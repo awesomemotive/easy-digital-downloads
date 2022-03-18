@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-02-18 21:07:20+00:00\n"
+"POT-Creation-Date: 2022-03-18 12:01:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -730,7 +730,7 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:126
 #: includes/admin/discounts/edit-discount.php:163
 #: includes/admin/payments/class-payments-table.php:495
-#: includes/admin/payments/class-refund-items-table.php:426
+#: includes/admin/payments/class-refund-items-table.php:447
 #. translators: customer name or address id
 #. translators: customer email
 #. translators: customer name or email
@@ -2868,28 +2868,28 @@ msgstr ""
 msgid "Amount of tax to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:341
+#: includes/admin/payments/class-refund-items-table.php:343
 msgid "Quantity to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:460
+#: includes/admin/payments/class-refund-items-table.php:481
 msgid "No items found."
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:635
+#: includes/admin/payments/class-refund-items-table.php:656
 #: includes/admin/payments/view-order-details.php:130
 msgid "Submit Refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:667
+#: includes/admin/payments/class-refund-items-table.php:688
 msgid "Refund Subtotal:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:690
+#: includes/admin/payments/class-refund-items-table.php:711
 msgid "Refund Tax Total:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:706
+#: includes/admin/payments/class-refund-items-table.php:727
 msgid "Refund Total:"
 msgstr ""
 
@@ -6842,17 +6842,27 @@ msgid "Issue a refund to adjust the net total for this order."
 msgstr ""
 
 #: includes/admin/views/tmpl-order-actions.php:49
+msgid "Amazon orders must be refunded at the gateway."
+msgstr ""
+
+#: includes/admin/views/tmpl-order-actions.php:51
 msgid ""
 "The refund window for this Order has passed; however, you have the ability "
 "to override this."
 msgstr ""
 
-#: includes/admin/views/tmpl-order-actions.php:51
+#: includes/admin/views/tmpl-order-actions.php:53
 msgid "The refund window for this Order has passed."
 msgstr ""
 
-#: includes/admin/views/tmpl-order-actions.php:61
+#: includes/admin/views/tmpl-order-actions.php:63
 msgid "Initialize Refund"
+msgstr ""
+
+#: includes/admin/views/tmpl-order-actions.php:68
+msgid ""
+"Orders placed through the Amazon gateway must be refunded through Amazon. "
+"The order status can then be updated manually."
 msgstr ""
 
 #: includes/admin/views/tmpl-order-adjustment-discount.php:27
@@ -9157,109 +9167,109 @@ msgstr ""
 msgid "You must enable a payment gateway to use Easy Digital Downloads"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:198
+#: includes/gateways/amazon-payments.php:197
 msgid "There is an error with the Amazon Payments configuration."
 msgstr ""
 
+#: includes/gateways/amazon-payments.php:267
 #: includes/gateways/amazon-payments.php:268
-#: includes/gateways/amazon-payments.php:269
 msgid "Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:317
+#: includes/gateways/amazon-payments.php:316
 msgid "Amazon Payments"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:333
+#: includes/gateways/amazon-payments.php:332
 msgid "Register with Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:335
+#: includes/gateways/amazon-payments.php:334
 msgid "Connect Easy Digital Downloads to Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:338
+#: includes/gateways/amazon-payments.php:337
 msgid "Once registration is complete, enter your API credentials below."
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:344
+#: includes/gateways/amazon-payments.php:343
 msgid "Seller ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:345
+#: includes/gateways/amazon-payments.php:344
 msgid "Found in the Integration settings. Also called a Merchant ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:351
+#: includes/gateways/amazon-payments.php:350
 msgid "MWS Access Key"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:352
-#: includes/gateways/amazon-payments.php:359
+#: includes/gateways/amazon-payments.php:351
+#: includes/gateways/amazon-payments.php:358
 msgid "Found on Seller Central in the MWS Keys section"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:358
+#: includes/gateways/amazon-payments.php:357
 msgid "MWS Secret Key"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:365
+#: includes/gateways/amazon-payments.php:364
 msgid "Client ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:366
+#: includes/gateways/amazon-payments.php:365
 msgid "The Amazon Client ID. Should look like `amzn1.application-oa2...`"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:372
+#: includes/gateways/amazon-payments.php:371
 msgid "Amazon MWS Callback URL"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:373
+#: includes/gateways/amazon-payments.php:372
 msgid ""
 "The Return URL to provide in your MWS Application. Enter this under your "
 "Login and Pay &rarr; Web Settings"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:381
+#: includes/gateways/amazon-payments.php:380
 msgid "Amazon Merchant IPN URL"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:382
+#: includes/gateways/amazon-payments.php:381
 msgid ""
 "The IPN URL to provide in your MWS account. Enter this under your <a "
 "href=\"%s\">Integration Settings</a>"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:666
+#: includes/gateways/amazon-payments.php:665
 msgid "Currently logged into Amazon as"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:667
+#: includes/gateways/amazon-payments.php:666
 msgid "Logout"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:817
-#: includes/gateways/amazon-payments.php:831
+#: includes/gateways/amazon-payments.php:816
+#: includes/gateways/amazon-payments.php:830
 msgid "Missing Reference ID, please try again."
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:864
+#: includes/gateways/amazon-payments.php:863
 msgid ""
 "Your payment could not be authorized, please try a different payment "
 "method. Reason: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:910
+#: includes/gateways/amazon-payments.php:909
 msgid "There was an issue processing your payment. Amazon error: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1024
+#: includes/gateways/amazon-payments.php:1023
 msgid "Invalid Amazon seller ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1024
-#: includes/gateways/amazon-payments.php:1064
+#: includes/gateways/amazon-payments.php:1023
+#: includes/gateways/amazon-payments.php:1063
 #: includes/gateways/paypal-standard.php:489
 #: includes/gateways/paypal-standard.php:496
 #: includes/gateways/paypal-standard.php:586
@@ -9269,24 +9279,24 @@ msgstr ""
 msgid "IPN Error"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1043
+#: includes/gateways/amazon-payments.php:1042
 msgid "Capture declined in Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1057
-#: includes/gateways/amazon-payments.php:1130
+#: includes/gateways/amazon-payments.php:1056
+#: includes/gateways/amazon-payments.php:1131
 msgid "Refund completed in Amazon. Refund ID: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1125
+#: includes/gateways/amazon-payments.php:1126
 msgid "Refund declined in Amazon. Refund ID: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1134
+#: includes/gateways/amazon-payments.php:1135
 msgid "Refund initiated in Amazon. Reference ID: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1140
+#: includes/gateways/amazon-payments.php:1141
 msgid "Refund request failed in Amazon."
 msgstr ""
 
@@ -11230,32 +11240,32 @@ msgstr ""
 msgid "Invoice"
 msgstr ""
 
-#: includes/payments/actions.php:252
+#: includes/payments/actions.php:253
 msgid "After payment actions processed."
 msgstr ""
 
-#: includes/payments/actions.php:277
+#: includes/payments/actions.php:278
 #. translators: %1$s Old order status. %2$s New order status.
 msgid "Status changed from %1$s to %2$s"
 msgstr ""
 
-#: includes/payments/actions.php:540 includes/payments/actions.php:601
+#: includes/payments/actions.php:541 includes/payments/actions.php:602
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:544
+#: includes/payments/actions.php:545
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:622 includes/payments/actions.php:656
+#: includes/payments/actions.php:623 includes/payments/actions.php:657
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:624
+#: includes/payments/actions.php:625
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:625 templates/shortcode-login.php:33
+#: includes/payments/actions.php:626 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
@@ -11583,19 +11593,19 @@ msgstr[1] ""
 
 #: includes/privacy-functions.php:27
 msgid ""
-"\n"
+"\r\n"
 "We collect information about you during the checkout process on our store. "
 "This information may include, but is not limited to, your name, billing "
 "address, shipping address, email address, phone number, credit card/payment "
 "details and any other details that might be requested from you for the "
-"purpose of processing your orders.\n"
-"Handling this data also allows us to:\n"
-"- Send you important account/order/service information.\n"
-"- Respond to your queries, refund requests, or complaints.\n"
+"purpose of processing your orders.\r\n"
+"Handling this data also allows us to:\r\n"
+"- Send you important account/order/service information.\r\n"
+"- Respond to your queries, refund requests, or complaints.\r\n"
 "- Process payments and to prevent fraudulent transactions. We do this on "
-"the basis of our legitimate business interests.\n"
+"the basis of our legitimate business interests.\r\n"
 "- Set up and administer your account, provide technical and/or customer "
-"support, and to verify your identity.\n"
+"support, and to verify your identity.\r\n"
 msgstr ""
 
 #: includes/privacy-functions.php:39
@@ -11923,11 +11933,11 @@ msgstr ""
 msgid "You do not have permission to view this file."
 msgstr ""
 
-#: includes/refund-functions.php:26 tests/orders/tests-refunds.php:219
+#: includes/refund-functions.php:26 tests/orders/tests-refunds.php:255
 msgid "Refundable"
 msgstr ""
 
-#: includes/refund-functions.php:27 tests/orders/tests-refunds.php:220
+#: includes/refund-functions.php:27 tests/orders/tests-refunds.php:256
 msgid "Non-Refundable"
 msgstr ""
 
