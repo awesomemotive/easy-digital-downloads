@@ -689,6 +689,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transactions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/ui.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transitions.php';
 
 		// Payments
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
