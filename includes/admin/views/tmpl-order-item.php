@@ -70,9 +70,9 @@ $view_url = add_query_arg(
 </td>
 
 <# if ( true === data.state.hasQuantity ) { #>
-<td data-colname="<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>">
-	{{ data.quantity }}
-</td>
+	<td data-colname="<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>">
+		{{ data.quantity }}
+	</td>
 <# } #>
 
 <td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">

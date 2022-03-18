@@ -253,6 +253,13 @@ class Refund_Validator {
 		$this->validate_order_item_amounts();
 		$this->validate_adjustment_amounts();
 
+		// Some items or adjustments have to be selected to refund.
+		if ( empty( $this->order_items_to_refund ) && empty( $this->adjustments_to_refund ) ) {
+			throw new Exception(
+				__( 'No items have been selected to refund.', 'easy-digital-downloads' )
+			);
+		}
+
 		// Refund amount cannot be 0
 		if ( $this->total <= 0 ) {
 			throw new Exception( sprintf(
