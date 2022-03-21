@@ -829,7 +829,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<textarea name="edd-payment-note" id="edd-payment-note" class="large-text"></textarea>
 
 									<p>
-										<button id="edd-add-payment-note" class="button button-secondary right" data-payment-id="<?php echo absint( $payment_id ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
+										<button id="edd-add-payment-note" class="button button-secondary right" data-payment-id="<?php echo absint( $payment_id ); ?>" data-nonce="<?php echo wp_create_nonce( 'edd_add_payment_note' ); ?>"><?php _e( 'Add Note', 'easy-digital-downloads' ); ?></button>
 									</p>
 
 									<div class="clear"></div>
