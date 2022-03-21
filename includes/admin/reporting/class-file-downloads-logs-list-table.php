@@ -135,6 +135,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				return false !== $item['payment_id'] ? '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . esc_attr( $item['payment_id'] ) ) ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
 			case 'ip':
 				return '<a href="' . esc_url( 'https://ipinfo.io/' . $item['ip'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
+			case 'file':
+				return esc_html( $item['file'] );
 			default:
 				return $item[ $column_name ];
 		}
@@ -379,7 +381,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				// Filter the $file_id
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
 
-				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+				$file_name = ! empty( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : edd_get_file_name( $files[ $file_id ] );
 
 				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
 					$logs_data[] = array(
