@@ -747,6 +747,7 @@ jQuery(document).ready(function ($) {
 				var postData = {
 					action : 'edd_insert_payment_note',
 					payment_id : $(this).data('payment-id'),
+					nonce : $(this).data('nonce'),
 					note : $('#edd-payment-note').val()
 				};
 

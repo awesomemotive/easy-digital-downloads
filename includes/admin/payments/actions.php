@@ -326,6 +326,10 @@ function edd_trigger_purchase_delete( $data ) {
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 function edd_ajax_store_payment_note() {
+	$nonce = sanitize_text_field( $_POST['nonce'] );
+	if ( ! wp_verify_nonce( $nonce, 'edd_add_payment_note' ) ) {
+		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
 
 	$payment_id = absint( $_POST['payment_id'] );
 	$note       = wp_kses( $_POST['note'], array() );
@@ -334,11 +338,13 @@ function edd_ajax_store_payment_note() {
 		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	if( empty( $payment_id ) )
+	if ( empty( $payment_id ) ) {
 		die( '-1' );
+	}
 
-	if( empty( $note ) )
+	if ( empty( $note ) ) {
 		die( '-1' );
+	}
 
 	$note_id = edd_insert_payment_note( $payment_id, $note );
 	die( edd_get_payment_note_html( $note_id ) );
