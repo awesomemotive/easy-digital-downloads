@@ -12,6 +12,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Models\Download;
 /**
  * EDD_Download Class
  *
@@ -753,35 +754,17 @@ class EDD_Download {
 	}
 
 	/**
-	 * Recalculates the gross sales and earnings for a download.
+	 * Updates the gross sales and earnings for a download.
 	 *
 	 * @since 3.0
 	 * @return void
 	 */
 	public function recalculate_gross_sales_earnings() {
-		global $wpdb;
-
-		$statuses      = edd_get_gross_order_statuses();
-		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-		$results       = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT SUM(oi.subtotal / oi.rate) AS revenue, SUM(oi.quantity) AS sales
-				FROM {$wpdb->edd_order_items} oi
-				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-				WHERE oi.product_id = %d
-				AND o.type = 'sale'
-				AND o.status IN({$status_string})",
-				$this->ID,
-				...$statuses
-			)
-		);
-
-		$sales    = ! empty( $results->sales ) ? intval( $results->sales ) : 0;
-		$earnings = ! empty( $results->revenue ) ? floatval( edd_sanitize_amount( $results->revenue ) ) : 0.00;
+		$download_model = new Download( $this->ID );
 
 		// This currently uses the post meta functions as we do not yet guarantee that the meta exists.
-		update_post_meta( $this->ID, '_edd_download_gross_sales', $sales );
-		update_post_meta( $this->ID, '_edd_download_gross_earnings', floatval( $earnings ) );
+		update_post_meta( $this->ID, '_edd_download_gross_sales', $download_model->get_gross_sales() );
+		update_post_meta( $this->ID, '_edd_download_gross_earnings', floatval( $download_model->get_gross_earnings() ) );
 	}
 
 	/**
@@ -791,46 +774,10 @@ class EDD_Download {
 	 * @return void
 	 */
 	public function recalculate_net_sales_earnings() {
+		$download_model = new Download( $this->ID );
 
-		global $wpdb;
-
-		$statuses      = edd_get_net_order_statuses();
-		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-
-		/**
-		 * Note on the select statements:
-		 * 1. This gets the net sum for revenue and sales for all orders with net statuses.
-		 * 2. Because a partial refund with an identical quantity as the original order will
-		 *    negate the original, we also sum partially refunded sales where the quantity
-		 *    matches the partial refund quantity.
-		 */
-		$complete_orders = $wpdb->prepare(
-			"SELECT SUM((oi.total - oi.tax)/ oi.rate) as revenue, SUM(oi.quantity) as sales
-			FROM {$wpdb->edd_order_items} oi
-			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-			WHERE oi.product_id = %d
-			AND oi.status IN('complete','partially_refunded')
-			AND o.status IN({$status_string})",
-			$this->ID,
-			...$statuses
-		);
-		$partial_orders = $wpdb->prepare(
-			"SELECT NULL, SUM(oi.quantity) as sales
-			FROM {$wpdb->edd_order_items} oi
-			LEFT JOIN {$wpdb->edd_order_items} ri
-			ON ri.parent = oi.id
-			WHERE oi.product_id = %d
-			AND oi.status = 'partially_refunded'
-			AND oi.quantity = - ri.quantity",
-			$this->ID
-		);
-		$results = $wpdb->get_row( "SELECT SUM(revenue) AS revenue, SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
-
-		$revenue = ! empty( $results->revenue ) ? $results->revenue : 0.00;
-		$sales   = ! empty( $results->sales ) ? $results->sales : 0;
-
-		$this->update_meta( '_edd_download_sales', intval( $sales ) );
-		$this->update_meta( '_edd_download_earnings', floatval( $revenue ) );
+		$this->update_meta( '_edd_download_sales', intval( $download_model->get_net_sales() ) );
+		$this->update_meta( '_edd_download_earnings', floatval( $download_model->get_net_earnings() ) );
 	}
 
 	/**
