@@ -240,7 +240,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 
-= 2.11.6, March 11, 2022 =
+= 2.11.6, March 21, 2022 =
 * Fix: Improved reliablity of PayPal Commerce modal while on checkout page.
 * Fix: PayPal Standard could throw an undefined variable notice when listening to the IPN.
 * Improvement: The link to configure Mailchimp could be wrong depending on the version of the extension.
