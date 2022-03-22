@@ -56,7 +56,7 @@ add_action( 'edd_transition_order_status', function( $old_status, $new_status, $
 }, 10, 3 );
 
 /**
- * When an order item changes status or total, we need to recalculate the related download's sales and earnings.
+ * When an order item changes status, we need to recalculate the related download's sales and earnings.
  *
  * @since 3.0
  * @param string $old_value The old value.
@@ -64,7 +64,6 @@ add_action( 'edd_transition_order_status', function( $old_status, $new_status, $
  * @param int $order_item_id The order item ID.
  */
 add_action( 'edd_transition_order_item_status', 'edd_maybe_recalculate_order_item_stats', 10, 3 );
-add_action( 'edd_transition_order_item_total', 'edd_maybe_recalculate_order_item_stats', 10, 3 );
 function edd_maybe_recalculate_order_item_stats( $old_value, $new_value, $order_item_id ) {
 	if ( $old_value === $new_value || 'inherit' === $new_value ) {
 		return;
