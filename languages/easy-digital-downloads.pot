@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.11.6\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-03-11 17:38:30+00:00\n"
+"POT-Creation-Date: 2022-03-22 00:00:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -74,9 +74,10 @@ msgstr ""
 #: includes/admin/payments/actions.php:25
 #: includes/admin/payments/actions.php:295
 #: includes/admin/payments/actions.php:318
-#: includes/admin/payments/actions.php:334
-#: includes/admin/payments/actions.php:361
-#: includes/admin/payments/actions.php:381
+#: includes/admin/payments/actions.php:331
+#: includes/admin/payments/actions.php:338
+#: includes/admin/payments/actions.php:367
+#: includes/admin/payments/actions.php:387
 #: includes/admin/payments/view-order-details.php:22
 #: includes/admin/payments/view-order-details.php:32
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:147
@@ -531,7 +532,7 @@ msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:72
 #: includes/admin/payments/class-payments-table.php:274
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:153
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:155
 #: includes/admin/reporting/class-sales-logs-list-table.php:129
 msgid "Customer"
 msgstr ""
@@ -673,6 +674,7 @@ msgstr ""
 #: includes/admin/customers/customer-actions.php:603
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:113
+#: includes/admin/payments/actions.php:331
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/api/class-edd-api.php:1980
 #: includes/class-edd-license-handler.php:398
@@ -926,7 +928,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-download-history.php:62
 #: includes/admin/reporting/class-export-payments.php:78
 #: includes/admin/reporting/class-export.php:67
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:157
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:159
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:131
 #: includes/admin/reporting/class-sales-logs-list-table.php:133
 #: includes/admin/reporting/export/class-batch-export-api-requests.php:46
@@ -1306,7 +1308,7 @@ msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:125
 #: includes/admin/payments/class-payments-table.php:247
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:320
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:322
 #: includes/admin/reporting/class-sales-logs-list-table.php:281
 msgid "All"
 msgstr ""
@@ -2185,9 +2187,9 @@ msgstr ""
 
 #: includes/admin/payments/actions.php:25
 #: includes/admin/payments/actions.php:318
-#: includes/admin/payments/actions.php:334
-#: includes/admin/payments/actions.php:361
-#: includes/admin/payments/actions.php:381 includes/emails/actions.php:53
+#: includes/admin/payments/actions.php:338
+#: includes/admin/payments/actions.php:367
+#: includes/admin/payments/actions.php:387 includes/emails/actions.php:53
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
@@ -2809,7 +2811,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:87
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:151
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:153
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:126
 #: includes/admin/reporting/class-sales-logs-list-table.php:128
 #: includes/admin/reporting/export/class-batch-export-api-requests.php:39
@@ -2931,7 +2933,7 @@ msgid "Downloaded by"
 msgstr ""
 
 #: includes/admin/reporting/class-export-download-history.php:64
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:156
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:158
 #: includes/admin/reporting/export/class-batch-export-api-requests.php:41
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:43
 #: includes/admin/reporting/export/class-batch-export-payments.php:63
@@ -2946,7 +2948,7 @@ msgid "Product"
 msgstr ""
 
 #: includes/admin/reporting/class-export-download-history.php:66
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:155
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:157
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:45
 msgid "File"
 msgstr ""
@@ -3041,7 +3043,7 @@ msgstr ""
 msgid "You do not have permission to export data."
 msgstr ""
 
-#: includes/admin/reporting/class-file-downloads-logs-list-table.php:154
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:156
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:127
 #: includes/admin/reporting/class-sales-logs-list-table.php:132
 #: includes/admin/reporting/export/class-batch-export-payments.php:39
