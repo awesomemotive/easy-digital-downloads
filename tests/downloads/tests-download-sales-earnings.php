@@ -418,4 +418,10 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 				'total'       => 5,
 			)
 		);
+
+		$download = edd_get_download( $this->simple_download->ID );
+		$this->assertEquals( $download->earnings, get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) );
+
+		edd_delete_order( $order_id );
+	}
 }
