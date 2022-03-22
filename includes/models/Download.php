@@ -85,7 +85,7 @@ class Download {
 			AND oa.object_type = 'order_item'
 			AND oa.total > 0
 			AND oi.status IN('complete','partially_refunded')",
-			$this->id,
+			$this->id
 		);
 		$results           = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
 
@@ -168,7 +168,7 @@ class Download {
 			WHERE oi.product_id = %d
 			AND oa.object_type = 'order_item'
 			AND oi.status IN('complete','partially_refunded')",
-			$this->id,
+			$this->id
 		);
 		$results           = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
 
