@@ -712,6 +712,9 @@ final class Easy_Digital_Downloads {
 
 		// Stats
 		require_once EDD_PLUGIN_DIR . 'includes/class-stats.php';
+
+		// Downloads
+		require_once EDD_PLUGIN_DIR . 'includes/models/Download.php';
 	}
 
 	/**

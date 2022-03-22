@@ -379,4 +379,43 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 
 		edd_delete_order( $order_id );
 	}
+
+	public function test_download_earnings_gross_equals_net_with_positive_fee() {
+		$order_id = edd_add_order(
+			array(
+				'status'          => 'complete',
+				'type'            => 'sale',
+				'date_completed'  => EDD()->utils->date( 'now' )->toDateTimeString(),
+				'date_refundable' => EDD()->utils->date( 'now' )->addDays( 30 )->toDateTimeString(),
+				'ip'              => '10.1.1.1',
+				'gateway'         => 'manual',
+				'mode'            => 'live',
+				'currency'        => 'USD',
+				'payment_key'     => md5( 'edd' ),
+				'subtotal'        => 20,
+				'total'           => 25,
+			)
+		);
+
+		$order_item_id = edd_add_order_item(
+			array(
+				'order_id'     => $order_id,
+				'product_id'   => $this->simple_download->ID,
+				'product_name' => 'Simple Download',
+				'status'       => 'complete',
+				'amount'       => 20,
+				'subtotal'     => 20,
+				'total'        => 20,
+				'quantity'     => 1,
+			)
+		);
+
+		$order_item_adjustment = edd_add_order_adjustment(
+			array(
+				'object_id'   => $order_item_id,
+				'object_type' => 'order_item',
+				'subtotal'    => 5,
+				'total'       => 5,
+			)
+		);
 }
