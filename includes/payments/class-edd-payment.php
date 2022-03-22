@@ -709,16 +709,7 @@ class EDD_Payment {
 			foreach ( $this->pending as $key => $value ) {
 				switch ( $key ) {
 					case 'downloads':
-						break;
-
 					case 'fees':
-						if ( 'publish' !== $this->status && 'complete' !== $this->status && 'revoked' !== $this->status && ! $this->is_recoverable() ) {
-							break;
-						}
-
-						if ( empty( $this->pending[ $key ] ) ) {
-							break;
-						}
 						break;
 
 					case 'status':
