@@ -63,11 +63,29 @@ add_action( 'edd_transition_order_status', function( $old_status, $new_status, $
  * @param string $new_value The new value.
  * @param int $order_item_id The order item ID.
  */
-add_action( 'edd_transition_order_item_status', 'edd_maybe_recalculate_order_item_stats', 10, 3 );
-function edd_maybe_recalculate_order_item_stats( $old_value, $new_value, $order_item_id ) {
+add_action( 'edd_transition_order_item_status', function( $old_value, $new_value, $order_item_id ) {
 	if ( $old_value === $new_value || 'inherit' === $new_value ) {
 		return;
 	}
 	$order_item = edd_get_order_item( $order_item_id );
 	edd_recalculate_download_sales_earnings( $order_item->product_id );
-}
+} );
+
+/**
+ * When an order item adjustment changes type, we need to recalculate the related download's sales and earnings.
+ *
+ * @since 3.0
+ * @param string $old_value The old value.
+ * @param string $new_value The new value.
+ * @param int $order_item_id The order item ID.
+ */
+add_action( 'edd_transition_order_adjustment_type', function( $old_value, $new_value, $adjustment_id ) {
+	if ( 'discount' === $new_value ) {
+		return;
+	}
+	$adjustment = edd_get_order_adjustment( $adjustment_id );
+	if ( 'order_item' === $adjustment->object_type ) {
+		$order_item = edd_get_order_item( $adjustment->object_id );
+		edd_recalculate_download_sales_earnings( $order_item->product_id );
+	}
+}, 10, 3 );
