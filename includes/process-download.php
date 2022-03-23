@@ -145,7 +145,7 @@ function edd_process_download() {
 
 		// If the file isn't locally hosted, process the redirect
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
-			edd_deliver_download( $requested_file, true );
+			edd_deliver_download( $requested_file, apply_filters( 'edd_file_download_method_redirect', true ) );
 			exit;
 		}
 
