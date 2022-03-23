@@ -69,7 +69,7 @@ add_action( 'edd_transition_order_item_status', function( $old_value, $new_value
 	}
 	$order_item = edd_get_order_item( $order_item_id );
 	edd_recalculate_download_sales_earnings( $order_item->product_id );
-} );
+}, 10, 3 );
 
 /**
  * When an order item adjustment changes type, we need to recalculate the related download's sales and earnings.
