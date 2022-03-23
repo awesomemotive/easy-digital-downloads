@@ -83,6 +83,7 @@ class Download {
 			INNER JOIN {$wpdb->edd_order_items} oi ON(oi.id = oa.object_id)
 			WHERE oi.product_id = %d
 			AND oa.object_type = 'order_item'
+			AND oa.type != 'discount'
 			AND oa.total > 0
 			AND oi.status IN('complete','partially_refunded')",
 			$this->id
@@ -167,6 +168,7 @@ class Download {
 			INNER JOIN {$wpdb->edd_order_items} oi ON(oi.id = oa.object_id)
 			WHERE oi.product_id = %d
 			AND oa.object_type = 'order_item'
+			AND oa.type != 'discount'
 			AND oi.status IN('complete','partially_refunded')",
 			$this->id
 		);
