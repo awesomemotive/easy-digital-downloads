@@ -715,6 +715,8 @@ class Data_Migrator {
 
 		// Remove all order status transition actions.
 		remove_all_actions( 'edd_transition_order_status' );
+		remove_all_actions( 'edd_transition_order_item_status' );
+		remove_all_actions( 'edd_transition_order_adjustment_type' );
 
 		$order_id = edd_add_order( $order_data );
 
