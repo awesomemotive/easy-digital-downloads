@@ -61,10 +61,9 @@ class Orders extends Base {
 				Data_Migrator::orders( $result );
 			}
 
-			$this->recalculate_sales_earnings();
-
 			return true;
 		}
+		$this->recalculate_sales_earnings();
 
 		return false;
 	}
@@ -86,8 +85,8 @@ class Orders extends Base {
 		);
 		$total     = count( $downloads );
 		if ( ! empty( $total ) ) {
-			foreach ( $downloads as $download_id ) {
-				edd_recalculate_download_sales_earnings( $download_id );
+			foreach ( $downloads as $download ) {
+				edd_recalculate_download_sales_earnings( $download->ID );
 			}
 		}
 	}
