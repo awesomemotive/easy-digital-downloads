@@ -1376,8 +1376,8 @@ class EDD_CLI extends WP_CLI_Command {
 		$total     = count( $downloads );
 		if ( ! empty( $total ) ) {
 			$progress = new \cli\progress\Bar( 'Recalculating Download Sales and Earnings', $total );
-			foreach ( $downloads as $download_id ) {
-				edd_recalculate_download_sales_earnings( $download_id );
+			foreach ( $downloads as $download ) {
+				edd_recalculate_download_sales_earnings( $download->ID );
 				$progress->tick();
 			}
 			$progress->finish();
