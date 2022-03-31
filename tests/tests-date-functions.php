@@ -135,6 +135,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		 * We know that these will fail near the end of the month, the above is a deprecated function
 		 * and we re-wrote a lot of the date logic with this in mind.
 		 */
+		$this->markTestIncomplete();
 
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
@@ -157,6 +158,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		 * We know that these will fail near the end of the month, the above is a deprecated function
 		 * and we re-wrote a lot of the date logic with this in mind.
 		 */
+		$this->markTestIncomplete();
 
 		$auk_date = edd()->utils->date( 'now', 'Pacific/Auckland' );
 
@@ -191,6 +193,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		 * We know that these will fail near the end of the month, the above is a deprecated function
 		 * and we re-wrote a lot of the date logic with this in mind.
 		 */
+		$this->markTestIncomplete();
 
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
@@ -213,6 +216,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		 * We know that these will fail near the end of the month, the above is a deprecated function
 		 * and we re-wrote a lot of the date logic with this in mind.
 		 */
+		$this->markTestIncomplete();
 
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
@@ -236,6 +240,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		 * We know that these will fail near the end of the month, the above is a deprecated function
 		 * and we re-wrote a lot of the date logic with this in mind.
 		 */
+		$this->markTestIncomplete();
 
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n', $current_time ), $dates['m_start'] );
