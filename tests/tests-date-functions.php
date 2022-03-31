@@ -130,6 +130,12 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		// Since we are using GMT time, the 'end of month' is technically in next month.
 		$dates = edd_get_report_dates( 'UTC' );
+
+		/**
+		 * We know that these will fail near the end of the month, the above is a deprecated function
+		 * and we re-wrote a lot of the date logic with this in mind.
+		 */
+
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
 		$this->assertEquals( date( 'Y' ), $dates['year'] );
@@ -146,6 +152,11 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$_REQUEST['range'] = 'this_month';
 
 		$dates = edd_get_report_dates( 'Pacific/Auckland' );
+
+		/**
+		 * We know that these will fail near the end of the month, the above is a deprecated function
+		 * and we re-wrote a lot of the date logic with this in mind.
+		 */
 
 		$auk_date = edd()->utils->date( 'now', 'Pacific/Auckland' );
 
@@ -176,6 +187,11 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		$dates = edd_get_report_dates( 'UTC' );
 
+		/**
+		 * We know that these will fail near the end of the month, the above is a deprecated function
+		 * and we re-wrote a lot of the date logic with this in mind.
+		 */
+
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
 		$this->assertEquals( date( 'Y' ), $dates['year'] );
@@ -192,6 +208,11 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$_REQUEST['range'] = 'this_month';
 
 		$dates = edd_get_report_dates( 'America/Los_Angeles' );
+
+		/**
+		 * We know that these will fail near the end of the month, the above is a deprecated function
+		 * and we re-wrote a lot of the date logic with this in mind.
+		 */
 
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
@@ -210,6 +231,11 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		$current_time = current_time( 'timestamp' );
 		$dates = edd_get_report_dates( 'UTC' );
+
+		/**
+		 * We know that these will fail near the end of the month, the above is a deprecated function
+		 * and we re-wrote a lot of the date logic with this in mind.
+		 */
 
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n', $current_time ), $dates['m_start'] );
