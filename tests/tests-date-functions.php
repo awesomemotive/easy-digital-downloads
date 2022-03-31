@@ -128,7 +128,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	public function test_get_report_dates_correct_this_month_at_the_end_of_the_month_utc() {
 		$_REQUEST['range'] = 'this_month';
 
-		// Since we are using GMT time, the 'end of month' is techincally in next month.
+		// Since we are using GMT time, the 'end of month' is technically in next month.
 		$dates = edd_get_report_dates( 'UTC' );
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
