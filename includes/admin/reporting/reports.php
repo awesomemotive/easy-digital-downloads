@@ -624,7 +624,7 @@ function edd_register_downloads_report( $reports ) {
 						return $stats->get_order_item_count() . ' / ' . $stats->get_order_item_earnings();
 					},
 					'display_args'  => array(
-						'comparison_label' => $label,
+						'comparison_label' => $label . ' &mdash; ' . __( 'Net	', 'easy-digital-downloads' ),
 					),
 				),
 			),
