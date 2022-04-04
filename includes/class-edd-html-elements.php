@@ -788,8 +788,9 @@ class EDD_HTML_Elements {
 			$options .= ' readonly';
 		}
 
+		$value = '';
 		if ( ! empty( $args['value'] ) ) {
-			$options .= ' value="' . esc_attr( $args['value'] ) . '"';
+			$value .= ' value="' . esc_attr( $args['value'] ) . '"';
 		}
 
 		// Checked could mean 'on' or 1 or true, so sanitize it for checked()
@@ -797,7 +798,7 @@ class EDD_HTML_Elements {
 		$checked  = checked( true, $to_check, false );
 
 		// Get the HTML to output
-		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . esc_attr( $class ) . '" ' . $checked . ' />';
+		$output = '<input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . esc_attr( $class ) . '" ' . $value . $checked . $options .' />';
 
 		if ( ! empty( $args['label'] ) ) {
 			$output .= '<label for="' . esc_attr( $args['name'] ) . '">' . wp_kses_post( $args['label'] ) . '</label>';
