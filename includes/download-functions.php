@@ -841,114 +841,19 @@ function edd_remove_download_logs_on_delete( $download_id = 0 ) {
 add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
 
 /**
+ * Recalculates both the net and gross sales and earnings for a download.
  *
- * Increases the sale count of a download.
- *
- * @since 1.0
- *
- * @param int $download_id Download ID.
- * @param int $quantity    Quantity to increase purchase count by.
- *
- * @return bool|int Updated sale count, false if download does not exist.
+ * @since 3.0
+ * @param int $download_id
+ * @return void
  */
-function edd_increase_purchase_count( $download_id = 0, $quantity = 1 ) {
-
-	// Bail if no download ID was passed.
-	if ( empty( $download_id ) ) {
-		return false;
-	}
-
-	// Ensure quantity is valid integer.
-	$quantity = absint( $quantity );
-
+function edd_recalculate_download_sales_earnings( $download_id ) {
 	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->increase_sales( $quantity )
-		: false;
-}
-
-/**
- * Decreases the sale count of a download. Primarily for when a purchase is
- * refunded.
- *
- * @since 1.0.8.1
- *
- * @param int $download_id Download ID.
- * @param int $quantity    Optional. Quantity to decrease by. Default 1.
- *
- * @return bool|int Updated sale count, false if download does not exist.
- */
-function edd_decrease_purchase_count( $download_id = 0, $quantity = 1 ) {
-
-	// Bail if no download ID was passed.
-	if ( empty( $download_id ) ) {
-		return false;
+	if ( ! $download instanceof \EDD_Download ) {
+		return;
 	}
-
-	// Ensure quantity is valid integer.
-	$quantity = absint( $quantity );
-
-	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->decrease_sales( $quantity )
-		: false;
-}
-
-/**
- * Increases the total earnings of a download.
- *
- * @since 1.0
- *
- * @param int   $download_id Download ID.
- * @param float $amount      Earnings to increase by.
- *
- * @return float|false Updated earnings, false if invalid data passed.
- */
-function edd_increase_earnings( $download_id = 0, $amount = 0.00 ) {
-
-	// Bail if no download ID or amount was passed.
-	if ( empty( $download_id ) || empty( $amount ) ) {
-		return false;
-	}
-
-	// Ensure amount passed was valid.
-	$amount = edd_sanitize_amount( $amount );
-
-	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->increase_earnings( $amount )
-		: false;
-}
-
-/**
- * Decreases the total earnings of a download. Primarily for when a purchase
- * is refunded.
- *
- * @since 1.0.8.1
- *
- * @param int   $download_id Download ID.
- * @param float $amount      Earnings to decrease by.
- *
- * @return float|false Updated earnings, false if invalid data passed.
- */
-function edd_decrease_earnings( $download_id = 0, $amount = 0.00 ) {
-
-	// Bail if no download ID or amount was passed.
-	if ( empty( $download_id ) || empty( $amount ) ) {
-		return false;
-	}
-
-	// Ensure amount passed was valid.
-	$amount = edd_sanitize_amount( $amount );
-
-	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->decrease_earnings( $amount )
-		: false;
+	$download->recalculate_net_sales_earnings();
+	$download->recalculate_gross_sales_earnings();
 }
 
 /**
