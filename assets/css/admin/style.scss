@@ -843,6 +843,11 @@ table.edd-order-overview-summary--refund {
 	align-items: center;
 }
 
+#edd-order-overview-actions .edd-order-overview-actions__notice {
+	flex-basis: 100%;
+	margin-top: 15px;
+}
+
 .edd-order-overview-actions .button {
 	width: 100%;
 	margin-bottom: 12px;

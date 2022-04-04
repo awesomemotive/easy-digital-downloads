@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-OPTS=$(getopt -a --options w:p:imh --longoptions wp:,php:,multisite,in-place,help --name "$0" -- "$@") || exit 1
+OPTS=$(getopt -a --options w:p:f:imh --longoptions wp:filter:,php:,multisite,in-place,help --name "$0" -- "$@") || exit 1
 eval set -- "$OPTS"
 
 show_help() {
@@ -13,6 +13,7 @@ show_help() {
   printf -- '-m, --multisite\t\tRun tests as multisite?\n';
   printf -- '-p, --php\t\tSets the PHP version to test with (Required)\n';
   printf -- '-w, --wp\t\tSets WP version to test against (Required)\n';
+  printf -- '-f, --filter\t\tPasses filters into PHPUnit\n';
   printf -- '-h, --help\t\tShow help.\n';
 }
 
@@ -38,6 +39,10 @@ while true; do
         show_help
         exit 0
         shift
+        ;;
+    --filter|-f )
+        export FILTER="$2"
+        shift 2
         ;;
     --)
         shift
