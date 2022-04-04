@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-02-01 14:14:42+00:00\n"
+"POT-Creation-Date: 2022-03-18 12:01:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -373,260 +373,260 @@ msgstr ""
 msgid "Generate New API Keys"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:222
+#: includes/admin/class-edd-notices.php:224
 msgid "No checkout page is configured. Set one in <a href=\"%s\">Settings</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:276
+#: includes/admin/class-edd-notices.php:278
 msgid "The files in %s are not currently protected."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:277
+#: includes/admin/class-edd-notices.php:279
 msgid ""
 "To protect them, you must add this <a "
 "href=\"http://docs.easydigitaldownloads.com/article/682-protected-download-"
 "files-on-nginx\">NGINX redirect rule</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:278
-#: includes/admin/class-edd-notices.php:297
+#: includes/admin/class-edd-notices.php:280
+#: includes/admin/class-edd-notices.php:299
 msgid ""
 "If you have already done this, or it does not apply to your site, you may "
 "permenently %s."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:278
-#: includes/admin/class-edd-notices.php:297
+#: includes/admin/class-edd-notices.php:280
+#: includes/admin/class-edd-notices.php:299
 msgid "dismiss this notice"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:295
+#: includes/admin/class-edd-notices.php:297
 msgid "The .htaccess file is missing from: %s"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:296
+#: includes/admin/class-edd-notices.php:298
 msgid ""
 "First, please resave the Misc settings tab a few times. If this warning "
 "continues to appear, create a file called \".htaccess\" in the %s "
 "directory, and copy the following into it:"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:318
+#: includes/admin/class-edd-notices.php:319
 msgid ""
 "Easy Digital Downloads 2.5 contains a <a href=\"%s\">built in recount "
 "tool</a>. Please <a href=\"%s\">deactivate the Easy Digital Downloads - "
 "Recount Earnings plugin</a>"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:348
+#: includes/admin/class-edd-notices.php:349
 msgid "Review Tax Rates"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:355
+#: includes/admin/class-edd-notices.php:356
 #. translators: Link to review existing tax rates.
 msgid "A default tax rate was detected."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:355
+#: includes/admin/class-edd-notices.php:356
 msgid ""
 "This setting is no longer used in this version of Easy Digital Downloads. "
 "Please confirm your regional tax rates are properly configured and update "
 "tax settings to remove this notice."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:376
+#: includes/admin/class-edd-notices.php:375
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:391
+#: includes/admin/class-edd-notices.php:390
 msgid "Fix this"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:397
+#: includes/admin/class-edd-notices.php:396
 msgid "No payment gateways are enabled. %s."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:427
+#: includes/admin/class-edd-notices.php:426
 msgid "Discount code added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:433
+#: includes/admin/class-edd-notices.php:432
 msgid "There was a problem adding that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:440
+#: includes/admin/class-edd-notices.php:439
 msgid "A discount with that code already exists, please use a different code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:447
+#: includes/admin/class-edd-notices.php:446
 msgid "Discount code updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:453
+#: includes/admin/class-edd-notices.php:452
 msgid "No changes were made to that discount code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:459
+#: includes/admin/class-edd-notices.php:458
 msgid "There was a problem updating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:466
+#: includes/admin/class-edd-notices.php:465
 msgid ""
 "The discount code could not be added because one or more of the required "
 "fields was empty, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:473
+#: includes/admin/class-edd-notices.php:472
 msgid ""
 "The discount code entered is invalid; only alphanumeric characters are "
 "allowed, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:480
+#: includes/admin/class-edd-notices.php:479
 msgid ""
 "The discount amount must be a valid percentage or numeric flat amount. "
 "Please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:487
+#: includes/admin/class-edd-notices.php:486
 msgid "Discount code deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:493
+#: includes/admin/class-edd-notices.php:492
 msgid "There was a problem deleting that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:500
+#: includes/admin/class-edd-notices.php:499
 msgid "Discount code activated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:506
+#: includes/admin/class-edd-notices.php:505
 msgid "There was a problem activating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:513
+#: includes/admin/class-edd-notices.php:512
 msgid "Discount code deactivated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:519
+#: includes/admin/class-edd-notices.php:518
 msgid "There was a problem deactivating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:532
+#: includes/admin/class-edd-notices.php:531
 msgid "The reports have been refreshed."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:544
+#: includes/admin/class-edd-notices.php:543
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:550
+#: includes/admin/class-edd-notices.php:549
 msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:556
+#: includes/admin/class-edd-notices.php:555
 msgid "The specified user already has API keys."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:563
+#: includes/admin/class-edd-notices.php:562
 msgid "API keys successfully regenerated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:569
+#: includes/admin/class-edd-notices.php:568
 msgid "API keys successfully revoked."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:576
+#: includes/admin/class-edd-notices.php:575
 msgid "The test email was sent successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:589
+#: includes/admin/class-edd-notices.php:588
 msgid "The note has been added successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:595
+#: includes/admin/class-edd-notices.php:594
 msgid "The order has been updated successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:601
+#: includes/admin/class-edd-notices.php:600
 msgid "Order successfully created."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:607
+#: includes/admin/class-edd-notices.php:606
 msgid "The order has been moved to the trash."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:613
+#: includes/admin/class-edd-notices.php:612
 msgid "The order has been restored."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:619
+#: includes/admin/class-edd-notices.php:618
 msgid "The order has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:625
+#: includes/admin/class-edd-notices.php:624
 msgid "The purchase receipt has been resent."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:631
+#: includes/admin/class-edd-notices.php:630
 msgid "Failed to send purchase receipt."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:637
+#: includes/admin/class-edd-notices.php:636
 msgid "The order note has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:649
+#: includes/admin/class-edd-notices.php:648
 msgid "Customer successfully deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:655
+#: includes/admin/class-edd-notices.php:654
 msgid "User successfully verified."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:661
+#: includes/admin/class-edd-notices.php:660
 msgid "Customer email added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:667
+#: includes/admin/class-edd-notices.php:666
 msgid "Customer email deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:673
+#: includes/admin/class-edd-notices.php:672
 msgid "Failed to delete customer email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:680
+#: includes/admin/class-edd-notices.php:679
 msgid "Primary email updated for customer."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:686
+#: includes/admin/class-edd-notices.php:685
 msgid "Failed to set primary email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:693
+#: includes/admin/class-edd-notices.php:692
 msgid "Customer address deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:699
+#: includes/admin/class-edd-notices.php:698
 msgid "Failed to delete customer address."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:737
+#: includes/admin/class-edd-notices.php:742
 msgid ""
 "Easy Digital Downloads debug logging is enabled. Please only leave it "
 "enabled for as long as it is needed for troubleshooting."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:738
+#: includes/admin/class-edd-notices.php:745
 msgid "View Debug Log"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:739
+#: includes/admin/class-edd-notices.php:746
 msgid "Delete Log File and Disable Logging"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:755
+#: includes/admin/class-edd-notices.php:762
 #: includes/admin/customers/customer-actions.php:554
 #: includes/admin/promos/class-promo-handler.php:116
 #: includes/admin/promos/class-promo-handler.php:123
@@ -645,7 +645,7 @@ msgstr ""
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:760
+#: includes/admin/class-edd-notices.php:767
 msgid "The debug log has been cleared and logging has been disabled."
 msgstr ""
 
@@ -730,7 +730,7 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:126
 #: includes/admin/discounts/edit-discount.php:163
 #: includes/admin/payments/class-payments-table.php:495
-#: includes/admin/payments/class-refund-items-table.php:429
+#: includes/admin/payments/class-refund-items-table.php:447
 #. translators: customer name or address id
 #. translators: customer email
 #. translators: customer name or email
@@ -801,7 +801,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:949
 #: includes/admin/downloads/dashboard-columns.php:37
 #: includes/admin/payments/class-payments-table.php:388
-#: includes/admin/payments/orders.php:1031
+#: includes/admin/payments/orders.php:1036
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:53
 #: includes/admin/reporting/class-export-download-history.php:59
 #: includes/admin/reporting/class-export-payments.php:76
@@ -1233,8 +1233,8 @@ msgstr ""
 #: includes/admin/customers/customers.php:904
 #: includes/admin/customers/customers.php:947
 #: includes/admin/payments/class-payments-table.php:386
-#: includes/admin/payments/orders.php:856
-#: includes/admin/payments/orders.php:862
+#: includes/admin/payments/orders.php:861
+#: includes/admin/payments/orders.php:867
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:111
 #: includes/admin/reporting/class-gateways-reports-table.php:74
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:59
@@ -1245,7 +1245,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:905
 #: includes/admin/customers/customers.php:948
 #: includes/admin/payments/class-payments-table.php:387
-#: includes/admin/payments/class-refund-items-table.php:96
+#: includes/admin/payments/class-refund-items-table.php:90
 #: includes/admin/tools.php:662 includes/admin/views/tmpl-order-refund.php:39
 #: includes/admin/views/tmpl-order-total.php:16
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:146
@@ -1436,8 +1436,8 @@ msgstr ""
 #: includes/admin/discounts/add-discount.php:57
 #: includes/admin/discounts/class-discount-codes-table.php:74
 #: includes/admin/discounts/edit-discount.php:98
-#: includes/admin/payments/orders.php:770
-#: includes/admin/payments/refunds.php:227
+#: includes/admin/payments/orders.php:775
+#: includes/admin/payments/refunds.php:225
 #: includes/admin/reporting/class-export-payments.php:70
 #: includes/admin/reporting/export/class-batch-export-payments.php:56
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:56
@@ -1810,7 +1810,7 @@ msgstr ""
 
 #: includes/admin/discounts/edit-discount.php:259
 #: includes/admin/payments/class-payments-table.php:389
-#: includes/admin/payments/orders.php:973
+#: includes/admin/payments/orders.php:978
 #: includes/admin/reporting/class-export-payments.php:78
 #: includes/admin/reporting/export/class-batch-export-downloads.php:48
 #: includes/admin/reporting/export/class-batch-export-payments.php:66
@@ -2807,22 +2807,22 @@ msgid "Resend Receipts"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:668
-#: includes/admin/payments/orders.php:1009
-#: includes/admin/payments/refunds.php:303
+#: includes/admin/payments/orders.php:1014
+#: includes/admin/payments/refunds.php:301
 msgid "Move to Trash"
 msgstr ""
 
 #: includes/admin/payments/class-refund-items-table.php:78
-#: includes/admin/payments/orders.php:766
+#: includes/admin/payments/orders.php:771
 #: includes/admin/payments/refunds.php:223
 #: includes/admin/views/tmpl-order-form-add-order-item.php:175
 #: includes/admin/views/tmpl-order-item.php:67
 msgid "Unit Price"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:83
-#: includes/admin/payments/orders.php:768
-#: includes/admin/payments/refunds.php:225
+#: includes/admin/payments/class-refund-items-table.php:79
+#: includes/admin/payments/orders.php:773
+#: includes/admin/payments/refunds.php:224
 #: includes/admin/reporting/export/class-batch-export-sales.php:46
 #: includes/admin/views/tmpl-order-form-add-order-item.php:110
 #: includes/admin/views/tmpl-order-item.php:73 includes/emails/tags.php:316
@@ -2830,14 +2830,14 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:87
+#: includes/admin/payments/class-refund-items-table.php:80
 #: includes/admin/tools.php:644 includes/admin/views/tmpl-order-subtotal.php:16
 #: includes/emails/tags.php:203 templates/checkout_cart.php:102
 #: templates/shortcode-receipt.php:76
 msgid "Subtotal"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:92
+#: includes/admin/payments/class-refund-items-table.php:86
 #: includes/admin/reporting/class-export-payments.php:71
 #: includes/admin/reporting/export/class-batch-export-payments.php:57
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:57
@@ -2849,47 +2849,47 @@ msgstr ""
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:163
+#: includes/admin/payments/class-refund-items-table.php:157
 #: includes/admin/views/tmpl-order-adjustment.php:46
 msgid "Order Fee"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:165
+#: includes/admin/payments/class-refund-items-table.php:159
 #: includes/admin/views/tmpl-order-adjustment.php:44
 #: includes/ajax-functions.php:1156
 msgid "Order Credit"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:284
+#: includes/admin/payments/class-refund-items-table.php:278
 msgid "Amount to refund, excluding tax"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:286
+#: includes/admin/payments/class-refund-items-table.php:280
 msgid "Amount of tax to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:347
+#: includes/admin/payments/class-refund-items-table.php:343
 msgid "Quantity to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:463
+#: includes/admin/payments/class-refund-items-table.php:481
 msgid "No items found."
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:638
+#: includes/admin/payments/class-refund-items-table.php:656
 #: includes/admin/payments/view-order-details.php:130
 msgid "Submit Refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:670
+#: includes/admin/payments/class-refund-items-table.php:688
 msgid "Refund Subtotal:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:693
+#: includes/admin/payments/class-refund-items-table.php:711
 msgid "Refund Tax Total:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:709
+#: includes/admin/payments/class-refund-items-table.php:727
 msgid "Refund Total:"
 msgstr ""
 
@@ -3185,31 +3185,31 @@ msgstr ""
 msgid "Customer Orders"
 msgstr ""
 
-#: includes/admin/payments/orders.php:733
+#: includes/admin/payments/orders.php:738
 #: includes/admin/views/tmpl-order-copy-download-link.php:35
 #: includes/gateways/stripe/includes/utils/modal.php:69
 msgid "Close"
 msgstr ""
 
-#: includes/admin/payments/orders.php:798
+#: includes/admin/payments/orders.php:803
 msgid "Order Details"
 msgstr ""
 
-#: includes/admin/payments/orders.php:846
+#: includes/admin/payments/orders.php:851
 msgid "Order Extras"
 msgstr ""
 
-#: includes/admin/payments/orders.php:884
+#: includes/admin/payments/orders.php:889
 msgid "Key"
 msgstr ""
 
-#: includes/admin/payments/orders.php:894
-#: includes/admin/payments/orders.php:902
+#: includes/admin/payments/orders.php:899
+#: includes/admin/payments/orders.php:907
 msgid "IP"
 msgstr ""
 
-#: includes/admin/payments/orders.php:909
-#: includes/admin/payments/orders.php:917
+#: includes/admin/payments/orders.php:914
+#: includes/admin/payments/orders.php:922
 #: includes/admin/reporting/class-export-payments.php:74
 #: includes/admin/reporting/export/class-batch-export-payments.php:60
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:60
@@ -3217,76 +3217,76 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
-#: includes/admin/payments/orders.php:931
+#: includes/admin/payments/orders.php:936
 msgid "Unlimited Downloads"
 msgstr ""
 
-#: includes/admin/payments/orders.php:932
+#: includes/admin/payments/orders.php:937
 msgid ""
 "Checking this box will override all other file download limits for this "
 "purchase, granting the customer unlimited downloads of all files included "
 "on the purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:964
+#: includes/admin/payments/orders.php:969
 msgid "Order Attributes"
 msgstr ""
 
-#: includes/admin/payments/orders.php:976
+#: includes/admin/payments/orders.php:981
 msgid ""
 "<strong>Pending</strong>: order is still processing or was abandoned by "
 "customer. Successful orders will be marked as Complete automatically once "
 "processing is finalized."
 msgstr ""
 
-#: includes/admin/payments/orders.php:977
+#: includes/admin/payments/orders.php:982
 msgid "<strong>Complete</strong>: all processing is completed for this purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:978
+#: includes/admin/payments/orders.php:983
 msgid ""
 "<strong>Revoked</strong>: access to purchased items is disabled, perhaps "
 "due to policy violation or fraud."
 msgstr ""
 
-#: includes/admin/payments/orders.php:979
+#: includes/admin/payments/orders.php:984
 msgid ""
 "<strong>Refunded</strong>: the purchase amount is returned to the customer "
 "and access to items is disabled."
 msgstr ""
 
-#: includes/admin/payments/orders.php:980
+#: includes/admin/payments/orders.php:985
 msgid ""
 "<strong>Abandoned</strong>: the purchase attempt was not completed by the "
 "customer."
 msgstr ""
 
-#: includes/admin/payments/orders.php:981
+#: includes/admin/payments/orders.php:986
 msgid ""
 "<strong>Failed</strong>: customer clicked Cancel before completing the "
 "purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1019
+#: includes/admin/payments/orders.php:1024
 msgid "Recover"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1020
+#: includes/admin/payments/orders.php:1025
 msgid ""
 "Pending and abandoned payments can be resumed by the customer, using this "
 "custom URL. Payments can be resumed only when they do not have a "
 "transaction ID from the gateway."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1042
+#: includes/admin/payments/orders.php:1047
 msgid "Time"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1047
+#: includes/admin/payments/orders.php:1052
 msgid "Hour"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1053
+#: includes/admin/payments/orders.php:1058
 msgid "Minute"
 msgstr ""
 
@@ -3310,19 +3310,19 @@ msgstr ""
 msgid "You are viewing a refund record."
 msgstr ""
 
-#: includes/admin/payments/refunds.php:248
+#: includes/admin/payments/refunds.php:246
 msgid "Refund Notes"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:292
+#: includes/admin/payments/refunds.php:290
 msgid "Refund Attributes"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:310
+#: includes/admin/payments/refunds.php:308
 msgid "Original Order"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:344
+#: includes/admin/payments/refunds.php:342
 msgid "Related Refunds"
 msgstr ""
 
@@ -6842,17 +6842,27 @@ msgid "Issue a refund to adjust the net total for this order."
 msgstr ""
 
 #: includes/admin/views/tmpl-order-actions.php:49
+msgid "Amazon orders must be refunded at the gateway."
+msgstr ""
+
+#: includes/admin/views/tmpl-order-actions.php:51
 msgid ""
 "The refund window for this Order has passed; however, you have the ability "
 "to override this."
 msgstr ""
 
-#: includes/admin/views/tmpl-order-actions.php:51
+#: includes/admin/views/tmpl-order-actions.php:53
 msgid "The refund window for this Order has passed."
 msgstr ""
 
-#: includes/admin/views/tmpl-order-actions.php:61
+#: includes/admin/views/tmpl-order-actions.php:63
 msgid "Initialize Refund"
+msgstr ""
+
+#: includes/admin/views/tmpl-order-actions.php:68
+msgid ""
+"Orders placed through the Amazon gateway must be refunded through Amazon. "
+"The order status can then be updated manually."
 msgstr ""
 
 #: includes/admin/views/tmpl-order-adjustment-discount.php:27
@@ -9157,109 +9167,109 @@ msgstr ""
 msgid "You must enable a payment gateway to use Easy Digital Downloads"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:198
+#: includes/gateways/amazon-payments.php:197
 msgid "There is an error with the Amazon Payments configuration."
 msgstr ""
 
+#: includes/gateways/amazon-payments.php:267
 #: includes/gateways/amazon-payments.php:268
-#: includes/gateways/amazon-payments.php:269
 msgid "Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:317
+#: includes/gateways/amazon-payments.php:316
 msgid "Amazon Payments"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:333
+#: includes/gateways/amazon-payments.php:332
 msgid "Register with Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:335
+#: includes/gateways/amazon-payments.php:334
 msgid "Connect Easy Digital Downloads to Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:338
+#: includes/gateways/amazon-payments.php:337
 msgid "Once registration is complete, enter your API credentials below."
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:344
+#: includes/gateways/amazon-payments.php:343
 msgid "Seller ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:345
+#: includes/gateways/amazon-payments.php:344
 msgid "Found in the Integration settings. Also called a Merchant ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:351
+#: includes/gateways/amazon-payments.php:350
 msgid "MWS Access Key"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:352
-#: includes/gateways/amazon-payments.php:359
+#: includes/gateways/amazon-payments.php:351
+#: includes/gateways/amazon-payments.php:358
 msgid "Found on Seller Central in the MWS Keys section"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:358
+#: includes/gateways/amazon-payments.php:357
 msgid "MWS Secret Key"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:365
+#: includes/gateways/amazon-payments.php:364
 msgid "Client ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:366
+#: includes/gateways/amazon-payments.php:365
 msgid "The Amazon Client ID. Should look like `amzn1.application-oa2...`"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:372
+#: includes/gateways/amazon-payments.php:371
 msgid "Amazon MWS Callback URL"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:373
+#: includes/gateways/amazon-payments.php:372
 msgid ""
 "The Return URL to provide in your MWS Application. Enter this under your "
 "Login and Pay &rarr; Web Settings"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:381
+#: includes/gateways/amazon-payments.php:380
 msgid "Amazon Merchant IPN URL"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:382
+#: includes/gateways/amazon-payments.php:381
 msgid ""
 "The IPN URL to provide in your MWS account. Enter this under your <a "
 "href=\"%s\">Integration Settings</a>"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:666
+#: includes/gateways/amazon-payments.php:665
 msgid "Currently logged into Amazon as"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:667
+#: includes/gateways/amazon-payments.php:666
 msgid "Logout"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:817
-#: includes/gateways/amazon-payments.php:831
+#: includes/gateways/amazon-payments.php:816
+#: includes/gateways/amazon-payments.php:830
 msgid "Missing Reference ID, please try again."
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:864
+#: includes/gateways/amazon-payments.php:863
 msgid ""
 "Your payment could not be authorized, please try a different payment "
 "method. Reason: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:910
+#: includes/gateways/amazon-payments.php:909
 msgid "There was an issue processing your payment. Amazon error: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1024
+#: includes/gateways/amazon-payments.php:1023
 msgid "Invalid Amazon seller ID"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1024
-#: includes/gateways/amazon-payments.php:1064
+#: includes/gateways/amazon-payments.php:1023
+#: includes/gateways/amazon-payments.php:1063
 #: includes/gateways/paypal-standard.php:489
 #: includes/gateways/paypal-standard.php:496
 #: includes/gateways/paypal-standard.php:586
@@ -9269,24 +9279,24 @@ msgstr ""
 msgid "IPN Error"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1043
+#: includes/gateways/amazon-payments.php:1042
 msgid "Capture declined in Amazon"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1057
-#: includes/gateways/amazon-payments.php:1130
+#: includes/gateways/amazon-payments.php:1056
+#: includes/gateways/amazon-payments.php:1131
 msgid "Refund completed in Amazon. Refund ID: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1125
+#: includes/gateways/amazon-payments.php:1126
 msgid "Refund declined in Amazon. Refund ID: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1134
+#: includes/gateways/amazon-payments.php:1135
 msgid "Refund initiated in Amazon. Reference ID: %s"
 msgstr ""
 
-#: includes/gateways/amazon-payments.php:1140
+#: includes/gateways/amazon-payments.php:1141
 msgid "Refund request failed in Amazon."
 msgstr ""
 
@@ -11170,29 +11180,33 @@ msgstr ""
 msgid "%s ago"
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:260
+#: includes/orders/classes/class-refund-validator.php:259
+msgid "No items have been selected to refund."
+msgstr ""
+
+#: includes/orders/classes/class-refund-validator.php:267
 #. Translators: %s - 0.00 formatted in store currency
 msgid "The refund amount must be greater than %s."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:270
+#: includes/orders/classes/class-refund-validator.php:277
 #. Translators: %s - maximum refund amount as formatted currency
 msgid "The maximum refund amount is %s."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:342
+#: includes/orders/classes/class-refund-validator.php:349
 #. Translators: %s is the type of amount being refunded (e.g. "subtotal" or
 #. "tax"). Not translatable at this time.
 msgid "An unexpected error occurred while validating the maximum %s amount."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:370
+#: includes/orders/classes/class-refund-validator.php:377
 #. Translators: %1$s - type of amount being refunded (subtotal, tax, or total);
 #. %1$s - product name; %3$s - maximum amount allowed for refund
 msgid "The maximum refund %1$s for the product \"%2$s\" is %3$s."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:383
+#: includes/orders/classes/class-refund-validator.php:390
 #. Translators: %1$s - type of amount being refunded (subtotal, tax, or total);
 #. %1$s - adjustment description; %3$s - maximum amount allowed for refund
 msgid "The maximum refund %s for the adjustment \"%s\" is %s."
@@ -11226,32 +11240,32 @@ msgstr ""
 msgid "Invoice"
 msgstr ""
 
-#: includes/payments/actions.php:252
+#: includes/payments/actions.php:253
 msgid "After payment actions processed."
 msgstr ""
 
-#: includes/payments/actions.php:277
+#: includes/payments/actions.php:278
 #. translators: %1$s Old order status. %2$s New order status.
 msgid "Status changed from %1$s to %2$s"
 msgstr ""
 
-#: includes/payments/actions.php:540 includes/payments/actions.php:601
+#: includes/payments/actions.php:541 includes/payments/actions.php:602
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:544
+#: includes/payments/actions.php:545
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:622 includes/payments/actions.php:656
+#: includes/payments/actions.php:623 includes/payments/actions.php:657
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:624
+#: includes/payments/actions.php:625
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:625 templates/shortcode-login.php:33
+#: includes/payments/actions.php:626 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
@@ -11919,11 +11933,11 @@ msgstr ""
 msgid "You do not have permission to view this file."
 msgstr ""
 
-#: includes/refund-functions.php:26 tests/orders/tests-refunds.php:219
+#: includes/refund-functions.php:26 tests/orders/tests-refunds.php:255
 msgid "Refundable"
 msgstr ""
 
-#: includes/refund-functions.php:27 tests/orders/tests-refunds.php:220
+#: includes/refund-functions.php:27 tests/orders/tests-refunds.php:256
 msgid "Non-Refundable"
 msgstr ""
 
@@ -12696,7 +12710,7 @@ msgctxt "date filter"
 msgid "To"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:321
+#: includes/admin/payments/class-refund-items-table.php:315
 msgctxt "Maximum input amount"
 msgid "Max:"
 msgstr ""

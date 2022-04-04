@@ -51,6 +51,7 @@ $fixed-column-width: 80px;
 		display: flex;
 		align-items: center;
 
+		select,
 		input {
 			background-color: transparent;
 			border: 0;
@@ -70,6 +71,11 @@ $fixed-column-width: 80px;
 			}
 		}
 
+		select[data-original="1"] {
+			background: transparent;
+		}
+
+		select,
 		.is-before + span > input {
 			text-align: left;
 		}

@@ -1800,3 +1800,114 @@ function edd_render_review_status_metabox() {
 
 	echo wp_kses_post( $rendered );
 }
+
+/**
+ *
+ * Increases the sale count of a download.
+ *
+ * @since 1.0
+ *
+ * @param int $download_id Download ID.
+ * @param int $quantity    Quantity to increase purchase count by.
+ *
+ * @return bool|int Updated sale count, false if download does not exist.
+ */
+function edd_increase_purchase_count( $download_id = 0, $quantity = 1 ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	// Bail if no download ID was passed.
+	if ( empty( $download_id ) ) {
+		return false;
+	}
+
+	$download = edd_get_download( $download_id );
+	if ( ! $download ) {
+		return false;
+	}
+
+	return $download->get_sales();
+}
+
+/**
+ * Decreases the sale count of a download. Primarily for when a purchase is
+ * refunded.
+ *
+ * @since 1.0.8.1
+ *
+ * @param int $download_id Download ID.
+ * @param int $quantity    Optional. Quantity to decrease by. Default 1.
+ *
+ * @return bool|int Updated sale count, false if download does not exist.
+ */
+function edd_decrease_purchase_count( $download_id = 0, $quantity = 1 ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	// Bail if no download ID was passed.
+	if ( empty( $download_id ) ) {
+		return false;
+	}
+
+	$download = edd_get_download( $download_id );
+	if ( ! $download ) {
+		return false;
+	}
+
+	return $download->get_sales();
+}
+
+/**
+ * Increases the total earnings of a download.
+ *
+ * @since 1.0
+ *
+ * @param int   $download_id Download ID.
+ * @param float $amount      Earnings to increase by.
+ *
+ * @return float|false Updated earnings, false if invalid data passed.
+ */
+function edd_increase_earnings( $download_id = 0, $amount = 0.00 ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	// Bail if no download ID or amount was passed.
+	if ( empty( $download_id ) || empty( $amount ) ) {
+		return false;
+	}
+
+	$download = edd_get_download( $download_id );
+	if ( ! $download ) {
+		return false;
+	}
+
+	return $download->get_earnings();
+}
+
+/**
+ * Decreases the total earnings of a download. Primarily for when a purchase
+ * is refunded.
+ *
+ * @since 1.0.8.1
+ *
+ * @param int   $download_id Download ID.
+ * @param float $amount      Earnings to decrease by.
+ *
+ * @return float|false Updated earnings, false if invalid data passed.
+ */
+function edd_decrease_earnings( $download_id = 0, $amount = 0.00 ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	// Bail if no download ID or amount was passed.
+	if ( empty( $download_id ) || empty( $amount ) ) {
+		return false;
+	}
+
+	$download = edd_get_download( $download_id );
+	if ( ! $download ) {
+		return false;
+	}
+
+	return $download->get_earnings();
+}

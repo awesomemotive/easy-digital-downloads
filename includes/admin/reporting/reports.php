@@ -231,7 +231,7 @@ function edd_register_overview_report( $reports ) {
 						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
 					},
 					'display_args'  => array(
-						'comparison_label' => $label,
+						'comparison_label' => $label . ' &mdash; ' . __( 'Gross', 'easy-digital-downloads' ),
 					),
 				),
 			),
@@ -252,7 +252,7 @@ function edd_register_overview_report( $reports ) {
 						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
 					},
 					'display_args'  => array(
-						'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
+						'comparison_label' => __( 'All Time', 'easy-digital-downloads' ) . ' &mdash; ' . __( 'Gross', 'easy-digital-downloads' ),
 					),
 				),
 			),
@@ -274,7 +274,7 @@ function edd_register_overview_report( $reports ) {
 						) );
 					},
 					'display_args'  => array(
-						'comparison_label' => $label,
+						'comparison_label' => $label . ' &mdash; ' . __( 'Gross', 'easy-digital-downloads' ),
 					),
 				),
 			),
@@ -293,7 +293,7 @@ function edd_register_overview_report( $reports ) {
 						) );
 					},
 					'display_args'  => array(
-						'comparison_label' => $label,
+						'comparison_label' => $label . ' &mdash; ' . __( 'Gross', 'easy-digital-downloads' ),
 					),
 				),
 			),
@@ -435,7 +435,7 @@ function edd_register_overview_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'overview_sales_earnings_chart', array(
-			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
 			'views' => array(
 				'chart' => array(
 					'data_callback' => 'edd_overview_sales_earnings_chart',
@@ -624,7 +624,7 @@ function edd_register_downloads_report( $reports ) {
 						return $stats->get_order_item_count() . ' / ' . $stats->get_order_item_earnings();
 					},
 					'display_args'  => array(
-						'comparison_label' => $label,
+						'comparison_label' => $label . ' &mdash; ' . __( 'Net	', 'easy-digital-downloads' ),
 					),
 				),
 			),
