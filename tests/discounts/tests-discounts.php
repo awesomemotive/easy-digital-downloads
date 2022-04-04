@@ -394,6 +394,141 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_product_requirements_any_all_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => $products,
+			'product_condition' => 'any',
+			'max_uses'          => 10000,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertTrue( edd_validate_discount( self::$discount_id, $products ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_product_requirements_any_none_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => $products,
+			'product_condition' => 'any',
+			'max_uses'          => 10000,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertFalse( edd_validate_discount( self::$discount_id, array( 123 ) ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_product_requirements_any_one_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => $products,
+			'product_condition' => 'any',
+			'max_uses'          => 10000,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertTrue( edd_validate_discount( self::$discount_id, array( self::$download->ID ) ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_product_requirements_all_all_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => $products,
+			'product_condition' => 'all',
+			'max_uses'          => 10000,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertTrue( edd_validate_discount( self::$discount_id, $products ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_product_requirements_all_none_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => $products,
+			'product_condition' => 'all',
+			'max_uses'          => 10000,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertFalse( edd_validate_discount( 123 ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_product_requirements_all_one_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => $products,
+			'product_condition' => 'all',
+			'max_uses'          => 10000,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertFalse( edd_validate_discount( self::$discount_id, array( self::$download->ID ) ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_excluded_products_all_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => array(),
+			'max_uses'          => 10000,
+			'excluded_products' => $products,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertFalse( edd_validate_discount( self::$discount_id, $products ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_excluded_products_none_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => array(),
+			'max_uses'          => 10000,
+			'excluded_products' => $products,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertTrue( edd_validate_discount( self::$discount_id, array( 546 ) ) );
+	}
+
+	/**
+	 * @covers edd_validate_discount
+	 */
+	public function test_edd_validate_discount_excluded_products_one_in_array() {
+		$products = array( self::$download->ID, 100 );
+		$args     = array(
+			'product_reqs'      => array(),
+			'max_uses'          => 10000,
+			'excluded_products' => $products,
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+		$this->assertFalse( edd_validate_discount( self::$discount_id, array( self::$download->ID ) ) );
+	}
+
+	/**
 	 * @covers ::edit_url()
 	 */
 	public function test_discount_edit_url() {
