@@ -8,7 +8,7 @@ services:
         volumes:
             - .:/app
         working_dir: /app
-        command: [ "bin/run-tests-internal-only.sh", "wordpress_test", "root", "", "mysql", "${TEST_WP_VERSION}" ]
+        command: [ "bin/run-tests-internal-only.sh", "wordpress_test", "root", "", "mysql", "${TEST_WP_VERSION}", "${FILTER}" ]
     mysql:
         image: mariadb:10.2
         environment:
