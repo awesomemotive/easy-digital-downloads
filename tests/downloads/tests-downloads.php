@@ -121,7 +121,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 			)
 		);
 		$download3 = new EDD_Download( $this->_post->ID );
-		$download3->increase_earnings( '0.50' );
 		$this->assertNotEmpty( $download3->ID );
 		$this->assertEquals( $this->_post->ID, $download3->ID );
 		$this->assertEquals( 'download', $download3->post_type );
@@ -133,7 +132,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertEquals( $prices, $download3->prices );
 		$this->assertEquals( $prices, $download3->get_prices() );
 		$this->assertEquals( 6, $download3->sales );
-		$this->assertEquals( 120.50, $download3->earnings );
+		$this->assertEquals( 120.00, $download3->earnings );
 		$this->assertNotEmpty( $download3->files );
 		$this->assertEquals( $files, $download3->files );
 		$this->assertEquals( $files, $download3->get_files() );
@@ -248,67 +247,12 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 	public function test_download_earnings() {
 		$download = new EDD_Download( $this->_post->ID );
-		$download->increase_earnings( '0.50' );
-		$this->assertEquals( 120.50, edd_get_download_earnings_stats( $this->_post->ID ) );
+
+		$this->assertEquals( 120, edd_get_download_earnings_stats( $this->_post->ID ) );
 	}
 
 	public function test_download_sales() {
 		$this->assertEquals( 6, edd_get_download_sales_stats( $this->_post->ID ) );
-	}
-
-	public function test_increase_purchase_count() {
-
-		// Test our helper function
-		$this->assertEquals( 7, edd_increase_purchase_count( $this->_post->ID ) );
-
-		// Now test our helper with a quantity
-		$this->assertEquals( 9, edd_increase_purchase_count( $this->_post->ID, 2 ) );
-
-		$download = new EDD_Download( $this->_post->ID );
-		// Now test our EDD_Download class method
-		$this->assertEquals( 10, $download->increase_sales() );
-
-		// Now test our EDD_Downlaod class method with a quantity
-		$this->assertEquals( 12, $download->increase_sales( 2 ) );
-
-	}
-
-	public function test_decrease_purchase_count() {
-
-		// Test our helper function
-		$this->assertEquals( 5, edd_decrease_purchase_count( $this->_post->ID ) );
-
-		// Test our helper function with a quantity
-		$this->assertEquals( 3, edd_decrease_purchase_count( $this->_post->ID, 2 ) );
-
-		$download = new EDD_Download( $this->_post->ID );
-		// Now test our EDD_Download class method
-		$this->assertEquals( 2, $download->decrease_sales() );
-
-		// Now test our EDD_Download class method with a quantity
-		$this->assertEquals( 0, $download->decrease_sales( 2 ) );
-
-	}
-
-	public function test_earnings_increase() {
-
-		// Test our helper function
-		$this->assertEquals( 140, edd_increase_earnings( $this->_post->ID, 20 ) );
-
-		// Now test our EDD_Download class method
-		$download = new EDD_Download( $this->_post->ID );
-		$this->assertEquals( 160, $download->increase_earnings( 20 ) );
-
-	}
-
-	public function test_decrease_earnings() {
-
-		// Test our helper function
-		$this->assertEquals( 100, edd_decrease_earnings( $this->_post->ID, 20 ) );
-
-		// Now test our EDD_Download class method
-		$download = new EDD_Download( $this->_post->ID );
-		$this->assertEquals( 95, $download->decrease_earnings( 5 ) );
 	}
 
 	public function test_get_download_files() {

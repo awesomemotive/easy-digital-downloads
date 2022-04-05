@@ -1487,9 +1487,9 @@ function edd_apply_preset_discount() {
 add_action( 'init', 'edd_apply_preset_discount', 999 );
 
 /**
- * Validate discount code.
- *
- * @since 3.0
+ * Validate discount code, optionally against an array of download IDs.
+ * Note: this function does not evaluate whether a current user can use the discount,
+ * or check the discount minimum cart requirement.
  *
  * @param int   $discount_id  Discount ID.
  * @param array $download_ids Array of download IDs.
@@ -1502,9 +1502,6 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 	if ( empty( $discount_id ) ) {
 		return false;
 	}
-
-	// Set discount to be invalid initially.
-	$is_valid = false;
 
 	$discount = edd_get_discount( $discount_id );
 
@@ -1526,46 +1523,32 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 		return true;
 	}
 
+	// At this point, we assume the discount is valid.
+	$is_valid = true;
+
 	$product_requirements = array_map( 'absint', $product_requirements );
 	asort( $product_requirements );
 	$product_requirements = array_filter( array_values( $product_requirements ) );
+
+	if ( ! empty( $product_requirements ) ) {
+
+		$matches = array_intersect( $product_requirements, $download_ids );
+
+		switch ( $discount->get_product_condition() ) {
+			case 'all':
+				$is_valid = count( $matches ) === count( $product_requirements );
+				break;
+			default:
+				$is_valid = 0 < count( $matches );
+		}
+	}
 
 	$excluded_products = array_map( 'absint', $excluded_products );
 	asort( $excluded_products );
 	$excluded_products = array_filter( array_values( $excluded_products ) );
 
-	if ( ! empty( $product_requirements ) ) {
-		foreach ( $product_requirements as $download_id ) {
-			if ( empty( $download_id ) ) {
-				continue;
-			}
-
-			$download_id  = absint( $download_id );
-			$has_download = in_array( $download_id, $download_ids, true );
-
-			switch ( $discount->get_product_condition() ) {
-				case 'all':
-					$is_valid = false !== $has_download;
-					break;
-				default:
-					$is_valid = $has_download;
-			}
-		}
-	} else {
-		$is_valid = true;
-	}
-
 	if ( ! empty( $excluded_products ) ) {
-		foreach ( $excluded_products as $download_id ) {
-			if ( empty( $download_id ) ) {
-				continue;
-			}
-
-			$download_id  = absint( $download_id );
-			$has_download = in_array( $download_id, $download_ids, true );
-
-			$is_valid = false === $has_download;
-		}
+		$is_valid = false === (bool) array_intersect( $excluded_products, $download_ids );
 	}
 
 	/**

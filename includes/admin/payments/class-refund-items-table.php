@@ -73,18 +73,12 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Product', 'easy-digital-downloads' ),
-			'amount' => __( 'Unit Price', 'easy-digital-downloads' ),
+			'cb'       => '<input type="checkbox" />',
+			'name'     => __( 'Product', 'easy-digital-downloads' ),
+			'amount'   => __( 'Unit Price', 'easy-digital-downloads' ),
+			'quantity' => __( 'Quantity', 'easy-digital-downloads' ),
+			'subtotal' => __( 'Subtotal', 'easy-digital-downloads' ),
 		);
-
-		// Maybe add quantity column.
-		if ( edd_item_quantities_enabled() ) {
-			$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
-		}
-
-		// Add subtotal after quantity.
-		$columns['subtotal'] = __( 'Subtotal', 'easy-digital-downloads' );
 
 		// Maybe add tax column.
 		$order = $this->get_order();
@@ -340,14 +334,44 @@ class Refund_Items_Table extends List_Table {
 	 * @return string
 	 */
 	private function get_quantity_column( $item, $column_name, $item_id, $object_type ) {
-		$item_quantity = $item instanceof Order_item ? $item->quantity : 1;
+		$refundable_amounts = $item->get_refundable_amounts();
+		$item_quantity      = 'order_item' === $object_type ? $refundable_amounts['quantity'] : 1;
 		ob_start();
 		?>
-		<label for="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="screen-reader-text">
-			<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
-		</label>
-		<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][quantity]" value="<?php echo esc_attr( $item_quantity ); ?>" placeholder="0" min="0" max="<?php echo esc_attr( $item_quantity ); ?>" step="1" disabled />
+		<div class="edd-form-group">
+			<label for="edd_order_item_quantity_<?php echo esc_attr( $item_id ); ?>" class="screen-reader-text">
+				<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
+			</label>
+			<div class="edd-form-group__control">
+				<?php if ( 'order_item' !== $object_type ) : ?>
+					<input type="hidden" data-original="<?php echo esc_attr( $item_quantity ); ?>" id="edd_order_item_quantity_<?php echo esc_attr( $item_id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input readonly" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][quantity]" value="<?php echo esc_attr( $item_quantity ); ?>" disabled />
+				<?php else : ?>
+					<?php
+					$options = range( 1, $item_quantity );
+					array_unshift( $options, '' );
+					unset( $options[0] );
+					$args = array(
+						'options'          => $options,
+						'name'             => 'refund_' . esc_attr( $object_type ) . '[' . esc_attr( $item->id ) . '][quantity]',
+						'id'               => 'edd-order-item-quantity-' . esc_attr( $item_id ),
+						'class'            => 'edd-order-item-refund-quantity edd-order-item-refund-input',
+						'disabled'         => true,
+						'show_option_all'  => false,
+						'show_option_none' => false,
+						'chosen'           => false,
+						'selected'         => $item_quantity,
+						'data'             => array(
+							'max'      => intval( $item_quantity ),
+							'original' => intval( $item->quantity ),
+						),
+					);
+					?>
+					<?php echo EDD()->html->select( $args ); ?>
+				<?php endif; ?>
+			</div>
+		</div>
 		<?php
+
 		return ob_get_clean();
 	}
 
@@ -407,20 +431,14 @@ class Refund_Items_Table extends List_Table {
 	 * @return string
 	 */
 	public function column_cb( $item ) {
-		$item_id            = $this->get_item_unique_id( $item );
 		$object_type        = $this->get_object_type( $item );
-		$item_quantity      = $item instanceof Order_Item ? $item->quantity : 1;
 		$refundable_amounts = $item->get_refundable_amounts();
 		$total_remaining    = array_key_exists( 'total', $refundable_amounts ) ? floatval( $refundable_amounts['total'] ) : 0.00;
 
 		if ( 'refunded' !== $item->status && 0.00 != $total_remaining ) {
-			$quantity_html = '';
-			if ( ! edd_item_quantities_enabled() ) {
-				$quantity_html = '<input type="hidden" id="edd-order-item-quantity-' . esc_attr( $item_id ) . '" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_' . esc_attr( $object_type ) . '[' . esc_attr( $item->id ) . '][quantity]" value="' . esc_attr( $item_quantity ) . '" min="0" max="' . esc_attr( $item_quantity ) . '" />';
-			}
 
 			return sprintf(
-				'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" class="edd-order-item-refund-checkbox" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>' . $quantity_html,
+				'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" class="edd-order-item-refund-checkbox" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 				/*$1%s*/
 				'refund_' . esc_attr( $object_type ),
 				/*$2%s*/

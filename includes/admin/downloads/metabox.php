@@ -1320,12 +1320,12 @@ function edd_render_stats_meta_box() {
 	?>
 
 	<p class="product-sales-stats">
-		<span class="label"><?php _e( 'Sales:', 'easy-digital-downloads' ); ?></span>
+		<span class="label"><?php esc_html_e( 'Net Sales:', 'easy-digital-downloads' ); ?></span>
 		<span><a href="<?php echo esc_url( $sales_url ); ?>"><?php echo esc_html( $sales ); ?></a></span>
 	</p>
 
 	<p class="product-earnings-stats">
-		<span class="label"><?php esc_html_e( 'Gross Revenue:', 'easy-digital-downloads' ); ?></span>
+		<span class="label"><?php esc_html_e( 'Net Revenue:', 'easy-digital-downloads' ); ?></span>
 		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
 	</p>
 

@@ -1347,11 +1347,43 @@ class EDD_CLI extends WP_CLI_Command {
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_orders' );
+
+			$this->recalculate_download_sales_earnings();
 		} else {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_orders' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		}
+	}
+
+	/**
+	 * Recalculates the sales and earnings for all downloads.
+	 *
+	 * @since 3.0
+	 * @return void
+	 *
+	 * wp edd recalculate_download_sales_earnings
+	 */
+	public function recalculate_download_sales_earnings() {
+		global $wpdb;
+
+		$downloads = $wpdb->get_results(
+			"SELECT ID
+			FROM {$wpdb->posts}
+			WHERE post_type = 'download'
+			ORDER BY ID ASC"
+		);
+		$total     = count( $downloads );
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Recalculating Download Sales and Earnings', $total );
+			foreach ( $downloads as $download ) {
+				edd_recalculate_download_sales_earnings( $download->ID );
+				$progress->tick();
+			}
+			$progress->finish();
+		}
+		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all downloads.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Downloads Updated: ', 'easy-digital-downloads' ) . $total );
 	}
 
 	/**

@@ -237,7 +237,7 @@ class Stats {
 		 * This may be overridden in $query parameters that get passed through.
 		 */
 		$this->query_vars['type']   = 'sale';
-		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
+		$this->query_vars['status'] = edd_get_gross_order_statuses();
 
 		/**
 		 * Filters Order statuses that should be included when calculating stats.
