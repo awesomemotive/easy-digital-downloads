@@ -1127,7 +1127,14 @@ class Stats {
 			'accepted_functions' => array( 'SUM' )
 		) );
 
-		$where = "AND {$this->get_db()->edd_orders}.type = 'sale' ";
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+
+		$where = $this->get_db()->prepare(
+			"AND {$this->get_db()->edd_order_items}.status IN('complete','partially_refunded')
+			 AND {$this->get_db()->edd_orders}.status IN({$status_string}) ",
+			 ...$statuses
+		);
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
 			$where .= $this->get_db()->prepare(
 				" AND {$this->get_db()->edd_orders}.currency = %s ",
@@ -1147,10 +1154,11 @@ class Stats {
 
 		array_walk( $result, function ( &$value ) {
 
+			$download_model = new \EDD\Models\Download( $value->product_id, $value->price_id );
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
-			$value->price_id   = absint( $value->price_id );
-			$value->sales      = absint( $value->sales );
+			$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
+			$value->sales      = absint( $download_model->get_net_sales() );
 			$value->total      = $this->maybe_format( $value->total );
 
 			// Add instance of EDD_Download to resultant object.
