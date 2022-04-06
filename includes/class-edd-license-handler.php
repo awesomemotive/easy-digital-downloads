@@ -18,7 +18,7 @@ if ( ! class_exists( 'EDD_License' ) ) :
  */
 class EDD_License {
 	private $file;
-	private $license;
+	public $license;
 	private $item_name;
 	private $item_id;
 	private $item_shortname;
@@ -68,6 +68,24 @@ class EDD_License {
 		// Setup hooks
 		$this->includes();
 		$this->hooks();
+
+		/**
+		 * Maintain an array of active, licensed plugins that have a license key entered.
+		 * This is to help us more easily determine if the site has a license key entered
+		 * at all. Initializing it this way helps us limit the data to activated plugins only.
+		 * If we relied on the options table (`edd_%_license_active`) then we could accidentally
+		 * be picking up plugins that have since been deactivated.
+		 *
+		 * @see \EDD\Admin\Promos\Notices\License_Upgrade_Notice::__construct()
+		 */
+		if ( ! empty( $this->license ) ) {
+			global $edd_licensed_products;
+			if ( ! is_array( $edd_licensed_products ) ) {
+				$edd_licensed_products = array();
+			}
+			$edd_licensed_products[] = $this->item_shortname;
+		}
+
 	}
 
 	/**
@@ -120,6 +138,9 @@ class EDD_License {
 
 		// Register plugins for beta support
 		add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
+
+		// Add the EDD version to the API parameters.
+		add_filter( 'edd_sl_plugin_updater_api_params', array( $this, 'filter_sl_api_params' ), 10, 3 );
 	}
 
 	/**
@@ -135,9 +156,18 @@ class EDD_License {
 			return;
 		}
 
+		$license = $this->license;
+		// Fall back to the highest license key if one is not saved for this extension.
+		if ( empty( $license ) ) {
+			$pass_manager = new \EDD\Admin\Pass_Manager();
+			if ( $pass_manager->highest_license_key ) {
+				$license = $pass_manager->highest_license_key;
+			}
+		}
+
 		$args = array(
 			'version'   => $this->version,
-			'license'   => $this->license,
+			'license'   => $license,
 			'author'    => $this->author,
 			'beta'      => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
 		);
@@ -202,6 +232,55 @@ class EDD_License {
 	}
 
 	/**
+	 * If the supplied license key is for a pass, updates the `edd_pass_licenses` option with
+	 * the pass ID and the date it was checked.
+	 *
+	 * Note: It's intentional that the `edd_pass_licenses` option is always updated, even if
+	 * the provided license data is not for a pass. This is so we have a clearer idea
+	 * of when the checks started coming through. If the option doesn't exist in the DB
+	 * at all, then we haven't checked any licenses.
+	 *
+	 * @since 2.10.6
+	 *
+	 * @param string $license
+	 * @param object $api_data
+	 */
+	private function maybe_set_pass_flag( $license, $api_data ) {
+		$passes = get_option( 'edd_pass_licenses' );
+		$passes = ! empty( $passes ) ? json_decode( $passes, true ) : array();
+
+		if ( ! empty( $api_data->pass_id ) && ! empty( $api_data->license ) && 'valid' === $api_data->license ) {
+			$passes[ $license ] = array(
+				'pass_id'      => intval( $api_data->pass_id ),
+				'time_checked' => time()
+			);
+		} else if ( array_key_exists( $license, $passes ) ) {
+			unset( $passes[ $license ] );
+		}
+
+		update_option( 'edd_pass_licenses', json_encode( $passes ) );
+	}
+
+	/**
+	 * Removes the pass flag for the supplied license. This happens when a license
+	 * is deactivated.
+	 *
+	 * @since 2.10.6
+	 *
+	 * @param string $license
+	 */
+	private function maybe_remove_pass_flag( $license ) {
+		$passes = get_option( 'edd_pass_licenses' );
+		$passes = ! empty( $passes ) ? json_decode( $passes, true ) : array();
+
+		if ( array_key_exists( $license, $passes ) ) {
+			unset( $passes[ $license ] );
+		}
+
+		update_option( 'edd_pass_licenses', json_encode( $passes ) );
+	}
+
+	/**
 	 * Activate the license key
 	 *
 	 * @return  void
@@ -234,7 +313,7 @@ class EDD_License {
 
 		$details = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $details ) && 'valid' === $details->license ) {
+		if ( is_object( $details ) && ! empty( $details->license ) && 'valid' === $details->license ) {
 			return;
 		}
 
@@ -276,6 +355,13 @@ class EDD_License {
 
 		// Decode license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		$this->maybe_set_pass_flag( $license, $license_data );
+
+		// Clear the option for licensed extensions to force regeneration.
+		if ( ! empty( $api_data->license ) && 'valid' === $api_data->license ) {
+			delete_option( 'edd_licensed_extensions' );
+		}
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 	}
@@ -333,6 +419,8 @@ class EDD_License {
 				return;
 			}
 
+			$this->maybe_remove_pass_flag( $this->license );
+
 			delete_option( $this->item_shortname . '_license_active' );
 		}
 	}
@@ -382,6 +470,8 @@ class EDD_License {
 
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
+		$this->maybe_set_pass_flag( $this->license, $license_data );
+
 		update_option( $this->item_shortname . '_license_active', $license_data );
 	}
 
@@ -405,7 +495,7 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+		if ( is_object( $license ) && ( empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_invalid_message ) ) {
 			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
 				$messages[] = sprintf(
@@ -437,7 +527,7 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
+		if ( ( ! is_object( $license ) || empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
 			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}
@@ -455,6 +545,24 @@ class EDD_License {
 		$products[ $this->item_shortname ] = $this->item_name;
 
 		return $products;
+	}
+
+	/**
+	 * Adds the EDD version to the API parameters.
+	 *
+	 * @since 2.11
+	 * @param array  $api_params  The array of parameters sent in the API request.
+	 * @param array  $api_data    The array of API data defined when instantiating the class.
+	 * @param string $plugin_file The path to the plugin file.
+	 * @return array
+	 */
+	public function filter_sl_api_params( $api_params, $api_data, $plugin_file ) {
+
+		if ( $this->file === $plugin_file ) {
+			$api_params['easy-digital-downloads_version'] = defined( 'EDD_VERSION' ) ? EDD_VERSION : '';
+		}
+
+		return $api_params;
 	}
 }
 

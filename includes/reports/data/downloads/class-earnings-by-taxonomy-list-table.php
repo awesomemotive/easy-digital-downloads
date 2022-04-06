@@ -34,15 +34,15 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		global $wpdb;
 
 		$dates      = Reports\get_filter_value( 'dates' );
-		$taxes      = Reports\get_filter_value( 'taxes' );
 		$date_range = Reports\parse_dates_for_range( $dates['range'] );
+		$currency   = Reports\get_filter_value( 'currencies' );
 
 		// Generate date query SQL if dates have been set.
 		$date_query_sql = '';
 
 		if ( ! empty( $date_range['start'] ) || ! empty( $date_range['end'] ) ) {
 			if ( ! empty( $date_range['start'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'AND date_created >= %s', $date_range['start']->format( 'mysql' ) );
+				$date_query_sql .= $wpdb->prepare( 'AND oi.date_created >= %s', $date_range['start']->format( 'mysql' ) );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -51,7 +51,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			}
 
 			if ( ! empty( $date_range['end'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $date_range['end']->format( 'mysql' ) );
+				$date_query_sql .= $wpdb->prepare( 'oi.date_created <= %s', $date_range['end']->format( 'mysql' ) );
 			}
 		}
 
@@ -81,6 +81,19 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		$data       = array();
 		$parent_ids = array();
 
+		$column = Reports\get_taxes_excluded_filter() ? 'oi.total - oi.tax' : 'oi.total';
+		$join   = $currency_clause = '';
+
+		if ( empty( $currency ) || 'convert' === $currency ) {
+			$column = sprintf( '(%s) / oi.rate', $column );
+		} elseif ( array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
+			$join            = " INNER JOIN {$wpdb->edd_orders} o ON o.id = oi.order_id ";
+			$currency_clause = $wpdb->prepare(
+				" AND o.currency = %s ",
+				strtoupper( $currency )
+			);
+		}
+
 		foreach ( $taxonomies as $k => $t ) {
 			$c       = new \stdClass();
 			$c->id   = $k;
@@ -89,11 +102,10 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			$placeholders   = implode( ', ', array_fill( 0, count( $taxonomies[ $k ]['object_ids'] ), '%d' ) );
 			$product_id__in = $wpdb->prepare( "product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
 
-			$column = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
-
-			$sql = "SELECT SUM({$column}) as total, COUNT(id) AS sales
-					FROM {$wpdb->edd_order_items}
-					WHERE {$product_id__in} {$date_query_sql}";
+			$sql = "SELECT SUM({$column}) as total, COUNT(oi.id) AS sales
+					FROM {$wpdb->edd_order_items} oi
+					{$join}
+					WHERE {$product_id__in} {$currency_clause} {$date_query_sql}";
 
 			$result = $wpdb->get_row( $sql ); // WPCS: unprepared SQL ok.
 
@@ -210,10 +222,10 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 * @since 3.0
 	 *
 	 * @param \stdClass $taxonomy Taxonomy object.
-	 * @return string Data shown in the Average Sales column.
+	 * @return int Data shown in the Average Sales column.
 	 */
 	public function column_average_sales( $taxonomy ) {
-		return edd_format_amount( $taxonomy->average_sales );
+		return (int) round( $taxonomy->average_sales );
 	}
 
 	/**

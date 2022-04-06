@@ -3,9 +3,9 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
- * Author: Sandhills Development, LLC
- * Author URI: https://sandhillsdev.com
- * Version: 3.0-beta2
+ * Author: Easy Digital Downloads
+ * Author URI: https://easydigitaldownloads.com
+ * Version: 3.0-rc1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  * Requires PHP: 5.6
@@ -25,6 +25,8 @@
  *
  * @package EDD
  * @category Core
+ * @author Easy Digital Downloads
+ * @version 3.0-rc1
  */
 
 // Exit if accessed directly.
@@ -246,17 +248,21 @@ final class EDD_Requirements_Check {
 	 * @since 3.0
 	 */
 	public function plugin_row_notice() {
-		?><tr class="active <?php echo esc_attr( $this->unmet_requirements_name() ); ?>-row">
-		<th class="check-column">
-			<span class="dashicons dashicons-warning"></span>
-		</th>
-		<td class="column-primary">
-			<?php $this->unmet_requirements_text(); ?>
-		</td>
-		<td class="column-description">
-			<?php $this->unmet_requirements_description(); ?>
-		</td>
-		</tr><?php
+		// wp_is_auto_update_enabled_for_type was introduced in WordPress 5.5.
+		$colspan = function_exists( 'wp_is_auto_update_enabled_for_type' ) && wp_is_auto_update_enabled_for_type( 'plugin' ) ? 2 : 1;
+		?>
+		<tr class="active <?php echo esc_attr( $this->unmet_requirements_name() ); ?>-row">
+			<th class="check-column">
+				<span class="dashicons dashicons-warning"></span>
+			</th>
+			<td class="column-primary">
+				<?php $this->unmet_requirements_text(); ?>
+			</td>
+			<td class="column-description" colspan="<?php echo esc_attr( $colspan ); ?>">
+				<?php $this->unmet_requirements_description(); ?>
+			</td>
+		</tr>
+		<?php
 	}
 
 	/**

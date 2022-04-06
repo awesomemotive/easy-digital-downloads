@@ -54,15 +54,7 @@ class Structured_Data {
 	 * @return array Raw data.
 	 */
 	public function get_data() {
-
-		/**
-		 * Allow data to be filtered being returned.
-		 *
-		 * @since 3.0
-		 *
-		 * @param array $data Structured data.
-		 */
-		return apply_filters( 'edd_structured_data_get_data', $this->data );
+		return $this->data;
 	}
 
 	/**
@@ -85,14 +77,7 @@ class Structured_Data {
 			return false;
 		}
 
-		/**
-		 * Apply data to be filtered before being added.
-		 *
-		 * @since 3.0
-		 *
-		 * @param array $data Structured data to be added.
-		 */
-		$this->data[] = apply_filters( 'edd_structured_data_set_data', $data );
+		$this->data[] = $data;
 
 		return true;
 	}

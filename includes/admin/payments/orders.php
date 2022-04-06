@@ -682,23 +682,33 @@ function edd_order_details_overview( $order ) {
 
 	$has_tax  = 'none';
 	$tax_rate = $order->id ? $order->get_tax_rate() : false;
+
 	$location = array(
-		'rate'    => $tax_rate,
-		'country' => '',
-		'region'  => '',
+		'rate'      => $tax_rate,
+		'country'   => '',
+		'region'    => '',
+		'inclusive' => edd_prices_include_tax(),
 	);
+
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
 		$has_tax = $location;
 	} elseif ( $tax_rate ) {
 		$has_tax         = $location;
 		$has_tax['rate'] = $tax_rate;
+
 		if ( $order->tax_rate_id ) {
 			$tax_rate_object = $order->get_tax_rate_object();
+
 			if ( $tax_rate_object ) {
 				$has_tax['country'] = $tax_rate_object->name;
 				$has_tax['region']  = $tax_rate_object->description;
 			}
 		}
+	}
+
+	$has_quantity = true;
+	if ( edd_is_add_order_page() && ! edd_item_quantities_enabled() ) {
+		$has_quantity = false;
 	}
 
 	wp_localize_script(
@@ -709,7 +719,7 @@ function edd_order_details_overview( $order ) {
 			'adjustments'  => $_adjustments,
 			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
-			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasQuantity'  => $has_quantity,
 			'hasTax'       => $has_tax,
 			'hasDiscounts' => true === edd_has_active_discounts(),
 			'order'        => array(
@@ -759,8 +769,8 @@ function edd_order_details_overview( $order ) {
 			<tr>
 				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<?php if ( true === edd_item_quantities_enabled() ) : ?>
-				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+				<?php if ( $has_quantity ) : ?>
+					<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
 				<?php endif; ?>
 				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
 			</tr>
@@ -1041,13 +1051,13 @@ function edd_order_details_attributes( $order ) {
 							<label for="edd-payment-time-hour" class="screen-reader-text">
 								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
 							</label>
-							<input type="number" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
+							<input type="number" class="edd-form-group__input small-text" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
 							:
 
 							<label for="edd-payment-time-min" class="screen-reader-text">
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
-							<input type="number" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
+							<input type="number" class="edd-form-group__input small-text" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
 						</div>
 					</fieldset>
 				</div>

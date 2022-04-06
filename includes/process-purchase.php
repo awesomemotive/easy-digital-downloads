@@ -58,7 +58,7 @@ function edd_process_purchase_form() {
 	}
 
 	// Validate the user.
-	$user = edd_get_purchase_form_user( $valid_data );
+	$user = edd_get_purchase_form_user( $valid_data, $is_ajax );
 
 	// Let extensions validate fields after user is logged in if user has used login/registration form.
 	do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
@@ -895,11 +895,11 @@ function edd_register_and_login_new_user( $user_data = array() ) {
  * @param   array $valid_data The validated data from the checkout form validation.
  * @return  array
  */
-function edd_get_purchase_form_user( $valid_data = array() ) {
+function edd_get_purchase_form_user( $valid_data = array(), $is_ajax = null ) {
 
 	// Default variables
 	$user    = false;
-	$is_ajax = edd_doing_ajax();
+	$is_ajax = ( null === $is_ajax ) ? edd_doing_ajax() : $is_ajax;
 
 	// Bail if during the ajax submission (check for errors only)
 	if ( $is_ajax ) {
@@ -911,6 +911,9 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 
 	// New user registration
 	} elseif ( true === $valid_data['need_new_user'] || true === $valid_data['need_user_login'] ) {
+		// This ensures $_COOKIE is available without a new HTTP request.
+		add_action( 'set_logged_in_cookie', 'edd_set_logged_in_cookie' );
+
 		if ( true === $valid_data['need_new_user'] ) {
 
 			// Set user
@@ -942,6 +945,8 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
 			}
 		}
+
+		remove_action( 'set_logged_in_cookie', 'edd_set_logged_in_cookie' );
 	}
 
 	// Check guest checkout
@@ -984,6 +989,22 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 
 	// Return valid user.
 	return $user;
+}
+
+/**
+ * Sets the $_COOKIE global when a logged in cookie is available.
+ *
+ * We need the global to be immediately available so calls to wp_create_nonce()
+ * within the same session will use the newly available data.
+ *
+ * @since 2.11
+ *
+ * @link https://wordpress.stackexchange.com/a/184055
+ *
+ * @param string $logged_in_cookie The logged-in cookie value.
+ */
+function edd_set_logged_in_cookie( $logged_in_cookie ) {
+	$_COOKIE[ LOGGED_IN_COOKIE ] = $logged_in_cookie;
 }
 
 /**

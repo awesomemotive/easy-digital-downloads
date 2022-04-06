@@ -481,6 +481,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$earnings = $download->earnings;
 		$sales    = $download->sales;
 
+		delete_option( 'edd_earnings_total' );
 		$store_earnings = edd_get_total_earnings();
 		$store_sales    = edd_get_total_sales();
 
@@ -548,7 +549,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1, $this->payment->cart_details[0]['item_price'] );
 
 		$download = new \EDD_Download( $this->payment->cart_details[0]['id'] );
-		$this->assertEquals( 41, $download->get_earnings() );
+		$this->assertEquals( 1.00, $download->get_earnings() );
 	}
 
 	public function test_modify_cart_item_quantity() {
@@ -565,7 +566,8 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 3, $this->payment->cart_details[0]['price'] );
 
 		$download = new \EDD_Download( $this->payment->cart_details[0]['id'] );
-		$this->assertEquals( 43, $download->get_earnings() );
+		$this->assertEquals( 3.00, $download->get_earnings() );
+		$this->assertEquals( 3, $download->get_sales() );
 	}
 
 	public function test_modify_cart_item_tax() {
@@ -706,6 +708,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$download_sales    = $download->sales;
 		$download_earnings = $download->earnings;
 
+		delete_option( 'edd_earnings_total' );
 		$store_earnings = edd_get_total_earnings();
 		$store_sales    = edd_get_total_sales();
 

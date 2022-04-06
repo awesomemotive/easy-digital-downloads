@@ -1,0 +1,92 @@
+.edd-admin-notice-top-of-page {
+	font-size: 15px;
+	line-height: 1.4;
+	color: #fff;
+	margin-left: -20px;
+	padding: 12px 32px 12px 20px;
+	background: #2d6ca2;
+	display: none;
+
+	@media screen and ( min-width: 783px ) {
+		padding: 10px 46px 10px 22px;
+	}
+
+	@media screen and ( min-width: 961px ) {
+		text-align: center;
+	}
+
+	a {
+		color: #fff;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+	.button-link {
+		position: absolute;
+		top: 48px;
+		right: -1px;
+		font-size: 20px;
+		color: #fff;
+		font-weight: bold;
+		text-decoration: none;
+		margin-left: 5px;
+		padding: 6px 10px;
+
+		&:hover, &:active, &:focus {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		@media screen and ( min-width: 601px ) {
+			top: 1px;
+		}
+
+		@media screen and ( min-width: 783px ) {
+			right: 9px;
+		}
+	}
+}
+
+/* Five Star Review Request
+------------------------------------------------------------- */
+#edd-admin-notice-five-star-review {
+	display: grid;
+}
+
+#edd_dashboard_sales .edd-promo-notice {
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.edd-review-actions {
+	display: flex;
+	gap: 6px;
+	margin: 0 0 16px 0;
+}
+
+.edd-promo-notice .edd-peeking {
+	align-self: flex-end;
+	justify-self: flex-end;
+	margin-right: 16px;
+	margin-bottom: -1px;
+}
+
+@media screen and (max-width: 782px) {
+	#edd-admin-notice-five-star-review.notice .edd-peeking {
+		margin-bottom: -6px;
+	}
+}
+
+@media screen and (min-width: 400px) {
+	.edd-promo-notice .edd-peeking {
+		justify-self: flex-start;
+		margin-right: 0;
+		margin-left: 200px;
+	}
+}
+
+.edd-review-step,
+.edd-promo-notice .edd-peeking {
+	grid-area: 1/-1;
+}

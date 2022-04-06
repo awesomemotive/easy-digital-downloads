@@ -489,6 +489,7 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		if ( $error ) {
+			$query = '';
 			foreach ( $assoc_args as $key => $value ) {
 				$query .= ' --' . $key . '=' . $value;
 			}
@@ -518,7 +519,7 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( count( $assoc_args ) > 0 ) {
 			$number   = ( array_key_exists( 'number', $assoc_args ) ) ? absint( $assoc_args['number'] ) : $number;
 			$id       = ( array_key_exists( 'id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $id;
-			$price_id = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $price_id;
+			$price_id = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['price_id'] ) : $price_id;
 			$tax      = ( array_key_exists( 'tax', $assoc_args ) ) ? floatval( $assoc_args['tax'] ) : $tax;
 			$email    = ( array_key_exists( 'email', $assoc_args ) ) ? sanitize_email( $assoc_args['email'] ) : $email;
 			$fname    = ( array_key_exists( 'fname', $assoc_args ) ) ? sanitize_text_field( $assoc_args['fname'] ) : $fname;
@@ -1271,6 +1272,9 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		WP_CLI::line( __( 'Migration complete: Tax Rates', 'easy-digital-downloads' ) );
+		$new_count = edd_count_adjustments( array( 'type' => 'tax_rate' ) );
+		WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . count( $tax_rates ) );
+		WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_tax_rates' );
@@ -1343,11 +1347,43 @@ class EDD_CLI extends WP_CLI_Command {
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_orders' );
+
+			$this->recalculate_download_sales_earnings();
 		} else {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_orders' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		}
+	}
+
+	/**
+	 * Recalculates the sales and earnings for all downloads.
+	 *
+	 * @since 3.0
+	 * @return void
+	 *
+	 * wp edd recalculate_download_sales_earnings
+	 */
+	public function recalculate_download_sales_earnings() {
+		global $wpdb;
+
+		$downloads = $wpdb->get_results(
+			"SELECT ID
+			FROM {$wpdb->posts}
+			WHERE post_type = 'download'
+			ORDER BY ID ASC"
+		);
+		$total     = count( $downloads );
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Recalculating Download Sales and Earnings', $total );
+			foreach ( $downloads as $download ) {
+				edd_recalculate_download_sales_earnings( $download->ID );
+				$progress->tick();
+			}
+			$progress->finish();
+		}
+		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all downloads.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Downloads Updated: ', 'easy-digital-downloads' ) . $total );
 	}
 
 	/**
@@ -1436,6 +1472,18 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 
 			edd_set_upgrade_complete( 'remove_legacy_order_notes' );
+		}
+
+		/**
+		 * Customers
+		 *
+		 * @var \EDD\Database\Tables\Customers|false $customer_table
+		 */
+		$customer_table = edd_get_component_interface( 'customer', 'table' );
+		if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
+			WP_CLI::line( __( 'Updating customers database table.', 'easy-digital-downloads' ) );
+
+			$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
 		}
 
 		/**

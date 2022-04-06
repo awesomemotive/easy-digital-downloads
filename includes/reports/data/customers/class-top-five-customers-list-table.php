@@ -69,11 +69,20 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 
 			// @todo DRY with Most_Valuable_Customers_List_Table
 
-			$column = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
+			$column          = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
+			$currency        = Reports\get_filter_value( 'currencies' );
+			$currency_clause = '';
+
+			if ( empty( $currency ) || 'convert' === $currency ) {
+				$column = sprintf( '%s / rate', $column );
+			} else {
+				$currency_clause = $wpdb->prepare( 'AND status = %s', strtoupper( $currency ) );
+			}
 
 			$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM({$column}) AS total_spent
 					FROM {$wpdb->edd_orders}
 					WHERE status IN (%s, %s) AND type = 'sale'
+					{$currency_clause}
 					GROUP BY customer_id
 					ORDER BY total_spent DESC
 					LIMIT 5";
@@ -123,6 +132,32 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 		}
 
 		return $columns;
+	}
+
+	/**
+	 * Overrides the `spent` column value to possibly display in the filtered currency.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array  $item
+	 * @param string $column_name
+	 *
+	 * @return string
+	 */
+	public function column_default( $item, $column_name ) {
+		if ( 'spent' !== $column_name ) {
+			return parent::column_default( $item, $column_name );
+		}
+
+		$currency          = '';
+		$selected_currency = Reports\get_filter_value( 'currencies' );
+		if ( ! empty( $selected_currency ) && 'convert' !== $selected_currency ) {
+			$currency = $selected_currency;
+		}
+
+		$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ), $currency );
+
+		return apply_filters( 'edd_customers_column_' . $column_name, $value, $item['id'] );
 	}
 
 	/**

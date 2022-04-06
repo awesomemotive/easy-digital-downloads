@@ -224,9 +224,9 @@ class EDD_Session {
 		}
 
 		if ( $set ) {
-			@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
+			@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 		} elseif ( isset( $_COOKIE['edd_items_in_cart'] ) ) {
-			@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+			@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 		}
 	}
 

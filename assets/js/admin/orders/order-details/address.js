@@ -84,6 +84,7 @@ jQueryReady( () => {
 					rate = rate * 100;
 
 					overviewState.set( 'hasTax', {
+						...overviewState.get( 'hasTax' ),
 						country,
 						region,
 						rate,

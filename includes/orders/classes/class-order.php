@@ -43,6 +43,7 @@ defined( 'ABSPATH' ) || exit;
  * @property float              $tax
  * @property float              $discount
  * @property float              $total
+ * @property float              $rate
  * @property Order_Item[]       $items
  * @property Order_Adjustment[] $adjustments
  * @property Order_Address      $address

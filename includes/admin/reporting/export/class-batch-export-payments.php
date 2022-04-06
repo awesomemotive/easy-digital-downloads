@@ -52,15 +52,15 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'products'     => __( 'Products (Verbose)', 'easy-digital-downloads' ),
 			'products_raw' => __( 'Products (Raw)', 'easy-digital-downloads' ),
 			'skus'         => __( 'SKUs', 'easy-digital-downloads' ),
-			'amount'       => __( 'Amount', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
-			'tax'          => __( 'Tax', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
+			'amount'       => __( 'Amount', 'easy-digital-downloads' ),
+			'tax'          => __( 'Tax', 'easy-digital-downloads' ),
 			'discount'     => __( 'Discount Code', 'easy-digital-downloads' ),
 			'gateway'      => __( 'Payment Method', 'easy-digital-downloads' ),
 			'trans_id'     => __( 'Transaction ID', 'easy-digital-downloads' ),
 			'key'          => __( 'Purchase Key', 'easy-digital-downloads' ),
 			'date'         => __( 'Date', 'easy-digital-downloads' ),
 			'user'         => __( 'User', 'easy-digital-downloads' ),
-			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
 			'ip'           => __( 'IP Address', 'easy-digital-downloads' ),
 			'mode'         => __( 'Mode (Live|Test)', 'easy-digital-downloads' ),
 			'status'       => __( 'Status', 'easy-digital-downloads' ),
@@ -157,7 +157,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					$products .= html_entity_decode( edd_get_price_option_name( $id, $item->price_id, $order->id ) ) . ' - ';
 				}
 
-				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
+				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ), $order->currency ) );
 
 				if ( $key != ( count( $items ) -1 ) ) {
 					$products .= ' / ';
@@ -199,6 +199,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
+				'currency'     => $order->currency,
 				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
 				'tax'          => html_entity_decode( edd_format_amount( $order->tax ) ),
 				'discount'     => $discounts,
@@ -207,7 +208,6 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'key'          => $order->payment_key,
 				'date'         => $order->date_created,
 				'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
-				'currency'     => $order->currency,
 				'ip'           => $order->ip,
 				'mode'         => $order->mode,
 				'status'       => $order->status,

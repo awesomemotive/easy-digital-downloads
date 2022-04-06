@@ -184,13 +184,14 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$payment = edd_get_payment( $payment_id );
 	$order   = edd_get_order( $payment_id );
 
-	if( $payment->user_id > 0 ) {
+	$name = $payment->email;
+	if ( $payment->user_id > 0 ) {
 		$user_data = get_userdata( $payment->user_id );
-		$name = $user_data->display_name;
-	} elseif( ! empty( $payment->first_name ) && ! empty( $payment->last_name ) ) {
+		if ( ! empty( $user_data->display_name ) ) {
+			$name = $user_data->display_name;
+		}
+	} elseif ( ! empty( $payment->first_name ) && ! empty( $payment->last_name ) ) {
 		$name = $payment->first_name . ' ' . $payment->last_name;
-	} else {
-		$name = $payment->email;
 	}
 
 	$download_list = '';

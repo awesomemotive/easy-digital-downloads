@@ -289,9 +289,10 @@ function edd_admin_get_script_version() {
 function edd_register_admin_scripts() {
 	$js_dir     = EDD_PLUGIN_URL . 'assets/js/';
 	$version    = edd_admin_get_script_version();
-	$admin_deps = array( 'jquery', 'jquery-form', 'underscore' );
+	$admin_deps = array( 'jquery', 'jquery-form', 'underscore', 'alpinejs' );
 
 	// Register scripts
+	wp_register_script( 'alpinejs',                        $js_dir . 'alpine.min.js',                        array(), '3.4.2', false );
 	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/chosen.jquery.min.js',          array( 'jquery' ), $version );
 	wp_register_script( 'edd-jquery-flot',                 $js_dir . 'vendor/jquery.flot.min.js',            array( 'jquery' ), $version );
 	wp_register_script( 'edd-moment-js',                   $js_dir . 'vendor/moment.min.js',                 array(), $version );
@@ -388,7 +389,7 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 		'media-upload',
 		'thickbox',
 		'wp-ajax-response',
-		'wp-color-picker'
+		'wp-color-picker',
 	);
 
 	// Loop through and enqueue the scripts
@@ -451,15 +452,37 @@ add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_styles' );
  * @since 3.0
  */
 function edd_localize_admin_scripts() {
+	$currency = edd_get_currency();
+
+	// Customize the currency on a few individual pages.
+	if ( function_exists( 'edd_is_admin_page' ) ) {
+		if ( edd_is_admin_page( 'reports' ) ) {
+			/*
+			 * For reports, use the currency currently being filtered.
+			 */
+			$currency_filter = \EDD\Reports\get_filter_value( 'currencies' );
+			if ( ! empty( $currency_filter ) && array_key_exists( strtoupper( $currency_filter ), edd_get_currencies() ) ) {
+				$currency = strtoupper( $currency_filter );
+			}
+		} elseif ( edd_is_admin_page( 'payments' ) && ! empty( $_GET['id'] ) ) {
+			/*
+			 * For orders & refunds, use the currency of the current order.
+			 */
+			$order = edd_get_order( absint( $_GET['id'] ) );
+			if ( $order instanceof \EDD\Orders\Order ) {
+				$currency = $order->currency;
+			}
+		}
+	}
 
 	// Admin scripts
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
 		'post_id'                 => get_the_ID(),
 		'edd_version'             => edd_admin_get_script_version(),
-		'currency'                => edd_get_currency(),
-		'currency_sign'           => edd_currency_filter( '' ),
+		'currency'                => $currency,
+		'currency_sign'           => edd_currency_filter( '', $currency ),
 		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
-		'currency_decimals'       => edd_currency_decimal_filter(),
+		'currency_decimals'       => edd_currency_decimal_filter( 2, $currency ),
 		'decimal_separator'       => edd_get_option( 'decimal_separator', '.' ),
 		'thousands_separator'     => edd_get_option( 'thousands_separator', ',' ),
 		'date_picker_format'      => edd_get_date_picker_format( 'js' ),
@@ -501,7 +524,10 @@ function edd_localize_admin_scripts() {
 		'quantities_enabled'          => edd_item_quantities_enabled(),
 		'taxes_enabled'               => edd_use_taxes(),
 		'taxes_included'              => edd_use_taxes() && edd_prices_include_tax(),
-		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 )
+		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 ),
+
+		'restBase'  => rest_url( \EDD\API\v3\Endpoint::$namespace ),
+		'restNonce' => wp_create_nonce( 'wp_rest' ),
 	) );
 
 	wp_localize_script( 'edd-admin-upgrades', 'edd_admin_upgrade_vars', array(
@@ -509,6 +535,17 @@ function edd_localize_admin_scripts() {
 	) );
 }
 add_action( 'admin_enqueue_scripts', 'edd_localize_admin_scripts' );
+
+/**
+ * Add `defer` to the AlpineJS script tag.
+ */
+add_filter( 'script_loader_tag', function( $url ) {
+	if ( false !== strpos( $url, EDD_PLUGIN_URL . 'assets/js/alpine.min.js' ) ) {
+		$url = str_replace( ' src', ' defer src', $url );
+	}
+
+	return $url;
+} );
 
 /**
  * Admin Downloads Icon

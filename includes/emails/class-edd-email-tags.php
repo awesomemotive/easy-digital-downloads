@@ -57,7 +57,7 @@ class EDD_Email_Template_Tags {
 		if ( is_callable( $func ) ) {
 			$this->tags[ $tag ] = array(
 				'tag'         => $tag,
-				'label'       => $label,
+				'label'       => ! empty( $label ) ? $label : ucwords( str_replace( '_', ' ', $tag ) ),
 				'description' => $description,
 				'func'        => $func,
 			);

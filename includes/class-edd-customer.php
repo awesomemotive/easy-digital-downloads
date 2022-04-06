@@ -772,20 +772,18 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			)
 		);
 
-		// Get order IDs
-		$totals = edd_get_orders(
-			array(
-				'customer_id'   => $this->id,
-				'number'        => 99999,
-				'status'        => edd_get_gross_order_statuses(),
-				'fields'        => 'total',
-				'no_found_rows' => true,
-				'type'          => array( 'sale', 'refund' ),
-			)
-		);
+		global $wpdb;
+		$statuses      = edd_get_gross_order_statuses();
+		$status_string = implode(', ', array_fill( 0, count( $statuses ), '%s' ) );
 
-		// Sum the totals together to get the lifetime value
-		$this->purchase_value = array_sum( $totals );
+		$this->purchase_value = (float) $wpdb->get_var( $wpdb->prepare(
+			"SELECT SUM(total / rate)
+			FROM {$wpdb->edd_orders}
+			WHERE customer_id = %d
+			AND status IN({$status_string})",
+			$this->id,
+			...$statuses
+		) );
 
 		// Update the customer purchase count & value
 		return $this->update(

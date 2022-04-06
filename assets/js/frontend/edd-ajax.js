@@ -21,6 +21,8 @@ jQuery( document ).ready( function( $ ) {
 				action: action,
 				cart_item: item,
 				nonce: nonce,
+				timestamp: $this.data( 'timestamp' ),
+				token: $this.data( 'token' )
 			};
 
 		 $.ajax( {
@@ -308,6 +310,8 @@ jQuery( document ).ready( function( $ ) {
 
 		const complete_purchase_val = $( this ).val();
 
+		$( this ).attr( 'data-original-value', complete_purchase_val );
+
 		$( this ).val( edd_global_vars.purchase_loading );
 
 		$( this ).after( '<span class="edd-loading-ajax edd-loading"></span>' );
@@ -492,7 +496,7 @@ function edd_load_gateway( payment_mode ) {
 	jQuery( '.edd-cart-ajax' ).show();
 	jQuery( '#edd_purchase_form_wrap' ).html( '<span class="edd-loading-ajax edd-loading"></span>' );
 
-	const nonce = jQuery( '#edd-gateway-' + payment_mode ).data( payment_mode + '-nonce' );
+	const nonce = document.getElementById( 'edd-gateway-' + payment_mode ).getAttribute( 'data-' + payment_mode + '-nonce' );
 	let url = edd_scripts.ajaxurl;
 
 	if ( url.indexOf( '?' ) > 0 ) {

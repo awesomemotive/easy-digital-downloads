@@ -122,6 +122,7 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '100',
 			'sortable'   => true,
+			'default'    => 'manual',
 		),
 
 		// mode
@@ -195,6 +196,14 @@ class Orders extends Schema {
 			'default'    => '0',
 			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
 		),
 
 		// date_created

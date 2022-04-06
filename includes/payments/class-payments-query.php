@@ -715,7 +715,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->args['parent'] = $this->args['post_parent'];
 		}
 
-		if ( isset( $this->args['paged'] ) && isset( $this->args['posts_per_page'] ) ) {
+		if ( ! empty( $this->args['offset'] ) ) {
+			$arguments['offset'] = $this->args['offset'];
+		} elseif ( isset( $this->args['paged'] ) && isset( $this->args['posts_per_page'] ) ) {
 			$arguments['offset'] = ( $this->args['paged'] * $this->args['posts_per_page'] ) - $this->args['posts_per_page'];
 		}
 
