@@ -202,9 +202,10 @@ class Download {
 	 * @return string
 	 */
 	private function get_product_price_id_where() {
-		$where = "oi.product_id = {$this->id}";
+		global $wpdb;
+		$where = $wpdb->prepare( 'oi.product_id = %d', $this->id );
 		if ( ! is_null( $this->price_id ) ) {
-			$where .= " AND oi.price_id = {$this->price_id}";
+			$where .= $wpdb->prepare( ' AND oi.price_id = %d', $this->price_id );
 		}
 
 		return $where;
