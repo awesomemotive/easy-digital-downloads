@@ -210,6 +210,16 @@ defined( 'ABSPATH' ) || exit;
 						<span class="description"><?php esc_html_e( 'Prevent customers from using this discount more than once.', 'easy-digital-downloads' ); ?></span>
 					</td>
 				</tr>
+				
+				<?php
+				/**
+				 * Action after "Use Once Per Customer" checkbox.
+				 *
+				 * @since 3.0
+				 */
+				?>
+				<?php do_action( 'edd_add_discount_form_after_use_once' ); ?>
+				
 			</tbody>
 		</table>
 

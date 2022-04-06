@@ -52,10 +52,10 @@ class Data_Migrator {
 			'country' => '',
 		) );
 
-		$address = array_filter( $address );
+		$address_to_check = array_filter( $address );
 
 		// Do not migrate empty addresses.
-		if ( empty( $address ) ) {
+		if ( empty( $address_to_check ) ) {
 			return;
 		}
 
@@ -235,11 +235,15 @@ class Data_Migrator {
 
 			$log_data = array(
 				'product_id'    => $data->post_parent,
-				'file_id'       => $post_meta['_edd_log_file_id'],
+				/*
+				 * Custom Deliverables was overriding the file ID to be a string instead of an integer. The preg_replace
+				 * allows us to try to salvage the file ID from that string.
+				 */
+				'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? preg_replace( '/[^0-9]/', '', $post_meta['_edd_log_file_id'] ) : 0,
 				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
 				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
-				'ip'            => $post_meta['_edd_log_ip'],
+				'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
 				'date_created'  => $data->post_date_gmt,
 				'date_modified' => $data->post_modified_gmt,
 			);
@@ -259,6 +263,17 @@ class Data_Migrator {
 			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_file_download_log( $log_data );
 			$add_meta_function = 'edd_add_file_download_log_meta';
+
+			/**
+			 * Triggers after a file download log has been migrated.
+			 *
+			 * @since 3.0
+			 *
+			 * @param int    $new_log_id ID of the newly created log.
+			 * @param object $data       Data from the posts table. (Essentially a `WP_Post`, without being that object.)
+			 * @param array  $post_meta  All meta associated with this log.
+			 */
+			do_action( 'edd_30_migrate_file_download_log', $new_log_id, $data, $post_meta );
 		} elseif ( 'api_request' === $data->slug ) {
 			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
@@ -405,6 +420,20 @@ class Data_Migrator {
 			$user_info = array();
 		}
 
+		/**
+		 * Last chance to filter payment meta before we use it!
+		 * Note: If modifying `cart_details`, then it's recommended that you first run
+		 * `EDD\Admin\Upgrades\v3\Data_Migrator::fix_possible_serialization()`
+		 * before making adjustments.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $payment_meta Payment meta.
+		 * @param int   $payment_id   ID of the payment.
+		 * @param array $meta         All post meta.
+		 */
+		$payment_meta = apply_filters( 'edd_30_migration_payment_meta', $payment_meta, $data->ID, $meta );
+
 		$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
 		$user_id        = isset( $meta['_edd_payment_user_id'][0] ) && ! empty( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
 		$ip             = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
@@ -440,6 +469,9 @@ class Data_Migrator {
 		// Some old EDD data has the cart details serialized, but starting with something other than a: so it can't be unserialized
 		$cart_details = self::fix_possible_serialization( $cart_details );
 
+		// Some old cart data does not contain subtotal or discount information. Normalize it.
+		$cart_details = self::normalize_cart_details( $cart_details );
+
 		// Account for possible double serialization of the cart_details
 		$cart_downloads = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
 
@@ -455,34 +487,57 @@ class Data_Migrator {
 			return;
 		}
 
-		$subtotal = 0;
-		$tax      = 0;
-		$discount = 0;
-		$total    = 0;
+		$order_subtotal = 0;
+		$order_tax      = 0;
+		$order_discount = 0;
+		$order_total    = 0;
+
+		// Track the total value of added fees in case the Order was initially migrated
+		// without _edd_payment_total or _edd_payment_tax and manual calculation was needed.
+		$order_fees_tax       = 0;
+		$order_fees_total     = 0;
+		$order_items_fees_tax = 0;
+
+		// Retrieve the tax amount from metadata if available.
+		$meta_tax = isset( $meta['_edd_payment_tax'] )
+			? $meta['_edd_payment_tax']
+			: false;
+
+		if ( false !== $meta_tax ) {
+			$meta_tax  = maybe_unserialize( $meta_tax );
+			$order_tax = (float) $meta_tax[0];
+		}
+
+		$meta_total = false;
+		// Retrieve the total amount from metadata if available.
+		if ( isset( $meta['_edd_payment_total'] ) ) {
+			$meta_total  = maybe_unserialize( $meta['_edd_payment_total'] );
+			$order_total = (float) $meta_total[0];
+		} elseif ( isset( $payment_meta['amount'] ) ) {
+			$meta_total  = maybe_unserialize( $payment_meta['amount'] );
+			$order_total = (float) $meta_total;
+		}
 
 		// In some cases (very few) there is no cart details...so we have to just avoid this part.
 		if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
 
 			// Loop through the items in the purchase to build the totals.
 			foreach ( $cart_details as $cart_item ) {
-				$subtotal += isset( $cart_item['subtotal'] ) ? (float) $cart_item['subtotal'] : 0;
-				$tax      += isset( $cart_item['tax'] )      ? (float) $cart_item['tax']      : 0;
-				$discount += isset( $cart_item['discount'] ) ? (float) $cart_item['discount'] : 0;
-				$total    += isset( $cart_item['price'] )    ? (float) $cart_item['price']    : 0;
+				$order_subtotal += $cart_item['subtotal'];
+
+				// Add the cart line item tax amount if a total is not available on the order.
+				if ( false === $meta_tax ) {
+					$order_tax += $cart_item['tax'];
+				}
+
+				$order_discount += $cart_item['discount'];
+
+				// Add the cart line item price amount (includes tax, order item fee, _but not order item fee tax_)
+				// if a total is not available on the order.
+				if ( false === $meta_total ) {
+					$order_total += $cart_item['price'];
+				}
 			}
-
-		} else {
-
-			// As a backup, we can get some information from other meta keys.
-			if ( isset( $meta['_edd_payment_total'][0] ) ) {
-				$total = (float) $meta['_edd_payment_total'][0];
-			}
-
-			if ( isset( $meta['_edd_payment_tax'][0] ) ) {
-				$tax = (float) $meta['_edd_payment_tax'][0];
-			}
-
-			$subtotal = $total - $tax;
 
 		}
 
@@ -494,25 +549,31 @@ class Data_Migrator {
 			$modified_time     = new \DateTime( $data->post_modified );
 			$modified_time_gmt = new \DateTime( $data->post_modified_gmt );
 
-			$diff = $modified_time_gmt->diff( $modified_time );
+			if ( $modified_time != $modified_time_gmt ) {
+				$diff = $modified_time_gmt->diff( $modified_time );
 
-			$time_diff = 'PT';
+				$time_diff = 'PT';
 
-			// Add hours to the offset string.
-			if ( ! empty( $diff->h ) ) {
-				$time_diff .= $diff->h . 'H';
-			}
+				// Add hours to the offset string.
+				if ( ! empty( $diff->h ) ) {
+					$time_diff .= $diff->h . 'H';
+				}
 
-			// Add minutes to the offset string.
-			if ( ! empty( $diff->i ) ) {
-				$time_diff .= $diff->i . 'M';
-			}
+				// Add minutes to the offset string.
+				if ( ! empty( $diff->i ) ) {
+					$time_diff .= $diff->i . 'M';
+				}
 
-			// Account for -/+ GMT offsets.
-			if ( 1 === $diff->invert ) {
-				$date_created_gmt->add( new \DateInterval( $time_diff ) );
-			} else {
-				$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+				// Account for -/+ GMT offsets.
+				try {
+					if ( 1 === $diff->invert ) {
+						$date_created_gmt->add( new \DateInterval( $time_diff ) );
+					} else {
+						$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+					}
+				} catch ( \Exception $e ) {
+
+				}
 			}
 
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
@@ -534,15 +595,9 @@ class Data_Migrator {
 
 		}
 
-		// Find the parent payment, if there is one.
-		$parent = 0;
-		if ( ! empty( $data->post_parent ) ) {
-			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
-		}
-
 		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
-			$gateway = 'manual';
-			$total   = $meta['_edd_payment_total'][0];
+			$gateway     = 'manual';
+			$order_total = $meta['_edd_payment_total'][0];
 		}
 
 		/*
@@ -624,7 +679,7 @@ class Data_Migrator {
 		// Build the order data before inserting.
 		$order_data = array(
 			'id'             => $data->ID,
-			'parent'         => ! empty( $parent ) ? $parent : 0,
+			'parent'         => $data->post_parent,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
 			'type'           => 'sale',
@@ -639,12 +694,29 @@ class Data_Migrator {
 			'mode'           => $mode,
 			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
-			'tax_rate_id'   => $tax_rate_id,
-			'subtotal'       => $subtotal,
-			'tax'            => $tax,
-			'discount'       => $discount,
-			'total'          => $total,
+			'tax_rate_id'    => $tax_rate_id,
+			'subtotal'       => $order_subtotal,
+			'tax'            => $order_tax,
+			'discount'       => $order_discount,
+			'total'          => $order_total,
 		);
+
+		/**
+		 * Filters the data used to create the order.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $order_data   Order creation arguments.
+		 * @param array $payment_meta Payment meta.
+		 * @param array $cart_details Cart details.
+		 * @param array $meta         All payment meta.
+		 */
+		$order_data = apply_filters( 'edd_30_migration_order_creation_data', $order_data, $payment_meta, $cart_details, $meta );
+
+		// Remove all order status transition actions.
+		remove_all_actions( 'edd_transition_order_status' );
+		remove_all_actions( 'edd_transition_order_item_status' );
+		remove_all_actions( 'edd_transition_order_adjustment_type' );
 
 		$order_id = edd_add_order( $order_data );
 
@@ -671,10 +743,10 @@ class Data_Migrator {
 			$refund_data['status']       = 'complete';
 
 			// Negate the amounts
-			$refund_data['subtotal'] = edd_negate_amount( $subtotal );
-			$refund_data['tax']      = edd_negate_amount( $tax );
-			$refund_data['discount'] = edd_negate_amount( $discount );
-			$refund_data['total']    = edd_negate_amount( $total );
+			$refund_data['subtotal'] = edd_negate_amount( $order_subtotal );
+			$refund_data['tax']      = edd_negate_amount( $order_tax );
+			$refund_data['discount'] = edd_negate_amount( $order_discount );
+			$refund_data['total']    = edd_negate_amount( $order_total );
 
 
 			// These are the best guess at the date it was refunded since we didn't store that prior.
@@ -738,14 +810,22 @@ class Data_Migrator {
 				'transaction_id' => $transaction_id,
 				'gateway'        => $gateway,
 				'status'         => 'complete',
-				'total'          => $total,
+				'total'          => $order_total,
 				'date_created'   => $date_completed,
 				'date_modified'  => $date_completed,
 			) );
 		}
 
-		// By default, this is what is stored in payment meta.
-		$core_meta_keys = array(
+		/**
+		 * By default, this is what is stored in payment meta. These array keys are part of the core payment meta in 2.x
+		 * but are not needed as part of the order meta and will not be migrated.
+		 * Extensions can add their keys to this filter if they use the payment meta array to store data and have
+		 * established a migration process to keep the data intact with the new order tables.
+		 *
+		 * @since 3.0
+		 * @param array The array of payment meta keys.
+		 */
+		$core_meta_keys = apply_filters( 'edd_30_payment_meta_keys_not_migrated', array(
 			'fees',
 			'key',
 			'email',
@@ -758,7 +838,7 @@ class Data_Migrator {
 			'tax',
 			'amount',
 			'user_id',
-		);
+		) );
 
 		// Remove core keys from `user_info`.
 		$remaining_user_info = false;
@@ -806,9 +886,7 @@ class Data_Migrator {
 					: '';
 
 				// Get price ID.
-				$price_id = isset( $cart_item['item_number']['options']['price_id'] )
-					? absint( $cart_item['item_number']['options']['price_id'] )
-					: 0;
+				$price_id = self::get_valid_price_id_for_cart_item( $cart_item );
 
 				if ( ! empty( $product_name ) ) {
 					$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
@@ -816,31 +894,6 @@ class Data_Migrator {
 						$product_name .= ' — ' . $option_name;
 					}
 				}
-
-				// Get item price.
-				$cart_item['item_price'] = isset( $cart_item['item_price'] )
-					? (float) $cart_item['item_price']
-					: (float) $cart_item['price'];
-
-				// Get quantity.
-				$cart_item['quantity'] = isset( $cart_item['quantity'] )
-					? $cart_item['quantity']
-					: 1;
-
-				// Get subtotal.
-				$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
-					? (float) $cart_item['subtotal']
-					: (float) $cart_item['quantity'] * $cart_item['item_price'];
-
-				// Get discount.
-				$cart_item['discount'] = isset( $cart_item['discount'] )
-					? (float) $cart_item['discount']
-					: 0.00;
-
-				// Get tax.
-				$cart_item['tax'] = isset( $cart_item['tax'] )
-					? (float) $cart_item['tax']
-					: 0.00;
 
 				$order_item_args = array(
 					'order_id'      => $order_id,
@@ -859,6 +912,18 @@ class Data_Migrator {
 					'date_created'  => $date_created_gmt,
 					'date_modified' => $data->post_modified_gmt,
 				);
+
+				/**
+				 * Filters the arguments used to create the order item.
+				 *
+				 * @since 1.0
+				 *
+				 * @param array $order_item_args Order item arguments.
+				 * @param array $cart_item       Original cart item.
+				 * @param array $payment_meta    Payment meta.
+				 * @param array $meta            All meta.
+				 */
+				$order_item_args = apply_filters( 'edd_30_migration_order_item_creation_data', $order_item_args, $cart_item, $payment_meta, $meta );
 
 				$order_item_id = edd_add_order_item( $order_item_args );
 
@@ -923,11 +988,11 @@ class Data_Migrator {
 						// Reset any conditional IDs to be safe.
 						$refund_adjustment_id = 0;
 
-						$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
-							? (float) $meta['_edd_payment_tax_rate'][0]
-							: 0.00;
+						$tax   = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+						$total = floatval( $fee['amount'] ) + $tax;
 
-						$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+						// Track order item fees tax to adjust order if needed.
+						$order_items_fees_tax += $tax;
 
 						// Add the adjustment.
 						$adjustment_args = array(
@@ -940,6 +1005,19 @@ class Data_Migrator {
 							'tax'         => $tax,
 							'total'       => floatval( $fee['amount'] ) + $tax,
 						);
+
+						/**
+						 * Filters the arguments used to create an order item adjustment.
+						 *
+						 * @since 3.0
+						 *
+						 * @param array $adjustment_args Adjustment arguments for a fee.
+						 * @param array $fee             Original fee data.
+						 * @param array $cart_item       Cart item this fee is part of.
+						 * @param array $payment_meta    Payment meta.
+						 * @param array $meta            All meta.
+						 */
+						$adjustment_args = apply_filters( 'edd_30_migration_order_item_adjustment_creation_data', $adjustment_args, $fee, $cart_item, $payment_meta, $meta );
 
 						$adjustment_id = edd_add_order_adjustment( $adjustment_args );
 
@@ -968,7 +1046,7 @@ class Data_Migrator {
 					'order_id'      => $order_id,
 					'product_id'    => $download_id,
 					'product_name'  => $download->post_name,
-					'price_id'      => 0,
+					'price_id'      => null,
 					'cart_index'    => $cart_index,
 					'type'          => 'download',
 					'quantity'      => 1,
@@ -1016,8 +1094,11 @@ class Data_Migrator {
 					continue;
 				}
 
-				// Reverse engineer the tax calculation.
-				$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+				$tax   = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+				$total = floatval( $fee['amount'] ) + $tax;
+
+				$order_fees_tax   += $tax;
+				$order_fees_total += $total;
 
 				// Add the adjustment.
 				$adjustment_args = array(
@@ -1028,10 +1109,22 @@ class Data_Migrator {
 					'description'   => $fee['label'],
 					'subtotal'      => floatval( $fee['amount'] ),
 					'tax'           => $tax,
-					'total'         => floatval( $fee['amount'] ) + $tax,
+					'total'         => $total,
 					'date_created'  => $date_created_gmt,
 					'date_modified' => $data->post_modified_gmt,
 				);
+
+				/**
+				 * Filters the order adjustment arguments.
+				 *
+				 * @since 3.0
+				 *
+				 * @param array $adjustment_args Arguments used to create the order adjustment.
+				 * @param array $fee             Fee data.
+				 * @param array $payment_meta    Payment meta.
+				 * @param array $meta            All meta.
+				 */
+				$adjustment_args = apply_filters( 'edd_30_migration_order_adjustment_creation_data', $adjustment_args, $fee, $payment_meta, $meta );
 
 				$adjustment_id = edd_add_order_adjustment( $adjustment_args );
 
@@ -1053,6 +1146,22 @@ class Data_Migrator {
 			}
 		}
 
+		// Add fee taxes (order and order item) if the order tax amount was previously manually calculated.
+		if ( false === $meta_tax ) {
+			edd_update_order( $order_id, array(
+				'tax' => $order_tax + $order_fees_tax + $order_items_fees_tax,
+			) );
+		}
+
+		// Add fee totals (order and order item) if the order tax amount was previously manually calculated.
+		// Order item fees were previously included in the total calculation. We must manually include
+		// order item fee tax amounts, and order fees total (subtotal + tax).
+		if ( false === $meta_total ) {
+			edd_update_order( $order_id, array(
+				'total' => $order_total + $order_fees_total + $order_items_fees_tax,
+			) );
+		}
+
 		// Insert discounts.
 		$discounts = ! empty( $user_info['discount'] )
 			? $user_info['discount']
@@ -1063,28 +1172,96 @@ class Data_Migrator {
 		}
 
 		if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
-			foreach ( $discounts as $discount ) {
+			if ( 1 === count( $discounts ) ) {
+				$discount_code = reset( $discounts );
 
-				/** @var \EDD_Discount $discount */
-				$discount = edd_get_discount_by( 'code', $discount );
+				/** @var \EDD_Discount $discount_object */
+				$discount_object = edd_get_discount_by( 'code', $discount_code );
 
-				if ( false === $discount ) {
-					continue;
-				}
-
-				edd_add_order_adjustment(
-					array(
+				if ( $discount_object instanceof \EDD_Discount ) {
+					$discount_args = array(
 						'object_id'     => $order_id,
 						'object_type'   => 'order',
-						'type_id'       => $discount->id,
+						'type_id'       => $discount_object->id,
 						'type'          => 'discount',
-						'description'   => $discount->code,
-						'subtotal'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
-						'total'         => $subtotal - $discount->get_discounted_amount( $subtotal ),
+						'description'   => $discount_object->code,
+						'subtotal'      => $order_discount,
+						'total'         => $order_discount,
 						'date_created'  => $date_created_gmt,
 						'date_modified' => $data->post_modified_gmt,
-					)
-				);
+					);
+
+					/**
+					 * Filters the arguments used to create a discount adjustment.
+					 *
+					 * @since 3.0
+					 *
+					 * @param array         $discount_args   Order adjustment arguments.
+					 * @param \EDD_Discount $discount_object Discount object.
+					 * @param float         $order_subtotal  Order subtotal.
+					 * @param array         $user_info       User info array.
+					 * @param array         $payment_meta    Payment meta.
+					 * @param array         $meta            All post meta.
+					 */
+					$discount_args = apply_filters( 'edd_30_migration_order_discount_creation_data', $discount_args, $discount_object, $order_subtotal, $user_info, $payment_meta, $meta );
+
+					$new_discount_id = edd_add_order_adjustment( $discount_args );
+					if ( $order_discount <= 0 ) {
+						edd_add_order_adjustment_meta(
+							$new_discount_id,
+							'migrated_order_discount_unknown',
+							(int) $order_id,
+							true
+						);
+					}
+				}
+			} else {
+				foreach ( $discounts as $discount_code ) {
+
+					/** @var \EDD_Discount $discount_object */
+					$discount_object = edd_get_discount_by( 'code', $discount_code );
+
+					if ( false === $discount_object ) {
+						continue;
+					}
+
+					$calculated_discount = $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal );
+					$discount_args       = array(
+						'object_id'     => $order_id,
+						'object_type'   => 'order',
+						'type_id'       => $discount_object->id,
+						'type'          => 'discount',
+						'description'   => $discount_object->code,
+						'subtotal'      => $calculated_discount,
+						'total'         => $calculated_discount,
+						'date_created'  => $date_created_gmt,
+						'date_modified' => $data->post_modified_gmt,
+					);
+
+					/**
+					 * Filters the arguments used to create a discount adjustment.
+					 *
+					 * @since 3.0
+					 *
+					 * @param array         $discount_args   Order adjustment arguments.
+					 * @param \EDD_Discount $discount_object Discount object.
+					 * @param float         $order_subtotal  Order subtotal.
+					 * @param array         $user_info       User info array.
+					 * @param array         $payment_meta    Payment meta.
+					 * @param array         $meta            All post meta.
+					 */
+					$discount_args = apply_filters( 'edd_30_migration_order_discount_creation_data', $discount_args, $discount_object, $order_subtotal, $user_info, $payment_meta, $meta );
+
+					$new_discount_id = edd_add_order_adjustment( $discount_args );
+					if ( $calculated_discount <= 0 ) {
+						edd_add_order_adjustment_meta(
+							$new_discount_id,
+							'migrated_order_discount_unknown',
+							(int) $order_id,
+							true
+						);
+					}
+				}
 			}
 		}
 
@@ -1127,6 +1304,40 @@ class Data_Migrator {
 		 * @param array $meta         All post meta associated with the payment.
 		 */
 		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
+	}
+
+	/**
+	 * Retrieves a valid price ID for a given cart item.
+	 * If the product does not have variable prices, then `null` is always returned.
+	 * If the supplied price ID does not match a price ID that actually exists, then the default
+	 * variable price is returned instead of the supplied one.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $cart_item Array of cart item details.
+	 *
+	 * @return int|null
+	 */
+	protected static function get_valid_price_id_for_cart_item( $cart_item ) {
+		// If the product doesn't have variable prices, just return `null`.
+		if ( ! edd_has_variable_prices( $cart_item['id'] ) ) {
+			return null;
+		}
+
+		$variable_prices = edd_get_variable_prices( $cart_item['id'] );
+		if ( ! is_array( $variable_prices ) || empty( $variable_prices ) ) {
+			return null;
+		}
+
+		// Get the price ID that's set to the cart item right now.
+		$price_id = isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
+			? absint( $cart_item['item_number']['options']['price_id'] )
+			: null;
+
+		// Now let's confirm it's actually a valid price ID.
+		$variable_price_ids = array_map( 'intval', array_column( $variable_prices, 'index' ) );
+
+		return in_array( $price_id, $variable_price_ids, true ) ? $price_id : edd_get_default_variable_price( $cart_item['id'] );
 	}
 
 	/**
@@ -1216,6 +1427,56 @@ class Data_Migrator {
 	}
 
 	/**
+	 * Normalizes and backfills legacy payment cart data.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array|string $cart_details Cart details. No action is performed if a string
+	 *                                   (array cannot be unserialized) is provided.
+	 * @return array|string
+	 */
+	private static function normalize_cart_details( $cart_details ) {
+		if ( ! is_array( $cart_details ) ) {
+			return $cart_details;
+		}
+
+		foreach ( $cart_details as &$cart_item ) {
+
+			// Get price.
+			$cart_item['price'] = isset( $cart_item['price'] )
+				? (float) $cart_item['price']
+				: 0.00;
+
+			// Get item price.
+			$cart_item['item_price'] = isset( $cart_item['item_price'] )
+				? (float) $cart_item['item_price']
+				: (float) $cart_item['price'];
+
+			// Get quantity.
+			$cart_item['quantity'] = isset( $cart_item['quantity'] )
+				? $cart_item['quantity']
+				: 1;
+
+			// Get subtotal.
+			$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
+				? (float) $cart_item['subtotal']
+				: (float) $cart_item['quantity'] * $cart_item['item_price'];
+
+			// Get discount.
+			$cart_item['discount'] = isset( $cart_item['discount'] )
+				? (float) $cart_item['discount']
+				: 0.00;
+
+			// Get tax.
+			$cart_item['tax'] = isset( $cart_item['tax'] )
+				? (float) $cart_item['tax']
+				: 0.00;
+		}
+
+		return $cart_details;
+	}
+
+	/**
 	 * Given that some data quite possible has bad serialization, we need to possibly fix the bad serialization.
 	 *
 	 * @since 3.0.0
@@ -1224,7 +1485,7 @@ class Data_Migrator {
 	 *
 	 * @return mixed
 	 */
-	private static function fix_possible_serialization( $data ) {
+	public static function fix_possible_serialization( $data ) {
 		if ( ! is_array( $data ) && is_string( $data ) ) {
 			$data = substr_replace( $data, 'a', 0, 1 );
 		}

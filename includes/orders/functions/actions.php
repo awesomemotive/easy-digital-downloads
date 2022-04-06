@@ -42,7 +42,7 @@ function edd_add_manual_order( $args = array() ) {
 	$now = EDD()->utils->date( 'now', null, true )->timestamp;
 
 	// Parse args.
-	$data = wp_parse_args( $args, array(
+	$order_data = wp_parse_args( $args, array(
 		'downloads'               => array(),
 		'adjustments'             => array(),
 		'subtotal'                => 0.00,
@@ -69,24 +69,24 @@ function edd_add_manual_order( $args = array() ) {
 	$name        = '';
 
 	// Create a new customer record.
-	if ( isset( $data['edd-new-customer'] ) && 1 === absint( $data['edd-new-customer'] ) ) {
+	if ( isset( $order_data['edd-new-customer'] ) && 1 === absint( $order_data['edd-new-customer'] ) ) {
 
 		// Sanitize first name
-		$first_name = isset( $data['edd-new-customer-first-name'] )
-			? sanitize_text_field( $data['edd-new-customer-first-name'] )
+		$first_name = isset( $order_data['edd-new-customer-first-name'] )
+			? sanitize_text_field( $order_data['edd-new-customer-first-name'] )
 			: '';
 
 		// Sanitize last name
-		$last_name = isset( $data['edd-new-customer-last-name'] )
-			? sanitize_text_field( $data['edd-new-customer-last-name'] )
+		$last_name = isset( $order_data['edd-new-customer-last-name'] )
+			? sanitize_text_field( $order_data['edd-new-customer-last-name'] )
 			: '';
 
 		// Combine
 		$name = trim( $first_name . ' ' . $last_name );
 
 		// Sanitize the email address
-		$email = isset( $data['edd-new-customer-email'] )
-			? sanitize_email( $data['edd-new-customer-email'] )
+		$email = isset( $order_data['edd-new-customer-email'] )
+			? sanitize_email( $order_data['edd-new-customer-email'] )
 			: '';
 
 		// Save to database.
@@ -98,8 +98,8 @@ function edd_add_manual_order( $args = array() ) {
 		$customer = edd_get_customer( $customer_id );
 
 	// Existing customer.
-	} elseif ( isset( $data['edd-new-customer'] ) && 0 === absint( $data['edd-new-customer'] ) && isset( $data['customer-id'] ) ) {
-		$customer_id = absint( $data['customer-id'] );
+	} elseif ( isset( $order_data['edd-new-customer'] ) && 0 === absint( $order_data['edd-new-customer'] ) && isset( $order_data['customer-id'] ) ) {
+		$customer_id = absint( $order_data['customer-id'] );
 
 		$customer = edd_get_customer( $customer_id );
 
@@ -113,15 +113,15 @@ function edd_add_manual_order( $args = array() ) {
 	/** Insert order **********************************************************/
 
 	// Parse order status.
-	$status = sanitize_text_field( $data['edd-payment-status'] );
+	$status = sanitize_text_field( $order_data['edd-payment-status'] );
 
 	if ( empty( $status ) || ! in_array( $status, array_keys( edd_get_payment_statuses() ), true ) ) {
 		$status = 'complete';
 	}
 
 	// Parse date.
-	$date = sanitize_text_field( $data['edd-payment-date'] );
-	$hour = sanitize_text_field( $data['edd-payment-time-hour'] );
+	$date = sanitize_text_field( $order_data['edd-payment-date'] );
+	$hour = sanitize_text_field( $order_data['edd-payment-time-hour'] );
 
 	// Restrict to our high and low.
 	if ( $hour > 23 ) {
@@ -130,7 +130,7 @@ function edd_add_manual_order( $args = array() ) {
 		$hour = 00;
 	}
 
-	$minute = sanitize_text_field( $data['edd-payment-time-min'] );
+	$minute = sanitize_text_field( $order_data['edd-payment-time-min'] );
 
 	// Restrict to our high and low.
 	if ( $minute > 59 ) {
@@ -149,20 +149,20 @@ function edd_add_manual_order( $args = array() ) {
 		: 'live';
 
 	// Amounts
-	$order_subtotal = floatval( $data['subtotal'] );
-	$order_tax      = floatval( $data['tax'] );
-	$order_discount = floatval( $data['discount'] );
-	$order_total    = floatval( $data['total'] );
+	$order_subtotal = floatval( $order_data['subtotal'] );
+	$order_tax      = floatval( $order_data['tax'] );
+	$order_discount = floatval( $order_data['discount'] );
+	$order_total    = floatval( $order_data['total'] );
 
 	$tax_rate  = false;
 	// If taxes are enabled, get the tax rate for the order location.
 	if ( edd_use_taxes() ) {
-		$country = ! empty( $data['edd_order_address']['country'] )
-			? $data['edd_order_address']['country']
+		$country = ! empty( $order_data['edd_order_address']['country'] )
+			? $order_data['edd_order_address']['country']
 			: false;
 
-		$region = ! empty( $data['edd_order_address']['region'] )
-			? $data['edd_order_address']['region']
+		$region = ! empty( $order_data['edd_order_address']['region'] )
+			? $order_data['edd_order_address']['region']
 			: false;
 
 		$tax_rate = edd_get_tax_rate_by_location(
@@ -180,11 +180,11 @@ function edd_add_manual_order( $args = array() ) {
 			'user_id'      => $user_id,
 			'customer_id'  => $customer_id,
 			'email'        => $email,
-			'ip'           => sanitize_text_field( $data['ip'] ),
-			'gateway'      => sanitize_text_field( $data['gateway'] ),
+			'ip'           => sanitize_text_field( $order_data['ip'] ),
+			'gateway'      => sanitize_text_field( $order_data['gateway'] ),
 			'mode'         => $mode,
 			'currency'     => edd_get_currency(),
-			'payment_key'  => $data['payment_key'] ? sanitize_text_field( $data['payment_key'] ) : edd_generate_order_payment_key( $email ),
+			'payment_key'  => $order_data['payment_key'] ? sanitize_text_field( $order_data['payment_key'] ) : edd_generate_order_payment_key( $email ),
 			'tax_rate_id'  => ! empty( $tax_rate->id ) ? $tax_rate->id : null,
 			'subtotal'     => $order_subtotal,
 			'tax'          => $order_tax,
@@ -201,7 +201,7 @@ function edd_add_manual_order( $args = array() ) {
 
 	// If we have tax, but no tax rate, manually save the percentage.
 	if ( empty( $tax_rate->id ) && $order_tax > 0 ) {
-		$tax_rate_percentage = $data['tax_rate'];
+		$tax_rate_percentage = $order_data['tax_rate'];
 		if ( ! empty( $tax_rate_percentage ) ) {
 			if ( $tax_rate_percentage > 0 && $tax_rate_percentage < 1 ) {
 				$tax_rate_percentage = $tax_rate_percentage * 100;
@@ -213,10 +213,10 @@ function edd_add_manual_order( $args = array() ) {
 
 	/** Insert order address **************************************************/
 
-	if ( isset( $data['edd_order_address'] ) ) {
+	if ( isset( $order_data['edd_order_address'] ) ) {
 
 		// Parse args
-		$address = wp_parse_args( $data['edd_order_address'], array(
+		$address = wp_parse_args( $order_data['edd_order_address'], array(
 			'name'        => $name,
 			'address'     => '',
 			'address2'    => '',
@@ -247,20 +247,20 @@ function edd_add_manual_order( $args = array() ) {
 	/** Insert order items ****************************************************/
 
 	// Any adjustments specific to an order item need to be added to the item.
-	foreach ( $data['adjustments'] as $key => $adjustment ) {
+	foreach ( $order_data['adjustments'] as $key => $adjustment ) {
 		if ( 'order_item' === $adjustment['object_type'] ) {
-			$data['downloads'][ $adjustment['object_id'] ]['adjustments'][] = $adjustment;
+			$order_data['downloads'][ $adjustment['object_id'] ]['adjustments'][] = $adjustment;
 
-			unset( $data['adjustments'][ $key ] );
+			unset( $order_data['adjustments'][ $key ] );
 		}
 	}
 
-	if ( ! empty( $data['downloads'] ) ) {
+	if ( ! empty( $order_data['downloads'] ) ) {
 
 		// Re-index downloads.
-		$data['downloads'] = array_values( $data['downloads'] );
+		$order_data['downloads'] = array_values( $order_data['downloads'] );
 
-		$downloads = array_reverse( $data['downloads'] );
+		$downloads = array_reverse( $order_data['downloads'] );
 
 		foreach ( $downloads as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
@@ -276,9 +276,9 @@ function edd_add_manual_order( $args = array() ) {
 				: 1;
 
 			// Price ID.
-			$price_id = isset( $download['price_id'] )
+			$price_id = isset( $download['price_id'] ) && is_numeric( $download['price_id'] )
 				? absint( $download['price_id'] )
-				: false;
+				: null;
 
 			// Amounts.
 			$amount = isset( $download[ 'amount' ] )
@@ -306,7 +306,7 @@ function edd_add_manual_order( $args = array() ) {
 				'order_id'     => $order_id,
 				'product_id'   => absint( $download['id'] ),
 				'product_name' => edd_get_download_name( $download['id'], absint( $price_id ) ),
-				'price_id'     => absint( $price_id ),
+				'price_id'     => $price_id,
 				'cart_index'   => $cart_key,
 				'type'         => 'download',
 				'status'       => 'complete',
@@ -349,10 +349,6 @@ function edd_add_manual_order( $args = array() ) {
 						) );
 					}
 				}
-
-				// Increase the earnings for this download.
-				edd_increase_earnings( absint( $download['id'] ), $total );
-				edd_increase_purchase_count( absint( $download['id'] ), $quantity );
 			}
 		}
 	}
@@ -360,8 +356,8 @@ function edd_add_manual_order( $args = array() ) {
 	/** Insert adjustments ****************************************************/
 
 	// Adjustments.
-	if ( isset( $data['adjustments'] ) ) {
-		$adjustments = array_reverse( $data['adjustments'] );
+	if ( isset( $order_data['adjustments'] ) ) {
+		$adjustments = array_reverse( $order_data['adjustments'] );
 
 		foreach ( $adjustments as $index => $adjustment ) {
 			if ( 'order_item' === $adjustment['object_type'] ) {
@@ -390,8 +386,8 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Discounts.
-	if ( isset( $data['discounts'] ) ) {
-		$discounts = array_reverse( $data['discounts'] );
+	if ( isset( $order_data['discounts'] ) ) {
+		$discounts = array_reverse( $order_data['discounts'] );
 
 		foreach ( $discounts as $discount ) {
 			$d = edd_get_discount( absint( $discount['type_id'] ) );
@@ -413,34 +409,25 @@ function edd_add_manual_order( $args = array() ) {
 				'subtotal'    => $discount_subtotal,
 				'total'       => $discount_total,
 			) );
-
-			// Increase discount usage.
-			$d->increase_usage();
 		}
 	}
 
 	// Insert transaction ID.
-	if ( ! empty( $data['transaction_id'] ) ) {
+	if ( ! empty( $order_data['transaction_id'] ) ) {
 		edd_add_order_transaction( array(
 			'object_id'      => $order_id,
 			'object_type'    => 'order',
-			'transaction_id' => sanitize_text_field( $data['transaction_id'] ),
-			'gateway'        => sanitize_text_field( $data['gateway'] ),
+			'transaction_id' => sanitize_text_field( $order_data['transaction_id'] ),
+			'gateway'        => sanitize_text_field( $order_data['gateway'] ),
 			'status'         => 'complete',
 			'total'          => $order_total,
 		) );
 	}
 
 	// Unlimited downloads.
-	if ( isset( $data['edd-unlimited-downloads'] ) && 1 === (int) $data['edd-unlimited-downloads'] ) {
+	if ( isset( $order_data['edd-unlimited-downloads'] ) && 1 === (int) $order_data['edd-unlimited-downloads'] ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', 1 );
 	}
-
-	if ( ! empty( $customer ) ) {
-		$customer->recalculate_stats();
-	}
-
-	edd_increase_total_earnings( $order_total );
 
 	// Setup order number.
 	$order_number = '';
@@ -459,7 +446,7 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Stop purchase receipt from being sent.
-	if ( ! isset( $data['edd_order_send_receipt'] ) ) {
+	if ( ! isset( $order_data['edd_order_send_receipt'] ) ) {
 		remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 	}
 
@@ -467,6 +454,16 @@ function edd_add_manual_order( $args = array() ) {
 	if ( 'complete' === $status ) {
 		edd_update_order_status( $order_id, $status );
 	}
+
+	/**
+	 * Action hook which runs after a manual order has been added to the database.
+	 *
+	 * @since 3.0
+	 * @param int   $order_id   The new order ID.
+	 * @param array $order_data The array of order data.
+	 * @param array $args       The original form data.
+	 */
+	do_action( 'edd_post_add_manual_order', $order_id, $order_data, $args );
 
 	// Redirect to `Edit Order` page.
 	edd_redirect( edd_get_admin_url( array(

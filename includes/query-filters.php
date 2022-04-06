@@ -62,7 +62,7 @@ add_action( 'template_redirect', 'edd_block_attachments' );
  * @param WP_Query $query.
  */
 function edd_unset_discount_query_arg( $query ) {
-	if ( is_admin() || ! $query->is_main_query() ) {
+	if ( is_admin() || ! $query->is_main_query() || ! empty( $query->query_vars['edd-api'] ) ) {
 		return;
 	}
 

@@ -38,7 +38,7 @@ final class Order_Items extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202103151;
+	protected $version = 202110141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -52,6 +52,8 @@ final class Order_Items extends Table {
 		'202002141' => 202002141,
 		'202102010' => 202102010,
 		'202103151' => 202103151,
+		'202105221' => 202105221,
+		'202110141' => 202110141,
 	);
 
 	/**
@@ -67,7 +69,7 @@ final class Order_Items extends Table {
 			order_id bigint(20) unsigned NOT NULL default '0',
 			product_id bigint(20) unsigned NOT NULL default '0',
 			product_name text NOT NULL default '',
-			price_id bigint(20) unsigned NOT NULL default '0',
+			price_id bigint(20) unsigned default null,
 			cart_index bigint(20) unsigned NOT NULL default '0',
 			type varchar(20) NOT NULL default 'download',
 			status varchar(20) NOT NULL default 'pending',
@@ -77,6 +79,7 @@ final class Order_Items extends Table {
 			discount decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
+			rate decimal(10,5) NOT NULL DEFAULT 1.00000,
 			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
 			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
@@ -166,6 +169,40 @@ final class Order_Items extends Table {
 		}
 
 		// Return success/fail.
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202105221
+	 * 	- Add `rate` column.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202105221() {
+		if ( ! $this->column_exists( 'rate' ) ) {
+			return $this->is_success(
+				$this->get_db()->query(
+					"ALTER TABLE {$this->table_name} ADD COLUMN rate decimal(10,5) NOT NULL DEFAULT 1.00000 AFTER total"
+				)
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202110141
+	 *    - Change default value for `price_id` to `null`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202110141() {
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN price_id bigint(20) unsigned default null;
+		" );
+
 		return $this->is_success( $result );
 	}
 

@@ -253,73 +253,8 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 		return false;
 	}
 
-	$payment = edd_get_payment( $order_id );
-
-	$cart_details = $payment->cart_details;
-	$user_info    = $payment->user_info;
-
 	// Refund the order.
-	$new_order_id = edd_refund_order( $order_id );
-
-	if ( is_array( $cart_details ) ) {
-
-		// Loop through each cart item.
-		foreach ( $cart_details as $item ) {
-
-			// Get the item's price.
-			$amount = isset( $item['price'] )
-				? $item['price']
-				: false;
-
-			// Decrease earnings/sales and fire action once per quantity number.
-			for ( $i = 0; $i < $item['quantity']; $i++ ) {
-
-				// Handle variable priced downloads.
-				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
-					$price_id = isset( $item['item_number']['options']['price_id'] )
-						? $item['item_number']['options']['price_id']
-						: null;
-
-					$amount = ! isset( $item['price'] ) && 0 !== $item['price']
-						? edd_get_price_option_amount( $item['id'], $price_id )
-						: $item['price'];
-				}
-
-				if ( ! $amount ) {
-					// This function is only used on payments with near 1.0 cart data structure.
-					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
-				}
-			}
-
-			if ( ! empty( $item['fees'] ) ) {
-				foreach ( $item['fees'] as $fee ) {
-
-					// Only let negative fees affect the earnings.
-					if ( $fee['amount'] > 0 ) {
-						continue;
-					}
-
-					$amount += $fee['amount'];
-				}
-			}
-
-			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_earnings ) {
-
-				// Decrease earnings.
-				edd_decrease_earnings( $item['id'], $amount );
-			}
-
-			$maybe_decrease_sales = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_sales ) {
-
-				// Decrease purchase count.
-				edd_decrease_purchase_count( $item['id'], $item['quantity'] );
-			}
-		}
-	}
-
-	return $new_order_id;
+	return edd_refund_order( $order_id );
 }
 
 /**
@@ -1298,9 +1233,7 @@ function edd_remove_payment_prefix_postfix( $number ) {
  * @return string $amount Fully formatted payment amount
  */
 function edd_payment_amount( $order_id = 0 ) {
-	$amount = edd_get_payment_amount( $order_id );
-
-	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( edd_get_payment_amount( $order_id ), edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1351,7 +1284,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
 function edd_payment_subtotal( $order_id = 0 ) {
 	$subtotal = edd_get_payment_subtotal( $order_id );
 
-	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $subtotal, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1393,7 +1326,7 @@ function edd_get_payment_subtotal( $order_id = 0 ) {
 function edd_payment_tax( $order_id = 0, $payment_meta = null ) {
 	$tax = edd_get_payment_tax( $order_id, false );
 
-	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $tax, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1547,10 +1480,8 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '', $a
 			'order'       => 'ASC',
 		) ) );
 
-		if ( $transaction_ids ) {
-			$transaction_id = $transaction_ids[0];
-
-			return edd_update_order_transaction( $transaction_id, array(
+		if ( $transaction_ids && isset( $transaction_ids[0] ) ) {
+			return edd_update_order_transaction( $transaction_ids[0], array(
 				'transaction_id' => $transaction_id,
 				'gateway'        => $order->gateway,
 				'total'          => $amount,

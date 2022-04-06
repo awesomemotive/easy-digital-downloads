@@ -80,12 +80,19 @@ function edd_is_debug_mode() {
  *
  * @since 3.0
  *
- * @return bool $retval True if dev, false if not.
+ * @return bool $is_dev_environment True if development environment; otherwise false.
  */
 function edd_is_dev_environment() {
 
+	// wp_get_environment_type was added in WordPress 5.5.
+	if ( function_exists( 'wp_get_environment_type' ) ) {
+		$environment = wp_get_environment_type();
+
+		return apply_filters( 'edd_is_dev_environment', in_array( $environment, array( 'local', 'development' ), true ) );
+	}
+
 	// Assume not a development environment
-	$retval = false;
+	$is_dev_environment = false;
 
 	// Get this one time and use it below
 	$network_url = network_site_url( '/' );
@@ -115,13 +122,13 @@ function edd_is_dev_environment() {
 	// Loop through all strings
 	foreach ( $strings as $string ) {
 		if ( stristr( $network_url, $string ) ) {
-			$retval = $string;
+			$is_dev_environment = true;
 			break;
 		}
 	}
 
 	// Filter & return
-	return apply_filters( 'edd_is_dev_environment', $retval );
+	return apply_filters( 'edd_is_dev_environment', $is_dev_environment );
 }
 
 /**
@@ -234,28 +241,14 @@ function edd_get_file_extension( $str ) {
  * Checks if the string (filename) provided is an image URL
  *
  * @since 1.0
- * @param string  $str Filename
+ * @param string  $filename Filename
  * @return bool Whether or not the filename is an image
  */
-function edd_string_is_image_url( $str ) {
-	$ext = edd_get_file_extension( $str );
+function edd_string_is_image_url( $filename ) {
+	$ext    = edd_get_file_extension( $filename );
+	$images = array( 'jpg', 'jpeg', 'png', 'gif', 'webp' );
 
-	switch ( strtolower( $ext ) ) {
-		case 'jpg';
-			$return = true;
-			break;
-		case 'png';
-			$return = true;
-			break;
-		case 'gif';
-			$return = true;
-			break;
-		default:
-			$return = false;
-			break;
-	}
-
-	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
+	return (bool) apply_filters( 'edd_string_is_image', in_array( $ext, $images, true ), $filename );
 }
 
 /**
@@ -414,117 +407,6 @@ function edd_is_host( $host = false ) {
 }
 
 /**
- * Get Currencies
- *
- * @since 1.0
- * @return array $currencies A list of the available currencies
- */
-function edd_get_currencies() {
-	$currencies = array(
-		'USD'  => __( 'US Dollars (&#36;)', 'easy-digital-downloads' ),
-		'EUR'  => __( 'Euros (&euro;)', 'easy-digital-downloads' ),
-		'GBP'  => __( 'Pound Sterling (&pound;)', 'easy-digital-downloads' ),
-		'AUD'  => __( 'Australian Dollars (&#36;)', 'easy-digital-downloads' ),
-		'BRL'  => __( 'Brazilian Real (R&#36;)', 'easy-digital-downloads' ),
-		'CAD'  => __( 'Canadian Dollars (&#36;)', 'easy-digital-downloads' ),
-		'CZK'  => __( 'Czech Koruna', 'easy-digital-downloads' ),
-		'DKK'  => __( 'Danish Krone', 'easy-digital-downloads' ),
-		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'easy-digital-downloads' ),
-		'HUF'  => __( 'Hungarian Forint', 'easy-digital-downloads' ),
-		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'easy-digital-downloads' ),
-		'JPY'  => __( 'Japanese Yen (&yen;)', 'easy-digital-downloads' ),
-		'MYR'  => __( 'Malaysian Ringgits', 'easy-digital-downloads' ),
-		'MXN'  => __( 'Mexican Peso (&#36;)', 'easy-digital-downloads' ),
-		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'easy-digital-downloads' ),
-		'NOK'  => __( 'Norwegian Krone', 'easy-digital-downloads' ),
-		'PHP'  => __( 'Philippine Pesos', 'easy-digital-downloads' ),
-		'PLN'  => __( 'Polish Zloty', 'easy-digital-downloads' ),
-		'SGD'  => __( 'Singapore Dollar (&#36;)', 'easy-digital-downloads' ),
-		'SEK'  => __( 'Swedish Krona', 'easy-digital-downloads' ),
-		'CHF'  => __( 'Swiss Franc', 'easy-digital-downloads' ),
-		'TWD'  => __( 'Taiwan New Dollars', 'easy-digital-downloads' ),
-		'THB'  => __( 'Thai Baht (&#3647;)', 'easy-digital-downloads' ),
-		'INR'  => __( 'Indian Rupee (&#8377;)', 'easy-digital-downloads' ),
-		'TRY'  => __( 'Turkish Lira (&#8378;)', 'easy-digital-downloads' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
-		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
-		'AOA'  => __( 'Angolan Kwanza', 'easy-digital-downloads' ),
-	);
-
-	return apply_filters( 'edd_currencies', $currencies );
-}
-
-/**
- * Get the store's set currency
- *
- * @since 1.5.2
- * @return string The currency code
- */
-function edd_get_currency() {
-	$currency = edd_get_option( 'currency', 'USD' );
-	return apply_filters( 'edd_currency', $currency );
-}
-
-/**
- * Given a currency determine the symbol to use. If no currency given, site default is used.
- * If no symbol is determine, the currency string is returned.
- *
- * @since  2.2
- * @param  string $currency The currency string
- * @return string           The symbol to use for the currency
- */
-function edd_currency_symbol( $currency = '' ) {
-	if ( empty( $currency ) ) {
-		$currency = edd_get_currency();
-	}
-
-	switch ( $currency ) :
-		case "GBP" :
-			$symbol = '&pound;';
-			break;
-		case "BRL" :
-			$symbol = 'R&#36;';
-			break;
-		case "EUR" :
-			$symbol = '&euro;';
-			break;
-		case "USD" :
-		case "AUD" :
-		case "NZD" :
-		case "CAD" :
-		case "HKD" :
-		case "MXN" :
-		case "SGD" :
-			$symbol = '&#36;';
-			break;
-		case "JPY" :
-			$symbol = '&yen;';
-			break;
-		case "AOA" :
-			$symbol = 'Kz';
-			break;
-		default :
-			$symbol = $currency;
-			break;
-	endswitch;
-
-	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
-}
-
-/**
- * Get the name of a currency
- *
- * @since 2.2
- * @param  string $code The currency code
- * @return string The currency's name
- */
-function edd_get_currency_name( $code = 'USD' ) {
-	$currencies = edd_get_currencies();
-	$name       = isset( $currencies[ $code ] ) ? $currencies[ $code ] : $code;
-	return apply_filters( 'edd_currency_name', $name );
-}
-
-/**
  * Month Num To Name
  *
  * Takes a month number and returns the name three letter name of it.
@@ -640,11 +522,19 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $function, $version, $replacement ) );
-			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
+
 			// Alternatively we could dump this to a file.
 		} else {
 			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $function, $version ) );
-			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
+
 			// Alternatively we could dump this to a file.
 		}
 	}
@@ -681,11 +571,18 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_argument_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead.', 'easy-digital-downloads' ), $argument, $function, $version, $replacement ) );
-			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
+
 			// Alternatively we could dump this to a file.
 		} else {
 			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available.', 'easy-digital-downloads' ), $argument, $function, $version ) );
-			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
 			// Alternatively we could dump this to a file.
 		}
 	}
@@ -1018,7 +915,7 @@ function edd_is_uploads_url_protected() {
 		if ( wp_is_writable( $upload_path ) ) {
 
 			// Get the file path
-			$file_name = wp_unique_filename( $upload_path, 'edd-temp.jpg' );
+			$file_name = wp_unique_filename( $upload_path, 'edd-temp.zip' );
 			$file_path = trailingslashit( $upload_path ) . $file_name;
 
 			// Save a temporary file - we will try to access it
@@ -1859,6 +1756,40 @@ function edd_is_promo_active() {
 	}
 
 	return false;
+}
+
+/**
+ * Gets the date that this EDD install was activated (for new installs).
+ * For existing installs, this option is added whenever the function is first used.
+ *
+ * @since 2.11.4
+ * @return int The timestamp when EDD was marked as activated.
+ */
+function edd_get_activation_date() {
+	$activation_date = get_option( 'edd_activation_date', '' );
+	if ( ! $activation_date ) {
+		$activation_date = time();
+		// Gets the first order placed in the store (any status).
+		$payments = edd_get_payments(
+			array(
+				'output'        => 'posts',
+				'number'        => 1,
+				'orderby'       => 'ID',
+				'order'         => 'ASC',
+				'no_found_rows' => true,
+			)
+		);
+		if ( $payments ) {
+			$first_payment = reset( $payments );
+			// Use just the post date, rather than looking for the completed date (first payment may not be complete).
+			if ( ! empty( $first_payment->post_date_gmt ) ) {
+				$activation_date = strtotime( $first_payment->post_date_gmt );
+			}
+		}
+		update_option( 'edd_activation_date', $activation_date );
+	}
+
+	return $activation_date;
 }
 
 /**

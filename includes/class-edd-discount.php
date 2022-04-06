@@ -425,14 +425,14 @@ class EDD_Discount extends Adjustment {
 	 * Handle method dispatch dynamically.
 	 *
 	 * @param string $method Method name.
-	 * @param array $args Arguments to be passed to method.
+	 * @param array  $args   Arguments to be passed to method.
 	 *
 	 * @return mixed
 	 */
 	public function __call( $method, $args ) {
-		$property = str_replace( 'setup_', '', $method );
+		$property = strtolower( str_replace( array( 'setup_', 'get_' ), '', $method ) );
 		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
-			return $this->{$property( $args )};
+			return $this->{$property};
 		}
 	}
 
@@ -1295,8 +1295,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Has the discount started or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_started', $return, $this->id );
+		return apply_filters( 'edd_is_discount_started', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1360,8 +1361,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the discount maxed out or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->id );
+		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1390,8 +1392,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the minimum cart amount met or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_min_met', $return, $this->id );
+		return apply_filters( 'edd_is_discount_min_met', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1426,11 +1429,7 @@ class EDD_Discount extends Adjustment {
 		$excluded_ps  = $this->get_excluded_products();
 		$cart_items   = edd_get_cart_contents();
 		$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
-		$return       = false;
-
-		if ( empty( $product_reqs ) && empty( $excluded_ps ) ) {
-			$return = true;
-		}
+		$is_met       = true;
 
 		/**
 		 * Normalize our data for product requirements, exclusions and cart data.
@@ -1441,67 +1440,32 @@ class EDD_Discount extends Adjustment {
 		asort( $product_reqs );
 		$product_reqs = array_filter( array_values( $product_reqs ) );
 
-
-		$excluded_ps = array_map( 'absint', $excluded_ps );
-		asort( $excluded_ps );
-		$excluded_ps = array_filter( array_values( $excluded_ps ) );
-
 		$cart_ids = array_map( 'absint', $cart_ids );
 		asort( $cart_ids );
 		$cart_ids = array_values( $cart_ids );
 
 		// Ensure we have requirements before proceeding
-		if ( ! $return && ! empty( $product_reqs ) ) {
-			switch ( $this->product_condition ) {
+		if ( ! $is_met && ! empty( $product_reqs ) ) {
+			$matches = array_intersect( $product_reqs, $cart_ids );
+
+			switch ( $this->get_product_condition() ) {
 				case 'all':
-					// Default back to true
-					$return = true;
-
-					foreach ( $product_reqs as $download_id ) {
-						if ( empty( $download_id ) ) {
-							continue;
-						}
-
-						if ( ! edd_item_in_cart( $download_id ) ) {
-							if ( $set_error ) {
-								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-							}
-
-							$return = false;
-
-							break;
-						}
-					}
+					$is_met = count( $matches ) === count( $product_reqs );
 					break;
-
 				default:
-					foreach ( $product_reqs as $download_id ) {
-						if ( empty( $download_id ) ) {
-							continue;
-						}
-
-						if ( edd_item_in_cart( $download_id ) ) {
-							$return = true;
-							break;
-						}
-					}
-
-					if ( ! $return && $set_error ) {
-						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-					}
-					break;
+					$is_met = 0 < count( $matches );
 			}
-		} else {
-			$return = true;
 		}
 
-		if ( ! empty( $excluded_ps ) ) {
-			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) === count( $cart_ids ) ) {
-				$return = false;
+		$excluded_ps = array_map( 'absint', $excluded_ps );
+		asort( $excluded_ps );
+		$excluded_ps = array_filter( array_values( $excluded_ps ) );
 
-				if ( $set_error ) {
-					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
-				}
+		if ( ! empty( $excluded_ps ) ) {
+			$is_met = false === (bool) array_intersect( $cart_ids, $excluded_ps );
+
+			if ( ! $is_met && $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 			}
 		}
 
@@ -1510,11 +1474,12 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @since 2.7
 		 *
-		 * @param bool   $return            Are the product requirements met or not.
+		 * @param bool   $is_met            Are the product requirements met or not.
 		 * @param int    $ID                Discount ID.
 		 * @param string $product_condition Product condition.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->id, $this->product_condition );
+		return (bool) apply_filters( 'edd_is_discount_products_req_met', $is_met, $this->id, $this->product_condition, $set_error );
 	}
 
 	/**
@@ -1613,8 +1578,9 @@ class EDD_Discount extends Adjustment {
 		 * @param bool   $return If the discount is used or not.
 		 * @param int    $ID     Discount ID.
 		 * @param string $user   User info.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user );
+		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user, $set_error );
 	}
 
 	/**
@@ -1654,8 +1620,9 @@ class EDD_Discount extends Adjustment {
 		 * @param int    $ID     Discount ID.
 		 * @param string $code   Discount code.
 		 * @param string $user   User info.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_valid', $return, $this->id, $this->code, $user );
+		return apply_filters( 'edd_is_discount_valid', $return, $this->id, $this->code, $user, $set_error );
 	}
 
 	/**
@@ -1690,8 +1657,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the discount active or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_active', $return, $this->id );
+		return apply_filters( 'edd_is_discount_active', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1723,8 +1691,9 @@ class EDD_Discount extends Adjustment {
 		 * @access public
 		 *
 		 * @param float $amount Calculated discounted amount.
+		 * @param EDD_Discount $this Discount object.
 		 */
-		return apply_filters( 'edd_discounted_amount', $amount );
+		return apply_filters( 'edd_discounted_amount', $amount, $this );
 	}
 
 	/**

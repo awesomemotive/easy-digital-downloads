@@ -88,8 +88,9 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'default'    => null,
+			'sortable'   => true,
+			'allow_null' => true,
 		),
 
 		// cart_index
@@ -180,6 +181,14 @@ class Order_Items extends Schema {
 			'default'    => '0',
 			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
 		),
 
 		// date_created

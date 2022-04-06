@@ -109,71 +109,36 @@ function edd_sanitize_amount( $amount = 0 ) {
  * value for output to the page.)
  *
  * @since 1.0
+ * @since 3.0 Added `$currency` parameter.
  *
  * @param mixed  $amount   Default 0. Numeric amount to format.
  * @param string $decimals Default true. Whether or not to use decimals. Useful when set to false for non-currency numbers.
+ * @param string $currency Currency code to format the amount for. This determines how many decimals are used.
+ *                         If omitted, site-wide currency is used.
  *
  * @return string $amount Newly formatted amount or Price Not Available
  */
-function edd_format_amount( $amount = 0, $decimals = true ) {
-
-	// Get separators
-	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
-	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-
-	// Format the amount
-	if ( $decimal_sep === ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
-		$whole  = substr( $amount, 0, $sep_found );
-		$part   = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
-		$amount = $whole . '.' . $part;
+function edd_format_amount( $amount = 0, $decimals = true, $currency = '' ) {
+	if ( empty( $currency ) ) {
+		$currency = edd_get_currency();
 	}
 
-	// Strip , from the amount (if set as the thousands separator)
-	if ( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
-		$amount = str_replace( ',', '', $amount );
-	}
+	$formatter = new \EDD\Currency\Money_Formatter( $amount, new \EDD\Currency\Currency( $currency ) );
 
-	// Strip ' ' from the amount (if set as the thousands separator)
-	if ( $thousands_sep === ' ' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
-		$amount = str_replace( ' ', '', $amount );
-	}
-
-	if ( empty( $amount ) ) {
-		$amount = 0;
-	}
-
-	/**
-	 * Filter number of decimals to use for formatted amount
-	 *
-	 * @since unknown
-	 *
-	 * @param int        $number        Default 2. Number of decimals.
-	 * @param int|string $amount        Amount being formatted.
-	 */
-	$decimals = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
-
-	// Format amount using decimals and separators (also rounds up or down)
-	$formatted = number_format( (float) $amount, $decimals, $decimal_sep, $thousands_sep );
-
-	/**
-	 * Filter the formatted amount before returning
-	 *
-	 * @since unknown
-	 *
-	 * @param mixed  $formatted     Formatted amount.
-	 * @param mixed  $amount        Original amount.
-	 * @param int    $decimals      Default 2. Number of decimals.
-	 * @param string $decimal_sep   Default '.'. Decimal separator.
-	 * @param string $thousands_sep Default ','. Thousands separator.
-	 */
-	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
+	return $formatter->format_for_display( $decimals )->amount;
 }
 
 /**
  * Formats the currency display
  *
  * @since 1.0
- * @param string $price Price
+ *
+ * @param string $price    Price. This should already be formatted.
+ * @param string $currency Currency code. When this function is used on an order's amount, the order's currency
+ *                         should always be provided here. If omitted, the store currency is used instead.
+ *                         But to ensure immutability with orders, the currency should always be explicitly provided
+ *                         if known and tied to an existing order.
+ *
  * @return string $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price = '', $currency = '' ) {
@@ -183,64 +148,14 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 		$currency = edd_get_currency();
 	}
 
-	// Default vars
-	$position = edd_get_option( 'currency_position', 'before' );
-	$negative = is_numeric( $price ) && $price < 0;
-
-	// Remove proceeding "-" -
-	if ( true === $negative ) {
-		$price = substr( $price, 1 );
+	$currency = new \EDD\Currency\Currency( $currency );
+	if ( '' === $price ) {
+		return $currency->symbol;
 	}
 
-	$symbol = edd_currency_symbol( $currency );
+	$formatter = new \EDD\Currency\Money_Formatter( $price, $currency );
 
-	if ( 'before' === $position ):
-		switch ( $currency ):
-			case 'GBP' :
-			case 'BRL' :
-			case 'EUR' :
-			case 'USD' :
-			case 'AUD' :
-			case 'CAD' :
-			case 'HKD' :
-			case 'MXN' :
-			case 'NZD' :
-			case 'SGD' :
-			case 'JPY' :
-				$formatted = $symbol . $price;
-				break;
-			default :
-				$formatted = $currency . ' ' . $price;
-				break;
-		endswitch;
-		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
-	else :
-		switch ( $currency ) :
-			case 'GBP' :
-			case 'BRL' :
-			case 'EUR' :
-			case 'USD' :
-			case 'AUD' :
-			case 'CAD' :
-			case 'HKD' :
-			case 'MXN' :
-			case 'SGD' :
-			case 'JPY' :
-				$formatted = $price . $symbol;
-				break;
-			default :
-				$formatted = $price . ' ' . $currency;
-				break;
-		endswitch;
-		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
-	endif;
-
-	// Prepend the mins sign before the currency sign
-	if ( true === $negative ) {
-		$formatted = '-' . $formatted;
-	}
-
-	return $formatted;
+	return $formatter->apply_symbol();
 }
 
 /**
@@ -271,7 +186,7 @@ function edd_currency_decimal_filter( $decimals = 2, $currency = '' ) {
 	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
-add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter' );
+add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter', 10, 2 );
 
 /**
  * Sanitizes a string key for EDD Settings
