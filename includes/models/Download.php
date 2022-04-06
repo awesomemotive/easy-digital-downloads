@@ -45,20 +45,22 @@ class Download {
 	public function get_gross_sales() {
 		global $wpdb;
 
-		$where         = $this->get_product_price_id_where();
 		$statuses      = edd_get_gross_order_statuses();
 		$status_string = $this->convert_status_array_to_string( $statuses );
-		$results       = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT SUM(oi.quantity) AS sales
-				FROM {$wpdb->edd_order_items} oi
-				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-				WHERE {$where}
-				AND o.type = 'sale'
-				AND o.status IN({$status_string})",
-				...$statuses
-			)
+		$query         = $wpdb->prepare(
+			"SELECT SUM(oi.quantity) AS sales
+			FROM {$wpdb->edd_order_items} oi
+			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
+			WHERE oi.product_id = %d
+			AND o.type = 'sale'
+			AND o.status IN({$status_string})",
+			$this->id,
+			...$statuses
 		);
+		if ( ! is_null( $this->price_id ) && is_numeric( $this->price_id ) ) {
+			$query .= $wpdb->prepare( ' AND oi.price_id = %d', $this->price_id );
+		}
+		$results = $wpdb->get_row( $query );
 
 		return ! empty( $results->sales ) ? intval( $results->sales ) : 0;
 	}
@@ -72,16 +74,16 @@ class Download {
 	public function get_gross_earnings() {
 		global $wpdb;
 
-		$where         = $this->get_product_price_id_where();
 		$statuses      = edd_get_gross_order_statuses();
 		$status_string = $this->convert_status_array_to_string( $statuses );
 		$order_items   = $wpdb->prepare(
 			"SELECT SUM(oi.subtotal / oi.rate) AS revenue
 			FROM {$wpdb->edd_order_items} oi
 			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-			WHERE {$where}
+			WHERE oi.product_id = %d
 			AND o.type = 'sale'
 			AND o.status IN({$status_string})",
+			$this->id,
 			...$statuses
 		);
 		// Fees on order items count as part of gross revenue.
@@ -89,14 +91,20 @@ class Download {
 			"SELECT SUM(oa.subtotal/ oa.rate) as revenue
 			FROM {$wpdb->edd_order_adjustments} oa
 			INNER JOIN {$wpdb->edd_order_items} oi ON(oi.id = oa.object_id)
-			WHERE {$where}
+			WHERE oi.product_id = %d
 			AND oa.object_type = 'order_item'
 			AND oa.type != 'discount'
 			AND oa.total > 0
 			AND oi.status IN({$status_string})",
+			$this->id,
 			...$statuses
 		);
-		$results           = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
+		if ( ! is_null( $this->price_id ) && is_numeric( $this->price_id ) ) {
+			$query              = $wpdb->prepare( ' AND oi.price_id = %d', $this->price_id );
+			$order_items       .= $query;
+			$order_adjustments .= $query;
+		}
+		$results = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
 
 		return ! empty( $results->revenue ) ? floatval( edd_sanitize_amount( $results->revenue ) ) : 0.00;
 	}
@@ -113,7 +121,6 @@ class Download {
 	public function get_net_sales() {
 		global $wpdb;
 
-		$where         = $this->get_product_price_id_where();
 		$statuses      = edd_get_net_order_statuses();
 		$status_string = $this->convert_status_array_to_string( $statuses );
 
@@ -121,9 +128,10 @@ class Download {
 			"SELECT SUM(oi.quantity) as sales
 			FROM {$wpdb->edd_order_items} oi
 			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-			WHERE {$where}
+			WHERE oi.product_id = %d
 			AND oi.status IN('complete','partially_refunded')
 			AND o.status IN({$status_string})",
+			$this->id,
 			...$statuses
 		);
 		$partial_orders  = $wpdb->prepare(
@@ -131,11 +139,17 @@ class Download {
 			FROM {$wpdb->edd_order_items} oi
 			LEFT JOIN {$wpdb->edd_order_items} ri
 			ON ri.parent = oi.id
-			WHERE {$where}
+			WHERE oi.product_id = %d
 			AND oi.status = 'partially_refunded'
-			AND oi.quantity = - ri.quantity"
+			AND oi.quantity = - ri.quantity",
+			$this->id
 		);
-		$results         = $wpdb->get_row( "SELECT SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
+		if ( ! is_null( $this->price_id ) && is_numeric( $this->price_id ) ) {
+			$query            = $wpdb->prepare( ' AND oi.price_id = %d', $this->price_id );
+			$complete_orders .= $query;
+			$partial_orders  .= $query;
+		}
+		$results = $wpdb->get_row( "SELECT SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
 
 		return ! empty( $results->sales ) ? $results->sales : 0;
 	}
@@ -149,7 +163,6 @@ class Download {
 	public function get_net_earnings() {
 		global $wpdb;
 
-		$where         = $this->get_product_price_id_where();
 		$statuses      = edd_get_net_order_statuses();
 		$status_string = $this->convert_status_array_to_string( $statuses );
 
@@ -164,21 +177,28 @@ class Download {
 			"SELECT SUM((oi.total - oi.tax)/ oi.rate) as revenue
 			FROM {$wpdb->edd_order_items} oi
 			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-			WHERE {$where}
+			WHERE oi.product_id = %d
 			AND oi.status IN('complete','partially_refunded')
 			AND o.status IN({$status_string})",
+			$this->id,
 			...$statuses
 		);
 		$order_adjustments = $wpdb->prepare(
 			"SELECT SUM((oa.total - oa.tax)/ oa.rate) as revenue
 			FROM {$wpdb->edd_order_adjustments} oa
 			INNER JOIN {$wpdb->edd_order_items} oi ON(oi.id = oa.object_id)
-			WHERE {$where}
+			WHERE oi.product_id = %d
 			AND oa.object_type = 'order_item'
 			AND oa.type != 'discount'
 			AND oi.status IN({$status_string})",
+			$this->id,
 			...$statuses
 		);
+		if ( ! is_null( $this->price_id ) && is_numeric( $this->price_id ) ) {
+			$query = $wpdb->prepare( ' AND oi.price_id = %d', $this->price_id );
+			$order_items       .= $query;
+			$order_adjustments .= $query;
+		}
 		$results           = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
 
 		return ! empty( $results->revenue ) ? $results->revenue : 0.00;
@@ -193,21 +213,5 @@ class Download {
 	 */
 	private function convert_status_array_to_string( $statuses ) {
 		return implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-	}
-
-	/**
-	 * Sets up the initial WHERE clause with the product ID and optionally the specific price ID.
-	 *
-	 * @since 3.0
-	 * @return string
-	 */
-	private function get_product_price_id_where() {
-		global $wpdb;
-		$where = $wpdb->prepare( 'oi.product_id = %d', $this->id );
-		if ( ! is_null( $this->price_id ) ) {
-			$where .= $wpdb->prepare( ' AND oi.price_id = %d', $this->price_id );
-		}
-
-		return $where;
 	}
 }
