@@ -55,7 +55,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			'name'           => __( 'Name', 'easy-digital-downloads' ),
 			'price'          => __( 'Price', 'easy-digital-downloads' ),
 			'sales'          => __( 'Sales', 'easy-digital-downloads' ),
-			'earnings'       => __( 'Earnings', 'easy-digital-downloads' ),
+			'earnings'       => __( 'Net Earnings', 'easy-digital-downloads' ),
 		);
 	}
 
