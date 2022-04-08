@@ -1157,8 +1157,15 @@ class Stats {
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
 			$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
-			$download_model    = new \EDD\Models\Download( $value->product_id, $value->price_id );
-			$value->sales      = absint( $download_model->get_net_sales( array( 'start' => $this->query_vars['start'], 'end' => $this->query_vars['end'] ) ) );
+			$download_model    = new \EDD\Models\Download(
+				$value->product_id,
+				$value->price_id,
+				array(
+					'start' => $this->query_vars['start'],
+					'end'   => $this->query_vars['end'],
+				)
+			);
+			$value->sales      = absint( $download_model->get_net_sales() );
 			$value->total      = $this->maybe_format( $value->total );
 
 			// Add instance of EDD_Download to resultant object.

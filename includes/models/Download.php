@@ -27,13 +27,22 @@ class Download {
 	public $price_id = null;
 
 	/**
+	 * Optional additional parameters that can be passed to the model.
+	 *
+	 * @since 3.0
+	 * @var array
+	 */
+	public $args = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @param int $id The download ID.
 	 */
-	public function __construct( $id, $price_id = null ) {
+	public function __construct( $id, $price_id = null, $args = array() ) {
 		$this->id       = $id;
 		$this->price_id = $price_id;
+		$this->args     = $args;
 	}
 
 	/**
@@ -108,13 +117,13 @@ class Download {
 	 * @since 3.0
 	 * @return int
 	 */
-	public function get_net_sales( $dates = array() ) {
+	public function get_net_sales() {
 		global $wpdb;
 
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
 		$order_status_sql = $this->generate_order_status_query_sql();
-		$date_query_sql   = $this->generate_date_query_sql( $dates );
+		$date_query_sql   = $this->generate_date_query_sql();
 
 		$complete_orders =
 			"SELECT SUM(oi.quantity) as sales
@@ -245,27 +254,26 @@ class Download {
 	 * Gets the query string for the dates, if set.
 	 *
 	 * @since 3.0
-	 * @param array $dates Optional start/end dates for the query.
 	 * @return string
 	 */
-	private function generate_date_query_sql( $dates = array() ) {
-		if ( empty( $dates['start'] ) && empty( $dates['end'] ) ) {
+	private function generate_date_query_sql() {
+		if ( empty( $this->args['start'] ) && empty( $this->args['end'] ) ) {
 			return '';
 		}
 		global $wpdb;
 		$date_query_sql = ' AND ';
 
-		if ( ! empty( $dates['start'] ) ) {
-			$date_query_sql .= $wpdb->prepare( 'oi.date_created >= %s', $dates['start'] );
+		if ( ! empty( $this->args['start'] ) ) {
+			$date_query_sql .= $wpdb->prepare( 'oi.date_created >= %s', $this->args['start'] );
 		}
 
 		// Join dates with `AND` if start and end date set.
-		if ( ! empty( $dates['start'] ) && ! empty( $dates['end'] ) ) {
+		if ( ! empty( $this->args['start'] ) && ! empty( $this->args['end'] ) ) {
 			$date_query_sql .= ' AND ';
 		}
 
-		if ( ! empty( $dates['end'] ) ) {
-			$date_query_sql .= $wpdb->prepare( 'oi.date_created <= %s', $dates['end'] );
+		if ( ! empty( $this->args['end'] ) ) {
+			$date_query_sql .= $wpdb->prepare( 'oi.date_created <= %s', $this->args['end'] );
 		}
 
 		return $date_query_sql;
