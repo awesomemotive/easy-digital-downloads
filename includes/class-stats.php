@@ -1111,8 +1111,8 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
-		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['exclude_taxes']     = true;
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
