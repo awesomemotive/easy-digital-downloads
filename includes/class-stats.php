@@ -1142,7 +1142,7 @@ class Stats {
 			);
 		}
 
-		$sql = "SELECT product_id, price_id, COUNT({$this->query_vars['table']}.id) AS sales, {$function} AS total
+		$sql = "SELECT product_id, price_id, {$function} AS total
 				FROM {$this->query_vars['table']}
 				INNER JOIN {$this->get_db()->edd_orders} ON({$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id)
 				WHERE 1=1 {$where} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
@@ -1154,11 +1154,11 @@ class Stats {
 
 		array_walk( $result, function ( &$value ) {
 
-			$download_model = new \EDD\Models\Download( $value->product_id, $value->price_id );
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
 			$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
-			$value->sales      = absint( $download_model->get_net_sales() );
+			$download_model    = new \EDD\Models\Download( $value->product_id, $value->price_id );
+			$value->sales      = absint( $download_model->get_net_sales( array( 'start' => $this->query_vars['start'], 'end' => $this->query_vars['end'] ) ) );
 			$value->total      = $this->maybe_format( $value->total );
 
 			// Add instance of EDD_Download to resultant object.
