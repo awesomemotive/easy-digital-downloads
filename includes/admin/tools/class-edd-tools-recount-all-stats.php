@@ -13,21 +13,38 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'EDD_Tools_Recount_Download_Stats' ) ) {
-	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/class-edd-tools-recount-download-stats.php';
-}
-
 /**
  * EDD_Tools_Recount_All_Stats Class
  *
  * @since 2.5
  */
-class EDD_Tools_Recount_All_Stats extends EDD_Tools_Recount_Download_Stats {
+class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 
 	/**
 	 * @var int[]
 	 */
 	private $download_ids;
+
+	/**
+	 * Our export type. Used for export-type specific filters/actions
+	 * @var string
+	 * @since 2.5
+	 */
+	public $export_type = '';
+
+	/**
+	 * Allows for a non-download batch processing to be run.
+	 * @since  2.5
+	 * @var boolean
+	 */
+	public $is_void = true;
+
+	/**
+	 * Sets the number of items to pull on each step
+	 * @since  2.5
+	 * @var integer
+	 */
+	public $per_step = 30;
 
 	/**
 	 * Return the calculated completion percentage
@@ -65,8 +82,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Tools_Recount_Download_Stats {
 
 		if ( ! empty( $download_ids ) && is_array( $download_ids ) ) {
 			foreach ( $this->get_download_ids() as $download_id ) {
-				$this->download_id = $download_id;
-				$this->get_data();
+				edd_recalculate_download_sales_earnings( $download_id );
 			}
 		}
 
@@ -106,4 +122,15 @@ class EDD_Tools_Recount_All_Stats extends EDD_Tools_Recount_Download_Stats {
 		return $this->download_ids;
 	}
 
+	/**
+	 * Delete an option
+	 *
+	 * @since  2.5
+	 * @param  string $key The option_name to delete
+	 * @return void
+	 */
+	protected function delete_data( $key ) {
+		global $wpdb;
+		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
+	}
 }

@@ -772,11 +772,15 @@ class EDD_HTML_Elements {
 				'readonly' => false,
 			),
 			'label'   => '',
+			'value'   => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$class   = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
+		$classes   = explode( ' ', $args['class'] );
+		$classes[] = $args['name'];
+		$class     = implode( ' ', array_map( 'sanitize_html_class', array_unique( array_filter( $classes ) ) ) );
+
 		$options = '';
 		if ( ! empty( $args['options']['disabled'] ) ) {
 			$options .= ' disabled="disabled"';
@@ -784,12 +788,17 @@ class EDD_HTML_Elements {
 			$options .= ' readonly';
 		}
 
+		$value = '';
+		if ( ! empty( $args['value'] ) ) {
+			$value .= ' value="' . esc_attr( $args['value'] ) . '"';
+		}
+
 		// Checked could mean 'on' or 1 or true, so sanitize it for checked()
 		$to_check = ! empty( $args['current'] );
 		$checked  = checked( true, $to_check, false );
 
 		// Get the HTML to output
-		$output   = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" ' . $checked . ' />';
+		$output = '<input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . esc_attr( $class ) . '" ' . $value . $checked . $options . ' />';
 
 		if ( ! empty( $args['label'] ) ) {
 			$output .= '<label for="' . esc_attr( $args['name'] ) . '">' . wp_kses_post( $args['label'] ) . '</label>';
