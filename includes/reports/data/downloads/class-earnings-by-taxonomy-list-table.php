@@ -81,18 +81,26 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		$data       = array();
 		$parent_ids = array();
 
-		$column = Reports\get_taxes_excluded_filter() ? 'oi.total - oi.tax' : 'oi.total';
-		$join   = $currency_clause = '';
+		$column          = Reports\get_taxes_excluded_filter() ? 'oi.total - oi.tax' : 'oi.total';
+		$join            = " INNER JOIN {$wpdb->edd_orders} o ON o.id = oi.order_id ";
+		$currency_clause = '';
 
 		if ( empty( $currency ) || 'convert' === $currency ) {
 			$column = sprintf( '(%s) / oi.rate', $column );
 		} elseif ( array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
-			$join            = " INNER JOIN {$wpdb->edd_orders} o ON o.id = oi.order_id ";
 			$currency_clause = $wpdb->prepare(
 				" AND o.currency = %s ",
 				strtoupper( $currency )
 			);
 		}
+
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+		$status_sql    = $wpdb->prepare(
+			" AND oi.status IN('complete','partially_refunded')
+			AND o.status IN({$status_string})",
+			...$statuses
+		);
 
 		foreach ( $taxonomies as $k => $t ) {
 			$c       = new \stdClass();
@@ -100,12 +108,12 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			$c->name = $taxonomies[ $k ]['name'];
 
 			$placeholders   = implode( ', ', array_fill( 0, count( $taxonomies[ $k ]['object_ids'] ), '%d' ) );
-			$product_id__in = $wpdb->prepare( "product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
+			$product_id__in = $wpdb->prepare( "oi.product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
 
-			$sql = "SELECT SUM({$column}) as total, COUNT(oi.id) AS sales
+			$sql = "SELECT SUM({$column}) as total
 					FROM {$wpdb->edd_order_items} oi
 					{$join}
-					WHERE {$product_id__in} {$currency_clause} {$date_query_sql}";
+					WHERE {$product_id__in} {$currency_clause} {$date_query_sql} {$status_sql}";
 
 			$result = $wpdb->get_row( $sql ); // WPCS: unprepared SQL ok.
 
@@ -113,9 +121,21 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 				? 0.00
 				: floatval( $result->total );
 
-			$sales = null === $result && null === $result->sales
-				? 0
-				: absint( $result->sales );
+			$complete_orders = "SELECT SUM(oi.quantity) as sales
+				FROM {$wpdb->edd_order_items} oi
+				{$join}
+				WHERE {$product_id__in} {$currency_clause} {$date_query_sql} {$status_sql}";
+			$partial_orders  = "SELECT SUM(oi.quantity) as sales
+				FROM {$wpdb->edd_order_items} oi
+				LEFT JOIN {$wpdb->edd_order_items} ri
+				ON ri.parent = oi.id
+				{$join}
+				WHERE {$product_id__in} {$currency_clause} {$date_query_sql}
+				AND oi.status ='partially_refunded'
+				AND oi.quantity = - ri.quantity";
+			$sql_sales       = $wpdb->get_row( "SELECT SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
+
+			$sales = ! empty( $sql_sales->sales ) ? $sql_sales->sales : 0;
 
 			$c->sales    = $sales;
 			$c->earnings = $earnings;
