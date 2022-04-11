@@ -311,6 +311,22 @@ function edd_setup_download_taxonomies() {
 add_action( 'init', 'edd_setup_download_taxonomies', 0 );
 
 /**
+ * Gets the names for the default download taxonomies.
+ *
+ * @since 3.0
+ * @return array
+ */
+function edd_get_download_taxonomies() {
+	return apply_filters(
+		'edd_download_taxonomies',
+		array(
+			'download_category',
+			'download_tag',
+		)
+	);
+}
+
+/**
  * Get the singular and plural labels for a download taxonomy
  *
  * @since  2.4
