@@ -299,10 +299,10 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
 
-		$this->assertEquals( '60', $out['products'][0]['stats']['total']['sales'] );
-		$this->assertEquals( '229.430000', $out['products'][0]['stats']['total']['earnings'] );
-		$this->assertEquals( '60', $out['products'][0]['stats']['monthly_average']['sales'] );
-		$this->assertEquals( '229.430000', $out['products'][0]['stats']['monthly_average']['earnings'] );
+		$this->assertEquals( '1', $out['products'][0]['stats']['total']['sales'] );
+		$this->assertEquals( '100.00', $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertEquals( '1', $out['products'][0]['stats']['monthly_average']['sales'] );
+		$this->assertEquals( '100.00', $out['products'][0]['stats']['monthly_average']['earnings'] );
 	}
 
 	public function test_get_products_pricing() {
@@ -529,14 +529,14 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
 		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
-		$this->assertEquals( 60, $out['products'][0]['stats']['total']['sales'] );
+		$this->assertEquals( 1, $out['products'][0]['stats']['total']['sales'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['total'] );
-		$this->assertEquals( 229.43, $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertEquals( 100.00, $out['products'][0]['stats']['total']['earnings'] );
 		$this->assertArrayHasKey( 'monthly_average', $out['products'][0]['stats'] );
 		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
-		$this->assertEquals( 60, $out['products'][0]['stats']['monthly_average']['sales'] );
+		$this->assertEquals( 1, $out['products'][0]['stats']['monthly_average']['sales'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
-		$this->assertEquals( 229.43, $out['products'][0]['stats']['monthly_average']['earnings'] );
+		$this->assertEquals( 100.00, $out['products'][0]['stats']['monthly_average']['earnings'] );
 
 		$this->assertArrayHasKey( 'pricing', $out['products'][0] );
 		$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );

@@ -3,7 +3,7 @@
 set -e
 
 if [[ $# -lt 3 ]]; then
-	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [force download]"
+	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [filter] [force download]"
 	exit 1
 fi
 
@@ -12,7 +12,8 @@ DB_USER="$2"
 DB_PASS="$3"
 DB_HOST="${4-localhost}"
 WP_VERSION="${5-latest}"
-FORCE="${6-false}"
+FILTER="${6-''}"
+FORCE="${7-false}"
 
 bin/install-wp-tests.sh "${DB_NAME}" "${DB_USER}" "${DB_PASS}" "${DB_HOST}" "${WP_VERSION}" "${FORCE}"
 
@@ -33,5 +34,7 @@ else
 	echo "Running inplace..."
 fi
 
+echo "Running tests for ${FILTER}"
+
 composer --no-cache install
-vendor/bin/phpunit
+vendor/bin/phpunit --filter "${FILTER}"

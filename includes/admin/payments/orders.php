@@ -706,6 +706,11 @@ function edd_order_details_overview( $order ) {
 		}
 	}
 
+	$has_quantity = true;
+	if ( edd_is_add_order_page() && ! edd_item_quantities_enabled() ) {
+		$has_quantity = false;
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
@@ -714,7 +719,7 @@ function edd_order_details_overview( $order ) {
 			'adjustments'  => $_adjustments,
 			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
-			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasQuantity'  => $has_quantity,
 			'hasTax'       => $has_tax,
 			'hasDiscounts' => true === edd_has_active_discounts(),
 			'order'        => array(
@@ -764,8 +769,8 @@ function edd_order_details_overview( $order ) {
 			<tr>
 				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<?php if ( true === edd_item_quantities_enabled() ) : ?>
-				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+				<?php if ( $has_quantity ) : ?>
+					<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
 				<?php endif; ?>
 				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
 			</tr>
