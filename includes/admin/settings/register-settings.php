@@ -1591,14 +1591,12 @@ function edd_sanitize_html_class( $class = '' ) {
  *
  * @since 3.0
  */
-function edd_sanitize_banned_emails( $value, $key ) {
-	if ( 'banned_emails' !== $key ) {
-		return $value;
-	}
+function edd_sanitize_banned_emails( $input ) {
 
-	if ( ! empty( $value ) ) {
+	$emails = '';
+	if ( ! empty( $input['banned_emails'] ) ) {
 		// Sanitize the input
-		$emails = array_map( 'trim', explode( "\n", $value ) );
+		$emails = array_map( 'trim', explode( "\n", $input['banned_emails'] ) );
 		$emails = array_unique( $emails );
 		$emails = array_map( 'sanitize_text_field', $emails );
 
@@ -1607,13 +1605,12 @@ function edd_sanitize_banned_emails( $value, $key ) {
 				unset( $emails[ $id ] );
 			}
 		}
-	} else {
-		$emails = '';
 	}
+	$input['banned_emails'] = $emails;
 
-	return $emails;
+	return $input;
 }
-add_filter( 'edd_settings_sanitize', 'edd_sanitize_banned_emails', 10, 2 );
+add_filter( 'edd_settings_gateways-checkout_sanitize', 'edd_sanitize_banned_emails' );
 
 /**
  * Retrieve settings tabs
