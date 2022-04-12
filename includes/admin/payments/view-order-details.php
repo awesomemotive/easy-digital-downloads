@@ -119,6 +119,7 @@ wp_enqueue_script( 'edd-admin-payments' );
 
 		wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
 		<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $order->id ); ?>"/>
+
 		<input type="hidden" name="edd_action" value="update_payment_details"/>
 
 		<?php do_action( 'edd_view_order_details_after', $order->id ); ?>
