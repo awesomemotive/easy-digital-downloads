@@ -174,6 +174,48 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_order_item_count
+	 */
+	public function test_get_order_item_count_null_price_id_should_be_2() {
+		$count = self::$stats->get_order_item_count(
+			array(
+				'product_id' => 1,
+				'price_id'   => null,
+			)
+		);
+
+		$this->assertSame( 2, $count );
+	}
+
+	/**
+	 * @covers ::get_order_item_count
+	 */
+	public function test_get_order_item_count_invalid_price_id_should_be_0() {
+		$count = self::$stats->get_order_item_count(
+			array(
+				'product_id' => 1,
+				'price_id'   => 2,
+			)
+		);
+
+		$this->assertSame( 0, $count );
+	}
+
+	/**
+	 * @covers ::get_order_item_refund_count
+	 */
+	public function test_get_order_item_refund_count_with_invalid_price_id_should_be_0() {
+		$count = self::$stats->get_order_item_refund_count(
+			array(
+				'product_id' => 1,
+				'price_id'   => 2,
+			)
+		);
+
+		$this->assertSame( 0, $count );
+	}
+
+	/**
 	 * @covers ::get_order_refund_amount
 	 */
 	public function test_get_order_refund_amount_with_range_last_year_should_be_0() {
