@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-03-18 12:01:48+00:00\n"
+"POT-Creation-Date: 2022-04-12 17:23:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -112,9 +112,9 @@ msgstr ""
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:109
 #: includes/admin/reporting/export/class-batch-export.php:146
 #: includes/admin/reporting/export/export-actions.php:24
-#: includes/admin/tools/class-edd-tools-recount-all-stats.php:61
+#: includes/admin/tools/class-edd-tools-recount-all-stats.php:78
 #: includes/admin/tools/class-edd-tools-recount-customer-stats.php:114
-#: includes/admin/tools/class-edd-tools-recount-download-stats.php:149
+#: includes/admin/tools/class-edd-tools-recount-download-stats.php:117
 #: includes/admin/tools/class-edd-tools-recount-single-customer-stats.php:114
 #: includes/admin/tools/class-edd-tools-recount-store-earnings.php:157
 #: includes/admin/tools/class-edd-tools-reset-stats.php:121
@@ -135,7 +135,7 @@ msgstr ""
 #: includes/class-edd-license-handler.php:385
 #: includes/deprecated-functions.php:488 includes/deprecated-functions.php:505
 #: includes/deprecated-functions.php:513 includes/deprecated-functions.php:915
-#: includes/download-functions.php:1638 includes/emails/actions.php:59
+#: includes/download-functions.php:1543 includes/emails/actions.php:59
 #: includes/emails/template.php:239 includes/error-tracking.php:59
 #: includes/gateways/functions.php:310 includes/gateways/manual.php:33
 #: includes/gateways/paypal/admin/connect.php:455
@@ -631,8 +631,8 @@ msgstr ""
 #: includes/admin/promos/class-promo-handler.php:116
 #: includes/admin/promos/class-promo-handler.php:123
 #: includes/admin/promos/class-promo-handler.php:128
-#: includes/admin/tools/class-edd-tools-recount-all-stats.php:61
-#: includes/admin/tools/class-edd-tools-recount-download-stats.php:149
+#: includes/admin/tools/class-edd-tools-recount-all-stats.php:78
+#: includes/admin/tools/class-edd-tools-recount-download-stats.php:117
 #: includes/gateways/paypal/admin/connect.php:106
 #: includes/gateways/paypal/admin/connect.php:182
 #: includes/gateways/paypal/admin/connect.php:292
@@ -703,8 +703,8 @@ msgstr ""
 #: includes/admin/customers/class-customer-addresses-table.php:152
 #: includes/admin/customers/class-customer-email-addresses-table.php:148
 #: includes/admin/customers/class-customer-table.php:133
-#: includes/misc-functions.php:1433 includes/payments/functions.php:604
-#: tests/orders/tests-payments.php:186
+#: includes/misc-functions.php:1433 includes/payments/functions.php:539
+#: tests/orders/tests-payments.php:173
 msgid "Pending"
 msgstr ""
 
@@ -1960,31 +1960,11 @@ msgid "Price"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:35
-#: includes/admin/reporting/class-download-reports-table.php:96
-#: includes/admin/reporting/export/class-batch-export-downloads.php:57
-#: includes/admin/reporting/export/class-batch-export-sales-and-earnings.php:60
-#: includes/admin/reporting/graphing.php:300
-#: includes/admin/reporting/graphing.php:599
-#: includes/admin/reporting/reports.php:284
-#: includes/admin/reporting/reports.php:446
-#: includes/admin/reporting/reports.php:720
-#: includes/admin/reporting/reports.php:896
-#: includes/admin/reporting/reports.php:1216
-#: includes/admin/reporting/reports.php:1376
-#: includes/admin/reporting/reports.php:1561
-#: includes/reports/data/downloads/class-top-selling-downloads-list-table.php:57
-#: includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php:60
-#: tests/reports/data/charts/v2/tests-dateset.php:213
-#: tests/reports/data/charts/v2/tests-manifest.php:265
-#: tests/reports/data/charts/v2/tests-manifest.php:333
-#: tests/reports/data/charts/v2/tests-manifest.php:422
-#: tests/reports/data/charts/v2/tests-manifest.php:459
-#: tests/reports/data/charts/v2/tests-manifest.php:498
-msgid "Sales"
+msgid "Net Sales"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:36
-msgid "Gross Revenue"
+msgid "Net Revenue"
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:184
@@ -2348,11 +2328,11 @@ msgid ""
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1323
-msgid "Sales:"
+msgid "Net Sales:"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1328
-msgid "Gross Revenue:"
+msgid "Net Revenue:"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1335
@@ -3537,6 +3517,29 @@ msgstr ""
 msgid "View Detailed Report"
 msgstr ""
 
+#: includes/admin/reporting/class-download-reports-table.php:96
+#: includes/admin/reporting/export/class-batch-export-downloads.php:57
+#: includes/admin/reporting/export/class-batch-export-sales-and-earnings.php:60
+#: includes/admin/reporting/graphing.php:300
+#: includes/admin/reporting/graphing.php:599
+#: includes/admin/reporting/reports.php:284
+#: includes/admin/reporting/reports.php:446
+#: includes/admin/reporting/reports.php:720
+#: includes/admin/reporting/reports.php:896
+#: includes/admin/reporting/reports.php:1216
+#: includes/admin/reporting/reports.php:1376
+#: includes/admin/reporting/reports.php:1561
+#: includes/reports/data/downloads/class-top-selling-downloads-list-table.php:57
+#: includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php:60
+#: tests/reports/data/charts/v2/tests-dateset.php:213
+#: tests/reports/data/charts/v2/tests-manifest.php:265
+#: tests/reports/data/charts/v2/tests-manifest.php:333
+#: tests/reports/data/charts/v2/tests-manifest.php:422
+#: tests/reports/data/charts/v2/tests-manifest.php:459
+#: tests/reports/data/charts/v2/tests-manifest.php:498
+msgid "Sales"
+msgstr ""
+
 #: includes/admin/reporting/class-download-reports-table.php:98
 msgid "Monthly Average Sales"
 msgstr ""
@@ -4015,6 +4018,14 @@ msgstr ""
 msgid "Sales / Earnings"
 msgstr ""
 
+#: includes/admin/reporting/reports.php:234
+#: includes/admin/reporting/reports.php:255
+#: includes/admin/reporting/reports.php:277
+#: includes/admin/reporting/reports.php:296
+#: includes/reports/data/taxes/class-tax-collected-by-location-list-table.php:78
+msgid "Gross"
+msgstr ""
+
 #: includes/admin/reporting/reports.php:255
 msgid "All Time"
 msgstr ""
@@ -4059,12 +4070,21 @@ msgstr ""
 msgid "Sales and Earnings"
 msgstr ""
 
+#: includes/admin/reporting/reports.php:438
+#: includes/reports/data/taxes/class-tax-collected-by-location-list-table.php:80
+msgid "Net"
+msgstr ""
+
 #: includes/admin/reporting/reports.php:575
 msgid "Most Valuable %s"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:612
 msgid "Average Sales / Earnings"
+msgstr ""
+
+#: includes/admin/reporting/reports.php:627
+msgid "Net\t"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:663
@@ -5807,154 +5827,154 @@ msgstr ""
 msgid "Purchase Buttons"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2068
+#: includes/admin/settings/register-settings.php:2075
 #: includes/gateways/functions.php:70 includes/gateways/functions.php:71
 msgid "Store Gateway"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2068
+#: includes/admin/settings/register-settings.php:2075
 msgid ""
 "This is an internal payment gateway which can be used for manually added "
 "orders or test purchases. No money is actually processed."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2083
+#: includes/admin/settings/register-settings.php:2090
 msgid "These gateways will be offered at checkout."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2083
+#: includes/admin/settings/register-settings.php:2090
 msgid "More <a href=\"%s\">Payment Gateways</a> are available."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2112
+#: includes/admin/settings/register-settings.php:2119
 msgid "&mdash; No gateway &mdash;"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2339
+#: includes/admin/settings/register-settings.php:2346
 msgid "The callback function used for the %s setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2521
+#: includes/admin/settings/register-settings.php:2528
 msgid "Attach File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2521
+#: includes/admin/settings/register-settings.php:2528
 msgid "Attach"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2638
+#: includes/admin/settings/register-settings.php:2645
 msgid "Recapture plugin activated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2639
+#: includes/admin/settings/register-settings.php:2646
 msgid "%sAccess your Recapture account%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2644
+#: includes/admin/settings/register-settings.php:2651
 msgid "Disconnect Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2648
+#: includes/admin/settings/register-settings.php:2655
 msgid "%sComplete your connection to Recapture%s"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2656
+#: includes/admin/settings/register-settings.php:2663
 msgid ""
 "We recommend Recapture for recovering lost revenue by automatically sending "
 "effective, targeted emails to customers who abandon their shopping cart."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2656
+#: includes/admin/settings/register-settings.php:2663
 msgid "%sLearn more%s (Free trial available)"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2660
+#: includes/admin/settings/register-settings.php:2667
 msgid "Connect with Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2693
+#: includes/admin/settings/register-settings.php:2700
 #. translators: Tax rate country code
 msgid ""
 "Duplicate tax rates are not allowed. Please deactivate the existing %s tax "
 "rate before adding or activating another."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2694
+#: includes/admin/settings/register-settings.php:2701
 msgid "Please select a country."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2695
+#: includes/admin/settings/register-settings.php:2702
 msgid "Please enter a tax rate greater than 0."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2778
+#: includes/admin/settings/register-settings.php:2785
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2790
+#: includes/admin/settings/register-settings.php:2797
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2801
+#: includes/admin/settings/register-settings.php:2808
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2813
+#: includes/admin/settings/register-settings.php:2820
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2824
+#: includes/admin/settings/register-settings.php:2831
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2832
+#: includes/admin/settings/register-settings.php:2839
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2840
+#: includes/admin/settings/register-settings.php:2847
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2847
+#: includes/admin/settings/register-settings.php:2854
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2848
+#: includes/admin/settings/register-settings.php:2855
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2864
+#: includes/admin/settings/register-settings.php:2871
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2870
+#: includes/admin/settings/register-settings.php:2877
 msgid "Your license key expires soon! It expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2878
+#: includes/admin/settings/register-settings.php:2885
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2893
+#: includes/admin/settings/register-settings.php:2900
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2906
+#: includes/admin/settings/register-settings.php:2913
 msgid "Deactivate License"
 msgstr ""
 
@@ -6018,7 +6038,7 @@ msgstr ""
 msgid "This is the text inside the button or link"
 msgstr ""
 
-#: includes/admin/tools/class-edd-tools-recount-all-stats.php:83
+#: includes/admin/tools/class-edd-tools-recount-all-stats.php:99
 msgid "Earnings and sales stats successfully recounted."
 msgstr ""
 
@@ -6027,7 +6047,7 @@ msgstr ""
 msgid "Customer stats successfully recounted."
 msgstr ""
 
-#: includes/admin/tools/class-edd-tools-recount-download-stats.php:161
+#: includes/admin/tools/class-edd-tools-recount-download-stats.php:129
 msgid "Earnings and sales stats successfully recounted for %s."
 msgstr ""
 
@@ -7805,11 +7825,11 @@ msgstr ""
 msgid "Single Use: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:486 includes/class-edd-cli.php:1519
+#: includes/class-edd-cli.php:486 includes/class-edd-cli.php:1551
 msgid "No action specified, did you mean"
 msgstr ""
 
-#: includes/class-edd-cli.php:488 includes/class-edd-cli.php:1521
+#: includes/class-edd-cli.php:488 includes/class-edd-cli.php:1553
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
@@ -7937,77 +7957,85 @@ msgstr ""
 msgid "Refund Records Created: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1351
+#: includes/class-edd-cli.php:1353
 msgid "No payment records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1372
+#: includes/class-edd-cli.php:1385
+msgid "Sales and Earnings successfully recalculated for all downloads."
+msgstr ""
+
+#: includes/class-edd-cli.php:1386
+msgid "Downloads Updated: "
+msgstr ""
+
+#: includes/class-edd-cli.php:1404
 msgid ""
 "Do you want to remove legacy data? This will permanently remove legacy "
 "discounts, logs, and order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1380
+#: includes/class-edd-cli.php:1412
 msgid ""
 "Legacy discounts have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1382
+#: includes/class-edd-cli.php:1414
 msgid "Removing old discount data."
 msgstr ""
 
-#: includes/class-edd-cli.php:1403
+#: includes/class-edd-cli.php:1435
 msgid ""
 "Legacy logs have already been removed. To run this anyway, use the --force "
 "argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1405
+#: includes/class-edd-cli.php:1437
 msgid "Removing old logs."
 msgstr ""
 
-#: includes/class-edd-cli.php:1426
+#: includes/class-edd-cli.php:1458
 msgid ""
 "Legacy order notes have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1428
+#: includes/class-edd-cli.php:1460
 msgid "Removing old order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1452
+#: includes/class-edd-cli.php:1484
 msgid "Updating customers database table."
 msgstr ""
 
-#: includes/class-edd-cli.php:1461
+#: includes/class-edd-cli.php:1493
 msgid ""
 "Legacy customer emails have already been removed. To run this anyway, use "
 "the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1463
+#: includes/class-edd-cli.php:1495
 msgid "Removing old customer emails."
 msgstr ""
 
-#: includes/class-edd-cli.php:1474
+#: includes/class-edd-cli.php:1506
 msgid ""
 "Legacy customer addresses have already been removed. To run this anyway, "
 "use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1476
+#: includes/class-edd-cli.php:1508
 msgid "Removing old customer addresses."
 msgstr ""
 
-#: includes/class-edd-cli.php:1487
+#: includes/class-edd-cli.php:1519
 msgid ""
 "Legacy orders have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1489
+#: includes/class-edd-cli.php:1521
 msgid "Removing old orders."
 msgstr ""
 
@@ -8015,7 +8043,7 @@ msgstr ""
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-edd-discount.php:358 includes/class-edd-download.php:188
+#: includes/class-edd-discount.php:358 includes/class-edd-download.php:189
 msgid "Can't get property %s"
 msgstr ""
 
@@ -8037,27 +8065,23 @@ msgstr ""
 msgid "Minimum order of %s not met."
 msgstr ""
 
-#: includes/class-edd-discount.php:1470 includes/class-edd-discount.php:1493
-msgid "The product requirements for this discount are not met."
-msgstr ""
-
-#: includes/class-edd-discount.php:1506
+#: includes/class-edd-discount.php:1468
 msgid "This discount is not valid for the cart contents."
 msgstr ""
 
-#: includes/class-edd-discount.php:1601
+#: includes/class-edd-discount.php:1562
 msgid "This discount has already been redeemed."
 msgstr ""
 
-#: includes/class-edd-discount.php:1683
+#: includes/class-edd-discount.php:1644
 msgid "This discount is expired."
 msgstr ""
 
-#: includes/class-edd-discount.php:1688
+#: includes/class-edd-discount.php:1649
 msgid "This discount is not active."
 msgstr ""
 
-#: includes/class-edd-download.php:208
+#: includes/class-edd-download.php:209
 msgid "New Download Product"
 msgstr ""
 
@@ -8105,7 +8129,7 @@ msgstr ""
 msgid "Choose a Region"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:954
+#: includes/class-edd-html-elements.php:963
 msgid "Enter Username"
 msgstr ""
 
@@ -8827,7 +8851,7 @@ msgstr ""
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
-#: includes/deprecated-functions.php:505 includes/download-functions.php:1638
+#: includes/deprecated-functions.php:505 includes/download-functions.php:1543
 msgid "Sorry but your download link has expired."
 msgstr ""
 
@@ -10628,7 +10652,7 @@ msgstr ""
 #: includes/gateways/stripe/includes/gateway-actions.php:17
 #: includes/gateways/stripe/includes/gateway-actions.php:26
 #: includes/gateways/stripe/includes/gateway-actions.php:35
-#: includes/post-types.php:405
+#: includes/post-types.php:421
 #. translators: %s Payment status count
 msgid "Active <span class=\"count\">(%s)</span>"
 msgid_plural "Active <span class=\"count\">(%s)</span>"
@@ -11232,6 +11256,11 @@ msgstr ""
 msgid "Invalid argument. Please check your amounts and try again."
 msgstr ""
 
+#: includes/orders/functions/transitions.php:30
+#. translators: %1$s Old order status. %2$s New order status.
+msgid "Status changed from %1$s to %2$s"
+msgstr ""
+
 #: includes/orders/functions/types.php:92
 msgid "Refund"
 msgstr ""
@@ -11240,66 +11269,61 @@ msgstr ""
 msgid "Invoice"
 msgstr ""
 
-#: includes/payments/actions.php:253
+#: includes/payments/actions.php:249
 msgid "After payment actions processed."
 msgstr ""
 
-#: includes/payments/actions.php:278
-#. translators: %1$s Old order status. %2$s New order status.
-msgid "Status changed from %1$s to %2$s"
-msgstr ""
-
-#: includes/payments/actions.php:541 includes/payments/actions.php:602
+#: includes/payments/actions.php:491 includes/payments/actions.php:552
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:545
+#: includes/payments/actions.php:495
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:623 includes/payments/actions.php:657
+#: includes/payments/actions.php:573 includes/payments/actions.php:607
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:625
+#: includes/payments/actions.php:575
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:626 templates/shortcode-login.php:33
+#: includes/payments/actions.php:576 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
-#: includes/payments/class-edd-payment.php:1941
+#: includes/payments/class-edd-payment.php:1843
 msgid ""
 "Array key \"post_status\" is no longer a supported attribute for the "
 "\"edd_update_payment_status_fields\" filter. Please use \"status\" instead."
 msgstr ""
 
-#: includes/payments/functions.php:605 tests/orders/tests-payments.php:187
+#: includes/payments/functions.php:540 tests/orders/tests-payments.php:174
 msgid "Processing"
 msgstr ""
 
-#: includes/payments/functions.php:606 tests/orders/tests-payments.php:188
+#: includes/payments/functions.php:541 tests/orders/tests-payments.php:175
 msgid "Completed"
 msgstr ""
 
-#: includes/payments/functions.php:607 tests/orders/tests-payments.php:189
+#: includes/payments/functions.php:542 tests/orders/tests-payments.php:176
 msgid "Refunded"
 msgstr ""
 
-#: includes/payments/functions.php:608 tests/orders/tests-payments.php:190
+#: includes/payments/functions.php:543 tests/orders/tests-payments.php:177
 msgid "Partially Refunded"
 msgstr ""
 
-#: includes/payments/functions.php:609 tests/orders/tests-payments.php:191
+#: includes/payments/functions.php:544 tests/orders/tests-payments.php:178
 msgid "Revoked"
 msgstr ""
 
-#: includes/payments/functions.php:610 tests/orders/tests-payments.php:192
+#: includes/payments/functions.php:545 tests/orders/tests-payments.php:179
 msgid "Failed"
 msgstr ""
 
-#: includes/payments/functions.php:611 tests/orders/tests-payments.php:193
+#: includes/payments/functions.php:546 tests/orders/tests-payments.php:180
 msgid "Abandoned"
 msgstr ""
 
@@ -11509,83 +11533,83 @@ msgstr ""
 msgid "Choose from most used %s tags"
 msgstr ""
 
-#: includes/post-types.php:363
+#: includes/post-types.php:379
 msgid "Refunded <span class=\"count\">(%s)</span>"
 msgid_plural "Refunded <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:371
+#: includes/post-types.php:387
 msgid "Failed <span class=\"count\">(%s)</span>"
 msgid_plural "Failed <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:379
+#: includes/post-types.php:395
 msgid "Revoked <span class=\"count\">(%s)</span>"
 msgid_plural "Revoked <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:387
+#: includes/post-types.php:403
 msgid "Abandoned <span class=\"count\">(%s)</span>"
 msgid_plural "Abandoned <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:395
+#: includes/post-types.php:411
 msgid "Processing <span class=\"count\">(%s)</span>"
 msgid_plural "Processing <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:413
+#: includes/post-types.php:429
 msgid "Inactive <span class=\"count\">(%s)</span>"
 msgid_plural "Inactive <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:434 includes/post-types.php:435
+#: includes/post-types.php:450 includes/post-types.php:451
 msgid "%2$s updated. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/post-types.php:436
+#: includes/post-types.php:452
 msgid "%2$s published. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/post-types.php:437
+#: includes/post-types.php:453
 msgid "%2$s saved. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/post-types.php:438
+#: includes/post-types.php:454
 msgid "%2$s submitted. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/post-types.php:461
+#: includes/post-types.php:477
 msgid "%1$s %2$s updated."
 msgid_plural "%1$s %3$s updated."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:462
+#: includes/post-types.php:478
 msgid "%1$s %2$s not updated, somebody is editing it."
 msgid_plural "%1$s %3$s not updated, somebody is editing them."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:463
+#: includes/post-types.php:479
 msgid "%1$s %2$s permanently deleted."
 msgid_plural "%1$s %3$s permanently deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:464
+#: includes/post-types.php:480
 msgid "%1$s %2$s moved to the Trash."
 msgid_plural "%1$s %3$s moved to the Trash."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/post-types.php:465
+#: includes/post-types.php:481
 msgid "%1$s %2$s restored from the Trash."
 msgid_plural "%1$s %3$s restored from the Trash."
 msgstr[0] ""
@@ -11983,14 +12007,6 @@ msgstr ""
 
 #: includes/reports/data/taxes/class-tax-collected-by-location-list-table.php:77
 msgid "To"
-msgstr ""
-
-#: includes/reports/data/taxes/class-tax-collected-by-location-list-table.php:78
-msgid "Gross"
-msgstr ""
-
-#: includes/reports/data/taxes/class-tax-collected-by-location-list-table.php:80
-msgid "Net"
 msgstr ""
 
 #: includes/reports/data/taxes/class-tax-collected-by-location-list-table.php:181
@@ -12776,7 +12792,7 @@ msgctxt "error shown when attempting to use a discount before its start date"
 msgid "This discount is invalid."
 msgstr ""
 
-#: includes/class-edd-discount.php:1650 includes/discount-functions.php:907
+#: includes/class-edd-discount.php:1611 includes/discount-functions.php:907
 msgctxt "error for when a discount is invalid based on its configuration"
 msgid "This discount is invalid."
 msgstr ""
@@ -12896,37 +12912,37 @@ msgctxt "taxonomy singular name"
 msgid "%s Tag"
 msgstr ""
 
-#: includes/post-types.php:358
+#: includes/post-types.php:374
 msgctxt "Refunded payment status"
 msgid "Refunded"
 msgstr ""
 
-#: includes/post-types.php:366
+#: includes/post-types.php:382
 msgctxt "Failed payment status"
 msgid "Failed"
 msgstr ""
 
-#: includes/post-types.php:374
+#: includes/post-types.php:390
 msgctxt "Revoked payment status"
 msgid "Revoked"
 msgstr ""
 
-#: includes/post-types.php:382
+#: includes/post-types.php:398
 msgctxt "Abandoned payment status"
 msgid "Abandoned"
 msgstr ""
 
-#: includes/post-types.php:390
+#: includes/post-types.php:406
 msgctxt "Processing payment status"
 msgid "Processing"
 msgstr ""
 
-#: includes/post-types.php:400
+#: includes/post-types.php:416
 msgctxt "Active discount code status"
 msgid "Active"
 msgstr ""
 
-#: includes/post-types.php:408
+#: includes/post-types.php:424
 msgctxt "Inactive discount code status"
 msgid "Inactive"
 msgstr ""
