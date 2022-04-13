@@ -88,6 +88,8 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 					: '&mdash;';
 			case 'ip' :
 				return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) )  . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] )  . '</a>';
+			case 'file':
+				return esc_html( $item['file'] );
 			default:
 				return $item[ $column_name ];
 		}
@@ -145,9 +147,9 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 				 */
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
 
-				$file_name = isset( $files[ $file_id ]['name'] )
+				$file_name = ! empty( $files[ $file_id ]['name'] )
 					? $files[ $file_id ]['name']
-					: null;
+					: edd_get_file_name( $files[ $file_id ] );
 
 				if ( empty( $this->file_search ) || ( ! empty( $this->file_search ) && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) ) {
 					$logs_data[] = array(
