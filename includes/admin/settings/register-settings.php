@@ -489,52 +489,6 @@ function edd_get_registered_settings() {
 						'placeholder' => '.'
 					),
 				),
-				'moderation' => array(
-					'moderation_settings' => array(
-						'id'   => 'moderation_settings',
-						'name' => '<h3>' . __( 'Moderation', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-						'tooltip_title' => __( 'Moderation', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'It is sometimes necessary to temporarily prevent certain potential customers from checking out. Use these settings to control who can make purchases.', 'easy-digital-downloads' ),
-					),
-					'banned_emails' => array(
-						'id'    => 'banned_emails',
-						'name'  => __( 'Banned Emails', 'easy-digital-downloads' ),
-						'desc'  => __( 'Emails placed in the box above will not be allowed to make purchases.', 'easy-digital-downloads' ) . '<br>' . __( 'One per line, enter: email addresses, domains (<code>@example.com</code>), or TLDs (<code>.gov</code>).', 'easy-digital-downloads' ),
-						'type'  => 'textarea',
-						'placeholder' => __( '@example.com', 'easy-digital-downloads' )
-					)
-				),
-				'refunds' => array(
-					'refunds_settings' => array(
-						'id'   => 'refunds_settings',
-						'name' => '<h3>' . __( 'Refunds', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-						'tooltip_title' => __( 'Refunds', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide how refunds will work in your shop.', 'easy-digital-downloads' ),
-					),
-					'refundability' => array(
-						'id'      => 'refundability',
-						'name'    => __( 'Default Status', 'easy-digital-downloads' ),
-						'desc'    => __( 'Products without an explicit setting will default to this.', 'easy-digital-downloads' ),
-						'type'    => 'select',
-						'std'     => 'refundable',
-						'options' => edd_get_refundability_types(),
-					),
-					'refund_window' => array(
-						'id'   => 'refund_window',
-						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
-						'desc' => __( 'Number of days (after a sale) when refunds can be processed.<br>Default is <code>30</code> days. Set to <code>0</code> for infinity. Overridden on a per-product basis.', 'easy-digital-downloads' ),
-						'std'  => 30,
-						'type' => 'number',
-						'size' => 'small',
-						'max'  => 3650, // Ten year maximum, because why explicitly support longer
-						'min'  => 0,
-						'step' => 1,
-					),
-				),
 				'api' => array(
 					'api_settings' => array(
 						'id'            => 'api_settings',
@@ -663,6 +617,50 @@ function edd_get_registered_settings() {
 						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
 					),
+					'moderation_settings' => array(
+							'id'   => 'moderation_settings',
+							'name' => '<h3>' . __( 'Moderation', 'easy-digital-downloads' ) . '</h3>',
+							'desc' => '',
+							'type' => 'header',
+							'tooltip_title' => __( 'Moderation', 'easy-digital-downloads' ),
+							'tooltip_desc'  => __( 'It is sometimes necessary to temporarily prevent certain potential customers from checking out. Use these settings to control who can make purchases.', 'easy-digital-downloads' ),
+					),
+					'banned_emails' => array(
+							'id'    => 'banned_emails',
+							'name'  => __( 'Banned Emails', 'easy-digital-downloads' ),
+							'desc'  => __( 'Emails placed in the box above will not be allowed to make purchases.', 'easy-digital-downloads' ) . '<br>' . __( 'One per line, enter: email addresses, domains (<code>@example.com</code>), or TLDs (<code>.gov</code>).', 'easy-digital-downloads' ),
+							'type'  => 'textarea',
+							'placeholder' => __( '@example.com', 'easy-digital-downloads' )
+					),
+				),
+				'refunds' => array(
+						'refunds_settings' => array(
+								'id'   => 'refunds_settings',
+								'name' => '<h3>' . __( 'Refunds', 'easy-digital-downloads' ) . '</h3>',
+								'desc' => '',
+								'type' => 'header',
+								'tooltip_title' => __( 'Refunds', 'easy-digital-downloads' ),
+								'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide how refunds will work in your shop.', 'easy-digital-downloads' ),
+						),
+						'refundability' => array(
+								'id'      => 'refundability',
+								'name'    => __( 'Default Status', 'easy-digital-downloads' ),
+								'desc'    => __( 'This will be the store default. It can be changed at a per-product level.', 'easy-digital-downloads' ),
+								'type'    => 'select',
+								'std'     => 'refundable',
+								'options' => edd_get_refundability_types(),
+						),
+						'refund_window' => array(
+								'id'   => 'refund_window',
+								'name' => __( 'Refund Window', 'easy-digital-downloads' ),
+								'desc' => __( 'Number of days (after a sale) when refunds can be processed.<br>Default is <code>30</code> days. Set to <code>0</code> for infinity. It can be changed at a per-product level.', 'easy-digital-downloads' ),
+								'std'  => 30,
+								'type' => 'number',
+								'size' => 'small',
+								'max'  => 3650, // Ten year maximum, because why explicitly support longer
+								'min'  => 0,
+								'step' => 1,
+						),
 				),
 				'accounting' => array(
 					'enable_skus' => array(
@@ -1593,14 +1591,12 @@ function edd_sanitize_html_class( $class = '' ) {
  *
  * @since 3.0
  */
-function edd_sanitize_banned_emails( $value, $key ) {
-	if ( 'banned_emails' !== $key ) {
-		return $value;
-	}
+function edd_sanitize_banned_emails( $input ) {
 
-	if ( ! empty( $value ) ) {
+	$emails = '';
+	if ( ! empty( $input['banned_emails'] ) ) {
 		// Sanitize the input
-		$emails = array_map( 'trim', explode( "\n", $value ) );
+		$emails = array_map( 'trim', explode( "\n", $input['banned_emails'] ) );
 		$emails = array_unique( $emails );
 		$emails = array_map( 'sanitize_text_field', $emails );
 
@@ -1609,13 +1605,12 @@ function edd_sanitize_banned_emails( $value, $key ) {
 				unset( $emails[ $id ] );
 			}
 		}
-	} else {
-		$emails = '';
 	}
+	$input['banned_emails'] = $emails;
 
-	return $emails;
+	return $input;
 }
-add_filter( 'edd_settings_sanitize', 'edd_sanitize_banned_emails', 10, 2 );
+add_filter( 'edd_settings_gateways-checkout_sanitize', 'edd_sanitize_banned_emails' );
 
 /**
  * Retrieve settings tabs
@@ -1672,18 +1667,17 @@ function edd_get_registered_settings_sections() {
 	if ( null === $sections ) {
 		$sections = array(
 			'general'    => apply_filters( 'edd_settings_sections_general', array(
-				'main'               => __( 'Store',    'easy-digital-downloads' ),
+				'main'               => __( 'Store',      'easy-digital-downloads' ),
 				'currency'           => __( 'Currency',   'easy-digital-downloads' ),
 				'pages'              => __( 'Pages',      'easy-digital-downloads' ),
-				'moderation'         => __( 'Moderation', 'easy-digital-downloads' ),
-				'refunds'            => __( 'Refunds',    'easy-digital-downloads' ),
 				'api'                => __( 'API',        'easy-digital-downloads' ),
 				'tracking'           => __( 'Tracking',   'easy-digital-downloads' )
 			) ),
 			'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
 				'main'               => __( 'General',         'easy-digital-downloads' ),
-				'checkout'           => __( 'Checkout',           'easy-digital-downloads' ),
-				'accounting'         => __( 'Accounting',         'easy-digital-downloads' ),
+				'checkout'           => __( 'Checkout',        'easy-digital-downloads' ),
+				'refunds'            => __( 'Refunds',         'easy-digital-downloads' ),
+				'accounting'         => __( 'Accounting',      'easy-digital-downloads' ),
 			) ),
 			'emails'     => apply_filters( 'edd_settings_sections_emails', array(
 				'main'               => __( 'General',            'easy-digital-downloads' ),

@@ -55,7 +55,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			}
 		}
 
-		$taxonomies = get_object_taxonomies( 'download', 'names' );
+		$taxonomies = edd_get_download_taxonomies();
 		$taxonomies = array_map( 'sanitize_text_field', $taxonomies );
 
 		$placeholders = implode( ', ', array_fill( 0, count( $taxonomies ), '%s' ) );
