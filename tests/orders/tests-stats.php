@@ -43,6 +43,23 @@ class Stats_Tests extends \EDD_UnitTestCase {
 		for ( $i = 0; $i < 2; $i++ ) {
 			self::$refunds[] = edd_refund_order( self::$orders[ $i ] );
 		}
+
+		// Add a variable download with price ID 0 to order 3.
+		edd_add_order_item(
+			array(
+				'order_id'     => 3,
+				'product_id'   => 2,
+				'price_id'     => 0,
+				'product_name' => 'Variable Test Download Product - Simple',
+				'status'       => 'complete',
+				'amount'       => 20,
+				'subtotal'     => 20,
+				'discount'     => 0,
+				'tax'          => 0,
+				'total'        => 20,
+				'quantity'     => 1,
+			)
+		);
 	}
 
 	/**
@@ -176,6 +193,19 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_order_item_count
 	 */
+	public function test_get_order_item_count_no_price_id_should_be_2() {
+		$count = self::$stats->get_order_item_count(
+			array(
+				'product_id' => 1,
+			)
+		);
+
+		$this->assertSame( 2, $count );
+	}
+
+	/**
+	 * @covers ::get_order_item_count
+	 */
 	public function test_get_order_item_count_null_price_id_should_be_2() {
 		$count = self::$stats->get_order_item_count(
 			array(
@@ -204,15 +234,15 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_order_item_count
 	 */
-	public function test_get_order_item_count_zero_price_id_should_be_0() {
+	public function test_get_order_item_count_zero_price_id_should_be_1() {
 		$count = self::$stats->get_order_item_count(
 			array(
-				'product_id' => 1,
+				'product_id' => 2,
 				'price_id'   => 0,
 			)
 		);
 
-		$this->assertSame( 0, $count );
+		$this->assertSame( 1, $count );
 	}
 
 	/**
