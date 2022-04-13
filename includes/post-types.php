@@ -75,6 +75,8 @@ function edd_setup_edd_post_types() {
 		'map_meta_cap'       => true,
 		'has_archive'        => $archives,
 		'hierarchical'       => false,
+		'show_in_rest'       => true,
+		'rest_base'          => 'edd-downloads',
 		'supports'           => apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
@@ -263,6 +265,9 @@ function edd_setup_download_taxonomies() {
 			'show_ui'      => true,
 			'query_var'    => 'download_category',
 			'rewrite'      => array( 'slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
+			'show_in_rest'          => true,
+			'rest_base'             => 'edd-categories',
+			'rest_controller_class' => 'WP_REST_Terms_Controller',
 			'capabilities' => array(
 				'manage_terms' => 'manage_product_terms',
 				'edit_terms'   => 'edit_product_terms',
@@ -296,6 +301,9 @@ function edd_setup_download_taxonomies() {
 			'show_ui'      => true,
 			'query_var'    => 'download_tag',
 			'rewrite'      => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true ),
+			'show_in_rest'          => true,
+			'rest_base'             => 'edd-tags',
+			'rest_controller_class' => 'WP_REST_Terms_Controller',
 			'capabilities' => array(
 				'manage_terms' => 'manage_product_terms',
 				'edit_terms'   => 'edit_product_terms',
