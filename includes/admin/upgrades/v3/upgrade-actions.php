@@ -69,6 +69,9 @@ function edd_process_v3_upgrade() {
 		wp_die( -1, 403, array( 'response' => 403 ) );
 	}
 
+	// Set an option indicating that the migration is running.
+	update_option( 'edd_v3_migration_in_process', true, false );
+
 	$was_processed       = $export->process_step();
 	$percentage_complete = round( $export->get_percentage_complete(), 2 );
 

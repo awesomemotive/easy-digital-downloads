@@ -1476,6 +1476,7 @@ function edd_upgrade_render_v30_migration() {
 	}
 
 	if ( $migration_complete ) {
+		delete_option( 'edd_v3_migration_in_process' );
 		?>
 		<div id="edd-migration-ready" class="notice notice-success">
 			<p>
