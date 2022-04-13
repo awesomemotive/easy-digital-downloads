@@ -122,7 +122,7 @@ class Stats {
 				'relative_end'      => '',
 				'grouped'           => false,
 				'product_id'        => '',
-				'price_id'          => '',
+				'price_id'          => null,
 			);
 		}
 
@@ -574,9 +574,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		$currency_sql = str_replace( $this->get_db()->edd_order_items, $this->get_db()->edd_orders, $this->query_vars['currency_sql'] );
 
@@ -611,7 +609,7 @@ class Stats {
 
 				// Format resultant object.
 				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
+				$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
 				$value->total      = absint( $value->total );
 
 				// Add instance of EDD_Download to resultant object.
@@ -902,9 +900,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		$region = ! empty( $this->query_vars['region'] )
 			? $this->get_db()->prepare( 'AND edd_oa.region = %s', esc_sql( $this->query_vars['region'] ) )
@@ -944,7 +940,7 @@ class Stats {
 
 				// Format resultant object.
 				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
+				$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
 				$value->total      = $this->maybe_format( $value->total );
 
 				// Add instance of EDD_Download to resultant object.
@@ -1009,9 +1005,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		$region = ! empty( $this->query_vars['region'] )
 			? $this->get_db()->prepare( 'AND edd_oa.region = %s', esc_sql( $this->query_vars['region'] ) )
@@ -1061,7 +1055,7 @@ class Stats {
 
 				// Format resultant object.
 				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
+				$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
 				$value->total      = absint( $value->total );
 
 				// Add instance of EDD_Download to resultant object.
@@ -1165,6 +1159,7 @@ class Stats {
 					'end'   => $this->query_vars['end'],
 				)
 			);
+
 			$value->sales      = absint( $download_model->get_net_sales() );
 			$value->total      = $this->maybe_format( $value->total );
 
@@ -1808,9 +1803,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
@@ -1935,7 +1928,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND oi.product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
+		$price_id = ! is_null( $this->query_vars['price_id'] ) && is_numeric( $this->query_vars['price_id'] )
 			? $this->get_db()->prepare( 'AND oi.price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
@@ -2421,9 +2414,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
@@ -2581,9 +2572,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		$file_id = ! empty( $this->query_vars['file_id'] )
 			? $this->get_db()->prepare( 'AND file_id = %d', absint( $this->query_vars['file_id'] ) )
@@ -2645,7 +2634,7 @@ class Stats {
 			'relative_end'      => '',
 			'grouped'           => false,
 			'product_id'        => '',
-			'price_id'          => '',
+			'price_id'          => null,
 			'country'           => '',
 			'region'            => '',
 		);
@@ -2925,6 +2914,18 @@ class Stats {
 
 			return $date_query_sql;
 		}
+	}
+
+	/**
+	 * Generates price ID query SQL.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function generate_price_id_query_sql() {
+		return ! is_null( $this->query_vars['price_id'] ) && is_numeric( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
 	}
 
 	/** Private Getters *******************************************************/
