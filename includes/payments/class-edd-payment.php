@@ -467,7 +467,10 @@ class EDD_Payment {
 		$this->order = edd_get_order( $payment_id );
 
 		if ( ! $this->order || is_wp_error( $this->order ) ) {
-			return false;
+			if ( ! get_option( 'edd_v3_migration_in_process' ) ) {
+				return false;
+			}
+			return $this->setup_compat_payment( $payment_id );
 		}
 
 		// Allow extensions to perform actions before the payment is loaded
@@ -3487,5 +3490,92 @@ class EDD_Payment {
 		}
 
 		return $customer;
+	}
+
+	/**
+	 * Sets up a payment object from a post.
+	 * This is only intended to be used when a 3.0 migration is in process and the
+	 * new order object is not yet available.
+	 *
+	 * @since 3.0
+	 * @param int $payment_id
+	 * @return bool
+	 */
+	private function setup_compat_payment( $payment_id ) {
+		$payment = get_post( $payment_id );
+
+		if ( ! $payment || is_wp_error( $payment ) ) {
+			return false;
+		}
+
+		if ( 'edd_payment' !== $payment->post_type ) {
+			return false;
+		}
+
+		// Allow extensions to perform actions before the payment is loaded
+		do_action( 'edd_pre_setup_payment', $this, $payment_id );
+
+		// Primary Identifier
+		$this->ID = absint( $payment_id );
+
+		// Protected ID that can never be changed
+		$this->_ID = absint( $payment_id );
+
+		include_once EDD_PLUGIN_DIR . 'includes/compat/class-edd-payment-compat.php';
+		$payment_compat = new EDD_Payment_Compat( $this->ID );
+
+		// We have a payment; get the generic payment_meta item to reduce calls to it
+		$this->payment_meta = $payment_compat->get_meta();
+
+		// Status and Dates
+		$this->date           = $payment->post_date;
+		$this->completed_date = $payment_compat->setup_completed_date();
+		$this->status         = $payment->post_status;
+		$this->post_status    = $payment_compat->status;
+		$this->mode           = $payment_compat->setup_mode();
+		$this->parent_payment = $payment->post_parent;
+
+		$all_payment_statuses  = edd_get_payment_statuses();
+		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
+
+		// Items
+		$this->fees         = $payment_compat->setup_fees();
+		$this->cart_details = $payment_compat->setup_cart_details();
+		$this->downloads    = $payment_compat->setup_downloads();
+
+		// Currency Based
+		$this->total      = $payment_compat->setup_total();
+		$this->tax        = $payment_compat->setup_tax();
+		$this->tax_rate   = $payment_compat->setup_tax_rate();
+		$this->fees_total = $payment_compat->setup_fees_total();
+		$this->subtotal   = $payment_compat->setup_subtotal();
+		$this->currency   = $payment_compat->setup_currency();
+
+		// Gateway based
+		$this->gateway        = $payment_compat->setup_gateway();
+		$this->transaction_id = $payment_compat->setup_transaction_id();
+
+		// User based
+		$this->ip          = $payment_compat->setup_ip();
+		$this->customer_id = $payment_compat->setup_customer_id();
+		$this->user_id     = $payment_compat->setup_user_id();
+		$this->email       = $payment_compat->setup_email();
+		$this->user_info   = $payment_compat->setup_user_info();
+		$this->address     = $payment_compat->setup_address();
+		$this->discounts   = $this->user_info['discount'];
+		$this->first_name  = $this->user_info['first_name'];
+		$this->last_name   = $this->user_info['last_name'];
+
+		// Other Identifiers
+		$this->key    = $payment_compat->setup_payment_key();
+		$this->number = $payment_compat->setup_payment_number();
+
+		// Additional Attributes
+		$this->has_unlimited_downloads = $payment_compat->setup_has_unlimited();
+
+		// Allow extensions to add items to this object via hook
+		do_action( 'edd_setup_payment', $this, $payment_id );
+
+		return true;
 	}
 }
