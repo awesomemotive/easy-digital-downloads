@@ -1105,8 +1105,8 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
-		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['exclude_taxes']     = true;
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
@@ -1121,19 +1121,24 @@ class Stats {
 			'accepted_functions' => array( 'SUM' )
 		) );
 
-		$join = '';
-		$where = '';
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+
+		$where = $this->get_db()->prepare(
+			"AND {$this->get_db()->edd_order_items}.status IN('complete','partially_refunded')
+			 AND {$this->get_db()->edd_orders}.status IN({$status_string}) ",
+			 ...$statuses
+		);
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
-			$join = " INNER JOIN {$this->get_db()->edd_orders} ON({$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id) ";
-			$where = $this->get_db()->prepare(
+			$where .= $this->get_db()->prepare(
 				" AND {$this->get_db()->edd_orders}.currency = %s ",
 				strtoupper( $this->query_vars['currency'] )
 			);
 		}
 
-		$sql = "SELECT product_id, price_id, COUNT({$this->query_vars['table']}.id) AS sales, {$function} AS total
+		$sql = "SELECT product_id, price_id, {$function} AS total
 				FROM {$this->query_vars['table']}
-				{$join}
+				INNER JOIN {$this->get_db()->edd_orders} ON({$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id)
 				WHERE 1=1 {$where} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY product_id, price_id
 				ORDER BY total DESC
@@ -1146,7 +1151,16 @@ class Stats {
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
 			$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
-			$value->sales      = absint( $value->sales );
+			$download_model    = new \EDD\Models\Download(
+				$value->product_id,
+				$value->price_id,
+				array(
+					'start' => $this->query_vars['start'],
+					'end'   => $this->query_vars['end'],
+				)
+			);
+
+			$value->sales      = absint( $download_model->get_net_sales() );
 			$value->total      = $this->maybe_format( $value->total );
 
 			// Add instance of EDD_Download to resultant object.
