@@ -2843,7 +2843,7 @@ function display_export_report() {
 						<p><?php printf( esc_html__( 'Download a CSV of customers. Select a taxonomy to see all the customers who purchased %s in that taxonomy.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></p>
 						<form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
 							<?php
-							$taxonomies = get_object_taxonomies( 'download', 'names' );
+							$taxonomies = edd_get_download_taxonomies();
 							$taxonomies = array_map( 'sanitize_text_field', $taxonomies );
 
 							$placeholders = implode( ', ', array_fill( 0, count( $taxonomies ), '%s' ) );
