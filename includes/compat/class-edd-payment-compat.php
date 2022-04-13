@@ -367,7 +367,9 @@ class EDD_Payment_Compat {
 			$payment_id = absint( $payment_or_txn_id );
 		}
 
-		$this->ID = $payment_id;
+		$this->ID           = $payment_id;
+		$this->payment_meta = $this->get_meta();
+		$this->cart_details = $this->setup_cart_details();
 	}
 
 	/**

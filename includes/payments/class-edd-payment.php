@@ -3525,7 +3525,7 @@ class EDD_Payment {
 		$payment_compat = new EDD_Payment_Compat( $this->ID );
 
 		// We have a payment; get the generic payment_meta item to reduce calls to it
-		$this->payment_meta = $payment_compat->get_meta();
+		$this->payment_meta = $payment_compat->payment_meta;
 
 		// Status and Dates
 		$this->date           = $payment->post_date;
@@ -3540,7 +3540,7 @@ class EDD_Payment {
 
 		// Items
 		$this->fees         = $payment_compat->setup_fees();
-		$this->cart_details = $payment_compat->setup_cart_details();
+		$this->cart_details = $payment_compat->cart_details;
 		$this->downloads    = $payment_compat->setup_downloads();
 
 		// Currency Based
