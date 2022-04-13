@@ -3,13 +3,15 @@
  * This class is used to build an EDD_Payment object
  * from a WP_Post object.
  *
+ * This is intended for internal use only, to ensure that existing
+ * payments can be accessed before the migration is complete.
+ *
  * @package     EDD
- * @subpackage  Classes/Payment
- * @copyright   Copyright (c) 2014, Pippin Williamson
+ * @subpackage  Compat
+ * @copyright   Copyright (c) 2022, Easy Digital Downloads
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
