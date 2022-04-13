@@ -825,9 +825,6 @@ class EDD_CLI extends WP_CLI_Command {
 		// Suspend the cache addition while we're migrating.
 		wp_suspend_cache_addition( true );
 
-		// Set an option indicating that the migration is running.
-		update_option( 'edd_v3_migration_in_process', true, false );
-
 		$this->maybe_install_v3_tables();
 		$this->migrate_tax_rates( $args, $assoc_args );
 		$this->migrate_discounts( $args, $assoc_args );
@@ -839,7 +836,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$this->remove_legacy_data( $args, $assoc_args );
 
 		// Delete the migration in process option.
-		delete_option( 'edd_v3_migration_in_process' );
+		delete_option( 'edd_v3_migration_pending' );
 	}
 
 	/**

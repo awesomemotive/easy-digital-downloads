@@ -43,14 +43,14 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 		);
 		update_post_meta( $this->payment_id, '_edd_payment_gateway', 'stripe' );
 		update_post_meta( $this->payment_id, '_edd_payment_total', 20.00 );
-		update_option( 'edd_v3_migration_in_process', true, false );
+		update_option( 'edd_v3_migration_pending', true, false );
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 
 		wp_delete_post( $this->payment_id );
-		delete_option( 'edd_v3_migration_in_process' );
+		delete_option( 'edd_v3_migration_pending' );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_return_object() {
@@ -78,7 +78,7 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_no_order_outside_migration_should_return_false() {
-		delete_option( 'edd_v3_migration_in_process' );
+		delete_option( 'edd_v3_migration_pending' );
 		$payment = edd_get_payment( $this->payment_id );
 
 		$this->assertFalse( $payment );

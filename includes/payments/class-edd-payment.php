@@ -467,7 +467,7 @@ class EDD_Payment {
 		$this->order = edd_get_order( $payment_id );
 
 		if ( ! $this->order || is_wp_error( $this->order ) ) {
-			if ( ! get_option( 'edd_v3_migration_in_process' ) ) {
+			if ( ! get_option( 'edd_v3_migration_pending' ) ) {
 				return false;
 			}
 			return $this->setup_compat_payment( $payment_id );

@@ -223,6 +223,8 @@ function edd_show_upgrade_notices() {
 				: false;
 
 			if ( $has_orders ) {
+				// Set an option indicating the migration is pending.
+				update_option( 'edd_v3_migration_pending', true, false );
 				?>
 				<div class="updated">
 					<p>
@@ -1476,7 +1478,7 @@ function edd_upgrade_render_v30_migration() {
 	}
 
 	if ( $migration_complete ) {
-		delete_option( 'edd_v3_migration_in_process' );
+		delete_option( 'edd_v3_migration_pending' );
 		?>
 		<div id="edd-migration-ready" class="notice notice-success">
 			<p>
