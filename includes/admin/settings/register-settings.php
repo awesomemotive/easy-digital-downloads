@@ -645,7 +645,7 @@ function edd_get_registered_settings() {
 						'refundability' => array(
 								'id'      => 'refundability',
 								'name'    => __( 'Default Status', 'easy-digital-downloads' ),
-								'desc'    => __( 'Products without an explicit setting will default to this.', 'easy-digital-downloads' ),
+								'desc'    => __( 'This will be the store default. It can be changed at a per-product level.', 'easy-digital-downloads' ),
 								'type'    => 'select',
 								'std'     => 'refundable',
 								'options' => edd_get_refundability_types(),
@@ -653,7 +653,7 @@ function edd_get_registered_settings() {
 						'refund_window' => array(
 								'id'   => 'refund_window',
 								'name' => __( 'Refund Window', 'easy-digital-downloads' ),
-								'desc' => __( 'Number of days (after a sale) when refunds can be processed.<br>Default is <code>30</code> days. Set to <code>0</code> for infinity. Overridden on a per-product basis.', 'easy-digital-downloads' ),
+								'desc' => __( 'Number of days (after a sale) when refunds can be processed.<br>Default is <code>30</code> days. Set to <code>0</code> for infinity. It can be changed at a per-product level.', 'easy-digital-downloads' ),
 								'std'  => 30,
 								'type' => 'number',
 								'size' => 'small',
