@@ -1628,7 +1628,7 @@ function edd_get_settings_tabs() {
 		'marketing'  => __( 'Marketing', 'easy-digital-downloads' ),
 		'styles'     => __( 'Styles', 'easy-digital-downloads' ),
 		'taxes'      => __( 'Taxes', 'easy-digital-downloads' ),
-		'privacy'    => __( 'Privacy', 'easy-digital-downloads' ),
+		'privacy'    => __( 'Policies', 'easy-digital-downloads' ),
 		'extensions' => __( 'Extensions', 'easy-digital-downloads' ),
 		'licenses'   => __( 'Licenses', 'easy-digital-downloads' ),
 		'misc'       => __( 'Misc', 'easy-digital-downloads' ),
