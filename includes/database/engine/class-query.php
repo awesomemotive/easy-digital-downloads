@@ -2397,9 +2397,12 @@ class Query extends Base {
 			return;
 		}
 
+		// Maybe apply the prefix to the meta type.
+		$meta_type = $this->apply_prefix( $this->item_name );
+
 		// Delete all meta data for this item ID
 		foreach ( $meta_ids as $mid ) {
-			delete_metadata_by_mid( $this->item_name, $mid );
+			delete_metadata_by_mid( $meta_type, $mid );
 		}
 	}
 
