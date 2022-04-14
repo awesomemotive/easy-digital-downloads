@@ -294,7 +294,14 @@ function edd_destroy_order( $order_id = 0 ) {
 		}
 	}
 
-
+	/**
+	 * Action hook for developers to do extra work when an order is destroyed.
+	 *
+	 * @since 3.0
+	 * @param int  $order_id  The original order ID.
+	 * @param bool $destroyed Whether the order was destroyed.
+	 */
+	do_action( 'edd_order_destroyed', $order_id, $destroyed );
 
 	return $destroyed;
 }
