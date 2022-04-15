@@ -399,6 +399,7 @@ class EDD_Payment_Compat {
 		$this->payment                 = get_post( $this->ID );
 		$this->payment_meta            = $this->get_meta();
 		$this->cart_details            = $this->setup_cart_details();
+		$this->status                  = $this->setup_status();
 		$this->completed_date          = $this->setup_completed_date();
 		$this->mode                    = $this->setup_mode();
 		$this->total                   = $this->setup_total();
@@ -947,6 +948,16 @@ class EDD_Payment_Compat {
 	}
 
 	/**
+	 * Sets up the payment status.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function setup_status() {
+		return 'publish' === $this->payment->post_status ? 'complete' : $this->payment->post_status;
+	}
+
+	/**
 	 * Shims the payment, as much as possible, into an EDD Order object.
 	 *
 	 * @return EDD\Orders\Order
@@ -957,7 +968,7 @@ class EDD_Payment_Compat {
 				'id'             => $this->ID,
 				'parent'         => $this->payment->parent,
 				'order_number'   => $this->number,
-				'status'         => $this->payment->post_status,
+				'status'         => $this->status,
 				'type'           => 'sale',
 				'user_id'        => $this->user_id,
 				'customer_id'    => $this->customer_id,

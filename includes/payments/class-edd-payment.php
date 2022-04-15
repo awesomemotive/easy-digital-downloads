@@ -3527,7 +3527,7 @@ class EDD_Payment {
 		// Status and Dates
 		$this->date           = $payment->post_date;
 		$this->completed_date = $payment_compat->completed_date;
-		$this->status         = 'publish' === $payment->post_status ? 'complete' : $payment->post_status;
+		$this->status         = $payment_compat->status;
 		$this->post_status    = $this->status;
 		$this->mode           = $payment_compat->mode;
 		$this->parent_payment = $payment->post_parent;
