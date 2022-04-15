@@ -1793,6 +1793,16 @@ function edd_get_activation_date() {
 }
 
 /**
+ * Gets the payment ID from the final edd_payment post.
+ * This was set as an option when the custom orders table was created.
+ *
+ * @return false|int
+ */
+function edd_get_final_payment_id() {
+	return get_option( 'edd_v3_migration_pending', false );
+}
+
+/**
  * Polyfills for is_countable and is_iterable
  *
  * This helps with plugin compatibility going forward. Many extensions have issues with more modern PHP versions,

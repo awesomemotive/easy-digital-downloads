@@ -113,10 +113,11 @@ final class Orders extends Table {
 		// After successful creation, we need to set the auto_increment for legacy orders.
 		if ( ! empty( $created ) ) {
 
-			$result = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
+			$last_payment_id = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
 
-			if ( ! empty( $result )  ) {
-				$auto_increment = $result + 1;
+			if ( ! empty( $last_payment_id ) ) {
+				update_option( 'edd_v3_migration_in_process', $last_payment_id, false );
+				$auto_increment = $last_payment_id + 1;
 				$this->get_db()->query( "ALTER TABLE {$this->table_name}  AUTO_INCREMENT = {$auto_increment};" );
 			}
 
