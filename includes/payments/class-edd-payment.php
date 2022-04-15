@@ -3529,49 +3529,49 @@ class EDD_Payment {
 
 		// Status and Dates
 		$this->date           = $payment->post_date;
-		$this->completed_date = $payment_compat->setup_completed_date();
+		$this->completed_date = $payment_compat->completed_date;
 		$this->status         = $payment->post_status;
 		$this->post_status    = $payment_compat->status;
-		$this->mode           = $payment_compat->setup_mode();
+		$this->mode           = $payment_compat->mode;
 		$this->parent_payment = $payment->post_parent;
 
 		$all_payment_statuses  = edd_get_payment_statuses();
 		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
 
 		// Items
-		$this->fees         = $payment_compat->setup_fees();
+		$this->fees         = $payment_compat->fees;
 		$this->cart_details = $payment_compat->cart_details;
-		$this->downloads    = $payment_compat->setup_downloads();
+		$this->downloads    = $payment_compat->downloads;
 
 		// Currency Based
-		$this->total      = $payment_compat->setup_total();
-		$this->tax        = $payment_compat->setup_tax();
-		$this->tax_rate   = $payment_compat->setup_tax_rate();
-		$this->fees_total = $payment_compat->setup_fees_total();
-		$this->subtotal   = $payment_compat->setup_subtotal();
-		$this->currency   = $payment_compat->setup_currency();
+		$this->total      = $payment_compat->total;
+		$this->tax        = $payment_compat->tax;
+		$this->tax_rate   = $payment_compat->tax_rate;
+		$this->fees_total = $payment_compat->fees_total;
+		$this->subtotal   = $payment_compat->subtotal;
+		$this->currency   = $payment_compat->currency;
 
 		// Gateway based
-		$this->gateway        = $payment_compat->setup_gateway();
-		$this->transaction_id = $payment_compat->setup_transaction_id();
+		$this->gateway        = $payment_compat->gateway;
+		$this->transaction_id = $payment_compat->transaction_id;
 
 		// User based
-		$this->ip          = $payment_compat->setup_ip();
-		$this->customer_id = $payment_compat->setup_customer_id();
-		$this->user_id     = $payment_compat->setup_user_id();
-		$this->email       = $payment_compat->setup_email();
-		$this->user_info   = $payment_compat->setup_user_info();
-		$this->address     = $payment_compat->setup_address();
+		$this->ip          = $payment_compat->ip;
+		$this->customer_id = $payment_compat->customer_id;
+		$this->user_id     = $payment_compat->user_id;
+		$this->email       = $payment_compat->email;
+		$this->user_info   = $payment_compat->user_info;
+		$this->address     = $payment_compat->address;
 		$this->discounts   = $this->user_info['discount'];
 		$this->first_name  = $this->user_info['first_name'];
 		$this->last_name   = $this->user_info['last_name'];
 
 		// Other Identifiers
-		$this->key    = $payment_compat->setup_payment_key();
-		$this->number = $payment_compat->setup_payment_number();
+		$this->key    = $payment_compat->key;
+		$this->number = $payment_compat->number;
 
 		// Additional Attributes
-		$this->has_unlimited_downloads = $payment_compat->setup_has_unlimited();
+		$this->has_unlimited_downloads = $payment_compat->has_unlimited_downloads;
 
 		// Allow extensions to add items to this object via hook
 		do_action( 'edd_setup_payment', $this, $payment_id );
