@@ -90,8 +90,18 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 'stripe', $this->payment->gateway );
 	}
 
+	public function test_edd_get_payment_no_order_during_migration_status_is_complete() {
+		$this->assertEquals( 'complete', $this->payment->status );
+	}
+
 	public function test_edd_get_payment_no_order_during_migration_customer_id_is_213() {
 		$this->assertEquals( 213, $this->payment->customer_id );
+	}
+
+	public function test_edd_get_order_no_order_during_migration_gets_order() {
+		$order = edd_get_order( $this->payment_id );
+
+		$this->assertSame( $this->payment_id, $order->id );
 	}
 
 	public function test_edd_get_payment_no_order_outside_migration_should_return_false() {

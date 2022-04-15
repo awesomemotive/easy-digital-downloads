@@ -464,7 +464,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		$this->order = edd_get_order( $payment_id );
+		$this->order = $this->shim_edd_get_order( $payment_id );
 
 		if ( ! $this->order || is_wp_error( $this->order ) ) {
 			return edd_get_final_payment_id() ? $this->setup_compat_payment( $payment_id ) : false;
@@ -696,7 +696,7 @@ class EDD_Payment {
 		}
 
 		// If the order is null, it means a new order is being added
-		$this->order = edd_get_order( $this->ID );
+		$this->order = $this->shim_edd_get_order( $this->ID );
 
 		$customer = $this->maybe_create_customer();
 		if ( $this->customer_id !== $customer->id ) {
@@ -978,7 +978,7 @@ class EDD_Payment {
 				 * Re-fetch the order with the new items from the database as it is used for the synchronization
 				 * between cart_details and the database.
 				 */
-				$this->order = edd_get_order( $this->ID );
+				$this->order = $this->shim_edd_get_order( $this->ID );
 
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
@@ -2710,7 +2710,7 @@ class EDD_Payment {
 	 */
 	private function setup_completed_date() {
 		/** @var EDD\Orders\Order $order */
-		$order = edd_get_order( $this->ID );
+		$order = $this->shim_edd_get_order( $this->ID );
 
 		if ( 'pending' === $order->status || 'preapproved' === $order->status || 'processing' === $order->status ) {
 			return false; // This payment was never completed
@@ -3575,5 +3575,20 @@ class EDD_Payment {
 		do_action( 'edd_setup_payment', $this, $payment_id );
 
 		return true;
+	}
+
+	/**
+	 * Gets the order from the database.
+	 * This is a duplicate of edd_get_order, but is defined separately here
+	 * for pending migration purposes.
+	 *
+	 * @param int $order_id
+	 * @return false|EDD\Orders\Order
+	 */
+	private function shim_edd_get_order( $order_id ) {
+		$orders = new EDD\Database\Queries\Order();
+
+		// Return order
+		return $orders->get_item( $order_id );
 	}
 }
