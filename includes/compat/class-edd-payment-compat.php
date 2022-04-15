@@ -328,25 +328,13 @@ class EDD_Payment_Compat {
 	 * @param int $payment_id A given payment
 	 * @return mixed void|false
 	 */
-	public function __construct( $payment_or_txn_id = false, $by_txn = false ) {
+	public function __construct( $payment_id = false ) {
 
-		if ( empty( $payment_or_txn_id ) ) {
+		if ( empty( $payment_id ) ) {
 			return false;
 		}
 
-		if ( $by_txn ) {
-			global $wpdb;
-			$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
-			$payment_id = $wpdb->get_var( $query );
-
-			if ( empty( $payment_id ) ) {
-				return false;
-			}
-		} else {
-			$payment_id = absint( $payment_or_txn_id );
-		}
-
-		$this->ID = $payment_id;
+		$this->ID = absint( $payment_id );
 		$this->setup();
 	}
 
