@@ -44,7 +44,7 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 		update_post_meta( $this->payment_id, '_edd_payment_gateway', 'stripe' );
 		update_post_meta( $this->payment_id, '_edd_payment_total', 20.00 );
 		update_post_meta( $this->payment_id, '_edd_payment_customer_id', 213 );
-		update_option( 'edd_v3_migration_pending', true, false );
+		update_option( 'edd_v3_migration_pending', 123456, false );
 	}
 
 	public function tearDown() {

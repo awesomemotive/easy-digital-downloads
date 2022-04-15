@@ -217,14 +217,9 @@ function edd_show_upgrade_notices() {
 		if ( count( $upgrades ) !== count( array_filter( $upgrades ) ) ) {
 
 			// Check if any payments exist.
-			$results    = $wpdb->get_row( "SELECT count(ID) as has_orders FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 0, 1" );
-			$has_orders = ! empty( $results->has_orders )
-				? true
-				: false;
+			$has_orders = edd_get_final_payment_id();
 
 			if ( $has_orders ) {
-				// Set an option indicating the migration is pending.
-				update_option( 'edd_v3_migration_pending', true, false );
 				?>
 				<div class="updated">
 					<p>
