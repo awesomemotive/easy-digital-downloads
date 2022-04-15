@@ -4,7 +4,7 @@
 		display: none;
 		border-width: 0 1px 1px;
 		border-style: solid;
-		border-color: #e5e5e5;
+		border-color: $wp-border;
 		box-sizing: border-box;
 		width: 100%;
 	}
@@ -16,7 +16,6 @@
 
 		&-title {
 			display: block;
-			font-size: 14px;
 			font-weight: 600;
 			padding: 0 0 10px;
 		}
@@ -34,7 +33,7 @@
 }
 
 .toggle-custom-price-option-section {
-	color: #777;
+	color: $wp-gray-40;
 
 	&:hover {
 		color: $wp-text;
