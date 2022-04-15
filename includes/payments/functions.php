@@ -1832,3 +1832,14 @@ function edd_filter_where_older_than_week( $where = '' ) {
 
 	return $where;
 }
+
+/**
+ * Gets the payment ID from the final edd_payment post.
+ * This was set as an option when the custom orders table was created.
+ * For internal use only.
+ *
+ * @return false|int
+ */
+function edd_get_final_payment_id() {
+	return get_option( 'edd_v3_migration_pending', false );
+}
