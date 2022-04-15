@@ -369,9 +369,41 @@ class EDD_Payment_Compat {
 			$payment_id = absint( $payment_or_txn_id );
 		}
 
-		$this->ID           = $payment_id;
-		$this->payment_meta = $this->get_meta();
-		$this->cart_details = $this->setup_cart_details();
+		$this->ID = $payment_id;
+		$this->setup();
+	}
+
+	/**
+	 * Sets up the payment object.
+	 *
+	 * @since 3.0
+	 * @return void
+	 */
+	private function setup() {
+		$this->payment_meta            = $this->get_meta();
+		$this->cart_details            = $this->setup_cart_details();
+		$this->completed_date          = $this->setup_completed_date();
+		$this->mode                    = $this->setup_mode();
+		$this->total                   = $this->setup_total();
+		$this->tax                     = $this->setup_tax();
+		$this->tax_rate                = $this->setup_tax_rate();
+		$this->fees_total              = $this->setup_fees_total();
+		$this->subtotal                = $this->setup_subtotal();
+		$this->discounts               = $this->setup_discounts();
+		$this->currency                = $this->setup_currency();
+		$this->fees                    = $this->setup_fees();
+		$this->gateway                 = $this->setup_gateway();
+		$this->transaction_id          = $this->setup_transaction_id();
+		$this->ip                      = $this->setup_ip();
+		$this->customer_id             = $this->setup_customer_id();
+		$this->user_id                 = $this->setup_user_id();
+		$this->email                   = $this->setup_email();
+		$this->user_info               = $this->setup_user_info();
+		$this->address                 = $this->setup_address();
+		$this->key                     = $this->setup_payment_key();
+		$this->number                  = $this->setup_payment_number();
+		$this->downloads               = $this->setup_downloads();
+		$this->has_unlimited_downloads = $this->setup_has_unlimited();
 	}
 
 	/**
@@ -513,9 +545,7 @@ class EDD_Payment_Compat {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->date;
-
-		return $date;
+		return ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->date;
 	}
 
 	/**
@@ -558,7 +588,7 @@ class EDD_Payment_Compat {
 	public function setup_tax() {
 		$tax = $this->get_meta( '_edd_payment_tax', true );
 
-		// We don't have tax as it's own meta and no meta was passed
+		// We don't have tax as its own meta and no meta was passed
 		if ( '' === $tax ) {
 
 			$tax = isset( $this->payment_meta['tax'] ) ? $this->payment_meta['tax'] : 0;
@@ -637,8 +667,7 @@ class EDD_Payment_Compat {
 	 * @return array               Array of discount codes on this payment
 	 */
 	public function setup_discounts() {
-		$discounts = ! empty( $this->payment_meta['user_info']['discount'] ) ? $this->payment_meta['user_info']['discount'] : array();
-		return $discounts;
+		return ! empty( $this->payment_meta['user_info']['discount'] ) ? $this->payment_meta['user_info']['discount'] : array();
 	}
 
 	/**
@@ -863,20 +892,12 @@ class EDD_Payment_Compat {
 	 * @return int|string Integer by default, or string if sequential order numbers is enabled
 	 */
 	public function setup_payment_number() {
-		$number = $this->ID;
-
+		$number = false;
 		if ( edd_get_option( 'enable_sequential' ) ) {
-
 			$number = $this->get_meta( '_edd_payment_number', true );
-
-			if ( ! $number ) {
-
-				$number = $this->ID;
-
-			}
 		}
 
-		return $number;
+		return $number ?: $this->ID;
 	}
 
 	/**
