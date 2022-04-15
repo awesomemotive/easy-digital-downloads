@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0
  *
  * @property int    $ID
- * @property bool   $new
  * @property string $number
  * @property string $mode
  * @property string $key
@@ -36,12 +35,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property array  $fees
  * @property float  $fees_total
  * @property string $discounts
- * @property string $date
  * @property string $completed_date
  * @property string $status
- * @property string $post_status
- * @property string $old_status
- * @property string $status_nicename
  * @property int    $customer_id
  * @property int    $user_id
  * @property string $first_name
@@ -67,15 +62,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var    integer
 	 */
-	public $ID = 0;
-
-	/**
-	 * Identify if the payment is a new one or existing
-	 *
-	 * @since  3.0
-	 * @var boolean
-	 */
-	protected $new = false;
+	protected $ID = 0;
 
 	/**
 	 * The Payment number (for use with sequential payments)
@@ -189,23 +176,6 @@ class EDD_Payment_Compat {
 	 * @var string
 	 */
 	protected $status      = 'pending';
-	protected $post_status = 'pending'; // Same as $status but here for backwards compat
-
-	/**
-	 * When updating, the old status prior to the change
-	 *
-	 * @since  3.0
-	 * @var string
-	 */
-	protected $old_status = '';
-
-	/**
-	 * The display name of the current payment status
-	 *
-	 * @since  3.0
-	 * @var string
-	 */
-	protected $status_nicename = '';
 
 	/**
 	 * The customer ID that made the payment
@@ -253,7 +223,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	public $user_info = array();
+	protected $user_info = array();
 
 	/**
 	 * Legacy (not to be accessed) payment meta array
@@ -261,7 +231,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	public $payment_meta = array();
+	protected $payment_meta = array();
 
 	/**
 	 * The physical address used for the payment if provided
@@ -326,15 +296,6 @@ class EDD_Payment_Compat {
 	 * @var boolean
 	 */
 	protected $has_unlimited_downloads = false;
-
-	/**
-	 * Array of items that have changed since the last save() was run
-	 * This is for internal use, to allow fewer update_payment_meta calls to be run
-	 *
-	 * @since  3.0
-	 * @var array
-	 */
-	public $pending;
 
 	/**
 	 * Order object.
@@ -457,16 +418,6 @@ class EDD_Payment_Compat {
 	 * @param mixed $value  The value of the property
 	 */
 	public function __set( $key, $value ) {
-		$ignore = array( 'downloads', 'cart_details', 'fees', '_ID' );
-
-		if ( $key === 'status' ) {
-			$this->old_status = $this->status;
-		}
-
-		if ( ! in_array( $key, $ignore ) ) {
-			$this->pending[ $key ] = $value;
-		}
-
 		if ( '_ID' !== $key ) {
 			$this->$key = $value;
 		}
@@ -495,7 +446,7 @@ class EDD_Payment_Compat {
 	 * @param  boolean $single   Return single item or array
 	 * @return mixed             The value from the post meta
 	 */
-	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
+	private function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
 
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
 		if ( $meta_key === '_edd_payment_meta' ) {
@@ -557,7 +508,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string The date the payment was completed
 	 */
-	public function setup_completed_date() {
+	private function setup_completed_date() {
 		if ( in_array( $this->payment->post_status, array( 'pending', 'preapproved', 'processing' ), true ) ) {
 			return false; // This payment was never completed
 		}
@@ -571,7 +522,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string The payment mode
 	 */
-	public function setup_mode() {
+	private function setup_mode() {
 		return $this->get_meta( '_edd_payment_mode' );
 	}
 
@@ -581,7 +532,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return float The payment total
 	 */
-	public function setup_total() {
+	private function setup_total() {
 		$amount = $this->get_meta( '_edd_payment_total', true );
 
 		if ( empty( $amount ) && '0.00' != $amount ) {
@@ -602,7 +553,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return float The tax for the payment
 	 */
-	public function setup_tax() {
+	private function setup_tax() {
 		$tax = $this->get_meta( '_edd_payment_tax', true );
 
 		// We don't have tax as its own meta and no meta was passed
@@ -622,7 +573,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return float The tax rate for the payment
 	 */
-	public function setup_tax_rate() {
+	private function setup_tax_rate() {
 		return $this->get_meta( '_edd_payment_tax_rate', true );
 	}
 
@@ -632,7 +583,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return float The fees total for the payment
 	 */
-	public function setup_fees_total() {
+	private function setup_fees_total() {
 		$fees_total = (float) 0.00;
 
 		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
@@ -652,7 +603,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return float The subtotal of the payment
 	 */
-	public function setup_subtotal() {
+	private function setup_subtotal() {
 		$subtotal     = 0;
 		$cart_details = $this->cart_details;
 
@@ -683,7 +634,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return array               Array of discount codes on this payment
 	 */
-	public function setup_discounts() {
+	private function setup_discounts() {
 		return ! empty( $this->payment_meta['user_info']['discount'] ) ? $this->payment_meta['user_info']['discount'] : array();
 	}
 
@@ -693,7 +644,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string              The currency for the payment
 	 */
-	public function setup_currency() {
+	private function setup_currency() {
 		return isset( $this->payment_meta['currency'] ) ? $this->payment_meta['currency'] : apply_filters( 'edd_payment_currency_default', edd_get_currency(), $this );
 	}
 
@@ -703,7 +654,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return array               The Fees
 	 */
-	public function setup_fees() {
+	private function setup_fees() {
 		return isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
 	}
 
@@ -713,7 +664,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string The gateway
 	 */
-	public function setup_gateway() {
+	private function setup_gateway() {
 		return $this->get_meta( '_edd_payment_gateway', true );
 	}
 
@@ -723,7 +674,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string The transaction ID for the payment
 	 */
-	public function setup_transaction_id() {
+	private function setup_transaction_id() {
 		$transaction_id = $this->get_meta( '_edd_payment_transaction_id', true );
 
 		if ( empty( $transaction_id ) || (int) $transaction_id === (int) $this->ID ) {
@@ -742,7 +693,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string The IP address for the payment
 	 */
-	public function setup_ip() {
+	private function setup_ip() {
 		return $this->get_meta( '_edd_payment_user_ip', true );
 	}
 
@@ -752,7 +703,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return int The Customer ID
 	 */
-	public function setup_customer_id() {
+	private function setup_customer_id() {
 		return $this->get_meta( '_edd_payment_customer_id', true );
 	}
 
@@ -762,7 +713,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return int The User ID
 	 */
-	public function setup_user_id() {
+	private function setup_user_id() {
 		$user_id  = $this->get_meta( '_edd_payment_user_id', true );
 		$customer = new EDD_Customer( $this->customer_id );
 
@@ -785,7 +736,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string The email address for the payment
 	 */
-	public function setup_email() {
+	private function setup_email() {
 		$email = $this->get_meta( '_edd_payment_user_email', true );
 
 		if ( empty( $email ) ) {
@@ -801,7 +752,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return array               The user info associated with the payment
 	 */
-	public function setup_user_info() {
+	private function setup_user_info() {
 		$defaults = array(
 			'first_name' => $this->first_name,
 			'last_name'  => $this->last_name,
@@ -878,7 +829,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return array               The Address information for the payment
 	 */
-	public function setup_address() {
+	private function setup_address() {
 		$address  = ! empty( $this->payment_meta['user_info']['address'] ) ? $this->payment_meta['user_info']['address'] : array();
 		$defaults = array(
 			'line1'   => '',
@@ -898,7 +849,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return string The Payment Key
 	 */
-	public function setup_payment_key() {
+	private function setup_payment_key() {
 		return $this->get_meta( '_edd_payment_purchase_key', true );
 	}
 
@@ -908,7 +859,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return int|string Integer by default, or string if sequential order numbers is enabled
 	 */
-	public function setup_payment_number() {
+	private function setup_payment_number() {
 		$number = false;
 		if ( edd_get_option( 'enable_sequential' ) ) {
 			$number = $this->get_meta( '_edd_payment_number', true );
@@ -923,7 +874,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return array               The cart details
 	 */
-	public function setup_cart_details() {
+	private function setup_cart_details() {
 		return isset( $this->payment_meta['cart_details'] ) ? maybe_unserialize( $this->payment_meta['cart_details'] ) : array();
 	}
 
@@ -933,7 +884,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return array               Downloads associated with this payment
 	 */
-	public function setup_downloads() {
+	private function setup_downloads() {
 		return isset( $this->payment_meta['downloads'] ) ? maybe_unserialize( $this->payment_meta['downloads'] ) : array();
 	}
 
@@ -943,7 +894,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @return bool If this payment has unlimited downloads
 	 */
-	public function setup_has_unlimited() {
+	private function setup_has_unlimited() {
 		return (bool) $this->get_meta( '_edd_payment_unlimited_downloads', true );
 	}
 
