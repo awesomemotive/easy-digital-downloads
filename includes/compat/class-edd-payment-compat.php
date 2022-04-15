@@ -337,12 +337,28 @@ class EDD_Payment_Compat {
 	public $pending;
 
 	/**
+	 * Order object.
+	 *
+	 * @since 3.0
+	 * @var   EDD\Orders\Order
+	 */
+	protected $order;
+
+	/**
 	 * The parent payment (if applicable)
 	 *
 	 * @since  3.0
 	 * @var integer
 	 */
 	protected $parent_payment = 0;
+
+	/**
+	 * Post object.
+	 *
+	 * @since 3.0
+	 * @var WP_Post
+	 */
+	private $payment;
 
 	/**
 	 * Setup the EDD Payments class
@@ -380,6 +396,7 @@ class EDD_Payment_Compat {
 	 * @return void
 	 */
 	private function setup() {
+		$this->payment                 = get_post( $this->ID );
 		$this->payment_meta            = $this->get_meta();
 		$this->cart_details            = $this->setup_cart_details();
 		$this->completed_date          = $this->setup_completed_date();
@@ -404,6 +421,7 @@ class EDD_Payment_Compat {
 		$this->number                  = $this->setup_payment_number();
 		$this->downloads               = $this->setup_downloads();
 		$this->has_unlimited_downloads = $this->setup_has_unlimited();
+		$this->order                   = $this->shim_order();
 	}
 
 	/**
@@ -539,13 +557,11 @@ class EDD_Payment_Compat {
 	 * @return string The date the payment was completed
 	 */
 	public function setup_completed_date() {
-		$payment = get_post( $this->ID );
-
-		if ( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status || 'processing' == $payment->post_status ) {
+		if ( in_array( $this->payment->post_status, array( 'pending', 'preapproved', 'processing' ), true ) ) {
 			return false; // This payment was never completed
 		}
 
-		return ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $payment->date;
+		return ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $this->payment->date;
 	}
 
 	/**
@@ -928,5 +944,38 @@ class EDD_Payment_Compat {
 	 */
 	public function setup_has_unlimited() {
 		return (bool) $this->get_meta( '_edd_payment_unlimited_downloads', true );
+	}
+
+	/**
+	 * Shims the payment, as much as possible, into an EDD Order object.
+	 *
+	 * @return EDD\Orders\Order
+	 */
+	public function shim_order() {
+		return new \EDD\Orders\Order(
+			array(
+				'id'             => $this->ID,
+				'parent'         => $this->payment->parent,
+				'order_number'   => $this->number,
+				'status'         => $this->payment->post_status,
+				'type'           => 'sale',
+				'user_id'        => $this->user_id,
+				'customer_id'    => $this->customer_id,
+				'email'          => $this->email,
+				'ip'             => $this->ip,
+				'gateway'        => $this->gateway,
+				'mode'           => $this->mode,
+				'currency'       => $this->currency,
+				'payment_key'    => $this->key,
+				'subtotal'       => $this->subtotal,
+				'discount'       => $this->discounted_amount,
+				'tax'            => $this->tax,
+				'total'          => $this->total,
+				'rate'           => $this->tax_rate,
+				'date_created'   => $this->completed_date,
+				'date_modified'  => $this->payment->post_modified,
+				'date_completed' => $this->completed_date,
+			)
+		);
 	}
 }

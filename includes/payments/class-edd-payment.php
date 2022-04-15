@@ -3527,8 +3527,8 @@ class EDD_Payment {
 		// Status and Dates
 		$this->date           = $payment->post_date;
 		$this->completed_date = $payment_compat->completed_date;
-		$this->status         = $payment->post_status;
-		$this->post_status    = $payment_compat->status;
+		$this->status         = 'publish' === $payment->post_status ? 'complete' : $payment->post_status;
+		$this->post_status    = $this->status;
 		$this->mode           = $payment_compat->mode;
 		$this->parent_payment = $payment->post_parent;
 
@@ -3569,6 +3569,7 @@ class EDD_Payment {
 
 		// Additional Attributes
 		$this->has_unlimited_downloads = $payment_compat->has_unlimited_downloads;
+		$this->order                   = $payment_compat->order;
 
 		// Allow extensions to add items to this object via hook
 		do_action( 'edd_setup_payment', $this, $payment_id );
