@@ -9,6 +9,8 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 
 	public $payment_id;
 
+	public $payment;
+
 	public function setUp() {
 		parent::setUp();
 
@@ -45,6 +47,8 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 		update_post_meta( $this->payment_id, '_edd_payment_total', 20.00 );
 		update_post_meta( $this->payment_id, '_edd_payment_customer_id', 213 );
 		update_option( 'edd_v3_migration_pending', 123456, false );
+
+		$this->payment = edd_get_payment( $this->payment_id );
 	}
 
 	public function tearDown() {
@@ -55,45 +59,39 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_return_object() {
-		$payment = edd_get_payment( $this->payment_id );
-
-		$this->assertTrue( $payment instanceof EDD_Payment );
+		$this->assertTrue( $this->payment instanceof EDD_Payment );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_have_payment_id() {
-		$payment = edd_get_payment( $this->payment_id );
+		$this->assertSame( $this->payment_id, $this->payment->ID );
+	}
 
-		$this->assertSame( $this->payment_id, $payment->ID );
+	public function test_edd_get_payment_no_order_during_migration_should_have_order_object() {
+		$this->assertTrue( $this->payment->order instanceof \EDD\Orders\Order );
+	}
+
+	public function test_edd_get_payment_no_order_during_migration_payment_id_should_match_order_id() {
+		$this->assertSame( $this->payment->order->id, $this->payment_id );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_have_payment_meta() {
-		$payment = edd_get_payment( $this->payment_id );
-
-		$this->assertNotEmpty( $payment->payment_meta );
+		$this->assertNotEmpty( $this->payment->payment_meta );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_have_download() {
-		$payment = edd_get_payment( $this->payment_id );
-
-		$this->assertSame( 1, $payment->downloads[0]['id'] );
+		$this->assertSame( 1, $this->payment->downloads[0]['id'] );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_total_is_20() {
-		$payment = edd_get_payment( $this->payment_id );
-
-		$this->assertEquals( 20, $payment->total );
+		$this->assertEquals( 20, $this->payment->total );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_gateway_is_stripe() {
-		$payment = edd_get_payment( $this->payment_id );
-
-		$this->assertEquals( 'stripe', $payment->gateway );
+		$this->assertEquals( 'stripe', $this->payment->gateway );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_customer_id_is_213() {
-		$payment = edd_get_payment( $this->payment_id );
-
-		$this->assertEquals( 213, $payment->customer_id );
+		$this->assertEquals( 213, $this->payment->customer_id );
 	}
 
 	public function test_edd_get_payment_no_order_outside_migration_should_return_false() {
