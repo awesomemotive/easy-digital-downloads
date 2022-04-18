@@ -62,7 +62,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var    integer
 	 */
-	protected $ID = 0;
+	public $ID = 0;
 
 	/**
 	 * The Payment number (for use with sequential payments)
@@ -70,7 +70,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $number = '';
+	public $number = '';
 
 	/**
 	 * The Gateway mode the payment was made in
@@ -78,7 +78,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $mode = 'live';
+	public $mode = 'live';
 
 	/**
 	 * The Unique Payment Key
@@ -86,7 +86,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $key = '';
+	public $key = '';
 
 	/**
 	 * The total amount the payment is for
@@ -95,7 +95,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var float
 	 */
-	protected $total = 0.00;
+	public $total = 0.00;
 
 	/**
 	 * The Subtotal fo the payment before taxes
@@ -103,7 +103,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var float
 	 */
-	protected $subtotal = 0;
+	public $subtotal = 0;
 
 	/**
 	 * The amount of tax for this payment
@@ -111,7 +111,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var float
 	 */
-	protected $tax = 0;
+	public $tax = 0;
 
 	/**
 	 * The amount the payment has been discounted through discount codes
@@ -119,7 +119,7 @@ class EDD_Payment_Compat {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $discounted_amount = 0;
+	public $discounted_amount = 0;
 
 	/**
 	 * The tax rate charged on this payment
@@ -127,7 +127,7 @@ class EDD_Payment_Compat {
 	 * @since 3.0
 	 * @var float
 	 */
-	protected $tax_rate = '';
+	public $tax_rate = '';
 
 	/**
 	 * Array of global fees for this payment
@@ -135,7 +135,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	protected $fees = array();
+	public $fees = array();
 
 	/**
 	 * The sum of the fee amounts
@@ -143,7 +143,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var float
 	 */
-	protected $fees_total = 0;
+	public $fees_total = 0;
 
 	/**
 	 * Any discounts applied to the payment
@@ -151,7 +151,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $discounts = 'none';
+	public $discounts = 'none';
 
 	/**
 	 * The date the payment was created
@@ -159,7 +159,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $date = '';
+	public $date = '';
 
 	/**
 	 * The date the payment was marked as 'complete'
@@ -167,7 +167,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $completed_date = '';
+	public $completed_date = '';
 
 	/**
 	 * The status of the payment
@@ -175,7 +175,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $status      = 'pending';
+	public $status      = 'pending';
 
 	/**
 	 * The customer ID that made the payment
@@ -183,7 +183,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var integer
 	 */
-	protected $customer_id = null;
+	public $customer_id = null;
 
 	/**
 	 * The User ID (if logged in) that made the payment
@@ -191,7 +191,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var integer
 	 */
-	protected $user_id = 0;
+	public $user_id = 0;
 
 	/**
 	 * The first name of the payee
@@ -199,7 +199,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $first_name = '';
+	public $first_name = '';
 
 	/**
 	 * The last name of the payee
@@ -207,7 +207,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $last_name = '';
+	public $last_name = '';
 
 	/**
 	 * The email used for the payment
@@ -215,7 +215,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $email = '';
+	public $email = '';
 
 	/**
 	 * Legacy (not to be accessed) array of user information
@@ -223,7 +223,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	protected $user_info = array();
+	public $user_info = array();
 
 	/**
 	 * Legacy (not to be accessed) payment meta array
@@ -231,7 +231,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	protected $payment_meta = array();
+	public $payment_meta = array();
 
 	/**
 	 * The physical address used for the payment if provided
@@ -239,7 +239,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	protected $address = array();
+	public $address = array();
 
 	/**
 	 * The transaction ID returned by the gateway
@@ -247,7 +247,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $transaction_id = '';
+	public $transaction_id = '';
 
 	/**
 	 * Array of downloads for this payment
@@ -255,7 +255,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	protected $downloads = array();
+	public $downloads = array();
 
 	/**
 	 * IP Address payment was made from
@@ -263,7 +263,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $ip = '';
+	public $ip = '';
 
 	/**
 	 * The gateway used to process the payment
@@ -271,7 +271,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $gateway = '';
+	public $gateway = '';
 
 	/**
 	 * The the payment was made with
@@ -279,7 +279,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	protected $currency = '';
+	public $currency = '';
 
 	/**
 	 * The cart details array
@@ -287,7 +287,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var array
 	 */
-	protected $cart_details = array();
+	public $cart_details = array();
 
 	/**
 	 * Allows the files for this payment to be downloaded unlimited times (when download limits are enabled)
@@ -295,7 +295,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var boolean
 	 */
-	protected $has_unlimited_downloads = false;
+	public $has_unlimited_downloads = false;
 
 	/**
 	 * Order object.
@@ -303,7 +303,7 @@ class EDD_Payment_Compat {
 	 * @since 3.0
 	 * @var   EDD\Orders\Order
 	 */
-	protected $order;
+	public $order;
 
 	/**
 	 * The parent payment (if applicable)
@@ -311,7 +311,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var integer
 	 */
-	protected $parent_payment = 0;
+	public $parent_payment = 0;
 
 	/**
 	 * Post object.
@@ -334,7 +334,11 @@ class EDD_Payment_Compat {
 			return false;
 		}
 
-		$this->ID = absint( $payment_id );
+		$this->ID      = absint( $payment_id );
+		$this->payment = get_post( $this->ID );
+		if ( ! $this->payment instanceof WP_Post ) {
+			return false;
+		}
 		$this->setup();
 	}
 
@@ -345,7 +349,6 @@ class EDD_Payment_Compat {
 	 * @return void
 	 */
 	private function setup() {
-		$this->payment                 = get_post( $this->ID );
 		$this->payment_meta            = $this->get_meta();
 		$this->cart_details            = $this->setup_cart_details();
 		$this->status                  = $this->setup_status();
@@ -375,58 +378,6 @@ class EDD_Payment_Compat {
 	}
 
 	/**
-	 * Magic GET function
-	 *
-	 * @since  3.0
-	 * @param  string $key  The property
-	 * @return mixed        The value
-	 */
-	public function __get( $key ) {
-
-		if ( method_exists( $this, 'get_' . $key ) ) {
-
-			$value = call_user_func( array( $this, 'get_' . $key ) );
-
-		} else {
-
-			$value = $this->$key;
-
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic SET function
-	 *
-	 * Sets up the pending array for the save method
-	 *
-	 * @since  3.0
-	 * @param string $key   The property name
-	 * @param mixed $value  The value of the property
-	 */
-	public function __set( $key, $value ) {
-		if ( '_ID' !== $key ) {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic ISSET function, which allows empty checks on protected elements
-	 *
-	 * @since  3.0
-	 * @param  string  $name The attribute to get
-	 * @return boolean       If the item is set or not
-	 */
-	public function __isset( $name ) {
-		if ( property_exists( $this, $name ) ) {
-			return false === empty( $this->$name );
-		} else {
-			return null;
-		}
-	}
-
-	/**
 	 * Get a post meta item for the payment
 	 *
 	 * @since  3.0
@@ -437,7 +388,7 @@ class EDD_Payment_Compat {
 	private function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
 
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
-		if ( $meta_key === '_edd_payment_meta' ) {
+		if ( '_edd_payment_meta' === $meta_key ) {
 
 			if ( empty( $meta ) ) {
 				$meta = array();
@@ -482,15 +433,6 @@ class EDD_Payment_Compat {
 	}
 
 	/**
-	 * Setup functions only, these are not to be used by developers.
-	 * These functions exist only to allow the setup routine to be backwards compatible with our old
-	 * helper functions.
-	 *
-	 * These will run whenever setup_payment is called, which should only be called once.
-	 * To update an attribute, update it directly instead of re-running the setup routine
-	 */
-
-	/**
 	 * Setup the payment completed date
 	 *
 	 * @since  3.0
@@ -500,8 +442,10 @@ class EDD_Payment_Compat {
 		if ( in_array( $this->payment->post_status, array( 'pending', 'preapproved', 'processing' ), true ) ) {
 			return false; // This payment was never completed
 		}
+		$date = $this->get_meta( '_edd_completed_date', true );
 
-		return ( $date = $this->get_meta( '_edd_completed_date', true ) ) ? $date : $this->payment->date;
+		// phpcs:ignore WordPress.PHP.DisallowShortTernary
+		return $date ?: $this->payment->date;
 	}
 
 	/**
