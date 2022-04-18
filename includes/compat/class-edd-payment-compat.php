@@ -175,7 +175,7 @@ class EDD_Payment_Compat {
 	 * @since  3.0
 	 * @var string
 	 */
-	public $status      = 'pending';
+	public $status = 'pending';
 
 	/**
 	 * The customer ID that made the payment
@@ -865,11 +865,107 @@ class EDD_Payment_Compat {
 				'discount'       => $this->discounted_amount,
 				'tax'            => $this->tax,
 				'total'          => $this->total,
-				'rate'           => $this->tax_rate,
-				'date_created'   => $this->completed_date,
+				'rate'           => $this->get_order_tax_rate(),
+				'date_created'   => $this->payment->post_date_gmt,
 				'date_modified'  => $this->payment->post_modified,
 				'date_completed' => $this->completed_date,
+				'items'          => $this->get_order_items(),
 			)
 		);
+	}
+
+	/**
+	 * Updates the payment tax rate to match the expected order tax rate.
+	 *
+	 * @since 3.0
+	 * @return float
+	 */
+	private function get_order_tax_rate() {
+		$tax_rate = (float) $this->tax_rate;
+		if ( $tax_rate < 1 ) {
+			$tax_rate = $tax_rate * 100;
+		}
+
+		return $tax_rate;
+	}
+
+	/**
+	 * Gets an array of order item objects from the cart details.
+	 *
+	 * @since 3.0
+	 * @return array
+	 */
+	private function get_order_items() {
+		$order_items = array();
+		if ( empty( $this->cart_details ) ) {
+			return $order_items;
+		}
+		foreach ( $this->cart_details as $key => $cart_item ) {
+			$product_name = isset( $cart_item['name'] )
+				? $cart_item['name']
+				: '';
+			$price_id     = $this->get_valid_price_id_for_cart_item( $cart_item );
+			if ( ! empty( $product_name ) ) {
+				$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
+				if ( ! empty( $option_name ) ) {
+					$product_name .= ' — ' . $option_name;
+				}
+			}
+			$order_item_args = array(
+				'order_id'      => $this->ID,
+				'product_id'    => $cart_item['id'],
+				'product_name'  => $product_name,
+				'price_id'      => $price_id,
+				'cart_index'    => $key,
+				'type'          => 'download',
+				'status'        => $this->status,
+				'quantity'      => $cart_item['quantity'],
+				'amount'        => (float) $cart_item['item_price'],
+				'subtotal'      => (float) $cart_item['subtotal'],
+				'discount'      => (float) $cart_item['discount'],
+				'tax'           => $cart_item['tax'],
+				'total'         => (float) $cart_item['price'],
+				'date_created'  => $this->payment->post_date_gmt,
+				'date_modified' => $this->payment->post_modified_gmt,
+			);
+
+			$order_items[] = new EDD\Orders\Order_Item( $order_item_args );
+		}
+
+		return $order_items;
+	}
+
+	/**
+	 * Retrieves a valid price ID for a given cart item.
+	 * If the product does not have variable prices, then `null` is always returned.
+	 * If the supplied price ID does not match a price ID that actually exists, then the default
+	 * variable price is returned instead of the supplied one.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $cart_item Array of cart item details.
+	 *
+	 * @return int|null
+	 */
+	private function get_valid_price_id_for_cart_item( $cart_item ) {
+		// If the product doesn't have variable prices, just return `null`.
+		if ( ! edd_has_variable_prices( $cart_item['id'] ) ) {
+			return null;
+		}
+
+		$variable_prices = edd_get_variable_prices( $cart_item['id'] );
+		if ( ! is_array( $variable_prices ) || empty( $variable_prices ) ) {
+			return null;
+		}
+
+		// Get the price ID that's set to the cart item right now.
+		$price_id = isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
+			? absint( $cart_item['item_number']['options']['price_id'] )
+			: null;
+
+		// Now let's confirm it's actually a valid price ID.
+		$variable_price_ids = array_map( 'intval', array_column( $variable_prices, 'index' ) );
+
+		return in_array( $price_id, $variable_price_ids, true ) ? $price_id : edd_get_default_variable_price( $cart_item['id'] );
 	}
 }
