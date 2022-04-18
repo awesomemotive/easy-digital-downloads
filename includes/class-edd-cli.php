@@ -1322,11 +1322,11 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! empty( $total ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
-
+			$orders   = new \EDD\Database\Queries\Order();
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				$migrated = edd_get_order( $result->ID );
+				$migrated = $orders->get_item( $result->ID );
 				if ( $migrated ) {
 					continue;
 				}
