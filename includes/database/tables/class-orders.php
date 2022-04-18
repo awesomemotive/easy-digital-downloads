@@ -116,7 +116,7 @@ final class Orders extends Table {
 			$last_payment_id = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
 
 			if ( ! empty( $last_payment_id ) ) {
-				update_option( 'edd_v3_migration_in_process', $last_payment_id, false );
+				update_option( 'edd_v3_migration_pending', $last_payment_id, false );
 				$auto_increment = $last_payment_id + 1;
 				$this->get_db()->query( "ALTER TABLE {$this->table_name}  AUTO_INCREMENT = {$auto_increment};" );
 			}
