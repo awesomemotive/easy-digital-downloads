@@ -110,4 +110,11 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 
 		$this->assertFalse( $payment );
 	}
+
+	public function test_edd_get_order_no_order_outside_migration_should_return_false() {
+		delete_option( 'edd_v3_migration_pending' );
+		$order = edd_get_order( $this->payment_id );
+
+		$this->assertFalse( $order );
+	}
 }
