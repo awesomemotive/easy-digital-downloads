@@ -1416,7 +1416,7 @@ function edd_complete_order_status_keys() {
 	 *        An array of order status array keys.
 	 * }
 	 */
-	return apply_filters( 'edd_complete_order_statuses', $statuses );
+	return apply_filters( 'edd_complete_order_status_keys', $statuses );
 }
 
 /**
@@ -1445,7 +1445,7 @@ function edd_incomplete_order_status_keys() {
 	 *        An array of order status array keys.
 	 * }
 	 */
-	return apply_filters( 'edd_incomplete_order_statuses', $statuses );
+	return apply_filters( 'edd_incomplete_order_status_keys', $statuses );
 }
 
 /**
@@ -1485,7 +1485,7 @@ function edd_recoverable_order_status_keys() {
 	 *        An array of order status array keys.
 	 * }
 	 */
-	return apply_filters( 'edd_recoverable_order_statuses', $statuses );
+	return apply_filters( 'edd_recoverable_order_status_keys', $statuses );
 }
 
 /**

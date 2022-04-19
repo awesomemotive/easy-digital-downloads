@@ -236,7 +236,7 @@ function edd_load_dashboard_sales_widget( ) {
 						);
 						?>
 					</a>
-					<br /><?php echo esc_html( edd_date_i18n( $payment->date ) ); ?>
+					<br /><?php echo esc_html( edd_date_i18n( $payment->completed_date ) ); ?>
 				</li>
 				<?php } // End foreach ?>
 		</ul>

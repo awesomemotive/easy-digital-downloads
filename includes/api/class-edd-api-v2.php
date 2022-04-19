@@ -401,7 +401,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$sales['sales'][ $i ]['customer_id']    = $payment->customer_id;
 				$sales['sales'][ $i ]['user_id']        = $payment->user_id;
 				$sales['sales'][ $i ]['email']          = $payment->email;
-				$sales['sales'][ $i ]['date']           = $payment->date;
+				$sales['sales'][ $i ]['date']           = $payment->completed_date;
 
 				$c = 0;
 

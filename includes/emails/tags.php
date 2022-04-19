@@ -662,7 +662,7 @@ function edd_email_tag_billing_address( $payment_id ) {
  */
 function edd_email_tag_date( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
-	return date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) );
+	return date_i18n( get_option( 'date_format' ), strtotime( $payment->completed_date ) );
 }
 
 /**
