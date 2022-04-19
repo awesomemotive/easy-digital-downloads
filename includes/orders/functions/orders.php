@@ -624,7 +624,7 @@ function edd_build_order( $order_data = array() ) {
 		$order = edd_get_order( $existing_order );
 
 		if ( $order ) {
-			$recoverable_statuses = edd_recoverable_order_statuses();
+			$recoverable_statuses = edd_recoverable_order_status_keys();
 
 			$transaction_id = $order->get_transaction_id();
 
