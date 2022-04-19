@@ -133,6 +133,7 @@ class Base extends \EDD_Batch_Export {
 			$this->message = $this->completed_message;
 			edd_set_upgrade_complete( $this->upgrade );
 			delete_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->upgrade ) ) );
+			edd_v30_migration_is_complete();
 			return false;
 		}
 	}
