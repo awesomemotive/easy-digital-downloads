@@ -1375,25 +1375,6 @@ function edd_get_net_order_statuses() {
 }
 
 /**
- * Get the order status array keys which are considered recoverable.
- *
- * @since 3.0
- * @return array An array of order status keys which are considered recoverable.
- */
-function edd_recoverable_order_statuses() {
-	$statuses = array( 'pending', 'abandoned', 'failed' );
-
-	/**
-	 * Order statuses which are considered recoverable.
-	 *
-	 * @param $statuses {
-	 *        An array of order status array keys.
-	 * }
-	 */
-	return apply_filters( 'edd_recoverable_payment_statuses', $statuses );
-}
-
-/**
  * Generate unique payment key for orders.
  *
  * @since 3.0
@@ -1413,4 +1394,106 @@ function edd_generate_order_payment_key( $key ) {
 	 * @return string
 	 */
 	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
+}
+
+/**
+ * Helper functions to retrieve or statues for different phases of the life of an order.
+ */
+
+/**
+ * Get the order status array keys which are considered completed.
+ *
+ * @since 3.0
+ * @return array An array of order status keys which are considered completed.
+ */
+function edd_complete_order_status_keys() {
+	$statuses = array( 'publish', 'complete', 'completed', 'partially_refunded', 'revoked', 'refunded' );
+
+	/**
+	 * Order statuses which are considered completed or at their final state.
+	 *
+	 * @param $statuses {
+	 *        An array of order status array keys.
+	 * }
+	 */
+	return apply_filters( 'edd_complete_order_statuses', $statuses );
+}
+
+/**
+ * Get the order statuses which are considered completed.
+ *
+ * @since 3.0
+ * @return array An array of order statuses which are considered completed.
+ */
+function edd_complete_order_statuses() {
+	return array_intersect_key( edd_get_payment_statuses(), array_flip( edd_complete_order_status_keys() ) );
+}
+
+/**
+ * Get the order status array keys which are considered incomplete.
+ *
+ * @since 3.0
+ * @return array An array of order status keys which are considered incomplete.
+ */
+function edd_incomplete_order_status_keys() {
+	$statuses = array( 'pending', 'abandoned', 'processing', 'failed' );
+
+	/**
+	 * Order statuses which are considered incomplete.
+	 *
+	 * @param $statuses {
+	 *        An array of order status array keys.
+	 * }
+	 */
+	return apply_filters( 'edd_incomplete_order_statuses', $statuses );
+}
+
+/**
+ * Get the order statuses which are considered incomplete.
+ *
+ * @since 3.0
+ * @return array An array of order statuses which are considered incomplete.
+ */
+function edd_incomplete_order_statuses() {
+	return array_intersect_key( edd_get_payment_statuses(), array_flip( edd_incomplete_order_status_keys() ) );
+}
+
+/**
+ * Get the order status array keys which are considered recoverable.
+ *
+ * @since 3.0
+ * @return array An array of order status keys which are considered recoverable.
+ */
+function edd_recoverable_order_status_keys() {
+	$statuses = array( 'pending', 'abandoned', 'failed' );
+
+	/**
+	 * Order statuses which are considered recoverable.
+	 *
+	 * @deprecated This has been deprecated in EDD 3.0. Use edd_recoverable_order_statuses instead.
+	 * @param $statuses {
+	 *        An array of order status array keys.
+	 * }
+	 */
+	$statuses = apply_filters( 'edd_recoverable_payment_statuses', $statuses );
+
+	/**
+	 * Order statuses which are considered recoverable.
+	 *
+	 * @since 3.0
+	 * @param $statuses {
+	 *        An array of order status array keys.
+	 * }
+	 */
+	return apply_filters( 'edd_recoverable_order_statuses', $statuses );
+}
+
+/**
+ * Get the order statuses which are considered non-completed.
+ *
+ * @since 3.0
+ * @return array An array of order statuses which are considered not completed.
+ */
+function edd_recoverable_order_statuses() {
+	return array_intersect_key( edd_get_payment_statuses(), array_flip( edd_recoverable_order_status_keys() ) );
 }

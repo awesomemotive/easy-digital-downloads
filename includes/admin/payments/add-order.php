@@ -25,12 +25,23 @@ function edd_add_order_page_content() {
 	// Enqueued for backwards compatibility. Empty file.
 	wp_enqueue_script( 'edd-admin-payments' );
 
+	// Add order statuses for use in jQuery
+	wp_localize_script(
+			'edd-admin-orders',
+			'edd_order_statuses',
+			array(
+					'completed'   => edd_complete_order_status_keys(),
+					'incomplete'  => edd_incomplete_order_status_keys(),
+					'recoverable' => edd_recoverable_order_status_keys(),
+			)
+	);
+
 	// Create empty order object to pass to callback functions.
 	$order = new Order( array(
 		'id'              => 0,
 		'parent'          => 0,
 		'order_number'    => 0,
-		'status'          => 'complete',
+		'status'          => 'pending',
 		'date_created'    => date( 'Y-m-d H:i:s' ),
 		'date_modified'   => date( 'Y-m-d H:i:s' ),
 		'date_refundable' => null,

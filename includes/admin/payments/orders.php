@@ -960,7 +960,8 @@ function edd_order_details_attributes( $order ) {
 		? ''
 		: edd_get_payment( $order->id )->get_recovery_url();
 
-	$order_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $order->date_created, 'utc', true ) );
+	$date_completed = ! is_null( $order->date_completed ) ? edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $order->date_completed, 'utc', true ) ) : '';
+	$date_created   = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $order->date_created, 'utc', true ) );
 
 	?>
 
@@ -990,9 +991,11 @@ function edd_order_details_attributes( $order ) {
 						</label>
 						<div class="edd-form-group__control">
 							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input">
-							<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
-								<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
-							<?php endforeach; ?>
+							<?php
+								foreach ( edd_get_payment_statuses() as $key => $status ) {
+									?><option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option><?php
+								}
+							?>
 							</select>
 						</div>
 					</div>
@@ -1031,17 +1034,19 @@ function edd_order_details_attributes( $order ) {
 					</div>
 				<?php endif; ?>
 
-				<div class="edd-admin-box-inside">
+				<?php $hide_date_completed = empty( $date_completed ) ? ' hidden' : ''; ?>
+				<div class="edd-admin-box-inside completed-date-wrapper <?php echo $hide_date_completed; ?>">
 					<div class="edd-form-group">
-						<label for="edd-payment-date" class="edd-form-group__label"><?php esc_html_e( 'Date', 'easy-digital-downloads' ); ?>
+						<label for="edd-payment-date" class="edd-form-group__label"><?php esc_html_e( 'Date Completed', 'easy-digital-downloads' ); ?>
 						</label>
 						<div class="edd-form-group__control">
-							<input type="text" id="edd-payment-date" class="edd-form-group__input edd_datepicker" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>"placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+							<?php $date_completed_value = ! empty( $date_completed ) ? esc_attr( $date_completed->format( 'Y-m-d' ) ) : ''; ?>
+							<input type="text" id="edd-payment-date" class="edd-form-group__input edd_datepicker" name="edd-payment-date" value="<?php echo $date_completed_value; ?>"placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 						</div>
 					</div>
 				</div>
 
-				<div class="edd-admin-box-inside">
+				<div class="edd-admin-box-inside completed-date-wrapper <?php echo $hide_date_completed; ?>">
 					<fieldset class="edd-form-group">
 						<legend class="edd-form-group__label">
 							<?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ')' ); ?>
@@ -1051,15 +1056,32 @@ function edd_order_details_attributes( $order ) {
 							<label for="edd-payment-time-hour" class="screen-reader-text">
 								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
 							</label>
-							<input type="number" class="edd-form-group__input small-text" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
+							<?php $hour_completed_value = ! empty( $date_completed ) ? esc_attr( $date_completed->format( 'H' ) ) : ''; ?>
+							<input type="number" class="edd-form-group__input small-text" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo $hour_completed_value; ?>" />
 							:
 
 							<label for="edd-payment-time-min" class="screen-reader-text">
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
-							<input type="number" class="edd-form-group__input small-text" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
+							<?php $minute_completed_value = ! empty( $date_completed ) ? esc_attr( $date_completed->format( 'i' ) ) : ''; ?>
+							<input type="number" class="edd-form-group__input small-text" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo $minute_completed_value; ?>" />
 						</div>
 					</fieldset>
+				</div>
+
+				<div class="edd-admin-box-inside">
+					<div class="edd-form-group">
+						<label for="edd-payment-created-date" class="edd-form-group__label">
+							<?php
+							esc_html_e( 'Date Created', 'easy-digital-downloads' );
+							$date_created_help  = __( 'This is the date the order was entered into the database. It differs from the \'completed date\', which is when the order transaction was successfully captured.', 'easy-digital-downloads' );
+							?>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $date_created_help; // WPCS: XSS ok. ?>"></span>
+						</label>
+						<div class="edd-form-group__control">
+							<input disabled readonly type="text" id="edd-payment-created-date" class="edd-form-group__input" name="edd-payment-created-date" value="<?php echo esc_attr( $date_created->format( 'Y-m-d H:i:s' ) ); ?>"placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+						</div>
+					</div>
 				</div>
 
 				<?php do_action( 'edd_view_order_details_update_inner', $order->id ); ?>

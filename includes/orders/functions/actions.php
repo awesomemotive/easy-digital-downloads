@@ -119,29 +119,34 @@ function edd_add_manual_order( $args = array() ) {
 		$status = 'complete';
 	}
 
-	// Parse date.
-	$date = sanitize_text_field( $order_data['edd-payment-date'] );
-	$hour = sanitize_text_field( $order_data['edd-payment-time-hour'] );
+	$completed_date = false;
 
-	// Restrict to our high and low.
-	if ( $hour > 23 ) {
-		$hour = 23;
-	} elseif ( $hour < 0 ) {
-		$hour = 00;
+	if ( in_array( $status, edd_complete_order_status_keys() ) ) {
+		$date = sanitize_text_field( $order_data['edd-payment-date'] );
+		$hour = sanitize_text_field( $order_data['edd-payment-time-hour'] );
+
+		// Restrict to our high and low
+		if ( $hour > 23 ) {
+			$hour = 23;
+		} elseif ( $hour < 0 ) {
+			$hour = 00;
+		}
+
+		$minute = sanitize_text_field( $order_data['edd-payment-time-min'] );
+
+		// Restrict to our high and low
+		if ( $minute > 59 ) {
+			$minute = 59;
+		} elseif ( $minute < 0 ) {
+			$minute = 00;
+		}
+
+		if ( ! empty( $date ) ) {
+			// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
+			$completed_date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
+			$completed_date = $completed_date->format( 'Y-m-d H:i:s' );
+		}
 	}
-
-	$minute = sanitize_text_field( $order_data['edd-payment-time-min'] );
-
-	// Restrict to our high and low.
-	if ( $minute > 59 ) {
-		$minute = 59;
-	} elseif ( $minute < 0 ) {
-		$minute = 00;
-	}
-
-	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
-	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
-	$date = $date->format( 'Y-m-d H:i:s' );
 
 	// Get mode
 	$mode = edd_is_test_mode()
@@ -173,26 +178,30 @@ function edd_add_manual_order( $args = array() ) {
 		);
 	}
 
-	// Add the order ID
-	$order_id = edd_add_order(
-		array(
-			'status'       => 'pending', // Always insert as pending initially.
-			'user_id'      => $user_id,
-			'customer_id'  => $customer_id,
-			'email'        => $email,
-			'ip'           => sanitize_text_field( $order_data['ip'] ),
-			'gateway'      => sanitize_text_field( $order_data['gateway'] ),
-			'mode'         => $mode,
-			'currency'     => edd_get_currency(),
-			'payment_key'  => $order_data['payment_key'] ? sanitize_text_field( $order_data['payment_key'] ) : edd_generate_order_payment_key( $email ),
-			'tax_rate_id'  => ! empty( $tax_rate->id ) ? $tax_rate->id : null,
-			'subtotal'     => $order_subtotal,
-			'tax'          => $order_tax,
-			'discount'     => $order_discount,
-			'total'        => $order_total,
-			'date_created' => $date,
-		)
+	$add_order_args = array(
+		'status'         => 'pending', // Always insert as pending initially.
+		'user_id'        => $user_id,
+		'customer_id'    => $customer_id,
+		'email'          => $email,
+		'ip'             => sanitize_text_field( $order_data['ip'] ),
+		'gateway'        => sanitize_text_field( $order_data['gateway'] ),
+		'mode'           => $mode,
+		'currency'       => edd_get_currency(),
+		'payment_key'    => $order_data['payment_key'] ? sanitize_text_field( $order_data['payment_key'] ) : edd_generate_order_payment_key( $email ),
+		'tax_rate_id'    => ! empty( $tax_rate->id ) ? $tax_rate->id : null,
+		'subtotal'       => $order_subtotal,
+		'tax'            => $order_tax,
+		'discount'       => $order_discount,
+		'total'          => $order_total,
 	);
+
+	if ( ! empty( $completed_date ) ) {
+		$add_order_args['date_completed']  = $completed_date;
+		$add_order_args['date_refundable'] = edd_get_refund_date( $completed_date );
+	}
+
+	// Add the order ID
+	$order_id = edd_add_order( $add_order_args );
 
 	// Attach order to the customer record.
 	if ( ! empty( $customer ) ) {
@@ -309,7 +318,7 @@ function edd_add_manual_order( $args = array() ) {
 				'price_id'     => $price_id,
 				'cart_index'   => $cart_key,
 				'type'         => 'download',
-				'status'       => 'complete',
+				'status'       => 'pending',
 				'quantity'     => $quantity,
 				'amount'       => $amount,
 				'subtotal'     => $subtotal,
@@ -451,7 +460,7 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Trigger edd_complete_purchase.
-	if ( 'complete' === $status ) {
+	if ( in_array( $status, edd_complete_order_status_keys() ) ) {
 		edd_update_order_status( $order_id, $status );
 	}
 

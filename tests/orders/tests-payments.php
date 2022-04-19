@@ -188,6 +188,56 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $expected, $out );
 	}
 
+	public function test_edd_complete_order_status_keys() {
+		$expected = array( 'publish', 'complete', 'completed', 'partially_refunded', 'revoked', 'refunded' );
+
+		$this->assertEquals( $expected, edd_complete_order_status_keys() );
+	}
+
+	public function test_edd_complete_order_statuses() {
+		$expected = array(
+			'complete'           => __( 'Completed',  'easy-digital-downloads' ),
+			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
+			'revoked'            => __( 'Revoked',    'easy-digital-downloads' ),
+			'refunded'           => __( 'Refunded',   'easy-digital-downloads' ),
+		);
+
+		$this->assertEquals( $expected, edd_complete_order_statuses() );
+	}
+
+	public function test_edd_incomplete_order_status_keys() {
+		$expected = array( 'pending', 'abandoned', 'processing', 'failed' );
+
+		$this->assertEquals( $expected, edd_incomplete_order_status_keys() );
+	}
+
+	public function test_edd_incomplete_order_statuses() {
+		$expected = array(
+			'pending'            => __( 'Pending',    'easy-digital-downloads' ),
+			'abandoned'          => __( 'Abandoned',  'easy-digital-downloads' ),
+			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
+			'failed'             => __( 'Failed',     'easy-digital-downloads' ),
+		);
+
+		$this->assertEquals( $expected, edd_incomplete_order_statuses() );
+	}
+
+	public function test_edd_recoverable_order_status_keys() {
+		$expected = array( 'pending', 'abandoned', 'failed' );
+
+		$this->assertEquals( $expected, edd_recoverable_order_status_keys() );
+	}
+
+	public function test_edd_recoverable_order_statuses() {
+		$expected = array(
+			'pending'            => __( 'Pending',    'easy-digital-downloads' ),
+			'abandoned'          => __( 'Abandoned',  'easy-digital-downloads' ),
+			'failed'             => __( 'Failed',     'easy-digital-downloads' ),
+		);
+
+		$this->assertEquals( $expected, edd_recoverable_order_statuses() );
+	}
+
 	public function test_delete_purchase() {
 		edd_delete_purchase( self::$payment->ID );
 

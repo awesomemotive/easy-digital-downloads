@@ -85,32 +85,41 @@ function edd_update_payment_details( $data = array() ) {
 
 	$order_update_args = array();
 
-	$unlimited  = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
-	$new_status = sanitize_key( $data['edd-payment-status'] );
-	$date       = sanitize_text_field( $data['edd-payment-date'] );
-	$hour       = sanitize_text_field( $data['edd-payment-time-hour'] );
+	$unlimited      = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
+	$new_status     = sanitize_key( $data['edd-payment-status'] );
+	$completed_date = false;
 
-	// Restrict to our high and low
-	if ( $hour > 23 ) {
-		$hour = 23;
-	} elseif ( $hour < 0 ) {
-		$hour = 00;
+	if ( in_array( $new_status, edd_complete_order_status_keys() ) ) {
+		$date = sanitize_text_field( $data['edd-payment-date'] );
+		$hour = sanitize_text_field( $data['edd-payment-time-hour'] );
+
+		// Restrict to our high and low
+		if ( $hour > 23 ) {
+			$hour = 23;
+		} elseif ( $hour < 0 ) {
+			$hour = 00;
+		}
+
+		$minute = sanitize_text_field( $data['edd-payment-time-min'] );
+
+		// Restrict to our high and low
+		if ( $minute > 59 ) {
+			$minute = 59;
+		} elseif ( $minute < 0 ) {
+			$minute = 00;
+		}
+
+		if ( ! empty( $date ) ) {
+			// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
+			$completed_date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
+			$completed_date = $completed_date->format( 'Y-m-d H:i:s' );
+		}
 	}
 
-	$minute = sanitize_text_field( $data['edd-payment-time-min'] );
-
-	// Restrict to our high and low
-	if ( $minute > 59 ) {
-		$minute = 59;
-	} elseif ( $minute < 0 ) {
-		$minute = 00;
+	if ( ! empty( $completed_date ) ) {
+		$order_update_args['date_completed']  = $completed_date;
+		$order_update_args['date_refundable'] = edd_get_refund_date( $completed_date );
 	}
-
-	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
-	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
-	$date = $date->format( 'Y-m-d H:i:s' );
-
-	$order_update_args['date_created'] = $date;
 
 	// Customer
 	$curr_customer_id = sanitize_text_field( $data['current-customer-id'] );
