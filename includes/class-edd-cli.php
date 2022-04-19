@@ -835,8 +835,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$this->migrate_customer_notes( $args, $assoc_args );
 		$this->remove_legacy_data( $args, $assoc_args );
 
-		// Delete the migration in process option.
-		delete_option( 'edd_v3_migration_pending' );
+		edd_v30_migration_is_complete();
 	}
 
 	/**
