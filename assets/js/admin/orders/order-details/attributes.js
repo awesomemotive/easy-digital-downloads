@@ -1,4 +1,4 @@
-/* global $, ajaxurl, edd_order_statuses */
+/* global $, ajaxurl, eddAdminOrderOverview */
 
 /**
  * Internal dependencies
@@ -6,18 +6,17 @@
 import { jQueryReady } from 'utils/jquery.js';
 
 jQueryReady( () => {
-	const order_data_wrap = $( '.edd-order-data' );
-
 	$( document.body ).on( 'change', '#edd_payment_status', function( e ) {
 		e.preventDefault();
 
-		let selected_status = $(this).val();
-		let found_value     = edd_order_statuses.incomplete.indexOf( selected_status );
-		console.log(found_value);
-		if ( found_value >= 0 ) {
-			$('.completed-date-wrapper').slideUp();
+		let selectedStatus = $(this).val();
+		let foundStatus    = eddAdminOrderOverview.orderStatuses.incomplete.indexOf( selectedStatus );
+		const dateWrapper  = $('.completed-date-wrapper');
+		console.log(foundStatus);
+		if ( foundStatus >= 0 ) {
+			dateWrapper.slideUp();
 		} else {
-			$('.completed-date-wrapper').slideDown();
+			dateWrapper.slideDown();
 		}
 	} );
 } );

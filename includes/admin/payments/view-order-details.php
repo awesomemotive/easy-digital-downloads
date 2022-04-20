@@ -45,17 +45,6 @@ if ( 'refund' === $order->type ) {
 wp_enqueue_script( 'edd-admin-orders' );
 // Enqueued for backwards compatibility. Empty file.
 wp_enqueue_script( 'edd-admin-payments' );
-
-// Add order statuses for use in jQuery
-wp_localize_script(
-	'edd-admin-orders',
-	'edd_order_statuses',
-	array(
-		'completed'   => edd_complete_order_status_keys(),
-		'incomplete'  => edd_incomplete_order_status_keys(),
-		'recoverable' => edd_recoverable_order_status_keys(),
-	)
-);
 ?>
 
 <form id="edd-edit-order-form" method="post">
