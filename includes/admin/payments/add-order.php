@@ -71,6 +71,10 @@ function edd_add_order_page_content() {
 				<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please add an item to this order.', 'easy-digital-downloads' ); ?></p>
 			</div>
 
+			<div class="notice notice-error inline" id="edd-add-order-incomplete-date-error" style="display: none">
+				<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please add a date and time to this order.', 'easy-digital-downloads' ); ?></p>
+			</div>
+
 			<?php do_action( 'edd_add_order_before' ); ?>
 
 			<?php do_action( 'edd_add_order_form_top' ); ?>

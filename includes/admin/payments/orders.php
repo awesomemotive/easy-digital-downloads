@@ -738,7 +738,7 @@ function edd_order_details_overview( $order ) {
 				'closeText' => esc_html__( 'Close', 'easy-digital-downloads' ),
 			),
 			'orderStatuses' => array(
-				'completed'   => edd_complete_order_status_keys(),
+				'complete'    => edd_complete_order_status_keys(),
 				'incomplete'  => edd_incomplete_order_status_keys(),
 				'recoverable' => edd_recoverable_order_status_keys(),
 			),

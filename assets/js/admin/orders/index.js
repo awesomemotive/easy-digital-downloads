@@ -19,11 +19,18 @@ jQueryReady( () => {
 			const overview = OrderOverview.options.state;
 			const orderItems = overview.get( 'items' );
 
+			const orderStatusEl = document.getElementById( 'edd_payment_status' );
+
 			const noItemErrorEl = document.getElementById( 'edd-add-order-no-items-error' );
 			const noCustomerErrorEl = document.getElementById( 'edd-add-order-customer-error' );
 
 			const assignCustomerEl = document.getElementById( 'customer_id' );
 			const newCustomerEmailEl = document.getElementById( 'edd_new_customer_email' );
+
+			const completedDateEl = document.getElementById( 'edd-payment-date' );
+			const completedHourEl = document.getElementById( 'edd-payment-time-hour' );
+			const completedMinuteEl = document.getElementById( 'edd-payment-time-min' );
+			const noDateErrorEl = document.getElementById( 'edd-add-order-incomplete-date-error' );
 
 			[
 				'edd-add-order-form',
@@ -66,11 +73,43 @@ jQueryReady( () => {
 					} else {
 						noCustomerErrorEl.style.display = 'none';
 					}
+				}
 
-					if ( true === hasError ) {
-						event.preventDefault();
+				// Ensure Date is selected.
+				let dateCompletedRequired = window.eddAdminOrderOverview.orderStatuses.complete.indexOf( orderStatusEl.value );
+				if ( dateCompletedRequired >= 0 ) {
+					let hasDateError = false;
+
+					if ( completedDateEl ) {
+						if ( '' === completedDateEl.value ) {
+							hasDateError = true;
+						}
+					}
+
+					if ( completedHourEl ) {
+						if ( '' === completedHourEl.value ) {
+							hasDateError = true;
+						}
+					}
+
+					if ( completedMinuteEl ) {
+						if ( '' === completedMinuteEl.value ) {
+							hasDateError = true;
+						}
+					}
+
+					if ( true === hasDateError ) {
+						noDateErrorEl.style.display = 'block';
+						hasError = true;
+					} else {
+						noDateErrorEl.style.display = 'none';
 					}
 				}
+
+				if ( true === hasError ) {
+					event.preventDefault();
+				}
+
 			}
 
 			/**

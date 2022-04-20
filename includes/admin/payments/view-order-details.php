@@ -60,6 +60,10 @@ wp_enqueue_script( 'edd-admin-payments' );
 			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
 		</div>
 
+		<div class="notice notice-error inline" id="edd-add-order-incomplete-date-error" style="display: none">
+			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please add a date and time to this order.', 'easy-digital-downloads' ); ?></p>
+		</div>
+
 		<?php do_action( 'edd_view_order_details_before', $order->id ); ?>
 
 		<?php do_action( 'edd_view_order_details_form_top', $order->id ); ?>
