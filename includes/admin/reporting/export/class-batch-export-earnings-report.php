@@ -212,7 +212,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			}
 
 			// Allows extensions with other 'completed' statuses to alter net earnings, like recurring.
-			$completed_statuses = apply_filters( 'edd_export_earnings_completed_statuses', edd_complete_order_statuses() );
+			$completed_statuses = apply_filters( 'edd_export_earnings_completed_statuses', edd_complete_order_status_keys() );
 
 			$net_count  = 0;
 			$net_amount = 0;
