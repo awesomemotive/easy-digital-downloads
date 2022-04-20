@@ -620,7 +620,7 @@ class Order extends Rows\Order {
 	 * @return bool
 	 */
 	public function is_recoverable() {
-		$recoverable_statuses = edd_recoverable_order_statuses();
+		$recoverable_statuses = edd_recoverable_order_status_keys();
 		if ( in_array( $this->status, $recoverable_statuses, true ) && empty( $this->get_transaction_id() ) ) {
 			return true;
 		}
