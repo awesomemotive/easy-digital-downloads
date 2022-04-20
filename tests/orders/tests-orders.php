@@ -73,6 +73,33 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_delete_order
 	 */
+	public function test_delete_should_delete_metadata() {
+		edd_add_order_meta( self::$orders[1], 'test_meta_key', 'test_meta_value', true );
+
+		// This assertion is added to ensure that metadata was, in fact, added to the order.
+		$this->assertEquals( 'test_meta_value', edd_get_order_meta( self::$orders[1], 'test_meta_key', true ) );
+
+		edd_delete_order( self::$orders[1] );
+		$this->assertEmpty( edd_get_order_meta( self::$orders[1], 'test_meta_key', true ) );
+	}
+
+	/**
+	 * @covers ::edd_delete_order
+	 */
+	public function test_delete_should_delete_metadata_non_unique() {
+		edd_add_order_meta( self::$orders[1], 'test_meta_key', '2', false );
+		edd_add_order_meta( self::$orders[1], 'test_meta_key', '1', false );
+
+		// This assertion is added to ensure that metadata was, in fact, added to the order.
+		$this->assertEquals( array( 2, 1 ), edd_get_order_meta( self::$orders[1], 'test_meta_key', false ) );
+
+		edd_delete_order( self::$orders[1] );
+		$this->assertEmpty( edd_get_order_meta( self::$orders[1], 'test_meta_key', false ) );
+	}
+
+	/**
+	 * @covers ::edd_delete_order
+	 */
 	public function test_delete_without_id_should_fail() {
 		$success = edd_delete_order( '' );
 

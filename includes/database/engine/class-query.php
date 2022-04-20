@@ -1133,10 +1133,6 @@ class Query extends Base {
 
 		// Defaults
 		$where = $join = $searchable = $date_query = array();
-		$and   = '/^\s*AND\s*/';
-
-		// Set the table right away
-		$table = $this->apply_prefix( $this->item_name );
 
 		// Loop through columns
 		foreach ( $this->columns as $column ) {
@@ -1276,11 +1272,16 @@ class Query extends Base {
 			$where['search'] = $this->get_search_sql( $this->query_vars['search'], $search_columns );
 		}
 
+		// Get the primary column & table
+		$primary = $this->get_primary_column_name();
+		$table   = $this->get_meta_type();
+		$and     = '/^\s*AND\s*/';
+
 		// Maybe perform a meta query.
 		$meta_query = $this->query_vars['meta_query'];
 		if ( ! empty( $meta_query ) && is_array( $meta_query ) ) {
 			$this->meta_query = $this->get_meta_query( $meta_query );
-			$clauses          = $this->meta_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
+			$clauses          = $this->meta_query->get_sql( $table, $this->table_alias, $primary, $this );
 
 			// Not all objects have meta, so make sure this one exists
 			if ( false !== $clauses ) {
@@ -1301,10 +1302,15 @@ class Query extends Base {
 		$compare_query = $this->query_vars['compare_query'];
 		if ( ! empty( $compare_query ) && is_array( $compare_query ) ) {
 			$this->compare_query = $this->get_compare_query( $compare_query );
-			$clauses             = $this->compare_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
+			$clauses             = $this->compare_query->get_sql( $table, $this->table_alias, $primary, $this );
 
 			// Not all objects can compare, so make sure this one exists
 			if ( false !== $clauses ) {
+
+				// Set join
+				if ( ! empty( $clauses['join'] ) ) {
+					$join['compare_query'] = $clauses['join'];
+				}
 
 				// Remove " AND " from query where clause.
 				$where['compare_query'] = preg_replace( $and, '', $clauses['where'] );
@@ -1319,10 +1325,15 @@ class Query extends Base {
 		// Maybe perform a date query
 		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
 			$this->date_query = $this->get_date_query( $date_query );
-			$clauses          = $this->date_query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
+			$clauses          = $this->date_query->get_sql( $this->table_name, $this->table_alias, $primary, $this );
 
 			// Not all objects are dates, so make sure this one exists
 			if ( false !== $clauses ) {
+
+				// Set join
+				if ( ! empty( $clauses['join'] ) ) {
+					$join['date_query'] = $clauses['join'];
+				}
 
 				// Remove " AND " from query where clause.
 				$where['date_query'] = preg_replace( $and, '', $clauses['where'] );
@@ -2198,11 +2209,8 @@ class Query extends Base {
 			return false;
 		}
 
-		// Get meta table name
-		$table = $this->apply_prefix( $this->item_name );
-
 		// Bail if no meta table exists
-		if ( empty( $table ) ) {
+		if ( false === $this->get_meta_table_name() ) {
 			return false;
 		}
 
@@ -2228,16 +2236,16 @@ class Query extends Base {
 			return false;
 		}
 
-		// Get meta table name
-		$table = $this->apply_prefix( $this->item_name );
-
 		// Bail if no meta table exists
-		if ( empty( $table ) ) {
+		if ( false === $this->get_meta_table_name() ) {
 			return false;
 		}
 
-		// Return results of get meta data
-		return get_metadata( $table, $item_id, $meta_key, $single );
+		// Get meta type
+		$meta_type = $this->get_meta_type();
+
+		// Return results of getting meta data
+		return get_metadata( $meta_type, $item_id, $meta_key, $single );
 	}
 
 	/**
@@ -2259,16 +2267,16 @@ class Query extends Base {
 			return false;
 		}
 
-		// Get meta table name
-		$table = $this->apply_prefix( $this->item_name );
-
 		// Bail if no meta table exists
-		if ( empty( $table ) ) {
+		if ( false === $this->get_meta_table_name() ) {
 			return false;
 		}
 
-		// Return results of get meta data
-		return update_metadata( $table, $item_id, $meta_key, $meta_value, $prev_value );
+		// Get meta type
+		$meta_type = $this->get_meta_type();
+
+		// Return results of updating meta data
+		return update_metadata( $meta_type, $item_id, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
@@ -2290,16 +2298,16 @@ class Query extends Base {
 			return false;
 		}
 
-		// Get meta table name
-		$table = $this->apply_prefix( $this->item_name );
-
 		// Bail if no meta table exists
-		if ( empty( $table ) ) {
+		if ( false === $this->get_meta_table_name() ) {
 			return false;
 		}
 
-		// Return results of get meta data
-		return delete_metadata( $table, $item_id, $meta_key, $meta_value, $delete_all );
+		// Get meta type
+		$meta_type = $this->get_meta_type();
+
+		// Return results of deleting meta data
+		return delete_metadata( $meta_type, $item_id, $meta_key, $meta_value, $delete_all );
 	}
 
 	/**
@@ -2314,7 +2322,7 @@ class Query extends Base {
 	private function get_registered_meta_keys( $object_subtype = '' ) {
 
 		// Get the object type
-		$object_type = $this->apply_prefix( $this->item_name );
+		$object_type = $this->get_meta_type();
 
 		// Return the keys
 		return get_registered_meta_keys( $object_type, $object_subtype );
@@ -2335,11 +2343,8 @@ class Query extends Base {
 			return;
 		}
 
-		// Get meta table name
-		$table = $this->get_meta_table_name();
-
 		// Bail if no meta table exists
-		if ( empty( $table ) ) {
+		if ( false === $this->get_meta_table_name() ) {
 			return;
 		}
 
@@ -2375,7 +2380,7 @@ class Query extends Base {
 			return;
 		}
 
-		// Get meta table name
+		// Get the meta table name
 		$table = $this->get_meta_table_name();
 
 		// Bail if no meta table exists
@@ -2388,8 +2393,8 @@ class Query extends Base {
 		$item_id_column = $this->apply_prefix( "{$this->item_name}_{$primary_id}" );
 
 		// Get meta IDs
-		$sql      = "SELECT meta_id FROM {$table} WHERE {$item_id_column} = %d";
-		$prepared = $this->get_db()->prepare( $sql, $item_id );
+		$query    = "SELECT meta_id FROM {$table} WHERE {$item_id_column} = %d";
+		$prepared = $this->get_db()->prepare( $query, $item_id );
 		$meta_ids = $this->get_db()->get_col( $prepared );
 
 		// Bail if no meta IDs to delete
@@ -2397,14 +2402,20 @@ class Query extends Base {
 			return;
 		}
 
+		// Get the meta type
+		$meta_type = $this->get_meta_type();
+
 		// Delete all meta data for this item ID
 		foreach ( $meta_ids as $mid ) {
-			delete_metadata_by_mid( $this->item_name, $mid );
+			delete_metadata_by_mid( $meta_type, $mid );
 		}
 	}
 
 	/**
-	 * Return meta table
+	 * Get the meta table for this query
+	 *
+	 * Forked from WordPress\_get_meta_table() so it can be more accurately
+	 * predicted in a future iteration and default to returning false.
 	 *
 	 * @since 1.0.0
 	 *
@@ -2412,11 +2423,36 @@ class Query extends Base {
 	 */
 	private function get_meta_table_name() {
 
-		// Maybe apply table prefix
-		$table = $this->apply_prefix( $this->item_name );
+		// Get the meta-type
+		$type = $this->get_meta_type();
 
-		// Return table if exists, or false if not
-		return _get_meta_table( $table );
+		// Append "meta" to end of meta-type
+		$table_name = "{$type}meta";
+
+		// Variable'ize the database interface, to use inside empty()
+		$db = $this->get_db();
+
+		// If not empty, return table name
+		if ( ! empty( $db->{$table_name} ) ) {
+			return $db->{$table_name};
+		}
+
+		// Default return false
+		return false;
+	}
+
+	/**
+	 * Get the meta type for this query
+	 *
+	 * This method exists to reduce some duplication for now. Future iterations
+	 * will likely use Column::relationships to
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return string
+	 */
+	private function get_meta_type() {
+		return $this->apply_prefix( $this->item_name );
 	}
 
 	/** Cache *****************************************************************/
