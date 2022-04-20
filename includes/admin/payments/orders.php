@@ -1041,7 +1041,7 @@ function edd_order_details_attributes( $order ) {
 						</label>
 						<div class="edd-form-group__control">
 							<?php $date_completed_value = ! empty( $date_completed ) ? esc_attr( $date_completed->format( 'Y-m-d' ) ) : ''; ?>
-							<input type="text" id="edd-payment-date" class="edd-form-group__input edd_datepicker" name="edd-payment-date" value="<?php echo $date_completed_value; ?>"placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+							<input type="text" id="edd-payment-date" class="edd-form-group__input edd_datepicker" name="edd-payment-date" value="<?php echo $date_completed_value; ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 						</div>
 					</div>
 				</div>
