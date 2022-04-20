@@ -121,7 +121,7 @@ function edd_add_manual_order( $args = array() ) {
 
 	$completed_date = false;
 
-	if ( in_array( $status, edd_complete_order_status_keys() ) ) {
+	if ( in_array( $status, edd_complete_order_status_keys(), true ) ) {
 		$date = sanitize_text_field( $order_data['edd-payment-date'] );
 		$hour = sanitize_text_field( $order_data['edd-payment-time-hour'] );
 
