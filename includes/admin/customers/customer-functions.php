@@ -21,10 +21,12 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_register_default_customer_views( $views ) {
 	return array_merge( $views, array(
-		'overview' => 'edd_customers_view',
-		'delete'   => 'edd_customers_delete_view',
-		'notes'    => 'edd_customer_notes_view',
-		'tools'    => 'edd_customer_tools_view'
+		'overview'  => 'edd_customers_view',
+		'emails'    => 'edd_customers_emails_view',
+		'addresses' => 'edd_customers_addresses_view',
+		'delete'    => 'edd_customers_delete_view',
+		'notes'     => 'edd_customer_notes_view',
+		'tools'     => 'edd_customer_tools_view',
 	) );
 }
 add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
@@ -38,9 +40,11 @@ add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
  */
 function edd_register_default_customer_tabs( $tabs ) {
 	return array_merge( $tabs, array(
-		'overview' => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
-		'tools'    => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
+		'overview'  => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
+		'emails'    => array( 'dashicon' => 'dashicons-email', 'title' => _x( 'Emails', 'Customer Emails tab title', 'easy-digital-downloads' ) ),
+		'addresses' => array( 'dashicon' => 'dashicons-admin-home', 'title' => _x( 'Addresses', 'Customer Addresses tab title', 'easy-digital-downloads' ) ),
+		'notes'     => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
+		'tools'     => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
 	) );
 }
 add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
