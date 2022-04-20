@@ -41,7 +41,7 @@ function edd_add_order_page_content() {
 		'id'              => 0,
 		'parent'          => 0,
 		'order_number'    => 0,
-		'status'          => 'pending',
+		'status'          => 'complete',
 		'date_created'    => date( 'Y-m-d H:i:s' ),
 		'date_modified'   => date( 'Y-m-d H:i:s' ),
 		'date_refundable' => null,
