@@ -62,16 +62,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::EDD()->utils->date()
-	 *
-	 */
-	public function test_date_invalid_date_returns_date() {
-		$date = EDD()->utils->date( '::00', edd_get_timezone_id(), false );
-
-		$this->assertTrue( $date instanceof EDD\Utils\Date );
-	}
-
-	/**
 	 * @covers ::edd_get_timezone_id()
 	 */
 	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings() {
@@ -258,5 +248,44 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertEquals( 1, $dates['day_end'] );
 		$this->assertEquals( date( 'n', strtotime( '+1 month' ) ), $dates['m_end'] );
 		$this->assertEquals( date( 'Y', strtotime( '+1 month' ) ), $dates['year_end'] );
+	}
+
+	/**
+	 * @covers ::EDD()->utils->date()
+	 *
+	 */
+	public function test_date_invalid_date_returns_date() {
+		$date = EDD()->utils->date( '::00', edd_get_timezone_id(), false );
+
+		$this->assertTrue( $date instanceof EDD\Utils\Date );
+	}
+
+	/**
+	 * @covers ::edd_get_date_string()
+	 */
+	public function test_get_date_string_valid_returns_valid_string() {
+		$actual = edd_get_date_string( '2020-01-10', 13, 9 );
+
+		$this->assertSame( '2020-01-10 13:09:00', $actual );
+	}
+
+	/**
+	 * @covers ::edd_get_date_string()
+	 */
+	public function test_get_date_string_empty_returns_valid_string() {
+		$actual   = edd_get_date_string();
+		$expected = date( 'Y-m-d' ) . ' 00:00:00';
+
+		$this->assertSame( $expected, $actual );
+	}
+
+	/**
+	 * @covers ::edd_get_date_string()
+	 */
+	public function test_get_date_string_invalid_returns_valid_string() {
+		$actual   = edd_get_date_string( '2020-01-100', 100, 99 );
+		$expected = date( 'Y-m-d' ) . ' 23:59:00';
+
+		$this->assertContains( $expected, $actual );
 	}
 }
