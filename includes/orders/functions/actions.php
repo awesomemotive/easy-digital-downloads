@@ -119,28 +119,15 @@ function edd_add_manual_order( $args = array() ) {
 		$status = 'complete';
 	}
 
-	// Parse date.
-	$date = sanitize_text_field( $order_data['edd-payment-date'] );
-	$hour = sanitize_text_field( $order_data['edd-payment-time-hour'] );
-
-	// Restrict to our high and low.
-	if ( $hour > 23 ) {
-		$hour = 23;
-	} elseif ( $hour < 0 ) {
-		$hour = 00;
-	}
-
-	$minute = sanitize_text_field( $order_data['edd-payment-time-min'] );
-
-	// Restrict to our high and low.
-	if ( $minute > 59 ) {
-		$minute = 59;
-	} elseif ( $minute < 0 ) {
-		$minute = 00;
-	}
+	// Get the date string.
+	$date_string = edd_get_date_string(
+		sanitize_text_field( $order_data['edd-payment-date'] ),
+		sanitize_text_field( $order_data['edd-payment-time-hour'] ),
+		sanitize_text_field( $order_data['edd-payment-time-min'] )
+	);
 
 	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
-	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
+	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date_string, edd_get_timezone_id(), false ) );
 	$date = $date->format( 'Y-m-d H:i:s' );
 
 	// Get mode
