@@ -30,7 +30,7 @@ class Order_Status_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_get_incomplete_order_statuses_label() {
-		$statuses = edd_get_complete_order_statuses( true );
+		$statuses = edd_get_incomplete_order_statuses( true );
 
 		$this->assertEquals( 'Abandoned', $statuses['abandoned'] );
 	}
@@ -62,6 +62,7 @@ class Order_Status_Tests extends \EDD_UnitTestCase {
 	public function test_order_status_pending_is_recoverable() {
 		$order = parent::edd()->order->create_and_get();
 		edd_update_order( $order->id, array( 'status' => 'pending' ) );
+		$order = edd_get_order( $order->id );
 
 		$this->assertTrue( $order->is_recoverable() );
 	}
