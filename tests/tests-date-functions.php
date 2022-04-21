@@ -62,6 +62,16 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::EDD()->utils->date()
+	 *
+	 */
+	public function test_date_invalid_date_returns_date() {
+		$date = EDD()->utils->date( '::00', edd_get_timezone_id(), false );
+
+		$this->assertTrue( $date instanceof EDD\Utils\Date );
+	}
+
+	/**
 	 * @covers ::edd_get_timezone_id()
 	 */
 	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings() {

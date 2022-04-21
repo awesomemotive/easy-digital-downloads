@@ -229,6 +229,11 @@ class Utilities {
 			$timezone = 'UTC';
 		}
 
+		// If the date string cannot be property converted to a valid time, reset it to now.
+		if ( ! strtotime( $date_string ) ) {
+			$date_string = 'now';
+		}
+
 		/*
 		 * Create the DateTime object with the "local" WordPress timezone.
 		 *
