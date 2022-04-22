@@ -288,7 +288,7 @@ class Stats_Tests extends \EDD_UnitTestCase {
 		$refund_rate = self::$stats->get_refund_rate( array(
 			'range'  => 'last_year',
 			'output' => 'raw',
-			'status' => array( 'complete', 'revoked', 'refunded', 'partially_refunded' ),
+			'status' => edd_get_complete_order_statuses(),
 		) );
 
 		$this->assertSame( 0, $refund_rate );
@@ -301,7 +301,7 @@ class Stats_Tests extends \EDD_UnitTestCase {
 		$refund_rate = self::$stats->get_refund_rate( array(
 			'range'  => 'this_year',
 			'output' => 'raw',
-			'status' => array( 'complete', 'revoked', 'refunded', 'partially_refunded' ),
+			'status' => edd_get_complete_order_statuses(),
 		) );
 
 		$this->assertSame( 40.0, $refund_rate );
