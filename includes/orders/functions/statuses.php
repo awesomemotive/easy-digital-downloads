@@ -120,7 +120,7 @@ function edd_get_complete_order_statuses( $include_labels = false ) {
  * @return array An array of order status keys which are considered incomplete.
  */
 function edd_get_incomplete_order_statuses( $include_labels = false ) {
-	$statuses = array( 'pending', 'abandoned', 'processing', 'failed' );
+	$statuses = array( 'pending', 'abandoned', 'processing', 'failed', 'cancelled' );
 
 	/**
 	 * Filters the payment key
@@ -133,4 +133,23 @@ function edd_get_incomplete_order_statuses( $include_labels = false ) {
 	$statuses = apply_filters( 'edd_incomplete_order_statuses', $statuses );
 
 	return $include_labels ? array_intersect_key( edd_get_payment_statuses(), array_flip( $statuses ) ) : $statuses;
+}
+
+/**
+ * Returns an array of order statuses that support refunds.
+ *
+ * @since 3.0
+ * @return array
+ */
+function edd_get_refundable_order_statuses() {
+	$refundable_order_statuses = array( 'complete', 'publish', 'partially_refunded' );
+
+	/**
+	 * Filters the order statuses that are allowed to be refunded.
+	 *
+	 * @param array $refundable_order_statuses
+	 *
+	 * @since 3.0
+	 */
+	return (array) apply_filters( 'edd_refundable_order_statuses', $refundable_order_statuses );
 }
