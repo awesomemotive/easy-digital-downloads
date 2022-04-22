@@ -27,6 +27,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
+	// This specifically does not use edd_get_complete_order_statuses().
 	$completed_statuses = array( 'publish', 'complete', 'completed' );
 	// Make sure that payments are only completed once.
 	if ( in_array( $old_status, $completed_statuses, true ) ) {
