@@ -1547,7 +1547,7 @@ class EDD_Discount extends Adjustment {
 						continue;
 					}
 
-					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ), true ) ) {
+					if ( in_array( $payment->status, edd_get_incomplete_order_statuses(), true ) ) {
 						continue;
 					}
 

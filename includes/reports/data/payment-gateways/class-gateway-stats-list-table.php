@@ -100,7 +100,7 @@ class Gateway_Stats extends List_Table {
 			$complete_count = $stats->get_gateway_sales( array(
 				'range'    => $filter['range'],
 				'gateway'  => $gateway_id,
-				'status'   => array( 'complete', 'revoked' ),
+				'status'   => edd_get_complete_order_statuses(),
 				'type'     => array( 'sale' ),
 				'currency' => $currency,
 			) );
@@ -108,7 +108,7 @@ class Gateway_Stats extends List_Table {
 			$pending_count = $stats->get_gateway_sales( array(
 				'range'    => $filter['range'],
 				'gateway'  => $gateway_id,
-				'status'   => array( 'pending', 'failed' ),
+				'status'   => edd_get_incomplete_order_statuses(),
 				'type'     => array( 'sale' ),
 				'currency' => $currency,
 			) );
