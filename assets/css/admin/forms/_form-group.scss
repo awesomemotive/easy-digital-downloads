@@ -33,7 +33,8 @@
 	}
 }
 
-.edd-form-group__label {
+.edd-form-group__label,
+.edd-form-group>label {
 	display: block;
 	font-weight: 600;
 	margin-bottom: 8px;
