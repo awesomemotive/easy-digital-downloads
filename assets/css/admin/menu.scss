@@ -7,6 +7,9 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
+@import "~@wordpress/base-styles/breakpoints";
+@import "../variables/colors";
+
 /* Submenu Styles
 -------------------------------------------------------------- */
 
@@ -30,7 +33,7 @@
 	content: '';
 	width: calc(100% + 26px);
 
-	@media screen and (max-width: 782px) {
+	@media screen and (max-width: $break-medium) {
 		margin: 20px -20px 8px -20px;
 		width: calc(100% + 30px);
 	}
@@ -56,6 +59,6 @@ ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-	border-right-color: #f1f1f1;
+	border-right-color: $wp-gray-0;
 	margin-top: 2px;
 }

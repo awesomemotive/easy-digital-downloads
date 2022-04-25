@@ -152,7 +152,7 @@
 	overflow: visible;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: $break-mobile) {
 
 	.edd-bundle-products-header,
 	.edd-repeatable-row-header,
