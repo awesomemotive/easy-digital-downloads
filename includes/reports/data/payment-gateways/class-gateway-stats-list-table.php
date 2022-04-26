@@ -100,7 +100,7 @@ class Gateway_Stats extends List_Table {
 			$complete_count = $stats->get_gateway_sales( array(
 				'range'    => $filter['range'],
 				'gateway'  => $gateway_id,
-				'status'   => edd_get_complete_order_statuses(),
+				'status'   => edd_get_gross_order_statuses(),
 				'type'     => array( 'sale' ),
 				'currency' => $currency,
 			) );

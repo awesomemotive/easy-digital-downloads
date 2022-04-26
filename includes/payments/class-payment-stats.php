@@ -95,7 +95,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
-			$statuses = edd_get_complete_order_statuses();
+			$statuses = edd_get_gross_order_statuses();
 
 			/**
 			 * Filters Order statuses that should be included when calculating stats.
@@ -264,7 +264,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 				remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
-				$statuses = edd_get_complete_order_statuses();
+				$statuses = edd_get_gross_order_statuses();
 
 				/**
 				 * Filters Order statuses that should be included when calculating stats.
@@ -383,7 +383,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = edd_get_complete_order_statuses();
+			$statuses = edd_get_gross_order_statuses();
 
 			/**
 			 * Filters Order statuses that should be included when calculating stats.
@@ -464,7 +464,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = edd_get_complete_order_statuses();
+			$statuses = edd_get_gross_order_statuses();
 
 			/**
 			 * Filters Order statuses that should be included when calculating stats.
