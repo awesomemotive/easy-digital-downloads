@@ -246,10 +246,10 @@ class EDD_Discount_Codes_Table extends List_Table {
 		 *
 		 * @param EDD_Discount $discount Discount object.
 		 * @param string $base The base URL for the discount list table.
-		 * @param string $state The discount status label.
+		 * @param string $status The discount status.
 		 * @return string Additional data shown in the Name column
 		 */
-		$additional_content = apply_filters( 'edd_discount_row_after_title', '', $discount, $base, $state );
+		$additional_content = apply_filters( 'edd_discount_row_after_title', '', $discount, $base, $status );
 
 		// Return discount title & row actions
 		return $discount_title . $additional_content . $this->row_actions( $row_actions );
