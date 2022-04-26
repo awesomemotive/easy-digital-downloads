@@ -261,29 +261,29 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::edd_get_date_string()
+	 * @covers ::EDD()->utils->get_date_string()
 	 */
 	public function test_get_date_string_valid_returns_valid_string() {
-		$actual = edd_get_date_string( '2020-01-10', 13, 9 );
+		$actual = EDD()->utils->get_date_string( '2020-01-10', 13, 9 );
 
 		$this->assertSame( '2020-01-10 13:09:00', $actual );
 	}
 
 	/**
-	 * @covers ::edd_get_date_string()
+	 * @covers ::EDD()->utils->get_date_string()
 	 */
 	public function test_get_date_string_empty_returns_valid_string() {
-		$actual   = edd_get_date_string();
+		$actual   = EDD()->utils->get_date_string();
 		$expected = date( 'Y-m-d' ) . ' 00:00:00';
 
 		$this->assertSame( $expected, $actual );
 	}
 
 	/**
-	 * @covers ::edd_get_date_string()
+	 * @covers ::EDD()->utils->get_date_string()
 	 */
 	public function test_get_date_string_invalid_returns_valid_string() {
-		$actual   = edd_get_date_string( '2020-01-100', 100, 99 );
+		$actual   = EDD()->utils->get_date_string( '2020-01-100', 100, 99 );
 		$expected = date( 'Y-m-d' ) . ' 23:59:00';
 
 		$this->assertContains( $expected, $actual );
