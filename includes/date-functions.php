@@ -283,32 +283,3 @@ function edd_get_minute_values() {
 		'59' => '59'
 	) );
 }
-
-/**
- * Gets a valid date string in the format Y-m-d HH:MM:00
- *
- * @since 3.0
- * @param string $date   A valid date string.
- * @param int    $hour   The hour.
- * @param int    $minute The minute.
- * @return string
- */
-function edd_get_date_string( $date = '', $hour = 0, $minute = 0 ) {
-	if ( empty( $date ) || ! strtotime( $date ) ) {
-		$date = date( 'Y-m-d' );
-	}
-
-	$hour = absint( $hour );
-	if ( $hour > 23 ) {
-		$hour = 23;
-	}
-	$hour = str_pad( $hour, 2, '0', STR_PAD_LEFT );
-
-	$minute = absint( $minute );
-	if ( $minute > 59 ) {
-		$minute = 59;
-	}
-	$minute = str_pad( $minute, 2, '0', STR_PAD_LEFT );
-
-	return "{$date} {$hour}:{$minute}:00";
-}

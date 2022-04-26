@@ -120,7 +120,7 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Get the date string.
-	$date_string = edd_get_date_string(
+	$date_string = EDD()->utils->get_date_string(
 		sanitize_text_field( $order_data['edd-payment-date'] ),
 		sanitize_text_field( $order_data['edd-payment-time-hour'] ),
 		sanitize_text_field( $order_data['edd-payment-time-min'] )

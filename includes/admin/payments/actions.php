@@ -87,7 +87,7 @@ function edd_update_payment_details( $data = array() ) {
 
 	$unlimited   = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
 	$new_status  = sanitize_key( $data['edd-payment-status'] );
-	$date_string = edd_get_date_string(
+	$date_string = EDD()->utils->get_date_string(
 		sanitize_text_field( $order_data['edd-payment-date'] ),
 		sanitize_text_field( $order_data['edd-payment-time-hour'] ),
 		sanitize_text_field( $order_data['edd-payment-time-min'] )
