@@ -229,6 +229,11 @@ class Utilities {
 			$timezone = 'UTC';
 		}
 
+		// If the date string cannot be property converted to a valid time, reset it to now.
+		if ( ! strtotime( $date_string ) ) {
+			$date_string = 'now';
+		}
+
 		/*
 		 * Create the DateTime object with the "local" WordPress timezone.
 		 *
@@ -317,6 +322,35 @@ class Utilities {
 		}
 
 		return $this->time_zone;
+	}
+
+	/**
+	 * Gets a valid date string in the format Y-m-d HH:MM:00
+	 *
+	 * @since 3.0
+	 * @param string $date   A valid date string.
+	 * @param int    $hour   The hour.
+	 * @param int    $minute The minute.
+	 * @return string
+	 */
+	public function get_date_string( $date = '', $hour = 0, $minute = 0 ) {
+		if ( empty( $date ) || ! strtotime( $date ) ) {
+			$date = date( 'Y-m-d' );
+		}
+
+		$hour = absint( $hour );
+		if ( $hour > 23 ) {
+			$hour = 23;
+		}
+		$hour = str_pad( $hour, 2, '0', STR_PAD_LEFT );
+
+		$minute = absint( $minute );
+		if ( $minute > 59 ) {
+			$minute = 59;
+		}
+		$minute = str_pad( $minute, 2, '0', STR_PAD_LEFT );
+
+		return "{$date} {$hour}:{$minute}:00";
 	}
 
 	/** Private Setters *******************************************************/
