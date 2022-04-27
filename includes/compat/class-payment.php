@@ -141,7 +141,7 @@ class Payment extends Base {
 		}
 
 		// Bail if order does not exist
-		$order = $this->shim_edd_get_order( $object_id );
+		$order = $this->_shim_edd_get_order( $object_id );
 		if ( empty( $order ) ) {
 			return $value;
 		}
@@ -299,10 +299,12 @@ class Payment extends Base {
 	 * This is a duplicate of edd_get_order, but is defined separately here
 	 * for pending migration purposes.
 	 *
+	 * @todo deprecate in 3.1
+	 *
 	 * @param int $order_id
 	 * @return false|EDD\Orders\Order
 	 */
-	private function shim_edd_get_order( $order_id ) {
+	private function _shim_edd_get_order( $order_id ) {
 		$orders = new \EDD\Database\Queries\Order();
 
 		// Return order

@@ -202,10 +202,10 @@ function edd_show_upgrade_notices() {
 		/** 3.0 Upgrades ******************************************************/
 
 		// Check if we need to do any upgrades.
-		if ( ! edd_v30_migration_is_complete() ) {
+		if ( ! edd_v30_is_migration_complete() ) {
 
 			// The final EDD Payment ID was recorded when the orders table was created.
-			$has_orders = edd_get_final_payment_id();
+			$has_orders = _edd_get_final_payment_id();
 
 			if ( $has_orders ) {
 				?>
@@ -1727,7 +1727,7 @@ function edd_load_batch_processors_for_v30_upgrade( $class ) {
  * @since 3.0
  * @return bool
  */
-function edd_v30_migration_is_complete() {
+function edd_v30_is_migration_complete() {
 	$upgrades = edd_get_v30_upgrades();
 	unset( $upgrades['v30_legacy_data_removed'] );
 	$upgrades = array_keys( $upgrades );

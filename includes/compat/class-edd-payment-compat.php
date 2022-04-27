@@ -374,7 +374,7 @@ class EDD_Payment_Compat {
 		$this->number                  = $this->setup_payment_number();
 		$this->downloads               = $this->setup_downloads();
 		$this->has_unlimited_downloads = $this->setup_has_unlimited();
-		$this->order                   = $this->shim_order();
+		$this->order                   = $this->_shim_order();
 	}
 
 	/**
@@ -842,10 +842,11 @@ class EDD_Payment_Compat {
 
 	/**
 	 * Shims the payment, as much as possible, into an EDD Order object.
+	 * @todo deprecate in 3.1
 	 *
 	 * @return EDD\Orders\Order
 	 */
-	public function shim_order() {
+	public function _shim_order() {
 		return new \EDD\Orders\Order(
 			array(
 				'id'             => $this->ID,

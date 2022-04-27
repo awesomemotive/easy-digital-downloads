@@ -1838,20 +1838,24 @@ function edd_filter_where_older_than_week( $where = '' ) {
  * This was set as an option when the custom orders table was created.
  * For internal use only.
  *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0
  * @return false|int
  */
-function edd_get_final_payment_id() {
+function _edd_get_final_payment_id() {
 	return get_option( 'edd_v3_migration_pending', false );
 }
 
 /**
  * Maybe adds a migration in progress notice to the order history.
  *
+ * @todo remove in 3.1
  * @since 3.0
  * @return void
  */
 add_action( 'edd_pre_order_history', function( $orders, $user_id ) {
-	if ( ! edd_get_final_payment_id() ) {
+	if ( ! _edd_get_final_payment_id() ) {
 		return;
 	}
 	?>
