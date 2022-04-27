@@ -613,6 +613,6 @@ function edd_remove_customer_address() {
 		$url = add_query_arg( 'edd-message', 'address-remove-failed', $url );
 	}
 
-	edd_redirect( $url );
+	edd_redirect( $url . '#edd_general_addresses' );
 }
 add_action( 'edd_customer-remove-address', 'edd_remove_customer_address', 10 );
