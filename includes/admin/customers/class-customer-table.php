@@ -112,15 +112,9 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @return string
 	 */
 	public function column_name( $item ) {
-		$state    = '';
-		$status   = $this->get_status();
-		$name     = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
-		$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
-		$actions  = array(
-			'view'   => '<a href="' . $view_url . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>',
-			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $item['id'] ) . '">' . __( 'Logs', 'easy-digital-downloads' ) . '</a>',
-			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
-		);
+		$state  = '';
+		$status = $this->get_status();
+		$name   = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
 
 		$item_status = ! empty( $item['status'] )
 			? $item['status']
@@ -145,8 +139,62 @@ class EDD_Customer_Reports_Table extends List_Table {
 		// Get the customer's avatar
 		$avatar = get_avatar( $item['email'], 32 );
 
+		// View URL
+		$view_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => urlencode( $item['id'] ),
+			)
+		);
+
 		// Concatenate and return
-		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $this->get_row_actions( $item ) );
+	}
+
+	/**
+	 * Gets the row actions for the customer.
+	 *
+	 * @since 3.0
+	 * @param array $item
+	 * @return array
+	 */
+	private function get_row_actions( $item ) {
+		$view_url   = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => urlencode( $item['id'] ),
+			)
+		);
+		$logs_url   = edd_get_admin_url(
+			array(
+				'page'     => 'edd-tools',
+				'tab'      => 'logs',
+				'customer' => urlencode( $item['id'] ),
+			)
+		);
+		$delete_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'delete',
+				'id'   => urlencode( $item['id'] ),
+			)
+		);
+		$actions    = array(
+			'view'   => '<a href="' . esc_url( $view_url ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>',
+			'logs'   => '<a href="' . esc_url( $logs_url ) . '">' . __( 'Logs', 'easy-digital-downloads' ) . '</a>',
+			'delete' => '<a href="' . esc_url( $delete_url ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
+		);
+
+		/**
+		 * Filter the customer row actions.
+		 *
+		 * @since 3.0
+		 * @param array $actions The array of row actions.
+		 * @param array $item    The specific item (customer).
+		 */
+		return apply_filters( 'edd_customer_row_actions', $actions, $item );
 	}
 
 	/**
