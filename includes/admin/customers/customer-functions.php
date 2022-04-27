@@ -162,3 +162,18 @@ function edd_render_customer_column( $value, $column_name, $user_id ) {
 	return $value;
 }
 add_action( 'manage_users_custom_column',  'edd_render_customer_column', 10, 3 );
+
+/**
+ * Renders the customer details header (gravatar/name).
+ *
+ * @since 3.0
+ * @param \EDD_Customer $customer
+ * @return void
+ */
+function edd_render_customer_details_header( \EDD_Customer $customer ) {
+	?>
+	<div class="edd-item-header-small">
+		<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo esc_html( $customer->name ); ?></span>
+	</div>
+	<?php
+}
