@@ -464,10 +464,10 @@ class EDD_Payment {
 			return false;
 		}
 
-		$this->order = $this->shim_edd_get_order( $payment_id );
+		$this->order = $this->_shim_edd_get_order( $payment_id );
 
 		if ( ! $this->order || is_wp_error( $this->order ) ) {
-			return edd_get_final_payment_id() ? $this->setup_compat_payment( $payment_id ) : false;
+			return _edd_get_final_payment_id() ? $this->_setup_compat_payment( $payment_id ) : false;
 		}
 
 		// Allow extensions to perform actions before the payment is loaded
@@ -696,7 +696,7 @@ class EDD_Payment {
 		}
 
 		// If the order is null, it means a new order is being added
-		$this->order = $this->shim_edd_get_order( $this->ID );
+		$this->order = $this->_shim_edd_get_order( $this->ID );
 
 		$customer = $this->maybe_create_customer();
 		if ( $this->customer_id !== $customer->id ) {
@@ -978,7 +978,7 @@ class EDD_Payment {
 				 * Re-fetch the order with the new items from the database as it is used for the synchronization
 				 * between cart_details and the database.
 				 */
-				$this->order = $this->shim_edd_get_order( $this->ID );
+				$this->order = $this->_shim_edd_get_order( $this->ID );
 
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
@@ -2710,7 +2710,7 @@ class EDD_Payment {
 	 */
 	private function setup_completed_date() {
 		/** @var EDD\Orders\Order $order */
-		$order = $this->shim_edd_get_order( $this->ID );
+		$order = $this->_shim_edd_get_order( $this->ID );
 
 		if ( 'pending' === $order->status || 'preapproved' === $order->status || 'processing' === $order->status ) {
 			return false; // This payment was never completed
@@ -3494,11 +3494,13 @@ class EDD_Payment {
 	 * This is only intended to be used when a 3.0 migration is in process and the
 	 * new order object is not yet available.
 	 *
+	 * @todo deprecate in 3.1
+	 *
 	 * @since 3.0
 	 * @param int $payment_id
 	 * @return bool
 	 */
-	private function setup_compat_payment( $payment_id ) {
+	private function _setup_compat_payment( $payment_id ) {
 		$payment = get_post( $payment_id );
 
 		if ( ! $payment || is_wp_error( $payment ) ) {
@@ -3582,10 +3584,12 @@ class EDD_Payment {
 	 * This is a duplicate of edd_get_order, but is defined separately here
 	 * for pending migration purposes.
 	 *
+	 * @todo deprecate in 3.1
+	 *
 	 * @param int $order_id
 	 * @return false|EDD\Orders\Order
 	 */
-	private function shim_edd_get_order( $order_id ) {
+	private function _shim_edd_get_order( $order_id ) {
 		$orders = new EDD\Database\Queries\Order();
 
 		// Return order
