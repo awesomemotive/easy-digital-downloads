@@ -834,6 +834,7 @@ function edd_customers_emails_view( $customer ) {
 	) );
 	?>
 	<div class="info-wrapper customer-section">
+		<?php edd_render_customer_details_header( $customer ); ?>
 		<h3>
 			<?php esc_html_e( 'Customer Emails', 'easy-digital-downloads' ); ?>
 			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'This customer can use any of the emails listed here when making new purchases.', 'easy-digital-downloads' ); ?>"></span>
@@ -948,6 +949,7 @@ function edd_customers_addresses_view( $customer ) {
 	}
 	?>
 	<div class="info-wrapper customer-section">
+		<?php edd_render_customer_details_header( $customer ); ?>
 		<h3><?php esc_html_e( 'Customer Addresses', 'easy-digital-downloads' ); ?></h3>
 
 		<div class="notice-wrap"></div>
@@ -1053,9 +1055,7 @@ function edd_customer_notes_view( $customer ) {
 	); ?>
 
 	<div id="edd-item-notes-wrapper">
-		<div class="edd-item-header-small">
-			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo esc_html( $customer->name ); ?></span>
-		</div>
+		<?php edd_render_customer_details_header( $customer ); ?>
 		<h3><?php esc_html_e( 'Notes', 'easy-digital-downloads' ); ?></h3>
 
 		<?php echo edd_admin_get_notes_pagination( $args ); ?>
@@ -1086,10 +1086,7 @@ function edd_customers_delete_view( $customer ) {
 
 		<form id="delete-customer" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer->id ); ?>">
 
-			<div class="edd-item-header-small">
-				<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
-			</div>
-
+			<?php edd_render_customer_details_header( $customer ); ?>
 			<h3><?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?></h3>
 
 			<div class="delete-customer">
@@ -1134,10 +1131,7 @@ function edd_customer_tools_view( $customer ) {
 	do_action( 'edd_customer_tools_top', $customer ); ?>
 
 	<div id="edd-item-tools-wrapper">
-		<div class="edd-item-header-small">
-			<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo $customer->name; ?></span>
-		</div>
-
+		<?php edd_render_customer_details_header( $customer ); ?>
 		<h3><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h3>
 
 		<div class="edd-item-info">
