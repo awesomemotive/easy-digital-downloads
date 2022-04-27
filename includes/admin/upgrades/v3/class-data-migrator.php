@@ -580,8 +580,8 @@ class Data_Migrator {
 		}
 
 		// Maybe convert the date completed to UTC or backfill the date_completed.
-		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
-		if ( ! in_array( $order_status, $non_completed_statuses ) ) {
+		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', edd_get_incomplete_order_statuses() );
+		if ( ! in_array( $order_status, $non_completed_statuses, true ) ) {
 
 			if ( ! empty( $date_completed ) ) {  // Update the data_completed to the UTC.
 				try {

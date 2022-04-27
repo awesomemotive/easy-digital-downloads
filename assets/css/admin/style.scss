@@ -31,6 +31,8 @@
 
 @import "notifications/style";
 
+@import "general/style";
+
 /**
  * Notes:
  *
@@ -1351,12 +1353,14 @@ input[class*="edd-price-field"] {
 	width: 80%;
 	max-width: 125px;
 }
+
 #edd_product_notes_field {
 	display: block;
 	margin: 12px 0 0;
 	height: 4em;
 	width: 100%;
 }
+
 /* Payment Details
 -------------------------------------------------------------- */
 
@@ -1672,6 +1676,7 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element .edd-purchased-download-actions .edd-order-remove-download:hover {
 	color: #f00;
 }
+
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
 	padding: 15px;
@@ -2431,6 +2436,7 @@ span.edd-to-and-from--separator {
 	border-top: 1px solid #bbb;
 	color: #777;
 }
+
 #edd-chartjs-tooltip {
 	position: absolute;
 	background-color: #fff;
@@ -3038,29 +3044,6 @@ span.edd-to-and-from--separator {
 	min-height: 50px;
 }
 
-.edd-item-header-small {
-	height: 30px;
-	padding-bottom: 20px;
-	border-bottom: 1px solid #e5e5e5;
-}
-
-.edd-item-header-small span {
-	font-weight: 600;
-	line-height: 15px;
-	font-size: 15px;
-	display: inline-block;
-	margin-bottom: 10px;
-}
-
-.edd-item-header-small span,
-.edd-item-header-small img {
-	vertical-align: middle;
-}
-
-.edd-item-header-small img.avatar {
-	margin-right: 5px;
-}
-
 .customer-note-input {
 	margin-bottom: 5px;
 	width: 100%;
@@ -3187,6 +3170,7 @@ span.edd-to-and-from--separator {
 	#edd-item-tab-wrapper-list li:nth-child(even) {
 		border-width: 0 0 1px 0;
 	}
+
 	.download_page_edd-reports .button {
 		text-align: center;
 	}
