@@ -31,6 +31,8 @@
 
 @import "notifications/style";
 
+@import "general/style";
+
 /**
  * Notes:
  *
@@ -3083,25 +3085,6 @@ span.edd-to-and-from--separator {
 }
 #edd-item-notes-wrapper {
 	min-height: 50px;
-}
-.edd-item-header-small {
-	height: 30px;
-	padding-bottom: 20px;
-	border-bottom: 1px solid #e5e5e5;
-}
-.edd-item-header-small span {
-	font-weight: 600;
-	line-height: 15px;
-	font-size: 15px;
-	display: inline-block;
-	margin-bottom: 10px;
-}
-.edd-item-header-small span,
-.edd-item-header-small img {
-	vertical-align: middle;
-}
-.edd-item-header-small img.avatar {
-	margin-right: 5px;
 }
 .customer-note-input {
 	margin-bottom: 5px;
