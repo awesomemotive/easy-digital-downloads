@@ -153,12 +153,23 @@ function edd_get_discount( $discount_id = 0 ) {
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object
  * @since 3.0 Updated to call use new query class.
+ * @since 3.0 Updated to include a filter.
  *
  * @param string $code Discount code.
  * @return EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_by_code( $code = '' ) {
-	return edd_get_discount_by( 'code', $code );
+	$discount = edd_get_discount_by( 'code', $code );
+
+	/**
+	 * Filters the get discount by request.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \EDD_Discount $discount     Discount object.
+	 * @param string        $code 				Discount code.
+	 */
+	return apply_filters( 'edd_get_discount_by_code', $discount, $code );
 }
 
 /**
