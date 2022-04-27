@@ -167,13 +167,12 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		);
 
 		// Non-primary email actions
-		if ( empty( $item['type'] ) || 'primary' !== $item['type'] ) {
-			$email      = ! empty( $item['email']  ) ? $item['email'] : '&mdash;';
+		if ( ! empty( $item['email'] ) && ( empty( $item['type'] ) || 'primary' !== $item['type'] ) ) {
 			$delete_url = wp_nonce_url( edd_get_admin_url( array(
 				'page'       => 'edd-customers',
 				'view'       => 'overview',
 				'id'         => urlencode( $item['customer_id'] ),
-				'email'      => rawurlencode( $email ),
+				'email'      => rawurlencode( $item['email'] ),
 				'edd_action' => 'customer-remove-email',
 			) ), 'edd-remove-customer-email' );
 			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
