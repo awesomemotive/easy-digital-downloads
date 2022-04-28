@@ -1832,3 +1832,35 @@ function edd_filter_where_older_than_week( $where = '' ) {
 
 	return $where;
 }
+
+/**
+ * Gets the payment ID from the final edd_payment post.
+ * This was set as an option when the custom orders table was created.
+ * For internal use only.
+ *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0
+ * @return false|int
+ */
+function _edd_get_final_payment_id() {
+	return get_option( 'edd_v3_migration_pending', false );
+}
+
+/**
+ * Maybe adds a migration in progress notice to the order history.
+ *
+ * @todo remove in 3.1
+ * @since 3.0
+ * @return void
+ */
+add_action( 'edd_pre_order_history', function( $orders, $user_id ) {
+	if ( ! _edd_get_final_payment_id() ) {
+		return;
+	}
+	?>
+	<p class="edd-notice">
+		<?php esc_html_e( 'A store migration is in progress. Past orders will not appear in your purchase history until they have been updated.', 'easy-digital-downloads' ); ?>
+	</p>
+	<?php
+}, 10, 2 );
