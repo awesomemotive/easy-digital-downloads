@@ -352,6 +352,13 @@ class EDD_Payment {
 	protected $order;
 
 	/**
+	 * Whether the payment being retrieved is a post object.
+	 *
+	 * @var bool
+	 */
+	private $is_edd_payment = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.5
@@ -1912,6 +1919,9 @@ class EDD_Payment {
 	 * @return mixed             The value from the post meta
 	 */
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
+		if ( $this->is_edd_payment ) {
+			return get_post_meta( $this->ID, $meta_key, $single );
+		}
 		$meta = edd_get_order_meta( $this->ID, $meta_key, $single );
 
 		// Backwards compatibility.
@@ -3510,6 +3520,9 @@ class EDD_Payment {
 		if ( 'edd_payment' !== $payment->post_type ) {
 			return false;
 		}
+
+		// Set the compatibility property to true.
+		$this->is_edd_payment = true;
 
 		// Allow extensions to perform actions before the payment is loaded
 		do_action( 'edd_pre_setup_payment', $this, $payment_id );
