@@ -44,7 +44,7 @@ function edd_overview_sales_earnings_chart() {
 		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
 	}
 
-	$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+	$statuses = edd_get_gross_order_statuses();
 
 	/**
 	 * Filters Order statuses that should be included when calculating stats.
