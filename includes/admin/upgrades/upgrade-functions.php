@@ -201,26 +201,11 @@ function edd_show_upgrade_notices() {
 
 		/** 3.0 Upgrades ******************************************************/
 
-		// Possible upgrades
-		$upgrades = array_map( 'edd_has_upgrade_completed', array(
-			'migrate_tax_rates'                => 'migrate_tax_rates',
-			'migrate_discounts'                => 'migrate_discounts',
-			'migrate_orders'                   => 'migrate_orders',
-			'migrate_customer_addresses'       => 'migrate_customer_addresses',
-			'migrate_customer_email_addresses' => 'migrate_customer_email_addresses',
-			'migrate_customer_notes'           => 'migrate_customer_notes',
-			'migrate_logs'                     => 'migrate_logs',
-			'migrate_order_notes'              => 'migrate_order_notes',
-		) );
-
 		// Check if we need to do any upgrades.
-		if ( count( $upgrades ) !== count( array_filter( $upgrades ) ) ) {
+		if ( ! edd_v30_is_migration_complete() ) {
 
-			// Check if any payments exist.
-			$results    = $wpdb->get_row( "SELECT count(ID) as has_orders FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 0, 1" );
-			$has_orders = ! empty( $results->has_orders )
-				? true
-				: false;
+			// The final EDD Payment ID was recorded when the orders table was created.
+			$has_orders = _edd_get_final_payment_id();
 
 			if ( $has_orders ) {
 				?>
@@ -1734,4 +1719,26 @@ function edd_load_batch_processors_for_v30_upgrade( $class ) {
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-remove-legacy-data.php';
 			break;
 	}
+}
+
+/**
+ * Checks whether all 3.0 migrations have run, ignoring the legacy data removal.
+ *
+ * @since 3.0
+ * @return bool
+ */
+function edd_v30_is_migration_complete() {
+	$upgrades = edd_get_v30_upgrades();
+	unset( $upgrades['v30_legacy_data_removed'] );
+	$upgrades = array_keys( $upgrades );
+	foreach ( $upgrades as $upgrade ) {
+		// If any migration has not completed, return false.
+		if ( ! edd_has_upgrade_completed( $upgrade ) ) {
+			return false;
+		}
+	}
+	// If the migration is complete, delete the pending option.
+	delete_option( 'edd_v3_migration_pending' );
+
+	return true;
 }

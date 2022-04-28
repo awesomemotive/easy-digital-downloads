@@ -352,6 +352,13 @@ class EDD_Payment {
 	protected $order;
 
 	/**
+	 * Whether the payment being retrieved is a post object.
+	 *
+	 * @var bool
+	 */
+	private $is_edd_payment = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.5
@@ -464,10 +471,10 @@ class EDD_Payment {
 			return false;
 		}
 
-		$this->order = edd_get_order( $payment_id );
+		$this->order = $this->_shim_edd_get_order( $payment_id );
 
 		if ( ! $this->order || is_wp_error( $this->order ) ) {
-			return false;
+			return _edd_get_final_payment_id() ? $this->_setup_compat_payment( $payment_id ) : false;
 		}
 
 		// Allow extensions to perform actions before the payment is loaded
@@ -696,7 +703,7 @@ class EDD_Payment {
 		}
 
 		// If the order is null, it means a new order is being added
-		$this->order = edd_get_order( $this->ID );
+		$this->order = $this->_shim_edd_get_order( $this->ID );
 
 		$customer = $this->maybe_create_customer();
 		if ( $this->customer_id !== $customer->id ) {
@@ -978,7 +985,7 @@ class EDD_Payment {
 				 * Re-fetch the order with the new items from the database as it is used for the synchronization
 				 * between cart_details and the database.
 				 */
-				$this->order = edd_get_order( $this->ID );
+				$this->order = $this->_shim_edd_get_order( $this->ID );
 
 				$updated = $this->update_meta( '_edd_payment_meta', $merged_meta );
 
@@ -1912,6 +1919,9 @@ class EDD_Payment {
 	 * @return mixed             The value from the post meta
 	 */
 	public function get_meta( $meta_key = '_edd_payment_meta', $single = true ) {
+		if ( $this->is_edd_payment ) {
+			return get_post_meta( $this->ID, $meta_key, $single );
+		}
 		$meta = edd_get_order_meta( $this->ID, $meta_key, $single );
 
 		// Backwards compatibility.
@@ -2710,7 +2720,7 @@ class EDD_Payment {
 	 */
 	private function setup_completed_date() {
 		/** @var EDD\Orders\Order $order */
-		$order = edd_get_order( $this->ID );
+		$order = $this->_shim_edd_get_order( $this->ID );
 
 		if ( 'pending' === $order->status || 'preapproved' === $order->status || 'processing' === $order->status ) {
 			return false; // This payment was never completed
@@ -3487,5 +3497,115 @@ class EDD_Payment {
 		}
 
 		return $customer;
+	}
+
+	/**
+	 * Sets up a payment object from a post.
+	 * This is only intended to be used when a 3.0 migration is in process and the
+	 * new order object is not yet available.
+	 *
+	 * @todo deprecate in 3.1
+	 *
+	 * @since 3.0
+	 * @param int $payment_id
+	 * @return bool
+	 */
+	private function _setup_compat_payment( $payment_id ) {
+		$payment = get_post( $payment_id );
+
+		if ( ! $payment || is_wp_error( $payment ) ) {
+			return false;
+		}
+
+		if ( 'edd_payment' !== $payment->post_type ) {
+			return false;
+		}
+
+		// Set the compatibility property to true.
+		$this->is_edd_payment = true;
+
+		// Allow extensions to perform actions before the payment is loaded
+		do_action( 'edd_pre_setup_payment', $this, $payment_id );
+
+		// Primary Identifier
+		$this->ID = absint( $payment_id );
+
+		// Protected ID that can never be changed
+		$this->_ID = absint( $payment_id );
+
+		include_once EDD_PLUGIN_DIR . 'includes/compat/class-edd-payment-compat.php';
+		$payment_compat = new EDD_Payment_Compat( $this->ID );
+
+		// We have a payment; get the generic payment_meta item to reduce calls to it
+		$this->payment_meta = $payment_compat->payment_meta;
+
+		// Status and Dates
+		$this->date           = $payment->post_date;
+		$this->completed_date = $payment_compat->completed_date;
+		$this->status         = $payment_compat->status;
+		$this->post_status    = $this->status;
+		$this->mode           = $payment_compat->mode;
+		$this->parent_payment = $payment->post_parent;
+
+		$all_payment_statuses  = edd_get_payment_statuses();
+		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
+
+		// Items
+		$this->fees         = $payment_compat->fees;
+		$this->cart_details = $payment_compat->cart_details;
+		$this->downloads    = $payment_compat->downloads;
+
+		// Currency Based
+		$this->total      = $payment_compat->total;
+		$this->tax        = $payment_compat->tax;
+		$this->tax_rate   = $payment_compat->tax_rate;
+		$this->fees_total = $payment_compat->fees_total;
+		$this->subtotal   = $payment_compat->subtotal;
+		$this->currency   = $payment_compat->currency;
+
+		// Gateway based
+		$this->gateway        = $payment_compat->gateway;
+		$this->transaction_id = $payment_compat->transaction_id;
+
+		// User based
+		$this->ip          = $payment_compat->ip;
+		$this->customer_id = $payment_compat->customer_id;
+		$this->user_id     = $payment_compat->user_id;
+		$this->email       = $payment_compat->email;
+		$this->user_info   = $payment_compat->user_info;
+		$this->address     = $payment_compat->address;
+		$this->discounts   = $this->user_info['discount'];
+		$this->first_name  = $this->user_info['first_name'];
+		$this->last_name   = $this->user_info['last_name'];
+
+		// Other Identifiers
+		$this->key    = $payment_compat->key;
+		$this->number = $payment_compat->number;
+
+		// Additional Attributes
+		$this->has_unlimited_downloads = $payment_compat->has_unlimited_downloads;
+		$this->order                   = $payment_compat->order;
+
+		// Allow extensions to add items to this object via hook
+		do_action( 'edd_setup_payment', $this, $payment_id );
+
+		return true;
+	}
+
+	/**
+	 * Gets the order from the database.
+	 * This is a duplicate of edd_get_order, but is defined separately here
+	 * for pending migration purposes.
+	 *
+	 * @todo deprecate in 3.1
+	 *
+	 * @param int $order_id
+	 * @return false|EDD\Orders\Order
+	 */
+	private function _shim_edd_get_order( $order_id ) {
+		$orders = new EDD\Database\Queries\Order();
+
+		// Return order
+		return $orders->get_item( $order_id );
 	}
 }

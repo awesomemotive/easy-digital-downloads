@@ -379,8 +379,23 @@ function edd_update_order( $order_id = 0, $data = array() ) {
 function edd_get_order( $order_id = 0 ) {
 	$orders = new EDD\Database\Queries\Order();
 
-	// Return order
-	return $orders->get_item( $order_id );
+	$order = $orders->get_item( $order_id );
+
+	/**
+	 * If the order is not retrieved but migration is pending, check for an old payment.
+	 * @todo remove in 3.1
+	*/
+	if ( ! $order instanceof EDD\Orders\Order && _edd_get_final_payment_id() ) {
+		$post = get_post( $order_id );
+		if ( $post instanceof WP_Post ) {
+			include_once EDD_PLUGIN_DIR . 'includes/compat/class-edd-payment-compat.php';
+			$payment_compat = new EDD_Payment_Compat( $order_id );
+
+			return $payment_compat->order;
+		}
+	}
+
+	return $order;
 }
 
 /**
