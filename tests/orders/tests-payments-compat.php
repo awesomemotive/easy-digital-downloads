@@ -104,6 +104,12 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( $this->payment_id, $order->id );
 	}
 
+	public function test_edd_get_payment_meta_no_order_during_migration_gets_meta() {
+		update_post_meta( $this->payment->ID, '_edd_random_metadata', 'sample_meta' );
+
+		$this->assertSame( 'sample_meta', edd_get_payment_meta( $this->payment->ID, '_edd_random_metadata', true ) );
+	}
+
 	public function test_edd_get_payment_no_order_outside_migration_should_return_false() {
 		delete_option( 'edd_v3_migration_pending' );
 		$payment = edd_get_payment( $this->payment_id );
