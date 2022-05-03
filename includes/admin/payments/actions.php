@@ -88,9 +88,9 @@ function edd_update_payment_details( $data = array() ) {
 	$unlimited   = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
 	$new_status  = sanitize_key( $data['edd-payment-status'] );
 	$date_string = EDD()->utils->get_date_string(
-		sanitize_text_field( $order_data['edd-payment-date'] ),
-		sanitize_text_field( $order_data['edd-payment-time-hour'] ),
-		sanitize_text_field( $order_data['edd-payment-time-min'] )
+		sanitize_text_field( $data['edd-payment-date'] ),
+		sanitize_text_field( $data['edd-payment-time-hour'] ),
+		sanitize_text_field( $data['edd-payment-time-min'] )
 	);
 
 	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
