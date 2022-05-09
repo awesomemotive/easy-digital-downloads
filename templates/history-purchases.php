@@ -64,20 +64,19 @@ if ( $orders ) :
 				</td>
 				<td class="edd_purchase_details">
 					<?php
-					$link_text = ! in_array( $order->status, array( 'complete', 'partially_refunded' ), true ) ? __( 'View Details', 'easy-digital-downloads' ) : __( 'View Details and Downloads', 'easy-digital-downloads' );
-					?>
-					<a href="<?php echo esc_url( add_query_arg( 'payment_key', $order->payment_key, edd_get_success_page_uri() ) ); ?>"><?php echo esc_html( $link_text ); ?></a>
-					<?php if ( ! in_array( $order->status, array( 'complete' ), true ) ) : ?>
-						| <span class="edd_purchase_status <?php echo esc_attr( $order->status ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></span>
-					<?php endif; ?>
-					<?php
-					$recovery_url = $order->get_recovery_url();
-					if ( $recovery_url ) :
-						?>
-						&mdash; <a href="<?php echo esc_url( $recovery_url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
+					if ( ! in_array( $order->status, array( 'complete', 'partially_refunded' ), true ) ) : ?>
+						<span class="edd_purchase_status <?php echo esc_html( $order->status ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></span>
 						<?php
-					endif;
-					?>
+						$recovery_url = $order->get_recovery_url();
+						if ( $recovery_url ) :
+							?>
+							&mdash; <a href="<?php echo esc_url( $recovery_url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
+							<?php
+						endif;
+						?>
+					<?php else: ?>
+						<a href="<?php echo esc_url( add_query_arg( 'payment_key', $order->payment_key, edd_get_success_page_uri() ) ); ?>"><?php esc_html_e( 'View Details and Downloads', 'easy-digital-downloads' ); ?></a>
+					<?php endif; ?>
 				</td>
 				<?php do_action( 'edd_order_history_row_end', $order ); ?>
 			</tr>
