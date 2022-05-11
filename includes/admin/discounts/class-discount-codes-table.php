@@ -238,9 +238,21 @@ class EDD_Discount_Codes_Table extends List_Table {
 			'edd-action' => 'edit_discount',
 			'discount'   => $discount->id,
 		), $base ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
+		
+		/**
+		 * Filter to allow additional content to be appended to the discount title.
+		 *
+		 * @since 3.0
+		 *
+		 * @param EDD_Discount $discount Discount object.
+		 * @param string $base The base URL for the discount list table.
+		 * @param string $status The queried discount status.
+		 * @return string Additional data shown in the Name column
+		 */
+		$additional_content = apply_filters( 'edd_discount_row_after_title', '', $discount, $base, $status );
 
 		// Return discount title & row actions
-		return $discount_title . $this->row_actions( $row_actions );
+		return $discount_title . $additional_content . $this->row_actions( $row_actions );
 	}
 
 	/**
