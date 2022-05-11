@@ -58,6 +58,7 @@ function edd_email_preview_template_tags( $message ) {
 	$download_list .= '</li>';
 	$download_list .= '</ul>';
 
+	
 	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
 
 	$price = edd_currency_filter( edd_format_amount( 10.50 ) );
@@ -77,6 +78,7 @@ function edd_email_preview_template_tags( $message ) {
 	$user = wp_get_current_user();
 
 	$message = str_replace( '{download_list}', $download_list, $message );
+	$message = str_replace( '{download_name}', $download_name, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
 	$message = str_replace( '{name}', $user->display_name, $message );
 	$message = str_replace( '{fullname}', $user->display_name, $message );
