@@ -975,7 +975,19 @@ function edd_tools_import_export_display() {
         <h3><span><?php _e( 'Export Settings', 'easy-digital-downloads' ); ?></span></h3>
         <div class="inside">
             <p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'easy-digital-downloads' ); ?></p>
-            <p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?></p>
+			<p>
+				<?php
+				printf(
+					__( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ),
+					esc_url( edd_get_admin_url(
+						array(
+						'page' => 'edd-reports',
+						'view' => 'export',
+						)
+					) )
+				);
+				?>
+			</p>
             <form method="post"
                   action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
                 <p><input type="hidden" name="edd_action" value="export_settings"/></p>
