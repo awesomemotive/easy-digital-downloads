@@ -839,4 +839,11 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 
 		$this->assertFalse( $order_item->is_deliverable() );
 	}
+
+	/**
+	 * @covers edd_get_deliverable_order_item_statuses
+	 */
+	public function test_order_item_deliverable_statuses_includes_partially_refunded() {
+		$this->assertTrue( in_array( 'partially_refunded', edd_get_deliverable_order_item_statuses(), true ) );
+	}
 }

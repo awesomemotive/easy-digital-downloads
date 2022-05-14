@@ -917,7 +917,7 @@ function edd_order_grants_access_to_download_files( $args ) {
 		'order_id'   => $args['order_id'],
 		'product_id' => $args['product_id'],
 		'price_id'   => $args['price_id'],
-		'status'     => 'complete'
+		'status'     => edd_get_deliverable_order_item_statuses(),
 	);
 
 	$order_items = edd_count_order_items( array_filter( $args ) );
