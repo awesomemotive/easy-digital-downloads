@@ -873,17 +873,18 @@ function edd_process_signed_download_url( $args ) {
 		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$args['expire']      = $_GET['ttl'];
-	$args['download']    = $order_parts[1];
-	$args['payment']     = $order_parts[0];
-	$args['file_key']    = $order_parts[2];
-	$args['price_id']    = $order_parts[3];
-	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$order            = edd_get_order( $order_parts[0] );
+	$args['expire']   = $_GET['ttl'];
+	$args['download'] = $order_parts[1];
+	$args['payment']  = $order->id;
+	$args['file_key'] = $order_parts[2];
+	$args['price_id'] = $order_parts[3];
+	$args['email']    = $order->email;
+	$args['key']      = $order->payment_key;
 
 	// Access is granted if there's at least one `complete` order item that matches the order + download + price ID.
 	$args['has_access'] = edd_order_grants_access_to_download_files( array(
-		'order_id'   => $args['payment'],
+		'order_id'   => $order->id,
 		'product_id' => $args['download'],
 		'price_id'   => ! empty( $args['price_id'] ) ? $args['price_id'] : ''
 	) );
@@ -913,16 +914,43 @@ function edd_order_grants_access_to_download_files( $args ) {
 		return false;
 	}
 
-	$args = array(
+	$order_items = edd_count_order_items( array(
 		'order_id'   => $args['order_id'],
 		'product_id' => $args['product_id'],
 		'price_id'   => $args['price_id'],
 		'status'     => edd_get_deliverable_order_item_statuses(),
+	) );
+
+	if ( $order_items > 0 ) {
+		return true;
+	}
+
+	$order_items = edd_get_order_items(
+		array(
+			'order_id' => $args['order_id'],
+			'status'   => edd_get_deliverable_order_item_statuses(),
+		)
 	);
 
-	$order_items = edd_count_order_items( array_filter( $args ) );
+	if ( empty( $order_items ) ) {
+		return false;
+	}
 
-	return $order_items > 0;
+	$product_to_check = is_numeric( $args['price_id'] ) ? "{$args['product_id']}_{$args['price_id']}" : $args['product_id'];
+
+	foreach ( $order_items as $order_item ) {
+		$download = edd_get_download( $order_item->product_id );
+		if ( ! $download instanceof EDD_Download || 'bundle' !== $download->type ) {
+			continue;
+		}
+		$bundled_downloads = $download->get_bundled_downloads();
+
+		if ( in_array( $product_to_check, $bundled_downloads ) ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
