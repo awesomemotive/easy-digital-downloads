@@ -632,7 +632,7 @@ function edd_order_details_overview( $order ) {
 				'dateCreated'  => esc_html( $item->date_created ),
 				'dateModified' => esc_html( $item->date_modified ),
 				'uuid'         => esc_html( $item->uuid ),
-
+				'deliverable'  => $item->is_deliverable(),
 				'adjustments'  => $item_adjustments,
 			);
 		}
