@@ -807,4 +807,36 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 	public function test_get_fees_should_be_empty() {
 		$this->assertEmpty( edd_get_order_item( self::$order_items[0] )->get_fees() );
 	}
+
+	/**
+	 * @covers ::is_deliverable
+	 */
+	public function test_order_item_marked_complete_is_deliverable_returns_true() {
+		edd_update_order_item(
+			self::$order_items[4],
+			array(
+				'status' => 'complete',
+			)
+		);
+
+		$order_item = edd_get_order_item( self::$order_items[4] );
+
+		$this->assertTrue( $order_item->is_deliverable() );
+	}
+
+	/**
+	 * @covers ::is_deliverable
+	 */
+	public function test_order_item_marked_refunded_is_deliverable_returns_false() {
+		edd_update_order_item(
+			self::$order_items[4],
+			array(
+				'status' => 'refunded',
+			)
+		);
+
+		$order_item = edd_get_order_item( self::$order_items[4] );
+
+		$this->assertFalse( $order_item->is_deliverable() );
+	}
 }
