@@ -270,13 +270,15 @@ if ( empty( $order_items ) ) {
 									<span class="edd_bundled_product_name"><?php echo esc_html( edd_get_bundle_item_title( $bundle_item ) ); ?></span>
 									<ul class="edd_bundled_product_files">
 										<?php
-										$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
+										$bundle_item_id       = edd_get_bundle_item_id( $bundle_item );
+										$bundle_item_price_id = edd_get_bundle_item_price_id( $bundle_item );
+										$download_files       = edd_get_download_files( $bundle_item_id, $bundle_item_price_id );
 
 										if ( $download_files && is_array( $download_files ) ) :
 											foreach ( $download_files as $filekey => $file ) :
 												?>
 												<li class="edd_download_file">
-													<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+													<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $bundle_item_price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 												</li>
 												<?php
 												/**
