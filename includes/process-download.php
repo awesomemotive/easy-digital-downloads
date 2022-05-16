@@ -867,9 +867,10 @@ function edd_process_signed_download_url( $args ) {
 	}
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
+	$price_id    = isset( $order_parts[3] ) ? (int) $order_parts[3] : null;
 
 	// Check to make sure not at download limit
-	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $order_parts[3] ) ) {
+	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $price_id ) ) {
 		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
@@ -878,7 +879,7 @@ function edd_process_signed_download_url( $args ) {
 	$args['download'] = $order_parts[1];
 	$args['payment']  = $order->id;
 	$args['file_key'] = $order_parts[2];
-	$args['price_id'] = $order_parts[3];
+	$args['price_id'] = $price_id;
 	$args['email']    = $order->email;
 	$args['key']      = $order->payment_key;
 
@@ -886,7 +887,7 @@ function edd_process_signed_download_url( $args ) {
 	$args['has_access'] = edd_order_grants_access_to_download_files( array(
 		'order_id'   => $order->id,
 		'product_id' => $args['download'],
-		'price_id'   => ! empty( $args['price_id'] ) ? $args['price_id'] : ''
+		'price_id'   => $args['price_id'],
 	) );
 
 	return $args;
