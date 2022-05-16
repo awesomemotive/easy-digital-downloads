@@ -915,13 +915,13 @@ function edd_order_grants_access_to_download_files( $args ) {
 		return false;
 	}
 
+	$args['status'] = edd_get_deliverable_order_item_statuses();
+	if ( is_null( $args['price_id'] ) ) {
+		unset( $args['price_id'] );
+	}
+
 	// Check if the download was purchased directly.
-	$order_items = edd_count_order_items( array(
-		'order_id'   => $args['order_id'],
-		'product_id' => $args['product_id'],
-		'price_id'   => $args['price_id'],
-		'status'     => edd_get_deliverable_order_item_statuses(),
-	) );
+	$order_items = edd_count_order_items( $args );
 
 	if ( $order_items > 0 ) {
 		return true;
@@ -941,7 +941,7 @@ function edd_order_grants_access_to_download_files( $args ) {
 	}
 
 	// Check if the requested download is part of a bundle.
-	$product_to_check = is_numeric( $args['price_id'] ) ? "{$args['product_id']}_{$args['price_id']}" : $args['product_id'];
+	$product_to_check = isset( $args['price_id'] ) && is_numeric( $args['price_id'] ) ? "{$args['product_id']}_{$args['price_id']}" : $args['product_id'];
 	foreach ( $order_items as $product_id ) {
 		$download = edd_get_download( $product_id );
 		if ( ! $download instanceof EDD_Download || 'bundle' !== $download->type ) {
