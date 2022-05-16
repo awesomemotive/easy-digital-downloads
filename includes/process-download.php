@@ -894,7 +894,7 @@ function edd_process_signed_download_url( $args ) {
 
 /**
  * Determines whether or not a given order grants access to download files associated with a given
- * product ID and price ID combination. Returns true if there's at least one `complete` order item
+ * product ID and price ID combination. Returns true if there's at least one deliverable order item
  * matching the requirements.
  *
  * @param array $args
@@ -906,7 +906,7 @@ function edd_order_grants_access_to_download_files( $args ) {
 	$args = wp_parse_args( $args, array(
 		'order_id'   => 0,
 		'product_id' => 0,
-		'price_id'   => ''
+		'price_id'   => null,
 	) );
 
 	// Order and product IDs are required.
@@ -914,6 +914,7 @@ function edd_order_grants_access_to_download_files( $args ) {
 		return false;
 	}
 
+	// Check if the download was purchased directly.
 	$order_items = edd_count_order_items( array(
 		'order_id'   => $args['order_id'],
 		'product_id' => $args['product_id'],
@@ -929,23 +930,24 @@ function edd_order_grants_access_to_download_files( $args ) {
 		array(
 			'order_id' => $args['order_id'],
 			'status'   => edd_get_deliverable_order_item_statuses(),
+			'fields'   => 'product_id',
 		)
 	);
 
+	// Unlikely, but return false if there are no order items found at all.
 	if ( empty( $order_items ) ) {
 		return false;
 	}
 
+	// Check if the requested download is part of a bundle.
 	$product_to_check = is_numeric( $args['price_id'] ) ? "{$args['product_id']}_{$args['price_id']}" : $args['product_id'];
-
-	foreach ( $order_items as $order_item ) {
-		$download = edd_get_download( $order_item->product_id );
+	foreach ( $order_items as $product_id ) {
+		$download = edd_get_download( $product_id );
 		if ( ! $download instanceof EDD_Download || 'bundle' !== $download->type ) {
 			continue;
 		}
-		$bundled_downloads = $download->get_bundled_downloads();
 
-		if ( in_array( $product_to_check, $bundled_downloads ) ) {
+		if ( in_array( $product_to_check, $download->get_bundled_downloads() ) ) {
 			return true;
 		}
 	}
