@@ -203,6 +203,30 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 		) ) );
 	}
 
+	/**
+	 * @covers edd_order_grants_access_to_download_files
+	 */
+	public function test_bundled_download_should_be_deliverable() {
+		$bundled_product    = EDD_Helper_Download::create_bundled_download();
+		$bundled_order_item = edd_add_order_item(
+			array(
+				'order_id'   => self::$order->id,
+				'product_id' => $bundled_product->ID,
+				'subtotal'   => 9.99,
+				'status'     => 'complete',
+			)
+		);
+
+		$this->assertTrue(
+			edd_order_grants_access_to_download_files(
+				array(
+					'order_id'   => self::$order->id,
+					'product_id' => $bundled_product->ID,
+				)
+			)
+		);
+	}
+
 	public function test_file_download_token() {
 		$eddfile = '1:2:3:4';
 		$ttl     = current_time( 'timestamp' ) + HOUR_IN_SECONDS;
