@@ -234,3 +234,22 @@ function edd_get_order_adjustment_counts( $args = array() ) {
 	// Format & return
 	return edd_format_counts( $counts, $r['groupby'] );
 }
+
+/**
+ * Get a field from a order adjustment object.
+ *
+ * @since 3.0
+ *
+ * @param int    $order_adjustment_id 	Order adjustment ID. Default `0`.
+ * @param string $field       			Field to retrieve from object. Default empty.
+ *
+ * @return mixed Null if adjustment does not exist. Value of Adjustment if exists.
+ */
+function edd_get_order_adjustment_field( $order_adjustment_id = 0, $field = '' ) {
+	$order_adjustment = edd_get_order_adjustment( $order_adjustment_id );
+
+	// Check that field exists
+	return isset( $order_adjustment->{$field} )
+		? $order_adjustment->{$field}
+		: null;
+}
