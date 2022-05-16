@@ -104,6 +104,15 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 		) ) );
 	}
 
+	public function test_order_with_null_price_id_should_return_true() {
+		// Not specifying price ID
+		$this->assertTrue( edd_order_grants_access_to_download_files( array(
+			'order_id'   => self::$order->id,
+			'product_id' => 2,
+			'price_id'   => null,
+		) ) );
+	}
+
 	/**
 	 * If specifying a price ID that was not purchased in this order, files cannot be downloaded
 	 *
