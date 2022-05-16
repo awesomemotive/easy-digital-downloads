@@ -496,7 +496,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	} else {
 		$keys      = edd_get_payment_status_keys();
 		$found_key = array_search( strtolower( $status ), $keys );
-		$status    = $found_key && array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
+		$status    = false !== $found_key && array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
 	}
 
 	return ! empty( $status ) ? $status : false;
