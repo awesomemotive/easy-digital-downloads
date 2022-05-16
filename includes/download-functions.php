@@ -1269,7 +1269,12 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	$args = array_fill_keys( edd_get_url_token_parameters(), '' );
 
 	// Simply the URL by concatenating required data using a colon as a delimiter.
-	$args['eddfile'] = rawurlencode( sprintf( '%d:%d:%d:%d', $order->id, $params['download_id'], $params['file'], $price_id ) );
+	if ( ! is_numeric( $price_id ) ) {
+		$eddfile = sprintf( '%d:%d:%d', $order->id, $params['download_id'], $params['file'] );
+	} else {
+		$eddfile = sprintf( '%d:%d:%d:%d', $order->id, $params['download_id'], $params['file'], $price_id );
+	}
+	$args['eddfile'] = rawurlencode( $eddfile );
 
 	if ( isset( $params['expire'] ) ) {
 		$args['ttl'] = $params['expire'];
