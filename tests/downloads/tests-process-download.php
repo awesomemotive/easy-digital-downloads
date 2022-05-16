@@ -39,7 +39,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 			'order_id'     => $order_id,
 			'product_id'   => 1,
 			'product_name' => 'Simple Download',
-			'price_id'     => 1,
+			'price_id'     => 0,
 			'status'       => 'complete',
 			'amount'       => 10,
 			'subtotal'     => 10,
@@ -100,7 +100,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 		$this->assertTrue( edd_order_grants_access_to_download_files( array(
 			'order_id'   => self::$order->id,
 			'product_id' => 1,
-			'price_id'   => 1
+			'price_id'   => 0,
 		) ) );
 	}
 
