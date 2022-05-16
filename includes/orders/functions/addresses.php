@@ -201,3 +201,22 @@ function edd_count_order_addresses( $args = array() ) {
 	// Return count(s)
 	return absint( $order_addresses->found_items );
 }
+
+/**
+ * Get a field from a order address object.
+ *
+ * @since 3.0
+ *
+ * @param int    $order_address_id 	Order address ID. Default `0`.
+ * @param string $field       			Field to retrieve from object. Default empty.
+ *
+ * @return mixed Null if address does not exist. Value of Address if exists.
+ */
+function edd_get_order_address_field( $order_address_id = 0, $field = '' ) {
+	$order_address = edd_get_order_address( $order_address_id );
+
+	// Check that field exists
+	return isset( $order_address->{$field} )
+		? $order_address->{$field}
+		: null;
+}
