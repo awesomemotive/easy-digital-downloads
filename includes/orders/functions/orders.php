@@ -1366,3 +1366,25 @@ function edd_generate_order_payment_key( $key ) {
 	 */
 	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
 }
+
+/**
+ * Retrieve whether or not an order was free.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if the payment was free, false otherwise.
+ */
+function edd_is_free_order( $order_id = 0 ) {
+
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	return $order
+		? $order->is_free()
+		: false;
+}
