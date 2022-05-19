@@ -3419,7 +3419,7 @@ class EDD_Payment {
 	 * @return int|string Payment number.
 	 */
 	private function get_number() {
-		return $this->order->get_number();
+		return $this->order instanceof EDD\Orders\Order ? $this->order->get_number() : $this->ID;
 	}
 
 	/**
