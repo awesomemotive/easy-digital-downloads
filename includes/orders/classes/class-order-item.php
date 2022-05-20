@@ -251,4 +251,14 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 			'parent' => $this->id
 		) );
 	}
+
+	/**
+	 * Checks the order item status to determine whether assets can be delivered.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	public function is_deliverable() {
+		return in_array( $this->status, edd_get_deliverable_order_item_statuses(), true );
+	}
 }

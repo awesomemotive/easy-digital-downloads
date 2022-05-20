@@ -74,7 +74,7 @@ if ( $orders ) :
 						<td class="edd_download_download_files">
 							<?php
 
-							if ( in_array( $item->status, array( 'complete', 'partially_refunded' ), true ) ) :
+							if ( $item->is_deliverable() ) :
 
 								if ( $download_files ) :
 

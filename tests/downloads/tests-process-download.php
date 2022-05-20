@@ -39,7 +39,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 			'order_id'     => $order_id,
 			'product_id'   => 1,
 			'product_name' => 'Simple Download',
-			'price_id'     => 1,
+			'price_id'     => 0,
 			'status'       => 'complete',
 			'amount'       => 10,
 			'subtotal'     => 10,
@@ -100,7 +100,16 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 		$this->assertTrue( edd_order_grants_access_to_download_files( array(
 			'order_id'   => self::$order->id,
 			'product_id' => 1,
-			'price_id'   => 1
+			'price_id'   => 0,
+		) ) );
+	}
+
+	public function test_order_with_null_price_id_should_return_true() {
+		// Not specifying price ID
+		$this->assertTrue( edd_order_grants_access_to_download_files( array(
+			'order_id'   => self::$order->id,
+			'product_id' => 2,
+			'price_id'   => null,
 		) ) );
 	}
 
@@ -201,6 +210,30 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 			'order_id'   => $order_id,
 			'product_id' => 1
 		) ) );
+	}
+
+	/**
+	 * @covers edd_order_grants_access_to_download_files
+	 */
+	public function test_bundled_download_should_be_deliverable() {
+		$bundled_product    = EDD_Helper_Download::create_bundled_download();
+		$bundled_order_item = edd_add_order_item(
+			array(
+				'order_id'   => self::$order->id,
+				'product_id' => $bundled_product->ID,
+				'subtotal'   => 9.99,
+				'status'     => 'complete',
+			)
+		);
+
+		$this->assertTrue(
+			edd_order_grants_access_to_download_files(
+				array(
+					'order_id'   => self::$order->id,
+					'product_id' => $bundled_product->ID,
+				)
+			)
+		);
 	}
 
 	public function test_file_download_token() {
