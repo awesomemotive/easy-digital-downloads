@@ -153,3 +153,22 @@ function edd_get_refundable_order_statuses() {
 	 */
 	return (array) apply_filters( 'edd_refundable_order_statuses', $refundable_order_statuses );
 }
+
+/**
+ * Returns an array of order item statuses that allow assets to be delivvered.
+ *
+ * @since 3.0
+ * @return array
+ */
+function edd_get_deliverable_order_item_statuses() {
+	$deliverable_order_item_statuses = array( 'complete', 'partially_refunded' );
+
+	/**
+	 * Filters the order item statuses that aallow assets to be delivered.
+	 *
+	 * @param array $refundable_order_statuses
+	 *
+	 * @since 3.0
+	 */
+	return (array) apply_filters( 'edd_deliverable_order_item_statuses', $deliverable_order_item_statuses );
+}
