@@ -328,7 +328,7 @@ function edd_order_details_email( $order ) {
 
 				<?php foreach ( $all_emails as $key => $email ) : ?>
 				<div class="edd-form-group__control is-radio">
-					<input id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
+					<input id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
 
 					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
 						<?php echo esc_attr( $email ); ?>
@@ -367,7 +367,7 @@ function edd_order_details_email( $order ) {
 				echo esc_attr( 'edd-select-receipt-email' );
 			} else {
 				echo esc_attr( 'edd-resend-receipt' );
-			} ?>" class="button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+			} ?>" class="button button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
 		</p>
 
 		<?php do_action( 'edd_view_order_details_resend_receipt_after', $order->id ); ?>
