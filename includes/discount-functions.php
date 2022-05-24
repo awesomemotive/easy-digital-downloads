@@ -1033,6 +1033,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  * @param array                    $items     All items (including item being calculated).
  * @param \EDD_Discount[]|string[] $discounts Discount to determine adjustment from.
  *                                            A discount code can be passed as a string.
+ * @param int                      $item_unit_price (Optional) Send in a price for an item, to allow custom prices.
  * @return float Discount amount. 0 if Discount is invalid or no Discount is applied.
  */
 function edd_get_item_discount_amount( $item, $items, $discounts, $item_unit_price = false ) {
