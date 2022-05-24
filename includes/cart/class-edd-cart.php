@@ -704,7 +704,7 @@ class EDD_Cart {
 			: array( $discount );
 
 		$item_price      = $this->get_item_price( $item['id'], $item['options'] );
-		$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts );
+		$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts, $item_price );
 
 		$discounted_amount = ( $item_price - $discount_amount );
 

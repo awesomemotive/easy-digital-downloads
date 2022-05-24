@@ -1035,7 +1035,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  *                                            A discount code can be passed as a string.
  * @return float Discount amount. 0 if Discount is invalid or no Discount is applied.
  */
-function edd_get_item_discount_amount( $item, $items, $discounts ) {
+function edd_get_item_discount_amount( $item, $items, $discounts, $item_unit_price = false ) {
 	global $edd_flat_discount_total;
 
 	// Validate item.
@@ -1077,17 +1077,19 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 
 	$discounts = array_filter( $discounts );
 
-	// Determine the price of the item.
-	if ( edd_has_variable_prices( $item['id'] ) ) {
-		// Mimics the original behavior of `\EDD_Cart::get_item_amount()` that
-		// does not fallback to the first Price ID if none is provided.
-		if ( ! isset( $item['options']['price_id'] ) ) {
-			return 0;
-		}
+	if ( false === $item_unit_price ) {
+		// Determine the price of the item.
+		if ( edd_has_variable_prices( $item['id'] ) ) {
+			// Mimics the original behavior of `\EDD_Cart::get_item_amount()` that
+			// does not fallback to the first Price ID if none is provided.
+			if ( ! isset( $item['options']['price_id'] ) ) {
+				return 0;
+			}
 
-		$item_unit_price = edd_get_price_option_amount( $item['id'], $item['options']['price_id'] );
-	} else {
-		$item_unit_price = edd_get_download_price( $item['id'] );
+			$item_unit_price = edd_get_price_option_amount( $item['id'], $item['options']['price_id'] );
+		} else {
+			$item_unit_price = edd_get_download_price( $item['id'] );
+		}
 	}
 
 	$item_amount     = ( $item_unit_price * $item['quantity'] );
@@ -1309,11 +1311,11 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 	foreach ( $discounts as $discount ) {
 		$discount_id     = edd_get_discount_id_by_code( $discount );
 		$discount_amount = 0;
-		$items           = EDD()->cart->get_contents();
+		$items           = EDD()->cart->get_contents_details();
 
 		if ( is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $key => $item ) {
-				$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+				$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ), $item['item_price'] );
 			}
 		}
 
