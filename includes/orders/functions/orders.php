@@ -1097,7 +1097,7 @@ function edd_build_order( $order_data = array() ) {
 
 			if ( is_array( $items ) && ! empty( $items ) ) {
 				foreach ( $items as $key => $item ) {
-					$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+					$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ), $item['item_price'] );
 				}
 			}
 
