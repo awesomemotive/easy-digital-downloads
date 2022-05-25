@@ -13,7 +13,7 @@
 /* Submenu Styles
 -------------------------------------------------------------- */
 
-#adminmenu a[href^="edit.php?post_type=download"] {
+#menu-posts-download a[href^="edit.php?post_type=download"] {
 	&:hover,
 	&:focus {
 		box-shadow: inset 4px 0 0 0 currentColor;
@@ -22,10 +22,10 @@
 }
 
 /* Secondary Separators */
-#adminmenu ul>li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
-#adminmenu ul>li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
-#adminmenu ul>li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
-#adminmenu #menu-posts-download ul>li:nth-last-child(2) a:after {
+#menu-posts-download li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
+#menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
+#menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
+#menu-posts-download li:nth-last-child(2) a:after {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	display: block;
 	float: left;
