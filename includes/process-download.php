@@ -867,7 +867,7 @@ function edd_process_signed_download_url( $args ) {
 	}
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
-	$price_id    = edd_has_variable_prices( $order_parts[1] ) && isset( $order_parts[3] ) ? (int) $order_parts[3] : null;
+	$price_id    = isset( $order_parts[3] ) && edd_has_variable_prices( $order_parts[1] ) ? (int) $order_parts[3] : null;
 
 	// Check to make sure not at download limit
 	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $price_id ) ) {
