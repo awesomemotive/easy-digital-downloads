@@ -892,6 +892,7 @@ function edd_process_profile_editor_updates( $data ) {
 			$customer_address_id = $customer_address_id[0];
 
 			edd_update_customer_address( $customer_address_id, array(
+				'name'        => stripslashes( $first_name . ' ' . $last_name ),
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
@@ -903,17 +904,21 @@ function edd_process_profile_editor_updates( $data ) {
 
 		// Add a customer address.
 		} else {
-			edd_add_customer_address( array(
-				'customer_id' => $customer->id,
-				'type'        => 'billing',
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'country'     => $address['country'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-				'country'     => $address['country']
-			) );
+			edd_maybe_add_customer_address(
+				$customer->id,
+				array(
+					'name'        => stripslashes( $first_name . ' ' . $last_name ),
+					'type'        => 'billing',
+					'address'     => $address['line1'],
+					'address2'    => $address['line2'],
+					'city'        => $address['city'],
+					'country'     => $address['country'],
+					'region'      => $address['state'],
+					'postal_code' => $address['zip'],
+					'country'     => $address['country'],
+					'is_primary'  => true,
+				)
+			);
 		}
 
 		if ( $customer->email === $email || ( is_array( $customer->emails ) && in_array( $email, $customer->emails ) ) ) {
