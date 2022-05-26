@@ -826,6 +826,7 @@ class EDD_CLI extends WP_CLI_Command {
 		wp_suspend_cache_addition( true );
 
 		$this->maybe_install_v3_tables();
+		update_option( 'edd_v30_cli_migration_running', true );
 		$this->migrate_tax_rates( $args, $assoc_args );
 		$this->migrate_discounts( $args, $assoc_args );
 		$this->migrate_payments( $args, $assoc_args );
@@ -834,6 +835,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$this->migrate_order_notes( $args, $assoc_args );
 		$this->migrate_customer_notes( $args, $assoc_args );
 		edd_v30_is_migration_complete();
+		delete_option( 'edd_v30_cli_migration_running' );
 		$this->remove_legacy_data( $args, $assoc_args );
 	}
 
