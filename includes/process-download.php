@@ -940,15 +940,21 @@ function edd_order_grants_access_to_download_files( $args ) {
 		return false;
 	}
 
-	// Check if the requested download is part of a bundle.
+	// Include some fallback checks for incorrectly created download URLs and bundled items.
 	$product_to_check = isset( $args['price_id'] ) && is_numeric( $args['price_id'] ) ? "{$args['product_id']}_{$args['price_id']}" : $args['product_id'];
 	foreach ( $order_items as $product_id ) {
 		$download = edd_get_download( $product_id );
-		if ( ! $download instanceof EDD_Download || 'bundle' !== $download->type ) {
+		if ( ! $download instanceof EDD_Download ) {
 			continue;
 		}
 
-		if ( in_array( $product_to_check, $download->get_bundled_downloads() ) ) {
+		// Check if the requested download is part of a bundle.
+		if ( 'bundle' === $download->type && in_array( $product_to_check, $download->get_bundled_downloads() ) ) {
+			return true;
+		}
+
+		// Check if the requested download is not variably priced but incorrectly included a price ID.
+		if ( empty( $args['price_id'] ) && $args['product_id'] == $product_id && ! $download->has_variable_prices() ) {
 			return true;
 		}
 	}
