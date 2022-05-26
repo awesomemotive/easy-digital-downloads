@@ -332,7 +332,7 @@ function edd_ajax_generate_file_download_link() {
 
 	$payment_id  = absint( $_POST['payment_id'] );
 	$download_id = absint( $_POST['download_id'] );
-	$price_id    = absint( $_POST['price_id'] );
+	$price_id    = isset( $_POST['price_id'] ) && is_numeric( $_POST['price_id'] ) ? absint( $_POST['price_id'] ) : null;
 
 	if ( empty( $payment_id ) ) {
 		die( '-2' );
