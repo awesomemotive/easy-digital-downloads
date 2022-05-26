@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-05-25 17:33:13+00:00\n"
+"POT-Creation-Date: 2022-05-26 17:12:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -120,14 +120,14 @@ msgstr ""
 #: includes/admin/tools/class-edd-tools-reset-stats.php:121
 #: includes/admin/tools.php:1092 includes/admin/tools.php:1098
 #: includes/admin/upgrades/classes/class-file-download-log-migration.php:134
-#: includes/admin/upgrades/upgrade-functions.php:305
-#: includes/admin/upgrades/upgrade-functions.php:619
-#: includes/admin/upgrades/upgrade-functions.php:690
-#: includes/admin/upgrades/upgrade-functions.php:788
-#: includes/admin/upgrades/upgrade-functions.php:901
-#: includes/admin/upgrades/upgrade-functions.php:978
-#: includes/admin/upgrades/upgrade-functions.php:1098
-#: includes/admin/upgrades/upgrade-functions.php:1181
+#: includes/admin/upgrades/upgrade-functions.php:311
+#: includes/admin/upgrades/upgrade-functions.php:625
+#: includes/admin/upgrades/upgrade-functions.php:696
+#: includes/admin/upgrades/upgrade-functions.php:794
+#: includes/admin/upgrades/upgrade-functions.php:907
+#: includes/admin/upgrades/upgrade-functions.php:984
+#: includes/admin/upgrades/upgrade-functions.php:1104
+#: includes/admin/upgrades/upgrade-functions.php:1187
 #: includes/admin/upgrades/v3/class-base.php:117
 #: includes/api/class-edd-api.php:2014 includes/api/class-edd-api.php:2018
 #: includes/api/class-edd-api.php:2030 includes/api/class-edd-api.php:2032
@@ -200,7 +200,7 @@ msgstr ""
 #: includes/admin/adjustments/adjustment-functions.php:43
 #: includes/admin/adjustments/adjustment-functions.php:99
 #: includes/admin/admin-pages.php:88 includes/admin/reporting/reports.php:2101
-#: includes/admin/upgrades/upgrade-functions.php:1382
+#: includes/admin/upgrades/upgrade-functions.php:1388
 #: includes/post-types.php:129 includes/reports/reports-functions.php:336
 msgid "Discounts"
 msgstr ""
@@ -276,7 +276,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:194
 #: includes/admin/payments/class-payments-table.php:57
 #: includes/admin/payments/payments-history.php:159
-#: includes/admin/upgrades/upgrade-functions.php:1386
+#: includes/admin/upgrades/upgrade-functions.php:1392
 #: includes/orders/functions/types.php:85
 msgid "Orders"
 msgstr ""
@@ -855,7 +855,7 @@ msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:121
 #: includes/admin/payments/orders.php:141 includes/admin/tools.php:99
-#: includes/admin/upgrades/upgrade-functions.php:1402
+#: includes/admin/upgrades/upgrade-functions.php:1408
 msgid "Logs"
 msgstr ""
 
@@ -1261,7 +1261,7 @@ msgid "Add Email"
 msgstr ""
 
 #: includes/admin/customers/customers.php:953
-#: includes/admin/upgrades/upgrade-functions.php:1390
+#: includes/admin/upgrades/upgrade-functions.php:1396
 msgid "Customer Addresses"
 msgstr ""
 
@@ -6527,17 +6527,23 @@ msgid ""
 "click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:216
+#: includes/admin/upgrades/upgrade-functions.php:214
+msgid ""
+"Easy Digital Downloads is performing a database migration via WP-CLI. This "
+"message will be removed when the migration is complete."
+msgstr ""
+
+#: includes/admin/upgrades/upgrade-functions.php:221
 msgid ""
 "Easy Digital Downloads needs to upgrade the database. %sLearn more about "
 "this upgrade%s."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:224
+#: includes/admin/upgrades/upgrade-functions.php:229
 msgid "About this upgrade:"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:230
+#: includes/admin/upgrades/upgrade-functions.php:235
 #. translators: 1. Opening strong/italics tag; do not translate. 2. Closing
 #. strong/italics tag; do not translate.
 msgid ""
@@ -6546,7 +6552,7 @@ msgid ""
 "performance and scalability."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:240
+#: includes/admin/upgrades/upgrade-functions.php:245
 #. translators: 1. Opening strong tag; do not translate. 2. Closing strong tag;
 #. do not translate.
 msgid ""
@@ -6554,7 +6560,7 @@ msgid ""
 "upgrade routine will make irreversible changes to the database."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:250
+#: includes/admin/upgrades/upgrade-functions.php:255
 #. translators: 1. Opening strong tag; do not translate. 2. Closing strong tag;
 #. do not translate. 3. Line break; do not translate. 4. CLI command example;
 #. do not translate.
@@ -6563,154 +6569,154 @@ msgid ""
 "following command:%3$s%3$s%4$s"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:260
+#: includes/admin/upgrades/upgrade-functions.php:264
 msgid "For large sites, this is the recommended method of upgrading."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:274
+#: includes/admin/upgrades/upgrade-functions.php:277
 msgid "Begin the upgrade"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:305
-#: includes/admin/upgrades/upgrade-functions.php:619
-#: includes/admin/upgrades/upgrade-functions.php:690
-#: includes/admin/upgrades/upgrade-functions.php:788
-#: includes/admin/upgrades/upgrade-functions.php:901
-#: includes/admin/upgrades/upgrade-functions.php:978
-#: includes/admin/upgrades/upgrade-functions.php:1098
-#: includes/admin/upgrades/upgrade-functions.php:1181
+#: includes/admin/upgrades/upgrade-functions.php:311
+#: includes/admin/upgrades/upgrade-functions.php:625
+#: includes/admin/upgrades/upgrade-functions.php:696
+#: includes/admin/upgrades/upgrade-functions.php:794
+#: includes/admin/upgrades/upgrade-functions.php:907
+#: includes/admin/upgrades/upgrade-functions.php:984
+#: includes/admin/upgrades/upgrade-functions.php:1104
+#: includes/admin/upgrades/upgrade-functions.php:1187
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:481 includes/install.php:372
+#: includes/admin/upgrades/upgrade-functions.php:487 includes/install.php:372
 msgid "Transaction Failed"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:482 includes/install.php:370
+#: includes/admin/upgrades/upgrade-functions.php:488 includes/install.php:370
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1246
+#: includes/admin/upgrades/upgrade-functions.php:1252
 msgid ""
 "<strong>Migration complete:</strong> You have already completed the update "
 "to the file download logs."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1256
+#: includes/admin/upgrades/upgrade-functions.php:1262
 msgid ""
 "<strong>Upgrades Complete:</strong> You may now safely navigate away from "
 "this page."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1260
+#: includes/admin/upgrades/upgrade-functions.php:1266
 msgid ""
 "<strong>Important:</strong> Do not navigate away from this page until all "
 "upgrades complete."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1308
+#: includes/admin/upgrades/upgrade-functions.php:1314
 msgid "Update file download logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1313
+#: includes/admin/upgrades/upgrade-functions.php:1319
 msgid ""
 "This will update the file download logs to remove some <abbr "
 "title=\"Personally Identifiable Information\">PII</abbr> and make file "
 "download counts more accurate."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1322
-#: includes/admin/upgrades/upgrade-functions.php:1325
+#: includes/admin/upgrades/upgrade-functions.php:1328
+#: includes/admin/upgrades/upgrade-functions.php:1331
 msgid "Update File Download Logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1326
+#: includes/admin/upgrades/upgrade-functions.php:1332
 msgid "File download logs have already been updated."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1378
+#: includes/admin/upgrades/upgrade-functions.php:1384
 msgid "Tax Rates"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1394
+#: includes/admin/upgrades/upgrade-functions.php:1400
 msgid "Customer Email Addresses"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1398
+#: includes/admin/upgrades/upgrade-functions.php:1404
 msgid "Customer Notes"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1406
+#: includes/admin/upgrades/upgrade-functions.php:1412
 msgid "Order Notes"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1410
-#: includes/admin/upgrades/upgrade-functions.php:1578
-#: includes/admin/upgrades/upgrade-functions.php:1649
+#: includes/admin/upgrades/upgrade-functions.php:1416
+#: includes/admin/upgrades/upgrade-functions.php:1584
+#: includes/admin/upgrades/upgrade-functions.php:1655
 msgid "Remove Legacy Data"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1467
+#: includes/admin/upgrades/upgrade-functions.php:1473
 msgid ""
 "<strong>Database Upgrade Complete:</strong> All database upgrades have been "
 "completed."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1469
+#: includes/admin/upgrades/upgrade-functions.php:1475
 msgid "You may now leave this page."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1474
+#: includes/admin/upgrades/upgrade-functions.php:1480
 msgid "Return to the dashboard"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1481
+#: includes/admin/upgrades/upgrade-functions.php:1487
 msgid ""
 "<strong>Important:</strong> Do not navigate away from this page until all "
 "upgrades have completed."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1485
+#: includes/admin/upgrades/upgrade-functions.php:1491
 msgid ""
 "Easy Digital Downloads needs to perform upgrades to your WordPress "
 "database. Your store data will be migrated to custom database tables to "
 "improve performance and efficiency. This process may take a while."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1486
+#: includes/admin/upgrades/upgrade-functions.php:1492
 msgid "Please create a full backup of your website before proceeding."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1490
+#: includes/admin/upgrades/upgrade-functions.php:1496
 msgid ""
 "This migration can also be run via WP-CLI with the following command: %s. "
 "This is the recommended method for large sites."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1500
+#: includes/admin/upgrades/upgrade-functions.php:1506
 msgid "I have secured a backup of my website data."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1505
+#: includes/admin/upgrades/upgrade-functions.php:1511
 msgid "Upgrade Easy Digital Downloads"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1530 includes/scripts.php:534
+#: includes/admin/upgrades/upgrade-functions.php:1536 includes/scripts.php:534
 msgid "Migration complete"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1535
+#: includes/admin/upgrades/upgrade-functions.php:1541
 msgid "Migration pending"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1554
+#: includes/admin/upgrades/upgrade-functions.php:1560
 msgid ""
 "The data migration has been successfully completed. You may now leave this "
 "page or proceed to remove legacy data below."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1581
+#: includes/admin/upgrades/upgrade-functions.php:1587
 msgid ""
 "<strong>Important:</strong> This removes all legacy data from where it was "
 "previously stored in custom post types and post meta. This is an optional "
@@ -6718,23 +6724,23 @@ msgid ""
 "database and ensure your store is operational before completing this step."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1587
+#: includes/admin/upgrades/upgrade-functions.php:1593
 msgid ""
 "You can complete this step later by navigating to %sDownloads &raquo; "
 "Tools%s."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1598
+#: includes/admin/upgrades/upgrade-functions.php:1604
 msgid ""
 "I have confirmed my store is operational and I have a backup of my website "
 "data."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1606
+#: includes/admin/upgrades/upgrade-functions.php:1612
 msgid "Permanently Remove Legacy Data"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1617
+#: includes/admin/upgrades/upgrade-functions.php:1623
 msgid "Legacy data has been successfully removed. You may now leave this page."
 msgstr ""
 
@@ -7795,11 +7801,11 @@ msgstr ""
 msgid "Single Use: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:486 includes/class-edd-cli.php:1551
+#: includes/class-edd-cli.php:486 includes/class-edd-cli.php:1553
 msgid "No action specified, did you mean"
 msgstr ""
 
-#: includes/class-edd-cli.php:488 includes/class-edd-cli.php:1553
+#: includes/class-edd-cli.php:488 includes/class-edd-cli.php:1555
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
@@ -7819,193 +7825,193 @@ msgstr ""
 msgid "Created %s discounts"
 msgstr ""
 
-#: includes/class-edd-cli.php:897
+#: includes/class-edd-cli.php:899
 msgid ""
 "The discounts custom database migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:916
+#: includes/class-edd-cli.php:918
 msgid "Migration complete: Discounts"
 msgstr ""
 
-#: includes/class-edd-cli.php:919 includes/class-edd-cli.php:987
-#: includes/class-edd-cli.php:1046 includes/class-edd-cli.php:1276
-#: includes/class-edd-cli.php:1342
+#: includes/class-edd-cli.php:921 includes/class-edd-cli.php:989
+#: includes/class-edd-cli.php:1048 includes/class-edd-cli.php:1278
+#: includes/class-edd-cli.php:1344
 msgid "Old Records: "
 msgstr ""
 
-#: includes/class-edd-cli.php:920 includes/class-edd-cli.php:988
-#: includes/class-edd-cli.php:1047 includes/class-edd-cli.php:1277
-#: includes/class-edd-cli.php:1343
+#: includes/class-edd-cli.php:922 includes/class-edd-cli.php:990
+#: includes/class-edd-cli.php:1049 includes/class-edd-cli.php:1279
+#: includes/class-edd-cli.php:1345
 msgid "New Records: "
 msgstr ""
 
-#: includes/class-edd-cli.php:927
+#: includes/class-edd-cli.php:929
 msgid "No discount records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:959
+#: includes/class-edd-cli.php:961
 msgid ""
 "The logs custom table migration has already been run. To do this anyway, "
 "use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:985
+#: includes/class-edd-cli.php:987
 msgid "Migration complete: Logs"
 msgstr ""
 
-#: includes/class-edd-cli.php:993
+#: includes/class-edd-cli.php:995
 msgid "No log records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1024
+#: includes/class-edd-cli.php:1026
 msgid ""
 "The order notes custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1043
+#: includes/class-edd-cli.php:1045
 msgid "Migration complete: Order Notes"
 msgstr ""
 
-#: includes/class-edd-cli.php:1052
+#: includes/class-edd-cli.php:1054
 msgid "No note records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1083
+#: includes/class-edd-cli.php:1085
 msgid ""
 "The customer notes custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1101
+#: includes/class-edd-cli.php:1103
 msgid "Migration complete: Customer Notes"
 msgstr ""
 
-#: includes/class-edd-cli.php:1106
+#: includes/class-edd-cli.php:1108
 msgid "No customer note records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1137
+#: includes/class-edd-cli.php:1139
 msgid ""
 "The user addresses custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1200
+#: includes/class-edd-cli.php:1202
 msgid ""
 "The user email addresses custom table migration has already been run. To do "
 "this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1225
+#: includes/class-edd-cli.php:1227
 msgid "Migration complete: Email Addresses"
 msgstr ""
 
-#: includes/class-edd-cli.php:1256
+#: includes/class-edd-cli.php:1258
 msgid ""
 "The tax rates custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1274
+#: includes/class-edd-cli.php:1276
 msgid "Migration complete: Tax Rates"
 msgstr ""
 
-#: includes/class-edd-cli.php:1309
+#: includes/class-edd-cli.php:1311
 msgid ""
 "The payments custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1339
+#: includes/class-edd-cli.php:1341
 msgid "Migration complete: Orders"
 msgstr ""
 
-#: includes/class-edd-cli.php:1346
+#: includes/class-edd-cli.php:1348
 msgid "Refund Records Created: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1353
+#: includes/class-edd-cli.php:1355
 msgid "No payment records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1385
+#: includes/class-edd-cli.php:1387
 msgid "Sales and Earnings successfully recalculated for all downloads."
 msgstr ""
 
-#: includes/class-edd-cli.php:1386
+#: includes/class-edd-cli.php:1388
 msgid "Downloads Updated: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1404
+#: includes/class-edd-cli.php:1406
 msgid ""
 "Do you want to remove legacy data? This will permanently remove legacy "
 "discounts, logs, and order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1412
+#: includes/class-edd-cli.php:1414
 msgid ""
 "Legacy discounts have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1414
+#: includes/class-edd-cli.php:1416
 msgid "Removing old discount data."
 msgstr ""
 
-#: includes/class-edd-cli.php:1435
+#: includes/class-edd-cli.php:1437
 msgid ""
 "Legacy logs have already been removed. To run this anyway, use the --force "
 "argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1437
+#: includes/class-edd-cli.php:1439
 msgid "Removing old logs."
 msgstr ""
 
-#: includes/class-edd-cli.php:1458
+#: includes/class-edd-cli.php:1460
 msgid ""
 "Legacy order notes have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1460
+#: includes/class-edd-cli.php:1462
 msgid "Removing old order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1484
+#: includes/class-edd-cli.php:1486
 msgid "Updating customers database table."
 msgstr ""
 
-#: includes/class-edd-cli.php:1493
+#: includes/class-edd-cli.php:1495
 msgid ""
 "Legacy customer emails have already been removed. To run this anyway, use "
 "the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1495
+#: includes/class-edd-cli.php:1497
 msgid "Removing old customer emails."
 msgstr ""
 
-#: includes/class-edd-cli.php:1506
+#: includes/class-edd-cli.php:1508
 msgid ""
 "Legacy customer addresses have already been removed. To run this anyway, "
 "use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1508
+#: includes/class-edd-cli.php:1510
 msgid "Removing old customer addresses."
 msgstr ""
 
-#: includes/class-edd-cli.php:1519
+#: includes/class-edd-cli.php:1521
 msgid ""
 "Legacy orders have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1521
+#: includes/class-edd-cli.php:1523
 msgid "Removing old orders."
 msgstr ""
 
@@ -11811,15 +11817,15 @@ msgstr ""
 msgid "Purchase Verification Failed"
 msgstr ""
 
-#: includes/process-download.php:1018
+#: includes/process-download.php:1024
 msgid "Invalid file"
 msgstr ""
 
-#: includes/process-download.php:1025
+#: includes/process-download.php:1031
 msgid "The requested file could not be found. Error 404."
 msgstr ""
 
-#: includes/process-download.php:1026
+#: includes/process-download.php:1032
 msgid "File not found"
 msgstr ""
 
