@@ -3040,6 +3040,13 @@ class Stats {
 		}
 	}
 
+	/**
+	 * Based on the query_vars['revenue_type'], use gross or net statuses.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array The statuses of orders to use for the stats generation.
+	 */
 	private function get_revenue_type_statuses() {
 
 		$statuses = edd_get_gross_order_statuses();
@@ -3051,6 +3058,13 @@ class Stats {
 		return $statuses;
 	}
 
+	/**
+	 * Based on the query_vars['revenue_type'], use just sale or also include refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array The order types to use when generating stats.
+	 */
 	private function get_revenue_type_order_types() {
 		$order_types = array( 'sale' );
 		if ( 'net' === $this->query_vars['revenue_type'] ) {
