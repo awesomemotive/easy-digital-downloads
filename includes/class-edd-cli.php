@@ -1204,7 +1204,7 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		} else {
 
-			WP_CLI::line( __( 'Prepairing to migrate customer email addresses (this can take several minutes).', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Preparing to migrate customer email addresses (this can take several minutes).', 'easy-digital-downloads' ) );
 
 			// Migrate email addresses next.
 			$sql = "
