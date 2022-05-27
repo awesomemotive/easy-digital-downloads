@@ -106,7 +106,7 @@ class Stats {
 				'exclude_taxes'     => false,
 				'currency'          => false,
 				'currency_sql'      => '',
-				'status'            => array( 'complete', 'revoked' ),
+				'status'            => array(),
 				'status_sql'        => '',
 				'type'              => array(),
 				'type_sql'          => '',
@@ -123,6 +123,7 @@ class Stats {
 				'grouped'           => false,
 				'product_id'        => '',
 				'price_id'          => null,
+				'revenue_type'      => 'gross',
 			);
 		}
 
@@ -236,8 +237,8 @@ class Stats {
 		 * By default we're checking sales only and excluding refunds. This gives us gross order earnings.
 		 * This may be overridden in $query parameters that get passed through.
 		 */
-		$this->query_vars['type']   = 'sale';
-		$this->query_vars['status'] = edd_get_gross_order_statuses();
+		$this->query_vars['type']   = $this->get_revenue_type_order_types();
+		$this->query_vars['status'] = $this->get_revenue_type_statuses();
 
 		/**
 		 * Filters Order statuses that should be included when calculating stats.
@@ -342,7 +343,7 @@ class Stats {
 		 * This may be overridden in $query parameters that get passed through.
 		 */
 		$this->query_vars['type']   = 'sale';
-		$this->query_vars['status'] = edd_get_gross_order_statuses();
+		$this->query_vars['status'] = $this->get_revenue_type_statuses();
 
 		/**
 		 * Filters Order statuses that should be included when calculating stats.
@@ -2618,7 +2619,7 @@ class Stats {
 			'exclude_taxes'     => false,
 			'currency'          => false,
 			'currency_sql'      => '',
-			'status'            => array( 'complete', 'revoked' ),
+			'status'            => array(),
 			'status_sql'        => '',
 			'type'              => array(),
 			'type_sql'          => '',
@@ -2635,6 +2636,7 @@ class Stats {
 			'grouped'           => false,
 			'product_id'        => '',
 			'price_id'          => null,
+			'revenue_type'      => 'gross',
 			'country'           => '',
 			'region'            => '',
 		);
@@ -3036,5 +3038,25 @@ class Stats {
 
 			$this->relative_date_ranges[ $range ] = $dates;
 		}
+	}
+
+	private function get_revenue_type_statuses() {
+
+		$statuses = edd_get_gross_order_statuses();
+		if ( 'net' === $this->query_vars['revenue_type'] ) {
+			$statuses = edd_get_net_order_statuses();
+		}
+
+
+		return $statuses;
+	}
+
+	private function get_revenue_type_order_types() {
+		$order_types = array( 'sale' );
+		if ( 'net' === $this->query_vars['revenue_type'] ) {
+			$order_types[] = 'refund';
+		}
+
+		return $order_types;
 	}
 }
