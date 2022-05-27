@@ -184,6 +184,18 @@ class Data_Migrator {
 				continue;
 			}
 
+			// `scope` has to be mapped uniquely.
+			if ( '_edd_discount_is_not_global' === $key ) {
+				$args['scope'] = ! empty( $value ) ? 'not_global' : 'global';
+				continue;
+			}
+
+			// `once_per_customer` has to be mapped uniquely.
+			if ( '_edd_discount_is_single_use' === $key ) {
+				$args['once_per_customer'] = ! empty( $value );
+				continue;
+			}
+
 			$value = maybe_unserialize( $value[0] );
 			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
 		}
