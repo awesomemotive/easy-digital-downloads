@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-05-26 17:12:01+00:00\n"
+"POT-Creation-Date: 2022-05-27 20:00:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7801,11 +7801,11 @@ msgstr ""
 msgid "Single Use: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:486 includes/class-edd-cli.php:1553
+#: includes/class-edd-cli.php:486 includes/class-edd-cli.php:1558
 msgid "No action specified, did you mean"
 msgstr ""
 
-#: includes/class-edd-cli.php:488 includes/class-edd-cli.php:1555
+#: includes/class-edd-cli.php:488 includes/class-edd-cli.php:1560
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
@@ -7835,15 +7835,15 @@ msgstr ""
 msgid "Migration complete: Discounts"
 msgstr ""
 
-#: includes/class-edd-cli.php:921 includes/class-edd-cli.php:989
-#: includes/class-edd-cli.php:1048 includes/class-edd-cli.php:1278
-#: includes/class-edd-cli.php:1344
+#: includes/class-edd-cli.php:921 includes/class-edd-cli.php:991
+#: includes/class-edd-cli.php:1050 includes/class-edd-cli.php:1283
+#: includes/class-edd-cli.php:1349
 msgid "Old Records: "
 msgstr ""
 
-#: includes/class-edd-cli.php:922 includes/class-edd-cli.php:990
-#: includes/class-edd-cli.php:1049 includes/class-edd-cli.php:1279
-#: includes/class-edd-cli.php:1345
+#: includes/class-edd-cli.php:922 includes/class-edd-cli.php:992
+#: includes/class-edd-cli.php:1051 includes/class-edd-cli.php:1284
+#: includes/class-edd-cli.php:1350
 msgid "New Records: "
 msgstr ""
 
@@ -7857,161 +7857,171 @@ msgid ""
 "use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:987
+#: includes/class-edd-cli.php:964
+msgid "Preparing to migrate logs (this can take several minutes)."
+msgstr ""
+
+#: includes/class-edd-cli.php:989
 msgid "Migration complete: Logs"
 msgstr ""
 
-#: includes/class-edd-cli.php:995
+#: includes/class-edd-cli.php:997
 msgid "No log records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1026
+#: includes/class-edd-cli.php:1028
 msgid ""
 "The order notes custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1045
+#: includes/class-edd-cli.php:1047
 msgid "Migration complete: Order Notes"
 msgstr ""
 
-#: includes/class-edd-cli.php:1054
+#: includes/class-edd-cli.php:1056
 msgid "No note records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1085
+#: includes/class-edd-cli.php:1087
 msgid ""
 "The customer notes custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1103
+#: includes/class-edd-cli.php:1105
 msgid "Migration complete: Customer Notes"
 msgstr ""
 
-#: includes/class-edd-cli.php:1108
+#: includes/class-edd-cli.php:1110
 msgid "No customer note records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1139
+#: includes/class-edd-cli.php:1141
 msgid ""
 "The user addresses custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1202
+#: includes/class-edd-cli.php:1204
 msgid ""
 "The user email addresses custom table migration has already been run. To do "
 "this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1227
+#: includes/class-edd-cli.php:1207
+msgid ""
+"Preparing to migrate customer email addresses (this can take several "
+"minutes)."
+msgstr ""
+
+#: includes/class-edd-cli.php:1232
 msgid "Migration complete: Email Addresses"
 msgstr ""
 
-#: includes/class-edd-cli.php:1258
+#: includes/class-edd-cli.php:1263
 msgid ""
 "The tax rates custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1276
+#: includes/class-edd-cli.php:1281
 msgid "Migration complete: Tax Rates"
 msgstr ""
 
-#: includes/class-edd-cli.php:1311
+#: includes/class-edd-cli.php:1316
 msgid ""
 "The payments custom table migration has already been run. To do this "
 "anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1341
+#: includes/class-edd-cli.php:1346
 msgid "Migration complete: Orders"
 msgstr ""
 
-#: includes/class-edd-cli.php:1348
+#: includes/class-edd-cli.php:1353
 msgid "Refund Records Created: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1355
+#: includes/class-edd-cli.php:1360
 msgid "No payment records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1387
+#: includes/class-edd-cli.php:1392
 msgid "Sales and Earnings successfully recalculated for all downloads."
 msgstr ""
 
-#: includes/class-edd-cli.php:1388
+#: includes/class-edd-cli.php:1393
 msgid "Downloads Updated: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1406
+#: includes/class-edd-cli.php:1411
 msgid ""
 "Do you want to remove legacy data? This will permanently remove legacy "
 "discounts, logs, and order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1414
+#: includes/class-edd-cli.php:1419
 msgid ""
 "Legacy discounts have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1416
+#: includes/class-edd-cli.php:1421
 msgid "Removing old discount data."
 msgstr ""
 
-#: includes/class-edd-cli.php:1437
+#: includes/class-edd-cli.php:1442
 msgid ""
 "Legacy logs have already been removed. To run this anyway, use the --force "
 "argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1439
+#: includes/class-edd-cli.php:1444
 msgid "Removing old logs."
 msgstr ""
 
-#: includes/class-edd-cli.php:1460
+#: includes/class-edd-cli.php:1465
 msgid ""
 "Legacy order notes have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1462
+#: includes/class-edd-cli.php:1467
 msgid "Removing old order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1486
+#: includes/class-edd-cli.php:1491
 msgid "Updating customers database table."
 msgstr ""
 
-#: includes/class-edd-cli.php:1495
+#: includes/class-edd-cli.php:1500
 msgid ""
 "Legacy customer emails have already been removed. To run this anyway, use "
 "the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1497
+#: includes/class-edd-cli.php:1502
 msgid "Removing old customer emails."
 msgstr ""
 
-#: includes/class-edd-cli.php:1508
+#: includes/class-edd-cli.php:1513
 msgid ""
 "Legacy customer addresses have already been removed. To run this anyway, "
 "use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1510
+#: includes/class-edd-cli.php:1515
 msgid "Removing old customer addresses."
 msgstr ""
 
-#: includes/class-edd-cli.php:1521
+#: includes/class-edd-cli.php:1526
 msgid ""
 "Legacy orders have already been removed. To run this anyway, use the "
 "--force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1523
+#: includes/class-edd-cli.php:1528
 msgid "Removing old orders."
 msgstr ""
 
