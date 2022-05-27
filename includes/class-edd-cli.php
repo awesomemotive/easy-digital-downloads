@@ -961,6 +961,8 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The logs custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
+		WP_CLI::line( __( 'Prepairing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
+
 		$sql = "
 			SELECT p.*, t.slug
 			FROM {$wpdb->posts} AS p
@@ -1201,6 +1203,9 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! $force && $customer_email_addresses_complete ) {
 			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		} else {
+
+			WP_CLI::line( __( 'Prepairing to migrate customer email addresses (this can take several minutes).', 'easy-digital-downloads' ) );
+
 			// Migrate email addresses next.
 			$sql = "
 				SELECT *
