@@ -1876,12 +1876,14 @@ class EDD_Discount extends Adjustment {
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
-			if ( in_array( $old_key, array( 'not_global', 'is_not_global' ), true ) && ! array_key_exists( 'scope', $args ) ) {
-				$args[ $new_key ] = ! empty( $args[ $old_key ] )
-					? 'not_global'
-					: 'global';
-			} elseif ( isset( $args[ $old_key ] ) ) {
-				$args[ $new_key ] = $args[ $old_key ];
+			if ( isset( $args[ $old_key ] ) ) {
+				if ( in_array( $old_key, array( 'not_global', 'is_not_global' ), true ) && ! array_key_exists( 'scope', $args ) ) {
+					$args[ $new_key ] = ! empty( $args[ $old_key ] )
+						? 'not_global'
+						: 'global';
+				} else {
+					$args[ $new_key ] = $args[ $old_key ];
+				}
 			}
 			unset( $args[ $old_key ] );
 		}
