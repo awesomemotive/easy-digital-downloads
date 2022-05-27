@@ -209,7 +209,7 @@ function edd_register_overview_report( $reports ) {
 			'endpoints' => array(
 				'tiles'  => array(
 					'overview_time_period_data',
-					'overview_all_time_data',
+					'overview_time_period_data_net',
 					'overview_sales',
 					'overview_earnings',
 					'overview_refunds',
@@ -219,6 +219,7 @@ function edd_register_overview_report( $reports ) {
 					'overview_file_downloads',
 					'overview_taxes',
 					'overview_busiest_day',
+					'overview_all_time_data',
 				),
 				'charts' => array(
 					'overview_sales_earnings_chart',
@@ -248,6 +249,28 @@ function edd_register_overview_report( $reports ) {
 					},
 					'display_args'  => array(
 						'comparison_label' => $label . ' &mdash; ' . __( 'Gross', 'easy-digital-downloads' ),
+					),
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'overview_time_period_data_net', array(
+			'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
+						$stats = new EDD\Stats( array(
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'currency'      => $currency,
+							'output'        => 'formatted',
+							'revenue_type'  => 'net',
+						) );
+
+						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
+					},
+					'display_args'  => array(
+						'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
 					),
 				),
 			),

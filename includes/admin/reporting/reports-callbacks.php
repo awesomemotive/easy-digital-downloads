@@ -44,7 +44,7 @@ function edd_overview_sales_earnings_chart() {
 		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
 	}
 
-	$statuses = edd_get_gross_order_statuses();
+	$statuses = edd_get_net_order_statuses();
 
 	/**
 	 * Filters Order statuses that should be included when calculating stats.
@@ -56,9 +56,24 @@ function edd_overview_sales_earnings_chart() {
 	$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 	$statuses = "'" . implode( "', '", $statuses ) . "'";
 
-	$results = $wpdb->get_results(
+	$earnings_results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT COUNT(id) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
+			"SELECT SUM({$column}) AS earnings, {$sql_clauses['select']}
+ 				 FROM {$wpdb->edd_orders} edd_o
+ 				 WHERE date_created >= %s AND date_created <= %s
+ 				 AND type IN ( 'sale', 'refund' )
+ 				 AND status IN( {$statuses} )
+				 {$sql_clauses['where']}
+				 GROUP BY {$sql_clauses['groupby']}
+				 ORDER BY {$sql_clauses['orderby']} ASC",
+			$dates['start']->copy()->format( 'mysql' ),
+			$dates['end']->copy()->format( 'mysql' )
+		)
+	);
+
+	$sales_results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT COUNT(id) AS sales, {$sql_clauses['select']}
  				 FROM {$wpdb->edd_orders} edd_o
  				 WHERE date_created >= %s AND date_created <= %s
  				 AND type = 'sale'
@@ -85,32 +100,57 @@ function edd_overview_sales_earnings_chart() {
 		$earnings[ $timestamp ][1] = 0.00;
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
-		foreach ( $results as $result ) {
+		foreach ( $earnings_results as $earnings_result ) {
 
 			$timezone         = new DateTimeZone( 'UTC' );
-			$date_of_db_value = new DateTime( $result->date, $timezone );
+			$date_of_db_value = new DateTime( $earnings_result->date, $timezone );
 			$date_on_chart    = new DateTime( $dates['start'], $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-					$sales[ $timestamp ][1]    += $result->sales;
-					$earnings[ $timestamp ][1] += $result->earnings;
+					$earnings[ $timestamp ][1] += $earnings_result->earnings;
 				}
 				// Add any sales/earnings that happened during this day.
 			} elseif ( $day_by_day ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-					$sales[ $timestamp ][1]    += $result->sales;
-					$earnings[ $timestamp ][1] += $result->earnings;
+					$earnings[ $timestamp ][1] += $earnings_result->earnings;
 				}
 				// Add any sales/earnings that happened during this month.
 			} else {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-					$sales[ $timestamp ][1]    += $result->sales;
-					$earnings[ $timestamp ][1] += $result->earnings;
+					$earnings[ $timestamp ][1] += $earnings_result->earnings;
+				}
+			}
+		}
+
+		// Loop through each date there were sales/earnings, which we queried from the database.
+		foreach ( $sales_results as $sales_result ) {
+
+			$timezone         = new DateTimeZone( 'UTC' );
+			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
+			$date_on_chart    = new DateTime( $dates['start'], $timezone );
+
+			// Add any sales/earnings that happened during this hour.
+			if ( $hour_by_hour ) {
+				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+					$sales[ $timestamp ][1] += $sales_result->sales;
+				}
+				// Add any sales/earnings that happened during this day.
+			} elseif ( $day_by_day ) {
+				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+					$sales[ $timestamp ][1] += $sales_result->sales;
+				}
+				// Add any sales/earnings that happened during this month.
+			} else {
+				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+					$sales[ $timestamp ][1] += $sales_result->sales;
 				}
 			}
 		}
