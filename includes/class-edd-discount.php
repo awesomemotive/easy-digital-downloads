@@ -1870,16 +1870,20 @@ class EDD_Discount extends Adjustment {
 			'products'          => 'product_reqs',
 			'excluded-products' => 'excluded_products',
 			'not_global'        => 'scope',
+			'is_not_global'     => 'scope',
 			'use_once'          => 'once_per_customer',
+			'is_single_use'     => 'once_per_customer',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
-			if ( 'not_global' === $old_key ) {
-				$args[ $new_key ] = ! empty( $args[ $old_key ] )
-					? 'not_global'
-					: 'global';
-			} elseif ( isset( $args[ $old_key ] ) ) {
-				$args[ $new_key ] = $args[ $old_key ];
+			if ( isset( $args[ $old_key ] ) ) {
+				if ( in_array( $old_key, array( 'not_global', 'is_not_global' ), true ) && ! array_key_exists( 'scope', $args ) ) {
+					$args[ $new_key ] = ! empty( $args[ $old_key ] )
+						? 'not_global'
+						: 'global';
+				} else {
+					$args[ $new_key ] = $args[ $old_key ];
+				}
 			}
 			unset( $args[ $old_key ] );
 		}
