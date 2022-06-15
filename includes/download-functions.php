@@ -160,6 +160,11 @@ function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 
 	$download = edd_get_download( $download_id );
 
+	// Bail if the download cannot be retrieved.
+	if ( ! $download instanceof EDD_Download ) {
+		return false;
+	}
+
 	// Get the download title
 	$retval = $download->get_name();
 
