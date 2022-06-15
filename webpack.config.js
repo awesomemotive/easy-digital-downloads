@@ -88,14 +88,10 @@ const config = {
 	},
 	plugins: [
 		new MiniCSSExtractPlugin( {
-			esModule: false,
-			moduleFilename: ( chunk ) =>
-				`assets/css/${ chunk.name.replace( '-style', '' ) }.min.css`
 		} ),
 		new WebpackRTLPlugin( {
 			filename: [ /(\.min\.css)/i, '-rtl$1' ],
 		} ),
-		new FixStyleOnlyEntriesPlugin(),
 		new webpack.ProvidePlugin( {
 			$: 'jquery',
 			jQuery: 'jquery'
@@ -153,9 +149,5 @@ const config = {
 		} ),
 	],
 };
-
-// Remove automatic split of style- imports.
-// @link https://github.com/WordPress/gutenberg/blob/master/packages/scripts/config/webpack.config.js#L67-L77
-delete config.optimization.splitChunks.cacheGroups;
 
 module.exports = config;
