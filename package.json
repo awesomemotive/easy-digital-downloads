@@ -31,10 +31,10 @@
 		"moment": "2.22.2"
 	},
 	"devDependencies": {
-		"@wordpress/base-styles": "3.1.0",
-		"@wordpress/dom": "2.15.0",
-		"@wordpress/postcss-plugins-preset": "^1.6.0",
-		"@wordpress/scripts": "12.5.0",
+		"@wordpress/base-styles": "4.3.1",
+		"@wordpress/dom": "3.6.1",
+		"@wordpress/postcss-plugins-preset": "3.6.1",
+		"@wordpress/scripts": "22.4.2",
 		"copy-webpack-plugin": "6.2.0",
 		"cross-env": "7.0.2",
 		"grunt": "^1.5.2",
