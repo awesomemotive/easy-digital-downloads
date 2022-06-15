@@ -5,7 +5,7 @@ const path = require( 'path' );
 const webpack = require( 'webpack' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const UglifyJS = require( 'uglify-es' );
-const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const MiniCSSExtractPlugin = require( 'mini-css-extract-plugin' );
 const WebpackRTLPlugin = require( 'webpack-rtl-plugin' );
 
@@ -50,6 +50,16 @@ const config = {
 			'@easy-digital-downloads/currency': path.resolve( __dirname, 'assets/js/packages/currency/src/index.js' ),
 		},
 	},
+	optimization: {
+		...defaultConfig.optimization,
+		splitChunks: {
+			...defaultConfig.optimization.splitChunks,
+			// Default configuration does does funky things with cache groups
+			// for entry points containing `-style`. Stop that to avoid changing
+			// filenames incorrectly.
+			cacheGroups: {}
+		}
+	},
 	entry: {
 		// Dynamic entry points for individual admin pages.
 		...adminPages.reduce( ( memo, path ) => {
@@ -88,7 +98,10 @@ const config = {
 	},
 	plugins: [
 		new MiniCSSExtractPlugin( {
+			filename: ( { chunk } ) =>
+				`assets/css/${ chunk.name.replace( '-style', '' ) }.min.css`,
 		} ),
+		new RemoveEmptyScriptsPlugin(),
 		new WebpackRTLPlugin( {
 			filename: [ /(\.min\.css)/i, '-rtl$1' ],
 		} ),
