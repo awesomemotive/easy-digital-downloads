@@ -127,7 +127,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		$customer_url = edd_get_admin_url( array(
 			'page' => 'edd-customers',
 			'view' => 'overview',
-			'id'   => $customer_id
+			'id'   => absint( $customer_id ),
 		) );
 
 		// Actions

@@ -202,23 +202,23 @@ class EDD_Discount_Codes_Table extends List_Table {
 		}
 
 		// Edit
-		$row_actions['edit'] = '<a href="' . add_query_arg( array(
+		$row_actions['edit'] = '<a href="' . esc_url( add_query_arg( array(
 			'edd-action' => 'edit_discount',
-			'discount'   => $discount->id,
-		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+			'discount'   => absint( $discount->id ),
+		), $base ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// Active, so add "deactivate" action
 		if ( 'active' === strtolower( $discount->status ) ) {
 			$row_actions['cancel'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 				'edd-action' => 'deactivate_discount',
-				'discount'   => $discount->id,
+				'discount'   => absint( $discount->id ),
 			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
 
 		// Inactive, so add "activate" action
 		} elseif ( 'inactive' === strtolower( $discount->status ) ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 				'edd-action' => 'activate_discount',
-				'discount'   => $discount->id,
+				'discount'   => absint( $discount->id ),
 			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -226,7 +226,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 		if ( 0 === (int) $discount->use_count ) {
 			$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 				'edd-action' => 'delete_discount',
-				'discount'   => $discount->id,
+				'discount'   => absint( $discount->id ),
 			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -234,11 +234,11 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
 		// Wrap discount title in strong anchor
-		$discount_title = '<strong><a class="row-title" href="' . add_query_arg( array(
+		$discount_title = '<strong><a class="row-title" href="' . esc_url( add_query_arg( array(
 			'edd-action' => 'edit_discount',
-			'discount'   => $discount->id,
-		), $base ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
-		
+			'discount'   => absint( $discount->id ),
+		), $base ) ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
+
 		/**
 		 * Filter to allow additional content to be appended to the discount title.
 		 *

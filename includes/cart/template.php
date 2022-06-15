@@ -100,7 +100,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$item = str_replace( '{cart_item_id}', absint( $cart_key ), $item );
 	$item = str_replace( '{item_id}', absint( $id ), $item );
 	$item = str_replace( '{item_quantity}', absint( $quantity ), $item );
-	$item = str_replace( '{remove_url}', $remove_url, $item );
+	$item = str_replace( '{remove_url}', esc_url( $remove_url ), $item );
   	$subtotal = '';
   	if ( $ajax ){
    	 $subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) ;
@@ -273,7 +273,7 @@ function edd_show_added_to_cart_messages( $download_id ) {
 
 		$alert = '<div class="edd_added_to_cart_alert">'
 		. sprintf( __('You have successfully added %s to your shopping cart.','easy-digital-downloads' ), get_the_title( $download_id ) )
-		. ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.','easy-digital-downloads' ) . '</a>'
+		. ' <a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_alert_checkout_link">' . __('Checkout.','easy-digital-downloads' ) . '</a>'
 		. '</div>';
 
 		echo apply_filters( 'edd_show_added_to_cart_messages', $alert );

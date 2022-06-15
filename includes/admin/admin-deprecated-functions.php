@@ -27,15 +27,15 @@ function edd_tools_banned_emails_display() {
 	do_action( 'edd_tools_banned_emails_before' );
 	?>
 	<div class="postbox">
-		<h3><span><?php _e( 'Banned Emails', 'easy-digital-downloads' ); ?></span></h3>
+		<h3><span><?php esc_html_e( 'Banned Emails', 'easy-digital-downloads' ); ?></span></h3>
 		<div class="inside">
-			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'easy-digital-downloads' ); ?></p>
+			<p><?php esc_html_e( 'Emails placed in the box below will not be allowed to make purchases.', 'easy-digital-downloads' ); ?></p>
 			<form method="post"
-					action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
+					action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'general' ) ) ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10"
-								class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-					<span class="description"><?php _e( 'Enter emails and/or domains (starting with "@") and/or TLDs (starting with ".") to disallow, one per line.', 'easy-digital-downloads' ); ?></span>
+								class="large-text"><?php echo esc_textarea( implode( "\n", edd_get_banned_emails() ) ); ?></textarea>
+					<span class="description"><?php esc_html_e( 'Enter emails and/or domains (starting with "@") and/or TLDs (starting with ".") to disallow, one per line.', 'easy-digital-downloads' ); ?></span>
 				</p>
 				<p>
 					<input type="hidden" name="edd_action" value="save_banned_emails"/>
@@ -69,7 +69,7 @@ function edd_trigger_purchase_delete( $data ) {
 
 		edd_delete_purchase( $payment_id );
 
-		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		edd_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
 	}
 }
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );

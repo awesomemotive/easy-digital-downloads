@@ -1124,7 +1124,7 @@ function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 	$payment         = new EDD_Payment( $payment_id );
 	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
 	$paypal_base_url = 'https://' . $sandbox . 'paypal.com/activity/payment/';
-	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
+	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
 
 	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );
 

@@ -87,12 +87,13 @@ function edd_options_page_primary_nav( $tabs, $active_tab = '' ) {
 
 			// Remove the section from the tabs so we always end up at the main section
 			$tab_url = remove_query_arg( 'section', $tab_url );
-			$active  = $active_tab == $tab_id
-				? ' nav-tab-active'
-				: '';
+			$class   = 'nav-tab';
+			if ( $active_tab === $tab_id ) {
+				$class .= ' nav-tab-active';
+			}
 
 			// Link
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">';
+			echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">';
 			echo esc_html( $tab_name );
 			echo '</a>';
 		}

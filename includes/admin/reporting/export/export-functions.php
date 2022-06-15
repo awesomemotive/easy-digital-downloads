@@ -103,7 +103,7 @@ function edd_do_ajax_export() {
 
 		echo wp_json_encode( array(
 			'step' => 'done',
-			'url'  => $download_url,
+			'url'  => esc_url_raw( $download_url ),
 		) );
 
 		exit;

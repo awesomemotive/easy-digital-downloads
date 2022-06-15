@@ -70,7 +70,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 				break;
 
 			case 'email' :
-				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
+				$value = '<a href="mailto:' . esc_url_raw( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
 				break;
 
 			case 'type' :
@@ -121,7 +121,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$customer_url = edd_get_admin_url( array(
 			'page' => 'edd-customers',
 			'view' => 'overview',
-			'id'   => $customer_id
+			'id'   => absint( $customer_id ),
 		) );
 
 		// Actions

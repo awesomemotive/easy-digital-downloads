@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_customers_page_primary_nav( $active_tab = '' ) {
 
-	$add_new_url = add_query_arg( array( 'view' => 'add-customer' ), edd_get_admin_url( array( 'page' => 'edd-customers' ) ) );
+	$add_new_url = edd_get_admin_url( array( 'page' => 'edd-customers', 'view' => 'add-customer' ) );
 
 	ob_start();?>
 
@@ -110,7 +110,7 @@ function edd_customers_sections( $customer ) {
 		: 'overview';
 	$sections->base_url = edd_get_admin_url( array(
 		'page' => 'edd-customers',
-		'id'   => $customer->id
+		'id'   => absint( $customer->id ),
 	) );
 
 	// Get all registered tabs & views
@@ -223,8 +223,8 @@ function edd_customers_list( $active_tab = 'customers' ) {
 
 	// Get the action url from the active tab
 	$action_url = edd_get_admin_url( array(
-		'page_type' => $active_tab,
-		'page'      => 'edd-' . $active_tab
+		'page_type' => sanitize_key( $active_tab ),
+		'page'      => 'edd-' . sanitize_key( $active_tab ),
 	) );
 
 	// Setup the list table class
@@ -455,8 +455,8 @@ function edd_customers_view( $customer = null ) {
 	?>
 
 	<div class="info-wrapper customer-section">
-		<form id="edit-customer-info" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>">
-			<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo esc_html( $customer->id ); ?>" />
+		<form id="edit-customer-info" method="post" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-customers', 'view' => 'overview', 'id' => absint( $customer->id ) ) ) ); ?>">
+			<input type="hidden" data-key="id" name="customerinfo[id]" value="<?php echo esc_attr( $customer->id ); ?>" />
 			<input type="hidden" name="edd_action" value="edit-customer" />
 			<?php wp_nonce_field( 'edit-customer', '_wpnonce', false, true ); ?>
 
@@ -465,14 +465,14 @@ function edd_customers_view( $customer = null ) {
 					<?php echo get_avatar( $customer->email, 150 ); ?><br />
 					<?php if ( current_user_can( $customer_edit_role ) ) : ?>
 						<span class="info-item editable customer-edit-link">
-							<a href="#" class="button-secondary" id="edit-customer"><?php _e( 'Edit Profile', 'easy-digital-downloads' ); ?></a>
+							<a href="#" class="button-secondary" id="edit-customer"><?php esc_html_e( 'Edit Profile', 'easy-digital-downloads' ); ?></a>
 						</span>
 						<?php do_action( 'edd_after_customer_edit_link', $customer ); ?>
 					<?php endif; ?>
 
 					<span id="customer-edit-actions" class="edit-item">
-						<a id="edd-edit-customer-cancel" href="" class="cancel"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
-						<button id="edd-edit-customer-save" class="button button-secondary"><?php _e( 'Update', 'easy-digital-downloads' ); ?></button>
+						<a id="edd-edit-customer-cancel" href="" class="cancel"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+						<button id="edd-edit-customer-save" class="button button-secondary"><?php esc_html_e( 'Update', 'easy-digital-downloads' ); ?></button>
 					</span>
 				</div>
 
@@ -565,7 +565,7 @@ function edd_customers_view( $customer = null ) {
 								<?php if ( empty( $user_login ) ) :
 									printf( __( 'User %s missing', 'easy-digital-downloads' ), '<code>' . $user_id . '</code>');
 								endif; ?>
-								<a href="<?php echo admin_url( 'user-edit.php?user_id=' . $user_id ); ?>"><?php echo esc_html( $user_login ); ?></a>
+								<a href="<?php echo esc_url( admin_url( 'user-edit.php?user_id=' . absint( $user_id ) ) ); ?>"><?php echo esc_html( $user_login ); ?></a>
 							</span>
 
 						<?php else : ?>
@@ -595,7 +595,7 @@ function edd_customers_view( $customer = null ) {
 	<div id="edd-item-stats-wrapper" class="customer-stats-wrapper customer-section">
 		<ul>
 			<li>
-				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&customer=' . $customer->id ); ?>">
+				<a href="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-payment-history', 'customer' => absint( $customer->id ) ) ) ); ?>">
 					<span class="dashicons dashicons-cart"></span>
 					<?php
 					printf(
@@ -728,14 +728,12 @@ function edd_customers_view( $customer = null ) {
 					$view_url = edd_get_admin_url( array(
 						'page' => 'edd-payment-history',
 						'view' => 'view-order-details',
-						'id'   => $order->id,
+						'id'   => absint( $order->id ),
 					) );
-
-					$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>'; ?>
-
+					?>
 					<tr>
-						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
-						<td><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></td>
+						<td class="column-primary"><strong><a class="row-title" href="<?php echo esc_url( $view_url ); ?>"><?php echo esc_html( $order->get_number() ); ?></a><?php echo esc_html( $state ); ?></strong></td>
+						<td><?php echo esc_html( edd_get_gateway_admin_label( $order->gateway ) ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $order->total ), $order->currency ); ?></td>
 						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time></td>
 					</tr>
@@ -764,14 +762,12 @@ function edd_customers_view( $customer = null ) {
 					$view_url = edd_get_admin_url( array(
 						'page' => 'edd-payment-history',
 						'view' => 'view-refund-details',
-						'id'   => $refund->id,
+						'id'   => absint( $refund->id ),
 					) );
-
-					$link = '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $refund->order_number ) . '</a>'; ?>
-
+					?>
 					<tr>
-						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
-						<td><?php echo edd_get_gateway_admin_label( $refund->gateway ); ?></td>
+						<td class="column-primary"><a class="row-title" href="<?php echo esc_url( $view_url ); ?>"><?php echo esc_html( $refund->order_number ); ?></a></td>
+						<td><?php echo esc_html( edd_get_gateway_admin_label( $refund->gateway ) ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $refund->total ), $refund->currency ); ?></td>
 						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'H:i' ); ?> <?php echo esc_html( edd_get_timezone_abbr() ); ?></time></td>
 					</tr>
@@ -796,7 +792,7 @@ function edd_customers_view( $customer = null ) {
 					<?php foreach ( $downloads as $download ) : ?>
 
 						<tr>
-							<td class="column-primary"><strong><a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $download->ID ) ); ?>"><?php echo esc_html( $download->post_title ); ?></a></strong></td>
+							<td class="column-primary"><strong><a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . absint( $download->ID ) ) ); ?>"><?php echo esc_html( $download->post_title ); ?></a></strong></td>
 						</tr>
 
 					<?php endforeach; ?>
@@ -1084,7 +1080,7 @@ function edd_customers_delete_view( $customer ) {
 
 	<div class="info-wrapper customer-section">
 
-		<form id="delete-customer" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer->id ); ?>">
+		<form id="delete-customer" method="post" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-customers', 'view' => 'delete', 'id' => absint( $customer->id ) ) ) ); ?>">
 
 			<?php edd_render_customer_details_header( $customer ); ?>
 			<h3><?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?></h3>
@@ -1166,12 +1162,24 @@ function edd_verify_customer_notice( $customer ) {
 		return;
 	}
 
-	$url = wp_nonce_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&edd_action=verify_user_admin&id=' . $customer->id ), 'edd-verify-user' );
+	$url = wp_nonce_url(
+		esc_url(
+			edd_get_admin_url(
+				array(
+					'page'       => 'edd-customers',
+					'view'       => 'overview',
+					'edd_action' => 'verify_user_admin',
+					'id'         => absint( $customer->id ),
+				)
+			)
+		),
+		'edd-verify-user'
+	);
 
 	echo '<div class="update error"><p>';
-	_e( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' );
+	esc_html_e( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' );
 	echo ' ';
-	echo '<a href="' . $url . '">' . __( 'Verify account.', 'easy-digital-downloads' ) . '</a>';
+	echo '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Verify account.', 'easy-digital-downloads' ) . '</a>';
 	echo "\n\n";
 
 	echo '</p></div>';

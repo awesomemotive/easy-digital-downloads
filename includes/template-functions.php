@@ -57,8 +57,17 @@ function edd_get_purchase_link( $args = array() ) {
 			return false;
 		}
 
-
-		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ) );
+		edd_set_error(
+			'set_checkout',
+			sprintf(
+				__( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ),
+				esc_url( edd_get_admin_url( array(
+					'page'    => 'edd-settings',
+					'tab'     => 'general',
+					'section' => 'pages',
+				) ) )
+			)
+		);
 		edd_print_errors();
 
 		$no_checkout_error_displayed = true;
@@ -1128,7 +1137,7 @@ function edd_pagination( $args = array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	
+
 	/**
 	 * Filter pagination args.
 	 *
