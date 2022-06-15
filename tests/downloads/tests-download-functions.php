@@ -21,7 +21,7 @@ class Tests_Download_Functions extends EDD_UnitTestCase {
 		parent::tearDown();
 
 		EDD_Helper_Download::delete_download( $this->simple_download->ID );
-		EDD_Helper_Download::delete_downlad( $this->variable_download->ID );
+		EDD_Helper_Download::delete_download( $this->variable_download->ID );
 	}
 
 	/**
