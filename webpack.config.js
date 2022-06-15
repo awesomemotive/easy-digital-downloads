@@ -4,8 +4,7 @@
 const path = require( 'path' );
 const webpack = require( 'webpack' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
-const UglifyJS = require( 'uglify-es' );
-const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const MiniCSSExtractPlugin = require( 'mini-css-extract-plugin' );
 const WebpackRTLPlugin = require( 'webpack-rtl-plugin' );
 
@@ -30,10 +29,6 @@ const adminPages = [
 	'upgrades',
 ];
 
-const minifyJs = ( content ) => {
-	return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-};
-
 // Webpack configuration.
 const config = {
 	...defaultConfig,
@@ -48,6 +43,16 @@ const config = {
 		alias: {
 			...defaultConfig.resolve.alias,
 			'@easy-digital-downloads/currency': path.resolve( __dirname, 'assets/js/packages/currency/src/index.js' ),
+		},
+	},
+	optimization: {
+		...defaultConfig.optimization,
+		splitChunks: {
+			...defaultConfig.optimization.splitChunks,
+			// Default configuration does does funky things with cache groups
+			// for entry points containing `-style`. Stop that to avoid changing
+			// filenames incorrectly.
+			cacheGroups: {}
 		},
 	},
 	entry: {
@@ -88,14 +93,13 @@ const config = {
 	},
 	plugins: [
 		new MiniCSSExtractPlugin( {
-			esModule: false,
-			moduleFilename: ( chunk ) =>
-				`assets/css/${ chunk.name.replace( '-style', '' ) }.min.css`
+			filename: ( { chunk } ) =>
+				`assets/css/${ chunk.name.replace( '-style', '' ) }.min.css`,
 		} ),
+		new RemoveEmptyScriptsPlugin(),
 		new WebpackRTLPlugin( {
 			filename: [ /(\.min\.css)/i, '-rtl$1' ],
 		} ),
-		new FixStyleOnlyEntriesPlugin(),
 		new webpack.ProvidePlugin( {
 			$: 'jquery',
 			jQuery: 'jquery'
@@ -118,27 +122,22 @@ const config = {
 				{
 					from: './node_modules/flot/jquery.flot.js',
 					to: 'assets/js/vendor/jquery.flot.min.js',
-					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/flot/jquery.flot.time.js',
 					to: 'assets/js/vendor/jquery.flot.time.min.js',
-					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/flot/jquery.flot.pie.js',
 					to: 'assets/js/vendor/jquery.flot.pie.min.js',
-					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/moment/moment.js',
 					to: 'assets/js/vendor/moment.min.js',
-					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/jquery-creditcardvalidator/jquery.creditCardValidator.js',
 					to: 'assets/js/vendor/jquery.creditcardvalidator.min.js',
-					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/jquery-validation/dist/jquery.validate.min.js',
@@ -153,9 +152,5 @@ const config = {
 		} ),
 	],
 };
-
-// Remove automatic split of style- imports.
-// @link https://github.com/WordPress/gutenberg/blob/master/packages/scripts/config/webpack.config.js#L67-L77
-delete config.optimization.splitChunks.cacheGroups;
 
 module.exports = config;
