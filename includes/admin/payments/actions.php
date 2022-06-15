@@ -220,7 +220,7 @@ function edd_update_payment_details( $data = array() ) {
 		'page'        => 'edd-payment-history',
 		'view'        => 'view-order-details',
 		'edd-message' => 'payment-updated',
-		'id'          => $order_id
+		'id'          => absint( $order_id ),
 	) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
@@ -282,7 +282,7 @@ function edd_trigger_trash_order( $data ) {
 			'order_type'  => esc_attr( $data['order_type'] ),
 		) );
 
-		edd_redirect( esc_url_raw( $redirect ) );
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_trash_order', 'edd_trigger_trash_order' );
@@ -312,7 +312,7 @@ function edd_trigger_restore_order( $data ) {
 			'order_type'  => esc_attr( $data['order_type'] ),
 		) );
 
-		edd_redirect( esc_url_raw( $redirect ) );
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_restore_order', 'edd_trigger_restore_order' );

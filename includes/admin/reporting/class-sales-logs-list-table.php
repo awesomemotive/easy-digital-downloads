@@ -55,7 +55,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 					: 0;
 
 				$title  = $download->get_name( $price_id );
-				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . $title . '</a>';
+				$return = '<a href="' . esc_url( add_query_arg( 'download', $item[ $column_name ] ) ) . '" >' . $title . '</a>';
 				break;
 
 			case 'customer':
@@ -63,7 +63,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 					? $item['customer']->name
 					: '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
 
-				$return = '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['customer']->id ) ) . '">#' . $item['customer']->id . ' ' . $name . '</a>';
+				$return = '<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-customers', 'view' => 'overview', 'id' => absint( $item['customer']->id ) ) ) ) . '">#' . esc_html( $item['customer']->id ) . ' ' . esc_html( $name ) . '</a>';
 				break;
 
 			case 'item_price':
@@ -75,7 +75,7 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 				break;
 
 			case 'ID':
-				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['order_id'] ) . '">' . $item['ID'] . '</a>';
+				$return = '<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-payment-history', 'view' => 'view-order-details', 'id' => absint( $item['order_id'] ) ) ) ) . '">' . absint( $item['ID'] ) . '</a>';
 				break;
 
 			default:

@@ -120,7 +120,7 @@ if ( is_user_logged_in() ):
 										'edd-remove-customer-email'
 									);
 								?>
-								<a href="<?php echo $remove_url ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
+								<a href="<?php echo esc_url( $remove_url ); ?>" class="delete"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></a>
 							</span>
 						</li>
 					<?php endforeach; ?>

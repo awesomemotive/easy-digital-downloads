@@ -1321,7 +1321,7 @@ function edd_render_stats_meta_box() {
 	$earnings_report_url = edd_get_admin_url( array(
 		'page'     => 'edd-reports',
 		'view'     => 'downloads',
-		'products' => $post_id,
+		'products' => absint( $post_id ),
 	) );
 	?>
 
@@ -1338,7 +1338,17 @@ function edd_render_stats_meta_box() {
 	<hr />
 
 	<p class="file-download-log">
-		<span><a href="<?php echo admin_url( 'edit.php?page=edd-tools&view=file_downloads&post_type=download&tab=logs&download=' . $post_id ); ?>"><?php _e( 'View File Download Log', 'easy-digital-downloads' ); ?></a></span><br/>
+		<?php
+		$url = edd_get_admin_url(
+			array(
+				'page'     => 'edd-tools',
+				'view'     => 'file_downloads',
+				'tab'      => 'logs',
+				'download' => absint( $post_id ),
+			)
+		);
+		?>
+		<span><a href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'View File Download Log', 'easy-digital-downloads' ); ?></a></span><br/>
 	</p>
 <?php
 	do_action('edd_stats_meta_box');
@@ -1365,7 +1375,7 @@ function edd_render_promo_metabox() {
 	<p>
 		<?php
 		// Translators: The %s represents the link to the pricing page on the Easy Digital Downloads website.
-		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), $url ) );
+		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), esc_url( $url ) ) );
 		?>
 	</p>
 	<?php

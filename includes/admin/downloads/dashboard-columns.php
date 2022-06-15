@@ -94,7 +94,7 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				$report_url = edd_get_admin_url( array(
 					'page'     => 'edd-reports',
 					'view'     => 'downloads',
-					'products' => $post_id,
+					'products' => absint( $post_id ),
 				) );
 
 				echo '<a href="' . esc_url( $report_url ) . '">';

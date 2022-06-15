@@ -239,7 +239,7 @@ function edd_order_details_customer( $order ) {
 					</em>
 
 					<span class="customer-record">
-						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers' ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
+						<a href="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-customers' ) ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
 					</span>
 				</div>
 			</div>
@@ -362,7 +362,7 @@ function edd_order_details_email( $order ) {
 		<p>
 			<a href="<?php echo esc_url( add_query_arg( array(
 				'edd-action'  => 'email_links',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
 				echo esc_attr( 'edd-select-receipt-email' );
 			} else {
@@ -536,11 +536,31 @@ function edd_order_details_logs( $order ) {
 		 * @param int $order_id ID of the current order.
 		 */
 		do_action( 'edd_view_order_details_logs_before', $order->id );
+		$download_log_url    = edd_get_admin_url(
+			array(
+				'page'    => 'edd-tools',
+				'tab'     => 'logs',
+				'payment' => absint( $order->id ),
+			)
+		);
+		$customer_log_url    = edd_get_admin_url(
+			array(
+				'page'     => 'edd-tools',
+				'tab'      => 'logs',
+				'customer' => absint( $order->customer_id ),
+			)
+		);
+		$customer_orders_url = edd_get_admin_url(
+			array(
+				'page'     => 'edd-payment-history',
+				'customer' => absint( $order->customer_id ),
+			)
+		);
 		?>
 
-		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order->id ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></p>
-		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $order->customer_id ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></p>
-		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order->id ) ) ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo esc_url( $download_log_url ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo esc_url( $customer_log_url ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo esc_url( $customer_orders_url ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></p>
 
 		<?php
 		/**
@@ -1004,7 +1024,7 @@ function edd_order_details_attributes( $order ) {
 								'page'        => 'edd-payment-history',
 								'order_type'  => 'sale',
 								'edd-action'  => 'trash_order',
-								'purchase_id' => $order->id,
+								'purchase_id' => absint( $order->id ),
 							) ),
 							'edd_payment_nonce'
 						);

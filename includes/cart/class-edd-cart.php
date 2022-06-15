@@ -1402,11 +1402,19 @@ class EDD_Cart {
 			$messages = array();
 		}
 
+		$checkout_url = add_query_arg(
+			array(
+				'edd_action'     => 'restore_cart',
+				'edd_cart_token' => sanitize_key( $token ),
+			),
+			edd_get_checkout_uri()
+		);
+
 		// Add the success message
 		$messages['edd_cart_save_successful'] = sprintf(
 			'<strong>%1$s</strong>: %2$s',
 			__( 'Success', 'easy-digital-downloads' ),
-			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
+			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' <a href="' . esc_url( $checkout_url ) . '">' . esc_url( $checkout_url ) . '</a>'
 		);
 
 		// Set these messages in the session

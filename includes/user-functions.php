@@ -586,7 +586,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
 	if( $emails->html ) {
 
-		$user_message .= '<a href="' . $login_url . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+		$user_message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
 
 	} else {
 
@@ -747,11 +747,10 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$message    = sprintf(
-		__( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.\n\nLink missing? Visit the following URL: %s", 'easy-digital-downloads' ),
+		__( "Hello %1$s,\n\nYour account with %2$s needs to be verified before you can access your purchase history. <a href='%3$s'>Click here</a> to verify your account.\n\nLink missing? Visit the following URL: %3$s", 'easy-digital-downloads' ),
 		$name,
 		$from_name,
-		$url,
-		$url
+		esc_url_raw( $url )
 	);
 
 	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
@@ -873,7 +872,7 @@ function edd_validate_user_verification_token( $url = '' ) {
 
 			$link_text = sprintf(
 				__( 'Sorry but your account verification link has expired. <a href="%s">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ),
-				edd_get_user_verification_request_url()
+				esc_url( edd_get_user_verification_request_url() )
 			);
 
 			wp_die( apply_filters( 'edd_verification_link_expired_text', $link_text ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
@@ -1117,7 +1116,7 @@ function edd_show_user_api_key_field( $user ) {
 					$sitename = get_bloginfo( 'name' );
 					$ios_url  = 'edd://new?sitename=' . $sitename . '&siteurl=' . home_url() . '&key=' . $public_key . '&token=' . $token;
 					?>
-					<a class="button-secondary" href="<?php echo $ios_url; ?>"><?php _e( 'Add to iOS App', 'easy-digital-downloads' ); ?></a>
+					<a class="button button-secondary" href="<?php echo esc_url( $ios_url ); ?>"><?php esc_html_e( 'Add to iOS App', 'easy-digital-downloads' ); ?></a>
 				</td>
 			</tr>
 			</tbody>

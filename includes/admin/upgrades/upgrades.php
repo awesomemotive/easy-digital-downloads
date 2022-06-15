@@ -77,10 +77,10 @@ function edd_upgrades_screen() {
 
 			// Redirect URL
 			$redirect = add_query_arg( array(
-				'edd_action' => $action,
-				'step'       => $step,
-				'total'      => $total,
-				'custom'     => $custom
+				'edd_action' => sanitize_key( $action ),
+				'step'       => absint( $step ),
+				'total'      => absint( $total ),
+				'custom'     => absint( $custom ),
 			), admin_url( 'index.php' ) ); ?>
 
 			<div id="edd-upgrade-status">
@@ -104,7 +104,7 @@ function edd_upgrades_screen() {
 			<div id="edd-upgrade-status">
 				<p>
 					<?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?>
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/loading.gif'; ?>" id="edd-upgrade-loader"/>
+					<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/loading.gif' ); ?>" id="edd-upgrade-loader"/>
 				</p>
 			</div>
 

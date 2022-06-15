@@ -84,7 +84,7 @@ class EDD_Payment_History_Table extends List_Table {
 		// Carry the type over to the base URL
 		$this->base_url = edd_get_admin_url( array(
 			'page'       => 'edd-payment-history',
-			'order_type' => $this->type
+			'order_type' => sanitize_key( $this->type ),
 		) );
 	}
 
@@ -514,7 +514,7 @@ class EDD_Payment_History_Table extends List_Table {
 			'view' => 'sale' === $order->type
 				? 'view-order-details'
 				: 'view-refund-details',
-			'id'   => $order->id,
+			'id'   => absint( $order->id ),
 		) );
 
 		// Default row actions
@@ -526,7 +526,7 @@ class EDD_Payment_History_Table extends List_Table {
 		if ( 'sale' === $this->type && 'complete' === $order->status && ! empty( $order->email ) ) {
 			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
 					'edd-action'  => 'email_links',
-					'purchase_id' => $order->id
+					'purchase_id' => absint( $order->id )
 				), $this->base_url ) ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -534,19 +534,19 @@ class EDD_Payment_History_Table extends List_Table {
 		if ( edd_is_order_trashable( $order->id ) ) {
 			$trash_url = wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'trash_order',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			), $this->base_url ), 'edd_payment_nonce' );
 			$row_actions['trash'] = '<a href="' . esc_url( $trash_url ) . '">' . esc_html__( 'Trash', 'easy-digital-downloads' ) . '</a>';
 		} elseif ( edd_is_order_restorable( $order->id ) ) {
 			$restore_url = wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'restore_order',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			), $this->base_url ), 'edd_payment_nonce' );
 			$row_actions['restore'] = '<a href="' . esc_url( $restore_url ) . '">' . esc_html__( 'Restore', 'easy-digital-downloads' ) . '</a>';
 
 			$delete_url = wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'delete_order',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			), $this->base_url ), 'edd_payment_nonce' );
 			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete Permanently', 'easy-digital-downloads' ) . '</a>';
 
@@ -613,10 +613,10 @@ class EDD_Payment_History_Table extends List_Table {
 			$url = edd_get_admin_url( array(
 				'page' => 'edd-customers',
 				'view' => 'overview',
-				'id'   => $customer_id,
+				'id'   => absint( $customer_id ),
 			) );
 
-			$name = '<a href="' . esc_url( $url ) . '">' . $name . '</a>';
+			$name = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
 		} else {
 			$name = '&mdash;';
 		}
@@ -908,7 +908,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 			$args['region'] = $region;
 		}
-		
+
 		/**
 		 * Filters array of arguments for getting orders for the list table, counts, and pagination.
 		 *

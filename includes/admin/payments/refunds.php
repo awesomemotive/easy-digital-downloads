@@ -26,9 +26,9 @@ defined( 'ABSPATH' ) || exit;
 function edd_refund_details_notice( $refund ) {
 	$order_url = edd_get_admin_url(
 		array(
-			'id'        => $refund->parent,
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
+			'id'   => absint( $refund->parent ),
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
 		)
 	);
 ?>
@@ -267,7 +267,7 @@ function edd_refund_details_attributes( $refund ) {
 	$trash_url = wp_nonce_url(
 		edd_get_admin_url( array(
 			'edd-action'  => 'trash_order',
-			'purchase_id' => $refund->id,
+			'purchase_id' => absint( $refund->id ),
 			'order_type'  => 'refund',
 			'page'        => 'edd-payment-history',
 		) ),
@@ -276,9 +276,9 @@ function edd_refund_details_attributes( $refund ) {
 
 	$order_url = edd_get_admin_url(
 		array(
-			'id'        => $refund->parent,
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
+			'id'   => absint( $refund->parent ),
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
 		)
 	);
 
@@ -347,7 +347,7 @@ function edd_refund_details_related_refunds( $refund ) {
 		$refund_url = edd_get_admin_url( array(
 			'page' => 'edd-payment-history',
 			'view' => 'view-refund-details',
-			'id'   => $refund->id
+			'id'   => absint( $refund->id ),
 		) );
 	?>
 		<div class="edd-admin-box-inside">
