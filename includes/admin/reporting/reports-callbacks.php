@@ -93,7 +93,6 @@ function edd_overview_sales_earnings_chart() {
 		foreach ( $results as $result ) {
 
 			$timezone         = new DateTimeZone( 'UTC' );
-			$chart_timezone   = new DateTimeZone( edd_get_timezone_id() );
 			$date_of_db_value = new DateTime( $result->date, $timezone );
 			$date_on_chart    = new DateTime( $chart_dates['start'], $timezone );
 

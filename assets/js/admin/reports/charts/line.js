@@ -37,6 +37,8 @@ export const render = ( config ) => {
 							callback: ( value, index, values ) => {
 								return number.format( value );
 							},
+							suggestedMin: 0,
+							beginAtZero: true,
 						},
 					},
 				],
