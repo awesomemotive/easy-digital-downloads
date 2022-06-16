@@ -88,7 +88,7 @@ function edd_options_page() {
 
 	// Remove tabs that don't have settings fields.
 	foreach ( array_keys( $settings_tabs ) as $settings_tab ) {
-		if ( empty( $all_settings[ $settings_tab ] ) ) {
+		if ( empty( $all_settings[ $settings_tab ] ) && in_array( $settings_tab, array( 'extensions', 'licenses' ), true ) ) {
 			unset( $settings_tabs[ $settings_tab ] );
 		}
 	}
