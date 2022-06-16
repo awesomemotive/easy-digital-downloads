@@ -561,12 +561,13 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  *
  * @since 3.0
  *
- * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
- *                               Default is the current range as derived from the session.
- * @param string          $date  Date string converted to `\EDD\Utils\Date` to anchor calculations to.
+ * @param string          $range          Optional. Range value to generate start and end dates for against `$date`.
+ *                                        Default is the current range as derived from the session.
+ * @param string          $date           Date string converted to `\EDD\Utils\Date` to anchor calculations to.
+ * @param bool            $convert_to_utc Optional. If we should convert the results to UTC for Database Queries
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
-function parse_dates_for_range( $range = null, $date = 'now' ) {
+function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = true ) {
 
 	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
 	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
@@ -672,9 +673,11 @@ function parse_dates_for_range( $range = null, $date = 'now' ) {
 			break;
 	}
 
-	// Convert the values to the UTC equivalent so that we can query the database using UTC.
-	$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
-	$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
+	if ( $convert_to_utc ) {
+		// Convert the values to the UTC equivalent so that we can query the database using UTC.
+		$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
+		$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
+	}
 
 	$dates['range'] = $range;
 
