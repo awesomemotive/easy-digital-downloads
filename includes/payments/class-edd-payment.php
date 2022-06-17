@@ -810,12 +810,6 @@ class EDD_Payment {
 						) );
 						break;
 
-					case 'key':
-						edd_update_order( $this->ID, array(
-							'payment_key' => $this->key,
-						) );
-						break;
-
 					case 'tax_rate':
 						$tax_rate = $this->tax_rate > 1 ? $this->tax_rate : ( $this->tax_rate * 100 );
 						$this->update_meta( '_edd_payment_tax_rate', $tax_rate );
@@ -878,7 +872,6 @@ class EDD_Payment {
 				'downloads'    => $this->downloads,
 				'cart_details' => $this->cart_details,
 				'fees'         => $this->fees,
-				'currency'     => $this->currency,
 				'user_info'    => is_array( $this->user_info ) ? $this->user_info : array(),
 				'date'         => $this->date,
 				'email'        => $this->email,
@@ -902,8 +895,6 @@ class EDD_Payment {
 				'price'        => $this->total,
 				'date'         => $this->date,
 				'user_email'   => $this->email,
-				'purchase_key' => $this->key,
-				'currency'     => $this->currency,
 				'downloads'    => $this->downloads,
 				'user_info'    => array(
 					'id'         => $this->user_id,
@@ -924,9 +915,7 @@ class EDD_Payment {
 			if ( md5( serialize( $this->payment_meta ) ) !== md5( serialize( $merged_meta ) ) ) {
 				// First, update the order.
 				$order_info = array(
-					'payment_key' => $this->key,
-					'currency'    => $merged_meta['currency'],
-					'email'       => $merged_meta['email'],
+					'email' => $merged_meta['email'],
 				);
 
 				if ( isset( $merged_meta['user_info']['id'] ) ) {
