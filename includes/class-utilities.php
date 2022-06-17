@@ -402,30 +402,11 @@ class Utilities {
 
 		// Use GMT offset to calculate
 		} elseif ( is_numeric( $gmt_offset ) ) {
-
-			if ( version_compare( phpversion(), '5.5', '<' ) ) {
-
-				/**
-				 * In the event the user has PHP 5.3 or 5.4 and is using a GMT offset like "GMT-5"
-				 * instead of a Country/City based timezone setting in the WordPress settings, we have to attempt a lookup
-				 * of the string timezone since DateTimeZone doesn't support instantiation from a GMT offset in these versions of PHP.
-				 *
-				 * timezone_name_from_abbr allows us to look up a TimeZone string like "America/Chicago" from the offset, which
-				 * will stop DateTimeZone from causing a fatal error in these circumstances.
-				 */
-				$is_dst = date( 'I' );
-				$retval = timezone_name_from_abbr('', $gmt_offset, $is_dst );
-
-			} else {
-
-				$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
-				$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
-				$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
-				$value   = ! empty( $minutes )  ? "{$hours}:{$minutes}" : $hours;
-				$retval  = "GMT{$math}{$value}";
-
-			}
-
+			$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
+			$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+			$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
+			$value   = ! empty( $minutes )  ? "{$hours}:{$minutes}" : $hours;
+			$retval  = "GMT{$math}{$value}";
 		}
 
 		// Set
