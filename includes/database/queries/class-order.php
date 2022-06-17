@@ -341,7 +341,7 @@ class Order extends Query {
 	 * @since 3.0
 	 *
 	 * @param array $data
-	 * @return bool
+	 * @return false|int  Returns the item ID on success; false on failure.
 	 */
 	public function add_item( $data = array() ) {
 		// Every order should have a currency assigned.
