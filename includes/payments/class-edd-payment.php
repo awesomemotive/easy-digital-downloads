@@ -551,16 +551,6 @@ class EDD_Payment {
 	 * @return int|bool False on failure, the order ID on success.
 	 */
 	private function insert_payment() {
-		if ( empty( $this->key ) ) {
-			$auth_key             = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
-			$this->key            = strtolower( md5( $this->email . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );  // Unique key
-			$this->pending['key'] = $this->key;
-		}
-
-		if ( empty( $this->ip ) ) {
-			$this->ip            = edd_get_ip();
-			$this->pending['ip'] = $this->ip;
-		}
 
 		$payment_data = array(
 			'price'        => $this->total,
@@ -737,12 +727,6 @@ class EDD_Payment {
 
 					case 'transaction_id':
 						$this->update_meta( 'transaction_id', $this->transaction_id );
-						break;
-
-					case 'ip':
-						edd_update_order( $this->ID, array(
-							'ip' => $this->ip,
-						) );
 						break;
 
 					case 'customer_id':

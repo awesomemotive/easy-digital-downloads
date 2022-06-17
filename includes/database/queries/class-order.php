@@ -335,4 +335,31 @@ class Order extends Query {
 		$this->query_var_defaults['product_product_id'] = false;
 	}
 
+	/**
+	 * Adds an item to the database
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $data
+	 * @return bool
+	 */
+	public function add_item( $data = array() ) {
+		// Every order should have a currency assigned.
+		if ( empty( $data['currency'] ) ) {
+			$data['currency'] = edd_get_currency();
+		}
+
+		// If the payment key isn't already created, generate it.
+		if ( empty( $data['payment_key'] ) ) {
+			$email               = ! empty( $data['email'] ) ? $data['email'] : '';
+			$data['payment_key'] = edd_generate_order_payment_key( $email );
+		}
+
+		// Add the IP address if it hasn't been already.
+		if ( empty( $data['ip'] ) ) {
+			$data['ip'] = edd_get_ip();
+		}
+
+		return parent::add_item( $data );
+	}
 }
