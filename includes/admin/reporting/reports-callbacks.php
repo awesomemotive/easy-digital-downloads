@@ -137,7 +137,7 @@ function edd_overview_sales_earnings_chart() {
 
 			$timezone         = new DateTimeZone( 'UTC' );
 			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
-			$date_on_chart    = new DateTime( $chart_dates['start'], $timezone );
+			$date_on_chart    = new DateTime( $dates['start'], $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
