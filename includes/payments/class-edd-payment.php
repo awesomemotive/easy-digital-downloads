@@ -810,6 +810,13 @@ class EDD_Payment {
 						) );
 						break;
 
+					case 'key':
+						edd_update_order( $this->ID, array(
+							'payment_key' => $this->key,
+						) );
+						break;
+
+
 					case 'tax_rate':
 						$tax_rate = $this->tax_rate > 1 ? $this->tax_rate : ( $this->tax_rate * 100 );
 						$this->update_meta( '_edd_payment_tax_rate', $tax_rate );
