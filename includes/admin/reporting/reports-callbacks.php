@@ -24,6 +24,7 @@ function edd_overview_sales_earnings_chart() {
 	global $wpdb;
 
 	$dates        = Reports\get_dates_filter( 'objects' );
+	$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
@@ -89,9 +90,13 @@ function edd_overview_sales_earnings_chart() {
 	$sales    = array();
 	$earnings = array();
 
-	// Initialise all arrays with timestamps and set values to 0.
-	while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-		$timestamp = strtotime( $dates['start']->copy()->format( 'mysql' ) );
+	/**
+	 * Initialise all arrays with timestamps and set values to 0.
+	 *
+	 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
+	 */
+	while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+		$timestamp = strtotime( $chart_dates['start']->copy()->format( 'mysql' ) );
 
 		$sales[ $timestamp ][0] = $timestamp;
 		$sales[ $timestamp ][1] = 0;
@@ -104,7 +109,7 @@ function edd_overview_sales_earnings_chart() {
 
 			$timezone         = new DateTimeZone( 'UTC' );
 			$date_of_db_value = new DateTime( $earnings_result->date, $timezone );
-			$date_on_chart    = new DateTime( $dates['start'], $timezone );
+			$date_on_chart    = new DateTime( $chart_dates['start'], $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -132,7 +137,7 @@ function edd_overview_sales_earnings_chart() {
 
 			$timezone         = new DateTimeZone( 'UTC' );
 			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
-			$date_on_chart    = new DateTime( $dates['start'], $timezone );
+			$date_on_chart    = new DateTime( $chart_dates['start'], $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -157,11 +162,11 @@ function edd_overview_sales_earnings_chart() {
 
 		// Move the chart along to the next hour/day/month to get ready for the next loop.
 		if ( $hour_by_hour ) {
-			$dates['start']->addHour( 1 );
+			$chart_dates['start']->addHour( 1 );
 		} elseif ( $day_by_day ) {
-			$dates['start']->addDays( 1 );
+			$chart_dates['start']->addDays( 1 );
 		} else {
-			$dates['start']->addMonth( 1 );
+			$chart_dates['start']->addMonth( 1 );
 		}
 	}
 

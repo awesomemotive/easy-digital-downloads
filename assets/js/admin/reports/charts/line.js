@@ -37,6 +37,8 @@ export const render = ( config ) => {
 							callback: ( value, index, values ) => {
 								return number.format( value );
 							},
+							suggestedMin: 0,
+							beginAtZero: true,
 						},
 					},
 				],
@@ -46,14 +48,7 @@ export const render = ( config ) => {
 						time: {
 							...config.options.scales.xAxes[0].time,
 							parser: function( date ) {
-								// Use UTC for larger dataset averages.
-								// Specifically this ensures month by month shows the start of the month
-								// if the UTC offset is negative.
-								if ( ! hourByHour && ! dayByDay ) {
-									return moment.utc( date );
-								} else {
-									return moment( date ).utcOffset( utcOffset );
-								}
+								return moment.utc( date );
 							},
 						},
 					},
