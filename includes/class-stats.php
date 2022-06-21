@@ -893,7 +893,7 @@ class Stats {
 
 		$function = $this->get_amount_column_and_function( array(
 			'column_prefix'     => $this->query_vars['table'],
-			'allowed_functions' => array( 'SUM', 'AVG' )
+			'accepted_functions' => array( 'SUM', 'AVG' )
 		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
@@ -1343,7 +1343,7 @@ class Stats {
 		$this->pre_query( $query );
 
 		$function = $this->get_amount_column_and_function( array(
-			'allowed_functions' => array( 'SUM' )
+			'accepted_functions' => array( 'SUM' )
 		) );
 
 		$discount_code = ! empty( $this->query_vars['discount_code'] )
@@ -1405,7 +1405,7 @@ class Stats {
 		$this->pre_query( $query );
 
 		$function = $this->get_amount_column_and_function( array(
-			'allowed_functions' => array( 'AVG' )
+			'accepted_functions' => array( 'AVG' )
 		) );
 
 		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
