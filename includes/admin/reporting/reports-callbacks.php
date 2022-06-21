@@ -27,7 +27,7 @@ function edd_overview_sales_earnings_chart() {
 	$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
+	$column       = Reports\get_taxes_excluded_filter() ? '(total - tax)' : 'total';
 	$currency     = Reports\get_filter_value( 'currencies' );
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
@@ -137,7 +137,7 @@ function edd_overview_sales_earnings_chart() {
 
 			$timezone         = new DateTimeZone( 'UTC' );
 			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
-			$date_on_chart    = new DateTime( $dates['start'], $timezone );
+			$date_on_chart    = new DateTime( $chart_dates['start'], $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
