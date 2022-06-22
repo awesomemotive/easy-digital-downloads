@@ -97,7 +97,7 @@ function edd_admin_header() {
 
 			<?php if ( ! empty( $page_title ) ) : ?>
 			<span class="edd-header-page-title-wrap">
-				<span class="edd-header-seperator">/</span>
+				<span class="edd-header-separator">/</span>
 				<h1 class="edd-header-page-title"><?php echo esc_html( $page_title ); ?></h1>
 			</span>
 			<?php endif; ?>

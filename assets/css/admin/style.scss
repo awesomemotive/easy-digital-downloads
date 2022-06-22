@@ -93,10 +93,6 @@ body.post-type-download #screen-meta {
 	padding: 0 20px;
 }
 
-#edd-header-branding {
-	vertical-align: middle;
-}
-
 #edd-header img {
 	max-width: 300px;
 	margin: 0 0 0 20px;
@@ -106,13 +102,11 @@ body.post-type-download #screen-meta {
 	margin-top: 7px;
 	font-size: 22px;
 	line-height: 28px;
-	vertical-align: top;
-	display: inline;
 	margin-right: auto;
 	padding-left: 7px;
 }
 
-.edd-header-seperator {
+.edd-header-separator {
 	margin-top: -2px;
 	opacity: 0.25;
 }
