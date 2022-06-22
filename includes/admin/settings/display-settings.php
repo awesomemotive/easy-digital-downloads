@@ -47,9 +47,14 @@ function edd_admin_header() {
 			break;
 		default:
 			if ( ! empty( $_GET['page'] ) ) {
-				$page_title = ucfirst( str_replace( 'edd-', '', $current_page ) );
+				$page_title = ucfirst( str_replace( array( 'edd-', 'fes-' ), '', $current_page ) );
 			} else {
-				$page_title = __( 'Downloads', 'easy-digital-downloads' );
+				if ( ! empty( $_GET['post_type'] ) ) {
+					$post_type  = get_post_type_object( $_GET['post_type'] );
+					$page_title = $post_type->labels->name;
+				} else {
+					$page_title = __( 'Downloads', 'easy-digital-downloads' );
+				}
 			}
 
 			break;
