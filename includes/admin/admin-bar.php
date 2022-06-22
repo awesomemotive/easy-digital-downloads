@@ -54,11 +54,12 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'edd-store-menu',
-		'id'     => 'edd-store-prodcuts',
-		'title'  => sprintf( __( 'All %1$s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'id'     => 'edd-store-reports',
+		'title'  => __( 'Store Reports', 'easy-digital-downloads' ),
 		'href'  => add_query_arg(
 			array(
 				'post_type' => 'download',
+				'page'      => 'edd-reports',
 			),
 			admin_url( 'edit.php' )
 		),
@@ -72,19 +73,6 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 			array(
 				'post_type' => 'download',
 				'page'      => 'edd-settings',
-			),
-			admin_url( 'edit.php' )
-		),
-	) );
-
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'edd-store-menu',
-		'id'     => 'edd-store-reports',
-		'title'  => __( 'Store Reports', 'easy-digital-downloads' ),
-		'href'  => add_query_arg(
-			array(
-				'post_type' => 'download',
-				'page'      => 'edd-reports',
 			),
 			admin_url( 'edit.php' )
 		),
@@ -108,6 +96,31 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 			'page' => 'edd-settings',
 			'tab'  => 'gateways'
 		) )
+	) );
+
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'edd-store-menu',
+		'id'     => 'edd-store-prodcuts',
+		'title'  => sprintf( __( 'All %1$s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'href'  => add_query_arg(
+			array(
+				'post_type' => 'download',
+			),
+			admin_url( 'edit.php' )
+		),
+	) );
+
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'edd-store-menu',
+		'id'     => 'edd-store-extensions',
+		'title'  => __( 'Extensions', 'easy-digital-downloads' ),
+		'href'  => add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-addons',
+			),
+			admin_url( 'edit.php' )
+		),
 	) );
 
 	$pass_manager = new \EDD\Admin\Pass_Manager();
@@ -153,10 +166,10 @@ function edd_store_mode_admin_bar_print_link_styles() {
 	} ?>
 
 	<style type="text/css" id="edd-store-menu-styling">
-		#wp-admin-bar-edd-store-menu .edd-mode {
-			font-weight: 600;
+		#wp-admin-bar-edd-store-status .edd-mode {
+			line-height: inherit;
 		}
-		#wp-admin-bar-edd-store-menu .edd-mode-live {
+		#wp-admin-bar-edd-store-status .edd-mode-live {
 			color: #32CD32;
 		}
 		#wp-admin-bar-edd-store-menu .edd-mode-test {
