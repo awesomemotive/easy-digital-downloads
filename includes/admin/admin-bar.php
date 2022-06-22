@@ -59,7 +59,19 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 		'href'  => add_query_arg(
 			array(
 				'post_type' => 'download',
-				'page'      => 'edd-reports',
+			),
+			admin_url( 'edit.php' )
+		),
+	) );
+
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'edd-store-menu',
+		'id'     => 'edd-store-settings',
+		'title'  => __( 'Store Settings', 'easy-digital-downloads' ),
+		'href'  => add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-settings',
 			),
 			admin_url( 'edit.php' )
 		),
