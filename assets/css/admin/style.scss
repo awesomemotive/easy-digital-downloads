@@ -82,7 +82,7 @@ body.post-type-download #screen-meta {
 #edd-header {
 	border-top: 5px solid #0c5d95;
 	border-bottom: 1px solid #c3c4c7;
-	padding: 22px 0px;
+	padding: 20px 0px;
 	margin-left: -20px;
 	background: #fff;
 }
@@ -93,10 +93,31 @@ body.post-type-download #screen-meta {
 	padding: 0 20px;
 }
 
+#edd-header-branding {
+	vertical-align: middle;
+}
+
 #edd-header img {
-	display: block;
 	max-width: 300px;
 	margin: 0 0 0 20px;
+}
+
+.edd-header-page-title-wrap {
+	margin-top: 7px;
+	font-size: 22px;
+	line-height: 28px;
+	vertical-align: top;
+	display: inline;
+	margin-right: auto;
+	padding-left: 7px;
+}
+
+.edd-header-seperator {
+	margin-top: -2px;
+}
+
+.edd-header-page-title {
+	font-weight: 400;
 }
 
 .no-js #edd-header-actions {
@@ -115,6 +136,7 @@ body.post-type-download #screen-meta {
 	margin-left: 10px;
 	cursor: pointer;
 	transition: background-color .2s ease;
+	margin-top: 6px;
 }
 
 button.edd-round {
