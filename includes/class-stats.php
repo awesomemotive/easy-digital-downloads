@@ -735,7 +735,7 @@ class Stats {
 				$total .= '<span class="tile-relative">' . $relative_output . '</span>';
 			}
 		} else {
-			$total = $this->maybe_format( $total );
+			$total = $this->maybe_format( -( $total ) );
 		}
 
 		// Reset query vars.
