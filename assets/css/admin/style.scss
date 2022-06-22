@@ -177,6 +177,17 @@ button.edd-round:active {
 	height: 20px;
 }
 
+@media screen and (max-width: 840px) {
+	.edd-header-seperator{
+		display: none;
+	}
+
+	#edd-header img {
+		display: none;
+	}
+}
+
+
 .edd_datepicker {
 	height: 29px;
 }
