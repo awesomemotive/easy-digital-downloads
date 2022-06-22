@@ -21,12 +21,79 @@ function edd_admin_header() {
 	if ( ! edd_is_admin_page( '', '', false ) ) {
 		return;
 	}
-
 	$numberNotifications = EDD()->notifications->countActiveNotifications();
+	$current_page        = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
+
+	$page_title = '';
+	switch( $current_page ) {
+		case 'edd-settings':
+			$page_title = __( 'Settings', 'easy-digital-downloads' );
+			break;
+		case 'edd-reports':
+			$page_title = __( 'Reports', 'easy-digital-downloads' );
+			break;
+		case 'edd-payment-history':
+			$page_title = __( 'Orders', 'easy-digital-downloads' );
+			break;
+		case 'edd-discounts':
+			$page_title = __( 'Discounts', 'easy-digital-downloads' );
+			break;
+		case 'edd-customers':
+			$page_title = __( 'Customers', 'easy-digital-downloads' );
+			break;
+		case 'edd-tools':
+			$page_title = __( 'Tools', 'easy-digital-downloads' );
+			break;
+		default:
+			if ( ! empty( $_GET['page'] ) ) {
+				$page_title = ucfirst( str_replace( 'edd-', '', $current_page ) );
+			} else {
+				$page_title = __( 'Downloads', 'easy-digital-downloads' );
+			}
+
+			break;
+	}
+
+	$page_title = apply_filters( 'edd_settings_page_title', $page_title, $current_page );
+	if ( ! empty( $page_title ) ) {
+		?>
+		<style>
+			.wrap > h1,
+			.wrap h1.wp-heading-inline,
+			.page-title-action {
+				display: none;
+			}
+		</style>
+		<script>
+		jQuery(document).ready(function($){
+			const coreAddNew = $('.page-title-action');
+			const eddAddNew  = $('.add-new-h2');
+
+			if ( coreAddNew.length ) {
+				coreAddNew.appendTo('.edd-header-page-title-wrap').addClass('button').show();
+			}
+
+			if ( eddAddNew.length ) {
+				eddAddNew.appendTo('.edd-header-page-title-wrap').addClass('button');
+			}
+		});
+		</script>
+		<?php
+	}
+
 	?>
 	<div id="edd-header" class="edd-header">
 		<div id="edd-header-wrapper">
-			<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>" />
+			<span id="edd-header-branding">
+				<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>" />
+			</span>
+
+			<?php if ( ! empty( $page_title ) ) : ?>
+			<span class="edd-header-page-title-wrap">
+				<span class="edd-header-seperator">/</span>
+				<span class="edd-header-page-title"><?php echo esc_html( $page_title ); ?></span>
+			</span>
+			<?php endif; ?>
 
 			<div id="edd-header-actions">
 				<button
