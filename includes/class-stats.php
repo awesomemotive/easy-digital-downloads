@@ -2223,7 +2223,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND email = %s', sanitize_email( $this->query_vars['email'] ) )
 			: '';
 
-		if ( 'AVG' === $function ) {
+		if ( 'AVG(id)' === $function ) {
 			$sql = "SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS average
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
