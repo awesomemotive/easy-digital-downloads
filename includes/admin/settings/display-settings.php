@@ -61,6 +61,7 @@ function edd_admin_header() {
 		<style>
 			.wrap > h1,
 			.wrap h1.wp-heading-inline,
+			.wrap h2,
 			.page-title-action {
 				display: none;
 			}
