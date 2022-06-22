@@ -42,12 +42,10 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 		array(
 			'id'    => 'edd-store-menu',
 			'title' => 'EDD' . $indicator,
-			'href'  => add_query_arg(
+			'href'  => edd_get_admin_url(
 				array(
-					'post_type' => 'download',
-					'page'      => 'edd-reports',
-				),
-				admin_url( 'edit.php' )
+					'page' => 'edd-reports',
+				)
 			),
 		)
 	);
@@ -56,12 +54,10 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 		'parent' => 'edd-store-menu',
 		'id'     => 'edd-store-reports',
 		'title'  => __( 'Store Reports', 'easy-digital-downloads' ),
-		'href'  => add_query_arg(
+		'href'  => edd_get_admin_url(
 			array(
-				'post_type' => 'download',
-				'page'      => 'edd-reports',
-			),
-			admin_url( 'edit.php' )
+				'page' => 'edd-reports',
+			)
 		),
 	) );
 
@@ -69,12 +65,10 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 		'parent' => 'edd-store-menu',
 		'id'     => 'edd-store-settings',
 		'title'  => __( 'Store Settings', 'easy-digital-downloads' ),
-		'href'  => add_query_arg(
+		'href'  => edd_get_admin_url(
 			array(
-				'post_type' => 'download',
-				'page'      => 'edd-settings',
-			),
-			admin_url( 'edit.php' )
+				'page' => 'edd-settings',
+			)
 		),
 	) );
 
@@ -92,34 +86,29 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 		'parent' => 'edd-store-menu',
 		'id'     => 'edd-store-status',
 		'title'  => sprintf( __( 'Store Status: %s', 'easy-digital-downloads' ), '<span class="edd-mode edd-mode-' . esc_attr( $mode ) . '">' . $text . '</span>' ),
-		'href'   => edd_get_admin_url( array(
-			'page' => 'edd-settings',
-			'tab'  => 'gateways'
-		) )
+		'href'  => edd_get_admin_url(
+			array(
+				'page' => 'edd-settings',
+				'tab'  => 'gateways',
+			)
+		),
 	) );
 
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'edd-store-menu',
 		'id'     => 'edd-store-prodcuts',
 		'title'  => sprintf( __( 'All %1$s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'href'  => add_query_arg(
-			array(
-				'post_type' => 'download',
-			),
-			admin_url( 'edit.php' )
-		),
+		'href'  => edd_get_admin_url(),
 	) );
 
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'edd-store-menu',
 		'id'     => 'edd-store-extensions',
 		'title'  => __( 'Extensions', 'easy-digital-downloads' ),
-		'href'  => add_query_arg(
+		'href'  => edd_get_admin_url(
 			array(
-				'post_type' => 'download',
-				'page'      => 'edd-addons',
-			),
-			admin_url( 'edit.php' )
+				'page' => 'edd-addons',
+			)
 		),
 	) );
 
@@ -144,10 +133,12 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 			'id'     => 'edd-is-dev',
 			'title'  => sprintf( __( 'Development Domain %s', 'easy-digital-downloads' ), '<span class="edd-mode">' . $is_dev . '</span>' ),
 			'parent' => 'edd-store-menu',
-			'href'   => edd_get_admin_url( array(
-				'page' => 'edd-settings',
-				'tab'  => 'gateways'
-			) )
+			'href'  => edd_get_admin_url(
+				array(
+					'page' => 'edd-settings',
+					'tab'  => 'gateways',
+				)
+			),
 		) );
 	}
 }
