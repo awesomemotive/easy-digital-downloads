@@ -114,10 +114,15 @@ body.post-type-download #screen-meta {
 
 .edd-header-seperator {
 	margin-top: -2px;
+	opacity: 0.25;
 }
 
 .edd-header-page-title {
 	font-weight: 400;
+}
+
+.edd-header-page-title-wrap .button {
+	margin-left: 5px;
 }
 
 .no-js #edd-header-actions {
