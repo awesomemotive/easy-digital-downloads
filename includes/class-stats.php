@@ -2211,18 +2211,22 @@ class Stats {
 			$total    = floatval( $result->total );
 			$relative = floatval( $result->relative );
 
+			$total_output    = $this->maybe_format( $total );
+			$relative_output = '';
+
 			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( floatval( 0 ) === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . $this->maybe_format( $total )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . $this->maybe_format( $total );
-			} else {
+				$relative_output = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} elseif ( floatval( 0 ) !== $relative ) {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
-				$total = 0 < $percentage_change
+				$relative_output = 0 < $percentage_change
 					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
 					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
+			}
+
+			$total = $total_output;
+			if ( ! empty( $relative_output ) ) {
+				$total .= '<span class="tile-relative">' . $relative_output . '</span>';
 			}
 		} else {
 			$total = $this->maybe_format( $total );
