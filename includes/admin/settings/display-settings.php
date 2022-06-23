@@ -60,7 +60,7 @@ function edd_admin_header() {
 			break;
 	}
 
-	$page_title = apply_filters( 'edd_settings_page_title', $page_title, $current_page );
+	$page_title = apply_filters( 'edd_settings_page_title', $page_title, $current_page, $is_single_view );
 	if ( ! empty( $page_title ) && empty( $is_single_view ) ) {
 		?>
 		<style>
@@ -98,7 +98,8 @@ function edd_admin_header() {
 			<?php if ( ! empty( $page_title ) ) : ?>
 			<span class="edd-header-page-title-wrap">
 				<span class="edd-header-separator">/</span>
-				<h1 class="edd-header-page-title"><?php echo esc_html( $page_title ); ?></h1>
+				<?php $element = true === $is_single_view ? 'span' : 'h1'; ?>
+				<<?php echo $element; ?> class="edd-header-page-title"><?php echo esc_html( $page_title ); ?></<?php echo $element; ?>>
 			</span>
 			<?php endif; ?>
 
