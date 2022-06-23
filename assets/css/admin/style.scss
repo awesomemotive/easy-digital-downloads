@@ -2437,20 +2437,14 @@ span.edd-to-and-from--separator {
 	color: #999;
 }
 
-.edd-reports-tile .tile-relative span.dashicons-arrow-down {
-	color: #FF6666;
-}
-
-.edd-reports-tile .tile-relative span.dashicons-arrow-up {
-	color: #66FF66;
-}
-
+.edd-reports-tile .tile-relative span.dashicons-arrow-down,
 .edd-reports-tile .tile-relative span.dashicons-arrow-up.reverse {
-	color: #FF6666;
+	color: $wp-red-50;
 }
 
+.edd-reports-tile .tile-relative span.dashicons-arrow-up,
 .edd-reports-tile .tile-relative span.dashicons-arrow-down.reverse {
-	color: #66FF66;
+	color: $wp-green-50;
 }
 
 .edd-reports-tile .tile-compare {
