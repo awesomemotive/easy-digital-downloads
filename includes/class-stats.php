@@ -677,7 +677,7 @@ class Stats {
 		}
 
 		/*
-		 * By default we're checking sales only and excluding refunds. This gives us gross order earnings.
+		 * By default we're checking refunds only and excluding any other types. This gives us gross refund amounts.
 		 * This may be overridden in $query parameters that get passed through.
 		 */
 		$this->query_vars['type']   = 'refund';
@@ -2307,7 +2307,7 @@ class Stats {
 				$sql = "SELECT COUNT(id) AS total, IFNULL(relative, 0) AS relative
 						FROM {$this->query_vars['table']}
 						CROSS JOIN (
-							SELECT COUNT(id) AS relative
+							SELECT COUNT(id), IFNULL(relative, 0) AS relative
 							FROM {$this->query_vars['table']}
 							WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 						) o
