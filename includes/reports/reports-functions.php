@@ -392,7 +392,7 @@ function get_filter_value( $filter ) {
 		// Handle dates.
 		case 'dates':
 			if ( ! isset( $_GET['range'] ) ) {
-				$default = 'last_30_days';
+				$default = 'this_month';
 				$dates   = parse_dates_for_range( $default );
 				$value   = array(
 					'range' => $default,
@@ -708,7 +708,7 @@ function get_dates_filter_range() {
 		 * @param string $range Date range as derived from the session. Default 'last_30_days'
 		 * @param array  $dates Dates filter data array.
 		 */
-		$range = apply_filters( 'edd_get_report_dates_default_range', 'last_30_days', $dates );
+		$range = apply_filters( 'edd_get_report_dates_default_range', 'this_month', $dates );
 	}
 
 	/**
@@ -762,8 +762,6 @@ function get_dates_filter_day_by_day() {
 	switch ( $dates['range'] ) {
 		case 'today':
 		case 'yesterday':
-		case 'last_quarter':
-		case 'this_quarter':
 		case 'this_year':
 		case 'last_year':
 			$day_by_day = false;

@@ -2344,7 +2344,7 @@ span.edd-to-and-from--separator {
 
 .edd-reports-tile {
 	text-align: center;
-	padding: 30px 10px;
+	padding: 20px 10px 35px 10px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -2373,7 +2373,7 @@ span.edd-to-and-from--separator {
 	font-size: 11px;
 	font-weight: normal;
 	color: #888;
-	order: 2;
+	order: 0;
 	margin-top: 3px;
 }
 
@@ -2412,6 +2412,39 @@ span.edd-to-and-from--separator {
 
 .edd-reports-tile .tile-value.tile-url {
 	font-size: 1.5em;
+}
+
+.edd-reports-tile .tile-relative {
+	text-align: center;
+	font-size: 11px;
+	font-weight: normal;
+	color: #888;
+	order: 2;
+	margin-top: 3px;
+	display: block;
+}
+
+.edd-reports-tile .tile-relative span.dashicons {
+	display: inline-block;
+	font-size: 22px;
+	line-height: 20px;
+	height: 20px;
+	width: 20px;
+	position: relative;
+	top: -4px;
+	left: 3px;
+	margin-left: 0px;
+	color: #999;
+}
+
+.edd-reports-tile .tile-relative span.dashicons-arrow-down,
+.edd-reports-tile .tile-relative span.dashicons-arrow-up.reverse {
+	color: $wp-red-50;
+}
+
+.edd-reports-tile .tile-relative span.dashicons-arrow-up,
+.edd-reports-tile .tile-relative span.dashicons-arrow-down.reverse {
+	color: $wp-green-50;
 }
 
 .edd-reports-tile .tile-compare {
