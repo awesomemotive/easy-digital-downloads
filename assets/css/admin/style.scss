@@ -91,6 +91,7 @@ body.post-type-download #screen-meta {
 	display: flex;
 	justify-content: space-between;
 	padding: 0 20px;
+	align-items: center;
 }
 
 #edd-header img {
@@ -100,9 +101,8 @@ body.post-type-download #screen-meta {
 }
 
 .edd-header-page-title-wrap {
-	margin-top: 7px;
-	font-size: 22px;
-	line-height: 28px;
+	font-size: 1.75em;
+	margin-top: -5px;
 	margin-right: auto;
 	padding-left: 7px;
 }
@@ -114,8 +114,8 @@ body.post-type-download #screen-meta {
 
 .edd-header-page-title {
 	font-weight: 400;
-	font-size: 22px;
-	line-height: 28px;
+	font-size: 1em;
+	line-height: 1.3em;
 	display: inline;
 }
 
@@ -139,7 +139,6 @@ body.post-type-download #screen-meta {
 	margin-left: 10px;
 	cursor: pointer;
 	transition: background-color .2s ease;
-	margin-top: 6px;
 }
 
 button.edd-round {
