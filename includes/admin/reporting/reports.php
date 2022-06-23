@@ -2261,9 +2261,9 @@ function edd_register_customer_report( $reports ) {
 			'priority'  => 40,
 			'endpoints' => array(
 				'tiles'  => array(
+					'new_customer_growth',
 					'average_revenue_per_customer',
 					'average_number_of_orders_per_customer',
-					'average_customer_revenue'
 				),
 				'tables' => array(
 					'top_five_customers',
@@ -2271,6 +2271,24 @@ function edd_register_customer_report( $reports ) {
 				),
 				'charts' => array(
 					'new_customers',
+				),
+			),
+		) );
+
+		$reports->register_endpoint( 'new_customer_growth', array(
+			'label' => __( 'New Customers', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $dates ) {
+						$stats = new EDD\Stats();
+						return $stats->get_customer_count( array(
+							'range'    => $dates['range'],
+							'relative' => true,
+						) );
+					},
+					'display_args'  => array(
+						'comparison_label' => $label,
+					),
 				),
 			),
 		) );
@@ -2296,13 +2314,15 @@ function edd_register_customer_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'average_number_of_orders_per_customer', array(
-			'label' => __( 'Average Number of Orders', 'easy-digital-downloads' ),
+			'label' => __( 'Average Orders per Customer', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return $stats->get_customer_order_count( array(
+							'range'    => $dates['range'],
 							'function' => 'AVG',
+							'relative' => true,
 						) );
 					},
 				),
