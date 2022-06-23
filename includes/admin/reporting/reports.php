@@ -313,7 +313,7 @@ function edd_register_overview_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
 						$stats  = new EDD\Stats();
-						$amount = $stats->get_order_refund_amount( array(
+						return $stats->get_order_refund_amount( array(
 							'range'         => $dates['range'],
 							'function'      => 'SUM',
 							'exclude_taxes' => $exclude_taxes,
@@ -322,7 +322,6 @@ function edd_register_overview_report( $reports ) {
 							'output'        => 'formatted',
 						) );
 
-						return esc_html( $amount );
 					},
 					'display_args'  => array(
 						'comparison_label' => $label,
@@ -953,14 +952,12 @@ function edd_register_refunds_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
 						$stats  = new EDD\Stats();
-						$amount = $stats->get_order_refund_amount( array(
+						return $stats->get_order_refund_amount( array(
 							'range'         => $dates['range'],
 							'exclude_taxes' => $exclude_taxes,
 							'output'        => 'formatted',
 							'currency'      => $currency
 						) );
-
-						return esc_html( $amount );
 					},
 					'display_args'  => array(
 						'comparison_label' => $label,
