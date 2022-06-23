@@ -762,8 +762,6 @@ function get_dates_filter_day_by_day() {
 	switch ( $dates['range'] ) {
 		case 'today':
 		case 'yesterday':
-		case 'last_quarter':
-		case 'this_quarter':
 		case 'this_year':
 		case 'last_year':
 			$day_by_day = false;
