@@ -82,7 +82,7 @@ body.post-type-download #screen-meta {
 #edd-header {
 	border-top: 5px solid #0c5d95;
 	border-bottom: 1px solid #c3c4c7;
-	padding: 22px 0px;
+	padding: 20px 0px;
 	margin-left: -20px;
 	background: #fff;
 }
@@ -91,12 +91,36 @@ body.post-type-download #screen-meta {
 	display: flex;
 	justify-content: space-between;
 	padding: 0 20px;
+	align-items: center;
 }
 
 #edd-header img {
 	display: block;
 	max-width: 300px;
 	margin: 0 0 0 20px;
+}
+
+.edd-header-page-title-wrap {
+	font-size: 1.75em;
+	margin-top: -5px;
+	margin-right: auto;
+	padding-left: 7px;
+}
+
+.edd-header-separator {
+	margin-top: -2px;
+	opacity: 0.25;
+}
+
+.edd-header-page-title {
+	font-weight: 400;
+	font-size: 1em;
+	line-height: 1.3em;
+	display: inline;
+}
+
+.edd-header-page-title-wrap .button {
+	margin-left: 5px;
 }
 
 .no-js #edd-header-actions {
@@ -154,6 +178,17 @@ button.edd-round:active {
 	width: 20px;
 	height: 20px;
 }
+
+@media screen and (max-width: 840px) {
+	.edd-header-separator{
+		display: none;
+	}
+
+	#edd-header img {
+		display: none;
+	}
+}
+
 
 .edd_datepicker {
 	height: 29px;
