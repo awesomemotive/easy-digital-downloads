@@ -324,7 +324,7 @@ function edd_get_registered_settings() {
 					'entity_type' => array(
 						'id'          => 'entity_type',
 						'name'        => __( 'Business Type', 'easy-digital-downloads' ),
-						'desc'        => __( 'Choose "Individual" if you do not have an official/legal business ID, or "Company" if a regisitered business entity exists.', 'easy-digital-downloads' ),
+						'desc'        => __( 'Choose "Individual" if you do not have an official/legal business ID, or "Company" if a registered business entity exists.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => array(
 							'individual' => esc_html__( 'Individual', 'easy-digital-downloads' ),
