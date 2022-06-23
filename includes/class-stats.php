@@ -2291,20 +2291,69 @@ class Stats {
 			? $this->get_db()->prepare( 'AND email = %s', sanitize_email( $this->query_vars['email'] ) )
 			: '';
 
-		if ( 'AVG' === $function ) {
-			$sql = "SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS average
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			if ( 'AVG(id)' === $function ) {
+				$sql = "SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS total, IFNULL(relative, 0) AS relative
+						FROM {$this->query_vars['table']}
+						CROSS JOIN (
+							SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS relative
+							FROM {$this->query_vars['table']}
+							WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						) o
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			} else {
+				$sql = "SELECT COUNT(id) AS total, IFNULL(relative, 0) AS relative
+						FROM {$this->query_vars['table']}
+						CROSS JOIN (
+							SELECT COUNT(id) AS relative
+							FROM {$this->query_vars['table']}
+							WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						) o
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			}
 		} else {
-			$sql = "SELECT COUNT(id)
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			if ( 'AVG(id)' === $function ) {
+				$sql = "SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS total
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			} else {
+				$sql = "SELECT COUNT(id) as total
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			}
 		}
-		$result = $this->get_db()->get_var( $sql );
+		$result = $this->get_db()->get_row( $sql );
 
 		$total = null === $result
 			? 0
-			: absint( $result );
+			: absint( $result->total );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = absint( $result->total );
+			$relative = absint( $result->relative );
+
+			$total_output    = $this->maybe_format( $total );
+			$relative_output = '';
+
+			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
+				$relative_output = esc_html__( 'No Change', 'easy-digital-downloads' );
+			} else if ( 0 !== $relative ) {
+				$percentage_change = ( $total - $relative ) / $relative * 100;
+
+				$relative_output = 0 < $percentage_change
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
+			}
+
+			$total = $total_output;
+			if ( ! empty( $relative_output ) ) {
+				$total .= '<span class="tile-relative">' . $relative_output . '</span>';
+			}
+		} else {
+			$total = $this->maybe_format( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();
