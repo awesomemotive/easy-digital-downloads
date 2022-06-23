@@ -27,6 +27,7 @@ export const render = ( config ) => {
 		...config,
 		options: {
 			...config.options,
+			maintainAspectRatio: false,
 			tooltips: tooltipConfig( config ),
 			scales: {
 				...config.options.scales,
