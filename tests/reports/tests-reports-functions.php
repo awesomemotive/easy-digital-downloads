@@ -345,9 +345,9 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_dates_filter_should_return_strings() {
 		$expected = array(
-			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
-			'range' => 'last_30_days',
+			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'range' => 'this_month',
 		);
 
 		$result = get_dates_filter();
@@ -650,11 +650,11 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
-	public function test_parse_dates_for_range_with_invalid_range_no_report_id_no_range_var_should_use_last_30_days() {
+	public function test_parse_dates_for_range_with_invalid_range_no_report_id_no_range_var_should_use_this_month() {
 		$expected = array(
-			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
-			'range' => 'last_30_days',
+			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'range' => 'this_month',
 		);
 
 		$result = parse_dates_for_range( 'fake' );
@@ -671,7 +671,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_no_preset_range_should_defualt_to_last_30_days() {
-		$this->assertSame( 'last_30_days', get_dates_filter_range() );
+		$this->assertSame( 'this_month', get_dates_filter_range() );
 	}
 
 	/**
@@ -684,14 +684,14 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( 'last_quarter', get_dates_filter_range() );
 	}
 
-	public function test_no_filters_should_default_to_last_30_days() {
+	public function test_no_filters_should_default_to_this_month() {
 		// Default to last 30 days for filter value.
-		$dates = parse_dates_for_range( 'last_30_days' );
+		$dates = parse_dates_for_range( 'this_month' );
 
 		$expected = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
 			'to'    => $dates['end']->format( 'Y-m-d' ),
-			'range' => 'last_30_days',
+			'range' => 'this_month',
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
