@@ -213,7 +213,6 @@ function edd_register_overview_report( $reports ) {
 					'overview_average_order_value',
 					'overview_new_customers',
 					'overview_refunded_amount',
-					'overview_refund_rate',
 				),
 				'charts' => array(
 					'overview_sales_earnings_chart',
@@ -322,26 +321,6 @@ function edd_register_overview_report( $reports ) {
 							'output'        => 'formatted',
 						) );
 
-					},
-					'display_args'  => array(
-						'comparison_label' => $label,
-					),
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'overview_refund_rate', array(
-			'label' => __( 'Refund Rate', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () use ( $dates, $currency ) {
-						$stats = new EDD\Stats();
-						return $stats->get_refund_rate( array(
-							'range'    => $dates['range'],
-							'output'   => 'formatted',
-							'currency' => $currency,
-							'relative' => true,
-						) );
 					},
 					'display_args'  => array(
 						'comparison_label' => $label,
