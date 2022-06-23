@@ -99,7 +99,7 @@ function edd_admin_header() {
 			<span class="edd-header-page-title-wrap">
 				<span class="edd-header-separator">/</span>
 				<?php $element = true === $is_single_view ? 'span' : 'h1'; ?>
-				<<?php echo $element; ?> class="edd-header-page-title"><?php echo esc_html( $page_title ); ?></<?php echo $element; ?>>
+				<<?php esc_attr_e( $element ); ?> class="edd-header-page-title"><?php echo esc_html( $page_title ); ?></<?php esc_attr_e( $element ); ?>>
 			</span>
 			<?php endif; ?>
 
