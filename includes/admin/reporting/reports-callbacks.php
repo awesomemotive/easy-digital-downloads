@@ -35,11 +35,13 @@ function edd_overview_sales_earnings_chart() {
 	}
 
 	$sql_clauses = array(
-		'select'  => 'date_created AS date',
-		'where'   => '',
-		'groupby' => 'DATE(date_created)',
-		'orderby' => 'DATE(date_created)',
+		'select' => 'date_created AS date',
+		'where'  => '',
 	);
+
+	// The groupby and orderby need to also support hours.
+	$sql_clauses['groupby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
+	$sql_clauses['orderby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
 
 	if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
 		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
@@ -192,11 +194,13 @@ function edd_overview_refunds_chart() {
 	$currency     = Reports\get_filter_value( 'currencies' );
 
 	$sql_clauses = array(
-		'select'  => 'date_created AS date',
-		'groupby' => 'DATE(date_created)',
-		'orderby' => 'DATE(date_created)',
-		'where'   => ''
+		'select' => 'date_created AS date',
+		'where'  => '',
 	);
+
+	// The groupby and orderby need to also support hours.
+	$sql_clauses['groupby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
+	$sql_clauses['orderby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
 		$column = sprintf( '(%s) / rate', $column );
