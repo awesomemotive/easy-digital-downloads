@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-06-23 20:23:48+00:00\n"
+"POT-Creation-Date: 2022-06-24 03:14:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4682,7 +4682,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:327
 msgid ""
 "Choose \"Individual\" if you do not have an official/legal business ID, or "
-"\"Company\" if a regisitered business entity exists."
+"\"Company\" if a registered business entity exists."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:330
