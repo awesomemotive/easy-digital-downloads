@@ -1746,5 +1746,8 @@ function edd_v30_is_migration_complete() {
 	// If the migration is complete, delete the pending option.
 	delete_option( 'edd_v3_migration_pending' );
 
+	// Delete the CLI option as well.
+	delete_option( 'edd_v30_cli_migration_running' );
+
 	return true;
 }

@@ -1920,7 +1920,7 @@ class EDD_API {
 
 			case 'json' :
 
-				header( 'Content-Type: application/json charset=' . get_option( 'blog_charset' ) );
+				header( 'Content-Type: application/json' );
 				if ( ! empty( $this->pretty_print ) ) {
 					echo json_encode( $this->data, $this->pretty_print );
 				} else {
