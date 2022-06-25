@@ -687,7 +687,7 @@ function edd_get_user_verification_url( $user_id = 0 ) {
 
 	$base_url = add_query_arg( array(
 		'edd_action' => 'verify_user',
-		'user_id'    => $user_id,
+		'user_id'    => absint( $user_id ),
 		'ttl'        => strtotime( '+24 hours' )
 	), untrailingslashit( edd_get_user_verification_page() ) );
 

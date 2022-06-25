@@ -201,10 +201,13 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		EDD()->session->set( 'edd_resume_payment', $payment );
 
 		// Get the success url
-		$return_url = add_query_arg( array(
+		$return_url = add_query_arg(
+			array(
 				'payment-confirmation' => 'paypal',
-				'payment-id' => $payment
-			), get_permalink( edd_get_option( 'success_page', false ) ) );
+				'payment-id'           => absint( $payment ),
+			),
+			get_permalink( edd_get_option( 'success_page', false ) )
+		);
 
 		// Get the PayPal redirect uri
 		$paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
@@ -223,7 +226,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'charset'       => get_bloginfo( 'charset' ),
 			'custom'        => $payment,
 			'rm'            => '2',
-			'return'        => $return_url,
+			'return'        => esc_url_raw( $return_url ),
 			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
 			'notify_url'    => $listener_url,
 			'image_url'     => edd_get_paypal_image_url(),

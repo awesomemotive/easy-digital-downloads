@@ -280,12 +280,10 @@ class Extension_Manager {
 
 		// Prepare variables.
 		$url = esc_url_raw(
-			add_query_arg(
+			edd_get_admin_url(
 				array(
-					'post_type' => 'download',
-					'page'      => 'edd-addons',
-				),
-				admin_url( 'edit.php' )
+					'page' => 'edd-addons',
+				)
 			)
 		);
 

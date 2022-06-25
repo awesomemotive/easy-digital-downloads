@@ -53,7 +53,7 @@ function edd_add_ons_page() {
 		} else {
 			$tab_url = add_query_arg( array(
 				'settings-updated' => false,
-				'tab'              => $tab_id
+				'tab'              => sanitize_key( $tab_id ),
 			) );
 		}
 
@@ -114,7 +114,7 @@ function edd_add_ons_page() {
 					'utm_source'   => 'add-ons-feed',
 					'utm_medium'   => 'wp-admin',
 					'utm_campaign' => 'bfcm2019',
-					'utm_content'  => 'first-feed-element-' . $active_tab,
+					'utm_content'  => 'first-feed-element-' . sanitize_key( $active_tab ),
 				);
 				$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
 				?>
@@ -167,7 +167,7 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 
 		// Popular
 		if ( 'popular' !== $tab ) {
-			$url = add_query_arg( array( 'display' => $tab ), $url );
+			$url = add_query_arg( array( 'display' => sanitize_key( $tab ) ), $url );
 		}
 
 		// Remote request

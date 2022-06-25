@@ -150,14 +150,12 @@ function edd_options_page_primary_nav( $tabs, $active_tab = '' ) {
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab_name ) {
-			$tab_url = add_query_arg(
+			$tab_url = edd_get_admin_url(
 				array(
 					'settings-updated' => false,
-					'post_type'        => 'download',
 					'page'             => 'edd-settings',
-					'tab'              => $tab_id,
-				),
-				edd_get_admin_base_url()
+					'tab'              => sanitize_key( $tab_id ),
+				)
 			);
 
 			// Remove the section from the tabs so we always end up at the main section
@@ -320,7 +318,7 @@ function edd_options_sidebar() {
 		'utm_source'   => 'settings',
 		'utm_medium'   => 'wp-admin',
 		'utm_campaign' => 'bfcm2019',
-		'utm_content'  => 'sidebar-promo-' . $active_tab . '-' . $active_section,
+		'utm_content'  => sanitize_key( 'sidebar-promo-' . $active_tab . '-' . $active_section ),
 	);
 	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
 	?>

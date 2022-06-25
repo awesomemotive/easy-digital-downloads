@@ -572,8 +572,8 @@ class EDD_Cart {
 			: edd_get_current_page_url();
 
 		$remove_url = edd_add_cache_busting( add_query_arg( array(
-			'cart_item'  => $cart_key,
-			'edd_action' => 'remove'
+			'cart_item'  => urlencode( $cart_key ),
+			'edd_action' => 'remove',
 		), $current_page ) );
 
 		return apply_filters( 'edd_remove_item_url', $remove_url );
@@ -594,7 +594,7 @@ class EDD_Cart {
 			: edd_get_current_page_url();
 
 		$remove_url = add_query_arg( array(
-			'fee'        => $fee_id,
+			'fee'        => urlencode( $fee_id ),
 			'edd_action' => 'remove_fee',
 			'nocache'    => 'true'
 		), $current_page );
