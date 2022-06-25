@@ -15,8 +15,7 @@
 	}
 }
 
-@media screen and (min-width: 1680px) {
-	.edd-reports-chart {
-		grid-column: unset;
-	}
+.edd-reports-chart {
+	height: 500px;
+	max-height: 700px;
 }
