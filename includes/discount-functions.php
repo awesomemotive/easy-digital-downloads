@@ -1326,8 +1326,8 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$remove_url  = add_query_arg(
 			array(
 				'edd_action'    => 'remove_cart_discount',
-				'discount_id'   => $discount_id,
-				'discount_code' => $discount
+				'discount_id'   => absint( $discount_id ),
+				'discount_code' => urlencode( $discount ),
 			),
 			edd_get_checkout_uri()
 		);

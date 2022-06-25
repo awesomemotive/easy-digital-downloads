@@ -89,7 +89,7 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_note',
 		'note_id'    => absint( $note->id ),
-	) ), 'edd_delete_note_' . $note->id );
+	) ), 'edd_delete_note_' . absint( $note->id ) );
 
 	// Start a buffer
 	ob_start();

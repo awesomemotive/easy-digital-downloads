@@ -1780,10 +1780,15 @@ class EDD_Discount extends Adjustment {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $this->id,
-		), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url(
+			edd_get_admin_url(
+				array(
+					'edd-action' => 'edit_discount',
+					'discount'   => absint( $this->id ),
+					'page'       => 'edd-discounts',
+				)
+			)
+		);
 	}
 
 	/**

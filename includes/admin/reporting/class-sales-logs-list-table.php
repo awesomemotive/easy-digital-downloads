@@ -50,12 +50,12 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 			case 'download':
 				$download_id = $item[ $column_name ];
 				$download    = edd_get_download( $download_id );
-				$price_id    = ! empty( $item['price_id'] )
+				$price_id    = isset( $item['price_id'] ) && is_numeric( $item['price_id'] )
 					? absint( $item['price_id'] )
-					: 0;
+					: null;
 
 				$title  = $download->get_name( $price_id );
-				$return = '<a href="' . esc_url( add_query_arg( 'download', $item[ $column_name ] ) ) . '" >' . $title . '</a>';
+				$return = '<a href="' . esc_url( add_query_arg( 'download', urlencode( $item[ $column_name ] ) ) ) . '" >' . esc_html( $title ) . '</a>';
 				break;
 
 			case 'customer':

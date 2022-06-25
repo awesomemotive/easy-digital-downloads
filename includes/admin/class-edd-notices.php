@@ -384,11 +384,12 @@ class EDD_Notices {
 			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
 
 				// URL to fix this
-				$url = add_query_arg( array(
-					'post_type' => 'download',
-					'page'      => 'edd-settings',
-					'tab'       => 'gateways'
-				) );
+				$url = edd_get_admin_url(
+					array(
+						'page' => 'edd-settings',
+						'tab'  => 'gateways',
+					)
+				);
 
 				// Link
 				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Fix this', 'easy-digital-downloads' ) . '</a>';

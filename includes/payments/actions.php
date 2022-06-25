@@ -528,7 +528,7 @@ function edd_recover_payment() {
 
 	EDD()->session->set( 'edd_resume_payment', $payment->ID );
 
-	$redirect_args = array( 'payment-mode' => $payment->gateway );
+	$redirect_args = array( 'payment-mode' => sanitize_key( $payment->gateway ) );
 	$redirect      = add_query_arg( $redirect_args, edd_get_checkout_uri() );
 	edd_redirect( $redirect );
 }

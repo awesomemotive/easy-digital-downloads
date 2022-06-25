@@ -477,7 +477,9 @@ function edd_get_register_fields() {
 	<fieldset id="edd_register_fields">
 
 		<?php if ( 'both' === $show_register_form ) { ?>
-			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login" data-nonce="<?php echo wp_create_nonce( 'edd_checkout_login' ); ?>"><?php _e( 'Log in', 'easy-digital-downloads' ); ?></a></p>
+			<p id="edd-login-account-wrap">
+				<?php esc_html_e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_checkout_login' ) ); ?>"><?php esc_html_e( 'Log in', 'easy-digital-downloads' ); ?></a>
+			</p>
 		<?php } ?>
 
 		<?php do_action( 'edd_register_fields_before' ); ?>

@@ -2036,24 +2036,52 @@ class EDD_API {
 			case 'generate':
 				if ( $this->generate_api_key( $user_id ) ) {
 					delete_transient( 'edd-total-api-keys' );
-					edd_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-					exit();
+					edd_redirect(
+						edd_get_admin_url(
+							array(
+								'page'        => 'edd-tools',
+								'tab'         => 'api_keys',
+								'edd-message' => 'api-key-generated',
+							)
+						)
+					);
 				} else {
-					edd_redirect( add_query_arg( 'edd-message', 'api-key-failed', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-					exit();
+					edd_redirect(
+						edd_get_admin_url(
+							array(
+								'page'        => 'edd-tools',
+								'tab'         => 'api_keys',
+								'edd-message' => 'api-key-failed',
+							)
+						)
+					);
 				}
 				break;
 			case 'regenerate':
 				$this->generate_api_key( $user_id, true );
 				delete_transient( 'edd-total-api-keys' );
-				edd_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-				exit();
+				edd_redirect(
+					edd_get_admin_url(
+						array(
+							'page'        => 'edd-tools',
+							'tab'         => 'api_keys',
+							'edd-message' => 'api-key-regenerated',
+						)
+					)
+				);
 				break;
 			case 'revoke':
 				$this->revoke_api_key( $user_id );
 				delete_transient( 'edd-total-api-keys' );
-				edd_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-				exit();
+				edd_redirect(
+					edd_get_admin_url(
+						array(
+							'page'        => 'edd-tools',
+							'tab'         => 'api_keys',
+							'edd-message' => 'api-key-revoked',
+						)
+					)
+				);
 				break;
 			default;
 				break;
