@@ -137,7 +137,7 @@ abstract class List_Table extends \WP_List_Table {
 		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
 		$label = __( 'All', 'easy-digital-downloads' ) . $count;
 		$views = array(
-			'all' => sprintf( '<a href="%s"%s>%s</a>', esc_url( $url ), $class, esc_html( $label ) ),
+			'all' => sprintf( '<a href="%s"%s>%s</a>', esc_url( $url ), $class, $label ),
 		);
 
 		// Remove total from counts array
@@ -159,7 +159,7 @@ abstract class List_Table extends \WP_List_Table {
 				$count = '&nbsp;<span class="count">(' . absint( $this->counts[ $status ] ) . ')</span>';
 
 				$label            = edd_get_status_label( $status ) . $count;
-				$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', esc_url( $count_url ), $class, esc_html( $label ) );
+				$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', esc_url( $count_url ), $class, $label );
 			}
 		}
 
