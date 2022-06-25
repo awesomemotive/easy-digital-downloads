@@ -54,8 +54,8 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
 		// Add base query args
-		return edd_get_admin_url( array(
-			'page' => 'edd-discounts'
+		return add_query_arg( array(
+			'page' => 'edd-discounts',
 		), $base );
 	}
 
