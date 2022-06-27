@@ -41,6 +41,8 @@ function edd_admin_load_report() {
 	// Start the Reports API.
 	new Reports\Init();
 
+	add_filter( 'edd_admin_is_single_view', '__return_false' );
+
 	// Get the section and report
 	$section = Reports\get_current_report();
 	$report  = Reports\get_report( $section );
@@ -141,6 +143,7 @@ function edd_output_report_callback( $report_id = '' ) {
 	do_action( 'edd_reports_page_top', $report );
 
 	if ( ! is_wp_error( $report ) ) {
+		printf( '<h2 class="edd-reports__heading">%s</h2>', esc_html( $report->label ) );
 		$report->display();
 	} else {
 		Reports\default_display_report( $report );
