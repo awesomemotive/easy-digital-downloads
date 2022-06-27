@@ -23,7 +23,7 @@ function edd_admin_header() {
 	}
 	$numberNotifications = EDD()->notifications->countActiveNotifications();
 	$current_page        = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
-	$is_single_view      = ! empty( $_GET['view'] );
+	$is_single_view      = (bool) apply_filters( 'edd_admin_is_single_view', ! empty( $_GET['view'] ) );
 
 	$page_title = '';
 	switch( $current_page ) {
@@ -66,7 +66,6 @@ function edd_admin_header() {
 		<style>
 			.wrap > h1,
 			.wrap h1.wp-heading-inline,
-			.wrap h2,
 			.page-title-action {
 				display: none;
 			}
