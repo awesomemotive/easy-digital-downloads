@@ -97,8 +97,11 @@ function edd_overview_sales_earnings_chart() {
 	 *
 	 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
 	 */
-	while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-		$timestamp = strtotime( $chart_dates['start']->copy()->format( 'mysql' ) );
+	while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
+		$timestamp       = $dates['start']->copy()->format( 'U' );
+		$utc_timezone    = new DateTimeZone( 'UTC' );
+		$timezone        = new DateTimeZone( edd_get_timezone_id() );
+		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
 
 		$sales[ $timestamp ][0] = $timestamp;
 		$sales[ $timestamp ][1] = 0;
@@ -108,10 +111,8 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $earnings_results as $earnings_result ) {
-
-			$timezone         = new DateTimeZone( 'UTC' );
-			$date_of_db_value = new DateTime( $earnings_result->date, $timezone );
-			$date_on_chart    = new DateTime( $chart_dates['start'], $timezone );
+			$date_of_db_value = new DateTime( $earnings_result->date, $utc_timezone );
+			$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -137,9 +138,8 @@ function edd_overview_sales_earnings_chart() {
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $sales_results as $sales_result ) {
 
-			$timezone         = new DateTimeZone( 'UTC' );
-			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
-			$date_on_chart    = new DateTime( $chart_dates['start'], $timezone );
+			$date_of_db_value = new DateTime( $earnings_result->date, $utc_timezone );
+			$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -164,10 +164,13 @@ function edd_overview_sales_earnings_chart() {
 
 		// Move the chart along to the next hour/day/month to get ready for the next loop.
 		if ( $hour_by_hour ) {
+			$dates['start']->addHour( 1 );
 			$chart_dates['start']->addHour( 1 );
 		} elseif ( $day_by_day ) {
+			$dates['start']->addDays( 1 );
 			$chart_dates['start']->addDays( 1 );
 		} else {
+			$dates['start']->addMonth( 1 );
 			$chart_dates['start']->addMonth( 1 );
 		}
 	}
