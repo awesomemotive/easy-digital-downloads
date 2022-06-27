@@ -726,8 +726,8 @@ class Stats {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
 				$relative_output = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up reverse"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down reverse"></span> ' . absint( $percentage_change ) . '%';
+					? '<span class="dashicons dashicons-arrow-down reverse"></span> ' . absint( $percentage_change ) . '%'
+					: '<span class="dashicons dashicons-arrow-up reverse"></span> ' . absint( $percentage_change ) . '%';
 			}
 
 			$total = $total_output;
