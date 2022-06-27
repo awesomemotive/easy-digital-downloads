@@ -49,7 +49,14 @@ export const render = ( config ) => {
 						time: {
 							...config.options.scales.xAxes[0].time,
 							parser: function( date ) {
-								return moment.utc( date );
+								// Use UTC for larger dataset averages.
+								// Specifically this ensures month by month shows the start of the month
+								// if the UTC offset is negative.
+								if ( ! hourByHour && ! dayByDay ) {
+									return moment.utc( date );
+								} else {
+									return moment( date ).utcOffset( utcOffset );
+								}
 							},
 						},
 					},
