@@ -72,8 +72,8 @@ function edd_admin_header() {
 		</style>
 		<script>
 		jQuery(document).ready(function($){
-			const coreAddNew = $('.page-title-action');
-			const eddAddNew  = $('.add-new-h2');
+			const coreAddNew = $( '.page-title-action:visible' );
+			const eddAddNew  = $( '.add-new-h2:visible' );
 
 			if ( coreAddNew.length ) {
 				coreAddNew.appendTo('.edd-header-page-title-wrap').addClass('button').show();
