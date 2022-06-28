@@ -1983,7 +1983,7 @@ class EDD_Payment {
 			return false;
 		}
 
-		$recovery_url = add_query_arg( array( 'edd_action' => 'recover_payment', 'payment_id' => $this->ID ), edd_get_checkout_uri() );
+		$recovery_url = add_query_arg( array( 'edd_action' => 'recover_payment', 'payment_id' => urlencode( $this->ID ) ), edd_get_checkout_uri() );
 
 		return apply_filters( 'edd_payment_recovery_url', $recovery_url, $this );
 	}

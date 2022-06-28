@@ -449,7 +449,8 @@ function edd_recover_payment() {
 	) {
 		$redirect = get_permalink( edd_get_option( 'purchase_history_page' ) );
 		edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
-		wp_redirect( $redirect );
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 	}
 
 	$payment->add_note( __( 'Payment recovery triggered URL', 'easy-digital-downloads' ) );
@@ -487,9 +488,9 @@ function edd_recover_payment() {
 
 	EDD()->session->set( 'edd_resume_payment', $payment->ID );
 
-	$redirect_args = array( 'payment-mode' => $payment->gateway );
+	$redirect_args = array( 'payment-mode' => urlencode( $payment->gateway ) );
 	$redirect      = add_query_arg( $redirect_args, edd_get_checkout_uri() );
-	wp_redirect( $redirect );
+	wp_safe_redirect( esc_url_raw( $redirect ) );
 	exit;
 }
 add_action( 'edd_recover_payment', 'edd_recover_payment' );
@@ -511,7 +512,7 @@ function edd_recovery_user_mismatch() {
 		if ( is_user_logged_in() && $payment->user_id != get_current_user_id() ) {
 			edd_empty_cart();
 			edd_set_error( 'edd-payment-recovery-user-mismatch', __( 'Error resuming payment.', 'easy-digital-downloads' ) );
-			wp_redirect( get_permalink( edd_get_option( 'purchase_page' ) ) );
+			wp_safe_redirect( esc_url_raw( get_permalink( edd_get_option( 'purchase_page' ) ) ) );
 			exit;
 		}
 	}

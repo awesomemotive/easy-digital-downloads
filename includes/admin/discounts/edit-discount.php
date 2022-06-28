@@ -207,8 +207,8 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="edit_discount"/>
 		<input type="hidden" name="discount-id" value="<?php echo absint( $_GET['discount'] ); ?>"/>
-		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $discount_id ) ); ?>"/>
-		<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>
+		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . absint( $discount_id ) ) ); ?>"/>
+		<input type="hidden" name="edd-discount-nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_discount_nonce' ) ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary"/>
 	</p>
 </form>

@@ -1589,11 +1589,11 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_payment_note',
-		'note_id'    => $note->comment_ID,
-		'payment_id' => $payment_id
+		'note_id'    => urlencode( $note->comment_ID ),
+		'payment_id' => urlencode( $payment_id ),
 	) ), 'edd_delete_payment_note_' . $note->comment_ID );
 
-	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->comment_ID . '">';
+	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . esc_attr( $note->comment_ID ) . '">';
 		$note_html .='<p>';
 			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
 			$note_html .= make_clickable( wp_kses_post( $note->comment_content ) );

@@ -34,19 +34,19 @@ function edd_add_discount( $data ) {
 	$posted = array();
 
 	if ( empty( $data['name'] ) || empty( $data['code'] ) || empty( $data['type'] ) || empty( $data['amount'] ) ) {
-		wp_redirect( add_query_arg( 'edd-message', 'discount_validation_failed' ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'discount_validation_failed' ) ) );
 		edd_die();
 	}
 
 	// Verify only accepted characters
 	$sanitized = preg_replace('/[^a-zA-Z0-9-_]+/', '', $data['code'] );
 	if ( strtoupper( $data['code'] ) !== strtoupper( $sanitized ) ) {
-		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'discount_invalid_code' ) ) );
 		edd_die();
 	}
 
 	if ( ! is_numeric( $data['amount'] ) ) {
-		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'discount_invalid_amount' ) ) );
 		edd_die();
 	}
 
@@ -83,17 +83,20 @@ function edd_add_discount( $data ) {
 
 		if ( edd_store_discount( $posted ) ) {
 
-			wp_redirect( add_query_arg( 'edd_discount_added', '1', $data['edd-redirect'] ) ); edd_die();
+			wp_safe_redirect( esc_url_raw( add_query_arg( 'edd_discount_added', '1', $data['edd-redirect'] ) ) );
+			edd_die();
 
 		} else {
 
-			wp_redirect( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ); edd_die();
+			wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'discount_add_failed', $data['edd-redirect'] ) ) );
+			edd_die();
 
 		}
 
 	} else {
 
-		wp_redirect( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ); edd_die();
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'discount_exists', $data['edd-redirect'] ) ) );
+		edd_die();
 
 	}
 
@@ -118,7 +121,7 @@ function edd_edit_discount( $data ) {
 	}
 
 	if ( empty( $data['amount'] ) || ! is_numeric( $data['amount'] ) ) {
-		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'discount_invalid_amount' ) ) );
 		edd_die();
 	}
 
@@ -156,11 +159,13 @@ function edd_edit_discount( $data ) {
 
 	if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
 
-		wp_redirect( add_query_arg( 'edd_discount_updated', '1', $data['edd-redirect'] ) ); edd_die();
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'edd_discount_updated', '1', $data['edd-redirect'] ) ) );
+		edd_die();
 
 	} else {
 
-		wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) ); edd_die();
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) ) );
+		edd_die();
 
 	}
 

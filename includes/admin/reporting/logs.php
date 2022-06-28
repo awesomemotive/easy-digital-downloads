@@ -57,7 +57,7 @@ function edd_logs_view_file_downloads() {
 	?>
 	<div class="wrap">
 		<?php do_action( 'edd_logs_file_downloads_top' ); ?>
-		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ); ?>">
+		<form id="edd-logs-filter" method="get" action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ) ); ?>">
 			<?php
 			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' );
 			$logs_table->display();
@@ -109,7 +109,7 @@ function edd_logs_view_api_requests() {
 	if( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
-	
+
 	include( dirname( __FILE__ ) . '/class-api-requests-logs-list-table.php' );
 
 	$logs_table = new EDD_API_Request_Log_Table();
@@ -117,7 +117,7 @@ function edd_logs_view_api_requests() {
 	?>
 	<div class="wrap">
 		<?php do_action( 'edd_logs_api_requests_top' ); ?>
-		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ); ?>">
+		<form id="edd-logs-filter" method="get" action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ) ); ?>">
 			<?php
 			$logs_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-api-requests' );
 			$logs_table->display();

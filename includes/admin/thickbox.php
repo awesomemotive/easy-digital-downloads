@@ -109,7 +109,7 @@ function edd_admin_footer_for_thickbox() {
 						<?php
 							$styles = array( 'button', 'text link' );
 							foreach ( $styles as $style ) {
-								echo '<option value="' . $style . '">' . $style . '</option>';
+								echo '<option value="' . esc_attr( $style ) . '">' . esc_html( $style ) . '</option>';
 							}
 						?>
 					</select>
@@ -122,7 +122,7 @@ function edd_admin_footer_for_thickbox() {
 						<option value=""><?php _e('Choose a button color','easy-digital-downloads' ); ?></option>
 						<?php
 							foreach ( $colors as $key => $color ) {
-								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
+								echo '<option value="' . esc_attr( str_replace( ' ', '_', $key ) ) . '">' . esc_html( $color['label'] ) . '</option>';
 							}
 						?>
 					</select>
@@ -132,7 +132,7 @@ function edd_admin_footer_for_thickbox() {
 					<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'Link text . . .', 'easy-digital-downloads' ); ?>"/>
 				</div>
 				<p class="submit">
-					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
+					<input type="button" id="edd-insert-download" class="button-primary" value="<?php printf( esc_html__( 'Insert %s', 'easy-digital-downloads' ), esc_html( edd_get_label_singular() ) ); ?>" onclick="insertDownload();" />
 					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
 				</p>
 			</div>
