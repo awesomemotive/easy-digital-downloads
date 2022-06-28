@@ -31,6 +31,9 @@
 	position: relative;
 	box-sizing: border-box;
 	gap: .5em;
+	>span:not(.tile-compare) {
+		width: 100%;
+	}
 }
 
 .edd-reports-tile .tile-label {
@@ -39,11 +42,9 @@
 	font-size: 12px;
 	font-weight: normal;
 	color: $wp-gray-2;
-	order: 0;
 }
 
 .edd-reports-tile .tile-value {
-	order: 1;
 	color: #333;
 	font-size: 2em;
 	line-height: 1;
@@ -87,7 +88,6 @@
 	font-size: 12px;
 	font-weight: normal;
 	color: #888;
-	order: 2;
 }
 
 .edd-reports-tile span.dashicons {
