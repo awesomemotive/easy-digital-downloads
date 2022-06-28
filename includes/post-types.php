@@ -377,7 +377,7 @@ add_action( 'init', 'edd_register_post_type_statuses', 2 );
 function edd_updated_messages( $messages ) {
 	global $post, $post_ID;
 
-	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
+	$url1 = '<a href="' . esc_url( get_permalink( $post_ID ) ) . '">';
 	$url2 = edd_get_label_singular();
 	$url3 = '</a>';
 

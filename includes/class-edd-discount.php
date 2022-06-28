@@ -1998,6 +1998,16 @@ class EDD_Discount {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->ID ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url(
+			add_query_arg(
+				array(
+					'post_type'  => 'download',
+					'page'       => 'edd-discounts',
+					'edd-action' => 'edit_discount',
+					'discount'   => absint( $this->ID ),
+				),
+				admin_url( 'edit.php' )
+			)
+		);
 	}
 }

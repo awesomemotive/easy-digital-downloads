@@ -243,7 +243,8 @@ function edd_process_purchase_login() {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
 		} else {
-			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+			wp_redirect( esc_url_raw( wp_get_referer() ) );
+			exit;
 		}
 	}
 
@@ -254,7 +255,8 @@ function edd_process_purchase_login() {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
 		} else {
-			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+			wp_redirect( esc_url_raw( wp_get_referer() ) );
+			exit;
 		}
 	}
 
@@ -264,7 +266,8 @@ function edd_process_purchase_login() {
 		echo 'success';
 		edd_die();
 	} else {
-		wp_redirect( edd_get_checkout_uri( $_SERVER['QUERY_STRING'] ) );
+		wp_safe_redirect( esc_url_raw( edd_get_checkout_uri( $_SERVER['QUERY_STRING'] ) ) );
+		exit;
 	}
 }
 add_action( 'wp_ajax_edd_process_checkout_login', 'edd_process_purchase_login' );
@@ -1234,7 +1237,7 @@ function edd_process_straight_to_gateway( $data ) {
 		}
 
 		edd_set_error( 'edd-straight-to-gateway-error', __( 'There was an error completing your purchase. Please try again.', 'easy-digital-downloads' ) );
-		wp_redirect( edd_get_checkout_uri() );
+		wp_safe_redirect( esc_url_raw( edd_get_checkout_uri() ) );
 		exit;
 	}
 

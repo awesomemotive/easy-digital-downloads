@@ -186,7 +186,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 			<?php endif; ?>
 			<?php if( ! empty( $start_date ) || ! empty( $end_date ) || 'all' !== $selected_gateway ) : ?>
-				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?></a>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?></a>
 			<?php endif; ?>
 			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
 			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
@@ -243,15 +243,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$abandoned_count  = '&nbsp;<span class="count">(' . $this->abandoned_count . ')</span>';
 		$revoked_count    = '&nbsp;<span class="count">(' . $this->revoked_count   . ')</span>';
 
+		$url   = remove_query_arg( 'paged' );
 		$views = array(
-			'all'        => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( array( 'status', 'paged' ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All','easy-digital-downloads' ) . $total_count ),
-			'publish'    => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'publish', 'paged' => FALSE ) ), $current === 'publish' ? ' class="current"' : '', __('Completed','easy-digital-downloads' ) . $complete_count ),
-			'pending'    => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'pending', 'paged' => FALSE ) ), $current === 'pending' ? ' class="current"' : '', __('Pending','easy-digital-downloads' ) . $pending_count ),
-			'processing' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'processing', 'paged' => FALSE ) ), $current === 'processing' ? ' class="current"' : '', __('Processing','easy-digital-downloads' ) . $processing_count ),
-			'refunded'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'refunded', 'paged' => FALSE ) ), $current === 'refunded' ? ' class="current"' : '', __('Refunded','easy-digital-downloads' ) . $refunded_count ),
-			'revoked'    => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'revoked', 'paged' => FALSE ) ), $current === 'revoked' ? ' class="current"' : '', __('Revoked','easy-digital-downloads' ) . $revoked_count ),
-			'failed'     => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'failed', 'paged' => FALSE ) ), $current === 'failed' ? ' class="current"' : '', __('Failed','easy-digital-downloads' ) . $failed_count ),
-			'abandoned'  => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'abandoned', 'paged' => FALSE ) ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned','easy-digital-downloads' ) . $abandoned_count ),
+			'all'        => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( array( 'status', 'paged' ) ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All','easy-digital-downloads' ) . $total_count ),
+			'publish'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'publish' ), $url ) ), $current === 'publish' ? ' class="current"' : '', __('Completed','easy-digital-downloads' ) . $complete_count ),
+			'pending'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'pending' ), $url ) ), $current === 'pending' ? ' class="current"' : '', __('Pending','easy-digital-downloads' ) . $pending_count ),
+			'processing' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'processing' ), $url ) ), $current === 'processing' ? ' class="current"' : '', __('Processing','easy-digital-downloads' ) . $processing_count ),
+			'refunded'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'refunded' ), $url ) ), $current === 'refunded' ? ' class="current"' : '', __('Refunded','easy-digital-downloads' ) . $refunded_count ),
+			'revoked'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'revoked' ), $url ) ), $current === 'revoked' ? ' class="current"' : '', __('Revoked','easy-digital-downloads' ) . $revoked_count ),
+			'failed'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'failed' ), $url ) ), $current === 'failed' ? ' class="current"' : '', __('Failed','easy-digital-downloads' ) . $failed_count ),
+			'abandoned'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'abandoned' ), $url ) ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned','easy-digital-downloads' ) . $abandoned_count ),
 		);
 
 		return apply_filters( 'edd_payments_table_views', $views );
@@ -331,7 +332,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value   = edd_get_payment_status( $payment, true );
 				break;
 			case 'details' :
-				$value = '<a href="' . add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'easy-digital-downloads' ) . '</a>';
+				$url   = add_query_arg(
+					array(
+						'post_type' => 'download',
+						'page'      => 'edd-payment-history',
+						'view'      => 'view-order-details',
+						'id'        => urlencode( $payment->ID ),
+					),
+					admin_url( 'edit.php' )
+				);
+				$value = '<a href="' . esc_url( $url ) . '">' . __( 'View Order Details', 'easy-digital-downloads' ) . '</a>';
 				break;
 			default:
 				$value = isset( $payment->$column_name ) ? $payment->$column_name : '';
@@ -355,16 +365,29 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$email = edd_get_payment_user_email( $payment->ID );
 
 		// Add search term string back to base URL
-		$search_terms = ( isset( $_GET['s'] ) ? trim( $_GET['s'] ) : '' );
+		$search_terms = isset( $_GET['s'] ) ? wp_unslash( trim( $_GET['s'] ) ) : '';
 		if ( ! empty( $search_terms ) ) {
-			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
+			$this->base_url = add_query_arg(
+				array(
+					's' => urlencode( $search_terms ),
+				),
+				$this->base_url
+			);
 		}
+
+		// Add the payment ID to the URL.
+		$base_url = add_query_arg(
+			array(
+				'purchase_id' => urlencode( $payment->ID ),
+			),
+			$this->base_url
+		);
 
 		if ( edd_is_payment_complete( $payment->ID ) && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array( 'edd-action' => 'email_links' ), $base_url ) ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment' ), $base_url ) ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
@@ -388,7 +411,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			'payment',
-			$payment->ID
+			absint( $payment->ID )
 		);
 	}
 
@@ -415,11 +438,27 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$customer_id = edd_get_payment_customer_id( $payment->ID );
 
 		if( ! empty( $customer_id ) ) {
-			$customer    = new EDD_Customer( $customer_id );
-			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-customers&view=overview&id=$customer_id" ) ) . '">' . $customer->name . '</a>';
+			$customer = new EDD_Customer( $customer_id );
+			$url      = add_query_arg(
+				array(
+					'post_type' => 'download',
+					'page'      => 'edd-customers',
+					'view'      => 'overview',
+					'id'        => absint( $customer_id ),
+				),
+				admin_url( 'edit.php' )
+			);
+			$value    = '<a href="' . esc_url( $url ) . '">' . esc_html( $customer->name ) . '</a>';
 		} else {
-			$email = edd_get_payment_user_email( $payment->ID );
-			$value = '<a href="' . esc_url( admin_url( "edit.php?post_type=download&page=edd-payment-history&s=$email" ) ) . '">' . __( '(customer missing)', 'easy-digital-downloads' ) . '</a>';
+			$url   = add_query_arg(
+				array(
+					'post_type' => 'download',
+					'page'      => 'edd-payment-history',
+					's'         => rawurlencode( edd_get_payment_user_email( $payment->ID ) ),
+				),
+				admin_url( 'edit.php' )
+			);
+			$value = '<a href="' . esc_url( $url ) . '">' . __( '(customer missing)', 'easy-digital-downloads' ) . '</a>';
 		}
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}

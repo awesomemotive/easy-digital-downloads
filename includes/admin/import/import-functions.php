@@ -164,7 +164,7 @@ function edd_do_ajax_import() {
 			'step'    => 'done',
 			'message' => sprintf(
 				__( 'Import complete! <a href="%s">View imported %s</a>.', 'easy-digital-downloads' ),
-				$import->get_list_table_url(),
+				esc_url( $import->get_list_table_url() ),
 				$import->get_import_type_label()
 			)
 		) );
