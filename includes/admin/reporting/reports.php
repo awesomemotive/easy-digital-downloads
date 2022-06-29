@@ -21,17 +21,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
 */
 function edd_reports_page() {
-	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
-	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
+	$current_page = add_query_arg(
+		array(
+			'post_type' => 'download',
+			'page'      => 'edd-reports',
+		),
+		admin_url( 'edit.php' )
+	);
+	$active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'reports';
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Reports', 'easy-digital-downloads' ); ?></h1>
 		<h2 class="nav-tab-wrapper">
-			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Reports', 'easy-digital-downloads' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'reports' ), $current_page ) ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Reports', 'easy-digital-downloads' ); ?></a>
 			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
-				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'easy-digital-downloads' ); ?></a>
+				<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'export' ), $current_page ) ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Export', 'easy-digital-downloads' ); ?></a>
 			<?php } ?>
-			<a href="<?php echo add_query_arg( array( 'tab' => 'logs', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Logs', 'easy-digital-downloads' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'logs' ), $current_page ) ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Logs', 'easy-digital-downloads' ); ?></a>
 			<?php do_action( 'edd_reports_tabs' ); ?>
 		</h2>
 
@@ -309,14 +315,14 @@ function edd_reports_taxes() {
 
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
-			<h3><span><?php _e('Tax Report','easy-digital-downloads' ); ?></span></h3>
+			<h3><span><?php esc_html_e('Tax Report','easy-digital-downloads' ); ?></span></h3>
 			<div class="inside">
-				<p><?php _e( 'This report shows the total amount collected in sales tax for the given year.', 'easy-digital-downloads' ); ?></p>
-				<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>">
-					<span><?php echo $year; ?></span>: <strong><?php edd_sales_tax_for_year( $year ); ?></strong>&nbsp;&mdash;&nbsp;
+				<p><?php esc_html_e( 'This report shows the total amount collected in sales tax for the given year.', 'easy-digital-downloads' ); ?></p>
+				<form method="get" action="<?php echo esc_url( admin_url( 'edit.php' ) ); ?>">
+					<span><?php echo esc_html( $year ); ?></span>: <strong><?php esc_html( edd_sales_tax_for_year( $year ) ); ?></strong>&nbsp;&mdash;&nbsp;
 					<select name="year">
 						<?php for ( $i = 2009; $i <= date( 'Y' ); $i++ ) : ?>
-						<option value="<?php echo $i; ?>"<?php selected( $year, $i ); ?>><?php echo $i; ?></option>
+						<option value="<?php echo esc_attr( $i ); ?>"<?php selected( $year, $i ); ?>><?php echo esc_attr( $i ); ?></option>
 						<?php endfor; ?>
 					</select>
 					<input type="hidden" name="view" value="taxes" />
@@ -383,7 +389,7 @@ function edd_reports_tab_export() {
 									<?php
 									$statuses = edd_get_payment_statuses();
 									foreach( $statuses as $status => $label ) {
-										echo '<option value="' . $status . '">' . $label . '</option>';
+										echo '<option value="' . esc_attr( $status ) . '">' . $label . '</option>';
 									}
 									?>
 								</select>

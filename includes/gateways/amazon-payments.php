@@ -356,7 +356,7 @@ final class EDD_Amazon_Payments {
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
 				'name' => __( 'Register with Amazon', 'easy-digital-downloads' ),
-				'desc' => '<p><a href="' . $this->get_registration_url() . '" class="button" target="_blank">' .
+				'desc' => '<p><a href="' . esc_url( $this->get_registration_url() ) . '" class="button" target="_blank">' .
 						__( 'Connect Easy Digital Downloads to Amazon', 'easy-digital-downloads' ) .
 						'</a></p>' .
 						'<p class="description">' .
@@ -625,7 +625,8 @@ final class EDD_Amazon_Payments {
 		}
 
 
-		wp_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized', 'amazon_reference_id' => $reference ) ) ); exit;
+		wp_safe_redirect( esc_url_raw( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized', 'amazon_reference_id' => urlencode( $reference ) ) ) ) );
+		exit;
 
 	}
 

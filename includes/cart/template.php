@@ -100,7 +100,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$item = str_replace( '{cart_item_id}', absint( $cart_key ), $item );
 	$item = str_replace( '{item_id}', absint( $id ), $item );
 	$item = str_replace( '{item_quantity}', absint( $quantity ), $item );
-	$item = str_replace( '{remove_url}', $remove_url, $item );
+	$item = str_replace( '{remove_url}', esc_url( $remove_url ), $item );
   	$subtotal = '';
   	if ( $ajax ){
    	 $subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) ;
@@ -179,7 +179,7 @@ function edd_save_cart_button() {
 	$color = ( $color == 'inherit' ) ? '' : $color;
 
 	if ( edd_is_cart_saved() ) : ?>
-		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-restore-cart-button" href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ); ?>"><?php _e( 'Restore Previous Cart', 'easy-digital-downloads' ); ?></a>
+		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-restore-cart-button" href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => urlencode( edd_get_cart_token() ) ) ) ); ?>"><?php _e( 'Restore Previous Cart', 'easy-digital-downloads' ); ?></a>
 	<?php endif; ?>
 	<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-save-cart-button" href="<?php echo esc_url( add_query_arg( 'edd_action', 'save_cart' ) ); ?>"><?php _e( 'Save Cart', 'easy-digital-downloads' ); ?></a>
 	<?php
@@ -193,11 +193,12 @@ function edd_save_cart_button() {
  */
 function edd_empty_cart_restore_cart_link() {
 
-	if( edd_is_cart_saving_disabled() )
+	if ( edd_is_cart_saving_disabled() ) {
 		return;
+	}
 
 	if( edd_is_cart_saved() ) {
-		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ) . '">' . __( 'Restore Previous Cart.', 'easy-digital-downloads' ) . '</a>';
+		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => urlencode( edd_get_cart_token() ) ) ) ) . '">' . __( 'Restore Previous Cart.', 'easy-digital-downloads' ) . '</a>';
 	}
 }
 add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
@@ -273,7 +274,7 @@ function edd_show_added_to_cart_messages( $download_id ) {
 
 		$alert = '<div class="edd_added_to_cart_alert">'
 		. sprintf( __('You have successfully added %s to your shopping cart.','easy-digital-downloads' ), get_the_title( $download_id ) )
-		. ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.','easy-digital-downloads' ) . '</a>'
+		. ' <a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_alert_checkout_link">' . __('Checkout.','easy-digital-downloads' ) . '</a>'
 		. '</div>';
 
 		echo apply_filters( 'edd_show_added_to_cart_messages', $alert );

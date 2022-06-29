@@ -430,7 +430,7 @@ class Tests_Customers extends EDD_UnitTestCase {
 
 		$this->assertFalse( edd_validate_user_verification_token( substr( $url, -1 ) ) );
 
-		$this->assertFalse( edd_validate_user_verification_token( remove_query_arg( 'token', $url ) ) );
+		$this->assertFalse( edd_validate_user_verification_token( esc_url( remove_query_arg( 'token', $url ) ) ) );
 
 	}
 

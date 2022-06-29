@@ -86,7 +86,7 @@ function register_js( $force_load = false ) {
 
 	wp_register_script(
 		'sandhills-paypal-js-sdk',
-		add_query_arg( array_filter( $sdk_query_args ), 'https://www.paypal.com/sdk/js' )
+		esc_url_raw( add_query_arg( array_filter( $sdk_query_args ), 'https://www.paypal.com/sdk/js' ) )
 	);
 
 	wp_register_script(

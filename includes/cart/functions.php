@@ -320,11 +320,7 @@ function edd_get_cart_total( $discounts = false ) {
  * @return mixed|string|void
  */
 function edd_cart_total( $echo = true ) {
-	if ( ! $echo ) {
-		return EDD()->cart->total( $echo );
-	}
-
-	EDD()->cart->total( $echo );
+	return EDD()->cart->total( $echo );
 }
 
 /**
@@ -442,11 +438,7 @@ function edd_get_cart_tax_rate( $country = '', $state = '', $postal_code = '' ) 
  * @return string Total tax amount (if $echo is set to true)
  */
 function edd_cart_tax( $echo = false ) {
-	if ( ! $echo ) {
-		return EDD()->cart->tax( $echo );
-	} else {
-		EDD()->cart->tax( $echo );
-	}
+	return EDD()->cart->tax( $echo );
 }
 
 /**

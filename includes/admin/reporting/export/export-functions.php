@@ -75,15 +75,16 @@ function edd_do_ajax_export() {
 	} else {
 
 		$args = array_merge( $_REQUEST, array(
-			'step'       => $step,
-			'class'      => $class,
+			'step'       => urlencode( $step ),
+			'class'      => urlencode( $class ),
 			'nonce'      => wp_create_nonce( 'edd-batch-export' ),
 			'edd_action' => 'download_batch_export',
 		) );
 
 		$download_url = add_query_arg( $args, admin_url() );
 
-		echo json_encode( array( 'step' => 'done', 'url' => $download_url ) ); exit;
+		echo json_encode( array( 'step' => 'done', 'url' => esc_url_raw( $download_url ) ) );
+		exit;
 
 	}
 }

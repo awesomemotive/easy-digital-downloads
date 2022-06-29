@@ -104,6 +104,7 @@ function edd_send_test_email( $data ) {
 	edd_email_test_purchase_receipt();
 
 	// Remove the test email query arg
-	wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
+	wp_safe_redirect( esc_url_raw( remove_query_arg( 'edd_action' ) ) );
+	exit;
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );

@@ -46,7 +46,7 @@ class EDD_Notices {
 			ob_start();
 			?>
 			<div class="error">
-				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ); ?></p>
+				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) ); ?></p>
 				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 			</div>
 			<?php
@@ -54,7 +54,7 @@ class EDD_Notices {
 		}
 
 		if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
-			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) );
+			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) ) );
 		}
 
 		$show_nginx_notice = apply_filters( 'edd_show_nginx_redirect_notice', true );
@@ -97,7 +97,7 @@ class EDD_Notices {
 			ob_start();
 			?>
 			<div class="error">
-				<p><?php printf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ), admin_url( 'plugins.php' ) ); ?></p>
+				<p><?php printf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ) ), esc_url( admin_url( 'plugins.php' ) ) ); ?></p>
 			</div>
 			<?php
 			echo ob_get_clean();
@@ -378,7 +378,7 @@ class EDD_Notices {
 	function dismiss_notices() {
 		if( isset( $_GET['edd_notice'] ) ) {
 			update_user_meta( get_current_user_id(), '_edd_' . $_GET['edd_notice'] . '_dismissed', 1 );
-			wp_redirect( remove_query_arg( array( 'edd_action', 'edd_notice' ) ) );
+			wp_safe_redirect( esc_url_raw( remove_query_arg( array( 'edd_action', 'edd_notice' ) ) ) );
 			exit;
 		}
 	}

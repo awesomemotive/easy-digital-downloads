@@ -523,7 +523,7 @@ class EDD_License {
 
 				$messages[] = sprintf(
 					__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
-					admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
+					esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) )
 				);
 
 				$showed_invalid_message = true;
