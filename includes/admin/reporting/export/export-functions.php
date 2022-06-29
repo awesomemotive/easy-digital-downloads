@@ -67,8 +67,8 @@ function edd_do_ajax_export() {
 		$step++;
 
 		echo wp_json_encode( array(
-			'step'       => $step,
-			'percentage' => $percentage,
+			'step'       => absint( $step ),
+			'percentage' => esc_attr( $percentage ),
 		) );
 
 		exit;

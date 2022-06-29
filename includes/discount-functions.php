@@ -1323,10 +1323,10 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$type = edd_get_discount_type( $discount_id );
 		$rate = edd_format_discount_rate( $type, edd_get_discount_amount( $discount_id ) );
 
-		$remove_url  = add_query_arg(
+		$remove_url = add_query_arg(
 			array(
 				'edd_action'    => 'remove_cart_discount',
-				'discount_id'   => absint( $discount_id ),
+				'discount_id'   => urlencode( $discount_id ),
 				'discount_code' => urlencode( $discount ),
 			),
 			edd_get_checkout_uri()

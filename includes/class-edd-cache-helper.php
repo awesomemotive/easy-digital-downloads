@@ -126,7 +126,7 @@ class EDD_Cache_Helper {
 							esc_url( admin_url( 'admin.php?page=w3tc_dbcache' ) )
 						);
 						?>
-						</p>
+					</p>
 				</div>
 				<?php
 			}

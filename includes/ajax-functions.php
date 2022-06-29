@@ -69,7 +69,7 @@ function edd_test_ajax_works() {
 	}
 
 	$works = true;
-	$ajax  = wp_remote_post( edd_get_ajax_url(), array(
+	$ajax  = wp_safe_remote_post( esc_url_raw( edd_get_ajax_url() ), array(
 		'sslverify'  => false,
 		'timeout'    => 30,
 		'body'       => array(
