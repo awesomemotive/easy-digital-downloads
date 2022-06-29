@@ -110,7 +110,7 @@ class ExtensionsAPI {
 			$this->get_products_url()
 		);
 		$request = wp_remote_get(
-			$url,
+			esc_url_raw( $url ),
 			array(
 				'timeout'   => 15,
 				'sslverify' => true,

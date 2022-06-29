@@ -79,7 +79,7 @@ function edd_test_ajax_works() {
 		)
 	);
 
-	$ajax  = wp_remote_post( edd_get_ajax_url(), $params );
+	$ajax  = wp_safe_remote_post( esc_url_raw( edd_get_ajax_url() ), $params );
 	$works = true;
 
 	if ( is_wp_error( $ajax ) ) {
@@ -396,7 +396,7 @@ function edd_ajax_remove_discount() {
 
 		/**
 		 * Allow for custom remove discount code handling.
-		 * 
+		 *
 		 * @since 2.11.4
 		 */
 		$return = apply_filters( 'edd_ajax_remove_discount_response', $return );

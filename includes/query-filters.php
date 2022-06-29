@@ -144,7 +144,8 @@ function edd_refresh_permalinks_on_bad_404() {
 
 		set_transient( 'edd_refresh_404_permalinks', 1, HOUR_IN_SECONDS * 12 );
 
-		wp_redirect( home_url( add_query_arg( array( 'edd-flush' => 1 ), $wp->request ) ) ); exit;
+		wp_safe_redirect( esc_url_raw( home_url( add_query_arg( array( 'edd-flush' => 1 ), $wp->request ) ) ) );
+		exit;
 
 	}
 }

@@ -82,7 +82,7 @@ function edd_show_upgrade_notices() {
 
 		// The payment history needs updated for version 1.2
 		$url = add_query_arg( 'edd-action', 'upgrade_payments' );
-		$upgrade_notice = sprintf( __( 'The Payment History needs to be updated. %s', 'easy-digital-downloads' ), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __( 'Click to Upgrade', 'easy-digital-downloads' ) . '</a>' );
+		$upgrade_notice = sprintf( __( 'The Payment History needs to be updated. %s', 'easy-digital-downloads' ), '<a href="' . esc_url( wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) ) . '">' . __( 'Click to Upgrade', 'easy-digital-downloads' ) . '</a>' );
 		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
 	}
 
@@ -136,7 +136,7 @@ function edd_show_upgrade_notices() {
 		if ( get_option( 'edd_upgrade_sequential' ) && edd_get_payments( array( 'fields' => 'ids' ) ) ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past orders to make them sequential. <a href="%s">Start the order numbers upgrade</a>.', 'easy-digital-downloads' ) . '</p></div>',
-				admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' ) )
 			);
 		}
 
@@ -584,11 +584,12 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_sequential_payment_numbers',
-			'step'        => $step,
-			'custom'      => $number,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'custom'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 
 	} else {
 
@@ -597,7 +598,8 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		delete_option( 'edd_upgrade_sequential' );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		wp_safe_redirect( esc_url_raw( admin_url() ) );
+		exit;
 	}
 
 }
@@ -699,9 +701,10 @@ function edd_v21_upgrade_customers_db() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customers_db',
-			'step'        => $step
+			'step'        => urlencode( $step ),
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 
 	} else {
 
@@ -710,7 +713,8 @@ function edd_v21_upgrade_customers_db() {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		wp_safe_redirect( esc_url_raw( admin_url() ) );
+		exit;
 	}
 
 }
@@ -742,7 +746,8 @@ function edd_v226_upgrade_payments_price_logs_db() {
 			// We had no variable priced products, so go ahead and just complete
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			wp_safe_redirect( esc_url_raw( admin_url() ) );
+			exit;
 		}
 	}
 	$payment_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_payment' ORDER BY post_date DESC LIMIT %d,%d;", $offset, $number ) );
@@ -801,14 +806,16 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_payments_price_logs_db',
-			'step'        => $step
+			'step'        => urlencode( $step ),
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 	} else {
 		// No more payments found, finish up
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		delete_option( 'edd_doing_upgrade' );
-		wp_redirect( admin_url() ); exit;
+		wp_safe_redirect( esc_url_raw( admin_url() ) );
+		exit;
 	}
 }
 add_action( 'edd_upgrade_payments_price_logs_db', 'edd_v226_upgrade_payments_price_logs_db' );
@@ -843,7 +850,8 @@ function edd_v23_upgrade_payment_taxes() {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			wp_safe_redirect( esc_url_raw( admin_url() ) );
+			exit;
 		}
 	}
 
@@ -871,17 +879,19 @@ function edd_v23_upgrade_payment_taxes() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_payment_taxes',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 	} else {
 		// No more payments found, finish up
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 		delete_option( 'edd_doing_upgrade' );
-		wp_redirect( admin_url() ); exit;
+		wp_safe_redirect( esc_url_raw( admin_url() ) );
+		exit;
 	}
 }
 add_action( 'edd_upgrade_payment_taxes', 'edd_v23_upgrade_payment_taxes' );
@@ -919,7 +929,8 @@ function edd_v23_upgrade_customer_purchases() {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			wp_safe_redirect( esc_url_raw( admin_url() ) );
+			exit;
 		}
 	}
 
@@ -996,11 +1007,12 @@ function edd_v23_upgrade_customer_purchases() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customer_payments_association',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 	} else {
 
 		// No more customers found, finish up
@@ -1009,7 +1021,8 @@ function edd_v23_upgrade_customer_purchases() {
 		edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		wp_safe_redirect( esc_url_raw( admin_url() ) );
+		exit;
 	}
 }
 add_action( 'edd_upgrade_customer_payments_association', 'edd_v23_upgrade_customer_purchases' );
@@ -1047,7 +1060,8 @@ function edd_upgrade_user_api_keys() {
 			update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 			edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 			delete_option( 'edd_doing_upgrade' );
-			wp_redirect( admin_url() ); exit;
+			wp_safe_redirect( esc_url_raw( admin_url() ) );
+			exit;
 		}
 	}
 
@@ -1081,11 +1095,12 @@ function edd_upgrade_user_api_keys() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_user_api_keys',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 	} else {
 
 		// No more customers found, finish up
@@ -1094,7 +1109,8 @@ function edd_upgrade_user_api_keys() {
 		edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		wp_safe_redirect( esc_url_raw( admin_url() ) );
+		exit;
 	}
 }
 add_action( 'edd_upgrade_user_api_keys', 'edd_upgrade_user_api_keys' );
@@ -1149,10 +1165,11 @@ function edd_remove_refunded_sale_logs() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'remove_refunded_sale_logs',
-			'step'        => $step,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		exit;
 
 	} else {
 
@@ -1162,7 +1179,8 @@ function edd_remove_refunded_sale_logs() {
 		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
 		delete_option( 'edd_doing_upgrade' );
 
-		wp_redirect( admin_url() ); exit;
+		wp_safe_redirect( esc_url_raw( admin_url() ) );
+		exit;
 	}
 }
 add_action( 'edd_remove_refunded_sale_logs', 'edd_remove_refunded_sale_logs' );

@@ -172,28 +172,38 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<td colspan="2">
 							<?php _e( 'Recent Purchases', 'easy-digital-downloads' ); ?>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'easy-digital-downloads' ); ?></a>
+							<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ); ?>">&nbsp;&ndash;&nbsp;<?php esc_html_e( 'View All', 'easy-digital-downloads' ); ?></a>
 						</td>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
-					foreach ( $payments as $payment ) { ?>
+					foreach ( $payments as $payment ) {
+						$payment_url = add_query_arg(
+							array(
+								'post_type' => 'download',
+								'page'      => 'edd-payment-history',
+								'view'      => 'view-order-details',
+								'id'        => urlencode( $payment->ID ),
+							),
+							admin_url( 'edit.php' )
+						);
+						?>
 						<tr>
 							<td class="edd_order_label">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
-									<?php echo get_the_title( $payment->ID ) ?>
-									&mdash; <?php echo $payment->email ?>
+								<a href="<?php echo esc_url( $payment_url ); ?>">
+									<?php echo esc_html( get_the_title( $payment->ID ) ); ?>
+									&mdash; <?php echo esc_html( $payment->email ); ?>
 								</a>
 								<?php if ( ! empty( $payment->user_id ) && ( $payment->user_id > 0 ) ) {
 									$user = get_user_by( 'id', $payment->user_id );
 									if ( $user ) {
-										echo "(" . $user->data->user_login . ")";
+										echo "(" . esc_html( $user->data->user_login ) . ")";
 									}
 								} ?>
 							</td>
 							<td class="edd_order_price">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
+								<a href="<?php echo esc_url( $payment_url ); ?>">
 									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ), edd_get_payment_currency_code( $payment->ID ) ); ?></span>
 								</a>
 							</td>

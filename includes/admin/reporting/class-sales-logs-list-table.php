@@ -90,11 +90,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 					}
 				}
 
-				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . $title . '</a>';
+				$return = '<a href="' . esc_url( add_query_arg( 'download', urlencode( $item[ $column_name ] ) ) ) . '" >' . esc_html( $title ) . '</a>';
 				break;
 
 			case 'customer' :
-				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . absint( $item['customer']->id ) ) . '">' . $item['customer']->name . '</a>';
+				$return = '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . absint( $item['customer']->id ) ) ) . '">' . esc_html( $item['customer']->name ) . '</a>';
 				break;
 
 			case 'item_price' :
@@ -106,7 +106,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				break;
 
 			case 'payment_id' :
-				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>';
+				$return = '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . urlencode( $item['payment_id'] ) ) ) . '">' . esc_html( edd_get_payment_number( $item['payment_id'] ) ) . '</a>';
 				break;
 
 			default:
@@ -280,7 +280,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 			echo '<select name="download" id="edd-log-download-filter">';
 				echo '<option value="0">' . __( 'All', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
-					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
+					echo '<option value="' . esc_attr( $download ) . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}
 
 			echo '</select>';

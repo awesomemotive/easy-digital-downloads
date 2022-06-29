@@ -430,8 +430,8 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 	?>
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
-			<?php printf( __( 'Price ID: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
-			<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+			<?php printf( __( 'Price ID: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . esc_html( $key ) . '</span>' ); ?>
+			<input type="hidden" name="edd_variable_prices[<?php echo esc_attr( $key ); ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 		</span>
 		<?php
 		$actions = array();
@@ -439,7 +439,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="price">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), $key ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ) . '</span></a>';
+		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="price">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), esc_html( $key ) ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), esc_html( $key ) ) . '</span></a>';
 		?>
 		<span class="edd-repeatable-row-actions">
 			<?php echo implode( '&nbsp;&#124;&nbsp;', $actions ); ?>
@@ -452,7 +452,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 			<span class="edd-repeatable-row-setting-label"><?php _e( 'Option Name', 'easy-digital-downloads' ); ?></span>
 			<?php echo EDD()->html->text( array(
 				'name'  => 'edd_variable_prices[' . $key . '][name]',
-				'value' => esc_attr( $args['name'] ),
+				'value' => $args['name'],
 				'placeholder' => __( 'Option Name', 'easy-digital-downloads' ),
 				'class' => 'edd_variable_prices_name large-text'
 			) ); ?>
@@ -483,7 +483,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 		<div class="edd_repeatable_default edd_repeatable_default_wrapper">
 			<span class="edd-repeatable-row-setting-label"><?php _e( 'Default', 'easy-digital-downloads' ); ?></span>
 			<label class="edd-default-price">
-				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo esc_attr( $key ); ?>" />
 				<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
 			</label>
 		</div>
@@ -603,7 +603,7 @@ function edd_render_products_field( $post_id ) {
 								<div class="edd-bundled-product-row<?php echo $variable_class; ?>">
 									<div class="edd-bundled-product-item-reorder">
 										<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move"  title="<?php printf( __( 'Click and drag to re-order bundled %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>"></span>
-										<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+										<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 									</div>
 									<div class="edd-bundled-product-item">
 										<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
@@ -703,7 +703,7 @@ function edd_render_products_field( $post_id ) {
 									?>
 								</div>
 								<span class="edd-bundled-product-actions">
-									<a class="edd-remove-row edd-delete" data-type="file" ><?php printf( __( 'Remove', 'easy-digital-downloads' ) ); ?><span class="screen-reader-text"><?php __( 'Remove bundle option 1', 'easy-digital-downloads' ); ?></span></a>
+									<a class="edd-remove-row edd-delete" data-type="file" ><?php printf( __( 'Remove', 'easy-digital-downloads' ) ); ?><span class="screen-reader-text"><?php _e( 'Remove bundle option 1', 'easy-digital-downloads' ); ?></span></a>
 								</span>
 								<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 							</div>
@@ -825,7 +825,7 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
 			<?php printf( __( '%1$s file ID: %2$s', 'easy-digital-downloads' ), edd_get_label_singular(), '<span class="edd_file_id">' . $key . '</span>' ); ?>
-			<input type="hidden" name="edd_download_files[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+			<input type="hidden" name="edd_download_files[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 		</span>
 		<span class="edd-repeatable-row-actions">
 			<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"><?php printf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ); ?></span>
@@ -1194,18 +1194,18 @@ function edd_render_stats_meta_box() {
 
 	<p class="product-sales-stats">
 		<span class="label"><?php _e( 'Sales:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php echo $sales; ?></a></span>
+		<span><a href="<?php echo esc_url( admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . urlencode( $post->ID ) ) ); ?>"><?php echo $sales; ?></a></span>
 	</p>
 
 	<p class="product-earnings-stats">
 		<span class="label"><?php _e( 'Earnings:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post->ID ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
+		<span><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . urlencode( $post->ID ) ) ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
 	</p>
 
 	<hr />
 
 	<p class="file-download-log">
-		<span><a href="<?php echo admin_url( 'edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View File Download Log', 'easy-digital-downloads' ); ?></a></span><br/>
+		<span><a href="<?php echo esc_url( admin_url( 'edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . urlencode( $post->ID ) ) ); ?>"><?php _e( 'View File Download Log', 'easy-digital-downloads' ); ?></a></span><br/>
 	</p>
 <?php
 	do_action('edd_stats_meta_box');
@@ -1232,7 +1232,7 @@ function edd_render_promo_metabox() {
 	<p>
 		<?php
 		// Translators: The %s represents the link to the pricing page on the Easy Digital Downloads website.
-		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), $url ) );
+		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), esc_url( $url ) ) );
 		?>
 	</p>
 	<?php

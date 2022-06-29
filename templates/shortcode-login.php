@@ -24,7 +24,7 @@ if ( ! is_user_logged_in() ) :
 			</p>
 			<p class="edd-login-submit">
 				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $edd_login_redirect ); ?>"/>
-				<input type="hidden" name="edd_login_nonce" value="<?php echo wp_create_nonce( 'edd-login-nonce' ); ?>"/>
+				<input type="hidden" name="edd_login_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd-login-nonce' ) ); ?>"/>
 				<input type="hidden" name="edd_action" value="user_login"/>
 				<input id="edd_login_submit" type="submit" class="edd-submit" value="<?php _e( 'Log In', 'easy-digital-downloads' ); ?>"/>
 			</p>
