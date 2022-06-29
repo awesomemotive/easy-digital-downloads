@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.4
-Tested up to: 5.9.2
+Tested up to: 6.0
 Requires PHP: 5.4
-Stable Tag: 2.11.6
+Stable Tag: 2.11.7
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
