@@ -666,9 +666,9 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_sequential_payment_numbers',
-			'step'        => absint( $step ),
-			'custom'      => absint( $number ),
-			'total'       => absint( $total ),
+			'step'        => urlencode( $step ),
+			'custom'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -766,7 +766,7 @@ function edd_v21_upgrade_customers_db() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customers_db',
-			'step'        => absint( $step ),
+			'step'        => urlencode( $step ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -882,7 +882,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_payments_price_logs_db',
-			'step'        => absint( $step ),
+			'step'        => urlencode( $step ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -954,9 +954,9 @@ function edd_v23_upgrade_payment_taxes() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_payment_taxes',
-			'step'        => absint( $step ),
-			'number'      => absint( $number ),
-			'total'       => absint( $total ),
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -1073,9 +1073,9 @@ function edd_v23_upgrade_customer_purchases() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customer_payments_association',
-			'step'        => absint( $step ),
-			'number'      => absint( $number ),
-			'total'       => absint( $total ),
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -1157,10 +1157,9 @@ function edd_upgrade_user_api_keys() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_user_api_keys',
-			'step'        => absint( $step ),
-			'number'      => absint( $number ),
-			'total'       => absint( $total ),
-		), admin_url( 'index.php' ) );
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ) ) );
 
 		edd_redirect( $redirect );
 
@@ -1220,8 +1219,8 @@ function edd_remove_refunded_sale_logs() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'remove_refunded_sale_logs',
-			'step'        => absint( $step ),
-			'total'       => absint( $total ),
+			'step'        => urlencode( $step ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );

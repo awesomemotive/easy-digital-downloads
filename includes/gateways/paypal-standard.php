@@ -204,7 +204,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$return_url = add_query_arg(
 			array(
 				'payment-confirmation' => 'paypal',
-				'payment-id'           => absint( $payment ),
+				'payment-id'           => urlencode( $payment ),
 			),
 			get_permalink( edd_get_option( 'success_page', false ) )
 		);
@@ -227,9 +227,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'custom'        => $payment,
 			'rm'            => '2',
 			'return'        => esc_url_raw( $return_url ),
-			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
-			'notify_url'    => $listener_url,
-			'image_url'     => edd_get_paypal_image_url(),
+			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $payment ) ) ),
+			'notify_url'    => esc_url_raw( $listener_url ),
+			'image_url'     => esc_url_raw( edd_get_paypal_image_url() ),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);

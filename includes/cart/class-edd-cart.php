@@ -751,7 +751,7 @@ class EDD_Cart {
 		$amount       = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
 		if ( $echo ) {
-			echo $amount;
+			echo esc_html( $amount );
 		}
 
 		return $amount;
@@ -1152,14 +1152,14 @@ class EDD_Cart {
 	 * @param bool $echo
 	 * @return mixed|string|void
 	 */
-	public function total( $echo ) {
+	public function total( $echo = false ) {
 		$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( $this->get_total() ) ) );
 
-		if ( ! $echo ) {
-			return $total;
+		if ( $echo ) {
+			echo esc_html( $total );
 		}
 
-		echo $total;
+		return $total;
 	}
 
 	/**
@@ -1285,11 +1285,11 @@ class EDD_Cart {
 		$tax = max( $cart_tax, 0 );
 		$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
-		if ( ! $echo ) {
-			return $tax;
-		} else {
-			echo $tax;
+		if ( $echo ) {
+			echo esc_html( $tax );
 		}
+
+		return $tax;
 	}
 
 	/**
@@ -1412,9 +1412,10 @@ class EDD_Cart {
 
 		// Add the success message
 		$messages['edd_cart_save_successful'] = sprintf(
-			'<strong>%1$s</strong>: %2$s',
+			'<strong>%1$s</strong>: %2$s <a href="%3$s">%3$s</a>',
 			__( 'Success', 'easy-digital-downloads' ),
-			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' <a href="' . esc_url( $checkout_url ) . '">' . esc_url( $checkout_url ) . '</a>'
+			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ),
+			esc_url( edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . urlencode( $token ) )
 		);
 
 		// Set these messages in the session

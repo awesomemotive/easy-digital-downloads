@@ -580,7 +580,7 @@ final class EDD_Amazon_Payments {
 			EDD()->session->set( 'customer', $customer );
 		}
 
-		edd_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized', 'amazon_reference_id' => $reference ) ) );
+		edd_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized', 'amazon_reference_id' => urlencode( $reference ) ) ) );
 	}
 
 	/**

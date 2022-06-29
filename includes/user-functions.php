@@ -586,11 +586,11 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
 	if( $emails->html ) {
 
-		$user_message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+		$user_message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &rarr;</a>' . "\r\n";
 
 	} else {
 
-		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), $login_url ) . "\r\n";
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), esc_url( $login_url ) ) . "\r\n";
 
 	}
 

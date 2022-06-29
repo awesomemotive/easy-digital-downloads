@@ -254,7 +254,7 @@ function edd_customers_list( $active_tab = 'customers' ) {
 		<?php edd_customers_page_primary_nav( $active_tab ); ?>
 		<br>
 
-		<?php do_action( 'edd_' . $active_tab. '_table_top' ); ?>
+		<?php do_action( 'edd_' . sanitize_key( $active_tab ) . '_table_top' ); ?>
 
 		<form id="edd-customers-filter" method="get" action="<?php echo esc_url( $action_url ); ?>">
 			<?php
@@ -1101,7 +1101,7 @@ function edd_customers_delete_view( $customer ) {
 				</span>
 
 				<span id="customer-edit-actions">
-					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
+					<input type="hidden" name="customer_id" value="<?php echo esc_attr( $customer->id ); ?>" />
 					<?php wp_nonce_field( 'delete-customer', '_wpnonce', false, true ); ?>
 					<input type="hidden" name="edd_action" value="delete-customer" />
 					<input type="submit" disabled="disabled" id="edd-delete-customer" class="button-primary" value="<?php _e( 'Delete Customer', 'easy-digital-downloads' ); ?>" />
@@ -1138,7 +1138,7 @@ function edd_customer_tools_view( $customer ) {
 					<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
 					<input type="hidden" name="edd-export-class" data-type="recount-single-customer-stats" value="EDD_Tools_Recount_Single_Customer_Stats" />
-					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
+					<input type="hidden" name="customer_id" value="<?php echo esc_attr( $customer->id ); ?>" />
 					<input type="submit" id="recount-stats-submit" value="<?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 				</span>
 			</form>

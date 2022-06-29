@@ -2778,7 +2778,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
 							edd_date_i18n( $expiration ),
-							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . esc_attr( $value ) . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2901,7 +2901,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="password" autocomplete="off" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
+		$html = '<input type="password" autocomplete="off" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . sanitize_key( $value ) . '"/>';
 
 		if ( ( is_object( $license ) && ! empty( $license->license ) && 'valid' == $license->license ) || 'valid' == $license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
@@ -2912,8 +2912,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
-				$html .= '<p>' . $message . '</p>';
+				$html .= '<div class="edd-license-data edd-license-' . esc_attr( $class ) . ' ' . esc_attr( $license_status ) . '">';
+				$html .= '<p>' . wp_kses_post( $message ) . '</p>';
 				$html .= '</div>';
 
 			}
