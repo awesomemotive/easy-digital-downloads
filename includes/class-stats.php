@@ -3165,14 +3165,11 @@ class Stats {
 	 * @return array The statuses of orders to use for the stats generation.
 	 */
 	private function get_revenue_type_statuses() {
-
-		$statuses = edd_get_gross_order_statuses();
 		if ( 'net' === $this->query_vars['revenue_type'] ) {
-			$statuses = edd_get_net_order_statuses();
+			return edd_get_net_order_statuses();
 		}
 
-
-		return $statuses;
+		return edd_get_gross_order_statuses();
 	}
 
 	/**
