@@ -65,9 +65,11 @@ function edd_admin_header() {
 		?>
 		<style>
 			.wrap > h1,
-			.wrap h1.wp-heading-inline,
-			.page-title-action {
+			.wrap h1.wp-heading-inline {
 				display: none;
+			}
+			.page-title-action {
+				visibility: hidden;
 			}
 		</style>
 		<script>
@@ -76,7 +78,7 @@ function edd_admin_header() {
 			const eddAddNew  = $( '.add-new-h2:visible' );
 
 			if ( coreAddNew.length ) {
-				coreAddNew.appendTo('.edd-header-page-title-wrap').addClass('button').show();
+				coreAddNew.appendTo( '.edd-header-page-title-wrap' ).addClass( 'button' ).css( 'visibility', 'unset' );
 			}
 
 			if ( eddAddNew.length ) {
