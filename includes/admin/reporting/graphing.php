@@ -390,7 +390,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			break;
 		case 'last_quarter' :
 		case 'this_quarter' :
-			$day_by_day = true;
+			$day_by_day = false;
 			break;
 		case 'other' :
 			if ( $dates['m_start'] == 12 && $dates['m_end'] == 1 ) {
