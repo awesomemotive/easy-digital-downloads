@@ -34,7 +34,7 @@ function edd_payment_history_page() {
 	<div class="wrap">
 		<h1><?php echo $edd_payment->labels->menu_name ?></h1>
 		<?php do_action( 'edd_payments_page_top' ); ?>
-		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
+		<form id="edd-payments-filter" method="get" action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ); ?>">
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-payment-history" />
 
@@ -114,14 +114,22 @@ add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
 function edd_override_edit_post_for_payment_link( $url, $post_id, $context ) {
 
 	$post = get_post( $post_id );
-	if( ! $post )
+	if ( ! $post ) {
 		return $url;
+	}
 
-	if( 'edd_payment' != $post->post_type )
+	if ( 'edd_payment' !== $post->post_type ) {
 		return $url;
+	}
 
-	$url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $post_id );
-
-	return $url;
+	return add_query_arg(
+		array(
+			'post_type' => 'download',
+			'page'      => 'edd-payment-history',
+			'view'      => 'view-order-details',
+			'id'        => absint( $post_id ),
+		),
+		admin_url( 'edit.php' )
+	);
 }
 add_filter( 'get_edit_post_link', 'edd_override_edit_post_for_payment_link', 10, 3 );

@@ -205,7 +205,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Get the success url
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
-				'payment-id' => $payment
+				'payment-id'           => urlencode( $payment ),
 			), get_permalink( edd_get_option( 'success_page', false ) ) );
 
 		// Get the PayPal redirect uri
@@ -225,10 +225,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'charset'       => get_bloginfo( 'charset' ),
 			'custom'        => $payment,
 			'rm'            => '2',
-			'return'        => $return_url,
-			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
-			'notify_url'    => $listener_url,
-			'image_url'     => edd_get_paypal_image_url(),
+			'return'        => esc_url_raw( $return_url ),
+			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $payment ) ) ),
+			'notify_url'    => esc_url_raw( $listener_url ),
+			'image_url'     => esc_url_raw( edd_get_paypal_image_url() ),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);
@@ -332,7 +332,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
 
 		// Redirect to PayPal
-		wp_redirect( $paypal_redirect );
+		wp_redirect( esc_url_raw( $paypal_redirect ) );
 		exit;
 	}
 

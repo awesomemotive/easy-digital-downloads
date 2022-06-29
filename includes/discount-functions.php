@@ -838,14 +838,14 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$discount_id = edd_get_discount_id_by_code( $discount );
 		$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
-		$remove_url  = add_query_arg(
+		$remove_url  = esc_url( add_query_arg(
 			array(
 				'edd_action'    => 'remove_cart_discount',
-				'discount_id'   => $discount_id,
-				'discount_code' => $discount
+				'discount_id'   => urlencode( $discount_id ),
+				'discount_code' => urlencode( $discount ),
 			),
 			edd_get_checkout_uri()
-		);
+		) );
 
 		$discount_html = '';
 		$discount_html .= "<span class=\"edd_discount\">\n";
@@ -895,7 +895,8 @@ function edd_remove_cart_discount() {
 
 	do_action( 'edd_post_remove_cart_discount', absint( $_GET['discount_id'] ) );
 
-	wp_redirect( edd_get_checkout_uri() ); edd_die();
+	wp_safe_redirect( esc_url_raw( edd_get_checkout_uri() ) );
+	edd_die();
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
 

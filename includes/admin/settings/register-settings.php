@@ -344,7 +344,7 @@ function edd_get_registered_settings() {
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
 							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+							esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' )
 						),
 						'type' => 'checkbox',
 					),
@@ -924,7 +924,7 @@ function edd_get_registered_settings() {
 						'id'   => 'show_privacy_policy_on_checkout',
 						'name' => __( 'Show the Privacy Policy on checkout', 'easy-digital-downloads' ),
 						'desc' =>
-								__( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.' .
+								__( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_url( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.' .
 								'<p>' . sprintf( __( 'Need help creating a Privacy Policy? We recommend %sTermageddon%s.', 'easy-digital-downloads' ), '<a href="https://termageddon.com/i/easy-digital-downloads-edd-termageddon-promotion/" target="_blank" rel="noopener noreferrer">', '</a>' ) . '</p>',
 						'type' => 'checkbox',
 					),
@@ -1684,7 +1684,7 @@ function edd_gateways_callback( $args ) {
 			'utm_campaign' => 'admin',
 	);
 	$url   = esc_url( add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' ) );
-	$html .= '<p class="description">' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'easy-digital-downloads' ), $url ) . '</p>';
+	$html .= '<p class="description">' . sprintf( __( 'Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
@@ -2183,7 +2183,7 @@ function edd_recapture_callback($args) {
 			</p>
 			<?php else : ?>
 			<p>
-				<?php printf( __( '%sComplete your connection to Recapture%s', 'easy-digital-downloads' ), '<a href="' . admin_url( 'admin.php?page=recapture' ) . '">', '</a>' ); ?>
+				<?php printf( __( '%sComplete your connection to Recapture%s', 'easy-digital-downloads' ), '<a href="' . esc_url( admin_url( 'admin.php?page=recapture' ) ) . '">', '</a>' ); ?>
 			</p>
 			<?php endif; ?>
 		</div>
@@ -2266,7 +2266,7 @@ function edd_tax_rates_callback($args) {
 						) );
 					} else {
 						echo EDD()->html->text( array(
-							'name'  => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]', $rate['state'],
+							'name'  => 'tax_rates[' . edd_sanitize_key( $key ) . '][state]',
 							'value' => ! empty( $rate['state'] ) ? $rate['state'] : '',
 						) );
 					}
@@ -2368,7 +2368,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
 							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+							esc_url( 'https://easydigitaldownloads.com/checkout/?edd_license_key=' . sanitize_key( $value ) . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired' )
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2507,7 +2507,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="password" autocomplete="off" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
+		$html = '<input type="password" autocomplete="off" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . sanitize_key( $value ) . '"/>';
 
 		if ( ( is_object( $license ) && ! empty( $license->license ) && 'valid' == $license->license ) || 'valid' == $license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
@@ -2518,8 +2518,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		if ( ! empty( $messages ) ) {
 			foreach( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
-					$html .= '<p>' . $message . '</p>';
+				$html .= '<div class="edd-license-data edd-license-' . esc_attr( $class ) . ' ' . esc_attr( $license_status ) . '">';
+					$html .= '<p>' . wp_kses_post( $message ) . '</p>';
 				$html .= '</div>';
 
 			}

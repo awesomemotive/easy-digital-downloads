@@ -1999,24 +1999,36 @@ class EDD_API {
 			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'easy-digital-downloads' ), $process ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
+		$url = add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-tools',
+				'tab'       => 'api_keys',
+			),
+			admin_url( 'edit.php' )
+		);
 		switch( $process ) {
 			case 'generate':
 				if( $this->generate_api_key( $user_id ) ) {
 					delete_transient( 'edd-total-api-keys' );
-					wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+					wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'api-key-generated', $url ) ) );
+					exit();
 				} else {
-					wp_redirect( add_query_arg( 'edd-message', 'api-key-failed', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+					wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'api-key-failed', $url ) ) );
+					exit();
 				}
 				break;
 			case 'regenerate':
 				$this->generate_api_key( $user_id, true );
 				delete_transient( 'edd-total-api-keys' );
-				wp_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'api-key-regenerated', $url ) ) );
+				exit();
 				break;
 			case 'revoke':
 				$this->revoke_api_key( $user_id );
 				delete_transient( 'edd-total-api-keys' );
-				wp_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				wp_safe_redirect( esc_url_raw( add_query_arg( 'edd-message', 'api-key-revoked', $url ) ) );
+				exit();
 				break;
 			default;
 				break;

@@ -198,7 +198,8 @@ class EDD_Tracking {
 
 		edd_delete_option( 'allow_tracking' );
 		update_option( 'edd_tracking_notice', '1' );
-		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
+		wp_safe_redirect( esc_url_raw( remove_query_arg( 'edd_action' ) ) );
+		exit;
 	}
 
 	/**
@@ -256,9 +257,9 @@ class EDD_Tracking {
 			$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 
 			$source         = substr( md5( get_bloginfo( 'name' ) ), 0, 10 );
-			$extensions_url = 'https://easydigitaldownloads.com/downloads/?utm_source=' . $source . '&utm_medium=admin&utm_term=notice&utm_campaign=EDDUsageTracking';
+			$extensions_url = 'https://easydigitaldownloads.com/downloads/?utm_source=' . sanitize_key( $source ) . '&utm_medium=admin&utm_term=notice&utm_campaign=EDDUsageTracking';
 			echo '<div class="updated"><p>';
-			echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), $extensions_url );
+			echo sprintf( __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ), esc_url( $extensions_url ) );
 			echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'easy-digital-downloads' ) . '</a>';
 			echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'easy-digital-downloads' ) . '</a>';
 			echo '</p></div>';

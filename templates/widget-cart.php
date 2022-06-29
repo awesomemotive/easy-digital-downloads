@@ -6,7 +6,7 @@ $cart_items    = edd_get_cart_contents();
 $cart_quantity = edd_get_cart_quantity();
 $display       = $cart_quantity > 0 ? '' : ' style="display:none;"';
 ?>
-<p class="edd-cart-number-of-items"<?php echo $display; ?>><?php _e( 'Number of items in cart', 'easy-digital-downloads' ); ?>: <span class="edd-cart-quantity"><?php echo $cart_quantity; ?></span></p>
+<p class="edd-cart-number-of-items"<?php echo $display; ?>><?php _e( 'Number of items in cart', 'easy-digital-downloads' ); ?>: <span class="edd-cart-quantity"><?php echo esc_html( $cart_quantity ); ?></span></p>
 <ul class="edd-cart">
 <?php if( $cart_items ) : ?>
 

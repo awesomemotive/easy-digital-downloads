@@ -99,12 +99,13 @@ function edd_is_success_page() {
 function edd_send_to_success_page( $query_string = null ) {
 	$redirect = edd_get_success_page_uri();
 
-	if ( $query_string )
+	if ( $query_string ) {
 		$redirect .= $query_string;
+	}
 
 	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
 
-	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
+	wp_safe_redirect( esc_url_raw( apply_filters( 'edd_success_page_redirect', $redirect, $gateway, $query_string ) ) );
 	edd_die();
 }
 
@@ -177,7 +178,7 @@ function edd_send_back_to_checkout( $args = array() ) {
 		$redirect = add_query_arg( $args, $redirect );
 	}
 
-	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
+	wp_safe_redirect( esc_url_raw( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) ) );
 	edd_die();
 }
 
@@ -342,7 +343,7 @@ function edd_enforced_ssl_redirect_handler() {
 
 	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-	wp_safe_redirect( $uri );
+	wp_safe_redirect( esc_url_raw( $uri ) );
 	exit;
 }
 add_action( 'template_redirect', 'edd_enforced_ssl_redirect_handler' );

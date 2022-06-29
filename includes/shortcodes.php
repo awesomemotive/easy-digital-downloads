@@ -615,7 +615,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		</div>
 
 		<?php
-		
+
 	else:
 		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
@@ -869,7 +869,7 @@ function edd_process_profile_editor_updates( $data ) {
 
 	if( $errors ) {
 		// Send back to the profile editor if there are errors
-		wp_redirect( $data['edd_redirect'] );
+		wp_safe_redirect( esc_url_raw( $data['edd_redirect'] ) );
 		edd_die();
 	}
 
@@ -893,7 +893,7 @@ function edd_process_profile_editor_updates( $data ) {
 
 	if ( $updated ) {
 		do_action( 'edd_user_profile_updated', $user_id, $userdata );
-		wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) ) );
 		edd_die();
 	}
 }
@@ -939,7 +939,7 @@ function edd_process_profile_editor_remove_email() {
 		$url = $_GET['redirect'];
 	}
 
-	wp_safe_redirect( $url );
+	wp_safe_redirect( esc_url_raw( $url ) );
 	exit;
 }
 add_action( 'edd_profile-remove-email', 'edd_process_profile_editor_remove_email' );

@@ -95,9 +95,9 @@ $customer       = new EDD_Customer( $payment->customer_id );
 											<p>
 												<span class="label"><?php _e( 'Recovery URL', 'easy-digital-downloads' ); ?>:</span>
 												<?php $recover_help = __( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>
-												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $recover_help; ?>"></span>
+												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( $recover_help ); ?>"></span>
 
-												<input type="text" class="large-text" readonly="readonly" value="<?php echo $payment->get_recovery_url(); ?>" />
+												<input type="text" class="large-text" readonly="readonly" value="<?php echo esc_url( $payment->get_recovery_url() ); ?>" />
 											</p>
 											<?php endif; ?>
 										</div>
@@ -135,7 +135,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														if ( false === $discount_obj ) {
 															$found_discounts[] = $discount;
 														} else {
-															$found_discounts[] = '<a href="' . $discount_obj->edit_url() . '">' . $discount_obj->code . '</a>';
+															$found_discounts[] = '<a href="' . esc_url( $discount_obj->edit_url() ) . '">' . esc_html( $discount_obj->code ) . '</a>';
 														}
 
 													}
@@ -147,7 +147,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<span>
 													<?php
 													if ( ! empty( $found_discounts ) ) {
-														echo implode( ', ', $found_discounts );
+														echo implode( ', ', $found_discounts ); // HTML OK
 													} else {
 														_e( 'None', 'easy-digital-downloads' );
 													}
@@ -163,7 +163,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 											<p class="strong"><?php _e( 'Fees', 'easy-digital-downloads' ); ?>:</p>
 											<ul class="edd-payment-fees">
 												<?php foreach( $fees as $fee ) : ?>
-												<li data-fee-id="<?php echo $fee['id']; ?>"><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'], $currency_code ); ?></span></li>
+												<li data-fee-id="<?php echo esc_attr( $fee['id'] ); ?>"><span class="fee-label"><?php echo esc_html( $fee['label'] ) . ':</span> ' . '<span class="fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . esc_html( edd_currency_filter( $fee['amount'], $currency_code ) ); ?></span></li>
 												<?php endforeach; ?>
 											</ul>
 										</div>
@@ -176,7 +176,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<input name="edd-payment-tax" class="med-text" type="text" value="<?php echo esc_attr( edd_format_amount( $payment->tax ) ); ?>"/>
 												<?php if ( ! empty( $payment->tax_rate ) ) : ?>
 													<span class="edd-tax-rate">
-														&nbsp;<?php echo $payment->tax_rate * 100; ?>%
+														&nbsp;<?php echo esc_html( $payment->tax_rate * 100 ); ?>%
 													</span>
 												<?php endif; ?>
 											</p>
@@ -207,7 +207,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<?php do_action( 'edd_view_order_details_update_before', $payment_id ); ?>
 									<div id="major-publishing-actions">
 										<div id="delete-action">
-											<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment_id ), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>" class="edd-delete-payment edd-delete"><?php _e( 'Delete Payment', 'easy-digital-downloads' ); ?></a>
+											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => urlencode( $payment_id ) ), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ); ?>" class="edd-delete-payment edd-delete"><?php esc_html_e( 'Delete Payment', 'easy-digital-downloads' ); ?></a>
 										</div>
 										<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Payment', 'easy-digital-downloads' ); ?>"/>
 										<div class="clear"></div>
@@ -230,7 +230,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<select class="edd-order-resend-receipt-email">
 													<option value=""><?php _e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
 													<?php foreach( $customer->emails as $email ) : ?>
-														<option value="<?php echo urlencode( sanitize_email( $email ) ); ?>"><?php echo $email; ?></option>
+														<option value="<?php echo urlencode( sanitize_email( $email ) ); ?>"><?php echo esc_html( $email ); ?></option>
 													<?php endforeach; ?>
 												</select>
 											</div>
@@ -305,23 +305,43 @@ $customer       = new EDD_Customer( $payment->customer_id );
 							<div id="edd-order-logs" class="postbox edd-order-logs">
 
 								<h3 class="hndle">
-									<span><?php _e( 'Logs', 'easy-digital-downloads' ); ?></span>
+									<span><?php esc_html_e( 'Logs', 'easy-digital-downloads' ); ?></span>
 								</h3>
 								<div class="inside">
 									<div class="edd-admin-box">
 
 										<div class="edd-admin-box-inside">
 
+											<?php
+											$logs_url = add_query_arg(
+												array(
+													'post_type' => 'download',
+													'page'      => 'edd-reports',
+													'tab'       => 'logs',
+												),
+												admin_url( 'edit.php' )
+											);
+											?>
 											<p>
-												<a href="<?php echo admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&payment=' . $payment_id ); ?>"><?php _e( 'View file download log for purchase', 'easy-digital-downloads' ); ?></a>
+												<a href="<?php echo esc_url( add_query_arg( 'payment', absint( $payment_id ), $logs_url ) ); ?>">
+													<?php esc_html_e( 'View file download log for purchase', 'easy-digital-downloads' ); ?>
+												</a>
 											</p>
 											<p>
-												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&customer=' . $customer->id ); ?>
-												<a href="<?php echo $download_log_url; ?>"><?php _e( 'View customer download log', 'easy-digital-downloads' ); ?></a>
+												<a href="<?php echo esc_url( add_query_arg( 'customer', absint( $customer->id ), $logs_url ) ); ?>"><?php esc_html_e( 'View customer download log', 'easy-digital-downloads' ); ?></a>
 											</p>
 											<p>
-												<?php $purchase_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $payment_id ) ) ); ?>
-												<a href="<?php echo $purchase_url; ?>"><?php _e( 'View all purchases of customer', 'easy-digital-downloads' ); ?></a>
+												<?php
+												$purchase_url = add_query_arg(
+													array(
+														'post_type' => 'download',
+														'page'      => 'edd-payment-history',
+														'customer'  => absint( $customer->id ),
+													),
+													admin_url( 'edit.php' )
+												);
+												?>
+												<a href="<?php echo esc_url( $purchase_url ); ?>"><?php esc_html_e( 'View all purchases of customer', 'easy-digital-downloads' ); ?></a>
 											</p>
 										</div>
 
@@ -379,7 +399,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 							if ( is_array( $cart_items ) ) :
 								$is_qty_enabled = edd_item_quantities_enabled() ? ' item_quantity' : '' ;
 								?>
-								<div id="edd-purchased-files" class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
+								<div id="edd-purchased-files" class="postbox edd-edit-purchase-element <?php echo esc_attr( $column_count ); ?>">
 									<h3 class="hndle edd-payment-details-label-mobile">
 										<span><?php printf( __( 'Purchased %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></span>
 									</h3>
@@ -389,7 +409,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<?php printf( _x( '%s Purchased', 'payment details purchased item title - full screen', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
 											</li>
 
-											<li class="item_price<?php echo $is_qty_enabled; ?>">
+											<li class="item_price<?php echo esc_attr( $is_qty_enabled ); ?>">
 												<?php
 													 _ex( 'Price', 'payment details purchased item price - full screen', 'easy-digital-downloads' );
 													if( edd_item_quantities_enabled() ) :
@@ -436,12 +456,12 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<li class="download">
 													<span class="edd-purchased-download-title">
 														<?php if ( ! empty( $download->ID ) ) : ?>
-															<a href="<?php echo admin_url( 'post.php?post=' . $item_id . '&action=edit' ); ?>">
-																<?php echo $download->get_name();
+															<a href="<?php echo esc_url( admin_url( 'post.php?post=' . urlencode( $item_id ) . '&action=edit' ) ); ?>">
+																<?php echo esc_html( $download->get_name() );
 																if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
 																	$price_options = $cart_items[ $key ]['item_number']['options'];
 																	if ( edd_has_variable_prices( $item_id ) && isset( $price_id ) ) {
-																		echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+																		echo ' - ' . esc_html( edd_get_price_option_name( $item_id, $price_id, $payment_id ) );
 																	}
 																}
 																?>
@@ -449,35 +469,35 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														<?php else: ?>
 															<span class="deleted">
 																<?php if ( ! $cart_items_existed ) {
-																	echo $cart_item['name'];
+																	echo esc_html( $cart_item['name'] );
 																} else if ( ! empty( $cart_item['name'] ) ) {
-																	echo $cart_item['name']; ?>&nbsp;-&nbsp;
+																	echo esc_html( $cart_item['name'] ); ?>&nbsp;-&nbsp;
 																	<em>(<?php _e( 'Deleted', 'easy-digital-downloads' ); ?>)</em>
 																<?php } else { ?>
-																	<em><?php printf( __( '%s deleted', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></em>
+																	<em><?php echo esc_html( sprintf( __( '%s deleted', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?></em>
 																<?php } ?>
 															</span>
 														<?php endif; ?>
 													</span>
-													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
-													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+													<input type="hidden" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
+													<input type="hidden" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
 
 													<?php if( ! edd_item_quantities_enabled() ) : ?>
-														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
 													<?php endif; ?>
 
 													<?php if ( ! edd_use_taxes() ): ?>
-														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" class="edd-payment-details-download-item-tax" value="<?php echo $item_tax; ?>" />
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][item_tax]" class="edd-payment-details-download-item-tax" value="<?php echo esc_attr( $item_tax ); ?>" />
 													<?php endif; ?>
 
 													<?php if ( ! empty( $cart_items[ $key ]['fees'] ) ) : ?>
 														<?php $fees = array_keys( $cart_items[ $key ]['fees'] ); ?>
-														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][fees]" class="edd-payment-details-download-fees" value="<?php echo esc_attr( json_encode( $fees ) ); ?>"/>
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][fees]" class="edd-payment-details-download-fees" value="<?php echo esc_attr( json_encode( $fees ) ); ?>"/>
 													<?php endif; ?>
 
 												</li>
 
-												<li class="item_price<?php echo $is_qty_enabled; ?>">
+												<li class="item_price<?php echo esc_attr( $is_qty_enabled ); ?>">
 													<span class="edd-payment-details-label-mobile">
 														<?php
 															_ex( 'Price', 'payment details purchased item price - mobile', 'easy-digital-downloads' );
@@ -487,10 +507,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														?>
 													</span>
 													<?php echo edd_currency_symbol( $currency_code ); ?>
-													<input type="text" class="medium-text edd-price-field edd-payment-details-download-item-price edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_price]" value="<?php echo edd_format_amount( $item_price ); ?>" />
+													<input type="text" class="medium-text edd-price-field edd-payment-details-download-item-price edd-payment-item-input" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][item_price]" value="<?php echo esc_attr( edd_format_amount( $item_price ) ); ?>" />
 													<?php if( edd_item_quantities_enabled() ) : ?>
 														&nbsp;&times;&nbsp;
-														<input type="number" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="small-text edd-payment-details-download-quantity edd-payment-item-input" min="1" step="1" value="<?php echo $quantity; ?>" />
+														<input type="number" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][quantity]" class="small-text edd-payment-details-download-quantity edd-payment-item-input" min="1" step="1" value="<?php echo esc_attr( $quantity ); ?>" />
 													<?php endif; ?>
 												</li>
 
@@ -500,7 +520,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 														<?php _ex( 'Tax', 'payment details purchased item tax - mobile', 'easy-digital-downloads' ); ?>
 													</span>
 													<?php echo edd_currency_symbol( $currency_code ); ?>
-													<input type="text" class="small-text edd-price-field edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo $key; ?>][item_tax]" value="<?php echo edd_format_amount( $item_tax ); ?>" />
+													<input type="text" class="small-text edd-price-field edd-payment-details-download-item-tax edd-payment-item-input" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][item_tax]" value="<?php echo esc_attr( edd_format_amount( $item_tax ) ); ?>" />
 												</li>
 												<?php endif; ?>
 
@@ -508,13 +528,13 @@ $customer       = new EDD_Customer( $payment->customer_id );
 													<span class="edd-payment-details-label-mobile">
 														<?php printf( _x( '%s Total', 'payment details purchased item total - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>
 													</span>
-													<span class="edd-price-currency"><?php echo edd_currency_symbol( $currency_code ); ?></span><span class="price-text edd-payment-details-download-amount"><?php echo edd_format_amount( $price ); ?></span>
-													<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
+													<span class="edd-price-currency"><?php echo edd_currency_symbol( $currency_code ); ?></span><span class="price-text edd-payment-details-download-amount"><?php echo esc_html( edd_format_amount( $price ) ); ?></span>
+													<input type="hidden" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
 												</li>
 											</ul>
 
 											<div class="edd-purchased-download-actions actions">
-												<input type="hidden" class="edd-payment-details-download-has-log" name="edd-payment-details-downloads[<?php echo $key; ?>][has_log]" value="1" />
+												<input type="hidden" class="edd-payment-details-download-has-log" name="edd-payment-details-downloads[<?php echo esc_attr( $key ); ?>][has_log]" value="1" />
 												<?php if( edd_get_download_files( $item_id, $price_id ) && edd_is_payment_complete( $payment_id ) ) : ?>
 													<span class="edd-copy-download-link-wrapper">
 														<a href="" class="edd-copy-download-link" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link(s)', 'easy-digital-downloads' ); ?></a> |
@@ -533,13 +553,13 @@ $customer       = new EDD_Customer( $payment->customer_id );
 								</div>
 							<?php endif; ?>
 
-							<div class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
+							<div class="postbox edd-edit-purchase-element <?php echo esc_attr( $column_count ); ?>">
 
 								<div class="edd-add-download-to-purchase-header row header">
 									<ul class="edd-purchased-files-list-wrapper">
 										<li class="download"><?php printf( __( 'Add New %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></li>
 
-										<li class="item_price<?php echo $is_qty_enabled; ?>">
+										<li class="item_price<?php echo esc_attr( $is_qty_enabled ); ?>">
 											<?php _e( 'Price', 'easy-digital-downloads' ); ?>
 											<?php if( edd_item_quantities_enabled() ) : ?>
 												<?php _e( ' & Quantity', 'easy-digital-downloads' ); ?>
@@ -650,21 +670,31 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<div class="column-container customer-info">
 										<div class="column">
 											<?php if( ! empty( $customer->id ) ) : ?>
-												<?php $customer_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>
-												<a href="<?php echo $customer_url; ?>"><?php echo $customer->name; ?> - <?php echo $customer->email; ?></a>
+												<?php
+												$customer_url = add_query_arg(
+													array(
+														'post_type' => 'download',
+														'page'      => 'edd-customers',
+														'view'      => 'overview',
+														'id'        => absint( $customer->id ),
+													),
+													admin_url( 'edit.php' )
+												);
+												?>
+												<a href="<?php echo esc_url( $customer_url ); ?>"><?php echo esc_html( $customer->name ); ?> - <?php echo esc_html( $customer->email ); ?></a>
 											<?php endif; ?>
-											<input type="hidden" name="edd-current-customer" value="<?php echo $customer->id; ?>" />
+											<input type="hidden" name="edd-current-customer" value="<?php echo absint( $customer->id ); ?>" />
 										</div>
 										<div class="column">
-											<a href="#change" class="edd-payment-change-customer"><?php _e( 'Assign to another customer', 'easy-digital-downloads' ); ?></a>
+											<a href="#change" class="edd-payment-change-customer"><?php esc_html_e( 'Assign to another customer', 'easy-digital-downloads' ); ?></a>
 											&nbsp;|&nbsp;
-											<a href="#new" class="edd-payment-new-customer"><?php _e( 'New Customer', 'easy-digital-downloads' ); ?></a>
+											<a href="#new" class="edd-payment-new-customer"><?php esc_html_e( 'New Customer', 'easy-digital-downloads' ); ?></a>
 										</div>
 									</div>
 
 									<div class="column-container change-customer" style="display: none">
 										<div class="column">
-											<strong><?php _e( 'Select a customer', 'easy-digital-downloads' ); ?>:</strong>
+											<strong><?php esc_html_e( 'Select a customer', 'easy-digital-downloads' ); ?>:</strong>
 											<?php
 												$args = array(
 													'class'       => 'edd-payment-change-customer-input',
