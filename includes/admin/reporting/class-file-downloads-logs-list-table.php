@@ -121,18 +121,19 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$base_url = remove_query_arg( 'paged' );
 		switch ( $column_name ) {
 			case 'download':
-				$download      = new EDD_Download( $item[ $column_name ] );
-				$column_value  = $download->get_name();
+				$download     = new EDD_Download( $item[ $column_name ] );
+				$column_value = esc_html( $download->get_name() );
 
-				if ( false !== $item['price_id'] ) {
-					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
+				if ( false !== $item['price_id'] && $download->has_variable_prices() ) {
+					$column_value .= ' &mdash; ' . esc_html( edd_get_price_option_name( $download->ID, $item['price_id'] ) );
 				}
 
-				return '<a href="' . esc_url( add_query_arg( 'download', $download->ID, $base_url ) ) . '" >' . $column_value . '</a>';
+				// $column_value may contain some HTML, so is intentionally not escaped.
+				return '<a href="' . esc_url( add_query_arg( 'download', absint( $download->ID ), $base_url ) ) . '" >' . $column_value . '</a>';
 			case 'customer':
-				return '<a href="' . esc_url( add_query_arg( 'customer', $item['customer']->id, $base_url ) ) . '">' . $item['customer']->name . '</a>';
+				return '<a href="' . esc_url( add_query_arg( 'customer', absint( $item['customer']->id ), $base_url ) ) . '">' . esc_html( $item['customer']->name ) . '</a>';
 			case 'payment_id':
-				return false !== $item['payment_id'] ? '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . esc_attr( $item['payment_id'] ) ) ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
+				return false !== $item['payment_id'] ? '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . esc_attr( $item['payment_id'] ) ) ) . '">' . esc_html( edd_get_payment_number( $item['payment_id'] ) ) . '</a>' : '';
 			case 'ip':
 				return '<a href="' . esc_url( 'https://ipinfo.io/' . $item['ip'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
 			case 'file':
@@ -321,7 +322,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			echo '<select name="download" id="edd-log-download-filter">';
 				echo '<option value="0">' . __( 'All', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
-					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
+					echo '<option value="' . esc_attr( $download ) . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}
 			echo '</select>';
 		}
@@ -381,7 +382,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				// Filter the $file_id
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
 
-				$file_name = ! empty( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : edd_get_file_name( $files[ $file_id ] );
+				$file_name = '';
+				if ( ! empty( $files ) && is_numeric( $file_id ) ) {
+					$file_name = ! empty( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : edd_get_file_name( $files[ $file_id ] );
+				}
 
 				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
 					$logs_data[] = array(

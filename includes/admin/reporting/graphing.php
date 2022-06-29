@@ -949,13 +949,24 @@ function edd_get_report_dates() {
  * @param $data
  */
 function edd_parse_report_dates( $data ) {
+	$args = array(
+		'post_type' => 'download',
+		'page'      => 'edd-reports',
+		'view'      => sanitize_key( edd_get_reporting_view() ),
+	);
+	if ( ! empty( $_GET['download-id'] ) ) {
+		$args['download-id'] = absint( $_GET['download-id'] );
+	}
+	if ( ! empty( $_GET['exclude_taxes'] ) ) {
+		$args['exclude_taxes'] = absint( $_GET['exclude_taxes'] );
+	}
+	$url   = add_query_arg(
+		$args,
+		admin_url( 'edit.php' )
+	);
 	$dates = edd_get_report_dates();
-
-	$view          = edd_get_reporting_view();
-	$id            = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
-	$exclude_taxes = isset( $_GET['exclude_taxes'] ) ? $_GET['exclude_taxes'] : null;
-
-	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) . '&exclude_taxes=' . absint( $exclude_taxes ) ) ) ); edd_die();
+	wp_safe_redirect( esc_url_raw( add_query_arg( $dates, $url ) ) );
+	edd_die();
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
 
@@ -971,7 +982,7 @@ function edd_reports_refresh_button() {
 		'edd-message' => 'refreshed-reports'
 	) ), 'edd-refresh-reports' );
 
-	echo '<a href="' . $url . '" title="' . __( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
+	echo '<a href="' . esc_url( $url ) . '" title="' . esc_html__( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . esc_html__( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
 
 }
 

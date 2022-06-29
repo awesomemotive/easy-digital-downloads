@@ -88,7 +88,7 @@ function edd_options_page() {
 
 	// Remove tabs that don't have settings fields.
 	foreach ( array_keys( $settings_tabs ) as $settings_tab ) {
-		if ( empty( $all_settings[ $settings_tab ] ) ) {
+		if ( empty( $all_settings[ $settings_tab ] ) && in_array( $settings_tab, array( 'extensions', 'licenses' ), true ) ) {
 			unset( $settings_tabs[ $settings_tab ] );
 		}
 	}
@@ -264,7 +264,7 @@ function edd_options_sidebar() {
 			</div>
 			<div class="edd-sidebar-coupon-section">
 				<label for="edd-coupon-code"><?php _e( 'Use code at checkout:', 'easy-digital-downloads' ); ?></label>
-				<input id="edd-coupon-code" type="text" value="<?php echo $coupon_code; ?>" readonly>
+				<input id="edd-coupon-code" type="text" value="<?php echo esc_attr( $coupon_code ); ?>" readonly>
 				<p class="edd-coupon-note"><?php _e( 'Sale ends 23:59 PM December 6th CST. Save 25% on <a href="https://sandhillsdev.com/projects/" target="_blank">our other plugins</a>.', 'easy-digital-downloads' ); ?></p>
 			</div>
 			<div class="edd-sidebar-footer-section">

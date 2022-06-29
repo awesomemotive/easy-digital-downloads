@@ -95,8 +95,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
 		?>
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
 		</p>
 		<?php
@@ -129,7 +129,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 			case 'num_purchases' :
 				$value = '<a href="' .
-					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
+					esc_url( admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] ) )
 				) . '">' . esc_html( $item['num_purchases'] ) . '</a>';
 				break;
 
@@ -149,15 +149,44 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	public function column_name( $item ) {
-		$name        = '#' . $item['id'] . ' ';
-		$name       .= ! empty( $item['name'] ) ? $item['name'] : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
-		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
-		$customer    = new EDD_Customer( $item['id'] );
-		$view_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
+		$name       = '#' . $item['id'] . ' ';
+		$name      .= ! empty( $item['name'] ) ? esc_html( $item['name'] ) : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
+		$customer   = new EDD_Customer( $item['id'] );
+		$base_url   = add_query_arg(
+			array(
+				'post_type' => 'download',
+			),
+			admin_url( 'edit.php' )
+		);
+		$view_url   = add_query_arg(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => absint( $customer->id ),
+			),
+			$base_url
+		);
+		$logs_url   = add_query_arg(
+			array(
+				'page'     => 'edd-reports',
+				'tab'      => 'logs',
+				'customer' => absint( $customer->id ),
+			),
+			$base_url
+		);
+		$delete_url = add_query_arg(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'delete',
+				'id'   => absint( $item['id'] ),
+			),
+			$base_url
+		);
+
 		$actions     = array(
-			'view'   => '<a href="' . $view_url . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
-			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&customer=' . $customer->id ) . '">' . __( 'Download log', 'easy-digital-downloads' ) . '</a>',
-			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
+			'view'   => '<a href="' . esc_url( $view_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
+			'logs'   => '<a href="' . esc_url( $logs_url ) . '">' . __( 'Download log', 'easy-digital-downloads' ) . '</a>',
+			'delete' => '<a href="' . esc_url( $delete_url ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
 		);
 
 		$pending  = edd_user_pending_verification( $customer->user_id ) ? ' <em>' . __( '(Pending Verification)', 'easy-digital-downloads' ) . '</em>' : '';
@@ -238,7 +267,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
-		global $wpdb;
 
 		$data    = array();
 		$paged   = $this->get_paged();
