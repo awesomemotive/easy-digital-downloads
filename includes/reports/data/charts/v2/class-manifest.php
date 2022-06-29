@@ -322,6 +322,7 @@ class Manifest implements Error_Logger {
 
 		// Enqueue script and configuration to render the chart.
 		wp_enqueue_script( 'edd-admin-reports' );
+
 		wp_add_inline_script(
 			'edd-admin-reports',
 			sprintf( 'window.edd.renderChart(%s)', wp_json_encode( $this->build_config() ) )
@@ -346,9 +347,20 @@ class Manifest implements Error_Logger {
 		// Adjust end date forward by 1 second to push into the next day (for ChartJS display purposes).
 		$dates['end']->addSeconds( 1 );
 
+		// Get the timezone ID for parsing.
+		$timezone = edd_get_timezone_id();
+
 		// Apply UTC offset.
-		$dates['start']->setTimezone( edd_get_timezone_id() );
-		$dates['end']->setTimezone( edd_get_timezone_id() );
+		$dates['start']->setTimezone( $timezone );
+		$dates['end']->setTimezone( $timezone );
+
+		$time_format = 'MMM YYYY';
+
+		if ( $day_by_day ) {
+			$time_format = 'MMM D';
+		} else if ( $hour_by_hour ) {
+			$time_format = 'h:mm A';
+		}
 
 		$config->type         = $this->get_type();
 		$config->data         = $this->get_chart_data();
@@ -360,6 +372,8 @@ class Manifest implements Error_Logger {
 				'hour_by_hour' => $hour_by_hour,
 				'day_by_day'   => $day_by_day,
 				'utc_offset'   => esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ),
+				'timezone'     => $timezone,
+				'time_format'  => $time_format,
 			)
 		);
 
