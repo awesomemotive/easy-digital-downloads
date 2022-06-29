@@ -551,16 +551,6 @@ class EDD_Payment {
 	 * @return int|bool False on failure, the order ID on success.
 	 */
 	private function insert_payment() {
-		if ( empty( $this->key ) ) {
-			$auth_key             = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
-			$this->key            = strtolower( md5( $this->email . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );  // Unique key
-			$this->pending['key'] = $this->key;
-		}
-
-		if ( empty( $this->ip ) ) {
-			$this->ip            = edd_get_ip();
-			$this->pending['ip'] = $this->ip;
-		}
 
 		$payment_data = array(
 			'price'        => $this->total,
@@ -739,12 +729,6 @@ class EDD_Payment {
 						$this->update_meta( 'transaction_id', $this->transaction_id );
 						break;
 
-					case 'ip':
-						edd_update_order( $this->ID, array(
-							'ip' => $this->ip,
-						) );
-						break;
-
 					case 'customer_id':
 						edd_update_order( $this->ID, array(
 							'customer_id' => $this->customer_id,
@@ -832,6 +816,7 @@ class EDD_Payment {
 						) );
 						break;
 
+
 					case 'tax_rate':
 						$tax_rate = $this->tax_rate > 1 ? $this->tax_rate : ( $this->tax_rate * 100 );
 						$this->update_meta( '_edd_payment_tax_rate', $tax_rate );
@@ -894,7 +879,6 @@ class EDD_Payment {
 				'downloads'    => $this->downloads,
 				'cart_details' => $this->cart_details,
 				'fees'         => $this->fees,
-				'currency'     => $this->currency,
 				'user_info'    => is_array( $this->user_info ) ? $this->user_info : array(),
 				'date'         => $this->date,
 				'email'        => $this->email,
@@ -918,8 +902,6 @@ class EDD_Payment {
 				'price'        => $this->total,
 				'date'         => $this->date,
 				'user_email'   => $this->email,
-				'purchase_key' => $this->key,
-				'currency'     => $this->currency,
 				'downloads'    => $this->downloads,
 				'user_info'    => array(
 					'id'         => $this->user_id,
@@ -940,9 +922,7 @@ class EDD_Payment {
 			if ( md5( serialize( $this->payment_meta ) ) !== md5( serialize( $merged_meta ) ) ) {
 				// First, update the order.
 				$order_info = array(
-					'payment_key' => $this->key,
-					'currency'    => $merged_meta['currency'],
-					'email'       => $merged_meta['email'],
+					'email' => $merged_meta['email'],
 				);
 
 				if ( isset( $merged_meta['user_info']['id'] ) ) {
