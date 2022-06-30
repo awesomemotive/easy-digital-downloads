@@ -359,7 +359,7 @@ class Manifest implements Error_Logger {
 		if ( $day_by_day ) {
 			$time_format = 'MMM D';
 		} else if ( $hour_by_hour ) {
-			$time_format = 'h:mm A';
+			$time_format = 'hA';
 		}
 
 		$config->type         = $this->get_type();
@@ -438,7 +438,7 @@ class Manifest implements Error_Logger {
 				$time_format = 'MMM D';
 			} else if ( $hour_by_hour ) {
 				$time_unit   = 'hour';
-				$time_format = 'h:mm A';
+				$time_format = 'hA';
 			}
 
 			$defaults = array(
@@ -455,7 +455,8 @@ class Manifest implements Error_Logger {
 							'type'     => 'time',
 							'display'  => true,
 							'ticks'    => array(
-								'source' => 'auto',
+								'source'      => 'auto',
+								'maxRotation' => 0,
 							),
 							'position' => 'bottom',
 							'time'     => array(

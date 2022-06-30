@@ -50,6 +50,8 @@ export const render = ( config ) => {
 						...config.options.scales.xAxes[0],
 						ticks: {
 							...config.options.scales.xAxes[0].ticks,
+							maxTicksLimit:12,
+							autoSkip: true,
 							callback( value, index, ticks ) {
 								return moment.tz( ticks[index].value, config.dates.timezone ).format( config.dates.time_format );
 							},
