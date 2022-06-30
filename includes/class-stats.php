@@ -3103,7 +3103,7 @@ class Stats {
 
 		$relative_markup = $total_output;
 		if ( ! empty( $relative_output ) ) {
-			$relative_markup .= '<span class="tile-relative">' . $relative_output . '</span>';
+			$relative_markup .= '<div class="tile-relative">' . $relative_output . '</div>';
 		}
 
 		return $relative_markup;
