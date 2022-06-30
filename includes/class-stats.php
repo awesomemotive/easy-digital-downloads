@@ -3092,9 +3092,13 @@ class Stats {
 				$formatted_percentage_change = $formatted_percentage_change < 1 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
 			}
 
-			$relative_output = 0 < $percentage_change
-				? '<span class="dashicons dashicons-arrow-up"></span> ' . $formatted_percentage_change . '%'
-				: '<span class="dashicons dashicons-arrow-down"></span> ' . $formatted_percentage_change . '%';
+			if ( 0 < $percentage_change ) {
+				$direction       = $reverse ? 'down reverse' : 'up';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+			} else {
+				$direction       = $reverse ? 'up reverse' : 'down';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+			}
 		}
 
 		$relative_markup = $total_output;
