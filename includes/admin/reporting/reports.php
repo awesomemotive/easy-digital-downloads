@@ -1121,7 +1121,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						return $stats->get_gateway_sales( array(
 							'range'    => $dates['range'],
 							'gateway'  => $gateway,
-							'currency' => $currency
+							'currency' => $currency,
 						) );
 					},
 					'display_args'  => array(
