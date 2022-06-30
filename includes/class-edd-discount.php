@@ -1783,9 +1783,9 @@ class EDD_Discount extends Adjustment {
 		return esc_url(
 			edd_get_admin_url(
 				array(
+					'page'       => 'edd-discounts',
 					'edd-action' => 'edit_discount',
 					'discount'   => absint( $this->id ),
-					'page'       => 'edd-discounts',
 				)
 			)
 		);
