@@ -229,7 +229,7 @@ defined( 'ABSPATH' ) || exit;
 			<input type="hidden" name="type" value="discount" />
 			<input type="hidden" name="edd-action" value="add_discount"/>
 			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-discounts' ) ) ); ?>"/>
-			<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); // WPCS: XSS ok. ?>"/>
+			<input type="hidden" name="edd-discount-nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_discount_nonce' ) ); ?>"/>
 			<input type="submit" value="<?php esc_html_e( 'Add Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary"/>
 		</p>
 	</form>

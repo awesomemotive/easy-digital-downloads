@@ -172,8 +172,9 @@ function edd_checkout_cart_columns() {
  * @return void
  */
 function edd_save_cart_button() {
-	if ( edd_is_cart_saving_disabled() )
+	if ( edd_is_cart_saving_disabled() ) {
 		return;
+	}
 
 	$color = edd_get_option( 'checkout_color', 'blue' );
 	$color = ( $color == 'inherit' ) ? '' : $color;

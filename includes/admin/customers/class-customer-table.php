@@ -69,7 +69,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 		switch ( $column_name ) {
 
 			case 'id' :
-				$value = $item['id'];
+				$value = esc_html( $item['id'] );
 				break;
 
 			case 'email' :
@@ -94,7 +94,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 			default:
 				$value = isset( $item[ $column_name ] )
-					? $item[ $column_name ]
+					? esc_html( $item[ $column_name ] )
 					: null;
 				break;
 		}
@@ -112,9 +112,9 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @return string
 	 */
 	public function column_name( $item ) {
-		$state    = '';
-		$status   = $this->get_status();
-		$name     = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
+		$state  = '';
+		$status = $this->get_status();
+		$name   = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
 
 		$view_url   = edd_get_admin_url(
 			array(

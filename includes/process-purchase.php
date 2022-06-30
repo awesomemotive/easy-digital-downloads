@@ -250,8 +250,7 @@ function edd_process_purchase_login() {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
 		} else {
-			wp_redirect( esc_url_raw( wp_get_referer() ) );
-			exit;
+			edd_redirect( wp_get_referer() );
 		}
 	}
 
