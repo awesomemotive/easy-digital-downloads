@@ -976,7 +976,7 @@ function default_display_charts_group( $report ) {
 	}
 	?>
 		<div class="chart-timezone">
-			<?php printf( esc_html( 'Chart timezone: %s', 'easy-digital-downloads' ), edd_get_timezone_id() ); ?>
+			<?php printf( esc_html__( 'Chart time zone: %s', 'easy-digital-downloads' ), esc_html( edd_get_timezone_id() ) ); ?>
 		</div>
 	</div>
 	<?php
