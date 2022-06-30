@@ -2299,18 +2299,13 @@ function edd_register_customer_report( $reports ) {
 			'label' => __( 'Average Revenue per Customer', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $dates ) {
+					'data_callback' => function () {
 						$stats = new EDD\Stats();
 						return $stats->get_customer_lifetime_value( array(
 							'function' => 'AVG',
-							'range'    => $dates['range'],
 							'output'   => 'formatted',
-							'relative' => true,
 						) );
 					},
-					'display_args'  => array(
-						'comparison_label' => $label,
-					),
 				),
 			),
 		) );

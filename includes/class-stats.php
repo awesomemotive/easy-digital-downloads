@@ -2091,39 +2091,26 @@ class Stats {
 			? $this->get_db()->prepare( 'AND customer_id = %d', absint( $this->query_vars['customer'] ) )
 			: '';
 
-		$email = isset( $this->query_vars['email'] )
+		$email    = isset( $this->query_vars['email'] )
 			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
 			: '';
 
-		if ( true === $this->query_vars['relative'] ) {
-			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' ),
+			'rate'               => false
+		) );
 
-			$sql = "SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS total, IFNULL(relative, 0) AS relative
+		$inner_function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM' )
+		) );
+
+		$sql = "SELECT {$function} AS total
+				FROM (
+					SELECT {$inner_function} AS total
 					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS relative
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
-					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-		} else {
-			$function = $this->get_amount_column_and_function( array(
-				'accepted_functions' => array( 'SUM', 'AVG' ),
-				'rate'               => false
-			) );
-
-			$inner_function = $this->get_amount_column_and_function( array(
-				'accepted_functions' => array( 'SUM' )
-			) );
-
-			$sql = "SELECT {$function} AS total
-					FROM (
-						SELECT {$inner_function} AS total
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
-					    GROUP BY customer_id
-					) o";
-		}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
+					GROUP BY customer_id
+				) o";
 
 		$result = $this->get_db()->get_row( $sql );
 
@@ -2131,13 +2118,7 @@ class Stats {
 			? 0.00
 			: (float) $result->total;
 
-		if ( true === $this->query_vars['relative'] ) {
-			$total    = floatval( $result->total );
-			$relative = floatval( $result->relative );
-			$total    = $this->generate_relative_markup( $total, $relative );
-		} else {
-			$total = $this->maybe_format( $total );
-		}
+		$total = $this->maybe_format( $total );
 
 		// Reset query vars.
 		$this->post_query();
