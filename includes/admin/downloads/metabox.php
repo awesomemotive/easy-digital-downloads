@@ -484,7 +484,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 		<div class="edd-form-group edd_repeatable_default edd_repeatable_default_wrapper">
 			<div class="edd-form-group__control">
 			<label for="edd_default_price_id_<?php echo esc_attr( $key ); ?>" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'Default', 'easy-digital-downloads' ); ?></label>
-				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" id="edd_default_price_id_<?php echo esc_attr( $key ); ?>" value="<?php echo $key; ?>" />
+				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" id="edd_default_price_id_<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" />
 				<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
 			</div>
 		</div>
@@ -605,10 +605,10 @@ function edd_render_products_field( $post_id ) {
 						<?php $index = 1; ?>
 						<?php foreach ( $products as $key => $product ) : ?>
 							<div class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $index ); ?>">
-								<div class="edd-bundled-product-row<?php echo $variable_class; ?>">
+								<div class="edd-bundled-product-row<?php echo esc_attr( $variable_class ); ?>">
 									<div class="edd-bundled-product-item-reorder">
 										<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move"  title="<?php printf( __( 'Click and drag to re-order bundled %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>"></span>
-										<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
+										<input type="hidden" name="edd_bundled_products[<?php echo esc_attr( $index ); ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 									</div>
 									<div class="edd-form-group edd-bundled-product-item">
 										<label for="edd_bundled_products_<?php echo esc_attr( $index ); ?>" class="edd-form-group__label edd-repeatable-row-setting-label"><?php printf( esc_html__( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
@@ -661,7 +661,7 @@ function edd_render_products_field( $post_id ) {
 										</div>
 									</div>
 									<div class="edd-bundled-product-actions">
-										<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $index ); ?><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $index ); ?></span></a>
+										<a class="edd-remove-row edd-delete" data-type="file"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( esc_html__( 'Remove bundle option %s', 'easy-digital-downloads' ), esc_html( $index ) ); ?></span></a>
 									</div>
 									<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 								</div>
@@ -839,12 +839,12 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 		</span>
 		<span class="edd-repeatable-row-actions">
 			<a class="edd-remove-row edd-delete" data-type="file">
-				<?php _e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ); ?></span>
+				<?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( esc_html__( 'Remove file %s', 'easy-digital-downloads' ), esc_html( $key ) ); ?></span>
 			</a>
 		</span>
 	</div>
 
-	<div class="edd-repeatable-row-standard-fields<?php echo $variable_class; ?>">
+	<div class="edd-repeatable-row-standard-fields<?php echo esc_attr( $variable_class ); ?>">
 		<div class="edd-form-group edd-file-name">
 			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-name" class="edd-form-group__label edd-repeatable-row-setting-label"><?php esc_html_e( 'File Name', 'easy-digital-downloads' ); ?></label>
 			<div class="edd-form-group__control">

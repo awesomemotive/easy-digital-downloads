@@ -411,10 +411,10 @@ function edd_customer_delete( $args = array() ) {
 		return;
 	}
 
-	$customer_id   = (int)$args['customer_id'];
-	$confirm       = ! empty( $args['edd-customer-delete-confirm'] ) ? true : false;
-	$remove_data   = ! empty( $args['edd-customer-delete-records'] ) ? true : false;
-	$nonce         = $args['_wpnonce'];
+	$customer_id = (int)$args['customer_id'];
+	$confirm     = ! empty( $args['edd-customer-delete-confirm'] );
+	$remove_data = ! empty( $args['edd-customer-delete-records'] );
+	$nonce       = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'delete-customer' ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );

@@ -106,7 +106,7 @@ if ( is_user_logged_in() ):
 					<?php foreach ( $customer->emails as $email ) : ?>
 						<?php if ( $email === $customer->email ) { continue; } ?>
 						<li class="edd-profile-email">
-							<?php echo $email; ?>
+							<?php echo esc_html( $email ); ?>
 							<span class="actions">
 								<?php
 									$remove_url = wp_nonce_url(
@@ -160,7 +160,7 @@ if ( is_user_logged_in() ):
 
 			<p id="edd_profile_billing_address_country_wrap">
 				<label for="edd_address_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></label>
-				<select name="edd_address_country" id="edd_address_country" class="select edd-select" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>">
+				<select name="edd_address_country" id="edd_address_country" class="select edd-select" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd-country-field-nonce' ) ); ?>">
 					<?php foreach( edd_get_country_list() as $key => $country ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $address['country'], $key ); ?>><?php echo esc_html( $country ); ?></option>
 					<?php endforeach; ?>
