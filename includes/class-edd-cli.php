@@ -700,6 +700,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $timestring ) ) {
 				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
+				$payment->gateway        = 'manual';
 				$payment->save();
 			}
 
