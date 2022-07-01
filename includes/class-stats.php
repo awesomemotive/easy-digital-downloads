@@ -3142,10 +3142,10 @@ class Stats {
 			}
 
 			if ( 0 < $percentage_change ) {
-				$direction       = $reverse ? 'down reverse' : 'up';
+				$direction       = $reverse ? 'up reverse' : 'up';
 				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
 			} else {
-				$direction       = $reverse ? 'up reverse' : 'down';
+				$direction       = $reverse ? 'down reverse' : 'down';
 				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
 			}
 		}
