@@ -32,7 +32,7 @@ export const getLabelWithTypeCondition = ( label, datasetConfig ) => {
 	if ( 'currency' === type ) {
 		const currency = new Currency();
 
-		newLabel = currency.format( label );
+		newLabel = currency.format( label, false );
 	}
 
 	return newLabel;

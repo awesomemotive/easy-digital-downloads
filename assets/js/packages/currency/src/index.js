@@ -63,13 +63,11 @@ export const Currency = class Currency {
 	format( number, absint = true ) {
 		const { currencySymbol, currencySymbolPosition } = this.config;
 
-		let formattedNumber = this.number.format( number );
 		const isNegative = number < 0;
+		let formattedNumber = this.number.format( number );
 		let currency = '';
 
-		// Turn a negative value positive so we can put &ndash; before
-		// currency symbol if needed.
-		if ( true === isNegative && true === absint ) {
+		if( isNegative ) {
 			formattedNumber = this.number.format( number * -1 );
 		}
 
