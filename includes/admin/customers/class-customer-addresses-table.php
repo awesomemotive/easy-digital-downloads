@@ -131,8 +131,8 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		) );
 
 		// Actions
-		$actions  = array(
-			'view' => '<a href="' . esc_url( $customer_url ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
+		$actions = array(
+			'view' => '<a href="' . esc_url( $customer_url . '#edd_general_addresses' ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>',
 		);
 
 		if ( empty( $item['is_primary'] ) ) {
@@ -162,7 +162,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		}
 
 		// Concatenate and return
-		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '">' . esc_html( $address ) . '</a>' . esc_html( $state ) . '</strong>' . $extra . $this->row_actions( $actions );
+		return '<strong><a class="row-title" href="' . esc_url( $customer_url . '#edd_general_addresses' ) . '">' . esc_html( $address ) . '</a>' . esc_html( $state ) . '</strong>' . $extra . $this->row_actions( $actions );
 	}
 
 	/**
