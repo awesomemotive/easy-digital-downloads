@@ -39,9 +39,18 @@ function edd_overview_sales_earnings_chart() {
 		'where'  => '',
 	);
 
-	// The groupby and orderby need to also support hours.
-	$sql_clauses['groupby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
-	$sql_clauses['orderby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
+	// Default to 'monthly'.
+	$sql_clauses['groupby'] = 'MONTH(date_created)';
+	$sql_clauses['orderby'] = 'MONTH(date_created)';
+
+	// Now drill down to the smallest unit.
+	if ( $day_by_day ) {
+		$sql_clauses['groupby'] = 'DATE(date_created)';
+		$sql_clauses['orderby'] = 'DATE(date_created)';
+	} elseif ( $hour_by_hour ) {
+		$sql_clauses['groupby'] = 'HOUR(date_created)';
+		$sql_clauses['orderby'] = 'HOUR(date_created)';
+	}
 
 	if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
 		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
@@ -102,7 +111,6 @@ function edd_overview_sales_earnings_chart() {
 		$timezone        = new DateTimeZone( edd_get_timezone_id() );
 
 		$timestamp       = $dates['start']->copy()->format( 'U' );
-		$chart_timestamp = $chart_dates['start']->copy()->setTimeZone( $timezone )->format( 'U' );
 		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
 
 		$sales[ $timestamp ][0] = $timestamp;
@@ -203,9 +211,18 @@ function edd_overview_refunds_chart() {
 		'where'  => '',
 	);
 
-	// The groupby and orderby need to also support hours.
-	$sql_clauses['groupby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
-	$sql_clauses['orderby'] = $day_by_day ? 'DATE(date_created)' : 'HOUR(date_created)';
+	// Default to 'monthly'.
+	$sql_clauses['groupby'] = 'MONTH(date_created)';
+	$sql_clauses['orderby'] = 'MONTH(date_created)';
+
+	// Now drill down to the smallest unit.
+	if ( $day_by_day ) {
+		$sql_clauses['groupby'] = 'DATE(date_created)';
+		$sql_clauses['orderby'] = 'DATE(date_created)';
+	} elseif ( $hour_by_hour ) {
+		$sql_clauses['groupby'] = 'HOUR(date_created)';
+		$sql_clauses['orderby'] = 'HOUR(date_created)';
+	}
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
 		$column = sprintf( '(%s) / rate', $column );
