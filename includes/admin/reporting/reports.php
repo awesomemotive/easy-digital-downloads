@@ -1801,27 +1801,26 @@ function edd_register_file_downloads_report( $reports ) {
 						global $wpdb;
 
 						$dates        = Reports\get_dates_filter( 'objects' );
+						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 						$day_by_day   = Reports\get_dates_filter_day_by_day();
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 						$sql_clauses = array(
-							'select'  => 'YEAR(edd_lfd.date_created) AS year, MONTH(edd_lfd.date_created) AS month, DAY(edd_lfd.date_created) AS day',
-							'groupby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created), DAY(edd_lfd.date_created)',
-							'orderby' => 'YEAR(edd_lfd.date_created), MONTH(edd_lfd.date_created), DAY(edd_lfd.date_created)',
+							'select' => 'date_created AS date',
+							'where'  => '',
 						);
 
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
+						// Default to 'monthly'.
+						$sql_clauses['groupby'] = 'MONTH(date_created)';
+						$sql_clauses['orderby'] = 'MONTH(date_created)';
+
+						// Now drill down to the smallest unit.
+						if ( $day_by_day ) {
+							$sql_clauses['groupby'] = 'DATE(date_created)';
+							$sql_clauses['orderby'] = 'DATE(date_created)';
 						} elseif ( $hour_by_hour ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
-								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-							);
+							$sql_clauses['groupby'] = 'HOUR(date_created)';
+							$sql_clauses['orderby'] = 'HOUR(date_created)';
 						}
 
 						$product_id = '';
@@ -1833,63 +1832,65 @@ function edd_register_file_downloads_report( $reports ) {
 							$price_id = ! empty( $download_data['price_id'] )
 								? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
 								: '';
-                        }
+						}
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(id) AS total, {$sql_clauses['select']}
-					         FROM {$wpdb->edd_logs_file_downloads} edd_lfd
-					         WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id}
-                             GROUP BY {$sql_clauses['groupby']}
-                             ORDER BY {$sql_clauses['orderby']} ASC",
+							FROM {$wpdb->edd_logs_file_downloads} edd_lfd
+							WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id}
+							GROUP BY {$sql_clauses['groupby']}
+							ORDER BY {$sql_clauses['orderby']} ASC",
 							$dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
 
 						$file_downloads = array();
 
 						// Initialise all arrays with timestamps and set values to 0.
 						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
+							$utc_timezone    = new DateTimeZone( 'UTC' );
+							$timezone        = new DateTimeZone( edd_get_timezone_id() );
+
+							$timestamp       = $dates['start']->copy()->format( 'U' );
+							$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+
+							$file_downloads[ $timestamp ][0] = $timestamp;
+							$file_downloads[ $timestamp ][1] = 0;
+
+							foreach ( $results as $result ) {
+								$date_of_db_value = new DateTime( $result->date, $utc_timezone );
+								$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
+
+								// Add any file downloads that happened during this hour.
+								if ( $hour_by_hour ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+										$file_downloads[ $timestamp ][1] += absint( $result->total );
+									}
+									// Add any file downloads that happened during this day.
+								} elseif ( $day_by_day ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+										$file_downloads[ $timestamp ][1] += absint( $result->total );
+									}
+									// Add any file downloads that happened during this month.
+								} else {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+										$file_downloads[ $timestamp ][1] += absint( $result->total );
+									}
+								}
+							}
+
+							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$file_downloads[ $timestamp ][] = $timestamp;
-								$file_downloads[ $timestamp ][] = 0;
-
-								$earnings[ $timestamp ][] = $timestamp;
-								$earnings[ $timestamp ][] = 0.00;
-
 								$dates['start']->addHour( 1 );
+								$chart_dates['start']->addHour( 1 );
+							} elseif ( $day_by_day ) {
+								$dates['start']->addDays( 1 );
+								$chart_dates['start']->addDays( 1 );
 							} else {
-								$day = ( true === $day_by_day )
-									? $dates['start']->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$file_downloads[ $timestamp ][] = $timestamp;
-								$file_downloads[ $timestamp ][] = 0;
-
-								$dates['start'] = ( true === $day_by_day )
-									? $dates['start']->addDays( 1 )
-									: $dates['start']->addMonth( 1 );
+								$dates['start']->addMonth( 1 );
+								$chart_dates['start']->addMonth( 1 );
 							}
-						}
-
-						foreach ( $results as $result ) {
-							if ( $hour_by_hour ) {
-
-								/**
-								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-								 * needs to be applied to that.
-								 */
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							} else {
-								$day = ( true === $day_by_day )
-									? $result->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							}
-
-							$file_downloads[ $timestamp ][1] += $result->total;
 						}
 
 						$file_downloads = array_values( $file_downloads );
