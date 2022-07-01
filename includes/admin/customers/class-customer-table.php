@@ -116,31 +116,24 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$status = $this->get_status();
 		$name   = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
 
-		$view_url   = edd_get_admin_url(
+		$view_url = edd_get_admin_url(
 			array(
 				'page' => 'edd-customers',
 				'view' => 'overview',
 				'id'   => absint( $item['id'] ),
 			)
 		);
-		$logs_url   = edd_get_admin_url(
+		$logs_url = edd_get_admin_url(
 			array(
 				'page'     => 'edd-tools',
 				'tab'      => 'logs',
 				'customer' => absint( $item['id'] ),
 			)
 		);
-		$delete_url = edd_get_admin_url(
-			array(
-				'page' => 'edd-customers',
-				'view' => 'delete',
-				'id'   => absint( $item['id'] ),
-			)
-		);
-		$actions    = array(
+		$actions  = array(
 			'view'   => '<a href="' . esc_url( $view_url ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>',
 			'logs'   => '<a href="' . esc_url( $logs_url ) . '">' . __( 'Logs', 'easy-digital-downloads' ) . '</a>',
-			'delete' => '<a href="' . esc_url( $delete_url ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
+			'delete' => '<a href="' . esc_url( $view_url . '#edd_general_delete' ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
 		);
 
 		$item_status = ! empty( $item['status'] )
