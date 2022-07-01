@@ -356,10 +356,11 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 			'scales'     => array(
 				'xAxes' => array(
 					array(
-						'type'     => "time",
+						'type'     => 'time',
 						'display'  => true,
 						'ticks'    => array(
-							'source' => 'auto',
+							'source'      => 'auto',
+							'maxRotation' => 0,
 						),
 						'position' => 'bottom',
 						'time'     => array(
@@ -386,7 +387,7 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 						'rgb(151,99,143)',
 						'rgb(244,10,43)',
 					),
-				)
+				),
 			),
 		);
 
