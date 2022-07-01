@@ -123,7 +123,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		if ( apply_filters( 'edd_api_log_requests', true ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( edd_get_admin_url( array( 'view' => 'api_requests', 'page' => 'edd-tools', 'tab' => 'logs', 's' => esc_url_raw( $item['email'] ) ) ) ),
+				esc_url( edd_get_admin_url( array( 'view' => 'api_requests', 'page' => 'edd-tools', 'tab' => 'logs', 's' => rawurlencode( $item['email'] ) ) ) ),
 				__( 'View Log', 'easy-digital-downloads' )
 			);
 		}
