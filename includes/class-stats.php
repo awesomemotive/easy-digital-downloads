@@ -2430,20 +2430,7 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$total    = absint( $result->total );
 			$relative = absint( $result->relative );
-
-			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( 0 === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . $total
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . $total;
-			} else {
-				$percentage_change = ( $total - $relative ) / $relative * 100;
-
-				$total = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
-			}
+			$total    = $this->generate_relative_markup( $total, $relative );
 		} else {
 			$total = $this->maybe_format( $total );
 		}
