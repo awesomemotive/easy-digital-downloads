@@ -23,7 +23,7 @@ function edd_admin_header() {
 	}
 	$numberNotifications = EDD()->notifications->countActiveNotifications();
 	$current_page        = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
-	$is_single_view      = ! empty( $_GET['view'] );
+	$is_single_view      = (bool) apply_filters( 'edd_admin_is_single_view', ! empty( $_GET['view'] ) );
 
 	$page_title = '';
 	switch( $current_page ) {
@@ -65,19 +65,20 @@ function edd_admin_header() {
 		?>
 		<style>
 			.wrap > h1,
-			.wrap h1.wp-heading-inline,
-			.wrap h2,
-			.page-title-action {
+			.wrap h1.wp-heading-inline {
 				display: none;
+			}
+			.page-title-action {
+				visibility: hidden;
 			}
 		</style>
 		<script>
 		jQuery(document).ready(function($){
-			const coreAddNew = $('.page-title-action');
-			const eddAddNew  = $('.add-new-h2');
+			const coreAddNew = $( '.page-title-action:visible' );
+			const eddAddNew  = $( '.add-new-h2:visible' );
 
 			if ( coreAddNew.length ) {
-				coreAddNew.appendTo('.edd-header-page-title-wrap').addClass('button').show();
+				coreAddNew.appendTo( '.edd-header-page-title-wrap' ).addClass( 'button' ).css( 'visibility', 'unset' );
 			}
 
 			if ( eddAddNew.length ) {
