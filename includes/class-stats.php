@@ -257,23 +257,43 @@ class Stats {
 		) );
 
 		if ( true === $this->query_vars['relative'] ) {
+
+			$initial_query = "SELECT IFNULL({$function}, 0) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$this->query_vars['date_query_sql']}";
+
+			$initial_result = $this->get_db()->get_row( $initial_query );
+
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
-					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT IFNULL({$function}, 0) AS relative
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
-					) o
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			$relative_query = "SELECT IFNULL({$function}, 0) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$relative_date_query_sql}";
+
+			$relative_result = $this->get_db()->get_row( $relative_query );
+
+			$result = (object) array(
+				'total'    => $initial_result->total,
+				'relative' => $relative_result->total,
+			);
+
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
-		}
 
-		$result = $this->get_db()->get_row( $sql );
+			$result = $this->get_db()->get_row( $sql );
+		}
 
 		$total = null === $result->total
 			? 0.00
@@ -349,23 +369,45 @@ class Stats {
 		) );
 
 		if ( true === $this->query_vars['relative'] ) {
+
+			// First get the 'current' date filter's results.
+			$initial_query = "SELECT IFNULL(COUNT(id), 0) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$this->query_vars['date_query_sql']}";
+
+			$initial_result = $this->get_db()->get_row( $initial_query );
+
+			// Now get the relative data.
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL(COUNT(id), 0) AS total, IFNULL(relative, 0) AS relative
-					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT IFNULL(COUNT(id), 0) AS relative
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
-					) o
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			$relative_query = "SELECT IFNULL(COUNT(id), 0) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$relative_date_query_sql}";
+
+			$relative_result = $this->get_db()->get_row( $relative_query );
+
+			$result = (object) array(
+				'total'    => $initial_result->total,
+				'relative' => $relative_result->total,
+			);
+
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-		}
 
-		$result = $this->get_db()->get_row( $sql );
+			$result = $this->get_db()->get_row( $sql );
+		}
 
 		$total = null === $result
 			? 0
@@ -658,23 +700,43 @@ class Stats {
 		) );
 
 		if ( true === $this->query_vars['relative'] ) {
+
+			$initial_query = "SELECT IFNULL({$function}, 0) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$this->query_vars['date_query_sql']}";
+
+			$initial_result = $this->get_db()->get_row( $initial_query );
+
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
-					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT IFNULL({$function}, 0) AS relative
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
-					) o
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			$relative_query = "SELECT IFNULL({$function}, 0) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$relative_date_query_sql}";
+
+			$relative_result = $this->get_db()->get_row( $relative_query );
+
+			$result = (object) array(
+				'total'    => $initial_result->total,
+				'relative' => $relative_result->total,
+			);
+
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
-		}
 
-		$result = $this->get_db()->get_row( $sql );
+			$result = $this->get_db()->get_row( $sql );
+		}
 
 		$total = null === $result->total
 			? 0.00
@@ -3066,7 +3128,7 @@ class Stats {
 		$relative_markup  = '';
 
 		$total_output    = $this->maybe_format( $total );
-		$relative_output = '';
+		$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . __( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
 
 		if ( ( floatval( 0 ) === floatval( $total ) && floatval( 0 ) === floatval( $relative ) ) || ( $total === $relative ) ) {
 			$relative_output = esc_html__( 'No Change', 'easy-digital-downloads' );

@@ -225,6 +225,26 @@ function edd_register_overview_report( $reports ) {
 			)
 		) );
 
+		$reports->register_endpoint( 'overview_sales', array(
+			'label' => __( 'Sales', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $dates, $currency ) {
+						$stats = new EDD\Stats();
+						return $stats->get_order_count( array(
+							'range'        => $dates['range'],
+							'relative'     => true,
+							'currency'     => $currency,
+							'revenue_type' => 'net',
+						) );
+					},
+					'display_args'  => array(
+						'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
+					),
+				),
+			),
+		) );
+
 		$reports->register_endpoint( 'overview_earnings', array(
 			'label' => __( 'Earnings', 'easy-digital-downloads' ),
 			'views' => array(
@@ -239,26 +259,6 @@ function edd_register_overview_report( $reports ) {
 							'relative'      => true,
 							'output'        => 'formatted',
 							'revenue_type'  => 'net',
-						) );
-					},
-					'display_args'  => array(
-						'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
-					),
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'overview_sales', array(
-			'label' => __( 'Sales', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () use ( $dates, $currency ) {
-						$stats = new EDD\Stats();
-						return $stats->get_order_count( array(
-							'range'        => $dates['range'],
-							'relative'     => true,
-							'currency'     => $currency,
-							'revenue_type' => 'net',
 						) );
 					},
 					'display_args'  => array(
