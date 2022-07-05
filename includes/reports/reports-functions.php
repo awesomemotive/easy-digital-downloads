@@ -840,25 +840,25 @@ function default_display_report( $report ) {
  * @return void Meta box display callbacks only echo output.
  */
 function default_display_tile( $endpoint, $data, $args ) {
-	echo '<span class="tile-label">' . esc_html( $endpoint->get_label() ) .'</span>';
+	echo '<div class="tile-label">' . esc_html( $endpoint->get_label() ) . '</div>';
 
 	if ( empty( $data ) ) {
-		echo '<span class="tile-no-data tile-value">&mdash;</span>';
+		echo '<div class="tile-no-data tile-value">&mdash;</div>';
 	} else {
 		switch ( $args['type'] ) {
 			case 'number':
-				echo '<span class="tile-number tile-value">' . edd_format_amount( $data ) . '</span>';
+				echo '<div class="tile-number tile-value">' . edd_format_amount( $data ) . '</div>';
 				break;
 
 			case 'split-number':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+				printf( '<div class="tile-amount tile-value">%1$d / %2$d</div>',
 					edd_format_amount( $data['first_value'] ),
 					edd_format_amount( $data['second_value'] )
 				);
 				break;
 
 			case 'split-amount':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+				printf( '<div class="tile-amount tile-value">%1$d / %2$d</div>',
 					edd_currency_filter( edd_format_amount( $data['first_value'] ) ),
 					edd_currency_filter( edd_format_amount( $data['second_value'] ) )
 				);
@@ -868,26 +868,26 @@ function default_display_tile( $endpoint, $data, $args ) {
 				$direction = ( ! empty( $data['direction'] ) && in_array( $data['direction'], array( 'up', 'down' ), true ) )
 					? '-' . sanitize_key( $data['direction'] )
 					: '';
-				echo '<span class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $data['value'] ) . '</span>';
+				echo '<div class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $data['value'] ) . '</div>';
 				break;
 
 			case 'amount':
-				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $data ) ) . '</span>';
+				echo '<div class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $data ) ) . '</div>';
 				break;
 
 			case 'url':
-				echo '<span class="tile-url tile-value">' . esc_url( $data ) . '</span>';
+				echo '<div class="tile-url tile-value">' . esc_url( $data ) . '</div>';
 				break;
 
 			default:
 				$tags = wp_kses_allowed_html( 'post' );
-				echo '<span class="tile-value tile-default">' . wp_kses( $data, $tags ) . '</span>';
+				echo '<div class="tile-value tile-default">' . wp_kses( $data, $tags ) . '</div>';
 				break;
 		}
 	}
 
 	if ( ! empty( $args['comparison_label'] ) ) {
-		echo '<span class="tile-compare">' . esc_attr( $args['comparison_label'] ) . '</span>';
+		echo '<div class="tile-compare">' . esc_attr( $args['comparison_label'] ) . '</div>';
 	}
 }
 
@@ -975,6 +975,9 @@ function default_display_charts_group( $report ) {
 		<?php
 	}
 	?>
+		<div class="chart-timezone">
+			<?php printf( esc_html__( 'Chart time zone: %s', 'easy-digital-downloads' ), esc_html( edd_get_timezone_id() ) ); ?>
+		</div>
 	</div>
 	<?php
 }

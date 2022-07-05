@@ -93,8 +93,9 @@ function edd_get_dashboard_sales_widget_data() {
 	$ranges = array( 'this_month', 'last_month', 'today', 'total' );
 	foreach ( $ranges as $range ) {
 		$args = array(
-			'range'  => $range,
-			'output' => 'formatted',
+			'range'         => $range,
+			'output'        => 'formatted',
+			'revenue_type'  => 'net',
 		);
 		if ( 'total' === $range ) {
 			unset( $args['range'] );
@@ -130,7 +131,7 @@ function edd_load_dashboard_sales_widget( ) {
 			<table>
 				<thead>
 					<tr>
-						<td colspan="2"><?php esc_html_e( 'Current Month', 'easy-digital-downloads' ); ?></td>
+						<td colspan="2"><?php esc_html_e( 'Current Month', 'easy-digital-downloads' ); ?> &mdash; <?php esc_html_e( 'Net', 'easy-digital-downloads' ); ?></td>
 					</tr>
 				</thead>
 				<tbody>
@@ -146,7 +147,7 @@ function edd_load_dashboard_sales_widget( ) {
 			<table>
 				<thead>
 					<tr>
-						<td colspan="2"><?php esc_html_e( 'Last Month', 'easy-digital-downloads' ); ?></td>
+						<td colspan="2"><?php esc_html_e( 'Last Month', 'easy-digital-downloads' ); ?> &mdash; <?php esc_html_e( 'Net', 'easy-digital-downloads' ); ?></td>
 					</tr>
 				</thead>
 				<tbody>
@@ -166,7 +167,7 @@ function edd_load_dashboard_sales_widget( ) {
 				<thead>
 					<tr>
 						<td colspan="2">
-							<?php esc_html_e( 'Today', 'easy-digital-downloads' ); ?>
+							<?php esc_html_e( 'Today', 'easy-digital-downloads' ); ?> &mdash; <?php esc_html_e( 'Net', 'easy-digital-downloads' ); ?>
 						</td>
 					</tr>
 				</thead>
@@ -188,7 +189,9 @@ function edd_load_dashboard_sales_widget( ) {
 			<table>
 				<thead>
 					<tr>
-						<td colspan="2"><?php esc_html_e( 'Totals', 'easy-digital-downloads' ); ?></td>
+						<td colspan="2">
+							<?php esc_html_e( 'All Time', 'easy-digital-downloads' ); ?> &mdash; <?php esc_html_e( 'Net', 'easy-digital-downloads' ); ?>
+						</td>
 					</tr>
 				</thead>
 				<tbody>

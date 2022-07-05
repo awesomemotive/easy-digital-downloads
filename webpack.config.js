@@ -136,6 +136,11 @@ const config = {
 					transform: ( content ) => minifyJs( content ),
 				},
 				{
+					from: './node_modules/moment-timezone/moment-timezone.js',
+					to: 'assets/js/vendor/moment-timezone.min.js',
+					transform: ( content ) => minifyJs( content ),
+				},
+				{
 					from: './node_modules/jquery-creditcardvalidator/jquery.creditCardValidator.js',
 					to: 'assets/js/vendor/jquery.creditcardvalidator.min.js',
 					transform: ( content ) => minifyJs( content ),

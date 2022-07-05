@@ -1,0 +1,145 @@
+#edd-reports-tiles-wrap #dashboard-widgets .sortable-placeholder {
+	padding: 0;
+	margin: 0 0 20px 0;
+	line-height: 0;
+	box-sizing: border-box;
+	height: 110px;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
+	margin-left: 0;
+}
+
+#edd-reports-tiles-wrap #dashboard-widgets #tertiary-sortables {
+	margin-right: 0;
+}
+
+#edd-reports-tiles-wrap {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-gap: 20px;
+}
+
+.edd-reports-tile {
+	text-align: center;
+	padding: 20px 10px 35px 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border: 1px solid #e5e5e5;
+	background: #fafafa;
+	position: relative;
+	box-sizing: border-box;
+	gap: .5em;
+	>span:not(.tile-compare) {
+		width: 100%;
+	}
+}
+
+.edd-reports-tile .tile-label {
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: normal;
+	color: $wp-gray-2;
+}
+
+.edd-reports-tile .tile-value {
+	color: #333;
+	font-size: 2em;
+	line-height: 1;
+	transition: all .2s ease-in-out;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	gap: .25em;
+}
+
+.edd-reports-tile:hover {
+	border: 1px solid #aaa;
+}
+
+.edd-reports-tile:hover .tile-value:not(.tile-no-data) {
+	transform: scale(1.05);
+}
+
+.edd-reports-tile .tile-amount {
+	color: rgb(39, 148, 218);
+}
+
+.edd-reports-tile .tile-number {
+	color: rgb(153, 102, 255);
+}
+
+.edd-reports-tile .tile-amount,
+.edd-reports-tile .tile-number {
+	color: #fff;
+}
+
+.edd-reports-tile .tile-value.tile-no-data {
+	color: #ddd;
+}
+
+.edd-reports-tile .tile-value.tile-url {
+	font-size: 1.5em;
+}
+
+.edd-reports-tile .tile-relative {
+	font-size: 12px;
+	font-weight: normal;
+	color: #888;
+}
+
+.edd-reports-tile span.dashicons {
+	display: inline-block;
+	font-size: 30px;
+	line-height: 20px;
+	height: 20px;
+	width: 20px;
+	position: relative;
+	top: 4px;
+	left: -5px;
+	margin-left: -5px;
+	color: $wp-inactive;
+}
+
+.edd-reports-tile .tile-relative {
+	span.dashicons {
+		top: -5px;
+		left: -3px;
+		margin-left: 0px;
+	}
+
+	span.dashicons-arrow-down,
+	span.dashicons-arrow-up.reverse {
+		color: $wp-red-50;
+	}
+
+	span.dashicons-arrow-up,
+	span.dashicons-arrow-down.reverse {
+		color: $wp-green-50;
+	}
+}
+
+.edd-reports-tile .tile-compare {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	color: #aaa;
+	font-size: 11px;
+	line-height: 1em;
+	background-color: #fff;
+	border-left: 1px solid #e5e5e5;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
+	border-top-left-radius: 8px;
+	padding: 4px 0 0 9px;
+	margin: 0 -1px -1px 0;
+}
+
+.edd-reports-tile:hover .tile-compare {
+	border-left: 1px solid #bbb;
+	border-top: 1px solid #bbb;
+	color: #777;
+}
