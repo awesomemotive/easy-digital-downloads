@@ -57,6 +57,7 @@ class Download {
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
 		$order_status_sql = $this->generate_order_status_query_sql( false );
+		$date_query_sql   = $this->generate_date_query_sql();
 
 		$results = $wpdb->get_row(
 			"SELECT SUM(oi.quantity) AS sales
@@ -65,7 +66,8 @@ class Download {
 			WHERE {$product_id_sql}
 			{$price_id_sql}
 			AND o.type = 'sale'
-			{$order_status_sql}"
+			{$order_status_sql}
+			{$date_query_sql}"
 		);
 
 		return ! empty( $results->sales ) ? intval( $results->sales ) : 0;
@@ -83,6 +85,7 @@ class Download {
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
 		$order_status_sql = $this->generate_order_status_query_sql( false );
+		$date_query_sql   = $this->generate_date_query_sql();
 
 		$order_items =
 			"SELECT SUM(oi.subtotal / oi.rate) AS revenue
@@ -91,7 +94,8 @@ class Download {
 			WHERE {$product_id_sql}
 			{$price_id_sql}
 			AND o.type = 'sale'
-			{$order_status_sql}";
+			{$order_status_sql}
+			{$date_query_sql}";
 		// Fees on order items count as part of gross revenue.
 		$order_adjustments =
 			"SELECT SUM(oa.subtotal/ oa.rate) as revenue
@@ -101,7 +105,8 @@ class Download {
 			{$price_id_sql}
 			AND oa.object_type = 'order_item'
 			AND oa.type != 'discount'
-			AND oa.total > 0";
+			AND oa.total > 0
+			{$date_query_sql}";
 
 		$results = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
 
@@ -120,10 +125,10 @@ class Download {
 	public function get_net_sales() {
 		global $wpdb;
 
-		$product_id_sql   = $this->generate_product_id_query_sql();
-		$price_id_sql     = $this->generate_price_id_query_sql();
-		$order_status_sql = $this->generate_order_status_query_sql();
-		$date_query_sql   = $this->generate_date_query_sql();
+		$product_id_sql      = $this->generate_product_id_query_sql();
+		$price_id_sql        = $this->generate_price_id_query_sql();
+		$order_status_sql    = $this->generate_order_status_query_sql();
+		$date_query_sql      = $this->generate_date_query_sql();
 
 		$complete_orders =
 			"SELECT SUM(oi.quantity) as sales
@@ -161,6 +166,7 @@ class Download {
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
 		$order_status_sql = $this->generate_order_status_query_sql();
+		$date_query_sql   = $this->generate_date_query_sql();
 
 		/**
 		 * Note on the select statements:
@@ -176,7 +182,7 @@ class Download {
 			WHERE {$product_id_sql}
 			{$price_id_sql}
 			AND oi.status IN('complete','partially_refunded')
-			{$order_status_sql}";
+			{$order_status_sql} {$date_query_sql}";
 		$order_adjustments =
 			"SELECT SUM((oa.total - oa.tax)/ oa.rate) as revenue
 			FROM {$wpdb->edd_order_adjustments} oa
@@ -185,7 +191,8 @@ class Download {
 			{$price_id_sql}
 			AND oa.object_type = 'order_item'
 			AND oa.type != 'discount'
-			AND oi.status IN('complete','partially_refunded')";
+			AND oi.status IN('complete','partially_refunded')
+			{$date_query_sql}";
 
 		$results = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
 
