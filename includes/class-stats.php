@@ -256,22 +256,22 @@ class Stats {
 			'accepted_functions' => array( 'SUM', 'AVG' )
 		) );
 
+		$initial_query = "SELECT {$function} AS total
+			FROM {$this->query_vars['table']}
+			WHERE 1=1
+			{$this->query_vars['status_sql']}
+			{$this->query_vars['type_sql']}
+			{$this->query_vars['currency_sql']}
+			{$this->query_vars['where_sql']}
+			{$this->query_vars['date_query_sql']}";
+
+		$initial_result = $this->get_db()->get_row( $initial_query );
+
 		if ( true === $this->query_vars['relative'] ) {
-
-			$initial_query = "SELECT IFNULL({$function}, 0) AS total
-				FROM {$this->query_vars['table']}
-				WHERE 1=1
-				{$this->query_vars['status_sql']}
-				{$this->query_vars['type_sql']}
-				{$this->query_vars['currency_sql']}
-				{$this->query_vars['where_sql']}
-				{$this->query_vars['date_query_sql']}";
-
-			$initial_result = $this->get_db()->get_row( $initial_query );
 
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$relative_query = "SELECT IFNULL({$function}, 0) AS total
+			$relative_query = "SELECT {$function} AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1
 				{$this->query_vars['status_sql']}
@@ -281,28 +281,14 @@ class Stats {
 				{$relative_date_query_sql}";
 
 			$relative_result = $this->get_db()->get_row( $relative_query );
-
-			$result = (object) array(
-				'total'    => $initial_result->total,
-				'relative' => $relative_result->total,
-			);
-
-		} else {
-			$sql = "SELECT {$function} AS total
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
-
-			$result = $this->get_db()->get_row( $sql );
 		}
 
-		$total = null === $result->total
+		$total = null === $initial_result->total
 			? 0.00
-			: (float) $result->total;
+			: (float) $initial_result->total;
 
 		if ( true === $this->query_vars['relative'] ) {
-			$total    = floatval( $result->total );
-			$relative = floatval( $result->relative );
-			$total    = $this->generate_relative_markup( $total, $relative );
+			$total = $this->generate_relative_markup( floatval( $total ), floatval( $relative_result->total ) );
 		} else {
 			$total = $this->maybe_format( $total );
 		}
@@ -368,24 +354,24 @@ class Stats {
 			'accepted_functions' => array( 'COUNT', 'AVG' )
 		) );
 
+		// First get the 'current' date filter's results.
+		$initial_query = "SELECT COUNT(id) AS total
+			FROM {$this->query_vars['table']}
+			WHERE 1=1
+			{$this->query_vars['status_sql']}
+			{$this->query_vars['type_sql']}
+			{$this->query_vars['currency_sql']}
+			{$this->query_vars['where_sql']}
+			{$this->query_vars['date_query_sql']}";
+
+		$initial_result = $this->get_db()->get_row( $initial_query );
+
 		if ( true === $this->query_vars['relative'] ) {
-
-			// First get the 'current' date filter's results.
-			$initial_query = "SELECT IFNULL(COUNT(id), 0) AS total
-				FROM {$this->query_vars['table']}
-				WHERE 1=1
-				{$this->query_vars['status_sql']}
-				{$this->query_vars['type_sql']}
-				{$this->query_vars['currency_sql']}
-				{$this->query_vars['where_sql']}
-				{$this->query_vars['date_query_sql']}";
-
-			$initial_result = $this->get_db()->get_row( $initial_query );
 
 			// Now get the relative data.
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$relative_query = "SELECT IFNULL(COUNT(id), 0) AS total
+			$relative_query = "SELECT COUNT(id) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1
 				{$this->query_vars['status_sql']}
@@ -395,28 +381,14 @@ class Stats {
 				{$relative_date_query_sql}";
 
 			$relative_result = $this->get_db()->get_row( $relative_query );
-
-			$result = (object) array(
-				'total'    => $initial_result->total,
-				'relative' => $relative_result->total,
-			);
-
-		} else {
-			$sql = "SELECT {$function} AS total
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-
-			$result = $this->get_db()->get_row( $sql );
 		}
 
-		$total = null === $result
+		$total = null === $initial_result
 			? 0
-			: absint( $result->total );
+			: absint( $initial_result->total );
 
 		if ( true === $this->query_vars['relative'] ) {
-			$total    = absint( $result->total );
-			$relative = absint( $result->relative );
-			$total    = $this->generate_relative_markup( $total, $relative );
+			$total = $this->generate_relative_markup( absint( $total ), absint( $relative_result->total ) );
 		}
 
 		// Reset query vars.
@@ -699,22 +671,22 @@ class Stats {
 			'accepted_functions' => array( 'SUM', 'AVG' )
 		) );
 
+		$initial_query = "SELECT {$function} AS total
+			FROM {$this->query_vars['table']}
+			WHERE 1=1
+			{$this->query_vars['status_sql']}
+			{$this->query_vars['type_sql']}
+			{$this->query_vars['currency_sql']}
+			{$this->query_vars['where_sql']}
+			{$this->query_vars['date_query_sql']}";
+
+		$initial_result = $this->get_db()->get_row( $initial_query );
+
 		if ( true === $this->query_vars['relative'] ) {
-
-			$initial_query = "SELECT IFNULL({$function}, 0) AS total
-				FROM {$this->query_vars['table']}
-				WHERE 1=1
-				{$this->query_vars['status_sql']}
-				{$this->query_vars['type_sql']}
-				{$this->query_vars['currency_sql']}
-				{$this->query_vars['where_sql']}
-				{$this->query_vars['date_query_sql']}";
-
-			$initial_result = $this->get_db()->get_row( $initial_query );
 
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$relative_query = "SELECT IFNULL({$function}, 0) AS total
+			$relative_query = "SELECT {$function} AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1
 				{$this->query_vars['status_sql']}
@@ -724,27 +696,15 @@ class Stats {
 				{$relative_date_query_sql}";
 
 			$relative_result = $this->get_db()->get_row( $relative_query );
-
-			$result = (object) array(
-				'total'    => $initial_result->total,
-				'relative' => $relative_result->total,
-			);
-
-		} else {
-			$sql = "SELECT {$function} AS total
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
-
-			$result = $this->get_db()->get_row( $sql );
 		}
 
-		$total = null === $result->total
+		$total = null === $initial_result->total
 			? 0.00
-			: (float) $result->total;
+			: (float) $initial_result->total;
 
 		if ( true === $this->query_vars['relative'] ) {
-			$total    = -( floatval( $result->total ) );
-			$relative = floatval( $result->relative );
+			$total    = -( floatval( $initial_result->total ) );
+			$relative = floatval( $relative_result->total );
 			$total    = $this->generate_relative_markup( $total, $relative, true );
 		} else {
 			$total = $this->maybe_format( -( $total ) );
