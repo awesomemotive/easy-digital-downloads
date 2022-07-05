@@ -247,7 +247,7 @@ class Stats {
 		 *
 		 * @param array $statuses Order statuses to include when generating stats.
 		 */
-		$this->query_vars['status'] = apply_filters( 'edd_payment_stats_post_statuses', $this->query_vars['status'] );
+		$this->query_vars['status'] = array_unique( apply_filters( 'edd_payment_stats_post_statuses', $this->query_vars['status'] ) );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
