@@ -35,20 +35,23 @@ function edd_overview_sales_earnings_chart() {
 	}
 
 	$sql_clauses = array(
-		'select' => 'date_created AS date',
-		'where'  => '',
+		'select'  => 'date_created AS date',
+		'where'   => '',
+		'groupby' => '',
 	);
 
+
+
 	// Default to 'monthly'.
-	$sql_clauses['groupby'] = 'MONTH(date_created)';
+	$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
 	$sql_clauses['orderby'] = 'MONTH(date_created)';
 
 	// Now drill down to the smallest unit.
 	if ( $day_by_day ) {
-		$sql_clauses['groupby'] = 'DATE(date_created)';
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DAY', 'date_created' );
 		$sql_clauses['orderby'] = 'DATE(date_created)';
 	} elseif ( $hour_by_hour ) {
-		$sql_clauses['groupby'] = 'HOUR(date_created)';
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
 		$sql_clauses['orderby'] = 'HOUR(date_created)';
 	}
 
@@ -71,10 +74,10 @@ function edd_overview_sales_earnings_chart() {
 	$earnings_results = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT SUM({$column}) AS earnings, {$sql_clauses['select']}
- 				 FROM {$wpdb->edd_orders} edd_o
- 				 WHERE date_created >= %s AND date_created <= %s
- 				 AND type IN ( 'sale', 'refund' )
- 				 AND status IN( {$statuses} )
+				 FROM {$wpdb->edd_orders} edd_o
+				 WHERE date_created >= %s AND date_created <= %s
+				 AND status IN( {$statuses} )
+				 AND type IN ( 'sale', 'refund' )
 				 {$sql_clauses['where']}
 				 GROUP BY {$sql_clauses['groupby']}
 				 ORDER BY {$sql_clauses['orderby']} ASC",
@@ -86,10 +89,10 @@ function edd_overview_sales_earnings_chart() {
 	$sales_results = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT COUNT(id) AS sales, {$sql_clauses['select']}
- 				 FROM {$wpdb->edd_orders} edd_o
- 				 WHERE date_created >= %s AND date_created <= %s
- 				 AND type = 'sale'
- 				 AND status IN( {$statuses} )
+				 FROM {$wpdb->edd_orders} edd_o
+				 WHERE date_created >= %s AND date_created <= %s
+				 AND status IN( {$statuses} )
+				 AND type = 'sale'
 				 {$sql_clauses['where']}
 				 GROUP BY {$sql_clauses['groupby']}
 				 ORDER BY {$sql_clauses['orderby']} ASC",
@@ -212,15 +215,15 @@ function edd_overview_refunds_chart() {
 	);
 
 	// Default to 'monthly'.
-	$sql_clauses['groupby'] = 'MONTH(date_created)';
+	$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
 	$sql_clauses['orderby'] = 'MONTH(date_created)';
 
 	// Now drill down to the smallest unit.
 	if ( $day_by_day ) {
-		$sql_clauses['groupby'] = 'DATE(date_created)';
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DAY', 'date_created' );
 		$sql_clauses['orderby'] = 'DATE(date_created)';
 	} elseif ( $hour_by_hour ) {
-		$sql_clauses['groupby'] = 'HOUR(date_created)';
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
 		$sql_clauses['orderby'] = 'HOUR(date_created)';
 	}
 
