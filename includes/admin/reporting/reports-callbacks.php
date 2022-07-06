@@ -48,7 +48,7 @@ function edd_overview_sales_earnings_chart() {
 
 	// Now drill down to the smallest unit.
 	if ( $day_by_day ) {
-		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DAY', 'date_created' );
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
 		$sql_clauses['orderby'] = 'DATE(date_created)';
 	} elseif ( $hour_by_hour ) {
 		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
@@ -220,7 +220,7 @@ function edd_overview_refunds_chart() {
 
 	// Now drill down to the smallest unit.
 	if ( $day_by_day ) {
-		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DAY', 'date_created' );
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
 		$sql_clauses['orderby'] = 'DATE(date_created)';
 	} elseif ( $hour_by_hour ) {
 		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
