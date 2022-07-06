@@ -807,9 +807,8 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 	$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
 
 	$formatted_offset = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours . ':00';
-	$group_by_string  = "{$function}(CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}'))";
 
-	return $group_by_string;
+	return "{$function}(CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}'))";
 }
 
 /**
