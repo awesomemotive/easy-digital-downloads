@@ -249,6 +249,10 @@ function edd_has_purchases( $user_id = null ) {
 		$user_id = get_current_user_id();
 	}
 
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
 	$count = edd_count_orders( array( 'user_id' => $user_id ) );
 
 	return (bool) $count;
