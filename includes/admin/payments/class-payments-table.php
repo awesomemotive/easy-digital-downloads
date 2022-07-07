@@ -839,17 +839,24 @@ class EDD_Payment_History_Table extends List_Table {
 
 			// Start (of day)
 			if ( ! empty( $start_date ) ) {
+
+				$start_date_obj   = EDD()->utils->date( $start_date, edd_get_timezone_id(), false )->copy()->startOfDay();
+				$query_start_date = edd_get_utc_equivalent_date( $start_date_obj->copy() );
+
 				$args['date_query'][] = array(
 					'column' => 'date_created',
-					'after'  => date( 'Y-m-d 00:00:00', strtotime( $start_date ) )
+					'after'  => $query_start_date->format( 'mysql' ),
 				);
 			}
 
 			// End (of day)
 			if ( ! empty( $end_date ) ) {
+				$end_date_obj   = EDD()->utils->date( $end_date, edd_get_timezone_id(), false )->copy()->endOfDay();
+				$query_end_date = edd_get_utc_equivalent_date( $end_date_obj->copy() );
+
 				$args['date_query'][] = array(
-					'column' => 'date_created',
-					'before'  => date( 'Y-m-d 23:59:59', strtotime( $end_date ) )
+					'column'  => 'date_created',
+					'before'  => $query_end_date->format( 'mysql' ),
 				);
 			}
 		}

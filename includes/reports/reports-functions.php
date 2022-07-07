@@ -784,6 +784,34 @@ function get_dates_filter_day_by_day() {
 }
 
 /**
+ * Given a function and column, make a timezone converted groupby query.
+ *
+ * @since 3.0
+ *
+ * @param string $function The function to run the value through, like DATE, HOUR, MONTH
+ * @param string $column   The column to group by.
+ *
+ * @return string
+ */
+function get_groupby_date_string( $function = 'DATE', $column = 'date_created' ) {
+	$date       = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+	$gmt_offset = $date->getOffset();
+
+	if ( empty( $gmt_offset ) ) {
+		return "{$function}({$column})";
+	}
+
+	// Output the offset in the proper format.
+	$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
+	$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+	$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
+
+	$formatted_offset = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours . ':00';
+
+	return "{$function}(CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}'))";
+}
+
+/**
  * Retrieves the tax exclusion filter.
  *
  * @since 3.0
