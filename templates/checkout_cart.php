@@ -89,7 +89,7 @@ global $post; ?>
 
 		<?php if( has_action( 'edd_cart_footer_buttons' ) ) : ?>
 			<tr class="edd_cart_footer_row<?php if ( edd_is_cart_saving_disabled() ) { echo ' edd-no-js'; } ?>">
-				<th colspan="<?php echo esc_attr( edd_checkout_cart_columns() ); ?>">
+				<th colspan="<?php echo absint( edd_checkout_cart_columns() ); ?>">
 					<?php do_action( 'edd_cart_footer_buttons' ); ?>
 				</th>
 			</tr>
@@ -98,7 +98,7 @@ global $post; ?>
 		<?php if( edd_use_taxes() && ! edd_prices_include_tax() ) : ?>
 			<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if ( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_subtotal_first' ); ?>
-				<th colspan="<?php echo esc_attr( edd_checkout_cart_columns() ); ?>" class="edd_cart_subtotal">
+				<th colspan="<?php echo absint( edd_checkout_cart_columns() ); ?>" class="edd_cart_subtotal">
 					<?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:&nbsp;<span class="edd_cart_subtotal_amount"><?php echo edd_cart_subtotal(); // Escaped ?></span>
 				</th>
 				<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
