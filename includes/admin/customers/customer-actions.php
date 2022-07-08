@@ -222,12 +222,13 @@ function edd_add_customer_email( $args = array() ) {
 		);
 
 	} else {
-		$email       = sanitize_email( $args['email'] );
-		$customer_id = (int) $args['customer_id'];
-		$primary     = 'true' === $args['primary'] ? true : false;
-		$customer    = new EDD_Customer( $customer_id );
+		$email                  = sanitize_email( $args['email'] );
+		$customer_id            = (int) $args['customer_id'];
+		$primary                = 'true' === $args['primary'] ? true : false;
+		$customer               = new EDD_Customer( $customer_id );
+		$customer_email_address = $customer->add_email( $email, $primary );
 
-		if ( false === $customer->add_email( $email, $primary ) ) {
+		if ( false === $customer_email_address ) {
 
 			if ( in_array( $email, $customer->emails, true ) ) {
 				$output = array(
@@ -245,10 +246,11 @@ function edd_add_customer_email( $args = array() ) {
 		} else {
 			$redirect = edd_get_admin_url(
 				array(
-					'page'        => 'edd-customers',
-					'view'        => 'overview',
-					'id'          => urlencode( $customer_id ),
-					'edd-message' => 'email-added',
+					'page'         => 'edd-customers',
+					'view'         => 'overview',
+					'id'           => urlencode( $customer_id ),
+					'edd-message'  => 'email-added',
+					'edd-email-id' => $customer_email_address,
 				)
 			);
 			$output   = array(
