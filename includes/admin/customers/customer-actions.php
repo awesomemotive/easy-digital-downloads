@@ -250,7 +250,7 @@ function edd_add_customer_email( $args = array() ) {
 					'view'         => 'overview',
 					'id'           => urlencode( $customer_id ),
 					'edd-message'  => 'email-added',
-					'edd-email-id' => $customer_email_address,
+					'edd-email-id' => $customer_email_id,
 				)
 			);
 			$output   = array(
