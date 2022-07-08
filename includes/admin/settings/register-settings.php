@@ -905,7 +905,7 @@ function edd_get_registered_settings() {
 						'id'    => 'debug_mode',
 						'name'  => __( 'Debug Mode', 'easy-digital-downloads' ),
 						'check' => __( 'Enabled',    'easy-digital-downloads' ),
-						'desc'  => sprintf( __( 'Check this box to enable Debug Mode. %s', 'easy-digital-downloads' ), $debug_log_link ),
+						'desc'  => __( 'Check this box to enable Debug Mode.', 'easy-digital-downloads' ) . ' ' . $debug_log_link,
 						'type'  => 'checkbox_description',
 					),
 					'disable_styles' => array(
