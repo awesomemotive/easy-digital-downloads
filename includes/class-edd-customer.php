@@ -369,7 +369,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @param string $email The email address to remove from the customer.
 	 * @param bool   $primary Allows setting the email added as the primary.
 	 *
-	 * @return bool True if the email was added successfully, false otherwise.
+	 * @return int|false ID of newly created customer email address, false on error.
 	 */
 	public function add_email( $email = '', $primary = false ) {
 		if ( ! is_email( $email ) ) {
@@ -389,11 +389,13 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			: 'secondary';
 
 		// Update is used to ensure duplicate emails are not added.
-		$ret = (bool) edd_add_customer_email_address( array(
-			'customer_id' => $this->id,
-			'email'       => $email,
-			'type'        => $type
-		) );
+		$ret = edd_add_customer_email_address(
+			array(
+				'customer_id' => $this->id,
+				'email'       => $email,
+				'type'        => $type,
+			)
+		);
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
 
