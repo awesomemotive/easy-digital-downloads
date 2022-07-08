@@ -222,13 +222,13 @@ function edd_add_customer_email( $args = array() ) {
 		);
 
 	} else {
-		$email                  = sanitize_email( $args['email'] );
-		$customer_id            = (int) $args['customer_id'];
-		$primary                = 'true' === $args['primary'] ? true : false;
-		$customer               = new EDD_Customer( $customer_id );
-		$customer_email_address = $customer->add_email( $email, $primary );
+		$email             = sanitize_email( $args['email'] );
+		$customer_id       = (int) $args['customer_id'];
+		$primary           = 'true' === $args['primary'] ? true : false;
+		$customer          = new EDD_Customer( $customer_id );
+		$customer_email_id = $customer->add_email( $email, $primary );
 
-		if ( false === $customer_email_address ) {
+		if ( false === $customer_email_id ) {
 
 			if ( in_array( $email, $customer->emails, true ) ) {
 				$output = array(
