@@ -94,7 +94,7 @@ function edd_do_ajax_export() {
 	} else {
 		$args = array_merge( $_REQUEST, array(
 			'step'       => absint( $step ),
-			'class'      => sanitize_key( $class ),
+			'class'      => urlencode( $class ),
 			'nonce'      => wp_create_nonce( 'edd-batch-export' ),
 			'edd_action' => 'download_batch_export',
 		) );
