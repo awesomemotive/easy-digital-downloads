@@ -111,7 +111,7 @@ function edd_refund_details_items( $refund ) {
 			'id'           => esc_html( $item->id ),
 			'orderId'      => esc_html( $item->order_id ),
 			'productId'    => esc_html( $item->product_id ),
-			'productName'  => esc_html( $item->get_order_item_name() ),
+			'productName'  => apply_filters( 'edd_order_details_item_name', $item->get_order_item_name(), $item ),
 			'priceId'      => esc_html( $item->price_id ),
 			'cartIndex'    => esc_html( $item->cart_index ),
 			'type'         => esc_html( $item->type ),
