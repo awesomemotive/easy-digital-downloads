@@ -43,7 +43,7 @@ function edd_dashboard_sales_widget() {
 			printf(
 				'<p>%1$s %2$s</p>',
 				esc_html__( 'Easy Digital Downloads is performing a database migration via WP-CLI.', 'easy-digital-downloads' ),
-				esc_html__( 'This summary will be available when that has completed.', 'easy-digital-downloads' ),
+				esc_html__( 'This summary will be available when that has completed.', 'easy-digital-downloads' )
 			);
 			return;
 		}
