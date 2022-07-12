@@ -293,7 +293,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) ) . '" class="' . $button_display . '">' . $text . '</a>';
+	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => sanitize_key( $taxonomy ), 'terms' => sanitize_key( $terms ) ) ) ) . '" class="' . esc_attr( $button_display ) . '">' . esc_html( $text ) . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 

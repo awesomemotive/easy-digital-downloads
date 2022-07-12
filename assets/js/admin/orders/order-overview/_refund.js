@@ -274,6 +274,6 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 });
 
 // Initialize WP toggle behavior for the modal.
-$( document.body ).on( 'click', '.refunditems .toggle-row', function () {
+$( document.body ).on( 'click', '.refund-items .toggle-row', function () {
 	$( this ).closest( 'tr' ).toggleClass( 'is-expanded' );
 } );

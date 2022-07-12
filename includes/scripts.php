@@ -153,7 +153,7 @@ function edd_localize_scripts() {
 
 	if ( edd_is_checkout() ) {
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
-			'ajaxurl'               => edd_get_ajax_url(),
+			'ajaxurl'               => esc_url_raw( edd_get_ajax_url() ),
 			'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
 			'checkout_error_anchor' => '#edd_purchase_submit',
 			'currency_sign'         => edd_currency_filter(''),
@@ -188,7 +188,7 @@ function edd_localize_scripts() {
 		}
 
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
-			'ajaxurl'                 => edd_get_ajax_url(),
+			'ajaxurl'                 => esc_url_raw( edd_get_ajax_url() ),
 			'position_in_cart'        => $position,
 			'has_purchase_links'      => $has_purchase_links,
 			'already_in_cart_message' => __('You have already added this item to your cart','easy-digital-downloads' ), // Item already in the cart message
@@ -198,7 +198,7 @@ function edd_localize_scripts() {
 			'is_checkout'             => edd_is_checkout() ? '1' : '0',
 			'default_gateway'         => edd_get_default_gateway(),
 			'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
-			'checkout_page'           => edd_get_checkout_uri(),
+			'checkout_page'           => esc_url_raw( edd_get_checkout_uri() ),
 			'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
 			'quantities_enabled'      => edd_item_quantities_enabled(),
 			'taxes_enabled'           => edd_use_taxes() ? '1' : '0', // Adding here for widget, but leaving in checkout vars for backcompat

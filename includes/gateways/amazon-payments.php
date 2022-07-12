@@ -330,7 +330,7 @@ final class EDD_Amazon_Payments {
 			'amazon_register' => array(
 				'id'   => 'amazon_register',
 				'name' => __( 'Register with Amazon', 'easy-digital-downloads' ),
-				'desc' => '<p><a href="' . $this->get_registration_url() . '" class="button" target="_blank">' .
+				'desc' => '<p><a href="' . esc_url( $this->get_registration_url() ) . '" class="button" target="_blank">' .
 						__( 'Connect Easy Digital Downloads to Amazon', 'easy-digital-downloads' ) .
 						'</a></p>' .
 						'<p class="description">' .
@@ -580,7 +580,7 @@ final class EDD_Amazon_Payments {
 			EDD()->session->set( 'customer', $customer );
 		}
 
-		edd_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized', 'amazon_reference_id' => $reference ) ) );
+		edd_redirect( edd_get_checkout_uri( array( 'payment-mode' => 'amazon', 'state' => 'authorized', 'amazon_reference_id' => urlencode( $reference ) ) ) );
 	}
 
 	/**
@@ -987,7 +987,7 @@ final class EDD_Amazon_Payments {
 	 */
 	public function link_transaction_id( $transaction_id, $payment_id ) {
 		$base_url = 'https://sellercentral.amazon.com/hz/me/pmd/payment-details?orderReferenceId=';
-		$transaction_url = '<a href="' . esc_url( $base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
+		$transaction_url = '<a href="' . esc_url( $base_url . $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
 
 		return apply_filters( 'edd_' . $this->gateway_id . '_link_payment_details_transaction_id', $transaction_url );
 	}

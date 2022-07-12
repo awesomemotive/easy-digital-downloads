@@ -39,22 +39,7 @@ function edd_do_ajax_import_file_upload() {
 		wp_send_json_error( array( 'error' => __( 'Missing import file. Please provide an import file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	$accepted_mime_types = array(
-		'text/csv',
-		'text/comma-separated-values',
-		'text/plain',
-		'text/anytext',
-		'text/*',
-		'text/plain',
-		'text/anytext',
-		'text/*',
-		'application/csv',
-		'application/excel',
-		'application/vnd.ms-excel',
-		'application/vnd.msexcel',
-	);
-
-	if( empty( $_FILES['edd-import-file']['type'] ) || ! in_array( strtolower( $_FILES['edd-import-file']['type'] ), $accepted_mime_types ) ) {
+	if ( empty( $_FILES['edd-import-file']['type'] ) || ! in_array( strtolower( $_FILES['edd-import-file']['type'] ), edd_importer_accepted_mime_types(), true ) ) {
 		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
@@ -121,11 +106,16 @@ function edd_do_ajax_import() {
 		wp_send_json_error( array( 'error' => __( 'Something went wrong during the upload process, please try again.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
+	$file = sanitize_text_field( $_REQUEST['upload']['file'] );
+	if ( ! in_array( mime_content_type( $file ), edd_importer_accepted_mime_types(), true ) ) {
+		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+	}
+
 	do_action( 'edd_batch_import_class_include', $_REQUEST['class'] );
 
-	$step     = absint( $_REQUEST['step'] );
-	$class    = $_REQUEST['class'];
-	$import   = new $class( $_REQUEST['upload']['file'], $step );
+	$step   = absint( $_REQUEST['step'] );
+	$class  = $_REQUEST['class'];
+	$import = new $class( $file, $step );
 
 	if( ! $import->can_import() ) {
 
@@ -164,11 +154,34 @@ function edd_do_ajax_import() {
 			'step'    => 'done',
 			'message' => sprintf(
 				__( 'Import complete! <a href="%s">View imported %s</a>.', 'easy-digital-downloads' ),
-				$import->get_list_table_url(),
-				$import->get_import_type_label()
+				esc_url( $import->get_list_table_url() ),
+				esc_html( $import->get_import_type_label() )
 			)
 		) );
 
 	}
 }
 add_action( 'wp_ajax_edd_do_ajax_import', 'edd_do_ajax_import' );
+
+/**
+ * Returns the array of accepted mime types for the importer.
+ *
+ * @since 3.0
+ * @return array
+ */
+function edd_importer_accepted_mime_types() {
+	return array(
+		'text/csv',
+		'text/comma-separated-values',
+		'text/plain',
+		'text/anytext',
+		'text/*',
+		'text/plain',
+		'text/anytext',
+		'text/*',
+		'application/csv',
+		'application/excel',
+		'application/vnd.ms-excel',
+		'application/vnd.msexcel',
+	);
+}

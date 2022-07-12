@@ -210,7 +210,7 @@ defined( 'ABSPATH' ) || exit;
 						<span class="description"><?php esc_html_e( 'Prevent customers from using this discount more than once.', 'easy-digital-downloads' ); ?></span>
 					</td>
 				</tr>
-				
+
 				<?php
 				/**
 				 * Action after "Use Once Per Customer" checkbox.
@@ -219,7 +219,7 @@ defined( 'ABSPATH' ) || exit;
 				 */
 				?>
 				<?php do_action( 'edd_add_discount_form_after_use_once' ); ?>
-				
+
 			</tbody>
 		</table>
 
@@ -228,8 +228,8 @@ defined( 'ABSPATH' ) || exit;
 		<p class="submit">
 			<input type="hidden" name="type" value="discount" />
 			<input type="hidden" name="edd-action" value="add_discount"/>
-			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"/>
-			<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); // WPCS: XSS ok. ?>"/>
+			<input type="hidden" name="edd-redirect" value="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-discounts' ) ) ); ?>"/>
+			<input type="hidden" name="edd-discount-nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_discount_nonce' ) ); ?>"/>
 			<input type="submit" value="<?php esc_html_e( 'Add Discount Code', 'easy-digital-downloads' ); ?>" class="button-primary"/>
 		</p>
 	</form>

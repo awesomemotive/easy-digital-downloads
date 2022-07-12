@@ -71,8 +71,8 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function column_message( $item ) {
 	?>
-		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo $item['ID']; ?>" class="thickbox"><?php _e( 'View Log Message', 'easy-digital-downloads' ); ?></a>
-		<div id="log-message-<?php echo $item['ID']; ?>" style="display:none;">
+		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo esc_attr( $item['ID'] ); ?>" class="thickbox"><?php esc_html_e( 'View Log Message', 'easy-digital-downloads' ); ?></a>
+		<div id="log-message-<?php echo esc_attr( $item['ID'] ); ?>" style="display:none;">
 			<?php
 
 			$log_message = $item['content'];

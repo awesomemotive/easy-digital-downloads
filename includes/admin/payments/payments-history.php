@@ -36,7 +36,7 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 			// Remove
 			$tab_url = add_query_arg( array(
 				'settings-updated' => false,
-				'order_type'       => $tab_id
+				'order_type'       => sanitize_key( $tab_id )
 			) );
 
 			// Remove the section from the tabs so we always end up at the main section
@@ -159,7 +159,7 @@ function edd_order_list_table_content() {
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
 		<?php
 		if ( 'sale' === $active_tab ) {
-			$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
+			$add_new_url = add_query_arg( array( 'view' => 'add-order' ), $admin_url );
 			printf(
 				'<a href="%s" class="page-title-action">%s</a>',
 				esc_url( $add_new_url ),

@@ -94,8 +94,8 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function column_details( $item ) {
 	?>
-		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo $item['ID']; ?>" class="thickbox"><?php _e( 'View Request', 'easy-digital-downloads' ); ?></a>
-		<div id="log-details-<?php echo $item['ID']; ?>" style="display:none;">
+		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo esc_attr( $item['ID'] ); ?>" class="thickbox"><?php esc_html_e( 'View Request', 'easy-digital-downloads' ); ?></a>
+		<div id="log-details-<?php echo absint( $item['ID'] ); ?>" style="display:none;">
 			<?php
 
 			$request = $item['request'];

@@ -70,7 +70,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 				break;
 
 			case 'email' :
-				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
+				$value = '<a href="mailto:' . rawurlencode( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
 				break;
 
 			case 'type' :
@@ -121,12 +121,12 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$customer_url = edd_get_admin_url( array(
 			'page' => 'edd-customers',
 			'view' => 'overview',
-			'id'   => $customer_id
+			'id'   => absint( $customer_id ),
 		) );
 
 		// Actions
-		$actions  = array(
-			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
+		$actions = array(
+			'view' => '<a href="' . esc_url( $customer_url . '#edd_general_emails' ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
 		);
 
 		// Non-primary email actions
@@ -158,7 +158,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		}
 
 		// Concatenate and return
-		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		return '<strong><a class="row-title" href="' . esc_url( $customer_url . '#edd_general_emails' ) . '">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
 	}
 
 	/**

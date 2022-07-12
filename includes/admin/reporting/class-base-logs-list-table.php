@@ -465,7 +465,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		$clear_url  = edd_get_admin_url( array(
 			'page' => 'edd-tools',
 			'tab'  => 'logs',
-			'view' => $view
+			'view' => sanitize_key( $view ),
 		) ); ?>
 
 		<span id="edd-type-filter">
