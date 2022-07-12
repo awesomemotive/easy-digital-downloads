@@ -99,7 +99,7 @@ $( document.body ).on( 'change', '.edd-order-item-refund-checkbox', function () 
  * Handles quantity changes, which includes items in the refund.
  */
 $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refund-input', function () {
-	let parent = $( this ).closest( '.refund-item' ),
+	let parent = $( this ).closest( '.refunditem' ),
 		quantityField = parent.find( '.edd-order-item-refund-quantity' ),
 		quantity = parseInt( quantityField.val() );
 
@@ -165,7 +165,7 @@ function recalculateRefundTotal() {
 			return;
 		}
 
-		const thisItemParent = $( this ).closest( '.refund-item' );
+		const thisItemParent = $( this ).closest( '.refunditem' );
 		const thisItemSelected = thisItemParent.find( '.edd-order-item-refund-checkbox' ).prop( 'checked' );
 
 		if ( ! thisItemSelected ) {
