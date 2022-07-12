@@ -31,8 +31,8 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Customer',  'easy-digital-downloads' ),
-			'plural'   => __( 'Customers', 'easy-digital-downloads' ),
+			'singular' => 'customer',
+			'plural'   => 'customers',
 			'ajax'     => false
 		) );
 
@@ -252,6 +252,8 @@ class EDD_Customer_Reports_Table extends List_Table {
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
 			return;
 		}
+
+		check_admin_referer( 'bulk-customers' );
 
 		$ids = isset( $_GET['customer'] )
 			? $_GET['customer']

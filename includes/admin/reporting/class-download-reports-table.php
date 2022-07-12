@@ -37,8 +37,8 @@ class EDD_Download_Reports_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => 'report-' . edd_get_label_singular(),
-			'plural'   => 'report-' . edd_get_label_plural(),
+			'singular' => 'report-download',
+			'plural'   => 'report-downloads',
 			'ajax'     => false
 		) );
 

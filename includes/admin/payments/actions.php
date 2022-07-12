@@ -573,6 +573,11 @@ function edd_orders_list_table_process_bulk_actions() {
 		_doing_it_wrong( __FUNCTION__, 'This method is not meant to be called directly.', 'EDD 3.0' );
 	}
 
+	// Check the current user's capability.
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		return;
+	}
+
 	$action = isset( $_REQUEST['action'] ) // WPCS: CSRF ok.
 		? sanitize_text_field( $_REQUEST['action'] )
 		: '';
@@ -593,6 +598,8 @@ function edd_orders_list_table_process_bulk_actions() {
 	if ( empty( $action ) ) {
 		return;
 	}
+
+	check_admin_referer( 'bulk-orders' );
 
 	$ids = wp_parse_id_list( $ids );
 
@@ -644,6 +651,6 @@ function edd_orders_list_table_process_bulk_actions() {
 		do_action( 'edd_payments_table_do_bulk_action', $id, $action );
 	}
 
-	wp_redirect( wp_get_referer() );
+	wp_safe_redirect( wp_get_referer() );
 }
 add_action( 'load-download_page_edd-payment-history', 'edd_orders_list_table_process_bulk_actions' );

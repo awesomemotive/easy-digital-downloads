@@ -53,8 +53,8 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular' => __( 'Order',  'easy-digital-downloads' ),
-			'plural'   => __( 'Orders', 'easy-digital-downloads' ),
+			'singular' => 'order',
+			'plural'   => 'orders',
 			'ajax'     => false
 		) );
 
