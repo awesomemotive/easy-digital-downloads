@@ -248,9 +248,9 @@ function edd_add_customer_email( $args = array() ) {
 				array(
 					'page'         => 'edd-customers',
 					'view'         => 'overview',
-					'id'           => urlencode( $customer_id ),
+					'id'           => absint( $customer_id ),
 					'edd-message'  => 'email-added',
-					'edd-email-id' => $customer_email_id,
+					'edd-email-id' => absint( $customer_email_id ),
 				)
 			);
 			$output   = array(
