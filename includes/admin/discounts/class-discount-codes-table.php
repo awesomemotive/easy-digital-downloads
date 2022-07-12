@@ -324,6 +324,8 @@ class EDD_Discount_Codes_Table extends List_Table {
 			return;
 		}
 
+		check_admin_referer( 'bulk-discounts' );
+
 		$ids = wp_parse_id_list( (array) $this->get_request_var( 'discount', false ) );
 
 		// Bail if no IDs

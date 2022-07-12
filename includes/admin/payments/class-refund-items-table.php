@@ -36,8 +36,8 @@ class Refund_Items_Table extends List_Table {
 		global $hook_suffix;
 
 		parent::__construct( array(
-			'singular' => 'refund item',
-			'plural'   => 'refund items',
+			'singular' => 'refund-item',
+			'plural'   => 'refund-items',
 			'ajax'     => false,
 		) );
 
