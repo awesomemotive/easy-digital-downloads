@@ -99,7 +99,7 @@ $( document.body ).on( 'change', '.edd-order-item-refund-checkbox', function () 
  * Handles quantity changes, which includes items in the refund.
  */
 $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refund-input', function () {
-	let parent = $( this ).closest( '.refunditem' ),
+	let parent = $( this ).closest( '.refund-item' ),
 		quantityField = parent.find( '.edd-order-item-refund-quantity' ),
 		quantity = parseInt( quantityField.val() );
 
@@ -165,7 +165,7 @@ function recalculateRefundTotal() {
 			return;
 		}
 
-		const thisItemParent = $( this ).closest( '.refunditem' );
+		const thisItemParent = $( this ).closest( '.refund-item' );
 		const thisItemSelected = thisItemParent.find( '.edd-order-item-refund-checkbox' ).prop( 'checked' );
 
 		if ( ! thisItemSelected ) {
@@ -274,6 +274,6 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 });
 
 // Initialize WP toggle behavior for the modal.
-$( document.body ).on( 'click', '.refunditems .toggle-row', function () {
+$( document.body ).on( 'click', '.refund-items .toggle-row', function () {
 	$( this ).closest( 'tr' ).toggleClass( 'is-expanded' );
 } );
