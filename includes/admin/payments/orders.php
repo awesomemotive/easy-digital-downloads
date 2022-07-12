@@ -617,7 +617,7 @@ function edd_order_details_overview( $order ) {
 				'id'           => esc_html( $item->id ),
 				'orderId'      => esc_html( $item->order_id ),
 				'productId'    => esc_html( $item->product_id ),
-				'productName'  => esc_html( apply_filters( 'edd_order_details_item_name', $item->get_order_item_name(), $item ) ),
+				'productName'  => esc_html( $item->get_order_item_name() ),
 				'priceId'      => esc_html( $item->price_id ),
 				'cartIndex'    => esc_html( $item->cart_index ),
 				'type'         => esc_html( $item->type ),

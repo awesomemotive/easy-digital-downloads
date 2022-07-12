@@ -232,7 +232,15 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @return string The product name including any price ID name.
 	 */
 	public function get_order_item_name() {
-		return $this->product_name;
+		return is_admin() ?
+			/**
+			 * Allow the product name to be filtered within the admin.
+			 * @since 3.0
+			 * @param string $product_name  The order item name.
+			 * @param EDD\Orders\Order_Item The order item object.
+			 */
+			apply_filters( 'edd_order_details_item_name', $this->product_name, $this ) :
+			$this->product_name;
 	}
 
 	/**
