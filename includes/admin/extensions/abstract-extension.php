@@ -325,14 +325,12 @@ abstract class Extension {
 		return array(
 			/* translators: The extension name. */
 			'button_text' => sprintf( __( 'Configure %s', 'easy-digital-downloads' ), $product_data->title ),
-			'href'        => add_query_arg(
+			'href'        => edd_get_admin_url(
 				array(
-					'post_type' => 'download',
-					'page'      => 'edd-settings',
-					'tab'       => urlencode( $tab ),
-					'section'   => urlencode( $section ),
-				),
-				admin_url( 'edit.php' )
+					'page'    => 'edd-settings',
+					'tab'     => urlencode( $tab ),
+					'section' => urlencode( $section ),
+				)
 			),
 		);
 	}

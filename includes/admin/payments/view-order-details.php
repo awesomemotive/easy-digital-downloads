@@ -52,7 +52,7 @@ wp_enqueue_script( 'edd-admin-payments' );
 	<?php edd_order_details_publish( $order ); ?>
 
 	<div class="wrap edd-wrap edd-clearfix">
-		<h1><?php printf( __( 'Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
+		<h1><?php printf( esc_html__( 'Order: %s', 'easy-digital-downloads' ), esc_html( $order->number ) ); ?></h1>
 
 		<hr class="wp-header-end">
 
@@ -128,11 +128,11 @@ wp_enqueue_script( 'edd-admin-payments' );
 
 </form>
 
-<div id="edd-refund-order-dialog" title="<?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>
+<div id="edd-refund-order-dialog" title="<?php esc_html_e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>
 
 <div
 	id="edd-admin-order-copy-download-link-dialog"
-	title="<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
+	title="<?php printf( esc_html__( 'Copy %s Links', 'easy-digital-downloads' ), esc_html( edd_get_label_singular() ) ); ?>"
 	style="display: none;"
 >
 	<div id="edd-admin-order-copy-download-link-dialog-content"></div>

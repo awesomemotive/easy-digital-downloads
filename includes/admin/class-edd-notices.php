@@ -173,7 +173,6 @@ class EDD_Notices {
 		// Dismiss notice
 		update_user_meta( get_current_user_id(), "_edd_{$key}_dismissed", 1 );
 		edd_redirect( remove_query_arg( array( 'edd_action', 'edd_notice', '_wpnonce' ) ) );
-		exit;
 	}
 
 	/**
@@ -221,7 +220,7 @@ class EDD_Notices {
 		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-no-purchase-page',
-				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ),
+				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'general', 'section' => 'pages' ) ) ) ),
 				'class'          => 'error',
 				'is_dismissible' => false
 			) );
@@ -276,7 +275,7 @@ class EDD_Notices {
 				'is_dismissible' => false,
 				'message'        => array(
 					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
-					__( 'To protect them, you must add this <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
+					__( 'To protect them, you must add this <a href="https://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
 					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
 				)
 			) );
@@ -316,7 +315,11 @@ class EDD_Notices {
 				'id'             => 'edd-recount-earnings',
 				'class'          => 'error',
 				'is_dismissible' => false,
-				'message'        => sprintf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ), admin_url( 'plugins.php' ) )
+				'message'        => sprintf(
+					__( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ),
+					esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'general' ) ) ),
+					esc_url( admin_url( 'plugins.php' ) )
+				)
 			) );
 		}
 	}
@@ -380,11 +383,12 @@ class EDD_Notices {
 			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
 
 				// URL to fix this
-				$url = add_query_arg( array(
-					'post_type' => 'download',
-					'page'      => 'edd-settings',
-					'tab'       => 'gateways'
-				) );
+				$url = edd_get_admin_url(
+					array(
+						'page' => 'edd-settings',
+						'tab'  => 'gateways',
+					)
+				);
 
 				// Link
 				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Fix this', 'easy-digital-downloads' ) . '</a>';

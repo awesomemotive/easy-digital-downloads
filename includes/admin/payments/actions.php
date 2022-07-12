@@ -220,7 +220,7 @@ function edd_update_payment_details( $data = array() ) {
 		'page'        => 'edd-payment-history',
 		'view'        => 'view-order-details',
 		'edd-message' => 'payment-updated',
-		'id'          => $order_id
+		'id'          => absint( $order_id ),
 	) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
@@ -282,7 +282,7 @@ function edd_trigger_trash_order( $data ) {
 			'order_type'  => esc_attr( $data['order_type'] ),
 		) );
 
-		edd_redirect( esc_url_raw( $redirect ) );
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_trash_order', 'edd_trigger_trash_order' );
@@ -312,7 +312,7 @@ function edd_trigger_restore_order( $data ) {
 			'order_type'  => esc_attr( $data['order_type'] ),
 		) );
 
-		edd_redirect( esc_url_raw( $redirect ) );
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_restore_order', 'edd_trigger_restore_order' );
@@ -573,6 +573,11 @@ function edd_orders_list_table_process_bulk_actions() {
 		_doing_it_wrong( __FUNCTION__, 'This method is not meant to be called directly.', 'EDD 3.0' );
 	}
 
+	// Check the current user's capability.
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		return;
+	}
+
 	$action = isset( $_REQUEST['action'] ) // WPCS: CSRF ok.
 		? sanitize_text_field( $_REQUEST['action'] )
 		: '';
@@ -593,6 +598,8 @@ function edd_orders_list_table_process_bulk_actions() {
 	if ( empty( $action ) ) {
 		return;
 	}
+
+	check_admin_referer( 'bulk-orders' );
 
 	$ids = wp_parse_id_list( $ids );
 
@@ -644,6 +651,6 @@ function edd_orders_list_table_process_bulk_actions() {
 		do_action( 'edd_payments_table_do_bulk_action', $id, $action );
 	}
 
-	wp_redirect( wp_get_referer() );
+	wp_safe_redirect( wp_get_referer() );
 }
 add_action( 'load-download_page_edd-payment-history', 'edd_orders_list_table_process_bulk_actions' );

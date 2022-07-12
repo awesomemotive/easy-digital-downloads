@@ -69,7 +69,7 @@ function edd_test_ajax_works() {
 	}
 
 	$works = true;
-	$ajax  = wp_remote_post( edd_get_ajax_url(), array(
+	$ajax  = wp_safe_remote_post( esc_url_raw( edd_get_ajax_url() ), array(
 		'sslverify'  => false,
 		'timeout'    => 30,
 		'body'       => array(
@@ -386,7 +386,7 @@ function edd_ajax_remove_discount() {
 
 		/**
 		 * Allow for custom remove discount code handling.
-		 * 
+		 *
 		 * @since 2.11.4
 		 */
 		$return = apply_filters( 'edd_ajax_remove_discount_response', $return );
@@ -1305,7 +1305,7 @@ function edd_ajax_customer_details() {
 		'date_created'      => esc_html( $customer->date_created ),
 		'date_created_i18n' => esc_html( edd_date_i18n( $customer->date_created ) ),
 		'_links'            => array(
-			'self' => esc_url_raw( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) ),
+			'self' => esc_url_raw( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . absint( $customer->id ) ) ),
 		),
 	);
 

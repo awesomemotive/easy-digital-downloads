@@ -151,24 +151,23 @@ function edd_options_page_primary_nav( $tabs, $active_tab = '' ) {
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab_name ) {
-			$tab_url = add_query_arg(
+			$tab_url = edd_get_admin_url(
 				array(
 					'settings-updated' => false,
-					'post_type'        => 'download',
 					'page'             => 'edd-settings',
-					'tab'              => $tab_id,
-				),
-				edd_get_admin_base_url()
+					'tab'              => sanitize_key( $tab_id ),
+				)
 			);
 
 			// Remove the section from the tabs so we always end up at the main section
 			$tab_url = remove_query_arg( 'section', $tab_url );
-			$active  = $active_tab == $tab_id
-				? ' nav-tab-active'
-				: '';
+			$class   = 'nav-tab';
+			if ( $active_tab === $tab_id ) {
+				$class .= ' nav-tab-active';
+			}
 
 			// Link
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">';
+			echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">';
 			echo esc_html( $tab_name );
 			echo '</a>';
 		}
@@ -320,7 +319,7 @@ function edd_options_sidebar() {
 		'utm_source'   => 'settings',
 		'utm_medium'   => 'wp-admin',
 		'utm_campaign' => 'bfcm2019',
-		'utm_content'  => 'sidebar-promo-' . $active_tab . '-' . $active_section,
+		'utm_content'  => sanitize_key( 'sidebar-promo-' . $active_tab . '-' . $active_section ),
 	);
 	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
 	?>
@@ -334,7 +333,7 @@ function edd_options_sidebar() {
 			</div>
 			<div class="edd-sidebar-coupon-section">
 				<label for="edd-coupon-code"><?php _e( 'Use code at checkout:', 'easy-digital-downloads' ); ?></label>
-				<input id="edd-coupon-code" type="text" value="<?php echo $coupon_code; ?>" readonly>
+				<input id="edd-coupon-code" type="text" value="<?php echo esc_attr( $coupon_code ); ?>" readonly>
 				<p class="edd-coupon-note"><?php _e( 'Sale ends 23:59 PM December 6th CST. Save 25% on <a href="https://sandhillsdev.com/projects/" target="_blank">our other plugins</a>.', 'easy-digital-downloads' ); ?></p>
 			</div>
 			<div class="edd-sidebar-footer-section">

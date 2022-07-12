@@ -185,7 +185,7 @@ function edd_display_product_tabs() {
 		$tabs[ $tax ] = array(
 			'name' => $details->labels->menu_name,
 			'url'  => add_query_arg( array(
-				'taxonomy'  => $tax,
+				'taxonomy'  => sanitize_key( $tax ),
 				'post_type' => 'download'
 			), admin_url( 'edit-tags.php' ) )
 		);
