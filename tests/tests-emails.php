@@ -218,7 +218,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 
 	public function test_email_tags_download_list() {
 		$order_items = edd_get_order_items( array( 'order_id' => self::$payment_id ) );
-		$this->assertContains( '<strong>' . $order_items[0]->get_order_item_name() . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertContains( '<strong>' . $order_items[0]->product_name . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
 		$this->assertContains( '<div><a href="', edd_email_tag_download_list( self::$payment_id ) );
 	}
 
