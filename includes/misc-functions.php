@@ -1245,7 +1245,7 @@ function edd_redirect( $location = '', $status = 302 ) {
 	}
 
 	// Setup the safe redirect.
-	wp_safe_redirect( $location, $status );
+	wp_safe_redirect( esc_url_raw( $location ), $status );
 
 	// Exit so the redirect takes place immediately.
 	edd_die();
@@ -1614,7 +1614,7 @@ function edd_get_payment_icon( $args = array() ) {
 	 *
 	 * See https://core.trac.wordpress.org/ticket/38387.
 	 */
-	$svg .= ' <use href="#icon-' . esc_html( $args['icon'] ) . '" xlink:href="#icon-' . esc_html( $args['icon'] ) . '"></use> ';
+	$svg .= ' <use href="#icon-' . esc_attr( $args['icon'] ) . '" xlink:href="#icon-' . esc_attr( $args['icon'] ) . '"></use> ';
 
 	// Add some markup to use as a fallback for browsers that do not support SVGs.
 	if ( $args['fallback'] ) {

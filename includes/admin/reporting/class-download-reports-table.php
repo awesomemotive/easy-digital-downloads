@@ -37,8 +37,8 @@ class EDD_Download_Reports_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => 'report-' . edd_get_label_singular(),
-			'plural'   => 'report-' . edd_get_label_plural(),
+			'singular' => 'report-download',
+			'plural'   => 'report-downloads',
 			'ajax'     => false
 		) );
 
@@ -78,7 +78,14 @@ class EDD_Download_Reports_Table extends List_Table {
 			case 'average_earnings' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 			case 'details' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item['ID'] ) . '">' . __( 'View Detailed Report', 'easy-digital-downloads' ) . '</a>';
+				$url = edd_get_admin_url(
+					array(
+						'page'        => 'edd-reports',
+						'view'        => 'downloads',
+						'download-id' => absint( $item['ID'] ),
+					)
+				);
+				return '<a href="' . esc_url( $url ) . '">' . __( 'View Detailed Report', 'easy-digital-downloads' ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}

@@ -214,6 +214,20 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertFalse( edd_get_users_purchases( 0 ) );
 	}
 
+	public function test_user_has_purchases_not_logged_in_should_return_false() {
+		$current_user = get_current_user_id();
+		wp_set_current_user( 0 );
+		edd_update_order(
+			self::$order,
+			array(
+				'user_id' => 0,
+			)
+		);
+
+		$this->assertFalse( edd_has_purchases() );
+		wp_set_current_user( $current_user );
+	}
+
 	public function test_user_has_purchases_should_return_true() {
 		self::$customers[0]->attach_payment( self::$order );
 

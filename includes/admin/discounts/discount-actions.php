@@ -49,8 +49,7 @@ function edd_admin_add_discount( $data = array() ) {
 	}
 
 	if ( ! is_numeric( $data['amount'] ) ) {
-		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
-		edd_die();
+		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
 	}
 
 	// Setup default discount values.
@@ -144,7 +143,7 @@ function edd_admin_add_discount( $data = array() ) {
 		: 'discount_add_failed';
 
 	// Redirect.
-	edd_redirect( add_query_arg( 'edd-message', $arg, $data['edd-redirect'] ) );
+	edd_redirect( add_query_arg( 'edd-message', sanitize_key( $arg ), $data['edd-redirect'] ) );
 }
 add_action( 'edd_add_discount', 'edd_admin_add_discount' );
 
@@ -182,8 +181,7 @@ function edd_admin_edit_discount( $data = array() ) {
 	}
 
 	if ( empty( $data['amount'] ) || ! is_numeric( $data['amount'] ) ) {
-		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
-		edd_die();
+		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
 	}
 
 	// Prepare update
@@ -287,7 +285,7 @@ function edd_admin_edit_discount( $data = array() ) {
 		: 'discount_not_changed';
 
 	// Redirect
-	edd_redirect( add_query_arg( 'edd-message', $arg, $data['edd-redirect'] ) );
+	edd_redirect( add_query_arg( 'edd-message', sanitize_key( $arg ), $data['edd-redirect'] ) );
 }
 add_action( 'edd_edit_discount', 'edd_admin_edit_discount' );
 
@@ -325,7 +323,7 @@ function edd_admin_delete_discount( $data = array() ) {
 		: 'discount_deleted_failed';
 
 	// Redirect
-	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', $arg, $_SERVER['REQUEST_URI'] ) ) );
+	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
 }
 add_action( 'edd_delete_discount', 'edd_admin_delete_discount' );
 
@@ -358,7 +356,7 @@ function edd_activate_discount( $data = array() ) {
 		: 'discount_activation_failed';
 
 	// Redirect
-	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', $arg, $_SERVER['REQUEST_URI'] ) ) );
+	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
 }
 add_action( 'edd_activate_discount', 'edd_activate_discount' );
 
@@ -391,6 +389,6 @@ function edd_deactivate_discount( $data = array() ) {
 		: 'discount_deactivation_failed';
 
 	// Redirect
-	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', $arg, $_SERVER['REQUEST_URI'] ) ) );
+	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );

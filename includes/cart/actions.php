@@ -113,8 +113,7 @@ function edd_process_remove_from_cart( $data ) {
 		edd_remove_from_cart( $cart_key );
 	}
 
-	wp_redirect( remove_query_arg( array( 'edd_action', 'cart_item', 'nocache' ) ) );
-	edd_die();
+	edd_redirect( remove_query_arg( array( 'edd_action', 'cart_item', 'nocache' ) ) );
 }
 add_action( 'edd_remove', 'edd_process_remove_from_cart' );
 

@@ -76,7 +76,7 @@ function edd_show_upgrade_notices() {
 
 		// The payment history needs updated for version 1.2
 		$url            = add_query_arg( 'edd-action', 'upgrade_payments' );
-		$upgrade_notice = sprintf( __( 'The Payment History needs to be updated. %s', 'easy-digital-downloads' ), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __( 'Click to Upgrade', 'easy-digital-downloads' ) . '</a>' );
+		$upgrade_notice = sprintf( __( 'The Payment History needs to be updated. %s', 'easy-digital-downloads' ), '<a href="' . wp_nonce_url( esc_url( $url ), 'edd_upgrade_payments_nonce' ) . '">' . __( 'Click to Upgrade', 'easy-digital-downloads' ) . '</a>' );
 
 		EDD()->notices->add_notice( array(
 			'id'      => 'edd-payments-upgrade',
@@ -135,7 +135,7 @@ function edd_show_upgrade_notices() {
 		if ( get_option( 'edd_upgrade_sequential' ) && edd_get_payments( array( 'fields' => 'ids' ) ) ) {
 			printf(
 				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade past orders to make them sequential. <a href="%s">Start the order numbers upgrade</a>.', 'easy-digital-downloads' ) . '</p></div>',
-				admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' ) )
 			);
 		}
 
@@ -666,9 +666,9 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_sequential_payment_numbers',
-			'step'        => $step,
-			'custom'      => $number,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'custom'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -766,7 +766,7 @@ function edd_v21_upgrade_customers_db() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customers_db',
-			'step'        => $step
+			'step'        => urlencode( $step ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -882,7 +882,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_payments_price_logs_db',
-			'step'        => $step
+			'step'        => urlencode( $step ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -954,9 +954,9 @@ function edd_v23_upgrade_payment_taxes() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_payment_taxes',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -1073,9 +1073,9 @@ function edd_v23_upgrade_customer_purchases() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_customer_payments_association',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );
@@ -1157,10 +1157,9 @@ function edd_upgrade_user_api_keys() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'upgrade_user_api_keys',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
+			'step'        => urlencode( $step ),
+			'number'      => urlencode( $number ),
+			'total'       => urlencode( $total ) ) );
 
 		edd_redirect( $redirect );
 
@@ -1220,8 +1219,8 @@ function edd_remove_refunded_sale_logs() {
 		$redirect = add_query_arg( array(
 			'page'        => 'edd-upgrades',
 			'edd-upgrade' => 'remove_refunded_sale_logs',
-			'step'        => $step,
-			'total'       => $total
+			'step'        => urlencode( $step ),
+			'total'       => urlencode( $total ),
 		), admin_url( 'index.php' ) );
 
 		edd_redirect( $redirect );

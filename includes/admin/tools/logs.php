@@ -57,7 +57,7 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 		 */
 		do_action( "edd_logs_{$tag}_top" ); ?>
 
-		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=' . $tag ); ?>">
+		<form id="edd-logs-filter" method="get" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => sanitize_key( $tag ) ) ) ); ?>">
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-tools" />
 			<input type="hidden" name="tab" value="<?php echo esc_attr( $tag ); ?>" />
@@ -219,7 +219,7 @@ function edd_log_views() {
 
 	<!-- EDD 3.0 Hack -->
 	</div></div>
-	<form method="get" class="edd-old-log-filters" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
+	<form method="get" class="edd-old-log-filters" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) ); ?>">
 		<?php edd_admin_filter_bar( 'old_logs' ); ?>
 	</form>
 	<div class="tablenav top"><div>

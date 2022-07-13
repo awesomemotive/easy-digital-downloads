@@ -411,10 +411,10 @@ function edd_customer_delete( $args = array() ) {
 		return;
 	}
 
-	$customer_id   = (int)$args['customer_id'];
-	$confirm       = ! empty( $args['edd-customer-delete-confirm'] ) ? true : false;
-	$remove_data   = ! empty( $args['edd-customer-delete-records'] ) ? true : false;
-	$nonce         = $args['_wpnonce'];
+	$customer_id = (int)$args['customer_id'];
+	$confirm     = ! empty( $args['edd-customer-delete-confirm'] );
+	$remove_data = ! empty( $args['edd-customer-delete-records'] );
+	$nonce       = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'delete-customer' ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
@@ -425,7 +425,15 @@ function edd_customer_delete( $args = array() ) {
 	}
 
 	if ( edd_get_errors() ) {
-		edd_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id ) );
+		edd_redirect(
+			edd_get_admin_url(
+				array(
+					'page' => 'edd-customers',
+					'view' => 'overview',
+					'id'   => absint( $customer_id ),
+				)
+			)
+		);
 	}
 
 	$customer = new EDD_Customer( $customer_id );
@@ -456,16 +464,16 @@ function edd_customer_delete( $args = array() ) {
 				}
 			}
 
-			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&edd-message=customer-deleted' );
+			$redirect = edd_get_admin_url( array( 'page' => 'edd-customers', 'edd-message' => 'customer-deleted' ) );
 
 		} else {
 			edd_set_error( 'edd-customer-delete-failed', __( 'Error deleting customer', 'easy-digital-downloads' ) );
-			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer_id );
+			$redirect = edd_get_admin_url( array( 'page' => 'edd-customers', 'view' => 'delete', 'id' => absint( $customer_id ) ) );
 		}
 
 	} else {
 		edd_set_error( 'edd-customer-delete-invalid-id', __( 'Invalid Customer ID', 'easy-digital-downloads' ) );
-		$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers' );
+		$redirect = edd_get_admin_url( array( 'page' => 'edd-customers' ) );
 	}
 
 	edd_redirect( $redirect );
@@ -550,7 +558,14 @@ function edd_process_admin_user_verification() {
 	$customer = new EDD_Customer( $_GET['id'] );
 	edd_set_user_to_verified( $customer->user_id );
 
-	$url = add_query_arg( 'edd-message', 'user-verified', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+	$url = edd_get_admin_url(
+		array(
+			'page'        => 'edd-customers',
+			'view'        => 'overview',
+			'id'          => absint( $customer->id ),
+			'edd-message' => 'user-verified',
+		)
+	);
 
 	edd_redirect( $url );
 }

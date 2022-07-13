@@ -386,11 +386,14 @@ function maybe_add_recapture_notice_to_abandoned_payment( $payment_id ) {
 					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
 					'<a href="',
 					esc_url(
-						add_query_arg(
-							array(
-								'edd_action' => 'dismiss_notices',
-								'edd_notice' => 'try_recapture',
-							)
+						wp_nonce_url(
+							add_query_arg(
+								array(
+									'edd_action' => 'dismiss_notices',
+									'edd_notice' => 'try_recapture',
+								)
+							),
+							'edd_notice_nonce'
 						)
 					),
 					'" type="button" class="notice-dismiss">',

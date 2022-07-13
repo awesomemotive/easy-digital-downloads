@@ -179,8 +179,8 @@ function edd_admin_footer_for_thickbox() {
 
 			<div class="submit-wrapper">
 				<div>
-					<a id="edd-cancel-download-insert" class="button" onclick="tb_remove();"><?php _e( 'Cancel', 'easy-digital-downloads' ); ?></a>
-					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
+					<a id="edd-cancel-download-insert" class="button" onclick="tb_remove();"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+					<input type="button" id="edd-insert-download" class="button-primary" value="<?php printf( esc_html__( 'Insert %s', 'easy-digital-downloads' ), esc_html( edd_get_label_singular() ) ); ?>" onclick="insertDownload();" />
 				</div>
 			</div>
 		</div>
