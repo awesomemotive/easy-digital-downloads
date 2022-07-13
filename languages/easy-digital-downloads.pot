@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.0-rc2\n"
+"Project-Id-Version: Easy Digital Downloads 3.0\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-07-12 15:51:42+00:00\n"
+"POT-Creation-Date: 2022-07-13 16:20:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -145,8 +145,8 @@ msgstr ""
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 #: includes/gateways/stripe/includes/payment-actions.php:1408
 #: includes/process-download.php:280 includes/process-download.php:874
-#: includes/query-filters.php:51 includes/user-functions.php:882
-#: includes/user-functions.php:907 includes/user-functions.php:959
+#: includes/query-filters.php:51 includes/user-functions.php:886
+#: includes/user-functions.php:911 includes/user-functions.php:963
 msgid "Error"
 msgstr ""
 
@@ -936,7 +936,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:215
-#: includes/user-functions.php:907
+#: includes/user-functions.php:911
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -970,7 +970,7 @@ msgstr ""
 #: includes/admin/customers/customer-actions.php:555
 #: includes/admin/customers/customer-actions.php:612
 #: includes/admin/import/import-functions.php:31
-#: includes/admin/import/import-functions.php:113
+#: includes/admin/import/import-functions.php:98
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:2014
 #: includes/class-edd-license-handler.php:385
@@ -2536,7 +2536,7 @@ msgid "payments"
 msgstr ""
 
 #: includes/admin/import/import-functions.php:35
-#: includes/admin/import/import-functions.php:117
+#: includes/admin/import/import-functions.php:102
 msgid "Missing import parameters. Import class must be specified."
 msgstr ""
 
@@ -2544,25 +2544,26 @@ msgstr ""
 msgid "Missing import file. Please provide an import file."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:58
+#: includes/admin/import/import-functions.php:43
+#: includes/admin/import/import-functions.php:111
 msgid "The file you uploaded does not appear to be a CSV file."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:62
-#: includes/admin/import/import-functions.php:121
+#: includes/admin/import/import-functions.php:47
+#: includes/admin/import/import-functions.php:106
 msgid "Something went wrong during the upload process, please try again."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:75
-#: includes/admin/import/import-functions.php:132
+#: includes/admin/import/import-functions.php:60
+#: includes/admin/import/import-functions.php:122
 msgid "You do not have permission to import data"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:158
+#: includes/admin/import/import-functions.php:148
 msgid "No data found for import parameters"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:166
+#: includes/admin/import/import-functions.php:156
 msgid "Import complete! <a href=\"%s\">View imported %s</a>."
 msgstr ""
 
@@ -4391,8 +4392,8 @@ msgstr ""
 msgid "Export File Download Log Dates"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:3035 includes/user-functions.php:911
-#: includes/user-functions.php:915
+#: includes/admin/reporting/reports.php:3035 includes/user-functions.php:915
+#: includes/user-functions.php:919
 msgid "Notice"
 msgstr ""
 
@@ -7130,11 +7131,11 @@ msgstr ""
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1970 includes/user-functions.php:1077
+#: includes/api/class-edd-api.php:1970 includes/user-functions.php:1081
 msgid "Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1980 includes/user-functions.php:1084
+#: includes/api/class-edd-api.php:1980 includes/user-functions.php:1088
 msgid "Generate API Key"
 msgstr ""
 
@@ -7146,11 +7147,11 @@ msgstr ""
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1990 includes/user-functions.php:1095
+#: includes/api/class-edd-api.php:1990 includes/user-functions.php:1099
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1994 includes/user-functions.php:1101
+#: includes/api/class-edd-api.php:1994 includes/user-functions.php:1105
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -7659,8 +7660,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:314 includes/user-functions.php:564
-#: includes/user-functions.php:576
+#: includes/class-edd-cli.php:314 includes/user-functions.php:568
+#: includes/user-functions.php:580
 msgid "Username: %s"
 msgstr ""
 
@@ -11603,19 +11604,19 @@ msgstr[1] ""
 
 #: includes/privacy-functions.php:27
 msgid ""
-"\r\n"
+"\n"
 "We collect information about you during the checkout process on our store. "
 "This information may include, but is not limited to, your name, billing "
 "address, shipping address, email address, phone number, credit card/payment "
 "details and any other details that might be requested from you for the "
-"purpose of processing your orders.\r\n"
-"Handling this data also allows us to:\r\n"
-"- Send you important account/order/service information.\r\n"
-"- Respond to your queries, refund requests, or complaints.\r\n"
+"purpose of processing your orders.\n"
+"Handling this data also allows us to:\n"
+"- Send you important account/order/service information.\n"
+"- Respond to your queries, refund requests, or complaints.\n"
 "- Process payments and to prevent fraudulent transactions. We do this on "
-"the basis of our legitimate business interests.\r\n"
+"the basis of our legitimate business interests.\n"
 "- Set up and administer your account, provide technical and/or customer "
-"support, and to verify your identity.\r\n"
+"support, and to verify your identity.\n"
 msgstr ""
 
 #: includes/privacy-functions.php:39
@@ -12310,91 +12311,91 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:562
+#: includes/user-functions.php:566
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:563
+#: includes/user-functions.php:567
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:565
+#: includes/user-functions.php:569
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:574
+#: includes/user-functions.php:578
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:575
+#: includes/user-functions.php:579
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:579
+#: includes/user-functions.php:583
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/user-functions.php:581
+#: includes/user-functions.php:585
 msgid "Password entered at registration"
 msgstr ""
 
-#: includes/user-functions.php:584
+#: includes/user-functions.php:588
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:589
+#: includes/user-functions.php:593
 msgid "Click here to log in"
 msgstr ""
 
-#: includes/user-functions.php:593
+#: includes/user-functions.php:597
 msgid "To log in, visit: %s"
 msgstr ""
 
-#: includes/user-functions.php:747 includes/user-functions.php:748
+#: includes/user-functions.php:751 includes/user-functions.php:752
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:750
+#: includes/user-functions.php:754
 msgid ""
-"Hello %1$s,\r\n"
-"\r\n"
+"Hello %1$s,\n"
+"\n"
 "\t\tYour account with %2$s needs to be verified before you can access your "
-"purchase history. <a href=\"%3$s\">Click here</a> to verify your account.\r\n"
-"\r\n"
+"purchase history. <a href=\"%3$s\">Click here</a> to verify your account.\n"
+"\n"
 "\t\tLink missing? Visit the following URL: %3$s"
 msgstr ""
 
-#: includes/user-functions.php:878
+#: includes/user-functions.php:882
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"%s\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:911
+#: includes/user-functions.php:915
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:915
+#: includes/user-functions.php:919
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:959
+#: includes/user-functions.php:963
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1089
+#: includes/user-functions.php:1093
 msgid "Public Key:"
 msgstr ""
 
-#: includes/user-functions.php:1092
+#: includes/user-functions.php:1096
 msgid "Secret Key:"
 msgstr ""
 
-#: includes/user-functions.php:1116
+#: includes/user-functions.php:1120
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1123
+#: includes/user-functions.php:1127
 msgid "Add to iOS App"
 msgstr ""
 
