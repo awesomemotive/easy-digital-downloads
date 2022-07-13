@@ -98,7 +98,7 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = $this->get_date_query();
+			$args['date_created_query'] = $this->get_date_query();
 		}
 
 		if ( 'any' === $args['status'] || 'all' === $args['status'] ) {
