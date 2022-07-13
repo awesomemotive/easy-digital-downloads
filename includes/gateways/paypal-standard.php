@@ -201,10 +201,13 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		EDD()->session->set( 'edd_resume_payment', $payment );
 
 		// Get the success url
-		$return_url = add_query_arg( array(
+		$return_url = add_query_arg(
+			array(
 				'payment-confirmation' => 'paypal',
-				'payment-id' => $payment
-			), get_permalink( edd_get_option( 'success_page', false ) ) );
+				'payment-id'           => urlencode( $payment ),
+			),
+			get_permalink( edd_get_option( 'success_page', false ) )
+		);
 
 		// Get the PayPal redirect uri
 		$paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
@@ -223,10 +226,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'charset'       => get_bloginfo( 'charset' ),
 			'custom'        => $payment,
 			'rm'            => '2',
-			'return'        => $return_url,
-			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
-			'notify_url'    => $listener_url,
-			'image_url'     => edd_get_paypal_image_url(),
+			'return'        => esc_url_raw( $return_url ),
+			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $payment ) ) ),
+			'notify_url'    => esc_url_raw( $listener_url ),
+			'image_url'     => esc_url_raw( edd_get_paypal_image_url() ),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);
@@ -1124,7 +1127,7 @@ function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 	$payment         = new EDD_Payment( $payment_id );
 	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
 	$paypal_base_url = 'https://' . $sandbox . 'paypal.com/activity/payment/';
-	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
+	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
 
 	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );
 

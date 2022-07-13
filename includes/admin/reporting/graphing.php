@@ -742,7 +742,7 @@ function edd_reports_refresh_button() {
 		'edd-message' => 'refreshed-reports'
 	) ), 'edd-refresh-reports' );
 
-	echo '<a href="' . esc_url( $url ) . '" title="' . __( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
+	echo '<a href="' . esc_url( $url ) . '" title="' . esc_html__( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . esc_html__( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
 }
 
 add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );

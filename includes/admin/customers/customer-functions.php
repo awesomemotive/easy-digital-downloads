@@ -106,7 +106,7 @@ function edd_maybe_remove_menu_profile_links() {
 
 		if( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
 			$url     = esc_url( edd_get_user_verification_request_url() );
-			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), $url );
+			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), esc_url( $url ) );
 			$title   = __( 'Account Pending Verification', 'easy-digital-downloads' );
 			$args    = array(
 				'response' => 403,
@@ -152,8 +152,14 @@ function edd_render_customer_column( $value, $column_name, $user_id ) {
 
 		if ( $customer->id > 0 ) {
 			$name     = '#' . $customer->id . ' ';
-			$name     .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
-			$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
+			$name    .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
+			$view_url = edd_get_admin_url(
+				array(
+					'page' => 'edd-customers',
+					'view' => 'overview',
+					'id'   => absint( $customer->id ),
+				)
+			);
 
 			return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>';
 		}

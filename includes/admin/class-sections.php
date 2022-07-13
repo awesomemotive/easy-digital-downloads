@@ -216,7 +216,7 @@ class Sections {
 
 			$url = $this->use_js
 				? '#' . esc_attr( $this->id . $section->id )
-				: add_query_arg( 'view', $section->id, $this->base_url );
+				: add_query_arg( 'view', sanitize_key( $section->id ), $this->base_url );
 
 			// Special selected section
 			$selected = ! $this->use_js && $this->is_current_section( $section->id )

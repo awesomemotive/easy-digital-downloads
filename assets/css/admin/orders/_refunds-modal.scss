@@ -32,7 +32,7 @@ $fixed-column-width: 80px;
 	}
 }
 
-.refunditems {
+.refund-items {
 	td,
 	th.check-column {
 		vertical-align: baseline;
@@ -117,7 +117,7 @@ $fixed-column-width: 80px;
 }
 
 .did-refund {
-	.refunditems,
+	.refund-items,
 	.edd-submit-refund-actions {
 		display: none;
 	}

@@ -1085,7 +1085,7 @@ function edd_override_edit_post_for_payment_link( $url = '', $post_id = 0, $cont
 	return edd_get_admin_url( array(
 		'page' => 'edd-payment-history',
 		'view' => 'view-order-details',
-		'id'   => $post_id
+		'id'   => absint( $post_id ),
 	) );
 }
 
@@ -1536,7 +1536,7 @@ function edd_sendwp_callback( $args ) {
 	$connected .= '</a>.';
 
 	$disconnected = sprintf(
-		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
+		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . esc_url( admin_url( 'tools.php?page=sendwp' ) ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
 	);
 
 	// Checks if SendWP is connected
@@ -1647,7 +1647,7 @@ function edd_sendwp_remote_install_handler () {
 		'register_url'    => sendwp_get_server_url() . '_/signup',
 		'client_name'     => sendwp_get_client_name(),
 		'client_secret'   => sendwp_get_client_secret(),
-		'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails&edd-message=sendwp-connected' ),
+		'client_redirect' => admin_url( 'edit.php?post_type=download&page=edd-settings&tab=emails&edd-message=sendwp-connected' ),
 	) );
 }
 add_action( 'wp_ajax_edd_sendwp_remote_install', 'edd_sendwp_remote_install_handler' );
@@ -1748,7 +1748,7 @@ function edd_render_review_status_metabox() {
 
 	if ( ! empty( $reviews_location ) ) {
 		$review_path  = '';
-		$base_url     = wp_nonce_url( admin_url( 'plugins.php' ), 'activate-plugin_' . $reviews_location );
+		$base_url     = wp_nonce_url( admin_url( 'plugins.php' ), 'activate-plugin_' . sanitize_key( $reviews_location ) );
 		$args         = array(
 			'action'        => 'activate',
 			'plugin'        => sanitize_text_field( $reviews_location ),

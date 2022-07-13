@@ -550,7 +550,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	 * @return string
 	 */
 	public function get_list_table_url() {
-		return admin_url( 'edit.php?post_type=download' );
+		return edd_get_admin_base_url();
 	}
 
 	/**

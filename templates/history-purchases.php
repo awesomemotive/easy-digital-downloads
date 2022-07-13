@@ -75,7 +75,7 @@ if ( $orders ) :
 						endif;
 						?>
 					<?php else: ?>
-						<a href="<?php echo esc_url( add_query_arg( 'payment_key', $order->payment_key, edd_get_success_page_uri() ) ); ?>"><?php esc_html_e( 'View Details and Downloads', 'easy-digital-downloads' ); ?></a>
+						<a href="<?php echo esc_url( add_query_arg( 'payment_key', urlencode( $order->payment_key ), edd_get_success_page_uri() ) ); ?>"><?php esc_html_e( 'View Details and Downloads', 'easy-digital-downloads' ); ?></a>
 					<?php endif; ?>
 				</td>
 				<?php do_action( 'edd_order_history_row_end', $order ); ?>
