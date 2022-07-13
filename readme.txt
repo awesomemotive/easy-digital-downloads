@@ -240,6 +240,55 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 
+= 3.0, July 13, 2022 =
+* IMPORTANT: This is a major release, and should be tested in your staging environments prior to running on your live site.
+* Upgrade: This update will ask you to perform database maintenance once installed. Your site should remain functional during this time, but access to historical store data will be limited until the migration is complete.
+* New: Custom database tables have been added for all transactional data types in EDD.
+* New: Migrate orders, order items, tax rates, discount codes, fees, customer addresses, and transaction details to custom tables with the UI or WP-CLI migration tool.
+* New: All new reporting with advanced features for orders, downloads, customers, refunds, taxes, and more.
+* New: Downloads now use the Block Editor and are available in the REST API.
+* New: Improved tax settings, allowing historical data to be determined.
+* New: Fully featured Refund system, for accurate reporting which includes partial and full refund support.
+* New: Refunds can be initiated from within EDD for gateways which support it.
+* New: Filter orders with advanced rules like purchase total, product, country, or state.
+* New: New email marker insertion interface to assist in creating emails.
+* New: Ability to manually add orders, without an extension; the Manual Purchases extension will be deactivated automatically.
+* New: Discounts support start and end times, in addition to dates.
+* New: Discounts now support notes.
+* New: Use JSON-LD format for schema output.
+* New: The order details views have been redesigned completely to make managing orders easier.
+* Improvement: CSS styles have been updated and modernized throughout, including for jQuery and Chosen, as well as to improve mobile responsiveness.
+* Improvement: Chosen has been updated for improved performance and accessibility.
+* Improvement: Admin table views have been revised to be more responsive and consistent with WordPress core.
+* Improvement: Dates for orders and related data are stored in the database in UTC, and displayed in the store’s time zone.
+* Improvement: Discounts which have been used at least once can no longer be deleted.
+* Improvement: Admin screens, settings and input fields have been revised for improved accessibility.
+* Improvement: Order items for variably priced products now include the price option name.
+* Improvement: Language files have been removed from the deliverable package, and will rely on translate.wordpress.org going forward.
+* Improvement: Introduce a "Store Gateway" to handle free orders and orders not handled through another gateway.
+* Improvement: EDD HTML fields can now be required.
+* Improvement: Admin table views have been rewritten to more accurately represent object status counts.
+* Improvement: Because orders can be partially refunded, file deliverability is evaluated per order item, not order.
+* Improvement: Download and customer sales and earnings are now dynamically calculated.
+* Fix: Additional order statuses (like renewals) were not consistently included when querying for orders.
+* Fix: Customers were failing to be created when their email address exceeded 50 characters.
+* Fix: Improved performance of the `edd_has_user_purchased()` function.
+* Fix: Average earnings now accounts for fees.
+* Fix: The customer's list table could show an empty customer name.
+* Fix: Greatly improved the performance of the cart total calculation.
+* Fix: Single price products are saved to the order items table with a null price ID, to differentiate from variable products with a 0 price ID.
+* Templates: The receipt, order history, and download history templates have been updated to work with new order functions.
+* Dev: Introduced `edd_get_`, `edd_add_`, and `edd_delete_` helper functions to access new database methods.
+* Dev: Introduced `edd_maybe_add_customer_address` to ensure that only unique physical addresses are added to a customer.
+* Dev: Introduced helper functions such as `edd_get_admin_url`, `edd_is_dev_environment`, and `edd_redirect` to reduce the need to write repeated code.
+* Dev: The minimum PHP version has been updated to 5.6.
+* Dev: The minimum WordPress version has been updated to 4.9.
+* Dev: Added new helper functions to retrieve order status by state like gross, net, recoverable, deliverable.
+* Dev: A new `edd_is_cart_empty()` function was added.
+* Dev: Orders now use 'complete' as the final state instead of 'publish'.
+* Dev: Moved all script and style generation to use webpack.
+* Dev: EDD style settings have been deprecated.
+
 = 2.11.7, June 29, 2022 =
 * Fix: Some settings for custom integrations were not showing settings screens, when no registered EDD settings were found in the section.
 * Fix: Improved sanitization when generating and using URLs.
