@@ -244,7 +244,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * IMPORTANT: This is a major release, and should be tested in your staging environments prior to running on your live site.
 * Upgrade: This update will ask you to perform database maintenance once installed. Your site should remain functional during this time, but access to historical store data will be limited until the migration is complete.
 * New: Custom database tables have been added for all transactional data types in EDD.
-* New: Migrate Orders, order items, tax rates, discount codes, fees, customer addresses, and transaction details to custom tables with the UI or WP-CLI migration tool.
+* New: Migrate orders, order items, tax rates, discount codes, fees, customer addresses, and transaction details to custom tables with the UI or WP-CLI migration tool.
 * New: All new reporting with advanced features for orders, downloads, customers, refunds, taxes, and more.
 * New: Downloads now use the Block Editor and are available in the REST API.
 * New: Improved tax settings, allowing historical data to be determined.
@@ -270,15 +270,16 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Improvement: Admin table views have been rewritten to more accurately represent object status counts.
 * Improvement: Because orders can be partially refunded, file deliverability is evaluated per order item, not order.
 * Improvement: Download and customer sales and earnings are now dynamically calculated.
-* Fix: Additional payment statuses (like renewals) were not consistently included when querying for orders.
+* Fix: Additional order statuses (like renewals) were not consistently included when querying for orders.
 * Fix: Customers were failing to be created when their email address exceeded 50 characters.
 * Fix: Improved performance of the `edd_has_user_purchased()` function.
 * Fix: Average earnings now accounts for fees.
-* Fix: The customer's list table could show an empty Customer Name.
+* Fix: The customer's list table could show an empty customer name.
 * Fix: Greatly improved the performance of the cart total calculation.
 * Fix: Single price products are saved to the order items table with a null price ID, to differentiate from variable products with a 0 price ID.
-* Templates: The receipt, order history templates have been updated to work with new order functions.
+* Templates: The receipt, order history, and download history templates have been updated to work with new order functions.
 * Dev: Introduced `edd_get_`, `edd_add_`, and `edd_delete_` helper functions to access new database methods.
+* Dev: Introduced `edd_maybe_add_customer_address` to ensure that only unique physical addresses are added to a customer.
 * Dev: Introduced helper functions such as `edd_get_admin_url`, `edd_is_dev_environment`, and `edd_redirect` to reduce the need to write repeated code.
 * Dev: The minimum PHP version has been updated to 5.6.
 * Dev: The minimum WordPress version has been updated to 4.9.
@@ -287,7 +288,6 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Dev: Orders now use 'complete' as the final state instead of 'publish'.
 * Dev: Moved all script and style generation to use webpack.
 * Dev: EDD style settings have been deprecated.
-
 
 = 2.11.7, June 29, 2022 =
 * Fix: Some settings for custom integrations were not showing settings screens, when no registered EDD settings were found in the section.
