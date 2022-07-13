@@ -224,19 +224,14 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Screenshots ==
 
-1. Download products overview
-2. Download configuration
-3. Download configuration details
-4. Payment History
-5. Payment details
-6. Discount codes
-7. Earnings and sales reports
-8. Add to cart / purchase button
-9. Apple Pay purchase buttons
-10. Checkout screen
-11. Google Pay checkout
-12. PayPal button on checkout page
-13. Pay with PayPal modal
+1. Detailed and actional reports
+2. Customer Management
+3. Order History
+4. Order Details
+5. Product Grid - Vendd
+6. Checkout - Vendd
+7. Product Grid - Default Theme
+8. Checkout - Default Theme
 
 == Changelog ==
 
