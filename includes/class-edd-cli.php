@@ -963,6 +963,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::line( __( 'Preparing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
 
+		// Check and see if we have even a single log to migrate.
 		$sql = "
 			SELECT p.*, t.slug
 			FROM {$wpdb->posts} AS p
@@ -970,33 +971,59 @@ class EDD_CLI extends WP_CLI_Command {
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
 			WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
+			LIMIT 1
 		";
 
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+		$check_result = $wpdb->get_results( $sql );
+		$check_total  = count( $results );
+		$has_results  = ! empty( $check_total );
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating Logs', $total );
+		// Setup base itteration variables.
+		$step        = 0;
+		$offset      = 0;
+		$number      = 1000;
 
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::logs( $result );
+		while ( $has_results ) {
+			$sql = "
+				SELECT p.*, t.slug
+				FROM {$wpdb->posts} AS p
+				LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+				LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+				LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+				WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
+				LIMIT {$number} {$offset}
+			";
 
-				$progress->tick();
+			$results = $wpdb->get_results( $sql );
+			$total   = count( $results );
+			if ( ! empty( $total ) ) {
+				foreach ( $results as $result ) {
+					\EDD\Admin\Upgrades\v3\Data_Migrator::logs( $result );
+				}
+
+				// Inciement step, so we can offset.
+				$step++;
+
+				// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
+				$offset = $step * $number;
+			} else {
+				$has_results = false;
 			}
+		}
 
-			$progress->finish();
-
+		if ( 0 === $step ) {
+			WP_CLI::line( __( 'No log records found.', 'easy-digital-downloads' ) );
+		} else {
+		// This migration is completed on a data set.
 			WP_CLI::line( __( 'Migration complete: Logs', 'easy-digital-downloads' ) );
 			$new_count = edd_count_logs() + edd_count_file_download_logs() + edd_count_api_request_logs();
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $total );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
-
-			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_logs' );
-		} else {
-			WP_CLI::line( __( 'No log records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_logs' );
 		}
+
+		edd_update_db_version();
+		edd_set_upgrade_complete( 'migrate_logs' );
+
 	}
 
 	/**
