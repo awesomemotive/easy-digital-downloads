@@ -1002,7 +1002,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->tick();
 
 			// Query & count.
-			$sql     = $sql_base . " LIMIT {$number}, {$offset}";
+			$sql     = $sql_base . " LIMIT {$offset}, {$number}";
 			$results = $wpdb->get_results( $sql );
 			$total   = count( $results );
 			if ( ! empty( $total ) ) {
