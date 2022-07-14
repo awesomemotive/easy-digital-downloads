@@ -365,6 +365,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * Attach an email address to the customer.
 	 *
 	 * @since 2.6
+	 * @since 3.0.1 This method will return customer email ID or false, instead of bool
 	 *
 	 * @param string $email The email address to remove from the customer.
 	 * @param bool   $primary Allows setting the email added as the primary.
