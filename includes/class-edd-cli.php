@@ -995,7 +995,11 @@ class EDD_CLI extends WP_CLI_Command {
 			$number = 10000;
 		}
 
+		// New Progress indicator.
+		$progress = new \cli\notify\Spinner( __( 'Migrating Logs', 'easy-digital-downloads' ) );
+
 		while ( $has_results ) {
+			$progress->tick();
 
 			// Query & count.
 			$sql     = $sql_base . " LIMIT {$number}, {$offset}";
@@ -1004,6 +1008,8 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $total ) ) {
 				foreach ( $results as $result ) {
 					\EDD\Admin\Upgrades\v3\Data_Migrator::logs( $result );
+
+					$progress->tick();
 				}
 
 				// Increment step, so we can offset.
@@ -1017,6 +1023,8 @@ class EDD_CLI extends WP_CLI_Command {
 				$has_results = false;
 			}
 		}
+
+		$progress->finish();
 
 		if ( 0 === $step ) {
 			WP_CLI::line( __( 'No log records found.', 'easy-digital-downloads' ) );
