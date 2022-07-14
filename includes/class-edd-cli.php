@@ -999,25 +999,33 @@ class EDD_CLI extends WP_CLI_Command {
 			$number = 10000;
 		}
 
+		// Starting total.
+		$total = 0;
+
 		while ( $has_results ) {
 			$progress->tick();
 
 			// Query & count.
 			$sql     = $sql_base . " LIMIT {$offset}, {$number}";
 			$results = $wpdb->get_results( $sql );
-			$total   = count( $results );
-			if ( ! empty( $total ) ) {
+
+			// Not empty, so lets chug through them!
+			if ( ! empty( $results ) ) {
 				foreach ( $results as $result ) {
 					\EDD\Admin\Upgrades\v3\Data_Migrator::logs( $result );
 
+					// Tick the spinner...
 					$progress->tick();
+
+					// Bump the total...
+					$total++;
 				}
 
-				// Increment step, so we can offset.
+				// Increment step for the next offset...
 				$step++;
 
 				// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
-				$offset = $step * $number;
+				$offset = ( $step * $number );
 
 			// Done!
 			} else {
