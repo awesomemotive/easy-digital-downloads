@@ -963,6 +963,10 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::line( __( 'Preparing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
 
+		// New Progress indicator.
+		$progress = new \cli\notify\Spinner( __( 'Migrating Logs', 'easy-digital-downloads' ) );
+		$progress->tick();
+
 		// Base SQL to get legacy logs (LIMIT added below)
 		$sql_base = "
 			SELECT p.*, t.slug
@@ -994,9 +998,6 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( $number > 10000 ) {
 			$number = 10000;
 		}
-
-		// New Progress indicator.
-		$progress = new \cli\notify\Spinner( __( 'Migrating Logs', 'easy-digital-downloads' ) );
 
 		while ( $has_results ) {
 			$progress->tick();
