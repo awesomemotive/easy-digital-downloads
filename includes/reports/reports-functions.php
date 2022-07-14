@@ -739,6 +739,12 @@ function get_dates_filter_hour_by_hour() {
 		case 'yesterday':
 			$hour_by_hour = true;
 			break;
+		case 'other':
+			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
+			if ( $difference <= ( DAY_IN_SECONDS * 2 ) ) {
+				$hour_by_hour = true;
+			}
+			break;
 		default:
 			$hour_by_hour = false;
 			break;
