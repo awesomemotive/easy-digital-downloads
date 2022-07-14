@@ -129,6 +129,11 @@ class Structured_Data {
 			return false;
 		}
 
+		// Return false if a download object could not be retrieved.
+		if ( ! $download instanceof \EDD_Download ) {
+			return false;
+		}
+
 		$data = array(
 			'@type'       => 'Product',
 			'name'        => $download->post_title,
