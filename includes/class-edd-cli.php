@@ -963,8 +963,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::line( __( 'Preparing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
 
-		// Check if any logs exist.
-		$sql = "
+		// Base SQL to get legacy logs (LIMIT added below)
+		$sql_base = "
 			SELECT p.*, t.slug
 				FROM {$wpdb->posts} AS p
 					LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
@@ -975,10 +975,10 @@ class EDD_CLI extends WP_CLI_Command {
 					AND
 					t.slug != 'sale'
 				ORDER BY p.ID ASC
-				LIMIT 1
 		";
 
 		// Query & count.
+		$sql          = $sql_base . " LIMIT 1";
 		$check_result = $wpdb->get_results( $sql );
 		$check_total  = count( $check_result );
 		$has_results  = ! empty( $check_total );
@@ -991,21 +991,9 @@ class EDD_CLI extends WP_CLI_Command {
 			: 1000;
 
 		while ( $has_results ) {
-			$sql = "
-				SELECT p.*, t.slug
-					FROM {$wpdb->posts} AS p
-						LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
-						LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
-						LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-					WHERE
-						p.post_type = 'edd_log'
-						AND
-						t.slug != 'sale'
-					ORDER BY p.ID ASC
-					LIMIT {$number}, {$offset}
-			";
 
 			// Query & count.
+			$sql     = $sql_base . " LIMIT {$number}, {$offset}";
 			$results = $wpdb->get_results( $sql );
 			$total   = count( $results );
 			if ( ! empty( $total ) ) {
