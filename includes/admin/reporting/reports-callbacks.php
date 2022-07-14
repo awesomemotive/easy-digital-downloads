@@ -47,12 +47,12 @@ function edd_overview_sales_earnings_chart() {
 	$sql_clauses['orderby'] = 'MONTH(date_created)';
 
 	// Now drill down to the smallest unit.
-	if ( $day_by_day ) {
-		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
-		$sql_clauses['orderby'] = 'DATE(date_created)';
-	} elseif ( $hour_by_hour ) {
+	if ( $hour_by_hour ) {
 		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
 		$sql_clauses['orderby'] = 'HOUR(date_created)';
+	} elseif ( $day_by_day ) {
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
+		$sql_clauses['orderby'] = 'DATE(date_created)';
 	}
 
 	if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
@@ -219,12 +219,12 @@ function edd_overview_refunds_chart() {
 	$sql_clauses['orderby'] = 'MONTH(date_created)';
 
 	// Now drill down to the smallest unit.
-	if ( $day_by_day ) {
-		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
-		$sql_clauses['orderby'] = 'DATE(date_created)';
-	} elseif ( $hour_by_hour ) {
+	if ( $hour_by_hour ) {
 		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
 		$sql_clauses['orderby'] = 'HOUR(date_created)';
+	} elseif ( $day_by_day ) {
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
+		$sql_clauses['orderby'] = 'DATE(date_created)';
 	}
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
