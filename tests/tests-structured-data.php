@@ -64,6 +64,13 @@ class Tests_Structured_Data extends EDD_UnitTestCase {
 	/**
 	 * @covers EDD_Structured_Data::generate_download_data()
 	 */
+	public function test_generate_download_data_for_non_download_should_return_false() {
+		$this->assertFalse( EDD()->structured_data->generate_download_data( 2341234 ) );
+	}
+
+	/**
+	 * @covers EDD_Structured_Data::generate_download_data()
+	 */
 	public function test_generate_download_data() {
 		EDD()->structured_data->generate_download_data( self::$download->ID );
 
