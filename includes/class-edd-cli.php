@@ -990,6 +990,11 @@ class EDD_CLI extends WP_CLI_Command {
 			? (int) $assoc_args['number']
 			: 1000;
 
+		// Maximum 10,000 - this ain't no VTEC.
+		if ( $number > 10000 ) {
+			$number = 10000;
+		}
+
 		while ( $has_results ) {
 
 			// Query & count.
