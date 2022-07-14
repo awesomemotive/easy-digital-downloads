@@ -963,37 +963,49 @@ class EDD_CLI extends WP_CLI_Command {
 
 		WP_CLI::line( __( 'Preparing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
 
-		// Check and see if we have even a single log to migrate.
+		// Check if any logs exist.
 		$sql = "
 			SELECT p.*, t.slug
-			FROM {$wpdb->posts} AS p
-			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
-			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
-			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-			WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
-			LIMIT 1
+				FROM {$wpdb->posts} AS p
+					LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+					LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+					LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+				WHERE
+					p.post_type = 'edd_log'
+					AND
+					t.slug != 'sale'
+				ORDER BY p.ID ASC
+				LIMIT 1
 		";
 
+		// Query & count.
 		$check_result = $wpdb->get_results( $sql );
-		$check_total  = count( $results );
+		$check_total  = count( $check_result );
 		$has_results  = ! empty( $check_total );
 
-		// Setup base itteration variables.
-		$step        = 0;
-		$offset      = 0;
-		$number      = 1000;
+		// Setup base iteration variables.
+		$step   = 0;
+		$offset = 0;
+		$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
+			? (int) $assoc_args['number']
+			: 1000;
 
 		while ( $has_results ) {
 			$sql = "
 				SELECT p.*, t.slug
-				FROM {$wpdb->posts} AS p
-				LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
-				LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
-				LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-				WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
-				LIMIT {$number} {$offset}
+					FROM {$wpdb->posts} AS p
+						LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+						LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+						LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+					WHERE
+						p.post_type = 'edd_log'
+						AND
+						t.slug != 'sale'
+					ORDER BY p.ID ASC
+					LIMIT {$number}, {$offset}
 			";
 
+			// Query & count.
 			$results = $wpdb->get_results( $sql );
 			$total   = count( $results );
 			if ( ! empty( $total ) ) {
@@ -1001,11 +1013,13 @@ class EDD_CLI extends WP_CLI_Command {
 					\EDD\Admin\Upgrades\v3\Data_Migrator::logs( $result );
 				}
 
-				// Inciement step, so we can offset.
+				// Increment step, so we can offset.
 				$step++;
 
 				// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
 				$offset = $step * $number;
+
+			// Done!
 			} else {
 				$has_results = false;
 			}
