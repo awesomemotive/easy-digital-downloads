@@ -93,7 +93,7 @@ class EDD_Session {
 			? 'plugins_loaded'
 			: 'init';
 
-		add_action( $hook, array( $this, 'init' ), -1 );
+		add_action( $hook, array( $this, 'init' ) );
 	}
 
 	/**
