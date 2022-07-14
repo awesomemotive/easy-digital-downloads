@@ -89,11 +89,16 @@ class EDD_Session {
 			add_filter( 'wp_session_expiration',         array( $this, 'set_expiration_time'         ), 99999 );
 		}
 
-		$hook = ( empty( $this->session ) && ! $this->use_php_sessions )
-			? 'plugins_loaded'
-			: 'init';
+		// Based off our session handling, we need to use different hooks and priorities.
+		if ( empty( $this->session ) && ! $this->use_php_sessions ) {
+			$hook     = 'plugins_loaded';
+			$priority = 10;
+		} else {
+			$hook     = 'init';
+			$priority = -1;
+		}
 
-		add_action( $hook, array( $this, 'init' ) );
+		add_action( $hook, array( $this, 'init' ), $priority );
 	}
 
 	/**
