@@ -74,9 +74,10 @@ class Tests_Structured_Data extends EDD_UnitTestCase {
 	public function test_generate_download_data() {
 		EDD()->structured_data->generate_download_data( self::$download->ID );
 
-		$data = EDD()->structured_data->get_data();
+		$all_data = EDD()->structured_data->get_data();
+		$data     = reset( $all_data );
 
-		$this->assertEquals( self::$download->post_title, $data[1]['name'] );
+		$this->assertEquals( self::$download->post_title, $data['name'] );
 	}
 
 	/**
