@@ -139,7 +139,11 @@ Check out some of our popular posts for actionable advice for running your busin
 
 Development for this plugin happens in a public GitHub repository to better facilitate contributions from an active community of users, developers and designers. If you have a suggestion, bug report, patch, or pull request, please feel free to [contribute here](https://github.com/easydigitaldownloads/easy-digital-downloads) or to our [code snippet library](https://github.com/easydigitaldownloads/library).
 
-= Looking for something else? =
+= Looking to change e-Commerce solutions? =
+
+Easy Digital Downloads is the perfect digital e-Commerce alternative to Etsy, Gumroad, WooCommerce, Shopfiy, BigCommerce, or Wix.
+
+You can use Easy Digital Downloads to sell your digital products with less fees than Gumroad or Etsy.
 
 If Easy Digital Downloads doesn't quite fit your needs, take a look at some of our other projects.
 
