@@ -701,17 +701,17 @@ function edd_register_downloads_report( $reports ) {
 							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses = array(
 								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
 								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+							);
+						} elseif ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
 							);
 						}
 
@@ -1355,17 +1355,17 @@ function edd_register_payment_gateways_report( $reports ) {
 							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses = array(
 								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
 								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+							);
+						} elseif ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
 							);
 						}
 
@@ -1818,12 +1818,12 @@ function edd_register_file_downloads_report( $reports ) {
 						$sql_clauses['orderby'] = 'MONTH(date_created)';
 
 						// Now drill down to the smallest unit.
-						if ( $day_by_day ) {
-							$sql_clauses['groupby'] = 'DATE(date_created)';
-							$sql_clauses['orderby'] = 'DATE(date_created)';
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses['groupby'] = 'HOUR(date_created)';
 							$sql_clauses['orderby'] = 'HOUR(date_created)';
+						} elseif ( $day_by_day ) {
+							$sql_clauses['groupby'] = 'DATE(date_created)';
+							$sql_clauses['orderby'] = 'DATE(date_created)';
 						}
 
 						$product_id = '';
@@ -2371,17 +2371,17 @@ function edd_register_customer_report( $reports ) {
 							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses = array(
 								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
 								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+							);
+						} elseif ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
 							);
 						}
 

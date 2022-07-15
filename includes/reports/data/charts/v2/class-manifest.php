@@ -356,10 +356,10 @@ class Manifest implements Error_Logger {
 
 		$time_format = 'MMM YYYY';
 
-		if ( $day_by_day ) {
-			$time_format = 'MMM D';
-		} else if ( $hour_by_hour ) {
+		if ( $hour_by_hour ) {
 			$time_format = 'hA';
+		} else if ( $day_by_day ) {
+			$time_format = 'MMM D';
 		}
 
 		$config->type         = $this->get_type();
@@ -433,12 +433,12 @@ class Manifest implements Error_Logger {
 			$time_unit = 'month';
 			$time_format = 'MMM YYYY';
 
-			if ( $day_by_day ) {
-				$time_unit   = 'day';
-				$time_format = 'MMM D';
-			} else if ( $hour_by_hour ) {
+			if ( $hour_by_hour ) {
 				$time_unit   = 'hour';
 				$time_format = 'hA';
+			} else if ( $day_by_day ) {
+				$time_unit   = 'day';
+				$time_format = 'MMM D';
 			}
 
 			$defaults = array(
