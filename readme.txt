@@ -245,7 +245,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Adding more than one additional customer email address in a row failed.
 * Fix: A fatal error could be triggered when attempting to output the JSON-LD structured data.
 * Fix: Adjust the debug mode setting to be more clearly stated.
-* Fix: Report graphs were not support hour-by-hour for some custom date queries.
+* Fix: Report graphs did not support hour-by-hour for some custom date queries.
 
 = 3.0, July 13, 2022 =
 * IMPORTANT: This is a major release, and should be tested in your staging environments prior to running on your live site.
