@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.0\n"
+"Project-Id-Version: Easy Digital Downloads 3.0.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-07-13 16:25:57+00:00\n"
+"POT-Creation-Date: 2022-07-15 08:37:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -73,10 +73,10 @@ msgstr ""
 
 #: includes/EDD_SL_Plugin_Updater.php:486
 #: includes/admin/admin-deprecated-functions.php:67
-#: includes/admin/customers/customer-actions.php:308
-#: includes/admin/customers/customer-actions.php:363
-#: includes/admin/customers/customer-actions.php:555
-#: includes/admin/customers/customer-actions.php:612
+#: includes/admin/customers/customer-actions.php:310
+#: includes/admin/customers/customer-actions.php:365
+#: includes/admin/customers/customer-actions.php:557
+#: includes/admin/customers/customer-actions.php:614
 #: includes/admin/discounts/discount-actions.php:32
 #: includes/admin/discounts/discount-actions.php:166
 #: includes/admin/discounts/discount-actions.php:171
@@ -642,7 +642,7 @@ msgid "Delete Log File and Disable Logging"
 msgstr ""
 
 #: includes/admin/class-edd-notices.php:766
-#: includes/admin/customers/customer-actions.php:604
+#: includes/admin/customers/customer-actions.php:606
 #: includes/admin/promos/class-promo-handler.php:116
 #: includes/admin/promos/class-promo-handler.php:123
 #: includes/admin/promos/class-promo-handler.php:128
@@ -897,13 +897,13 @@ msgstr ""
 
 #: includes/admin/customers/customer-actions.php:35
 #: includes/admin/customers/customer-actions.php:195
-#: includes/admin/customers/customer-actions.php:494
+#: includes/admin/customers/customer-actions.php:496
 msgid "You do not have permission to edit this customer."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:44
-#: includes/admin/customers/customer-actions.php:420
-#: includes/admin/customers/customer-actions.php:505
+#: includes/admin/customers/customer-actions.php:422
+#: includes/admin/customers/customer-actions.php:507
 msgid "Cheatin' eh?!"
 msgstr ""
 
@@ -944,31 +944,31 @@ msgstr ""
 msgid "Invalid email address."
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:235
+#: includes/admin/customers/customer-actions.php:236
 msgid "Email already associated with this customer."
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:241
+#: includes/admin/customers/customer-actions.php:242
 msgid "Email address is already associated with another customer."
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:256
+#: includes/admin/customers/customer-actions.php:258
 msgid "Email successfully added to customer."
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:262
+#: includes/admin/customers/customer-actions.php:264
 msgid "Email address %s added by %s"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:266
-#: includes/admin/customers/customer-actions.php:378
+#: includes/admin/customers/customer-actions.php:268
+#: includes/admin/customers/customer-actions.php:380
 msgid "Email address %s set as primary by %s"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:308
-#: includes/admin/customers/customer-actions.php:363
-#: includes/admin/customers/customer-actions.php:555
-#: includes/admin/customers/customer-actions.php:612
+#: includes/admin/customers/customer-actions.php:310
+#: includes/admin/customers/customer-actions.php:365
+#: includes/admin/customers/customer-actions.php:557
+#: includes/admin/customers/customer-actions.php:614
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:98
 #: includes/admin/reporting/export/export-actions.php:24
@@ -977,28 +977,28 @@ msgstr ""
 msgid "Nonce verification failed"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:323
+#: includes/admin/customers/customer-actions.php:325
 #: includes/shortcodes.php:975
 msgid "Email address %s removed by %s"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:407
+#: includes/admin/customers/customer-actions.php:409
 msgid "You do not have permission to delete this customer."
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:424
+#: includes/admin/customers/customer-actions.php:426
 msgid "Please confirm you want to delete this customer"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:470
+#: includes/admin/customers/customer-actions.php:472
 msgid "Error deleting customer"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:475
+#: includes/admin/customers/customer-actions.php:477
 msgid "Invalid Customer ID"
 msgstr ""
 
-#: includes/admin/customers/customer-actions.php:524
+#: includes/admin/customers/customer-actions.php:526
 msgid "Failed to disconnect user from customer"
 msgstr ""
 
@@ -2004,7 +2004,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:2789
 #: includes/admin/reporting/reports.php:2858
 #: includes/admin/reporting/reports.php:2924
-#: includes/reports/reports-functions.php:1078
+#: includes/reports/reports-functions.php:1084
 #. translators: the plural post type label
 msgid "All %s"
 msgstr ""
@@ -2725,7 +2725,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:296
 #: includes/admin/reporting/class-base-logs-list-table.php:506
 #: includes/admin/tools/logs.php:258
-#: includes/reports/reports-functions.php:1392
+#: includes/reports/reports-functions.php:1398
 msgid "Filter"
 msgstr ""
 
@@ -5389,7 +5389,7 @@ msgid "Debug Mode"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:908
-msgid "Check this to enable logging of certain behaviors to a file. %s"
+msgid "Check this box to enable Debug Mode."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:913
@@ -12009,7 +12009,7 @@ msgid "Global Rate"
 msgstr ""
 
 #: includes/reports/reports-functions.php:328
-#: includes/reports/reports-functions.php:1115
+#: includes/reports/reports-functions.php:1121
 msgid "Exclude Taxes"
 msgstr ""
 
@@ -12039,15 +12039,15 @@ msgstr ""
 msgid "Last 30 Days"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1007
+#: includes/reports/reports-functions.php:1013
 msgid "Chart time zone: %s"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1284
+#: includes/reports/reports-functions.php:1290
 msgid "%s - Converted"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1414
+#: includes/reports/reports-functions.php:1420
 msgid "Try the Sales/Earnings iOS App!"
 msgstr ""
 
@@ -12713,7 +12713,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:2816
 #: includes/admin/reporting/reports.php:2885
 #: includes/admin/reporting/reports.php:2939
-#: includes/reports/reports-functions.php:1044
+#: includes/reports/reports-functions.php:1050
 msgctxt "date filter"
 msgid "From"
 msgstr ""
@@ -12726,7 +12726,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:2827
 #: includes/admin/reporting/reports.php:2896
 #: includes/admin/reporting/reports.php:2950
-#: includes/reports/reports-functions.php:1052
+#: includes/reports/reports-functions.php:1058
 msgctxt "date filter"
 msgid "To"
 msgstr ""
