@@ -240,7 +240,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 == Changelog ==
 
 = 3.0.1, July 15, 2022 =
-* Fix: Using the EDD_USE_PHP_SESSIONS constant could result in empty carts.
+* Fix: Setting the EDD_USE_PHP_SESSIONS constant to 'false' could result in empty carts.
 * Fix: Exporting reports with 'All Statuses' and a country/region fails.
 * Fix: Adding more than one additional customer email address in a row failed.
 * Fix: A fatal error could be triggered when attempting to output the JSON+LS structured data.
