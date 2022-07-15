@@ -243,7 +243,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Setting the EDD_USE_PHP_SESSIONS constant to 'false' could result in empty carts.
 * Fix: Exporting reports with 'All Statuses' and a country/region fails.
 * Fix: Adding more than one additional customer email address in a row failed.
-* Fix: A fatal error could be triggered when attempting to output the JSON+LS structured data.
+* Fix: A fatal error could be triggered when attempting to output the JSON-LD structured data.
 * Fix: Adjust the debug mode setting to be more clearly stated.
 * Fix: Report graphs were not support hour-by-hour for some custom date queries.
 
