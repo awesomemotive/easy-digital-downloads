@@ -7,7 +7,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.0
+Stable Tag: 3.0.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -238,6 +238,14 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.0.1, July 15, 2022 =
+* Fix: Using the EDD_USE_PHP_SESSIONS constant could result in empty carts.
+* Fix: Exporting reports with 'All Statuses' and a country/region fails.
+* Fix: Adding more than one additional customer email address in a row failed.
+* Fix: A fatal error could be triggered when attempting to output the JSON+LS structured data.
+* Fix: Adjust the debug mode setting to be more clearly stated.
+* Fix: Report graphs were not support hour-by-hour for some custom date queries.
 
 = 3.0, July 13, 2022 =
 * IMPORTANT: This is a major release, and should be tested in your staging environments prior to running on your live site.
