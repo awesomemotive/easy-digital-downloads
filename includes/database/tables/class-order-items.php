@@ -38,7 +38,7 @@ final class Order_Items extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202110141;
+	protected $version = 202207161;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -49,11 +49,11 @@ final class Order_Items extends Table {
 	 */
 	protected $upgrades = array(
 		'201906241' => 201906241,
-		'202002141' => 202002141,
 		'202102010' => 202102010,
 		'202103151' => 202103151,
 		'202105221' => 202105221,
 		'202110141' => 202110141,
+		'202207161' => 202207161,
 	);
 
 	/**
@@ -80,8 +80,8 @@ final class Order_Items extends Table {
 			tax decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
 			rate decimal(10,5) NOT NULL DEFAULT 1.00000,
-			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
-			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_product_price_id (order_id,product_id,price_id),
@@ -100,34 +100,11 @@ final class Order_Items extends Table {
 	 */
 	protected function __201906241() {
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY `quantity` int signed NOT NULL default '0';
+			ALTER TABLE {$this->table_name} MODIFY `quantity` int signed NOT NULL default '0'
 		" );
 
 		// Return success/fail
 		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 202002141
-	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
-	 *
-	 * @since 3.0
-	 * @return bool
-	 */
-	protected function __202002141() {
-
-		// Update `date_created`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
-		// Update `date_modified`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
-		return $this->is_success( $result );
-
 	}
 
 	/**
@@ -137,9 +114,10 @@ final class Order_Items extends Table {
 	 * @return bool
 	 */
 	protected function __202102010() {
+
 		// Update `status`.
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `status` varchar(20) NOT NULL default 'pending';
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `status` varchar(20) NOT NULL default 'pending'
 		" );
 
 		return $this->is_success( $result );
@@ -154,13 +132,14 @@ final class Order_Items extends Table {
 	 * @return bool
 	 */
 	protected function __202103151() {
+
 		// Look for column
 		$result = $this->column_exists( 'parent' );
 
 		// Maybe add column
 		if ( false === $result ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN parent bigint(20) unsigned NOT NULL default '0' AFTER id;
+				ALTER TABLE {$this->table_name} ADD COLUMN parent bigint(20) unsigned NOT NULL default '0' AFTER id
 			" );
 		}
 
@@ -200,10 +179,31 @@ final class Order_Items extends Table {
 	 */
 	protected function __202110141() {
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN price_id bigint(20) unsigned default null;
+			ALTER TABLE {$this->table_name} MODIFY COLUMN price_id bigint(20) unsigned default null
 		" );
 
 		return $this->is_success( $result );
 	}
 
+	/**
+	 * Upgrade to version 202207161
+	 *  - Change default value to '0000-00-00 00:00:00' for columns `date_created` and `date_modified`.
+	 *
+	 * @since 3.0.2
+	 * @return bool
+	 */
+	protected function __202207161() {
+
+		// Update `date_created`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default '0000-00-00 00:00:00'
+		" );
+
+		// Update `date_modified`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00'
+		" );
+
+		return true;
+	}
 }

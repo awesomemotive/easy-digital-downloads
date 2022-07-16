@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202108041;
+	protected $version = 202207161;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -55,6 +55,7 @@ final class Orders extends Table {
 		'202103261' => 202103261,
 		'202105221' => 202105221,
 		'202108041' => 202108041,
+		'202207161' => 202207161,
 	);
 
 	/**
@@ -84,8 +85,8 @@ final class Orders extends Table {
 			tax decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
 			rate decimal(10,5) NOT NULL DEFAULT 1.00000,
-			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
-			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			date_completed datetime default null,
 			date_refundable datetime default null,
 			uuid varchar(100) NOT NULL default '',
@@ -113,18 +114,16 @@ final class Orders extends Table {
 		// After successful creation, we need to set the auto_increment for legacy orders.
 		if ( ! empty( $created ) ) {
 
-			$last_payment_id = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
+			$last_payment_id = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1" );
 
 			if ( ! empty( $last_payment_id ) ) {
 				update_option( 'edd_v3_migration_pending', $last_payment_id, false );
 				$auto_increment = $last_payment_id + 1;
-				$this->get_db()->query( "ALTER TABLE {$this->table_name}  AUTO_INCREMENT = {$auto_increment};" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} AUTO_INCREMENT = {$auto_increment}" );
 			}
-
 		}
 
 		return $created;
-
 	}
 
 	/**
@@ -137,7 +136,7 @@ final class Orders extends Table {
 	 */
 	protected function __201901111() {
 		$this->get_db()->query( "
-			UPDATE {$this->table_name} set `status` = 'complete' WHERE `status` = 'publish';
+			UPDATE {$this->table_name} set `status` = 'complete' WHERE `status` = 'publish'
 		" );
 
 		return $this->is_success( true );
@@ -145,7 +144,6 @@ final class Orders extends Table {
 
 	/**
 	 * Upgrade to version 202002141
-	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *  - Change default value to `null` for columns `date_completed` and `date_refundable`.
 	 *
 	 * @since 3.0
@@ -153,19 +151,9 @@ final class Orders extends Table {
 	 */
 	protected function __202002141() {
 
-		// Update `date_created`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
-		// Update `date_modified`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
 		// Update `date_completed`.
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_completed` datetime default null;
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_completed` datetime default null
 		" );
 
 		if ( $this->is_success( $result ) ) {
@@ -174,7 +162,7 @@ final class Orders extends Table {
 
 		// Update `date_refundable`.
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_refundable` datetime default null;
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_refundable` datetime default null
 		" );
 
 		if ( $this->is_success( $result ) ) {
@@ -182,7 +170,6 @@ final class Orders extends Table {
 		}
 
 		return $this->is_success( $result );
-
 	}
 
 	/**
@@ -193,13 +180,14 @@ final class Orders extends Table {
 	 * @return bool
 	 */
 	protected function __202012041() {
+
 		// Look for column
 		$result = $this->column_exists( 'tax_rate_id' );
 
 		// Maybe add column
 		if ( false === $result ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN tax_rate_id bigint(20) DEFAULT NULL AFTER payment_key;
+				ALTER TABLE {$this->table_name} ADD COLUMN tax_rate_id bigint(20) DEFAULT NULL AFTER payment_key
 			" );
 		}
 
@@ -236,7 +224,7 @@ final class Orders extends Table {
 	 */
 	protected function __202103261() {
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default '';
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default ''
 		" );
 
 		return $this->is_success( $result );
@@ -271,11 +259,33 @@ final class Orders extends Table {
 	 */
 	protected function __202108041() {
 		$this->get_db()->query( "
-			UPDATE {$this->table_name} set `gateway` = 'manual' WHERE `gateway` = '';
+			UPDATE {$this->table_name} set `gateway` = 'manual' WHERE `gateway` = ''
 		" );
 
 		$this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default 'manual';
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default 'manual'
+		" );
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202207161
+	 *  - Change default value to '0000-00-00 00:00:00' for columns `date_created` and `date_modified`.
+	 *
+	 * @since 3.0.2
+	 * @return bool
+	 */
+	protected function __202207161() {
+
+		// Update `date_created`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default '0000-00-00 00:00:00'
+		" );
+
+		// Update `date_modified`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00'
 		" );
 
 		return true;
