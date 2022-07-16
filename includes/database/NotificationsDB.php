@@ -252,7 +252,16 @@ class NotificationsDB extends \EDD_DB {
 	    KEY dismissed_start_end (dismissed, start, end)
 		) DEFAULT CHARACTER SET {$wpdb->charset} COLLATE {$wpdb->collate};" );
 
+		// Update `date_created`.
+		$wpdb->query(
+			"ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default '0000-00-00 00:00:00'"
+		);
+
+		// Update `date_updated`.
+		$wpdb->query(
+			"ALTER TABLE {$this->table_name} MODIFY COLUMN `date_updated` datetime NOT NULL default '0000-00-00 00:00:00'"
+		);
+
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
-
 }
