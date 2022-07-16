@@ -38,7 +38,7 @@ final class Order_Transactions extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202205241;
+	protected $version = 202207161;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,10 +48,10 @@ final class Order_Transactions extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'202002141' => 202002141,
 		'202005261' => 202005261,
 		'202105291' => 202105291,
 		'202205241' => 202205241,
+		'202207161' => 202207161,
 	);
 
 	/**
@@ -70,8 +70,8 @@ final class Order_Transactions extends Table {
 			status varchar(20) NOT NULL default '',
 			total decimal(18,9) NOT NULL default '0',
 			rate decimal(10,5) NOT NULL DEFAULT 1.00000,
-			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
-			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY transaction_id (transaction_id(64)),
@@ -79,29 +79,6 @@ final class Order_Transactions extends Table {
 			KEY status (status(20)),
 			KEY date_created (date_created),
 			KEY object_type_object_id (object_type, object_id)";
-	}
-
-	/**
-	 * Upgrade to version 202002141
-	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
-	 *
-	 * @since 3.0
-	 * @return bool
-	 */
-	protected function __202002141() {
-
-		// Update `date_created`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
-		// Update `date_modified`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
-		return $this->is_success( $result );
-
 	}
 
 	/**
@@ -116,7 +93,7 @@ final class Order_Transactions extends Table {
 
 		// Increase the transaction_id column.
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `transaction_id` varchar(256) NOT NULL default '';
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `transaction_id` varchar(256) NOT NULL default ''
 		" );
 
 		return $this->is_success( $result );
@@ -158,4 +135,25 @@ final class Order_Transactions extends Table {
 		return true;
 	}
 
+	/**
+	 * Upgrade to version 202207161
+	 *  - Change default value to '0000-00-00 00:00:00' for columns `date_created` and `date_modified`.
+	 *
+	 * @since 3.0.2
+	 * @return bool
+	 */
+	protected function __202207161() {
+
+		// Update `date_created`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default '0000-00-00 00:00:00'
+		" );
+
+		// Update `date_modified`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00'
+		" );
+
+		return true;
+	}
 }

@@ -38,7 +38,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202102161;
+	protected $version = 202207161;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -50,7 +50,8 @@ final class Adjustments extends Table {
 	protected $upgrades = array(
 		'201906031' => 201906031,
 		'202002121' => 202002121,
-		'202102161' => 202102161
+		'202102161' => 202102161,
+		'202207161' => 202207161,
 	);
 
 	/**
@@ -76,8 +77,8 @@ final class Adjustments extends Table {
 			min_charge_amount decimal(18,9) NOT NULL default '0',
 			start_date datetime default null,
 			end_date datetime default null,
-			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
-			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY type_status (type(20), status(20)),
@@ -100,17 +101,15 @@ final class Adjustments extends Table {
 		// After successful creation, we need to set the auto_increment for legacy orders.
 		if ( ! empty( $created ) ) {
 
-			$result = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_discount' ORDER BY ID DESC LIMIT 1;" );
+			$result = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_discount' ORDER BY ID DESC LIMIT 1" );
 
 			if ( ! empty( $result )  ) {
 				$auto_increment = $result + 1;
-				$this->get_db()->query( "ALTER TABLE {$this->table_name}  AUTO_INCREMENT = {$auto_increment};" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} AUTO_INCREMENT = {$auto_increment}" );
 			}
-
 		}
 
 		return $created;
-
 	}
 
 	/**
@@ -146,7 +145,6 @@ final class Adjustments extends Table {
 	/**
 	 * Upgrade to version 202002121
 	 *  - Change default value to `null` for columns `start_date` and `end_date`.
-	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @return bool
 	 */
@@ -154,7 +152,7 @@ final class Adjustments extends Table {
 
 		// Update `start_date`.
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `start_date` datetime default null;
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `start_date` datetime default null
 		" );
 
 		if ( $this->is_success( $result ) ) {
@@ -163,25 +161,14 @@ final class Adjustments extends Table {
 
 		// Update `end_date`.
 		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `end_date` datetime default null;
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `end_date` datetime default null
 		" );
 
 		if ( $this->is_success( $result ) ) {
 			$this->get_db()->query( "UPDATE {$this->table_name} SET `end_date` = NULL WHERE `end_date` = '0000-00-00 00:00:00'" );
 		}
 
-		// Update `date_created`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
-		// Update `date_modified`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
-
 		return $this->is_success( $result );
-
 	}
 
 	/**
@@ -200,6 +187,28 @@ final class Adjustments extends Table {
 
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX type_status (type(20), status(20))" );
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX code (code)" );
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202207161
+	 *  - Change default value to '0000-00-00 00:00:00' for columns `date_created` and `date_modified`.
+	 *
+	 * @since 3.0.2
+	 * @return bool
+	 */
+	protected function __202207161() {
+
+		// Update `date_created`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default '0000-00-00 00:00:00'
+		" );
+
+		// Update `date_modified`.
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00'
+		" );
 
 		return true;
 	}

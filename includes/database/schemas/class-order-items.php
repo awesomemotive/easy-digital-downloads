@@ -195,7 +195,7 @@ class Order_Items extends Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -205,7 +205,7 @@ class Order_Items extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true

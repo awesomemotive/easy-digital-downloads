@@ -38,7 +38,7 @@ final class Order_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002141;
+	protected $version = 202207161;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -50,7 +50,7 @@ final class Order_Addresses extends Table {
 	protected $upgrades = array(
 		'201906251' => 201906251,
 		'201906281' => 201906281,
-		'202002141' => 202002141,
+		'202207161' => 202207161,
 	);
 
 	/**
@@ -72,8 +72,8 @@ final class Order_Addresses extends Table {
 			region mediumtext NOT NULL,
 			postal_code varchar(32) NOT NULL default '',
 			country mediumtext NOT NULL,
-			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
-			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_created datetime NOT NULL default '0000-00-00 00:00:00',
+			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
@@ -103,7 +103,7 @@ final class Order_Addresses extends Table {
 		// Don't take any action if the column already exists.
 		if ( false === $column_exists ) {
 			$column_exists = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `name` mediumtext NOT NULL AFTER `last_name`;
+				ALTER TABLE {$this->table_name} ADD COLUMN `name` mediumtext NOT NULL AFTER `last_name`
 			" );
 
 		}
@@ -111,12 +111,12 @@ final class Order_Addresses extends Table {
 		$deprecated_columns_exist = ( $this->column_exists( 'first_name' ) && $this->column_exists( 'last_name' ) );
 		if ( $column_exists && $deprecated_columns_exist ) {
 			$data_merged = $this->get_db()->query( "
-					UPDATE {$this->table_name} SET name = CONCAT(first_name, ' ', last_name);
+					UPDATE {$this->table_name} SET name = CONCAT(first_name, ' ', last_name)
 				" );
 
 			if ( $data_merged ) {
 				$success = $this->get_db()->query( "
-					ALTER TABLE {$this->table_name} DROP first_name, DROP last_name;
+					ALTER TABLE {$this->table_name} DROP first_name, DROP last_name
 				" );
 				}
 		}
@@ -149,26 +149,24 @@ final class Order_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 202002141
-	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
+	 * Upgrade to version 202207161
+	 *  - Change default value to '0000-00-00 00:00:00' for columns `date_created` and `date_modified`.
 	 *
-	 * @since 3.0
+	 * @since 3.0.2
 	 * @return bool
 	 */
-	protected function __202002141() {
+	protected function __202207161() {
 
 		// Update `date_created`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default '0000-00-00 00:00:00'
 		" );
 
 		// Update `date_modified`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00'
 		" );
 
-		return $this->is_success( $result );
-
+		return true;
 	}
-
 }
