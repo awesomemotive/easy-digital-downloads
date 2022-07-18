@@ -1851,6 +1851,8 @@ function _edd_get_final_payment_id() {
  * Evaluates whether the EDD 3.0 migration should be run,
  * based on _any_ data existing which will need to be migrated.
  *
+ * This should only be run after `edd_v30_is_migration_complete` has returned false.
+ *
  * @todo deprecate in 3.1
  *
  * @since 3.0.2
