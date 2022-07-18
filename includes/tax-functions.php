@@ -457,7 +457,8 @@ function edd_get_tax_rate_by_location( $args ) {
 	if ( empty( $tax_rates ) ) {
 		$tax_rates = edd_get_tax_rates(
 			array(
-				'name'   => '*',
+				'name'   => '',
+				'scope'  => 'global',
 				'status' => 'active',
 			),
 			OBJECT

@@ -16,17 +16,25 @@
 </th>
 
 <td class="edd-tax-rates-table-country" data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">
+	<# if ( data.country ) { #>
 	{{ data.country }}
 	<input type="hidden" name="tax_rates[{{ data.id }}][country]" value="{{ data.country }}" />
+	<# } else { #>
+		*
+		<input type="hidden" name="tax_rates[{{ data.id }}][country]" value="{{ data.country }}" />
+	<# } #>
 </td>
 
 <td data-colname="<?php esc_attr_e( 'Region', 'easy-digital-downloads' ); ?>">
 	<# if ( data.global ) { #>
 	&mdash;
 	<input type="hidden" name="tax_rates[{{ data.id }}][global]" value="{{ data.global }}" />
-	<# } else { #>
+	<# } else if ( data.region ) { #>
 	{{ data.region }}
 	<input type="hidden" name="tax_rates[{{ data.id }}][state]" value="{{ data.region }}" />
+	<# } else { #>
+	&mdash;
+	<input type="hidden" name="tax_rates[{{ data.id }}][state]" value="" />
 	<# } #>
 </td>
 
