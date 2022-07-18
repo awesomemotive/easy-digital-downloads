@@ -1478,8 +1478,12 @@ function edd_settings_sanitize_taxes( $input ) {
 			? sanitize_text_field( $tax_rate['state'] )
 			: '';
 
+		$name = 'all' === $tax_rate['country']
+			? '*'
+			: sanitize_text_field( $tax_rate['country'] );
+
 		$adjustment_data = array(
-			'name'        => sanitize_text_field( $tax_rate['country'] ),
+			'name'        => $name,
 			'type'        => 'tax_rate',
 			'scope'       => $scope,
 			'amount_type' => 'percent',
