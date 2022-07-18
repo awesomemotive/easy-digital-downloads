@@ -17,7 +17,7 @@
 		<label for="tax_rate_country" class="screen-reader-text"><?php esc_html_e( 'Country', 'easy-digital-downloads' ); ?></label>
 		<?php
 		echo EDD()->html->country_select( array(
-			'id'              => 'tax_rate_country'
+			'id' => 'tax_rate_country',
 		) );
 		?>
 	</th>

@@ -1478,9 +1478,13 @@ function edd_settings_sanitize_taxes( $input ) {
 			? sanitize_text_field( $tax_rate['state'] )
 			: '';
 
-		$name = 'all' === $tax_rate['country']
-			? '*'
+		$name = '*' === $tax_rate['country']
+			? ''
 			: sanitize_text_field( $tax_rate['country'] );
+
+		if ( empty( $name ) ) {
+			$scope  = 'global';
+		}
 
 		$adjustment_data = array(
 			'name'        => $name,
@@ -1491,7 +1495,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
-		if ( empty( $adjustment_data['name'] ) || $adjustment_data['amount'] <= 0 ) {
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] <= 0 ) {
 			continue;
 		}
 
