@@ -215,6 +215,7 @@ function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 			'region'  => $region,
 		)
 	);
+
 	if ( $tax_rate ) {
 		$rate = $tax_rate->amount;
 	}
@@ -451,6 +452,17 @@ function edd_get_tax_rate_by_location( $args ) {
 		),
 		OBJECT
 	);
+
+	// If no country specific tax rates are found, check for a global tax rate.
+	if ( empty( $tax_rates ) ) {
+		$tax_rates = edd_get_tax_rates(
+			array(
+				'name'   => '*',
+				'status' => 'active',
+			),
+			OBJECT
+		);
+	}
 
 	if ( empty( $tax_rates ) ) {
 		return $rate;
