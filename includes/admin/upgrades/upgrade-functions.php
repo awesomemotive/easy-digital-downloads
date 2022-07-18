@@ -205,9 +205,9 @@ function edd_show_upgrade_notices() {
 		if ( ! edd_v30_is_migration_complete() ) {
 
 			// The final EDD Payment ID was recorded when the orders table was created.
-			$has_orders = _edd_get_final_payment_id();
+			$needs_migration = _edd_needs_v3_migration();
 
-			if ( $has_orders ) {
+			if ( $needs_migration ) {
 				?>
 				<div class="updated">
 					<?php if ( get_option( 'edd_v30_cli_migration_running' ) ) { ?>
