@@ -658,16 +658,19 @@ class Data_Migrator {
 		$set_tax_rate_meta = false;
 
 		if ( ! empty( $tax_rate ) ) {
-			// If there is no country, determine if we are on the default tax rate, or we need a deactivated default tax rate.
+			// Determine if we have a tax rate we can use for this order.
 			if ( empty( $order_address_data['country'] ) ) {
-				$tax_rate_object = edd_get_tax_rate_by_location( array(
-					'country' => '',
-					'scope'   => 'global',
-					'region'  => '',
-					'amount'  => floatval( $tax_rate ), // Check for this specific default tax rate, as it could have been changed since this order.
-				) );
+				$tax_rate_object = edd_get_tax_rates(
+					array(
+						'name'        => '',
+						'scope'       => 'global',
+						'amount'      => floatval( $tax_rate ),
+						'description' => '',
+					),
+					OBJECT
+				);
 
-				// There was not a default tax rate object.
+				// We did not find a tax rate for this match, so create one.
 				if ( empty( $tax_rate_object ) ) {
 					// We need to generate a deactivated 'global tax rate' for this order, since it is different than the current default.
 					$adjustment_data = array(
@@ -675,9 +678,9 @@ class Data_Migrator {
 						'type'        => 'tax_rate',
 						'scope'       => 'global',
 						'amount_type' => 'percent',
-						'amount'      => floatval( tax_rate ),
+						'amount'      => floatval( $tax_rate ),
 						'description' => '',
-						'status'      => 'inactive',
+						'status'      => 'inactive', // Set to inactive as we've already checked for the currently active default rate.
 					);
 
 					$tax_rate_id     = edd_add_adjustment( $adjustment_data );
