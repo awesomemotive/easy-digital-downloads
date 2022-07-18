@@ -92,7 +92,12 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setCountry: function( event ) {
-		this.model.set( 'country', event.target.options[ event.target.selectedIndex ].value );
+		let country = event.target.options[ event.target.selectedIndex ].value;
+		if ( 'all' === country ) {
+			country = '*';
+		}
+
+		this.model.set( 'country', country );
 	},
 
 	/**
