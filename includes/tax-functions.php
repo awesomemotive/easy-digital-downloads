@@ -438,20 +438,20 @@ function edd_download_is_tax_exclusive( $download_id = 0 ) {
  */
 function edd_get_tax_rate_by_location( $args ) {
 
-	$rate = false;
-	if ( empty( $args['country'] ) ) {
-		return $rate;
-	}
+	$rate      = false;
+	$tax_rates = array();
 
 	// Fetch all the tax rates from the database.
 	// The region is not passed in deliberately in order to check for country-wide tax rates.
-	$tax_rates = edd_get_tax_rates(
-		array(
-			'name'   => $args['country'],
-			'status' => 'active',
-		),
-		OBJECT
-	);
+	if ( ! empty( $args['country'] ) ) {
+		$tax_rates = edd_get_tax_rates(
+			array(
+				'name'   => $args['country'],
+				'status' => 'active',
+			),
+			OBJECT
+		);
+	}
 
 	// If no country specific tax rates are found, check for a global tax rate.
 	if ( empty( $tax_rates ) ) {
