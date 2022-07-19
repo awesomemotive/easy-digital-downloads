@@ -1169,7 +1169,7 @@ function edd_get_registered_settings() {
 						'type'          => 'tax_rate',
 						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
 						'desc'          => (
-							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. We have migrated any fall-back tax rates into new persistant tax rates below for you to verify, then click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
+							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. We have migrated any fallback tax rates for you to verify below. Click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
 						),
 					),
 				),
