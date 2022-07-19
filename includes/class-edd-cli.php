@@ -1275,6 +1275,7 @@ class EDD_CLI extends WP_CLI_Command {
 					'amount_type' => 'percent',
 					'amount'      => floatval( $default_tax_rate ),
 					'description' => '',
+					'status'      => 'active',
 				)
 			);
 		}
