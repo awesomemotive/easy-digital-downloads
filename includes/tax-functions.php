@@ -485,6 +485,8 @@ function edd_get_tax_rate_by_location( $args ) {
 		} elseif ( 'country' === $tax_rate->scope ) {
 			// Countrywide tax rate.
 			$rate = $tax_rate;
+		} elseif ( 'global' === $tax_rate->scope ) {
+			$rate = $tax_rate;
 		}
 	}
 
