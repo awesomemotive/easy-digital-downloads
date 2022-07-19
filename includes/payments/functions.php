@@ -1870,6 +1870,11 @@ function _edd_needs_v3_migration() {
 		return true;
 	}
 
+	// Return true if a fallback tax rate was saved.
+	if ( edd_get_option( 'tax_rate', false ) ) {
+		return true;
+	}
+
 	global $wpdb;
 
 	// Return true if any discounts were saved.

@@ -15,6 +15,13 @@ class Migration_Tests extends \EDD_UnitTestCase {
 		delete_option( 'edd_v3_migration_pending' );
 	}
 
+	public function test_edd_needs_v3_migration_default_tax_rate_should_return_true() {
+		edd_update_option( 'tax_rate', '.14' );
+
+		$this->assertTrue( _edd_needs_v3_migration() );
+		edd_delete_option( 'tax_rate' );
+	}
+
 	public function test_edd_needs_v3_migration_discount_should_return_true() {
 		$discount_id = wp_insert_post(
 			array(
