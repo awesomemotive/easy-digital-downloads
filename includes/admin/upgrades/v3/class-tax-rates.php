@@ -52,6 +52,7 @@ class Tax_Rates extends Base {
 						'amount_type' => 'percent',
 						'amount'      => floatval( $default_tax_rate ),
 						'description' => '',
+						'status'      => 'active',
 					)
 				);
 			}
