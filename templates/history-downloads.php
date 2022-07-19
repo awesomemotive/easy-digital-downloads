@@ -47,50 +47,80 @@ if ( $orders ) :
 				<?php do_action( 'edd_download_history_header_end' ); ?>
 			</tr>
 		</thead>
-		<?php foreach ( $orders as $order ) :
+		<?php
+		foreach ( $orders as $order ) :
 			foreach ( $order->get_items() as $key => $item ) :
-
-				// Skip over Bundles. Products included with a bundle will be displayed individually
-				if ( edd_is_bundled_product( $item->product_id ) ) {
-					continue;
-				}
+				$download_files = edd_get_download_files( $item->product_id, $item->price_id );
 				?>
-
 				<tr class="edd_download_history_row">
 					<?php
-					$price_id       = $item->price_id;
-					// Get price ID of product with variable prices included in Bundle
-						if ( ! empty( $download['in_bundle'] ) && edd_has_variable_prices( $download['id'] ) ) {
-							$price_id = edd_get_bundle_item_price_id( $download['id'] );
-						}
-						$download_files = edd_get_download_files( $item->product_id, $price_id );
-					$name           = $item->product_name;
-
-					do_action( 'edd_download_history_row_start', $order->id, $item->product_id );
+						do_action( 'edd_download_history_row_start', $order->id, $item->product_id );
 					?>
-					<td class="edd_download_download_name"><?php echo esc_html( $name ); ?></td>
+					<td class="edd_download_download_name"><?php echo esc_html( $item->product_name ); ?></td>
 
 					<?php if ( ! edd_no_redownload() ) : ?>
 						<td class="edd_download_download_files">
 							<?php
-
 							if ( $item->is_deliverable() ) :
-
-								if ( $download_files ) :
-
+								if ( ! empty( $download_files ) && is_array( $download_files ) ) :
 									foreach ( $download_files as $filekey => $file ) :
-
-										$download_url = edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $price_id );
 										?>
-
 										<div class="edd_download_file">
-											<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-												<?php echo edd_get_file_name( $file ); ?>
-											</a>
+											<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 										</div>
-
 										<?php
-										do_action( 'edd_download_history_download_file', $filekey, $file, $item, $order );
+										/**
+										 * Fires at the end of the download history files list.
+										 *
+										 * @since 3.0.2
+										 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+										 * @param array $file             The array of file information.
+										 * @param int   $item->product_id The product ID.
+										 * @param int   $order->id        The order ID.
+										 */
+										do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id );
+									endforeach;
+								elseif ( edd_is_bundled_product( $item->product_id ) ) :
+									$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
+
+									foreach ( $bundled_products as $bundle_item ) :
+										?>
+										<div class="edd_bundled_product">
+											<span class="edd_bundled_product_name"><?php echo esc_html( edd_get_bundle_item_title( $bundle_item ) ); ?></span>
+											<ul class="edd_bundled_product_files">
+												<?php
+												$bundle_item_id       = edd_get_bundle_item_id( $bundle_item );
+												$bundle_item_price_id = edd_get_bundle_item_price_id( $bundle_item );
+												$download_files       = edd_get_download_files( $bundle_item_id, $bundle_item_price_id );
+
+												if ( $download_files && is_array( $download_files ) ) :
+													foreach ( $download_files as $filekey => $file ) :
+														?>
+														<li class="edd_download_file">
+															<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $bundle_item_price_id ) ); ?>" class="edd_download_file_link">
+																<?php echo esc_html( edd_get_file_name( $file ) ); ?>
+															</a>
+														</li>
+														<?php
+														/**
+														 * Fires at the end of the download history bundled files list.
+														 *
+														 * @since 3.0.2
+														 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+														 * @param array $file             The array of file information.
+														 * @param int   $item->product_id The product ID.
+														 * @param array $bundle_item      The array of information about the bundled item.
+														 * @param int   $order->id        The order ID.
+														 */
+														do_action( 'edd_download_history_bundle_files', $filekey, $file, $item->product_id, $bundle_item, $order->id );
+													endforeach;
+												else :
+													echo '<li>' . esc_html__( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
+												endif;
+												?>
+											</ul>
+										</div>
+										<?php
 									endforeach;
 
 								else :
