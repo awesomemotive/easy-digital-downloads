@@ -125,6 +125,10 @@ function edd_admin_get_note_html( $note_id = 0 ) {
  */
 function edd_admin_get_new_note_form( $object_id = 0, $object_type = '' ) {
 
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		return;
+	}
+
 	// Start a buffer
 	ob_start();?>
 
