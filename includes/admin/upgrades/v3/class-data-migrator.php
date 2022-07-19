@@ -658,55 +658,11 @@ class Data_Migrator {
 		$set_tax_rate_meta = false;
 
 		if ( ! empty( $tax_rate ) ) {
-			// Determine if we have a tax rate we can use for this order.
-			if ( empty( $order_address_data['country'] ) ) {
-				$tax_rate_object = edd_get_tax_rates(
-					array(
-						'name'        => '',
-						'scope'       => 'global',
-						'amount'      => floatval( $tax_rate ),
-						'description' => '',
-					),
-					OBJECT
-				);
-
-				// We did not find a tax rate for this match, so create one.
-				if ( empty( $tax_rate_object ) ) {
-					// We need to generate a deactivated 'global tax rate' for this order, since it is different than the current default.
-					$adjustment_data = array(
-						'name'        => '',
-						'type'        => 'tax_rate',
-						'scope'       => 'global',
-						'amount_type' => 'percent',
-						'amount'      => floatval( $tax_rate ),
-						'description' => '',
-						'status'      => 'inactive', // Set to inactive as we've already checked for the currently active default rate.
-					);
-
-					$tax_rate_id     = edd_add_adjustment( $adjustment_data );
-					$tax_rate_object = edd_get_adjustment( $tax_rate_id );
-				}
-
-			} else {
-				// Fetch the actual tax rate object for the order region & country.
-				$tax_rate_object = edd_get_tax_rate_by_location( array(
-					'country' => $order_address_data['country'],
-					'region'  => ! empty( $order_address_data['region'] ) ? $order_address_data['region'] : ''
-				) );
-
-				// We did not find a tax rate for this country, so let's dip back into the defaults to see if we can find one.
-				if ( empty( $tax_rate_object ) ) {
-					$tax_rate_object = edd_get_tax_rates(
-						array(
-							'name'        => '',
-							'scope'       => 'global',
-							'amount'      => floatval( $tax_rate ),
-							'description' => '',
-						),
-						OBJECT
-					);
-				}
-			}
+			// Fetch the actual tax rate object for the order region & country.
+			$tax_rate_object = edd_get_tax_rate_by_location( array(
+				'country' => $order_address_data['country'],
+				'region'  => ! empty( $order_address_data['region'] ) ? $order_address_data['region'] : ''
+			) );
 
 			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == $tax_rate ) {
 				$tax_rate_id = $tax_rate_object->id;
