@@ -179,20 +179,15 @@ add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
  * @return void
  */
 function edd_login_register_error_message( $errors, $redirect ) {
-	$edd_action_is_reset = ! empty( $_GET['edd_reset_password'] ) && 'done' === sanitize_text_field( $_GET['edd_reset_password'] );
-	if ( ! $edd_action_is_reset ) {
+	$redirect_url = EDD()->session->get( 'edd_forgot_password_redirect' );
+	if ( empty( $redirect_url ) ) {
 		return $errors;
 	}
-	$redirect_url = EDD()->session->get( 'edd_forgot_password_redirect' );
-	$message      = sprintf(
+	$message = sprintf(
 		/* translators: %s: Link to the referring page. */
 		__( 'Follow the instructions in the confirmation email you just received, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
 		esc_url( $redirect_url )
 	);
-	if ( empty( $redirect_url ) ) {
-		$redirect_url = edd_get_checkout_uri();
-		$message      = __( 'Follow the instructions in the confirmation email you just received.', 'easy-digital-downloads' );
-	}
 	$errors->remove( 'confirm' );
 	$errors->add(
 		'confirm',
@@ -221,14 +216,7 @@ function edd_get_lostpassword_url() {
 		array(
 			'edd_forgot_password' => 'confirm',
 		),
-		wp_lostpassword_url(
-			add_query_arg(
-				array(
-					'edd_reset_password' => 'done',
-				),
-				wp_login_url()
-			)
-		)
+		wp_lostpassword_url()
 	);
 }
 
