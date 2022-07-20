@@ -379,7 +379,9 @@ class Order extends Rows\Order {
 					);
 					$new_items[]     = new \EDD\Orders\Order_Item( $order_item_args );
 				}
-				array_splice( $items, $index, 1, $new_items );
+				if ( ! empty( $new_items ) ) {
+					array_splice( $items, $index, 1, $new_items );
+				}
 			}
 		}
 		return $items;
