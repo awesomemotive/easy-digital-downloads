@@ -355,6 +355,37 @@ class Order extends Rows\Order {
 		return $this->items;
 	}
 
+
+	/**
+	 * Retrieve all the items in the order and transform bundle items into regular items.
+	 *
+	 * @since 3.0.2
+	 *
+	 * @return Order_Item[] Order items.
+	 */
+	public function get_items_with_bundles() {
+		$items = $this->get_items();
+		foreach ( $items as $index => $item ) {
+			if ( edd_is_bundled_product( $item->product_id ) ) {
+				$new_items        = array();
+				$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
+				foreach ( $bundled_products as $bundle_item ) {
+					$order_item_args = array(
+						'order_id'     => $this->ID,
+						'status'       => $item->status,
+						'product_id'   => edd_get_bundle_item_id( $bundle_item ),
+						'product_name' => edd_get_bundle_item_title( $bundle_item ),
+						'price_id'     => edd_get_bundle_item_price_id( $bundle_item ),
+					);
+					$new_items[]     = new \EDD\Orders\Order_Item( $order_item_args );
+				}
+				array_splice( $items, $index, 1, $new_items );
+			}
+		}
+		return $items;
+	}
+
+
 	/**
 	 * Retrieve all the adjustments applied to the order.
 	 *
