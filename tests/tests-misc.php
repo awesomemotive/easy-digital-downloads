@@ -910,6 +910,18 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertTrue( function_exists( 'is_iterable' ) );
 	}
 
+	function test_postal_codes_SE_leading_s() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 's-12345', 'SE' ) );
+	}
+
+	function test_postal_codes_SE_leading_capital_s() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 'S-12345', 'SE' ) );
+	}
+
+	function test_postal_codes_SE_numeric() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( '12345', 'SE' ) );
+	}
+
 	private function write_test_file( $full_file_path ) {
 		$file = fopen( $full_file_path,"w" );
 		fwrite( $file,"" );
