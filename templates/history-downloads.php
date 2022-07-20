@@ -50,10 +50,6 @@ if ( $orders ) :
 		<?php
 		foreach ( $orders as $order ) :
 			foreach ( $order->get_items_with_bundles() as $key => $item ) :
-				// We have to skip bundle parent.
-				if ( edd_is_bundled_product( $item->product_id ) ) {
-					continue;
-				}
 				?>
 
 				<tr class="edd_download_history_row">
