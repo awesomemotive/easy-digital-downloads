@@ -1160,14 +1160,12 @@ function edd_verify_customer_notice( $customer ) {
 	}
 
 	$url = wp_nonce_url(
-		esc_url(
-			edd_get_admin_url(
-				array(
-					'page'       => 'edd-customers',
-					'view'       => 'overview',
-					'edd_action' => 'verify_user_admin',
-					'id'         => absint( $customer->id ),
-				)
+		edd_get_admin_url(
+			array(
+				'page'       => 'edd-customers',
+				'view'       => 'overview',
+				'edd_action' => 'verify_user_admin',
+				'id'         => absint( $customer->id ),
 			)
 		),
 		'edd-verify-user'
