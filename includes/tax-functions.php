@@ -446,7 +446,33 @@ function edd_get_tax_rate_by_location( $args ) {
 		);
 	}
 
-	$fallback = edd_get_tax_rates(
+	if ( ! empty( $tax_rates ) ) {
+		foreach ( $tax_rates as $tax_rate ) {
+
+			// Regional tax rate.
+			if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) ) {
+				if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
+					continue;
+				}
+
+				$regional_rate = $tax_rate->amount;
+
+				if ( ! empty( $regional_rate ) ) {
+					return $tax_rate;
+				}
+			} elseif ( 'country' === $tax_rate->scope ) {
+				// Countrywide tax rate.
+				$rate = $tax_rate;
+			}
+		}
+
+		if ( $rate ) {
+			return $rate;
+		}
+	}
+
+	// No regional or country rate was found, so look for a global rate.
+	$global_rates = edd_get_tax_rates(
 		array(
 			'name'   => '',
 			'scope'  => 'global',
@@ -455,35 +481,7 @@ function edd_get_tax_rate_by_location( $args ) {
 		OBJECT
 	);
 
-	if ( empty( $tax_rates ) && empty( $fallback ) ) {
-		return $rate;
-	}
-
-	// If an array of fallback rates was returned, just get the one.
-	if ( ! empty( $fallback ) && is_array( $fallback ) ) {
-		$fallback = reset( $fallback );
-	}
-
-	foreach ( $tax_rates as $tax_rate ) {
-
-		// Regional tax rate.
-		if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) ) {
-			if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
-				continue;
-			}
-
-			$regional_rate = $tax_rate->amount;
-
-			if ( ! empty( $regional_rate ) ) {
-				return $tax_rate;
-			}
-		} elseif ( 'country' === $tax_rate->scope ) {
-			// Countrywide tax rate.
-			$rate = $tax_rate;
-		}
-	}
-
-	return $rate ?: $fallback;
+	return ! empty( $global_rates ) ? reset( $global_rates ) : $rate;
 }
 
 /**
