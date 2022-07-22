@@ -459,6 +459,11 @@ function edd_get_tax_rate_by_location( $args ) {
 		return $rate;
 	}
 
+	// If an array of fallback rates was returned, just get the one.
+	if ( ! empty( $fallback ) && is_array( $fallback ) ) {
+		$fallback = reset( $fallback );
+	}
+
 	foreach ( $tax_rates as $tax_rate ) {
 
 		// Regional tax rate.
@@ -478,7 +483,7 @@ function edd_get_tax_rate_by_location( $args ) {
 		}
 	}
 
-	return $rate ?: reset( $fallback );
+	return $rate ?: $fallback;
 }
 
 /**
