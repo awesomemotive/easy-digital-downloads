@@ -78,17 +78,15 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 				'id'      => absint( $tax_rate->id ),
 				'country' => esc_attr( $tax_rate->name ),
 				'rate'    => floatval( $tax_rate->amount ),
+				'state'   => '',
+				'global'  => '1',
 			);
 
-			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
+			if ( ! empty( $tax_rate->description ) ) {
 				$rate['state'] = esc_attr( $tax_rate->description );
-			} else {
-				$rate['state'] = '';
 			}
 
-			if ( 'country' === $tax_rate->scope ) {
-				$rate['global'] = '1';
-			} else {
+			if ( 'region' === $tax_rate->scope ) {
 				$rate['global'] = '0';
 			}
 
@@ -159,9 +157,6 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  */
 function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 
-	// Default rate
-	$rate = (float) edd_get_option( 'tax_rate', 0 );
-
 	// Get the address, to try to get the tax rate
 	$user_address = edd_get_customer_address();
 
@@ -216,9 +211,7 @@ function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 		)
 	);
 
-	if ( $tax_rate ) {
-		$rate = $tax_rate->amount;
-	}
+	$rate = $tax_rate ? $tax_rate->amount : 0.00;
 
 	// Convert to a number we can use
 	$rate = $rate / 100;
@@ -441,7 +434,7 @@ function edd_get_tax_rate_by_location( $args ) {
 	$rate      = false;
 	$tax_rates = array();
 
-	// Fetch all the tax rates from the database.
+	// Fetch all the active country tax rates from the database.
 	// The region is not passed in deliberately in order to check for country-wide tax rates.
 	if ( ! empty( $args['country'] ) ) {
 		$tax_rates = edd_get_tax_rates(
@@ -453,19 +446,16 @@ function edd_get_tax_rate_by_location( $args ) {
 		);
 	}
 
-	// If no country specific tax rates are found, check for a global tax rate.
-	if ( empty( $tax_rates ) ) {
-		$tax_rates = edd_get_tax_rates(
-			array(
-				'name'   => '',
-				'scope'  => 'global',
-				'status' => 'active',
-			),
-			OBJECT
-		);
-	}
+	$fallback = edd_get_tax_rates(
+		array(
+			'name'   => '',
+			'scope'  => 'global',
+			'status' => 'active',
+		),
+		OBJECT
+	);
 
-	if ( empty( $tax_rates ) ) {
+	if ( empty( $tax_rates ) && empty( $fallback ) ) {
 		return $rate;
 	}
 
@@ -485,12 +475,10 @@ function edd_get_tax_rate_by_location( $args ) {
 		} elseif ( 'country' === $tax_rate->scope ) {
 			// Countrywide tax rate.
 			$rate = $tax_rate;
-		} elseif ( 'global' === $tax_rate->scope ) {
-			$rate = $tax_rate;
 		}
 	}
 
-	return $rate;
+	return $rate ?: reset( $fallback );
 }
 
 /**
