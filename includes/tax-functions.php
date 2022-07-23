@@ -80,6 +80,8 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 				'rate'    => floatval( $tax_rate->amount ),
 				'state'   => '',
 				'global'  => '1',
+				'status'  => esc_attr( $tax_rate->status ),
+				'scope'   => esc_attr( $tax_rate->scope ),
 			);
 
 			if ( ! empty( $tax_rate->description ) ) {
