@@ -931,6 +931,14 @@ class EDD_Payment_History_Table extends List_Table {
 			: $args;
 	}
 
+	/**
+	 * Parse the search query.
+	 *
+	 * @since 3.0.2
+	 * @param string $search
+	 * @param array $args
+	 * @return array
+	 */
 	private function parse_search( $search, $args ) {
 
 		// Transaction ID
@@ -964,12 +972,26 @@ class EDD_Payment_History_Table extends List_Table {
 		// The customer’s name or ID prefixed by customer:
 		if ( ! is_array( $search ) && ( false !== strpos( $search, 'customer:' ) ) ) {
 			$search = trim( str_replace( 'customer:', '', $search ) );
+
+			// Search by customer ID.
 			if ( is_numeric( $search ) ) {
 				$args['customer_id'] = absint( $search );
 
 				return $args;
 			}
-			//todo: search by name
+
+			// Get customer IDs that match the search string.
+			$customers = edd_get_customers(
+				array(
+					'search' => $search,
+					'fields' => 'ids',
+				)
+			);
+			if ( ! empty( $customers ) ) {
+				$args['customer_id__in'] = $customers;
+			}
+
+			return $args;
 		}
 
 		// The user ID prefixed by user:
