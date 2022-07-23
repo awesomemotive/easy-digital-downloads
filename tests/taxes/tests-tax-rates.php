@@ -7,12 +7,11 @@
 
 class Tests_Tax_Rates extends EDD_UnitTestCase {
 
-	protected $fallback_rate;
-	protected $country_rate;
-	protected $region_rate;
+	protected static $fallback_rate;
+	protected static $country_rate;
+	protected static $region_rate;
 
-	public function setUp() {
-		parent::setUp();
+	public static function wpSetUpBeforeClass() {
 
 		$fallback_rate       = edd_add_adjustment(
 			array(
@@ -47,17 +46,15 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 				'status'      => 'active',
 			)
 		);
-		$this->fallback_rate = edd_get_adjustment( $fallback_rate );
-		$this->country_rate  = edd_get_adjustment( $country_rate );
-		$this->region_rate   = edd_get_adjustment( $region_rate );
+		self::$fallback_rate = edd_get_adjustment( $fallback_rate );
+		self::$country_rate  = edd_get_adjustment( $country_rate );
+		self::$region_rate   = edd_get_adjustment( $region_rate );
 	}
 
-	public function tearDown() {
-		parent::tearDown();
-
-		edd_delete_adjustment( $this->fallback_rate->id );
-		edd_delete_adjustment( $this->country_rate->id );
-		edd_delete_adjustment( $this->region_rate->id );
+	public static function wpTearDownAfterClass() {
+		edd_delete_adjustment( self::$fallback_rate->id );
+		edd_delete_adjustment( self::$country_rate->id );
+		edd_delete_adjustment( self::$region_rate->id );
 	}
 
 	/**
@@ -71,7 +68,7 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertEquals( $this->fallback_rate->id, $tax_rate->id );
+		$this->assertEquals( self::$fallback_rate->id, $tax_rate->id );
 	}
 
 	/**
@@ -85,7 +82,7 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertEquals( $this->fallback_rate->id, $tax_rate->id );
+		$this->assertEquals( self::$fallback_rate->id, $tax_rate->id );
 	}
 
 	/**
@@ -99,7 +96,7 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertEquals( $this->country_rate->id, $tax_rate->id );
+		$this->assertEquals( self::$country_rate->id, $tax_rate->id );
 	}
 
 	/**
@@ -113,24 +110,24 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertEquals( $this->region_rate->id, $tax_rate->id );
+		$this->assertEquals( self::$region_rate->id, $tax_rate->id );
 	}
 
 	public function test_edd_get_tax_rate_by_location_country_rate_with_description_returns_country_rate() {
 		edd_update_adjustment(
-			$this->country_rate->id,
+			self::$country_rate->id,
 			array(
 				'description' => 'TN',
 			)
 		);
+		$country_rate = edd_get_adjustment( self::$country_rate->id );
 		$tax_rate     = edd_get_tax_rate_by_location(
 			array(
 				'country' => 'US',
 				'region'  => 'KS',
 			)
 		);
-		$country_rate = edd_get_adjustment( $this->country_rate->id );
 
-		$this->assertEquals( $this->country_rate->id, $tax_rate->id );
+		$this->assertEquals( self::$country_rate->id, $tax_rate->id );
 	}
 }
