@@ -115,4 +115,22 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 
 		$this->assertEquals( $this->region_rate->id, $tax_rate->id );
 	}
+
+	public function test_edd_get_tax_rate_by_location_country_rate_with_description_returns_country_rate() {
+		edd_update_adjustment(
+			$this->country_rate->id,
+			array(
+				'description' => 'TN',
+			)
+		);
+		$tax_rate     = edd_get_tax_rate_by_location(
+			array(
+				'country' => 'US',
+				'region'  => 'KS',
+			)
+		);
+		$country_rate = edd_get_adjustment( $this->country_rate->id );
+
+		$this->assertEquals( $this->country_rate->id, $tax_rate->id );
+	}
 }
