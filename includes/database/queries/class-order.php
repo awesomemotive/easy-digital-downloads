@@ -174,6 +174,8 @@ class Order extends Query {
 	 *     @type string       $region                Limit results to those affiliated with a given region. Default empty.
 	 *     @type int          $product_id            Filter by product ID. Default empty.
 	 *     @type int          $product_price_id      Filter by product price ID. Default empty.
+	 *     @type string       $txn                   Filter by transaction ID.
+	 *     @type string       $discount              Filter by discount code.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -215,6 +217,14 @@ class Order extends Query {
 			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
 		}
 
+		if ( ! empty( $query['txn'] ) ) {
+			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_txn' ) );
+		}
+
+		if ( ! empty( $query['discount_id'] ) ) {
+			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_discount_id' ) );
+		}
+
 		$result = parent::query( $query );
 
 		if ( ! empty( $query['country'] ) ) {
@@ -223,6 +233,14 @@ class Order extends Query {
 
 		if ( ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ) ) {
 			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
+		}
+
+		if ( ! empty( $query['txn'] ) ) {
+			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_txn' ) );
+		}
+
+		if ( ! empty( $query['discount_id'] ) ) {
+			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_discount_id' ) );
 		}
 
 		return $result;
@@ -316,6 +334,60 @@ class Order extends Query {
 				{$this->table_alias}.{$primary_column} = {$order_items_query->table_alias}.order_id
 				{$conditions}
 			)";
+
+		return $clauses;
+	}
+
+	/**
+	 * Filter the query clause to filter by transaction ID.
+	 *
+	 * @since 3.0.2
+	 * @param string $clauses
+	 * @return string
+	 */
+	public function query_by_txn( $clauses ) {
+		if ( empty( $this->query_vars['txn'] ) ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+
+		$primary_column          = parent::get_primary_column_name();
+		$order_transaction_query = new Order_Transaction();
+
+		$clauses['join'] .= $wpdb->prepare(
+			" INNER JOIN {$order_transaction_query->table_name} {$order_transaction_query->table_alias}
+			ON( {$this->table_alias}.{$primary_column} = {$order_transaction_query->table_alias}.object_id
+			AND {$order_transaction_query->table_alias}.transaction_id = %s )",
+			sanitize_text_field( $this->query_vars['txn'] )
+		);
+
+		return $clauses;
+	}
+
+	/**
+	 * Filter the query clause to filter by discount ID.
+	 *
+	 * @since 3.0.2
+	 * @param string $clauses
+	 * @return string
+	 */
+	public function query_by_discount_id( $clauses ) {
+		if ( empty( $this->query_vars['discount_id'] ) ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+
+		$primary_column         = parent::get_primary_column_name();
+		$order_adjustment_query = new Order_Adjustment();
+
+		$clauses['join'] .= $wpdb->prepare(
+			" INNER JOIN {$order_adjustment_query->table_name} {$order_adjustment_query->table_alias}
+			ON( {$this->table_alias}.{$primary_column} = {$order_adjustment_query->table_alias}.object_id
+			AND {$order_adjustment_query->table_alias}.type_id = %d )",
+			absint( $this->query_vars['discount_id'] )
+		);
 
 		return $clauses;
 	}
