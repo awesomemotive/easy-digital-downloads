@@ -450,7 +450,7 @@ function edd_get_tax_rate_by_location( $args ) {
 		foreach ( $tax_rates as $tax_rate ) {
 
 			// Regional tax rate.
-			if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) ) {
+			if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) && 'region' === $tax_rate->scope ) {
 				if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
 					continue;
 				}
