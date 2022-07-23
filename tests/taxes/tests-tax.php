@@ -93,6 +93,12 @@ class Tests_Taxes extends EDD_UnitTestCase {
 				'description' => 'LA',
 				'amount'      => 96,
 			),
+			array(
+				'scope'       => 'region',
+				'name'        => 'US',
+				'description' => 'TN',
+				'amount'      => 9.25,
+			),
 		);
 		foreach ( $rates_to_create as $rate ) {
 			$rate['type']        = 'tax_rate';
@@ -175,6 +181,10 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_get_tax_rate_LA_equals_96() {
 		$this->assertEquals( '0.96', edd_get_tax_rate( 'US', 'LA' ) );
+	}
+
+	public function test_get_tax_rate_TN_equals_0925() {
+		$this->assertEquals( 0.0925, edd_get_tax_rate( 'US', 'TN' ) );
 	}
 
 	public function test_get_tax_rate_by_country_returns_global_rate() {
@@ -270,6 +280,10 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_calculate_tax_amount_LA_equals_99775() {
 		$this->assertEquals( 997.75, edd_format_amount( edd_calculate_tax( 1039.32, 'US', 'LA' ) ) );
+	}
+
+	public function test_calculate_tax_amount_TN_equals_277() {
+		$this->assertEquals( 2.77, edd_format_amount( edd_calculate_tax( 29.99, 'US', 'TN' ) ) );
 	}
 
 	public function test_calculate_tax_amount_price_includes_tax() {
