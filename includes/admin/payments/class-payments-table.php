@@ -820,13 +820,11 @@ class EDD_Payment_History_Table extends List_Table {
 			'gateway'     => $gateway,
 			'mode'        => $mode,
 			'type'        => $type,
-			'search'      => $search,
 		) );
 
-		// Search
-		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
-			$args['search_in_notes'] = true;
-			$args['search']          = trim( str_replace( 'txn:', '', $args['s'] ) );
+		// Update args by search query.
+		if ( ! empty( $search ) ) {
+			$args = $this->parse_search( $search, $args );
 		}
 
 		// Date query
@@ -931,6 +929,73 @@ class EDD_Payment_History_Table extends List_Table {
 		return ( true === $paginate )
 			? $this->parse_pagination_args( $args )
 			: $args;
+	}
+
+	private function parse_search( $search, $args ) {
+
+		// Transaction ID
+		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
+			$args['txn'] = trim( str_replace( 'txn:', '', $search ) );
+
+			return $args;
+		}
+
+		// Email
+		if ( is_email( $search ) ) {
+			$args['email'] = $search;
+
+			return $args;
+		}
+
+		// Download ID
+		if ( is_string( $search ) && ( false !== strpos( $search, '#' ) ) ) {
+			$args['product_id'] = absint( $search );
+
+			return $args;
+		}
+
+		// Order ID
+		if ( is_numeric( $search ) ) {
+			$args['id'] = $search;
+
+			return $args;
+		}
+
+		// The customer’s name or ID prefixed by customer:
+		if ( ! is_array( $search ) && ( false !== strpos( $search, 'customer:' ) ) ) {
+			$search = trim( str_replace( 'customer:', '', $search ) );
+			if ( is_numeric( $search ) ) {
+				$args['customer_id'] = absint( $search );
+
+				return $args;
+			}
+			//todo: search by name
+		}
+
+		// The user ID prefixed by user:
+		if ( ! is_array( $search ) && ( false !== strpos( $search, 'user:' ) ) ) {
+			$search = trim( str_replace( 'user:', '', $search ) );
+			if ( is_numeric( $search ) ) {
+				$args['user_id'] = absint( $search );
+
+				return $args;
+			}
+		}
+
+		// The Discount Code prefixed by discount:
+		if ( is_string( $search ) && ( false !== strpos( $search, 'discount:' ) ) ) {
+			$discount = edd_get_discount_by_code( trim( str_replace( 'discount:', '', $search ) ) );
+			if ( ! empty( $discount->id ) ) {
+				$args['discount_id'] = $discount->id;
+			}
+
+			return $args;
+		}
+
+		// Default search
+		$args['search'] = $search;
+
+		return $args;
 	}
 
 	/**
