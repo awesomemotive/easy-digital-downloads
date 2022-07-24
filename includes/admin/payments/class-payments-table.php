@@ -860,30 +860,28 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		// Maybe filter by order amount.
-		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			if ( ! is_null( $_GET['order-amount-filter-value'] ) && '' !== $_GET['order-amount-filter-value'] ) {
-				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+		if ( isset( $_GET['order-amount-filter-type'] ) && ! empty( $_GET['order-amount-filter-value'] ) ) {
+			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-				switch( $_GET['order-amount-filter-type'] ) {
-					case 'lt' :
-						$filter_type = '<';
-						break;
-					case 'gt' :
-						$filter_type = '>';
-						break;
-					default :
-						$filter_type = '=';
-						break;
-				}
-
-				$args['compare_query'] = array(
-					array(
-						'key'     => 'total',
-						'value'   => $filter_amount,
-						'compare' => $filter_type,
-					),
-				);
+			switch ( $_GET['order-amount-filter-type'] ) {
+				case 'lt':
+					$filter_type = '<';
+					break;
+				case 'gt':
+					$filter_type = '>';
+					break;
+				default:
+					$filter_type = '=';
+					break;
 			}
+
+			$args['compare_query'] = array(
+				array(
+					'key'     => 'total',
+					'value'   => $filter_amount,
+					'compare' => $filter_type,
+				),
+			);
 		}
 
 		// Maybe filter by product.
@@ -898,21 +896,13 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		// Maybe filter by country.
-		if ( isset( $_GET['order-country-filter-value'] ) ) {
-			$country = ! empty( $_GET['order-country-filter-value'] )
-				? sanitize_text_field( $_GET['order-country-filter-value'] )
-				: '';
-
-			$args['country'] = $country;
+		if ( ! empty( $_GET['order-country-filter-value'] ) ) {
+			$args['country'] = sanitize_text_field( $_GET['order-country-filter-value'] );
 		}
 
 		// Maybe filter by region.
-		if ( isset( $_GET['order-region-filter-value'] ) ) {
-			$region = ! empty( $_GET['order-region-filter-value'] )
-				? sanitize_text_field( $_GET['order-region-filter-value'] )
-				: '';
-
-			$args['region'] = $region;
+		if ( ! empty( $_GET['order-region-filter-value'] ) ) {
+			$args['region'] = sanitize_text_field( $_GET['order-region-filter-value'] );
 		}
 
 		/**
