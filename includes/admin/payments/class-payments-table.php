@@ -905,6 +905,11 @@ class EDD_Payment_History_Table extends List_Table {
 			$args['region'] = sanitize_text_field( $_GET['order-region-filter-value'] );
 		}
 
+		// Maybe filter by discount ID.
+		if ( ! empty( $_GET['discount_id'] ) ) {
+			$args['discount_id'] = absint( $_GET['discount_id'] );
+		}
+
 		/**
 		 * Filters array of arguments for getting orders for the list table, counts, and pagination.
 		 *
