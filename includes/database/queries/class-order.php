@@ -209,38 +209,19 @@ class Order extends Query {
 	 * @see Order::__construct()
 	 */
 	public function query( $query = array() ) {
-		if ( ! empty( $query['country'] ) ) {
-			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
-		}
-
-		if ( ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ) ) {
-			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
-		}
-
-		if ( ! empty( $query['txn'] ) ) {
-			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_txn' ) );
-		}
-
-		if ( ! empty( $query['discount_id'] ) ) {
-			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_discount_id' ) );
+		$query_clauses_filters = $this->get_query_clauses_filters( $query );
+		foreach ( $query_clauses_filters as $filter ) {
+			if ( $filter['condition'] ) {
+				add_filter( 'edd_orders_query_clauses', array( $this, $filter['callback'] ) );
+			}
 		}
 
 		$result = parent::query( $query );
 
-		if ( ! empty( $query['country'] ) ) {
-			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
-		}
-
-		if ( ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ) ) {
-			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
-		}
-
-		if ( ! empty( $query['txn'] ) ) {
-			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_txn' ) );
-		}
-
-		if ( ! empty( $query['discount_id'] ) ) {
-			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_discount_id' ) );
+		foreach ( $query_clauses_filters as $filter ) {
+			if ( $filter['condition'] ) {
+				remove_filter( 'edd_orders_query_clauses', array( $this, $filter['callback'] ) );
+			}
 		}
 
 		return $result;
@@ -433,5 +414,33 @@ class Order extends Query {
 		}
 
 		return parent::add_item( $data );
+	}
+
+	/**
+	 * Get the array of possible query clause filters.
+	 *
+	 * @since 3.0.2
+	 * @param array $query
+	 * @return array
+	 */
+	private function get_query_clauses_filters( $query ) {
+		return array(
+			array(
+				'condition' => ! empty( $query['country'] ),
+				'callback'  => 'query_by_country',
+			),
+			array(
+				'condition' => ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ),
+				'callback'  => 'query_by_product',
+			),
+			array(
+				'condition' => ! empty( $query['txn'] ),
+				'callback'  => 'query_by_txn',
+			),
+			array(
+				'condition' => ! empty( $query['discount_id'] ),
+				'callback'  => 'query_by_discount_id',
+			),
+		);
 	}
 }
