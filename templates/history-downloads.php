@@ -49,7 +49,7 @@ if ( $orders ) :
 		</thead>
 		<?php
 		foreach ( $orders as $order ) :
-			foreach ( $order->get_items_with_bundles() as $key => $item ) :
+			foreach ( $order->get_deliverable_items() as $key => $item ) :
 				?>
 
 				<tr class="edd_download_history_row">
