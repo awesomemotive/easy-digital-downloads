@@ -357,13 +357,13 @@ class Order extends Rows\Order {
 
 
 	/**
-	 * Retrieve all the items in the order and transform bundle items into regular items.
+	 * Retrieve all the items in the order and transform bundle products into regular items.
 	 *
 	 * @since 3.0.2
 	 *
 	 * @return Order_Item[] Order items.
 	 */
-	public function get_items_with_bundles() {
+	public function get_deliverable_items() {
 		$items = $this->get_items();
 		foreach ( $items as $index => $item ) {
 			if ( edd_is_bundled_product( $item->product_id ) ) {
@@ -380,6 +380,7 @@ class Order extends Rows\Order {
 					$new_items[]     = new \EDD\Orders\Order_Item( $order_item_args );
 				}
 				if ( ! empty( $new_items ) ) {
+					// The parent item should be replaced at its original position with its bundle items.
 					array_splice( $items, $index, 1, $new_items );
 				}
 			}
