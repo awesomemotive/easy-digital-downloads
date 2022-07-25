@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-07-15 08:37:00+00:00\n"
+"POT-Creation-Date: 2022-07-25 21:10:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -709,7 +709,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:1018
 #: includes/admin/customers/customers.php:1083
 #: includes/admin/discounts/class-discount-codes-table.php:230
-#: includes/admin/discounts/class-discount-codes-table.php:307
+#: includes/admin/discounts/class-discount-codes-table.php:316
 #: includes/admin/settings/register-settings.php:293
 #: includes/gateways/stripe/includes/template-functions.php:443
 msgid "Delete"
@@ -741,7 +741,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:183
 #: includes/admin/discounts/add-discount.php:85
 #: includes/admin/discounts/add-discount.php:122
-#: includes/admin/discounts/class-discount-codes-table.php:272
+#: includes/admin/discounts/class-discount-codes-table.php:281
 #: includes/admin/discounts/edit-discount.php:126
 #: includes/admin/discounts/edit-discount.php:163
 #: includes/admin/payments/class-payments-table.php:496
@@ -1316,11 +1316,11 @@ msgstr ""
 msgid "Recount Stats"
 msgstr ""
 
-#: includes/admin/customers/customers.php:1177
+#: includes/admin/customers/customers.php:1175
 msgid "This customer's user account is pending verification."
 msgstr ""
 
-#: includes/admin/customers/customers.php:1179
+#: includes/admin/customers/customers.php:1177
 msgid "Verify account."
 msgstr ""
 
@@ -1412,7 +1412,6 @@ msgid "Total Earnings"
 msgstr ""
 
 #: includes/admin/dashboard-widgets.php:233
-#: includes/admin/payments/class-payments-table.php:611
 msgid "No Name"
 msgstr ""
 
@@ -1642,20 +1641,24 @@ msgid "End Date"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:215
-#: includes/admin/discounts/class-discount-codes-table.php:306
+#: includes/admin/discounts/class-discount-codes-table.php:315
 #: includes/admin/views/tmpl-tax-rates-table-bulk-actions.php:20
 #: includes/admin/views/tmpl-tax-rates-table-row.php:42
 msgid "Deactivate"
 msgstr ""
 
 #: includes/admin/discounts/class-discount-codes-table.php:222
-#: includes/admin/discounts/class-discount-codes-table.php:305
+#: includes/admin/discounts/class-discount-codes-table.php:314
 #: includes/admin/views/tmpl-tax-rates-table-bulk-actions.php:19
 #: includes/admin/views/tmpl-tax-rates-table-row.php:44
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/discounts/class-discount-codes-table.php:294
+#: includes/admin/discounts/class-discount-codes-table.php:239
+msgid "View Orders"
+msgstr ""
+
+#: includes/admin/discounts/class-discount-codes-table.php:303
 #: includes/reports/data/discounts/class-top-five-discounts-list-table.php:179
 msgid "No discounts found."
 msgstr ""
@@ -2576,11 +2579,11 @@ msgstr ""
 msgid "User ID #%s"
 msgstr ""
 
-#: includes/admin/notes/note-functions.php:134
+#: includes/admin/notes/note-functions.php:138
 msgid "Note"
 msgstr ""
 
-#: includes/admin/notes/note-functions.php:144
+#: includes/admin/notes/note-functions.php:148
 msgid "Add Note"
 msgstr ""
 
@@ -2764,7 +2767,7 @@ msgid "Trash"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:546
-#: includes/admin/payments/class-payments-table.php:666
+#: includes/admin/payments/class-payments-table.php:669
 msgid "Restore"
 msgstr ""
 
@@ -2772,43 +2775,43 @@ msgstr ""
 msgid "Delete Permanently"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:650
+#: includes/admin/payments/class-payments-table.php:653
 msgid "Mark Completed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:651
+#: includes/admin/payments/class-payments-table.php:654
 msgid "Mark Pending"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:652
+#: includes/admin/payments/class-payments-table.php:655
 msgid "Mark Processing"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:653
+#: includes/admin/payments/class-payments-table.php:656
 msgid "Mark Revoked"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:654
+#: includes/admin/payments/class-payments-table.php:657
 msgid "Mark Failed"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:655
+#: includes/admin/payments/class-payments-table.php:658
 msgid "Mark Abandoned"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:656
+#: includes/admin/payments/class-payments-table.php:659
 msgid "Mark Preapproved"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:657
+#: includes/admin/payments/class-payments-table.php:660
 msgid "Mark Cancelled"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:658
+#: includes/admin/payments/class-payments-table.php:661
 msgid "Resend Receipts"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:669
+#: includes/admin/payments/class-payments-table.php:672
 #: includes/admin/payments/orders.php:1034
 #: includes/admin/payments/refunds.php:301
 msgid "Move to Trash"
@@ -2973,73 +2976,77 @@ msgid "You can enter:"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:80
-msgid "The purchase ID"
+msgid "The order ID"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:81
-msgid "The 32-character purchase key"
+msgid "The 32-character order key"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:82
 msgid "The customer's email address"
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:83
-msgid "The customer's name or ID prefixed by <code>user:</code>"
-msgstr ""
-
 #: includes/admin/payments/contextual-help.php:84
-msgid "The %s ID prefixed by <code>#</code>"
+msgid "The customer's name or ID prefixed by %s"
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:85
-msgid "The Discount Code prefixed by <code>discount:</code>"
-msgstr ""
-
-#: includes/admin/payments/contextual-help.php:86
-msgid "A transaction ID prefixed by <code>txn:</code>"
+#: includes/admin/payments/contextual-help.php:88
+msgid "A user's ID prefixed by %s"
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:92
+msgid "The %s ID prefixed by %s"
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:97
+msgid "The Discount Code prefixed by %s"
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:101
+msgid "A transaction ID prefixed by %s"
+msgstr ""
+
+#: includes/admin/payments/contextual-help.php:109
 #: templates/history-purchases.php:53
 msgid "Details"
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:94
+#: includes/admin/payments/contextual-help.php:111
 msgid ""
 "Each order can be further inspected by clicking the corresponding <em>View "
 "Order Details</em> link. This will provide more information including:"
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:97
+#: includes/admin/payments/contextual-help.php:114
 msgid "The file associated with the purchase."
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:98
+#: includes/admin/payments/contextual-help.php:115
 msgid "The exact date and time the order was completed."
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:99
+#: includes/admin/payments/contextual-help.php:116
 msgid "If a coupon or discount was used during the checkout process."
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:100
+#: includes/admin/payments/contextual-help.php:117
 msgid "The buyer's name."
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:101 includes/emails/tags.php:186
+#: includes/admin/payments/contextual-help.php:118 includes/emails/tags.php:186
 msgid "The buyer's email address."
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:102
+#: includes/admin/payments/contextual-help.php:119
 msgid "Any customer-specific notes related to the order."
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:103
+#: includes/admin/payments/contextual-help.php:120
 msgid "The name of the order gateway used to complete the order."
 msgstr ""
 
-#: includes/admin/payments/contextual-help.php:104
+#: includes/admin/payments/contextual-help.php:121
 msgid "A unique key used to identify the order."
 msgstr ""
 
@@ -7599,7 +7606,7 @@ msgid "ID: %d"
 msgstr ""
 
 #: includes/class-edd-cli.php:185 includes/class-edd-cli.php:444
-#: templates/history-downloads.php:105
+#: templates/history-downloads.php:96
 #. translators: the order item's status.
 msgid "Status: %s"
 msgstr ""
@@ -9110,7 +9117,7 @@ msgstr ""
 msgid "The buyer's IP Address."
 msgstr ""
 
-#: includes/emails/tags.php:372 templates/history-downloads.php:97
+#: includes/emails/tags.php:372 templates/history-downloads.php:88
 #: templates/shortcode-receipt.php:306
 msgid "No downloadable files found."
 msgstr ""
@@ -11062,44 +11069,44 @@ msgstr ""
 msgid "Invalid username or password. %1$sReset Password%2$s"
 msgstr ""
 
-#: includes/login-register.php:193
+#: includes/login-register.php:188
 #. translators: %s: Link to the referring page.
 msgid ""
 "Follow the instructions in the confirmation email you just received, then "
 "<a href=\"%s\">return to what you were doing</a>."
 msgstr ""
 
-#: includes/login-register.php:246 includes/login-register.php:254
+#: includes/login-register.php:260 includes/login-register.php:268
 #: includes/process-purchase.php:654
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:250
+#: includes/login-register.php:264
 msgid "Username already taken"
 msgstr ""
 
-#: includes/login-register.php:258
+#: includes/login-register.php:272
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:262 includes/process-purchase.php:564
+#: includes/login-register.php:276 includes/process-purchase.php:564
 #: includes/process-purchase.php:674 includes/process-purchase.php:794
 msgid "Invalid email"
 msgstr ""
 
-#: includes/login-register.php:266
+#: includes/login-register.php:280
 msgid "Invalid payment email"
 msgstr ""
 
-#: includes/login-register.php:270
+#: includes/login-register.php:284
 msgid "Registration form validation failed."
 msgstr ""
 
-#: includes/login-register.php:274
+#: includes/login-register.php:288
 msgid "Please enter a password"
 msgstr ""
 
-#: includes/login-register.php:278 includes/process-purchase.php:702
+#: includes/login-register.php:292 includes/process-purchase.php:702
 msgid "Passwords do not match"
 msgstr ""
 
@@ -11312,7 +11319,7 @@ msgstr ""
 msgid "Abandoned"
 msgstr ""
 
-#: includes/payments/functions.php:1863
+#: includes/payments/functions.php:1968
 msgid ""
 "A store migration is in progress. Past orders will not appear in your "
 "purchase history until they have been updated."
@@ -12499,7 +12506,7 @@ msgstr ""
 msgid "Download Name"
 msgstr ""
 
-#: templates/history-downloads.php:142
+#: templates/history-downloads.php:133
 msgid "You have not purchased any downloads"
 msgstr ""
 
