@@ -77,14 +77,31 @@ function edd_payments_contextual_help() {
 			'<p>' . __( 'The order history can be searched in several different ways.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'You can enter:', 'easy-digital-downloads' ) . '</p>' .
 			'<ul>
-				<li>' . __( 'The purchase ID', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'The 32-character purchase key', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'The order ID', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'The 32-character order key', 'easy-digital-downloads' ) . '</li>
 				<li>' . __( 'The customer\'s email address', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'The customer\'s name or ID prefixed by <code>user:</code>', 'easy-digital-downloads' ) . '</li>
-				<li>' . sprintf( __( 'The %s ID prefixed by <code>#</code>', 'easy-digital-downloads' ), edd_get_label_singular() ) . '</li>
-				<li>' . __( 'The Discount Code prefixed by <code>discount:</code>', 'easy-digital-downloads' ) . '</li>
-				<li>' . __( 'A transaction ID prefixed by <code>txn:</code>', 'easy-digital-downloads' ) . '</li>
-			</ul>'
+				<li>' . sprintf(
+					__( 'The customer\'s name or ID prefixed by %s', 'easy-digital-downloads' ),
+					'<code>customer:</code>'
+				) . '</li>
+				<li>' . sprintf(
+					__( 'A user\'s ID prefixed by %s', 'easy-digital-downloads' ),
+					'<code>user:</code>'
+				) . '</li>
+				<li>' . sprintf(
+					__( 'The %s ID prefixed by %s', 'easy-digital-downloads' ),
+					edd_get_label_singular(),
+					'<code>#</code>',
+				) . '</li>
+				<li>' . sprintf(
+					__( 'The Discount Code prefixed by %s', 'easy-digital-downloads' ),
+					'<code>discount:</code>'
+				) . '</li>
+				<li>' . sprintf(
+					__( 'A transaction ID prefixed by %s', 'easy-digital-downloads' ),
+					'<code>txn:</code>'
+				) . '</li>
+			</ul>',
 	) );
 
 	$screen->add_help_tab( array(
