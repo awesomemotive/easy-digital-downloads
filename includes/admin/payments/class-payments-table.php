@@ -984,6 +984,8 @@ class EDD_Payment_History_Table extends List_Table {
 			);
 			if ( ! empty( $customers ) ) {
 				$args['customer_id__in'] = $customers;
+			} else {
+				$args['customer_id__in'] = array( null );
 			}
 
 			return $args;
