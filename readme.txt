@@ -482,3 +482,6 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: When no customer exists for a query, the total_spent returns an undefined index notice.
 * Dev: When checking if a file download limit is reached, the price_id of the purchased download is now passed to the edd_is_file_at_download_limit filter.
 * Dev: The edd_download_price_table_head and edd_download_price_table_row actions have been formally deprecated.
+
+== Upgrade Notice ==
+IMPORTANT: Easy Digital Downloads 3.0 is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.
