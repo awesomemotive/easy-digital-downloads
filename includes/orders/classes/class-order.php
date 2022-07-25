@@ -363,7 +363,7 @@ class Order extends Rows\Order {
 	 *
 	 * @return Order_Item[] Order items.
 	 */
-	public function get_deliverable_items() {
+	public function get_items_with_bundles() {
 		$items = $this->get_items();
 		foreach ( $items as $index => $item ) {
 			if ( edd_is_bundled_product( $item->product_id ) ) {
