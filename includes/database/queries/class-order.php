@@ -175,7 +175,7 @@ class Order extends Query {
 	 *     @type int          $product_id            Filter by product ID. Default empty.
 	 *     @type int          $product_price_id      Filter by product price ID. Default empty.
 	 *     @type string       $txn                   Filter by transaction ID.
-	 *     @type string       $discount              Filter by discount code.
+	 *     @type int          $discount_id           Filter by discount code.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
