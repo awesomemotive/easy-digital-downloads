@@ -608,7 +608,7 @@ class EDD_Payment_History_Table extends List_Table {
 			// Use customer name, if exists
 			$name = ! empty( $customer->name )
 				? $customer->name
-				: __( 'No Name', 'easy-digital-downloads' );
+				: $order->email;
 
 			// Link to View Customer
 			$url = edd_get_admin_url( array(
@@ -618,8 +618,11 @@ class EDD_Payment_History_Table extends List_Table {
 			) );
 
 			$name = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
+			if ( ! empty( $customer->name ) ) {
+				$name .= '<div class="order-list-email">' . $order->email . '</div>';
+			}
 		} else {
-			$name = '&mdash;';
+			$name = $order->email;
 		}
 
 		/**
