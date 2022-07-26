@@ -67,31 +67,31 @@ class Tests_Taxes extends EDD_UnitTestCase {
 				'scope'       => 'region',
 				'name'        => 'US',
 				'description' => 'AZ',
-				'amount'      => 15,
+				'amount'      => .15,
 			),
 			array(
 				'scope'       => 'region',
 				'name'        => 'US',
 				'description' => 'TX',
-				'amount'      => 13,
+				'amount'      => .13,
 			),
 			array(
 				'scope'       => 'region',
 				'name'        => 'US',
 				'description' => 'AR',
-				'amount'      => 9,
+				'amount'      => .09,
 			),
 			array(
 				'scope'       => 'region',
 				'name'        => 'US',
 				'description' => 'HI',
-				'amount'      => 63,
+				'amount'      => .63,
 			),
 			array(
 				'scope'       => 'region',
 				'name'        => 'US',
 				'description' => 'LA',
-				'amount'      => 96,
+				'amount'      => .96,
 			),
 			array(
 				'scope'       => 'region',
@@ -163,24 +163,24 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'HK' ) );
 	}
 
-	public function test_get_tax_rate_AZ_equals_15() {
-		$this->assertEquals( '0.15', edd_get_tax_rate( 'US', 'AZ' ) );
+	public function test_get_tax_rate_AZ_equals_0015() {
+		$this->assertEquals( 0.0015, edd_get_tax_rate( 'US', 'AZ' ) );
 	}
 
 	public function test_get_tax_rate_TX_equals_13() {
-		$this->assertEquals( '0.13', edd_get_tax_rate( 'US', 'TX' ) );
+		$this->assertEquals( 0.0013, edd_get_tax_rate( 'US', 'TX' ) );
 	}
 
 	public function test_get_tax_rate_AR_equals_9() {
-		$this->assertEquals( '0.09', edd_get_tax_rate( 'US', 'AR' ) );
+		$this->assertEquals( 0.0009, edd_get_tax_rate( 'US', 'AR' ) );
 	}
 
 	public function test_get_tax_rate_HI_equals_63() {
-		$this->assertEquals( '0.63', edd_get_tax_rate( 'US', 'HI' ) );
+		$this->assertEquals( 0.0063, edd_get_tax_rate( 'US', 'HI' ) );
 	}
 
 	public function test_get_tax_rate_LA_equals_96() {
-		$this->assertEquals( '0.96', edd_get_tax_rate( 'US', 'LA' ) );
+		$this->assertEquals( 0.0096, edd_get_tax_rate( 'US', 'LA' ) );
 	}
 
 	public function test_get_tax_rate_TN_equals_0925() {
@@ -263,23 +263,23 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_calculate_tax_amount_AZ_equals_810() {
-		$this->assertEquals( 8.10, edd_format_amount( edd_calculate_tax( 54, 'US', 'AZ' ) ) );
+		$this->assertEquals( 0.08, edd_format_amount( edd_calculate_tax( 54, 'US', 'AZ' ) ) );
 	}
 
 	public function test_calculate_tax_amount_TX_equals_711() {
-		$this->assertEquals( 7.11, edd_format_amount( edd_calculate_tax( 54.7, 'US', 'TX' ) ) );
+		$this->assertEquals( 0.07, edd_format_amount( edd_calculate_tax( 54.7, 'US', 'TX' ) ) );
 	}
 
 	public function test_calculate_tax_amount_AR_equals_1385() {
-		$this->assertEquals( 13.85, edd_format_amount( edd_calculate_tax( 153.85, 'US', 'AR' ) ) );
+		$this->assertEquals( 0.14, edd_format_amount( edd_calculate_tax( 153.85, 'US', 'AR' ) ) );
 	}
 
 	public function test_calculate_tax_amount_HI_equals_16274() {
-		$this->assertEquals( 162.74, edd_format_amount( edd_calculate_tax( 258.31, 'US', 'HI' ) ) );
+		$this->assertEquals( 1.63, edd_format_amount( edd_calculate_tax( 258.31, 'US', 'HI' ) ) );
 	}
 
 	public function test_calculate_tax_amount_LA_equals_99775() {
-		$this->assertEquals( 997.75, edd_format_amount( edd_calculate_tax( 1039.32, 'US', 'LA' ) ) );
+		$this->assertEquals( 9.98, edd_format_amount( edd_calculate_tax( 1039.32, 'US', 'LA' ) ) );
 	}
 
 	public function test_calculate_tax_amount_TN_equals_277() {
@@ -385,5 +385,22 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$current_meta['tax'] = 20;
 		edd_update_payment_meta( self::$order->id, '_edd_payment_meta', $current_meta );
 		$this->assertEquals( 20, edd_get_payment_tax( self::$order->id ) );
+	}
+
+	public function test_update_option_updates_rate() {
+
+		$tn_new_rate = edd_add_adjustment(
+			array(
+				'scope'       => 'region',
+				'name'        => 'US',
+				'description' => 'TN',
+				'amount'      => 19.25,
+				'status'      => 'active',
+				'type'        => 'tax_rate',
+				'amount_type' => 'percent',
+			)
+		);
+
+		$this->assertTrue( in_array( $tn_new_rate, self::$rate_ids, true ) );
 	}
 }
