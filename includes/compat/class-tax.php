@@ -70,14 +70,14 @@ class Tax extends Base {
 		$value = (array) $value;
 
 		foreach ( $value as $tax_rate ) {
-			if ( empty( $tax_rate ) ) {
+			if ( empty( $tax_rate['country'] ) || empty( $tax_rate['rate'] ) ) {
 				continue;
 			}
-			$scope = isset( $tax_rate['global'] )
+			$scope = ! empty( $tax_rate['global'] )
 				? 'country'
 				: 'region';
 
-			$region = isset( $tax_rate['state'] )
+			$region = ! empty( $tax_rate['state'] )
 				? sanitize_text_field( $tax_rate['state'] )
 				: '';
 
@@ -91,31 +91,7 @@ class Tax extends Base {
 				'description' => $region,
 			);
 
-			// Update database if adjustment ID was supplied.
-			if ( isset( $tax_rate['edd_adjustment_id'] ) ) {
-				edd_update_adjustment( $tax_rate['edd_adjustment_id'], $adjustment_data );
-
-			// Check if the tax rate exists.
-			} else {
-				$rate = edd_get_adjustments( array(
-					'type'        => 'tax_rate',
-					'fields'      => 'ids',
-					'name'        => $tax_rate['country'],
-					'description' => $region,
-					'scope'       => $scope,
-				) );
-
-				// Tax rate exists.
-				if ( 1 === count( $rate ) ) {
-					$adjustment_id = absint( $rate[0] );
-
-					edd_update_adjustment( $adjustment_id, $adjustment_data );
-
-				// Add the tax rate to the database.
-				} else {
-					edd_add_adjustment( $adjustment_data );
-				}
-			}
+			edd_add_adjustment( $adjustment_data );
 		}
 
 		// Return the value so it is stored for backwards compatibility purposes.
