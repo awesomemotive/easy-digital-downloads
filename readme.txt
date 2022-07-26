@@ -245,7 +245,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Swedish postal codes would not pass validation.
 * Fix: Non-Shop Manager roles could no longer leave notes on orders.
 * Fix: Searching orders was not working in the admin.
-* Fix: Template: Download History shortcode was not providing access to download bundeled products.
+* Fix: Template: Download History shortcode was not providing access to bundled products.
 * Fix: 3.0 Migration: Stores with no orders, but other data like discounts, did not prompt the user to run the migration.
 
 = 3.0.1, July 15, 2022 =
