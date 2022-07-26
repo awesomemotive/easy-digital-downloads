@@ -163,7 +163,7 @@ If Easy Digital Downloads doesn't quite fit your needs, take a look at some of o
 
 = Where can I find complete documentation? =
 
-Full searchable docs for Easy Digital Downloads and all our extensions can be found at [http://easydigitaldownloads.com/docs](http://easydigitaldownloads.com/docs/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+Full searchable docs for Easy Digital Downloads and all our extensions can be found at [https://easydigitaldownloads.com/docs](https://easydigitaldownloads.com/docs/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
 
 = Where can I ask for help with my digital e-Commerce store? =
 
