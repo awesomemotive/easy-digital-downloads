@@ -50,6 +50,20 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 		)
 	);
 
+	if ( ! empty( $count ) ) {
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'edd-store-menu',
+			'id'     => 'edd-store-notifications',
+			'title'  => __( 'Notifications', 'easy-digital-downloads' ) . ' <div class="wp-core-ui wp-ui-notification edd-menu-notification-indicator"></div>',
+			'href'  => edd_get_admin_url(
+				array(
+					'page'          => 'edd-reports',
+					'notifications' => 'true',
+				)
+			),
+		) );
+	}
+
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'edd-store-menu',
 		'id'     => 'edd-store-reports',
@@ -166,9 +180,76 @@ function edd_store_mode_admin_bar_print_link_styles() {
 		#wp-admin-bar-edd-store-menu .edd-mode-test {
 			color: #FF8C00;
 		}
+
+		#wpadminbar .edd-menu-notification-counter {
+			display: inline-block !important;
+			min-width: 18px !important;
+			height: 18px !important;
+			border-radius: 9px !important;
+			margin: 7px 0 0 2px !important;
+			vertical-align: top !important;
+			font-size: 11px !important;
+			line-height: 1.6 !important;
+			text-align: center !important;
+		}
+
+		#wpadminbar .edd-menu-notification-indicator {
+			float: right !important;
+			margin: 10px 0 0 !important;
+			width: 8px !important;
+			height: 8px !important;
+			border-radius: 4px !important;
+		}
+
+		#wpadminbar .edd-menu-notification-indicator:after {
+			display: block !important;
+			content: "";
+			position: absolute !important;
+			width: inherit !important;
+			height: inherit !important;
+			border-radius: inherit !important;
+			background-color: inherit !important;
+			animation: edd-menu-notification-indicator-pulse 1.5s infinite !important;
+		}
+
+		@keyframes edd-menu-notification-indicator-pulse {
+			0% {
+				transform: scale(1);
+				opacity: 1;
+			}
+			100% {
+				transform: scale(3);
+				opacity: 0;
+			}
+		}
+
+		#wpadminbar #wp-admin-bar-edd-upgrade a {
+			background-color: #00a32a;
+			color: #fff;
+			margin-top: 5px;
+		}
+
+		#wpadminbar #wp-admin-bar-edd-upgrade a:hover {
+			background-color: #008a20;
+		}
+
+		#wpadminbar .edd-menu-form-last {
+			border-bottom: 1px solid #3c4146 !important;
+			margin-bottom: 6px !important;
+			padding-bottom: 6px !important;
+		}
+
+		<?php if ( ! is_admin() ) : ?>
+		#wpadminbar .wp-ui-notification.edd-menu-notification-counter,
+		#wpadminbar .wp-ui-notification.edd-menu-notification-indicator {
+			color: #fff;
+			background-color: #d63638;
+		}
+		<?php endif; ?>
+
 	</style>
 
 <?php
 }
-add_action( 'wp_print_styles',    'edd_store_mode_admin_bar_print_link_styles' );
+add_action( 'wp_print_styles', 'edd_store_mode_admin_bar_print_link_styles' );
 add_action( 'admin_print_styles', 'edd_store_mode_admin_bar_print_link_styles' );
