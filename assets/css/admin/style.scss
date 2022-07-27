@@ -1251,6 +1251,20 @@ textarea[name="edd-note"] {
 	border-radius: 5px;
 }
 
+.wp-list-table.orders div.order-list-email {
+	font-size: .85em;
+	color: #888888;
+}
+
+.wp-list-table.orders th.column-number {
+	width: 150px;
+}
+
+.wp-list-table.orders th.column-amount {
+	width: 100px;
+}
+
+
 /* Row Actions
 -------------------------------------------------------------- */
 
