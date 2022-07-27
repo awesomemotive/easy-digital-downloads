@@ -200,7 +200,7 @@ function edd_importer_accepted_mime_types() {
 }
 
 /**
- * Given an impoter class name, is it allowed to process as an impoter.
+ * Given an importer class name, is it allowed to process as an importer.
  *
  * @since 3.0.2
  *
@@ -214,7 +214,7 @@ function edd_importer_is_class_allowed( $class = '' ) {
 }
 
 /**
- * Returns a list of allowed impoter classes.
+ * Returns a list of allowed importer classes.
  *
  * @since 3.0.2
  *
