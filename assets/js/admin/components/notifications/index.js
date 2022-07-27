@@ -30,7 +30,7 @@ document.addEventListener( 'alpine:init', () => {
 			const params = new URLSearchParams( window.location.search );
 
 			const triggerNotifications = params.has( 'notifications' );
-			if ( triggerNotifications && params.get( 'notifications' ) ) {
+			if ( triggerNotifications && 'true' === params.get( 'notifications' ) ) {
 				eddNotifications.openPanel();
 			}
 		},
