@@ -239,11 +239,13 @@ function edd_store_mode_admin_bar_print_link_styles() {
 			padding-bottom: 6px !important;
 		}
 
+		<?php if ( ! is_admin() ) : ?>
 		#wpadminbar .wp-ui-notification.edd-menu-notification-counter,
 		#wpadminbar .wp-ui-notification.edd-menu-notification-indicator {
 			color: #fff;
 			background-color: #d63638;
 		}
+		<?php endif; ?>
 
 	</style>
 
