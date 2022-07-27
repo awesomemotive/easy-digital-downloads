@@ -285,7 +285,7 @@ function edd_show_upgrade_notices() {
 			} else {
 
 				// The orders database table is missing (we assume all primary tables have failed to create).
-				$message          = __( 'Easy Digital Downloads was unable to create the necessary database tables. Your site may not meet the minimum requirements for EDD 3.0.', 'easy-digital-downloads' );
+				$message          = __( 'Easy Digital Downloads was unable to create the necessary database tables to complete this update. Your site may not meet the minimum requirements for EDD 3.0.', 'easy-digital-downloads' );
 				$database_version = $wpdb->db_version();
 
 				// The database version is the problem.
