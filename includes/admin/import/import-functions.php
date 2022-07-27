@@ -113,7 +113,19 @@ function edd_do_ajax_import() {
 	}
 
 	$file = sanitize_text_field( $_REQUEST['upload']['file'] );
-	if ( ! in_array( mime_content_type( $file ), edd_importer_accepted_mime_types(), true ) ) {
+
+	$mime_type_allowed = false;
+	if ( is_callable( 'mime_content_type' ) ) {
+		if ( in_array( mime_content_type( $file ), edd_importer_accepted_mime_types(), true ) ) {
+			$mime_type_allowed = true;
+		}
+	} else {
+		if ( wp_check_filetype( $file, edd_importer_accepted_mime_types() ) ) {
+			$mime_type_allowed = true;
+		}
+	}
+
+	if ( false === $mime_type_allowed ) {
 		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
