@@ -291,8 +291,10 @@ function edd_show_upgrade_notices() {
 				// The database version is the problem.
 				if ( version_compare( $database_version, '5.6', '<' ) ) {
 					$message .= ' ' . sprintf(
-						/* translators: MySQL database version, do not translate */
-						__( 'Please contact your host and ask them to upgrade your MySQL version (your current version is %s).', 'easy-digital-downloads' ),
+						/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate; 3. MySQL database version, do not translate */
+						__( 'Please contact your host and ask them to upgrade your environment to meet our %1$sminimum technical requirements%2$s. Your MySQL version is %3$s and needs to be updated.', 'easy-digital-downloads' ),
+						'<a href="https://easydigitaldownloads.com/recommended-wordpress-hosting/">',
+						'</a>',
 						$database_version
 					);
 				} else {
