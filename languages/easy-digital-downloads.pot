@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-07-27 18:17:40+00:00\n"
+"POT-Creation-Date: 2022-07-27 21:58:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -974,7 +974,7 @@ msgstr ""
 #: includes/admin/customers/customer-actions.php:557
 #: includes/admin/customers/customer-actions.php:614
 #: includes/admin/import/import-functions.php:31
-#: includes/admin/import/import-functions.php:98
+#: includes/admin/import/import-functions.php:104
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:2014
 #: includes/class-edd-license-handler.php:385
@@ -2543,7 +2543,7 @@ msgid "payments"
 msgstr ""
 
 #: includes/admin/import/import-functions.php:35
-#: includes/admin/import/import-functions.php:102
+#: includes/admin/import/import-functions.php:108
 msgid "Missing import parameters. Import class must be specified."
 msgstr ""
 
@@ -2552,25 +2552,30 @@ msgid "Missing import file. Please provide an import file."
 msgstr ""
 
 #: includes/admin/import/import-functions.php:43
-#: includes/admin/import/import-functions.php:111
+#: includes/admin/import/import-functions.php:129
 msgid "The file you uploaded does not appear to be a CSV file."
 msgstr ""
 
 #: includes/admin/import/import-functions.php:47
-#: includes/admin/import/import-functions.php:106
+#: includes/admin/import/import-functions.php:112
 msgid "Something went wrong during the upload process, please try again."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:60
-#: includes/admin/import/import-functions.php:122
+#: includes/admin/import/import-functions.php:58
+#: includes/admin/import/import-functions.php:136
+msgid "Invalid importer class supplied"
+msgstr ""
+
+#: includes/admin/import/import-functions.php:66
+#: includes/admin/import/import-functions.php:147
 msgid "You do not have permission to import data"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:148
+#: includes/admin/import/import-functions.php:173
 msgid "No data found for import parameters"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:156
+#: includes/admin/import/import-functions.php:181
 msgid "Import complete! <a href=\"%s\">View imported %s</a>."
 msgstr ""
 
