@@ -247,7 +247,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Searching orders was not working in the admin.
 * Fix: Template: Download History shortcode was not providing access to bundled products.
 * Fix: 3.0 Migration: Stores with no orders, but other data like discounts, did not prompt the user to run the migration.
-* Fix: EDD admin menu bar were not always loading correctly.
+* Fix: EDD admin menu bar styles were not always loading correctly.
 * Fix: An admin notice is now shown if EDD detects that it was unable to create the proper database tables.
 * Fix: When showing taxes on product pricing, the % character was showing twice.
 
