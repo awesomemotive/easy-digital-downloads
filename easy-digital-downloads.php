@@ -177,7 +177,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_url() {
-		return 'https://docs.easydigitaldownloads.com/article/2051-minimum-requirements-for-edd-3-0';
+		return 'https://easydigitaldownloads.com/recommended-wordpress-hosting/';
 	}
 
 	/**
