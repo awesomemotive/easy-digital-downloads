@@ -250,6 +250,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: EDD admin menu bar styles were not always loading correctly.
 * Fix: An admin notice is now shown if EDD detects that it was unable to create the proper database tables.
 * Fix: When showing taxes on product pricing, the % character was showing twice.
+* Fix: Improved error handling around importer tools.
 
 = 3.0.1, July 15, 2022 =
 * Fix: Setting the EDD_USE_PHP_SESSIONS constant to 'false' could result in empty carts.
