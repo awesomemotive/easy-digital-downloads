@@ -91,7 +91,7 @@ function edd_payments_contextual_help() {
 				<li>' . sprintf(
 					__( 'The %s ID prefixed by %s', 'easy-digital-downloads' ),
 					edd_get_label_singular(),
-					'<code>#</code>',
+					'<code>#</code>'
 				) . '</li>
 				<li>' . sprintf(
 					__( 'The Discount Code prefixed by %s', 'easy-digital-downloads' ),
