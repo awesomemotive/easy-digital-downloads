@@ -52,9 +52,15 @@ function edd_do_ajax_import_file_upload() {
 
 	if ( $import_file && empty( $import_file['error'] ) ) {
 
-		do_action( 'edd_batch_import_class_include', $_POST['edd-import-class'] );
+		$importer_class   = sanitize_text_field( $_POST['edd-import-class'] );
+		$is_class_allowed = edd_importer_is_class_allowed( $importer_class );
+		if ( false === $is_class_allowed ) {
+			wp_send_json_error( array( 'error' => __( 'Invalid importer class supplied', 'easy-digital-downloads' ) ) );
+		}
 
-		$import = new $_POST['edd-import-class']( $import_file['file'] );
+		do_action( 'edd_batch_import_class_include', $importer_class );
+
+		$import = new $importer_class( $import_file['file'] );
 
 		if( ! $import->can_import() ) {
 			wp_send_json_error( array( 'error' => __( 'You do not have permission to import data', 'easy-digital-downloads' ) ) );
@@ -62,7 +68,7 @@ function edd_do_ajax_import_file_upload() {
 
 		wp_send_json_success( array(
 			'form'      => $_POST,
-			'class'     => $_POST['edd-import-class'],
+			'class'     => $importer_class,
 			'upload'    => $import_file,
 			'first_row' => $import->get_first_row(),
 			'columns'   => $import->get_columns(),
@@ -111,10 +117,17 @@ function edd_do_ajax_import() {
 		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	do_action( 'edd_batch_import_class_include', $_REQUEST['class'] );
+	$importer_class   = sanitize_text_field( $_REQUEST['class'] );
+	$is_class_allowed = edd_importer_is_class_allowed( $importer_class );
+
+	if ( ! $is_class_allowed ) {
+		wp_send_json_error( array( 'error' => __( 'Invalid importer class supplied', 'easy-digital-downloads' ) ) );
+	}
+
+	do_action( 'edd_batch_import_class_include', $importer_class );
 
 	$step   = absint( $_REQUEST['step'] );
-	$class  = $_REQUEST['class'];
+	$class  = $importer_class;
 	$import = new $class( $file, $step );
 
 	if( ! $import->can_import() ) {
@@ -183,5 +196,36 @@ function edd_importer_accepted_mime_types() {
 		'application/excel',
 		'application/vnd.ms-excel',
 		'application/vnd.msexcel',
+	);
+}
+
+/**
+ * Given an impoter class name, is it allowed to process as an impoter.
+ *
+ * @since 3.0.2
+ *
+ * @param string $class The class name to check.
+ *
+ * @return bool If the class is allowed to be used as an importer.
+ */
+function edd_importer_is_class_allowed( $class = '' ) {
+	$allowed_importer_classes = edd_get_importer_accepted_classes();
+	return in_array( $class, $allowed_importer_classes, true );
+}
+
+/**
+ * Returns a list of allowed impoter classes.
+ *
+ * @since 3.0.2
+ *
+ * @return array An array of class names to allow during imports.
+ */
+function edd_get_importer_accepted_classes() {
+	return apply_filters(
+		'edd_accepted_importer_classes',
+		array(
+			'EDD_Batch_Downloads_Import',
+			'EDD_Batch_Payments_Import',
+		)
 	);
 }
