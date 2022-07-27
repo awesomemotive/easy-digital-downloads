@@ -206,8 +206,9 @@ function edd_show_upgrade_notices() {
 
 			// The final EDD Payment ID was recorded when the orders table was created.
 			$needs_migration = _edd_needs_v3_migration();
+			global $wpdb;
 
-			if ( $needs_migration ) {
+			if ( $needs_migration && ! empty( $wpdb->edd_orders ) ) {
 				?>
 				<div class="updated">
 					<?php if ( get_option( 'edd_v30_cli_migration_running' ) ) { ?>
@@ -279,6 +280,32 @@ function edd_show_upgrade_notices() {
 						<?php
 					}
 					?>
+				</div>
+				<?php
+			} else {
+
+				// The orders database table is missing (we assume all primary tables have failed to create).
+				$message          = __( 'Easy Digital Downloads was unable to create the necessary database tables. Your site may not meet the minimum requirements for EDD 3.0.', 'easy-digital-downloads' );
+				$database_version = $wpdb->db_version();
+
+				// The database version is the problem.
+				if ( version_compare( $database_version, '5.6', '<' ) ) {
+					$message .= ' ' . sprintf(
+						/* translators: MySQL database version, do not translate */
+						__( 'Please contact your host and ask them to upgrade your MySQL version (your current version is %s).', 'easy-digital-downloads' ),
+						$database_version
+					);
+				} else {
+					$message .= ' ' . sprintf(
+						/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate */
+						__( '%1$sContact our support team%2$s for help with next steps.', 'easy-digital-downloads' ),
+						'<a href="https://easydigitaldownloads.com/support/">',
+						'</a>'
+					);
+				}
+				?>
+				<div class="notice notice-error">
+					<p><?php echo wp_kses_post( $message ); ?></p>
 				</div>
 				<?php
 			}
