@@ -7,7 +7,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.0.2
+Stable Tag: 3.0.2.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -238,6 +238,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.0.2.1, July 28, 2022 =
+* Fix: Upgrade warning notices were showing incorrectly for some sites.
 
 = 3.0.2, July 26, 2022 =
 * Fix: Customer verification URL was not working in the admin.
