@@ -206,9 +206,14 @@ function edd_show_upgrade_notices() {
 
 			// The final EDD Payment ID was recorded when the orders table was created.
 			$needs_migration = _edd_needs_v3_migration();
-			global $wpdb;
+			$version         = false;
+			$component       = edd_get_component( 'order' );
+			$table           = $component->get_interface( 'table' );
+			if ( ! empty( $table ) ) {
+				$version = $table->get_version();
+			}
 
-			if ( $needs_migration && ! empty( $wpdb->edd_orders ) ) {
+			if ( $needs_migration && $version ) {
 				?>
 				<div class="updated">
 					<?php if ( get_option( 'edd_v30_cli_migration_running' ) ) { ?>
