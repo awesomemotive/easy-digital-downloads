@@ -817,7 +817,7 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 		'customer_id' => $order->customer_id,
 		'ip'          => sanitize_text_field( $ip ),
 		'user_agent'  => $user_agent,
-	), $user_info );
+	) );
 
 	edd_add_file_download_log( $args );
 }
