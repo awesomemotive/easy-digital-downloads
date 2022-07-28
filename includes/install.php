@@ -252,7 +252,7 @@ function edd_run_install( $site_id = false ) {
 function edd_set_all_upgrades_complete() {
 
 	// Bail if not a fresh installation
-	if ( ! edd_get_db_version() ) {
+	if ( edd_get_db_version() ) {
 		return;
 	}
 
