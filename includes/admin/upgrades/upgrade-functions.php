@@ -204,15 +204,25 @@ function edd_show_upgrade_notices() {
 		// Check if we need to do any upgrades.
 		if ( ! edd_v30_is_migration_complete() ) {
 
-			// The final EDD Payment ID was recorded when the orders table was created.
+			// If any EDD 2.x data exists, the migration should be run.
 			$needs_migration = _edd_needs_v3_migration();
 			$version         = false;
-			$component       = edd_get_component( 'order' );
-			$table           = $component->get_interface( 'table' );
-			if ( ! empty( $table ) ) {
-				$version = $table->get_version();
+			// If the migration doesn't need to be run, mark the upgrades as complete.
+			if ( ! $needs_migration ) {
+				$upgrades = edd_get_v30_upgrades();
+				$upgrades = array_keys( $upgrades );
+				foreach ( $upgrades as $upgrade ) {
+					edd_set_upgrade_complete( $upgrade );
+				}
+			} else {
+				$component = edd_get_component( 'order' );
+				$table     = $component->get_interface( 'table' );
+				if ( ! empty( $table ) ) {
+					$version = $table->get_version();
+				}
 			}
 
+			// The migration needs to be run, and the database table exists.
 			if ( $needs_migration && $version ) {
 				?>
 				<div class="updated">
@@ -287,7 +297,7 @@ function edd_show_upgrade_notices() {
 					?>
 				</div>
 				<?php
-			} else {
+			} elseif ( $needs_migration && ! $version ) {
 
 				// The orders database table is missing (we assume all primary tables have failed to create).
 				$message          = __( 'Easy Digital Downloads was unable to create the necessary database tables to complete this update. Your site may not meet the minimum requirements for EDD 3.0.', 'easy-digital-downloads' );
