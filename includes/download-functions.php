@@ -774,6 +774,7 @@ function edd_get_download_sales_stats( $download_id = 0 ) {
  *
  * @since 1.0
  * @since 3.0 Refactored to use new query methods.
+ * @since 3.0.3 Added edd_record_download_log_args filter. 
  *
  * @param int    $download_id Download ID.
  * @param int    $file_id     File ID.
@@ -786,6 +787,11 @@ function edd_get_download_sales_stats( $download_id = 0 ) {
 function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info = array(), $ip = '', $order_id = 0, $price_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
+	// Bail if order data was not passed.
+	if ( empty( $order ) ) {
+		return;
+	}
+
 	if ( ! class_exists( 'Browser' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 	}
@@ -794,7 +800,16 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 
 	$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
 
-	edd_add_file_download_log( array(
+	/**
+	 * Filters the args before being inserted into the database.
+	 *
+	 * Returning an empty value for product_id or order_id will short-circuit the insert.
+	 *
+	 * @since 3.0.3
+	 *
+	 * @param array $args File download log args.
+	 */
+	$args = apply_filters( 'edd_record_download_log_args', array(
 		'product_id'  => absint( $download_id ),
 		'file_id'     => absint( $file_id ),
 		'order_id'    => absint( $order_id ),
@@ -802,7 +817,9 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 		'customer_id' => $order->customer_id,
 		'ip'          => sanitize_text_field( $ip ),
 		'user_agent'  => $user_agent,
-	) );
+	), $user_info );
+
+	edd_add_file_download_log( $args );
 }
 
 /**
