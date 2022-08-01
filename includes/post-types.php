@@ -513,3 +513,33 @@ function edd_download_row_actions( $actions, $post ) {
 	return $actions;
 }
 add_filter( 'post_row_actions', 'edd_download_row_actions', 2, 100 );
+
+/**
+ * Adds the custom page state display to the Pages list.
+ *
+ * @since 3.1
+ */
+function edd_display_post_states( $post_states, $post ) {
+	if ( intval( edd_get_option( 'purchase_page' ) ) === $post->ID ) {
+		$post_states['purchase_page'] = __( 'Checkout Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'success_page' ) ) === $post->ID ) {
+		$post_states['success_page'] = __( 'Success Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'failure_page' ) ) === $post->ID ) {
+		$post_states['failure_page'] = __( 'Failed Transaction Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'purchase_history_page' ) ) === $post->ID ) {
+		$post_states['purchase_history_page'] = __( 'Purchase History Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'login_redirect_page' ) ) === $post->ID ) {
+		$post_states['login_redirect_page'] = __( 'Login Redirect Page', 'easy-digital-downloads' );
+	}
+
+	return $post_states;
+}
+add_filter( 'display_post_states', 'edd_display_post_states', 10, 2 );
