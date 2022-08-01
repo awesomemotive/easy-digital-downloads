@@ -1317,6 +1317,21 @@ function edd_tools_sysinfo_get() {
 	if ( $parent_theme !== $theme ) {
 		$return .= 'Parent Theme:             ' . $parent_theme . "\n";
 	}
+
+	$customized_template_files = edd_get_theme_edd_templates();
+	$return .= "\n" . '-- Customized Templates' . "\n\n";
+	if ( empty( $customized_template_files ) ) {
+		$return .= 'No custom templates found.' . "\n\n";
+	} else {
+		foreach ( $customized_template_files as $customized_template_file ) {
+			$return .= $customized_template_file . "\n";
+		}
+	}
+
+	$return .= "\n";
+
+	$return = apply_filters( 'edd_sysinfo_after_customized_templates', $return );
+
 	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
 
 	// Only show page specs if frontpage is set to 'page'
