@@ -25,7 +25,7 @@ abstract class Base_Object implements Error_Logger {
 	 * @since 3.0
 	 * @var   string
 	 */
-	private $object_id;
+	public $object_id;
 
 	/**
 	 * Object label.
@@ -33,7 +33,7 @@ abstract class Base_Object implements Error_Logger {
 	 * @since 3.0
 	 * @var   string
 	 */
-	private $label;
+	public $label;
 
 	/**
 	 * Holds errors related to instantiating the object.

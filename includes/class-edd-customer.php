@@ -334,11 +334,24 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 		do_action( 'edd_customer_pre_update', $this->id, $data );
 
-		$updated = false;
+		$updated          = false;
+		$previous_user_id = $this->user_id;
 
 		if ( edd_update_customer( $this->id, $data ) ) {
 			$customer = edd_get_customer( $this->id );
 			$this->setup_customer( $customer );
+
+			// If the user ID changed, we need to update all the orders associated with this customer and change the user ID.
+			if ( intval( $previous_user_id ) !== intval( $this->user_id ) ) {
+
+				// Update some payment meta if we need to
+				$order_ids = edd_get_orders( array( 'customer_id' => $this->id, 'number' => 9999999 ) );
+
+				foreach ( $order_ids as $order_id ) {
+					edd_update_order( $order_id, array( 'user_id' => $this->user_id ) );
+				}
+
+			}
 
 			$updated = true;
 		}
@@ -352,11 +365,12 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * Attach an email address to the customer.
 	 *
 	 * @since 2.6
+	 * @since 3.0.1 This method will return customer email ID or false, instead of bool
 	 *
 	 * @param string $email The email address to remove from the customer.
 	 * @param bool   $primary Allows setting the email added as the primary.
 	 *
-	 * @return bool True if the email was added successfully, false otherwise.
+	 * @return int|false ID of newly created customer email address, false on error.
 	 */
 	public function add_email( $email = '', $primary = false ) {
 		if ( ! is_email( $email ) ) {
@@ -376,11 +390,13 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			: 'secondary';
 
 		// Update is used to ensure duplicate emails are not added.
-		$ret = (bool) edd_add_customer_email_address( array(
-			'customer_id' => $this->id,
-			'email'       => $email,
-			'type'        => $type
-		) );
+		$ret = edd_add_customer_email_address(
+			array(
+				'customer_id' => $this->id,
+				'email'       => $email,
+				'type'        => $type,
+			)
+		);
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
 
@@ -721,7 +737,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		}
 
 		// Only update stats when published or revoked
-		if ( ! in_array( $payment->status, array( 'publish', 'revoked' ), true ) ) {
+		if ( ! in_array( $payment->status, array( 'complete', 'revoked' ), true ) ) {
 			$update_stats = false;
 		}
 
@@ -751,30 +767,34 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @since 3.0
 	 */
 	public function recalculate_stats() {
+		$this->purchase_count = edd_count_orders(
+			array(
+				'customer_id' => $this->id,
+				'status'      => edd_get_net_order_statuses(),
+				'type'        => 'sale',
+			)
+		);
 
-		// Get total orders
-		$this->purchase_count = edd_count_orders( array(
-			'customer_id' => $this->id,
-			'status'      => 'publish'
+		global $wpdb;
+		$statuses      = edd_get_gross_order_statuses();
+		$status_string = implode(', ', array_fill( 0, count( $statuses ), '%s' ) );
+
+		$this->purchase_value = (float) $wpdb->get_var( $wpdb->prepare(
+			"SELECT SUM(total / rate)
+			FROM {$wpdb->edd_orders}
+			WHERE customer_id = %d
+			AND status IN({$status_string})",
+			$this->id,
+			...$statuses
 		) );
-
-		// Get order IDs
-		$totals = edd_get_orders( array(
-			'customer_id'   => $this->id,
-			'number'        => $this->purchase_count,
-			'status'        => 'publish',
-			'fields'        => 'total',
-			'no_found_rows' => true
-		) );
-
-		// Sum the totals together to get the lifetime value
-		$this->purchase_value = array_sum( $totals );
 
 		// Update the customer purchase count & value
-		return $this->update( array(
-			'purchase_count' => $this->purchase_count,
-			'purchase_value' => $this->purchase_value,
-		) );
+		return $this->update(
+			array(
+				'purchase_count' => $this->purchase_count,
+				'purchase_value' => $this->purchase_value,
+			)
+		);
 	}
 
 	/** Notes *****************************************************************/
@@ -862,12 +882,15 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		 */
 		do_action( 'edd_customer_pre_add_note', $note, $this->id, $this );
 
+		// Sanitize note
+		$note = trim( wp_kses( stripslashes( $note ), edd_get_allowed_tags() ) );
+
 		// Try to add the note
 		edd_add_note( array(
 			'user_id'     => 0, // Authored by System/Bot
 			'object_id'   => $this->id,
 			'object_type' => 'customer',
-			'content'     => wp_kses( stripslashes( $note ), array() ),
+			'content'     => $note,
 		) );
 
 		/**
@@ -1060,29 +1083,29 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $type Address type. Default primary.
+	 * @param boolean $is_primary Whether the address is the primary address. Default true.
 	 *
-	 * @return array|\EDD\Customers\Customer_Address Object if primary address requested, array otherwise.
+	 * @return array|\EDD\Customers\Customer_Address|null Object if primary address requested, array otherwise. Null if no result for primary address.
 	 */
-	public function get_address( $type = 'primary' ) {
-		if ( 'primary' === $type ) {
-			$address = edd_get_customer_addresses( array(
-				'number'      => 1,
-				'type'        => 'primary',
-				'customer_id' => $this->id,
-			) );
-
-			if ( is_array( $address ) && ! empty( $address ) ) {
-				return $address[0];
-			} else {
-				return null;
-			}
-		} else {
-			return edd_get_customer_addresses( array(
-				'customer_id' => $this->id,
-				'type'        => $type,
-			) );
+	public function get_address( $is_primary = true ) {
+		$args = array(
+			'customer_id' => $this->id,
+			'is_primary'  => $is_primary,
+		);
+		if ( $is_primary ) {
+			$args['number']  = 1;
+			$args['orderby'] = 'date_created';
+			$args['order']   = 'desc';
 		}
+		$address = edd_get_customer_addresses( $args );
+		if ( ! $is_primary ) {
+			return $address;
+		}
+		if ( is_array( $address ) && ! empty( $address[0] ) ) {
+			return $address[0];
+		}
+
+		return null;
 	}
 
 	/**
@@ -1119,6 +1142,8 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 */
 	public function increase_purchase_count( $count = 1 ) {
 
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		// Make sure it's numeric and not negative
 		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
 			return false;
@@ -1147,6 +1172,8 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New purchase count if successful, false otherwise.
 	 */
 	public function decrease_purchase_count( $count = 1 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
 
 		// Make sure it's numeric and not negative
 		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
@@ -1180,6 +1207,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function increase_value( $value = 0.00 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		$value     = floatval( apply_filters( 'edd_customer_increase_value', $value, $this ) );
 		$new_value = floatval( $this->purchase_value ) + $value;
 
@@ -1204,6 +1234,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function decrease_value( $value = 0.00 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		$value     = floatval( apply_filters( 'edd_customer_decrease_value', $value, $this ) );
 		$new_value = floatval( $this->purchase_value ) - $value;
 

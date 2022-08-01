@@ -38,12 +38,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'           => __( 'Payment ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
-			'seq_id'       => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
+			'id'           => __( 'Payment ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'       => __( 'Payment Number', 'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
 			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
-			'first'        => __( 'First Name', 'easy-digital-downloads' ),
-			'last'         => __( 'Last Name', 'easy-digital-downloads' ),
+			'name'         => __( 'Customer Name', 'easy-digital-downloads' ),
 			'address1'     => __( 'Address', 'easy-digital-downloads' ),
 			'address2'     => __( 'Address (Line 2)', 'easy-digital-downloads' ),
 			'city'         => __( 'City', 'easy-digital-downloads' ),
@@ -53,15 +52,15 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'products'     => __( 'Products (Verbose)', 'easy-digital-downloads' ),
 			'products_raw' => __( 'Products (Raw)', 'easy-digital-downloads' ),
 			'skus'         => __( 'SKUs', 'easy-digital-downloads' ),
-			'amount'       => __( 'Amount', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
-			'tax'          => __( 'Tax', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
+			'amount'       => __( 'Amount', 'easy-digital-downloads' ),
+			'tax'          => __( 'Tax', 'easy-digital-downloads' ),
 			'discount'     => __( 'Discount Code', 'easy-digital-downloads' ),
 			'gateway'      => __( 'Payment Method', 'easy-digital-downloads' ),
 			'trans_id'     => __( 'Transaction ID', 'easy-digital-downloads' ),
 			'key'          => __( 'Purchase Key', 'easy-digital-downloads' ),
 			'date'         => __( 'Date', 'easy-digital-downloads' ),
 			'user'         => __( 'User', 'easy-digital-downloads' ),
-			'currency'     => __( 'Currency', 'easy-digital-downloads' ),
 			'ip'           => __( 'IP Address', 'easy-digital-downloads' ),
 			'mode'         => __( 'Mode (Live|Test)', 'easy-digital-downloads' ),
 			'status'       => __( 'Status', 'easy-digital-downloads' ),
@@ -96,21 +95,15 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'offset'  => ( $this->step * 30 ) - 30,
 			'status'  => $this->status,
 			'order'   => 'ASC',
-			'orderby' => 'date',
+			'orderby' => 'date_created',
+			'type'    => 'sale',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-m-d 00:00:00', strtotime( $this->start ) ),
-					'before'    => date( 'Y-m-d 23:59:59', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
-
-		if ( 'any' === $args['status'] ) {
+		if ( 'all' === $args['status'] ) {
 			unset( $args['status'] );
 		}
 
@@ -120,10 +113,10 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			/** @var EDD\Orders\Order $order */
 
 			$items        = $order->get_items();
-			$user_info    = $order->get_user_info();
-			$address      = $order->get_customer_address();
+			$address      = $order->get_address();
 			$total        = $order->total;
-			$user_id      = $order->id && $order->id != - 1 ? $order->id : $user_info['email'];
+			$user_id      = $order->id && $order->id != - 1 ? $order->id : $order->email;
+			$customer     = edd_get_customer( $order->customer_id );
 			$products     = '';
 			$products_raw = '';
 			$skus         = '';
@@ -164,7 +157,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					$products .= html_entity_decode( edd_get_price_option_name( $id, $item->price_id, $order->id ) ) . ' - ';
 				}
 
-				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
+				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ), $order->currency ) );
 
 				if ( $key != ( count( $items ) -1 ) ) {
 					$products .= ' / ';
@@ -196,17 +189,17 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'seq_id'       => $order->get_number(),
 				'email'        => $order->email,
 				'customer_id'  => $order->customer_id,
-				'first'        => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
-				'last'         => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
-				'address1'     => isset( $address['line1'] ) ? $address['line1'] : '',
-				'address2'     => isset( $address['line2'] ) ? $address['line2'] : '',
-				'city'         => isset( $address['city'] ) ? $address['city'] : '',
-				'state'        => isset( $address['state'] ) ? $address['state'] : '',
-				'country'      => isset( $address['country'] ) ? $address['country'] : '',
-				'zip'          => isset( $address['zip'] ) ? $address['zip'] : '',
+				'name'         => ! empty( $customer->name ) ? $customer->name : '',
+				'address1'     => isset( $address->address ) ? $address->address : '',
+				'address2'     => isset( $address->address2 ) ? $address->address2 : '',
+				'city'         => isset( $address->city ) ? $address->city : '',
+				'state'        => isset( $address->region ) ? $address->region : '',
+				'country'      => isset( $address->country ) ? $address->country : '',
+				'zip'          => isset( $address->postal_code ) ? $address->postal_code : '',
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
+				'currency'     => $order->currency,
 				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
 				'tax'          => html_entity_decode( edd_format_amount( $order->tax ) ),
 				'discount'     => $discounts,
@@ -215,12 +208,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'key'          => $order->payment_key,
 				'date'         => $order->date_created,
 				'user'         => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
-				'currency'     => $order->currency,
 				'ip'           => $order->ip,
 				'mode'         => $order->mode,
-				'status'       => ( 'publish' === $order->status ) ? 'complete' : $order->status,
-				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
-        'state_name'   => isset( $user_info['address']['state'] )   ? edd_get_state_name( $user_info['address']['country'], $user_info['address']['state'] ) : '',
+				'status'       => $order->status,
+				'country_name' => isset( $address->country ) ? edd_get_country_name( $address->country ) : '',
+				'state_name'   => isset( $address->country ) && isset( $address->region ) ? edd_get_state_name( $address->country, $address->region ) : '',
 			);
 		}
 
@@ -246,13 +238,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		if ( 'any' !== $this->status ) {
@@ -281,8 +267,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * @param array $request The Form Data passed into the batch processing
 	 */
 	public function set_properties( $request ) {
-		$this->start  = isset( $request['start'] )  ? sanitize_text_field( $request['start'] )  : '';
-		$this->end    = isset( $request['end']  )   ? sanitize_text_field( $request['end']  )   : '';
+		$this->start  = isset( $request['orders-export-start'] ) ? sanitize_text_field( $request['orders-export-start'] ) : '';
+		$this->end    = isset( $request['orders-export-end'] ) ? sanitize_text_field( $request['orders-export-end'] ) : '';
 		$this->status = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'complete';
 	}
 }

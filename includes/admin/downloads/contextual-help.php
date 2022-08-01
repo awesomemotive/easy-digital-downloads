@@ -25,15 +25,12 @@ function edd_downloads_contextual_help() {
 		return;
 
 	$screen->set_help_sidebar(
-		'<p><strong>' . sprintf( __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
-		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'http://docs.easydigitaldownloads.com/' ) ) ) . '</p>' .
+		'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
+		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'https://docs.easydigitaldownloads.com/' ) ) . '</p>' .
 		'<p>' . sprintf(
-					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'easy-digital-downloads' ),
-					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
-					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
-					esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=plugin-downloads-page&utm_medium=contextual-help-sidebar&utm_term=extensions&utm_campaign=ContextualHelp' ),
-					esc_url( 'https://easydigitaldownloads.com/themes/?utm_source=plugin-downloads-page&utm_medium=contextual-help-sidebar&utm_term=themes&utm_campaign=ContextualHelp' )
-				) . '</p>'
+			__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now</a>!', 'easy-digital-downloads' ),
+			esc_url( 'https://easydigitaldownloads.com/pricing/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' )
+		) . '</p>'
 	);
 
 	$screen->add_help_tab( array(
@@ -68,8 +65,8 @@ function edd_downloads_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-product-notes',
-		'title'	    => sprintf( __( '%s Notes', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'content'	=> '<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionally may be used by some extensions or themes on the frontend.', 'easy-digital-downloads' ) . '</p>'
+		'title'	    => sprintf( __( '%s Instructions', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		'content'	=> '<p>' . sprintf( __( 'Special instructions for this %s. These will be added to the sales receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</p>'
 	) );
 
 	$colors = array(
@@ -90,7 +87,7 @@ function edd_downloads_contextual_help() {
 				<li><strong>color</strong> - <em>' . implode( '</em> | <em>', $colors ) . '</em></li>
 				<li><strong>class</strong> - ' . __( 'One or more custom CSS classes you want applied to the button.', 'easy-digital-downloads' ) . '</li>
 			</ul>' .
-			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'easy-digital-downloads' ), 'https://codex.wordpress.org/Shortcode', 'http://docs.easydigitaldownloads.com/article/229-purchaselink' ) . '</p>'
+			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'easy-digital-downloads' ), 'https://codex.wordpress.org/Shortcode', 'https://docs.easydigitaldownloads.com/article/229-purchaselink' ) . '</p>'
 	) );
 
 	/**

@@ -54,12 +54,12 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_admin_enqueue_scripts() {
 		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_print_admin_scripts', $wp_filter['admin_print_scripts'][10] );
+		$this->assertArrayHasKey( 'edd_enqueue_admin_scripts', $wp_filter['admin_enqueue_scripts'][10] );
 	}
 
 	public function test_admin_enqueue_styles() {
 		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_print_admin_styles', $wp_filter['admin_print_styles'][10] );
+		$this->assertArrayHasKey( 'edd_enqueue_admin_styles', $wp_filter['admin_enqueue_scripts'][10] );
 	}
 
 	public function test_upload_mimes() {
@@ -74,8 +74,8 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_wp_enqueue_scripts() {
 		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_load_scripts', $wp_filter['wp_enqueue_scripts'][10] );
-		$this->assertArrayHasKey( 'edd_register_styles', $wp_filter['wp_enqueue_scripts'][10] );
+		$this->assertArrayHasKey( 'edd_load_scripts',   $wp_filter['wp_enqueue_scripts'][10] );
+		$this->assertArrayHasKey( 'edd_enqueue_styles', $wp_filter['wp_enqueue_scripts'][10] );
 	}
 
 	public function test_ajax() {
@@ -183,7 +183,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_discount_field', $wp_filter['edd_checkout_form_top'][-1] );
 		$this->assertArrayHasKey( 'edd_show_payment_icons', $wp_filter['edd_checkout_form_top'][10] );
-		$this->assertArrayHasKey( 'edd_agree_to_terms_js', $wp_filter['edd_checkout_form_top'][10] );
 	}
 
 	public function test_edd_empty_cart() {
@@ -260,7 +259,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 	public function test_edd_update_payment_status() {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_complete_purchase', $wp_filter['edd_update_payment_status'][100] );
-		$this->assertArrayHasKey( 'edd_record_status_change', $wp_filter['edd_update_payment_status'][100] );
+		$this->assertArrayHasKey( 'edd_record_order_status_change', $wp_filter['edd_transition_order_status'][100] );
 		$this->assertArrayHasKey( 'edd_clear_user_history_cache', $wp_filter['edd_update_payment_status'][10] );
 	}
 

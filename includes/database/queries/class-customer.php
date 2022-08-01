@@ -107,16 +107,16 @@ class Customer extends Query {
 	 *     @type int          $id                   An customer ID to only return that customer. Default empty.
 	 *     @type array        $id__in               Array of customer IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of customer IDs to exclude. Default empty.
-	 *     @type int          $user_id              A user ID to only return that object. Default empty.
+	 *     @type int          $user_id              A user ID to only return that user. Default empty.
 	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
 	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
 	 *     @type string       $email                Limit results to those affiliated with a given email. Default empty.
 	 *     @type array        $email__in            Array of email to include affiliated orders for. Default empty.
 	 *     @type array        $email__not_in        Array of email to exclude affiliated orders for. Default empty.
-	 *     @type string       $status               An order statuses to only return that order. Default empty.
+	 *     @type string       $status               A status to only return that status. Default empty.
 	 *     @type array        $status__in           Array of order statuses to include. Default empty.
 	 *     @type array        $status__not_in       Array of order statuses to exclude. Default empty.
-	 *     @type decimal      $purchase_value       An 18,9 numeric value. Default empty.
+	 *     @type float        $purchase_value       A purchase value. Default empty.
 	 *     @type int          $purchase_count       A numeric value. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit customers by. See WP_Date_Query.
@@ -131,7 +131,8 @@ class Customer extends Query {
 	 *     @type int          $offset               Number of customers to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Accepts 'id', 'date_created', 'start_date', 'end_date'.
+	 *     @type string|array $orderby              Accepts 'id', 'email', 'name', 'status', 'purchase_value',
+	 *                                              'purchase_count', 'date_created', 'date_modified'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.

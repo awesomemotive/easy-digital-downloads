@@ -38,8 +38,7 @@ class Orders extends Schema {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
-			'sortable'   => true,
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// parent
@@ -49,7 +48,6 @@ class Orders extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -68,7 +66,6 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'pending',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -79,7 +76,6 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'sale',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -124,8 +120,9 @@ class Orders extends Schema {
 		array(
 			'name'       => 'gateway',
 			'type'       => 'varchar',
-			'length'     => '20',
+			'length'     => '100',
 			'sortable'   => true,
+			'default'    => 'manual',
 		),
 
 		// mode
@@ -139,14 +136,27 @@ class Orders extends Schema {
 		array(
 			'name'       => 'currency',
 			'type'       => 'varchar',
-			'length'     => '20'
+			'length'     => '20',
+			'validate'   => 'strtoupper',
 		),
 
 		// payment_key
 		array(
 			'name'       => 'payment_key',
 			'type'       => 'varchar',
-			'length'     => '64'
+			'length'     => '64',
+			'searchable' => true,
+		),
+
+		// tax_rate_id
+		array(
+			'name'       => 'tax_rate_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => null,
+			'allow_null' => true,
+			'sortable'   => true
 		),
 
 		// subtotal
@@ -185,16 +195,23 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
 		),
 
 		// date_created
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -204,7 +221,7 @@ class Orders extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -214,7 +231,8 @@ class Orders extends Schema {
 		array(
 			'name'       => 'date_completed',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => null,
+			'allow_null' => true,
 			'date_query' => true,
 			'sortable'   => true
 		),
@@ -223,7 +241,8 @@ class Orders extends Schema {
 		array(
 			'name'       => 'date_refundable',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => null,
+			'allow_null' => true,
 			'date_query' => true,
 			'sortable'   => true
 		),

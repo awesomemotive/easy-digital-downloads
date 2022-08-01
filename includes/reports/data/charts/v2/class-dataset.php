@@ -271,7 +271,6 @@ abstract class Dataset implements Error_Logger {
 					);
 				}
 			}
-
 		}
 
 		return $processed;

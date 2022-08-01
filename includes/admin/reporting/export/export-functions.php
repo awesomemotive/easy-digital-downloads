@@ -67,8 +67,8 @@ function edd_do_ajax_export() {
 		$step++;
 
 		echo wp_json_encode( array(
-			'step'       => $step,
-			'percentage' => $percentage,
+			'step'       => absint( $step ),
+			'percentage' => esc_attr( $percentage ),
 		) );
 
 		exit;
@@ -87,13 +87,14 @@ function edd_do_ajax_export() {
 		echo wp_json_encode( array(
 			'success' => true,
 			'message' => $message,
+			'data'    => $export->result_data,
 		) );
 
 		exit;
 	} else {
 		$args = array_merge( $_REQUEST, array(
-			'step'       => $step,
-			'class'      => $class,
+			'step'       => absint( $step ),
+			'class'      => urlencode( $class ),
 			'nonce'      => wp_create_nonce( 'edd-batch-export' ),
 			'edd_action' => 'download_batch_export',
 		) );
@@ -102,7 +103,7 @@ function edd_do_ajax_export() {
 
 		echo wp_json_encode( array(
 			'step' => 'done',
-			'url'  => $download_url,
+			'url'  => esc_url_raw( $download_url ),
 		) );
 
 		exit;

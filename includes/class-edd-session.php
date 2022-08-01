@@ -89,7 +89,16 @@ class EDD_Session {
 			add_filter( 'wp_session_expiration',         array( $this, 'set_expiration_time'         ), 99999 );
 		}
 
-		$this->init();
+		// Based off our session handling, we need to use different hooks and priorities.
+		if ( empty( $this->session ) && ! $this->use_php_sessions ) {
+			$hook     = 'plugins_loaded';
+			$priority = 10;
+		} else {
+			$hook     = 'init';
+			$priority = -1;
+		}
+
+		add_action( $hook, array( $this, 'init' ), $priority );
 	}
 
 	/**
@@ -225,9 +234,9 @@ class EDD_Session {
 		$now = time();
 
 		if ( $set ) {
-			@setcookie( 'edd_items_in_cart', '1', $now + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
+			@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 		} elseif ( isset( $_COOKIE['edd_items_in_cart'] ) ) {
-			@setcookie( 'edd_items_in_cart', '', $now - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+			@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 		}
 	}
 

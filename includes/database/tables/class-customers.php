@@ -29,7 +29,7 @@ final class Customers extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_customers';
+	protected $name = 'customers';
 
 	/**
 	 * Database version
@@ -38,7 +38,7 @@ final class Customers extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 202006101;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,10 +48,8 @@ final class Customers extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807110001' => 201807110001,
-		'201807130001' => 201807130001,
-		'201807130002' => 201807130002,
-		'201807270003' => 201807270003,
+		'202002141' => 202002141,
+		'202006101' => 202006101,
 	);
 
 	/**
@@ -65,12 +63,12 @@ final class Customers extends Table {
 		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			user_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
-			name mediumtext NOT NULL,
+			name varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default '',
 			purchase_value decimal(18,9) NOT NULL default '0',
 			purchase_count bigint(20) unsigned NOT NULL default '0',
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			UNIQUE KEY email (email),
@@ -92,14 +90,16 @@ final class Customers extends Table {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		if ( false !== get_option( $this->prefix . 'edd_customers_db_version', false ) ) {
-			delete_option( $this->prefix . 'edd_customers_db_version' );
+		if ( false !== get_option( $this->table_prefix . 'edd_customers_db_version', false ) ) {
+			delete_option( $this->table_prefix . 'edd_customers_db_version' );
 
+			// Modify existing columns.
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `name` varchar(255) NOT NULL default ''" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'" );
-			$this->get_db()->query( "ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00'" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `date_created` datetime NOT NULL default CURRENT_TIMESTAMP" );
 
 			if ( ! $this->column_exists( 'status' ) ) {
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;" );
@@ -107,9 +107,13 @@ final class Customers extends Table {
 			}
 
 			if ( ! $this->column_exists( 'date_modified' ) ) {
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT CURRENT_TIMESTAMP AFTER `date_created`" );
 				$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_created (date_created)" );
+			}
+
+			if ( ! $this->column_exists( 'uuid' ) ) {
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;" );
 			}
 		}
 
@@ -117,84 +121,47 @@ final class Customers extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201806070001
-	 * - Change `purchase_value` from mediumtext to decimal(18,9).
-	 * - Add the `status` column.
+	 * Upgrade to version 202002141
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
-	 *
 	 * @return bool
 	 */
-	protected function __201807110001() {
+	protected function __202002141() {
 
-		// Alter the database
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-		if ( ! $this->column_exists( 'status' ) ) {
-			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`" );
-			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status (status(20))" );
-		}
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-		// Return success/fail
-		return $this->is_success( true );
+		return $this->is_success( $result );
+
 	}
 
 	/**
-	 * Upgrade to version 201807130001
-	 * - Add `date_modified` column.
+	 * Upgrade to version 202006101
+	 * - Remove the payment_ids column if it still exists.
 	 *
 	 * @since 3.0
-	 *
 	 * @return bool
 	 */
-	protected function __201807130001() {
+	protected function __202006101() {
 
-		if ( ! $this->column_exists( 'date_modified' ) ) {
-			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`" );
-		}
+		$result = true;
 
-		// Return success/fail
-		return $this->is_success( true );
-	}
-
-	/**
-	 * Upgrade to version 201807130002
-	 * - Set values of `date_modified` to `date_created` (no empties)
-	 *
-	 * @since 3.0
-	 *
-	 * @return bool
-	 */
-	protected function __201807130002() {
-
-		// Update modified row values
-		$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
-
-		// Return success/fail
-		return $this->is_success( true );
-	}
-
-	/**
-	 * Upgrade to version 201807270003
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807270003() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
+		// Remove the column.
+		if ( $this->column_exists( 'payment_ids' ) ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
+				ALTER TABLE {$this->table_name} DROP `payment_ids`
 			" );
 		}
 
-		// Return success/fail
 		return $this->is_success( $result );
 	}
+
 }

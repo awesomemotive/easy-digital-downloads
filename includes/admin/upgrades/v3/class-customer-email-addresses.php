@@ -51,6 +51,17 @@ class Customer_Email_Addresses extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
+				// Check if email has already been migrated.
+				if ( ! empty( $result->edd_customer_id ) && $result->meta_value ) {
+					$number_results = edd_count_customer_email_addresses( array(
+						'customer_id' => $result->edd_customer_id,
+						'email'       => $result->meta_value
+					) );
+					if ( $number_results > 0 ) {
+						continue;
+					}
+				}
+
 				Data_Migrator::customer_email_addresses( $result );
 			}
 

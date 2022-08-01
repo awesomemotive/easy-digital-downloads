@@ -41,8 +41,8 @@ function edd_logs_view_setup( $type = '' ) {
  *
  * @since 3.0
  *
- * @param object $logs_table List table class to work with
- * @param string $tag        Type of log to view
+ * @param EDD_Base_Log_List_Table $logs_table List table class to work with
+ * @param string                  $tag        Type of log to view
  */
 function edd_logs_view_page( $logs_table, $tag = '' ) {
 	$tag = sanitize_key( $tag );
@@ -51,13 +51,13 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 	<div class="wrap">
 		<?php
 		/**
-		 * Fires at the top of the File Downloads logs view.
+		 * Fires at the top of the logs view.
 		 *
 		 * @since 3.0
 		 */
 		do_action( "edd_logs_{$tag}_top" ); ?>
 
-		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=' . $tag ); ?>">
+		<form id="edd-logs-filter" method="get" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => sanitize_key( $tag ) ) ) ); ?>">
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-tools" />
 			<input type="hidden" name="tab" value="<?php echo esc_attr( $tag ); ?>" />
@@ -65,13 +65,15 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 			wp_nonce_field( -1, 'edd_filter', false );
 			$logs_table->views();
 			$logs_table->advanced_filters();
-			$logs_table->display();
 			?>
 		</form>
+		<?php
+		$logs_table->display();
+		?>
 
 		<?php
 		/**
-		 * Fires at the bottom of the File Downloads logs view.
+		 * Fires at the bottom of the logs view.
 		 *
 		 * @since 3.0
 		 */
@@ -85,6 +87,8 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 
 /**
  * Sales Log View
+ *
+ * @deprecated 3.0
  *
  * @since 1.4
  * @uses EDD_Sales_Log_Table::prepare_items()
@@ -182,13 +186,13 @@ function edd_log_default_views() {
 	 * Filters the default logs views.
 	 *
 	 * @since 1.4
+	 * @since 3.0 Removed sales log.
 	 *
 	 * @param array $views Logs views. Each key/value pair represents the view slug
 	 *                     and label, respectively.
 	 */
 	return apply_filters( 'edd_log_views', array(
 		'file_downloads'  => __( 'File Downloads', 'easy-digital-downloads' ),
-		'sales' 		  => __( 'Sales',          'easy-digital-downloads' ),
 		'gateway_errors'  => __( 'Payment Errors', 'easy-digital-downloads' ),
 		'api_requests'    => __( 'API Requests',   'easy-digital-downloads' )
 	) );
@@ -215,8 +219,8 @@ function edd_log_views() {
 
 	<!-- EDD 3.0 Hack -->
 	</div></div>
-	<form method="get" class="edd-old-log-filters" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
-		<?php edd_admin_filter_bar( 'old-logs' ); ?>
+	<form method="get" class="edd-old-log-filters" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) ); ?>">
+		<?php edd_admin_filter_bar( 'old_logs' ); ?>
 	</form>
 	<div class="tablenav top"><div>
 	<!-- EDD 3.0 Hack -->
@@ -230,17 +234,13 @@ function edd_log_views() {
  * @since 3.0
  */
 function edd_old_logs_filter_bar_items() {
-	$rtl_class = is_rtl()
-		? ' chosen-rtl'
-		: '';
-
 	$views        = edd_log_default_views();
 	$current_view = isset( $_GET['view'] ) && array_key_exists( $_GET['view'], edd_log_default_views() )
 		? sanitize_text_field( $_GET['view'] )
 		: 'file_downloads'; ?>
 
 	<span id="edd-type-filter">
-		<select id="edd-logs-view" name="view" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+		<select id="edd-logs-view" name="view">
 			<?php foreach ( $views as $view_id => $label ) : ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>

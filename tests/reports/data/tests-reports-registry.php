@@ -1,5 +1,5 @@
 <?php
-namespace EDD\Reports;
+namespace EDD\Reports\Data;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
@@ -211,7 +211,7 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 
 		$report = $this->registry->get_report( 'foo' );
 
-		$this->assertEqualSets( array( 'dates' ), $report['filters'] );
+		$this->assertEqualSets( array( 'dates', 'taxes' ), $report['filters'] );
 	}
 
 	/**

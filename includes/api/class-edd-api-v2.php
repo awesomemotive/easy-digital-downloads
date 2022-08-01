@@ -73,7 +73,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 			}
 
 			if( ! empty( $args['category'] ) ) {
-				if ( strpos( $args['category'], ',' ) ) {
+				if ( is_string( $args[ 'categrory' ] ) ) {
 					$args['category'] = explode( ',', $args['category'] );
 				}
 
@@ -338,7 +338,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 		} elseif( $args['customer'] ) {
 
-			$error['error'] = sprintf( __( 'Customer %s not found!', 'easy-digital-downloads' ), $customer );
+			$error['error'] = sprintf( __( 'Customer %s not found!', 'easy-digital-downloads' ), $args['customer'] );
 			return $error;
 
 		} else {
@@ -373,9 +373,9 @@ class EDD_API_V2 extends EDD_API_V1 {
 			$query   = array();
 			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
 		} elseif( isset( $wp_query->query_vars['email'] ) ) {
-			$query = edd_get_payments( array( 'fields' => 'ids', 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'complete' ) );
 		} else {
-			$query = edd_get_payments( array( 'fields' => 'ids', 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+			$query = edd_get_payments( array( 'fields' => 'ids', 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'complete' ) );
 		}
 
 		if ( $query ) {
@@ -389,6 +389,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$user_info    = $payment->user_info;
 
 				$sales['sales'][ $i ]['ID']             = $payment->number;
+				$sales['sales'][ $i ]['mode']           = $payment->mode;
+				$sales['sales'][ $i ]['status']         = $payment->status;
 				$sales['sales'][ $i ]['transaction_id'] = ( ! empty( $payment->transaction_id ) ) ? $payment->transaction_id : null;
 				$sales['sales'][ $i ]['key']            = $payment->key;
 				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
@@ -396,6 +398,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$sales['sales'][ $i ]['fees']           = ( ! empty( $payment->fees ) ? $payment->fees : null );
 				$sales['sales'][ $i ]['total']          = $payment->total;
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
+				$sales['sales'][ $i ]['customer_id']    = $payment->customer_id;
+				$sales['sales'][ $i ]['user_id']        = $payment->user_id;
 				$sales['sales'][ $i ]['email']          = $payment->email;
 				$sales['sales'][ $i ]['date']           = $payment->date;
 

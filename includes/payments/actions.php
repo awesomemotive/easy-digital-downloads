@@ -27,20 +27,26 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
+	// This specifically does not use edd_get_complete_order_statuses().
+	$completed_statuses = array( 'publish', 'complete', 'completed' );
 	// Make sure that payments are only completed once.
-	if ( 'publish' === $old_status || 'complete' === $old_status || 'completed' === $old_status ) {
+	if ( in_array( $old_status, $completed_statuses, true ) ) {
 		return;
 	}
 
 	// Make sure the payment completion is only processed when new status is complete.
-	if ( 'publish' !== $new_status && 'complete' !== $new_status && 'completed' !== $new_status ) {
+	if ( ! in_array( $new_status, $completed_statuses, true ) ) {
 		return;
 	}
 
 	$order = edd_get_order( $order_id );
 
-	$completed_date = '0000-00-00 00:00:00' === $order->date_completed
-		? ''
+	if ( ! $order || 'sale' !== $order->type ) {
+		return;
+	}
+
+	$completed_date = empty( $order->date_completed )
+		? null
 		: $order->date_completed;
 
 	$customer_id = $order->customer_id;
@@ -70,12 +76,15 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					foreach ( $item->get_fees() as $key => $item_fee ) {
 						/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-						$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
-						$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
-						$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-						$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+						$download_id = $item->product_id;
+						$price_id    = $item->price_id;
+						$no_tax      = (bool) 0.00 === $item_fee->tax;
+						$id          = is_null( $item_fee->type_key ) ? $item_fee->id : $item_fee->type_key;
+						if ( array_key_exists( $id, $item_fees ) ) {
+							$id .= '_2';
+						}
 
-						$item_fees[ $fee_id ] = array(
+						$item_fees[ $id ] = array(
 							'amount'      => $item_fee->amount,
 							'label'       => $item_fee->description,
 							'no_tax'      => $no_tax ? $no_tax : false,
@@ -85,16 +94,32 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 						);
 					}
 
+					$item_options = array(
+						'quantity' => $item->quantity,
+						'price_id' => $item->price_id,
+					);
+
+					/*
+					 * For backwards compatibility from pre-3.0: add in order item meta prefixed with `_option_`.
+					 * While saving, we've migrated these values to order item meta, but people may still be looking
+					 * for them in this cart details array, so we need to fill them back in.
+					 */
+					$order_item_meta = edd_get_order_item_meta( $item->id );
+					if ( ! empty( $order_item_meta ) ) {
+						foreach ( $order_item_meta as $item_meta_key => $item_meta_value ) {
+							if ( '_option_' === substr( $item_meta_key, 0, 8 ) && isset( $item_meta_value[0] ) ) {
+								$item_options[ str_replace( '_option_', '', $item_meta_key ) ] = $item_meta_value[0];
+							}
+						}
+					}
+
 					$cart_details = array(
 						'name'        => $item->product_name,
 						'id'          => $item->product_id,
 						'item_number' => array(
 							'id'       => $item->product_id,
 							'quantity' => $item->quantity,
-							'options'  => array(
-								'quantity' => $item->quantity,
-								'price_id' => $item->price_id,
-							),
+							'options'  => $item_options,
 						),
 						'item_price'  => $item->amount,
 						'quantity'    => $item->quantity,
@@ -108,21 +133,6 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					do_action( 'edd_complete_download_purchase', $item->product_id, $order_id, $download_type, $cart_details, $item->cart_index );
 				}
 			}
-
-			$increase_earnings = $item->total;
-
-			$fees = $order->get_fees();
-			foreach ( $fees as $fee ) {
-				if ( $fee->total > 0 ) {
-					continue;
-				}
-
-				$increase_earnings += $fee->total;
-			}
-
-			// Increase the earnings for this download ID
-			edd_increase_earnings( $item->product_id, $increase_earnings );
-			edd_increase_purchase_count( $item->product_id, $item->quantity );
 		}
 
 		// Clear the total earnings cache
@@ -148,7 +158,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 	}
 
 	// Ensure this action only runs once ever
-	if ( empty( $completed_date ) || '0000-00-00 00:00:00' === $completed_date ) {
+	if ( empty( $completed_date ) ) {
 		$date = EDD()->utils->date()->format( 'mysql' );
 
 		$date_refundable = edd_get_refund_date( $date );
@@ -239,31 +249,10 @@ function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
 
 	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );
 	$payment->update_meta( '_edd_complete_actions_run', time() ); // This is in GMT
-	do_action( 'edd_after_payment_actions', $payment_id );
+
+	do_action( 'edd_after_payment_actions', $payment_id, $payment, new EDD_Customer( $payment->customer_id ) );
 }
 add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
-
-/**
- * Record payment status change
- *
- * @since 1.4.3
- * @param int $payment_id the ID number of the payment
- * @param string $new_status the status of the payment, probably "publish"
- * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @return void
- */
-function edd_record_status_change( $payment_id, $new_status, $old_status ) {
-
-	// Get the list of statuses so that status in the payment note can be translated
-	$stati      = edd_get_payment_statuses();
-	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
-	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
-
-	$status_change = sprintf( __( 'Status changed from %s to %s', 'easy-digital-downloads' ), $old_status, $new_status );
-
-	edd_insert_payment_note( $payment_id, $status_change );
-}
-add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
 
 /**
  * Flushes the current user's purchase history transient when a payment status
@@ -305,7 +294,7 @@ function edd_update_old_payments_with_totals( $data ) {
 
 	$payments = edd_get_payments( array(
 		'offset' => 0,
-		'number' => -1,
+		'number' => 9999999,
 		'mode'   => 'all',
 	) );
 
@@ -341,7 +330,7 @@ function edd_mark_abandoned_orders() {
 
 	$args = array(
 		'status' => 'pending',
-		'number' => -1,
+		'number' => 9999999,
 		'output' => 'edd_payments',
 	);
 
@@ -515,14 +504,16 @@ function edd_recover_payment() {
 
 		// Recover any item specific fees.
 		if ( ! empty( $download['fees'] ) ) {
-			foreach ( $download['fees'] as $fee ) {
+			foreach ( $download['fees'] as $key => $fee ) {
+				$fee['id'] = ! empty( $fee['id'] ) ? $fee['id'] : $key;
 				EDD()->fees->add_fee( $fee );
 			}
 		}
 	}
 
 	// Recover any global fees.
-	foreach ( $payment->fees as $fee ) {
+	foreach ( $payment->fees as $key => $fee ) {
+		$fee['id'] = ! empty( $fee['id'] ) ? $fee['id'] : $key;
 		EDD()->fees->add_fee( $fee );
 	}
 
@@ -537,7 +528,7 @@ function edd_recover_payment() {
 
 	EDD()->session->set( 'edd_resume_payment', $payment->ID );
 
-	$redirect_args = array( 'payment-mode' => $payment->gateway );
+	$redirect_args = array( 'payment-mode' => urlencode( $payment->gateway ) );
 	$redirect      = add_query_arg( $redirect_args, edd_get_checkout_uri() );
 	edd_redirect( $redirect );
 }
@@ -582,7 +573,7 @@ function edd_recovery_force_login_fields() {
 			<div class="edd-alert edd-alert-info">
 				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
 				<p>
-					<a href="<?php echo wp_lostpassword_url(); ?>" title="<?php _e( 'Lost Password', 'easy-digital-downloads' ); ?>">
+					<a href="<?php echo esc_url( edd_get_lostpassword_url() ); ?>" title="<?php esc_attr_e( 'Lost Password', 'easy-digital-downloads' ); ?>">
 						<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
 					</a>
 				</p>

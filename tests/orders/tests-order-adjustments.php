@@ -564,4 +564,42 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 
 		$this->assertCount( 5, $order_adjustments );
 	}
+
+	/**
+	 * @covers ::edd_add_order_adjustment
+	 */
+	public function test_order_adjustment_with_null_type_id_returns_null() {
+		$adjustment_id = edd_add_order_adjustment( array(
+			'object_id'   => 1,
+			'object_type' => 'order',
+			'type_id'     => null,
+			'type'        => 'fee',
+			'description' => 'Custom Fee',
+			'subtotal'    => 5.00,
+			'tax'         => 0.00,
+			'total'       => 5.00,
+		) );
+		$adjustment = edd_get_order_adjustment( $adjustment_id );
+
+		$this->assertNull( $adjustment->type_id );
+	}
+
+	/**
+	 * @covers ::edd_add_order_adjustment
+	 */
+	public function test_order_adjustment_with_no_type_key_returns_null() {
+		$adjustment_id = edd_add_order_adjustment( array(
+			'object_id'   => 1,
+			'object_type' => 'order',
+			'type_id'     => null,
+			'type'        => 'fee',
+			'description' => 'Custom Fee',
+			'subtotal'    => 5.00,
+			'tax'         => 0.00,
+			'total'       => 5.00,
+		) );
+		$adjustment = edd_get_order_adjustment( $adjustment_id );
+
+		$this->assertNull( $adjustment->type_key );
+	}
 }

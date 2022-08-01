@@ -66,7 +66,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  * @since 1.8 Refactored to be a wrapper for EDD_Payments_Query.
  *
  * @param array $args Arguments passed to get payments.
- * @return EDD_Payment[] $payments Payments retrieved from the database.
+ * @return EDD_Payment[]|int $payments Payments retrieved from the database.
  */
 function edd_get_payments( $args = array() ) {
 	$args     = apply_filters( 'edd_get_payments_args', $args );
@@ -152,7 +152,7 @@ function edd_insert_payment( $order_data = array() ) {
  *
  * @return bool True if the status was updated successfully, false otherwise.
  */
-function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
+function edd_update_payment_status( $order_id = 0, $new_status = 'complete' ) {
 	return edd_update_order_status( $order_id, $new_status );
 }
 
@@ -184,18 +184,11 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	$customer = edd_get_customer( $customer_id );
 
 	// Only decrease earnings if they haven't already been decreased (or were never increased for this payment).
-	if ( 'revoked' === $status || 'publish' === $status ) {
+	if ( 'revoked' === $status || 'complete' === $status ) {
 		edd_decrease_total_earnings( $amount );
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
-
-		if ( $customer && $customer->id && $update_customer ) {
-
-			// Decrement the stats for the customer
-			$customer->decrease_purchase_count();
-			$customer->decrease_value( $amount );
-		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
@@ -220,6 +213,10 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 				edd_delete_file_download_log( $log->id );
 			}
 		}
+	}
+
+	if ( $customer && $customer->id && $update_customer ) {
+		$customer->recalculate_stats();
 	}
 
 	do_action( 'edd_payment_deleted', $payment_id );
@@ -256,73 +253,8 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 		return false;
 	}
 
-	$payment = edd_get_payment( $order_id );
-
-	$cart_details = $payment->cart_details;
-	$user_info    = $payment->user_info;
-
 	// Refund the order.
-	$new_order_id = edd_refund_order( $order_id );
-
-	if ( is_array( $cart_details ) ) {
-
-		// Loop through each cart item.
-		foreach ( $cart_details as $item ) {
-
-			// Get the item's price.
-			$amount = isset( $item['price'] )
-				? $item['price']
-				: false;
-
-			// Decrease earnings/sales and fire action once per quantity number.
-			for ( $i = 0; $i < $item['quantity']; $i++ ) {
-
-				// Handle variable priced downloads.
-				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
-					$price_id = isset( $item['item_number']['options']['price_id'] )
-						? $item['item_number']['options']['price_id']
-						: null;
-
-					$amount = ! isset( $item['price'] ) && 0 !== $item['price']
-						? edd_get_price_option_amount( $item['id'], $price_id )
-						: $item['price'];
-				}
-
-				if ( ! $amount ) {
-					// This function is only used on payments with near 1.0 cart data structure.
-					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
-				}
-			}
-
-			if ( ! empty( $item['fees'] ) ) {
-				foreach ( $item['fees'] as $fee ) {
-
-					// Only let negative fees affect the earnings.
-					if ( $fee['amount'] > 0 ) {
-						continue;
-					}
-
-					$amount += $fee['amount'];
-				}
-			}
-
-			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_earnings ) {
-
-				// Decrease earnings.
-				edd_decrease_earnings( $item['id'], $amount );
-			}
-
-			$maybe_decrease_sales = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_sales ) {
-
-				// Decrease purchase count.
-				edd_decrease_purchase_count( $item['id'], $item['quantity'] );
-			}
-		}
-	}
-
-	return $new_order_id;
+	return edd_refund_order( $order_id );
 }
 
 /**
@@ -348,6 +280,7 @@ function edd_count_payments( $args = array() ) {
 		'end-date'   => null,
 		'download'   => null,
 		'gateway'    => null,
+		'type'       => 'sale',
 	) );
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
@@ -414,6 +347,10 @@ function edd_count_payments( $args = array() ) {
 		$where .= $wpdb->prepare( ' AND edd_o.gateway = %s', sanitize_text_field( $args['gateway'] ) );
 	}
 
+	if ( ! empty( $args['type'] ) ) {
+		$where .= $wpdb->prepare( ' AND edd_o.type = %s', sanitize_text_field( $args['type'] ) );
+	}
+
 	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
 		$date_parts = explode( '/', $args['start-date'] );
 		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
@@ -461,7 +398,7 @@ function edd_count_payments( $args = array() ) {
 	$counts = $wpdb->get_results( $query, ARRAY_A );
 
 	// Here for backwards compatibility.
-	$statuses = get_post_stati();
+	$statuses = array_merge( get_post_stati(), edd_get_payment_status_keys() );
 	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
 		unset( $statuses['private'] );
 	}
@@ -555,18 +492,14 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	}
 
 	if ( true === $return_label ) {
-		return edd_get_payment_status_label( $status );
+		$status = edd_get_payment_status_label( $status );
 	} else {
-		$statuses = edd_get_payment_statuses();
-
-		// Account that our 'publish' status is labeled 'Complete'
-		$post_status = $order->is_complete()
-			? 'Completed'
-			: $status;
-
-		// Make sure we're matching cases, since they matter
-		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ), true );
+		$keys      = edd_get_payment_status_keys();
+		$found_key = array_search( strtolower( $status ), $keys );
+		$status    = false !== $found_key && array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
 	}
+
+	return ! empty( $status ) ? $status : false;
 }
 
 /**
@@ -578,7 +511,8 @@ function edd_get_payment_status( $order, $return_label = false ) {
  * @return bool|mixed
  */
 function edd_get_payment_status_label( $status = '' ) {
-	$default  = ucwords( $status );
+	$default  = str_replace( '_', ' ', $status );
+	$default  = ucwords( $default );
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
@@ -602,13 +536,14 @@ function edd_get_payment_status_label( $status = '' ) {
  */
 function edd_get_payment_statuses() {
 	return apply_filters( 'edd_payment_statuses', array(
-		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
-		'processing' => __( 'Processing', 'easy-digital-downloads' ),
-		'publish'    => __( 'Completed',  'easy-digital-downloads' ),
-		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
-		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
-		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
-		'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' )
+		'pending'            => __( 'Pending',    'easy-digital-downloads' ),
+		'processing'         => __( 'Processing', 'easy-digital-downloads' ),
+		'complete'           => __( 'Completed',  'easy-digital-downloads' ),
+		'refunded'           => __( 'Refunded',   'easy-digital-downloads' ),
+		'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
+		'revoked'            => __( 'Revoked',    'easy-digital-downloads' ),
+		'failed'             => __( 'Failed',     'easy-digital-downloads' ),
+		'abandoned'          => __( 'Abandoned',  'easy-digital-downloads' )
 	) );
 }
 
@@ -638,15 +573,17 @@ function edd_get_payment_status_keys() {
 function edd_is_payment_complete( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
-	$ret = false;
+	$ret    = false;
+	$status = null;
 
 	if ( $order ) {
+		$status = $order->status;
 		if ( (int) $order_id === (int) $order->id && $order->is_complete() ) {
 			$ret = true;
 		}
 	}
 
-	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $order->status );
+	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $status );
 }
 
 /**
@@ -657,9 +594,9 @@ function edd_is_payment_complete( $order_id = 0 ) {
  * @return int $count Total sales
  */
 function edd_get_total_sales() {
-	$payments = edd_count_payments();
+	$payments = edd_count_payments( array( 'type' => 'sale' ) );
 
-	return $payments->revoked + $payments->publish;
+	return $payments->revoked + $payments->complete;
 }
 
 /**
@@ -688,7 +625,7 @@ function edd_get_total_earnings( $include_taxes = true ) {
 			$total = $wpdb->get_var( "
 				SELECT SUM(total) {$exclude_taxes_sql} AS total
 				FROM {$wpdb->edd_orders}
-				WHERE status IN ('publish', 'revoked')
+				WHERE status IN ('complete', 'revoked')
 			" );
 
 			$total = (float) edd_number_not_negative( (float) $total );
@@ -879,23 +816,24 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 
 				foreach ( $products as $product_id ) {
 					$cart_details[] = array(
-						'id'          => $product_id,
-						'name'        => get_the_title( $product_id ),
-						'item_number' => array(
+						'id'            => $product_id,
+						'name'          => get_the_title( $product_id ),
+						'item_number'   => array(
 							'id'      => $product_id,
 							'options' => array(),
 						),
-						'price'       => 0,
-						'subtotal'    => 0,
-						'quantity'    => 1,
-						'tax'         => 0,
-						'in_bundle'   => 1,
-						'parent'      => array(
+						'price'         => 0,
+						'subtotal'      => 0,
+						'quantity'      => 1,
+						'tax'           => 0,
+						'in_bundle'     => 1,
+						'parent'        => array(
 							'id'      => $cart_item['id'],
 							'options' => isset( $cart_item['item_number']['options'] )
 								? $cart_item['item_number']['options']
 								: array(),
 						),
+						'order_item_id' => $cart_item['order_item_id'],
 					);
 				}
 			}
@@ -1263,15 +1201,15 @@ function edd_get_next_payment_number() {
  * @return string  The new order number without prefix and postfix.
  */
 function edd_remove_payment_prefix_postfix( $number ) {
-	$prefix  = edd_get_option( 'sequential_prefix' );
-	$postfix = edd_get_option( 'sequential_postfix' );
+	$prefix  = (string) edd_get_option( 'sequential_prefix' );
+	$postfix = (string) edd_get_option( 'sequential_postfix' );
 
 	// Remove prefix
 	$number = preg_replace( '/' . $prefix . '/', '', $number, 1 );
 
 	// Remove the postfix
 	$length      = strlen( $number );
-	$postfix_pos = strrpos( $number, $postfix );
+	$postfix_pos = strrpos( $number, strval( $postfix ) );
 	if ( false !== $postfix_pos ) {
 		$number = substr_replace( $number, '', $postfix_pos, $length );
 	}
@@ -1295,9 +1233,7 @@ function edd_remove_payment_prefix_postfix( $number ) {
  * @return string $amount Fully formatted payment amount
  */
 function edd_payment_amount( $order_id = 0 ) {
-	$amount = edd_get_payment_amount( $order_id );
-
-	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( edd_get_payment_amount( $order_id ), edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1348,7 +1284,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
 function edd_payment_subtotal( $order_id = 0 ) {
 	$subtotal = edd_get_payment_subtotal( $order_id );
 
-	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $subtotal, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1390,7 +1326,7 @@ function edd_get_payment_subtotal( $order_id = 0 ) {
 function edd_payment_tax( $order_id = 0, $payment_meta = null ) {
 	$tax = edd_get_payment_tax( $order_id, false );
 
-	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $tax, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1544,10 +1480,8 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '', $a
 			'order'       => 'ASC',
 		) ) );
 
-		if ( $transaction_ids ) {
-			$transaction_id = $transaction_ids[0];
-
-			return edd_update_order_transaction( $transaction_id, array(
+		if ( $transaction_ids && isset( $transaction_ids[0] ) ) {
+			return edd_update_order_transaction( $transaction_ids[0], array(
 				'transaction_id' => $transaction_id,
 				'gateway'        => $order->gateway,
 				'total'          => $amount,
@@ -1654,6 +1588,11 @@ function edd_get_payment_notes( $order_id = 0, $search = '' ) {
  * @return int|false The new note ID, false otherwise.
  */
 function edd_insert_payment_note( $order_id = 0, $note = '' ) {
+
+	// Sanitize note contents
+	if ( ! empty( $note ) ) {
+		$note = trim( wp_kses( $note, edd_get_allowed_tags() ) );
+	}
 
 	// Bail if no order ID or note.
 	if ( empty( $order_id ) || empty( $note ) ) {
@@ -1893,3 +1832,140 @@ function edd_filter_where_older_than_week( $where = '' ) {
 
 	return $where;
 }
+
+/**
+ * Gets the payment ID from the final edd_payment post.
+ * This was set as an option when the custom orders table was created.
+ * For internal use only.
+ *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0
+ * @return false|int
+ */
+function _edd_get_final_payment_id() {
+	return get_option( 'edd_v3_migration_pending', false );
+}
+
+/**
+ * Evaluates whether the EDD 3.0 migration should be run,
+ * based on _any_ data existing which will need to be migrated.
+ *
+ * This should only be run after `edd_v30_is_migration_complete` has returned false.
+ *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0.2
+ * @return bool
+ */
+function _edd_needs_v3_migration() {
+	// Return true if a final payment ID was recorded.
+	if ( _edd_get_final_payment_id() ) {
+		return true;
+	}
+
+	// Return true if any tax rates were saved.
+	$tax_rates = get_option( 'edd_tax_rates', array() );
+	if ( ! empty( $tax_rates ) ) {
+		return true;
+	}
+
+	// Return true if a fallback tax rate was saved.
+	if ( edd_get_option( 'tax_rate', false ) ) {
+		return true;
+	}
+
+	global $wpdb;
+
+	// Return true if any discounts were saved.
+	$discounts = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->posts}
+			 WHERE post_type = %s
+			 LIMIT 1",
+			esc_sql( 'edd_discount' )
+		)
+	);
+	if ( ! empty( $discounts ) ) {
+		return true;
+	}
+
+	// Return true if there are any customers.
+	$customers = $wpdb->get_results(
+		"SELECT *
+		FROM {$wpdb->edd_customers}
+		LIMIT 1"
+	);
+	if ( ! empty( $customers ) ) {
+		return true;
+	}
+
+	// Return true if any customer email addresses were saved.
+	$customer_emails = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->edd_customermeta}
+			 WHERE meta_key = %s
+			 LIMIT 1",
+			esc_sql( 'additional_email' )
+		)
+	);
+	if ( ! empty( $customer_emails ) ) {
+		return true;
+	}
+
+	// Return true if any customer addresses are in the user meta table.
+	$customer_addresses = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->usermeta}
+			 WHERE meta_key = %s
+			 ORDER BY umeta_id ASC
+			 LIMIT 1",
+			esc_sql( '_edd_user_address' )
+		)
+	);
+	if ( ! empty( $customer_addresses ) ) {
+		return true;
+	}
+
+	// Return true if there are any EDD logs (not sales) saved.
+	$logs = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT p.*, t.slug
+			 FROM {$wpdb->posts} AS p
+			 LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+			 LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+			 LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+			 WHERE p.post_type = %s AND t.slug != %s
+			 GROUP BY p.ID
+			 LIMIT 1",
+			esc_sql( 'edd_log' ),
+			esc_sql( 'sale' )
+		)
+	);
+	if ( ! empty( $logs ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Maybe adds a migration in progress notice to the order history.
+ *
+ * @todo remove in 3.1
+ * @since 3.0
+ * @return void
+ */
+add_action( 'edd_pre_order_history', function( $orders, $user_id ) {
+	if ( ! _edd_get_final_payment_id() ) {
+		return;
+	}
+	?>
+	<p class="edd-notice">
+		<?php esc_html_e( 'A store migration is in progress. Past orders will not appear in your purchase history until they have been updated.', 'easy-digital-downloads' ); ?>
+	</p>
+	<?php
+}, 10, 2 );

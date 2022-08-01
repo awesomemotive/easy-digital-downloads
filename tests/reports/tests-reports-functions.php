@@ -43,13 +43,6 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$registry = EDD()->utils->get_registry( 'reports' );
 		$registry->exchangeArray( array() );
 
-		// Clear filters.
-		$filters = array_keys( get_filters() );
-
-		foreach ( $filters as $filter ) {
-			clear_filter( $filter );
-		}
-
 		parent::tearDown();
 	}
 
@@ -280,7 +273,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Reports\get_filters()
 	 */
 	public function test_get_filters_should_return_records_for_all_official_filters() {
-		$expected = array( 'dates', 'products', 'taxes', 'gateways', 'discounts', 'regions', 'countries' );
+		$expected = array( 'dates', 'products', 'product_categories', 'taxes', 'gateways', 'discounts', 'regions', 'countries', 'currencies' );
 
 		$this->assertEqualSets( $expected, array_keys( get_filters() ) );
 	}
@@ -311,11 +304,14 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_filter_value_with_a_valid_filter_should_retrieve_that_filters_value() {
 		$expected = array(
-			'from' => date( 'Y-m-d H:i:s' ),
-			'to'   => date( 'Y-m-d H:i:s' ),
+			'from'  => date( 'Y-m-d 00:00:00' ),
+			'to'    => date( 'Y-m-d 23:59:59' ),
+			'range' => 'today',
 		);
 
-		set_filter_value( 'dates', $expected );
+		$_GET['range']       = 'today';
+		$_GET['filter_from'] = $expected['from'];
+		$_GET['filter_to']   = $expected['to'];
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
@@ -326,6 +322,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_dates_filter_options_should_match_defaults() {
 		$expected = array(
+			'other'        => __( 'Custom', 'easy-digital-downloads' ),
 			'today'        => __( 'Today', 'easy-digital-downloads' ),
 			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
 			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
@@ -337,9 +334,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
 			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
 			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
-			'other'        => __( 'Custom', 'easy-digital-downloads' )
 		);
-		
+
 		$this->assertEqualSetsWithIndex( $expected, get_dates_filter_options() );
 	}
 
@@ -349,9 +345,9 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_dates_filter_should_return_strings() {
 		$expected = array(
-			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
-			'range' => 'last_30_days',
+			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'range' => 'this_month',
 		);
 
 		$result = get_dates_filter();
@@ -390,7 +386,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_month',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_month' );
+		$result = parse_dates_for_range( 'this_month' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -405,12 +401,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_last_month_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
+			'start' => self::$date->copy()->subMonthNoOverflow( 1 )->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->subMonthNoOverflow( 1 )->endOfMonth()->toDateTimeString(),
 			'range' => 'last_month',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_month' );
+		$result = parse_dates_for_range( 'last_month' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -423,14 +419,36 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
+	public function test_parse_dates_for_range_with_overflow_last_month_range_should_return_those_dates() {
+		$overflow_day  = '2020-03-30 00:00:00';
+		$overflow_date = EDD()->utils->date( $overflow_day );
+
+		$expected = array(
+			'start' => ( new \DateTime( '2020-02-01 00:00:00' ) )->format( 'Y-m-d H:i' ),
+			'end'   => ( new \DateTime( '2020-02-29 23:59:59' ) )->format( 'Y-m-d H:i' ),
+			'range' => 'last_month',
+		);
+
+		$result = parse_dates_for_range( 'last_month', $overflow_day );
+
+		// Explicitly strip seconds in case the test is slow.
+		$result = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers \EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
+	 */
 	public function test_parse_dates_for_range_with_today_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->setTimezone( edd_get_timezone_id() )->startOfDay()->setTimezone( 'UTC' ),
+			'end'   => self::$date->copy()->setTimezone( edd_get_timezone_id() )->endOfDay()->setTimezone( 'UTC' ),
 			'range' => 'today',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'today' );
+		$result = parse_dates_for_range( 'today' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -445,12 +463,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_yesterday_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->subDay( 1 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->subDay( 1 )->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->startOfDay()->setTimezone( 'UTC' ),
+			'end'   => self::$date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->endOfDay()->setTimezone( 'UTC' ),
 			'range' => 'yesterday',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'yesterday' );
+		$result = parse_dates_for_range( 'yesterday' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -470,7 +488,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_week',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_week' );
+		$result = parse_dates_for_range( 'this_week' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -490,7 +508,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_week',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_week' );
+		$result = parse_dates_for_range( 'last_week' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -510,7 +528,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_30_days',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_30_days' );
+		$result = parse_dates_for_range( 'last_30_days' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -530,7 +548,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_quarter',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_quarter' );
+		$result = parse_dates_for_range( 'this_quarter' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -550,7 +568,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_quarter',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_quarter' );
+		$result = parse_dates_for_range( 'last_quarter' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -570,7 +588,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_year',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_year' );
+		$result = parse_dates_for_range( 'this_year' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -590,7 +608,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_year',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_year' );
+		$result = parse_dates_for_range( 'last_year' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -607,10 +625,11 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$dates = array(
 			'from'  => self::$date->copy()->subCentury( 2 )->startOfDay()->toDateTimeString(),
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
-			'range' => 'other',
 		);
 
-		set_filter_value( 'dates', $dates );
+		$_GET['range']       = 'other';
+		$_GET['filter_from'] = $dates['from'];
+		$_GET['filter_to']   = $dates['to'];
 
 		$expected = array(
 			'start' => $dates['from'],
@@ -618,7 +637,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'other',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'other' );
+		$result = parse_dates_for_range( 'other' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -631,14 +650,14 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Reports\parse_dates_for_range()
 	 * @group edd_dates
 	 */
-	public function test_parse_dates_for_range_with_invalid_range_no_report_id_no_range_var_should_use_last_30_days() {
+	public function test_parse_dates_for_range_with_invalid_range_no_report_id_no_range_var_should_use_this_month() {
 		$expected = array(
-			'start' => self::$date->copy()->subDay( 30 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
-			'range' => 'last_30_days',
+			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'range' => 'this_month',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'fake' );
+		$result = parse_dates_for_range( 'fake' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -652,7 +671,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_no_preset_range_should_defualt_to_last_30_days() {
-		$this->assertSame( 'last_30_days', get_dates_filter_range() );
+		$this->assertSame( 'this_month', get_dates_filter_range() );
 	}
 
 	/**
@@ -660,113 +679,43 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_non_default_range_set_should_return_that_reports_range() {
-		$filter_key = get_filter_key( 'dates' );
-
-		set_filter_value( 'dates', array(
-			'range' => 'last_quarter',
-		) );
+		$_GET['range'] = 'last_quarter';
 
 		$this->assertSame( 'last_quarter', get_dates_filter_range() );
 	}
 
-	/**
-	 * @covers \EDD\Reports\get_filter_key
-	 */
-	public function test_get_filter_key_should_begin_with_reports() {
-		$this->assertRegExp( '/^reports/', get_filter_key( 'dates' ) );
-	}
-
-	/**
-	 * @covers \EDD\Reports\get_filter_key
-	 */
-	public function test_get_filter_key_should_contain_the_filter_name() {
-		$filter = 'dates';
-
-		$this->assertRegExp( "/filter-{$filter}/", get_filter_key( $filter ) );
-	}
-
-	/**
-	 * @covers \EDD\Reports\get_filter_key
-	 */
-	public function test_get_filter_key_should_contain_the_current_site_id() {
-		$site = get_current_blog_id();
-
-		$this->assertRegExp( "/site-{$site}/", get_filter_key( 'dates' ) );
-	}
-
-	/**
-	 * @covers \EDD\Reports\get_filter_key
-	 */
-	public function test_get_filter_key_should_contain_the_current_user_id() {
-		$user = get_current_user_id();
-
-		$this->assertRegExp( "/user-{$user}/", get_filter_key( 'dates' ) );
-	}
-
-	/**
-	 * @covers \EDD\Reports\get_filter_key
-	 */
-	public function test_get_filter_key_should_contain_reports_the_filter_the_site_and_the_user() {
-		$filter = 'dates';
-		$site   = get_current_blog_id();
-		$user   = get_current_user_id();
-
-		$expected = "reports:filter-{$filter}:site-{$site}:user-{$user}";
-
-		$this->assertSame( $expected, get_filter_key( $filter ) );
-	}
-
-	/**
-	 * @covers \EDD\Reports\set_filter_value
-	 */
-	public function test_set_filter_key_with_invalid_filter_should_not_set_filter() {
-		set_filter_value( 'foo', 'bar' );
-
-		$this->assertSame( '', get_filter_value( 'foo' ) );
-	}
-
-	/**
-	 * @covers \EDD\Reports\set_filter_value
-	 */
-	public function test_set_filter_value_with_valid_filter_should_set_it() {
-		$dates = array(
-			'from' => date( 'Y-m-d H:i:s' ),
-			'to'   => date( 'Y-m-d H:i:s' ),
-		);
-
-		set_filter_value( 'dates', $dates );
-
-		$this->assertEqualSetsWithIndex( $dates, get_filter_value( 'dates' ) );
-	}
-
-	/**
-	 * @covers \EDD\Reports\clear_filter
-	 */
-	public function test_clear_filter_should_default_to_last_30_days() {
-		$dates = array(
-			'from' => date( 'Y-m-d H:i:s' ),
-			'to'   => date( 'Y-m-d H:i:s' ),
-		);
-
-		// Set the dates filter so there's something to clear.
-		set_filter_value( 'dates', $dates );
-
-		$this->assertEqualSetsWithIndex( $dates, get_filter_value( 'dates' ) );
-
-		// Clear it.
-		clear_filter( 'dates' );
-
+	public function test_no_filters_should_default_to_this_month() {
 		// Default to last 30 days for filter value.
-		$date  = EDD()->utils->date( 'now' );
-		$dates = parse_dates_for_range( $date, 'last_30_days' );
+		$dates = parse_dates_for_range( 'this_month' );
 
 		$expected = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
 			'to'    => $dates['end']->format( 'Y-m-d' ),
-			'range' => 'last_30_days',
+			'range' => 'this_month',
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
+	}
+
+	public function test_gross_order_status() {
+		$expected = array(
+			'complete',
+			'refunded',
+			'partially_refunded',
+			'revoked',
+		);
+
+		$this->assertSame( $expected, edd_get_gross_order_statuses() );
+	}
+
+	public function test_net_order_status() {
+		$expected = array(
+			'complete',
+			'partially_refunded',
+			'revoked',
+		);
+
+		$this->assertSame( $expected, edd_get_net_order_statuses() );
 	}
 
 	/**

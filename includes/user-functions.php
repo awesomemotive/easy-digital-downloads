@@ -43,8 +43,8 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		if ( strpos( $status, ',' ) ) {
 			$status = explode( ',', $status );
 		} else {
-			$status = 'complete' === $status
-				? 'publish'
+			$status = 'publish' === $status
+				? 'complete'
 				: $status;
 
 			$status = array( $status );
@@ -100,7 +100,11 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  *
  * @return WP_Post[]|false Array of products, false otherwise.
  */
-function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
+function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
+
+	if ( $status === 'publish' ) {
+		$status = 'complete';
+	}
 
 	// Fall back to user ID
 	if ( empty( $user ) ) {
@@ -126,7 +130,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
 	}
 
 	// Fetch the order IDs
-	$number = apply_filters( 'edd_users_purchased_products_payments', 9999 );
+	$number = apply_filters( 'edd_users_purchased_products_payments', 9999999 );
 
 	$order_ids = edd_get_orders( array(
 		'customer_id' => $customer->id,
@@ -164,7 +168,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
  * @since 3.0 Refactored to be more efficient.
  *
  * @param int   $user_id   User ID.
- * @param array $downloads Download IDs to check against.
+ * @param array|int $downloads Download IDs to check against.
  * @param int $variable_price_id - the variable price ID to check for
  *
  * @return bool True if purchased, false otherwise.
@@ -184,8 +188,6 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 	 */
 	do_action( 'edd_has_user_purchased_before', $user_id, $downloads, $variable_price_id );
 
-	$return = false;
-
 	if ( ! is_array( $downloads ) ) {
 		$downloads = array( $downloads );
 	}
@@ -195,7 +197,7 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 		return false;
 	}
 
-	$number = $wpdb->prepare( '%d', apply_filters( 'edd_users_purchased_products_payments', 9999 ) );
+	$number = apply_filters( 'edd_users_purchased_products_payments', 9999999 );
 
 	$where_id   = "'" . implode( "', '", $wpdb->_escape( $downloads ) ) . "'";
 	$product_id = "oi.product_id IN ({$where_id})";
@@ -205,13 +207,16 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 		: '';
 
 	// Perform a direct database query as it is more efficient.
-	$sql = "
+	$sql = $wpdb->prepare("
 		SELECT COUNT(o.id) AS count
 		FROM {$wpdb->edd_orders} o
 		INNER JOIN {$wpdb->edd_order_items} oi ON o.id = oi.order_id
 		WHERE {$product_id} {$price_id}
-		LIMIT {$number}
-	";
+		AND user_id = %d
+		LIMIT %d",
+		absint( $user_id ),
+		$number
+	);
 
 	$result = (int) $wpdb->get_var( $sql );
 
@@ -242,6 +247,10 @@ function edd_has_purchases( $user_id = null ) {
 	// Maybe fallback to logged in user.
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
+	}
+
+	if ( empty( $user_id ) ) {
+		return false;
 	}
 
 	$count = edd_count_orders( array( 'user_id' => $user_id ) );
@@ -313,7 +322,7 @@ function edd_count_purchases_of_customer( $user = null ) {
 function edd_purchase_total_of_user( $user = null ) {
 	$stats = edd_get_purchase_stats_by_user( $user );
 
-	return $stats['total_spent'];
+	return isset( $stats['total_spent'] ) ? $stats['total_spent'] : 0.00;
 }
 
 /**
@@ -321,48 +330,44 @@ function edd_purchase_total_of_user( $user = null ) {
  * given) has downloaded
  *
  * @since       1.3
+ * @since       3.0 Updated to use edd_count_file_download_logs.
  * @param       mixed $user - ID or email
  * @return      int - The total number of files the user has downloaded
  */
 function edd_count_file_downloads_of_user( $user ) {
-	global $edd_logs;
 
 	// If we got an email, look up the customer ID and call the direct query
 	// for customer download counts.
 	if ( is_email( $user ) ) {
 		return edd_count_file_downloads_of_customer( $user );
-
-	} else {
-		$meta_query = array(
-			array(
-				'key'     => '_edd_log_user_id',
-				'value'   => $user
-			)
-		);
 	}
 
-	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+	$customer = edd_get_customer_by( 'user_id', $user );
+
+	return ! empty( $customer->id ) ? edd_count_file_download_logs(
+		array(
+			'customer_id' => $customer->id,
+		)
+	) : 0;
 }
 
 /**
  * Counts the total number of files a customer has downloaded.
  *
+ * @since unknown
+ * @since 3.0     Updated to use edd_count_file_download_logs.
  * @param string|int $customer_id_or_email The email address or id of the customer.
  *
  * @return int The total number of files the customer has downloaded.
  */
 function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
-	global $edd_logs;
+	$customer = new EDD_Customer( $customer_id_or_email );
 
-	$customer   = new EDD_Customer( $customer_id_or_email );
-	$meta_query = array(
+	return edd_count_file_download_logs(
 		array(
-			'key'   => '_edd_log_customer_id',
-			'value' => $customer->id,
+			'customer_id' => $customer->id,
 		)
 	);
-
-	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
 }
 
 /**
@@ -374,7 +379,8 @@ function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
  */
 function edd_validate_username( $username ) {
 	$sanitized = sanitize_user( $username, false );
-	$valid = ( $sanitized == $username );
+	$valid     = ( $sanitized == $username );
+
 	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
 }
 
@@ -584,11 +590,11 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
 	if( $emails->html ) {
 
-		$user_message .= '<a href="' . $login_url . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+		$user_message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &rarr;</a>' . "\r\n";
 
 	} else {
 
-		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), $login_url ) . "\r\n";
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), esc_url( $login_url ) ) . "\r\n";
 
 	}
 
@@ -685,7 +691,7 @@ function edd_get_user_verification_url( $user_id = 0 ) {
 
 	$base_url = add_query_arg( array(
 		'edd_action' => 'verify_user',
-		'user_id'    => $user_id,
+		'user_id'    => absint( $user_id ),
 		'ttl'        => strtotime( '+24 hours' )
 	), untrailingslashit( edd_get_user_verification_page() ) );
 
@@ -745,11 +751,14 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$message    = sprintf(
-		__( "Hello %s,\n\nYour account with %s needs to be verified before you can access your purchase history. <a href='%s'>Click here</a> to verify your account.\n\nLink missing? Visit the following URL: %s", 'easy-digital-downloads' ),
+		__( 'Hello %1$s,
+
+		Your account with %2$s needs to be verified before you can access your purchase history. <a href="%3$s">Click here</a> to verify your account.
+
+		Link missing? Visit the following URL: %3$s', 'easy-digital-downloads' ),
 		$name,
 		$from_name,
-		$url,
-		$url
+		esc_url_raw( $url )
 	);
 
 	$message    = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
@@ -871,7 +880,7 @@ function edd_validate_user_verification_token( $url = '' ) {
 
 			$link_text = sprintf(
 				__( 'Sorry but your account verification link has expired. <a href="%s">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ),
-				edd_get_user_verification_request_url()
+				esc_url( edd_get_user_verification_request_url() )
 			);
 
 			wp_die( apply_filters( 'edd_verification_link_expired_text', $link_text ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
@@ -1017,7 +1026,8 @@ add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
  */
 function edd_show_user_api_key_field( $user ) {
 
-	if ( get_current_user_id() !== $user->ID ) {
+	// Bail if no user, or user ID is not current user
+	if ( empty( $user ) || ( get_current_user_id() !== $user->ID ) ) {
 		return;
 	}
 
@@ -1114,7 +1124,7 @@ function edd_show_user_api_key_field( $user ) {
 					$sitename = get_bloginfo( 'name' );
 					$ios_url  = 'edd://new?sitename=' . $sitename . '&siteurl=' . home_url() . '&key=' . $public_key . '&token=' . $token;
 					?>
-					<a class="button-secondary" href="<?php echo $ios_url; ?>"><?php _e( 'Add to iOS App', 'easy-digital-downloads' ); ?></a>
+					<a class="button button-secondary" href="<?php echo esc_url( $ios_url ); ?>"><?php esc_html_e( 'Add to iOS App', 'easy-digital-downloads' ); ?></a>
 				</td>
 			</tr>
 			</tbody>

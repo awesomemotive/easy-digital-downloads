@@ -29,7 +29,7 @@ final class Customer_Addresses extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_customer_addresses';
+	protected $name = 'customer_addresses';
 
 	/**
 	 * Database version
@@ -38,7 +38,7 @@ final class Customer_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 202004051;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,7 +48,9 @@ final class Customer_Addresses extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807270003' => 201807270003,
+		'201906251' => 201906251,
+		'202002141' => 202002141,
+		'202004051' => 202004051,
 	);
 
 	/**
@@ -61,45 +63,87 @@ final class Customer_Addresses extends Table {
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			customer_id bigint(20) unsigned NOT NULL default '0',
+			is_primary tinyint(1) signed NOT NULL default '0',
 			type varchar(20) NOT NULL default 'billing',
 			status varchar(20) NOT NULL default 'active',
+			name mediumtext NOT NULL,
 			address mediumtext NOT NULL,
 			address2 mediumtext NOT NULL,
 			city mediumtext NOT NULL,
 			region mediumtext NOT NULL,
 			postal_code varchar(32) NOT NULL default '',
 			country mediumtext NOT NULL,
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
-			KEY customer (customer_id),
+			KEY customer_is_primary (customer_id, is_primary),
 			KEY type (type(20)),
 			KEY status (status(20)),
 			KEY date_created (date_created)";
 	}
 
 	/**
-	 * Upgrade to version 201807270003
-	 * - Add the `uuid` varchar column
+	 * Upgrade to version 201906251
+	 * - Add the `name` mediumtext column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201906251() {
 
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
+		$result = $this->column_exists( 'name' );
 
-		// Maybe add column
 		if ( false === $result ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
+				ALTER TABLE {$this->table_name} ADD COLUMN `name` mediumtext AFTER `status`;
 			" );
 		}
 
-		// Return success/fail
 		return $this->is_success( $result );
 	}
+
+	/**
+	 * Upgrade to version 202002141
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202002141() {
+
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		return $this->is_success( $result );
+
+	}
+
+	/**
+	 * Upgrade to version 202004051
+	 * - Update the customer physical address table to have `is_primary`
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202004051() {
+
+		$result = $this->column_exists( 'is_primary' );
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `is_primary` tinyint SIGNED NOT NULL default '0' AFTER `customer_id`;
+			" );
+		}
+
+		return $this->is_success( $result );
+	}
+
 }

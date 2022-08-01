@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 
 	/**
+	 * Log type
+	 *
+	 * @var string
+	 */
+	protected $log_type = 'api_requests';
+
+	/**
 	 * Get things started
 	 *
 	 * @since 1.5
@@ -70,7 +77,12 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		return $item[ $column_name ];
+		switch ( $column_name ) {
+			case 'ip':
+				return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
+			default:
+				return $item[ $column_name ];
+		}
 	}
 
 	/**
@@ -82,8 +94,8 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function column_details( $item ) {
 	?>
-		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo $item['ID']; ?>" class="thickbox"><?php _e( 'View Request', 'easy-digital-downloads' ); ?></a>
-		<div id="log-details-<?php echo $item['ID']; ?>" style="display:none;">
+		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo esc_attr( $item['ID'] ); ?>" class="thickbox"><?php esc_html_e( 'View Request', 'easy-digital-downloads' ); ?></a>
+		<div id="log-details-<?php echo absint( $item['ID'] ); ?>" style="display:none;">
 			<?php
 
 			$request = $item['request'];
@@ -103,61 +115,6 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 			?>
 		</div>
 	<?php
-	}
-
-	/**
-	 * Gets the meta query for the log query
-	 *
-	 * This is used to return log entries that match our search query
-	 *
-	 * @since 1.5
-	 * @return array $meta_query
-	 */
-	function get_meta_query() {
-		$meta_query = array();
-
-		$search = $this->get_search();
-
-		if ( $search ) {
-			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-				// This is an IP address search
-				$key = '_edd_log_request_ip';
-			} else if ( is_email( $search ) ) {
-				// This is an email search
-				$userdata = get_user_by( 'email', $search );
-
-				if( $userdata ) {
-					$search = $userdata->ID;
-				}
-
-				$key = '_edd_log_user';
-			} elseif( strlen( $search ) == 32 ) {
-				// Look for an API key
-				$key = '_edd_log_key';
-			} elseif( stristr( $search, 'token:' ) ) {
-				// Look for an API token
-				$search = str_ireplace( 'token:', '', $search );
-				$key = '_edd_log_token';
-			} else {
-				// This is (probably) a user ID search
-				$userdata = get_userdata( $search );
-
-				if( $userdata ) {
-					$search = $userdata->ID;
-				}
-
-				$key = '_edd_log_user';
-			}
-
-			// Setup the meta query
-			$meta_query[] = array(
-				'key'     => $key,
-				'value'   => $search,
-				'compare' => '=',
-			);
-		}
-
-		return $meta_query;
 	}
 
 	/**

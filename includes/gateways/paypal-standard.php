@@ -9,6 +9,8 @@
  * @since       1.0
  */
 
+use EDD\Orders\Order;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -30,7 +32,9 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
  * @return array                    Gateway subsections with PayPal Standard
  */
 function edd_register_paypal_gateway_section( $gateway_sections ) {
-	$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+	if ( \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
+		$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+	}
 
 	return $gateway_sections;
 }
@@ -44,6 +48,9 @@ add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_secti
  * @return array                    Gateway tab settings with the PayPal Standard settings
  */
 function edd_register_paypal_gateway_settings( $gateway_settings ) {
+	if ( ! \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
+		return $gateway_settings;
+	}
 
 	$paypal_settings = array(
 		'paypal_email' => array(
@@ -64,7 +71,7 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 	$pdt_desc = sprintf(
 		__( 'Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'easy-digital-downloads' ),
-		'http://docs.easydigitaldownloads.com/article/918-paypal-standard'
+		'https://docs.easydigitaldownloads.com/article/918-paypal-standard'
 	);
 
 	$paypal_settings['paypal_identify_token'] = array(
@@ -77,7 +84,7 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 	$desc  = sprintf(
 		__( 'If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
-		'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
+		'https://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
 	);
 
 	$paypal_settings['disable_paypal_verification'] = array(
@@ -194,10 +201,13 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		EDD()->session->set( 'edd_resume_payment', $payment );
 
 		// Get the success url
-		$return_url = add_query_arg( array(
+		$return_url = add_query_arg(
+			array(
 				'payment-confirmation' => 'paypal',
-				'payment-id' => $payment
-			), get_permalink( edd_get_option( 'success_page', false ) ) );
+				'payment-id'           => urlencode( $payment ),
+			),
+			get_permalink( edd_get_option( 'success_page', false ) )
+		);
 
 		// Get the PayPal redirect uri
 		$paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
@@ -216,10 +226,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'charset'       => get_bloginfo( 'charset' ),
 			'custom'        => $payment,
 			'rm'            => '2',
-			'return'        => $return_url,
-			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
-			'notify_url'    => $listener_url,
-			'image_url'     => edd_get_paypal_image_url(),
+			'return'        => esc_url_raw( $return_url ),
+			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $payment ) ) ),
+			'notify_url'    => esc_url_raw( $listener_url ),
+			'image_url'     => esc_url_raw( edd_get_paypal_image_url() ),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);
@@ -284,12 +294,21 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			}
 		}
 
+		$price_before_discount = $purchase_data['price'];
 		if ( $discounted_amount > '0' ) {
 			$paypal_args['discount_amount_cart'] = edd_sanitize_amount( $discounted_amount );
+
+			/*
+			 * Add the discounted amount back onto the price to get the "price before discount". We do this
+			 * to avoid double applying any discounts below.
+			 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6837
+			 */
+			$price_before_discount += $paypal_args['discount_amount_cart'];
 		}
 
-		if ( $paypal_sum > $purchase_data['price'] ) {
-			$difference = round( $paypal_sum - $purchase_data['price'], 2 );
+		// Check if there are any additional discounts we need to add that we haven't already accounted for.
+		if( $paypal_sum > $price_before_discount ) {
+			$difference = round( $paypal_sum - $price_before_discount, 2 );
 			if ( ! isset( $paypal_args['discount_amount_cart'] ) ) {
 				$paypal_args['discount_amount_cart'] = 0;
 			}
@@ -313,11 +332,29 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Fix for some sites that encode the entities
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
 
-		// Redirect to PayPal
+		// Allow paypal as a redirect destination.
+		add_filter( 'allowed_redirect_hosts', 'edd_allow_redirect_to_paypal', 10 );
+
+		// Redirect to PayPal.
 		edd_redirect( $paypal_redirect );
 	}
 }
 add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
+
+/**
+ * Add paypal.com to the list of allowed hosts that wp_safe_redirect can redirect to.
+ *
+ * @since 3.0
+ * @param array $redirects - The list of urls that wp_safe_redirect can redirect to.
+ * @return array
+ */
+function edd_allow_redirect_to_paypal( $redirects ) {
+	$redirects[] = 'www.sandbox.paypal.com';
+	$redirects[] = 'sandbox.paypal.com';
+	$redirects[] = 'www.paypal.com';
+	$redirects[] = 'paypal.com';
+	return $redirects;
+}
 
 /**
  * Listens for a PayPal IPN requests and then sends to the processing function
@@ -536,7 +573,10 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
 
 	// Collect payment details
-	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
+	$purchase_key = isset( $data['invoice'] ) ? $data['invoice'] : false;
+	if ( ! $purchase_key && ! empty( $data['item_number'] ) ) {
+		$purchase_key = $data['item_number'];
+	}
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
@@ -603,6 +643,19 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 	}
 
+	if( empty( $customer ) ) {
+
+		$customer = new EDD_Customer( $payment->customer_id );
+
+	}
+
+	// Record the payer email on the EDD_Customer record if it is different than the email entered on checkout
+	if( ! empty( $data['payer_email'] ) && ! in_array( strtolower( $data['payer_email'] ), array_map( 'strtolower', $customer->emails ) ) ) {
+
+		$customer->add_email( strtolower( $data['payer_email'] ) );
+
+	}
+
 	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {
 
 		// Process a refund
@@ -610,7 +663,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 	} else {
 
-		if ( get_post_status( $payment_id ) == 'publish' ) {
+		if ( edd_get_payment_status( $payment_id ) == 'complete' ) {
 			return; // Only complete payments once
 		}
 
@@ -638,7 +691,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $data['txn_id'] ) );
 			edd_set_payment_transaction_id( $payment_id, $data['txn_id'], number_format( (float) $paypal_amount, 2 ) );
-			edd_update_payment_status( $payment_id, 'publish' );
+			edd_update_payment_status( $payment_id, 'complete' );
 
 		} else if ( 'pending' == $payment_status && isset( $data['pending_reason'] ) ) {
 
@@ -890,7 +943,18 @@ function edd_paypal_process_pdt_on_return() {
 		return;
 	}
 
-	$payment = new EDD_Payment( $payment_id );
+	$purchase_session = edd_get_purchase_session();
+	$payment          = new EDD_Payment( $payment_id );
+
+	// If there is no purchase session, don't try and fire PDT.
+	if ( empty( $purchase_session ) ) {
+		return;
+	}
+
+	// Do not fire a PDT verification if the purchase session does not match the payment-id PDT is asking to verify.
+	if ( ! empty( $purchase_session['purchase_key'] ) && $payment->key !== $purchase_session['purchase_key'] ) {
+		return;
+	}
 
 	if ( $token && ! empty( $_GET['tx'] ) && $payment->ID > 0 ) {
 
@@ -923,17 +987,95 @@ function edd_paypal_process_pdt_on_return() {
 		$debug_args['body']['at'] = str_pad( substr( $debug_args['body']['at'], -6 ), strlen( $debug_args['body']['at'] ), '*', STR_PAD_LEFT );
 		edd_debug_log( 'Attempting to verify PayPal payment with PDT. Args: ' . print_r( $debug_args, true ) );
 
-		$request = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
+		edd_debug_log( 'Sending PDT Verification request to ' . edd_get_paypal_redirect() );
+
+		$request = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
 
 		if ( ! is_wp_error( $request ) ) {
 
 			$body = wp_remote_retrieve_body( $request );
 
-			if ( false !== strpos( $body, 'SUCCESS' ) ) {
+			// parse the data
+			$lines = explode( "\n", trim( $body ) );
+			$data  = array();
+			if ( strcmp ( $lines[0], "SUCCESS" ) == 0 ) {
 
-				// Purchase verified, set to completed
-				$payment->status = 'publish';
+				for ( $i = 1; $i < count( $lines ); $i++ ) {
+					$parsed_line = explode( "=", $lines[ $i ],2 );
+					$data[ urldecode( $parsed_line[0] ) ] = urldecode( $parsed_line[1] );
+				}
+
+				if ( isset( $data['mc_gross'] ) ) {
+
+					$total = $data['mc_gross'];
+
+				} else if ( isset( $data['payment_gross'] ) ) {
+
+					$total = $data['payment_gross'];
+
+				} else if ( isset( $_REQUEST['amt'] ) ) {
+
+					$total = $_REQUEST['amt'];
+
+				} else {
+
+					$total = null;
+
+				}
+
+				if ( is_null( $total ) ) {
+
+					edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to payment total missing' );
+					$payment->add_note( __( 'Payment could not be verified while validating PayPal PDT. Missing payment total fields.', 'easy-digital-downloads' ) );
+					$payment->status = 'pending';
+
+				} elseif ( (float) $total < (float) $payment->total ) {
+
+					/**
+					 * Here we account for payments that are less than the expected results only. There are times that
+					 * PayPal will sometimes round and have $0.01 more than the amount. The goal here is to protect store owners
+					 * from getting paid less than expected.
+					 */
+					edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to payment total discrepancy' );
+					$payment->add_note( sprintf( __( 'Payment failed while validating PayPal PDT. Amount expected: %f. Amount Received: %f', 'easy-digital-downloads' ), $payment->total, $data['payment_gross'] ) );
+					$payment->status = 'failed';
+
+				} else {
+
+					// Verify the status
+					switch( strtolower( $data['payment_status'] ) ) {
+
+						case 'completed':
+							$payment->status = 'complete';
+							break;
+
+						case 'failed':
+							$payment->status = 'failed';
+							break;
+
+						default:
+							$payment->status = 'pending';
+							break;
+
+					}
+
+				}
+
 				$payment->transaction_id = sanitize_text_field( $_GET['tx'] );
+				$payment->save();
+
+			} elseif ( strcmp ( $lines[0], "FAIL" ) == 0 ) {
+
+				edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to PDT failure response: ' . print_r( $body, true ) );
+				$payment->add_note( __( 'Payment failed while validating PayPal PDT.', 'easy-digital-downloads' ) );
+				$payment->status = 'failed';
+				$payment->save();
+
+			} else {
+
+				edd_debug_log( 'Attempt to verify PayPal payment with PDT met with an unexpected result: ' . print_r( $body, true ) );
+				$payment->add_note( __( 'PayPal PDT encountered an unexpected result, payment set to pending', 'easy-digital-downloads' ) );
+				$payment->status = 'pending';
 				$payment->save();
 
 			}
@@ -982,10 +1124,10 @@ add_filter( 'edd_get_payment_transaction_id-paypal', 'edd_paypal_get_payment_tra
  */
 function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 
-	$payment = new EDD_Payment( $payment_id );
-	$sandbox = 'test' == $payment->mode ? 'sandbox.' : '';
-	$paypal_base_url = 'https://www.' . $sandbox . 'paypal.com/webscr?cmd=_history-details-from-hub&id=';
-	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
+	$payment         = new EDD_Payment( $payment_id );
+	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
+	$paypal_base_url = 'https://' . $sandbox . 'paypal.com/activity/payment/';
+	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
 
 	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );
 
@@ -993,22 +1135,20 @@ function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 add_filter( 'edd_payment_details_transaction_id-paypal', 'edd_paypal_link_transaction_id', 10, 2 );
 
 /**
- * Shows checkbox to automatically refund payments made in PayPal.
+ * Shows a checkbox to automatically refund payments in PayPal.
  *
- * @since  2.6.0
+ * @param Order $order
  *
- * @param int $payment_id The current payment ID.
+ * @since 3.0
  * @return void
  */
-function edd_paypal_refund_admin_js( $payment_id = 0 ) {
-
-	// If not the proper gateway, return early.
-	if ( 'paypal' !== edd_get_payment_gateway( $payment_id ) ) {
+function edd_paypal_refund_checkbox( Order $order ) {
+	if ( 'paypal' !== $order->gateway ) {
 		return;
 	}
 
 	// If our credentials are not set, return early.
-	$key       = edd_get_payment_meta( $payment_id, '_edd_payment_mode', true );
+	$key       = $order->mode;
 	$username  = edd_get_option( 'paypal_' . $key . '_api_username' );
 	$password  = edd_get_option( 'paypal_' . $key . '_api_password' );
 	$signature = edd_get_option( 'paypal_' . $key . '_api_signature' );
@@ -1016,103 +1156,131 @@ function edd_paypal_refund_admin_js( $payment_id = 0 ) {
 	if ( empty( $username ) || empty( $password ) || empty( $signature ) ) {
 		return;
 	}
-
-	// Localize the refund checkbox label.
-	$label = __( 'Refund Payment in PayPal', 'easy-digital-downloads' );
-
 	?>
-	<script type="text/javascript">
-		jQuery(document).ready(function($) {
-			$('select[name=edd-payment-status]').change(function() {
-				if ( 'refunded' === $(this).val() ) {
-					$(this).parent().parent().append('<input type="checkbox" id="edd-paypal-refund" name="edd-paypal-refund" value="1" style="margin-top:0">');
-					$(this).parent().parent().append('<label for="edd-paypal-refund"><?php echo $label; ?></label>');
-				} else {
-					$('#edd-paypal-refund').remove();
-					$('label[for="edd-paypal-refund"]').remove();
-				}
-			});
-		});
-	</script>
+	<div class="edd-form-group edd-paypal-refund-transaction">
+		<div class="edd-form-group__control">
+			<input type="checkbox" id="edd-paypal-refund" name="edd-paypal-refund" class="edd-form-group__input" value="1">
+			<label for="edd-paypal-refund" class="edd-form-group__label">
+				<?php esc_html_e( 'Refund transaction in PayPal', 'easy-digital-downloads' ); ?>
+			</label>
+		</div>
+	</div>
 	<?php
 }
-add_action( 'edd_view_order_details_before', 'edd_paypal_refund_admin_js', 100 );
+add_action( 'edd_after_submit_refund_table', 'edd_paypal_refund_checkbox' );
 
 /**
- * Possibly refunds a payment made with PayPal Standard or PayPal Express.
+ * If selected, refunds a transaction in PayPal when creating a new refund record.
  *
- * @since  2.6.0
+ * @param int $order_id ID of the order we're processing a refund for.
+ * @param int $refund_id ID of the newly created refund record.
+ * @param bool $all_refunded Whether or not this was a full refund.
  *
- * @param object|EDD_Payment $payment The current payment ID.
- * @return void
+ * @since 3.0
  */
-function edd_maybe_refund_paypal_purchase( EDD_Payment $payment ) {
-
-
-	if ( ! current_user_can( 'edit_shop_payments', $payment->ID ) ) {
+function edd_paypal_maybe_refund_transaction( $order_id, $refund_id, $all_refunded ) {
+	if ( ! current_user_can( 'edit_shop_payments', $order_id ) ) {
 		return;
 	}
 
-	if ( empty( $_POST['edd-paypal-refund'] ) ) {
+	if ( empty( $_POST['data'] ) ) {
 		return;
 	}
 
-	$processed = $payment->get_meta( '_edd_paypal_refunded', true );
-
-	// If the status is not set to "refunded", return early.
-	if ( 'publish' !== $payment->old_status && 'revoked' !== $payment->old_status ) {
+	$order = edd_get_order( $order_id );
+	if ( empty( $order->gateway ) || 'paypal' !== $order->gateway ) {
 		return;
 	}
 
-	// If not PayPal/PayPal Express, return early.
-	if ( 'paypal' !== $payment->gateway ) {
+	// Get our data out of the serialized string.
+	parse_str( $_POST['data'], $form_data );
+
+	if ( empty( $form_data['edd-paypal-refund'] ) ) {
+		edd_add_note( array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+			'user_id'     => is_admin() ? get_current_user_id() : 0,
+			'content'     => __( 'Transaction not refunded in PayPal, as checkbox was not selected.', 'easy-digital-downloads' )
+		) );
+
 		return;
 	}
 
-	// If the payment has already been refunded in the past, return early.
-	if ( $processed ) {
+	$refund = edd_get_order( $refund_id );
+	if ( empty( $refund->total ) ) {
 		return;
 	}
 
-	// Process the refund in PayPal.
-	edd_refund_paypal_purchase( $payment );
-
+	edd_refund_paypal_purchase( $order, $refund );
 }
-add_action( 'edd_pre_refund_payment', 'edd_maybe_refund_paypal_purchase', 999 );
+add_action( 'edd_refund_order', 'edd_paypal_maybe_refund_transaction', 10, 3 );
 
 /**
  * Refunds a purchase made via PayPal.
  *
  * @since  2.6.0
  *
- * @param object|int $payment The payment ID or object to refund.
+ * @param EDD_Payment|Order|int $payment_id_or_object The ID or object of the order to refund.
+ * @param Order|null            $refund_object        Optional. The refund object associated with this
+ *                                                    transaction refund. If provided, then the refund
+ *                                                    amount is used as the transaction refund amount (used for
+ *                                                    partial refunds), and an EDD transaction record will be
+ *                                                    inserted.
+ *
  * @return void
  */
-function edd_refund_paypal_purchase( $payment ) {
+function edd_refund_paypal_purchase( $payment_id_or_object, $refund_object = null ) {
+	/*
+	 * Internally we want to work with an Order object, but we also need
+	 * an EDD_Payment object for backwards compatibility in the hooks.
+	 */
+	$order = $payment = false;
+	if ( $payment_id_or_object instanceof Order ) {
+		$order   = $payment_id_or_object;
+		$payment = edd_get_payment( $order->id );
+	} elseif ( $payment_id_or_object instanceof EDD_Payment ) {
+		$payment = $payment_id_or_object;
+		$order   = edd_get_order( $payment_id_or_object->ID );
+	} elseif ( is_numeric( $payment_id_or_object ) ) {
+		$order   = edd_get_order( $payment_id_or_object );
+		$payment = edd_get_payment( $payment_id_or_object );
+	}
 
-	if ( ! $payment instanceof EDD_Payment && is_numeric( $payment ) ) {
-		$payment = new EDD_Payment( $payment );
+	if ( empty( $order ) || ! $order instanceof Order ) {
+		return;
 	}
 
 	// Set PayPal API key credentials.
 	$credentials = array(
-		'api_endpoint'  => 'test' == $payment->mode ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
-		'api_username'  => edd_get_option( 'paypal_' . $payment->mode . '_api_username' ),
-		'api_password'  => edd_get_option( 'paypal_' . $payment->mode . '_api_password' ),
-		'api_signature' => edd_get_option( 'paypal_' . $payment->mode . '_api_signature' )
+		'api_endpoint'  => 'test' == $order->mode ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
+		'api_username'  => edd_get_option( 'paypal_' . $order->mode . '_api_username' ),
+		'api_password'  => edd_get_option( 'paypal_' . $order->mode . '_api_password' ),
+		'api_signature' => edd_get_option( 'paypal_' . $order->mode . '_api_signature' )
 	);
 
 	$credentials = apply_filters( 'edd_paypal_refund_api_credentials', $credentials, $payment );
 
 	$body = array(
-		'USER' 			=> $credentials['api_username'],
-		'PWD'  			=> $credentials['api_password'],
-		'SIGNATURE' 	=> $credentials['api_signature'],
+		'USER'          => $credentials['api_username'],
+		'PWD'           => $credentials['api_password'],
+		'SIGNATURE'     => $credentials['api_signature'],
 		'VERSION'       => '124',
 		'METHOD'        => 'RefundTransaction',
-		'TRANSACTIONID' => $payment->transaction_id,
+		'TRANSACTIONID' => $order->get_transaction_id(),
 		'REFUNDTYPE'    => 'Full'
 	);
+
+	// If a refund object is supplied, let's check if this should be a partial refund instead.
+	if ( $refund_object instanceof Order && abs( $refund_object->total ) !== abs( $order->total ) ) {
+		$body['REFUNDTYPE'] = 'Partial';
+		$body['AMT']        = abs( $refund_object->total );
+
+		/* Translators: %d - order ID number; %s - formatted refund amount */
+		edd_debug_log( sprintf( 'Processing partial PayPal refund for order #%d. Amount: %s.', $order->id, edd_currency_filter( $refund_object->total, $refund_object->currency ) ) );
+	} else {
+		/* Translators: %d - order ID number */
+		edd_debug_log( sprintf( 'Processing full PayPal refund for order #%d.', $order->id ) );
+	}
 
 	$body = apply_filters( 'edd_paypal_refund_body_args', $body, $payment );
 
@@ -1143,19 +1311,9 @@ function edd_refund_paypal_purchase( $payment ) {
 
 	} else {
 
-		$body    = wp_remote_retrieve_body( $request );
-		$code    = wp_remote_retrieve_response_code( $request );
-		$message = wp_remote_retrieve_response_message( $request );
+		$body = wp_remote_retrieve_body( $request );
 		if ( is_string( $body ) ) {
 			wp_parse_str( $body, $body );
-		}
-
-		if ( empty( $code ) || 200 !== (int) $code ) {
-			$success = false;
-		}
-
-		if ( empty( $message ) || 'OK' !== $message ) {
-			$success = false;
 		}
 
 		if ( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
@@ -1173,14 +1331,48 @@ function edd_refund_paypal_purchase( $payment ) {
 
 	if ( $success ) {
 
-		// Prevents the PayPal Express one-time gateway from trying to process the refundl
-		$payment->update_meta( '_edd_paypal_refunded', true );
-		$payment->add_note( sprintf( __( 'PayPal refund transaction ID: %s', 'easy-digital-downloads' ), $body['REFUNDTRANSACTIONID'] ) );
+		edd_update_order_meta( $order->id, '_edd_paypal_refunded', true );
+
+		// Add a note to the original order, and, if provided, the new refund object.
+		if ( isset( $body['GROSSREFUNDAMT'] ) ) {
+			/* Translators: %1$s - amount refunded; %2$s - transaction ID. */
+			$note_message = sprintf( __( '%1$s refunded in PayPal. Transaction ID: %2$s', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $body['GROSSREFUNDAMT'] ) ), esc_html( $body['REFUNDTRANSACTIONID'] ) );
+		} else {
+			/* Translators: %s - transaction ID. */
+			$note_message = sprintf( __( 'PayPal refund transaction ID: %s', 'easy-digital-downloads' ), esc_html( $body['REFUNDTRANSACTIONID'] ) );
+		}
+		$note_object_ids = array( $order->id );
+		if ( $refund_object instanceof Order ) {
+			$note_object_ids[] = $refund_object->id;
+		}
+		foreach ( $note_object_ids as $note_object_id ) {
+			edd_add_note( array(
+				'object_id'   => $note_object_id,
+				'object_type' => 'order',
+				'user_id'     => is_admin() ? get_current_user_id() : 0,
+				'content'     => $note_message
+			) );
+		}
+
+		// Add a negative transaction.
+		if ( $refund_object instanceof Order && isset( $body['REFUNDTRANSACTIONID'] ) && isset( $body['GROSSREFUNDAMT'] ) ) {
+			edd_add_order_transaction( array(
+				'object_id'      => $refund_object->id,
+				'object_type'    => 'order',
+				'transaction_id' => sanitize_text_field( $body['REFUNDTRANSACTIONID'] ),
+				'gateway'        => 'paypal',
+				'status'         => 'complete',
+				'total'          => edd_negate_amount( $body['GROSSREFUNDAMT'] )
+			) );
+		}
 
 	} else {
-
-		$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'easy-digital-downloads' ), $error_msg ) );
-
+		edd_add_note( array(
+			'object_id'   => $order->id,
+			'object_type' => 'order',
+			'user_id'     => is_admin() ? get_current_user_id() : 0,
+			'content'     => sprintf( __( 'PayPal refund failed: %s', 'easy-digital-downloads' ), $error_msg )
+		) );
 	}
 
 	// Run hook letting people know the payment has been refunded successfully.

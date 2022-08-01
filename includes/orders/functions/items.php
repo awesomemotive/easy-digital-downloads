@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Item Functions
+ * Order Item Functions.
  *
  * @package     EDD
  * @subpackage  Orders
@@ -17,7 +17,38 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @param array $data
+ * @param array $data {
+ *     Array of order item data. Default empty.
+ *
+ *     The `date_created` and `date_modified` parameters do not need to be passed.
+ *     They will be automatically populated if empty.
+ *
+ *     @type int      $parent        Parent ID. Only used when creating refunds to link
+ *                                   a refund order item to the original order item.
+ *                                   Default 0.
+ *     @type int      $order_id      Order ID. Default 0.
+ *     @type int      $product_id    Product ID of the order item purchased. ID
+ *                                   refers to the download in the `wp_posts` table.
+ *                                   Default 0.
+ *     @type string   $product_name  Name of the order item. Default empty.
+ *     @type int|null $price_id      ID of the price option purchased. Default null (no price ID).
+ *     @type int      $cart_index    Position of the order item in the cart.
+ *                                   Default 0.
+ *     @type string   $type          Order item type. Default `download`.
+ *     @type string   $status        Status of the order item. Default `pending`.
+ *     @type int      $quantity      Quantity purchased of the order item. Default 0.
+ *     @type float    $amount        Amount for the order item. Default 0.
+ *     @type float    $subtotal      Subtotal of the order item. Default 0.
+ *     @type float    $discount      Discount applied to the order item. Default 0.
+ *     @type float    $tax           Tax applied to the order item. Default 0.
+ *     @type float    $total         Item total. Default 0.
+ *     @type string   $date_created  Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order item was inserted.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string   $date_modified Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order item was last modified.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ * }
  * @return int|false ID of newly created order, false on error.
  */
 function edd_add_order_item( $data = array() ) {
@@ -29,9 +60,9 @@ function edd_add_order_item( $data = array() ) {
 	}
 
 	// Instantiate a query object
-	$orders = new EDD\Database\Queries\Order_Item();
+	$order_items = new EDD\Database\Queries\Order_Item();
 
-	return $orders->add_item( $data );
+	return $order_items->add_item( $data );
 }
 
 /**
@@ -40,12 +71,12 @@ function edd_add_order_item( $data = array() ) {
  * @since 3.0
  *
  * @param int $order_item_id Order item ID.
- * @return int
+ * @return int|false `1` if the item was deleted successfully, false on error.
  */
 function edd_delete_order_item( $order_item_id = 0 ) {
-	$orders = new EDD\Database\Queries\Order_Item();
+	$order_items = new EDD\Database\Queries\Order_Item();
 
-	return $orders->delete_item( $order_item_id );
+	return $order_items->delete_item( $order_item_id );
 }
 
 /**
@@ -54,13 +85,39 @@ function edd_delete_order_item( $order_item_id = 0 ) {
  * @since 3.0
  *
  * @param int   $order_item_id Order item ID.
- * @param array $data          Updated file download order data.
- * @return bool Whether or not the file download order was updated.
+ * @param array $data {
+ *     Array of order item data. Default empty.
+ *
+ *     @type int    $order_id       Order ID. Default 0.
+ *     @type int    $product_id     Product ID of the order item purchased. ID
+ *                                  refers to the download in the `wp_posts` table.
+ *                                  Default 0.
+ *     @type string $product_name   Name of the order item. Default empty.
+ *     @type int    $price_id       ID of the price option purchased. Default 0.
+ *     @type int    $cart_index     Position of the order item in the cart.
+ *                                  Default 0.
+ *     @type string $type           Order item type. Default `download`.
+ *     @type string $status         Status of the order item. Default `inherit`.
+ *     @type int    $quantity       Quantity purchased of the order item. Default 0.
+ *     @type float  $amount         Amount for the order item. Default 0.
+ *     @type float  $subtotal       Subtotal of the order item. Default 0.
+ *     @type float  $discount       Discount applied to the order item. Default 0.
+ *     @type float  $tax            Tax applied to the order item. Default 0.
+ *     @type float  $total          Item total. Default 0.
+ *     @type string $date_created   Optional. Automatically calculated on add/edit.
+ *                                  The date & time the order item was inserted.
+ *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified  Optional. Automatically calculated on add/edit.
+ *                                  The date & time the order item was last modified.
+ *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ * }
+ *
+ * @return int|false Number of rows updated if successful, false otherwise.
  */
 function edd_update_order_item( $order_item_id = 0, $data = array() ) {
-	$orders = new EDD\Database\Queries\Order_Item();
+	$order_items = new EDD\Database\Queries\Order_Item();
 
-	return $orders->update_item( $order_item_id, $data );
+	return $order_items->update_item( $order_item_id, $data );
 }
 
 /**
@@ -69,10 +126,14 @@ function edd_update_order_item( $order_item_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $order_item_id Order item ID.
- * @return EDD\Orders\Order_Item
+ * @return EDD\Orders\Order_Item|false Order_Item object if successful, false
+ *                                     otherwise.
  */
 function edd_get_order_item( $order_item_id = 0 ) {
-	return edd_get_order_item_by( 'id', $order_item_id );
+	$order_items = new EDD\Database\Queries\Order_Item();
+
+	// Return order item
+	return $order_items->get_item( $order_item_id );
 }
 
 /**
@@ -82,24 +143,27 @@ function edd_get_order_item( $order_item_id = 0 ) {
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
- * @return object
+ *
+ * @return EDD\Orders\Order_Item|false Order_Item object if successful, false
+ *                                     otherwise.
  */
 function edd_get_order_item_by( $field = '', $value = '' ) {
+	$order_items = new EDD\Database\Queries\Order_Item();
 
-	// Instantiate a query object
-	$orders = new EDD\Database\Queries\Order_Item();
-
-	// Return item
-	return $orders->get_item_by( $field, $value );
+	// Return order item
+	return $order_items->get_item_by( $field, $value );
 }
 
 /**
  * Query for order items.
  *
+ * @see \EDD\Database\Queries\Order_Item::__construct()
+ *
  * @since 3.0
  *
- * @param array $args
- * @return \EDD\Orders\Order_Item[]
+ * @param array $args Arguments. See `EDD\Database\Queries\Order_Item` for
+ *                    accepted arguments.
+ * @return \EDD\Orders\Order_Item[] Array of `Order_Item` objects.
  */
 function edd_get_order_items( $args = array() ) {
 
@@ -109,19 +173,22 @@ function edd_get_order_items( $args = array() ) {
 	) );
 
 	// Instantiate a query object
-	$orders = new EDD\Database\Queries\Order_Item();
+	$order_items = new EDD\Database\Queries\Order_Item();
 
 	// Return items
-	return $orders->query( $r );
+	return $order_items->query( $r );
 }
 
 /**
  * Count order items.
  *
+ * @see \EDD\Database\Queries\Order_Item::__construct()
+ *
  * @since 3.0
  *
- * @param array $args
- * @return int
+ * @param array $args Arguments. See `EDD\Database\Queries\Order_Item` for
+ *                    accepted arguments.
+ * @return int Number of order items returned based on query arguments passed.
  */
 function edd_count_order_items( $args = array() ) {
 
@@ -131,22 +198,26 @@ function edd_count_order_items( $args = array() ) {
 	) );
 
 	// Query for count(s)
-	$orders = new EDD\Database\Queries\Order_Item( $r );
+	$order_items = new EDD\Database\Queries\Order_Item( $r );
 
 	// Return count(s)
-	return absint( $orders->found_items );
+	return absint( $order_items->found_items );
 }
 
 /**
  * Query for and return array of order item counts, keyed by status.
  *
+ * @see \EDD\Database\Queries\Order_Item::__construct()
+ *
  * @since 3.0
  *
- * @return array
+ * @param array $args Arguments. See `EDD\Database\Queries\Order_Item` for
+ *                    accepted arguments.
+ * @return array Order items keyed by status.
  */
 function edd_get_order_item_counts( $args = array() ) {
 
-	// Parse arguments
+	// Parse args
 	$r = wp_parse_args( $args, array(
 		'order_id' => 0,
 		'count'    => true,

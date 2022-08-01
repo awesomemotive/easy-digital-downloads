@@ -12,6 +12,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Models\Download;
 /**
  * EDD_Download Class
  *
@@ -315,7 +316,7 @@ class EDD_Download {
 	 * @return bool True if download is in single price mode, false otherwise
 	 */
 	public function is_single_price_mode() {
-		$ret = get_post_meta( $this->ID, '_edd_price_options_mode', true );
+		$ret = $this->has_variable_prices() && get_post_meta( $this->ID, '_edd_price_options_mode', true );
 
 		/**
 		 * Override the price mode for a download when checking if is in single price mode.
@@ -555,7 +556,7 @@ class EDD_Download {
 	 * @return array List of bundled downloads
 	 */
 	public function get_variable_priced_bundled_downloads( $price_id = null ) {
-		if ( null == $price_id ) {
+		if ( null === $price_id ) {
 			return $this->get_bundled_downloads();
 		}
 
@@ -666,19 +667,13 @@ class EDD_Download {
 	 */
 	public function increase_sales( $quantity = 1 ) {
 
-		$quantity    = absint( $quantity );
-		$total_sales = $this->get_sales() + $quantity;
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
+		edd_recalculate_download_sales_earnings( $this->ID );
 
-		if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
+		$this->get_sales();
+		do_action( 'edd_download_increase_sales', $this->ID, $this->sales, $this );
 
-			$this->sales = $total_sales;
-
-			do_action( 'edd_download_increase_sales', $this->ID, $this->sales, $this );
-
-			return $this->sales;
-		}
-
-		return false;
+		return $this->sales;
 	}
 
 	/**
@@ -690,22 +685,13 @@ class EDD_Download {
 	 */
 	public function decrease_sales( $quantity = 1 ) {
 
-		// Only decrease if not already zero
-		if ( $this->get_sales() > 0 ) {
-			$quantity    = absint( $quantity );
-			$total_sales = $this->get_sales() - $quantity;
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
+		$this->recalculate_net_sales_earnings();
 
-			if ( $this->update_meta( '_edd_download_sales', $total_sales ) ) {
+		$this->get_sales();
+		do_action( 'edd_download_decrease_sales', $this->ID, $this->sales, $this );
 
-				$this->sales = $total_sales;
-
-				do_action( 'edd_download_decrease_sales', $this->ID, $this->sales, $this );
-
-				return $this->sales;
-			}
-		}
-
-		return false;
+		return $this->sales;
 	}
 
 	/**
@@ -738,18 +724,14 @@ class EDD_Download {
 	 * @return float New number of total earnings
 	 */
 	public function increase_earnings( $amount = 0 ) {
-		$current_earnings = $this->get_earnings();
-		$new_amount       = apply_filters( 'edd_download_increase_earnings_amount', $current_earnings + (float) $amount, $current_earnings, $amount, $this );
 
-		if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
-			$this->earnings = $new_amount;
+		_edd_deprecated_function( __METHOD__, '3.0', 'edd_recalculate_download_sales_earnings()' );
+		edd_recalculate_download_sales_earnings( $this->ID );
 
-			do_action( 'edd_download_increase_earnings', $this->ID, $this->earnings, $this );
+		$this->get_earnings();
+		do_action( 'edd_download_increase_earnings', $this->ID, $this->earnings, $this );
 
-			return $this->earnings;
-		}
-
-		return false;
+		return $this->earnings;
 	}
 
 	/**
@@ -761,22 +743,41 @@ class EDD_Download {
 	 */
 	public function decrease_earnings( $amount ) {
 
-		// Only decrease if greater than zero
-		if ( $this->get_earnings() > 0 ) {
-			$current_earnings = $this->get_earnings();
-			$new_amount       = apply_filters( 'edd_download_decrease_earnings_amount', $current_earnings - (float) $amount, $current_earnings, $amount, $this );
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
 
-			if ( $this->update_meta( '_edd_download_earnings', $new_amount ) ) {
+		$this->recalculate_net_sales_earnings();
+		$this->get_earnings();
 
-				$this->earnings = $new_amount;
+		do_action( 'edd_download_decrease_earnings', $this->ID, $this->earnings, $this );
 
-				do_action( 'edd_download_decrease_earnings', $this->ID, $this->earnings, $this );
+		return $this->earnings;
+	}
 
-				return $this->earnings;
-			}
-		}
+	/**
+	 * Updates the gross sales and earnings for a download.
+	 *
+	 * @since 3.0
+	 * @return void
+	 */
+	public function recalculate_gross_sales_earnings() {
+		$download_model = new Download( $this->ID );
 
-		return false;
+		// This currently uses the post meta functions as we do not yet guarantee that the meta exists.
+		update_post_meta( $this->ID, '_edd_download_gross_sales', $download_model->get_gross_sales() );
+		update_post_meta( $this->ID, '_edd_download_gross_earnings', floatval( $download_model->get_gross_earnings() ) );
+	}
+
+	/**
+	 * Recalculates the net sales and earnings for a download.
+	 *
+	 * @since 3.0
+	 * @return void
+	 */
+	public function recalculate_net_sales_earnings() {
+		$download_model = new Download( $this->ID );
+
+		$this->update_meta( '_edd_download_sales', intval( $download_model->get_net_sales() ) );
+		$this->update_meta( '_edd_download_earnings', floatval( $download_model->get_net_earnings() ) );
 	}
 
 	/**

@@ -7,8 +7,8 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 
 		$this->default_generation_definitions = array(
-			'status'          => 'publish',
-			'type'            => 'order',
+			'status'          => 'complete',
+			'type'            => 'sale',
 			'date_completed'  => EDD()->utils->date( 'now' )->toDateTimeString(),
 			'date_refundable' => EDD()->utils->date( 'now' )->addDays( 30 )->toDateTimeString(),
 			'user_id'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
@@ -51,6 +51,7 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 			'discount'     => 5,
 			'tax'          => 25,
 			'total'        => 120,
+			'quantity'     => 1,
 		) );
 
 		edd_add_order_adjustment( array(

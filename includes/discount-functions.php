@@ -15,7 +15,10 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add a discount.
  *
- * @since 3.0
+ * @since 1.0
+ * @since 3.0 This function has been repurposed. Previously it was an internal admin callback for adding
+ *        a discount via the UI. It's now used as a public function for inserting a new discount
+ *        into the database.
  *
  * @param array $data Discount data.
  * @return int Discount ID.
@@ -23,9 +26,21 @@ defined( 'ABSPATH' ) || exit;
 function edd_add_discount( $data = array() ) {
 
 	// Juggle requirements and products.
-	$product_requirements = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : null;
-	$excluded_products    = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : null;
-	unset( $data['product_reqs'], $data['excluded_products'] );
+	$product_requirements = isset( $data['product_reqs'] )      ? $data['product_reqs']      : null;
+	$excluded_products    = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
+	$product_condition    = isset( $data['product_condition'] ) ? $data['product_condition'] : null;
+	$pre_convert_args     = $data;
+	unset( $data['product_reqs'], $data['excluded_products'], $data['product_condition'] );
+
+	if ( isset( $data['expiration'] ) ) {
+		$data['end_date'] = $data['expiration'];
+		unset( $data['expiration'] );
+	}
+
+	if ( isset( $data['start'] ) ) {
+		$data['start_date'] = $data['start'];
+		unset( $data['start'] );
+	}
 
 	// Setup the discounts query.
 	$discounts = new EDD\Compat\Discount_Query();
@@ -37,7 +52,7 @@ function edd_add_discount( $data = array() ) {
 	if ( ! empty( $discount_id ) ) {
 
 		// Product requirements.
-		if ( ! is_null( $product_requirements ) ) {
+		if ( ! empty( $product_requirements ) ) {
 			if ( is_string( $product_requirements ) ) {
 				$product_requirements = maybe_unserialize( $product_requirements );
 			}
@@ -50,7 +65,7 @@ function edd_add_discount( $data = array() ) {
 		}
 
 		// Excluded products.
-		if ( ! is_null( $excluded_products ) ) {
+		if ( ! empty( $excluded_products ) ) {
 			if ( is_string( $excluded_products ) ) {
 				$excluded_products = maybe_unserialize( $excluded_products );
 			}
@@ -61,7 +76,26 @@ function edd_add_discount( $data = array() ) {
 				}
 			}
 		}
+
+		if ( ! empty( $product_condition ) ) {
+			edd_add_adjustment_meta( $discount_id, 'product_condition', $product_condition );
+		}
+
+		// If the end date has passed, mark the discount as expired.
+		edd_is_discount_expired( $discount_id );
 	}
+
+	/**
+	 * Fires after the discount code is inserted. This hook exists for
+	 * backwards compatibility purposes. It uses the $pre_convert_args variable
+	 * to ensure the arguments maintain backwards compatible array keys.
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $pre_convert_args Discount args.
+	 * @param int   $return Discount  ID.
+	 */
+	do_action( 'edd_post_insert_discount', $pre_convert_args, $discount_id );
 
 	// Return the new discount ID.
 	return $discount_id;
@@ -107,7 +141,10 @@ function edd_delete_discount( $discount_id = 0 ) {
  * @return \EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount( $discount_id = 0 ) {
-	return edd_get_discount_by( 'id', $discount_id );
+	$discounts = new EDD\Compat\Discount_Query();
+
+	// Return discount
+	return $discounts->get_item( $discount_id );
 }
 
 /**
@@ -116,12 +153,23 @@ function edd_get_discount( $discount_id = 0 ) {
  * @since 1.0
  * @since 2.7 Updated to use EDD_Discount object
  * @since 3.0 Updated to call use new query class.
+ * @since 3.0 Updated to include a filter.
  *
  * @param string $code Discount code.
  * @return EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_by_code( $code = '' ) {
-	return edd_get_discount_by( 'code', $code );
+	$discount = edd_get_discount_by( 'code', $code );
+
+	/**
+	 * Filters the get discount by request.
+	 *
+	 * @since 3.0
+	 *
+	 * @param \EDD_Discount $discount     Discount object.
+	 * @param string        $code 				Discount code.
+	 */
+	return apply_filters( 'edd_get_discount_by_code', $discount, $code );
 }
 
 /**
@@ -138,7 +186,7 @@ function edd_get_discount_by_code( $code = '' ) {
 function edd_get_discount_by( $field = '', $value = '' ) {
 	$discounts = new EDD\Compat\Discount_Query();
 
-	// Return item
+	// Return discount
 	return $discounts->get_item_by( $field, $value );
 }
 
@@ -176,7 +224,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 	do_action( 'edd_pre_update_discount', $data, $discount_id );
 
 	// Product requirements.
-	if ( isset( $data['product_reqs'] ) ) {
+	if ( isset( $data['product_reqs'] ) && ! empty( $data['product_reqs'] ) ) {
 		if ( is_string( $data['product_reqs'] ) ) {
 			$data['product_reqs'] = maybe_unserialize( $data['product_reqs'] );
 		}
@@ -190,10 +238,16 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		}
 
 		unset( $data['product_reqs'] );
+	} elseif ( isset( $data['product_reqs'] ) ) {
+		edd_delete_adjustment_meta( $discount_id, 'product_requirement' );
+
+		// We don't have product conditions when there are no product requirements.
+		edd_delete_adjustment_meta( $discount_id, 'product_condition' );
+		unset( $data['product_condition'] );
 	}
 
 	// Excluded products are handled differently.
-	if ( isset( $data['excluded_products'] ) ) {
+	if ( isset( $data['excluded_products'] ) && ! empty( $data['excluded_products'] ) ) {
 		if ( is_string( $data['excluded_products'] ) ) {
 			$data['excluded_products'] = maybe_unserialize( $data['excluded_products'] );
 		}
@@ -207,6 +261,13 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		}
 
 		unset( $data['excluded_products'] );
+	} elseif( isset( $data['excluded_products'] ) ) {
+		edd_delete_adjustment_meta( $discount_id, 'excluded_product' );
+	}
+
+	if ( isset( $data['product_condition'] ) ) {
+		$product_condition = sanitize_text_field( $data['product_condition'] );
+		edd_update_adjustment_meta( $discount_id, 'product_condition', $product_condition );
 	}
 
 	$discounts = new EDD\Compat\Discount_Query();
@@ -319,7 +380,7 @@ function edd_has_active_discounts() {
 
 	// Query for active discounts.
 	$discounts = edd_get_discounts( array(
-		'number' => 1,
+		'number' => 10,
 		'status' => 'active'
 	) );
 
@@ -353,7 +414,7 @@ function edd_has_active_discounts() {
  * @param int   $discount_id Discount ID.
  * @return mixed bool|int The discount ID of the discount code, or false on failure.
  */
-function edd_store_discount( $details, $discount_id = 0 ) {
+function edd_store_discount( $details, $discount_id = null ) {
 
 	// Set default return value to false.
 	$return = false;
@@ -392,30 +453,15 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 	 */
 	do_action( 'edd_pre_insert_discount', $details );
 
-	// Necessary for edd_post_insert_discount action.
-	$pre_convert_args = $details;
-
 	// Convert legacy arguments to new ones accepted by `edd_add_discount()`.
 	$details = EDD_Discount::convert_legacy_args( $details );
 
-	if ( 0 === $discount_id ) {
+	if ( null === $discount_id ) {
 		$return = (int) edd_add_discount( $details );
 	} else {
 		edd_update_discount( $discount_id, $details );
 		$return = $discount_id;
 	}
-
-	/**
-	 * Fires after the discount code is inserted. This hook exists for
-	 * backwards compatibility purposes. It uses the $pre_convert_args variable
-	 * to ensure the arguments maintain backwards compatible array keys
-	 *
-	 * @since 2.7
-	 *
-	 * @param array $pre_convert_args Discount args.
-	 * @param int   $return           Discount ID.
-	 */
-	do_action( 'edd_post_insert_discount', $pre_convert_args, $return );
 
 	return $return;
 }
@@ -465,7 +511,7 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
 
 	// Try to update status.
 	if ( ! empty( $discount->id ) ) {
-		$updated = edd_update_discount( $discount->id, array(
+		$updated = (bool) edd_update_discount( $discount->id, array(
 			'status' => $new_status
 		) );
 	}
@@ -488,7 +534,7 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
 function edd_discount_exists( $discount_id ) {
 	$discount = edd_get_discount( $discount_id );
 
-	return $discount->exists();
+	return $discount instanceof EDD_Discount && $discount->exists();
 }
 
 /**
@@ -506,6 +552,10 @@ function edd_discount_exists( $discount_id ) {
  */
 function edd_is_discount_active( $discount_id = 0, $update = true, $set_error = true ) {
 	$discount = edd_get_discount( $discount_id );
+
+	if ( ! $discount instanceof EDD_Discount ) {
+		return false;
+	}
 
 	return $discount->is_active( $update, $set_error );
 }
@@ -591,7 +641,7 @@ function edd_get_discount_uses( $discount_id = 0 ) {
  * @return float $min_price Minimum purchase amount.
  */
 function edd_get_discount_min_price( $discount_id = 0 ) {
-	return edd_format_amount( edd_get_discount_field( $discount_id, 'min_cart_price' ) );
+	return edd_format_amount( edd_get_discount_field( $discount_id, 'min_charge_amount' ) );
 }
 
 /**
@@ -634,7 +684,8 @@ function edd_get_discount_type( $discount_id = 0 ) {
  */
 function edd_get_discount_excluded_products( $discount_id = 0 ) {
 	$discount = edd_get_discount( $discount_id );
-	return $discount->excluded_products;
+
+	return $discount instanceof EDD_Discount ? $discount->excluded_products : array();
 }
 
 /**
@@ -649,7 +700,8 @@ function edd_get_discount_excluded_products( $discount_id = 0 ) {
  */
 function edd_get_discount_product_reqs( $discount_id = 0 ) {
 	$discount = edd_get_discount( $discount_id );
-	return $discount->product_reqs;
+
+	return $discount instanceof EDD_Discount ? $discount->product_reqs : array();
 }
 
 /**
@@ -664,7 +716,9 @@ function edd_get_discount_product_reqs( $discount_id = 0 ) {
  * @return string Product condition.
  */
 function edd_get_discount_product_condition( $discount_id = 0 ) {
-	return edd_get_discount_field( $discount_id, 'product_condition' );
+	$discount = edd_get_discount( $discount_id );
+
+	return $discount instanceof EDD_Discount ? $discount->product_condition : '';
 }
 
 /**
@@ -678,7 +732,7 @@ function edd_get_discount_product_condition( $discount_id = 0 ) {
 function edd_get_discount_status_label( $discount_id = null ) {
 	$discount = edd_get_discount( $discount_id );
 
-	return $discount->get_status_label();
+	return $discount instanceof EDD_Discount ? $discount->get_status_label() : '';
 }
 
 /**
@@ -696,7 +750,7 @@ function edd_get_discount_status_label( $discount_id = null ) {
  * @return boolean Whether or not discount code is not global.
  */
 function edd_is_discount_not_global( $discount_id = 0 ) {
-	return ( 'global' === edd_get_discount_field( $discount_id, 'scope' ) );
+	return ( 'not_global' === edd_get_discount_field( $discount_id, 'scope' ) );
 }
 
 /**
@@ -816,7 +870,8 @@ function edd_discount_is_single_use( $discount_id = 0 ) {
  */
 function edd_discount_product_reqs_met( $discount_id = 0, $set_error = true ) {
 	$discount = edd_get_discount( $discount_id );
-	return $discount->is_product_requirements_met( $set_error );
+
+	return $discount instanceof EDD_Discount && $discount->is_product_requirements_met( $set_error );
 }
 
 /**
@@ -839,7 +894,7 @@ function edd_is_discount_used( $code = null, $user = '', $discount_id = 0, $set_
 		? edd_get_discount( $discount_id )
 		: edd_get_discount_by_code( $code );
 
-	return $discount->is_used( $user, $set_error );
+	return $discount instanceof EDD_Discount && $discount->is_used( $user, $set_error );
 }
 
 /**
@@ -875,11 +930,12 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
  * @since 3.0 Updated to call edd_get_discount_by_code()
  *
  * @param string $code Discount code.
- * @return int Discount ID.
+ * @return int|bool Discount ID, or false if discount does not exist.
  */
 function edd_get_discount_id_by_code( $code = '' ) {
 	$discount = edd_get_discount_by_code( $code );
-	return $discount->id;
+
+	return ( $discount instanceof EDD_Discount ) ? $discount->id : false;
 }
 
 /**
@@ -951,6 +1007,151 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
 	return ( 'flat' === $type )
 		? edd_currency_filter( edd_format_amount( $amount ) )
 		: edd_format_amount( $amount ) . '%';
+}
+
+/**
+ * Retrieves a discount amount for an item.
+ *
+ * Calculates an amount based on the context of other items.
+ *
+ * @since 3.0
+ *
+ * @global float $edd_flat_discount_total Track flat rate discount total for penny adjustments.
+ * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2757
+ *
+ * @param array                    $item {
+ *   Order Item data, matching Cart line item format.
+ *
+ *   @type string $id       Download ID.
+ *   @type array  $options {
+ *     Download options.
+ *
+ *     @type string $price_id Download Price ID.
+ *   }
+ *   @type int    $quantity Purchase quantity.
+ * }
+ * @param array                    $items     All items (including item being calculated).
+ * @param \EDD_Discount[]|string[] $discounts Discount to determine adjustment from.
+ *                                            A discount code can be passed as a string.
+ * @param int                      $item_unit_price (Optional) Pass in a defined price for a specific context, such as the cart.
+ * @return float Discount amount. 0 if Discount is invalid or no Discount is applied.
+ */
+function edd_get_item_discount_amount( $item, $items, $discounts, $item_unit_price = false ) {
+	global $edd_flat_discount_total;
+
+	// Validate item.
+	if ( empty( $item ) || empty( $item['id'] ) ) {
+		return 0;
+	}
+
+	if ( ! isset( $item['quantity'] ) ) {
+		return 0;
+	}
+
+	if ( ! isset( $item['options'] ) ) {
+		$item['options'] = array();
+
+		/*
+		 * Support for variable pricing when the `item_number` key is set (cart details).
+		 */
+		if ( isset( $item['item_number']['options'] ) ) {
+			$item['options'] = $item['item_number']['options'];
+		}
+	}
+
+	// Validate and normalize Discounts.
+	$discounts = array_map(
+		function( $discount ) {
+			// Convert a Discount code to a Discount object.
+			if ( is_string( $discount ) ) {
+				$discount = edd_get_discount_by_code( $discount );
+			}
+
+			if ( ! $discount instanceof \EDD_Discount ) {
+				return false;
+			}
+
+			return $discount;
+		},
+		$discounts
+	);
+
+	$discounts = array_filter( $discounts );
+
+	if ( false === $item_unit_price ) {
+		// Determine the price of the item.
+		if ( edd_has_variable_prices( $item['id'] ) ) {
+			// Mimics the original behavior of `\EDD_Cart::get_item_amount()` that
+			// does not fallback to the first Price ID if none is provided.
+			if ( ! isset( $item['options']['price_id'] ) ) {
+				return 0;
+			}
+
+			$item_unit_price = edd_get_price_option_amount( $item['id'], $item['options']['price_id'] );
+		} else {
+			$item_unit_price = edd_get_download_price( $item['id'] );
+		}
+	}
+
+	$item_amount     = ( $item_unit_price * $item['quantity'] );
+	$discount_amount = 0;
+
+	foreach ( $discounts as $discount ) {
+		$reqs              = $discount->get_product_reqs();
+		$excluded_products = $discount->get_excluded_products();
+
+		// Make sure requirements are set and that this discount shouldn't apply to the whole cart.
+		if ( ! empty( $reqs ) && 'global' !== $discount->get_scope() ) {
+			// This is a product(s) specific discount.
+			foreach ( $reqs as $download_id ) {
+				if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
+					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+				}
+			}
+		} else {
+			// This is a global cart discount.
+			if ( ! in_array( $item['id'], $excluded_products ) ) {
+				if ( 'flat' === $discount->get_type() ) {
+					// In order to correctly record individual item amounts, global flat rate discounts
+					// are distributed across all items.
+					//
+					// The discount amount is divided by the number of items in the cart and then a
+					// portion is evenly applied to each item.
+					$items_amount = 0;
+
+					foreach ( $items as $i ) {
+						if ( ! in_array( $i['id'], $excluded_products ) ) {
+							if ( edd_has_variable_prices( $i['id'] ) ) {
+								$i_amount = edd_get_price_option_amount( $i['id'], $i['options']['price_id'] );
+							} else {
+								$i_amount = edd_get_download_price( $i['id'] );
+							}
+
+							$items_amount += ( $i_amount * $i['quantity'] );
+						}
+					}
+
+					$subtotal_percent = ! empty( $items_amount ) ? ( $item_amount / $items_amount ) : 0;
+					$discount_amount += ( $discount->get_amount() * $subtotal_percent );
+
+					$edd_flat_discount_total += round( $discount_amount, edd_currency_decimal_filter() );
+
+					if ( $item['id'] === end( $items )['id'] && $edd_flat_discount_total < $discount->get_amount() ) {
+						$adjustment       = ( $discount->get_amount() - $edd_flat_discount_total );
+						$discount_amount += $adjustment;
+					}
+
+					if ( $discount_amount > $item_amount ) {
+						$discount_amount = $item_amount;
+					}
+				} else {
+					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+				}
+			}
+		}
+	}
+
+	return $discount_amount;
 }
 
 /** Cart **********************************************************************/
@@ -1106,25 +1307,44 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		return;
 	}
 
-	$html = '';
+	$html = _n( 'Discount', 'Discounts', count( $discounts ), 'easy-digital-downloads' ) . ':&nbsp;';
 
 	foreach ( $discounts as $discount ) {
-		$discount_id = edd_get_discount_id_by_code( $discount );
-		$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+		$discount_id     = edd_get_discount_id_by_code( $discount );
+		$discount_amount = 0;
+		$items           = EDD()->cart->get_contents_details();
 
-		$remove_url  = add_query_arg(
+		if ( is_array( $items ) && ! empty( $items ) ) {
+			foreach ( $items as $key => $item ) {
+				$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ), $item['item_price'] );
+			}
+		}
+
+		$type = edd_get_discount_type( $discount_id );
+		$rate = edd_format_discount_rate( $type, edd_get_discount_amount( $discount_id ) );
+
+		$remove_url = add_query_arg(
 			array(
 				'edd_action'    => 'remove_cart_discount',
-				'discount_id'   => $discount_id,
-				'discount_code' => $discount
+				'discount_id'   => urlencode( $discount_id ),
+				'discount_code' => urlencode( $discount ),
 			),
 			edd_get_checkout_uri()
 		);
 
-		$discount_html = '';
-		$discount_html .= "<span class=\"edd_discount\">\n";
-			$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
-			$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
+		$discount_html   = '';
+		$discount_html  .= "<span class=\"edd_discount\">\n";
+		$discount_amount = edd_currency_filter( edd_format_amount( $discount_amount ) );
+		$discount_html  .= "<span class=\"edd_discount_total\">{$discount}&nbsp;&ndash;&nbsp;{$discount_amount}</span>\n";
+		if ( 'percent' === $type ) {
+			$discount_html .= "<span class=\"edd_discount_rate\">($rate)</span>\n";
+		}
+		$discount_html .= sprintf(
+			'<a href="%s" data-code="%s" class="edd_discount_remove"><span class="screen-reader-text">%s</span></a>',
+			esc_url( $remove_url ),
+			esc_attr( $discount ),
+			esc_attr__( 'Remove discount', 'easy-digital-downloads' )
+		);
 		$discount_html .= "</span>\n";
 
 		$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
@@ -1281,9 +1501,9 @@ function edd_apply_preset_discount() {
 add_action( 'init', 'edd_apply_preset_discount', 999 );
 
 /**
- * Validate discount code.
- *
- * @since 3.0
+ * Validate discount code, optionally against an array of download IDs.
+ * Note: this function does not evaluate whether a current user can use the discount,
+ * or check the discount minimum cart requirement.
  *
  * @param int   $discount_id  Discount ID.
  * @param array $download_ids Array of download IDs.
@@ -1296,9 +1516,6 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 	if ( empty( $discount_id ) ) {
 		return false;
 	}
-
-	// Set discount to be invalid initially.
-	$is_valid = false;
 
 	$discount = edd_get_discount( $discount_id );
 
@@ -1320,54 +1537,32 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 		return true;
 	}
 
+	// At this point, we assume the discount is valid.
+	$is_valid = true;
+
 	$product_requirements = array_map( 'absint', $product_requirements );
 	asort( $product_requirements );
 	$product_requirements = array_filter( array_values( $product_requirements ) );
+
+	if ( ! empty( $product_requirements ) ) {
+
+		$matches = array_intersect( $product_requirements, $download_ids );
+
+		switch ( $discount->get_product_condition() ) {
+			case 'all':
+				$is_valid = count( $matches ) === count( $product_requirements );
+				break;
+			default:
+				$is_valid = 0 < count( $matches );
+		}
+	}
 
 	$excluded_products = array_map( 'absint', $excluded_products );
 	asort( $excluded_products );
 	$excluded_products = array_filter( array_values( $excluded_products ) );
 
-	if ( ! $is_valid && ! empty( $product_requirements ) ) {
-		switch ( $discount->get_product_condition() ) {
-			case 'all':
-				foreach ( $product_requirements as $download_id ) {
-					if ( empty( $download_id ) ) {
-						continue;
-					}
-
-					$download_id = absint( $download_id );
-
-					if ( ! in_array( $download_id, $download_ids, true ) ) {
-						$is_valid = false;
-						break;
-					}
-				}
-
-				break;
-			default:
-				foreach ( $product_requirements as $download_id ) {
-					if ( empty( $download_id ) ) {
-						continue;
-					}
-
-					if ( in_array( $download_id, $download_ids, true ) ) {
-						return true;
-					}
-				}
-
-				break;
-		}
-	} else {
-		$is_valid = true;
-	}
-
 	if ( ! empty( $excluded_products ) ) {
-		foreach ( $excluded_products as $download_id ) {
-			if ( in_array( $download_id, $download_ids, true ) ) {
-				$is_valid = false;
-			}
-		}
+		$is_valid = false === (bool) array_intersect( $excluded_products, $download_ids );
 	}
 
 	/**

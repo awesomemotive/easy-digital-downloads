@@ -115,18 +115,28 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertFalse( in_array( self::$order, $order_ids ) );
 	}
 
+	/**
+	 * @expectEDDeprecated EDD_Customer::increase_value
+	 */
 	public function test_increase_value_should_return_10() {
 		self::$customers[3]->increase_value( 10 );
 
 		$this->assertSame( 10.0, self::$customers[3]->purchase_value );
 	}
 
+	/**
+	 * @expectEDDeprecated EDD_Customer::increase_purchase_count
+	 */
 	public function test_increase_purchase_count_should_return_1() {
 		self::$customers[3]->increase_purchase_count();
 
 		$this->assertSame( 1, self::$customers[3]->purchase_count );
 	}
 
+	/**
+	 * @expectEDDeprecated EDD_Customer::increase_value
+	 * @expectEDDeprecated EDD_Customer::decrease_value
+	 */
 	public function test_decrease_value_should_return_90() {
 		self::$customers[4]->increase_value( 100 );
 		self::$customers[4]->decrease_value( 10 );
@@ -134,6 +144,10 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertSame( 90.0, self::$customers[4]->purchase_value );
 	}
 
+	/**
+	 * @expectEDDeprecated EDD_Customer::increase_purchase_count
+	 * @expectEDDeprecated EDD_Customer::decrease_purchase_count
+	 */
 	public function test_decrease_purchase_count_should_return_0() {
 		self::$customers[3]->increase_purchase_count();
 		self::$customers[3]->decrease_purchase_count();
@@ -163,8 +177,8 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertCount( 0, parent::edd()->customer->create_and_get()->get_payment_ids() );
 	}
 
-	public function test_add_email_should_return_true() {
-		$this->assertTrue( self::$customers[1]->add_email( 'added-email@edd.test' ) );
+	public function test_add_email_should_return_id() {
+		$this->assertGreaterThanOrEqual( 1, self::$customers[1]->add_email( 'added-email@edd.test' ) );
 
 		/** @var $customer \EDD_Customer */
 		$customer = edd_get_customer( self::$customers[1]->id );
@@ -172,8 +186,8 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertTrue( in_array( 'added-email@edd.test', $customer->emails ) );
 	}
 
-	public function test_add_email_with_primary_parameter_should_return_true() {
-		$this->assertTrue( self::$customers[2]->add_email( 'added-email2@edd.test', true ) );
+	public function test_add_email_with_primary_parameter_should_return_id() {
+		$this->assertGreaterThanOrEqual( 1, self::$customers[2]->add_email( 'added-email2@edd.test', true ) );
 		$this->assertSame( 'added-email2@edd.test', self::$customers[2]->email );
 	}
 
@@ -198,6 +212,20 @@ class Tests_Customers extends \EDD_UnitTestCase {
 
 	public function test_get_users_purchases_with_invalid_user_id_should_return_false() {
 		$this->assertFalse( edd_get_users_purchases( 0 ) );
+	}
+
+	public function test_user_has_purchases_not_logged_in_should_return_false() {
+		$current_user = get_current_user_id();
+		wp_set_current_user( 0 );
+		edd_update_order(
+			self::$order,
+			array(
+				'user_id' => 0,
+			)
+		);
+
+		$this->assertFalse( edd_has_purchases() );
+		wp_set_current_user( $current_user );
 	}
 
 	public function test_user_has_purchases_should_return_true() {
@@ -364,5 +392,26 @@ class Tests_Customers extends \EDD_UnitTestCase {
 
 	public function test_get_customer_pending_payments_should_be_empty() {
 		$this->assertEmpty( self::$customers[0]->get_payments( 'pending' ) );
+	}
+
+	public function test_customer_and_user_order_lookup_success() {
+		self::$customers[0]->attach_payment( self::$order );
+
+		$customers_orders = edd_get_orders( array( 'customer_id' => self::$customers[0]->id, 'number' => 9999 ) );
+		$users_orders     = edd_get_orders( array( 'user_id' => self::$customers[0]->user_id, 'number' => 9999 ) );
+
+		$this->assertEquals( $customers_orders, $users_orders );
+	}
+
+	public function test_customer_and_user_order_lookup_success_after_user_id_change() {
+		self::$customers[0]->attach_payment( self::$order );
+
+		self::$customers[0]->update( array( 'user_id' => 2 ) );
+		$this->assertSame( '2', self::$customers[0]->user_id );
+
+		$customers_orders = edd_get_orders( array( 'customer_id' => self::$customers[0]->id, 'number' => 9999 ) );
+		$users_orders     = edd_get_orders( array( 'user_id' => self::$customers[0]->user_id, 'number' => 9999 ) );
+
+		$this->assertEquals( $customers_orders, $users_orders );
 	}
 }

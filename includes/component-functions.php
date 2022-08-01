@@ -70,7 +70,7 @@ function edd_register_component( $name = '', $args = array() ) {
  * @since 3.0
  * @param string $name
  *
- * @return mixed False if not exists, EDD_Component if exists
+ * @return EDD\Component|false False if not exists, EDD\Component if exists
  */
 function edd_get_component( $name = '' ) {
 	$name = sanitize_key( $name );
@@ -88,7 +88,7 @@ function edd_get_component( $name = '' ) {
  * @param string $component
  * @param string $interface
  *
- * @return mixed False if not exists, EDD_Component interface if exists
+ * @return mixed False if not exists, EDD Component interface if exists
  */
 function edd_get_component_interface( $component = '', $interface = '' ) {
 
@@ -119,7 +119,7 @@ function edd_setup_components() {
 
 	// Register customer.
 	edd_register_component( 'customer', array(
-		'schema' => '\\EDD\\Database\\Schema\\Customers',
+		'schema' => '\\EDD\\Database\\Schemas\\Customers',
 		'table'  => '\\EDD\\Database\\Tables\\Customers',
 		'meta'   => '\\EDD\\Database\\Tables\\Customer_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Customer',
@@ -128,7 +128,7 @@ function edd_setup_components() {
 
 	// Register customer address.
 	edd_register_component( 'customer_address', array(
-		'schema' => '\\EDD\\Database\\Schema\\Customer_Addresses',
+		'schema' => '\\EDD\\Database\\Schemas\\Customer_Addresses',
 		'table'  => '\\EDD\\Database\\Tables\\Customer_Addresses',
 		'query'  => '\\EDD\\Database\\Queries\\Customer_Address',
 		'object' => '\\EDD\\Customers\\Customer_Address',
@@ -137,7 +137,7 @@ function edd_setup_components() {
 
 	// Register customer email address.
 	edd_register_component( 'customer_email_address', array(
-		'schema' => '\\EDD\\Database\\Schema\\Customer_Email_Addresses',
+		'schema' => '\\EDD\\Database\\Schemas\\Customer_Email_Addresses',
 		'table'  => '\\EDD\\Database\\Tables\\Customer_Email_Addresses',
 		'query'  => '\\EDD\\Database\\Queries\\Customer_Email_Address',
 		'object' => '\\EDD\\Customers\\Customer_Email_Address',
@@ -146,7 +146,7 @@ function edd_setup_components() {
 
 	// Register adjustment.
 	edd_register_component( 'adjustment', array(
-		'schema' => '\\EDD\\Database\\Schema\\Adjustments',
+		'schema' => '\\EDD\\Database\\Schemas\\Adjustments',
 		'table'  => '\\EDD\\Database\\Tables\\Adjustments',
 		'meta'   => '\\EDD\\Database\\Tables\\Adjustment_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Adjustment',
@@ -155,7 +155,7 @@ function edd_setup_components() {
 
 	// Register note.
 	edd_register_component( 'note', array(
-		'schema' => '\\EDD\\Database\\Schema\\Notes',
+		'schema' => '\\EDD\\Database\\Schemas\\Notes',
 		'table'  => '\\EDD\\Database\\Tables\\Notes',
 		'meta'   => '\\EDD\\Database\\Tables\\Note_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Note',
@@ -164,7 +164,7 @@ function edd_setup_components() {
 
 	// Register order.
 	edd_register_component( 'order', array(
-		'schema' => '\\EDD\\Database\\Schema\\Orders',
+		'schema' => '\\EDD\\Database\\Schemas\\Orders',
 		'table'  => '\\EDD\\Database\\Tables\\Orders',
 		'meta'   => '\\EDD\\Database\\Tables\\Order_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Order',
@@ -173,7 +173,7 @@ function edd_setup_components() {
 
 	// Register order item.
 	edd_register_component( 'order_item', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Items',
+		'schema' => '\\EDD\\Database\\Schemas\\Order_Items',
 		'table'  => '\\EDD\\Database\\Tables\\Order_Items',
 		'meta'   => '\\EDD\\Database\\Tables\\Order_Item_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Order_Item',
@@ -182,7 +182,7 @@ function edd_setup_components() {
 
 	// Register order adjustment.
 	edd_register_component( 'order_adjustment', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Adjustments',
+		'schema' => '\\EDD\\Database\\Schemas\\Order_Adjustments',
 		'table'  => '\\EDD\\Database\\Tables\\Order_Adjustments',
 		'meta'   => '\\EDD\\Database\\Tables\\Order_Adjustment_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Order_Adjustment',
@@ -191,7 +191,7 @@ function edd_setup_components() {
 
 	// Register order address.
 	edd_register_component( 'order_address', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Addresses',
+		'schema' => '\\EDD\\Database\\Schemas\\Order_Addresses',
 		'table'  => '\\EDD\\Database\\Tables\\Order_Addresses',
 		'query'  => '\\EDD\\Database\\Queries\\Order_Address',
 		'object' => '\\EDD\\Orders\\Order_Address',
@@ -200,7 +200,7 @@ function edd_setup_components() {
 
 	// Register order transaction.
 	edd_register_component( 'order_transaction', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Transactions',
+		'schema' => '\\EDD\\Database\\Schemas\\Order_Transactions',
 		'table'  => '\\EDD\\Database\\Tables\\Order_Transactions',
 		'query'  => '\\EDD\\Database\\Queries\\Order_Transaction',
 		'object' => '\\EDD\\Orders\\Order_Transaction',
@@ -209,7 +209,7 @@ function edd_setup_components() {
 
 	// Register log.
 	edd_register_component( 'log', array(
-		'schema' => '\\EDD\\Database\\Schema\\Logs',
+		'schema' => '\\EDD\\Database\\Schemas\\Logs',
 		'table'  => '\\EDD\\Database\\Tables\\Logs',
 		'meta'   => '\\EDD\\Database\\Tables\\Log_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Log',
@@ -218,20 +218,20 @@ function edd_setup_components() {
 
 	// Register log API request.
 	edd_register_component( 'log_api_request', array(
-		'schema' => '\\EDD\\Database\\Schema\\Logs_Api_Requests',
+		'schema' => '\\EDD\\Database\\Schemas\\Logs_Api_Requests',
 		'table'  => '\\EDD\\Database\\Tables\\Logs_Api_Requests',
+		'meta'   => '\\EDD\\Database\\Tables\\Logs_Api_Request_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Log_Api_Request',
 		'object' => '\\EDD\\Logs\\Api_Request_Log',
-		'meta'   => false
 	) );
 
 	// Register log file download.
 	edd_register_component( 'log_file_download', array(
-		'schema' => '\\EDD\\Database\\Schema\\Logs_File_Downloads',
+		'schema' => '\\EDD\\Database\\Schemas\\Logs_File_Downloads',
 		'table'  => '\\EDD\\Database\\Tables\\Logs_File_Downloads',
+		'meta'   => '\\EDD\\Database\\Tables\\Logs_File_Download_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Log_File_Download',
 		'object' => '\\EDD\\Logs\\File_Download_Log',
-		'meta'   => false
 	) );
 
 	// Register session.

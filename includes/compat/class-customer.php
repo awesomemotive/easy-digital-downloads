@@ -10,6 +10,8 @@
  */
 namespace EDD\Compat;
 
+use EDD\Database\Table;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -30,6 +32,41 @@ class Customer extends Base {
 	 * @var string
 	 */
 	protected $component = 'customer';
+
+	/**
+	 * Magic method to handle calls to properties that no longer exist.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $property Name of the property.
+	 *
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		switch( $property ) {
+			case 'table_name' :
+				global $wpdb;
+				return $wpdb->edd_customers;
+
+			case 'primary_key' :
+				return 'id';
+
+			case 'version' :
+				$table = edd_get_component_interface( 'customer', 'table' );
+
+				return $table instanceof Table ? $table->get_version() : false;
+			case 'meta_type' :
+				return 'customer';
+
+			case 'date_key' :
+				return 'date_created';
+
+			case 'cache_group' :
+				return 'customers';
+		}
+
+		return null;
+	}
 
 	/**
 	 * Magic method to handle calls to method that no longer exist.
@@ -138,61 +175,6 @@ class Customer extends Base {
 		add_filter( 'get_user_metadata',    array( $this, 'get_user_meta'    ), 99, 4 );
 		add_filter( 'update_user_metadata', array( $this, 'update_user_meta' ), 99, 5 );
 		add_filter( 'add_user_metadata',    array( $this, 'update_user_meta' ), 99, 5 );
-
-		/** Actions **********************************************************/
-		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10 );
-	}
-
-	/**
-	 * Updates the email address of a customer record when the email on a user is updated.
-	 *
-	 * @since 2.4.0
-	 *
-	 * @param int   $user_id User ID.
-	 *
-	 * @return bool False if customer does not exist for given user ID.
-	 */
-	public function update_customer_email_on_user_update( $user_id = 0 ) {
-
-		// Bail if no customer
-		$customer = edd_get_customer_by( 'user_id', $user_id );
-		if ( empty( $customer ) ) {
-			return false;
-		}
-
-		// Bail if no user
-		$user = get_userdata( $user_id );
-		if ( empty( $user ) || ( $user->user_email === $customer->email ) ) {
-			return;
-		}
-
-		// Bail if customer already has this email address
-		if ( edd_get_customer_by( 'email', $user->user_email ) ) {
-			return;
-		}
-
-		// Try to update the customer
-		$success = edd_update_customer( $customer->id, array(
-			'email' => $user->user_email
-		) );
-
-		// Bail on failure
-		if ( empty( $success ) ) {
-			return;
-		}
-
-		// Bail if no payment IDs to update
-		$payments_array = explode( ',', $customer->payment_ids );
-		if ( empty( $payments_array ) ) {
-			return;
-		}
-
-		// Loop through and update payment meta
-		foreach ( $payments_array as $payment_id ) {
-			edd_update_payment_meta( $payment_id, 'email', $user->user_email );
-		}
-
-		do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
 	}
 
 	/**
@@ -228,7 +210,7 @@ class Customer extends Base {
 			}
 		}
 
-		return $value;
+		return array( $value );
 	}
 
 	/**
@@ -253,11 +235,13 @@ class Customer extends Base {
 		}
 
 		// Fetch saved primary address.
-		$addresses = edd_get_customer_addresses( array(
-			'number'      => 1,
-			'type'        => 'primary',
-			'customer_id' => $object_id,
-		) );
+		$addresses = edd_get_customer_addresses(
+			array(
+				'number'      => 1,
+				'is_primary'  => true,
+				'customer_id' => $object_id,
+			)
+		);
 
 		// Defaults.
 		$defaults = array(
@@ -271,31 +255,36 @@ class Customer extends Base {
 
 		$address = wp_parse_args( (array) $meta_value, $defaults );
 
-		if ( is_array( $addresses ) && ! empty( $addresses ) ) {
+		if ( is_array( $addresses ) && ! empty( $addresses[0] ) ) {
 			$customer_address = $addresses[0];
 
-			edd_update_customer_address( $customer_address->id, array(
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-				'country'     => $address['country'],
-			) );
-		} else {
-			$customer = edd_get_customer_by( 'user_id', absint( $object_id ) );
-
-			if ( $customer ) {
-				edd_add_customer_address( array(
-					'customer_id' => $customer->id,
-					'type'        => 'primary',
+			edd_update_customer_address(
+				$customer_address->id,
+				array(
 					'address'     => $address['line1'],
 					'address2'    => $address['line2'],
 					'city'        => $address['city'],
 					'region'      => $address['state'],
 					'postal_code' => $address['zip'],
 					'country'     => $address['country'],
-				) );
+				)
+			);
+		} else {
+			$customer = edd_get_customer_by( 'user_id', absint( $object_id ) );
+
+			if ( $customer ) {
+				edd_add_customer_address(
+					array(
+						'customer_id' => $customer->id,
+						'address'     => $address['line1'],
+						'address2'    => $address['line2'],
+						'city'        => $address['city'],
+						'region'      => $address['state'],
+						'postal_code' => $address['zip'],
+						'country'     => $address['country'],
+						'is_primary'  => true,
+					)
+				);
 			}
 		}
 

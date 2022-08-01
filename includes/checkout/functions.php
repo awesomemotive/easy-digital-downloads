@@ -620,12 +620,16 @@ function edd_print_payment_icons_on_checkout() {
 	$methods = (array) edd_get_option( 'accepted_cards', array() );
 	$icons   = array_keys( $methods );
 
-	// Bail if no icons
+	if ( is_ssl() ) {
+		$icons[] = 'lock';
+	}
+
+	// Bail if no icons.
 	if ( empty( $icons ) ) {
 		return;
 	}
 
-	// Output icons
+	// Output icons.
 	edd_print_payment_icons( $icons );
 }
 add_action( 'wp_print_footer_scripts', 'edd_print_payment_icons_on_checkout', 9999 );

@@ -94,7 +94,6 @@ class EDD_Categories_Reports_Table extends List_Table {
 				<?php
 				if ( 'top' === $which ) {
 					edd_report_views();
-					edd_reports_graph_controls();
 				}
 				?>
 			</div>
@@ -103,12 +102,27 @@ class EDD_Categories_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Build all the reports data
+	 * Builds and retrieves of all the categories reports data.
 	 *
-	 * @since  2.4
-	 * @return array $reports_data All the data for customer reports
+	 * @since 2.4
+	 * @edeprecated 3.0 Use get_data()
+	 *
+	 * @return array All the data for customer reports.
 	 */
 	public function reports_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Categories_Reports_Table::get_data()' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Builds and retrieves all of the categories reports data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Categories reports table data.
+	 */
+	public function get_data() {
 
 		/*
 		 * Date filtering
@@ -361,6 +375,6 @@ class EDD_Categories_Reports_Table extends List_Table {
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->reports_data();
+		$this->items           = $this->get_data();
 	}
 }

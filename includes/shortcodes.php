@@ -293,7 +293,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) ) . '" class="' . $button_display . '">' . $text . '</a>';
+	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => sanitize_key( $taxonomy ), 'terms' => sanitize_key( $terms ) ) ) ) . '" class="' . esc_attr( $button_display ) . '">' . esc_html( $text ) . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
@@ -585,7 +585,11 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	do_action( 'edd_downloads_list_before', $atts );
 
+	// Ensure buttons are not appended to content.
+	remove_filter( 'the_content', 'edd_after_download_content' );
+
 	ob_start();
+
 
 	if ( $downloads->have_posts() ) :
 		$i = 1;
@@ -610,7 +614,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		</div>
 
 		<?php
-		
+
 	else:
 		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
@@ -618,6 +622,9 @@ function edd_downloads_query( $atts, $content = null ) {
 	do_action( 'edd_downloads_list_after', $atts, $downloads, $query );
 
 	$display = ob_get_clean();
+
+	// Ensure buttons are appended to content.
+	add_filter( 'the_content', 'edd_after_download_content' );
 
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
@@ -662,7 +669,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	global $edd_receipt_args;
 
 	$edd_receipt_args = shortcode_atts( array(
-		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'easy-digital-downloads' ),
+		'error'           => __( 'Sorry, trouble retrieving order receipt.', 'easy-digital-downloads' ),
 		'price'           => true,
 		'discount'        => true,
 		'products'        => true,
@@ -688,11 +695,11 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 
-	$payment_id    = edd_get_purchase_id_by_key( $payment_key );
+	$order         = edd_get_order_by( 'payment_key', $payment_key );
 	$user_can_view = edd_can_view_receipt( $payment_key );
 
 	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
-	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $payment_id ) ) {
+	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order->id ) ) {
 		global $edd_login_redirect;
 		$edd_login_redirect = edd_get_current_page_url();
 
@@ -858,13 +865,24 @@ function edd_process_profile_editor_updates( $data ) {
 	// Update user.
 	$updated = wp_update_user( $userdata );
 
-	// Possibly update the customer.
+	// If the current user does not have an associated customer record, create one.
+	if ( ! $customer && $updated ) {
+		$customer_id = edd_add_customer( array(
+			'user_id' => $updated,
+			'email'   => $email,
+		) );
+
+		$customer = edd_get_customer_by( 'id', $customer_id );
+	}
+
+	// Try to update customer data.
 	if ( $customer ) {
 
 		// Update the primary address.
 		$customer_address_id = edd_get_customer_addresses( array(
 			'customer_id' => $customer->id,
-			'type'        => 'primary',
+			'type'        => 'billing',
+			'is_primary'  => 1,
 			'number'      => 1,
 			'fields'      => 'ids'
 		) );
@@ -874,23 +892,33 @@ function edd_process_profile_editor_updates( $data ) {
 			$customer_address_id = $customer_address_id[0];
 
 			edd_update_customer_address( $customer_address_id, array(
+				'name'        => stripslashes( $first_name . ' ' . $last_name ),
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
+				'country'     => $address['country'],
 				'region'      => $address['state'],
 				'postal_code' => $address['zip'],
+				'country'     => $address['country']
 			) );
 
 		// Add a customer address.
 		} else {
-			edd_add_customer_address( array(
-				'type'        => 'primary',
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-			) );
+			edd_maybe_add_customer_address(
+				$customer->id,
+				array(
+					'name'        => stripslashes( $first_name . ' ' . $last_name ),
+					'type'        => 'billing',
+					'address'     => $address['line1'],
+					'address2'    => $address['line2'],
+					'city'        => $address['city'],
+					'country'     => $address['country'],
+					'region'      => $address['state'],
+					'postal_code' => $address['zip'],
+					'country'     => $address['country'],
+					'is_primary'  => true,
+				)
+			);
 		}
 
 		if ( $customer->email === $email || ( is_array( $customer->emails ) && in_array( $email, $customer->emails ) ) ) {
@@ -898,7 +926,7 @@ function edd_process_profile_editor_updates( $data ) {
 		}
 
 		$update_args = array(
-			'name' => $first_name . ' ' . $last_name,
+			'name'  => stripslashes( $first_name . ' ' . $last_name ),
 		);
 
 		$customer->update( $update_args );

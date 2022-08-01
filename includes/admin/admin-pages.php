@@ -77,7 +77,7 @@ function edd_get_admin_pages() {
  * @global $edd_upgrades_screen
  */
 function edd_add_options_link() {
-	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
+	global $submenu, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
 
 	// Filter the "View Customers" role
 	$customer_view_role  = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
@@ -92,6 +92,13 @@ function edd_add_options_link() {
 
 	// Setup hidden upgrades page
 	$edd_upgrades_screen = add_submenu_page( null, __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'EDD Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
+
+	// Add our reports link in the main Dashboard menu.
+	$submenu['index.php'][] = array(
+		__( 'Store Reports', 'easy-digital-downloads' ),
+		'view_shop_reports',
+		'edit.php?post_type=download&page=edd-reports',
+	);
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
 
@@ -144,13 +151,17 @@ function edd_is_insertable_admin_page() {
  * Failure to pass in $passed_page will return true if on any EDD page
  *
  * @since 1.9.6
+ * @since 2.11.3 Added `$include_non_exclusive` parameter.
  *
- * @param string $passed_page Optional. Main page's slug.
- * @param string $passed_view Optional. Page view ( ex: `edit` or `delete` )
+ * @param string $passed_page           Optional. Main page's slug.
+ * @param string $passed_view           Optional. Page view ( ex: `edit` or `delete` )
+ * @param bool   $include_non_exclusive Optional. If we should consider pages not exclusive to EDD.
+ *                                      Includes the main dashboard page and custom post types that
+ *                                      support the "Insert Download" button via the TinyMCE editor.
  *
  * @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
  */
-function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
+function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_exclusive = true ) {
 	global $pagenow, $typenow;
 
 	$found      = false;
@@ -313,7 +324,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'settings':
 			switch ( $passed_view ) {
 				case 'general':
-					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && ( 'genera' === $tab || false === $tab ) ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && ( 'general' === $tab || false === $tab ) ) {
 						$found = true;
 					}
 					break;
@@ -349,6 +360,11 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 					break;
 				case 'misc':
 					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && 'misc' === $tab ) {
+						$found = true;
+					}
+					break;
+				case 'marketing':
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'marketing' === $tab ) {
 						$found = true;
 					}
 					break;
@@ -437,7 +453,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			$admin_pages = edd_get_admin_pages();
 
 			// Downloads sub-page or Dashboard page
-			if ( ( 'download' === $typenow ) || ( 'index.php' === $pagenow ) ) {
+			if ( ( 'download' === $typenow ) || ( $include_non_exclusive && 'index.php' === $pagenow ) ) {
 				$found = true;
 
 			// Registered global pages
@@ -445,7 +461,11 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 				$found = true;
 
 			// Supported post types
-			} elseif ( edd_is_insertable_admin_page() ) {
+			} elseif ( $include_non_exclusive && edd_is_insertable_admin_page() ) {
+				$found = true;
+
+			// The EDD settings screen (fallback if mislinked)
+			} elseif ( 'edd-settings' === $page ) {
 				$found = true;
 			}
 			break;
@@ -453,3 +473,25 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 
 	return (bool) apply_filters( 'edd_is_admin_page', $found, $page, $view, $passed_page, $passed_view );
 }
+
+/**
+ * Forces the Cache-Control header on our admin pages to send the no-store header
+ * which prevents the back-forward cache (bfcache) from storing a copy of this page in local
+ * cache. This helps make sure that page elements modified via AJAX and DOM manipulations aren't
+ * incorrectly shown as if they never changed.
+ *
+ * @since 3.0
+ * @param array $headers An array of nocache headers.
+ *
+ * @return array
+ */
+function _edd_bfcache_buster( $headers ) {
+	if ( ! is_admin() & ! edd_is_admin_page() ) {
+		return $headers;
+	}
+
+	$headers['Cache-Control'] = 'no-cache, must-revalidate, max-age=0, no-store';
+
+	return $headers;
+}
+add_filter( 'nocache_headers', '_edd_bfcache_buster', 10, 1 );

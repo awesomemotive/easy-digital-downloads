@@ -16,837 +16,1102 @@
 <!-- 7. WordPress will then import each of the posts, pages, comments, categories, etc. -->
 <!--    contained in this file into your site. -->
 
-<!-- generator="WordPress/3.5.1" created="2013-01-25 17:58" -->
+	<!-- generator="WordPress/5.7.4" created="2022-02-07 19:01" -->
 <rss version="2.0"
-	xmlns:excerpt="https://wordpress.org/export/1.2/excerpt/"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
 	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
-	xmlns:wp="https://wordpress.org/export/1.2/"
+	xmlns:wp="http://wordpress.org/export/1.2/"
 >
 
 <channel>
 	<title>Easy Digital Downloads Demo</title>
-	<link>http://easydigitaldownloads.com/demo</link>
+	<link>https://easydigitaldownloads.com/demo</link>
 	<description>A demo site for Easy Digital Downloads</description>
-	<pubDate>Fri, 25 Jan 2013 17:58:10 +0000</pubDate>
+	<pubDate>Mon, 07 Feb 2022 19:01:26 +0000</pubDate>
 	<language>en-US</language>
 	<wp:wxr_version>1.2</wp:wxr_version>
-	<wp:base_site_url>http://easydigitaldownloads.com/</wp:base_site_url>
-	<wp:base_blog_url>http://easydigitaldownloads.com/demo</wp:base_blog_url>
+	<wp:base_site_url>https://easydigitaldownloads.com/</wp:base_site_url>
+	<wp:base_blog_url>https://easydigitaldownloads.com/demo</wp:base_blog_url>
 
-	<wp:author><wp:author_id>1</wp:author_id><wp:author_login>pippin</wp:author_login><wp:author_email>pippin@pippinsplugins.com</wp:author_email><wp:author_display_name><![CDATA[Pippin Williamson]]></wp:author_display_name><wp:author_first_name><![CDATA[Pippin]]></wp:author_first_name><wp:author_last_name><![CDATA[Williamson]]></wp:author_last_name></wp:author>
+		<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[edd]]></wp:author_login><wp:author_email><![CDATA[support@easydigitaldownloads.com]]></wp:author_email><wp:author_display_name><![CDATA[Edd]]></wp:author_display_name><wp:author_first_name><![CDATA[Edd]]></wp:author_first_name></wp:author>
 
-	<wp:category><wp:term_id>1</wp:term_id><wp:category_nicename>uncategorized</wp:category_nicename><wp:category_parent></wp:category_parent><wp:cat_name><![CDATA[Uncategorized]]></wp:cat_name></wp:category>
-	<wp:term><wp:term_id>3</wp:term_id><wp:term_taxonomy>download_category</wp:term_taxonomy><wp:term_slug>category-1</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Category 1]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>7</wp:term_id><wp:term_taxonomy>download_category</wp:term_taxonomy><wp:term_slug>category-ii</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Category II]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>11</wp:term_id><wp:term_taxonomy>edd_log_type</wp:term_taxonomy><wp:term_slug>file_download</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[file_download]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>12</wp:term_id><wp:term_taxonomy>edd_log_type</wp:term_taxonomy><wp:term_slug>gateway_error</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[gateway_error]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>10</wp:term_id><wp:term_taxonomy>edd_log_type</wp:term_taxonomy><wp:term_slug>sale</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[sale]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>4</wp:term_id><wp:term_taxonomy>download_tag</wp:term_taxonomy><wp:term_slug>tag1</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Tag1]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>5</wp:term_id><wp:term_taxonomy>download_tag</wp:term_taxonomy><wp:term_slug>tag2</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Tag2]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>9</wp:term_id><wp:term_taxonomy>download_tag</wp:term_taxonomy><wp:term_slug>tag3</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Tag3]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>8</wp:term_id><wp:term_taxonomy>download_tag</wp:term_taxonomy><wp:term_slug>tag4</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Tag4]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>6</wp:term_id><wp:term_taxonomy>nav_menu</wp:term_taxonomy><wp:term_slug>main-nav</wp:term_slug><wp:term_name><![CDATA[Main Nav]]></wp:term_name></wp:term>
 
-	<generator>https://wordpress.org/?v=3.5.1</generator>
-
+	<generator>https://wordpress.org/?v=5.7.4</generator>
 	<item>
-		<title>A Sample Digital Download</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/</link>
+		<title><![CDATA[A Sample Digital Download]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/</link>
 		<pubDate>Mon, 21 May 2012 16:20:08 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=8</guid>
 		<description></description>
-		<content:encoded><![CDATA[Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturient urna ac, ac amet! Non integer nec, mid, enim lorem scelerisque ultricies tristique aliquet sagittis? Augue ridiculus non! Nec magnis, tortor sit, scelerisque lacus augue integer magna, hac et vel, mauris turpis urna tincidunt nascetur in, platea est, amet, rhoncus a nisi augue rhoncus hac! Tristique ridiculus phasellus pulvinar sed diam rhoncus dolor a tincidunt mus! Mauris pid, enim nec. Ac platea sociis pulvinar enim ridiculus, porta turpis? Hac lectus scelerisque montes? Elementum augue dignissim turpis, habitasse sociis odio mattis ut in egestas ac a quis! Mattis? Hac! Nunc magna. Pid dignissim pulvinar! Nunc placerat tortor, ultrices nisi elit, amet vut tortor mattis auctor a lundium cum in.]]></content:encoded>
+		<content:encoded><![CDATA[This product shows an example of the <a href="https://easydigitaldownloads.com/downloads/edd-upload-file/">EDD Upload File extension</a>. Click purchase below and go to checkout see a demonstration.
+
+Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturient urna ac, ac amet! Non integer nec, mid, enim lorem scelerisque ultricies tristique aliquet sagittis? Augue ridiculus non! Nec magnis, tortor sit, scelerisque lacus augue integer magna, hac et vel, mauris turpis urna tincidunt nascetur in, platea est, amet, rhoncus a nisi augue rhoncus hac! Tristique ridiculus phasellus pulvinar sed diam rhoncus dolor a tincidunt mus! Mauris pid, enim nec. Ac platea sociis pulvinar enim ridiculus, porta turpis? Hac lectus scelerisque montes? Elementum augue dignissim turpis, habitasse sociis odio mattis ut in egestas ac a quis! Mattis? Hac! Nunc magna. Pid dignissim pulvinar! Nunc placerat tortor, ultrices nisi elit, amet vut tortor mattis auctor a lundium cum in.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>8</wp:post_id>
-		<wp:post_date>2012-05-21 16:20:08</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:20:08</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>closed</wp:ping_status>
-		<wp:post_name>a-sample-digital-download</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-05-21 16:20:08]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-05-21 16:20:08]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:32:38]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:32:38]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[a-sample-digital-download]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>1</wp:menu_order>
-		<wp:post_type>download</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[download]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
+										<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
 		<category domain="download_tag" nicename="tag1"><![CDATA[Tag1]]></category>
 		<category domain="download_tag" nicename="tag2"><![CDATA[Tag2]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+						<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[650]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_price</wp:meta_key>
-			<wp:meta_value><![CDATA[10]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_price]]></wp:meta_key>
+		<wp:meta_value><![CDATA[10.00]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_variable_prices</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:0:"";s:6:"amount";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_variable_prices]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:14:"Download Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_download_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:1:"0";s:14:"thumbnail_size";s:0:"";s:4:"name";s:14:"Download Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_purchase_text</wp:meta_key>
-			<wp:meta_value><![CDATA[Purchase]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_purchase_style</wp:meta_key>
-			<wp:meta_value><![CDATA[button]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_preview_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_purchase_color</wp:meta_key>
-			<wp:meta_value><![CDATA[blue]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_enabled]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>wpmini-grey</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/wpmini-grey/</link>
-		<pubDate>Mon, 21 May 2012 16:19:32 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>9</wp:post_id>
-		<wp:post_date>2012-05-21 16:19:32</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:19:32</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>wpmini-grey</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>8</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/05/wpmini-grey.png]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_limit]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:5:{s:5:"width";s:2:"16";s:6:"height";s:2:"16";s:14:"hwstring_small";s:22:"height='16' width='16'";s:4:"file";s:27:"edd/2012/05/wpmini-grey.png";s:10:"image_meta";a:10:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_extensions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>Sample Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/</link>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_thumbnail_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[36864]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products_conditions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:1;s:3:"all";}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_button_behavior]]></wp:meta_key>
+		<wp:meta_value><![CDATA[add_to_cart]]></wp:meta_value>
+		</wp:postmeta>
+					</item>
+					<item>
+		<title><![CDATA[Sample Product]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/</link>
 		<pubDate>Mon, 21 May 2012 16:26:47 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=16</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>16</wp:post_id>
-		<wp:post_date>2012-05-21 16:26:47</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:26:47</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>closed</wp:ping_status>
-		<wp:post_name>sample-product</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-05-21 16:26:47]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-05-21 16:26:47]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:33:16]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:33:16]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[sample-product]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>2</wp:menu_order>
-		<wp:post_type>download</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[download]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
+										<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
 		<category domain="download_category" nicename="category-ii"><![CDATA[Category II]]></category>
 		<category domain="download_tag" nicename="tag1"><![CDATA[Tag1]]></category>
 		<category domain="download_tag" nicename="tag3"><![CDATA[Tag3]]></category>
 		<category domain="download_tag" nicename="tag4"><![CDATA[Tag4]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+						<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[650]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_variable_pricing</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_variable_pricing]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_variable_prices</wp:meta_key>
-			<wp:meta_value><![CDATA[a:3:{i:0;a:2:{s:4:"name";s:5:"Basic";s:6:"amount";s:2:"10";}i:1;a:2:{s:4:"name";s:6:"Medium";s:6:"amount";s:2:"20";}i:2;a:2:{s:4:"name";s:8:"Advanced";s:6:"amount";s:2:"30";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_variable_prices]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:3:{i:0;a:3:{s:5:"index";s:1:"0";s:4:"name";s:5:"Basic";s:6:"amount";s:5:"10.00";}i:1;a:3:{s:5:"index";s:1:"1";s:4:"name";s:6:"Medium";s:6:"amount";s:5:"20.00";}i:2;a:3:{s:5:"index";s:1:"2";s:4:"name";s:8:"Advanced";s:6:"amount";s:5:"30.00";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_download_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:1:"0";s:14:"thumbnail_size";s:0:"";s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_thumbnail_id</wp:meta_key>
-			<wp:meta_value><![CDATA[688]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_thumbnail_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[36865]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_price</wp:meta_key>
-			<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_price]]></wp:meta_key>
+		<wp:meta_value><![CDATA[10.00]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_limit</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_preview_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_product_notes</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_ap_placement</wp:meta_key>
-			<wp:meta_value><![CDATA[top]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_button_behavior]]></wp:meta_key>
+		<wp:meta_value><![CDATA[add_to_cart]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_preview_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:0:"";s:4:"file";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_default_price_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[0]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>cars_pixar</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/cars_pixar/</link>
-		<pubDate>Fri, 15 Jun 2012 15:17:24 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>64</wp:post_id>
-		<wp:post_date>2012-06-15 15:17:24</wp:post_date>
-		<wp:post_date_gmt>2012-06-15 15:17:24</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>cars_pixar</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>16</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/05/cars_pixar.jpg]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products_conditions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:1;s:3:"all";}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:6:{s:5:"width";s:4:"1700";s:6:"height";s:4:"1100";s:14:"hwstring_small";s:23:"height='82' width='128'";s:4:"file";s:26:"edd/2012/05/cars_pixar.jpg";s:5:"sizes";a:6:{s:9:"thumbnail";a:3:{s:4:"file";s:22:"cars_pixar-150x150.jpg";s:5:"width";s:3:"150";s:6:"height";s:3:"150";}s:6:"medium";a:3:{s:4:"file";s:22:"cars_pixar-300x194.jpg";s:5:"width";s:3:"300";s:6:"height";s:3:"194";}s:5:"large";a:3:{s:4:"file";s:23:"cars_pixar-1024x662.jpg";s:5:"width";s:4:"1024";s:6:"height";s:3:"662";}s:14:"post-thumbnail";a:3:{s:4:"file";s:23:"cars_pixar-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"large-feature";a:3:{s:4:"file";s:23:"cars_pixar-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"small-feature";a:3:{s:4:"file";s:22:"cars_pixar-463x300.jpg";s:5:"width";s:3:"463";s:6:"height";s:3:"300";}}s:10:"image_meta";a:10:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";}}]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>cars_pixar</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/cars_pixar-2/</link>
-		<pubDate>Fri, 15 Jun 2012 15:20:50 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar1.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>65</wp:post_id>
-		<wp:post_date>2012-06-15 15:20:50</wp:post_date>
-		<wp:post_date_gmt>2012-06-15 15:20:50</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>cars_pixar-2</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>16</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar1.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/05/cars_pixar1.jpg]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:6:{s:5:"width";s:4:"1700";s:6:"height";s:4:"1100";s:14:"hwstring_small";s:23:"height='82' width='128'";s:4:"file";s:27:"edd/2012/05/cars_pixar1.jpg";s:5:"sizes";a:6:{s:9:"thumbnail";a:3:{s:4:"file";s:23:"cars_pixar1-150x150.jpg";s:5:"width";s:3:"150";s:6:"height";s:3:"150";}s:6:"medium";a:3:{s:4:"file";s:23:"cars_pixar1-300x194.jpg";s:5:"width";s:3:"300";s:6:"height";s:3:"194";}s:5:"large";a:3:{s:4:"file";s:24:"cars_pixar1-1024x662.jpg";s:5:"width";s:4:"1024";s:6:"height";s:3:"662";}s:14:"post-thumbnail";a:3:{s:4:"file";s:24:"cars_pixar1-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"large-feature";a:3:{s:4:"file";s:24:"cars_pixar1-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"small-feature";a:3:{s:4:"file";s:23:"cars_pixar1-463x300.jpg";s:5:"width";s:3:"463";s:6:"height";s:3:"300";}}s:10:"image_meta";a:10:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";}}]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Disney and Pixar?s RATATOUILLE movie image</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/disney-and-pixars-ratatouille-movie-image/</link>
-		<pubDate>Fri, 15 Jun 2012 15:21:13 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>66</wp:post_id>
-		<wp:post_date>2012-06-15 15:21:13</wp:post_date>
-		<wp:post_date_gmt>2012-06-15 15:21:13</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>disney-and-pixars-ratatouille-movie-image</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>16</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:6:{s:5:"width";s:4:"2114";s:6:"height";s:4:"1028";s:14:"hwstring_small";s:23:"height='62' width='128'";s:4:"file";s:58:"edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg";s:5:"sizes";a:6:{s:9:"thumbnail";a:3:{s:4:"file";s:54:"disney_and_pixar_s_ratatouille_movie_image-150x150.jpg";s:5:"width";s:3:"150";s:6:"height";s:3:"150";}s:6:"medium";a:3:{s:4:"file";s:54:"disney_and_pixar_s_ratatouille_movie_image-300x145.jpg";s:5:"width";s:3:"300";s:6:"height";s:3:"145";}s:5:"large";a:3:{s:4:"file";s:55:"disney_and_pixar_s_ratatouille_movie_image-1024x497.jpg";s:5:"width";s:4:"1024";s:6:"height";s:3:"497";}s:14:"post-thumbnail";a:3:{s:4:"file";s:55:"disney_and_pixar_s_ratatouille_movie_image-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"large-feature";a:3:{s:4:"file";s:55:"disney_and_pixar_s_ratatouille_movie_image-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"small-feature";a:3:{s:4:"file";s:54:"disney_and_pixar_s_ratatouille_movie_image-500x243.jpg";s:5:"width";s:3:"500";s:6:"height";s:3:"243";}}s:10:"image_meta";a:10:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:42:"Disney and Pixar?s RATATOUILLE movie image";}}]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Another Sample Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/another-sample-product/</link>
+							</item>
+					<item>
+		<title><![CDATA[Another Sample Product]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/another-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:21:40 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=67</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>67</wp:post_id>
-		<wp:post_date>2012-06-15 15:21:40</wp:post_date>
-		<wp:post_date_gmt>2012-06-15 15:21:40</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>closed</wp:ping_status>
-		<wp:post_name>another-sample-product</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-06-15 15:21:40]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-06-15 15:21:40]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:33:54]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:33:54]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[another-sample-product]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>3</wp:menu_order>
-		<wp:post_type>download</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[download]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
+										<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
 		<category domain="download_category" nicename="category-ii"><![CDATA[Category II]]></category>
 		<category domain="download_tag" nicename="tag1"><![CDATA[Tag1]]></category>
 		<category domain="download_tag" nicename="tag3"><![CDATA[Tag3]]></category>
 		<category domain="download_tag" nicename="tag4"><![CDATA[Tag4]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+						<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[650]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_variable_pricing</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_variable_pricing]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_variable_prices</wp:meta_key>
-			<wp:meta_value><![CDATA[a:3:{i:0;a:2:{s:4:"name";s:5:"Basic";s:6:"amount";s:2:"10";}i:1;a:2:{s:4:"name";s:6:"Medium";s:6:"amount";s:2:"20";}i:2;a:2:{s:4:"name";s:8:"Advanced";s:6:"amount";s:2:"30";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_variable_prices]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:3:{i:0;a:3:{s:5:"index";s:1:"0";s:4:"name";s:5:"Basic";s:6:"amount";s:5:"10.00";}i:1;a:3:{s:5:"index";s:1:"1";s:4:"name";s:6:"Medium";s:6:"amount";s:5:"20.00";}i:2;a:3:{s:5:"index";s:1:"2";s:4:"name";s:8:"Advanced";s:6:"amount";s:5:"30.00";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_download_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:1:"0";s:14:"thumbnail_size";s:0:"";s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_price</wp:meta_key>
-			<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_price]]></wp:meta_key>
+		<wp:meta_value><![CDATA[10.00]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_product_notes</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_thumbnail_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[36867]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_thumbnail_id</wp:meta_key>
-			<wp:meta_value><![CDATA[687]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_price_options_mode]]></wp:meta_key>
+		<wp:meta_value><![CDATA[on]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_limit</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_button_behavior]]></wp:meta_key>
+		<wp:meta_value><![CDATA[add_to_cart]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>One More Sample Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/one-more-sample-product/</link>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_default_price_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products_conditions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:1;s:3:"all";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[One More Sample Product]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:22:01 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=68</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>68</wp:post_id>
-		<wp:post_date>2012-06-15 15:22:01</wp:post_date>
-		<wp:post_date_gmt>2012-06-15 15:22:01</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>closed</wp:ping_status>
-		<wp:post_name>one-more-sample-product</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-06-15 15:22:01]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-06-15 15:22:01]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:32:03]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:32:03]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[one-more-sample-product]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>download</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[download]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
+										<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
 		<category domain="download_tag" nicename="tag1"><![CDATA[Tag1]]></category>
 		<category domain="download_tag" nicename="tag3"><![CDATA[Tag3]]></category>
 		<category domain="download_tag" nicename="tag4"><![CDATA[Tag4]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+						<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[650]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_variable_prices</wp:meta_key>
-			<wp:meta_value><![CDATA[a:3:{i:0;a:2:{s:4:"name";s:5:"Basic";s:6:"amount";s:2:"10";}i:1;a:2:{s:4:"name";s:6:"Medium";s:6:"amount";s:2:"20";}i:2;a:2:{s:4:"name";s:8:"Advanced";s:6:"amount";s:2:"30";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_variable_prices]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_download_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:1:"0";s:14:"thumbnail_size";s:0:"";s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_price</wp:meta_key>
-			<wp:meta_value><![CDATA[30.00]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_price]]></wp:meta_key>
+		<wp:meta_value><![CDATA[30.00]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_product_notes</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_thumbnail_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[36863]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>top-ten-pixar-monster (1)</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/one-more-sample-product/top-ten-pixar-monster-1/</link>
-		<pubDate>Fri, 15 Jun 2012 15:24:08 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/06/top-ten-pixar-monster-1.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>70</wp:post_id>
-		<wp:post_date>2012-06-15 15:24:08</wp:post_date>
-		<wp:post_date_gmt>2012-06-15 15:24:08</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>top-ten-pixar-monster-1</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>68</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/06/top-ten-pixar-monster-1.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/06/top-ten-pixar-monster-1.jpg]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_limit]]></wp:meta_key>
+		<wp:meta_value><![CDATA[0]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:6:{s:5:"width";s:4:"1024";s:6:"height";s:3:"768";s:14:"hwstring_small";s:23:"height='96' width='128'";s:4:"file";s:39:"edd/2012/06/top-ten-pixar-monster-1.jpg";s:5:"sizes";a:5:{s:9:"thumbnail";a:3:{s:4:"file";s:35:"top-ten-pixar-monster-1-150x150.jpg";s:5:"width";s:3:"150";s:6:"height";s:3:"150";}s:6:"medium";a:3:{s:4:"file";s:35:"top-ten-pixar-monster-1-300x225.jpg";s:5:"width";s:3:"300";s:6:"height";s:3:"225";}s:14:"post-thumbnail";a:3:{s:4:"file";s:36:"top-ten-pixar-monster-1-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"large-feature";a:3:{s:4:"file";s:36:"top-ten-pixar-monster-1-1000x288.jpg";s:5:"width";s:4:"1000";s:6:"height";s:3:"288";}s:13:"small-feature";a:3:{s:4:"file";s:35:"top-ten-pixar-monster-1-400x300.jpg";s:5:"width";s:3:"400";s:6:"height";s:3:"300";}}s:10:"image_meta";a:10:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_extensions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>Sample FREE Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/</link>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products_conditions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:1;s:3:"all";}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_button_behavior]]></wp:meta_key>
+		<wp:meta_value><![CDATA[add_to_cart]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[Sample FREE Product]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-free-product/</link>
 		<pubDate>Tue, 27 Nov 2012 23:57:34 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=476</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>476</wp:post_id>
-		<wp:post_date>2012-11-27 23:57:34</wp:post_date>
-		<wp:post_date_gmt>2012-11-27 23:57:34</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>closed</wp:ping_status>
-		<wp:post_name>sample-free-product</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-11-27 23:57:34]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-11-27 23:57:34]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:31:03]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:31:03]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[sample-free-product]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>download</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[download]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
-		<wp:postmeta>
-			<wp:meta_key>edd_price</wp:meta_key>
-			<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
+										<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[650]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_variable_prices</wp:meta_key>
-			<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_price]]></wp:meta_key>
+		<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:10:"Free Image";s:4:"file";s:63:"http://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_variable_prices]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_limit</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_download_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:5:"36861";s:14:"thumbnail_size";s:5:"false";s:4:"name";s:9:"Free Item";s:4:"file";s:69:"https://easydigitaldownloads.com/demo/files/edd/2021/10/all-songs.zip";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_product_notes</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_thumbnail_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[36862]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_thumbnail_id</wp:meta_key>
-			<wp:meta_value><![CDATA[686]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_limit]]></wp:meta_key>
+		<wp:meta_value><![CDATA[0]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>Free</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/free/</link>
-		<pubDate>Tue, 27 Nov 2012 23:57:04 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>477</wp:post_id>
-		<wp:post_date>2012-11-27 23:57:04</wp:post_date>
-		<wp:post_date_gmt>2012-11-27 23:57:04</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>free</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>476</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/11/free.jpg]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_extensions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:6:{s:5:"width";s:3:"693";s:6:"height";s:3:"693";s:14:"hwstring_small";s:22:"height='96' width='96'";s:4:"file";s:20:"edd/2012/11/free.jpg";s:5:"sizes";a:5:{s:9:"thumbnail";a:3:{s:4:"file";s:16:"free-150x150.jpg";s:5:"width";s:3:"150";s:6:"height";s:3:"150";}s:6:"medium";a:3:{s:4:"file";s:16:"free-300x300.jpg";s:5:"width";s:3:"300";s:6:"height";s:3:"300";}s:14:"post-thumbnail";a:3:{s:4:"file";s:16:"free-693x288.jpg";s:5:"width";s:3:"693";s:6:"height";s:3:"288";}s:13:"large-feature";a:3:{s:4:"file";s:16:"free-693x288.jpg";s:5:"width";s:3:"693";s:6:"height";s:3:"288";}s:13:"small-feature";a:3:{s:4:"file";s:16:"free-300x300.jpg";s:5:"width";s:3:"300";s:6:"height";s:3:"300";}}s:10:"image_meta";a:10:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>A Music Album</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/</link>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products_conditions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:1;s:3:"all";}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_button_behavior]]></wp:meta_key>
+		<wp:meta_value><![CDATA[add_to_cart]]></wp:meta_value>
+		</wp:postmeta>
+					</item>
+					<item>
+		<title><![CDATA[A Music Album]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/</link>
 		<pubDate>Wed, 05 Dec 2012 17:13:21 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=514</guid>
 		<description></description>
-		<content:encoded><![CDATA[This is a sample product that show cases the <a href="http://easydigitaldownloads.com/extension/audio-player" target="_blank">Audio Player</a> extension.
-
-You can easily setup price options to purchase individual songs or the entire album.]]></content:encoded>
+		<content:encoded><![CDATA[This is a sample product that show cases an album configuration. You can easily setup price options to purchase individual songs or the entire album.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>514</wp:post_id>
-		<wp:post_date>2012-12-05 17:13:21</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:13:21</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>closed</wp:ping_status>
-		<wp:post_name>a-music-album</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-12-05 17:13:21]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-12-05 17:13:21]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:26:28]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:26:28]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[a-music-album]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>download</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[download]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
+										<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
 		<category domain="download_category" nicename="category-ii"><![CDATA[Category II]]></category>
-		<wp:postmeta>
-			<wp:meta_key>edd_price</wp:meta_key>
-			<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[650]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_variable_pricing</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_price]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1.00]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_variable_prices</wp:meta_key>
-			<wp:meta_value><![CDATA[a:4:{i:0;a:2:{s:4:"name";s:6:"Song 1";s:6:"amount";s:4:"1.00";}i:1;a:2:{s:4:"name";s:6:"Song 2";s:6:"amount";s:4:"1.00";}i:2;a:2:{s:4:"name";s:6:"Song 3";s:6:"amount";s:4:"1.00";}i:3;a:2:{s:4:"name";s:11:"Whole Album";s:6:"amount";s:4:"3.00";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_variable_pricing]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_variable_prices]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:4:{i:0;a:3:{s:5:"index";s:1:"0";s:4:"name";s:6:"Song 1";s:6:"amount";s:4:"1.00";}i:1;a:3:{s:5:"index";s:1:"1";s:4:"name";s:6:"Song 2";s:6:"amount";s:4:"1.00";}i:2;a:3:{s:5:"index";s:1:"2";s:4:"name";s:6:"Song 3";s:6:"amount";s:4:"1.00";}i:3;a:3:{s:5:"index";s:1:"3";s:4:"name";s:11:"Whole Album";s:6:"amount";s:4:"3.00";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_limit</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_download_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:4:{i:1;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:5:"36856";s:14:"thumbnail_size";s:5:"false";s:4:"name";s:6:"Song 1";s:4:"file";s:107:"https://easydigitaldownloads.com/demo/files/edd/2021/10/Atlantic-City-Orchestra-I-Love-Her-She-Loves-Me.mp3";s:9:"condition";s:1:"0";}i:2;a:6:{s:5:"index";s:0:"";s:13:"attachment_id";s:5:"36857";s:14:"thumbnail_size";s:5:"false";s:4:"name";s:6:"Song 2";s:4:"file";s:91:"https://easydigitaldownloads.com/demo/files/edd/2021/10/Weber-and-Fields-Drinking-Scene.mp3";s:9:"condition";s:1:"1";}i:3;a:6:{s:5:"index";s:0:"";s:13:"attachment_id";s:5:"36858";s:14:"thumbnail_size";s:5:"false";s:4:"name";s:6:"Song 3";s:4:"file";s:100:"https://easydigitaldownloads.com/demo/files/edd/2021/10/Lloyd-Rodgers-ghetto-blaster-chuck-estes.mp3";s:9:"condition";s:1:"2";}i:4;a:6:{s:5:"index";s:0:"";s:13:"attachment_id";s:5:"36861";s:14:"thumbnail_size";s:5:"false";s:4:"name";s:9:"All Songs";s:4:"file";s:69:"https://easydigitaldownloads.com/demo/files/edd/2021/10/all-songs.zip";s:9:"condition";s:1:"3";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_product_notes</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[edd_preview_files]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:3:{i:0;a:2:{s:4:"name";s:6:"Song 1";s:4:"file";s:107:"https://easydigitaldownloads.com/demo/files/edd/2021/10/Atlantic-City-Orchestra-I-Love-Her-She-Loves-Me.mp3";}i:1;a:2:{s:4:"name";s:6:"Song 2";s:4:"file";s:91:"https://easydigitaldownloads.com/demo/files/edd/2021/10/Weber-and-Fields-Drinking-Scene.mp3";}i:2;a:2:{s:4:"name";s:6:"Song 3";s:4:"file";s:100:"https://easydigitaldownloads.com/demo/files/edd/2021/10/Lloyd-Rodgers-ghetto-blaster-chuck-estes.mp3";}}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_thumbnail_id</wp:meta_key>
-			<wp:meta_value><![CDATA[685]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_thumbnail_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[36859]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>02156_orangedays_1024x1024</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/02156_orangedays_1024x1024/</link>
-		<pubDate>Fri, 25 Jan 2013 17:40:51 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/12/02156_orangedays_1024x1024.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>685</wp:post_id>
-		<wp:post_date>2013-01-25 17:40:51</wp:post_date>
-		<wp:post_date_gmt>2013-01-25 17:40:51</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>02156_orangedays_1024x1024</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>514</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/12/02156_orangedays_1024x1024.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/12/02156_orangedays_1024x1024.jpg]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:5:{s:5:"width";i:1024;s:6:"height";i:1024;s:4:"file";s:42:"edd/2012/12/02156_orangedays_1024x1024.jpg";s:5:"sizes";a:4:{s:9:"thumbnail";a:4:{s:4:"file";s:37:"02156_orangedays_1024x1024-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:6:"medium";a:4:{s:4:"file";s:38:"02156_orangedays_1024x1024-300x300.jpg";s:5:"width";i:300;s:6:"height";i:300;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:40:"02156_orangedays_1024x1024-1024x1024.jpg";s:5:"width";i:1024;s:6:"height";i:1024;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:38:"02156_orangedays_1024x1024-624x624.jpg";s:5:"width";i:624;s:6:"height";i:624;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:10:{s:8:"aperture";i:0;s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";i:0;s:9:"copyright";s:0:"";s:12:"focal_length";i:0;s:3:"iso";i:0;s:13:"shutter_speed";i:0;s:5:"title";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_price_options_mode]]></wp:meta_key>
+		<wp:meta_value><![CDATA[on]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>01689_beautifulmorning_1280x1024</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/01689_beautifulmorning_1280x1024/</link>
-		<pubDate>Fri, 25 Jan 2013 17:41:34 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/11/01689_beautifulmorning_1280x1024.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>686</wp:post_id>
-		<wp:post_date>2013-01-25 17:41:34</wp:post_date>
-		<wp:post_date_gmt>2013-01-25 17:41:34</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>01689_beautifulmorning_1280x1024</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>476</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/11/01689_beautifulmorning_1280x1024.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/11/01689_beautifulmorning_1280x1024.jpg]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_default_price_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[0]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:5:{s:5:"width";i:1280;s:6:"height";i:1024;s:4:"file";s:48:"edd/2012/11/01689_beautifulmorning_1280x1024.jpg";s:5:"sizes";a:4:{s:9:"thumbnail";a:4:{s:4:"file";s:43:"01689_beautifulmorning_1280x1024-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:6:"medium";a:4:{s:4:"file";s:44:"01689_beautifulmorning_1280x1024-300x240.jpg";s:5:"width";i:300;s:6:"height";i:240;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:45:"01689_beautifulmorning_1280x1024-1024x819.jpg";s:5:"width";i:1024;s:6:"height";i:819;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:44:"01689_beautifulmorning_1280x1024-624x499.jpg";s:5:"width";i:624;s:6:"height";i:499;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:10:{s:8:"aperture";d:11;s:6:"credit";s:0:"";s:6:"camera";s:13:"Canon EOS 40D";s:7:"caption";s:0:"";s:17:"created_timestamp";i:1221891293;s:9:"copyright";s:0:"";s:12:"focal_length";s:2:"10";s:3:"iso";s:3:"100";s:13:"shutter_speed";s:3:"0.6";s:5:"title";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_limit]]></wp:meta_key>
+		<wp:meta_value><![CDATA[0]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>01643_goodmorning_1280x1024</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/another-sample-product/01643_goodmorning_1280x1024/</link>
-		<pubDate>Fri, 25 Jan 2013 17:42:12 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/06/01643_goodmorning_1280x1024.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>687</wp:post_id>
-		<wp:post_date>2013-01-25 17:42:12</wp:post_date>
-		<wp:post_date_gmt>2013-01-25 17:42:12</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>01643_goodmorning_1280x1024</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>67</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/06/01643_goodmorning_1280x1024.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/06/01643_goodmorning_1280x1024.jpg]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_upload_file_extensions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:5:{s:5:"width";i:960;s:6:"height";i:462;s:4:"file";s:43:"edd/2012/06/01643_goodmorning_1280x1024.jpg";s:5:"sizes";a:3:{s:9:"thumbnail";a:4:{s:4:"file";s:38:"01643_goodmorning_1280x1024-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:6:"medium";a:4:{s:4:"file";s:39:"01643_goodmorning_1280x1024-300x144.jpg";s:5:"width";i:300;s:6:"height";i:144;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:39:"01643_goodmorning_1280x1024-624x300.jpg";s:5:"width";i:624;s:6:"height";i:300;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:10:{s:8:"aperture";d:8;s:6:"credit";s:7:"unknown";s:6:"camera";s:22:"Canon EOS 350D DIGITAL";s:7:"caption";s:0:"";s:17:"created_timestamp";i:1211095823;s:9:"copyright";s:0:"";s:12:"focal_length";s:2:"26";s:3:"iso";s:3:"100";s:13:"shutter_speed";s:2:"35";s:5:"title";s:0:"";}}]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_bundled_products_conditions]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:1;s:3:"all";}]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-	<item>
-		<title>Stitched Panorama</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/stitched-panorama/</link>
-		<pubDate>Fri, 25 Jan 2013 17:42:29 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>688</wp:post_id>
-		<wp:post_date>2013-01-25 17:42:29</wp:post_date>
-		<wp:post_date_gmt>2013-01-25 17:42:29</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>stitched-panorama</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>16</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_edd_button_behavior]]></wp:meta_key>
+		<wp:meta_value><![CDATA[add_to_cart]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:5:{s:5:"width";i:1280;s:6:"height";i:1024;s:4:"file";s:51:"edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg";s:5:"sizes";a:4:{s:9:"thumbnail";a:4:{s:4:"file";s:46:"02348_caltonhilledinburgh_1280x1024-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:6:"medium";a:4:{s:4:"file";s:47:"02348_caltonhilledinburgh_1280x1024-300x240.jpg";s:5:"width";i:300;s:6:"height";i:240;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:48:"02348_caltonhilledinburgh_1280x1024-1024x819.jpg";s:5:"width";i:1024;s:6:"height";i:819;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:47:"02348_caltonhilledinburgh_1280x1024-624x499.jpg";s:5:"width";i:624;s:6:"height";i:499;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:10:{s:8:"aperture";d:8;s:6:"credit";s:0:"";s:6:"camera";s:11:"NIKON D5000";s:7:"caption";s:0:"";s:17:"created_timestamp";i:1281644419;s:9:"copyright";s:0:"";s:12:"focal_length";s:2:"18";s:3:"iso";s:3:"100";s:13:"shutter_speed";s:14:"0.166666666667";s:5:"title";s:17:"Stitched Panorama";}}]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Checkout</title>
-		<link>http://easydigitaldownloads.com/demo/checkout/</link>
-		<pubDate>Mon, 21 May 2012 15:59:39 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/checkout/</guid>
-		<description></description>
-		<content:encoded><![CDATA[[download_checkout]]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>4</wp:post_id>
-		<wp:post_date>2012-05-21 15:59:39</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 15:59:39</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>checkout</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-	</item>
-	<item>
-		<title>Purchase Confirmation</title>
-		<link>http://easydigitaldownloads.com/demo/purchase-confirmation/</link>
-		<pubDate>Mon, 21 May 2012 15:59:39 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/purchase-confirmation/</guid>
-		<description></description>
-		<content:encoded><![CDATA[Thank you for your purchase!
-[edd_receipt]]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>5</wp:post_id>
-		<wp:post_date>2012-05-21 15:59:39</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 15:59:39</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>purchase-confirmation</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-	</item>
-	<item>
-		<title>Purchase History</title>
-		<link>http://easydigitaldownloads.com/demo/purchase-history/</link>
-		<pubDate>Mon, 21 May 2012 15:59:39 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/purchase-history/</guid>
-		<description></description>
-		<content:encoded><![CDATA[[purchase_history]]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>6</wp:post_id>
-		<wp:post_date>2012-05-21 15:59:39</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 15:59:39</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>purchase-history</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-	</item>
-	<item>
-		<title>Product Grid</title>
-		<link>http://easydigitaldownloads.com/demo/product-grid/</link>
+					</item>
+					<item>
+		<title><![CDATA[Product Grid]]></title>
+		<link>https://easydigitaldownloads.com/demo/product-grid/</link>
 		<pubDate>Wed, 05 Dec 2012 17:06:25 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=509</guid>
 		<description></description>
-		<content:encoded><![CDATA[[downloads columns=2 number=4]]]></content:encoded>
+		<content:encoded><![CDATA[[downloads columns=3]]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>509</wp:post_id>
-		<wp:post_date>2012-12-05 17:06:25</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:06:25</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>product-grid</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-12-05 17:06:25]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-12-05 17:06:25]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2020-06-16 13:19:25]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2020-06-16 13:19:25]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[open]]></wp:ping_status>
+		<wp:post_name><![CDATA[product-grid]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[page]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_page_template</wp:meta_key>
-			<wp:meta_value><![CDATA[default]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_page_template]]></wp:meta_key>
+		<wp:meta_value><![CDATA[templates/template-full-width.php]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Transaction Failed</title>
-		<link>http://easydigitaldownloads.com/demo/checkout/transaction-failed/</link>
-		<pubDate>Wed, 05 Dec 2012 17:06:32 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/checkout/transaction-failed/</guid>
-		<description></description>
-		<content:encoded><![CDATA[Your transaction failed, please try again or contact site support.]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>510</wp:post_id>
-		<wp:post_date>2012-12-05 17:06:32</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:06:32</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>transaction-failed</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>4</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Product List</title>
-		<link>http://easydigitaldownloads.com/demo/product-list/</link>
+							</item>
+					<item>
+		<title><![CDATA[Product List]]></title>
+		<link>https://easydigitaldownloads.com/demo/product-list/</link>
 		<pubDate>Wed, 05 Dec 2012 17:08:28 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=512</guid>
 		<description></description>
 		<content:encoded><![CDATA[[downloads columns=1 number=3]]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>512</wp:post_id>
-		<wp:post_date>2012-12-05 17:08:28</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:08:28</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>product-list</wp:post_name>
-		<wp:status>publish</wp:status>
+		<wp:post_date><![CDATA[2012-12-05 17:08:28]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2012-12-05 17:08:28]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2012-12-05 17:08:28]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2012-12-05 17:08:28]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[open]]></wp:ping_status>
+		<wp:post_name><![CDATA[product-list]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
 		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
+		<wp:post_type><![CDATA[page]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_edit_last]]></wp:meta_key>
+		<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_page_template</wp:meta_key>
-			<wp:meta_value><![CDATA[default]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_page_template]]></wp:meta_key>
+		<wp:meta_value><![CDATA[default]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+							</item>
+							<item>
+		<title><![CDATA[logo_03]]></title>
+		<link>https://easydigitaldownloads.com/demo/logo_03/</link>
+		<pubDate>Fri, 05 Sep 2014 14:44:53 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/2014/09/logo_03.png</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>8357</wp:post_id>
+		<wp:post_date><![CDATA[2014-09-05 14:44:53]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2014-09-05 14:44:53]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2014-09-05 14:44:53]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2014-09-05 14:44:53]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[logo_03]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/2014/09/logo_03.png]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[2014/09/logo_03.png]]></wp:meta_value>
 		</wp:postmeta>
-	</item>
-</channel>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:5:{s:5:"width";i:308;s:6:"height";i:48;s:4:"file";s:19:"2014/09/logo_03.png";s:5:"sizes";a:2:{s:9:"thumbnail";a:4:{s:4:"file";s:18:"logo_03-296x48.png";s:5:"width";i:296;s:6:"height";i:48;s:9:"mime-type";s:9:"image/png";}s:6:"medium";a:4:{s:4:"file";s:18:"logo_03-300x46.png";s:5:"width";i:300;s:6:"height";i:46;s:9:"mime-type";s:9:"image/png";}}s:10:"image_meta";a:11:{s:8:"aperture";i:0;s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";i:0;s:9:"copyright";s:0:"";s:12:"focal_length";i:0;s:3:"iso";i:0;s:13:"shutter_speed";i:0;s:5:"title";s:0:"";s:11:"orientation";i:0;}}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[download-item]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/download-item/</link>
+		<pubDate>Sat, 16 Dec 2017 18:58:54 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2017/12/download-item.zip</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>29258</wp:post_id>
+		<wp:post_date><![CDATA[2017-12-16 18:58:54]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2017-12-16 18:58:54]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2017-12-16 18:58:54]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2017-12-16 18:58:54]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[download-item]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>514</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2017/12/download-item.zip]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2017/12/download-item.zip]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[edd-relevant-icons]]></title>
+		<link>https://easydigitaldownloads.com/demo/edd-relevant-icons/</link>
+		<pubDate>Mon, 20 Aug 2018 19:55:02 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/2018/08/edd-relevant-icons.png</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>32939</wp:post_id>
+		<wp:post_date><![CDATA[2018-08-20 19:55:02]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2018-08-20 19:55:02]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2018-08-20 19:55:02]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2018-08-20 19:55:02]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[edd-relevant-icons]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/2018/08/edd-relevant-icons.png]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[2018/08/edd-relevant-icons.png]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:5:{s:5:"width";i:2000;s:6:"height";i:1200;s:4:"file";s:30:"2018/08/edd-relevant-icons.png";s:5:"sizes";a:5:{s:9:"thumbnail";a:4:{s:4:"file";s:29:"edd-relevant-icons-296x96.png";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:9:"image/png";}s:6:"medium";a:4:{s:4:"file";s:30:"edd-relevant-icons-300x180.png";s:5:"width";i:300;s:6:"height";i:180;s:9:"mime-type";s:9:"image/png";}s:12:"medium_large";a:4:{s:4:"file";s:30:"edd-relevant-icons-768x461.png";s:5:"width";i:768;s:6:"height";i:461;s:9:"mime-type";s:9:"image/png";}s:5:"large";a:4:{s:4:"file";s:31:"edd-relevant-icons-1024x614.png";s:5:"width";i:1024;s:6:"height";i:614;s:9:"mime-type";s:9:"image/png";}s:14:"post-thumbnail";a:4:{s:4:"file";s:30:"edd-relevant-icons-624x374.png";s:5:"width";i:624;s:6:"height";i:374;s:9:"mime-type";s:9:"image/png";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[cropped-edd-relevant-icons.png]]></title>
+		<link>https://easydigitaldownloads.com/demo/cropped-edd-relevant-icons-png/</link>
+		<pubDate>Mon, 20 Aug 2018 19:55:12 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/2018/08/cropped-edd-relevant-icons.png</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>32940</wp:post_id>
+		<wp:post_date><![CDATA[2018-08-20 19:55:12]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2018-08-20 19:55:12]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2018-08-20 19:55:12]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2018-08-20 19:55:12]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[cropped-edd-relevant-icons-png]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/2018/08/cropped-edd-relevant-icons.png]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[2018/08/cropped-edd-relevant-icons.png]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_context]]></wp:meta_key>
+		<wp:meta_value><![CDATA[custom-header]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:6:{s:5:"width";i:2000;s:6:"height";i:1200;s:4:"file";s:38:"2018/08/cropped-edd-relevant-icons.png";s:5:"sizes";a:5:{s:9:"thumbnail";a:4:{s:4:"file";s:37:"cropped-edd-relevant-icons-296x96.png";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:9:"image/png";}s:6:"medium";a:4:{s:4:"file";s:38:"cropped-edd-relevant-icons-300x180.png";s:5:"width";i:300;s:6:"height";i:180;s:9:"mime-type";s:9:"image/png";}s:12:"medium_large";a:4:{s:4:"file";s:38:"cropped-edd-relevant-icons-768x461.png";s:5:"width";i:768;s:6:"height";i:461;s:9:"mime-type";s:9:"image/png";}s:5:"large";a:4:{s:4:"file";s:39:"cropped-edd-relevant-icons-1024x614.png";s:5:"width";i:1024;s:6:"height";i:614;s:9:"mime-type";s:9:"image/png";}s:32:"twentyseventeen-thumbnail-avatar";a:4:{s:4:"file";s:38:"cropped-edd-relevant-icons-100x100.png";s:5:"width";i:100;s:6:"height";i:100;s:9:"mime-type";s:9:"image/png";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}s:17:"attachment_parent";i:32939;}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[product-image-4]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/product-image-4/</link>
+		<pubDate>Tue, 21 Aug 2018 21:03:23 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2018/08/product-image-4.png</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>32962</wp:post_id>
+		<wp:post_date><![CDATA[2018-08-21 21:03:23]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2018-08-21 21:03:23]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2018-08-21 21:03:23]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2018-08-21 21:03:23]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[product-image-4]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>514</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2018/08/product-image-4.png]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2018/08/product-image-4.png]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:5:{s:5:"width";i:722;s:6:"height";i:361;s:4:"file";s:31:"edd/2018/08/product-image-4.png";s:5:"sizes";a:3:{s:9:"thumbnail";a:4:{s:4:"file";s:26:"product-image-4-296x96.png";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:9:"image/png";}s:6:"medium";a:4:{s:4:"file";s:27:"product-image-4-300x150.png";s:5:"width";i:300;s:6:"height";i:150;s:9:"mime-type";s:9:"image/png";}s:32:"twentyseventeen-thumbnail-avatar";a:4:{s:4:"file";s:27:"product-image-4-100x100.png";s:5:"width";i:100;s:6:"height";i:100;s:9:"mime-type";s:9:"image/png";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[pexels-photo-27449-large-722x361]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/pexels-photo-27449-large-722x361/</link>
+		<pubDate>Tue, 21 Aug 2018 21:05:41 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2018/08/pexels-photo-27449-large-722x361.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>32964</wp:post_id>
+		<wp:post_date><![CDATA[2018-08-21 21:05:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2018-08-21 21:05:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2018-08-21 21:05:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2018-08-21 21:05:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[pexels-photo-27449-large-722x361]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>8</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2018/08/pexels-photo-27449-large-722x361.jpg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2018/08/pexels-photo-27449-large-722x361.jpg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:5:{s:5:"width";i:722;s:6:"height";i:361;s:4:"file";s:48:"edd/2018/08/pexels-photo-27449-large-722x361.jpg";s:5:"sizes";a:3:{s:9:"thumbnail";a:4:{s:4:"file";s:43:"pexels-photo-27449-large-722x361-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:6:"medium";a:4:{s:4:"file";s:44:"pexels-photo-27449-large-722x361-300x150.jpg";s:5:"width";i:300;s:6:"height";i:150;s:9:"mime-type";s:10:"image/jpeg";}s:32:"twentyseventeen-thumbnail-avatar";a:4:{s:4:"file";s:44:"pexels-photo-27449-large-722x361-100x100.jpg";s:5:"width";i:100;s:6:"height";i:100;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[pexels-photo-109479-large-722x361]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/pexels-photo-109479-large-722x361/</link>
+		<pubDate>Tue, 21 Aug 2018 21:06:05 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2018/08/pexels-photo-109479-large-722x361.jpeg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>32966</wp:post_id>
+		<wp:post_date><![CDATA[2018-08-21 21:06:05]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2018-08-21 21:06:05]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2018-08-21 21:06:05]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2018-08-21 21:06:05]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[pexels-photo-109479-large-722x361]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>68</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2018/08/pexels-photo-109479-large-722x361.jpeg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2018/08/pexels-photo-109479-large-722x361.jpeg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:5:{s:5:"width";i:722;s:6:"height";i:361;s:4:"file";s:50:"edd/2018/08/pexels-photo-109479-large-722x361.jpeg";s:5:"sizes";a:3:{s:9:"thumbnail";a:4:{s:4:"file";s:45:"pexels-photo-109479-large-722x361-296x96.jpeg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:6:"medium";a:4:{s:4:"file";s:46:"pexels-photo-109479-large-722x361-300x150.jpeg";s:5:"width";i:300;s:6:"height";i:150;s:9:"mime-type";s:10:"image/jpeg";}s:32:"twentyseventeen-thumbnail-avatar";a:4:{s:4:"file";s:46:"pexels-photo-109479-large-722x361-100x100.jpeg";s:5:"width";i:100;s:6:"height";i:100;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[I Love Her - She Loves Me]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/i-love-her-she-loves-me/</link>
+		<pubDate>Thu, 14 Oct 2021 03:12:52 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/Atlantic-City-Orchestra-I-Love-Her-She-Loves-Me.mp3</guid>
+		<description></description>
+		<content:encoded><![CDATA["I Love Her - She Loves Me" from Antique Phonograph Music Program 12/02/2008 by Atlantic City Orchestra. Released: 1922. Genre: Old-Time / Historic.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36856</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:12:52]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:12:52]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:13:42]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:13:42]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[i-love-her-she-loves-me]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>514</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/Atlantic-City-Orchestra-I-Love-Her-She-Loves-Me.mp3]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/Atlantic-City-Orchestra-I-Love-Her-She-Loves-Me.mp3]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:24:{s:10:"dataformat";s:3:"mp3";s:8:"channels";i:2;s:11:"sample_rate";i:44100;s:7:"bitrate";i:256000;s:11:"channelmode";s:6:"stereo";s:12:"bitrate_mode";s:3:"cbr";s:8:"lossless";b:0;s:15:"encoder_options";s:6:"CBR256";s:17:"compression_ratio";d:0.18140589569160998;s:10:"fileformat";s:3:"mp3";s:8:"filesize";i:7698856;s:9:"mime_type";s:10:"audio/mpeg";s:6:"length";i:241;s:16:"length_formatted";s:4:"4:01";s:5:"title";s:25:"I Love Her - She Loves Me";s:6:"artist";s:23:"Atlantic City Orchestra";s:5:"album";s:43:"Antique Phonograph Music Program 12/02/2008";s:14:"recording_time";s:19:"1922-01-01T00:00:00";s:5:"genre";s:19:"Old-Time / Historic";s:17:"copyright_message";s:63:"Public Domain: http://creativecommons.org/choose/publicdomain-2";s:4:"date";s:18:"1922-01-01 0:00:00";s:7:"comment";s:261:"URL: http://freemusicarchive.org/music/Atlantic_City_Orchestra/Antique_Phonograph_Music_Program_12022008/I_Love_Her_-_She_Loves_Me
+Comments: http://freemusicarchive.org/
+Curator: WFMU
+Copyright: Public Domain: http://creativecommons.org/choose/publicdomain-2";s:4:"band";s:50:"Antique Phonograph Music Program [Various Artists]";s:4:"year";s:4:"1922";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[Drinking Scene]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/drinking-scene/</link>
+		<pubDate>Thu, 14 Oct 2021 03:13:00 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/Weber-and-Fields-Drinking-Scene.mp3</guid>
+		<description></description>
+		<content:encoded><![CDATA["Drinking Scene" from Antique Phonograph Music Program 12/30/2008 by Weber and Fields. Released: 1912. Genre: Old-Time / Historic.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36857</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:13:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:13:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:13:45]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:13:45]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[drinking-scene]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>514</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/Weber-and-Fields-Drinking-Scene.mp3]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/Weber-and-Fields-Drinking-Scene.mp3]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:24:{s:10:"dataformat";s:3:"mp3";s:8:"channels";i:2;s:11:"sample_rate";i:44100;s:7:"bitrate";i:256000;s:11:"channelmode";s:6:"stereo";s:12:"bitrate_mode";s:3:"cbr";s:8:"lossless";b:0;s:15:"encoder_options";s:6:"CBR256";s:17:"compression_ratio";d:0.18140589569160998;s:10:"fileformat";s:3:"mp3";s:8:"filesize";i:5462088;s:9:"mime_type";s:10:"audio/mpeg";s:6:"length";i:171;s:16:"length_formatted";s:4:"2:51";s:5:"title";s:14:"Drinking Scene";s:6:"artist";s:16:"Weber and Fields";s:5:"album";s:43:"Antique Phonograph Music Program 12/30/2008";s:14:"recording_time";s:19:"1912-01-01T00:00:00";s:5:"genre";s:19:"Old-Time / Historic";s:17:"copyright_message";s:63:"Public Domain: http://creativecommons.org/choose/publicdomain-2";s:4:"date";s:18:"1912-01-01 0:00:00";s:7:"comment";s:243:"URL: http://freemusicarchive.org/music/Weber_and_Fields/Antique_Phonograph_Music_Program_12302008/Drinking_Scene
+Comments: http://freemusicarchive.org/
+Curator: WFMU
+Copyright: Public Domain: http://creativecommons.org/choose/publicdomain-2";s:4:"band";s:50:"Antique Phonograph Music Program [Various Artists]";s:4:"year";s:4:"1912";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[ghetto blaster - chuck estes]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/ghetto-blaster-chuck-estes/</link>
+		<pubDate>Thu, 14 Oct 2021 03:13:08 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/Lloyd-Rodgers-ghetto-blaster-chuck-estes.mp3</guid>
+		<description></description>
+		<content:encoded><![CDATA["ghetto blaster - chuck estes" from Cartesian Reunion Memorial Orchestra by Lloyd Rodgers. Released: 2012. Track 10. Genre: Unknown.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36858</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:13:08]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:13:08]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:13:49]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:13:49]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[ghetto-blaster-chuck-estes]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>514</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/Lloyd-Rodgers-ghetto-blaster-chuck-estes.mp3]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/Lloyd-Rodgers-ghetto-blaster-chuck-estes.mp3]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:27:{s:10:"dataformat";s:3:"mp3";s:8:"channels";i:2;s:11:"sample_rate";i:44100;s:7:"bitrate";i:96000;s:11:"channelmode";s:12:"joint stereo";s:12:"bitrate_mode";s:3:"cbr";s:8:"lossless";b:0;s:15:"encoder_options";s:5:"CBR96";s:17:"compression_ratio";d:0.06802721088435375;s:10:"fileformat";s:3:"mp3";s:8:"filesize";i:2390906;s:9:"mime_type";s:10:"audio/mpeg";s:6:"length";i:199;s:16:"length_formatted";s:4:"3:19";s:5:"title";s:28:"ghetto blaster - chuck estes";s:6:"artist";s:13:"Lloyd Rodgers";s:12:"track_number";s:2:"10";s:5:"album";s:36:"Cartesian Reunion Memorial Orchestra";s:14:"recording_time";s:19:"2012-01-13T14:39:12";s:5:"genre";s:7:"Unknown";s:17:"copyright_message";s:127:"Creative Commons Attribution-NonCommercial-NoDerivatives (aka Music Sharing): http://creativecommons.org/licenses/by-nc-nd/3.0/";s:4:"date";s:19:"2012-01-13 14:39:12";s:9:"file_type";s:9:"audio/mp3";s:7:"comment";s:330:"URL: http://freemusicarchive.org/music/Lloyd_Rodgers/Cartesian_Reunion_Memorial_Orchestra_1242/ghetto_blaster_-_chuck_estes_1557
+Comments: http://freemusicarchive.org/
+Curator: ccCommunity
+Copyright: Creative Commons Attribution-NonCommercial-NoDerivatives (aka Music Sharing): http://creativecommons.org/licenses/by-nc-nd/3.0/";s:19:"music_cd_identifier";s:162:"
+
+1';	574
+
+%A&lt; 2	5;7&quot;#F!!	%&#039;*C:&amp;.
+02,
+n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d26Filename402001f00002c0a02";s:4:"band";s:13:"Lloyd Rodgers";s:4:"year";s:4:"2012";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[bowling]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/bowling/</link>
+		<pubDate>Thu, 14 Oct 2021 03:23:17 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/bowling.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36859</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:23:17]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:23:17]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:23:17]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:23:17]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[bowling]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>514</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/bowling-scaled.jpg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/bowling-scaled.jpg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:6:{s:5:"width";i:2560;s:6:"height";i:1695;s:4:"file";s:30:"edd/2021/10/bowling-scaled.jpg";s:5:"sizes";a:8:{s:6:"medium";a:4:{s:4:"file";s:19:"bowling-300x199.jpg";s:5:"width";i:300;s:6:"height";i:199;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:20:"bowling-1024x678.jpg";s:5:"width";i:1024;s:6:"height";i:678;s:9:"mime-type";s:10:"image/jpeg";}s:9:"thumbnail";a:4:{s:4:"file";s:18:"bowling-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:12:"medium_large";a:4:{s:4:"file";s:19:"bowling-768x509.jpg";s:5:"width";i:768;s:6:"height";i:509;s:9:"mime-type";s:10:"image/jpeg";}s:9:"1536x1536";a:4:{s:4:"file";s:21:"bowling-1536x1017.jpg";s:5:"width";i:1536;s:6:"height";i:1017;s:9:"mime-type";s:10:"image/jpeg";}s:9:"2048x2048";a:4:{s:4:"file";s:21:"bowling-2048x1356.jpg";s:5:"width";i:2048;s:6:"height";i:1356;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:20:"bowling-1200x795.jpg";s:5:"width";i:1200;s:6:"height";i:795;s:9:"mime-type";s:10:"image/jpeg";}s:23:"twentytwenty-fullscreen";a:4:{s:4:"file";s:21:"bowling-1980x1311.jpg";s:5:"width";i:1980;s:6:"height";i:1311;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:3:"6.3";s:6:"credit";s:0:"";s:6:"camera";s:11:"NIKON D7000";s:7:"caption";s:0:"";s:17:"created_timestamp";s:10:"1417209340";s:9:"copyright";s:0:"";s:12:"focal_length";s:3:"200";s:3:"iso";s:3:"800";s:13:"shutter_speed";s:4:"0.04";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}s:14:"original_image";s:11:"bowling.jpg";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[all-songs]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/all-songs/</link>
+		<pubDate>Thu, 14 Oct 2021 03:26:11 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/all-songs.zip</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36861</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:26:11]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:26:11]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:26:11]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:26:11]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[all-songs]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>514</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/all-songs.zip]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/all-songs.zip]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[saad-chaudhry-cYpqYxGeqts-unsplash]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-free-product/saad-chaudhry-cypqyxgeqts-unsplash/</link>
+		<pubDate>Thu, 14 Oct 2021 03:30:48 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/saad-chaudhry-cYpqYxGeqts-unsplash.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36862</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:30:48]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:30:48]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:30:48]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:30:48]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[saad-chaudhry-cypqyxgeqts-unsplash]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>476</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/saad-chaudhry-cYpqYxGeqts-unsplash-scaled.jpg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/saad-chaudhry-cYpqYxGeqts-unsplash-scaled.jpg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:6:{s:5:"width";i:2560;s:6:"height";i:1707;s:4:"file";s:57:"edd/2021/10/saad-chaudhry-cYpqYxGeqts-unsplash-scaled.jpg";s:5:"sizes";a:8:{s:6:"medium";a:4:{s:4:"file";s:46:"saad-chaudhry-cYpqYxGeqts-unsplash-300x200.jpg";s:5:"width";i:300;s:6:"height";i:200;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:47:"saad-chaudhry-cYpqYxGeqts-unsplash-1024x683.jpg";s:5:"width";i:1024;s:6:"height";i:683;s:9:"mime-type";s:10:"image/jpeg";}s:9:"thumbnail";a:4:{s:4:"file";s:45:"saad-chaudhry-cYpqYxGeqts-unsplash-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:12:"medium_large";a:4:{s:4:"file";s:46:"saad-chaudhry-cYpqYxGeqts-unsplash-768x512.jpg";s:5:"width";i:768;s:6:"height";i:512;s:9:"mime-type";s:10:"image/jpeg";}s:9:"1536x1536";a:4:{s:4:"file";s:48:"saad-chaudhry-cYpqYxGeqts-unsplash-1536x1024.jpg";s:5:"width";i:1536;s:6:"height";i:1024;s:9:"mime-type";s:10:"image/jpeg";}s:9:"2048x2048";a:4:{s:4:"file";s:48:"saad-chaudhry-cYpqYxGeqts-unsplash-2048x1365.jpg";s:5:"width";i:2048;s:6:"height";i:1365;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:47:"saad-chaudhry-cYpqYxGeqts-unsplash-1200x800.jpg";s:5:"width";i:1200;s:6:"height";i:800;s:9:"mime-type";s:10:"image/jpeg";}s:23:"twentytwenty-fullscreen";a:4:{s:4:"file";s:48:"saad-chaudhry-cYpqYxGeqts-unsplash-1980x1320.jpg";s:5:"width";i:1980;s:6:"height";i:1320;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}s:14:"original_image";s:38:"saad-chaudhry-cYpqYxGeqts-unsplash.jpg";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[galina-n-miziNqvJx5M-unsplash]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/galina-n-mizinqvjx5m-unsplash/</link>
+		<pubDate>Thu, 14 Oct 2021 03:31:49 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/galina-n-miziNqvJx5M-unsplash.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36863</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:31:49]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:31:49]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:31:49]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:31:49]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[galina-n-mizinqvjx5m-unsplash]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>68</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/galina-n-miziNqvJx5M-unsplash-scaled.jpg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/galina-n-miziNqvJx5M-unsplash-scaled.jpg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:6:{s:5:"width";i:2560;s:6:"height";i:1704;s:4:"file";s:52:"edd/2021/10/galina-n-miziNqvJx5M-unsplash-scaled.jpg";s:5:"sizes";a:8:{s:6:"medium";a:4:{s:4:"file";s:41:"galina-n-miziNqvJx5M-unsplash-300x200.jpg";s:5:"width";i:300;s:6:"height";i:200;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:42:"galina-n-miziNqvJx5M-unsplash-1024x682.jpg";s:5:"width";i:1024;s:6:"height";i:682;s:9:"mime-type";s:10:"image/jpeg";}s:9:"thumbnail";a:4:{s:4:"file";s:40:"galina-n-miziNqvJx5M-unsplash-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:12:"medium_large";a:4:{s:4:"file";s:41:"galina-n-miziNqvJx5M-unsplash-768x511.jpg";s:5:"width";i:768;s:6:"height";i:511;s:9:"mime-type";s:10:"image/jpeg";}s:9:"1536x1536";a:4:{s:4:"file";s:43:"galina-n-miziNqvJx5M-unsplash-1536x1022.jpg";s:5:"width";i:1536;s:6:"height";i:1022;s:9:"mime-type";s:10:"image/jpeg";}s:9:"2048x2048";a:4:{s:4:"file";s:43:"galina-n-miziNqvJx5M-unsplash-2048x1363.jpg";s:5:"width";i:2048;s:6:"height";i:1363;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:42:"galina-n-miziNqvJx5M-unsplash-1200x799.jpg";s:5:"width";i:1200;s:6:"height";i:799;s:9:"mime-type";s:10:"image/jpeg";}s:23:"twentytwenty-fullscreen";a:4:{s:4:"file";s:43:"galina-n-miziNqvJx5M-unsplash-1980x1318.jpg";s:5:"width";i:1980;s:6:"height";i:1318;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}s:14:"original_image";s:33:"galina-n-miziNqvJx5M-unsplash.jpg";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[charles-deluvio-1-nx1QR5dTE-unsplash]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/charles-deluvio-1-nx1qr5dte-unsplash/</link>
+		<pubDate>Thu, 14 Oct 2021 03:32:25 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/charles-deluvio-1-nx1QR5dTE-unsplash.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36864</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:32:25]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:32:25]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:32:25]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:32:25]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[charles-deluvio-1-nx1qr5dte-unsplash]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>8</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/charles-deluvio-1-nx1QR5dTE-unsplash-scaled.jpg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/charles-deluvio-1-nx1QR5dTE-unsplash-scaled.jpg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:6:{s:5:"width";i:2560;s:6:"height";i:2560;s:4:"file";s:59:"edd/2021/10/charles-deluvio-1-nx1QR5dTE-unsplash-scaled.jpg";s:5:"sizes";a:8:{s:6:"medium";a:4:{s:4:"file";s:48:"charles-deluvio-1-nx1QR5dTE-unsplash-300x300.jpg";s:5:"width";i:300;s:6:"height";i:300;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:50:"charles-deluvio-1-nx1QR5dTE-unsplash-1024x1024.jpg";s:5:"width";i:1024;s:6:"height";i:1024;s:9:"mime-type";s:10:"image/jpeg";}s:9:"thumbnail";a:4:{s:4:"file";s:47:"charles-deluvio-1-nx1QR5dTE-unsplash-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:12:"medium_large";a:4:{s:4:"file";s:48:"charles-deluvio-1-nx1QR5dTE-unsplash-768x768.jpg";s:5:"width";i:768;s:6:"height";i:768;s:9:"mime-type";s:10:"image/jpeg";}s:9:"1536x1536";a:4:{s:4:"file";s:50:"charles-deluvio-1-nx1QR5dTE-unsplash-1536x1536.jpg";s:5:"width";i:1536;s:6:"height";i:1536;s:9:"mime-type";s:10:"image/jpeg";}s:9:"2048x2048";a:4:{s:4:"file";s:50:"charles-deluvio-1-nx1QR5dTE-unsplash-2048x2048.jpg";s:5:"width";i:2048;s:6:"height";i:2048;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:50:"charles-deluvio-1-nx1QR5dTE-unsplash-1200x1200.jpg";s:5:"width";i:1200;s:6:"height";i:1200;s:9:"mime-type";s:10:"image/jpeg";}s:23:"twentytwenty-fullscreen";a:4:{s:4:"file";s:50:"charles-deluvio-1-nx1QR5dTE-unsplash-1980x1980.jpg";s:5:"width";i:1980;s:6:"height";i:1980;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}s:14:"original_image";s:40:"charles-deluvio-1-nx1QR5dTE-unsplash.jpg";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[cristina-matos-albers-Ltv7a5m8i4c-unsplash]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/cristina-matos-albers-ltv7a5m8i4c-unsplash/</link>
+		<pubDate>Thu, 14 Oct 2021 03:33:08 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/cristina-matos-albers-Ltv7a5m8i4c-unsplash.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36865</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:33:08]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:33:08]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:33:08]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:33:08]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[cristina-matos-albers-ltv7a5m8i4c-unsplash]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>16</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/cristina-matos-albers-Ltv7a5m8i4c-unsplash.jpg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/cristina-matos-albers-Ltv7a5m8i4c-unsplash.jpg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:5:{s:5:"width";i:2334;s:6:"height";i:2334;s:4:"file";s:58:"edd/2021/10/cristina-matos-albers-Ltv7a5m8i4c-unsplash.jpg";s:5:"sizes";a:8:{s:6:"medium";a:4:{s:4:"file";s:54:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-300x300.jpg";s:5:"width";i:300;s:6:"height";i:300;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:56:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-1024x1024.jpg";s:5:"width";i:1024;s:6:"height";i:1024;s:9:"mime-type";s:10:"image/jpeg";}s:9:"thumbnail";a:4:{s:4:"file";s:53:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:12:"medium_large";a:4:{s:4:"file";s:54:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-768x768.jpg";s:5:"width";i:768;s:6:"height";i:768;s:9:"mime-type";s:10:"image/jpeg";}s:9:"1536x1536";a:4:{s:4:"file";s:56:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-1536x1536.jpg";s:5:"width";i:1536;s:6:"height";i:1536;s:9:"mime-type";s:10:"image/jpeg";}s:9:"2048x2048";a:4:{s:4:"file";s:56:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-2048x2048.jpg";s:5:"width";i:2048;s:6:"height";i:2048;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:56:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-1200x1200.jpg";s:5:"width";i:1200;s:6:"height";i:1200;s:9:"mime-type";s:10:"image/jpeg";}s:23:"twentytwenty-fullscreen";a:4:{s:4:"file";s:56:"cristina-matos-albers-Ltv7a5m8i4c-unsplash-1980x1980.jpg";s:5:"width";i:1980;s:6:"height";i:1980;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[rodion-kutsaev-6W8H4puOJB0-unsplash]]></title>
+		<link>https://easydigitaldownloads.com/demo/downloads/another-sample-product/rodion-kutsaev-6w8h4puojb0-unsplash/</link>
+		<pubDate>Thu, 14 Oct 2021 03:33:41 +0000</pubDate>
+		<dc:creator><![CDATA[edd]]></dc:creator>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/rodion-kutsaev-6W8H4puOJB0-unsplash.jpg</guid>
+		<description></description>
+		<content:encoded><![CDATA[]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>36867</wp:post_id>
+		<wp:post_date><![CDATA[2021-10-14 03:33:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2021-10-14 03:33:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2021-10-14 03:33:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2021-10-14 03:33:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[rodion-kutsaev-6w8h4puojb0-unsplash]]></wp:post_name>
+		<wp:status><![CDATA[inherit]]></wp:status>
+		<wp:post_parent>67</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[attachment]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+						<wp:attachment_url><![CDATA[https://easydigitaldownloads.com/demo/files/edd/2021/10/rodion-kutsaev-6W8H4puOJB0-unsplash-scaled.jpg]]></wp:attachment_url>
+											<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
+		<wp:meta_value><![CDATA[edd/2021/10/rodion-kutsaev-6W8H4puOJB0-unsplash-scaled.jpg]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_attachment_metadata]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:6:{s:5:"width";i:2560;s:6:"height";i:2048;s:4:"file";s:58:"edd/2021/10/rodion-kutsaev-6W8H4puOJB0-unsplash-scaled.jpg";s:5:"sizes";a:8:{s:6:"medium";a:4:{s:4:"file";s:47:"rodion-kutsaev-6W8H4puOJB0-unsplash-300x240.jpg";s:5:"width";i:300;s:6:"height";i:240;s:9:"mime-type";s:10:"image/jpeg";}s:5:"large";a:4:{s:4:"file";s:48:"rodion-kutsaev-6W8H4puOJB0-unsplash-1024x819.jpg";s:5:"width";i:1024;s:6:"height";i:819;s:9:"mime-type";s:10:"image/jpeg";}s:9:"thumbnail";a:4:{s:4:"file";s:46:"rodion-kutsaev-6W8H4puOJB0-unsplash-296x96.jpg";s:5:"width";i:296;s:6:"height";i:96;s:9:"mime-type";s:10:"image/jpeg";}s:12:"medium_large";a:4:{s:4:"file";s:47:"rodion-kutsaev-6W8H4puOJB0-unsplash-768x614.jpg";s:5:"width";i:768;s:6:"height";i:614;s:9:"mime-type";s:10:"image/jpeg";}s:9:"1536x1536";a:4:{s:4:"file";s:49:"rodion-kutsaev-6W8H4puOJB0-unsplash-1536x1229.jpg";s:5:"width";i:1536;s:6:"height";i:1229;s:9:"mime-type";s:10:"image/jpeg";}s:9:"2048x2048";a:4:{s:4:"file";s:49:"rodion-kutsaev-6W8H4puOJB0-unsplash-2048x1638.jpg";s:5:"width";i:2048;s:6:"height";i:1638;s:9:"mime-type";s:10:"image/jpeg";}s:14:"post-thumbnail";a:4:{s:4:"file";s:48:"rodion-kutsaev-6W8H4puOJB0-unsplash-1200x960.jpg";s:5:"width";i:1200;s:6:"height";i:960;s:9:"mime-type";s:10:"image/jpeg";}s:23:"twentytwenty-fullscreen";a:4:{s:4:"file";s:49:"rodion-kutsaev-6W8H4puOJB0-unsplash-1980x1584.jpg";s:5:"width";i:1980;s:6:"height";i:1584;s:9:"mime-type";s:10:"image/jpeg";}}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}s:14:"original_image";s:39:"rodion-kutsaev-6W8H4puOJB0-unsplash.jpg";}]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+				</channel>
 </rss>

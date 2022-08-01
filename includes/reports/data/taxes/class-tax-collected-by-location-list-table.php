@@ -14,6 +14,7 @@ namespace EDD\Reports\Data\Taxes;
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Admin\List_Table;
+use EDD\Reports;
 
 /**
  * Tax_Collected_by_Location class.
@@ -31,7 +32,7 @@ class Tax_Collected_By_Location extends List_Table {
 	public function __construct() {
 		parent::__construct( array(
 			'singular' => 'report-tax-collected-by-location',
-			'plural'   => 'report-tax-collected-by-locationss',
+			'plural'   => 'report-tax-collected-by-locations',
 			'ajax'     => false,
 		) );
 	}
@@ -72,10 +73,10 @@ class Tax_Collected_By_Location extends List_Table {
 	public function get_columns() {
 		return array(
 			'country'  => __( 'Country/Region', 'easy-digital-downloads' ),
-			'tax_rate' => __( 'Tax Rate', 'easy-digital-downloads' ),
 			'from'     => __( 'From', 'easy-digital-downloads' ),
 			'to'       => __( 'To', 'easy-digital-downloads' ),
 			'gross'    => __( 'Gross', 'easy-digital-downloads' ),
+			'tax'      => __( 'Tax', 'easy-digital-downloads' ),
 			'net'      => __( 'Net', 'easy-digital-downloads' ),
  		);
 	}
@@ -90,62 +91,101 @@ class Tax_Collected_By_Location extends List_Table {
 	public function get_data() {
 		global $wpdb;
 
-		$data = array();
+		$data             = array();
+		$tax_rates        = edd_get_tax_rates( array(), OBJECT );
+		$date_filter      = Reports\get_filter_value( 'dates' );
+		$date_range       = Reports\parse_dates_for_range( $date_filter['range'] );
+		$currency         = Reports\get_filter_value( 'currencies' );
+		$convert_currency = empty( $currency ) || 'convert' === $currency;
+		$format_currency  = $convert_currency ? edd_get_currency() : strtoupper( $currency );
 
-		$tax_rates = edd_get_tax_rates( array(), OBJECT );
+		// Date query.
+		$date_query  = '';
+
+		if ( ! empty( $date_range['start'] ) && '0000-00-00 00:00:00' !== $date_range['start'] ) {
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( EDD()->utils->date( $date_range['start'], null, false )->startOfDay()->format( 'mysql' ) ) );
+		}
+
+		if ( ! empty( $date_range['end'] ) && '0000-00-00 00:00:00' !== $date_range['end'] ) {
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( EDD()->utils->date( $date_range['end'], null, false )->endOfDay()->format( 'mysql' ) ) );
+		}
+
+		$from = empty( $date_range['start'] ) || '0000-00-00 00:00:00' === $date_range['start']
+				? '&mdash;'
+				: edd_date_i18n( EDD()->utils->date( $date_range['start'], null, false )->startOfDay()->timestamp );
+
+		$to = empty( $date_range['end'] ) || '0000-00-00 00:00:00' === $date_range['end']
+			? '&mdash;'
+			: edd_date_i18n( EDD()->utils->date( $date_range['end'], null, false )->endOfDay()->timestamp );
+
+		$tax_column   = $convert_currency ? 'tax / rate' : 'tax';
+		$total_column = $convert_currency ? 'total / rate' : 'total';
+
+		$currency_sql = '';
+		if ( ! $convert_currency && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
+			$currency_sql = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
+		}
+
+		/*
+		 * We need to first calculate the total tax collected for all orders so we can determine the amount of tax collected for the global rate
+		 *
+		 * The total determined here will be reduced by the amount collected for each specified tax rate/region.
+		 */
+		$all_orders = $wpdb->get_results( "
+			SELECT SUM({$tax_column}) as tax, SUM({$total_column}) as total
+			FROM {$wpdb->edd_orders}
+			WHERE 1=1 {$currency_sql} {$date_query}
+		", ARRAY_A );
 
 		foreach ( $tax_rates as $tax_rate ) {
+
+			$country_region = $tax_rate->name . '-' . $tax_rate->description;
+
+			if ( array_key_exists( $country_region, $data ) ) {
+				continue; // We've already pulled numbers for this country / region
+			}
+
 			$location = edd_get_country_name( $tax_rate->name );
 
 			if ( ! empty( $tax_rate->description ) ) {
 				$location .= ' &mdash; ' . edd_get_state_name( $tax_rate->name, $tax_rate->description );
 			}
 
-			$from = empty( $tax_rate->start_date ) || '0000-00-00 00:00:00' === $tax_rate->start_date
-				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $tax_rate->start_date, null, true )->startOfDay()->timestamp );
-
-			$to = empty( $tax_rate->end_date ) || '0000-00-00 00:00:00' === $tax_rate->end_date
-				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $tax_rate->end_date, null, true )->endOfDay()->timestamp );
-
 			$region = ! empty( $tax_rate->description )
 				? $wpdb->prepare( ' AND region = %s', esc_sql( $tax_rate->description ) )
 				: '';
 
-			// Date query.
-			$date_query = '';
-
-			if ( ! empty( $tax_rate->start_date ) && '0000-00-00 00:00:00' !== $tax_rate->start_date ) {
-				$date_query .= $wpdb->prepare( "AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( $tax_rate->start_date ) );
-			}
-
-			if ( ! empty( $tax_rate->end_date ) && '0000-00-00 00:00:00' !== $tax_rate->end_date ) {
-				$date_query .= $wpdb->prepare( "AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( $tax_rate->end_date ) );
-			}
-
-			$results = $wpdb->get_row( $wpdb->prepare( "
-				SELECT tax, total, country, region
+			$results = $wpdb->get_results( $wpdb->prepare( "
+				SELECT SUM($tax_column) as tax, SUM($total_column) as total, country, region
 				FROM {$wpdb->edd_orders}
 				INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
-				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
-				GROUP BY country, region
+				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query} {$currency_sql}
 			", esc_sql( $tax_rate->name ) ), ARRAY_A );
 
-			$results = wp_parse_args( $results, array(
-				'subtotal' => 0.00,
-				'total'    => 0.00,
-				'tax'      => 0.00
-			) );
+			$all_orders[0]['tax']   -= $results[0]['tax'];
+			$all_orders[0]['total'] -= $results[0]['total'];
 
-			$data[] = array(
+			$data[ $country_region ] = array(
 				'country'  => $location,
-				'tax_rate' => floatval( $tax_rate->amount ) . '%',
 				'from'     => $from,
 				'to'       => $to,
-				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results['total'] - $results['tax'] ) ) ),
-				'net'      => edd_currency_filter( edd_format_amount( floatval( $results['total'] ) ) ),
+				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] ) ), $format_currency ),
+				'tax'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['tax'] ) ), $format_currency ),
+				'net'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] - $results[0]['tax'] ) ), $format_currency ),
 			);
+		}
+
+		if( $all_orders[0]['total'] > 0 && $all_orders[0]['tax'] > 0 ) {
+
+			$data[ 'global' ] = array(
+				'country'  => __( 'Global Rate', 'easy-digital-downloads' ),
+				'from'     => $from,
+				'to'       => $to,
+				'gross'    => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] ) ) ), $format_currency ),
+				'tax'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['tax'] ) ) ), $format_currency ),
+				'net'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] - $all_orders[0]['tax'] ) ) ), $format_currency ),
+			);
+
 		}
 
 		return $data;

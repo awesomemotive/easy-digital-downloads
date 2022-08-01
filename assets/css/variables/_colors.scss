@@ -1,0 +1,29 @@
+@import "~@wordpress/base-styles/colors";
+@import "~@wordpress/base-styles/colors.native";
+/**
+ * WordPress Core colors current as of 5.5.1.
+ */
+$wp-text: $gray-text-min;
+$wp-border: #c3c4c7;
+
+$wp-input-text: #32373c;
+$wp-input-border: #7e8993;
+
+$wp-alternate: #f9f9f9;
+$wp-inactive: #999;
+
+$wp-red-50: #d63638;
+$wp-green-50: #008a20;
+
+$wp-gray-0: $gray-0;
+$wp-gray-2: $gray-100;
+$wp-gray-5: #dcdcde;
+$wp-gray-10: #c3c4c7;
+$wp-gray-20: $gray-20;
+$wp-gray-40: $gray-40;
+$wp-gray-50: $gray-50;
+
+$buddypress-colors: (
+	'evergreen': #36533f,
+	'mint': #4f6d59,
+);

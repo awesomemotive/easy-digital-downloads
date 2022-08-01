@@ -25,6 +25,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 // Load EDD file.
 include_once( 'easy-digital-downloads.php' );
 
+$plugin = new EDD_Requirements_Check;
+$plugin->bootstrap();
+
 global $wpdb, $wp_roles;
 
 if( edd_get_option( 'uninstall_on_delete' ) ) {
@@ -88,21 +91,6 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 		'widget_edd_cart_widget',
 		'widget_edd_categories_tags_widget',
 
-		// Database options
-		'wpdb_edd_adjustmentmeta_version',
-		'wpdb_edd_adjustments_version',
-		'wpdb_edd_customermeta_version',
-		'wpdb_edd_customers_version',
-		'wpdb_edd_logmeta_version',
-		'wpdb_edd_logs_version',
-		'wpdb_edd_notemeta_version',
-		'wpdb_edd_notes_version',
-		'wpdb_edd_order_itemmeta_version',
-		'wpdb_edd_order_items_version',
-		'wpdb_edd_order_adjustments_version',
-		'wpdb_edd_ordermeta_version',
-		'wpdb_edd_orders_version',
-
 		// Deprecated 3.0.0
 		'wp_edd_customers_db_version',
 		'wp_edd_customermeta_db_version',
@@ -122,10 +110,26 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	// Remove all database tables
-	$edd_db_tables = array( 'customers', 'customermeta', 'adjustment', 'adjustmentmeta', 'logs', 'logmeta', 'notes', 'notemeta', 'orders', 'ordermeta', 'order_items', 'order_itemmeta', 'order_adjustments' );
-	foreach ( $edd_db_tables as $table ) {
-		$query = "DROP TABLE IF EXISTS {$wpdb->prefix}edd_{$table}";
-		$wpdb->query( $query );
+	foreach ( EDD()->components as $component ) {
+		/**
+		 * @var EDD\Database\Table $table
+		 */
+		$table = $component->get_interface( 'table' );
+
+		if ( $table instanceof EDD\Database\Table ) {
+			$table->uninstall();
+		}
+
+		// Check to see if this component has a meta table to uninstall.
+
+		/**
+		 * @var EDD\Database\Table $meta_table
+		 */
+		$meta_table = $component->get_interface( 'meta' );
+
+		if ( $meta_table instanceof EDD\Database\Table ) {
+			$meta_table->uninstall();
+		}
 	}
 
 	/** Cleanup Cron Events */

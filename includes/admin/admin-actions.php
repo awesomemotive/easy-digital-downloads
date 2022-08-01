@@ -34,6 +34,8 @@ add_action( 'admin_init', 'edd_process_actions' );
  * When the Download list table loads, call the function to view our tabs.
  *
  * @since 2.8.9
+ * @since 2.11.3 Unhooked this to revert to standard admin H1 tags.
+ * @since 3.0    Added back as download categories/tags have been removed from the admin menu.
  * @param $views
  *
  * @return mixed
@@ -50,7 +52,7 @@ add_filter( 'views_edit-download', 'edd_products_tabs', 10, 1 );
  *
  * @since 3.0
  *
- * @return mixed
+ * @return void
  */
 function edd_taxonomies_tabs() {
 
@@ -69,9 +71,7 @@ function edd_taxonomies_tabs() {
 	}
 
 	// Output the tabs
-	?><div class="wrap edd-tab-wrap"><?php
 	edd_display_product_tabs();
-	?></div><?php
 }
 add_action( 'admin_notices', 'edd_taxonomies_tabs', 10, 1 );
 
@@ -175,8 +175,8 @@ function edd_display_product_tabs() {
 	$tabs = array(
 		'products' => array(
 			'name' => edd_get_label_plural(),
-			'url'  => admin_url( 'edit.php?post_type=download' ),
-		)
+			'url'  => edd_get_admin_url(),
+		),
 	);
 
 	// Get taxonomies
@@ -185,7 +185,7 @@ function edd_display_product_tabs() {
 		$tabs[ $tax ] = array(
 			'name' => $details->labels->menu_name,
 			'url'  => add_query_arg( array(
-				'taxonomy'  => $tax,
+				'taxonomy'  => sanitize_key( $tax ),
 				'post_type' => 'download'
 			), admin_url( 'edit-tags.php' ) )
 		);
@@ -204,26 +204,26 @@ function edd_display_product_tabs() {
 	}
 
 	// Start a buffer
-	ob_start() ?>
+	ob_start();
+	?>
 
-	<div class="clear"></div>
-	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper edd-tab-clear">
+	<nav class="nav-tab-wrapper wp-clearfix" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab ) {
-			$active = ( $active_tab === $tab_id )
-				? ' nav-tab-active'
-				: '';
-
-			echo '<a href="' . esc_url( $tab['url'] ) . '" class="nav-tab' . esc_attr( $active ) . '">';
-			echo esc_html( $tab['name'] );
-			echo '</a>';
+			$class = 'nav-tab';
+			if ( $active_tab === $tab_id ) {
+				$class .= ' nav-tab-active';
+			}
+			printf(
+				'<a href="%s" class="%s">%s</a>',
+				esc_url( $tab['url'] ),
+				esc_attr( $class ),
+				esc_html( $tab['name'] )
+			);
 		} ?>
 
-		<a href="<?php echo admin_url( 'post-new.php?post_type=download' ); ?>" class="page-title-action">
-			<?php _e( 'Add New', 'easy-digital-downloads' ); ?>
-		</a>
-	</h2>
+	</nav>
 	<br />
 
 	<?php

@@ -69,6 +69,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 	public function __construct( $_data, $options = array() ) {
 
 		$this->data = $_data;
+
 		// Set this so filters recieving $this can quickly know if it's a graph they want to modify
 		$this->type = 'pie';
 
@@ -76,7 +77,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 		$this->id = 'a' . md5( rand() );
 
 		// Setup default options;
-		$defaults = array(
+		$this->options = wp_parse_args( $options,  array(
 			'radius'            => 1,
 			'legend'            => true,
 			'legend_formatter'  => false,
@@ -91,12 +92,9 @@ class EDD_Pie_Graph extends EDD_Graph {
 			'hoverable'         => true,
 			'clickable'         => false,
 			'threshold'         => false,
-		);
-
-		$this->options = wp_parse_args( $options, $defaults );
+		) );
 
 		add_action( 'edd_graph_load_scripts', array( $this, 'load_additional_scripts' ) );
-
 	}
 
 	/**
@@ -105,9 +103,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 	 * @since 2.4
 	 */
 	public function load_additional_scripts() {
-		// Use minified libraries if SCRIPT_DEBUG is turned off
-		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		wp_enqueue_script( 'jquery-flot-pie', EDD_PLUGIN_URL . 'assets/js/jquery.flot.pie' . $suffix . '.js' );
+		wp_enqueue_script( 'edd-jquery-flot-pie', EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.pie.min.js' );
 	}
 
 	/**

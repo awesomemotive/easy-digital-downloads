@@ -11,11 +11,15 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_file_hooks() {
-		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_load_scripts'         ) );
-		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_register_styles'      ) );
-		$this->assertNotFalse( has_action( 'admin_print_scripts', 'edd_print_admin_scripts'  ) );
-		$this->assertNotFalse( has_action( 'admin_print_styles',  'edd_print_admin_styles'   ) );
-		$this->assertNotFalse( has_action( 'admin_head',          'edd_admin_downloads_icon' ) );
+		$this->assertNotFalse( has_action( 'init',                  'edd_register_scripts'       ) );
+		$this->assertNotFalse( has_action( 'init',                  'edd_register_styles'        ) );
+		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',    'edd_load_scripts'           ) );
+		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',    'edd_enqueue_styles'         ) );
+		$this->assertNotFalse( has_action( 'admin_init',            'edd_register_admin_scripts' ) );
+		$this->assertNotFalse( has_action( 'admin_init',            'edd_register_admin_styles'  ) );
+		$this->assertNotFalse( has_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_scripts'  ) );
+		$this->assertNotFalse( has_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_styles'   ) );
+		$this->assertNotFalse( has_action( 'admin_head',            'edd_admin_downloads_icon'   ) );
 	}
 
 	/**
@@ -66,6 +70,19 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		edd_update_option( 'disable_styles', false );
 		edd_register_styles();
 
+		$this->assertTrue( wp_style_is( 'edd-styles', 'registered' ) );
+	}
+
+	/**
+	 * Test that the test_enqueue_styles() function will enqueue the styles.
+	 *
+	 * @since 2.3.6
+	 */
+	public function test_enqueue_styles() {
+
+		edd_update_option( 'disable_styles', false );
+		edd_enqueue_styles();
+
 		$this->assertTrue( wp_style_is( 'edd-styles', 'enqueued' ) );
 	}
 
@@ -84,6 +101,9 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		edd_register_styles();
 
 		$this->go_to( '/' );
+
+		$this->assertTrue( wp_style_is( 'edd-styles', 'registered' ) );
+
 		unset( $_SERVER['HTTPS'] );
 	}
 
@@ -130,7 +150,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		return array(
 			array( 'jquery-chosen',        'enqueued' ),
 			array( 'edd-admin-scripts',    'enqueued' ),
-			array( 'colorbox',             'enqueued' ),
 			array( 'jquery-ui-datepicker', 'enqueued' ),
 			array( 'jquery-ui-dialog',     'enqueued' ),
 			array( 'media-upload',         'enqueued' ),
@@ -158,7 +177,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		return array(
 			array( 'jquery-chosen',   'enqueued' ),
 			array( 'wp-color-picker', 'enqueued' ),
-			array( 'colorbox',        'enqueued' ),
 			array( 'thickbox',        'enqueued' ),
 			array( 'edd-admin',       'enqueued' ),
 		);

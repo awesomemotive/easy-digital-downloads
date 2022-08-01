@@ -67,7 +67,8 @@ class Notes extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// content
@@ -84,7 +85,7 @@ class Notes extends Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -94,7 +95,7 @@ class Notes extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true

@@ -29,7 +29,7 @@ final class Customer_Email_Addresses extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_customer_email_addresses';
+	protected $name = 'customer_email_addresses';
 
 	/**
 	 * Database version
@@ -38,7 +38,7 @@ final class Customer_Email_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201808170001;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,8 +48,7 @@ final class Customer_Email_Addresses extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201808140001' => 201808140001,
-		'201808170001' => 201808170001,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -65,8 +64,8 @@ final class Customer_Email_Addresses extends Table {
 			type varchar(20) NOT NULL default 'secondary',
 			status varchar(20) NOT NULL default 'active',
 			email varchar(100) NOT NULL default '',
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY customer (customer_id),
@@ -77,43 +76,26 @@ final class Customer_Email_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201808140001
-	 * - Add the `uuid` varchar column
+	 * Upgrade to version 202002141
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
-	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	protected function __201808140001() {
+	protected function __202002141() {
 
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-		// Return success/fail
 		return $this->is_success( $result );
+
 	}
 
-	/**
-	 * Upgrade to version 201808170001
-	 * - Add the `email` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808170001() {
-
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY COLUMN `email` varchar(100) NOT NULL default ''" );
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX email (email)" );
-
-		// Return success/fail
-		return $this->is_success( $result );
-	}
 }

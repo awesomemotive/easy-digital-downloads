@@ -116,10 +116,10 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	 * @return string $col_data CSV cols.
 	 */
 	public function print_csv_cols() {
-		$cols     = $this->get_csv_cols();
-		$col_data = '';
-
-		for ( $i = 0; $i < count( $cols ); $i++ ) {
+		$cols         = $this->get_csv_cols();
+		$col_data     = '';
+		$column_count = count( $cols );
+		for ( $i = 0; $i < $column_count; $i++ ) {
 			$col_data .= $cols[ $i ];
 
 			// We don't need an extra space after the first column.
@@ -128,7 +128,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 				continue;
 			}
 
-			if ( $i == ( count( $cols ) - 1 ) ) {
+			if ( $i == ( $column_count - 1 ) ) {
 				$col_data .= "\r\n";
 			} else {
 				$col_data .= ",,";
@@ -212,11 +212,14 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			}
 
 			// Allows extensions with other 'completed' statuses to alter net earnings, like recurring.
-			$completed_statuses = apply_filters( 'edd_export_earnings_completed_statuses', array( 'publish', 'revoked' ) );
+			$completed_statuses = apply_filters( 'edd_export_earnings_completed_statuses', edd_get_complete_order_statuses() );
 
 			$net_count  = 0;
 			$net_amount = 0;
 			foreach ( $completed_statuses as $status ) {
+				if ( ! isset( $data[ $status ] ) ) {
+					continue;
+				}
 				$net_count  += absint( $data[ $status ]['count'] );
 				$net_amount += floatval( $data[ $status ]['amount'] );
 			}
@@ -246,21 +249,12 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$data = array();
 
 		$start_date = date( 'Y-m-d 00:00:00', strtotime( $this->start ) );
-
-		if ( $this->count() == 0 ) {
-			$end_date = date( 'Y-m-d 23:59:59', strtotime( $this->end ) );
-		} else {
-			$end_date = date( 'Y-m-d 23:59:59', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
-		}
+		$end_date   = date( 'Y-m-t 23:59:59', strtotime( $this->start ) );
 
 		if ( $this->step > 1 ) {
-			$start_date = date( 'Y-m-d 00:00:00', strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) ) );
-
-			if ( date( 'Y-m', strtotime( $start_date ) ) == date( 'Y-m', strtotime( $this->end ) ) ) {
-				$end_date = date( 'Y-m-d 23:59:59', strtotime( $this->end ) );
-			} else {
-				$end_date = date( 'Y-m-d 23:59:59', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
-			}
+			$start_timestamp = strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) );
+			$start_date      = date( 'Y-m-d 00:00:00', $start_timestamp );
+			$end_date        = date( 'Y-m-t 23:59:59', $start_timestamp );
 		}
 
 		if ( strtotime( $start_date ) > strtotime( $this->end ) ) {
@@ -271,7 +265,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$totals   = $wpdb->get_results( $wpdb->prepare(
 			"SELECT SUM(total) AS total, COUNT(DISTINCT id) AS count, status
 			 FROM {$wpdb->edd_orders}
-			 WHERE date_created >= %s AND date_created < %s
+			 WHERE date_created >= %s AND date_created <= %s
 			 GROUP BY YEAR(date_created), MONTH(date_created), status
 			 ORDER by date_created ASC", $start_date, $end_date ), ARRAY_A );
 
@@ -279,7 +273,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		foreach ( $totals as $row ) {
 			$total_data[ $row['status'] ] = array(
 				'count'  => $row['count'],
-				'amount' => edd_format_amount( $row['total'] )
+				'amount' => floatval( $row['total'] )
 			);
 		}
 

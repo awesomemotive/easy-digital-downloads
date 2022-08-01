@@ -1,0 +1,110 @@
+
+#edd-admin-tax-rates {
+	margin: 1em 0 0;
+
+	table {
+		border-collapse: collapse;
+	}
+
+	.tablenav.top {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.edd-admin-tax-rates__tablenav--left {
+		display: inline-flex;
+	}
+
+	th:not(.check-column) {
+		padding: 15px 10px;
+		width: unset;
+	}
+
+	.chosen-container {
+		width: 100% !important;
+	}
+
+	tbody tr:not(:last-of-type) {
+		border-bottom: 1px solid $gray-200;
+	}
+
+	tfoot.add-new th {
+		font-weight: normal;
+		padding: 12px 8px 10px 8px;
+	}
+
+	/**
+	* [1] Due to the inability to reset the <tbody> child views the "empty" view
+	* can only be appended to the parent. This means duplicates may be added.
+	*
+	* This can be removed once changes are immediately reflected with Backbone.sync()
+	*/
+	.edd-tax-rate-row--is-empty + .edd-tax-rate-row--is-empty, /* [1] */
+	.edd-tax-rate-row--inactive {
+		display: none;
+	}
+
+	.has-inactive .edd-tax-rate-row--inactive {
+		display: table-row;
+	}
+
+	.edd-tax-rate-row--is-empty td {
+		background-color: $wp-alternate;
+	}
+
+	.edd-tax-rate-row--inactive td {
+		color: $wp-inactive;
+		background-color: $wp-alternate;
+	}
+
+	.edd-tax-rate-table-add {
+		background-color: $wp-alternate;
+	}
+
+	@media screen and (max-width: 782px) {
+		thead th:not(.edd-tax-rates-table-rate),
+		tfoot:not(.add-new) th:not(.edd-tax-rates-table-rate) {
+			display: none;
+		}
+
+		thead tr,
+		tfoot:not(.add-new) tr,
+		.edd-tax-rate-row {
+			display: grid;
+			grid-template-columns: 2.5em 1fr;
+			grid-template-rows: 1fr;
+			grid-gap: 0 16px;
+		}
+
+		th.edd-tax-rates-table-rate {
+			padding-left: 12px;
+		}
+
+		.edd-tax-rates-table-checkbox {
+			grid-row: 1 / 5;
+		}
+
+		tbody td {
+			padding-left: 35% !important;
+		}
+
+		td:before {
+			content: attr(data-colname);
+			display: block;
+			width: 32%;
+			position: absolute;
+		}
+
+		.tablenav.top {
+			flex-wrap: wrap;
+		}
+
+		.edd-admin-tax-rates__tablenav--left {
+			margin-bottom: 16px;
+		}
+
+		.edd-admin-tax-rates__tablenav--left select {
+			margin-right: 6px;
+		}
+	}
+}

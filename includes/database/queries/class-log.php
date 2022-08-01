@@ -104,7 +104,7 @@ class Log extends Query {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An log ID to only return that order. Default empty.
+	 *     @type int          $id                   An log ID to only return that log. Default empty.
 	 *     @type array        $id__in               Array of log IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of log IDs to exclude. Default empty.
 	 *     @type string       $object_id            An object ID to only return those objects. Default empty.
@@ -119,8 +119,8 @@ class Log extends Query {
 	 *     @type string       $type                 A type to only return those types. Default empty.
 	 *     @type array        $type__in             Array of types to include. Default empty.
 	 *     @type array        $type__not_in         Array of types to exclude. Default empty.
-	 *     @type array        $title                Title to search by. Default empty.
-	 *     @type array        $content              Content to search by. Default empty.
+	 *     @type string       $title                Title to search by. Default empty.
+	 *     @type string       $content              Content to search by. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.
@@ -134,9 +134,9 @@ class Log extends Query {
 	 *     @type int          $offset               Number of logs to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'user_id', 'date_created',
-	 *                                              'user_id__in', 'object_id__in', 'object_type__in'.
-	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
+	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'user_id', 'type',
+	 *                                              'title', 'date_created', and 'date_modified'. Also accepts false,
+	 *                                              an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order rsults. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching logs for. Default empty.

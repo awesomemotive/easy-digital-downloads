@@ -57,8 +57,17 @@ function edd_get_purchase_link( $args = array() ) {
 			return false;
 		}
 
-
-		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
+		edd_set_error(
+			'set_checkout',
+			sprintf(
+				__( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ),
+				esc_url( edd_get_admin_url( array(
+					'page'    => 'edd-settings',
+					'tab'     => 'general',
+					'section' => 'pages',
+				) ) )
+			)
+		);
 		edd_print_errors();
 
 		$no_checkout_error_displayed = true;
@@ -174,7 +183,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	ob_start();
 ?>
-	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
+	<form id="<?php echo esc_attr( $form_id ); ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
 
 		<?php do_action( 'edd_purchase_link_top', $download->ID, $args ); ?>
 
@@ -183,8 +192,8 @@ function edd_get_purchase_link( $args = array() ) {
 			$class = implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) );
 
 			if ( ! edd_is_ajax_disabled() ) {
-
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-nonce="' .  wp_create_nonce( 'edd-add-to-cart-' . $download->ID ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
+				$timestamp = time();
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-nonce="' .  wp_create_nonce( 'edd-add-to-cart-' . $download->ID ) . '" data-timestamp="' . esc_attr( $timestamp ) . '" data-token="' . esc_attr( EDD\Utils\Tokenizer::tokenize( $timestamp ) ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
 
 			}
 
@@ -204,16 +213,18 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php endif; ?>
 			<?php if( ! $download->is_free( $args['price_id'] ) && ! edd_download_is_tax_exclusive( $download->ID ) ): ?>
 				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
+					/* translators: the formatted tax rate */
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( esc_html__( 'Includes %1$s tax', 'easy-digital-downloads' ), esc_html( edd_get_formatted_tax_rate() ) ) . '</span>';
 				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
+					/* translators: the formatted tax rate */
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( esc_html__( 'Excluding %1$s tax', 'easy-digital-downloads' ), esc_html( edd_get_formatted_tax_rate() ) ) . '</span>';
 				} ?>
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $download->ID ); ?>">
 		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
-			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $download->ID; ?>_1" class="edd_price_option_<?php echo $download->ID; ?>" value="<?php echo $price_id; ?>">
+			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo esc_attr( $download->ID ); ?>_<?php echo esc_attr( $price_id ); ?>" class="edd_price_option_<?php echo esc_attr( $download->ID ); ?>" value="<?php echo esc_attr( $price_id ); ?>">
 		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) && ! $download->is_free( $args['price_id'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
@@ -278,7 +289,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	), $download_id );
 
 	// Sanitize those class names and form them into a string
-	$css_classes_string = implode( array_map( 'sanitize_html_class', $css_classes_array ), ' ' );
+	$css_classes_string = implode( ' ', array_map( 'sanitize_html_class', $css_classes_array ) );
 
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;
@@ -414,7 +425,7 @@ add_action( 'edd_after_price_option', 'edd_variable_price_quantity_field', 10, 3
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
+	if ( $post && $post instanceof WP_Post && 'download' === $post->post_type && is_singular( 'download' ) && is_main_query() && ! post_password_required() ) {
 		ob_start();
 		do_action( 'edd_before_download_content', $post->ID );
 		$content = ob_get_clean() . $content;
@@ -999,6 +1010,82 @@ function edd_download_shortcode_item( $atts, $i ) {
 add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );
 
 /**
+ * Output full content for a download item in the [downloads] shortcode.
+ *
+ * Strips the [downloads] shortcode to avoid recursion.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_download_shortcode_full_content() {
+	$pattern = get_shortcode_regex( array( 'downloads' ) );
+	$content = preg_replace( "/$pattern/", '', get_the_content( '' ) );
+
+	/**
+	 * Filters the full content output for an individual download in [downloads] shortcode.
+	 *
+	 * @since 1.2
+	 *
+	 * @param string $content Download content.
+	 */
+	return apply_filters( 'edd_downloads_content', $content );
+}
+
+/**
+ * Output an excerpt for a download item in the [downloads] shortcode.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_download_shortcode_excerpt() {
+	// Adjust excerpt lengths.
+	add_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	// Ensure we use `the_excerpt` filter (for length).
+	ob_start();
+	the_excerpt();
+	$excerpt = ob_get_clean();
+
+	/**
+	 * Filters the excerpt output for an individual download in [downloads] shortcode.
+	 *
+	 * @since 1.2
+	 *
+	 * @param string $excerpt Download excerpt.
+	 */
+	$excerpt = apply_filters( 'edd_downloads_excerpt', $excerpt );
+
+	// Let other excerpt lengths act independently again.
+	remove_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	return $excerpt;
+}
+
+/**
+ * Callback for the [downloads] shortcode excerpt length.
+ *
+ * Added as a callable function so it can be removed after the downloads are output.
+ *
+ * @since 3.0
+ *
+ * @return int
+ */
+function edd_download_shortcode_excerpt_length() {
+	$length = 30;
+
+	/**
+	 * Filters the length of the generated excerpts in the [downloads] shortcode.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $length Length of the excerpt (in words).
+	 */
+	return apply_filters( 'edd_download_shortcode_excerpt_length', $length );
+}
+
+/**
  * Load the pagination for the [downloads] shortcode.
  *
  * @since 2.9.8
@@ -1036,7 +1123,7 @@ add_action( 'edd_downloads_list_after', 'edd_downloads_pagination', 10, 3 );
  * Build pagination
  *
  * @since 2.9.8
- * 
+ *
  * @param array $args The arguments used to build the pagination.
  */
 function edd_pagination( $args = array() ) {
@@ -1052,6 +1139,15 @@ function edd_pagination( $args = array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
+
+	/**
+	 * Filter pagination args.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args Pagination arguments.
+	 */
+	$args = apply_filters( 'edd_pagination_args', $args );
 
 	$type  = $args['type'];
 	$total = $args['total'];

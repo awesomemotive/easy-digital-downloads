@@ -143,16 +143,19 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		try {
 			$valid = $this->validate_endpoint( $endpoint_id, $attributes );
-
 		} catch ( \EDD_Exception $exception ) {
 			throw $exception;
 		}
 
 		if ( false === $valid ) {
 			return false;
-
 		} else {
-			return parent::add_item( $endpoint_id, $attributes );
+			try {
+				$return_value = parent::add_item( $endpoint_id, $attributes );
+			} catch ( \EDD_Exception $exception ) {
+				throw $exception;
+			}
+			return $return_value;
 		}
 	}
 

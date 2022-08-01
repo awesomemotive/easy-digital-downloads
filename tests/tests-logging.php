@@ -92,8 +92,129 @@ class Tests_Logging extends EDD_UnitTestCase {
 	 * @covers ::delete_logs()
 	 */
 	public function test_delete_logs() {
-		self::$object->delete_logs( self::$log_id );
+
+		$this->assertSame( 1, self::$object->get_log_count( 1, 'gateway_error' ) );
+
+		self::$object->delete_logs( 1 );
 
 		$this->assertSame( 0, self::$object->get_log_count( 1, 'gateway_error' ) );
 	}
+
+	/**
+	 * @covers edd_record_gateway_error()
+	 */
+	public function test_edd_record_gateway_error() {
+
+		$log_id     = edd_record_gateway_error( 'Test gateway error', 'Test gateway error content' );
+		$actual_log = edd_get_log( $log_id );
+
+		$expected = array(
+			'object_id'   => '0',
+			'object_type' => 'gateway_error',
+			'user_id'     => '0',
+			'type'        => 'gateway_error',
+			'title'       => 'Test gateway error',
+			'content'     => 'Test gateway error content',
+		);
+
+		$this->assertSame( $expected['object_id'], $actual_log->object_id );
+		$this->assertSame( $expected['object_type'], $actual_log->object_type );
+		$this->assertSame( $expected['user_id'], $actual_log->user_id );
+		$this->assertSame( $expected['type'], $actual_log->type );
+		$this->assertSame( $expected['title'], $actual_log->title );
+		$this->assertSame( $expected['content'], $actual_log->content );
+	}
+
+	/**
+	 * @covers edd_record_gateway_error()
+	 */
+	public function test_edd_add_log_with_null_type_and_no_id() {
+
+		$log_id = edd_add_log(
+			array(
+				'object_type' => null,
+				'object_id'   => 0,
+				'title'       => 'Test log with null object type and no ID',
+			)
+		);
+
+		$actual_log = edd_get_log( $log_id );
+
+		$expected = array(
+			'object_id'   => '0',
+			'object_type' => null,
+			'user_id'     => '0',
+			'type'        => '',
+			'title'       => 'Test log with null object type and no ID',
+			'content'     => '',
+		);
+
+		$this->assertSame( $expected['object_id'], $actual_log->object_id );
+		$this->assertSame( $expected['object_type'], $actual_log->object_type );
+		$this->assertSame( $expected['user_id'], $actual_log->user_id );
+		$this->assertSame( $expected['type'], $actual_log->type );
+		$this->assertSame( $expected['title'], $actual_log->title );
+		$this->assertSame( $expected['content'], $actual_log->content );
+	}
+
+	/**
+	 * @covers edd_add_log()
+	 */
+	public function test_edd_add_log_with_null_type_and_an_id() {
+
+		$log_id = edd_add_log(
+			array(
+				'object_type' => null,
+				'object_id'   => 1,
+				'title'       => 'Test log with null object type and an ID (should fail)',
+			)
+		);
+
+		$actual_log = edd_get_log( $log_id );
+
+		$expected = false;
+
+		$this->assertSame( $expected, $actual_log );
+	}
+
+	/**
+	 * @covers edd_add_log()
+	 */
+	public function test_edd_add_log_with_empty_type_and_no_id() {
+
+		$log_id = edd_add_log(
+			array(
+				'object_type' => 0,
+				'object_id'   => 0,
+				'title'       => 'Test log with empty object type and no ID (should fail)',
+			)
+		);
+
+		$actual_log = edd_get_log( $log_id );
+
+		$expected = false;
+
+		$this->assertSame( $expected, $actual_log );
+	}
+
+	/**
+	 * @covers edd_add_log()
+	 */
+	public function test_edd_add_log_with_empty_type_and_an_id() {
+
+		$log_id = edd_add_log(
+			array(
+				'object_type' => 0,
+				'object_id'   => 1,
+				'title'       => 'Test log with empty object type and an ID (should fail)',
+			)
+		);
+
+		$actual_log = edd_get_log( $log_id );
+
+		$expected = false;
+
+		$this->assertSame( $expected, $actual_log );
+	}
+
 }

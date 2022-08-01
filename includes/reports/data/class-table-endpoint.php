@@ -212,9 +212,9 @@ final class Table_Endpoint extends Endpoint {
 				$this->get_data();
 
 				call_user_func_array( $callback, array(
-					'endpoint' => $this,
-					'table'    => $table,
-					'args'     => $this->get_display_args(),
+					$this, // Endpoint
+					$table, // Table
+					$this->get_display_args(), // Args
 				) );
 			}
 		}

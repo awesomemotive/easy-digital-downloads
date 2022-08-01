@@ -105,6 +105,9 @@ function edd_get_shop_states( $country = null ) {
 		case 'MY' :
 			$states = edd_get_malaysian_states_list();
 			break;
+		case 'NL' :
+			$states = edd_get_netherlands_provinces_list();
+			break;
 		case 'NP' :
 			$states = edd_get_nepalese_states_list();
 			break;
@@ -1356,7 +1359,6 @@ function edd_get_italian_states_list() {
 		'CA' => 'Cagliari',
 		'CL' => 'Caltanissetta',
 		'CB' => 'Campobasso',
-		'CI' => 'Caltanissetta',
 		'CE' => 'Caserta',
 		'CT' => 'Catania',
 		'CZ' => 'Catanzaro',
@@ -1888,6 +1890,46 @@ function edd_get_spain_states_list() {
 	);
 
 	return apply_filters( 'edd_spain_states', $states );
+}
+
+/**
+ * Returns a list of Netherland's provinces.
+ *
+ * @since 3.0
+ * @return array $states A list of Netherland's provinces.
+ */
+function edd_get_netherlands_provinces_list() {
+	$provinces = array(
+		''   => '',
+		'DR' => __( 'Drenthe', 'easy-digital-downloads' ),
+		'FL' => __( 'Flevoland', 'easy-digital-downloads' ),
+		'FR' => __( 'Friesland', 'easy-digital-downloads' ),
+		'GE' => __( 'Gelderland', 'easy-digital-downloads' ),
+		'GR' => __( 'Groningen', 'easy-digital-downloads' ),
+		'LI' => __( 'Limburg', 'easy-digital-downloads' ),
+		'NB' => __( 'North Brabant', 'easy-digital-downloads' ),
+		'NH' => __( 'North Holland', 'easy-digital-downloads' ),
+		'OV' => __( 'Overijssel', 'easy-digital-downloads' ),
+		'ZH' => __( 'South Holland', 'easy-digital-downloads' ),
+		'UT' => __( 'Utrecht', 'easy-digital-downloads' ),
+		'ZE' => __( 'Zeeland', 'easy-digital-downloads' ),
+
+		// Caribbean Netherland
+		'BO' => __( 'Bonaire', 'easy-digital-downloads' ),
+		'SA' => __( 'Saba', 'easy-digital-downloads' ),
+		'SE' => __( 'Sint Eustatius', 'easy-digital-downloads' ),
+	);
+
+	/**
+	 * Filters the list of Netherland's provinces.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $states A list of Netherland's provinces.
+	 */
+	$provinces = apply_filters( 'edd_netherlands_provinces', $provinces );
+
+	return $provinces;
 }
 
 /**

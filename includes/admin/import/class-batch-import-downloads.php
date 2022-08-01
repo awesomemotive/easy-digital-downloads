@@ -70,13 +70,16 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 		if( $offset > $this->total ) {
 			$this->done = true;
+
+			// Delete the uploaded CSV file.
+			unlink( $this->file );
 		}
 
-		if( ! $this->done && $this->csv->data ) {
+		if( ! $this->done && $this->csv ) {
 
 			$more = true;
 
-			foreach( $this->csv->data as $key => $row ) {
+			foreach( $this->csv as $key => $row ) {
 
 				// Skip all rows until we pass our offset
 				if( $key + 1 <= $offset ) {
@@ -192,7 +195,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				// setup files
 				if( ! empty( $this->field_mapping['files'] ) && ! empty( $row[ $this->field_mapping['files'] ] ) ) {
 
-					$files = $this->str_to_array( $row[ $this->field_mapping['files'] ] );
+					$files = $this->convert_file_string_to_array( $row[ $this->field_mapping['files'] ] );
 
 					$this->set_files( $download_id, $files );
 
@@ -339,13 +342,11 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				$download_file_args = array(
-					'file' => $file_url,
-					'name' => basename( $file_url ),
+					'index'     => $file_id,
+					'file'      => $file_url,
+					'name'      => basename( $file_url ),
+					'condition' => empty( $condition ) ? 'all' : $condition
 				);
-
-				if ( ! empty( $condition ) ) {
-					$download_file_args['condition'] = $condition;
-				}
 
 				$download_files[ $file_id ] = $download_file_args;
 				$file_id++;
@@ -407,7 +408,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 			} else {
 
 				// Now look through year/month sub folders of upload directory for files with our image's same extension
-				$files = glob( $upload_dir['basedir'] . '/*/*/*{' . $ext . '}', GLOB_BRACE );
+				$files = glob( $upload_dir['basedir'] . '/*/*/*' . $ext );
 				foreach( $files as $file ) {
 
 					if( basename( $file ) == $image ) {
@@ -549,7 +550,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	 * @return string
 	 */
 	public function get_list_table_url() {
-		return admin_url( 'edit.php?post_type=download' );
+		return edd_get_admin_base_url();
 	}
 
 	/**

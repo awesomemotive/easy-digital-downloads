@@ -121,7 +121,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_filters()
 	 */
-	public function test_get_filters_with_empty_filters_from_registry_should_return_dates_filter_only() {
+	public function test_get_filters_with_empty_filters_from_registry_should_return_no_filters() {
 		$report = new Report( array(
 			'id'         => 'foo',
 			'label'      => 'Foo',
@@ -129,7 +129,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'capability' => 'exist',
 		) );
 
-		$this->assertEqualSets( array( 'dates' ), $report->get_filters() );
+		$this->assertEqualSets( array(), $report->get_filters() );
 	}
 
 	/**
@@ -150,7 +150,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_filters()
 	 */
-	public function test_get_filters_with_a_valid_non_dates_filter_should_still_include_dates() {
+	public function test_Report_get_filters_with_a_valid_non_dates_filter_should_not_include_dates() {
 		$report = new Report( array(
 			'id'         => 'foo',
 			'label'      => 'Foo',
@@ -159,21 +159,22 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'filters'    => array( 'products' ),
 		) );
 
-		$this->assertContains( 'dates', $report->get_filters() );
+		$this->assertNotContains( 'dates', $report->get_filters() );
 	}
 
 	/**
 	 * @covers ::$filters
 	 */
-	public function test_Report_with_empty_filters_should_set_dates_filter_by_default() {
+	public function test_Report_with_false_filters_should_return_no_filters() {
 		$report = new Report( array(
 			'id'         => 'foo',
 			'label'      => 'Foo',
 			'endpoints'  => array(),
 			'capability' => 'exist',
+			'filters'    => false,
 		) );
 
-		$this->assertEqualSets( array( 'dates' ), $report->get_filters() );
+		$this->assertEqualSets( array(), $report->get_filters() );
 	}
 
 	/**

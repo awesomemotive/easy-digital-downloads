@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-  */
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -75,6 +75,7 @@ function edd_process_download() {
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
+		$from_attachment_id = false;
 		if ( edd_is_local_file( $requested_file ) && $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
 			if ( 'pdf' === strtolower( edd_get_file_extension( $requested_file ) ) ) {
 				// Do not ever grab the thumbnail for PDFs. See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5491
@@ -109,12 +110,13 @@ function edd_process_download() {
 			}
 
 			if ( $attached_file ) {
-				$requested_file = $attached_file;
+				$from_attachment_id = true;
+				$requested_file     = $attached_file;
 			}
 		}
 
 		// Allow the file to be altered before any headers are sent
-		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
+		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'], $args );
 
 		if ( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
 			// If X-Sendfile is selected but is not supported, fallback to Direct
@@ -162,8 +164,16 @@ function edd_process_download() {
 
 		edd_set_time_limit( false );
 
-		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
+		if ( version_compare( phpversion(), '5.4', '<' ) && function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
 			set_magic_quotes_runtime( 0 );
+		}
+
+		// If we're using an attachment ID to get the file, even by path, we can ignore this check.
+		if ( false === $from_attachment_id ) {
+			$file_is_in_allowed_location = edd_local_file_location_is_allowed( $file_details, $schemes, $requested_file );
+			if ( false === $file_is_in_allowed_location ) {
+				wp_die( __( 'Sorry, this file could not be downloaded.', 'easy-digital-downloads' ), __( 'Error Downloading File', 'easy-digital-downloads' ), 403 );
+			}
 		}
 
 		@session_write_close();
@@ -664,6 +674,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'wav'      : $ctype = "audio/x-wav"; break;
 		case 'wbmp'     : $ctype = "image/vnd.wap.wbmp"; break;
 		case 'wbmxl'    : $ctype = "application/vnd.wap.wbxml"; break;
+		case 'webp'     : $ctype = "image/webp"; break;
 		case 'wm'       : $ctype = "video/x-ms-wm"; break;
 		case 'wml'      : $ctype = "text/vnd.wap.wml"; break;
 		case 'wmlc'     : $ctype = "application/vnd.wap.wmlc"; break;
@@ -856,24 +867,99 @@ function edd_process_signed_download_url( $args ) {
 	}
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
+	$price_id    = isset( $order_parts[3] ) ? (int) $order_parts[3] : null;
 
 	// Check to make sure not at download limit
-	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $order_parts[3] ) ) {
+	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $price_id ) ) {
 		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$args['expire']      = $_GET['ttl'];
-	$args['download']    = $order_parts[1];
-	$args['payment']     = $order_parts[0];
-	$args['file_key']    = $order_parts[2];
-	$args['price_id']    = $order_parts[3];
-	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$order            = edd_get_order( $order_parts[0] );
+	$args['expire']   = $_GET['ttl'];
+	$args['download'] = $order_parts[1];
+	$args['payment']  = $order->id;
+	$args['file_key'] = $order_parts[2];
+	$args['price_id'] = $price_id;
+	$args['email']    = $order->email;
+	$args['key']      = $order->payment_key;
 
-	$payment = new EDD_Payment( $args['payment'] );
-	$args['has_access']  = 'publish' === $payment->status ? true : false;
+	// Access is granted if there's at least one `complete` order item that matches the order + download + price ID.
+	$args['has_access'] = edd_order_grants_access_to_download_files( array(
+		'order_id'   => $order->id,
+		'product_id' => $args['download'],
+		'price_id'   => $args['price_id'],
+	) );
 
 	return $args;
+}
+
+/**
+ * Determines whether or not a given order grants access to download files associated with a given
+ * product ID and price ID combination. Returns true if there's at least one deliverable order item
+ * matching the requirements.
+ *
+ * @param array $args
+ *
+ * @since 3.0
+ * @return bool
+ */
+function edd_order_grants_access_to_download_files( $args ) {
+	$args = wp_parse_args( $args, array(
+		'order_id'   => 0,
+		'product_id' => 0,
+		'price_id'   => null,
+	) );
+
+	// Order and product IDs are required.
+	if ( empty( $args['order_id'] ) || empty( $args['product_id'] ) ) {
+		return false;
+	}
+
+	$args['status'] = edd_get_deliverable_order_item_statuses();
+	if ( is_null( $args['price_id'] ) ) {
+		unset( $args['price_id'] );
+	}
+
+	// Check if the download was purchased directly.
+	$order_items = edd_count_order_items( $args );
+
+	if ( $order_items > 0 ) {
+		return true;
+	}
+
+	$order_items = edd_get_order_items(
+		array(
+			'order_id' => $args['order_id'],
+			'status'   => edd_get_deliverable_order_item_statuses(),
+			'fields'   => 'product_id',
+		)
+	);
+
+	// Unlikely, but return false if there are no order items found at all.
+	if ( empty( $order_items ) ) {
+		return false;
+	}
+
+	// Include some fallback checks for incorrectly created download URLs and bundled items.
+	$product_to_check = isset( $args['price_id'] ) && is_numeric( $args['price_id'] ) ? "{$args['product_id']}_{$args['price_id']}" : $args['product_id'];
+	foreach ( $order_items as $product_id ) {
+		$download = edd_get_download( $product_id );
+		if ( ! $download instanceof EDD_Download ) {
+			continue;
+		}
+
+		// Check if the requested download is part of a bundle.
+		if ( 'bundle' === $download->type && in_array( $product_to_check, $download->get_bundled_downloads() ) ) {
+			return true;
+		}
+
+		// Check if the requested download is not variably priced but incorrectly included a price ID.
+		if ( empty( $args['price_id'] ) && $args['product_id'] == $product_id && ! $download->has_variable_prices() ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -957,6 +1043,39 @@ function edd_check_file_url_head( $requested_file, $args, $method ) {
 	}
 
 }
+
+/**
+ * Determines if a file should be allowed to be downloaded by making sure it's within the wp-content directory.
+ *
+ * @since 2.9.13
+ *
+ * @param $file_details
+ * @param $schemas
+ * @param $requested_file
+ *
+ * @return boolean
+ */
+function edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) {
+	$should_allow = true;
+
+	// If the file is an absolute path, make sure it's in the wp-content directory, to prevent store owners from accidentally allowing privileged files from being downloaded.
+	if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemas ) ) && isset( $file_details['path'] ) ) {
+
+		/** This is an absolute path */
+		$requested_file         = wp_normalize_path( realpath( $requested_file ) );
+		$normalized_abspath     = wp_normalize_path( ABSPATH );
+		$normalized_content_dir = wp_normalize_path( WP_CONTENT_DIR );
+
+		if ( 0 !== strpos( $requested_file, $normalized_abspath ) || false === strpos( $requested_file, $normalized_content_dir ) ) {
+			// If the file is not within the WP_CONTENT_DIR, it should not be able to be downloaded.
+			$should_allow = false;
+		}
+
+	}
+
+	return apply_filters( 'edd_local_file_location_is_allowed', $should_allow, $file_details, $schemas, $requested_file );
+}
+
 /**
  * Filter removed in EDD 2.7
  *

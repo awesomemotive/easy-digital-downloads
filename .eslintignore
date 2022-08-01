@@ -1,0 +1,5 @@
+node_modules
+vendor
+public
+assets/js/*.js
+assets/js/*.js.map

@@ -23,10 +23,9 @@ use EDD\Database\Schema;
 final class Adjustments extends Schema {
 
 	/**
-	 * Array of database column objects
+	 * Array of database column objects.
 	 *
 	 * @since 3.0
-	 * @access public
 	 * @var array
 	 */
 	public $columns = array(
@@ -49,7 +48,6 @@ final class Adjustments extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -78,7 +76,6 @@ final class Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'draft',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -119,8 +116,7 @@ final class Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// description
@@ -146,7 +142,8 @@ final class Adjustments extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true,
 		),
 
 		// once_per_customer
@@ -162,25 +159,16 @@ final class Adjustments extends Schema {
 			'name'       => 'min_charge_amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
-		),
-
-		// product_condition
-		array(
-			'name'       => 'product_condition',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
+			'default'    => '0'
 		),
 
 		// start_date
 		array(
 			'name'       => 'start_date',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => null,
+			'allow_null' => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -188,9 +176,9 @@ final class Adjustments extends Schema {
 		array(
 			'name'       => 'end_date',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => null,
+			'allow_null' => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -198,10 +186,9 @@ final class Adjustments extends Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -209,10 +196,9 @@ final class Adjustments extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 

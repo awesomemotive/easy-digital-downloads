@@ -42,6 +42,16 @@ class Order_Items extends Schema {
 			'sortable'   => true
 		),
 
+		// parent
+		array(
+			'name'       => 'parent',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'sortable'   => true
+		),
+
 		// order_id
 		array(
 			'name'       => 'order_id',
@@ -78,8 +88,9 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'default'    => null,
+			'sortable'   => true,
+			'allow_null' => true,
 		),
 
 		// cart_index
@@ -88,7 +99,8 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// type
@@ -106,7 +118,7 @@ class Order_Items extends Schema {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'inherit',
+			'default'    => 'pending',
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -117,7 +129,8 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// amount
@@ -126,6 +139,7 @@ class Order_Items extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		),
 
@@ -135,6 +149,7 @@ class Order_Items extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		),
 
@@ -144,6 +159,7 @@ class Order_Items extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		),
 
@@ -153,6 +169,7 @@ class Order_Items extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
 		),
 
@@ -162,14 +179,23 @@ class Order_Items extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
+			'sortable'   => true,
 			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
 		),
 
 		// date_created
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -179,7 +205,7 @@ class Order_Items extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true

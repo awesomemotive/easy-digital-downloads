@@ -42,6 +42,16 @@ class Order_Adjustments extends Schema {
 			'sortable'   => true
 		),
 
+		// parent
+		array(
+			'name'       => 'parent',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'sortable'   => true
+		),
+
 		// object_id
 		array(
 			'name'       => 'object_id',
@@ -49,7 +59,6 @@ class Order_Adjustments extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -59,7 +68,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -69,9 +77,9 @@ class Order_Adjustments extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
-			'searchable' => true,
-			'sortable'   => true
+			'default'    => null,
+			'sortable'   => true,
+			'allow_null' => true,
 		),
 
 		// type
@@ -80,9 +88,18 @@ class Order_Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
+		),
+
+		// type key
+		array(
+			'name'       => 'type_key',
+			'type'       => 'varchar',
+			'length'     => '255',
+			'default'    => null,
+			'allow_null' => true,
+			'sortable'   => true,
 		),
 
 		// description
@@ -101,9 +118,8 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
-			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// tax
@@ -112,9 +128,8 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
-			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// total
@@ -123,16 +138,23 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
-			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
 		),
 
 		// date_created
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -142,7 +164,7 @@ class Order_Adjustments extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true

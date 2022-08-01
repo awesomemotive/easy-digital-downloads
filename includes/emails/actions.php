@@ -28,6 +28,12 @@ function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $custom
 	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] ) {
 		return;
 	}
+	if ( null === $payment ) {
+		$payment = new EDD_Payment( $payment_id );
+	}
+	if ( $payment->order instanceof \EDD\Orders\Order && 'refund' === $payment->order->type ) {
+		return;
+	}
 
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id, true, '', $payment, $customer );
@@ -60,7 +66,7 @@ function edd_resend_purchase_receipt( $data ) {
 		$email    = $customer->email;
 	}
 
-	edd_email_purchase_receipt( $purchase_id, false, $email );
+	$sent = edd_email_purchase_receipt( $purchase_id, false, $email );
 
 	// Grab all downloads of the purchase and update their file download limits, if needed
 	// This allows admins to resend purchase receipts to grant additional file downloads
@@ -75,7 +81,15 @@ function edd_resend_purchase_receipt( $data ) {
 		}
 	}
 
-	edd_redirect( add_query_arg( array( 'edd-message' => 'email_sent', 'edd-action' => false, 'purchase_id' => false ) ) );
+	edd_redirect(
+		add_query_arg(
+			array(
+				'edd-message' => $sent ? 'email_sent' : 'email_send_failed',
+				'edd-action'  => false,
+				'purchase_id' => false,
+			)
+		)
+	);
 }
 add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
 
@@ -94,7 +108,14 @@ function edd_send_test_email( $data ) {
 	// Send a test email
 	edd_email_test_purchase_receipt();
 
-	// Remove the test email query arg
-	edd_redirect( remove_query_arg( 'edd_action' ) );
+	$url = edd_get_admin_url(
+		array(
+			'page'        => 'edd-settings',
+			'tab'         => 'emails',
+			'section'     => 'purchase_receipts',
+			'edd-message' => 'test-purchase-email-sent',
+		)
+	);
+	edd_redirect( $url );
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );

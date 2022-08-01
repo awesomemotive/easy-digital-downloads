@@ -50,7 +50,7 @@ class Tests_Tools extends EDD_UnitTestCase {
 		$this->assertContains( 'Failure Page', $system_info );
 		$this->assertContains( 'Downloads Slug', $system_info );
 		$this->assertContains( 'Taxes', $system_info );
-		$this->assertContains( 'Tax Rate', $system_info );
+		$this->assertContains( 'Default Rate', $system_info );
 		$this->assertContains( 'Display On Checkout', $system_info );
 		$this->assertContains( 'Prices Include Tax', $system_info );
 		$this->assertContains( 'PHP Version', $system_info );

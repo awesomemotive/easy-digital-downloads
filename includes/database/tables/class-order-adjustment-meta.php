@@ -29,7 +29,7 @@ final class Order_Adjustment_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_order_adjustmentmeta';
+	protected $name = 'order_adjustmentmeta';
 
 	/**
 	 * Database version
@@ -38,7 +38,7 @@ final class Order_Adjustment_Meta extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201805221;
 
 	/**
 	 * Setup the database schema

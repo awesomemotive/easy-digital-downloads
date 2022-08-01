@@ -1,10 +1,17 @@
-<?php $excerpt_length = apply_filters( 'excerpt_length', 30 ); ?>
-<?php if ( has_excerpt() ) : ?>
-	<div class="edd_download_excerpt">
-		<?php echo apply_filters( 'edd_downloads_excerpt', wp_trim_words( get_post_field( 'post_excerpt', get_the_ID() ), $excerpt_length ) ); ?>
-	</div>
-<?php elseif ( get_the_content() ) : ?>
-	<div class="edd_download_excerpt">
-		<?php echo apply_filters( 'edd_downloads_excerpt', wp_trim_words( get_post_field( 'post_content', get_the_ID() ), $excerpt_length ) ); ?>
-	</div>
-<?php endif; ?>
+<?php
+/**
+ * Shortcode "Excerpt" template.
+ *
+ * @since 1.2
+ *
+ * @package EDD
+ * @category Template
+ * @author Easy Digital Downloads
+ * @version 2.0
+ * @version 3.0 Uses the new `edd_download_shortcode_except()` function
+ */
+?>
+
+<div class="edd_download_excerpt">
+	<?php echo edd_download_shortcode_excerpt(); ?>
+</div>

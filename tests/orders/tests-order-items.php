@@ -800,7 +800,7 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 
 		$this->assertCount( 0, $order_items );
 	}
-	
+
 	/**
 	 * @covers ::get_fees
 	 */
@@ -809,9 +809,41 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_fees
+	 * @covers ::is_deliverable
 	 */
-	public function test_get_tax_rate_should_be_0() {
-		$this->assertSame( 0.00, edd_get_order_item( self::$order_items[0] )->get_tax_rate() );
+	public function test_order_item_marked_complete_is_deliverable_returns_true() {
+		edd_update_order_item(
+			self::$order_items[4],
+			array(
+				'status' => 'complete',
+			)
+		);
+
+		$order_item = edd_get_order_item( self::$order_items[4] );
+
+		$this->assertTrue( $order_item->is_deliverable() );
+	}
+
+	/**
+	 * @covers ::is_deliverable
+	 */
+	public function test_order_item_marked_refunded_is_deliverable_returns_false() {
+		edd_update_order_item(
+			self::$order_items[4],
+			array(
+				'status' => 'refunded',
+			)
+		);
+
+		$order_item = edd_get_order_item( self::$order_items[4] );
+
+		$this->assertFalse( $order_item->is_deliverable() );
+	}
+
+	/**
+	 * @covers edd_get_deliverable_order_item_statuses
+	 */
+	public function test_order_item_deliverable_statuses_includes_partially_refunded() {
+		$this->assertTrue( in_array( 'partially_refunded', edd_get_deliverable_order_item_statuses(), true ) );
 	}
 }

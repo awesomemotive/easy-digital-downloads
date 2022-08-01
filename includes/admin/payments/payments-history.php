@@ -22,11 +22,9 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_orders_page_primary_nav( $active_tab = '' ) {
 
-	$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
-
 	ob_start();?>
 
-	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+	<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 		<?php
 
 		// Get the order pages
@@ -38,11 +36,11 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 			// Remove
 			$tab_url = add_query_arg( array(
 				'settings-updated' => false,
-				'order_type'       => $tab_id
+				'order_type'       => sanitize_key( $tab_id )
 			) );
 
 			// Remove the section from the tabs so we always end up at the main section
-			$tab_url = remove_query_arg( 'section', $tab_url );
+			$tab_url = remove_query_arg( array( 'section', 'status' ), $tab_url );
 			$active  = $active_tab === $tab_id
 				? ' nav-tab-active'
 				: '';
@@ -53,8 +51,7 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 			echo '</a>';
 		}
 		?>
-		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
-	</h2>
+	</nav>
 
 	<?php
 
@@ -120,15 +117,21 @@ function edd_payment_history_page() {
 	// What are we viewing?
 	switch ( edd_get_payment_view() ) {
 
-		// Edit
+		// View Order
 		case 'view-order-details' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
 			break;
 
-		// Add
+		// Add Order
 		case 'add-order' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
 			edd_add_order_page_content();
+			break;
+
+		// View Refund
+		case 'view-refund-details' :
+			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-refund.php';
+			edd_view_refund_page_content();
 			break;
 
 		// List Table
@@ -146,7 +149,6 @@ function edd_payment_history_page() {
  */
 function edd_order_list_table_content() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-items-table.php';
 	$orders_table = new EDD_Payment_History_Table();
 	$orders_table->prepare_items();
 
@@ -155,6 +157,16 @@ function edd_order_list_table_content() {
 
 	<div class="wrap">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
+		<?php
+		if ( 'sale' === $active_tab ) {
+			$add_new_url = add_query_arg( array( 'view' => 'add-order' ), $admin_url );
+			printf(
+				'<a href="%s" class="page-title-action">%s</a>',
+				esc_url( $add_new_url ),
+				esc_html__( 'Add New', 'easy-digital-downloads' )
+			);
+		}
+		?>
 		<hr class="wp-header-end">
 
 		<?php edd_orders_page_primary_nav( $active_tab ); ?>
@@ -177,23 +189,6 @@ function edd_order_list_table_content() {
 
 	<?php
 }
-
-/**
- * Renders the mobile link at the bottom of the payment history page
- *
- * @since 1.8.4
- * @since 3.0 Updated filter to display link next to the reports filters.
-*/
-function edd_payment_history_mobile_link() {
-	?>
-	<span class="edd-mobile-link">
-		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
-			<?php esc_html_e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
-		</a>
-	</span>
-	<?php
-}
-add_action( 'edd_after_admin_filter_bar_reports', 'edd_payment_history_mobile_link' );
 
 /**
  * Orders admin titles.

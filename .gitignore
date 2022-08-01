@@ -23,15 +23,18 @@ Easy-Digital-Downloads.iml
 *.pydevproject
 .project
 .metadata
-build/
+/build
 tmp/
 tests/clover.xml
 
-# Grunt
+# Node
 node_modules
 
 # Vendor
-vendor
+/vendor
 
 # Temporary files
 *~
+
+# Stripe
+includes/gateways/stripe

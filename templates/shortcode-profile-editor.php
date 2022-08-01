@@ -14,7 +14,7 @@ if ( is_user_logged_in() ):
 	$state 		  = $address['state'];
 
 	if ( edd_is_cart_saved() ): ?>
-		<?php $restore_url = add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ), edd_get_checkout_uri() ); ?>
+		<?php $restore_url = add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => urlencode( edd_get_cart_token() ) ), edd_get_checkout_uri() ); ?>
 		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Saved cart','easy-digital-downloads' ); ?>:</strong> <?php printf( __( 'You have a saved cart, <a href="%s">click here</a> to restore it.', 'easy-digital-downloads' ), esc_url( $restore_url ) ); ?></div>
 	<?php endif; ?>
 
@@ -26,7 +26,7 @@ if ( is_user_logged_in() ):
 
 	<?php do_action( 'edd_profile_editor_before' ); ?>
 
-	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
+	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="post">
 
 		<?php do_action( 'edd_profile_editor_fields_top' ); ?>
 
@@ -106,7 +106,7 @@ if ( is_user_logged_in() ):
 					<?php foreach ( $customer->emails as $email ) : ?>
 						<?php if ( $email === $customer->email ) { continue; } ?>
 						<li class="edd-profile-email">
-							<?php echo $email; ?>
+							<?php echo esc_html( $email ); ?>
 							<span class="actions">
 								<?php
 									$remove_url = wp_nonce_url(
@@ -120,7 +120,7 @@ if ( is_user_logged_in() ):
 										'edd-remove-customer-email'
 									);
 								?>
-								<a href="<?php echo $remove_url ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
+								<a href="<?php echo esc_url( $remove_url ); ?>" class="delete"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></a>
 							</span>
 						</li>
 					<?php endforeach; ?>
@@ -160,9 +160,9 @@ if ( is_user_logged_in() ):
 
 			<p id="edd_profile_billing_address_country_wrap">
 				<label for="edd_address_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></label>
-				<select name="edd_address_country" id="edd_address_country" class="select edd-select" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>">
+				<select name="edd_address_country" id="edd_address_country" class="select edd-select" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd-country-field-nonce' ) ); ?>">
 					<?php foreach( edd_get_country_list() as $key => $country ) : ?>
-					<option value="<?php echo $key; ?>"<?php selected( $address['country'], $key ); ?>><?php echo esc_html( $country ); ?></option>
+					<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $address['country'], $key ); ?>><?php echo esc_html( $country ); ?></option>
 					<?php endforeach; ?>
 				</select>
 			</p>
@@ -173,7 +173,7 @@ if ( is_user_logged_in() ):
 					<select name="edd_address_state" id="edd_address_state" class="select edd-select">
 						<?php
 							foreach( $states as $state_code => $state_name ) {
-								echo '<option value="' . $state_code . '"' . selected( $state_code, $state, false ) . '>' . $state_name . '</option>';
+								echo '<option value="' . esc_attr( $state_code ) . '"' . selected( $state_code, $state, false ) . '>' . esc_html( $state_name ) . '</option>';
 							}
 						?>
 					</select>
@@ -195,12 +195,12 @@ if ( is_user_logged_in() ):
 			<legend id="edd_profile_password_label"><?php _e( 'Change your Password', 'easy-digital-downloads' ); ?></legend>
 
 			<p id="edd_profile_password_wrap">
-				<label for="edd_user_pass"><?php _e( 'New Password', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_new_user_pass1"><?php esc_html_e( 'New Password', 'easy-digital-downloads' ); ?></label>
 				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
 			</p>
 
 			<p id="edd_profile_confirm_password_wrap">
-				<label for="edd_user_pass"><?php _e( 'Re-enter Password', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_new_user_pass2"><?php esc_html_e( 'Re-enter Password', 'easy-digital-downloads' ); ?></label>
 				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 				<?php do_action( 'edd_profile_editor_password' ); ?>
 			</p>
@@ -214,7 +214,7 @@ if ( is_user_logged_in() ):
 		<fieldset id="edd_profile_submit_fieldset">
 
 			<p id="edd_profile_submit_wrap">
-				<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
+				<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd-profile-editor-nonce' ) ); ?>"/>
 				<input type="hidden" name="edd_action" value="edit_user_profile" />
 				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( edd_get_current_page_url() ); ?>" />
 				<input name="edd_profile_editor_submit" id="edd_profile_editor_submit" type="submit" class="edd_submit edd-submit" value="<?php _e( 'Save Changes', 'easy-digital-downloads' ); ?>"/>

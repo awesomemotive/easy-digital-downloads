@@ -52,7 +52,7 @@ class Customer_Address extends \WP_UnitTest_Factory_For_Thing {
 	/**
 	 * Stub out copy of parent method for IDE type hinting purposes.
 	 *
-	 * @param $customer_address_id Customer address ID.
+	 * @param int $customer_address_id Customer address ID.
 	 *
 	 * @return \EDD\Customers\Customer_Address|false
 	 */

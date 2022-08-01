@@ -31,7 +31,7 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 *
 	 * @return array $data Discounts.
 	 */
-	public function discount_codes_data() {
+	public function get_data() {
 		$filter = Reports\get_filter_value( 'dates' );
 
 		$stats = new Stats();
@@ -129,10 +129,10 @@ class Top_Five_Discounts_List_Table extends List_Table {
 		}
 
 		// Wrap discount title in strong anchor
-		$discount_title = '<strong><a class="row-title" href="' . add_query_arg( array(
+		$discount_title = '<strong><a class="row-title" href="' . esc_url( add_query_arg( array(
 				'edd-action' => 'edit_discount',
-				'discount'   => $discount->id,
-			), $base ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
+				'discount'   => absint( $discount->id ),
+			), $base ) ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
 
 		// Return discount title & row actions
 		return $discount_title;
@@ -149,7 +149,7 @@ class Top_Five_Discounts_List_Table extends List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->discount_codes_data();
+		$this->items           = $this->get_data();
 	}
 
 	/**

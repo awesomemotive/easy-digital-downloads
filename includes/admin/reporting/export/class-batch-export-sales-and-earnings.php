@@ -81,7 +81,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 			'offset' => ( $this->step * 30 ) - 30,
 		);
 
-		$status         = "AND {$wpdb->edd_orders}.status IN ( '" . implode( "', '", $wpdb->_escape( array( 'publish', 'revoked' ) ) ) . "' )";
+		$status         = "AND {$wpdb->edd_orders}.status IN ( '" . implode( "', '", $wpdb->_escape( edd_get_complete_order_statuses() ) ) . "' )";
 		$date_query_sql = '';
 
 		// Customer ID.
@@ -109,7 +109,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 					? EDD()->utils->date( $this->start )->subSeconds( $offset )->format( 'mysql' )
 					: EDD()->utils->date( $this->start )->addSeconds( $offset )->format( 'mysql' );
 
-				$date_query_sql .= $wpdb->prepare( 'date_created >= %s', $this->start );
+				$date_query_sql .= $wpdb->prepare( "{$wpdb->edd_orders}.date_created >= %s", $this->start );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -124,7 +124,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 			}
 
 			if ( ! empty( $this->end ) ) {
-				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $this->end );
+				$date_query_sql .= $wpdb->prepare( "{$wpdb->edd_orders}.date_created <= %s", $this->end );
 			}
 		}
 
@@ -194,13 +194,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		$total = edd_count_orders( $args );
@@ -225,12 +219,12 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 	 * @param array $request Form data passed to the batch processor.
 	 */
 	public function set_properties( $request ) {
-		$this->start = isset( $request['start'] )
-			? sanitize_text_field( $request['start'] )
+		$this->start = isset( $request['order-export-start'] )
+			? sanitize_text_field( $request['order-export-start'] )
 			: '';
 
-		$this->end = isset( $request['end'] )
-			? sanitize_text_field( $request['end'] )
+		$this->end = isset( $request['order-export-end'] )
+			? sanitize_text_field( $request['order-export-end'] )
 			: '';
 
 		$this->download_id = isset( $request['download_id'] )

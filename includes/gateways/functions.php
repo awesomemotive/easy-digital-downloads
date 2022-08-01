@@ -50,16 +50,37 @@ function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	if ( is_null( $gateways ) ) {
 		$gateways = array(
-			'paypal' => array(
+			'paypal_commerce' => array(
+			'admin_label'    => __( 'PayPal', 'easy-digital-downloads' ),
+			'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
+			'supports'       => array( 'buy_now' )
+		),
+		/**
+		 * PayPal Standard is available only if it was used prior to 2.11 and the store owner hasn't
+		 * yet been onboarded to PayPal Commerce.
+		 *
+		 * @see \EDD\Gateways\PayPal\maybe_remove_paypal_standard()
+		 */
+		'paypal' => array(
 				'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
 				'checkout_label' => __( 'PayPal',          'easy-digital-downloads' ),
 				'supports'       => array( 'buy_now' )
 			),
 			'manual' => array(
-				'admin_label'    => __( 'Test Payment', 'easy-digital-downloads' ),
-				'checkout_label' => __( 'Test Payment', 'easy-digital-downloads' )
+				'admin_label'    => __( 'Store Gateway', 'easy-digital-downloads' ),
+				'checkout_label' => __( 'Store Gateway', 'easy-digital-downloads' ),
 			),
 		);
+	}
+
+	$gateways = apply_filters( 'edd_payment_gateways', $gateways );
+
+	// Since Stripe is added via a filter still, move to the top.
+	if ( array_key_exists( 'stripe', $gateways ) ) {
+		$stripe_attributes = $gateways['stripe'];
+		unset( $gateways['stripe'] );
+
+		$gateways = array_merge( array( 'stripe' => $stripe_attributes ), $gateways );
 	}
 
 	return (array) apply_filters( 'edd_payment_gateways', $gateways );
@@ -187,16 +208,6 @@ function edd_get_gateway_admin_label( $gateway ) {
 		? $gateways[ $gateway ]['admin_label']
 		: ucwords( $gateway );
 
-	$payment = isset( $_GET['id'] )
-		? absint( $_GET['id'] )
-		: false;
-
-	if ( 'manual' === $gateway && $payment ) {
-		if ( ! edd_get_payment_amount( $payment ) ) {
-			$label = __( 'Free Purchase', 'easy-digital-downloads' );
-		}
-	}
-
 	return apply_filters( 'edd_gateway_admin_label', $label, $gateway );
 }
 
@@ -211,10 +222,6 @@ function edd_get_gateway_admin_label( $gateway ) {
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
-
-	if ( 'manual' === $gateway ) {
-		$label = __( 'Free Purchase', 'easy-digital-downloads' );
-	}
 
 	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
 }
@@ -364,7 +371,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'user_info'    => $user_info,
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
-		'gateway'      => 'paypal',
+		'gateway'      => \EDD\Gateways\PayPal\paypal_standard_enabled() ? 'paypal' : 'paypal_commerce',
 		'buy_now'      => true,
 		'card_info'    => array()
 	);
@@ -478,7 +485,7 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
  *
  * @return int Number of orders placed based on the gateway.
  */
-function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'publish' ) {
+function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'complete' ) {
 	return edd_count_orders( array(
 		'gateway' => $gateway_label,
 		'status'  => $status,

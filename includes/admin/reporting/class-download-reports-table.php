@@ -37,8 +37,8 @@ class EDD_Download_Reports_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => 'report-' . edd_get_label_singular(),
-			'plural'   => 'report-' . edd_get_label_plural(),
+			'singular' => 'report-download',
+			'plural'   => 'report-downloads',
 			'ajax'     => false
 		) );
 
@@ -78,7 +78,14 @@ class EDD_Download_Reports_Table extends List_Table {
 			case 'average_earnings' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 			case 'details' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item['ID'] ) . '">' . __( 'View Detailed Report', 'easy-digital-downloads' ) . '</a>';
+				$url = edd_get_admin_url(
+					array(
+						'page'        => 'edd-reports',
+						'view'        => 'downloads',
+						'download-id' => absint( $item['ID'] ),
+					)
+				);
+				return '<a href="' . esc_url( $url ) . '">' . __( 'View Detailed Report', 'easy-digital-downloads' ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -220,12 +227,27 @@ class EDD_Download_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Build all the reports data
+	 * Build and retrieves all of the download reports data.
 	 *
 	 * @since 1.5
-	 * @return array $reports_data All the data for customer reports
+	 * @deprecated 3.0 Use get_data()
+	 *
+	 * @return array All the data for customer reports.
 	 */
 	public function reports_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download_Reports_Table::get_data()' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the download reports data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Download reports table data.
+	 */
+	public function get_data() {
 		$reports_data = array();
 
 		$downloads = $this->products->posts;
@@ -252,9 +274,9 @@ class EDD_Download_Reports_Table extends List_Table {
 	 * @since 1.5
 	 * @uses EDD_Download_Reports_Table::get_columns()
 	 * @uses EDD_Download_Reports_Table::get_sortable_columns()
-	 * @uses EDD_Download_Reports_Table::reports_data()
-	 * @uses EDD_Download_Reports_Table::get_pagenum()
 	 * @uses EDD_Download_Reports_Table::get_total_downloads()
+	 * @uses EDD_Download_Reports_Table::get_data()
+	 * @uses EDD_Download_Reports_Table::set_pagination_args()
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -265,12 +287,12 @@ class EDD_Download_Reports_Table extends List_Table {
 		);
 
 		$total_items = $this->get_total_downloads();
-		$this->items = $this->reports_data();
+		$this->items = $this->get_data();
 
 		$this->set_pagination_args( array(
+			'total_pages' => ceil( $total_items / $this->per_page ),
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
 		) );
 	}
 }

@@ -94,6 +94,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'download'        => null,
 			'gateway'         => null,
 			'post__in'        => null,
+			'post__not_in'    => null,
 			'compare'         => null,
 			'country'         => null,
 			'region'          => null,
@@ -103,6 +104,23 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
 		$this->args = wp_parse_args( $args, $defaults );
+
+		// In EDD 3.0 we switched from 'publish' to 'complete' for the final state of a completed payment, this accounts for that change.
+		if ( is_array( $this->args['status'] ) && in_array( 'publish', $this->args['status'] ) ) {
+
+			foreach ( $this->args['status'] as $key => $status ) {
+				if ( $status === 'publish' ) {
+					unset( $this->args['status'][ $key ] );
+				}
+			}
+
+			$this->args['status'][] = 'complete';
+
+		} else if ( 'publish' === $this->args['status'] ) {
+
+			$this->args['status'] = 'complete';
+
+		}
 	}
 
 	/**
@@ -137,7 +155,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @since 1.8
 	 * @since 3.0 Updated to use the new query classes and custom tables.
 	 *
-	 * @return EDD_Payment[]|EDD\Orders\Order[]
+	 * @return EDD_Payment[]|EDD\Orders\Order[]|int
 	 */
 	public function get_payments() {
 
@@ -177,7 +195,11 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$this->items = edd_get_orders( $this->args );
 
-		if ( $should_output_order_objects ) {
+		if ( ! empty( $this->args['count'] ) && is_numeric( $this->items ) ) {
+			return intval( $this->items );
+		}
+
+		if ( $should_output_order_objects || ! empty( $this->args['fields'] ) ) {
 			return $this->items;
 		}
 
@@ -199,10 +221,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			}
 
 			return $posts;
-		}
-
-		if ( $should_output_order_objects ) {
-			return $this->items;
 		}
 
 		foreach ( $this->items as $order ) {
@@ -551,13 +569,24 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		// Meta key and value
-		if ( isset( $this->initial_args['meta_key'] ) && isset( $this->initial_args['meta_value'] ) ) {
-			$arguments['meta_query'] = array(
-				array(
-					'key'   => $this->initial_args['meta_key'],
-					'value' => $this->initial_args['meta_value'],
-				),
+		if ( isset( $this->initial_args['meta_query'] ) ) {
+			$arguments['meta_query'] = $this->initial_args['meta_query'];
+		} elseif ( isset( $this->initial_args['meta_key'] ) ) {
+			$meta_query = array(
+				'key' => $this->initial_args['meta_key']
 			);
+
+			if ( isset( $this->initial_args['meta_value'] ) ) {
+				$meta_query['value'] = $this->initial_args['meta_value'];
+			}
+
+			$arguments['meta_query'] = array( $meta_query );
+		}
+
+		foreach ( array( 'year', 'month', 'week', 'day', 'hour', 'minute', 'second' ) as $date_interval ) {
+			if ( isset( $this->initial_args[ $date_interval ] ) ) {
+				$arguments['date_created_query'][ $date_interval ] = $this->initial_args[ $date_interval ];
+			}
 		}
 
 		if ( $this->args['start_date'] ) {
@@ -578,7 +607,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( $this->args['end_date'] ) {
 			if ( is_numeric( $this->end_date ) ) {
-				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->start_date )->toDateTimeString();
+				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->end_date )->toDateTimeString();
 			}
 
 			$this->end_date = \Carbon\Carbon::parse( $this->end_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
@@ -592,12 +621,22 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['date_created_query']['inclusive'] = true;
 		}
 
+		if ( isset( $this->initial_args['number'] ) ) {
+			if ( -1 == $this->initial_args['number'] ) {
+				_doing_it_wrong( __FUNCTION__, esc_html__( 'Do not use -1 to retrieve all results.', 'easy-digital-downloads' ), '3.0' );
+				$this->args['nopaging'] = true;
+			} else {
+				$arguments['number'] = $this->initial_args['number'];
+			}
+		}
+
 		$arguments['number'] = isset( $this->args['posts_per_page'] )
 			? $this->args['posts_per_page']
 			: 20;
 
 		if ( isset( $this->args['nopaging'] ) && true === $this->args['nopaging'] ) {
-			unset( $arguments['number'] );
+			// Setting to a really large number because we don't actually have a way to get all results.
+			$arguments['number'] = 9999999;
 		}
 
 		switch ( $this->args['orderby'] ) {
@@ -656,6 +695,10 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['id__in'] = $this->args['post__in'];
 		}
 
+		if ( ! is_null( $this->args['post__not_in'] ) ) {
+			$arguments['id__in'] = $this->args['post__not_in'];
+		}
+
 		if ( ! empty( $this->args['mode'] ) && 'all' !== $this->args['mode'] ) {
 			$arguments['mode'] = $this->args['mode'];
 		}
@@ -672,7 +715,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->args['parent'] = $this->args['post_parent'];
 		}
 
-		if ( isset( $this->args['paged'] ) && isset( $this->args['posts_per_page'] ) ) {
+		if ( ! empty( $this->args['offset'] ) ) {
+			$arguments['offset'] = $this->args['offset'];
+		} elseif ( isset( $this->args['paged'] ) && isset( $this->args['posts_per_page'] ) ) {
 			$arguments['offset'] = ( $this->args['paged'] * $this->args['posts_per_page'] ) - $this->args['posts_per_page'];
 		}
 
@@ -698,35 +743,40 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['status'] = $this->args['post_status'];
 		}
 
-		// If the status includes `any`, we don't need to pass anything to the query class.
-		if ( isset( $arguments['status'] ) && is_array( $arguments['status'] ) ) {
-			if ( isset( $arguments['status'][0] ) && 'any' === $arguments['status'][0] ) {
-				unset( $arguments['status'] );
-			}
+		// If the status includes `any`, we should set the status to our whitelisted keys.
+		if ( isset( $arguments['status'] ) && ( 'any' === $arguments['status'] || ( is_array( $arguments['status'] ) && in_array( 'any', $arguments['status'], true ) ) ) ) {
+			$arguments['status'] = edd_get_payment_status_keys();
 		}
 
-		if ( isset( $arguments['status'] ) && ! is_array( $arguments['status'] ) && 'any' === $arguments['status'] ) {
-			unset( $arguments['status'] );
-		}
+		if ( isset( $arguments['meta_query'] ) && is_array( $arguments['meta_query'] ) ) {
+			foreach ( $arguments['meta_query'] as $meta_index => $meta ) {
+				if ( ! empty( $meta['key'] ) ) {
+					switch ( $meta['key'] ) {
+						case '_edd_payment_customer_id':
+							$arguments['customer_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
 
-		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
-			foreach ( $this->args['meta_query'] as $meta ) {
-				switch ( $meta['key'] ) {
-					case '_edd_payment_customer_id':
-						$arguments['customer_id'] = absint( $meta['value'] );
-						break;
+						case '_edd_payment_user_id':
+							$arguments['user_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
 
-					case '_edd_payment_user_id':
-						$arguments['user_id'] = absint( $meta['value'] );
-						break;
+						case '_edd_payment_user_email':
+							$arguments['email'] = sanitize_email( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
 
-					case '_edd_payment_user_email':
-						$arguments['email'] = sanitize_email( $meta['value'] );
-						break;
+						case '_edd_payment_gateway':
+							$arguments['gateway'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
 
-					case '_edd_payment_gateway':
-						$arguments['gateway'] = sanitize_text_field( $meta['value'] );
-						break;
+						case '_edd_payment_purchase_key' :
+							$arguments['payment_key'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
+					}
 				}
 			}
 		}
@@ -807,6 +857,11 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['date_refundable_query'] ) ) {
 			$arguments['date_refundable_query'] = $this->args['date_refundable_query'];
+		}
+
+		// Make sure `fields` is honored if set (eg. 'ids').
+		if ( ! empty( $this->args['fields'] ) ) {
+			$arguments['fields'] = $this->args['fields'];
 		}
 
 		$this->args = $arguments;

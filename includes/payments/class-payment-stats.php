@@ -39,7 +39,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 *
 	 * @return float|int Total amount of sales based on the passed arguments.
 	 */
-	public function get_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'publish' ) {
+	public function get_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'complete' ) {
 		global $wpdb;
 
 		$this->setup_dates( $start_date, $end_date );
@@ -55,14 +55,19 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		if ( empty( $download_id ) ) {
-			if ( is_array( $status ) ) {
-				$count = 0;
-				foreach ( $status as $payment_status ) {
-					$count += edd_count_payments()->$payment_status;
+			// Global sale stats
+			add_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
+
+			$count        = 0;
+			$total_counts = edd_count_payments();
+
+			foreach ( (array) $status as $payment_status ) {
+				if ( isset( $total_counts->$payment_status ) ) {
+					$count += absint( $total_counts->$payment_status );
 				}
-			} else {
-				$count = edd_count_payments()->$status;
 			}
+
+			remove_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 		} else {
 			$this->timestamp = false;
 
@@ -90,11 +95,23 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
+			$statuses = edd_get_net_order_statuses();
+
+			/**
+			 * Filters Order statuses that should be included when calculating stats.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $statuses Order statuses to include when generating stats.
+			 */
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
+			$statuses = "'" . implode( "', '", $statuses ) . "'";
+
 			$result = $wpdb->get_row( $wpdb->prepare(
 				"SELECT COUNT(edd_oi.id) AS sales
 				 FROM {$wpdb->edd_order_items} edd_oi
 				 INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
-				 WHERE edd_o.status IN ('publish', 'revoked') AND edd_oi.product_id = %d {$date_query_sql}",
+				 WHERE edd_o.status IN ($statuses) AND edd_oi.product_id = %d {$date_query_sql}",
 			$download_id ) );
 
 			$count = null === $result
@@ -134,11 +151,20 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		if ( empty( $download_id ) ) {
+			/**
+			 * Filters Order statuses that should be included when calculating stats.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $statuses Order statuses to include when generating stats.
+			 */
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', edd_get_net_order_statuses() );
+
 			// Global earning stats
 			$args = array(
 				'post_type'              => 'edd_payment',
 				'nopaging'               => true,
-				'post_status'            => array( 'publish', 'revoked' ),
+				'post_status'            => $statuses,
 				'fields'                 => 'ids',
 				'update_post_term_cache' => false,
 				'suppress_filters'       => false,
@@ -154,6 +180,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$orders = edd_get_orders( array(
+					'type'          => 'sale',
 					'status__in'    => $args['post_status'],
 					'date_query'    => array(
 						array(
@@ -237,11 +264,23 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 				remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
+				$statuses = edd_get_net_order_statuses();
+
+				/**
+				 * Filters Order statuses that should be included when calculating stats.
+				 *
+				 * @since 2.7
+				 *
+				 * @param array $statuses Order statuses to include when generating stats.
+				 */
+				$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
+				$statuses = "'" . implode( "', '", $statuses ) . "'";
+
 				$result = $wpdb->get_row( $wpdb->prepare(
-					"SELECT edd_oi.tax, edd_oi.total
+					"SELECT SUM(edd_oi.tax) as tax, SUM(edd_oi.total) as total
 					 FROM {$wpdb->edd_order_items} edd_oi
 					 INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
-					 WHERE edd_o.status IN ('publish', 'revoked') AND edd_oi.product_id = %d {$date_query_sql}",
+					 WHERE edd_o.status IN ($statuses) AND edd_oi.product_id = %d {$date_query_sql}",
 				$download_id ) );
 
 				$earnings = 0;
@@ -305,7 +344,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 *
 	 * @return array|false Total amount of sales based on the passed arguments.
 	 */
-	public function get_sales_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $status = 'publish' ) {
+	public function get_sales_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $status = 'complete' ) {
 		global $wpdb;
 
 		$this->setup_dates( $start_date, $end_date );
@@ -344,7 +383,16 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'publish', 'revoked' ) );
+			$statuses = edd_get_net_order_statuses();
+
+			/**
+			 * Filters Order statuses that should be included when calculating stats.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $statuses Order statuses to include when generating stats.
+			 */
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 			$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 			$sales = $wpdb->get_results( $wpdb->prepare(
@@ -416,7 +464,16 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'publish', 'revoked' ) );
+			$statuses = edd_get_net_order_statuses();
+
+			/**
+			 * Filters Order statuses that should be included when calculating stats.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $statuses Order statuses to include when generating stats.
+			 */
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 			$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 			$earnings = $wpdb->get_results( $wpdb->prepare(

@@ -44,7 +44,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @since 2.5
 	 * @var int
 	 */
-	public $per_step = 30;
+	public $per_step = 1;
 
 	/**
 	 * Retrieve the export data.
@@ -56,76 +56,19 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	public function get_data() {
 		global $wpdb;
 
-		$items = $this->get_stored_data( 'edd_temp_reset_ids' );
+		$tables = $this->get_stored_data( 'edd_reset_tables_to_truncate' );
 
-		if ( ! is_array( $items ) ) {
+		if ( ! is_array( $tables ) ) {
 			return false;
 		}
 
 		$offset     = ( $this->step - 1 ) * $this->per_step;
-		$step_items = array_slice( $items, $offset, $this->per_step );
+		$step_items = array_slice( $tables, $offset, $this->per_step );
 
 		if ( $step_items ) {
-			$step_ids = array(
-				'customers' => array(),
-				'downloads' => array(),
-				'other'     => array(),
-			);
-
-			foreach ( $step_items as $item ) {
-				switch ( $item['type'] ) {
-					case 'customer':
-						$step_ids['customers'][] = $item['id'];
-						break;
-					case 'download':
-						$step_ids['downloads'][] = $item['id'];
-						break;
-					default:
-						$item_type                = apply_filters( 'edd_reset_item_type', 'other', $item );
-						$step_ids[ $item_type ][] = $item['id'];
-						break;
-				}
-			}
-
-			$sql = array();
-
-			foreach ( $step_ids as $type => $ids ) {
-				if ( empty( $ids ) ) {
-					continue;
-				}
-
-				$ids = implode( ',', $ids );
-
-				switch ( $type ) {
-					case 'customers':
-						$table_name = $wpdb->prefix . 'edd_customers';
-						$sql[]      = "DELETE FROM {$table_name} WHERE id IN ({$ids})";
-						break;
-					case 'downloads':
-						$sql[] = "UPDATE {$wpdb->postmeta} SET meta_value = 0 WHERE meta_key = '_edd_download_sales' AND post_id IN ({$ids})";
-						$sql[] = "UPDATE {$wpdb->postmeta} SET meta_value = 0.00 WHERE meta_key = '_edd_download_earnings' AND post_id IN ({$ids})";
-						break;
-					case 'other':
-						$sql[] = "DELETE FROM {$wpdb->posts} WHERE id IN ({$ids})";
-						$sql[] = "DELETE FROM {$wpdb->postmeta} WHERE post_id IN ({$ids})";
-						$sql[] = "DELETE FROM {$wpdb->comments} WHERE comment_post_ID IN ({$ids})";
-						$sql[] = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id NOT IN (SELECT comment_ID FROM {$wpdb->comments})";
-						break;
-				}
-
-				if ( ! in_array( $type, array( 'customers', 'downloads', 'other' ), true ) ) {
-
-					// Allows other types of custom post types to filter on their own post_type
-					// and add items to the query list, for the IDs found in their post type.
-					$sql = apply_filters( 'edd_reset_add_queries_' . $type, $sql, $ids );
-				}
-			}
-
-			if ( ! empty( $sql ) ) {
-				foreach ( $sql as $query ) {
-					$wpdb->query( $query ); // WPCS: unprepared SQL ok.
-				}
-			}
+			$query = "TRUNCATE TABLE {$step_items[0]}";
+			edd_debug_log( var_export($query, true), true );
+			$wpdb->query( $query );
 
 			return true;
 		}
@@ -141,7 +84,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @return float Percentage complete.
 	 */
 	public function get_percentage_complete() {
-		$items = $this->get_stored_data( 'edd_temp_reset_ids', false );
+		$items = $this->get_stored_data( 'edd_reset_tables_to_truncate' );
 		$total = count( $items );
 
 		$percentage = 100;
@@ -188,7 +131,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			delete_transient( 'edd_earnings_total' );
 			delete_transient( 'edd_estimated_monthly_stats' . true );
 			delete_transient( 'edd_estimated_monthly_stats' . false );
-			$this->delete_data( 'edd_temp_reset_ids' );
+			$this->delete_data( 'edd_reset_tables_to_truncate' );
 
 			// Reset the sequential order numbers
 			if ( edd_get_option( 'enable_sequential' ) ) {
@@ -196,7 +139,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			}
 
 			$this->done    = true;
-			$this->message = __( 'Customers, earnings, sales, discounts and logs successfully reset.', 'easy-digital-downloads' );
+			$this->message = __( 'Your store has been successfully reset.', 'easy-digital-downloads' );
 			return false;
 		}
 	}
@@ -230,45 +173,34 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 */
 	public function pre_fetch() {
 		if ( 1 === $this->step ) {
-			$this->delete_data( 'edd_temp_reset_ids' );
+			$this->delete_data( 'edd_reset_tables_to_truncate' );
 		}
 
-		$items = get_option( 'edd_temp_reset_ids', false );
+		$tables = get_option( 'edd_reset_tables_to_truncate', false );
 
-		if ( false === $items ) {
-			$items = array();
+		if ( false === $tables ) {
+			$tables = array();
 
-			$edd_types_for_reset = array( 'download', 'edd_log', 'edd_payment', 'edd_discount' );
-			$edd_types_for_reset = apply_filters( 'edd_reset_store_post_types', $edd_types_for_reset );
+			foreach ( EDD()->components as $component ) {
+				/** @var $component EDD\Component */
 
-			$args = apply_filters( 'edd_tools_reset_stats_total_args', array(
-				'post_type'      => $edd_types_for_reset,
-				'post_status'    => 'any',
-				'posts_per_page' => -1,
-			) );
+				// Objects
+				$object = $component->get_interface( 'table' );
+				if ( $object instanceof \EDD\Database\Table && $object->exists() ) {
+					$tables[] = $object->table_name;
+				}
 
-			$posts = get_posts( $args );
-			foreach ( $posts as $post ) {
-				$items[] = array(
-					'id'   => (int) $post->ID,
-					'type' => $post->post_type,
-				);
+				// Meta
+				$meta = $component->get_interface( 'meta' );
+				if ( $meta instanceof \EDD\Database\Table && $meta->exists() ) {
+					$tables[] = $meta->table_name;
+				}
+
 			}
 
-			$customer_args = array( 'number' => -1 );
-			$customers     = edd_get_customers( $customer_args );
-			foreach ( $customers as $customer ) {
-				$items[] = array(
-					'id'   => (int) $customer->id,
-					'type' => 'customer',
-				);
-			}
+			$tables = apply_filters( 'edd_reset_tables_to_truncate', $tables );
 
-			// Allow filtering of items to remove with an unassociative array for each item
-			// The array contains the unique ID of the item, and a 'type' for you to use in the execution of the get_data method
-			$items = apply_filters( 'edd_reset_store_items', $items );
-
-			$this->store_data( 'edd_temp_reset_ids', $items );
+			$this->store_data( 'edd_reset_tables_to_truncate', $tables );
 		}
 	}
 
@@ -286,7 +218,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $key ) );
 
 		if ( empty( $value ) ) {
-			return false;
+			return array();
 		}
 
 		$maybe_json = json_decode( $value );
@@ -294,7 +226,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			$value = json_decode( $value, true );
 		}
 
-		return $value;
+		return (array) $value;
 	}
 
 	/**
@@ -305,7 +237,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @param string $key   Option name.
 	 * @param mixed  $value Option value.
 	 */
-	private function store_data( $key = '', $value ) {
+	private function store_data( $key = '', $value = '' ) {
 		global $wpdb;
 
 		// Bail if no key was passed.

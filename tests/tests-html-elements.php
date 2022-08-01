@@ -135,7 +135,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	 */
 	public function test_year_dropdown() {
 		$current_year = date( 'Y' );
-		$expected     = '<select name="year" id="" class="edd-select " data-placeholder="">';
+		$expected     = '<select name="year" id="edd_year_select_year" class="edd-select " data-placeholder="">';
 		$i            = 5;
 
 		while ( $i >= 0 ) {
@@ -161,7 +161,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$start_year = $current_year - $years_before;
 		$end_year   = $current_year + $years_after;
 
-		$expected = '<select name="year" id="" class="edd-select " data-placeholder="">';
+		$expected = '<select name="year" id="edd_year_select_year" class="edd-select " data-placeholder="">';
 
 		while ( $start_year <= $end_year ) {
 			$selected = (int) $start_year === (int) $current_year
@@ -183,7 +183,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	public function test_month_dropdown() {
 		$out = EDD()->html->month_dropdown();
 
-		$this->assertContains( '<select name="month" id="" class="edd-select "', $out );
+		$this->assertContains( '<select name="month" id="edd_month_select_month" class="edd-select "', $out );
 		$this->assertContains( '<option value="1"', $out );
 		$this->assertContains( '<option value="2"', $out );
 		$this->assertContains( '<option value="3"', $out );
@@ -196,5 +196,54 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertContains( '<option value="10"', $out );
 		$this->assertContains( '<option value="11"', $out );
 		$this->assertContains( '<option value="12"', $out );
+	}
+
+	/**
+	 * @covers EDD_HTML_Elements::select
+	 */
+	public function test_select_is_required() {
+		$select = EDD()->html->select(
+			array(
+				'required' => true,
+				'options'  => array(
+					1 => '1',
+					2 => '2',
+					3 => '3',
+				),
+			)
+		);
+
+		$this->assertContains( 'required', $select );
+	}
+
+	/**
+	 * @covers EDD_HTML_Elements::select
+	 */
+	public function test_select_is_not_required() {
+		$select = EDD()->html->select(
+			array(
+				'options' => array(
+					1 => '1',
+					2 => '2',
+					3 => '3',
+				)
+			)
+		);
+
+		$this->assertNotContains( 'required', $select );
+	}
+
+	/**
+	 * @covers EDD_HTML_Elements::text
+	 */
+	public function test_text_is_required() {
+		$this->assertContains( 'required', EDD()->html->text( array( 'required' => true ) ) );
+	}
+
+	/**
+	 * @covers EDD_HTML_Elements::text
+	 */
+	public function test_text_is_not_required() {
+		$this->assertNotContains( 'required', EDD()->html->text() );
 	}
 }

@@ -5,9 +5,10 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 3.0.0-beta-1
+ * Version: 3.0.2.1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
+ * Requires PHP: 5.6
  *
  * Easy Digital Downloads is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +25,8 @@
  *
  * @package EDD
  * @category Core
+ * @author Easy Digital Downloads
+ * @version 3.0.2.1
  */
 
 // Exit if accessed directly.
@@ -63,7 +66,7 @@ final class EDD_Requirements_Check {
 
 		// PHP
 		'php' => array(
-			'minimum' => '5.4.0',
+			'minimum' => '5.6',
 			'name'    => 'PHP',
 			'exists'  => true,
 			'current' => false,
@@ -73,7 +76,7 @@ final class EDD_Requirements_Check {
 
 		// WordPress
 		'wp' => array(
-			'minimum' => '4.4.0',
+			'minimum' => '4.9.0',
 			'name'    => 'WordPress',
 			'exists'  => true,
 			'current' => false,
@@ -132,7 +135,7 @@ final class EDD_Requirements_Check {
 
 			// Bootstrap to plugins_loaded before priority 10 to make sure
 			// add-ons are loaded after us.
-			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 8 );
+			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 4 );
 
 			// Register the activation hook
 			register_activation_hook( $this->file, array( $this, 'install' ) );
@@ -174,7 +177,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_url() {
-		return 'https://docs.easydigitaldownloads.com/article/2051-minimum-requirements-for-edd-3-0';
+		return 'https://easydigitaldownloads.com/recommended-wordpress-hosting/';
 	}
 
 	/**
@@ -245,17 +248,21 @@ final class EDD_Requirements_Check {
 	 * @since 3.0
 	 */
 	public function plugin_row_notice() {
-		?><tr class="active <?php echo esc_attr( $this->unmet_requirements_name() ); ?>-row">
-		<th class="check-column">
-			<span class="dashicons dashicons-warning"></span>
-		</th>
-		<td class="column-primary">
-			<?php $this->unmet_requirements_text(); ?>
-		</td>
-		<td class="column-description">
-			<?php $this->unmet_requirements_description(); ?>
-		</td>
-		</tr><?php
+		// wp_is_auto_update_enabled_for_type was introduced in WordPress 5.5.
+		$colspan = function_exists( 'wp_is_auto_update_enabled_for_type' ) && wp_is_auto_update_enabled_for_type( 'plugin' ) ? 2 : 1;
+		?>
+		<tr class="active <?php echo esc_attr( $this->unmet_requirements_name() ); ?>-row">
+			<th class="check-column">
+				<span class="dashicons dashicons-warning"></span>
+			</th>
+			<td class="column-primary">
+				<?php $this->unmet_requirements_text(); ?>
+			</td>
+			<td class="column-description" colspan="<?php echo esc_attr( $colspan ); ?>">
+				<?php $this->unmet_requirements_description(); ?>
+			</td>
+		</tr>
+		<?php
 	}
 
 	/**
@@ -469,17 +476,15 @@ final class EDD_Requirements_Check {
 		// Set filter for plugin's languages directory.
 		$edd_lang_dir = dirname( $this->base ) . '/languages/';
 		$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
-		$get_locale   = function_exists( 'get_user_locale' )
-			? get_user_locale()
-			: get_locale();
+
+		unload_textdomain( 'easy-digital-downloads' );
 
 		/**
-		 * Defines the plugin language locale used in AffiliateWP.
+		 * Defines the plugin language locale used in Easy Digital Downloads.
 		 *
-		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
-		 *                  otherwise uses `get_locale()`.
+		 * @var $get_locale The locale to use.
 		 */
-		$locale = apply_filters( 'plugin_locale', $get_locale, 'easy-digital-downloads' );
+		$locale = apply_filters( 'plugin_locale', get_user_locale(), 'easy-digital-downloads' );
 		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
 		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo

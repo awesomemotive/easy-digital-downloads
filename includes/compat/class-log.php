@@ -220,9 +220,10 @@ class Log extends Base {
 			'_edd_log_user_info',
 			'_edd_log_user_id',
 			'_edd_log_file_id',
-			'_edd_key_ip',
+			'_edd_log_ip',
 			'_edd_log_payment_id',
 			'_edd_log_price_id',
+			'_edd_log_customer_id',
 		);
 
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
@@ -238,9 +239,10 @@ class Log extends Base {
 		switch ( $meta_key ) {
 			case '_edd_log_user_id':
 			case '_edd_log_file_id':
-			case '_edd_key_ip':
+			case '_edd_log_ip':
 			case '_edd_log_payment_id':
 			case '_edd_log_price_id':
+			case '_edd_log_customer_id':
 				$key = str_replace( '_edd_log_', '', $meta_key );
 
 				switch ( $key ) {
@@ -253,14 +255,24 @@ class Log extends Base {
 					case 'user':
 						$key = 'user_id';
 						break;
+					case 'payment_id':
+						$key = 'order_id';
+						break;
 				}
 
-				$value = $file_download_log->{$key};
+				if ( isset( $file_download_log->{$key} ) ) {
+					$value = $file_download_log->{$key};
+				}
+
+				if ( 'user_id' === $key ) {
+					$customer = new \EDD_Customer( $file_download_log->customer_id );
+					$value    = ! empty( $customer->user_id ) ? $customer->user_id : 0;
+				}
 				break;
 		}
 
 		if ( $this->show_notices ) {
-			_doing_it_wrong( 'get_post_meta()', 'All log postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_api_request_log()</code> instead.', 'EDD 3.0' );
+			_doing_it_wrong( 'get_post_meta()', __( 'All log postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_api_request_log()</code> instead.', 'easy-digital-downloads' ), 'EDD 3.0' );
 
 			if ( $this->show_backtrace ) {
 				$backtrace = debug_backtrace();
@@ -292,9 +304,10 @@ class Log extends Base {
 			'_edd_log_user_info',
 			'_edd_log_user_id',
 			'_edd_log_file_id',
-			'_edd_key_ip',
+			'_edd_log_ip',
 			'_edd_log_payment_id',
 			'_edd_log_price_id',
+			'_edd_log_customer_id',
 		);
 
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
@@ -313,23 +326,16 @@ class Log extends Base {
 			case '_edd_key_ip':
 			case '_edd_log_payment_id':
 			case '_edd_log_price_id':
+			case '_edd_log_customer_id':
 				$key = str_replace( '_edd_log_', '', $meta_key );
+
+				if ( 'payment_id' === $key ) {
+					$key = 'order_id';
+				}
 
 				$check = edd_update_file_download_log( $object_id, array(
 					$key => $meta_value,
 				) );
-				break;
-			case '_edd_log_user_info':
-
-				$user_id = isset( $meta_value['id'] )
-					? absint( $meta_value['id'] )
-					: 0;
-
-				if ( $user_id ) {
-					edd_update_file_download_log( $object_id, array(
-						'user_id' => $user_id
-					) );
-				}
 				break;
 		}
 

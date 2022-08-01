@@ -1,6 +1,6 @@
 <?php
 /**
- * Note Functions
+ * Note Functions.
  *
  * @package     EDD
  * @subpackage  Notes
@@ -17,8 +17,30 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @param array $data
- * @return int
+ * @param array $data {
+ *     Array of note data. Default empty.
+ *
+ *     The `date_created` and `date_modified` parameters do not need to be passed.
+ *     They will be automatically populated if empty.
+ *
+ *     @type int    $object_id     Object ID that the note refers to. This would
+ *                                 be an ID that corresponds to the object type
+ *                                 specified. E.g. an object ID of 25 with object
+ *                                 type of `order` refers to order 25 in the
+ *                                 `edd_orders` table. Default empty.
+ *     @type string $object_type   Object type that the note refers to.
+ *                                 E.g. `discount` or `order`. Default empty.
+ *     @type int    $user_id       ID of the current WordPress user logged in.
+ *                                 Default 0.
+ *     @type string $content       Note content. Default empty.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was inserted.
+ *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was last modified.
+ *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ * }
+ * @return int|false ID of newly created note, false on error.
  */
 function edd_add_note( $data = array() ) {
 
@@ -40,7 +62,7 @@ function edd_add_note( $data = array() ) {
  * @since 3.0
  *
  * @param int $note_id Note ID.
- * @return int
+ * @return int|false `1` if the note was deleted successfully, false on error.
  */
 function edd_delete_note( $note_id = 0 ) {
 	$notes = new EDD\Database\Queries\Note();
@@ -54,8 +76,28 @@ function edd_delete_note( $note_id = 0 ) {
  * @since 3.0
  *
  * @param int   $note_id Note ID.
- * @param array $data    Updated note data.
- * @return bool Whether or not the note was updated.
+ * @param array $data {
+ *     Array of note data. Default empty.
+ *
+ *     @type int    $object_id     Object ID that the note refers to. This would
+ *                                 be an ID that corresponds to the object type
+ *                                 specified. E.g. an object ID of 25 with object
+ *                                 type of `order` refers to order 25 in the
+ *                                 `edd_orders` table. Default empty.
+ *     @type string $object_type   Object type that the note refers to.
+ *                                 E.g. `discount` or `order`. Default empty.
+ *     @type int    $user_id       ID of the current WordPress user logged in.
+ *                                 Default 0.
+ *     @type string $content       Note content. Default empty.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was inserted.
+ *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was last modified.
+ *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ * }
+ *
+ * @return int|false Number of rows updated if successful, false otherwise.
  */
 function edd_update_note( $note_id = 0, $data = array() ) {
 	$notes = new EDD\Database\Queries\Note();
@@ -69,10 +111,13 @@ function edd_update_note( $note_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $note_id Note ID.
- * @return EDD\Notes\Note
+ * @return EDD\Notes\Note Note object if successful, false otherwise.
  */
 function edd_get_note( $note_id = 0 ) {
-	return edd_get_note_by( 'id', $note_id );
+	$notes = new EDD\Database\Queries\Note();
+
+	// Return note
+	return $notes->get_item( $note_id );
 }
 
 /**
@@ -82,7 +127,8 @@ function edd_get_note( $note_id = 0 ) {
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
- * @return EDD\Notes\Note
+ *
+ * @return EDD\Notes\Note Note object if successful, false otherwise.
  */
 function edd_get_note_by( $field = '', $value = '' ) {
 	$notes = new EDD\Database\Queries\Note();
@@ -94,10 +140,13 @@ function edd_get_note_by( $field = '', $value = '' ) {
 /**
  * Query for notes.
  *
+ * @see \EDD\Database\Queries\Note::__construct()
+ *
  * @since 3.0
  *
- * @param array $args
- * @return array
+ * @param array $args Arguments. See `EDD\Database\Queries\Note` for
+ *                    accepted arguments.
+ * @return \EDD\Notes\Note[] Array of `Note` objects.
  */
 function edd_get_notes( $args = array() ) {
 
@@ -116,10 +165,13 @@ function edd_get_notes( $args = array() ) {
 /**
  * Count notes.
  *
+ * @see \EDD\Database\Queries\Note::__construct()
+ *
  * @since 3.0
  *
- * @param array $args Arguments.
- * @return int
+ * @param array $args Arguments. See `EDD\Database\Queries\Note` for
+ *                    accepted arguments.
+ * @return int Number of notes returned based on query arguments passed.
  */
 function edd_count_notes( $args = array() ) {
 

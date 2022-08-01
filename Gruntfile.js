@@ -1,229 +1,16 @@
-module.exports = function(grunt) {
-
+module.exports = function( grunt ) {
 	// Load multiple grunt tasks using globbing patterns
-	require('load-grunt-tasks')(grunt);
+	require( 'load-grunt-tasks' )( grunt );
 
 	// Project configuration.
-	grunt.initConfig({
+	grunt.initConfig( {
 
-		pkg: grunt.file.readJSON('package.json'),
-
-		rtlcss: {
-			options: {
-				opts: {
-					processUrls: false,
-					autoRename: false,
-					clean: true
-				},
-				saveUnmodified: false
-			},
-			target: {
-				files: [
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['chosen.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['colorbox.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-menu.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-email-tags.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-datepicker.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-tax-rates.css'],
-						dest: 'assets/css',
-						ext: '-rtl.css'
-					},
-					{
-						expand: true,
-						cwd: 'templates',
-						src: ['edd.css'],
-						dest: 'templates',
-						ext: '-rtl.css'
-					}
-				]
-			}
-		},
-
-		cssmin: {
-			options: {
-				mergeIntoShorthands: false
-			},
-			ltr: {
-				files: [
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['chosen.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['colorbox.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-menu.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-email-tags.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-datepicker.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-tax-rates.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'templates',
-						src: ['edd.css'],
-						dest: 'templates',
-						ext: '.min.css'
-					}
-				]
-			},
-			rtl: {
-				files: [
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['chosen-rtl.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['colorbox-rtl.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-rtl.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-menu-rtl.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-email-tags-rtl.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-datepicker-rtl.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'assets/css',
-						src: ['edd-admin-tax-rates-rtl.css'],
-						dest: 'assets/css',
-						ext: '.min.css'
-					},
-					{
-						expand: true,
-						cwd: 'templates',
-						src: ['edd-rtl.css'],
-						dest: 'templates',
-						ext: '.min.css'
-					}
-				]
-			}
-		},
-
-		uglify: {
-			options: {
-				mangle: false
-			},
-			target: {
-				files: [{
-					expand: true,
-					cwd: 'assets/js',
-					src: [ '*.js', '!*.min.js', '!*jquery*.js' ],
-					dest: 'assets/js',
-					ext: '.min.js',
-					extDot: 'last'
-				}]
-			}
-		},
+		pkg: grunt.file.readJSON( 'package.json' ),
 
 		checktextdomain: {
-			options:{
+			options: {
 				text_domain: 'easy-digital-downloads',
+				correct_domain: true,
 				keywords: [
 					'__:1,2d',
 					'_e:1,2d',
@@ -242,76 +29,76 @@ module.exports = function(grunt) {
 					' __ngettext:1,2,3d',
 					'__ngettext_noop:1,2,3d',
 					'_c:1,2d',
-					'_nc:1,2,4c,5d'
-				]
+					'_nc:1,2,4c,5d',
+				],
 			},
 			files: {
 				src: [
 					'**/*.php', // Include all files
 					'!node_modules/**', // Exclude node_modules/
-					'!build/**'// Exclude build/
+					'!build/**', // Exclude build/
 				],
-				expand: true
-			}
+				expand: true,
+			},
 		},
 
 		makepot: {
 			target: {
 				options: {
-					domainPath: '/languages/',    // Where to save the POT file.
-					exclude: ['build/.*'],
-					mainFile: 'easy-digital-downloads.php',    // Main project file.
-					potFilename: 'easy-digital-downloads.pot',    // Name of the POT file.
+					domainPath: '/languages/', // Where to save the POT file.
+					exclude: [ 'build/.*' ],
+					mainFile: 'easy-digital-downloads.php', // Main project file.
+					potFilename: 'easy-digital-downloads.pot', // Name of the POT file.
 					potHeaders: {
-						poedit: true,                 // Includes common Poedit headers.
-						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
+						poedit: true, // Includes common Poedit headers.
+						'x-poedit-keywordslist': true, // Include a list of all possible gettext functions.
 					},
-					type: 'wp-plugin',    // Type of project (wp-plugin or wp-theme).
-					updateTimestamp: true,    // Whether the POT-Creation-Date should be updated without other changes.
+					type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
+					updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
 					processPot: function( pot, options ) {
-						pot.headers['report-msgid-bugs-to'] = 'https://easydigitaldownloads.com/';
-						pot.headers['last-translator'] = 'WP-Translations (http://wp-translations.org/)';
-						pot.headers['language-team'] = 'WP-Translations <wpt@wp-translations.org>';
-						pot.headers['language'] = 'en_US';
-						var translation, // Exclude meta data from pot.
+						pot.headers[ 'report-msgid-bugs-to' ] = 'https://easydigitaldownloads.com/';
+						pot.headers[ 'last-translator' ] = 'WP-Translations (http://wp-translations.org/)';
+						pot.headers[ 'language-team' ] = 'WP-Translations <wpt@wp-translations.org>';
+						pot.headers.language = 'en_US';
+						let translation, // Exclude meta data from pot.
 							excluded_meta = [
 								'Plugin Name of the plugin/theme',
 								'Plugin URI of the plugin/theme',
 								'Author of the plugin/theme',
-								'Author URI of the plugin/theme'
+								'Author URI of the plugin/theme',
 							];
-							for ( translation in pot.translations[''] ) {
-								if ( 'undefined' !== typeof pot.translations[''][ translation ].comments.extracted ) {
-									if ( excluded_meta.indexOf( pot.translations[''][ translation ].comments.extracted ) >= 0 ) {
-										console.log( 'Excluded meta: ' + pot.translations[''][ translation ].comments.extracted );
-										delete pot.translations[''][ translation ];
-									}
+						for ( translation in pot.translations[ '' ] ) {
+							if ( 'undefined' !== typeof pot.translations[ '' ][ translation ].comments.extracted ) {
+								if ( excluded_meta.indexOf( pot.translations[ '' ][ translation ].comments.extracted ) >= 0 ) {
+									console.log( 'Excluded meta: ' + pot.translations[ '' ][ translation ].comments.extracted );
+									delete pot.translations[ '' ][ translation ];
 								}
 							}
+						}
 						return pot;
-					}
-				}
-			}
+					},
+				},
+			},
 		},
 
 		// Clean up build directory
 		clean: {
-			main: ['build/<%= pkg.name %>']
+			main: [ 'build/<%= pkg.name %>' ],
 		},
 
 		// Copy the plugin into the build directory
 		copy: {
 			main: {
-				src:  [
+				src: [
 					'assets/**',
 					'includes/**',
 					'languages/**',
 					'templates/**',
 					'*.php',
-					'*.txt'
+					'*.txt',
 				],
-				dest: 'build/<%= pkg.name %>/'
-			}
+				dest: 'build/<%= pkg.name %>/',
+			},
 		},
 
 		// Compress build directory into <name>.zip and <name>-<version>.zip
@@ -319,17 +106,43 @@ module.exports = function(grunt) {
 			main: {
 				options: {
 					mode: 'zip',
-					archive: './build/<%= pkg.name %>.zip'
+					archive: './build/<%= pkg.name %>.zip',
 				},
 				expand: true,
 				cwd: 'build/<%= pkg.name %>/',
-				src: ['**/*'],
-				dest: '<%= pkg.name %>/'
+				src: [ '**/*' ],
+				dest: '<%= pkg.name %>/',
+			},
+		},
+
+		replace: {
+			stripe: {
+				options: {
+					patterns: [
+						{
+							match: /edd_stripe_bootstrap/g,
+							replacement: 'edd_stripe_core_bootstrap',
+							expression: true,
+						},
+						{
+							match: /remove_action(.*);/g,
+							replacement: '',
+							expression: true,
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'includes/gateways/stripe/edd-stripe.php' ],
+						dest: 'includes/gateways/stripe'
+					}
+				]
 			}
 		}
-	});
+	} );
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'cssmin:ltr', 'rtlcss', 'cssmin:rtl', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
-
+	grunt.registerTask( 'build', [ 'force:checktextdomain', 'makepot', 'replace', 'clean', 'copy', 'compress' ] );
 };

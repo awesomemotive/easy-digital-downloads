@@ -13,111 +13,132 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Sanitize Amount
+ * Sanitize a numeric value.
  *
- * Returns a sanitized amount by stripping out thousands separators.
+ * Use this function to "unformat" a previously formatted numeric value.
+ *
+ * (Most commonly, this is when accepting input from a form field where the
+ * value is likely to derived from the site or user preferences.)
  *
  * @since 1.0
- * @param string $amount Price amount to format
- * @return string $amount Newly sanitized amount
+ *
+ * @param mixed $amount Default 0. Numeric amount to sanitize.
+ *
+ * @return string $amount Newly sanitized amount.
  */
-function edd_sanitize_amount( $amount = '' ) {
-	$is_negative   = false;
-	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+function edd_sanitize_amount( $amount = 0 ) {
 
-	// Sanitize the amount
-	if ( $decimal_sep === ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
-		if ( ( $thousands_sep == '.' || $thousands_sep == ' ' ) && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	// Get separators
+	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
+
+	// Look for separators in amount
+	$found_decimal   = strpos( $amount, $decimal_sep   );
+	$found_thousands = strpos( $amount, $thousands_sep );
+
+	// Amount contains comma as decimal separator
+	if ( ( $decimal_sep === ',' ) && ( false !== $found_decimal ) ) {
+
+		// Amount contains period or space as thousands separator
+		if ( in_array( $thousands_sep, array( '.', ' ' ), true ) && ( false !== $found_thousands ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
-		} elseif( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
+
+		// Amount contains period
+		} elseif ( empty( $thousands_sep ) && ( false !== strpos( $amount, '.' ) ) ) {
 			$amount = str_replace( '.', '', $amount );
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
-	} elseif( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+
+	// Amount contains comma as thousands separator
+	} elseif( ( $thousands_sep === ',' ) && ( false !== $found_thousands ) ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
-	// Negative
-	if ( $amount < 0 ) {
-		$is_negative = true;
-	}
+	// Check if negative (before stripping characters below)
+	$negative_exponent = ( $amount < 0 )
+		? -1
+		: 1;
 
-	// Only numbers
+	// Only numbers and period
 	$amount = preg_replace( '/[^0-9\.]/', '', $amount );
 
 	/**
-	 * Filter number of decimals to use for prices
+	 * Filter number of decimals to use for sanitized amount
 	 *
 	 * @since unknown
 	 *
-	 * @param int $number Number of decimals
-	 * @param int|string $amount Price
+	 * @param int        $number Default 2. Number of decimals.
+	 * @param int|string $amount Amount being sanitized.
 	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
-	$amount   = number_format( (float) $amount, $decimals, '.', '' );
 
-	if ( true === $is_negative ) {
-		$amount *= -1;
-	}
-
-	/**
-	 * Filter the sanitized price before returning
-	 *
-	 * @since unknown
-	 *
-	 * @param string $amount Price
-	 */
-	return apply_filters( 'edd_sanitize_amount', $amount );
-}
-
-/**
- * Returns a nicely formatted amount.
- *
- * @since 1.0
- *
- * @param string $amount   Price amount to format
- * @param string $decimals Whether or not to use decimals.  Useful when set to false for non-currency numbers.
- *
- * @return string $amount Newly formatted amount or Price Not Available
- */
-function edd_format_amount( $amount, $decimals = true ) {
-	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
-
-	// Format the amount
-	if ( $decimal_sep === ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
-		$whole  = substr( $amount, 0, $sep_found );
-		$part   = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
-		$amount = $whole . '.' . $part;
-	}
-
-	// Strip , from the amount (if set as the thousands separator)
-	if ( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
-		$amount = str_replace( ',', '', $amount );
-	}
-
-	// Strip ' ' from the amount (if set as the thousands separator)
-	if ( $thousands_sep === ' ' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
-		$amount = str_replace( ' ', '', $amount );
-	}
-
-	if ( empty( $amount ) ) {
+	// Check for empty strings before we multiply.
+	if ( '' === $amount ) {
 		$amount = 0;
 	}
 
-	$decimals  = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
-	$formatted = number_format( (float) $amount, $decimals, $decimal_sep, $thousands_sep );
+	// Flip back to negative
+	$sanitized = $amount * $negative_exponent;
 
-	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
+	// Format amount using decimals and a period for the decimal separator
+	// (no thousands separator; also rounds up or down)
+	$sanitized = number_format( (float) $sanitized, $decimals, '.', '' );
+
+	/**
+	 * Filter the sanitized amount before returning
+	 *
+	 * @since unknown
+	 *
+	 * @param mixed  $sanitized     Sanitized amount.
+	 * @param mixed  $amount        Original amount.
+	 * @param int    $decimals      Default 2. Number of decimals.
+	 * @param string $decimal_sep   Default '.'. Decimal separator.
+	 * @param string $thousands_sep Default ','. Thousands separator.
+	 */
+	return apply_filters( 'edd_sanitize_amount', $sanitized, $amount, $decimals, $decimal_sep, $thousands_sep );
+}
+
+/**
+ * Format a numeric value.
+ *
+ * Uses the decimal & thousands separator settings, and the number of decimals,
+ * to format any numeric value.
+ *
+ * (Most commonly, this is used to apply site or user preferences to a numeric
+ * value for output to the page.)
+ *
+ * @since 1.0
+ * @since 3.0 Added `$currency` parameter.
+ *
+ * @param mixed  $amount   Default 0. Numeric amount to format.
+ * @param string $decimals Default true. Whether or not to use decimals. Useful when set to false for non-currency numbers.
+ * @param string $currency Currency code to format the amount for. This determines how many decimals are used.
+ *                         If omitted, site-wide currency is used.
+ *
+ * @return string $amount Newly formatted amount or Price Not Available
+ */
+function edd_format_amount( $amount = 0, $decimals = true, $currency = '' ) {
+	if ( empty( $currency ) ) {
+		$currency = edd_get_currency();
+	}
+
+	$formatter = new \EDD\Currency\Money_Formatter( $amount, new \EDD\Currency\Currency( $currency ) );
+
+	return $formatter->format_for_display( $decimals )->amount;
 }
 
 /**
  * Formats the currency display
  *
  * @since 1.0
- * @param string $price Price
+ *
+ * @param string $price    Price. This should already be formatted.
+ * @param string $currency Currency code. When this function is used on an order's amount, the order's currency
+ *                         should always be provided here. If omitted, the store currency is used instead.
+ *                         But to ensure immutability with orders, the currency should always be explicitly provided
+ *                         if known and tied to an existing order.
+ *
  * @return string $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price = '', $currency = '' ) {
@@ -127,64 +148,14 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 		$currency = edd_get_currency();
 	}
 
-	// Default vars
-	$position = edd_get_option( 'currency_position', 'before' );
-	$negative = $price < 0;
-
-	// Remove proceeding "-" -
-	if ( true === $negative ) {
-		$price = substr( $price, 1 );
+	$currency = new \EDD\Currency\Currency( $currency );
+	if ( '' === $price ) {
+		return $currency->symbol;
 	}
 
-	$symbol = edd_currency_symbol( $currency );
+	$formatter = new \EDD\Currency\Money_Formatter( $price, $currency );
 
-	if ( 'before' === $position ):
-		switch ( $currency ):
-			case 'GBP' :
-			case 'BRL' :
-			case 'EUR' :
-			case 'USD' :
-			case 'AUD' :
-			case 'CAD' :
-			case 'HKD' :
-			case 'MXN' :
-			case 'NZD' :
-			case 'SGD' :
-			case 'JPY' :
-				$formatted = $symbol . $price;
-				break;
-			default :
-				$formatted = $currency . ' ' . $price;
-				break;
-		endswitch;
-		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
-	else :
-		switch ( $currency ) :
-			case 'GBP' :
-			case 'BRL' :
-			case 'EUR' :
-			case 'USD' :
-			case 'AUD' :
-			case 'CAD' :
-			case 'HKD' :
-			case 'MXN' :
-			case 'SGD' :
-			case 'JPY' :
-				$formatted = $price . $symbol;
-				break;
-			default :
-				$formatted = $price . ' ' . $currency;
-				break;
-		endswitch;
-		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
-	endif;
-
-	// Prepend the mins sign before the currency sign
-	if ( true === $negative ) {
-		$formatted = '-' . $formatted;
-	}
-
-	return $formatted;
+	return $formatter->apply_symbol();
 }
 
 /**
@@ -215,7 +186,7 @@ function edd_currency_decimal_filter( $decimals = 2, $currency = '' ) {
 	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
-add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter' );
+add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter', 10, 2 );
 
 /**
  * Sanitizes a string key for EDD Settings
@@ -279,4 +250,91 @@ function edd_number_not_negative( $number = 0 ) {
 
 	// Filter & return
 	return (int) apply_filters( 'edd_number_not_negative', $not_less_than_zero, $casted_number, $number );
+}
+
+/**
+ * Return array of allowed HTML tags.
+ *
+ * Used with wp_kses() to filter unsafe HTML out of settings and notes.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_allowed_tags() {
+	return (array) apply_filters( 'edd_allowed_html_tags', array(
+		'p'      => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'span'   => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'a' => array(
+			'href'   => array(),
+			'target' => array(),
+			'title'  => array(),
+			'class'  => array(),
+			'id'     => array(),
+		),
+		'code'   => array(),
+		'strong' => array(),
+		'em'     => array(),
+		'br'     => array(),
+		'img'    => array(
+			'src'   => array(),
+			'title' => array(),
+			'alt'   => array(),
+			'id'    => array(),
+		),
+		'div'    => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'ul'     => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'li'     => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+	) );
+}
+
+/**
+ * Return a translatable and display ready string for an address type.
+ *
+ * @since 3.0
+ * @param string $address_type The type of address to get the display label for.
+ *
+ * @return string              The translatable string for the display type, in lowercase.
+ */
+function edd_get_address_type_label( $address_type = 'billing' ) {
+
+	// Core default address types and their labels.
+	$address_type_labels = array(
+		'billing' => __( 'Billing', 'easy-digital-downloads' ),
+	);
+
+	/**
+	 * Physical address type labels.
+	 *
+	 * A key/value array of billing types found in the 'type' column of the customer address table, and their translatable
+	 * strings for output.
+	 *
+	 * @since 3.0
+	 * @param array $address_type_labels
+	 *     Array of the address type labels, in key/value form. The key should match the database entry for the
+	 *         wp_edd_customer_addresses table in the 'type' column. The value of each array entry should be a translatable
+	 *         string for output in the UI.
+	 */
+	$address_type_labels = apply_filters( 'edd_address_type_labels', $address_type_labels );
+
+	// Fallback to just applying an upper case to any words not in the filter.
+	return array_key_exists( $address_type, $address_type_labels ) ?
+		$address_type_labels[ $address_type ] :
+		$address_type;
+
 }

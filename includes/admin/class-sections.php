@@ -127,12 +127,13 @@ class Sections {
 		$use_js = ! empty( $this->use_js )
 			? ' use-js'
 			: '';
+		$role   = $this->use_js ? 'tablist' : 'menu';
 
 		ob_start(); ?>
 
 		<div class="edd-sections-wrap">
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
-				<ul class="section-nav">
+				<ul class="section-nav" role="<?php echo esc_attr( $role ); ?>">
 					<?php echo $this->get_all_section_links(); ?>
 				</ul>
 
@@ -215,16 +216,19 @@ class Sections {
 
 			$url = $this->use_js
 				? '#' . esc_attr( $this->id . $section->id )
-				: add_query_arg( 'view', $section->id, $this->base_url );
+				: add_query_arg( 'view', sanitize_key( $section->id ), $this->base_url );
 
 			// Special selected section
-			$selected = $this->is_current_section( $section->id )
-				? 'aria-selected="true"'
-				: ''; ?>
+			$selected = ! $this->use_js && $this->is_current_section( $section->id )
+				? 'aria-current="true"'
+				: '';
+			$class           = $this->is_current_section( $section->id ) ? 'section-title section-title--is-active' : 'section-title';
+			$aria_attributes = $this->use_js ? 'role="tab" aria-controls="' . esc_attr( $this->id . $section->id ) . '"' : 'role="menuitem"';
+			?>
 
-			<li class="section-title" <?php echo $selected; ?>>
+			<li class="<?php echo esc_attr( $class ); ?>" <?php echo $aria_attributes . ' ' . $selected; ?>>
 				<a href="<?php echo esc_url( $url ); ?>">
-					<i class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></i>
+					<span class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></span>
 					<span class="label"><?php echo $section->label; // Allow HTML ?></span>
 				</a>
 			</li>
@@ -267,7 +271,7 @@ class Sections {
 
 				// Callback or action
 				if ( ! empty( $section->callback ) ) {
-					if ( is_string( $section->callback ) && is_callable( $section->callback ) ) {
+					if ( is_callable( $section->callback ) ) {
 						call_user_func( $section->callback, $this->item );
 
 					} elseif ( is_array( $section->callback ) && is_callable( $section->callback[0] ) ) {

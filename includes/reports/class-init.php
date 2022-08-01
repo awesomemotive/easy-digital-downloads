@@ -36,6 +36,7 @@ final class Init {
 		// Dependencies.
 		require_once $reports_dir . 'class-registry.php';
 		require_once $reports_dir . 'data/class-base-object.php';
+		require_once $reports_dir . 'data/class-endpoint-view-registry.php';
 
 		// Reports.
 		require_once $reports_dir . 'data/class-report-registry.php';
@@ -73,6 +74,8 @@ final class Init {
 		$reports = Data\Report_Registry::instance();
 
 		$reports = $this->legacy_reports( $reports );
+
+		$reports = $this->register_core_endpoint_views( $reports );
 
 		/**
 		 * Fires when the Reports API is initialized.
@@ -141,11 +144,10 @@ final class Init {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $reports
-	 *
-	 * @return array
+	 * @param Data\Report_Registry $reports Reports registry instance.
+	 * @return Data\Report_Registry Reports registry.
 	 */
-	private function legacy_reports( $reports = array() ) {
+	private function legacy_reports( $reports ) {
 
 		// Bail if no legacy reports
 		if ( ! has_filter( 'edd_report_views' ) ) {
@@ -208,14 +210,22 @@ final class Init {
 			// Legacy label
 			$legacy_label = $label . '<span class="edd-legacy-label edd-chip">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
 
-			// Add report
-			$reports->add_report( $report_id, array(
-				'label'            => $legacy_label,
-				'group'            => 'core',
-				'icon'             => 'chart-area',
-				'priority'         => $priority,
-				'display_callback' => $callback
-			) );
+			try {
+				// Add report
+				$reports->add_report( $report_id, array(
+					'label'            => $legacy_label,
+					'group'            => 'core',
+					'icon'             => 'chart-area',
+					'priority'         => $priority,
+					'display_callback' => $callback,
+					'filters'          => array(
+						'dates',
+						'taxes',
+					),
+				) );
+			} catch ( \EDD_Exception $exception ) {
+				edd_debug_log_exception( $exception );
+			}
 
 			// Bump the priority
 			++$priority;
@@ -224,4 +234,28 @@ final class Init {
 		// Return reports array
 		return $reports;
 	}
+
+	/**
+	 * Registers the core endpoint views.
+	 *
+	 * @since 3.0
+	 *
+	 * @param Data\Report_Registry $reports Reports registry instance.
+	 */
+	private function register_core_endpoint_views( $reports ) {
+		$views      = Data\Endpoint_View_Registry::instance();
+		$core_views = $views->get_core_views();
+
+		try {
+			foreach ( $core_views as $view_id => $atts ) {
+				$views->register_endpoint_view( $view_id, $atts );
+			}
+		} catch ( \EDD_Exception $exception ) {
+			edd_debug_log_exception( $exception );
+		}
+
+		return $reports;
+	}
+
+
 }

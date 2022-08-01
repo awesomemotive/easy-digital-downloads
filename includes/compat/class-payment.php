@@ -49,7 +49,6 @@ class Payment extends Base {
 		/* Filters ************************************************************/
 
 		add_filter( 'query',                array( $this, 'wp_count_posts'       ), 10, 1 );
-		add_filter( 'query',                array( $this, 'get_post'             ), 10, 1 );
 		add_filter( 'get_post_metadata',    array( $this, 'get_post_metadata'    ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
 		add_filter( 'add_post_metadata',    array( $this, 'update_post_metadata' ), 99, 5 );
@@ -73,51 +72,6 @@ class Payment extends Base {
 
 		if ( $expected === $query ) {
 			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_orders} GROUP BY post_status";
-		}
-
-		return $query;
-	}
-
-	/**
-	 * Backwards compatibility layer for get_post().
-	 *
-	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $query SQL request.
-	 *
-	 * @return string $request Rewritten SQL query.
-	 */
-	public function get_post( $query ) {
-		global $wpdb;
-
-		$expected = "/^SELECT \* FROM {$wpdb->posts} WHERE ID = (\d*) LIMIT 1$/";
-
-		if ( preg_match( $expected, $query, $matches, PREG_OFFSET_CAPTURE ) ) {
-
-			$object_id = 0;
-
-			if ( isset( $matches[1] ) ) {
-				$object_id = (int) $matches[1][0];
-			}
-
-			// Check if the ID matches a legacy ID.
-			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
-
-			if ( isset( $wpdb->$table_name ) ) {
-				$object_id = $wpdb->get_var( $wpdb->prepare(
-					"
-					SELECT edd_order_id
-					FROM {$table_name}
-					WHERE meta_key = %s AND meta_value = %d
-					", 'legacy_payment_id', $object_id
-				) );
-
-				if ( ! empty( $object_id ) ) {
-					$query = str_replace( $matches[1][0], $object_id, $query );
-				}
-			}
 		}
 
 		return $query;
@@ -175,54 +129,21 @@ class Payment extends Base {
 	 * @return mixed The value to return.
 	 */
 	public function get_post_metadata( $value, $object_id, $meta_key, $single ) {
-		global $wpdb;
 
 		if ( 'get_post_metadata' !== current_filter() ) {
 			$message = __( 'This function is not meant to be called directly. It is only here for backwards compatibility purposes.', 'easy-digital-downloads' );
 			_doing_it_wrong( __FUNCTION__, esc_html( $message ), 'EDD 3.0' );
 		}
 
-		$meta_keys = array(
-			'_edd_payment_purchase_key',
-			'_edd_payment_transaction_id',
-			'_edd_payment_meta',
-			'_edd_completed_date',
-			'_edd_payment_gateway',
-			'_edd_payment_user_id',
-			'_edd_payment_user_email',
-			'_edd_payment_user_ip',
-			'_edd_payment_mode',
-			'_edd_payment_tax_rate',
-			'_edd_payment_customer_id',
-			'_edd_payment_total',
-			'_edd_payment_tax',
-			'_edd_payment_number',
-		);
-
-		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
+		// Bail early of not a back-compat key
+		if ( ! in_array( $meta_key, $this->get_meta_key_whitelist(), true ) ) {
 			return $value;
 		}
 
-		$order = edd_get_order( $object_id );
-
-		if ( ! $order ) {
-
-			// Check if the ID matches a legacy ID.
-			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
-
-			$object_id = $wpdb->get_var( $wpdb->prepare(
-				"
-				SELECT edd_order_id
-				FROM {$table_name}
-				WHERE meta_key = %s AND meta_value = %d
-				", 'legacy_payment_id', $object_id
-			) );
-
-			$order = edd_get_order( $object_id );
-
-			if ( ! $order ) {
-				return $value;
-			}
+		// Bail if order does not exist
+		$order = $this->_shim_edd_get_order( $object_id );
+		if ( empty( $order ) ) {
+			return $value;
 		}
 
 		switch ( $meta_key ) {
@@ -256,6 +177,13 @@ class Payment extends Base {
 				break;
 			case '_edd_payment_tax_rate':
 				$value = $order->get_tax_rate();
+				/*
+				 * Tax rates are now stored as percentages (e.g. `20.00`) but previously they were stored as
+				 * decimals (e.g. `0.2`) so we convert it back to a decimal.
+				 */
+				if ( is_numeric( $value ) ) {
+					$value = $value / 100;
+				}
 				break;
 			case '_edd_payment_customer_id':
 				$value = $order->customer_id;
@@ -268,6 +196,9 @@ class Payment extends Base {
 				break;
 			case '_edd_payment_number':
 				$value = $order->get_number();
+				break;
+			default :
+				$value = edd_get_order_meta( $order->id, $meta_key, true );
 				break;
 		}
 
@@ -297,8 +228,39 @@ class Payment extends Base {
 	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta.
 	 */
 	public function update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		global $wpdb;
 
+		// Bail early of not a back-compat key
+		if ( ! in_array( $meta_key, $this->get_meta_key_whitelist(), true ) ) {
+			return $check;
+		}
+
+		// Bail if payment does not exist
+		$payment = edd_get_payment( $object_id );
+		if ( empty( $payment ) ) {
+			return $check;
+		}
+
+		$check = $payment->update_meta( $meta_key, $meta_value );
+
+		if ( $this->show_notices ) {
+			_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All payment postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_order_meta()/edd_update_order_meta()()</code> instead.', 'EDD 3.0' );
+
+			if ( $this->show_backtrace ) {
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+		}
+
+		return $check;
+	}
+
+	/**
+	 * Retrieves a list of whitelisted meta keys that we want to catch in get/update post meta calls.
+	 *
+	 * @since 3.0
+	 * @return array
+	 */
+	private function get_meta_key_whitelist() {
 		$meta_keys = array(
 			'_edd_payment_purchase_key',
 			'_edd_payment_transaction_id',
@@ -314,45 +276,38 @@ class Payment extends Base {
 			'_edd_payment_total',
 			'_edd_payment_tax',
 			'_edd_payment_number',
+			'_edd_sl_upgraded_payment_id', // EDD SL
+			'_edd_sl_is_renewal', // EDD SL
+			'_edds_stripe_customer_id', // EDD Stripe
 		);
 
-		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
-			return $check;
-		}
+		/**
+		 * Allows the whitelisted post meta keys to be filtered. Extensions should add their meta key(s) to this
+		 * list if they want add/update/get post meta calls to be routed to order meta.
+		 *
+		 * @param array $meta_keys
+		 *
+		 * @since 3.0
+		 */
+		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
 
-		$p = edd_get_payment( $object_id );
+		return (array) $meta_keys;
+	}
 
-		if ( ! $p ) {
+	/**
+	 * Gets the order from the database.
+	 * This is a duplicate of edd_get_order, but is defined separately here
+	 * for pending migration purposes.
+	 *
+	 * @todo deprecate in 3.1
+	 *
+	 * @param int $order_id
+	 * @return false|EDD\Orders\Order
+	 */
+	private function _shim_edd_get_order( $order_id ) {
+		$orders = new \EDD\Database\Queries\Order();
 
-			// Check if the ID matches a legacy ID.
-			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
-
-			$object_id = $wpdb->get_var( $wpdb->prepare(
-				"
-				SELECT edd_order_id
-				FROM {$table_name}
-				WHERE meta_key = %s AND meta_value = %d
-				", 'legacy_payment_id', $object_id
-			) );
-
-			$p = edd_get_payment( $object_id );
-
-			if ( ! $p ) {
-				return $check;
-			}
-		}
-
-		$check = $p->update_meta( $meta_key, $meta_value );
-
-		if ( $this->show_notices ) {
-			_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All payment postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_order_meta()/edd_update_order_meta()()</code> instead.', 'EDD 3.0' );
-
-			if ( $this->show_backtrace ) {
-				$backtrace = debug_backtrace();
-				trigger_error( print_r( $backtrace, 1 ) );
-			}
-		}
-
-		return $check;
+		// Return order
+		return $orders->get_item( $order_id );
 	}
 }

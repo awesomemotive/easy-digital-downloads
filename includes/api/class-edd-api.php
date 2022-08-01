@@ -330,6 +330,11 @@ class EDD_API {
 				$secret = $this->get_user_secret_key( $user );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
+				// Verify that if user has secret key or not.
+				if ( ! $secret ) {
+					$this->invalid_auth();
+				}
+
 				$valid = $this->check_keys( $secret, $public, $token );
 				if ( $valid ) {
 					$this->is_valid_request = true;
@@ -390,11 +395,7 @@ class EDD_API {
 		$user = get_transient( md5( 'edd_api_user_' . $key ) );
 
 		if ( false === $user ) {
-			if ( edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
-				$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s LIMIT 1", $key ) );
-			} else {
-				$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
-			}
+			$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = %s LIMIT 1", $key ) );
 			set_transient( md5( 'edd_api_user_' . $key ), $user, DAY_IN_SECONDS );
 		}
 
@@ -418,11 +419,7 @@ class EDD_API {
 		$user_public_key = get_transient( $cache_key );
 
 		if ( empty( $user_public_key ) ) {
-			if ( edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
-				$user_public_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_public_key' AND user_id = %d", $user_id ) );
-			} else {
-				$user_public_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND user_id = %d", $user_id ) );
-			}
+			$user_public_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_public_key' AND user_id = %d", $user_id ) );
 			set_transient( $cache_key, $user_public_key, HOUR_IN_SECONDS );
 		}
 
@@ -440,11 +437,7 @@ class EDD_API {
 		$user_secret_key = get_transient( $cache_key );
 
 		if ( empty( $user_secret_key ) ) {
-			if ( edd_has_upgrade_completed( 'upgrade_user_api_keys' ) ) {
-				$user_secret_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_secret_key' AND user_id = %d", $user_id ) );
-			} else {
-				$user_secret_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = 'edd_user_secret_key' AND user_id = %d", $user_id ) );
-			}
+			$user_secret_key = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE meta_value = 'edd_user_secret_key' AND user_id = %d", $user_id ) );
 			set_transient( $cache_key, $user_secret_key, HOUR_IN_SECONDS );
 		}
 
@@ -557,7 +550,8 @@ class EDD_API {
 		}
 
 		$data         = array();
-		$this->routes = new $this->versions[$this->get_queried_version()];
+		$version      = $this->get_queried_version();
+		$this->routes = new $this->versions[ $version ];
 		$this->routes->validate_request();
 
 		switch ( $this->endpoint ) :
@@ -980,8 +974,6 @@ class EDD_API {
 	 *
 	 * @since  1.5
 	 * @author Daniel J Griffiths
-	 * @global object $wpdb     Used to query the database using the WordPress
-	 *                          Database API
 	 *
 	 * @param int     $customer Customer ID
 	 *
@@ -996,8 +988,6 @@ class EDD_API {
 		if ( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
 			return $customers;
 		}
-
-		global $wpdb;
 
 		$paged    = $this->get_paged();
 		$per_page = $this->per_page();
@@ -1020,7 +1010,16 @@ class EDD_API {
 			$field = 'email';
 		}
 
-		$customer_query = edd_get_customers( array( 'number' => $per_page, 'offset' => $offset, $field => $customer ) );
+		$args = array(
+			'number' => $per_page,
+			'offset' => $offset
+		);
+
+		if ( ! is_null( $customer ) ) {
+			$args[ $field ] = $customer;
+		}
+
+		$customer_query = edd_get_customers( $args );
 		$customer_count = 0;
 
 		if ( $customer_query ) {
@@ -1089,7 +1088,7 @@ class EDD_API {
 	 * @author Daniel J Griffiths
 	 * @since  1.5
 	 *
-	 * @param int $product Product (Download) ID
+	 * @param array $args
 	 *
 	 * @return array $customers Multidimensional array of the products
 	 */
@@ -1200,16 +1199,16 @@ class EDD_API {
 	 * @return array
 	 */
 	public function get_stats( $args = array() ) {
-		$defaults = array(
+
+		// Parse args
+		$args = wp_parse_args( $args, array(
 			'type'        => null,
 			'product'     => null,
 			'date'        => null,
 			'startdate'   => null,
 			'enddate'     => null,
 			'include_tax' => true,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
+		) );
 
 		$dates = $this->get_dates( $args );
 
@@ -1488,14 +1487,14 @@ class EDD_API {
 				'meta_value' => $wp_query->query_vars['email'],
 				'number'     => $this->per_page(),
 				'page'       => $this->get_paged(),
-				'status'     => 'publish',
+				'status'     => 'complete',
 			) );
 		} else {
 			$query = edd_get_payments( array(
 				'fields' => 'ids',
 				'number' => $this->per_page(),
 				'page'   => $this->get_paged(),
-				'status' => 'publish',
+				'status' => 'complete',
 			) );
 		}
 
@@ -1590,8 +1589,8 @@ class EDD_API {
 			$paged     = $this->get_paged();
 			$per_page  = $this->per_page();
 			$discounts = edd_get_discounts( array(
-				'posts_per_page' => $per_page,
-				'paged'          => $paged,
+				'number' => $per_page,
+				'offset' => ( absint( $paged ) - 1 ) * $per_page,
 			) );
 
 			if ( empty( $discounts ) ) {
@@ -1601,42 +1600,45 @@ class EDD_API {
 			}
 
 			foreach ( $discounts as $discount ) {
-				$discount_list['discounts'][ $count ]['ID']                    = $discount->ID;
-				$discount_list['discounts'][ $count ]['name']                  = $discount->post_title;
-				$discount_list['discounts'][ $count ]['code']                  = edd_get_discount_code( $discount->ID );
-				$discount_list['discounts'][ $count ]['amount']                = edd_get_discount_amount( $discount->ID );
-				$discount_list['discounts'][ $count ]['min_price']             = edd_get_discount_min_price( $discount->ID );
-				$discount_list['discounts'][ $count ]['type']                  = edd_get_discount_type( $discount->ID );
-				$discount_list['discounts'][ $count ]['uses']                  = edd_get_discount_uses( $discount->ID );
-				$discount_list['discounts'][ $count ]['max_uses']              = edd_get_discount_max_uses( $discount->ID );
-				$discount_list['discounts'][ $count ]['start_date']            = edd_get_discount_start_date( $discount->ID );
-				$discount_list['discounts'][ $count ]['exp_date']              = edd_get_discount_expiration( $discount->ID );
-				$discount_list['discounts'][ $count ]['status']                = $discount->post_status;
-				$discount_list['discounts'][ $count ]['product_requirements']  = edd_get_discount_product_reqs( $discount->ID );
-				$discount_list['discounts'][ $count ]['requirement_condition'] = edd_get_discount_product_condition( $discount->ID );
-				$discount_list['discounts'][ $count ]['global_discount']       = edd_is_discount_not_global( $discount->ID );
-				$discount_list['discounts'][ $count ]['single_use']            = edd_discount_is_single_use( $discount->ID );
+				$discount_list['discounts'][ $count ]['ID']                    = $discount->id;
+				$discount_list['discounts'][ $count ]['name']                  = $discount->name;
+				$discount_list['discounts'][ $count ]['code']                  = $discount->code;
+				$discount_list['discounts'][ $count ]['amount']                = $discount->amount;
+				$discount_list['discounts'][ $count ]['min_price']             = $discount->min_charge_amount;
+				$discount_list['discounts'][ $count ]['type']                  = $discount->amount_type;
+				$discount_list['discounts'][ $count ]['uses']                  = $discount->use_count;
+				$discount_list['discounts'][ $count ]['max_uses']              = $discount->max_uses;
+				$discount_list['discounts'][ $count ]['start_date']            = $discount->start_date;
+				$discount_list['discounts'][ $count ]['exp_date']              = $discount->end_date;
+				$discount_list['discounts'][ $count ]['status']                = $discount->status;
+				$discount_list['discounts'][ $count ]['product_requirements']  = $discount->product_reqs;
+				$discount_list['discounts'][ $count ]['requirement_condition'] = $discount->product_condition;
+				$discount_list['discounts'][ $count ]['global_discount']       = 'global' === $discount->scope;
+				$discount_list['discounts'][ $count ]['excluded_products']     = $discount->excluded_products;
+				$discount_list['discounts'][ $count ]['single_use']            = $discount->once_per_customer;
 
 				$count ++;
 			}
 
 		} else {
-			if ( is_numeric( $discount ) && get_post( $discount ) ) {
-				$discount_list['discounts'][0]['ID']                    = $discount;
-				$discount_list['discounts'][0]['name']                  = get_post_field( 'post_title', $discount );
-				$discount_list['discounts'][0]['code']                  = edd_get_discount_code( $discount );
-				$discount_list['discounts'][0]['amount']                = edd_get_discount_amount( $discount );
-				$discount_list['discounts'][0]['min_price']             = edd_get_discount_min_price( $discount );
-				$discount_list['discounts'][0]['type']                  = edd_get_discount_type( $discount );
-				$discount_list['discounts'][0]['uses']                  = edd_get_discount_uses( $discount );
-				$discount_list['discounts'][0]['max_uses']              = edd_get_discount_max_uses( $discount );
-				$discount_list['discounts'][0]['start_date']            = edd_get_discount_start_date( $discount );
-				$discount_list['discounts'][0]['exp_date']              = edd_get_discount_expiration( $discount );
-				$discount_list['discounts'][0]['status']                = get_post_field( 'post_status', $discount );
-				$discount_list['discounts'][0]['product_requirements']  = edd_get_discount_product_reqs( $discount );
-				$discount_list['discounts'][0]['requirement_condition'] = edd_get_discount_product_condition( $discount );
-				$discount_list['discounts'][0]['global_discount']       = edd_is_discount_not_global( $discount );
-				$discount_list['discounts'][0]['single_use']            = edd_discount_is_single_use( $discount );
+			$discount_object = edd_get_discount( $discount );
+			if ( is_numeric( $discount ) && $discount_object ) {
+				$discount_list['discounts'][0]['ID']                    = $discount_object->id;
+				$discount_list['discounts'][0]['name']                  = $discount_object->name;
+				$discount_list['discounts'][0]['code']                  = $discount_object->code;
+				$discount_list['discounts'][0]['amount']                = $discount_object->amount;
+				$discount_list['discounts'][0]['min_price']             = $discount_object->min_charge_amount;
+				$discount_list['discounts'][0]['type']                  = $discount_object->amount_type;
+				$discount_list['discounts'][0]['uses']                  = $discount_object->use_count;
+				$discount_list['discounts'][0]['max_uses']              = $discount_object->max_uses;
+				$discount_list['discounts'][0]['start_date']            = $discount_object->start_date;
+				$discount_list['discounts'][0]['exp_date']              = $discount_object->end_date;
+				$discount_list['discounts'][0]['status']                = $discount_object->status;
+				$discount_list['discounts'][0]['product_requirements']  = $discount_object->product_reqs;
+				$discount_list['discounts'][0]['requirement_condition'] = $discount_object->product_condition;
+				$discount_list['discounts'][0]['global_discount']       = 'global' === $discount_object->scope;
+				$discount_list['discounts'][0]['excluded_products']     = $discount_object->excluded_products;
+				$discount_list['discounts'][0]['single_use']            = $discount_object->once_per_customer;
 			} else {
 				$error['error'] = sprintf( __( 'Discount %s not found!', 'easy-digital-downloads' ), $discount );
 
@@ -1658,10 +1660,9 @@ class EDD_API {
 	 * @return array            Multidimensional array of the download logs
 	 */
 	public function get_download_logs( $customer_id = 0 ) {
-		global $edd_logs;
+		$edd_logs = EDD()->debug_log;
 
 		$downloads        = array();
-		$errors           = array();
 		$invalid_customer = false;
 
 		$paged    = $this->get_paged();
@@ -1716,10 +1717,8 @@ class EDD_API {
 		}
 
 		foreach ( $logs as $log ) {
-			$item = array();
 
 			$log_meta   = get_post_custom( $log->ID );
-			$user_info  = isset( $log_meta['_edd_log_user_info'] ) ? maybe_unserialize( $log_meta['_edd_log_user_info'][0] ) : array();
 			$payment_id = isset( $log_meta['_edd_log_payment_id'] ) ? $log_meta['_edd_log_payment_id'][0] : false;
 
 			$payment_customer_id = edd_get_payment_customer_id( $payment_id );
@@ -1732,7 +1731,7 @@ class EDD_API {
 			$file_id             = $file_id !== false ? $file_id : 0;
 			$file_name           = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-			$item = array(
+			$item = (array) apply_filters( 'edd_api_download_log_item', array(
 				'ID'           => $log->ID,
 				'user_id'      => $user_id,
 				'product_id'   => $log->post_parent,
@@ -1742,9 +1741,7 @@ class EDD_API {
 				'file'         => $file_name,
 				'ip'           => $ip,
 				'date'         => $log->post_date,
-			);
-
-			$item = apply_filters( 'edd_api_download_log_item', $item, $log, $log_meta );
+			), $log, $log_meta );
 
 			$downloads['download_logs'][] = $item;
 
@@ -1923,7 +1920,7 @@ class EDD_API {
 
 			case 'json' :
 
-				header( 'Content-Type: application/json charset=' . get_option( 'blog_charset' ) );
+				header( 'Content-Type: application/json' );
 				if ( ! empty( $this->pretty_print ) ) {
 					echo json_encode( $this->data, $this->pretty_print );
 				} else {
@@ -1944,7 +1941,11 @@ class EDD_API {
 
 		do_action( 'edd_api_output_after', $this->data, $this, $format );
 
-		edd_die();
+		if ( defined( 'EDD_DOING_TESTS' ) && EDD_DOING_TESTS ) {
+			edd_die();
+		} else {
+			die();
+		}
 	}
 
 	/**
@@ -2014,7 +2015,7 @@ class EDD_API {
 		}
 
 		if ( empty( $args['user_id'] ) ) {
-			wp_die( sprintf( __( 'User ID Required', 'easy-digital-downloads' ), $process ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
+			wp_die( __( 'User ID Required', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
 		}
 
 		if ( is_numeric( $args['user_id'] ) ) {
@@ -2035,24 +2036,52 @@ class EDD_API {
 			case 'generate':
 				if ( $this->generate_api_key( $user_id ) ) {
 					delete_transient( 'edd-total-api-keys' );
-					edd_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-					exit();
+					edd_redirect(
+						edd_get_admin_url(
+							array(
+								'page'        => 'edd-tools',
+								'tab'         => 'api_keys',
+								'edd-message' => 'api-key-generated',
+							)
+						)
+					);
 				} else {
-					edd_redirect( add_query_arg( 'edd-message', 'api-key-failed', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-					exit();
+					edd_redirect(
+						edd_get_admin_url(
+							array(
+								'page'        => 'edd-tools',
+								'tab'         => 'api_keys',
+								'edd-message' => 'api-key-failed',
+							)
+						)
+					);
 				}
 				break;
 			case 'regenerate':
 				$this->generate_api_key( $user_id, true );
 				delete_transient( 'edd-total-api-keys' );
-				edd_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-				exit();
+				edd_redirect(
+					edd_get_admin_url(
+						array(
+							'page'        => 'edd-tools',
+							'tab'         => 'api_keys',
+							'edd-message' => 'api-key-regenerated',
+						)
+					)
+				);
 				break;
 			case 'revoke':
 				$this->revoke_api_key( $user_id );
 				delete_transient( 'edd-total-api-keys' );
-				edd_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) );
-				exit();
+				edd_redirect(
+					edd_get_admin_url(
+						array(
+							'page'        => 'edd-tools',
+							'tab'         => 'api_keys',
+							'edd-message' => 'api-key-revoked',
+						)
+					)
+				);
 				break;
 			default;
 				break;
@@ -2081,7 +2110,6 @@ class EDD_API {
 		}
 
 		$public_key = $this->get_user_public_key( $user_id );
-		$secret_key = $this->get_user_secret_key( $user_id );
 
 		if ( empty( $public_key ) || $regenerate == true ) {
 			$new_public_key = $this->generate_public_key( $user->user_email );

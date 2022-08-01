@@ -33,18 +33,20 @@ function edd_adjustments_page() {
 	// Add new URL
 	$add_new_url = edd_get_admin_url( array(
 		'page'       => 'edd-discounts',
-		'edd-action' => 'add_' . $active_tab
+		'edd-action' => 'add_' . sanitize_key( $active_tab ),
 	) );
 
 	// Start the output buffer
 	ob_start(); ?>
 
-    <div class="wrap">
-        <h1 class="wp-heading-inline"><?php _e( 'Adjustments', 'easy-digital-downloads' ); ?></h1>
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Discounts', 'easy-digital-downloads' ); ?></h1>
+		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
 
 		<hr class="wp-header-end">
+		<?php if ( 1 < count( $all_tabs ) ) : ?>
 
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+		<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 			<?php
 
 			// Loop through all tabs
@@ -53,7 +55,7 @@ function edd_adjustments_page() {
 				// Add the tab ID
 				$tab_url = edd_get_admin_url( array(
 					'page' => 'edd-discounts',
-					'tab'  => $tab_id
+					'tab'  => sanitize_key( $tab_id ),
 				) );
 
 				// Remove messages
@@ -66,16 +68,16 @@ function edd_adjustments_page() {
 					? ' nav-tab-active'
 					: ''; ?>
 
-				<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo $active; ?>"><?php echo esc_html( $tab_name ); ?></a>
+				<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo esc_attr( $active ); ?>"><?php echo esc_html( $tab_name ); ?></a>
 
 			<?php endforeach; ?>
 
-			<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
-        </h2>
+			</nav>
 		<br>
+		<?php endif; ?>
 
-		<?php do_action( 'edd_adjustments_page_' . $active_tab ); ?>
-    </div><!-- .wrap -->
+		<?php do_action( 'edd_adjustments_page_' . esc_attr( $active_tab ) ); ?>
+	</div><!-- .wrap -->
 
 	<?php
 
@@ -95,10 +97,10 @@ function edd_get_adjustments_tabs() {
 	// Tabs
 	$tabs = array(
 		'discount' => __( 'Discounts', 'easy-digital-downloads' ),
-		'credit'   => __( 'Credits',   'easy-digital-downloads' ),
-		'fee'      => __( 'Fees',      'easy-digital-downloads' )
+//		'credit'   => __( 'Credits',   'easy-digital-downloads' ),
+//		'fee'      => __( 'Fees',      'easy-digital-downloads' )
 	);
 
 	// Filter & return
-	return apply_filters( 'edd_tools_tabs', $tabs );
+	return apply_filters( 'edd_adjustments_tabs', $tabs );
 }

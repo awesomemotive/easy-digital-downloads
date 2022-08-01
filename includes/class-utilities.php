@@ -116,6 +116,14 @@ class Utilities {
 				}
 				break;
 
+			case 'reports:endpoints:views':
+				if ( ! did_action( 'edd_reports_init' ) ) {
+					_doing_it_wrong( __FUNCTION__, 'The Endpoint Views registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
+				} elseif ( class_exists( '\EDD\Reports\Data\Endpoint_View_Registry' ) ) {
+					$registry = Reports\Data\Endpoint_View_Registry::instance();
+				}
+				break;
+
 			default:
 				$registry = new \WP_Error( 'invalid_registry', "The '{$name}' registry does not exist." );
 				break;
@@ -210,6 +218,7 @@ class Utilities {
 	 *                             date. Default false.
 	 *
 	 * @return \EDD\Utils\Date Date instance. Time is returned as UTC.
+	 * @throws \Exception
 	 */
 	public function date( $date_string = 'now', $timezone = null, $localize = false ) {
 
@@ -218,6 +227,11 @@ class Utilities {
 			$timezone = $this->get_time_zone();
 		} elseif ( null === $timezone && false === $localize ) {
 			$timezone = 'UTC';
+		}
+
+		// If the date string cannot be property converted to a valid time, reset it to now.
+		if ( ! strtotime( $date_string ) ) {
+			$date_string = 'now';
 		}
 
 		/*
@@ -310,6 +324,35 @@ class Utilities {
 		return $this->time_zone;
 	}
 
+	/**
+	 * Gets a valid date string in the format Y-m-d HH:MM:00
+	 *
+	 * @since 3.0
+	 * @param string $date   A valid date string.
+	 * @param int    $hour   The hour.
+	 * @param int    $minute The minute.
+	 * @return string
+	 */
+	public function get_date_string( $date = '', $hour = 0, $minute = 0 ) {
+		if ( empty( $date ) || ! strtotime( $date ) ) {
+			$date = date( 'Y-m-d' );
+		}
+
+		$hour = absint( $hour );
+		if ( $hour > 23 ) {
+			$hour = 23;
+		}
+		$hour = str_pad( $hour, 2, '0', STR_PAD_LEFT );
+
+		$minute = absint( $minute );
+		if ( $minute > 59 ) {
+			$minute = 59;
+		}
+		$minute = str_pad( $minute, 2, '0', STR_PAD_LEFT );
+
+		return "{$date} {$hour}:{$minute}:00";
+	}
+
 	/** Private Setters *******************************************************/
 
 	/**
@@ -357,30 +400,13 @@ class Utilities {
 		if ( ! empty( $timezone ) ) {
 			$retval = $timezone;
 
-		// Use GMT offset to calculate from list
-		} elseif ( ! empty( $gmt_offset ) ) {
-
-			// Attempt to guess the timezone string from the GMT offset & DST
-			$is_dst   = date( 'I' );
-			$timezone = timezone_name_from_abbr( '', $gmt_offset, $is_dst );
-
-			// Return the timezone
-			if ( false !== $timezone ) {
-				$retval = $timezone;
-
-				// Last try, guess timezone string manually
-			} else {
-				$list = timezone_abbreviations_list();
-
-				foreach ( $list as $abbr ) {
-					foreach ( $abbr as $city ) {
-						if ( ( $city['dst'] == $is_dst ) && ( $city['offset'] == $gmt_offset ) ) {
-							$retval = $city['timezone_id'];
-							break 2;
-						}
-					}
-				}
-			}
+		// Use GMT offset to calculate
+		} elseif ( is_numeric( $gmt_offset ) ) {
+			$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
+			$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+			$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
+			$value   = ! empty( $minutes )  ? "{$hours}:{$minutes}" : $hours;
+			$retval  = "GMT{$math}{$value}";
 		}
 
 		// Set

@@ -7,6 +7,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Admin\Upgrades\v3;
 
 // Exit if accessed directly
@@ -124,11 +125,15 @@ class Base extends \EDD_Batch_Export {
 
 		if ( $had_data ) {
 			$this->done = false;
+			// Save the *next* step to do.
+			update_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->upgrade ) ), $this->step + 1 );
 			return true;
 		} else {
 			$this->done    = true;
 			$this->message = $this->completed_message;
 			edd_set_upgrade_complete( $this->upgrade );
+			delete_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->upgrade ) ) );
+			edd_v30_is_migration_complete();
 			return false;
 		}
 	}
@@ -158,48 +163,9 @@ class Base extends \EDD_Batch_Export {
 	}
 
 	/**
-	 * Fetch a legacy ID when migrating.
-	 *
-	 * @since 3.0
-	 *
-	 * @param int    $legacy_id Legacy ID.
-	 * @param string $type      Type.
-	 *
-	 * @return int|false New ID if found, false otherwise.
-	 */
-	protected function find_legacy_id( $legacy_id = 0, $type = '' ) {
-
-		// Bail if nothing passed.
-		if ( empty( $legacy_id ) || empty( $type ) ) {
-			return $legacy_id;
-		}
-
-		$legacy_id = absint( $legacy_id );
-
-		switch ( $type ) {
-			case static::ORDERS:
-				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_order_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
-					$legacy_id
-				) );
-				break;
-			case static::DISCOUNTS:
-				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_discount_id FROM {$this->get_db()->edd_discountmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = %d",
-					$legacy_id
-				) );
-				break;
-		}
-
-		return ! empty( $id )
-			? absint( $id )
-			: false;
-	}
-
-	/**
 	 * Return the global database interface.
 	 *
-	 * @since 3.0
+	 * @since  3.0
 	 * @access protected
 	 * @static
 	 *
@@ -218,12 +184,14 @@ class Base extends \EDD_Batch_Export {
 	 *
 	 * @param array $request Form data passed into the batch processor.
 	 */
-	public function set_properties( $request ) {}
+	public function set_properties( $request ) {
+	}
 
 	/**
 	 * Allow for pre-fetching of data for the remainder of the batch processor.
 	 *
 	 * @since 3.0
 	 */
-	public function pre_fetch() {}
+	public function pre_fetch() {
+	}
 }

@@ -288,7 +288,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	$payments = edd_get_payments( array(
 		'customer' => $customer->id,
 		'output'   => 'payments',
-		'number'   => -1,
+		'number'   => 9999999,
 	) );
 
 	foreach ( $payments as $payment ) {
@@ -420,8 +420,7 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 
 			// Anonymize the line 1 and line 2 of the address. City, state, zip, and country are possibly needed for taxes.
 			$order_address_data = array(
-				'first_name' => '',
-				'last_name'  => '',
+				'name'       => '',
 				'address'    => '',
 				'address2'   => '',
 			);
@@ -467,7 +466,7 @@ function _edd_privacy_get_payment_action( $order ) {
 	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
 	if ( empty( $action ) ) {
 		switch ( $order->status ) {
-			case 'publish':
+			case 'complete':
 			case 'refunded':
 			case 'revoked':
 				$action = 'anonymize';
@@ -647,6 +646,10 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
  */
 function edd_privacy_billing_information_exporter( $email_address = '', $page = 1 ) {
 	$customer = new EDD_Customer( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
 
 	$orders = edd_get_orders( array(
 		'customer_id' => $customer->id,
@@ -828,6 +831,10 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
  */
 function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 ) {
 	$customer = new EDD_Customer( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
 
 	$logs = edd_get_file_download_logs( array(
 		'customer_id' => $customer->id,
@@ -1262,10 +1269,7 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
  * @return array
  */
 function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
-	global $edd_logs;
-
-	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
-
+	$customer  = _edd_privacy_get_customer_id_for_email( $email_address );
 	$log_query = array(
 		'customer_id' => $customer->id,
 		'number'      => 30,
@@ -1320,7 +1324,6 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
  * @return array
  */
 function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
-	global $edd_logs;
 
 	$user = get_user_by( 'email', $email_address );
 

@@ -48,7 +48,8 @@ class Logs_File_Downloads extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// file_id
@@ -58,7 +59,7 @@ class Logs_File_Downloads extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// order_id
@@ -67,7 +68,8 @@ class Logs_File_Downloads extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// price_id
@@ -86,7 +88,7 @@ class Logs_File_Downloads extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// ip
@@ -99,7 +101,7 @@ class Logs_File_Downloads extends Schema {
 			'searchable' => true
 		),
 
-		// ip
+		// user_agent
 		array(
 			'name'       => 'user_agent',
 			'type'       => 'varchar',
@@ -113,7 +115,7 @@ class Logs_File_Downloads extends Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -123,7 +125,7 @@ class Logs_File_Downloads extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true

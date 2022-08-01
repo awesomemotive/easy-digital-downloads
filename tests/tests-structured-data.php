@@ -38,7 +38,34 @@ class Tests_Structured_Data extends EDD_UnitTestCase {
 
 		$data = EDD()->structured_data->get_data();
 
-		$this->assertEquals( self::$download->post_title, $data[0]['name'] );
+		$product = $data[0];
+
+		// @type
+		$this->assertEquals( 'Product', $product['@type'] );
+
+		// name
+		$this->assertEquals( self::$download->post_title, $product['name'] );
+
+		// url
+		$this->assertArrayHasKey( 'url', $product );
+
+		// image
+		$this->assertArrayNotHasKey( 'image', $product );
+
+		// brand
+		$this->assertArrayHasKey( 'brand', $product );
+		$this->assertEquals( 'Thing', $product['brand']['@type'] );
+		$this->assertEquals( get_bloginfo( 'name' ), $product['brand']['name'] );
+
+		// offers
+		$this->assertArrayHasKey( 'offers', $product );
+	}
+
+	/**
+	 * @covers EDD_Structured_Data::generate_download_data()
+	 */
+	public function test_generate_download_data_for_non_download_should_return_false() {
+		$this->assertFalse( EDD()->structured_data->generate_download_data( 2341234 ) );
 	}
 
 	/**
@@ -47,9 +74,10 @@ class Tests_Structured_Data extends EDD_UnitTestCase {
 	public function test_generate_download_data() {
 		EDD()->structured_data->generate_download_data( self::$download->ID );
 
-		$data = EDD()->structured_data->get_data();
+		$all_data = EDD()->structured_data->get_data();
+		$data     = reset( $all_data );
 
-		$this->assertEquals( self::$download->post_title, $data[1]['name'] );
+		$this->assertEquals( self::$download->post_title, $data['name'] );
 	}
 
 	/**

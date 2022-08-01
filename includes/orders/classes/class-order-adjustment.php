@@ -10,6 +10,8 @@
  */
 namespace EDD\Orders;
 
+use EDD\Refundable_Item;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -18,19 +20,22 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @property int    $id
- * @property int    $object_id
- * @property string $object_type
- * @property int    $type_id
- * @property string $type
- * @property string $description
- * @property float  $subtotal
- * @property float  $tax
- * @property float  $total
- * @property string $date_completed
- * @property string $date_modified
+ * @property int      $id
+ * @property int      $parent
+ * @property int      $object_id
+ * @property string   $object_type
+ * @property int|null $type_id
+ * @property string   $type
+ * @property string   $description
+ * @property float    $subtotal
+ * @property float    $tax
+ * @property float    $total
+ * @property string   $date_completed
+ * @property string   $date_modified
  */
 class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
+
+	use Refundable_Item;
 
 	/**
 	 * Order Discount ID.
@@ -39,6 +44,15 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 	 * @var   int
 	 */
 	protected $id;
+
+	/**
+	 * Parent ID. This is only used for order adjustments attached to refunds. The ID references the
+	 * original adjustment that was refunded.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $parent;
 
 	/**
 	 * Object ID.
@@ -60,7 +74,7 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 	 * Type ID.
 	 *
 	 * @since 3.0
-	 * @var   int
+	 * @var   int|null
 	 */
 	protected $type_id;
 
@@ -127,5 +141,27 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 	 */
 	public function __toString() {
 		return $this->description;
+	}
+
+	/**
+	 * Retrieves order adjustment records that were refunded from this original adjustment.
+	 *
+	 * @since 3.0
+	 *
+	 * @return Order_Adjustment[]|false
+	 */
+	public function get_refunded_items() {
+		if ( null !== $this->refunded_items ) {
+			return $this->refunded_items;
+		}
+
+		// Only fees and credits are supported.
+		if ( ! in_array( $this->type, array( 'fee', 'credit' ) ) ) {
+			return false;
+		}
+
+		return edd_get_order_adjustments( array(
+			'parent' => $this->id
+		) );
 	}
 }

@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @param bool         $admin_notice Whether to send the admin email notification or not (default: true)
  * @param EDD_Payment  $payment      Payment object for payment ID.
  * @param EDD_Customer $customer     Customer object for associated payment.
- * @return void
+ * @return bool Whether the email was sent successfully.
  */
 function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '', $payment = null, $customer = null ) {
 	if ( is_null( $payment ) ) {
@@ -63,11 +63,13 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
 
-	$emails->send( $to_email, $subject, $message, $attachments );
+	$sent = $emails->send( $to_email, $subject, $message, $attachments );
 
 	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
 	}
+
+	return $sent;
 }
 
 /**
@@ -89,11 +91,11 @@ function edd_email_test_purchase_receipt() {
 	$subject     = wp_specialchars_decode( edd_do_email_tags( $subject, 0 ) );
 
 	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
-	$heading     = apply_filters( 'edd_purchase_heading', $heading, 0, array() );
+	$heading     = edd_email_preview_template_tags( apply_filters( 'edd_purchase_heading', $heading, 0, array() ) );
 
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), 0, array() );
 
-	$message     = edd_do_email_tags( edd_get_email_body_content( 0, array() ), 0 );
+	$message     = edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ), 0 );
 
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name' , $from_name );
@@ -226,12 +228,16 @@ function edd_get_email_names( $user_info, $payment = false ) {
 
 	if ( $payment instanceof EDD_Payment ) {
 
+		$email_names['name']     = $payment->email;
+		$email_names['username'] = $payment->email;
 		if ( $payment->user_id > 0 ) {
 
-			$user_data = get_userdata( $payment->user_id );
-			$email_names['name']      = $payment->first_name;
-			$email_names['fullname']  = trim( $payment->first_name . ' ' . $payment->last_name );
-			$email_names['username']  = $user_data->user_login;
+			$user_data               = get_userdata( $payment->user_id );
+			$email_names['name']     = $payment->first_name;
+			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
+			if ( ! empty( $user_data->user_login ) ) {
+				$email_names['username'] = $user_data->user_login;
+			}
 
 		} elseif ( ! empty( $payment->first_name ) ) {
 
@@ -239,13 +245,7 @@ function edd_get_email_names( $user_info, $payment = false ) {
 			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
 			$email_names['username'] = $payment->first_name;
 
-		} else {
-
-			$email_names['name']     = $payment->email;
-			$email_names['username'] = $payment->email;
-
 		}
-
 	} else {
 
 		if ( is_serialized( $user_info ) ) {
@@ -281,3 +281,130 @@ function edd_get_email_names( $user_info, $payment = false ) {
 
 	return $email_names;
 }
+
+/**
+ * Handle installation and connection for Recapture via ajax
+ *
+ * @since 2.10.2
+ */
+function edd_recapture_remote_install_handler () {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) || ! current_user_can( 'install_plugins' ) ) {
+		wp_send_json_error( array(
+			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
+		) );
+	}
+
+	include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+	include_once ABSPATH . 'wp-admin/includes/file.php';
+	include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	$plugins = get_plugins();
+
+	if( ! array_key_exists( 'recapture-for-edd/recapture.php', $plugins ) ) {
+
+		/*
+		* Use the WordPress Plugins API to get the plugin download link.
+		*/
+		$api = plugins_api( 'plugin_information', array(
+			'slug' => 'recapture-for-edd',
+		) );
+
+		if ( is_wp_error( $api ) ) {
+			wp_send_json_error( array(
+				'error' => $api->get_error_message(),
+				'debug' => $api
+			) );
+		}
+
+		/*
+		* Use the AJAX Upgrader skin to quietly install the plugin.
+		*/
+		$upgrader = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
+		$install = $upgrader->install( $api->download_link );
+		if ( is_wp_error( $install ) ) {
+			wp_send_json_error( array(
+				'error' => $install->get_error_message(),
+				'debug' => $api
+			) );
+		}
+
+		$activated = activate_plugin( $upgrader->plugin_info() );
+
+	} else {
+
+		$activated = activate_plugin( 'recapture-for-edd/recapture.php' );
+
+	}
+
+	/*
+	* Final check to see if Recapture is available.
+	*/
+	if ( is_wp_error( $activated ) ) {
+		wp_send_json_error( array(
+			'error' => __( 'Something went wrong. Recapture for EDD was not installed correctly.', 'easy-digital-downloads' )
+		) );
+	}
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_edd_recapture_remote_install', 'edd_recapture_remote_install_handler' );
+
+/**
+ * Maybe adds a notice to abandoned payments if Recapture isn't installed.
+ *
+ * @since 2.10.2
+ *
+ * @param int $payment_id The ID of the abandoned payment, for which a Recapture notice is being thrown.
+ */
+function maybe_add_recapture_notice_to_abandoned_payment( $payment_id ) {
+
+	if ( ! class_exists( 'Recapture' )
+		&& 'abandoned' === edd_get_payment_status( $payment_id )
+		&& ! get_user_meta( get_current_user_id(), '_edd_try_recapture_dismissed', true )
+	) {
+		?>
+		<div class="notice notice-warning recapture-notice">
+			<p>
+				<?php
+				echo wp_kses_post(
+					sprintf(
+						/* Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s - </a> tag */
+						__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Recapture for free%4$s.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>',
+						'<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" rel="noopener" target="_blank">',
+						'</a>'
+					)
+				);
+				?>
+			</p>
+			<?php
+			echo wp_kses_post(
+				sprintf(
+					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
+					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
+					'<a href="',
+					esc_url(
+						wp_nonce_url(
+							add_query_arg(
+								array(
+									'edd_action' => 'dismiss_notices',
+									'edd_notice' => 'try_recapture',
+								)
+							),
+							'edd_notice_nonce'
+						)
+					),
+					'" type="button" class="notice-dismiss">',
+					'<span class="screen-reader-text">',
+					'</span>
+					</a>'
+				)
+			);
+			?>
+		</div>
+		<?php
+	}
+}
+add_action( 'edd_view_order_details_before', 'maybe_add_recapture_notice_to_abandoned_payment' );

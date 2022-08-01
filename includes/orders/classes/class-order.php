@@ -11,6 +11,7 @@
 namespace EDD\Orders;
 
 use EDD\Database\Rows as Rows;
+use EDD\Database\Rows\Adjustment;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -20,30 +21,32 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @property int $id
- * @property int $parent
- * @property string $order_number
- * @property string $type
- * @property string $status
- * @property string $date_created
- * @property string $date_modified
- * @property string $date_completed
- * @property string $date_refundable
- * @property int $user_id
- * @property int $customer_id
- * @property string $email
- * @property string $ip
- * @property string $gateway
- * @property string $mode
- * @property string $currency
- * @property string $payment_key
- * @property float $subtotal
- * @property float $tax
- * @property float $discount
- * @property float $total
- * @property Order_Item[] $items
+ * @property int                $id
+ * @property int                $parent
+ * @property string             $order_number
+ * @property string             $type
+ * @property string             $status
+ * @property string             $date_created
+ * @property string             $date_modified
+ * @property string|null        $date_completed
+ * @property string|null        $date_refundable
+ * @property int                $user_id
+ * @property int                $customer_id
+ * @property string             $email
+ * @property string             $ip
+ * @property string             $gateway
+ * @property string             $mode
+ * @property string             $currency
+ * @property string             $payment_key
+ * @property int|null           $tax_rate_id
+ * @property float              $subtotal
+ * @property float              $tax
+ * @property float              $discount
+ * @property float              $total
+ * @property float              $rate
+ * @property Order_Item[]       $items
  * @property Order_Adjustment[] $adjustments
- * @property Order_Address $address
+ * @property Order_Address      $address
  */
 class Order extends Rows\Order {
 
@@ -107,7 +110,7 @@ class Order extends Rows\Order {
 	 * Date completed.
 	 *
 	 * @since 3.0
-	 * @var   string
+	 * @var   string|null
 	 */
 	protected $date_completed;
 
@@ -115,7 +118,7 @@ class Order extends Rows\Order {
 	 * Date refundable.
 	 *
 	 * @since 3.0
-	 * @var   string
+	 * @var   string|null
 	 */
 	protected $date_refundable;
 
@@ -182,6 +185,22 @@ class Order extends Rows\Order {
 	 * @var   string
 	 */
 	protected $payment_key;
+
+	/**
+	 * Tax rate ID.
+	 *
+	 * @since 3.0
+	 * @var   int|null
+	 */
+	protected $tax_rate_id;
+
+	/**
+	 * Tax rate Adjustment object.
+	 *
+	 * @since 3.0
+	 * @var   Adjustment|null
+	 */
+	protected $tax_rate = null;
 
 	/**
 	 * Subtotal.
@@ -278,9 +297,42 @@ class Order extends Rows\Order {
 	 * @return string
 	 */
 	public function get_number() {
-		return $this->order_number && edd_get_option( 'enable_sequential' )
-			? $this->order_number
-			: $this->id;
+
+		if ( $this->order_number && edd_get_option( 'enable_sequential' ) ) {
+			$number = $this->order_number;
+		} else {
+			$number = $this->id;
+		}
+
+		/**
+		 * The edd_payment_number filter allows the order_number value to be changed.
+		 *
+		 * This filter used to run in the  EDD_Payment class's get_number method upon its setup.
+		 * It now exists only here in EDD_Order since EDD 3.0. EDD Payment gets its order_number
+		 * value from EDD_Order (this class), so it gets run for both EDD_Payment and EDD_Order this way.
+		 *
+		 * @since 2.5
+		 * @since 3.0 Updated the 3rd paramater from an EDD_Payment object to an EDD_Order object.
+		 *
+		 * @param string    The unique value to represent this order. This is a string because pre-fixes and post-fixes can be appended via the filter.
+		 * @param int       The row ID of the Payment/Order.
+		 * @param Order     Prior to EDD 3.0, this was an EDD_Payment object. Now it is an EDD_Order object.
+		 */
+		$number = apply_filters( 'edd_payment_number', $number, $this->ID, $this );
+
+		/**
+		 * This filter is exactly the same as edd_payment_number, and exists purely so that
+		 * the "order" terminology has a filter as well.
+		 *
+		 * @since 3.0
+		 *
+		 * @param string    The unique value to represent this order. This is a string because pre-fixes and post-fixes can be appended via the filter.
+		 * @param int       The row ID of the Payment/Order.
+		 * @param Order     The EDD_Order object.
+		 */
+		$number = apply_filters( 'edd_order_number', $number, $this->ID, $this );
+
+		return $number;
 	}
 
 	/**
@@ -302,6 +354,40 @@ class Order extends Rows\Order {
 
 		return $this->items;
 	}
+
+
+	/**
+	 * Retrieve all the items in the order and transform bundle products into regular items.
+	 *
+	 * @since 3.0.2
+	 *
+	 * @return Order_Item[] Order items.
+	 */
+	public function get_items_with_bundles() {
+		$items = $this->get_items();
+		foreach ( $items as $index => $item ) {
+			if ( edd_is_bundled_product( $item->product_id ) ) {
+				$new_items        = array();
+				$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
+				foreach ( $bundled_products as $bundle_item ) {
+					$order_item_args = array(
+						'order_id'     => $this->ID,
+						'status'       => $item->status,
+						'product_id'   => edd_get_bundle_item_id( $bundle_item ),
+						'product_name' => edd_get_bundle_item_title( $bundle_item ),
+						'price_id'     => edd_get_bundle_item_price_id( $bundle_item ),
+					);
+					$new_items[]     = new \EDD\Orders\Order_Item( $order_item_args );
+				}
+				if ( ! empty( $new_items ) ) {
+					// The parent item should be replaced at its original position with its bundle items.
+					array_splice( $items, $index, 1, $new_items );
+				}
+			}
+		}
+		return $items;
+	}
+
 
 	/**
 	 * Retrieve all the adjustments applied to the order.
@@ -333,11 +419,7 @@ class Order extends Rows\Order {
 	public function get_discounts() {
 		$discounts = array();
 
-		if ( empty( $this->adjustments ) ) {
-			return $discounts;
-		}
-
-		foreach ( $this->adjustments as $adjustment ) {
+		foreach ( $this->get_adjustments() as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'discount' === $adjustment->type ) {
@@ -346,31 +428,6 @@ class Order extends Rows\Order {
 		}
 
 		return $discounts;
-	}
-
-	/**
-	 * Retrieve the tax rates applied to the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return array Order tax rates.
-	 */
-	public function get_taxes() {
-		$taxes = array();
-
-		if ( empty( $this->adjustments ) ) {
-			return $taxes;
-		}
-
-		foreach ( $this->adjustments as $adjustment ) {
-			/** @var Order_Adjustment $adjustment */
-
-			if ( 'tax_rate' === $adjustment->type ) {
-				$taxes[] = $adjustment;
-			}
-		}
-
-		return $taxes;
 	}
 
 	/**
@@ -385,40 +442,18 @@ class Order extends Rows\Order {
 		// Default values
 		$fees = array();
 
-		// Ensure adjustments exist.
-		if ( null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+		// Fetch the fees that applied to the entire order.
+		foreach ( $this->get_adjustments() as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'fee' === $adjustment->type ) {
+				$fees[] = $adjustment;
+			}
 		}
 
 		// Ensure items exist.
 		if ( null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			) );
-		}
-
-		// Bail if no adjustments.
-		if ( empty( $this->adjustments ) ) {
-			return $fees;
-		}
-
-		// Fetch the fees that applied to the entire order.
-		foreach ( $this->adjustments as $adjustment ) {
-			/** @var Order_Adjustment $adjustment */
-
-			if ( 'fee' === $adjustment->type ) {
-				$fee_id = edd_get_order_adjustment_meta( $adjustment->id, 'fee_id', true );
-
-				$fees[ $fee_id ] = $adjustment;
-			}
+			$this->items = $this->get_items();
 		}
 
 		// Fetch the fees that applied to specific items in the order.
@@ -428,13 +463,35 @@ class Order extends Rows\Order {
 			foreach ( $item->get_fees() as $fee ) {
 				/** @var Order_Adjustment $fee */
 
-				$fee_id = edd_get_order_adjustment_meta( $fee->id, 'fee_id', true );
-
-				$fees[ $fee_id ] = $fee;
+				$fees[] = $fee;
 			}
 		}
 
 		return $fees;
+	}
+
+	/**
+	 * Retrieve the credits applied to the order.
+	 * These exist only for manually added orders.
+	 *
+	 * @since 3.0
+	 *
+	 *@return Order_Adjustment[] Order credits.
+	 */
+	public function get_credits() {
+		// Default values
+		$credits = array();
+
+		// Fetch the fees that applied to the entire order.
+		foreach ( $this->get_adjustments() as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'credit' === $adjustment->type ) {
+				$credits[] = $adjustment;
+			}
+		}
+
+		return $credits;
 	}
 
 	/**
@@ -478,11 +535,25 @@ class Order extends Rows\Order {
 	}
 
 	/**
+	 * Retrieves the tax rate Adjustment object associated with the order.
+	 *
+	 * @since 3.0
+	 * @return Adjustment|false|null
+	 */
+	public function get_tax_rate_object() {
+		if ( $this->tax_rate_id && null === $this->tax_rate ) {
+			$this->tax_rate = edd_get_adjustment( $this->tax_rate_id );
+		}
+
+		return $this->tax_rate;
+	}
+
+	/**
 	 * Retrieve the tax rate associated with the order.
 	 *
 	 * @since 3.0
 	 *
-	 * @return string Tax rate.
+	 * @return float Tax rate percentage (0 - 100).
 	 */
 	public function get_tax_rate() {
 
@@ -490,15 +561,20 @@ class Order extends Rows\Order {
 		$rate = 0;
 
 		// Get rates from adjustments
-		$rates = $this->get_taxes();
-
-		// Get a single rate amount
-		if ( ! empty( $rates ) ) {
-			$rate = reset( $rates );
-			$rate = $rate->amount;
+		$tax_rate_object = $this->get_tax_rate_object();
+		if ( is_object( $tax_rate_object ) && isset( $tax_rate_object->amount ) ) {
+			$rate = $tax_rate_object->amount;
 		}
 
-		return $rate;
+		/*
+		 * If we have a tax_amount, but no rate, check in order meta. This is where legacy rates are stored
+		 * if they cannot be resolved to an actual adjustment object.
+		 */
+		if ( empty( $rate ) && abs( $this->tax ) > 0 ) {
+			$rate = edd_get_order_meta( $this->id, 'tax_rate', true );
+		}
+
+		return floatval( $rate );
 	}
 
 	/**
@@ -567,6 +643,61 @@ class Order extends Rows\Order {
 	 * @return bool True if the order is complete, false otherwise.
 	 */
 	public function is_complete() {
-		return ( 'publish' === $this->status );
+		return ( 'complete' === $this->status );
+	}
+
+	/**
+	 * Determines if this order is able to be resumed by the user.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function is_recoverable() {
+		$recoverable_statuses = edd_recoverable_order_statuses();
+		if ( in_array( $this->status, $recoverable_statuses, true ) && empty( $this->get_transaction_id() ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the URL that a customer can use to resume an order, or false if it's not recoverable.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool|string
+	 */
+	public function get_recovery_url() {
+		if ( ! $this->is_recoverable() ) {
+			return false;
+		}
+
+		$recovery_url = add_query_arg(
+			array(
+				'edd_action' => 'recover_payment',
+				'payment_id' => urlencode( $this->id ),
+			),
+			edd_get_checkout_uri()
+		);
+
+		/**
+		 * Legacy recovery URL filter.
+		 *
+		 * @param \EDD_Payment $payment The EDD payment object.
+		 */
+		if ( has_filter( 'edd_payment_recovery_url' ) ) {
+			$recovery_url = apply_filters( 'edd_payment_recovery_url', $recovery_url, edd_get_payment( $this->id ) );
+		}
+
+		/**
+		 * The order recovery URL.
+		 *
+		 * @since 3.0
+		 * @param string            $recovery_url The order recovery URL.
+		 * @param \EDD\Orders\Order $this         The order object.
+		 */
+		return apply_filters( 'edd_order_recovery_url', $recovery_url, $this );
 	}
 }

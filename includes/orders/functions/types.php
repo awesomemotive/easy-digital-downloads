@@ -81,8 +81,8 @@ function edd_register_default_order_types( $name = '' ) {
 	// Sales
 	edd_register_order_type( 'sale', array(
 		'labels' => array(
-			'singular' => __( 'Sale',  'easy-digital-downloads' ),
-			'plural'   => __( 'Sales', 'easy-digital-downloads' )
+			'singular' => __( 'Order',  'easy-digital-downloads' ),
+			'plural'   => __( 'Orders', 'easy-digital-downloads' )
 		)
 	) );
 

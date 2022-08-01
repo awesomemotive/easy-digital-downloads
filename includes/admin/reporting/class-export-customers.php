@@ -98,8 +98,7 @@ class EDD_Customers_Export extends EDD_Export {
 
 		if ( ! empty( $_POST['edd_export_download'] ) ) {
 
-			// Export customers of a specific product
-			global $edd_logs;
+			$edd_logs = EDD()->debug_log;
 
 			$args = array(
 				'post_parent' => absint( $_POST['edd_export_download'] ),
@@ -135,7 +134,7 @@ class EDD_Customers_Export extends EDD_Export {
 
 			// Export all customers
 			$customers = edd_get_customers( array(
-				'limit' => -1
+				'limit' => 9999999,
 			) );
 
 			$i = 0;

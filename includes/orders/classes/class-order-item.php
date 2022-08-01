@@ -10,6 +10,8 @@
  */
 namespace EDD\Orders;
 
+use EDD\Refundable_Item;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -18,25 +20,29 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @property int    $id
- * @property int    $order_id
- * @property int    $product_id
- * @property string $product_name
- * @property int    $price_id
- * @property int    $cart_index
- * @property string $type
- * @property string $status
- * @property int    $quantity
- * @property int    $amount
- * @property float  $subtotal
- * @property float  $tax
- * @property float  $discount
- * @property float  $total
- * @property string $date_created
- * @property string $date_modified
+ * @property int                $id
+ * @property int                $parent
+ * @property int                $order_id
+ * @property int                $product_id
+ * @property string             $product_name
+ * @property int|null           $price_id
+ * @property int                $cart_index
+ * @property string             $type
+ * @property string             $status
+ * @property int                $quantity
+ * @property int                $amount
+ * @property float              $subtotal
+ * @property float              $tax
+ * @property float              $discount
+ * @property float              $total
+ * @property float              $rate
+ * @property string             $date_created
+ * @property string             $date_modified
  * @property Order_Adjustment[] $adjustments
  */
 class Order_Item extends \EDD\Database\Rows\Order_Item {
+
+	use Refundable_Item;
 
 	/**
 	 * Order Item ID.
@@ -45,6 +51,15 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @var   int
 	 */
 	protected $id;
+
+	/**
+	 * Parent ID. This is only used for order items attached to refunds. The ID references the
+	 * original order item that was refunded.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $parent;
 
 	/**
 	 * Order ID.
@@ -74,7 +89,7 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * Price ID.
 	 *
 	 * @since 3.0
-	 * @var   int
+	 * @var   int|null
 	 */
 	protected $price_id;
 
@@ -177,6 +192,7 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @since 3.0
 	 *
 	 * @param string $key
+	 *
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
@@ -209,30 +225,6 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	}
 
 	/**
-	 * Retrieve the tax rate for the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Tax rate.
-	 */
-	public function get_tax_rate() {
-		$rate = edd_get_order_adjustments( array(
-			'number'      => 1,
-			'object_id'   => $this->id,
-			'object_type' => 'order_item',
-			'type'        => 'tax_rate',
-		) );
-
-		if ( $rate ) {
-			$rate = $rate[0];
-
-			return $rate->amount * 100;
-		}
-
-		return 0.00;
-	}
-
-	/**
 	 * Get an order item name, including any price ID name appended to the end.
 	 *
 	 * @since 3.0
@@ -240,13 +232,43 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @return string The product name including any price ID name.
 	 */
 	public function get_order_item_name() {
-
-		// Return product name if not a variable price
-		if ( empty( $this->price_id ) ) {
-			return $this->product_name;
+		if ( is_admin() && ( function_exists( 'edd_doing_ajax' ) && ! edd_doing_ajax() ) ) {
+			/**
+			 * Allow the product name to be filtered within the admin.
+			 * @since 3.0
+			 * @param string $product_name  The order item name.
+			 * @param EDD\Orders\Order_Item The order item object.
+			 */
+			return apply_filters( 'edd_order_details_item_name', $this->product_name, $this );
 		}
 
-		// Get the download name, maybe with the price name appended
-		return edd_get_download_name( $this->product_id, $this->price_id );
+		return $this->product_name;
+	}
+
+	/**
+	 * Retrieves order item records that were refunded from this original order item.
+	 *
+	 * @since 3.0
+	 *
+	 * @return Order_Item[]|false
+	 */
+	public function get_refunded_items() {
+		if ( null !== $this->refunded_items ) {
+			return $this->refunded_items;
+		}
+
+		return edd_get_order_items( array(
+			'parent' => $this->id
+		) );
+	}
+
+	/**
+	 * Checks the order item status to determine whether assets can be delivered.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	public function is_deliverable() {
+		return in_array( $this->status, edd_get_deliverable_order_item_statuses(), true );
 	}
 }

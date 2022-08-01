@@ -67,7 +67,7 @@ class EDD_CLI extends WP_CLI_Command {
 		WP_CLI::line( sprintf( __( 'Failure URL is: %s', 'easy-digital-downloads' ), ( ! empty( $failure_page ) ? get_permalink( $failure_page ) : __( 'Undefined', 'easy-digital-downloads' ) ) ) );
 		WP_CLI::line( sprintf( __( 'Downloads slug is: %s', 'easy-digital-downloads' ), ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG : '/downloads' ) ) );
 		WP_CLI::line( "\n" . sprintf( __( 'Taxes are: %s', 'easy-digital-downloads' ), ( edd_use_taxes() ? __( 'Enabled', 'easy-digital-downloads' ) : __( 'Disabled', 'easy-digital-downloads' ) ) ) );
-		WP_CLI::line( sprintf( __( 'Tax rate is: %s', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 . '%' ) );
+		WP_CLI::line( sprintf( __( 'Tax rate is: %s', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() ) );
 
 		$rates = edd_get_tax_rates();
 		if ( ! empty( $rates ) ) {
@@ -489,6 +489,7 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		if ( $error ) {
+			$query = '';
 			foreach ( $assoc_args as $key => $value ) {
 				$query .= ' --' . $key . '=' . $value;
 			}
@@ -518,7 +519,7 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( count( $assoc_args ) > 0 ) {
 			$number   = ( array_key_exists( 'number', $assoc_args ) ) ? absint( $assoc_args['number'] ) : $number;
 			$id       = ( array_key_exists( 'id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $id;
-			$price_id = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $price_id;
+			$price_id = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['price_id'] ) : $price_id;
 			$tax      = ( array_key_exists( 'tax', $assoc_args ) ) ? floatval( $assoc_args['tax'] ) : $tax;
 			$email    = ( array_key_exists( 'email', $assoc_args ) ) ? sanitize_email( $assoc_args['email'] ) : $email;
 			$fname    = ( array_key_exists( 'fname', $assoc_args ) ) ? sanitize_text_field( $assoc_args['fname'] ) : $fname;
@@ -533,8 +534,8 @@ class EDD_CLI extends WP_CLI_Command {
 				$statuses = array_keys( edd_get_payment_statuses() );
 
 				if ( in_array( $assoc_args['status'], $statuses, true ) ) {
-					$status = ( 'complete' === $assoc_args['status'] )
-						? 'publish'
+					$status = ( 'publish' === $assoc_args['status'] )
+						? 'complete'
 						: $assoc_args['status'];
 				} else {
 					WP_CLI::warning( sprintf(
@@ -699,6 +700,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $timestring ) ) {
 				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
+				$payment->gateway        = 'manual';
 				$payment->save();
 			}
 
@@ -810,6 +812,65 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Run the EDD 3.0 Migration via WP-CLI
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * @param $args
+	 * @param $assoc_args
+	 */
+	public function v30_migration( $args, $assoc_args ) {
+
+		// Suspend the cache addition while we're migrating.
+		wp_suspend_cache_addition( true );
+
+		$this->maybe_install_v3_tables();
+		update_option( 'edd_v30_cli_migration_running', true );
+		$this->migrate_tax_rates( $args, $assoc_args );
+		$this->migrate_discounts( $args, $assoc_args );
+		$this->migrate_payments( $args, $assoc_args );
+		$this->migrate_customer_data( $args, $assoc_args );
+		$this->migrate_logs( $args, $assoc_args );
+		$this->migrate_order_notes( $args, $assoc_args );
+		$this->migrate_customer_notes( $args, $assoc_args );
+		edd_v30_is_migration_complete();
+		$this->remove_legacy_data( $args, $assoc_args );
+	}
+
+	/**
+	 * Installs any new 3.0 database tables that haven't yet been installed
+	 *
+	 * @access private
+	 * @since 3.0
+	 */
+	private function maybe_install_v3_tables() {
+		static $installed = false;
+
+		if ( $installed ) {
+			return;
+		}
+
+		foreach ( EDD()->components as $component ) {
+			// Install the main component table.
+			$table = $component->get_interface( 'table' );
+			if ( $table instanceof EDD\Database\Table && ! $table->exists() ) {
+				$table->install();
+			}
+
+			// Install the associated meta table, if there is one.
+			$meta = $component->get_interface( 'meta' );
+			if ( $meta instanceof EDD\Database\Table && ! $meta->exists() ) {
+				$meta->install();
+			}
+		}
+
+		// Only need to do this once.
+		$installed = true;
+	}
+
+	/**
 	 * Migrate Discounts to the custom tables
 	 *
 	 * ## OPTIONS
@@ -824,6 +885,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_discounts( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -834,16 +897,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$adjustments_db = edd_get_component_interface( 'adjustment', 'table' );
-		if ( ! $adjustments_db->exists() ) {
-			@$adjustments_db->create();
-		}
-
-		$discount_meta = edd_get_component_interface( 'adjustment', 'meta' );
-		if ( ! $discount_meta->exists() ) {
-			@$discount_meta->create();
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->posts} WHERE post_type = 'edd_discount'";
@@ -862,8 +915,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
-			$new_count = count( edd_get_discounts( array( 'number' => - 1 ) ) );
+			WP_CLI::line( __( 'Migration complete: Discounts', 'easy-digital-downloads' ) );
+			$new_count = edd_get_discount_count();
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts WHERE post_type ='edd_discount'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
@@ -871,26 +924,10 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_discounts' );
 
-			WP_CLI::confirm( __( 'Remove legacy discount records?', 'easy-digital-downloads' ), array() );
-			WP_CLI::line( __( 'Removing old discount data.', 'easy-digital-downloads' ) );
-
-			$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
-			$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
-			$discount_ids = implode( ', ', $discount_ids );
-
-			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
-			$wpdb->query( $delete_posts_query );
-
-			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
-			$wpdb->query( $delete_postmeta_query );
-
-			edd_set_upgrade_complete( 'remove_legacy_discounts' );
-
 		} else {
 
 			WP_CLI::line( __( 'No discount records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_discounts' );
-			edd_set_upgrade_complete( 'remove_legacy_discounts' );
 
 		}
 	}
@@ -910,6 +947,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_logs( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -922,25 +961,7 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The logs custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
-		$logs_db = edd_get_component_interface( 'log', 'table' );
-		if ( ! $logs_db->exists() ) {
-			@$logs_db->create();
-		}
-
-		$log_meta_db = edd_get_component_interface( 'log', 'meta' );
-		if ( ! $log_meta_db->exists() ) {
-			@$log_meta_db->create();
-		}
-
-		$log_api_request_db = edd_get_component_interface( 'log_api_request', 'table' );
-		if ( ! $log_api_request_db->exists() ) {
-			@$log_api_request_db->create();
-		}
-
-		$log_file_download_db = edd_get_component_interface( 'log_file_download', 'table' );
-		if ( ! $log_file_download_db->exists() ) {
-			@$log_file_download_db->create();
-		}
+		WP_CLI::line( __( 'Preparing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
 
 		$sql = "
 			SELECT p.*, t.slug
@@ -948,9 +969,9 @@ class EDD_CLI extends WP_CLI_Command {
 			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
-			GROUP BY p.ID
+			WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
 		";
+
 		$results = $wpdb->get_results( $sql );
 		$total   = count( $results );
 
@@ -965,33 +986,16 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Logs', 'easy-digital-downloads' ) );
 			$new_count = edd_count_logs() + edd_count_file_download_logs() + edd_count_api_request_logs();
-			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_log'", 0 );
-			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $total );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_logs' );
-
-			WP_CLI::confirm( __( 'Remove legacy logs?', 'easy-digital-downloads' ), array() );
-			WP_CLI::line( __( 'Removing old logs.', 'easy-digital-downloads' ) );
-
-			$log_ids = $wpdb->get_results( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_log'" );
-			$log_ids = wp_list_pluck( $log_ids, 'ID' );
-			$log_ids = implode( ', ', $log_ids );
-
-			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
-			$wpdb->query( $delete_query );
-
-			$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
-			$wpdb->query( $delete_postmeta_query );
-
-			edd_set_upgrade_complete( 'remove_legacy_logs' );
 		} else {
 			WP_CLI::line( __( 'No log records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_logs' );
-			edd_set_upgrade_complete( 'remove_legacy_logs' );
 		}
 	}
 
@@ -1010,6 +1014,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_order_notes( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1019,17 +1025,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_order_notes' );
 
 		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$notes_db = edd_get_component_interface( 'note', 'table' );
-		if ( ! $notes_db->exists() ) {
-			@$notes_db->create();
-		}
-
-		$note_meta_db = edd_get_component_interface( 'note', 'meta' );
-		if ( ! $note_meta_db->exists() ) {
-			@$note_meta_db->create();
+			WP_CLI::error( __( 'The order notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' ORDER BY comment_ID ASC";
@@ -1040,11 +1036,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Notes', $total );
 
 			foreach ( $results as $result ) {
-				$result->object_id = $wpdb->get_var( $wpdb->prepare(
-					"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
-					$result->comment_post_ID
-				) );
-
+				$result->object_id = $result->comment_post_ID;
 				\EDD\Admin\Upgrades\v3\Data_Migrator::order_notes( $result );
 
 				$progress->tick();
@@ -1052,7 +1044,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Order Notes', 'easy-digital-downloads' ) );
 			$new_count = edd_count_notes();
 			$old_count = $wpdb->get_col( "SELECT count(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
@@ -1060,25 +1052,9 @@ class EDD_CLI extends WP_CLI_Command {
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_order_notes' );
-
-			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), array() );
-			WP_CLI::line( __( 'Removing old notes.', 'easy-digital-downloads' ) );
-
-			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'" );
-			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
-			$note_ids = implode( ', ', $note_ids );
-
-			$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
-			$wpdb->query( $delete_query );
-
-			$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
-			$wpdb->query( $delete_postmeta_query );
-
-			edd_set_upgrade_complete( 'remove_legacy_notes' );
 		} else {
 			WP_CLI::line( __( 'No note records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_order_notes' );
-			edd_set_upgrade_complete( 'remove_legacy_notes' );
 		}
 	}
 
@@ -1097,6 +1073,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_customer_notes( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1106,12 +1084,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_notes' );
 
 		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$customers_db = edd_get_component_interface( 'customer', 'table' );
-		if ( ! $customers_db->exists() ) {
-			@$customers_db->create();
+			WP_CLI::error( __( 'The customer notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->edd_customers}";
@@ -1129,7 +1102,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Customer Notes', 'easy-digital-downloads' ) );
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_customer_notes' );
@@ -1154,83 +1127,111 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_customer_data( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
 			? true
 			: false;
 
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_data' );
+		$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
-		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
+		if ( ! $force && $customer_addresses_complete ) {
+			WP_CLI::warning( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
 
-		// Create the tables if they do not exist.
-		$components = array(
-			array( 'order', 'table' ),
-			array( 'order', 'meta' ),
-			array( 'customer', 'table' ),
-			array( 'customer', 'meta' ),
-			array( 'customer_address', 'table' ),
-			array( 'customer_email_address', 'table' ),
-		);
+			// Create the tables if they do not exist.
+			$components = array(
+				array( 'order', 'table' ),
+				array( 'order', 'meta' ),
+				array( 'customer', 'table' ),
+				array( 'customer', 'meta' ),
+				array( 'customer_address', 'table' ),
+				array( 'customer_email_address', 'table' ),
+			);
 
-		foreach ( $components as $component ) {
-			/** @var EDD\Database\Tables\Base $table */
-			$table = edd_get_component_interface( $component[0], $component[1] );
+			foreach ( $components as $component ) {
+				/** @var EDD\Database\Tables\Base $table */
+				$table = edd_get_component_interface( $component[0], $component[1] );
 
-			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
-				@$table->create();
-			}
-		}
-
-		// Migrate user addresses first.
-		$sql = "
-			SELECT *
-			FROM {$wpdb->usermeta}
-			WHERE meta_key = '_edd_user_address'
-		";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
-
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
-
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result );
-
-				$progress->tick();
+				if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
+					@$table->create();
+				}
 			}
 
-			$progress->finish();
-		}
+			// Migrate user addresses first.
+			$sql = "
+				SELECT *
+				FROM {$wpdb->usermeta}
+				WHERE meta_key = '_edd_user_address'
+			";
+			$results = $wpdb->get_results( $sql );
+			$total   = count( $results );
 
-		// Migrate email addresses next.
-		$sql = "
-			SELECT *
-			FROM {$wpdb->edd_customermeta}
-			WHERE meta_key = 'additional_email'
-		";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+			if ( ! empty( $total ) ) {
+				$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
+				foreach ( $results as $result ) {
+					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result, 'billing' );
 
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+					$progress->tick();
+				}
 
-				$progress->tick();
+				$progress->finish();
 			}
 
-			$progress->finish();
+			// Now update the most recent billing address entries for customers as the primary address.
+			$sql = "
+				UPDATE {$wpdb->edd_customer_addresses} ca
+				SET ca.is_primary = 1
+				WHERE ca.id IN (
+					SELECT MAX(ca2.id)
+					FROM ( SELECT * FROM {$wpdb->edd_customer_addresses} ) ca2
+					WHERE ca2.type = 'billing'
+					GROUP BY ca2.customer_id
+				)
+			";
+
+			@$wpdb->query( $sql );
+
+			edd_set_upgrade_complete( 'migrate_customer_addresses' );
 		}
 
-		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+		$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
+
+		if ( ! $force && $customer_email_addresses_complete ) {
+			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+
+			WP_CLI::line( __( 'Preparing to migrate customer email addresses (this can take several minutes).', 'easy-digital-downloads' ) );
+
+			// Migrate email addresses next.
+			$sql = "
+				SELECT *
+				FROM {$wpdb->edd_customermeta}
+				WHERE meta_key = 'additional_email'
+			";
+			$results = $wpdb->get_results( $sql );
+			$total   = count( $results );
+
+			if ( ! empty( $total ) ) {
+				$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
+
+				foreach ( $results as $result ) {
+					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+
+					$progress->tick();
+				}
+
+				$progress->finish();
+			}
+			edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
+		}
+
+		WP_CLI::line( __( 'Migration complete: Email Addresses', 'easy-digital-downloads' ) );
 
 		edd_update_db_version();
-		edd_set_upgrade_complete( 'migrate_customer_data' );
 	}
 
 	/**
@@ -1248,6 +1249,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_tax_rates( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1258,21 +1261,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The tax rates custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		// Create the tables if they do not exist.
-		$components = array(
-			array( 'adjustment', 'table' ),
-			array( 'adjustment', 'meta' ),
-		);
-
-		foreach ( $components as $component ) {
-			/** @var EDD\Database\Tables\Base $table */
-			$table = edd_get_component_interface( $component[0], $component[1] );
-
-			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
-				@$table->create();
-			}
 		}
 
 		// Migrate user addresses first.
@@ -1290,7 +1278,10 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->finish();
 		}
 
-		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Migration complete: Tax Rates', 'easy-digital-downloads' ) );
+		$new_count = edd_count_adjustments( array( 'type' => 'tax_rate' ) );
+		WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . count( $tax_rates ) );
+		WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_tax_rates' );
@@ -1311,52 +1302,36 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_payments( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
 			? true
 			: false;
 
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_payments' );
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_orders' );
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The payments custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		// Create the tables if they do not exist.
-		$components = array(
-			array( 'order', 'table' ),
-			array( 'order', 'meta' ),
-			array( 'order_item', 'table' ),
-			array( 'order_item', 'meta' ),
-			array( 'order_adjustment', 'table' ),
-			array( 'order_adjustment', 'meta' ),
-		);
-
-		foreach ( $components as $component ) {
-			/** @var EDD\Database\Tables\Base $table */
-			$table = edd_get_component_interface( $component[0], $component[1] );
-
-			if ( ! $table->exists() ) {
-				@$table->create();
-			}
 		}
 
 		$sql = "
 			SELECT *
 			FROM {$wpdb->posts}
 			WHERE post_type = 'edd_payment'
+			ORDER BY ID ASC
 		";
 		$results = $wpdb->get_results( $sql );
 		$total   = count( $results );
 
 		if ( ! empty( $total ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
-
+			$orders   = new \EDD\Database\Queries\Order();
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				$migrated = $wpdb->get_var( $wpdb->prepare( "SELECT meta_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $result->ID ) );
+				$migrated = $orders->get_item( $result->ID );
 				if ( $migrated ) {
 					continue;
 				}
@@ -1368,18 +1343,197 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
-			$new_count = edd_count_orders();
+			WP_CLI::line( __( 'Migration complete: Orders', 'easy-digital-downloads' ) );
+			$new_count = edd_count_orders( array( 'type' => 'sale' ) );
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_payment'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
+			$refund_count = edd_count_orders( array( 'type' => 'refund' ) );
+			WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
+
 			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_payments' );
+			edd_set_upgrade_complete( 'migrate_orders' );
+
+			$this->recalculate_download_sales_earnings();
 		} else {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_payments' );
+			edd_set_upgrade_complete( 'migrate_orders' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
+		}
+	}
+
+	/**
+	 * Recalculates the sales and earnings for all downloads.
+	 *
+	 * @since 3.0
+	 * @return void
+	 *
+	 * wp edd recalculate_download_sales_earnings
+	 */
+	public function recalculate_download_sales_earnings() {
+		global $wpdb;
+
+		$downloads = $wpdb->get_results(
+			"SELECT ID
+			FROM {$wpdb->posts}
+			WHERE post_type = 'download'
+			ORDER BY ID ASC"
+		);
+		$total     = count( $downloads );
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Recalculating Download Sales and Earnings', $total );
+			foreach ( $downloads as $download ) {
+				edd_recalculate_download_sales_earnings( $download->ID );
+				$progress->tick();
+			}
+			$progress->finish();
+		}
+		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all downloads.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Downloads Updated: ', 'easy-digital-downloads' ) . $total );
+	}
+
+	/**
+	 * Removes legacy data from 2.9 and earlier that has been migrated to 3.0.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd remove_legacy_data
+	 * wp edd remove_legacy_data --force
+	 */
+	public function remove_legacy_data( $args, $assoc_args ) {
+		global $wpdb;
+
+		WP_CLI::confirm( __( 'Do you want to remove legacy data? This will permanently remove legacy discounts, logs, and order notes.', 'easy-digital-downloads' ) );
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		/**
+		 * Discounts
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_discounts' ) ) {
+			WP_CLI::warning( __( 'Legacy discounts have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old discount data.', 'easy-digital-downloads' ) );
+
+			$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
+			$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
+			$discount_ids = implode( ', ', $discount_ids );
+
+			if ( ! empty( $discount_ids ) ) {
+				$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
+				$wpdb->query( $delete_posts_query );
+
+				$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
+
+			edd_set_upgrade_complete( 'remove_legacy_discounts' );
+		}
+
+		/**
+		 * Logs
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_logs' ) ) {
+			WP_CLI::warning( __( 'Legacy logs have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old logs.', 'easy-digital-downloads' ) );
+
+			$log_ids = $wpdb->get_results( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_log'" );
+			$log_ids = wp_list_pluck( $log_ids, 'ID' );
+			$log_ids = implode( ', ', $log_ids );
+
+			if ( ! empty( $log_ids ) ) {
+				$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
+				$wpdb->query( $delete_query );
+
+				$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
+
+			edd_set_upgrade_complete( 'remove_legacy_logs' );
+		}
+
+		/**
+		 * Order notes
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_order_notes' ) ) {
+			WP_CLI::warning( __( 'Legacy order notes have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old order notes.', 'easy-digital-downloads' ) );
+
+			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'" );
+			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
+			$note_ids = implode( ', ', $note_ids );
+
+			if ( ! empty( $note_ids ) ) {
+				$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
+				$wpdb->query( $delete_query );
+
+				$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
+
+			edd_set_upgrade_complete( 'remove_legacy_order_notes' );
+		}
+
+		/**
+		 * Customers
+		 *
+		 * @var \EDD\Database\Tables\Customers|false $customer_table
+		 */
+		$customer_table = edd_get_component_interface( 'customer', 'table' );
+		if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
+			WP_CLI::line( __( 'Updating customers database table.', 'easy-digital-downloads' ) );
+
+			$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
+		}
+
+		/**
+		 * Customer emails
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_customer_emails' ) ) {
+			WP_CLI::warning( __( 'Legacy customer emails have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old customer emails.', 'easy-digital-downloads' ) );
+
+			$wpdb->query( "DELETE FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email'" );
+
+			edd_set_upgrade_complete( 'remove_legacy_customer_emails' );
+		}
+
+		/**
+		 * Customer addresses
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_customer_addresses' ) ) {
+			WP_CLI::warning( __( 'Legacy customer addresses have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old customer addresses.', 'easy-digital-downloads' ) );
+
+			$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address'" );
+
+			edd_set_upgrade_complete( 'remove_legacy_customer_addresses' );
+		}
+
+		/**
+		 * Orders
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_orders' ) ) {
+			WP_CLI::warning( __( 'Legacy orders have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old orders.', 'easy-digital-downloads' ) );
+
+			$wpdb->query(
+				"DELETE orders, order_meta FROM {$wpdb->posts} orders
+				LEFT JOIN {$wpdb->postmeta} order_meta ON( orders.ID = order_meta.post_id )
+				WHERE orders.post_type = 'edd_payment'"
+			);
+
+			edd_set_upgrade_complete( 'remove_legacy_orders' );
 		}
 	}
 
@@ -1444,64 +1598,53 @@ class EDD_CLI extends WP_CLI_Command {
 			$download_ids_with_files[ $meta_item->post_id ] = array_keys( $files );
 		}
 
-		// Next, find all payment records that exist for the downloads that have files.
-		$sales_logs_args = array(
-			'post_parent'            => array_keys( $download_ids_with_files ),
-			'log_type'               => 'sale',
-			'posts_per_page'         => - 1,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		);
-
-		$sales_logs     = $edd_logs->get_connected_logs( $sales_logs_args );
-		$sales_log_meta = array();
-		$payments       = array();
+		global $wpdb;
+		$product_ids = implode('","', array_keys( $download_ids_with_files ) );
+		$table       = $wpdb->prefix . 'edd_order_items';
+		$sql         = 'SELECT order_id, product_id, price_id, uuid FROM ' . $table . ' WHERE product_id IN ( "' . $product_ids . '")';
+		$results     = $wpdb->get_results( $sql );
 
 		// Now generate some download logs for the files.
 		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating File Download Logs', $number );
 		$i        = 1;
 		while ( $i <= $number ) {
-			$sales_log_key = array_rand( $sales_logs, 1 );
-			$sales_log     = $sales_logs[ $sales_log_key ];
-			if ( ! empty( $sales_log_meta[ $sales_log->ID ] ) ) {
-				$meta = $sales_log_meta[ $sales_log->ID ];
-			} else {
-				$meta                             = get_post_meta( $sales_log->ID );
-				$sales_log_meta[ $sales_log->ID ] = $meta;
-			}
+			$found_item = array_rand( $results, 1 );
+			$item       = $results[ $found_item ];
 
+			$order_id    = (int) $item->order_id;
+			$order       = edd_get_order( $order_id );
+			$product_id  = (int) $item->product_id;
 
-			$payment_id  = (int) $meta['_edd_log_payment_id'][0];
-			$download_id = (int) $sales_log->post_parent;
-
-			if ( isset( $meta['_edd_log_price_id'] ) ) {
-				$price_id = (int) $meta['_edd_log_price_id'][0];
+			if ( edd_has_variable_prices( $product_id ) ) {
+				$price_id = (int) $item->price_id;
 			} else {
 				$price_id = false;
 			}
 
-			if ( ! isset( $payments[ $payment_id ] ) ) {
-				$payment                 = edd_get_payment( $payment_id );
-				$payments[ $payment_id ] = $payment;
-			} else {
-				$payment = $payments[ $payment_id ];
-			}
-
-			$customer = new EDD_Customer( $payment->customer_id );
+			$customer = new EDD_Customer( $order->customer_id );
 
 			$user_info = array(
-				'email' => $payment->email,
-				'id'    => $payment->user_id,
-				'name'  => $customer->name,
+				'email' => $order->email,
+				'id'    => $order->user_id,
+				'name'  => $order->name,
 			);
 
-			if ( empty( $download_ids_with_files[ $download_id ] ) ) {
+			if ( empty( $download_ids_with_files[ $product_id ] ) ) {
 				continue;
 			}
 
-			$file_id_key = array_rand( $download_ids_with_files[ $download_id ], 1 );
-			$file_key    = $download_ids_with_files[ $download_id ][ $file_id_key ];
-			edd_record_download_in_log( $download_id, $file_key, $user_info, edd_get_ip(), $payment_id, $price_id );
+			$file_id_key = array_rand( $download_ids_with_files[ $product_id ], 1 );
+			$file_key    = $download_ids_with_files[ $product_id ][ $file_id_key ];
+			edd_add_file_download_log( array(
+				'product_id'   => absint( $product_id ),
+				'file_id'      => absint( $file_key ),
+				'order_id'     => absint( $order_id ),
+				'price_id'     => absint( $price_id ),
+				'customer_id'  => $order->customer_id,
+				'ip'           => edd_get_ip(),
+				'user_agent'   => 'EDD; WPCLI; download_logs;',
+				'date_created' => $order->date_completed,
+			) );
 
 			$progress->tick();
 			$i ++;

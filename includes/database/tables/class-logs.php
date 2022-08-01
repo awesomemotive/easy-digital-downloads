@@ -29,7 +29,7 @@ final class Logs extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_logs';
+	protected $name = 'logs';
 
 	/**
 	 * Database version.
@@ -38,7 +38,7 @@ final class Logs extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,9 +48,7 @@ final class Logs extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807240001' => 201807240001,
-		'201807270002' => 201807270002,
-		'201807270003' => 201807270003,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -68,8 +66,8 @@ final class Logs extends Table {
 		type varchar(20) DEFAULT NULL,
 		title varchar(200) DEFAULT NULL,
 		content longtext DEFAULT NULL,
-		date_created datetime NOT NULL default '0000-00-00 00:00:00',
-		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+		date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+		date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 		uuid varchar(100) NOT NULL default '',
 		PRIMARY KEY (id),
 		KEY object_id_type (object_id,object_type(20)),
@@ -79,70 +77,25 @@ final class Logs extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807230001
-	 * - Add `user_id` column.
+	 * Upgrade to version 202002141
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
-	 *
 	 * @return bool
 	 */
-	protected function __201807240001() {
+	protected function __202002141() {
 
-		// Alter the database
-		if ( ! $this->column_exists( 'user_id' ) ) {
-			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN user_id bigint(20) unsigned NOT NULL default '0' AFTER object_type" );
-			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX user_id (user_id)" );
-		}
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-		// Return success/fail
-		return $this->is_success( true );
-	}
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-	/**
-	 * Upgrade to version 201807270002
-	 * - Add the `date_modified` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807270002() {
-
-		// Look for column
-		$result = $this->column_exists( 'date_modified' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`;
-			" );
-		}
-
-		// Return success/fail
 		return $this->is_success( $result );
-	}
 
-	/**
-	 * Upgrade to version 201807270003
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807270003() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
 	}
 }

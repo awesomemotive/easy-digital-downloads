@@ -51,10 +51,11 @@ class Orders extends Base {
 		) );
 
 		if ( ! empty( $results ) ) {
+			$orders = new \EDD\Database\Queries\Order();
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				if ( $this->find_legacy_id( $result->ID, static::ORDERS ) ) {
+				if ( $orders->get_item( $result->ID ) ) {
 					continue;
 				}
 
@@ -63,8 +64,32 @@ class Orders extends Base {
 
 			return true;
 		}
+		$this->recalculate_sales_earnings();
 
 		return false;
+	}
+
+	/**
+	 * Recalculates the sales and earnings numbers for all downloads once the orders have been migrated.
+	 *
+	 * @since 3.0
+	 * @return void
+	 */
+	private function recalculate_sales_earnings() {
+		global $wpdb;
+
+		$downloads = $wpdb->get_results(
+			"SELECT ID
+			FROM {$wpdb->posts}
+			WHERE post_type = 'download'
+			ORDER BY ID ASC"
+		);
+		$total     = count( $downloads );
+		if ( ! empty( $total ) ) {
+			foreach ( $downloads as $download ) {
+				edd_recalculate_download_sales_earnings( $download->ID );
+			}
+		}
 	}
 
 	/**

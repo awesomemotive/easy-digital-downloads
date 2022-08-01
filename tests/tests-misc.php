@@ -62,14 +62,15 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_string_is_image_url() {
 		$this->assertTrue( edd_string_is_image_url( 'jpg' ) );
+		$this->assertTrue( edd_string_is_image_url( 'webp' ) );
 		$this->assertFalse( edd_string_is_image_url( 'php' ) );
 	}
 
 	public function test_get_ip() {
 		$this->assertEquals( '127.0.0.1', edd_get_ip() );
 
-		$_SERVER['REMOTE_ADDR'] = ' 192.168.0.1 , 192.168.1.1 ';
-		$this->assertEquals( '192.168.0.1', edd_get_ip() );
+		$_SERVER['REMOTE_ADDR'] = '172.217.6.46';
+		$this->assertEquals( '172.217.6.46', edd_get_ip() );
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 	}
@@ -504,8 +505,38 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertSame( $expected, edd_get_angola_provinces_list() );
 	}
 
+	public function test_netherlands_provinces_list() {
+		$expected = array(
+			''   => '',
+			'DR' => __( 'Drenthe', 'easy-digital-downloads' ),
+			'FL' => __( 'Flevoland', 'easy-digital-downloads' ),
+			'FR' => __( 'Friesland', 'easy-digital-downloads' ),
+			'GE' => __( 'Gelderland', 'easy-digital-downloads' ),
+			'GR' => __( 'Groningen', 'easy-digital-downloads' ),
+			'LI' => __( 'Limburg', 'easy-digital-downloads' ),
+			'NB' => __( 'North Brabant', 'easy-digital-downloads' ),
+			'NH' => __( 'North Holland', 'easy-digital-downloads' ),
+			'OV' => __( 'Overijssel', 'easy-digital-downloads' ),
+			'ZH' => __( 'South Holland', 'easy-digital-downloads' ),
+			'UT' => __( 'Utrecht', 'easy-digital-downloads' ),
+			'ZE' => __( 'Zeeland', 'easy-digital-downloads' ),
+			'BO' => __( 'Bonaire', 'easy-digital-downloads' ),
+			'SA' => __( 'Saba', 'easy-digital-downloads' ),
+			'SE' => __( 'Sint Eustatius', 'easy-digital-downloads' ),
+		);
+
+		$this->assertSame( $expected, edd_get_netherlands_provinces_list() );
+	}
+
 	public function test_month_num_to_name() {
 		$this->assertEquals( 'Jan', edd_month_num_to_name( 1 ) );
+	}
+
+	/**
+	 * @covers ::edd_month_num_to_name()
+	 */
+	public function test_month_num_to_long_name() {
+		$this->assertEquals( 'January', edd_month_num_to_name( 1, true ) );
 	}
 
 	public function test_get_php_arg_separator_output() {
@@ -699,7 +730,6 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_array_convert() {
 		$customer1_id = edd_add_customer( array( 'email' => 'test10@example.com' ) );
-		$customer2_id = edd_add_customer( array( 'email' => 'test11@example.com' ) );
 
 		// Test sending a single object in
 		$customer_object = new EDD_Customer( $customer1_id );
@@ -802,5 +832,103 @@ class Test_Misc extends EDD_UnitTestCase {
 		edd_delete_option( 'test_setting' );
 
 		$this->assertFalse( edd_get_option( 'test_setting' ) );
+	}
+
+	function test_should_allow_file_download_edd_uploaded_file_url() {
+		$file_details   = array ( 'scheme' => 'https', 'host' => site_url(), 'path' => '/wp-content/uploads/edd/2019/04/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = trailingslashit( site_url() ) . 'wp-content/uploads/edd/2019/04/test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_url() {
+		$file_details   = array ( 'scheme' => 'https', 'host' => site_url(), 'path' => '/wp-content/my-files/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = trailingslashit( site_url() ) . '/wp-content/my-files/test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_absolute_in_content() {
+		$this->write_test_file( trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg' );
+		$file_details   = array ( 'path' => trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file =  trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+		$this->delete_test_file( trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg' );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_absolute_outside_of_content() {
+		$this->write_test_file( trailingslashit( ABSPATH ) . 'test-file.jpg' );
+		$file_details   = array ( 'path' => trailingslashit( ABSPATH ) . 'test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file =  trailingslashit( ABSPATH ) . 'test-file.jpg';
+
+		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+		$this->delete_test_file( trailingslashit( ABSPATH ) . 'test-file.jpg' );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_url_on_windows_WAMP() {
+		$file_details   = array ( 'scheme' => 'https', 'host' => site_url(), 'path' => 'E:\wamp\www\site\wp/wp-content/my-files/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = trailingslashit( site_url() ) . '/wp-content/my-files/test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_absolute_outside_of_content_on_windows_WAMP() {
+		$file_details   = array ( 'path' => 'E:\wamp\www\site\wp/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = 'E:\wamp\www\site\wp/test-file.jpg';
+
+		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_url_on_windows_IIS() {
+		$file_details   = array ( 'scheme' => 'https', 'host' => site_url(), 'path' => 'C:\inetpub\wwwroot\mysite/wp-content/my-files/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = trailingslashit( site_url() ) . '/wp-content/my-files/test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_absolute_outside_of_content_on_windows_IIS() {
+		$file_details   = array ( 'path' => 'C:\inetpub\wwwroot\mysite/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = 'C:\inetpub\wwwroot\mysite/test-file.jpg';
+
+		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_is_countable_defined() {
+		$this->assertTrue( function_exists( 'is_countable' ) );
+	}
+
+	function test_is_iterable_defined() {
+		$this->assertTrue( function_exists( 'is_iterable' ) );
+	}
+
+	function test_postal_codes_SE_leading_s() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 's-12345', 'SE' ) );
+	}
+
+	function test_postal_codes_SE_leading_capital_s() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 'S-12345', 'SE' ) );
+	}
+
+	function test_postal_codes_SE_numeric() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( '12345', 'SE' ) );
+	}
+
+	private function write_test_file( $full_file_path ) {
+		$file = fopen( $full_file_path,"w" );
+		fwrite( $file,"" );
+		fclose( $file );
+	}
+
+	private function delete_test_file( $full_file_path ) {
+		unlink( $full_file_path );
 	}
 }

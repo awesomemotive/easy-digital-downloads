@@ -104,7 +104,7 @@ class Note extends Query {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An note ID to only return that order. Default empty.
+	 *     @type int          $id                   An note ID to only return that note. Default empty.
 	 *     @type array        $id__in               Array of note IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of note IDs to exclude. Default empty.
 	 *     @type string       $object_id            An object ID to only return those objects. Default empty.
@@ -131,7 +131,7 @@ class Note extends Query {
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
 	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'user_id', 'date_created',
-	 *                                              'user_id__in', 'object_id__in', 'object_type__in'.
+	 *                                              'date_modified'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.

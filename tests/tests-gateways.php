@@ -22,8 +22,8 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$this->assertEquals( 'PayPal Standard', $out['paypal']['admin_label'] );
 		$this->assertEquals( 'PayPal', $out['paypal']['checkout_label'] );
 
-		$this->assertEquals( 'Test Payment', $out['manual']['admin_label'] );
-		$this->assertEquals( 'Test Payment', $out['manual']['checkout_label'] );
+		$this->assertEquals( 'Store Gateway', $out['manual']['admin_label'] );
+		$this->assertEquals( 'Store Gateway', $out['manual']['checkout_label'] );
 	}
 
 	public function test_enabled_gateways() {
@@ -82,7 +82,9 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$edd_options['gateways']['manual'] = '1';
 		$edd_options['gateways']['stripe'] = '1';
 
-		$this->assertEquals( 'manual', edd_get_default_gateway() );
+		// If we have Stripe in this install, 'stripe' is the default';
+		$expected_result = class_exists( 'EDD_Stripe' ) ? 'stripe' : 'manual';
+		$this->assertEquals( $expected_result, edd_get_default_gateway() );
 	}
 
 	public function test_get_gateway_admin_label() {
@@ -93,7 +95,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$edd_options['gateways']['manual'] = '1';
 
 		$this->assertEquals( 'PayPal Standard', edd_get_gateway_admin_label( 'paypal' ) );
-		$this->assertEquals( 'Test Payment', edd_get_gateway_admin_label( 'manual' ) );
+		$this->assertEquals( 'Store Gateway', edd_get_gateway_admin_label( 'manual' ) );
 	}
 
 	public function test_get_gateway_checkout_label() {
@@ -104,7 +106,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$edd_options['gateways']['manual'] = '1';
 
 		$this->assertEquals( 'PayPal', edd_get_gateway_checkout_label( 'paypal' ) );
-		$this->assertEquals( 'Free Purchase', edd_get_gateway_checkout_label( 'manual' ) );
+		$this->assertEquals( 'Store Gateway', edd_get_gateway_checkout_label( 'manual' ) );
 	}
 
 	public function test_buy_now_supported_single_gateway() {

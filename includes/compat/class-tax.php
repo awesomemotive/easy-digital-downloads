@@ -70,6 +70,9 @@ class Tax extends Base {
 		$value = (array) $value;
 
 		foreach ( $value as $tax_rate ) {
+			if ( empty( $tax_rate ) ) {
+				continue;
+			}
 			$scope = isset( $tax_rate['global'] )
 				? 'country'
 				: 'region';
@@ -95,6 +98,7 @@ class Tax extends Base {
 			// Check if the tax rate exists.
 			} else {
 				$rate = edd_get_adjustments( array(
+					'type'        => 'tax_rate',
 					'fields'      => 'ids',
 					'name'        => $tax_rate['country'],
 					'description' => $region,

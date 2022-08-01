@@ -33,7 +33,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 			'amount'            => '20',
 			'use_count'         => 54,
 			'max_uses'          => 10,
-			'min_cart_price'    => 128,
+			'min_charge_amount' => 128,
 			'product_condition' => 'all',
 			'start_date'        => '2010-12-12 00:00:00',
 			'end_date'          => '2050-12-31 23:59:59'
@@ -93,7 +93,7 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::get_meta()
 	 */
 	public function test_get_metadata_with_no_args_should_return_array() {
-		$this->assertEmpty( edd_get_adjustment_meta( self::$discount_id ) );
+		$this->assertSame( 1, count( edd_get_adjustment_meta( self::$discount_id ) ) );
 	}
 
 	/**
@@ -128,5 +128,12 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 */
 	public function test_delete_metadata_with_invalid_key_should_return_false() {
 		$this->assertFalse( edd_delete_adjustment_meta( self::$discount_id,  'key_that_does_not_exist' ) );
+	}
+
+	/**
+	 * @covers \edd_get_discount_product_condition()
+	 */
+	public function test_discount_product_condition() {
+		$this->assertSame( 'all', edd_get_discount_product_condition( self::$discount_id ) );
 	}
 }

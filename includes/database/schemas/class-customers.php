@@ -65,7 +65,8 @@ class Customers extends Schema {
 		// name
 		array(
 			'name'       => 'name',
-			'type'       => 'mediumtext',
+			'type'       => 'varchar',
+			'length'     => '255',
 			'searchable' => true,
 			'sortable'   => true
 		),
@@ -76,7 +77,6 @@ class Customers extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'active',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -87,9 +87,7 @@ class Customers extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true,
-			'searchable' => true,
-			'validate'   => 'edd_sanitize_amount',
+			'sortable'   => true
 		),
 
 		// purchase_count
@@ -106,7 +104,7 @@ class Customers extends Schema {
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true
@@ -116,7 +114,7 @@ class Customers extends Schema {
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '0000-00-00 00:00:00',
+			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
 			'sortable'   => true

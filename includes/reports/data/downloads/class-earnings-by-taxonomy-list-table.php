@@ -30,19 +30,19 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 *
 	 * @return array Taxonomies.
 	 */
-	public function taxonomy_data() {
+	public function get_data() {
 		global $wpdb;
 
-		$date       = EDD()->utils->date( 'now' );
-		$filter     = Reports\get_filter_value( 'dates' );
-		$date_range = Reports\parse_dates_for_range( $date, $filter['range'] );
+		$dates      = Reports\get_filter_value( 'dates' );
+		$date_range = Reports\parse_dates_for_range( $dates['range'] );
+		$currency   = Reports\get_filter_value( 'currencies' );
 
 		// Generate date query SQL if dates have been set.
 		$date_query_sql = '';
 
 		if ( ! empty( $date_range['start'] ) || ! empty( $date_range['end'] ) ) {
 			if ( ! empty( $date_range['start'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'AND date_created >= %s', $date_range['start']->format( 'mysql' ) );
+				$date_query_sql .= $wpdb->prepare( 'AND oi.date_created >= %s', $date_range['start']->format( 'mysql' ) );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -51,11 +51,11 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			}
 
 			if ( ! empty( $date_range['end'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $date_range['end']->format( 'mysql' ) );
+				$date_query_sql .= $wpdb->prepare( 'oi.date_created <= %s', $date_range['end']->format( 'mysql' ) );
 			}
 		}
 
-		$taxonomies = get_object_taxonomies( 'download', 'names' );
+		$taxonomies = edd_get_download_taxonomies();
 		$taxonomies = array_map( 'sanitize_text_field', $taxonomies );
 
 		$placeholders = implode( ', ', array_fill( 0, count( $taxonomies ), '%s' ) );
@@ -81,17 +81,39 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		$data       = array();
 		$parent_ids = array();
 
+		$column          = Reports\get_taxes_excluded_filter() ? 'oi.total - oi.tax' : 'oi.total';
+		$join            = " INNER JOIN {$wpdb->edd_orders} o ON o.id = oi.order_id ";
+		$currency_clause = '';
+
+		if ( empty( $currency ) || 'convert' === $currency ) {
+			$column = sprintf( '(%s) / oi.rate', $column );
+		} elseif ( array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
+			$currency_clause = $wpdb->prepare(
+				" AND o.currency = %s ",
+				strtoupper( $currency )
+			);
+		}
+
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+		$status_sql    = $wpdb->prepare(
+			" AND oi.status IN('complete','partially_refunded')
+			AND o.status IN({$status_string})",
+			...$statuses
+		);
+
 		foreach ( $taxonomies as $k => $t ) {
 			$c       = new \stdClass();
 			$c->id   = $k;
 			$c->name = $taxonomies[ $k ]['name'];
 
 			$placeholders   = implode( ', ', array_fill( 0, count( $taxonomies[ $k ]['object_ids'] ), '%d' ) );
-			$product_id__in = $wpdb->prepare( "product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
+			$product_id__in = $wpdb->prepare( "oi.product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
 
-			$sql = "SELECT total, COUNT(id) AS sales
-					FROM {$wpdb->edd_order_items}
-					WHERE {$product_id__in} {$date_query_sql}";
+			$sql = "SELECT SUM({$column}) as total
+					FROM {$wpdb->edd_order_items} oi
+					{$join}
+					WHERE {$product_id__in} {$currency_clause} {$date_query_sql} {$status_sql}";
 
 			$result = $wpdb->get_row( $sql ); // WPCS: unprepared SQL ok.
 
@@ -99,9 +121,21 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 				? 0.00
 				: floatval( $result->total );
 
-			$sales = null === $result && null === $result->sales
-				? 0
-				: absint( $result->sales );
+			$complete_orders = "SELECT SUM(oi.quantity) as sales
+				FROM {$wpdb->edd_order_items} oi
+				{$join}
+				WHERE {$product_id__in} {$currency_clause} {$date_query_sql} {$status_sql}";
+			$partial_orders  = "SELECT SUM(oi.quantity) as sales
+				FROM {$wpdb->edd_order_items} oi
+				LEFT JOIN {$wpdb->edd_order_items} ri
+				ON ri.parent = oi.id
+				{$join}
+				WHERE {$product_id__in} {$currency_clause} {$date_query_sql}
+				AND oi.status ='partially_refunded'
+				AND oi.quantity = - ri.quantity";
+			$sql_sales       = $wpdb->get_row( "SELECT SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
+
+			$sales = ! empty( $sql_sales->sales ) ? $sql_sales->sales : 0;
 
 			$c->sales    = $sales;
 			$c->earnings = $earnings;
@@ -141,7 +175,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 
 		// Sort by total earnings
 		usort( $sorted_data, function( $a, $b ) {
-			return $a->earnings < $b->earnings;
+			return ( $a->earnings < $b->earnings ) ? -1 : 1;
 		} );
 
 		return $sorted_data;
@@ -208,10 +242,10 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 * @since 3.0
 	 *
 	 * @param \stdClass $taxonomy Taxonomy object.
-	 * @return string Data shown in the Average Sales column.
+	 * @return int Data shown in the Average Sales column.
 	 */
 	public function column_average_sales( $taxonomy ) {
-		return edd_format_amount( $taxonomy->average_sales );
+		return (int) round( $taxonomy->average_sales );
 	}
 
 	/**
@@ -237,7 +271,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->taxonomy_data();
+		$this->items           = $this->get_data();
 	}
 
 	/**

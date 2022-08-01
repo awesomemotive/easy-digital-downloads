@@ -71,15 +71,16 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class. Some methods will not allow parameters to be overridden as it could lead to inaccurate calculations.
 	 *
-	 *     @type string $start     Start day and time (based on the beginning of the given day).
-	 *     @type string $end       End day and time (based on the end of the given day).
-	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
-	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Certain methods will only accept certain functions. See each method for
-	 *                             a list of accepted SQL functions.
-	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
-	 *                             query.
-	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      SQL function. Certain methods will only accept certain functions. See each method for
+	 *                                 a list of accepted SQL functions.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                                 query.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -102,8 +103,13 @@ class Stats {
 				'start'             => '',
 				'end'               => '',
 				'range'             => '',
-				'status'            => array( 'publish', 'revoked' ),
+				'exclude_taxes'     => false,
+				'currency'          => false,
+				'currency_sql'      => '',
+				'status'            => array(),
 				'status_sql'        => '',
+				'type'              => array(),
+				'type_sql'          => '',
 				'where_sql'         => '',
 				'date_query_sql'    => '',
 				'date_query_column' => '',
@@ -116,9 +122,74 @@ class Stats {
 				'relative_end'      => '',
 				'grouped'           => false,
 				'product_id'        => '',
-				'price_id'          => '',
+				'price_id'          => null,
+				'revenue_type'      => 'gross',
 			);
 		}
+
+	}
+
+	/**
+	 * Builds a fully qualified amount column and function, given the currency settings,
+	 * tax settings, and accepted functions.
+	 *
+	 * @param array $args              {
+	 *                                 Optional arguments.
+	 *
+	 * @type string $column_prefix     Column prefix (table alias or name).
+	 * @type array  $accepted_function Accepted functions for this query.
+	 *                    }
+	 *
+	 * @return string Example: `SUM( total / rate )`
+	 * @throws \InvalidArgumentException
+	 */
+	private function get_amount_column_and_function( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'column_prefix'      => '',
+			'accepted_functions' => array(),
+			'rate'               => true
+		) );
+
+		$column = $this->query_vars['column'];
+		$column_prefix = '';
+
+		if ( ! empty( $args['column_prefix'] ) ) {
+			$column_prefix = $args['column_prefix'] . '.';
+		}
+
+		if ( empty( $column ) ) {
+			$column = true === $this->query_vars['exclude_taxes'] ?  "{$column_prefix}total - {$column_prefix}tax" : $column_prefix . 'total';
+		} else {
+			$column = $column_prefix . $column;
+		}
+
+		$default_function = is_array( $args['accepted_functions'] ) && isset( $args['accepted_functions'][0] ) ? $args['accepted_functions'][0] : false;
+		$function = ! empty( $this->query_vars['function'] ) ? $this->query_vars['function'] : $default_function;
+		if ( empty( $function ) ) {
+			throw new \InvalidArgumentException( 'Missing select function.' );
+		}
+
+		if ( ! empty( $args['accepted_functions'] ) && ! in_array( strtoupper( $this->query_vars['function'] ), $args['accepted_functions'], true ) ) {
+			if ( ! empty( $default_function ) ) {
+				$function = $default_function;
+			} else {
+				throw new \InvalidArgumentException( sprintf( 'Invalid function "%s". Must be one of: %s', $this->query_vars['function'], json_encode( $args['accepted_functions'] ) ) );
+			}
+		}
+
+		$function = $this->query_vars['function'] = strtoupper( $function );
+
+		// Multiply by rate if currency conversion is enabled.
+		if (
+			! empty( $args['rate'] ) &&
+			in_array( $function, array( 'SUM', 'AVG' ), true ) &&
+			( empty( $this->query_vars['currency'] ) || 'convert' === $this->query_vars['currency'] ) &&
+			( false !== strpos( $column, 'total' ) || false !== strpos( $column, 'tax' ) )
+		) {
+			$column = sprintf( '(%s) / %s', $column, $column_prefix . 'rate' );
+		}
+
+		return sprintf( '%s(%s)', $function, $column );
 	}
 
 	/** Calculation Methods ***************************************************/
@@ -138,75 +209,86 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start     Start day and time (based on the beginning of the given day).
-	 *     @type string $end       End day and time (based on the end of the given day).
-	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
-	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Accepts `SUM` and `AVG`. Default `SUM`.
-	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
-	 *                             query.
-	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      SQL function. Accepts `SUM` and `AVG`. Default `SUM`.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                                 query.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted order earnings.
 	 */
 	public function get_order_earnings( $query = array() ) {
+		$this->parse_query( $query );
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
+
+		if ( empty( $this->query_vars['function'] ) ) {
+			$this->query_vars['function'] = 'SUM';
+		}
+
+		/*
+		 * By default we're checking sales only and excluding refunds. This gives us gross order earnings.
+		 * This may be overridden in $query parameters that get passed through.
+		 */
+		$this->query_vars['type']   = $this->get_revenue_type_order_types();
+		$this->query_vars['status'] = $this->get_revenue_type_statuses();
+
+		/**
+		 * Filters Order statuses that should be included when calculating stats.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $statuses Order statuses to include when generating stats.
+		 */
+		$this->query_vars['status'] = array_unique( apply_filters( 'edd_payment_stats_post_statuses', $this->query_vars['status'] ) );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'SUM', 'AVG' );
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$initial_query = "SELECT {$function} AS total
+			FROM {$this->query_vars['table']}
+			WHERE 1=1
+			{$this->query_vars['status_sql']}
+			{$this->query_vars['type_sql']}
+			{$this->query_vars['currency_sql']}
+			{$this->query_vars['where_sql']}
+			{$this->query_vars['date_query_sql']}";
+
+		$initial_result = $this->get_db()->get_row( $initial_query );
 
 		if ( true === $this->query_vars['relative'] ) {
+
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL({$function}, 0) AS total, IFNULL(relative, 0) AS relative
-					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT IFNULL({$function}, 0) AS relative
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
-					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-		} else {
-			$sql = "SELECT {$function} AS total
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+			$relative_query = "SELECT {$function} AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$relative_date_query_sql}";
+
+			$relative_result = $this->get_db()->get_row( $relative_query );
 		}
 
-		$result = $this->get_db()->get_row( $sql );
-
-		$total = null === $result->total
+		$total = null === $initial_result->total
 			? 0.00
-			: (float) $result->total;
+			: (float) $initial_result->total;
 
 		if ( true === $this->query_vars['relative'] ) {
-			$total    = floatval( $result->total );
-			$relative = floatval( $result->relative );
-
-			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( floatval( 0 ) === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
-			} else {
-				$percentage_change = ( $total - $relative ) / $relative * 100;
-
-				$total = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
-			}
+			$total = $this->generate_relative_markup( floatval( $total ), floatval( $relative_result->total ) );
 		} else {
 			$total = $this->maybe_format( $total );
 		}
@@ -249,56 +331,64 @@ class Stats {
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		/*
+		 * By default we're checking sales only and excluding refunds. This gives us gross order counts.
+		 * This may be overridden in $query parameters that get passed through.
+		 */
+		$this->query_vars['type']   = 'sale';
+		$this->query_vars['status'] = $this->get_revenue_type_statuses();
+
+		/**
+		 * Filters Order statuses that should be included when calculating stats.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $statuses Order statuses to include when generating stats.
+		 */
+		$this->query_vars['status'] = apply_filters( 'edd_payment_stats_post_statuses', $this->query_vars['status'] );
+
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
+		// First get the 'current' date filter's results.
+		$initial_query = "SELECT COUNT(id) AS total
+			FROM {$this->query_vars['table']}
+			WHERE 1=1
+			{$this->query_vars['status_sql']}
+			{$this->query_vars['type_sql']}
+			{$this->query_vars['currency_sql']}
+			{$this->query_vars['where_sql']}
+			{$this->query_vars['date_query_sql']}";
+
+		$initial_result = $this->get_db()->get_row( $initial_query );
 
 		if ( true === $this->query_vars['relative'] ) {
+
+			// Now get the relative data.
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-			$sql = "SELECT IFNULL(COUNT(id), 0) AS total, IFNULL(relative, 0) AS relative
-					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT IFNULL(COUNT(id), 0) AS relative
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
-					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-		} else {
-			$sql = "SELECT {$function} AS total
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			$relative_query = "SELECT COUNT(id) AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$relative_date_query_sql}";
+
+			$relative_result = $this->get_db()->get_row( $relative_query );
 		}
 
-		$result = $this->get_db()->get_row( $sql );
-
-		$total = null === $result
+		$total = null === $initial_result
 			? 0
-			: absint( $result->total );
+			: absint( $initial_result->total );
 
 		if ( true === $this->query_vars['relative'] ) {
-			$total    = absint( $result->total );
-			$relative = absint( $result->relative );
-
-			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( 0 === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $total )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $total );
-			} else {
-				$percentage_change = ( $total - $relative ) / $relative * 100;
-
-				$total = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
-			}
+			$total = $this->generate_relative_markup( absint( $total ), absint( $relative_result->total ) );
 		}
 
 		// Reset query vars.
@@ -344,9 +434,9 @@ class Stats {
 
 		$sql = "SELECT DAYOFWEEK(date_created) AS day, COUNT({$this->query_vars['column']}) as total
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY day
-				ORDER BY day DESC
+				ORDER BY total DESC
 				LIMIT 1";
 
 		$result = $this->get_db()->get_row( $sql );
@@ -401,7 +491,13 @@ class Stats {
 	public function get_order_refund_count( $query = array() ) {
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'refunded', 'partially_refunded' );
+			: array( 'complete' );
+
+		if ( ! array( $query['status'] ) ) {
+			$query['status'] = array( $query['status'] );
+		}
+
+		$query['type'] = array( 'refund' );
 
 		return $this->get_order_count( $query );
 	}
@@ -440,48 +536,59 @@ class Stats {
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		if ( empty( $this->query_vars['function'] ) ) {
+			$this->query_vars['function'] = 'COUNT';
+		}
+
 		// Base value for status.
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'refunded', 'partially_refunded' );
+			: array( 'refunded' );
+
+		/*
+		 * The type should be `sale` because we're querying for fully refunded order items only.
+		 * That means we look in `type` = `sale` and `status` = `refunded`.
+		 */
+		$this->query_vars['where_sql'] .= " AND {$this->get_db()->edd_orders}.type = 'sale' ";
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = ! empty( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
-			: "COUNT({$this->query_vars['table']}.id)";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
+
+		$currency_sql = str_replace( $this->get_db()->edd_order_items, $this->get_db()->edd_orders, $this->query_vars['currency_sql'] );
 
 		// Calculating an average requires a subquery.
 		if ( 'AVG' === $this->query_vars['function'] ) {
 			$sql = "SELECT AVG(id) AS total
 					FROM (
-						SELECT COUNT(id) AS id
+						SELECT COUNT({$this->query_vars['table']}.id) AS id
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
+						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$currency_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
-			$sql = "SELECT product_id, price_id, {$function} AS total
+			$sql = "SELECT {$this->query_vars['table']}.product_id, {$this->query_vars['table']}.price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$currency_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$currency_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -491,7 +598,7 @@ class Stats {
 
 				// Format resultant object.
 				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
+				$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
 				$value->total      = absint( $value->total );
 
 				// Add instance of EDD_Download to resultant object.
@@ -526,28 +633,87 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start     Start day and time (based on the beginning of the given day).
-	 *     @type string $end       End day and time (based on the end of the given day).
-	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
-	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Default `SUM`.
-	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
-	 *                             query.
-	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      SQL function. Default `SUM`.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                                 query.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$query['status'] = array( 'refunded', 'partially_refunded' );
+		$this->parse_query( $query );
 
-		// Request raw output so we can run `abs()` on the value.
-		$query['output'] = 'raw';
+		// Add table and column name to query_vars to assist with date query generation.
+		$this->query_vars['table']             = $this->get_db()->edd_orders;
+		$this->query_vars['date_query_column'] = 'date_created';
 
-		$retval = $this->get_order_earnings( $query );
+		if ( empty( $this->query_vars['function'] ) ) {
+			$this->query_vars['function'] = 'SUM';
+		}
 
-		// Format & return.
-		return edd_currency_filter( edd_format_amount( abs( $retval ) ) );
+		/*
+		 * By default we're checking refunds only and excluding any other types. This gives us gross refund amounts.
+		 * This may be overridden in $query parameters that get passed through.
+		 */
+		$this->query_vars['type']   = 'refund';
+		$this->query_vars['status'] = array( 'complete' );
+
+		// Run pre-query checks and maybe generate SQL.
+		$this->pre_query( $query );
+
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
+
+		$initial_query = "SELECT {$function} AS total
+			FROM {$this->query_vars['table']}
+			WHERE 1=1
+			{$this->query_vars['status_sql']}
+			{$this->query_vars['type_sql']}
+			{$this->query_vars['currency_sql']}
+			{$this->query_vars['where_sql']}
+			{$this->query_vars['date_query_sql']}";
+
+		$initial_result = $this->get_db()->get_row( $initial_query );
+
+		if ( true === $this->query_vars['relative'] ) {
+
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+
+			$relative_query = "SELECT {$function} AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1
+				{$this->query_vars['status_sql']}
+				{$this->query_vars['type_sql']}
+				{$this->query_vars['currency_sql']}
+				{$this->query_vars['where_sql']}
+				{$relative_date_query_sql}";
+
+			$relative_result = $this->get_db()->get_row( $relative_query );
+		}
+
+		$total = null === $initial_result->total
+			? 0.00
+			: (float) $initial_result->total;
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = -( floatval( $initial_result->total ) );
+			$relative = floatval( $relative_result->total );
+			$total    = $this->generate_relative_markup( $total, $relative, true );
+		} else {
+			$total = $this->maybe_format( -( $total ) );
+		}
+
+		// Reset query vars.
+		$this->post_query();
+
+		return $total;
 	}
 
 	/**
@@ -591,8 +757,8 @@ class Stats {
 
 		$sql = "SELECT AVG( TIMESTAMPDIFF( SECOND, {$this->query_vars['table']}.{$this->query_vars['column']}, o2.date_created ) ) AS time_to_refund
 				FROM {$this->query_vars['table']}
-				INNER JOIN wp_edd_orders o2 ON {$this->query_vars['table']}.id = o2.parent
-				WHERE 1=1 {$type_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				INNER JOIN {$this->query_vars['table']} o2 ON {$this->query_vars['table']}.id = o2.parent
+				WHERE 1=1 {$type_sql} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -667,14 +833,15 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start     Start day and time (based on the beginning of the given day).
-	 *     @type string $end       End day and time (based on the end of the given day).
-	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
-	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  This method does not allow any SQL functions to be passed.
-	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
-	 *                             query.
-	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function      This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                                 query.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return float|int Rate of refunded orders.
@@ -689,18 +856,18 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$status_sql = $this->get_db()->prepare( 'AND status IN(%s, %s)', esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ) );
+		$status_sql = $this->get_db()->prepare( "AND status = %s AND type = '%s'", esc_sql( 'complete' ), esc_sql( 'refund' ) );
 
 		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
 
-		$sql = "SELECT SUM(ABS({$this->query_vars['table']}.total)) / o.total * 100 AS `refund_rate`
+		$sql = "SELECT COUNT(id ) / o.number_orders * 100 AS `refund_rate`
 				FROM {$this->query_vars['table']}
 				CROSS JOIN (
-					SELECT SUM(id) AS total
+					SELECT COUNT(id) AS number_orders
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$status_sql} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -734,16 +901,17 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start      Start day and time (based on the beginning of the given day).
-	 *     @type string $end        End day and time (based on the end of the given day).
-	 *     @type string $range      Date range. If a range is passed, this will override and `start` and `end`
-	 *                              values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function   SQL function. Default `SUM`.
-	 *     @type string $where_sql  Reserved for internal use. Allows for additional WHERE clauses to be appended to the
-	 *                              query.
-	 *     @type int    $product_id Product ID. If empty, an aggregation of the values in the `total` column in the
-	 *                              `edd_order_items` table will be returned.
-	 *     @type string $output     The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      SQL function. Default `SUM`.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                                 query.
+	 *     @type int    $product_id    Product ID. If empty, an aggregation of the values in the `total` column in the
+	 *                                 `edd_order_items` table will be returned.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return array|float|int Formatted order item earnings.
@@ -752,23 +920,23 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
-		$this->query_vars['column']            = 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['status']            = array( 'complete' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = ! empty( $this->query_vars['function'] )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'     => $this->query_vars['table'],
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		$region = ! empty( $this->query_vars['region'] )
 			? $this->get_db()->prepare( 'AND edd_oa.region = %s', esc_sql( $this->query_vars['region'] ) )
@@ -778,22 +946,27 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
-		$join = ! empty( $country ) || ! empty( $region )
-			? "INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id"
-			: '';
+		$join = $currency = '';
+		if ( ! empty( $country ) || ! empty( $region ) ) {
+			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
+		}
+		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
+			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
+		}
 
 		if ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT product_id, price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -803,7 +976,7 @@ class Stats {
 
 				// Format resultant object.
 				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
+				$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
 				$value->total      = $this->maybe_format( $value->total );
 
 				// Add instance of EDD_Download to resultant object.
@@ -811,7 +984,7 @@ class Stats {
 			} );
 		} else {
 			$result = null === $result[0]->total
-				? 0.00
+				? $this->maybe_format( 0.00 )
 				: $this->maybe_format( floatval( $result[0]->total ) );
 		}
 
@@ -854,24 +1027,21 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['status']            = array( 'complete' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = ! empty( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
-			: "COUNT({$this->query_vars['table']}.id)";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		$region = ! empty( $this->query_vars['region'] )
 			? $this->get_db()->prepare( 'AND edd_oa.region = %s', esc_sql( $this->query_vars['region'] ) )
@@ -881,32 +1051,37 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
-		$join = ! empty( $country ) || ! empty( $region )
-			? "INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id"
-			: '';
+		$join = $currency = '';
+		if ( ! empty( $country ) || ! empty( $region ) ) {
+			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
+		}
+		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
+			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
+		}
 
 		// Calculating an average requires a subquery.
 		if ( 'AVG' === $this->query_vars['function'] ) {
 			$sql = "SELECT AVG(id) AS total
 					FROM (
-						SELECT COUNT(id) AS id
+						SELECT COUNT({$this->query_vars['table']}.id) AS id
 						FROM {$this->query_vars['table']}
 						{$join}
-						WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT product_id, price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -916,7 +1091,7 @@ class Stats {
 
 				// Format resultant object.
 				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
+				$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
 				$value->total      = absint( $value->total );
 
 				// Add instance of EDD_Download to resultant object.
@@ -947,15 +1122,16 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start     Start day and time (based on the beginning of the given day).
-	 *     @type string $end       End day and time (based on the end of the given day).
-	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
-	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  This method does not allow any SQL functions to be passed.
-	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
-	 *                             query.
-	 *     @type int    $number    Number of order items to fetch. Default 1.
-	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
+	 *                                 query.
+	 *     @type int    $number        Number of order items to fetch. Default 1.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return array Array of objects with most valuable order items. Each object has the product ID, total earnings,
@@ -965,8 +1141,8 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
-		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['exclude_taxes']     = true;
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
@@ -976,9 +1152,30 @@ class Stats {
 			? absint( $this->query_vars['number'] )
 			: 1;
 
-		$sql = "SELECT product_id, price_id, COUNT(total) AS sales, SUM(total) AS total
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'SUM' )
+		) );
+
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+
+		$where = $this->get_db()->prepare(
+			"AND {$this->get_db()->edd_order_items}.status IN('complete','partially_refunded')
+			 AND {$this->get_db()->edd_orders}.status IN({$status_string}) ",
+			 ...$statuses
+		);
+		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$where .= $this->get_db()->prepare(
+				" AND {$this->get_db()->edd_orders}.currency = %s ",
+				strtoupper( $this->query_vars['currency'] )
+			);
+		}
+
+		$sql = "SELECT product_id, price_id, {$function} AS total
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				INNER JOIN {$this->get_db()->edd_orders} ON({$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id)
+				WHERE 1=1 {$where} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY product_id, price_id
 				ORDER BY total DESC
 				LIMIT {$number}";
@@ -989,9 +1186,18 @@ class Stats {
 
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
-			$value->price_id   = absint( $value->price_id );
-			$value->sales      = absint( $value->sales );
-			$value->total      = $this->maybe_format( $value->total );
+			$value->price_id   = is_numeric( $value->price_id ) ? absint( $value->price_id ) : null;
+			$download_model    = new \EDD\Models\Download(
+				$value->product_id,
+				$value->price_id,
+				array(
+					'start' => $this->query_vars['start'],
+					'end'   => $this->query_vars['end'],
+				)
+			);
+
+			$value->sales      = absint( $download_model->get_net_sales() );
+			$value->total      = $this->maybe_format($download_model->get_net_earnings() );
 
 			// Add instance of EDD_Download to resultant object.
 			$value->object = edd_get_download( $value->product_id );
@@ -1085,7 +1291,7 @@ class Stats {
 	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return string Most popular discount with usage count.
+	 * @return array Most popular discounts with usage count.
 	 */
 	public function get_most_popular_discounts( $query = array() ) {
 
@@ -1108,7 +1314,7 @@ class Stats {
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$discount} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY description
-				ORDER BY {$this->query_vars['date_query_column']} DESC
+				ORDER BY count DESC
 				LIMIT {$number}";
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1151,6 +1357,7 @@ class Stats {
 	 *     @type string $end           End day and time (based on the end of the given day).
 	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
 	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
 	 *     @type string $function      This method does not allow any SQL functions to be passed.
 	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
 	 *                                 to the query.
@@ -1165,13 +1372,16 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = 'amount';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = $this->get_db()->prepare( 'SUM(%s)', $this->query_vars['column'] );
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM' )
+		) );
+
 		$discount_code = ! empty( $this->query_vars['discount_code'] )
 			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
 			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
@@ -1207,14 +1417,15 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start     Start day and time (based on the beginning of the given day).
-	 *     @type string $end       End day and time (based on the end of the given day).
-	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
-	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  This method does not allow any SQL functions to be passed.
-	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
-	 *                             to the query.
-	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                                 to the query.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return float Average discount amount applied to an order.
@@ -1223,13 +1434,16 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = 'amount';
+		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = $this->get_db()->prepare( 'AVG(%s)', $this->query_vars['column'] );
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'AVG' )
+		) );
+
 		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
 		$sql = "SELECT {$function}
@@ -1340,22 +1554,29 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start     Start day and time (based on the beginning of the given day).
-	 *     @type string $end       End day and time (based on the end of the given day).
-	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
-	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Accepts `COUNT`, `AVG`, and `SUM`. Default `COUNT`.
-	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended
-	 *                             to the query.
-	 *     @type string $gateway   Gateway name. This is checked against a list of registered payment gateways.
-	 *                             If a gateway is not passed, a list of objects are returned for each gateway and the
-	 *                             number of orders processed with that gateway.
-	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type string $function      SQL function. Accepts `COUNT`, `AVG`, and `SUM`. Default `COUNT`.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                                 to the query.
+	 *     @type string $gateway       Gateway name. This is checked against a list of registered payment gateways.
+	 *                                 If a gateway is not passed, a list of objects are returned for each gateway and the
+	 *                                 number of orders processed with that gateway.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return mixed array|int|float Either a list of payment gateways and counts or just a single value.
 	 */
 	private function get_gateway_data( $query = array() ) {
+		$query = wp_parse_args( $query, array(
+			'type'   => 'sale',
+			'status' => edd_get_gross_order_statuses(),
+		) );
+
+		$this->parse_query( $query );
 
 		// Set up default values.
 		$gateways = edd_get_payment_gateways();
@@ -1372,28 +1593,23 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
-		$this->query_vars['function']          = 'COUNT';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT`, `AVG` and `SUM` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG', 'SUM' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'COUNT', 'AVG', 'SUM' )
+		) );
 
 		$gateway = ! empty( $this->query_vars['gateway'] )
 			? $this->get_db()->prepare( 'AND gateway = %s', sanitize_text_field( $this->query_vars['gateway'] ) )
 			: '';
 
 		$sql = "SELECT gateway, {$function} AS total
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY gateway";
+			FROM {$this->query_vars['table']}
+			WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+			GROUP BY gateway";
 
 		$result = $this->get_db()->get_results( $sql );
 
@@ -1465,10 +1681,13 @@ class Stats {
 	 *
 	 * @param array $query See \EDD\Stats::get_gateway_data().
 	 *
-	 * @return array List of objects containing the number of sales processed either for every gateway or the gateway
+	 * @return int|array List of objects containing the number of sales processed either for every gateway or the gateway
 	 *               passed as a query parameter.
 	 */
 	public function get_gateway_sales( $query = array() ) {
+
+		$query['column']   = 'id';
+		$query['function'] = 'COUNT';
 
 		// Dispatch to \EDD\Stats::get_gateway_data().
 		return $this->get_gateway_data( $query );
@@ -1612,20 +1831,15 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'SUM', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['download_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
@@ -1635,9 +1849,9 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL({$function}, 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} elseif ( ! empty( $product_id ) || ! empty( $price_id ) ) {
 
 			// Regenerate SQL clauses due to alias.
@@ -1646,20 +1860,21 @@ class Stats {
 			$this->pre_query( $query );
 			$this->query_vars['table'] = $table;
 
-			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-				? $this->query_vars['function'] . "(oi.{$this->query_vars['column']})"
-				: "SUM(oi.{$this->query_vars['column']})";
+			$function = $this->get_amount_column_and_function( array(
+				'column_prefix'      => 'oi',
+				'accepted_functions' => array( 'SUM', 'AVG' )
+			) );
 
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']} o
-					INNER JOIN {$this->get_db()->edd_order_items} oi ON o.id = oi.order_id 
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+					INNER JOIN {$this->get_db()->edd_order_items} oi ON o.id = oi.order_id
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 
 			$this->pre_query( $query );
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -1671,20 +1886,7 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$total    = floatval( $result->total );
 			$relative = floatval( $result->relative );
-
-			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( floatval( 0 ) === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
-			} else {
-				$percentage_change = ( $total - $relative ) / $relative * 100;
-
-				$total = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
-			}
+			$total    = $this->generate_relative_markup( $total, $relative );
 		} else {
 			$total = $this->maybe_format( $total );
 		}
@@ -1732,12 +1934,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'SUM', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
-			: "SUM({$this->query_vars['table']}.{$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$region = ! empty( $this->query_vars['region'] )
 			? $this->get_db()->prepare( 'AND oa.region = %s', esc_sql( $this->query_vars['region'] ) )
@@ -1751,7 +1951,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND oi.product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
+		$price_id = ! is_null( $this->query_vars['price_id'] ) && is_numeric( $this->query_vars['price_id'] )
 			? $this->get_db()->prepare( 'AND oi.price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
@@ -1761,16 +1961,17 @@ class Stats {
 
 		// Re-parse function to fetch tax from the order items table.
 		if ( ! empty( $product_id ) && 'tax' === $this->query_vars['column'] ) {
-			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-				? $this->query_vars['function'] . "(oi.{$this->query_vars['column']})"
-				: "SUM(oi.{$this->query_vars['column']})";
+			$function = $this->get_amount_column_and_function( array(
+				'column_prefix'      => 'oi',
+				'accepted_functions' => array( 'SUM', 'AVG' )
+			) );
 		}
 
 		$sql = "SELECT {$function} AS total
 				FROM {$this->query_vars['table']}
 				INNER JOIN {$this->get_db()->edd_order_addresses} oa ON {$this->query_vars['table']}.id = oa.order_id
 				{$join}
-				WHERE 1=1 {$region} {$country} {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$region} {$country} {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_row( $sql );
 
@@ -1849,20 +2050,7 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$total    = absint( $result->total );
 			$relative = absint( $result->relative );
-
-			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( 0 === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . $total
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . $total;
-			} else {
-				$percentage_change = ( $total - $relative ) / $relative * 100;
-
-				$total = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
-			}
+			$total    = $this->generate_relative_markup( $total, $relative );
 		} else {
 			$total = $this->maybe_format( $total );
 		}
@@ -1886,22 +2074,24 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start       Start day and time (based on the beginning of the given day).
-	 *     @type string $end         End day and time (based on the end of the given day).
-	 *     @type string $range       Date range. If a range is passed, this will override and `start` and `end`
-	 *                               values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function    SQL function. Accepts `AVG` and `SUM`. Default `SUM`.
-	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
-	 *                               to the query.
-	 *     @type int    $customer_id Customer ID. Default empty.
-	 *     @type int    $user_id     User ID. Default empty.
-	 *     @type string $email       Email address.
-	 *     @type string $output      The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      SQL function. Accepts `AVG` and `SUM`. Default `SUM`.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                                 to the query.
+	 *     @type int    $customer_id   Customer ID. Default empty.
+	 *     @type int    $user_id       User ID. Default empty.
+	 *     @type string $email         Email address.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return string Formatted lifetime value of a customer.
 	 */
 	public function get_customer_lifetime_value( $query = array() ) {
+		$this->parse_query( $query );
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
@@ -1911,12 +2101,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `AVG` and `SUM` are accepted by this method.
-		$accepted_functions = array( 'AVG', 'SUM' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
@@ -1926,30 +2113,26 @@ class Stats {
 			? $this->get_db()->prepare( 'AND customer_id = %d', absint( $this->query_vars['customer'] ) )
 			: '';
 
-		$email = isset( $this->query_vars['email'] )
+		$email    = isset( $this->query_vars['email'] )
 			? $this->get_db()->prepare( 'AND email = %s', absint( $this->query_vars['email'] ) )
 			: '';
 
-		if ( true === $this->query_vars['relative'] ) {
-			$relative_date_query_sql = $this->generate_relative_date_query_sql();
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' ),
+			'rate'               => false
+		) );
 
-			$sql = "SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS total, IFNULL(relative, 0) AS relative
+		$inner_function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM' )
+		) );
+
+		$sql = "SELECT {$function} AS total
+				FROM (
+					SELECT {$inner_function} AS total
 					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS relative
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
-					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-		} else {
-			$sql = "SELECT {$function} AS total
-					FROM (
-						SELECT SUM(total) AS total
-						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
-					    GROUP BY customer_id
-					) o";
-		}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
+					GROUP BY customer_id
+				) o";
 
 		$result = $this->get_db()->get_row( $sql );
 
@@ -1957,26 +2140,7 @@ class Stats {
 			? 0.00
 			: (float) $result->total;
 
-		if ( true === $this->query_vars['relative'] ) {
-			$total    = floatval( $result->total );
-			$relative = floatval( $result->relative );
-
-			if ( ( floatval( 0 ) === $total && floatval( 0 ) === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( floatval( 0 ) === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
-			} else {
-				$percentage_change = ( $total - $relative ) / $relative * 100;
-
-				$total = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
-			}
-		} else {
-			$total = $this->maybe_format( $total );
-		}
+		$total = $this->maybe_format( $total );
 
 		// Reset query vars.
 		$this->post_query();
@@ -2013,7 +2177,6 @@ class Stats {
 	 * @return int Number of orders made by a customer.
 	 */
 	public function get_customer_order_count( $query = array() ) {
-
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
 		$this->query_vars['column']            = 'id';
@@ -2022,12 +2185,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
@@ -2041,29 +2201,55 @@ class Stats {
 			? $this->get_db()->prepare( 'AND email = %s', sanitize_email( $this->query_vars['email'] ) )
 			: '';
 
-		if ( 'AVG' === $function ) {
-			$sql = "SELECT COUNT(id) / total_customers AS average
-					FROM wp_edd_orders
-					CROSS JOIN (
-						SELECT COUNT(DISTINCT customer_id) AS total_customers
-						FROM wp_edd_orders
-					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-		} else {
-			$sql = "SELECT {$function}
-					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
-		}
+		if ( true === $this->query_vars['relative'] ) {
+			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
-		$result = $this->get_db()->get_var( $sql );
+			if ( 'AVG(id)' === $function ) {
+				$sql = "SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS total, IFNULL(relative, 0) AS relative
+						FROM {$this->query_vars['table']}
+						CROSS JOIN (
+							SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS relative
+							FROM {$this->query_vars['table']}
+							WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						) o
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			} else {
+				$sql = "SELECT COUNT(id) AS total, IFNULL(relative, 0) AS relative
+						FROM {$this->query_vars['table']}
+						CROSS JOIN (
+							SELECT COUNT(id), IFNULL(relative, 0) AS relative
+							FROM {$this->query_vars['table']}
+							WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						) o
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			}
+		} else {
+			if ( 'AVG(id)' === $function ) {
+				$sql = "SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS total
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			} else {
+				$sql = "SELECT COUNT(id) as total
+						FROM {$this->query_vars['table']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			}
+		}
+		$result = $this->get_db()->get_row( $sql );
 
 		$total = null === $result
 			? 0
-			: absint( $result );
+			: absint( $result->total );
+
+		if ( true === $this->query_vars['relative'] ) {
+			$total    = absint( $result->total );
+			$relative = absint( $result->relative );
+			$total    = $this->generate_relative_markup( $total, $relative );
+		} else {
+			$total = $this->maybe_format( $total );
+		}
 
 		// Reset query vars.
 		$this->post_query();
-
 		return $total;
 	}
 
@@ -2131,15 +2317,16 @@ class Stats {
 	 *     the constructor. This is by design to allow for multiple calculations to be executed from one instance of
 	 *     this class.
 	 *
-	 *     @type string $start       Start day and time (based on the beginning of the given day).
-	 *     @type string $end         End day and time (based on the end of the given day).
-	 *     @type string $range       Date range. If a range is passed, this will override and `start` and `end`
-	 *                               values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function    This method does not allow any SQL functions to be passed.
-	 *     @type string $where_sql   Reserved for internal use. Allows for additional WHERE clauses to be appended
-	 *                               to the query.
-	 *     @type int    $number      Number of customers to fetch. Default 1.
-	 *     @type string $output      The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
+	 *     @type string $start         Start day and time (based on the beginning of the given day).
+	 *     @type string $end           End day and time (based on the end of the given day).
+	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
+	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
+	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type string $function      This method does not allow any SQL functions to be passed.
+	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended
+	 *                                 to the query.
+	 *     @type int    $number        Number of customers to fetch. Default 1.
+	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
 	 * @return array Array of objects with most valuable customers. Each object has the customer ID, total amount spent
@@ -2160,7 +2347,11 @@ class Stats {
 			? absint( $this->query_vars['number'] )
 			: 1;
 
-		$sql = "SELECT customer_id, SUM(total) AS total
+		$column = true === $this->query_vars['exclude_taxes']
+			? 'total - tax'
+			: 'total';
+
+		$sql = "SELECT customer_id, SUM({$column}) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY customer_id
@@ -2233,9 +2424,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
-			: '';
+		$price_id = $this->generate_price_id_query_sql();
 
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
@@ -2263,20 +2452,7 @@ class Stats {
 		if ( true === $this->query_vars['relative'] ) {
 			$total    = absint( $result->total );
 			$relative = absint( $result->relative );
-
-			if ( ( 0 === $total && 0 === $relative ) || ( $total === $relative ) ) {
-				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
-			} elseif ( 0 === $relative ) {
-				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . $total
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . $total;
-			} else {
-				$percentage_change = ( $total - $relative ) / $relative * 100;
-
-				$total = 0 < $percentage_change
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . absint( $percentage_change ) . '%'
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . absint( $percentage_change ) . '%';
-			}
+			$total    = $this->generate_relative_markup( $total, $relative );
 		} else {
 			$total = $this->maybe_format( $total );
 		}
@@ -2328,10 +2504,10 @@ class Stats {
 			? absint( $this->query_vars['number'] )
 			: 1;
 
-		$sql = "SELECT product_id, price_id, COUNT(id) AS total
+		$sql = "SELECT product_id, file_id, COUNT(id) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY product_id, price_id
+				GROUP BY product_id
 				ORDER BY total DESC
 				LIMIT {$number}";
 
@@ -2341,7 +2517,7 @@ class Stats {
 
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
-			$value->price_id   = absint( $value->price_id );
+			$value->file_id    = absint( $value->file_id );
 			$value->total      = absint( $value->total );
 
 			// Add instance of EDD_Download to resultant object.
@@ -2393,8 +2569,10 @@ class Stats {
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
 			: '';
 
-		$price_id = ! empty( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+		$price_id = $this->generate_price_id_query_sql();
+
+		$file_id = ! empty( $this->query_vars['file_id'] )
+			? $this->get_db()->prepare( 'AND file_id = %d', absint( $this->query_vars['file_id'] ) )
 			: '';
 
 		$sql = "SELECT AVG(total) AS total
@@ -2434,8 +2612,13 @@ class Stats {
 			'start'             => '',
 			'end'               => '',
 			'range'             => '',
-			'status'            => array( 'publish', 'revoked' ),
+			'exclude_taxes'     => false,
+			'currency'          => false,
+			'currency_sql'      => '',
+			'status'            => array(),
 			'status_sql'        => '',
+			'type'              => array(),
+			'type_sql'          => '',
 			'where_sql'         => '',
 			'date_query_sql'    => '',
 			'date_query_column' => '',
@@ -2448,7 +2631,8 @@ class Stats {
 			'relative_end'      => '',
 			'grouped'           => false,
 			'product_id'        => '',
-			'price_id'          => '',
+			'price_id'          => null,
+			'revenue_type'      => 'gross',
 			'country'           => '',
 			'region'            => '',
 		);
@@ -2461,6 +2645,7 @@ class Stats {
 
 		// Use Carbon to set up start and end date based on range passed.
 		if ( ! empty( $this->query_vars['range'] ) && isset( $this->date_ranges[ $this->query_vars['range'] ] ) ) {
+
 			if ( ! empty( $this->date_ranges[ $this->query_vars['range'] ]['start'] ) ) {
 				$this->query_vars['start'] = $this->date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			}
@@ -2472,6 +2657,7 @@ class Stats {
 
 		// Use Carbon to set up start and end date based on range passed.
 		if ( true === $this->query_vars['relative'] && ! empty( $this->query_vars['range'] ) && isset( $this->relative_date_ranges[ $this->query_vars['range'] ] ) ) {
+
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['start'] ) ) {
 				$this->query_vars['relative_start'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['start']->format( 'mysql' );
 			}
@@ -2479,6 +2665,15 @@ class Stats {
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
 				$this->query_vars['relative_end'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 			}
+		}
+
+		// Validate currency.
+		if ( empty( $this->query_vars['currency'] ) ) {
+			$this->query_vars['currency'] = false;
+		} elseif ( array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$this->query_vars['currency'] = strtoupper( $this->query_vars['currency'] );
+		} else {
+			$this->query_vars['currency'] = 'convert';
 		}
 
 		// Correctly format functions and column names.
@@ -2491,34 +2686,35 @@ class Stats {
 		}
 
 		/** Parse country ****************************************************/
-
-		$country_list = array_filter( edd_get_country_list() );
-
 		$country = isset( $this->query_vars['country'] )
 			? sanitize_text_field( $this->query_vars['country'] )
-			: edd_get_shop_country();
+			: '';
 
-		// Maybe convert country code to country name.
-		$country = in_array( $country, array_flip( $country_list ), true )
-			? $country_list[ $country ]
-			: $country;
+		if ( $country ) {
+			$country_list = array_filter( edd_get_country_list() );
 
-		// Ensure a valid county has been passed.
-		$country = in_array( $country, $country_list, true )
-			? $country
-			: null;
+			// Maybe convert country code to country name.
+			$country = in_array( $country, array_flip( $country_list ), true )
+				? $country_list[ $country ]
+				: $country;
 
-		// Convert back to country code for SQL query.
-		$country_list                = array_flip( $country_list );
-		$this->query_vars['country'] = is_null( $country )
-			? ''
-			: $country_list[ $country ];
+			// Ensure a valid county has been passed.
+			$country = in_array( $country, $country_list, true )
+				? $country
+				: null;
+
+			// Convert back to country code for SQL query.
+			$country_list                = array_flip( $country_list );
+			$this->query_vars['country'] = is_null( $country )
+				? ''
+				: $country_list[ $country ];
+		}
 
 		/** Parse state ******************************************************/
 
 		$state = isset( $this->query_vars['region'] )
 			? sanitize_text_field( $this->query_vars['region'] )
-			: edd_get_shop_state();
+			: '';
 
 		// Only parse state if one was passed.
 		if ( $state ) {
@@ -2589,11 +2785,33 @@ class Stats {
 
 		// Generate status SQL if statuses have been set.
 		if ( ! empty( $this->query_vars['status'] ) ) {
-			$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
+			if ( 'any' === $this->query_vars['status'] ) {
+				$this->query_vars['status_sql'] = '';
+			} else {
+				$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
 
-			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
+				$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
 
-			$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
+				$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
+			}
+		}
+
+		if ( ! empty( $this->query_vars['type'] ) ) {
+
+			// We always want to format this as an array, so account for a possible string.
+			if ( ! is_array( $this->query_vars['type'] ) ) {
+				$this->query_vars['type'] = array( $this->query_vars['type'] );
+			}
+
+			$this->query_vars['type'] = array_map( 'sanitize_text_field', $this->query_vars['type'] );
+
+			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['type'] ), '%s' ) );
+
+			$this->query_vars['type_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.type IN ({$placeholders})", $this->query_vars['type'] );
+		}
+
+		if ( ! empty( $this->query_vars['currency'] ) && 'convert' !== strtolower( $this->query_vars['currency'] ) ) {
+			$this->query_vars['currency_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.currency = %s", $this->query_vars['currency'] );
 		}
 	}
 
@@ -2620,7 +2838,7 @@ class Stats {
 	private function maybe_format( $data = null ) {
 
 		// Bail if nothing was passed.
-		if ( empty( $data ) || null === $data ) {
+		if ( null === $data ) {
 			return $data;
 		}
 
@@ -2636,21 +2854,26 @@ class Stats {
 			return $data;
 		}
 
+		$currency = $this->query_vars['currency'];
+		if ( empty( $currency ) || 'convert' === strtolower( $currency ) ) {
+			$currency = edd_get_currency();
+		}
+
 		if ( is_object( $data ) ) {
 			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
 				if ( is_numeric( $data->{$field} ) ) {
-					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ) );
+					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ), $currency );
 				}
 			}
 		} elseif ( is_array( $data ) ) {
 			foreach ( array_keys( $data ) as $field ) {
 				if ( is_numeric( $data[ $field ] ) ) {
-					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ) );
+					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ), $currency );
 				}
 			}
 		} else {
 			if ( is_numeric( $data ) ) {
-				$data = edd_currency_filter( edd_format_amount( $data ) );
+				$data = edd_currency_filter( edd_format_amount( $data ), $currency );
 			}
 		}
 
@@ -2693,6 +2916,18 @@ class Stats {
 		}
 	}
 
+	/**
+	 * Generates price ID query SQL.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function generate_price_id_query_sql() {
+		return ! is_null( $this->query_vars['price_id'] ) && is_numeric( $this->query_vars['price_id'] )
+			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
+	}
+
 	/** Private Getters *******************************************************/
 
 	/**
@@ -2721,12 +2956,12 @@ class Stats {
 	private function set_date_ranges() {
 
 		// Retrieve the time in UTC for the date ranges to be correctly parsed.
-		$date = EDD()->utils->date();
+		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 		$date_filters = Reports\get_dates_filter_options();
 
 		foreach ( $date_filters as $range => $label ) {
-			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $date, $range );
+			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $range );
 
 			switch ( $range ) {
 				case 'this_month':
@@ -2797,9 +3032,89 @@ class Stats {
 					break;
 			}
 
-			$dates['range'] = $range;
+			if ( ! empty( $dates ) ) {
+				// Convert the values to the UTC equivalent so that we can query the database using UTC.
+				$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
+				$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
+				$dates['range'] = $range;
 
-			$this->relative_date_ranges[ $range ] = $dates;
+				$this->relative_date_ranges[ $range ] = $dates;
+			}
 		}
+
+	}
+
+	/**
+	 * Based on the query_vars['revenue_type'], use gross or net statuses.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array The statuses of orders to use for the stats generation.
+	 */
+	private function get_revenue_type_statuses() {
+		if ( 'net' === $this->query_vars['revenue_type'] ) {
+			return edd_get_net_order_statuses();
+		}
+
+		return edd_get_gross_order_statuses();
+	}
+
+	/**
+	 * Based on the query_vars['revenue_type'], use just sale or also include refunds.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array The order types to use when generating stats.
+	 */
+	private function get_revenue_type_order_types() {
+		$order_types = array( 'sale' );
+		if ( 'net' === $this->query_vars['revenue_type'] ) {
+			$order_types[] = 'refund';
+		}
+
+		return $order_types;
+	}
+
+	/**
+	 * Generates output for the report tiles when a relative % change is requested.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int|float $total     The primary value result for the stat.
+	 * @param int|float $relative  The value relative to the previous date range.
+	 * @param bool      $reverse   If the stat being displayed is a 'reverse' state, where lower is better.
+	 */
+	private function generate_relative_markup( $total = 0, $relative = 0, $reverse = false ) {
+		$relative_markup  = '';
+
+		$total_output    = $this->maybe_format( $total );
+		$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . __( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
+
+		if ( ( floatval( 0 ) === floatval( $total ) && floatval( 0 ) === floatval( $relative ) ) || ( $total === $relative ) ) {
+			$relative_output = esc_html__( 'No Change', 'easy-digital-downloads' );
+		} else if ( floatval( 0 ) !== floatval( $relative ) ) {
+			$percentage_change           = ( $total - $relative ) / $relative * 100;
+			$formatted_percentage_change = absint( $percentage_change );
+
+			if ( absint( $percentage_change ) < 100 ) {
+				$formatted_percentage_change = number_format( $percentage_change, 2 );
+				$formatted_percentage_change = $formatted_percentage_change < 1 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
+			}
+
+			if ( 0 < $percentage_change ) {
+				$direction       = $reverse ? 'up reverse' : 'up';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+			} else {
+				$direction       = $reverse ? 'down reverse' : 'down';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+			}
+		}
+
+		$relative_markup = $total_output;
+		if ( ! empty( $relative_output ) ) {
+			$relative_markup .= '<div class="tile-relative">' . $relative_output . '</div>';
+		}
+
+		return $relative_markup;
 	}
 }

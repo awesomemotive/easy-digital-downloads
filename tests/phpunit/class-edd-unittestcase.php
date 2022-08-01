@@ -124,7 +124,11 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 		}
 
 		foreach ( $actual as $item ) {
-			\PHPUnit_Framework_Assert::assertThat( $item, $constraint );
+			if ( class_exists( '\PHPUnit\Framework\Assert' ) ) {
+				\PHPUnit\Framework\Assert::assertThat( $item, $constraint );
+			} else {
+				\PHPUnit_Framework_Assert::assertThat( $item, $constraint );
+			}
 		}
 	}
 

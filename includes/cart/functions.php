@@ -248,7 +248,7 @@ function edd_get_cart_item_price_name( $item = array() ) {
  * Get cart item title
  *
  * @since 2.4.3
- * @param int $item Cart item array
+ * @param array $item Cart item array
  * @return string item title
  */
 function edd_get_cart_item_name( $item = array() ) {
@@ -324,11 +324,7 @@ function edd_get_cart_total( $discounts = false ) {
  * @return mixed|string|void
  */
 function edd_cart_total( $echo = true ) {
-	if ( ! $echo ) {
-		return EDD()->cart->total( $echo );
-	}
-
-	EDD()->cart->total( $echo );
+	return EDD()->cart->total( $echo );
 }
 
 /**
@@ -382,6 +378,17 @@ function edd_get_cart_fee_total() {
  */
 function edd_get_cart_fee_tax() {
 	return EDD()->cart->get_tax_on_fees();
+}
+
+/**
+ * Is the cart empty?
+ *
+ * @since 3.0
+ * @uses EDD()->cart->is_empty()
+ * @return bool Is the cart empty?
+ */
+function edd_is_cart_empty() {
+	return EDD()->cart->is_empty();
 }
 
 /**
@@ -447,11 +454,7 @@ function edd_get_cart_tax_rate( $country = '', $state = '', $postal_code = '' ) 
  * @return string Total tax amount (if $echo is set to true)
  */
 function edd_cart_tax( $echo = false ) {
-	if ( ! $echo ) {
-		return EDD()->cart->tax( $echo );
-	} else {
-		EDD()->cart->tax( $echo );
-	}
+	return EDD()->cart->tax( $echo );
 }
 
 /**

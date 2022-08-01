@@ -29,7 +29,7 @@ final class Logs_File_Downloads extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_logs_file_downloads';
+	protected $name = 'logs_file_downloads';
 
 	/**
 	 * Database version
@@ -38,7 +38,7 @@ final class Logs_File_Downloads extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201806280001;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,8 +48,7 @@ final class Logs_File_Downloads extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806280001' => 201806280001,
-		'201807270003' => 201807270003
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -68,8 +67,8 @@ final class Logs_File_Downloads extends Table {
 		customer_id bigint(20) unsigned NOT NULL default '0',
 		ip varchar(60) NOT NULL default '',
 		user_agent varchar(200) NOT NULL default '',
-		date_created datetime NOT NULL default '0000-00-00 00:00:00',
-		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+		date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+		date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 		uuid varchar(100) NOT NULL default '',
 		PRIMARY KEY (id),
 		KEY customer_id (customer_id),
@@ -78,47 +77,26 @@ final class Logs_File_Downloads extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201806280001
-	 * - Rename  `download_id` column to `product_id`
+	 * Upgrade to version 202002141
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
-	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	protected function __201806280001() {
+	protected function __202002141() {
 
-		// Alter the database with separate queries so indexes succeed
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN download_id product_id bigint(20) unsigned NOT NULL default 0" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN user_id customer_id bigint(20) unsigned NOT NULL default 0" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN payment_id order_id bigint(20) unsigned NOT NULL default 0" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX download_id" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX product_id (product_id)" );
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-		// Return success/fail
-		return $this->is_success( true );
-	}
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
 
-	/**
-	 * Upgrade to version 201807270003
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807270003() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
-
-		// Return success/fail
 		return $this->is_success( $result );
+
 	}
+
 }

@@ -27,6 +27,14 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 abstract class List_Table extends \WP_List_Table {
 
 	/**
+	 * Arguments for the data set.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	public $args = array();
+
+	/**
 	 * Number of results to show per page.
 	 *
 	 * @since 3.0
@@ -94,6 +102,15 @@ abstract class List_Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Retrieves the data to be populated into the list table.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Array of list table data.
+	 */
+	abstract public function get_data();
+
+	/**
 	 * Retrieve the view types
 	 *
 	 * @since 1.4
@@ -120,7 +137,7 @@ abstract class List_Table extends \WP_List_Table {
 		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
 		$label = __( 'All', 'easy-digital-downloads' ) . $count;
 		$views = array(
-			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
+			'all' => sprintf( '<a href="%s"%s>%s</a>', esc_url( $url ), $class, $label ),
 		);
 
 		// Remove total from counts array
@@ -131,7 +148,7 @@ abstract class List_Table extends \WP_List_Table {
 		if ( ! empty( $counts ) ) {
 			foreach ( $counts as $status => $count ) {
 				$count_url = add_query_arg( array(
-					'status' => $status,
+					'status' => sanitize_key( $status ),
 					'paged'  => false,
 				), $url );
 
@@ -142,11 +159,49 @@ abstract class List_Table extends \WP_List_Table {
 				$count = '&nbsp;<span class="count">(' . absint( $this->counts[ $status ] ) . ')</span>';
 
 				$label            = edd_get_status_label( $status ) . $count;
-				$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', $count_url, $class, $label );
+				$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', esc_url( $count_url ), $class, $label );
 			}
 		}
 
 		return $views;
+	}
+
+	/**
+	 * Parse pagination query arguments into keys & values that the Query class
+	 * can understand and use to retrieve the correct results from the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function parse_pagination_args( $args = array() ) {
+
+		// Get pagination values
+		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
+		$paged   = $this->get_paged();
+
+		// Only perform paged math if numeric and greater than 1
+		if ( ! empty( $paged ) && is_numeric( $paged ) && ( $paged > 1 ) ) {
+			$offset = ceil( $this->per_page * ( $paged - 1 ) );
+
+		// Otherwise, default to the first page of results
+		} else {
+			$offset = 0;
+		}
+
+		// Parse pagination args into passed args
+		$r = wp_parse_args( $args, array(
+			'number'  => $this->per_page,
+			'offset'  => $offset,
+			'order'   => $order,
+			'orderby' => $orderby
+		) );
+
+		// Return args
+		return array_filter( $r );
 	}
 
 	/**

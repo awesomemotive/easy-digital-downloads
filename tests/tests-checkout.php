@@ -123,8 +123,13 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	 * Test to make sure the purchase button is returned properly
 	 */
 	public function test_checkout_button_purchase() {
+		// We need activate gateways in order for this to pass.
+		add_filter( 'edd_enabled_payment_gateways', array( $this, 'modify_gateaways' ) );
+
 		$this->assertInternalType( 'string', edd_checkout_button_purchase() );
 		$this->assertContains( '<input type="submit" class="edd-submit blue button" id="edd-purchase-button" name="edd-purchase" value="Purchase"/>', edd_checkout_button_purchase() );
+
+		remove_filter( 'edd_enabled_payment_gateways', array( $this, 'modify_gateaways' ) );
 	}
 
 	/**
@@ -311,5 +316,9 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		do_action( 'template_redirect' ); // Necessary to trigger correct actions
 
 		$this->assertFalse( edd_is_checkout() );
+	}
+
+	public function modify_gateaways( $gateways ) {
+		return array( 'test-gateway' );
 	}
 }

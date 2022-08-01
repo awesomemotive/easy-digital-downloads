@@ -125,9 +125,35 @@ final class Easy_Digital_Downloads {
 	public $structured_data;
 
 	/**
+	 * @var \EDD\Database\NotificationsDB
+	 */
+	public $notifications;
+
+	/**
+	 * EDD Payment Stats Object
+	 *
+	 * @var EDD_Payment_Stats
+	 * @since 1.8
+	 */
+	public $payment_stats;
+
+	/**
+	 * @var EDD_Logging
+	 */
+	public $debug_log;
+
+	/**
+	 * Holds registered premium EDD extensions.
+	 *
+	 * @var \EDD\Extensions\ExtensionRegistry
+	 * @since 2.11.4
+	 */
+	public $extensionRegistry;
+
+	/**
 	 * EDD Components array
 	 *
-	 * @var array
+	 * @var EDD\Component[]
 	 * @since 3.0
 	 */
 	public $components = array();
@@ -167,23 +193,31 @@ final class Easy_Digital_Downloads {
 		self::$instance->setup_compat();
 
 		// APIs
-		self::$instance->roles           = new EDD_Roles();
-		self::$instance->fees            = new EDD_Fees();
-		self::$instance->api             = new EDD_API();
-		self::$instance->utils           = new EDD\Utilities();
-		self::$instance->session         = new EDD_Session();
-		self::$instance->html            = new EDD_HTML_Elements();
-		self::$instance->emails          = new EDD_Emails();
-		self::$instance->email_tags      = new EDD_Email_Template_Tags();
-		self::$instance->payment_stats   = new EDD_Payment_Stats();
-		self::$instance->cart            = new EDD_Cart();
-		self::$instance->tracking        = new EDD_Tracking();
-		self::$instance->structured_data = new EDD\Structured_Data();
+		self::$instance->roles             = new EDD_Roles();
+		self::$instance->fees              = new EDD_Fees();
+		self::$instance->api               = new EDD_API();
+		self::$instance->debug_log         = new EDD_Logging();
+		self::$instance->utils             = new EDD\Utilities();
+		self::$instance->session           = new EDD_Session();
+		self::$instance->html              = new EDD_HTML_Elements();
+		self::$instance->emails            = new EDD_Emails();
+		self::$instance->email_tags        = new EDD_Email_Template_Tags();
+		self::$instance->payment_stats     = new EDD_Payment_Stats();
+		self::$instance->cart              = new EDD_Cart();
+		self::$instance->tracking          = new EDD_Tracking();
+		self::$instance->structured_data   = new EDD\Structured_Data();
+		self::$instance->notifications     = new \EDD\Database\NotificationsDB();
+		self::$instance->extensionRegistry = new \EDD\Extensions\ExtensionRegistry();
 
 		// Admin APIs
 		if ( is_admin() ) {
 			self::$instance->notices = new EDD_Notices();
 		}
+
+		// Parachute
+		self::$instance->backcompat_globals();
+
+		self::$instance->registerApiEndpoints();
 
 		// Return the instance
 		return self::$instance;
@@ -229,9 +263,10 @@ final class Easy_Digital_Downloads {
 	public function __get( $key = '' ) {
 		switch ( $key ) {
 			case 'customers' :
+				return new EDD\Compat\Customer();
 			case 'customermeta' :
 			case 'customer_meta' :
-				return new EDD\Compat\Customer();
+				return new EDD\Compat\CustomerMeta();
 
 			default :
 				return isset( $this->{$key} )
@@ -280,7 +315,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0.0-beta-1.0012' );
+			define( 'EDD_VERSION', '3.0.2.1' );
 		}
 
 		// Plugin Root File.
@@ -339,17 +374,22 @@ final class Easy_Digital_Downloads {
 	 * This method exists to setup the bridges between EDD versions, most
 	 * notably between versions less than 2.9 and greater than 3.0.
 	 *
+	 * Compatibility classes are not set up during EDD uninstall in order to allow us to use WordPress functions
+	 * to cleanly delete the old custom post types from pre-3.0.
+	 *
 	 * @access private
 	 * @since 3.0
 	 * @return void
 	 */
 	private function setup_compat() {
-		new EDD\Compat\Discount();
-		new EDD\Compat\Customer();
-		new EDD\Compat\Log();
-		new EDD\Compat\Payment();
-		new EDD\Compat\Tax();
-		new EDD\Compat\Template();
+		if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) || plugin_basename( $this->file ) !== WP_UNINSTALL_PLUGIN ) {
+			new EDD\Compat\Discount();
+			new EDD\Compat\Customer();
+			new EDD\Compat\Log();
+			new EDD\Compat\Payment();
+			new EDD\Compat\Tax();
+			new EDD\Compat\Template();
+		}
 	}
 
 	/**
@@ -358,7 +398,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function setup_application() {
-		edd_setup_components();
+		add_action( 'plugins_loaded', 'edd_setup_components', 100 );
 
 		$GLOBALS['edd_options'] = edd_get_settings();
 
@@ -391,14 +431,17 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
 		require_once EDD_PLUGIN_DIR . 'includes/component-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-component.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-base.php';
 
-		// Database Resources
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-column.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-schema.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-query.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-row.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-table.php';
+		// Database Engine
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-column.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-schema.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-row.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-date.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-compare.php';
 
 		// Database Schemas
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-adjustments.php';
@@ -439,7 +482,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-requests.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-request-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-downloads.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-download-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-addresses.php';
@@ -456,7 +501,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-item-meta.php';
 
 		// Database Table Query Interfaces
-		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-compare.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer-email-address.php';
@@ -471,6 +515,12 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-transaction.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-session.php';
+
+		// Old Database Components
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
+
+		// Notifications
+		require_once EDD_PLUGIN_DIR . 'includes/database/NotificationsDB.php';
 	}
 
 	/**
@@ -514,6 +564,7 @@ final class Easy_Digital_Downloads {
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customermeta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-log.php';
@@ -531,7 +582,6 @@ final class Easy_Digital_Downloads {
 
 		// Classes
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
@@ -544,6 +594,8 @@ final class Easy_Digital_Downloads {
 		if ( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
+
+		require_once EDD_PLUGIN_DIR . 'includes/deprecated-hooks.php';
 	}
 
 	/**
@@ -558,6 +610,9 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
 		}
 
+		// Traits
+		require_once EDD_PLUGIN_DIR . 'includes/traits/trait-refundable-item.php';
+
 		// Adjustments
 		require_once EDD_PLUGIN_DIR . 'includes/adjustments/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/adjustments/functions.php';
@@ -565,6 +620,7 @@ final class Easy_Digital_Downloads {
 
 		// API
 		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
+		require_once EDD_PLUGIN_DIR . 'includes/api/v3/Endpoint.php';
 
 		// Checkout
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
@@ -580,24 +636,47 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 
+		// Currency
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-currency.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-money-formatter.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/functions.php';
+
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
+		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 
+		$stripe = EDD_PLUGIN_DIR . 'includes/gateways/stripe/edd-stripe.php';
+
+		if ( file_exists( $stripe ) ) {
+			require_once( $stripe );
+		}
+
 		// Logs
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-api-request-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-file-download-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/class-api-request-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/meta.php';
+
+		require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/class-file-download-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/meta.php';
+
+		require_once EDD_PLUGIN_DIR . 'includes/logs/log/class-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/log/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/log/meta.php';
 
 		// Notes
 		require_once EDD_PLUGIN_DIR . 'includes/notes/class-note.php';
 		require_once EDD_PLUGIN_DIR . 'includes/notes/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/notes/meta.php';
+
+		// Notifications
+		require_once EDD_PLUGIN_DIR . 'includes/models/Notification.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/EnvironmentChecker.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/NotificationImporter.php';
 
 		// Orders
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order.php';
@@ -605,18 +684,19 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-transaction.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-refund-validator.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/items.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/credits.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/refunds.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/addresses.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transactions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/ui.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transitions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/statuses.php';
 
 		// Payments
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
@@ -643,6 +723,9 @@ final class Easy_Digital_Downloads {
 
 		// Stats
 		require_once EDD_PLUGIN_DIR . 'includes/class-stats.php';
+
+		// Downloads
+		require_once EDD_PLUGIN_DIR . 'includes/models/Download.php';
 	}
 
 	/**
@@ -663,12 +746,17 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/extensions/licensing-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/extensions/ExtensionRegistry.php';
 		require_once EDD_PLUGIN_DIR . 'includes/date-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/customers/customer-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
@@ -678,8 +766,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 
-		// Must always be loaded to ensure cron runs
+		// Admin files to load globally (cron, bar, etc...)
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-bar.php';
 	}
 
 	/**
@@ -714,6 +803,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/refunds.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
@@ -722,6 +812,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-reports-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports-callbacks.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
@@ -729,9 +820,24 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/downgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/upgrade-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extension-manager.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/abstract-extension.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extension-product-data.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-wpsmtp.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-recurring.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-reviews.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-email-marketing.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-invoices.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/settings-compatibility.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-deprecated-functions.php';
+
+		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/class-promo-handler.php';
 	}
 
 	/**
@@ -742,6 +848,44 @@ final class Easy_Digital_Downloads {
 	private function include_frontend() {
 		require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
+	}
+
+	/**
+	 * Backwards compatibility for old global values
+	 *
+	 * @since 3.0
+	 */
+	private function backcompat_globals() {
+
+		// The $edd_logs global
+		$GLOBALS['edd_logs'] = self::$instance->debug_log;
+	}
+
+	/**
+	 * Registers REST API endpoints.
+	 *
+	 * @todo move this somewhere better
+	 *
+	 * @since 2.11.4
+	 */
+	private function registerApiEndpoints() {
+		add_action( 'rest_api_init', function() {
+			$endpoints = array(
+				'\\EDD\\API\\v3\\Notifications',
+			);
+
+			foreach( $endpoints as $endpointClassName ) {
+				$endpointNamePieces = explode( '\\', $endpointClassName );
+				$endpointName = end( $endpointNamePieces );
+
+				require_once EDD_PLUGIN_DIR . 'includes/api/v3/' . $endpointName . '.php';
+
+				if ( class_exists( $endpointClassName ) ) {
+					$endpoint = new $endpointClassName();
+					$endpoint->register();
+				}
+			}
+		} );
 	}
 }
 endif; // End if class_exists check.

@@ -32,20 +32,22 @@ class EDD_HTML_Elements {
 	 */
 	public function product_dropdown( $args = array() ) {
 		$defaults = array(
-			'name'        => 'products',
-			'id'          => 'products',
-			'class'       => '',
-			'multiple'    => false,
-			'selected'    => 0,
-			'chosen'      => false,
-			'number'      => 30,
-			'bundles'     => true,
-			'variations'  => false,
-			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
-			'data'        => array(
+			'name'                 => 'products',
+			'id'                   => 'products',
+			'class'                => '',
+			'multiple'             => false,
+			'selected'             => 0,
+			'chosen'               => false,
+			'number'               => 30,
+			'bundles'              => true,
+			'variations'           => false,
+			'show_variations_only' => false,
+			'placeholder'          => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'data'                 => array(
 				'search-type'        => 'download',
 				'search-placeholder' => sprintf( __( 'Search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 			),
+			'required'             => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -78,10 +80,15 @@ class EDD_HTML_Elements {
 			$product_args['post_status'] = array( 'publish' );
 		}
 
-		// Maybe disable bundles
+		// Maybe disable bundles.
 		if ( ! $args['bundles'] ) {
 			$product_args['meta_query'] = array(
-				'relation' => 'AND',
+				'relation' => 'OR',
+				array(
+					'key'     => '_edd_product_type',
+					'value'   => 'bundle',
+					'compare' => '!=',
+				),
 				array(
 					'key'     => '_edd_product_type',
 					'value'   => 'bundle',
@@ -123,8 +130,28 @@ class EDD_HTML_Elements {
 		$options[0] = '';
 		if ( $products ) {
 			foreach ( $products as $product ) {
-				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
-				if ( $args['variations'] && edd_has_variable_prices( $product->ID ) ) {
+				$has_variations = edd_has_variable_prices( $product->ID );
+
+				// If a product has no variations, just add it to the list and continue.
+				if ( ! $has_variations ) {
+					$title                             = esc_html( $product->post_title );
+					$options[ absint( $product->ID ) ] = $title;
+
+					continue;
+				}
+
+				// The product does have variations. Add the top level product to the list
+				// if not showing variations, or not showing variations only.
+				if ( false === $args['variations'] || ! $args['show_variations_only'] ) {
+					$title = esc_html( $product->post_title );
+					if ( ! $args['show_variations_only'] ) {
+						$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
+					}
+					$options[ absint( $product->ID ) ] = $title;
+				}
+
+				// If showing variations, add them to the list.
+				if ( $args['variations'] ) {
 					$prices = edd_get_variable_prices( $product->ID );
 					foreach ( $prices as $key => $value ) {
 						$name = ! empty( $value['name'] ) ? $value['name'] : '';
@@ -185,6 +212,10 @@ class EDD_HTML_Elements {
 			$args['class'] .= ' variations';
 		}
 
+		if ( $args['show_variations_only'] ) {
+			$args['class'] .= ' variations-only';
+		}
+
 		// 'all' gets created as an option if passed via the `selected` argument.
 		if ( isset( $options['all'] ) ) {
 			unset( $options['all'] );
@@ -202,6 +233,7 @@ class EDD_HTML_Elements {
 			'show_option_all'  => isset( $args['show_option_all'] ) ? $args['show_option_all'] : false,
 			'show_option_none' => false,
 			'data'             => $args['data'],
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -231,6 +263,7 @@ class EDD_HTML_Elements {
 				'search-placeholder' => __( 'Search Customers', 'easy-digital-downloads' ),
 			),
 			'none_selected' => __( 'No customer attached', 'easy-digital-downloads' ),
+			'required'      => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -274,6 +307,7 @@ class EDD_HTML_Elements {
 			'show_option_all'  => false,
 			'show_option_none' => false,
 			'data'             => $args['data'],
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -302,6 +336,7 @@ class EDD_HTML_Elements {
 				'search-type'        => 'user',
 				'search-placeholder' => __( 'Search Users', 'easy-digital-downloads' ),
 			),
+			'required'    => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -320,13 +355,19 @@ class EDD_HTML_Elements {
 			$options[0] = __( 'No users found', 'easy-digital-downloads' );
 		}
 
+		$selected = $args['selected'];
+		if ( ! is_array( $selected ) ) {
+			$selected = array( $selected );
+		}
 		// If a selected user has been specified, we need to ensure it's in the initial list of user displayed
-		if ( ! empty( $args['selected'] ) ) {
-			if ( ! array_key_exists( $args['selected'], $options ) ) {
-				$user = get_userdata( $args['selected'] );
+		if ( ! empty( $selected ) ) {
+			foreach ( $selected as $selected_user ) {
+				if ( ! array_key_exists( $selected_user, $options ) ) {
+					$user = get_userdata( $selected_user );
 
-				if ( $user ) {
-					$options[ absint( $args['selected'] ) ] = esc_html( $user->display_name );
+					if ( $user ) {
+						$options[ absint( $user->ID ) ] = esc_html( $user->display_name );
+					}
 				}
 			}
 		}
@@ -343,6 +384,7 @@ class EDD_HTML_Elements {
 			'show_option_all'  => false,
 			'show_option_none' => false,
 			'data'             => $args['data'],
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -375,6 +417,7 @@ class EDD_HTML_Elements {
 				'search-type'        => 'discount',
 				'search-placeholder' => __( 'Search Discounts', 'easy-digital-downloads' ),
 			),
+			'required'        => false,
 		);
 
 		$args = func_get_args();
@@ -419,6 +462,7 @@ class EDD_HTML_Elements {
 			'chosen'           => $args['chosen'],
 			'show_option_all'  => $args['show_option_all'],
 			'show_option_none' => false,
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -459,14 +503,14 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name         Name attribute of the dropdown
-	 * @param int    $selected     Year to select automatically
-	 * @param int    $years_before Number of years before the current year the dropdown should start with
-	 * @param int    $years_after  Number of years after the current year the dropdown should finish at
-	 *
+	 * @param string $name         Name attribute of the dropdown.
+	 * @param int    $selected     Year to select automatically.
+	 * @param int    $years_before Number of years before the current year the dropdown should start with.
+	 * @param int    $years_after  Number of years after the current year the dropdown should finish at.
+	 * @param string $id           A unique identifier for the field.
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
+	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0, $id = 'edd_year_select' ) {
 		$current    = date( 'Y' );
 		$start_year = $current - absint( $years_before );
 		$end_year   = $current + absint( $years_after );
@@ -478,13 +522,16 @@ class EDD_HTML_Elements {
 			$start_year ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'id'               => $id . '_' . $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
@@ -494,30 +541,104 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name     Name attribute of the dropdown
-	 * @param int    $selected Month to select automatically
+	 * @param string  $name             Name attribute of the dropdown.
+	 * @param int     $selected         Month to select automatically.
+	 * @param string  $id               A unique identifier for the field.
+	 * @param boolean $return_long_name Whether to use the long name for the month.
 	 *
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $name = 'month', $selected = 0 ) {
+	public function month_dropdown( $name = 'month', $selected = 0, $id = 'edd_month_select', $return_long_name = false ) {
 		$month    = 1;
 		$options  = array();
 		$selected = empty( $selected ) ? date( 'n' ) : $selected;
 
 		while ( $month <= 12 ) {
-			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
+			$options[ absint( $month ) ] = edd_month_num_to_name( $month, $return_long_name );
 			$month ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'id'               => $id . '_' . $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
+	}
+
+	/**
+	 * Gets the countries dropdown.
+	 *
+	 * @since  3.0
+	 * @param  array  $args    The array of parameters passed to the method
+	 * @param  string $country The selected country
+	 * @return string
+	 */
+	public function country_select( $args = array(), $country = '' ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'name'             => 'edd_countries',
+				'class'            => 'edd_countries_filter',
+				'options'          => edd_get_country_list(),
+				'chosen'           => true,
+				'selected'         => $country,
+				'show_option_none' => false,
+				'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+				'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+				'data'             => array(
+					'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+				),
+				'required'         => false,
+			)
+		);
+
+		if ( false === strpos( $args['class'], 'edd_countries_filter' ) ) {
+			$args['class'] .= ' edd_countries_filter';
+		}
+
+		return $this->select( $args );
+	}
+
+	/**
+	 * Gets the regions dropdown.
+	 *
+	 * @since  3.0
+	 * @param  array  $args     The array of parameters passed to the method
+	 * @param  string $country  The country from which to populate the regions
+	 * @param  string $region   The selected region
+	 * @return string
+	 */
+	public function region_select( $args = array(), $country = '', $region = '' ) {
+		if ( ! $country ) {
+			$country = edd_get_shop_country();
+		}
+		$args = wp_parse_args(
+			$args,
+			array(
+				'name'             => 'edd_regions',
+				'class'            => 'edd_regions_filter',
+				'options'          => edd_get_shop_states( $country ),
+				'chosen'           => true,
+				'selected'         => $region,
+				'show_option_none' => false,
+				'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+				'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+				'required'         => false,
+			)
+		);
+
+		if ( false === strpos( $args['class'], 'edd_regions_filter' ) ) {
+			$args['class'] .= ' edd_regions_filter';
+		}
+
+		return $this->select( $args );
 	}
 
 	/**
@@ -545,6 +666,7 @@ class EDD_HTML_Elements {
 			'data'             => array(),
 			'readonly'         => false,
 			'disabled'         => false,
+			'required'         => false,
 		) );
 
 		$data_elements = '';
@@ -583,8 +705,13 @@ class EDD_HTML_Elements {
 			$disabled = '';
 		}
 
+		$required = '';
+		if ( ! empty( $args['required'] ) ) {
+			$required = ' required';
+		}
+
 		$class  = implode( ' ', array_map( 'esc_attr', explode( ' ', $args['class'] ) ) );
-		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( str_replace( '-', '_', $args['id'] ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
+		$output = '<select' . $disabled . $readonly . $required . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( str_replace( '-', '_', $args['id'] ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
 
 		if ( ! isset( $args['selected'] ) || ( is_array( $args['selected'] ) && empty( $args['selected'] ) ) || ! $args['selected'] ) {
 			$selected = "";
@@ -592,8 +719,8 @@ class EDD_HTML_Elements {
 
 		if ( ! empty( $args['show_option_all'] ) ) {
 			if ( $args['multiple'] && ! empty( $args['selected'] ) ) {
-				$selected = selected( true, in_array( 0, $args['selected'] ), false );
-			} else {
+				$selected = selected( true, in_array( 0, (array) $args['selected'] ), false );
+			} elseif ( isset( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
 				$selected = selected( $args['selected'], 0, false );
 			}
 			$output .= '<option value="all"' . $selected . '>' . esc_html( $args['show_option_all'] ) . '</option>';
@@ -645,11 +772,15 @@ class EDD_HTML_Elements {
 				'readonly' => false,
 			),
 			'label'   => '',
+			'value'   => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$class   = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
+		$classes   = explode( ' ', $args['class'] );
+		$classes[] = $args['name'];
+		$class     = implode( ' ', array_map( 'sanitize_html_class', array_unique( array_filter( $classes ) ) ) );
+
 		$options = '';
 		if ( ! empty( $args['options']['disabled'] ) ) {
 			$options .= ' disabled="disabled"';
@@ -657,12 +788,17 @@ class EDD_HTML_Elements {
 			$options .= ' readonly';
 		}
 
+		$value = '';
+		if ( ! empty( $args['value'] ) ) {
+			$value .= ' value="' . esc_attr( $args['value'] ) . '"';
+		}
+
 		// Checked could mean 'on' or 1 or true, so sanitize it for checked()
 		$to_check = ! empty( $args['current'] );
 		$checked  = checked( true, $to_check, false );
 
 		// Get the HTML to output
-		$output   = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" ' . $checked . ' />';
+		$output = '<input type="checkbox" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . esc_attr( $class ) . '" ' . $value . $checked . $options . ' />';
 
 		if ( ! empty( $args['label'] ) ) {
 			$output .= '<label for="' . esc_attr( $args['name'] ) . '">' . wp_kses_post( $args['label'] ) . '</label>';
@@ -702,6 +838,7 @@ class EDD_HTML_Elements {
 			'disabled'     => false,
 			'autocomplete' => '',
 			'data'         => false,
+			'required'     => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -710,6 +847,11 @@ class EDD_HTML_Elements {
 		$disabled = '';
 		if ( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
+		}
+
+		$required = '';
+		if ( ! empty( $args['required'] ) ) {
+			$required = ' required';
 		}
 
 		$data = '';
@@ -728,7 +870,7 @@ class EDD_HTML_Elements {
 			$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 		}
 
-		$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . '' . $disabled . '/>';
+		$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . $disabled . $required . '/>';
 
 		$output .= '</span>';
 

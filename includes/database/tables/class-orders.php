@@ -29,7 +29,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    string
 	 */
-	protected $name = 'edd_orders';
+	protected $name = 'orders';
 
 	/**
 	 * Database version.
@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 201808150001;
+	protected $version = 202108041;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -48,10 +48,13 @@ final class Orders extends Table {
 	 * @var    array
 	 */
 	protected $upgrades = array(
-		'201806110001' => 201806110001,
-		'201807270003' => 201807270003,
-		'201808140001' => 201808140001,
-		'201808150001' => 201808150001,
+		'201901111' => 201901111,
+		'202002141' => 202002141,
+		'202012041' => 202012041,
+		'202102161' => 202102161,
+		'202103261' => 202103261,
+		'202105221' => 202105221,
+		'202108041' => 202108041,
 	);
 
 	/**
@@ -71,22 +74,24 @@ final class Orders extends Table {
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
 			ip varchar(60) NOT NULL default '',
-			gateway varchar(20) NOT NULL default '',
+			gateway varchar(100) NOT NULL default 'manual',
 			mode varchar(20) NOT NULL default '',
 			currency varchar(20) NOT NULL default '',
 			payment_key varchar(64) NOT NULL default '',
+			tax_rate_id bigint(20) DEFAULT NULL,
 			subtotal decimal(18,9) NOT NULL default '0',
 			discount decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
-			date_completed datetime NOT NULL default '0000-00-00 00:00:00',
-			date_refundable datetime NOT NULL default '0000-00-00 00:00:00',
+			rate decimal(10,5) NOT NULL DEFAULT 1.00000,
+			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_completed datetime default null,
+			date_refundable datetime default null,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_number (order_number({$max_index_length})),
-			KEY status (status(20)),
+			KEY status_type (status, type),
 			KEY user_id (user_id),
 			KEY customer_id (customer_id),
 			KEY email (email(100)),
@@ -95,97 +100,184 @@ final class Orders extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201806110001
-	 * - Add the `date_refundable` datetime column.
+	 * Create the table
 	 *
 	 * @since 3.0
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	protected function __201806110001() {
+	public function create() {
 
-		// Look for column
-		$result = $this->get_db()->query( "SHOW COLUMNS FROM {$this->table_name} LIKE 'date_refundable'" );
+		$created = parent::create();
 
-		// Maybe add column
-		if ( ! $this->is_success( $result ) ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_completed`;
-			" );
+		// After successful creation, we need to set the auto_increment for legacy orders.
+		if ( ! empty( $created ) ) {
+
+			$last_payment_id = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
+
+			if ( ! empty( $last_payment_id ) ) {
+				update_option( 'edd_v3_migration_pending', $last_payment_id, false );
+				$auto_increment = $last_payment_id + 1;
+				$this->get_db()->query( "ALTER TABLE {$this->table_name}  AUTO_INCREMENT = {$auto_increment};" );
+			}
+
 		}
 
-		// Return success/fail
-		return $this->is_success( $result );
+		return $created;
+
 	}
 
 	/**
-	 * Upgrade to version 201807270001
-	 * - Add the `uuid` varchar column
+	 * Upgrade to version 201901111
+	 * - Set any 'publish' status items to 'complete'.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
-			" );
-		}
-
-		// Return success/fail.
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201808140001
-	 * - Add the `type` column.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808140001() {
-
-		// Look for column
-		$result = $this->column_exists( 'type' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'sale' AFTER status;
-			" );
-		}
-
-		// Return success/fail.
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201808150001
-	 * - Change the default value of the `type` column to `sale`.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808150001() {
-
-		// Alter the database
+	protected function __201901111() {
 		$this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `type` varchar(20) NOT NULL default 'sale';
+			UPDATE {$this->table_name} set `status` = 'complete' WHERE `status` = 'publish';
 		" );
 
-		$this->get_db()->query( "
-			UPDATE {$this->table_name} SET `type` = 'sale';
-		" );
-
-		// Return success/fail.
 		return $this->is_success( true );
+	}
+
+	/**
+	 * Upgrade to version 202002141
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
+	 *  - Change default value to `null` for columns `date_completed` and `date_refundable`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202002141() {
+
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_completed`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_completed` datetime default null;
+		" );
+
+		if ( $this->is_success( $result ) ) {
+			$this->get_db()->query( "UPDATE {$this->table_name} SET `date_completed` = NULL WHERE `date_completed` = '0000-00-00 00:00:00'" );
+		}
+
+		// Update `date_refundable`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_refundable` datetime default null;
+		" );
+
+		if ( $this->is_success( $result ) ) {
+			$this->get_db()->query( "UPDATE {$this->table_name} SET `date_refundable` = NULL WHERE `date_refundable` = '0000-00-00 00:00:00'" );
+		}
+
+		return $this->is_success( $result );
+
+	}
+
+	/**
+	 * Upgrade to version 202012041
+	 * 	- Add column `tax_rate_id`
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202012041() {
+		// Look for column
+		$result = $this->column_exists( 'tax_rate_id' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN tax_rate_id bigint(20) DEFAULT NULL AFTER payment_key;
+			" );
+		}
+
+		// Return success/fail.
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202102161
+	 * 	- Drop `status` index
+	 * 	- Create new `status_type` index
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202102161() {
+		if ( $this->index_exists( 'status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX status" );
+		}
+
+		if ( ! $this->index_exists( 'status_type' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status_type (status, type)" );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202103261
+	 *  - Change length of `gateway` column to `100`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202103261() {
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default '';
+		" );
+
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202105221
+	 * 	- Add `rate` column.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202105221() {
+		if ( ! $this->column_exists( 'rate' ) ) {
+			return $this->is_success(
+				$this->get_db()->query(
+					"ALTER TABLE {$this->table_name} ADD COLUMN rate decimal(10,5) NOT NULL DEFAULT 1.00000 AFTER total"
+				)
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202108041
+	 * - Set any empty gateway items to 'manual'.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __202108041() {
+		$this->get_db()->query( "
+			UPDATE {$this->table_name} set `gateway` = 'manual' WHERE `gateway` = '';
+		" );
+
+		$this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default 'manual';
+		" );
+
+		return true;
 	}
 }

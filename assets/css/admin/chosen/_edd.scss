@@ -1,0 +1,20 @@
+.edd-select-chosen {
+	width: 100%;
+	max-width: 300px;
+}
+
+.edd-select-chosen.edd-customer-select {
+	width: 100% !important;
+}
+
+.edd-select-chosen.edd-time {
+	width: 55px;
+	max-width: 55px;
+}
+
+@media screen and (max-width: $break-medium) {
+	.edd-select-chosen.edd-time {
+		width: 70px;
+		max-width: 70px;
+	}
+}

@@ -34,7 +34,7 @@ function edd_upgrades_screen() {
 		// Until we have fully migrated all upgrade scripts to this new system,
 		// we will selectively enqueue the necessary scripts.
 		add_filter( 'edd_load_admin_scripts', '__return_true' );
-		edd_load_admin_scripts( '' );
+		edd_load_admin_scripts( 'edd-admin-upgrades' );
 
 		// This is the new method to register an upgrade routine, so we can use
 		// an ajax and progress bar to display any needed upgrades.
@@ -77,10 +77,10 @@ function edd_upgrades_screen() {
 
 			// Redirect URL
 			$redirect = add_query_arg( array(
-				'edd_action' => $action,
-				'step'       => $step,
-				'total'      => $total,
-				'custom'     => $custom
+				'edd_action' => sanitize_key( $action ),
+				'step'       => absint( $step ),
+				'total'      => absint( $total ),
+				'custom'     => absint( $custom ),
 			), admin_url( 'index.php' ) ); ?>
 
 			<div id="edd-upgrade-status">
@@ -92,7 +92,7 @@ function edd_upgrades_screen() {
 			</div>
 			<script type="text/javascript">
 				setTimeout( function() {
-					document.location.href = '<?php echo esc_url( $redirect ); ?>';
+					document.location.href = '<?php echo esc_url_raw( $redirect ); ?>';
 				}, 250 );
 			</script>
 
@@ -104,7 +104,7 @@ function edd_upgrades_screen() {
 			<div id="edd-upgrade-status">
 				<p>
 					<?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?>
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/loading.gif'; ?>" id="edd-upgrade-loader"/>
+					<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/loading.gif' ); ?>" id="edd-upgrade-loader"/>
 				</p>
 			</div>
 
@@ -124,7 +124,7 @@ function edd_upgrades_screen() {
 						jQuery( '#edd-upgrade-loader' ).hide();
 
 						setTimeout( function() {
-							document.location.href = '<?php echo esc_url( $redirect ); ?>';
+							document.location.href = '<?php echo esc_url_raw( $redirect ); ?>';
 						}, 250 );
 					});
 				});

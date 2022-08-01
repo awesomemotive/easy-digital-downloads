@@ -37,8 +37,9 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 			'edd_user_login'  => 'wrong_username',
 		) );
 
-		$this->assertArrayHasKey( 'username_incorrect', edd_get_errors() );
-		$this->assertContains( 'The username you entered does not exist', edd_get_errors() );
+		$errors = edd_get_errors();
+		$this->assertArrayHasKey( 'edd_invalid_login', $errors );
+		$this->assertContains( 'Invalid username or password', $errors['edd_invalid_login'] );
 
 		// Clear errors for other test
 		edd_clear_errors();
@@ -57,8 +58,9 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 			'edd_user_pass'   => 'falsepass',
 		) );
 
-		$this->assertArrayHasKey( 'password_incorrect', edd_get_errors() );
-		$this->assertContains( 'The password you entered is incorrect', edd_get_errors() );
+		$errors = edd_get_errors();
+		$this->assertArrayHasKey( 'edd_invalid_login', $errors );
+		$this->assertContains( 'Invalid username or password', $errors['edd_invalid_login'] );
 
 		// Clear errors for other test
 		edd_clear_errors();
@@ -70,12 +72,16 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_login() {
-		edd_process_login_form( array(
-			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
-			'edd_user_login'  => 'admin@example.org',
-			'edd_user_pass'   => 'password',
-			'edd_redirect'    => '',
-		) );
+		try {
+			edd_process_login_form( array(
+				'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+				'edd_user_login'  => 'admin@example.org',
+				'edd_user_pass'   => 'password',
+				'edd_redirect'    => '',
+			) );
+		} catch ( WPDieException $e ) {
+
+		}
 
 		$this->assertEmpty( edd_get_errors() );
 	}
@@ -86,7 +92,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_log_user_in_return() {
-		$this->assertNull( edd_log_user_in( 0, '', '' ) );
+		$this->assertTrue( edd_log_user_in( 0, '', '' ) instanceof WP_Error );
 	}
 
 	/**

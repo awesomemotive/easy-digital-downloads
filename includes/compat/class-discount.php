@@ -44,7 +44,6 @@ class Discount extends Base {
 
 		/** Filters **********************************************************/
 		add_filter( 'query',                array( $this, 'wp_count_posts'       ), 10, 1 );
-		add_filter( 'query',                array( $this, 'get_post'             ), 10, 1 );
 		add_filter( 'get_post_metadata',    array( $this, 'get_post_metadata'    ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
 		add_filter( 'add_post_metadata',    array( $this, 'update_post_metadata' ), 99, 5 );
@@ -102,51 +101,6 @@ class Discount extends Base {
 
 		if ( $expected === $query ) {
 			$query = "SELECT status AS post_status, COUNT( * ) AS num_posts FROM {$wpdb->edd_adjustments} WHERE type = 'discount' GROUP BY post_status";
-		}
-
-		return $query;
-	}
-
-	/**
-	 * Backwards compatibility layer for get_post().
-	 *
-	 * This is here for backwards compatibility purposes with the migration to custom tables in EDD 3.0.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $query SQL request.
-	 *
-	 * @return string $request Rewritten SQL query.
-	 */
-	public function get_post( $query ) {
-		global $wpdb;
-
-		$expected = "/^SELECT \* FROM {$wpdb->posts} WHERE ID = (\d*) LIMIT 1$/";
-
-		if ( preg_match( $expected, $query, $matches, PREG_OFFSET_CAPTURE ) ) {
-
-			$object_id = 0;
-
-			if ( isset( $matches[1] ) ) {
-				$object_id = (int) $matches[1][0];
-			}
-
-			// Check if the ID matches a legacy ID.
-			$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
-
-			if ( isset( $wpdb->$table_name ) ) {
-				$object_id = $wpdb->get_var( $wpdb->prepare(
-					"
-					SELECT edd_adjustment_id
-					FROM {$table_name}
-					WHERE meta_key = %s AND meta_value = %d
-					", 'legacy_discount_id', $object_id
-				) );
-
-				if ( ! empty( $object_id ) ) {
-					$query = str_replace( $matches[1][0], $object_id, $query );
-				}
-			}
 		}
 
 		return $query;
@@ -279,7 +233,7 @@ class Discount extends Base {
 			$meta_query = $query->get( 'meta_query' );
 
 			$clauses   = array();
-			$sql_where = 'WHERE 1=1';
+			$sql_where = "WHERE type = 'discount'";
 
 			$meta_key   = $query->get( 'meta_key',   false );
 			$meta_value = $query->get( 'meta_value', false );
@@ -315,7 +269,7 @@ class Discount extends Base {
 							 * products as these would be serialized under the old schema.
 							 */
 							if ( in_array( $query['key'], $columns, true ) && array_key_exists( 'value', $query ) ) {
-								$meta_compare = $query['compare'];
+								$meta_compare = ! empty( $query['compare'] ) ? $query['compare'] : '=';
 								$meta_compare = strtoupper( $meta_compare );
 
 								$meta_value = $query['value'];
@@ -362,7 +316,7 @@ class Discount extends Base {
 							}
 						}
 
-						if ( 0 < count( $clauses['where'] ) ) {
+						if ( ! empty( $clauses['where'] ) && is_array( $clauses['where'] ) ) {
 							$sql_where .= ' AND ( ' . implode( ' ' . $relation . ' ', $clauses['where'] ) . ' )';
 						}
 					}
@@ -388,7 +342,6 @@ class Discount extends Base {
 	 * @return mixed The value to return.
 	 */
 	public function get_post_metadata( $value, $object_id, $meta_key, $single ) {
-		global $wpdb;
 
 		$meta_keys = apply_filters( 'edd_post_meta_discount_backwards_compat_keys', array(
 			'_edd_discount_status',
@@ -405,25 +358,13 @@ class Discount extends Base {
 			'_edd_discount_max_uses'
 		) );
 
+		// Bail early of not a back-compat key
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
 			return $value;
 		}
 
+		// Bail if discount does not exist
 		$discount = edd_get_discount( $object_id );
-
-		if ( empty( $discount->id ) ) {
-
-			// We didn't find a discount record with this ID...so let's check and
-			// see if it was a migrated one.
-			$object_id = $wpdb->get_var( "SELECT edd_discount_id FROM {$wpdb->prefix}edd_adjustmentmeta WHERE meta_key = 'legacy_discount_id' AND meta_value = $object_id" );
-
-			if ( ! empty( $object_id ) ) {
-				$discount = edd_get_discount( $object_id );
-			} else {
-				return $value;
-			}
-		}
-
 		if ( empty( $discount->id ) ) {
 			return $value;
 		}
@@ -508,7 +449,6 @@ class Discount extends Base {
 	 * @return mixed Returns 'null' if no action should be taken and WordPress core can continue, or non-null to avoid postmeta.
 	 */
 	public function update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
-		global $wpdb;
 
 		$meta_keys = apply_filters( 'edd_update_post_meta_discount_backwards_compat_keys', array(
 			'_edd_discount_status',
@@ -525,31 +465,13 @@ class Discount extends Base {
 			'_edd_discount_max_uses'
 		) );
 
+		// Bail early of not a back-compat key
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
 			return $check;
 		}
 
+		// Bail if discount does not exist
 		$discount = edd_get_discount( $object_id );
-
-		if ( empty( $discount->id ) ) {
-
-			// We didn't find a discount record with this ID... so let's check and see if it was a migrated one
-			$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
-
-			$object_id = $wpdb->get_var( $wpdb->prepare( "
-				SELECT edd_adjustment_id
-				FROM {$table_name}
-				WHERE meta_key = %s AND meta_value = %d",
-				'legacy_discount_id', $object_id
-			) );
-
-			if ( ! empty( $object_id ) ) {
-				$discount = edd_get_discount( $object_id );
-			} else {
-				return $check;
-			}
-		}
-
 		if ( empty( $discount->id ) ) {
 			return $check;
 		}

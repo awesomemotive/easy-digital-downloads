@@ -20,8 +20,7 @@ class Order_Address extends \WP_UnitTest_Factory_For_Thing {
 
 		$this->default_generation_definitions = array(
 			'order_id'    => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'first_name'  => new \WP_UnitTest_Generator_Sequence( 'first_name%d' ),
-			'last_name'   => new \WP_UnitTest_Generator_Sequence( 'last_name%d' ),
+			'name'        => new \WP_UnitTest_Generator_Sequence( 'name%d' ),
 			'type'        => new \WP_UnitTest_Generator_Sequence( 'type%d' ),
 			'status'      => new \WP_UnitTest_Generator_Sequence( 'status%d' ),
 			'address'     => new \WP_UnitTest_Generator_Sequence( 'address%d' ),

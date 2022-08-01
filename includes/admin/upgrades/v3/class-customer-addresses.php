@@ -85,6 +85,22 @@ class Customer_Addresses extends Base {
 			$percentage = 100;
 		}
 
+		if ( 100 === $percentage ) {
+			// Now update the most recent billing address entries for customers as the primary address.
+			$sql = "
+				UPDATE {$this->get_db()->edd_customer_addresses} ca
+				SET ca.is_primary = 1
+				WHERE ca.id IN (
+					SELECT MAX(ca2.id)
+					FROM ( SELECT * FROM {$this->get_db()->edd_customer_addresses} ) ca2
+					WHERE ca2.type = 'billing'
+					GROUP BY ca2.customer_id
+				)
+			";
+
+			@$this->get_db()->query( $sql );
+		}
+
 		return $percentage;
 	}
 }
