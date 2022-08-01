@@ -1329,12 +1329,10 @@ class Data_Migrator {
 			return null;
 		}
 
-		// Get the price ID that's set to the cart item right now.
-		$price_id = isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
+		// Return the price ID that's set to the cart item right now, if not numeric return NULL.
+		return isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
 			? absint( $cart_item['item_number']['options']['price_id'] )
 			: null;
-
-		return $price_id;
 	}
 
 	/**
