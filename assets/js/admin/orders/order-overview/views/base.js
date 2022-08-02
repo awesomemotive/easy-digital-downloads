@@ -143,13 +143,10 @@ export const Base = wp.Backbone.View.extend( {
 			return;
 		}
 
-		// Attempt to find the caret position.
-		if ( ! target.selectionStart ) {
-			return;
-		}
-
 		try {
-			this.focusedElCaretPos = target.selectionStart;
+			if ( target.selectionStart ) {
+				this.focusedElCaretPos = target.selectionStart;
+			}
 		} catch ( error ) {
 			this.focusedElCaretPos = target.value.length;
 		}
