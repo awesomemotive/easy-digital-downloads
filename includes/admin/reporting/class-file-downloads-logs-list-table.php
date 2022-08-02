@@ -89,7 +89,9 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 			case 'ip' :
 				return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) )  . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] )  . '</a>';
 			case 'file':
-				return esc_html( $item['file'] );
+				return ! empty( $item['file'] )
+					? esc_html( $item['file'] )
+					: '&mdash;';
 			default:
 				return $item[ $column_name ];
 		}
