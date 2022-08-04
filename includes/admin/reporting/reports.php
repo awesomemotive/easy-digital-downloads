@@ -535,9 +535,10 @@ function edd_register_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $download_data, $dates, $currency ) {
-						$stats = new EDD\Stats( array(
+						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ? absint( $download_data['price_id'] ) : null;
+						$stats    = new EDD\Stats( array(
 							'product_id' => absint( $download_data['download_id'] ),
-							'price_id'   => absint( $download_data['price_id'] ),
+							'price_id'   => $price_id,
 							'currency'   => $currency,
 							'range'      => $dates['range'],
 							'output'     => 'formatted',
