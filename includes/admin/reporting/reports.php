@@ -407,7 +407,7 @@ function edd_register_downloads_report( $reports ) {
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
 			$prices   = $download->get_prices();
-			if ( $download_data['price_id'] ) {
+			if ( isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
 				if ( $price_name ) {
@@ -716,7 +716,7 @@ function edd_register_downloads_report( $reports ) {
 							);
 						}
 
-						$price_id = ! empty( $download_data['price_id'] )
+						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
 							? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
 							: '';
 
@@ -1516,7 +1516,7 @@ function edd_register_taxes_report( $reports ) {
 		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-			if ( $download_data['price_id'] ) {
+			if ( isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
 				if ( $price_name ) {
@@ -1658,7 +1658,7 @@ function edd_register_file_downloads_report( $reports ) {
 		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-			if ( $download_data['price_id'] ) {
+			if ( isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
 				if ( $price_name ) {
@@ -1833,7 +1833,7 @@ function edd_register_file_downloads_report( $reports ) {
 						if ( is_array( $download_data ) ) {
 							$product_id = $wpdb->prepare( 'AND product_id = %d', absint( $download_data['download_id'] ) );
 
-							$price_id = ! empty( $download_data['price_id'] )
+							$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
 								? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
 								: '';
 						}
