@@ -83,15 +83,12 @@ class Tax extends Base {
 
 			$adjustment_data = array(
 				'name'        => $tax_rate['country'],
-				'status'      => 'active',
-				'type'        => 'tax_rate',
 				'scope'       => $scope,
-				'amount_type' => 'percent',
 				'amount'      => floatval( $tax_rate['rate'] ),
 				'description' => $region,
 			);
 
-			edd_add_adjustment( $adjustment_data );
+			edd_add_tax_rate( $adjustment_data );
 		}
 
 		// Return the value so it is stored for backwards compatibility purposes.

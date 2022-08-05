@@ -13,37 +13,25 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 
-		$fallback_rate       = edd_add_adjustment(
+		$fallback_rate       = edd_add_tax_rate(
 			array(
-				'name'        => '',
-				'type'        => 'tax_rate',
-				'scope'       => 'global',
-				'amount_type' => 'percent',
-				'amount'      => floatval( 10 ),
-				'description' => '',
-				'status'      => 'active',
+				'scope'  => 'global',
+				'amount' => floatval( 10 ),
 			)
 		);
-		$country_rate        = edd_add_adjustment(
+		$country_rate        = edd_add_tax_rate(
 			array(
-				'name'        => 'US',
-				'type'        => 'tax_rate',
-				'scope'       => 'country',
-				'amount_type' => 'percent',
-				'amount'      => floatval( 15 ),
-				'description' => '',
-				'status'      => 'active',
+				'name'   => 'US',
+				'scope'  => 'country',
+				'amount' => floatval( 15 ),
 			)
 		);
-		$region_rate         = edd_add_adjustment(
+		$region_rate         = edd_add_tax_rate(
 			array(
 				'name'        => 'US',
-				'type'        => 'tax_rate',
 				'scope'       => 'region',
-				'amount_type' => 'percent',
 				'amount'      => floatval( 9.25 ),
 				'description' => 'TN',
-				'status'      => 'active',
 			)
 		);
 		self::$fallback_rate = edd_get_adjustment( $fallback_rate );

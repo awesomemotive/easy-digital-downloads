@@ -101,12 +101,9 @@ class Tests_Taxes extends EDD_UnitTestCase {
 			),
 		);
 		foreach ( $rates_to_create as $rate ) {
-			$rate['type']        = 'tax_rate';
-			$rate['status']      = 'active';
-			$rate['amount_type'] = 'percent';
-			$rate['amount']      = floatval( $rate['amount'] );
+			$rate['amount'] = floatval( $rate['amount'] );
 
-			self::$rate_ids[] = edd_add_adjustment( $rate );
+			self::$rate_ids[] = edd_add_tax_rate( $rate );
 		}
 	}
 
@@ -229,15 +226,11 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_tax_rate_country() {
-		$country_rate_id = edd_add_adjustment(
+		$country_rate_id = edd_add_tax_rate(
 			array(
-				'name'        => 'NL',
-				'type'        => 'tax_rate',
-				'scope'       => 'country',
-				'amount_type' => 'percent',
-				'amount'      => floatval( 21 ),
-				'description' => '',
-				'status'      => 'active',
+				'name'   => 'NL',
+				'scope'  => 'country',
+				'amount' => floatval( 21 ),
 			)
 		);
 
@@ -387,20 +380,17 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertEquals( 20, edd_get_payment_tax( self::$order->id ) );
 	}
 
-	public function test_update_option_updates_rate() {
+	public function test_update_option_gets_new_rate_amount() {
 
-		$tn_new_rate = edd_add_adjustment(
+		$tn_new_rate = edd_add_tax_rate(
 			array(
 				'scope'       => 'region',
 				'name'        => 'US',
 				'description' => 'TN',
 				'amount'      => 19.25,
-				'status'      => 'active',
-				'type'        => 'tax_rate',
-				'amount_type' => 'percent',
 			)
 		);
 
-		$this->assertTrue( in_array( $tn_new_rate, self::$rate_ids, true ) );
+		$this->assertEquals( .1925, edd_get_tax_rate( 'US', 'TN' ) );
 	}
 }

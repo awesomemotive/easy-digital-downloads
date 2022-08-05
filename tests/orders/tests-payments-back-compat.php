@@ -163,13 +163,10 @@ class Payment_Back_Compat_Tests extends \EDD_UnitTestCase {
 
 	public function test_tax_rate_converted_to_decimal_when_querying_post_meta() {
 		// Create an adjustment.
-		$adjustment_id = edd_add_adjustment( array(
-			'name'        => 'GB',
-			'status'      => 'active',
-			'type'        => 'tax_rate',
-			'scope'       => 'country',
-			'amount_type' => 'percent',
-			'amount'      => 20
+		$adjustment_id = edd_add_tax_rate( array(
+			'name'   => 'GB',
+			'type'   => 'tax_rate',
+			'amount' => 20
 		) );
 
 		// Create an order.
