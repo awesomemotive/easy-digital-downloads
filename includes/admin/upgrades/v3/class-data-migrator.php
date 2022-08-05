@@ -1410,19 +1410,16 @@ class Data_Migrator {
 		}
 
 		$adjustment_data = array(
-			'name'        => $data['country'],
-			'status'      => 'active',
-			'type'        => 'tax_rate',
-			'scope'       => $scope,
-			'amount_type' => 'percent',
-			'amount'      => floatval( $data['rate'] ),
+			'name'   => $data['country'],
+			'scope'  => $scope,
+			'amount' => floatval( $data['rate'] ),
 		);
 
 		if ( ! empty( $data['state'] ) ) {
 			$adjustment_data['description'] = sanitize_text_field( $data['state'] );
 		}
 
-		edd_add_adjustment( $adjustment_data );
+		edd_add_tax_rate( $adjustment_data );
 	}
 
 	/**

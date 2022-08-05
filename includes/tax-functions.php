@@ -498,3 +498,56 @@ function edd_get_tax_rate_by_location( $args ) {
 add_action( 'edd_before_checkout_cart', function () {
 	EDD()->cart->set_tax_rate( null );
 } );
+
+/**
+ * Adds a tax rate to the database.
+ * If an active tax rate is found, it's demoted to inactive and the new one is added.
+ *
+ * @param array $data The array of data to create the tax rate.
+ * @return int|false Returns the tax rate ID if one is added; otherwise false.
+ */
+function edd_add_tax_rate( $data = array() ) {
+	$data = wp_parse_args(
+		$data,
+		array(
+			'name'        => '',
+			'description' => '',
+			'status'      => 'active',
+		)
+	);
+
+	// The type and amount type for tax rates cannot be overridden.
+	$data['type']        = 'tax_rate';
+	$data['amount_type'] = 'percent';
+
+	if ( empty( $data['scope'] ) ) {
+		$scope = 'country';
+		if ( empty( $data['name'] ) && empty( $data['description'] ) ) {
+			$scope = 'global';
+		} elseif ( ! empty( $data['name'] ) && ! empty( $data['description'] ) ) {
+			$scope = 'region';
+		}
+		$data['scope'] = $scope;
+	}
+
+	// Check if the tax rate exists.
+	$data_to_check = array(
+		'type'        => 'tax_rate',
+		'fields'      => 'ids',
+		'status'      => 'active',
+		'name'        => $data['name'],
+		'description' => $data['description'],
+		'scope'       => $data['scope'],
+	);
+
+	// Query for potentially matching active rates.
+	$tax_rate_exists = edd_get_adjustments( $data_to_check );
+	$tax_rate_id     = edd_add_adjustment( $data );
+
+	// If the new tax rate was successfully added, set the old one to inactive.
+	if ( $tax_rate_id && ! empty( $tax_rate_exists ) ) {
+		edd_update_adjustment( $tax_rate_exists[0], array( 'status' => 'inactive' ) );
+	}
+
+	return $tax_rate_id;
+}

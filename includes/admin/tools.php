@@ -1123,15 +1123,13 @@ function edd_tools_import_export_process_import() {
 				} elseif ( empty( $rate['country'] && empty( $rate['state'] ) ) ) {
 					$scope = 'global';
 				}
-				edd_add_adjustment(
+				edd_add_tax_rate(
 					array(
-						'type'        => 'tax_rate',
 						'name'        => esc_attr( $rate['country'] ),
 						'status'      => ! empty( $rate['status'] ) ? esc_attr( $rate['status'] ) : 'active',
 						'description' => esc_attr( $rate['state'] ),
 						'amount'      => floatval( $rate['rate'] ),
 						'scope'       => esc_attr( $scope ),
-						'amount_type' => 'percent',
 					)
 				);
 			}
