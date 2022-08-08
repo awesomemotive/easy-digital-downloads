@@ -1366,3 +1366,22 @@ function edd_generate_order_payment_key( $key ) {
 	 */
 	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
 }
+
+/**
+ * Get a field from a order object.
+ *
+ * @since 3.0
+ *
+ * @param int    $order_id 	Order ID. Default `0`.
+ * @param string $field     Field to retrieve from object. Default empty.
+ *
+ * @return mixed Null if order does not exist. Value of Order if exists.
+ */
+function edd_get_order_field( $order_id = 0, $field = '' ) {
+	$order = edd_get_order( $order_id );
+
+	// Check that field exists
+	return isset( $order->{$field} )
+		? $order->{$field}
+		: null;
+}
