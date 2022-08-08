@@ -233,13 +233,15 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $currency ) {
-						$stats = new EDD\Stats();
-						return $stats->get_order_count( array(
-							'range'        => $dates['range'],
-							'relative'     => true,
-							'currency'     => $currency,
-							'revenue_type' => 'net',
-						) );
+						$stats = new EDD\Stats(
+							array(
+								'range'        => $dates['range'],
+								'relative'     => true,
+								'currency'     => $currency,
+								'revenue_type' => 'net',
+							)
+						);
+						return $stats->get_order_count();
 					},
 					'display_args'  => array(
 						'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
@@ -253,16 +255,18 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-						$stats = new EDD\Stats();
-						return $stats->get_order_earnings( array(
-							'range'         => $dates['range'],
-							'function'      => 'SUM',
-							'exclude_taxes' => $exclude_taxes,
-							'currency'      => $currency,
-							'relative'      => true,
-							'output'        => 'formatted',
-							'revenue_type'  => 'net',
-						) );
+						$stats = new EDD\Stats(
+							array(
+								'range'         => $dates['range'],
+								'function'      => 'SUM',
+								'exclude_taxes' => $exclude_taxes,
+								'currency'      => $currency,
+								'relative'      => true,
+								'output'        => 'formatted',
+								'revenue_type'  => 'net',
+							)
+						);
+						return $stats->get_order_earnings();
 					},
 					'display_args'  => array(
 						'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
@@ -277,14 +281,7 @@ function edd_register_overview_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
 						$stats = new EDD\Stats();
-						return $stats->get_order_earnings( array(
-							'function'      => 'AVG',
-							'output'        => 'formatted',
-							'relative'      => true,
-							'range'         => $dates['range'],
-							'exclude_taxes' => $exclude_taxes,
-							'currency'      => $currency,
-						) );
+						return $stats->get_order_earnings();
 					},
 					'display_args'  => array(
 						'comparison_label' => $label,
