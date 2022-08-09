@@ -44,15 +44,10 @@ class Tax_Rates extends Base {
 		if ( 1 === $this->step ) {
 			$default_tax_rate = edd_get_option( 'tax_rate', false );
 			if ( ! empty( $default_tax_rate ) ) {
-				edd_add_adjustment(
+				edd_add_tax_rate(
 					array(
-						'name'        => '',
-						'type'        => 'tax_rate',
-						'scope'       => 'global',
-						'amount_type' => 'percent',
-						'amount'      => floatval( $default_tax_rate ),
-						'description' => '',
-						'status'      => 'active',
+						'scope'  => 'global',
+						'amount' => floatval( $default_tax_rate ),
 					)
 				);
 			}

@@ -1509,9 +1509,8 @@ function edd_settings_sanitize_taxes( $input ) {
 		} else {
 			$adjustment_data['status'] = 'active';
 
-			edd_add_adjustment( $adjustment_data );
+			edd_add_tax_rate( $adjustment_data );
 		}
-
 	}
 
 	return $input;

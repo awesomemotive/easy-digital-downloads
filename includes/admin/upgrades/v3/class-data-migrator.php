@@ -661,7 +661,7 @@ class Data_Migrator {
 			// Fetch the actual tax rate object for the order region & country.
 			$tax_rate_object = edd_get_tax_rate_by_location( array(
 				'country' => $order_address_data['country'],
-				'region'  => ! empty( $order_address_data['region'] ) ? $order_address_data['region'] : ''
+				'region'  => $order_address_data['region'],
 			) );
 
 			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == $tax_rate ) {
@@ -1384,22 +1384,18 @@ class Data_Migrator {
 			return;
 		}
 
-		$scope = isset( $data['global'] )
+		$scope = ! empty( $data['global'] )
 			? 'country'
 			: 'region';
-
-		$region = isset( $data['state'] )
-			? sanitize_text_field( $data['state'] )
-			: '';
 
 		// If the scope is 'country', look for other active rates that are country wide and set them as 'inactive'.
 		if ( 'country' === $scope ) {
 			$tax_rates = edd_get_adjustments(
 				array(
-					'type'        => 'tax_rate',
-					'status'      => 'active',
-					'scope'       => 'country',
-					'name'        => $data['country'],
+					'type'   => 'tax_rate',
+					'status' => 'active',
+					'scope'  => 'country',
+					'name'   => $data['country'],
 				)
 			);
 
@@ -1414,16 +1410,16 @@ class Data_Migrator {
 		}
 
 		$adjustment_data = array(
-			'name'        => $data['country'],
-			'status'      => 'active',
-			'type'        => 'tax_rate',
-			'scope'       => $scope,
-			'amount_type' => 'percent',
-			'amount'      => floatval( $data['rate'] ),
-			'description' => $region,
+			'name'   => $data['country'],
+			'scope'  => $scope,
+			'amount' => floatval( $data['rate'] ),
 		);
 
-		edd_add_adjustment( $adjustment_data );
+		if ( ! empty( $data['state'] ) ) {
+			$adjustment_data['description'] = sanitize_text_field( $data['state'] );
+		}
+
+		edd_add_tax_rate( $adjustment_data );
 	}
 
 	/**
