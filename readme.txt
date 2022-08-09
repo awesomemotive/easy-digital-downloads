@@ -1,13 +1,13 @@
 === Easy Digital Downloads - Simple eCommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee, zkawesome
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.0.1
+Stable Tag: 3.0.2.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -46,7 +46,7 @@ Here are some of the features supported out-of-the-box:
 
 = Localized for your language =
 
-Easy Digital Downloads has been translated into more than two dozen languages and new translations are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
+Easy Digital Downloads has been translated into more than two dozen languages and new translations are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](https://easydigitaldownloads.com/docs/easy-digital-downloads-in-your-own-language/?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
 
 = Support for many payment gateways, including Stripe and PayPal =
 
@@ -98,7 +98,7 @@ These are just a few of the extensions we offer to help you optimize your digita
 
 = Built with developers in mind =
 
-Extensible, adaptable, and open source -- Easy Digital Downloads is created with designers and developers in mind. Consult our detailed [developer documentation](http://docs.easydigitaldownloads.com/collection/174-developer-docs?utm_source=wporg&utm_medium=readme&utm_content=documentation&utm_campaign=dev-docs) to learn how you can extend and customize your Easy Digital Downloads powered eCommerce store.
+Extensible, adaptable, and open source -- Easy Digital Downloads is created with designers and developers in mind. Consult our detailed [developer documentation](https://easydigitaldownloads.com/categories/docs/developer-docs/?utm_source=wporg&utm_medium=readme&utm_content=documentation&utm_campaign=dev-docs) to learn how you can extend and customize your Easy Digital Downloads powered eCommerce store.
 
 The Easy Digital Downloads API makes it possible for developers to make customizations such as:
 
@@ -117,7 +117,7 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 
 = Get help =
 
-Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://docs.easydigitaldownloads.com/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you're looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
+Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://easydigitaldownloads.com/docs/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you're looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
 
 > EDD has been a long standing, rock-solid e-commerce solution for WordPress. The team lives and breathes WordPress, understands the platform, and is embedded in the community.
 
@@ -157,13 +157,13 @@ If Easy Digital Downloads doesn't quite fit your needs, take a look at some of o
 2. Go to Downloads > Settings and configure the options
 3. Create Downloadable products from the Downloads page
 4. Insert purchase buttons for any download via the "Insert Download" button next the Upload Media buttons
-5. For detailed setup instructions, vist the official [Documentation](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
+5. For detailed setup instructions, vist the official [Documentation](https://easydigitaldownloads.com/docs/quickstart-guide/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
 
 == Frequently Asked Questions ==
 
 = Where can I find complete documentation? =
 
-Full searchable docs for Easy Digital Downloads and all our extensions can be found at [http://docs.easydigitaldownloads.com/](http://docs.easydigitaldownloads.com/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+Full searchable docs for Easy Digital Downloads and all our extensions can be found at [https://easydigitaldownloads.com/docs](https://easydigitaldownloads.com/docs/?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
 
 = Where can I ask for help with my digital e-Commerce store? =
 
@@ -175,7 +175,7 @@ Any file type can be sold using Easy Digital Downloads. You can sell .PDF, .DOC,
 
 = Is an SSL certificate required to sell digital products? =
 
-Easy Digital Downloads can function without an SSL certificate just fine, making it easy to set up in a testing or development environment.  We still strongly recommend you have an SSL certificate for your live store, both for security and for the peace of mind of your customers. [Documentation here](http://docs.easydigitaldownloads.com/article/994-how-to-set-up-ssl?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
+Easy Digital Downloads can function without an SSL certificate just fine, making it easy to set up in a testing or development environment.  We still strongly recommend you have an SSL certificate for your live store, both for security and for the peace of mind of your customers. [Documentation here](https://easydigitaldownloads.com/docs/do-i-need-an-ssl-certificate/?994-how-to-set-up-ssl?utm_source=docs&utm_medium=faq_tab&utm_content=documentation&utm_campaign=readme)
 
 = What themes work with Easy Digital Downloads? =
 
@@ -183,7 +183,7 @@ Any properly written theme will work with Easy Digital Downloads.
 
 That said, we have a nice collection of free themes that come with support for Easy Digital Downloads, requiring much less design work on the part of the store owner.
 
-[See the themes here.](https://easydigitaldownloads.com/themes/?utm_source=docs&utm_medium=faq_tab&utm_term=free_themes&utm_content=faqs&utm_campaign=readme)
+[See the themes here.](https://easydigitaldownloads.com/docs/importing-exporting-products/?utm_source=docs&utm_medium=faq_tab&utm_term=free_themes&utm_content=faqs&utm_campaign=readme)
 
 = Is there a sample import file I can use to setup a demo store? =
 
@@ -191,11 +191,11 @@ Yes! Simply go to Tools > Import and install the WordPress Importer, then naviga
 
 = Can I import all the products from my existing store into EDD? =
 
-Yes! We do have a [basic import solution](http://docs.easydigitaldownloads.com/article/216-can-i-import-and-export-products?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
+Yes! We do have a [basic import solution](https://easydigitaldownloads.com/docs/importing-exporting-products/?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
 
 = My payments are being marked as "pending" =
 
-There are several reasons this happens. Please follow the suggestions [here](http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
+There are several reasons this happens. Please follow the suggestions [here](https://easydigitaldownloads.com/docs/paypal-payments-not-marked-as-complete/?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
 
 = Getting a 404 error? =
 
@@ -209,7 +209,7 @@ If you want to just show a list of the files the user has purchased, use the [do
 
 = How do I display my digital products? =
 
-There are several different ways to visually display your product catalogue, each [documented here](http://docs.easydigitaldownloads.com/category/870-product-display?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
+There are several different ways to visually display your product catalogue, each [documented here](https://easydigitaldownloads.com/docs/downloads-shortcode/?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
 
 = Can I set up an affiliate program? =
 
@@ -224,7 +224,7 @@ Yes, with the Invoices extension, you can provide beautiful and downloadable inv
 
 = Are recurring payments (subscriptions) supported? =
 
-Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). [Full documentation here](http://docs.easydigitaldownloads.com/article/1142-recurring-payments---overview?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). The Recurring Payments extension allows you to create subscriptions so that customers continue paying you over time. This is great for selling memberships, courses, all access passes, software licenses, and other products which require an ongoing payment.
+Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). [Full documentation here](https://easydigitaldownloads.com/docs/recurring-payments-setup-overview/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). The Recurring Payments extension allows you to create subscriptions so that customers continue paying you over time. This is great for selling memberships, courses, all access passes, software licenses, and other products which require an ongoing payment.
 
 == Screenshots ==
 
@@ -238,6 +238,22 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.0.2.1, July 28, 2022 =
+* Fix: Upgrade warning notices were showing incorrectly for some sites.
+
+= 3.0.2, July 26, 2022 =
+* Fix: Customer verification URL was not working in the admin.
+* Fix: When cancelling an order once at PayPal, the checkout page could produce a Javascript error.
+* Fix: Swedish postal codes would not pass validation.
+* Fix: Non-Shop Manager roles could no longer leave notes on orders.
+* Fix: Searching orders was not working in the admin.
+* Fix: Template: Download History shortcode was not providing access to bundled products.
+* Fix: 3.0 Migration: Stores with no orders, but other data like discounts, did not prompt the user to run the migration.
+* Fix: EDD admin menu bar styles were not always loading correctly.
+* Fix: An admin notice is now shown if EDD detects that it was unable to create the proper database tables.
+* Fix: When showing taxes on product pricing, the % character was showing twice.
+* Fix: Improved error handling around importer tools.
 
 = 3.0.1, July 15, 2022 =
 * Fix: Setting the EDD_USE_PHP_SESSIONS constant to 'false' could result in empty carts.
@@ -473,3 +489,6 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: When no customer exists for a query, the total_spent returns an undefined index notice.
 * Dev: When checking if a file download limit is reached, the price_id of the purchased download is now passed to the edd_is_file_at_download_limit filter.
 * Dev: The edd_download_price_table_head and edd_download_price_table_row actions have been formally deprecated.
+
+== Upgrade Notice ==
+IMPORTANT: Easy Digital Downloads 3.0 is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.

@@ -228,6 +228,15 @@ class EDD_Discount_Codes_Table extends List_Table {
 				'edd-action' => 'delete_discount',
 				'discount'   => absint( $discount->id ),
 			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		} else {
+			$row_actions['orders'] = '<a href="' . esc_url(
+				edd_get_admin_url(
+					array(
+						'page'        => 'edd-payment-history',
+						'discount_id' => absint( $discount->id ),
+					)
+				)
+			) . '">' . __( 'View Orders', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// Filter all discount row actions
