@@ -252,7 +252,7 @@ function edd_run_install( $site_id = false ) {
 function edd_set_all_upgrades_complete() {
 
 	// Bail if not a fresh installation
-	if ( ! edd_get_db_version() ) {
+	if ( edd_get_db_version() ) {
 		return;
 	}
 
@@ -269,6 +269,8 @@ function edd_set_all_upgrades_complete() {
 		'remove_refunded_sale_logs',
 		'update_file_download_log_data',
 	);
+	$edd_30_upgrades  = edd_get_v30_upgrades();
+	$upgrade_routines = array_merge( $upgrade_routines, array_keys( $edd_30_upgrades ) );
 
 	// Loop through upgrade routines and mark them as complete
 	foreach ( $upgrade_routines as $upgrade ) {

@@ -1848,6 +1848,111 @@ function _edd_get_final_payment_id() {
 }
 
 /**
+ * Evaluates whether the EDD 3.0 migration should be run,
+ * based on _any_ data existing which will need to be migrated.
+ *
+ * This should only be run after `edd_v30_is_migration_complete` has returned false.
+ *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0.2
+ * @return bool
+ */
+function _edd_needs_v3_migration() {
+	// Return true if a final payment ID was recorded.
+	if ( _edd_get_final_payment_id() ) {
+		return true;
+	}
+
+	// Return true if any tax rates were saved.
+	$tax_rates = get_option( 'edd_tax_rates', array() );
+	if ( ! empty( $tax_rates ) ) {
+		return true;
+	}
+
+	// Return true if a fallback tax rate was saved.
+	if ( edd_get_option( 'tax_rate', false ) ) {
+		return true;
+	}
+
+	global $wpdb;
+
+	// Return true if any discounts were saved.
+	$discounts = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->posts}
+			 WHERE post_type = %s
+			 LIMIT 1",
+			esc_sql( 'edd_discount' )
+		)
+	);
+	if ( ! empty( $discounts ) ) {
+		return true;
+	}
+
+	// Return true if there are any customers.
+	$customers = $wpdb->get_results(
+		"SELECT *
+		FROM {$wpdb->edd_customers}
+		LIMIT 1"
+	);
+	if ( ! empty( $customers ) ) {
+		return true;
+	}
+
+	// Return true if any customer email addresses were saved.
+	$customer_emails = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->edd_customermeta}
+			 WHERE meta_key = %s
+			 LIMIT 1",
+			esc_sql( 'additional_email' )
+		)
+	);
+	if ( ! empty( $customer_emails ) ) {
+		return true;
+	}
+
+	// Return true if any customer addresses are in the user meta table.
+	$customer_addresses = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->usermeta}
+			 WHERE meta_key = %s
+			 ORDER BY umeta_id ASC
+			 LIMIT 1",
+			esc_sql( '_edd_user_address' )
+		)
+	);
+	if ( ! empty( $customer_addresses ) ) {
+		return true;
+	}
+
+	// Return true if there are any EDD logs (not sales) saved.
+	$logs = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT p.*, t.slug
+			 FROM {$wpdb->posts} AS p
+			 LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+			 LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+			 LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+			 WHERE p.post_type = %s AND t.slug != %s
+			 GROUP BY p.ID
+			 LIMIT 1",
+			esc_sql( 'edd_log' ),
+			esc_sql( 'sale' )
+		)
+	);
+	if ( ! empty( $logs ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Maybe adds a migration in progress notice to the order history.
  *
  * @todo remove in 3.1
