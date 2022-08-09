@@ -1267,15 +1267,10 @@ class EDD_CLI extends WP_CLI_Command {
 		$default_tax_rate = edd_get_option( 'tax_rate', false );
 		if ( ! empty( $default_tax_rate ) ) {
 			WP_CLI::line( __( 'Migrating default tax rate', 'easy-digital-downloads' ) );
-			edd_add_adjustment(
+			edd_add_tax_rate(
 				array(
-					'name'        => '',
-					'type'        => 'tax_rate',
-					'scope'       => 'global',
-					'amount_type' => 'percent',
-					'amount'      => floatval( $default_tax_rate ),
-					'description' => '',
-					'status'      => 'active',
+					'scope'  => 'global',
+					'amount' => floatval( $default_tax_rate ),
 				)
 			);
 		}
