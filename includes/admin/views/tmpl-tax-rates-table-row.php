@@ -17,12 +17,11 @@
 
 <td class="edd-tax-rates-table-country" data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">
 	<# if ( data.country ) { #>
-	{{ data.country }}
-	<input type="hidden" name="tax_rates[{{ data.id }}][country]" value="{{ data.country }}" />
+		{{ data.country }}
 	<# } else { #>
 		*
-		<input type="hidden" name="tax_rates[{{ data.id }}][country]" value="{{ data.country }}" />
 	<# } #>
+	<input type="hidden" name="tax_rates[{{ data.id }}][country]" value="{{ data.country }}" />
 </td>
 
 <td data-colname="<?php esc_attr_e( 'Region', 'easy-digital-downloads' ); ?>">
