@@ -35,7 +35,7 @@ class Test_Tax_Rates_Compat extends EDD_UnitTestCase {
 		edd_update_option( 'enable_taxes', true );
 	}
 
-	public static function wpTearDownAfter_class() {
+	public static function wpTearDownAfterClass() {
 		delete_option( 'edd_tax_rates' );
 		edd_update_option( 'enable_taxes', false );
 	}
