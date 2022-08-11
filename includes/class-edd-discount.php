@@ -1445,7 +1445,7 @@ class EDD_Discount extends Adjustment {
 		$cart_ids = array_values( $cart_ids );
 
 		// Ensure we have requirements before proceeding
-		if ( ! $is_met && ! empty( $product_reqs ) ) {
+		if ( ! empty( $product_reqs ) ) {
 			$matches = array_intersect( $product_reqs, $cart_ids );
 
 			switch ( $this->get_product_condition() ) {
@@ -1463,10 +1463,10 @@ class EDD_Discount extends Adjustment {
 
 		if ( ! empty( $excluded_ps ) ) {
 			$is_met = false === (bool) array_intersect( $cart_ids, $excluded_ps );
+		}
 
-			if ( ! $is_met && $set_error ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
-			}
+		if ( ! $is_met && $set_error ) {
+			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
 		}
 
 		/**
