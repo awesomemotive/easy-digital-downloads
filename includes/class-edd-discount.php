@@ -1455,6 +1455,10 @@ class EDD_Discount extends Adjustment {
 				default:
 					$is_met = 0 < count( $matches );
 			}
+
+			if ( ! $is_met && $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+			}
 		}
 
 		$excluded_ps = array_map( 'absint', $excluded_ps );
@@ -1462,11 +1466,13 @@ class EDD_Discount extends Adjustment {
 		$excluded_ps = array_filter( array_values( $excluded_ps ) );
 
 		if ( ! empty( $excluded_ps ) ) {
-			$is_met = false === (bool) array_intersect( $cart_ids, $excluded_ps );
-		}
+			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) === count( $cart_ids ) ) {
+				$is_met = false;
 
-		if ( ! $is_met && $set_error ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+				if ( $set_error ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+				}
+			}
 		}
 
 		/**
