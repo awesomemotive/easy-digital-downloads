@@ -327,7 +327,7 @@ class EDD_Notices {
 	 * Adds a notice about the deprecated Default Rate for Taxes.
 	 *
 	 * @since 3.0
-	 * @since 3.0.2 - We've found a way to add defualt tax rates. Leaving the method in case anyone (for some reason) is calling it.
+	 * @since 3.0.2 - We've found a way to add default tax rates. Leaving the method in case anyone (for some reason) is calling it.
 	 */
 	private function add_tax_rate_notice() {
 
