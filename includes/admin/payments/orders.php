@@ -711,6 +711,15 @@ function edd_order_details_overview( $order ) {
 	);
 
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
+		$default_rate = edd_get_tax_rate_by_location(
+			array(
+				'country' => '',
+				'region'  => '',
+			)
+		);
+		if ( $default_rate ) {
+			$location['rate'] = floatval( $default_rate->amount );
+		}
 		$has_tax = $location;
 	} elseif ( $tax_rate ) {
 		$has_tax         = $location;

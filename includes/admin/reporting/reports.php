@@ -280,7 +280,16 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-						$stats = new EDD\Stats();
+						$stats = new EDD\Stats(
+							array(
+								'function'      => 'AVG',
+								'output'        => 'formatted',
+								'relative'      => true,
+								'range'         => $dates['range'],
+								'exclude_taxes' => $exclude_taxes,
+								'currency'      => $currency,
+							)
+						);
 						return $stats->get_order_earnings();
 					},
 					'display_args'  => array(
