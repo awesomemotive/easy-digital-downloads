@@ -7,7 +7,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.0.2.1
+Stable Tag: 3.0.3
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -238,6 +238,19 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.0.3, August 16, 2022 =
+* New: Added support for Global Tax rates as a fallback with the new Tax Rates UI.
+* Fix: The old 'fallback tax rate' was not imported as a new tax rate.
+* Fix: Improved discount code validation with product restrictions and requirements.
+* Fix: Viewing a custom report with a date range over 2 days could throw an undefined variable notice.
+* Fix: Single priced downloads were showing incorrect stats in reports.
+* Fix: Adding a download to a new order would not let you manually set prices in Safari.
+* Fix: When an order with a discount code is deleted, the discount code's usage count is decreased.
+* Fix: The total refund amount tile was incorrectly calculating the relative percentage.
+* Fix: The customer table upgrade assumed the table prefix hadn't been changed after installation of EDD 2.x.
+* Fix: The 3.0 migration could incorrectly identify a price ID as invalid and set it to the default price ID.
+* Fix: The file download log could produce an notice if a file had been deleted from a product.
 
 = 3.0.2.1, July 28, 2022 =
 * Fix: Upgrade warning notices were showing incorrectly for some sites.
