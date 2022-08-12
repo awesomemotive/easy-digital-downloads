@@ -1169,7 +1169,7 @@ function edd_get_registered_settings() {
 						'type'          => 'tax_rate',
 						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
 						'desc'          => (
-							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured properly below, then click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
+							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. We have migrated any fallback tax rates for you to verify below. Click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
 						),
 					),
 				),
@@ -1478,8 +1478,16 @@ function edd_settings_sanitize_taxes( $input ) {
 			? sanitize_text_field( $tax_rate['state'] )
 			: '';
 
+		$name = '*' === $tax_rate['country']
+			? ''
+			: sanitize_text_field( $tax_rate['country'] );
+
+		if ( empty( $name ) ) {
+			$scope  = 'global';
+		}
+
 		$adjustment_data = array(
-			'name'        => sanitize_text_field( $tax_rate['country'] ),
+			'name'        => $name,
 			'type'        => 'tax_rate',
 			'scope'       => $scope,
 			'amount_type' => 'percent',
@@ -1487,7 +1495,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
-		if ( empty( $adjustment_data['name'] ) || $adjustment_data['amount'] <= 0 ) {
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] <= 0 ) {
 			continue;
 		}
 
@@ -1501,9 +1509,8 @@ function edd_settings_sanitize_taxes( $input ) {
 		} else {
 			$adjustment_data['status'] = 'active';
 
-			edd_add_adjustment( $adjustment_data );
+			edd_add_tax_rate( $adjustment_data );
 		}
-
 	}
 
 	return $input;
