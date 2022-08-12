@@ -93,8 +93,17 @@ const TableAdd = wp.Backbone.View.extend( {
 	 */
 	setCountry: function( event ) {
 		let country = event.target.options[ event.target.selectedIndex ].value;
+		let regionGlobalCheckbox = document.getElementById( "tax_rate_region_global" );
 		if ( 'all' === country ) {
 			country = '*';
+			regionGlobalCheckbox.checked  = true;
+			this.model.set( 'region', '' );
+			this.model.set( 'global', true );
+			regionGlobalCheckbox.readOnly = true;
+			regionGlobalCheckbox.disabled = true;
+		} else {
+			regionGlobalCheckbox.disabled = false;
+			regionGlobalCheckbox.readOnly = false;
 		}
 
 		this.model.set( 'country', country );
@@ -123,8 +132,11 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setGlobal: function( event ) {
-		this.model.set( 'global', event.target.checked );
-		this.model.set( 'region', '' );
+		let isChecked = event.target.checked;
+		this.model.set( 'global', isChecked );
+		if ( true === isChecked ) {
+			this.model.set( 'region', '' );
+		}
 	},
 
 	/**

@@ -26,7 +26,7 @@
 		<label for="tax_rate_region" class="screen-reader-text"><?php esc_html_e( 'Region', 'easy-digital-downloads' ); ?></label>
 
 		<label>
-			<input type="checkbox" checked /><?php esc_html_e( 'Apply to whole country', 'easy-digital-downloads' ); ?>
+			<input type="checkbox" id="tax_rate_region_global" checked disabled /><?php esc_html_e( 'Apply to whole country', 'easy-digital-downloads' ); ?>
 		</label>
 
 		<div id="tax_rate_region_wrapper"></div>
