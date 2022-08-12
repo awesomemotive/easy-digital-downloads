@@ -4,6 +4,7 @@
  * Migration tests.
  */
 class Migration_Tests extends \EDD_UnitTestCase {
+
 	public function test_edd_needs_v3_migration_no_data_should_return_false() {
 		$this->assertFalse( _edd_needs_v3_migration() );
 	}

@@ -132,7 +132,7 @@ final class Customers extends Table {
 	 * @return bool
 	 */
 	private function needs_initial_upgrade() {
-		return ! $this->column_exists( 'status' ) && ! $this->column_exists( 'uuid' );
+		return $this->exists() && ! $this->column_exists( 'status' ) && ! $this->column_exists( 'uuid' );
 	}
 
 	/**
