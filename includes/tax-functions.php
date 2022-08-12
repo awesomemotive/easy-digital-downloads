@@ -503,6 +503,7 @@ add_action( 'edd_before_checkout_cart', function () {
  * Adds a tax rate to the database.
  * If an active tax rate is found, it's demoted to inactive and the new one is added.
  *
+ * @since 3.0.3
  * @param array $data The array of data to create the tax rate.
  * @return int|false Returns the tax rate ID if one is added; otherwise false.
  */
