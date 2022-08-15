@@ -1321,6 +1321,10 @@ class EDD_CLI extends WP_CLI_Command {
 		$force = isset( $assoc_args['force'] )
 			? true
 			: false;
+		
+		$destroy = isset( $assoc_args['destroy'] )
+			? true
+			: false;
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_orders' );
 
@@ -1341,11 +1345,16 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
 			$orders   = new \EDD\Database\Queries\Order();
 			foreach ( $results as $result ) {
-
-				// Check if order has already been migrated.
-				$migrated = $orders->get_item( $result->ID );
-				if ( $migrated ) {
-					continue;
+				
+				if ( $destroy ) {
+					// Delete the existing order to re-run the migration fresh.
+					edd_destroy_order( $result->ID );
+				} else {
+					// Check if order has already been migrated.
+					$migrated = $orders->get_item( $result->ID );
+					if ( $migrated ) {
+						continue;
+					}
 				}
 
 				\EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
