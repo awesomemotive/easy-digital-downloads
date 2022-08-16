@@ -24,13 +24,14 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function edd_print_errors() {
-	$errors = edd_get_errors();
-	if ( $errors ) {
+	$errors    = edd_get_errors();
+	$successes = EDD()->session->get( 'edd_success_errors' );
+	if ( $errors || $successes ) {
 
 		echo edd_build_errors_html( $errors );
+		echo edd_build_successes_html( $successes );
 
 		edd_clear_errors();
-
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_print_errors' );
@@ -63,6 +64,28 @@ function edd_build_errors_html( $errors ) {
 	}
 
 	return $error_html;
+}
+
+/**
+ * Builds the HTML output for the sucess messages.
+ *
+ * @since 3.1
+ * @param array $successes
+ * @return string
+ */
+function edd_build_successes_html( $successes ) {
+	if ( empty( $successes ) || ! is_array( $successes ) ) {
+		return '';
+	}
+
+	$html  = '<div class="edd_success edd-alert edd-alert-success">';
+	$html .= '<p><strong>';
+	$html .= esc_html__( 'Success', 'easy-digital-downloads' );
+	$html .= '</strong>: ';
+	$html .= esc_html__( 'You did it! Check your email for instructions on resetting your password.', 'easy-digital-downloads' );
+	$html .= '</p></div>';
+
+	return $html;
 }
 
 /**
@@ -102,6 +125,25 @@ function edd_set_error( $error_id, $error_message ) {
 }
 
 /**
+ * Stores an array of success messages in a session variable.
+ *
+ * @since 3.1
+ * @uses EDD_Session::set()
+ * @param string $error_id
+ * @param string $error_message
+ * @return void
+ */
+function edd_set_success( $error_id, $error_message ) {
+	$successes = EDD()->session->get( 'edd_success_errors' );
+	if ( ! $successes ) {
+		$successes = array();
+	}
+	$successes[ $error_id ] = $error_message;
+
+	EDD()->session->set( 'edd_success_errors', $successes );
+}
+
+/**
  * Clears all stored errors.
  *
  * @since 1.0
@@ -110,6 +152,7 @@ function edd_set_error( $error_id, $error_message ) {
  */
 function edd_clear_errors() {
 	EDD()->session->set( 'edd_errors', null );
+	EDD()->session->set( 'edd_success_errors', null );
 }
 
 /**
