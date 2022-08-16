@@ -103,3 +103,62 @@ function edd_lost_password_block( $data ) {
 	}
 	edd_redirect( remove_query_arg( 'action', wp_get_referer() ) );
 }
+
+add_filter( 'retrieve_password_message', 'edd_retrieve_password_message', 10, 4 );
+/**
+ * Filters the email message sent when a password reset has been requested.
+ *
+ * @since 3.1
+ * @param string  $message    The email message.
+ * @param string  $key        The activation key.
+ * @param string  $user_login The username for the user.
+ * @param WP_User $user_data  WP_User object.
+ * @return string
+ */
+function edd_retrieve_password_message( $message, $key, $user_login, $user_data ) {
+	if ( empty( $_POST['edd_action'] ) || 'user_lost_password' !== $_POST['edd_action'] ) {
+		return $message;
+	}
+	if ( empty( $_POST['edd_lost-password_nonce'] ) || ! wp_verify_nonce( $_POST['edd_lost-password_nonce'], 'edd-lost-password-nonce' ) ) {
+		return $message;
+	}
+	if ( is_multisite() ) {
+		$site_name = get_network()->site_name;
+	} else {
+		/*
+		 * The blogname option is escaped with esc_html on the way into the database
+		 * in sanitize_option. We want to reverse this for the plain text arena of emails.
+		 */
+		$site_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+	}
+	$message = __( 'Someone has requested a password reset for the following account:', 'easy-digital-downloads' ) . "\r\n\r\n";
+	/* translators: %s: Site name. */
+	$message .= sprintf( __( 'Site Name: %s', 'easy-digital-downloads' ), $site_name ) . "\r\n\r\n";
+	/* translators: %s: User login. */
+	$message .= sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_login ) . "\r\n\r\n";
+	$message .= __( 'If this was a mistake, ignore this email and nothing will happen.', 'easy-digital-downloads' ) . "\r\n\r\n";
+	$message .= __( 'To reset your password, visit the following address:', 'easy-digital-downloads' ) . "\r\n\r\n";
+	$message .= add_query_arg(
+		array(
+			'action'  => 'resetpassword',
+			'key'     => $key,
+			'login'   => rawurlencode( $user_login ),
+			'wp_lang' => get_user_locale( $user_data ),
+		),
+		$_POST['edd_redirect']
+	);
+	$message .= "\r\n\r\n";
+
+	if ( ! is_user_logged_in() ) {
+		$requester_ip = $_SERVER['REMOTE_ADDR'];
+		if ( $requester_ip ) {
+			$message .= sprintf(
+				/* translators: %s: IP address of password reset requester. */
+				__( 'This password reset request originated from the IP address %s.', 'easy-digital-downloads' ),
+				$requester_ip
+			) . "\r\n";
+		}
+	}
+
+	return $message;
+}
