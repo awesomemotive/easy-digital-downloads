@@ -93,6 +93,14 @@ final class Easy_Digital_Downloads {
 	public $email_tags;
 
 	/**
+	 * EDD Email Summary Cron Object.
+	 *
+	 * @var object|EDD_Email_Summary_Cron
+	 * @since 3.1
+	 */
+	public $email_summary_cron;
+
+	/**
 	 * EDD Cart Object
 	 *
 	 * @var object|EDD_Cart
@@ -193,21 +201,22 @@ final class Easy_Digital_Downloads {
 		self::$instance->setup_compat();
 
 		// APIs
-		self::$instance->roles             = new EDD_Roles();
-		self::$instance->fees              = new EDD_Fees();
-		self::$instance->api               = new EDD_API();
-		self::$instance->debug_log         = new EDD_Logging();
-		self::$instance->utils             = new EDD\Utilities();
-		self::$instance->session           = new EDD_Session();
-		self::$instance->html              = new EDD_HTML_Elements();
-		self::$instance->emails            = new EDD_Emails();
-		self::$instance->email_tags        = new EDD_Email_Template_Tags();
-		self::$instance->payment_stats     = new EDD_Payment_Stats();
-		self::$instance->cart              = new EDD_Cart();
-		self::$instance->tracking          = new EDD_Tracking();
-		self::$instance->structured_data   = new EDD\Structured_Data();
-		self::$instance->notifications     = new \EDD\Database\NotificationsDB();
-		self::$instance->extensionRegistry = new \EDD\Extensions\ExtensionRegistry();
+		self::$instance->roles              = new EDD_Roles();
+		self::$instance->fees               = new EDD_Fees();
+		self::$instance->api                = new EDD_API();
+		self::$instance->debug_log          = new EDD_Logging();
+		self::$instance->utils              = new EDD\Utilities();
+		self::$instance->session            = new EDD_Session();
+		self::$instance->html               = new EDD_HTML_Elements();
+		self::$instance->emails             = new EDD_Emails();
+		self::$instance->email_tags         = new EDD_Email_Template_Tags();
+		self::$instance->email_summary_cron = new EDD_Email_Summary_Cron();
+		self::$instance->payment_stats      = new EDD_Payment_Stats();
+		self::$instance->cart               = new EDD_Cart();
+		self::$instance->tracking           = new EDD_Tracking();
+		self::$instance->structured_data    = new EDD\Structured_Data();
+		self::$instance->notifications      = new \EDD\Database\NotificationsDB();
+		self::$instance->extensionRegistry  = new \EDD\Extensions\ExtensionRegistry();
 
 		// Admin APIs
 		if ( is_admin() ) {
@@ -707,6 +716,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/tags-inserter.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary-cron.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary.php';
 
 		// Structured Data
 		require_once EDD_PLUGIN_DIR . 'includes/class-structured-data.php';

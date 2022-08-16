@@ -809,6 +809,41 @@ function edd_get_registered_settings() {
 						'type' => 'checkbox',
 					),
 				),
+				'email_summaries' => array(
+					'disable_email_summary' => array(
+						'id'    => 'disable_email_summary',
+						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
+						'desc' => '<a href="https://easydigitaldownloads.com/">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
+						'check'  => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
+						'type'  => 'checkbox_description',
+					),
+					'email_summary_frequency' => array(
+						'id'      => 'email_summary_frequency',
+						'name'    => __( 'Email Frequency', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'weekly',
+						'options' => array(
+							'weekly'  => __( 'Weekly', 'easy-digital-downloads' ),
+							'monthly' => __( 'Monthly', 'easy-digital-downloads' ),
+						),
+					),
+					'email_summary_recipient' => array(
+						'id'      => 'email_summary_recipient',
+						'name'    => __( 'Email Recipient', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'admin',
+						'options' => array(
+							'admin'  => __( 'Store admin', 'easy-digital-downloads' ),
+							'custom' => __( 'Custom', 'easy-digital-downloads' ),
+						),
+					),
+					'email_summary_custom_recipients' => array(
+						'id'   => 'email_summary_custom_recipients',
+						'name' => __( 'Custom recipients', 'easy-digital-downloads' ),
+						'desc' => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
+						'type' => 'textarea',
+					),
+				),
 			) ),
 
 			// Marketing Settings
@@ -1682,7 +1717,8 @@ function edd_get_registered_settings_sections() {
 			'emails'     => apply_filters( 'edd_settings_sections_emails', array(
 				'main'               => __( 'General',            'easy-digital-downloads' ),
 				'purchase_receipts'  => __( 'Purchase Receipts',  'easy-digital-downloads' ),
-				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' )
+				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' ),
+				'email_summaries'    => __( 'Summaries', 'easy-digital-downloads' ),
 			) ),
 			'marketing'  => apply_filters( 'edd_settings_sections_marketing', array(
 				'main' => __( 'General', 'easy-digital-downloads' ),
