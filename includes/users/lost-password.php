@@ -79,3 +79,27 @@ function edd_set_lostpassword_session() {
 		EDD()->session->set( 'edd_forgot_password_redirect', $url );
 	}
 }
+
+add_action( 'edd_user_lost_password', 'edd_lost_password_block' );
+/**
+ * Handles the lost password request from the EDD lost password block.
+ *
+ * @since 3.1
+ * @param array $data
+ * @return void
+ */
+function edd_lost_password_block( $data ) {
+	if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
+		$errors = retrieve_password();
+		if ( ! is_wp_error( $errors ) ) {
+			edd_set_success( 'checkemail', __( 'You did it! Check your email for instructions on resetting your password.', 'easy-digital-downloads' ) );
+		} else {
+			foreach ( $errors->errors as $id => $message ) {
+				$message = explode( ':', reset( $message ) );
+				$message = ! empty( $message[1] ) ? trim( $message[1] ) : trim( $message[0] );
+				edd_set_error( $id, $message );
+			}
+		}
+	}
+	edd_redirect( remove_query_arg( 'action', wp_get_referer() ) );
+}
