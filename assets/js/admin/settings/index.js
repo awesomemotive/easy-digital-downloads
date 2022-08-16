@@ -160,6 +160,24 @@ const EDD_Settings = {
 			document.body.style.cursor = 'wait';
 			recaptureRemoteInstall();
 		});
+
+		// Email Summaries
+		const emailSummaryRecipient = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
+			emailSummaryCustomRecipients = emailSummaryRecipient.parent().parent().next();
+
+		// Hide Custom Recipients if Email Recipient is set to Admin
+		if ( emailSummaryRecipient.val() === 'admin' ) {
+			emailSummaryCustomRecipients.css( 'opacity', '0.4' );
+		}
+
+		// Toggle Email Recipient option
+		emailSummaryRecipient.on( 'change', function() {
+			if ( $( this ).val() === 'admin' ) {
+				emailSummaryCustomRecipients.css( 'opacity', '0.4' );
+			} else {
+				emailSummaryCustomRecipients.css( 'opacity', '1' );
+			}
+		} );
 	}
 };
 
