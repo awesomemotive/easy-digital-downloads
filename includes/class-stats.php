@@ -704,7 +704,7 @@ class Stats {
 
 		if ( true === $this->query_vars['relative'] ) {
 			$total    = -( floatval( $initial_result->total ) );
-			$relative = floatval( $relative_result->total );
+			$relative = -( floatval( $relative_result->total ) );
 			$total    = $this->generate_relative_markup( $total, $relative, true );
 		} else {
 			$total = $this->maybe_format( -( $total ) );
