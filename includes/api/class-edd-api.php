@@ -1263,8 +1263,9 @@ class EDD_API {
 							'revenue_type' => 'net',
 						)
 					);
-					$start_date  = date( 'Y-m-d', strtotime( $start_date ) );
-					$end_date    = date( 'Y-m-d', strtotime( $end_date ) );
+
+					$start_date  = $dates['start']->format( 'Y-m-d' );
+					$end_date    = $dates['end']->format( 'Y-m-d' );
 
 					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
 
@@ -1384,8 +1385,8 @@ class EDD_API {
 						)
 					);
 
-					$start_date  = date( 'Y-m-d', strtotime( $start_date ) );
-					$end_date    = date( 'Y-m-d', strtotime( $end_date ) );
+					$start_date  = $dates['start']->format( 'Y-m-d' );
+					$end_date    = $dates['end']->format( 'Y-m-d' );
 
 					$earnings['earnings'] = array();
 					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
