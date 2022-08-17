@@ -277,6 +277,10 @@ function edd_destroy_order( $order_id = 0 ) {
 		// Destroy adjustments.
 		if ( ! empty( $adjustments ) ) {
 			foreach ( $adjustments as $adjustment ) {
+				// Decrease discount code use count.
+				if ( 'discount' === $adjustment->type ) {
+					edd_decrease_discount_usage( $adjustment->description );
+				}
 				edd_delete_order_adjustment( $adjustment->id );
 			}
 		}

@@ -1052,7 +1052,7 @@ function edd_tools_import_export_process_export() {
 	 */
 	$filename      = apply_filters( 'edd_settings_export_filename', 'edd-settings-export-' . date( 'm-d-Y' ) ) . '.json';
 	$edd_settings  = get_option( 'edd_settings' );
-	$edd_tax_rates = get_option( 'edd_tax_rates' );
+	$edd_tax_rates = edd_get_tax_rates();
 
 	edd_set_time_limit();
 
@@ -1113,7 +1113,27 @@ function edd_tools_import_export_process_import() {
 		update_option( 'edd_settings', $edd_settings );
 
 		$edd_tax_rates = $settings['edd_tax_rates'];
-		update_option( 'edd_tax_rates', $edd_tax_rates );
+		if ( ! empty( $edd_tax_rates ) ) {
+			foreach( $edd_tax_rates as $rate ) {
+				$scope = 'country';
+				if ( ! empty( $rate['scope'] ) ) {
+					$scope = $rate['scope'];
+				} elseif ( empty( $rate['global'] ) && ! empty( $rate['state'] ) ) {
+					$scope = 'region';
+				} elseif ( empty( $rate['country'] && empty( $rate['state'] ) ) ) {
+					$scope = 'global';
+				}
+				edd_add_tax_rate(
+					array(
+						'name'        => esc_attr( $rate['country'] ),
+						'status'      => ! empty( $rate['status'] ) ? esc_attr( $rate['status'] ) : 'active',
+						'description' => esc_attr( $rate['state'] ),
+						'amount'      => floatval( $rate['rate'] ),
+						'scope'       => esc_attr( $scope ),
+					)
+				);
+			}
+		}
 
 	}
 
