@@ -488,11 +488,11 @@ function get_dates_filter_options() {
 			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
 			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
 			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+			'this_month'   => __( 'Month to Date', 'easy-digital-downloads' ),
 			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+			'this_quarter' => __( 'Quarter to Date', 'easy-digital-downloads' ),
 			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+			'this_year'    => __( 'Year to Date', 'easy-digital-downloads' ),
 			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
 		);
 	}
@@ -581,7 +581,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_month':
 			$dates = array(
 				'start' => $date->copy()->startOfMonth(),
-				'end'   => $date->copy()->endOfMonth(),
+				'end'   => $date->copy(),
 			);
 			break;
 
@@ -609,7 +609,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_week':
 			$dates = array(
 				'start' => $date->copy()->startOfWeek(),
-				'end'   => $date->copy()->endOfWeek(),
+				'end'   => $date->copy(),
 			);
 			break;
 
@@ -630,7 +630,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_quarter':
 			$dates = array(
 				'start' => $date->copy()->startOfQuarter(),
-				'end'   => $date->copy()->endOfQuarter(),
+				'end'   => $date->copy(),
 			);
 			break;
 
@@ -644,7 +644,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_year':
 			$dates = array(
 				'start' => $date->copy()->startOfYear(),
-				'end'   => $date->copy()->endOfYear(),
+				'end'   => $date->copy(),
 			);
 			break;
 
@@ -669,6 +669,121 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 			$dates = array(
 				'start' => EDD()->utils->date( $start, edd_get_timezone_id(), false )->startOfDay(),
 				'end'   => EDD()->utils->date( $end, edd_get_timezone_id(), false )->endOfDay(),
+			);
+			break;
+	}
+
+	if ( $convert_to_utc ) {
+		// Convert the values to the UTC equivalent so that we can query the database using UTC.
+		$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
+		$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
+	}
+
+	$dates['range'] = $range;
+
+	return $dates;
+}
+
+/**
+ * Parses relative start and end dates for the given range.
+ *
+ * @since 3.1
+ *
+ * @param string          $range          Optional. Range value to generate start and end dates for against `$date`.
+ *                                        Default is the current range as derived from the session.
+ * @param string          $date           Date string converted to `\EDD\Utils\Date` to anchor calculations to.
+ * @param bool            $convert_to_utc Optional. If we should convert the results to UTC for Database Queries
+ * @return \EDD\Utils\Date[] Array of start and end date objects.
+ */
+function parse_relative_dates_for_range( $range = null, $date = 'now', $convert_to_utc = true ) {
+
+	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
+	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
+
+	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
+		$range = get_dates_filter_range();
+	}
+
+	switch ( $range ) {
+		case 'this_month':
+			$dates = array(
+				'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
+				'end'   => $date->copy()->subMonth( 1 ),
+			);
+			break;
+		case 'last_month':
+			$dates = array(
+				'start' => $date->copy()->subMonth( 2 )->startOfMonth(),
+				'end'   => $date->copy()->subMonth( 2 )->endOfMonth(),
+			);
+			break;
+		case 'today':
+			$dates = array(
+				'start' => $date->copy()->subDay( 1 )->startOfDay(),
+				'end'   => $date->copy()->subDay( 1 )->endOfDay(),
+			);
+			break;
+		case 'yesterday':
+			$dates = array(
+				'start' => $date->copy()->subDay( 2 )->startOfDay(),
+				'end'   => $date->copy()->subDay( 2 )->endOfDay(),
+			);
+			break;
+		case 'this_week':
+			$dates = array(
+				'start' => $date->copy()->subWeek( 1 )->startOfWeek(),
+				'end'   => $date->copy()->subWeek( 1 ),
+			);
+			break;
+		case 'last_week':
+			$dates = array(
+				'start' => $date->copy()->subWeek( 2 )->startOfWeek(),
+				'end'   => $date->copy()->subWeek( 2 )->endOfWeek(),
+			);
+			break;
+		case 'last_30_days':
+			$dates = array(
+				'start' => $date->copy()->subDay( 60 )->startOfDay(),
+				'end'   => $date->copy()->subDay( 30 ),
+			);
+			break;
+		case 'this_quarter':
+			$dates = array(
+				'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
+				'end'   => $date->copy()->subQuarter( 1 ),
+			);
+			break;
+		case 'last_quarter':
+			$dates = array(
+				'start' => $date->copy()->subQuarter( 2 )->startOfQuarter(),
+				'end'   => $date->copy()->subQuarter( 2 )->endOfQuarter(),
+			);
+			break;
+		case 'this_year':
+			$dates = array(
+				'start' => $date->copy()->subYear( 1 )->startOfYear(),
+				'end'   => $date->copy()->subYear( 1 ),
+			);
+			break;
+			case 'last_year':
+				$dates = array(
+					'start' => $date->copy()->subYear( 2 )->startOfYear(),
+					'end'   => $date->copy()->subYear( 2 )->endOfYear(),
+				);
+				break;
+		case 'other':
+			$dates_from_report = get_filter_value( 'dates' );
+
+			if ( ! empty( $dates_from_report ) ) {
+				$start = $dates_from_report['from'];
+				$end   = $dates_from_report['to'];
+			} else {
+				$start = $end = 'now';
+			}
+
+			$dates = array(
+				'start' => EDD()->utils->date( $start, edd_get_timezone_id(), false )->subMonth( 1 )->startOfDay(),
+				'end'   => EDD()->utils->date( $end, edd_get_timezone_id(), false )->subMonth( 1 )->endOfDay(),
 			);
 			break;
 	}
