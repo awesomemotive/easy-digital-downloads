@@ -30,22 +30,33 @@ class Reports_Sections extends Sections {
 		$use_js = ! empty( $this->use_js )
 			? ' use-js'
 			: '';
-		$role   = $this->use_js ? 'tablist' : 'menu';
-		?>
 
+		$role           = $this->use_js ? 'tablist' : 'menu';
+		$range          = \EDD\Reports\get_dates_filter_range();
+		$date_format    = 'd M Y';
+		$dates          = \EDD\Reports\parse_dates_for_range( $range );
+		$relative_dates = \EDD\Reports\parse_relative_dates_for_range( $range );
+		?>
 		<div class="edd-sections-wrap edd-reports-wrapper">
+
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
+				<span class="edd-reports-section-label">
+					<strong><?php echo esc_html( $dates['start']->format( $date_format ) );?> - <?php echo esc_html( $dates['end']->format( $date_format ) );?></strong>
+					<?php echo esc_html__( 'compared to', 'easy-digital-downloads' );?>
+					<strong><?php echo esc_html( $relative_dates['start']->format( $date_format ) );?> - <?php echo esc_html( $relative_dates['end']->format( $date_format ) );?></strong>
+				</span>
+
 				<ul class="section-nav" role="<?php echo esc_attr( $role ); ?>">
 					<?php echo $this->get_all_section_links(); ?>
 				</ul>
 
 				<div class="section-wrap">
+
 					<?php echo $this->get_all_section_contents(); ?>
 				</div>
 				<br class="clear">
 			</div>
 		</div>
-
 		<?php
 	}
 }
