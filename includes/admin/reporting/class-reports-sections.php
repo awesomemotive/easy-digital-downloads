@@ -33,7 +33,7 @@ class Reports_Sections extends Sections {
 
 		$role           = $this->use_js ? 'tablist' : 'menu';
 		$range          = \EDD\Reports\get_dates_filter_range();
-		$date_format    = 'd M Y';
+		$date_format    = get_option('date_format');
 		$dates          = \EDD\Reports\parse_dates_for_range( $range );
 		$relative_dates = \EDD\Reports\parse_relative_dates_for_range( $range );
 		?>
