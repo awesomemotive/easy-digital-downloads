@@ -78,12 +78,14 @@ function edd_build_successes_html( $successes ) {
 		return '';
 	}
 
-	$html  = '<div class="edd_success edd-alert edd-alert-success">';
-	$html .= '<p><strong>';
-	$html .= esc_html__( 'Success', 'easy-digital-downloads' );
-	$html .= '</strong>: ';
-	$html .= esc_html__( 'You did it! Check your email for instructions on resetting your password.', 'easy-digital-downloads' );
-	$html .= '</p></div>';
+	$html = '<div class="edd_success edd-alert edd-alert-success">';
+	foreach ( $successes as $id => $message ) {
+		$html .= '<p id="' . $id . '">';
+		$html .= '<strong>' . esc_html__( 'Success', 'easy-digital-downloads' ) . '</strong>: ';
+		$html .= $message;
+		$html .= '</p>';
+	}
+	$html .= '</div>';
 
 	return $html;
 }
