@@ -80,7 +80,7 @@ function edd_set_lostpassword_session() {
 	}
 }
 
-add_action( 'edd_user_lost_password', 'edd_lost_password_block' );
+add_action( 'edd_user_lost_password', 'edd_handle_lost_password_request' );
 /**
  * Handles the lost password request from the EDD lost password block.
  *
@@ -88,7 +88,7 @@ add_action( 'edd_user_lost_password', 'edd_lost_password_block' );
  * @param array $data
  * @return void
  */
-function edd_lost_password_block( $data ) {
+function edd_handle_lost_password_request( $data ) {
 	if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 		$errors = retrieve_password();
 		if ( ! is_wp_error( $errors ) ) {
