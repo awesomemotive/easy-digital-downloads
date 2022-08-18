@@ -139,6 +139,30 @@ module.exports = function( grunt ) {
 						dest: 'includes/gateways/stripe'
 					}
 				]
+			},
+			blocks: {
+				options: {
+					patterns: [
+						{
+							match: /init/g,
+							replacement: 'core_init',
+							expression: true,
+						},
+						{
+							match: /remove_action(.*);/g,
+							replacement: '',
+							expression: true,
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'includes/blocks/edd-blocks.php' ],
+						dest: 'includes/blocks'
+					}
+				]
 			}
 		}
 	} );

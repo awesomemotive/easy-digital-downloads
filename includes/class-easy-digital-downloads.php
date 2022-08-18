@@ -716,6 +716,13 @@ final class Easy_Digital_Downloads {
 
 		// Downloads
 		require_once EDD_PLUGIN_DIR . 'includes/models/Download.php';
+
+		// Blocks
+		$blocks = EDD_PLUGIN_DIR . 'includes/blocks/edd-blocks.php';
+
+		if ( file_exists( $blocks ) ) {
+			require_once $blocks;
+		}
 	}
 
 	/**
