@@ -176,7 +176,7 @@ function edd_user_info_fields() {
 	$customer = array_map( 'sanitize_text_field', $customer );
 	?>
 	<fieldset id="edd_checkout_user_info">
-		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html__( 'Personal info', 'easy-digital-downloads' ) ); ?></legend>
+		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html_e( 'Personal info', 'easy-digital-downloads' ) ); ?></legend>
 		<?php do_action( 'edd_purchase_form_before_email' ); ?>
 		<p id="edd-email-wrap">
 			<label class="edd-label" for="edd-email">
