@@ -70,6 +70,7 @@
 		"lint:js--fix": "wp-scripts lint-js ./assets/js --fix",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"package-plugin": "npm run build && grunt build",
-		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js"
+		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
+		"blocks": "bash bin/update-blocks.sh"
 	}
 }
