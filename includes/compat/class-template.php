@@ -60,6 +60,9 @@ class Template extends Base {
 			return false;
 		}
 
+		// Only run this once a day.
+		set_transient( 'edd-sc-receipt-check', DAY_IN_SECONDS );
+
 		// Retrieve the path to the template being used.
 		$template = edd_locate_template( 'shortcode-receipt.php' );
 
@@ -67,9 +70,6 @@ class Template extends Base {
 		if ( false === strpos( $template, 'edd_templates' ) ) {
 			return false;
 		}
-
-		// Only run this once a day.
-		set_transient( 'edd-sc-receipt-check', DAY_IN_SECONDS );
 
 		if ( 'direct' === $access_type ) {
 
