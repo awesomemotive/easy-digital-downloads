@@ -53,7 +53,7 @@ class EDD_Email_Summary {
 		$site_url_parsed = wp_parse_url( $site_url );
 		$site_url        = isset( $site_url_parsed['host'] ) ? $site_url_parsed['host'] : $site_url;
 		// Translators: The domain of the site is appended to the subject.
-		$email_subject = sprintf( __( 'EDD Summary - %s', 'easy-digital-downloads' ), $site_url );
+		$email_subject = sprintf( __( 'Easy Digital Downloads Summary - %s', 'easy-digital-downloads' ), $site_url );
 		return apply_filters( 'edd_email_summary_subject', $email_subject );
 	}
 
@@ -141,12 +141,13 @@ class EDD_Email_Summary {
 	 */
 	public function get_report_dataset() {
 		$date_range = $this->get_report_date_range();
-
-		$stats       = new EDD\Stats();
+		$stats      = new EDD\Stats();
+		$start_date = $date_range['start_date']->format('Y-m-d H:i:s');
+		$end_date   = $date_range['end_date']->format('Y-m-d H:i:s');
 
 		$earnings_gross = $stats->get_order_earnings( array(
-			'start'         => $date_range['start_date']->format('Y-m-d H:i:s'),
-			'end'           => $date_range['end_date']->format('Y-m-d H:i:s'),
+			'start'         => $start_date,
+			'end'           => $end_date,
 			'function'      => 'SUM',
 			'exclude_taxes' => false,
 			'relative'      => false,
@@ -154,8 +155,8 @@ class EDD_Email_Summary {
 		) );
 
 		$earnings_net = $stats->get_order_earnings( array(
-			'start'         => $date_range['start_date']->format('Y-m-d H:i:s'),
-			'end'           => $date_range['end_date']->format('Y-m-d H:i:s'),
+			'start'         => $start_date,
+			'end'           => $end_date,
 			'function'      => 'SUM',
 			'exclude_taxes' => true,
 			'relative'      => false,
@@ -163,8 +164,8 @@ class EDD_Email_Summary {
 		) );
 
 		$average_order_value =  $stats->get_order_earnings( array(
-			'start'         => $date_range['start_date']->format('Y-m-d H:i:s'),
-			'end'           => $date_range['end_date']->format('Y-m-d H:i:s'),
+			'start'         => $start_date,
+			'end'           => $end_date,
 			'function'      => 'AVG',
 			'exclude_taxes' => false,
 			// 'output'     => 'formatted',
@@ -172,14 +173,14 @@ class EDD_Email_Summary {
 		) );
 
 		$new_customers =  $stats->get_customer_count( array(
-			'start'         => $date_range['start_date']->format('Y-m-d H:i:s'),
-			'end'           => $date_range['end_date']->format('Y-m-d H:i:s'),
+			'start'         => $start_date,
+			'end'           => $end_date,
 			'relative' => false,
 		) );
 
 		$top_selling_products = $stats->get_most_valuable_order_items( array(
-			'start'         => $date_range['start_date']->format('Y-m-d H:i:s'),
-			'end'           => $date_range['end_date']->format('Y-m-d H:i:s'),
+			'start'         => $start_date,
+			'end'           => $end_date,
 			'number'   => 5,
 			'currency' => '',
 		) );
@@ -207,6 +208,9 @@ class EDD_Email_Summary {
 		$site_url_parsed = wp_parse_url( $site_url );
 		$site_url        = isset( $site_url_parsed['host'] ) ? $site_url_parsed['host'] : $site_url;
 
+		$blurb           = new EDD_Email_Summary_Blurb();
+		$blurb           = $blurb->get_next();
+
 		ob_start();
 		?>
 		<!DOCTYPE html>
@@ -219,6 +223,9 @@ class EDD_Email_Summary {
 			</head>
 
 			<body style="margin: 0px;">
+
+				@todo - Get preview template
+				Store performance summary <start date> - <end date>
 
 				<!-- HEADER HOLDER -->
 				<div class="email-header-holder" style="background: #343A40;max-height: 60px;height: 60px;">
@@ -531,15 +538,16 @@ class EDD_Email_Summary {
 	 * @since 3.1
 	 */
 	public function send_email() {
+
+		// From Name: Store Name.
+		// Subject: Easy Digital Downloads Summary - <domain name>
+		// Preview Text: Store performance summary <start date> - <end date>
+
 		// Prepare email.
 		$email_subject    = $this->get_email_subject();
 		$email_recipients = $this->get_email_recipients();
 		$email_body       = $this->build_email_template();
 		$email_headers    = array('Content-Type: text/html; charset=UTF-8');
-
-		// From Name: Store Name.
-		// Subject: Easy Digital Downloads Summary - <domain name>
-		// Preview Text: Store performance summary <start date> - <end date>
 
 		// Send email.
 		wp_mail( $email_recipients, $email_subject, $email_body, $email_headers );
