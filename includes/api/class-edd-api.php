@@ -1277,24 +1277,19 @@ class EDD_API {
 						$_GET['filter_to']   = $start_date;
 						$_GET['range']       = 'other';
 
+						$key   = str_replace( '-', '', $start_date );
 						$dates = EDD\Reports\parse_dates_for_range();
-
-						$d = date( 'd', strtotime( $start_date ) );
-						$m = date( 'm', strtotime( $start_date ) );
-						$y = date( 'Y', strtotime( $start_date ) );
-
-						$key = $y . $m . $d;
 
 						if ( ! isset( $sales['sales'][ $key ] ) ) {
 							$sales['sales'][ $key ] = $stats->get_order_count(
 								array(
-									'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
-									'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+									'start' => $dates['start']->startOfDay()->format( 'Y-m-d H:i:s' ),
+									'end'   => $dates['end']->endOfDay()->format( 'Y-m-d H:i:s' ),
 								)
 							);
 						}
 
-						$start_date = date( 'Y-m-d', strtotime( '+1 day', strtotime( $start_date ) ) );
+						$start_date = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
 					}
 
 					ksort( $sales['sales'] );
@@ -1402,13 +1397,8 @@ class EDD_API {
 						$_GET['filter_to']   = $start_date;
 						$_GET['range']       = 'other';
 
+						$key   = str_replace( '-', '', $start_date );
 						$dates = EDD\Reports\parse_dates_for_range();
-
-						$d = date( 'd', strtotime( $start_date ) );
-						$m = date( 'm', strtotime( $start_date ) );
-						$y = date( 'Y', strtotime( $start_date ) );
-
-						$key = $y . $m . $d;
 
 						if ( ! isset( $sales['earnings'][ $key ] ) ) {
 							$earnings['earnings'][ $key ] = $stats->get_order_earnings(
@@ -1419,7 +1409,7 @@ class EDD_API {
 							);
 						}
 
-						$start_date = date( 'Y-m-d', strtotime( '+1 day', strtotime( $start_date ) ) );
+						$start_date = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
 					}
 
 					ksort( $earnings['earnings'] );
