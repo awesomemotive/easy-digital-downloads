@@ -385,40 +385,48 @@ function edd_validate_username( $username ) {
 }
 
 /**
- * Attach the customer to an existing user account when completing guest purchase
+ * Attach the customer to an existing user account when the customer record is created.
  *
- * This only runs when a user account already exists and a guest purchase is made
+ * This only runs when a user account already exists and a customer is created
  * with the account's email address
  *
  * After attaching the customer to the user ID, the account is set to pending
  *
  * @since  2.8
- * @param  bool   $success     True if payment was added successfully, false otherwise
- * @param  int    $payment_id  The ID of the EDD_Payment that was added
- * @param  int    $customer_id The ID of the EDD_Customer object
- * @param  object $customer    The EDD_Customer object
+ * @since  3.0.4 This is now hooked into the customer creation process instead.
+ *
+ * @param int   $customer_id If created successfully, the customer ID.
+ * @param array $args        Contains customer information such as payment ID, name, and email.
+ *
  * @return void
  */
-function edd_connect_guest_customer_to_existing_user( $success, $payment_id, $customer_id, $customer ) {
+function edd_connect_guest_customer_to_existing_user( $customer_id = 0, $args = array() ) {
 
-	if( ! empty( $customer->user_id ) ) {
+	if ( empty( $customer_id ) ) {
 		return;
 	}
 
-	$user = get_user_by( 'email', $customer->email );
+	$user = get_user_by( 'email', $args['email'] );
 
-	if( ! $user ) {
+	if ( ! $user instanceof WP_User ) {
+		return;
+	}
+
+	$customer = edd_get_customer( $customer_id );
+
+	// If for some reason we don't get a customer object here, return.
+	if ( ! $customer instanceof EDD_Customer ) {
 		return;
 	}
 
 	$customer->update( array( 'user_id' => $user->ID ) );
 
-	// Set a flag to force the account to be verified before purchase history can be accessed
-	edd_set_user_to_pending( $user->ID  );
-	edd_send_user_verification_email( $user->ID  );
+	// Set a flag to force the account to be verified before purchase history can be accessed.
+	edd_set_user_to_pending( $user->ID );
+	edd_send_user_verification_email( $user->ID );
 
 }
-add_action( 'edd_customer_post_attach_payment', 'edd_connect_guest_customer_to_existing_user', 10, 4 );
+add_action( 'edd_customer_post_create', 'edd_connect_guest_customer_to_existing_user', 10, 2 );
 
 /**
  * Attach the newly created user_id to a customer, if one exists
