@@ -1253,19 +1253,22 @@ class EDD_API {
 					$_GET['filter_to']   = $end_date;
 					$_GET['range']       = 'other';
 
-					$stats   = new EDD\Stats();
-					$dates   = EDD\Reports\parse_dates_for_range();
-
-					$total_sales = $stats->get_order_count(
+					$stats = new EDD\Stats(
 						array(
-							'start'        => $dates['start']->format( 'Y-m-d H:i:s' ),
-							'end'          => $dates['end']->format( 'Y-m-d H:i:s' ),
 							'revenue_type' => 'net',
 						)
 					);
+					$dates = EDD\Reports\parse_dates_for_range();
 
-					$start_date  = $dates['start']->format( 'Y-m-d' );
-					$end_date    = $dates['end']->format( 'Y-m-d' );
+					$total_sales = $stats->get_order_count(
+						array(
+							'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
+							'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+						)
+					);
+
+					$start_date = $dates['start']->format( 'Y-m-d' );
+					$end_date   = $dates['end']->format( 'Y-m-d' );
 
 					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
 
@@ -1285,9 +1288,8 @@ class EDD_API {
 						if ( ! isset( $sales['sales'][ $key ] ) ) {
 							$sales['sales'][ $key ] = $stats->get_order_count(
 								array(
-									'start'        => $dates['start']->format( 'Y-m-d H:i:s' ),
-									'end'          => $dates['end']->format( 'Y-m-d H:i:s' ),
-									'revenue_type' => 'net',
+									'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
+									'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
 								)
 							);
 						}
@@ -1306,6 +1308,7 @@ class EDD_API {
 							'revenue_type' => 'net',
 						)
 					);
+
 					$sales['sales'][ $args['date'] ] = $stats->get_order_count();
 				}
 			} elseif ( $args['product'] == 'all' ) {
@@ -1373,20 +1376,23 @@ class EDD_API {
 					$_GET['filter_to']   = $end_date;
 					$_GET['range']       = 'other';
 
-					$stats   = new EDD\Stats();
-					$dates   = EDD\Reports\parse_dates_for_range();
-
-					$total_earnings = $stats->get_order_earnings(
+					$stats = new EDD\Stats(
 						array(
-							'start'         => $dates['start']->format( 'Y-m-d H:i:s' ),
-							'end'           => $dates['end']->format( 'Y-m-d H:i:s' ),
 							'revenue_type'  => 'net',
 							'exclude_taxes' => ! $args['include_tax'],
 						)
 					);
+					$dates = EDD\Reports\parse_dates_for_range();
 
-					$start_date  = $dates['start']->format( 'Y-m-d' );
-					$end_date    = $dates['end']->format( 'Y-m-d' );
+					$total_earnings = $stats->get_order_earnings(
+						array(
+							'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
+							'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+						)
+					);
+
+					$start_date = $dates['start']->format( 'Y-m-d' );
+					$end_date   = $dates['end']->format( 'Y-m-d' );
 
 					$earnings['earnings'] = array();
 					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
@@ -1407,10 +1413,8 @@ class EDD_API {
 						if ( ! isset( $sales['earnings'][ $key ] ) ) {
 							$earnings['earnings'][ $key ] = $stats->get_order_earnings(
 								array(
-									'start'         => $dates['start']->format( 'Y-m-d H:i:s' ),
-									'end'           => $dates['end']->format( 'Y-m-d H:i:s' ),
-									'revenue_type'  => 'net',
-									'exclude_taxes' => ! $args['include_tax'],
+									'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
+									'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
 								)
 							);
 						}
