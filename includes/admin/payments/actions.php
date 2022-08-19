@@ -177,10 +177,11 @@ function edd_update_payment_details( $data = array() ) {
 	$order_update_args['user_id'] = $customer->user_id;
 	$order_update_args['email']   = $customer->email;
 
-	// Address
+	// Address.
 	$address = $data['edd_order_address'];
 
-	edd_update_order_address( absint( $address['address_id'] ), array(
+	$order_address_id      = absint( $address['address_id'] );
+	$order_address_details = array(
 		'name'        => $customer->name,
 		'address'     => $address['address'],
 		'address2'    => $address['address2'],
@@ -188,7 +189,20 @@ function edd_update_payment_details( $data = array() ) {
 		'region'      => $address['region'],
 		'postal_code' => $address['postal_code'],
 		'country'     => $address['country'],
-	) );
+	);
+
+	if ( empty( $order_address_id ) ) {
+
+		// Unset the address_id which is 0.
+		unset( $address['address_id'] );
+
+		// Add the $order_id to the arguments to create this order address.
+		$order_address_details['order_id'] = $order_id;
+
+		edd_add_order_address( $order_address_details );
+	} else {
+		edd_update_order_address( $order_address_id, $order_address_details );
+	}
 
 	// Unlimited downloads.
 	if ( 1 === (int) $unlimited ) {
