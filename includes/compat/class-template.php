@@ -101,7 +101,7 @@ class Template extends Base {
 				$contents = str_replace( 'get_post( $edd_receipt_args[\'id\'] )', 'edd_get_payment( $edd_receipt_args[\'id\'] )', $contents );
 				$updated  = $wp_filesystem->put_contents( $template, $contents );
 
-				// Only display a notice if we updated anything.
+				// Only display a notice if we could not update the file.
 				if ( ! $updated ) {
 					add_action( 'admin_notices', function() use ( $template ) {
 						?>
