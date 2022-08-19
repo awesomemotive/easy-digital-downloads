@@ -795,18 +795,28 @@ function get_dates_filter_day_by_day() {
  * Given a function and column, make a timezone converted groupby query.
  *
  * @since 3.0
+ * @since 3.0.4 If MONTH is passed as the function, always add YEAR and MONTH
+ *              to avoid issues with spanning multiple years.
  *
- * @param string $function The function to run the value through, like DATE, HOUR, MONTH
+ * @param string $function The function to run the value through, like DATE, HOUR, MONTH.
  * @param string $column   The column to group by.
  *
  * @return string
  */
 function get_groupby_date_string( $function = 'DATE', $column = 'date_created' ) {
+	$function   = strtoupper( $function );
 	$date       = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 	$gmt_offset = $date->getOffset();
 
 	if ( empty( $gmt_offset ) ) {
-		return "{$function}({$column})";
+		$group_by_string = "{$function}({$column})";
+
+		// Always use YEAR and MONTH when grouping by MONTH.
+		if ( 'MONTH' === $function ) {
+			$group_by_string = "YEAR({$column}), MONTH({$column})";
+		}
+
+		return $group_by_string;
 	}
 
 	// Output the offset in the proper format.
@@ -816,7 +826,14 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 
 	$formatted_offset = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours . ':00';
 
-	return "{$function}(CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}'))";
+	$group_by_string = "{$function}(CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}'))";
+	// Always use YEAR and MONTH when grouping by MONTH.
+	if ( 'MONTH' === $function ) {
+		$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
+		$group_by_string   = "YEAR({$column_conversion}), MONTH({$column_conversion})";
+	}
+
+	return $group_by_string;
 }
 
 /**
