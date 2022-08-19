@@ -62,7 +62,7 @@ function edd_add_manual_order( $args = array() ) {
 
 	/** Customer data *********************************************************/
 
-	// Defaults
+	// Defaults.
 	$customer_id = 0;
 	$user_id     = 0;
 	$email       = '';
@@ -71,29 +71,39 @@ function edd_add_manual_order( $args = array() ) {
 	// Create a new customer record.
 	if ( isset( $order_data['edd-new-customer'] ) && 1 === absint( $order_data['edd-new-customer'] ) ) {
 
-		// Sanitize first name
+		// Sanitize first name.
 		$first_name = isset( $order_data['edd-new-customer-first-name'] )
 			? sanitize_text_field( $order_data['edd-new-customer-first-name'] )
 			: '';
 
-		// Sanitize last name
+		// Sanitize last name.
 		$last_name = isset( $order_data['edd-new-customer-last-name'] )
 			? sanitize_text_field( $order_data['edd-new-customer-last-name'] )
 			: '';
 
-		// Combine
+		// Combine.
 		$name = trim( $first_name . ' ' . $last_name );
 
-		// Sanitize the email address
+		// Sanitize the email address.
 		$email = isset( $order_data['edd-new-customer-email'] )
 			? sanitize_email( $order_data['edd-new-customer-email'] )
 			: '';
 
-		// Save to database.
-		$customer_id = edd_add_customer( array(
+		$new_customer_args = array(
 			'name'  => $name,
 			'email' => $email,
-		) );
+		);
+
+		// Determine if there is an existing user with this email address.
+		$possible_user = get_user_by( 'email', $email );
+		if ( $possible_user instanceof WP_User ) {
+			$new_customer_args['user_id'] = $possible_user->ID;
+		}
+
+		// Save to database.
+		$customer_id = edd_add_customer(
+			$new_customer_args
+		);
 
 		$customer = edd_get_customer( $customer_id );
 
