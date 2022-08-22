@@ -68,8 +68,22 @@ function edd_add_manual_order( $args = array() ) {
 	$email       = '';
 	$name        = '';
 
+	$new_customer_neeed = isset( $order_data['edd-new-customer'] ) && 1 === absint( $order_data['edd-new-customer'] );
+
+	// Before we assume we need a new customer, verify one doesn't exist for this email address.
+	// Sanitize the email address.
+	$email = isset( $order_data['edd-new-customer-email'] )
+		? sanitize_email( $order_data['edd-new-customer-email'] )
+		: '';
+
+	$customer = edd_get_customer_by( 'email', $email );
+	if ( false !== $customer ) {
+		$order_data['customer-id'] = $customer->id;
+		$new_customer_neeed        = false;
+	}
+
 	// Create a new customer record.
-	if ( isset( $order_data['edd-new-customer'] ) && 1 === absint( $order_data['edd-new-customer'] ) ) {
+	if ( $new_customer_neeed ) {
 
 		// Sanitize first name.
 		$first_name = isset( $order_data['edd-new-customer-first-name'] )
@@ -83,11 +97,6 @@ function edd_add_manual_order( $args = array() ) {
 
 		// Combine.
 		$name = trim( $first_name . ' ' . $last_name );
-
-		// Sanitize the email address.
-		$email = isset( $order_data['edd-new-customer-email'] )
-			? sanitize_email( $order_data['edd-new-customer-email'] )
-			: '';
 
 		$new_customer_args = array(
 			'name'  => $name,

@@ -170,6 +170,7 @@ function edd_get_customer( $customer_id = 0 ) {
  * Get a customer item by a specific field value.
  *
  * @since 3.0
+ * @since 3.0.4 If 'email' is used as the field, search the customer email addresses, not the customers table.
  *
  * @param string $field Database table field.
  * @param string $value Value of the row.
@@ -198,8 +199,28 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 		return $found;
 	}
 
-	$customers = new EDD\Database\Queries\Customer();
-	$customer  = $customers->get_item_by( $field, $value );
+	if ( 'email' !== $field ) {
+		$customers = new EDD\Database\Queries\Customer();
+		$customer  = $customers->get_item_by( $field, $value );
+	} else {
+		// Search the customer email addresses table for a matching customer.
+		$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
+		$customer_ids             = $customer_email_addresses->query(
+			array(
+				'fields' => 'customer_id',
+				'email'  => $value,
+			),
+		);
+
+		if ( empty( $customer_ids ) ) {
+			$customer_id = 0;
+		} else {
+			$customer_id = reset( $customer_ids );
+		}
+
+		$customers = new EDD\Database\Queries\Customer();
+		$customer  = $customers->get_item_by( 'id', $customer_id );
+	}
 
 	/**
 	 * Filters the single Customer retrieved from the database based on field.
