@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Email_Summary {
 
 	/**
-	 * Email options
+	 * Email options.
 	 *
 	 * @since 3.1
 	 *
@@ -81,7 +81,7 @@ class EDD_Email_Summary {
 			edd_debug_log( __( 'Missing email recipients for Email Summary', 'easy-digital-downloads' ), true );
 		}
 
-		return $recipients;
+		return apply_filters( 'edd_email_summary_recipients', $recipients );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class EDD_Email_Summary {
 	 * @return \EDD\Utils\Date[] Array of start and end date objects.
 	 */
 	public function get_report_date_range() {
-		// @TODO - Check if we have to convert this to UTC because of DB?
+		// @todo - Check if we have to convert this to UTC because of DB?
 		return array(
 			'start_date' => $this->get_report_start_date(),
 			'end_date' => $this->get_report_end_date(),
@@ -195,11 +195,12 @@ class EDD_Email_Summary {
 	}
 
 	/**
-	 * Build email template
+	 * Build email template.
 	 *
 	 * @since 3.1
+	 * @param array|bool $blurb Structured blurb data.
 	 */
-	public function build_email_template() {
+	public function build_email_template( $blurb = false ) {
 		$dataset         = $this->get_report_dataset();
 		$date_range      = $this->get_report_date_range();
 
@@ -207,9 +208,6 @@ class EDD_Email_Summary {
 		$site_url        = get_site_url();
 		$site_url_parsed = wp_parse_url( $site_url );
 		$site_url        = isset( $site_url_parsed['host'] ) ? $site_url_parsed['host'] : $site_url;
-
-		$blurb           = new EDD_Email_Summary_Blurb();
-		$blurb           = $blurb->get_next();
 
 		ob_start();
 		?>
@@ -224,8 +222,9 @@ class EDD_Email_Summary {
 
 			<body style="margin: 0px;">
 
-				@todo - Get preview template
-				Store performance summary <start date> - <end date>
+				<div style="display: none; max-height: 0px; overflow: hidden;">
+					Store performance summary <?php echo esc_html( $date_range['start_date']->format( $wp_date_format ) );?> - <?php echo esc_html( $date_range['end_date']->format( $wp_date_format ) );?>
+				</div>
 
 				<!-- HEADER HOLDER -->
 				<div class="email-header-holder" style="background: #343A40;max-height: 60px;height: 60px;">
@@ -284,7 +283,7 @@ class EDD_Email_Summary {
 									</div>
 
 									<div class="data-value" style="font-weight: 700;font-size: clamp(18px, 5vw, 32px);color: #111827;margin-top: 6px;">
-										<?php echo $dataset['earnings_gross'];?>
+										<?php echo edd_currency_filter( edd_format_amount( $dataset['earnings_gross'] ) );?>
 									</div>
 
 									<div class="data-statistic growth" style="font-weight: 600;font-size: clamp(8px, 5vw, 16px);color: #059669;margin-top: 5px;">
@@ -310,7 +309,7 @@ class EDD_Email_Summary {
 									</div>
 
 									<div class="data-value" style="font-weight: 700;font-size: clamp(18px, 5vw, 32px);color: #111827;margin-top: 6px;">
-									<?php echo $dataset['earnings_net'];?>
+									<?php echo edd_currency_filter( edd_format_amount( $dataset['earnings_net'] ) );?>
 									</div>
 
 									<div class="data-statistic growth" style="font-weight: 600;font-size: clamp(8px, 5vw, 16px);color: #059669;margin-top: 5px;">
@@ -367,7 +366,7 @@ class EDD_Email_Summary {
 									</div>
 
 									<div class="data-value" style="font-weight: 700;font-size: clamp(18px, 5vw, 32px);color: #111827;margin-top: 6px;">
-									<?php echo $dataset['average_order_value'];?>
+									<?php echo edd_currency_filter( edd_format_amount( $dataset['average_order_value'] ) );?>
 									</div>
 
 									<div class="data-statistic growth" style="font-weight: 600;font-size: clamp(8px, 5vw, 16px);color: #059669;margin-top: 5px;">
@@ -445,30 +444,29 @@ class EDD_Email_Summary {
 								</div>
 
 								<table style="border-collapse: collapse;width: 100%;">
-								<tr>
-									<th style="color: #4B5563;font-weight: 600;border-bottom: 1px solid #D1D5DB;text-align: left;border-right: none;padding: 7px 0px;font-size: clamp(10px, 5vw, 20px);">Product</th>
-									<th style="color: #4B5563;font-weight: 600;border-bottom: 1px solid #D1D5DB;text-align: right;border-right: none;padding: 7px 0px;font-size: clamp(10px, 5vw, 20px);">Gros Revenue</th>
-								</tr>
-								<tr>
-								<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: left;padding: 7px 0px;">1. Product 1</td>
-								<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: right;padding: 7px 0px;">XX</td>
-								</tr>
-								<tr>
-									<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: left;padding: 7px 0px;">2. Product 2</td>
-									<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: right;padding: 7px 0px;">XX</td>
-								</tr>
-								<tr>
-								<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: left;padding: 7px 0px;">3. Product 3</td>
-								<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: right;padding: 7px 0px;">XX</td>
-								</tr>
-								<tr>
-									<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: left;padding: 7px 0px;">4. Product 4</td>
-									<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: right;padding: 7px 0px;">XX</td>
-								</tr>
-								<tr>
-									<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: left;padding: 7px 0px;">5. Product 5</td>
-									<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: right;padding: 7px 0px;">XX</td>
-								</tr>
+									<tr>
+										<th style="color: #4B5563;font-weight: 600;border-bottom: 1px solid #D1D5DB;text-align: left;border-right: none;padding: 7px 0px;font-size: clamp(10px, 5vw, 20px);">Product</th>
+										<th style="color: #4B5563;font-weight: 600;border-bottom: 1px solid #D1D5DB;text-align: right;border-right: none;padding: 7px 0px;font-size: clamp(10px, 5vw, 20px);">Gros Revenue</th>
+									</tr>
+									<?php
+									$counter = 1;
+									foreach( $dataset['top_selling_products'] as $product ):
+										if ( ! $product->object instanceof \EDD_Download ) {
+											continue;
+										}
+
+										$title   = $product->object->post_title;
+										$revenue = edd_currency_filter( edd_format_amount( $product->total ) );
+									?>
+									<tr>
+										<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: left;padding: 7px 0px;"><?php echo esc_html( $counter );?>. <?php echo esc_html( $title );?></td>
+										<td style="font-size: clamp(10px, 5vw, 16px);color: #4B5563;font-weight: 400;border-bottom: 1px solid #E5E7EB;text-align: right;padding: 7px 0px;"><?php echo esc_html( $revenue );?></td>
+									</tr>
+									<?php
+										$counter++;
+									endforeach;
+									?>
+
 								</table>
 
 
@@ -487,7 +485,7 @@ class EDD_Email_Summary {
 				</div>
 				<!-- /.email-container -->
 
-
+				<?php if( ! empty( $blurb ) ): ?>
 				<!-- PRO-TIP SECTION -->
 				<div class="pro-tip-section-bg" style="background: #343A40;">
 					<div class="email-container" style="max-width: 650px;margin: 0 auto;font-family: 'Source Sans Pro', sans-serif;color: #1F2937;">
@@ -503,16 +501,16 @@ class EDD_Email_Summary {
 									</div>
 
 									<div class="pro-tip-title pull-down-20" style="margin-top: 20px;font-weight: 600;font-size: clamp(12px, 5vw, 20px);line-height: clamp(16px, 5vw, 26px);color: #1F2937;">
-										Did you know that adding your customers to your email marketing can boost revenue?
+										<?php echo esc_html( $blurb['headline'] );?>
 									</div>
 
 									<p class="bigger pull-down-15" style="margin: 0px;font-weight: 400;font-size: clamp(12px, 5vw, 16px);line-height: clamp(16px, 5vw, 22px);color: #4B5563;margin-top: 15px;">
-										Inform about personal pass. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tristique ut massa eget euismod nisl in. Rhoncus, aliquet mattis proin nisl laoreet elementum, et pretium.
+										<?php echo esc_html( $blurb['content'] );?>
 									</p>
 
 									<div class="pull-down-20" style="margin-top: 20px;">
-										<a href="#" class="cta-btn" style="padding: 8px 26px;font-size: clamp(14px, 5vw, 16px);line-height: 20px;background: #1C3D94;display: inline-block;color: #FFFFFF;text-decoration: none;">
-											Know More
+										<a href="<?php echo esc_attr( $blurb['button_link'] );?>" class="cta-btn" style="padding: 8px 26px;font-size: clamp(14px, 5vw, 16px);line-height: 20px;background: #1C3D94;display: inline-block;color: #FFFFFF;text-decoration: none;">
+											<?php echo esc_html( $blurb['button_text'] );?>
 										</a>
 									</div>
 
@@ -523,8 +521,9 @@ class EDD_Email_Summary {
 						</div>
 
 					</div>
+					<!-- /.email-container -->
 				</div>
-				<!-- /.email-container -->
+				<?php endif; ?>
 			</body>
 		</html>
 		<?php
@@ -533,24 +532,33 @@ class EDD_Email_Summary {
 	}
 
 	/**
-	 * Prepare and send email
+	 * Prepare and send email.
 	 *
 	 * @since 3.1
 	 */
 	public function send_email() {
-
 		// From Name: Store Name.
 		// Subject: Easy Digital Downloads Summary - <domain name>
 		// Preview Text: Store performance summary <start date> - <end date>
 
+
+		// Get next blurb.
+		$email_blurbs     = new EDD_Email_Summary_Blurb();
+		$next_blurb       = $email_blurbs->get_next();
+
 		// Prepare email.
 		$email_subject    = $this->get_email_subject();
 		$email_recipients = $this->get_email_recipients();
-		$email_body       = $this->build_email_template();
+		$email_body       = $this->build_email_template( $next_blurb );
 		$email_headers    = array('Content-Type: text/html; charset=UTF-8');
 
 		// Send email.
-		wp_mail( $email_recipients, $email_subject, $email_body, $email_headers );
+		$email_sent = wp_mail( $email_recipients, $email_subject, $email_body, $email_headers );
+
+		if ( $email_sent ) {
+			$email_blurbs->mark_blurb_sent( $next_blurb );
+		}
+
 	}
 
 }

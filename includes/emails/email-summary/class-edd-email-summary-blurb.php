@@ -86,27 +86,77 @@ class EDD_Email_Summary_Blurb {
 
 
 	/**
-	 * Get next blurb that wasn't sent yet.
+	 * Get the next blurb that can be sent.
 	 *
 	 * @since 3.1
 	 *
 	 * @return array
 	 */
 	public function get_next() {
-		$all_data = $this->fetch_blurbs();
-		$blurbs   = array();
+		$all_data    = $this->fetch_blurbs();
+		$blurbs      = array();
+		$blurbs_sent = get_option( 'email_summary_blurbs_sent', array() );
+		$next_blurb  = false;
 
-		// Loop through the fetched blurbs and determine all that meet the conditions
+		// Loop through the fetched blurbs and filter out all that meet the conditions.
 		foreach ( $all_data['blurbs'] as $key => $blurb ) {
 			if( $this->does_blurb_meet_conditions( $blurb ) ) {
+				// We want to sort the array, so that we can get reliable hash everytime even if json order changed.
+				array_multisort( $blurb );
 				$blurbs[] = $blurb;
 			}
 		}
 
-		// @todo - It might be good to sort the array so that we get reliable hash?
-		// zan_return( md5(json_encode($blurbs[0]))	);
+		// Find first blurb that was not yet sent.
+		foreach ( $blurbs as $blurb ) {
+			$blurb_hash = $this->get_blurb_hash( $blurb );
+			if ( is_array( $blurbs_sent ) && ! in_array( $blurb_hash, $blurbs_sent ) ) {
+				$next_blurb = $blurb;
+				break;
+			}
+		}
 
-		return $blurbs;
+		// If all of the available blurbs were already sent out, choose random blurb.
+		if ( ! $next_blurb && ! empty( $blurbs ) ) {
+			$next_blurb = $blurbs[ array_rand( $blurbs ) ];
+		}
+
+		return $next_blurb;
+	}
+
+	/**
+	 * Save blurb as sent to the options.
+	 *
+	 * @since 3.1
+	 *
+	 * @return void
+	 */
+	public function mark_blurb_sent( $blurb ) {
+		$blurbs_sent = get_option( 'email_summary_blurbs_sent', array() );
+		if ( ! empty( $blurb ) ) {
+			$blurb_hash = $this->get_blurb_hash( $blurb );
+			if ( ! in_array( $blurb_hash, $blurbs_sent ) ) {
+				$blurbs_sent[] = $blurb_hash;
+			}
+		}
+
+		update_option( 'email_summary_blurbs_sent', $blurbs_sent );
+	}
+
+
+	/**
+	 * Hash blurb array
+	 *
+	 * @since 3.1
+	 *
+	 * @return string
+	 */
+	public function get_blurb_hash( $blurb ) {
+		if ( ! empty( $blurb ) ) {
+			return md5( json_encode( $blurb ) );
+		}
+
+		return false;
 	}
 
 	/**
@@ -137,6 +187,7 @@ class EDD_Email_Summary_Blurb {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -153,11 +204,12 @@ class EDD_Email_Summary_Blurb {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
 	/**
-	 * Check if store has specific products/downloads active
+	 * Check if store has specific products/downloads active.
 	 *
 	 * @since 3.1
 	 *
@@ -186,6 +238,7 @@ class EDD_Email_Summary_Blurb {
 				}
 			}
 		}
+
 		return true;
 	}
 
