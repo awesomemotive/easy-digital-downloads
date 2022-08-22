@@ -86,8 +86,8 @@ function edd_add_manual_order( $args = array() ) {
 
 		// Sanitize the email address.
 		$email = isset( $order_data['edd-new-customer-email'] )
-		? sanitize_email( $order_data['edd-new-customer-email'] )
-		: '';
+			? sanitize_email( $order_data['edd-new-customer-email'] )
+			: '';
 
 		$new_customer_args = array(
 			'name'  => $name,
