@@ -2842,14 +2842,14 @@ class Stats {
 			return $data;
 		}
 
-		$allowed_output_formats = array( 'raw', 'formatted' );
+		$allowed_output_formats = array( 'raw', 'typed', 'formatted' );
 
 		// Output format. Default raw.
 		$output = isset( $this->query_vars['output'] ) && in_array( $this->query_vars['output'], $allowed_output_formats, true )
 			? $this->query_vars['output']
 			: 'raw';
 
-		// Return data as is if the format is raw.
+			// Return data as is if the format is raw.
 		if ( 'raw' === $output ) {
 			return $data;
 		}
@@ -2862,18 +2862,30 @@ class Stats {
 		if ( is_object( $data ) ) {
 			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
 				if ( is_numeric( $data->{$field} ) ) {
-					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ), $currency );
+					$data->{$field} = edd_format_amount( $data->{$field} );
+
+					if ( 'formatted' === $output ) {
+						$data->{$field} = edd_currency_filter( $data->{$field}, $currency );
+					}
 				}
 			}
 		} elseif ( is_array( $data ) ) {
 			foreach ( array_keys( $data ) as $field ) {
 				if ( is_numeric( $data[ $field ] ) ) {
-					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ), $currency );
+					$data[ $field ] = edd_format_amount( $data[ $field ] );
+
+					if ( 'formatted' === $output ) {
+						$data[ $field ] = edd_currency_filter( $data[ $field ], $currency );
+					}
 				}
 			}
 		} else {
 			if ( is_numeric( $data ) ) {
-				$data = edd_currency_filter( edd_format_amount( $data ), $currency );
+				$data = edd_format_amount( $data );
+
+				if ( 'formatted' === $output ) {
+					$data = edd_currency_filter( $data, $currency );
+				}
 			}
 		}
 

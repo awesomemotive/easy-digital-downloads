@@ -1375,6 +1375,7 @@ class EDD_API {
 						array(
 							'revenue_type'  => 'net',
 							'exclude_taxes' => ! $args['include_tax'],
+							'output'        => 'typed',
 						)
 					);
 					$dates = EDD\Reports\parse_dates_for_range();
@@ -1421,6 +1422,7 @@ class EDD_API {
 							'range'        => $args['date'],
 							'revenue_type' => 'net',
 							'exclude_tax'  => ! $args['include_tax'],
+							'output'       => 'typed',
 						)
 					);
 					$earnings['earnings'][ $args['date'] ] = $stats->get_order_earnings();
@@ -1433,7 +1435,8 @@ class EDD_API {
 				foreach ( $products as $product_info ) {
 					$product_earnings = $stats->get_order_item_earnings(
 						array(
-							'product_id'   => $product_info->ID,
+							'product_id' => $product_info->ID,
+							'output'     => 'typed',
 						)
 					);
 
@@ -1449,6 +1452,7 @@ class EDD_API {
 					$order_item_earnings = $stats->get_order_item_earnings(
 						array(
 							'product_id' => $args['product'],
+							'output'     => 'typed',
 						)
 					);
 
@@ -2302,6 +2306,7 @@ class EDD_API {
 				'range'         => 'today',
 				'exclude_taxes' => ! $args['include_tax'],
 				'revenue_type'  => 'net',
+				'output'        => 'typed',
 			)
 		);
 		$earnings['earnings']['today'] = $stats->get_order_earnings();
@@ -2311,6 +2316,7 @@ class EDD_API {
 				'range'         => 'this_month',
 				'exclude_taxes' => ! $args['include_tax'],
 				'revenue_type'  => 'net',
+				'output'        => 'typed',
 			)
 		);
 		$earnings['earnings']['current_month'] = $stats->get_order_earnings();
@@ -2320,6 +2326,7 @@ class EDD_API {
 				'range'         => 'last_month',
 				'exclude_taxes' => ! $args['include_tax'],
 				'revenue_type'  => 'net',
+				'output'        => 'typed',
 			)
 		);
 		$earnings['earnings']['last_month'] = $stats->get_order_earnings();
