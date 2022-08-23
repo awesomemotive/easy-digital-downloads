@@ -274,7 +274,7 @@ class Order extends Rows\Order {
 				'no_found_rows' => true,
 				'order'         => 'ASC',
 			) );
-		} elseif ( 'items' === $key && null === $this->items ) {
+		} elseif ( 'items' === $key ) {
 			$this->get_items();
 		}
 
