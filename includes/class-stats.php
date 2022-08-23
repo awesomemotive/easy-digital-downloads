@@ -2862,7 +2862,7 @@ class Stats {
 		if ( is_object( $data ) ) {
 			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
 				if ( is_numeric( $data->{$field} ) ) {
-					$data->{$field} = edd_format_amount( $data->{$field} );
+					$data->{$field} = edd_format_amount( $data->{$field}, true, $currency, $output );
 
 					if ( 'formatted' === $output ) {
 						$data->{$field} = edd_currency_filter( $data->{$field}, $currency );
@@ -2872,7 +2872,7 @@ class Stats {
 		} elseif ( is_array( $data ) ) {
 			foreach ( array_keys( $data ) as $field ) {
 				if ( is_numeric( $data[ $field ] ) ) {
-					$data[ $field ] = edd_format_amount( $data[ $field ] );
+					$data[ $field ] = edd_format_amount( $data[ $field ], true, $currency, $output );
 
 					if ( 'formatted' === $output ) {
 						$data[ $field ] = edd_currency_filter( $data[ $field ], $currency );
@@ -2881,7 +2881,7 @@ class Stats {
 			}
 		} else {
 			if ( is_numeric( $data ) ) {
-				$data = edd_format_amount( $data );
+				$data = edd_format_amount( $data, true, $currency, $output );
 
 				if ( 'formatted' === $output ) {
 					$data = edd_currency_filter( $data, $currency );

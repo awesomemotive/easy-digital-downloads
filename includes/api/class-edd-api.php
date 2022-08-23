@@ -1382,8 +1382,8 @@ class EDD_API {
 
 					$total_earnings = $stats->get_order_earnings(
 						array(
-							'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
-							'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+							'start'  => $dates['start']->format( 'Y-m-d H:i:s' ),
+							'end'    => $dates['end']->format( 'Y-m-d H:i:s' ),
 						)
 					);
 

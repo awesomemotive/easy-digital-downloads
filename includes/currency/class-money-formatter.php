@@ -114,6 +114,37 @@ class Money_Formatter {
 	}
 
 	/**
+	 * Formats the amount for API returns.
+	 * Does not apply the currency code and returns a foat instead of a string.
+	 *
+	 * @since 3.0
+	 * @return Money_Formatter
+	 */
+	public function format_for_api( $decimals = true ) {
+		$amount = $this->unformat();
+
+		if ( empty( $amount ) ) {
+			$amount = 0;
+		}
+
+		/**
+		 * Filter number of decimals to use for formatted amount
+		 *
+		 * @since unknown
+		 *
+		 * @param int        $number        Default 2. Number of decimals.
+		 * @param int|string $amount        Amount being formatted.
+		 * @param string     $currency_code Currency code being formatted.
+		 */
+		$decimals = apply_filters( 'edd_format_amount_decimals', $decimals ? $this->currency->number_decimals : 0, $amount, $this->currency->code );
+
+		// Format amount using decimals and separators (also rounds up or down)
+		$formatted = number_format( (float) $amount, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator );
+
+		return $this;
+	}
+
+	/**
 	 * Applies the currency prefix/suffix to the amount.
 	 *
 	 * @since 3.0
