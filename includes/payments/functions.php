@@ -611,31 +611,26 @@ function edd_get_total_sales() {
 function edd_get_total_earnings( $include_taxes = true ) {
 	global $wpdb;
 
-	$total = get_option( 'edd_earnings_total', false );
+	$key = $include_taxes ? 'edd_earnings_total' : 'edd_earnings_total_without_tax';
+
+	$total = get_transient( $key );
 
 	// If no total stored in the database, use old method of calculating total earnings.
 	if ( false === $total ) {
-		$total = get_transient( 'edd_earnings_total' );
 
-		if ( false === $total ) {
-			$exclude_taxes_sql = false === $include_taxes
-				? ' - SUM(tax)'
-				: '';
+		$stats = new EDD\Stats( array(
+			'output'        => 'raw',
+			'function'      => 'COUNT',
+			'exclude_taxes' => ! $include_taxes,
+		) );
 
-			$total = $wpdb->get_var( "
-				SELECT SUM(total) {$exclude_taxes_sql} AS total
-				FROM {$wpdb->edd_orders}
-				WHERE status IN ('complete', 'revoked')
-			" );
+		$total = $stats->get_order_earnings();
 
-			$total = (float) edd_number_not_negative( (float) $total );
+		// Cache results for 1 day. This cache is cleared automatically when a payment is made.
+		set_transient( $key, $total, 86400 );
 
-			// Cache results for 1 day. This cache is cleared automatically when a payment is made
-			set_transient( 'edd_earnings_total', $total, 86400 );
-
-			// Store the total for the first time
-			update_option( 'edd_earnings_total', $total );
-		}
+		// Store as an option for backwards compatibility.
+		update_option( $key, $total );
 	}
 
 	// Don't ever show negative earnings.
