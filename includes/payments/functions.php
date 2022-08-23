@@ -603,17 +603,19 @@ function edd_get_total_sales() {
  * Calculate the total earnings of the store.
  *
  * @since 1.2
- * @since 3.0 Refactored to work with new tables.
+ * @since 3.0   Refactored to work with new tables.
+ * @since 3.0.4 Added the $force argument, to force querying again.
  *
  * @param bool $include_taxes Whether taxes should be included. Default true.
+ * @param bool $force         If we should force a new calculation.
  * @return float $total Total earnings.
  */
-function edd_get_total_earnings( $include_taxes = true ) {
+function edd_get_total_earnings( $include_taxes = true, $force = true ) {
 	global $wpdb;
 
 	$key = $include_taxes ? 'edd_earnings_total' : 'edd_earnings_total_without_tax';
 
-	$total = get_transient( $key );
+	$total = $force ? false : get_transient( $key );
 
 	// If no total stored in the database, use old method of calculating total earnings.
 	if ( false === $total ) {
@@ -657,10 +659,8 @@ function edd_get_total_earnings( $include_taxes = true ) {
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
-	$total  = floatval( edd_get_total_earnings() );
+	$total  = floatval( edd_get_total_earnings( true, true ) );
 	$total += floatval( $amount );
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
@@ -674,14 +674,12 @@ function edd_increase_total_earnings( $amount = 0 ) {
  * @return float $total Total earnings.
  */
 function edd_decrease_total_earnings( $amount = 0 ) {
-	$total  = edd_get_total_earnings();
+	$total  = edd_get_total_earnings( true, true );
 	$total -= $amount;
 
 	if ( $total < 0 ) {
 		$total = 0;
 	}
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
