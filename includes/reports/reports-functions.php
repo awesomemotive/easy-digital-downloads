@@ -814,6 +814,8 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 		// Always use YEAR and MONTH when grouping by MONTH.
 		if ( 'MONTH' === $function ) {
 			$group_by_string = "YEAR({$column}), MONTH({$column})";
+		} elseif ( 'HOUR' === $function ) {
+			$group_by_string = "DAY({$column}), HOUR({$column})";
 		}
 
 		return $group_by_string;
@@ -831,6 +833,9 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 	if ( 'MONTH' === $function ) {
 		$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
 		$group_by_string   = "YEAR({$column_conversion}), MONTH({$column_conversion})";
+	} elseif ( 'HOUR' === $function ) {
+		$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
+		$group_by_string   = "DAY({$column_conversion}), HOUR({$column_conversion})";
 	}
 
 	return $group_by_string;
