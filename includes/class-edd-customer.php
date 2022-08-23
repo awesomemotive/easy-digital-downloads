@@ -682,10 +682,10 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 		do_action( 'edd_customer_pre_attach_payment', $order->id, $this->id, $this );
 
-		$success = false;
+		$success = (int) $order->customer_id === (int) $this->id;
 
 		// Update the order if it isn't already attached.
-		if ( (int) $order->customer_id !== (int) $this->id ) {
+		if ( ! $success ) {
 			// Update the order.
 			$success = (bool) edd_update_order(
 				$order_id,
