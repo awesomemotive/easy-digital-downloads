@@ -809,13 +809,17 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 	$gmt_offset = $date->getOffset();
 
 	if ( empty( $gmt_offset ) ) {
-		$group_by_string = "{$function}({$column})";
 
-		// Always use YEAR and MONTH when grouping by MONTH.
-		if ( 'MONTH' === $function ) {
-			$group_by_string = "YEAR({$column}), MONTH({$column})";
-		} elseif ( 'HOUR' === $function ) {
-			$group_by_string = "DAY({$column}), HOUR({$column})";
+		switch ( $function ) {
+			case 'HOUR':
+				$group_by_string = "DAY({$column}), HOUR({$column})";
+				break;
+			case 'MONTH':
+				$group_by_string = "YEAR({$column}), MONTH({$column})";
+				break;
+			default:
+				$group_by_string = "{$function}({$column})";
+				break;
 		}
 
 		return $group_by_string;
@@ -828,14 +832,17 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 
 	$formatted_offset = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours . ':00';
 
-	$group_by_string = "{$function}(CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}'))";
-	// Always use YEAR and MONTH when grouping by MONTH.
-	if ( 'MONTH' === $function ) {
-		$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
-		$group_by_string   = "YEAR({$column_conversion}), MONTH({$column_conversion})";
-	} elseif ( 'HOUR' === $function ) {
-		$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
-		$group_by_string   = "DAY({$column_conversion}), HOUR({$column_conversion})";
+	$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
+	switch ( $function ) {
+		case 'HOUR':
+			$group_by_string = "DAY({$column_conversion}), HOUR({$column_conversion})";
+			break;
+		case 'MONTH':
+			$group_by_string = "YEAR({$column_conversion}), MONTH({$column_conversion})";
+			break;
+		default:
+			$group_by_string = "{$function}({$column_conversion})";
+			break;
 	}
 
 	return $group_by_string;
