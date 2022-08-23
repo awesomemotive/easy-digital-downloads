@@ -280,6 +280,7 @@ class Order extends Rows\Order {
 				'orderby'       => 'cart_index',
 				'order'         => 'ASC',
 				'no_found_rows' => true,
+				'number'        => 100,
 			) );
 		}
 
@@ -349,6 +350,7 @@ class Order extends Rows\Order {
 				'orderby'       => 'cart_index',
 				'order'         => 'ASC',
 				'no_found_rows' => true,
+				'number'        => 100,
 			) );
 		}
 
