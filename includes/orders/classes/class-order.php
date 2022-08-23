@@ -275,13 +275,7 @@ class Order extends Rows\Order {
 				'order'         => 'ASC',
 			) );
 		} elseif ( 'items' === $key && null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-				'number'        => 100,
-			) );
+			$this->get_items();
 		}
 
 		return parent::__get( $key );
@@ -350,7 +344,7 @@ class Order extends Rows\Order {
 				'orderby'       => 'cart_index',
 				'order'         => 'ASC',
 				'no_found_rows' => true,
-				'number'        => 100,
+				'number'        => 200,
 			) );
 		}
 
