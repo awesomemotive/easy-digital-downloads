@@ -622,6 +622,7 @@ function edd_get_total_earnings( $include_taxes = true ) {
 			'output'        => 'typed',
 			'function'      => 'COUNT',
 			'exclude_taxes' => ! $include_taxes,
+			'revenue_type'  => 'net',
 		) );
 
 		$total = $stats->get_order_earnings();
