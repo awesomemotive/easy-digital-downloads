@@ -53,6 +53,9 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		self::$customers[0] = edd_get_customer( $customers[0] );
 
 		edd_update_payment_status( self::$order, 'complete' );
+
+		// Avoid an issue that causes the user to be pending verification, due to EDD 3.0.4.
+		delete_user_meta( self::$user, '_edd_pending_verification', '1' );
 	}
 
 	public function test_create_customer_from_EDD_Customer_should_be_greater_than_0() {
