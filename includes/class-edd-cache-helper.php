@@ -121,4 +121,24 @@ class EDD_Cache_Helper {
 		}
 
 	}
+
+	/**
+	 * Prevents W3TC from adding to the cache prior to modifying data.
+	 *
+	 * @since 1.7
+	 * @since 3.0.4 Removed the cache suspend call.
+	 */
+	public function w3tc_suspend_cache_addition_pre() {
+		// This function does nothing as of EDD 3.0.4, it is only left here to prevent fatal errors in case it was used.
+	}
+
+	/**
+	 * Prevents W3TC from adding to the cache after modifying data.
+	 *
+	 * @since 1.7
+	 * @since 3.0.4 Removed the cache suspend call.
+	 */
+	public function w3tc_suspend_cache_addition_post() {
+		// This function does nothing as of EDD 3.0.4, it is only left here to prevent fatal errors in case it was used.
+	}
 }
