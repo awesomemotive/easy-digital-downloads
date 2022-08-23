@@ -2849,7 +2849,7 @@ class Stats {
 			? $this->query_vars['output']
 			: 'raw';
 
-			// Return data as is if the format is raw.
+		// Return data as is if the format is raw.
 		if ( 'raw' === $output ) {
 			return $data;
 		}
