@@ -618,20 +618,21 @@ function edd_get_total_earnings( $include_taxes = true ) {
 	// If no total stored in the database, use old method of calculating total earnings.
 	if ( false === $total ) {
 
-		$stats = new EDD\Stats( array(
-			'output'        => 'typed',
-			'function'      => 'COUNT',
-			'exclude_taxes' => ! $include_taxes,
-			'revenue_type'  => 'net',
-		) );
+		$stats = new EDD\Stats();
 
-		$total = $stats->get_order_earnings();
+		$total = $stats->get_order_earnings(
+			array(
+				'output'        => 'typed',
+				'exclude_taxes' => ! $include_taxes,
+				'revenue_type'  => 'net',
+			)
+		);
 
 		// Cache results for 1 day. This cache is cleared automatically when a payment is made.
 		set_transient( $key, $total, 86400 );
 
 		// Store as an option for backwards compatibility.
-		update_option( $key, $total );
+		update_option( $key, $total, false );
 	} else {
 		// Always ensure that we're working with a float, since the transient comes back as a string.
 		$total = (float) $total;
