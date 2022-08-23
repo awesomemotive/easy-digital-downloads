@@ -169,7 +169,7 @@ function edd_get_order_items( $args = array() ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'number' => 30,
+		'number' => 100,
 	) );
 
 	// Instantiate a query object
