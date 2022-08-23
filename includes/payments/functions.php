@@ -619,7 +619,7 @@ function edd_get_total_earnings( $include_taxes = true ) {
 	if ( false === $total ) {
 
 		$stats = new EDD\Stats( array(
-			'output'        => 'raw',
+			'output'        => 'typed',
 			'function'      => 'COUNT',
 			'exclude_taxes' => ! $include_taxes,
 		) );
@@ -631,6 +631,9 @@ function edd_get_total_earnings( $include_taxes = true ) {
 
 		// Store as an option for backwards compatibility.
 		update_option( $key, $total );
+	} else {
+		// Always ensure that we're working with a float, since the transient comes back as a string.
+		$total = (float) $total;
 	}
 
 	// Don't ever show negative earnings.
@@ -638,7 +641,9 @@ function edd_get_total_earnings( $include_taxes = true ) {
 		$total = 0;
 	}
 
-	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
+	$total = edd_format_amount( $total, true, edd_get_currency(), 'typed' );
+
+	return apply_filters( 'edd_total_earnings', $total );
 }
 
 /**
