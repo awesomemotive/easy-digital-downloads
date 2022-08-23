@@ -128,7 +128,7 @@ function edd_format_amount( $amount = 0, $decimals = true, $currency = '', $cont
 
 	switch ( $context ) {
 		case 'typed':
-			$return_value = $formatter->format_for_api( $decimals )->amount;
+			$return_value = $formatter->format_for_typed( $decimals )->amount;
 			break;
 		case 'display':
 		default:
