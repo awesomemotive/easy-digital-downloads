@@ -639,9 +639,6 @@ class Data_Migrator {
 			'date_created' => $date_created_gmt,
 		);
 
-		// Remove empty data.
-		$order_address_data = array_filter( $order_address_data );
-
 		$tax_rate_id = null;
 		$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
 			? (float) $meta['_edd_payment_tax_rate'][0]
@@ -757,6 +754,8 @@ class Data_Migrator {
 
 		}
 
+		// Remove empty data.
+		$order_address_data = array_filter( $order_address_data );
 		if ( ! empty( $order_address_data ) ) {
 			// Add to edd_order_addresses table.
 			$order_address_data['order_id'] = $order_id;
