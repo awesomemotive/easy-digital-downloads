@@ -20,6 +20,11 @@ class Money_Formatter {
 	public $amount;
 
 	/**
+	 * @var float Typed amount.
+	 */
+	public $typed_amount;
+
+	/**
 	 * @var int|float Original, unmodified amount passed in via constructor.
 	 */
 	private $original_amount;
@@ -49,7 +54,7 @@ class Money_Formatter {
 	 * @return float|int
 	 */
 	private function unformat() {
-		$amount = $this->amount;
+		$amount = $this->original_amount;
 
 		$sep_found = strpos( $amount, $this->currency->decimal_separator );
 		if ( ',' === $this->currency->decimal_separator && false !== $sep_found ) {
@@ -154,7 +159,7 @@ class Money_Formatter {
 		$formatted = number_format( (float) $amount, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator );
 
 		// Set the amount to $this->amount.
-		$this->amount = $formatted;
+		$this->typed_amount = $formatted;
 
 		return $this;
 	}
