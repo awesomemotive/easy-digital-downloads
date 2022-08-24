@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ''
-labels: type-improvement, workflow-needs-lead-feedback
+labels: type-request, workflow-needs-lead-feedback
 assignees: 'cklosowski'
 
 ---
