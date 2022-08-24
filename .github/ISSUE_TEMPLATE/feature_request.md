@@ -2,8 +2,8 @@
 name: Feature request
 about: Suggest an idea for this project
 title: ''
-labels: Enhancement, Needs Lead Dev Feedback
-assignees: ''
+labels: type-improvement, workflow-needs-lead-feedback
+assignees: 'cklosowski'
 
 ---
 
