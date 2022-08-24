@@ -41,8 +41,10 @@ class Money_Formatter {
 	 * @param Currency $currency
 	 */
 	public function __construct( $amount, Currency $currency ) {
-		$this->amount   = $this->original_amount = $amount;
-		$this->currency = $currency;
+		$this->original_amount = $amount;
+		$this->amount          = $amount;
+		$this->typed_amount    = $amount;
+		$this->currency        = $currency;
 	}
 
 	/**
@@ -155,8 +157,15 @@ class Money_Formatter {
 
 		$decimals = $this->get_decimals( $decimals, $amount );
 
-		// Format amount using decimals and separators (also rounds up or down). We intentionally are not filtering here as it casues a data type issue.
-		$formatted = number_format( (float) $amount, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator );
+		/**
+		 * Since we want to return a float value here, intentionally only supply a decimal separator.
+		 *
+		 * The separators here are hard coded intentionally as we're looking to get truncated, raw format of float
+		 * which requires '.' for decimal separators and no thousands separator.
+		 *
+		 * This is also intentionally not filtered for the time being.
+		 */
+		$formatted = floatval( number_format( (float) $amount, $decimals, '.', '' ) );
 
 		// Set the amount to $this->amount.
 		$this->typed_amount = $formatted;
