@@ -69,19 +69,17 @@ class Money_Formatter {
 	}
 
 	/**
-	 * Formats the amount for display.
-	 * Does not apply the currency code.
+	 * Returns the number of decimals ot use for the formatted amount.
 	 *
-	 * @since 3.0
-	 * @return Money_Formatter
+	 * Based on the currency code used when instantiating the class, determines how many
+	 * decimal points the value should have once formatted.
+	 *
+	 * @param bool  $decimals If we should include decimals or not in the formatted amount.
+	 * @param float $amount   The amount to format.
+	 *
+	 * @return int  The number of decimals places to use when formatting the amount.
 	 */
-	public function format_for_display( $decimals = true ) {
-		$amount = $this->unformat();
-
-		if ( empty( $amount ) ) {
-			$amount = 0;
-		}
-
+	private function get_decimals( $decimals, $amount ) {
 		/**
 		 * Filter number of decimals to use for formatted amount
 		 *
@@ -91,9 +89,29 @@ class Money_Formatter {
 		 * @param int|string $amount        Amount being formatted.
 		 * @param string     $currency_code Currency code being formatted.
 		 */
-		$decimals = apply_filters( 'edd_format_amount_decimals', $decimals ? $this->currency->number_decimals : 0, $amount, $this->currency->code );
+		return apply_filters( 'edd_format_amount_decimals', $decimals ? $this->currency->number_decimals : 0, $amount, $this->currency->code );
+	}
 
-		// Format amount using decimals and separators (also rounds up or down)
+	/**
+	 * Formats the amount for display.
+	 * Does not apply the currency code.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $decimals If we should include decimal places or not when formatting.
+	 *
+	 * @return Money_Formatter
+	 */
+	public function format_for_display( $decimals = true ) {
+		$amount = $this->unformat();
+
+		if ( empty( $amount ) ) {
+			$amount = 0;
+		}
+
+		$decimals = $this->get_decimals( $decimals, $amount );
+
+		// Format amount using decimals and separators (also rounds up or down).
 		$formatted = number_format( (float) $amount, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator );
 
 		/**
@@ -118,6 +136,9 @@ class Money_Formatter {
 	 * Does not apply the currency code and returns a foat instead of a string.
 	 *
 	 * @since 3.0
+	 *
+	 * @param bool $decimals If we should include decimal places or not when formatting.
+	 *
 	 * @return Money_Formatter
 	 */
 	public function format_for_typed( $decimals = true ) {
@@ -127,19 +148,13 @@ class Money_Formatter {
 			$amount = 0;
 		}
 
-		/**
-		 * Filter number of decimals to use for formatted amount
-		 *
-		 * @since unknown
-		 *
-		 * @param int        $number        Default 2. Number of decimals.
-		 * @param int|string $amount        Amount being formatted.
-		 * @param string     $currency_code Currency code being formatted.
-		 */
-		$decimals = apply_filters( 'edd_format_amount_decimals', $decimals ? $this->currency->number_decimals : 0, $amount, $this->currency->code );
+		$decimals = $this->get_decimals( $decimals, $amount );
 
-		// Format amount using decimals and separators (also rounds up or down).
+		// Format amount using decimals and separators (also rounds up or down). We intentionally are not filtering here as it casues a data type issue.
 		$formatted = number_format( (float) $amount, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator );
+
+		// Set the amount to $this->amount.
+		$this->amount = $formatted;
 
 		return $this;
 	}
