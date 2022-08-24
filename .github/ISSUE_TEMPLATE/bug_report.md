@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: Bug, Needs Replication
+labels: type-bug, workflow-needs-replication
 assignees: ''
 
 ---
