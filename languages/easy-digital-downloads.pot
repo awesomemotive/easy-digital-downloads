@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.0.3\n"
+"Project-Id-Version: Easy Digital Downloads 3.0.4\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-08-16 03:37:29+00:00\n"
+"POT-Creation-Date: 2022-08-25 06:47:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -95,10 +95,10 @@ msgstr ""
 #: includes/admin/import/class-batch-import.php:188
 #: includes/admin/payments/actions.php:72
 #: includes/admin/payments/actions.php:77
-#: includes/admin/payments/actions.php:208
-#: includes/admin/payments/actions.php:242
-#: includes/admin/payments/actions.php:274
-#: includes/admin/payments/actions.php:304
+#: includes/admin/payments/actions.php:222
+#: includes/admin/payments/actions.php:256
+#: includes/admin/payments/actions.php:288
+#: includes/admin/payments/actions.php:318
 #: includes/admin/payments/add-order.php:63
 #: includes/admin/payments/add-order.php:67
 #: includes/admin/payments/view-order-details.php:23
@@ -129,8 +129,8 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:1148
 #: includes/admin/upgrades/upgrade-functions.php:1230
 #: includes/admin/upgrades/v3/class-base.php:117
-#: includes/api/class-edd-api.php:2014 includes/api/class-edd-api.php:2018
-#: includes/api/class-edd-api.php:2030 includes/api/class-edd-api.php:2032
+#: includes/api/class-edd-api.php:2036 includes/api/class-edd-api.php:2040
+#: includes/api/class-edd-api.php:2052 includes/api/class-edd-api.php:2054
 #: includes/cart/class-edd-cart.php:1451 includes/cart/class-edd-cart.php:1465
 #: includes/class-edd-license-handler.php:385
 #: includes/deprecated-functions.php:488 includes/deprecated-functions.php:505
@@ -145,8 +145,8 @@ msgstr ""
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 #: includes/gateways/stripe/includes/payment-actions.php:1408
 #: includes/process-download.php:280 includes/process-download.php:874
-#: includes/query-filters.php:51 includes/user-functions.php:886
-#: includes/user-functions.php:911 includes/user-functions.php:963
+#: includes/query-filters.php:51 includes/user-functions.php:891
+#: includes/user-functions.php:916 includes/user-functions.php:968
 msgid "Error"
 msgstr ""
 
@@ -287,8 +287,8 @@ msgstr ""
 #: includes/admin/admin-deprecated-functions.php:67
 #: includes/admin/payments/actions.php:72
 #: includes/admin/payments/actions.php:77
-#: includes/admin/payments/actions.php:274
-#: includes/admin/payments/actions.php:304 includes/emails/actions.php:59
+#: includes/admin/payments/actions.php:288
+#: includes/admin/payments/actions.php:318 includes/emails/actions.php:59
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
@@ -940,7 +940,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:215
-#: includes/user-functions.php:911
+#: includes/user-functions.php:916
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -976,7 +976,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:104
 #: includes/admin/reporting/export/export-actions.php:24
-#: includes/api/class-edd-api.php:2014
+#: includes/api/class-edd-api.php:2036
 #: includes/class-edd-license-handler.php:385
 msgid "Nonce verification failed"
 msgstr ""
@@ -2011,7 +2011,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:2796
 #: includes/admin/reporting/reports.php:2865
 #: includes/admin/reporting/reports.php:2931
-#: includes/reports/reports-functions.php:1086
+#: includes/reports/reports-functions.php:1115
 #. translators: the plural post type label
 msgid "All %s"
 msgstr ""
@@ -2610,57 +2610,57 @@ msgid ""
 "assign this payment to them."
 msgstr ""
 
-#: includes/admin/payments/actions.php:208
+#: includes/admin/payments/actions.php:222
 msgid "Error updating order."
 msgstr ""
 
-#: includes/admin/payments/actions.php:242
+#: includes/admin/payments/actions.php:256
 msgid "You do not have permission to edit this order."
 msgstr ""
 
-#: includes/admin/payments/actions.php:383
-#: includes/admin/payments/actions.php:480
+#: includes/admin/payments/actions.php:397
+#: includes/admin/payments/actions.php:494
 msgid "You must be logged in to perform this action."
 msgstr ""
 
-#: includes/admin/payments/actions.php:393
-#: includes/admin/payments/actions.php:485
+#: includes/admin/payments/actions.php:407
+#: includes/admin/payments/actions.php:499
 msgid "Your account does not have permission to perform this action."
 msgstr ""
 
-#: includes/admin/payments/actions.php:404
+#: includes/admin/payments/actions.php:418
 msgid "Invalid order ID"
 msgstr ""
 
-#: includes/admin/payments/actions.php:414
+#: includes/admin/payments/actions.php:428
 msgid "Invalid order"
 msgstr ""
 
-#: includes/admin/payments/actions.php:423
+#: includes/admin/payments/actions.php:437
 msgid "Order is already refunded"
 msgstr ""
 
-#: includes/admin/payments/actions.php:432
+#: includes/admin/payments/actions.php:446
 msgid "Cannot refund an order that is already refunded."
 msgstr ""
 
-#: includes/admin/payments/actions.php:443
+#: includes/admin/payments/actions.php:457
 msgid "View Refund"
 msgstr ""
 
-#: includes/admin/payments/actions.php:489
+#: includes/admin/payments/actions.php:503
 msgid "Missing form data or order ID."
 msgstr ""
 
-#: includes/admin/payments/actions.php:498
+#: includes/admin/payments/actions.php:512
 msgid "Nonce validation failed when submitting refund."
 msgstr ""
 
-#: includes/admin/payments/actions.php:545
+#: includes/admin/payments/actions.php:559
 msgid "Refund successfully processed."
 msgstr ""
 
-#: includes/admin/payments/actions.php:556
+#: includes/admin/payments/actions.php:570
 msgid "Unable to process refund."
 msgstr ""
 
@@ -2737,7 +2737,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:296
 #: includes/admin/reporting/class-base-logs-list-table.php:506
 #: includes/admin/tools/logs.php:258
-#: includes/reports/reports-functions.php:1400
+#: includes/reports/reports-functions.php:1429
 msgid "Filter"
 msgstr ""
 
@@ -4408,8 +4408,8 @@ msgstr ""
 msgid "Export File Download Log Dates"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:3042 includes/user-functions.php:915
-#: includes/user-functions.php:919
+#: includes/admin/reporting/reports.php:3042 includes/user-functions.php:920
+#: includes/user-functions.php:924
 msgid "Notice"
 msgstr ""
 
@@ -6042,7 +6042,7 @@ msgstr ""
 msgid "Store earnings successfully recounted."
 msgstr ""
 
-#: includes/admin/tools/class-edd-tools-reset-stats.php:142
+#: includes/admin/tools/class-edd-tools-reset-stats.php:144
 msgid "Your store has been successfully reset."
 msgstr ""
 
@@ -7111,93 +7111,89 @@ msgstr ""
 msgid "Unable to find download. Please refresh the page and try again."
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:166 includes/api/class-edd-api.php:1128
-#: includes/api/class-edd-api.php:1315 includes/api/class-edd-api.php:1432
+#: includes/api/class-edd-api-v2.php:166 includes/api/class-edd-api.php:1131
+#: includes/api/class-edd-api.php:1340 includes/api/class-edd-api.php:1463
 msgid "Product %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:240 includes/api/class-edd-api.php:1237
-#: includes/api/class-edd-api.php:1333
+#: includes/api/class-edd-api-v2.php:240 includes/api/class-edd-api.php:1240
+#: includes/api/class-edd-api.php:1358
 msgid "The end date must be later than the start date!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:341 includes/api/class-edd-api.php:1070
+#: includes/api/class-edd-api-v2.php:341 includes/api/class-edd-api.php:1073
 msgid "Customer %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:346 includes/api/class-edd-api.php:1076
+#: includes/api/class-edd-api-v2.php:346 includes/api/class-edd-api.php:1079
 msgid "No customers found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:458
+#: includes/api/class-edd-api.php:461
 msgid "You must specify both a token and API key!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:475
+#: includes/api/class-edd-api.php:478
 msgid "Your request could not be authenticated!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:493
+#: includes/api/class-edd-api.php:496
 msgid "Invalid API key!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:509
+#: includes/api/class-edd-api.php:512
 msgid "Invalid API version!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:685
+#: includes/api/class-edd-api.php:688
 msgid "Invalid query!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1242 includes/api/class-edd-api.php:1338
+#: includes/api/class-edd-api.php:1245 includes/api/class-edd-api.php:1363
 msgid "Invalid or no date range specified!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1282 includes/api/class-edd-api.php:1401
-msgid "There was an error retrieving earnings."
-msgstr ""
-
-#: includes/api/class-edd-api.php:1597
+#: includes/api/class-edd-api.php:1619
 msgid "No discounts found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1643
+#: includes/api/class-edd-api.php:1665
 msgid "Discount %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1714
+#: includes/api/class-edd-api.php:1736
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1970 includes/user-functions.php:1081
+#: includes/api/class-edd-api.php:1992 includes/user-functions.php:1086
 msgid "Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1980 includes/user-functions.php:1088
+#: includes/api/class-edd-api.php:2002 includes/user-functions.php:1093
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1984
+#: includes/api/class-edd-api.php:2006
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1987
+#: includes/api/class-edd-api.php:2009
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1990 includes/user-functions.php:1099
+#: includes/api/class-edd-api.php:2012 includes/user-functions.php:1104
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1994 includes/user-functions.php:1105
+#: includes/api/class-edd-api.php:2016 includes/user-functions.php:1110
 msgid "Revoke API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2018
+#: includes/api/class-edd-api.php:2040
 msgid "User ID Required"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2030 includes/api/class-edd-api.php:2032
+#: includes/api/class-edd-api.php:2052 includes/api/class-edd-api.php:2054
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -7542,7 +7538,7 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/class-edd-cache-helper.php:125
+#: includes/class-edd-cache-helper.php:113
 msgid ""
 "In order for <strong>database caching</strong> to work with Easy Digital "
 "Downloads you must add <code>_wp_session_</code> to the \"Ignored query "
@@ -7698,8 +7694,8 @@ msgstr ""
 msgid "Customer User ID: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:314 includes/user-functions.php:568
-#: includes/user-functions.php:580
+#: includes/class-edd-cli.php:314 includes/user-functions.php:573
+#: includes/user-functions.php:585
 msgid "Username: %s"
 msgstr ""
 
@@ -8353,11 +8349,11 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: includes/class-stats.php:3091
+#: includes/class-stats.php:3103
 msgid "No data to compare"
 msgstr ""
 
-#: includes/class-stats.php:3094
+#: includes/class-stats.php:3106
 msgid "No Change"
 msgstr ""
 
@@ -8392,20 +8388,20 @@ msgid ""
 "%4$s. See %5$s for more information."
 msgstr ""
 
-#: includes/compat/class-template.php:97
+#: includes/compat/class-template.php:109
 msgid ""
 "Easy Digital Downloads failed to automatically update your purchase receipt "
 "template. This update is necessary for the purchase receipt to display "
 "correctly."
 msgstr ""
 
-#: includes/compat/class-template.php:98
+#: includes/compat/class-template.php:110
 msgid ""
 "This update must be completed manually. Please click %shere%s for more "
 "information."
 msgstr ""
 
-#: includes/compat/class-template.php:99
+#: includes/compat/class-template.php:111
 msgid "The file that needs to be updated is located at:"
 msgstr ""
 
@@ -9205,7 +9201,7 @@ msgstr ""
 msgid "Receipt"
 msgstr ""
 
-#: includes/formatting.php:318
+#: includes/formatting.php:329
 msgid "Billing"
 msgstr ""
 
@@ -11304,27 +11300,27 @@ msgstr ""
 msgid "Invoice"
 msgstr ""
 
-#: includes/payments/actions.php:250
+#: includes/payments/actions.php:251
 msgid "After payment actions processed."
 msgstr ""
 
-#: includes/payments/actions.php:492 includes/payments/actions.php:553
+#: includes/payments/actions.php:493 includes/payments/actions.php:554
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:496
+#: includes/payments/actions.php:497
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:574 includes/payments/actions.php:608
+#: includes/payments/actions.php:575 includes/payments/actions.php:609
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:576
+#: includes/payments/actions.php:577
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:577 templates/shortcode-login.php:33
+#: includes/payments/actions.php:578 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
@@ -12059,7 +12055,7 @@ msgid "Global Rate"
 msgstr ""
 
 #: includes/reports/reports-functions.php:328
-#: includes/reports/reports-functions.php:1123
+#: includes/reports/reports-functions.php:1152
 msgid "Exclude Taxes"
 msgstr ""
 
@@ -12089,15 +12085,15 @@ msgstr ""
 msgid "Last 30 Days"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1015
+#: includes/reports/reports-functions.php:1044
 msgid "Chart time zone: %s"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1292
+#: includes/reports/reports-functions.php:1321
 msgid "%s - Converted"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1422
+#: includes/reports/reports-functions.php:1451
 msgid "Try the Sales/Earnings iOS App!"
 msgstr ""
 
@@ -12363,51 +12359,51 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:566
+#: includes/user-functions.php:571
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:567
+#: includes/user-functions.php:572
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:569
+#: includes/user-functions.php:574
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:578
+#: includes/user-functions.php:583
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:579
+#: includes/user-functions.php:584
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:583
+#: includes/user-functions.php:588
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/user-functions.php:585
+#: includes/user-functions.php:590
 msgid "Password entered at registration"
 msgstr ""
 
-#: includes/user-functions.php:588
+#: includes/user-functions.php:593
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:593
+#: includes/user-functions.php:598
 msgid "Click here to log in"
 msgstr ""
 
-#: includes/user-functions.php:597
+#: includes/user-functions.php:602
 msgid "To log in, visit: %s"
 msgstr ""
 
-#: includes/user-functions.php:751 includes/user-functions.php:752
+#: includes/user-functions.php:756 includes/user-functions.php:757
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:754
+#: includes/user-functions.php:759
 msgid ""
 "Hello %1$s,\n"
 "\n"
@@ -12417,37 +12413,37 @@ msgid ""
 "\t\tLink missing? Visit the following URL: %3$s"
 msgstr ""
 
-#: includes/user-functions.php:882
+#: includes/user-functions.php:887
 msgid ""
 "Sorry but your account verification link has expired. <a href=\"%s\">Click "
 "here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:915
+#: includes/user-functions.php:920
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:919
+#: includes/user-functions.php:924
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:963
+#: includes/user-functions.php:968
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1093
+#: includes/user-functions.php:1098
 msgid "Public Key:"
 msgstr ""
 
-#: includes/user-functions.php:1096
+#: includes/user-functions.php:1101
 msgid "Secret Key:"
 msgstr ""
 
-#: includes/user-functions.php:1120
+#: includes/user-functions.php:1125
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1127
+#: includes/user-functions.php:1132
 msgid "Add to iOS App"
 msgstr ""
 
@@ -12765,7 +12761,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:2823
 #: includes/admin/reporting/reports.php:2892
 #: includes/admin/reporting/reports.php:2946
-#: includes/reports/reports-functions.php:1052
+#: includes/reports/reports-functions.php:1081
 msgctxt "date filter"
 msgid "From"
 msgstr ""
@@ -12778,7 +12774,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:2834
 #: includes/admin/reporting/reports.php:2903
 #: includes/admin/reporting/reports.php:2957
-#: includes/reports/reports-functions.php:1060
+#: includes/reports/reports-functions.php:1089
 msgctxt "date filter"
 msgid "To"
 msgstr ""
