@@ -419,6 +419,8 @@ class Manifest implements Error_Logger {
 	 * @return array Parsed chart options.
 	 */
 	public function get_chart_options() {
+		$endpoint_options = $this->get_endpoint()->get_options();
+
 		if ( $this->is_pie_manifest() ) {
 			$defaults = array(
 				'responsive' => true,
@@ -441,6 +443,35 @@ class Manifest implements Error_Logger {
 				$time_format = 'MMM D';
 			}
 
+			$default_xAxes = array(
+				array(
+					'type'     => 'time',
+					'display'  => true,
+					'ticks'    => array(
+						'source'      => 'auto',
+						'maxRotation' => 0,
+					),
+					'position' => 'bottom',
+					'time'     => array(
+						'unit'          => $time_unit,
+						'tooltipFormat' => $time_format,
+					),
+				),
+			);
+
+			$default_yAxes = array(
+				array(
+					'type'     => 'linear',
+					'display'  => true,
+					'position' => 'left',
+					'ticks'    => array(
+						'formattingType' => 'format',
+						'beginAtZero'    => true,
+						'suggestedMin'   => 0,
+					),
+				),
+			);
+
 			$defaults = array(
 				'responsive' => true,
 				'hoverMode'  => 'index',
@@ -449,34 +480,22 @@ class Manifest implements Error_Logger {
 					'display' => $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ),
 					'text'    => $this->get_endpoint()->get_label(),
 				),
-				'scales'     => array(
-					'xAxes' => array(
-						array(
-							'type'     => 'time',
-							'display'  => true,
-							'ticks'    => array(
-								'source'      => 'auto',
-								'maxRotation' => 0,
-							),
-							'position' => 'bottom',
-							'time'     => array(
-								'unit'          => $time_unit,
-								'tooltipFormat' => $time_format,
-							),
-						),
-					),
-					'yAxes' => array(
-						array(
-							'type'     => 'linear',
-							'display'  => true,
-							'position' => 'left',
-						),
-					),
+				'scales'    => array(
+					'xAxes' => array(),
+					'yAxes' => array(),
 				),
 			);
+
+			// Check if specific axes are missing from the endpoint options and load them from defaults.
+			foreach ( array( 'xAxes', 'yAxes' ) as $axes_name) {
+				if ( empty( $endpoint_options['scales'][ $axes_name ] ) ) {
+					$endpoint_options['scales'][ $axes_name ] = ${ "default_{$axes_name}" };
+				}
+			}
+
 		}
 
-		return array_merge( $defaults, $this->get_endpoint()->get_options() );
+		return array_merge( $defaults, $endpoint_options );
 	}
 
 	/**
