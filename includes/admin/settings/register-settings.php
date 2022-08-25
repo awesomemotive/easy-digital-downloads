@@ -1177,7 +1177,7 @@ function edd_get_registered_settings() {
 			);
 		}
 
-		// If the constant is defined as true for EDD_TEST_MODE do not allow changing the Test Mode setting.
+		// If test_mode is being forced to true, alter the setting so it cannot be modified.
 		if ( edd_is_test_mode_forced() ) {
 			$edd_settings['gateways']['main']['test_mode'] = array_merge(
 				array(
@@ -3016,7 +3016,7 @@ add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
  * Filters the edd_get_option call for test_mode.
  *
  * This allows us to ensure that calls directly to edd_get_option respect the constant
- * in addition to the edd_is_test_mode() function call.
+ * in addition to the edd_is_test_mode() function call and included filter.
  *
  * @since 3.1
  *
