@@ -1177,6 +1177,21 @@ function edd_get_registered_settings() {
 			);
 		}
 
+		// If the constant is defined as true for EDD_TEST_MODE do not allow changing the Test Mode setting.
+		if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+			$edd_settings['gateways']['main']['test_mode'] = array_merge(
+				array(
+					'options'       => array(
+						'disabled' => true,
+						'readonly' => true,
+					),
+					'tooltip_title' => __( 'Forced Test Mode', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'You currently cannot modify the Test Mode setting, as the \'EDD_TEST_MODE\' constant has been defined as \'true\'.', 'easy-digital-downloads' ),
+				),
+				$edd_settings['gateways']['main']['test_mode'],
+			);
+		}
+
 		// Allow registered settings to surface the deprecated "Styles" tab.
 		if ( has_filter( 'edd_settings_styles' ) ) {
 			$edd_settings['styles'] = edd_apply_filters_deprecated(
@@ -1817,6 +1832,11 @@ function edd_checkbox_callback( $args ) {
  */
 function edd_checkbox_description_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+
+	// Allow a setting or filter to override what the found value is.
+	if ( isset( $args['current'] ) ) {
+		$edd_option = $args['current'];
+	}
 
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
@@ -2991,3 +3011,25 @@ function edd_add_setting_tooltip( $html = '', $args = array() ) {
 	return $html;
 }
 add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
+
+/**
+ * Filters the edd_get_option call for test_mode.
+ *
+ * This allows us to ensure that calls directly to edd_get_option respect the constant
+ * in addition to the edd_is_test_mode() function call.
+ *
+ * @since 3.1
+ *
+ * @param bool   $value   If test_mode is enabled in the settings.
+ * @param string $key     The key of the setting, should be test_mode.
+ * @param bool   $default The default setting, which is 'false' for test_mode.
+ */
+function edd_filter_test_mode_option( $value, $key, $default ) {
+	if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+		$value = true;
+	}
+
+	return $value;
+}
+add_filter( 'edd_get_option_test_mode', 'edd_filter_test_mode_option', 10, 3 );
+
