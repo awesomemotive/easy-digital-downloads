@@ -1178,7 +1178,7 @@ function edd_get_registered_settings() {
 		}
 
 		// If the constant is defined as true for EDD_TEST_MODE do not allow changing the Test Mode setting.
-		if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+		if ( edd_is_test_mode_forced() ) {
 			$edd_settings['gateways']['main']['test_mode'] = array_merge(
 				array(
 					'options'       => array(
@@ -1186,7 +1186,7 @@ function edd_get_registered_settings() {
 						'readonly' => true,
 					),
 					'tooltip_title' => __( 'Forced Test Mode', 'easy-digital-downloads' ),
-					'tooltip_desc'  => __( 'You currently cannot modify the Test Mode setting, as the \'EDD_TEST_MODE\' constant has been defined as \'true\'.', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'You currently cannot modify the Test Mode setting, as the \'EDD_TEST_MODE\' constant has been defined as \'true\' or the edd_is_test_mode filter is being forced to \'true\'.', 'easy-digital-downloads' ),
 				),
 				$edd_settings['gateways']['main']['test_mode'],
 			);
@@ -3025,11 +3025,33 @@ add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
  * @param bool   $default The default setting, which is 'false' for test_mode.
  */
 function edd_filter_test_mode_option( $value, $key, $default ) {
-	if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+	if ( edd_is_test_mode_forced() ) {
 		$value = true;
 	}
 
 	return $value;
 }
 add_filter( 'edd_get_option_test_mode', 'edd_filter_test_mode_option', 10, 3 );
+
+/**
+ * Determine if test mode is being forced to true.
+ *
+ * Using the EDD_TEST_MODE and the edd_is_test_mode filter, determine if the value of true
+ * is being forced for test_mode so we can properly alter the setting for it.
+ *
+ * @since 3.1
+ *
+ * @return bool If test_mode is being forced or not.
+ */
+function edd_is_test_mode_forced() {
+	if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+		return true;
+	}
+
+	if ( false !== has_filter( 'edd_is_test_mode', '__return_true' ) ) {
+		return true;
+	}
+
+	return false;
+}
 
