@@ -60,7 +60,7 @@ function edd_is_test_mode() {
 	$ret = edd_get_option( 'test_mode', false );
 
 	// Override any setting with the constant.
-	if ( defined( 'EDD_TEST_MODE') && true === EDD_TEST_MODE ) {
+	if ( edd_is_test_mode_forced() ) {
 		$ret = true;
 	}
 
