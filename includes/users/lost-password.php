@@ -63,6 +63,28 @@ function edd_get_lostpassword_url() {
 	);
 }
 
+/**
+ * Gets the password reset link for a user.
+ *
+ * @param WP_User $user
+ * @return false|string
+ */
+function edd_get_password_reset_link( $user ) {
+	$key = get_password_reset_key( $user );
+	if ( is_wp_error( $key ) ) {
+		return false;
+	}
+
+	return add_query_arg(
+		array(
+			'action' => 'rp',
+			'key'    => rawurlencode( $key ),
+			'login'  => rawurlencode( $user->user_login ),
+		),
+		network_site_url( 'wp-login.php', 'login' )
+	);
+}
+
 add_action( 'lostpassword_form', 'edd_set_lostpassword_session' );
 /**
  * Sets a session value for the lost password redirect URI.
