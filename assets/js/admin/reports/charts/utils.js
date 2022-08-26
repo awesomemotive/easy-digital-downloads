@@ -1,8 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Currency } from '@easy-digital-downloads/currency';
-import { NumberFormat } from '@easy-digital-downloads/currency';
+import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
 
 /**
  * Determine if a pie graph.
@@ -144,9 +143,6 @@ export const toolTipBaseConfig = {
 
 	ticks.callback = function( value, index, values ) {
 		switch ( ticks.formattingType ) {
-			case 'raw':
-				value = value;
-			  	break;
 			case 'integer':
 				value = parseInt( value );
 				break;

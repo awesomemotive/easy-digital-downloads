@@ -443,6 +443,20 @@ class Manifest implements Error_Logger {
 				$time_format = 'MMM D';
 			}
 
+			$defaults = array(
+				'responsive' => true,
+				'hoverMode'  => 'index',
+				'stacked'    => false,
+				'title'      => array(
+					'display' => $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ),
+					'text'    => $this->get_endpoint()->get_label(),
+				),
+				'scales'    => array(
+					'xAxes' => array(),
+					'yAxes' => array(),
+				),
+			);
+
 			$default_xAxes = array(
 				array(
 					'type'     => 'time',
@@ -469,20 +483,6 @@ class Manifest implements Error_Logger {
 						'beginAtZero'    => true,
 						'suggestedMin'   => 0,
 					),
-				),
-			);
-
-			$defaults = array(
-				'responsive' => true,
-				'hoverMode'  => 'index',
-				'stacked'    => false,
-				'title'      => array(
-					'display' => $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ),
-					'text'    => $this->get_endpoint()->get_label(),
-				),
-				'scales'    => array(
-					'xAxes' => array(),
-					'yAxes' => array(),
 				),
 			);
 
