@@ -102,8 +102,29 @@ var EDD_PayPal = {
 		var nonceEl = form.querySelector( 'input[name="edd_process_paypal_nonce"]' );
 		var tokenEl = form.querySelector( 'input[name="edd-process-paypal-token"]' );
 		var createFunc = ( 'subscription' === eddPayPalVars.intent ) ? 'createSubscription' : 'createOrder';
+		var requiredInputs = document.getElementById( 'edd_purchase_form' ).querySelectorAll( '[required]' );
+		var canEnable = false;
 
 		var buttonArgs = {
+			onInit: function ( data, actions ) {
+				canEnable = EDD_PayPal.maybeEnableButtons( requiredInputs, actions );
+				requiredInputs.forEach( function ( element ) {
+					element.addEventListener( 'change', function ( e ) {
+						if ( element.value ) {
+							canEnable = EDD_PayPal.maybeEnableButtons( requiredInputs, actions );
+
+							if ( canEnable && errorWrapper ) {
+								errorWrapper.innerHTML = '';
+							}
+						}
+					} );
+				} );
+			},
+			onClick: function () {
+				if ( !canEnable && errorWrapper ) {
+					errorWrapper.innerHTML = eddPayPalVars.requiredError;
+				}
+			},
 			onApprove: function( data, actions ) {
 				var formData = new FormData();
 				formData.append( 'action', eddPayPalVars.approvalAction );
@@ -233,6 +254,28 @@ var EDD_PayPal = {
 		};
 
 		return buttonArgs;
+	},
+
+	/**
+	 * Loops through the required fields. If any are empty, the PayPal buttons are disabled and the function returns false.
+	 * Otherwise, the buttons are enabled and this returns true.
+	 *
+	 * @param {array}  requiredInputs An array of inputs marked as required on the checkout form.
+	 * @param {object} actions        The actions which can modify the PayPal buttons (enable/disable).
+	 * @returns {boolean}
+	 */
+	maybeEnableButtons: function ( requiredInputs, actions ) {
+		for ( let input of requiredInputs ) {
+			if ( !input.value ) {
+				canEnable = false;
+				actions.disable();
+				break;
+			}
+			canEnable = true;
+			actions.enable();
+		}
+
+		return canEnable;
 	}
 };
 
