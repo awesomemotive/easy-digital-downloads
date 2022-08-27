@@ -1188,7 +1188,7 @@ function edd_get_registered_settings() {
 					'tooltip_title' => __( 'Forced Test Mode', 'easy-digital-downloads' ),
 					'tooltip_desc'  => __( 'You currently cannot modify the Test Mode setting, as the \'EDD_TEST_MODE\' constant has been defined as \'true\' or the edd_is_test_mode filter is being forced to \'true\'.', 'easy-digital-downloads' ),
 				),
-				$edd_settings['gateways']['main']['test_mode'],
+				$edd_settings['gateways']['main']['test_mode']
 			);
 		}
 
