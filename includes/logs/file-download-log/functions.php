@@ -66,7 +66,6 @@ function edd_add_file_download_log( $data = array() ) {
 	$should_record_log = apply_filters( 'edd_should_log_file_download', true, $data );
 
 	if ( false === $should_record_log ) {
-		edd_debug_log( 'Did not log file download due to filter', true );
 		return false;
 	}
 

@@ -65,7 +65,6 @@ function edd_add_api_request_log( $data = array() ) {
 	$should_record_log = apply_filters( 'edd_should_log_api_request', true, $data );
 
 	if ( false === $should_record_log ) {
-		edd_debug_log( 'Did not log api request due to filter', true );
 		return false;
 	}
 
