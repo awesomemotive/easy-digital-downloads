@@ -81,7 +81,6 @@ function edd_add_log( $data = array() ) {
 	$should_record_log = apply_filters( "edd_should_log_{$data['object_type']}", true, $data );
 
 	if ( false === $should_record_log ) {
-		edd_debug_log( 'Did not log due to filter', true );
 		return false;
 	}
 
