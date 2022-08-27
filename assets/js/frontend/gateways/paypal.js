@@ -106,24 +106,6 @@ var EDD_PayPal = {
 		var createFunc = ( 'subscription' === eddPayPalVars.intent ) ? 'createSubscription' : 'createOrder';
 
 		var buttonArgs = {
-			onClick: function( data, actions ) {
-				return fetch('/my-api/validate', {
-					method: 'post',
-					headers: {
-					'content-type': 'application/json'
-					}
-				}).then(function(res) {
-					return res.json();
-				}).then(function(data) {
-					// If there is a validation error, reject, otherwise resolve
-					if (data.validationError) {
-					document.querySelector('#error').classList.remove('hidden');
-					return actions.reject();
-					} else {
-					return actions.resolve();
-					}
-				});
-			},
 			onApprove: function( data, actions ) {
 				var formData = new FormData();
 				formData.append( 'action', eddPayPalVars.approvalAction );
