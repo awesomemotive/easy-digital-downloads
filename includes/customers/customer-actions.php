@@ -92,15 +92,16 @@ add_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
 /**
  * When a new primary email address is added to the database, any other primary email addresses should be demoted.
  *
- * @param string $old_value The previous value of `is_primary`.
- * @param string $new_value The new value of `is_primary`.
- * @param int $item_id      The address ID in the edd_customer_email_addresses table.
+ * @param string $old_value The previous value of `type`.
+ * @param string $new_value The new value of `type`.
+ * @param int    $item_id   The address ID in the edd_customer_email_addresses table.
  * @return void
  */
 function edd_demote_customer_primary_email_addresses( $old_value, $new_value, $item_id ) {
 	if ( ! $new_value ) {
 		return;
 	}
+
 	$email_address                    = edd_get_customer_email_address( $item_id );
 	$previous_primary_email_addresses = edd_get_customer_email_addresses(
 		array(
@@ -110,9 +111,11 @@ function edd_demote_customer_primary_email_addresses( $old_value, $new_value, $i
 			'type'        => 'primary',
 		)
 	);
+
 	if ( empty( $previous_primary_email_addresses ) ) {
 		return;
 	}
+
 	foreach ( $previous_primary_email_addresses as $previous ) {
 		edd_update_customer_address( $previous, array( 'type' => 'secondary' ) );
 	}
