@@ -63,6 +63,28 @@ function edd_add_log( $data = array() ) {
 		}
 	}
 
+	/**
+	 * Allow the ability to disable a generic log entry by object_type.
+	 *
+	 * Based on the object type, allows developers to disable the insertion of a log.
+	 *
+	 * Example:
+	 * add_filter( 'edd_should_log_gateway_error', '__return_false' )
+	 *
+	 * You can find a list of the logs object types in the edd_logs table.
+	 *
+	 * @since 3.1
+	 *
+	 * @param bool  $should_record_log If this log should be inserted
+	 * @param array $data              The data to be logged.
+	 */
+	$should_record_log = apply_filters( "edd_should_log_{$data['object_type']}", true, $data );
+
+	if ( false === $should_record_log ) {
+		edd_debug_log( 'Did not log due to filter', true );
+		return false;
+	}
+
 	// Instantiate a query object.
 	$logs = new EDD\Database\Queries\Log();
 
