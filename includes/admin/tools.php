@@ -1506,6 +1506,18 @@ function edd_tools_sysinfo_get() {
 		$return = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
 	}
 
+	// Drop Ins
+	$dropins = get_dropins();
+	if ( count( $dropins ) > 0 ) {
+		$return .= "\n" . '-- Drop Ins' . "\n\n";
+
+		foreach ( $dropins as $plugin => $plugin_data ) {
+			$return .= str_pad( $plugin_data['Name'] . ': ', 26, ' ' ) . $plugin_data['Version'] . "\n";
+		}
+
+		$return = apply_filters( 'edd_sysinfo_after_wordpress_dropin_plugins', $return );
+	}
+
 	// Get plugins that have an update
 	$updates = get_plugin_updates();
 
