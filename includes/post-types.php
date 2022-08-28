@@ -517,7 +517,7 @@ add_filter( 'post_row_actions', 'edd_download_row_actions', 2, 100 );
 /**
  * Adds the custom page state display to the Pages list.
  *
- * @param array   $post_states The existing registerd post states.
+ * @param array   $post_states The existing registered post states.
  * @param WP_Post $post        The post to possibly append the post state to.
  * @since 3.1
  */
