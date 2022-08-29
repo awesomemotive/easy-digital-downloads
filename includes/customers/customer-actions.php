@@ -117,7 +117,7 @@ function edd_demote_customer_primary_email_addresses( $old_value, $new_value, $i
 	}
 
 	foreach ( $previous_primary_email_addresses as $previous ) {
-		edd_update_customer_address( $previous, array( 'type' => 'secondary' ) );
+		edd_update_customer_email_address( $previous, array( 'type' => 'secondary' ) );
 	}
 }
 add_action( 'edd_transition_customer_email_address_type', 'edd_demote_customer_primary_email_addresses', 10, 3 );
