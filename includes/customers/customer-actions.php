@@ -71,12 +71,19 @@ function edd_process_customer_updated( $customer_id, $data, $previous_customer_d
 		// Remove the old user email from this account.
 		$previous_user = new WP_User( $previous_customer_data->user_id );
 		if ( $previous_user instanceof WP_User ) {
-			edd_delete_customer_email_address(
+			$existing_email_addresses = edd_get_customer_email_addresses(
 				array(
 					'customer_id' => $customer->id,
 					'email'       => $previous_user->user_email,
 				)
 			);
+
+			if ( ! empty( $existing_email_addresses ) ) {
+				// Should only be one, but let's foreach to be safe.
+				foreach ( $existing_email_addresses as $existing_address ) {
+					edd_delete_customer_email_address( $existing_address->id );
+				}
+			}
 		}
 
 		// Update some payment meta if we need to.
