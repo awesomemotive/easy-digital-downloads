@@ -265,7 +265,6 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 			$customer  = $customers->get_item_by( 'id', $customer_email->customer_id );
 		}
 	} else {
-		$customers = new EDD\Database\Queries\Customer();
 		$customer  = $customers->get_item_by( $field, $value );
 	}
 
