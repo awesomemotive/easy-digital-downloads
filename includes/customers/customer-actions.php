@@ -63,7 +63,7 @@ function edd_process_customer_updated( $customer_id, $data, $previous_customer_d
 				array(
 					'customer_id' => $customer->id,
 					'email'       => $user->user_email,
-					'primary'     => true, // Set this as the primary, which should transition any other emails.
+					'type'     => 'primary', // Set this as the primary, which should transition any other emails.
 				)
 			);
 		}
