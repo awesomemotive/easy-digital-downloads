@@ -20,7 +20,7 @@
  * @since 3.0.4
  */
 function edd_process_customer_added( $customer_id, $data ) {
-	// Make sure we add a new primary email address to the email addrsses table.
+	// Make sure we add a new primary email address to the email addresses table.
 	edd_add_customer_email_address(
 		array(
 			'customer_id' => $customer_id,
