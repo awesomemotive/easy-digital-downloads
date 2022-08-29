@@ -539,7 +539,7 @@ function edd_display_post_states( $post_states, $post ) {
 	}
 
 	if ( intval( edd_get_option( 'login_redirect_page' ) ) === $post->ID ) {
-		$post_states['edd_ogin_redirect_page'] = __( 'Login Redirect Page', 'easy-digital-downloads' );
+		$post_states['edd_login_redirect_page'] = __( 'Login Redirect Page', 'easy-digital-downloads' );
 	}
 
 	return $post_states;
