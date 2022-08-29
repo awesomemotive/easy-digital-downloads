@@ -12,7 +12,7 @@
  */
 
 /**
- * Is intended to be used when adding a customer direclty with edd_add_customer function.
+ * Is intended to be used when adding a customer directly with edd_add_customer function.
  *
  * Because the edd_add_customer function only directly interacts with the customers DB table, we may
  * need to do some additional actions like adding items to the customer email addresses table.
