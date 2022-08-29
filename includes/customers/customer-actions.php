@@ -32,7 +32,7 @@ function edd_process_customer_added( $customer_id, $data ) {
 add_action( 'edd_customer_added', 'edd_process_customer_added', 10, 2 );
 
 /**
- * Is intended to be used when updating a customer direclty with edd_add_customer function.
+ * Is intended to be used when updating a customer directly with edd_add_customer function.
  *
  * Because the edd_update_customer function only directly interacts with the customers DB table, we may
  * need to do some additional actions like managing email addresses.
