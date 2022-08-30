@@ -101,8 +101,6 @@ class EDD_Email_Summary_Blurb {
 		// Loop through the fetched blurbs and filter out all that meet the conditions.
 		foreach ( $all_data['blurbs'] as $key => $blurb ) {
 			if( $this->does_blurb_meet_conditions( $blurb ) ) {
-				// We want to sort the array, so that we can get reliable hash everytime even if json order changed.
-				array_multisort( $blurb );
 				$blurbs[] = $blurb;
 			}
 		}
@@ -153,6 +151,8 @@ class EDD_Email_Summary_Blurb {
 	 */
 	public function get_blurb_hash( $blurb ) {
 		if ( ! empty( $blurb ) ) {
+			// We want to sort the array, so that we can get reliable hash everytime even if array properties order changed.
+			array_multisort( $blurb );
 			return md5( json_encode( $blurb ) );
 		}
 
