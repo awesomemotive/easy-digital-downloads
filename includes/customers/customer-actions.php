@@ -55,8 +55,12 @@ function edd_process_customer_updated( $customer_id, $data, $prev_customer_obj )
 		// Attach the User Email to the customer as well.
 		$user = new WP_User( $customer->user_id );
 		if ( $user instanceof WP_User ) {
-			$customers = new EDD\Database\Queries\Customer();
-			$customers->update_item( $customer_id, array( 'email' => $user->user_email ) );
+
+			// Only update this if it doesn't match already.
+			if ( $customer->email !== $user->user_email ) {
+				$customers = new EDD\Database\Queries\Customer();
+				$customers->update_item( $customer_id, array( 'email' => $user->user_email ) );
+			}
 
 			// Our transition hook for the type will handle demoting any other email addresses.
 			edd_add_customer_email_address(
