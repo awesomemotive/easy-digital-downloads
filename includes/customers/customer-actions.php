@@ -18,6 +18,9 @@
  * need to do some additional actions like adding items to the customer email addresses table.
  *
  * @since 3.0.4
+ *
+ * @param int   $customer_id The customer ID that was added.
+ * @param array $data        The data passed in to add the customer.
  */
 function edd_process_customer_added( $customer_id, $data ) {
 	// Make sure we add a new primary email address to the email addresses table.
@@ -38,12 +41,16 @@ add_action( 'edd_customer_added', 'edd_process_customer_added', 10, 2 );
  * need to do some additional actions like managing email addresses.
  *
  * @since 3.0.4
+ *
+ * @param int          $customer_id       The customer ID being updated.
+ * @param array        $data              The data passed in to update the customer with.
+ * @param EDD_Customer $prev_customer_obj The customer object, prior to these updates.
  */
-function edd_process_customer_updated( $customer_id, $data, $previous_customer_data ) {
+function edd_process_customer_updated( $customer_id, $data, $prev_customer_obj ) {
 	$customer = edd_get_customer( $customer_id );
 
 	// If the email address changed, set the new one as primary.
-	if ( $previous_customer_data->email !== $customer->email ) {
+	if ( $prev_customer_obj->email !== $customer->email ) {
 
 		// Our transition hook for the type will handle demoting any other email addresses.
 		edd_add_customer_email_address(
@@ -55,7 +62,7 @@ function edd_process_customer_updated( $customer_id, $data, $previous_customer_d
 		);
 	}
 	// Process a User ID change.
-	if ( intval( $customer->user_id ) !== intval( $previous_customer_data->user_id ) ) {
+	if ( intval( $customer->user_id ) !== intval( $prev_customer_obj->user_id ) ) {
 		// Attach the User Email to the customer as well.
 		$user = new WP_User( $customer->user_id );
 		if ( $user instanceof WP_User ) {
@@ -69,7 +76,7 @@ function edd_process_customer_updated( $customer_id, $data, $previous_customer_d
 		}
 
 		// Remove the old user email from this account.
-		$previous_user = new WP_User( $previous_customer_data->user_id );
+		$previous_user = new WP_User( $prev_customer_obj->user_id );
 		if ( $previous_user instanceof WP_User ) {
 			$existing_email_addresses = edd_get_customer_email_addresses(
 				array(
