@@ -55,37 +55,22 @@ add_action( 'edd_transition_order_status', function( $old_status, $new_status, $
 	}
 }, 10, 3 );
 
+add_action( 'edd_after_payment_actions', 'edd_recalculate_order_downloads' );
+add_action( 'edd_refund_order', 'edd_recalculate_order_downloads' );
 /**
- * When an order item changes status, we need to recalculate the related download's sales and earnings.
+ * Recalculate download earnings/sales after a payment is created or a refund is issued.
  *
- * @since 3.0
- * @param string $old_value The old value.
- * @param string $new_value The new value.
- * @param int $order_item_id The order item ID.
+ * @param int $order_id The order ID.
+ * @return void
  */
-add_action( 'edd_transition_order_item_status', function( $old_value, $new_value, $order_item_id ) {
-	if ( $old_value === $new_value || 'inherit' === $new_value ) {
-		return;
+function edd_recalculate_order_downloads( $order_id ) {
+	$order_items = edd_get_order_items(
+		array(
+			'order_id' => $order_id,
+			'fields'   => 'product_id',
+		)
+	);
+	foreach ( $order_items as $order_item ) {
+		edd_recalculate_download_sales_earnings( $order_item );
 	}
-	$order_item = edd_get_order_item( $order_item_id );
-	edd_recalculate_download_sales_earnings( $order_item->product_id );
-}, 10, 3 );
-
-/**
- * When an order item adjustment changes type, we need to recalculate the related download's sales and earnings.
- *
- * @since 3.0
- * @param string $old_value The old value.
- * @param string $new_value The new value.
- * @param int $order_item_id The order item ID.
- */
-add_action( 'edd_transition_order_adjustment_type', function( $old_value, $new_value, $adjustment_id ) {
-	if ( 'discount' === $new_value ) {
-		return;
-	}
-	$adjustment = edd_get_order_adjustment( $adjustment_id );
-	if ( 'order_item' === $adjustment->object_type ) {
-		$order_item = edd_get_order_item( $adjustment->object_id );
-		edd_recalculate_download_sales_earnings( $order_item->product_id );
-	}
-}, 10, 3 );
+}
