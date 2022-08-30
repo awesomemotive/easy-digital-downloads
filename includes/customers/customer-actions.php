@@ -116,6 +116,11 @@ function edd_demote_customer_primary_email_addresses( $old_value, $new_value, $i
 		return;
 	}
 
+	// If we're not setting the `type` to `primary` we do not need to make any adjustments.
+	if ( 'primary' !== $new_value ) {
+		return;
+	}
+
 	$email_address                    = edd_get_customer_email_address( $item_id );
 	$previous_primary_email_addresses = edd_get_customer_email_addresses(
 		array(
