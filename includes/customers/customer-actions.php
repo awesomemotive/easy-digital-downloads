@@ -47,32 +47,27 @@ add_action( 'edd_customer_added', 'edd_process_customer_added', 10, 2 );
  * @param EDD_Customer $prev_customer_obj The customer object, prior to these updates.
  */
 function edd_process_customer_updated( $customer_id, $data, $prev_customer_obj ) {
-	$customer = edd_get_customer( $customer_id );
+	$customer      = edd_get_customer( $customer_id );
+	$email_updated = false;
 
-	// If the email address changed, set the new one as primary.
-	if ( $prev_customer_obj->email !== $customer->email ) {
-
-		// Our transition hook for the type will handle demoting any other email addresses.
-		edd_add_customer_email_address(
-			array(
-				'customer_id' => $customer->id,
-				'email'       => $customer->email,
-				'type'        => 'primary',
-			)
-		);
-	}
 	// Process a User ID change.
 	if ( intval( $customer->user_id ) !== intval( $prev_customer_obj->user_id ) ) {
 		// Attach the User Email to the customer as well.
 		$user = new WP_User( $customer->user_id );
 		if ( $user instanceof WP_User ) {
+			$customers = new EDD\Database\Queries\Customer();
+			$customers->update_item( $customer_id, array( 'email' => $user->user_email ) );
+
+			// Our transition hook for the type will handle demoting any other email addresses.
 			edd_add_customer_email_address(
 				array(
 					'customer_id' => $customer->id,
 					'email'       => $user->user_email,
-					'type'     => 'primary', // Set this as the primary, which should transition any other emails.
+					'type'        => 'primary',
 				)
 			);
+
+			$email_updated = true;
 		}
 
 		// Remove the old user email from this account.
@@ -99,6 +94,19 @@ function edd_process_customer_updated( $customer_id, $data, $prev_customer_obj )
 		foreach ( $order_ids as $order_id ) {
 			edd_update_order( $order_id, array( 'user_id' => $customer->user_id ) );
 		}
+	}
+
+	// If the email address changed, set the new one as primary.
+	if ( false === $email_updated && $prev_customer_obj->email !== $customer->email ) {
+
+		// Our transition hook for the type will handle demoting any other email addresses.
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => $customer->id,
+				'email'       => $customer->email,
+				'type'        => 'primary',
+			)
+		);
 	}
 }
 add_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
