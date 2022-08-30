@@ -52,7 +52,7 @@ function edd_add_log( $data = array() ) {
 	// inserted into the database.
 	if ( empty( $data['object_type'] ) ) {
 		// If the object_type is set to null, check the value of the object_id.
-		if ( is_null( $data['object_type'] ) ) {
+		if ( isset( $data['object_type'] ) && is_null( $data['object_type'] ) ) {
 			// If the object_id is not empty but the object_type is, fail this log attempt.
 			if ( ! empty( $data['object_id'] ) ) {
 				return false;
@@ -63,6 +63,7 @@ function edd_add_log( $data = array() ) {
 		}
 	}
 
+	$object_type_for_filter = ! empty( $data['object_type'] ) ? $data['object_type'] : 'generic';
 	/**
 	 * Allow the ability to disable a generic log entry by object_type.
 	 *
@@ -78,7 +79,7 @@ function edd_add_log( $data = array() ) {
 	 * @param bool  $should_record_log If this log should be inserted
 	 * @param array $data              The data to be logged.
 	 */
-	$should_record_log = apply_filters( "edd_should_log_{$data['object_type']}", true, $data );
+	$should_record_log = apply_filters( "edd_should_log_{$object_type_for_filter}", true, $data );
 
 	if ( false === $should_record_log ) {
 		return false;
