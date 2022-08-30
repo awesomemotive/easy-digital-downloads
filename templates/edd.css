@@ -122,10 +122,10 @@
 	line-height: 1;
 	font-weight: bold;
 	width: 100%;
-	margin: 0 0 21px;
+	margin: 0 0 1rem;
 	padding: 0;
-	float: left;
 }
+
 #edd_checkout_form_wrap label {
 	font-weight: bold;
 	display: block;
@@ -290,7 +290,7 @@
 	padding: 4px 4px 4px 0;
 	font-weight: bold;
 }
-#edd_secure_site_wrapper span { 
+#edd_secure_site_wrapper span {
 	vertical-align: middle;
 }
 #edd_checkout_form_wrap input.edd-input.card-number.valid {
@@ -927,7 +927,7 @@ input.edd_submit_plain {
 	.edd_downloads_list.edd_download_columns_6 { grid-template-columns: repeat(6, 1fr); }
 }
 @supports (display: grid) {
-	.edd_downloads_list .edd_download { 
+	.edd_downloads_list .edd_download {
 		width: auto;
 	}
 	.edd_download_inner {
