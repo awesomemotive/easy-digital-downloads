@@ -82,7 +82,7 @@ class EDD_Email_Summary {
 	public function get_email_recipients() {
 		$recipients = array();
 
-		if ( 'admin' === edd_get_option( 'email_summary_recipient' ) ) {
+		if ( 'admin' === edd_get_option( 'email_summary_recipient', 'admin' ) ) {
 			$recipients[] = get_option( 'admin_email' );
 		} else {
 			$emails = edd_get_option( 'email_summary_custom_recipients', array() );
