@@ -47,6 +47,8 @@ class EDD_Email_Summary_Blurb {
 	 */
 	public function __construct() {
 
+		// Load plugin.php so that we can use is_plugin_active().
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		$this->environmentChecker = new EnvironmentChecker();
 
 	}
