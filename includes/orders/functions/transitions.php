@@ -64,13 +64,13 @@ add_action( 'edd_refund_order', 'edd_recalculate_order_downloads' );
  * @return void
  */
 function edd_recalculate_order_downloads( $order_id ) {
-	$order_items = edd_get_order_items(
+	$order_item_product_ids = edd_get_order_items(
 		array(
 			'order_id' => $order_id,
 			'fields'   => 'product_id',
 		)
 	);
-	foreach ( $order_items as $order_item ) {
-		edd_recalculate_download_sales_earnings( $order_item );
+	foreach ( $order_item_product_ids as $product_id ) {
+		edd_recalculate_download_sales_earnings( $product_id );
 	}
 }
