@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.4\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-08-26 22:12:30+00:00\n"
+"POT-Creation-Date: 2022-08-31 04:27:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -132,7 +132,7 @@ msgstr ""
 #: includes/api/class-edd-api.php:2036 includes/api/class-edd-api.php:2040
 #: includes/api/class-edd-api.php:2052 includes/api/class-edd-api.php:2054
 #: includes/cart/class-edd-cart.php:1451 includes/cart/class-edd-cart.php:1465
-#: includes/class-edd-license-handler.php:385
+#: includes/class-edd-license-handler.php:388
 #: includes/deprecated-functions.php:488 includes/deprecated-functions.php:505
 #: includes/deprecated-functions.php:513 includes/deprecated-functions.php:915
 #: includes/download-functions.php:1553 includes/emails/actions.php:59
@@ -977,7 +977,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:104
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:2036
-#: includes/class-edd-license-handler.php:385
+#: includes/class-edd-license-handler.php:388
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -8158,24 +8158,24 @@ msgstr ""
 msgid "Enter Username"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:199
+#: includes/class-edd-license-handler.php:202
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:227
+#: includes/class-edd-license-handler.php:230
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please <a href=\"%s\" "
 "target=\"_blank\">renew your license</a>."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:502
+#: includes/class-edd-license-handler.php:505
 msgid ""
 "You have invalid or expired license keys for Easy Digital Downloads. <a "
 "href=\"%s\">Fix this</a>"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:531
+#: includes/class-edd-license-handler.php:534
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -8785,7 +8785,7 @@ msgstr ""
 msgid "Angolan Kwanza"
 msgstr ""
 
-#: includes/customer-functions.php:335
+#: includes/customer-functions.php:334
 #: includes/payments/class-payments-query.php:626
 msgid "Do not use -1 to retrieve all results."
 msgstr ""
