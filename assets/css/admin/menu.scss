@@ -7,10 +7,13 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
+@import "~@wordpress/base-styles/breakpoints";
+@import "../variables/colors";
+
 /* Submenu Styles
 -------------------------------------------------------------- */
 
-#adminmenu a[href^="edit.php?post_type=download"] {
+#menu-posts-download a[href^="edit.php?post_type=download"] {
 	&:hover,
 	&:focus {
 		box-shadow: inset 4px 0 0 0 currentColor;
@@ -19,28 +22,24 @@
 }
 
 /* Secondary Separators */
-#adminmenu ul > li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
-#adminmenu ul > li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
-#adminmenu ul > li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
-#adminmenu #menu-posts-download ul > li:nth-last-child(2):after {
-	border-bottom: 1px solid rgba(255,255,255,0.2);
+#menu-posts-download li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
+#menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
+#menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
+#menu-posts-download li:nth-last-child(2) a:after {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	display: block;
 	float: left;
 	margin: 13px -15px 8px;
 	content: '';
-	width: calc(100% + 30px);
+	width: calc(100% + 26px);
 
-	@media screen and (max-width: 782px) {
+	@media screen and (max-width: $break-medium) {
 		margin: 20px -20px 8px -20px;
-		width: calc(100% + 40px);
+		width: calc(100% + 30px);
 	}
 }
 
 #adminmenu #menu-posts-download {
-	ul > li:nth-last-child(2):after {
-		margin-left: 0;
-	}
-
 	/* WordPress 5.7 fix for left-shadow on hover */
 	ul.wp-submenu-wrap li {
 		clear: both;
@@ -60,6 +59,6 @@ ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-	border-right-color: #f1f1f1;
+	border-right-color: $wp-gray-0;
 	margin-top: 2px;
 }

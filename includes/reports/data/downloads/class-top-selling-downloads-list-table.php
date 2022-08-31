@@ -39,7 +39,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		return $stats->get_most_valuable_order_items( array(
 			'number'   => 10,
 			'range'    => $filter['range'],
-			'currency' => ''
+			'currency' => '',
 		) );
 	}
 

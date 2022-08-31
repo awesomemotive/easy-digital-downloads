@@ -21,10 +21,12 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_register_default_customer_views( $views ) {
 	return array_merge( $views, array(
-		'overview' => 'edd_customers_view',
-		'delete'   => 'edd_customers_delete_view',
-		'notes'    => 'edd_customer_notes_view',
-		'tools'    => 'edd_customer_tools_view'
+		'overview'  => 'edd_customers_view',
+		'emails'    => 'edd_customers_emails_view',
+		'addresses' => 'edd_customers_addresses_view',
+		'delete'    => 'edd_customers_delete_view',
+		'notes'     => 'edd_customer_notes_view',
+		'tools'     => 'edd_customer_tools_view',
 	) );
 }
 add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
@@ -38,9 +40,11 @@ add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
  */
 function edd_register_default_customer_tabs( $tabs ) {
 	return array_merge( $tabs, array(
-		'overview' => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
-		'tools'    => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
+		'overview'  => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
+		'emails'    => array( 'dashicon' => 'dashicons-email', 'title' => _x( 'Emails', 'Customer Emails tab title', 'easy-digital-downloads' ) ),
+		'addresses' => array( 'dashicon' => 'dashicons-admin-home', 'title' => _x( 'Addresses', 'Customer Addresses tab title', 'easy-digital-downloads' ) ),
+		'notes'     => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
+		'tools'     => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
 	) );
 }
 add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
@@ -102,7 +106,7 @@ function edd_maybe_remove_menu_profile_links() {
 
 		if( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
 			$url     = esc_url( edd_get_user_verification_request_url() );
-			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), $url );
+			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), esc_url( $url ) );
 			$title   = __( 'Account Pending Verification', 'easy-digital-downloads' );
 			$args    = array(
 				'response' => 403,
@@ -148,8 +152,14 @@ function edd_render_customer_column( $value, $column_name, $user_id ) {
 
 		if ( $customer->id > 0 ) {
 			$name     = '#' . $customer->id . ' ';
-			$name     .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
-			$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
+			$name    .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
+			$view_url = edd_get_admin_url(
+				array(
+					'page' => 'edd-customers',
+					'view' => 'overview',
+					'id'   => absint( $customer->id ),
+				)
+			);
 
 			return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>';
 		}
@@ -158,3 +168,18 @@ function edd_render_customer_column( $value, $column_name, $user_id ) {
 	return $value;
 }
 add_action( 'manage_users_custom_column',  'edd_render_customer_column', 10, 3 );
+
+/**
+ * Renders the customer details header (gravatar/name).
+ *
+ * @since 3.0
+ * @param \EDD_Customer $customer
+ * @return void
+ */
+function edd_render_customer_details_header( \EDD_Customer $customer ) {
+	?>
+	<div class="edd-item-header-small">
+		<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo esc_html( $customer->name ); ?></span>
+	</div>
+	<?php
+}

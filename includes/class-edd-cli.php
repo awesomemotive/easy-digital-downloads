@@ -700,6 +700,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $timestring ) ) {
 				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
+				$payment->gateway        = 'manual';
 				$payment->save();
 			}
 
@@ -826,6 +827,7 @@ class EDD_CLI extends WP_CLI_Command {
 		wp_suspend_cache_addition( true );
 
 		$this->maybe_install_v3_tables();
+		update_option( 'edd_v30_cli_migration_running', true );
 		$this->migrate_tax_rates( $args, $assoc_args );
 		$this->migrate_discounts( $args, $assoc_args );
 		$this->migrate_payments( $args, $assoc_args );
@@ -833,8 +835,8 @@ class EDD_CLI extends WP_CLI_Command {
 		$this->migrate_logs( $args, $assoc_args );
 		$this->migrate_order_notes( $args, $assoc_args );
 		$this->migrate_customer_notes( $args, $assoc_args );
+		edd_v30_is_migration_complete();
 		$this->remove_legacy_data( $args, $assoc_args );
-
 	}
 
 	/**
@@ -958,6 +960,8 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The logs custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
+
+		WP_CLI::line( __( 'Preparing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
 
 		$sql = "
 			SELECT p.*, t.slug
@@ -1199,6 +1203,9 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! $force && $customer_email_addresses_complete ) {
 			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		} else {
+
+			WP_CLI::line( __( 'Preparing to migrate customer email addresses (this can take several minutes).', 'easy-digital-downloads' ) );
+
 			// Migrate email addresses next.
 			$sql = "
 				SELECT *
@@ -1254,6 +1261,18 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The tax rates custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		WP_CLI::line( __( 'Checking for default tax rate', 'easy-digital-downloads' ) );
+		$default_tax_rate = edd_get_option( 'tax_rate', false );
+		if ( ! empty( $default_tax_rate ) ) {
+			WP_CLI::line( __( 'Migrating default tax rate', 'easy-digital-downloads' ) );
+			edd_add_tax_rate(
+				array(
+					'scope'  => 'global',
+					'amount' => floatval( $default_tax_rate ),
+				)
+			);
 		}
 
 		// Migrate user addresses first.
@@ -1320,11 +1339,11 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! empty( $total ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
-
+			$orders   = new \EDD\Database\Queries\Order();
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				$migrated = edd_get_order( $result->ID );
+				$migrated = $orders->get_item( $result->ID );
 				if ( $migrated ) {
 					continue;
 				}

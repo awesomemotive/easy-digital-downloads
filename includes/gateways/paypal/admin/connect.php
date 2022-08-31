@@ -613,7 +613,7 @@ add_action( 'admin_init', function () {
 			'merchant_id' => $merchant_id
 		);
 
-		edd_debug_log( 'PayPal Connect - Failed to retrieve merchant status from PayPal. Error: %s', $e->getMessage() );
+		edd_debug_log( sprintf( 'PayPal Connect - Failed to retrieve merchant status from PayPal. Error: %s', $e->getMessage() ) );
 	}
 
 	$merchant_account = new PayPal\MerchantAccount( $details );

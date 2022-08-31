@@ -26,6 +26,13 @@ document.addEventListener( 'alpine:init', () => {
 					eddNotifications.closePanel();
 				}
 			} );
+
+			const params = new URLSearchParams( window.location.search );
+
+			const triggerNotifications = params.has( 'notifications' );
+			if ( triggerNotifications && 'true' === params.get( 'notifications' ) ) {
+				eddNotifications.openPanel();
+			}
 		},
 
 		openPanel: function() {

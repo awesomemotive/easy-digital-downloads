@@ -147,11 +147,11 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  * @since 3.0
  *
  * @param int $download_id
- * @param int $price_id
+ * @param int|null $price_id
  *
- * @return string
+ * @return false|string
  */
-function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
+function edd_get_download_name( $download_id = 0, $price_id = null ) {
 
 	// Bail if no download ID was passed.
 	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {
@@ -159,6 +159,11 @@ function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 	}
 
 	$download = edd_get_download( $download_id );
+
+	// Bail if the download cannot be retrieved.
+	if ( ! $download instanceof EDD_Download ) {
+		return false;
+	}
 
 	// Get the download title
 	$retval = $download->get_name();
@@ -1269,7 +1274,12 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	$args = array_fill_keys( edd_get_url_token_parameters(), '' );
 
 	// Simply the URL by concatenating required data using a colon as a delimiter.
-	$args['eddfile'] = rawurlencode( sprintf( '%d:%d:%d:%d', $order->id, $params['download_id'], $params['file'], $price_id ) );
+	if ( ! is_numeric( $price_id ) ) {
+		$eddfile = sprintf( '%d:%d:%d', $order->id, $params['download_id'], $params['file'] );
+	} else {
+		$eddfile = sprintf( '%d:%d:%d:%d', $order->id, $params['download_id'], $params['file'], $price_id );
+	}
+	$args['eddfile'] = rawurlencode( $eddfile );
 
 	if ( isset( $params['expire'] ) ) {
 		$args['ttl'] = $params['expire'];

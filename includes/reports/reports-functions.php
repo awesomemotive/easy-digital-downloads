@@ -392,7 +392,7 @@ function get_filter_value( $filter ) {
 		// Handle dates.
 		case 'dates':
 			if ( ! isset( $_GET['range'] ) ) {
-				$default = 'last_30_days';
+				$default = 'this_month';
 				$dates   = parse_dates_for_range( $default );
 				$value   = array(
 					'range' => $default,
@@ -561,12 +561,13 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  *
  * @since 3.0
  *
- * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
- *                               Default is the current range as derived from the session.
- * @param string          $date  Date string converted to `\EDD\Utils\Date` to anchor calculations to.
+ * @param string          $range          Optional. Range value to generate start and end dates for against `$date`.
+ *                                        Default is the current range as derived from the session.
+ * @param string          $date           Date string converted to `\EDD\Utils\Date` to anchor calculations to.
+ * @param bool            $convert_to_utc Optional. If we should convert the results to UTC for Database Queries
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
-function parse_dates_for_range( $range = null, $date = 'now' ) {
+function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = true ) {
 
 	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
 	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
@@ -672,9 +673,11 @@ function parse_dates_for_range( $range = null, $date = 'now' ) {
 			break;
 	}
 
-	// Convert the values to the UTC equivalent so that we can query the database using UTC.
-	$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
-	$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
+	if ( $convert_to_utc ) {
+		// Convert the values to the UTC equivalent so that we can query the database using UTC.
+		$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
+		$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
+	}
 
 	$dates['range'] = $range;
 
@@ -705,7 +708,7 @@ function get_dates_filter_range() {
 		 * @param string $range Date range as derived from the session. Default 'last_30_days'
 		 * @param array  $dates Dates filter data array.
 		 */
-		$range = apply_filters( 'edd_get_report_dates_default_range', 'last_30_days', $dates );
+		$range = apply_filters( 'edd_get_report_dates_default_range', 'this_month', $dates );
 	}
 
 	/**
@@ -727,6 +730,8 @@ function get_dates_filter_range() {
  * @return bool True if results should use hour by hour, otherwise false.
  */
 function get_dates_filter_hour_by_hour() {
+	$hour_by_hour = false;
+
 	// Retrieve the queried dates
 	$dates = get_dates_filter( 'objects' );
 
@@ -735,6 +740,12 @@ function get_dates_filter_hour_by_hour() {
 		case 'today':
 		case 'yesterday':
 			$hour_by_hour = true;
+			break;
+		case 'other':
+			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
+			if ( $difference <= ( DAY_IN_SECONDS * 2 ) ) {
+				$hour_by_hour = true;
+			}
 			break;
 		default:
 			$hour_by_hour = false;
@@ -759,8 +770,6 @@ function get_dates_filter_day_by_day() {
 	switch ( $dates['range'] ) {
 		case 'today':
 		case 'yesterday':
-		case 'last_quarter':
-		case 'this_quarter':
 		case 'this_year':
 		case 'last_year':
 			$day_by_day = false;
@@ -780,6 +789,34 @@ function get_dates_filter_day_by_day() {
 	}
 
 	return $day_by_day;
+}
+
+/**
+ * Given a function and column, make a timezone converted groupby query.
+ *
+ * @since 3.0
+ *
+ * @param string $function The function to run the value through, like DATE, HOUR, MONTH
+ * @param string $column   The column to group by.
+ *
+ * @return string
+ */
+function get_groupby_date_string( $function = 'DATE', $column = 'date_created' ) {
+	$date       = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+	$gmt_offset = $date->getOffset();
+
+	if ( empty( $gmt_offset ) ) {
+		return "{$function}({$column})";
+	}
+
+	// Output the offset in the proper format.
+	$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
+	$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+	$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
+
+	$formatted_offset = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours . ':00';
+
+	return "{$function}(CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}'))";
 }
 
 /**
@@ -839,25 +876,25 @@ function default_display_report( $report ) {
  * @return void Meta box display callbacks only echo output.
  */
 function default_display_tile( $endpoint, $data, $args ) {
-	echo '<span class="tile-label">' . esc_html( $endpoint->get_label() ) .'</span>';
+	echo '<div class="tile-label">' . esc_html( $endpoint->get_label() ) . '</div>';
 
 	if ( empty( $data ) ) {
-		echo '<span class="tile-no-data tile-value">&mdash;</span>';
+		echo '<div class="tile-no-data tile-value">&mdash;</div>';
 	} else {
 		switch ( $args['type'] ) {
 			case 'number':
-				echo '<span class="tile-number tile-value">' . edd_format_amount( $data ) . '</span>';
+				echo '<div class="tile-number tile-value">' . edd_format_amount( $data ) . '</div>';
 				break;
 
 			case 'split-number':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+				printf( '<div class="tile-amount tile-value">%1$d / %2$d</div>',
 					edd_format_amount( $data['first_value'] ),
 					edd_format_amount( $data['second_value'] )
 				);
 				break;
 
 			case 'split-amount':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+				printf( '<div class="tile-amount tile-value">%1$d / %2$d</div>',
 					edd_currency_filter( edd_format_amount( $data['first_value'] ) ),
 					edd_currency_filter( edd_format_amount( $data['second_value'] ) )
 				);
@@ -867,26 +904,26 @@ function default_display_tile( $endpoint, $data, $args ) {
 				$direction = ( ! empty( $data['direction'] ) && in_array( $data['direction'], array( 'up', 'down' ), true ) )
 					? '-' . sanitize_key( $data['direction'] )
 					: '';
-				echo '<span class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $data['value'] ) . '</span>';
+				echo '<div class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $data['value'] ) . '</div>';
 				break;
 
 			case 'amount':
-				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $data ) ) . '</span>';
+				echo '<div class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $data ) ) . '</div>';
 				break;
 
 			case 'url':
-				echo '<span class="tile-url tile-value">' . esc_url( $data ) . '</span>';
+				echo '<div class="tile-url tile-value">' . esc_url( $data ) . '</div>';
 				break;
 
 			default:
 				$tags = wp_kses_allowed_html( 'post' );
-				echo '<span class="tile-value tile-default">' . wp_kses( $data, $tags ) . '</span>';
+				echo '<div class="tile-value tile-default">' . wp_kses( $data, $tags ) . '</div>';
 				break;
 		}
 	}
 
 	if ( ! empty( $args['comparison_label'] ) ) {
-		echo '<span class="tile-compare">' . esc_attr( $args['comparison_label'] ) . '</span>';
+		echo '<div class="tile-compare">' . esc_attr( $args['comparison_label'] ) . '</div>';
 	}
 }
 
@@ -974,6 +1011,9 @@ function default_display_charts_group( $report ) {
 		<?php
 	}
 	?>
+		<div class="chart-timezone">
+			<?php printf( esc_html__( 'Chart time zone: %s', 'easy-digital-downloads' ), esc_html( edd_get_timezone_id() ) ); ?>
+		</div>
 	</div>
 	<?php
 }
@@ -1307,7 +1347,7 @@ function filter_items( $report = false ) {
 
 	$redirect_url = edd_get_admin_url( array(
 		'page' => 'edd-reports',
-		'view' => $report_id,
+		'view' => sanitize_key( $report_id ),
 	) );
 
 	// Bail if no filters
@@ -1359,7 +1399,7 @@ function filter_items( $report = false ) {
 	<span class="edd-graph-filter-submit graph-option-section">
 		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 		<input type="hidden" name="edd_action" value="filter_reports">
-		<input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $redirect_url ); ?>">
+		<input type="hidden" name="edd_redirect" value="<?php echo esc_url_raw( $redirect_url ); ?>">
 	</span>
 
 	<?php

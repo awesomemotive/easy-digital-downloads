@@ -390,7 +390,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			break;
 		case 'last_quarter' :
 		case 'this_quarter' :
-			$day_by_day = true;
+			$day_by_day = false;
 			break;
 		case 'other' :
 			if ( $dates['m_start'] == 12 && $dates['m_end'] == 1 ) {
@@ -742,7 +742,7 @@ function edd_reports_refresh_button() {
 		'edd-message' => 'refreshed-reports'
 	) ), 'edd-refresh-reports' );
 
-	echo '<a href="' . esc_url( $url ) . '" title="' . __( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . __( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
+	echo '<a href="' . esc_url( $url ) . '" title="' . esc_html__( 'Clicking this will clear the reports cache', 'easy-digital-downloads' ) . '"  class="button edd-refresh-reports-button">' . esc_html__( 'Refresh Reports', 'easy-digital-downloads' ) . '</a>';
 }
 
 add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );

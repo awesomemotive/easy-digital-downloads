@@ -88,8 +88,8 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_note',
-		'note_id'    => $note->id,
-	) ), 'edd_delete_note_' . $note->id );
+		'note_id'    => absint( $note->id ),
+	) ), 'edd_delete_note_' . absint( $note->id ) );
 
 	// Start a buffer
 	ob_start();
@@ -124,6 +124,10 @@ function edd_admin_get_note_html( $note_id = 0 ) {
  * @return string
  */
 function edd_admin_get_new_note_form( $object_id = 0, $object_type = '' ) {
+
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		return '';
+	}
 
 	// Start a buffer
 	ob_start();?>

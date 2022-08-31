@@ -82,17 +82,29 @@ final class Customer_Meta extends Table {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		if ( false !== get_option( $this->table_prefix . 'edd_customermeta_db_version', false ) ) {
-			delete_option( $this->table_prefix . 'edd_customermeta_db_version' );
 
-			if ( $this->column_exists( 'customer_id' ) && ! $this->column_exists( 'edd_customer_id' ) ) {
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';" );
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX customer_id" );
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX edd_customer_id (edd_customer_id)" );
-			}
+		if ( $this->needs_initial_upgrade() ) {
+
+			// Delete old/irrelevant database options.
+			delete_option( $this->table_prefix . 'edd_customermeta_db_version' );
+			delete_option( 'wp_edd_customermeta_db_version' );
+
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX customer_id" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX edd_customer_id (edd_customer_id)" );
 		}
 
 		parent::maybe_upgrade();
+	}
+
+	/**
+	 * Whether the initial upgrade from the 1.0 database needs to be run.
+	 *
+	 * @since 3.0.3
+	 * @return bool
+	 */
+	private function needs_initial_upgrade() {
+		return $this->exists() && $this->column_exists( 'customer_id' ) && ! $this->column_exists( 'edd_customer_id' );
 	}
 
 	/**

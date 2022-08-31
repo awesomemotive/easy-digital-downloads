@@ -174,6 +174,8 @@ class Order extends Query {
 	 *     @type string       $region                Limit results to those affiliated with a given region. Default empty.
 	 *     @type int          $product_id            Filter by product ID. Default empty.
 	 *     @type int          $product_price_id      Filter by product price ID. Default empty.
+	 *     @type string       $txn                   Filter by transaction ID.
+	 *     @type int          $discount_id           Filter by discount code.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -207,22 +209,19 @@ class Order extends Query {
 	 * @see Order::__construct()
 	 */
 	public function query( $query = array() ) {
-		if ( ! empty( $query['country'] ) ) {
-			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
-		}
-
-		if ( ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ) ) {
-			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
+		$query_clauses_filters = $this->get_query_clauses_filters( $query );
+		foreach ( $query_clauses_filters as $filter ) {
+			if ( $filter['condition'] ) {
+				add_filter( 'edd_orders_query_clauses', array( $this, $filter['callback'] ) );
+			}
 		}
 
 		$result = parent::query( $query );
 
-		if ( ! empty( $query['country'] ) ) {
-			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
-		}
-
-		if ( ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ) ) {
-			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
+		foreach ( $query_clauses_filters as $filter ) {
+			if ( $filter['condition'] ) {
+				remove_filter( 'edd_orders_query_clauses', array( $this, $filter['callback'] ) );
+			}
 		}
 
 		return $result;
@@ -321,6 +320,60 @@ class Order extends Query {
 	}
 
 	/**
+	 * Filter the query clause to filter by transaction ID.
+	 *
+	 * @since 3.0.2
+	 * @param string $clauses
+	 * @return string
+	 */
+	public function query_by_txn( $clauses ) {
+		if ( empty( $this->query_vars['txn'] ) ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+
+		$primary_column          = parent::get_primary_column_name();
+		$order_transaction_query = new Order_Transaction();
+
+		$clauses['join'] .= $wpdb->prepare(
+			" INNER JOIN {$order_transaction_query->table_name} {$order_transaction_query->table_alias}
+			ON( {$this->table_alias}.{$primary_column} = {$order_transaction_query->table_alias}.object_id
+			AND {$order_transaction_query->table_alias}.transaction_id = %s )",
+			sanitize_text_field( $this->query_vars['txn'] )
+		);
+
+		return $clauses;
+	}
+
+	/**
+	 * Filter the query clause to filter by discount ID.
+	 *
+	 * @since 3.0.2
+	 * @param string $clauses
+	 * @return string
+	 */
+	public function query_by_discount_id( $clauses ) {
+		if ( empty( $this->query_vars['discount_id'] ) ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+
+		$primary_column         = parent::get_primary_column_name();
+		$order_adjustment_query = new Order_Adjustment();
+
+		$clauses['join'] .= $wpdb->prepare(
+			" INNER JOIN {$order_adjustment_query->table_name} {$order_adjustment_query->table_alias}
+			ON( {$this->table_alias}.{$primary_column} = {$order_adjustment_query->table_alias}.object_id
+			AND {$order_adjustment_query->table_alias}.type_id = %d )",
+			absint( $this->query_vars['discount_id'] )
+		);
+
+		return $clauses;
+	}
+
+	/**
 	 * Set the query var defaults for country and region.
 	 *
 	 * @since 3.0
@@ -335,4 +388,59 @@ class Order extends Query {
 		$this->query_var_defaults['product_product_id'] = false;
 	}
 
+	/**
+	 * Adds an item to the database
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $data
+	 * @return false|int  Returns the item ID on success; false on failure.
+	 */
+	public function add_item( $data = array() ) {
+		// Every order should have a currency assigned.
+		if ( empty( $data['currency'] ) ) {
+			$data['currency'] = edd_get_currency();
+		}
+
+		// If the payment key isn't already created, generate it.
+		if ( empty( $data['payment_key'] ) ) {
+			$email               = ! empty( $data['email'] ) ? $data['email'] : '';
+			$data['payment_key'] = edd_generate_order_payment_key( $email );
+		}
+
+		// Add the IP address if it hasn't been already.
+		if ( empty( $data['ip'] ) ) {
+			$data['ip'] = edd_get_ip();
+		}
+
+		return parent::add_item( $data );
+	}
+
+	/**
+	 * Get the array of possible query clause filters.
+	 *
+	 * @since 3.0.2
+	 * @param array $query
+	 * @return array
+	 */
+	private function get_query_clauses_filters( $query ) {
+		return array(
+			array(
+				'condition' => ! empty( $query['country'] ),
+				'callback'  => 'query_by_country',
+			),
+			array(
+				'condition' => ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ),
+				'callback'  => 'query_by_product',
+			),
+			array(
+				'condition' => ! empty( $query['txn'] ),
+				'callback'  => 'query_by_txn',
+			),
+			array(
+				'condition' => ! empty( $query['discount_id'] ),
+				'callback'  => 'query_by_discount_id',
+			),
+		);
+	}
 }

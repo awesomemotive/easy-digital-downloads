@@ -95,7 +95,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
-			$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+			$statuses = edd_get_net_order_statuses();
 
 			/**
 			 * Filters Order statuses that should be included when calculating stats.
@@ -158,7 +158,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			 *
 			 * @param array $statuses Order statuses to include when generating stats.
 			 */
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', edd_get_gross_order_statuses() );
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', edd_get_net_order_statuses() );
 
 			// Global earning stats
 			$args = array(
@@ -264,7 +264,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 				remove_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
 
-				$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+				$statuses = edd_get_net_order_statuses();
 
 				/**
 				 * Filters Order statuses that should be included when calculating stats.
@@ -383,7 +383,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+			$statuses = edd_get_net_order_statuses();
 
 			/**
 			 * Filters Order statuses that should be included when calculating stats.
@@ -464,7 +464,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+			$statuses = edd_get_net_order_statuses();
 
 			/**
 			 * Filters Order statuses that should be included when calculating stats.
