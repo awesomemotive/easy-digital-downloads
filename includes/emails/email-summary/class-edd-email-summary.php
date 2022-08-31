@@ -86,10 +86,12 @@ class EDD_Email_Summary {
 			$recipients[] = get_option( 'admin_email' );
 		} else {
 			$emails = edd_get_option( 'email_summary_custom_recipients', array() );
-			$emails = array_map( 'trim', explode( "\n", $emails ) );
-			foreach ( $emails as $email ) {
-				if ( is_email( $email ) ) {
-					$recipients[] = $email;
+			if ( ! is_array( $emails ) ) {
+				$emails = array_map( 'trim', explode( "\n", $emails ) );
+				foreach ( $emails as $email ) {
+					if ( is_email( $email ) ) {
+						$recipients[] = $email;
+					}
 				}
 			}
 		}
