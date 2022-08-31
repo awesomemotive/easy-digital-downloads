@@ -31,7 +31,7 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @const string
 	 */
-	const BLURB_ENDPOINT_URL = 'https://edd-localhost.test/wp-content/uploads/product-blurbs.json';
+	const BLURB_ENDPOINT_URL = 'https://jsonkeeper.com/b/JJNK';
 
 	/**
 	 * Environment Checker class.
