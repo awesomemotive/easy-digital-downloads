@@ -32,7 +32,7 @@ export const getLabelWithTypeCondition = ( label, datasetConfig ) => {
 	if ( 'currency' === type ) {
 		const currency = new Currency();
 
-		newLabel = currency.format( label );
+		newLabel = currency.format( label, false );
 	}
 
 	return newLabel;
@@ -88,10 +88,6 @@ export const toolTipBaseConfig = {
 			const bodyLines = tooltip.body.map( getBody );
 
 			let innerHtml = '<thead>';
-
-			titleLines.forEach( function( title ) {
-				innerHtml += '<tr><th>' + title + '</th></tr>';
-			} );
 
 			innerHtml += '</thead><tbody>';
 

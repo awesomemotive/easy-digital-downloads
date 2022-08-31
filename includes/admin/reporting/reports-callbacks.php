@@ -24,9 +24,10 @@ function edd_overview_sales_earnings_chart() {
 	global $wpdb;
 
 	$dates        = Reports\get_dates_filter( 'objects' );
+	$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
+	$column       = Reports\get_taxes_excluded_filter() ? '(total - tax)' : 'total';
 	$currency     = Reports\get_filter_value( 'currencies' );
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
@@ -36,15 +37,29 @@ function edd_overview_sales_earnings_chart() {
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
 		'where'   => '',
-		'groupby' => 'DATE(date_created)',
-		'orderby' => 'DATE(date_created)',
+		'groupby' => '',
 	);
+
+
+
+	// Default to 'monthly'.
+	$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
+	$sql_clauses['orderby'] = 'MONTH(date_created)';
+
+	// Now drill down to the smallest unit.
+	if ( $hour_by_hour ) {
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
+		$sql_clauses['orderby'] = 'HOUR(date_created)';
+	} elseif ( $day_by_day ) {
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
+		$sql_clauses['orderby'] = 'DATE(date_created)';
+	}
 
 	if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
 		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
 	}
 
-	$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+	$statuses = edd_get_net_order_statuses();
 
 	/**
 	 * Filters Order statuses that should be included when calculating stats.
@@ -56,13 +71,28 @@ function edd_overview_sales_earnings_chart() {
 	$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 	$statuses = "'" . implode( "', '", $statuses ) . "'";
 
-	$results = $wpdb->get_results(
+	$earnings_results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT COUNT(id) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
- 				 FROM {$wpdb->edd_orders} edd_o
- 				 WHERE date_created >= %s AND date_created <= %s
- 				 AND type = 'sale'
- 				 AND status IN( {$statuses} )
+			"SELECT SUM({$column}) AS earnings, {$sql_clauses['select']}
+				 FROM {$wpdb->edd_orders} edd_o
+				 WHERE date_created >= %s AND date_created <= %s
+				 AND status IN( {$statuses} )
+				 AND type IN ( 'sale', 'refund' )
+				 {$sql_clauses['where']}
+				 GROUP BY {$sql_clauses['groupby']}
+				 ORDER BY {$sql_clauses['orderby']} ASC",
+			$dates['start']->copy()->format( 'mysql' ),
+			$dates['end']->copy()->format( 'mysql' )
+		)
+	);
+
+	$sales_results = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT COUNT(id) AS sales, {$sql_clauses['select']}
+				 FROM {$wpdb->edd_orders} edd_o
+				 WHERE date_created >= %s AND date_created <= %s
+				 AND status IN( {$statuses} )
+				 AND type = 'sale'
 				 {$sql_clauses['where']}
 				 GROUP BY {$sql_clauses['groupby']}
 				 ORDER BY {$sql_clauses['orderby']} ASC",
@@ -74,9 +104,17 @@ function edd_overview_sales_earnings_chart() {
 	$sales    = array();
 	$earnings = array();
 
-	// Initialise all arrays with timestamps and set values to 0.
+	/**
+	 * Initialise all arrays with timestamps and set values to 0.
+	 *
+	 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
+	 */
 	while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-		$timestamp = strtotime( $dates['start']->copy()->format( 'mysql' ) );
+		$utc_timezone    = new DateTimeZone( 'UTC' );
+		$timezone        = new DateTimeZone( edd_get_timezone_id() );
+
+		$timestamp       = $dates['start']->copy()->format( 'U' );
+		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
 
 		$sales[ $timestamp ][0] = $timestamp;
 		$sales[ $timestamp ][1] = 0;
@@ -85,32 +123,54 @@ function edd_overview_sales_earnings_chart() {
 		$earnings[ $timestamp ][1] = 0.00;
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
-		foreach ( $results as $result ) {
-
-			$timezone         = new DateTimeZone( 'UTC' );
-			$date_of_db_value = new DateTime( $result->date, $timezone );
-			$date_on_chart    = new DateTime( $dates['start'], $timezone );
+		foreach ( $earnings_results as $earnings_result ) {
+			$date_of_db_value = new DateTime( $earnings_result->date, $utc_timezone );
+			$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-					$sales[ $timestamp ][1]    += $result->sales;
-					$earnings[ $timestamp ][1] += $result->earnings;
+					$earnings[ $timestamp ][1] += $earnings_result->earnings;
 				}
 				// Add any sales/earnings that happened during this day.
 			} elseif ( $day_by_day ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-					$sales[ $timestamp ][1]    += $result->sales;
-					$earnings[ $timestamp ][1] += $result->earnings;
+					$earnings[ $timestamp ][1] += $earnings_result->earnings;
 				}
 				// Add any sales/earnings that happened during this month.
 			} else {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-					$sales[ $timestamp ][1]    += $result->sales;
-					$earnings[ $timestamp ][1] += $result->earnings;
+					$earnings[ $timestamp ][1] += $earnings_result->earnings;
+				}
+			}
+		}
+
+		// Loop through each date there were sales/earnings, which we queried from the database.
+		foreach ( $sales_results as $sales_result ) {
+
+			$date_of_db_value = new DateTime( $sales_result->date, $utc_timezone );
+			$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
+
+			// Add any sales/earnings that happened during this hour.
+			if ( $hour_by_hour ) {
+				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+					$sales[ $timestamp ][1] += $sales_result->sales;
+				}
+				// Add any sales/earnings that happened during this day.
+			} elseif ( $day_by_day ) {
+				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+					$sales[ $timestamp ][1] += $sales_result->sales;
+				}
+				// Add any sales/earnings that happened during this month.
+			} else {
+				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+					$sales[ $timestamp ][1] += $sales_result->sales;
 				}
 			}
 		}
@@ -118,10 +178,13 @@ function edd_overview_sales_earnings_chart() {
 		// Move the chart along to the next hour/day/month to get ready for the next loop.
 		if ( $hour_by_hour ) {
 			$dates['start']->addHour( 1 );
+			$chart_dates['start']->addHour( 1 );
 		} elseif ( $day_by_day ) {
 			$dates['start']->addDays( 1 );
+			$chart_dates['start']->addDays( 1 );
 		} else {
 			$dates['start']->addMonth( 1 );
+			$chart_dates['start']->addMonth( 1 );
 		}
 	}
 
@@ -147,11 +210,22 @@ function edd_overview_refunds_chart() {
 	$currency     = Reports\get_filter_value( 'currencies' );
 
 	$sql_clauses = array(
-		'select'  => 'date_created AS date',
-		'groupby' => 'DATE(date_created)',
-		'orderby' => 'DATE(date_created)',
-		'where'   => ''
+		'select' => 'date_created AS date',
+		'where'  => '',
 	);
+
+	// Default to 'monthly'.
+	$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
+	$sql_clauses['orderby'] = 'MONTH(date_created)';
+
+	// Now drill down to the smallest unit.
+	if ( $hour_by_hour ) {
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
+		$sql_clauses['orderby'] = 'HOUR(date_created)';
+	} elseif ( $day_by_day ) {
+		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
+		$sql_clauses['orderby'] = 'DATE(date_created)';
+	}
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
 		$column = sprintf( '(%s) / rate', $column );

@@ -556,7 +556,7 @@ class EDD_Download {
 	 * @return array List of bundled downloads
 	 */
 	public function get_variable_priced_bundled_downloads( $price_id = null ) {
-		if ( null == $price_id ) {
+		if ( null === $price_id ) {
 			return $this->get_bundled_downloads();
 		}
 

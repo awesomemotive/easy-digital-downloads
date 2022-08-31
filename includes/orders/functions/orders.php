@@ -277,6 +277,10 @@ function edd_destroy_order( $order_id = 0 ) {
 		// Destroy adjustments.
 		if ( ! empty( $adjustments ) ) {
 			foreach ( $adjustments as $adjustment ) {
+				// Decrease discount code use count.
+				if ( 'discount' === $adjustment->type ) {
+					edd_decrease_discount_usage( $adjustment->description );
+				}
 				edd_delete_order_adjustment( $adjustment->id );
 			}
 		}
@@ -379,8 +383,23 @@ function edd_update_order( $order_id = 0, $data = array() ) {
 function edd_get_order( $order_id = 0 ) {
 	$orders = new EDD\Database\Queries\Order();
 
-	// Return order
-	return $orders->get_item( $order_id );
+	$order = $orders->get_item( $order_id );
+
+	/**
+	 * If the order is not retrieved but migration is pending, check for an old payment.
+	 * @todo remove in 3.1
+	*/
+	if ( ! $order instanceof EDD\Orders\Order && _edd_get_final_payment_id() ) {
+		$post = get_post( $order_id );
+		if ( $post instanceof WP_Post ) {
+			include_once EDD_PLUGIN_DIR . 'includes/compat/class-edd-payment-compat.php';
+			$payment_compat = new EDD_Payment_Compat( $order_id );
+
+			return $payment_compat->order;
+		}
+	}
+
+	return $order;
 }
 
 /**
@@ -1082,7 +1101,7 @@ function edd_build_order( $order_data = array() ) {
 
 			if ( is_array( $items ) && ! empty( $items ) ) {
 				foreach ( $items as $key => $item ) {
-					$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+					$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ), $item['item_price'] );
 				}
 			}
 
@@ -1328,84 +1347,6 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
 	}
 
 	return $new_order_id;
-}
-
-/**
- * Get the order status array keys that can be used to run reporting related to gross reporting.
- *
- * @since 3.0
- *
- * @return array An array of order status array keys that can be related to gross reporting.
- */
-function edd_get_gross_order_statuses() {
-	$statuses = array(
-		'complete',
-		'refunded',
-		'partially_refunded',
-		'revoked',
-	);
-
-	/**
-	 * Statuses that affect gross order statistics.
-	 *
-	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of gross
-	 * sales statistics.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $statuses {
-	 *     An array of order status array keys.
-	 *
-	 */
-	return apply_filters( 'edd_gross_order_statuses', $statuses );
-}
-
-/**
- * Get the order status array keys that can be used to run reporting related to net reporting.
- *
- * @since 3.0
- *
- * @return array An array of order status array keys that can be related to net reporting.
- */
-function edd_get_net_order_statuses() {
-	$statuses = array(
-		'complete',
-		'partially_refunded',
-		'revoked',
-	);
-
-	/**
-	 * Statuses that affect net order statistics.
-	 *
-	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of net
-	 * sales statistics.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $statuses {
-	 *     An array of order status array keys.
-	 *
-	 */
-	return apply_filters( 'edd_net_order_statuses', $statuses );
-}
-
-/**
- * Get the order status array keys which are considered recoverable.
- *
- * @since 3.0
- * @return array An array of order status keys which are considered recoverable.
- */
-function edd_recoverable_order_statuses() {
-	$statuses = array( 'pending', 'abandoned', 'failed' );
-
-	/**
-	 * Order statuses which are considered recoverable.
-	 *
-	 * @param $statuses {
-	 *        An array of order status array keys.
-	 * }
-	 */
-	return apply_filters( 'edd_recoverable_payment_statuses', $statuses );
 }
 
 /**

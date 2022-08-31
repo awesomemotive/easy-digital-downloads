@@ -367,6 +367,14 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
 
+	public function test_get_recent_sales_invalid_payment_id() {
+		global $wp_query;
+		$wp_query->query_vars['id'] = 0;
+		$recent_sales               = self::$api->get_recent_sales();
+
+		$this->assertEquals( 0, $recent_sales['sales'][0]['ID'] );
+	}
+
 	public function test_update_key() {
 
 		$_POST['edd_set_api_key'] = 1;

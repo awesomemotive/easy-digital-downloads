@@ -52,7 +52,7 @@ function edd_discounts_page_content() {
 
 	do_action( 'edd_discounts_page_top' ); ?>
 
-	<form id="edd-discounts-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>">
+	<form id="edd-discounts-filter" method="get" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-discounts' ) ) ); ?>">
 		<?php $discount_codes_table->search_box( __( 'Search Discounts', 'easy-digital-downloads' ), 'edd-discounts' ); ?>
 
 		<input type="hidden" name="post_type" value="download" />

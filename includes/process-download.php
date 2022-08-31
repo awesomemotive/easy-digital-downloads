@@ -867,25 +867,27 @@ function edd_process_signed_download_url( $args ) {
 	}
 
 	$order_parts = explode( ':', rawurldecode( $_GET['eddfile'] ) );
+	$price_id    = isset( $order_parts[3] ) ? (int) $order_parts[3] : null;
 
 	// Check to make sure not at download limit
-	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $order_parts[3] ) ) {
+	if ( edd_is_file_at_download_limit( $order_parts[1], $order_parts[0], $order_parts[2], $price_id ) ) {
 		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$args['expire']      = $_GET['ttl'];
-	$args['download']    = $order_parts[1];
-	$args['payment']     = $order_parts[0];
-	$args['file_key']    = $order_parts[2];
-	$args['price_id']    = $order_parts[3];
-	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$order            = edd_get_order( $order_parts[0] );
+	$args['expire']   = $_GET['ttl'];
+	$args['download'] = $order_parts[1];
+	$args['payment']  = $order->id;
+	$args['file_key'] = $order_parts[2];
+	$args['price_id'] = $price_id;
+	$args['email']    = $order->email;
+	$args['key']      = $order->payment_key;
 
 	// Access is granted if there's at least one `complete` order item that matches the order + download + price ID.
 	$args['has_access'] = edd_order_grants_access_to_download_files( array(
-		'order_id'   => $args['payment'],
+		'order_id'   => $order->id,
 		'product_id' => $args['download'],
-		'price_id'   => ! empty( $args['price_id'] ) ? $args['price_id'] : ''
+		'price_id'   => $args['price_id'],
 	) );
 
 	return $args;
@@ -893,7 +895,7 @@ function edd_process_signed_download_url( $args ) {
 
 /**
  * Determines whether or not a given order grants access to download files associated with a given
- * product ID and price ID combination. Returns true if there's at least one `complete` order item
+ * product ID and price ID combination. Returns true if there's at least one deliverable order item
  * matching the requirements.
  *
  * @param array $args
@@ -905,7 +907,7 @@ function edd_order_grants_access_to_download_files( $args ) {
 	$args = wp_parse_args( $args, array(
 		'order_id'   => 0,
 		'product_id' => 0,
-		'price_id'   => ''
+		'price_id'   => null,
 	) );
 
 	// Order and product IDs are required.
@@ -913,16 +915,51 @@ function edd_order_grants_access_to_download_files( $args ) {
 		return false;
 	}
 
-	$args = array(
-		'order_id'   => $args['order_id'],
-		'product_id' => $args['product_id'],
-		'price_id'   => $args['price_id'],
-		'status'     => 'complete'
+	$args['status'] = edd_get_deliverable_order_item_statuses();
+	if ( is_null( $args['price_id'] ) ) {
+		unset( $args['price_id'] );
+	}
+
+	// Check if the download was purchased directly.
+	$order_items = edd_count_order_items( $args );
+
+	if ( $order_items > 0 ) {
+		return true;
+	}
+
+	$order_items = edd_get_order_items(
+		array(
+			'order_id' => $args['order_id'],
+			'status'   => edd_get_deliverable_order_item_statuses(),
+			'fields'   => 'product_id',
+		)
 	);
 
-	$order_items = edd_count_order_items( array_filter( $args ) );
+	// Unlikely, but return false if there are no order items found at all.
+	if ( empty( $order_items ) ) {
+		return false;
+	}
 
-	return $order_items > 0;
+	// Include some fallback checks for incorrectly created download URLs and bundled items.
+	$product_to_check = isset( $args['price_id'] ) && is_numeric( $args['price_id'] ) ? "{$args['product_id']}_{$args['price_id']}" : $args['product_id'];
+	foreach ( $order_items as $product_id ) {
+		$download = edd_get_download( $product_id );
+		if ( ! $download instanceof EDD_Download ) {
+			continue;
+		}
+
+		// Check if the requested download is part of a bundle.
+		if ( 'bundle' === $download->type && in_array( $product_to_check, $download->get_bundled_downloads() ) ) {
+			return true;
+		}
+
+		// Check if the requested download is not variably priced but incorrectly included a price ID.
+		if ( empty( $args['price_id'] ) && $args['product_id'] == $product_id && ! $download->has_variable_prices() ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**

@@ -166,9 +166,9 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments. %3$sAlready have a Pass?%4$s', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', $source ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', urlencode( $source ) ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
 					'</a>',
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', $source ), 'https://easydigitaldownloads.com/what-is-an-edd-pass' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', urlencode( $source ) ), 'https://easydigitaldownloads.com/what-is-an-edd-pass' ) ) . '" target="_blank">',
 					'</a>'
 				);
 
@@ -178,7 +178,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'For access to additional Easy Digital Downloads extensions to grow your store, consider %1$spurchasing a pass%2$s.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extension-license', $source ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extension-license', urlencode( $source ) ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
 					'</a>'
 				);
 
@@ -188,7 +188,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'You are using Easy Digital Downloads with a Personal Pass. Consider %1$supgrading%2$s to get recurring payments and more.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'personal-pass', $source ), 'https://easydigitaldownloads.com/your-account/license-keys/' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'personal-pass', urlencode( $source ) ), 'https://easydigitaldownloads.com/your-account/license-keys/' ) ) . '" target="_blank">',
 					'</a>'
 				);
 
@@ -199,7 +199,7 @@ class License_Upgrade_Notice extends Notice {
 					printf(
 					/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 						__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s', 'easy-digital-downloads' ),
-						'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass', $source ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
+						'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass', urlencode( $source ) ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
 						'</a>'
 					);
 				} elseif( ! $this->has_mi_license() ) {

@@ -51,10 +51,11 @@ class Orders extends Base {
 		) );
 
 		if ( ! empty( $results ) ) {
+			$orders = new \EDD\Database\Queries\Order();
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				if ( edd_get_order( $result->ID ) ) {
+				if ( $orders->get_item( $result->ID ) ) {
 					continue;
 				}
 

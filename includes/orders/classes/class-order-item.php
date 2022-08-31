@@ -232,6 +232,16 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @return string The product name including any price ID name.
 	 */
 	public function get_order_item_name() {
+		if ( is_admin() && ( function_exists( 'edd_doing_ajax' ) && ! edd_doing_ajax() ) ) {
+			/**
+			 * Allow the product name to be filtered within the admin.
+			 * @since 3.0
+			 * @param string $product_name  The order item name.
+			 * @param EDD\Orders\Order_Item The order item object.
+			 */
+			return apply_filters( 'edd_order_details_item_name', $this->product_name, $this );
+		}
+
 		return $this->product_name;
 	}
 
@@ -250,5 +260,15 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 		return edd_get_order_items( array(
 			'parent' => $this->id
 		) );
+	}
+
+	/**
+	 * Checks the order item status to determine whether assets can be delivered.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	public function is_deliverable() {
+		return in_array( $this->status, edd_get_deliverable_order_item_statuses(), true );
 	}
 }

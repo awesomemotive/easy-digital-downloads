@@ -1445,7 +1445,7 @@ class EDD_Discount extends Adjustment {
 		$cart_ids = array_values( $cart_ids );
 
 		// Ensure we have requirements before proceeding
-		if ( ! $is_met && ! empty( $product_reqs ) ) {
+		if ( ! empty( $product_reqs ) ) {
 			$matches = array_intersect( $product_reqs, $cart_ids );
 
 			switch ( $this->get_product_condition() ) {
@@ -1455,6 +1455,10 @@ class EDD_Discount extends Adjustment {
 				default:
 					$is_met = 0 < count( $matches );
 			}
+
+			if ( ! $is_met && $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+			}
 		}
 
 		$excluded_ps = array_map( 'absint', $excluded_ps );
@@ -1462,10 +1466,12 @@ class EDD_Discount extends Adjustment {
 		$excluded_ps = array_filter( array_values( $excluded_ps ) );
 
 		if ( ! empty( $excluded_ps ) ) {
-			$is_met = false === (bool) array_intersect( $cart_ids, $excluded_ps );
+			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) === count( $cart_ids ) ) {
+				$is_met = false;
 
-			if ( ! $is_met && $set_error ) {
-				edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+				if ( $set_error ) {
+					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+				}
 			}
 		}
 
@@ -1547,7 +1553,7 @@ class EDD_Discount extends Adjustment {
 						continue;
 					}
 
-					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ), true ) ) {
+					if ( in_array( $payment->status, edd_get_incomplete_order_statuses(), true ) ) {
 						continue;
 					}
 
@@ -1780,10 +1786,15 @@ class EDD_Discount extends Adjustment {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $this->id,
-		), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url(
+			edd_get_admin_url(
+				array(
+					'page'       => 'edd-discounts',
+					'edd-action' => 'edit_discount',
+					'discount'   => absint( $this->id ),
+				)
+			)
+		);
 	}
 
 	/**
@@ -1870,16 +1881,20 @@ class EDD_Discount extends Adjustment {
 			'products'          => 'product_reqs',
 			'excluded-products' => 'excluded_products',
 			'not_global'        => 'scope',
+			'is_not_global'     => 'scope',
 			'use_once'          => 'once_per_customer',
+			'is_single_use'     => 'once_per_customer',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
-			if ( 'not_global' === $old_key ) {
-				$args[ $new_key ] = ! empty( $args[ $old_key ] )
-					? 'not_global'
-					: 'global';
-			} elseif ( isset( $args[ $old_key ] ) ) {
-				$args[ $new_key ] = $args[ $old_key ];
+			if ( isset( $args[ $old_key ] ) ) {
+				if ( in_array( $old_key, array( 'not_global', 'is_not_global' ), true ) && ! array_key_exists( 'scope', $args ) ) {
+					$args[ $new_key ] = ! empty( $args[ $old_key ] )
+						? 'not_global'
+						: 'global';
+				} else {
+					$args[ $new_key ] = $args[ $old_key ];
+				}
 			}
 			unset( $args[ $old_key ] );
 		}

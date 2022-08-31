@@ -450,7 +450,7 @@ add_action( 'init', 'edd_register_post_type_statuses', 2 );
 function edd_updated_messages( $messages ) {
 	global $post, $post_ID;
 
-	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
+	$url1 = '<a href="' . esc_url( get_permalink( $post_ID ) ) . '">';
 	$url2 = edd_get_label_singular();
 	$url3 = '</a>';
 
@@ -513,3 +513,35 @@ function edd_download_row_actions( $actions, $post ) {
 	return $actions;
 }
 add_filter( 'post_row_actions', 'edd_download_row_actions', 2, 100 );
+
+/**
+ * Adds the custom page state display to the Pages list.
+ *
+ * @param array   $post_states The existing registered post states.
+ * @param WP_Post $post        The post to possibly append the post state to.
+ * @since 3.1
+ */
+function edd_display_post_states( $post_states, $post ) {
+	if ( intval( edd_get_option( 'purchase_page' ) ) === $post->ID ) {
+		$post_states['edd_purchase_page'] = __( 'Checkout Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'success_page' ) ) === $post->ID ) {
+		$post_states['edd_success_page'] = __( 'Success Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'failure_page' ) ) === $post->ID ) {
+		$post_states['edd_failure_page'] = __( 'Failed Transaction Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'purchase_history_page' ) ) === $post->ID ) {
+		$post_states['edd_purchase_history_page'] = __( 'Purchase History Page', 'easy-digital-downloads' );
+	}
+
+	if ( intval( edd_get_option( 'login_redirect_page' ) ) === $post->ID ) {
+		$post_states['edd_login_redirect_page'] = __( 'Login Redirect Page', 'easy-digital-downloads' );
+	}
+
+	return $post_states;
+}
+add_filter( 'display_post_states', 'edd_display_post_states', 10, 2 );

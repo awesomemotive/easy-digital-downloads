@@ -250,7 +250,7 @@ function edd_process_purchase_login() {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
 		} else {
-			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+			edd_redirect( wp_get_referer() );
 		}
 	}
 
@@ -261,7 +261,7 @@ function edd_process_purchase_login() {
 			do_action( 'edd_ajax_checkout_errors' );
 			edd_die();
 		} else {
-			edd_redirect( $_SERVER['HTTP_REFERER'] );
+			edd_redirect( wp_get_referer() );
 		}
 	}
 
@@ -1198,7 +1198,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		"RS" => "\d{5}",
 		"RU" => "\d{6}",
 		"SA" => "\d{5}",
-		"SE" => "^(s-|S-) {0,1}[0-9]{3}\s?[0-9]{2}$",
+		"SE" => "^(s-|S-){0,1}[0-9]{3}\s?[0-9]{2}$",
 		"SG" => "\d{6}",
 		"SH" => "(ASCN|STHL) 1ZZ",
 		"SI" => "\d{4}",

@@ -27,6 +27,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
+	// This specifically does not use edd_get_complete_order_statuses().
 	$completed_statuses = array( 'publish', 'complete', 'completed' );
 	// Make sure that payments are only completed once.
 	if ( in_array( $old_status, $completed_statuses, true ) ) {
@@ -527,7 +528,7 @@ function edd_recover_payment() {
 
 	EDD()->session->set( 'edd_resume_payment', $payment->ID );
 
-	$redirect_args = array( 'payment-mode' => $payment->gateway );
+	$redirect_args = array( 'payment-mode' => urlencode( $payment->gateway ) );
 	$redirect      = add_query_arg( $redirect_args, edd_get_checkout_uri() );
 	edd_redirect( $redirect );
 }
