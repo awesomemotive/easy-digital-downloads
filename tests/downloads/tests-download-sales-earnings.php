@@ -60,6 +60,7 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 				'quantity'     => 1,
 			)
 		);
+		do_action( 'edd_after_payment_actions', $order_id );
 
 		$download = edd_get_download( $this->simple_download->ID );
 		$this->assertEquals( get_post_meta( $download->ID, '_edd_download_gross_sales', true ), $download->get_sales() );
@@ -96,6 +97,7 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 				'quantity'     => 1,
 			)
 		);
+		do_action( 'edd_after_payment_actions', $order_id );
 
 		$download = edd_get_download( $this->simple_download->ID );
 		$this->assertEquals( get_post_meta( $download->ID, '_edd_download_gross_earnings', true ), $download->get_earnings() );
@@ -373,6 +375,7 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 				'discount'     => 5,
 			)
 		);
+		do_action( 'edd_after_payment_actions', $order_id );
 
 		$download = edd_get_download( $this->simple_download->ID );
 		$this->assertEquals( 5, get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) - $download->earnings );
@@ -418,6 +421,7 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 				'total'       => 5,
 			)
 		);
+		do_action( 'edd_after_payment_actions', $order_id );
 
 		$download = edd_get_download( $this->simple_download->ID );
 		$this->assertEquals( $download->earnings, get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) );
@@ -464,7 +468,7 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 			)
 		);
 
-		// edd_update_order_item( $order_item_id, array( 'status' => 'complete' ) );
+		do_action( 'edd_after_payment_actions', $order_id );
 
 		$download = edd_get_download( $this->simple_download->ID );
 		$this->assertEquals( 5, get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) - $download->earnings );
