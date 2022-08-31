@@ -730,6 +730,8 @@ function get_dates_filter_range() {
  * @return bool True if results should use hour by hour, otherwise false.
  */
 function get_dates_filter_hour_by_hour() {
+	$hour_by_hour = false;
+
 	// Retrieve the queried dates
 	$dates = get_dates_filter( 'objects' );
 

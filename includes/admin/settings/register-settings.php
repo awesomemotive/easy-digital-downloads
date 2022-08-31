@@ -1204,11 +1204,26 @@ function edd_get_registered_settings() {
 						'type'          => 'tax_rate',
 						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
 						'desc'          => (
-							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured properly below, then click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
+							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. We have migrated any fallback tax rates for you to verify below. Click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
 						),
 					),
 				),
 				$edd_settings['taxes']['rates']
+			);
+		}
+
+		// If test_mode is being forced to true, alter the setting so it cannot be modified.
+		if ( edd_is_test_mode_forced() ) {
+			$edd_settings['gateways']['main']['test_mode'] = array_merge(
+				array(
+					'options'       => array(
+						'disabled' => true,
+						'readonly' => true,
+					),
+					'tooltip_title' => __( 'Forced Test Mode', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'You currently cannot modify the Test Mode setting, as the \'EDD_TEST_MODE\' constant has been defined as \'true\' or the edd_is_test_mode filter is being forced to \'true\'.', 'easy-digital-downloads' ),
+				),
+				$edd_settings['gateways']['main']['test_mode']
 			);
 		}
 
@@ -1513,8 +1528,16 @@ function edd_settings_sanitize_taxes( $input ) {
 			? sanitize_text_field( $tax_rate['state'] )
 			: '';
 
+		$name = '*' === $tax_rate['country']
+			? ''
+			: sanitize_text_field( $tax_rate['country'] );
+
+		if ( empty( $name ) ) {
+			$scope  = 'global';
+		}
+
 		$adjustment_data = array(
-			'name'        => sanitize_text_field( $tax_rate['country'] ),
+			'name'        => $name,
 			'type'        => 'tax_rate',
 			'scope'       => $scope,
 			'amount_type' => 'percent',
@@ -1522,7 +1545,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
-		if ( empty( $adjustment_data['name'] ) || $adjustment_data['amount'] <= 0 ) {
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] <= 0 ) {
 			continue;
 		}
 
@@ -1536,9 +1559,8 @@ function edd_settings_sanitize_taxes( $input ) {
 		} else {
 			$adjustment_data['status'] = 'active';
 
-			edd_add_adjustment( $adjustment_data );
+			edd_add_tax_rate( $adjustment_data );
 		}
-
 	}
 
 	return $input;
@@ -1846,6 +1868,11 @@ function edd_checkbox_callback( $args ) {
  */
 function edd_checkbox_description_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+
+	// Allow a setting or filter to override what the found value is.
+	if ( isset( $args['current'] ) ) {
+		$edd_option = $args['current'];
+	}
 
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
@@ -3020,3 +3047,47 @@ function edd_add_setting_tooltip( $html = '', $args = array() ) {
 	return $html;
 }
 add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
+
+/**
+ * Filters the edd_get_option call for test_mode.
+ *
+ * This allows us to ensure that calls directly to edd_get_option respect the constant
+ * in addition to the edd_is_test_mode() function call and included filter.
+ *
+ * @since 3.1
+ *
+ * @param bool   $value   If test_mode is enabled in the settings.
+ * @param string $key     The key of the setting, should be test_mode.
+ * @param bool   $default The default setting, which is 'false' for test_mode.
+ */
+function edd_filter_test_mode_option( $value, $key, $default ) {
+	if ( edd_is_test_mode_forced() ) {
+		$value = true;
+	}
+
+	return $value;
+}
+add_filter( 'edd_get_option_test_mode', 'edd_filter_test_mode_option', 10, 3 );
+
+/**
+ * Determine if test mode is being forced to true.
+ *
+ * Using the EDD_TEST_MODE and the edd_is_test_mode filter, determine if the value of true
+ * is being forced for test_mode so we can properly alter the setting for it.
+ *
+ * @since 3.1
+ *
+ * @return bool If test_mode is being forced or not.
+ */
+function edd_is_test_mode_forced() {
+	if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+		return true;
+	}
+
+	if ( false !== has_filter( 'edd_is_test_mode', '__return_true' ) ) {
+		return true;
+	}
+
+	return false;
+}
+
