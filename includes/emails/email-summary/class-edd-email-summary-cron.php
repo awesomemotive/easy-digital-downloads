@@ -37,13 +37,13 @@ class EDD_Email_Summary_Cron {
 	 */
 	public function __construct() {
 
-		// Register daily check
+		// Register daily check.
 		add_action( 'edd_daily_scheduled_events', array( $this, 'schedule_cron_events' ) );
 
-		// User settings changed
+		// User settings changed.
 		add_action( 'updated_option', array( $this, 'settings_changed' ), 10, 1 );
 
-		// Prepare and run cron
+		// Prepare and run cron.
 		add_action( self::CRON_EVENT_NAME, array( $this, 'run_cron' ) );
 
 	}
@@ -52,6 +52,8 @@ class EDD_Email_Summary_Cron {
 	 * Get the current status of email summary.
 	 *
 	 * @since 3.1
+	 *
+	 * @return bool True if email summary is enabled, false if disabled.
 	 */
 	public function is_enabled() {
 		return (bool) ! edd_get_option( 'disable_email_summary', false );
@@ -62,6 +64,8 @@ class EDD_Email_Summary_Cron {
 	 * should be and schedule it.
 	 *
 	 * @since 3.1
+	 *
+	 * @return void
 	 */
 	public function schedule_cron_events() {
 		// Exit if email summary is disabled or event is already scheduled.
@@ -87,6 +91,8 @@ class EDD_Email_Summary_Cron {
 	 * Clear all cron events related to email summary.
 	 *
 	 * @since 3.1
+	 *
+	 * @return void
 	 */
 	public function clear_cron_events() {
 		wp_clear_scheduled_hook( self::CRON_EVENT_NAME );
@@ -97,7 +103,10 @@ class EDD_Email_Summary_Cron {
 	 * schedule of email summaries are updated.
 	 *
 	 * @since 3.1
+	 *
 	 * @param string $option_name
+	 *
+	 * @return void
 	 */
 	public function settings_changed( $option_name ) {
 		if ( ! in_array( $option_name, array( 'edd_settings', 'start_of_week' ) ) ) {
@@ -114,6 +123,8 @@ class EDD_Email_Summary_Cron {
 	 * Initialize the cron with all the proper checks.
 	 *
 	 * @since 3.1
+	 *
+	 * @return void
 	 */
 	public function run_cron() {
 		// This is not cron, abort!
