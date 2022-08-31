@@ -112,7 +112,7 @@ class EDD_Email_Summary_Cron {
 		if ( ! in_array( $option_name, array( 'edd_settings', 'start_of_week' ) ) ) {
 			return;
 		}
-		// Reload EDD options so that we have the newest values
+		// Reload EDD options so that we have the newest values.
 		global $edd_options;
 		$edd_options = get_option( 'edd_settings' );
 		$this->clear_cron_events();
