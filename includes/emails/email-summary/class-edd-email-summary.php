@@ -47,6 +47,8 @@ class EDD_Email_Summary {
 	 * Get site URL.
 	 *
 	 * @since 3.1
+	 *
+	 * @return string Host of the site url.
 	 */
 	public function get_site_url() {
 		$site_url        = get_site_url();
@@ -60,6 +62,8 @@ class EDD_Email_Summary {
 	 * Get email subject.
 	 *
 	 * @since 3.1
+	 *
+	 * @return string Email subject.
 	 */
 	public function get_email_subject() {
 		// Translators: The domain of the site is appended to the subject.
@@ -72,6 +76,8 @@ class EDD_Email_Summary {
 	 * Get email recipients.
 	 *
 	 * @since 3.1
+	 *
+	 * @return array Recipients to receive the email.
 	 */
 	public function get_email_recipients() {
 		$recipients = array();
@@ -99,6 +105,7 @@ class EDD_Email_Summary {
 	 * Get report start date.
 	 *
 	 * @since 3.1
+	 *
  	 * @return EDD\Utils\Date The EDD date object set at the UTC equivalent time.
 	 */
 	public function get_report_start_date() {
@@ -117,6 +124,7 @@ class EDD_Email_Summary {
 	 * Get report end date.
 	 *
 	 * @since 3.1
+	 *
 	 * @return EDD\Utils\Date The EDD date object set at the UTC equivalent time.
 	 */
 	public function get_report_end_date() {
@@ -135,6 +143,7 @@ class EDD_Email_Summary {
 	 * Get report date range.
 	 *
 	 * @since 3.1
+	 *
 	 * @return \EDD\Utils\Date[] Array of start and end date objects.
 	 */
 	public function get_report_date_range() {
@@ -149,6 +158,8 @@ class EDD_Email_Summary {
 	 * Retrieve dataset for email content.
 	 *
 	 * @since 3.1
+	 *
+	 * @return array Data and statistics for the period.
 	 */
 	public function get_report_dataset() {
 		$date_range = $this->get_report_date_range();
@@ -216,7 +227,10 @@ class EDD_Email_Summary {
 	 * Build email template.
 	 *
 	 * @since 3.1
+	 *
 	 * @param array|bool $blurb Structured blurb data.
+	 *
+	 * @return string|bool The string of the email template or false if the email template couldn't be built.
 	 */
 	public function build_email_template( $blurb = false ) {
 		$dataset         = $this->get_report_dataset();
@@ -691,6 +705,8 @@ class EDD_Email_Summary {
 	 * Prepare and send email.
 	 *
 	 * @since 3.1
+	 *
+	 * @return bool True if email was sent, false if there was an error.
 	 */
 	public function send_email() {
 		// Get next blurb.
