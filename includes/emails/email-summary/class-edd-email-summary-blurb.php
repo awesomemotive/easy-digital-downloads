@@ -220,7 +220,7 @@ class EDD_Email_Summary_Blurb {
 	public function check_blurb_has_downloads( $conditions ) {
 		foreach ($conditions as $condition_name) {
 			// Check if store has any products that are free.
-			if ( 'free' == $condition_name ) {
+			if ( 'free' === $condition_name ) {
 				$args = array(
 					'post_type'      => 'download',
 					'posts_per_page' => 1,
@@ -235,7 +235,7 @@ class EDD_Email_Summary_Blurb {
 				);
 
 				$downloads = new WP_Query( $args );
-				if ( $downloads->post_count == 0 ) {
+				if ( $downloads->post_count === 0 ) {
 					return false;
 				}
 			}
@@ -259,28 +259,28 @@ class EDD_Email_Summary_Blurb {
 				}
 
 				// Pass check.
-				if ( 'current_pass' == $condition_name ) {
+				if ( 'current_pass' === $condition_name ) {
 					if ( ! $this->check_blurb_current_pass( $condition ) ) {
 						return false;
 					}
 				}
 
 				// Active plugins check.
-				if ( 'active_plugins' == $condition_name ) {
+				if ( 'active_plugins' === $condition_name ) {
 					if ( ! $this->check_blurb_active_plugins( $condition ) ) {
 						return false;
 					}
 				}
 
 				// Inactive plugins check.
-				if ( 'inactive_plugins' == $condition_name ) {
+				if ( 'inactive_plugins' === $condition_name ) {
 					if ( ! $this->check_blurb_inactive_plugins( $condition ) ) {
 						return false;
 					}
 				}
 
 				// Check for specific product/downloads.
-				if ( 'has_downloads' == $condition_name ) {
+				if ( 'has_downloads' === $condition_name ) {
 					if ( ! $this->check_blurb_has_downloads( $condition ) ) {
 						return false;
 					}
