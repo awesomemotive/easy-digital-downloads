@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.3\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-08-16 03:37:29+00:00\n"
+"POT-Creation-Date: 2022-08-31 18:41:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -252,7 +252,7 @@ msgstr ""
 #: includes/admin/admin-bar.php:121 includes/admin/admin-pages.php:115
 #: includes/admin/plugins.php:60
 #: includes/admin/settings/contextual-help.php:102
-#: includes/admin/settings/register-settings.php:1639
+#: includes/admin/settings/register-settings.php:1654
 msgid "Extensions"
 msgstr ""
 
@@ -672,13 +672,13 @@ msgstr ""
 #: includes/admin/discounts/contextual-help.php:35
 #: includes/admin/settings/contextual-help.php:40
 #: includes/admin/settings/display-settings.php:194
-#: includes/admin/settings/register-settings.php:1632
-#: includes/admin/settings/register-settings.php:1684
-#: includes/admin/settings/register-settings.php:1690
-#: includes/admin/settings/register-settings.php:1695
-#: includes/admin/settings/register-settings.php:1698
-#: includes/admin/settings/register-settings.php:1702
-#: includes/admin/settings/register-settings.php:1715
+#: includes/admin/settings/register-settings.php:1647
+#: includes/admin/settings/register-settings.php:1699
+#: includes/admin/settings/register-settings.php:1705
+#: includes/admin/settings/register-settings.php:1710
+#: includes/admin/settings/register-settings.php:1713
+#: includes/admin/settings/register-settings.php:1717
+#: includes/admin/settings/register-settings.php:1730
 #: includes/admin/tools.php:96
 msgid "General"
 msgstr ""
@@ -722,7 +722,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-addresses-table.php:152
 #: includes/admin/customers/class-customer-email-addresses-table.php:148
 #: includes/admin/customers/class-customer-table.php:147
-#: includes/misc-functions.php:1433 includes/payments/functions.php:539
+#: includes/misc-functions.php:1440 includes/payments/functions.php:539
 #: tests/orders/tests-payments.php:173
 msgid "Pending"
 msgstr ""
@@ -731,7 +731,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-email-addresses-table.php:153
 #: includes/admin/customers/class-customer-table.php:152
 #: includes/admin/discounts/edit-discount.php:263
-#: includes/class-edd-discount.php:684 includes/misc-functions.php:1428
+#: includes/class-edd-discount.php:684 includes/misc-functions.php:1435
 msgid "Active"
 msgstr ""
 
@@ -1854,7 +1854,7 @@ msgid "Status"
 msgstr ""
 
 #: includes/admin/discounts/edit-discount.php:264
-#: includes/class-edd-discount.php:681 includes/misc-functions.php:1429
+#: includes/class-edd-discount.php:681 includes/misc-functions.php:1436
 msgid "Inactive"
 msgstr ""
 
@@ -2206,7 +2206,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:1171
 #: includes/admin/settings/register-settings.php:639
 #: includes/admin/settings/register-settings.php:642
-#: includes/admin/settings/register-settings.php:1686
+#: includes/admin/settings/register-settings.php:1701
 #: includes/orders/functions/types.php:93
 msgid "Refunds"
 msgstr ""
@@ -3655,7 +3655,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:64
 #: includes/admin/settings/register-settings.php:447
 #: includes/admin/settings/register-settings.php:455
-#: includes/admin/settings/register-settings.php:1678
+#: includes/admin/settings/register-settings.php:1693
 msgid "Currency"
 msgstr ""
 
@@ -4124,7 +4124,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:1550
 #: includes/admin/settings/contextual-help.php:78
 #: includes/admin/settings/register-settings.php:840
-#: includes/admin/settings/register-settings.php:1637
+#: includes/admin/settings/register-settings.php:1652
 msgid "Taxes"
 msgstr ""
 
@@ -4142,7 +4142,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:1705
 #: includes/admin/reporting/reports.php:1914
-#: includes/admin/settings/register-settings.php:1717
+#: includes/admin/settings/register-settings.php:1732
 #: includes/admin/tools/logs.php:195 includes/privacy-functions.php:546
 #: includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php:58
 msgid "File Downloads"
@@ -4432,7 +4432,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:46
-#: includes/admin/settings/register-settings.php:1633
+#: includes/admin/settings/register-settings.php:1648
 msgid "Payments"
 msgstr ""
 
@@ -4469,7 +4469,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:56
-#: includes/admin/settings/register-settings.php:1634
+#: includes/admin/settings/register-settings.php:1649
 msgid "Emails"
 msgstr ""
 
@@ -4488,7 +4488,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:64
-#: includes/admin/settings/register-settings.php:1635
+#: includes/admin/settings/register-settings.php:1650
 msgid "Marketing"
 msgstr ""
 
@@ -4501,7 +4501,7 @@ msgid "Marketing specific extensions will add their settings here as well."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:72
-#: includes/admin/settings/register-settings.php:1636
+#: includes/admin/settings/register-settings.php:1651
 msgid "Styles"
 msgstr ""
 
@@ -4578,7 +4578,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:94
-#: includes/admin/settings/register-settings.php:1638
+#: includes/admin/settings/register-settings.php:1653
 msgid "Policies"
 msgstr ""
 
@@ -4733,7 +4733,7 @@ msgid "Select a region"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:389
-#: includes/admin/settings/register-settings.php:1679
+#: includes/admin/settings/register-settings.php:1694
 msgid "Pages"
 msgstr ""
 
@@ -4770,6 +4770,7 @@ msgid "Select a page"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:406
+#: includes/post-types.php:530
 msgid "Success Page"
 msgstr ""
 
@@ -4781,6 +4782,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:415
+#: includes/post-types.php:534
 msgid "Failed Transaction Page"
 msgstr ""
 
@@ -4791,6 +4793,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:424
+#: includes/post-types.php:538
 msgid "Purchase History Page"
 msgstr ""
 
@@ -4802,6 +4805,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:433
+#: includes/post-types.php:542
 msgid "Login Redirect Page"
 msgstr ""
 
@@ -4865,7 +4869,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:495
-#: includes/admin/settings/register-settings.php:1680
+#: includes/admin/settings/register-settings.php:1695
 msgid "API"
 msgstr ""
 
@@ -4901,7 +4905,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:517
-#: includes/admin/settings/register-settings.php:1681
+#: includes/admin/settings/register-settings.php:1696
 msgid "Tracking"
 msgstr ""
 
@@ -5603,7 +5607,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1038
-#: includes/admin/settings/register-settings.php:1706
+#: includes/admin/settings/register-settings.php:1721
 msgid "Privacy Policy"
 msgstr ""
 
@@ -5665,7 +5669,7 @@ msgid "Need help creating a Privacy Policy? We recommend %sTermageddon%s."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1072
-#: includes/admin/settings/register-settings.php:1707
+#: includes/admin/settings/register-settings.php:1722
 msgid "Terms & Agreements"
 msgstr ""
 
@@ -5759,205 +5763,216 @@ msgid ""
 "\"Save Changes\" to dismiss this notice."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1640
+#: includes/admin/settings/register-settings.php:1188
+msgid "Forced Test Mode"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:1189
+msgid ""
+"You currently cannot modify the Test Mode setting, as the 'EDD_TEST_MODE' "
+"constant has been defined as 'true' or the edd_is_test_mode filter is being "
+"forced to 'true'."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:1655
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1641
+#: includes/admin/settings/register-settings.php:1656
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1677
+#: includes/admin/settings/register-settings.php:1692
 msgid "Store"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1685
+#: includes/admin/settings/register-settings.php:1700
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:82
 #: includes/install.php:346 templates/widget-cart-checkout.php:6
 #: templates/widget-cart-empty.php:7
 msgid "Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1687
+#: includes/admin/settings/register-settings.php:1702
 msgid "Accounting"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1691
+#: includes/admin/settings/register-settings.php:1706
 msgid "Purchase Receipts"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1692
+#: includes/admin/settings/register-settings.php:1707
 msgid "Sale Notifications"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1699
+#: includes/admin/settings/register-settings.php:1714
 msgid "Buttons"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1703
+#: includes/admin/settings/register-settings.php:1718
 msgid "Rates"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1708
+#: includes/admin/settings/register-settings.php:1723
 msgid "Export & Erase"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1711
+#: includes/admin/settings/register-settings.php:1726
 msgid "Main"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1716
+#: includes/admin/settings/register-settings.php:1731
 msgid "Purchase Buttons"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2076
+#: includes/admin/settings/register-settings.php:2096
 #: includes/gateways/functions.php:70 includes/gateways/functions.php:71
 msgid "Store Gateway"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2076
+#: includes/admin/settings/register-settings.php:2096
 msgid ""
 "This is an internal payment gateway which can be used for manually added "
 "orders or test purchases. No money is actually processed."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2091
+#: includes/admin/settings/register-settings.php:2111
 msgid "These gateways will be offered at checkout."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2091
+#: includes/admin/settings/register-settings.php:2111
 msgid "More <a href=\"%s\">Payment Gateways</a> are available."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2120
+#: includes/admin/settings/register-settings.php:2140
 msgid "&mdash; No gateway &mdash;"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2347
+#: includes/admin/settings/register-settings.php:2367
 msgid "The callback function used for the %s setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2529
+#: includes/admin/settings/register-settings.php:2549
 msgid "Attach File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2529
+#: includes/admin/settings/register-settings.php:2549
 msgid "Attach"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2646
+#: includes/admin/settings/register-settings.php:2666
 msgid "Recapture plugin activated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2647
+#: includes/admin/settings/register-settings.php:2667
 msgid "%sAccess your Recapture account%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2652
+#: includes/admin/settings/register-settings.php:2672
 msgid "Disconnect Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2656
+#: includes/admin/settings/register-settings.php:2676
 msgid "%sComplete your connection to Recapture%s"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2664
+#: includes/admin/settings/register-settings.php:2684
 msgid ""
 "We recommend Recapture for recovering lost revenue by automatically sending "
 "effective, targeted emails to customers who abandon their shopping cart."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2664
+#: includes/admin/settings/register-settings.php:2684
 msgid "%sLearn more%s (Free trial available)"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2668
+#: includes/admin/settings/register-settings.php:2688
 msgid "Connect with Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2701
+#: includes/admin/settings/register-settings.php:2721
 #. translators: Tax rate country code
 msgid ""
 "Duplicate tax rates are not allowed. Please deactivate the existing %s tax "
 "rate before adding or activating another."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2702
+#: includes/admin/settings/register-settings.php:2722
 msgid "Please select a country."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2703
+#: includes/admin/settings/register-settings.php:2723
 msgid "Please enter a tax rate greater than 0."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2786
+#: includes/admin/settings/register-settings.php:2806
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2798
+#: includes/admin/settings/register-settings.php:2818
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2809
+#: includes/admin/settings/register-settings.php:2829
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2821
+#: includes/admin/settings/register-settings.php:2841
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2832
+#: includes/admin/settings/register-settings.php:2852
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2840
+#: includes/admin/settings/register-settings.php:2860
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2848
+#: includes/admin/settings/register-settings.php:2868
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2855
+#: includes/admin/settings/register-settings.php:2875
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2856
+#: includes/admin/settings/register-settings.php:2876
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2872
+#: includes/admin/settings/register-settings.php:2892
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2878
+#: includes/admin/settings/register-settings.php:2898
 msgid "Your license key expires soon! It expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2886
+#: includes/admin/settings/register-settings.php:2906
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2901
+#: includes/admin/settings/register-settings.php:2921
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2914
+#: includes/admin/settings/register-settings.php:2934
 msgid "Deactivate License"
 msgstr ""
 
@@ -8078,7 +8093,7 @@ msgstr ""
 
 #: includes/class-edd-discount.php:678
 #: includes/gateways/stripe/includes/template-functions.php:328
-#: includes/misc-functions.php:1430
+#: includes/misc-functions.php:1437
 msgid "Expired"
 msgstr ""
 
@@ -11153,7 +11168,7 @@ msgstr ""
 msgid "Passwords do not match"
 msgstr ""
 
-#: includes/misc-functions.php:524 includes/misc-functions.php:639
+#: includes/misc-functions.php:531 includes/misc-functions.php:646
 #. translators: 1: PHP file name, 2: EDD version number, 3: alternative file
 #. name
 msgid ""
@@ -11161,33 +11176,33 @@ msgid ""
 "%2$s! Use %3$s instead."
 msgstr ""
 
-#: includes/misc-functions.php:532 includes/misc-functions.php:642
+#: includes/misc-functions.php:539 includes/misc-functions.php:649
 #. translators: 1: PHP file name, 2: EDD version number
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s with no alternative available."
 msgstr ""
 
-#: includes/misc-functions.php:573
+#: includes/misc-functions.php:580
 msgid ""
 "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital "
 "Downloads version %3$s! Please use %4$s instead."
 msgstr ""
 
-#: includes/misc-functions.php:581
+#: includes/misc-functions.php:588
 msgid ""
 "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital "
 "Downloads version %3$s with no alternative available."
 msgstr ""
 
-#: includes/misc-functions.php:672
+#: includes/misc-functions.php:679
 #. translators: 1: PHP file name, 2: EDD version number
 msgid ""
 "Code within %1$s is <strong>deprecated</strong> since Easy Digital "
 "Downloads version %2$s. See message for further details."
 msgstr ""
 
-#: includes/misc-functions.php:769
+#: includes/misc-functions.php:776
 #. translators: 1: PHP file name, 2: EDD version number, 3: alternative hook
 #. name
 msgid ""
@@ -11195,38 +11210,38 @@ msgid ""
 "version %2$s! Use the %3$s hook instead."
 msgstr ""
 
-#: includes/misc-functions.php:772
+#: includes/misc-functions.php:779
 #. translators: 1: PHP file name, 2: EDD version number
 msgid ""
 "The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads "
 "version %2$s with no alternative available."
 msgstr ""
 
-#: includes/misc-functions.php:1214
+#: includes/misc-functions.php:1221
 msgid "Store Bot"
 msgstr ""
 
-#: includes/misc-functions.php:1434
+#: includes/misc-functions.php:1441
 msgid "Verified"
 msgstr ""
 
-#: includes/misc-functions.php:1435
+#: includes/misc-functions.php:1442
 msgid "Spam"
 msgstr ""
 
-#: includes/misc-functions.php:1436
+#: includes/misc-functions.php:1443
 msgid "Deleted"
 msgstr ""
 
-#: includes/misc-functions.php:1437
+#: includes/misc-functions.php:1444
 msgid "Cancelled"
 msgstr ""
 
-#: includes/misc-functions.php:1553
+#: includes/misc-functions.php:1560
 msgid "Please define default parameters in the form of an array."
 msgstr ""
 
-#: includes/misc-functions.php:1558
+#: includes/misc-functions.php:1565
 msgid "Please define an SVG icon filename."
 msgstr ""
 
@@ -11651,6 +11666,10 @@ msgid "%1$s %2$s restored from the Trash."
 msgid_plural "%1$s %3$s restored from the Trash."
 msgstr[0] ""
 msgstr[1] ""
+
+#: includes/post-types.php:526
+msgid "Checkout Page"
+msgstr ""
 
 #: includes/privacy-functions.php:27
 msgid ""

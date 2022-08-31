@@ -90,7 +90,15 @@ module.exports = function( grunt ) {
 		copy: {
 			main: {
 				src: [
-					'assets/**',
+					'assets/css/*.min.css',
+					'assets/css/admin/style.css',
+					'assets/js/*.js',
+					'assets/js/*.min.js',
+					'assets/js/vendor/**',
+					'assets/js/utils/**',
+					'assets/js/packages/**',
+					'assets/js/frontend/**',
+					'assets/images/**',
 					'includes/**',
 					'languages/**',
 					'templates/**',
