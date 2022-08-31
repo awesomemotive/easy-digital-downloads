@@ -1211,4 +1211,3 @@ function edd_get_theme_edd_templates() {
 
 	return $theme_edd_templates;
 }
-add_action( 'admin_init', 'edd_get_theme_edd_templates' );
