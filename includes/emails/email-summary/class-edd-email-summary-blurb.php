@@ -17,21 +17,21 @@ use \EDD\Utils\EnvironmentChecker;
 /**
  * EDD_Email_Summary_Blurb Class.
  *
- * Takes care of preparing the necessary dataset, building the
- * email template and sending the Email Summary.
+ * Takes care of fetching the available blurbs and determines
+ * which blurb meets the conditions and is next to be sent.
  *
  * @since 3.1
  */
 class EDD_Email_Summary_Blurb {
 
 	/**
-	 * URL of the endpoint for the blurbs json.
+	 * URL of the endpoint for the blurbs JSON.
 	 *
 	 * @since 3.1
 	 *
 	 * @const string
 	 */
-	const BLURB_ENDPOINT_URL = 'https://jsonkeeper.com/b/JJNK';
+	const BLURBS_ENDPOINT_URL = 'https://jsonkeeper.com/b/JJNK';
 
 	/**
 	 * Environment Checker class.
@@ -62,7 +62,7 @@ class EDD_Email_Summary_Blurb {
 		$blurbs = array();
 
 		$res = wp_remote_get(
-			self::BLURB_ENDPOINT_URL,
+			self::BLURBS_ENDPOINT_URL,
 			array(
 				'sslverify' => false, // @todo - Remove!
 			)
@@ -160,7 +160,7 @@ class EDD_Email_Summary_Blurb {
 	}
 
 	/**
-	 * Check if store pass matches the condition from the blurb
+	 * Check if store pass matches the condition from the blurb.
 	 *
 	 * @since 3.1
 	 *
@@ -217,7 +217,7 @@ class EDD_Email_Summary_Blurb {
 	 */
 	public function check_blurb_has_downloads( $conditions ) {
 		foreach ($conditions as $condition_name) {
-			// Check if store has any products that are free
+			// Check if store has any products that are free.
 			if ( 'free' == $condition_name ) {
 				$args = array(
 					'post_type'      => 'download',
@@ -277,7 +277,7 @@ class EDD_Email_Summary_Blurb {
 					}
 				}
 
-				// Check for specific product/downloads
+				// Check for specific product/downloads.
 				if ( 'has_downloads' == $condition_name ) {
 					if ( ! $this->check_blurb_has_downloads( $condition ) ) {
 						return false;
