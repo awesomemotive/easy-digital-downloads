@@ -74,6 +74,11 @@ function edd_get_password_reset_link( $user ) {
 	if ( is_wp_error( $key ) ) {
 		return false;
 	}
+	$base_url   = network_site_url( 'wp-login.php', 'login' );
+	$login_page = edd_get_option( 'login_page' );
+	if ( $login_page ) {
+		$base_url = get_permalink( $login_page );
+	}
 
 	return add_query_arg(
 		array(
@@ -81,7 +86,7 @@ function edd_get_password_reset_link( $user ) {
 			'key'    => rawurlencode( $key ),
 			'login'  => rawurlencode( $user->user_login ),
 		),
-		network_site_url( 'wp-login.php', 'login' )
+		$base_url
 	);
 }
 
@@ -204,7 +209,7 @@ function edd_validate_password_reset_link() {
 		$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['key'] ) );
 		setcookie( $rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
 
-		edd_redirect( add_query_arg( 'action', 'resetpassword', $redirect ) );
+		edd_redirect( add_query_arg( 'action', 'rp', $redirect ) );
 	}
 
 	$user = false;
