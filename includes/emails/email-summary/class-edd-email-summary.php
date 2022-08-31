@@ -85,13 +85,11 @@ class EDD_Email_Summary {
 		if ( 'admin' === edd_get_option( 'email_summary_recipient', 'admin' ) ) {
 			$recipients[] = get_option( 'admin_email' );
 		} else {
-			$emails = edd_get_option( 'email_summary_custom_recipients', array() );
-			if ( ! is_array( $emails ) ) {
-				$emails = array_map( 'trim', explode( "\n", $emails ) );
-				foreach ( $emails as $email ) {
-					if ( is_email( $email ) ) {
-						$recipients[] = $email;
-					}
+			$emails = edd_get_option( 'email_summary_custom_recipients', '' );
+			$emails = array_map( 'trim', explode( "\n", $emails ) );
+			foreach ( $emails as $email ) {
+				if ( is_email( $email ) ) {
+					$recipients[] = $email;
 				}
 			}
 		}
