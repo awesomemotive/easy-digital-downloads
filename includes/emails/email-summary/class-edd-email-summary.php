@@ -106,18 +106,23 @@ class EDD_Email_Summary {
 	 *
 	 * @since 3.1
 	 *
- 	 * @return EDD\Utils\Date The EDD date object set at the UTC equivalent time.
+	 * @return EDD\Utils\Date An array of start date and it's relative counterpart as the EDD date object set at the UTC equivalent time.
 	 */
 	public function get_report_start_date() {
 		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 		if ( 'monthly' === $this->email_options['email_summary_frequency'] ) {
-			$start_date = $date->copy()->subMonth( 1 )->startOfMonth();
+			$start_date          = $date->copy()->subMonth( 1 )->startOfMonth();
+			$relative_start_date = $date->copy()->subMonth( 2 )->startOfMonth();
 		} else {
-			$start_date = $date->copy()->subDay( 7 )->startOfDay();
+			$start_date          = $date->copy()->subDay( 7 )->startOfDay();
+			$relative_start_date = $date->copy()->subDay( 14 )->startOfDay();
 		}
 
-		return $start_date;
+		return array(
+			'start_date'          => $start_date,
+			'relative_start_date' => $relative_start_date,
+		);
 	}
 
 	/**
@@ -125,18 +130,23 @@ class EDD_Email_Summary {
 	 *
 	 * @since 3.1
 	 *
-	 * @return EDD\Utils\Date The EDD date object set at the UTC equivalent time.
+	 * @return EDD\Utils\Date An array of end date and it's relative counterpart as the EDD date object set at the UTC equivalent time.
 	 */
 	public function get_report_end_date() {
 		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 		if ( 'monthly' === $this->email_options['email_summary_frequency'] ) {
-			$end_date = $date->copy()->subMonth( 1 )->endOfMonth();
+			$end_date          = $date->copy()->subMonth( 1 )->endOfMonth();
+			$relative_end_date = $date->copy()->subMonth( 2 )->endOfMonth();
 		} else {
-			$end_date = $date->copy()->endOfDay();
+			$end_date          = $date->copy()->endOfDay();
+			$relative_end_date = $date->copy()->subDay( 7 )->endOfDay();
 		}
 
-		return $end_date;
+		return array(
+			'end_date'          => $end_date,
+			'relative_end_date' => $relative_end_date,
+		);
 	}
 
 	/**
@@ -144,13 +154,13 @@ class EDD_Email_Summary {
 	 *
 	 * @since 3.1
 	 *
-	 * @return \EDD\Utils\Date[] Array of start and end date objects.
+	 * @return array Array of start and end date objects in \EDD\Utils\Date[] format.
 	 */
 	public function get_report_date_range() {
 		// @todo - Check if we have to convert this to UTC because of DB?
-		return array(
-			'start_date' => $this->get_report_start_date(),
-			'end_date' => $this->get_report_end_date(),
+		return array_merge(
+			$this->get_report_start_date(),
+			$this->get_report_end_date()
 		);
 	}
 
@@ -162,13 +172,12 @@ class EDD_Email_Summary {
 	 * @return array Data and statistics for the period.
 	 */
 	public function get_report_dataset() {
-		$date_range = $this->get_report_date_range();
-		$stats      = new EDD\Stats();
-		$start_date = $date_range['start_date']->format('Y-m-d H:i:s');
-		$end_date   = $date_range['end_date']->format('Y-m-d H:i:s');
-
-		$relative_start_date = "2022-08-01";
-		$relative_end_date   = "2022-08-25";
+		$date_range          = $this->get_report_date_range();
+		$stats               = new EDD\Stats();
+		$start_date          = $date_range['start_date']->format('Y-m-d H:i:s');
+		$end_date            = $date_range['end_date']->format('Y-m-d H:i:s');
+		$relative_start_date = $date_range['relative_start_date']->format('Y-m-d H:i:s');
+		$relative_end_date   = $date_range['relative_end_date']->format('Y-m-d H:i:s');
 
 		$earnings_gross = $stats->get_order_earnings( array(
 			'output'        => 'array',
@@ -251,12 +260,20 @@ class EDD_Email_Summary {
 	 * @return string HTML for relative markup.
 	 */
 	private function build_relative_markup( $relative_data ) {
-		$arrow = $relative_data['positive_change'] ? 'icon-arrow-up.png': 'icon-arrow-down.png';
+		$arrow  = $relative_data['positive_change'] ? 'icon-arrow-up.png': 'icon-arrow-down.png';
+		$output = __( 'No data to compare', 'easy-digital-downloads' );
+		if ( $relative_data['no_change'] ) {
+			$output = __( 'No Change', 'easy-digital-downloads' );
+		} else if ( $relative_data['comparable'] ) {
+			$output = $relative_data['formatted_percentage_change'] . '%';
+		}
 		ob_start();
 		?>
-		<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/' . $arrow ); ?>" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
+		<?php if( $relative_data['comparable'] ): ?>
+			<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/' . $arrow ); ?>" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
+		<?php endif; ?>
 		<span style="padding-left: 1px;">
-			<?php echo esc_html( $relative_data['formatted_percentage_change'] );?>%
+			<?php echo esc_html( $output );?>
 		</span>
 		<?php
 		$relative_markup = ob_get_clean();
