@@ -584,7 +584,7 @@ class EDD_Email_Summary {
 												<?php echo esc_html( __( 'New Customers', 'easy-digital-downloads' ) ); ?>
 											</p>
 											<p class="stats-total-item-value dark-white-color" style="margin: 0 0 6px 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: bold; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 32px; font-size: 32px;">
-												<?php echo edd_currency_filter( edd_format_amount( $dataset['new_customers']['value'] ) );?>
+												<?php echo $dataset['new_customers']['value'];?>
 											</p>
 											<p class="stats-total-item-percent" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #777777; font-weight: normal; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 14px; font-size: 10px; white-space: nowrap;">
 												<?php echo $this->build_relative_markup( $dataset['new_customers']['relative_data'] );?>
