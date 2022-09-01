@@ -510,7 +510,7 @@ class EDD_Email_Summary {
 							<p class="pull-down-5" style="margin: 0px; font-weight: 400; font-size: 14px; line-height: 18px; color: #4B5563; margin-top: 5px;">
 								<?php
 									/* Translators: period name (e.g. week) */
-									echo esc_html( sprintf( __( 'Below is a look at how your store performed last %s.', 'easy-digital-downloads' ), $period_name ) );
+									echo esc_html( sprintf( __( 'Below is a look at how your store performed in the last %s.', 'easy-digital-downloads' ), $period_name ) );
 								?>
 							</p>
 
