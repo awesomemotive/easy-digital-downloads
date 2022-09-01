@@ -167,50 +167,68 @@ class EDD_Email_Summary {
 		$start_date = $date_range['start_date']->format('Y-m-d H:i:s');
 		$end_date   = $date_range['end_date']->format('Y-m-d H:i:s');
 
+		$relative_start_date = "2022-08-01";
+		$relative_end_date   = "2022-08-25";
+
 		$earnings_gross = $stats->get_order_earnings( array(
-			'start'         => $start_date,
-			'end'           => $end_date,
+			'output'        => 'array',
 			'function'      => 'SUM',
 			'exclude_taxes' => false,
-			'relative'      => false,
 			'revenue_type'  => 'gross',
+			'start'         => $start_date,
+			'end'           => $end_date,
+			'relative'      => true,
+			'relative_start'=> $relative_start_date,
+			'relative_end'  => $relative_end_date,
 		) );
 
 		$earnings_net = $stats->get_order_earnings( array(
-			'start'         => $start_date,
-			'end'           => $end_date,
+			'output'        => 'array',
 			'function'      => 'SUM',
 			'exclude_taxes' => true,
-			'relative'      => false,
 			'revenue_type'  => 'net',
+			'start'         => $start_date,
+			'end'           => $end_date,
+			'relative'      => true,
+			'relative_start'=> $relative_start_date,
+			'relative_end'  => $relative_end_date,
 		) );
 
 		$average_order_value =  $stats->get_order_earnings( array(
-			'start'         => $start_date,
-			'end'           => $end_date,
+			'output'        => 'array',
 			'function'      => 'AVG',
 			'exclude_taxes' => false,
-			// 'output'     => 'formatted',
-			'relative'      => false,
+			'start'         => $start_date,
+			'end'           => $end_date,
+			'relative'      => true,
+			'relative_start'=> $relative_start_date,
+			'relative_end'  => $relative_end_date,
 		) );
 
 		$new_customers =  $stats->get_customer_count( array(
-			'start'    => $start_date,
-			'end'      => $end_date,
-			'relative' => false,
+			'output'        => 'array',
+			'start'         => $start_date,
+			'end'           => $end_date,
+			'relative'      => true,
+			'relative_start'=> $relative_start_date,
+			'relative_end'  => $relative_end_date,
 		) );
 
 		$top_selling_products = $stats->get_most_valuable_order_items( array(
-			'start'    => $start_date,
-			'end'      => $end_date,
 			'number'   => 5,
-			'currency' => '',
+			'start'         => $start_date,
+			'end'           => $end_date,
+			'relative'      => true,
+			'relative_start'=> $relative_start_date,
+			'relative_end'  => $relative_end_date,
 		) );
 
 		$order_count =  $stats->get_order_count( array(
-			'start'    => $start_date,
-			'end'      => $end_date,
-			'relative' => false,
+			'start'         => $start_date,
+			'end'           => $end_date,
+			'relative'      => true,
+			'relative_start'=> $relative_start_date,
+			'relative_end'  => $relative_end_date,
 		) );
 
 		return compact(
@@ -221,6 +239,28 @@ class EDD_Email_Summary {
 			'top_selling_products',
 			'order_count',
 		) ;
+	}
+
+	/**
+	 * Generate HTML for relative markup.
+	 *
+	 * @since 3.1
+	 *
+	 * @param array $relative_data Calculated relative data.
+	 *
+	 * @return string HTML for relative markup.
+	 */
+	private function build_relative_markup( $relative_data ) {
+		$arrow = $relative_data['positive_change'] ? 'icon-arrow-up.png': 'icon-arrow-down.png';
+		ob_start();
+		?>
+		<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/' . $arrow ); ?>" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
+		<span style="padding-left: 1px;">
+			<?php echo esc_html( $relative_data['formatted_percentage_change'] );?>%
+		</span>
+		<?php
+		$relative_markup = ob_get_clean();
+		return $relative_markup;
 	}
 
 	/**
@@ -240,7 +280,7 @@ class EDD_Email_Summary {
 		$site_url        = $this->get_site_url();
 
 		$period_name     = ( 'monthly' === $this->email_options['email_summary_frequency'] ) ? __( 'month', 'easy-digital-downloads' ) :  __( 'week', 'easy-digital-downloads' );
-		/* Translators: %s - period name (ex: week) */
+		/* Translators: period name (e.g. week) */
 		$relative_text   = sprintf( __( 'vs previous %s', 'easy-digital-downloads' ), $period_name );
 
 		// If there were no sales, do not build an email template.
@@ -452,7 +492,7 @@ class EDD_Email_Summary {
 
 							<p class="pull-down-5" style="margin: 0px; font-weight: 400; font-size: 14px; line-height: 18px; color: #4B5563; margin-top: 5px;">
 								<?php
-									/* Translators: %s - period name (ex: week) */
+									/* Translators: period name (e.g. week) */
 									echo esc_html( sprintf( __( 'Below is a look at how your store performed last %s.', 'easy-digital-downloads' ), $period_name ) );
 								?>
 							</p>
@@ -472,14 +512,10 @@ class EDD_Email_Summary {
 												<?php echo esc_html( __( 'Gross Revenue', 'easy-digital-downloads' ) ); ?>
 											</p>
 											<p class="stats-total-item-value dark-white-color" style="margin: 0 0 6px 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: bold; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 32px; font-size: 32px;">
-												<?php echo edd_currency_filter( edd_format_amount( $dataset['earnings_gross'] ) );?>
+												<?php echo edd_currency_filter( edd_format_amount( $dataset['earnings_gross']['value'] ) );?>
 											</p>
 											<p class="stats-total-item-percent" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #777777; font-weight: normal; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 14px; font-size: 10px; white-space: nowrap;">
-												<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-arrow-up.png' ); ?>" alt="#" title="#" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
-
-												<span style="padding-left: 1px;">
-													+8.13%
-												</span>
+												<?php echo $this->build_relative_markup( $dataset['earnings_gross']['relative_data'] );?>
 												<span class="comparison" style="font-style: normal; font-weight: lighter; font-size: 12px; line-height: 14px; text-align: center; color: #6B7280; display: block; margin-top: 6px;">
 													<?php echo esc_html( $relative_text ); ?>
 												</span>
@@ -501,15 +537,10 @@ class EDD_Email_Summary {
 												<?php echo esc_html( __( 'Net Revenue', 'easy-digital-downloads' ) ); ?>
 											</p>
 											<p class="stats-total-item-value dark-white-color" style="margin: 0 0 6px 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: bold; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 32px; font-size: 32px;">
-												<?php echo edd_currency_filter( edd_format_amount( $dataset['earnings_net'] ) );?>
+												<?php echo edd_currency_filter( edd_format_amount( $dataset['earnings_net']['value'] ) );?>
 											</p>
 											<p class="stats-total-item-percent" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #777777; font-weight: normal; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 14px; font-size: 10px; white-space: nowrap;">
-												<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-arrow-down.png' ); ?>" alt="#" title="#" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
-
-												<span style="padding-left: 1px;">
-													-10.13%
-												</span>
-
+												<?php echo $this->build_relative_markup( $dataset['earnings_net']['relative_data'] );?>
 												<span class="comparison" style="font-style: normal; font-weight: lighter; font-size: 12px; line-height: 14px; text-align: center; color: #6B7280; display: block; margin-top: 6px;">
 													<?php echo esc_html( $relative_text ); ?>
 												</span>
@@ -536,14 +567,10 @@ class EDD_Email_Summary {
 												<?php echo esc_html( __( 'New Customers', 'easy-digital-downloads' ) ); ?>
 											</p>
 											<p class="stats-total-item-value dark-white-color" style="margin: 0 0 6px 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: bold; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 32px; font-size: 32px;">
-												<?php echo $dataset['new_customers'];?>
+												<?php echo edd_currency_filter( edd_format_amount( $dataset['new_customers']['value'] ) );?>
 											</p>
 											<p class="stats-total-item-percent" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #777777; font-weight: normal; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 14px; font-size: 10px; white-space: nowrap;">
-												<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-arrow-up.png' ); ?>" alt="#" title="#" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
-
-												<span style="padding-left: 1px;">
-													8.13%
-												</span>
+												<?php echo $this->build_relative_markup( $dataset['new_customers']['relative_data'] );?>
 												<span class="comparison" style="font-style: normal; font-weight: lighter; font-size: 12px; line-height: 14px; text-align: center; color: #6B7280; display: block; margin-top: 6px;">
 													<?php echo esc_html( $relative_text ); ?>
 												</span>
@@ -565,14 +592,10 @@ class EDD_Email_Summary {
 												<?php echo esc_html( __( 'Average Order', 'easy-digital-downloads' ) ); ?>
 											</p>
 											<p class="stats-total-item-value dark-white-color" style="margin: 0 0 6px 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: bold; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 32px; font-size: 32px;">
-												<?php echo edd_currency_filter( edd_format_amount( $dataset['average_order_value'] ) );?>
+												<?php echo edd_currency_filter( edd_format_amount( $dataset['average_order_value']['value'] ) );?>
 											</p>
 											<p class="stats-total-item-percent" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #777777; font-weight: normal; padding: 0; text-align: center; mso-line-height-rule: exactly; line-height: 14px; font-size: 10px; white-space: nowrap;">
-												<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-arrow-up.png' ); ?>" alt="#" title="#" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
-
-												<span style="padding-left: 1px;">
-													8.13%
-												</span>
+												<?php echo $this->build_relative_markup( $dataset['average_order_value']['relative_data'] );?>
 												<span class="comparison" style="font-style: normal; font-weight: lighter; font-size: 12px; line-height: 14px; text-align: center; color: #6B7280; display: block; margin-top: 6px;">
 													<?php echo esc_html( $relative_text ); ?>
 												</span>
