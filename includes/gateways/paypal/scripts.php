@@ -116,9 +116,6 @@ function register_js( $force_load = false ) {
 			) ),
 			'intent'         => ! empty( $sdk_query_args['intent'] ) ? $sdk_query_args['intent'] : 'capture',
 			'style'          => get_button_styles(),
-			'requiredError'  => edd_build_errors_html( array(
-				'required-error' => esc_html__( 'Please fill out all required fields.', 'easy-digital-downloads' ),
-			) ),
 		);
 
 		wp_localize_script( 'edd-paypal', 'eddPayPalVars', $paypal_script_vars );
