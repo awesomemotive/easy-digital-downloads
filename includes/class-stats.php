@@ -3097,6 +3097,8 @@ class Stats {
 	 * @param int|float $total     The primary value result for the stat.
 	 * @param int|float $relative  The value relative to the previous date range.
 	 * @param bool      $reverse   If the stat being displayed is a 'reverse' state, where lower is better.
+	 *
+	 * @return array Details about the relative change between two datasets.
 	 */
 	public function generate_relative_data( $total = 0, $relative = 0, $reverse = false ) {
 		$output = array(
@@ -3125,10 +3127,9 @@ class Stats {
 			}
 
 			// Check if stat is in a 'reverse' state, where lower is better.
-			if ( 0 < $percentage_change ) {
-				$positive_change = $reverse ? false : true;
-			} else {
-				$positive_change = $reverse ? true : false;
+			$positive_change = (bool) ! $reverse;
+			if ( 0 > $percentage_change ) {
+				$positive_change = (bool) $reverse;
 			}
 
 			$output['percentage_change']           = $percentage_change;

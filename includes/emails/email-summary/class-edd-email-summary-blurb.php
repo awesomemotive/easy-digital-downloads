@@ -63,7 +63,7 @@ class EDD_Email_Summary_Blurb {
 	public function fetch_blurbs() {
 		$blurbs = array();
 
-		$res = wp_remote_get(
+		$res = wp_safe_remote_get(
 			self::BLURBS_ENDPOINT_URL,
 			array(
 				'sslverify' => false, // @todo - Remove!
@@ -151,16 +151,15 @@ class EDD_Email_Summary_Blurb {
 	 * @since 3.1
 	 *
 	 * @param array $blurb Blurb data.
-	 * @return string
+	 * @return string MD5 hashed blurb.
 	 */
 	public function get_blurb_hash( $blurb ) {
-		if ( ! empty( $blurb ) ) {
-			// We want to sort the array, so that we can get reliable hash everytime even if array properties order changed.
-			array_multisort( $blurb );
-			return md5( wp_json_encode( $blurb ) );
+		if ( empty( $blurb ) ) {
+			return false;
 		}
-
-		return false;
+		// We want to sort the array, so that we can get reliable hash everytime even if array properties order changed.
+		array_multisort( $blurb );
+		return md5( wp_json_encode( $blurb ) );
 	}
 
 	/**
