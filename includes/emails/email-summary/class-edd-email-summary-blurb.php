@@ -171,19 +171,15 @@ class EDD_Email_Summary_Blurb {
 	 * @return bool
 	 */
 	public function check_blurb_current_pass( $condition ) {
-		if ( ! $this->environment_checker->meetsCondition( $condition ) ) {
-			return false;
-		}
-
-		return true;
+		return $this->environment_checker->meetsCondition( $condition );
 	}
 
 	/**
-	 * Check if store has certain plugins active.
+	 * Check if store has all requested plugins active.
 	 *
 	 * @since 3.1
 	 *
-	 * @param array $active_plugins An array of plugins that needs to be active.
+	 * @param array $active_plugins An array of plugins that all need to be active.
 	 * @return bool
 	 */
 	public function check_blurb_active_plugins( $active_plugins ) {
