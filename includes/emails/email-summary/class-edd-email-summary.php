@@ -654,7 +654,7 @@ class EDD_Email_Summary {
 								<table class="top-products" style="border-collapse: collapse; width: 100%; font-size: 12px; line-height: 15px; color: #4B5563;" width="100%">
 									<tr>
 										<th style="font-weight: 600; border-bottom: 1px solid #E5E7EB; text-align: left; border-right: none; padding: 10px 0px; font-size: 12px; line-height: 15px;" align="left"><?php echo esc_html( __( 'Product', 'easy-digital-downloads' ) ); ?></th>
-										<th style="font-weight: 600; border-bottom: 1px solid #E5E7EB; border-right: none; padding: 10px 0px; font-size: 12px; line-height: 15px; text-align: right;" align="right"><?php echo esc_html( __( 'Gross Revenue', 'easy-digital-downloads' ) ); ?>e</th>
+										<th style="font-weight: 600; border-bottom: 1px solid #E5E7EB; border-right: none; padding: 10px 0px; font-size: 12px; line-height: 15px; text-align: right;" align="right"><?php echo esc_html( __( 'Gross Revenue', 'easy-digital-downloads' ) ); ?></th>
 									</tr>
 									<?php
 									$counter = 1;
@@ -768,16 +768,17 @@ class EDD_Email_Summary {
 		$next_blurb   = $email_blurbs->get_next();
 
 		// Prepare email.
-		$email_subject    = $this->get_email_subject();
-		$email_recipients = $this->get_email_recipients();
-		$email_body       = $this->build_email_template( $next_blurb );
-		$email_headers    = array( 'Content-Type: text/html; charset=UTF-8' );
-
-		// If there is no email body, do not send an email.
+		$email_body = $this->build_email_template( $next_blurb );
+		// If there is no email body, we cannot continue.
 		if ( ! $email_body ) {
 			edd_debug_log( __( 'Email body for Email Summary was empty.', 'easy-digital-downloads' ), true );
 			return false;
 		}
+
+		$email_subject    = $this->get_email_subject();
+		$email_recipients = $this->get_email_recipients();
+		$email_headers    = array( 'Content-Type: text/html; charset=UTF-8' );
+
 
 		// Everything is ok, send email.
 		$email_sent = wp_mail( $email_recipients, $email_subject, $email_body, $email_headers );
