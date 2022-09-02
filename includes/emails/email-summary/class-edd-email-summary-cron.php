@@ -75,7 +75,7 @@ class EDD_Email_Summary_Cron {
 
 		// Get the event date based on user settings.
 		$email_frequency = edd_get_option( 'email_summary_frequency', 'weekly' );
-		$week_start_day  = jddayofweek( (int) get_option( 'start_of_week' ) - 1, 1);
+		$week_start_day  = jddayofweek( (int) get_option( 'start_of_week' ) - 1, 1 );
 
 		if ( 'monthly' === $email_frequency ) {
 			$next_time_string = 'first day of next month 8am';
@@ -104,12 +104,12 @@ class EDD_Email_Summary_Cron {
 	 *
 	 * @since 3.1
 	 *
-	 * @param string $option_name
+	 * @param string $option_name WordPress option that was changed.
 	 *
 	 * @return void
 	 */
 	public function settings_changed( $option_name ) {
-		if ( ! in_array( $option_name, array( 'edd_settings', 'start_of_week' ) ) ) {
+		if ( ! in_array( $option_name, array( 'edd_settings', 'start_of_week' ), true ) ) {
 			return;
 		}
 		// Reload EDD options so that we have the newest values.
@@ -132,7 +132,7 @@ class EDD_Email_Summary_Cron {
 			return;
 		}
 
-		$email = new EDD_Email_Summary;
+		$email = new EDD_Email_Summary();
 		$email->send_email();
 	}
 

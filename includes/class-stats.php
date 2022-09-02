@@ -3139,7 +3139,6 @@ class Stats {
 			$output['comparable'] = false;
 		}
 
-
 		return $output;
 	}
 
