@@ -38,7 +38,7 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @var EnvironmentChecker
 	 */
-	protected $environmentChecker;
+	protected $environment_checker;
 
 	/**
 	 * Class constructor.
@@ -49,7 +49,7 @@ class EDD_Email_Summary_Blurb {
 
 		// Load plugin.php so that we can use is_plugin_active().
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		$this->environmentChecker = new EnvironmentChecker();
+		$this->environment_checker = new EnvironmentChecker();
 
 	}
 
@@ -102,7 +102,7 @@ class EDD_Email_Summary_Blurb {
 
 		// Loop through the fetched blurbs and filter out all that meet the conditions.
 		foreach ( $all_data['blurbs'] as $key => $blurb ) {
-			if( $this->does_blurb_meet_conditions( $blurb ) ) {
+			if ( $this->does_blurb_meet_conditions( $blurb ) ) {
 				$blurbs[] = $blurb;
 			}
 		}
@@ -110,7 +110,7 @@ class EDD_Email_Summary_Blurb {
 		// Find first blurb that was not yet sent.
 		foreach ( $blurbs as $blurb ) {
 			$blurb_hash = $this->get_blurb_hash( $blurb );
-			if ( is_array( $blurbs_sent ) && ! in_array( $blurb_hash, $blurbs_sent ) ) {
+			if ( is_array( $blurbs_sent ) && ! in_array( $blurb_hash, $blurbs_sent, true ) ) {
 				$next_blurb = $blurb;
 				break;
 			}
@@ -129,13 +129,14 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @since 3.1
 	 *
+	 * @param array $blurb Blurb data.
 	 * @return void
 	 */
 	public function mark_blurb_sent( $blurb ) {
 		$blurbs_sent = get_option( 'email_summary_blurbs_sent', array() );
 		if ( ! empty( $blurb ) ) {
 			$blurb_hash = $this->get_blurb_hash( $blurb );
-			if ( ! in_array( $blurb_hash, $blurbs_sent ) ) {
+			if ( ! in_array( $blurb_hash, $blurbs_sent, true ) ) {
 				$blurbs_sent[] = $blurb_hash;
 			}
 		}
@@ -149,13 +150,14 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @since 3.1
 	 *
+	 * @param array $blurb Blurb data.
 	 * @return string
 	 */
 	public function get_blurb_hash( $blurb ) {
 		if ( ! empty( $blurb ) ) {
 			// We want to sort the array, so that we can get reliable hash everytime even if array properties order changed.
 			array_multisort( $blurb );
-			return md5( json_encode( $blurb ) );
+			return md5( wp_json_encode( $blurb ) );
 		}
 
 		return false;
@@ -166,10 +168,11 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @since 3.1
 	 *
+	 * @param string $condition Pass details.
 	 * @return bool
 	 */
 	public function check_blurb_current_pass( $condition ) {
-		if ( ! $this->environmentChecker->meetsCondition( $condition ) ) {
+		if ( ! $this->environment_checker->meetsCondition( $condition ) ) {
 			return false;
 		}
 
@@ -181,10 +184,11 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @since 3.1
 	 *
+	 * @param array $active_plugins An array of plugins that needs to be active.
 	 * @return bool
 	 */
 	public function check_blurb_active_plugins( $active_plugins ) {
-		foreach ($active_plugins as $plugin_name) {
+		foreach ( $active_plugins as $plugin_name ) {
 			if ( ! is_plugin_active( $plugin_name ) ) {
 				return false;
 			}
@@ -198,10 +202,11 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @since 3.1
 	 *
+	 * @param array $inactive_plugins An array of plugins that needs to be inactive.
 	 * @return bool
 	 */
 	public function check_blurb_inactive_plugins( $inactive_plugins ) {
-		foreach ($inactive_plugins as $plugin_name) {
+		foreach ( $inactive_plugins as $plugin_name ) {
 			if ( is_plugin_active( $plugin_name ) ) {
 				return false;
 			}
@@ -215,10 +220,11 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @since 3.1
 	 *
+	 * @param array $conditions An array of predefined conditions.
 	 * @return bool
 	 */
 	public function check_blurb_has_downloads( $conditions ) {
-		foreach ($conditions as $condition_name) {
+		foreach ( $conditions as $condition_name ) {
 			// Check if store has any products that are free.
 			if ( 'free' === $condition_name ) {
 				$args = array(
@@ -228,14 +234,14 @@ class EDD_Email_Summary_Blurb {
 					'no_found_rows'  => true,
 					'meta_query'     => array(
 						array(
-							'key'    => 'edd_price',
-							'value'  => '0.00',
+							'key'   => 'edd_price',
+							'value' => '0.00',
 						),
 					),
 				);
 
 				$downloads = new WP_Query( $args );
-				if ( $downloads->post_count === 0 ) {
+				if ( 0 === $downloads->post_count ) {
 					return false;
 				}
 			}
@@ -249,6 +255,7 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @since 3.1
 	 *
+	 * @param array $blurb Blurb data.
 	 * @return bool
 	 */
 	public function does_blurb_meet_conditions( $blurb ) {
