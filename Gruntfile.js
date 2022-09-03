@@ -144,8 +144,8 @@ module.exports = function( grunt ) {
 				options: {
 					patterns: [
 						{
-							match: /init/g,
-							replacement: 'core_init',
+							match: /init_blocks/g,
+							replacement: 'init_core_blocks',
 							expression: true,
 						},
 						{
