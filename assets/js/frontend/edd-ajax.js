@@ -7,7 +7,6 @@ import { recalculateTaxes } from './checkout/utils.js';
 
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
-	$( '.edd-no-js' ).hide();
 	$( 'a.edd-add-to-cart' ).addClass( 'edd-has-js' );
 
 	// Send Remove from Cart requests
@@ -510,7 +509,6 @@ function edd_load_gateway( payment_mode ) {
 	jQuery.post( url, { action: 'edd_load_gateway', edd_payment_mode: payment_mode, nonce: nonce },
 		function( response ) {
 			jQuery( '#edd_purchase_form_wrap' ).html( response );
-			jQuery( '.edd-no-js' ).hide();
 			jQuery( 'body' ).trigger( 'edd_gateway_loaded', [ payment_mode ] );
 		}
 	);
