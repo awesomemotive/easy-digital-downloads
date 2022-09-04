@@ -605,6 +605,36 @@ function edd_should_load_admin_scripts( $hook = '' ) {
 	return (bool) apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook_suffix );
 }
 
+add_action( 'wp_body_open', 'edd_add_js_class', 100 );
+/**
+ * Use javascript to remove the no-js class from the body element.
+ * The `wp_body_open` was added in WordPress 5.2.0 but it's dependent on themes to include it.
+ *
+ * @since 3.1
+ * @return void
+ */
+function edd_add_js_class() {
+	?>
+	<style>.edd-js .edd-no-js, .no-js .edd-has-js { display: none; }</style>
+	<script>/* <![CDATA[ */(function(){var c = document.body.classList;c.remove('no-js');c.add('edd-js');})();/* ]]> */</script>
+	<?php
+}
+
+add_action( 'wp_footer', 'edd_back_compat_add_js_class' );
+/**
+ * Backwards compatible no-js replacement--runs if the wp_body_open hook
+ * is not present.
+ *
+ * @since 3.1
+ * @return void
+ */
+function edd_back_compat_add_js_class() {
+	if ( did_action( 'wp_body_open' ) ) {
+		return;
+	}
+	edd_add_js_class();
+}
+
 /** Deprecated ****************************************************************/
 
 /**
