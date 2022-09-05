@@ -299,6 +299,9 @@ function edd_get_registered_settings() {
 		$gateways         = edd_get_payment_gateways();
 		$admin_email      = get_bloginfo( 'admin_email' );
 		$site_name        = get_bloginfo( 'name' );
+
+		$email_summary_recipient = edd_get_option( 'email_summary_recipient', 'admin' );
+
 		$site_hash        = substr( md5( $site_name ), 0, 10 );
 		$edd_settings     = array(
 
@@ -810,13 +813,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'email_summaries' => array(
-					'disable_email_summary' => array(
-						'id'    => 'disable_email_summary',
-						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
-						'desc' => '<a href="https://easydigitaldownloads.com/">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
-						'check'  => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
-						'type'  => 'checkbox_description',
-					),
 					'email_summary_frequency' => array(
 						'id'      => 'email_summary_frequency',
 						'name'    => __( 'Email Frequency', 'easy-digital-downloads' ),
@@ -838,10 +834,18 @@ function edd_get_registered_settings() {
 						),
 					),
 					'email_summary_custom_recipients' => array(
-						'id'   => 'email_summary_custom_recipients',
-						'name' => __( 'Custom recipients', 'easy-digital-downloads' ),
-						'desc' => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
-						'type' => 'textarea',
+						'id'       => 'email_summary_custom_recipients',
+						'name'     => __( 'Custom recipients', 'easy-digital-downloads' ),
+						'desc'     => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
+						'type'     => 'textarea',
+						'readonly' => ( 'admin' === $email_summary_recipient ),
+					),
+					'disable_email_summary' => array(
+						'id'    => 'disable_email_summary',
+						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
+						'desc'  => '<a href="https://easydigitaldownloads.com/">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
+						'check' => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
+						'type'  => 'checkbox_description',
 					),
 				),
 			) ),
@@ -2352,7 +2356,9 @@ function edd_textarea_callback( $args ) {
 		? ' placeholder="' . esc_attr( $args['placeholder'] ) . '"'
 		: '';
 
-	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+
+	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $readonly . '>' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
