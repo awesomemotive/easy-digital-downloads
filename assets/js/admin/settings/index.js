@@ -163,19 +163,14 @@ const EDD_Settings = {
 
 		// Email Summaries
 		const emailSummaryRecipient = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
-			emailSummaryCustomRecipients = emailSummaryRecipient.parent().parent().next();
-
-		// Hide Custom Recipients if Email Recipient is set to Admin
-		if ( emailSummaryRecipient.val() === 'admin' ) {
-			emailSummaryCustomRecipients.css( 'opacity', '0.4' );
-		}
+			emailSummaryCustomRecipients = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' );
 
 		// Toggle Email Recipient option
 		emailSummaryRecipient.on( 'change', function() {
 			if ( $( this ).val() === 'admin' ) {
-				emailSummaryCustomRecipients.css( 'opacity', '0.4' );
+				emailSummaryCustomRecipients.prop( 'readonly', true );
 			} else {
-				emailSummaryCustomRecipients.css( 'opacity', '1' );
+				emailSummaryCustomRecipients.prop( 'readonly', false );
 			}
 		} );
 	}
