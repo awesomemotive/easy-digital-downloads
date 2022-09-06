@@ -364,15 +364,24 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$search = $this->get_search();
 		$args   = array( 'status'  => $this->get_status() );
 
-		// Email
+		// Account for search stripping the "+" from emails.
+		if ( strpos( $search, ' ' ) ) {
+			$original_query = $search;
+			$search         = str_replace( ' ', '+', $search );
+			if ( ! is_email( $search ) ) {
+				$search = $original_query;
+			}
+		}
+
+		// Email.
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-		// Address ID
+		// Address ID.
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 
-		// Customer ID
+		// Customer ID.
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
 
@@ -382,10 +391,10 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			$args['search_columns'] = array( 'email' );
 		}
 
-		// Parse pagination
+		// Parse pagination.
 		$this->args = $this->parse_pagination_args( $args );
 
-		// Get the data
+		// Get the data.
 		$emails = edd_get_customer_email_addresses( $this->args );
 
 		if ( ! empty( $emails ) ) {
