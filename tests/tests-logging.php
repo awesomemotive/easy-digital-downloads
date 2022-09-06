@@ -126,7 +126,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_record_gateway_error()
+	 * @covers edd_add_log()
 	 */
 	public function test_edd_add_log_with_null_type_and_no_id() {
 
