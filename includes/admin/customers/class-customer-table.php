@@ -332,17 +332,26 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$search = $this->get_search();
 		$args   = array( 'status' => $this->get_status() );
 
-		// Email search
+		// Account for search stripping the "+" from emails.
+		if ( strpos( $search, ' ' ) ) {
+			$original_query = $search;
+			$search         = str_replace( ' ', '+', $search );
+			if ( ! is_email( $search ) ) {
+				$search = $original_query;
+			}
+		}
+
+		// Email search.
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-			// Customer ID
+			// Customer ID.
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['id'] = trim( str_replace( 'c:', '', $search ) );
 
-			// User ID
+			// User ID.
 		} elseif ( strpos( $search, 'user:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
 		} elseif ( strpos( $search, 'u:' ) !== false ) {
@@ -357,9 +366,25 @@ class EDD_Customer_Reports_Table extends List_Table {
 		// Parse pagination
 		$this->args = $this->parse_pagination_args( $args );
 
-		// Get the data
-		$customers  = edd_get_customers( $this->args );
+		if ( is_email( $search ) ) {
+			$customer_emails = new EDD\Database\Queries\Customer_Email_Address();
+			$customer_ids    = $customer_emails->query(
+				array(
+					'fields' => 'customer_id',
+					'email'  => $search,
+				)
+			);
 
+			$customers = edd_get_customers(
+				array(
+					'id__in' => $customer_ids,
+				)
+			);
+		} else {
+			$customers  = edd_get_customers( $this->args );
+		}
+
+		// Get the data
 		if ( ! empty( $customers ) ) {
 			foreach ( $customers as $customer ) {
 				$data[] = array(

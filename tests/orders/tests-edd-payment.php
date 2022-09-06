@@ -481,7 +481,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$earnings = $download->earnings;
 		$sales    = $download->sales;
 
-		delete_option( 'edd_earnings_total' );
 		$store_earnings = edd_get_total_earnings();
 		$store_sales    = edd_get_total_sales();
 
@@ -708,7 +707,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$download_sales    = $download->sales;
 		$download_earnings = $download->earnings;
 
-		delete_option( 'edd_earnings_total' );
 		$store_earnings = edd_get_total_earnings();
 		$store_sales    = edd_get_total_sales();
 
