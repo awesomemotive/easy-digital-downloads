@@ -1079,34 +1079,82 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The order notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
-		$sql     = "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' ORDER BY comment_ID ASC";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+		WP_CLI::line( __( 'Preparing to migrate order notes.', 'easy-digital-downloads' ) );
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating Notes', $total );
+		$progress = new \cli\notify\Spinner( __( 'Migrating Order Notes', 'easy-digital-downloads' ) );
+		$progress->tick();
 
-			foreach ( $results as $result ) {
-				$result->object_id = $result->comment_post_ID;
-				\EDD\Admin\Upgrades\v3\Data_Migrator::order_notes( $result );
+		$sql_base = "
+			SELECT * FROM {$wpdb->comments}
+				WHERE comment_type = 'edd_payment_note'
+				ORDER BY comment_ID ASC
+		";
 
-				$progress->tick();
-			}
+		// Query & count.
+		$sql          = $sql_base . " LIMIT 1";
+		$check_result = $wpdb->get_results( $sql );
+		$check_total  = count( $check_result );
+		$has_results  = ! empty( $check_total );
 
-			$progress->finish();
+		// Setup base iteration variables.
+		$step   = 0;
+		$offset = 0;
+		$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
+			? (int) $assoc_args['number']
+			: 1000;
 
-			WP_CLI::line( __( 'Migration complete: Order Notes', 'easy-digital-downloads' ) );
-			$new_count = edd_count_notes();
-			$old_count = $wpdb->get_col( "SELECT count(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'", 0 );
-			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
-			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
-
-			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_order_notes' );
-		} else {
-			WP_CLI::line( __( 'No note records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_order_notes' );
+		// Maximum 10,000 - this ain't no VTEC.
+		if ( $number > 10000 ) {
+			$number = 10000;
 		}
+
+		$total = 0;
+
+		while ( $has_results ) {
+			$progress->tick();
+
+			// Query & count.
+			$sql     = $sql_base . " LIMIT {$offset}, {$number}";
+			$results = $wpdb->get_results( $sql );
+
+			// Not empty, so lets process the order notes.
+			if ( ! empty( $results ) ) {
+				foreach ( $results as $result ) {
+					$result->object_id = $result->comment_post_ID;
+					\EDD\Admin\Upgrades\v3\Data_Migrator::order_notes( $result );
+
+					// Tick the spinner...
+					$progress->tick();
+
+					// Bump the total...
+					$total++;
+				}
+
+				// Increment step for the next offset...
+				$step++;
+
+				// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
+				$offset = ( $step * $number );
+
+			// Done!
+			} else {
+				$has_results = false;
+			}
+		}
+
+		$progress->finish();
+
+		if ( 0 === $step ) {
+			WP_CLI::line( __( 'No order notes found.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Migration complete: Order Notes', 'easy-digital-downloads' ) );
+			$new_count = edd_count_notes( array( 'object_type' => 'order' ) );
+			WP_CLI::line( __( 'Old order notes: ', 'easy-digital-downloads' ) . $total );
+			WP_CLI::line( __( 'New order notes: ', 'easy-digital-downloads' ) . $new_count );
+		}
+
+		edd_update_db_version();
+		edd_set_upgrade_complete( 'migrate_order_notes' );
 	}
 
 	/**
@@ -1136,29 +1184,78 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The customer notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
+		} else {
+			WP_CLI::line( __( 'Preparing to migrate customer notes.', 'easy-digital-downloads' ) );
 
-		$sql     = "SELECT * FROM {$wpdb->edd_customers}";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+			$progress = new \cli\notify\Spinner( __( 'Migrating Customer Notes', 'easy-digital-downloads' ) );
+			$progress->tick();
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating Customer Notes', $total );
+			$sql_base = "SELECT * FROM {$wpdb->edd_customers}";
 
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_notes( $result );
+			// Query & count.
+			$sql          = $sql_base . " LIMIT 1";
+			$check_result = $wpdb->get_results( $sql );
+			$check_total  = count( $check_result );
+			$has_results  = ! empty( $check_total );
 
+			// Setup base iteration variables.
+			$step   = 0;
+			$offset = 0;
+			$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
+				? (int) $assoc_args['number']
+				: 1000;
+
+			// Maximum 10,000 - this ain't no VTEC.
+			if ( $number > 10000 ) {
+				$number = 10000;
+			}
+
+			$total = 0;
+
+			while ( $has_results ) {
 				$progress->tick();
+
+				// Query & count.
+				$sql     = $sql_base . " LIMIT {$offset}, {$number}";
+				$results = $wpdb->get_results( $sql );
+
+				// Not empty, so lets process the customer notes.
+				if ( ! empty( $results ) ) {
+					foreach ( $results as $result ) {
+						\EDD\Admin\Upgrades\v3\Data_Migrator::customer_notes( $result );
+
+
+						// Tick the spinner...
+						$progress->tick();
+
+						// Bump the total...
+						$total++;
+					}
+
+					// Increment step for the next offset...
+					$step++;
+
+					// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
+					$offset = ( $step * $number );
+
+				// Done!
+				} else {
+					$has_results = false;
+				}
 			}
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete: Customer Notes', 'easy-digital-downloads' ) );
+			if ( 0 === $step ) {
+				WP_CLI::line( __( 'No customer notes found.', 'easy-digital-downloads' ) );
+			} else {
+				WP_CLI::line( __( 'Migration complete: Cusotmer Notes', 'easy-digital-downloads' ) );
+				$new_count = edd_count_notes( array( 'object_type' => 'customer' ) );
+				WP_CLI::line( __( 'Old customer notes: ', 'easy-digital-downloads' ) . $total );
+				WP_CLI::line( __( 'New customer notes: ', 'easy-digital-downloads' ) . $new_count );
+			}
 
 			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_customer_notes' );
-		} else {
-			WP_CLI::line( __( 'No customer note records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_customer_notes' );
 		}
 	}
@@ -1186,51 +1283,96 @@ class EDD_CLI extends WP_CLI_Command {
 			? true
 			: false;
 
+		WP_CLI::line( __( 'Preparing to migrate additional customer data.', 'easy-digital-downloads' ) );
+
+		// Create the tables if they do not exist.
+		$components = array(
+			array( 'order', 'table' ),
+			array( 'order', 'meta' ),
+			array( 'customer', 'table' ),
+			array( 'customer', 'meta' ),
+			array( 'customer_address', 'table' ),
+			array( 'customer_email_address', 'table' ),
+		);
+
+		foreach ( $components as $component ) {
+			/** @var EDD\Database\Tables\Base $table */
+			$table = edd_get_component_interface( $component[0], $component[1] );
+
+			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
+				@$table->create();
+			}
+		}
+
+		// Migrate Customer Addresses.
 		$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
 		if ( ! $force && $customer_addresses_complete ) {
 			WP_CLI::warning( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		} else {
-
-			// Create the tables if they do not exist.
-			$components = array(
-				array( 'order', 'table' ),
-				array( 'order', 'meta' ),
-				array( 'customer', 'table' ),
-				array( 'customer', 'meta' ),
-				array( 'customer_address', 'table' ),
-				array( 'customer_email_address', 'table' ),
-			);
-
-			foreach ( $components as $component ) {
-				/** @var EDD\Database\Tables\Base $table */
-				$table = edd_get_component_interface( $component[0], $component[1] );
-
-				if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
-					@$table->create();
-				}
-			}
+			WP_CLI::line( __( 'Preparing to migrate customer address data.', 'easy-digital-downloads' ) );
+			$progress = new \cli\notify\Spinner( __( 'Migrating Customer Addresses', 'easy-digital-downloads' ) );
+			$progress->tick();
 
 			// Migrate user addresses first.
-			$sql = "
+			$sql_base = "
 				SELECT *
 				FROM {$wpdb->usermeta}
 				WHERE meta_key = '_edd_user_address'
 			";
-			$results = $wpdb->get_results( $sql );
-			$total   = count( $results );
 
-			if ( ! empty( $total ) ) {
-				$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
+			// Query & count.
+			$sql          = $sql_base . " LIMIT 1";
+			$check_result = $wpdb->get_results( $sql );
+			$check_total  = count( $check_result );
+			$has_results  = ! empty( $check_total );
 
-				foreach ( $results as $result ) {
-					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result, 'billing' );
+			// Setup base iteration variables.
+			$step   = 0;
+			$offset = 0;
+			$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
+				? (int) $assoc_args['number']
+				: 1000;
 
-					$progress->tick();
-				}
-
-				$progress->finish();
+			// Maximum 10,000 - this ain't no VTEC.
+			if ( $number > 10000 ) {
+				$number = 10000;
 			}
+
+			$total = 0;
+
+			while ( $has_results ) {
+				$progress->tick();
+
+				// Query & count.
+				$sql     = $sql_base . " LIMIT {$offset}, {$number}";
+				$results = $wpdb->get_results( $sql );
+
+				// Not empty, so lets process the customer address.
+				if ( ! empty( $results ) ) {
+					foreach ( $results as $result ) {
+						\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result, 'billing' );
+
+						// Tick the spinner...
+						$progress->tick();
+
+						// Bump the total...
+						$total++;
+					}
+
+					// Increment step for the next offset...
+					$step++;
+
+					// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
+					$offset = ( $step * $number );
+
+				// Done!
+				} else {
+					$has_results = false;
+				}
+			}
+
+			$progress->tick();
 
 			// Now update the most recent billing address entries for customers as the primary address.
 			$sql = "
@@ -1246,16 +1388,20 @@ class EDD_CLI extends WP_CLI_Command {
 
 			@$wpdb->query( $sql );
 
+			$progress->finish();
+
 			edd_set_upgrade_complete( 'migrate_customer_addresses' );
 		}
 
+		// Migrate Customer Email Addresses.
 		$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
 
 		if ( ! $force && $customer_email_addresses_complete ) {
 			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		} else {
-
 			WP_CLI::line( __( 'Preparing to migrate customer email addresses (this can take several minutes).', 'easy-digital-downloads' ) );
+			$progress = new \cli\notify\Spinner( __( 'Migrating Customer Email Addresses', 'easy-digital-downloads' ) );
+			$progress->tick();
 
 			// Migrate email addresses next.
 			$sql = "
@@ -1263,24 +1409,62 @@ class EDD_CLI extends WP_CLI_Command {
 				FROM {$wpdb->edd_customermeta}
 				WHERE meta_key = 'additional_email'
 			";
-			$results = $wpdb->get_results( $sql );
-			$total   = count( $results );
 
-			if ( ! empty( $total ) ) {
-				$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
+			// Query & count.
+			$sql          = $sql_base . " LIMIT 1";
+			$check_result = $wpdb->get_results( $sql );
+			$check_total  = count( $check_result );
+			$has_results  = ! empty( $check_total );
 
-				foreach ( $results as $result ) {
-					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+			// Setup base iteration variables.
+			$step   = 0;
+			$offset = 0;
+			$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
+				? (int) $assoc_args['number']
+				: 1000;
 
-					$progress->tick();
-				}
-
-				$progress->finish();
+			// Maximum 10,000 - this ain't no VTEC.
+			if ( $number > 10000 ) {
+				$number = 10000;
 			}
-			edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
-		}
 
-		WP_CLI::line( __( 'Migration complete: Email Addresses', 'easy-digital-downloads' ) );
+			$total = 0;
+
+			while ( $has_results ) {
+				$progress->tick();
+
+				// Query & count.
+				$sql     = $sql_base . " LIMIT {$offset}, {$number}";
+				$results = $wpdb->get_results( $sql );
+
+				// Not empty, so lets process the customer email addresses.
+				if ( ! empty( $results ) ) {
+					foreach ( $results as $result ) {
+						\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+
+						// Tick the spinner...
+						$progress->tick();
+
+						// Bump the total...
+						$total++;
+					}
+
+					// Increment step for the next offset...
+					$step++;
+
+					// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
+					$offset = ( $step * $number );
+
+				// Done!
+				} else {
+					$has_results = false;
+				}
+			}
+
+			$progress->finish();
+			edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
+			WP_CLI::line( __( 'Migration complete: Customer Email Addresses', 'easy-digital-downloads' ) );
+		}
 
 		edd_update_db_version();
 	}
