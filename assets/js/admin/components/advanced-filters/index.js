@@ -8,7 +8,13 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 	$( document ).on( 'click', function( e ) {
-		if ( $( '#edd-advanced-filters' ).hasClass('open') && $( e.target ).closest( '#edd-advanced-filters' ).length == 0 ) {
+		var advancedFiltersWrapper = $( '#edd-advanced-filters' );
+
+		if ( ! advancedFiltersWrapper.hasClass( 'open' ) ) {
+			return;
+		}
+
+		if ( ! advancedFiltersWrapper.is( e.target ) && ! advancedFiltersWrapper.has( e.target ).length ) {
 			$( '#edd-advanced-filters' ).toggleClass( 'open' );
 		}
 	});
