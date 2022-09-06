@@ -7,7 +7,7 @@ import { recalculateTaxes } from './checkout/utils.js';
 
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
-	$( 'a.edd-add-to-cart' ).addClass( 'edd-has-js' );
+	$( '.edd-add-to-cart' ).addClass( 'edd-has-js' );
 
 	// Send Remove from Cart requests
 	$( document.body ).on( 'click.eddRemoveFromCart', '.edd-remove-from-cart', function( event ) {
@@ -56,7 +56,7 @@ jQuery( document ).ready( function( $ ) {
 					// Check to see if the purchase form(s) for this download is present on this page
 					if ( $( '[id^=edd_purchase_' + id + ']' ).length ) {
 						$( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).hide();
-						$( '[id^=edd_purchase_' + id + '] a.edd-add-to-cart' ).show().removeAttr( 'data-edd-loading' );
+						$( '[id^=edd_purchase_' + id + '] .edd-add-to-cart' ).show().removeAttr( 'data-edd-loading' );
 						if ( edd_scripts.quantities_enabled === '1' ) {
 							$( '[id^=edd_purchase_' + id + '] .edd_download_quantity_wrapper' ).show();
 						}
@@ -239,7 +239,7 @@ jQuery( document ).ready( function( $ ) {
 
 					if ( variable_price === 'no' || price_mode !== 'multi' ) {
 						// Switch purchase to checkout if a single price item or variable priced with radio buttons
-						$( 'a.edd-add-to-cart', container ).toggle();
+						$( '.edd-add-to-cart', container ).toggle();
 						$( '.edd_go_to_checkout', container ).css( 'display', 'inline-block' );
 					}
 
@@ -251,7 +251,7 @@ jQuery( document ).ready( function( $ ) {
 					// Update all buttons for same download
 					if ( $( '.edd_download_purchase_form' ).length && ( variable_price === 'no' || ! form.find( '.edd_price_option_' + download ).is( 'input:hidden' ) ) ) {
 						const parent_form = $( '.edd_download_purchase_form *[data-download-id="' + download + '"]' ).parents( 'form' );
-						$( 'a.edd-add-to-cart', parent_form ).hide();
+						$( '.edd-add-to-cart', parent_form ).hide();
 						if ( price_mode !== 'multi' ) {
 							parent_form.find( '.edd_download_quantity_wrapper' ).slideUp();
 						}
