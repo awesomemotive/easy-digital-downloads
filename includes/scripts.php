@@ -615,7 +615,7 @@ add_action( 'wp_body_open', 'edd_add_js_class', 100 );
  */
 function edd_add_js_class() {
 	?>
-	<style>.edd-js .edd-no-js, .no-js .edd-has-js { display: none; }</style>
+	<style>.edd-js .edd-no-js, .no-js .edd-has-js { display: none !important; }</style>
 	<script>/* <![CDATA[ */(function(){var c = document.body.classList;c.remove('no-js');c.add('edd-js');})();/* ]]> */</script>
 	<?php
 }
