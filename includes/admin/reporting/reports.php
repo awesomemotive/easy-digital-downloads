@@ -233,13 +233,15 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $currency ) {
-						$stats = new EDD\Stats();
-						return $stats->get_order_count( array(
-							'range'        => $dates['range'],
-							'relative'     => true,
-							'currency'     => $currency,
-							'revenue_type' => 'net',
-						) );
+						$stats = new EDD\Stats(
+							array(
+								'range'        => $dates['range'],
+								'relative'     => true,
+								'currency'     => $currency,
+								'revenue_type' => 'net',
+							)
+						);
+						return $stats->get_order_count();
 					},
 					'display_args'  => array(
 						'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
@@ -253,16 +255,18 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-						$stats = new EDD\Stats();
-						return $stats->get_order_earnings( array(
-							'range'         => $dates['range'],
-							'function'      => 'SUM',
-							'exclude_taxes' => $exclude_taxes,
-							'currency'      => $currency,
-							'relative'      => true,
-							'output'        => 'formatted',
-							'revenue_type'  => 'net',
-						) );
+						$stats = new EDD\Stats(
+							array(
+								'range'         => $dates['range'],
+								'function'      => 'SUM',
+								'exclude_taxes' => $exclude_taxes,
+								'currency'      => $currency,
+								'relative'      => true,
+								'output'        => 'formatted',
+								'revenue_type'  => 'net',
+							)
+						);
+						return $stats->get_order_earnings();
 					},
 					'display_args'  => array(
 						'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
@@ -276,15 +280,17 @@ function edd_register_overview_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-						$stats = new EDD\Stats();
-						return $stats->get_order_earnings( array(
-							'function'      => 'AVG',
-							'output'        => 'formatted',
-							'relative'      => true,
-							'range'         => $dates['range'],
-							'exclude_taxes' => $exclude_taxes,
-							'currency'      => $currency,
-						) );
+						$stats = new EDD\Stats(
+							array(
+								'function'      => 'AVG',
+								'output'        => 'formatted',
+								'relative'      => true,
+								'range'         => $dates['range'],
+								'exclude_taxes' => $exclude_taxes,
+								'currency'      => $currency,
+							)
+						);
+						return $stats->get_order_earnings();
 					},
 					'display_args'  => array(
 						'comparison_label' => $label,
@@ -407,7 +413,7 @@ function edd_register_downloads_report( $reports ) {
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
 			$prices   = $download->get_prices();
-			if ( $download_data['price_id'] ) {
+			if ( isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
 				if ( $price_name ) {
@@ -535,9 +541,10 @@ function edd_register_downloads_report( $reports ) {
 			'views' => array(
 				'tile' => array(
 					'data_callback' => function () use ( $download_data, $dates, $currency ) {
-						$stats = new EDD\Stats( array(
+						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ? absint( $download_data['price_id'] ) : null;
+						$stats    = new EDD\Stats( array(
 							'product_id' => absint( $download_data['download_id'] ),
-							'price_id'   => absint( $download_data['price_id'] ),
+							'price_id'   => $price_id,
 							'currency'   => $currency,
 							'range'      => $dates['range'],
 							'output'     => 'formatted',
@@ -701,21 +708,21 @@ function edd_register_downloads_report( $reports ) {
 							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses = array(
 								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
 								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 							);
+						} elseif ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+							);
 						}
 
-						$price_id = ! empty( $download_data['price_id'] )
+						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
 							? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
 							: '';
 
@@ -1355,17 +1362,17 @@ function edd_register_payment_gateways_report( $reports ) {
 							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses = array(
 								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
 								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+							);
+						} elseif ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
 							);
 						}
 
@@ -1515,7 +1522,7 @@ function edd_register_taxes_report( $reports ) {
 		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-			if ( $download_data['price_id'] ) {
+			if ( isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
 				if ( $price_name ) {
@@ -1657,7 +1664,7 @@ function edd_register_file_downloads_report( $reports ) {
 		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-			if ( $download_data['price_id'] ) {
+			if ( isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
 				if ( $price_name ) {
@@ -1818,12 +1825,12 @@ function edd_register_file_downloads_report( $reports ) {
 						$sql_clauses['orderby'] = 'MONTH(date_created)';
 
 						// Now drill down to the smallest unit.
-						if ( $day_by_day ) {
-							$sql_clauses['groupby'] = 'DATE(date_created)';
-							$sql_clauses['orderby'] = 'DATE(date_created)';
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses['groupby'] = 'HOUR(date_created)';
 							$sql_clauses['orderby'] = 'HOUR(date_created)';
+						} elseif ( $day_by_day ) {
+							$sql_clauses['groupby'] = 'DATE(date_created)';
+							$sql_clauses['orderby'] = 'DATE(date_created)';
 						}
 
 						$product_id = '';
@@ -1832,7 +1839,7 @@ function edd_register_file_downloads_report( $reports ) {
 						if ( is_array( $download_data ) ) {
 							$product_id = $wpdb->prepare( 'AND product_id = %d', absint( $download_data['download_id'] ) );
 
-							$price_id = ! empty( $download_data['price_id'] )
+							$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
 								? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
 								: '';
 						}
@@ -2371,17 +2378,17 @@ function edd_register_customer_report( $reports ) {
 							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
 						);
 
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
+						if ( $hour_by_hour ) {
 							$sql_clauses = array(
 								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
 								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
 								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+							);
+						} elseif ( ! $day_by_day ) {
+							$sql_clauses = array(
+								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
+								'groupby' => 'YEAR(date_created), MONTH(date_created)',
+								'orderby' => 'YEAR(date_created), MONTH(date_created)',
 							);
 						}
 

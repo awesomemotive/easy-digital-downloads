@@ -481,7 +481,7 @@ function edd_order_details_addresses( $order ) {
 						); // WPCS: XSS ok.
 					} else {
 						?>
-						<input type="text" name="edd_order_address[region]" class="edd-form-group__input" value="<?php echo esc_attr( $address->region ); ?>" />
+						<input type="text" id="edd_order_address_region" name="edd_order_address[region]" class="edd-form-group__input" value="<?php echo esc_attr( $address->region ); ?>" />
 						<?php
 					}
 					?>
@@ -711,6 +711,15 @@ function edd_order_details_overview( $order ) {
 	);
 
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
+		$default_rate = edd_get_tax_rate_by_location(
+			array(
+				'country' => '',
+				'region'  => '',
+			)
+		);
+		if ( $default_rate ) {
+			$location['rate'] = floatval( $default_rate->amount );
+		}
 		$has_tax = $location;
 	} elseif ( $tax_rate ) {
 		$has_tax         = $location;

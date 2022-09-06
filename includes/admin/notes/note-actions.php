@@ -23,7 +23,7 @@ function edd_admin_ajax_add_note() {
 	check_ajax_referer( 'edd_note', 'nonce' );
 
 	// Bail if user cannot delete notes
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
 		wp_die( -1 );
 	}
 

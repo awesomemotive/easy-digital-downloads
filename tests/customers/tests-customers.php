@@ -45,9 +45,12 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		self::$user  = 1;
 		self::$order = \EDD_Helper_Payment::create_simple_payment();
 
+		// Don't trigger the updateing of the customer during this part of the setup.
+		remove_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
 		edd_update_customer( self::$customers[0], array(
 			'user_id' => self::$user,
 		) );
+		add_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
 
 		self::$customers[0]->attach_payment( self::$order );
 		self::$customers[0] = edd_get_customer( $customers[0] );
@@ -177,8 +180,8 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertCount( 0, parent::edd()->customer->create_and_get()->get_payment_ids() );
 	}
 
-	public function test_add_email_should_return_true() {
-		$this->assertTrue( self::$customers[1]->add_email( 'added-email@edd.test' ) );
+	public function test_add_email_should_return_id() {
+		$this->assertGreaterThanOrEqual( 1, self::$customers[1]->add_email( 'added-email@edd.test' ) );
 
 		/** @var $customer \EDD_Customer */
 		$customer = edd_get_customer( self::$customers[1]->id );
@@ -186,8 +189,8 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertTrue( in_array( 'added-email@edd.test', $customer->emails ) );
 	}
 
-	public function test_add_email_with_primary_parameter_should_return_true() {
-		$this->assertTrue( self::$customers[2]->add_email( 'added-email2@edd.test', true ) );
+	public function test_add_email_with_primary_parameter_should_return_id() {
+		$this->assertGreaterThanOrEqual( 1, self::$customers[2]->add_email( 'added-email2@edd.test', true ) );
 		$this->assertSame( 'added-email2@edd.test', self::$customers[2]->email );
 	}
 
