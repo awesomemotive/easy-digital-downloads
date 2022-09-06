@@ -603,39 +603,41 @@ function edd_get_total_sales() {
  * Calculate the total earnings of the store.
  *
  * @since 1.2
- * @since 3.0 Refactored to work with new tables.
+ * @since 3.0   Refactored to work with new tables.
+ * @since 3.0.4 Added the $force argument, to force querying again.
  *
  * @param bool $include_taxes Whether taxes should be included. Default true.
+ * @param bool $force         If we should force a new calculation.
  * @return float $total Total earnings.
  */
-function edd_get_total_earnings( $include_taxes = true ) {
+function edd_get_total_earnings( $include_taxes = true, $force = true ) {
 	global $wpdb;
 
-	$total = get_option( 'edd_earnings_total', false );
+	$key = $include_taxes ? 'edd_earnings_total' : 'edd_earnings_total_without_tax';
+
+	$total = $force ? false : get_transient( $key );
 
 	// If no total stored in the database, use old method of calculating total earnings.
 	if ( false === $total ) {
-		$total = get_transient( 'edd_earnings_total' );
 
-		if ( false === $total ) {
-			$exclude_taxes_sql = false === $include_taxes
-				? ' - SUM(tax)'
-				: '';
+		$stats = new EDD\Stats();
 
-			$total = $wpdb->get_var( "
-				SELECT SUM(total) {$exclude_taxes_sql} AS total
-				FROM {$wpdb->edd_orders}
-				WHERE status IN ('complete', 'revoked')
-			" );
+		$total = $stats->get_order_earnings(
+			array(
+				'output'        => 'typed',
+				'exclude_taxes' => ! $include_taxes,
+				'revenue_type'  => 'net',
+			)
+		);
 
-			$total = (float) edd_number_not_negative( (float) $total );
+		// Cache results for 1 day. This cache is cleared automatically when a payment is made.
+		set_transient( $key, $total, 86400 );
 
-			// Cache results for 1 day. This cache is cleared automatically when a payment is made
-			set_transient( 'edd_earnings_total', $total, 86400 );
-
-			// Store the total for the first time
-			update_option( 'edd_earnings_total', $total );
-		}
+		// Store as an option for backwards compatibility.
+		update_option( $key, $total, false );
+	} else {
+		// Always ensure that we're working with a float, since the transient comes back as a string.
+		$total = (float) $total;
 	}
 
 	// Don't ever show negative earnings.
@@ -643,7 +645,9 @@ function edd_get_total_earnings( $include_taxes = true ) {
 		$total = 0;
 	}
 
-	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
+	$total = edd_format_amount( $total, true, edd_get_currency(), 'typed' );
+
+	return apply_filters( 'edd_total_earnings', $total );
 }
 
 /**
@@ -655,10 +659,8 @@ function edd_get_total_earnings( $include_taxes = true ) {
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
-	$total  = floatval( edd_get_total_earnings() );
+	$total  = floatval( edd_get_total_earnings( true, true ) );
 	$total += floatval( $amount );
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
@@ -672,14 +674,12 @@ function edd_increase_total_earnings( $amount = 0 ) {
  * @return float $total Total earnings.
  */
 function edd_decrease_total_earnings( $amount = 0 ) {
-	$total  = edd_get_total_earnings();
+	$total  = edd_get_total_earnings( true, true );
 	$total -= $amount;
 
 	if ( $total < 0 ) {
 		$total = 0;
 	}
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
