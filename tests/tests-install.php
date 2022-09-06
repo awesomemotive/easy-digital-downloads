@@ -85,6 +85,14 @@ class Tests_Activation extends EDD_UnitTestCase {
 
 	}
 
+	public function test_edd_upgrades_have_completed_upgrade_payment_taxes_is_true() {
+		$this->assertTrue( edd_has_upgrade_completed( 'upgrade_payment_taxes' ) );
+	}
+
+	public function test_edd_upgrades_have_completed_migrate_orders_is_true() {
+		$this->assertTrue( edd_has_upgrade_completed( 'migrate_orders' ) );
+	}
+
 	/**
 	 * Test that the install doesn't redirect when activating multiple plugins.
 	 *

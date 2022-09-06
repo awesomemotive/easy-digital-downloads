@@ -68,7 +68,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = $this->get_date_query();
+			$args['date_created_query'] = $this->get_date_query();
 		}
 
 		if ( 0 !== $this->download_id ) {
@@ -129,7 +129,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = $this->get_date_query();
+			$args['date_created_query'] = $this->get_date_query();
 		}
 
 		if ( 0 !== $this->download_id ) {

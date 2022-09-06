@@ -603,39 +603,41 @@ function edd_get_total_sales() {
  * Calculate the total earnings of the store.
  *
  * @since 1.2
- * @since 3.0 Refactored to work with new tables.
+ * @since 3.0   Refactored to work with new tables.
+ * @since 3.0.4 Added the $force argument, to force querying again.
  *
  * @param bool $include_taxes Whether taxes should be included. Default true.
+ * @param bool $force         If we should force a new calculation.
  * @return float $total Total earnings.
  */
-function edd_get_total_earnings( $include_taxes = true ) {
+function edd_get_total_earnings( $include_taxes = true, $force = true ) {
 	global $wpdb;
 
-	$total = get_option( 'edd_earnings_total', false );
+	$key = $include_taxes ? 'edd_earnings_total' : 'edd_earnings_total_without_tax';
+
+	$total = $force ? false : get_transient( $key );
 
 	// If no total stored in the database, use old method of calculating total earnings.
 	if ( false === $total ) {
-		$total = get_transient( 'edd_earnings_total' );
 
-		if ( false === $total ) {
-			$exclude_taxes_sql = false === $include_taxes
-				? ' - SUM(tax)'
-				: '';
+		$stats = new EDD\Stats();
 
-			$total = $wpdb->get_var( "
-				SELECT SUM(total) {$exclude_taxes_sql} AS total
-				FROM {$wpdb->edd_orders}
-				WHERE status IN ('complete', 'revoked')
-			" );
+		$total = $stats->get_order_earnings(
+			array(
+				'output'        => 'typed',
+				'exclude_taxes' => ! $include_taxes,
+				'revenue_type'  => 'net',
+			)
+		);
 
-			$total = (float) edd_number_not_negative( (float) $total );
+		// Cache results for 1 day. This cache is cleared automatically when a payment is made.
+		set_transient( $key, $total, 86400 );
 
-			// Cache results for 1 day. This cache is cleared automatically when a payment is made
-			set_transient( 'edd_earnings_total', $total, 86400 );
-
-			// Store the total for the first time
-			update_option( 'edd_earnings_total', $total );
-		}
+		// Store as an option for backwards compatibility.
+		update_option( $key, $total, false );
+	} else {
+		// Always ensure that we're working with a float, since the transient comes back as a string.
+		$total = (float) $total;
 	}
 
 	// Don't ever show negative earnings.
@@ -643,7 +645,9 @@ function edd_get_total_earnings( $include_taxes = true ) {
 		$total = 0;
 	}
 
-	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
+	$total = edd_format_amount( $total, true, edd_get_currency(), 'typed' );
+
+	return apply_filters( 'edd_total_earnings', $total );
 }
 
 /**
@@ -655,10 +659,8 @@ function edd_get_total_earnings( $include_taxes = true ) {
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
-	$total  = floatval( edd_get_total_earnings() );
+	$total  = floatval( edd_get_total_earnings( true, true ) );
 	$total += floatval( $amount );
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
@@ -672,14 +674,12 @@ function edd_increase_total_earnings( $amount = 0 ) {
  * @return float $total Total earnings.
  */
 function edd_decrease_total_earnings( $amount = 0 ) {
-	$total  = edd_get_total_earnings();
+	$total  = edd_get_total_earnings( true, true );
 	$total -= $amount;
 
 	if ( $total < 0 ) {
 		$total = 0;
 	}
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
@@ -1845,6 +1845,111 @@ function edd_filter_where_older_than_week( $where = '' ) {
  */
 function _edd_get_final_payment_id() {
 	return get_option( 'edd_v3_migration_pending', false );
+}
+
+/**
+ * Evaluates whether the EDD 3.0 migration should be run,
+ * based on _any_ data existing which will need to be migrated.
+ *
+ * This should only be run after `edd_v30_is_migration_complete` has returned false.
+ *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0.2
+ * @return bool
+ */
+function _edd_needs_v3_migration() {
+	// Return true if a final payment ID was recorded.
+	if ( _edd_get_final_payment_id() ) {
+		return true;
+	}
+
+	// Return true if any tax rates were saved.
+	$tax_rates = get_option( 'edd_tax_rates', array() );
+	if ( ! empty( $tax_rates ) ) {
+		return true;
+	}
+
+	// Return true if a fallback tax rate was saved.
+	if ( edd_get_option( 'tax_rate', false ) ) {
+		return true;
+	}
+
+	global $wpdb;
+
+	// Return true if any discounts were saved.
+	$discounts = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->posts}
+			 WHERE post_type = %s
+			 LIMIT 1",
+			esc_sql( 'edd_discount' )
+		)
+	);
+	if ( ! empty( $discounts ) ) {
+		return true;
+	}
+
+	// Return true if there are any customers.
+	$customers = $wpdb->get_results(
+		"SELECT *
+		FROM {$wpdb->edd_customers}
+		LIMIT 1"
+	);
+	if ( ! empty( $customers ) ) {
+		return true;
+	}
+
+	// Return true if any customer email addresses were saved.
+	$customer_emails = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->edd_customermeta}
+			 WHERE meta_key = %s
+			 LIMIT 1",
+			esc_sql( 'additional_email' )
+		)
+	);
+	if ( ! empty( $customer_emails ) ) {
+		return true;
+	}
+
+	// Return true if any customer addresses are in the user meta table.
+	$customer_addresses = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->usermeta}
+			 WHERE meta_key = %s
+			 ORDER BY umeta_id ASC
+			 LIMIT 1",
+			esc_sql( '_edd_user_address' )
+		)
+	);
+	if ( ! empty( $customer_addresses ) ) {
+		return true;
+	}
+
+	// Return true if there are any EDD logs (not sales) saved.
+	$logs = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT p.*, t.slug
+			 FROM {$wpdb->posts} AS p
+			 LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+			 LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+			 LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+			 WHERE p.post_type = %s AND t.slug != %s
+			 GROUP BY p.ID
+			 LIMIT 1",
+			esc_sql( 'edd_log' ),
+			esc_sql( 'sale' )
+		)
+	);
+	if ( ! empty( $logs ) ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**

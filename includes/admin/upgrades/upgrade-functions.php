@@ -204,10 +204,26 @@ function edd_show_upgrade_notices() {
 		// Check if we need to do any upgrades.
 		if ( ! edd_v30_is_migration_complete() ) {
 
-			// The final EDD Payment ID was recorded when the orders table was created.
-			$has_orders = _edd_get_final_payment_id();
+			// If any EDD 2.x data exists, the migration should be run.
+			$needs_migration = _edd_needs_v3_migration();
+			$version         = false;
+			// If the migration doesn't need to be run, mark the upgrades as complete.
+			if ( ! $needs_migration ) {
+				$upgrades = edd_get_v30_upgrades();
+				$upgrades = array_keys( $upgrades );
+				foreach ( $upgrades as $upgrade ) {
+					edd_set_upgrade_complete( $upgrade );
+				}
+			} else {
+				$component = edd_get_component( 'order' );
+				$table     = $component->get_interface( 'table' );
+				if ( ! empty( $table ) ) {
+					$version = $table->get_version();
+				}
+			}
 
-			if ( $has_orders ) {
+			// The migration needs to be run, and the database table exists.
+			if ( $needs_migration && $version ) {
 				?>
 				<div class="updated">
 					<?php if ( get_option( 'edd_v30_cli_migration_running' ) ) { ?>
@@ -279,6 +295,34 @@ function edd_show_upgrade_notices() {
 						<?php
 					}
 					?>
+				</div>
+				<?php
+			} elseif ( $needs_migration && ! $version ) {
+
+				// The orders database table is missing (we assume all primary tables have failed to create).
+				$message          = __( 'Easy Digital Downloads was unable to create the necessary database tables to complete this update. Your site may not meet the minimum requirements for EDD 3.0.', 'easy-digital-downloads' );
+				$database_version = $wpdb->db_version();
+
+				// The database version is the problem.
+				if ( version_compare( $database_version, '5.6', '<' ) ) {
+					$message .= ' ' . sprintf(
+						/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate; 3. MySQL database version, do not translate */
+						__( 'Please contact your host and ask them to upgrade your environment to meet our %1$sminimum technical requirements%2$s. Your MySQL version is %3$s and needs to be updated.', 'easy-digital-downloads' ),
+						'<a href="https://easydigitaldownloads.com/recommended-wordpress-hosting/">',
+						'</a>',
+						$database_version
+					);
+				} else {
+					$message .= ' ' . sprintf(
+						/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate */
+						__( '%1$sContact our support team%2$s for help with next steps.', 'easy-digital-downloads' ),
+						'<a href="https://easydigitaldownloads.com/support/">',
+						'</a>'
+					);
+				}
+				?>
+				<div class="notice notice-error">
+					<p><?php echo wp_kses_post( $message ); ?></p>
 				</div>
 				<?php
 			}

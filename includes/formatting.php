@@ -115,17 +115,28 @@ function edd_sanitize_amount( $amount = 0 ) {
  * @param string $decimals Default true. Whether or not to use decimals. Useful when set to false for non-currency numbers.
  * @param string $currency Currency code to format the amount for. This determines how many decimals are used.
  *                         If omitted, site-wide currency is used.
+ * @param string $context  Defines the context in which we are formatting the data (formatted), for display or for data useage like API (typed).
  *
  * @return string $amount Newly formatted amount or Price Not Available
  */
-function edd_format_amount( $amount = 0, $decimals = true, $currency = '' ) {
+function edd_format_amount( $amount = 0, $decimals = true, $currency = '', $context = 'display' ) {
 	if ( empty( $currency ) ) {
 		$currency = edd_get_currency();
 	}
 
 	$formatter = new \EDD\Currency\Money_Formatter( $amount, new \EDD\Currency\Currency( $currency ) );
 
-	return $formatter->format_for_display( $decimals )->amount;
+	switch ( $context ) {
+		case 'typed':
+			$return_value = $formatter->format_for_typed( $decimals )->typed_amount;
+			break;
+		case 'display':
+		default:
+			$return_value = $formatter->format_for_display( $decimals )->amount;
+			break;
+	}
+
+	return $return_value;
 }
 
 /**

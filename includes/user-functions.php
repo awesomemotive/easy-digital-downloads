@@ -385,37 +385,42 @@ function edd_validate_username( $username ) {
 }
 
 /**
- * Attach the customer to an existing user account when completing guest purchase
+ * Attach the customer to an existing user account when completing guest purchase.
  *
  * This only runs when a user account already exists and a guest purchase is made
- * with the account's email address
+ * with the account's email address.
  *
- * After attaching the customer to the user ID, the account is set to pending
+ * After attaching the customer to the user ID, the account is set to pending.
  *
  * @since  2.8
- * @param  bool   $success     True if payment was added successfully, false otherwise
- * @param  int    $payment_id  The ID of the EDD_Payment that was added
- * @param  int    $customer_id The ID of the EDD_Customer object
- * @param  object $customer    The EDD_Customer object
+ * @param  bool   $success     True if payment was added successfully, false otherwise.
+ * @param  int    $payment_id  The ID of the EDD_Payment that was added.
+ * @param  int    $customer_id The ID of the EDD_Customer object.
+ * @param  object $customer    The EDD_Customer object.
  * @return void
  */
 function edd_connect_guest_customer_to_existing_user( $success, $payment_id, $customer_id, $customer ) {
 
-	if( ! empty( $customer->user_id ) ) {
+	// If for some reason we don't get a customer object here, return.
+	if ( ! $customer instanceof EDD_Customer ) {
+		return;
+	}
+
+	if ( ! empty( $customer->user_id ) ) {
 		return;
 	}
 
 	$user = get_user_by( 'email', $customer->email );
 
-	if( ! $user ) {
+	if ( ! $user instanceof WP_User ) {
 		return;
 	}
 
 	$customer->update( array( 'user_id' => $user->ID ) );
 
-	// Set a flag to force the account to be verified before purchase history can be accessed
-	edd_set_user_to_pending( $user->ID  );
-	edd_send_user_verification_email( $user->ID  );
+	// Set a flag to force the account to be verified before purchase history can be accessed.
+	edd_set_user_to_pending( $user->ID );
+	edd_send_user_verification_email( $user->ID );
 
 }
 add_action( 'edd_customer_post_attach_payment', 'edd_connect_guest_customer_to_existing_user', 10, 4 );
