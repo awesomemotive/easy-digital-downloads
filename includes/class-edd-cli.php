@@ -1563,33 +1563,86 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The payments custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
-		$sql = "
+		WP_CLI::line( __( 'Preparing to migrate payments.', 'easy-digital-downloads' ) );
+
+		// New Progress indicator.
+		$progress = new \cli\notify\Spinner( __( 'Migrating Payments', 'easy-digital-downloads' ) );
+		$progress->tick();
+
+		$sql_base = "
 			SELECT *
 			FROM {$wpdb->posts}
 			WHERE post_type = 'edd_payment'
 			ORDER BY ID ASC
 		";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
-			$orders   = new \EDD\Database\Queries\Order();
-			foreach ( $results as $result ) {
+		// Query & count.
+		$sql          = $sql_base . " LIMIT 1";
+		$check_result = $wpdb->get_results( $sql );
+		$check_total  = count( $check_result );
+		$has_results  = ! empty( $check_total );
 
-				// Check if order has already been migrated.
-				$migrated = $orders->get_item( $result->ID );
-				if ( $migrated ) {
-					continue;
+		// Setup base iteration variables.
+		$step   = 0;
+		$offset = 0;
+		$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
+			? (int) $assoc_args['number']
+			: 1000;
+
+		// Maximum 10,000 - this ain't no VTEC.
+		if ( $number > 10000 ) {
+			$number = 10000;
+		}
+
+		// Starting total.
+		$total = 0;
+
+		while ( $has_results ) {
+			$orders = new \EDD\Database\Queries\Order();
+			$progress->tick();
+
+			// Query & count.
+			$sql     = $sql_base . " LIMIT {$offset}, {$number}";
+			$results = $wpdb->get_results( $sql );
+
+			// Not empty, so lets chug through them!
+			if ( ! empty( $results ) ) {
+				foreach ( $results as $result ) {
+
+					// Check if order has already been migrated.
+					$migrated = $orders->get_item( $result->ID );
+					if ( $migrated ) {
+						$progress->tick();
+						continue;
+					}
+
+					\EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
+
+					// Tick the spinner...
+					$progress->tick();
+
+					// Bump the total...
+					$total++;
 				}
 
-				\EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
+				// Increment step for the next offset...
+				$step++;
 
-				$progress->tick();
+				// EG: 1 * 1000 = 1000, 2 * 1000 = 2000.
+				$offset = ( $step * $number );
+
+			// Done!
+			} else {
+				$has_results = false;
 			}
+		}
 
-			$progress->finish();
 
+		if ( 0 === $step ) {
+			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_orders' );
+			edd_set_upgrade_complete( 'remove_legacy_payments' );
+		} else {
 			WP_CLI::line( __( 'Migration complete: Orders', 'easy-digital-downloads' ) );
 			$new_count = edd_count_orders( array( 'type' => 'sale' ) );
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_payment'", 0 );
@@ -1602,12 +1655,11 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_orders' );
 
+			$progress->tick();
 			$this->recalculate_download_sales_earnings();
-		} else {
-			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_orders' );
-			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		}
+
+		$progress->finish();
 	}
 
 	/**
