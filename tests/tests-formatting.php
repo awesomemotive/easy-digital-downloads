@@ -44,6 +44,20 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$this->assertEquals( '20 000.20', edd_format_amount( '20000.20' ) );
 	}
 
+	public function test_format_amount_typed() {
+		$this->assertEquals( 20000.20, edd_format_amount( '20000.20', true, '', 'typed' ) );
+
+		edd_update_option( 'thousands_separator', '.' );
+		edd_update_option( 'decimal_separator', ',' );
+
+		$this->assertEquals( 20000.20, edd_format_amount( '20000.20', true, '', 'typed' ) );
+
+		edd_update_option( 'thousands_separator', ' ' );
+		edd_update_option( 'decimal_separator', '.' );
+
+		$this->assertEquals( 20000.20, edd_format_amount( '20000.20', true, '', 'typed' ) );
+	}
+
 	public function test_currency_filter() {
 		$this->assertEquals( '&#36;20,000.20', edd_currency_filter( '20,000.20' ) );
 	}
