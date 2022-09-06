@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.3\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-08-31 18:41:15+00:00\n"
+"POT-Creation-Date: 2022-09-06 19:51:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -143,7 +143,7 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:597
 #: includes/gateways/paypal-standard.php:170
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
-#: includes/gateways/stripe/includes/payment-actions.php:1408
+#: includes/gateways/stripe/includes/payment-actions.php:1387
 #: includes/process-download.php:280 includes/process-download.php:874
 #: includes/query-filters.php:51 includes/user-functions.php:886
 #: includes/user-functions.php:911 includes/user-functions.php:963
@@ -715,7 +715,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:230
 #: includes/admin/discounts/class-discount-codes-table.php:316
 #: includes/admin/settings/register-settings.php:293
-#: includes/gateways/stripe/includes/template-functions.php:443
+#: includes/gateways/stripe/includes/template-functions.php:444
 msgid "Delete"
 msgstr ""
 
@@ -789,8 +789,8 @@ msgstr ""
 #: includes/admin/views/tmpl-tax-rates-table-add.php:17
 #: includes/admin/views/tmpl-tax-rates-table-meta.php:16
 #: includes/admin/views/tmpl-tax-rates-table-row.php:18
-#: includes/gateways/stripe/includes/template-functions.php:512
-#: includes/gateways/stripe/includes/template-functions.php:521
+#: includes/gateways/stripe/includes/template-functions.php:513
+#: includes/gateways/stripe/includes/template-functions.php:522
 #: templates/shortcode-profile-editor.php:162
 msgid "Country"
 msgstr ""
@@ -1055,13 +1055,13 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:471 includes/admin/thickbox.php:182
 #: includes/gateways/stripe/includes/admin/admin-filters.php:109
-#: includes/gateways/stripe/includes/template-functions.php:599
-#: includes/gateways/stripe/includes/template-functions.php:639
+#: includes/gateways/stripe/includes/template-functions.php:600
+#: includes/gateways/stripe/includes/template-functions.php:643
 msgid "Cancel"
 msgstr ""
 
 #: includes/admin/customers/customers.php:472
-#: includes/gateways/stripe/includes/template-functions.php:427
+#: includes/gateways/stripe/includes/template-functions.php:428
 msgid "Update"
 msgstr ""
 
@@ -1084,7 +1084,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-payments.php:48
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:49
 #: includes/admin/tools.php:712 includes/checkout/template.php:377
-#: includes/gateways/stripe/includes/template-functions.php:487
+#: includes/gateways/stripe/includes/template-functions.php:488
 #: templates/shortcode-profile-editor.php:152
 msgid "City"
 msgstr ""
@@ -2090,7 +2090,7 @@ msgid "Option Name"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:486 includes/download-functions.php:674
-#: includes/gateways/stripe/includes/template-functions.php:406
+#: includes/gateways/stripe/includes/template-functions.php:407
 msgid "Default"
 msgstr ""
 
@@ -2277,7 +2277,7 @@ msgstr ""
 #: includes/admin/downloads/metabox.php:1145
 #: includes/admin/settings/register-settings.php:954
 #: includes/admin/thickbox.php:76 includes/checkout/template.php:1023
-#: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:214
+#: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:215
 #: includes/shortcodes.php:49 includes/template-functions.php:87
 msgid "Purchase"
 msgstr ""
@@ -3625,7 +3625,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:64
 #: includes/admin/reporting/export/class-batch-export-payments.php:49
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:50
-#: includes/gateways/stripe/includes/template-functions.php:534
+#: includes/gateways/stripe/includes/template-functions.php:535
 msgid "State"
 msgstr ""
 
@@ -3633,7 +3633,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-payments.php:51
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:52
 #: includes/admin/tools.php:730 includes/checkout/template.php:387
-#: includes/gateways/stripe/includes/template-functions.php:782
+#: includes/gateways/stripe/includes/template-functions.php:789
 #: templates/shortcode-profile-editor.php:157
 msgid "Zip / Postal Code"
 msgstr ""
@@ -6275,12 +6275,12 @@ msgid "Purchased Product(s)"
 msgstr ""
 
 #: includes/admin/tools.php:692
-#: includes/gateways/stripe/includes/template-functions.php:459
+#: includes/gateways/stripe/includes/template-functions.php:460
 msgid "Address Line 1"
 msgstr ""
 
 #: includes/admin/tools.php:702
-#: includes/gateways/stripe/includes/template-functions.php:473
+#: includes/gateways/stripe/includes/template-functions.php:474
 msgid "Address Line 2"
 msgstr ""
 
@@ -7331,7 +7331,7 @@ msgid "The (typically) 16 digits on the front of your credit card."
 msgstr ""
 
 #: includes/checkout/template.php:260
-#: includes/gateways/stripe/includes/template-functions.php:158
+#: includes/gateways/stripe/includes/template-functions.php:159
 msgid "CVC"
 msgstr ""
 
@@ -7348,17 +7348,17 @@ msgid "Name on the card"
 msgstr ""
 
 #: includes/checkout/template.php:271
-#: includes/gateways/stripe/includes/template-functions.php:115
+#: includes/gateways/stripe/includes/template-functions.php:116
 msgid "The name printed on the front of your credit card."
 msgstr ""
 
 #: includes/checkout/template.php:272
-#: includes/gateways/stripe/includes/template-functions.php:116
+#: includes/gateways/stripe/includes/template-functions.php:117
 msgid "Card name"
 msgstr ""
 
 #: includes/checkout/template.php:277
-#: includes/gateways/stripe/includes/template-functions.php:556
+#: includes/gateways/stripe/includes/template-functions.php:557
 msgid "Expiration (MM/YY)"
 msgstr ""
 
@@ -7407,7 +7407,7 @@ msgid "Billing zip/Postal code"
 msgstr ""
 
 #: includes/checkout/template.php:386
-#: includes/gateways/stripe/includes/template-functions.php:781
+#: includes/gateways/stripe/includes/template-functions.php:788
 msgid "The zip or postal code for your billing address."
 msgstr ""
 
@@ -7416,7 +7416,7 @@ msgid "Billing country"
 msgstr ""
 
 #: includes/checkout/template.php:396
-#: includes/gateways/stripe/includes/template-functions.php:757
+#: includes/gateways/stripe/includes/template-functions.php:764
 msgid "The country for your billing address."
 msgstr ""
 
@@ -8092,7 +8092,7 @@ msgid "Draft"
 msgstr ""
 
 #: includes/class-edd-discount.php:678
-#: includes/gateways/stripe/includes/template-functions.php:328
+#: includes/gateways/stripe/includes/template-functions.php:329
 #: includes/misc-functions.php:1437
 msgid "Expired"
 msgstr ""
@@ -10167,7 +10167,7 @@ msgstr ""
 #. code tag, do not translate.
 msgid ""
 "To continue accepting credit card payments with Stripe please update "
-"%1$sEasy Digital Downloads%2$s to version %3$s2.9%4$s or higher."
+"%1$sEasy Digital Downloads%2$s to version %3$s2.11%4$s or higher."
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/notices/edd-stripe-core.php:28
@@ -10218,8 +10218,8 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:84
-#: includes/gateways/stripe/includes/admin/settings.php:307
-#: includes/gateways/stripe/includes/admin/settings.php:376
+#: includes/gateways/stripe/includes/admin/settings.php:309
+#: includes/gateways/stripe/includes/admin/settings.php:378
 msgid "Need help upgrading? Ask your web host!"
 msgstr ""
 
@@ -10528,8 +10528,8 @@ msgid ""
 "previously connected in with \"Test Mode\" disabled."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:289
-#: includes/gateways/stripe/includes/admin/settings.php:361
+#: includes/gateways/stripe/includes/admin/settings.php:291
+#: includes/gateways/stripe/includes/admin/settings.php:363
 #. translators: %1$s Future PHP version requirement. %2$s Current PHP version.
 #. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not
 #. translate.
@@ -10542,8 +10542,8 @@ msgid ""
 "%3$supgrade your version of PHP before acceping credit card payments%4$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:313
-#: includes/gateways/stripe/includes/admin/settings.php:381
+#: includes/gateways/stripe/includes/admin/settings.php:315
+#: includes/gateways/stripe/includes/admin/settings.php:383
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
 #. tag, do not translate.
 msgid ""
@@ -10634,7 +10634,7 @@ msgid "Card successfully added."
 msgstr ""
 
 #: includes/gateways/stripe/includes/class-edd-stripe.php:252
-#: includes/gateways/stripe/includes/template-functions.php:125
+#: includes/gateways/stripe/includes/template-functions.php:126
 msgid "Credit Card"
 msgstr ""
 
@@ -10663,7 +10663,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/gateways/stripe/includes/compat.php:235
+#: includes/gateways/stripe/includes/compat.php:233
 #: includes/process-purchase.php:51
 msgid "Error processing purchase. Please reload the page and try again."
 msgstr ""
@@ -10686,11 +10686,11 @@ msgid ""
 "be completed. Please click the link below to take finalize your purchase"
 msgstr ""
 
-#: includes/gateways/stripe/includes/functions.php:611
+#: includes/gateways/stripe/includes/functions.php:641
 msgid "Invalid order ID."
 msgstr ""
 
-#: includes/gateways/stripe/includes/functions.php:679
+#: includes/gateways/stripe/includes/functions.php:709
 #. translators: %1$s the amount refunded; %2$s Stripe Refund ID
 msgid "%1$s refunded in Stripe. Refund ID %2$s"
 msgstr ""
@@ -10715,68 +10715,98 @@ msgstr ""
 msgid "Please enter a name for the credit card."
 msgstr ""
 
+#: includes/gateways/stripe/includes/i18n.php:24
+msgid ""
+"There was an error processing your payment. Please try with a different "
+"payment method."
+msgstr ""
+
 #: includes/gateways/stripe/includes/i18n.php:25
-msgid "The card number is not a valid credit card number."
-msgstr ""
-
-#: includes/gateways/stripe/includes/i18n.php:26
-msgid "The card's expiration month is invalid."
-msgstr ""
-
-#: includes/gateways/stripe/includes/i18n.php:27
-msgid "The card's expiration year is invalid."
+msgid ""
+"There was an error processing your payment. Please contact your card issuer "
+"for more information."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:28
-msgid "The card's security code is invalid."
+msgid "The card number is not a valid credit card number."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:29
-msgid "The card number is incorrect."
+msgid "The card's expiration month is invalid."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:30
-msgid "The card number is incomplete."
+msgid "The card's expiration year is invalid."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:31
-msgid "The card's security code is incomplete."
+msgid "The card's security code is invalid."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:32
-msgid "The card's expiration date is incomplete."
+msgid ""
+"The card number you provided is incorrect. Please check the number and try "
+"again."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:33
-msgid "The card has expired."
+msgid "The card number is incomplete."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:34
-msgid "The card's security code is incorrect."
+msgid "The card's security code is incomplete."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:35
-msgid "The card's zip code failed validation."
+msgid "The card's expiration date is incomplete."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:36
-msgid "The card's expiration year is in the past"
+msgid "The card's security code is incorrect."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:37
-msgid "The card was declined."
+msgid "The card's zip code failed validation."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:38
-msgid "An error occurred while processing the card."
+msgid "The card's expiration year is in the past."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:39
-msgid "Unable to process this payment, please try again or use alternative method."
+msgid "An error occurred while processing the card. Please try again."
 msgstr ""
 
 #: includes/gateways/stripe/includes/i18n.php:40
 msgid "Invalid email address, please correct and try again."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:41
+msgid ""
+"Your purchase may require additional authentication. Please try again and "
+"confirm any authentication requests."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:42
+msgid ""
+"There was an error processing your payment. Please try again, and if you "
+"continue to have problems, contact your card issuer."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:43
+msgid ""
+"Your payment method is not authorized to make purchases in this currency. "
+"Please contact your card issuer."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:44
+msgid ""
+"The payment method you have provided is expired. Please try a different "
+"payment method."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:45
+msgid "There was an error processing your payment. Please try again."
 msgstr ""
 
 #: includes/gateways/stripe/includes/integrations/wp-cli.php:49
@@ -10821,55 +10851,55 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/stripe/includes/payment-actions.php:346
-#: includes/gateways/stripe/includes/payment-actions.php:366
-#: includes/gateways/stripe/includes/payment-actions.php:384
-#: includes/gateways/stripe/includes/payment-actions.php:460
-#: includes/gateways/stripe/includes/payment-actions.php:542
-#: includes/gateways/stripe/includes/payment-actions.php:630
-#: includes/gateways/stripe/includes/payment-actions.php:717
-#: includes/gateways/stripe/includes/payment-actions.php:928
-#: includes/gateways/stripe/includes/payment-actions.php:1071
+#: includes/gateways/stripe/includes/payment-actions.php:368
+#: includes/gateways/stripe/includes/payment-actions.php:386
+#: includes/gateways/stripe/includes/payment-actions.php:462
+#: includes/gateways/stripe/includes/payment-actions.php:544
+#: includes/gateways/stripe/includes/payment-actions.php:626
+#: includes/gateways/stripe/includes/payment-actions.php:713
+#: includes/gateways/stripe/includes/payment-actions.php:918
+#: includes/gateways/stripe/includes/payment-actions.php:1055
 msgid "Stripe Error"
 msgstr ""
 
 #: includes/gateways/stripe/includes/payment-actions.php:348
-#: includes/gateways/stripe/includes/payment-actions.php:368
+#: includes/gateways/stripe/includes/payment-actions.php:370
 msgid "There was an error while processing a Stripe payment. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:426
-#: includes/gateways/stripe/includes/payment-actions.php:436
-#: includes/gateways/stripe/includes/payment-actions.php:495
-#: includes/gateways/stripe/includes/payment-actions.php:505
-#: includes/gateways/stripe/includes/payment-actions.php:576
-#: includes/gateways/stripe/includes/payment-actions.php:593
-#: includes/gateways/stripe/includes/payment-actions.php:664
-#: includes/gateways/stripe/includes/payment-actions.php:674
-#: includes/gateways/stripe/includes/payment-actions.php:752
-#: includes/gateways/stripe/includes/payment-actions.php:769
-#: includes/gateways/stripe/includes/payment-actions.php:781
-#: includes/gateways/stripe/includes/payment-actions.php:793
-#: includes/gateways/stripe/includes/payment-actions.php:810
-#: includes/gateways/stripe/includes/payment-actions.php:841
-#: includes/gateways/stripe/includes/payment-actions.php:962
-#: includes/gateways/stripe/includes/payment-actions.php:979
-#: includes/gateways/stripe/includes/payment-actions.php:989
-#: includes/gateways/stripe/includes/payment-actions.php:1008
-#: includes/gateways/stripe/includes/payment-actions.php:1056
-#: includes/gateways/stripe/includes/payment-actions.php:1102
-#: includes/gateways/stripe/includes/payment-actions.php:1118
-#: includes/gateways/stripe/includes/payment-actions.php:1131
-#: includes/gateways/stripe/includes/payment-actions.php:1165
+#: includes/gateways/stripe/includes/payment-actions.php:428
+#: includes/gateways/stripe/includes/payment-actions.php:438
+#: includes/gateways/stripe/includes/payment-actions.php:497
+#: includes/gateways/stripe/includes/payment-actions.php:507
+#: includes/gateways/stripe/includes/payment-actions.php:578
+#: includes/gateways/stripe/includes/payment-actions.php:589
+#: includes/gateways/stripe/includes/payment-actions.php:660
+#: includes/gateways/stripe/includes/payment-actions.php:670
+#: includes/gateways/stripe/includes/payment-actions.php:748
+#: includes/gateways/stripe/includes/payment-actions.php:759
+#: includes/gateways/stripe/includes/payment-actions.php:771
+#: includes/gateways/stripe/includes/payment-actions.php:783
+#: includes/gateways/stripe/includes/payment-actions.php:800
+#: includes/gateways/stripe/includes/payment-actions.php:831
+#: includes/gateways/stripe/includes/payment-actions.php:952
+#: includes/gateways/stripe/includes/payment-actions.php:963
+#: includes/gateways/stripe/includes/payment-actions.php:973
+#: includes/gateways/stripe/includes/payment-actions.php:992
+#: includes/gateways/stripe/includes/payment-actions.php:1040
+#: includes/gateways/stripe/includes/payment-actions.php:1086
+#: includes/gateways/stripe/includes/payment-actions.php:1097
+#: includes/gateways/stripe/includes/payment-actions.php:1110
+#: includes/gateways/stripe/includes/payment-actions.php:1144
 msgid ""
 "An error occurred, but your payment may have gone through. Please contact "
 "the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:913
+#: includes/gateways/stripe/includes/payment-actions.php:903
 msgid "Unable to create payment."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:1450
+#: includes/gateways/stripe/includes/payment-actions.php:1429
 msgid "Charge not refunded in Stripe, as checkbox was not selected."
 msgstr ""
 
@@ -10985,102 +11015,102 @@ msgstr ""
 msgid "This is a secure SSL encrypted payment."
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:102
+#: includes/gateways/stripe/includes/template-functions.php:103
 msgid "Adding new payment methods is currently unavailable."
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:112
+#: includes/gateways/stripe/includes/template-functions.php:113
 msgid "Name on the Card"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:123
+#: includes/gateways/stripe/includes/template-functions.php:124
 msgid "Credit Card Number"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:149
+#: includes/gateways/stripe/includes/template-functions.php:150
 msgid "Expiration"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:240
+#: includes/gateways/stripe/includes/template-functions.php:241
 #. translators: %1$s Card type. %2$s Card last 4.
 msgid "Update card billing address for %1$s •••• %2$s"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:268
+#: includes/gateways/stripe/includes/template-functions.php:269
 msgid ""
 "We are unable to process your payment at this time, please try again later "
 "or contacts support."
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:303
-#: includes/gateways/stripe/includes/template-functions.php:392
+#: includes/gateways/stripe/includes/template-functions.php:304
+#: includes/gateways/stripe/includes/template-functions.php:393
 #. translators: %1$s Card type. %2$s Card last 4.
 msgid "%1$s •••• %2$s"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:340
-#: includes/gateways/stripe/includes/template-functions.php:610
+#: includes/gateways/stripe/includes/template-functions.php:341
+#: includes/gateways/stripe/includes/template-functions.php:614
 msgid "Add New Card"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:369
+#: includes/gateways/stripe/includes/template-functions.php:370
 msgid "Payment method management is currently unavailable."
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:382
+#: includes/gateways/stripe/includes/template-functions.php:383
 msgid "Manage Payment Methods"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:411
+#: includes/gateways/stripe/includes/template-functions.php:412
 msgid "Expires"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:433
+#: includes/gateways/stripe/includes/template-functions.php:434
 msgid "Set as Default"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:451
-#: includes/gateways/stripe/includes/template-functions.php:749
+#: includes/gateways/stripe/includes/template-functions.php:452
+#: includes/gateways/stripe/includes/template-functions.php:756
 msgid "Billing Details"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:501
+#: includes/gateways/stripe/includes/template-functions.php:502
 msgid "ZIP Code"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:594
-#: includes/gateways/stripe/includes/template-functions.php:635
+#: includes/gateways/stripe/includes/template-functions.php:595
+#: includes/gateways/stripe/includes/template-functions.php:639
 msgid "Please Wait…"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:595
 #: includes/gateways/stripe/includes/template-functions.php:596
+#: includes/gateways/stripe/includes/template-functions.php:597
 msgid "Update Card"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:612
+#: includes/gateways/stripe/includes/template-functions.php:616
 msgid "Credit Card Details"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:636
-#: includes/gateways/stripe/includes/template-functions.php:637
+#: includes/gateways/stripe/includes/template-functions.php:640
+#: includes/gateways/stripe/includes/template-functions.php:641
 msgid "Add new card"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:752
+#: includes/gateways/stripe/includes/template-functions.php:759
 msgid "Billing Country"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:776
+#: includes/gateways/stripe/includes/template-functions.php:783
 msgid "Billing Zip / Postal Code"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:848
+#: includes/gateways/stripe/includes/template-functions.php:855
 #: includes/process-purchase.php:487
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/gateways/stripe/includes/template-functions.php:853
+#: includes/gateways/stripe/includes/template-functions.php:860
 #: includes/process-purchase.php:499
 msgid "Please select your billing country"
 msgstr ""
@@ -12923,7 +12953,7 @@ msgctxt "Cancelled payment"
 msgid "Cancelled"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-methods/payment-request/template.php:198
+#: includes/gateways/stripe/includes/payment-methods/payment-request/template.php:200
 msgctxt "payment request button divider"
 msgid "or"
 msgstr ""
