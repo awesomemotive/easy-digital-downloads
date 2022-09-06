@@ -19,8 +19,8 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-use EDD\Reports;
 use EDD\Stats;
+use EDD\Reports;
 
 /**
  * EDD_API Class
