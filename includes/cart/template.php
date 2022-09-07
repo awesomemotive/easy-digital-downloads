@@ -176,8 +176,7 @@ function edd_save_cart_button() {
 		return;
 	}
 
-	$color = edd_get_option( 'checkout_color', 'blue' );
-	$color = ( $color == 'inherit' ) ? '' : $color;
+	$color = edd_get_button_color_class();
 
 	if ( edd_is_cart_saved() ) : ?>
 		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . esc_attr( $color ); ?>" id="edd-restore-cart-button" href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => urlencode( edd_get_cart_token() ) ) ) ); ?>"><?php esc_html_e( 'Restore Previous Cart', 'easy-digital-downloads' ); ?></a>
@@ -214,8 +213,7 @@ function edd_update_cart_button() {
 	if ( ! edd_item_quantities_enabled() )
 		return;
 
-	$color = edd_get_option( 'checkout_color', 'blue' );
-	$color = ( $color == 'inherit' ) ? '' : $color;
+	$color = edd_get_button_color_class();
 ?>
 	<input type="submit" name="edd_update_cart_submit" class="edd-submit edd-no-js button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'easy-digital-downloads' ); ?>"/>
 	<input type="hidden" name="edd_action" value="update_cart"/>

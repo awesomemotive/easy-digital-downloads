@@ -87,8 +87,8 @@ function edd_get_purchase_link( $args = array() ) {
 		'text'        => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
 		'checkout'    => edd_get_option( 'checkout_button_text', _x( 'Checkout', 'text shown on the Add to Cart Button when the product is already in the cart', 'easy-digital-downloads' ) ),
 		'style'       => edd_get_option( 'button_style', 'button' ),
-		'color'       => edd_get_option( 'checkout_color', 'blue' ),
-		'class'       => 'edd-submit'
+		'color'       => edd_get_button_color_class(),
+		'class'       => 'edd-submit',
 	) );
 
 	$args = wp_parse_args( $args, $defaults );
@@ -107,9 +107,6 @@ function edd_get_purchase_link( $args = array() ) {
 	if( 'publish' !== $download->post_status && ! current_user_can( 'edit_product', $download->ID ) ) {
 		return false; // Product not published or user doesn't have permission to view drafts
 	}
-
-	// Override color if color == inherit
-	$args['color'] = ( $args['color'] == 'inherit' ) ? '' : $args['color'];
 
 	$options          = array();
 	$variable_pricing = $download->has_variable_prices();
@@ -1172,4 +1169,18 @@ function edd_pagination( $args = array() ) {
 			<?php echo $pagination; ?>
 		</div>
 	<?php endif;
+}
+
+/**
+ * Gets the CSS class for the button color.
+ *
+ * @since 3.1
+ * @param string $default The default color option to use as a fallback.
+ * @return string
+ */
+function edd_get_button_color_class( $default = 'blue' ) {
+	$color = edd_get_option( 'checkout_color', $default );
+	$class = 'inherit' !== $color ? $color : '';
+
+	return apply_filters( 'edd_button_color_class', $class );
 }
