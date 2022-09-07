@@ -871,6 +871,75 @@ class EDD_CLI extends WP_CLI_Command {
 
 	}
 
+	public function generate_customer_notes( $args, $assoc_args ) {
+		global $wpdb;
+
+		$error = false;
+
+		// At some point we'll likely add another action for payments
+		if( ! isset( $args ) ||  count( $args ) == 0 ) {
+			$error = __( 'No action specified, did you mean', 'easy-digital-downloads' );
+		} elseif( isset( $args ) && ! in_array( 'create', $args ) ) {
+			$error = __( 'Invalid action specified, did you mean', 'easy-digital-downloads' );
+		}
+
+		if( $error ) {
+			$query = '';
+			foreach( $assoc_args as $key => $value ) {
+				$query .= ' --' . $key . '=' . $value;
+			}
+
+			WP_CLI::error(
+				sprintf( $error . ' %s?', 'wp edd generate_customer_notes create' . $query )
+			);
+
+			return;
+		}
+
+		// Setup some defaults
+		$number     = 1;
+
+		if ( count( $assoc_args ) > 0 ) {
+			$number   = ( array_key_exists( 'number', $assoc_args ) ) ? absint( $assoc_args['number'] ) : $number;
+		}
+
+		// Now generate some customer notes.
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Customer Notes', $number );
+		$i = 1;
+		while ( $i <= $number ) {
+			$sql = "SELECT id FROM {$wpdb->prefix}edd_customers ORDER BY RAND() LIMIT 1";
+			$customer_id = $wpdb->get_col( $sql );
+			$customer = new EDD_Customer( $customer_id[0] );
+			$customer->add_note( 'Aenean dictum dolor mattis, viverra massa nec, ornare turpis. Fusce accumsan odio libero, eu lacinia ante tincidunt et. Duis feugiat.' );
+			$progress->tick();
+			$i++;
+		}
+		$progress->finish();
+	}
+
+	public function generate_payment_notes( $args, $assoc_args ) {
+		global $wpdb;
+
+		// Setup some defaults
+		$number     = 1;
+
+		if ( count( $assoc_args ) > 0 ) {
+			$number   = ( array_key_exists( 'number', $assoc_args ) ) ? absint( $assoc_args['number'] ) : $number;
+		}
+
+		// Now generate some payment notes.
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Payment Notes', $number );
+		$i = 1;
+		while ( $i <= $number ) {
+			$payment_id = $wpdb->get_col( "SELECT ID FROM {$wpdb->prefix}posts WHERE post_type = 'edd_payment' ORDER BY RAND() LIMIT 1" );
+			edd_insert_payment_note( $payment_id[0], 'Aenean dictum dolor mattis, viverra massa nec, ornare turpis. Fusce accumsan odio libero, eu lacinia ante tincidunt et. Duis feugiat.' );
+			$progress->tick();
+			$i++;
+		}
+		$progress->finish();
+	}
+
+
 	protected function get_fname() {
 		$names = array(
 			'Ilse','Emelda','Aurelio','Chiquita','Cheryl','Norbert','Neville','Wendie','Clint','Synthia','Tobi','Nakita',
