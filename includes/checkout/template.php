@@ -542,11 +542,7 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
  * @return string
  */
 function edd_get_login_fields() {
-	$color = edd_get_option( 'checkout_color', 'gray' );
-
-	$color = 'inherit' === $color
-		? ''
-		: $color;
+	$color = edd_get_button_color_class( 'gray' );
 
 	$style = edd_get_option( 'button_style', 'button' );
 
@@ -759,8 +755,7 @@ function edd_discount_field() {
 	}
 
 	if ( edd_has_active_discounts() && edd_get_cart_total() ) :
-		$color = edd_get_option( 'checkout_color', 'blue' );
-		$color = ( $color == 'inherit' ) ? '' : $color;
+		$color = edd_get_button_color_class();
 		$style = edd_get_option( 'button_style', 'button' ); ?>
 		<fieldset id="edd_discount_code">
 			<p id="edd_show_discount" style="display:none;">
@@ -967,9 +962,8 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 9999 );
  * @return string
  */
 function edd_checkout_button_next() {
-	$color = edd_get_option( 'checkout_color', 'blue' );
-	$color = ( $color == 'inherit' ) ? '' : $color;
-	$style = edd_get_option( 'button_style', 'button' );
+	$color         = edd_get_button_color_class();
+	$style         = edd_get_option( 'button_style', 'button' );
 	$purchase_page = edd_get_option( 'purchase_page', '0' );
 
 	ob_start(); ?>
@@ -995,13 +989,13 @@ function edd_checkout_button_purchase() {
 	$cart_total       = edd_get_cart_total();
 
 	if ( ! empty( $enabled_gateways ) || empty( $cart_total ) ) {
-		$color = edd_get_option( 'checkout_color', 'blue' );
-		$color = ( $color == 'inherit' ) ? '' : $color;
+		$color = edd_get_button_color_class();
 		$style = edd_get_option( 'button_style', 'button' );
 		$label = edd_get_checkout_button_purchase_label();
+		$class = implode( ' ', array_filter( array( 'edd-submit', $color, $style ) ) );
 
 		?>
-		<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo esc_html( $label ); ?>"/>
+		<input type="submit" class="<?php echo esc_attr( $class ); ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo esc_html( $label ); ?>"/>
 		<?php
 	}
 

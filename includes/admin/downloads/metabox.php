@@ -1144,8 +1144,7 @@ function edd_render_meta_box_shortcode() {
 
 	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) );
 	$style         = edd_get_option( 'button_style', 'button' );
-	$color         = edd_get_option( 'checkout_color', 'blue' );
-	$color         = ( $color == 'inherit' ) ? '' : $color;
+	$color         = edd_get_button_color_class();
 	$shortcode     = '[purchase_link id="' . absint( get_the_ID() ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]'; ?>
 
 	<div class="edd-form-group edd-product-options-wrapper">
