@@ -300,10 +300,36 @@ function edd_get_registered_settings() {
 		$admin_email      = get_bloginfo( 'admin_email' );
 		$site_name        = get_bloginfo( 'name' );
 
-		$email_summary_recipient = edd_get_option( 'email_summary_recipient', 'admin' );
+		$email_summary_recipient   = edd_get_option( 'email_summary_recipient', 'admin' );
+		$email_summary_trigger_url = wp_nonce_url(
+			edd_get_admin_url(
+				array(
+					'page'       => 'edd-settings',
+					'tab'        => 'emails',
+					'section'    => 'email_summaries',
+					'edd_action' => 'trigger_email_summary',
+				),
+			),
+			'edd_trigger_email_summary'
+		);
+		$email_summary_preview_url = wp_nonce_url(
+			edd_get_admin_url(
+				array(
+					'edd_action' => 'preview_email_summary',
+				),
+			),
+			'edd_preview_email_summary'
+		);
+		$email_summary_schedule      = wp_next_scheduled( EDD_Email_Summary_Cron::CRON_EVENT_NAME );
+		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'edd-dev-tools' ) ) . '</span>';
+		if ( $email_summary_schedule ) {
+			$email_summary_schedule_date = \Carbon\Carbon::createFromTimestamp( $email_summary_schedule );
+			/* Translators: formatted date */
+			$email_summary_schedule_text  = sprintf( __( 'The next summary email is scheduled to send on %s.', 'easy-digital-downloads' ), $email_summary_schedule_date->format( get_option( 'date_format' ) ) );
+		}
 
-		$site_hash        = substr( md5( $site_name ), 0, 10 );
-		$edd_settings     = array(
+		$site_hash    = substr( md5( $site_name ), 0, 10 );
+		$edd_settings = array(
 
 			// General Settings
 			'general' => apply_filters( 'edd_settings_general', array(
@@ -813,11 +839,18 @@ function edd_get_registered_settings() {
 					),
 				),
 				'email_summaries' => array(
+					'email_summary_buttons' => array(
+						'id'   => 'email_summary_buttons',
+						'name' => '',
+						'desc' => '<a target="_blank" href="' . esc_url( $email_summary_preview_url ) . '" class="button">' . esc_html( __( 'Preview Email Summary', 'easy-digital-downloads' ) ) . '</a> <a href="' . esc_url( $email_summary_trigger_url ) . '" class="button">'. esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>',
+						'type' => 'descriptive_text',
+					),
 					'email_summary_frequency' => array(
 						'id'      => 'email_summary_frequency',
 						'name'    => __( 'Email Frequency', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'std'     => 'weekly',
+						'desc'    => $email_summary_schedule_text,
 						'options' => array(
 							'weekly'  => __( 'Weekly', 'easy-digital-downloads' ),
 							'monthly' => __( 'Monthly', 'easy-digital-downloads' ),
@@ -829,13 +862,14 @@ function edd_get_registered_settings() {
 						'type'    => 'select',
 						'std'     => 'admin',
 						'options' => array(
-							'admin'  => __( 'Store admin', 'easy-digital-downloads' ),
-							'custom' => __( 'Custom', 'easy-digital-downloads' ),
+							/* Translators: email */
+							'admin'  => sprintf( __( 'Administrator: %s', 'easy-digital-downloads' ), $admin_email ),
+							'custom' => __( 'Custom Recipients', 'easy-digital-downloads' ),
 						),
 					),
 					'email_summary_custom_recipients' => array(
 						'id'       => 'email_summary_custom_recipients',
-						'name'     => __( 'Custom recipients', 'easy-digital-downloads' ),
+						'name'     => __( 'Custom Recipients', 'easy-digital-downloads' ),
 						'desc'     => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
 						'type'     => 'textarea',
 						'readonly' => ( 'admin' === $email_summary_recipient ),
