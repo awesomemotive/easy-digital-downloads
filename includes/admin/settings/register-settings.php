@@ -316,7 +316,7 @@ function edd_get_registered_settings() {
 			edd_get_admin_url(
 				array(
 					'edd_action' => 'preview_email_summary',
-				),
+				)
 			),
 			'edd_preview_email_summary'
 		);
