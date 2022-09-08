@@ -72,7 +72,7 @@ function edd_recalculate_order_item_download( $order_item_id, $data = array(), $
 
 	// If the order item data being updated doesn't affect sales/earnings, recalculations do not need to be run.
 	if ( $previous_order_item instanceof EDD\Orders\Order_Item ) {
-		$columns_affecting_stats = array( 'status', 'quantity', 'total', 'subtotal' );
+		$columns_affecting_stats = array( 'status', 'quantity', 'total', 'subtotal', 'discount', 'tax', 'rate', 'product_id' );
 
 		// If the data being updated isn't one of these columns then we don't need to recalculate.
 		if ( empty( array_intersect( array_keys( $data ), $columns_affecting_stats ) ) ) {
@@ -81,10 +81,14 @@ function edd_recalculate_order_item_download( $order_item_id, $data = array(), $
 
 		// If the data exists but matches, we don't need to recalculate.
 		if (
-			! empty( $data['status'] ) && $previous_order_item->status === $data['status'] &&
-			! empty( $data['quantity'] ) && $previous_order_item->quantity === $data['quantity'] &&
-			isset( $data['total'] ) && $previous_order_item->total == $data['total'] &&
-			isset( $data['subtotal'] ) && $previous_order_item->subtotal == $data['subtotal']
+			( empty( $data['status'] ) || $previous_order_item->status === $data['status'] ) &&
+			( empty( $data['quantity'] ) || $previous_order_item->quantity === $data['quantity'] ) &&
+			( ! isset( $data['total'] ) || $previous_order_item->total == $data['total'] ) &&
+			( ! isset( $data['subtotal'] ) || $previous_order_item->subtotal == $data['subtotal'] ) &&
+			( ! isset( $data['discount'] ) || $previous_order_item->discount == $data['discount'] ) &&
+			( ! isset( $data['tax'] ) || $previous_order_item->tax == $data['tax'] ) &&
+			( ! isset( $data['rate'] ) || $previous_order_item->rate == $data['rate'] ) &&
+			( empty( $data['product_id'] ) || $previous_order_item->product_id == $data['product_id'] )
 			) {
 			return;
 		}
@@ -111,7 +115,7 @@ add_action( 'edd_order_adjustment_updated', 'edd_recalculate_order_adjustment_do
  */
 function edd_recalculate_order_adjustment_download( $order_adjustment_id, $data = array(), $previous_order_adjustment = false ) {
 	if ( $previous_order_adjustment instanceof EDD\Orders\Order_Adjustment ) {
-		$columns_affecting_stats = array( 'total', 'subtotal' );
+		$columns_affecting_stats = array( 'total', 'subtotal', 'object_id', 'object_type' );
 
 		// If the data being updated isn't one of these columns then we don't need to recalculate.
 		if ( empty( array_intersect( array_keys( $data ), $columns_affecting_stats ) ) ) {
@@ -120,8 +124,10 @@ function edd_recalculate_order_adjustment_download( $order_adjustment_id, $data 
 
 		// If the data exists but matches, we don't need to recalculate.
 		if (
-			isset( $data['total'] ) && $previous_order_item->total == $data['total'] &&
-			isset( $data['subtotal'] ) && $previous_order_item->subtotal == $data['subtotal']
+			( ! isset( $data['total'] ) || $previous_order_adjustment->total == $data['total'] ) &&
+			( ! isset( $data['subtotal'] ) || $previous_order_adjustment->subtotal == $data['subtotal'] ) &&
+			( empty( $data['object_id'] ) || $previous_order_adjustment->object_id == $data['object_id'] ) &&
+			( empty( $data['object_type'] ) || $previous_order_adjustment->object_type == $data['object_type'] )
 			) {
 			return;
 		}
