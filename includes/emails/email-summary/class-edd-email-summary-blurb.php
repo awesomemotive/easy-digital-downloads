@@ -31,7 +31,7 @@ class EDD_Email_Summary_Blurb {
 	 *
 	 * @const string
 	 */
-	const BLURBS_ENDPOINT_URL = 'https://jsonkeeper.com/b/JJNK';
+	const BLURBS_ENDPOINT_URL = 'https://plugin.easydigitaldownloads.com/wp-content/summaries.json';
 
 	/**
 	 * Environment Checker class.
@@ -99,6 +99,10 @@ class EDD_Email_Summary_Blurb {
 		$blurbs      = array();
 		$blurbs_sent = get_option( 'email_summary_blurbs_sent', array() );
 		$next_blurb  = false;
+
+		if ( empty( $all_data['blurbs'] ) ) {
+			return false;
+		}
 
 		// Loop through the fetched blurbs and filter out all that meet the conditions.
 		foreach ( $all_data['blurbs'] as $key => $blurb ) {
