@@ -308,7 +308,7 @@ function edd_get_registered_settings() {
 					'tab'        => 'emails',
 					'section'    => 'email_summaries',
 					'edd_action' => 'trigger_email_summary',
-				),
+				)
 			),
 			'edd_trigger_email_summary'
 		);
