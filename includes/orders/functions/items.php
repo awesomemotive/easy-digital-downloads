@@ -68,12 +68,13 @@ function edd_add_order_item( $data = array() ) {
 		/**
 		 * Action that runs when an order item is successfully added.
 		 *
-		 * @since 3.0.5
+		 * @since 3.1
 		 * @param int   Order item ID.
 		 * @param array Array of order item data.
 		 */
 		do_action( 'edd_order_item_added', $order_item_id, $data );
 	}
+
 	return $order_item_id;
 }
 
@@ -149,7 +150,7 @@ function edd_update_order_item( $order_item_id = 0, $data = array() ) {
 		/**
 		 * Action that runs when an order item is updated.
 		 *
-		 * @since 3.0.5
+		 * @since 3.1
 		 * @param int                   The order item ID.
 		 * @param array                 The array of data to update.
 		 * @param EDD\Orders\Order_Item The original order item object.
