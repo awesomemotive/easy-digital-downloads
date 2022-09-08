@@ -1249,7 +1249,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( 0 === $step ) {
 				WP_CLI::line( __( 'No customer notes found.', 'easy-digital-downloads' ) );
 			} else {
-				WP_CLI::line( __( 'Migration complete: Cusotmer Notes', 'easy-digital-downloads' ) );
+				WP_CLI::line( __( 'Migration complete: Customer Notes', 'easy-digital-downloads' ) );
 				$new_count = edd_count_notes( array( 'object_type' => 'customer' ) );
 				WP_CLI::line( __( 'Old customer notes: ', 'easy-digital-downloads' ) . $total );
 				WP_CLI::line( __( 'New customer notes: ', 'easy-digital-downloads' ) . $new_count );
