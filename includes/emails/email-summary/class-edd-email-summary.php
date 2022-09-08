@@ -227,7 +227,7 @@ class EDD_Email_Summary {
 			'average_order_value',
 			'new_customers',
 			'top_selling_products',
-			'order_count',
+			'order_count'
 		);
 	}
 
