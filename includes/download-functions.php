@@ -400,12 +400,12 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
             }
 
             if ( ! isset( $min ) ) {
-                $min = $price['amount'];
+                $min = floatval($price['amount']);
             } else {
-                $min = min( $min, $price['amount'] );
+                $min = min( $min, floatval($price['amount']) );
             }
 
-            if ( $price['amount'] == $min ) {
+            if ( floatval($price['amount']) == $min ) {
                 $min_id = $key;
             }
         }
