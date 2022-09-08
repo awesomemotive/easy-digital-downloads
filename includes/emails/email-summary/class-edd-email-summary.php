@@ -271,7 +271,7 @@ class EDD_Email_Summary {
 	 * @return string|bool The string of the email template or false if the email template couldn't be built.
 	 */
 	public function build_email_template( $blurb = false ) {
-		$dataset        = $this->get_report_dataset();
+		$dataset = $this->get_report_dataset();
 		// If there were no sales, do not build an email template.
 		if ( empty( $dataset['order_count'] ) || 0 === $dataset['order_count'] ) {
 			return false;
