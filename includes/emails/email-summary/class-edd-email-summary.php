@@ -160,7 +160,7 @@ class EDD_Email_Summary {
 		// @todo - Check if we have to convert this to UTC because of DB?
 		return array_merge(
 			$this->get_report_start_date(),
-			$this->get_report_end_date(),
+			$this->get_report_end_date()
 		);
 	}
 
