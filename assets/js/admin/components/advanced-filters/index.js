@@ -6,7 +6,7 @@ jQuery( document ).ready( function( $ ) {
 	$( '.edd-advanced-filters-button' ).on( 'click', function( e ) {
 		e.preventDefault();
 
-		edd_maybe_toggle_advanced_order_filters();
+		edd_toggle_advanced_order_filters();
 	} );
 
 	// If a click event is triggered.
@@ -34,6 +34,10 @@ jQuery( document ).ready( function( $ ) {
  */
 function edd_maybe_toggle_advanced_order_filters( target = false) {
 	var advancedFiltersWrapper = $( '#edd-advanced-filters' );
+
+	if ( ! advancedFiltersWrapper.hasClass( 'open' ) ) {
+		return false;
+	}
 
 	if ( false === target || ( ! advancedFiltersWrapper.is( target ) && ! advancedFiltersWrapper.has( target ).length ) ) {
 		edd_toggle_advanced_order_filters();
