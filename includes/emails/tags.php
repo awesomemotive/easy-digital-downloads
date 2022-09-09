@@ -768,21 +768,13 @@ function edd_email_tag_sitename( $payment_id ) {
  * @return string receipt_link
  */
 function edd_email_tag_receipt_link( $payment_id ) {
-	$receipt_url = esc_url(
-		add_query_arg(
-			array(
-				'payment_key' => urlencode( edd_get_payment_key( $payment_id ) ),
-				'edd_action'  => 'view_receipt',
-			),
-			home_url()
-		)
-	);
+	$receipt_url = edd_get_receipt_page_uri( $payment_id );
 	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'easy-digital-downloads' ), '<a href="' . esc_url_raw( $receipt_url ) . '">', '&raquo;</a>' );
 
 	if ( edd_get_option( 'email_template' ) !== 'none' ) {
 		return $formatted;
 	} else {
-		return $receipt_url;
+		return esc_url( $receipt_url );
 	}
 }
 
