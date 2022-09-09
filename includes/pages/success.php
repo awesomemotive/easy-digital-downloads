@@ -14,6 +14,9 @@
 */
 function edd_get_success_page_uri( $query_string = null ) {
 	$page_id = edd_get_option( 'success_page', 0 );
+	if ( empty( $query_string ) ) {
+		$page_id = edd_get_option( 'confirmation_page', $page_id );
+	}
 	$page_id = absint( $page_id );
 
 	$success_page = get_permalink( $page_id );
@@ -52,6 +55,22 @@ function edd_send_to_success_page( $query_string = null ) {
 	$gateway  = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
 
 	edd_redirect( apply_filters( 'edd_success_page_redirect', $redirect, $gateway, $query_string ) );
+}
+
+/**
+ * Gets the confirmation page URI.
+ * If a confirmation page is not set, returns the success page URI with no parameters.
+ *
+ * @since 3.1
+ * @return string
+ */
+function edd_get_confirmation_page_uri() {
+	$confirmation_page_id = edd_get_option( 'confirmation_page', false );
+	if ( empty( $confirmation_page_id ) ) {
+		return edd_get_success_page_uri();
+	}
+
+	return get_permalink( $confirmation_page_id );
 }
 
 /**
