@@ -688,54 +688,13 @@ function edd_show_payment_icons() {
 	echo '<div class="edd-payment-icons">';
 
 	foreach ( $payment_methods as $key => $option ) {
-		if ( edd_string_is_image_url( $key ) ) {
-			echo '<img class="payment-icon" src="' . esc_url( $key ) . '" alt="' . esc_attr( $option ) . '"/>';
-		} else {
-			$type = '';
-			$card = strtolower( str_replace( ' ', '', $option ) );
-
-			if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
-
-			} elseif ( has_filter( 'edd_accepted_payment_' . $key . '_image' ) ) {
-				$image = apply_filters( 'edd_accepted_payment_' . $key  . '_image', '' );
-
-			} else {
-				// Set the type to SVG.
-				$type = 'svg';
-
-				// Get SVG dimensions.
-				$dimensions = edd_get_payment_icon_dimensions( $key );
-
-				// Get SVG markup.
-				$image = edd_get_payment_icon(
-					array(
-						'icon'    => $key,
-						'width'   => $dimensions['width'],
-						'height'  => $dimensions['height'],
-						'title'   => $option,
-						'classes' => array( 'payment-icon' )
-					)
-				);
-			}
-
-			if ( edd_is_ssl_enforced() || is_ssl() ) {
-				$image = edd_enforced_ssl_asset_filter( $image );
-			}
-
-			if ( 'svg' === $type ) {
-				echo $image;
-			} else {
-				echo '<img class="payment-icon" src="' . esc_url( $image ) . '" alt="' . esc_attr( $option ) . '"/>';
-			}
-		}
+		echo edd_get_payment_image( $key, $option );
 	}
 
 	echo '</div>';
 }
 add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
 add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
-
 
 /**
  * Renders the Discount Code field which allows users to enter a discount code.
