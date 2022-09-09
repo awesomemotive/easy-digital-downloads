@@ -624,6 +624,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-address.php';
 		require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-email-address.php';
 
+		// Pages
+		require_once EDD_PLUGIN_DIR . 'includes/pages/success.php';
+
 		// Cart
 		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
