@@ -53,3 +53,21 @@ function edd_send_to_success_page( $query_string = null ) {
 
 	edd_redirect( apply_filters( 'edd_success_page_redirect', $redirect, $gateway, $query_string ) );
 }
+
+/**
+ * Gets the receipt page URI.
+ *
+ * @since 3.1
+ * @param int $order_id
+ * @return string
+ */
+function edd_get_receipt_page_uri( $order_id ) {
+	$page_id    = absint( edd_get_option( 'success_page', 0 ) );
+	$order      = edd_get_order( $order_id );
+	$query_args = array(
+		'id'    => $order_id,
+		'order' => urlencode( md5( $order_id . $order->payment_key . $order->email ) ),
+	);
+
+	return add_query_arg( $query_args, get_permalink( $page_id ) );
+}
