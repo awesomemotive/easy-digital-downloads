@@ -321,7 +321,7 @@ function edd_get_registered_settings() {
 			'edd_preview_email_summary'
 		);
 		$email_summary_schedule      = wp_next_scheduled( EDD_Email_Summary_Cron::CRON_EVENT_NAME );
-		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'edd-dev-tools' ) ) . '</span>';
+		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
 		if ( $email_summary_schedule ) {
 			$email_summary_schedule_date = \Carbon\Carbon::createFromTimestamp( $email_summary_schedule );
 			/* Translators: formatted date */
