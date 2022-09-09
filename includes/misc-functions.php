@@ -1741,6 +1741,56 @@ function edd_print_payment_icons( $icons = array() ) {
 }
 
 /**
+ * Gets the supported card image for a given gateway.
+ *
+ * @since 3.1
+ * @param string $gateway
+ * @param string $label
+ * @return string
+ */
+function edd_get_payment_image( $gateway, $label ) {
+	if ( edd_string_is_image_url( $gateway ) ) {
+		return '<img class="payment-icon" src="' . esc_url( $gateway ) . '" alt="' . esc_attr( $label ) . '"/>';
+	}
+
+	$type = '';
+	$card = strtolower( str_replace( ' ', '', $label ) );
+
+	if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
+		$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+	} elseif ( has_filter( 'edd_accepted_payment_' . $gateway . '_image' ) ) {
+		$image = apply_filters( 'edd_accepted_payment_' . $gateway . '_image', '' );
+	} else {
+		// Set the type to SVG.
+		$type = 'svg';
+
+		// Get SVG dimensions.
+		$dimensions = edd_get_payment_icon_dimensions( $gateway );
+
+		// Get SVG markup.
+		$image = edd_get_payment_icon(
+			array(
+				'icon'    => $gateway,
+				'width'   => $dimensions['width'],
+				'height'  => $dimensions['height'],
+				'title'   => $label,
+				'classes' => array( 'payment-icon' ),
+			)
+		);
+	}
+
+	if ( edd_is_ssl_enforced() || is_ssl() ) {
+		$image = edd_enforced_ssl_asset_filter( $image );
+	}
+
+	if ( 'svg' === $type ) {
+		return $image;
+	}
+
+	return '<img class="payment-icon" src="' . esc_url( $image ) . '" alt="' . esc_attr( $label ) . '"/>';
+}
+
+/**
  * Check to see if we should be displaying promotional content
  *
  * In various parts of the plugin, we may choose to promote something like a sale for a limited time only. This
