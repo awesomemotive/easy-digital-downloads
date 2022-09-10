@@ -854,11 +854,11 @@ function edd_get_registered_settings() {
 						),
 					),
 					'email_summary_custom_recipients' => array(
-						'id'       => 'email_summary_custom_recipients',
-						'name'     => __( 'Custom Recipients', 'easy-digital-downloads' ),
-						'desc'     => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
-						'type'     => 'textarea',
-						'readonly' => ( 'admin' === $email_summary_recipient ),
+						'id'    => 'email_summary_custom_recipients',
+						'class' => ( 'admin' === $email_summary_recipient ) ? 'hidden' : '',
+						'name'  => __( 'Custom Recipients', 'easy-digital-downloads' ),
+						'desc'  => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
+						'type'  => 'textarea',
 					),
 					'disable_email_summary' => array(
 						'id'    => 'disable_email_summary',

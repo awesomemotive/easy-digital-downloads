@@ -161,18 +161,17 @@ const EDD_Settings = {
 			recaptureRemoteInstall();
 		});
 
-		// Email Summaries
+		/**
+		 * Email Summaries
+		 */
 		const emailSummaryRecipient = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
-			emailSummaryCustomRecipients = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' );
+			emailSummaryCustomRecipients = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' ).parents( 'tr' );
 
 		// Toggle Email Recipient option
 		emailSummaryRecipient.on( 'change', function() {
-			if ( $( this ).val() === 'admin' ) {
-				emailSummaryCustomRecipients.prop( 'readonly', true );
-			} else {
-				emailSummaryCustomRecipients.prop( 'readonly', false );
-			}
+			emailSummaryCustomRecipients.toggleClass( 'hidden' );
 		} );
+
 	}
 };
 
