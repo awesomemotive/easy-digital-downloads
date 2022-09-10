@@ -22,54 +22,68 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Email_Summary_Admin {
 
 	/**
+	 * WordPress SMTP error.
+	 *
+	 * @since 3.1
+	 *
+	 * @var bool|\WP_Error
+	 */
+	public $mail_smtp_error = false;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @since 3.1
 	 */
 	public function __construct() {
-		add_action( 'edd_trigger_email_summary', array( $this, 'trigger_email_summary' ) );
+		add_action( 'wp_ajax_edd_send_test_email_summary', array( $this, 'send_test_email_summary' ) );
 	}
 
 	/**
-	 * Send Email Summary preview.
+	 * Send test Email Summary.
 	 *
 	 * @since 3.1
 	 *
 	 * @param array $data GET Request array.
 	 */
-	public function trigger_email_summary( $data ) {
-		if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_trigger_email_summary' ) ) {
-			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-		}
+	public function send_test_email_summary() {
+		add_action( 'wp_mail_failed', array( $this, 'mail_failed' ) );
 
+		$output       = array(
+			'status'  => 'success',
+			'message' => __( 'The test Email Summary was sent successfully!', 'easy-digital-downloads' ),
+		);
 		$email        = new EDD_Email_Summary();
 		$email_status = $email->send_email();
-		$this->check_email_status( $email_status );
+		if ( ! $email_status ) {
+			$output['status'] = 'error';
 
-		$url = edd_get_admin_url(
-			array(
-				'page'        => 'edd-settings',
-				'tab'         => 'emails',
-				'section'     => 'email_summaries',
-				'edd-message' => 'test-summary-email-sent',
-			)
-		);
+			// Generic error.
+			$output['message'] = __( 'There was an unknown problem while sending test Email Summary!', 'easy-digital-downloads' );
 
-		edd_redirect( $url );
+			// SMTP error.
+			if ( $this->mail_smtp_error ) {
+				$output['message'] = $this->mail_smtp_error;
+			}
+		}
+
+		echo wp_json_encode( $output );
+		edd_die();
 	}
 
 	/**
-	 * Check if there was an error while preparing
-	 * or sending email summary and abort.
+	 * Get error message from failed SMTP.
 	 *
 	 * @since 3.1
 	 *
-	 * @param bool $email_status True if email was built and sent succesfully, false if not.
+	 * @param \WP_Error $error The WP Error thrown in WP core: `wp_mail_failed` hook.
 	 */
-	public function check_email_status( $email_status ) {
-		if ( ! $email_status ) {
-			wp_die( __( 'There was an error while sending an email. Does your store have any sales in the requested period?', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 500 ) );
+	public function mail_failed( $error ) {
+		if ( ! is_wp_error( $error ) ) {
+			return;
 		}
+
+		$this->mail_smtp_error = $error->get_error_message();
 	}
 
 }

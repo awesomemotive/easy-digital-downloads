@@ -870,7 +870,7 @@ function edd_get_registered_settings() {
 					'email_summary_buttons' => array(
 						'id'   => 'email_summary_buttons',
 						'name' => '',
-						'desc' => '<a href="' . esc_url( $email_summary_trigger_url ) . '" class="button">'. esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>',
+						'desc' => '<a href="' . esc_url( $email_summary_trigger_url ) . '" class="button" id="edd-send-test-summary">'. esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a><div id="edd-send-test-summary-notice"></div>',
 						'type' => 'descriptive_text',
 					),
 				),

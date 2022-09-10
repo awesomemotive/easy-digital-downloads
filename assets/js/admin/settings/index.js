@@ -164,13 +164,48 @@ const EDD_Settings = {
 		/**
 		 * Email Summaries
 		 */
-		const emailSummaryRecipient = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
-			emailSummaryCustomRecipients = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' ).parents( 'tr' );
 
-		// Toggle Email Recipient option
-		emailSummaryRecipient.on( 'change', function() {
-			emailSummaryCustomRecipients.toggleClass( 'hidden' );
-		} );
+			// Toggle Email Recipient option
+			const emailSummaryRecipient = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
+				emailSummaryCustomRecipients = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' ).parents( 'tr' );
+
+			emailSummaryRecipient.on( 'change', function() {
+				emailSummaryCustomRecipients.toggleClass( 'hidden' );
+			} );
+
+			// Send test email.
+			const emailSummaryTestButton = $( '#edd-send-test-summary' ),
+			      emailSummaryTestNotice = $( '#edd-send-test-summary-notice' );
+			emailSummaryTestButton.on( 'click', function( e ) {
+				e.preventDefault();
+
+				$.ajax( {
+					type: 'GET',
+					dataType: 'json',
+					url: ajaxurl,
+					data: {
+						action: 'edd_send_test_email_summary',
+					},
+					beforeSend: function() {
+						emailSummaryTestNotice.empty();
+						emailSummaryTestButton.removeClass( 'updated-message' ).addClass( 'updating-message' ).prop( 'disabled', true );
+					},
+					success: function( data ) {
+						emailSummaryTestNotice.html( '<div class="updated ' + data.status + '"><p>' + data.message + '</p></div>' );
+						if( 'success' === data.status ) {
+							emailSummaryTestButton.addClass( 'updated-message' );
+						}
+					},
+				} ).fail( function( response ) {
+					if ( window.console && window.console.log ) {
+						console.log( response );
+					}
+				} ).done( function( response ) {
+					emailSummaryTestButton.removeClass( 'updating-message' ).prop( 'disabled', false );
+				} );
+
+
+			} );
 
 	}
 };
