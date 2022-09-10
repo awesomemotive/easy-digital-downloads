@@ -1147,7 +1147,7 @@ function display_dates_filter() {
 		? ' screen-reader-text'
 		: '';
 
-	$range = EDD()->html->select( array(
+	$range_select = EDD()->html->select( array(
 		'name'             => 'range',
 		'class'            => 'edd-graphs-date-options',
 		'options'          => $options,
@@ -1174,13 +1174,19 @@ function display_dates_filter() {
 	) );
 
 	// Output fields
-	?><span class="edd-date-range-picker graph-option-section"><?php
-		echo $range;
-	?></span>
+	?>
+	<div class="edd-date-range-picker graph-option-section">
+		<?php echo $range_select; ?>
+		<div class="edd-date-range-dates">
+			<span class="dashicons dashicons-calendar"></span>
+			1 Sep - 9 Sep
+		</div>
+	</div>
 
 	<span class="edd-date-range-options graph-option-section edd-from-to-wrapper<?php echo esc_attr( $class ); ?>">
 		<?php echo $from . $to; ?>
-	</span><?php
+	</span>
+	<?php
 }
 
 /**

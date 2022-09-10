@@ -41,9 +41,9 @@ class Reports_Sections extends Sections {
 
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
 				<span class="edd-reports-section-label">
-					<strong><?php echo esc_html( $dates['start']->format( $date_format ) );?> - <?php echo esc_html( $dates['end']->format( $date_format ) );?></strong>
+					<strong><?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $dates['start'] )->format( $date_format ) );?> - <?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $dates['end'] )->format( $date_format ) );?></strong>
 					<?php echo esc_html__( 'compared to', 'easy-digital-downloads' );?>
-					<strong><?php echo esc_html( $relative_dates['start']->format( $date_format ) );?> - <?php echo esc_html( $relative_dates['end']->format( $date_format ) );?></strong>
+					<strong><?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_dates['start'] )->format( $date_format ) ); ?> - <?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_dates['end'] )->format( $date_format ) ); ?></strong>
 				</span>
 
 				<ul class="section-nav" role="<?php echo esc_attr( $role ); ?>">
@@ -51,7 +51,6 @@ class Reports_Sections extends Sections {
 				</ul>
 
 				<div class="section-wrap">
-
 					<?php echo $this->get_all_section_contents(); ?>
 				</div>
 				<br class="clear">
