@@ -289,12 +289,7 @@ function edd_install_pages() {
 	$current_options = get_option( 'edd_settings', array() );
 
 	// Required store pages
-	$pages = array_flip( array(
-		'purchase_page',
-		'success_page',
-		'failure_page',
-		'purchase_history_page'
-	) );
+	$pages = edd_get_required_pages();
 
 	// Look for missing pages
 	$missing_pages  = array_diff_key( $pages, $current_options );
@@ -313,10 +308,23 @@ function edd_install_pages() {
 	$checkout = 0;
 
 	// We'll only update settings on change
-	$changed  = false;
+	$changed = false;
+
+	// Use the current user as the page author.
+	$user_id = get_current_user_id();
 
 	// Loop through all pages, fix or create any missing ones
-	foreach ( array_flip( $pages ) as $page ) {
+	foreach ( $pages as $page => $page_attributes ) {
+
+		$page_attributes = wp_parse_args(
+			$page_attributes,
+			array(
+				'post_status'    => 'publish',
+				'post_author'    => $user_id,
+				'post_type'      => 'page',
+				'comment_status' => 'closed',
+			)
+		);
 
 		$page_id = ! empty( $pages_to_check[ $page ] ) ? $pages_to_check[ $page ] : false;
 
@@ -337,62 +345,8 @@ function edd_install_pages() {
 			continue;
 		}
 
-		// Get page attributes for missing pages
-		switch ( $page ) {
-
-			// Checkout
-			case 'purchase_page':
-				$page_attributes = array(
-					'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:shortcode -->[download_checkout]<!-- /wp:shortcode -->",
-					'post_status'    => 'publish',
-					'post_author'    => 1,
-					'post_parent'    => 0,
-					'post_type'      => 'page',
-					'comment_status' => 'closed',
-				);
-				break;
-
-			// Success
-			case 'success_page':
-				$text            = __( 'Thank you for your purchase!', 'easy-digital-downloads' );
-				$page_attributes = array(
-					'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:paragraph --><p>{$text}</p><!-- /wp:paragraph --><!-- wp:shortcode -->[edd_receipt]<!-- /wp:shortcode -->",
-					'post_status'    => 'publish',
-					'post_author'    => 1,
-					'post_parent'    => $checkout,
-					'post_type'      => 'page',
-					'comment_status' => 'closed',
-				);
-				break;
-
-			// Failure
-			case 'failure_page':
-				$text            = __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' );
-				$page_attributes = array(
-					'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:paragraph --><p>{$text}</p><!-- /wp:paragraph -->",
-					'post_status'    => 'publish',
-					'post_author'    => 1,
-					'post_type'      => 'page',
-					'post_parent'    => $checkout,
-					'comment_status' => 'closed',
-				);
-				break;
-
-			// Purchase History
-			case 'purchase_history_page':
-				$page_attributes = array(
-					'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:shortcode -->[purchase_history]<!-- /wp:shortcode -->",
-					'post_status'    => 'publish',
-					'post_author'    => 1,
-					'post_type'      => 'page',
-					'post_parent'    => $checkout,
-					'comment_status' => 'closed',
-				);
-				break;
+		if ( ! isset( $page_attributes['post_parent'] ) ) {
+			$page_attributes['post_parent'] = $checkout;
 		}
 
 		// Create the new page
@@ -414,6 +368,38 @@ function edd_install_pages() {
 	if ( true === $changed ) {
 		update_option( 'edd_settings', $current_options );
 	}
+}
+
+/**
+ * Gets the array of required pages with default attributes and content for EDD.
+ *
+ * @since 3.1
+ * @return array
+ */
+function edd_get_required_pages() {
+
+	return apply_filters(
+		'edd_required_pages',
+		array(
+			'purchase_page'         => array(
+				'post_title'   => __( 'Checkout', 'easy-digital-downloads' ),
+				'post_content' => '<!-- wp:shortcode -->[download_checkout]<!-- /wp:shortcode -->',
+				'post_parent'  => 0,
+			),
+			'success_page'          => array(
+				'post_title'   => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
+				'post_content' => '<!-- wp:paragraph --><p>' . __( 'Thank you for your purchase!', 'easy-digital-downloads' ) . '</p><!-- /wp:paragraph --><!-- wp:shortcode -->[edd_receipt]<!-- /wp:shortcode -->',
+			),
+			'failure_page'          => array(
+				'post_title'   => __( 'Transaction Failed', 'easy-digital-downloads' ),
+				'post_content' => '<!-- wp:paragraph --><p>' . __( 'Your transaction failed; please try again or contact site support.', 'easy-digital-downloads' ) .'</p><!-- /wp:paragraph -->',
+			),
+			'purchase_history_page' => array(
+				'post_title'   => __( 'Purchase History', 'easy-digital-downloads' ),
+				'post_content' => '<!-- wp:shortcode -->[purchase_history]<!-- /wp:shortcode -->',
+			),
+		)
+	);
 }
 
 /**
