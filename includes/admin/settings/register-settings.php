@@ -312,14 +312,6 @@ function edd_get_registered_settings() {
 			),
 			'edd_trigger_email_summary'
 		);
-		$email_summary_preview_url = wp_nonce_url(
-			edd_get_admin_url(
-				array(
-					'edd_action' => 'preview_email_summary',
-				)
-			),
-			'edd_preview_email_summary'
-		);
 		$email_summary_schedule      = wp_next_scheduled( EDD_Email_Summary_Cron::CRON_EVENT_NAME );
 		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
 		if ( $email_summary_schedule ) {
@@ -839,12 +831,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'email_summaries' => array(
-					'email_summary_buttons' => array(
-						'id'   => 'email_summary_buttons',
-						'name' => '',
-						'desc' => '<a target="_blank" href="' . esc_url( $email_summary_preview_url ) . '" class="button">' . esc_html( __( 'Preview Email Summary', 'easy-digital-downloads' ) ) . '</a> <a href="' . esc_url( $email_summary_trigger_url ) . '" class="button">'. esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>',
-						'type' => 'descriptive_text',
-					),
 					'email_summary_frequency' => array(
 						'id'      => 'email_summary_frequency',
 						'name'    => __( 'Email Frequency', 'easy-digital-downloads' ),
@@ -880,6 +866,12 @@ function edd_get_registered_settings() {
 						'desc'  => '<a href="https://easydigitaldownloads.com/">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
 						'check' => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description',
+					),
+					'email_summary_buttons' => array(
+						'id'   => 'email_summary_buttons',
+						'name' => '',
+						'desc' => '<a href="' . esc_url( $email_summary_trigger_url ) . '" class="button">'. esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>',
+						'type' => 'descriptive_text',
 					),
 				),
 			) ),

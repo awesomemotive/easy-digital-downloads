@@ -28,7 +28,6 @@ class EDD_Email_Summary_Admin {
 	 */
 	public function __construct() {
 		add_action( 'edd_trigger_email_summary', array( $this, 'trigger_email_summary' ) );
-		add_action( 'edd_preview_email_summary', array( $this, 'preview_email_summaryy' ) );
 	}
 
 	/**
@@ -57,29 +56,6 @@ class EDD_Email_Summary_Admin {
 		);
 
 		edd_redirect( $url );
-	}
-
-	/**
-	 * Build and output Email Summary template to the screen.
-	 *
-	 * @since 3.1
-	 */
-	public function preview_email_summaryy() {
-		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_preview_email_summary' ) ) {
-			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-		}
-
-		// Get next blurb.
-		$email_blurbs = new EDD_Email_Summary_Blurb();
-		$next_blurb   = $email_blurbs->get_next();
-
-		// Get email body.
-		$email      = new EDD_Email_Summary();
-		$email_body = $email->build_email_template( $next_blurb );
-		$this->check_email_status( $email_body );
-
-		echo $email_body;
-		exit;
 	}
 
 	/**

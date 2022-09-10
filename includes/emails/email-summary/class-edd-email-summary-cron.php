@@ -41,7 +41,7 @@ class EDD_Email_Summary_Cron {
 		add_action( 'edd_daily_scheduled_events', array( $this, 'schedule_cron_events' ) );
 
 		// User settings changed.
-		add_action( 'updated_option', array( $this, 'settings_changed' ), 10, 1 );
+		add_action( 'updated_option', array( $this, 'settings_changed' ), 10, 3 );
 
 		// Prepare and run cron.
 		add_action( self::CRON_EVENT_NAME, array( $this, 'run_cron' ) );
@@ -105,16 +105,37 @@ class EDD_Email_Summary_Cron {
 	 * @since 3.1
 	 *
 	 * @param string $option_name WordPress option that was changed.
+	 * @param string $old_value Old option value.
+	 * @param string $new_value New option value.
 	 *
 	 * @return void
 	 */
-	public function settings_changed( $option_name ) {
+	public function settings_changed( $option_name, $old_value, $new_value ) {
 		if ( ! in_array( $option_name, array( 'edd_settings', 'start_of_week' ), true ) ) {
 			return;
 		}
-		// Reload EDD options so that we have the newest values.
-		global $edd_options;
-		$edd_options = get_option( 'edd_settings' );
+
+		// If `edd_settings` were changed, listen
+		// only to changes in specific fields.
+		if ( 'edd_settings' === $option_name ) {
+			$change_detected = false;
+			$field_listeners = array( 'email_summary_frequency', 'disable_email_summary' );
+			foreach ( $field_listeners as $field ) {
+				if ( ( empty( $old_value[ $field ] ) || empty( $new_value[ $field ] ) ) || ( $old_value[ $field ] !== $new_value[ $field ] ) ) {
+					$change_detected = true;
+					break;
+				}
+			}
+
+			if ( ! $change_detected ) {
+				return;
+			}
+
+			// Reload EDD options so that we have the newest values in class methods.
+			global $edd_options;
+			$edd_options = get_option( 'edd_settings' );
+		}
+
 		$this->clear_cron_events();
 		$this->schedule_cron_events();
 	}
