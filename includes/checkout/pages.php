@@ -1,6 +1,6 @@
 <?php
 /**
- * Functions to handle the success page.
+ * Functions to handle the checkout related pages.
  *
  * @package EDD
  *
