@@ -53,7 +53,7 @@ class EDD_Email_Summary_Admin {
 			'status'  => 'success',
 			'message' => __( 'The test Email Summary was sent successfully!', 'easy-digital-downloads' ),
 		);
-		$email        = new EDD_Email_Summary();
+		$email        = new EDD_Email_Summary( true );
 		$email_status = $email->send_email();
 		if ( ! $email_status ) {
 			$output['status'] = 'error';

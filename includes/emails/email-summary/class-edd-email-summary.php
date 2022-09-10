@@ -23,6 +23,15 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Email_Summary {
 
 	/**
+	 * Are we in a test mode.
+	 *
+	 * @since 3.1
+	 *
+	 * @var bool
+	 */
+	private $test_mode;
+
+	/**
 	 * Email options.
 	 *
 	 * @since 3.1
@@ -36,7 +45,8 @@ class EDD_Email_Summary {
 	 *
 	 * @since 3.1
 	 */
-	public function __construct() {
+	public function __construct( $test_mode = false ) {
+		$this->test_mode     = $test_mode;
 		$this->email_options = array(
 			'email_summary_frequency'     => edd_get_option( 'email_summary_frequency', 'weekly' ),
 			'email_summary_start_of_week' => jddayofweek( (int) get_option( 'start_of_week' ) - 1, 1 ),
@@ -69,7 +79,11 @@ class EDD_Email_Summary {
 		/* Translators: Site domain name */
 		$email_subject = sprintf( __( 'Easy Digital Downloads Summary - %s', 'easy-digital-downloads' ), $this->get_site_url() );
 
-		return apply_filters( 'edd_email_summary_subject', $email_subject );
+		if ( $this->test_mode ) {
+			$email_subject = '[TEST] ' . $email_subject;
+		}
+
+		return $email_subject;
 	}
 
 	/**
@@ -163,6 +177,58 @@ class EDD_Email_Summary {
 			$this->get_report_end_date()
 		);
 	}
+	/**
+	 * Retrieve ! TEST ! dataset for email content.
+	 *
+	 * @since 3.1
+	 *
+	 * @return array Data and statistics for the period.
+	 */
+	public function get_test_report_dataset() {
+		$stats = new EDD\Stats();
+		$args  = array(
+			'post_type'      => 'download',
+			'posts_per_page' => 5,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		);
+
+		$downloads = new WP_Query( $args );
+		$top_selling_products = array();
+
+		foreach ( $downloads->posts as $post ) {
+			$download = new EDD_Download( $post );
+
+			$product = new stdClass();
+			$product->object = $download;
+			$product->total  = 100;
+
+			$top_selling_products[] = $product;
+		}
+
+		$data = array(
+			'earnings_gross'       => array(
+				'value'         => 5000,
+				'relative_data' => $stats->generate_relative_data( 5000, 4000  ),
+			),
+			'earnings_net'         => array(
+				'value'         => 4500,
+				'relative_data' => $stats->generate_relative_data( 4500, 3500 ),
+			),
+			'average_order_value'  => array(
+				'value'         => 29,
+				'relative_data' => $stats->generate_relative_data( 20, 35 ),
+			),
+			'new_customers'        => array(
+				'value'         => 25,
+				'relative_data' => $stats->generate_relative_data( 25, 20 ),
+			),
+			'top_selling_products' => $top_selling_products,
+			'order_count'          => array( 'value' => 172 ),
+		);
+
+		return $data;
+	}
 
 	/**
 	 * Retrieve dataset for email content.
@@ -172,6 +238,10 @@ class EDD_Email_Summary {
 	 * @return array Data and statistics for the period.
 	 */
 	public function get_report_dataset() {
+		if ( $this->test_mode ) {
+			return $this->get_test_report_dataset();
+		}
+
 		$date_range          = $this->get_report_date_range();
 		$start_date          = $date_range['start_date']->format( 'Y-m-d H:i:s' );
 		$end_date            = $date_range['end_date']->format( 'Y-m-d H:i:s' );
@@ -300,7 +370,11 @@ class EDD_Email_Summary {
 	public function send_email() {
 		// Get next blurb.
 		$email_blurbs = new EDD_Email_Summary_Blurb();
-		$next_blurb   = $email_blurbs->get_next();
+		$next_blurb   = false;
+
+		if ( ! $this->test_mode ) {
+			$next_blurb = $email_blurbs->get_next();
+		}
 
 		// Prepare email.
 		$email_body = $this->build_email_template( $next_blurb );

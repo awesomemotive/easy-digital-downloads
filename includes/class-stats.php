@@ -3127,9 +3127,9 @@ class Stats {
 			}
 
 			// Check if stat is in a 'reverse' state, where lower is better.
-			$positive_change = (bool) $reverse;
-			if ( $positive_change && 0 < $percentage_change ) {
-				$positive_change = false;
+			$positive_change = (bool) ! $reverse;
+			if ( 0 > $percentage_change ) {
+				$positive_change = (bool) $reverse;
 			}
 
 			$output['percentage_change']           = $percentage_change;
