@@ -291,28 +291,6 @@ class EDD_Email_Summary {
 	}
 
 	/**
-	 * Add tracking parameters to the blurb URL.
-	 *
-	 * @since 3.1
-	 *
-	 * @param  string $url Destination URL.
-	 * @param  array $blurb Blurb data.
-	 * @return string URL with tracking parameters.
-	 */
-	public function add_blurb_tracking_parameters( $url, $blurb ) {
-		// @todo - Define tracking parameters!
-		return add_query_arg(
-			array(
-				'utm_source'   => 'email-summary',
-				'utm_medium'   => 'blurb-' . rawurlencode( $blurb['headline'] ), // @todo - We have to change this to something more appropriate.
-				'utm_campaign' => 'email',
-				'utm_content'  => 'pro-tip',
-			),
-			$url
-		);
-	}
-
-	/**
 	 * Prepare and send email.
 	 *
 	 * @since 3.1

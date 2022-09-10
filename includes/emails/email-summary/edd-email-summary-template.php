@@ -391,7 +391,7 @@
 							</p>
 
 							<div class="pull-down-15" style="margin-top: 15px;">
-								<a href="<?php echo esc_attr( $this->add_blurb_tracking_parameters( $blurb['button_link'], $blurb ) ); ?>" class="cta-btn" style="padding: 6px 15px; font-weight: 600; font-size: 14px; line-height: 20px; background: #2794DA; display: inline-block; text-decoration: none; color: white;">
+								<a href="<?php echo esc_attr( $blurb['button_link'] ); ?>" class="cta-btn" style="padding: 6px 15px; font-weight: 600; font-size: 14px; line-height: 20px; background: #2794DA; display: inline-block; text-decoration: none; color: white;">
 									<?php echo esc_html( $blurb['button_text'] ); ?>
 								</a>
 							</div>
