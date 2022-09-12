@@ -166,16 +166,28 @@ const EDD_Settings = {
 		 */
 
 			// Toggle Email Recipient option
-			const emailSummaryRecipient = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
-				emailSummaryCustomRecipients = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' ).parents( 'tr' );
+			const emailSummaryRecipient           = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
+			    emailSummaryRecipientInitialValue = emailSummaryRecipient.val(),
+				emailSummaryCustomRecipients      = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' ).parents( 'tr' ),
+				emailSummarySaveChangesNotice     = $( '#edd-send-test-summary-save-changes-notice' ),
+				emailSummaryTestButton            = $( '#edd-send-test-summary' ),
+				emailSummaryTestNotice            = $( '#edd-send-test-summary-notice' );
 
 			emailSummaryRecipient.on( 'change', function() {
 				emailSummaryCustomRecipients.toggleClass( 'hidden' );
+				emailSummaryTestButton.removeClass( 'hidden updated-message' );
+				emailSummaryTestNotice.empty();
+				emailSummarySaveChangesNotice.empty();
+
+				if ( emailSummaryRecipientInitialValue !== emailSummaryRecipient.val() ) {
+					emailSummaryTestButton.addClass( 'hidden' );
+					emailSummarySaveChangesNotice.html( '<div class="notice"><p>' + edd_vars.test_email_save_changes + '</p></div>' );
+				}
+
 			} );
 
 			// Send test email.
-			const emailSummaryTestButton = $( '#edd-send-test-summary' ),
-			      emailSummaryTestNotice = $( '#edd-send-test-summary-notice' );
+
 			emailSummaryTestButton.on( 'click', function( e ) {
 				e.preventDefault();
 
