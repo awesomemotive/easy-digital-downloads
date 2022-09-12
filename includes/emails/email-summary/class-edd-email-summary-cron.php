@@ -74,8 +74,9 @@ class EDD_Email_Summary_Cron {
 		}
 
 		// Get the event date based on user settings.
+		$days            = EDD()->utils->date()->getDays();
 		$email_frequency = edd_get_option( 'email_summary_frequency', 'weekly' );
-		$week_start_day  = jddayofweek( (int) get_option( 'start_of_week' ) - 1, 1 );
+		$week_start_day  = $days[ (int) get_option( 'start_of_week' ) ];
 
 		if ( 'monthly' === $email_frequency ) {
 			$next_time_string = 'first day of next month 8am';
