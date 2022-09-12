@@ -12,7 +12,12 @@
 			<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 		</head>
 		<style>
-			@media only screen and (max-width: 599px) {
+			@media only screen and (max-width: 480px) {
+
+				body {
+					max-width: 320px;
+				}
+
 				.push-down-25 {
 					margin-bottom: 20px;
 				}
@@ -155,7 +160,7 @@
 			}
 		</style>
 
-		<body style="margin: 0px;">
+		<body style="margin: 0px auto; max-width: 450px;">
 			<!-- PREVIEW TEXT -->
 			<div style="display: none; max-height: 0px; overflow: hidden;">
 				<?php echo esc_html( __( 'Store performance summary', 'easy-digital-downloads' ) ); ?> <?php echo esc_html( $date_range['start_date']->format( $wp_date_format ) ); ?> - <?php echo esc_html( $date_range['end_date']->format( $wp_date_format ) ); ?>
