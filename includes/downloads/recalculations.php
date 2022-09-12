@@ -92,6 +92,11 @@ function edd_recalculate_order_item_download( $order_item_id, $data = array(), $
 			) {
 			return;
 		}
+
+		// Recalculate the previous product values if the product ID has changed.
+		if ( ! empty( $data['product_id'] ) && $previous_order_item->product_id != $data['product_id'] ) {
+			edd_maybe_schedule_download_recalculation( $previous_order_item->product_id );
+		}
 	}
 
 	$order_item = edd_get_order_item( $order_item_id );
