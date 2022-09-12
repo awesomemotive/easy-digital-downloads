@@ -1098,6 +1098,11 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	}
 	$edd_receipt_args['id'] = $order->id;
 
+	// Some capabilities can always view the receipt, skip the filter.
+	if ( current_user_can( 'edit_shop_payments' ) ) {
+		return true;
+	}
+
 	if ( is_user_logged_in() ) {
 		if ( (int) get_current_user_id() === (int) $order->user_id ) {
 			$user_can_view = true;
