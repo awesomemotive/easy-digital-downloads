@@ -84,7 +84,7 @@ class EDD_Email_Summary_Cron {
 			$next_time_string = "next {$week_start_day} 8am";
 		}
 
-		$date = new \DateTime( $next_time_string, wp_timezone() );
+		$date = new \DateTime( $next_time_string, new DateTimeZone( edd_get_timezone_id() ) );
 		wp_schedule_single_event( $date->getTimestamp(), self::CRON_EVENT_NAME );
 	}
 

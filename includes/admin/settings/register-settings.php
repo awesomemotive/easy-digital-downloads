@@ -315,7 +315,7 @@ function edd_get_registered_settings() {
 		$email_summary_schedule      = wp_next_scheduled( EDD_Email_Summary_Cron::CRON_EVENT_NAME );
 		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
 		if ( $email_summary_schedule ) {
-			$email_summary_schedule_date = \Carbon\Carbon::createFromTimestamp( $email_summary_schedule )->setTimezone( wp_timezone() );
+			$email_summary_schedule_date = \Carbon\Carbon::createFromTimestamp( $email_summary_schedule )->setTimezone( edd_get_timezone_id() );
 			/* Translators: formatted date */
 			$email_summary_schedule_text  = sprintf( __( 'The next summary email is scheduled to send on %s.', 'easy-digital-downloads' ), $email_summary_schedule_date->format( get_option( 'date_format' ) ) );
 		}
