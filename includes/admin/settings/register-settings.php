@@ -403,8 +403,8 @@ function edd_get_registered_settings() {
 					),
 					'success_page' => array(
 						'id'          => 'success_page',
-						'name'        => __( 'Receipt Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page buyers are sent to to view their receipt.<br>The <code>[edd_receipt]</code> shortcode should be on this page.', 'easy-digital-downloads' ),
+						'name'        => __( 'Success Page', 'easy-digital-downloads' ),
+						'desc'        => __( 'This is the page buyers are sent to after completing their purchases.<br>The <code>[edd_receipt]</code> shortcode should be on this page.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => $pages,
 						'chosen'      => true,
