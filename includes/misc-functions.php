@@ -1117,7 +1117,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
 			if ( $session['purchase_key'] === $order->payment_key ) {
 				$user_can_view = true;
 			}
-		} else {
+		} elseif ( empty( $order->user_id ) ) {
 			$id         = (int) filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 			$order_hash = ! empty( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : false;
 			if ( $id === (int) $order->ID && $order_hash ) {
