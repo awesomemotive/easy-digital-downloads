@@ -410,15 +410,6 @@ function edd_get_registered_settings() {
 						'chosen'      => true,
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
-					'confirmation_page'     => array(
-						'id'          => 'confirmation_page',
-						'name'        => __( 'Confirmation Page', 'easy-digital-downloads' ),
-						'desc'        => __( 'This is the page buyers are sent to after completing their purchases. The EDD Order Confirmation block should be on this page.', 'easy-digital-downloads' ),
-						'type'        => 'select',
-						'options'     => $pages,
-						'chosen'      => true,
-						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
-					),
 					'failure_page' => array(
 						'id'          => 'failure_page',
 						'name'        => __( 'Failed Transaction Page', 'easy-digital-downloads' ),
