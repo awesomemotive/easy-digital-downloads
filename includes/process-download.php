@@ -60,6 +60,28 @@ function edd_process_download() {
 	$args['has_access'] = apply_filters( 'edd_file_download_has_access', $args['has_access'], $args['payment'], $args );
 
 	if ( $args['payment'] && $args['has_access'] ) {
+
+		// We've verified that the user should have access, now see if we need to require the user to be logged in.
+		$require_login = edd_get_option( 'require_login_to_download', false );
+		if ( $require_login && ! is_user_logged_in() ) {
+			$login_page_id = edd_get_option( 'login_page', false );
+
+			$parts = parse_url( add_query_arg( array() ) );
+			wp_parse_str( $parts['query'], $file_download_args );
+
+			EDD()->session->set( 'edd_require_login_to_download_redirect', $file_download_args );
+
+			if ( empty( $login_page_id ) ) {
+				$login_page = wp_login_url( edd_get_file_download_login_redirect() );
+			} else {
+				$login_page = get_permalink( $login_page_id );
+			}
+
+			// Redirect to the login page, and have it continue the download upon successful login.
+			wp_safe_redirect( $login_page );
+			edd_die();
+		}
+
 		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $args['payment'], $args );
 
 		// Determine the download method set in settings
@@ -1075,6 +1097,53 @@ function edd_local_file_location_is_allowed( $file_details, $schemas, $requested
 
 	return apply_filters( 'edd_local_file_location_is_allowed', $should_allow, $file_details, $schemas, $requested_file );
 }
+
+/**
+ * Detect downloading a file immeidatly after a forced login.
+ *
+ * When the store requires being logged in to download files, this handles the file download after logging in.
+ * We need this otherwise the file is downloaded immediatly after successfully logging in, but the page never changes.
+ *
+ * @since 3.1
+ */
+function edd_redirect_file_download_after_login() {
+	$nonce = isset( $_GET['_nonce'] ) ? sanitize_text_field( $_GET['_nonce'] ) : false;
+
+	// No nonce provided, redirect to the homepage.
+	if ( empty( $nonce ) ) {
+		wp_safe_redirect( home_url() );
+	}
+
+	// Nonce verification failed, redirect to the homepage.
+	if ( wp_verify_nonce( $nonce, 'edd_process_file_download_after_login' ) ) {
+		wp_safe_redirect( home_url() );
+	}
+
+	$redirect_session_data = EDD()->session->get( 'edd_require_login_to_download_redirect' );
+	EDD()->session->set( 'edd_require_login_to_download_redirect', '' );
+
+	// No more file download session data, redirect to the homepage.
+	if ( empty( $redirect_session_data ) ) {
+		wp_safe_redirect( home_url() );
+	}
+
+	// Add some Javascript to download the file and then clear the query args from the page.
+	add_action( 'wp_footer', function() use ($redirect_session_data) {
+		printf('
+			<script type="text/javascript">
+			(function(){
+				setTimeout(
+					() => {
+						window.location.replace("' . home_url() . '");
+					}, 2000
+				);
+				window.location.assign("' . add_query_arg( $redirect_session_data, home_url( 'index.php' ) ) . '");
+			})();
+			</script>
+		');
+	} );
+}
+add_action( 'edd_process_file_download_after_login', 'edd_redirect_file_download_after_login', 10, 2 );
 
 /**
  * Filter removed in EDD 2.7
