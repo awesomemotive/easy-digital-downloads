@@ -105,6 +105,13 @@ function edd_process_login_form( $data ) {
 		// Check for errors and redirect if none present.
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
+			// First check to see if we're processing a login from a file download that required a login.
+			$download_require_login_redirect = EDD()->session->get( 'edd_require_login_to_download_redirect' );
+			if ( ! empty( $download_require_login_redirect ) ) {
+				$redirect_for_download = edd_get_file_download_login_redirect();
+				wp_safe_redirect( esc_url( $redirect_for_download ) );
+			}
+
 			$default_redirect_url = $data['edd_redirect'];
 			if ( has_filter( 'edd_login_redirect' ) ) {
 				$user_id = $user instanceof WP_User ? $user->ID : false;
@@ -315,3 +322,26 @@ function edd_process_register_form( $data ) {
 	}
 }
 add_action( 'edd_user_register', 'edd_process_register_form' );
+
+/**
+ * Generate a redirect URL that is used when file downloads require the user to be logged in.
+ *
+ * By default uses the homepage, appends a nonce, and an action, and returns a Nonce'd URL
+ *
+ * @since 3.1
+ *
+ * @return string The URL to use in the redirect process of logging in to download the file.
+ */
+function edd_get_file_download_login_redirect() {
+	$redirect_for_download = apply_filters( 'edd_require_login_download_redirect', home_url() );
+	$file_download_nonce   = wp_create_nonce( 'edd_process_file_download_after_login' );
+	$redirect_for_download = add_query_arg(
+		array(
+			'edd_action' => 'process_file_download_after_login',
+			'_nonce'     => $file_download_nonce,
+		),
+		$redirect_for_download
+	);
+
+	return $redirect_for_download;
+}
