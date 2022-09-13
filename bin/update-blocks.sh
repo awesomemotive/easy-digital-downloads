@@ -19,12 +19,15 @@ rm -rf languages
 rm -rf src
 rm -rf .git
 rm -rf .github
+rm -rf vendor
 rm .gitattributes
 rm .gitignore
 rm .editorconfig
 rm package-lock.json
 rm package.json
 rm readme.txt
+rm composer.json
+rm composer.lock
 
 # Reset cwd
 cd ../../
