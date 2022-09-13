@@ -596,9 +596,9 @@ function edd_purchase_form_validate_new_user() {
 		? sanitize_text_field( $_POST['edd_last'] )
 		: '';
 
-	// Sanitize user login (not strict-mode for back-compat)
-	$user_login   = isset( $_POST['edd_user_login'] )
-		? preg_replace( '/\s+/', '', sanitize_user( $_POST['edd_user_login'], false ) )
+	// Sanitize user login.
+	$user_login = isset( $_POST['edd_user_login'] )
+		? sanitize_user( $_POST['edd_user_login'] )
 		: false;
 
 	// Sanitize email address (allowed formatting only)

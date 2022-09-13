@@ -13,10 +13,14 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
+ * @since       3.0.4 Refactored to use the new stats API, returns same formatting as 2.x API.
  */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Stats;
+use EDD\Reports;
 
 /**
  * EDD_API Class
@@ -156,7 +160,6 @@ class EDD_API {
 
 		// Setup EDD_Stats instance
 		$this->stats = new EDD_Payment_Stats;
-
 	}
 
 	/**
@@ -1245,72 +1248,94 @@ class EDD_API {
 					$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'];
 					$end_date   = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
-					$stats = EDD()->payment_stats->get_sales_by_range( 'other', true, $start_date, $end_date );
+					// Force the data for the reports API.
+					$_GET['filter_from'] = $start_date;
+					$_GET['filter_to']   = $end_date;
+					$_GET['range']       = 'other';
 
-					foreach ( $stats as $sale ) {
-						$key                    = $sale['y'] . $sale['m'] . $sale['d'];
-						$sales['sales'][ $key ] = (int) $sale['count'];
-					}
+					$stats = new EDD\Stats(
+						array(
+							'revenue_type' => 'net',
+						)
+					);
+					$dates = EDD\Reports\parse_dates_for_range();
 
-					$start_date = date( 'Y-m-d', strtotime( $start_date ) );
-					$end_date   = date( 'Y-m-d', strtotime( $end_date ) );
+					$total_sales = $stats->get_order_count(
+						array(
+							'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
+							'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+						)
+					);
+
+					$start_date = $dates['start']->format( 'Y-m-d' );
+					$end_date   = $dates['end']->format( 'Y-m-d' );
 
 					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-						$d = date( 'd', strtotime( $start_date ) );
-						$m = date( 'm', strtotime( $start_date ) );
-						$y = date( 'Y', strtotime( $start_date ) );
 
-						$key = $y . $m . $d;
+						// Force the data for the reports API.
+						$_GET['filter_from'] = $start_date;
+						$_GET['filter_to']   = $start_date;
+						$_GET['range']       = 'other';
+
+						$key   = str_replace( '-', '', $start_date );
+						$dates = EDD\Reports\parse_dates_for_range();
 
 						if ( ! isset( $sales['sales'][ $key ] ) ) {
-							$sales['sales'][ $key ] = 0;
+							$sales['sales'][ $key ] = $stats->get_order_count(
+								array(
+									'start' => $dates['start']->startOfDay()->format( 'Y-m-d H:i:s' ),
+									'end'   => $dates['end']->endOfDay()->format( 'Y-m-d H:i:s' ),
+								)
+							);
 						}
 
-						$start_date = date( 'Y-m-d', strtotime( '+1 day', strtotime( $start_date ) ) );
+						$start_date = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
 					}
 
 					ksort( $sales['sales'] );
 
-					$sales['totals'] = array_sum( $sales['sales'] );
+					$sales['totals'] = $total_sales;
+
 				} else {
-					$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
-					$end_date   = $dates['year'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+					$stats = new EDD\Stats(
+						array(
+							'range'        => $args['date'],
+							'revenue_type' => 'net',
+						)
+					);
 
-					$stats = EDD()->payment_stats->get_sales_by_range( $args['date'], false, $start_date, $end_date );
-					if ( $stats instanceof WP_Error ) {
-
-						$error_message = __( 'There was an error retrieving earnings.', 'easy-digital-downloads' );
-
-						foreach ( $stats->errors as $error_key => $error_array ) {
-							if ( ! empty( $error_array[0] ) ) {
-								$error_message = $error_array[0];
-							}
-						}
-
-						$error['error'] = sprintf( '%s %s', $error_message, $args['date'] );
-					} else {
-						if ( empty( $stats ) ) {
-							$sales['sales'][ $args['date'] ] = 0;
-						} else {
-							$total_sales = 0;
-							foreach ( $stats as $date ) {
-								$total_sales += (int) $date['count'];
-							}
-							$sales['sales'][ $args['date'] ] = $total_sales;
-						}
-					}
+					$sales['sales'][ $args['date'] ] = $stats->get_order_count();
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 				$i        = 0;
+
+				$stats = new EDD\Stats();
 				foreach ( $products as $product_info ) {
-					$sales['sales'][ $i ] = array( $product_info->post_name => edd_get_download_sales_stats( $product_info->ID ) );
+					$product_order_count = $stats->get_order_item_count(
+						array(
+							'product_id' => $product_info->ID,
+						)
+					);
+
+					$sales['sales'][ $i ] = array(
+						$product_info->post_name => $product_order_count,
+					);
 					$i ++;
 				}
 			} else {
-				if ( get_post_type( $args['product'] ) == 'download' ) {
-					$product_info      = get_post( $args['product'] );
-					$sales['sales'][0] = array( $product_info->post_name => edd_get_download_sales_stats( $args['product'] ) );
+				if ( get_post_type( $args['product'] ) === 'download' ) {
+					$stats            = new EDD\Stats();
+					$product_info     = get_post( $args['product'] );
+					$order_item_count = $stats->get_order_item_count(
+						array(
+							'product_id' => $args['product'],
+						)
+					);
+
+					$sales['sales'][0] = array(
+						$product_info->post_name => $order_item_count,
+					);
 				} else {
 					$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $args['product'] );
 				}
@@ -1321,7 +1346,7 @@ class EDD_API {
 			}
 
 			return apply_filters( 'edd_api_stats_sales', $sales, $this );
-		} elseif ( $args['type'] == 'earnings' ) {
+		} elseif ( $args['type'] === 'earnings' ) {
 			if ( $args['product'] == null ) {
 				if ( $args['date'] == null ) {
 					$earnings = $this->get_default_earnings_stats( $args );
@@ -1338,96 +1363,102 @@ class EDD_API {
 						$error['error'] = __( 'Invalid or no date range specified!', 'easy-digital-downloads' );
 					}
 
-					$total = (float) 0.00;
+					$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'];
+					$end_date   = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
 
-					// Loop through the years
-					if ( ! isset( $earnings['earnings'] ) ) {
-						$earnings['earnings'] = array();
-					}
+					// Force the data for the reports API.
+					$_GET['filter_from'] = $start_date;
+					$_GET['filter_to']   = $end_date;
+					$_GET['range']       = 'other';
 
-					if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) < $dates['day_start'] ) {
-						$next_day   = mktime( 0, 0, 0, $dates['m_start'] + 1, 1, $dates['year'] );
-						$day        = date( 'd', $next_day );
-						$month      = date( 'm', $next_day );
-						$year       = date( 'Y', $next_day );
-						$date_start = $year . '-' . $month . '-' . $day;
-					} else {
-						$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'];
-					}
+					$stats = new EDD\Stats(
+						array(
+							'revenue_type'  => 'net',
+							'exclude_taxes' => ! $args['include_tax'],
+							'output'        => 'typed',
+						)
+					);
+					$dates = EDD\Reports\parse_dates_for_range();
 
-					if ( cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] ) < $dates['day_end'] ) {
-						$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
-					} else {
-						$date_end = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
-					}
+					$total_earnings = $stats->get_order_earnings(
+						array(
+							'start'  => $dates['start']->format( 'Y-m-d H:i:s' ),
+							'end'    => $dates['end']->format( 'Y-m-d H:i:s' ),
+						)
+					);
 
-					$earnings = EDD()->payment_stats->get_earnings_by_range( 'other', true, $date_start, $date_end, $args['include_tax'] );
+					$start_date = $dates['start']->format( 'Y-m-d' );
+					$end_date   = $dates['end']->format( 'Y-m-d' );
 
-					$total = 0;
+					$earnings['earnings'] = array();
+					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
 
-					foreach ( $earnings as $earning ) {
-						$temp_data['earnings'][ $earning['y'] . $earning['m'] . $earning['d'] ] = (float) $earning['total'];
-						$total += (float) $earning['total'];
-					}
+						// Force the data for the reports API.
+						$_GET['filter_from'] = $start_date;
+						$_GET['filter_to']   = $start_date;
+						$_GET['range']       = 'other';
 
-					$date_start = date( 'Y-m-d', strtotime( $date_start ) );
-					$date_end   = date( 'Y-m-d', strtotime( $date_end ) );
+						$key   = str_replace( '-', '', $start_date );
+						$dates = EDD\Reports\parse_dates_for_range();
 
-					while ( strtotime( $date_start ) <= strtotime( $date_end ) ) {
-						$d = date( 'd', strtotime( $date_start ) );
-						$m = date( 'm', strtotime( $date_start ) );
-						$y = date( 'Y', strtotime( $date_start ) );
-
-						$key = $y . $m . $d;
-
-						if ( ! isset( $temp_data['earnings'][ $key ] ) ) {
-							$temp_data['earnings'][ $key ] = 0;
+						if ( ! isset( $sales['earnings'][ $key ] ) ) {
+							$earnings['earnings'][ $key ] = $stats->get_order_earnings(
+								array(
+									'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
+									'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+								)
+							);
 						}
 
-						$date_start = date( 'Y-m-d', strtotime( '+1 day', strtotime( $date_start ) ) );
+						$start_date = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
 					}
 
-					ksort( $temp_data['earnings'] );
+					ksort( $earnings['earnings'] );
 
-					$earnings = $temp_data;
-
-					$earnings['totals'] = $total;
+					$earnings['totals'] = $total_earnings;
 				} else {
-					$date_start = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day'];
-					$date_end   = $dates['year'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
-
-					$results = EDD()->payment_stats->get_earnings_by_range( $args['date'], false, $date_start, $date_end, $args['include_tax'] );
-					if ( $results instanceof WP_Error ) {
-						$error_message = __( 'There was an error retrieving earnings.', 'easy-digital-downloads' );
-
-						foreach ( $results->errors as $error_key => $error_array ) {
-							if ( ! empty( $error_array[0] ) ) {
-								$error_message = $error_array[0];
-							}
-						}
-
-						$error['error'] = sprintf( '%s %s', $error_message, $args['date'] );
-					} else {
-						$total_earnings = 0;
-						foreach ( $results as $result ) {
-							$total_earnings += $result['total'];
-						}
-
-						$earnings['earnings'][ $args['date'] ] = edd_format_amount( $total_earnings );
-					}
+					$stats = new EDD\Stats(
+						array(
+							'range'        => $args['date'],
+							'revenue_type' => 'net',
+							'exclude_tax'  => ! $args['include_tax'],
+							'output'       => 'typed',
+						)
+					);
+					$earnings['earnings'][ $args['date'] ] = $stats->get_order_earnings();
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
+				$i        = 0;
 
-				$i = 0;
+				$stats = new EDD\Stats();
 				foreach ( $products as $product_info ) {
-					$earnings['earnings'][ $i ] = array( $product_info->post_name => edd_get_download_earnings_stats( $product_info->ID ) );
+					$product_earnings = $stats->get_order_item_earnings(
+						array(
+							'product_id' => $product_info->ID,
+							'output'     => 'typed',
+						)
+					);
+
+					$earnings['earnings'][ $i ] = array(
+						$product_info->post_name => $product_earnings,
+					);
 					$i ++;
 				}
 			} else {
-				if ( get_post_type( $args['product'] ) == 'download' ) {
-					$product_info            = get_post( $args['product'] );
-					$earnings['earnings'][0] = array( $product_info->post_name => edd_get_download_earnings_stats( $args['product'] ) );
+				if ( get_post_type( $args['product'] ) === 'download' ) {
+					$stats               = new EDD\Stats();
+					$product_info        = get_post( $args['product'] );
+					$order_item_earnings = $stats->get_order_item_earnings(
+						array(
+							'product_id' => $args['product'],
+							'output'     => 'typed',
+						)
+					);
+
+					$earnings['earnings'][0] = array(
+						$product_info->post_name => $order_item_earnings,
+					);
 				} else {
 					$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $args['product'] );
 				}
@@ -1439,18 +1470,9 @@ class EDD_API {
 
 			return apply_filters( 'edd_api_stats_earnings', $earnings, $this );
 		} elseif ( $args['type'] == 'customers' ) {
-			if ( version_compare( $edd_version, '2.3', '<' ) || ! edd_has_upgrade_completed( 'upgrade_customer_payments_association' ) ) {
-				global $wpdb;
-				$stats                                 = array();
-				$count                                 = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-				$stats['customers']['total_customers'] = $count[0];
+			$stats['customers']['total_customers'] = edd_count_customers();
 
-				return apply_filters( 'edd_api_stats_customers', $stats, $this );
-			} else {
-				$stats['customers']['total_customers'] = edd_count_customers();
-
-				return apply_filters( 'edd_api_stats_customers', $stats, $this );
-			}
+			return apply_filters( 'edd_api_stats_customers', $stats, $this );
 		} elseif ( empty( $args['type'] ) ) {
 			$stats = array_merge( $stats, $this->get_default_sales_stats() );
 			$stats = array_merge( $stats, $this->get_default_earnings_stats( $args ) );
@@ -2241,12 +2263,31 @@ class EDD_API {
 	 */
 	private function get_default_sales_stats() {
 
-		// Default sales return
-		$sales                           = array();
-		$sales['sales']['today']         = $this->stats->get_sales( 0, 'today' );
-		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
-		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
-		$sales['sales']['totals']        = edd_get_total_sales();
+		$stats = new EDD\Stats(
+			array(
+				'range'        => 'today',
+				'revenue_type' => 'net',
+			)
+		);
+		$sales['sales']['today'] = $stats->get_order_count();
+
+		$stats = new EDD\Stats(
+			array(
+				'range'        => 'this_month',
+				'revenue_type' => 'net',
+			)
+		);
+		$sales['sales']['current_month'] = $stats->get_order_count();
+
+		$stats = new EDD\Stats(
+			array(
+				'range'        => 'last_month',
+				'revenue_type' => 'net',
+			)
+		);
+		$sales['sales']['last_month'] = $stats->get_order_count();
+
+		$sales['sales']['totals'] = edd_get_total_sales();
 
 		return $sales;
 	}
@@ -2260,12 +2301,37 @@ class EDD_API {
 	 */
 	private function get_default_earnings_stats( $args ) {
 
-		// Default earnings return
-		$earnings                              = array();
-		$earnings['earnings']['today']         = $this->stats->get_earnings( 0, 'today', null, $args['include_tax'] );
-		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month', null, $args['include_tax'] );
-		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month', null, $args['include_tax'] );
-		$earnings['earnings']['totals']        = edd_get_total_earnings( $args['include_tax'] );
+		$stats  = new EDD\Stats(
+			array(
+				'range'         => 'today',
+				'exclude_taxes' => ! $args['include_tax'],
+				'revenue_type'  => 'net',
+				'output'        => 'typed',
+			)
+		);
+		$earnings['earnings']['today'] = $stats->get_order_earnings();
+
+		$stats  = new EDD\Stats(
+			array(
+				'range'         => 'this_month',
+				'exclude_taxes' => ! $args['include_tax'],
+				'revenue_type'  => 'net',
+				'output'        => 'typed',
+			)
+		);
+		$earnings['earnings']['current_month'] = $stats->get_order_earnings();
+
+		$stats  = new EDD\Stats(
+			array(
+				'range'         => 'last_month',
+				'exclude_taxes' => ! $args['include_tax'],
+				'revenue_type'  => 'net',
+				'output'        => 'typed',
+			)
+		);
+		$earnings['earnings']['last_month'] = $stats->get_order_earnings();
+
+		$earnings['earnings']['totals'] = edd_get_total_earnings( $args['include_tax'] );
 
 		return $earnings;
 	}

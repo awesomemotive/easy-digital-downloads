@@ -481,7 +481,7 @@ function edd_order_details_addresses( $order ) {
 						); // WPCS: XSS ok.
 					} else {
 						?>
-						<input type="text" name="edd_order_address[region]" class="edd-form-group__input" value="<?php echo esc_attr( $address->region ); ?>" />
+						<input type="text" id="edd_order_address_region" name="edd_order_address[region]" class="edd-form-group__input" value="<?php echo esc_attr( $address->region ); ?>" />
 						<?php
 					}
 					?>
