@@ -92,7 +92,21 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setCountry: function( event ) {
-		this.model.set( 'country', event.target.options[ event.target.selectedIndex ].value );
+		let country = event.target.options[ event.target.selectedIndex ].value;
+		let regionGlobalCheckbox = document.getElementById( "tax_rate_region_global" );
+		if ( 'all' === country ) {
+			country = '*';
+			regionGlobalCheckbox.checked  = true;
+			this.model.set( 'region', '' );
+			this.model.set( 'global', true );
+			regionGlobalCheckbox.readOnly = true;
+			regionGlobalCheckbox.disabled = true;
+		} else {
+			regionGlobalCheckbox.disabled = false;
+			regionGlobalCheckbox.readOnly = false;
+		}
+
+		this.model.set( 'country', country );
 	},
 
 	/**
@@ -118,8 +132,11 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setGlobal: function( event ) {
-		this.model.set( 'global', event.target.checked );
-		this.model.set( 'region', '' );
+		let isChecked = event.target.checked;
+		this.model.set( 'global', isChecked );
+		if ( true === isChecked ) {
+			this.model.set( 'region', '' );
+		}
 	},
 
 	/**
@@ -163,29 +180,48 @@ const TableAdd = wp.Backbone.View.extend( {
 			return;
 		}
 
+		let addingRegion  = this.model.get( 'region' );
+		let addingCountry = this.model.get( 'country' );
+		let addingGlobal  = '' === this.model.get( 'region' );
+
+		// For the purposes of this query, the * is really an empty query.
+		if ( '*' === addingCountry ) {
+			addingCountry = '';
+			addingRegion  = '';
+			addingGlobal  = false;
+		}
+
 		const existingCountryWide = this.collection.where( {
-			region: this.model.get( 'region' ),
-			country: this.model.get( 'country' ),
-			global: '' === this.model.get( 'region' ),
+			region: addingRegion,
+			country: addingCountry,
+			global: addingGlobal,
 			status: 'active',
 		} );
 
 		if ( existingCountryWide.length > 0 ) {
-			const regionString = '' === this.model.get( 'region' )
-				? ''
-				: ': ' + this.model.get( 'region' );
+			const countryString = '' === addingCountry
+				? '*'
+				: addingCountry;
 
-			const taxRateString = this.model.get( 'country' ) + regionString;
+			const regionString = '' === addingRegion
+				? ''
+				: ': ' + addingRegion;
+
+			const taxRateString = countryString + regionString;
 
 			alert( i18n.duplicateRate.replace( '%s', `"${ taxRateString }"` ) );
 
 			return;
 		}
 
-		if ( this.model.get( 'amount' ) <= 0 ) {
-			alert( i18n.emptyTax );
+		if ( this.model.get( 'amount' ) < 0 ) {
+			alert( i18n.negativeTax );
 
 			return;
+		}
+
+		if ( this.model.get( 'amount' ) == 0 ) {
+			confirm( i18n.emptyTax );
 		}
 
 		// Merge cid as ID to make this a unique model.

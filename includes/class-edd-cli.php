@@ -1263,6 +1263,18 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::error( __( 'The tax rates custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
+		WP_CLI::line( __( 'Checking for default tax rate', 'easy-digital-downloads' ) );
+		$default_tax_rate = edd_get_option( 'tax_rate', false );
+		if ( ! empty( $default_tax_rate ) ) {
+			WP_CLI::line( __( 'Migrating default tax rate', 'easy-digital-downloads' ) );
+			edd_add_tax_rate(
+				array(
+					'scope'  => 'global',
+					'amount' => floatval( $default_tax_rate ),
+				)
+			);
+		}
+
 		// Migrate user addresses first.
 		$tax_rates = get_option( 'edd_tax_rates', array() );
 

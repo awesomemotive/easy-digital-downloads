@@ -58,6 +58,13 @@ function edd_get_admin_url( $args = array() ) {
  */
 function edd_is_test_mode() {
 	$ret = edd_get_option( 'test_mode', false );
+
+	// Override any setting with the constant.
+	if ( edd_is_test_mode_forced() ) {
+		$ret = true;
+	}
+
+	// At the end of the day, the filter still has the final say.
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 

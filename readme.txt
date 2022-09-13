@@ -2,12 +2,11 @@
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee, zkawesome
-Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.0.2.1
+Stable Tag: 3.0.4
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -238,6 +237,34 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.0.4, September 6, 2022 =
+* Fix: Stripe Pro license key detection was not working on older versions of the Stripe Pro gateway.
+* Fix: Hour by hour graphs that spanned more than one day would group all data into the first day.
+* Fix: Reports that span more than one year would group stats by month only.
+* Fix: Some of the report tiles were not accurately accounting for refunded orders.
+* Fix: The purchase receipt was limited to only showing 30 items.
+* Fix: When using persistent object caching, discount codes would not always update immediately.
+* Fix: When manually adding a new order, region based tax rates were not updating.
+* Fix: Improved migration of order address data when checking tax rates of previous orders.
+* Fix: The `stats` API endpoint data did not match the reports data. This improves the iOS app accuracy.
+* Fix: The template modification checks for 3.0 compatibility were checking for modifications too often.
+* Fix: Guest customers using an email address associated with an existing user were not always connected.
+* Fix: When editing an order's address, it was not always saving changes.
+* Dev: Actions were added to the `edd_add_customer` and `edd_update_customer` functions.
+
+= 3.0.3, August 16, 2022 =
+* New: Added support for Global Tax rates as a fallback with the new Tax Rates UI.
+* Fix: The old 'fallback tax rate' was not imported as a new tax rate.
+* Fix: Improved discount code validation with product restrictions and requirements.
+* Fix: Viewing a custom report with a date range over 2 days could throw an undefined variable notice.
+* Fix: Single priced downloads were showing incorrect stats in reports.
+* Fix: Adding a download to a new order would not let you manually set prices in Safari.
+* Fix: When an order with a discount code is deleted, the discount code's usage count is decreased.
+* Fix: The total refund amount tile was incorrectly calculating the relative percentage.
+* Fix: The customer table upgrade assumed the table prefix hadn't been changed after installation of EDD 2.x.
+* Fix: The 3.0 migration could incorrectly identify a price ID as invalid and set it to the default price ID.
+* Fix: The file download log could produce an notice if a file had been deleted from a product.
 
 = 3.0.2.1, July 28, 2022 =
 * Fix: Upgrade warning notices were showing incorrectly for some sites.

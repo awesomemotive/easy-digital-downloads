@@ -124,23 +124,6 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			'id'   => absint( $customer_id ),
 		) );
 
-		// Actions
-		$actions = array(
-			'view' => '<a href="' . esc_url( $customer_url . '#edd_general_emails' ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
-		);
-
-		// Non-primary email actions
-		if ( empty( $item['type'] ) || 'primary' !== $item['type'] ) {
-			$delete_url = wp_nonce_url( edd_get_admin_url( array(
-				'page'       => 'edd-customers',
-				'view'       => 'overview',
-				'id'         => urlencode( $customer_id ),
-				'email'      => rawurlencode( $email ),
-				'edd_action' => 'customer-remove-email'
-			) ), 'edd-remove-customer-email' );
-			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		}
-
 		// State
 		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
 			switch ( $status ) {
@@ -158,7 +141,51 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		}
 
 		// Concatenate and return
-		return '<strong><a class="row-title" href="' . esc_url( $customer_url . '#edd_general_emails' ) . '">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '#edd_general_emails">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $this->get_row_actions( $item ) );
+	}
+
+	/**
+	 * Gets the row actions for the customer email address.
+	 *
+	 * @since 3.0
+	 * @param array $item
+	 * @return array
+	 */
+	private function get_row_actions( $item ) {
+		// Link to customer
+		$customer_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => urlencode( $item['customer_id'] ),
+			)
+		);
+
+		// Actions
+		$actions = array(
+			'view' => '<a href="' . esc_url( $customer_url ) . '#edd_general_emails">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
+		);
+
+		// Non-primary email actions
+		if ( ! empty( $item['email'] ) && ( empty( $item['type'] ) || 'primary' !== $item['type'] ) ) {
+			$delete_url = wp_nonce_url( edd_get_admin_url( array(
+				'page'       => 'edd-customers',
+				'view'       => 'overview',
+				'id'         => urlencode( $item['customer_id'] ),
+				'email'      => rawurlencode( $item['email'] ),
+				'edd_action' => 'customer-remove-email',
+			) ), 'edd-remove-customer-email' );
+			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		}
+
+		/**
+		 * Filter the customer email address row actions.
+		 *
+		 * @since 3.0
+		 * @param array $actions The array of row actions.
+		 * @param array $item    The specific item (customer email address).
+		 */
+		return apply_filters( 'edd_customer_email_address_row_actions', $actions, $item );
 	}
 
 	/**
@@ -337,15 +364,24 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$search = $this->get_search();
 		$args   = array( 'status'  => $this->get_status() );
 
-		// Email
+		// Account for search stripping the "+" from emails.
+		if ( strpos( $search, ' ' ) ) {
+			$original_query = $search;
+			$search         = str_replace( ' ', '+', $search );
+			if ( ! is_email( $search ) ) {
+				$search = $original_query;
+			}
+		}
+
+		// Email.
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-		// Address ID
+		// Address ID.
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 
-		// Customer ID
+		// Customer ID.
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
 
@@ -355,10 +391,10 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			$args['search_columns'] = array( 'email' );
 		}
 
-		// Parse pagination
+		// Parse pagination.
 		$this->args = $this->parse_pagination_args( $args );
 
-		// Get the data
+		// Get the data.
 		$emails = edd_get_customer_email_addresses( $this->args );
 
 		if ( ! empty( $emails ) ) {
