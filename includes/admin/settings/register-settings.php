@@ -863,7 +863,7 @@ function edd_get_registered_settings() {
 					'disable_email_summary' => array(
 						'id'    => 'disable_email_summary',
 						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
-						'desc'  => '<a href="https://easydigitaldownloads.com/docs/email-settings/#summaries">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
+						'desc'  => '<a target="_blank" href="https://easydigitaldownloads.com/docs/email-settings/#summaries">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
 						'check' => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description',
 					),
