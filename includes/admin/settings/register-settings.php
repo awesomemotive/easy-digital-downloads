@@ -1510,7 +1510,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
-		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] <= 0 ) {
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] < 0 ) {
 			continue;
 		}
 
@@ -2720,7 +2720,8 @@ function edd_tax_rates_callback( $args ) {
 			/* translators: Tax rate country code */
 			'duplicateRate' => esc_html__( 'Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another.', 'easy-digital-downloads' ),
 			'emptyCountry'  => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
-			'emptyTax'      => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'negativeTax'   => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'emptyTax'      => esc_html__( 'Are you sure you want to add a 0% tax rate?', 'easy-digital-downloads' ),
 		),
 	) );
 
