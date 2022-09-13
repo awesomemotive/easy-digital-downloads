@@ -315,7 +315,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0.3' );
+			define( 'EDD_VERSION', '3.0.4' );
 		}
 
 		// Plugin Root File.
@@ -742,6 +742,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/downloads/recalculations.php';
 		require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/customers/customer-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';

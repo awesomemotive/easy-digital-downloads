@@ -63,7 +63,20 @@ function edd_add_order_adjustment( $data ) {
 	// Instantiate a query object
 	$order_adjustments = new EDD\Database\Queries\Order_Adjustment();
 
-	return $order_adjustments->add_item( $data );
+	$order_adjustment_id = $order_adjustments->add_item( $data );
+
+	if ( ! empty( $order_adjustment_id ) ) {
+		/**
+		 * Action that runs when an order item is successfully added.
+		 *
+		 * @since 3.1
+		 * @param int   Order adjustment ID.
+		 * @param array Array of order adjustment data.
+		 */
+		do_action( 'edd_order_adjustment_added', $order_adjustment_id, $data );
+	}
+
+	return $order_adjustment_id;
 }
 
 /**
@@ -119,7 +132,22 @@ function edd_delete_order_adjustment( $order_adjustment_id = 0 ) {
 function edd_update_order_adjustment( $order_adjustment_id = 0, $data = array() ) {
 	$order_adjustments = new EDD\Database\Queries\Order_Adjustment();
 
-	return $order_adjustments->update_item( $order_adjustment_id, $data );
+	$previous_adjustment      = edd_get_order_adjustment( $order_adjustment_id );
+	$order_adjustment_updated = $order_adjustments->update_item( $order_adjustment_id, $data );
+
+	if ( ! empty( $order_adjustment_updated ) ) {
+		/**
+		 * Action that runs when an order item is updated.
+		 *
+		 * @since 3.1
+		 * @param int                         The order adjustment ID.
+		 * @param array                       The array of data to update.
+		 * @param EDD\Orders\Order_Adjustment The original order adjustment object.
+		 */
+		do_action( 'edd_order_adjustment_updated', $order_adjustment_id, $data, $previous_adjustment );
+	}
+
+	return $order_adjustment_updated;
 }
 
 /**

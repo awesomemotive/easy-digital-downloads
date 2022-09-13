@@ -116,26 +116,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$status = $this->get_status();
 		$name   = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
 
-		$view_url = edd_get_admin_url(
-			array(
-				'page' => 'edd-customers',
-				'view' => 'overview',
-				'id'   => absint( $item['id'] ),
-			)
-		);
-		$logs_url = edd_get_admin_url(
-			array(
-				'page'     => 'edd-tools',
-				'tab'      => 'logs',
-				'customer' => absint( $item['id'] ),
-			)
-		);
-		$actions  = array(
-			'view'   => '<a href="' . esc_url( $view_url ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>',
-			'logs'   => '<a href="' . esc_url( $logs_url ) . '">' . __( 'Logs', 'easy-digital-downloads' ) . '</a>',
-			'delete' => '<a href="' . esc_url( $view_url . '#edd_general_delete' ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
-		);
-
 		$item_status = ! empty( $item['status'] )
 			? $item['status']
 			: 'active';
@@ -159,8 +139,62 @@ class EDD_Customer_Reports_Table extends List_Table {
 		// Get the customer's avatar
 		$avatar = get_avatar( $item['email'], 32 );
 
+		// View URL
+		$view_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => urlencode( $item['id'] ),
+			)
+		);
+
 		// Concatenate and return
-		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $this->get_row_actions( $item ) );
+	}
+
+	/**
+	 * Gets the row actions for the customer.
+	 *
+	 * @since 3.0
+	 * @param array $item
+	 * @return array
+	 */
+	private function get_row_actions( $item ) {
+		$view_url   = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => urlencode( $item['id'] ),
+			)
+		);
+		$logs_url   = edd_get_admin_url(
+			array(
+				'page'     => 'edd-tools',
+				'tab'      => 'logs',
+				'customer' => urlencode( $item['id'] ),
+			)
+		);
+		$delete_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'delete',
+				'id'   => urlencode( $item['id'] ),
+			)
+		);
+		$actions    = array(
+			'view'   => '<a href="' . esc_url( $view_url ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>',
+			'logs'   => '<a href="' . esc_url( $logs_url ) . '">' . __( 'Logs', 'easy-digital-downloads' ) . '</a>',
+			'delete' => '<a href="' . esc_url( $delete_url ) . '#edd_general_delete">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>',
+		);
+
+		/**
+		 * Filter the customer row actions.
+		 *
+		 * @since 3.0
+		 * @param array $actions The array of row actions.
+		 * @param array $item    The specific item (customer).
+		 */
+		return apply_filters( 'edd_customer_row_actions', $actions, $item );
 	}
 
 	/**
@@ -298,17 +332,26 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$search = $this->get_search();
 		$args   = array( 'status' => $this->get_status() );
 
-		// Email search
+		// Account for search stripping the "+" from emails.
+		if ( strpos( $search, ' ' ) ) {
+			$original_query = $search;
+			$search         = str_replace( ' ', '+', $search );
+			if ( ! is_email( $search ) ) {
+				$search = $original_query;
+			}
+		}
+
+		// Email search.
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-			// Customer ID
+			// Customer ID.
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['id'] = trim( str_replace( 'c:', '', $search ) );
 
-			// User ID
+			// User ID.
 		} elseif ( strpos( $search, 'user:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
 		} elseif ( strpos( $search, 'u:' ) !== false ) {
@@ -323,9 +366,25 @@ class EDD_Customer_Reports_Table extends List_Table {
 		// Parse pagination
 		$this->args = $this->parse_pagination_args( $args );
 
-		// Get the data
-		$customers  = edd_get_customers( $this->args );
+		if ( is_email( $search ) ) {
+			$customer_emails = new EDD\Database\Queries\Customer_Email_Address();
+			$customer_ids    = $customer_emails->query(
+				array(
+					'fields' => 'customer_id',
+					'email'  => $search,
+				)
+			);
 
+			$customers = edd_get_customers(
+				array(
+					'id__in' => $customer_ids,
+				)
+			);
+		} else {
+			$customers  = edd_get_customers( $this->args );
+		}
+
+		// Get the data
 		if ( ! empty( $customers ) ) {
 			foreach ( $customers as $customer ) {
 				$data[] = array(
