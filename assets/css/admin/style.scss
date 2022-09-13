@@ -2018,36 +2018,6 @@ body.download_page_edd-reports {
 	background-color: #444;
 }
 
-.edd-vertical-sections .edd-legacy-label {
-	display: inline-block;
-	position: absolute;
-	top: 11px;
-	right: 6px;
-}
-
-.edd-reports-section-label {
-	display: inline-block;
-	position: absolute;
-	left: 50%;
-	top: 0;
-	-webkit-transform: translate(-50%, 0);
-	transform: translate(-50%, 0);
-	padding: 5px 10px;
-	border: 1px solid #c3c4c7;
-	border-top: none;
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
-	font-size: 11px;
-	z-index: 10;
-}
-
-@media screen and (max-width: 782px) {
-
-	.edd-reports-section-label {
-		display: none;
-	}
-}
-
 /* Keeping this rule for Software Licensing Reports */
 .edd-reports-wrapper .postbox h2,
 .edd-reports-wrapper .postbox h3 {
