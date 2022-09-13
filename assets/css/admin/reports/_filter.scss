@@ -17,6 +17,7 @@
 
 		.graph-option-section {
 			display: flex;
+			align-items: center;
 		}
 
 		.edd-date-range-options {
@@ -30,13 +31,100 @@
 		}
 
 		.edd-date-range-dates {
-			display: inline-block;
+			display: flex;
+			align-items: center;
 			border: 1px solid #8c8f94;
 			border-left: none;
 			padding: 4px 10px;
 			margin-left: -5px;
 			border-top-right-radius: 4px;
 			border-bottom-right-radius: 4px;
+			cursor: pointer;
+			&.hidden {
+				display: none;
+			}
+		}
+
+		.edd-date-main-icon {
+			margin-right: 4px;
+		}
+
+		.edd-date-range-selected-date {
+			display: inline-block;
+		}
+
+		.edd-date-range-relative-dates {
+			display: flex;
+			align-items: center;
+			margin-left: 10px;
+		}
+
+		.edd-date-range-selected-relative-date {
+			position: relative;
+			display: flex;
+			align-items: center;
+			border: 1px solid #8c8f94;
+			padding: 4px 2px 4px 6px;
+			margin-left: 10px;
+			border-radius: 4px;
+			cursor: pointer;
+			.arrow-down {
+				width: 16px;
+				height: auto;
+				margin-left: 6px;
+				margin-top: 2px;
+				vertical-align: middle;
+			}
+			&.opened {
+				.edd-date-range-relative-dropdown {
+					display: block;
+				}
+			}
+		}
+
+		.edd-date-range-relative-dropdown {
+			position: absolute;
+			z-index: 99;
+			width: auto;
+			width: 425px;
+			left: 50%;
+			top: 100%;
+			margin-top: 10px;
+			transform: translateX( -50% );
+			background-color: #fff;
+			border: 1px solid #8c8f94;
+			border-radius: 4px;
+			-webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15);
+			-moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15);
+			box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15);
+			display: none;
+			&:after {
+				content: '';
+				position: absolute;
+				width: 0;
+				height: 0;
+				left: 50%;
+				top: -10px;
+				transform: translateX( -50% );
+				border-style: solid;
+				border-width: 10px 10px 0 10px;
+				border-color: #8c8f94 transparent transparent transparent;
+			}
+			ul li {
+				display: flex;
+				align-items: center;
+				padding: 2px 10px;
+				opacity: 0.85;
+				&:hover, &.active {
+					cursor: pointer;
+					color: var( --wp-admin-theme-color );
+					opacity: 1;
+				}
+				.date-range-name {
+					margin-right: 20px;
+					width: 110px;
+				}
+			}
 		}
 
 	}

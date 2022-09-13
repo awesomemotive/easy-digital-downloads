@@ -2959,6 +2959,7 @@ class Stats {
 		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 		$date_filters = Reports\get_dates_filter_options();
+		$filter       = Reports\get_filter_value( 'dates' );
 
 		foreach ( $date_filters as $range => $label ) {
 			$this->date_ranges[ $range ]          = Reports\parse_dates_for_range( $range );

@@ -38,12 +38,70 @@ const EDD_Reports = {
 			const	select = $( this ),
 				date_range_options = select.parent().siblings( '.edd-date-range-options' );
 
+			$('.edd-date-range-dates').addClass( 'hidden' );
+
 			if ( 'other' === select.val() ) {
 				date_range_options.removeClass( 'screen-reader-text' );
 			} else {
 				date_range_options.addClass( 'screen-reader-text' );
+				$('.edd-date-range-dates').removeClass( 'hidden' );
+				$( '.edd-date-range-selected-date span' ).addClass( 'hidden' )
+				$( '.edd-date-range-selected-date span[data-range="' + select.val() + '"]' ).removeClass( 'hidden' )
 			}
 		} );
+
+		$( '.edd-date-range-dates' ).on( 'click', function( event ) {
+			event.preventDefault();
+			$( 'select.edd-graphs-date-options' ).trigger( 'focus' );
+		});
+
+		/**
+		 * Relative date ranges.
+		 */
+
+			const relativeDateRangesParent = $( '.edd-date-range-selected-relative-date' );
+
+			// Open relative daterange dropdown.
+			relativeDateRangesParent.on( 'click', function( event ) {
+				event.preventDefault();
+				$( this ).toggleClass( 'opened' );
+			});
+
+			// If a click event is triggered on body.
+			$( document ).on( 'click', function( e ) {
+				EDD_Reports.close_relative_ranges_dropdown( e.target );
+			});
+
+			// If the Escape key is pressed.
+			$( document ).on( 'keydown', function( event ) {
+				const key = event.key;
+				if ( key === "Escape" ) {
+					EDD_Reports.close_relative_ranges_dropdown();
+				}
+			});
+
+			// Select relative daterange.
+			$( '.edd-date-range-relative-dropdown li' ).on( 'click', function() {
+				$('.edd-graphs-relative-date-options').val( $(this).data( 'range' ) ).trigger( 'change' );
+			});
+
+			$('.edd-graphs-relative-date-options').on( 'change', function() {
+				var selected_range_name = $( '.edd-date-range-relative-dropdown li[data-range="' + $( this ).val() + '"] .date-range-name' ).text();
+				$( '.edd-date-range-selected-relative-range-name' ).html( selected_range_name )
+			} )
+
+	},
+
+	close_relative_ranges_dropdown: function( target = false ) {
+		var relativeDateRangesParent = $( '.edd-date-range-selected-relative-date' );
+
+		if ( ! relativeDateRangesParent.hasClass( 'opened' ) ) {
+			return false;
+		}
+
+		if ( false === target || ( ! relativeDateRangesParent.is( target ) && ! relativeDateRangesParent.has( target ).length ) ) {
+			relativeDateRangesParent.removeClass( 'opened' );
+		}
 	},
 
 	customers_export: function() {
