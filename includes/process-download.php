@@ -1099,7 +1099,7 @@ function edd_local_file_location_is_allowed( $file_details, $schemas, $requested
 }
 
 /**
- * Detect downloading a file immeidatly after a forced login.
+ * Detect downloading a file immediately after a forced login.
  *
  * When the store requires being logged in to download files, this handles the file download after logging in.
  * We need this otherwise the file is downloaded immediatly after successfully logging in, but the page never changes.
