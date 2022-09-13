@@ -1115,7 +1115,7 @@ function edd_redirect_file_download_after_login() {
 	}
 
 	// Nonce verification failed, redirect to the homepage.
-	if ( wp_verify_nonce( $nonce, 'edd_process_file_download_after_login' ) ) {
+	if ( ! wp_verify_nonce( $nonce, 'edd_process_file_download_after_login' ) ) {
 		wp_safe_redirect( home_url() );
 	}
 
