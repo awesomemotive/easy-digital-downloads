@@ -957,6 +957,7 @@ class EDD_Payment {
 							'discount'     => $item['discount'],
 							'tax'          => $item['tax'],
 							'total'        => $item['price'],
+							'status'       => ! empty( $item['status'] ) ? $item['status'] : $this->status,
 						) );
 					}
 				}
@@ -1035,6 +1036,7 @@ class EDD_Payment {
 			'discount'   => 0,
 			'tax'        => 0.00,
 			'fees'       => array(),
+			'status'     => $this->status,
 		);
 
 		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args, $download->ID ), $defaults );
@@ -2347,6 +2349,7 @@ class EDD_Payment {
 								'discount'     => $item['discount'],
 								'tax'          => $item['tax'],
 								'total'        => $item['price'],
+								'status'       => ! empty( $item['status'] ) ? $item->status : $this->status,
 							) );
 
 							$new_tax += $item['tax'];
