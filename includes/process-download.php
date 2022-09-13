@@ -1107,7 +1107,7 @@ function edd_local_file_location_is_allowed( $file_details, $schemas, $requested
  * @since 3.1
  */
 function edd_redirect_file_download_after_login() {
-	$nonce = isset( $_GET['_nonce'] ) ? sanitize_text_field( $_GET['_nonce'] ) : false;
+	$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : false;
 
 	// No nonce provided, redirect to the homepage.
 	if ( empty( $nonce ) ) {
@@ -1122,7 +1122,7 @@ function edd_redirect_file_download_after_login() {
 	$redirect_session_data = EDD()->session->get( 'edd_require_login_to_download_redirect' );
 	EDD()->session->set( 'edd_require_login_to_download_redirect', '' );
 
-	// No more file download session data, redirect to the homepage.
+	// No file download session data, redirect to the homepage.
 	if ( empty( $redirect_session_data ) ) {
 		wp_safe_redirect( home_url() );
 	}
@@ -1134,8 +1134,8 @@ function edd_redirect_file_download_after_login() {
 			(function(){
 				setTimeout(
 					() => {
-						window.location.replace("' . home_url() . '");
-					}, 2000
+						window.location.replace( window.location.href.split(/[?#]/)[0] );
+					}, 1000
 				);
 				window.location.assign("' . add_query_arg( $redirect_session_data, home_url( 'index.php' ) ) . '");
 			})();
