@@ -127,8 +127,10 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			$this->done = false;
 			return true;
 		} else {
-			update_option( 'edd_earnings_total', 0 );
+			update_option( 'edd_earnings_total', 0, false );
+			update_option( 'edd_earnings_total_without_tax', 0, false );
 			delete_transient( 'edd_earnings_total' );
+			delete_transient( 'edd_earnings_total_without_tax' );
 			delete_transient( 'edd_estimated_monthly_stats' . true );
 			delete_transient( 'edd_estimated_monthly_stats' . false );
 			$this->delete_data( 'edd_reset_tables_to_truncate' );

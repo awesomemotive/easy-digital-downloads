@@ -137,6 +137,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 		// Clear the total earnings cache
 		delete_transient( 'edd_earnings_total' );
+		delete_transient( 'edd_earnings_total_without_tax' );
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );

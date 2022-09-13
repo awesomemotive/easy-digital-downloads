@@ -41,6 +41,18 @@ class Tax_Rates extends Base {
 	public function get_data() {
 		$offset = ( $this->step - 1 ) * $this->per_step;
 
+		if ( 1 === $this->step ) {
+			$default_tax_rate = edd_get_option( 'tax_rate', false );
+			if ( ! empty( $default_tax_rate ) ) {
+				edd_add_tax_rate(
+					array(
+						'scope'  => 'global',
+						'amount' => floatval( $default_tax_rate ),
+					)
+				);
+			}
+		}
+
 		$results = get_option( 'edd_tax_rates', array() );
 		$results = array_slice( $results, $offset, $this->per_step, true );
 

@@ -55,6 +55,14 @@ class Template extends Base {
 	public function update_receipt_template() {
 		$access_type = get_filesystem_method();
 
+		$last_checked = get_transient( 'edd-sc-receipt-check' );
+		if ( false !== $last_checked ) {
+			return false;
+		}
+
+		// Only run this once a day.
+		set_transient( 'edd-sc-receipt-check', DAY_IN_SECONDS );
+
 		// Retrieve the path to the template being used.
 		$template = edd_locate_template( 'shortcode-receipt.php' );
 
@@ -86,16 +94,20 @@ class Template extends Base {
 
 				$get_post_call_exists = strstr( $contents, 'get_post( $edd_receipt_args[\'id\'] )' );
 
+				if ( false === $get_post_call_exists ) {
+					return;
+				}
+
 				$contents = str_replace( 'get_post( $edd_receipt_args[\'id\'] )', 'edd_get_payment( $edd_receipt_args[\'id\'] )', $contents );
 				$updated  = $wp_filesystem->put_contents( $template, $contents );
 
-				// Only display a notice if a `get_post()` call exists.
-				if ( ! $updated && $get_post_call_exists ) {
+				// Only display a notice if we could not update the file.
+				if ( ! $updated ) {
 					add_action( 'admin_notices', function() use ( $template ) {
 						?>
 						<div class="notice notice-error">
 							<p><?php esc_html_e( 'Easy Digital Downloads failed to automatically update your purchase receipt template. This update is necessary for the purchase receipt to display correctly.', 'easy-digital-downloads' ); ?></p>
-							<p><?php printf( __( 'This update must be completed manually. Please click %shere%s for more information.', 'easy-digital-downloads' ), '<a href="https://docs.easydigitaldownloads.com/article/2061-template-update-for-3-0">', '</a>' ); ?></p>
+							<p><?php printf( __( 'This update must be completed manually. Please click %shere%s for more information.', 'easy-digital-downloads' ), '<a href="https://easydigitaldownloads.com/development/2018/06/21/breaking-changes-to-orders-in-easy-digital-downloads-3-0/">', '</a>' ); ?></p>
 							<p><?php esc_html_e( 'The file that needs to be updated is located at:', 'easy-digital-downloads' ); ?> <code><?php echo esc_html( $template ); ?></code></p>
 						</div>
 						<?php
