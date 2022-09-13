@@ -333,15 +333,13 @@ add_action( 'edd_user_register', 'edd_process_register_form' );
  * @return string The URL to use in the redirect process of logging in to download the file.
  */
 function edd_get_file_download_login_redirect() {
-	$redirect_for_download = apply_filters( 'edd_require_login_download_redirect', home_url() );
-	$file_download_nonce   = wp_create_nonce( 'edd_process_file_download_after_login' );
+	$login_redirect_page_id = edd_get_option( 'login_redirect_page', false );
+	$redirect_base          = ! empty( $login_redirect_page_id ) ? get_permalink( $login_redirect_page_id ) : home_url();
+
 	$redirect_for_download = add_query_arg(
-		array(
-			'edd_action' => 'process_file_download_after_login',
-			'_nonce'     => $file_download_nonce,
-		),
-		$redirect_for_download
+		array( 'edd_action' => 'process_file_download_after_login' ),
+		apply_filters( 'edd_get_file_download_login_redirect_base', $redirect_base )
 	);
 
-	return $redirect_for_download;
+	return wp_nonce_url( $redirect_for_download, 'edd_process_file_download_after_login' );
 }
