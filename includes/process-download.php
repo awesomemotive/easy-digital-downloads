@@ -72,7 +72,7 @@ function edd_process_download() {
 			EDD()->session->set( 'edd_require_login_to_download_redirect', $file_download_args );
 
 			if ( empty( $login_page_id ) ) {
-				$login_page = wp_login_url( edd_get_file_download_login_redirect() );
+				$login_page = wp_login_url( edd_get_file_download_login_redirect( $file_download_args ) );
 			} else {
 				$login_page = get_permalink( $login_page_id );
 			}
@@ -1107,19 +1107,20 @@ function edd_local_file_location_is_allowed( $file_details, $schemas, $requested
  * @since 3.1
  */
 function edd_redirect_file_download_after_login() {
-	$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : false;
+	$token = isset( $_GET['_token'] ) ? sanitize_text_field( $_GET['_token'] ) : false;
 
 	// No nonce provided, redirect to the homepage.
-	if ( empty( $nonce ) ) {
-		wp_safe_redirect( home_url() );
-	}
-
-	// Nonce verification failed, redirect to the homepage.
-	if ( ! wp_verify_nonce( $nonce, 'edd_process_file_download_after_login' ) ) {
+	if ( empty( $token ) ) {
 		wp_safe_redirect( home_url() );
 	}
 
 	$redirect_session_data = EDD()->session->get( 'edd_require_login_to_download_redirect' );
+
+	// Nonce verification failed, redirect to the homepage.
+	if ( ! \EDD\Utils\Tokenizer::is_token_valid( $token, $redirect_session_data ) ) {
+		wp_safe_redirect( home_url() );
+	}
+
 	EDD()->session->set( 'edd_require_login_to_download_redirect', '' );
 
 	// No file download session data, redirect to the homepage.
