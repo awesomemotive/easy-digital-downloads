@@ -200,13 +200,10 @@ const EDD_Settings = {
 					},
 					beforeSend: function() {
 						emailSummaryTestNotice.empty();
-						emailSummaryTestButton.removeClass( 'updated-message' ).addClass( 'updating-message' ).prop( 'disabled', true );
+						emailSummaryTestButton.addClass( 'updating-message' ).prop( 'disabled', true );
 					},
 					success: function( data ) {
 						emailSummaryTestNotice.html( '<div class="updated ' + data.status + '"><p>' + data.message + '</p></div>' );
-						if( 'success' === data.status ) {
-							emailSummaryTestButton.addClass( 'updated-message' );
-						}
 					},
 				} ).fail( function( response ) {
 					if ( window.console && window.console.log ) {
