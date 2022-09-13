@@ -20,6 +20,17 @@
 			align-items: center;
 		}
 
+		.edd-date-range-picker[data-range='other'] {
+			.edd-graphs-date-options {
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+			}
+
+			.edd-date-range-dates, .edd-date-range-relative-dates {
+				display: none;
+			}
+		}
+
 		.edd-date-range-options {
 			display: inline-block;
 			margin: 10px 0;
@@ -35,6 +46,7 @@
 			align-items: center;
 			border: 1px solid #8c8f94;
 			border-left: none;
+			color: #2c3338;
 			padding: 4px 10px;
 			margin-left: -5px;
 			border-top-right-radius: 4px;
@@ -57,6 +69,9 @@
 			display: flex;
 			align-items: center;
 			margin-left: 10px;
+			&.hidden {
+				display: none;
+			}
 		}
 
 		.edd-date-range-selected-relative-date {
@@ -65,6 +80,7 @@
 			align-items: center;
 			border: 1px solid #8c8f94;
 			padding: 4px 2px 4px 6px;
+			color: #2c3338;
 			margin-left: 10px;
 			border-radius: 4px;
 			cursor: pointer;
@@ -85,8 +101,7 @@
 		.edd-date-range-relative-dropdown {
 			position: absolute;
 			z-index: 99;
-			width: auto;
-			width: 425px;
+			width: 420px;
 			left: 50%;
 			top: 100%;
 			margin-top: 10px;
@@ -94,9 +109,9 @@
 			background-color: #fff;
 			border: 1px solid #8c8f94;
 			border-radius: 4px;
-			-webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15);
-			-moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15);
-			box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15);
+			-webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);
+			-moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);
+			box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);
 			display: none;
 			&:after {
 				content: '';
@@ -124,6 +139,32 @@
 					margin-right: 20px;
 					width: 110px;
 				}
+			}
+		}
+
+		@media screen and ( max-width: 480px ) {
+			.edd-date-range-picker {
+				flex-wrap: wrap;
+			}
+
+			.edd-graphs-date-options {
+				width: 100%;
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+			}
+
+			.edd-date-range-dates {
+				width: 100%;
+				margin-top: 10px;
+				border: 1px solid #8c8f94;
+				margin-left: unset;
+				border-radius: 4px;
+				font-size: 16px;
+				padding: 8px 10px;
+			}
+
+			.edd-date-range-relative-dates {
+				display: none;
 			}
 		}
 
