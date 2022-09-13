@@ -743,103 +743,11 @@ function parse_relative_dates_for_range( $range = null, $relative_range = null, 
 		$relative_range = get_relative_dates_filter_range();
 	}
 
-	switch ( $range ) {
-		case 'this_month':
-			$dates = array(
-				'start' => $date->copy()->startOfMonth(),
-				'end'   => $date->copy(),
-			);
-			break;
-
-		case 'last_month':
-			$dates = array(
-				'start' => $date->copy()->subMonthNoOverflow( 1 )->startOfMonth(),
-				'end'   => $date->copy()->subMonthNoOverflow( 1 )->endOfMonth(),
-			);
-			break;
-
-		case 'today':
-			$dates = array(
-				'start' => $date->copy()->startOfDay(),
-				'end'   => $date->copy()->endOfDay(),
-			);
-			break;
-
-		case 'yesterday':
-			$dates = array(
-				'start' => $date->copy()->subDay( 1 )->startOfDay(),
-				'end'   => $date->copy()->subDay( 1 )->endOfDay(),
-			);
-			break;
-
-		case 'this_week':
-			$dates = array(
-				'start' => $date->copy()->startOfWeek(),
-				'end'   => $date->copy(),
-			);
-			break;
-
-		case 'last_week':
-			$dates = array(
-				'start' => $date->copy()->subWeek( 1 )->startOfWeek(),
-				'end'   => $date->copy()->subWeek( 1 )->endOfWeek(),
-			);
-			break;
-
-		case 'last_30_days':
-			$dates = array(
-				'start' => $date->copy()->subDay( 30 )->startOfDay(),
-				'end'   => $date->copy()->endOfDay(),
-			);
-			break;
-
-		case 'this_quarter':
-			$dates = array(
-				'start' => $date->copy()->startOfQuarter(),
-				'end'   => $date->copy(),
-			);
-			break;
-
-		case 'last_quarter':
-			$dates = array(
-				'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
-				'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
-			);
-			break;
-
-		case 'this_year':
-			$dates = array(
-				'start' => $date->copy()->startOfYear(),
-				'end'   => $date->copy(),
-			);
-			break;
-
-		case 'last_year':
-			$dates = array(
-				'start' => $date->copy()->subYear( 1 )->startOfYear(),
-				'end'   => $date->copy()->subYear( 1 )->endOfYear(),
-			);
-			break;
-		case 'other':
-			$dates_from_report = get_filter_value( 'dates' );
-
-			if ( ! empty( $dates_from_report ) ) {
-				$start = $dates_from_report['from'];
-				$end   = $dates_from_report['to'];
-			} else {
-				$start = $end = 'now';
-			}
-
-			$dates = array(
-				'start' => EDD()->utils->date( $start, edd_get_timezone_id(), false )->subMonth( 1 )->startOfDay(),
-				'end'   => EDD()->utils->date( $end, edd_get_timezone_id(), false )->subMonth( 1 )->endOfDay(),
-			);
-			break;
-	}
+	$dates = parse_dates_for_range( $range, $date, false );
 
 	switch ( $relative_range ) {
 		case 'previous_period':
-			$days_diff = $dates['start']->copy()->diffInDays( $dates['end'], true );
+			$days_diff = $dates['start']->copy()->diffInDays( $dates['end'], true ) + 1;
 			$dates     = array(
 				'start' => $dates['start']->copy()->subDays( $days_diff ),
 				'end'   => $dates['end']->copy()->subDays( $days_diff ),
@@ -1313,13 +1221,12 @@ function display_dates_filter() {
 		)
 	);
 
-	// $relative_dates = \EDD\Reports\parse_relative_dates_for_range( $selected_range );
-
 	// Output fields
 	?>
-	<div class="edd-date-range-picker graph-option-section">
+	<div class="edd-date-range-picker graph-option-section" data-range="<?php echo esc_attr( $selected_range ); ?>">
 		<?php echo $range_select; ?>
-		<div class="edd-date-range-dates<?php echo esc_attr( ( 'other' === $selected_range ? ' hidden' : '' ) ); ?>">
+		<!-- DATE RANGES -->
+		<div class="edd-date-range-dates">
 			<span class="dashicons dashicons-calendar edd-date-main-icon"></span>
 			<div class="edd-date-range-selected-date">
 				<?php
@@ -1333,27 +1240,35 @@ function display_dates_filter() {
 				?>
 			</div>
 		</div>
-		<div class="edd-date-range-relative-dates<?php echo esc_attr( ( 'other' === $selected_range ? ' hidden' : '' ) ); ?>">
+		<!-- RELATIVE DATE RANGES -->
+		<div class="edd-date-range-relative-dates">
+			<div class="hidden"><?php echo $relative_range_select; ?></div>
+
 			<?php echo esc_html__( 'compared to', 'easy-digital-downloads' ); ?>
+
 			<div class="edd-date-range-selected-relative-date">
-				<div class="hidden"><?php echo $relative_range_select; ?></div>
 				<span class="edd-date-range-selected-relative-range-name"><?php echo esc_html( $relative_range_options[ $selected_relative_range ] ); ?></span>
 				<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-chevron-down.svg' ); ?>" class="arrow-down">
+
+				<!-- RELATIVE DATE RANGES DROPDOWN -->
 				<div class="edd-date-range-relative-dropdown">
-					<ul>
-					<?php
-					foreach ( $relative_range_options as $relative_range_key => $relative_range_name ) :
-						$relative_range_dates = \EDD\Reports\parse_relative_dates_for_range( $selected_range, $relative_range_key );
-						$selected_range_class = ( $selected_relative_range === $relative_range_key ) ? 'active' : '';
-						?>
-						<li class="<?php echo esc_attr( $selected_range_class ); ?>" data-range="<?php echo esc_attr( $relative_range_key ); ?>">
-							<span class="date-range-name"><?php echo esc_html( $relative_range_options[ $relative_range_key ] ); ?></span>
-							<span class="date-range-dates"><?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['start'] )->format( $date_format ) ); ?> - <?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['end'] )->format( $date_format ) ); ?></span>
-						</li>
-						<?php
-					endforeach;
-					?>
-					</ul>
+					<?php foreach ( $range_options as $range_key => $range_name ) : ?>
+						<!-- SINGLE DATE RANGE PARENT -->
+						<ul data-range="<?php echo esc_attr( $range_key ); ?>" class="<?php echo esc_attr( ( $range_key !== $selected_range ? 'hidden' : '' ) ); ?>">
+							<?php
+							foreach ( $relative_range_options as $relative_range_key => $relative_range_name ) :
+								$relative_range_dates = \EDD\Reports\parse_relative_dates_for_range( $range_key, $relative_range_key );
+								$selected_range_class = ( $selected_relative_range === $relative_range_key ) ? 'active' : '';
+								?>
+								<li class="<?php echo esc_attr( $selected_range_class ); ?>" data-range="<?php echo esc_attr( $relative_range_key ); ?>">
+									<span class="date-range-name"><?php echo esc_html( $relative_range_options[ $relative_range_key ] ); ?></span>
+									<span class="date-range-dates"><?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['start'] )->format( $date_format ) ); ?> - <?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['end'] )->format( $date_format ) ); ?></span>
+								</li>
+								<?php
+							endforeach;
+							?>
+						</ul>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>

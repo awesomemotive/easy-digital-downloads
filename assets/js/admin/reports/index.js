@@ -38,13 +38,10 @@ const EDD_Reports = {
 			const	select = $( this ),
 				date_range_options = select.parent().siblings( '.edd-date-range-options' );
 
-			$('.edd-date-range-dates').addClass( 'hidden' );
-
 			if ( 'other' === select.val() ) {
 				date_range_options.removeClass( 'screen-reader-text' );
 			} else {
 				date_range_options.addClass( 'screen-reader-text' );
-				$('.edd-date-range-dates').removeClass( 'hidden' );
 				$( '.edd-date-range-selected-date span' ).addClass( 'hidden' )
 				$( '.edd-date-range-selected-date span[data-range="' + select.val() + '"]' ).removeClass( 'hidden' )
 			}
@@ -67,6 +64,33 @@ const EDD_Reports = {
 				$( this ).toggleClass( 'opened' );
 			});
 
+			// When selecting relative daterange from dropdown.
+			$( '.edd-date-range-relative-dropdown li' ).on( 'click', function() {
+				var range = $(this).data( 'range' );
+				$('.edd-graphs-relative-date-options').val( range ).trigger( 'change' );
+			});
+
+			// Detect when HTML select for relative date range is changed.
+			$('.edd-graphs-relative-date-options').on( 'change', function() {
+				// Get relative date range name.
+				var range               = $( this ).val();
+				var selected_range_item = $( '.edd-date-range-relative-dropdown li[data-range="' + range + '"]' );
+				var selected_range_name = selected_range_item.find( '.date-range-name' ).first().text();
+
+				$( '.edd-date-range-selected-relative-range-name' ).html( selected_range_name )
+				$( '.edd-date-range-relative-dropdown li.active' ).removeClass( 'active' );
+				selected_range_item.addClass( 'active' );
+			} )
+
+			// Detect when HTML select for normal date range is changed.
+			$('.edd-graphs-date-options').on( 'change', function() {
+				var range = $( this ).val();
+
+				$( '.edd-date-range-picker' ).attr( 'data-range', range );
+				$( '.edd-date-range-relative-dropdown ul' ).hide();
+				$( '.edd-date-range-relative-dropdown ul[data-range="' + range + '"]' ).show();
+			} )
+
 			// If a click event is triggered on body.
 			$( document ).on( 'click', function( e ) {
 				EDD_Reports.close_relative_ranges_dropdown( e.target );
@@ -79,16 +103,6 @@ const EDD_Reports = {
 					EDD_Reports.close_relative_ranges_dropdown();
 				}
 			});
-
-			// Select relative daterange.
-			$( '.edd-date-range-relative-dropdown li' ).on( 'click', function() {
-				$('.edd-graphs-relative-date-options').val( $(this).data( 'range' ) ).trigger( 'change' );
-			});
-
-			$('.edd-graphs-relative-date-options').on( 'change', function() {
-				var selected_range_name = $( '.edd-date-range-relative-dropdown li[data-range="' + $( this ).val() + '"] .date-range-name' ).text();
-				$( '.edd-date-range-selected-relative-range-name' ).html( selected_range_name )
-			} )
 
 	},
 
