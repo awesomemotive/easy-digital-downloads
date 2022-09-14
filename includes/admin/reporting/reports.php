@@ -377,11 +377,12 @@ function edd_register_overview_report( $reports ) {
 						'scales' => array(
 							'yAxes' => array(
 								array(
-									'id'       => 'earnings-y',
-									'type'     => 'linear',
-									'display'  => true,
-									'position' => 'left',
-									'ticks'    => array(
+									'id'        => 'earnings-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
 										'formattingType' => 'format',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
@@ -391,18 +392,19 @@ function edd_register_overview_report( $reports ) {
 									),
 								),
 								array(
-									'id'       => 'sales-y',
-									'type'     => 'linear',
-									'position' => 'right',
-									'display'  => true,
-									'ticks'    => array(
+									'id'        => 'sales-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
 									),
 									'gridLines' => array(
-										'display'     => true,
-										'color' => 'rgba(0,0,0,0.02)',
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
 									),
 								),
 							),
@@ -827,35 +829,72 @@ function edd_register_downloads_report( $reports ) {
 						$earnings = array_values( $earnings );
 
 						return array(
-							'sales'    => $sales,
 							'earnings' => $earnings,
+							'sales'    => $sales,
 						);
 					},
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
-							'sales'    => array(
-								'label'                => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
-								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
-								'borderCapStyle'       => 'round',
-								'borderJoinStyle'      => 'round',
-								'pointRadius'          => 4,
-								'pointHoverRadius'     => 6,
-								'pointBackgroundColor' => 'rgb(255,255,255)',
-							),
 							'earnings' => array(
 								'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'earnings-y',
+							),
+							'sales'    => array(
+								'label'                => __( 'Sales', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
+								'fill'                 => true,
+								'borderWidth'          => 2,
+								'borderCapStyle'       => 'round',
+								'borderJoinStyle'      => 'round',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'sales-y',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'id'        => 'earnings-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'format',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+									),
+								),
+								array(
+									'id'        => 'sales-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
+									),
+								),
 							),
 						),
 					),
@@ -1061,8 +1100,8 @@ function edd_register_refunds_report( $reports ) {
 						'datasets' => array(
 							'amount' => array(
 								'label'                => __( 'Amount', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
@@ -1073,10 +1112,10 @@ function edd_register_refunds_report( $reports ) {
 							),
 							'number' => array(
 								'label'                => __( 'Number', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
 								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
+								'borderWidth'          => 2,
 								'borderCapStyle'       => 'round',
 								'borderJoinStyle'      => 'round',
 								'pointRadius'          => 4,
@@ -1088,25 +1127,34 @@ function edd_register_refunds_report( $reports ) {
 						'scales' => array(
 							'yAxes' => array(
 								array(
-									'id'       => 'amount-y',
-									'type'     => 'linear',
-									'display'  => true,
-									'position' => 'left',
-									'ticks'    => array(
+									'id'        => 'amount-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
 										'formattingType' => 'format',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
 									),
+									'gridLines' => array(
+										'display' => true,
+									),
 								),
 								array(
-									'id'       => 'number-y',
-									'type'     => 'linear',
-									'display'  => true,
-									'position' => 'right',
-									'ticks'    => array(
+									'id'        => 'number-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
 									),
 								),
 							),
@@ -1518,35 +1566,72 @@ function edd_register_payment_gateways_report( $reports ) {
 						$earnings = array_values( $earnings );
 
 						return array(
-							'sales'    => $sales,
 							'earnings' => $earnings,
+							'sales'    => $sales,
 						);
 					},
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
-							'sales'    => array(
-								'label'                => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
-								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
-								'borderCapStyle'       => 'round',
-								'borderJoinStyle'      => 'round',
-								'pointRadius'          => 4,
-								'pointHoverRadius'     => 6,
-								'pointBackgroundColor' => 'rgb(255,255,255)',
-							),
 							'earnings' => array(
 								'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'earnings-y',
+							),
+							'sales'    => array(
+								'label'                => __( 'Sales', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
+								'fill'                 => true,
+								'borderWidth'          => 2,
+								'borderCapStyle'       => 'round',
+								'borderJoinStyle'      => 'round',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'sales-y',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'id'        => 'earnings-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'format',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+									),
+								),
+								array(
+									'id'        => 'sales-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
+									),
+								),
 							),
 						),
 					),
@@ -1975,10 +2060,11 @@ function edd_register_file_downloads_report( $reports ) {
 						'datasets' => array(
 							'file_downloads' => array(
 								'label'                => __( 'File Downloads', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
+								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
@@ -1991,6 +2077,7 @@ function edd_register_file_downloads_report( $reports ) {
 									'display'  => true,
 									'position' => 'left',
 									'ticks'    => array(
+										'maxTicksLimit'  => 5,
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
@@ -2307,13 +2394,29 @@ function edd_register_discounts_report( $reports ) {
 							'datasets' => array(
 								'discount_usage' => array(
 									'label'                => __( 'Discount Usage', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgb(24,126,244)',
-									'backgroundColor'      => 'rgba(24,126,244,0.05)',
+									'borderColor'          => 'rgba(24,126,244,0.75)',
+									'backgroundColor'      => 'rgba(24,126,244,0.1)',
 									'fill'                 => true,
 									'borderWidth'          => 2,
+									'type'                 => 'currency',
 									'pointRadius'          => 4,
 									'pointHoverRadius'     => 6,
 									'pointBackgroundColor' => 'rgb(255,255,255)',
+								),
+							),
+							'scales' => array(
+								'yAxes' => array(
+									array(
+										'type'     => 'linear',
+										'display'  => true,
+										'position' => 'left',
+										'ticks'    => array(
+											'maxTicksLimit'  => 2,
+											'formattingType' => 'integer',
+											'suggestedMin'   => 0,
+											'beginAtZero'    => true,
+										),
+									),
 								),
 							),
 						),
@@ -2537,10 +2640,11 @@ function edd_register_customer_report( $reports ) {
 						'datasets' => array(
 							'customers' => array(
 								'label'                => __( 'New Customers', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
+								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
@@ -2553,6 +2657,7 @@ function edd_register_customer_report( $reports ) {
 									'display'  => true,
 									'position' => 'left',
 									'ticks'    => array(
+										'maxTicksLimit'  => 5,
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
