@@ -350,8 +350,8 @@ function edd_register_overview_report( $reports ) {
 						'datasets' => array(
 							'earnings' => array(
 								'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
@@ -362,10 +362,10 @@ function edd_register_overview_report( $reports ) {
 							),
 							'sales'    => array(
 								'label'                => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
 								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
+								'borderWidth'          => 2,
 								'borderCapStyle'       => 'round',
 								'borderJoinStyle'      => 'round',
 								'pointRadius'          => 4,
@@ -386,16 +386,23 @@ function edd_register_overview_report( $reports ) {
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
 									),
+									'gridLines' => array(
+										'display' => true,
+									),
 								),
 								array(
 									'id'       => 'sales-y',
 									'type'     => 'linear',
-									'display'  => true,
 									'position' => 'right',
+									'display'  => true,
 									'ticks'    => array(
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display'     => true,
+										'color' => 'rgba(0,0,0,0.02)',
 									),
 								),
 							),
