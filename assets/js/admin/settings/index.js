@@ -203,7 +203,14 @@ const EDD_Settings = {
 						emailSummaryTestButton.addClass( 'updating-message' ).prop( 'disabled', true );
 					},
 					success: function( data ) {
-						emailSummaryTestNotice.html( '<div class="updated ' + data.status + '"><p>' + data.message + '</p></div>' );
+						if ( 'error' == data.status ) {
+							emailSummaryTestNotice.html( '<div class="updated ' + data.status + '"><p>' + data.message + '</p></div>' );
+						} else {
+							emailSummaryTestButton.addClass( 'updated-message' );
+							setTimeout( function() {
+								emailSummaryTestButton.removeClass( 'updated-message' );
+							}, 3000 );
+						}
 					},
 				} ).fail( function( response ) {
 					if ( window.console && window.console.log ) {
