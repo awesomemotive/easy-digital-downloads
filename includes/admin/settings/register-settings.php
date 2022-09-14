@@ -860,13 +860,6 @@ function edd_get_registered_settings() {
 						'desc'  => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
 						'type'  => 'textarea',
 					),
-					'disable_email_summary' => array(
-						'id'    => 'disable_email_summary',
-						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
-						'desc'  => '<a target="_blank" href="https://easydigitaldownloads.com/docs/email-settings/#summaries">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
-						'check' => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
-						'type'  => 'checkbox_description',
-					),
 					'email_summary_buttons' => array(
 						'id'   => 'email_summary_buttons',
 						'name' => '',
@@ -876,6 +869,13 @@ function edd_get_registered_settings() {
 							<div id="edd-send-test-summary-notice"></div>
 						',
 						'type' => 'descriptive_text',
+					),
+					'disable_email_summary' => array(
+						'id'    => 'disable_email_summary',
+						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
+						'desc'  => '<a target="_blank" href="https://easydigitaldownloads.com/docs/email-settings/#summaries">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
+						'check' => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
+						'type'  => 'checkbox_description',
 					),
 				),
 			) ),
