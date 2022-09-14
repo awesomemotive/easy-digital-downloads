@@ -239,7 +239,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @covers: edd_get_file_download_login_redirect
 	 */
 	public function test_get_file_download_login_redirect_no_login_redirect_page() {
-		$this->assertTrue( 0 === strpos( edd_get_file_download_login_redirect(), home_url() ) );
+		$this->assertTrue( 0 === strpos( edd_get_file_download_login_redirect( array( 'foo' => 'bar' ) ), home_url() ) );
 	}
 
 	/**
@@ -256,7 +256,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 		);
 
 		edd_update_option( 'login_redirect_page', $login_redirect_page_id );
-		$this->assertTrue( 0 === strpos( edd_get_file_download_login_redirect(), get_permalink( $login_redirect_page_id ) ) );
+		$this->assertTrue( 0 === strpos( edd_get_file_download_login_redirect( array( 'foo' => 'bar' ) ), get_permalink( $login_redirect_page_id ) ) );
 		edd_delete_option( 'login_redirect_page' );
 	}
 }
