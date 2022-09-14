@@ -447,7 +447,7 @@ function edd_customer_delete( $args = array() ) {
 	if ( $customer->id > 0 ) {
 
 		$payments_array = explode( ',', $customer->payment_ids );
-		$success        = edd_delete_customer( $customer->id );
+		$success        = edd_destroy_customer( $customer->id );
 
 		if ( $success ) {
 
@@ -455,7 +455,7 @@ function edd_customer_delete( $args = array() ) {
 
 				// Remove all payments, logs, etc
 				foreach ( $payments_array as $payment_id ) {
-					edd_delete_purchase( $payment_id, false, true );
+					edd_destroy_order( $payment_id, false, true );
 				}
 
 			} else {
