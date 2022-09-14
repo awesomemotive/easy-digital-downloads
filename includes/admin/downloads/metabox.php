@@ -70,7 +70,7 @@ function edd_download_metabox_fields() {
 		'_edd_quantities_disabled',
 		'edd_product_notes',
 		'_edd_default_price_id',
-		'_edd_bundled_products_conditions'
+		'_edd_bundled_products_conditions',
 	);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
@@ -182,6 +182,22 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 	return array_values( array_unique( $products ) );
 }
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
+
+/**
+ * Sanitize bundled products conditions on save
+ *
+ * @since 3.1
+ *
+ * @param array $bundled_products_conditions
+ * @return array
+ */
+function edd_sanitize_bundled_products_conditions_save( $bundled_products_conditions = array() ) {
+	return array_combine(
+		range( 1, count( $bundled_products_conditions ) ),
+		array_values( $bundled_products_conditions )
+	);
+}
+add_filter( 'edd_metabox_save__edd_bundled_products_conditions', 'edd_sanitize_bundled_products_conditions_save' );
 
 /**
  * Don't save blank rows.
