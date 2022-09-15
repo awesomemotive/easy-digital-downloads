@@ -455,7 +455,7 @@ function edd_customer_delete( $args = array() ) {
 
 				// Remove all payments, logs, etc
 				foreach ( $payments_array as $payment_id ) {
-					edd_destroy_order( $payment_id, false, true );
+					edd_destroy_order( $payment_id );
 				}
 
 			} else {
