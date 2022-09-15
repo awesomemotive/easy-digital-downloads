@@ -112,7 +112,7 @@ class EDD_Email_Summary_Cron {
 	 * @return void
 	 */
 	public function settings_changed( $option_name, $old_value, $new_value ) {
-		if ( ! in_array( $option_name, array( 'edd_settings', 'start_of_week' ), true ) ) {
+		if ( ! in_array( $option_name, array( 'edd_settings', 'start_of_week', 'timezone_string', 'gmt_offset' ), true ) ) {
 			return;
 		}
 
