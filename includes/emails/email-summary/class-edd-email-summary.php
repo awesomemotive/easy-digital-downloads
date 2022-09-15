@@ -372,9 +372,7 @@ class EDD_Email_Summary {
 		$email_blurbs = new EDD_Email_Summary_Blurb();
 		$next_blurb   = false;
 
-		if ( ! $this->test_mode ) {
 			$next_blurb = $email_blurbs->get_next();
-		}
 
 		// Prepare email.
 		$email_body = $this->build_email_template( $next_blurb );

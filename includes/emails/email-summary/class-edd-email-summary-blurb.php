@@ -61,27 +61,24 @@ class EDD_Email_Summary_Blurb {
 	 * @return array
 	 */
 	public function fetch_blurbs() {
-		$blurbs = array();
+		$blurbs       = array();
+		$request_body = false;
 
-		$res = wp_safe_remote_get(
-			self::BLURBS_ENDPOINT_URL,
-			array(
-				'sslverify' => false, // @todo - Remove!
-			)
-		);
+		$request = wp_safe_remote_get( self::BLURBS_ENDPOINT_URL );
 
-		if ( is_wp_error( $res ) ) {
-			edd_debug_log( __( 'Error while retrieving Email Summary Blurbs', 'easy-digital-downloads' ), true ); // @todo - Add exact error response!
-			return $blurbs;
+		// @todo  - Detect first response code, before redirect!
+		if ( ! is_wp_error( $request ) && 200 === wp_remote_retrieve_response_code( $request ) ) {
+			$request_body = wp_remote_retrieve_body( $request );
+			$blurbs       = json_decode( $request_body, true );
 		}
 
-		$body = wp_remote_retrieve_body( $res );
-
-		if ( empty( $body ) ) {
-			return $blurbs;
+		if ( empty( $request_body ) ) {
+			// HTTP Request for blurbs is empty, fallback to local .json file.
+			$fallback_json = wp_json_file_decode( EDD_PLUGIN_DIR . 'includes/admin/promos/email-summary/blurbs.json', array( 'associative' => true ) );
+			if ( ! empty( $fallback_json ) ) {
+				$blurbs = $fallback_json;
+			}
 		}
-
-		$blurbs = json_decode( $body, true );
 
 		return $blurbs;
 	}
