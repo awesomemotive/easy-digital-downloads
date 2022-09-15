@@ -7,12 +7,9 @@
 			<!--[if !mso]><!-->
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
 			<!--<![endif]-->
-
-			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 		</head>
 		<style>
 			@media only screen and (max-width: 480px) {
-
 				body {
 					max-width: 320px;
 				}
