@@ -1135,7 +1135,7 @@ function edd_redirect_file_download_after_login() {
 			(function(){
 				setTimeout(
 					() => {
-						window.location.replace( window.location.href.split(/[?#]/)[0] );
+						window.location.assign( window.location.href.split(/[?#]/)[0] );
 					}, 1000
 				);
 				window.location.assign("' . add_query_arg( $redirect_session_data, home_url( 'index.php' ) ) . '");
