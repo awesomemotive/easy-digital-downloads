@@ -141,5 +141,18 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	}
 
 	return $user;
+}
 
+add_filter( 'login_url', 'edd_update_login_url' );
+/**
+ * If a login page has been set in the EDD settings,
+ * update the WordPress login URL.
+ *
+ * @param string $url
+ * @return string
+ */
+function edd_update_login_url( $url ) {
+	$login_page = edd_get_option( 'login_page', false );
+
+	return $login_page ? get_permalink( $login_page ) : $url;
 }
