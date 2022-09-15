@@ -184,7 +184,7 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
 
 /**
- * Sanitize bundled products conditions on save
+ * Sanitize bundled products conditions on save.
  *
  * @since 3.1
  *
