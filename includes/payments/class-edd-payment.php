@@ -957,6 +957,7 @@ class EDD_Payment {
 							'discount'     => $item['discount'],
 							'tax'          => $item['tax'],
 							'total'        => $item['price'],
+							'status'       => ! empty( $item['status'] ) ? $item['status'] : $this->status,
 						) );
 					}
 				}
@@ -990,14 +991,6 @@ class EDD_Payment {
 
 		$customer = new EDD_Customer( $this->customer_id );
 		$customer->recalculate_stats();
-
-		$order_items = edd_get_order_items( array(
-			'order_id' => $this->ID,
-			'fields'   => 'product_id',
-		) );
-		foreach ( $order_items as $item_id ) {
-			edd_recalculate_download_sales_earnings( $item_id );
-		}
 
 		/**
 		 * Update the payment in the object cache
@@ -1035,6 +1028,7 @@ class EDD_Payment {
 			'discount'   => 0,
 			'tax'        => 0.00,
 			'fees'       => array(),
+			'status'     => $this->status,
 		);
 
 		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args, $download->ID ), $defaults );
@@ -2347,6 +2341,7 @@ class EDD_Payment {
 								'discount'     => $item['discount'],
 								'tax'          => $item['tax'],
 								'total'        => $item['price'],
+								'status'       => ! empty( $item['status'] ) ? $item->status : $this->status,
 							) );
 
 							$new_tax += $item['tax'];
