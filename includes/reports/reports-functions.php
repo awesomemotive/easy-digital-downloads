@@ -615,7 +615,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_month':
 			$dates = array(
 				'start' => $date->copy()->startOfMonth(),
-				'end'   => $date->copy(),
+				'end'   => $date->copy()->endOfDay(),
 			);
 			break;
 
@@ -643,7 +643,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_week':
 			$dates = array(
 				'start' => $date->copy()->startOfWeek(),
-				'end'   => $date->copy(),
+				'end'   => $date->copy()->endOfDay(),
 			);
 			break;
 
@@ -664,7 +664,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_quarter':
 			$dates = array(
 				'start' => $date->copy()->startOfQuarter(),
-				'end'   => $date->copy(),
+				'end'   => $date->copy()->endOfDay(),
 			);
 			break;
 
@@ -678,7 +678,7 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 		case 'this_year':
 			$dates = array(
 				'start' => $date->copy()->startOfYear(),
-				'end'   => $date->copy(),
+				'end'   => $date->copy()->endOfDay(),
 			);
 			break;
 
