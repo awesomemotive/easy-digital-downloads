@@ -1035,14 +1035,14 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
-		$this->query_vars['status']            = array( 'complete', 'refunded', 'partially_refunded' );
+		$this->query_vars['status']            = array( 'complete', 'partially_refunded' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
 		$function = $this->get_amount_column_and_function( array(
 			'column_prefix'      => $this->query_vars['table'],
-			'accepted_functions' => array( 'COUNT', 'AVG' )
+			'accepted_functions' => array( 'COUNT', 'AVG' ),
 		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
@@ -1059,12 +1059,12 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
-		$join = $currency = '';
+		$join     = "INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) AND edd_o.status IN('complete','partially_refunded') AND edd_o.type = 'sale' ";
+		$currency = '';
 		if ( ! empty( $country ) || ! empty( $region ) ) {
 			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
 		}
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
-			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
 			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
 		}
 
@@ -1107,7 +1107,7 @@ class Stats {
 			} );
 		} else {
 			$result = null === $result[0]->total
-				? 0.00
+				? 0
 				: absint( $result[0]->total );
 		}
 
