@@ -60,11 +60,12 @@ const EDD_Reports = {
 			      relativeDateRangesDropdown = $( '.edd-date-range-relative-dropdown' );
 
 			// Detect when HTML select for normal date range is changed.
-			$('.edd-graphs-date-options').on( 'change', function() {
+			$( '.edd-graphs-date-options' ).on( 'change', function() {
 				var range          = $( this ).val();
-				var relative_range = $('.edd-graphs-relative-date-options').val();
+				var relative_range = $( '.edd-date-range-selected-date span[data-range="' + range + '"]' ).data( 'default-relative-range' );
 
 				$( '.edd-date-range-picker' ).attr( 'data-range', range );
+				$( '.edd-graphs-relative-date-options' ).val( relative_range ).trigger( 'change' );
 
 				// Get relative date ranges from backend.
 				$.ajax( {

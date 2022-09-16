@@ -511,6 +511,39 @@ function get_dates_filter_options() {
 }
 
 
+/**
+ * Retrieves the default relative range key for a specific range.
+ *
+ * @since 3.1
+ *
+ * @return string Relative date range key.
+ */
+function get_default_relative_range( $range ) {
+
+	switch ( $range ) {
+		case 'this_month':
+		case 'last_month':
+			$relative_range = 'previous_month';
+			break;
+
+		case 'this_quarter':
+		case 'last_quarter':
+			$relative_range = 'previous_quarter';
+			break;
+
+		case 'this_year':
+		case 'last_year':
+			$relative_range = 'previous_year';
+			break;
+
+		default:
+			$relative_range = 'previous_period';
+			break;
+	}
+
+	return $relative_range;
+}
+
 
 /**
  * Retrieves key/label pairs of relative date filter options for use in a drop-down.
@@ -531,14 +564,7 @@ function get_relative_dates_filter_options() {
 		);
 	}
 
-	/**
-	 * Filters the list of key/label pairs of relative date filter options.
-	 *
-	 * @since 3.1
-	 *
-	 * @param array $date_options Date filter options.
-	 */
-	return apply_filters( 'edd_report_relative_date_options', $options );
+	return $options;
 }
 
 /**
@@ -1264,8 +1290,14 @@ function display_dates_filter() {
 				foreach ( $range_options as $range_key => $range_name ) :
 					$range_dates          = \EDD\Reports\parse_dates_for_range( $range_key );
 					$selected_range_class = ( $selected_range !== $range_key ) ? 'hidden' : '';
+					$start_date           = edd_get_edd_timezone_equivalent_date_from_utc( $range_dates['start'] )->format( $date_format );
+					$end_date             = edd_get_edd_timezone_equivalent_date_from_utc( $range_dates['end'] )->format( $date_format );
+					$label                = $start_date;
+					if ( $start_date !== $end_date ) {
+						$label = $start_date . ' - ' . $end_date;
+					}
 					?>
-					<span class="<?php echo esc_attr( $selected_range_class ); ?>" data-range="<?php echo esc_attr( $range_key ); ?>"><?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $range_dates['start'] )->format( $date_format ) ); ?> - <?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $range_dates['end'] )->format( $date_format ) ); ?></span>
+					<span class="<?php echo esc_attr( $selected_range_class ); ?>" data-range="<?php echo esc_attr( $range_key ); ?>" data-default-relative-range="<?php echo \EDD\Reports\get_default_relative_range( $range_key ); ?>"><?php echo esc_html( $label ); ?></span>
 					<?php
 				endforeach;
 				?>
