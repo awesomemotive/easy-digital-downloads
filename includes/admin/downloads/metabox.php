@@ -399,26 +399,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 	$default_price_id     = edd_get_default_variable_price( $post_id );
 	$currency_position    = edd_get_option( 'currency_position', 'before' );
 	$custom_price_options = isset( $wp_filter['edd_download_price_option_row'] ) ? true : false;
-
-	// Run our advanced settings now, so we know if we need to display the settings.
-	// Output buffer so that the headers run, so we can log them and use them later
-	ob_start();
-	if ( has_action( 'edd_download_price_table_head' ) ) {
-		do_action_deprecated( 'edd_download_price_table_head', array( $post_id ), '2.10', 'edd_download_price_option_row' );
-	}
-	ob_end_clean();
-
-	ob_start();
-	$found_fields = isset( $wp_filter['edd_download_price_table_row'] ) ? $wp_filter['edd_download_price_table_row'] : false;
-	if ( ! empty( $found_fields->callbacks ) ) {
-		if ( 1 !== count( $found_fields->callbacks ) ) {
-			do_action_deprecated( 'edd_download_price_table_row', array( $post_id, $key, $args ), '2.10', 'edd_download_price_option_row' );
-		} else {
-			do_action( 'edd_download_price_table_row', $post_id, $key, $args );
-		}
-	}
-	$show_advanced = ob_get_clean();
-?>
+	?>
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
 			<?php printf( __( 'Price ID: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . esc_html( $key ) . '</span>' ); ?>
@@ -426,7 +407,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 		</span>
 		<?php
 		$actions = array();
-		if ( ! empty( $show_advanced ) || $custom_price_options ) {
+		if ( $custom_price_options ) {
 			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -492,48 +473,19 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 	</div>
 
 	<?php
-		/**
-		 * Intercept extension-specific settings and rebuild the markup
-		 */
-		if ( ! empty( $show_advanced ) || $custom_price_options ) {
-			?>
+	if ( $custom_price_options ) {
+		?>
 
-			<div class="edd-custom-price-option-sections-wrap">
+		<div class="edd-custom-price-option-sections-wrap">
+			<div class="edd-custom-price-option-sections">
 				<?php
-				$elements = str_replace(
-					array(
-						'<td>',
-						'<td ',
-						'</td>',
-						'<th>',
-						'<th ',
-						'</th>',
-						'class="times"',
-						'class="signup_fee"',
-					),
-					array(
-						'<span class="edd-custom-price-option-section">',
-						'<span ',
-						'</span>',
-						'<label class="edd-legacy-setting-label">',
-						'<label ',
-						'</label>',
-						'class="edd-recurring-times times"', // keep old class for back compat
-						'class="edd-recurring-signup-fee signup_fee"' // keep old class for back compat
-					),
-					$show_advanced
-				);
+					do_action( 'edd_download_price_option_row', $post_id, $key, $args );
 				?>
-				<div class="edd-custom-price-option-sections">
-					<?php
-						echo $elements;
-						do_action( 'edd_download_price_option_row', $post_id, $key, $args );
-					?>
-				</div>
 			</div>
+		</div>
 
-			<?php
-		}
+		<?php
+	}
 }
 add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 4 );
 
@@ -1383,61 +1335,3 @@ function edd_render_promo_metabox() {
 
 	echo wp_kses_post( $rendered );
 }
-
-/**
- * Internal use only: This is to help with https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
- *
- * This function takes any hooked functions for edd_download_price_table_head and re-registers them into the edd_download_price_table_row
- * action. It will also de-register any original table_row data, so that labels appear before their setting, then re-registers the table_row.
- *
- * @since 2.8
- *
- * @param $arg1
- * @param $arg2
- * @param $arg3
- *
- * @return void
- */
-function edd_hijack_edd_download_price_table_head( $arg1, $arg2, $arg3 ) {
-	global $wp_filter;
-
-	$found_fields  = isset( $wp_filter['edd_download_price_table_row'] )  ? $wp_filter['edd_download_price_table_row']  : false;
-	$found_headers = isset( $wp_filter['edd_download_price_table_head'] ) ? $wp_filter['edd_download_price_table_head'] : false;
-
-	$re_register = array();
-
-	if ( ! $found_fields && ! $found_headers ) {
-		return;
-	}
-
-	foreach ( $found_fields->callbacks as $priority => $callbacks ) {
-		if ( -1 === $priority ) {
-			continue; // Skip our -1 priority so we don't break the interwebs
-		}
-
-		if ( is_object( $found_headers ) && property_exists( $found_headers, 'callbacks' ) && array_key_exists( $priority, $found_headers->callbacks ) ) {
-
-			// De-register any row data.
-			foreach ( $callbacks as $callback ) {
-				$re_register[ $priority ][] = $callback;
-				remove_action( 'edd_download_price_table_row', $callback['function'], $priority, $callback['accepted_args'] );
-			}
-
-			// Register any header data.
-			foreach( $found_headers->callbacks[ $priority ] as $callback ) {
-				if ( is_callable( $callback['function'] ) ) {
-					add_action( 'edd_download_price_table_row', $callback['function'], $priority, 1 );
-				}
-			}
-		}
-
-	}
-
-	// Now that we've re-registered our headers first...re-register the inputs
-	foreach ( $re_register as $priority => $callbacks ) {
-		foreach ( $callbacks as $callback ) {
-			add_action( 'edd_download_price_table_row', $callback['function'], $priority, $callback['accepted_args'] );
-		}
-	}
-}
-add_action( 'edd_download_price_table_row', 'edd_hijack_edd_download_price_table_head', -1, 3 );

@@ -276,7 +276,6 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		// Add the customer
 		$customer_id = edd_add_customer( $args );
 
-		// The DB class 'add' implies an update if the customer being asked to be created already exists
 		if ( ! empty( $customer_id ) ) {
 
 			// Add the primary email address for this customer
@@ -334,24 +333,11 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 		do_action( 'edd_customer_pre_update', $this->id, $data );
 
-		$updated          = false;
-		$previous_user_id = $this->user_id;
+		$updated = false;
 
 		if ( edd_update_customer( $this->id, $data ) ) {
 			$customer = edd_get_customer( $this->id );
 			$this->setup_customer( $customer );
-
-			// If the user ID changed, we need to update all the orders associated with this customer and change the user ID.
-			if ( intval( $previous_user_id ) !== intval( $this->user_id ) ) {
-
-				// Update some payment meta if we need to
-				$order_ids = edd_get_orders( array( 'customer_id' => $this->id, 'number' => 9999999 ) );
-
-				foreach ( $order_ids as $order_id ) {
-					edd_update_order( $order_id, array( 'user_id' => $this->user_id ) );
-				}
-
-			}
 
 			$updated = true;
 		}
@@ -660,40 +646,43 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @since 2.3
 	 *
-	 * @param int  $payment_id   The payment ID to attach to the customer.
+	 * @param int  $order_id     The Order ID to attach to the customer.
 	 * @param bool $update_stats For backwards compatibility, if we should increase the stats or not.
 	 *
 	 * @return bool True if the attachment was successfully, false otherwise.
 	 */
-	public function attach_payment( $payment_id = 0, $update_stats = true ) {
+	public function attach_payment( $order_id = 0, $update_stats = true ) {
 
-		// Bail if no payment ID
-		if ( empty( $payment_id ) ) {
+		// Bail if no payment ID.
+		if ( empty( $order_id ) ) {
 			return false;
 		}
 
-		// Get payment
-		$order = edd_get_order( $payment_id );
+		// Get order.
+		$order = edd_get_order( $order_id );
 
-		// Bail if payment does not exist
+		// Bail if payment does not exist.
 		if ( empty( $order ) ) {
 			return false;
 		}
 
-		// Bail if already attached
-		if ( (int) $order->customer_id === (int) $this->id ) {
-			return true;
-		}
-
 		do_action( 'edd_customer_pre_attach_payment', $order->id, $this->id, $this );
 
-		// Update the order
-		$success = (bool) edd_update_order( $payment_id, array(
-			'customer_id' => $this->id,
-			'email'       => $this->email
-		) );
+		$success = (int) $order->customer_id === (int) $this->id;
 
-		// Maybe update stats
+		// Update the order if it isn't already attached.
+		if ( ! $success ) {
+			// Update the order.
+			$success = (bool) edd_update_order(
+				$order_id,
+				array(
+					'customer_id' => $this->id,
+					'email'       => $this->email,
+				)
+			);
+		}
+
+		// Maybe update stats.
 		if ( ! empty( $success ) && ! empty( $update_stats ) ) {
 			$this->recalculate_stats();
 		}
