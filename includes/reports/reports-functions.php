@@ -1283,23 +1283,7 @@ function display_dates_filter() {
 
 				<!-- RELATIVE DATE RANGES DROPDOWN -->
 				<div class="edd-date-range-relative-dropdown">
-					<?php foreach ( $range_options as $range_key => $range_name ) : ?>
-						<!-- SINGLE DATE RANGE PARENT -->
-						<ul data-range="<?php echo esc_attr( $range_key ); ?>" class="<?php echo esc_attr( ( $range_key !== $selected_range ? 'hidden' : '' ) ); ?>">
-							<?php
-							foreach ( $relative_range_options as $relative_range_key => $relative_range_name ) :
-								$relative_range_dates = \EDD\Reports\parse_relative_dates_for_range( $range_key, $relative_range_key );
-								$selected_range_class = ( $selected_relative_range === $relative_range_key ) ? 'active' : '';
-								?>
-								<li class="<?php echo esc_attr( $selected_range_class ); ?>" data-range="<?php echo esc_attr( $relative_range_key ); ?>">
-									<span class="date-range-name"><?php echo esc_html( $relative_range_options[ $relative_range_key ] ); ?></span>
-									<span class="date-range-dates"><?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['start'] )->format( $date_format ) ); ?> - <?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['end'] )->format( $date_format ) ); ?></span>
-								</li>
-								<?php
-							endforeach;
-							?>
-						</ul>
-					<?php endforeach; ?>
+					<?php echo \EDD\Reports\display_relative_dates_dropdown_options( $selected_range, $selected_relative_range ); ?>
 				</div>
 			</div>
 		</div>
@@ -1307,6 +1291,31 @@ function display_dates_filter() {
 	<span class="edd-date-range-options graph-option-section edd-from-to-wrapper<?php echo esc_attr( $class ); ?>">
 		<?php echo $from . $to; ?>
 	</span>
+	<?php
+}
+/**
+ * Handles display of the relative dates dropdown options.
+ *
+ * @since 3.1
+ */
+function display_relative_dates_dropdown_options( $range, $selected_relative_range ) {
+	$date_format            = get_option( 'date_format' );
+	$relative_range_options = get_relative_dates_filter_options();
+	?>
+	<ul data-range="<?php echo esc_attr( $range ); ?>">
+		<?php
+		foreach ( $relative_range_options as $relative_range_key => $relative_range_name ) :
+			$relative_range_dates = \EDD\Reports\parse_relative_dates_for_range( $range, $relative_range_key );
+			$selected_range_class = ( $selected_relative_range === $relative_range_key ) ? 'active' : '';
+			?>
+			<li class="<?php echo esc_attr( $selected_range_class ); ?>" data-range="<?php echo esc_attr( $relative_range_key ); ?>">
+				<span class="date-range-name"><?php echo esc_html( $relative_range_options[ $relative_range_key ] ); ?></span>
+				<span class="date-range-dates"><?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['start'] )->format( $date_format ) ); ?> - <?php echo esc_html( edd_get_edd_timezone_equivalent_date_from_utc( $relative_range_dates['end'] )->format( $date_format ) ); ?></span>
+			</li>
+			<?php
+		endforeach;
+		?>
+	</ul>
 	<?php
 }
 

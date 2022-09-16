@@ -56,7 +56,42 @@ const EDD_Reports = {
 		 * Relative date ranges.
 		 */
 
-			const relativeDateRangesParent = $( '.edd-date-range-selected-relative-date' );
+			const relativeDateRangesParent   = $( '.edd-date-range-selected-relative-date' ),
+			      relativeDateRangesDropdown = $( '.edd-date-range-relative-dropdown' );
+
+			// Detect when HTML select for normal date range is changed.
+			$('.edd-graphs-date-options').on( 'change', function() {
+				var range          = $( this ).val();
+				var relative_range = $('.edd-graphs-relative-date-options').val();
+
+				$( '.edd-date-range-picker' ).attr( 'data-range', range );
+
+				// Get relative date ranges from backend.
+				$.ajax( {
+					type: 'GET',
+					dataType: 'html',
+					url: ajaxurl,
+					data: {
+						action: 'edd_reports_get_relative_date_ranges',
+						range: range,
+						relative_range: relative_range,
+					},
+					beforeSend: function() {
+						relativeDateRangesDropdown.html( '<div class="spinner"></div>' ).addClass( 'loading' );
+					},
+					success: function( data ) {
+						relativeDateRangesDropdown.html( data );
+					},
+				} ).fail( function( response ) {
+					if ( window.console && window.console.log ) {
+						console.log( response );
+					}
+				} ).done( function( response ) {
+					relativeDateRangesDropdown.remove( '.spinner' );
+					relativeDateRangesDropdown.removeClass( 'loading' );
+				} );
+
+			} )
 
 			// Open relative daterange dropdown.
 			relativeDateRangesParent.on( 'click', function( event ) {
@@ -65,7 +100,7 @@ const EDD_Reports = {
 			});
 
 			// When selecting relative daterange from dropdown.
-			$( '.edd-date-range-relative-dropdown li' ).on( 'click', function() {
+			$( document ).on( 'click', '.edd-date-range-relative-dropdown li', function() {
 				var range = $(this).data( 'range' );
 				$('.edd-graphs-relative-date-options').val( range ).trigger( 'change' );
 			});
@@ -82,14 +117,6 @@ const EDD_Reports = {
 				selected_range_item.addClass( 'active' );
 			} )
 
-			// Detect when HTML select for normal date range is changed.
-			$('.edd-graphs-date-options').on( 'change', function() {
-				var range = $( this ).val();
-
-				$( '.edd-date-range-picker' ).attr( 'data-range', range );
-				$( '.edd-date-range-relative-dropdown ul' ).hide();
-				$( '.edd-date-range-relative-dropdown ul[data-range="' + range + '"]' ).show();
-			} )
 
 			// If a click event is triggered on body.
 			$( document ).on( 'click', function( e ) {

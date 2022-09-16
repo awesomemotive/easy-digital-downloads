@@ -82,6 +82,7 @@
 			padding: 4px 2px 4px 6px;
 			color: #2c3338;
 			margin-left: 10px;
+			margin-right: 10px;
 			border-radius: 4px;
 			cursor: pointer;
 			.arrow-down {
@@ -113,6 +114,24 @@
 			-moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);
 			box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);
 			display: none;
+
+			.spinner {
+				display: none;;
+			}
+			&.loading {
+				padding: 10px;
+				text-align: center;
+				.spinner {
+					display: inline-block;
+					visibility: visible;
+					margin: 0;
+					float: unset;
+				}
+			}
+			&.loading *:not(.spinner) {
+				display: none;
+			}
+
 			&:after {
 				content: '';
 				position: absolute;
@@ -182,6 +201,7 @@
 				width: 100%;
 				margin-top: 8px;
 				margin-left: 0px;
+				margin-right: 0;
 				font-size: 14px;
 				padding: 8px 6px 8px 8px;
 				flex-wrap: wrap;

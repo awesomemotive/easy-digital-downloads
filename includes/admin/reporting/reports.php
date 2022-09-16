@@ -3046,3 +3046,28 @@ function edd_tax_report_notice( $report ) {
 	}
 }
 add_action( 'edd_reports_page_bottom', 'edd_tax_report_notice', 10, 1 );
+
+/**
+ * Will return HTML for relative date ranges dropdown.
+ *
+ * @since 3.1
+ */
+function edd_reports_get_relative_date_ranges() {
+	require_once EDD_PLUGIN_DIR . 'includes/reports/reports-functions.php';
+	$range = isset( $_REQUEST['range'] )
+		? sanitize_text_field( $_REQUEST['range'] )
+		: '';
+
+	$relative_range = isset( $_REQUEST['relative_range'] )
+		? sanitize_text_field( $_REQUEST['relative_range'] )
+		: '';
+
+	if ( empty( $range ) || empty( $relative_range ) ) {
+		return;
+	}
+
+	echo Reports\display_relative_dates_dropdown_options( $range, $relative_range );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_reports_get_relative_date_ranges', 'edd_reports_get_relative_date_ranges' );
