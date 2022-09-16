@@ -238,7 +238,7 @@ class Stats {
 		 * This may be overridden in $query parameters that get passed through.
 		 */
 		$this->query_vars['type']   = $this->get_revenue_type_order_types();
-		$this->query_vars['status'] = $this->get_revenue_type_statuses();
+		$this->query_vars['status'] = edd_get_gross_order_statuses();
 
 		/**
 		 * Filters Order statuses that should be included when calculating stats.
@@ -2842,7 +2842,7 @@ class Stats {
 			return $data;
 		}
 
-		$allowed_output_formats = array( 'raw', 'formatted' );
+		$allowed_output_formats = array( 'raw', 'typed', 'formatted' );
 
 		// Output format. Default raw.
 		$output = isset( $this->query_vars['output'] ) && in_array( $this->query_vars['output'], $allowed_output_formats, true )
@@ -2862,18 +2862,30 @@ class Stats {
 		if ( is_object( $data ) ) {
 			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
 				if ( is_numeric( $data->{$field} ) ) {
-					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ), $currency );
+					$data->{$field} = edd_format_amount( $data->{$field}, true, $currency, $output );
+
+					if ( 'formatted' === $output ) {
+						$data->{$field} = edd_currency_filter( $data->{$field}, $currency );
+					}
 				}
 			}
 		} elseif ( is_array( $data ) ) {
 			foreach ( array_keys( $data ) as $field ) {
 				if ( is_numeric( $data[ $field ] ) ) {
-					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ), $currency );
+					$data[ $field ] = edd_format_amount( $data[ $field ], true, $currency, $output );
+
+					if ( 'formatted' === $output ) {
+						$data[ $field ] = edd_currency_filter( $data[ $field ], $currency );
+					}
 				}
 			}
 		} else {
 			if ( is_numeric( $data ) ) {
-				$data = edd_currency_filter( edd_format_amount( $data ), $currency );
+				$data = edd_format_amount( $data, true, $currency, $output );
+
+				if ( 'formatted' === $output ) {
+					$data = edd_currency_filter( $data, $currency );
+				}
 			}
 		}
 

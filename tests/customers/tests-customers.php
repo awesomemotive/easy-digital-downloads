@@ -45,9 +45,12 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		self::$user  = 1;
 		self::$order = \EDD_Helper_Payment::create_simple_payment();
 
+		// Don't trigger the updateing of the customer during this part of the setup.
+		remove_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
 		edd_update_customer( self::$customers[0], array(
 			'user_id' => self::$user,
 		) );
+		add_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
 
 		self::$customers[0]->attach_payment( self::$order );
 		self::$customers[0] = edd_get_customer( $customers[0] );

@@ -20,6 +20,11 @@ class Money_Formatter {
 	public $amount;
 
 	/**
+	 * @var float Typed amount.
+	 */
+	public $typed_amount;
+
+	/**
 	 * @var int|float Original, unmodified amount passed in via constructor.
 	 */
 	private $original_amount;
@@ -36,8 +41,10 @@ class Money_Formatter {
 	 * @param Currency $currency
 	 */
 	public function __construct( $amount, Currency $currency ) {
-		$this->amount   = $this->original_amount = $amount;
-		$this->currency = $currency;
+		$this->original_amount = $amount;
+		$this->amount          = $amount;
+		$this->typed_amount    = $amount;
+		$this->currency        = $currency;
 	}
 
 	/**
@@ -49,7 +56,7 @@ class Money_Formatter {
 	 * @return float|int
 	 */
 	private function unformat() {
-		$amount = $this->amount;
+		$amount = $this->original_amount;
 
 		$sep_found = strpos( $amount, $this->currency->decimal_separator );
 		if ( ',' === $this->currency->decimal_separator && false !== $sep_found ) {
@@ -69,19 +76,17 @@ class Money_Formatter {
 	}
 
 	/**
-	 * Formats the amount for display.
-	 * Does not apply the currency code.
+	 * Returns the number of decimals ot use for the formatted amount.
 	 *
-	 * @since 3.0
-	 * @return Money_Formatter
+	 * Based on the currency code used when instantiating the class, determines how many
+	 * decimal points the value should have once formatted.
+	 *
+	 * @param bool  $decimals If we should include decimals or not in the formatted amount.
+	 * @param float $amount   The amount to format.
+	 *
+	 * @return int  The number of decimals places to use when formatting the amount.
 	 */
-	public function format_for_display( $decimals = true ) {
-		$amount = $this->unformat();
-
-		if ( empty( $amount ) ) {
-			$amount = 0;
-		}
-
+	private function get_decimals( $decimals, $amount ) {
 		/**
 		 * Filter number of decimals to use for formatted amount
 		 *
@@ -91,9 +96,29 @@ class Money_Formatter {
 		 * @param int|string $amount        Amount being formatted.
 		 * @param string     $currency_code Currency code being formatted.
 		 */
-		$decimals = apply_filters( 'edd_format_amount_decimals', $decimals ? $this->currency->number_decimals : 0, $amount, $this->currency->code );
+		return apply_filters( 'edd_format_amount_decimals', $decimals ? $this->currency->number_decimals : 0, $amount, $this->currency->code );
+	}
 
-		// Format amount using decimals and separators (also rounds up or down)
+	/**
+	 * Formats the amount for display.
+	 * Does not apply the currency code.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $decimals If we should include decimal places or not when formatting.
+	 *
+	 * @return Money_Formatter
+	 */
+	public function format_for_display( $decimals = true ) {
+		$amount = $this->unformat();
+
+		if ( empty( $amount ) ) {
+			$amount = 0;
+		}
+
+		$decimals = $this->get_decimals( $decimals, $amount );
+
+		// Format amount using decimals and separators (also rounds up or down).
 		$formatted = number_format( (float) $amount, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator );
 
 		/**
@@ -109,6 +134,41 @@ class Money_Formatter {
 		 * @param string $currency_code       Currency used for formatting.
 		 */
 		$this->amount = apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $this->currency->decimal_separator, $this->currency->thousands_separator, $this->currency->code );
+
+		return $this;
+	}
+
+	/**
+	 * Formats the amount for typed data returns.
+	 * Does not apply the currency code and returns a foat instead of a string.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $decimals If we should include decimal places or not when formatting.
+	 *
+	 * @return Money_Formatter
+	 */
+	public function format_for_typed( $decimals = true ) {
+		$amount = $this->unformat();
+
+		if ( empty( $amount ) ) {
+			$amount = 0;
+		}
+
+		$decimals = $this->get_decimals( $decimals, $amount );
+
+		/**
+		 * Since we want to return a float value here, intentionally only supply a decimal separator.
+		 *
+		 * The separators here are hard coded intentionally as we're looking to get truncated, raw format of float
+		 * which requires '.' for decimal separators and no thousands separator.
+		 *
+		 * This is also intentionally not filtered for the time being.
+		 */
+		$formatted = floatval( number_format( (float) $amount, $decimals, '.', '' ) );
+
+		// Set the amount to $this->amount.
+		$this->typed_amount = $formatted;
 
 		return $this;
 	}
