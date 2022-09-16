@@ -520,7 +520,7 @@ function edd_localize_admin_scripts() {
 		'hide_advanced_settings'  => __( 'Hide advanced settings', 'easy-digital-downloads' ),
 		'no_downloads_error'      => __( 'There are no downloads attached to this payment', 'easy-digital-downloads' ),
 		'wait'                    => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
-		'test_email_save_changes' => __( 'You have to Save Changes to send the test email.', 'easy-digital-downloads' ),
+		'test_email_save_changes' => __( 'You must save your changes to send the test email.', 'easy-digital-downloads' ),
 
 		// Features
 		'quantities_enabled'          => edd_item_quantities_enabled(),
