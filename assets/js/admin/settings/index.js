@@ -181,7 +181,7 @@ const EDD_Settings = {
 
 				if ( emailSummaryRecipientInitialValue !== emailSummaryRecipient.val() ) {
 					emailSummaryTestButton.addClass( 'hidden' );
-					emailSummarySaveChangesNotice.html( '<div class="notice"><p>' + edd_vars.test_email_save_changes + '</p></div>' );
+					emailSummarySaveChangesNotice.html( '<div class="notice notice-info"><p>' + edd_vars.test_email_save_changes + '</p></div>' );
 				}
 
 			} );
