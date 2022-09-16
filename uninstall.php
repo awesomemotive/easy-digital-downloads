@@ -79,6 +79,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 		'edd_completed_upgrades',
 		'edd_default_api_version',
 		'edd_earnings_total',
+		'edd_earnings_total_without_tax',
 		'edd_settings',
 		'edd_tracking_notice',
 		'edd_tax_rates',
