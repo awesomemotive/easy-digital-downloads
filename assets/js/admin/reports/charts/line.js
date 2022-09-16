@@ -3,10 +3,9 @@
 /**
  * Internal dependencies.
  */
-import { NumberFormat } from '@easy-digital-downloads/currency';
 import moment, { utc } from 'moment';
 import momentTimezone from 'moment-timezone';
-import { getLabelWithTypeCondition, toolTipBaseConfig } from './utils';
+import { getLabelWithTypeCondition, toolTipBaseConfig, attachAxisTickFormattingCallback } from './utils';
 
 /**
  * Render a line chart.
@@ -23,7 +22,13 @@ export const render = ( config ) => {
 			day_by_day: dayByDay,
 		},
 	} = config;
-	const number = new NumberFormat();
+
+	// Attach formatting callback to Y axes ticks.
+	config.options.scales.yAxes.forEach( axis => {
+		if ( axis.ticks.hasOwnProperty( 'formattingType' ) ) {
+			axis.ticks = attachAxisTickFormattingCallback( axis.ticks );
+		}
+	});
 
 	const lineConfig = {
 		...config,
@@ -32,18 +37,8 @@ export const render = ( config ) => {
 			maintainAspectRatio: false,
 			tooltips: tooltipConfig( config ),
 			scales: {
-				...config.options.scales,
 				yAxes: [
-					{
-						...config.options.scales.yAxes[0],
-						ticks: {
-							callback: ( value, index, values ) => {
-								return number.format( value );
-							},
-							suggestedMin: 0,
-							beginAtZero: true,
-						},
-					},
+					...config.options.scales.yAxes,
 				],
 				xAxes: [
 					{
@@ -58,6 +53,28 @@ export const render = ( config ) => {
 						},
 					},
 				],
+			},
+			legend:{
+				// Detect click on a dataset legend item and hide the dataset with it's Y axis.
+				onClick: function( event, legendItem ) {
+					const dataset = this.chart.config.data.datasets[ legendItem.datasetIndex ];
+
+					// Find Y axis that belongs to the dataset.
+					if ( dataset.hasOwnProperty( 'yAxisID' ) ) {
+						const axisIndex = this.chart.options.scales.yAxes.findIndex( axis => {
+							return axis.id === dataset.yAxisID;
+						});
+
+						if ( axisIndex !== -1 ) {
+							// Toggle the visibility of Y axis.
+							this.chart.options.scales.yAxes[ axisIndex ].display = ! this.chart.options.scales.yAxes[ axisIndex ].display;
+						}
+					}
+
+					// Toggle the visibility of the dataset.
+					dataset.hidden = ! dataset.hidden;
+					this.chart.update();
+				}
 			},
 		},
 	};

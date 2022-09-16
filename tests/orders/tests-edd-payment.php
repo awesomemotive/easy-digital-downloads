@@ -941,6 +941,69 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertTrue( edd_receipt_show_download_files( $download_id, $receipt_args, $cart_item ) );
 	}
 
+	public function test_creating_complete_payment_marks_order_items_complete() {
+		$payment             = new \EDD_Payment();
+		$payment->first_name = 'John';
+		$payment->last_name  = 'Doe';
+		$payment->user_id    = 1;
+		$payment->email      = 'johndoe@edd.local';
+		$payment->total      = 0;
+		$payment->gateway    = 'manual';
+
+		$simple_download = \EDD_Helper_Download::create_simple_download();
+		$payment->add_download(
+			$simple_download->ID,
+			array(
+				'price_id' => false,
+			)
+		);
+
+		// Update the payment status to mark the order as complete.
+		$payment->status = 'complete';
+		$payment->save();
+
+		$order_items = edd_get_order_items(
+			array(
+				'order_id' => $payment->ID,
+			)
+		);
+		$order_item  = reset( $order_items );
+
+		$this->assertEquals( 'complete', $order_item->status );
+	}
+
+	public function test_inserting_payment_invalid_data_returns_false() {
+		$payment = edd_insert_payment(
+			array(
+				'customer_id' => 1,
+				'email'       => 'admin@edd.local',
+				'user_id'     => 1,
+				'gateway'     => 'manual',
+				'total'       => edd_sanitize_amount( sanitize_text_field( 20 ) ),
+				'status'      => 'pending',
+			)
+		);
+
+		$this->assertFalse( $payment );
+	}
+
+	public function test_inserting_payment_incomplete_data_returns_true() {
+		$payment = edd_insert_payment(
+			array(
+				'customer_id' => 1,
+				'user_id'     => 1,
+				'gateway'     => 'manual',
+				'total'       => edd_sanitize_amount( sanitize_text_field( 20 ) ),
+				'status'      => 'pending',
+				'user_info'   => array(
+					'email' => 'admin@edd.local',
+				),
+			)
+		);
+
+		$this->assertNotEmpty( $payment );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {

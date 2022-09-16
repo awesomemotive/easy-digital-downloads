@@ -649,6 +649,17 @@ function edd_build_order( $order_data = array() ) {
 		return false;
 	}
 
+	$order_data = wp_parse_args(
+		$order_data,
+		array(
+			'user_info' => array(),
+		)
+	);
+
+	if ( empty( $order_data['user_info']['email'] ) ) {
+		return false;
+	}
+
 	/* Order recovery ********************************************************/
 
 	$resume_order   = false;
@@ -724,13 +735,13 @@ function edd_build_order( $order_data = array() ) {
 		'parent'       => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
 		'order_number' => '',
 		'status'       => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
-		'user_id'      => $order_data['user_info']['id'],
+		'user_id'      => ! empty( $order_data['user_info']['id'] ) ? $order_data['user_info']['id'] : 0,
 		'email'        => $order_data['user_info']['email'],
 		'ip'           => edd_get_ip(),
 		'gateway'      => $gateway,
 		'mode'         => edd_is_test_mode() ? 'test' : 'live',
 		'currency'     => ! empty( $order_data['currency'] ) ? $order_data['currency'] : edd_get_currency(),
-		'payment_key'  => $order_data['purchase_key'],
+		'payment_key'  => ! empty( $order_data['purchase_key'] ) ? $order_data['purchase_key'] : edd_generate_order_payment_key( $order_data['user_info']['email'] ),
 		'date_created' => ! empty( $order_data['date_created'] ) ? $order_data['date_created'] : '',
 	);
 
@@ -829,9 +840,17 @@ function edd_build_order( $order_data = array() ) {
 		'state'   => '',
 	) );
 
+	$name = '';
+	if ( ! empty( $order_data['user_info']['first_name'] ) ) {
+		$name = $order_data['user_info']['first_name'];
+	}
+	if ( ! empty( $order_data['user_info']['last_name'] ) ) {
+		$name .= ' ' . $order_data['user_info']['last_name'];
+	}
+
 	$order_address_data = array(
 		'order_id'    => $order_id,
-		'name'        => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'],
+		'name'        => $name,
 		'address'     => $order_data['user_info']['address']['line1'],
 		'address2'    => $order_data['user_info']['address']['line2'],
 		'city'        => $order_data['user_info']['address']['city'],
@@ -860,7 +879,7 @@ function edd_build_order( $order_data = array() ) {
 
 	$decimal_filter = edd_currency_decimal_filter();
 
-	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
+	if ( ! empty( $order_data['cart_details'] ) && is_array( $order_data['cart_details'] ) ) {
 
 		foreach ( $order_data['cart_details'] as $key => $item ) {
 
