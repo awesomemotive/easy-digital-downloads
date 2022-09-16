@@ -1579,7 +1579,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
-		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] <= 0 ) {
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] < 0 ) {
 			continue;
 		}
 
@@ -2780,7 +2780,7 @@ function edd_recapture_callback($args) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates( array(), OBJECT );
+	$rates = edd_get_tax_rates( array( 'number' => 9999 ), OBJECT );
 
 	wp_enqueue_script( 'edd-admin-tax-rates' );
 	wp_enqueue_style( 'edd-admin-tax-rates' );
@@ -2792,7 +2792,8 @@ function edd_tax_rates_callback( $args ) {
 			/* translators: Tax rate country code */
 			'duplicateRate' => esc_html__( 'Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another.', 'easy-digital-downloads' ),
 			'emptyCountry'  => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
-			'emptyTax'      => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'negativeTax'   => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'emptyTax'      => esc_html__( 'Are you sure you want to add a 0% tax rate?', 'easy-digital-downloads' ),
 		),
 	) );
 

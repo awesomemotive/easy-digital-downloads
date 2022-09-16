@@ -639,9 +639,6 @@ class Data_Migrator {
 			'date_created' => $date_created_gmt,
 		);
 
-		// Remove empty data.
-		$order_address_data = array_filter( $order_address_data );
-
 		$tax_rate_id = null;
 		$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
 			? (float) $meta['_edd_payment_tax_rate'][0]
@@ -715,8 +712,11 @@ class Data_Migrator {
 
 		// Remove all order status transition actions.
 		remove_all_actions( 'edd_transition_order_status' );
-		remove_all_actions( 'edd_transition_order_item_status' );
-		remove_all_actions( 'edd_transition_order_adjustment_type' );
+		remove_action( 'edd_order_item_added', 'edd_recalculate_order_item_download' );
+		remove_action( 'edd_order_item_updated', 'edd_recalculate_order_item_download' );
+		remove_action( 'edd_order_item_deleted', 'edd_recalculate_order_item_download' );
+		remove_action( 'edd_order_adjustment_added', 'edd_recalculate_order_adjustment_download' );
+		remove_action( 'edd_order_adjustment_updated', 'edd_recalculate_order_adjustment_download' );
 
 		$order_id = edd_add_order( $order_data );
 
@@ -757,6 +757,8 @@ class Data_Migrator {
 
 		}
 
+		// Remove empty data.
+		$order_address_data = array_filter( $order_address_data );
 		if ( ! empty( $order_address_data ) ) {
 			// Add to edd_order_addresses table.
 			$order_address_data['order_id'] = $order_id;
