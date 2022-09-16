@@ -280,6 +280,7 @@ class Stats {
 				{$this->query_vars['where_sql']}
 				{$relative_date_query_sql}";
 
+
 			$relative_result = $this->get_db()->get_row( $relative_query );
 		}
 
@@ -287,16 +288,23 @@ class Stats {
 			? 0.00
 			: (float) $initial_result->total;
 
-		if ( true === $this->query_vars['relative'] ) {
-			$total = $this->generate_relative_markup( floatval( $total ), floatval( $relative_result->total ) );
+		if ( 'array' === $this->query_vars['output'] ) {
+			$output = array(
+				'value'         => $total,
+				'relative_data' => ( true === $this->query_vars['relative'] ) ? $this->generate_relative_data( floatval( $total ), floatval( $relative_result->total ) ) : array(),
+			);
 		} else {
-			$total = $this->maybe_format( $total );
+			if ( true === $this->query_vars['relative'] ) {
+				$output = $this->generate_relative_markup( floatval( $total ), floatval( $relative_result->total ) );
+			} else {
+				$output = $this->maybe_format( $total );
+			}
 		}
 
 		// Reset query vars.
 		$this->post_query();
 
-		return $total;
+		return $output;
 	}
 
 	/**
@@ -2047,18 +2055,23 @@ class Stats {
 			? 0
 			: absint( $result->total );
 
-		if ( true === $this->query_vars['relative'] ) {
-			$total    = absint( $result->total );
-			$relative = absint( $result->relative );
-			$total    = $this->generate_relative_markup( $total, $relative );
+		if ( 'array' === $this->query_vars['output'] ) {
+			$output = array(
+				'value'         => $total,
+				'relative_data' => ( true === $this->query_vars['relative'] ) ? $this->generate_relative_data( absint( $result->total ), absint( $result->relative ) ) : array(),
+			);
 		} else {
-			$total = $this->maybe_format( $total );
+			if ( true === $this->query_vars['relative'] ) {
+				$output = $this->generate_relative_markup( absint( $result->total ), absint( $result->relative ) );
+			} else {
+				$output = $this->maybe_format( $total );
+			}
 		}
 
 		// Reset query vars.
 		$this->post_query();
 
-		return $total;
+		return $output;
 	}
 
 	/**
@@ -3012,6 +3025,61 @@ class Stats {
 	}
 
 	/**
+	 * Calculates the relative change between two datasets
+	 * and outputs an array of details about comparison.
+	 *
+	 * @since 3.1
+	 *
+	 * @param int|float $total     The primary value result for the stat.
+	 * @param int|float $relative  The value relative to the previous date range.
+	 * @param bool      $reverse   If the stat being displayed is a 'reverse' state, where lower is better.
+	 *
+	 * @return array Details about the relative change between two datasets.
+	 */
+	public function generate_relative_data( $total = 0, $relative = 0, $reverse = false ) {
+		$output = array(
+			'comparable'                  => true,
+			'no_change'                   => false,
+			'percentage_change'           => false,
+			'formatted_percentage_change' => false,
+			'positive_change'             => false,
+			'total'                       => $total,
+			'relative'                    => $relative,
+			'reverse'                     => $reverse,
+		);
+
+		if ( ( floatval( 0 ) === floatval( $total ) && floatval( 0 ) === floatval( $relative ) ) || ( $total === $relative ) ) {
+			// There is no change between datasets.
+			$output['no_change'] = true;
+		} else if ( floatval( 0 ) !== floatval( $relative ) ) {
+			// There is a calculatable difference between datasets.
+			$percentage_change           = ( $total - $relative ) / $relative * 100;
+			$formatted_percentage_change = absint( $percentage_change );
+			$positive_change             = false;
+
+			if ( absint( $percentage_change ) < 100 ) {
+				$formatted_percentage_change = number_format( $percentage_change, 2 );
+				$formatted_percentage_change = $formatted_percentage_change < 1 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
+			}
+
+			// Check if stat is in a 'reverse' state, where lower is better.
+			$positive_change = (bool) ! $reverse;
+			if ( 0 > $percentage_change ) {
+				$positive_change = (bool) $reverse;
+			}
+
+			$output['percentage_change']           = $percentage_change;
+			$output['formatted_percentage_change'] = $formatted_percentage_change;
+			$output['positive_change']             = $positive_change;
+		} else {
+			// There is no data to compare.
+			$output['comparable'] = false;
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Generates output for the report tiles when a relative % change is requested.
 	 *
 	 * @since 3.0
@@ -3021,29 +3089,23 @@ class Stats {
 	 * @param bool      $reverse   If the stat being displayed is a 'reverse' state, where lower is better.
 	 */
 	private function generate_relative_markup( $total = 0, $relative = 0, $reverse = false ) {
-		$relative_markup  = '';
 
-		$total_output    = $this->maybe_format( $total );
-		$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . __( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
+		$relative_data   = $this->generate_relative_data( $total, $relative, $reverse );
+		$total_output    = $this->maybe_format( $relative_data['total'] );
+		$relative_markup = '';
 
-		if ( ( floatval( 0 ) === floatval( $total ) && floatval( 0 ) === floatval( $relative ) ) || ( $total === $relative ) ) {
+		if ( $relative_data['no_change'] ) {
 			$relative_output = esc_html__( 'No Change', 'easy-digital-downloads' );
-		} else if ( floatval( 0 ) !== floatval( $relative ) ) {
-			$percentage_change           = ( $total - $relative ) / $relative * 100;
-			$formatted_percentage_change = absint( $percentage_change );
-
-			if ( absint( $percentage_change ) < 100 ) {
-				$formatted_percentage_change = number_format( $percentage_change, 2 );
-				$formatted_percentage_change = $formatted_percentage_change < 1 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
-			}
-
-			if ( 0 < $percentage_change ) {
-				$direction       = $reverse ? 'up reverse' : 'up';
-				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+		} else if ( $relative_data['comparable'] ) {
+			if ( 0 < $relative_data['percentage_change'] ) {
+				$direction       = $relative_data['reverse'] ? 'up reverse' : 'up';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $relative_data['formatted_percentage_change'] . '%';
 			} else {
-				$direction       = $reverse ? 'down reverse' : 'down';
-				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+				$direction       = $relative_data['reverse'] ? 'down reverse' : 'down';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $relative_data['formatted_percentage_change'] . '%';
 			}
+		} else {
+			$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . __( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
 		}
 
 		$relative_markup = $total_output;
