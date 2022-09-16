@@ -2491,6 +2491,15 @@ span.edd-to-and-from--separator {
 	clear: both;
 }
 
+#edd-send-test-summary-save-changes-notice .notice p {
+	font-size: 13px;
+}
+
+#edd-send-test-summary-save-changes-notice, #edd-send-test-summary-notice {
+	display: flex;
+	margin-top: 5px;
+}
+
 /* Global Graph Styles
 -------------------------------------------------------------- */
 
