@@ -2984,87 +2984,11 @@ class Stats {
 		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 		$date_filters = Reports\get_dates_filter_options();
+		$filter       = Reports\get_filter_value( 'dates' );
 
 		foreach ( $date_filters as $range => $label ) {
-			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $range );
-
-			switch ( $range ) {
-				case 'this_month':
-					$dates = array(
-						'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
-						'end'   => $date->copy()->subMonth( 1 )->endOfMonth(),
-					);
-					break;
-				case 'last_month':
-					$dates = array(
-						'start' => $date->copy()->subMonth( 2 )->startOfMonth(),
-						'end'   => $date->copy()->subMonth( 2 )->endOfMonth(),
-					);
-					break;
-				case 'today':
-					$dates = array(
-						'start' => $date->copy()->subDay( 1 )->startOfDay(),
-						'end'   => $date->copy()->subDay( 1 )->endOfDay(),
-					);
-					break;
-				case 'yesterday':
-					$dates = array(
-						'start' => $date->copy()->subDay( 2 )->startOfDay(),
-						'end'   => $date->copy()->subDay( 2 )->endOfDay(),
-					);
-					break;
-				case 'this_week':
-					$dates = array(
-						'start' => $date->copy()->subWeek( 1 )->startOfWeek(),
-						'end'   => $date->copy()->subWeek( 1 )->endOfWeek(),
-					);
-					break;
-				case 'last_week':
-					$dates = array(
-						'start' => $date->copy()->subWeek( 2 )->startOfWeek(),
-						'end'   => $date->copy()->subWeek( 2 )->endOfWeek(),
-					);
-					break;
-				case 'last_30_days':
-					$dates = array(
-						'start' => $date->copy()->subDay( 60 )->startOfDay(),
-						'end'   => $date->copy()->subDay( 30 )->endOfDay(),
-					);
-					break;
-				case 'this_quarter':
-					$dates = array(
-						'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
-						'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
-					);
-					break;
-				case 'last_quarter':
-					$dates = array(
-						'start' => $date->copy()->subQuarter( 2 )->startOfQuarter(),
-						'end'   => $date->copy()->subQuarter( 2 )->endOfQuarter(),
-					);
-					break;
-				case 'this_year':
-					$dates = array(
-						'start' => $date->copy()->subYear( 1 )->startOfYear(),
-						'end'   => $date->copy()->subYear( 1 )->endOfYear(),
-					);
-					break;
-				case 'last_year':
-					$dates = array(
-						'start' => $date->copy()->subYear( 2 )->startOfYear(),
-						'end'   => $date->copy()->subYear( 2 )->endOfYear(),
-					);
-					break;
-			}
-
-			if ( ! empty( $dates ) ) {
-				// Convert the values to the UTC equivalent so that we can query the database using UTC.
-				$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
-				$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
-				$dates['range'] = $range;
-
-				$this->relative_date_ranges[ $range ] = $dates;
-			}
+			$this->date_ranges[ $range ]          = Reports\parse_dates_for_range( $range );
+			$this->relative_date_ranges[ $range ] = Reports\parse_relative_dates_for_range( $range );
 		}
 
 	}
