@@ -1059,7 +1059,14 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
-		$join     = "INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) AND edd_o.status IN('complete','partially_refunded') AND edd_o.type = 'sale' ";
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = $this->get_placeholder_string( $statuses );
+
+		$join = $this->get_db()->prepare(
+			"INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale' ",
+			...$statuses
+		);
+
 		$currency = '';
 		if ( ! empty( $country ) || ! empty( $region ) ) {
 			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
@@ -1166,7 +1173,7 @@ class Stats {
 		) );
 
 		$statuses      = edd_get_net_order_statuses();
-		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+		$status_string = $this->get_placeholder_string( $statuses );
 
 		$where = $this->get_db()->prepare(
 			"AND {$this->get_db()->edd_order_items}.status IN('complete','partially_refunded')
@@ -2803,7 +2810,7 @@ class Stats {
 			} else {
 				$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
 
-				$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
+				$placeholders = $this->get_placeholder_string( $this->query_vars['status'] );
 
 				$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
 			}
@@ -2818,7 +2825,7 @@ class Stats {
 
 			$this->query_vars['type'] = array_map( 'sanitize_text_field', $this->query_vars['type'] );
 
-			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['type'] ), '%s' ) );
+			$placeholders = $this->get_placeholder_string( $this->query_vars['type'] );
 
 			$this->query_vars['type_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.type IN ({$placeholders})", $this->query_vars['type'] );
 		}
@@ -3190,5 +3197,16 @@ class Stats {
 		}
 
 		return $relative_markup;
+	}
+
+	/**
+	 * Gets a placeholder string from an array.
+	 *
+	 * @since 3.1
+	 * @param array $array
+	 * @return string
+	 */
+	private function get_placeholder_string( $array ) {
+		return implode( ', ', array_fill( 0, count( $array ), '%s' ) );
 	}
 }
