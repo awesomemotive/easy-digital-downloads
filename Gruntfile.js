@@ -174,5 +174,5 @@ module.exports = function( grunt ) {
 	} );
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'force:checktextdomain', 'makepot', 'replace', 'clean', 'copy', 'compress' ] );
+	grunt.registerTask( 'build', [ 'replace', 'clean', 'copy', 'compress' ] );
 };

@@ -61,7 +61,7 @@
 		"webpack-rtl-plugin": "^2.0.0"
 	},
 	"scripts": {
-		"build": "wp-scripts build --webpack-no-externals && bash bin/update-stripe.sh && grunt build",
+		"build": "wp-scripts build --webpack-no-externals && bash bin/update-stripe.sh && bash bin/update-blocks.sh && grunt build",
 		"dev": "cross-env NODE_ENV=production wp-scripts start --webpack-no-externals",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses --production",
@@ -71,6 +71,7 @@
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"package-plugin": "npm run build && grunt build",
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
-		"blocks": "bash bin/update-blocks.sh && grunt replace:blocks"
+		"blocks": "bash bin/update-blocks.sh && grunt replace:blocks",
+		"translate": "wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=\"/build,/node_modules\""
 	}
 }
