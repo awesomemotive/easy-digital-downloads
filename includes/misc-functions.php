@@ -1120,7 +1120,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
 		} elseif ( empty( $order->user_id ) ) {
 			$id         = (int) filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 			$order_hash = ! empty( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : false;
-			if ( $id === (int) $order->ID && $order_hash ) {
+			if ( $id === (int) $order->id && $order_hash ) {
 				$key           = ! empty( $order->payment_key ) ? $order->payment_key : $order->payment_meta['key'];
 				$user_can_view = hash_equals( md5( $order->id . $key . $order->email ), $order_hash );
 			}
