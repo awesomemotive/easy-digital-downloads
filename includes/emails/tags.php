@@ -243,7 +243,7 @@ function edd_setup_email_tags() {
 		array(
 			'tag'         => 'receipt_link',
 			'label'       => __( 'Receipt Link', 'easy-digital-downloads' ),
-			'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'easy-digital-downloads' ),
+			'description' => __( 'Adds a link so users can view their receipt directly on a simplified page on your site if they are unable to view it in the browser correctly.', 'easy-digital-downloads' ),
 			'function'    => 'edd_email_tag_receipt_link',
 		),
 		array(
