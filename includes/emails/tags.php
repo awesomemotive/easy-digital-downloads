@@ -241,6 +241,12 @@ function edd_setup_email_tags() {
 			'function'    => 'edd_email_tag_sitename',
 		),
 		array(
+			'tag'         => 'receipt',
+			'label'       => __( 'Receipt', 'easy-digital-downloads' ),
+			'description' => __( 'Links to the EDD success page with the text "View Receipt".', 'easy-digital-downloads' ),
+			'function'    => 'edd_email_tag_receipt',
+		),
+		array(
 			'tag'         => 'receipt_link',
 			'label'       => __( 'Receipt Link', 'easy-digital-downloads' ),
 			'description' => __( 'Adds a link so users can view their receipt directly on a simplified page on your site if they are unable to view it in the browser correctly.', 'easy-digital-downloads' ),
@@ -757,6 +763,23 @@ function edd_email_tag_payment_method( $payment_id ) {
  */
 function edd_email_tag_sitename( $payment_id ) {
 	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+}
+
+/**
+ * Email template tag: receipt
+ *
+ * Adds a link to the user's receipt page on the website.
+ *
+ * @param [type] $order_id
+ * @return void
+ */
+function edd_email_tag_receipt( $order_id ) {
+
+	return sprintf(
+		'<a href="%s">%s</a>',
+		esc_url( edd_get_receipt_page_uri( $order_id ) ),
+		__( 'View Receipt', 'easy-digital-downloads' )
+	);
 }
 
 /**
