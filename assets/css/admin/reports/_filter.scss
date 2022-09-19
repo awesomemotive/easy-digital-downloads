@@ -15,10 +15,227 @@
 		float: none;
 		flex-grow: 1;
 
+		.graph-option-section {
+			display: flex;
+			align-items: center;
+		}
+
+		.edd-date-range-picker[data-range='other'] {
+			.edd-graphs-date-options {
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+			}
+
+			.edd-date-range-dates, .edd-date-range-relative-dates {
+				display: none;
+			}
+		}
+
 		.edd-date-range-options {
 			display: inline-block;
 			margin: 10px 0;
 		}
+
+		.edd-graphs-date-options {
+			border-top-right-radius: 0px;
+			border-bottom-right-radius: 0px;
+		}
+
+		.edd-date-range-dates {
+			display: flex;
+			align-items: center;
+			border: 1px solid #8c8f94;
+			border-left: none;
+			color: #2c3338;
+			padding: 4px 10px;
+			margin-left: -5px;
+			border-top-right-radius: 4px;
+			border-bottom-right-radius: 4px;
+			cursor: pointer;
+			gap: 4px;
+			&.hidden {
+				display: none;
+			}
+		}
+
+		.edd-date-range-selected-date {
+			display: inline-block;
+		}
+
+		.edd-date-range-relative-dates {
+			display: flex;
+			align-items: center;
+			margin-left: 10px;
+			&.hidden {
+				display: none;
+			}
+		}
+
+		.edd-date-range-selected-relative-date {
+			position: relative;
+			display: flex;
+			align-items: center;
+			border: 1px solid #8c8f94;
+			padding: 4px 2px 4px 6px;
+			color: #2c3338;
+			margin-left: 10px;
+			margin-right: 10px;
+			border-radius: 4px;
+			cursor: pointer;
+			.arrow-down {
+				width: 16px;
+				height: auto;
+				margin-left: 6px;
+				margin-top: 2px;
+				vertical-align: middle;
+			}
+			&.opened {
+				.edd-date-range-relative-dropdown {
+					display: block;
+				}
+			}
+		}
+
+		.edd-date-range-relative-dropdown {
+			position: absolute;
+			z-index: 99;
+			width: 420px;
+			left: 50%;
+			top: 100%;
+			margin-top: 10px;
+			transform: translateX( -50% );
+			background-color: #fff;
+			border: 1px solid #8c8f94;
+			border-radius: 4px;
+			box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);
+			display: none;
+			&:after {
+				height: 10px;
+				width: 10px;
+				position: absolute;
+				content: '';
+				background: white;
+				border: 1px solid #8c8f94;
+				border-top-width: 0px;
+				border-left-width: 0px;
+				transform: rotate(-135deg);
+				top: -6px;
+				left: calc(50% - 4px);
+			}
+
+			.spinner {
+				display: none;
+			}
+			&.loading {
+				padding: 10px;
+				text-align: center;
+				.spinner {
+					display: inline-block;
+					visibility: visible;
+					margin: 0;
+					float: unset;
+				}
+			}
+			&.loading *:not(.spinner) {
+				display: none;
+			}
+
+			ul li {
+				display: flex;
+				align-items: center;
+				padding: 2px 10px;
+				opacity: 0.85;
+				gap: 20px;
+				&:hover, &.active {
+					cursor: pointer;
+					color: var( --wp-admin-theme-color );
+					opacity: 1;
+				}
+				.date-range-name {
+					width: 110px;
+				}
+			}
+		}
+
+		@media screen and ( max-width: 950px ) {
+			.graph-option-section {
+				margin-top: 8px;
+				width: 100%;
+			}
+
+			.edd-date-range-picker {
+				flex-wrap: wrap;
+			}
+
+			.edd-graphs-date-options {
+				width: 100%;
+				max-width: 100%;
+				min-height: 40px;
+				font-size: 14px;
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+			}
+
+			.edd-date-range-dates {
+				width: 100%;
+				margin-top: 10px;
+				border: 1px solid #8c8f94;
+				margin-left: unset;
+				border-radius: 4px;
+				font-size: 14px;
+				padding: 8px 6px 8px 8px;
+			}
+
+			.edd-date-range-relative-dates {
+				width: 100%;
+				flex-wrap: wrap;
+				margin-left: 0px;
+				margin-top: 6px;
+			}
+
+			.edd-date-range-selected-relative-date {
+				width: 100%;
+				margin-top: 8px;
+				margin-left: 0px;
+				margin-right: 0;
+				font-size: 14px;
+				padding: 8px 6px 8px 8px;
+				flex-wrap: wrap;
+				.arrow-down {
+					margin-left: auto;
+				}
+			}
+			.edd-date-range-relative-dropdown {
+				position: relative;
+				width: 100%;
+				left: 0;
+				top: 0;
+				transform: unset;
+				box-shadow: unset;
+				border: unset;
+				margin: 0;
+
+				&:after {
+					display: none;
+				}
+
+				ul {
+					margin-bottom: 0;
+					li {
+						padding-left: 0;
+						padding-right: 0;
+						justify-content: space-between;
+						flex-wrap: wrap;
+						gap: unset;
+						.date-range-name, .date-range-dates {
+							width: 100%;
+						}
+					}
+				}
+
+			}
+		}
+
 	}
 
 	> p {

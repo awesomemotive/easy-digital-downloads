@@ -650,9 +650,11 @@ function edd_parse_report_dates( $form_data ) {
 
 			case 'dates':
 				if ( ! empty( $form_data['range'] ) ) {
-					$range = sanitize_key( $form_data['range'] );
+					$range          = sanitize_key( $form_data['range'] );
+					$relative_range = sanitize_key( $form_data['relative_range'] );
 				} else {
-					$range = Reports\get_dates_filter_range();
+					$range          = Reports\get_dates_filter_range();
+					$relative_range = Reports\get_relative_dates_filter_range();
 				}
 
 				if ( 'other' === $range ) {
@@ -679,7 +681,8 @@ function edd_parse_report_dates( $form_data ) {
 							'filter_to'   => ! empty( $form_data['filter_to'] )
 								? sanitize_text_field( $form_data['filter_to'] )
 								: '',
-							'range'       => 'other',
+							'range'          => 'other',
+							'relative_range' => 'previous_period',
 						),
 						$filter_args
 					);
@@ -690,9 +693,10 @@ function edd_parse_report_dates( $form_data ) {
 
 					$filter_args = array_merge(
 						array(
-							'filter_from' => $dates['start']->format( 'date-mysql' ),
-							'filter_to'   => $dates['end']->format( 'date-mysql' ),
-							'range'       => $range,
+							'filter_from'    => $dates['start']->format( 'date-mysql' ),
+							'filter_to'      => $dates['end']->format( 'date-mysql' ),
+							'range'          => $range,
+							'relative_range' => $relative_range,
 						),
 						$filter_args
 					);
