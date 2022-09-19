@@ -143,7 +143,7 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	return $user;
 }
 
-add_filter( 'login_url', 'edd_update_login_url' );
+add_filter( 'login_url', 'edd_update_login_url', 10, 3 );
 /**
  * If a login page has been set in the EDD settings,
  * update the WordPress login URL.
@@ -151,8 +151,19 @@ add_filter( 'login_url', 'edd_update_login_url' );
  * @param string $url
  * @return string
  */
-function edd_update_login_url( $url ) {
+function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
 	$login_page = edd_get_option( 'login_page', false );
 
-	return $login_page ? get_permalink( $login_page ) : $url;
+	if ( ! $login_page ) {
+		return $url;
+	}
+	$login_url = get_permalink( $login_page );
+	if ( ! empty( $redirect ) ) {
+		$login_url = add_query_arg( 'redirect_to', urlencode( $redirect ), $login_url );
+	}
+	if ( $force_reauth ) {
+		$login_url = add_query_arg( 'reauth', '1', $login_url );
+	}
+
+	return $login_url;
 }
