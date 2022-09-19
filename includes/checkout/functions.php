@@ -36,7 +36,7 @@ function edd_is_checkout() {
 	}
 
 	// If we know this isn't the primary checkout page, check other methods.
-	if ( ! $is_checkout && isset( $content ) && has_shortcode( $content, 'download_checkout' ) ) {
+	if ( ! $is_checkout && ( has_block( 'edd/checkout' ) || ( isset( $content ) && has_shortcode( $content, 'download_checkout' ) ) ) ) {
 		$is_checkout = true;
 	}
 
