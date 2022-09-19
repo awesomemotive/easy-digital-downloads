@@ -303,6 +303,14 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
  * @since 3.0 Updated to use `edd_get_customer_address()`.
  */
 function edd_default_cc_address_fields() {
+	/**
+	 * Allow the address fields to be replaced.
+	 * @since 3.1
+	 */
+	if ( null !== apply_filters( 'edd_pre_cc_address_fields', null ) ) {
+		do_action( 'edd_cc_address_fields' );
+		return;
+	}
 	$logged_in = is_user_logged_in();
 
 	$customer = EDD()->session->get( 'customer' );
@@ -628,7 +636,7 @@ function edd_payment_mode_select() {
 						$nonce         = ' data-' . esc_attr( $gateway_id ) . '-nonce="' . wp_create_nonce( 'edd-gateway-selected-' . esc_attr( $gateway_id ) ) .'"';
 
 						echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option ' . esc_attr( $checked_class ) . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
-							echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . $nonce . '>' . esc_html( $label );
+							echo '<input autocomplete="off" type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . $nonce . '>' . esc_html( $label );
 						echo '</label>';
 					}
 

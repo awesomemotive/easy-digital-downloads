@@ -89,6 +89,22 @@ class Tests_Logging extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::get_log_count()
+	 */
+	public function test_get_log_count_file_downloads() {
+		$file_download_log = self::$object->insert_log(
+			array(
+				'log_type'    => 'file_download',
+				'post_parent' => 1,
+			),
+			array(
+				'payment_id' => 1234,
+			)
+		);
+		$this->assertSame( 1, self::$object->get_log_count( 1, 'file_download' ) );
+	}
+
+	/**
 	 * @covers ::delete_logs()
 	 */
 	public function test_delete_logs() {
@@ -126,7 +142,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_record_gateway_error()
+	 * @covers edd_add_log()
 	 */
 	public function test_edd_add_log_with_null_type_and_no_id() {
 
