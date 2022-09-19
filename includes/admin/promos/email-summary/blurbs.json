@@ -1,0 +1,54 @@
+{
+  "blurbs":[
+     {
+        "headline":"Are new features and products getting ignored?",
+        "content":"Smart marketers know that emails with high click-through rates that promote new products and features will lead to more sales. Connect your Easy Digital Downloads powered store to your favorite email marketing service to boost revenue.",
+        "button_text":"Read More",
+        "button_link":"https://easydigitaldownloads.com/downloads/category/extensions/email/?utm_source=plugin&utm_medium=email&utm_campaign=summaries",
+        "conditions":{
+           "current_pass":"free"
+        }
+     },
+     {
+        "headline":"Are you missing out on future revenue?",
+        "content":"On average, up to 60% of customers do not manually renew their license keys. That's lost revenue for your business. Enable subscriptions on your licensed products and keep the revenue flowing!",
+        "button_text":"Read More",
+        "button_link":"https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=plugin&utm_medium=email&utm_campaign=summaries",
+        "conditions":{
+           "active_plugins":[
+              "EDD-Software-Licensing/edd-software-licenses.php"
+           ],
+           "inactive_plugins":[
+              "edd-recurring/edd-recurring.php"
+           ],
+           "current_pass":"pass-any"
+        }
+     },
+     {
+        "headline":"Are you giving things away for free?",
+        "content":"Lead magnets are the easiest way to capture potential customers. Use our Free Downloads add-on, and start capturing those leads today.",
+        "button_text":"Read More",
+        "button_link":"https://easydigitaldownloads.com/blog/how-to-add-lead-magnets-in-wordpress-to-grow-your-email-list/?utm_source=plugin&utm_medium=email&utm_campaign=summaries",
+        "conditions":{
+           "has_downloads":[
+              "free"
+           ],
+           "inactive_plugins":[
+              "edd-free-downloads/edd-free-downloads.php"
+           ]
+        }
+     },
+     {
+        "headline":"Who are your biggest fans?",
+        "content":"Did you know that 72% of customers say that a product review is the key to making their purchasing decision? Learn how to add reviews to your store, and let your happy customers be your brand ambassadors!",
+        "button_text":"Read More",
+        "button_link":"https://easydigitaldownloads.com/blog/how-to-add-product-reviews-to-your-website/?utm_source=plugin&utm_medium=email&utm_campaign=summaries",
+        "conditions":{
+           "inactive_plugins":[
+              "edd-reviews/edd-reviews.php"
+           ],
+           "current_pass":"pass-any"
+        }
+     }
+  ]
+}
