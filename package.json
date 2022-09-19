@@ -69,6 +69,6 @@
 		"package-plugin": "npm run build && grunt build",
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
 		"blocks": "bash bin/update-blocks.sh && grunt replace:blocks",
-		"translate": "wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets"
+		"translate": "wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets --ignore-domain"
 	}
 }
