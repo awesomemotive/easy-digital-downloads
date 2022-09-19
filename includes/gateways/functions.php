@@ -55,9 +55,9 @@ function edd_get_payment_gateways() {
 				'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
 				'supports'       => array(
 					'buy_now',
-					'methods' => array(
-						'paypal',
-					),
+				),
+				'icons'          => array(
+					'paypal',
 				),
 			),
 			/**
@@ -71,9 +71,9 @@ function edd_get_payment_gateways() {
 				'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
 				'supports'       => array(
 					'buy_now',
-					'methods' => array(
-						'paypal',
-					),
+				),
+				'icons'          => array(
+					'paypal',
 				),
 			),
 			'manual' => array(

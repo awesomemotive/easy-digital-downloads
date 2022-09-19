@@ -1018,6 +1018,9 @@ class EDD_Payment_History_Table extends List_Table {
 			$discount = edd_get_discount_by_code( trim( str_replace( 'discount:', '', $search ) ) );
 			if ( ! empty( $discount->id ) ) {
 				$args['discount_id'] = $discount->id;
+			} else {
+				// If no discount object is found, we force the results to be empty.
+				$args['id__in'] = array( null );
 			}
 
 			return $args;

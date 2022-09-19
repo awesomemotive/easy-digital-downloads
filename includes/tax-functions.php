@@ -457,11 +457,8 @@ function edd_get_tax_rate_by_location( $args ) {
 					continue;
 				}
 
-				$regional_rate = $tax_rate->amount;
-
-				if ( ! empty( $regional_rate ) ) {
-					return $tax_rate;
-				}
+				// A tax rate matching the region/description was found, so return it.
+				return $tax_rate;
 			} elseif ( 'country' === $tax_rate->scope ) {
 				// Countrywide tax rate.
 				$rate = $tax_rate;

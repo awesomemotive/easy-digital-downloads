@@ -160,6 +160,69 @@ const EDD_Settings = {
 			document.body.style.cursor = 'wait';
 			recaptureRemoteInstall();
 		});
+
+		/**
+		 * Email Summaries
+		 */
+
+			// Toggle Email Recipient option
+			const emailSummaryRecipient           = $( 'select[name="edd_settings[email_summary_recipient]"]' ),
+			    emailSummaryRecipientInitialValue = emailSummaryRecipient.val(),
+				emailSummaryCustomRecipients      = $( 'textarea[name="edd_settings[email_summary_custom_recipients]"]' ).parents( 'tr' ),
+				emailSummarySaveChangesNotice     = $( '#edd-send-test-summary-save-changes-notice' ),
+				emailSummaryTestButton            = $( '#edd-send-test-summary' ),
+				emailSummaryTestNotice            = $( '#edd-send-test-summary-notice' );
+
+			emailSummaryRecipient.on( 'change', function() {
+				emailSummaryCustomRecipients.toggleClass( 'hidden' );
+				emailSummaryTestButton.removeClass( 'hidden updated-message' );
+				emailSummaryTestNotice.empty();
+				emailSummarySaveChangesNotice.empty();
+
+				if ( emailSummaryRecipientInitialValue !== emailSummaryRecipient.val() ) {
+					emailSummaryTestButton.addClass( 'hidden' );
+					emailSummarySaveChangesNotice.html( '<div class="notice notice-info"><p>' + edd_vars.test_email_save_changes + '</p></div>' );
+				}
+
+			} );
+
+			// Send test email.
+
+			emailSummaryTestButton.on( 'click', function( e ) {
+				e.preventDefault();
+
+				$.ajax( {
+					type: 'GET',
+					dataType: 'json',
+					url: ajaxurl,
+					data: {
+						action: 'edd_send_test_email_summary',
+					},
+					beforeSend: function() {
+						emailSummaryTestNotice.empty();
+						emailSummaryTestButton.addClass( 'updating-message' ).prop( 'disabled', true );
+					},
+					success: function( data ) {
+						if ( 'error' == data.status ) {
+							emailSummaryTestNotice.html( '<div class="updated ' + data.status + '"><p>' + data.message + '</p></div>' );
+						} else {
+							emailSummaryTestButton.addClass( 'updated-message' );
+							setTimeout( function() {
+								emailSummaryTestButton.removeClass( 'updated-message' );
+							}, 3000 );
+						}
+					},
+				} ).fail( function( response ) {
+					if ( window.console && window.console.log ) {
+						console.log( response );
+					}
+				} ).done( function( response ) {
+					emailSummaryTestButton.removeClass( 'updating-message' ).prop( 'disabled', false );
+				} );
+
+
+			} );
+
 	}
 };
 
