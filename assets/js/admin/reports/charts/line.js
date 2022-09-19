@@ -79,8 +79,45 @@ export const render = ( config ) => {
 		},
 	};
 
-	// Render
-	return new Chart( document.getElementById( target ), lineConfig );
+	let chartTarget = document.getElementById( target );
+	let chart = new Chart( chartTarget, lineConfig );
+
+	// Make adjustments to the config based on the data sets.
+	/**
+	 * Setup some sane min and max values for the y-axes.
+	 *
+	 * If there are two y-axes, then we need to possibly adjust the min on both to to ensure the `0` line is in the same
+	 * plane for both.
+	 */
+	 let yAxesConstraints = [];
+	 config.data.datasets.forEach( function( values, index ) {
+		 let yValues = values.data.map(item => item.y); // Pull out just the y values.
+		 let max = Math.max.apply( null, yValues ),
+			 min =  Math.min.apply( null, yValues );
+
+		 yAxesConstraints[ index ] = {
+			 min: Math.floor( min + ( min * .10 ) ),
+			 max: Math.ceil( max + ( max * .10 ) ),
+		 };
+	 });
+
+	 // If we have more than one axes here determine if one is lower than 0, so we can adjust the other graphs.
+	 if ( yAxesConstraints.length > 1 ) {
+
+		 if ( yAxesConstraints[0]['min'] < 0 && yAxesConstraints[1]['min'] >= 0 ) {
+			 yAxesConstraints[1]['min'] = -2;
+		 } else if ( yAxesConstraints[1][min] < 0 && yAxesConstraints[0]['min'] >= 0 ) {
+			 yAxesConstraints[0]['min'] = -200;
+		 }
+
+		 yAxesConstraints.forEach( function( values, index ) {
+			 config.options.scales.yAxes[ index ]['ticks']['min'] = values[ 'min' ];
+			 config.options.scales.yAxes[ index ]['ticks']['max'] = values[ 'max' ];
+		 } );
+	 }
+
+	// Render.
+	return chart;
 };
 
 /**
