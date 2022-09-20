@@ -184,22 +184,6 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
 
 /**
- * Sanitize bundled products conditions on save.
- *
- * @since 3.1
- *
- * @param array $bundled_products_conditions
- * @return array
- */
-function edd_sanitize_bundled_products_conditions_save( $bundled_products_conditions = array() ) {
-	return array_combine(
-		range( 1, count( $bundled_products_conditions ) ),
-		array_values( $bundled_products_conditions )
-	);
-}
-add_filter( 'edd_metabox_save__edd_bundled_products_conditions', 'edd_sanitize_bundled_products_conditions_save' );
-
-/**
  * Don't save blank rows.
  *
  * When saving, check the price and file table for blank rows.
@@ -632,7 +616,7 @@ function edd_render_products_field( $post_id ) {
 										<?php
 										echo EDD()->html->product_dropdown(
 											array(
-												'name'                 => '_edd_bundled_products[]',
+												'name'                 => '_edd_bundled_products[' . $index . ']',
 												'id'                   => 'edd_bundled_products_' . esc_attr( $index ),
 												'selected'             => $product,
 												'multiple'             => false,
@@ -666,7 +650,7 @@ function edd_render_products_field( $post_id ) {
 											$selected = isset( $price_assignments[ $index ] ) ? $price_assignments[ $index ] : null;
 
 											echo EDD()->html->select( array(
-												'name'             => '_edd_bundled_products_conditions['. $index .']',
+												'name'             => '_edd_bundled_products_conditions[' . $index . ']',
 												'id'               => 'edd_bundled_products_conditions_'. esc_attr( $index ),
 												'class'            => 'edd_repeatable_condition_field',
 												'options'          => $options,
@@ -702,7 +686,7 @@ function edd_render_products_field( $post_id ) {
 									<div class="edd-form-group__control">
 									<?php
 									echo EDD()->html->product_dropdown( array(
-										'name'                 => '_edd_bundled_products[]',
+										'name'                 => '_edd_bundled_products[1]',
 										'id'                   => 'edd_bundled_products_1',
 										'multiple'             => false,
 										'chosen'               => true,
