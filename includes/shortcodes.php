@@ -679,7 +679,9 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 	if ( isset( $_GET['payment_key'] ) ) {
 		$payment_key = urldecode( $_GET['payment_key'] );
-	} else if ( $session ) {
+	} elseif ( ! empty( $_GET['order'] ) && ! empty( $_GET['id'] ) ) {
+		$payment_key = edd_get_payment_key( absint( $_GET['id'] ) );
+	} elseif ( $session ) {
 		$payment_key = $session['purchase_key'];
 	} elseif ( $edd_receipt_args['payment_key'] ) {
 		$payment_key = $edd_receipt_args['payment_key'];

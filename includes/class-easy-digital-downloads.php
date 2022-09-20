@@ -629,6 +629,7 @@ final class Easy_Digital_Downloads {
 		// Checkout
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/checkout/pages.php';
 
 		// Customers
 		require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-address.php';
