@@ -7,9 +7,10 @@
  */
 
 /**
- * Retrieve the Success page URI
+ * Retrieves the Success page URI.
  *
- * @since       1.6
+ * @since 1.6
+ * @since 3.1 Updated to check for the new confirmation page if no query string is provided.
  * @return      string
 */
 function edd_get_success_page_uri( $query_string = null ) {
@@ -17,8 +18,7 @@ function edd_get_success_page_uri( $query_string = null ) {
 	if ( empty( $query_string ) ) {
 		$page_id = edd_get_option( 'confirmation_page', $page_id );
 	}
-	$page_id = absint( $page_id );
-
+	$page_id      = absint( $page_id );
 	$success_page = get_permalink( $page_id );
 
 	if ( $query_string ) {
