@@ -54,7 +54,21 @@ function edd_add_api_request_log( $data = array() ) {
 		return false;
 	}
 
-	// Instantiate a query object
+	/**
+	 * Allow the ability to disable an API Request Log from being inserted.
+	 *
+	 * @since 3.1
+	 *
+	 * @param bool  $should_record_log If this API reqeust should be logged.
+	 * @param array $data              The data to be logged.
+	 */
+	$should_record_log = apply_filters( 'edd_should_log_api_request', true, $data );
+
+	if ( false === $should_record_log ) {
+		return false;
+	}
+
+	// Instantiate a query object.
 	$api_request_logs = new EDD\Database\Queries\Log_Api_Request();
 
 	return $api_request_logs->add_item( $data );

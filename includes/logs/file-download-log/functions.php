@@ -55,6 +55,20 @@ function edd_add_file_download_log( $data = array() ) {
 		return false;
 	}
 
+	/**
+	 * Allow the ability to disable a File Download Log being inserted.
+	 *
+	 * @since 3.1
+	 *
+	 * @param bool  $should_record_log If this file download should be logged.
+	 * @param array $data              The data to be logged.
+	 */
+	$should_record_log = apply_filters( 'edd_should_log_file_download', true, $data );
+
+	if ( false === $should_record_log ) {
+		return false;
+	}
+
 	$file_download_logs = new EDD\Database\Queries\Log_File_Download();
 
 	return $file_download_logs->add_item( $data );
