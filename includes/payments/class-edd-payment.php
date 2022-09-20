@@ -1109,7 +1109,7 @@ class EDD_Payment {
 		);
 
 		$this->cart_details[] = array(
-			'name'        => $download->post_title,
+			'name'        => edd_get_download_name( $download->ID, $args['price_id'] ),
 			'id'          => $download->ID,
 			'item_number' => $item_number,
 			'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
