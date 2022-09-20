@@ -373,7 +373,7 @@ jQuery( document ).ready( function( $ ) {
 			// The form is already on page, just trigger that the gateway is loaded so further action can be taken.
 			setTimeout( function() {
 				$( 'body' ).trigger( 'edd_gateway_loaded', [ chosen_gateway ] );
-			}, 200 );
+			}, 300 );
 		}
 	}
 
