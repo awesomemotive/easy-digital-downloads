@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.4\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-09-17 03:01:53+00:00\n"
+"POT-Creation-Date: 2022-09-20 14:06:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -131,6 +131,7 @@ msgstr ""
 #: includes/admin/upgrades/v3/class-base.php:117
 #: includes/api/class-edd-api.php:2036 includes/api/class-edd-api.php:2040
 #: includes/api/class-edd-api.php:2052 includes/api/class-edd-api.php:2054
+#: includes/blocks/includes/forms/recaptcha.php:175
 #: includes/cart/class-edd-cart.php:1451 includes/cart/class-edd-cart.php:1465
 #: includes/class-edd-license-handler.php:388
 #: includes/deprecated-functions.php:488 includes/deprecated-functions.php:505
@@ -864,8 +865,8 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-sales.php:42
 #: includes/admin/reporting/export/class-batch-export-taxed-customers.php:43
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:43
-#: includes/admin/tools.php:496 includes/emails/tags.php:185
-#: templates/shortcode-register.php:25
+#: includes/admin/tools.php:496 includes/blocks/views/forms/registration.php:23
+#: includes/emails/tags.php:185 templates/shortcode-register.php:25
 msgid "Email"
 msgstr ""
 
@@ -3341,6 +3342,8 @@ msgid ""
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:55
+#: includes/blocks/views/orders/orders.php:25
+#. translators: the order
 msgid "Order: %s"
 msgstr ""
 
@@ -4792,6 +4795,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:441
 #: includes/admin/settings/register-settings.php:450
 #: includes/admin/settings/register-settings.php:462
+#: includes/blocks/includes/admin/settings.php:35
 msgid "Select a page"
 msgstr ""
 
@@ -6108,6 +6112,7 @@ msgid "Choose the button color"
 msgstr ""
 
 #: includes/admin/thickbox.php:169
+#: includes/blocks/includes/admin/settings.php:107
 msgid "Text"
 msgstr ""
 
@@ -7306,6 +7311,238 @@ msgstr ""
 msgid "Failed to dismiss notification."
 msgstr ""
 
+#: includes/blocks/includes/admin/functions.php:25
+#: includes/blocks/includes/admin/settings.php:30
+msgid "Login Page"
+msgstr ""
+
+#: includes/blocks/includes/admin/notices.php:26
+msgid "EDD Blocks are now a part of Easy Digital Downloads"
+msgstr ""
+
+#: includes/blocks/includes/admin/notices.php:27
+msgid ""
+"If you are using the original Downloads block, you will need to update it "
+"to use either the new EDD Products or EDD Downloads Terms block. All other "
+"blocks functionality is automatically updated. Once you've replaced your "
+"blocks, you can deactivate the EDD Blocks plugin."
+msgstr ""
+
+#: includes/blocks/includes/admin/recaptcha.php:25
+msgid "reCAPTCHA"
+msgstr ""
+
+#: includes/blocks/includes/admin/recaptcha.php:28
+#. translators: 1. opening anchor tag; 2. closing anchor tag
+msgid ""
+"%1$sRegister with Google%2$s to get reCAPTCHA keys. Setting the keys here "
+"will enable reCAPTCHA on your login form block."
+msgstr ""
+
+#: includes/blocks/includes/admin/recaptcha.php:37
+msgid "reCAPTCHA Site Key"
+msgstr ""
+
+#: includes/blocks/includes/admin/recaptcha.php:44
+msgid "reCAPTCHA Secret Key"
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:31
+msgid ""
+"This page must include the EDD Login block. Setting this allows the front "
+"end form to be used for resetting passwords."
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:42
+#. translators: 1. opening code tag, do not translate; 2. closing code tag, do
+#. not translate.
+msgid ""
+"If a customer logs in using the EDD Login block or %1$s[edd_login]%2$s "
+"shortcode, will be redirected to this page."
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:47
+msgid "This can be overridden in the block settings or shortcode parameters."
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:54
+msgid ""
+"This page shows a complete order history for the current user, including "
+"download links."
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:58
+#. translators: 1. opening code tag, do not translate; 2. closing code tag, do
+#. not translate.
+msgid ""
+"Either the EDD Order History block or the %1$s[purchase_history]%2$s "
+"shortcode must be on this page."
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:64
+msgid "Order History Page"
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:82
+msgid "Default Button Colors"
+msgstr ""
+
+#: includes/blocks/includes/admin/settings.php:106
+msgid "Background"
+msgstr ""
+
+#: includes/blocks/includes/forms/recaptcha.php:92
+msgid "reCAPTCHA validation missing."
+msgstr ""
+
+#: includes/blocks/includes/forms/recaptcha.php:128
+msgid "There was an error validating the reCAPTCHA. Please try again."
+msgstr ""
+
+#: includes/blocks/includes/forms/recaptcha.php:144
+msgid "Unexpected reCAPTCHA error. Please try again."
+msgstr ""
+
+#: includes/blocks/includes/forms/recaptcha.php:154
+msgid ""
+"reCAPTCHA verification failed with low score. Please contact a site "
+"administrator."
+msgstr ""
+
+#: includes/blocks/includes/forms/recaptcha.php:160
+msgid "reCAPTCHA verification failed. Please contact a site administrator."
+msgstr ""
+
+#: includes/blocks/includes/orders/functions.php:28
+#: templates/history-purchases.php:73
+msgid "Complete Purchase"
+msgstr ""
+
+#: includes/blocks/includes/orders/functions.php:36
+#: templates/history-purchases.php:78
+msgid "View Details and Downloads"
+msgstr ""
+
+#: includes/blocks/includes/terms/images.php:76
+#: includes/blocks/includes/terms/images.php:177
+msgid "Select Image"
+msgstr ""
+
+#: includes/blocks/includes/terms/images.php:92
+#: includes/blocks/includes/terms/images.php:117
+msgid "Term Image"
+msgstr ""
+
+#: includes/blocks/includes/terms/images.php:95
+msgid "Set Term Image."
+msgstr ""
+
+#: includes/blocks/includes/terms/images.php:131
+#. translators: 1. name of the term
+msgid "Set Term Image for %1$s."
+msgstr ""
+
+#: includes/blocks/includes/terms/images.php:155
+#. translators: the placeholder refers to which featured image
+msgid "%s featured image"
+msgstr ""
+
+#: includes/blocks/includes/terms/images.php:180
+msgid "Delete Image"
+msgstr ""
+
+#: includes/blocks/includes/terms/images.php:213
+msgid "Image"
+msgstr ""
+
+#: includes/blocks/views/downloads/content.php:18
+#: includes/template-functions.php:153
+msgid "Free"
+msgstr ""
+
+#: includes/blocks/views/forms/login.php:11
+#: includes/blocks/views/forms/registration.php:12
+#: templates/shortcode-login.php:15
+msgid "Username or Email"
+msgstr ""
+
+#: includes/blocks/views/forms/login.php:22
+#: includes/blocks/views/forms/registration.php:34
+#: includes/checkout/template.php:502 includes/checkout/template.php:508
+#: includes/checkout/template.php:579 templates/shortcode-login.php:19
+#: templates/shortcode-register.php:30
+msgid "Password"
+msgstr ""
+
+#: includes/blocks/views/forms/login.php:33 templates/shortcode-login.php:23
+msgid "Remember Me"
+msgstr ""
+
+#: includes/blocks/views/forms/login.php:40 templates/shortcode-login.php:29
+msgid "Log In"
+msgstr ""
+
+#: includes/blocks/views/forms/login.php:44 includes/payments/actions.php:578
+#: templates/shortcode-login.php:33
+msgid "Lost Password?"
+msgstr ""
+
+#: includes/blocks/views/forms/lost-password.php:8
+msgid ""
+"Please enter your username or email address. You will receive an email "
+"message with instructions on how to reset your password."
+msgstr ""
+
+#: includes/blocks/views/forms/lost-password.php:14
+msgid "Username or Email Address"
+msgstr ""
+
+#: includes/blocks/views/forms/lost-password.php:27
+msgid "Get New Password"
+msgstr ""
+
+#: includes/blocks/views/forms/registration.php:45
+#: templates/shortcode-register.php:35
+msgid "Confirm Password"
+msgstr ""
+
+#: includes/blocks/views/forms/registration.php:58
+#: includes/checkout/template.php:561 templates/shortcode-register.php:46
+msgid "Register"
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:7
+msgid "Enter your new password below or generate one."
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:13
+msgid "New password"
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:17
+msgid "Hide password"
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:20
+msgid "Strength indicator"
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:26
+msgid "Confirm use of weak password"
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:31
+msgid "Confirm new password"
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:43
+msgid "Generate Password"
+msgstr ""
+
+#: includes/blocks/views/forms/reset-password.php:44
+msgid "Save Password"
+msgstr ""
+
 #: includes/cart/class-edd-cart.php:902
 msgid "includes %s tax"
 msgstr ""
@@ -7534,12 +7771,6 @@ msgstr ""
 msgid "The username you will use to log into your account."
 msgstr ""
 
-#: includes/checkout/template.php:502 includes/checkout/template.php:508
-#: includes/checkout/template.php:579 templates/shortcode-login.php:19
-#: templates/shortcode-register.php:30
-msgid "Password"
-msgstr ""
-
 #: includes/checkout/template.php:507
 msgid "The password used to access your account."
 msgstr ""
@@ -7558,10 +7789,6 @@ msgstr ""
 
 #: includes/checkout/template.php:559
 msgid "Need to create an account?"
-msgstr ""
-
-#: includes/checkout/template.php:561 templates/shortcode-register.php:46
-msgid "Register"
 msgstr ""
 
 #: includes/checkout/template.php:561
@@ -11506,10 +11733,6 @@ msgstr ""
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:578 templates/shortcode-login.php:33
-msgid "Lost Password?"
-msgstr ""
-
 #: includes/payments/class-edd-payment.php:1824
 msgid ""
 "Array key \"post_status\" is no longer a supported attribute for the "
@@ -12530,10 +12753,6 @@ msgid ""
 "set one."
 msgstr ""
 
-#: includes/template-functions.php:153
-msgid "Free"
-msgstr ""
-
 #: includes/template-functions.php:210
 msgid "Added to cart"
 msgstr ""
@@ -12780,14 +12999,6 @@ msgstr ""
 msgid "You have not purchased any downloads"
 msgstr ""
 
-#: templates/history-purchases.php:73
-msgid "Complete Purchase"
-msgstr ""
-
-#: templates/history-purchases.php:78
-msgid "View Details and Downloads"
-msgstr ""
-
 #: templates/history-purchases.php:101
 msgid "You have not made any purchases."
 msgstr ""
@@ -12800,18 +13011,6 @@ msgstr ""
 
 #: templates/shortcode-login.php:12
 msgid "Log into Your Account"
-msgstr ""
-
-#: templates/shortcode-login.php:15
-msgid "Username or Email"
-msgstr ""
-
-#: templates/shortcode-login.php:23
-msgid "Remember Me"
-msgstr ""
-
-#: templates/shortcode-login.php:29
-msgid "Log In"
 msgstr ""
 
 #: templates/shortcode-profile-editor.php:18
@@ -12888,10 +13087,6 @@ msgstr ""
 
 #: templates/shortcode-register.php:15
 msgid "Register New Account"
-msgstr ""
-
-#: templates/shortcode-register.php:35
-msgid "Confirm Password"
 msgstr ""
 
 #: templates/widget-cart-checkout.php:2 templates/widget-cart-empty.php:3
@@ -13059,6 +13254,22 @@ msgctxt "add order item tax rate"
 msgid "(%s)"
 msgstr ""
 
+#: includes/blocks/includes/downloads/downloads.php:83
+#. translators: the plurals downloads name.
+msgctxt "download post type name"
+msgid "No %s found."
+msgstr ""
+
+#: includes/post-types.php:38
+msgctxt "download post type name"
+msgid "%2$s"
+msgstr ""
+
+#: includes/shortcodes.php:619
+msgctxt "download post type name"
+msgid "No %s found"
+msgstr ""
+
 #: includes/checkout/template.php:767
 msgctxt "Entering a discount code"
 msgid "Click to enter it"
@@ -13132,16 +13343,6 @@ msgstr ""
 #: includes/gateways/stripe/includes/payment-methods/payment-request/template.php:200
 msgctxt "payment request button divider"
 msgid "or"
-msgstr ""
-
-#: includes/post-types.php:38
-msgctxt "download post type name"
-msgid "%2$s"
-msgstr ""
-
-#: includes/shortcodes.php:619
-msgctxt "download post type name"
-msgid "No %s found"
 msgstr ""
 
 #: includes/post-types.php:39
