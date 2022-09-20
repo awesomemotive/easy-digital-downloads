@@ -267,6 +267,7 @@ final class EDD_Amazon_Payments {
 				'admin_label'    => __( 'Amazon', 'easy-digital-downloads' ),
 				'checkout_label' => __( 'Amazon', 'easy-digital-downloads' ),
 				'supports'       => array(),
+				'icons'          => array( 'amazon' ),
 			),
 		);
 
