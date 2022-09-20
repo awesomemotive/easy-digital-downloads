@@ -391,24 +391,31 @@ function get_filter_value( $filter ) {
 	switch ( $filter ) {
 		// Handle dates.
 		case 'dates':
+
+			$default_range          = 'this_month';
+			$default_relative_range = 'previous_period';
+
 			if ( ! isset( $_GET['range'] ) ) {
-				$default = 'this_month';
-				$dates   = parse_dates_for_range( $default );
+				$dates   = parse_dates_for_range( $default_range );
 				$value   = array(
-					'range'          => $default,
-					'relative_range' => 'previous_period',
+					'range'          => $default_range,
+					'relative_range' => $default_relative_range,
 					'from'           => $dates['start']->format( 'Y-m-d' ),
 					'to'             => $dates['end']->format( 'Y-m-d' ),
 				);
 			} else {
 				$value = array(
-					'range'          => sanitize_text_field( $_GET[ 'range' ] ),
-					'relative_range' => sanitize_text_field( $_GET[ 'relative_range' ] ),
+					'range' => isset( $_GET['range'] )
+						? sanitize_text_field( $_GET['range'] )
+						: $default_range,
+					'relative_range' => isset( $_GET['relative_range'] )
+						? sanitize_text_field( $_GET['relative_range'] )
+						: $default_relative_range,
 					'from' => isset( $_GET['filter_from'] )
-						? sanitize_text_field( $_GET[ 'filter_from'] )
+						? sanitize_text_field( $_GET['filter_from'] )
 						: '',
 					'to'   => isset( $_GET['filter_to'] )
-						? sanitize_text_field( $_GET[ 'filter_to'] )
+						? sanitize_text_field( $_GET['filter_to'] )
 						: ''
 				);
 			}
