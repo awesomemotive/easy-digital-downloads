@@ -81,10 +81,20 @@ module.exports = function( grunt ) {
 							expression: true,
 						},
 						{
+							match: /update_required_pages/g,
+							replacement: 'update_core_required_pages',
+							expression: true,
+						},
+						{
 							match: /remove_action(.*);/g,
 							replacement: '',
 							expression: true,
-						}
+						},
+						{
+							match: /remove_filter(.*);/g,
+							replacement: '',
+							expression: true,
+						},
 					]
 				},
 				files: [
