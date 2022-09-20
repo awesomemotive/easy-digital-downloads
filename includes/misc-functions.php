@@ -1084,38 +1084,50 @@ function edd_set_upload_dir( $upload ) {
  */
 function edd_can_view_receipt( $payment_key = '' ) {
 
-	$return = false;
+	$user_can_view = false;
 
 	if ( empty( $payment_key ) ) {
-		return $return;
+		return $user_can_view;
 	}
 
 	global $edd_receipt_args;
 
 	$order = edd_get_order_by( 'payment_key', $payment_key );
 	if ( empty( $order->id ) ) {
-		return $return;
+		return $user_can_view;
 	}
 	$edd_receipt_args['id'] = $order->id;
 
+	// Some capabilities can always view the receipt, skip the filter.
+	if ( current_user_can( 'edit_shop_payments' ) ) {
+		return true;
+	}
+
 	if ( is_user_logged_in() ) {
 		if ( (int) get_current_user_id() === (int) $order->user_id ) {
-			$return = true;
+			$user_can_view = true;
 		} elseif ( wp_get_current_user()->user_email === $order->email ) {
-			$return = true;
+			$user_can_view = true;
 		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
-			$return = true;
+			$user_can_view = true;
 		}
 	} else {
 		$session = edd_get_purchase_session();
 		if ( ! empty( $session ) ) {
 			if ( $session['purchase_key'] === $order->payment_key ) {
-				$return = true;
+				$user_can_view = true;
+			}
+		} elseif ( empty( $order->user_id ) ) {
+			$id         = (int) filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+			$order_hash = ! empty( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : false;
+			if ( $id === (int) $order->id && $order_hash ) {
+				$key           = ! empty( $order->payment_key ) ? $order->payment_key : $order->payment_meta['key'];
+				$user_can_view = hash_equals( md5( $order->id . $key . $order->email ), $order_hash );
 			}
 		}
 	}
 
-	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+	return (bool) apply_filters( 'edd_can_view_receipt', $user_can_view, $payment_key );
 }
 
 /**
