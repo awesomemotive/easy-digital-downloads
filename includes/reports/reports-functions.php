@@ -391,7 +391,6 @@ function get_filter_value( $filter ) {
 	switch ( $filter ) {
 		// Handle dates.
 		case 'dates':
-
 			$default_range          = 'this_month';
 			$default_relative_range = 'previous_period';
 
