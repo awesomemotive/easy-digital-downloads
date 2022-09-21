@@ -958,6 +958,7 @@ class Stats {
 		if ( ! empty( $country ) || ! empty( $region ) ) {
 			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
 		}
+
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
 			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
 			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
