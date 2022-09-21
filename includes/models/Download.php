@@ -136,7 +136,7 @@ class Download {
 			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
 			WHERE {$product_id_sql}
 			{$price_id_sql}
-			AND oi.status IN('complete','partially_refunded')
+			AND oi.status IN('complete','refunded','partially_refunded')
 			{$order_status_sql} {$date_query_sql}";
 		$partial_orders  =
 			"SELECT SUM(oi.quantity) as sales
@@ -165,7 +165,7 @@ class Download {
 
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
-		$order_status_sql = $this->generate_order_status_query_sql();
+		$order_status_sql = $this->generate_order_status_query_sql( false );
 		$date_query_sql   = $this->generate_date_query_sql();
 
 		/**
@@ -181,7 +181,7 @@ class Download {
 			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
 			WHERE {$product_id_sql}
 			{$price_id_sql}
-			AND oi.status IN('complete','partially_refunded')
+			AND oi.status IN('complete','partially_refunded','refunded')
 			{$order_status_sql} {$date_query_sql}";
 		$order_adjustments =
 			"SELECT SUM((oa.total - oa.tax)/ oa.rate) as revenue
