@@ -130,21 +130,6 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			'id'   => absint( $customer_id ),
 		) );
 
-		// Actions
-		$actions = array(
-			'view' => '<a href="' . esc_url( $customer_url . '#edd_general_addresses' ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>',
-		);
-
-		if ( empty( $item['is_primary'] ) ) {
-			$delete_url = wp_nonce_url( edd_get_admin_url( array(
-				'page'       => 'edd-customers',
-				'view'       => 'overview',
-				'id'         => urlencode( $item['id'] ),
-				'edd_action' => 'customer-remove-address'
-			) ), 'edd-remove-customer-address' );
-			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		}
-
 		// State
 		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
 			switch ( $status ) {
@@ -162,7 +147,49 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		}
 
 		// Concatenate and return
-		return '<strong><a class="row-title" href="' . esc_url( $customer_url . '#edd_general_addresses' ) . '">' . esc_html( $address ) . '</a>' . esc_html( $state ) . '</strong>' . $extra . $this->row_actions( $actions );
+		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '#edd_general_addresses">' . esc_html( $address ) . '</a>' . esc_html( $state ) . '</strong>' . $extra . $this->row_actions( $this->get_row_actions( $item ) );
+	}
+
+	/**
+	 * Gets the row actions for the customer address.
+	 *
+	 * @since 3.0
+	 * @param array $item
+	 * @return array
+	 */
+	private function get_row_actions( $item ) {
+		// Link to customer
+		$customer_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => urlencode( $item['customer_id'] ),
+			)
+		);
+
+		// Actions
+		$actions = array(
+			'view' => '<a href="' . esc_url( $customer_url ) . '#edd_general_addresses">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
+		);
+
+		if ( empty( $item['is_primary'] ) ) {
+			$delete_url = wp_nonce_url( edd_get_admin_url( array(
+				'page'       => 'edd-customers',
+				'view'       => 'overview',
+				'id'         => urlencode( $item['id'] ),
+				'edd_action' => 'customer-remove-address'
+			) ), 'edd-remove-customer-address' );
+			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		}
+
+		/**
+		 * Filter the customer address row actions.
+		 *
+		 * @since 3.0
+		 * @param array $actions The array of row actions.
+		 * @param array $item    The specific item (customer address).
+		 */
+		return apply_filters( 'edd_customer_address_row_actions', $actions, $item );
 	}
 
 	/**

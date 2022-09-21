@@ -424,7 +424,7 @@ class EDD_Logging {
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
 		$r = array(
-			'object_id' => $object_id,
+			$this->get_object_id_column_name_for_type( $type ) => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
@@ -462,7 +462,7 @@ class EDD_Logging {
 	 */
 	public function delete_logs( $object_id = 0, $type = null, $meta_query = null ) {
 		$r = array(
-			'object_id' => $object_id,
+			$this->get_object_id_column_name_for_type( $type ) => $object_id,
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
@@ -553,11 +553,8 @@ class EDD_Logging {
 
 		// Back-compat for post_parent.
 		if ( ! empty( $r['post_parent'] ) ) {
-			if ( ! empty( $r['log_type'] && 'file_download' === $r['log_type'] ) ) {
-				$r['product_id'] = $r['post_parent'];
-			} else {
-				$r['object_id'] = $r['post_parent'];
-			}
+			$type                                        = ! empty( $r['log_type'] ) ? $r['log_type'] : '';
+			$r[ $this->get_object_id_column_name_for_type( $type ) ] = $r['post_parent'];
 		}
 
 		// Back compat for posts_per_page
@@ -581,6 +578,32 @@ class EDD_Logging {
 
 		// Return parsed args
 		return $r;
+	}
+
+	/**
+	 * Gets the object ID column name based on the log type.
+	 *
+	 * @since 3.1
+	 * @param string $type The log type.
+	 * @return string      The column name to query for the object ID.
+	 */
+	private function get_object_id_column_name_for_type( $type = '' ) {
+
+		switch ( $type ) {
+			case 'file_download':
+				$object_id = 'product_id';
+				break;
+
+			case 'api_request':
+				$object_id = 'user_id';
+				break;
+
+			default:
+				$object_id = 'object_id';
+				break;
+		}
+
+		return $object_id;
 	}
 
 	/** File System ***********************************************************/

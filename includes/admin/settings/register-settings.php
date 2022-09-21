@@ -299,8 +299,29 @@ function edd_get_registered_settings() {
 		$gateways         = edd_get_payment_gateways();
 		$admin_email      = get_bloginfo( 'admin_email' );
 		$site_name        = get_bloginfo( 'name' );
-		$site_hash        = substr( md5( $site_name ), 0, 10 );
-		$edd_settings     = array(
+
+		$email_summary_recipient   = edd_get_option( 'email_summary_recipient', 'admin' );
+		$email_summary_trigger_url = wp_nonce_url(
+			edd_get_admin_url(
+				array(
+					'page'       => 'edd-settings',
+					'tab'        => 'emails',
+					'section'    => 'email_summaries',
+					'edd_action' => 'trigger_email_summary',
+				)
+			),
+			'edd_trigger_email_summary'
+		);
+		$email_summary_schedule      = wp_next_scheduled( EDD_Email_Summary_Cron::CRON_EVENT_NAME );
+		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
+		if ( $email_summary_schedule ) {
+			$email_summary_schedule_date = \Carbon\Carbon::createFromTimestamp( $email_summary_schedule )->setTimezone( edd_get_timezone_id() );
+			/* Translators: formatted date */
+			$email_summary_schedule_text  = sprintf( __( 'The next summary email is scheduled to send on %s.', 'easy-digital-downloads' ), $email_summary_schedule_date->format( get_option( 'date_format' ) ) );
+		}
+
+		$site_hash    = substr( md5( $site_name ), 0, 10 );
+		$edd_settings = array(
 
 			// General Settings
 			'general' => apply_filters( 'edd_settings_general', array(
@@ -809,6 +830,54 @@ function edd_get_registered_settings() {
 						'type' => 'checkbox',
 					),
 				),
+				'email_summaries' => array(
+					'email_summary_frequency' => array(
+						'id'      => 'email_summary_frequency',
+						'name'    => __( 'Email Frequency', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'weekly',
+						'desc'    => $email_summary_schedule_text,
+						'options' => array(
+							'weekly'  => __( 'Weekly', 'easy-digital-downloads' ),
+							'monthly' => __( 'Monthly', 'easy-digital-downloads' ),
+						),
+					),
+					'email_summary_recipient' => array(
+						'id'      => 'email_summary_recipient',
+						'name'    => __( 'Email Recipient', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'admin',
+						'options' => array(
+							/* Translators: email */
+							'admin'  => sprintf( __( 'Administrator: %s', 'easy-digital-downloads' ), $admin_email ),
+							'custom' => __( 'Custom Recipients', 'easy-digital-downloads' ),
+						),
+					),
+					'email_summary_custom_recipients' => array(
+						'id'    => 'email_summary_custom_recipients',
+						'class' => ( 'admin' === $email_summary_recipient ) ? 'hidden' : '',
+						'name'  => __( 'Custom Recipients', 'easy-digital-downloads' ),
+						'desc'  => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
+						'type'  => 'textarea',
+					),
+					'email_summary_buttons' => array(
+						'id'   => 'email_summary_buttons',
+						'name' => '',
+						'desc' => '
+							<a href="' . esc_url( $email_summary_trigger_url ) . '" class="button" id="edd-send-test-summary">' . esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>
+							<div id="edd-send-test-summary-save-changes-notice"></div>
+							<div id="edd-send-test-summary-notice"></div>
+						',
+						'type' => 'descriptive_text',
+					),
+					'disable_email_summary' => array(
+						'id'    => 'disable_email_summary',
+						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
+						'desc'  => '<a target="_blank" href="https://easydigitaldownloads.com/docs/email-settings/#summaries">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
+						'check' => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
+						'type'  => 'checkbox_description',
+					),
+				),
 			) ),
 
 			// Marketing Settings
@@ -1177,6 +1246,21 @@ function edd_get_registered_settings() {
 			);
 		}
 
+		// If test_mode is being forced to true, alter the setting so it cannot be modified.
+		if ( edd_is_test_mode_forced() ) {
+			$edd_settings['gateways']['main']['test_mode'] = array_merge(
+				array(
+					'options'       => array(
+						'disabled' => true,
+						'readonly' => true,
+					),
+					'tooltip_title' => __( 'Forced Test Mode', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'You currently cannot modify the Test Mode setting, as the \'EDD_TEST_MODE\' constant has been defined as \'true\' or the edd_is_test_mode filter is being forced to \'true\'.', 'easy-digital-downloads' ),
+				),
+				$edd_settings['gateways']['main']['test_mode']
+			);
+		}
+
 		// Allow registered settings to surface the deprecated "Styles" tab.
 		if ( has_filter( 'edd_settings_styles' ) ) {
 			$edd_settings['styles'] = edd_apply_filters_deprecated(
@@ -1495,7 +1579,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
-		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] <= 0 ) {
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] < 0 ) {
 			continue;
 		}
 
@@ -1689,7 +1773,8 @@ function edd_get_registered_settings_sections() {
 			'emails'     => apply_filters( 'edd_settings_sections_emails', array(
 				'main'               => __( 'General',            'easy-digital-downloads' ),
 				'purchase_receipts'  => __( 'Purchase Receipts',  'easy-digital-downloads' ),
-				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' )
+				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' ),
+				'email_summaries'    => __( 'Summaries', 'easy-digital-downloads' ),
 			) ),
 			'marketing'  => apply_filters( 'edd_settings_sections_marketing', array(
 				'main' => __( 'General', 'easy-digital-downloads' ),
@@ -1817,6 +1902,11 @@ function edd_checkbox_callback( $args ) {
  */
 function edd_checkbox_description_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+
+	// Allow a setting or filter to override what the found value is.
+	if ( isset( $args['current'] ) ) {
+		$edd_option = $args['current'];
+	}
 
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
@@ -2296,7 +2386,9 @@ function edd_textarea_callback( $args ) {
 		? ' placeholder="' . esc_attr( $args['placeholder'] ) . '"'
 		: '';
 
-	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+
+	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $readonly . '>' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2688,7 +2780,7 @@ function edd_recapture_callback($args) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates( array(), OBJECT );
+	$rates = edd_get_tax_rates( array( 'number' => 9999 ), OBJECT );
 
 	wp_enqueue_script( 'edd-admin-tax-rates' );
 	wp_enqueue_style( 'edd-admin-tax-rates' );
@@ -2700,7 +2792,8 @@ function edd_tax_rates_callback( $args ) {
 			/* translators: Tax rate country code */
 			'duplicateRate' => esc_html__( 'Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another.', 'easy-digital-downloads' ),
 			'emptyCountry'  => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
-			'emptyTax'      => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'negativeTax'   => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'emptyTax'      => esc_html__( 'Are you sure you want to add a 0% tax rate?', 'easy-digital-downloads' ),
 		),
 	) );
 
@@ -2991,3 +3084,47 @@ function edd_add_setting_tooltip( $html = '', $args = array() ) {
 	return $html;
 }
 add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
+
+/**
+ * Filters the edd_get_option call for test_mode.
+ *
+ * This allows us to ensure that calls directly to edd_get_option respect the constant
+ * in addition to the edd_is_test_mode() function call and included filter.
+ *
+ * @since 3.1
+ *
+ * @param bool   $value   If test_mode is enabled in the settings.
+ * @param string $key     The key of the setting, should be test_mode.
+ * @param bool   $default The default setting, which is 'false' for test_mode.
+ */
+function edd_filter_test_mode_option( $value, $key, $default ) {
+	if ( edd_is_test_mode_forced() ) {
+		$value = true;
+	}
+
+	return $value;
+}
+add_filter( 'edd_get_option_test_mode', 'edd_filter_test_mode_option', 10, 3 );
+
+/**
+ * Determine if test mode is being forced to true.
+ *
+ * Using the EDD_TEST_MODE and the edd_is_test_mode filter, determine if the value of true
+ * is being forced for test_mode so we can properly alter the setting for it.
+ *
+ * @since 3.1
+ *
+ * @return bool If test_mode is being forced or not.
+ */
+function edd_is_test_mode_forced() {
+	if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+		return true;
+	}
+
+	if ( false !== has_filter( 'edd_is_test_mode', '__return_true' ) ) {
+		return true;
+	}
+
+	return false;
+}
+
