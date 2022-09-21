@@ -184,6 +184,22 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
 
 /**
+ * Sanitize bundled products conditions on save
+ *
+ * @since 3.1
+ *
+ * @param array $bundled_products_conditions
+ * @return array
+ */
+function edd_sanitize_bundled_products_conditions_save( $bundled_products_conditions = array() ) {
+	return array_combine(
+		range( 1, count( $bundled_products_conditions ) ),
+		array_values( $bundled_products_conditions )
+	);
+}
+add_filter( 'edd_metabox_save__edd_bundled_products_conditions', 'edd_sanitize_bundled_products_conditions_save' );
+
+/**
  * Don't save blank rows.
  *
  * When saving, check the price and file table for blank rows.
