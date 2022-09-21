@@ -42,8 +42,108 @@ const EDD_Reports = {
 				date_range_options.removeClass( 'screen-reader-text' );
 			} else {
 				date_range_options.addClass( 'screen-reader-text' );
+				$( '.edd-date-range-selected-date span' ).addClass( 'hidden' )
+				$( '.edd-date-range-selected-date span[data-range="' + select.val() + '"]' ).removeClass( 'hidden' )
 			}
 		} );
+
+		$( '.edd-date-range-dates' ).on( 'click', function( event ) {
+			event.preventDefault();
+			$( 'select.edd-graphs-date-options' ).trigger( 'focus' );
+		});
+
+		/**
+		 * Relative date ranges.
+		 */
+
+			const relativeDateRangesParent   = $( '.edd-date-range-selected-relative-date' ),
+			      relativeDateRangesDropdown = $( '.edd-date-range-relative-dropdown' );
+
+			// Detect when HTML select for normal date range is changed.
+			$( '.edd-graphs-date-options' ).on( 'change', function() {
+				var range          = $( this ).val();
+				var relative_range = $( '.edd-date-range-selected-date span[data-range="' + range + '"]' ).data( 'default-relative-range' );
+
+				$( '.edd-date-range-picker' ).attr( 'data-range', range );
+				$( '.edd-graphs-relative-date-options' ).val( relative_range ).trigger( 'change' );
+
+				// Get relative date ranges from backend.
+				$.ajax( {
+					type: 'GET',
+					dataType: 'html',
+					url: ajaxurl,
+					data: {
+						action: 'edd_reports_get_relative_date_ranges',
+						range: range,
+						relative_range: relative_range,
+					},
+					beforeSend: function() {
+						relativeDateRangesDropdown.html( '<div class="spinner"></div>' ).addClass( 'loading' );
+					},
+					success: function( data ) {
+						relativeDateRangesDropdown.html( data );
+					},
+				} ).fail( function( response ) {
+					if ( window.console && window.console.log ) {
+						console.log( response );
+					}
+				} ).done( function( response ) {
+					relativeDateRangesDropdown.remove( '.spinner' );
+					relativeDateRangesDropdown.removeClass( 'loading' );
+				} );
+
+			} )
+
+			// Open relative daterange dropdown.
+			relativeDateRangesParent.on( 'click', function( event ) {
+				event.preventDefault();
+				$( this ).toggleClass( 'opened' );
+			});
+
+			// When selecting relative daterange from dropdown.
+			$( document ).on( 'click', '.edd-date-range-relative-dropdown li', function() {
+				var range = $(this).data( 'range' );
+				$('.edd-graphs-relative-date-options').val( range ).trigger( 'change' );
+			});
+
+			// Detect when HTML select for relative date range is changed.
+			$('.edd-graphs-relative-date-options').on( 'change', function() {
+				// Get relative date range name.
+				var range               = $( this ).val();
+				var selected_range_item = $( '.edd-date-range-relative-dropdown li[data-range="' + range + '"]' );
+				var selected_range_name = selected_range_item.find( '.date-range-name' ).first().text();
+
+				$( '.edd-date-range-selected-relative-range-name' ).html( selected_range_name )
+				$( '.edd-date-range-relative-dropdown li.active' ).removeClass( 'active' );
+				selected_range_item.addClass( 'active' );
+			} )
+
+
+			// If a click event is triggered on body.
+			$( document ).on( 'click', function( e ) {
+				EDD_Reports.close_relative_ranges_dropdown( e.target );
+			});
+
+			// If the Escape key is pressed.
+			$( document ).on( 'keydown', function( event ) {
+				const key = event.key;
+				if ( key === "Escape" ) {
+					EDD_Reports.close_relative_ranges_dropdown();
+				}
+			});
+
+	},
+
+	close_relative_ranges_dropdown: function( target = false ) {
+		var relativeDateRangesParent = $( '.edd-date-range-selected-relative-date' );
+
+		if ( ! relativeDateRangesParent.hasClass( 'opened' ) ) {
+			return false;
+		}
+
+		if ( false === target || ( ! relativeDateRangesParent.is( target ) && ! relativeDateRangesParent.has( target ).length ) ) {
+			relativeDateRangesParent.removeClass( 'opened' );
+		}
 	},
 
 	customers_export: function() {

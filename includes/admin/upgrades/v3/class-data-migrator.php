@@ -712,8 +712,11 @@ class Data_Migrator {
 
 		// Remove all order status transition actions.
 		remove_all_actions( 'edd_transition_order_status' );
-		remove_all_actions( 'edd_transition_order_item_status' );
-		remove_all_actions( 'edd_transition_order_adjustment_type' );
+		remove_action( 'edd_order_item_added', 'edd_recalculate_order_item_download' );
+		remove_action( 'edd_order_item_updated', 'edd_recalculate_order_item_download' );
+		remove_action( 'edd_order_item_deleted', 'edd_recalculate_order_item_download' );
+		remove_action( 'edd_order_adjustment_added', 'edd_recalculate_order_adjustment_download' );
+		remove_action( 'edd_order_adjustment_updated', 'edd_recalculate_order_adjustment_download' );
 
 		$order_id = edd_add_order( $order_data );
 

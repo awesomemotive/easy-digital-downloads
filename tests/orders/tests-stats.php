@@ -193,20 +193,20 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_order_item_count
 	 */
-	public function test_get_order_item_count_no_price_id_should_be_2() {
+	public function test_get_order_item_count_no_price_id_should_be_3() {
 		$count = self::$stats->get_order_item_count(
 			array(
 				'product_id' => 1,
 			)
 		);
 
-		$this->assertSame( 2, $count );
+		$this->assertSame( 3, $count );
 	}
 
 	/**
 	 * @covers ::get_order_item_count
 	 */
-	public function test_get_order_item_count_null_price_id_should_be_2() {
+	public function test_get_order_item_count_null_price_id_should_be_3() {
 		$count = self::$stats->get_order_item_count(
 			array(
 				'product_id' => 1,
@@ -214,7 +214,7 @@ class Stats_Tests extends \EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertSame( 2, $count );
+		$this->assertSame( 3, $count );
 	}
 
 	/**
@@ -305,5 +305,50 @@ class Stats_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertSame( 40.0, $refund_rate );
+	}
+
+	/**
+	 * @covers ::generate_relative_data
+	 */
+	public function test_generate_relative_data_should_be_without_change() {
+		$relative_data = self::$stats->generate_relative_data( 100, 100 );
+
+		$this->assertTrue( $relative_data['no_change'] );
+	}
+
+	/**
+	 * @covers ::generate_relative_data
+	 */
+	public function test_generate_relative_data_should_not_be_comparable() {
+		$relative_data = self::$stats->generate_relative_data( 100, 0 );
+
+		$this->assertFalse( $relative_data['comparable'] );
+	}
+
+	/**
+	 * @covers ::generate_relative_data
+	 */
+	public function test_generate_relative_data_should_be_positive_change() {
+		$relative_data = self::$stats->generate_relative_data( 100, 50 );
+
+		$this->assertTrue( $relative_data['positive_change'] );
+	}
+
+	/**
+	 * @covers ::generate_relative_data
+	 */
+	public function test_generate_relative_data_should_be_positive_reversed_change() {
+		$relative_data = self::$stats->generate_relative_data( 50, 100, true );
+
+		$this->assertTrue( $relative_data['positive_change'] );
+	}
+
+	/**
+	 * @covers ::generate_relative_data
+	 */
+	public function test_generate_relative_data_should_be_negative_change() {
+		$relative_data = self::$stats->generate_relative_data( 50, 100 );
+
+		$this->assertFalse( $relative_data['positive_change'] );
 	}
 }
