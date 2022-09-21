@@ -91,6 +91,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/misc-functions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/download-functions.php' ),
+			array( EDD_PLUGIN_DIR . 'includes/downloads/recalculations.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/scripts.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/post-types.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php' ),

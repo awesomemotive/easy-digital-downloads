@@ -1172,3 +1172,42 @@ function edd_pagination( $args = array() ) {
 		</div>
 	<?php endif;
 }
+
+/**
+ * Return a list of theme files found in both parent and child themes.
+ *
+ * This allows us to detect when a core template is being overridden by a theme.
+ *
+ * @since 3.1
+ *
+ * @return array List of files that the parent and child themes are overriding, relative.
+ */
+function edd_get_theme_edd_templates() {
+	$parent_theme_dir = trailingslashit( get_template_directory() ) . 'edd_templates/';
+	$child_theme_dir  = trailingslashit( get_stylesheet_directory() ) . 'edd_templates/';
+
+	$theme_edd_templates = array();
+
+	if ( $parent_theme_dir === $child_theme_dir ) {
+		$child_theme_dir = false;
+	}
+
+	$found_templates = array();
+	if ( is_dir( $parent_theme_dir ) ) {
+		$found_templates = list_files( $parent_theme_dir );
+	}
+
+	$found_child_templates = array();
+	if ( false !== $child_theme_dir && is_dir( $child_theme_dir ) ) {
+		$found_child_templates = list_files( $child_theme_dir );
+	}
+
+	$theme_edd_templates = array_map(
+		function( $file ) {
+			return str_replace( get_theme_root() . '/', '', $file );
+		},
+		array_merge( $found_templates, $found_child_templates )
+	);
+
+	return $theme_edd_templates;
+}

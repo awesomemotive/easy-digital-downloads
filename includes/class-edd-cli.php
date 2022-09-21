@@ -617,7 +617,7 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 
 				$cart_details[ $key ] = array(
-					'name'        => $download->post_title,
+					'name'        => edd_get_download_name( $download->ID, $price_id ),
 					'id'          => $download->ID,
 					'item_number' => $item_number,
 					'item_price'  => edd_sanitize_amount( $item_price ),
