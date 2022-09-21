@@ -348,28 +348,65 @@ function edd_register_overview_report( $reports ) {
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
-							'sales'    => array(
-								'label'                => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
-								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
-								'borderCapStyle'       => 'round',
-								'borderJoinStyle'      => 'round',
-								'pointRadius'          => 4,
-								'pointHoverRadius'     => 6,
-								'pointBackgroundColor' => 'rgb(255,255,255)',
-							),
 							'earnings' => array(
 								'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'earnings-y',
+							),
+							'sales'    => array(
+								'label'                => __( 'Sales', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
+								'fill'                 => true,
+								'borderWidth'          => 2,
+								'borderCapStyle'       => 'round',
+								'borderJoinStyle'      => 'round',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'sales-y',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'id'        => 'earnings-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'format',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+									),
+								),
+								array(
+									'id'        => 'sales-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
+									),
+								),
 							),
 						),
 					),
@@ -703,36 +740,71 @@ function edd_register_downloads_report( $reports ) {
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 						$sql_clauses = array(
-							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
-							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month, DAY(edd_oi.date_created) AS day',
+							'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created)',
+							'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created)',
 						);
 
 						if ( $hour_by_hour ) {
 							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
-								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+								'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month, DAY(edd_oi.date_created) AS day, HOUR(edd_oi.date_created) AS hour',
+								'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created), HOUR(edd_oi.date_created)',
+								'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created), HOUR(edd_oi.date_created)',
 							);
 						} elseif ( ! $day_by_day ) {
 							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+								'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month',
+								'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created)',
+								'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created)',
 							);
 						}
 
 						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
-							? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
+							? sprintf( 'AND price_id = %d', absint( $download_data['price_id'] ) )
 							: '';
 
-						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT COUNT(total) AS sales, SUM(total / rate) AS earnings, {$sql_clauses['select']}
-							FROM {$wpdb->edd_order_items} edd_oi
-							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s AND status = 'complete'
-							GROUP BY {$sql_clauses['groupby']}
-							ORDER BY {$sql_clauses['orderby']} ASC",
-							$download_data['download_id'], $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
+						$earnings_results = $wpdb->get_results(
+							$wpdb->prepare(
+								"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, %1s
+								FROM {$wpdb->edd_order_items} edd_oi
+								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
+								GROUP BY %1s
+								ORDER BY %1s ASC",
+								$sql_clauses['select'],
+								$download_data['download_id'],
+								$price_id,
+								$dates['start']->copy()->format( 'mysql' ),
+								$dates['end']->copy()->format( 'mysql' ),
+								$sql_clauses['groupby'],
+								$sql_clauses['orderby']
+							)
+						);
+
+						$statuses      = edd_get_net_order_statuses();
+						$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+
+						$join = $wpdb->prepare(
+							"INNER JOIN {$wpdb->edd_orders} edd_o ON (edd_oi.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale' ",
+							...$statuses
+						);
+
+						$sales_results = $wpdb->get_results(
+							$wpdb->prepare(
+								"SELECT COUNT(edd_oi.total) AS sales, %1s
+								FROM {$wpdb->edd_order_items} edd_oi
+								{$join}
+								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
+								GROUP BY %1s
+								ORDER BY %1s ASC",
+								$sql_clauses['select'],
+								$download_data['download_id'],
+								$price_id,
+								$dates['start']->copy()->format( 'mysql' ),
+								$dates['end']->copy()->format( 'mysql' ),
+								$sql_clauses['groupby'],
+								$sql_clauses['orderby']
+							)
+						);
 
 						$sales    = array();
 						$earnings = array();
@@ -742,11 +814,11 @@ function edd_register_downloads_report( $reports ) {
 							if ( $hour_by_hour ) {
 								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 
-								$sales[ $timestamp ][] = $timestamp;
-								$sales[ $timestamp ][] = 0;
+								$sales[ $timestamp ][0] = $timestamp;
+								$sales[ $timestamp ][1] = 0;
 
-								$earnings[ $timestamp ][] = $timestamp;
-								$earnings[ $timestamp ][] = 0.00;
+								$earnings[ $timestamp ][0] = $timestamp;
+								$earnings[ $timestamp ][1] = 0.00;
 
 								$dates['start']->addHour( 1 );
 							} else {
@@ -756,11 +828,11 @@ function edd_register_downloads_report( $reports ) {
 
 								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 
-								$sales[ $timestamp ][] = $timestamp;
-								$sales[ $timestamp ][] = 0;
+								$sales[ $timestamp ][0] = $timestamp;
+								$sales[ $timestamp ][1] = 0;
 
-								$earnings[ $timestamp ][] = $timestamp;
-								$earnings[ $timestamp ][] = 0.00;
+								$earnings[ $timestamp ][0] = $timestamp;
+								$earnings[ $timestamp ][1] = 0.00;
 
 								$dates['start'] = ( true === $day_by_day )
 									? $dates['start']->addDays( 1 )
@@ -768,59 +840,115 @@ function edd_register_downloads_report( $reports ) {
 							}
 						}
 
-						foreach ( $results as $result ) {
+						foreach ( $earnings_results as $earnings_result ) {
 							if ( $hour_by_hour ) {
 
 								/**
 								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
 								 * needs to be applied to that.
 								 */
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $earnings_result->year, $earnings_result->month, $earnings_result->day, $earnings_result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							} else {
 								$day = ( true === $day_by_day )
-									? $result->day
+									? $earnings_result->day
 									: 1;
 
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $earnings_result->year, $earnings_result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$sales[ $timestamp ][1]    += $result->sales;
-							$earnings[ $timestamp ][1] += floatval( $result->earnings );
+							if ( isset( $earnings[ $timestamp ] ) ) {
+								$earnings[ $timestamp ][1] += floatval( $earnings_result->earnings );
+							}
 						}
 
-						$sales    = array_values( $sales );
-						$earnings = array_values( $earnings );
+						foreach ( $sales_results as $sales_result ) {
+							if ( $hour_by_hour ) {
+
+								/**
+								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
+								 * needs to be applied to that.
+								 */
+								$timestamp = \Carbon\Carbon::create( $sales_result->year, $sales_result->month, $sales_result->day, $sales_result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+							} else {
+								$day = ( true === $day_by_day )
+									? $sales_result->day
+									: 1;
+
+								$timestamp = \Carbon\Carbon::create( $sales_result->year, $sales_result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+							}
+
+							if ( isset( $sales[ $timestamp ] ) ) {
+								$sales[ $timestamp ][1] += $sales_result->sales;
+							}
+						}
 
 						return array(
-							'sales'    => $sales,
-							'earnings' => $earnings,
+							'earnings' => array_values( $earnings ),
+							'sales'    => array_values( $sales ),
 						);
 					},
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
-							'sales'    => array(
-								'label'                => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
-								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
-								'borderCapStyle'       => 'round',
-								'borderJoinStyle'      => 'round',
-								'pointRadius'          => 4,
-								'pointHoverRadius'     => 6,
-								'pointBackgroundColor' => 'rgb(255,255,255)',
-							),
 							'earnings' => array(
 								'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'earnings-y',
+							),
+							'sales'    => array(
+								'label'                => __( 'Sales', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
+								'fill'                 => true,
+								'borderWidth'          => 2,
+								'borderCapStyle'       => 'round',
+								'borderJoinStyle'      => 'round',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'sales-y',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'id'        => 'earnings-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'format',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+									),
+								),
+								array(
+									'id'        => 'sales-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
+									),
+								),
 							),
 						),
 					),
@@ -1024,28 +1152,65 @@ function edd_register_refunds_report( $reports ) {
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
-							'number' => array(
-								'label'                => __( 'Number', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
-								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
-								'borderCapStyle'       => 'round',
-								'borderJoinStyle'      => 'round',
-								'pointRadius'          => 4,
-								'pointHoverRadius'     => 6,
-								'pointBackgroundColor' => 'rgb(255,255,255)',
-							),
 							'amount' => array(
 								'label'                => __( 'Amount', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'amount-y',
+							),
+							'number' => array(
+								'label'                => __( 'Number', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
+								'fill'                 => true,
+								'borderWidth'          => 2,
+								'borderCapStyle'       => 'round',
+								'borderJoinStyle'      => 'round',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'number-y',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'id'        => 'amount-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'format',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+									),
+								),
+								array(
+									'id'        => 'number-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
+									),
+								),
 							),
 						),
 					),
@@ -1455,35 +1620,72 @@ function edd_register_payment_gateways_report( $reports ) {
 						$earnings = array_values( $earnings );
 
 						return array(
-							'sales'    => $sales,
 							'earnings' => $earnings,
+							'sales'    => $sales,
 						);
 					},
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
-							'sales'    => array(
-								'label'                => __( 'Sales', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(252,108,18)',
-								'backgroundColor'      => 'rgba(252,108,18,0.2)',
-								'fill'                 => true,
-								'borderDash'           => array( 2, 6 ),
-								'borderCapStyle'       => 'round',
-								'borderJoinStyle'      => 'round',
-								'pointRadius'          => 4,
-								'pointHoverRadius'     => 6,
-								'pointBackgroundColor' => 'rgb(255,255,255)',
-							),
 							'earnings' => array(
 								'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
 								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'earnings-y',
+							),
+							'sales'    => array(
+								'label'                => __( 'Sales', 'easy-digital-downloads' ),
+								'borderColor'          => 'rgba(252,108,18,0.75)',
+								'backgroundColor'      => 'rgba(252,108,18,0.05)',
+								'fill'                 => true,
+								'borderWidth'          => 2,
+								'borderCapStyle'       => 'round',
+								'borderJoinStyle'      => 'round',
+								'pointRadius'          => 4,
+								'pointHoverRadius'     => 6,
+								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'sales-y',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'id'        => 'earnings-y',
+									'type'      => 'linear',
+									'display'   => true,
+									'position'  => 'left',
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'format',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+									),
+								),
+								array(
+									'id'        => 'sales-y',
+									'type'      => 'linear',
+									'position'  => 'right',
+									'display'   => true,
+									'ticks'     => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+									'gridLines' => array(
+										'display' => true,
+										'color'   => 'rgba(0,0,0,0.03)',
+									),
+								),
 							),
 						),
 					),
@@ -1912,13 +2114,29 @@ function edd_register_file_downloads_report( $reports ) {
 						'datasets' => array(
 							'file_downloads' => array(
 								'label'                => __( 'File Downloads', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
+								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'type'     => 'linear',
+									'display'  => true,
+									'position' => 'left',
+									'ticks'    => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+								),
 							),
 						),
 					),
@@ -2230,13 +2448,29 @@ function edd_register_discounts_report( $reports ) {
 							'datasets' => array(
 								'discount_usage' => array(
 									'label'                => __( 'Discount Usage', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgb(24,126,244)',
-									'backgroundColor'      => 'rgba(24,126,244,0.05)',
+									'borderColor'          => 'rgba(24,126,244,0.75)',
+									'backgroundColor'      => 'rgba(24,126,244,0.1)',
 									'fill'                 => true,
 									'borderWidth'          => 2,
+									'type'                 => 'currency',
 									'pointRadius'          => 4,
 									'pointHoverRadius'     => 6,
 									'pointBackgroundColor' => 'rgb(255,255,255)',
+								),
+							),
+							'scales' => array(
+								'yAxes' => array(
+									array(
+										'type'     => 'linear',
+										'display'  => true,
+										'position' => 'left',
+										'ticks'    => array(
+											'maxTicksLimit'  => 2,
+											'formattingType' => 'integer',
+											'suggestedMin'   => 0,
+											'beginAtZero'    => true,
+										),
+									),
 								),
 							),
 						),
@@ -2460,13 +2694,29 @@ function edd_register_customer_report( $reports ) {
 						'datasets' => array(
 							'customers' => array(
 								'label'                => __( 'New Customers', 'easy-digital-downloads' ),
-								'borderColor'          => 'rgb(24,126,244)',
-								'backgroundColor'      => 'rgba(24,126,244,0.05)',
+								'borderColor'          => 'rgba(24,126,244,0.75)',
+								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
+								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+							),
+						),
+						'scales' => array(
+							'yAxes' => array(
+								array(
+									'type'     => 'linear',
+									'display'  => true,
+									'position' => 'left',
+									'ticks'    => array(
+										'maxTicksLimit'  => 5,
+										'formattingType' => 'integer',
+										'suggestedMin'   => 0,
+										'beginAtZero'    => true,
+									),
+								),
 							),
 						),
 					),
@@ -3046,3 +3296,28 @@ function edd_tax_report_notice( $report ) {
 	}
 }
 add_action( 'edd_reports_page_bottom', 'edd_tax_report_notice', 10, 1 );
+
+/**
+ * Will return HTML for relative date ranges dropdown.
+ *
+ * @since 3.1
+ */
+function edd_reports_get_relative_date_ranges() {
+	require_once EDD_PLUGIN_DIR . 'includes/reports/reports-functions.php';
+	$range = isset( $_REQUEST['range'] )
+		? sanitize_text_field( $_REQUEST['range'] )
+		: '';
+
+	$relative_range = isset( $_REQUEST['relative_range'] )
+		? sanitize_text_field( $_REQUEST['relative_range'] )
+		: '';
+
+	if ( empty( $range ) || empty( $relative_range ) ) {
+		return;
+	}
+
+	echo Reports\display_relative_dates_dropdown_options( $range, $relative_range );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_reports_get_relative_date_ranges', 'edd_reports_get_relative_date_ranges' );

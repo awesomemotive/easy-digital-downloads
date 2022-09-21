@@ -280,6 +280,7 @@ class Stats {
 				{$this->query_vars['where_sql']}
 				{$relative_date_query_sql}";
 
+
 			$relative_result = $this->get_db()->get_row( $relative_query );
 		}
 
@@ -287,16 +288,23 @@ class Stats {
 			? 0.00
 			: (float) $initial_result->total;
 
-		if ( true === $this->query_vars['relative'] ) {
-			$total = $this->generate_relative_markup( floatval( $total ), floatval( $relative_result->total ) );
+		if ( 'array' === $this->query_vars['output'] ) {
+			$output = array(
+				'value'         => $total,
+				'relative_data' => ( true === $this->query_vars['relative'] ) ? $this->generate_relative_data( floatval( $total ), floatval( $relative_result->total ) ) : array(),
+			);
 		} else {
-			$total = $this->maybe_format( $total );
+			if ( true === $this->query_vars['relative'] ) {
+				$output = $this->generate_relative_markup( floatval( $total ), floatval( $relative_result->total ) );
+			} else {
+				$output = $this->maybe_format( $total );
+			}
 		}
 
 		// Reset query vars.
 		$this->post_query();
 
-		return $total;
+		return $output;
 	}
 
 	/**
@@ -922,7 +930,7 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
 		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
-		$this->query_vars['status']            = array( 'complete' );
+		$this->query_vars['status']            = array( 'complete', 'refunded', 'partially_refunded' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
@@ -950,6 +958,7 @@ class Stats {
 		if ( ! empty( $country ) || ! empty( $region ) ) {
 			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
 		}
+
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
 			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
 			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
@@ -1027,14 +1036,14 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
-		$this->query_vars['status']            = array( 'complete' );
+		$this->query_vars['status']            = array( 'complete', 'partially_refunded' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
 		$function = $this->get_amount_column_and_function( array(
 			'column_prefix'      => $this->query_vars['table'],
-			'accepted_functions' => array( 'COUNT', 'AVG' )
+			'accepted_functions' => array( 'COUNT', 'AVG' ),
 		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
@@ -1051,12 +1060,19 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
-		$join = $currency = '';
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = $this->get_placeholder_string( $statuses );
+
+		$join = $this->get_db()->prepare(
+			"INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale' ",
+			...$statuses
+		);
+
+		$currency = '';
 		if ( ! empty( $country ) || ! empty( $region ) ) {
 			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
 		}
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
-			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
 			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
 		}
 
@@ -1099,7 +1115,7 @@ class Stats {
 			} );
 		} else {
 			$result = null === $result[0]->total
-				? 0.00
+				? 0
 				: absint( $result[0]->total );
 		}
 
@@ -1158,7 +1174,7 @@ class Stats {
 		) );
 
 		$statuses      = edd_get_net_order_statuses();
-		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+		$status_string = $this->get_placeholder_string( $statuses );
 
 		$where = $this->get_db()->prepare(
 			"AND {$this->get_db()->edd_order_items}.status IN('complete','partially_refunded')
@@ -2047,18 +2063,23 @@ class Stats {
 			? 0
 			: absint( $result->total );
 
-		if ( true === $this->query_vars['relative'] ) {
-			$total    = absint( $result->total );
-			$relative = absint( $result->relative );
-			$total    = $this->generate_relative_markup( $total, $relative );
+		if ( 'array' === $this->query_vars['output'] ) {
+			$output = array(
+				'value'         => $total,
+				'relative_data' => ( true === $this->query_vars['relative'] ) ? $this->generate_relative_data( absint( $result->total ), absint( $result->relative ) ) : array(),
+			);
 		} else {
-			$total = $this->maybe_format( $total );
+			if ( true === $this->query_vars['relative'] ) {
+				$output = $this->generate_relative_markup( absint( $result->total ), absint( $result->relative ) );
+			} else {
+				$output = $this->maybe_format( $total );
+			}
 		}
 
 		// Reset query vars.
 		$this->post_query();
 
-		return $total;
+		return $output;
 	}
 
 	/**
@@ -2790,7 +2811,7 @@ class Stats {
 			} else {
 				$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
 
-				$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
+				$placeholders = $this->get_placeholder_string( $this->query_vars['status'] );
 
 				$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
 			}
@@ -2805,7 +2826,7 @@ class Stats {
 
 			$this->query_vars['type'] = array_map( 'sanitize_text_field', $this->query_vars['type'] );
 
-			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['type'] ), '%s' ) );
+			$placeholders = $this->get_placeholder_string( $this->query_vars['type'] );
 
 			$this->query_vars['type_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.type IN ({$placeholders})", $this->query_vars['type'] );
 		}
@@ -2971,87 +2992,11 @@ class Stats {
 		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 		$date_filters = Reports\get_dates_filter_options();
+		$filter       = Reports\get_filter_value( 'dates' );
 
 		foreach ( $date_filters as $range => $label ) {
-			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $range );
-
-			switch ( $range ) {
-				case 'this_month':
-					$dates = array(
-						'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
-						'end'   => $date->copy()->subMonth( 1 )->endOfMonth(),
-					);
-					break;
-				case 'last_month':
-					$dates = array(
-						'start' => $date->copy()->subMonth( 2 )->startOfMonth(),
-						'end'   => $date->copy()->subMonth( 2 )->endOfMonth(),
-					);
-					break;
-				case 'today':
-					$dates = array(
-						'start' => $date->copy()->subDay( 1 )->startOfDay(),
-						'end'   => $date->copy()->subDay( 1 )->endOfDay(),
-					);
-					break;
-				case 'yesterday':
-					$dates = array(
-						'start' => $date->copy()->subDay( 2 )->startOfDay(),
-						'end'   => $date->copy()->subDay( 2 )->endOfDay(),
-					);
-					break;
-				case 'this_week':
-					$dates = array(
-						'start' => $date->copy()->subWeek( 1 )->startOfWeek(),
-						'end'   => $date->copy()->subWeek( 1 )->endOfWeek(),
-					);
-					break;
-				case 'last_week':
-					$dates = array(
-						'start' => $date->copy()->subWeek( 2 )->startOfWeek(),
-						'end'   => $date->copy()->subWeek( 2 )->endOfWeek(),
-					);
-					break;
-				case 'last_30_days':
-					$dates = array(
-						'start' => $date->copy()->subDay( 60 )->startOfDay(),
-						'end'   => $date->copy()->subDay( 30 )->endOfDay(),
-					);
-					break;
-				case 'this_quarter':
-					$dates = array(
-						'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
-						'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
-					);
-					break;
-				case 'last_quarter':
-					$dates = array(
-						'start' => $date->copy()->subQuarter( 2 )->startOfQuarter(),
-						'end'   => $date->copy()->subQuarter( 2 )->endOfQuarter(),
-					);
-					break;
-				case 'this_year':
-					$dates = array(
-						'start' => $date->copy()->subYear( 1 )->startOfYear(),
-						'end'   => $date->copy()->subYear( 1 )->endOfYear(),
-					);
-					break;
-				case 'last_year':
-					$dates = array(
-						'start' => $date->copy()->subYear( 2 )->startOfYear(),
-						'end'   => $date->copy()->subYear( 2 )->endOfYear(),
-					);
-					break;
-			}
-
-			if ( ! empty( $dates ) ) {
-				// Convert the values to the UTC equivalent so that we can query the database using UTC.
-				$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
-				$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
-				$dates['range'] = $range;
-
-				$this->relative_date_ranges[ $range ] = $dates;
-			}
+			$this->date_ranges[ $range ]          = Reports\parse_dates_for_range( $range );
+			$this->relative_date_ranges[ $range ] = Reports\parse_relative_dates_for_range( $range );
 		}
 
 	}
@@ -3088,6 +3033,61 @@ class Stats {
 	}
 
 	/**
+	 * Calculates the relative change between two datasets
+	 * and outputs an array of details about comparison.
+	 *
+	 * @since 3.1
+	 *
+	 * @param int|float $total     The primary value result for the stat.
+	 * @param int|float $relative  The value relative to the previous date range.
+	 * @param bool      $reverse   If the stat being displayed is a 'reverse' state, where lower is better.
+	 *
+	 * @return array Details about the relative change between two datasets.
+	 */
+	public function generate_relative_data( $total = 0, $relative = 0, $reverse = false ) {
+		$output = array(
+			'comparable'                  => true,
+			'no_change'                   => false,
+			'percentage_change'           => false,
+			'formatted_percentage_change' => false,
+			'positive_change'             => false,
+			'total'                       => $total,
+			'relative'                    => $relative,
+			'reverse'                     => $reverse,
+		);
+
+		if ( ( floatval( 0 ) === floatval( $total ) && floatval( 0 ) === floatval( $relative ) ) || ( $total === $relative ) ) {
+			// There is no change between datasets.
+			$output['no_change'] = true;
+		} else if ( floatval( 0 ) !== floatval( $relative ) ) {
+			// There is a calculatable difference between datasets.
+			$percentage_change           = ( $total - $relative ) / $relative * 100;
+			$formatted_percentage_change = absint( $percentage_change );
+			$positive_change             = false;
+
+			if ( absint( $percentage_change ) < 100 ) {
+				$formatted_percentage_change = number_format( $percentage_change, 2 );
+				$formatted_percentage_change = $formatted_percentage_change < 1 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
+			}
+
+			// Check if stat is in a 'reverse' state, where lower is better.
+			$positive_change = (bool) ! $reverse;
+			if ( 0 > $percentage_change ) {
+				$positive_change = (bool) $reverse;
+			}
+
+			$output['percentage_change']           = $percentage_change;
+			$output['formatted_percentage_change'] = $formatted_percentage_change;
+			$output['positive_change']             = $positive_change;
+		} else {
+			// There is no data to compare.
+			$output['comparable'] = false;
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Generates output for the report tiles when a relative % change is requested.
 	 *
 	 * @since 3.0
@@ -3097,29 +3097,23 @@ class Stats {
 	 * @param bool      $reverse   If the stat being displayed is a 'reverse' state, where lower is better.
 	 */
 	private function generate_relative_markup( $total = 0, $relative = 0, $reverse = false ) {
-		$relative_markup  = '';
 
-		$total_output    = $this->maybe_format( $total );
-		$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . __( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
+		$relative_data   = $this->generate_relative_data( $total, $relative, $reverse );
+		$total_output    = $this->maybe_format( $relative_data['total'] );
+		$relative_markup = '';
 
-		if ( ( floatval( 0 ) === floatval( $total ) && floatval( 0 ) === floatval( $relative ) ) || ( $total === $relative ) ) {
+		if ( $relative_data['no_change'] ) {
 			$relative_output = esc_html__( 'No Change', 'easy-digital-downloads' );
-		} else if ( floatval( 0 ) !== floatval( $relative ) ) {
-			$percentage_change           = ( $total - $relative ) / $relative * 100;
-			$formatted_percentage_change = absint( $percentage_change );
-
-			if ( absint( $percentage_change ) < 100 ) {
-				$formatted_percentage_change = number_format( $percentage_change, 2 );
-				$formatted_percentage_change = $formatted_percentage_change < 1 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
-			}
-
-			if ( 0 < $percentage_change ) {
-				$direction       = $reverse ? 'up reverse' : 'up';
-				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+		} else if ( $relative_data['comparable'] ) {
+			if ( 0 < $relative_data['percentage_change'] ) {
+				$direction       = $relative_data['reverse'] ? 'up reverse' : 'up';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $relative_data['formatted_percentage_change'] . '%';
 			} else {
-				$direction       = $reverse ? 'down reverse' : 'down';
-				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $formatted_percentage_change . '%';
+				$direction       = $relative_data['reverse'] ? 'down reverse' : 'down';
+				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $relative_data['formatted_percentage_change'] . '%';
 			}
+		} else {
+			$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . __( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
 		}
 
 		$relative_markup = $total_output;
@@ -3128,5 +3122,16 @@ class Stats {
 		}
 
 		return $relative_markup;
+	}
+
+	/**
+	 * Gets a placeholder string from an array.
+	 *
+	 * @since 3.1
+	 * @param array $array
+	 * @return string
+	 */
+	private function get_placeholder_string( $array ) {
+		return implode( ', ', array_fill( 0, count( $array ), '%s' ) );
 	}
 }

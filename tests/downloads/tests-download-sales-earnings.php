@@ -464,8 +464,6 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 			)
 		);
 
-		// edd_update_order_item( $order_item_id, array( 'status' => 'complete' ) );
-
 		$download = edd_get_download( $this->simple_download->ID );
 		$this->assertEquals( 5, get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) - $download->earnings );
 

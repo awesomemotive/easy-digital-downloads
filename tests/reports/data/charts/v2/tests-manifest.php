@@ -374,6 +374,11 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 						'type'     => 'linear',
 						'display'  => true,
 						'position' => 'left',
+						'ticks'    => array(
+							'formattingType' => 'format',
+							'beginAtZero'    => true,
+							'suggestedMin'   => 0,
+						),
 					),
 				),
 			),
