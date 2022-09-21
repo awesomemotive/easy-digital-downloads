@@ -212,6 +212,8 @@ function edd_ajax_add_to_cart() {
 		$post_data = array();
 	}
 
+	$all_items = array();
+
 	foreach ( $to_add as $options ) {
 
 		if ( $_POST['download_id'] == $options['price_id'] ) {
@@ -232,12 +234,13 @@ function edd_ajax_add_to_cart() {
 
 		$item = array(
 			'id'      => $_POST['download_id'],
-			'options' => $options
+			'options' => $options,
 		);
 
 		$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
 		$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
 
+		$all_items[] = $item;
 	}
 
 	$return = array(
@@ -248,11 +251,11 @@ function edd_ajax_add_to_cart() {
 	);
 
 	if ( edd_use_taxes() ) {
-		$cart_tax = (float) edd_get_cart_tax();
+		$cart_tax      = (float) edd_get_cart_tax();
 		$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
 	}
 
-	$return = apply_filters( 'edd_ajax_add_to_cart_response', $return );
+	$return = apply_filters( 'edd_ajax_add_to_cart_response', $return, $all_items );
 
 	echo json_encode( $return );
 	edd_die();
