@@ -7,6 +7,41 @@ module.exports = function( grunt ) {
 
 		pkg: grunt.file.readJSON( 'package.json' ),
 
+		checktextdomain: {
+			options: {
+				text_domain: 'easy-digital-downloads',
+				correct_domain: true,
+				keywords: [
+					'__:1,2d',
+					'_e:1,2d',
+					'_x:1,2c,3d',
+					'esc_html__:1,2d',
+					'esc_html_e:1,2d',
+					'esc_html_x:1,2c,3d',
+					'esc_attr__:1,2d',
+					'esc_attr_e:1,2d',
+					'esc_attr_x:1,2c,3d',
+					'_ex:1,2c,3d',
+					'_n:1,2,3,4d',
+					'_nx:1,2,4c,5d',
+					'_n_noop:1,2,3d',
+					'_nx_noop:1,2,3c,4d',
+					' __ngettext:1,2,3d',
+					'__ngettext_noop:1,2,3d',
+					'_c:1,2d',
+					'_nc:1,2,4c,5d',
+				],
+			},
+			files: {
+				src: [
+					'**/*.php', // Include all files
+					'!node_modules/**', // Exclude node_modules/
+					'!build/**', // Exclude build/
+				],
+				expand: true,
+			},
+		},
+
 		// Clean up build directory
 		clean: {
 			main: [ 'build/<%= pkg.name %>' ],
@@ -110,6 +145,6 @@ module.exports = function( grunt ) {
 	} );
 
 	// Build task(s).
-	grunt.registerTask( 'prep', [ 'clean', 'replace' ] );
+	grunt.registerTask( 'prep', [ 'force:checktextdomain', 'clean', 'replace' ] );
 	grunt.registerTask( 'build', [ 'copy', 'compress' ] );
 };
