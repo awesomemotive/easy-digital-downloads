@@ -740,22 +740,22 @@ function edd_register_downloads_report( $reports ) {
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 						$sql_clauses = array(
-							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
-							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month, DAY(edd_oi.date_created) AS day',
+							'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created)',
+							'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created)',
 						);
 
 						if ( $hour_by_hour ) {
 							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
-								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
+								'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month, DAY(edd_oi.date_created) AS day, HOUR(edd_oi.date_created) AS hour',
+								'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created), HOUR(edd_oi.date_created)',
+								'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created), HOUR(edd_oi.date_created)',
 							);
 						} elseif ( ! $day_by_day ) {
 							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
+								'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month',
+								'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created)',
+								'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created)',
 							);
 						}
 
@@ -765,9 +765,9 @@ function edd_register_downloads_report( $reports ) {
 
 						$earnings_results = $wpdb->get_results(
 							$wpdb->prepare(
-								"SELECT SUM(total / rate) AS earnings, %1s
+								"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, %1s
 								FROM {$wpdb->edd_order_items} edd_oi
-								WHERE product_id = %d %1s AND date_created >= %s AND date_created <= %s AND status IN (  'complete', 'refunded', 'partially_refunded' )
+								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
 								GROUP BY %1s
 								ORDER BY %1s ASC",
 								$sql_clauses['select'],
@@ -780,11 +780,20 @@ function edd_register_downloads_report( $reports ) {
 							)
 						);
 
+						$statuses      = edd_get_net_order_statuses();
+						$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+
+						$join = $wpdb->prepare(
+							"INNER JOIN {$wpdb->edd_orders} edd_o ON (edd_oi.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale' ",
+							...$statuses
+						);
+
 						$sales_results = $wpdb->get_results(
 							$wpdb->prepare(
-								"SELECT COUNT(total) AS sales, %1s
+								"SELECT COUNT(edd_oi.total) AS sales, %1s
 								FROM {$wpdb->edd_order_items} edd_oi
-								WHERE product_id = %d %1s AND date_created >= %s AND date_created <= %s AND status IN (  'complete', 'partially_refunded' )
+								{$join}
+								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
 								GROUP BY %1s
 								ORDER BY %1s ASC",
 								$sql_clauses['select'],
