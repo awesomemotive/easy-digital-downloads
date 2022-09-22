@@ -225,3 +225,22 @@ function edd_get_order_id_from_transaction_id( $transaction_id = '' ) {
 	// Return.
 	return absint( $retval );
 }
+
+/**
+ * Get a field from a order transaction object.
+ *
+ * @since 3.0
+ *
+ * @param int    $transaction_id 	Transaction ID. Default `0`.
+ * @param string $field       		Field to retrieve from object. Default empty.
+ *
+ * @return mixed Null if transaction does not exist. Value of Transaction if exists.
+ */
+function edd_get_order_transaction_field( $transaction_id = 0, $field = '' ) {
+	$transaction = edd_get_order_transaction( $transaction_id );
+
+	// Check that field exists
+	return isset( $transaction->{$field} )
+		? $transaction->{$field}
+		: null;
+}
