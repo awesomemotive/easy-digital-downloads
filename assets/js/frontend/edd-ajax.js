@@ -508,7 +508,7 @@ function edd_load_gateway( payment_mode ) {
 
 	url = url + 'payment-mode=' + payment_mode;
 
-	jQuery.post( url, { action: 'edd_load_gateway', edd_payment_mode: payment_mode, nonce: nonce },
+	jQuery.post( url, { action: 'edd_load_gateway', edd_payment_mode: payment_mode, nonce: nonce, current_page: edd_scripts.current_page },
 		function( response ) {
 			jQuery( '#edd_purchase_form_wrap' ).html( response );
 			jQuery( 'body' ).trigger( 'edd_gateway_loaded', [ payment_mode ] );
