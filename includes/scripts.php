@@ -202,6 +202,7 @@ function edd_localize_scripts() {
 			'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
 			'quantities_enabled'      => edd_item_quantities_enabled(),
 			'taxes_enabled'           => edd_use_taxes() ? '1' : '0', // Adding here for widget, but leaving in checkout vars for backcompat
+			'current_page'            => get_the_ID(),
 		) ) );
 	}
 }
