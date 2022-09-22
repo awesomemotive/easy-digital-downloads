@@ -40,12 +40,13 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 
 	public function create_object( $args ) {
 		$order_id = edd_add_order( $args );
+		$order    = edd_get_order( $order_id );
 
 		$oid = edd_add_order_item( array(
 			'order_id'     => $order_id,
 			'product_id'   => 1,
 			'product_name' => 'Simple Download',
-			'status'       => 'inherit',
+			'status'       => $order->status,
 			'amount'       => 100,
 			'subtotal'     => 100,
 			'discount'     => 5,
