@@ -64,18 +64,12 @@ function edd_process_download() {
 		// We've verified that the user should have access, now see if we need to require the user to be logged in.
 		$require_login = edd_get_option( 'require_login_to_download', false );
 		if ( $require_login && ! is_user_logged_in() ) {
-			$login_page_id = edd_get_option( 'login_page', false );
 
 			$parts = parse_url( add_query_arg( array() ) );
 			wp_parse_str( $parts['query'], $file_download_args );
 
 			EDD()->session->set( 'edd_require_login_to_download_redirect', $file_download_args );
-
-			if ( empty( $login_page_id ) ) {
-				$login_page = wp_login_url( edd_get_file_download_login_redirect( $file_download_args ) );
-			} else {
-				$login_page = get_permalink( $login_page_id );
-			}
+			$login_page = wp_login_url( edd_get_file_download_login_redirect( $file_download_args ) );
 
 			// Redirect to the login page, and have it continue the download upon successful login.
 			wp_safe_redirect( $login_page );
@@ -1133,12 +1127,17 @@ function edd_redirect_file_download_after_login() {
 		printf('
 			<script type="text/javascript">
 			(function(){
+				var download_link = document.createElement("a");
+				download_link.href = "' . add_query_arg( $redirect_session_data, home_url( 'index.php' ) ) . '";
+				download_link.setAttribute("download", "");
+				document.body.appendChild(download_link);
+				download_link.click();
+
 				setTimeout(
 					() => {
-						window.location.assign( window.location.href.split(/[?#]/)[0] );
-					}, 1000
+						window.location.replace( window.location.href.split(/[?#]/)[0] );
+					}, 250
 				);
-				window.location.assign("' . add_query_arg( $redirect_session_data, home_url( 'index.php' ) ) . '");
 			})();
 			</script>
 		');
