@@ -363,7 +363,7 @@
 						</div>
 
 						<a href="<?php echo esc_attr( $view_more_url ); ?>" style="color: #2794DA; margin-top: 15px; margin-bottom: 15px; font-weight: 400; font-size: 14px; text-decoration-line: underline; display: inline-block; text-decoration: none;">
-							<?php echo esc_html( __( 'View more', 'easy-digital-downloads' ) ); ?>
+							<?php echo esc_html( __( 'View Full Report', 'easy-digital-downloads' ) ); ?>
 						</a>
 
 					</div>
