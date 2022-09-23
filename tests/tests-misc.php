@@ -62,6 +62,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_string_is_image_url() {
 		$this->assertTrue( edd_string_is_image_url( 'jpg' ) );
+		$this->assertTrue( edd_string_is_image_url( 'webp' ) );
 		$this->assertFalse( edd_string_is_image_url( 'php' ) );
 	}
 
@@ -907,6 +908,18 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	function test_is_iterable_defined() {
 		$this->assertTrue( function_exists( 'is_iterable' ) );
+	}
+
+	function test_postal_codes_SE_leading_s() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 's-12345', 'SE' ) );
+	}
+
+	function test_postal_codes_SE_leading_capital_s() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 'S-12345', 'SE' ) );
+	}
+
+	function test_postal_codes_SE_numeric() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( '12345', 'SE' ) );
 	}
 
 	private function write_test_file( $full_file_path ) {

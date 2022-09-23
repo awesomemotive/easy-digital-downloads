@@ -99,7 +99,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 					?>
 					<tr>
 						<td><?php echo esc_html( $label ); ?></td>
-						<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $order_discount->total ) ), $order->currency ) ); ?></td>
+						<td><?php echo esc_html( edd_display_amount( edd_negate_amount( $order_discount->total ), $order->currency ) ); ?></td>
 					</tr>
 					<?php
 				}
@@ -124,7 +124,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				?>
 				<tr>
 					<td><span class="edd_fee_label"><?php echo esc_html( $label ); ?></span></td>
-					<td><span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ), $order->currency ) ); ?></span></td>
+					<td><span class="edd_fee_amount"><?php echo esc_html( edd_display_amount( $fee->subtotal, $order->currency ) ); ?></span></td>
 				</tr>
 			<?php endforeach; ?>
 		<?php endif; ?>
@@ -151,7 +151,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				?>
 				<tr>
 					<td><?php echo esc_html( $label ); ?></td>
-					<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $credit->total ) ), $order->currency ) ); ?></td>
+					<td><?php echo esc_html( edd_display_amount( edd_negate_amount( $credit->total ), $order->currency ) ); ?></td>
 				</tr>
 				<?php
 			}
@@ -270,13 +270,15 @@ if ( empty( $order_items ) ) {
 									<span class="edd_bundled_product_name"><?php echo esc_html( edd_get_bundle_item_title( $bundle_item ) ); ?></span>
 									<ul class="edd_bundled_product_files">
 										<?php
-										$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
+										$bundle_item_id       = edd_get_bundle_item_id( $bundle_item );
+										$bundle_item_price_id = edd_get_bundle_item_price_id( $bundle_item );
+										$download_files       = edd_get_download_files( $bundle_item_id, $bundle_item_price_id );
 
 										if ( $download_files && is_array( $download_files ) ) :
 											foreach ( $download_files as $filekey => $file ) :
 												?>
 												<li class="edd_download_file">
-													<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+													<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $bundle_item_price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 												</li>
 												<?php
 												/**
@@ -324,7 +326,7 @@ if ( empty( $order_items ) ) {
 					<td><?php echo esc_html( $item->quantity ); ?></td>
 				<?php } ?>
 				<td>
-					<?php echo esc_html( edd_currency_filter( edd_format_amount( $item->total ), $order->currency ) ); ?>
+					<?php echo esc_html( edd_display_amount( $item->total, $order->currency ) ); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>

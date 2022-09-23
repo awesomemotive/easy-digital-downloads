@@ -26,9 +26,9 @@ defined( 'ABSPATH' ) || exit;
 function edd_refund_details_notice( $refund ) {
 	$order_url = edd_get_admin_url(
 		array(
-			'id'        => $refund->parent,
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
+			'id'   => absint( $refund->parent ),
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
 		)
 	);
 ?>
@@ -185,7 +185,7 @@ function edd_refund_details_items( $refund ) {
 			'refunds'      => array(),
 			'isAdding'     => false,
 			'isRefund'     => true,
-			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasQuantity'  => true,
 			'hasTax'       => $has_tax,
 			'order'        => array(
 				'currency'       => $refund->currency,
@@ -221,9 +221,7 @@ function edd_refund_details_items( $refund ) {
 			<tr>
 				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<?php if ( true === edd_item_quantities_enabled() ) : ?>
 				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
-				<?php endif; ?>
 				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
 			</tr>
 		</thead>
@@ -269,7 +267,7 @@ function edd_refund_details_attributes( $refund ) {
 	$trash_url = wp_nonce_url(
 		edd_get_admin_url( array(
 			'edd-action'  => 'trash_order',
-			'purchase_id' => $refund->id,
+			'purchase_id' => absint( $refund->id ),
 			'order_type'  => 'refund',
 			'page'        => 'edd-payment-history',
 		) ),
@@ -278,9 +276,9 @@ function edd_refund_details_attributes( $refund ) {
 
 	$order_url = edd_get_admin_url(
 		array(
-			'id'        => $refund->parent,
-			'page'      => 'edd-payment-history',
-			'view'      => 'view-order-details',
+			'id'   => absint( $refund->parent ),
+			'page' => 'edd-payment-history',
+			'view' => 'view-order-details',
 		)
 	);
 
@@ -349,7 +347,7 @@ function edd_refund_details_related_refunds( $refund ) {
 		$refund_url = edd_get_admin_url( array(
 			'page' => 'edd-payment-history',
 			'view' => 'view-refund-details',
-			'id'   => $refund->id
+			'id'   => absint( $refund->id ),
 		) );
 	?>
 		<div class="edd-admin-box-inside">

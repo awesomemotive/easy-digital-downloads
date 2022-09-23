@@ -123,20 +123,20 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		if ( apply_filters( 'edd_api_log_requests', true ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( edd_get_admin_url( array( 'view' => 'api_requests', 'page' => 'edd-tools', 'tab' => 'logs', 's' => $item['email'] ) ) ),
+				esc_url( edd_get_admin_url( array( 'view' => 'api_requests', 'page' => 'edd-tools', 'tab' => 'logs', 's' => rawurlencode( $item['email'] ) ) ) ),
 				__( 'View Log', 'easy-digital-downloads' )
 			);
 		}
 
 		$actions['reissue'] = sprintf(
 			'<a href="%s" class="edd-regenerate-api-key">%s</a>',
-			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ), 'edd-api-nonce' ) ),
+			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => absint( $item['id'] ), 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ), 'edd-api-nonce' ) ),
 			__( 'Reissue', 'easy-digital-downloads' )
 		);
 
 		$actions['revoke'] = sprintf(
 			'<a href="%s" class="edd-revoke-api-key edd-delete">%s</a>',
-			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ), 'edd-api-nonce' ) ),
+			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => absint( $item['id'] ), 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ), 'edd-api-nonce' ) ),
 			__( 'Revoke', 'easy-digital-downloads' )
 		);
 
@@ -179,7 +179,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		$edd_api_is_bottom = true; ?>
 
-		<form id="api-key-generate-form" method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
+		<form id="api-key-generate-form" method="post" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'api_keys' ) ) ); ?>">
 			<input type="hidden" name="edd_action" value="process_api_key" />
 			<input type="hidden" name="edd_api_process" value="generate" />
 			<?php wp_nonce_field( 'edd-api-nonce' ); ?>
@@ -236,8 +236,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		foreach( $users as $user ) {
 			$keys[$user->ID]['id']     = $user->ID;
 			$keys[$user->ID]['email']  = $user->user_email;
-			$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '"><strong>' . esc_html( $user->user_login ) . '</strong></a>';
-
+			$keys[$user->ID]['user']   = '<a href="' . esc_url( add_query_arg( 'user_id', urlencode( $user->ID ), 'user-edit.php' ) ) . '"><strong>' . esc_html( $user->user_login ) . '</strong></a>';
 			$keys[$user->ID]['key']    = EDD()->api->get_user_public_key( $user->ID );
 			$keys[$user->ID]['secret'] = EDD()->api->get_user_secret_key( $user->ID );
 			$keys[$user->ID]['token']  = EDD()->api->get_token( $user->ID );

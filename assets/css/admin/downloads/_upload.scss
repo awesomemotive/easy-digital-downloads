@@ -1,0 +1,27 @@
+.edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container {
+	position: relative;
+	width: 100%;
+
+	+span:first-child {
+		width: 100%;
+	}
+}
+
+.edd_repeatable_upload_field {
+	padding-right: 32px;
+}
+
+.edd_upload_file button {
+	background: $wp-gray-0;
+	border: none;
+	border-left: 1px solid $wp-border;
+	padding: 0 4px;
+	position: absolute;
+	height: calc(100% - 4px);
+	overflow: hidden;
+	top: 2px;
+	right: 2px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}

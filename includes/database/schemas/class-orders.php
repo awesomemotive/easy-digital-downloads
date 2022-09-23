@@ -144,7 +144,8 @@ class Orders extends Schema {
 		array(
 			'name'       => 'payment_key',
 			'type'       => 'varchar',
-			'length'     => '64'
+			'length'     => '64',
+			'searchable' => true,
 		),
 
 		// tax_rate_id

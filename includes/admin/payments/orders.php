@@ -239,7 +239,7 @@ function edd_order_details_customer( $order ) {
 					</em>
 
 					<span class="customer-record">
-						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers' ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
+						<a href="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-customers' ) ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
 					</span>
 				</div>
 			</div>
@@ -328,7 +328,7 @@ function edd_order_details_email( $order ) {
 
 				<?php foreach ( $all_emails as $key => $email ) : ?>
 				<div class="edd-form-group__control is-radio">
-					<input id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
+					<input id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
 
 					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
 						<?php echo esc_attr( $email ); ?>
@@ -362,12 +362,12 @@ function edd_order_details_email( $order ) {
 		<p>
 			<a href="<?php echo esc_url( add_query_arg( array(
 				'edd-action'  => 'email_links',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
 				echo esc_attr( 'edd-select-receipt-email' );
 			} else {
 				echo esc_attr( 'edd-resend-receipt' );
-			} ?>" class="button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+			} ?>" class="button button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
 		</p>
 
 		<?php do_action( 'edd_view_order_details_resend_receipt_after', $order->id ); ?>
@@ -481,7 +481,7 @@ function edd_order_details_addresses( $order ) {
 						); // WPCS: XSS ok.
 					} else {
 						?>
-						<input type="text" name="edd_order_address[region]" class="edd-form-group__input" value="<?php echo esc_attr( $address->region ); ?>" />
+						<input type="text" id="edd_order_address_region" name="edd_order_address[region]" class="edd-form-group__input" value="<?php echo esc_attr( $address->region ); ?>" />
 						<?php
 					}
 					?>
@@ -536,11 +536,31 @@ function edd_order_details_logs( $order ) {
 		 * @param int $order_id ID of the current order.
 		 */
 		do_action( 'edd_view_order_details_logs_before', $order->id );
+		$download_log_url    = edd_get_admin_url(
+			array(
+				'page'    => 'edd-tools',
+				'tab'     => 'logs',
+				'payment' => absint( $order->id ),
+			)
+		);
+		$customer_log_url    = edd_get_admin_url(
+			array(
+				'page'     => 'edd-tools',
+				'tab'      => 'logs',
+				'customer' => absint( $order->customer_id ),
+			)
+		);
+		$customer_orders_url = edd_get_admin_url(
+			array(
+				'page'     => 'edd-payment-history',
+				'customer' => absint( $order->customer_id ),
+			)
+		);
 		?>
 
-		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order->id ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></p>
-		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $order->customer_id ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></p>
-		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order->id ) ) ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo esc_url( $download_log_url ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo esc_url( $customer_log_url ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo esc_url( $customer_orders_url ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></p>
 
 		<?php
 		/**
@@ -632,7 +652,7 @@ function edd_order_details_overview( $order ) {
 				'dateCreated'  => esc_html( $item->date_created ),
 				'dateModified' => esc_html( $item->date_modified ),
 				'uuid'         => esc_html( $item->uuid ),
-
+				'deliverable'  => $item->is_deliverable(),
 				'adjustments'  => $item_adjustments,
 			);
 		}
@@ -691,6 +711,15 @@ function edd_order_details_overview( $order ) {
 	);
 
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
+		$default_rate = edd_get_tax_rate_by_location(
+			array(
+				'country' => '',
+				'region'  => '',
+			)
+		);
+		if ( $default_rate ) {
+			$location['rate'] = floatval( $default_rate->amount );
+		}
 		$has_tax = $location;
 	} elseif ( $tax_rate ) {
 		$has_tax         = $location;
@@ -706,6 +735,11 @@ function edd_order_details_overview( $order ) {
 		}
 	}
 
+	$has_quantity = true;
+	if ( edd_is_add_order_page() && ! edd_item_quantities_enabled() ) {
+		$has_quantity = false;
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
@@ -714,7 +748,7 @@ function edd_order_details_overview( $order ) {
 			'adjustments'  => $_adjustments,
 			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
-			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasQuantity'  => $has_quantity,
 			'hasTax'       => $has_tax,
 			'hasDiscounts' => true === edd_has_active_discounts(),
 			'order'        => array(
@@ -764,8 +798,8 @@ function edd_order_details_overview( $order ) {
 			<tr>
 				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<?php if ( true === edd_item_quantities_enabled() ) : ?>
-				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+				<?php if ( $has_quantity ) : ?>
+					<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
 				<?php endif; ?>
 				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
 			</tr>
@@ -999,7 +1033,7 @@ function edd_order_details_attributes( $order ) {
 								'page'        => 'edd-payment-history',
 								'order_type'  => 'sale',
 								'edd-action'  => 'trash_order',
-								'purchase_id' => $order->id,
+								'purchase_id' => absint( $order->id ),
 							) ),
 							'edd_payment_nonce'
 						);
@@ -1046,13 +1080,13 @@ function edd_order_details_attributes( $order ) {
 							<label for="edd-payment-time-hour" class="screen-reader-text">
 								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
 							</label>
-							<input type="number" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
+							<input type="number" class="edd-form-group__input small-text" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
 							:
 
 							<label for="edd-payment-time-min" class="screen-reader-text">
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
-							<input type="number" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
+							<input type="number" class="edd-form-group__input small-text" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
 						</div>
 					</fieldset>
 				</div>

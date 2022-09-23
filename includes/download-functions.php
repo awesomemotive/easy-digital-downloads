@@ -147,11 +147,11 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
  * @since 3.0
  *
  * @param int $download_id
- * @param int $price_id
+ * @param int|null $price_id
  *
- * @return string
+ * @return false|string
  */
-function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
+function edd_get_download_name( $download_id = 0, $price_id = null ) {
 
 	// Bail if no download ID was passed.
 	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {
@@ -159,6 +159,11 @@ function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 	}
 
 	$download = edd_get_download( $download_id );
+
+	// Bail if the download cannot be retrieved.
+	if ( ! $download instanceof EDD_Download ) {
+		return false;
+	}
 
 	// Get the download title
 	$retval = $download->get_name();
@@ -841,114 +846,19 @@ function edd_remove_download_logs_on_delete( $download_id = 0 ) {
 add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
 
 /**
+ * Recalculates both the net and gross sales and earnings for a download.
  *
- * Increases the sale count of a download.
- *
- * @since 1.0
- *
- * @param int $download_id Download ID.
- * @param int $quantity    Quantity to increase purchase count by.
- *
- * @return bool|int Updated sale count, false if download does not exist.
+ * @since 3.0
+ * @param int $download_id
+ * @return void
  */
-function edd_increase_purchase_count( $download_id = 0, $quantity = 1 ) {
-
-	// Bail if no download ID was passed.
-	if ( empty( $download_id ) ) {
-		return false;
-	}
-
-	// Ensure quantity is valid integer.
-	$quantity = absint( $quantity );
-
+function edd_recalculate_download_sales_earnings( $download_id ) {
 	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->increase_sales( $quantity )
-		: false;
-}
-
-/**
- * Decreases the sale count of a download. Primarily for when a purchase is
- * refunded.
- *
- * @since 1.0.8.1
- *
- * @param int $download_id Download ID.
- * @param int $quantity    Optional. Quantity to decrease by. Default 1.
- *
- * @return bool|int Updated sale count, false if download does not exist.
- */
-function edd_decrease_purchase_count( $download_id = 0, $quantity = 1 ) {
-
-	// Bail if no download ID was passed.
-	if ( empty( $download_id ) ) {
-		return false;
+	if ( ! $download instanceof \EDD_Download ) {
+		return;
 	}
-
-	// Ensure quantity is valid integer.
-	$quantity = absint( $quantity );
-
-	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->decrease_sales( $quantity )
-		: false;
-}
-
-/**
- * Increases the total earnings of a download.
- *
- * @since 1.0
- *
- * @param int   $download_id Download ID.
- * @param float $amount      Earnings to increase by.
- *
- * @return float|false Updated earnings, false if invalid data passed.
- */
-function edd_increase_earnings( $download_id = 0, $amount = 0.00 ) {
-
-	// Bail if no download ID or amount was passed.
-	if ( empty( $download_id ) || empty( $amount ) ) {
-		return false;
-	}
-
-	// Ensure amount passed was valid.
-	$amount = edd_sanitize_amount( $amount );
-
-	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->increase_earnings( $amount )
-		: false;
-}
-
-/**
- * Decreases the total earnings of a download. Primarily for when a purchase
- * is refunded.
- *
- * @since 1.0.8.1
- *
- * @param int   $download_id Download ID.
- * @param float $amount      Earnings to decrease by.
- *
- * @return float|false Updated earnings, false if invalid data passed.
- */
-function edd_decrease_earnings( $download_id = 0, $amount = 0.00 ) {
-
-	// Bail if no download ID or amount was passed.
-	if ( empty( $download_id ) || empty( $amount ) ) {
-		return false;
-	}
-
-	// Ensure amount passed was valid.
-	$amount = edd_sanitize_amount( $amount );
-
-	$download = edd_get_download( $download_id );
-
-	return $download
-		? $download->decrease_earnings( $amount )
-		: false;
+	$download->recalculate_net_sales_earnings();
+	$download->recalculate_gross_sales_earnings();
 }
 
 /**
@@ -1360,10 +1270,16 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		return false;
 	}
 
+	// Get the array of parameters in the same order in which they will be validated.
+	$args = array_fill_keys( edd_get_url_token_parameters(), '' );
+
 	// Simply the URL by concatenating required data using a colon as a delimiter.
-	$args = array(
-		'eddfile' => rawurlencode( sprintf( '%d:%d:%d:%d', $order->id, $params['download_id'], $params['file'], $price_id ) ),
-	);
+	if ( ! is_numeric( $price_id ) ) {
+		$eddfile = sprintf( '%d:%d:%d', $order->id, $params['download_id'], $params['file'] );
+	} else {
+		$eddfile = sprintf( '%d:%d:%d:%d', $order->id, $params['download_id'], $params['file'], $price_id );
+	}
+	$args['eddfile'] = rawurlencode( $eddfile );
 
 	if ( isset( $params['expire'] ) ) {
 		$args['ttl'] = $params['expire'];
@@ -1376,11 +1292,28 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	$args = apply_filters( 'edd_get_download_file_url_args', $args, $order->id, $params );
 
 	$args['file']  = $params['file'];
-	$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( site_url() ) ) );
+	$args['token'] = edd_get_download_token( add_query_arg( array_filter( $args ), untrailingslashit( site_url() ) ) );
 
-	$download_url = add_query_arg( $args, site_url( 'index.php' ) );
+	return add_query_arg( array_filter( $args ), site_url( 'index.php' ) );
+}
 
-	return $download_url;
+/**
+ * Gets the array of parameters to be used for the URL token generation and validation.
+ * Used by `edd_get_download_file_url` and `edd_validate_url_token` so that their parameters are ordered the same.
+ *
+ * @since 2.11.4
+ * @return array
+ */
+function edd_get_url_token_parameters() {
+	return apply_filters(
+		'edd_url_token_allowed_params',
+		array(
+			'eddfile',
+			'ttl',
+			'file',
+			'token',
+		)
+	);
 }
 
 /**
@@ -1607,43 +1540,48 @@ function edd_get_download_token( $url = '' ) {
  * @return bool
  */
 function edd_validate_url_token( $url = '' ) {
-	$ret   = false;
-	$parts = wp_parse_url( $url );
+	$ret          = false;
+	$parts        = parse_url( $url );
+	$query_args   = array();
+	$original_url = $url;
 
 	if ( isset( $parts['query'] ) ) {
 		wp_parse_str( $parts['query'], $query_args );
 
-		// These are the only URL parameters that are allowed to affect the token validation
-		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
-			'eddfile',
-			'file',
-			'ttl',
-			'token',
-		) );
-
-		// Parameters that will be removed from the URL before testing the token
-		$remove = array();
-
-		foreach ( $query_args as $key => $value ) {
-			if ( false === in_array( $key, $allowed, true ) ) {
-				$remove[] = $key;
-			}
-		}
-
-		if ( ! empty( $remove ) ) {
-			$url = remove_query_arg( $remove, $url );
-		}
-
+		// If the TTL is in the past, die out before we go any further.
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 			wp_die( apply_filters( 'edd_download_link_expired_text', esc_html__( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
+
+		// These are the only URL parameters that are allowed to affect the token validation.
+		$allowed_args = edd_get_url_token_parameters();
+
+		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
+		$validated_query_args = array();
+
+		foreach ( $allowed_args as $key ) {
+			if ( true === array_key_exists( $key, $query_args ) ) {
+				$validated_query_args[ $key ] = $query_args[ $key ];
+			}
+		}
+
+		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
+		$url = add_query_arg( $validated_query_args, strtok( $url, '?' ) );
 
 		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
 			$ret = true;
 		}
 	}
 
-	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
+	/**
+	 * Filters the URL token validation.
+	 *
+	 * @param bool   $ret          Whether the URL has validated or not.
+	 * @param string $url          The URL used for validation.
+	 * @param array  $query_args   The array of query parameters.
+	 * @param string $original_url The original URL (added 2.11.3).
+	 */
+	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args, $original_url );
 }
 
 /**

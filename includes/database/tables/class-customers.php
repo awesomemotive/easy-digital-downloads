@@ -90,8 +90,13 @@ final class Customers extends Table {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		if ( false !== get_option( $this->table_prefix . 'edd_customers_db_version', false ) ) {
+
+		if ( $this->needs_initial_upgrade() ) {
+
+			// Delete old/irrelevant database options.
 			delete_option( $this->table_prefix . 'edd_customers_db_version' );
+			delete_option( 'wp_edd_customers_db_version' );
+
 
 			// Modify existing columns.
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
@@ -118,6 +123,16 @@ final class Customers extends Table {
 		}
 
 		parent::maybe_upgrade();
+	}
+
+	/**
+	 * Whether the initial upgrade from the 1.0 database needs to be run.
+	 *
+	 * @since 3.0.3
+	 * @return bool
+	 */
+	private function needs_initial_upgrade() {
+		return $this->exists() && ! $this->column_exists( 'status' ) && ! $this->column_exists( 'uuid' );
 	}
 
 	/**

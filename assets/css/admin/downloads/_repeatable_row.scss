@@ -1,0 +1,188 @@
+.edd_repeatable_row.ui-sortable-placeholder {
+	line-height: 0;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	border: 1px dashed $wp-border;
+	visibility: visible !important;
+}
+
+.edd-add-repeatable-row {
+	border-top: 1px solid $wp-border;
+	padding: 12px;
+	margin: 15px -12px -12px -12px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.edd_repeatable_row input[type="text"].large-text {
+	width: 100%;
+}
+
+.edd_variable_prices_wrapper:not(:first-child),
+.edd_repeatable_upload_wrapper:not(:first-child) {
+	margin-top: 12px;
+}
+
+.edd_repeatable_row.ui-sortable-helper .edd-repeatable-row-actions .edd-remove-row {
+	display: none;
+}
+
+.edd-repeatable-row-actions {
+	color: $wp-gray-40;
+
+	a {
+		text-decoration: none;
+		width: auto;
+		cursor: pointer;
+	}
+}
+
+.edd-repeatable-row-header,
+.edd-bundle-products-header {
+	clear: both;
+	background: $wp-gray-0;
+	border: 1px solid $wp-border;
+	display: flex;
+	justify-content: space-between;
+}
+
+.edd-repeatable-row-header {
+	cursor: move;
+}
+
+.edd_repeatable_row:hover .edd-repeatable-row-header,
+.edd_repeatable_row:hover .edd-repeatable-row-standard-fields {
+	border-color: $wp-border;
+}
+
+.edd-repeatable-row-header:before,
+.edd-repeatable-row-header:after,
+.edd-bundled-product-row:before,
+.edd-bundled-product-row:after {
+	content: '';
+	display: table;
+}
+
+.edd-repeatable-row-header:after,
+.edd-bundled-product-row:after {
+	clear: both;
+}
+
+.edd-repeatable-row-title,
+.edd-bundle-products-header {
+	font-weight: 600;
+}
+
+.edd-repeatable-row-title,
+.edd-repeatable-row-actions,
+.edd-bundle-products-header {
+	padding: 8px;
+	box-sizing: border-box;
+}
+
+.edd-repeatable-row-actions {
+	flex-grow: 1;
+	text-align: right;
+}
+
+.edd-repeatable-row-actions .edd-remove-row,
+.edd-bundled-product-row .edd-remove-row {
+	width: auto;
+	cursor: pointer;
+}
+
+.edd-repeatable-row-standard-fields,
+.edd-bundled-product-row {
+	padding: 8px;
+	border-width: 0 1px 1px;
+	border-style: solid;
+	border-color: $wp-border;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 18px;
+}
+
+/* @todo: remove these when .edd-form-row has been fully implemented */
+.edd-repeatable-row-standard-fields .edd-form-group,
+.edd-bundled-product-row .edd-form-group {
+	margin-bottom: 0;
+	display: inline-flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: space-between;
+}
+
+.edd-repeatable-row-setting-label .edd-help-tip {
+	display: inline-block;
+	margin-left: 4px;
+}
+
+.edd-bundled-product-item-reorder {
+	min-width: 30px;
+
+	.edd-product-file-reorder {
+		font-size: 20px;
+		cursor: move;
+		color: $wp-gray-5;
+		font-family: "dashicons";
+		content: "\f545";
+		transition: .2s color;
+
+		&:hover {
+			color: $wp-gray-20;
+		}
+	}
+}
+
+.edd-bundled-product-actions {
+	align-self: center;
+}
+
+#edd_products .edd-select,
+.edd_repeatable_upload_wrapper .pricing select,
+.edd_repeatable_product_wrapper .edd-select {
+	min-width: 100%;
+	max-width: 200px;
+}
+
+.edd_repeatable_product_wrapper td {
+	overflow: visible;
+}
+
+@media screen and (max-width: $break-mobile) {
+
+	.edd-bundle-products-header,
+	.edd-repeatable-row-header,
+	.edd-repeatable-row-standard-fields,
+	.edd-bundled-product-row {
+		flex-wrap: wrap;
+	}
+
+	.edd-repeatable-row-standard-fields .edd-form-group,
+	.edd-bundled-product-row .edd-form-group {
+		margin-left: 0 !important;
+		margin-bottom: 24px;
+	}
+}
+
+/* still used by extensions - Software Licensing upgrade paths, Custom Prices */
+.edd_remove_repeatable {
+	border: none;
+	cursor: pointer;
+	display: inline-block;
+	padding: 0;
+	overflow: hidden;
+	margin: 8px 0 0 0;
+	text-indent: -9999px;
+	width: 10px;
+	height: 10px;
+}
+
+.edd_remove_repeatable:active,
+.edd_remove_repeatable:hover,
+.edd_remove_repeatable:focus {
+	background-position: -10px 0 !important;
+}

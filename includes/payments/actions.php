@@ -27,17 +27,23 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
+	// This specifically does not use edd_get_complete_order_statuses().
+	$completed_statuses = array( 'publish', 'complete', 'completed' );
 	// Make sure that payments are only completed once.
-	if ( 'publish' === $old_status || 'complete' === $old_status || 'completed' === $old_status ) {
+	if ( in_array( $old_status, $completed_statuses, true ) ) {
 		return;
 	}
 
 	// Make sure the payment completion is only processed when new status is complete.
-	if ( 'publish' !== $new_status && 'complete' !== $new_status && 'completed' !== $new_status ) {
+	if ( ! in_array( $new_status, $completed_statuses, true ) ) {
 		return;
 	}
 
 	$order = edd_get_order( $order_id );
+
+	if ( ! $order || 'sale' !== $order->type ) {
+		return;
+	}
 
 	$completed_date = empty( $order->date_completed )
 		? null
@@ -127,14 +133,11 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					do_action( 'edd_complete_download_purchase', $item->product_id, $order_id, $download_type, $cart_details, $item->cart_index );
 				}
 			}
-
-			// Increase the earnings for this download ID
-			edd_increase_earnings( $item->product_id, $item->total );
-			edd_increase_purchase_count( $item->product_id, $item->quantity );
 		}
 
 		// Clear the total earnings cache
 		delete_transient( 'edd_earnings_total' );
+		delete_transient( 'edd_earnings_total_without_tax' );
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
@@ -251,33 +254,6 @@ function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
 	do_action( 'edd_after_payment_actions', $payment_id, $payment, new EDD_Customer( $payment->customer_id ) );
 }
 add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
-
-/**
- * Record order status change
- *
- * @since 3.0
- * @param string $old_status the status of the order prior to this change.
- * @param string $new_status The new order status.
- * @param int    $order_id the ID number of the order.
- * @return void
- */
-function edd_record_order_status_change( $old_status, $new_status, $order_id ) {
-
-	// Get the list of statuses so that status in the payment note can be translated.
-	$stati      = edd_get_payment_statuses();
-	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
-	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
-
-	$status_change = sprintf(
-		/* translators: %1$s Old order status. %2$s New order status. */
-		__( 'Status changed from %1$s to %2$s', 'easy-digital-downloads' ),
-		$old_status,
-		$new_status
-	);
-
-	edd_insert_payment_note( $order_id, $status_change );
-}
-add_action( 'edd_transition_order_status', 'edd_record_order_status_change', 100, 3 );
 
 /**
  * Flushes the current user's purchase history transient when a payment status
@@ -553,7 +529,7 @@ function edd_recover_payment() {
 
 	EDD()->session->set( 'edd_resume_payment', $payment->ID );
 
-	$redirect_args = array( 'payment-mode' => $payment->gateway );
+	$redirect_args = array( 'payment-mode' => urlencode( $payment->gateway ) );
 	$redirect      = add_query_arg( $redirect_args, edd_get_checkout_uri() );
 	edd_redirect( $redirect );
 }

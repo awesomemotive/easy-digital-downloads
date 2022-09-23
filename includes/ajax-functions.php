@@ -69,7 +69,7 @@ function edd_test_ajax_works() {
 	}
 
 	$works = true;
-	$ajax  = wp_remote_post( edd_get_ajax_url(), array(
+	$ajax  = wp_safe_remote_post( esc_url_raw( edd_get_ajax_url() ), array(
 		'sslverify'  => false,
 		'timeout'    => 30,
 		'body'       => array(
@@ -179,76 +179,82 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  * @return void
  */
 function edd_ajax_add_to_cart() {
-	if ( ! isset( $_POST['nonce'] ) ) {
-		edd_debug_log( __( 'Missing nonce when adding an item to the cart. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+	if ( ! isset( $_POST['download_id'] ) ) {
+		edd_die();
 	}
 
-	if ( isset( $_POST['download_id'] ) && isset( $_POST['nonce'] ) ) {
-		$download_id = absint( $_POST['download_id'] );
-		$nonce       = sanitize_text_field( $_POST['nonce'] );
+	$download_id = absint( $_POST['download_id'] );
+	$request_validated = false;
+	if ( isset( $_POST['timestamp'] ) && isset( $_POST['token'] ) && EDD\Utils\Tokenizer::is_token_valid( $_POST['token'], $_POST['timestamp'] ) ) {
+		$request_validated = true;
+	} elseif ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'edd-add-to-cart-' . $download_id ) ) {
+		$request_validated = true;
+	}
 
-		$nonce_verified = wp_verify_nonce( $nonce, 'edd-add-to-cart-' . $download_id );
+	if ( ! $request_validated ) {
+		edd_debug_log( __( 'Missing nonce when adding an item to the cart. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+		edd_die( '', '', 403 );
+	}
 
-		if ( false === $nonce_verified ) {
-			edd_die( '', '', 403 );
+	$to_add = array();
+
+	if ( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
+		foreach ( $_POST['price_ids'] as $price ) {
+			$to_add[] = array( 'price_id' => $price );
+		}
+	}
+
+	$items = '';
+
+	if ( isset( $_POST['post_data'] ) ) {
+		parse_str( $_POST['post_data'], $post_data );
+	} else {
+		$post_data = array();
+	}
+
+	foreach ( $to_add as $options ) {
+
+		if ( $_POST['download_id'] == $options['price_id'] ) {
+			$options = array();
 		}
 
-		$to_add = array();
+		if ( isset( $options['price_id'] ) && isset( $post_data['edd_download_quantity_' . $options['price_id'] ] ) ) {
 
-		if ( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
-			foreach ( $_POST['price_ids'] as $price ) {
-				$to_add[] = array( 'price_id' => $price );
-			}
-		}
+			$options['quantity'] = absint( $post_data['edd_download_quantity_' . $options['price_id'] ] );
 
-		$items = '';
+		} else {
 
-		foreach ( $to_add as $options ) {
-
-			if ( $_POST['download_id'] == $options['price_id'] ) {
-				$options = array();
-			}
-
-			parse_str( $_POST['post_data'], $post_data );
-
-			if ( isset( $options['price_id'] ) && isset( $post_data['edd_download_quantity_' . $options['price_id'] ] ) ) {
-
-				$options['quantity'] = absint( $post_data['edd_download_quantity_' . $options['price_id'] ] );
-
-			} else {
-
-				$options['quantity'] = isset( $post_data['edd_download_quantity'] ) ? absint( $post_data['edd_download_quantity'] ) : 1;
-
-			}
-
-			$key = edd_add_to_cart( $_POST['download_id'], $options );
-
-			$item = array(
-				'id'      => $_POST['download_id'],
-				'options' => $options
-			);
-
-			$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
-			$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
+			$options['quantity'] = isset( $post_data['edd_download_quantity'] ) ? absint( $post_data['edd_download_quantity'] ) : 1;
 
 		}
 
-		$return = array(
-			'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
-			'cart_item'     => $items,
-			'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
+		$key = edd_add_to_cart( $_POST['download_id'], $options );
+
+		$item = array(
+			'id'      => $_POST['download_id'],
+			'options' => $options
 		);
 
-		if ( edd_use_taxes() ) {
-			$cart_tax = (float) edd_get_cart_tax();
-			$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
-		}
+		$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
+		$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
 
-		$return = apply_filters( 'edd_ajax_add_to_cart_response', $return );
-
-		echo json_encode( $return );
 	}
+
+	$return = array(
+		'subtotal'      => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+		'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
+		'cart_item'     => $items,
+		'cart_quantity' => html_entity_decode( edd_get_cart_quantity() )
+	);
+
+	if ( edd_use_taxes() ) {
+		$cart_tax = (float) edd_get_cart_tax();
+		$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
+	}
+
+	$return = apply_filters( 'edd_ajax_add_to_cart_response', $return );
+
+	echo json_encode( $return );
 	edd_die();
 }
 add_action( 'wp_ajax_edd_add_to_cart',        'edd_ajax_add_to_cart' );
@@ -371,11 +377,19 @@ function edd_ajax_remove_discount() {
 		$total = edd_get_cart_total();
 
 		$return = array(
-			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-			'code'      => sanitize_text_field( $_POST['code'] ),
-			'discounts' => edd_get_cart_discounts(),
-			'html'      => edd_get_cart_discounts_html()
+			'total_plain' => $total,
+			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+			'code'        => sanitize_text_field( $_POST['code'] ),
+			'discounts'   => edd_get_cart_discounts(),
+			'html'        => edd_get_cart_discounts_html()
 		);
+
+		/**
+		 * Allow for custom remove discount code handling.
+		 *
+		 * @since 2.11.4
+		 */
+		$return = apply_filters( 'edd_ajax_remove_discount_response', $return );
 
 		wp_send_json( $return );
 	}
@@ -1291,7 +1305,7 @@ function edd_ajax_customer_details() {
 		'date_created'      => esc_html( $customer->date_created ),
 		'date_created_i18n' => esc_html( edd_date_i18n( $customer->date_created ) ),
 		'_links'            => array(
-			'self' => esc_url_raw( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) ),
+			'self' => esc_url_raw( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . absint( $customer->id ) ) ),
 		),
 	);
 

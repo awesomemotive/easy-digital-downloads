@@ -253,73 +253,8 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 		return false;
 	}
 
-	$payment = edd_get_payment( $order_id );
-
-	$cart_details = $payment->cart_details;
-	$user_info    = $payment->user_info;
-
 	// Refund the order.
-	$new_order_id = edd_refund_order( $order_id );
-
-	if ( is_array( $cart_details ) ) {
-
-		// Loop through each cart item.
-		foreach ( $cart_details as $item ) {
-
-			// Get the item's price.
-			$amount = isset( $item['price'] )
-				? $item['price']
-				: false;
-
-			// Decrease earnings/sales and fire action once per quantity number.
-			for ( $i = 0; $i < $item['quantity']; $i++ ) {
-
-				// Handle variable priced downloads.
-				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
-					$price_id = isset( $item['item_number']['options']['price_id'] )
-						? $item['item_number']['options']['price_id']
-						: null;
-
-					$amount = ! isset( $item['price'] ) && 0 !== $item['price']
-						? edd_get_price_option_amount( $item['id'], $price_id )
-						: $item['price'];
-				}
-
-				if ( ! $amount ) {
-					// This function is only used on payments with near 1.0 cart data structure.
-					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
-				}
-			}
-
-			if ( ! empty( $item['fees'] ) ) {
-				foreach ( $item['fees'] as $fee ) {
-
-					// Only let negative fees affect the earnings.
-					if ( $fee['amount'] > 0 ) {
-						continue;
-					}
-
-					$amount += $fee['amount'];
-				}
-			}
-
-			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_earnings ) {
-
-				// Decrease earnings.
-				edd_decrease_earnings( $item['id'], $amount );
-			}
-
-			$maybe_decrease_sales = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_sales ) {
-
-				// Decrease purchase count.
-				edd_decrease_purchase_count( $item['id'], $item['quantity'] );
-			}
-		}
-	}
-
-	return $new_order_id;
+	return edd_refund_order( $order_id );
 }
 
 /**
@@ -561,7 +496,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	} else {
 		$keys      = edd_get_payment_status_keys();
 		$found_key = array_search( strtolower( $status ), $keys );
-		$status    = $found_key && array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
+		$status    = false !== $found_key && array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
 	}
 
 	return ! empty( $status ) ? $status : false;
@@ -668,39 +603,41 @@ function edd_get_total_sales() {
  * Calculate the total earnings of the store.
  *
  * @since 1.2
- * @since 3.0 Refactored to work with new tables.
+ * @since 3.0   Refactored to work with new tables.
+ * @since 3.0.4 Added the $force argument, to force querying again.
  *
  * @param bool $include_taxes Whether taxes should be included. Default true.
+ * @param bool $force         If we should force a new calculation.
  * @return float $total Total earnings.
  */
-function edd_get_total_earnings( $include_taxes = true ) {
+function edd_get_total_earnings( $include_taxes = true, $force = true ) {
 	global $wpdb;
 
-	$total = get_option( 'edd_earnings_total', false );
+	$key = $include_taxes ? 'edd_earnings_total' : 'edd_earnings_total_without_tax';
+
+	$total = $force ? false : get_transient( $key );
 
 	// If no total stored in the database, use old method of calculating total earnings.
 	if ( false === $total ) {
-		$total = get_transient( 'edd_earnings_total' );
 
-		if ( false === $total ) {
-			$exclude_taxes_sql = false === $include_taxes
-				? ' - SUM(tax)'
-				: '';
+		$stats = new EDD\Stats();
 
-			$total = $wpdb->get_var( "
-				SELECT SUM(total) {$exclude_taxes_sql} AS total
-				FROM {$wpdb->edd_orders}
-				WHERE status IN ('complete', 'revoked')
-			" );
+		$total = $stats->get_order_earnings(
+			array(
+				'output'        => 'typed',
+				'exclude_taxes' => ! $include_taxes,
+				'revenue_type'  => 'net',
+			)
+		);
 
-			$total = (float) edd_number_not_negative( (float) $total );
+		// Cache results for 1 day. This cache is cleared automatically when a payment is made.
+		set_transient( $key, $total, 86400 );
 
-			// Cache results for 1 day. This cache is cleared automatically when a payment is made
-			set_transient( 'edd_earnings_total', $total, 86400 );
-
-			// Store the total for the first time
-			update_option( 'edd_earnings_total', $total );
-		}
+		// Store as an option for backwards compatibility.
+		update_option( $key, $total, false );
+	} else {
+		// Always ensure that we're working with a float, since the transient comes back as a string.
+		$total = (float) $total;
 	}
 
 	// Don't ever show negative earnings.
@@ -708,7 +645,9 @@ function edd_get_total_earnings( $include_taxes = true ) {
 		$total = 0;
 	}
 
-	return apply_filters( 'edd_total_earnings', round( $total, edd_currency_decimal_filter() ) );
+	$total = edd_format_amount( $total, true, edd_get_currency(), 'typed' );
+
+	return apply_filters( 'edd_total_earnings', $total );
 }
 
 /**
@@ -720,10 +659,8 @@ function edd_get_total_earnings( $include_taxes = true ) {
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
-	$total  = floatval( edd_get_total_earnings() );
+	$total  = floatval( edd_get_total_earnings( true, true ) );
 	$total += floatval( $amount );
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
@@ -737,14 +674,12 @@ function edd_increase_total_earnings( $amount = 0 ) {
  * @return float $total Total earnings.
  */
 function edd_decrease_total_earnings( $amount = 0 ) {
-	$total  = edd_get_total_earnings();
+	$total  = edd_get_total_earnings( true, true );
 	$total -= $amount;
 
 	if ( $total < 0 ) {
 		$total = 0;
 	}
-
-	update_option( 'edd_earnings_total', $total );
 
 	return $total;
 }
@@ -1349,7 +1284,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
 function edd_payment_subtotal( $order_id = 0 ) {
 	$subtotal = edd_get_payment_subtotal( $order_id );
 
-	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $subtotal, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1391,7 +1326,7 @@ function edd_get_payment_subtotal( $order_id = 0 ) {
 function edd_payment_tax( $order_id = 0, $payment_meta = null ) {
 	$tax = edd_get_payment_tax( $order_id, false );
 
-	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $tax, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1545,10 +1480,8 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '', $a
 			'order'       => 'ASC',
 		) ) );
 
-		if ( $transaction_ids ) {
-			$transaction_id = $transaction_ids[0];
-
-			return edd_update_order_transaction( $transaction_id, array(
+		if ( $transaction_ids && isset( $transaction_ids[0] ) ) {
+			return edd_update_order_transaction( $transaction_ids[0], array(
 				'transaction_id' => $transaction_id,
 				'gateway'        => $order->gateway,
 				'total'          => $amount,
@@ -1899,3 +1832,140 @@ function edd_filter_where_older_than_week( $where = '' ) {
 
 	return $where;
 }
+
+/**
+ * Gets the payment ID from the final edd_payment post.
+ * This was set as an option when the custom orders table was created.
+ * For internal use only.
+ *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0
+ * @return false|int
+ */
+function _edd_get_final_payment_id() {
+	return get_option( 'edd_v3_migration_pending', false );
+}
+
+/**
+ * Evaluates whether the EDD 3.0 migration should be run,
+ * based on _any_ data existing which will need to be migrated.
+ *
+ * This should only be run after `edd_v30_is_migration_complete` has returned false.
+ *
+ * @todo deprecate in 3.1
+ *
+ * @since 3.0.2
+ * @return bool
+ */
+function _edd_needs_v3_migration() {
+	// Return true if a final payment ID was recorded.
+	if ( _edd_get_final_payment_id() ) {
+		return true;
+	}
+
+	// Return true if any tax rates were saved.
+	$tax_rates = get_option( 'edd_tax_rates', array() );
+	if ( ! empty( $tax_rates ) ) {
+		return true;
+	}
+
+	// Return true if a fallback tax rate was saved.
+	if ( edd_get_option( 'tax_rate', false ) ) {
+		return true;
+	}
+
+	global $wpdb;
+
+	// Return true if any discounts were saved.
+	$discounts = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->posts}
+			 WHERE post_type = %s
+			 LIMIT 1",
+			esc_sql( 'edd_discount' )
+		)
+	);
+	if ( ! empty( $discounts ) ) {
+		return true;
+	}
+
+	// Return true if there are any customers.
+	$customers = $wpdb->get_results(
+		"SELECT *
+		FROM {$wpdb->edd_customers}
+		LIMIT 1"
+	);
+	if ( ! empty( $customers ) ) {
+		return true;
+	}
+
+	// Return true if any customer email addresses were saved.
+	$customer_emails = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->edd_customermeta}
+			 WHERE meta_key = %s
+			 LIMIT 1",
+			esc_sql( 'additional_email' )
+		)
+	);
+	if ( ! empty( $customer_emails ) ) {
+		return true;
+	}
+
+	// Return true if any customer addresses are in the user meta table.
+	$customer_addresses = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT *
+			 FROM {$wpdb->usermeta}
+			 WHERE meta_key = %s
+			 ORDER BY umeta_id ASC
+			 LIMIT 1",
+			esc_sql( '_edd_user_address' )
+		)
+	);
+	if ( ! empty( $customer_addresses ) ) {
+		return true;
+	}
+
+	// Return true if there are any EDD logs (not sales) saved.
+	$logs = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT p.*, t.slug
+			 FROM {$wpdb->posts} AS p
+			 LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
+			 LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+			 LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
+			 WHERE p.post_type = %s AND t.slug != %s
+			 GROUP BY p.ID
+			 LIMIT 1",
+			esc_sql( 'edd_log' ),
+			esc_sql( 'sale' )
+		)
+	);
+	if ( ! empty( $logs ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Maybe adds a migration in progress notice to the order history.
+ *
+ * @todo remove in 3.1
+ * @since 3.0
+ * @return void
+ */
+add_action( 'edd_pre_order_history', function( $orders, $user_id ) {
+	if ( ! _edd_get_final_payment_id() ) {
+		return;
+	}
+	?>
+	<p class="edd-notice">
+		<?php esc_html_e( 'A store migration is in progress. Past orders will not appear in your purchase history until they have been updated.', 'easy-digital-downloads' ); ?>
+	</p>
+	<?php
+}, 10, 2 );

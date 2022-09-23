@@ -235,11 +235,15 @@ class Data_Migrator {
 
 			$log_data = array(
 				'product_id'    => $data->post_parent,
-				'file_id'       => $post_meta['_edd_log_file_id'],
+				/*
+				 * Custom Deliverables was overriding the file ID to be a string instead of an integer. The preg_replace
+				 * allows us to try to salvage the file ID from that string.
+				 */
+				'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? preg_replace( '/[^0-9]/', '', $post_meta['_edd_log_file_id'] ) : 0,
 				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
 				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
-				'ip'            => $post_meta['_edd_log_ip'],
+				'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
 				'date_created'  => $data->post_date_gmt,
 				'date_modified' => $data->post_modified_gmt,
 			);
@@ -259,6 +263,17 @@ class Data_Migrator {
 			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_file_download_log( $log_data );
 			$add_meta_function = 'edd_add_file_download_log_meta';
+
+			/**
+			 * Triggers after a file download log has been migrated.
+			 *
+			 * @since 3.0
+			 *
+			 * @param int    $new_log_id ID of the newly created log.
+			 * @param object $data       Data from the posts table. (Essentially a `WP_Post`, without being that object.)
+			 * @param array  $post_meta  All meta associated with this log.
+			 */
+			do_action( 'edd_30_migrate_file_download_log', $new_log_id, $data, $post_meta );
 		} elseif ( 'api_request' === $data->slug ) {
 			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
@@ -534,33 +549,39 @@ class Data_Migrator {
 			$modified_time     = new \DateTime( $data->post_modified );
 			$modified_time_gmt = new \DateTime( $data->post_modified_gmt );
 
-			$diff = $modified_time_gmt->diff( $modified_time );
+			if ( $modified_time != $modified_time_gmt ) {
+				$diff = $modified_time_gmt->diff( $modified_time );
 
-			$time_diff = 'PT';
+				$time_diff = 'PT';
 
-			// Add hours to the offset string.
-			if ( ! empty( $diff->h ) ) {
-				$time_diff .= $diff->h . 'H';
-			}
+				// Add hours to the offset string.
+				if ( ! empty( $diff->h ) ) {
+					$time_diff .= $diff->h . 'H';
+				}
 
-			// Add minutes to the offset string.
-			if ( ! empty( $diff->i ) ) {
-				$time_diff .= $diff->i . 'M';
-			}
+				// Add minutes to the offset string.
+				if ( ! empty( $diff->i ) ) {
+					$time_diff .= $diff->i . 'M';
+				}
 
-			// Account for -/+ GMT offsets.
-			if ( 1 === $diff->invert ) {
-				$date_created_gmt->add( new \DateInterval( $time_diff ) );
-			} else {
-				$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+				// Account for -/+ GMT offsets.
+				try {
+					if ( 1 === $diff->invert ) {
+						$date_created_gmt->add( new \DateInterval( $time_diff ) );
+					} else {
+						$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+					}
+				} catch ( \Exception $e ) {
+
+				}
 			}
 
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
 		}
 
 		// Maybe convert the date completed to UTC or backfill the date_completed.
-		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
-		if ( ! in_array( $order_status, $non_completed_statuses ) ) {
+		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', edd_get_incomplete_order_statuses() );
+		if ( ! in_array( $order_status, $non_completed_statuses, true ) ) {
 
 			if ( ! empty( $date_completed ) ) {  // Update the data_completed to the UTC.
 				try {
@@ -618,9 +639,6 @@ class Data_Migrator {
 			'date_created' => $date_created_gmt,
 		);
 
-		// Remove empty data.
-		$order_address_data = array_filter( $order_address_data );
-
 		$tax_rate_id = null;
 		$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
 			? (float) $meta['_edd_payment_tax_rate'][0]
@@ -636,11 +654,11 @@ class Data_Migrator {
 
 		$set_tax_rate_meta = false;
 
-		if ( ! empty( $tax_rate ) && ! empty( $order_address_data['country'] ) ) {
+		if ( ! empty( $tax_rate ) ) {
 			// Fetch the actual tax rate object for the order region & country.
 			$tax_rate_object = edd_get_tax_rate_by_location( array(
 				'country' => $order_address_data['country'],
-				'region'  => ! empty( $order_address_data['region'] ) ? $order_address_data['region'] : ''
+				'region'  => $order_address_data['region'],
 			) );
 
 			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == $tax_rate ) {
@@ -692,6 +710,11 @@ class Data_Migrator {
 		 */
 		$order_data = apply_filters( 'edd_30_migration_order_creation_data', $order_data, $payment_meta, $cart_details, $meta );
 
+		// Remove all order status transition actions.
+		remove_all_actions( 'edd_transition_order_status' );
+		remove_all_actions( 'edd_transition_order_item_status' );
+		remove_all_actions( 'edd_transition_order_adjustment_type' );
+
 		$order_id = edd_add_order( $order_data );
 
 		// Save an un-matched tax rate in order meta.
@@ -731,6 +754,8 @@ class Data_Migrator {
 
 		}
 
+		// Remove empty data.
+		$order_address_data = array_filter( $order_address_data );
 		if ( ! empty( $order_address_data ) ) {
 			// Add to edd_order_addresses table.
 			$order_address_data['order_id'] = $order_id;
@@ -860,9 +885,7 @@ class Data_Migrator {
 					: '';
 
 				// Get price ID.
-				$price_id = isset( $cart_item['item_number']['options']['price_id'] )
-					? absint( $cart_item['item_number']['options']['price_id'] )
-					: 0;
+				$price_id = self::get_valid_price_id_for_cart_item( $cart_item );
 
 				if ( ! empty( $product_name ) ) {
 					$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
@@ -1022,7 +1045,7 @@ class Data_Migrator {
 					'order_id'      => $order_id,
 					'product_id'    => $download_id,
 					'product_name'  => $download->post_name,
-					'price_id'      => 0,
+					'price_id'      => null,
 					'cart_index'    => $cart_index,
 					'type'          => 'download',
 					'quantity'      => 1,
@@ -1283,6 +1306,35 @@ class Data_Migrator {
 	}
 
 	/**
+	 * Retrieves a valid price ID for a given cart item.
+	 * If the product does not have variable prices, then `null` is always returned.
+	 * If the supplied price ID does not match a price ID that actually exists, then the default
+	 * variable price is returned instead of the supplied one.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $cart_item Array of cart item details.
+	 *
+	 * @return int|null
+	 */
+	protected static function get_valid_price_id_for_cart_item( $cart_item ) {
+		// If the product doesn't have variable prices, just return `null`.
+		if ( ! edd_has_variable_prices( $cart_item['id'] ) ) {
+			return null;
+		}
+
+		$variable_prices = edd_get_variable_prices( $cart_item['id'] );
+		if ( ! is_array( $variable_prices ) || empty( $variable_prices ) ) {
+			return null;
+		}
+
+		// Return the price ID that's set to the cart item right now, if not numeric return NULL.
+		return isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
+			? absint( $cart_item['item_number']['options']['price_id'] )
+			: null;
+	}
+
+	/**
 	 * Attempts to locate a PayPal transaction ID from legacy payment notes.
 	 *
 	 * @since 3.0
@@ -1326,22 +1378,18 @@ class Data_Migrator {
 			return;
 		}
 
-		$scope = isset( $data['global'] )
+		$scope = ! empty( $data['global'] )
 			? 'country'
 			: 'region';
-
-		$region = isset( $data['state'] )
-			? sanitize_text_field( $data['state'] )
-			: '';
 
 		// If the scope is 'country', look for other active rates that are country wide and set them as 'inactive'.
 		if ( 'country' === $scope ) {
 			$tax_rates = edd_get_adjustments(
 				array(
-					'type'        => 'tax_rate',
-					'status'      => 'active',
-					'scope'       => 'country',
-					'name'        => $data['country'],
+					'type'   => 'tax_rate',
+					'status' => 'active',
+					'scope'  => 'country',
+					'name'   => $data['country'],
 				)
 			);
 
@@ -1356,16 +1404,16 @@ class Data_Migrator {
 		}
 
 		$adjustment_data = array(
-			'name'        => $data['country'],
-			'status'      => 'active',
-			'type'        => 'tax_rate',
-			'scope'       => $scope,
-			'amount_type' => 'percent',
-			'amount'      => floatval( $data['rate'] ),
-			'description' => $region,
+			'name'   => $data['country'],
+			'scope'  => $scope,
+			'amount' => floatval( $data['rate'] ),
 		);
 
-		edd_add_adjustment( $adjustment_data );
+		if ( ! empty( $data['state'] ) ) {
+			$adjustment_data['description'] = sanitize_text_field( $data['state'] );
+		}
+
+		edd_add_tax_rate( $adjustment_data );
 	}
 
 	/**

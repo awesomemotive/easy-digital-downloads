@@ -288,10 +288,10 @@ function edd_email_tag_download_list( $payment_id ) {
 		return '';
 	}
 
-	$payment_data  = $payment->get_meta();
 	$download_list = '<ul>';
 	$cart_items    = $payment->cart_details;
 	$email         = $payment->email;
+	$needs_notes   = array();
 
 	if ( $order->get_items() ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
@@ -330,12 +330,12 @@ function edd_email_tag_download_list( $payment_id ) {
 
 					if ( $show_links ) {
 						$download_list .= '<div>';
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item->product_id, $item->price_id );
-							$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
-							$download_list .= '</div>';
+						$file_url       = edd_get_download_file_url( $order->payment_key, $email, $filekey, $item->product_id, $item->price_id );
+						$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
+						$download_list .= '</div>';
 					} else {
 						$download_list .= '<div>';
-							$download_list .= edd_get_file_name( $file );
+						$download_list .= edd_get_file_name( $file );
 						$download_list .= '</div>';
 					}
 
@@ -349,12 +349,14 @@ function edd_email_tag_download_list( $payment_id ) {
 
 					$download_list .= '<div class="edd_bundled_product"><strong>' . get_the_title( $bundle_item ) . '</strong></div>';
 
-					$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
+					$bundle_item_id       = edd_get_bundle_item_id( $bundle_item );
+					$bundle_item_price_id = edd_get_bundle_item_price_id( $bundle_item );
+					$download_files       = edd_get_download_files( $bundle_item_id, $bundle_item_price_id );
 
 					foreach ( $download_files as $filekey => $file ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $item->price_id );
+							$file_url       = edd_get_download_file_url( $order->payment_key, $email, $filekey, $bundle_item_id, $bundle_item_price_id );
 							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
@@ -377,11 +379,15 @@ function edd_email_tag_download_list( $payment_id ) {
 				}
 			}
 
-
-			if ( '' != edd_get_product_notes( $item->product_id ) ) {
-				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item->product_id ) . '</small>';
+			if ( ! array_key_exists( $item->product_id, $needs_notes ) ) {
+				$item_notes = edd_get_product_notes( $item->product_id );
+				if ( $item_notes ) {
+					$needs_notes[ $item->product_id ] = array(
+						'item_name'  => get_the_title( $item->product_id ),
+						'item_notes' => $item_notes,
+					);
+				}
 			}
-
 
 			if ( $show_names ) {
 				$download_list .= '</li>';
@@ -389,6 +395,18 @@ function edd_email_tag_download_list( $payment_id ) {
 		}
 	}
 	$download_list .= '</ul>';
+
+	// Remove any empty values.
+	$needs_notes = array_filter( $needs_notes );
+	if ( ! empty( $needs_notes ) ) {
+		$download_list .= __( 'Additional information about your purchase:', 'easy-digital-downloads' );
+
+		$download_list .= '<ul>';
+		foreach ( $needs_notes as $note ) {
+			$download_list .= '<li>' . $note['item_name'] . "\n" . '<small>' . $note['item_notes'] . '</small></li>';
+		}
+		$download_list .= '</ul>';
+	}
 
 	return $download_list;
 }
@@ -750,11 +768,16 @@ function edd_email_tag_sitename( $payment_id ) {
  * @return string receipt_link
  */
 function edd_email_tag_receipt_link( $payment_id ) {
-	$receipt_url = esc_url( add_query_arg( array(
-		'payment_key' => edd_get_payment_key( $payment_id ),
-		'edd_action'  => 'view_receipt'
-	), home_url() ) );
-	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'easy-digital-downloads' ), '<a href="' . $receipt_url . '">', '&raquo;</a>' );
+	$receipt_url = esc_url(
+		add_query_arg(
+			array(
+				'payment_key' => urlencode( edd_get_payment_key( $payment_id ) ),
+				'edd_action'  => 'view_receipt',
+			),
+			home_url()
+		)
+	);
+	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'easy-digital-downloads' ), '<a href="' . esc_url_raw( $receipt_url ) . '">', '&raquo;</a>' );
 
 	if ( edd_get_option( 'email_template' ) !== 'none' ) {
 		return $formatted;

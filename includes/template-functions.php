@@ -57,8 +57,17 @@ function edd_get_purchase_link( $args = array() ) {
 			return false;
 		}
 
-
-		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ) );
+		edd_set_error(
+			'set_checkout',
+			sprintf(
+				__( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ),
+				esc_url( edd_get_admin_url( array(
+					'page'    => 'edd-settings',
+					'tab'     => 'general',
+					'section' => 'pages',
+				) ) )
+			)
+		);
 		edd_print_errors();
 
 		$no_checkout_error_displayed = true;
@@ -174,7 +183,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	ob_start();
 ?>
-	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
+	<form id="<?php echo esc_attr( $form_id ); ?>" class="edd_download_purchase_form edd_purchase_<?php echo absint( $download->ID ); ?>" method="post">
 
 		<?php do_action( 'edd_purchase_link_top', $download->ID, $args ); ?>
 
@@ -183,8 +192,8 @@ function edd_get_purchase_link( $args = array() ) {
 			$class = implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) );
 
 			if ( ! edd_is_ajax_disabled() ) {
-
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-nonce="' .  wp_create_nonce( 'edd-add-to-cart-' . $download->ID ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
+				$timestamp = time();
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-nonce="' .  wp_create_nonce( 'edd-add-to-cart-' . $download->ID ) . '" data-timestamp="' . esc_attr( $timestamp ) . '" data-token="' . esc_attr( EDD\Utils\Tokenizer::tokenize( $timestamp ) ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
 
 			}
 
@@ -204,9 +213,11 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php endif; ?>
 			<?php if( ! $download->is_free( $args['price_id'] ) && ! edd_download_is_tax_exclusive( $download->ID ) ): ?>
 				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() ) . '</span>';
+					/* translators: the formatted tax rate */
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( esc_html__( 'Includes %1$s tax', 'easy-digital-downloads' ), esc_html( edd_get_formatted_tax_rate() ) ) . '</span>';
 				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() ) . '</span>';
+					/* translators: the formatted tax rate */
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( esc_html__( 'Excluding %1$s tax', 'easy-digital-downloads' ), esc_html( edd_get_formatted_tax_rate() ) ) . '</span>';
 				} ?>
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
@@ -1128,7 +1139,7 @@ function edd_pagination( $args = array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	
+
 	/**
 	 * Filter pagination args.
 	 *

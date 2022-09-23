@@ -33,6 +33,7 @@ class EDD_Notices {
 		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' )     );
 		add_action( 'admin_init',          array( $this, 'add_notices'     ), 20 );
 		add_action( 'admin_notices',       array( $this, 'display_notices' ), 30 );
+		add_action( 'wp_ajax_edd_disable_debugging', array( $this, 'edd_disable_debugging' ) );
 	}
 
 	/**
@@ -134,7 +135,6 @@ class EDD_Notices {
 		if ( current_user_can( 'manage_shop_settings' ) ) {
 			$this->add_system_notices();
 			$this->add_data_notices();
-			$this->add_tax_rate_notice();
 			$this->add_settings_notices();
 		}
 
@@ -172,7 +172,6 @@ class EDD_Notices {
 		// Dismiss notice
 		update_user_meta( get_current_user_id(), "_edd_{$key}_dismissed", 1 );
 		edd_redirect( remove_query_arg( array( 'edd_action', 'edd_notice', '_wpnonce' ) ) );
-		exit;
 	}
 
 	/**
@@ -181,6 +180,8 @@ class EDD_Notices {
 	 * @since 2.6.0 bbPress (r6771)
 	 */
 	public function display_notices() {
+
+		$this->show_debugging_notice();
 
 		// Bail if no notices
 		if ( empty( $this->notices ) || ! is_array( $this->notices ) ) {
@@ -218,7 +219,7 @@ class EDD_Notices {
 		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-no-purchase-page',
-				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ),
+				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'general', 'section' => 'pages' ) ) ) ),
 				'class'          => 'error',
 				'is_dismissible' => false
 			) );
@@ -247,7 +248,7 @@ class EDD_Notices {
 		}
 
 		// Bail if user cannot manage options
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
 
@@ -258,28 +259,34 @@ class EDD_Notices {
 
 		// Get the upload directory
 		$upload_directory   = edd_get_upload_dir();
-		$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
-			'edd_action' => 'dismiss_notices',
-			'edd_notice' => 'dismissed_notice_uploads'
-		) ), 'edd_notice_nonce' );
 
 		// Running NGINX
 		$show_nginx_notice = apply_filters( 'edd_show_nginx_redirect_notice', true );
-		if ( $show_nginx_notice && ! empty( $GLOBALS['is_nginx'] ) ) {
+		if ( $show_nginx_notice && ! empty( $GLOBALS['is_nginx'] ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) ) {
+			$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
+				'edd_action' => 'dismiss_notices',
+				'edd_notice' => 'nginx_redirect'
+			) ), 'edd_notice_nonce' );
+
 			$this->add_notice( array(
 				'id'             => 'edd-nginx',
 				'class'          => 'error',
 				'is_dismissible' => false,
 				'message'        => array(
 					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
-					__( 'To protect them, you must add this <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
+					__( 'To protect them, you must add this <a href="https://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
 					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
 				)
 			) );
 		}
 
 		// Running Apache
-		if ( ! empty( $GLOBALS['is_apache'] ) && ! edd_htaccess_exists() ) {
+		if ( ! empty( $GLOBALS['is_apache'] ) && ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
+			$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
+				'edd_action' => 'dismiss_notices',
+				'edd_notice' => 'htaccess_missing'
+			) ), 'edd_notice_nonce' );
+
 			$this->add_notice( array(
 				'id'             => 'edd-apache',
 				'class'          => 'error',
@@ -307,7 +314,11 @@ class EDD_Notices {
 				'id'             => 'edd-recount-earnings',
 				'class'          => 'error',
 				'is_dismissible' => false,
-				'message'        => sprintf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ), admin_url( 'plugins.php' ) )
+				'message'        => sprintf(
+					__( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ),
+					esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'general' ) ) ),
+					esc_url( admin_url( 'plugins.php' ) )
+				)
 			) );
 		}
 	}
@@ -316,6 +327,7 @@ class EDD_Notices {
 	 * Adds a notice about the deprecated Default Rate for Taxes.
 	 *
 	 * @since 3.0
+	 * @since 3.0.2 - We've found a way to add default tax rates. Leaving the method in case anyone (for some reason) is calling it.
 	 */
 	private function add_tax_rate_notice() {
 
@@ -371,11 +383,12 @@ class EDD_Notices {
 			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
 
 				// URL to fix this
-				$url = add_query_arg( array(
-					'post_type' => 'download',
-					'page'      => 'edd-settings',
-					'tab'       => 'gateways'
-				) );
+				$url = edd_get_admin_url(
+					array(
+						'page' => 'edd-settings',
+						'tab'  => 'gateways',
+					)
+				);
 
 				// Link
 				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Fix this', 'easy-digital-downloads' ) . '</a>';
@@ -559,12 +572,6 @@ class EDD_Notices {
 						'message' => __( 'API keys successfully revoked.', 'easy-digital-downloads' )
 					) );
 					break;
-				case 'sendwp-connected' :
-					$this->add_notice( array(
-						'id'      => 'edd-sendwp-connected',
-						'message' => __( 'SendWP has been successfully connected!', 'easy-digital-downloads' )
-					) );
-
 				case 'test-purchase-email-sent':
 					$this->add_notice(
 						array(
@@ -619,6 +626,12 @@ class EDD_Notices {
 					$this->add_notice( array(
 						'id'      => 'edd-payment-sent',
 						'message' => __( 'The purchase receipt has been resent.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'email_send_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-payment-sent',
+						'message' => __( 'Failed to send purchase receipt.', 'easy-digital-downloads' )
 					) );
 					break;
 				case 'payment-note-deleted' :
@@ -692,6 +705,70 @@ class EDD_Notices {
 					break;
 			}
 		}
+	}
+
+	/**
+	 * Show a notice if debugging is enabled in the EDD settings.
+	 * Does not show if only the `EDD_DEBUG_MODE` constant is defined.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	private function show_debugging_notice() {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+		if ( ! edd_get_option( 'debug_mode', false ) ) {
+			return;
+		}
+
+		/**
+		 * The notices JS needs to be output wherever the notice is displayed, not just EDD screens.
+		 * If more notices add to the script then this enqueue will need to be moved.
+		 *
+		 * @since 3.0
+		 */
+		wp_enqueue_script( 'edd-admin-notices', EDD_PLUGIN_URL . 'assets/js/edd-admin-notices.js', array( 'jquery' ), EDD_VERSION, true );
+		$view_url = add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-tools',
+				'tab'       => 'debug_log',
+			),
+			admin_url( 'edit.php' )
+		);
+		?>
+		<div id="edd-debug-log-notice" class="notice notice-warning">
+			<p>
+				<?php esc_html_e( 'Easy Digital Downloads debug logging is enabled. Please only leave it enabled for as long as it is needed for troubleshooting.', 'easy-digital-downloads' ); ?>
+			</p>
+			<p>
+				<a class="button button-secondary" href="<?php echo esc_url( $view_url ); ?>"><?php esc_html_e( 'View Debug Log', 'easy-digital-downloads' ); ?></a>
+				<button class="button button-primary" id="edd-disable-debug-log"><?php esc_html_e( 'Delete Log File and Disable Logging', 'easy-digital-downloads' ); ?></button>
+				<?php wp_nonce_field( 'edd_debug_log_delete', 'edd_debug_log_delete' ); ?>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Disables the debug log setting and deletes the existing log file.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	public function edd_disable_debugging() {
+		$validate_nonce = ! empty( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'edd_debug_log_delete' );
+		if ( ! current_user_can( 'manage_shop_settings' ) || ! $validate_nonce ) {
+			wp_send_json_error( wpautop( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) ), 403 );
+		}
+		edd_update_option( 'debug_mode', false );
+		global $edd_logs;
+		$edd_logs->clear_log_file();
+		wp_send_json_success( wpautop( __( 'The debug log has been cleared and logging has been disabled.', 'easy-digital-downloads' ) ) );
 	}
 
 	/**

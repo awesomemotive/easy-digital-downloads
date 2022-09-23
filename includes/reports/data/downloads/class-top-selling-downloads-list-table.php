@@ -39,7 +39,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		return $stats->get_most_valuable_order_items( array(
 			'number'   => 10,
 			'range'    => $filter['range'],
-			'currency' => ''
+			'currency' => '',
 		) );
 	}
 
@@ -55,7 +55,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			'name'           => __( 'Name', 'easy-digital-downloads' ),
 			'price'          => __( 'Price', 'easy-digital-downloads' ),
 			'sales'          => __( 'Sales', 'easy-digital-downloads' ),
-			'earnings'       => __( 'Earnings', 'easy-digital-downloads' ),
+			'earnings'       => __( 'Net Earnings', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -73,7 +73,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		}
 
 		// Check for variable pricing
-		$retval = ! empty( $download->price_id )
+		$retval = ! is_null( $download->price_id ) && is_numeric( $download->price_id )
 			? edd_get_download_name( $download->object->ID, $download->price_id )
 			: edd_get_download_name( $download->object->ID );
 
@@ -94,7 +94,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		}
 
 		// Check for variable pricing
-		$retval = ! empty( $download->price_id )
+		$retval = ! is_null( $download->price_id ) && is_numeric( $download->price_id )
 			? edd_price( $download->object->ID, false, $download->price_id )
 			: edd_price( $download->object->ID, false );
 

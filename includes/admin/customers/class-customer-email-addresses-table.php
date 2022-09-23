@@ -70,7 +70,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 				break;
 
 			case 'email' :
-				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
+				$value = '<a href="mailto:' . rawurlencode( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
 				break;
 
 			case 'type' :
@@ -121,12 +121,12 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$customer_url = edd_get_admin_url( array(
 			'page' => 'edd-customers',
 			'view' => 'overview',
-			'id'   => $customer_id
+			'id'   => absint( $customer_id ),
 		) );
 
 		// Actions
-		$actions  = array(
-			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
+		$actions = array(
+			'view' => '<a href="' . esc_url( $customer_url . '#edd_general_emails' ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
 		);
 
 		// Non-primary email actions
@@ -158,7 +158,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		}
 
 		// Concatenate and return
-		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
+		return '<strong><a class="row-title" href="' . esc_url( $customer_url . '#edd_general_emails' ) . '">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $actions );
 	}
 
 	/**
@@ -337,15 +337,24 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$search = $this->get_search();
 		$args   = array( 'status'  => $this->get_status() );
 
-		// Email
+		// Account for search stripping the "+" from emails.
+		if ( strpos( $search, ' ' ) ) {
+			$original_query = $search;
+			$search         = str_replace( ' ', '+', $search );
+			if ( ! is_email( $search ) ) {
+				$search = $original_query;
+			}
+		}
+
+		// Email.
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-		// Address ID
+		// Address ID.
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 
-		// Customer ID
+		// Customer ID.
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
 
@@ -355,10 +364,10 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			$args['search_columns'] = array( 'email' );
 		}
 
-		// Parse pagination
+		// Parse pagination.
 		$this->args = $this->parse_pagination_args( $args );
 
-		// Get the data
+		// Get the data.
 		$emails = edd_get_customer_email_addresses( $this->args );
 
 		if ( ! empty( $emails ) ) {

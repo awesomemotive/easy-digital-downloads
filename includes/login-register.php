@@ -105,7 +105,7 @@ function edd_process_login_form( $data ) {
 		// Check for errors and redirect if none present.
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
-			$default_redirect_url = esc_url_raw( $data['edd_redirect'] );
+			$default_redirect_url = $data['edd_redirect'];
 			if ( has_filter( 'edd_login_redirect' ) ) {
 				$user_id = $user instanceof WP_User ? $user->ID : false;
 				/**
@@ -115,9 +115,9 @@ function edd_process_login_form( $data ) {
 				 * @param string $default_redirect_url The URL to which to redirect after logging in.
 				 * @param int|false                    User ID. false if no ID is available.
 				 */
-				wp_redirect( apply_filters( 'edd_login_redirect', $default_redirect_url, $user_id ) );
+				wp_redirect( esc_url_raw( apply_filters( 'edd_login_redirect', $default_redirect_url, $user_id ) ) );
 			} else {
-				wp_safe_redirect( $default_redirect_url );
+				wp_safe_redirect( esc_url_raw( $default_redirect_url ) );
 			}
 			edd_die();
 		}
@@ -179,25 +179,26 @@ add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
  * @return void
  */
 function edd_login_register_error_message( $errors, $redirect ) {
-	$action_is_confirm   = ! empty( $_GET['checkemail'] ) && 'confirm' === sanitize_text_field( $_GET['checkemail'] );
-	$edd_action_is_reset = ! empty( $_GET['edd_reset_password'] ) && 'confirm' === sanitize_text_field( $_GET['checkemail'] );
-	$redirect_url        = ! empty( $_GET['edd_redirect'] ) ? urldecode( $_GET['edd_redirect'] ) : false;
-	if ( $action_is_confirm && $edd_action_is_reset && $redirect_url ) {
-		$errors->remove( 'confirm' );
-		$errors->add(
-			'confirm',
-			apply_filters(
-				'edd_login_register_error_message',
-				sprintf(
-					/* translators: %s: Link to the referring page. */
-					__( 'Follow the instructions in the confirmation email you just received, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
-					esc_url( $redirect_url )
-				),
-				$redirect_url
-			),
-			'message'
-		);
+	$redirect_url = EDD()->session->get( 'edd_forgot_password_redirect' );
+	if ( empty( $redirect_url ) ) {
+		return $errors;
 	}
+	$message = sprintf(
+		/* translators: %s: Link to the referring page. */
+		__( 'Follow the instructions in the confirmation email you just received, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
+		esc_url( $redirect_url )
+	);
+	$errors->remove( 'confirm' );
+	$errors->add(
+		'confirm',
+		apply_filters(
+			'edd_login_register_error_message',
+			$message,
+			$redirect_url
+		),
+		'message'
+	);
+	EDD()->session->set( 'edd_forgot_password_redirect', null );
 
 	return $errors;
 }
@@ -210,17 +211,30 @@ function edd_login_register_error_message( $errors, $redirect ) {
  * @return string
  */
 function edd_get_lostpassword_url() {
-	$url      = wp_validate_redirect( edd_get_current_page_url(), edd_get_checkout_uri() );
-	$redirect = add_query_arg(
-		array(
-			'checkemail'         => 'confirm',
-			'edd_reset_password' => 'confirm',
-			'edd_redirect'       => urlencode( $url ),
-		),
-		wp_login_url()
-	);
 
-	return wp_lostpassword_url( $redirect );
+	return add_query_arg(
+		array(
+			'edd_forgot_password' => 'confirm',
+		),
+		wp_lostpassword_url()
+	);
+}
+
+add_action( 'lostpassword_form', 'edd_set_lostpassword_session' );
+/**
+ * Sets a session value for the lost password redirect URI.
+ *
+ * @since 3.0.2
+ * @return void
+ */
+function edd_set_lostpassword_session() {
+	if ( ! empty( $_GET['edd_forgot_password'] ) && 'confirm' === $_GET['edd_forgot_password'] ) {
+		$url = wp_validate_redirect(
+			wp_get_referer(),
+			edd_get_checkout_uri()
+		);
+		EDD()->session->set( 'edd_forgot_password_redirect', $url );
+	}
 }
 
 /**

@@ -222,12 +222,13 @@ function edd_add_customer_email( $args = array() ) {
 		);
 
 	} else {
-		$email       = sanitize_email( $args['email'] );
-		$customer_id = (int) $args['customer_id'];
-		$primary     = 'true' === $args['primary'] ? true : false;
-		$customer    = new EDD_Customer( $customer_id );
+		$email             = sanitize_email( $args['email'] );
+		$customer_id       = (int) $args['customer_id'];
+		$primary           = 'true' === $args['primary'] ? true : false;
+		$customer          = new EDD_Customer( $customer_id );
+		$customer_email_id = $customer->add_email( $email, $primary );
 
-		if ( false === $customer->add_email( $email, $primary ) ) {
+		if ( false === $customer_email_id ) {
 
 			if ( in_array( $email, $customer->emails, true ) ) {
 				$output = array(
@@ -243,11 +244,19 @@ function edd_add_customer_email( $args = array() ) {
 			}
 
 		} else {
-			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id . '&edd-message=email-added' );
-			$output = array(
+			$redirect = edd_get_admin_url(
+				array(
+					'page'         => 'edd-customers',
+					'view'         => 'overview',
+					'id'           => absint( $customer_id ),
+					'edd-message'  => 'email-added',
+					'edd-email-id' => absint( $customer_email_id ),
+				)
+			);
+			$output   = array(
 				'success'  => true,
 				'message'  => __( 'Email successfully added to customer.', 'easy-digital-downloads' ),
-				'redirect' => $redirect,
+				'redirect' => $redirect . '#edd_general_emails',
 			);
 
 			$user          = wp_get_current_user();
@@ -303,17 +312,31 @@ function edd_remove_customer_email() {
 
 	$customer = new EDD_Customer( $_GET['id'] );
 	if ( $customer->remove_email( $_GET['email'] ) ) {
-		$url           = add_query_arg( 'edd-message', 'email-removed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+		$url           = edd_get_admin_url(
+			array(
+				'page'        => 'edd-customers',
+				'view'        => 'overview',
+				'id'          => urlencode( $customer->id ),
+				'edd-message' => 'email-removed',
+			)
+		);
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
-		$url = add_query_arg( 'edd-message', 'email-remove-failed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+		$url = edd_get_admin_url(
+			array(
+				'page'        => 'edd-customers',
+				'view'        => 'overview',
+				'id'          => urlencode( $customer->id ),
+				'edd-message' => 'email-remove-failed',
+			)
+		);
 	}
 
-	edd_redirect( $url );
+	edd_redirect( $url . '#edd_general_emails' );
 }
 add_action( 'edd_customer-remove-email', 'edd_remove_customer_email', 10 );
 
@@ -344,17 +367,31 @@ function edd_set_customer_primary_email() {
 
 	$customer = new EDD_Customer( $_GET['id'] );
 	if ( $customer->set_primary_email( $_GET['email'] ) ) {
-		$url           = add_query_arg( 'edd-message', 'primary-email-updated', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+		$url           = edd_get_admin_url(
+			array(
+				'page'        => 'edd-customers',
+				'view'        => 'overview',
+				'id'          => urlencode( $customer->id ),
+				'edd-message' => 'primary-email-updated',
+			)
+		);
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
 		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
-		$url = add_query_arg( 'edd-message', 'primary-email-failed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+		$url = edd_get_admin_url(
+			array(
+				'page'        => 'edd-customers',
+				'view'        => 'overview',
+				'id'          => urlencode( $customer->id ),
+				'edd-message' => 'primary-email-failed',
+			)
+		);
 	}
 
-	edd_redirect( $url );
+	edd_redirect( $url . '#edd_general_emails' );
 }
 add_action( 'edd_customer-primary-email', 'edd_set_customer_primary_email', 10 );
 
@@ -376,10 +413,10 @@ function edd_customer_delete( $args = array() ) {
 		return;
 	}
 
-	$customer_id   = (int)$args['customer_id'];
-	$confirm       = ! empty( $args['edd-customer-delete-confirm'] ) ? true : false;
-	$remove_data   = ! empty( $args['edd-customer-delete-records'] ) ? true : false;
-	$nonce         = $args['_wpnonce'];
+	$customer_id = (int)$args['customer_id'];
+	$confirm     = ! empty( $args['edd-customer-delete-confirm'] );
+	$remove_data = ! empty( $args['edd-customer-delete-records'] );
+	$nonce       = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'delete-customer' ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
@@ -390,7 +427,15 @@ function edd_customer_delete( $args = array() ) {
 	}
 
 	if ( edd_get_errors() ) {
-		edd_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id ) );
+		edd_redirect(
+			edd_get_admin_url(
+				array(
+					'page' => 'edd-customers',
+					'view' => 'overview',
+					'id'   => absint( $customer_id ),
+				)
+			)
+		);
 	}
 
 	$customer = new EDD_Customer( $customer_id );
@@ -421,16 +466,16 @@ function edd_customer_delete( $args = array() ) {
 				}
 			}
 
-			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&edd-message=customer-deleted' );
+			$redirect = edd_get_admin_url( array( 'page' => 'edd-customers', 'edd-message' => 'customer-deleted' ) );
 
 		} else {
 			edd_set_error( 'edd-customer-delete-failed', __( 'Error deleting customer', 'easy-digital-downloads' ) );
-			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer_id );
+			$redirect = edd_get_admin_url( array( 'page' => 'edd-customers', 'view' => 'delete', 'id' => absint( $customer_id ) ) );
 		}
 
 	} else {
 		edd_set_error( 'edd-customer-delete-invalid-id', __( 'Invalid Customer ID', 'easy-digital-downloads' ) );
-		$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers' );
+		$redirect = edd_get_admin_url( array( 'page' => 'edd-customers' ) );
 	}
 
 	edd_redirect( $redirect );
@@ -515,7 +560,14 @@ function edd_process_admin_user_verification() {
 	$customer = new EDD_Customer( $_GET['id'] );
 	edd_set_user_to_verified( $customer->user_id );
 
-	$url = add_query_arg( 'edd-message', 'user-verified', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
+	$url = edd_get_admin_url(
+		array(
+			'page'        => 'edd-customers',
+			'view'        => 'overview',
+			'id'          => absint( $customer->id ),
+			'edd-message' => 'user-verified',
+		)
+	);
 
 	edd_redirect( $url );
 }
@@ -578,6 +630,6 @@ function edd_remove_customer_address() {
 		$url = add_query_arg( 'edd-message', 'address-remove-failed', $url );
 	}
 
-	edd_redirect( $url );
+	edd_redirect( $url . '#edd_general_addresses' );
 }
 add_action( 'edd_customer-remove-address', 'edd_remove_customer_address', 10 );

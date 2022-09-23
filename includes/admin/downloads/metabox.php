@@ -21,9 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function edd_add_download_meta_box() {
-	$reviews_location = edd_reviews_location();
-	$is_promo_active  = edd_is_promo_active();
-	$post_types       = apply_filters( 'edd_download_metabox_post_types', array( 'download' ) );
+	$post_types = apply_filters( 'edd_download_metabox_post_types', array( 'download' ) );
 
 	foreach ( $post_types as $post_type ) {
 
@@ -42,17 +40,6 @@ function edd_add_download_meta_box() {
 		if ( current_user_can( 'view_product_stats', get_the_ID() ) ) {
 			/** Product Stats */
 			add_meta_box( 'edd_product_stats', sprintf( __( '%1$s Stats', 'easy-digital-downloads' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
-		}
-
-		if ( ! class_exists( 'EDD_Reviews' ) ) {
-			add_meta_box( 'edd-reviews-status', __( 'Product Reviews', 'easy-digital-downloads' ), 'edd_render_review_status_metabox', 'download', 'side', 'low' );
-		}
-
-		// If a promotion is active and Product Reviews is either activated or installed but not activated, show promo.
-		if ( true === $is_promo_active ) {
-			if ( class_exists( 'EDD_Reviews' ) || ( ! class_exists( 'EDD_Reviews' ) && ! empty( $reviews_location ) ) ) {
-				add_meta_box( 'edd-promo', __( 'Black Friday & Cyber Monday sale!', 'easy-digital-downloads' ), 'edd_render_promo_metabox', 'download', 'side', 'low' );
-			}
 		}
 	}
 }
@@ -140,8 +127,12 @@ function edd_download_meta_box_save( $post_id, $post ) {
 			// No value stored when product type is "default" ("0") for backwards compatibility.
 			delete_post_meta( $post_id, '_edd_product_type' );
 		} else {
-			if ( isset( $_POST[ $field ] ) ) {
+
+			$new = false;
+			if ( ! empty( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
+			}
+			if ( ! empty( $new ) ) {
 				update_post_meta( $post_id, $field, $new );
 			} else {
 				delete_post_meta( $post_id, $field );
@@ -183,7 +174,7 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 			$product_id = $value;
 		}
 
-		if ( $product_id === get_the_ID() ) {
+		if ( in_array( $product_id, array( 0, get_the_ID() ) ) ) {
 			unset( $products[ $key ] );
 		}
 	}
@@ -430,8 +421,8 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 ?>
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
-			<?php printf( __( 'Price ID: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
-			<input type="hidden" name="edd_variable_prices[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+			<?php printf( __( 'Price ID: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . esc_html( $key ) . '</span>' ); ?>
+			<input type="hidden" name="edd_variable_prices[<?php echo esc_attr( $key ); ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 		</span>
 		<?php
 		$actions = array();
@@ -439,7 +430,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="price">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), $key ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ) . '</span></a>';
+		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="price">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), esc_html( $key ) ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), esc_html( $key ) ) . '</span></a>';
 		?>
 		<span class="edd-repeatable-row-actions">
 			<?php echo implode( '&nbsp;&#124;&nbsp;', $actions ); ?>
@@ -493,7 +484,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 		<div class="edd-form-group edd_repeatable_default edd_repeatable_default_wrapper">
 			<div class="edd-form-group__control">
 			<label for="edd_default_price_id_<?php echo esc_attr( $key ); ?>" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'Default', 'easy-digital-downloads' ); ?></label>
-				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" id="edd_default_price_id_<?php echo esc_attr( $key ); ?>" value="<?php echo $key; ?>" />
+				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" id="edd_default_price_id_<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $key ); ?>" />
 				<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
 			</div>
 		</div>
@@ -614,10 +605,10 @@ function edd_render_products_field( $post_id ) {
 						<?php $index = 1; ?>
 						<?php foreach ( $products as $key => $product ) : ?>
 							<div class="edd_repeatable_product_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $index ); ?>">
-								<div class="edd-bundled-product-row<?php echo $variable_class; ?>">
+								<div class="edd-bundled-product-row<?php echo esc_attr( $variable_class ); ?>">
 									<div class="edd-bundled-product-item-reorder">
 										<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move"  title="<?php printf( __( 'Click and drag to re-order bundled %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>"></span>
-										<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
+										<input type="hidden" name="edd_bundled_products[<?php echo esc_attr( $index ); ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 									</div>
 									<div class="edd-form-group edd-bundled-product-item">
 										<label for="edd_bundled_products_<?php echo esc_attr( $index ); ?>" class="edd-form-group__label edd-repeatable-row-setting-label"><?php printf( esc_html__( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
@@ -652,7 +643,9 @@ function edd_render_products_field( $post_id ) {
 											}
 
 											$price_assignments = edd_get_bundle_pricing_variations( $post_id );
-											$price_assignments = $price_assignments[0];
+											if ( ! empty( $price_assignments[0] ) ) {
+												$price_assignments = $price_assignments[0];
+											}
 
 											$selected = isset( $price_assignments[ $index ] ) ? $price_assignments[ $index ] : null;
 
@@ -668,7 +661,7 @@ function edd_render_products_field( $post_id ) {
 										</div>
 									</div>
 									<div class="edd-bundled-product-actions">
-										<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $index ); ?><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $index ); ?></span></a>
+										<a class="edd-remove-row edd-delete" data-type="file"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( esc_html__( 'Remove bundle option %s', 'easy-digital-downloads' ), esc_html( $index ) ); ?></span></a>
 									</div>
 									<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 								</div>
@@ -730,7 +723,7 @@ function edd_render_products_field( $post_id ) {
 									</div>
 								</div>
 								<div class="edd-bundled-product-actions">
-									<a class="edd-remove-row edd-delete" data-type="file" ><?php printf( __( 'Remove', 'easy-digital-downloads' ) ); ?><span class="screen-reader-text"><?php __( 'Remove bundle option 1', 'easy-digital-downloads' ); ?></span></a>
+									<a class="edd-remove-row edd-delete" data-type="file" ><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php esc_html_e( 'Remove bundle option 1', 'easy-digital-downloads' ); ?></span></a>
 								</div>
 								<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 							</div>
@@ -841,17 +834,17 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
-			<?php printf( __( '%1$s file ID: %2$s', 'easy-digital-downloads' ), edd_get_label_singular(), '<span class="edd_file_id">' . esc_html( $key ) . '</span>' ); ?>
+			<?php printf( esc_html__( '%1$s file ID: %2$s', 'easy-digital-downloads' ), esc_html( edd_get_label_singular() ), '<span class="edd_file_id">' . esc_html( $key ) . '</span>' ); ?>
 			<input type="hidden" name="edd_download_files[<?php echo esc_attr( $key ); ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 		</span>
 		<span class="edd-repeatable-row-actions">
 			<a class="edd-remove-row edd-delete" data-type="file">
-				<?php _e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ); ?></span>
+				<?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( esc_html__( 'Remove file %s', 'easy-digital-downloads' ), esc_html( $key ) ); ?></span>
 			</a>
 		</span>
 	</div>
 
-	<div class="edd-repeatable-row-standard-fields<?php echo $variable_class; ?>">
+	<div class="edd-repeatable-row-standard-fields<?php echo esc_attr( $variable_class ); ?>">
 		<div class="edd-form-group edd-file-name">
 			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-name" class="edd-form-group__label edd-repeatable-row-setting-label"><?php esc_html_e( 'File Name', 'easy-digital-downloads' ); ?></label>
 			<div class="edd-form-group__control">
@@ -1324,114 +1317,41 @@ function edd_render_stats_meta_box() {
 		'page'       => 'edd-payment-history',
 		'product-id' => urlencode( $post_id )
 	), edd_get_admin_base_url() );
+
+	$earnings_report_url = edd_get_admin_url( array(
+		'page'     => 'edd-reports',
+		'view'     => 'downloads',
+		'products' => absint( $post_id ),
+	) );
 	?>
 
 	<p class="product-sales-stats">
-		<span class="label"><?php _e( 'Sales:', 'easy-digital-downloads' ); ?></span>
+		<span class="label"><?php esc_html_e( 'Net Sales:', 'easy-digital-downloads' ); ?></span>
 		<span><a href="<?php echo esc_url( $sales_url ); ?>"><?php echo esc_html( $sales ); ?></a></span>
 	</p>
 
 	<p class="product-earnings-stats">
-		<span class="label"><?php esc_html_e( 'Gross Revenue:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
+		<span class="label"><?php esc_html_e( 'Net Revenue:', 'easy-digital-downloads' ); ?></span>
+		<span><a href="<?php echo esc_url( $earnings_report_url ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
 	</p>
 
 	<hr />
 
 	<p class="file-download-log">
-		<span><a href="<?php echo admin_url( 'edit.php?page=edd-tools&view=file_downloads&post_type=download&tab=logs&download=' . $post_id ); ?>"><?php _e( 'View File Download Log', 'easy-digital-downloads' ); ?></a></span><br/>
+		<?php
+		$url = edd_get_admin_url(
+			array(
+				'page'     => 'edd-tools',
+				'view'     => 'file_downloads',
+				'tab'      => 'logs',
+				'download' => absint( $post_id ),
+			)
+		);
+		?>
+		<span><a href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'View File Download Log', 'easy-digital-downloads' ); ?></a></span><br/>
 	</p>
 <?php
 	do_action('edd_stats_meta_box');
-}
-
-/**
- * Get the path of the Product Reviews plugin
- *
- * @since 2.9.20
- *
- * @return mixed|string
- */
-function edd_reviews_location() {
-	$possible_locations = array( 'edd-reviews/edd-reviews.php', 'EDD-Reviews/edd-reviews.php' );
-	$reviews_location   = '';
-
-	foreach ( $possible_locations as $location ) {
-
-		if ( 0 !== validate_plugin( $location ) ) {
-			continue;
-		}
-		$reviews_location = $location;
-	}
-
-	return $reviews_location;
-}
-
-/**
- * Outputs a metabox for the Product Reviews extension to show or activate it.
- *
- * @since 2.8
- * @return void
- */
-function edd_render_review_status_metabox() {
-	$reviews_location = edd_reviews_location();
-	$is_promo_active  = edd_is_promo_active();
-
-	ob_start();
-
-	if ( ! empty( $reviews_location ) ) {
-		$review_path  = '';
-		$base_url     = wp_nonce_url( admin_url( 'plugins.php' ), 'activate-plugin_' . $reviews_location );
-		$args         = array(
-			'action'        => 'activate',
-			'plugin'        => sanitize_text_field( $reviews_location ),
-			'plugin_status' => 'all',
-		);
-		$activate_url = add_query_arg( $args, $base_url );
-		?><p style="text-align: center;"><a href="<?php echo esc_url( $activate_url ); ?>" class="button-secondary"><?php _e( 'Activate Reviews', 'easy-digital-downloads' ); ?></a></p><?php
-
-	} else {
-
-		// Adjust UTM params based on state of promotion.
-		if ( true === $is_promo_active ) {
-			$args = array(
-				'utm_source'   => 'download-metabox',
-				'utm_medium'   => 'wp-admin',
-				'utm_campaign' => 'bfcm2019',
-				'utm_content'  => 'product-reviews-metabox-bfcm',
-			);
-		} else {
-			$args = array(
-				'utm_source'   => 'edit-download',
-				'utm_medium'   => 'enable-reviews',
-				'utm_campaign' => 'admin',
-			);
-		}
-
-		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
-		$url      = add_query_arg( $args, $base_url );
-		?>
-		<p>
-			<?php
-			// Translators: The %s represents the link to the Product Reviews extension.
-			echo wp_kses_post( sprintf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), esc_url( $url ) ) );
-			?>
-		</p>
-		<?php
-		// Add an additional note if a promotion is active.
-		if ( true === $is_promo_active ) {
-			?>
-			<p>
-				<?php echo wp_kses_post( __( 'Act now and <strong>SAVE 25%</strong> on your purchase. Sale ends <em>23:59 PM December 6th CST</em>. Use code <code>BFCM2019</code> at checkout.', 'easy-digital-downloads' ) ); ?>
-			</p>
-			<?php
-		}
-	}
-
-	$rendered = ob_get_contents();
-	ob_end_clean();
-
-	echo wp_kses_post( $rendered );
 }
 
 /**
@@ -1455,7 +1375,7 @@ function edd_render_promo_metabox() {
 	<p>
 		<?php
 		// Translators: The %s represents the link to the pricing page on the Easy Digital Downloads website.
-		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), $url ) );
+		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), esc_url( $url ) ) );
 		?>
 	</p>
 	<?php

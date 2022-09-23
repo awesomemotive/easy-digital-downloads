@@ -229,6 +229,11 @@ class Utilities {
 			$timezone = 'UTC';
 		}
 
+		// If the date string cannot be property converted to a valid time, reset it to now.
+		if ( ! strtotime( $date_string ) ) {
+			$date_string = 'now';
+		}
+
 		/*
 		 * Create the DateTime object with the "local" WordPress timezone.
 		 *
@@ -319,6 +324,35 @@ class Utilities {
 		return $this->time_zone;
 	}
 
+	/**
+	 * Gets a valid date string in the format Y-m-d HH:MM:00
+	 *
+	 * @since 3.0
+	 * @param string $date   A valid date string.
+	 * @param int    $hour   The hour.
+	 * @param int    $minute The minute.
+	 * @return string
+	 */
+	public function get_date_string( $date = '', $hour = 0, $minute = 0 ) {
+		if ( empty( $date ) || ! strtotime( $date ) ) {
+			$date = date( 'Y-m-d' );
+		}
+
+		$hour = absint( $hour );
+		if ( $hour > 23 ) {
+			$hour = 23;
+		}
+		$hour = str_pad( $hour, 2, '0', STR_PAD_LEFT );
+
+		$minute = absint( $minute );
+		if ( $minute > 59 ) {
+			$minute = 59;
+		}
+		$minute = str_pad( $minute, 2, '0', STR_PAD_LEFT );
+
+		return "{$date} {$hour}:{$minute}:00";
+	}
+
 	/** Private Setters *******************************************************/
 
 	/**
@@ -368,30 +402,11 @@ class Utilities {
 
 		// Use GMT offset to calculate
 		} elseif ( is_numeric( $gmt_offset ) ) {
-
-			if ( version_compare( phpversion(), '5.5', '<' ) ) {
-
-				/**
-				 * In the event the user has PHP 5.3 or 5.4 and is using a GMT offset like "GMT-5"
-				 * instead of a Country/City based timezone setting in the WordPress settings, we have to attempt a lookup
-				 * of the string timezone since DateTimeZone doesn't support instantiation from a GMT offset in these versions of PHP.
-				 *
-				 * timezone_name_from_abbr allows us to look up a TimeZone string like "America/Chicago" from the offset, which
-				 * will stop DateTimeZone from causing a fatal error in these circumstances.
-				 */
-				$is_dst = date( 'I' );
-				$retval = timezone_name_from_abbr('', $gmt_offset, $is_dst );
-
-			} else {
-
-				$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
-				$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
-				$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
-				$value   = ! empty( $minutes )  ? "{$hours}:{$minutes}" : $hours;
-				$retval  = "GMT{$math}{$value}";
-
-			}
-
+			$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
+			$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+			$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
+			$value   = ! empty( $minutes )  ? "{$hours}:{$minutes}" : $hours;
+			$retval  = "GMT{$math}{$value}";
 		}
 
 		// Set

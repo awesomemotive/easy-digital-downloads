@@ -82,7 +82,9 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$edd_options['gateways']['manual'] = '1';
 		$edd_options['gateways']['stripe'] = '1';
 
-		$this->assertEquals( 'manual', edd_get_default_gateway() );
+		// If we have Stripe in this install, 'stripe' is the default';
+		$expected_result = class_exists( 'EDD_Stripe' ) ? 'stripe' : 'manual';
+		$this->assertEquals( $expected_result, edd_get_default_gateway() );
 	}
 
 	public function test_get_gateway_admin_label() {

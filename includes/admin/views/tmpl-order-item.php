@@ -48,7 +48,7 @@ $view_url = add_query_arg(
 				</span>
 				<# } #>
 
-				<# if ( false === data.state.isAdding && 'complete' === data.status ) { #>
+				<# if ( false === data.state.isAdding && true === data.deliverable ) { #>
 				<span>
 					<button class="button-link copy-download-link">
 						<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
@@ -70,9 +70,9 @@ $view_url = add_query_arg(
 </td>
 
 <# if ( true === data.state.hasQuantity ) { #>
-<td data-colname="<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>">
-	{{ data.quantity }}
-</td>
+	<td data-colname="<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>">
+		{{ data.quantity }}
+	</td>
 <# } #>
 
 <td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">

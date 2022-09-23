@@ -215,6 +215,7 @@ class Currency {
 			'clp',
 			'djf',
 			'gnf',
+			'huf',
 			'jpy',
 			'kmf',
 			'krw',

@@ -53,8 +53,8 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular' => __( 'Order',  'easy-digital-downloads' ),
-			'plural'   => __( 'Orders', 'easy-digital-downloads' ),
+			'singular' => 'order',
+			'plural'   => 'orders',
 			'ajax'     => false
 		) );
 
@@ -84,7 +84,7 @@ class EDD_Payment_History_Table extends List_Table {
 		// Carry the type over to the base URL
 		$this->base_url = edd_get_admin_url( array(
 			'page'       => 'edd-payment-history',
-			'order_type' => $this->type
+			'order_type' => sanitize_key( $this->type ),
 		) );
 	}
 
@@ -450,7 +450,8 @@ class EDD_Payment_History_Table extends List_Table {
 		$timezone_abbreviation = edd_get_timezone_abbr();
 		switch ( $column_name ) {
 			case 'amount':
-				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
+				$currency = ! empty( $order->currency ) ? $order->currency : edd_get_currency();
+				$value    = edd_display_amount( $order->total, $currency );
 				break;
 			case 'date':
 				$value = '<time datetime="' . esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) . '">' . edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
@@ -490,7 +491,7 @@ class EDD_Payment_History_Table extends List_Table {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			'order',
-			esc_attr( $order->id ),
+			absint( $order->id ),
 			/* translators: the order number */
 			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_number ) )
 		);
@@ -514,7 +515,7 @@ class EDD_Payment_History_Table extends List_Table {
 			'view' => 'sale' === $order->type
 				? 'view-order-details'
 				: 'view-refund-details',
-			'id'   => $order->id,
+			'id'   => absint( $order->id ),
 		) );
 
 		// Default row actions
@@ -526,7 +527,7 @@ class EDD_Payment_History_Table extends List_Table {
 		if ( 'sale' === $this->type && 'complete' === $order->status && ! empty( $order->email ) ) {
 			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
 					'edd-action'  => 'email_links',
-					'purchase_id' => $order->id
+					'purchase_id' => absint( $order->id )
 				), $this->base_url ) ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -534,19 +535,19 @@ class EDD_Payment_History_Table extends List_Table {
 		if ( edd_is_order_trashable( $order->id ) ) {
 			$trash_url = wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'trash_order',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			), $this->base_url ), 'edd_payment_nonce' );
 			$row_actions['trash'] = '<a href="' . esc_url( $trash_url ) . '">' . esc_html__( 'Trash', 'easy-digital-downloads' ) . '</a>';
 		} elseif ( edd_is_order_restorable( $order->id ) ) {
 			$restore_url = wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'restore_order',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			), $this->base_url ), 'edd_payment_nonce' );
 			$row_actions['restore'] = '<a href="' . esc_url( $restore_url ) . '">' . esc_html__( 'Restore', 'easy-digital-downloads' ) . '</a>';
 
 			$delete_url = wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'delete_order',
-				'purchase_id' => $order->id,
+				'purchase_id' => absint( $order->id ),
 			), $this->base_url ), 'edd_payment_nonce' );
 			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete Permanently', 'easy-digital-downloads' ) . '</a>';
 
@@ -607,18 +608,21 @@ class EDD_Payment_History_Table extends List_Table {
 			// Use customer name, if exists
 			$name = ! empty( $customer->name )
 				? $customer->name
-				: __( 'No Name', 'easy-digital-downloads' );
+				: $order->email;
 
 			// Link to View Customer
 			$url = edd_get_admin_url( array(
 				'page' => 'edd-customers',
 				'view' => 'overview',
-				'id'   => $customer_id,
+				'id'   => absint( $customer_id ),
 			) );
 
-			$name = '<a href="' . esc_url( $url ) . '">' . $name . '</a>';
+			$name = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
+			if ( ! empty( $customer->name ) ) {
+				$name .= '<div class="order-list-email">' . $order->email . '</div>';
+			}
 		} else {
-			$name = '&mdash;';
+			$name = $order->email;
 		}
 
 		/**
@@ -819,13 +823,11 @@ class EDD_Payment_History_Table extends List_Table {
 			'gateway'     => $gateway,
 			'mode'        => $mode,
 			'type'        => $type,
-			'search'      => $search,
 		) );
 
-		// Search
-		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
-			$args['search_in_notes'] = true;
-			$args['search']          = trim( str_replace( 'txn:', '', $args['s'] ) );
+		// Update args by search query.
+		if ( ! empty( $search ) ) {
+			$args = $this->parse_search( $search, $args );
 		}
 
 		// Date query
@@ -838,46 +840,51 @@ class EDD_Payment_History_Table extends List_Table {
 
 			// Start (of day)
 			if ( ! empty( $start_date ) ) {
+
+				$start_date_obj   = EDD()->utils->date( $start_date, edd_get_timezone_id(), false )->copy()->startOfDay();
+				$query_start_date = edd_get_utc_equivalent_date( $start_date_obj->copy() );
+
 				$args['date_query'][] = array(
 					'column' => 'date_created',
-					'after'  => date( 'Y-m-d 00:00:00', strtotime( $start_date ) )
+					'after'  => $query_start_date->format( 'mysql' ),
 				);
 			}
 
 			// End (of day)
 			if ( ! empty( $end_date ) ) {
+				$end_date_obj   = EDD()->utils->date( $end_date, edd_get_timezone_id(), false )->copy()->endOfDay();
+				$query_end_date = edd_get_utc_equivalent_date( $end_date_obj->copy() );
+
 				$args['date_query'][] = array(
-					'column' => 'date_created',
-					'before'  => date( 'Y-m-d 23:59:59', strtotime( $end_date ) )
+					'column'  => 'date_created',
+					'before'  => $query_end_date->format( 'mysql' ),
 				);
 			}
 		}
 
 		// Maybe filter by order amount.
-		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			if ( ! is_null( $_GET['order-amount-filter-value'] ) && '' !== $_GET['order-amount-filter-value'] ) {
-				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+		if ( isset( $_GET['order-amount-filter-type'] ) && ! empty( $_GET['order-amount-filter-value'] ) ) {
+			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-				switch( $_GET['order-amount-filter-type'] ) {
-					case 'lt' :
-						$filter_type = '<';
-						break;
-					case 'gt' :
-						$filter_type = '>';
-						break;
-					default :
-						$filter_type = '=';
-						break;
-				}
-
-				$args['compare_query'] = array(
-					array(
-						'key'     => 'total',
-						'value'   => $filter_amount,
-						'compare' => $filter_type,
-					),
-				);
+			switch ( $_GET['order-amount-filter-type'] ) {
+				case 'lt':
+					$filter_type = '<';
+					break;
+				case 'gt':
+					$filter_type = '>';
+					break;
+				default:
+					$filter_type = '=';
+					break;
 			}
+
+			$args['compare_query'] = array(
+				array(
+					'key'     => 'total',
+					'value'   => $filter_amount,
+					'compare' => $filter_type,
+				),
+			);
 		}
 
 		// Maybe filter by product.
@@ -892,27 +899,125 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		// Maybe filter by country.
-		if ( isset( $_GET['order-country-filter-value'] ) ) {
-			$country = ! empty( $_GET['order-country-filter-value'] )
-				? sanitize_text_field( $_GET['order-country-filter-value'] )
-				: '';
-
-			$args['country'] = $country;
+		if ( ! empty( $_GET['order-country-filter-value'] ) ) {
+			$args['country'] = sanitize_text_field( $_GET['order-country-filter-value'] );
 		}
 
 		// Maybe filter by region.
-		if ( isset( $_GET['order-region-filter-value'] ) ) {
-			$region = ! empty( $_GET['order-region-filter-value'] )
-				? sanitize_text_field( $_GET['order-region-filter-value'] )
-				: '';
-
-			$args['region'] = $region;
+		if ( ! empty( $_GET['order-region-filter-value'] ) ) {
+			$args['region'] = sanitize_text_field( $_GET['order-region-filter-value'] );
 		}
+
+		// Maybe filter by discount ID.
+		if ( ! empty( $_GET['discount_id'] ) ) {
+			$args['discount_id'] = absint( $_GET['discount_id'] );
+		}
+
+		/**
+		 * Filters array of arguments for getting orders for the list table, counts, and pagination.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array  $args Array of arguments to use for querying orders.
+		 * @param bool   $paginate $paginate Whether to add pagination arguments
+		 */
+		$args = apply_filters( 'edd_payments_table_parse_args', $args, $paginate );
 
 		// Return args, possibly with pagination
 		return ( true === $paginate )
 			? $this->parse_pagination_args( $args )
 			: $args;
+	}
+
+	/**
+	 * Parse the search query.
+	 *
+	 * @since 3.0.2
+	 * @param string $search
+	 * @param array $args
+	 * @return array
+	 */
+	private function parse_search( $search, $args ) {
+
+		// Transaction ID
+		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
+			$args['txn'] = trim( str_replace( 'txn:', '', $search ) );
+
+			return $args;
+		}
+
+		// Email
+		if ( is_email( $search ) ) {
+			$args['email'] = $search;
+
+			return $args;
+		}
+
+		// Download ID
+		if ( is_string( $search ) && ( false !== strpos( $search, '#' ) ) ) {
+			$args['product_id'] = absint( $search );
+
+			return $args;
+		}
+
+		// Order ID
+		if ( is_numeric( $search ) ) {
+			$args['id'] = $search;
+
+			return $args;
+		}
+
+		// The customer’s name or ID prefixed by customer:
+		if ( ! is_array( $search ) && ( false !== strpos( $search, 'customer:' ) ) ) {
+			$search = trim( str_replace( 'customer:', '', $search ) );
+
+			// Search by customer ID.
+			if ( is_numeric( $search ) ) {
+				$args['customer_id'] = absint( $search );
+
+				return $args;
+			}
+
+			// Get customer IDs that match the search string.
+			$customers = edd_get_customers(
+				array(
+					'search' => $search,
+					'fields' => 'ids',
+				)
+			);
+			if ( ! empty( $customers ) ) {
+				$args['customer_id__in'] = $customers;
+			} else {
+				$args['customer_id__in'] = array( null );
+			}
+
+			return $args;
+		}
+
+		// The user ID prefixed by user:
+		if ( ! is_array( $search ) && ( false !== strpos( $search, 'user:' ) ) ) {
+			$search = trim( str_replace( 'user:', '', $search ) );
+			if ( is_numeric( $search ) ) {
+				$args['user_id'] = absint( $search );
+
+				return $args;
+			}
+		}
+
+		// The Discount Code prefixed by discount:
+		if ( is_string( $search ) && ( false !== strpos( $search, 'discount:' ) ) ) {
+			$discount = edd_get_discount_by_code( trim( str_replace( 'discount:', '', $search ) ) );
+			if ( ! empty( $discount->id ) ) {
+				$args['discount_id'] = $discount->id;
+			}
+
+			return $args;
+		}
+
+		// Default search
+		$args['search'] = $search;
+
+		return $args;
 	}
 
 	/**

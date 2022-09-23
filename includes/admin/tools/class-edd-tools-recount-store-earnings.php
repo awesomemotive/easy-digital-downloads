@@ -93,7 +93,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 		}
 
-		update_option( 'edd_earnings_total', $total );
+		update_option( 'edd_earnings_total', $total, false );
 		set_transient( 'edd_earnings_total', $total, 86400 );
 
 		return false;
