@@ -193,20 +193,20 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_order_item_count
 	 */
-	public function test_get_order_item_count_no_price_id_should_be_2() {
+	public function test_get_order_item_count_no_price_id_should_be_3() {
 		$count = self::$stats->get_order_item_count(
 			array(
 				'product_id' => 1,
 			)
 		);
 
-		$this->assertSame( 2, $count );
+		$this->assertSame( 3, $count );
 	}
 
 	/**
 	 * @covers ::get_order_item_count
 	 */
-	public function test_get_order_item_count_null_price_id_should_be_2() {
+	public function test_get_order_item_count_null_price_id_should_be_3() {
 		$count = self::$stats->get_order_item_count(
 			array(
 				'product_id' => 1,
@@ -214,7 +214,7 @@ class Stats_Tests extends \EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertSame( 2, $count );
+		$this->assertSame( 3, $count );
 	}
 
 	/**
