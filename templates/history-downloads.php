@@ -47,20 +47,16 @@ if ( $orders ) :
 				<?php do_action( 'edd_download_history_header_end' ); ?>
 			</tr>
 		</thead>
-		<?php foreach ( $orders as $order ) :
-			foreach ( $order->get_items() as $key => $item ) :
-
-				// Skip over Bundles. Products included with a bundle will be displayed individually
-				if ( edd_is_bundled_product( $item->product_id ) ) {
-					continue;
-				}
+		<?php
+		foreach ( $orders as $order ) :
+			foreach ( $order->get_items_with_bundles() as $key => $item ) :
 				?>
 
 				<tr class="edd_download_history_row">
 					<?php
+					$name           = $item->product_name;
 					$price_id       = $item->price_id;
 					$download_files = edd_get_download_files( $item->product_id, $price_id );
-					$name           = $item->product_name;
 
 					do_action( 'edd_download_history_row_start', $order->id, $item->product_id );
 					?>
@@ -69,8 +65,7 @@ if ( $orders ) :
 					<?php if ( ! edd_no_redownload() ) : ?>
 						<td class="edd_download_download_files">
 							<?php
-
-							if ( 'complete' == $item->status ) :
+							if ( $item->is_deliverable() ) :
 
 								if ( $download_files ) :
 
@@ -81,7 +76,7 @@ if ( $orders ) :
 
 										<div class="edd_download_file">
 											<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-												<?php echo edd_get_file_name( $file ); ?>
+												<?php echo esc_html( edd_get_file_name( $file ) ); ?>
 											</a>
 										</div>
 

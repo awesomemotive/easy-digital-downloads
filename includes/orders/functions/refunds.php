@@ -15,25 +15,6 @@ use EDD\Orders\Refund_Validator;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Returns an array of order statuses that support refunds.
- *
- * @since 3.0
- * @return array
- */
-function edd_get_refundable_order_statuses() {
-	$refundable_order_statuses = array( 'complete', 'publish', 'partially_refunded' );
-
-	/**
-	 * Filters the order statuses that are allowed to be refunded.
-	 *
-	 * @param array $refundable_order_statuses
-	 *
-	 * @since 3.0
-	 */
-	return (array) apply_filters( 'edd_refundable_order_statuses', $refundable_order_statuses );
-}
-
-/**
  * Check order can be refunded.
  *
  * @since 3.0
@@ -328,7 +309,6 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 
 	// Maintain a mapping of old order item IDs => new for easier lookup when we do fees.
 	$order_item_id_map = array();
-
 	foreach ( $validator->get_refunded_order_items() as $order_item ) {
 		$order_item['order_id'] = $refund_id;
 
@@ -383,8 +363,14 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 	}
 
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
-	$all_refunded = true;
-	if ( edd_get_order_total( $order_id ) > 0 ) {
+	$all_refunded    = true;
+	$remaining_items = edd_count_order_items(
+		array(
+			'order_id'       => $order_id,
+			'status__not_in' => array( 'refunded' ),
+		)
+	);
+	if ( edd_get_order_total( $order_id ) > 0 || $remaining_items > 0 ) {
 		$all_refunded = false;
 	}
 
@@ -394,6 +380,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 
 	edd_update_order( $order_id, array( 'status' => $order_status ) );
 
+	edd_update_order( $refund_id, array( 'date_completed' => date( 'Y-m-d H:i:s' ) ) );
 	/**
 	 * Fires when an order has been refunded.
 	 * This hook will trigger the legacy `edd_pre_refund_payment` and `edd_post_refund_payment`

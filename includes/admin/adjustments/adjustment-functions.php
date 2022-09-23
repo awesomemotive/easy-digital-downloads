@@ -33,7 +33,7 @@ function edd_adjustments_page() {
 	// Add new URL
 	$add_new_url = edd_get_admin_url( array(
 		'page'       => 'edd-discounts',
-		'edd-action' => 'add_' . $active_tab
+		'edd-action' => 'add_' . sanitize_key( $active_tab ),
 	) );
 
 	// Start the output buffer
@@ -55,7 +55,7 @@ function edd_adjustments_page() {
 				// Add the tab ID
 				$tab_url = edd_get_admin_url( array(
 					'page' => 'edd-discounts',
-					'tab'  => $tab_id
+					'tab'  => sanitize_key( $tab_id ),
 				) );
 
 				// Remove messages
@@ -68,7 +68,7 @@ function edd_adjustments_page() {
 					? ' nav-tab-active'
 					: ''; ?>
 
-				<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo $active; ?>"><?php echo esc_html( $tab_name ); ?></a>
+				<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo esc_attr( $active ); ?>"><?php echo esc_html( $tab_name ); ?></a>
 
 			<?php endforeach; ?>
 
@@ -76,7 +76,7 @@ function edd_adjustments_page() {
 		<br>
 		<?php endif; ?>
 
-		<?php do_action( 'edd_adjustments_page_' . $active_tab ); ?>
+		<?php do_action( 'edd_adjustments_page_' . esc_attr( $active_tab ) ); ?>
 	</div><!-- .wrap -->
 
 	<?php

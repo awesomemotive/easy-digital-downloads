@@ -32,8 +32,8 @@ function edd_download_columns( $download_columns ) {
 		'download_category' => $category_labels['menu_name'],
 		'download_tag'      => $tag_labels['menu_name'],
 		'price'             => __( 'Price', 'easy-digital-downloads' ),
-		'sales'             => __( 'Sales', 'easy-digital-downloads' ),
-		'earnings'          => __( 'Gross Revenue', 'easy-digital-downloads' ),
+		'sales'             => __( 'Net Sales', 'easy-digital-downloads' ),
+		'earnings'          => __( 'Net Revenue', 'easy-digital-downloads' ),
 		'date'              => __( 'Date', 'easy-digital-downloads' )
 	) );
 }
@@ -72,7 +72,7 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				echo edd_price_range( $post_id );
 			} else {
 				echo edd_price( $post_id, false );
-				echo '<input type="hidden" class="downloadprice-' . $post_id . '" value="' . edd_get_download_price( $post_id ) . '" />';
+				echo '<input type="hidden" class="downloadprice-' . absint( $post_id ) . '" value="' . esc_attr( edd_get_download_price( $post_id ) ) . '" />';
 			}
 			break;
 		case 'sales':
@@ -91,7 +91,13 @@ function edd_render_download_columns( $column_name, $post_id ) {
 			break;
 		case 'earnings':
 			if ( current_user_can( 'view_product_stats', $post_id ) ) {
-				echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ) ) . '">';
+				$report_url = edd_get_admin_url( array(
+					'page'     => 'edd-reports',
+					'view'     => 'downloads',
+					'products' => absint( $post_id ),
+				) );
+
+				echo '<a href="' . esc_url( $report_url ) . '">';
 					echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
 				echo '</a>';
 			} else {

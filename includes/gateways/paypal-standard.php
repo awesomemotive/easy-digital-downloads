@@ -32,7 +32,9 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
  * @return array                    Gateway subsections with PayPal Standard
  */
 function edd_register_paypal_gateway_section( $gateway_sections ) {
-	$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+	if ( \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
+		$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+	}
 
 	return $gateway_sections;
 }
@@ -46,6 +48,9 @@ add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_secti
  * @return array                    Gateway tab settings with the PayPal Standard settings
  */
 function edd_register_paypal_gateway_settings( $gateway_settings ) {
+	if ( ! \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
+		return $gateway_settings;
+	}
 
 	$paypal_settings = array(
 		'paypal_email' => array(
@@ -66,7 +71,7 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 	$pdt_desc = sprintf(
 		__( 'Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'easy-digital-downloads' ),
-		'http://docs.easydigitaldownloads.com/article/918-paypal-standard'
+		'https://docs.easydigitaldownloads.com/article/918-paypal-standard'
 	);
 
 	$paypal_settings['paypal_identify_token'] = array(
@@ -79,7 +84,7 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 	$desc  = sprintf(
 		__( 'If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
-		'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
+		'https://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
 	);
 
 	$paypal_settings['disable_paypal_verification'] = array(
@@ -196,10 +201,13 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		EDD()->session->set( 'edd_resume_payment', $payment );
 
 		// Get the success url
-		$return_url = add_query_arg( array(
+		$return_url = add_query_arg(
+			array(
 				'payment-confirmation' => 'paypal',
-				'payment-id' => $payment
-			), get_permalink( edd_get_option( 'success_page', false ) ) );
+				'payment-id'           => urlencode( $payment ),
+			),
+			get_permalink( edd_get_option( 'success_page', false ) )
+		);
 
 		// Get the PayPal redirect uri
 		$paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
@@ -218,10 +226,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'charset'       => get_bloginfo( 'charset' ),
 			'custom'        => $payment,
 			'rm'            => '2',
-			'return'        => $return_url,
-			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
-			'notify_url'    => $listener_url,
-			'image_url'     => edd_get_paypal_image_url(),
+			'return'        => esc_url_raw( $return_url ),
+			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $payment ) ) ),
+			'notify_url'    => esc_url_raw( $listener_url ),
+			'image_url'     => esc_url_raw( edd_get_paypal_image_url() ),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);
@@ -565,7 +573,10 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
 
 	// Collect payment details
-	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
+	$purchase_key = isset( $data['invoice'] ) ? $data['invoice'] : false;
+	if ( ! $purchase_key && ! empty( $data['item_number'] ) ) {
+		$purchase_key = $data['item_number'];
+	}
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
@@ -1113,10 +1124,10 @@ add_filter( 'edd_get_payment_transaction_id-paypal', 'edd_paypal_get_payment_tra
  */
 function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 
-	$payment = new EDD_Payment( $payment_id );
-	$sandbox = 'test' == $payment->mode ? 'sandbox.' : '';
-	$paypal_base_url = 'https://www.' . $sandbox . 'paypal.com/webscr?cmd=_history-details-from-hub&id=';
-	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
+	$payment         = new EDD_Payment( $payment_id );
+	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
+	$paypal_base_url = 'https://' . $sandbox . 'paypal.com/activity/payment/';
+	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
 
 	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );
 

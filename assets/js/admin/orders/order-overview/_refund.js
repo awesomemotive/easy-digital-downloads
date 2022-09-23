@@ -99,7 +99,7 @@ $( document.body ).on( 'change', '.edd-order-item-refund-checkbox', function () 
  * Handles quantity changes, which includes items in the refund.
  */
 $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refund-input', function () {
-	let parent = $( this ).parent().parent(),
+	let parent = $( this ).closest( '.refunditem' ),
 		quantityField = parent.find( '.edd-order-item-refund-quantity' ),
 		quantity = parseInt( quantityField.val() );
 
@@ -121,7 +121,7 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refun
 			taxField = parent.find( '.edd-order-item-refund-tax' ),
 			originalSubtotal = number.unformat( subtotalField.data( 'original' ) ),
 			originalTax = taxField.length ? number.unformat( taxField.data( 'original' ) ) : 0.00,
-			originalQuantity = parseInt( quantityField.attr( 'max' ) ),
+			originalQuantity = parseInt( quantityField.data( 'max' ) ),
 			calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity,
 			calculatedTax = taxField.length ? ( originalTax / originalQuantity ) * quantity : 0.00;
 
@@ -151,7 +151,8 @@ function recalculateRefundTotal() {
 		newTax        = 0,
 		newTotal      = 0,
 		canRefund     = false,
-		allInputBoxes = $( '#edd-refund-order-dialog .edd-order-item-refund-input' );
+		allInputBoxes = $( '#edd-refund-order-dialog .edd-order-item-refund-input' ),
+		allReadOnly   = $( '#edd-refund-order-dialog .edd-order-item-refund-input.readonly' );
 
 	// Set a readonly while we recalculate, to avoid race conditions in the browser.
 	allInputBoxes.prop( 'readonly', true );
@@ -164,7 +165,7 @@ function recalculateRefundTotal() {
 			return;
 		}
 
-		const thisItemParent = $( this ).parent().parent();
+		const thisItemParent = $( this ).closest( '.refunditem' );
 		const thisItemSelected = thisItemParent.find( '.edd-order-item-refund-checkbox' ).prop( 'checked' );
 
 		if ( ! thisItemSelected ) {
@@ -213,6 +214,7 @@ function recalculateRefundTotal() {
 
 	// Remove the readonly.
 	allInputBoxes.prop( 'readonly', false );
+	allReadOnly.prop( 'readonly', true );
 }
 
 /**
@@ -272,6 +274,6 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 });
 
 // Initialize WP toggle behavior for the modal.
-$( document.body ).on( 'click', '.refunditems .toggle-row', function () {
+$( document.body ).on( 'click', '.refund-items .toggle-row', function () {
 	$( this ).closest( 'tr' ).toggleClass( 'is-expanded' );
 } );

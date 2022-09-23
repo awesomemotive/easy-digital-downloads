@@ -20,15 +20,26 @@ endif;
 if ( ! is_user_logged_in() ) {
 	return;
 }
-$page   = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-$orders = edd_get_orders(
+$page    = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+$user_id = get_current_user_id();
+$orders  = edd_get_orders(
 	array(
-		'user_id' => get_current_user_id(),
+		'user_id' => $user_id,
 		'number'  => 20,
 		'offset'  => 20 * ( intval( $page ) - 1 ),
 		'type'    => 'sale',
 	)
 );
+
+/**
+ * Fires before the order history, whether or not orders have been found.
+ *
+ * @since 3.0
+ * @param array $orders  The array of order objects for the current user.
+ * @param int   $user_id The current user ID.
+ */
+do_action( 'edd_pre_order_history', $orders, $user_id );
+
 if ( $orders ) :
 	do_action( 'edd_before_order_history', $orders );
 	?>
@@ -49,24 +60,23 @@ if ( $orders ) :
 				<td class="edd_purchase_id">#<?php echo esc_html( $order->get_number() ); ?></td>
 				<td class="edd_purchase_date"><?php echo esc_html( edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) ); ?></td>
 				<td class="edd_purchase_amount">
-					<span class="edd_purchase_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $order->total ), $order->currency ) ); ?></span>
+					<span class="edd_purchase_amount"><?php echo esc_html( edd_display_amount( $order->total, $order->currency ) ); ?></span>
 				</td>
 				<td class="edd_purchase_details">
 					<?php
-					$link_text = ! in_array( $order->status, array( 'complete', 'partially_refunded' ), true ) ? __( 'View Details', 'easy-digital-downloads' ) : __( 'View Details and Downloads', 'easy-digital-downloads' );
-					?>
-					<a href="<?php echo esc_url( add_query_arg( 'payment_key', $order->payment_key, edd_get_success_page_uri() ) ); ?>"><?php echo esc_html( $link_text ); ?></a>
-					<?php if ( ! in_array( $order->status, array( 'complete' ), true ) ) : ?>
-						| <span class="edd_purchase_status <?php echo esc_attr( $order->status ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></span>
-					<?php endif; ?>
-					<?php
-					$recovery_url = $order->get_recovery_url();
-					if ( $recovery_url ) :
-						?>
-						&mdash; <a href="<?php echo esc_url( $recovery_url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
+					if ( ! in_array( $order->status, array( 'complete', 'partially_refunded' ), true ) ) : ?>
+						<span class="edd_purchase_status <?php echo esc_html( $order->status ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></span>
 						<?php
-					endif;
-					?>
+						$recovery_url = $order->get_recovery_url();
+						if ( $recovery_url ) :
+							?>
+							&mdash; <a href="<?php echo esc_url( $recovery_url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
+							<?php
+						endif;
+						?>
+					<?php else: ?>
+						<a href="<?php echo esc_url( add_query_arg( 'payment_key', urlencode( $order->payment_key ), edd_get_success_page_uri() ) ); ?>"><?php esc_html_e( 'View Details and Downloads', 'easy-digital-downloads' ); ?></a>
+					<?php endif; ?>
 				</td>
 				<?php do_action( 'edd_order_history_row_end', $order ); ?>
 			</tr>

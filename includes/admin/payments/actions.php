@@ -85,29 +85,16 @@ function edd_update_payment_details( $data = array() ) {
 
 	$order_update_args = array();
 
-	$unlimited  = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
-	$new_status = sanitize_key( $data['edd-payment-status'] );
-	$date       = sanitize_text_field( $data['edd-payment-date'] );
-	$hour       = sanitize_text_field( $data['edd-payment-time-hour'] );
-
-	// Restrict to our high and low
-	if ( $hour > 23 ) {
-		$hour = 23;
-	} elseif ( $hour < 0 ) {
-		$hour = 00;
-	}
-
-	$minute = sanitize_text_field( $data['edd-payment-time-min'] );
-
-	// Restrict to our high and low
-	if ( $minute > 59 ) {
-		$minute = 59;
-	} elseif ( $minute < 0 ) {
-		$minute = 00;
-	}
+	$unlimited   = isset( $data['edd-unlimited-downloads'] ) ? '1' : null;
+	$new_status  = sanitize_key( $data['edd-payment-status'] );
+	$date_string = EDD()->utils->get_date_string(
+		sanitize_text_field( $data['edd-payment-date'] ),
+		sanitize_text_field( $data['edd-payment-time-hour'] ),
+		sanitize_text_field( $data['edd-payment-time-min'] )
+	);
 
 	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
-	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
+	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date_string, edd_get_timezone_id(), false ) );
 	$date = $date->format( 'Y-m-d H:i:s' );
 
 	$order_update_args['date_created'] = $date;
@@ -190,10 +177,11 @@ function edd_update_payment_details( $data = array() ) {
 	$order_update_args['user_id'] = $customer->user_id;
 	$order_update_args['email']   = $customer->email;
 
-	// Address
+	// Address.
 	$address = $data['edd_order_address'];
 
-	edd_update_order_address( absint( $address['address_id'] ), array(
+	$order_address_id      = absint( $address['address_id'] );
+	$order_address_details = array(
 		'name'        => $customer->name,
 		'address'     => $address['address'],
 		'address2'    => $address['address2'],
@@ -201,7 +189,20 @@ function edd_update_payment_details( $data = array() ) {
 		'region'      => $address['region'],
 		'postal_code' => $address['postal_code'],
 		'country'     => $address['country'],
-	) );
+	);
+
+	if ( empty( $order_address_id ) ) {
+
+		// Unset the address_id which is 0.
+		unset( $address['address_id'] );
+
+		// Add the $order_id to the arguments to create this order address.
+		$order_address_details['order_id'] = $order_id;
+
+		edd_add_order_address( $order_address_details );
+	} else {
+		edd_update_order_address( $order_address_id, $order_address_details );
+	}
 
 	// Unlimited downloads.
 	if ( 1 === (int) $unlimited ) {
@@ -233,7 +234,7 @@ function edd_update_payment_details( $data = array() ) {
 		'page'        => 'edd-payment-history',
 		'view'        => 'view-order-details',
 		'edd-message' => 'payment-updated',
-		'id'          => $order_id
+		'id'          => absint( $order_id ),
 	) ) );
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
@@ -295,7 +296,7 @@ function edd_trigger_trash_order( $data ) {
 			'order_type'  => esc_attr( $data['order_type'] ),
 		) );
 
-		edd_redirect( esc_url_raw( $redirect ) );
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_trash_order', 'edd_trigger_trash_order' );
@@ -325,7 +326,7 @@ function edd_trigger_restore_order( $data ) {
 			'order_type'  => esc_attr( $data['order_type'] ),
 		) );
 
-		edd_redirect( esc_url_raw( $redirect ) );
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_restore_order', 'edd_trigger_restore_order' );
@@ -345,7 +346,7 @@ function edd_ajax_generate_file_download_link() {
 
 	$payment_id  = absint( $_POST['payment_id'] );
 	$download_id = absint( $_POST['download_id'] );
-	$price_id    = absint( $_POST['price_id'] );
+	$price_id    = isset( $_POST['price_id'] ) && is_numeric( $_POST['price_id'] ) ? absint( $_POST['price_id'] ) : null;
 
 	if ( empty( $payment_id ) ) {
 		die( '-2' );
@@ -586,6 +587,11 @@ function edd_orders_list_table_process_bulk_actions() {
 		_doing_it_wrong( __FUNCTION__, 'This method is not meant to be called directly.', 'EDD 3.0' );
 	}
 
+	// Check the current user's capability.
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		return;
+	}
+
 	$action = isset( $_REQUEST['action'] ) // WPCS: CSRF ok.
 		? sanitize_text_field( $_REQUEST['action'] )
 		: '';
@@ -606,6 +612,8 @@ function edd_orders_list_table_process_bulk_actions() {
 	if ( empty( $action ) ) {
 		return;
 	}
+
+	check_admin_referer( 'bulk-orders' );
 
 	$ids = wp_parse_id_list( $ids );
 
@@ -657,6 +665,6 @@ function edd_orders_list_table_process_bulk_actions() {
 		do_action( 'edd_payments_table_do_bulk_action', $id, $action );
 	}
 
-	wp_redirect( wp_get_referer() );
+	wp_safe_redirect( wp_get_referer() );
 }
 add_action( 'load-download_page_edd-payment-history', 'edd_orders_list_table_process_bulk_actions' );

@@ -489,6 +489,7 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		if ( $error ) {
+			$query = '';
 			foreach ( $assoc_args as $key => $value ) {
 				$query .= ' --' . $key . '=' . $value;
 			}
@@ -518,7 +519,7 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( count( $assoc_args ) > 0 ) {
 			$number   = ( array_key_exists( 'number', $assoc_args ) ) ? absint( $assoc_args['number'] ) : $number;
 			$id       = ( array_key_exists( 'id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $id;
-			$price_id = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['id'] ) : $price_id;
+			$price_id = ( array_key_exists( 'price_id', $assoc_args ) ) ? absint( $assoc_args['price_id'] ) : $price_id;
 			$tax      = ( array_key_exists( 'tax', $assoc_args ) ) ? floatval( $assoc_args['tax'] ) : $tax;
 			$email    = ( array_key_exists( 'email', $assoc_args ) ) ? sanitize_email( $assoc_args['email'] ) : $email;
 			$fname    = ( array_key_exists( 'fname', $assoc_args ) ) ? sanitize_text_field( $assoc_args['fname'] ) : $fname;
@@ -699,6 +700,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $timestring ) ) {
 				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
+				$payment->gateway        = 'manual';
 				$payment->save();
 			}
 
@@ -825,6 +827,7 @@ class EDD_CLI extends WP_CLI_Command {
 		wp_suspend_cache_addition( true );
 
 		$this->maybe_install_v3_tables();
+		update_option( 'edd_v30_cli_migration_running', true );
 		$this->migrate_tax_rates( $args, $assoc_args );
 		$this->migrate_discounts( $args, $assoc_args );
 		$this->migrate_payments( $args, $assoc_args );
@@ -832,8 +835,8 @@ class EDD_CLI extends WP_CLI_Command {
 		$this->migrate_logs( $args, $assoc_args );
 		$this->migrate_order_notes( $args, $assoc_args );
 		$this->migrate_customer_notes( $args, $assoc_args );
+		edd_v30_is_migration_complete();
 		$this->remove_legacy_data( $args, $assoc_args );
-
 	}
 
 	/**
@@ -957,6 +960,8 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The logs custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
+
+		WP_CLI::line( __( 'Preparing to migrate logs (this can take several minutes).', 'easy-digital-downloads' ) );
 
 		$sql = "
 			SELECT p.*, t.slug
@@ -1198,6 +1203,9 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! $force && $customer_email_addresses_complete ) {
 			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		} else {
+
+			WP_CLI::line( __( 'Preparing to migrate customer email addresses (this can take several minutes).', 'easy-digital-downloads' ) );
+
 			// Migrate email addresses next.
 			$sql = "
 				SELECT *
@@ -1253,6 +1261,18 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The tax rates custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		WP_CLI::line( __( 'Checking for default tax rate', 'easy-digital-downloads' ) );
+		$default_tax_rate = edd_get_option( 'tax_rate', false );
+		if ( ! empty( $default_tax_rate ) ) {
+			WP_CLI::line( __( 'Migrating default tax rate', 'easy-digital-downloads' ) );
+			edd_add_tax_rate(
+				array(
+					'scope'  => 'global',
+					'amount' => floatval( $default_tax_rate ),
+				)
+			);
 		}
 
 		// Migrate user addresses first.
@@ -1319,11 +1339,11 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! empty( $total ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Payments', $total );
-
+			$orders   = new \EDD\Database\Queries\Order();
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				$migrated = edd_get_order( $result->ID );
+				$migrated = $orders->get_item( $result->ID );
 				if ( $migrated ) {
 					continue;
 				}
@@ -1346,11 +1366,43 @@ class EDD_CLI extends WP_CLI_Command {
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_orders' );
+
+			$this->recalculate_download_sales_earnings();
 		} else {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_orders' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		}
+	}
+
+	/**
+	 * Recalculates the sales and earnings for all downloads.
+	 *
+	 * @since 3.0
+	 * @return void
+	 *
+	 * wp edd recalculate_download_sales_earnings
+	 */
+	public function recalculate_download_sales_earnings() {
+		global $wpdb;
+
+		$downloads = $wpdb->get_results(
+			"SELECT ID
+			FROM {$wpdb->posts}
+			WHERE post_type = 'download'
+			ORDER BY ID ASC"
+		);
+		$total     = count( $downloads );
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Recalculating Download Sales and Earnings', $total );
+			foreach ( $downloads as $download ) {
+				edd_recalculate_download_sales_earnings( $download->ID );
+				$progress->tick();
+			}
+			$progress->finish();
+		}
+		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all downloads.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Downloads Updated: ', 'easy-digital-downloads' ) . $total );
 	}
 
 	/**

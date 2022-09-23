@@ -18,7 +18,7 @@ if ( ! class_exists( 'EDD_License' ) ) :
  */
 class EDD_License {
 	private $file;
-	private $license;
+	public $license;
 	private $item_name;
 	private $item_id;
 	private $item_shortname;
@@ -138,6 +138,12 @@ class EDD_License {
 
 		// Register plugins for beta support
 		add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
+
+		// Add the EDD version to the API parameters.
+		add_filter( 'edd_sl_plugin_updater_api_params', array( $this, 'filter_sl_api_params' ), 10, 3 );
+
+		// Fix missing Stripe keys due to option name change.
+		add_action( 'admin_init', array( $this, 'fix_stripe_key' ) );
 	}
 
 	/**
@@ -153,9 +159,18 @@ class EDD_License {
 			return;
 		}
 
+		$license = $this->license;
+		// Fall back to the highest license key if one is not saved for this extension.
+		if ( empty( $license ) ) {
+			$pass_manager = new \EDD\Admin\Pass_Manager();
+			if ( $pass_manager->highest_license_key ) {
+				$license = $pass_manager->highest_license_key;
+			}
+		}
+
 		$args = array(
 			'version'   => $this->version,
-			'license'   => $this->license,
+			'license'   => $license,
 			'author'    => $this->author,
 			'beta'      => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
 		);
@@ -213,7 +228,7 @@ class EDD_License {
 
 		echo '<p>' . sprintf(
 			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'easy-digital-downloads' ),
-			'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
+			'https://docs.easydigitaldownloads.com/article/1000-license-renewal'
 		) . '</p>';
 
 		$has_ran = true;
@@ -301,7 +316,7 @@ class EDD_License {
 
 		$details = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $details ) && 'valid' === $details->license ) {
+		if ( is_object( $details ) && ! empty( $details->license ) && 'valid' === $details->license ) {
 			return;
 		}
 
@@ -344,7 +359,12 @@ class EDD_License {
 		// Decode license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		$this->maybe_set_pass_flag( $this->license, $license_data );
+		$this->maybe_set_pass_flag( $license, $license_data );
+
+		// Clear the option for licensed extensions to force regeneration.
+		if ( ! empty( $api_data->license ) && 'valid' === $api_data->license ) {
+			delete_option( 'edd_licensed_extensions' );
+		}
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 	}
@@ -478,12 +498,12 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+		if ( is_object( $license ) && ( empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_invalid_message ) ) {
 			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
 				$messages[] = sprintf(
 					__( 'You have invalid or expired license keys for Easy Digital Downloads. <a href="%s">Fix this</a>', 'easy-digital-downloads' ),
-					admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
+					esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'licenses' ) ) )
 				);
 
 				$showed_invalid_message = true;
@@ -510,7 +530,7 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
+		if ( ( ! is_object( $license ) || empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
 			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}
@@ -528,6 +548,49 @@ class EDD_License {
 		$products[ $this->item_shortname ] = $this->item_name;
 
 		return $products;
+	}
+
+	/**
+	 * Adds the EDD version to the API parameters.
+	 *
+	 * @since 2.11
+	 * @param array  $api_params  The array of parameters sent in the API request.
+	 * @param array  $api_data    The array of API data defined when instantiating the class.
+	 * @param string $plugin_file The path to the plugin file.
+	 * @return array
+	 */
+	public function filter_sl_api_params( $api_params, $api_data, $plugin_file ) {
+
+		if ( $this->file === $plugin_file ) {
+			$api_params['easy-digital-downloads_version'] = defined( 'EDD_VERSION' ) ? EDD_VERSION : '';
+		}
+
+		return $api_params;
+	}
+
+	/**
+	 * If the original Stripe gateway key is set and the new one is not,
+	 * update the license key to fix automatic updates.
+	 *
+	 * @since 3.0.4
+	 * @return void
+	 */
+	public function fix_stripe_key() {
+		$license_key = edd_get_option( 'edd_stripe_pro_payment_gateway_license_key' );
+		if ( $license_key ) {
+			return;
+		}
+		$old_key = edd_get_option( 'edd_stripe_payment_gateway_license_key' );
+		if ( $old_key ) {
+			edd_update_option( 'edd_stripe_pro_payment_gateway_license_key', sanitize_text_field( $old_key ) );
+			edd_delete_option( 'edd_stripe_payment_gateway_license_key' );
+		}
+
+		$old_license_status = get_option( 'edd_stripe_payment_gateway_license_key_active' );
+		if ( $old_license_status ) {
+			update_option( 'edd_stripe_pro_payment_gateway_license_key_active', santize_text_field( $old_license_status ) );
+			delete_option( 'edd_stripe_payment_gateway_license_key_active' );
+		}
 	}
 }
 

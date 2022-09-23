@@ -3,9 +3,9 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
- * Author: Sandhills Development, LLC
- * Author URI: https://sandhillsdev.com
- * Version: 3.0-rc1
+ * Author: Easy Digital Downloads
+ * Author URI: https://easydigitaldownloads.com
+ * Version: 3.0.4
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  * Requires PHP: 5.6
@@ -25,6 +25,8 @@
  *
  * @package EDD
  * @category Core
+ * @author Easy Digital Downloads
+ * @version 3.0.4
  */
 
 // Exit if accessed directly.
@@ -175,7 +177,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_url() {
-		return 'https://docs.easydigitaldownloads.com/article/2051-minimum-requirements-for-edd-3-0';
+		return 'https://easydigitaldownloads.com/recommended-wordpress-hosting/';
 	}
 
 	/**

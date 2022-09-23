@@ -75,18 +75,6 @@ class EDD_Cache_Helper {
 				}
 			}
 		}
-
-		add_action( 'edd_pre_update_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-		add_action( 'edd_pre_insert_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-		add_action( 'edd_pre_delete_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-		add_action( 'edd_pre_update_discount_status',  array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-		add_action( 'edd_pre_remove_cart_discount',    array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-
-		add_action( 'edd_post_update_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
-		add_action( 'edd_post_insert_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
-		add_action( 'edd_post_delete_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
-		add_action( 'edd_post_update_discount_status', array( $this, 'w3tc_suspend_cache_addition_post' ) );
-		add_action( 'edd_post_remove_cart_discount',   array( $this, 'w3tc_suspend_cache_addition_post' ) );
 	}
 
 	/**
@@ -119,7 +107,14 @@ class EDD_Cache_Helper {
 			if ( $enabled && ! in_array( '_wp_session_', $settings, true ) ) {
 				?>
 				<div class="error">
-					<p><?php printf( __( 'In order for <strong>database caching</strong> to work with Easy Digital Downloads you must add <code>_wp_session_</code> to the "Ignored query stems" option in W3 Total Cache settings <a href="%s">here</a>.', 'easy-digital-downloads' ), admin_url( 'admin.php?page=w3tc_dbcache' ) ); ?></p>
+					<p>
+						<?php
+						printf(
+							__( 'In order for <strong>database caching</strong> to work with Easy Digital Downloads you must add <code>_wp_session_</code> to the "Ignored query stems" option in W3 Total Cache settings <a href="%s">here</a>.', 'easy-digital-downloads' ),
+							esc_url( admin_url( 'admin.php?page=w3tc_dbcache' ) )
+						);
+						?>
+					</p>
 				</div>
 				<?php
 			}
@@ -131,17 +126,19 @@ class EDD_Cache_Helper {
 	 * Prevents W3TC from adding to the cache prior to modifying data.
 	 *
 	 * @since 1.7
+	 * @since 3.0.4 Removed the cache suspend call.
 	 */
 	public function w3tc_suspend_cache_addition_pre() {
-		wp_suspend_cache_addition( true );
+		// This function does nothing as of EDD 3.0.4, it is only left here to prevent fatal errors in case it was used.
 	}
 
 	/**
 	 * Prevents W3TC from adding to the cache after modifying data.
 	 *
 	 * @since 1.7
+	 * @since 3.0.4 Removed the cache suspend call.
 	 */
 	public function w3tc_suspend_cache_addition_post() {
-		wp_suspend_cache_addition();
+		// This function does nothing as of EDD 3.0.4, it is only left here to prevent fatal errors in case it was used.
 	}
 }

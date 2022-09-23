@@ -1,5 +1,5 @@
-import { sendwpRemoteInstall, sendwpDisconnect } from './sendwp';
 import { recaptureRemoteInstall } from './recapture';
+import './gateways/paypal';
 
 /**
  * Settings screen JS
@@ -154,20 +154,6 @@ const EDD_Settings = {
 	},
 
 	emails: function() {
-		$('#edd-sendwp-connect').on('click', function(e) {
-			e.preventDefault();
-			$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );
-			document.body.style.cursor = 'wait';
-			sendwpRemoteInstall();
-		});
-
-		$('#edd-sendwp-disconnect').on('click', function(e) {
-			e.preventDefault();
-			$(this).html( edd_vars.wait + ' <span class="edd-loading dark"></span>' );
-			document.body.style.cursor = 'wait';
-			sendwpDisconnect();
-		});
-
 		$('#edd-recapture-connect').on('click', function(e) {
 			e.preventDefault();
 			$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );

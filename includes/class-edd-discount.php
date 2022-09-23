@@ -1429,11 +1429,7 @@ class EDD_Discount extends Adjustment {
 		$excluded_ps  = $this->get_excluded_products();
 		$cart_items   = edd_get_cart_contents();
 		$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
-		$return       = false;
-
-		if ( empty( $product_reqs ) && empty( $excluded_ps ) ) {
-			$return = true;
-		}
+		$is_met       = true;
 
 		/**
 		 * Normalize our data for product requirements, exclusions and cart data.
@@ -1444,63 +1440,34 @@ class EDD_Discount extends Adjustment {
 		asort( $product_reqs );
 		$product_reqs = array_filter( array_values( $product_reqs ) );
 
-
-		$excluded_ps = array_map( 'absint', $excluded_ps );
-		asort( $excluded_ps );
-		$excluded_ps = array_filter( array_values( $excluded_ps ) );
-
 		$cart_ids = array_map( 'absint', $cart_ids );
 		asort( $cart_ids );
 		$cart_ids = array_values( $cart_ids );
 
 		// Ensure we have requirements before proceeding
-		if ( ! $return && ! empty( $product_reqs ) ) {
-			switch ( $this->product_condition ) {
+		if ( ! empty( $product_reqs ) ) {
+			$matches = array_intersect( $product_reqs, $cart_ids );
+
+			switch ( $this->get_product_condition() ) {
 				case 'all':
-					// Default back to true
-					$return = true;
-
-					foreach ( $product_reqs as $download_id ) {
-						if ( empty( $download_id ) ) {
-							continue;
-						}
-
-						if ( ! edd_item_in_cart( $download_id ) ) {
-							if ( $set_error ) {
-								edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-							}
-
-							$return = false;
-
-							break;
-						}
-					}
+					$is_met = count( $matches ) === count( $product_reqs );
 					break;
-
 				default:
-					foreach ( $product_reqs as $download_id ) {
-						if ( empty( $download_id ) ) {
-							continue;
-						}
-
-						if ( edd_item_in_cart( $download_id ) ) {
-							$return = true;
-							break;
-						}
-					}
-
-					if ( ! $return && $set_error ) {
-						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
-					}
-					break;
+					$is_met = 0 < count( $matches );
 			}
-		} else {
-			$return = true;
+
+			if ( ! $is_met && $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'easy-digital-downloads' ) );
+			}
 		}
+
+		$excluded_ps = array_map( 'absint', $excluded_ps );
+		asort( $excluded_ps );
+		$excluded_ps = array_filter( array_values( $excluded_ps ) );
 
 		if ( ! empty( $excluded_ps ) ) {
 			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) === count( $cart_ids ) ) {
-				$return = false;
+				$is_met = false;
 
 				if ( $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
@@ -1513,12 +1480,12 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @since 2.7
 		 *
-		 * @param bool   $return            Are the product requirements met or not.
+		 * @param bool   $is_met            Are the product requirements met or not.
 		 * @param int    $ID                Discount ID.
 		 * @param string $product_condition Product condition.
 		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->id, $this->product_condition, $set_error );
+		return (bool) apply_filters( 'edd_is_discount_products_req_met', $is_met, $this->id, $this->product_condition, $set_error );
 	}
 
 	/**
@@ -1586,7 +1553,7 @@ class EDD_Discount extends Adjustment {
 						continue;
 					}
 
-					if ( in_array( $payment->status, array( 'abandoned', 'failed', 'pending' ), true ) ) {
+					if ( in_array( $payment->status, edd_get_incomplete_order_statuses(), true ) ) {
 						continue;
 					}
 
@@ -1819,10 +1786,15 @@ class EDD_Discount extends Adjustment {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $this->id,
-		), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url(
+			edd_get_admin_url(
+				array(
+					'page'       => 'edd-discounts',
+					'edd-action' => 'edit_discount',
+					'discount'   => absint( $this->id ),
+				)
+			)
+		);
 	}
 
 	/**
@@ -1909,16 +1881,20 @@ class EDD_Discount extends Adjustment {
 			'products'          => 'product_reqs',
 			'excluded-products' => 'excluded_products',
 			'not_global'        => 'scope',
+			'is_not_global'     => 'scope',
 			'use_once'          => 'once_per_customer',
+			'is_single_use'     => 'once_per_customer',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
-			if ( 'not_global' === $old_key ) {
-				$args[ $new_key ] = ! empty( $args[ $old_key ] )
-					? 'not_global'
-					: 'global';
-			} elseif ( isset( $args[ $old_key ] ) ) {
-				$args[ $new_key ] = $args[ $old_key ];
+			if ( isset( $args[ $old_key ] ) ) {
+				if ( in_array( $old_key, array( 'not_global', 'is_not_global' ), true ) && ! array_key_exists( 'scope', $args ) ) {
+					$args[ $new_key ] = ! empty( $args[ $old_key ] )
+						? 'not_global'
+						: 'global';
+				} else {
+					$args[ $new_key ] = $args[ $old_key ];
+				}
 			}
 			unset( $args[ $old_key ] );
 		}

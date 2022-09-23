@@ -38,7 +38,7 @@ final class Order_Transactions extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202105291;
+	protected $version = 202205241;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -51,6 +51,7 @@ final class Order_Transactions extends Table {
 		'202002141' => 202002141,
 		'202005261' => 202005261,
 		'202105291' => 202105291,
+		'202205241' => 202205241,
 	);
 
 	/**
@@ -76,7 +77,8 @@ final class Order_Transactions extends Table {
 			KEY transaction_id (transaction_id(64)),
 			KEY gateway (gateway(20)),
 			KEY status (status(20)),
-			KEY date_created (date_created)";
+			KEY date_created (date_created),
+			KEY object_type_object_id (object_type, object_id)";
 	}
 
 	/**
@@ -135,6 +137,23 @@ final class Order_Transactions extends Table {
 				)
 			);
 		}
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202205241
+	 * 	- Add combined index for object_type, object_id.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202205241() {
+		if ( $this->index_exists( 'object_type_object_id' ) ) {
+			return true;
+		}
+
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX object_type_object_id (object_type, object_id)" );
 
 		return true;
 	}

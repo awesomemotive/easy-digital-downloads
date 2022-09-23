@@ -75,6 +75,15 @@ class EDD_Cart {
 	public $tax = 0.00;
 
 	/**
+	 * Determined tax rate, based on the customer's address.
+	 * This will be `null` until it is set for the first time.
+	 *
+	 * @var float|null
+	 * @since 3.0
+	 */
+	private $tax_rate = null;
+
+	/**
 	 * Purchase Session
 	 *
 	 * @var array
@@ -137,6 +146,35 @@ class EDD_Cart {
 		$this->get_all_fees();
 		$this->get_discounts_from_session();
 		$this->get_quantity();
+	}
+
+	/**
+	 * Retrieves the tax rate.
+	 *
+	 * This sets up the tax rate once so we don't have to recaculate it each time we need it.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8455
+	 *
+	 * @since 3.0
+	 * @return float
+	 */
+	private function get_tax_rate() {
+		if ( null === $this->tax_rate ) {
+			$this->tax_rate = edd_get_tax_rate();
+		}
+
+		return $this->tax_rate;
+	}
+
+	/**
+	 * Sets the tax rate.
+	 *
+	 * @param float $tax_rate
+	 *
+	 * @since 3.0
+	 */
+	public function set_tax_rate( $tax_rate ) {
+		$this->tax_rate = $tax_rate;
 	}
 
 	/**
@@ -538,8 +576,8 @@ class EDD_Cart {
 			: edd_get_current_page_url();
 
 		$remove_url = edd_add_cache_busting( add_query_arg( array(
-			'cart_item'  => $cart_key,
-			'edd_action' => 'remove'
+			'cart_item'  => urlencode( $cart_key ),
+			'edd_action' => 'remove',
 		), $current_page ) );
 
 		return apply_filters( 'edd_remove_item_url', $remove_url );
@@ -560,7 +598,7 @@ class EDD_Cart {
 			: edd_get_current_page_url();
 
 		$remove_url = add_query_arg( array(
-			'fee'        => $fee_id,
+			'fee'        => urlencode( $fee_id ),
 			'edd_action' => 'remove_fee',
 			'nocache'    => 'true'
 		), $current_page );
@@ -673,7 +711,7 @@ class EDD_Cart {
 			: array( $discount );
 
 		$item_price      = $this->get_item_price( $item['id'], $item['options'] );
-		$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts );
+		$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts, $item_price );
 
 		$discounted_amount = ( $item_price - $discount_amount );
 
@@ -720,7 +758,7 @@ class EDD_Cart {
 		$amount       = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
 		if ( $echo ) {
-			echo $amount;
+			echo esc_html( $amount );
 		}
 
 		return $amount;
@@ -954,7 +992,7 @@ class EDD_Cart {
 			$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
 			$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
 
-			$tax = edd_calculate_tax( $subtotal, $country, $state );
+			$tax = edd_calculate_tax( $subtotal, $country, $state, true, $this->get_tax_rate() );
 		}
 
 		$tax = max( $tax, 0 );
@@ -1121,14 +1159,14 @@ class EDD_Cart {
 	 * @param bool $echo
 	 * @return mixed|string|void
 	 */
-	public function total( $echo ) {
+	public function total( $echo = false ) {
 		$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( $this->get_total() ) ) );
 
-		if ( ! $echo ) {
-			return $total;
+		if ( $echo ) {
+			echo esc_html( $total );
 		}
 
-		echo $total;
+		return $total;
 	}
 
 	/**
@@ -1254,11 +1292,11 @@ class EDD_Cart {
 		$tax = max( $cart_tax, 0 );
 		$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
-		if ( ! $echo ) {
-			return $tax;
-		} else {
-			echo $tax;
+		if ( $echo ) {
+			echo esc_html( $tax );
 		}
+
+		return $tax;
 	}
 
 	/**
@@ -1281,7 +1319,7 @@ class EDD_Cart {
 				 * Fees (at this time) must be exclusive of tax
 				 */
 				add_filter( 'edd_prices_include_tax', '__return_false' );
-				$tax += edd_calculate_tax( $fee['amount'] );
+				$tax += edd_calculate_tax( $fee['amount'], '', '', true, $this->get_tax_rate() );
 				remove_filter( 'edd_prices_include_tax', '__return_false' );
 			}
 		}
@@ -1371,11 +1409,20 @@ class EDD_Cart {
 			$messages = array();
 		}
 
+		$checkout_url = add_query_arg(
+			array(
+				'edd_action'     => 'restore_cart',
+				'edd_cart_token' => sanitize_key( $token ),
+			),
+			edd_get_checkout_uri()
+		);
+
 		// Add the success message
 		$messages['edd_cart_save_successful'] = sprintf(
-			'<strong>%1$s</strong>: %2$s',
+			'<strong>%1$s</strong>: %2$s <a href="%3$s">%3$s</a>',
 			__( 'Success', 'easy-digital-downloads' ),
-			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
+			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ),
+			esc_url( edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . urlencode( $token ) )
 		);
 
 		// Set these messages in the session

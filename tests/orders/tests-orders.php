@@ -14,7 +14,7 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Orders fixture.
 	 *
-	 * @var array
+	 * @var int[]
 	 * @static
 	 */
 	protected static $orders = array();
@@ -68,6 +68,33 @@ class Orders_Tests extends \EDD_UnitTestCase {
 		$success = edd_delete_order( self::$orders[0] );
 
 		$this->assertSame( 1, $success );
+	}
+
+	/**
+	 * @covers ::edd_delete_order
+	 */
+	public function test_delete_should_delete_metadata() {
+		edd_add_order_meta( self::$orders[1], 'test_meta_key', 'test_meta_value', true );
+
+		// This assertion is added to ensure that metadata was, in fact, added to the order.
+		$this->assertEquals( 'test_meta_value', edd_get_order_meta( self::$orders[1], 'test_meta_key', true ) );
+
+		edd_delete_order( self::$orders[1] );
+		$this->assertEmpty( edd_get_order_meta( self::$orders[1], 'test_meta_key', true ) );
+	}
+
+	/**
+	 * @covers ::edd_delete_order
+	 */
+	public function test_delete_should_delete_metadata_non_unique() {
+		edd_add_order_meta( self::$orders[1], 'test_meta_key', '2', false );
+		edd_add_order_meta( self::$orders[1], 'test_meta_key', '1', false );
+
+		// This assertion is added to ensure that metadata was, in fact, added to the order.
+		$this->assertEquals( array( 2, 1 ), edd_get_order_meta( self::$orders[1], 'test_meta_key', false ) );
+
+		edd_delete_order( self::$orders[1] );
+		$this->assertEmpty( edd_get_order_meta( self::$orders[1], 'test_meta_key', false ) );
 	}
 
 	/**
@@ -285,6 +312,67 @@ class Orders_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertCount( 5, $orders );
+	}
+
+	/**
+	 * @covers \EDD\Database\Queries\Order::query_by_product
+	 */
+	public function test_get_orders_with_product_price_id_should_return_1() {
+		$items = edd_get_order_items( array( 'order_id' => self::$orders[0] ) );
+		foreach( $items as $item ) {
+			edd_update_order_item( $item->id, array(
+				'price_id' => 2
+			) );
+		}
+
+		$orders = edd_count_orders( array(
+			'product_price_id' => 2
+		) );
+
+		$this->assertSame( 1, $orders );
+	}
+
+	/**
+	 * @covers \EDD\Database\Queries\Order::query_by_product
+	 */
+	public function test_get_orders_with_product_price_id_0_should_return_1() {
+		$items = edd_get_order_items( array( 'order_id' => self::$orders[0] ) );
+		foreach( $items as $item ) {
+			edd_update_order_item( $item->id, array(
+				'price_id' => 0
+			) );
+		}
+
+		$orders = edd_get_orders( array(
+			'product_price_id' => 0
+		) );
+
+		$this->assertCount( 1, $orders );
+	}
+
+	/**
+	 * @covers \EDD\Database\Queries\Order::query_by_product
+	 */
+	public function get_get_orders_with_no_product_price_id_should_return_5() {
+		// Make sure all order items have price_id `null`.
+		$items = edd_get_order_items( array( 'order_id__in' => self::$orders ) );
+		foreach( $items as $item ) {
+			edd_update_order_item( $item->id, array(
+				'price_id' => null
+			) );
+		}
+
+		// Now set one to `1`.
+		$items = edd_get_order_items( array( 'order_id' => self::$orders[0] ) );
+		foreach( $items as $item ) {
+			edd_update_order_item( $item->id, array(
+				'price_id' => 1
+			) );
+		}
+
+		// There should be 4 records at `null`, and 1 at `1`.
+		$this->assertSame( 4, edd_count_orders( array( 'product_price_id' => null ) ) );
+		$this->assertSame( 1, edd_count_orders( array( 'product_price_id' => 1 ) ) );
 	}
 
 	/**

@@ -78,17 +78,17 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 				'id'      => absint( $tax_rate->id ),
 				'country' => esc_attr( $tax_rate->name ),
 				'rate'    => floatval( $tax_rate->amount ),
+				'state'   => '',
+				'global'  => '1',
+				'status'  => esc_attr( $tax_rate->status ),
+				'scope'   => esc_attr( $tax_rate->scope ),
 			);
 
-			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
+			if ( ! empty( $tax_rate->description ) ) {
 				$rate['state'] = esc_attr( $tax_rate->description );
-			} else {
-				$rate['state'] = '';
 			}
 
-			if ( 'country' === $tax_rate->scope ) {
-				$rate['global'] = '1';
-			} else {
+			if ( 'region' === $tax_rate->scope ) {
 				$rate['global'] = '0';
 			}
 
@@ -155,12 +155,9 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  *                          address information, then your store's Business Country setting.
  *                          Default true.
  *
- * @return mixed|void
+ * @return float
  */
 function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
-
-	// Default rate
-	$rate = (float) edd_get_option( 'tax_rate', 0 );
 
 	// Get the address, to try to get the tax rate
 	$user_address = edd_get_customer_address();
@@ -215,9 +212,8 @@ function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 			'region'  => $region,
 		)
 	);
-	if ( $tax_rate ) {
-		$rate = $tax_rate->amount;
-	}
+
+	$rate = $tax_rate ? $tax_rate->amount : 0.00;
 
 	// Convert to a number we can use
 	$rate = $rate / 100;
@@ -261,18 +257,21 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
  * @since 1.3.3
  * @since 3.0 Renamed $state parameter to $region.
  *            Added $fallback parameter.
+ *            Added `$tax_rate` parameter.
  *
- * @param float  $amount  Amount.
- * @param string $country Country. Default base country.
- * @param string $region  Region. Default base region.
- * @param boolean $fallback Fall back to (in order): server $_POST data, the current Customer's
- *                          address information, then your store's Business Country setting.
- *                          Default true.
+ * @param float      $amount   Amount.
+ * @param string     $country  Country. Default base country.
+ * @param string     $region   Region. Default base region.
+ * @param boolean    $fallback Fall back to (in order): server $_POST data, the current Customer's
+ *                             address information, then your store's Business Country setting.
+ *                             Default true.
+ * @param null|float $tax_rate Tax rate to use for the calculataion. If `null`, the rate is retrieved using
+ *                             `edd_get_tax_rate()`.
  *
  * @return float $tax Taxed amount.
  */
-function edd_calculate_tax( $amount = 0.00, $country = '', $region = '', $fallback = true ) {
-	$rate = edd_get_tax_rate( $country, $region, $fallback );
+function edd_calculate_tax( $amount = 0.00, $country = '', $region = '', $fallback = true, $tax_rate = null ) {
+	$rate = ( null === $tax_rate ) ? edd_get_tax_rate( $country, $region, $fallback ) : $tax_rate;
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
@@ -434,43 +433,122 @@ function edd_download_is_tax_exclusive( $download_id = 0 ) {
  */
 function edd_get_tax_rate_by_location( $args ) {
 
-	$rate = false;
-	if ( empty( $args['country'] ) ) {
-		return $rate;
+	$rate      = false;
+	$tax_rates = array();
+
+	// Fetch all the active country tax rates from the database.
+	// The region is not passed in deliberately in order to check for country-wide tax rates.
+	if ( ! empty( $args['country'] ) ) {
+		$tax_rates = edd_get_tax_rates(
+			array(
+				'name'   => $args['country'],
+				'status' => 'active',
+			),
+			OBJECT
+		);
 	}
 
-	// Fetch all the tax rates from the database.
-	// The region is not passed in deliberately in order to check for country-wide tax rates.
-	$tax_rates = edd_get_tax_rates(
+	if ( ! empty( $tax_rates ) ) {
+		foreach ( $tax_rates as $tax_rate ) {
+
+			// Regional tax rate.
+			if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) && 'region' === $tax_rate->scope ) {
+				if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
+					continue;
+				}
+
+				$regional_rate = $tax_rate->amount;
+
+				if ( ! empty( $regional_rate ) ) {
+					return $tax_rate;
+				}
+			} elseif ( 'country' === $tax_rate->scope ) {
+				// Countrywide tax rate.
+				$rate = $tax_rate;
+			}
+		}
+
+		if ( $rate ) {
+			return $rate;
+		}
+	}
+
+	// No regional or country rate was found, so look for a global rate.
+	$global_rates = edd_get_tax_rates(
 		array(
-			'name'   => $args['country'],
+			'name'   => '',
+			'scope'  => 'global',
 			'status' => 'active',
 		),
 		OBJECT
 	);
 
-	if ( empty( $tax_rates ) ) {
-		return $rate;
-	}
+	return ! empty( $global_rates ) ? reset( $global_rates ) : $rate;
+}
 
-	foreach ( $tax_rates as $tax_rate ) {
+/**
+ * Clears the tax rate cache prior to displaying the cart.
+ * This fixes potential issues with custom tax rates / rate filtering from after we added
+ * tax rate caching logic.
+ *
+ * @link https://github.com/easydigitaldownloads/easy-digital-downloads/pull/8509#issuecomment-926576698
+ *
+ * @since 3.0
+ */
+add_action( 'edd_before_checkout_cart', function () {
+	EDD()->cart->set_tax_rate( null );
+} );
 
-		// Regional tax rate.
-		if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) ) {
-			if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
-				continue;
-			}
+/**
+ * Adds a tax rate to the database.
+ * If an active tax rate is found, it's demoted to inactive and the new one is added.
+ *
+ * @since 3.0.3
+ * @param array $data The array of data to create the tax rate.
+ * @return int|false Returns the tax rate ID if one is added; otherwise false.
+ */
+function edd_add_tax_rate( $data = array() ) {
+	$data = wp_parse_args(
+		$data,
+		array(
+			'name'        => '',
+			'description' => '',
+			'status'      => 'active',
+		)
+	);
 
-			$regional_rate = $tax_rate->amount;
+	// The type and amount type for tax rates cannot be overridden.
+	$data['type']        = 'tax_rate';
+	$data['amount_type'] = 'percent';
 
-			if ( ! empty( $regional_rate ) ) {
-				return $tax_rate;
-			}
-		} elseif ( 'country' === $tax_rate->scope ) {
-			// Countrywide tax rate.
-			$rate = $tax_rate;
+	if ( empty( $data['scope'] ) ) {
+		$scope = 'country';
+		if ( empty( $data['name'] ) && empty( $data['description'] ) ) {
+			$scope = 'global';
+		} elseif ( ! empty( $data['name'] ) && ! empty( $data['description'] ) ) {
+			$scope = 'region';
 		}
+		$data['scope'] = $scope;
 	}
 
-	return $rate;
+	// Check if the tax rate exists.
+	$data_to_check = array(
+		'type'        => 'tax_rate',
+		'fields'      => 'ids',
+		'status'      => 'active',
+		'name'        => $data['name'],
+		'description' => $data['description'],
+		'scope'       => $data['scope'],
+	);
+
+	// Query for potentially matching active rates.
+	$tax_rate_exists = edd_get_adjustments( $data_to_check );
+	$tax_rate_id     = edd_add_adjustment( $data );
+
+	// If the new tax rate was successfully added, set the old one to inactive.
+	if ( $tax_rate_id && ! empty( $tax_rate_exists ) ) {
+		edd_update_adjustment( $tax_rate_exists[0], array( 'status' => 'inactive' ) );
+	}
+
+	return $tax_rate_id;
 }
