@@ -326,7 +326,7 @@
 
 
 						<!-- TABLE DATA -->
-						<div class="table-data-holder pull-down-25 push-down-25" style="margin-top: 25px; margin-bottom: 25px;">
+						<div class="table-data-holder pull-down-25 " style="margin-top: 25px; ">
 							<div class="table-top-icon align-c" style="text-align: center;">
 								<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-top-products.png' ); ?>" alt="#" title="#" width="28" height="28">
 							</div>
@@ -361,6 +361,10 @@
 							</table>
 
 						</div>
+
+						<a href="<?php echo esc_attr( $view_more_url ); ?>" style="color: #2794DA; margin-top: 15px; margin-bottom: 15px; font-weight: 400; font-size: 14px; text-decoration-line: underline; display: inline-block; text-decoration: none;">
+							<?php echo esc_html( __( 'View Full Report', 'easy-digital-downloads' ) ); ?>
+						</a>
 
 					</div>
 
