@@ -230,3 +230,22 @@ function edd_get_order_item_counts( $args = array() ) {
 	// Format & return
 	return edd_format_counts( $counts, $r['groupby'] );
 }
+
+/**
+ * Get a field from a order item object.
+ *
+ * @since 3.0
+ *
+ * @param int    $order_item_id 	Order item ID. Default `0`.
+ * @param string $field       		Field to retrieve from object. Default empty.
+ *
+ * @return mixed Null if order item does not exist. Value of Item if exists.
+ */
+function edd_get_order_item_field( $order_item_id = 0, $field = '' ) {
+	$order_item = edd_get_order_item( $order_item_id );
+
+	// Check that field exists
+	return isset( $order_item->{$field} )
+		? $order_item->{$field}
+		: null;
+}
