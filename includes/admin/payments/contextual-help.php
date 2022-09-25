@@ -9,6 +9,8 @@
  * @since       1.4
  */
 
+use EDD\Admin\Pass_Manager;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -32,14 +34,17 @@ function edd_payments_contextual_help() {
 		return;
 	}
 
-	$screen->set_help_sidebar(
-		'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
-		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'https://docs.easydigitaldownloads.com/' ) ) . '</p>' .
-		'<p>' . sprintf(
-			__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now</a>!', 'easy-digital-downloads' ),
-			esc_url( 'https://easydigitaldownloads.com/pricing/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' )
-		) . '</p>'
-	);
+	$pass_manager = new Pass_Manager();
+	if ( $pass_manager->isFree() ) {
+		$screen->set_help_sidebar(
+			'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
+			'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'https://docs.easydigitaldownloads.com/' ) ) . '</p>' .
+			'<p>' . sprintf(
+				__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now</a>!', 'easy-digital-downloads' ),
+				esc_url( 'https://easydigitaldownloads.com/lite-upgrade/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' )
+			) . '</p>'
+		);
+	}
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-payments-overview',
