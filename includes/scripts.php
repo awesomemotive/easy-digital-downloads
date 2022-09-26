@@ -55,13 +55,14 @@ function edd_register_styles() {
 	$version = edd_admin_get_script_version();
 
 	$file          = 'edd' . $suffix . '.css';
+	$css_suffix    = is_rtl() ? '-rtl.min.css' : '.min.css';
 	$templates_dir = edd_get_theme_template_dir_name();
 
 	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
 	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
 	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
 	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
-	$edd_plugin_style_sheet     = trailingslashit( edd_get_templates_dir()    ) . $file;
+	$edd_plugin_style_sheet     = trailingslashit( EDD_PLUGIN_DIR ) . 'assets/css/edd' . $css_suffix;
 
 	// Look in the child theme directory first, followed by the parent theme, followed by the EDD core templates directory
 	// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
@@ -78,8 +79,8 @@ function edd_register_styles() {
 		} else {
 			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
 		}
-	} elseif ( file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
-		$url = trailingslashit( edd_get_templates_url() ) . $file;
+	} elseif ( file_exists( $edd_plugin_style_sheet ) ) {
+		$url = trailingslashit( EDD_PLUGIN_URL ) . 'assets/css/edd' . $css_suffix;
 	}
 
 	wp_register_style( 'edd-styles', $url, array(), $version, 'all' );
