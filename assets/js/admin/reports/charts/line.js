@@ -28,6 +28,18 @@ export const render = ( config ) => {
 		if ( axis.ticks.hasOwnProperty( 'formattingType' ) ) {
 			axis.ticks = attachAxisTickFormattingCallback( axis.ticks );
 		}
+
+		if ( axis.ticks.hasOwnProperty( 'hideNegativeTicks' ) && axis.ticks.hideNegativeTicks ) {
+			axis.afterTickToLabelConversion = function(scaleInstance) {
+				for (let index = scaleInstance.ticksAsNumbers.length - 1; index >= 0; index--) {
+					if (scaleInstance.ticksAsNumbers[index] < 0) {
+						scaleInstance.ticksAsNumbers.splice(index, 1);
+						scaleInstance.ticks.splice(index, 1);
+					}
+				}
+
+			}
+		}
 	});
 
 	const lineConfig = {

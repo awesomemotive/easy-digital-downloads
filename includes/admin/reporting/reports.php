@@ -395,8 +395,9 @@ function edd_register_overview_report( $reports ) {
 									'position'  => 'right',
 									'display'   => true,
 									'ticks'     => array(
-										'formattingType' => 'integer',
-										'beginAtZero'    => true,
+										'formattingType'    => 'integer',
+										'beginAtZero'       => true,
+										'hideNegativeTicks' => true,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -881,10 +882,11 @@ function edd_register_downloads_report( $reports ) {
 									'position'  => 'right',
 									'display'   => true,
 									'ticks'     => array(
-										'maxTicksLimit'  => 5,
-										'formattingType' => 'integer',
-										'suggestedMin'   => 0,
-										'beginAtZero'    => true,
+										'maxTicksLimit'     => 5,
+										'formattingType'    => 'integer',
+										'suggestedMin'      => 0,
+										'beginAtZero'       => true,
+										'hideNegativeTicks' => true,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -1618,10 +1620,11 @@ function edd_register_payment_gateways_report( $reports ) {
 									'position'  => 'right',
 									'display'   => true,
 									'ticks'     => array(
-										'maxTicksLimit'  => 5,
-										'formattingType' => 'integer',
-										'suggestedMin'   => 0,
-										'beginAtZero'    => true,
+										'maxTicksLimit'     => 5,
+										'formattingType'    => 'integer',
+										'suggestedMin'      => 0,
+										'beginAtZero'       => true,
+										'hideNegativeTicks' => true,
 									),
 									'gridLines' => array(
 										'display' => true,
