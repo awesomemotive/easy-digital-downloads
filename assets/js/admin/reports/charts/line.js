@@ -82,39 +82,49 @@ export const render = ( config ) => {
 	let chartTarget = document.getElementById( target );
 	let chart = new Chart( chartTarget, lineConfig );
 
-	// Make adjustments to the config based on the data sets.
-	/**
-	 * Setup some sane min and max values for the y-axes.
-	 *
-	 * If there are two y-axes, then we need to possibly adjust the min on both to to ensure the `0` line is in the same
-	 * plane for both.
-	 */
-	 let yAxesConstraints = [];
-	 config.data.datasets.forEach( function( values, index ) {
-		 let yValues = values.data.map(item => item.y); // Pull out just the y values.
-		 let max = Math.max.apply( null, yValues ),
-			 min =  Math.min.apply( null, yValues );
+	/*
+	* If there are multiple Y axes, we have to align their baseline.
+	* We have to take yAxes after chart is initialized so that
+	* we can get calculated min and max of each axis.
+	*/
+	let yAxes = []
+	for ( const [key, scale] of Object.entries( chart.scales ) ) {
+		// Find out if this is Y axis.
+		if ( scale.maxHeight > scale.maxWidth ) {
+			yAxes.push( scale )
+		}
+	}
 
-		 yAxesConstraints[ index ] = {
-			 min: Math.floor( min + ( min * .10 ) ),
-			 max: Math.ceil( max + ( max * .10 ) ),
-		 };
-	 });
+	if ( yAxes.length > 1 ) {
+		yAxes.forEach(axis => {
+			// Max and min is already calculated by chart.js.
+			axis.range = (axis.max - axis.min) * 1.2;
+			// Express the min / max values as a fraction of the overall range.
+			axis.min_ratio = axis.min / axis.range
+			axis.max_ratio = axis.max / axis.range
+		})
 
-	 // If we have more than one axes here determine if one is lower than 0, so we can adjust the other graphs.
-	 if ( yAxesConstraints.length > 1 ) {
+		// Find the largest of min and max ratio.
+		let largest_ratio = yAxes.reduce((a, b) => ({
+			min_ratio: Math.min(a.min_ratio, b.min_ratio),
+			max_ratio: Math.max(a.max_ratio, b.max_ratio)
+		}))
 
-		 if ( yAxesConstraints[0]['min'] < 0 && yAxesConstraints[1]['min'] >= 0 ) {
-			 yAxesConstraints[1]['min'] = -2;
-		 } else if ( yAxesConstraints[1][min] < 0 && yAxesConstraints[0]['min'] >= 0 ) {
-			 yAxesConstraints[0]['min'] = -200;
-		 }
+		// Scale each axis according to the ratio.
+		yAxes.forEach(axis => {
+			let min_ticks = largest_ratio.min_ratio * axis.range;
+			let max_ticks = largest_ratio.max_ratio * axis.range;
 
-		 yAxesConstraints.forEach( function( values, index ) {
-			 config.options.scales.yAxes[ index ]['ticks']['min'] = values[ 'min' ];
-			 config.options.scales.yAxes[ index ]['ticks']['max'] = values[ 'max' ];
-		 } );
-	 }
+			// Set options to the chart axis.
+			let chart_axis = chart.options.scales.yAxes.find(x => x.id === axis.id);
+			if (chart_axis) {
+				chart_axis.ticks.min = min_ticks;
+				chart_axis.ticks.max = max_ticks;
+			}
+		})
+
+		chart.update();
+	}
 
 	// Render.
 	return chart;
