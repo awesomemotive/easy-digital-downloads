@@ -224,6 +224,14 @@ add_action( 'edd_register_fields_before', 'edd_user_info_fields' );
  * @return void
  */
 function edd_get_cc_form() {
+	/**
+	 * Allow the credit card fields to be replaced.
+	 * @since 3.1
+	 */
+	if ( null !== apply_filters( 'edd_pre_cc_fields', null ) ) {
+		do_action( 'edd_cc_fields' );
+		return;
+	}
 	ob_start(); ?>
 
 	<?php do_action( 'edd_before_cc_fields' ); ?>
