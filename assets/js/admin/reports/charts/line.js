@@ -110,7 +110,7 @@ export const render = ( config ) => {
 	if ( yAxes.length > 1 ) {
 		yAxes.forEach(axis => {
 			// Max and min is already calculated by chart.js.
-			axis.range = (axis.max - axis.min) * 1.2;
+			axis.range = (axis.max - axis.min);
 			// Express the min / max values as a fraction of the overall range.
 			axis.min_ratio = axis.min / axis.range
 			axis.max_ratio = axis.max / axis.range
