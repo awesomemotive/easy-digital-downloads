@@ -1742,7 +1742,6 @@ function edd_render_review_status_metabox() {
 	_edd_deprecated_function( __FUNCTION__, '2.11.4' );
 
 	$reviews_location = edd_reviews_location();
-	$is_promo_active  = edd_is_promo_active();
 
 	ob_start();
 
@@ -1759,21 +1758,11 @@ function edd_render_review_status_metabox() {
 
 	} else {
 
-		// Adjust UTM params based on state of promotion.
-		if ( true === $is_promo_active ) {
-			$args = array(
-				'utm_source'   => 'download-metabox',
-				'utm_medium'   => 'wp-admin',
-				'utm_campaign' => 'bfcm2019',
-				'utm_content'  => 'product-reviews-metabox-bfcm',
-			);
-		} else {
-			$args = array(
-				'utm_source'   => 'edit-download',
-				'utm_medium'   => 'enable-reviews',
-				'utm_campaign' => 'admin',
-			);
-		}
+		$args = array(
+			'utm_source'   => 'edit-download',
+			'utm_medium'   => 'enable-reviews',
+			'utm_campaign' => 'admin',
+		);
 
 		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
 		$url      = add_query_arg( $args, $base_url );
@@ -1785,14 +1774,6 @@ function edd_render_review_status_metabox() {
 			?>
 		</p>
 		<?php
-		// Add an additional note if a promotion is active.
-		if ( true === $is_promo_active ) {
-			?>
-			<p>
-				<?php echo wp_kses_post( __( 'Act now and <strong>SAVE 25%</strong> on your purchase. Sale ends <em>23:59 PM December 6th CST</em>. Use code <code>BFCM2019</code> at checkout.', 'easy-digital-downloads' ) ); ?>
-			</p>
-			<?php
-		}
 	}
 
 	$rendered = ob_get_contents();
@@ -1910,4 +1891,34 @@ function edd_decrease_earnings( $download_id = 0, $amount = 0.00 ) {
 	}
 
 	return $download->get_earnings();
+}
+
+/**
+ * Check to see if we should be displaying promotional content
+ *
+ * In various parts of the plugin, we may choose to promote something like a sale for a limited time only. This
+ * function should be used to set the conditions under which the promotions will display.
+ *
+ * @since 2.9.20
+ * @deprecated 3.1
+ *
+ * @return bool
+ */
+function edd_is_promo_active() {
+	_edd_deprecated_function( __FUNCTION__, '3.1' );
+
+	return false;
+}
+
+/**
+ * Outputs a metabox for promotional content.
+ *
+ * @since 2.9.20
+ * @deprecated 3.1
+ *
+ * @return void
+ */
+function edd_render_promo_metabox() {
+	_edd_deprecated_function( __FUNCTION__, '3.1' );
+	return;
 }
