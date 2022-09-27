@@ -423,6 +423,9 @@ class Manifest implements Error_Logger {
 
 		if ( $this->is_pie_manifest() ) {
 			$defaults = array(
+				'animation' => array(
+					'duration'   => 0,
+				),
 				'responsive' => true,
 				'legend'     => array(
 					'position' => 'left',
@@ -444,6 +447,9 @@ class Manifest implements Error_Logger {
 			}
 
 			$defaults = array(
+				'animation' => array(
+					'duration'   => 0,
+				),
 				'responsive' => true,
 				'hoverMode'  => 'index',
 				'stacked'    => false,
@@ -459,11 +465,13 @@ class Manifest implements Error_Logger {
 
 			$default_xAxes = array(
 				array(
+					'timezone' => edd_get_timezone_id(),
 					'type'     => 'time',
 					'display'  => true,
 					'ticks'    => array(
-						'source'      => 'auto',
-						'maxRotation' => 0,
+						'source'        => 'auto',
+						'maxRotation'   => 0,
+						'autoSkip'      => true,
 					),
 					'position' => 'bottom',
 					'time'     => array(
@@ -487,7 +495,7 @@ class Manifest implements Error_Logger {
 			);
 
 			// Check if specific axes are missing from the endpoint options and load them from defaults.
-			foreach ( array( 'xAxes', 'yAxes' ) as $axes_name) {
+			foreach ( array( 'xAxes', 'yAxes' ) as $axes_name ) {
 				if ( empty( $endpoint_options['scales'][ $axes_name ] ) ) {
 					$endpoint_options['scales'][ $axes_name ] = ${ "default_{$axes_name}" };
 				}
