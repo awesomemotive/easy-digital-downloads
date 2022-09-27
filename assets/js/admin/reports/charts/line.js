@@ -58,11 +58,21 @@ export const render = ( config ) => {
 					{
 						...config.options.scales.xAxes[0],
 						ticks: {
-							...config.options.scales.xAxes[0].ticks,
-							maxTicksLimit:12,
+							maxTicksLimit: 12,
 							autoSkip: true,
-							callback( value, index, ticks ) {
-								return moment.tz( ticks[index].value, config.dates.timezone ).format( config.dates.time_format );
+							maxRotation: 0,
+						},
+						time: {
+							...config.options.scales.xAxes[0].time,
+							parser: function( date ) {
+								// Use UTC for larger dataset averages.
+								// Specifically this ensures month by month shows the start of the month
+								// if the UTC offset is negative.
+								if ( ! hourByHour && ! dayByDay ) {
+									return moment.utc( date );
+								} else {
+									return moment( date ).utcOffset( utcOffset );
+								}
 							},
 						},
 					},
