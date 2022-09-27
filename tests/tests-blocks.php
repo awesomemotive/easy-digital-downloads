@@ -3,7 +3,9 @@
  * Tests for EDD core block functions.
  */
 
-function_exists( 'register_block_type' ) || exit;
+if ( ! function_exists( 'register_block_type' ) ) {
+	return;
+}
 
 class Tests_Blocks extends EDD_UnitTestCase {
 
