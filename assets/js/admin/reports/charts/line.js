@@ -23,6 +23,8 @@ export const render = ( config ) => {
 		},
 	} = config;
 
+
+
 	// Attach formatting callback to Y axes ticks.
 	config.options.scales.yAxes.forEach( axis => {
 		if ( axis.ticks.hasOwnProperty( 'formattingType' ) ) {
