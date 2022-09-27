@@ -55,11 +55,12 @@ export const render = ( config ) => {
 				xAxes: [
 					{
 						...config.options.scales.xAxes[0],
-						timezone: config.dates.timezone,
 						ticks: {
 							...config.options.scales.xAxes[0].ticks,
+							maxTicksLimit:12,
+							autoSkip: true,
 							callback( value, index, ticks ) {
-								return moment( ticks[index].value ).format( config.dates.time_format );
+								return moment.tz( ticks[index].value, config.dates.timezone ).format( config.dates.time_format );
 							},
 						},
 					},
