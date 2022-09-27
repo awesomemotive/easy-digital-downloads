@@ -423,6 +423,9 @@ class Manifest implements Error_Logger {
 
 		if ( $this->is_pie_manifest() ) {
 			$defaults = array(
+				'animation' => array(
+					'duration'   => 0,
+				),
 				'responsive' => true,
 				'legend'     => array(
 					'position' => 'left',
@@ -444,6 +447,9 @@ class Manifest implements Error_Logger {
 			}
 
 			$defaults = array(
+				'animation' => array(
+					'duration'   => 0,
+				),
 				'responsive' => true,
 				'hoverMode'  => 'index',
 				'stacked'    => false,
@@ -462,8 +468,8 @@ class Manifest implements Error_Logger {
 					'type'     => 'time',
 					'display'  => true,
 					'ticks'    => array(
-						'source'      => 'auto',
-						'maxRotation' => 0,
+						'source'        => 'auto',
+						'maxRotation'   => 0,
 					),
 					'position' => 'bottom',
 					'time'     => array(
