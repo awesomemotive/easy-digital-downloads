@@ -382,10 +382,9 @@ function edd_register_overview_report( $reports ) {
 									'display'   => true,
 									'position'  => 'left',
 									'ticks'     => array(
-										'maxTicksLimit'  => 5,
 										'formattingType' => 'format',
-										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+										'precision'      => 0,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -397,10 +396,10 @@ function edd_register_overview_report( $reports ) {
 									'position'  => 'right',
 									'display'   => true,
 									'ticks'     => array(
-										'maxTicksLimit'  => 5,
-										'formattingType' => 'integer',
-										'suggestedMin'   => 0,
-										'beginAtZero'    => true,
+										'formattingType'    => 'integer',
+										'beginAtZero'       => true,
+										'hideNegativeTicks' => true,
+										'precision'      => 0,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -939,10 +938,11 @@ function edd_register_downloads_report( $reports ) {
 									'position'  => 'right',
 									'display'   => true,
 									'ticks'     => array(
-										'maxTicksLimit'  => 5,
-										'formattingType' => 'integer',
-										'suggestedMin'   => 0,
-										'beginAtZero'    => true,
+										'maxTicksLimit'     => 5,
+										'formattingType'    => 'integer',
+										'suggestedMin'      => 0,
+										'beginAtZero'       => true,
+										'hideNegativeTicks' => true,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -1190,6 +1190,7 @@ function edd_register_refunds_report( $reports ) {
 										'formattingType' => 'format',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+										'precision'      => 0,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -1205,6 +1206,7 @@ function edd_register_refunds_report( $reports ) {
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+										'precision'      => 0,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -1665,6 +1667,7 @@ function edd_register_payment_gateways_report( $reports ) {
 										'formattingType' => 'format',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+										'precision'      => 0,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -1676,10 +1679,12 @@ function edd_register_payment_gateways_report( $reports ) {
 									'position'  => 'right',
 									'display'   => true,
 									'ticks'     => array(
-										'maxTicksLimit'  => 5,
-										'formattingType' => 'integer',
-										'suggestedMin'   => 0,
-										'beginAtZero'    => true,
+										'maxTicksLimit'     => 5,
+										'formattingType'    => 'integer',
+										'suggestedMin'      => 0,
+										'beginAtZero'       => true,
+										'hideNegativeTicks' => true,
+										'precision'      => 0,
 									),
 									'gridLines' => array(
 										'display' => true,
@@ -2135,6 +2140,7 @@ function edd_register_file_downloads_report( $reports ) {
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+										'precision'      => 0,
 									),
 								),
 							),
@@ -2469,6 +2475,7 @@ function edd_register_discounts_report( $reports ) {
 											'formattingType' => 'integer',
 											'suggestedMin'   => 0,
 											'beginAtZero'    => true,
+											'precision'      => 0,
 										),
 									),
 								),
@@ -2715,6 +2722,7 @@ function edd_register_customer_report( $reports ) {
 										'formattingType' => 'integer',
 										'suggestedMin'   => 0,
 										'beginAtZero'    => true,
+										'precision'      => 0,
 									),
 								),
 							),
