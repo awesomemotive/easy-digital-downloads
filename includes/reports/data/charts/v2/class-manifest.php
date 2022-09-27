@@ -471,7 +471,6 @@ class Manifest implements Error_Logger {
 					'ticks'    => array(
 						'source'        => 'auto',
 						'maxRotation'   => 0,
-						'autoSkip'      => true,
 					),
 					'position' => 'bottom',
 					'time'     => array(
