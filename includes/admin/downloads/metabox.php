@@ -1305,34 +1305,3 @@ function edd_render_stats_meta_box() {
 <?php
 	do_action('edd_stats_meta_box');
 }
-
-/**
- * Outputs a metabox for promotional content.
- *
- * @since 2.9.20
- * @return void
- */
-function edd_render_promo_metabox() {
-	ob_start();
-
-	// Build the main URL for the promotion.
-	$args = array(
-		'utm_source'   => 'download-metabox',
-		'utm_medium'   => 'wp-admin',
-		'utm_campaign' => 'bfcm2019',
-		'utm_content'  => 'bfcm-metabox',
-	);
-	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
-	?>
-	<p>
-		<?php
-		// Translators: The %s represents the link to the pricing page on the Easy Digital Downloads website.
-		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), esc_url( $url ) ) );
-		?>
-	</p>
-	<?php
-	$rendered = ob_get_contents();
-	ob_end_clean();
-
-	echo wp_kses_post( $rendered );
-}
