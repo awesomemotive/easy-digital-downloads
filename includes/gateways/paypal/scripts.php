@@ -115,7 +115,7 @@ function register_js( $force_load = false ) {
 				'paypal-error' => esc_html__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' )
 			) ),
 			'intent'         => ! empty( $sdk_query_args['intent'] ) ? $sdk_query_args['intent'] : 'capture',
-			'style'          => get_button_styles()
+			'style'          => get_button_styles(),
 		);
 
 		wp_localize_script( 'edd-paypal', 'eddPayPalVars', $paypal_script_vars );

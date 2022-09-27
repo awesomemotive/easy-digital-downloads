@@ -349,6 +349,13 @@ class EDD_Email_Summary {
 
 		$date_range     = $this->get_report_date_range();
 		$site_url       = $this->get_site_url();
+		$view_more_url  = edd_get_admin_url(
+			array(
+				'page'           => 'edd-reports',
+				'range'          => ( 'monthly' === $this->email_options['email_summary_frequency'] ) ? 'last_month' : 'last_week',
+				'relative_range' => 'previous_period',
+			)
+		);
 		$wp_date_format = get_option( 'date_format' );
 		$period_name    = ( 'monthly' === $this->email_options['email_summary_frequency'] ) ? __( 'month', 'easy-digital-downloads' ) : __( 'week', 'easy-digital-downloads' );
 		/* Translators: period name (e.g. week) */
