@@ -177,6 +177,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'assets/images/media-button.png' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/tick.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/xit.gif' ),
+			array( EDD_PLUGIN_DIR . 'assets/css/edd.min.css' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/xit.gif' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-admin.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' ),

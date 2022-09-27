@@ -66,6 +66,11 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'purchase_history_page', $new_settings );
 		$this->assertNotEquals( $origin_edd_options['purchase_history_page'], $new_settings['purchase_history_page'] );
 
+		// Check for the new confirmation page if the blocks files are loaded and the WordPress version is 5.8 or higher.
+		if ( file_exists( EDD_PLUGIN_DIR . 'includes/blocks/edd-blocks.php' ) && version_compare( get_bloginfo( 'version' ), '5.8', '>=' ) ) {
+			$this->assertArrayHasKey( 'confirmation_page', $new_settings );
+		}
+
 		$this->assertEquals( edd_format_db_version( EDD_VERSION ), get_option( 'edd_version' ) );
 
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_manager' ) );
