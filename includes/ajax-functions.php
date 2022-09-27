@@ -496,7 +496,11 @@ function edd_ajax_recalculate_taxes() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart     = ob_get_clean();
+	/**
+	 * Allows the cart content to be filtered.
+	 * @since 3.1
+	 */
+	$cart     = apply_filters( 'edd_get_checkout_cart', ob_get_clean() );
 	$response = array(
 		'html'         => $cart,
 		'tax_raw'      => edd_get_cart_tax(),
