@@ -1003,6 +1003,16 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 
 	$formatted_offset = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours . ':00';
 
+	/**
+	 * There is a limitation here that we cannot get past due to MySQL not having timezone information.
+	 *
+	 * When a requested date group spans the DST change. For instance, a 6 month graph will have slightly
+	 * different results for each month than if you pulled each of those 6 months individually. This is because
+	 * our 'grouping' can only convert the timezone based on the current offset and that can change if the
+	 * range spans the DST break, which would have some dates be in a +/- 1 hour state.
+	 *
+	 * @see https://github.com/awesomemotive/easy-digital-downloads/pull/9449
+	 */
 	$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
 	switch ( $function ) {
 		case 'HOUR':

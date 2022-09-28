@@ -23,10 +23,24 @@ export const render = ( config ) => {
 		},
 	} = config;
 
+
+
 	// Attach formatting callback to Y axes ticks.
 	config.options.scales.yAxes.forEach( axis => {
 		if ( axis.ticks.hasOwnProperty( 'formattingType' ) ) {
 			axis.ticks = attachAxisTickFormattingCallback( axis.ticks );
+		}
+
+		if ( axis.ticks.hasOwnProperty( 'hideNegativeTicks' ) && axis.ticks.hideNegativeTicks ) {
+			axis.afterTickToLabelConversion = function(scaleInstance) {
+				for (let index = scaleInstance.ticksAsNumbers.length - 1; index >= 0; index--) {
+					if (scaleInstance.ticksAsNumbers[index] < 0) {
+						scaleInstance.ticksAsNumbers.splice(index, 1);
+						scaleInstance.ticks.splice(index, 1);
+					}
+				}
+
+			}
 		}
 	});
 
@@ -44,11 +58,21 @@ export const render = ( config ) => {
 					{
 						...config.options.scales.xAxes[0],
 						ticks: {
-							...config.options.scales.xAxes[0].ticks,
-							maxTicksLimit:12,
+							maxTicksLimit: 12,
 							autoSkip: true,
-							callback( value, index, ticks ) {
-								return moment.tz( ticks[index].value, config.dates.timezone ).format( config.dates.time_format );
+							maxRotation: 0,
+						},
+						time: {
+							...config.options.scales.xAxes[0].time,
+							parser: function( date ) {
+								// Use UTC for larger dataset averages.
+								// Specifically this ensures month by month shows the start of the month
+								// if the UTC offset is negative.
+								if ( ! hourByHour && ! dayByDay ) {
+									return moment.utc( date );
+								} else {
+									return moment( date ).utcOffset( utcOffset );
+								}
 							},
 						},
 					},
@@ -79,8 +103,55 @@ export const render = ( config ) => {
 		},
 	};
 
-	// Render
-	return new Chart( document.getElementById( target ), lineConfig );
+	let chartTarget = document.getElementById( target );
+	let chart = new Chart( chartTarget, lineConfig );
+
+	/*
+	* If there are multiple Y axes, we have to align their baseline.
+	* We have to take yAxes after chart is initialized so that
+	* we can get calculated min and max of each axis.
+	*/
+	let yAxes = []
+	for ( const [key, scale] of Object.entries( chart.scales ) ) {
+		// Find out if this is Y axis.
+		if ( scale.maxHeight > scale.maxWidth ) {
+			yAxes.push( scale )
+		}
+	}
+
+	if ( yAxes.length > 1 ) {
+		yAxes.forEach(axis => {
+			// Max and min is already calculated by chart.js.
+			axis.range = (axis.max - axis.min);
+			// Express the min / max values as a fraction of the overall range.
+			axis.min_ratio = axis.min / axis.range
+			axis.max_ratio = axis.max / axis.range
+		})
+
+		// Find the largest of min and max ratio.
+		let largest_ratio = yAxes.reduce((a, b) => ({
+			min_ratio: Math.min(a.min_ratio, b.min_ratio),
+			max_ratio: Math.max(a.max_ratio, b.max_ratio)
+		}))
+
+		// Scale each axis according to the ratio.
+		yAxes.forEach(axis => {
+			let min_ticks = largest_ratio.min_ratio * axis.range;
+			let max_ticks = largest_ratio.max_ratio * axis.range;
+
+			// Set options to the chart axis.
+			let chart_axis = chart.options.scales.yAxes.find(x => x.id === axis.id);
+			if (chart_axis) {
+				chart_axis.ticks.min = min_ticks;
+				chart_axis.ticks.max = max_ticks;
+			}
+		})
+
+		chart.update();
+	}
+
+	// Render.
+	return chart;
 };
 
 /**

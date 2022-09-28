@@ -315,4 +315,17 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertTrue( edd_download_quantities_disabled( $this->_post->ID ) );
 	}
 
+	public function test_bundled_products_conditions_price_id_has_one_download() {
+		$bundle            = EDD_Helper_Download::create_variable_bundled_download();
+		$bundled_downloads = edd_get_bundled_products( $bundle->ID, 2 );
+
+		$this->assertEquals( 1, count( $bundled_downloads ) );
+	}
+
+	public function test_bundled_products_conditions_no_price_id_has_two_downloads() {
+		$bundle            = EDD_Helper_Download::create_variable_bundled_download();
+		$bundled_downloads = edd_get_bundled_products( $bundle->ID );
+
+		$this->assertEquals( 2, count( $bundled_downloads ) );
+	}
 }

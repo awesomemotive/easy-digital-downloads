@@ -40,8 +40,6 @@ function edd_overview_sales_earnings_chart() {
 		'groupby' => '',
 	);
 
-
-
 	// Default to 'monthly'.
 	$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
 	$sql_clauses['orderby'] = 'MONTH(date_created)';
@@ -59,15 +57,8 @@ function edd_overview_sales_earnings_chart() {
 		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
 	}
 
-	$statuses = edd_get_net_order_statuses();
-
-	/**
-	 * Filters Order statuses that should be included when calculating stats.
-	 *
-	 * @since 2.7
-	 *
-	 * @param array $statuses Order statuses to include when generating stats.
-	 */
+	// Revenue calculations should include gross statuses to negate refunds properly.
+	$statuses = edd_get_gross_order_statuses();
 	$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 	$statuses = "'" . implode( "', '", $statuses ) . "'";
 
@@ -85,6 +76,11 @@ function edd_overview_sales_earnings_chart() {
 			$dates['end']->copy()->format( 'mysql' )
 		)
 	);
+
+	// Sales counts should count by 'net' statuses, which excludes refunds.
+	$statuses = edd_get_net_order_statuses();
+	$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
+	$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 	$sales_results = $wpdb->get_results(
 		$wpdb->prepare(
@@ -110,9 +106,7 @@ function edd_overview_sales_earnings_chart() {
 	 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
 	 */
 	while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-		$utc_timezone    = new DateTimeZone( 'UTC' );
 		$timezone        = new DateTimeZone( edd_get_timezone_id() );
-
 		$timestamp       = $dates['start']->copy()->format( 'U' );
 		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
 
@@ -124,8 +118,7 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $earnings_results as $earnings_result ) {
-			$date_of_db_value = new DateTime( $earnings_result->date, $utc_timezone );
-			$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
+			$date_of_db_value = new DateTime( $earnings_result->date, $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -151,8 +144,7 @@ function edd_overview_sales_earnings_chart() {
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $sales_results as $sales_result ) {
 
-			$date_of_db_value = new DateTime( $sales_result->date, $utc_timezone );
-			$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
+			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -204,6 +196,7 @@ function edd_overview_refunds_chart() {
 	global $wpdb;
 
 	$dates        = Reports\get_dates_filter( 'objects' );
+	$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
@@ -253,7 +246,9 @@ function edd_overview_refunds_chart() {
 
 	// Initialise all arrays with timestamps and set values to 0.
 	while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-		$timestamp = strtotime( $dates['start']->copy()->format( 'mysql' ) );
+		$timezone        = new DateTimeZone( edd_get_timezone_id() );
+		$timestamp       = $dates['start']->copy()->format( 'U' );
+		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
 
 		$number[ $timestamp ][0] = $timestamp;
 		$number[ $timestamp ][1] = 0;
@@ -263,10 +258,7 @@ function edd_overview_refunds_chart() {
 
 		// Loop through each date there were refunds, which we queried from the database.
 		foreach ( $results as $result ) {
-
-			$timezone         = new DateTimeZone( 'UTC' );
 			$date_of_db_value = new DateTime( $result->date, $timezone );
-			$date_on_chart    = new DateTime( $dates['start'], $timezone );
 
 			// Add any refunds that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -295,14 +287,15 @@ function edd_overview_refunds_chart() {
 		// Move the chart along to the next hour/day/month to get ready for the next loop.
 		if ( $hour_by_hour ) {
 			$dates['start']->addHour( 1 );
+			$chart_dates['start']->addHour( 1 );
 		} elseif ( $day_by_day ) {
 			$dates['start']->addDays( 1 );
+			$chart_dates['start']->addDays( 1 );
 		} else {
 			$dates['start']->addMonth( 1 );
+			$chart_dates['start']->addMonth( 1 );
 		}
 	}
-
-
 
 	return array(
 		'number' => array_values( $number ),
