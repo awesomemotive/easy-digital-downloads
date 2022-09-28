@@ -2,7 +2,7 @@
 rm -rf includes/blocks
 
 # Initial clone (todo: change to main)
-git clone -b rock/core-blocks git@github.com:awesomemotive/edd-blocks includes/blocks
+git clone -b main git@github.com:awesomemotive/edd-blocks includes/blocks
 
 # Install dependencies
 cd includes/blocks
