@@ -132,7 +132,7 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 			'parent' => 'edd-store-menu',
 			'id'     => 'edd-upgrade',
 			'title'  => esc_html__( 'Upgrade to Pro', 'easy-digital-downloads' ),
-			'href'   => 'https://easydigitaldownloads.com/pricing/?utm_campaign=admin&utm_medium=admin-bar&utm_source=WordPress&utm_content=Upgrade+to+Pro',
+			'href'   => 'https://easydigitaldownloads.com/lite-upgrade/?utm_campaign=admin&utm_medium=admin-bar&utm_source=WordPress&utm_content=Upgrade+to+Pro',
 			'meta'   => array(
 				'target' => '_blank',
 				'rel'    => 'noopener noreferrer',
