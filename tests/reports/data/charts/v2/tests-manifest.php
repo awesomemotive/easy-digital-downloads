@@ -302,6 +302,9 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 				2 => 'Third',
 				3 => 'Fourth',
 			),
+			'animation' => array(
+				'duration'   => 0,
+			),
 			'responsive' => true,
 			'legend'     => array(
 				'position' => 'left',
@@ -346,6 +349,9 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$expected = array(
+			'animation' => array(
+				'duration'   => 0,
+			),
 			'responsive' => true,
 			'hoverMode'  => 'index',
 			'stacked'    => false,
