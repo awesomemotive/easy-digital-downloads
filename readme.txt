@@ -1,7 +1,7 @@
 === Easy Digital Downloads - Simple eCommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, smub, am, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee, zkawesome
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee, zkawesome
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
@@ -116,7 +116,7 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 
 = Get help =
 
-Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://easydigitaldownloads.com/docs/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you're looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/lite-upgrade/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
+Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://easydigitaldownloads.com/docs/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you're looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
 
 > EDD has been a long standing, rock-solid e-commerce solution for WordPress. The team lives and breathes WordPress, understands the platform, and is embedded in the community.
 
