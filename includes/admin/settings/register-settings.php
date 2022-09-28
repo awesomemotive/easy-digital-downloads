@@ -1052,6 +1052,14 @@ function edd_get_registered_settings() {
 					),
 				),
 				'file_downloads' => array(
+					'require_login_to_download' => array(
+						'id'            => 'require_login_to_download',
+						'name'          => __( 'Require Login', 'easy-digital-downloads' ),
+						'desc'          => __( 'Require a user to login before file download links deliver the file.', 'easy-digital-downloads' ),
+						'tooltip_title' => __( 'Require Login', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Download links expire after the link expiration setting, but you can restrict file downloads to only logged in users. Note: This may affect links from purchase receipts and customers if you have guest checkout enabled.', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+					),
 					'download_method' => array(
 						'id'            => 'download_method',
 						'name'          => __( 'Download Method', 'easy-digital-downloads' ),

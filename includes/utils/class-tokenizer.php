@@ -108,6 +108,10 @@ class Tokenizer {
 	 * @return string|false
 	 */
 	public static function tokenize( $data ) {
+		if ( is_array( $data ) ) {
+			$data = json_encode( $data );
+		}
+
 		$generator = new Tokenizer( $data );
 
 		return $generator->generate_token();
