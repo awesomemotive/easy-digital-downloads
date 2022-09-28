@@ -70,7 +70,7 @@ function edd_download_metabox_fields() {
 		'_edd_quantities_disabled',
 		'edd_product_notes',
 		'_edd_default_price_id',
-		'_edd_bundled_products_conditions'
+		'_edd_bundled_products_conditions',
 	);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
@@ -179,9 +179,30 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 		}
 	}
 
-	return array_values( array_unique( $products ) );
+	$products = array_unique( $products );
+
+	return array_combine(
+		range( 1, count( $products ) ),
+		array_values( $products )
+	);
 }
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
+
+/**
+ * Sanitize bundled products conditions on save
+ *
+ * @since 3.1
+ *
+ * @param array $bundled_products_conditions
+ * @return array
+ */
+function edd_sanitize_bundled_products_conditions_save( $bundled_products_conditions = array() ) {
+	return array_combine(
+		range( 1, count( $bundled_products_conditions ) ),
+		array_values( $bundled_products_conditions )
+	);
+}
+add_filter( 'edd_metabox_save__edd_bundled_products_conditions', 'edd_sanitize_bundled_products_conditions_save' );
 
 /**
  * Don't save blank rows.
@@ -568,7 +589,7 @@ function edd_render_products_field( $post_id ) {
 										<?php
 										echo EDD()->html->product_dropdown(
 											array(
-												'name'                 => '_edd_bundled_products[]',
+												'name'                 => '_edd_bundled_products[' . $index . ']',
 												'id'                   => 'edd_bundled_products_' . esc_attr( $index ),
 												'selected'             => $product,
 												'multiple'             => false,
@@ -602,7 +623,7 @@ function edd_render_products_field( $post_id ) {
 											$selected = isset( $price_assignments[ $index ] ) ? $price_assignments[ $index ] : null;
 
 											echo EDD()->html->select( array(
-												'name'             => '_edd_bundled_products_conditions['. $index .']',
+												'name'             => '_edd_bundled_products_conditions[' . $index . ']',
 												'id'               => 'edd_bundled_products_conditions_'. esc_attr( $index ),
 												'class'            => 'edd_repeatable_condition_field',
 												'options'          => $options,
@@ -638,7 +659,7 @@ function edd_render_products_field( $post_id ) {
 									<div class="edd-form-group__control">
 									<?php
 									echo EDD()->html->product_dropdown( array(
-										'name'                 => '_edd_bundled_products[]',
+										'name'                 => '_edd_bundled_products[1]',
 										'id'                   => 'edd_bundled_products_1',
 										'multiple'             => false,
 										'chosen'               => true,
@@ -1304,35 +1325,4 @@ function edd_render_stats_meta_box() {
 	</p>
 <?php
 	do_action('edd_stats_meta_box');
-}
-
-/**
- * Outputs a metabox for promotional content.
- *
- * @since 2.9.20
- * @return void
- */
-function edd_render_promo_metabox() {
-	ob_start();
-
-	// Build the main URL for the promotion.
-	$args = array(
-		'utm_source'   => 'download-metabox',
-		'utm_medium'   => 'wp-admin',
-		'utm_campaign' => 'bfcm2019',
-		'utm_content'  => 'bfcm-metabox',
-	);
-	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
-	?>
-	<p>
-		<?php
-		// Translators: The %s represents the link to the pricing page on the Easy Digital Downloads website.
-		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), esc_url( $url ) ) );
-		?>
-	</p>
-	<?php
-	$rendered = ob_get_contents();
-	ob_end_clean();
-
-	echo wp_kses_post( $rendered );
 }

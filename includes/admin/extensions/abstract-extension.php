@@ -275,7 +275,7 @@ abstract class Extension {
 	 * @return string
 	 */
 	private function get_upgrade_url( ProductData $product_data, $item_id, $has_access = false ) {
-		$url            = 'https://easydigitaldownloads.com/pricing';
+		$url            = 'https://easydigitaldownloads.com/lite-upgrade';
 		$utm_parameters = array(
 			'p'            => urlencode( $item_id ),
 			'utm_source'   => 'settings',

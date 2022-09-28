@@ -102,8 +102,29 @@ var EDD_PayPal = {
 		var nonceEl = form.querySelector( 'input[name="edd_process_paypal_nonce"]' );
 		var tokenEl = form.querySelector( 'input[name="edd-process-paypal-token"]' );
 		var createFunc = ( 'subscription' === eddPayPalVars.intent ) ? 'createSubscription' : 'createOrder';
+		var requiredInputs = form.querySelectorAll( '[required]' );
 
 		var buttonArgs = {
+			onInit: function ( data, actions ) {
+				actions.disable();
+				if ( form.checkValidity() ) {
+					actions.enable();
+				}
+				requiredInputs.forEach( function ( element ) {
+					element.addEventListener( 'change', function ( e ) {
+						if ( form.checkValidity() ) {
+							actions.enable();
+						} else {
+							actions.disable();
+						}
+					} );
+				} );
+			},
+			onClick: function ( data, actions ) {
+				if ( ! form.reportValidity() ) {
+					return false;
+				}
+			},
 			onApprove: function( data, actions ) {
 				var formData = new FormData();
 				formData.append( 'action', eddPayPalVars.approvalAction );
