@@ -55,12 +55,18 @@ function edd_login_register_error_message( $errors, $redirect ) {
  */
 function edd_get_lostpassword_url() {
 
-	return add_query_arg(
-		array(
-			'edd_forgot_password' => 'confirm',
-		),
-		wp_lostpassword_url()
-	);
+	$login_page = edd_get_option( 'login_page', false );
+
+	if ( empty( $login_page ) ) {
+		return add_query_arg(
+			array(
+				'edd_forgot_password' => 'confirm',
+			),
+			wp_lostpassword_url()
+		);
+	}
+
+	return add_query_arg( 'action', 'lostpassword', get_permalink( $login_page ) );
 }
 
 /**
