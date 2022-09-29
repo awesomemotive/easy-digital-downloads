@@ -1020,11 +1020,6 @@ table.edd-order-overview-summary--refund {
 	width: 100%;
 }
 
-/** Columns */
-.wp-list-table.orders .column-number .row-title {
-	display: block;
-}
-
 /** Status labels */
 .edd-admin-order-status-badge {
 	padding: 2px 7px;
@@ -1256,10 +1251,6 @@ textarea[name="edd-note"] {
 .wp-list-table.orders div.order-list-email {
 	font-size: .85em;
 	color: #888888;
-}
-
-.wp-list-table.orders th.column-number {
-	width: 150px;
 }
 
 .wp-list-table.orders th.column-amount {
