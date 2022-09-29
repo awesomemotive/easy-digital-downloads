@@ -159,12 +159,11 @@ add_filter( 'login_url', 'edd_update_login_url', 10, 3 );
  * @return string
  */
 function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
-	$login_page = edd_get_option( 'login_page', false );
-
-	if ( ! $login_page ) {
+	$login_url = edd_get_login_page_uri();
+	if ( ! $login_url ) {
 		return $url;
 	}
-	$login_url = get_permalink( $login_page );
+
 	if ( ! empty( $redirect ) ) {
 		$login_url = add_query_arg( 'redirect_to', urlencode( $redirect ), $login_url );
 	}
@@ -173,6 +172,17 @@ function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
 	}
 
 	return $login_url;
+}
+
+/**
+ * Helper function to get the EDD login page URI.
+ *
+ * @return false|string
+ */
+function edd_get_login_page_uri() {
+	$login_page = edd_get_option( 'login_page', false );
+
+	return $login_page ? get_permalink( $login_page ) : false;
 }
 
 /**
