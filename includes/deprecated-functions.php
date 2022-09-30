@@ -1757,20 +1757,18 @@ function edd_render_review_status_metabox() {
 		?><p style="text-align: center;"><a href="<?php echo esc_url( $activate_url ); ?>" class="button-secondary"><?php _e( 'Activate Reviews', 'easy-digital-downloads' ); ?></a></p><?php
 
 	} else {
-
-		$args = array(
-			'utm_source'   => 'edit-download',
-			'utm_medium'   => 'enable-reviews',
-			'utm_campaign' => 'admin',
+		$url = edd_link_helper(
+			'https://easydigitaldownloads.com/downloads/product-reviews/',
+			array(
+				'utm_medium'  => 'edit-download',
+				'utm_content' => 'product-reviews',
+			)
 		);
-
-		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
-		$url      = add_query_arg( $args, $base_url );
 		?>
 		<p>
 			<?php
 			// Translators: The %s represents the link to the Product Reviews extension.
-			echo wp_kses_post( sprintf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), esc_url( $url ) ) );
+			echo wp_kses_post( sprintf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), $url ) );
 			?>
 		</p>
 		<?php

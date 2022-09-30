@@ -169,6 +169,17 @@ class Pass_Manager {
 	}
 
 	/**
+	 * If this is a "pro install". This means they have the pro version of EDD installed.
+	 *
+	 * @since 3.1
+	 *
+	 * @return bool
+	 */
+	public static function isPro() {
+		return false;
+	}
+
+	/**
 	 * If this site has an individual product license active (à la carte), but no pass active.
 	 *
 	 * @since 2.11.4

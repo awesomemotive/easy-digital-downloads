@@ -174,16 +174,14 @@ class Five_Star_Review_Dashboard extends Notice {
 	 * @return string
 	 */
 	private function url() {
-		$args = array(
-			'utm_source'   => urlencode( $this->screen ),
-			'utm_medium'   => urlencode( static::TYPE ),
-			'utm_campaign' => 'Feedback',
-			'utm_content'  => 'give-feedback',
+		$url = edd_link_helper(
+			'https://easydigitaldownloads.com/plugin-feedback/',
+			array(
+				'utm_medium'  => 'feedback-' . static::TYPE,
+				'utm_content' => 'give-feedback',
+			)
 		);
 
-		return add_query_arg(
-			$args,
-			'https://easydigitaldownloads.com/plugin-feedback'
-		);
+		return $url;
 	}
 }
