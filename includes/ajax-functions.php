@@ -212,8 +212,6 @@ function edd_ajax_add_to_cart() {
 		$post_data = array();
 	}
 
-	$all_items = array();
-
 	foreach ( $to_add as $options ) {
 
 		if ( $_POST['download_id'] == $options['price_id'] ) {
@@ -239,8 +237,6 @@ function edd_ajax_add_to_cart() {
 
 		$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
 		$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
-
-		$all_items[] = $item;
 	}
 
 	$return = array(
@@ -255,7 +251,7 @@ function edd_ajax_add_to_cart() {
 		$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
 	}
 
-	$return = apply_filters( 'edd_ajax_add_to_cart_response', $return, $all_items );
+	$return = apply_filters( 'edd_ajax_add_to_cart_response', $return );
 
 	echo json_encode( $return );
 	edd_die();
