@@ -1775,6 +1775,36 @@ function edd_get_activation_date() {
 }
 
 /**
+ * Given a URL, run it through query arg additions.
+ *
+ * @since 3.1
+ *
+ * @param string $base_url    The base URL for the generation.
+ * @param array  $query_args  The arguments to add to the $base_url.
+ * @param bool   $run_esc_url If true, esc_url will be run
+ *
+ * @return string.
+ */
+function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $query_args = array(), $run_esc_url = true ) {
+	$default_args = array(
+		'utm_source'   => 'WordPress',
+		'utm_medium'   => '',
+		'utm_content'  => '',
+		'utm_campaign' => EDD\Admin\Pass_Manager::isPro() ? 'edd-pro' : 'edd',
+	);
+
+	$args = wp_parse_args( $query_args, $default_args );
+
+	// Ensure we sanitize the medium and content.
+	$args['utm_medium']  = str_replace( '_', '-', sanitize_title( $args['utm_medium'] ) );
+	$args['utm_content'] = str_replace( '_', '-', sanitize_title( $args['utm_content'] ) );
+
+	$url = add_query_arg( $args, trailingslashit( $base_url ) );
+
+	return $run_esc_url ? esc_url( $url ) : $url;
+}
+
+/**
  * Polyfills for is_countable and is_iterable
  *
  * This helps with plugin compatibility going forward. Many extensions have issues with more modern PHP versions,

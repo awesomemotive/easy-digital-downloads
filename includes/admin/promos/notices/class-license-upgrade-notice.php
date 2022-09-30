@@ -141,65 +141,77 @@ class License_Upgrade_Notice extends Notice {
 	 * @inheritDoc
 	 */
 	protected function _display() {
-		$screen = get_current_screen();
-		$source = 'settings';
-		if ( $screen instanceof \WP_Screen ) {
-			switch ( $screen->base ) {
-				case 'edit' :
-					$source = 'list-downloads';
-					break;
-				case 'post' :
-					$source = sprintf(
-						'%s-download',
-						'add' === $screen->action ? 'add' : 'edit'
-					);
-					break;
-				default :
-					$source = str_replace( 'download_page_edd-', '', $screen->base );
-			}
-		}
 
 		try {
 			if ( 0 === $this->number_license_keys ) {
+				$utm_parameters = $this->query_args( 'core' );
+				$link_url       = $this->build_url(
+					'https://easydigitaldownloads.com/lite-upgrade/',
+					$utm_parameters
+				);
+
+				$help_url = edd_link_helper(
+					'https://easydigitaldownloads.com/what-is-an-edd-pass/',
+					array(
+						'utm_medium'  => 'top-promo',
+						'utm_content' => 'what-is-a-pass',
+					)
+				);
 
 				// No license keys active at all.
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments. %3$sAlready have a Pass?%4$s', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', urlencode( $source ) ), 'https://easydigitaldownloads.com/lite-upgrade/' ) ) . '" target="_blank">',
+					'<a href="' . $link_url . '" target="_blank">',
 					'</a>',
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', urlencode( $source ) ), 'https://easydigitaldownloads.com/what-is-an-edd-pass' ) ) . '" target="_blank">',
+					'<a href="' . $help_url . '" target="_blank">',
 					'</a>'
 				);
 
 			} elseif ( ! $this->pass_manager->highest_pass_id ) {
+				$utm_parameters = $this->query_args( 'extension-license' );
+				$link_url       = $this->build_url(
+					'https://easydigitaldownloads.com/your-account/',
+					$utm_parameters
+				);
 
 				// Individual product license active, but no pass.
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'For access to additional Easy Digital Downloads extensions to grow your store, consider %1$spurchasing a pass%2$s.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extension-license', urlencode( $source ) ), 'https://easydigitaldownloads.com/lite-upgrade/' ) ) . '" target="_blank">',
+					'<a href="' . $link_url . '" target="_blank">',
 					'</a>'
 				);
 
 			} elseif ( Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::PERSONAL_PASS_ID, '=' ) ) {
+				$utm_parameters = $this->query_args( 'personal-pass' );
+				$link_url       = $this->build_url(
+					'https://easydigitaldownloads.com/your-account/',
+					$utm_parameters
+				);
 
 				// Personal pass active.
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'You are using Easy Digital Downloads with a Personal Pass. Consider %1$supgrading%2$s to get recurring payments and more.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'personal-pass', urlencode( $source ) ), 'https://easydigitaldownloads.com/your-account/license-keys/' ) ) . '" target="_blank">',
+					'<a href="' . $link_url . '" target="_blank">',
 					'</a>'
 				);
 
 			} elseif ( Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::EXTENDED_PASS_ID, '>=' ) ) {
-
 				if ( ! $this->has_affiliate_wp_license() ) {
-				// Extended pass or higher.
+					$link_url = edd_link_helper(
+						'https://affiliatewp.com',
+						array(
+							'utm_medium'  => 'top-promo',
+							'utm_content' => 'affiliate-wp',
+						)
+					);
+
 					printf(
 					/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 						__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s', 'easy-digital-downloads' ),
-						'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass', urlencode( $source ) ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
+						'<a href="' . $link_url . '" target="_blank">',
 						'</a>'
 					);
 				} elseif( ! $this->has_mi_license() ) {
@@ -212,7 +224,7 @@ class License_Upgrade_Notice extends Notice {
 				}
 			}
 		} catch ( \Exception $e ) {
-			// If we're in here, that means we have an invalid pass ID... what should we do? :thinking:
+			// If we're in here, that means we have an invalid pass ID... what should we do? :thinking:.
 		}
 	}
 
@@ -226,12 +238,29 @@ class License_Upgrade_Notice extends Notice {
 	 *
 	 * @return string[]
 	 */
-	private function query_args( $upgrade_from, $source = 'settings' ) {
+	private function query_args( $upgrade_from, $source = '' ) {
 		return array(
-			'utm_source'   => urlencode( $source ),
-			'utm_medium'   => 'upgrade-from-' . urlencode( $upgrade_from ),
-			'utm_campaign' => 'admin',
-			'utm_content'  => 'top-promo'
+			'utm_medium'   => 'top-promo',
+			'utm_content'  => 'upgrade-from-' . urlencode( $upgrade_from ),
+		);
+	}
+
+	/**
+	 * Build a link with UTM parameters
+	 *
+	 * @since 3.1
+	 *
+	 * @param string $url            The Base URL.
+	 * @param array  $utm_parameters The UTM tags for the URL.
+	 *
+	 * @return string
+	 */
+	private function build_url( $url, $utm_parameters ) {
+		return esc_url(
+			edd_link_helper(
+				$url,
+				$utm_parameters
+			)
 		);
 	}
 }

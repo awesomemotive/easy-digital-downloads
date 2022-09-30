@@ -25,7 +25,7 @@
 #menu-posts-download li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
 #menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
 #menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
-#menu-posts-download li:nth-last-child(2) a:after {
+#menu-posts-download li:nth-last-child(3) a:after {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	display: block;
 	float: left;
@@ -37,6 +37,17 @@
 		margin: 20px -20px 8px -20px;
 		width: calc(100% + 30px);
 	}
+}
+
+#menu-posts-download li:last-child {
+	background-color: #1da867;
+	font-weight: 600;
+}
+
+#menu-posts-download li:last-child a,
+#menu-posts-download li:last-child a:hover{
+	color: #FFFFFF;
+	font-weight: 600;
 }
 
 #adminmenu #menu-posts-download {
