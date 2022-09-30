@@ -9,7 +9,7 @@ jQuery( document ).ready( function( $ ) {
 		const topOfPageNoticeEl = topOfPageNotice.detach();
 
 		$( '#wpbody-content' ).prepend( topOfPageNoticeEl );
-		topOfPageNotice.delay( 1000 ).slideDown();
+		topOfPageNotice.show();
 	}
 
 	/**
