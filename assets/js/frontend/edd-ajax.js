@@ -7,7 +7,7 @@ import { recalculateTaxes } from './checkout/utils.js';
 
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
-	$( '.edd-add-to-cart' ).addClass( 'edd-has-js' );
+	$( '.edd-add-to-cart:not(.edd-no-js)' ).addClass( 'edd-has-js' );
 
 	// Send Remove from Cart requests
 	$( document.body ).on( 'click.eddRemoveFromCart', '.edd-remove-from-cart', function( event ) {
@@ -56,7 +56,8 @@ jQuery( document ).ready( function( $ ) {
 					// Check to see if the purchase form(s) for this download is present on this page
 					if ( $( '[id^=edd_purchase_' + id + ']' ).length ) {
 						$( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).hide();
-						$( '[id^=edd_purchase_' + id + '] .edd-add-to-cart' ).show().removeAttr( 'data-edd-loading' );
+						console.log( $( '[id^=edd_purchase_' + id + '] .edd-add-to-cart.edd-has-js' ) );
+						$( '[id^=edd_purchase_' + id + '] .edd-add-to-cart.edd-has-js' ).show().removeAttr( 'data-edd-loading' );
 						if ( edd_scripts.quantities_enabled === '1' ) {
 							$( '[id^=edd_purchase_' + id + '] .edd_download_quantity_wrapper' ).show();
 						}
