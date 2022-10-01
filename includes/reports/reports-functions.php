@@ -923,6 +923,21 @@ function get_dates_filter_hour_by_hour() {
 			break;
 	}
 
+	// Account for the relative queries being in the first 2 days of the range.
+	$relative_ranges = array(
+		'this_week',
+		'this_month',
+		'this_quarter',
+		'this_year',
+	);
+
+	if ( in_array( $dates['range'], $relative_ranges, true ) ) {
+		$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
+		if ( $difference <= ( DAY_IN_SECONDS * 2 ) ) {
+			$hour_by_hour = true;
+		}
+	}
+
 	return $hour_by_hour;
 }
 
