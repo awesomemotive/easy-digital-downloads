@@ -348,7 +348,7 @@ class EDD_Email_Summary {
 		}
 
 		$date_range     = $this->get_report_date_range();
-		$site_url       = $this->get_site_url();
+		$site_url       = get_site_url();
 		$view_more_url  = edd_get_admin_url(
 			array(
 				'page'           => 'edd-reports',
