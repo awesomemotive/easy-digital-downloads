@@ -192,8 +192,8 @@
 							<?php echo esc_html( $date_range['start_date']->format( $wp_date_format ) ); ?> - <?php echo esc_html( $date_range['end_date']->format( $wp_date_format ) ); ?>
 						</div>
 
-						<a href="<?php echo esc_attr( $site_url ); ?>" class="link-style pull-down-8" style="margin-top: 8px; font-weight: 400; font-size: 14px; text-decoration-line: underline; display: inline-block; color: inherit; text-decoration: none;">
-							<?php echo esc_url( $site_url ); ?>
+						<a href="<?php echo esc_url( get_site_url() ); ?>" class="link-style pull-down-8" style="margin-top: 8px; font-weight: 400; font-size: 14px; text-decoration-line: underline; display: inline-block; color: inherit; text-decoration: none;">
+							<?php echo esc_url( get_site_url() ); ?>
 						</a>
 
 
