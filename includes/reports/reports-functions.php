@@ -903,15 +903,19 @@ function get_relative_dates_filter_range() {
 function get_dates_filter_hour_by_hour() {
 	$hour_by_hour = false;
 
-	// Retrieve the queried dates
+	// Retrieve the queried dates.
 	$dates = get_dates_filter( 'objects' );
 
-	// Determine graph options
+	// Determine graph options.
 	switch ( $dates['range'] ) {
 		case 'today':
 		case 'yesterday':
 			$hour_by_hour = true;
 			break;
+		case 'this_week':
+		case 'this_month':
+		case 'this_quarter':
+		case 'this_year':
 		case 'other':
 			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
 			if ( $difference <= ( DAY_IN_SECONDS * 2 ) ) {
@@ -921,21 +925,6 @@ function get_dates_filter_hour_by_hour() {
 		default:
 			$hour_by_hour = false;
 			break;
-	}
-
-	// Account for the relative queries being in the first 2 days of the range.
-	$relative_ranges = array(
-		'this_week',
-		'this_month',
-		'this_quarter',
-		'this_year',
-	);
-
-	if ( in_array( $dates['range'], $relative_ranges, true ) ) {
-		$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
-		if ( $difference <= ( DAY_IN_SECONDS * 2 ) ) {
-			$hour_by_hour = true;
-		}
 	}
 
 	return $hour_by_hour;
