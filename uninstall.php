@@ -98,8 +98,8 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	// Remove all database tables
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customers" );
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customermeta" );
+	$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'edd_customer' );
+	$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'edd_customermeta' );
 
 	/** Cleanup Cron Events */
 	wp_clear_scheduled_hook( 'edd_daily_scheduled_events' );
