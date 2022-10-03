@@ -1920,3 +1920,17 @@ function edd_render_promo_metabox() {
 	_edd_deprecated_function( __FUNCTION__, '3.1' );
 	return;
 }
+
+/**
+ * Plugin row meta links
+ *
+ * @since 1.8
+ * @deprecated 3.1
+ * @param  array  $links already defined meta links.
+ * @param  string $file  plugin file path and name being processed.
+ * @return array  $input
+ */
+function edd_plugin_row_meta( $links = array(), $file = '' ) {
+	_edd_deprecated_function( __FUNCTION__, '3.1' );
+	return $links;
+}
