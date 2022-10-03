@@ -14,7 +14,7 @@ use EDD\Admin\Pass_Manager;
 
 class License_Upgrade_Notice extends Notice {
 
-	const DISPLAY_HOOK = 'admin_notices';
+	const DISPLAY_HOOK = 'in_admin_header';
 
 	/**
 	 * Number of EDD license keys that have been entered.
