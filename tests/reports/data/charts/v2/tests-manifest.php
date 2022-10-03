@@ -2,6 +2,7 @@
 namespace EDD\Reports\Data\Charts\v2;
 
 use EDD\Reports\Data\Chart_Endpoint;
+use EDD\Reports;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
@@ -348,6 +349,20 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 			)
 		) );
 
+		$day_by_day   = Reports\get_dates_filter_day_by_day();
+		$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+
+		$time_unit   = 'month';
+		$time_format = 'MMM YYYY';
+
+		if ( $hour_by_hour ) {
+			$time_unit   = 'hour';
+			$time_format = 'hA';
+		} elseif ( $day_by_day ) {
+			$time_unit   = 'day';
+			$time_format = 'MMM D';
+		}
+
 		$expected = array(
 			'animation' => array(
 				'duration'   => 0,
@@ -370,8 +385,8 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 						),
 						'position' => 'bottom',
 						'time'     => array(
-							'unit' => 'day',
-							'tooltipFormat' => 'MMM D',
+							'unit'          => $time_unit,
+							'tooltipFormat' => $time_format,
 						),
 					),
 				),
