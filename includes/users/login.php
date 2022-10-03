@@ -159,6 +159,13 @@ add_filter( 'login_url', 'edd_update_login_url', 10, 3 );
  * @return string
  */
 function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
+
+	// Don't change the login URL if the request is an admin request.
+	if ( is_admin() ) {
+		return $url;
+	}
+
+	// Get the login page URL and return the default if it's not set.
 	$login_url = edd_get_login_page_uri();
 	if ( ! $login_url ) {
 		return $url;
