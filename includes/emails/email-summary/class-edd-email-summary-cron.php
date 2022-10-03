@@ -156,6 +156,9 @@ class EDD_Email_Summary_Cron {
 
 		$email = new EDD_Email_Summary();
 		$email->send_email();
+
+		// Schedule the next event.
+		$this->schedule_cron_events();
 	}
 
 }
