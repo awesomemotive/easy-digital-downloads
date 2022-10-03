@@ -130,7 +130,7 @@ function edd_add_ons_page() {
 				)
 			);
 			?>
-			<a href="<?php echo $url; ?>" class="button-primary" target="_blank"><?php esc_html_e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
+			<a href="<?php echo $url; ?>" class="button button-primary" target="_blank"><?php esc_html_e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
 		</div>
 	</div>
 
