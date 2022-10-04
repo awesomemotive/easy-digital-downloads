@@ -325,7 +325,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0.4' );
+			define( 'EDD_VERSION', '3.1' );
 		}
 
 		// Plugin Root File.
