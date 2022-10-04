@@ -189,15 +189,20 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 				// Objects
 				$object = $component->get_interface( 'table' );
 				if ( $object instanceof \EDD\Database\Table && $object->exists() ) {
+					if ( 'adjustments' === $object->name ) {
+						continue;
+					}
 					$tables[] = $object->table_name;
 				}
 
 				// Meta
 				$meta = $component->get_interface( 'meta' );
 				if ( $meta instanceof \EDD\Database\Table && $meta->exists() ) {
+					if ( 'adjustmentmeta' === $meta->name ) {
+						continue;
+					}
 					$tables[] = $meta->table_name;
 				}
-
 			}
 
 			$tables = apply_filters( 'edd_reset_tables_to_truncate', $tables );

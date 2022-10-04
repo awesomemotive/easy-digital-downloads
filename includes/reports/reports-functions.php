@@ -903,15 +903,19 @@ function get_relative_dates_filter_range() {
 function get_dates_filter_hour_by_hour() {
 	$hour_by_hour = false;
 
-	// Retrieve the queried dates
+	// Retrieve the queried dates.
 	$dates = get_dates_filter( 'objects' );
 
-	// Determine graph options
+	// Determine graph options.
 	switch ( $dates['range'] ) {
 		case 'today':
 		case 'yesterday':
 			$hour_by_hour = true;
 			break;
+		case 'this_week':
+		case 'this_month':
+		case 'this_quarter':
+		case 'this_year':
 		case 'other':
 			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
 			if ( $difference <= ( DAY_IN_SECONDS * 2 ) ) {
@@ -1713,9 +1717,16 @@ add_action( 'edd_admin_filter_bar_reports', 'EDD\Reports\filter_items' );
  * @since 3.0 Updated filter to display link next to the reports filters.
 */
 function mobile_link() {
+	$url = edd_link_helper(
+		'https://easydigitaldownloads.com/downloads/ios-app/',
+		array(
+			'utm_medium'  => 'reports',
+			'utm_content' => 'ios-app',
+		)
+	);
 	?>
 	<span class="edd-mobile-link">
-		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
+		<a href="<?php echo $url; ?>" target="_blank">
 			<?php esc_html_e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
 		</a>
 	</span>

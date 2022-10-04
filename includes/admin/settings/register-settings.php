@@ -528,7 +528,16 @@ function edd_get_registered_settings() {
 					),
 					'api_help' => array(
 						'id'   => 'api_help',
-						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">REST API documentation</a> for further information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1131-edd-rest-api-introduction' ),
+						'desc' => sprintf(
+							__( 'Visit the <a href="%s" target="_blank">REST API documentation</a> for further information.', 'easy-digital-downloads' ),
+							edd_link_helper(
+								'https://easydigitaldownloads.com/categories/docs/api-reference/',
+								array(
+									'utm_medium'  => 'settings',
+									'utm_content' => 'api-documentation',
+								)
+							)
+						),
 						'type' => 'descriptive_text',
 					),
 				),
@@ -545,10 +554,9 @@ function edd_get_registered_settings() {
 						'check' => __( 'Allow',          'easy-digital-downloads' ),
 						'desc'  => sprintf(
 							/* translators: %1$s Link to tracking information, do not translate. %2$s Link to EDD newsleter, do not translate. %3$s Link to EDD extensions, do not translate */
-							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%1$s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%2$s" target="_blank">our newsletter</a>, we will email you a discount code for our <a href="%3$s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
-							esc_url( 'https://docs.easydigitaldownloads.com/article/1419-what-information-will-be-tracked-by-opting-into-usage-tracking' ),
-							esc_url( 'https://easydigitaldownloads.com/subscribe/?utm_source=' . esc_attr( $site_hash ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' ),
-							esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=' . esc_attr( $site_hash ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' )
+							__( 'Help us make Easy Digital Downloads better. <a href="%1$s" target="_blank">Here is what we track</a>.<br>If you opt-in, we will email you a discount code to <a href="%2$s" target="_blank">upgrade to a pass</a>.', 'easy-digital-downloads' ),
+							edd_link_helper( 'https://easydigitaldownloads.com/docs/what-information-will-be-tracked-by-opting-into-usage-tracking/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) ),
+							edd_link_helper( 'https://easydigitaldownloads.com/lite-upgrade/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) )
 						),
 						'type' => 'checkbox_description',
 					)
@@ -2179,14 +2187,15 @@ function edd_gateways_callback( $args ) {
 
 		$html .= '</ul>';
 
-		$url_args = array(
-			'utm_source'   => 'settings',
-			'utm_medium'   => 'gateways',
-			'utm_campaign' => 'admin',
+		$url = edd_link_helper(
+			'https://easydigitaldownloads.com/downloads/category/extensions/gateways/',
+			array(
+				'utm_medium'  => 'payment-settings',
+				'utm_content' => 'gateways',
+			)
 		);
 
-		$url   = add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' );
-		$html .= '<p class="description">' . esc_html__( 'These gateways will be offered at checkout.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
+		$html .= '<p class="description">' . esc_html__( 'These gateways will be offered at checkout.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), $url ) . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2882,11 +2891,18 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 				switch ( $license->error ) {
 
 					case 'expired' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . esc_attr( $value ),
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'expired',
+							)
+						);
 						$class      = 'expired';
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
 							edd_date_i18n( $expiration ),
-							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . esc_attr( $value ) . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2894,10 +2910,17 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'revoked' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/support/',
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'revoked',
+							)
+						);
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2905,10 +2928,17 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'missing' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/your-account/',
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'missing',
+							)
+						);
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2917,11 +2947,18 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					case 'invalid' :
 					case 'site_inactive' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/your-account/',
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'inactive',
+							)
+						);
 						$class      = 'error';
 						$messages[] = sprintf(
-							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
+							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license keys.', 'easy-digital-downloads' ),
 							esc_html( $args['name'] ),
-							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';

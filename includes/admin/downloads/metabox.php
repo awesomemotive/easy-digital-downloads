@@ -181,10 +181,10 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 
 	$products = array_unique( $products );
 
-	return array_combine(
+	return ! empty( $products ) ? array_combine(
 		range( 1, count( $products ) ),
 		array_values( $products )
-	);
+	) : false;
 }
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
 
@@ -197,10 +197,10 @@ add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_prod
  * @return array
  */
 function edd_sanitize_bundled_products_conditions_save( $bundled_products_conditions = array() ) {
-	return array_combine(
+	return ! empty( $bundled_products_conditions ) ? array_combine(
 		range( 1, count( $bundled_products_conditions ) ),
 		array_values( $bundled_products_conditions )
-	);
+	) : false;
 }
 add_filter( 'edd_metabox_save__edd_bundled_products_conditions', 'edd_sanitize_bundled_products_conditions_save' );
 

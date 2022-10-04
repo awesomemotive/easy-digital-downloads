@@ -2,17 +2,6 @@
 
 jQuery( document ).ready( function( $ ) {
 	/**
-	 * Display notices
-	 */
-	const topOfPageNotice = $( '.edd-admin-notice-top-of-page' );
-	if ( topOfPageNotice ) {
-		const topOfPageNoticeEl = topOfPageNotice.detach();
-
-		$( '#wpbody-content' ).prepend( topOfPageNoticeEl );
-		topOfPageNotice.delay( 1000 ).slideDown();
-	}
-
-	/**
 	 * Dismiss notices
 	 */
 	$( '.edd-promo-notice' ).each( function() {

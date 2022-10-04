@@ -36,12 +36,28 @@ function edd_payments_contextual_help() {
 
 	$pass_manager = new Pass_Manager();
 	if ( $pass_manager->isFree() ) {
+		$docs_url = edd_link_helper(
+			'https://easydigitaldownloads.com/docs/',
+			array(
+				'utm_medium'  => 'orders-contextual-help',
+				'utm_content' => 'documentation',
+			)
+		);
+
+		$upgrade_url = edd_link_helper(
+			'https://easydigitaldownloads.com/lite-upgrade/',
+			array(
+				'utm_medium'  => 'orders-contextual-help',
+				'utm_content' => 'lite-upgrade',
+			)
+		);
+
 		$screen->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
-			'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'https://easydigitaldownloads.com/docs/' ) ) . '</p>' .
+			'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), $docs_url ) . '</p>' .
 			'<p>' . sprintf(
 				__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now</a>!', 'easy-digital-downloads' ),
-				esc_url( 'https://easydigitaldownloads.com/lite-upgrade/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' )
+				$upgrade_url
 			) . '</p>'
 		);
 	}
