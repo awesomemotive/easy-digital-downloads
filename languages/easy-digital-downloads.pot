@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-04T19:15:01+00:00\n"
+"POT-Creation-Date: 2022-10-04T23:37:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: easy-digital-downloads\n"
@@ -261,9 +261,9 @@ msgstr ""
 #: includes/process-download.php:296
 #: includes/process-download.php:890
 #: includes/query-filters.php:51
-#: includes/user-functions.php:891
-#: includes/user-functions.php:916
-#: includes/user-functions.php:968
+#: includes/user-functions.php:893
+#: includes/user-functions.php:918
+#: includes/user-functions.php:970
 msgid "Error"
 msgstr ""
 
@@ -927,7 +927,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:215
-#: includes/user-functions.php:916
+#: includes/user-functions.php:918
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -4376,8 +4376,8 @@ msgid "Export File Download Log Dates"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:3300
-#: includes/user-functions.php:920
-#: includes/user-functions.php:924
+#: includes/user-functions.php:922
+#: includes/user-functions.php:926
 msgid "Notice"
 msgstr ""
 
@@ -6940,12 +6940,12 @@ msgid "No download logs found!"
 msgstr ""
 
 #: includes/api/class-edd-api.php:1985
-#: includes/user-functions.php:1086
+#: includes/user-functions.php:1088
 msgid "Downloads API Keys"
 msgstr ""
 
 #: includes/api/class-edd-api.php:1995
-#: includes/user-functions.php:1093
+#: includes/user-functions.php:1095
 msgid "Generate API Key"
 msgstr ""
 
@@ -6958,12 +6958,12 @@ msgid "Secret key:"
 msgstr ""
 
 #: includes/api/class-edd-api.php:2005
-#: includes/user-functions.php:1104
+#: includes/user-functions.php:1106
 msgid "Token:"
 msgstr ""
 
 #: includes/api/class-edd-api.php:2009
-#: includes/user-functions.php:1110
+#: includes/user-functions.php:1112
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -7963,8 +7963,8 @@ msgstr ""
 
 #. translators: %s: User login.
 #: includes/class-edd-cli.php:314
-#: includes/user-functions.php:573
-#: includes/user-functions.php:585
+#: includes/user-functions.php:575
+#: includes/user-functions.php:587
 #: includes/users/lost-password.php:169
 msgid "Username: %s"
 msgstr ""
@@ -8101,12 +8101,12 @@ msgid "Single Use: %s"
 msgstr ""
 
 #: includes/class-edd-cli.php:486
-#: includes/class-edd-cli.php:1857
+#: includes/class-edd-cli.php:1863
 msgid "No action specified, did you mean"
 msgstr ""
 
 #: includes/class-edd-cli.php:488
-#: includes/class-edd-cli.php:1859
+#: includes/class-edd-cli.php:1865
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
@@ -8136,15 +8136,15 @@ msgstr ""
 
 #: includes/class-edd-cli.php:921
 #: includes/class-edd-cli.php:1044
-#: includes/class-edd-cli.php:1530
-#: includes/class-edd-cli.php:1649
+#: includes/class-edd-cli.php:1536
+#: includes/class-edd-cli.php:1655
 msgid "Old Records: "
 msgstr ""
 
 #: includes/class-edd-cli.php:922
 #: includes/class-edd-cli.php:1045
-#: includes/class-edd-cli.php:1531
-#: includes/class-edd-cli.php:1650
+#: includes/class-edd-cli.php:1537
+#: includes/class-edd-cli.php:1656
 msgid "New Records: "
 msgstr ""
 
@@ -8228,139 +8228,139 @@ msgstr ""
 msgid "New customer notes: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1286
+#: includes/class-edd-cli.php:1292
 msgid "Preparing to migrate additional customer data."
 msgstr ""
 
-#: includes/class-edd-cli.php:1311
+#: includes/class-edd-cli.php:1317
 msgid "The user addresses custom table migration has already been run. To do this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1313
+#: includes/class-edd-cli.php:1319
 msgid "Preparing to migrate customer address data."
 msgstr ""
 
-#: includes/class-edd-cli.php:1314
+#: includes/class-edd-cli.php:1320
 msgid "Migrating Customer Addresses"
 msgstr ""
 
-#: includes/class-edd-cli.php:1400
+#: includes/class-edd-cli.php:1406
 msgid "The user email addresses custom table migration has already been run. To do this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1402
+#: includes/class-edd-cli.php:1408
 msgid "Preparing to migrate customer email addresses (this can take several minutes)."
 msgstr ""
 
-#: includes/class-edd-cli.php:1403
+#: includes/class-edd-cli.php:1409
 msgid "Migrating Customer Email Addresses"
 msgstr ""
 
-#: includes/class-edd-cli.php:1466
+#: includes/class-edd-cli.php:1472
 msgid "Migration complete: Customer Email Addresses"
 msgstr ""
 
-#: includes/class-edd-cli.php:1498
+#: includes/class-edd-cli.php:1504
 msgid "The tax rates custom table migration has already been run. To do this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1501
+#: includes/class-edd-cli.php:1507
 msgid "Checking for default tax rate"
 msgstr ""
 
-#: includes/class-edd-cli.php:1504
+#: includes/class-edd-cli.php:1510
 msgid "Migrating default tax rate"
 msgstr ""
 
-#: includes/class-edd-cli.php:1528
+#: includes/class-edd-cli.php:1534
 msgid "Migration complete: Tax Rates"
 msgstr ""
 
-#: includes/class-edd-cli.php:1563
+#: includes/class-edd-cli.php:1569
 msgid "The payments custom table migration has already been run. To do this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1566
+#: includes/class-edd-cli.php:1572
 msgid "Preparing to migrate payments."
 msgstr ""
 
-#: includes/class-edd-cli.php:1569
+#: includes/class-edd-cli.php:1575
 msgid "Migrating Payments"
 msgstr ""
 
-#: includes/class-edd-cli.php:1642
+#: includes/class-edd-cli.php:1648
 msgid "No payment records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1646
+#: includes/class-edd-cli.php:1652
 msgid "Migration complete: Orders"
 msgstr ""
 
-#: includes/class-edd-cli.php:1653
+#: includes/class-edd-cli.php:1659
 msgid "Refund Records Created: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1691
+#: includes/class-edd-cli.php:1697
 msgid "Sales and Earnings successfully recalculated for all downloads."
 msgstr ""
 
-#: includes/class-edd-cli.php:1692
+#: includes/class-edd-cli.php:1698
 msgid "Downloads Updated: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1710
+#: includes/class-edd-cli.php:1716
 msgid "Do you want to remove legacy data? This will permanently remove legacy discounts, logs, and order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1718
+#: includes/class-edd-cli.php:1724
 msgid "Legacy discounts have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1720
+#: includes/class-edd-cli.php:1726
 msgid "Removing old discount data."
 msgstr ""
 
-#: includes/class-edd-cli.php:1741
+#: includes/class-edd-cli.php:1747
 msgid "Legacy logs have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1743
+#: includes/class-edd-cli.php:1749
 msgid "Removing old logs."
 msgstr ""
 
-#: includes/class-edd-cli.php:1764
+#: includes/class-edd-cli.php:1770
 msgid "Legacy order notes have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1766
+#: includes/class-edd-cli.php:1772
 msgid "Removing old order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1790
+#: includes/class-edd-cli.php:1796
 msgid "Updating customers database table."
 msgstr ""
 
-#: includes/class-edd-cli.php:1799
+#: includes/class-edd-cli.php:1805
 msgid "Legacy customer emails have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1801
+#: includes/class-edd-cli.php:1807
 msgid "Removing old customer emails."
 msgstr ""
 
-#: includes/class-edd-cli.php:1812
+#: includes/class-edd-cli.php:1818
 msgid "Legacy customer addresses have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1814
+#: includes/class-edd-cli.php:1820
 msgid "Removing old customer addresses."
 msgstr ""
 
-#: includes/class-edd-cli.php:1825
+#: includes/class-edd-cli.php:1831
 msgid "Legacy orders have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1827
+#: includes/class-edd-cli.php:1833
 msgid "Removing old orders."
 msgstr ""
 
@@ -11970,13 +11970,13 @@ msgstr ""
 
 #: includes/privacy-functions.php:27
 msgid ""
-"\r\n"
-"We collect information about you during the checkout process on our store. This information may include, but is not limited to, your name, billing address, shipping address, email address, phone number, credit card/payment details and any other details that might be requested from you for the purpose of processing your orders.\r\n"
-"Handling this data also allows us to:\r\n"
-"- Send you important account/order/service information.\r\n"
-"- Respond to your queries, refund requests, or complaints.\r\n"
-"- Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.\r\n"
-"- Set up and administer your account, provide technical and/or customer support, and to verify your identity.\r\n"
+"\n"
+"We collect information about you during the checkout process on our store. This information may include, but is not limited to, your name, billing address, shipping address, email address, phone number, credit card/payment details and any other details that might be requested from you for the purpose of processing your orders.\n"
+"Handling this data also allows us to:\n"
+"- Send you important account/order/service information.\n"
+"- Respond to your queries, refund requests, or complaints.\n"
+"- Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.\n"
+"- Set up and administer your account, provide technical and/or customer support, and to verify your identity.\n"
 ""
 msgstr ""
 
@@ -12713,89 +12713,89 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/user-functions.php:571
+#: includes/user-functions.php:573
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/user-functions.php:572
+#: includes/user-functions.php:574
 msgid "New user registration"
 msgstr ""
 
-#: includes/user-functions.php:574
+#: includes/user-functions.php:576
 msgid "E-mail: %s"
 msgstr ""
 
-#: includes/user-functions.php:583
+#: includes/user-functions.php:585
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/user-functions.php:584
+#: includes/user-functions.php:586
 msgid "Your account info"
 msgstr ""
 
-#: includes/user-functions.php:588
+#: includes/user-functions.php:590
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/user-functions.php:590
+#: includes/user-functions.php:592
 msgid "Password entered at registration"
 msgstr ""
 
-#: includes/user-functions.php:593
+#: includes/user-functions.php:595
 msgid "Password: %s"
 msgstr ""
 
-#: includes/user-functions.php:598
+#: includes/user-functions.php:600
 msgid "Click here to log in"
 msgstr ""
 
-#: includes/user-functions.php:602
+#: includes/user-functions.php:604
 msgid "To log in, visit: %s"
 msgstr ""
 
-#: includes/user-functions.php:756
-#: includes/user-functions.php:757
+#: includes/user-functions.php:758
+#: includes/user-functions.php:759
 msgid "Verify your account"
 msgstr ""
 
-#: includes/user-functions.php:759
+#: includes/user-functions.php:761
 msgid ""
-"Hello %1$s,\r\n"
-"\r\n"
-"\t\tYour account with %2$s needs to be verified before you can access your purchase history. <a href=\"%3$s\">Click here</a> to verify your account.\r\n"
-"\r\n"
+"Hello %1$s,\n"
+"\n"
+"\t\tYour account with %2$s needs to be verified before you can access your purchase history. <a href=\"%3$s\">Click here</a> to verify your account.\n"
+"\n"
 "\t\tLink missing? Visit the following URL: %3$s"
 msgstr ""
 
-#: includes/user-functions.php:887
+#: includes/user-functions.php:889
 msgid "Sorry but your account verification link has expired. <a href=\"%s\">Click here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:920
+#: includes/user-functions.php:922
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:924
+#: includes/user-functions.php:926
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:968
+#: includes/user-functions.php:970
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1098
+#: includes/user-functions.php:1100
 msgid "Public Key:"
 msgstr ""
 
-#: includes/user-functions.php:1101
+#: includes/user-functions.php:1103
 msgid "Secret Key:"
 msgstr ""
 
-#: includes/user-functions.php:1125
+#: includes/user-functions.php:1127
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1132
+#: includes/user-functions.php:1134
 msgid "Add to iOS App"
 msgstr ""
 
