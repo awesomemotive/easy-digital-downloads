@@ -268,7 +268,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Improvement - Stripe: Session validation throughout Stripe actions has been updated to improve reliability.
 * Improvement - Stripe: Error messages have been updated to help customers with failed purchases know what action to take.
 * Improvement - Stripe: Supported payment methods are included in the gateway registration.
-* Improvement - Stripe: Card test/fraud handling has been improved.
+* Improvement - Stripe: Optimized validation during checkout.
+* Improvement - Stripe: Optimized cleanup of logging.
+* Improvement - Stripe: Added better checkout session handling.
 * Fix: Resetting the store was incorrectly deleting discounts and tax rates.
 * Fix: The price option assignment for variably priced bundled product conditions could be incorrectly assigned.
 * Fix: Report graphs could be inaccurate when grouping by month due to time zone adjustments.
