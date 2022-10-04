@@ -1,6 +1,6 @@
 <?php
 /**
- * Login / Register Functions
+ * Login Functions
  *
  * @package     EDD
  * @subpackage  Functions/Login
@@ -52,30 +52,6 @@ function edd_login_form( $redirect = '' ) {
 	edd_get_template_part( 'shortcode', 'login' );
 
 	return apply_filters( 'edd_login_form', ob_get_clean() );
-}
-
-/**
- * Registration Form
- *
- * @since 2.0
- * @global $post
- * @param string $redirect Redirect page URL
- * @return string Register form
-*/
-function edd_register_form( $redirect = '' ) {
-	global $edd_register_redirect;
-
-	if ( empty( $redirect ) ) {
-		$redirect = edd_get_current_page_url();
-	}
-
-	$edd_register_redirect = $redirect;
-
-	ob_start();
-
-	edd_get_template_part( 'shortcode', 'register' );
-
-	return apply_filters( 'edd_register_form', ob_get_clean() );
 }
 
 /**
@@ -132,7 +108,6 @@ function edd_process_login_form( $data ) {
 }
 add_action( 'edd_user_login', 'edd_process_login_form' );
 
-
 /**
  * Log User In
  *
@@ -173,155 +148,49 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	}
 
 	return $user;
-
 }
 
-add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
+add_filter( 'login_url', 'edd_update_login_url', 10, 3 );
 /**
- * Changes the WordPress login confirmation message when using EDD's reset password link.
+ * If a login page has been set in the EDD settings,
+ * update the WordPress login URL.
  *
- * @since 2.10
- * @param object \WP_Error $errors
- * @param string $redirect
- * @return void
- */
-function edd_login_register_error_message( $errors, $redirect ) {
-	$redirect_url = EDD()->session->get( 'edd_forgot_password_redirect' );
-	if ( empty( $redirect_url ) ) {
-		return $errors;
-	}
-	$message = sprintf(
-		/* translators: %s: Link to the referring page. */
-		__( 'Follow the instructions in the confirmation email you just received, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
-		esc_url( $redirect_url )
-	);
-	$errors->remove( 'confirm' );
-	$errors->add(
-		'confirm',
-		apply_filters(
-			'edd_login_register_error_message',
-			$message,
-			$redirect_url
-		),
-		'message'
-	);
-	EDD()->session->set( 'edd_forgot_password_redirect', null );
-
-	return $errors;
-}
-
-/**
- * Gets the lost password URL, customized for EDD. Using this allows the password
- * reset form to redirect to the login screen with the EDD custom confirmation message.
- *
- * @since 2.10
+ * @param string $url
  * @return string
  */
-function edd_get_lostpassword_url() {
+function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
 
-	return add_query_arg(
-		array(
-			'edd_forgot_password' => 'confirm',
-		),
-		wp_lostpassword_url()
-	);
+	// Don't change the login URL if the request is an admin request.
+	if ( is_admin() ) {
+		return $url;
+	}
+
+	// Get the login page URL and return the default if it's not set.
+	$login_url = edd_get_login_page_uri();
+	if ( ! $login_url ) {
+		return $url;
+	}
+
+	if ( ! empty( $redirect ) ) {
+		$login_url = add_query_arg( 'redirect_to', urlencode( $redirect ), $login_url );
+	}
+	if ( $force_reauth ) {
+		$login_url = add_query_arg( 'reauth', '1', $login_url );
+	}
+
+	return $login_url;
 }
 
-add_action( 'lostpassword_form', 'edd_set_lostpassword_session' );
 /**
- * Sets a session value for the lost password redirect URI.
+ * Helper function to get the EDD login page URI.
  *
- * @since 3.0.2
- * @return void
+ * @return false|string
  */
-function edd_set_lostpassword_session() {
-	if ( ! empty( $_GET['edd_forgot_password'] ) && 'confirm' === $_GET['edd_forgot_password'] ) {
-		$url = wp_validate_redirect(
-			wp_get_referer(),
-			edd_get_checkout_uri()
-		);
-		EDD()->session->set( 'edd_forgot_password_redirect', $url );
-	}
+function edd_get_login_page_uri() {
+	$login_page = edd_get_option( 'login_page', false );
+
+	return $login_page ? get_permalink( $login_page ) : false;
 }
-
-/**
- * Process Register Form
- *
- * @since 2.0
- * @param array $data Data sent from the register form
- * @return void
-*/
-function edd_process_register_form( $data ) {
-
-	if ( is_user_logged_in() ) {
-		return;
-	}
-
-	if ( empty( $_POST['edd_register_submit'] ) ) {
-		return;
-	}
-
-	do_action( 'edd_pre_process_register_form' );
-
-	if ( empty( $data['edd_user_login'] ) ) {
-		edd_set_error( 'empty_username', __( 'Invalid username', 'easy-digital-downloads' ) );
-	}
-
-	if ( username_exists( $data['edd_user_login'] ) ) {
-		edd_set_error( 'username_unavailable', __( 'Username already taken', 'easy-digital-downloads' ) );
-	}
-
-	if ( ! validate_username( $data['edd_user_login'] ) ) {
-		edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
-	}
-
-	if ( email_exists( $data['edd_user_email'] ) ) {
-		edd_set_error( 'email_unavailable', __( 'Email address already taken', 'easy-digital-downloads' ) );
-	}
-
-	if ( empty( $data['edd_user_email'] ) || ! is_email( $data['edd_user_email'] ) ) {
-		edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
-	}
-
-	if ( ! empty( $data['edd_payment_email'] ) && $data['edd_payment_email'] != $data['edd_user_email'] && ! is_email( $data['edd_payment_email'] ) ) {
-		edd_set_error( 'payment_email_invalid', __( 'Invalid payment email', 'easy-digital-downloads' ) );
-	}
-
-	if ( isset( $data['edd_honeypot'] ) && ! empty( $data['edd_honeypot'] ) ) {
-		edd_set_error( 'invalid_form_data', __( 'Registration form validation failed.', 'easy-digital-downloads' ) );
-	}
-
-	if ( empty( $_POST['edd_user_pass'] ) ) {
-		edd_set_error( 'empty_password', __( 'Please enter a password', 'easy-digital-downloads' ) );
-	}
-
-	if ( ( ! empty( $_POST['edd_user_pass'] ) && empty( $_POST['edd_user_pass2'] ) ) || ( $_POST['edd_user_pass'] !== $_POST['edd_user_pass2'] ) ) {
-		edd_set_error( 'password_mismatch', __( 'Passwords do not match', 'easy-digital-downloads' ) );
-	}
-
-	do_action( 'edd_process_register_form' );
-
-	// Check for errors and redirect if none present.
-	$errors = edd_get_errors();
-
-	if ( empty( $errors ) ) {
-
-		$redirect = apply_filters( 'edd_register_redirect', $data['edd_redirect'] );
-
-		edd_register_and_login_new_user(
-			array(
-				'user_login'      => $data['edd_user_login'],
-				'user_pass'       => $data['edd_user_pass'],
-				'user_email'      => $data['edd_user_email'],
-				'user_registered' => date( 'Y-m-d H:i:s' ),
-				'role'            => get_option( 'default_role' ),
-			)
-		);
-
-		edd_redirect( $redirect );
-	}
-}
-add_action( 'edd_user_register', 'edd_process_register_form' );
 
 /**
  * Generate a redirect URL that is used when file downloads require the user to be logged in.

@@ -28,16 +28,16 @@ function edd_download_shortcode( $atts, $content = null ) {
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
 	$atts = shortcode_atts( array(
-		'id' 	        => $post_id,
-		'price_id'      => isset( $atts['price_id'] ) ? $atts['price_id'] : false,
-		'sku'			=> '',
-		'price'         => '1',
-		'direct'        => '0',
-		'text'          => '',
-		'style'         => edd_get_option( 'button_style', 'button' ),
-		'color'         => edd_get_option( 'checkout_color', 'blue' ),
-		'class'         => 'edd-submit',
-		'form_id'       => ''
+		'id'       => $post_id,
+		'price_id' => isset( $atts['price_id'] ) ? $atts['price_id'] : false,
+		'sku'      => '',
+		'price'    => '1',
+		'direct'   => '0',
+		'text'     => '',
+		'style'    => edd_get_option( 'button_style', 'button' ),
+		'color'    => edd_get_button_color_class(),
+		'class'    => 'edd-submit',
+		'form_id'  => '',
 	),
 	$atts, 'purchase_link' );
 
@@ -48,11 +48,6 @@ function edd_download_shortcode( $atts, $content = null ) {
 		} else {
 			$atts['text'] = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) );
 		}
-	}
-
-	// Override color if color == inherit
-	if( isset( $atts['color'] )	) {
-		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 	}
 
 	if( ! empty( $atts['sku'] ) ) {
@@ -283,15 +278,15 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-		'taxonomy'	=> '',
-		'terms'		=> '',
-		'text'		=> __('Purchase All Items','easy-digital-downloads' ),
-		'style'     => edd_get_option( 'button_style', 'button' ),
-		'color'     => edd_get_option( 'checkout_color', 'blue' ),
-		'class'		=> 'edd-submit'
+		'taxonomy' => '',
+		'terms'    => '',
+		'text'     => __( 'Purchase All Items', 'easy-digital-downloads' ),
+		'style'    => edd_get_option( 'button_style', 'button' ),
+		'color'    => edd_get_button_color_class(),
+		'class'    => 'edd-submit',
 	), $atts, 'purchase_collection' ) );
 
-	$button_display = implode( ' ', array( $style, $color, $class ) );
+	$button_display = implode( ' ', array_filter( array( $style, $color, $class ) ) );
 
 	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => sanitize_key( $taxonomy ), 'terms' => sanitize_key( $terms ) ) ) ) . '" class="' . esc_attr( $button_display ) . '">' . esc_html( $text ) . '</a>';
 }
@@ -684,7 +679,9 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 	if ( isset( $_GET['payment_key'] ) ) {
 		$payment_key = urldecode( $_GET['payment_key'] );
-	} else if ( $session ) {
+	} elseif ( ! empty( $_GET['order'] ) && ! empty( $_GET['id'] ) ) {
+		$payment_key = edd_get_payment_key( absint( $_GET['id'] ) );
+	} elseif ( $session ) {
 		$payment_key = $session['purchase_key'];
 	} elseif ( $edd_receipt_args['payment_key'] ) {
 		$payment_key = $edd_receipt_args['payment_key'];

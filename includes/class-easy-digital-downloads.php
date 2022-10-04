@@ -629,6 +629,7 @@ final class Easy_Digital_Downloads {
 		// Checkout
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/checkout/pages.php';
 
 		// Customers
 		require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-address.php';
@@ -729,6 +730,13 @@ final class Easy_Digital_Downloads {
 
 		// Downloads
 		require_once EDD_PLUGIN_DIR . 'includes/models/Download.php';
+
+		// Blocks
+		$blocks = EDD_PLUGIN_DIR . 'includes/blocks/edd-blocks.php';
+
+		if ( file_exists( $blocks ) ) {
+			require_once $blocks;
+		}
 	}
 
 	/**
@@ -766,7 +774,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/refund-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
-		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
+		require_once EDD_PLUGIN_DIR . 'includes/users/login.php';
+		require_once EDD_PLUGIN_DIR . 'includes/users/lost-password.php';
+		require_once EDD_PLUGIN_DIR . 'includes/users/register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 

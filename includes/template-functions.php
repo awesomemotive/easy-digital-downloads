@@ -87,8 +87,8 @@ function edd_get_purchase_link( $args = array() ) {
 		'text'        => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
 		'checkout'    => edd_get_option( 'checkout_button_text', _x( 'Checkout', 'text shown on the Add to Cart Button when the product is already in the cart', 'easy-digital-downloads' ) ),
 		'style'       => edd_get_option( 'button_style', 'button' ),
-		'color'       => edd_get_option( 'checkout_color', 'blue' ),
-		'class'       => 'edd-submit'
+		'color'       => edd_get_button_color_class(),
+		'class'       => 'edd-submit',
 	) );
 
 	$args = wp_parse_args( $args, $defaults );
@@ -107,9 +107,6 @@ function edd_get_purchase_link( $args = array() ) {
 	if( 'publish' !== $download->post_status && ! current_user_can( 'edit_product', $download->ID ) ) {
 		return false; // Product not published or user doesn't have permission to view drafts
 	}
-
-	// Override color if color == inherit
-	$args['color'] = ( $args['color'] == 'inherit' ) ? '' : $args['color'];
 
 	$options          = array();
 	$variable_pricing = $download->has_variable_prices();
@@ -157,12 +154,11 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
+	$button_display   = '';
+	$checkout_display = 'style="display:none;"';
 	if ( edd_item_in_cart( $download->ID, $options ) && ( ! $variable_pricing || ! $download->is_single_price_mode() ) ) {
 		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
-	} else {
-		$button_display   = '';
-		$checkout_display = 'style="display:none;"';
 	}
 
 	// Collect any form IDs we've displayed already so we can avoid duplicate IDs
@@ -189,11 +185,11 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
-			$class = implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) );
+			$class = implode( ' ', array_filter( array( $args['style'], $args['color'], trim( $args['class'] ) ) ) );
 
 			if ( ! edd_is_ajax_disabled() ) {
 				$timestamp = time();
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-nonce="' .  wp_create_nonce( 'edd-add-to-cart-' . $download->ID ) . '" data-timestamp="' . esc_attr( $timestamp ) . '" data-token="' . esc_attr( EDD\Utils\Tokenizer::tokenize( $timestamp ) ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
+				echo '<button class="edd-add-to-cart ' . esc_attr( $class ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'edd-add-to-cart-' . $download->ID ) ) . '" data-timestamp="' . esc_attr( $timestamp ) . '" data-token="' . esc_attr( EDD\Utils\Tokenizer::tokenize( $timestamp ) ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></button>';
 
 			}
 
@@ -837,6 +833,8 @@ function edd_add_body_classes( $class ) {
 		$classes[] = 'edd-test-mode';
 	}
 
+	$classes[] = 'no-js';
+
 	return array_unique( $classes );
 }
 add_filter( 'body_class', 'edd_add_body_classes' );
@@ -1171,6 +1169,20 @@ function edd_pagination( $args = array() ) {
 			<?php echo $pagination; ?>
 		</div>
 	<?php endif;
+}
+
+/**
+ * Gets the CSS class for the button color.
+ *
+ * @since 3.1
+ * @param string $default The default color option to use as a fallback.
+ * @return string
+ */
+function edd_get_button_color_class( $default = 'blue' ) {
+	$color = edd_get_option( 'checkout_color', $default );
+	$class = 'inherit' !== $color ? $color : '';
+
+	return apply_filters( 'edd_button_color_class', $class );
 }
 
 /**

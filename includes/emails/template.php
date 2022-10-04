@@ -91,6 +91,7 @@ function edd_email_preview_template_tags( $message ) {
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
 	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( $payment_id ), $message );
+	$message = str_replace( '{receipt}', edd_email_tag_receipt( $payment_id ), $message );
 
 	$message = apply_filters( 'edd_email_preview_template_tags', $message );
 

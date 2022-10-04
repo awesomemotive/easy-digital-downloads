@@ -55,13 +55,14 @@ function edd_register_styles() {
 	$version = edd_admin_get_script_version();
 
 	$file          = 'edd' . $suffix . '.css';
+	$css_suffix    = is_rtl() ? '-rtl.min.css' : '.min.css';
 	$templates_dir = edd_get_theme_template_dir_name();
 
 	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
 	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
 	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
 	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
-	$edd_plugin_style_sheet     = trailingslashit( edd_get_templates_dir()    ) . $file;
+	$edd_plugin_style_sheet     = trailingslashit( EDD_PLUGIN_DIR ) . 'assets/css/edd' . $css_suffix;
 
 	// Look in the child theme directory first, followed by the parent theme, followed by the EDD core templates directory
 	// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
@@ -78,8 +79,8 @@ function edd_register_styles() {
 		} else {
 			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
 		}
-	} elseif ( file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
-		$url = trailingslashit( edd_get_templates_url() ) . $file;
+	} elseif ( file_exists( $edd_plugin_style_sheet ) ) {
+		$url = trailingslashit( EDD_PLUGIN_URL ) . 'assets/css/edd' . $css_suffix;
 	}
 
 	wp_register_style( 'edd-styles', $url, array(), $version, 'all' );
@@ -202,6 +203,7 @@ function edd_localize_scripts() {
 			'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
 			'quantities_enabled'      => edd_item_quantities_enabled(),
 			'taxes_enabled'           => edd_use_taxes() ? '1' : '0', // Adding here for widget, but leaving in checkout vars for backcompat
+			'current_page'            => get_the_ID(),
 		) ) );
 	}
 }
@@ -604,6 +606,36 @@ function edd_should_load_admin_scripts( $hook = '' ) {
 
 	// Filter & return
 	return (bool) apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook_suffix );
+}
+
+add_action( 'wp_body_open', 'edd_add_js_class', 100 );
+/**
+ * Use javascript to remove the no-js class from the body element.
+ * The `wp_body_open` was added in WordPress 5.2.0 but it's dependent on themes to include it.
+ *
+ * @since 3.1
+ * @return void
+ */
+function edd_add_js_class() {
+	?>
+	<style>.edd-js .edd-no-js, .no-js .edd-has-js { display: none; }</style>
+	<script>/* <![CDATA[ */(function(){var c = document.body.classList;c.remove('no-js');c.add('edd-js');})();/* ]]> */</script>
+	<?php
+}
+
+add_action( 'wp_footer', 'edd_back_compat_add_js_class' );
+/**
+ * Backwards compatible no-js replacement--runs if the wp_body_open hook
+ * is not present.
+ *
+ * @since 3.1
+ * @return void
+ */
+function edd_back_compat_add_js_class() {
+	if ( did_action( 'wp_body_open' ) ) {
+		return;
+	}
+	edd_add_js_class();
 }
 
 /** Deprecated ****************************************************************/

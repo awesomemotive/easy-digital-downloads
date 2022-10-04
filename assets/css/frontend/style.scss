@@ -98,15 +98,17 @@
 }
 .edd_discount_remove {
 	display: inline-block;
-	width: 10px;
-	height: 11px;
-	background: url(images/xit.gif ) 0 0 no-repeat;
+	width: 14px;
+	height: 14px;
+	background: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22currentColor%22%3E%0A%20%20%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M9.75%209.75l4.5%204.5m0-4.5l-4.5%204.5M21%2012a9%209%200%2011-18%200%209%209%200%200118%200z%22%20%2F%3E%0A%3C%2Fsvg%3E%0A) 0 0 no-repeat;
 	position: relative;
-	top: 3px;
+	opacity: .6;
+
+	&:hover {
+		opacity: 1;
+	}
 }
-.edd_discount_remove:hover {
-	background-position: -10px 0;
-}
+
 #edd_checkout_cart br {
 	display: none;
 }
@@ -122,10 +124,10 @@
 	line-height: 1;
 	font-weight: bold;
 	width: 100%;
-	margin: 0 0 21px;
+	margin: 0 0 1rem;
 	padding: 0;
-	float: left;
 }
+
 #edd_checkout_form_wrap label {
 	font-weight: bold;
 	display: block;
@@ -290,11 +292,11 @@
 	padding: 4px 4px 4px 0;
 	font-weight: bold;
 }
-#edd_secure_site_wrapper span { 
+#edd_secure_site_wrapper span {
 	vertical-align: middle;
 }
 #edd_checkout_form_wrap input.edd-input.card-number.valid {
-	background-image: url(images/tick.png);
+	background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22green%22%3E%0A%20%20%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M4.5%2012.75l6%206%209-13.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A);
 	background-repeat: no-repeat;
 	background-position: 98% 50%;
 }
@@ -353,9 +355,6 @@
 	display: none;
 	position: relative;
 	overflow: hidden;
-}
-.edd_purchase_submit_wrapper a.edd-add-to-cart.edd-has-js {
-	display: inline-block;
 }
 .edd_purchase_submit_wrapper .edd-cart-ajax {
 	display: none;
@@ -927,7 +926,7 @@ input.edd_submit_plain {
 	.edd_downloads_list.edd_download_columns_6 { grid-template-columns: repeat(6, 1fr); }
 }
 @supports (display: grid) {
-	.edd_downloads_list .edd_download { 
+	.edd_downloads_list .edd_download {
 		width: auto;
 	}
 	.edd_download_inner {
