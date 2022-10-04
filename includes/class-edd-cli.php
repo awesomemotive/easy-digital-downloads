@@ -1277,6 +1277,12 @@ class EDD_CLI extends WP_CLI_Command {
 
 		$this->maybe_install_v3_tables();
 
+		$customers = new EDD\Database\Tables\Customers();
+		$customers->maybe_upgrade();
+
+		$meta = new EDD\Database\Tables\Customer_Meta();
+		$meta->maybe_upgrade();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
