@@ -232,12 +232,11 @@ function edd_ajax_add_to_cart() {
 
 		$item = array(
 			'id'      => $_POST['download_id'],
-			'options' => $options
+			'options' => $options,
 		);
 
 		$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
 		$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
-
 	}
 
 	$return = array(
@@ -248,7 +247,7 @@ function edd_ajax_add_to_cart() {
 	);
 
 	if ( edd_use_taxes() ) {
-		$cart_tax = (float) edd_get_cart_tax();
+		$cart_tax      = (float) edd_get_cart_tax();
 		$return['tax'] = html_entity_decode( edd_currency_filter( edd_format_amount( $cart_tax ) ), ENT_COMPAT, 'UTF-8' );
 	}
 
@@ -493,7 +492,11 @@ function edd_ajax_recalculate_taxes() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart     = ob_get_clean();
+	/**
+	 * Allows the cart content to be filtered.
+	 * @since 3.1
+	 */
+	$cart     = apply_filters( 'edd_get_checkout_cart', ob_get_clean() );
 	$response = array(
 		'html'         => $cart,
 		'tax_raw'      => edd_get_cart_tax(),

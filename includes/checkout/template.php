@@ -224,6 +224,14 @@ add_action( 'edd_register_fields_before', 'edd_user_info_fields' );
  * @return void
  */
 function edd_get_cc_form() {
+	/**
+	 * Allow the credit card fields to be replaced.
+	 * @since 3.1
+	 */
+	if ( null !== apply_filters( 'edd_pre_cc_fields', null ) ) {
+		do_action( 'edd_cc_fields' );
+		return;
+	}
 	ob_start(); ?>
 
 	<?php do_action( 'edd_before_cc_fields' ); ?>
@@ -303,6 +311,14 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
  * @since 3.0 Updated to use `edd_get_customer_address()`.
  */
 function edd_default_cc_address_fields() {
+	/**
+	 * Allow the address fields to be replaced.
+	 * @since 3.1
+	 */
+	if ( null !== apply_filters( 'edd_pre_cc_address_fields', null ) ) {
+		do_action( 'edd_cc_address_fields' );
+		return;
+	}
 	$logged_in = is_user_logged_in();
 
 	$customer = EDD()->session->get( 'customer' );
@@ -542,11 +558,7 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
  * @return string
  */
 function edd_get_login_fields() {
-	$color = edd_get_option( 'checkout_color', 'gray' );
-
-	$color = 'inherit' === $color
-		? ''
-		: $color;
+	$color = edd_get_button_color_class( 'gray' );
 
 	$style = edd_get_option( 'button_style', 'button' );
 
@@ -692,54 +704,13 @@ function edd_show_payment_icons() {
 	echo '<div class="edd-payment-icons">';
 
 	foreach ( $payment_methods as $key => $option ) {
-		if ( edd_string_is_image_url( $key ) ) {
-			echo '<img class="payment-icon" src="' . esc_url( $key ) . '" alt="' . esc_attr( $option ) . '"/>';
-		} else {
-			$type = '';
-			$card = strtolower( str_replace( ' ', '', $option ) );
-
-			if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
-
-			} elseif ( has_filter( 'edd_accepted_payment_' . $key . '_image' ) ) {
-				$image = apply_filters( 'edd_accepted_payment_' . $key  . '_image', '' );
-
-			} else {
-				// Set the type to SVG.
-				$type = 'svg';
-
-				// Get SVG dimensions.
-				$dimensions = edd_get_payment_icon_dimensions( $key );
-
-				// Get SVG markup.
-				$image = edd_get_payment_icon(
-					array(
-						'icon'    => $key,
-						'width'   => $dimensions['width'],
-						'height'  => $dimensions['height'],
-						'title'   => $option,
-						'classes' => array( 'payment-icon' )
-					)
-				);
-			}
-
-			if ( edd_is_ssl_enforced() || is_ssl() ) {
-				$image = edd_enforced_ssl_asset_filter( $image );
-			}
-
-			if ( 'svg' === $type ) {
-				echo $image;
-			} else {
-				echo '<img class="payment-icon" src="' . esc_url( $image ) . '" alt="' . esc_attr( $option ) . '"/>';
-			}
-		}
+		echo edd_get_payment_image( $key, $option );
 	}
 
 	echo '</div>';
 }
 add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
 add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
-
 
 /**
  * Renders the Discount Code field which allows users to enter a discount code.
@@ -759,8 +730,7 @@ function edd_discount_field() {
 	}
 
 	if ( edd_has_active_discounts() && edd_get_cart_total() ) :
-		$color = edd_get_option( 'checkout_color', 'blue' );
-		$color = ( $color == 'inherit' ) ? '' : $color;
+		$color = edd_get_button_color_class();
 		$style = edd_get_option( 'button_style', 'button' ); ?>
 		<fieldset id="edd_discount_code">
 			<p id="edd_show_discount" style="display:none;">
@@ -967,9 +937,8 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 9999 );
  * @return string
  */
 function edd_checkout_button_next() {
-	$color = edd_get_option( 'checkout_color', 'blue' );
-	$color = ( $color == 'inherit' ) ? '' : $color;
-	$style = edd_get_option( 'button_style', 'button' );
+	$color         = edd_get_button_color_class();
+	$style         = edd_get_option( 'button_style', 'button' );
 	$purchase_page = edd_get_option( 'purchase_page', '0' );
 
 	ob_start(); ?>
@@ -995,13 +964,13 @@ function edd_checkout_button_purchase() {
 	$cart_total       = edd_get_cart_total();
 
 	if ( ! empty( $enabled_gateways ) || empty( $cart_total ) ) {
-		$color = edd_get_option( 'checkout_color', 'blue' );
-		$color = ( $color == 'inherit' ) ? '' : $color;
+		$color = edd_get_button_color_class();
 		$style = edd_get_option( 'button_style', 'button' );
 		$label = edd_get_checkout_button_purchase_label();
+		$class = implode( ' ', array_filter( array( 'edd-submit', $color, $style ) ) );
 
 		?>
-		<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo esc_html( $label ); ?>"/>
+		<input type="submit" class="<?php echo esc_attr( $class ); ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo esc_html( $label ); ?>"/>
 		<?php
 	}
 
