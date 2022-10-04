@@ -1717,9 +1717,16 @@ add_action( 'edd_admin_filter_bar_reports', 'EDD\Reports\filter_items' );
  * @since 3.0 Updated filter to display link next to the reports filters.
 */
 function mobile_link() {
+	$url = edd_link_helper(
+		'https://easydigitaldownloads.com/downloads/ios-app/',
+		array(
+			'utm_medium'  => 'reports',
+			'utm_content' => 'ios-app',
+		)
+	);
 	?>
 	<span class="edd-mobile-link">
-		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
+		<a href="<?php echo $url; ?>" target="_blank">
 			<?php esc_html_e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
 		</a>
 	</span>

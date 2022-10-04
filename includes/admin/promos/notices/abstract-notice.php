@@ -20,6 +20,11 @@ abstract class Notice {
 	const DISPLAY_HOOK = 'admin_notices';
 
 	/**
+	 * The priority for the display hook.
+	 */
+	const DISPLAY_PRIORITY = 10;
+
+	/**
 	 * Type of promotional notice.
 	 */
 	const TYPE = 'top-of-page';

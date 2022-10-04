@@ -90,6 +90,7 @@ function edd_admin_header() {
 	}
 
 	?>
+
 	<div id="edd-header" class="edd-header">
 		<div id="edd-header-wrapper">
 			<span id="edd-header-branding">
