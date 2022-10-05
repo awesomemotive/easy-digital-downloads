@@ -276,6 +276,17 @@ abstract class Dataset implements Error_Logger {
 		return $processed;
 	}
 
+	/**
+	 * Given a date as a string or numeric timestamp, adjust it for a specific timezone.
+	 *
+	 * This allows the points on the grpah to line up with the ticks, which are already adjusted.
+	 *
+	 * @since 3.1
+	 *
+	 * @param string|int $time_string The time string to possibly adjust.
+	 *
+	 * @return string if a timestamp, it's adjusted for the timezone of the store.
+	 */
 	private function adjust_time_string( $time_string ) {
 		if ( is_numeric( $time_string ) ) {
 			$timezone      = new \DateTimeZone( edd_get_timezone_id() );
