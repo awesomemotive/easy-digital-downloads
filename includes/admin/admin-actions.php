@@ -96,9 +96,6 @@ function edd_admin_adjust_submenus() {
 	foreach ( $taxonomies as $taxonomy ) {
 		remove_submenu_page( 'edit.php?post_type=download', 'edit-tags.php?taxonomy=' . $taxonomy . '&amp;post_type=download' );
 	}
-
-	// Remove the "Add New" link for downloads
-	remove_submenu_page( 'edit.php?post_type=download', 'post-new.php?post_type=download' );
 }
 add_action( 'admin_menu', 'edd_admin_adjust_submenus', 999 );
 

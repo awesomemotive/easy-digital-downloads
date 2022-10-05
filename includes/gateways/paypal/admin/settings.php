@@ -10,6 +10,8 @@
 
 namespace EDD\Gateways\PayPal\Admin;
 
+use EDD\Gateways\PayPal;
+
 /**
  * Returns the URL to the PayPal Commerce settings page.
  *
@@ -64,7 +66,7 @@ function register_gateway_settings( $gateway_settings ) {
 			'name'  => __( 'Connection Status', 'easy-digital-downloads' ),
 			'desc'  => connect_settings_field(),
 			'type'  => 'descriptive_text',
-			'class' => 'edd-paypal-connect-row'
+			'class' => 'edd-paypal-connect-row',
 		),
 		'paypal_sandbox_client_id'     => array(
 			'id'    => 'paypal_sandbox_client_id',
@@ -99,6 +101,13 @@ function register_gateway_settings( $gateway_settings ) {
 			'class' => 'edd-hidden'
 		),
 	);
+
+	$is_connected = PayPal\has_rest_api_connection();
+	if ( ! $is_connected ) {
+		$paypal_settings['paypal_settings']['tooltip_title'] = __( 'Connect with PayPal', 'easy-digital-downloads' );
+		$paypal_settings['paypal_settings']['tooltip_desc']  = __( 'Connecting your store with PayPal allows Easy Digital Downloads to automatically configure your store to securely communicate PayPal.<br \><br \>You may see "Sandhills Development, LLC", mentioned during the process&mdash;that is the company behind Easy Digital Downloads.', 'easy-digital-downloads' );
+
+	}
 
 	/**
 	 * Filters the PayPal Settings.

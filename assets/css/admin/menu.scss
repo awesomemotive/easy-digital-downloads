@@ -21,6 +21,10 @@
 	}
 }
 
+#menu-posts-download li > a[href^="post-new.php?post_type=download"] {
+	display: none;
+}
+
 /* Secondary Separators */
 #menu-posts-download li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
 #menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
@@ -37,16 +41,6 @@
 		margin: 20px -20px 8px -20px;
 		width: calc(100% + 30px);
 	}
-}
-
-#menu-posts-download li:last-child {
-	background-color: #1da867;
-}
-
-#menu-posts-download li:last-child a,
-#menu-posts-download li:last-child a:hover{
-	color: #FFFFFF;
-	font-weight: 600;
 }
 
 #adminmenu #menu-posts-download {
