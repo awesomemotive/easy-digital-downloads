@@ -110,10 +110,10 @@ function edd_overview_sales_earnings_chart() {
 		$timestamp       = $dates['start']->copy()->format( 'U' );
 		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
 
-		$sales[ $timestamp ][0] = $timestamp;
+		$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 		$sales[ $timestamp ][1] = 0;
 
-		$earnings[ $timestamp ][0] = $timestamp;
+		$earnings[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 		$earnings[ $timestamp ][1] = 0.00;
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
@@ -250,10 +250,10 @@ function edd_overview_refunds_chart() {
 		$timestamp       = $dates['start']->copy()->format( 'U' );
 		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
 
-		$number[ $timestamp ][0] = $timestamp;
+		$number[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 		$number[ $timestamp ][1] = 0;
 
-		$amount[ $timestamp ][0] = $timestamp;
+		$amount[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 		$amount[ $timestamp ][1] = 0.00;
 
 		// Loop through each date there were refunds, which we queried from the database.
