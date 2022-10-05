@@ -4,7 +4,6 @@
  * Internal dependencies.
  */
 import moment, { utc } from 'moment';
-import momentTimezone from 'moment-timezone';
 import { getLabelWithTypeCondition, toolTipBaseConfig, attachAxisTickFormattingCallback } from './utils';
 
 /**
@@ -20,7 +19,6 @@ export const render = ( config ) => {
 			utc_offset: utcOffset,
 			hour_by_hour: hourByHour,
 			day_by_day: dayByDay,
-			timezone: timeZone,
 		},
 	} = config;
 
