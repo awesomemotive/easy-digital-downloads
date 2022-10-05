@@ -287,6 +287,8 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Searching the orders table for a discount code which does not exist now correctly returns no orders.
 * Fix: The customers API endpoint now uses the correct parameters to return data.
 * Fix: When registering a new user from an EDD form, spaces were incorrectly removed from user names.
+* Fix: When the browser timezone differed from that of the Store, line graphs could offset the points from the gridlines.
+* Fix: Users with the shop worker role were not able to create new downloads.
 * Fix - Stripe: Customers were not always automatically logged in with Auto Register's successful purchase setting.
 * Fix - Stripe: When changing the store mode, the Stripe admin notice displayed incorrectly.
 * Dev: Legacy compatibility code has been removed from the downloads metabox.
