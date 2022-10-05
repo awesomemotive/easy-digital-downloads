@@ -146,45 +146,41 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	 * @covers ::parse_data_for_output()
 	 */
 	public function test_parse_data_for_output_should_return_single_axis_keyed_data_for_single_level_non_pie_data() {
-		$expected = array(
-			array( 'x' => 40 * 1000 ),
-			array( 'x' => 20 * 1000 ),
-			array( 'x' => 30 * 1000 ),
-			array( 'x' => 10 * 1000 ),
-		);
+		$expected = array();
+		$data     = array();
 
-		$this->assertEqualSetsWithIndex( $expected, $this->mock_Dataset->parse_data_for_output( array( 40, 20, 30, 10 ) ) );
+		for ( $day = 1; $day < 5; $day++ ) {
+			$timezone = new \DateTimeZone( edd_get_timezone_id() );
+			$date     = new \DateTime( strtotime( 'Y-m-' . $day )  );
+			$data[]   = $date->getTimestamp();
+
+			$date_on_chart = new \DateTime( '@' . $date->getTimestamp() );
+			$expected[]    = array(
+				'x' => $date_on_chart->setTimeZone( $timezone )->format( 'Y-m-d H:i:s' ),
+			);
+		}
+
+		$this->assertEqualSetsWithIndex( $expected, $this->mock_Dataset->parse_data_for_output( $data ) );
 	}
 
 	/**
 	 * @covers ::parse_data_for_output()
 	 */
 	public function test_parse_data_for_output_should_return_double_axis_keyed_data_for_double_level_non_pie_data() {
-		$expected = array(
-			array(
-				'x' => 40 * 1000,
-				'y' => 1,
-			),
-			array(
-				'x' => 20 * 1000,
-				'y' => 2,
-			),
-			array(
-				'x' => 30 * 1000,
-				'y' => 3,
-			),
-			array(
-				'x' => 10 * 1000,
-				'y' => 4,
-			),
-		);
+		$expected = array();
+		$data     = array();
 
-		$data = array(
-			array( 40, 1 ),
-			array( 20, 2 ),
-			array( 30, 3 ),
-			array( 10, 4 )
-		);
+		for ( $day = 1; $day < 5; $day++ ) {
+			$timezone = new \DateTimeZone( edd_get_timezone_id() );
+			$date     = new \DateTime( strtotime( 'Y-m-' . $day )  );
+			$data[]   = array( $date->getTimestamp(), $day * 5 );
+
+			$date_on_chart = new \DateTime( '@' . $date->getTimestamp() );
+			$expected[]    = array(
+				'x' => $date_on_chart->setTimeZone( $timezone )->format( 'Y-m-d H:i:s' ),
+				'y' => $day * 5,
+			);
+		}
 
 		$this->assertEqualSetsWithIndex( $expected, $this->mock_Dataset->parse_data_for_output( $data ) );
 	}

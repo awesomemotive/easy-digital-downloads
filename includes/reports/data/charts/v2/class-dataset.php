@@ -262,18 +262,40 @@ abstract class Dataset implements Error_Logger {
 			foreach ( $data as $key => $values ) {
 				if ( is_array( $values ) && isset( $values[1] ) ) {
 					$processed[ $key ] = array(
-						'x' => $values[0] * 1000,
+						'x' => $this->adjust_time_string( $values[0] ),
 						'y' => $values[1],
 					);
 				} else {
 					$processed[ $key ] = array(
-						'x' => $values * 1000,
+						'x' => $this->adjust_time_string( $values ),
 					);
 				}
 			}
 		}
 
 		return $processed;
+	}
+
+	/**
+	 * Given a date as a string or numeric timestamp, adjust it for a specific timezone.
+	 *
+	 * This allows the points on the graph to line up with the ticks, which are already adjusted.
+	 *
+	 * @since 3.1
+	 *
+	 * @param string|int $time_string The time string to possibly adjust.
+	 *
+	 * @return string If a timestamp, it's adjusted for the timezone of the store.
+	 */
+	private function adjust_time_string( $time_string ) {
+		if ( is_numeric( $time_string ) ) {
+			$timezone      = new \DateTimeZone( edd_get_timezone_id() );
+			$date_on_chart = new \DateTime( '@' . $time_string );
+
+			$time_string = $date_on_chart->setTimeZone( $timezone )->format( 'Y-m-d H:i:s' );
+		}
+
+		return $time_string;
 	}
 
 	/**
