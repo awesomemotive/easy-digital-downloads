@@ -114,7 +114,8 @@ export const render = ( config ) => {
 	let yAxes = []
 	for ( const [key, scale] of Object.entries( chart.scales ) ) {
 		// Find out if this is Y axis.
-		if ( scale.maxHeight > scale.maxWidth ) {
+
+		if ( 'time' !== scale.type ) {
 			yAxes.push( scale )
 		}
 	}
