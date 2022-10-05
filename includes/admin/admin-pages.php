@@ -110,6 +110,9 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  * @global $edd_add_ons_page
  */
 function edd_add_extentions_link() {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
 	global $submenu, $edd_add_ons_page;
 
 	$edd_add_ons_page = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
@@ -127,6 +130,12 @@ function edd_add_extentions_link() {
 			)
 		);
 	}
+
+	add_action( 'admin_print_styles', function() {
+		?>
+		<style>#menu-posts-download li:last-child {background-color: #1da867;}#menu-posts-download li:last-child a,#menu-posts-download li:last-child a:hover{color: #FFFFFF;font-weight: 600;}</style>
+		<?php
+	} );
 }
 add_action( 'admin_menu', 'edd_add_extentions_link', 99999 );
 
