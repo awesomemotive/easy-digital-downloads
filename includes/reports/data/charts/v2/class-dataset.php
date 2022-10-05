@@ -262,18 +262,29 @@ abstract class Dataset implements Error_Logger {
 			foreach ( $data as $key => $values ) {
 				if ( is_array( $values ) && isset( $values[1] ) ) {
 					$processed[ $key ] = array(
-						'x' => $values[0] * 1000,
+						'x' => $this->adjust_time_string( $values[0] ),
 						'y' => $values[1],
 					);
 				} else {
 					$processed[ $key ] = array(
-						'x' => $values * 1000,
+						'x' => $this->adjust_time_string( $values ),
 					);
 				}
 			}
 		}
 
 		return $processed;
+	}
+
+	private function adjust_time_string( $time_string ) {
+		if ( is_numeric( $time_string ) ) {
+			$timezone      = new \DateTimeZone( edd_get_timezone_id() );
+			$date_on_chart = new \DateTime( '@' . $time_string );
+
+			$time_string = $date_on_chart->setTimeZone( $timezone )->format( 'Y-m-d H:i:s' );
+		}
+
+		return $time_string;
 	}
 
 	/**

@@ -20,10 +20,9 @@ export const render = ( config ) => {
 			utc_offset: utcOffset,
 			hour_by_hour: hourByHour,
 			day_by_day: dayByDay,
+			timezone: timeZone,
 		},
 	} = config;
-
-
 
 	// Attach formatting callback to Y axes ticks.
 	config.options.scales.yAxes.forEach( axis => {
