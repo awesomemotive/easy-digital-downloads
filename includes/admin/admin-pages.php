@@ -133,7 +133,7 @@ function edd_add_extentions_link() {
 
 	add_action( 'admin_print_styles', function() {
 		?>
-		<style>#menu-posts-download li:last-child {background-color: #1da867;}#menu-posts-download li:last-child a,#menu-posts-download li:last-child a:hover{color: #FFFFFF;font-weight: 600;}</style>
+		<style>#menu-posts-download li:last-child {background-color: #1da867;}#menu-posts-download li:last-child a,#menu-posts-download li:last-child a:hover{color: #FFFFFF !important;font-weight: 600;}</style>
 		<?php
 	} );
 }
