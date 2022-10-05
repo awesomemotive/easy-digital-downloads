@@ -319,7 +319,24 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * @return string $display Output generated from the downloads queried
  */
 function edd_downloads_query( $atts, $content = null ) {
-	$atts = shortcode_atts( array(
+
+    $custom_taxonomy_names = array();
+
+    $taxonomies = get_taxonomies( array(
+         'public'   => true,
+         '_builtin' => false
+        ), 'names', 'and'
+    );
+
+    if ( $taxonomies ) {
+        foreach ( $taxonomies as $taxonomy_name ) {
+            $custom_taxonomy_names[$taxonomy_name] = '';
+        }
+    }
+
+	$atts = shortcode_atts(  array_merge(
+      $custom_taxonomy_names,
+      array(
 		'category'         => '',
 		'exclude_category' => '',
 		'tags'             => '',
@@ -338,6 +355,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		'ids'              => '',
 		'class'            => '',
 		'pagination'       => 'true',
+      )
 	), $atts, 'downloads' );
 
 	$query = array(
@@ -401,81 +419,70 @@ function edd_downloads_query( $atts, $content = null ) {
 		break;
 	}
 
-	if ( $atts['tags'] || $atts['category'] || $atts['exclude_category'] || $atts['exclude_tags'] ) {
+    $taxonomy_filters = array();
+
+    // auto-detect if a custom taxonomy is actually being used in the shortcode (atts)
+    foreach ($custom_taxonomy_names as $taxonomy_name => $default) {
+
+        if ( $atts[$taxonomy_name] ) {
+
+            $taxonomy_filters[$taxonomy_name]   = $atts[$taxonomy_name];
+        }
+    }
+
+    // manually detect if a default taxonomy is being used in the shortcode
+    // note: download_tags will be detected automatically, only set it from tags when download_tags is empty
+    if ( $atts['tags'] && !$taxonomy_filters['download_tags'] ) {
+
+        $taxonomy_filters['download_tags']  	= $atts['tags'];
+      }
+
+    if ( $atts['category'] && !$taxonomy_filters['download_category'] )	{
+
+      $taxonomy_filtes['download_category'] 	= $atts['category'];
+    }
+
+	if ( $taxonomy_filters || $atts['exclude_category'] || $atts['exclude_tags'] ) {
 
 		$query['tax_query'] = array(
 			'relation' => $atts['relation']
 		);
 
-		if ( $atts['tags'] ) {
+        foreach ($taxonomy_filters as $taxonomy_name => $taxonomy_ids) {
 
-			$tag_list = explode( ',', $atts['tags'] );
+          $term_list = explode(',', $taxonomy_ids);
 
-			foreach( $tag_list as $tag ) {
+          foreach ($term_list as $term) {
 
-				$t_id  = (int) $tag;
-				$is_id = is_int( $t_id ) && ! empty( $t_id );
+            $t_id = (int) $term;
+            $is_id = is_int($t_id) && !empty($t_id);
 
-				if( $is_id ) {
+            if ($is_id) {
 
-					$term_id = $tag;
+              $term_id = $term;
 
-				} else {
+            }
+            else {
 
-					$term = get_term_by( 'slug', $tag, 'download_tag' );
+              $the_term = get_term_by('slug', $term, $taxonomy_name);
 
-					if( ! $term ) {
-						continue;
-					}
+              if (!$the_term) {
+                continue;
+              }
 
-					$term_id = $term->term_id;
-				}
+              $term_id = $the_term->term_id;
+            }
 
-				$query['tax_query'][] = array(
-					'taxonomy' => 'download_tag',
-					'field'    => 'term_id',
-					'terms'    => $term_id
-				);
-			}
+            $query['tax_query'][] = array(
+              'taxonomy' => $taxonomy_name,
+              'field' => 'term_id',
+              'terms' => $term_id
+            );
+          }
+        }
 
-		}
 
-		if ( $atts['category'] ) {
-
-			$categories = explode( ',', $atts['category'] );
-
-			foreach( $categories as $category ) {
-
-				$t_id  = (int) $category;
-				$is_id = is_int( $t_id ) && ! empty( $t_id );
-
-				if( $is_id ) {
-
-					$term_id = $category;
-
-				} else {
-
-					$term = get_term_by( 'slug', $category, 'download_category' );
-
-					if( ! $term ) {
-						continue;
-					}
-
-					$term_id = $term->term_id;
-
-				}
-
-				$query['tax_query'][] = array(
-					'taxonomy' => 'download_category',
-					'field'    => 'term_id',
-					'terms'    => $term_id,
-				);
-
-			}
-
-		}
-
-		if ( $atts['exclude_category'] ) {
+      if ( $atts['exclude_category'] ) {
 
 			$categories = explode( ',', $atts['exclude_category'] );
 
@@ -509,7 +516,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		}
 
-		if ( $atts['exclude_tags'] ) {
+      if ( $atts['exclude_tags'] ) {
 
 			$tag_list = explode( ',', $atts['exclude_tags'] );
 
