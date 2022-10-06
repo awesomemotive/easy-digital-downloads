@@ -1818,12 +1818,12 @@ function edd_get_activation_date() {
 					'number'  => 1,
 					'orderby' => 'id',
 					'order'   => 'ASC',
-					'type'    => 'sale',
+					'fields'  => 'date_created',
 				)
 			);
 			if ( $orders ) {
 				$first_order = reset( $orders );
-				// Use just the post date, rather than looking for the completed date (first payment may not be complete).
+				// Use just the date_created, rather than looking for the completed date (first order may not be complete).
 				if ( ! empty( $first_order->date_created ) ) {
 					$activation_date = strtotime( $first_order->date_created );
 				}
