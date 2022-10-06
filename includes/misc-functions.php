@@ -1800,29 +1800,36 @@ function edd_get_payment_image( $gateway, $label ) {
  * For existing installs, this option is added whenever the function is first used.
  *
  * @since 2.11.4
+ * @since 3.1 Checks for the table before checking if orders exist.
+ *
  * @return int The timestamp when EDD was marked as activated.
  */
 function edd_get_activation_date() {
 	$activation_date = get_option( 'edd_activation_date', '' );
 	if ( ! $activation_date ) {
 		$activation_date = time();
-		// Gets the first order placed in the store (any status).
-		$payments = edd_get_payments(
-			array(
-				'output'        => 'posts',
-				'number'        => 1,
-				'orderby'       => 'ID',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			)
-		);
-		if ( $payments ) {
-			$first_payment = reset( $payments );
-			// Use just the post date, rather than looking for the completed date (first payment may not be complete).
-			if ( ! empty( $first_payment->post_date_gmt ) ) {
-				$activation_date = strtotime( $first_payment->post_date_gmt );
+
+		$orders_table = new EDD\Database\Tables\Orders();
+
+		if ( $orders_table->exists() ) {
+			// Gets the first order placed in the store (any status).
+			$orders = edd_get_orders(
+				array(
+					'number'  => 1,
+					'orderby' => 'id',
+					'order'   => 'ASC',
+					'type'    => 'sale',
+				)
+			);
+			if ( $orders ) {
+				$first_order = reset( $orders );
+				// Use just the post date, rather than looking for the completed date (first payment may not be complete).
+				if ( ! empty( $first_order->date_created ) ) {
+					$activation_date = strtotime( $first_order->date_created );
+				}
 			}
 		}
+
 		update_option( 'edd_activation_date', $activation_date );
 	}
 
