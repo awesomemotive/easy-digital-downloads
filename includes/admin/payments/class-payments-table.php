@@ -523,6 +523,15 @@ class EDD_Payment_History_Table extends List_Table {
 			'view' => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'Edit', 'easy-digital-downloads' ) . '</a>',
 		);
 
+		// View receipt
+		if ( 'sale' === $order->type && edd_can_view_receipt( $order->payment_key ) ) {
+			$row_actions['receipt'] = sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				edd_get_receipt_page_uri( $order->id ),
+				__( 'View Receipt', 'easy-digital-downloads' )
+			);
+		}
+
 		// Resend Receipt
 		if ( 'sale' === $this->type && 'complete' === $order->status && ! empty( $order->email ) ) {
 			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
@@ -1009,6 +1018,9 @@ class EDD_Payment_History_Table extends List_Table {
 			$discount = edd_get_discount_by_code( trim( str_replace( 'discount:', '', $search ) ) );
 			if ( ! empty( $discount->id ) ) {
 				$args['discount_id'] = $discount->id;
+			} else {
+				// If no discount object is found, we force the results to be empty.
+				$args['id__in'] = array( null );
 			}
 
 			return $args;

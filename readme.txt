@@ -1,12 +1,12 @@
 === Easy Digital Downloads - Simple eCommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee, zkawesome
+Contributors: easydigitaldownloads, mordauk, smub, am, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee, zkawesome
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.0.4
+Stable Tag: 3.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,66 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1, October 4, 2022 =
+* New: Websites running WordPress 5.8 and above (and PHP 7.0 or greater) have access to ten new registered EDD blocks.
+* New: Store owners can receive weekly or monthly email summaries of their store's performance.
+* New - Blocks: A new EDD Products block has been registered to display downloads.
+* New - Blocks: A new EDD Terms block has been registered to display download categories or tags.
+* New - Blocks: A new EDD Buy Button block has been registered to display a purchase button for any download.
+* New - Blocks: A new EDD Cart block has been registered to show either a mini or full cart anywhere on your site.
+* New - Blocks: A new EDD Order History block has been registered to show a customer's order history.
+* New - Blocks: A new EDD Login block has been registered to render a login form which supports a full lost password recovery flow and reCAPTCHA support.
+* New - Blocks: A new EDD Registration block has been registered to render a registration form which includes reCAPTCHA support.
+* New - Blocks: A new EDD Receipt block has been registered to show a customer's receipt. This receipt supports guest purchases.
+* New - Blocks: A new EDD Confirmation block has been registered to show some order details when successfully completing a purchase.
+* New - Blocks: A new EDD Checkout block has been registered to completely update the EDD checkout experience. This block is still considered to be in beta.
+* Improvement: Store owners can now require that a user be logged into their account to download files.
+* Improvement: The CLI migration to EDD 3.0 has been updated to improve memory usage for larger stores.
+* Improvement: The PayPal Commerce button is disabled until required fields have been completed.
+* Improvement: Relative date ranges are now compared against similar ranges in reports.
+* Improvement: Report line graphs with multiple scales now use unique y-axes to display data.
+* Improvement: Development asset files have been removed from the final build.
+* Improvement: Updating download calculations has been moved from the order completion process to a slightly delayed cron event.
+* Improvement: Dismissing the advanced filters on the order table has been improved.
+* Improvement: Filters have been added to prevent certain logs from being recorded.
+* Improvement: EDD registered pages now show in the pages list table.
+* Improvement: The order ID column in the orders table no longer has a constrained width.
+* Improvement: Store admins can now view the customer receipt from a link on the orders table.
+* Improvement - Blocks: A confirmation page/block has been registered to separate the order completion view from the receipt.
+* Improvement - Blocks: If the core EDD cart and terms widgets are not already in use on the site, they will not be displayed in the block editor as legacy widgets.
+* Improvement - Stripe: Session validation throughout Stripe actions has been updated to improve reliability.
+* Improvement - Stripe: Error messages have been updated to help customers with failed purchases know what action to take.
+* Improvement - Stripe: Supported payment methods are included in the gateway registration.
+* Improvement - Stripe: Optimized validation during checkout.
+* Improvement - Stripe: Optimized cleanup of logging.
+* Improvement - Stripe: Added better checkout session handling.
+* Fix: Resetting the store was incorrectly deleting discounts and tax rates.
+* Fix: The price option assignment for variably priced bundled product conditions could be incorrectly assigned.
+* Fix: Report graphs could be inaccurate when grouping by month due to time zone adjustments.
+* Fix: Querying the Stats API for a store using a UTC relative time zone would crash the site.
+* Fix: Calculations for report tiles have been updated for consistency.
+* Fix: The `edd_load_gateway` JavaScript hook is now triggered when only one gateway is active.
+* Fix: Adding an adjustment on a manual order could cause unexpected cursor behavior.
+* Fix: Using `edd_insert_payment` with incomplete data now creates an order if possible, or fails without errors if not.
+* Fix: Legacy log functions now query logs correctly.
+* Fix: Stores with more than 30 tax rates now can view all rates on the settings screen.
+* Fix: Deleting a customer now properly deletes their orders as well.
+* Fix: It is now possible to set a 0% tax rate for a region to exclude taxes from being collected for that region even if a country wide rate exists.
+* Fix: When selecting a gateway and refreshing the checkout screen, some browsers could fail to load the payment fields.
+* Fix: Searching the orders table for a discount code which does not exist now correctly returns no orders.
+* Fix: The customers API endpoint now uses the correct parameters to return data.
+* Fix: When registering a new user from an EDD form, spaces were incorrectly removed from user names.
+* Fix: When the browser timezone differed from that of the Store, line graphs could offset the points from the gridlines.
+* Fix: Users with the shop worker role were not able to create new downloads.
+* Fix: Upon activation, EDD could have thrown a PHP notice about the orders table not existing on new installs.
+* Fix - Stripe: Customers were not always automatically logged in with Auto Register's successful purchase setting.
+* Fix - Stripe: When changing the store mode, the Stripe admin notice displayed incorrectly.
+* Dev: Legacy compatibility code has been removed from the downloads metabox.
+* Dev: A filter has been added to the customer row actions.
+* Dev: Drop-ins have been added to the system information file.
+* Dev: Templates which have been overridden now show in the system information file.
+* Dev: Test mode can now be activated by setting a constant and the setting will reflect this.
 
 = 3.0.4, September 6, 2022 =
 * Fix: Stripe Pro license key detection was not working on older versions of the Stripe Pro gateway.

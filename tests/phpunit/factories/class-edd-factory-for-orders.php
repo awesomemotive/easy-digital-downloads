@@ -9,7 +9,7 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 		$this->default_generation_definitions = array(
 			'status'          => 'complete',
 			'type'            => 'sale',
-			'date_completed'  => EDD()->utils->date( 'now' )->toDateTimeString(),
+			'date_completed'  => edd_get_utc_equivalent_date( EDD()->utils->date( 'now' ) )->toDateTimeString(),
 			'date_refundable' => EDD()->utils->date( 'now' )->addDays( 30 )->toDateTimeString(),
 			'user_id'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'customer_id'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
@@ -40,12 +40,13 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 
 	public function create_object( $args ) {
 		$order_id = edd_add_order( $args );
+		$order    = edd_get_order( $order_id );
 
 		$oid = edd_add_order_item( array(
 			'order_id'     => $order_id,
 			'product_id'   => 1,
 			'product_name' => 'Simple Download',
-			'status'       => 'inherit',
+			'status'       => $order->status,
 			'amount'       => 100,
 			'subtotal'     => 100,
 			'discount'     => 5,

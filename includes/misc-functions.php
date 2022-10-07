@@ -58,6 +58,13 @@ function edd_get_admin_url( $args = array() ) {
  */
 function edd_is_test_mode() {
 	$ret = edd_get_option( 'test_mode', false );
+
+	// Override any setting with the constant.
+	if ( edd_is_test_mode_forced() ) {
+		$ret = true;
+	}
+
+	// At the end of the day, the filter still has the final say.
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 
@@ -1077,38 +1084,43 @@ function edd_set_upload_dir( $upload ) {
  */
 function edd_can_view_receipt( $payment_key = '' ) {
 
-	$return = false;
+	$user_can_view = false;
 
 	if ( empty( $payment_key ) ) {
-		return $return;
+		return $user_can_view;
 	}
 
 	global $edd_receipt_args;
 
 	$order = edd_get_order_by( 'payment_key', $payment_key );
 	if ( empty( $order->id ) ) {
-		return $return;
+		return $user_can_view;
 	}
 	$edd_receipt_args['id'] = $order->id;
 
+	// Some capabilities can always view the receipt, skip the filter.
+	if ( current_user_can( 'edit_shop_payments' ) ) {
+		return true;
+	}
+
 	if ( is_user_logged_in() ) {
 		if ( (int) get_current_user_id() === (int) $order->user_id ) {
-			$return = true;
+			$user_can_view = true;
 		} elseif ( wp_get_current_user()->user_email === $order->email ) {
-			$return = true;
+			$user_can_view = true;
 		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
-			$return = true;
+			$user_can_view = true;
 		}
 	} else {
 		$session = edd_get_purchase_session();
 		if ( ! empty( $session ) ) {
 			if ( $session['purchase_key'] === $order->payment_key ) {
-				$return = true;
+				$user_can_view = true;
 			}
 		}
 	}
 
-	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+	return (bool) apply_filters( 'edd_can_view_receipt', $user_can_view, $payment_key );
 }
 
 /**
@@ -1734,28 +1746,53 @@ function edd_print_payment_icons( $icons = array() ) {
 }
 
 /**
- * Check to see if we should be displaying promotional content
+ * Gets the supported card image for a given gateway.
  *
- * In various parts of the plugin, we may choose to promote something like a sale for a limited time only. This
- * function should be used to set the conditions under which the promotions will display.
- *
- * @since 2.9.20
- *
- * @return bool
+ * @since 3.1
+ * @param string $gateway
+ * @param string $label
+ * @return string
  */
-function edd_is_promo_active() {
-
-	// Set the date/time range based on UTC.
-	$start = strtotime( '2019-11-29 06:00:00' );
-	$end   = strtotime( '2019-12-07 05:59:59' );
-	$now   = time();
-
-	// Only display sidebar if the page is loaded within the date range.
-	if ( ( $now > $start ) && ( $now < $end ) ) {
-		return true;
+function edd_get_payment_image( $gateway, $label ) {
+	if ( edd_string_is_image_url( $gateway ) ) {
+		return '<img class="payment-icon" src="' . esc_url( $gateway ) . '" alt="' . esc_attr( $label ) . '"/>';
 	}
 
-	return false;
+	$type = '';
+	$card = strtolower( str_replace( ' ', '', $label ) );
+
+	if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
+		$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
+	} elseif ( has_filter( 'edd_accepted_payment_' . $gateway . '_image' ) ) {
+		$image = apply_filters( 'edd_accepted_payment_' . $gateway . '_image', '' );
+	} else {
+		// Set the type to SVG.
+		$type = 'svg';
+
+		// Get SVG dimensions.
+		$dimensions = edd_get_payment_icon_dimensions( $gateway );
+
+		// Get SVG markup.
+		$image = edd_get_payment_icon(
+			array(
+				'icon'    => $gateway,
+				'width'   => $dimensions['width'],
+				'height'  => $dimensions['height'],
+				'title'   => $label,
+				'classes' => array( 'payment-icon' ),
+			)
+		);
+	}
+
+	if ( edd_is_ssl_enforced() || is_ssl() ) {
+		$image = edd_enforced_ssl_asset_filter( $image );
+	}
+
+	if ( 'svg' === $type ) {
+		return $image;
+	}
+
+	return '<img class="payment-icon" src="' . esc_url( $image ) . '" alt="' . esc_attr( $label ) . '"/>';
 }
 
 /**
@@ -1763,33 +1800,69 @@ function edd_is_promo_active() {
  * For existing installs, this option is added whenever the function is first used.
  *
  * @since 2.11.4
+ * @since 3.1 Checks for the table before checking if orders exist.
+ *
  * @return int The timestamp when EDD was marked as activated.
  */
 function edd_get_activation_date() {
 	$activation_date = get_option( 'edd_activation_date', '' );
 	if ( ! $activation_date ) {
 		$activation_date = time();
-		// Gets the first order placed in the store (any status).
-		$payments = edd_get_payments(
-			array(
-				'output'        => 'posts',
-				'number'        => 1,
-				'orderby'       => 'ID',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			)
-		);
-		if ( $payments ) {
-			$first_payment = reset( $payments );
-			// Use just the post date, rather than looking for the completed date (first payment may not be complete).
-			if ( ! empty( $first_payment->post_date_gmt ) ) {
-				$activation_date = strtotime( $first_payment->post_date_gmt );
+
+		$orders_table = new EDD\Database\Tables\Orders();
+
+		if ( $orders_table->exists() ) {
+			// Gets the first order placed in the store (any status).
+			$orders = edd_get_orders(
+				array(
+					'number'  => 1,
+					'orderby' => 'id',
+					'order'   => 'ASC',
+					'fields'  => 'date_created',
+				)
+			);
+			if ( $orders ) {
+				$first_order_date = reset( $orders );
+				if ( ! empty( $first_order_date ) ) {
+					$activation_date = strtotime( $first_order_date );
+				}
 			}
 		}
+
 		update_option( 'edd_activation_date', $activation_date );
 	}
 
 	return $activation_date;
+}
+
+/**
+ * Given a URL, run it through query arg additions.
+ *
+ * @since 3.1
+ *
+ * @param string $base_url    The base URL for the generation.
+ * @param array  $query_args  The arguments to add to the $base_url.
+ * @param bool   $run_esc_url If true, esc_url will be run
+ *
+ * @return string.
+ */
+function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $query_args = array(), $run_esc_url = true ) {
+	$default_args = array(
+		'utm_source'   => 'WordPress',
+		'utm_medium'   => '',
+		'utm_content'  => '',
+		'utm_campaign' => EDD\Admin\Pass_Manager::isPro() ? 'edd-pro' : 'edd',
+	);
+
+	$args = wp_parse_args( $query_args, $default_args );
+
+	// Ensure we sanitize the medium and content.
+	$args['utm_medium']  = str_replace( '_', '-', sanitize_title( $args['utm_medium'] ) );
+	$args['utm_content'] = str_replace( '_', '-', sanitize_title( $args['utm_content'] ) );
+
+	$url = add_query_arg( $args, trailingslashit( $base_url ) );
+
+	return $run_esc_url ? esc_url( $url ) : $url;
 }
 
 /**

@@ -110,9 +110,32 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  * @global $edd_add_ons_page
  */
 function edd_add_extentions_link() {
-	global $edd_add_ons_page;
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+	global $submenu, $edd_add_ons_page;
 
 	$edd_add_ons_page = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
+	$pass_manager = new \EDD\Admin\Pass_Manager();
+	if ( ! $pass_manager->has_pass() ) {
+		$submenu[ 'edit.php?post_type=download' ][] = array(
+			'<span class="edd-menu-highlight">' . esc_html__( 'Upgrade to Pro', 'easy-digital-downloads' ) . '</span>',
+			'manage_shop_settings',
+			edd_link_helper(
+				'https://easydigitaldownloads.com/lite-upgrade',
+				array(
+					'utm_medium'  => 'admin-menu',
+					'utm_content' => 'upgrade-to-pro',
+				)
+			)
+		);
+
+		add_action( 'admin_print_styles', function() {
+			?>
+			<style>#menu-posts-download li:last-child {background-color: #1da867;}#menu-posts-download li:last-child a,#menu-posts-download li:last-child a:hover{color: #FFFFFF !important;font-weight: 600;}</style>
+			<?php
+		} );
+	}
 }
 add_action( 'admin_menu', 'edd_add_extentions_link', 99999 );
 

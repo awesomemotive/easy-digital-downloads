@@ -233,4 +233,57 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 
 	}
 
+	public static function create_variable_bundled_download() {
+
+		$post_id = wp_insert_post(
+			array(
+				'post_title'  => 'Variable Bundled Test Download Product',
+				'post_name'   => 'variable-bundled-test-download-product',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
+
+		$simple_download   = self::create_simple_download();
+		$variable_download = self::create_variable_download();
+		$_variable_pricing = array(
+			array(
+				'name'   => 'Advanced',
+				'amount' => 100,
+			),
+			array(
+				'name'   => 'Enterprise',
+				'amount' => 200,
+			),
+			array(
+				'name'   => 'Corporate',
+				'amount' => 300,
+			),
+		);
+
+		$meta = array(
+			'edd_price'                        => 9.99,
+			'_variable_pricing'                => 1,
+			'edd_variable_prices'              => array_values( $_variable_pricing ),
+			'edd_download_files'               => array(),
+			'_edd_bundled_products'            => array(
+				1 => $simple_download->ID,
+				2 => $variable_download->ID,
+			),
+			'_edd_bundled_products_conditions' => array(
+				1 => 1,
+				2 => 2,
+			),
+			'_edd_download_limit'              => 20,
+			'edd_product_notes'                => 'Bundled Purchase Notes',
+			'_edd_product_type'                => 'bundle',
+			'_edd_download_earnings'           => 120,
+			'_edd_download_sales'              => 12,
+		);
+		foreach ( $meta as $key => $value ) {
+			update_post_meta( $post_id, $key, $value );
+		}
+
+		return get_post( $post_id );
+	}
 }

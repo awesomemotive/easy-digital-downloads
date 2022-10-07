@@ -30,10 +30,11 @@ class Reports_Sections extends Sections {
 		$use_js = ! empty( $this->use_js )
 			? ' use-js'
 			: '';
-		$role   = $this->use_js ? 'tablist' : 'menu';
-		?>
 
+		$role = $this->use_js ? 'tablist' : 'menu';
+		?>
 		<div class="edd-sections-wrap edd-reports-wrapper">
+
 			<div class="edd-vertical-sections<?php echo $use_js; ?>">
 				<ul class="section-nav" role="<?php echo esc_attr( $role ); ?>">
 					<?php echo $this->get_all_section_links(); ?>
@@ -45,7 +46,6 @@ class Reports_Sections extends Sections {
 				<br class="clear">
 			</div>
 		</div>
-
 		<?php
 	}
 }

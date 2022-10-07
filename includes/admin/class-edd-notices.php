@@ -580,6 +580,14 @@ class EDD_Notices {
 						)
 					);
 					break;
+				case 'test-summary-email-sent':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-test-summary-email-sent',
+							'message' => __( 'The test email summary was sent successfully.', 'easy-digital-downloads' )
+						)
+					);
+					break;
 			}
 		}
 

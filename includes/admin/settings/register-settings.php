@@ -299,8 +299,29 @@ function edd_get_registered_settings() {
 		$gateways         = edd_get_payment_gateways();
 		$admin_email      = get_bloginfo( 'admin_email' );
 		$site_name        = get_bloginfo( 'name' );
-		$site_hash        = substr( md5( $site_name ), 0, 10 );
-		$edd_settings     = array(
+
+		$email_summary_recipient   = edd_get_option( 'email_summary_recipient', 'admin' );
+		$email_summary_trigger_url = wp_nonce_url(
+			edd_get_admin_url(
+				array(
+					'page'       => 'edd-settings',
+					'tab'        => 'emails',
+					'section'    => 'email_summaries',
+					'edd_action' => 'trigger_email_summary',
+				)
+			),
+			'edd_trigger_email_summary'
+		);
+		$email_summary_schedule      = wp_next_scheduled( EDD_Email_Summary_Cron::CRON_EVENT_NAME );
+		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
+		if ( $email_summary_schedule ) {
+			$email_summary_schedule_date = \Carbon\Carbon::createFromTimestamp( $email_summary_schedule )->setTimezone( edd_get_timezone_id() );
+			/* Translators: formatted date */
+			$email_summary_schedule_text  = sprintf( __( 'The next summary email is scheduled to send on %s.', 'easy-digital-downloads' ), $email_summary_schedule_date->format( get_option( 'date_format' ) ) );
+		}
+
+		$site_hash    = substr( md5( $site_name ), 0, 10 );
+		$edd_settings = array(
 
 			// General Settings
 			'general' => apply_filters( 'edd_settings_general', array(
@@ -507,7 +528,16 @@ function edd_get_registered_settings() {
 					),
 					'api_help' => array(
 						'id'   => 'api_help',
-						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">REST API documentation</a> for further information.', 'easy-digital-downloads' ), 'http://docs.easydigitaldownloads.com/article/1131-edd-rest-api-introduction' ),
+						'desc' => sprintf(
+							__( 'Visit the <a href="%s" target="_blank">REST API documentation</a> for further information.', 'easy-digital-downloads' ),
+							edd_link_helper(
+								'https://easydigitaldownloads.com/categories/docs/api-reference/',
+								array(
+									'utm_medium'  => 'settings',
+									'utm_content' => 'api-documentation',
+								)
+							)
+						),
 						'type' => 'descriptive_text',
 					),
 				),
@@ -524,10 +554,9 @@ function edd_get_registered_settings() {
 						'check' => __( 'Allow',          'easy-digital-downloads' ),
 						'desc'  => sprintf(
 							/* translators: %1$s Link to tracking information, do not translate. %2$s Link to EDD newsleter, do not translate. %3$s Link to EDD extensions, do not translate */
-							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%1$s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%2$s" target="_blank">our newsletter</a>, we will email you a discount code for our <a href="%3$s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
-							esc_url( 'https://docs.easydigitaldownloads.com/article/1419-what-information-will-be-tracked-by-opting-into-usage-tracking' ),
-							esc_url( 'https://easydigitaldownloads.com/subscribe/?utm_source=' . esc_attr( $site_hash ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' ),
-							esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=' . esc_attr( $site_hash ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' )
+							__( 'Help us make Easy Digital Downloads better. <a href="%1$s" target="_blank">Here is what we track</a>.<br>If you opt-in, we will email you a discount code to <a href="%2$s" target="_blank">upgrade to a pass</a>.', 'easy-digital-downloads' ),
+							edd_link_helper( 'https://easydigitaldownloads.com/docs/what-information-will-be-tracked-by-opting-into-usage-tracking/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) ),
+							edd_link_helper( 'https://easydigitaldownloads.com/lite-upgrade/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) )
 						),
 						'type' => 'checkbox_description',
 					)
@@ -809,6 +838,54 @@ function edd_get_registered_settings() {
 						'type' => 'checkbox',
 					),
 				),
+				'email_summaries' => array(
+					'email_summary_frequency' => array(
+						'id'      => 'email_summary_frequency',
+						'name'    => __( 'Email Frequency', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'weekly',
+						'desc'    => $email_summary_schedule_text,
+						'options' => array(
+							'weekly'  => __( 'Weekly', 'easy-digital-downloads' ),
+							'monthly' => __( 'Monthly', 'easy-digital-downloads' ),
+						),
+					),
+					'email_summary_recipient' => array(
+						'id'      => 'email_summary_recipient',
+						'name'    => __( 'Email Recipient', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'admin',
+						'options' => array(
+							/* Translators: email */
+							'admin'  => sprintf( __( 'Administrator: %s', 'easy-digital-downloads' ), $admin_email ),
+							'custom' => __( 'Custom Recipients', 'easy-digital-downloads' ),
+						),
+					),
+					'email_summary_custom_recipients' => array(
+						'id'    => 'email_summary_custom_recipients',
+						'class' => ( 'admin' === $email_summary_recipient ) ? 'hidden' : '',
+						'name'  => __( 'Custom Recipients', 'easy-digital-downloads' ),
+						'desc'  => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
+						'type'  => 'textarea',
+					),
+					'email_summary_buttons' => array(
+						'id'   => 'email_summary_buttons',
+						'name' => '',
+						'desc' => '
+							<a href="' . esc_url( $email_summary_trigger_url ) . '" class="button" id="edd-send-test-summary">' . esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>
+							<div id="edd-send-test-summary-save-changes-notice"></div>
+							<div id="edd-send-test-summary-notice"></div>
+						',
+						'type' => 'descriptive_text',
+					),
+					'disable_email_summary' => array(
+						'id'    => 'disable_email_summary',
+						'name'  => __( 'Disable Email Summary', 'easy-digital-downloads' ),
+						'desc'  => '<a target="_blank" href="https://easydigitaldownloads.com/docs/email-settings/#summaries">' . __( 'Learn more about Email Summaries.', 'easy-digital-downloads' ) . '</a>',
+						'check' => __( 'Check this box to disable Email Summaries.', 'easy-digital-downloads' ),
+						'type'  => 'checkbox_description',
+					),
+				),
 			) ),
 
 			// Marketing Settings
@@ -983,6 +1060,14 @@ function edd_get_registered_settings() {
 					),
 				),
 				'file_downloads' => array(
+					'require_login_to_download' => array(
+						'id'            => 'require_login_to_download',
+						'name'          => __( 'Require Login', 'easy-digital-downloads' ),
+						'desc'          => __( 'Require a user to login before file download links deliver the file.', 'easy-digital-downloads' ),
+						'tooltip_title' => __( 'Require Login', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Download links expire after the link expiration setting, but you can restrict file downloads to only logged in users. Note: This may affect links from purchase receipts and customers if you have guest checkout enabled.', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+					),
 					'download_method' => array(
 						'id'            => 'download_method',
 						'name'          => __( 'Download Method', 'easy-digital-downloads' ),
@@ -1174,6 +1259,21 @@ function edd_get_registered_settings() {
 					),
 				),
 				$edd_settings['taxes']['rates']
+			);
+		}
+
+		// If test_mode is being forced to true, alter the setting so it cannot be modified.
+		if ( edd_is_test_mode_forced() ) {
+			$edd_settings['gateways']['main']['test_mode'] = array_merge(
+				array(
+					'options'       => array(
+						'disabled' => true,
+						'readonly' => true,
+					),
+					'tooltip_title' => __( 'Forced Test Mode', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'You currently cannot modify the Test Mode setting, as the \'EDD_TEST_MODE\' constant has been defined as \'true\' or the edd_is_test_mode filter is being forced to \'true\'.', 'easy-digital-downloads' ),
+				),
+				$edd_settings['gateways']['main']['test_mode']
 			);
 		}
 
@@ -1495,7 +1595,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
-		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] <= 0 ) {
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] < 0 ) {
 			continue;
 		}
 
@@ -1689,7 +1789,8 @@ function edd_get_registered_settings_sections() {
 			'emails'     => apply_filters( 'edd_settings_sections_emails', array(
 				'main'               => __( 'General',            'easy-digital-downloads' ),
 				'purchase_receipts'  => __( 'Purchase Receipts',  'easy-digital-downloads' ),
-				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' )
+				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' ),
+				'email_summaries'    => __( 'Summaries', 'easy-digital-downloads' ),
 			) ),
 			'marketing'  => apply_filters( 'edd_settings_sections_marketing', array(
 				'main' => __( 'General', 'easy-digital-downloads' ),
@@ -1817,6 +1918,11 @@ function edd_checkbox_callback( $args ) {
  */
 function edd_checkbox_description_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
+
+	// Allow a setting or filter to override what the found value is.
+	if ( isset( $args['current'] ) ) {
+		$edd_option = $args['current'];
+	}
 
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
@@ -2081,14 +2187,15 @@ function edd_gateways_callback( $args ) {
 
 		$html .= '</ul>';
 
-		$url_args = array(
-			'utm_source'   => 'settings',
-			'utm_medium'   => 'gateways',
-			'utm_campaign' => 'admin',
+		$url = edd_link_helper(
+			'https://easydigitaldownloads.com/downloads/category/extensions/gateways/',
+			array(
+				'utm_medium'  => 'payment-settings',
+				'utm_content' => 'gateways',
+			)
 		);
 
-		$url   = add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' );
-		$html .= '<p class="description">' . esc_html__( 'These gateways will be offered at checkout.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
+		$html .= '<p class="description">' . esc_html__( 'These gateways will be offered at checkout.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), $url ) . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2296,7 +2403,9 @@ function edd_textarea_callback( $args ) {
 		? ' placeholder="' . esc_attr( $args['placeholder'] ) . '"'
 		: '';
 
-	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+
+	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $readonly . '>' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2688,7 +2797,7 @@ function edd_recapture_callback($args) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates( array(), OBJECT );
+	$rates = edd_get_tax_rates( array( 'number' => 9999 ), OBJECT );
 
 	wp_enqueue_script( 'edd-admin-tax-rates' );
 	wp_enqueue_style( 'edd-admin-tax-rates' );
@@ -2700,7 +2809,8 @@ function edd_tax_rates_callback( $args ) {
 			/* translators: Tax rate country code */
 			'duplicateRate' => esc_html__( 'Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another.', 'easy-digital-downloads' ),
 			'emptyCountry'  => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
-			'emptyTax'      => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'negativeTax'   => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'emptyTax'      => esc_html__( 'Are you sure you want to add a 0% tax rate?', 'easy-digital-downloads' ),
 		),
 	) );
 
@@ -2781,11 +2891,18 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 				switch ( $license->error ) {
 
 					case 'expired' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . esc_attr( $value ),
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'expired',
+							)
+						);
 						$class      = 'expired';
 						$messages[] = sprintf(
 							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
 							edd_date_i18n( $expiration ),
-							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . esc_attr( $value ) . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2793,10 +2910,17 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'revoked' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/support/',
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'revoked',
+							)
+						);
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2804,10 +2928,17 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						break;
 
 					case 'missing' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/your-account/',
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'missing',
+							)
+						);
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2816,11 +2947,18 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 
 					case 'invalid' :
 					case 'site_inactive' :
+						$url        = edd_link_helper(
+							'https://easydigitaldownloads.com/your-account/',
+							array(
+								'utm_medium'  => 'license-notice',
+								'utm_content' => 'inactive',
+							)
+						);
 						$class      = 'error';
 						$messages[] = sprintf(
-							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
+							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license keys.', 'easy-digital-downloads' ),
 							esc_html( $args['name'] ),
-							'https://easydigitaldownloads.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+							$url
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -2991,3 +3129,47 @@ function edd_add_setting_tooltip( $html = '', $args = array() ) {
 	return $html;
 }
 add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
+
+/**
+ * Filters the edd_get_option call for test_mode.
+ *
+ * This allows us to ensure that calls directly to edd_get_option respect the constant
+ * in addition to the edd_is_test_mode() function call and included filter.
+ *
+ * @since 3.1
+ *
+ * @param bool   $value   If test_mode is enabled in the settings.
+ * @param string $key     The key of the setting, should be test_mode.
+ * @param bool   $default The default setting, which is 'false' for test_mode.
+ */
+function edd_filter_test_mode_option( $value, $key, $default ) {
+	if ( edd_is_test_mode_forced() ) {
+		$value = true;
+	}
+
+	return $value;
+}
+add_filter( 'edd_get_option_test_mode', 'edd_filter_test_mode_option', 10, 3 );
+
+/**
+ * Determine if test mode is being forced to true.
+ *
+ * Using the EDD_TEST_MODE and the edd_is_test_mode filter, determine if the value of true
+ * is being forced for test_mode so we can properly alter the setting for it.
+ *
+ * @since 3.1
+ *
+ * @return bool If test_mode is being forced or not.
+ */
+function edd_is_test_mode_forced() {
+	if ( defined( 'EDD_TEST_MODE' ) && true === EDD_TEST_MODE ) {
+		return true;
+	}
+
+	if ( false !== has_filter( 'edd_is_test_mode', '__return_true' ) ) {
+		return true;
+	}
+
+	return false;
+}
+

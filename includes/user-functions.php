@@ -206,12 +206,16 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 		? $wpdb->prepare( 'AND oi.price_id = %d', absint( $variable_price_id ) )
 		: '';
 
+	$statuses  = "'" . implode( "', '", $wpdb->_escape( edd_get_deliverable_order_item_statuses() ) ). "'";
+	$status_id = " AND oi.status IN({$statuses})";
+
 	// Perform a direct database query as it is more efficient.
 	$sql = $wpdb->prepare("
 		SELECT COUNT(o.id) AS count
 		FROM {$wpdb->edd_orders} o
 		INNER JOIN {$wpdb->edd_order_items} oi ON o.id = oi.order_id
-		WHERE {$product_id} {$price_id}
+		WHERE {$product_id} {$price_id} {$status_id}
+		AND o.type = 'sale'
 		AND user_id = %d
 		LIMIT %d",
 		absint( $user_id ),
@@ -229,9 +233,7 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 	 *
 	 * Filter has purchased result
 	 */
-	$return = apply_filters( 'edd_has_user_purchased', $return, $user_id, $downloads, $variable_price_id );
-
-	return $return;
+	return apply_filters( 'edd_has_user_purchased', $return, $user_id, $downloads, $variable_price_id );
 }
 
 /**

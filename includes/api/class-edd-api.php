@@ -19,8 +19,8 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-use EDD\Reports;
 use EDD\Stats;
+use EDD\Reports;
 
 /**
  * EDD_API Class
@@ -1228,29 +1228,27 @@ class EDD_API {
 			return $stats;
 		}
 
-		if ( $args['type'] == 'sales' ) {
-			if ( $args['product'] == null ) {
-				if ( $args['date'] == null ) {
+		if ( 'sales' === $args['type'] ) {
+			if ( null === $args['product'] ) {
+				if ( null === $args['date'] ) {
 					$sales = $this->get_default_sales_stats();
-				} elseif ( $args['date'] === 'range' ) {
-					// Return sales for a date range
-
-					// Ensure the end date is later than the start date
+				} elseif ( 'range' === $args['date'] ) {
+					// Ensure the end date is later than the start date.
 					if ( $args['enddate'] < $args['startdate'] ) {
 						$error['error'] = __( 'The end date must be later than the start date!', 'easy-digital-downloads' );
 					}
 
-					// Ensure both the start and end date are specified
+					// Ensure both the start and end date are specified.
 					if ( empty( $args['startdate'] ) || empty( $args['enddate'] ) ) {
 						$error['error'] = __( 'Invalid or no date range specified!', 'easy-digital-downloads' );
 					}
 
-					$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'];
-					$end_date   = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+					$start_date = EDD()->utils->date( $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'], edd_get_timezone_id(), false )->startOfDay();
+					$end_date   = EDD()->utils->date( $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'], edd_get_timezone_id(), false )->endOfDay();
 
 					// Force the data for the reports API.
-					$_GET['filter_from'] = $start_date;
-					$_GET['filter_to']   = $end_date;
+					$_GET['filter_from'] = $start_date->format( 'Y-m-d' );
+					$_GET['filter_to']   = $end_date->format( 'Y-m-d' );
 					$_GET['range']       = 'other';
 
 					$stats = new EDD\Stats(
@@ -1258,44 +1256,43 @@ class EDD_API {
 							'revenue_type' => 'net',
 						)
 					);
-					$dates = EDD\Reports\parse_dates_for_range();
 
-					$total_sales = $stats->get_order_count(
+					// Get UTC dates for selected date range.
+					$utc_dates = EDD\Reports\parse_dates_for_range();
+
+					// Get total sales.
+					$sales['totals'] = $stats->get_order_count(
 						array(
-							'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
-							'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+							'start' => $utc_dates['start']->format( 'Y-m-d H:i:s' ),
+							'end'   => $utc_dates['end']->format( 'Y-m-d H:i:s' ),
 						)
 					);
 
-					$start_date = $dates['start']->format( 'Y-m-d' );
-					$end_date   = $dates['end']->format( 'Y-m-d' );
-
-					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-
+					// Get sales for each day in the requested date range.
+					$current_date = $start_date->copy();
+					while ( $current_date->lte( $end_date ) ) {
 						// Force the data for the reports API.
-						$_GET['filter_from'] = $start_date;
-						$_GET['filter_to']   = $start_date;
+						$_GET['filter_from'] = $current_date->format( 'Y-m-d' );
+						$_GET['filter_to']   = $current_date->format( 'Y-m-d' );
 						$_GET['range']       = 'other';
 
-						$key   = str_replace( '-', '', $start_date );
-						$dates = EDD\Reports\parse_dates_for_range();
+						$date_key  = str_replace( '-', '', $current_date->format( 'Y-m-d' ) );
+						$utc_dates = EDD\Reports\parse_dates_for_range();
 
-						if ( ! isset( $sales['sales'][ $key ] ) ) {
-							$sales['sales'][ $key ] = $stats->get_order_count(
+						if ( ! isset( $sales['sales'][ $date_key ] ) ) {
+							$sales['sales'][ $date_key ] = $stats->get_order_count(
 								array(
-									'start' => $dates['start']->startOfDay()->format( 'Y-m-d H:i:s' ),
-									'end'   => $dates['end']->endOfDay()->format( 'Y-m-d H:i:s' ),
+									'start' => $utc_dates['start']->format( 'Y-m-d H:i:s' ),
+									'end'   => $utc_dates['end']->format( 'Y-m-d H:i:s' ),
 								)
 							);
 						}
 
-						$start_date = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
+
+						$current_date->addDay();
 					}
 
 					ksort( $sales['sales'] );
-
-					$sales['totals'] = $total_sales;
-
 				} else {
 					$stats = new EDD\Stats(
 						array(
@@ -1306,7 +1303,7 @@ class EDD_API {
 
 					$sales['sales'][ $args['date'] ] = $stats->get_order_count();
 				}
-			} elseif ( $args['product'] == 'all' ) {
+			} elseif ( 'all' === $args['product'] ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 				$i        = 0;
 
@@ -1324,7 +1321,7 @@ class EDD_API {
 					$i ++;
 				}
 			} else {
-				if ( get_post_type( $args['product'] ) === 'download' ) {
+				if ( 'download' === get_post_type( $args['product'] ) ) {
 					$stats            = new EDD\Stats();
 					$product_info     = get_post( $args['product'] );
 					$order_item_count = $stats->get_order_item_count(
@@ -1346,29 +1343,27 @@ class EDD_API {
 			}
 
 			return apply_filters( 'edd_api_stats_sales', $sales, $this );
-		} elseif ( $args['type'] === 'earnings' ) {
-			if ( $args['product'] == null ) {
-				if ( $args['date'] == null ) {
+		} elseif ( 'earnings' === $args['type'] ) {
+			if ( null === $args['product'] ) {
+				if ( null === $args['date'] ) {
 					$earnings = $this->get_default_earnings_stats( $args );
-				} elseif ( $args['date'] === 'range' ) {
-					// Return sales for a date range
-
-					// Ensure the end date is later than the start date
+				} elseif ( 'range' === $args['date'] ) {
+					// Ensure the end date is later than the start date.
 					if ( $args['enddate'] < $args['startdate'] ) {
 						$error['error'] = __( 'The end date must be later than the start date!', 'easy-digital-downloads' );
 					}
 
-					// Ensure both the start and end date are specified
+					// Ensure both the start and end date are specified.
 					if ( empty( $args['startdate'] ) || empty( $args['enddate'] ) ) {
 						$error['error'] = __( 'Invalid or no date range specified!', 'easy-digital-downloads' );
 					}
 
-					$start_date = $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'];
-					$end_date   = $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'];
+					$start_date = EDD()->utils->date( $dates['year'] . '-' . $dates['m_start'] . '-' . $dates['day_start'], edd_get_timezone_id(), false )->startOfDay();
+					$end_date   = EDD()->utils->date( $dates['year_end'] . '-' . $dates['m_end'] . '-' . $dates['day_end'], edd_get_timezone_id(), false )->endOfDay();
 
 					// Force the data for the reports API.
-					$_GET['filter_from'] = $start_date;
-					$_GET['filter_to']   = $end_date;
+					$_GET['filter_from'] = $start_date->format( 'Y-m-d' );
+					$_GET['filter_to']   = $end_date->format( 'Y-m-d' );
 					$_GET['range']       = 'other';
 
 					$stats = new EDD\Stats(
@@ -1378,44 +1373,42 @@ class EDD_API {
 							'output'        => 'typed',
 						)
 					);
-					$dates = EDD\Reports\parse_dates_for_range();
 
-					$total_earnings = $stats->get_order_earnings(
+					// Get UTC dates for selected date range.
+					$utc_dates = EDD\Reports\parse_dates_for_range();
+
+					// Get total earnings.
+					$earnings['totals'] = $stats->get_order_earnings(
 						array(
-							'start'  => $dates['start']->format( 'Y-m-d H:i:s' ),
-							'end'    => $dates['end']->format( 'Y-m-d H:i:s' ),
+							'start' => $utc_dates['start']->format( 'Y-m-d H:i:s' ),
+							'end'   => $utc_dates['end']->format( 'Y-m-d H:i:s' ),
 						)
 					);
 
-					$start_date = $dates['start']->format( 'Y-m-d' );
-					$end_date   = $dates['end']->format( 'Y-m-d' );
-
-					$earnings['earnings'] = array();
-					while ( strtotime( $start_date ) <= strtotime( $end_date ) ) {
-
+					// Get earnings for each day in the requested date range.
+					$current_date = $start_date->copy();
+					while ( $current_date->lte( $end_date ) ) {
 						// Force the data for the reports API.
-						$_GET['filter_from'] = $start_date;
-						$_GET['filter_to']   = $start_date;
+						$_GET['filter_from'] = $current_date->format( 'Y-m-d' );
+						$_GET['filter_to']   = $current_date->format( 'Y-m-d' );
 						$_GET['range']       = 'other';
 
-						$key   = str_replace( '-', '', $start_date );
-						$dates = EDD\Reports\parse_dates_for_range();
+						$date_key  = str_replace( '-', '', $current_date->format( 'Y-m-d' ) );
+						$utc_dates = EDD\Reports\parse_dates_for_range();
 
-						if ( ! isset( $sales['earnings'][ $key ] ) ) {
-							$earnings['earnings'][ $key ] = $stats->get_order_earnings(
+						if ( ! isset( $sales['earnings'][ $date_key ] ) ) {
+							$earnings['earnings'][ $date_key ] = $stats->get_order_earnings(
 								array(
-									'start' => $dates['start']->format( 'Y-m-d H:i:s' ),
-									'end'   => $dates['end']->format( 'Y-m-d H:i:s' ),
+									'start' => $utc_dates['start']->format( 'Y-m-d H:i:s' ),
+									'end'   => $utc_dates['end']->format( 'Y-m-d H:i:s' ),
 								)
 							);
 						}
 
-						$start_date = $dates['start']->addDays( 1 )->format( 'Y-m-d' );
+						$current_date->addDay();
 					}
 
 					ksort( $earnings['earnings'] );
-
-					$earnings['totals'] = $total_earnings;
 				} else {
 					$stats = new EDD\Stats(
 						array(
@@ -1427,7 +1420,7 @@ class EDD_API {
 					);
 					$earnings['earnings'][ $args['date'] ] = $stats->get_order_earnings();
 				}
-			} elseif ( $args['product'] == 'all' ) {
+			} elseif ( 'all' === $args['product'] ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 				$i        = 0;
 
@@ -1446,7 +1439,7 @@ class EDD_API {
 					$i ++;
 				}
 			} else {
-				if ( get_post_type( $args['product'] ) === 'download' ) {
+				if ( 'download' === get_post_type( $args['product'] ) ) {
 					$stats               = new EDD\Stats();
 					$product_info        = get_post( $args['product'] );
 					$order_item_earnings = $stats->get_order_item_earnings(
@@ -1469,7 +1462,7 @@ class EDD_API {
 			}
 
 			return apply_filters( 'edd_api_stats_earnings', $earnings, $this );
-		} elseif ( $args['type'] == 'customers' ) {
+		} elseif ( 'customers' === $args['type'] ) {
 			$stats['customers']['total_customers'] = edd_count_customers();
 
 			return apply_filters( 'edd_api_stats_customers', $stats, $this );

@@ -304,14 +304,16 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_filter_value_with_a_valid_filter_should_retrieve_that_filters_value() {
 		$expected = array(
-			'from'  => date( 'Y-m-d 00:00:00' ),
-			'to'    => date( 'Y-m-d 23:59:59' ),
-			'range' => 'today',
+			'from'           => date( 'Y-m-d 00:00:00' ),
+			'to'             => date( 'Y-m-d 23:59:59' ),
+			'range'          => 'today',
+			'relative_range' => 'previous_period',
 		);
 
-		$_GET['range']       = 'today';
-		$_GET['filter_from'] = $expected['from'];
-		$_GET['filter_to']   = $expected['to'];
+		$_GET['range']          = 'today';
+		$_GET['relative_range'] = 'previous_period';
+		$_GET['filter_from']    = $expected['from'];
+		$_GET['filter_to']      = $expected['to'];
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
@@ -328,11 +330,11 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
 			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
 			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+			'this_month'   => __( 'Month to Date', 'easy-digital-downloads' ),
 			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+			'this_quarter' => __( 'Quarter to Date', 'easy-digital-downloads' ),
 			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+			'this_year'    => __( 'Year to Date', 'easy-digital-downloads' ),
 			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
 		);
 
@@ -346,7 +348,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_get_dates_filter_should_return_strings() {
 		$expected = array(
 			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 			'range' => 'this_month',
 		);
 
@@ -382,7 +384,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_parse_dates_for_range_with_this_month_range_should_return_those_dates() {
 		$expected = array(
 			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 			'range' => 'this_month',
 		);
 
@@ -484,7 +486,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_parse_dates_for_range_with_this_week_range_should_return_those_dates() {
 		$expected = array(
 			'start' => self::$date->copy()->startOfWeek()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfWeek()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 			'range' => 'this_week',
 		);
 
@@ -544,7 +546,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_parse_dates_for_range_with_this_quarter_range_should_return_those_dates() {
 		$expected = array(
 			'start' => self::$date->copy()->startOfQuarter()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfQuarter()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 			'range' => 'this_quarter',
 		);
 
@@ -584,7 +586,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_parse_dates_for_range_with_this_year_range_should_return_those_dates() {
 		$expected = array(
 			'start' => self::$date->copy()->startOfYear()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfYear()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 			'range' => 'this_year',
 		);
 
@@ -627,14 +629,15 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'to'    => self::$date->copy()->addCentury( 2 )->endOfDay()->toDateTimeString(),
 		);
 
-		$_GET['range']       = 'other';
-		$_GET['filter_from'] = $dates['from'];
-		$_GET['filter_to']   = $dates['to'];
+		$_GET['range']          = 'other';
+		$_GET['relative_range'] = 'previous_period';
+		$_GET['filter_from']    = $dates['from'];
+		$_GET['filter_to']      = $dates['to'];
 
 		$expected = array(
-			'start' => $dates['from'],
-			'end'   => $dates['to'],
-			'range' => 'other',
+			'start'          => $dates['from'],
+			'end'            => $dates['to'],
+			'range'          => 'other',
 		);
 
 		$result = parse_dates_for_range( 'other' );
@@ -653,7 +656,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_parse_dates_for_range_with_invalid_range_no_report_id_no_range_var_should_use_this_month() {
 		$expected = array(
 			'start' => self::$date->copy()->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
 			'range' => 'this_month',
 		);
 
@@ -679,7 +682,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_range_with_non_default_range_set_should_return_that_reports_range() {
-		$_GET['range'] = 'last_quarter';
+		$_GET['range']          = 'last_quarter';
+		$_GET['relative_range'] = 'previous_period';
 
 		$this->assertSame( 'last_quarter', get_dates_filter_range() );
 	}
@@ -689,12 +693,111 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$dates = parse_dates_for_range( 'this_month' );
 
 		$expected = array(
-			'from'  => $dates['start']->format( 'Y-m-d' ),
-			'to'    => $dates['end']->format( 'Y-m-d' ),
-			'range' => 'this_month',
+			'from'           => $dates['start']->format( 'Y-m-d' ),
+			'to'             => $dates['end']->format( 'Y-m-d' ),
+			'range'          => 'this_month',
+			'relative_range' => 'previous_period',
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
+	}
+
+	/**
+	 * @covers \EDD\Reports\parse_relative_dates_for_range()
+	 * @group edd_dates
+	 */
+	public function test_parse_relative_dates_for_previous_period_in_last_month_should_return_those_dates() {
+		$range          = 'last_month';
+		$relative_range = 'previous_period';
+
+		$dates     = parse_dates_for_range( $range );
+		$days_diff = $dates['start']->copy()->diffInDays( $dates['end'], true ) + 1;
+
+		$expected = array(
+			'start' => $dates['start']->copy()->subDays( $days_diff ),
+			'end'   => $dates['end']->copy()->subDays( $days_diff ),
+			'range' => $range,
+		);
+
+		$result = parse_relative_dates_for_range( $range, $relative_range );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers \EDD\Reports\parse_relative_dates_for_range()
+	 * @group edd_dates
+	 */
+	public function test_parse_relative_dates_for_previous_month_in_last_month_should_return_those_dates() {
+		$range          = 'last_month';
+		$relative_range = 'previous_month';
+
+		$dates    = parse_dates_for_range( $range );
+		$expected = array(
+			'start' => $dates['start']->copy()->subMonth( 1 ),
+			'end'   => $dates['end']->copy()->subMonth( 1 ),
+			'range' => $range,
+		);
+
+		$result = parse_relative_dates_for_range( $range, $relative_range );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers \EDD\Reports\parse_relative_dates_for_range()
+	 * @group edd_dates
+	 */
+	public function test_parse_relative_dates_for_previous_quarter_in_last_month_should_return_those_dates() {
+		$range          = 'last_month';
+		$relative_range = 'previous_quarter';
+
+		$dates    = parse_dates_for_range( $range );
+		$expected = array(
+			'start' => $dates['start']->copy()->subQuarter( 1 ),
+			'end'   => $dates['end']->copy()->subQuarter( 1 ),
+			'range' => $range,
+		);
+
+		$result = parse_relative_dates_for_range( $range, $relative_range );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers \EDD\Reports\parse_relative_dates_for_range()
+	 * @group edd_dates
+	 */
+	public function test_parse_relative_dates_for_previous_year_in_last_month_should_return_those_dates() {
+		$range          = 'last_month';
+		$relative_range = 'previous_year';
+
+		$dates    = parse_dates_for_range( $range );
+		$expected = array(
+			'start' => $dates['start']->copy()->subYear( 1 ),
+			'end'   => $dates['end']->copy()->subYear( 1 ),
+			'range' => $range,
+		);
+
+		$result = parse_relative_dates_for_range( $range, $relative_range );
+
+		// Explicitly strip seconds in case the test is slow.
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
 	}
 
 	public function test_gross_order_status() {

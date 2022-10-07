@@ -981,4 +981,17 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
+
+	/**
+	 * Show a required indicator on a field.
+	 *
+	 * @return string
+	 */
+	public function show_required() {
+
+		$output  = '<span class="edd-required-indicator" aria-hidden="true">*</span>';
+		$output .= sprintf( '<span class="screen-reader-text">%s</span>', __( 'Required', 'easy-digital-downloads' ) );
+
+		return $output;
+	}
 }

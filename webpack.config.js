@@ -76,7 +76,9 @@ const config = {
 		'edd-admin-email-tags-style': './assets/css/admin/email-tags.scss',
 		'edd-admin-menu-style': './assets/css/admin/menu.scss',
 		'edd-admin-tax-rates-style': './assets/css/admin/tax-rates/style.scss',
-		'edd-admin-extension-manager-style': './assets/css/admin/extension-manager.scss'
+		'edd-admin-extension-manager-style': './assets/css/admin/extension-manager.scss',
+
+		'edd-style': './assets/css/frontend/style.scss'
 	},
 	output: {
 		filename: 'assets/js/[name].js',
