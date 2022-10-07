@@ -33,6 +33,8 @@
 
 @import "general/style";
 
+@import "settings/style.scss";
+
 /**
  * Notes:
  *
@@ -1018,11 +1020,6 @@ table.edd-order-overview-summary--refund {
 	width: 100%;
 }
 
-/** Columns */
-.wp-list-table.orders .column-number .row-title {
-	display: block;
-}
-
 /** Status labels */
 .edd-admin-order-status-badge {
 	padding: 2px 7px;
@@ -1254,10 +1251,6 @@ textarea[name="edd-note"] {
 .wp-list-table.orders div.order-list-email {
 	font-size: .85em;
 	color: #888888;
-}
-
-.wp-list-table.orders th.column-number {
-	width: 150px;
 }
 
 .wp-list-table.orders th.column-amount {
@@ -2018,13 +2011,6 @@ body.download_page_edd-reports {
 	background-color: #444;
 }
 
-.edd-vertical-sections .edd-legacy-label {
-	display: inline-block;
-	position: absolute;
-	top: 11px;
-	right: 6px;
-}
-
 /* Keeping this rule for Software Licensing Reports */
 .edd-reports-wrapper .postbox h2,
 .edd-reports-wrapper .postbox h3 {
@@ -2496,6 +2482,15 @@ span.edd-to-and-from--separator {
 
 .wrap-licenses p.submit {
 	clear: both;
+}
+
+#edd-send-test-summary-save-changes-notice .notice p {
+	font-size: 13px;
+}
+
+#edd-send-test-summary-save-changes-notice, #edd-send-test-summary-notice {
+	display: flex;
+	margin-top: 5px;
 }
 
 /* Global Graph Styles

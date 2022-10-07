@@ -42,45 +42,6 @@ module.exports = function( grunt ) {
 			},
 		},
 
-		makepot: {
-			target: {
-				options: {
-					domainPath: '/languages/', // Where to save the POT file.
-					exclude: [ 'build/.*' ],
-					mainFile: 'easy-digital-downloads.php', // Main project file.
-					potFilename: 'easy-digital-downloads.pot', // Name of the POT file.
-					potHeaders: {
-						poedit: true, // Includes common Poedit headers.
-						'x-poedit-keywordslist': true, // Include a list of all possible gettext functions.
-					},
-					type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
-					updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
-					processPot: function( pot, options ) {
-						pot.headers[ 'report-msgid-bugs-to' ] = 'https://easydigitaldownloads.com/';
-						pot.headers[ 'last-translator' ] = 'WP-Translations (http://wp-translations.org/)';
-						pot.headers[ 'language-team' ] = 'WP-Translations <wpt@wp-translations.org>';
-						pot.headers.language = 'en_US';
-						let translation, // Exclude meta data from pot.
-							excluded_meta = [
-								'Plugin Name of the plugin/theme',
-								'Plugin URI of the plugin/theme',
-								'Author of the plugin/theme',
-								'Author URI of the plugin/theme',
-							];
-						for ( translation in pot.translations[ '' ] ) {
-							if ( 'undefined' !== typeof pot.translations[ '' ][ translation ].comments.extracted ) {
-								if ( excluded_meta.indexOf( pot.translations[ '' ][ translation ].comments.extracted ) >= 0 ) {
-									console.log( 'Excluded meta: ' + pot.translations[ '' ][ translation ].comments.extracted );
-									delete pot.translations[ '' ][ translation ];
-								}
-							}
-						}
-						return pot;
-					},
-				},
-			},
-		},
-
 		// Clean up build directory
 		clean: {
 			main: [ 'build/<%= pkg.name %>' ],
@@ -90,7 +51,13 @@ module.exports = function( grunt ) {
 		copy: {
 			main: {
 				src: [
-					'assets/**',
+					'assets/sample-products-import.xml',
+					'assets/css/*.min.css',
+					'assets/css/admin/style.css',
+					'assets/js/*.js',
+					'assets/js/*.min.js',
+					'assets/js/vendor/**',
+					'assets/images/**',
 					'includes/**',
 					'languages/**',
 					'templates/**',
@@ -139,10 +106,45 @@ module.exports = function( grunt ) {
 						dest: 'includes/gateways/stripe'
 					}
 				]
+			},
+			blocks: {
+				options: {
+					patterns: [
+						{
+							match: /init_blocks/g,
+							replacement: 'init_core_blocks',
+							expression: true,
+						},
+						{
+							match: /update_required_pages/g,
+							replacement: 'update_core_required_pages',
+							expression: true,
+						},
+						{
+							match: /remove_action(.*);/g,
+							replacement: '',
+							expression: true,
+						},
+						{
+							match: /remove_filter(.*);/g,
+							replacement: '',
+							expression: true,
+						},
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'includes/blocks/edd-blocks.php' ],
+						dest: 'includes/blocks'
+					}
+				]
 			}
 		}
 	} );
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'force:checktextdomain', 'makepot', 'replace', 'clean', 'copy', 'compress' ] );
+	grunt.registerTask( 'prep', [ 'force:checktextdomain', 'clean', 'replace' ] );
+	grunt.registerTask( 'build', [ 'copy', 'compress' ] );
 };

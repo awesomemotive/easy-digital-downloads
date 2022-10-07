@@ -38,3 +38,6 @@ node_modules
 
 # Stripe
 includes/gateways/stripe
+
+# Blocks
+includes/blocks

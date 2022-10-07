@@ -90,6 +90,7 @@ function edd_admin_header() {
 	}
 
 	?>
+
 	<div id="edd-header" class="edd-header">
 		<div id="edd-header-wrapper">
 			<span id="edd-header-branding">
@@ -248,15 +249,9 @@ function edd_options_page_form( $active_tab = '', $section = '', $override = fal
 	$suffix = ! empty( $section )
 		? $active_tab . '_' . $section
 		: $active_tab . '_main';
-
-	// Find out if we're displaying a sidebar.
-	$is_promo_active = edd_is_promo_active();
-	$wrapper_class   = ( true === $is_promo_active )
-		? array( ' edd-has-sidebar' )
-		: array();
 	?>
 
-	<div class="edd-settings-wrap<?php echo esc_attr( implode( ' ', $wrapper_class ) ); ?> wp-clearfix">
+	<div class="edd-settings-wrap wp-clearfix">
 		<div class="edd-settings-content">
 			<form method="post" action="options.php" class="edd-settings-form">
 				<?php
@@ -287,60 +282,8 @@ function edd_options_page_form( $active_tab = '', $section = '', $override = fal
 				submit_button(); ?>
 			</form>
 		</div>
-		<?php
-		if ( true === $is_promo_active ) {
-			edd_options_sidebar();
-		}
-		?>
 	</div>
 
-	<?php
-}
-
-/**
- * Display the sidebar
- *
- * @since 2.9.20
- *
- * @return string
- */
-function edd_options_sidebar() {
-	// Get settings tab and section info
-	$active_tab     = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
-	$active_tab     = array_key_exists( $active_tab, edd_get_settings_tabs() ) ? $active_tab : 'general';
-	$active_section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : 'main';
-	$active_section = array_key_exists( $active_section, edd_get_settings_tab_sections( $active_tab ) ) ? $active_section : 'main';
-
-	// The coupon code we're promoting
-	$coupon_code = 'BFCM2019';
-
-	// Build the main URL for the promotion
-	$args = array(
-		'utm_source'   => 'settings',
-		'utm_medium'   => 'wp-admin',
-		'utm_campaign' => 'bfcm2019',
-		'utm_content'  => sanitize_key( 'sidebar-promo-' . $active_tab . '-' . $active_section ),
-	);
-	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
-	?>
-	<div class="edd-settings-sidebar">
-		<div class="edd-settings-sidebar-content">
-			<div class="edd-sidebar-header-section">
-				<img class="edd-bfcm-header" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/bfcm-header.svg' ); ?>">
-			</div>
-			<div class="edd-sidebar-description-section">
-				<p class="edd-sidebar-description"><?php _e( 'Save 25% on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades!', 'easy-digital-downloads' ); ?></p>
-			</div>
-			<div class="edd-sidebar-coupon-section">
-				<label for="edd-coupon-code"><?php _e( 'Use code at checkout:', 'easy-digital-downloads' ); ?></label>
-				<input id="edd-coupon-code" type="text" value="<?php echo esc_attr( $coupon_code ); ?>" readonly>
-				<p class="edd-coupon-note"><?php _e( 'Sale ends 23:59 PM December 6th CST. Save 25% on <a href="https://sandhillsdev.com/projects/" target="_blank">our other plugins</a>.', 'easy-digital-downloads' ); ?></p>
-			</div>
-			<div class="edd-sidebar-footer-section">
-				<a class="edd-cta-button" href="<?php echo esc_url( $url ); ?>" target="_blank"><?php _e( 'Shop Now!', 'easy-digital-downloads' ); ?></a>
-			</div>
-		</div>
-	</div>
 	<?php
 }
 

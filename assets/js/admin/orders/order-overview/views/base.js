@@ -45,6 +45,9 @@ export const Base = wp.Backbone.View.extend( {
 		'change input': 'onChange',
 		'change textarea': 'onChange',
 		'change select': 'onChange',
+		'input input': 'onChange',
+		'input textarea': 'onChange',
+		'input select': 'onChange',
 	},
 
 	/**
@@ -110,10 +113,10 @@ export const Base = wp.Backbone.View.extend( {
 
 		if ( 'undefined' !== typeof toFocus ) {
 			this.focusedEl = toFocus;
-			this.focusedElCartetPos = toFocus.value.length;
+			this.focusedElCaretPos = toFocus.value.length;
 		} else {
 			this.focusedEl = null;
-			this.focusedElCartetPos = 0;
+			this.focusedElCaretPos = 0;
 		}
 	},
 

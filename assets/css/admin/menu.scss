@@ -21,11 +21,15 @@
 	}
 }
 
+#menu-posts-download li > a[href^="post-new.php?post_type=download"] {
+	display: none;
+}
+
 /* Secondary Separators */
 #menu-posts-download li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
 #menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
 #menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
-#menu-posts-download li:nth-last-child(2) a:after {
+#menu-posts-download li:nth-last-child(3) a:after {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	display: block;
 	float: left;

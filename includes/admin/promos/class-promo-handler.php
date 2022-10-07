@@ -65,7 +65,7 @@ class PromoHandler {
 				if ( $notice->should_display() ) {
 					$notice->display();
 				}
-			} );
+			}, $notice_class_name::DISPLAY_PRIORITY );
 		}
 	}
 

@@ -275,26 +275,20 @@ abstract class Extension {
 	 * @return string
 	 */
 	private function get_upgrade_url( ProductData $product_data, $item_id, $has_access = false ) {
-		$url            = 'https://easydigitaldownloads.com/pricing';
-		$utm_parameters = array(
-			'p'            => urlencode( $item_id ),
-			'utm_source'   => 'settings',
-			'utm_medium'   => urlencode( $this->settings_section ),
-			'utm_campaign' => 'admin',
-			'utm_term'     => urlencode( $product_data->slug ),
-		);
-
 		if ( $has_access ) {
 			$url = 'https://easydigitaldownloads.com/your-account/your-downloads/';
-			unset( $utm_parameters['p'] );
-		} elseif ( ! empty( $product_data->upgrade_url ) ) {
-			$url = esc_url_raw( $product_data->upgrade_url );
-			unset( $utm_parameters['p'] );
+		} else {
+			$url = 'https://easydigitaldownloads.com/lite-upgrade';
 		}
 
-		return add_query_arg(
+		$utm_parameters = array(
+			'utm_medium'  => $this->settings_section,
+			'utm_content' => $product_data->slug,
+		);
+
+		return edd_link_helper(
+			$url,
 			$utm_parameters,
-			$url
 		);
 	}
 
