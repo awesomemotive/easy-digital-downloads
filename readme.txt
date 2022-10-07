@@ -289,6 +289,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: When registering a new user from an EDD form, spaces were incorrectly removed from user names.
 * Fix: When the browser timezone differed from that of the Store, line graphs could offset the points from the gridlines.
 * Fix: Users with the shop worker role were not able to create new downloads.
+* Fix: Upon activation, EDD could have thrown a PHP notice about the orders table not existing on new installs.
 * Fix - Stripe: Customers were not always automatically logged in with Auto Register's successful purchase setting.
 * Fix - Stripe: When changing the store mode, the Stripe admin notice displayed incorrectly.
 * Dev: Legacy compatibility code has been removed from the downloads metabox.
