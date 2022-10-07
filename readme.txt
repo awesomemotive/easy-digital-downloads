@@ -238,7 +238,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 
-= 3.1, October 4, 2022 =
+= 3.1, October 6, 2022 =
 * New: Websites running WordPress 5.8 and above (and PHP 7.0 or greater) have access to ten new registered EDD blocks.
 * New: Store owners can receive weekly or monthly email summaries of their store's performance.
 * New - Blocks: A new EDD Products block has been registered to display downloads.
