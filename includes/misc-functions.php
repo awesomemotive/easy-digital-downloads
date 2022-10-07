@@ -1822,10 +1822,9 @@ function edd_get_activation_date() {
 				)
 			);
 			if ( $orders ) {
-				$first_order = reset( $orders );
-				// Use just the date_created, rather than looking for the completed date (first order may not be complete).
-				if ( ! empty( $first_order->date_created ) ) {
-					$activation_date = strtotime( $first_order->date_created );
+				$first_order_date = reset( $orders );
+				if ( ! empty( $first_order_date ) ) {
+					$activation_date = strtotime( $first_order_date );
 				}
 			}
 		}
