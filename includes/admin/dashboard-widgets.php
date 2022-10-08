@@ -273,8 +273,8 @@ function edd_load_dashboard_sales_widget( ) {
 		if ( has_action( 'edd_sales_summary_widget_after_payments' ) ) {
 			_edd_deprecated_hook(
 				'edd_sales_summary_widget_after_payments',
-				'edd_sales_summary_widget_after_orders',
 				'3.1.0.1',
+				'edd_sales_summary_widget_after_orders',
 				'Note: The replacement hook uses the EDD 3.0 order objects, instead of payment objects. Developers will need to make adjustments accordingly.'
 			);
 			do_action( 'edd_sales_summary_widget_after_payments', edd_get_payments( array( 'number' => 5, 'status' => 'complete' ) ) );
