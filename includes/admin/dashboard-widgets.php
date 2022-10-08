@@ -254,7 +254,7 @@ function edd_load_dashboard_sales_widget( ) {
 						);
 						?>
 					</a>
-					<br /><?php echo esc_html( edd_date_i18n( $order->date_completed ) ); ?> &mdash; <?php echo edd_get_status_label( $order->status ); ?>
+					<br /><?php echo esc_html( edd_date_i18n( $order->date_created ) ); ?> &mdash; <?php echo edd_get_status_label( $order->status ); ?>
 				</li>
 				<?php } // End foreach ?>
 		</ul>
