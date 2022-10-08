@@ -239,7 +239,7 @@ jQuery( document ).ready( function( $ ) {
 
 					if ( variable_price === 'no' || price_mode !== 'multi' ) {
 						// Switch purchase to checkout if a single price item or variable priced with radio buttons
-						$( '.edd-add-to-cart', container ).toggle();
+						$( '.edd-add-to-cart.edd-has-js', container ).toggle();
 						$( '.edd_go_to_checkout', container ).show();
 					}
 
