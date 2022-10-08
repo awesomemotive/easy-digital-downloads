@@ -6,7 +6,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.1
+Stable Tag: 3.1.0.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,11 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1.0.1, October 8, 2022 =
+* Fix: With taxes enabled, updating the address fields in the shortcode would replace the cart with the cart block.
+* Fix: The dashboard widget was not using the order currency to display amounts for recent orders.
+* Fix: No JS fallback buttons were being improperly toggled by JavaScript changes.
 
 = 3.1, October 6, 2022 =
 * New: Websites running WordPress 5.8 and above (and PHP 7.0 or greater) have access to ten new registered EDD blocks.
