@@ -268,7 +268,8 @@ function edd_load_dashboard_sales_widget( ) {
 		<a href="<?php echo esc_url( $all_orders_link ); ?>" class="button-secondary"><?php esc_html_e( 'View All Orders', 'easy-digital-downloads' ); ?></a>
 		</div>
 		<?php } // End if ?>
-		<?php do_action( 'edd_sales_summary_widget_after_purchases', $orders ); ?>
+		<?php _edd_deprecated_hook( 'edd_sales_summary_widget_after_payments', 'edd_sales_summary_widget_after_orders', '3.1.0.1', 'Note: the replacement hook is sending order objects, not payment objects, so developers will need to adjust accordingly.' ); ?>
+		<?php do_action( 'edd_sales_summary_widget_after_orders', $orders ); ?>
 	</div>
 	<?php
 	die();
