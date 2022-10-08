@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.1\n"
+"Project-Id-Version: Easy Digital Downloads 3.1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-05T16:48:26+00:00\n"
+"POT-Creation-Date: 2022-10-08T14:14:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: easy-digital-downloads\n"
@@ -1199,7 +1199,7 @@ msgid "No privacy policy agreement found."
 msgstr ""
 
 #: includes/admin/customers/customers.php:704
-#: includes/admin/dashboard-widgets.php:216
+#: includes/admin/dashboard-widgets.php:222
 msgid "Recent Orders"
 msgstr ""
 
@@ -1432,22 +1432,22 @@ msgstr ""
 msgid "Total Earnings"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:233
+#: includes/admin/dashboard-widgets.php:239
 msgid "No Name"
 msgstr ""
 
 #. translators: 1. customer name; 2. number of items purchased; 3. order total
-#: includes/admin/dashboard-widgets.php:238
+#: includes/admin/dashboard-widgets.php:244
 msgid "%1$s purchased %2$s item for <strong>%3$s</strong>"
 msgid_plural "%1$s purchased %2$s items for <strong>%3$s</strong>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/dashboard-widgets.php:262
+#: includes/admin/dashboard-widgets.php:268
 msgid "View All Orders"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:283
+#: includes/admin/dashboard-widgets.php:300
 msgid "%s "
 msgid_plural "%s "
 msgstr[0] ""
@@ -2020,7 +2020,7 @@ msgid "Price ID: %s"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:432
-#: includes/scripts.php:521
+#: includes/scripts.php:522
 msgid "Show advanced settings"
 msgstr ""
 
@@ -2031,7 +2031,7 @@ msgstr ""
 #: includes/admin/views/tmpl-tax-rates-table-row.php:47
 #: includes/blocks/views/checkout/cart/cart-fees.php:10
 #: includes/blocks/views/checkout/cart/cart-item.php:55
-#: includes/scripts.php:516
+#: includes/scripts.php:517
 #: templates/checkout_cart.php:57
 #: templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
@@ -5855,7 +5855,7 @@ msgid "Use these tools to recount / reset store stats."
 msgstr ""
 
 #: includes/admin/tools.php:140
-#: includes/scripts.php:198
+#: includes/scripts.php:199
 msgid "Please select an option"
 msgstr ""
 
@@ -6505,7 +6505,7 @@ msgid "Upgrade Easy Digital Downloads"
 msgstr ""
 
 #: includes/admin/upgrades/upgrade-functions.php:1579
-#: includes/scripts.php:538
+#: includes/scripts.php:539
 msgid "Migration complete"
 msgstr ""
 
@@ -8427,7 +8427,7 @@ msgid "New Download Product"
 msgstr ""
 
 #: includes/class-edd-html-elements.php:45
-#: includes/scripts.php:507
+#: includes/scripts.php:508
 msgid "Choose a %s"
 msgstr ""
 
@@ -11978,13 +11978,13 @@ msgstr ""
 
 #: includes/privacy-functions.php:27
 msgid ""
-"\n"
-"We collect information about you during the checkout process on our store. This information may include, but is not limited to, your name, billing address, shipping address, email address, phone number, credit card/payment details and any other details that might be requested from you for the purpose of processing your orders.\n"
-"Handling this data also allows us to:\n"
-"- Send you important account/order/service information.\n"
-"- Respond to your queries, refund requests, or complaints.\n"
-"- Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.\n"
-"- Set up and administer your account, provide technical and/or customer support, and to verify your identity.\n"
+"\r\n"
+"We collect information about you during the checkout process on our store. This information may include, but is not limited to, your name, billing address, shipping address, email address, phone number, credit card/payment details and any other details that might be requested from you for the purpose of processing your orders.\r\n"
+"Handling this data also allows us to:\r\n"
+"- Send you important account/order/service information.\r\n"
+"- Respond to your queries, refund requests, or complaints.\r\n"
+"- Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.\r\n"
+"- Set up and administer your account, provide technical and/or customer support, and to verify your identity.\r\n"
 ""
 msgstr ""
 
@@ -12198,7 +12198,7 @@ msgid "File not found"
 msgstr ""
 
 #: includes/process-purchase.php:31
-#: includes/scripts.php:196
+#: includes/scripts.php:197
 msgid "Your cart is empty"
 msgstr ""
 
@@ -12489,136 +12489,136 @@ msgstr ""
 msgid "Please Wait..."
 msgstr ""
 
-#: includes/scripts.php:195
+#: includes/scripts.php:196
 msgid "You have already added this item to your cart"
 msgstr ""
 
-#: includes/scripts.php:197
+#: includes/scripts.php:198
 #: includes/template-functions.php:192
 msgid "Loading"
 msgstr ""
 
-#: includes/scripts.php:492
+#: includes/scripts.php:493
 msgid "Add New Download"
 msgstr ""
 
-#: includes/scripts.php:493
+#: includes/scripts.php:494
 msgid "Use This File"
 msgstr ""
 
-#: includes/scripts.php:494
+#: includes/scripts.php:495
 msgid "Sorry, not available for variable priced products."
 msgstr ""
 
-#: includes/scripts.php:495
+#: includes/scripts.php:496
 msgid "Are you sure you want to delete this order?"
 msgstr ""
 
-#: includes/scripts.php:496
+#: includes/scripts.php:497
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: includes/scripts.php:497
+#: includes/scripts.php:498
 msgid "Are you sure you want to delete this adjustment?"
 msgstr ""
 
-#: includes/scripts.php:498
+#: includes/scripts.php:499
 msgid "Are you sure you want to delete this note?"
 msgstr ""
 
-#: includes/scripts.php:499
+#: includes/scripts.php:500
 msgid "Are you sure you want to delete this tax rate?"
 msgstr ""
 
-#: includes/scripts.php:500
+#: includes/scripts.php:501
 msgid "Are you sure you want to revoke this API key?"
 msgstr ""
 
-#: includes/scripts.php:501
+#: includes/scripts.php:502
 msgid "Are you sure you want to regenerate this API key?"
 msgstr ""
 
-#: includes/scripts.php:502
+#: includes/scripts.php:503
 msgid "Are you sure you want to resend the purchase receipt?"
 msgstr ""
 
-#: includes/scripts.php:503
+#: includes/scripts.php:504
 msgid "Are you sure you want to disconnect the WordPress user from this customer record?"
 msgstr ""
 
-#: includes/scripts.php:504
+#: includes/scripts.php:505
 msgid "Copy these links to your clipboard and give them to your customer"
 msgstr ""
 
-#: includes/scripts.php:505
+#: includes/scripts.php:506
 msgid "Are you sure you want to delete this %s?"
 msgstr ""
 
-#: includes/scripts.php:506
+#: includes/scripts.php:507
 msgid "Type to search %s"
 msgstr ""
 
-#: includes/scripts.php:508
+#: includes/scripts.php:509
 msgid "Choose one or more %s"
 msgstr ""
 
-#: includes/scripts.php:509
+#: includes/scripts.php:510
 msgid "You must have at least one price"
 msgstr ""
 
-#: includes/scripts.php:510
+#: includes/scripts.php:511
 msgid "You must have at least one field"
 msgstr ""
 
-#: includes/scripts.php:511
+#: includes/scripts.php:512
 msgid "Payments must contain at least one item"
 msgstr ""
 
-#: includes/scripts.php:512
+#: includes/scripts.php:513
 msgid "No match for:"
 msgstr ""
 
-#: includes/scripts.php:513
+#: includes/scripts.php:514
 msgid "Item price must be numeric"
 msgstr ""
 
-#: includes/scripts.php:514
+#: includes/scripts.php:515
 msgid "Item tax must be numeric"
 msgstr ""
 
-#: includes/scripts.php:515
+#: includes/scripts.php:516
 msgid "Quantity must be numeric"
 msgstr ""
 
-#: includes/scripts.php:517
+#: includes/scripts.php:518
 msgid "You must choose a method."
 msgstr ""
 
-#: includes/scripts.php:518
+#: includes/scripts.php:519
 msgid "Required fields not completed."
 msgstr ""
 
-#: includes/scripts.php:519
+#: includes/scripts.php:520
 msgid "Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup."
 msgstr ""
 
-#: includes/scripts.php:520
+#: includes/scripts.php:521
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: includes/scripts.php:522
+#: includes/scripts.php:523
 msgid "Hide advanced settings"
 msgstr ""
 
-#: includes/scripts.php:523
+#: includes/scripts.php:524
 msgid "There are no downloads attached to this payment"
 msgstr ""
 
-#: includes/scripts.php:524
+#: includes/scripts.php:525
 msgid "Please wait &hellip;"
 msgstr ""
 
-#: includes/scripts.php:525
+#: includes/scripts.php:526
 msgid "You must save your changes to send the test email."
 msgstr ""
 
@@ -12768,10 +12768,10 @@ msgstr ""
 
 #: includes/user-functions.php:761
 msgid ""
-"Hello %1$s,\n"
-"\n"
-"\t\tYour account with %2$s needs to be verified before you can access your purchase history. <a href=\"%3$s\">Click here</a> to verify your account.\n"
-"\n"
+"Hello %1$s,\r\n"
+"\r\n"
+"\t\tYour account with %2$s needs to be verified before you can access your purchase history. <a href=\"%3$s\">Click here</a> to verify your account.\r\n"
+"\r\n"
 "\t\tLink missing? Visit the following URL: %3$s"
 msgstr ""
 
