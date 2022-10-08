@@ -69,6 +69,7 @@ export function recalculateTaxes( state ) {
 		state: state,
 		billing_country: billing_country,
 		nonce: jQuery( '#edd-checkout-address-fields-nonce' ).val(),
+		current_page: edd_global_vars.current_page,
 	};
 
 	jQuery( '#edd_purchase_submit [type=submit]' ).after( '<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>' );
