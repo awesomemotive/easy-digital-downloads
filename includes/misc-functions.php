@@ -1866,6 +1866,16 @@ function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $quer
 }
 
 /**
+ * Whether core blocks are active.
+ *
+ * @since 3.1.0.2
+ * @return bool
+ */
+function edd_has_core_blocks() {
+	return defined( 'EDD_BLOCKS_DIR' );
+}
+
+/**
  * Polyfills for is_countable and is_iterable
  *
  * This helps with plugin compatibility going forward. Many extensions have issues with more modern PHP versions,
