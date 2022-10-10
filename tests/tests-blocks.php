@@ -19,7 +19,7 @@ class Tests_Blocks extends EDD_UnitTestCase {
 
 		$expected = $this->wp_version_supports_edd_blocks();
 
-		$this->assertEquals( $expected, defined( 'EDD_BLOCKS_DIR' ) );
+		$this->assertEquals( $expected, edd_has_core_blocks() );
 	}
 
 	public function test_block_categories_includes_edd() {
