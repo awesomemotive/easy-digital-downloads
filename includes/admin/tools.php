@@ -155,7 +155,6 @@ function edd_tools_recount_stats_display() {
 						<?php
 						$args = array(
 							'name'   => 'download_id',
-							'number' => - 1,
 							'chosen' => true,
 						);
 						echo EDD()->html->product_dropdown( $args );
