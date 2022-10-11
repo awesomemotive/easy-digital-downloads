@@ -1,0 +1,55 @@
+.edd-onboarding {
+	margin-top: 80px;
+}
+
+.edd-onboarding__logo {
+	text-align: center;
+	img {
+		width: 300px;
+	}
+}
+
+.edd-onboarding__wrapper {
+	max-width: 650px;
+	margin: 0 auto;
+}
+
+.edd-onboarding__steps {
+	margin: 50px 0;
+	ul {
+		display: flex;
+		gap: 15px;
+		li {
+			flex: 1;
+			text-align: center;
+		}
+	}
+
+}
+
+.edd-onboarding__single-step {
+	background: white;
+	border: 1px solid #c3c4c7;
+	border-radius: 3px;
+}
+
+.edd-onboarding__single-step-inner {
+	padding: 20px;
+}
+
+.edd-onboarding__single-step-title {
+	font-size: 24px;
+	color: #141b38;
+	font-weight: 600;
+}
+
+.edd-onboarding__single-step-subtitle {
+	font-size: 16px;
+	color: #141b38;
+	font-weight: normal;
+}
+
+.edd-onboarding__single-step-footer {
+	border-top: 1px solid #c3c4c7;
+	padding: 30px 20px 30px 20px;
+}
