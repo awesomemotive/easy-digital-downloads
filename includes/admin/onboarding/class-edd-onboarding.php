@@ -27,7 +27,12 @@ class EDD_Onboarding {
 	private $current_step = 'business_info';
 
 	/**
-	 * Holder of all Onboarding steps.
+	 * Current Onboarding step index.
+	 */
+	private $current_step_index = 1;
+
+	/**
+	 * Onboarding steps.
 	 */
 	private $onboarding_steps = array();
 
@@ -77,16 +82,10 @@ class EDD_Onboarding {
 		}
 
 		// Set onboarding steps.
+		$this->set_onboarding_steps();
 
 		// Determine current step.
-		if( isset( $_GET['current_step'] ) ){
-			$this->current_step = sanitize_key( $_GET['current_step'] );
-		}
-
-		// If requested step does not exist, abort.
-		if ( ! isset( $this->onboarding_steps[ $this->current_step ] ) ) {
-			die;
-		}
+		$this->set_current_onboarding_step();
 
 		// We don't want any notices on our screen.
 		remove_all_actions( 'admin_notices' );
@@ -94,7 +93,6 @@ class EDD_Onboarding {
 
 		// Load scripts and styles.
 		$this->enqueue_onboarding_scripts();
-
 	}
 
 	/**
@@ -107,12 +105,133 @@ class EDD_Onboarding {
 	}
 
 	/**
+	 * Set onboarding steps.
+	 *
+	 * @since 3.2
+	 */
+	public function set_onboarding_steps() {
+		$this->onboarding_steps = array(
+			'business_info' => array(
+				'step_title'          => __( 'Business', 'easy-digital-downloads' ),
+				'step_headline'       => __( 'Tell us a little bit about your business.', 'easy-digital-downloads' ),
+				'step_intro'          => __( 'Where is your business located? This helps Easy Digital Downloads configure the checkout and receipt templates.', 'easy-digital-downloads' ),
+				'step_view'           => '',
+				'step_submit_handler' => '',
+			),
+			'payment_methods' => array(
+				'step_title'          => __( 'Payment Methods', 'easy-digital-downloads' ),
+				'step_headline'       => __( 'Start accepting payments today!', 'easy-digital-downloads' ),
+				'step_intro'          => __( 'Connect with Stripe.', 'easy-digital-downloads' ),
+				'step_view'           => '',
+				'step_submit_handler' => '',
+			),
+			'configure_emails' => array(
+				'step_title'          => __( 'Emails', 'easy-digital-downloads' ),
+				'step_headline'       => __( 'Configure your Emails', 'easy-digital-downloads' ),
+				'step_intro'          => __( 'So that your dear users will receive good emails.', 'easy-digital-downloads' ),
+				'step_view'           => '',
+				'step_submit_handler' => '',
+			),
+			'tools' => array(
+				'step_title'          => __( 'Tools', 'easy-digital-downloads' ),
+				'step_headline'       => __( 'Conversion and Optimization tools', 'easy-digital-downloads' ),
+				'step_intro'          => __( 'Below, we have selected our recommended tools and features to help boost conversions and optimize your digital store.', 'easy-digital-downloads' ),
+				'step_view'           => '',
+				'step_submit_handler' => '',
+			),
+			'products' => array(
+				'step_title'          => __( 'Products', 'easy-digital-downloads' ),
+				'step_headline'       => __( 'What are you going to sell?', 'easy-digital-downloads' ),
+				'step_intro'          => __( 'Let’s get started with your first product.', 'easy-digital-downloads' ),
+				'step_view'           => '',
+				'step_submit_handler' => '',
+			),
+		);
+
+		// Set their index in the array.
+		$index = 1;
+		foreach ( $this->onboarding_steps as $key => $value ) {
+			$this->onboarding_steps[ $key ]['step_index'] = $index;
+			$index++;
+		}
+	}
+
+	/**
+	 * Set current onboarding step.
+	 *
+	 * @since 3.2
+	 */
+	public function set_current_onboarding_step() {
+		if( isset( $_GET['current_step'] ) ){
+			$this->current_step      = sanitize_key( $_GET['current_step'] );
+			// If requested step does not exist, abort.
+			if ( ! isset( $this->onboarding_steps[ $this->current_step ] ) ) {
+				wp_die( __( 'Unknown Onboarding Step.', 'easy-digital-downloads' ), __( 'Onboarding', 'easy-digital-downloads' ), 404 );
+			}
+
+			$this->current_step_index = $this->onboarding_steps[ $this->current_step ]['step_index'];
+		}
+	}
+
+	/**
+	 * Get previous step.
+	 *
+	 * @since 3.2
+	 */
+	public function get_previous_step() {
+		$internal_step = $this->current_step_index - 2;
+		$step_keys     = array_keys( $this->onboarding_steps );
+		if ( isset( $step_keys[ $internal_step ] ) ) {
+			return $step_keys[ $internal_step ];
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get current step.
 	 *
 	 * @since 3.2
 	 */
 	public function get_current_step() {
 		return $this->current_step;
+	}
+
+	/**
+	 * Get current step details.
+	 *
+	 * @since 3.2
+	 */
+	public function get_current_step_details() {
+		return $this->onboarding_steps[ $this->current_step ];
+	}
+
+	/**
+	 * Get next step.
+	 *
+	 * @since 3.2
+	 */
+	public function get_next_step() {
+		$internal_step = $this->current_step_index;
+		$step_keys     = array_keys( $this->onboarding_steps );
+		if ( isset( $step_keys[ $internal_step ] ) ) {
+			return $step_keys[ $internal_step ];
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get pagination.
+	 *
+	 * @since 3.2
+	 */
+	public function get_step_pagination() {
+		return array(
+			'previous' => $this->get_previous_step(),
+			'current'  => $this->get_current_step(),
+			'next'     => $this->get_next_step(),
+		);
 	}
 
 	/**
@@ -131,96 +250,90 @@ class EDD_Onboarding {
 			<div class="edd-onboarding__logo">
 				<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>">
 			</div>
-
 			<div class="edd-onboarding__wrapper">
-				<div class="edd-onboarding__steps">
-					<ul>
-						<li>✅ 1</li>
-						<li>2</li>
-						<li>3</li>
-						<li>4</li>
-						<li>5</li>
-					</ul>
+				<div class="edd-loader">
+					LOADING!
 				</div>
-
-				<div class="edd-onboarding__single-step">
-					<div class="edd-onboarding__single-step-inner">
-						<h1 class="edd-onboarding__single-step-title">Tell us a little bit about your business.</h1>
-						<h2 class="edd-onboarding__single-step-subtitle">Where is your business located? This helps Easy Digital Downloads configure the checkout and receipt templates.</h2>
-
-						<div>
-
-						<table class="form-table" role="presentation">
-							<tbody>
-								<tr>
-									<th scope="row">
-										<label for="edd_settings[business_settings]">
-										<h3>Business Info</h3>
-										</label>
-									</th>
-									<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>Business Information</strong>: Easy Digital Downloads uses the following business information for things like pre-populating tax fields, and connecting third-party services with the same information."></span></td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="edd_settings[entity_name]">Business Name</label></th>
-									<td>
-										<input type="text" class=" regular-text" id="edd_settings[entity_name]" name="edd_settings[entity_name]" value="" placeholder="EDD Localhost ZAN" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAfBJREFUWAntVk1OwkAUZkoDKza4Utm61iP0AqyIDXahN2BjwiHYGU+gizap4QDuegWN7lyCbMSlCQjU7yO0TOlAi6GwgJc0fT/fzPfmzet0crmD7HsFBAvQbrcrw+Gw5fu+AfOYvgylJ4TwCoVCs1ardYTruqfj8fgV5OUMSVVT93VdP9dAzpVvm5wJHZFbg2LQ2pEYOlZ/oiDvwNcsFoseY4PBwMCrhaeCJyKWZU37KOJcYdi27QdhcuuBIb073BvTNL8ln4NeeR6NRi/wxZKQcGurQs5oNhqLshzVTMBewW/LMU3TTNlO0ieTiStjYhUIyi6DAp0xbEdgTt+LE0aCKQw24U4llsCs4ZRJrYopB6RwqnpA1YQ5NGFZ1YQ41Z5S8IQQdP5laEBRJcD4Vj5DEsW2gE6s6g3d/YP/g+BDnT7GNi2qCjTwGd6riBzHaaCEd3Js01vwCPIbmWBRx1nwAN/1ov+/drgFWIlfKpVukyYihtgkXNp4mABK+1GtVr+SBhJDbBIubVw+Cd/TDgKO2DPiN3YUo6y/nDCNEIsqTKH1en2tcwA9FKEItyDi3aIh8Gl1sRrVnSDzNFDJT1bAy5xpOYGn5fP5JuL95ZjMIn1ya7j5dPGfv0A5eAnpZUY3n5jXcoec5J67D9q+VuAPM47D3XaSeL4AAAAASUVORK5CYII=&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
-										<p class="description"> The official (legal) name of your store. Defaults to Site Title if empty.</p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="edd_settings[entity_type]">Business Type</label></th>
-									<td>
-										<select id="edd_settings[entity_type]" name="edd_settings[entity_type]" class="" data-placeholder="">
-										<option value="individual">Individual</option>
-										<option value="company">Company</option>
-										</select>
-										<p class="description"> Choose "Individual" if you do not have an official/legal business ID, or "Company" if a registered business entity exists.</p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="edd_settings[business_address]">Business Address</label></th>
-									<td>
-										<input type="text" class=" regular-text" id="edd_settings[business_address]" name="edd_settings[business_address]" value="">
-										<p class="description"> </p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="edd_settings[business_address_2]">Business Address (Extra)</label></th>
-									<td>
-										<input type="text" class=" regular-text" id="edd_settings[business_address_2]" name="edd_settings[business_address_2]" value="">
-										<p class="description"> </p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="edd_settings[business_city]">Business City</label></th>
-									<td>
-										<input type="text" class=" regular-text" id="edd_settings[business_city]" name="edd_settings[business_city]" value="">
-										<p class="description"> </p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="edd_settings[business_postal_code]">Business Postal Code</label></th>
-									<td>
-										<input type="text" class=" medium-text" id="edd_settings[business_postal_code]" name="edd_settings[business_postal_code]" value="">
-										<p class="description"> </p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
-						</div>
-
-					</div>
-
-					<div class="edd-onboarding__single-step-footer">
-						<a href="">Back</a>
-						<a href="">Save</a>
-					</div>
-
+				<div class="edd-onboarding__current-step">
+					<?php $this->load_step_view(); ?>
 				</div>
-
 			</div>
 		</div>
+		<?php
+	}
+
+
+	/**
+	 * Onboarding Wizard subpage screen.
+	 *
+	 * @since 3.2
+	 */
+	public function load_step_view() {
+		$current_step_details = $this->get_current_step_details();
+		$pagination           = $this->get_step_pagination();
+		?>
+		<div class="edd-onboarding__steps">
+			<ul>
+				<?php foreach( $this->onboarding_steps as $step_key => $step ):
+					$step_url = edd_get_admin_url(
+						array(
+							'post_type'    => 'download',
+							'page'         => 'edd-onboarding-wizard',
+							'current_step' => sanitize_key( $step_key ),
+						)
+					);
+
+					$classes = array();
+					// Determine if this step is active.
+					if ( $this->current_step_index === $step['step_index'] ) {
+						$classes[] = 'active-step';
+					}
+					// Determine if this step is active.
+					if ( $this->current_step_index > $step['step_index'] ) {
+						$classes[] = 'completed-step';
+					}
+					?>
+					<li class="<?php echo implode( ' ', array_map( 'esc_attr', $classes ) ) ?>">
+						<a href="<?php echo esc_url( $step_url );?>">(<?php echo esc_html( $step['step_index'] ); ?>) - <?php echo esc_html( $step['step_title'] ); ?></a>
+					</li>
+					<?php
+				endforeach;
+				?>
+			</ul>
+		</div>
+
+		<div class="edd-onboarding__single-step">
+			<div class="edd-onboarding__single-step-inner">
+				<span class="edd-onboarding__steps-indicator"><?php echo esc_html( __( 'Step', 'easy-digital-downloads' ) ); ?> <?php echo $this->current_step_index;?> / <?php echo count( $this->onboarding_steps ); ?></span>
+				<h1 class="edd-onboarding__single-step-title"><?php echo esc_html( $current_step_details['step_headline'] ); ?></h1>
+				<h2 class="edd-onboarding__single-step-subtitle"><?php echo esc_html( $current_step_details['step_intro'] ); ?></h2>
+
+				<?php include EDD_PLUGIN_DIR . "includes/admin/onboarding/views/step-{$this->current_step}.php";?>
+
+			</div>
+
+			<div class="edd-onboarding__single-step-footer">
+				<?php if ( $pagination['previous'] ) : ?>
+					<a href="">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></a>
+				<?php endif;?>
+
+				<a class="button button-secondary" href=""><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></a>
+				<a class="button button-primary" href=""><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></a>
+
+				<br>
+				<br>
+
+
+			</div>
+
+		</div>
+
+		<div style="text-align: center;"><a href="" style="color: black; opacity: 0.5;"><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a></div>
+
+		<pre><?php print_r( $this->onboarding_steps );?></pre>
+			<pre><?php print_r( $this->current_step );?></pre>
+			<pre><?php print_r( $this->current_step_index );?></pre>
+			<pre><?php print_r( array_keys( $this->onboarding_steps ) ); ?></pre>
 		<?php
 	}
 
