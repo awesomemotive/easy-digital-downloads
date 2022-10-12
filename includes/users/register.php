@@ -55,16 +55,6 @@ function edd_process_register_form( $data ) {
 
 	do_action( 'edd_pre_process_register_form' );
 
-	$block_inputs = array(
-		'pass1' => 'edd_user_pass',
-		'pass2' => 'edd_user_pass2',
-	);
-
-	foreach ( $block_inputs as $block_input => $edd_input ) {
-		$_POST[ $edd_input ] = $data[ $block_input ];
-		$data[ $edd_input ]  = $data[ $block_input ];
-	}
-
 	if ( empty( $data['edd_user_login'] ) ) {
 		edd_set_error( 'empty_username', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
