@@ -1157,7 +1157,7 @@ class EDD_API {
 		$product['info']['modified_date'] = $product_info->post_modified;
 		$product['info']['status']        = $product_info->post_status;
 		$product['info']['link']          = html_entity_decode( $product_info->guid );
-		$product['info']['permalink']     = get_permalink( $product_info->ID );
+		$product['info']['permalink']     = html_entity_decode( get_permalink( $product_info->ID ) );
 		$product['info']['content']       = $product_info->post_content;
 		$product['info']['excerpt']       = $product_info->post_excerpt;
 		$product['info']['thumbnail']     = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
