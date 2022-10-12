@@ -596,7 +596,7 @@ function edd_render_products_field( $post_id ) {
 												'chosen'               => true,
 												'bundles'              => false,
 												'variations'           => true,
-												'show_variations_only' => true,
+												'show_variations_only' => false,
 												'class'                => 'edd-form-group__input',
 											)
 										);
