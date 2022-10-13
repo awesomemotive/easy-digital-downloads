@@ -171,7 +171,8 @@ class Sections {
 			'id'       => '',
 			'label'    => '',
 			'icon'     => 'admin-settings',
-			'callback' => ''
+			'callback' => '',
+			'visible'  => '',
 		) );
 	}
 
@@ -224,9 +225,11 @@ class Sections {
 				: '';
 			$class           = $this->is_current_section( $section->id ) ? 'section-title section-title--is-active' : 'section-title';
 			$aria_attributes = $this->use_js ? 'role="tab" aria-controls="' . esc_attr( $this->id . $section->id ) . '"' : 'role="menuitem"';
+			$display         = ! empty( $section->visible ) ? '' : ' style="display: none;"';
+
 			?>
 
-			<li class="<?php echo esc_attr( $class ); ?>" <?php echo $aria_attributes . ' ' . $selected; ?>>
+			<li id="<?php echo esc_attr( $section->id ); ?>" class="<?php echo esc_attr( $class ); ?>" <?php echo $aria_attributes . ' ' . $selected; ?> <?php echo $display; ?>>
 				<a href="<?php echo esc_url( $url ); ?>">
 					<span class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></span>
 					<span class="label"><?php echo $section->label; // Allow HTML ?></span>

@@ -303,3 +303,58 @@ function edd_overview_refunds_chart() {
 	);
 
 }
+
+/**
+ * Create reports page for report settings
+ *
+ * @access      public
+ * @since       3.1.0.2
+ */
+function edd_report_settings_page() {
+
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		wp_die( __( 'You do not have permission to access report settings.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$tabs = Reports\get_reports();
+
+	// Remove the settings tab from the list, so it cannot be hidden.
+	unset( $tabs['report_settings'] );
+
+	$user_reports_settings = edd_parse_user_reports_settings();
+	?>
+	<div>
+		<div class="inside">
+		<?php
+			?>
+			<p><?php esc_html_e( 'Use these settings to customize the Easy Digital Downloads reports. These are specific to your user.', 'edd-advanced-reports' ); ?></p>
+			<?php
+		?>
+		<form id="edd-report-settings">
+			<h3><?php _e( 'Exclude Data', 'easy-digital-downloads' ); ?></h3>
+			<p>
+				<label class="edd-toggle">
+					<input type="checkbox" name="report_settings[exclude_taxes]" value="1" <?php echo checked( true, $user_reports_settings['exclude_taxes'] ); ?> /> <?php echo esc_html__( 'Exclude Taxes', 'easy-digital-downloads' ); ?>
+				</label>
+			</p>
+
+			<p>
+				<label class="edd-toggle">
+					<input type="checkbox" name="report_settings[exclude_free_orders]" value="1" <?php echo checked( true, $user_reports_settings['exclude_free_orders'] ); ?> /> <?php echo esc_html__( 'Exclude Free Orders', 'easy-digital-downloads' ); ?>
+				</label>
+			</p>
+
+			<h3><?php _e( 'Show Reports', 'easy-digital-downloads' ); ?></h3>
+			<?php foreach ( $tabs as $id => $tab ) : ?>
+			<p>
+				<label class="edd-toggle">
+					<input class="report-selector" data-menu-id="<?php echo $id; ?>" type="checkbox" name="report_settings[registered_reports][<?php echo $id; ?>]" value="1" <?php echo checked( true, $user_reports_settings['registered_reports'][ $id ] ); ?> /> <?php echo esc_html__( $tab['label'] ); ?>
+				</label>
+			</p>
+			<?php endforeach; ?>
+
+		</form>
+		</div>
+	</div>
+	<?php
+}

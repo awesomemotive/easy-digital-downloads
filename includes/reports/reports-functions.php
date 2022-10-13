@@ -1752,3 +1752,30 @@ function compat_filter_date_range( $range ) {
 		? sanitize_key( $_REQUEST['range'] )
 		: $range;
 }
+
+function edd_get_default_user_reports_settings() {
+	$registered_reports = array();
+
+	$tabs = get_reports();
+
+	// Loop through tabs & setup sections.
+	if ( ! empty( $tabs ) ) {
+		foreach ( $tabs as $id => $tab ) {
+
+			if ( 'report_settings' === $id ) {
+				continue;
+			}
+
+			// Add to sections array
+			$registered_reports[ $id ] = true;
+		}
+	}
+
+	$defaults = array(
+		'exclude_taxes'       => false,
+		'exclude_free_orders' => false,
+		'registered_reports'  => $registered_reports,
+	);
+
+	return $defaults;
+}

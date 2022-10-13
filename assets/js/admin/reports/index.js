@@ -20,6 +20,7 @@ const EDD_Reports = {
 		this.meta_boxes();
 		this.date_options();
 		this.customers_export();
+		this.report_settings();
 	},
 
 	meta_boxes: function() {
@@ -176,6 +177,27 @@ const EDD_Reports = {
 			} else {
 				price_options_select.remove();
 			}
+		} );
+	},
+
+	report_settings: function() {
+		$( '#edd_general_report_settings input' ).change( function() {
+			var formData = $( '#edd-report-settings' ).serialize();
+			$( '#edd_general_report_settings input').prop( 'disabled', true );
+			const data = {
+				action: 'edd_save_user_report_settings',
+				settings: formData,
+			};
+
+			if ( $(this).hasClass( 'report-selector' ) ) {
+				let menuID = $(this).data('menu-id');
+				console.log(menuID);
+				$('#'+menuID).toggle();
+			}
+
+			$.post( ajaxurl, data, function( response ) {
+				$( '#edd_general_report_settings input').prop( 'disabled', false );
+			} );
 		} );
 	},
 };

@@ -96,6 +96,8 @@ function edd_reports_sections() {
 	// Get all registered tabs & views
 	$tabs = Reports\get_reports();
 
+	$user_report_settings = edd_parse_user_reports_settings();
+
 	// Loop through tabs & setup sections
 	if ( ! empty( $tabs ) ) {
 		foreach ( $tabs as $id => $tab ) {
@@ -105,7 +107,8 @@ function edd_reports_sections() {
 				'id'       => $id,
 				'label'    => $tab['label'],
 				'icon'     => $tab['icon'],
-				'callback' => array( 'edd_output_report_callback', array( $id ) )
+				'callback' => array( 'edd_output_report_callback', array( $id ) ),
+				'visible'  => ( 'report_settings' === $id || ! empty( $user_report_settings['registered_reports'][ $id ] ) ),
 			);
 		}
 	}
@@ -186,6 +189,22 @@ function edd_reports_page() {
 
 	<?php
 }
+
+function edd_register_user_report_settings( $reports ) {
+	try {
+		$reports->add_report( 'report_settings', array(
+			'label'            => __( 'Report Settings', 'easy-digital-downloads' ),
+			'icon'             => 'admin-settings',
+			'priority'         => 999999,
+			'display_callback' => 'edd_report_settings_page',
+			'filters'          => false,
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_user_report_settings' );
+
 
 /**
  * Register overview report and endpoints.
@@ -3365,3 +3384,58 @@ function edd_reports_get_relative_date_ranges() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_reports_get_relative_date_ranges', 'edd_reports_get_relative_date_ranges' );
+
+/**
+ * Save the user's reports settings.
+ *
+ * @since 3.1.0.2
+ */
+function edd_save_user_reports_settings() {
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( null, 403 );
+	}
+
+	parse_str( $_POST['settings'], $user_settings_string );
+	$user_settings = edd_parse_user_reports_settings( $user_settings_string['report_settings'] );
+	update_user_meta( get_current_user_id(), 'edd_reports_settings', $user_settings );
+
+	wp_send_json_success( null, 200 );
+}
+add_action( 'wp_ajax_edd_save_user_report_settings', 'edd_save_user_reports_settings' );
+
+function edd_parse_user_reports_settings( $user_reports_settings = array() ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		return array();
+	}
+
+	new Reports\init();
+	$default_settings = Reports\edd_get_default_user_reports_settings();
+
+	if ( empty( $user_reports_settings ) ) {
+		$user_reports_settings = get_user_meta( get_current_user_id(), 'edd_reports_settings', true );
+		if ( empty( $user_reports_settings ) ) {
+			update_user_meta( get_current_user_id(), 'edd_reports_settings', $default_settings );
+			return $default_settings;
+		}
+	}
+
+	array_walk( $default_settings, function( $value, $key ) use ( &$user_reports_settings ) {
+		if ( 'registered_reports' !== $key ) {
+			if ( ! array_key_exists( $key, $user_reports_settings ) ) {
+				$user_reports_settings[ $key ] = false;
+			}
+		}
+	} );
+
+	array_walk( $default_settings['registered_reports'], function( $value, $key ) use ( &$user_reports_settings ) {
+		if ( ! array_key_exists( $key, $user_reports_settings['registered_reports'] ) ) {
+			$user_reports_settings['registered_reports'][ $key ] = false;
+		}
+	} );
+
+	array_walk_recursive( $user_reports_settings, function( &$value, $key ) {
+		$value = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+	} );
+
+	return $user_reports_settings;
+}
