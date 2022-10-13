@@ -644,13 +644,14 @@ function edd_ajax_download_search() {
 
 	// Default query arguments
 	$args = array(
-		'orderby'        => 'title',
-		'order'          => 'ASC',
-		'post_type'      => 'download',
-		'posts_per_page' => 50,
-		'post_status'    => implode( ',', $status ), // String
-		'post__not_in'   => $excludes,               // Array
-		's'              => $new_search              // String
+		'orderby'          => 'title',
+		'order'            => 'ASC',
+		'post_type'        => 'download',
+		'posts_per_page'   => 50,
+		'post_status'      => implode( ',', $status ), // String
+		'post__not_in'     => $excludes,               // Array
+		'edd_search'       => $new_search,              // String
+		'suppress_filters' => false,
 	);
 
 	// Maybe exclude bundles.
@@ -670,8 +671,10 @@ function edd_ajax_download_search() {
 		);
 	}
 
+	add_filter( 'posts_where', 'edd_ajax_filter_download_where', 10, 2 );
 	// Get downloads
 	$items = get_posts( $args );
+	remove_filter( 'posts_where', 'edd_ajax_filter_download_where', 10, 2 );
 
 	// Pluck title & ID
 	if ( ! empty( $items ) ) {
@@ -724,8 +727,27 @@ function edd_ajax_download_search() {
 	// Done!
 	edd_die();
 }
-add_action( 'wp_ajax_edd_download_search',        'edd_ajax_download_search' );
+add_action( 'wp_ajax_edd_download_search', 'edd_ajax_download_search' );
 add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
+
+/**
+ * Filters the WHERE SQL query for the edd_download_search.
+ * This searches the download titles only, not the excerpt/content.
+ *
+ * @since 3.1.0.2
+ * @param string $where
+ * @param WP_Query $wp_query
+ * @return string
+ */
+function edd_ajax_filter_download_where( $where, $wp_query ) {
+	$search = $wp_query->get( 'edd_search' );
+	if ( $search ) {
+		global $wpdb;
+		$where .= " AND {$wpdb->posts}.post_title LIKE '%{$search}%'";
+	}
+
+	return $where;
+}
 
 /**
  * Search the customers database via AJAX
