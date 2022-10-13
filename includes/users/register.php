@@ -49,7 +49,7 @@ function edd_process_register_form( $data ) {
 		return;
 	}
 
-	if ( empty( $_POST['edd_register_submit'] ) ) {
+	if ( empty( $data['edd_register_submit'] ) ) {
 		return;
 	}
 
@@ -86,10 +86,10 @@ function edd_process_register_form( $data ) {
 	// Check if password is one or all empty spaces.
 	if ( ! empty( $data['edd_user_pass'] ) ) {
 		$data['edd_user_pass'] = trim( $data['edd_user_pass'] );
+	}
 
-		if ( empty( $data['edd_user_pass'] ) ) {
-			edd_set_error( 'password_empty_space', __( 'The password cannot be a space or all spaces.', 'easy-digital-downloads' ) );
-		}
+	if ( empty( $data['edd_user_pass'] ) ) {
+		edd_set_error( 'empty_password', __( 'The password cannot be a space or all spaces.', 'easy-digital-downloads' ) );
 	}
 
 	// Check if password fields do not match.
