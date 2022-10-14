@@ -682,6 +682,7 @@ function edd_ajax_download_search() {
 
 		// Loop through all items...
 		foreach ( $items as $post_id => $title ) {
+			$product_title = $title;
 
 			// Look for variable pricing
 			$prices = edd_get_variable_prices( $post_id );
@@ -694,7 +695,7 @@ function edd_ajax_download_search() {
 				// Add item to results array
 				$search['results'][] = array(
 					'id'   => $post_id,
-					'name' => $title
+					'name' => $title,
 				);
 			}
 
@@ -706,7 +707,7 @@ function edd_ajax_download_search() {
 					if ( ! empty( $name ) ) {
 						$search['results'][] = array(
 							'id'   => $post_id . '_' . $key,
-							'name' => esc_html( $title . ': ' . $name ),
+							'name' => esc_html( $product_title . ': ' . $name ),
 						);
 					}
 				}
