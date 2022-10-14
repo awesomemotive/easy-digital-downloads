@@ -743,6 +743,7 @@ function edd_ajax_filter_download_where( $where, $wp_query ) {
 	$search = $wp_query->get( 'edd_search' );
 	if ( $search ) {
 		global $wpdb;
+		$search = $wpdb->esc_like( $search );
 		$where .= " AND {$wpdb->posts}.post_title LIKE '%{$search}%'";
 	}
 
