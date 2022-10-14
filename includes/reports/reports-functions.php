@@ -324,10 +324,6 @@ function get_filters() {
 			'label'            => __( 'Product Categories', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_product_categories_filter'
 		),
-		'taxes'              => array(
-			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter'
-		),
 		'gateways'           => array(
 			'label'            => __( 'Gateways', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter'
@@ -421,16 +417,6 @@ function get_filter_value( $filter ) {
 
 			break;
 
-		// Handle taxes.
-		case 'taxes':
-			$value = array();
-
-			if ( isset( $_GET['exclude_taxes'] ) ) {
-				$value['exclude_taxes'] = true;
-			}
-
-			break;
-
 		// Handle default (direct from URL).
 		default:
 			$value = isset( $_GET[ $filter ] )
@@ -464,7 +450,6 @@ function get_persisted_filters() {
 		'relative_range',
 		'filter_from',
 		'filter_to',
-		'exclude_taxes',
 	);
 
 	/**
@@ -1041,13 +1026,20 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
  * @return bool True if taxes should be excluded from calculations.
  */
 function get_taxes_excluded_filter() {
-	$taxes = get_filter_value( 'taxes' );
+	$user_settings = edd_parse_user_reports_settings();
+	return (bool) $user_settings['exclude_taxes'];
+}
 
-	if ( ! isset( $taxes['exclude_taxes'] ) ) {
-		return false;
-	}
-
-	return (bool) $taxes['exclude_taxes'];
+/**
+ * Retrieves the free order exclusion filter.
+ *
+ * @since 3.0
+ *
+ * @return bool True if free orders should be excluded from calculations.
+ */
+function get_free_orders_excluded_filter() {
+	$user_settings = edd_parse_user_reports_settings();
+	return (bool) $user_settings['exclude_free_orders'];
 }
 
 /** Display *******************************************************************/
@@ -1403,28 +1395,6 @@ function display_product_categories_filter() {
 		<?php echo EDD()->html->category_dropdown( 'product_categories', get_filter_value( 'product_categories' ) ); ?>
 	</span>
 	<?php
-}
-
-/**
- * Handles display of the 'Exclude Taxes' filter for reports.
- *
- * @since 3.0
- */
-function display_taxes_filter() {
-	if ( false === edd_use_taxes() ) {
-		return;
-	}
-
-	$taxes         = get_filter_value( 'taxes' );
-	$exclude_taxes = isset( $taxes['exclude_taxes'] ) && true == $taxes['exclude_taxes'];
-?>
-	<span class="edd-graph-filter-options graph-option-section">
-		<label for="exclude_taxes">
-			<input type="checkbox" id="exclude_taxes" <?php checked( true, $exclude_taxes, true ); ?> value="1" name="exclude_taxes"/>
-			<?php esc_html_e( 'Exclude Taxes', 'easy-digital-downloads' ); ?>
-		</label>
-	</span>
-<?php
 }
 
 /**

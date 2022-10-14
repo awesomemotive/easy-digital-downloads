@@ -28,6 +28,7 @@ function edd_overview_sales_earnings_chart() {
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 	$column       = Reports\get_taxes_excluded_filter() ? '(total - tax)' : 'total';
+	$exclude_free = Reports\get_free_orders_excluded_filter();
 	$currency     = Reports\get_filter_value( 'currencies' );
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
@@ -54,7 +55,11 @@ function edd_overview_sales_earnings_chart() {
 	}
 
 	if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
-		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
+		$sql_clauses['where'] .= $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
+	}
+
+	if ( true === $exclude_free ) {
+		$sql_clauses['where'] .= ' AND total > 0 ';
 	}
 
 	// Revenue calculations should include gross statuses to negate refunds properly.

@@ -76,6 +76,7 @@ class Stats {
 	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
 	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
 	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type bool   $exclude_free  If free orders should be excluded from calculations. Default `false`
 	 *     @type string $function      SQL function. Certain methods will only accept certain functions. See each method for
 	 *                                 a list of accepted SQL functions.
 	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
@@ -104,6 +105,7 @@ class Stats {
 				'end'               => '',
 				'range'             => '',
 				'exclude_taxes'     => false,
+				'exclude_free'      => false,
 				'currency'          => false,
 				'currency_sql'      => '',
 				'status'            => array(),
@@ -214,6 +216,7 @@ class Stats {
 	 *     @type string $range         Date range. If a range is passed, this will override and `start` and `end`
 	 *                                 values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
 	 *     @type bool   $exclude_taxes If taxes should be excluded from calculations. Default `false`.
+	 *     @type bool   $exclude_free  If free orders should be excluded from calculations. Default `false`
 	 *     @type string $function      SQL function. Accepts `SUM` and `AVG`. Default `SUM`.
 	 *     @type string $where_sql     Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                                 query.
@@ -2634,6 +2637,7 @@ class Stats {
 			'end'               => '',
 			'range'             => '',
 			'exclude_taxes'     => false,
+			'exclude_free'      => false,
 			'currency'          => false,
 			'currency_sql'      => '',
 			'status'            => array(),
@@ -2833,6 +2837,10 @@ class Stats {
 
 		if ( ! empty( $this->query_vars['currency'] ) && 'convert' !== strtolower( $this->query_vars['currency'] ) ) {
 			$this->query_vars['currency_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.currency = %s", $this->query_vars['currency'] );
+		}
+
+		if ( ! empty( $this->query_vars['exclude_free'] ) ) {
+			$this->query_vars['exclude_free_sql'] = " AND {$this->query_vars['table']}.total > 0 )";
 		}
 	}
 

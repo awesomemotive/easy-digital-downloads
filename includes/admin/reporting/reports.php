@@ -219,6 +219,7 @@ function edd_register_overview_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
+		$exclude_free  = Reports\get_free_orders_excluded_filter();
 		$currency      = Reports\get_filter_value( 'currencies' );
 
 		$hbh   = Reports\get_dates_filter_hour_by_hour();
@@ -242,7 +243,6 @@ function edd_register_overview_report( $reports ) {
 			),
 			'filters' => array(
 				'dates',
-				'taxes',
 				'currencies',
 			)
 		) );
@@ -273,12 +273,13 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes, $currency, $exclude_free ) {
 						$stats = new EDD\Stats(
 							array(
 								'range'         => $dates['range'],
 								'function'      => 'SUM',
 								'exclude_taxes' => $exclude_taxes,
+								'exclude_free'  => $exclude_free,
 								'currency'      => $currency,
 								'relative'      => true,
 								'output'        => 'formatted',
@@ -298,7 +299,7 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes, $currency, $exclude_free ) {
 						$stats = new EDD\Stats(
 							array(
 								'function'      => 'AVG',
@@ -306,6 +307,7 @@ function edd_register_overview_report( $reports ) {
 								'relative'      => true,
 								'range'         => $dates['range'],
 								'exclude_taxes' => $exclude_taxes,
+								'exclude_free'  => $exclude_free,
 								'currency'      => $currency,
 							)
 						);
@@ -340,12 +342,13 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Total Refund Amount', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes, $currency, $exclude_free ) {
 						$stats  = new EDD\Stats();
 						return $stats->get_order_refund_amount( array(
 							'range'         => $dates['range'],
 							'function'      => 'SUM',
 							'exclude_taxes' => $exclude_taxes,
+							'exclude_free'  => $exclude_free,
 							'currency'      => $currency,
 							'relative'      => true,
 							'output'        => 'formatted',
@@ -1029,7 +1032,6 @@ function edd_register_refunds_report( $reports ) {
 			),
 			'filters' => array(
 				'dates',
-				'taxes',
 				'currencies'
 			)
 		) );
