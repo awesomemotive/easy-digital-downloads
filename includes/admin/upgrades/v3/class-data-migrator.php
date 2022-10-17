@@ -60,7 +60,7 @@ class Data_Migrator {
 		}
 
 		if ( $customer ) {
-			edd_add_customer_address(
+			edd_maybe_add_customer_address(
 				array(
 					'customer_id'  => $customer->id,
 					'is_primary'   => true,
