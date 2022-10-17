@@ -91,12 +91,30 @@ final class Customers extends Table {
 	 */
 	public function maybe_upgrade() {
 
-		if ( $this->needs_initial_upgrade() ) {
+		$missing_columns = false;
+		if ( ! $this->column_exists( 'status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status (status(20))" );
+			$missing_columns = true;
+		}
+
+		if ( ! $this->column_exists( 'date_modified' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT CURRENT_TIMESTAMP AFTER `date_created`" );
+			$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_created (date_created)" );
+			$missing_columns = true;
+		}
+
+		if ( ! $this->column_exists( 'uuid' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;" );
+			$missing_columns = true;
+		}
+
+		if ( $missing_columns ) {
 
 			// Delete old/irrelevant database options.
 			delete_option( $this->table_prefix . 'edd_customers_db_version' );
 			delete_option( 'wp_edd_customers_db_version' );
-
 
 			// Modify existing columns.
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
@@ -105,21 +123,6 @@ final class Customers extends Table {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `date_created` datetime NOT NULL default CURRENT_TIMESTAMP" );
-
-			if ( ! $this->column_exists( 'status' ) ) {
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;" );
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status (status(20))" );
-			}
-
-			if ( ! $this->column_exists( 'date_modified' ) ) {
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT CURRENT_TIMESTAMP AFTER `date_created`" );
-				$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_created (date_created)" );
-			}
-
-			if ( ! $this->column_exists( 'uuid' ) ) {
-				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;" );
-			}
 		}
 
 		parent::maybe_upgrade();
@@ -132,7 +135,7 @@ final class Customers extends Table {
 	 * @return bool
 	 */
 	private function needs_initial_upgrade() {
-		return $this->exists() && ! $this->column_exists( 'status' ) && ! $this->column_exists( 'uuid' );
+		return $this->exists() && ( ! $this->column_exists( 'status' ) || ! $this->column_exists( 'uuid' ) || ! $this->column_exists( 'date_modified' ) );
 	}
 
 	/**
