@@ -92,8 +92,7 @@ class Customer_Addresses extends Base {
 				SET ca.is_primary = 1
 				WHERE ca.id IN (
 					SELECT MAX(ca2.id)
-					FROM ( SELECT * FROM {$this->get_db()->edd_customer_addresses} ) ca2
-					WHERE ca2.type = 'billing'
+					FROM ( SELECT id, customer_id FROM {$this->get_db()->edd_customer_addresses} WHERE type = 'billing' ) ca2
 					GROUP BY ca2.customer_id
 				)
 			";
