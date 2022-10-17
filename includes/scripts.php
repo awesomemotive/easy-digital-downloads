@@ -315,6 +315,7 @@ function edd_register_admin_scripts() {
 		'tools-export' => array(),
 		'tools-import' => array(),
 		'notes'        => array(),
+		'onboarding'   => array(),
 		'orders'       => array(
 			'edd-admin-notes',
 			'wp-util',
@@ -329,7 +330,7 @@ function edd_register_admin_scripts() {
 		'tools'        => array(
 			'edd-admin-tools-export'
 		),
-		'upgrades'     => array()
+		'upgrades'     => array(),
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
