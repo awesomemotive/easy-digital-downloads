@@ -9,8 +9,17 @@
  * @since       3.1
  */
 
+namespace EDD\Onboarding;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+require_once EDD_PLUGIN_DIR . 'includes/admin/onboarding/helpers.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/onboarding/steps/step-business_info.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/onboarding/steps/step-payment_methods.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/onboarding/steps/step-configure_emails.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/onboarding/steps/step-tools.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/onboarding/steps/step-products.php';
 
 /**
  * EDD_Onboarding Class.
@@ -19,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.2
  */
-class EDD_Onboarding {
+class OnboardingWizard {
 
 	/**
 	 * Current Onboarding step.
@@ -37,19 +46,49 @@ class EDD_Onboarding {
 	private $onboarding_steps = array();
 
 	/**
+	 * True if user started onboarding process.
+	 */
+	private $onboarding_started = false;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @since 3.2
 	 */
 	public function __construct() {
-		// If Onboarding Wizard was already completed, we can abort.
 		if ( ! is_admin() || wp_doing_cron() ) {
 			return;
 		}
 
 		add_action( 'admin_menu', array( $this, 'add_menu_item' ), 99999 );
 		add_action( 'admin_head', array( $this, 'hide_menu_item' ) );
+
+		// Abort if we are not requesting Onboarding Wizard.
+		if ( ! isset( $_REQUEST['page'] ) || 'edd-onboarding-wizard' !== wp_unslash( $_REQUEST['page'] ) ) {
+			return;
+		}
+
+		// @todo If onboarding was completed, can we stop loading this class?
+		// if (condition) {
+		// 	# code...
+		// }
+
+
 		add_action( 'admin_init', array( $this, 'load_onboarding_wizard' ) );
+
+		// Set variables.
+		$this->onboarding_started = get_option( 'edd_onboarding_started', false );
+
+		// Set onboarding steps.
+		$this->set_onboarding_steps();
+
+		// Determine current step.
+		$this->set_current_onboarding_step();
+
+		// Ajax handlers.
+		add_action( 'wp_ajax_edd_onboarding_started', array( $this, 'ajax_onboarding_started' ) );
+		add_action( 'wp_ajax_edd_onboarding_load_step', array( $this, 'ajax_onboarding_load_step' ) );
+
 	}
 
 	/**
@@ -77,22 +116,13 @@ class EDD_Onboarding {
 	 * @since 3.2
 	 */
 	public function load_onboarding_wizard() {
-		if ( ! isset( $_GET['page'] ) || 'edd-onboarding-wizard' !== wp_unslash( $_GET['page'] ) ) {
-			return;
-		}
-
-		// Set onboarding steps.
-		$this->set_onboarding_steps();
-
-		// Determine current step.
-		$this->set_current_onboarding_step();
-
 		// We don't want any notices on our screen.
 		remove_all_actions( 'admin_notices' );
 		remove_all_actions( 'all_admin_notices' );
 
 		// Load scripts and styles.
 		$this->enqueue_onboarding_scripts();
+		edd_stripe_connect_admin_script( 'download_page_edd-settings' );
 	}
 
 	/**
@@ -101,7 +131,11 @@ class EDD_Onboarding {
 	 * @since 3.2
 	 */
 	public function enqueue_onboarding_scripts() {
+		wp_enqueue_script( 'edd-admin-onboarding' );
 		wp_enqueue_media();
+
+		wp_enqueue_style( 'edd-extension-manager' );
+		wp_enqueue_script( 'edd-extension-manager' );
 	}
 
 	/**
@@ -115,45 +149,44 @@ class EDD_Onboarding {
 				'step_title'          => __( 'Business', 'easy-digital-downloads' ),
 				'step_headline'       => __( 'Tell us a little bit about your business.', 'easy-digital-downloads' ),
 				'step_intro'          => __( 'Where is your business located? This helps Easy Digital Downloads configure the checkout and receipt templates.', 'easy-digital-downloads' ),
-				'step_view'           => '',
-				'step_submit_handler' => '',
+				'step_handler'        => 'BusinessInfo',
 			),
 			'payment_methods' => array(
 				'step_title'          => __( 'Payment Methods', 'easy-digital-downloads' ),
 				'step_headline'       => __( 'Start accepting payments today!', 'easy-digital-downloads' ),
 				'step_intro'          => __( 'Connect with Stripe.', 'easy-digital-downloads' ),
-				'step_view'           => '',
-				'step_submit_handler' => '',
+				'step_handler'        => 'PaymentMethods',
 			),
 			'configure_emails' => array(
 				'step_title'          => __( 'Emails', 'easy-digital-downloads' ),
 				'step_headline'       => __( 'Configure your Emails', 'easy-digital-downloads' ),
 				'step_intro'          => __( 'So that your dear users will receive good emails.', 'easy-digital-downloads' ),
-				'step_view'           => '',
-				'step_submit_handler' => '',
+				'step_handler'        => 'ConfigureEmails',
 			),
 			'tools' => array(
 				'step_title'          => __( 'Tools', 'easy-digital-downloads' ),
 				'step_headline'       => __( 'Conversion and Optimization tools', 'easy-digital-downloads' ),
 				'step_intro'          => __( 'Below, we have selected our recommended tools and features to help boost conversions and optimize your digital store.', 'easy-digital-downloads' ),
-				'step_view'           => '',
-				'step_submit_handler' => '',
+				'step_handler'        => 'Tools',
 			),
 			'products' => array(
 				'step_title'          => __( 'Products', 'easy-digital-downloads' ),
 				'step_headline'       => __( 'What are you going to sell?', 'easy-digital-downloads' ),
 				'step_intro'          => __( 'Let’s get started with your first product.', 'easy-digital-downloads' ),
-				'step_view'           => '',
-				'step_submit_handler' => '',
+				'step_handler'        => 'Products',
 			),
 		);
 
-		// Set their index in the array.
+		// Set step index in the array and load ajax handlers.
 		$index = 1;
 		foreach ( $this->onboarding_steps as $key => $value ) {
 			$this->onboarding_steps[ $key ]['step_index'] = $index;
 			$index++;
+
+			// Initialize step.
+			call_user_func( 'EDD\\Onboarding\\Steps\\' . $value['step_handler'] . '\\initialize' );
 		}
+
 	}
 
 	/**
@@ -162,15 +195,25 @@ class EDD_Onboarding {
 	 * @since 3.2
 	 */
 	public function set_current_onboarding_step() {
-		if( isset( $_GET['current_step'] ) ){
-			$this->current_step      = sanitize_key( $_GET['current_step'] );
-			// If requested step does not exist, abort.
-			if ( ! isset( $this->onboarding_steps[ $this->current_step ] ) ) {
-				wp_die( __( 'Unknown Onboarding Step.', 'easy-digital-downloads' ), __( 'Onboarding', 'easy-digital-downloads' ), 404 );
-			}
-
-			$this->current_step_index = $this->onboarding_steps[ $this->current_step ]['step_index'];
+		// If Onboarding hasn't started yet, we force the first default step.
+		if ( ! $this->onboarding_started ) {
+			return;
 		}
+
+		// User is requesting specific step.
+		if( isset( $_GET['current_step'] ) ) {
+			$this->current_step = sanitize_key( $_GET['current_step'] );
+		} else {
+			$this->current_step = sanitize_key( get_option( 'edd_onboarding_latest_step', $this->current_step ) );
+		}
+
+		// If requested step does not exist, abort.
+		if ( ! isset( $this->onboarding_steps[ $this->current_step ] ) ) {
+			wp_die( __( 'Unknown Onboarding Step.', 'easy-digital-downloads' ), __( 'Onboarding Wizard', 'easy-digital-downloads' ), 404 );
+		}
+
+		$this->current_step_index = $this->onboarding_steps[ $this->current_step ]['step_index'];
+		update_option( 'edd_onboarding_latest_step', $this->current_step );
 	}
 
 	/**
@@ -203,7 +246,7 @@ class EDD_Onboarding {
 	 * @since 3.2
 	 */
 	public function get_current_step_details() {
-		return $this->onboarding_steps[ $this->current_step ];
+		return $this->onboarding_steps[ $this->get_current_step() ];
 	}
 
 	/**
@@ -251,8 +294,8 @@ class EDD_Onboarding {
 				<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>">
 			</div>
 			<div class="edd-onboarding__wrapper">
-				<div class="edd-loader">
-					LOADING!
+				<div class="edd-onboarding__loading" style="display: none;">
+					<img src="https://samherbert.net/svg-loaders/svg-loaders/oval.svg" alt="">
 				</div>
 				<div class="edd-onboarding__current-step">
 					<?php $this->load_step_view(); ?>
@@ -262,17 +305,19 @@ class EDD_Onboarding {
 		<?php
 	}
 
-
 	/**
 	 * Onboarding Wizard subpage screen.
 	 *
 	 * @since 3.2
 	 */
-	public function load_step_view() {
+	private function load_step_view() {
 		$current_step_details = $this->get_current_step_details();
 		$pagination           = $this->get_step_pagination();
+
+		$onboarding_initial_style = ( ! $this->onboarding_started ) ? ' style="display:none;"' : '';
 		?>
-		<div class="edd-onboarding__steps">
+		<input type="hidden" class="edd-onboarding_current-step" value="<?php echo esc_attr( $this->get_current_step() );?>">
+		<div class="edd-onboarding__steps"<?php echo $onboarding_initial_style; ?>>
 			<ul>
 				<?php foreach( $this->onboarding_steps as $step_key => $step ):
 					$step_url = edd_get_admin_url(
@@ -285,16 +330,19 @@ class EDD_Onboarding {
 
 					$classes = array();
 					// Determine if this step is active.
-					if ( $this->current_step_index === $step['step_index'] ) {
+					if ( $step['step_index'] === $this->current_step_index ) {
 						$classes[] = 'active-step';
 					}
-					// Determine if this step is active.
+					// Determine if this step is completed.
 					if ( $this->current_step_index > $step['step_index'] ) {
 						$classes[] = 'completed-step';
 					}
 					?>
 					<li class="<?php echo implode( ' ', array_map( 'esc_attr', $classes ) ) ?>">
-						<a href="<?php echo esc_url( $step_url );?>">(<?php echo esc_html( $step['step_index'] ); ?>) - <?php echo esc_html( $step['step_title'] ); ?></a>
+						<a href="<?php echo esc_url( $step_url );?>">
+							<span class="edd-onboarding__steps__number"><?php echo esc_html( $step['step_index'] ); ?></span>
+							<small class="edd-onboarding__steps__name"><?php echo esc_html( $step['step_title'] ); ?> </small>
+						</a>
 					</li>
 					<?php
 				endforeach;
@@ -307,36 +355,61 @@ class EDD_Onboarding {
 				<span class="edd-onboarding__steps-indicator"><?php echo esc_html( __( 'Step', 'easy-digital-downloads' ) ); ?> <?php echo $this->current_step_index;?> / <?php echo count( $this->onboarding_steps ); ?></span>
 				<h1 class="edd-onboarding__single-step-title"><?php echo esc_html( $current_step_details['step_headline'] ); ?></h1>
 				<h2 class="edd-onboarding__single-step-subtitle"><?php echo esc_html( $current_step_details['step_intro'] ); ?></h2>
-
-				<?php include EDD_PLUGIN_DIR . "includes/admin/onboarding/views/step-{$this->current_step}.php";?>
-
+				<?php echo call_user_func( 'EDD\\Onboarding\\Steps\\' . $current_step_details['step_handler'] . '\\step_html' );?>
 			</div>
 
 			<div class="edd-onboarding__single-step-footer">
-				<?php if ( $pagination['previous'] ) : ?>
-					<a href="">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></a>
-				<?php endif;?>
+				<div>
+					<?php if ( $pagination['previous'] ) : ?>
+						<a href="#" data-step="<?php echo esc_attr( $this->get_previous_step() ); ?>" class="edd-onboarding__button-back">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></a>
+					<?php endif;?>
+				</div>
 
-				<a class="button button-secondary" href=""><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></a>
-				<a class="button button-primary" href=""><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></a>
 
-				<br>
-				<br>
-
+				<div>
+					<a href="#" class="button button-secondary edd-onboarding__button-supportive edd-onboarding__button-skip-step" data-step="<?php echo esc_attr( $this->get_next_step() ); ?>"><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></a>
+					<a href="#" class="button button-primary edd-onboarding__button-save-step" data-step="<?php echo esc_attr( $this->get_next_step() ); ?>"><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></a>
+				</div>
 
 			</div>
 
 		</div>
-
-		<div style="text-align: center;"><a href="" style="color: black; opacity: 0.5;"><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a></div>
-
-		<pre><?php print_r( $this->onboarding_steps );?></pre>
-			<pre><?php print_r( $this->current_step );?></pre>
-			<pre><?php print_r( $this->current_step_index );?></pre>
-			<pre><?php print_r( array_keys( $this->onboarding_steps ) ); ?></pre>
+		<div class="edd-onboarding__close-and-exit"<?php echo $onboarding_initial_style; ?>>
+			<a href=""><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a>
+		</div>
 		<?php
 	}
 
+	/**
+	 * Ajax callback when user started
+	 * the Onboarding Wizard flow.
+	 *
+	 * @since 3.2
+	 */
+	public function ajax_onboarding_started() {
+		// if ( ! wp_verify_nonce( $_REQUEST['nonce'], "edd_onboarding_nonce") ) {
+		// 	exit("No naughty business please");
+		// }
+
+		update_option( 'edd_onboarding_started', true );
+		exit;
+	}
+
+	/**
+	 * Ajax callback for loading single step view.
+	 *
+	 * @since 3.2
+	 */
+	public function ajax_onboarding_load_step() {
+		// if ( ! wp_verify_nonce( $_REQUEST['nonce'], "edd_onboarding_nonce") ) {
+		// 	exit("No naughty business please");
+		// }
+
+		ob_start();
+		$this->load_step_view();
+		echo ob_get_clean();
+		exit;
+	}
 }
 
-new EDD_Onboarding();
+new OnboardingWizard();

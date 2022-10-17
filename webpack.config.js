@@ -22,6 +22,7 @@ const adminPages = [
 	'tools/export',
 	'tools/import',
 	'notes',
+	'onboarding',
 	'orders',
 	'reports',
 	'payments',
