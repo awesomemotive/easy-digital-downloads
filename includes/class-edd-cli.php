@@ -1386,7 +1386,7 @@ class EDD_CLI extends WP_CLI_Command {
 				SET ca.is_primary = 1
 				WHERE ca.id IN (
 					SELECT MAX(ca2.id)
-					FROM ( SELECT * FROM {$wpdb->edd_customer_addresses} ) ca2
+					FROM ( SELECT id, customer_id FROM {$wpdb->edd_customer_addresses} WHERE type = 'billing' ) ca2
 					WHERE ca2.type = 'billing'
 					GROUP BY ca2.customer_id
 				)
