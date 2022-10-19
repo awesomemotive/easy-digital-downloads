@@ -94,7 +94,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 					$customer = new EDD_Customer( $customer_id );
 					$name     = ! empty( $customer->name ) ? $customer->name : '';
 					if ( preg_match( '~^[+\-=@]~m', $name ) ) {
-						$name = '\'' . $name;
+						$name = "'{$name}";
 					}
 
 					$data[] = array(
@@ -130,7 +130,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 					$customer = new EDD_Customer( $order->customer_id );
 					$name     = ! empty( $customer->name ) ? $customer->name : '';
 					if ( preg_match( '~^[+\-=@]~m', $name ) ) {
-						$name = '\'' . $name;
+						$name = "'{$name}";
 					}
 
 					$data[] = array(
@@ -158,7 +158,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 			foreach ( $customers as $customer ) {
 				$name = ! empty( $customer->name ) ? $customer->name : '';
 				if ( preg_match( '~^[+\-=@]~m', $name ) ) {
-					$name = '\'' . $name;
+					$name = "'{$name}";
 				}
 				$data[ $i ]= array(
 					'id'           => $customer->id,
