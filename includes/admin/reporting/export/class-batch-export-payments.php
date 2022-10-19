@@ -184,12 +184,17 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				? get_userdata( $user_id )
 				: false;
 
+			$name = ! empty( $customer->name ) ? $customer->name : '';
+			if ( preg_match( '~[\+-=@]~m', $name ) ) {
+				$name = '\'' . $name;
+			}
+
 			$data[] = array(
 				'id'           => $order->id,
 				'seq_id'       => $order->get_number(),
 				'email'        => $order->email,
 				'customer_id'  => $order->customer_id,
-				'name'         => ! empty( $customer->name ) ? $customer->name : '',
+				'name'         => $name,
 				'address1'     => isset( $address->address ) ? $address->address : '',
 				'address2'     => isset( $address->address2 ) ? $address->address2 : '',
 				'city'         => isset( $address->city ) ? $address->city : '',
