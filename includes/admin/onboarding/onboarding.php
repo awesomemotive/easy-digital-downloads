@@ -375,7 +375,7 @@ class OnboardingWizard {
 
 		</div>
 		<div class="edd-onboarding__close-and-exit"<?php echo $onboarding_initial_style; ?>>
-			<a href=""><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) ); ?>"><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a>
 		</div>
 		<?php
 	}
