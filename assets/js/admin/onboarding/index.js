@@ -18,6 +18,7 @@
 		}
 	},
 	loading_state: function( state ) {
+		$( '.edd-onbaording__loading-status' ).empty();
 		$( '.edd-onboarding__loading' ).toggle( state );
 	},
 	init_step_buttons: function() {
@@ -264,19 +265,25 @@
 		},
 		get_selected_plugins: function() {
 			let selected_plugins = [];
+
+			$( '.edd-onboarding__selected-plugins' ).show();
 			$( '.edd-onboarding__plugin-install:checked:not(:disabled)' ).each( function() {
 				selected_plugins.push( $(this).data( 'plugin-name' ) );
 			});
 
 			$( '.edd-onboarding__selected-plugins-text' ).html( selected_plugins.join( ', ' ) );
+
+			if ( selected_plugins.length === 0 ) {
+				$( '.edd-onboarding__selected-plugins' ).hide();
+			}
 		},
+
 		save: async function() {
 			EDD_Onboarding.loading_state( true )
 
-			let selected_plugins = [];
-			let ajax_promises    = [];
-
 			// Get selected plugins.
+			let selected_plugins = [];
+			let installation_errors = [];
 			$( '.edd-onboarding__plugin-install:checked:not(:disabled)' ).each( function() {
 				selected_plugins.push({
 					plugin_url: $(this).val(),
@@ -285,58 +292,40 @@
 			} );
 
 			// Instal and activate selected plugins.
-			// todo - MAKE AJAX CALL SEQUENTIAL!
-			selected_plugins.forEach( function ( plugin ) {
+			for ( let plugin in selected_plugins ) {
+				await new Promise((resolve, reject) => {
+					let data = {
+						action: 'edd_install_extension',
+						nonce: EDDExtensionManager.extension_manager_nonce,
+						plugin: selected_plugins[plugin].plugin_url,
+						type: 'plugin',
+					};
 
-				ajax_promises.push(
-					new Promise((resolve, reject) => {
-						let data = {
-							action: 'edd_install_extension',
-							nonce: EDDExtensionManager.extension_manager_nonce,
-							plugin: plugin.plugin_url,
-							type: 'plugin',
-						};
+					$( '.edd-onboarding__loading-status' ).html( 'Installing ' + selected_plugins[plugin].plugin_name + '...' );
 
-						$.post( ajaxurl, data )
-						.done( function ( res ) {
-							console.log( res );
-							// var thisStep = $btn.closest( '.edd-extension-manager__step' );
-							if ( res.success ) {
-								// var nextStep = thisStep.next();
-								// if ( nextStep.length ) {
-								// 	thisStep.fadeOut();
-								// 	nextStep.prepend( '<div class="notice inline-notice notice-success"><p>' + res.data.message + '</p></div>' );
-								// 	nextStep.fadeIn();
-								// }
-							} else {
-								// thisStep.fadeOut();
-								// var message = res.data.message;
-								// /**
-								//  * The install class returns an array of error messages, and res.data.message will be undefined.
-								//  * In that case, we'll use the standard failure messages.
-								//  */
-								// if ( ! message ) {
-								// 	if ( 'plugin' !== type ) {
-								// 		message = EDDExtensionManager.extension_install_failed;
-								// 	} else {
-								// 		message = EDDExtensionManager.plugin_install_failed;
-								// 	}
-								// }
-								// thisStep.after( '<div class="notice inline-notice notice-warning"><p>' + message + '</p></div>' );
-							}
-							resolve();
-						} );
+					$.post( ajaxurl, data )
+					.done( function ( res ) {
+						console.log( res );
+						if ( ! res.success ) {
+							installation_errors.push( selected_plugins[plugin].plugin_name );
+						}
+						resolve();
+					} );
 
-					})
-				);
+				})
+			}
 
-			} );
+			// All of the plugins were installed.
+			if ( installation_errors.length === 0 ) {
+				console.log("PROMISE")
+				return Promise.resolve();
+			}
 
-			// Save details about telemetry.
-
-			return Promise.all( ajax_promises ).then( function() {
-				EDD_Onboarding.loading_state( false )
-			} );
+			// Some of the plugins were not able to be installed.
+			$( '.edd-onboarding__failed-plugins-text' ).html( installation_errors.join( ', ' ) );
+			$( '.edd-onboarding__steps-indicator, .edd-onboarding__single-step-title, .edd-onboarding__single-step-subtitle, .edd-onboarding__single-step-footer, .edd-onboarding__install-plugins' ).slideUp();
+			$( '.edd-onboarding__install-failed' ).slideDown();
+			EDD_Onboarding.loading_state( false )
 
 		}
 	},
