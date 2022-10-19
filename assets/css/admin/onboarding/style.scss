@@ -343,7 +343,7 @@
 }
 
 /* EDD ONBOARDING - Form style */
-.edd-onboarding input {
+.edd-onboarding input:not([type="checkbox"]) {
 	border: 1px solid #dedfe0 !important;
 	border-radius: 2px !important;
 	padding: 2px 8px !important;
@@ -365,12 +365,12 @@
 .edd-onboarding .form-table th {
 	vertical-align: middle;
 }
-.edd-onboarding .form-table, .form-table td, .form-table td p {
+.edd-onboarding .form-table, .edd-onboarding .form-table td, .edd-onboarding .form-table td p {
 	color: #8a8e92;
 	font-size: 13px;
 	line-height: 18px;
 }
-.edd-onboarding .form-table th, .form-wrap label {
+.edd-onboarding .form-table th, .edd-onboarding .form-wrap label {
 	color: #141b38;
 	font-weight: 400;
 	text-shadow: none;
@@ -585,4 +585,52 @@
 .edd-onboarding__selected-plugins {
 	text-align: center;
 	margin-top: 25px;
+}
+
+/* EDD ONBOARDING - Create product */
+.edd-onboarding__product-pricing-row td,
+.edd-onboarding__product-files-row td {
+	padding: 0px;
+}
+
+.edd-onboarding__product-pricing-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+    align-items: baseline;
+
+	p {
+		width: 196px;
+		margin-right: 10px;
+	}
+
+	#edd_regular_price_field {
+		order: 2;
+	}
+
+	#edd_variable_pricing_control {
+		order: 3;
+		flex-basis: 100%;
+	}
+
+	#edd_variable_price_fields {
+		order: 4;
+		flex-basis: 100%;
+	}
+}
+
+.edd-onboarding__pricing-options-label {
+	display: block;
+	color: #141b38;
+    font-weight: 400;
+    text-shadow: none;
+    vertical-align: baseline;
+	font-size: 14px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.edd-add-repeatable-row {
+	border-top: none;
+	padding-top: 8px;
+	margin-bottom: 5px;
 }

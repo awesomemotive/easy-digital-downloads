@@ -365,12 +365,10 @@ class OnboardingWizard {
 					<?php endif;?>
 				</div>
 
-
 				<div>
 					<a href="#" class="button button-secondary edd-onboarding__button-supportive edd-onboarding__button-skip-step" data-step="<?php echo esc_attr( $this->get_next_step() ); ?>"><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></a>
 					<a href="#" class="button button-primary edd-onboarding__button-save-step" data-step="<?php echo esc_attr( $this->get_next_step() ); ?>"><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></a>
 				</div>
-
 			</div>
 
 		</div>

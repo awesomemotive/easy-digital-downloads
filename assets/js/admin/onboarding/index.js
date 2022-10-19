@@ -40,13 +40,12 @@
 	},
 	init_upload_buttons: function() {
 		let file_frame;
-		window.formfield = '';
+		window.form_upload_field = false;
 		$( document.body ).on( 'click', '.edd_settings_upload_button', function( e ) {
 			e.preventDefault();
 
 			const button = $( this );
-
-			window.formfield = $( this ).parent().prev();
+			window.form_upload_field = $( this ).parent().prev();
 
 			// If the media frame already exists, reopen it.
 			if ( file_frame ) {
@@ -82,7 +81,11 @@
 				const selection = file_frame.state().get( 'selection' );
 				selection.each( function( attachment, index ) {
 					attachment = attachment.toJSON();
-					window.formfield.val( attachment.url );
+					window.form_upload_field.val( attachment.url );
+					// Check if we have a field for attachment ID connected to this upload button.
+					if ( window.form_upload_field.data( 'attachment-id-field' ) ) {
+						$( window.form_upload_field.data( 'attachment-id-field' ) ).val( attachment.id );
+					}
 				} );
 			} );
 
@@ -337,6 +340,42 @@
 
 		}
 	},
+
+	EDD_Onboarding_Products: {
+		init: function() {},
+		save: function() {
+			let form = $('.edd-onboarding__create-product-form');
+			if ( ! form[0].reportValidity() ) {
+				return;
+			}
+
+			let form_details = Object.fromEntries( new FormData( form[0] ) );
+
+			$.ajax( {
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: 'edd_onboarding_create_product',
+					page: 'edd-onboarding-wizard',
+					...form_details
+				},
+				beforeSend: function() {
+					EDD_Onboarding.loading_state( true );
+				},
+				success: function( data ) {
+					if ( data.success ) {
+						window.location = decodeURI( data.redirect_url.replace(/&amp;/g, "&")  );
+					} else {
+						EDD_Onboarding.loading_state( false );
+					}
+				},
+			} ).fail( function( response ) {
+				if ( window.console && window.console.log ) {
+					console.log( response );
+				}
+			} );
+		}
+	}
 };
 
 jQuery( document ).ready( function( $ ) {

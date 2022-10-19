@@ -31,7 +31,7 @@ function step_html() {
 			'https://easydigitaldownloads.com/?edd_gateway_connect_init=stripe_connect'
 		);
 
-		echo esc_url_raw( urlencode( esc_url_raw( $return_url ) ) );
+		// echo esc_url_raw( urlencode( esc_url_raw( $return_url ) ) );
 
 		return $stripe_connect_url;
 	}, 1, 1 );
