@@ -2088,10 +2088,12 @@ body.download_page_edd-reports {
 }
 
 fieldset.edd-to-and-from-container {
-	display: contents;
-	display: -ms-grid;
-	grid-template-columns: 1fr 1fr;
-	grid-gap: 8px;
+	display: flex;
+	gap: 8px;
+
+	select {
+		flex: 0 0 calc(50% - 6px);
+	}
 }
 
 span.edd-to-and-from--separator {
