@@ -1379,20 +1379,6 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 
 			$progress->tick();
-
-			// Now update the most recent billing address entries for customers as the primary address.
-			$sql = "
-				UPDATE {$wpdb->edd_customer_addresses} ca
-				SET ca.is_primary = 1
-				WHERE ca.id IN (
-					SELECT MAX(ca2.id)
-					FROM ( SELECT id, customer_id FROM {$wpdb->edd_customer_addresses} WHERE type = 'billing' ) ca2
-					GROUP BY ca2.customer_id
-				)
-			";
-
-			@$wpdb->query( $sql );
-
 			$progress->finish();
 
 			edd_set_upgrade_complete( 'migrate_customer_addresses' );
