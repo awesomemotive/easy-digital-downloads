@@ -89,7 +89,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 				$customer = $customer->email;
 				if ( ! empty( $customer->name ) ) {
 					$customer = $customer->name;
-					if ( preg_match( '~[\+-=@]~m', $customer ) ) {
+					if ( preg_match( '~^[+\-=@]~m', $customer ) ) {
 						$customer = '\'' . $customer;
 					}
 				}

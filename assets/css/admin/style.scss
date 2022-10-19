@@ -2088,7 +2088,7 @@ body.download_page_edd-reports {
 }
 
 fieldset.edd-to-and-from-container {
-	display: grid;
+	display: contents;
 	display: -ms-grid;
 	grid-template-columns: 1fr 1fr;
 	grid-gap: 8px;
