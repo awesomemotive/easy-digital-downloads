@@ -96,8 +96,8 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 			}
 
 			$name = ! empty( $customer->name ) ? $customer->name : '';
-			if ( preg_match( '~[\+-=@]~m', $name ) ) {
-				$name = '\'' . $name . '\'';
+			if ( preg_match( '~^[+\-=@]~m', $name ) ) {
+				$name = '\'' . $name;
 			}
 
 			$data[] = array(

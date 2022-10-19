@@ -185,7 +185,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				: false;
 
 			$name = ! empty( $customer->name ) ? $customer->name : '';
-			if ( preg_match( '~[\+-=@]~m', $name ) ) {
+			if ( preg_match( '~^[+\-=@]~m', $name ) ) {
 				$name = '\'' . $name;
 			}
 
