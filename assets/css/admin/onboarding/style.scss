@@ -27,9 +27,20 @@
 	background: rgba(0, 0, 0, 0.65);
 	z-index: 99;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
+	img {
+		display: inline-block;
+	}
+	.edd-onboarding__loading-status {
+		display: block;
+		text-align: center;
+		margin-top: 15px;
+		color: white;
+		flex-basis: 100%;
+	}
 }
 
 /* EDD ONBOARDING - Steps style */

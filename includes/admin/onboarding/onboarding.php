@@ -132,6 +132,10 @@ class OnboardingWizard {
 	 */
 	public function enqueue_onboarding_scripts() {
 		wp_enqueue_script( 'edd-admin-onboarding' );
+		wp_localize_script( 'edd-admin-onboarding', 'edd_onboarding_data', array(
+			'test' => "test",
+		) );
+
 		wp_enqueue_media();
 
 		wp_enqueue_style( 'edd-extension-manager' );
@@ -295,7 +299,10 @@ class OnboardingWizard {
 			</div>
 			<div class="edd-onboarding__wrapper">
 				<div class="edd-onboarding__loading" style="display: none;">
-					<img src="https://samherbert.net/svg-loaders/svg-loaders/oval.svg" alt="">
+					<div>
+						<img src="https://samherbert.net/svg-loaders/svg-loaders/oval.svg" alt="">
+						<div class="edd-onboarding__loading-status"></div>
+					</div>
 				</div>
 				<div class="edd-onboarding__current-step">
 					<?php $this->load_step_view(); ?>
