@@ -728,7 +728,7 @@ function edd_register_downloads_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'download_sales_earnings_chart', array(
-			'label' => __( 'Sales and Earning tests', 'easy-digital-downloads' ) . esc_html( $download_label ),
+			'label' => __( 'Sales and Earning', 'easy-digital-downloads' ) . esc_html( $download_label ),
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function () use ( $download_data, $currency ) {
