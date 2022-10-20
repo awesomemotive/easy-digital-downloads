@@ -1536,6 +1536,9 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * wp edd migrate_payments
 	 * wp edd migrate_payments --force
+	 * wp edd migrate_payments --force --id=3    Migrate payment ID 3.
+	 * wp edd migrate_payments --force --start=3 Migrate payments beginning with and including ID 3.
+	 * wp edd migrate_payments --force --end=3   Migrate payments up to and including ID 3, but not higher.
 	 */
 	public function migrate_payments( $args, $assoc_args ) {
 		global $wpdb;
@@ -1564,7 +1567,6 @@ class EDD_CLI extends WP_CLI_Command {
 			SELECT *
 			FROM {$wpdb->posts}
 			WHERE post_type = 'edd_payment'
-			ORDER BY ID ASC
 		";
 
 		// Query & count.
@@ -1576,6 +1578,26 @@ class EDD_CLI extends WP_CLI_Command {
 		// Setup base iteration variables.
 		$step   = 0;
 		$offset = 0;
+
+		// Migrate one specific order.
+		if ( isset( $assoc_args['id'] ) ) {
+			$id        = absint( $assoc_args['id'] );
+			$sql_base .= " AND ID = {$id}";
+		} else {
+			// Begin the order migration at a specific payment ID.
+			if ( isset( $assoc_args['start'] ) ) {
+				$start     = absint( $assoc_args['start'] );
+				$sql_base .= " AND ID >= {$start}";
+			}
+			// Stop the order migration at a specific payment ID.
+			if ( isset( $assoc_args['end'] ) ) {
+				$end       = absint( $assoc_args['end'] );
+				$sql_base .= " AND ID <= {$end}";
+			}
+		}
+
+		$sql_base .= ' ORDER BY ID ASC';
+
 		$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
 			? (int) $assoc_args['number']
 			: 1000;
