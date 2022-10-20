@@ -290,6 +290,7 @@ class OnboardingWizard {
 	 */
 	public function onboarding_wizard_sub_page() {
 		?>
+		<?php wp_nonce_field( 'edd_onboarding_wizard' ); ?>
 		<div class="edd-onboarding">
 			<div class="edd-onboarding__logo">
 				<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>">
@@ -391,9 +392,9 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function ajax_onboarding_started() {
-		// if ( ! wp_verify_nonce( $_REQUEST['nonce'], "edd_onboarding_nonce") ) {
-		// 	exit("No naughty business please");
-		// }
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_onboarding_wizard' ) ) {
+			exit();
+		}
 
 		update_option( 'edd_onboarding_started', true );
 		exit;
@@ -405,9 +406,9 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function ajax_onboarding_load_step() {
-		// if ( ! wp_verify_nonce( $_REQUEST['nonce'], "edd_onboarding_nonce") ) {
-		// 	exit("No naughty business please");
-		// }
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_onboarding_wizard' ) ) {
+			exit();
+		}
 
 		ob_start();
 		$this->load_step_view();
@@ -421,9 +422,9 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function ajax_onboarding_completed() {
-		// if ( ! wp_verify_nonce( $_REQUEST['nonce'], "edd_onboarding_nonce") ) {
-		// 	exit("No naughty business please");
-		// }
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_onboarding_wizard' ) ) {
+			exit();
+		}
 
 		update_option( 'edd_onboarding_completed', true );
 		exit;
