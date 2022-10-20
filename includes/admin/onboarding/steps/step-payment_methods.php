@@ -1,10 +1,30 @@
 <?php
+/**
+ * Onboarding Wizard Payment Methods Step.
+ *
+ * @package     EDD
+ * @subpackage  Onboarding
+ * @copyright   Copyright (c) 2022, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.2
+ */
+
 namespace EDD\Onboarding\Steps\PaymentMethods;
 
 use EDD\Onboarding\Helpers;
 
+/**
+ * Initialize step.
+ *
+ * @since 3.2
+ */
 function initialize() {}
 
+/**
+ * Get step view.
+ *
+ * @since 3.2
+ */
 function step_html() {
 	// Filter Stripe connect nad disconnect URL.
 	add_filter( 'edds_stripe_connect_url', function( $url ) {

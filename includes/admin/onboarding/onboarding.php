@@ -3,10 +3,10 @@
  * Onboarding Wizard Class.
  *
  * @package     EDD
- * @subpackage  Emails
+ * @subpackage  Onboarding
  * @copyright   Copyright (c) 2022, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.1
+ * @since       3.2
  */
 
 namespace EDD\Onboarding;
@@ -88,11 +88,7 @@ class OnboardingWizard {
 
 		// Set variables.
 		$this->onboarding_started = get_option( 'edd_onboarding_started', false );
-
-		// Set onboarding steps.
 		$this->set_onboarding_steps();
-
-		// Determine current step.
 		$this->set_current_onboarding_step();
 
 		// Ajax handlers.
@@ -116,7 +112,7 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function hide_menu_item() {
-		remove_submenu_page( 'edit.php?post_type=download', 'edd-onboarding' );
+		// remove_submenu_page( 'edit.php?post_type=download', 'edd-onboarding-wizard' );
 	}
 
 	/**
@@ -132,7 +128,6 @@ class OnboardingWizard {
 
 		// Load scripts and styles.
 		$this->enqueue_onboarding_scripts();
-		edd_stripe_connect_admin_script( 'download_page_edd-settings' );
 	}
 
 	/**
@@ -143,9 +138,9 @@ class OnboardingWizard {
 	public function enqueue_onboarding_scripts() {
 		wp_enqueue_script( 'edd-admin-onboarding' );
 		wp_enqueue_media();
-
 		wp_enqueue_style( 'edd-extension-manager' );
 		wp_enqueue_script( 'edd-extension-manager' );
+		edd_stripe_connect_admin_script( 'download_page_edd-settings' );
 	}
 
 	/**
@@ -211,7 +206,7 @@ class OnboardingWizard {
 			return;
 		}
 
-		// User is requesting specific step.
+		// User is requesting a specific step.
 		if( isset( $_GET['current_step'] ) ) {
 			$this->current_step = sanitize_key( $_GET['current_step'] );
 		} else {
@@ -295,11 +290,6 @@ class OnboardingWizard {
 	 */
 	public function onboarding_wizard_sub_page() {
 		?>
-		<style>
-			#edd-header {
-				display: none;
-			}
-		</style>
 		<div class="edd-onboarding">
 			<div class="edd-onboarding__logo">
 				<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>">
@@ -320,7 +310,7 @@ class OnboardingWizard {
 	}
 
 	/**
-	 * Onboarding Wizard subpage screen.
+	 * Load requested step HTML.
 	 *
 	 * @since 3.2
 	 */
@@ -333,6 +323,8 @@ class OnboardingWizard {
 		<input type="hidden" class="edd-onboarding_current-previous-step" value="<?php echo esc_attr( $this->get_previous_step() );?>">
 		<input type="hidden" class="edd-onboarding_current-step" value="<?php echo esc_attr( $this->get_current_step() );?>">
 		<input type="hidden" class="edd-onboarding_current-next-step" value="<?php echo esc_attr( $this->get_next_step() );?>">
+
+		<!-- STEPS NAVIGATION -->
 		<div class="edd-onboarding__steps"<?php echo $onboarding_initial_style; ?>>
 			<ul>
 				<?php
@@ -368,6 +360,7 @@ class OnboardingWizard {
 		</div>
 
 		<div class="edd-onboarding__single-step">
+			<!-- STEP VIEW -->
 			<div class="edd-onboarding__single-step-inner">
 				<span class="edd-onboarding__steps-indicator"><?php echo esc_html( __( 'Step', 'easy-digital-downloads' ) ); ?> <?php echo esc_html( $this->current_step_index ); ?> / <?php echo count( $this->onboarding_steps ); ?></span>
 				<h1 class="edd-onboarding__single-step-title"><?php echo esc_html( $current_step_details['step_headline'] ); ?></h1>
@@ -393,8 +386,7 @@ class OnboardingWizard {
 	}
 
 	/**
-	 * Ajax callback when user started
-	 * the Onboarding Wizard flow.
+	 * Ajax callback when user started the Onboarding flow.
 	 *
 	 * @since 3.2
 	 */

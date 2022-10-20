@@ -15,12 +15,14 @@ namespace EDD\Onboarding\Helpers;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Get fields ..
+ * Extract requested fields from the settings array.
+ *
+ * @param array $sections Array of fields in sections that we want to extract.
  *
  * @since 2.0
  * @return bool
  */
-function extract_settings_fields( $sections ) {
+function extract_settings_fields( $sections = array() ) {
 	global $wp_settings_fields;
 	$extracted_fields = array();
 
@@ -41,6 +43,8 @@ function extract_settings_fields( $sections ) {
 
 /**
  * Get fields HTML.
+ *
+ * @param array $screen_settings Fields.
  *
  * @since 2.0
  */

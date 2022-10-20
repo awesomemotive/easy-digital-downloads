@@ -1,12 +1,32 @@
 <?php
+/**
+ * Onboarding Wizard Products Step.
+ *
+ * @package     EDD
+ * @subpackage  Onboarding
+ * @copyright   Copyright (c) 2022, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.2
+ */
+
 namespace EDD\Onboarding\Steps\Products;
 
 use EDD\Onboarding\Helpers;
 
+/**
+ * Initialize step.
+ *
+ * @since 3.2
+ */
 function initialize() {
 	add_action( 'wp_ajax_edd_onboarding_create_product', __NAMESPACE__ . '\create_product' );
 }
 
+/**
+ * Ajax callback for creating a product.
+ *
+ * @since 3.2
+ */
 function create_product() {
 	// @todo - Nonce verification!
 	$response = array( 'success' => false );
@@ -41,6 +61,11 @@ function create_product() {
 	exit;
 }
 
+/**
+ * Get step view.
+ *
+ * @since 3.2
+ */
 function step_html() {
 	$currency_position  = edd_get_option( 'currency_position', 'before' );
 	add_filter( 'edd_price_options_heading', function( $heading ) {

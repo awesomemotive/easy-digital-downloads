@@ -1,10 +1,30 @@
 <?php
+/**
+ * Onboarding Wizard Configure Emails Step.
+ *
+ * @package     EDD
+ * @subpackage  Onboarding
+ * @copyright   Copyright (c) 2022, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.2
+ */
+
 namespace EDD\Onboarding\Steps\ConfigureEmails;
 
 use EDD\Onboarding\Helpers;
 
+/**
+ * Initialize step.
+ *
+ * @since 3.2
+ */
 function initialize() {}
 
+/**
+ * Get step view.
+ *
+ * @since 3.2
+ */
 function step_html() {
 	$sections = array(
 		'edd_settings_emails_main' => array(
