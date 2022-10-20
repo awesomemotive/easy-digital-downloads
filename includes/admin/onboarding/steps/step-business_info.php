@@ -1,10 +1,30 @@
 <?php
+/**
+ * Onboarding Wizard Business Info Step.
+ *
+ * @package     EDD
+ * @subpackage  Onboarding
+ * @copyright   Copyright (c) 2022, Easy Digital Downloads, LLC
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.2
+ */
+
 namespace EDD\Onboarding\Steps\BusinessInfo;
 
 use EDD\Onboarding\Helpers;
 
+/**
+ * Initialize step.
+ *
+ * @since 3.2
+ */
 function initialize() {}
 
+/**
+ * Get step view.
+ *
+ * @since 3.2
+ */
 function step_html() {
 	$onboarding_started       = get_option( 'edd_onboarding_started', false );
 	$onboarding_initial_style = ( ! $onboarding_started ) ? ' style="display:none;"' : '';

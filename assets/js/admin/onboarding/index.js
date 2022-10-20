@@ -1,26 +1,44 @@
 /**
  * Onboarding Wizard.
  */
-
  var EDD_Onboarding = {
-	vars: {},
+	/**
+	 * Run when page is loaded
+	 * to initialize logic.
+	 *
+	 * @since 3.1
+	 *
+	 */
 	init: function() {
 		this.init_step_buttons();
 		this.init_upload_buttons();
 		this.start_onboarding();
 
-		console.log( EDDExtensionManager );
-
-		// Initialize current step logic.
+		// Run current step logic.
 		let current_step = EDD_Onboarding.get_step_class( $( '.edd-onboarding_current-step' ).val() );
 		if ( current_step ) {
 			EDD_Onboarding[ current_step ].init();
 		}
 	},
+
+	/**
+	 * Toggle the loading overlay.
+	 *
+	 * @since 3.1
+	 *
+	 * @param {bool} state True to show the loader, false to hide it.
+	 */
 	loading_state: function( state ) {
-		$( '.edd-onbaording__loading-status' ).empty();
+		$( '.edd-onboarding__loading-status' ).empty();
 		$( '.edd-onboarding__loading' ).toggle( state );
 	},
+
+	/**
+	 * Attach listeners to the control buttons.
+	 *
+	 * @since 3.1
+	 *
+	 */
 	init_step_buttons: function() {
 		// Go back button.
 		$( document.body ).on( 'click', '.edd-onboarding__button-back', function( e ) {
@@ -52,6 +70,13 @@
 			EDD_Onboarding.onboarding_completed();
 		} );
 	},
+
+	/**
+	 * Upload image buttons.
+	 *
+	 * @since 3.1
+	 *
+	 */
 	init_upload_buttons: function() {
 		let file_frame;
 		window.form_upload_field = false;
@@ -107,6 +132,14 @@
 			file_frame.open();
 		} );
 	},
+
+	/**
+	 * Attach listeners for when
+	 * user starts its onboarding process.
+	 *
+	 * @since 3.1
+	 *
+	 */
 	start_onboarding: function() {
 		$( document.body ).on( 'click', '.edd-onboarding__welcome-screen-get-started', function( e ) {
 			e.preventDefault();
@@ -131,6 +164,14 @@
 
 		} );
 	},
+
+	/**
+	 * Mark the Onboarding process
+	 * as completed and redirect user.
+	 *
+	 * @since 3.1
+	 *
+	 */
 	onboarding_completed: function() {
 		EDD_Onboarding.loading_state( true );
 
@@ -147,6 +188,15 @@
 			}
 		);
 	},
+
+	/**
+	 * Fetch the HTML for a specific
+	 * requested step and load it onto screen.
+	 *
+	 * @since 3.1
+	 *
+	 * @param {string} step_name Step name.
+	 */
 	load_step: function( step_name ) {
 		EDD_Onboarding.loading_state( true );
 
@@ -164,7 +214,7 @@
 				// Replace step screen.
 				$( '.edd-onboarding__current-step' ).html( data );
 
-				// Initialize step logic.
+				// Run step specific logic.
 				let step_class = EDD_Onboarding.get_step_class( step_name );
 				if ( step_class ) {
 					EDD_Onboarding[ step_class ].init();
@@ -179,7 +229,6 @@
 				let query_params = new URLSearchParams( window.location.search );
 				query_params.set( 'current_step', step_name );
 				history.replaceState( null, null, '?' + query_params.toString() );
-
 			},
 		} ).fail( function( response ) {
 			if ( window.console && window.console.log ) {
@@ -189,6 +238,13 @@
 			EDD_Onboarding.loading_state( false );
 		} );
 	},
+
+	/**
+	 * Load next step in the sequence.
+	 *
+	 * @since 3.1
+	 *
+	 */
 	next_step: function() {
 		let next_step = $( '.edd-onboarding_current-next-step' ).val();
 		if ( '' === next_step ) {
@@ -197,6 +253,15 @@
 
 		EDD_Onboarding.load_step( next_step );
 	},
+
+	/**
+	 * Transform step name to pascal case and return
+	 * transformed string name. False if class object does not exist.
+	 *
+	 * @since 3.1
+	 *
+	 * @param {string} step_name Step name.
+	 */
 	get_step_class: function( step_name ) {
 		let step_class = 'EDD_Onboarding_' + step_name.split( '_' ).map(element => {
 			return element.charAt( 0 ).toUpperCase() + element.slice( 1 ).toLowerCase();
@@ -212,8 +277,22 @@
 	/**
 	 * Specific steps logic.
 	 */
+
 	 EDD_Onboarding_Business_Info: {
+		/**
+		 * Initialize step specific logic.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		init: function() {},
+
+		/**
+		 * Save settings fields.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		save: function() {
 			return $.ajax( {
 				type: 'POST',
@@ -233,6 +312,12 @@
 	},
 
 	EDD_Onboarding_Payment_Methods: {
+		/**
+		 * Initialize step specific logic.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		init: function() {
 			// If Stripe connectioon exsists, fetch the current account details.
 			let stripe_connect_account = $( '#edds-stripe-connect-account' );
@@ -247,6 +332,7 @@
 						nonce: stripe_connect_account.data( 'nonce' ),
 					},
 					success: function( response ) {
+						// Account is sucessfully connected.
 						if ( response.success ) {
 							stripe_connect_account.html(  response.data.message );
 							stripe_connect_account.addClass( `notice-${ response.data.status }` );
@@ -263,13 +349,32 @@
 				} );
 			}
 		},
+		/**
+		 * There is nothing to save in this step.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		save: function() {
 			return Promise.resolve();
 		},
 	},
 
 	EDD_Onboarding_Configure_Emails: {
+		/**
+		 * Initialize step specific logic.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		init: function() {},
+
+		/**
+		 * Save settings fields.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		save: function() {
 			return $.ajax( {
 				type: 'POST',
@@ -289,12 +394,26 @@
 	},
 
 	EDD_Onboarding_Tools: {
+		/**
+		 * Initialize step specific logic.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		init: function() {
 			this.get_selected_plugins();
 			$( document.body ).on( 'change', '.edd-onboarding__plugin-install', function() {
 				EDD_Onboarding.EDD_Onboarding_Tools.get_selected_plugins();
 			} );
 		},
+
+		/**
+		 * Check which plugins are selected and
+		 * update the UI accordingly.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		get_selected_plugins: function() {
 			let selected_plugins = [];
 
@@ -310,20 +429,16 @@
 			}
 		},
 
+		/**
+		 * Handle saving of user telemetry settings and
+		 * installation/activation of selected plugins.
+		 * If there is an error it will show a specific error page.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		save: async function() {
 			EDD_Onboarding.loading_state( true )
-
-			// Get selected plugins.
-			let selected_plugins = [];
-			let installation_errors = [];
-			$( '.edd-onboarding__plugin-install:checked:not(:disabled)' ).each( function() {
-				selected_plugins.push({
-					plugin_name: $(this).data( 'plugin-name' ),
-					plugin_file: $(this).data( 'plugin-file' ),
-					plugin_url: $(this).val(),
-					action: $(this).data( 'action' ),
-				});
-			} );
 
 			// Save user telemetry details.
 			await $.post(
@@ -338,11 +453,23 @@
 					}
 				);
 
-			// Instal and activate selected plugins.
+			// Get selected plugins.
+			let selected_plugins = [];
+			let installation_errors = [];
+			$( '.edd-onboarding__plugin-install:checked:not(:disabled)' ).each( function() {
+				selected_plugins.push({
+					plugin_name: $(this).data( 'plugin-name' ),
+					plugin_file: $(this).data( 'plugin-file' ),
+					plugin_url: $(this).val(),
+					action: $(this).data( 'action' ),
+				});
+			} );
+
+			// Install and activate selected plugins.
 			for ( let plugin in selected_plugins ) {
 				await new Promise((resolve, reject) => {
-					let action = selected_plugins[ plugin ].action;
-					let plugin_value = '';
+					let action      = selected_plugins[ plugin ].action;
+					let plugin_key  = '';
 					let ajax_action = '';
 					let loader_text = '';
 
@@ -350,28 +477,28 @@
 						case 'activate':
 							ajax_action  = 'edd_activate_extension';
 							loader_text  = EDDExtensionManager.activating;
-							plugin_value = selected_plugins[ plugin ].plugin_file;
+							plugin_key   = selected_plugins[ plugin ].plugin_file;
 							break;
 
 						case 'install':
 							ajax_action  = 'edd_install_extension';
 							loader_text  = EDDExtensionManager.installing;
-							plugin_value = selected_plugins[ plugin ].plugin_url;
+							plugin_key   = selected_plugins[ plugin ].plugin_url;
 							break;
 					}
+
+					// Update loading text.
+					$( '.edd-onboarding__loading-status' ).html( loader_text + ' ' + selected_plugins[plugin].plugin_name + '...' );
 
 					let data = {
 						action: ajax_action,
 						nonce: EDDExtensionManager.extension_manager_nonce,
-						plugin: plugin_value,
+						plugin: plugin_key,
 						type: 'plugin',
 					};
 
-					$( '.edd-onboarding__loading-status' ).html( loader_text + ' ' + selected_plugins[plugin].plugin_name + '...' );
-
 					$.post( ajaxurl, data )
 					.done( function ( res ) {
-						console.log( res );
 						if ( ! res.success ) {
 							installation_errors.push( selected_plugins[plugin].plugin_name );
 						}
@@ -391,11 +518,26 @@
 			$( '.edd-onboarding__install-failed' ).slideDown();
 			EDD_Onboarding.loading_state( false )
 
+			return Promise.reject();
 		}
 	},
 
 	EDD_Onboarding_Products: {
+		/**
+		 * Initialize step specific logic.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		init: function() {},
+
+		/**
+		 * Save product details and upon
+		 * success redirect to the created product.
+		 *
+		 * @since 3.1
+		 *
+		 */
 		save: function() {
 			let form = $('.edd-onboarding__create-product-form');
 			if ( ! form[0].reportValidity() ) {

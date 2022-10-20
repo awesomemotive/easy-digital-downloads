@@ -3,10 +3,20 @@ namespace EDD\Onboarding\Steps\Tools;
 
 use EDD\Onboarding\Helpers;
 
+/**
+ * Initialize step.
+ *
+ * @since 3.2
+ */
 function initialize() {
 	add_action( 'wp_ajax_edd_onboarding_telemetry_settings', __NAMESPACE__ . '\ajax_save_telemetry_settings' );
 }
 
+/**
+ * Ajax callback for saving telemetry option.
+ *
+ * @since 3.2
+ */
 function ajax_save_telemetry_settings() {
 	// @todo - PERMISSIONS AND NONCE!
 	if ( isset( $_REQUEST['telemetry_toggle'] ) ) {
@@ -16,6 +26,11 @@ function ajax_save_telemetry_settings() {
 	exit;
 }
 
+/**
+ * Get step view.
+ *
+ * @since 3.2
+ */
 function step_html() {
 	$extension_manager = new \EDD\Admin\Extensions\Extension_Manager();
 
@@ -74,12 +89,12 @@ function step_html() {
 			continue;
 		}
 
-		// Is plugin already installed?
+		// If plugin is already installed, set the action to activate.
 		if ( $extension_manager->is_plugin_installed( $plugin['plugin_file'] ) ) {
 			$available_plugins[ $key ]['action'] = 'activate';
 		}
 
-		// Is plugin already activated?
+		// If this plugin is activated, disable the checkbox on the front.
 		if ( is_plugin_active( $plugin['plugin_file'] ) ) {
 			$available_plugins[ $key ]['prechecked'] = true;
 			$available_plugins[ $key ]['disabled']   = true;
