@@ -3,13 +3,7 @@ namespace EDD\Onboarding\Steps\PaymentMethods;
 
 use EDD\Onboarding\Helpers;
 
-function initialize() {
-	return;
-}
-
-function save_handler() {
-	exit;
-}
+function initialize() {}
 
 function step_html() {
 	// Filter Stripe connect nad disconnect URL.
@@ -31,16 +25,14 @@ function step_html() {
 			'https://easydigitaldownloads.com/?edd_gateway_connect_init=stripe_connect'
 		);
 
-		// echo esc_url_raw( urlencode( esc_url_raw( $return_url ) ) );
-
 		return $stripe_connect_url;
 	}, 1, 1 );
 
 	add_filter( 'edds_stripe_connect_disconnect_url', function( $url ) {
 		$stripe_connect_disconnect_url = add_query_arg(
 			array(
-				'post_type'       => 'download',
-				'redirect_screen' => 'onboarding-wizard',
+				'post_type'             => 'download',
+				'redirect_screen'        => 'onboarding-wizard',
 				'edds-stripe-disconnect' => true,
 			),
 			admin_url( 'edit.php' )

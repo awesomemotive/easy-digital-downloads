@@ -404,7 +404,7 @@
 
 			let form_details = Object.fromEntries( new FormData( form[0] ) );
 
-			return $.ajax( {
+			$.ajax( {
 				type: 'POST',
 				url: ajaxurl,
 				data: {
