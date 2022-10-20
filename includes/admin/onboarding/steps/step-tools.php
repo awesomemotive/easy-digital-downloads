@@ -16,6 +16,8 @@ function save_handler() {
 }
 
 function step_html() {
+	$extension_manager = new \EDD\Admin\Extensions\Extension_Manager();
+
 	$available_plugins = array(
 		array(
 			'name'        => __( 'Essential eCommerce Features', 'easy-digital-downloads' ),
@@ -25,15 +27,17 @@ function step_html() {
 			'plugin_name' => '',
 			'plugin_file' => '',
 			'plugin_url'  => '',
+			'action'      => '',
 		),
-		// array(
-		// 	'name'        => __( 'Optimize Checkout', 'easy-digital-downloads' ),
-		// 	'description' => __( 'Improve the checkout experience by auto-creating user accounts for new customers.', 'easy-digital-downloads' ),
-		// 	'prechecked'  => true,
-		// 	'plugin_name' => 'Auto Register',
-		// 	'plugin_file' => '',
-		// 	'plugin_url' => 'https://downloads.wordpress.org/plugin/edd-auto-register.zip',
-		// ),
+		array(
+			'name'        => __( 'Optimize Checkout', 'easy-digital-downloads' ),
+			'description' => __( 'Improve the checkout experience by auto-creating user accounts for new customers.', 'easy-digital-downloads' ),
+			'prechecked'  => true,
+			'plugin_name' => 'Auto Register',
+			'plugin_file' => 'edd-auto-register/edd-auto-register.php',
+			'plugin_url' => 'https://downloads.wordpress.org/plugin/edd-auto-register.zip',
+			'action'      => 'install',
+		),
 		array(
 			'name'        => __( 'Reliable Email Delivery', 'easy-digital-downloads' ),
 			'description' => __( 'Email deliverability is one of the most important services for an eCommerce store. Don’t leave your customers in the dark.', 'easy-digital-downloads' ),
@@ -41,24 +45,47 @@ function step_html() {
 			'plugin_name' => 'WP Mail SMTP',
 			'plugin_file' => 'wp-mail-smtp/wp_mail_smtp.php',
 			'plugin_url'  => 'https://downloads.wordpress.org/plugin/wp-mail-smtp.zip',
+			'action'      => 'install',
 		),
-		// array(
-		// 	'name'        => __( 'SEO', 'easy-digital-downloads' ),
-		// 	'description' => __( 'Get the tools used by millions of smart business owners to analyze and optimize their store’s traffic with SEO.', 'easy-digital-downloads' ),
-		// 	'prechecked'  => true,
-		// 	'plugin_name' => 'All In One Seo',
-		// 	'plugin_file' => '',
-		// 	'plugin_url'  => 'https://downloads.wordpress.org/plugin/all-in-one-seo-pack.zip',
-		// ),
-		// array(
-		// 	'name'        => __( 'Conversion Tools', 'easy-digital-downloads' ),
-		// 	'description' => __( 'Get the #1 conversion optimization plugin to convert your website traffic into subscribers, leads, and sales.', 'easy-digital-downloads' ),
-		// 	'prechecked'  => true,
-		// 	'plugin_name' => 'MonsterInsights',
-		// 	'plugin_file' => '',
-		// 	'plugin_url'  => 'https://downloads.wordpress.org/plugin/google-analytics-for-wordpress.zip',
-		// ),
+		array(
+			'name'        => __( 'SEO', 'easy-digital-downloads' ),
+			'description' => __( 'Get the tools used by millions of smart business owners to analyze and optimize their store’s traffic with SEO.', 'easy-digital-downloads' ),
+			'prechecked'  => true,
+			'plugin_name' => 'All In One Seo',
+			'plugin_file' => 'all-in-one-seo-pack/all_in_one_seo_pack.php',
+			'plugin_url'  => 'https://downloads.wordpress.org/plugin/all-in-one-seo-pack.zip',
+			'action'      => 'install',
+		),
+		array(
+			'name'        => __( 'Conversion Tools', 'easy-digital-downloads' ),
+			'description' => __( 'Get the #1 conversion optimization plugin to convert your website traffic into subscribers, leads, and sales.', 'easy-digital-downloads' ),
+			'prechecked'  => true,
+			'plugin_name' => 'MonsterInsights',
+			'plugin_file' => 'google-analytics-for-wordpress/googleanalytics.php',
+			'plugin_url'  => 'https://downloads.wordpress.org/plugin/google-analytics-for-wordpress.zip',
+			'action'      => 'install',
+		),
 	);
+
+	// Check the state of the plugins in the current environment.
+	foreach ( $available_plugins as $key => $plugin ) {
+		if ( isset( $plugin['disabled'] ) && $plugin['disabled'] ) {
+			continue;
+		}
+
+		// Is plugin already installed?
+		if ( $extension_manager->is_plugin_installed( $plugin['plugin_file'] ) ) {
+			$available_plugins[ $key ]['action'] = 'activate';
+		}
+
+		// Is plugin already activated?
+		if ( is_plugin_active( $plugin['plugin_file'] ) ) {
+			$available_plugins[ $key ]['prechecked'] = true;
+			$available_plugins[ $key ]['disabled'] = true;
+		}
+
+	}
+
 	ob_start();
 	?>
 	<div class="edd-onboarding__install-plugins">
@@ -81,7 +108,7 @@ function step_html() {
 					<div class="edd-onboarding__plugins-control">
 
 					<label class="checkbox-control checkbox-control--checkbox">
-						<input class="edd-onboarding__plugin-install" data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] );?>" value="<?php echo esc_attr( $plugin['plugin_url'] );?>" type="checkbox"<?php echo $checked.$disabled;?>/>
+						<input class="edd-onboarding__plugin-install" data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] );?>" data-action="<?php echo esc_attr( $plugin['action'] );?>" data-plugin-file="<?php echo esc_attr( $plugin['plugin_file'] );?>" value="<?php echo esc_attr( $plugin['plugin_url'] );?>" type="checkbox"<?php echo $checked.$disabled;?>/>
 						<div class="checkbox-control__indicator"></div>
 					</label>
 
