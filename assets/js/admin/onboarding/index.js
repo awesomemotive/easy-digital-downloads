@@ -286,22 +286,56 @@
 			let installation_errors = [];
 			$( '.edd-onboarding__plugin-install:checked:not(:disabled)' ).each( function() {
 				selected_plugins.push({
-					plugin_url: $(this).val(),
 					plugin_name: $(this).data( 'plugin-name' ),
+					plugin_file: $(this).data( 'plugin-file' ),
+					plugin_url: $(this).val(),
+					action: $(this).data( 'action' ),
 				});
 			} );
+
+			// Save user telemetry details.
+			await new Promise((resolve, reject) => {
+				let data = {
+					action: '',
+				};
+
+				$.post( ajaxurl, data )
+				.done( function ( res ) {
+
+					resolve();
+				} );
+			} )
 
 			// Instal and activate selected plugins.
 			for ( let plugin in selected_plugins ) {
 				await new Promise((resolve, reject) => {
+					let action = selected_plugins[ plugin ].action;
+					let plugin_value = '';
+					let ajax_action = '';
+					let loader_text = '';
+
+					switch ( action ) {
+						case 'activate':
+							ajax_action  = 'edd_activate_extension';
+							loader_text  = EDDExtensionManager.activating;
+							plugin_value = selected_plugins[ plugin ].plugin_file;
+							break;
+
+						case 'install':
+							ajax_action  = 'edd_install_extension';
+							loader_text  = EDDExtensionManager.installing;
+							plugin_value = selected_plugins[ plugin ].plugin_url;
+							break;
+					}
+
 					let data = {
-						action: 'edd_install_extension',
+						action: ajax_action,
 						nonce: EDDExtensionManager.extension_manager_nonce,
-						plugin: selected_plugins[plugin].plugin_url,
+						plugin: plugin_value,
 						type: 'plugin',
 					};
 
-					$( '.edd-onboarding__loading-status' ).html( 'Installing ' + selected_plugins[plugin].plugin_name + '...' );
+					$( '.edd-onboarding__loading-status' ).html( loader_text + ' ' + selected_plugins[plugin].plugin_name + '...' );
 
 					$.post( ajaxurl, data )
 					.done( function ( res ) {
@@ -311,17 +345,16 @@
 						}
 						resolve();
 					} );
-
 				})
 			}
 
-			// All of the plugins were installed.
+			// All of the plugins were installed and activated.
 			if ( installation_errors.length === 0 ) {
 				console.log("PROMISE")
 				return Promise.resolve();
 			}
 
-			// Some of the plugins were not able to be installed.
+			// There were some errors while installing/activating.
 			$( '.edd-onboarding__failed-plugins-text' ).html( installation_errors.join( ', ' ) );
 			$( '.edd-onboarding__steps-indicator, .edd-onboarding__single-step-title, .edd-onboarding__single-step-subtitle, .edd-onboarding__single-step-footer, .edd-onboarding__install-plugins' ).slideUp();
 			$( '.edd-onboarding__install-failed' ).slideDown();
