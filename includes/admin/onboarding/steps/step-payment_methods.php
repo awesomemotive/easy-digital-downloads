@@ -47,7 +47,7 @@ function step_html() {
 	?>
 	<div class="edd-onboarding__stripe-content-holder">
 		<div class="edd-onboarding__stripe-content-logo">
-			<img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="#" title="#">
+			<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/onboarding/stripe-logo.svg' ); ?>">
 
 			<span>The world’s most powerful and easy to use payment gateway. </span>
 		</div>

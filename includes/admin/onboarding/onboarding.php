@@ -306,8 +306,8 @@ class OnboardingWizard {
 			</div>
 			<div class="edd-onboarding__wrapper">
 				<div class="edd-onboarding__loading" style="display: none;">
-					<div>
-						<img src="https://samherbert.net/svg-loaders/svg-loaders/oval.svg" alt="">
+					<div class="edd-onboarding__loading-content-wrapper">
+						<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/oval-ajax-loader.svg' ); ?>" alt="">
 						<div class="edd-onboarding__loading-status"></div>
 					</div>
 				</div>
