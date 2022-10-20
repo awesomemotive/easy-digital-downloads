@@ -31,7 +31,7 @@
 		// Skip step button.
 		$( document.body ).on( 'click', '.edd-onboarding__button-skip-step', function( e ) {
 			e.preventDefault();
-			EDD_Onboarding.load_step( $( '.edd-onboarding_current-next-step' ).val() );
+			EDD_Onboarding.next_step();
 		} );
 
 		// Save button.
@@ -44,6 +44,12 @@
 					EDD_Onboarding.next_step();
 				} );
 			}
+		} );
+
+		// Close and exit.
+		$( document.body ).on( 'click', '.edd-onboarding__close-and-exit', function( e ) {
+			e.preventDefault();
+			EDD_Onboarding.onboarding_completed();
 		} );
 	},
 	init_upload_buttons: function() {
@@ -125,6 +131,22 @@
 
 		} );
 	},
+	onboarding_completed: function() {
+		EDD_Onboarding.loading_state( true );
+
+		var postData = {
+			action: 'edd_onboarding_completed',
+			page: 'edd-onboarding-wizard',
+			// _wpnonce: nonce,
+		};
+		return $.post(
+			ajaxurl,
+			postData,
+			function() {
+				window.location = $( '.edd-onboarding__close-and-exit' ).attr( 'href' );
+			}
+		);
+	},
 	load_step: function( step_name ) {
 		EDD_Onboarding.loading_state( true );
 
@@ -142,6 +164,7 @@
 				// Replace step screen.
 				$( '.edd-onboarding__current-step' ).html( data );
 
+				// Initialize step logic.
 				let step_class = EDD_Onboarding.get_step_class( step_name );
 				if ( step_class ) {
 					EDD_Onboarding[ step_class ].init();
@@ -168,6 +191,10 @@
 	},
 	next_step: function() {
 		let next_step = $( '.edd-onboarding_current-next-step' ).val();
+		if ( '' === next_step ) {
+			return EDD_Onboarding.onboarding_completed();
+		}
+
 		EDD_Onboarding.load_step( next_step );
 	},
 	get_step_class: function( step_name ) {
@@ -299,17 +326,17 @@
 			} );
 
 			// Save user telemetry details.
-			// await new Promise((resolve, reject) => {
-			// 	let data = {
-			// 		action: '',
-			// 	};
-
-			// 	$.post( ajaxurl, data )
-			// 	.done( function ( res ) {
-
-			// 		resolve();
-			// 	} );
-			// } )
+			await $.post(
+					ajaxurl,
+					{
+						action: 'edd_onboarding_telemetry_settings',
+						page: 'edd-onboarding-wizard',
+						telemetry_toggle: $( '#edd-onboarding__telemery-toggle' ).is( ':checked' ),
+						// _wpnonce: nonce,
+					},
+					function() {
+					}
+				);
 
 			// Instal and activate selected plugins.
 			for ( let plugin in selected_plugins ) {
@@ -355,7 +382,6 @@
 
 			// All of the plugins were installed and activated.
 			if ( installation_errors.length === 0 ) {
-				console.log("PROMISE")
 				return Promise.resolve();
 			}
 
@@ -373,7 +399,7 @@
 		save: function() {
 			let form = $('.edd-onboarding__create-product-form');
 			if ( ! form[0].reportValidity() ) {
-				return;
+				return Promise.reject();
 			}
 
 			let form_details = Object.fromEntries( new FormData( form[0] ) );
