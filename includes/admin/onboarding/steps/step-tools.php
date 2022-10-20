@@ -18,7 +18,10 @@ function initialize() {
  * @since 3.2
  */
 function ajax_save_telemetry_settings() {
-	// @todo - PERMISSIONS AND NONCE!
+	if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_onboarding_wizard' ) ) {
+		exit();
+	}
+
 	if ( isset( $_REQUEST['telemetry_toggle'] ) ) {
 		edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
 	}

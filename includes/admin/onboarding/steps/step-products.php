@@ -28,7 +28,10 @@ function initialize() {
  * @since 3.2
  */
 function create_product() {
-	// @todo - Nonce verification!
+	if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_onboarding_wizard' ) ) {
+		exit();
+	}
+
 	$response = array( 'success' => false );
 
 	// @todo - Check permissions!

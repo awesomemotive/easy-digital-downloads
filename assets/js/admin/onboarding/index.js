@@ -2,6 +2,11 @@
  * Onboarding Wizard.
  */
  var EDD_Onboarding = {
+
+	vars: {
+		nonce: '',
+	},
+
 	/**
 	 * Run when page is loaded
 	 * to initialize logic.
@@ -10,6 +15,8 @@
 	 *
 	 */
 	init: function() {
+		EDD_Onboarding.vars.nonce = $( '#_wpnonce' ).val();
+
 		this.init_step_buttons();
 		this.init_upload_buttons();
 		this.start_onboarding();
@@ -149,7 +156,7 @@
 			var postData = {
 				action: 'edd_onboarding_started',
 				page: 'edd-onboarding-wizard',
-				// _wpnonce: nonce,
+				_wpnonce: EDD_Onboarding.vars.nonce,
 			};
 			$.post(
 				ajaxurl,
@@ -178,7 +185,7 @@
 		var postData = {
 			action: 'edd_onboarding_completed',
 			page: 'edd-onboarding-wizard',
-			// _wpnonce: nonce,
+			_wpnonce: EDD_Onboarding.vars.nonce,
 		};
 		return $.post(
 			ajaxurl,
@@ -208,7 +215,7 @@
 				action: 'edd_onboarding_load_step',
 				page: 'edd-onboarding-wizard',
 				current_step: step_name,
-				// _wpnonce: nonce,
+				_wpnonce: EDD_Onboarding.vars.nonce,
 			},
 			success: function( data ) {
 				// Replace step screen.
@@ -447,7 +454,7 @@
 						action: 'edd_onboarding_telemetry_settings',
 						page: 'edd-onboarding-wizard',
 						telemetry_toggle: $( '#edd-onboarding__telemery-toggle' ).is( ':checked' ),
-						// _wpnonce: nonce,
+						_wpnonce: EDD_Onboarding.vars.nonce,
 					},
 					function() {
 					}
@@ -552,6 +559,7 @@
 				data: {
 					action: 'edd_onboarding_create_product',
 					page: 'edd-onboarding-wizard',
+					_wpnonce: EDD_Onboarding.vars.nonce,
 					...form_details
 				},
 				beforeSend: function() {
