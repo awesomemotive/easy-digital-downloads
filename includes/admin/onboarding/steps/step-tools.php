@@ -3,7 +3,15 @@ namespace EDD\Onboarding\Steps\Tools;
 
 use EDD\Onboarding\Helpers;
 
-function initialize() {}
+function initialize() {
+	add_action( 'wp_ajax_edd_onboarding_telemetry_settings', __NAMESPACE__ . '\ajax_save_telemetry_settings' );
+}
+
+function ajax_save_telemetry_settings() {
+	// @todo - PERMISSIONS AND NONCE!
+	edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
+	exit;
+}
 
 function step_html() {
 	$extension_manager = new \EDD\Admin\Extensions\Extension_Manager();
@@ -25,7 +33,7 @@ function step_html() {
 			'prechecked'  => true,
 			'plugin_name' => 'Auto Register',
 			'plugin_file' => 'edd-auto-register/edd-auto-register.php',
-			'plugin_url' => 'https://downloads.wordpress.org/plugin/edd-auto-register.zip',
+			'plugin_url'  => 'https://downloads.wordpress.org/plugin/edd-auto-register.zip',
 			'action'      => 'install',
 		),
 		array(
@@ -110,7 +118,6 @@ function step_html() {
 		</div>
 
 		<div class="edd-onboarding__get-suggestions-section">
-
 			<h3>Get helpful suggestions from Easy Digital Downloads on how to supercharge your EDD powered store, so you can improve conversions and earn more money.</h3>
 
 			<div class="edd-onboarding__get-suggestions-section_label">
@@ -119,13 +126,11 @@ function step_html() {
 				</label>
 			</div>
 
-
 			<div class="edd-onboarding__get-suggestions-section_input">
-				<input type="email" id="get-suggestions-email">
+				<input type="email" id="edd-onboarding__telemery-email">
 			</div>
 
-			<label class="edd-toggle"><input type="checkbox" name="telemetry" value="1" checked> Help make EDD better for everyone <span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation what we are doing here."></span></input></label>
-
+			<label class="edd-toggle"><input type="checkbox" id="edd-onboarding__telemery-toggle" name="telemetry" value="1" checked> Help make EDD better for everyone <span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation what we are doing here."></span></input></label>
 		</div>
 
 		<div class="edd-onboarding__selected-plugins">
@@ -136,10 +141,8 @@ function step_html() {
 		<h3>Some features were not able to be installed!</h3>
 		<p>Don't worry, everything will still work without them! You can install "<span class="edd-onboarding__failed-plugins-text"></span>" later by going to the Plugins > Add New section of your admin</p>
 
-		<a href="#" class="button button-primary"><?php echo esc_html( __( 'Continue', 'easy-digital-downloads' ) ); ?></a>
-
+		<a href="#" class="button button-primary edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Continue', 'easy-digital-downloads' ) ); ?></a>
 	</div>
-
 	<?php
 
 	return ob_get_clean();

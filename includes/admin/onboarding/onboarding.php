@@ -88,6 +88,7 @@ class OnboardingWizard {
 		// Ajax handlers.
 		add_action( 'wp_ajax_edd_onboarding_started', array( $this, 'ajax_onboarding_started' ) );
 		add_action( 'wp_ajax_edd_onboarding_load_step', array( $this, 'ajax_onboarding_load_step' ) );
+		add_action( 'wp_ajax_edd_onboarding_completed', array( $this, 'ajax_onboarding_completed' ) );
 
 	}
 
@@ -323,9 +324,9 @@ class OnboardingWizard {
 
 		$onboarding_initial_style = ( ! $this->onboarding_started ) ? ' style="display:none;"' : '';
 		?>
-		<input type="text" class="edd-onboarding_current-previous-step" value="<?php echo esc_attr( $this->get_previous_step() );?>">
-		<input type="text" class="edd-onboarding_current-step" value="<?php echo esc_attr( $this->get_current_step() );?>">
-		<input type="text" class="edd-onboarding_current-next-step" value="<?php echo esc_attr( $this->get_next_step() );?>">
+		<input type="hidden" class="edd-onboarding_current-previous-step" value="<?php echo esc_attr( $this->get_previous_step() );?>">
+		<input type="hidden" class="edd-onboarding_current-step" value="<?php echo esc_attr( $this->get_current_step() );?>">
+		<input type="hidden" class="edd-onboarding_current-next-step" value="<?php echo esc_attr( $this->get_next_step() );?>">
 		<div class="edd-onboarding__steps"<?php echo $onboarding_initial_style; ?>>
 			<ul>
 				<?php foreach( $this->onboarding_steps as $step_key => $step ):
@@ -381,8 +382,8 @@ class OnboardingWizard {
 			</div>
 
 		</div>
-		<div class="edd-onboarding__close-and-exit"<?php echo $onboarding_initial_style; ?>>
-			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) ); ?>"><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a>
+		<div class="edd-onboarding__close-and-exit-wrapper"<?php echo $onboarding_initial_style; ?>>
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) ); ?>" class="edd-onboarding__close-and-exit"><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a>
 		</div>
 		<?php
 	}
@@ -415,6 +416,20 @@ class OnboardingWizard {
 		ob_start();
 		$this->load_step_view();
 		echo ob_get_clean();
+		exit;
+	}
+
+	/**
+	 * Ajax callback for completing the Onboarding.
+	 *
+	 * @since 3.2
+	 */
+	public function ajax_onboarding_completed() {
+		// if ( ! wp_verify_nonce( $_REQUEST['nonce'], "edd_onboarding_nonce") ) {
+		// 	exit("No naughty business please");
+		// }
+
+		update_option( 'edd_onboarding_completed', true );
 		exit;
 	}
 }
