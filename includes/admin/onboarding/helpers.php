@@ -27,7 +27,7 @@ function extract_settings_fields( $sections ) {
 	// Fields extraction.
 	foreach ( $sections as $section_name => $section ) {
 		if ( isset( $wp_settings_fields[ $section_name ] ) && isset( $wp_settings_fields[ $section_name ][ $section_name ] ) ) {
-			foreach ($section as $field) {
+			foreach ( $section as $field ) {
 				$field_name = "edd_settings[{$field}]";
 				if ( array_key_exists( $field_name, $wp_settings_fields[ $section_name ][ $section_name ] ) ) {
 					$extracted_fields[ $field_name ] = $wp_settings_fields[ $section_name ][ $section_name ][ $field_name ];
@@ -40,13 +40,12 @@ function extract_settings_fields( $sections ) {
 }
 
 /**
- * Get fields ..
+ * Get fields HTML.
  *
  * @since 2.0
- * @return bool
  */
 function settings_html( $screen_settings ) {
-	foreach( $screen_settings as $field ) :
+	foreach ( $screen_settings as $field ) :
 		$class = '';
 
 		if ( ! empty( $field['args']['class'] ) ) {

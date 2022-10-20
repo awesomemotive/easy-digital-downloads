@@ -3,20 +3,14 @@ namespace EDD\Onboarding\Steps\BusinessInfo;
 
 use EDD\Onboarding\Helpers;
 
-function initialize() {
-	return;
-}
-
-function save_handler() {
-	exit;
-}
+function initialize() {}
 
 function step_html() {
 	$onboarding_started       = get_option( 'edd_onboarding_started', false );
 	$onboarding_initial_style = ( ! $onboarding_started ) ? ' style="display:none;"' : '';
 
 	$sections = array(
-		'edd_settings_general_main' => array(
+		'edd_settings_general_main'     => array(
 			'business_settings',
 			'entity_name',
 			'entity_type',
@@ -35,7 +29,7 @@ function step_html() {
 	);
 	ob_start();
 	?>
-	<div class="edd-onboarding__after-welcome-screen"<?php echo $onboarding_initial_style;?>>
+	<div class="edd-onboarding__after-welcome-screen"<?php echo $onboarding_initial_style; ?>>
 		<form method="post" action="options.php" class="edd-settings-form">
 			<?php settings_fields( 'edd_settings' ); ?>
 			<table class="form-table" role="presentation">

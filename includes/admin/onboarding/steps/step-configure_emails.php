@@ -3,13 +3,7 @@ namespace EDD\Onboarding\Steps\ConfigureEmails;
 
 use EDD\Onboarding\Helpers;
 
-function initialize() {
-	return;
-}
-
-function save_handler() {
-	exit;
-}
+function initialize() {}
 
 function step_html() {
 	$sections = array(

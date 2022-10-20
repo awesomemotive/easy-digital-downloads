@@ -4,20 +4,20 @@ namespace EDD\Onboarding\Steps\Products;
 use EDD\Onboarding\Helpers;
 
 function initialize() {
-	add_action( 'wp_ajax_edd_onboarding_create_product',  __NAMESPACE__ . '\create_product' );
+	add_action( 'wp_ajax_edd_onboarding_create_product', __NAMESPACE__ . '\create_product' );
 }
 
 function create_product() {
 	// @todo - Nonce verification!
-	$response = array( "success" => false );
+	$response = array( 'success' => false );
 
 	// @todo - Check permissions!
 
 	// Prepare product post details.
 	$product = array(
-		'post_title'    => wp_strip_all_tags( $_REQUEST['product_title'] ),
-		'post_status'   => 'publish',
-		'post_type'     => 'download',
+		'post_title'  => wp_strip_all_tags( $_REQUEST['product_title'] ),
+		'post_status' => 'publish',
+		'post_type'   => 'download',
 	);
 
 	// Insert the product into the database.

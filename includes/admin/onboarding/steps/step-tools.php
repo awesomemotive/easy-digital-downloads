@@ -9,7 +9,10 @@ function initialize() {
 
 function ajax_save_telemetry_settings() {
 	// @todo - PERMISSIONS AND NONCE!
-	edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
+	if ( isset( $_REQUEST['telemetry_toggle'] ) ) {
+		edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
+	}
+
 	exit;
 }
 
@@ -79,16 +82,16 @@ function step_html() {
 		// Is plugin already activated?
 		if ( is_plugin_active( $plugin['plugin_file'] ) ) {
 			$available_plugins[ $key ]['prechecked'] = true;
-			$available_plugins[ $key ]['disabled'] = true;
+			$available_plugins[ $key ]['disabled']   = true;
 		}
-
 	}
 
 	ob_start();
 	?>
 	<div class="edd-onboarding__install-plugins">
 		<div class="edd-onboarding__plugins-list">
-			<?php foreach( $available_plugins as $plugin ) :
+			<?php
+			foreach ( $available_plugins as $plugin ) :
 				$checked  = '';
 				$disabled = '';
 				if ( isset( $plugin['prechecked'] ) && $plugin['prechecked'] ) {
@@ -106,7 +109,7 @@ function step_html() {
 					<div class="edd-onboarding__plugins-control">
 
 					<label class="checkbox-control checkbox-control--checkbox">
-						<input class="edd-onboarding__plugin-install" data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] );?>" data-action="<?php echo esc_attr( $plugin['action'] );?>" data-plugin-file="<?php echo esc_attr( $plugin['plugin_file'] );?>" value="<?php echo esc_attr( $plugin['plugin_url'] );?>" type="checkbox"<?php echo $checked.$disabled;?>/>
+						<input class="edd-onboarding__plugin-install" data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] ); ?>" data-action="<?php echo esc_attr( $plugin['action'] ); ?>" data-plugin-file="<?php echo esc_attr( $plugin['plugin_file'] ); ?>" value="<?php echo esc_attr( $plugin['plugin_url'] ); ?>" type="checkbox"<?php echo $checked.$disabled;?>/>
 						<div class="checkbox-control__indicator"></div>
 					</label>
 
