@@ -545,3 +545,45 @@ function edd_display_post_states( $post_states, $post ) {
 	return $post_states;
 }
 add_filter( 'display_post_states', 'edd_display_post_states', 10, 2 );
+
+/**
+ * Adds EDD custom roles to the REST API authors query.
+ *
+ * @param array $prepared_args
+ * @param array $request
+ * @return array
+ */
+function edd_add_custom_roles_rest_user_query( $prepared_args, $request ) {
+	// If the args don't match the authors query, return early.
+	if ( empty( $prepared_args['who'] || 'authors' !== $prepared_args['who'] ) ) {
+		return $prepared_args;
+	}
+
+	// Get the referer so we can look for the download post type by post ID.
+	$referer = wp_parse_url( wp_get_referer() );
+
+	if ( empty( $referer['query'] ) ) {
+		return $prepared_args;
+	}
+
+	$post_id = (int) filter_var( $referer['query'], FILTER_SANITIZE_NUMBER_INT );
+	if ( empty( $post_id ) || 'download' !== get_post_type( $post_id ) ) {
+		return $prepared_args;
+	}
+
+	$roles = new WP_Roles();
+	$who   = array();
+	foreach ( $roles->role_objects as $role ) {
+		if ( array_key_exists( 'edit_products', $role->capabilities ) && ! empty( $role->capabilities['edit_product'] ) ) {
+			$who[] = $role->name;
+			continue;
+		}
+	}
+	if ( ! empty( $who ) ) {
+		unset( $prepared_args['who'] );
+		$prepared_args['role__in'] = $who;
+	}
+
+	return $prepared_args;
+}
+add_filter( 'rest_user_query', 'edd_add_custom_roles_rest_user_query', 5, 2 );

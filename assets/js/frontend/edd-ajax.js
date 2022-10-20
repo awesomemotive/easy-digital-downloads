@@ -21,7 +21,8 @@ jQuery( document ).ready( function( $ ) {
 				cart_item: item,
 				nonce: nonce,
 				timestamp: $this.data( 'timestamp' ),
-				token: $this.data( 'token' )
+				token: $this.data( 'token' ),
+				current_page: edd_scripts.current_page,
 			};
 
 		 $.ajax( {
@@ -175,6 +176,7 @@ jQuery( document ).ready( function( $ ) {
 			price_ids: item_price_ids,
 			post_data: $( form ).serialize(),
 			nonce: nonce,
+			current_page: edd_scripts.current_page,
 		};
 
 		$.ajax( {
