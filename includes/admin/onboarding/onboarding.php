@@ -323,7 +323,9 @@ class OnboardingWizard {
 
 		$onboarding_initial_style = ( ! $this->onboarding_started ) ? ' style="display:none;"' : '';
 		?>
-		<input type="hidden" class="edd-onboarding_current-step" value="<?php echo esc_attr( $this->get_current_step() );?>">
+		<input type="text" class="edd-onboarding_current-previous-step" value="<?php echo esc_attr( $this->get_previous_step() );?>">
+		<input type="text" class="edd-onboarding_current-step" value="<?php echo esc_attr( $this->get_current_step() );?>">
+		<input type="text" class="edd-onboarding_current-next-step" value="<?php echo esc_attr( $this->get_next_step() );?>">
 		<div class="edd-onboarding__steps"<?php echo $onboarding_initial_style; ?>>
 			<ul>
 				<?php foreach( $this->onboarding_steps as $step_key => $step ):
@@ -368,13 +370,13 @@ class OnboardingWizard {
 			<div class="edd-onboarding__single-step-footer">
 				<div>
 					<?php if ( $pagination['previous'] ) : ?>
-						<a href="#" data-step="<?php echo esc_attr( $this->get_previous_step() ); ?>" class="edd-onboarding__button-back">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></a>
+						<a href="#" class="edd-onboarding__button-back">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></a>
 					<?php endif;?>
 				</div>
 
 				<div>
-					<a href="#" class="button button-secondary edd-onboarding__button-supportive edd-onboarding__button-skip-step" data-step="<?php echo esc_attr( $this->get_next_step() ); ?>"><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></a>
-					<a href="#" class="button button-primary edd-onboarding__button-save-step" data-step="<?php echo esc_attr( $this->get_next_step() ); ?>"><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></a>
+					<a href="#" class="button button-secondary edd-onboarding__button-supportive edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></a>
+					<a href="#" class="button button-primary edd-onboarding__button-save-step"><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></a>
 				</div>
 			</div>
 
