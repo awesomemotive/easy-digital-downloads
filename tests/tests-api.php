@@ -277,6 +277,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'modified_date', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'status', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'link', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'permalink', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'content', $out['products'][0]['info'] );
 		$this->assertArrayHasKey( 'thumbnail', $out['products'][0]['info'] );
 
@@ -286,6 +287,8 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'publish', $out['products'][0]['info']['status'] );
 		$this->assertEquals( self::$post->post_content, $out['products'][0]['info']['content'] );
 		$this->assertEquals( '', $out['products'][0]['info']['thumbnail'] );
+		$this->assertEquals( html_entity_decode( self::$post->guid ), $out['products'][0]['info']['link'] );
+		$this->assertEquals( html_entity_decode( get_permalink( self::$post->ID ) ), $out['products'][0]['info']['permalink'] );
 	}
 
 	public function test_get_product_stats() {
