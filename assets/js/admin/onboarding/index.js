@@ -22,21 +22,28 @@
 		$( '.edd-onboarding__loading' ).toggle( state );
 	},
 	init_step_buttons: function() {
-		// Go back and skip button.
-		$( document.body ).on( 'click', '.edd-onboarding__button-back, .edd-onboarding__button-skip-step', function( e ) {
+		// Go back button.
+		$( document.body ).on( 'click', '.edd-onboarding__button-back', function( e ) {
 			e.preventDefault();
-			EDD_Onboarding.load_step( $( this ).data( 'step' ) );
+			EDD_Onboarding.load_step( $( '.edd-onboarding_current-previous-step' ).val() );
+		} );
+
+		// Skip step button.
+		$( document.body ).on( 'click', '.edd-onboarding__button-skip-step', function( e ) {
+			e.preventDefault();
+			EDD_Onboarding.load_step( $( '.edd-onboarding_current-next-step' ).val() );
 		} );
 
 		// Save button.
 		$( document.body ).on( 'click', '.edd-onboarding__button-save-step', function( e ) {
 			e.preventDefault();
-
 			let step_class = EDD_Onboarding.get_step_class( $( '.edd-onboarding_current-step' ).val() );
+			console.log( step_class );
 			if ( step_class ) {
-				EDD_Onboarding[ step_class ].save();
+				EDD_Onboarding[ step_class ].save().then( function() {
+					EDD_Onboarding.next_step();
+				} );
 			}
-
 		} );
 	},
 	init_upload_buttons: function() {
@@ -160,7 +167,7 @@
 		} );
 	},
 	next_step: function() {
-		let next_step = $( '.edd-onboarding__button-save-step' ).data( 'step' );
+		let next_step = $( '.edd-onboarding_current-next-step' ).val();
 		EDD_Onboarding.load_step( next_step );
 	},
 	get_step_class: function( step_name ) {
@@ -181,7 +188,7 @@
 	 EDD_Onboarding_Business_Info: {
 		init: function() {},
 		save: function() {
-			$.ajax( {
+			return $.ajax( {
 				type: 'POST',
 				url: $('.edd-settings-form').attr("action"),
 				data: $('.edd-settings-form').serialize(),
@@ -189,7 +196,6 @@
 					EDD_Onboarding.loading_state( true );
 				},
 				success: function( data ) {
-					EDD_Onboarding.next_step();
 				},
 			} ).fail( function( response ) {
 				if ( window.console && window.console.log ) {
@@ -231,14 +237,14 @@
 			}
 		},
 		save: function() {
-			EDD_Onboarding.next_step();
+			return Promise.resolve();
 		},
 	},
 
 	EDD_Onboarding_Configure_Emails: {
 		init: function() {},
 		save: function() {
-			$.ajax( {
+			return $.ajax( {
 				type: 'POST',
 				url: $('.edd-settings-form').attr("action"),
 				data: $('.edd-settings-form').serialize(),
@@ -246,7 +252,6 @@
 					EDD_Onboarding.loading_state( true );
 				},
 				success: function( data ) {
-					EDD_Onboarding.next_step();
 				},
 			} ).fail( function( response ) {
 				if ( window.console && window.console.log ) {
@@ -294,17 +299,17 @@
 			} );
 
 			// Save user telemetry details.
-			await new Promise((resolve, reject) => {
-				let data = {
-					action: '',
-				};
+			// await new Promise((resolve, reject) => {
+			// 	let data = {
+			// 		action: '',
+			// 	};
 
-				$.post( ajaxurl, data )
-				.done( function ( res ) {
+			// 	$.post( ajaxurl, data )
+			// 	.done( function ( res ) {
 
-					resolve();
-				} );
-			} )
+			// 		resolve();
+			// 	} );
+			// } )
 
 			// Instal and activate selected plugins.
 			for ( let plugin in selected_plugins ) {
@@ -373,7 +378,7 @@
 
 			let form_details = Object.fromEntries( new FormData( form[0] ) );
 
-			$.ajax( {
+			return $.ajax( {
 				type: 'POST',
 				url: ajaxurl,
 				data: {

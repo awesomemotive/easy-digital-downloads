@@ -3,17 +3,7 @@ namespace EDD\Onboarding\Steps\Tools;
 
 use EDD\Onboarding\Helpers;
 
-function initialize() {
-	add_action( 'wp_ajax_edd_onboarding_install_plugin', __NAMESPACE__ . '\install_plugin' );
-}
-
-function install_plugin() {
-
-}
-
-function save_handler() {
-	exit;
-}
+function initialize() {}
 
 function step_html() {
 	$extension_manager = new \EDD\Admin\Extensions\Extension_Manager();
