@@ -36,6 +36,7 @@ for phpVersion in ${phpVersions[@]}; do
     echo "            - TEST_INPLACE"
     echo "          propagate-uid-gid: true"
     echo "          pull-retries: 3"
+    echo "          graceful-shutdown: true"
     echo "          run: wordpress"
   done
 done
@@ -56,4 +57,5 @@ echo "            - WP_MULTISITE"
 echo "            - TEST_INPLACE"
 echo "          propagate-uid-gid: true"
 echo "          pull-retries: 3"
+echo "          graceful-shutdown: true"
 echo "          run: wordpress"
