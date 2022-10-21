@@ -242,7 +242,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 This is a very minor point release, with a single change to try and correct an issue within the PayPal API that is causing 403 and 400 errors.
 It is not intended to resolve the issue within PayPal's API, but offer us some time to continue to work with PayPal to solve the issue long term without it impacting customer's purchases.
 
-* IMPORTANT: If you have been experiencing issues with the PayPal webhooks, please update and visit Downloads > Settings. Payments> PayPal and re-check your payment status and sync webhooks.
+* IMPORTANT: If you have been experiencing issues with the PayPal webhooks, please update EDD and visit Downloads > Settings > Payments > PayPal and re-check your payment status and sync webhooks.
 * Fix: Attempts to create a specific user-agent to send to PayPal for webhook validation to avoid 403/400 errors.
 
 = 3.1.0.1, October 8, 2022 =
