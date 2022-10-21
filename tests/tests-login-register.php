@@ -244,6 +244,25 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers edd_process_register_form
+	 */
+	public function test_process_register_form_pass2_missing() {
+
+		edd_process_register_form(
+			array(
+				'edd_register_submit' => 1,
+				'edd_user_login'      => 'sample_user',
+				'edd_user_email'      => 'sample@edd.local',
+				'edd_user_pass'       => 'password',
+			)
+		);
+		$this->assertArrayHasKey( 'password_mismatch', edd_get_errors() );
+
+		// Clear errors for other test
+		edd_clear_errors();
+	}
+
+	/**
 	 * @covers: edd_get_file_download_login_redirect
 	 */
 	public function test_get_file_download_login_redirect_no_login_redirect_page() {
