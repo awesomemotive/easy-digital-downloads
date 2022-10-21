@@ -800,6 +800,44 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, $result );
 	}
 
+	public function test_parse_dates_for_range_with_last_quarter_range_should_return_those_dates_utc_plus() {
+		$date = EDD()->utils->date( 'now', 'UTC', false );
+		$expected = array(
+			'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
+			'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
+		);
+
+		$date = EDD()->utils->date( 'now', 'GMT+5', false );
+		$result = array(
+			'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
+			'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
+		);
+
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	public function test_parse_dates_for_range_with_last_quarter_range_should_return_those_dates_utc_negative() {
+		$date = EDD()->utils->date( 'now', 'UTC', false );
+		$expected = array(
+			'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
+			'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
+		);
+
+		$date = EDD()->utils->date( 'now', 'GMT-5', false );
+		$result = array(
+			'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
+			'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
+		);
+
+		$expected = $this->strip_seconds( $expected );
+		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
 	public function test_gross_order_status() {
 		$expected = array(
 			'complete',
