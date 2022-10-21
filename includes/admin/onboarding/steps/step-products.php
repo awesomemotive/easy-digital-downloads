@@ -32,9 +32,11 @@ function create_product() {
 		exit();
 	}
 
-	$response = array( 'success' => false );
+	if ( ! current_user_can( 'edit_products' ) ) {
+		return;
+	}
 
-	// @todo - Check permissions!
+	$response = array( 'success' => false );
 
 	// Prepare product post details.
 	$product = array(
@@ -81,17 +83,17 @@ function step_html() {
 		<table class="form-table" role="presentation">
 			<tbody>
 				<tr>
-					<th scope="row"><label><h3>Product details</h3></label></th>
+					<th scope="row"><label><h3><?php echo esc_html( __( 'Product details', 'easy-digital-downloads' ) ); ?></h3></label></th>
 					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation for basic product details."></span></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="product_title">Product name:</label></th>
+					<th scope="row"><label for="product_title"><?php echo esc_html( __( 'Product name:', 'easy-digital-downloads' ) ); ?></label></th>
 					<td>
 						<input type="text" class="regular-text" id="product_title" name="product_title" required>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="product_image_url">Product image:</label></th>
+					<th scope="row"><label for="product_image_url"><?php echo esc_html( __( 'Product image:', 'easy-digital-downloads' ) ); ?></label></th>
 					<td>
 						<input type="hidden" id="product_image_id" name="product_image_id"><input type="text" class="regular-text" id="product_image_url" class="" name="product_image_url" data-attachment-id-field="#product_image_id" /><span>&nbsp;<input type="button" data-uploader-title="Set Image" data-uploader-button-text="Set Image" class="edd_settings_upload_button button-secondary" value="Set Image"/></span>
 					</td>
@@ -104,7 +106,7 @@ function step_html() {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label><h3>Add your first file</h3></label></th>
+					<th scope="row"><label><h3><?php echo esc_html( __( 'Add your first file', 'easy-digital-downloads' ) ); ?></h3></label></th>
 					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation for adding the files."></span></td>
 				</tr>
 				<tr class="edd-onboarding__product-files-row">

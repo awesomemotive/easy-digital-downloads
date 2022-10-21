@@ -69,22 +69,22 @@ function step_html() {
 		<div class="edd-onboarding__stripe-content-logo">
 			<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/onboarding/stripe-logo.svg' ); ?>">
 
-			<span>The world’s most powerful and easy to use payment gateway. </span>
+			<span><?php echo esc_html( __( 'The world’s most powerful and easy to use payment gateway.', 'easy-digital-downloads' ) ); ?></span>
 		</div>
 
-		<strong class="edd-onboarding__stripe-features-title">Stripe Features we can add:</strong>
+		<strong class="edd-onboarding__stripe-features-title"><?php echo esc_html( __( 'Stripe Features we can add:', 'easy-digital-downloads' ) ); ?></strong>
 
 		<div class="edd-onboarding__stripe-features-divider">
 			<ol class="edd-onboarding__stripe-features-listing">
-				<li>Secure checkout</li>
-				<li>Accept all major credit cards</li>
-				<li>Supports subscriptions</li>
+				<li><?php echo esc_html( __( 'Secure checkout', 'easy-digital-downloads' ) ); ?></li>
+				<li><?php echo esc_html( __( 'Accept all major credit cards', 'easy-digital-downloads' ) ); ?></li>
+				<li><?php echo esc_html( __( 'Supports subscriptions', 'easy-digital-downloads' ) ); ?></li>
 			</ol>
 
 			<ol class="edd-onboarding__stripe-features-listing">
-				<li>Fraud prevention tools</li>
-				<li>Apple Pay & Google Pay</li>
-				<li>And more…</li>
+				<li><?php echo esc_html( __( 'Fraud prevention tools', 'easy-digital-downloads' ) ); ?></li>
+				<li><?php echo esc_html( __( 'Apple Pay & Google Pay', 'easy-digital-downloads' ) ); ?></li>
+				<li><?php echo esc_html( __( 'And more…', 'easy-digital-downloads' ) ); ?></li>
 			</ol>
 		</div>
 
@@ -93,7 +93,7 @@ function step_html() {
 		</div>
 
 		<div class="edd-onboarding__stripe-additional-text">
-			<span>Start accepting payments with Stripe by connecting your account. Stripe Connect helps ensure easier setup and improved security.</span>
+			<span><?php echo esc_html( __( 'Start accepting payments with Stripe by connecting your account. Stripe Connect helps ensure easier setup and improved security.', 'easy-digital-downloads' ) ); ?></span>
 		</div>
 	</div>
 	<?php

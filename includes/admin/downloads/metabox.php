@@ -120,9 +120,9 @@ add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
 /**
  * Save post meta when the save_post action is called
  *
- * @since 3.1
- * @param int $post_id Download (Post) ID
- * @global array $post All the data of the the current post
+ * @since 3.2
+ * @param int $post_id Download (Post) ID.
+ * @global array $post All the data of the the current post.
  * @return void
  */
 function edd_download_meta_box_fields_save( $post_id, $post ) {
