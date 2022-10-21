@@ -62,10 +62,10 @@ function step_html() {
 	<?php if ( ! $onboarding_started ) : ?>
 		<div class="edd-onboarding__welcome-screen">
 			<div class="edd-onboarding__welcome-screen-inner">
-				<span>👋 Say hello to the easiest way to...</span>
-				<h1>Sell Digital Products<br> With WordPress</h1>
-				<p>From eBooks, to WordPress plugins, to PDF files and more, we make selling digital products a breeze. Easy Digital Downloads is trusted by over 50,000 smart website owners.</p>
-				<a href="" class="edd-onboarding__welcome-screen-get-started">GET STARTED</a>
+				<span><?php echo esc_html( __( '👋 Say hello to the easiest way to...', 'easy-digital-downloads' ) ); ?></span>
+				<h1><?php echo esc_html( __( 'Sell Digital Products With WordPress', 'easy-digital-downloads' ) ); ?></h1>
+				<p><?php echo esc_html( __( 'From eBooks, to WordPress plugins, to PDF files and more, we make selling digital products a breeze. Easy Digital Downloads is trusted by over 50,000 smart website owners.', 'easy-digital-downloads' ) ); ?></p>
+				<a href="" class="edd-onboarding__welcome-screen-get-started"><?php echo esc_html( __( 'GET STARTED', 'easy-digital-downloads' ) ); ?></a>
 			</div>
 		</div>
 	<?php endif; ?>

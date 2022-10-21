@@ -86,11 +86,6 @@ class OnboardingWizard {
 
 		add_action( 'admin_init', array( $this, 'load_onboarding_wizard' ) );
 
-		// Set variables.
-		$this->onboarding_started = get_option( 'edd_onboarding_started', false );
-		$this->set_onboarding_steps();
-		$this->set_current_onboarding_step();
-
 		// Ajax handlers.
 		add_action( 'wp_ajax_edd_onboarding_started', array( $this, 'ajax_onboarding_started' ) );
 		add_action( 'wp_ajax_edd_onboarding_load_step', array( $this, 'ajax_onboarding_load_step' ) );
@@ -122,6 +117,12 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function load_onboarding_wizard() {
+
+		// Set variables.
+		$this->onboarding_started = get_option( 'edd_onboarding_started', false );
+		$this->set_onboarding_steps();
+		$this->set_current_onboarding_step();
+
 		// We don't want any notices on our screen.
 		remove_all_actions( 'admin_notices' );
 		remove_all_actions( 'all_admin_notices' );
@@ -140,7 +141,9 @@ class OnboardingWizard {
 		wp_enqueue_media();
 		wp_enqueue_style( 'edd-extension-manager' );
 		wp_enqueue_script( 'edd-extension-manager' );
-		edd_stripe_connect_admin_script( 'download_page_edd-settings' );
+		if ( array_key_exists( 'payment_methods', $this->onboarding_steps ) ) {
+			edd_stripe_connect_admin_script( 'download_page_edd-settings' );
+		}
 	}
 
 	/**
@@ -181,6 +184,11 @@ class OnboardingWizard {
 				'step_handler'  => 'Products',
 			),
 		);
+
+		// If Stripe classes are not available, remove payment methods step.
+		if ( ! defined( 'EDD_STRIPE_VERSION' ) ) {
+			unset( $this->onboarding_steps['payment_methods'] );
+		}
 
 		// Set step index in the array and load ajax handlers.
 		$index = 1;

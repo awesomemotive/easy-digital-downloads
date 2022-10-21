@@ -143,7 +143,7 @@ function step_html() {
 
 			<div class="edd-onboarding__get-suggestions-section_label">
 				<label for="get-suggestion-email">
-					Your Email Address:
+					<?php echo esc_html( __( 'Your Email Address:', 'easy-digital-downloads' ) ); ?>
 				</label>
 			</div>
 
@@ -151,17 +151,28 @@ function step_html() {
 				<input type="email" id="edd-onboarding__telemery-email">
 			</div>
 
-			<label class="edd-toggle"><input type="checkbox" id="edd-onboarding__telemery-toggle" name="telemetry" value="1" checked> Help make EDD better for everyone <span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation what we are doing here."></span></input></label>
+			<label class="edd-toggle">
+				<input type="checkbox" id="edd-onboarding__telemery-toggle" name="telemetry" value="1" checked> <?php echo esc_html( __( 'Help make EDD better for everyone', 'easy-digital-downloads' ) ); ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Explanation for the telemetry.', 'easy-digital-downloads' ) ); ?>"></span></input>
+			</label>
 		</div>
 
 		<div class="edd-onboarding__selected-plugins">
-			<p>The following plugins will be installed: <span class="edd-onboarding__selected-plugins-text"></span></p>
+			<p><?php echo esc_html( __( 'The following plugins will be installed:', 'easy-digital-downloads' ) ); ?> <span class="edd-onboarding__selected-plugins-text"></span></p>
 		</div>
 	</div>
 	<div class="edd-onboarding__install-failed" style="display: none;">
-		<h3>Some features were not able to be installed!</h3>
-		<p>Don't worry, everything will still work without them! You can install "<span class="edd-onboarding__failed-plugins-text"></span>" later by going to the Plugins > Add New section of your admin</p>
-
+		<h3><?php echo esc_html( __( 'Some features were not able to be installed!', 'easy-digital-downloads' ) ); ?></h3>
+		<p>
+			<?php
+				/* Translators: list of plugins that were not able to be installed or activated */
+				wp_kses(
+					printf( __( "Don't worry, everything will still work without them! You can install %s later by going to the Plugins > Add New section of your admin", 'edd' ), '<span class="edd-onboarding__failed-plugins-text"></span>' ),
+					array( 'span' )
+				);
+			?>
+		</p>
+		<?php echo esc_html( __( 'Your Email Address:', 'easy-digital-downloads' ) ); ?>
 		<a href="#" class="button button-primary edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Continue', 'easy-digital-downloads' ) ); ?></a>
 	</div>
 	<?php
