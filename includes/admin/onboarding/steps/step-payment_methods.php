@@ -11,6 +11,9 @@
 
 namespace EDD\Onboarding\Steps\PaymentMethods;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use EDD\Onboarding\Helpers;
 
 /**
