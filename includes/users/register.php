@@ -93,7 +93,7 @@ function edd_process_register_form( $data ) {
 	}
 
 	// Check if password fields do not match.
-	if ( ! empty( $data['edd_user_pass'] ) && trim( $data['edd_user_pass2'] ) !== $data['edd_user_pass'] ) {
+	if ( ! empty( $data['edd_user_pass'] ) && ( empty( $data['edd_user_pass2'] ) || trim( $data['edd_user_pass2'] ) !== $data['edd_user_pass'] ) ) {
 		edd_set_error( 'password_mismatch', __( 'The passwords do not match.', 'easy-digital-downloads' ) );
 	}
 
