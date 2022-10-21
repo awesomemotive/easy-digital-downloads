@@ -6,7 +6,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.1.0.1
+Stable Tag: 3.1.0.1.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,12 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1.0.1.1, October 21, 2022 =
+This is a very minor point release, with a single change to try and correct an issue within the PayPal API that is causing 403 and 400 errors.
+It is not intended to resolve the issue within PayPal's API, but offer us some time to continue to work with PayPal to solve the issue long term without it impacting customer's purchases.
+
+* Fix: Attempts to create a specific user-agent to send to PayPal for webhook validation to avoid 403/400 errors.
 
 = 3.1.0.1, October 8, 2022 =
 * Fix: With taxes enabled, updating the address fields in the shortcode would replace the cart with the cart block.
