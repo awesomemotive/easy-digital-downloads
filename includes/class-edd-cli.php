@@ -1530,7 +1530,11 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 * --force=<boolean>:   If the routine should be run even if the upgrade routine has been run already
+	 * --id=<int>:          Run the migration for a specific order.
+	 * --start=<int>:       Run the migration beginning with a specific order ID.
+	 * --end=<int>:         Run the migration ending with a specific order ID.
+	 * --destroy=<boolean>: Destroy existing orders that have already been migrated.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -1539,6 +1543,7 @@ class EDD_CLI extends WP_CLI_Command {
 	 * wp edd migrate_payments --force --id=3    Migrate payment ID 3.
 	 * wp edd migrate_payments --force --start=3 Migrate payments beginning with and including ID 3.
 	 * wp edd migrate_payments --force --end=3   Migrate payments up to and including ID 3, but not higher.
+	 * wp edd migrate_payments --force --destroy Destroy existing orders and migrate them again.
 	 */
 	public function migrate_payments( $args, $assoc_args ) {
 		global $wpdb;
@@ -1550,6 +1555,12 @@ class EDD_CLI extends WP_CLI_Command {
 		$force = isset( $assoc_args['force'] )
 			? true
 			: false;
+
+		$destroy = (bool) ( $force && isset( $assoc_args['destroy'] ) );
+
+		if ( $destroy ) {
+			WP_CLI::confirm( __( 'Are you sure you want to delete orders that have already been migrated and run the migration again?', 'easy-digital-downloads' ) );
+		}
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_orders' );
 
@@ -1576,21 +1587,25 @@ class EDD_CLI extends WP_CLI_Command {
 		$has_results  = ! empty( $check_total );
 
 		// Setup base iteration variables.
-		$step   = 0;
-		$offset = 0;
+		$step           = 0;
+		$offset         = 0;
+		$full_migration = true;
 
 		// Migrate one specific order.
-		if ( isset( $assoc_args['id'] ) ) {
-			$id        = absint( $assoc_args['id'] );
-			$sql_base .= " AND ID = {$id}";
-		} else {
+		if ( ! empty( $assoc_args['id'] ) ) {
+			$id             = absint( $assoc_args['id'] );
+			$sql_base      .= " AND ID = {$id}";
+			$full_migration = false;
+		} elseif ( ! empty( $assoc_args['start'] ) || ! empty( $assoc_args['end'] ) ) {
+			$full_migration = false;
+
 			// Begin the order migration at a specific payment ID.
-			if ( isset( $assoc_args['start'] ) ) {
+			if ( ! empty( $assoc_args['start'] ) ) {
 				$start     = absint( $assoc_args['start'] );
 				$sql_base .= " AND ID >= {$start}";
 			}
 			// Stop the order migration at a specific payment ID.
-			if ( isset( $assoc_args['end'] ) ) {
+			if ( ! empty( $assoc_args['end'] ) ) {
 				$end       = absint( $assoc_args['end'] );
 				$sql_base .= " AND ID <= {$end}";
 			}
@@ -1622,8 +1637,14 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $result ) {
 
-					// Check if order has already been migrated.
-					$migrated = $orders->get_item( $result->ID );
+					// Delete the existing order to re-run the migration fresh.
+					if ( $destroy ) {
+						edd_destroy_order( $result->ID );
+						$migrated = false;
+					} else {
+						// Check if order has already been migrated.
+						$migrated = $orders->get_item( $result->ID );
+					}
 					if ( $migrated ) {
 						$progress->tick();
 						continue;
@@ -1650,26 +1671,30 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 		}
 
-
 		if ( 0 === $step ) {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_orders' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		} else {
-			WP_CLI::line( __( 'Migration complete: Orders', 'easy-digital-downloads' ) );
-			$new_count = edd_count_orders( array( 'type' => 'sale' ) );
-			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_payment'", 0 );
-			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
-			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
+			if ( ! $full_migration ) {
+				WP_CLI::line( __( 'Partial order migration complete. Orders Processed: ', 'easy-digital-downloads' ) . $total );
+				WP_CLI::line( __( 'To recalculate all download sales and earnings, run wp edd `recalculate_download_sales_earnings`.', 'easy-digital-downloads' ) );
+			} else {
+				WP_CLI::line( __( 'Migration complete: Orders', 'easy-digital-downloads' ) );
+				$new_count = edd_count_orders( array( 'type' => 'sale' ) );
+				$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_payment'", 0 );
+				WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
+				WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-			$refund_count = edd_count_orders( array( 'type' => 'refund' ) );
-			WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
+				$refund_count = edd_count_orders( array( 'type' => 'refund' ) );
+				WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
 
-			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_orders' );
+				edd_update_db_version();
+				edd_set_upgrade_complete( 'migrate_orders' );
 
-			$progress->tick();
-			$this->recalculate_download_sales_earnings();
+				$progress->tick();
+				$this->recalculate_download_sales_earnings();
+			}
 		}
 
 		$progress->finish();
