@@ -1611,6 +1611,11 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 		}
 
+		// Confirm any partial migrations if the upgrade hasn't been completed.
+		if ( ! $full_migration && ! $upgrade_completed ) {
+			WP_CLI::confirm( __( 'Are you sure you want to run a partial order migration?', 'easy-digital-downloads' ) );
+		}
+
 		$sql_base .= ' ORDER BY ID ASC';
 
 		$number = isset( $assoc_args['number'] ) && is_numeric( $assoc_args['number'] )
