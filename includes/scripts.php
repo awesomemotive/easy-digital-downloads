@@ -170,7 +170,8 @@ function edd_localize_scripts() {
 			'purchase_loading'      => __( 'Please Wait...', 'easy-digital-downloads' ),
 			'complete_purchase'     => edd_get_checkout_button_purchase_label(),
 			'taxes_enabled'         => edd_use_taxes() ? '1' : '0',
-			'edd_version'           => $version
+			'edd_version'           => $version,
+			'current_page'          => get_the_ID(),
 		) ) );
 	}
 

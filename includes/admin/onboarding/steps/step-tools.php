@@ -167,7 +167,7 @@ function step_html() {
 			<?php
 				/* Translators: list of plugins that were not able to be installed or activated */
 				wp_kses(
-					printf( __( "Don't worry, everything will still work without them! You can install %s later by going to the Plugins > Add New section of your admin", 'edd' ), '<span class="edd-onboarding__failed-plugins-text"></span>' ),
+					printf( __( "Don't worry, everything will still work without them! You can install %s later by going to the Plugins > Add New section of your admin", 'easy-digital-downloads' ), '<span class="edd-onboarding__failed-plugins-text"></span>' ),
 					array( 'span' )
 				);
 			?>
