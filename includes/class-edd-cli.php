@@ -1706,6 +1706,47 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Display the legacy data for an EDD_Payment.
+	 *
+	 * @param array $args
+	 * @return void
+	 */
+	public function display_legacy_payment_data( $args ) {
+		$id = ! empty( $args[0] ) ? (int) $args[0] : false;
+		if ( ! $id ) {
+			WP_CLI::error( __( 'You must enter a payment ID to display legacy data.', 'easy-digital-downloads' ) );
+		}
+
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d",
+				$id
+			)
+		);
+
+		if ( empty( $results ) ) {
+			WP_CLI::error( __( 'The legacy payment data could not be found.', 'easy-digital-downloads' ) );
+		}
+
+		foreach ( $results as $result ) {
+			$meta_value = maybe_unserialize( $result->meta_value );
+			if ( is_array( $meta_value ) ) {
+				WP_CLI::line( $result->meta_key . ' =>' );
+				foreach ( $meta_value as $key => $value ) {
+					WP_CLI::line( $key . ' => ' . print_r( maybe_unserialize( $value ), true ) );
+				}
+				WP_CLI::line( '/' . $result->meta_key );
+			} else {
+				WP_CLI::line( $result->meta_key . ' => ' . print_r( $meta_value, true ) );
+			}
+		}
+	}
+
+	/**
 	 * Recalculates the sales and earnings for all downloads.
 	 *
 	 * @since 3.0
