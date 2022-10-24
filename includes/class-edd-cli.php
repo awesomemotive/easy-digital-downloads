@@ -1655,7 +1655,11 @@ class EDD_CLI extends WP_CLI_Command {
 						continue;
 					}
 
-					\EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
+					$success = \EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
+					if ( ! $full_migration && empty( $success ) ) {
+						/* translators: payment ID. */
+						WP_CLI::line( sprintf( __( 'Migration failed for payment %d.', 'easy-digital-downloads' ), $result->ID ) );
+					}
 
 					// Tick the spinner...
 					$progress->tick();
