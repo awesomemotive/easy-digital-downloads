@@ -209,19 +209,25 @@ function edd_load_dashboard_sales_widget( ) {
 		<div style="clear: both"></div>
 		<?php do_action( 'edd_sales_summary_widget_after_stats', $stats ); ?>
 		<?php
-		$payments = edd_get_payments( array( 'number' => 5, 'status' => 'complete' ) );
+		$orders = edd_get_orders(
+			array(
+				'number' => 5,
+				'status' => edd_get_net_order_statuses(),
+				'type'   => 'sale',
+			)
+		);
 
-		if ( $payments ) { ?>
+		if ( $orders ) { ?>
 		<div class="table recent_orders">
 			<h3><?php esc_html_e( 'Recent Orders', 'easy-digital-downloads' ); ?></h3>
 			<ul>
 			<?php
-			foreach ( $payments as $payment ) {
+			foreach ( $orders as $order ) {
 				$link = edd_get_admin_url(
 					array(
 						'page' => 'edd-payment-history',
 						'view' => 'view-order-details',
-						'id'   => urlencode( $payment->ID ),
+						'id'   => urlencode( $order->id ),
 					),
 					admin_url( 'edit.php' )
 				);
@@ -229,9 +235,9 @@ function edd_load_dashboard_sales_widget( ) {
 				<li class="edd_order_label">
 					<a href="<?php echo esc_url( $link ); ?>">
 						<?php
-						$customer      = edd_get_customer( $payment->customer_id );
+						$customer      = edd_get_customer( $order->customer_id );
 						$customer_name = ! empty( $customer->name ) ? $customer->name : __( 'No Name', 'easy-digital-downloads' );
-						$item_count    = edd_count_order_items( array( 'order_id' => $payment->ID ) );
+						$item_count    = edd_count_order_items( array( 'order_id' => $order->id ) );
 						echo wp_kses_post(
 							sprintf(
 								/* translators: 1. customer name; 2. number of items purchased; 3. order total */
@@ -243,12 +249,12 @@ function edd_load_dashboard_sales_widget( ) {
 								),
 								$customer_name,
 								$item_count,
-								edd_currency_filter( edd_format_amount( edd_get_order_total( $payment->ID ) ) )
+								edd_currency_filter( edd_format_amount( edd_get_order_total( $order->id ) ), $order->currency )
 							)
 						);
 						?>
 					</a>
-					<br /><?php echo esc_html( edd_date_i18n( $payment->date ) ); ?>
+					<br /><?php echo esc_html( edd_date_i18n( $order->date_created ) ); ?> &mdash; <?php echo edd_get_status_label( $order->status ); ?>
 				</li>
 				<?php } // End foreach ?>
 		</ul>
@@ -262,7 +268,18 @@ function edd_load_dashboard_sales_widget( ) {
 		<a href="<?php echo esc_url( $all_orders_link ); ?>" class="button-secondary"><?php esc_html_e( 'View All Orders', 'easy-digital-downloads' ); ?></a>
 		</div>
 		<?php } // End if ?>
-		<?php do_action( 'edd_sales_summary_widget_after_purchases', $payments ); ?>
+		<?php do_action( 'edd_sales_summary_widget_after_orders', $orders ); ?>
+		<?php
+		if ( has_action( 'edd_sales_summary_widget_after_purchases' ) ) {
+			_edd_deprecated_hook(
+				'edd_sales_summary_widget_after_purchases',
+				'3.1.0.1',
+				'edd_sales_summary_widget_after_orders',
+				'Note: The replacement hook uses the EDD 3.0 order objects, instead of payment objects. Developers will need to make adjustments accordingly.'
+			);
+			do_action( 'edd_sales_summary_widget_after_purchases', edd_get_payments( array( 'number' => 5, 'status' => 'complete' ) ) );
+		}
+		?>
 	</div>
 	<?php
 	die();

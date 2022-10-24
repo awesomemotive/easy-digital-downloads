@@ -21,7 +21,8 @@ jQuery( document ).ready( function( $ ) {
 				cart_item: item,
 				nonce: nonce,
 				timestamp: $this.data( 'timestamp' ),
-				token: $this.data( 'token' )
+				token: $this.data( 'token' ),
+				current_page: edd_scripts.current_page,
 			};
 
 		 $.ajax( {
@@ -175,6 +176,7 @@ jQuery( document ).ready( function( $ ) {
 			price_ids: item_price_ids,
 			post_data: $( form ).serialize(),
 			nonce: nonce,
+			current_page: edd_scripts.current_page,
 		};
 
 		$.ajax( {
@@ -239,7 +241,7 @@ jQuery( document ).ready( function( $ ) {
 
 					if ( variable_price === 'no' || price_mode !== 'multi' ) {
 						// Switch purchase to checkout if a single price item or variable priced with radio buttons
-						$( '.edd-add-to-cart', container ).toggle();
+						$( '.edd-add-to-cart.edd-has-js', container ).toggle();
 						$( '.edd_go_to_checkout', container ).show();
 					}
 

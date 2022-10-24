@@ -288,7 +288,7 @@ abstract class Extension {
 
 		return edd_link_helper(
 			$url,
-			$utm_parameters,
+			$utm_parameters
 		);
 	}
 
