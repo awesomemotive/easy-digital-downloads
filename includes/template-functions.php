@@ -833,7 +833,7 @@ function edd_add_body_classes( $class ) {
 		$classes[] = 'edd-test-mode';
 	}
 
-	$classes[] = 'no-js';
+	$classes[] = 'edd-js-none';
 
 	return array_unique( $classes );
 }
