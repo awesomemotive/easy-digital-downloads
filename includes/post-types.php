@@ -555,7 +555,7 @@ add_filter( 'display_post_states', 'edd_display_post_states', 10, 2 );
  */
 function edd_add_custom_roles_rest_user_query( $prepared_args, $request ) {
 	// If the args don't match the authors query, return early.
-	if ( empty( $prepared_args['who'] || 'authors' !== $prepared_args['who'] ) ) {
+	if ( empty( $prepared_args['who'] ) || 'authors' !== $prepared_args['who'] ) {
 		return $prepared_args;
 	}
 
