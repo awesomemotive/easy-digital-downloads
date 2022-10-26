@@ -1698,8 +1698,10 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( 0 === $step ) {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_orders' );
-			edd_set_upgrade_complete( 'remove_legacy_payments' );
+			if ( $full_migration ) {
+				edd_set_upgrade_complete( 'migrate_orders' );
+				edd_set_upgrade_complete( 'remove_legacy_payments' );
+			}
 		} else {
 			if ( ! $full_migration ) {
 				WP_CLI::line( __( 'Partial order migration complete. Orders Processed: ', 'easy-digital-downloads' ) . $total );
