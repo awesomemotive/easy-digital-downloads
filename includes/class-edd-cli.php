@@ -1703,7 +1703,7 @@ class EDD_CLI extends WP_CLI_Command {
 					 */
 					if ( $parent_id ) {
 						edd_destroy_order( $parent_id );
-						$result = $wpdb->get_results(
+						$result = $wpdb->get_row(
 							$wpdb->prepare(
 								"SELECT *
 								FROM {$wpdb->posts}
@@ -1712,7 +1712,7 @@ class EDD_CLI extends WP_CLI_Command {
 								$parent_id
 							)
 						);
-						\EDD\Admin\Upgrades\v3\Data_Migrator::orders( reset( $result ) );
+						\EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
 					}
 					if ( ! $full_migration && empty( $success ) ) {
 						/* translators: payment ID. */
