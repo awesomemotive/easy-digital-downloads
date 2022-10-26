@@ -1658,20 +1658,62 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $result ) {
 
+					// Check if order has already been migrated.
+					$migrated  = $orders->get_item( $result->ID );
+					$parent_id = false;
+
 					// Delete the existing order to re-run the migration fresh.
 					if ( $destroy ) {
+						$parent_id = 'refund' === $migrated->type && ! empty( $migrated->parent ) ? $migrated->parent : false;
+
+						// EDD has detected a collision between a refund ID and a payment ID.
+						if ( ! empty( $parent_id ) ) {
+							WP_CLI::line(
+								sprintf(
+									/* translators: 1. the refund order ID; 2. the original payment ID. */
+									__( '%1$d is a refund order. EDD will delete the refund and migrate payment %1$d, then re-migrate payment %2$d', 'easy-digital-downloads' ),
+									$result->ID,
+									$parent_id
+								)
+							);
+						} elseif ( $result->post_date_gmt !== $migrated->date_created ) {
+							// The migrated order does not appear to be the same as the original order, so let's confirm.
+							WP_CLI::confirm(
+								sprintf(
+									/* translators: 1. the order/payment ID. */
+									__( 'Order ID %1$s appears to be a different record from Payment ID %1$d. Are you sure you want to destroy this order and overwrite it?', 'easy-digital-downloads' ),
+									$result->ID
+								)
+							);
+						}
 						edd_destroy_order( $result->ID );
 						$migrated = false;
-					} else {
-						// Check if order has already been migrated.
-						$migrated = $orders->get_item( $result->ID );
 					}
+
 					if ( $migrated ) {
 						$progress->tick();
 						continue;
 					}
 
 					$success = \EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
+
+					/**
+					 * We detected that a refund order ID collided with an edd_payment post ID.
+					 * We deleted the refund already; now delete the original order and re-migrate it to regenerate the refund.
+					 */
+					if ( $parent_id ) {
+						edd_destroy_order( $parent_id );
+						$result = $wpdb->get_results(
+							$wpdb->prepare(
+								"SELECT *
+								FROM {$wpdb->posts}
+								WHERE post_type = 'edd_payment'
+								AND ID = %d",
+								$parent_id
+							)
+						);
+						\EDD\Admin\Upgrades\v3\Data_Migrator::orders( reset( $result ) );
+					}
 					if ( ! $full_migration && empty( $success ) ) {
 						/* translators: payment ID. */
 						WP_CLI::line( sprintf( __( 'Migration failed for payment %d.', 'easy-digital-downloads' ), $result->ID ) );
