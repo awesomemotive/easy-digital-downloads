@@ -1593,21 +1593,37 @@ class EDD_CLI extends WP_CLI_Command {
 
 		// Migrate one specific order.
 		if ( ! empty( $assoc_args['id'] ) ) {
-			$id             = absint( $assoc_args['id'] );
-			$sql_base      .= " AND ID = {$id}";
-			$full_migration = false;
+			if ( is_numeric( $assoc_args['id'] ) ) {
+				$id             = absint( $assoc_args['id'] );
+				$sql_base      .= " AND ID = {$id}";
+				$full_migration = false;
+				if ( ! $wpdb->get_results( $sql_base ) ) {
+					WP_CLI::error( __( 'An EDD Payment could not be found for that ID.', 'easy-digital-downloads' ) );
+				}
+			} else {
+				WP_CLI::error( __( 'The payment ID must be an integer from the post_id column.', 'easy-digital-downloads' ) );
+			}
 		} elseif ( ! empty( $assoc_args['start'] ) || ! empty( $assoc_args['end'] ) ) {
-			$full_migration = false;
 
 			// Begin the order migration at a specific payment ID.
 			if ( ! empty( $assoc_args['start'] ) ) {
-				$start     = absint( $assoc_args['start'] );
-				$sql_base .= " AND ID >= {$start}";
+				if ( is_numeric( $assoc_args['start'] ) ) {
+					$start          = absint( $assoc_args['start'] );
+					$sql_base      .= " AND ID >= {$start}";
+					$full_migration = false;
+				} else {
+					WP_CLI::error( __( 'The starting ID must be an integer from the post_id column.', 'easy-digital-downloads' ) );
+				}
 			}
 			// Stop the order migration at a specific payment ID.
 			if ( ! empty( $assoc_args['end'] ) ) {
-				$end       = absint( $assoc_args['end'] );
-				$sql_base .= " AND ID <= {$end}";
+				if ( is_numeric( $assoc_args['end'] ) ) {
+					$end            = absint( $assoc_args['end'] );
+					$sql_base      .= " AND ID <= {$end}";
+					$full_migration = false;
+				} else {
+					WP_CLI::error( __( 'The ending ID must be an integer from the post_id column.', 'easy-digital-downloads' ) );
+				}
 			}
 		}
 
