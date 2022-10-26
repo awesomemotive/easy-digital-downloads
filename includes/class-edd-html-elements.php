@@ -48,59 +48,15 @@ class EDD_HTML_Elements {
 				'search-placeholder' => sprintf( __( 'Search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 			),
 			'required'             => false,
+			'products'             => array(),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$product_args = array(
-			'post_type'      => 'download',
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'posts_per_page' => $args['number'],
-		);
-
-		if ( ! current_user_can( 'edit_products' ) ) {
-			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
-		} else {
-			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status', array(
-				'publish',
-				'draft',
-				'private',
-				'future',
-			) );
+		$products = $args['products'];
+		if ( empty( $args['products'] ) ) {
+			$products = $this->get_products( $args );
 		}
-
-		if ( is_array( $product_args['post_status'] ) ) {
-
-			// Given the array, sanitize them.
-			$product_args['post_status'] = array_map( 'sanitize_text_field', $product_args['post_status'] );
-		} else {
-
-			// If we didn't get an array, fallback to 'publish'.
-			$product_args['post_status'] = array( 'publish' );
-		}
-
-		// Maybe disable bundles.
-		if ( ! $args['bundles'] ) {
-			$product_args['meta_query'] = array(
-				'relation' => 'OR',
-				array(
-					'key'     => '_edd_product_type',
-					'value'   => 'bundle',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => '_edd_product_type',
-					'value'   => 'bundle',
-					'compare' => 'NOT EXISTS',
-				),
-			);
-		}
-
-		$product_args = apply_filters( 'edd_product_dropdown_args', $product_args );
-
-		// Since it's possible to have selected items not within the queried limit, we need to include the selected items.
-		$products     = get_posts( $product_args );
 		$existing_ids = wp_list_pluck( $products, 'ID' );
 		if ( ! empty( $args['selected'] ) ) {
 
@@ -126,8 +82,9 @@ class EDD_HTML_Elements {
 			}
 		}
 
-		$options    = array();
-		$options[0] = '';
+		$options = array(
+			'' => '',
+		);
 		if ( $products ) {
 			foreach ( $products as $product ) {
 				$has_variations = edd_has_variable_prices( $product->ID );
@@ -237,6 +194,73 @@ class EDD_HTML_Elements {
 		) );
 
 		return $output;
+	}
+
+	/**
+	 * Get EDD products for the product dropdown.
+	 *
+	 * @param array  $args     Parameters for the get_posts function.
+	 * @return array WP_Post[] Array of download objects.
+	 */
+	public function get_products( $args = array() ) {
+		$defaults = array(
+			'number'  => 30,
+			'bundles' => true,
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$product_args = array(
+			'post_type'      => 'download',
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'posts_per_page' => $args['number'],
+		);
+
+		if ( ! current_user_can( 'edit_products' ) ) {
+			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
+		} else {
+			$product_args['post_status'] = apply_filters(
+				'edd_product_dropdown_status',
+				array(
+					'publish',
+					'draft',
+					'private',
+					'future',
+				)
+			);
+		}
+
+		if ( is_array( $product_args['post_status'] ) ) {
+
+			// Given the array, sanitize them.
+			$product_args['post_status'] = array_map( 'sanitize_text_field', $product_args['post_status'] );
+		} else {
+
+			// If we didn't get an array, fallback to 'publish'.
+			$product_args['post_status'] = array( 'publish' );
+		}
+
+		// Maybe disable bundles.
+		if ( ! $args['bundles'] ) {
+			$product_args['meta_query'] = array(
+				'relation' => 'OR',
+				array(
+					'key'     => '_edd_product_type',
+					'value'   => 'bundle',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => '_edd_product_type',
+					'value'   => 'bundle',
+					'compare' => 'NOT EXISTS',
+				),
+			);
+		}
+
+		$product_args = apply_filters( 'edd_product_dropdown_args', $product_args );
+
+		return get_posts( $product_args );
 	}
 
 	/**
