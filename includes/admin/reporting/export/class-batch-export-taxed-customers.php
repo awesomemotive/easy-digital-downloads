@@ -95,9 +95,14 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 				continue;
 			}
 
+			$name = ! empty( $customer->name ) ? $customer->name : '';
+			if ( preg_match( '~^[+\-=@]~m', $name ) ) {
+				$name = "'{$name}";
+			}
+
 			$data[] = array(
 				'id'        => $customer->id,
-				'name'      => $customer->name,
+				'name'      => $name,
 				'email'     => $customer->email,
 				'purchases' => $customer->purchase_count,
 				'amount'    => edd_format_amount( $customer->purchase_value ),

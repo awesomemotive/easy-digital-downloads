@@ -1,12 +1,12 @@
 === Easy Digital Downloads - Simple eCommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, smub, am, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee, zkawesome
+Contributors: easydigitaldownloads, am, cklosows, littlerchicken, zkawesome, smub, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, lisacee
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable Tag: 3.1
+Stable Tag: 3.1.0.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -238,7 +238,12 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 
-= 3.1, October 4, 2022 =
+= 3.1.0.1, October 8, 2022 =
+* Fix: With taxes enabled, updating the address fields in the shortcode would replace the cart with the cart block.
+* Fix: The dashboard widget was not using the order currency to display amounts for recent orders.
+* Fix: No JS fallback buttons were being improperly toggled by JavaScript changes.
+
+= 3.1, October 6, 2022 =
 * New: Websites running WordPress 5.8 and above (and PHP 7.0 or greater) have access to ten new registered EDD blocks.
 * New: Store owners can receive weekly or monthly email summaries of their store's performance.
 * New - Blocks: A new EDD Products block has been registered to display downloads.
@@ -287,6 +292,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Searching the orders table for a discount code which does not exist now correctly returns no orders.
 * Fix: The customers API endpoint now uses the correct parameters to return data.
 * Fix: When registering a new user from an EDD form, spaces were incorrectly removed from user names.
+* Fix: When the browser timezone differed from that of the Store, line graphs could offset the points from the gridlines.
+* Fix: Users with the shop worker role were not able to create new downloads.
+* Fix: Upon activation, EDD could have thrown a PHP notice about the orders table not existing on new installs.
 * Fix - Stripe: Customers were not always automatically logged in with Auto Register's successful purchase setting.
 * Fix - Stripe: When changing the store mode, the Stripe admin notice displayed incorrectly.
 * Dev: Legacy compatibility code has been removed from the downloads metabox.

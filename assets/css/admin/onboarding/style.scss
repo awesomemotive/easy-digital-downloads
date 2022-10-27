@@ -154,7 +154,7 @@
 	border: 1px solid #dedfe0;
 	border-radius: 3px;
 	position: relative;
-	min-height: 450px;
+	min-height: 600px;
 	margin-top: 25px;
 }
 
@@ -193,8 +193,75 @@
 }
 
 .edd-onboarding__welcome-screen-inner {
-	padding: 100px;
-	max-width: 385px;
+	padding: 100px 80px;
+	text-align: center;
+}
+
+.edd-onboarding__testimonials-wrapper {
+	display: inline-flex;
+	justify-content: space-between;
+}
+
+.edd-onboarding__testimonial {
+	flex-grow: 1;
+	width: 30%;
+	display: flex;
+	text-align: left;
+	flex-wrap: wrap;
+	border: 1px solid #dedfe0;
+	border-radius: 6px;
+	padding: 10px 8px;
+	margin: 5px;
+}
+
+.edd-onboarding__testimonial-content:before {
+	content: "\f122";
+	font-family: Dashicons;
+	font-size: 14px;
+	font-weight: 400;
+	color: #dedfe0;
+	margin-right: 3px;
+}
+
+.edd-onboarding__testimonial-content > span.big {
+	font-weight: 600;
+	font-size: 15px;
+	font-style: italic;
+}
+
+.edd-onboarding__testimonial-person {
+	display: flex;
+	align-self: flex-end;
+}
+
+.edd-onboarding__testimonial-avatar {
+	vertical-align: middle;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+
+.edd-onboarding__testimonial-info {
+	display: flex;
+	flex-direction: column;
+	margin-left: 10px;
+	margin-top: 0px;
+}
+
+.edd-onboarding__testimonial-info > .testimonial-name {
+	font-weight: 600;
+}
+
+.edd-onboarding__testimonial-info > .testimonial-company {
+	font-size: 10px;
+	font-style: italic;
+}
+
+.edd-onboarding__testimonial-info > .testimonial-stars > span {
+	color: #ffbb38;
+	font-size: 12px;
+	height: 12px;
+	width: 12px;
 }
 
 .edd-onboarding__welcome-screen-get-started {

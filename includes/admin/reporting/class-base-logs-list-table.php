@@ -234,28 +234,24 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Sets up the downloads filter
 	 *
 	 * @since 3.0
+	 * @since 3.1 Accepts a download ID to filter by for the selected value.
+	 *
+	 * @param int $download The filtered download ID, default: 0.
+	 *
 	 * @return void
 	 */
-	public function downloads_filter() {
-		$downloads = get_posts( array(
-			'post_type'              => 'download',
-			'post_status'            => 'any',
-			'posts_per_page'         => -1,
-			'orderby'                => 'title',
-			'order'                  => 'ASC',
-			'fields'                 => 'ids',
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		) );
+	public function downloads_filter( $download = 0 ) {
+		$args = array(
+			'id'     => 'edd-log-download-filter',
+			'name'   => 'download',
+			'chosen' => true,
+		);
 
-		if ( $downloads ) {
-			echo '<select name="download" id="edd-log-download-filter">';
-				echo '<option value="0">' . __( 'All Downloads', 'easy-digital-downloads' ) . '</option>';
-				foreach ( $downloads as $download ) {
-					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
-				}
-			echo '</select>';
+		if ( ! empty( $download ) ) {
+			$args['selected'] = $download;
 		}
+
+		echo EDD()->html->product_dropdown( $args );
 	}
 
 	/**
@@ -492,7 +488,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		?></span>
 
 		<span id="edd-download-filter">
-			<?php $this->downloads_filter(); ?>
+			<?php $this->downloads_filter( $download ); ?>
 		</span>
 
 		<?php if ( ! empty( $customer ) ) : ?>
