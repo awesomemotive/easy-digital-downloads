@@ -373,7 +373,9 @@
 		 * @since 3.1
 		 *
 		 */
-		init: function() {},
+		init: function() {
+			wp.editor.initialize('edd_settings_purchase_receipt', true);
+		},
 
 		/**
 		 * Save settings fields.
@@ -508,7 +510,10 @@
 						if ( ! res.success ) {
 							installation_errors.push( selected_plugins[plugin].plugin_name );
 						}
-						resolve();
+						// Activation can happen very fast, so we want a fake delay for the UI.
+						setTimeout( function() {
+							resolve();
+						}, 1200 );
 					} );
 				})
 			}

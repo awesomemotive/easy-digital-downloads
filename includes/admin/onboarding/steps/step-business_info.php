@@ -41,6 +41,8 @@ function step_html() {
 			'business_address_2',
 			'business_city',
 			'business_postal_code',
+			'base_country',
+			'base_state',
 		),
 		'edd_settings_general_currency' => array(
 			'currency_settings',

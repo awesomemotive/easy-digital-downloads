@@ -44,7 +44,7 @@ function create_product() {
 	// Prepare product post details.
 	$product = array(
 		'post_title'  => wp_strip_all_tags( $_REQUEST['product_title'] ),
-		'post_status' => 'publish',
+		'post_status' => 'draft',
 		'post_type'   => 'download',
 	);
 
@@ -98,7 +98,12 @@ function step_html() {
 				<tr>
 					<th scope="row"><label for="product_image_url"><?php echo esc_html( __( 'Product image:', 'easy-digital-downloads' ) ); ?></label></th>
 					<td>
-						<input type="hidden" id="product_image_id" name="product_image_id"><input type="text" class="regular-text" id="product_image_url" class="" name="product_image_url" data-attachment-id-field="#product_image_id" /><span>&nbsp;<input type="button" data-uploader-title="Set Image" data-uploader-button-text="Set Image" class="edd_settings_upload_button button-secondary" value="Set Image"/></span>
+						<div class="edd-onboarding__product-image-wrapper">
+							<input type="hidden" id="product_image_id" name="product_image_id">
+							<input type="text" class="regular-text" id="product_image_url" class="" name="product_image_url" data-attachment-id-field="#product_image_id" />
+							<span>&nbsp;
+							<input type="button" data-uploader-title="Set Image" data-uploader-button-text="Set Image" class="edd_settings_upload_button button-secondary" value="Set Image"/></span>
+						</div>
 					</td>
 				</tr>
 				<tr class="edd-onboarding__product-pricing-row">
