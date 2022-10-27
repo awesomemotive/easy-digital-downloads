@@ -142,11 +142,15 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function enqueue_onboarding_scripts() {
+		wp_enqueue_style( 'edd-admin-onboarding' );
 		wp_enqueue_script( 'edd-admin-onboarding' );
-		wp_enqueue_media();
-		wp_enqueue_editor();
+
 		wp_enqueue_style( 'edd-extension-manager' );
 		wp_enqueue_script( 'edd-extension-manager' );
+
+		wp_enqueue_media();
+		wp_enqueue_editor();
+
 		if ( array_key_exists( 'payment_methods', $this->onboarding_steps ) ) {
 			edd_stripe_connect_admin_script( 'download_page_edd-settings' );
 		}
