@@ -71,8 +71,8 @@ class edd_cart_widget extends WP_Widget {
 		$instance = $old_instance;
 
 		$instance['title']            = strip_tags( $new_instance['title'] );
-		$instance['hide_on_checkout'] = isset( $new_instance['hide_on_checkout'] );
-		$instance['hide_on_empty']    = isset( $new_instance['hide_on_empty'] );
+		$instance['hide_on_checkout'] = ! empty( $new_instance['hide_on_checkout'] );
+		$instance['hide_on_empty']    = ! empty( $new_instance['hide_on_empty'] );
 
 		return $instance;
 	}
