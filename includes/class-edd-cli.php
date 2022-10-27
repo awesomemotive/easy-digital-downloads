@@ -1559,7 +1559,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$destroy = (bool) ( $force && isset( $assoc_args['destroy'] ) );
 
 		if ( $destroy ) {
-			WP_CLI::confirm( __( 'Are you sure you want to delete orders that have already been migrated and run the migration again?', 'easy-digital-downloads' ) );
+			WP_CLI::confirm( __( 'This process will remove and recreate orders in your database. Please make sure you\'ve backed up your EDD database tables. Are you sure you want to delete orders that have already been migrated and run the migration again?', 'easy-digital-downloads' ) );
 		}
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_orders' );
