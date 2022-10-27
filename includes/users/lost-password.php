@@ -250,10 +250,10 @@ function edd_validate_password_reset( $data ) {
 	// Check if password is one or all empty spaces.
 	if ( ! empty( $data['pass1'] ) ) {
 		$_POST['pass1'] = trim( $data['pass1'] );
+	}
 
-		if ( empty( $data['pass1'] ) ) {
-			edd_set_error( 'password_reset_empty_space', __( 'The password cannot be a space or all spaces.', 'easy-digital-downloads' ) );
-		}
+	if ( empty( $data['pass1'] ) ) {
+		edd_set_error( 'empty_password', __( 'The password cannot be a space or all spaces.', 'easy-digital-downloads' ) );
 	}
 
 	// Check if password fields do not match.
