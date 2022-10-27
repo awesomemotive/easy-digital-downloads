@@ -301,7 +301,7 @@
 .wp-core-ui .edd-onboarding .button-primary,
 .wp-core-ui .edd-onboarding .button-secondary {
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 13px;
 	line-height: 2.15384615;
 	min-height: 30px;
 	margin: 0;
@@ -363,6 +363,12 @@
 	border-radius: 2px !important;
 	padding: 2px 8px !important;
 }
+
+.edd-onboarding .edd-check-wrapper {
+	display: flex;
+	align-items: center;
+}
+
 .wp-core-ui .edd-onboarding select {
 	font-size: 14px;
 	line-height: 2;
@@ -376,6 +382,9 @@
 	background-size: 16px 16px;
 	cursor: pointer;
 	vertical-align: middle;
+}
+input[id='edd_settings[email_logo]'], #product_image_url {
+	width: 18.7em;
 }
 .edd-onboarding .form-table th {
 	vertical-align: middle;
@@ -606,6 +615,11 @@
 .edd-onboarding__product-pricing-row td,
 .edd-onboarding__product-files-row td {
 	padding: 0px;
+}
+
+.edd-onboarding__product-image-wrapper {
+	display: flex;
+    justify-content: space-evenly;
 }
 
 .edd-onboarding__product-pricing-wrapper {

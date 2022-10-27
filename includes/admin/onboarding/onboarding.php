@@ -76,7 +76,12 @@ class OnboardingWizard {
 			return;
 		}
 
-		add_action( 'admin_menu', array( $this, 'add_menu_item' ), 99999 );
+		// If Onboarding was already completed, abort.
+		if ( get_option( 'edd_onboarding_completed', false ) ) {
+			return;
+		}
+
+		add_action( 'admin_menu', array( $this, 'add_menu_item' ) );
 		add_action( 'admin_head', array( $this, 'hide_menu_item' ) );
 
 		// Abort if we are not requesting Onboarding Wizard.
@@ -98,7 +103,7 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function add_menu_item() {
-		add_submenu_page( 'edit.php?post_type=download', __( 'Onboarding', 'easy-digital-downloads' ), __( 'Onboarding', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-onboarding-wizard', array( $this, 'onboarding_wizard_sub_page' ) );
+		add_submenu_page( 'edit.php?post_type=download', __( 'Setup', 'easy-digital-downloads' ), __( 'Setup', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-onboarding-wizard', array( $this, 'onboarding_wizard_sub_page' ) );
 	}
 
 	/**
@@ -139,6 +144,7 @@ class OnboardingWizard {
 	public function enqueue_onboarding_scripts() {
 		wp_enqueue_script( 'edd-admin-onboarding' );
 		wp_enqueue_media();
+		wp_enqueue_editor();
 		wp_enqueue_style( 'edd-extension-manager' );
 		wp_enqueue_script( 'edd-extension-manager' );
 		if ( array_key_exists( 'payment_methods', $this->onboarding_steps ) ) {
@@ -371,7 +377,6 @@ class OnboardingWizard {
 		<div class="edd-onboarding__single-step">
 			<!-- STEP VIEW -->
 			<div class="edd-onboarding__single-step-inner">
-				<span class="edd-onboarding__steps-indicator"><?php echo esc_html( __( 'Step', 'easy-digital-downloads' ) ); ?> <?php echo esc_html( $this->current_step_index ); ?> / <?php echo count( $this->onboarding_steps ); ?></span>
 				<h1 class="edd-onboarding__single-step-title"><?php echo esc_html( $current_step_details['step_headline'] ); ?></h1>
 				<h2 class="edd-onboarding__single-step-subtitle"><?php echo esc_html( $current_step_details['step_intro'] ); ?></h2>
 				<?php echo call_user_func( 'EDD\\Onboarding\\Steps\\' . $current_step_details['step_handler'] . '\\step_html' );?>
@@ -435,6 +440,7 @@ class OnboardingWizard {
 		}
 
 		update_option( 'edd_onboarding_completed', true );
+		update_option( 'edd_tracking_notice', true );
 		exit;
 	}
 }

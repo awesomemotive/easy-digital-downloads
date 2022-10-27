@@ -39,6 +39,8 @@ function ajax_save_telemetry_settings() {
 		edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
 	}
 
+	update_option( 'edd_tracking_notice', true );
+
 	exit;
 }
 
@@ -89,8 +91,8 @@ function step_html() {
 			'action'      => 'install',
 		),
 		array(
-			'name'        => __( 'Conversion Tools', 'easy-digital-downloads' ),
-			'description' => __( 'Get the #1 conversion optimization plugin to convert your website traffic into subscribers, leads, and sales.', 'easy-digital-downloads' ),
+			'name'        => __( 'Analytics Tools', 'easy-digital-downloads' ),
+			'description' => __( 'Get the #1 analytics plugin to see useful information about your visitors right inside your WordPress dashboard.', 'easy-digital-downloads' ),
 			'prechecked'  => true,
 			'plugin_name' => 'MonsterInsights',
 			'plugin_file' => 'google-analytics-for-wordpress/googleanalytics.php',
@@ -166,8 +168,8 @@ function step_html() {
 
 			<label class="edd-toggle">
 				<input type="checkbox" id="edd-onboarding__telemery-toggle" name="telemetry" value="1" checked> <?php echo esc_html( __( 'Help make EDD better for everyone', 'easy-digital-downloads' ) ); ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Explanation for the telemetry.', 'easy-digital-downloads' ) ); ?>"></span></input>
 			</label>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Explanation for the telemetry.', 'easy-digital-downloads' ) ); ?>"></span></input>
 		</div>
 
 		<div class="edd-onboarding__selected-plugins">
