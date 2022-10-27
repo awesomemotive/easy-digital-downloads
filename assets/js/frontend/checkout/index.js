@@ -152,6 +152,7 @@ window.EDD_Checkout = ( function( $ ) {
 			action: 'edd_apply_discount',
 			code: discount_code,
 			form: $( '#edd_purchase_form' ).serialize(),
+			current_page: edd_global_vars.current_page,
 		};
 
 		$( '#edd-discount-error-wrap' ).html( '' ).hide();
@@ -219,6 +220,7 @@ window.EDD_Checkout = ( function( $ ) {
 			postData = {
 				action: 'edd_remove_discount',
 				code: $this.data( 'code' ),
+				current_page: edd_global_vars.current_page,
 			};
 
 		$.ajax( {
@@ -283,6 +285,7 @@ window.EDD_Checkout = ( function( $ ) {
 			options: options,
 			billing_country: billing_country,
 			card_state: card_state,
+			current_page: edd_global_vars.current_page,
 		};
 
 		//edd_discount_loader.show();

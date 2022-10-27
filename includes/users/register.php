@@ -49,7 +49,7 @@ function edd_process_register_form( $data ) {
 		return;
 	}
 
-	if ( empty( $_POST['edd_register_submit'] ) ) {
+	if ( empty( $data['edd_register_submit'] ) ) {
 		return;
 	}
 
@@ -83,12 +83,18 @@ function edd_process_register_form( $data ) {
 		edd_set_error( 'invalid_form_data', __( 'Registration form validation failed.', 'easy-digital-downloads' ) );
 	}
 
-	if ( empty( $_POST['edd_user_pass'] ) ) {
-		edd_set_error( 'empty_password', __( 'Please enter a password', 'easy-digital-downloads' ) );
+	// Check if password is one or all empty spaces.
+	if ( ! empty( $data['edd_user_pass'] ) ) {
+		$data['edd_user_pass'] = trim( $data['edd_user_pass'] );
 	}
 
-	if ( ( ! empty( $_POST['edd_user_pass'] ) && empty( $_POST['edd_user_pass2'] ) ) || ( $_POST['edd_user_pass'] !== $_POST['edd_user_pass2'] ) ) {
-		edd_set_error( 'password_mismatch', __( 'Passwords do not match', 'easy-digital-downloads' ) );
+	if ( empty( $data['edd_user_pass'] ) ) {
+		edd_set_error( 'empty_password', __( 'The password cannot be a space or all spaces.', 'easy-digital-downloads' ) );
+	}
+
+	// Check if password fields do not match.
+	if ( ! empty( $data['edd_user_pass'] ) && ( empty( $data['edd_user_pass2'] ) || trim( $data['edd_user_pass2'] ) !== $data['edd_user_pass'] ) ) {
+		edd_set_error( 'password_mismatch', __( 'The passwords do not match.', 'easy-digital-downloads' ) );
 	}
 
 	do_action( 'edd_process_register_form' );
@@ -109,6 +115,8 @@ function edd_process_register_form( $data ) {
 				'role'            => get_option( 'default_role' ),
 			)
 		);
+
+		edd_set_success( 'account_registration_successful', __( 'Your account has been successfully created.', 'easy-digital-downloads' ) );
 
 		edd_redirect( $redirect );
 	}
