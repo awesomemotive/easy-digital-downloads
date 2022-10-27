@@ -4,7 +4,6 @@
  * Internal dependencies.
  */
 import moment, { utc } from 'moment';
-import momentTimezone from 'moment-timezone';
 import { getLabelWithTypeCondition, toolTipBaseConfig, attachAxisTickFormattingCallback } from './utils';
 
 /**
@@ -22,8 +21,6 @@ export const render = ( config ) => {
 			day_by_day: dayByDay,
 		},
 	} = config;
-
-
 
 	// Attach formatting callback to Y axes ticks.
 	config.options.scales.yAxes.forEach( axis => {

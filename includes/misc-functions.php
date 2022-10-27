@@ -1800,29 +1800,35 @@ function edd_get_payment_image( $gateway, $label ) {
  * For existing installs, this option is added whenever the function is first used.
  *
  * @since 2.11.4
+ * @since 3.1 Checks for the table before checking if orders exist.
+ *
  * @return int The timestamp when EDD was marked as activated.
  */
 function edd_get_activation_date() {
 	$activation_date = get_option( 'edd_activation_date', '' );
 	if ( ! $activation_date ) {
 		$activation_date = time();
-		// Gets the first order placed in the store (any status).
-		$payments = edd_get_payments(
-			array(
-				'output'        => 'posts',
-				'number'        => 1,
-				'orderby'       => 'ID',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			)
-		);
-		if ( $payments ) {
-			$first_payment = reset( $payments );
-			// Use just the post date, rather than looking for the completed date (first payment may not be complete).
-			if ( ! empty( $first_payment->post_date_gmt ) ) {
-				$activation_date = strtotime( $first_payment->post_date_gmt );
+
+		$orders_table = new EDD\Database\Tables\Orders();
+
+		if ( $orders_table->exists() ) {
+			// Gets the first order placed in the store (any status).
+			$orders = edd_get_orders(
+				array(
+					'number'  => 1,
+					'orderby' => 'id',
+					'order'   => 'ASC',
+					'fields'  => 'date_created',
+				)
+			);
+			if ( $orders ) {
+				$first_order_date = reset( $orders );
+				if ( ! empty( $first_order_date ) ) {
+					$activation_date = strtotime( $first_order_date );
+				}
 			}
 		}
+
 		update_option( 'edd_activation_date', $activation_date );
 	}
 
@@ -1857,6 +1863,16 @@ function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $quer
 	$url = add_query_arg( $args, trailingslashit( $base_url ) );
 
 	return $run_esc_url ? esc_url( $url ) : $url;
+}
+
+/**
+ * Whether core blocks are active.
+ *
+ * @since 3.1.0.2
+ * @return bool
+ */
+function edd_has_core_blocks() {
+	return defined( 'EDD_BLOCKS_DIR' );
 }
 
 /**

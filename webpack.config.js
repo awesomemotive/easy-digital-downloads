@@ -64,6 +64,7 @@ const config = {
 		'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
 		'edd-admin-extension-manager': './assets/js/admin/settings/extension-manager',
 		'edd-admin-notices': './assets/js/admin/notices',
+		'edd-admin-onboarding': './assets/js/admin/onboarding',
 
 		// Front-end JavaScript.
 		'edd-ajax': './assets/js/frontend/edd-ajax.js',
@@ -78,6 +79,7 @@ const config = {
 		'edd-admin-menu-style': './assets/css/admin/menu.scss',
 		'edd-admin-tax-rates-style': './assets/css/admin/tax-rates/style.scss',
 		'edd-admin-extension-manager-style': './assets/css/admin/extension-manager.scss',
+		'edd-admin-onboarding-style': './assets/css/admin/onboarding/style.scss',
 
 		'edd-style': './assets/css/frontend/style.scss'
 	},
