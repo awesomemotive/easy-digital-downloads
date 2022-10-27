@@ -1671,7 +1671,7 @@ class EDD_CLI extends WP_CLI_Command {
 							WP_CLI::line(
 								sprintf(
 									/* translators: 1. the refund order ID; 2. the original payment ID. */
-									__( '%1$d is a refund order. EDD will delete the refund and migrate payment %1$d, then re-migrate payment %2$d', 'easy-digital-downloads' ),
+									__( '%1$d is a refund order. EDD will delete the refund and migrate payment %1$d, then re-migrate payment %2$d.', 'easy-digital-downloads' ),
 									$result->ID,
 									$parent_id
 								)
@@ -1681,7 +1681,7 @@ class EDD_CLI extends WP_CLI_Command {
 							WP_CLI::confirm(
 								sprintf(
 									/* translators: 1. the order/payment ID. */
-									__( 'Order ID %1$s appears to be a different record from Payment ID %1$d. Are you sure you want to destroy this order and overwrite it?', 'easy-digital-downloads' ),
+									__( 'Order ID %1$d appears to be a different record from Payment ID %1$d. Are you sure you want to destroy this order and overwrite it?', 'easy-digital-downloads' ),
 									$result->ID
 								)
 							);
