@@ -365,6 +365,7 @@ function edd_register_admin_styles() {
 	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, $deps,   $version );
+	wp_register_style( 'edd-admin-onboarding',  $css_dir . 'edd-admin-onboarding' . $css_suffix, $deps,   $version );
 }
 add_action( 'admin_init', 'edd_register_admin_styles' );
 
