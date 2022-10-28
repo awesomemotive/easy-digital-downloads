@@ -175,7 +175,7 @@ class Data_Migrator {
 		$args            = array();
 		$meta            = get_post_custom( $data->ID );
 		$meta_to_migrate = array();
-		$meta_to_ignore  = array(
+		$core_meta       = array(
 			'code',
 			'name',
 			'status',
@@ -202,7 +202,7 @@ class Data_Migrator {
 				continue;
 			}
 			$meta_key = str_replace( '_edd_discount_', '', $key );
-			if ( ! in_array( $meta_key, $meta_to_ignore, true ) ) {
+			if ( ! in_array( $meta_key, $core_meta, true ) ) {
 				$meta_to_migrate[ $meta_key ] = $value;
 				continue;
 			}
