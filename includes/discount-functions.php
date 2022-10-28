@@ -58,7 +58,7 @@ function edd_add_discount( $data = array() ) {
 			}
 
 			if ( is_array( $product_requirements ) ) {
-				foreach ( $product_requirements as $product_requirement ) {
+				foreach ( array_filter( $product_requirements ) as $product_requirement ) {
 					edd_add_adjustment_meta( $discount_id, 'product_requirement', $product_requirement );
 				}
 			}
@@ -71,7 +71,7 @@ function edd_add_discount( $data = array() ) {
 			}
 
 			if ( is_array( $excluded_products ) ) {
-				foreach ( $excluded_products as $excluded_product ) {
+				foreach ( array_filter( $excluded_products ) as $excluded_product ) {
 					edd_add_adjustment_meta( $discount_id, 'excluded_product', $excluded_product );
 				}
 			}
