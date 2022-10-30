@@ -1640,7 +1640,7 @@ function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
 	global $wpdb, $wp_version;
 
 	if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
-		$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
+		$clauses['where'] .= " AND comment_type != 'edd_payment_note'";
 	}
 
 	return $clauses;
