@@ -243,9 +243,10 @@ class API {
 		) );
 
 		$request_args = array(
-			'method'  => $method,
-			'timeout' => 15,
-			'headers' => $headers
+			'method'     => $method,
+			'timeout'    => 15,
+			'headers'    => $headers,
+			'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
 		);
 
 		if ( ! empty( $body ) ) {

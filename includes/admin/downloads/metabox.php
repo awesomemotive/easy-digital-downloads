@@ -559,7 +559,13 @@ function edd_render_products_field( $post_id ) {
 	$variable_pricing = $download->has_variable_prices();
 	$variable_display = $variable_pricing ? '' : 'display:none;';
 	$variable_class   = $variable_pricing ? ' has-variable-pricing' : '';
-	$prices           = $download->get_prices(); ?>
+	$prices           = $download->get_prices();
+	$bundle_options   = EDD()->html->get_products(
+		array(
+			'bundles' => false,
+		)
+	);
+	?>
 
 	<div id="edd_products"<?php echo $display; ?>>
 		<div id="edd_file_fields_bundle" class="edd_meta_table_wrap">
@@ -594,9 +600,9 @@ function edd_render_products_field( $post_id ) {
 												'selected'             => $product,
 												'multiple'             => false,
 												'chosen'               => true,
-												'bundles'              => false,
+												'products'             => $bundle_options,
 												'variations'           => true,
-												'show_variations_only' => true,
+												'show_variations_only' => false,
 												'class'                => 'edd-form-group__input',
 											)
 										);
@@ -663,9 +669,9 @@ function edd_render_products_field( $post_id ) {
 										'id'                   => 'edd_bundled_products_1',
 										'multiple'             => false,
 										'chosen'               => true,
-										'bundles'              => false,
+										'products'             => $bundle_options,
 										'variations'           => true,
-										'show_variations_only' => true,
+										'show_variations_only' => false,
 									) );
 									?>
 									</div>
