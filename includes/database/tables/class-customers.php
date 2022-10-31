@@ -90,7 +90,33 @@ final class Customers extends Table {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
+		if ( $this->needs_initial_upgrade() ) {
+			$this->run_initial_upgrade();
+		}
 
+		parent::maybe_upgrade();
+	}
+
+	/**
+	 * Whether the initial upgrade from the 1.0 database needs to be run.
+	 *
+	 * @since 3.0.3
+	 * @since 3.1.0.3 Updated to use the EDD upgrade option.
+	 * @return bool
+	 */
+	private function needs_initial_upgrade() {
+		return ! edd_has_upgrade_completed( 'customer_table_30' );
+	}
+
+	/**
+	 * This checks through the new customer columns individually and adds them.
+	 * If any were missing, the other table alterations likely need to be made as well.
+	 * Mark the update as complete.
+	 *
+	 * @since 3.1.0.3
+	 * @return void
+	 */
+	private function run_initial_upgrade() {
 		$missing_columns = false;
 		if ( ! $this->column_exists( 'status' ) ) {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;" );
@@ -125,17 +151,8 @@ final class Customers extends Table {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `date_created` datetime NOT NULL default CURRENT_TIMESTAMP" );
 		}
 
-		parent::maybe_upgrade();
-	}
-
-	/**
-	 * Whether the initial upgrade from the 1.0 database needs to be run.
-	 *
-	 * @since 3.0.3
-	 * @return bool
-	 */
-	private function needs_initial_upgrade() {
-		return $this->exists() && ( ! $this->column_exists( 'status' ) || ! $this->column_exists( 'uuid' ) || ! $this->column_exists( 'date_modified' ) );
+		// Set the initial customer table 3.0 upgrade to complete.
+		edd_set_upgrade_complete( 'customer_table_30' );
 	}
 
 	/**
