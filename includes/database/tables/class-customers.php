@@ -105,7 +105,7 @@ final class Customers extends Table {
 	 * @return bool
 	 */
 	private function needs_initial_upgrade() {
-		return ! edd_has_upgrade_completed( 'customer_table_30' );
+		return $this->exists() && ! edd_has_upgrade_completed( 'customer_table_30' );
 	}
 
 	/**
