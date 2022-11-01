@@ -15,8 +15,24 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	 */
 	protected static $payment;
 
+	protected static $recoverable_payment_id;
+
+	protected static $recovered_payment_id;
+
 	public function setUp() {
 		self::$payment = edd_get_payment( \EDD_Helper_Payment::create_simple_payment() );
+		$this->generate_recoverable_recovered_orders();
+	}
+
+	private function generate_recoverable_recovered_orders() {
+		/**
+		 * @internal This call is necessary as we need to flush the meta cache.
+		 */
+		wp_cache_flush();
+
+		self::$recoverable_payment_id = $this->generate_recoverable_order();
+		EDD()->session->set( 'edd_resume_payment', self::$recoverable_payment_id );
+		self::$recovered_payment_id = $this->generate_recovered_order();
 	}
 
 	public function tearDown() {
@@ -409,12 +425,26 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		self::$payment = edd_get_payment( \EDD_Helper_Payment::create_simple_payment() );
 	}
 
-	public function test_recovering_payment_guest_to_guest() {
-		/**
-		 * @internal This call is necessary as we need to flush the meta cache.
-		 */
-		wp_cache_flush();
+	public function test_recovering_payment_ids_match() {
+		$this->assertSame( self::$recoverable_payment_id, self::$recovered_payment_id );
+	}
 
+	public function test_recovering_payment_guest_to_guest() {
+
+		$payment           = edd_get_payment( self::$recovered_payment_id );
+		$payment_customer  = new \EDD_Customer( $payment->customer_id );
+		$recovery_customer = new \EDD_Customer( 'batman@thebatcave.co' );
+
+		$this->assertSame( $payment_customer->id, $recovery_customer->id );
+	}
+
+	public function test_recovering_payment_gateway_change() {
+		$order = edd_get_order( self::$recovered_payment_id );
+
+		$this->assertEquals( 'stripe', $order->gateway );
+	}
+
+	private function generate_recoverable_order() {
 		$initial_purchase_data = array(
 			'price'        => 299.0,
 			'date'         => date( 'Y-m-d H:i:s' ),
@@ -472,9 +502,10 @@ class Payment_Tests extends \EDD_UnitTestCase {
 			'status'       => 'pending',
 		);
 
-		$initial_payment_id = edd_insert_payment( $initial_purchase_data );
-		EDD()->session->set( 'edd_resume_payment', $initial_payment_id );
+		return edd_insert_payment( $initial_purchase_data );
+	}
 
+	private function generate_recovered_order() {
 		$recovery_purchase_data = array(
 			'price'        => 299.0,
 			'date'         => '2017-08-15 18:10:37',
@@ -528,17 +559,10 @@ class Payment_Tests extends \EDD_UnitTestCase {
 							'price'       => 299.0,
 						),
 				),
-			'gateway'      => 'paypal',
+			'gateway'      => 'stripe',
 			'status'       => 'pending',
 		);
 
-		$recovery_payment_id = edd_insert_payment( $recovery_purchase_data );
-		$this->assertSame( $initial_payment_id, $recovery_payment_id );
-
-		$payment           = edd_get_payment( $recovery_payment_id );
-		$payment_customer  = new \EDD_Customer( $payment->customer_id );
-		$recovery_customer = new \EDD_Customer( 'batman@thebatcave.co' );
-
-		$this->assertSame( $payment_customer->id, $recovery_customer->id );
+		return edd_insert_payment( $recovery_purchase_data );
 	}
 }
