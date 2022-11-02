@@ -118,7 +118,7 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $earnings_results as $earnings_result ) {
-			$date_of_db_value = new DateTime( $earnings_result->date, $timezone );
+			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $earnings_result->date ) );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -143,8 +143,7 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $sales_results as $sales_result ) {
-
-			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
+			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $sales_result->date ) );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
