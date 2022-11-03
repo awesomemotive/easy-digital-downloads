@@ -540,7 +540,39 @@
 		 * @since 3.1
 		 *
 		 */
-		init: function() {},
+		init: function() {
+			EDD_Onboarding.EDD_Onboarding_Products.init_variable_pricing_toggle();
+		},
+
+		/**
+		 * Toggle between single price
+		 * and variable price options.
+		 *
+		 * @since 3.1
+		 *
+		 */
+		 init_variable_pricing_toggle: function() {
+			$( document.body ).on( 'click', '.edd-onbaording__pricing-option-pill button', function( e ) {
+				e.preventDefault();
+
+				$( '.edd-onbaording__pricing-option-pill .active' ).removeClass( 'active' );
+				$( '.edd-onboarding__product-single-price' ).show();
+				$( '.edd-onboarding__product-variable-price' ).hide();
+
+				$( this ).addClass( 'active' );
+
+				let is_variable_pricing = $( this ).data( 'variable-pricing' );
+
+				// Toggle checkbox.
+				$( '#edd_variable_pricing' ).attr( 'checked', is_variable_pricing );
+
+				// Toggle views.
+				if ( is_variable_pricing ) {
+					$( '.edd-onboarding__product-variable-price' ).show();
+					$( '.edd-onboarding__product-single-price' ).hide();
+				}
+			} );
+		},
 
 		/**
 		 * Save product details and upon

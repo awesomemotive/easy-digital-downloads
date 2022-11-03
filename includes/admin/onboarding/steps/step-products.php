@@ -106,11 +106,76 @@ function step_html() {
 						</div>
 					</td>
 				</tr>
-				<tr class="edd-onboarding__product-pricing-row">
-					<td colspan="2">
-						<div class="edd-onboarding__product-pricing-wrapper">
-							<?php edd_render_price_field( null ); ?>
+				<tr>
+					<th scope="row"><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options:', 'easy-digital-downloads' ) ); ?></th>
+					<td>
+						<input style="display:none;" type="checkbox" class="edd-form-group__input" name="_variable_pricing" id="edd_variable_pricing" value="1"/>
+						<div class="edd-onbaording__pricing-option-pill">
+							<button class="left-option active" data-variable-pricing="false"><?php echo esc_html( __( 'Single price', 'easy-digital-downloads' ) ); ?></button>
+							<button class="right-option" data-variable-pricing="true"><?php echo esc_html( __( 'Variable price', 'easy-digital-downloads' ) ); ?></button>
 						</div>
+					</td>
+				</tr>
+				<tr class="edd-onboarding__product-single-price">
+					<th scope="row"><?php echo esc_html( __( 'Product price:', 'easy-digital-downloads' ) ); ?></th>
+					<td>
+					<div class="edd-form-group__control">
+						<?php
+							$price_args = array(
+								'name'  => 'edd_price',
+								'id'    => 'edd_price',
+								'value' => '0.00',
+								'class' => 'edd-form-group__input edd-price-field',
+							);
+							if ( 'before' === $currency_position ) {
+								?>
+								<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+								<?php
+								echo EDD()->html->text( $price_args );
+							} else {
+								echo EDD()->html->text( $price_args );
+								?>
+								<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+								<?php
+							}
+
+							do_action( 'edd_price_field', null );
+							?>
+						</div>
+					</td>
+				</tr>
+
+				<tr class="edd-onboarding__product-variable-price">
+					<th scope="row"><?php echo esc_html( 'Multi-option mode:' ); ?></th>
+					<td>
+						<div class="edd-form-group">
+							<div class="edd-form-group__control">
+								<label class="edd-toggle edd-onboarding__multi-option-toggle" for="_edd_price_options_mode">
+									<?php echo EDD()->html->checkbox( array( 'name' => '_edd_price_options_mode', 'current' => null, 'class' => 'edd-form-group__input', ) ); ?>
+									<span><?php echo esc_html( apply_filters( 'edd_multi_option_purchase_text', __( 'Allows multiple price options to be added to your cart at once', 'easy-digital-downloads' ) ) ); ?></span>
+								</label>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr class="edd-onboarding__product-variable-price no-table-row-padding">
+					<td colspan="2">
+						<div id="edd_variable_price_fields" class="edd_pricing_fields edd-onboarding__product-variable-price-fields">
+							<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
+							<div id="edd_price_fields" class="edd_meta_table_wrap">
+								<div class="widefat edd_repeatable_table">
+									<div class="edd-price-option-fields edd-repeatables-wrap">
+										<div class="edd_variable_prices_wrapper edd_repeatable_row" data-key="1">
+											<?php do_action( 'edd_render_price_row', 1, array(), null, 1 ); ?>
+										</div>
+									</div>
+
+									<div class="edd-add-repeatable-row">
+										<button class="button-secondary edd_add_repeatable"><?php echo esc_html( __( 'Add New Price', 'easy-digital-downloads' ) ); ?></button>
+									</div>
+								</div>
+							</div>
+						</div><!--end #edd_variable_price_fields-->
 					</td>
 				</tr>
 				<tr>
