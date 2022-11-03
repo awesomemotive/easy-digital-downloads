@@ -66,3 +66,9 @@ ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 	border-right-color: $wp-gray-0;
 	margin-top: 2px;
 }
+
+/* Onboarding Submenu Item */
+.edd-onboarding__menu-item {
+	background: #e67e22;
+	color: white;
+}
