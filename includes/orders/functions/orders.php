@@ -681,8 +681,7 @@ function edd_build_order( $order_data = array() ) {
 	}
 
 	if ( $resume_order ) {
-		$payment->date              = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
-		$order_data['date_created'] = $payment->date;
+		$order_data['date_created'] = EDD()->utils->date( 'now', null, true );
 
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
 
