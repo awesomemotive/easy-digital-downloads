@@ -7,10 +7,10 @@ set -eu
 echo "steps:"
 
 phpVersions=('5.6' '7.0' '7.1' '7.2' '7.3' '7.4')
-wpVersions=('4.9.21' '5.0.17' '5.1.14' '5.2.16' '5.3.13' '5.4.11' '5.5.10' '5.6.9' '5.7.7' '5.8.5' '5.9.4' 'latest')
+wpVersions=('4.9.22' '5.0.18' '5.1.15' '5.2.17' '5.3.14' '5.4.12' '5.5.11' '5.6.10' '5.7.8' '5.8.6' '5.9.5' '6.0.3' 'latest')
 
 # Exclude combinations with <php version>-<wp version>
-exclusions=('7.3-4.9.21' '7.4-4.9.21' '7.4-5.0.17' '7.4-5.1.14' '7.4-5.2.16')
+exclusions=('7.3-4.9.22' '7.4-4.9.22' '7.4-5.0.18' '7.4-5.1.15' '7.4-5.2.17')
 
 # add a new command step to run the tests in each test directory
 for phpVersion in ${phpVersions[@]}; do
