@@ -82,7 +82,7 @@ class OnboardingWizard {
 		}
 
 		add_action( 'admin_menu', array( $this, 'add_menu_item' ) );
-		add_action( 'admin_menu', array( $this, 'add_menu_item_clss' ) );
+		add_action( 'admin_menu', array( $this, 'add_menu_item_class' ) );
 
 		// Abort if we are not requesting Onboarding Wizard.
 		if ( ! isset( $_REQUEST['page'] ) || 'edd-onboarding-wizard' !== wp_unslash( $_REQUEST['page'] ) ) {
@@ -111,7 +111,7 @@ class OnboardingWizard {
 	 *
 	 * @since 3.2
 	 */
-	public function add_menu_item_clss() {
+	public function add_menu_item_class() {
 		global $submenu;
 		$edd_submenu     = $submenu[ 'edit.php?post_type=download' ];
 		$onboarding_menu = __( 'Setup', 'easy-digital-downloads' );
