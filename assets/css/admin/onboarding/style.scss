@@ -689,29 +689,55 @@ input[id='edd_settings[email_logo]'], #product_image_url {
     justify-content: space-evenly;
 }
 
-.edd-onboarding__product-pricing-wrapper {
+.edd-onbaording__pricing-option-pill {
 	display: flex;
-	flex-wrap: wrap;
-    align-items: baseline;
-
-	p {
-		width: 196px;
-		margin-right: 10px;
+	button {
+		display: inline-block;
+		flex: 1;
+		border: 1px solid #ccc;
+		padding: 10px 15px;
+		cursor: pointer;
+		&:hover:not(.active) {
+			background: #dbdcdd;
+		}
 	}
-
-	#edd_regular_price_field {
-		order: 2;
+	.left-option {
+		border-top-left-radius: 2px;
+		border-bottom-left-radius: 2px;
 	}
-
-	#edd_variable_pricing_control {
-		order: 3;
-		flex-basis: 100%;
+	.right-option {
+		border-left: none;
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
 	}
-
-	#edd_variable_price_fields {
-		order: 4;
-		flex-basis: 100%;
+	.active {
+		background: #007cba;
+		border-color: #007cba;
+		border-right-color: #ccc;
+		color: white;
 	}
+}
+
+.no-table-row-padding {
+	td {
+		padding: 0px;
+	}
+}
+
+.edd-onboarding__product-variable-price {
+	display: none;
+}
+
+.edd-onboarding__multi-option-toggle {
+	display: flex;
+	align-items: center;
+	span {
+		margin-left: 10px;
+	}
+}
+
+.edd-onboarding__product-variable-price-fields {
+	margin-top: 15px;
 }
 
 .edd-onboarding__pricing-options-label {
