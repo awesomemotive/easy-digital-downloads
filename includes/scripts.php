@@ -621,8 +621,8 @@ add_action( 'wp_body_open', 'edd_add_js_class', 100 );
  */
 function edd_add_js_class() {
 	?>
-	<style>.edd-js .edd-no-js, .no-js .edd-has-js { display: none; }</style>
-	<script>/* <![CDATA[ */(function(){var c = document.body.classList;c.remove('no-js');c.add('edd-js');})();/* ]]> */</script>
+	<style>.edd-js-none .edd-has-js, .edd-js .edd-no-js, body.edd-js input.edd-no-js { display: none; }</style>
+	<script>/* <![CDATA[ */(function(){var c = document.body.classList;c.remove('edd-js-none');c.add('edd-js');})();/* ]]> */</script>
 	<?php
 }
 

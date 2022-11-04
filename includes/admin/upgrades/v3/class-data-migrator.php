@@ -400,7 +400,7 @@ class Data_Migrator {
 
 		// Bail if no data passed.
 		if ( ! $data ) {
-			return;
+			return false;
 		}
 
 		/** Create a new order ***************************************/
@@ -484,7 +484,7 @@ class Data_Migrator {
 		// If there are no items, and it's abandoned, just return, since this isn't a valid order.
 		if ( 'abandoned' === $order_status && empty( $cart_downloads ) && empty( $cart_details ) ) {
 			edd_debug_log( 'Skipping order ' . $data->ID . ' due to abandoned status and no products.', true );
-			return;
+			return false;
 		}
 
 		$order_subtotal = 0;
@@ -1307,6 +1307,8 @@ class Data_Migrator {
 		 * @param array $meta         All post meta associated with the payment.
 		 */
 		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
+
+		return $order_id;
 	}
 
 	/**
