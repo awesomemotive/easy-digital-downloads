@@ -2,14 +2,18 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.1.0.1\n"
+"Project-Id-Version: Easy Digital Downloads 3.1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-10-24T04:39:03+00:00\n"
+=======
+"POT-Creation-Date: 2022-10-27T19:31:38+00:00\n"
+>>>>>>> 3.1.0.3
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: easy-digital-downloads\n"
@@ -843,7 +847,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-taxed-customers.php:43
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:43
 #: includes/admin/tools.php:512
-#: includes/blocks/views/forms/registration.php:26
+#: includes/blocks/views/forms/registration.php:24
 #: includes/emails/tags.php:185
 #: templates/shortcode-register.php:25
 #: includes/blocks/build/register/index.js:1
@@ -1809,7 +1813,7 @@ msgid "You do not have permission to delete discount codes"
 msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:56
-#: includes/class-edd-html-elements.php:418
+#: includes/class-edd-html-elements.php:442
 #: includes/post-types.php:125
 msgid "Search Discounts"
 msgstr ""
@@ -1903,7 +1907,11 @@ msgid "Special instructions for this %s. These will be added to the sales receip
 msgstr ""
 
 #: includes/admin/downloads/contextual-help.php:100
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:1144
+=======
+#: includes/admin/downloads/metabox.php:1132
+>>>>>>> 3.1.0.3
 msgid "Purchase Shortcode"
 msgstr ""
 
@@ -2025,10 +2033,17 @@ msgstr ""
 msgid "Show advanced settings"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:453
 #: includes/admin/downloads/metabox.php:655
 #: includes/admin/downloads/metabox.php:717
 #: includes/admin/downloads/metabox.php:833
+=======
+#: includes/admin/downloads/metabox.php:435
+#: includes/admin/downloads/metabox.php:643
+#: includes/admin/downloads/metabox.php:705
+#: includes/admin/downloads/metabox.php:821
+>>>>>>> 3.1.0.3
 #: includes/admin/views/tmpl-tax-rates-table-row.php:47
 #: includes/blocks/views/checkout/cart/cart-fees.php:15
 #: includes/blocks/views/checkout/cart/cart-item.php:55
@@ -2071,6 +2086,7 @@ msgstr ""
 msgid "<strong>Product Type</strong>: Sell this item as a single product, or use the Bundle type to sell a collection of products."
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:593
 msgid "Bundled %s"
 msgstr ""
@@ -2157,6 +2173,94 @@ msgid "Insert into %s"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:954
+=======
+#: includes/admin/downloads/metabox.php:581
+msgid "Bundled %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:589
+#: includes/admin/downloads/metabox.php:660
+msgid "Click and drag to re-order bundled %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:593
+#: includes/admin/downloads/metabox.php:664
+msgid "Select %s:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:613
+#: includes/admin/downloads/metabox.php:680
+msgid "Price assignment:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:643
+msgid "Remove bundle option %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:654
+msgid "Bundled %s:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:705
+msgid "Remove bundle option 1"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:716
+#: includes/admin/downloads/metabox.php:777
+msgid "Add New File"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:815
+msgid "Click and drag to re-order files"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:816
+msgid "%1$s file ID: %2$s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:821
+msgid "Remove file %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:828
+msgid "File Name"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:836
+msgid "My Neat File"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:843
+msgid "File URL"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:849
+msgid "Enter, upload, choose from Media Library"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:854
+#: includes/admin/downloads/metabox.php:856
+msgid "Select Files"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:854
+msgid "Select"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:864
+msgid "Price Assignment"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:864
+msgid "<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:911
+msgid "Insert into %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:942
+>>>>>>> 3.1.0.3
 #: includes/admin/reporting/reports.php:994
 #: includes/admin/reporting/reports.php:1157
 #: includes/admin/reporting/reports.php:1347
@@ -2167,42 +2271,72 @@ msgstr ""
 msgid "Refunds"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:955
 msgid "<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing."
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:960
+=======
+#: includes/admin/downloads/metabox.php:943
+msgid "<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:948
+>>>>>>> 3.1.0.3
 msgid "Refund Status"
 msgstr ""
 
 #. translators: Default refund status
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:971
+=======
+#: includes/admin/downloads/metabox.php:959
+>>>>>>> 3.1.0.3
 msgctxt "Download refund status"
 msgid "Default (%1$s)"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:986
+=======
+#: includes/admin/downloads/metabox.php:974
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:684
 msgid "Refund Window"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:989
+=======
+#: includes/admin/downloads/metabox.php:977
+>>>>>>> 3.1.0.3
 msgctxt "refund window interval"
 msgid "Days"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:992
 #: includes/admin/downloads/metabox.php:1025
 msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1020
+=======
+#: includes/admin/downloads/metabox.php:980
+#: includes/admin/downloads/metabox.php:1013
+msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1008
+>>>>>>> 3.1.0.3
 #: includes/admin/reporting/export/class-batch-export-downloads.php:53
 #: includes/admin/settings/register-settings.php:1091
 #: includes/admin/tools.php:952
 msgid "File Download Limit"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:1020
 msgid "<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links."
 msgstr ""
@@ -2232,6 +2366,37 @@ msgid "Disable quantity input for this product"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1136
+=======
+#: includes/admin/downloads/metabox.php:1008
+msgid "<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1053
+msgid "Taxability"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1053
+msgid "<strong>Taxability</strong>: When taxes are enabled, all products are taxable by default. Check this box to mark this product as non-taxable."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1064
+msgid "This product is non-taxable"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1089
+msgid "Item Quantities"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1089
+msgid "<strong>Item Quantities</strong>: if disabled, customers will not be provided an option to change the number they wish to purchase."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1102
+msgid "Disable quantity input for this product"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1124
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:1031
 #: includes/admin/thickbox.php:76
 #: includes/checkout/template.php:992
@@ -2241,6 +2406,7 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:1144
 msgid "<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing."
 msgstr ""
@@ -2282,12 +2448,59 @@ msgid "Purchase button behavior"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1231
+=======
+#: includes/admin/downloads/metabox.php:1132
+msgid "<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1156
+msgid "Accounting Options"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1156
+msgid "<strong>SKU</strong>: If an SKU is entered for this product, it will be shown on the purchase receipt and exported purchase histories."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1159
+msgid "Enter an SKU for this product."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1188
+msgid "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1189
+msgid "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1193
+msgid "Button Options"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1193
+msgid "<strong>Hide purchase button</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1205
+msgid "Hide purchase button"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1211
+msgid "Purchase button behavior"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1219
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:1045
 #: includes/admin/thickbox.php:125
 msgid "Add to Cart"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:1232
+=======
+#: includes/admin/downloads/metabox.php:1220
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:1059
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:47
 #: includes/shortcodes.php:47
@@ -2295,6 +2508,7 @@ msgstr ""
 msgid "Buy Now"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/downloads/metabox.php:1278
 msgid "Download Instructions"
 msgstr ""
@@ -2312,6 +2526,25 @@ msgid "Net Revenue:"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1341
+=======
+#: includes/admin/downloads/metabox.php:1266
+msgid "Download Instructions"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1269
+msgid "Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1307
+msgid "Net Sales:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1312
+msgid "Net Revenue:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1329
+>>>>>>> 3.1.0.3
 msgid "View File Download Log"
 msgstr ""
 
@@ -4534,7 +4767,7 @@ msgid "Select Region"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:3027
-#: includes/class-edd-html-elements.php:632
+#: includes/class-edd-html-elements.php:656
 msgid "All Regions"
 msgstr ""
 
@@ -7071,7 +7304,7 @@ msgid "Missing nonce when retrieving state list. Please read the following for m
 msgstr ""
 
 #: includes/ajax-functions.php:691
-#: includes/class-edd-html-elements.php:148
+#: includes/class-edd-html-elements.php:105
 msgid "All Price Options"
 msgstr ""
 
@@ -7081,7 +7314,7 @@ msgstr ""
 
 #: includes/ajax-functions.php:816
 #: includes/ajax-functions.php:954
-#: includes/class-edd-html-elements.php:355
+#: includes/class-edd-html-elements.php:379
 msgid "No users found"
 msgstr ""
 
@@ -7597,7 +7830,7 @@ msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/login.php:6
 #: includes/blocks/views/forms/login.php:11
-#: includes/blocks/views/forms/registration.php:15
+#: includes/blocks/views/forms/registration.php:13
 #: templates/shortcode-login.php:15
 #: includes/blocks/build/login/index.js:1
 #: includes/blocks/build/register/index.js:1
@@ -7607,7 +7840,7 @@ msgstr ""
 #: includes/blocks/views/checkout/purchase-form/login.php:17
 #: includes/blocks/views/checkout/purchase-form/register.php:18
 #: includes/blocks/views/forms/login.php:22
-#: includes/blocks/views/forms/registration.php:37
+#: includes/blocks/views/forms/registration.php:35
 #: includes/checkout/template.php:518
 #: includes/checkout/template.php:524
 #: includes/checkout/template.php:591
@@ -7663,7 +7896,7 @@ msgid "Register For a New Account"
 msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/register.php:29
-#: includes/blocks/views/forms/registration.php:59
+#: includes/blocks/views/forms/registration.php:57
 #: templates/shortcode-register.php:35
 #: includes/blocks/build/register/index.js:1
 msgid "Confirm Password"
@@ -7706,12 +7939,12 @@ msgstr ""
 msgid "Get New Password"
 msgstr ""
 
-#: includes/blocks/views/forms/registration.php:44
+#: includes/blocks/views/forms/registration.php:42
 #: includes/blocks/views/forms/reset-password.php:17
 msgid "Hide password"
 msgstr ""
 
-#: includes/blocks/views/forms/registration.php:76
+#: includes/blocks/views/forms/registration.php:74
 #: includes/checkout/template.php:573
 #: templates/shortcode-register.php:46
 msgid "Register"
@@ -8175,7 +8408,7 @@ msgid "%d customers created in %d seconds"
 msgstr ""
 
 #: includes/class-edd-cli.php:306
-#: includes/class-edd-html-elements.php:283
+#: includes/class-edd-html-elements.php:307
 msgid "No customers found"
 msgstr ""
 
@@ -8265,7 +8498,7 @@ msgid "  Product: %s - %s"
 msgstr ""
 
 #: includes/class-edd-cli.php:423
-#: includes/class-edd-html-elements.php:451
+#: includes/class-edd-html-elements.php:475
 #: includes/shortcodes.php:259
 msgid "No discounts found"
 msgstr ""
@@ -8323,12 +8556,12 @@ msgid "Single Use: %s"
 msgstr ""
 
 #: includes/class-edd-cli.php:486
-#: includes/class-edd-cli.php:1848
+#: includes/class-edd-cli.php:2005
 msgid "No action specified, did you mean"
 msgstr ""
 
 #: includes/class-edd-cli.php:488
-#: includes/class-edd-cli.php:1850
+#: includes/class-edd-cli.php:2007
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
@@ -8359,14 +8592,14 @@ msgstr ""
 #: includes/class-edd-cli.php:921
 #: includes/class-edd-cli.php:1044
 #: includes/class-edd-cli.php:1521
-#: includes/class-edd-cli.php:1640
+#: includes/class-edd-cli.php:1755
 msgid "Old Records: "
 msgstr ""
 
 #: includes/class-edd-cli.php:922
 #: includes/class-edd-cli.php:1045
 #: includes/class-edd-cli.php:1522
-#: includes/class-edd-cli.php:1641
+#: includes/class-edd-cli.php:1756
 msgid "New Records: "
 msgstr ""
 
@@ -8498,91 +8731,146 @@ msgstr ""
 msgid "Migration complete: Tax Rates"
 msgstr ""
 
-#: includes/class-edd-cli.php:1554
+#: includes/class-edd-cli.php:1562
+msgid "This process will remove and recreate orders in your database. Please make sure you've backed up your EDD database tables. Are you sure you want to delete orders that have already been migrated and run the migration again?"
+msgstr ""
+
+#: includes/class-edd-cli.php:1568
 msgid "The payments custom table migration has already been run. To do this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1557
+#: includes/class-edd-cli.php:1571
 msgid "Preparing to migrate payments."
 msgstr ""
 
-#: includes/class-edd-cli.php:1560
+#: includes/class-edd-cli.php:1574
 msgid "Migrating Payments"
 msgstr ""
 
-#: includes/class-edd-cli.php:1633
+#: includes/class-edd-cli.php:1601
+msgid "An EDD Payment could not be found for that ID."
+msgstr ""
+
+#: includes/class-edd-cli.php:1604
+msgid "The payment ID must be an integer from the post_id column."
+msgstr ""
+
+#: includes/class-edd-cli.php:1615
+msgid "The starting ID must be an integer from the post_id column."
+msgstr ""
+
+#: includes/class-edd-cli.php:1625
+msgid "The ending ID must be an integer from the post_id column."
+msgstr ""
+
+#: includes/class-edd-cli.php:1632
+msgid "Are you sure you want to run a partial order migration?"
+msgstr ""
+
+#. translators: 1. the refund order ID; 2. the original payment ID.
+#: includes/class-edd-cli.php:1674
+msgid "%1$d is a refund order. EDD will delete the refund and migrate payment %1$d, then re-migrate payment %2$d."
+msgstr ""
+
+#. translators: 1. the order/payment ID.
+#: includes/class-edd-cli.php:1684
+msgid "Order ID %1$d appears to be a different record from Payment ID %1$d. Are you sure you want to destroy this order and overwrite it?"
+msgstr ""
+
+#. translators: payment ID.
+#: includes/class-edd-cli.php:1719
+msgid "Migration failed for payment %d."
+msgstr ""
+
+#: includes/class-edd-cli.php:1742
 msgid "No payment records found."
 msgstr ""
 
-#: includes/class-edd-cli.php:1637
+#: includes/class-edd-cli.php:1749
+msgid "Partial order migration complete. Orders Processed: "
+msgstr ""
+
+#: includes/class-edd-cli.php:1750
+msgid "To recalculate all download sales and earnings, run wp edd `recalculate_download_sales_earnings`."
+msgstr ""
+
+#: includes/class-edd-cli.php:1752
 msgid "Migration complete: Orders"
 msgstr ""
 
-#: includes/class-edd-cli.php:1644
+#: includes/class-edd-cli.php:1759
 msgid "Refund Records Created: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1682
+#: includes/class-edd-cli.php:1781
+msgid "You must enter a payment ID to display legacy data."
+msgstr ""
+
+#: includes/class-edd-cli.php:1796
+msgid "The legacy payment data could not be found."
+msgstr ""
+
+#: includes/class-edd-cli.php:1839
 msgid "Sales and Earnings successfully recalculated for all downloads."
 msgstr ""
 
-#: includes/class-edd-cli.php:1683
+#: includes/class-edd-cli.php:1840
 msgid "Downloads Updated: "
 msgstr ""
 
-#: includes/class-edd-cli.php:1701
+#: includes/class-edd-cli.php:1858
 msgid "Do you want to remove legacy data? This will permanently remove legacy discounts, logs, and order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1709
+#: includes/class-edd-cli.php:1866
 msgid "Legacy discounts have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1711
+#: includes/class-edd-cli.php:1868
 msgid "Removing old discount data."
 msgstr ""
 
-#: includes/class-edd-cli.php:1732
+#: includes/class-edd-cli.php:1889
 msgid "Legacy logs have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1734
+#: includes/class-edd-cli.php:1891
 msgid "Removing old logs."
 msgstr ""
 
-#: includes/class-edd-cli.php:1755
+#: includes/class-edd-cli.php:1912
 msgid "Legacy order notes have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1757
+#: includes/class-edd-cli.php:1914
 msgid "Removing old order notes."
 msgstr ""
 
-#: includes/class-edd-cli.php:1781
+#: includes/class-edd-cli.php:1938
 msgid "Updating customers database table."
 msgstr ""
 
-#: includes/class-edd-cli.php:1790
+#: includes/class-edd-cli.php:1947
 msgid "Legacy customer emails have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1792
+#: includes/class-edd-cli.php:1949
 msgid "Removing old customer emails."
 msgstr ""
 
-#: includes/class-edd-cli.php:1803
+#: includes/class-edd-cli.php:1960
 msgid "Legacy customer addresses have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1805
+#: includes/class-edd-cli.php:1962
 msgid "Removing old customer addresses."
 msgstr ""
 
-#: includes/class-edd-cli.php:1816
+#: includes/class-edd-cli.php:1973
 msgid "Legacy orders have already been removed. To run this anyway, use the --force argument."
 msgstr ""
 
-#: includes/class-edd-cli.php:1818
+#: includes/class-edd-cli.php:1975
 msgid "Removing old orders."
 msgstr ""
 
@@ -8653,67 +8941,67 @@ msgstr ""
 msgid "Choose a %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:259
+#: includes/class-edd-html-elements.php:283
 msgid "Choose a Customer"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:263
+#: includes/class-edd-html-elements.php:287
 msgid "Search Customers"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:265
+#: includes/class-edd-html-elements.php:289
 msgid "No customer attached"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:333
+#: includes/class-edd-html-elements.php:357
 msgid "Select a User"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:337
+#: includes/class-edd-html-elements.php:361
 msgid "Search Users"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:413
+#: includes/class-edd-html-elements.php:437
 msgid "Choose a Discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:414
+#: includes/class-edd-html-elements.php:438
 #: includes/post-types.php:123
 msgid "All Discounts"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:494
+#: includes/class-edd-html-elements.php:518
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:593
+#: includes/class-edd-html-elements.php:617
 msgid "Choose a Country"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:594
+#: includes/class-edd-html-elements.php:618
 msgid "All Countries"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:631
+#: includes/class-edd-html-elements.php:655
 msgid "Choose a Region"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:664
+#: includes/class-edd-html-elements.php:688
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:665
+#: includes/class-edd-html-elements.php:689
 msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:963
+#: includes/class-edd-html-elements.php:987
 msgid "Enter Username"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:993
+#: includes/class-edd-html-elements.php:1017
 #: includes/blocks/build/register/index.js:1
 msgid "Required"
 msgstr ""
@@ -12499,7 +12787,6 @@ msgid "Enter an email"
 msgstr ""
 
 #: includes/process-purchase.php:702
-#: includes/users/register.php:91
 msgid "Passwords do not match"
 msgstr ""
 
@@ -13069,11 +13356,13 @@ msgstr ""
 msgid "Your password reset link appears to be invalid. Please request a new link below."
 msgstr ""
 
-#: includes/users/lost-password.php:255
+#: includes/users/lost-password.php:256
+#: includes/users/register.php:92
 msgid "The password cannot be a space or all spaces."
 msgstr ""
 
 #: includes/users/lost-password.php:261
+#: includes/users/register.php:97
 msgid "The passwords do not match."
 msgstr ""
 
@@ -13101,8 +13390,8 @@ msgstr ""
 msgid "Registration form validation failed."
 msgstr ""
 
-#: includes/users/register.php:87
-msgid "Please enter a password"
+#: includes/users/register.php:119
+msgid "Your account has been successfully created."
 msgstr ""
 
 #: includes/widgets.php:38

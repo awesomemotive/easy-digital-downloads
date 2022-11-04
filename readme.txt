@@ -4,9 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, zkawesome, smub, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, lisacee
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
-Tested up to: 6.0
+Tested up to: 6.1
 Requires PHP: 5.6
-Stable Tag: 3.1.0.1
+Stable Tag: 3.1.0.2
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,38 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1.0.2, October 27, 2022 =
+* New - Blocks: The registration block now supports the WordPress password strength script.
+* Improvement: The products API now includes the product permalink.
+* Improvement: The user registration process and messaging has been updated to more closely match WordPress Core.
+* Improvement: Searching in the product dropdown is now restricted to titles only.
+* Improvement: The no-js/js class switcher has been prefixed and made more specific.
+* Improvement: Editing a bundled product has been updated to be more performant.
+* Improvement - Blocks: Fees in the cart/checkout blocks have been updated to more closely match cart items and other amounts.
+* Improvement - Blocks: Update block definitions so that icons show on the repository.
+* Improvement - Blocks: The order history block filter has been updated to not override filtered values.
+* Improvement - Blocks: A filter has been added to the Terms block to allow users to filter the query.
+* Fix: The 3.0 migration for customer addresses could create duplicate addresses.
+* Fix: A redundant database update for customer addresses was removed from the 3.0 migration.
+* Fix: The main checkout function now checks directly for the checkout block rather than relying on a filter.
+* Fix: The Tools screen could time out on a site with a large number of products.
+* Fix: The options for bundled products now show the general product in addition to each price option.
+* Fix: For some time zones, reports could show incorrect dates for a range such as "last quarter".
+* Fix: The block editor was not showing the correct list of authors for a download.
+* Fix: Some settings for the legacy cart widget could not be disabled once saved.
+* Fix: Customer names with unexpected characters could be improperly interpreted by spreadsheet apps.
+* Fix - Blocks: The checkout helper function was incorrectly returning true.
+* Fix - Blocks: The cart block is now disabled in the block editor.
+* Fix - Blocks: The purchase link filter could incorrectly override previous adjustments to the button class.
+* Dev: The CLI order migration has been updated to allow partial order migrations.
+
+= 3.1.0.1.1, October 21, 2022 =
+This is a very minor point release, with a single change to try and correct an issue within the PayPal API that is causing 403 and 400 errors.
+It is not intended to resolve the issue within PayPal's API, but offer us some time to continue to work with PayPal to solve the issue long term without it impacting customer's purchases.
+
+* IMPORTANT: If you have been experiencing issues with the PayPal webhooks, please update EDD and visit Downloads > Settings > Payments > PayPal and re-check your payment status and sync webhooks.
+* Fix: Attempts to create a specific user-agent to send to PayPal for webhook validation to avoid 403/400 errors.
 
 = 3.1.0.1, October 8, 2022 =
 * Fix: With taxes enabled, updating the address fields in the shortcode would replace the cart with the cart block.
