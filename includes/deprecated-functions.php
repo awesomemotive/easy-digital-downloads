@@ -1934,3 +1934,185 @@ function edd_plugin_row_meta( $links = array(), $file = '' ) {
 	_edd_deprecated_function( __FUNCTION__, '3.1' );
 	return $links;
 }
+
+/**
+ * Listens to the updated_postmeta hook for our backwards compatible payment_meta updates, and runs through them
+ *
+ * Previously hooked into: updated_postmeta
+ *
+ * @since  2.3
+ * @deprecated 3.1.0.3
+ * @param  int $meta_id    The Meta ID that was updated
+ * @param  int $object_id  The Object ID that was updated (post ID)
+ * @param  string $meta_key   The Meta key that was updated
+ * @param  string|int|float $meta_value The Value being updated
+ * @return bool|int             If successful the number of rows updated, if it fails, false
+ */
+function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $meta_value ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.1.0.3' );
+
+	$meta_keys = array( '_edd_payment_meta', '_edd_payment_tax' );
+
+	if ( ! in_array( $meta_key, $meta_keys ) ) {
+		return;
+	}
+
+	global $wpdb;
+	switch( $meta_key ) {
+
+		case '_edd_payment_meta':
+			$meta_value   = maybe_unserialize( $meta_value );
+
+			if( ! isset( $meta_value['tax'] ) ){
+				return;
+			}
+
+			$tax_value    = $meta_value['tax'];
+
+			$data         = array( 'meta_value' => $tax_value );
+			$where        = array( 'post_id'  => $object_id, 'meta_key' => '_edd_payment_tax' );
+			$data_format  = array( '%f' );
+			$where_format = array( '%d', '%s' );
+			break;
+
+		case '_edd_payment_tax':
+			$tax_value    = ! empty( $meta_value ) ? $meta_value : 0;
+			$current_meta = edd_get_payment_meta( $object_id, '_edd_payment_meta', true );
+
+			$current_meta['tax'] = $tax_value;
+			$new_meta            = maybe_serialize( $current_meta );
+
+			$data         = array( 'meta_value' => $new_meta );
+			$where        = array( 'post_id' => $object_id, 'meta_key' => '_edd_payment_meta' );
+			$data_format  = array( '%s' );
+			$where_format = array( '%d', '%s' );
+
+			break;
+
+	}
+
+	$updated = $wpdb->update( $wpdb->postmeta, $data, $where, $data_format, $where_format );
+
+	if ( ! empty( $updated ) ) {
+		// Since we did a direct DB query, clear the postmeta cache.
+		wp_cache_delete( $object_id, 'post_meta' );
+	}
+
+	return $updated;
+
+}
+
+/**
+ * Deletes edd_stats_ transients that have expired to prevent database clogs
+ *
+ * Previously hooked into: edd_daily_scheduled_events
+ *
+ * @since 2.6.7
+ * @deprecated 3.1.0.3
+ * @return void
+*/
+function edd_cleanup_stats_transients() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.1.0.3' );
+
+	global $wpdb;
+
+	if ( defined( 'WP_SETUP_CONFIG' ) ) {
+		return;
+	}
+
+	if ( defined( 'WP_INSTALLING' ) ) {
+		return;
+	}
+
+	$now        = current_time( 'timestamp' );
+	$transients = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '%\_transient_timeout\_edd\_stats\_%' AND option_value+0 < $now LIMIT 0, 200;" );
+	$to_delete  = array();
+
+	if( ! empty( $transients ) ) {
+
+		foreach( $transients as $transient ) {
+
+			$to_delete[] = $transient->option_name;
+			$to_delete[] = str_replace( '_timeout', '', $transient->option_name );
+
+		}
+
+	}
+
+	if ( ! empty( $to_delete ) ) {
+
+		$option_names = implode( "','", $to_delete );
+		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')"  );
+
+	}
+
+}
+
+/**
+ * Updates all old payments, prior to 1.2, with new
+ * meta for the total purchase amount
+ *
+ * This is so that payments can be queried by their totals
+ *
+ * Prevsiouly hooked into: edd_upgrade_payments
+ *
+ * @since 1.2
+ * @deprecated 3.1.0.3
+ * @param array $data Arguments passed
+ * @return void
+*/
+function edd_update_old_payments_with_totals( $data ) {
+	_edd_deprecated_function( __FUNCTION__, '3.1.0.3' );
+
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd_upgrade_payments_nonce' ) ) {
+		return;
+	}
+
+	if ( get_option( 'edd_payment_totals_upgraded' ) ) {
+		return;
+	}
+
+	$payments = edd_get_payments( array(
+		'offset' => 0,
+		'number' => 9999999,
+		'mode'   => 'all',
+	) );
+
+	if ( $payments ) {
+		foreach ( $payments as $payment ) {
+
+			$payment = new EDD_Payment( $payment->ID );
+			$meta    = $payment->get_meta();
+
+			$payment->total = $meta['amount'];
+			$payment->save();
+		}
+	}
+
+	add_option( 'edd_payment_totals_upgraded', 1 );
+}
+
+/**
+ * Flushes the current user's purchase history transient when a payment status
+ * is updated
+ *
+ * Previously hooked into: edd_update_payment_status
+ *
+ * @since 1.2.2
+ * @deprecated 3.1.0.3
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ */
+function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.1.0.3' );
+
+	$payment = new EDD_Payment( $payment_id );
+
+	if( ! empty( $payment->user_id ) ) {
+		delete_transient( 'edd_user_' . $payment->user_id . '_purchases' );
+	}
+}
