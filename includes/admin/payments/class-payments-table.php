@@ -964,7 +964,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Download ID
 		if ( is_string( $search ) && ( false !== strpos( $search, '#' ) ) ) {
-			$args['product_id'] = absint( $search );
+			$args['product_id'] = intval( trim( str_replace( '#', '', $search ) ) );
 
 			return $args;
 		}
