@@ -10,6 +10,17 @@
 @import "~@wordpress/base-styles/breakpoints";
 @import "../variables/colors";
 
+
+/* Main Menu
+-------------------------------------------------------------- */
+#menu-posts-download .wp-submenu {
+	display: flex;
+	flex-wrap: wrap;
+	li {
+		width: 100%;
+	}
+}
+
 /* Submenu Styles
 -------------------------------------------------------------- */
 
@@ -69,6 +80,7 @@ ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 
 /* Onboarding Submenu Item */
 .edd-onboarding__menu-item {
+	order: -1;
 	background: #e67e22;
 	a {
 		color: white !important;
