@@ -1,7 +1,13 @@
 /**
  * Onboarding Wizard.
  */
- var EDD_Onboarding = {
+
+/**
+ * Internal dependencies
+ */
+import { edd_attach_tooltips as setup_tooltips } from 'admin/components/tooltips';
+
+var EDD_Onboarding = {
 
 	vars: {
 		nonce: '',
@@ -235,6 +241,9 @@
 				let query_params = new URLSearchParams( window.location.search );
 				query_params.set( 'current_step', step_name );
 				history.replaceState( null, null, '?' + query_params.toString() );
+
+				// Load tooltips.
+				setup_tooltips( $( '.edd-help-tip' ) );
 			},
 		} ).fail( function( response ) {
 			if ( window.console && window.console.log ) {
@@ -367,6 +376,11 @@
 	},
 
 	EDD_Onboarding_Configure_Emails: {
+
+		vars: {
+			wp_editor: false,
+		},
+
 		/**
 		 * Initialize step specific logic.
 		 *
@@ -374,6 +388,11 @@
 		 *
 		 */
 		init: function() {
+			// If WP Editor is already initialized, we have to destroy it first.
+			if ( EDD_Onboarding.EDD_Onboarding_Configure_Emails.vars.wp_editor ) {
+				wp.editor.remove( 'edd_settings_purchase_receipt' )
+			}
+
 			wp.editor.initialize(
 				'edd_settings_purchase_receipt',
 				{
@@ -387,6 +406,11 @@
 				  mediaButtons: true,
 				}
 			  );
+
+			// Append "Insert marker" button.
+			$( '#edd-onboarding__insert-marker-button a' ).clone().appendTo( '.wp-media-buttons' );
+
+			EDD_Onboarding.EDD_Onboarding_Configure_Emails.vars.wp_editor = true;
 		},
 
 		/**
@@ -396,6 +420,15 @@
 		 *
 		 */
 		save: function() {
+			let editor_id                = 'edd_settings_purchase_receipt';
+			let purchase_receipt_content = $( '#' + editor_id ).val();
+
+			if( tinymce.get( editor_id ) ) {
+				purchase_receipt_content = wp.editor.getContent(editor_id);
+			}
+
+			$( 'textarea#edd_settings_purchase_receipt' ).val( purchase_receipt_content );
+
 			return $.ajax( {
 				type: 'POST',
 				url: $('.edd-settings-form').attr("action"),

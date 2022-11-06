@@ -72,12 +72,15 @@ function step_html() {
 					<td colspan="2">
 						<?php do_action( 'edd_settings_tab_top_emails_purchase_receipts' ); ?>
 
-						<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
-							<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
-							<?php esc_html_e( 'Insert Marker', 'easy-digital-downloads' ); ?>
-						</a>
+						<div id="edd-onboarding__insert-marker-button" style="display: none;">
+							<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
+								<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
+								<?php esc_html_e( 'Insert Marker', 'easy-digital-downloads' ); ?>
+							</a>
+						</div>
 
-						<textarea name="edd_settings_purchase_receipt" id="edd_settings_purchase_receipt" rows="12" style="width: 100%;"></textarea>
+						<textarea name="edd_settings[purchase_receipt]" id="edd_settings_purchase_receipt" rows="12" style="width: 100%;"><?php echo wpautop( wp_kses_post( edd_get_option( 'purchase_receipt' ) ) ); ?></textarea>
+
 						<?php
 						// echo edd_rich_editor_callback(
 						// 	array(
