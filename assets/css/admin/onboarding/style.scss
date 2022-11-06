@@ -364,9 +364,9 @@
 }
 
 /* EDD ONBOARDING - Buttons style */
-.wp-core-ui .edd-onboarding .button,
-.wp-core-ui .edd-onboarding .button-primary,
-.wp-core-ui .edd-onboarding .button-secondary {
+.wp-core-ui .edd-onboarding .edd-onboarding__button.button,
+.wp-core-ui .edd-onboarding .edd-onboarding__button.button-primary,
+.wp-core-ui .edd-onboarding .edd-onboarding__button.button-secondary {
 	text-decoration: none;
 	font-size: 13px;
 	line-height: 2.15384615;
@@ -382,24 +382,24 @@
 	box-sizing: border-box;
 }
 
-.wp-core-ui .edd-onboarding .button-primary {
+.wp-core-ui .edd-onboarding .edd-onboarding__button.button-primary {
 	background: #0c5d95;
 	border-color: #0c5d95;
 	color: #fff;
 	transition: all 0.2s ease-in-out;
 }
-.wp-core-ui .edd-onboarding .button-primary:hover {
+.wp-core-ui .edd-onboarding .edd-onboarding__button.button-primary:hover {
 	background: darken(#0c5d95, 5%);
 	border-color: darken(#0c5d95, 5%);
 	color: #fff;
 }
-.wp-core-ui .edd-onboarding .button-secondary {
+.wp-core-ui .edd-onboarding .edd-onboarding__button.button-secondary {
 	border-color: #d9e7f3;
 	background: #f6f7f7;
 	color: #5696c2;
 	transition: all 0.2s ease-in-out;
 }
-.wp-core-ui .edd-onboarding .button-secondary:hover {
+.wp-core-ui .edd-onboarding .edd-onboarding__button.button-secondary:hover {
 	border-color: #d9e7f3;
 	background: darken(#f6f7f7, 2%);
 	color: #5696c2;
@@ -429,6 +429,10 @@
 	border: 1px solid #dedfe0 !important;
 	border-radius: 2px !important;
 	padding: 2px 8px !important;
+}
+
+.edd-onboarding input.edd_settings_upload_button {
+	border-color: #2271b1 !important;
 }
 
 .edd-onboarding .edd-check-wrapper {
