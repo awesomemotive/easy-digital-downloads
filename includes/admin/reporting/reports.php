@@ -2141,15 +2141,16 @@ function edd_register_file_downloads_report( $reports ) {
 								'backgroundColor'      => 'rgba(24,126,244,0.1)',
 								'fill'                 => true,
 								'borderWidth'          => 2,
-								'type'                 => 'currency',
 								'pointRadius'          => 4,
 								'pointHoverRadius'     => 6,
 								'pointBackgroundColor' => 'rgb(255,255,255)',
+								'yAxisID'              => 'file-downloads-y',
 							),
 						),
 						'scales' => array(
 							'yAxes' => array(
 								array(
+									'id'       => 'file-downloads-y',
 									'type'     => 'linear',
 									'display'  => true,
 									'position' => 'left',
