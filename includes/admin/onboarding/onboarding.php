@@ -113,12 +113,13 @@ class OnboardingWizard {
 	 */
 	public function add_menu_item_class() {
 		global $submenu;
-		$edd_submenu     = $submenu[ 'edit.php?post_type=download' ];
-		$onboarding_menu = __( 'Setup', 'easy-digital-downloads' );
 
-		if ( empty( $edd_submenu ) ) {
+		if ( empty( $submenu[ 'edit.php?post_type=download' ] ) ) {
 			return;
 		}
+
+		$edd_submenu     = $submenu[ 'edit.php?post_type=download' ];
+		$onboarding_menu = __( 'Setup', 'easy-digital-downloads' );
 
 		foreach ( $edd_submenu as $key => $value ) {
 			if ( $onboarding_menu == $value[0] ) {
