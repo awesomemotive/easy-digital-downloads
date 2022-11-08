@@ -260,12 +260,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_complete_purchase', $wp_filter['edd_update_payment_status'][100] );
 		$this->assertArrayHasKey( 'edd_record_order_status_change', $wp_filter['edd_transition_order_status'][100] );
-		$this->assertArrayHasKey( 'edd_clear_user_history_cache', $wp_filter['edd_update_payment_status'][10] );
-	}
-
-	public function test_edd_upgrade_payments() {
-		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_update_old_payments_with_totals', $wp_filter['edd_upgrade_payments'][10] );
 	}
 
 	public function test_edd_cleanup_file_symlinks() {
