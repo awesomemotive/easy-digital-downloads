@@ -681,8 +681,6 @@ function edd_build_order( $order_data = array() ) {
 	}
 
 	if ( $resume_order ) {
-		$order_data['date_created'] = EDD()->utils->date( 'now', null, true );
-
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
 
 		// Since things could have been added/removed since we first crated this...rebuild the cart details.
@@ -813,6 +811,7 @@ function edd_build_order( $order_data = array() ) {
 	// Add order into the edd_orders table.
 	if ( true === $resume_order ) {
 		$order_id = $payment->ID;
+		unset( $order_args['date_created'] );
 		edd_update_order( $order_id, $order_args );
 	} else {
 		$order_id = edd_add_order( $order_args );
