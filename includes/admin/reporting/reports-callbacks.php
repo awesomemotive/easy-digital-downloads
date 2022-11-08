@@ -143,7 +143,6 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $sales_results as $sales_result ) {
-
 			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
 
 			// Add any sales/earnings that happened during this hour.
