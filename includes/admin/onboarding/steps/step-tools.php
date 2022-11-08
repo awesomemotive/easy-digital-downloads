@@ -35,6 +35,8 @@ function ajax_save_telemetry_settings() {
 		exit();
 	}
 
+	// @todo - Add correct permissions check!
+
 	if ( isset( $_REQUEST['telemetry_toggle'] ) ) {
 		edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
 	}

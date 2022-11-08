@@ -429,6 +429,8 @@ class OnboardingWizard {
 			exit();
 		}
 
+		// @todo - Add correct permissions check!
+
 		update_option( 'edd_onboarding_started', true );
 		exit;
 	}
@@ -458,6 +460,8 @@ class OnboardingWizard {
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_onboarding_wizard' ) ) {
 			exit();
 		}
+
+		// @todo - Add correct permissions check!
 
 		update_option( 'edd_onboarding_completed', true );
 		update_option( 'edd_tracking_notice', true );
