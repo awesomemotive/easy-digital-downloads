@@ -571,6 +571,24 @@ function process_delete() {
 	// Delete partner connect information.
 	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
 
+	try {
+		$api = new PayPal\API();
+
+		try {
+			// Disconnect the webhook.
+			// This is in another try/catch because we want to delete the token cache (below) even if this fails.
+			// This only deletes the webhooks in PayPal, we do not remove the webhook ID in EDD until we delete the connection.
+			PayPal\Webhooks\delete_webhook( $mode );
+		} catch ( \Exception $e ) {
+
+		}
+
+		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
+		delete_option( $api->token_cache_key );
+	} catch ( \Exception $e ) {
+
+	}
+
 	// Now delete our webhook ID.
 	delete_option( sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode ) );
 
