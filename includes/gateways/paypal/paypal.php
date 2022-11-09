@@ -69,6 +69,7 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-pa
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-payment-capture-denied.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/integrations.php';
+require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/ipn.php';
 
 if ( is_admin() ) {
 	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/connect.php';
