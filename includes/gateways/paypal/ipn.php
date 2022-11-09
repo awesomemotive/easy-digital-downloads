@@ -149,17 +149,13 @@ function listen_for_ipn() {
 			return;
 		}
 
-
-		// Process for Subscriptions
-		if ( class_exists( 'EDD_Recurring' ) ) {
-			if ( ! isset( $posted['recurring_payment_id'] ) ) {
-				ipn_debug_log( 'no recurring billing found, move along.' );
-			}
+		// Process webhooks from recurring first, as that is where most of the missing actions will come from.
+		if ( class_exists( 'EDD_Recurring' ) && isset( $posted['recurring_payment_id'] ) ) {
 
 			$subscription = new \EDD_Subscription( $posted['recurring_payment_id'], true );
 
 			$parent_payment = edd_get_payment( $subscription->parent_payment_id );
-			if ( $parent_payment->gateway !== 'paypal_commerce' ) {
+			if ( 'paypal_commerce' !== $parent_payment->gateway ) {
 				ipn_debug_log( 'This is not for PayPal Commerce - bailing' );
 				return;
 			}
@@ -175,21 +171,14 @@ function listen_for_ipn() {
 			// Subscriptions
 			switch ( $txn_type ) :
 
-				case "recurring_payment_profile_created" :
-
-					$subscription->update( array( 'status' => 'active' ) );
-					if( ! empty( $posted['initial_payment_txn_id'] ) ) {
-						edd_set_payment_transaction_id( $subscription->parent_payment_id, $posted['initial_payment_txn_id'] );
-					}
-
-					ipn_debug_log( 'subscription ' . $subscription->id . ': subscription marked as active' );
-
-					die( 'subscription marked as active' );
-
-					break;
-
 				case "recurring_payment" :
 				case "recurring_payment_outstanding_payment" :
+
+					$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $transaction_id );
+					if ( ! empty( $transaction_exists ) ) {
+						ipn_debug_log( 'Transaction ID ' . $transaction_id . ' arlready processed.' );
+						return;
+					}
 
 					$sub_currency = edd_get_payment_currency_code( $subscription->parent_payment_id );
 
@@ -207,6 +196,10 @@ function listen_for_ipn() {
 					}
 
 					if( 'failed' === strtolower( $posted['payment_status'] ) ) {
+						if ( 'failing' === $subscription->status ) {
+							ipn_debug_log( 'Subscription ID ' . $subscription->id . ' arlready failing.' );
+							return;
+						}
 
 						$transaction_link = '<a href="https://www.paypal.com/activity/payment/' . $transaction_id . '" target="_blank">' . $transaction_id . '</a>';
 						$subscription->add_note( sprintf( __( 'Transaction ID %s failed in PayPal', 'edd-recurring' ), $transaction_link ) );
@@ -216,16 +209,6 @@ function listen_for_ipn() {
 
 						die( 'Subscription payment failed' );
 
-					}
-
-					// Bail if this is the very first payment
-					if( date( 'Y-n-d', strtotime( $subscription->created ) ) == date( 'Y-n-d', strtotime( $posted['payment_date'] ) ) ) {
-
-						edd_set_payment_transaction_id( $subscription->parent_payment_id, $transaction_id );
-
-						ipn_debug_log( 'subscription ' . $subscription->id . ': processing stopped because this is the initial payment' );
-
-						return;
 					}
 
 					ipn_debug_log( 'subscription ' . $subscription->id . ': preparing to insert renewal payment' );
@@ -256,6 +239,10 @@ function listen_for_ipn() {
 				case "recurring_payment_profile_cancel" :
 				case "recurring_payment_suspended" :
 				case "recurring_payment_suspended_due_to_max_failed_payment" :
+					if ( 'cancelled' === $subscription->status ) {
+						ipn_debug_log( 'Subscription ID ' . $subscription->id . ' arlready cancelled.' );
+						return;
+					}
 
 					$subscription->cancel();
 					ipn_debug_log( 'subscription ' . $subscription->id . ': subscription cancelled.' );
@@ -266,6 +253,10 @@ function listen_for_ipn() {
 					break;
 
 				case "recurring_payment_failed" :
+					if ( 'failing' === $subscription->status ) {
+						ipn_debug_log( 'Subscription ID ' . $subscription->id . ' arlready failing.' );
+						return;
+					}
 
 					$subscription->failing();
 					ipn_debug_log( 'subscription ' . $subscription->id . ': subscription failing.' );
@@ -274,6 +265,10 @@ function listen_for_ipn() {
 					break;
 
 				case "recurring_payment_expired" :
+					if ( 'completed' === $subscription->status ) {
+						ipn_debug_log( 'Subscription ID ' . $subscription->id . ' arlready completed.' );
+						return;
+					}
 
 					$subscription->complete();
 					ipn_debug_log( 'subscription ' . $subscription->id . ': subscription completed.' );
@@ -281,12 +276,73 @@ function listen_for_ipn() {
 					die( 'Subscription completed' );
 					break;
 
-				default :
-
-					die( 'Paypal Commerce IPN Endpoint' );
-					break;
-
 			endswitch;
+		}
+
+		// We've processed recurring, now let's handle non-recurring IPNs.
+		$payment_status = strtolower( $posted['payment_status'] );
+		$order_id       = 0;
+
+		if ( ! empty( $posted['parent_txn_id'] ) ) {
+			$order_id = edd_get_order_id_from_transaction_id( $posted['parent_txn_id'] );
+		}
+
+		if ( empty( $order_id ) ) {
+			ipn_debug_log( 'No parent transaction found for ' . $posted['parent_txn_id'] );
+			return;
+		}
+
+		$order = edd_get_order( $order_id );
+		if ( 'paypal_commerce' !== $order->gateway ) {
+			ipn_debug_log( 'Order ' . $order_id . ' was not with PayPal Commerce' );
+			return;
+		}
+
+		if ( 'refunded' == $payment_status || 'reversed' == $payment_status ) {
+			$order = edd_get_order( $order_id );
+			if ( 'refunded' === $order->status ) {
+				ipn_debug_log( 'Order ' . $order_id . ' is already refunded' );
+			}
+
+			$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $order->get_transaction_id() );
+			if ( ! empty( $transaction_exists ) ) {
+				ipn_debug_log( 'Refund transaction for ' . $transaction_id . ' already exists' );
+				return;
+			}
+
+			$order_amount    = edd_get_payment_amount( $order->id );
+			$refunded_amount = ! empty( $amount ) ? $amount : $order_amount;
+			$currency        = ! empty( $currency_code) ? $currency_code : $order->currency;
+
+			ipn_debug_log( 'Processing a refund for original transaction ' . $order->get_transaction_id() );
+
+			/* Translators: %1$s - Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID */
+			$payment_note = sprintf(
+				esc_html__( 'Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s', 'easy-digital-downloads' ),
+				edd_currency_filter( edd_format_amount( $refunded_amount ), $currency ),
+				esc_html( $order->get_transaction_id() ),
+				esc_html( $transaction_id )
+			);
+
+			// Partial refund.
+			if ( (float) $refunded_amount < (float) $order_amount ) {
+				edd_add_note( array(
+					'object_type' => 'order',
+					'object_id'   => $order->id,
+					'content'     => __( 'Partial refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
+				) );
+				edd_update_order_status( $order->id, 'partially_refunded' );
+			} else {
+				// Full refund.
+				edd_add_note( array(
+					'object_type' => 'order',
+					'object_id'   => $order->id,
+					'content'     => __( 'Full refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
+				) );
+				edd_update_order_status( $order->id, 'refunded' );
+			}
+
+			die( 'Refund processed' );
 		}
 
 	} else {
