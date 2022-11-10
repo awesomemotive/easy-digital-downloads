@@ -1826,7 +1826,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$number      = 1000;
 		$has_results = true;
 		$total       = $wpdb->get_var(
-			"SELECT COUNT(ID)
+			"SELECT COUNT(*)
 			FROM {$wpdb->posts}
 			WHERE post_type = 'download'"
 		);
