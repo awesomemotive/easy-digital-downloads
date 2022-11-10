@@ -81,7 +81,7 @@ var EDD_Onboarding = {
 		// Close and exit.
 		$( document.body ).on( 'click', '.edd-onboarding__close-and-exit', function( e ) {
 			e.preventDefault();
-			EDD_Onboarding.onboarding_completed();
+			EDD_Onboarding.onboarding_completed( true );
 		} );
 	},
 
@@ -184,7 +184,7 @@ var EDD_Onboarding = {
 	 * @since 3.1
 	 *
 	 */
-	onboarding_completed: function() {
+	onboarding_completed: function( redirect ) {
 		EDD_Onboarding.loading_state( true );
 
 		var postData = {
@@ -196,7 +196,9 @@ var EDD_Onboarding = {
 			ajaxurl,
 			postData,
 			function() {
-				window.location = $( '.edd-onboarding__close-and-exit' ).attr( 'href' );
+				if ( redirect ) {
+					window.location = $( '.edd-onboarding__close-and-exit' ).attr( 'href' );
+				}
 			}
 		);
 	},
@@ -263,7 +265,7 @@ var EDD_Onboarding = {
 	next_step: function() {
 		let next_step = $( '.edd-onboarding_current-next-step' ).val();
 		if ( '' === next_step ) {
-			return EDD_Onboarding.onboarding_completed();
+			return EDD_Onboarding.onboarding_completed( true );
 		}
 
 		EDD_Onboarding.load_step( next_step );
@@ -656,10 +658,14 @@ var EDD_Onboarding = {
 				},
 				success: function( data ) {
 					if ( data.success ) {
-						window.location = decodeURI( data.redirect_url.replace(/&amp;/g, "&")  );
-					} else {
-						EDD_Onboarding.loading_state( false );
+						$( '.edd-onboarding__edit-my-product' ).attr( 'href', decodeURI( data.redirect_url.replace(/&amp;/g, "&")  ) );
+						$( '.edd-onboarding__create-product-form, .edd-onboarding__single-step-title, .edd-onboarding__single-step-subtitle, .edd-onboarding__single-step-footer' ).hide();
+						$( '.edd-onboarding__product-created' ).show();
+
+						EDD_Onboarding.onboarding_completed( false );
 					}
+
+					EDD_Onboarding.loading_state( false );
 				},
 			} ).fail( function( response ) {
 				if ( window.console && window.console.log ) {
