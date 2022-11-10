@@ -191,8 +191,12 @@ function step_html() {
 			</tbody>
 		</table>
 	</form>
-	<pre>
-	</pre>
+	<div class="edd-onboarding__product-created" style="display: none;">
+		<h1><?php esc_html_e( 'Congratulations!', 'easy-digital-downloads' ); ?></h1>
+		<p><?php esc_html_e( 'You\'ve set up your store and your first product has been created.', 'easy-digital-downloads' ); ?></p>
+		<a href="" class="button button-primary button-hero edd-onboarding__edit-my-product"><?php esc_html_e( 'Edit My Product', 'easy-digital-downloads' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) );?>" class="button button-secondary button-hero"><?php esc_html_e( 'Exit to the Dashoard', 'easy-digital-downloads' ); ?></a>
+	</div>
 	<?php
 
 	return ob_get_clean();
