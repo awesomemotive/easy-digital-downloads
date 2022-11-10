@@ -28,7 +28,7 @@ function extract_settings_fields( $sections = array() ) {
 
 	// Fields extraction.
 	foreach ( $sections as $section_name => $section ) {
-		if ( isset( $wp_settings_fields[ $section_name ] ) && isset( $wp_settings_fields[ $section_name ][ $section_name ] ) ) {
+		if ( ! empty( $wp_settings_fields[ $section_name ][ $section_name ] ) ) {
 			foreach ( $section as $field ) {
 				$field_name = "edd_settings[{$field}]";
 				if ( array_key_exists( $field_name, $wp_settings_fields[ $section_name ][ $section_name ] ) ) {

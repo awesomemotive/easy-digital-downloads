@@ -77,16 +77,17 @@ function create_product() {
 function step_html() {
 	$currency_position  = edd_get_option( 'currency_position', 'before' );
 	add_filter( 'edd_price_options_heading', function( $heading ) {
-		return '<label class="edd-onboarding__pricing-options-label">' . esc_html( __( 'Pricing options', 'easy-digital-downloads' ) ) . '</label>';
+		return '<label for="edd_variable_pricing" class="edd-onboarding__pricing-options-label">' . esc_html( __( 'Pricing options', 'easy-digital-downloads' ) ) . '</label>';
 	}, 10, 1 );
 
 	ob_start();
 	?>
 	<form method="post" class="edd-onboarding__create-product-form">
+		<input type="hidden" name="_edd_product_type" value="0">
 		<table class="form-table" role="presentation">
 			<tbody>
 				<tr>
-					<th scope="row"><label><h3><?php echo esc_html( __( 'Product details', 'easy-digital-downloads' ) ); ?></h3></label></th>
+					<th scope="row"><h3><?php echo esc_html( __( 'Product details', 'easy-digital-downloads' ) ); ?></h3></th>
 					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation for basic product details."></span></td>
 				</tr>
 				<tr>

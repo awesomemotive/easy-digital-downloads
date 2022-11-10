@@ -167,9 +167,8 @@ var EDD_Onboarding = {
 				ajaxurl,
 				postData,
 				function() {
-					$( '.edd-onboarding__welcome-screen' ).fadeOut();
-					$( '.edd-onboarding__steps' ).slideDown();
-					$( '.edd-onboarding__steps, .edd-onboarding__after-welcome-screen, .edd-onboarding__close-and-exit' ).slideDown();
+					$( '.edd-onboarding__welcome-screen' ).hide();
+					$( '.edd-onboarding__steps, .edd-onboarding__after-welcome-screen, .edd-onboarding__close-and-exit' ).show();
 					EDD_Onboarding.loading_state( false );
 				}
 			);
@@ -599,17 +598,24 @@ var EDD_Onboarding = {
 		 init_variable_pricing_toggle: function() {
 			$( document.body ).on( 'click', '.edd-onbaording__pricing-option-pill button', function( e ) {
 				e.preventDefault();
-
-				$( '.edd-onbaording__pricing-option-pill .active' ).removeClass( 'active' );
-				$( '.edd-onboarding__product-single-price' ).show();
-				$( '.edd-onboarding__product-variable-price' ).hide();
-
-				$( this ).addClass( 'active' );
-
 				let is_variable_pricing = $( this ).data( 'variable-pricing' );
 
 				// Toggle checkbox.
-				$( '#edd_variable_pricing' ).attr( 'checked', is_variable_pricing );
+				$( '#edd_variable_pricing' ).prop( 'checked', is_variable_pricing );
+				$( '#edd_variable_pricing' ).trigger( 'change' );
+			} );
+
+
+			$( document.body ).on( 'change', '#edd_variable_pricing', function( e ) {
+				e.preventDefault();
+				let is_variable_pricing = this.checked;
+
+				// Active pill state.
+				$( '.edd-onbaording__pricing-option-pill .active' ).removeClass( 'active' );
+				$( '.edd-onbaording__pricing-option-pill button[data-variable-pricing="' + is_variable_pricing + '"]' ).addClass( 'active' );
+
+				$( '.edd-onboarding__product-single-price' ).show();
+				$( '.edd-onboarding__product-variable-price' ).hide();
 
 				// Toggle views.
 				if ( is_variable_pricing ) {

@@ -255,7 +255,7 @@ class OnboardingWizard {
 		}
 
 		$this->current_step_index = $this->onboarding_steps[ $this->current_step ]['step_index'];
-		update_option( 'edd_onboarding_latest_step', $this->current_step );
+		update_option( 'edd_onboarding_latest_step', $this->current_step, false );
 	}
 
 	/**
@@ -325,6 +325,7 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function onboarding_wizard_sub_page() {
+		$onboarding_initial_style = ( ! $this->onboarding_started ) ? ' style="display:none;"' : '';
 		?>
 		<?php wp_nonce_field( 'edd_onboarding_wizard' ); ?>
 		<div class="edd-onboarding">
@@ -338,8 +339,76 @@ class OnboardingWizard {
 						<div class="edd-onboarding__loading-status"></div>
 					</div>
 				</div>
-				<div class="edd-onboarding__current-step">
-					<?php $this->load_step_view(); ?>
+
+				<?php $this->get_welcome_screen(); ?>
+				<div class="edd-onboarding__after-welcome-screen"<?php echo $onboarding_initial_style; ?>>
+					<div class="edd-onboarding__current-step">
+						<?php $this->load_step_view(); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Welcome screen.
+	 *
+	 * @since 3.2
+	 */
+	public function get_welcome_screen() {
+		if ( $this->onboarding_started ) {
+			return;
+		}
+
+		$testimonials = array(
+			array(
+				'name'    => 'Joe Casabona',
+				'company' => 'How I Built It',
+				'content' => 'The problem with many e-commerce platforms to sell online courses is they aren’t made with only digital goods in mind. <span class="big">EDD doesn’t have that problem, and as a result their platform is perfectly made for selling my online courses.</span>',
+				'avatar'  => EDD_PLUGIN_URL . '/assets/images/onboarding/joe.jpeg',
+				'stars'   => 5,
+			),
+			array(
+				'name'    => 'Nicolas Martin',
+				'company' => 'Flea Market Insiders',
+				'content' => 'Before EDD\'s Recurring Payments was made available, we were only able to sell one-time subscriptions to our customers. Since implementing recurring payments, we\'ve been able to offer quarterly and yearly subscriptions and subsequently <span class="big">increase our subscriptions revenue by 200%.</span>',
+				'avatar'  => EDD_PLUGIN_URL . '/assets/images/onboarding/nicholas.jpeg',
+				'stars'   => 5,
+			),
+			array(
+				'name'    => 'Bob Dunn',
+				'company' => 'BobWP',
+				'content' => 'If anyone asks me what they should use for downloadable products on their WordPress site, <span class="big">it’s a no-brainer as far as EDD goes.</span>',
+				'avatar'  => EDD_PLUGIN_URL . '/assets/images/onboarding/bob.jpeg',
+				'stars'   => 5,
+			),
+		);
+		?>
+		<div class="edd-onboarding__welcome-screen">
+			<div class="edd-onboarding__welcome-screen-inner">
+				<h1>👋 <?php esc_html_e( 'Welcome, and thanks for choosing us!', 'easy-digital-downloads' ); ?></h1>
+				<p><?php esc_html_e( 'Easy Digital Downloads setup is fast and easy. Click below, and we\'ll walk you through the quick initial process. And don\'t worry. You can go back and change anything you do – at anytime. Nothing\'s permanent (unless you want it to be). So feel free to explore!', 'easy-digital-downloads' ); ?></p>
+				<a href="" class="edd-onboarding__welcome-screen-get-started"><?php esc_html_e( 'GET STARTED', 'easy-digital-downloads' ); ?></a>
+				<h2><?php esc_html_e( 'Creators ❤️ Easy Digital Downloads', 'easy-digital-downloads' ); ?></h2>
+				<div class="edd-onboarding__testimonials-wrapper">
+					<?php foreach ( $testimonials as $testimonial ) : ?>
+						<div class="edd-onboarding__testimonial">
+						<p class="edd-onboarding__testimonial-content"><?php echo wp_kses_post( $testimonial['content'] ); ?></p>
+						<div class="edd-onboarding__testimonial-person">
+							<img class="edd-onboarding__testimonial-avatar" src="<?php echo esc_url( $testimonial['avatar'] ); ?>" />
+							<p class="edd-onboarding__testimonial-info">
+								<span class="testimonial-name"><?php echo esc_html( $testimonial['name'] ); ?></span>
+								<span class="testimonial-company"><?php echo esc_html( $testimonial['company'] ); ?></span>
+								<span class="testimonial-stars">
+									<?php for ( $star = 1; $star <= $testimonial['stars']; $star++ ) : ?>
+										<span class="dashicons dashicons-star-filled"></span>
+									<?php endfor; ?>
+								</span>
+							</p>
+						</div>
+					</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>
@@ -354,15 +423,13 @@ class OnboardingWizard {
 	private function load_step_view() {
 		$current_step_details = $this->get_current_step_details();
 		$pagination           = $this->get_step_pagination();
-
-		$onboarding_initial_style = ( ! $this->onboarding_started ) ? ' style="display:none;"' : '';
 		?>
 		<input type="hidden" class="edd-onboarding_current-previous-step" value="<?php echo esc_attr( $this->get_previous_step() );?>">
 		<input type="hidden" class="edd-onboarding_current-step" value="<?php echo esc_attr( $this->get_current_step() );?>">
 		<input type="hidden" class="edd-onboarding_current-next-step" value="<?php echo esc_attr( $this->get_next_step() );?>">
 
 		<!-- STEPS NAVIGATION -->
-		<div class="edd-onboarding__steps"<?php echo $onboarding_initial_style; ?>>
+		<div class="edd-onboarding__steps">
 			<ul>
 				<?php
 				foreach( $this->onboarding_steps as $step_key => $step ) :
@@ -406,16 +473,16 @@ class OnboardingWizard {
 			<div class="edd-onboarding__single-step-footer">
 				<div>
 					<?php if ( $pagination['previous'] ) : ?>
-						<a href="#" class="edd-onboarding__button-back">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></a>
+						<button class="edd-onboarding__button-back">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></button>
 					<?php endif; ?>
 				</div>
 				<div>
-					<a href="#" class="button button-secondary edd-onboarding__button edd-onboarding__button-supportive edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></a>
-					<a href="#" class="button button-primary edd-onboarding__button edd-onboarding__button-save-step"><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></a>
+					<button class="button button-secondary button-hero edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></button>
+					<button class="button button-primary button-hero edd-onboarding__button-save-step"><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></button>
 				</div>
 			</div>
 		</div>
-		<div class="edd-onboarding__close-and-exit-wrapper"<?php echo $onboarding_initial_style; ?>>
+		<div class="edd-onboarding__close-and-exit-wrapper">
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) ); ?>" class="edd-onboarding__close-and-exit"><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a>
 		</div>
 		<?php
@@ -433,7 +500,7 @@ class OnboardingWizard {
 
 		// @todo - Add correct permissions check!
 
-		update_option( 'edd_onboarding_started', true );
+		update_option( 'edd_onboarding_started', true, false );
 		exit;
 	}
 
@@ -447,9 +514,7 @@ class OnboardingWizard {
 			exit();
 		}
 
-		ob_start();
 		$this->load_step_view();
-		echo ob_get_clean();
 		exit;
 	}
 
@@ -465,7 +530,7 @@ class OnboardingWizard {
 
 		// @todo - Add correct permissions check!
 
-		update_option( 'edd_onboarding_completed', true );
+		update_option( 'edd_onboarding_completed', true, true );
 		update_option( 'edd_tracking_notice', true );
 		exit;
 	}
