@@ -893,6 +893,12 @@ class EDD_CLI extends WP_CLI_Command {
 			? true
 			: false;
 
+		$destroy = (bool) ( $force && isset( $assoc_args['destroy'] ) );
+
+		if ( $destroy ) {
+			WP_CLI::confirm( __( 'This process will remove and recreate discounts in your database. Please make sure you\'ve backed up your EDD database tables. Are you sure you want to delete discounts that have already been migrated and run the migration again?', 'easy-digital-downloads' ) );
+		}
+
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_discounts' );
 
 		if ( ! $force && $upgrade_completed ) {
@@ -908,6 +914,9 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Discounts', $total );
 
 			foreach ( $results as $result ) {
+				if ( $destroy ) {
+					edd_delete_discount( $result->ID );
+				}
 				\EDD\Admin\Upgrades\v3\Data_Migrator::discounts( $result );
 
 				$progress->tick();

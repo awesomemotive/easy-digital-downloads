@@ -681,8 +681,6 @@ function edd_build_order( $order_data = array() ) {
 	}
 
 	if ( $resume_order ) {
-		$payment->date = date( 'Y-m-d G:i:s', current_time( 'timestamp' ) );
-
 		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
 
 		// Since things could have been added/removed since we first crated this...rebuild the cart details.
@@ -811,9 +809,13 @@ function edd_build_order( $order_data = array() ) {
 	/** Insert order **********************************************************/
 
 	// Add order into the edd_orders table.
-	$order_id = true === $resume_order
-		? $payment->ID
-		: edd_add_order( $order_args );
+	if ( true === $resume_order ) {
+		$order_id = $payment->ID;
+		unset( $order_args['date_created'] );
+		edd_update_order( $order_id, $order_args );
+	} else {
+		$order_id = edd_add_order( $order_args );
+	}
 
 	// Attach order to the customer record.
 	$customer->attach_payment( $order_id, false );
