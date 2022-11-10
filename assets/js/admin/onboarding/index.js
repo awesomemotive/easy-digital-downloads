@@ -44,6 +44,7 @@ var EDD_Onboarding = {
 	loading_state: function( state ) {
 		$( '.edd-onboarding__loading-status' ).empty();
 		$( '.edd-onboarding__loading' ).toggle( state );
+		$( '.edd-onboarding' ).toggleClass( 'edd-onboarding__loading-in-progress', state );
 	},
 
 	/**
