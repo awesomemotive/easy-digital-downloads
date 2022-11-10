@@ -42,7 +42,7 @@
 }
 
 .edd-onboarding__loading-in-progress {
-	.edd-onboarding__single-step {
+	.edd-onboarding__single-step, .edd-onboarding__welcome-screen {
 		position: relative;
 		&:before {
 			content: "";
