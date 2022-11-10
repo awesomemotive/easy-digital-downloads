@@ -586,6 +586,7 @@ var EDD_Onboarding = {
 		 */
 		init: function() {
 			EDD_Onboarding.EDD_Onboarding_Products.init_variable_pricing_toggle();
+			$( '#edd_download_files' ).show();
 		},
 
 		/**
