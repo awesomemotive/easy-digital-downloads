@@ -138,6 +138,8 @@ class OnboardingWizard {
 	 * @since 3.2
 	 */
 	public function load_onboarding_wizard() {
+		// Hide EDD header.
+		remove_action( 'admin_notices', 'edd_admin_header', 1 );
 
 		// Set variables.
 		$this->onboarding_started = get_option( 'edd_onboarding_started', false );
