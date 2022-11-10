@@ -354,6 +354,14 @@ function listen_for_ipn() {
 }
 add_action( 'init', __NAMESPACE__ . '\listen_for_ipn' );
 
+/**
+ * Helper method to prefix any calls to edd_debug_log
+ *
+ * @since 3.1.0.3
+ * @uses edd_debug_log
+ *
+ * @param string $message The message to send to the debug logging.
+ */
 function ipn_debug_log( $message ) {
-	ipn_debug_log( 'PayPal Commerce IPN: ' . $message );
+	edd_debug_log( 'PayPal Commerce IPN: ' . $message );
 }
