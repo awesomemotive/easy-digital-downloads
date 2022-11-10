@@ -80,11 +80,11 @@ ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 
 /* Onboarding Submenu Item */
 .edd-onboarding__menu-item {
-	background: #e67e22;
+	background: #dd823b;
 	a {
-		color: white !important;
+		color: $white !important;
 	}
 	a:hover {
-		color: black !important;
+		color: $black !important;
 	}
 }

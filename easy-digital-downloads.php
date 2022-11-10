@@ -187,8 +187,7 @@ final class EDD_Requirements_Check {
 			return;
 		}
 
-		wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-onboarding-wizard' ) );
-		exit;
+		edd_redirect( admin_url( 'edit.php?post_type=download&page=edd-onboarding-wizard' ) );
 	}
 
 	/**
