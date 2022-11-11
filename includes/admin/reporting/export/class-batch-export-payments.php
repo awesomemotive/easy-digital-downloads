@@ -91,12 +91,13 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 		$data = array();
 
 		$args = array(
-			'number'  => 30,
-			'offset'  => ( $this->step * 30 ) - 30,
-			'status'  => $this->status,
-			'order'   => 'ASC',
-			'orderby' => 'date_created',
-			'type'    => 'sale',
+			'number'         => 30,
+			'offset'         => ( $this->step * 30 ) - 30,
+			'status'         => $this->status,
+			'order'          => 'ASC',
+			'orderby'        => 'date_created',
+			'type'           => 'sale',
+			'status__not_in' => array( 'trash' ),
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
