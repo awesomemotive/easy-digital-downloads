@@ -1350,6 +1350,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Language:                 ' . ( ! empty( $locale ) ? $locale : 'en_US' ) . "\n";
 	$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
 	$return .= 'Active Theme:             ' . $theme . "\n";
+	$return .= 'Timezone:                 ' . wp_timezone_string() . "\n";
 	if ( $parent_theme !== $theme ) {
 		$return .= 'Parent Theme:             ' . $parent_theme . "\n";
 	}
