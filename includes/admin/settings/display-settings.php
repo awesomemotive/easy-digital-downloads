@@ -108,9 +108,14 @@ function edd_admin_header() {
 			<div id="edd-header-actions">
 				<button
 					id="edd-notification-button"
-					class="edd-round"
+					class="edd-round edd-hidden"
 					x-data
-					x-init="$store.eddNotifications.numberActiveNotifications = <?php echo esc_js( $numberNotifications ); ?>"
+					x-init="function() {
+						if ( 'undefined' !== typeof $store.eddNotifications ) {
+							$el.classList.remove( 'edd-hidden' );
+							$store.eddNotifications.numberActiveNotifications = <?php echo esc_js( $numberNotifications ); ?>
+						}
+					}"
 					@click="$store.eddNotifications.openPanel()"
 				>
 					<span

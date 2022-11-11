@@ -141,6 +141,10 @@ body.post-type-download #screen-meta {
 	margin-left: 10px;
 	cursor: pointer;
 	transition: background-color .2s ease;
+
+	&.edd-hidden {
+		display: none;
+	}
 }
 
 button.edd-round {
