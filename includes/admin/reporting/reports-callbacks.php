@@ -257,7 +257,7 @@ function edd_overview_refunds_chart() {
 
 		// Loop through each date there were refunds, which we queried from the database.
 		foreach ( $results as $result ) {
-			$date_of_db_value = new DateTime( $result->date, $timezone );
+			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
 
 			// Add any refunds that happened during this hour.
 			if ( $hour_by_hour ) {
