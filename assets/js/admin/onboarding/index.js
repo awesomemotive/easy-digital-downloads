@@ -658,8 +658,10 @@ var EDD_Onboarding = {
 				},
 				success: function( data ) {
 					if ( data.success ) {
+
 						$( '.edd-onboarding__edit-my-product' ).attr( 'href', decodeURI( data.redirect_url.replace(/&amp;/g, "&")  ) );
-						$( '.edd-onboarding__create-product-form, .edd-onboarding__single-step-title, .edd-onboarding__single-step-subtitle, .edd-onboarding__single-step-footer' ).hide();
+						$( '.edd-onboarding__single-step-inner' ).addClass( 'equal' );
+						$( '.edd-onboarding__create-product-form, .edd-onboarding__single-step-title, .edd-onboarding__single-step-subtitle, .edd-onboarding__single-step-footer, .edd-onboarding__close-and-exit-wrapper' ).hide();
 						$( '.edd-onboarding__product-created' ).show();
 
 						EDD_Onboarding.onboarding_completed( false );

@@ -168,6 +168,9 @@
 
 .edd-onboarding__single-step-inner {
 	padding: 70px 140px 40px 140px;
+	&.equal {
+		padding: 70px 140px;
+	}
 }
 .edd-onboarding__steps-indicator {
 	opacity: 0.6;
