@@ -38,8 +38,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'           => __( 'Payment ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
-			'seq_id'       => __( 'Payment Number', 'easy-digital-downloads' ), // sequential payment ID
+			'id'           => __( 'Order ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'       => __( 'Order Number', 'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
 			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
 			'name'         => __( 'Customer Name', 'easy-digital-downloads' ),
