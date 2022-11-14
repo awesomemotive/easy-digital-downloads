@@ -85,7 +85,12 @@ class OnboardingWizard {
 		add_action( 'admin_menu', array( $this, 'add_menu_item_class' ) );
 
 		// Abort if we are not requesting Onboarding Wizard.
-		if ( ! isset( $_REQUEST['page'] ) || 'edd-onboarding-wizard' !== wp_unslash( $_REQUEST['page'] ) ) {
+		if ( ! empty( $_REQUEST['page'] ) && 'edd-onboarding-wizard' !== wp_unslash( $_REQUEST['page'] ) ) {
+			return;
+		}
+
+		// Stripe calls are marked with onboardingWizard request parameter.
+		if ( empty( $_REQUEST['page'] ) && empty( $_REQUEST['onboardingWizard'] )  ){
 			return;
 		}
 
@@ -152,6 +157,9 @@ class OnboardingWizard {
 
 		// Load scripts and styles.
 		$this->enqueue_onboarding_scripts();
+
+		// Override Stripe callback urls.
+		$this->initialize_stripe_callbacks();
 	}
 
 	/**
@@ -172,6 +180,51 @@ class OnboardingWizard {
 		if ( array_key_exists( 'payment_methods', $this->onboarding_steps ) ) {
 			edd_stripe_connect_admin_script( 'download_page_edd-settings' );
 		}
+	}
+
+	/**
+	 * Override Stripe callback urls.
+	 *
+	 * @since 3.2
+	 */
+	public function initialize_stripe_callbacks() {
+		// Filter Stripe connect URL.
+		add_filter( 'edds_stripe_connect_url', function( $url ) {
+			$return_url = add_query_arg(
+				array(
+					'post_type'       => 'download',
+					'redirect_screen' => 'onboarding-wizard',
+				),
+				admin_url( 'edit.php' )
+			);
+
+			$stripe_connect_url = add_query_arg(
+				array(
+					'live_mode'         => (int) ! edd_is_test_mode(),
+					'state'             => str_pad( wp_rand( wp_rand(), PHP_INT_MAX ), 100, wp_rand(), STR_PAD_BOTH ),
+					'customer_site_url' => urlencode( esc_url_raw( $return_url ) ),
+				),
+				'https://easydigitaldownloads.com/?edd_gateway_connect_init=stripe_connect'
+			);
+
+			return $stripe_connect_url;
+		}, 1, 1 );
+
+		// Filter Stripe disconnect URL.
+		add_filter( 'edds_stripe_connect_disconnect_url', function( $url ) {
+			$stripe_connect_disconnect_url = add_query_arg(
+				array(
+					'post_type'              => 'download',
+					'page'                   => 'edd-onboarding-wizard',
+					'current_step'           => 'payment_methods',
+					'edds-stripe-disconnect' => true,
+				),
+				admin_url( 'edit.php' )
+			);
+			$stripe_connect_disconnect_url = wp_nonce_url( $stripe_connect_disconnect_url, 'edds-stripe-connect-disconnect' );
+
+			return $stripe_connect_disconnect_url;
+		}, 1, 1 );
 	}
 
 	/**

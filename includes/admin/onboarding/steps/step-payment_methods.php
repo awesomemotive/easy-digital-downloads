@@ -29,43 +29,6 @@ function initialize() {}
  * @since 3.2
  */
 function step_html() {
-	// Filter Stripe connect nad disconnect URL.
-	add_filter( 'edds_stripe_connect_url', function( $url ) {
-		$return_url = add_query_arg(
-			array(
-				'post_type'       => 'download',
-				'redirect_screen' => 'onboarding-wizard',
-			),
-			admin_url( 'edit.php' )
-		);
-
-		$stripe_connect_url = add_query_arg(
-			array(
-				'live_mode'         => 0,
-				'state'             => str_pad( wp_rand( wp_rand(), PHP_INT_MAX ), 100, wp_rand(), STR_PAD_BOTH ),
-				'customer_site_url' => urlencode( esc_url_raw( $return_url ) ),
-			),
-			'https://easydigitaldownloads.com/?edd_gateway_connect_init=stripe_connect'
-		);
-
-		return $stripe_connect_url;
-	}, 1, 1 );
-
-	add_filter( 'edds_stripe_connect_disconnect_url', function( $url ) {
-		$stripe_connect_disconnect_url = add_query_arg(
-			array(
-				'post_type'             => 'download',
-				'redirect_screen'        => 'onboarding-wizard',
-				'edds-stripe-disconnect' => true,
-			),
-			admin_url( 'edit.php' )
-		);
-
-		$stripe_connect_disconnect_url = wp_nonce_url( $stripe_connect_disconnect_url, 'edds-stripe-connect-disconnect' );
-
-		return $stripe_connect_disconnect_url;
-	}, 1, 1 );
-
 	ob_start();
 	?>
 	<div class="edd-onboarding__stripe-content-holder">
