@@ -441,7 +441,7 @@ class OnboardingWizard {
 		<div class="edd-onboarding__welcome-screen">
 			<div class="edd-onboarding__welcome-screen-inner">
 				<h1>👋 <?php esc_html_e( 'Welcome, and thanks for choosing us!', 'easy-digital-downloads' ); ?></h1>
-				<p><?php esc_html_e( 'Easy Digital Downloads setup is fast and easy. Click below, and we\'ll walk you through the quick initial process. And don\'t worry. You can go back and change anything you do – at anytime. Nothing\'s permanent (unless you want it to be). So feel free to explore!', 'easy-digital-downloads' ); ?></p>
+				<p><?php esc_html_e( 'Easy Digital Downloads setup is fast and easy. We\'ll walk you through the quick initial process. And don\'t worry. You can go back and change anything you do – at anytime. Nothing\'s permanent (unless you want it to be). So feel free to explore!', 'easy-digital-downloads' ); ?></p>
 				<button class="button edd-onboarding__welcome-screen-get-started"><?php esc_html_e( 'Get Started', 'easy-digital-downloads' ); ?></button>
 				<h2><?php esc_html_e( 'Creators ❤️ Easy Digital Downloads', 'easy-digital-downloads' ); ?></h2>
 				<div class="edd-onboarding__testimonials-wrapper">
