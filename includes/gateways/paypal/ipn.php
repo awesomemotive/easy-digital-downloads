@@ -101,7 +101,7 @@ function listen_for_ipn() {
 		$body         = wp_remote_retrieve_body( $api_response );
 
 		if ( is_wp_error( $api_response ) ) {
-			edd_record_gateway_error( __( 'IPN Error', 'edd-recurring' ), sprintf( __( 'Invalid PayPal Express IPN verification response. IPN data: %s', 'edd-recurring' ), json_encode( $api_response ) ) );
+			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
 			ipn_debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
 			status_header( 401 );
 			return; // Something went wrong
@@ -109,7 +109,7 @@ function listen_for_ipn() {
 
 		if ( $body !== 'VERIFIED' ) {
 			status_header( 401 );
-			edd_record_gateway_error( __( 'IPN Error', 'edd-recurring' ), sprintf( __( 'Invalid PayPal Express IPN verification response. IPN data: %s', 'edd-recurring' ), json_encode( $api_response ) ) );
+			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
 			ipn_debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
 			return; // Response not okay
 		}
@@ -187,7 +187,7 @@ function listen_for_ipn() {
 
 						// the currency code is invalid
 						// @TODO: Does this need a parent_id for better error organization?
-						edd_record_gateway_error( __( 'Invalid Currency Code', 'edd-recurring' ), sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'edd-recurring' ), json_encode( $payment_data ) ) );
+						edd_record_gateway_error( __( 'Invalid Currency Code', 'easy-digital-downloads' ), sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'easy-digital-downloads' ), json_encode( $payment_data ) ) );
 
 						ipn_debug_log( 'subscription ' . $subscription->id . ': invalid currency code detected in IPN data: ' . var_export( $posted, true ) );
 
@@ -202,7 +202,7 @@ function listen_for_ipn() {
 						}
 
 						$transaction_link = '<a href="https://www.paypal.com/activity/payment/' . $transaction_id . '" target="_blank">' . $transaction_id . '</a>';
-						$subscription->add_note( sprintf( __( 'Transaction ID %s failed in PayPal', 'edd-recurring' ), $transaction_link ) );
+						$subscription->add_note( sprintf( __( 'Transaction ID %s failed in PayPal', 'easy-digital-downloads' ), $transaction_link ) );
 						$subscription->failing();
 
 						ipn_debug_log( 'subscription ' . $subscription->id . ': payment failed in PayPal' );
@@ -225,7 +225,7 @@ function listen_for_ipn() {
 						$subscription->renew( $payment_id );
 
 						if( 'recurring_payment_outstanding_payment' === $txn_type ) {
-							$subscription->add_note( sprintf( __( 'Outstanding subscription balance of %s collected successfully.', 'edd-recurring' ), $amount ) );
+							$subscription->add_note( sprintf( __( 'Outstanding subscription balance of %s collected successfully.', 'easy-digital-downloads' ), $amount ) );
 						}
 
 					} else {
