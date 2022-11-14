@@ -98,7 +98,12 @@ var EDD_Onboarding = {
 			e.preventDefault();
 
 			const button = $( this );
-			window.form_upload_field = $( this ).parent().prev();
+
+			if ( button.data('input') ) {
+				window.form_upload_field = $( button.data('input') );
+			} else {
+				window.form_upload_field = $( this ).parent().prev();
+			}
 
 			// If the media frame already exists, reopen it.
 			if ( file_frame ) {
