@@ -102,8 +102,7 @@ function step_html() {
 						<div class="edd-onboarding__product-image-wrapper">
 							<input type="hidden" id="product_image_id" name="product_image_id">
 							<input type="text" class="regular-text" id="product_image_url" class="" name="product_image_url" data-attachment-id-field="#product_image_id" />
-							<span>&nbsp;
-							<input type="button" data-uploader-title="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" data-uploader-button-text="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" class="edd_settings_upload_button button-secondary" value="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>"/></span>
+							<button data-uploader-title="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" data-uploader-button-text="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" class="button edd_settings_upload_button button-secondary"><?php esc_html_e( 'Set Image', 'easy-digital-downloads' ); ?></button>
 						</div>
 					</td>
 				</tr>
@@ -118,7 +117,7 @@ function step_html() {
 					</td>
 				</tr>
 				<tr class="edd-onboarding__product-single-price">
-					<th scope="row"><?php echo esc_html( __( 'Product price', 'easy-digital-downloads' ) ); ?></th>
+					<th scope="row"><label for="edd_price"><?php echo esc_html( __( 'Product price', 'easy-digital-downloads' ) ); ?></label></th>
 					<td>
 					<div class="edd-form-group__control">
 						<?php
@@ -147,7 +146,7 @@ function step_html() {
 				</tr>
 
 				<tr class="edd-onboarding__product-variable-price">
-					<th scope="row"><?php echo esc_html( 'Multi-option mode' ); ?></th>
+					<th scope="row"><label for="_edd_price_options_mode"><?php echo esc_html( 'Multi-option mode' ); ?></label></th>
 					<td>
 						<div class="edd-form-group">
 							<div class="edd-form-group__control">
@@ -192,7 +191,7 @@ function step_html() {
 		</table>
 	</form>
 	<div class="edd-onboarding__product-created" style="display: none;">
-		<h1><?php esc_html_e( 'Congratulations!', 'easy-digital-downloads' ); ?></h1>
+		<h1>🎉 <?php esc_html_e( 'Congratulations!', 'easy-digital-downloads' ); ?></h1>
 		<p><?php esc_html_e( 'You\'ve set up your store and your first product has been created.', 'easy-digital-downloads' ); ?></p>
 		<a href="" class="button button-primary button-hero edd-onboarding__edit-my-product"><?php esc_html_e( 'Edit My Product', 'easy-digital-downloads' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) );?>" class="button button-secondary button-hero"><?php esc_html_e( 'Exit to the Dashoard', 'easy-digital-downloads' ); ?></a>
