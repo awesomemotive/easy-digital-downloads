@@ -243,6 +243,12 @@ function edd_run_install( $site_id = false ) {
 	if ( true === $switched ) {
 		restore_current_blog();
 	}
+
+	// Existing stores should have the Onboarding Wizard completed.
+	$db_version = edd_get_db_version();
+	if ( ! empty( $db_version ) ) {
+		update_option( 'edd_onboarding_completed', true );
+	}
 }
 
 /**
