@@ -71,3 +71,32 @@ if ( ! function_exists( 'getallheaders' ) ) :
 		return $headers;
 	}
 endif;
+
+if ( ! function_exists( 'wp_timezone_string' ) ) :
+	/**
+	 * Polyfill for wp_timezone_string() function added in WP 5.3.0
+	 *
+	 * Retrieves the timezone of the site as a string.
+	 *
+	 * @since  3.1.0.3
+	 * @return string PHP timezone name or a ±HH:MM offset.
+	 */
+	function wp_timezone_string() {
+		$timezone_string = get_option( 'timezone_string' );
+
+		if ( $timezone_string ) {
+			return $timezone_string;
+		}
+
+		$offset  = (float) get_option( 'gmt_offset' );
+		$hours   = (int) $offset;
+		$minutes = ( $offset - $hours );
+
+		$sign      = ( $offset < 0 ) ? '-' : '+';
+		$abs_hour  = abs( $hours );
+		$abs_mins  = abs( $minutes * 60 );
+		$tz_offset = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
+
+		return $tz_offset;
+	}
+endif;
