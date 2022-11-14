@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-27T19:31:38+00:00\n"
+"POT-Creation-Date: 2022-11-10T19:05:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: easy-digital-downloads\n"
 
 #. Plugin Name of the plugin
@@ -82,7 +82,7 @@ msgstr ""
 #: includes/admin/adjustments/adjustment-functions.php:43
 #: includes/admin/adjustments/adjustment-functions.php:99
 #: includes/admin/admin-pages.php:88
-#: includes/admin/reporting/reports.php:2233
+#: includes/admin/reporting/reports.php:2234
 #: includes/admin/settings/display-settings.php:40
 #: includes/admin/upgrades/upgrade-functions.php:1431
 #: includes/post-types.php:129
@@ -253,9 +253,11 @@ msgstr ""
 #: includes/gateways/functions.php:320
 #: includes/gateways/manual.php:33
 #: includes/gateways/paypal-standard.php:170
-#: includes/gateways/paypal/admin/connect.php:455
-#: includes/gateways/paypal/admin/connect.php:459
-#: includes/gateways/paypal/admin/connect.php:597
+#: includes/gateways/paypal/admin/connect.php:518
+#: includes/gateways/paypal/admin/connect.php:522
+#: includes/gateways/paypal/admin/connect.php:559
+#: includes/gateways/paypal/admin/connect.php:563
+#: includes/gateways/paypal/admin/connect.php:705
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 #: includes/gateways/stripe/includes/payment-actions.php:1387
 #: includes/process-download.php:296
@@ -282,7 +284,7 @@ msgstr ""
 
 #: includes/admin/admin-pages.php:87
 #: includes/admin/customers/customers.php:77
-#: includes/admin/reporting/reports.php:2540
+#: includes/admin/reporting/reports.php:2541
 #: includes/admin/settings/display-settings.php:43
 msgid "Customers"
 msgstr ""
@@ -626,15 +628,18 @@ msgstr ""
 #: includes/admin/promos/class-promo-handler.php:128
 #: includes/admin/tools/class-edd-tools-recount-all-stats.php:78
 #: includes/admin/tools/class-edd-tools-recount-download-stats.php:117
-#: includes/gateways/paypal/admin/connect.php:106
-#: includes/gateways/paypal/admin/connect.php:182
-#: includes/gateways/paypal/admin/connect.php:292
-#: includes/gateways/paypal/admin/connect.php:455
-#: includes/gateways/paypal/admin/connect.php:459
-#: includes/gateways/paypal/admin/connect.php:511
-#: includes/gateways/paypal/admin/connect.php:545
-#: includes/gateways/paypal/admin/connect.php:568
-#: includes/gateways/paypal/admin/connect.php:597
+#: includes/gateways/paypal/admin/connect.php:103
+#: includes/gateways/paypal/admin/connect.php:163
+#: includes/gateways/paypal/admin/connect.php:218
+#: includes/gateways/paypal/admin/connect.php:328
+#: includes/gateways/paypal/admin/connect.php:518
+#: includes/gateways/paypal/admin/connect.php:522
+#: includes/gateways/paypal/admin/connect.php:559
+#: includes/gateways/paypal/admin/connect.php:563
+#: includes/gateways/paypal/admin/connect.php:619
+#: includes/gateways/paypal/admin/connect.php:653
+#: includes/gateways/paypal/admin/connect.php:676
+#: includes/gateways/paypal/admin/connect.php:705
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -3980,9 +3985,9 @@ msgid "Average Order Value"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:303
-#: includes/admin/reporting/reports.php:2560
-#: includes/admin/reporting/reports.php:2633
-#: includes/admin/reporting/reports.php:2739
+#: includes/admin/reporting/reports.php:2561
+#: includes/admin/reporting/reports.php:2634
+#: includes/admin/reporting/reports.php:2740
 #: includes/emails/email-summary/edd-email-summary-template.php:279
 msgid "New Customers"
 msgstr ""
@@ -4119,52 +4124,52 @@ msgstr ""
 msgid "Top Five Most Downloaded Products"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2245
+#: includes/admin/reporting/reports.php:2246
 msgid "Number of Discounts Used"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2262
+#: includes/admin/reporting/reports.php:2263
 msgid "Discount Ratio"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2280
+#: includes/admin/reporting/reports.php:2281
 msgid "Customer Savings"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2301
+#: includes/admin/reporting/reports.php:2302
 msgid "Average Discount Amount"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2319
+#: includes/admin/reporting/reports.php:2320
 msgid "Most Popular Discount"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2344
+#: includes/admin/reporting/reports.php:2345
 msgid "Discount Usage Count"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2363
+#: includes/admin/reporting/reports.php:2364
 msgid "Top Five Discounts"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2376
-#: includes/admin/reporting/reports.php:2483
+#: includes/admin/reporting/reports.php:2377
+#: includes/admin/reporting/reports.php:2484
 msgid "Discount Usage"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2578
+#: includes/admin/reporting/reports.php:2579
 msgid "Average Revenue per Customer"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2593
+#: includes/admin/reporting/reports.php:2594
 msgid "Average Orders per Customer"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2609
+#: includes/admin/reporting/reports.php:2610
 msgid "Top Five Customers &mdash; All Time"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2621
+#: includes/admin/reporting/reports.php:2622
 msgid "Most Valuable Customers"
 msgstr ""
 
@@ -7463,7 +7468,7 @@ msgid "Log In"
 msgstr ""
 
 #: includes/blocks/views/forms/login.php:44
-#: includes/payments/actions.php:578
+#: includes/payments/actions.php:412
 #: templates/shortcode-login.php:33
 #: includes/blocks/build/login/index.js:1
 msgid "Lost Password?"
@@ -9820,6 +9825,8 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:602
 #: includes/gateways/paypal-standard.php:675
 #: includes/gateways/paypal-standard.php:684
+#: includes/gateways/paypal/ipn.php:104
+#: includes/gateways/paypal/ipn.php:112
 msgid "IPN Error"
 msgstr ""
 
@@ -10107,120 +10114,132 @@ msgid "PayPal refund failed: %s"
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:32
-#: includes/gateways/paypal/admin/connect.php:316
+#: includes/gateways/paypal/admin/connect.php:357
 msgid "sandbox"
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:32
-#: includes/gateways/paypal/admin/connect.php:316
+#: includes/gateways/paypal/admin/connect.php:357
 msgid "live"
 msgstr ""
 
 #. Translators: %1$s opening <strong> tag; %2$s closing </strong> tag
-#: includes/gateways/paypal/admin/connect.php:52
+#: includes/gateways/paypal/admin/connect.php:51
 msgid "%1$sConnection failure:%2$s Please ensure browser popups are enabled then click the button below to connect again. If you continue to experience this error, please contact support."
 msgstr ""
 
 #. Translators: %s - the store mode, either `sandbox` or `live`
-#: includes/gateways/paypal/admin/connect.php:65
+#: includes/gateways/paypal/admin/connect.php:64
 msgid "Connect with PayPal in %s mode"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:69
+#: includes/gateways/paypal/admin/connect.php:68
 msgid "Sign up for PayPal"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:80
+#: includes/gateways/paypal/admin/connect.php:79
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:342
 msgid "Retrieving account information..."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:85
-msgid "Disconnect from PayPal"
-msgstr ""
-
 #. Translators: %d - HTTP response code; %s - Response from the API
-#: includes/gateways/paypal/admin/connect.php:133
+#: includes/gateways/paypal/admin/connect.php:130
 msgid "Unexpected response code: %d. Error: %s"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:140
+#: includes/gateways/paypal/admin/connect.php:137
 msgid "An unexpected error occurred."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:186
+#: includes/gateways/paypal/admin/connect.php:178
+msgid "Failure reconnecting to PayPal. Please try again"
+msgstr ""
+
+#: includes/gateways/paypal/admin/connect.php:184
+msgid "Your account has been successfully reconnected, but an error occurred while creating a webhook."
+msgstr ""
+
+#: includes/gateways/paypal/admin/connect.php:222
 msgid "Missing PayPal authentication information. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:193
+#: includes/gateways/paypal/admin/connect.php:229
 msgid "Missing nonce. Please refresh the page and try again."
 msgstr ""
 
 #. Translators: %d - HTTP response code
-#: includes/gateways/paypal/admin/connect.php:225
+#: includes/gateways/paypal/admin/connect.php:261
 msgid "Unexpected response from PayPal while generating token. Response code: %d. Please try again."
 msgstr ""
 
 #. Translators: %d - HTTP response code
-#: includes/gateways/paypal/admin/connect.php:252
+#: includes/gateways/paypal/admin/connect.php:288
 msgid "Unexpected response from PayPal. Response code: %d. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:260
+#: includes/gateways/paypal/admin/connect.php:296
 msgid "Successfully connected."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:265
+#: includes/gateways/paypal/admin/connect.php:301
 msgid "Your account has been successfully connected, but an error occurred while creating a webhook."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:299
+#: includes/gateways/paypal/admin/connect.php:335
 msgid "Re-Check Payment Status"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:300
+#: includes/gateways/paypal/admin/connect.php:336
 msgid "Sync Webhook"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:309
+#: includes/gateways/paypal/admin/connect.php:340
+msgid "Disconnect webhooks from PayPal"
+msgstr ""
+
+#: includes/gateways/paypal/admin/connect.php:341
+msgid "Delete connection with PayPal"
+msgstr ""
+
+#: includes/gateways/paypal/admin/connect.php:350
 msgid "API:"
 msgstr ""
 
 #. Translators: %s - the connected mode, either `sandbox` or `live`
-#: includes/gateways/paypal/admin/connect.php:319
+#: includes/gateways/paypal/admin/connect.php:360
 msgid "Your PayPal account is successfully connected in %s mode."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:334
+#: includes/gateways/paypal/admin/connect.php:375
 msgid "Payment Status:"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:338
+#: includes/gateways/paypal/admin/connect.php:379
 msgid "You need to address the following issues before you can start receiving payments:"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:346
+#: includes/gateways/paypal/admin/connect.php:388
 msgid "Ready to accept payments."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:368
+#: includes/gateways/paypal/admin/connect.php:410
 msgid "Webhook:"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:375
-msgid "Create Webhook"
+#: includes/gateways/paypal/admin/connect.php:418
+msgid "Create Webhooks"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:379
+#: includes/gateways/paypal/admin/connect.php:423
 msgid "Webhook successfully configured for the following events:"
 msgstr ""
 
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag; %3$s: opening line item/status/strong tags; %4$s closing strong tag; %5$s: closing list item tag
-#: includes/gateways/paypal/admin/connect.php:404
+#: includes/gateways/paypal/admin/connect.php:448
 msgid "%3$sGateway Status: %4$s PayPal is not currently active. %1$sEnable PayPal%2$s in the general gateway settings to start using it.%5$s"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:518
+#: includes/gateways/paypal/admin/connect.php:626
 msgid "No merchant ID saved. Please reconnect to PayPal."
 msgstr ""
 
@@ -10423,6 +10442,42 @@ msgstr ""
 msgid "Response Code: %d; Message: %s"
 msgstr ""
 
+#: includes/gateways/paypal/ipn.php:104
+#: includes/gateways/paypal/ipn.php:112
+msgid "Invalid PayPal Express IPN verification response. IPN data: %s"
+msgstr ""
+
+#: includes/gateways/paypal/ipn.php:190
+msgid "Invalid Currency Code"
+msgstr ""
+
+#: includes/gateways/paypal/ipn.php:190
+msgid "The currency code in an IPN request did not match the site currency code. Payment data: %s"
+msgstr ""
+
+#: includes/gateways/paypal/ipn.php:205
+msgid "Transaction ID %s failed in PayPal"
+msgstr ""
+
+#: includes/gateways/paypal/ipn.php:228
+msgid "Outstanding subscription balance of %s collected successfully."
+msgstr ""
+
+#: includes/gateways/paypal/ipn.php:321
+#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:53
+msgid "Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s"
+msgstr ""
+
+#: includes/gateways/paypal/ipn.php:332
+#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:64
+msgid "Partial refund processed in PayPal."
+msgstr ""
+
+#: includes/gateways/paypal/ipn.php:340
+#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:72
+msgid "Full refund processed in PayPal."
+msgstr ""
+
 #. Translators: %d - ID of the refund; %s - error message from PayPal
 #: includes/gateways/paypal/refunds.php:107
 msgid "Failure when processing PayPal refund #%d: %s"
@@ -10469,18 +10524,6 @@ msgstr ""
 msgid "PayPal transaction denied."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:53
-msgid "Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s"
-msgstr ""
-
-#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:64
-msgid "Partial refund processed in PayPal."
-msgstr ""
-
-#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:72
-msgid "Full refund processed in PayPal."
-msgstr ""
-
 #: includes/gateways/paypal/webhooks/functions.php:86
 msgid "An SSL certificate is required to create a PayPal webhook."
 msgstr ""
@@ -10503,17 +10546,21 @@ msgstr ""
 msgid "Invalid response code %d while syncing webhook. Response: %s"
 msgstr ""
 
-#. Translators: %d - HTTP response code.
 #: includes/gateways/paypal/webhooks/functions.php:226
+msgid "Your store is currently not receiving webhook notifications, create the webhooks to reconnect."
+msgstr ""
+
+#. Translators: %d - HTTP response code.
+#: includes/gateways/paypal/webhooks/functions.php:231
 msgid "Invalid response code %d while retrieving webhook details."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:232
+#: includes/gateways/paypal/webhooks/functions.php:238
 msgid "Unexpected response from PayPal when retrieving webhook details."
 msgstr ""
 
 #. Translators: %d - HTTP response code.
-#: includes/gateways/paypal/webhooks/functions.php:271
+#: includes/gateways/paypal/webhooks/functions.php:274
 msgid "Invalid response code %d while deleting webhook."
 msgstr ""
 
@@ -11587,21 +11634,21 @@ msgstr ""
 msgid "After payment actions processed."
 msgstr ""
 
-#: includes/payments/actions.php:493
-#: includes/payments/actions.php:554
+#: includes/payments/actions.php:327
+#: includes/payments/actions.php:388
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:497
+#: includes/payments/actions.php:331
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:575
-#: includes/payments/actions.php:609
+#: includes/payments/actions.php:409
+#: includes/payments/actions.php:443
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:577
+#: includes/payments/actions.php:411
 msgid "Lost Password"
 msgstr ""
 
