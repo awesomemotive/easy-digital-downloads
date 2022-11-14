@@ -172,7 +172,7 @@ function step_html() {
 									</div>
 
 									<div class="edd-add-repeatable-row">
-										<button class="button-secondary edd_add_repeatable"><?php echo esc_html( __( 'Add New Price', 'easy-digital-downloads' ) ); ?></button>
+										<button class="button button-secondary edd_add_repeatable"><?php echo esc_html( __( 'Add New Price', 'easy-digital-downloads' ) ); ?></button>
 									</div>
 								</div>
 							</div>
