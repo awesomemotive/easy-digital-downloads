@@ -566,7 +566,7 @@ var EDD_Onboarding = {
 						// Activation can happen very fast, so we want a fake delay for the UI.
 						setTimeout( function() {
 							resolve();
-						}, 1200 );
+						}, 1500 );
 					} );
 				})
 			}
