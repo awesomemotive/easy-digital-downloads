@@ -347,6 +347,7 @@ var EDD_Onboarding = {
 						action: 'edds_stripe_connect_account_info',
 						accountId: stripe_connect_account.data( 'account-id' ),
 						nonce: stripe_connect_account.data( 'nonce' ),
+						onboardingWizard: true,
 					},
 					success: function( response ) {
 						// Account is sucessfully connected.
