@@ -142,7 +142,7 @@ function edd_admin_add_discount( $data = array() ) {
 		: 'discount_add_failed';
 
 	if ( ! empty( $created ) ) {
-		// Now re-prime the transient for the has_acitve_discounts check
+		// Now re-prime the transient for the has_active_discounts check.
 		edd_has_active_discounts( 50, true );
 	}
 
@@ -288,7 +288,7 @@ function edd_admin_edit_discount( $data = array() ) {
 		: 'discount_not_changed';
 
 	if ( ! empty( $updated ) ) {
-		// Now re-prime the transient for the has_acitve_discounts check
+		// Now re-prime the transient for the has_active_discounts check.
 		edd_has_active_discounts( 50, true );
 	}
 
@@ -331,7 +331,7 @@ function edd_admin_delete_discount( $data = array() ) {
 		: 'discount_deleted_failed';
 
 	if ( ! empty( $deleted ) ) {
-		// Now re-prime the transient for the has_acitve_discounts check
+		// Now re-prime the transient for the has_active_discounts check.
 		edd_has_active_discounts( 50, true );
 	}
 
@@ -369,7 +369,7 @@ function edd_activate_discount( $data = array() ) {
 		: 'discount_activation_failed';
 
 	if ( ! empty( $activated ) ) {
-		// Now re-prime the transient for the has_acitve_discounts check
+		// Now re-prime the transient for the has_active_discounts check.
 		edd_has_active_discounts( 50, true );
 	}
 
@@ -407,7 +407,7 @@ function edd_deactivate_discount( $data = array() ) {
 		: 'discount_deactivation_failed';
 
 	if ( ! empty( $deactivated ) ) {
-		// Now re-prime the transient for the has_acitve_discounts check
+		// Now re-prime the transient for the has_active_discounts check.
 		edd_has_active_discounts( 50, true );
 	}
 
