@@ -386,25 +386,27 @@ function edd_has_active_discounts( $sample_size = 10, $refresh = false ) {
 	if ( false === $refresh ) {
 		$cached_result = get_transient( 'edd_has_active_discounts' );
 
-		if ( false !== $cached_result  ) {
+		if ( false !== $cached_result ) {
 			return boolval( $cached_result );
 		}
 	}
 
+	$has_active_discounts = false;
+
 	// Query for active discounts.
-	$discounts = edd_get_discounts( array(
-		'number' => $sample_size,
-		'status' => 'active'
-	) );
+	$discounts = edd_get_discounts(
+		array(
+			'number' => $sample_size,
+			'status' => 'active',
+		)
+	);
 
 	// Bail if none.
-	if ( empty( $discounts ) ) {
-		$has_active_discounts = false;
-	} else {
+	if ( ! empty( $discounts ) ) {
 		// Check each discount for active status, applying filters, etc...
 		foreach ( $discounts as $discount ) {
 			/** @var $discount EDD_Discount */
-			if ( $discount->is_active( false, true ) ) {
+			if ( $discount->is_active( $refresh, true ) ) {
 				$has_active_discounts = true;
 				break;
 			}
