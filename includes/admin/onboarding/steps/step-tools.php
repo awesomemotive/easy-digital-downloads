@@ -41,6 +41,7 @@ function ajax_save_telemetry_settings() {
 		edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
 	}
 
+	update_option( 'edd_telemetry_email', filter_var( $_REQUEST['telemetry_email'], FILTER_VALIDATE_EMAIL ) );
 	update_option( 'edd_tracking_notice', true );
 
 	exit;
@@ -52,6 +53,7 @@ function ajax_save_telemetry_settings() {
  * @since 3.2
  */
 function step_html() {
+	$telemetry_email   = get_option( 'edd_telemetry_email' );
 	$extension_manager = new \EDD\Admin\Extensions\Extension_Manager();
 
 	$available_plugins = array(
@@ -165,7 +167,7 @@ function step_html() {
 			</div>
 
 			<div class="edd-onboarding__get-suggestions-section_input">
-				<input type="email" id="edd-onboarding__telemery-email">
+				<input type="email" name="edd_telemetry_email" value="<?php echo esc_attr( $telemetry_email ); ?>" id="edd-onboarding__telemery-email">
 			</div>
 
 			<label class="edd-toggle">
