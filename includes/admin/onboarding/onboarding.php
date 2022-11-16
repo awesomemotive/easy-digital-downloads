@@ -208,7 +208,7 @@ class OnboardingWizard {
 			);
 
 			return $stripe_connect_url;
-		}, 1, 1 );
+		}, 15, 1 );
 
 		// Filter Stripe disconnect URL.
 		add_filter( 'edds_stripe_connect_disconnect_url', function( $url ) {
@@ -224,7 +224,7 @@ class OnboardingWizard {
 			$stripe_connect_disconnect_url = wp_nonce_url( $stripe_connect_disconnect_url, 'edds-stripe-connect-disconnect' );
 
 			return $stripe_connect_disconnect_url;
-		}, 1, 1 );
+		}, 15, 1 );
 	}
 
 	/**

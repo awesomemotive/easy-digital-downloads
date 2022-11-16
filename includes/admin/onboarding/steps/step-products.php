@@ -76,10 +76,6 @@ function create_product() {
  */
 function step_html() {
 	$currency_position  = edd_get_option( 'currency_position', 'before' );
-	add_filter( 'edd_price_options_heading', function( $heading ) {
-		return '<label for="edd_variable_pricing" class="edd-onboarding__pricing-options-label">' . esc_html( __( 'Pricing options', 'easy-digital-downloads' ) ) . '</label>';
-	}, 10, 1 );
-
 	ob_start();
 	?>
 	<form method="post" class="edd-onboarding__create-product-form">
@@ -91,13 +87,13 @@ function step_html() {
 					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation for basic product details."></span></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="product_title"><?php echo esc_html_e( 'Product name', 'easy-digital-downloads' ); ?></label></th>
+					<th scope="row"><label for="product_title"><?php echo esc_html_e( 'Product Name', 'easy-digital-downloads' ); ?></label></th>
 					<td>
 						<input type="text" class="regular-text" id="product_title" name="product_title" required>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="product_image_url"><?php echo esc_html_e( 'Product image', 'easy-digital-downloads' ); ?></label></th>
+					<th scope="row"><label for="product_image_url"><?php echo esc_html_e( 'Product Image', 'easy-digital-downloads' ); ?></label></th>
 					<td>
 						<div class="edd-onboarding__product-image-wrapper">
 							<input type="hidden" id="product_image_id" name="product_image_id">
@@ -117,7 +113,7 @@ function step_html() {
 					</td>
 				</tr>
 				<tr class="edd-onboarding__product-single-price">
-					<th scope="row"><label for="edd_price"><?php echo esc_html_e( 'Product price', 'easy-digital-downloads' ); ?></label></th>
+					<th scope="row"><label for="edd_price"><?php echo esc_html_e( 'Product Price', 'easy-digital-downloads' ); ?></label></th>
 					<td>
 					<div class="edd-form-group__control">
 						<?php
@@ -146,7 +142,7 @@ function step_html() {
 				</tr>
 
 				<tr class="edd-onboarding__product-variable-price">
-					<th scope="row"><label for="_edd_price_options_mode"><?php echo esc_html( 'Multi-option mode' ); ?></label></th>
+					<th scope="row"><label for="_edd_price_options_mode"><?php echo esc_html_e( 'Multi-option Mode', 'easy-digital-downloads' ); ?></label></th>
 					<td>
 						<div class="edd-form-group">
 							<div class="edd-form-group__control">
