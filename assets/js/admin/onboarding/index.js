@@ -253,7 +253,6 @@ var EDD_Onboarding = {
 				setup_tooltips( $( '.edd-help-tip' ) );
 
 				// Reload email tags.
-
 				document.dispatchEvent( new Event( 'DOMContentLoaded' ) );
 
 			},
