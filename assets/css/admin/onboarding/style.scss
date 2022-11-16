@@ -1,4 +1,3 @@
-
 .edd-onboarding {
 	margin-top: 80px;
 }
@@ -16,6 +15,7 @@
 }
 
 .edd-onboarding__loading {
+	z-index: 99;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -23,8 +23,8 @@
 	height: 100%;
 	padding-left: 80px;
 	padding-top: 8px;
-	z-index: 99;
 	display: flex;
+	gap: 15px;
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
@@ -35,7 +35,6 @@
 	.edd-onboarding__loading-status {
 		display: block;
 		text-align: center;
-		margin-top: 15px;
 		color: black;
 		flex-basis: 100%;
 	}
@@ -136,7 +135,7 @@
 			   }
 		   }
 			&.completed-step a {
-				color: #24c261;
+				color: $wp-green-20;
 				span {
 					width: 25px;
 					height: 25px;

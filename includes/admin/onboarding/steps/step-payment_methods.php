@@ -33,7 +33,7 @@ function step_html() {
 	?>
 	<div class="edd-onboarding__stripe-content-holder">
 		<div class="edd-onboarding__stripe-content-logo">
-			<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/onboarding/stripe-logo.svg' ); ?>">
+			<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/onboarding/stripe-logo.svg' ); ?>" alt="">
 
 			<span><?php echo esc_html( __( 'The world’s most powerful and easy to use payment gateway.', 'easy-digital-downloads' ) ); ?></span>
 		</div>
