@@ -87,17 +87,17 @@ function step_html() {
 		<table class="form-table" role="presentation">
 			<tbody>
 				<tr>
-					<th scope="row"><h3><?php echo esc_html( __( 'Product details', 'easy-digital-downloads' ) ); ?></h3></th>
+					<th scope="row"><h3><?php echo esc_html_e( 'Product details', 'easy-digital-downloads' ); ?></h3></th>
 					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation for basic product details."></span></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="product_title"><?php echo esc_html( __( 'Product name', 'easy-digital-downloads' ) ); ?></label></th>
+					<th scope="row"><label for="product_title"><?php echo esc_html_e( 'Product name', 'easy-digital-downloads' ); ?></label></th>
 					<td>
 						<input type="text" class="regular-text" id="product_title" name="product_title" required>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="product_image_url"><?php echo esc_html( __( 'Product image', 'easy-digital-downloads' ) ); ?></label></th>
+					<th scope="row"><label for="product_image_url"><?php echo esc_html_e( 'Product image', 'easy-digital-downloads' ); ?></label></th>
 					<td>
 						<div class="edd-onboarding__product-image-wrapper">
 							<input type="hidden" id="product_image_id" name="product_image_id">
@@ -111,13 +111,13 @@ function step_html() {
 					<td>
 						<input style="display:none;" type="checkbox" class="edd-form-group__input" name="_variable_pricing" id="edd_variable_pricing" value="1"/>
 						<div class="edd-onbaording__pricing-option-pill">
-							<button class="left-option active" data-variable-pricing="false"><?php echo esc_html( __( 'Single price', 'easy-digital-downloads' ) ); ?></button>
-							<button class="right-option" data-variable-pricing="true"><?php echo esc_html( __( 'Variable price', 'easy-digital-downloads' ) ); ?></button>
+							<button class="left-option active" data-variable-pricing="false"><?php echo esc_html_e( 'Single price', 'easy-digital-downloads' ); ?></button>
+							<button class="right-option" data-variable-pricing="true"><?php echo esc_html_e( 'Variable price', 'easy-digital-downloads' ); ?></button>
 						</div>
 					</td>
 				</tr>
 				<tr class="edd-onboarding__product-single-price">
-					<th scope="row"><label for="edd_price"><?php echo esc_html( __( 'Product price', 'easy-digital-downloads' ) ); ?></label></th>
+					<th scope="row"><label for="edd_price"><?php echo esc_html_e( 'Product price', 'easy-digital-downloads' ); ?></label></th>
 					<td>
 					<div class="edd-form-group__control">
 						<?php
@@ -171,7 +171,7 @@ function step_html() {
 									</div>
 
 									<div class="edd-add-repeatable-row">
-										<button class="button button-secondary edd_add_repeatable"><?php echo esc_html( __( 'Add New Price', 'easy-digital-downloads' ) ); ?></button>
+										<button class="button button-secondary edd_add_repeatable"><?php echo esc_html_e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
 									</div>
 								</div>
 							</div>
@@ -179,7 +179,7 @@ function step_html() {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label><h3><?php echo esc_html( __( 'Add your first file', 'easy-digital-downloads' ) ); ?></h3></label></th>
+					<th scope="row"><label><h3><?php echo esc_html_e( 'Add your first file', 'easy-digital-downloads' ); ?></h3></label></th>
 					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Explanation for files creation.', 'easy-digital-downloads' ) ); ?>"></span></td>
 				</tr>
 				<tr class="edd-onboarding__product-files-row">
@@ -193,7 +193,7 @@ function step_html() {
 	<div class="edd-onboarding__product-created" style="display: none;">
 		<h1>🎉 <?php esc_html_e( 'Congratulations!', 'easy-digital-downloads' ); ?></h1>
 		<p><?php esc_html_e( 'You\'ve set up your store and your first product has been created.', 'easy-digital-downloads' ); ?></p>
-		<a href="" class="button button-primary button-hero edd-onboarding__edit-my-product"><?php esc_html_e( 'Edit My Product', 'easy-digital-downloads' ); ?></a>
+		<a href=<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) );?>"" class="button button-primary button-hero edd-onboarding__edit-my-product"><?php esc_html_e( 'Edit My Product', 'easy-digital-downloads' ); ?></a>
 		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) );?>" class="button button-secondary button-hero"><?php esc_html_e( 'Exit to the Dashoard', 'easy-digital-downloads' ); ?></a>
 	</div>
 	<?php

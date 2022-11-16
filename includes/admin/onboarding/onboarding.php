@@ -119,11 +119,11 @@ class OnboardingWizard {
 	public function add_menu_item_class() {
 		global $submenu;
 
-		if ( empty( $submenu[ 'edit.php?post_type=download' ] ) ) {
+		if ( empty( $submenu['edit.php?post_type=download'] ) ) {
 			return;
 		}
 
-		$edd_submenu     = $submenu[ 'edit.php?post_type=download' ];
+		$edd_submenu     = $submenu['edit.php?post_type=download'];
 		$onboarding_menu = __( 'Setup', 'easy-digital-downloads' );
 
 		foreach ( $edd_submenu as $key => $value ) {
@@ -133,7 +133,7 @@ class OnboardingWizard {
 			}
 		}
 
-		$submenu[ 'edit.php?post_type=download' ] = $edd_submenu;
+		$submenu['edit.php?post_type=download'] = $edd_submenu;
 	}
 
 	/**
@@ -526,17 +526,17 @@ class OnboardingWizard {
 			<div class="edd-onboarding__single-step-footer">
 				<div>
 					<?php if ( $pagination['previous'] ) : ?>
-						<button class="edd-onboarding__button-back">← <?php echo esc_html( __( 'Go Back', 'easy-digital-downloads' ) ); ?></button>
+						<button class="edd-onboarding__button-back">← <?php echo esc_html_e( 'Go Back', 'easy-digital-downloads' ); ?></button>
 					<?php endif; ?>
 				</div>
 				<div>
-					<button class="button button-secondary button-hero edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Skip this step', 'easy-digital-downloads' ) ); ?></button>
-					<button class="button button-primary button-hero edd-onboarding__button-save-step"><?php echo esc_html( __( 'Save & Continue', 'easy-digital-downloads' ) ); ?></button>
+					<button class="button button-secondary button-hero edd-onboarding__button-skip-step"><?php echo esc_html_e( 'Skip this step', 'easy-digital-downloads' ); ?></button>
+					<button class="button button-primary button-hero edd-onboarding__button-save-step"><?php echo esc_html_e( 'Save & Continue', 'easy-digital-downloads' ); ?></button>
 				</div>
 			</div>
 		</div>
 		<div class="edd-onboarding__close-and-exit-wrapper">
-			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) ); ?>" class="edd-onboarding__close-and-exit"><?php echo esc_html( __( 'Close and Exit Without Saving', 'easy-digital-downloads' ) ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) ); ?>" class="edd-onboarding__close-and-exit"><?php echo esc_html_e( 'Close and Exit Without Saving', 'easy-digital-downloads' ); ?></a>
 		</div>
 		<?php
 	}
