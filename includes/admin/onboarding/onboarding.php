@@ -180,6 +180,8 @@ class OnboardingWizard {
 		if ( array_key_exists( 'payment_methods', $this->onboarding_steps ) ) {
 			edd_stripe_connect_admin_script( 'download_page_edd-settings' );
 		}
+
+		edd_email_tags_inserter_enqueue_scripts();
 	}
 
 	/**
