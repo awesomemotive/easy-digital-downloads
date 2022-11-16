@@ -383,12 +383,12 @@ class OnboardingWizard {
 		<?php wp_nonce_field( 'edd_onboarding_wizard' ); ?>
 		<div class="edd-onboarding">
 			<div class="edd-onboarding__logo">
-				<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>">
+				<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/logo-edd-dark.svg' ); ?>" alt="">
 			</div>
 			<div class="edd-onboarding__wrapper">
 				<div class="edd-onboarding__loading" style="display: none;">
 					<div class="edd-onboarding__loading-content-wrapper">
-						<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/oval-ajax-loader.svg' ); ?>" alt="">
+						<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/oval-ajax-loader.svg' ); ?>" alt="">
 						<div class="edd-onboarding__loading-status"></div>
 					</div>
 				</div>
@@ -419,21 +419,21 @@ class OnboardingWizard {
 				'name'    => 'Joe Casabona',
 				'company' => 'How I Built It',
 				'content' => 'The problem with many e-commerce platforms to sell online courses is they aren’t made with only digital goods in mind. <span class="big">EDD doesn’t have that problem, and as a result their platform is perfectly made for selling my online courses.</span>',
-				'avatar'  => EDD_PLUGIN_URL . '/assets/images/onboarding/joe.jpeg',
+				'avatar'  => EDD_PLUGIN_URL . 'assets/images/onboarding/joe.jpeg',
 				'stars'   => 5,
 			),
 			array(
 				'name'    => 'Nicolas Martin',
 				'company' => 'Flea Market Insiders',
 				'content' => 'Before EDD\'s Recurring Payments was made available, we were only able to sell one-time subscriptions to our customers. Since implementing recurring payments, we\'ve been able to offer quarterly and yearly subscriptions and subsequently <span class="big">increase our subscriptions revenue by 200%.</span>',
-				'avatar'  => EDD_PLUGIN_URL . '/assets/images/onboarding/nicholas.jpeg',
+				'avatar'  => EDD_PLUGIN_URL . 'assets/images/onboarding/nicholas.jpeg',
 				'stars'   => 5,
 			),
 			array(
 				'name'    => 'Bob Dunn',
 				'company' => 'BobWP',
 				'content' => 'If anyone asks me what they should use for downloadable products on their WordPress site, <span class="big">it’s a no-brainer as far as EDD goes.</span>',
-				'avatar'  => EDD_PLUGIN_URL . '/assets/images/onboarding/bob.jpeg',
+				'avatar'  => EDD_PLUGIN_URL . 'assets/images/onboarding/bob.jpeg',
 				'stars'   => 5,
 			),
 		);
