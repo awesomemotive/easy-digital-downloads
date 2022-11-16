@@ -52,19 +52,19 @@ function step_html() {
 			<tbody>
 				<?php echo Helpers\settings_html( Helpers\extract_settings_fields( $sections ) ); ?>
 				<tr>
-					<th scope="row"><?php echo esc_html( __( 'Sale Notifications', 'easy-digital-downloads' ) ); ?></th>
+					<th scope="row"><?php echo esc_html_e( 'Sale Notifications', 'easy-digital-downloads' ); ?></th>
 					<td>
 						<input type="hidden" name="edd_settings[disable_admin_notices]" value="1">
 						<label class="edd-toggle">
 							<input type="checkbox" name="edd_settings[disable_admin_notices]" id="edd_settings[disable_admin_notices]" value="0" <?php checked( (bool) edd_get_option( 'disable_admin_notices', false ), false, true ); ?>>
-							<br> <?php echo esc_html( __( 'Receive sales notification emails.', 'easy-digital-downloads' ) ); ?>
+							<br> <?php echo esc_html_e( 'Receive sales notification emails.', 'easy-digital-downloads' ); ?>
 						</label>
 					</td>
 				</tr>
 				<?php echo Helpers\settings_html( Helpers\extract_settings_fields( $sections_purchase_receipt ) ); ?>
 				<tr>
 					<th scope="row">
-						<label for="edd_settings[purchase_receipt]"><?php echo esc_html( __( 'Purchase Receipt Email', 'easy-digital-downloads' ) ); ?></label>
+						<label for="edd_settings[purchase_receipt]"><?php echo esc_html_e( 'Purchase Receipt Email', 'easy-digital-downloads' ); ?></label>
 					</th>
 				</tr>
 

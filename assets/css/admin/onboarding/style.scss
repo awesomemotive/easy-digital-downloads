@@ -1,3 +1,14 @@
+@import "~@wordpress/base-styles/breakpoints";
+@import "~@wordpress/base-styles/colors";
+@import "~@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/mixins";
+@import "../../variables/colors";
+@import "../../variables/mixins";
+
+:root {
+	@include edd-admin-colors();
+}
+
 .edd-onboarding {
 	margin-top: 80px;
 }
@@ -50,7 +61,7 @@
 			top: 0;
 			width: 100%;
 			height: 100%;
-			background: rgba(255, 255, 255, 0.65);
+			background: rgba(255, 255, 255, 0.85);
 			z-index: 95;
 		}
 	}
@@ -85,7 +96,7 @@
 				font-size: 12px;
 				text-decoration: none;
 				span {
-					color: white;
+					color: $white;
 					width: 25px;
 					height: 25px;
 					line-height: 25px;
@@ -135,13 +146,12 @@
 			   }
 		   }
 			&.completed-step a {
-				color: $wp-green-20;
 				span {
 					width: 25px;
 					height: 25px;
 					line-height: 25px;
 					font-size: 14px;
-					background: #72B281;
+					background: $wp-green-30;
 					box-shadow: none;
 			   }
 		   }
@@ -149,7 +159,7 @@
    }
 }
 .edd-onboarding__steps__name {
-	color: #8a8e92;
+	color: $wp-gray-50;
 	display: block;
 	font-size: 11px;
 }
@@ -272,15 +282,16 @@
 }
 
 .edd-onboarding__welcome-screen-get-started {
-	color: white;
-	background: #24c261;
+	color: $white !important;
+	background: $wp-green-30 !important;
+	border-color: $wp-green-30 !important;
 	padding: 10px 30px;
 	display: inline-block;
 	text-decoration: none;
 	margin-top: 10px;
 	&:hover {
-		color: white;
-		background: #27da6c;
+		color: $white !important;
+		background: $wp-green-50 !important;
 	}
 }
 
@@ -311,14 +322,6 @@
 	   }
 		&.disabled {
 			background: rgba(#72b281, 0.04);
-			.edd-onboarding__plugins-details {
-				h3 {
-					//color: #72b281;
-			   }
-				p {
-					//color: #72b281;
-			   }
-		   }
 			&:hover {
 				background: rgba(#72b281, 0.04);
 				.edd-onboarding__plugins-details {
@@ -332,13 +335,13 @@
 		   }
 	   }
 		&:hover {
-			background: rgba(#0c5d95, 0.02);
+			background: rgba(var( --wp-admin-theme-color ), 0.02);
 			.edd-onboarding__plugins-details {
 				h3 {
-					color: #0c5d95;
+					color: var( --wp-admin-theme-color );
 			   }
 				p {
-					color: #0c5d95;
+					color: var( --wp-admin-theme-color );
 			   }
 		   }
 	   }
@@ -351,14 +354,14 @@
 	justify-content: space-between;
 	align-items: center;
 	.edd-onboarding__button-back {
-		color: #8a8e92;
+		color: $wp-gray-40;
 		text-decoration: none;
 		transition: all 0.2s ease-in-out;
 		background: none;
 		border: none;
 		cursor: pointer;
 		&:hover {
-			color: #0c5d95;
+			color: var( --wp-admin-theme-color );
 	   }
    }
    .edd-onboarding__button-skip-step {
@@ -420,18 +423,14 @@ input[id='edd_settings[email_logo]'], #product_image_url {
 	vertical-align: baseline;
 }
 /* EDD ONBOARDING - Stripe section style */
-.edd-onboarding__stripe-features-divider {
-	display: flex;
-	justify-content: space-between;
-	.stripe-features-listing {
-		flex: 1;
-   }
-}
+
 .edd-onboarding__stripe-features-listing {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	list-style-type:none;
 	margin-left: 0;
 	padding-left: 0;
-	margin-top: 15px;
+	margin-top: 20px;
 	li {
 		list-style-type:none;
 		position: relative;
@@ -535,13 +534,13 @@ input[id='edd_settings[email_logo]'], #product_image_url {
 	background: #eaeaec;
 }
 .checkbox-control input:checked ~ .checkbox-control__indicator {
-	background: #0c5d95;
+	background: var( --wp-admin-theme-color );
 }
 .checkbox-control:hover input:not([disabled]):checked ~ .checkbox-control__indicator, .checkbox-control input:checked:focus ~ .checkbox-control__indicator {
-	background: #0c5d95;
+	background: var( --wp-admin-theme-color );
 }
 .checkbox-control input:disabled ~ .checkbox-control__indicator {
-	background: #72b281;
+	background: $wp-green-30;
 	pointer-events: none;
 }
 .checkbox-control__indicator:after {
@@ -581,10 +580,10 @@ input[id='edd_settings[email_logo]'], #product_image_url {
 	background: #dedfe0;
 }
 .checkbox-control.small-checkbox input:checked ~ .checkbox-control__indicator {
-	background: #0c5d95;
+	background: var( --wp-admin-theme-color );
 }
 .checkbox-control.small-checkbox:hover input:not([disabled]):checked ~ .checkbox-control__indicator, .checkbox-control.small-checkbox input:checked:focus ~ .checkbox-control__indicator {
-	background: #0c5d95;
+	background: var( --wp-admin-theme-color );
 }
 .checkbox-control.small-checkbox input:disabled ~ .checkbox-control__indicator {
 	background: #72b281;
