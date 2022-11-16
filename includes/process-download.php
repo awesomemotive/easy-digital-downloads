@@ -906,7 +906,13 @@ function edd_process_signed_download_url( $args ) {
 		'price_id'   => $args['price_id'],
 	) );
 
-	return $args;
+	/**
+	 * Filters whether or not the customer has access to the file 
+	 *
+	 * @since  3.1.0.3
+	 * @param  array $args Arguments provided to download a file
+	 */
+	return apply_filters( 'edd_process_signed_download_url', $args );
 }
 
 /**
