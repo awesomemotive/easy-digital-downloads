@@ -261,7 +261,7 @@ class OnboardingWizard {
 			'products' => array(
 				'step_title'    => __( 'Products', 'easy-digital-downloads' ),
 				'step_headline' => __( 'What are you going to sell?', 'easy-digital-downloads' ),
-				'step_intro'    => __( 'Let’s get started with your first product.', 'easy-digital-downloads' ),
+				'step_intro'    => __( 'Let\'s get started with your first product.', 'easy-digital-downloads' ),
 				'step_handler'  => 'Products',
 			),
 		);
