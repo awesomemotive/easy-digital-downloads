@@ -251,6 +251,11 @@ var EDD_Onboarding = {
 
 				// Load tooltips.
 				setup_tooltips( $( '.edd-help-tip' ) );
+
+				// Reload email tags.
+
+				document.dispatchEvent( new Event( 'DOMContentLoaded' ) );
+
 			},
 		} ).fail( function( response ) {
 			if ( window.console && window.console.log ) {

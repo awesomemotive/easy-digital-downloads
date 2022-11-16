@@ -70,7 +70,7 @@ function step_html() {
 
 				<tr>
 					<td colspan="2">
-						<?php do_action( 'edd_settings_tab_top_emails_purchase_receipts' ); ?>
+						<?php edd_email_tags_inserter_thickbox_content(); ?>
 						<div id="edd-onboarding__insert-marker-button" style="display: none;">
 							<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
 								<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
