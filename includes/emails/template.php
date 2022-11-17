@@ -234,13 +234,25 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
  *
  * @since 1.5
  * @author Sunny Ratilal
+ * @param array $data The request data.
  */
-function edd_render_receipt_in_browser() {
-	if ( ! isset( $_GET['payment_key'] ) ) {
+function edd_render_receipt_in_browser( $data ) {
+	if ( ! isset( $data['payment_key'] ) ) {
 		wp_die( __( 'Missing purchase key.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 	}
 
-	$key = urlencode( $_GET['payment_key'] );
+	if ( ! empty( $_POST['edd_action'] ) && ! empty( $_POST['edd_user_login'] ) && ! empty( $_POST['edd_login_nonce'] ) ) {
+		return;
+	}
+
+	$key = urlencode( $data['payment_key'] );
+	$url = add_query_arg(
+		array(
+			'payment_key' => $key,
+			'edd_action'  => 'view_receipt',
+		),
+		home_url()
+	);
 
 	ob_start();
 
@@ -262,7 +274,7 @@ function edd_render_receipt_in_browser() {
 <body class="<?php echo apply_filters('edd_receipt_page_body_class', 'edd_receipt_page' ); ?>">
 	<div id="edd_receipt_wrapper">
 		<?php do_action( 'edd_render_receipt_in_browser_before' ); ?>
-		<?php echo do_shortcode('[edd_receipt payment_key='. $key .']'); ?>
+		<?php echo do_shortcode( '[edd_receipt payment_key='. $key . ' redirect=' . esc_url_raw( $url ) . ']' ); ?>
 		<?php do_action( 'edd_render_receipt_in_browser_after' ); ?>
 	</div>
 <?php wp_footer(); ?>
