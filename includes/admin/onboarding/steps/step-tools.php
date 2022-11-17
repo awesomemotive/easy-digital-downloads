@@ -191,8 +191,7 @@ function step_html() {
 				);
 			?>
 		</p>
-		<?php echo esc_html( __( 'Your Email Address:', 'easy-digital-downloads' ) ); ?>
-		<a href="#" class="button button-primary edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Continue', 'easy-digital-downloads' ) ); ?></a>
+		<button class="button button-primary button-hero edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Continue', 'easy-digital-downloads' ) ); ?></button>
 	</div>
 	<?php
 

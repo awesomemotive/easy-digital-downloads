@@ -28,7 +28,7 @@ const EDD_Settings = {
 
 				$( document.body ).on( 'click', edd_settings_upload_button, function( e ) {
 					e.preventDefault();
-					window.formfield = $( this ).parent().prev();
+					window.formfield = $( this.data('input') );
 					window.tbframe_interval = setInterval( function() {
 						jQuery( '#TB_iframeContent' ).contents().find( '.savesend .button' ).val( edd_vars.use_this_file ).end().find( '#insert-gallery, .wp-post-thumbnail' ).hide();
 					}, 2000 );
@@ -60,7 +60,10 @@ const EDD_Settings = {
 
 				const button = $( this );
 
-				window.formfield = $( this ).parent().prev();
+				window.formfield = $( button.data('input') );
+
+				console.log( button.data('input') )
+				console.log( $( button.data('input') ) )
 
 				// If the media frame already exists, reopen it.
 				if ( file_frame ) {

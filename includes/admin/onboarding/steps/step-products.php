@@ -97,8 +97,10 @@ function step_html() {
 					<td>
 						<div class="edd-onboarding__product-image-wrapper">
 							<input type="hidden" id="product_image_id" name="product_image_id">
-							<input type="text" class="regular-text" id="product_image_url" class="" name="product_image_url" data-attachment-id-field="#product_image_id" />
-							<button data-input="#product_image_url" data-uploader-title="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" data-uploader-button-text="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" class="button edd_settings_upload_button button-secondary"><?php esc_html_e( 'Set Image', 'easy-digital-downloads' ); ?></button>
+							<div class="edd-upload-button-wrapper">
+								<input type="text" class="regular-text" id="product_image_url" class="" name="product_image_url" data-attachment-id-field="#product_image_id" />
+								<button data-input="#product_image_url" data-uploader-title="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" data-uploader-button-text="<?php echo esc_attr( __( 'Set image', 'easy-digital-downloads' ) ); ?>" class="button edd_settings_upload_button button-secondary"><?php esc_html_e( 'Set Image', 'easy-digital-downloads' ); ?></button>
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -106,7 +108,7 @@ function step_html() {
 					<th scope="row"><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options', 'easy-digital-downloads' ) ); ?></th>
 					<td>
 						<input style="display:none;" type="checkbox" class="edd-form-group__input" name="_variable_pricing" id="edd_variable_pricing" value="1"/>
-						<div class="edd-onbaording__pricing-option-pill">
+						<div class="edd-onboarding__pricing-option-pill">
 							<button class="left-option active" data-variable-pricing="false"><?php echo esc_html_e( 'Single price', 'easy-digital-downloads' ); ?></button>
 							<button class="right-option" data-variable-pricing="true"><?php echo esc_html_e( 'Variable price', 'easy-digital-downloads' ); ?></button>
 						</div>
