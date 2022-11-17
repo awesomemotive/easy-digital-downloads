@@ -161,13 +161,13 @@ function step_html() {
 			<h3>Get helpful suggestions from Easy Digital Downloads on how to supercharge your EDD powered store, so you can improve conversions and earn more money.</h3>
 
 			<div class="edd-onboarding__get-suggestions-section_label">
-				<label for="get-suggestion-email">
+				<label for="edd-onboarding__telemetry-email">
 					<?php echo esc_html( __( 'Your Email Address:', 'easy-digital-downloads' ) ); ?>
 				</label>
 			</div>
 
 			<div class="edd-onboarding__get-suggestions-section_input">
-				<input type="email" name="edd_telemetry_email" value="<?php echo esc_attr( $telemetry_email ); ?>" id="edd-onboarding__telemery-email">
+				<input type="email" name="edd_telemetry_email" value="<?php echo esc_attr( $telemetry_email ); ?>" id="edd-onboarding__telemetry-email">
 			</div>
 
 			<label class="edd-toggle">
@@ -186,7 +186,7 @@ function step_html() {
 			<?php
 				/* Translators: list of plugins that were not able to be installed or activated */
 				wp_kses(
-					printf( __( "Don't worry, everything will still work without them! You can install %s later by going to the Plugins > Add New section of your admin", 'easy-digital-downloads' ), '<span class="edd-onboarding__failed-plugins-text"></span>' ),
+					printf( __( 'Don\'t worry, everything will still work without them! You can install %s later by going to Plugins > Add New.', 'easy-digital-downloads' ), '<span class="edd-onboarding__failed-plugins-text"></span>' ),
 					array( 'span' )
 				);
 			?>
