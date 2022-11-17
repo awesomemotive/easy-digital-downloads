@@ -99,11 +99,7 @@ var EDD_Onboarding = {
 
 			const button = $( this );
 
-			if ( button.data('input') ) {
-				window.form_upload_field = $( button.data('input') );
-			} else {
-				window.form_upload_field = $( this ).parent().prev();
-			}
+			window.form_upload_field = $( button.data('input') );
 
 			// If the media frame already exists, reopen it.
 			if ( file_frame ) {
@@ -611,7 +607,7 @@ var EDD_Onboarding = {
 		 *
 		 */
 		 init_variable_pricing_toggle: function() {
-			$( document.body ).on( 'click', '.edd-onbaording__pricing-option-pill button', function( e ) {
+			$( document.body ).on( 'click', '.edd-onboarding__pricing-option-pill button', function( e ) {
 				e.preventDefault();
 				let is_variable_pricing = $( this ).data( 'variable-pricing' );
 
@@ -626,8 +622,8 @@ var EDD_Onboarding = {
 				let is_variable_pricing = this.checked;
 
 				// Active pill state.
-				$( '.edd-onbaording__pricing-option-pill .active' ).removeClass( 'active' );
-				$( '.edd-onbaording__pricing-option-pill button[data-variable-pricing="' + is_variable_pricing + '"]' ).addClass( 'active' );
+				$( '.edd-onboarding__pricing-option-pill .active' ).removeClass( 'active' );
+				$( '.edd-onboarding__pricing-option-pill button[data-variable-pricing="' + is_variable_pricing + '"]' ).addClass( 'active' );
 
 				$( '.edd-onboarding__product-single-price' ).show();
 				$( '.edd-onboarding__product-variable-price' ).hide();

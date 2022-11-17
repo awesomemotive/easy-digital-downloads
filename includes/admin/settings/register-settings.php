@@ -2634,8 +2634,10 @@ function edd_upload_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size  = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html  = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<span>&nbsp;<input type="button" data-uploader-title="' . esc_html__( 'Attach File', 'easy-digital-downloads' ) . '" data-uploader-button-text="' . esc_html__( 'Attach', 'easy-digital-downloads' ) . '" class="edd_settings_upload_button button-secondary" value="' . __( 'Attach File', 'easy-digital-downloads' ) . '"/></span>';
+	$html  = '<div class="edd-upload-button-wrapper">';
+	$html .= '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<button data-input="#edd_settings\\[' . edd_sanitize_key( $args['id'] ) . '\\]" data-uploader-title="' . esc_html__( 'Attach File', 'easy-digital-downloads' ) . '" data-uploader-button-text="' . esc_html__( 'Attach', 'easy-digital-downloads' ) . '" class="edd_settings_upload_button button button-secondary">' . __( 'Attach File', 'easy-digital-downloads' ) . '</button>';
+	$html .= '</div>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
