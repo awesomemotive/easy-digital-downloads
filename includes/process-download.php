@@ -402,7 +402,7 @@ function edd_is_local_file( $requested_file ) {
 	 * Allow filtering the edd_is_local_file detection.
 	 *
 	 * EDD tries to identify if a file is hosted locally, so that we can use the proper file delivery method.
-	 * By default we check the site_url, and then the home_url (in the event that those settins are different).
+	 * By default we check the site_url, and then the home_url (in the event that those settings are different).
 	 *
 	 * @since 3.1.0.3
 	 *
