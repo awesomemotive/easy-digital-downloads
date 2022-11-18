@@ -41,7 +41,6 @@ function ajax_save_telemetry_settings() {
 		edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
 	}
 
-	update_option( 'edd_telemetry_email', filter_var( $_REQUEST['telemetry_email'], FILTER_VALIDATE_EMAIL ) );
 	update_option( 'edd_tracking_notice', true );
 
 	exit;
