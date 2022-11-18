@@ -806,10 +806,9 @@ function edd_register_downloads_report( $reports ) {
 						$earnings = array();
 
 						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$timezone        = new DateTimeZone( edd_get_timezone_id() );
-							$timestamp       = $dates['start']->copy()->format( 'U' );
-							$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart = $chart_dates['start'];
 
 							$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 							$sales[ $timestamp ][1] = 0;
@@ -869,13 +868,10 @@ function edd_register_downloads_report( $reports ) {
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-								$dates['start']->addHour( 1 );
 								$chart_dates['start']->addHour( 1 );
 							} elseif ( $day_by_day ) {
-								$dates['start']->addDays( 1 );
 								$chart_dates['start']->addDays( 1 );
 							} else {
-								$dates['start']->addMonth( 1 );
 								$chart_dates['start']->addMonth( 1 );
 							}
 						}
@@ -1570,10 +1566,9 @@ function edd_register_payment_gateways_report( $reports ) {
 						 *
 						 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
 						 */
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$timezone        = new DateTimeZone( edd_get_timezone_id() );
-							$timestamp       = $dates['start']->copy()->format( 'U' );
-							$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart = $chart_dates['start'];
 
 							$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 							$sales[ $timestamp ][1] = 0;
@@ -1611,13 +1606,10 @@ function edd_register_payment_gateways_report( $reports ) {
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-								$dates['start']->addHour( 1 );
 								$chart_dates['start']->addHour( 1 );
 							} elseif ( $day_by_day ) {
-								$dates['start']->addDays( 1 );
 								$chart_dates['start']->addDays( 1 );
 							} else {
-								$dates['start']->addMonth( 1 );
 								$chart_dates['start']->addMonth( 1 );
 							}
 						}
@@ -2067,12 +2059,9 @@ function edd_register_file_downloads_report( $reports ) {
 						$file_downloads = array();
 
 						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$utc_timezone    = new DateTimeZone( 'UTC' );
-							$timezone        = new DateTimeZone( edd_get_timezone_id() );
-
-							$timestamp       = $dates['start']->copy()->format( 'U' );
-							$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp       = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart   = $chart_dates['start'];
 
 							$file_downloads[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 							$file_downloads[ $timestamp ][1] = 0;
@@ -2103,13 +2092,10 @@ function edd_register_file_downloads_report( $reports ) {
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-								$dates['start']->addHour( 1 );
 								$chart_dates['start']->addHour( 1 );
 							} elseif ( $day_by_day ) {
-								$dates['start']->addDays( 1 );
 								$chart_dates['start']->addDays( 1 );
 							} else {
-								$dates['start']->addMonth( 1 );
 								$chart_dates['start']->addMonth( 1 );
 							}
 						}
@@ -2405,10 +2391,9 @@ function edd_register_discounts_report( $reports ) {
 							$discount_usage = array();
 
 							// Initialise all arrays with timestamps and set values to 0.
-							while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timezone        = new DateTimeZone( edd_get_timezone_id() );
-								$timestamp       = $dates['start']->copy()->format( 'U' );
-								$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+								$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+								$date_on_chart = $chart_dates['start'];
 
 								$discount_usage[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 								$discount_usage[ $timestamp ][1] = 0;
@@ -2440,13 +2425,10 @@ function edd_register_discounts_report( $reports ) {
 
 								// Move the chart along to the next hour/day/month to get ready for the next loop.
 								if ( $hour_by_hour ) {
-									$dates['start']->addHour( 1 );
 									$chart_dates['start']->addHour( 1 );
 								} elseif ( $day_by_day ) {
-									$dates['start']->addDays( 1 );
 									$chart_dates['start']->addDays( 1 );
 								} else {
-									$dates['start']->addMonth( 1 );
 									$chart_dates['start']->addMonth( 1 );
 								}
 							}
@@ -2644,10 +2626,9 @@ function edd_register_customer_report( $reports ) {
 						$customers = array();
 
 						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$timezone      = new DateTimeZone( edd_get_timezone_id() );
-							$timestamp     = $dates['start']->copy()->format( 'U' );
-							$date_on_chart = new DateTime( $chart_dates['start'], $timezone );
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart = $chart_dates['start'];
 
 							$customers[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 							$customers[ $timestamp ][1] = 0;
@@ -2678,13 +2659,10 @@ function edd_register_customer_report( $reports ) {
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-								$dates['start']->addHour( 1 );
 								$chart_dates['start']->addHour( 1 );
 							} elseif ( $day_by_day ) {
-								$dates['start']->addDays( 1 );
 								$chart_dates['start']->addDays( 1 );
 							} else {
-								$dates['start']->addMonth( 1 );
 								$chart_dates['start']->addMonth( 1 );
 							}
 						}
