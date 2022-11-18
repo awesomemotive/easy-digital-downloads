@@ -163,6 +163,13 @@ function listen_for_ipn() {
 
 			$subscription = new \EDD_Subscription( $posted['recurring_payment_id'], true );
 
+
+			// Bail if this is the very first payment.
+			if ( date( 'Y-n-d', strtotime( $subscription->created ) ) == date( 'Y-n-d', strtotime( $posted['payment_date'] ) ) ) {
+				ipn_debug_log( 'IPN for subscription ' . $subscription->id . ': processing stopped because this is the initial payment.' );
+				return;
+			}
+
 			$parent_payment = edd_get_payment( $subscription->parent_payment_id );
 			if ( 'paypal_commerce' !== $parent_payment->gateway ) {
 				ipn_debug_log( 'This is not for PayPal Commerce - bailing' );
@@ -181,12 +188,6 @@ function listen_for_ipn() {
 
 				case 'recurring_payment':
 				case 'recurring_payment_outstanding_payment':
-					// Bail if this is the very first payment.
-					if ( date( 'Y-n-d', strtotime( $subscription->created ) ) == date( 'Y-n-d', strtotime( $posted['payment_date'] ) ) ) {
-						ipn_debug_log( 'IPN for subscription ' . $subscription->id . ': processing stopped because this is the initial payment.' );
-						return;
-					}
-
 					$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $transaction_id );
 					if ( ! empty( $transaction_exists ) ) {
 						ipn_debug_log( 'Transaction ID ' . $transaction_id . ' arlready processed.' );
