@@ -304,8 +304,13 @@ function listen_for_ipn() {
 			$order_id = edd_get_order_id_from_transaction_id( $posted['parent_txn_id'] );
 		}
 
+		/**
+		 * This section of the IPN should only affect processing refunds or returns on orders made previous, not new
+		 * orders, so we can just look for the parent_txn_id, and if it's not here, bail as this is a new order that
+		 * should be handeled with webhooks.
+		 */
 		if ( empty( $order_id ) ) {
-			ipn_debug_log( 'No parent transaction found for ' . $posted['parent_txn_id'] );
+			ipn_debug_log( 'IPN Track ID ' . $posted['ipn_track_id'] . ' does not need to be processed as it does not belong to an existing record.' );
 			return;
 		}
 
