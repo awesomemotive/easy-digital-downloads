@@ -108,7 +108,7 @@ function listen_for_ipn() {
 
 		if ( is_wp_error( $api_response ) ) {
 			/* Translators: %s - IPN Verification response */
-			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
 			ipn_debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
 			status_header( 401 );
 			return; // Something went wrong.
@@ -116,7 +116,7 @@ function listen_for_ipn() {
 
 		if ( 'VERIFIED' !== $body ) {
 			/* Translators: %s - IPN Verification response */
-			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
 			ipn_debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
 			status_header( 401 );
 			return; // Response not okay.
