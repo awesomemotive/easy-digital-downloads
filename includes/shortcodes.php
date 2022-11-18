@@ -673,7 +673,6 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'payment_key'    => false,
 		'payment_method' => true,
 		'payment_id'     => true,
-		'redirect'       => edd_get_current_page_url(),
 	), $atts, 'edd_receipt' );
 
 	$session = edd_get_purchase_session();
@@ -699,7 +698,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
 	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order->id ) ) {
 		global $edd_login_redirect;
-		$edd_login_redirect = $edd_receipt_args['redirect'];
+		$edd_login_redirect = edd_get_receipt_page_uri( $order->id );
 
 		ob_start();
 
