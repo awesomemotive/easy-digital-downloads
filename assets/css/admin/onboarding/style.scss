@@ -20,10 +20,16 @@
    }
 }
 .edd-onboarding__wrapper {
-	max-width: 850px;
+	max-width: 1000px;
 	margin: 0 auto;
 	position: relative;
 }
+
+@media only screen and (max-width: $break-wide) {
+	.edd-onboarding__wrapper {
+		max-width: 850px;
+	}
+  }
 
 .edd-onboarding__loading {
 	z-index: 99;
@@ -380,10 +386,11 @@
 }
 
 /* EDD ONBOARDING - Form style */
-.edd-onboarding input:not([type="checkbox"]) {
+.edd-onboarding input:not([type="checkbox"]):not([type="radio"]) {
 	border: 1px solid #dedfe0 !important;
 	border-radius: 2px !important;
 	padding: 2px 8px !important;
+	width: 100%;
 }
 
 .edd-onboarding .edd-check-wrapper {
@@ -405,9 +412,7 @@
 	cursor: pointer;
 	vertical-align: middle;
 }
-input[id='edd_settings[email_logo]'], #product_image_url {
-	width: 18.7em;
-}
+
 .edd-onboarding .form-table th {
 	vertical-align: middle;
 }
@@ -630,6 +635,7 @@ input[id='edd_settings[email_logo]'], #product_image_url {
 }
 
 /* EDD ONBOARDING - Create product */
+
 .edd-onboarding__product-pricing-row td,
 .edd-onboarding__product-files-row td {
 	padding: 0px;

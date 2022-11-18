@@ -77,7 +77,7 @@ class OnboardingWizard {
 		}
 
 		// If Onboarding was already completed, abort.
-		if ( get_option( 'edd_onboarding_completed', false ) ) {
+		if ( get_option( 'edd_onboarding_completed', '' ) !== '' ) {
 			return;
 		}
 
@@ -100,6 +100,7 @@ class OnboardingWizard {
 		add_action( 'wp_ajax_edd_onboarding_started', array( $this, 'ajax_onboarding_started' ) );
 		add_action( 'wp_ajax_edd_onboarding_load_step', array( $this, 'ajax_onboarding_load_step' ) );
 		add_action( 'wp_ajax_edd_onboarding_completed', array( $this, 'ajax_onboarding_completed' ) );
+		add_action( 'wp_ajax_edd_onboarding_skipped', array( $this, 'ajax_onboarding_skipped' ) );
 	}
 
 	/**
@@ -263,7 +264,7 @@ class OnboardingWizard {
 			'products' => array(
 				'step_title'    => __( 'Products', 'easy-digital-downloads' ),
 				'step_headline' => __( 'What are you going to sell?', 'easy-digital-downloads' ),
-				'step_intro'    => __( 'Let\'s get started with your first product.', 'easy-digital-downloads' ),
+				'step_intro'    => __( 'Let\'s get started creating your first awesome product.', 'easy-digital-downloads' ),
 				'step_handler'  => 'Products',
 			),
 		);
@@ -271,6 +272,19 @@ class OnboardingWizard {
 		// If Stripe classes are not available, remove payment methods step.
 		if ( ! defined( 'EDD_STRIPE_VERSION' ) ) {
 			unset( $this->onboarding_steps['payment_methods'] );
+		}
+
+		// Determine products step intro.
+		$products = new \WP_Query(
+			array(
+				'post_type' => 'download',
+				'posts_per_page' => 1,
+				'no_found_rows' => true,
+				'fields' => 'ids',
+			)
+		);
+		if ( ! empty( $products->posts ) ) {
+			$this->onboarding_steps['products']['step_intro'] = 'Let\'s get started with your next great product.';
 		}
 
 		// Set step index in the array and load ajax handlers.
@@ -574,6 +588,16 @@ class OnboardingWizard {
 	}
 
 	/**
+	 * Clean onboarding options.
+	 *
+	 * @since 3.2
+	 */
+	public function clean_onboarding_options() {
+		delete_option( 'edd_onboarding_started' );
+		delete_option( 'edd_onboarding_latest_step' );
+	}
+
+	/**
 	 * Ajax callback for completing the Onboarding.
 	 *
 	 * @since 3.2
@@ -584,13 +608,28 @@ class OnboardingWizard {
 		}
 
 		// @todo - Add correct permissions check!
-
 		update_option( 'edd_onboarding_completed', current_time( 'Y-m-d H:i:s' ) );
 		update_option( 'edd_tracking_notice', true );
 
-		delete_option( 'edd_onboarding_started' );
-		delete_option( 'edd_onboarding_latest_step' );
+		$this->clean_onboarding_options();
 
+		exit;
+	}
+
+	/**
+	 * Ajax callback for skipping the Onboarding.
+	 *
+	 * @since 3.2
+	 */
+	public function ajax_onboarding_skipped() {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd_onboarding_wizard' ) ) {
+			exit();
+		}
+
+		// @todo - Add correct permissions check!
+		update_option( 'edd_onboarding_completed', 0 );
+
+		$this->clean_onboarding_options();
 		exit;
 	}
 }

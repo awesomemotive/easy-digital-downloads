@@ -158,22 +158,15 @@ function step_html() {
 		</div>
 
 		<div class="edd-onboarding__get-suggestions-section">
-			<h3>Get helpful suggestions from Easy Digital Downloads on how to supercharge your EDD powered store, so you can improve conversions and earn more money.</h3>
-
-			<div class="edd-onboarding__get-suggestions-section_label">
-				<label for="edd-onboarding__telemetry-email">
-					<?php echo esc_html( __( 'Your Email Address:', 'easy-digital-downloads' ) ); ?>
-				</label>
-			</div>
-
-			<div class="edd-onboarding__get-suggestions-section_input">
-				<input type="email" name="edd_telemetry_email" value="<?php echo esc_attr( $telemetry_email ); ?>" id="edd-onboarding__telemetry-email">
-			</div>
+			<!-- This is temporary! -->
+			<h3 style="display: flex; align-items: center; justify-content: center;">
+				<?php echo esc_html( __( 'Help make EDD better for everyone', 'easy-digital-downloads' ) ); ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Explanation for the telemetry.', 'easy-digital-downloads' ) ); ?>"></span></input>
+			</h3>
 
 			<label class="edd-toggle">
-				<input type="checkbox" id="edd-onboarding__telemery-toggle" name="telemetry" value="1" checked> <?php echo esc_html( __( 'Help make EDD better for everyone', 'easy-digital-downloads' ) ); ?>
+				<input type="checkbox" id="edd-onboarding__telemery-toggle" name="telemetry" value="1" checked>
 			</label>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Explanation for the telemetry.', 'easy-digital-downloads' ) ); ?>"></span></input>
 		</div>
 
 		<div class="edd-onboarding__selected-plugins">

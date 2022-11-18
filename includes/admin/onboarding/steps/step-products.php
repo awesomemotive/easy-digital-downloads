@@ -84,7 +84,7 @@ function step_html() {
 			<tbody>
 				<tr>
 					<th scope="row"><h3><?php echo esc_html_e( 'Product details', 'easy-digital-downloads' ); ?></h3></th>
-					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="Explanation for basic product details."></span></td>
+					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'We\'ll get started with some basic information. Don\'t worry, you can add more details. When your finished here, the product will be saved as a draft so you can finish up later.', 'easy-digital-downloads' ) ); ?>"></span></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="product_title"><?php echo esc_html_e( 'Product Name', 'easy-digital-downloads' ); ?></label></th>
@@ -105,7 +105,7 @@ function step_html() {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options', 'easy-digital-downloads' ) ); ?></th>
+					<th scope="row"><label for="edd_variable_pricing"><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options', 'easy-digital-downloads' ) ); ?></label></th>
 					<td>
 						<input style="display:none;" type="checkbox" class="edd-form-group__input" name="_variable_pricing" id="edd_variable_pricing" value="1"/>
 						<div class="edd-onboarding__pricing-option-pill">
@@ -178,7 +178,7 @@ function step_html() {
 				</tr>
 				<tr>
 					<th scope="row"><label><h3><?php echo esc_html_e( 'Add your first file', 'easy-digital-downloads' ); ?></h3></label></th>
-					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Explanation for files creation.', 'easy-digital-downloads' ) ); ?>"></span></td>
+					<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'We\'ll get started with some basic information. Don\'t worry, you can add more details. When your finished here, the product will be saved as a draft so you can finish up later.', 'easy-digital-downloads' ) ); ?>"></span></td>
 				</tr>
 				<tr class="edd-onboarding__product-files-row">
 					<td colspan="2">
