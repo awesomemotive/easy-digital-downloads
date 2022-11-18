@@ -201,7 +201,7 @@ function listen_for_ipn() {
 						// the currency code is invalid
 						// @TODO: Does this need a parent_id for better error organization?
 						/* Translators: %s - The payment data sent via the IPN */
-						edd_record_gateway_error( __( 'Invalid Currency Code', 'easy-digital-downloads' ), sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'easy-digital-downloads' ), json_encode( $payment_data ) ) );
+						edd_record_gateway_error( __( 'Invalid Currency Code', 'easy-digital-downloads' ), sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'easy-digital-downloads' ), json_encode( $posted ) ) );
 
 						ipn_debug_log( 'subscription ' . $subscription->id . ': invalid currency code detected in IPN data: ' . var_export( $posted, true ) );
 
