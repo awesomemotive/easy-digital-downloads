@@ -383,7 +383,6 @@ function get_account_info() {
 				unset( $actions['refresh_merchant'] );
 			}
 		} else {
-			unset( $actions['refresh_merchant'] );
 			$merchant_dashicon        = 'yes';
 			$merchant_account_message .= __( 'Ready to accept payments.', 'easy-digital-downloads' );
 		}
