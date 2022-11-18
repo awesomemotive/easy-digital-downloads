@@ -534,7 +534,6 @@ var EDD_Onboarding = {
 						action: 'edd_onboarding_telemetry_settings',
 						page: 'edd-onboarding-wizard',
 						telemetry_toggle: $( '#edd-onboarding__telemery-toggle' ).is( ':checked' ),
-						telemetry_email: $( '#edd-onboarding__telemery-email' ).val(),
 						_wpnonce: EDD_Onboarding.vars.nonce,
 					},
 					function() {
