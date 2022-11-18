@@ -81,7 +81,7 @@ var EDD_Onboarding = {
 		// Close and exit.
 		$( document.body ).on( 'click', '.edd-onboarding__close-and-exit', function( e ) {
 			e.preventDefault();
-			EDD_Onboarding.onboarding_completed( true );
+			EDD_Onboarding.onboarding_skipped();
 		} );
 	},
 
@@ -203,6 +203,32 @@ var EDD_Onboarding = {
 			}
 		);
 	},
+
+
+	/**
+	 * Mark the Onboarding process
+	 * as skipped and redirect user.
+	 *
+	 * @since 3.1
+	 *
+	 */
+	 onboarding_skipped: function( redirect ) {
+		EDD_Onboarding.loading_state( true );
+
+		var postData = {
+			action: 'edd_onboarding_skipped',
+			page: 'edd-onboarding-wizard',
+			_wpnonce: EDD_Onboarding.vars.nonce,
+		};
+		return $.post(
+			ajaxurl,
+			postData,
+			function() {
+				window.location = $( '.edd-onboarding__close-and-exit' ).attr( 'href' );
+			}
+		);
+	},
+
 
 	/**
 	 * Fetch the HTML for a specific
@@ -633,6 +659,8 @@ var EDD_Onboarding = {
 					$( '.edd-onboarding__product-variable-price' ).show();
 					$( '.edd-onboarding__product-single-price' ).hide();
 				}
+
+				$( '.edd-onboarding__product-files-wrapper' ).show();
 			} );
 		},
 
