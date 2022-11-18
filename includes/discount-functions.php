@@ -1120,9 +1120,13 @@ function edd_get_item_discount_amount( $item, $items, $discounts, $item_unit_pri
 					$items_amount = 0;
 
 					foreach ( $items as $i ) {
+
 						if ( ! in_array( $i['id'], $excluded_products ) ) {
+							$i_amount = 0;
+
 							if ( edd_has_variable_prices( $i['id'] ) ) {
-								$i_amount = edd_get_price_option_amount( $i['id'], $i['options']['price_id'] );
+								$price_id = isset( $i['options']['price_id'] ) ? $i['options']['price_id'] : $i['item_number']['options']['price_id'];
+								$i_amount = edd_get_price_option_amount( $i['id'], $price_id );
 							} else {
 								$i_amount = edd_get_download_price( $i['id'] );
 							}
