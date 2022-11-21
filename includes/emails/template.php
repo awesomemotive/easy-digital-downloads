@@ -259,12 +259,38 @@ function edd_render_receipt_in_browser( $data ) {
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title><?php _e( 'Receipt', 'easy-digital-downloads' ); ?></title>
+		<title><?php esc_html_e( 'Receipt', 'easy-digital-downloads' ); ?></title>
 		<meta charset="utf-8" />
 		<meta name="robots" content="noindex, nofollow" />
 		<?php wp_head(); ?>
+		<style>
+			body.edd_receipt_page {
+				margin: 12px auto;
+				align-items: center;
+				border: 1px solid #cfcfcf;
+				max-width: fit-content;
+				padding: 12px 24px;
+				border-radius: 8px;
+			}
+
+			.edd_receipt_page #edd_login_form fieldset {
+				border: none;
+				display: grid;
+			}
+
+			.edd_receipt_page #edd_login_form label,
+			.edd_receipt_page #edd_login_form input[type=text],
+			.edd_receipt_page #edd_login_form input[type=password]{
+				display: block;
+				width: 100%;
+			}
+
+			.edd_receipt_page th {
+				text-align: left;
+			}
+		</style>
 	</head>
-<body class="<?php echo apply_filters('edd_receipt_page_body_class', 'edd_receipt_page' ); ?>">
+<body class="<?php echo esc_attr( apply_filters( 'edd_receipt_page_body_class', 'edd_receipt_page' ) ); ?>">
 	<div id="edd_receipt_wrapper">
 		<?php do_action( 'edd_render_receipt_in_browser_before' ); ?>
 		<?php echo do_shortcode( '[edd_receipt payment_key=' . $key . ']' ); ?>
