@@ -656,10 +656,6 @@ function edd_build_order( $order_data = array() ) {
 		)
 	);
 
-	if ( empty( $order_data['user_info']['email'] ) ) {
-		return false;
-	}
-
 	/* Order recovery ********************************************************/
 
 	$resume_order   = false;
@@ -815,6 +811,11 @@ function edd_build_order( $order_data = array() ) {
 		edd_update_order( $order_id, $order_args );
 	} else {
 		$order_id = edd_add_order( $order_args );
+	}
+
+	// If there is no order ID at this point, something went wrong.
+	if ( empty( $order_id ) ) {
+		return false;
 	}
 
 	// Attach order to the customer record.
