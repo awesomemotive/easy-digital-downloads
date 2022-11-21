@@ -111,6 +111,25 @@ function edd_download_meta_box_save( $post_id, $post ) {
 		return;
 	}
 
+	edd_download_meta_box_fields_save( $post_id, $post );
+}
+
+add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
+
+
+/**
+ * Save post meta when the save_post action is called
+ *
+ * @since 3.2
+ * @param int $post_id Download (Post) ID.
+ * @global array $post All the data of the the current post.
+ * @return void
+ */
+function edd_download_meta_box_fields_save( $post_id, $post ) {
+	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+
 	// The default fields that get saved
 	$fields = edd_download_metabox_fields();
 	foreach ( $fields as $field ) {
@@ -148,7 +167,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 	do_action( 'edd_save_download', $post_id, $post );
 }
 
-add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
 
 /**
  * Sanitize bundled products on save
@@ -312,7 +330,7 @@ function edd_render_price_field( $post_id ) {
 		<strong><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options:', 'easy-digital-downloads' ) ); ?></strong>
 	</p>
 
-	<div class="edd-form-group">
+	<div id="edd_variable_pricing_control" class="edd-form-group">
 		<div class="edd-form-group__control">
 			<input type="checkbox" class="edd-form-group__input" name="_variable_pricing" id="edd_variable_pricing" value="1" <?php checked( 1, $variable_pricing ); ?> />
 			<label for="edd_variable_pricing">

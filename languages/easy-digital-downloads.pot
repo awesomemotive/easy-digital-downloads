@@ -9,7 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+<<<<<<< HEAD
+"POT-Creation-Date: 2022-10-24T04:39:03+00:00\n"
+=======
 "POT-Creation-Date: 2022-10-27T19:31:38+00:00\n"
+>>>>>>> 3.1.0.3
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: easy-digital-downloads\n"
@@ -317,6 +321,7 @@ msgstr ""
 
 #: includes/admin/admin-pages.php:91
 #: includes/admin/customers/customers.php:1128
+#: includes/admin/onboarding/onboarding.php:175
 #: includes/admin/settings/display-settings.php:46
 #: includes/admin/tools.php:39
 msgid "Tools"
@@ -1902,7 +1907,11 @@ msgid "Special instructions for this %s. These will be added to the sales receip
 msgstr ""
 
 #: includes/admin/downloads/contextual-help.php:100
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:1144
+=======
 #: includes/admin/downloads/metabox.php:1132
+>>>>>>> 3.1.0.3
 msgid "Purchase Shortcode"
 msgstr ""
 
@@ -1936,8 +1945,8 @@ msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:34
 #: includes/admin/downloads/dashboard-columns.php:308
-#: includes/admin/downloads/metabox.php:325
-#: includes/admin/downloads/metabox.php:458
+#: includes/admin/downloads/metabox.php:343
+#: includes/admin/downloads/metabox.php:476
 #: includes/admin/reporting/export/class-batch-export-downloads.php:51
 #: includes/emails/tags.php:215
 #: includes/reports/data/downloads/class-top-selling-downloads-list-table.php:56
@@ -1995,81 +2004,176 @@ msgstr ""
 msgid "%1$s Stats"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:312
+#: includes/admin/downloads/metabox.php:330
 msgid "Pricing Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:319
+#: includes/admin/downloads/metabox.php:337
 msgid "Enable variable pricing"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:358
+#: includes/admin/downloads/metabox.php:376
 msgid "Enable multi-option purchase mode. Allows multiple price options to be added to your cart at once"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:389
+#: includes/admin/downloads/metabox.php:407
 msgid "Add New Price"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:425
+#: includes/admin/downloads/metabox.php:443
 msgid "Click and drag to re-order price options"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:426
+#: includes/admin/downloads/metabox.php:444
 msgid "Price ID: %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:432
-#: includes/scripts.php:522
+#: includes/admin/downloads/metabox.php:450
+#: includes/scripts.php:523
 msgid "Show advanced settings"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:453
+#: includes/admin/downloads/metabox.php:655
+#: includes/admin/downloads/metabox.php:717
+#: includes/admin/downloads/metabox.php:833
+=======
 #: includes/admin/downloads/metabox.php:435
 #: includes/admin/downloads/metabox.php:643
 #: includes/admin/downloads/metabox.php:705
 #: includes/admin/downloads/metabox.php:821
+>>>>>>> 3.1.0.3
 #: includes/admin/views/tmpl-tax-rates-table-row.php:47
 #: includes/blocks/views/checkout/cart/cart-fees.php:15
 #: includes/blocks/views/checkout/cart/cart-item.php:55
-#: includes/scripts.php:517
+#: includes/scripts.php:518
 #: templates/checkout_cart.php:57
 #: templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:435
+#: includes/admin/downloads/metabox.php:453
 msgid "Remove price option %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:445
-#: includes/admin/downloads/metabox.php:451
+#: includes/admin/downloads/metabox.php:463
+#: includes/admin/downloads/metabox.php:469
 msgid "Option Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:488
+#: includes/admin/downloads/metabox.php:506
 #: includes/download-functions.php:674
 #: includes/gateways/stripe/includes/template-functions.php:407
 #: includes/blocks/build/downloads/index.js:1
 msgid "Default"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:490
+#: includes/admin/downloads/metabox.php:508
 msgid "Set ID %s as default price"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:526
+#: includes/admin/downloads/metabox.php:544
 msgid "Product Type Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:540
+#: includes/admin/downloads/metabox.php:558
 msgid "Select a product type"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:541
+#: includes/admin/downloads/metabox.php:559
 msgid "<strong>Product Type</strong>: Sell this item as a single product, or use the Bundle type to sell a collection of products."
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:593
+msgid "Bundled %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:601
+#: includes/admin/downloads/metabox.php:672
+msgid "Click and drag to re-order bundled %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:605
+#: includes/admin/downloads/metabox.php:676
+msgid "Select %s:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:625
+#: includes/admin/downloads/metabox.php:692
+msgid "Price assignment:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:655
+msgid "Remove bundle option %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:666
+msgid "Bundled %s:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:717
+msgid "Remove bundle option 1"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:728
+#: includes/admin/downloads/metabox.php:789
+msgid "Add New File"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:827
+msgid "Click and drag to re-order files"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:828
+msgid "%1$s file ID: %2$s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:833
+msgid "Remove file %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:840
+msgid "File Name"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:848
+msgid "My Neat File"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:855
+msgid "File URL"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:861
+msgid "Enter, upload, choose from Media Library"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:866
+#: includes/admin/downloads/metabox.php:868
+msgid "Select Files"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:866
+msgid "Select"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:876
+msgid "Price Assignment"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:876
+msgid "<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:923
+msgid "Insert into %s"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:954
+=======
 #: includes/admin/downloads/metabox.php:581
 msgid "Bundled %s"
 msgstr ""
@@ -2156,6 +2260,7 @@ msgid "Insert into %s"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:942
+>>>>>>> 3.1.0.3
 #: includes/admin/reporting/reports.php:994
 #: includes/admin/reporting/reports.php:1157
 #: includes/admin/reporting/reports.php:1347
@@ -2166,42 +2271,102 @@ msgstr ""
 msgid "Refunds"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:955
+msgid "<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:960
+=======
 #: includes/admin/downloads/metabox.php:943
 msgid "<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing."
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:948
+>>>>>>> 3.1.0.3
 msgid "Refund Status"
 msgstr ""
 
 #. translators: Default refund status
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:971
+=======
 #: includes/admin/downloads/metabox.php:959
+>>>>>>> 3.1.0.3
 msgctxt "Download refund status"
 msgid "Default (%1$s)"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:986
+=======
 #: includes/admin/downloads/metabox.php:974
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:684
 msgid "Refund Window"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:989
+=======
 #: includes/admin/downloads/metabox.php:977
+>>>>>>> 3.1.0.3
 msgctxt "refund window interval"
 msgid "Days"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:992
+#: includes/admin/downloads/metabox.php:1025
+msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1020
+=======
 #: includes/admin/downloads/metabox.php:980
 #: includes/admin/downloads/metabox.php:1013
 msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1008
+>>>>>>> 3.1.0.3
 #: includes/admin/reporting/export/class-batch-export-downloads.php:53
 #: includes/admin/settings/register-settings.php:1091
 #: includes/admin/tools.php:952
 msgid "File Download Limit"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:1020
+msgid "<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1065
+msgid "Taxability"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1065
+msgid "<strong>Taxability</strong>: When taxes are enabled, all products are taxable by default. Check this box to mark this product as non-taxable."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1076
+msgid "This product is non-taxable"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1101
+msgid "Item Quantities"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1101
+msgid "<strong>Item Quantities</strong>: if disabled, customers will not be provided an option to change the number they wish to purchase."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1114
+msgid "Disable quantity input for this product"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1136
+=======
 #: includes/admin/downloads/metabox.php:1008
 msgid "<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links."
 msgstr ""
@@ -2231,6 +2396,7 @@ msgid "Disable quantity input for this product"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1124
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:1031
 #: includes/admin/thickbox.php:76
 #: includes/checkout/template.php:992
@@ -2240,6 +2406,49 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:1144
+msgid "<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1168
+msgid "Accounting Options"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1168
+msgid "<strong>SKU</strong>: If an SKU is entered for this product, it will be shown on the purchase receipt and exported purchase histories."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1171
+msgid "Enter an SKU for this product."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1200
+msgid "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1201
+msgid "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1205
+msgid "Button Options"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1205
+msgid "<strong>Hide purchase button</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1217
+msgid "Hide purchase button"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1223
+msgid "Purchase button behavior"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1231
+=======
 #: includes/admin/downloads/metabox.php:1132
 msgid "<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing."
 msgstr ""
@@ -2281,12 +2490,17 @@ msgid "Purchase button behavior"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1219
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:1045
 #: includes/admin/thickbox.php:125
 msgid "Add to Cart"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:1232
+=======
 #: includes/admin/downloads/metabox.php:1220
+>>>>>>> 3.1.0.3
 #: includes/admin/settings/register-settings.php:1059
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:47
 #: includes/shortcodes.php:47
@@ -2294,6 +2508,25 @@ msgstr ""
 msgid "Buy Now"
 msgstr ""
 
+<<<<<<< HEAD
+#: includes/admin/downloads/metabox.php:1278
+msgid "Download Instructions"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1281
+msgid "Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes."
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1319
+msgid "Net Sales:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1324
+msgid "Net Revenue:"
+msgstr ""
+
+#: includes/admin/downloads/metabox.php:1341
+=======
 #: includes/admin/downloads/metabox.php:1266
 msgid "Download Instructions"
 msgstr ""
@@ -2311,6 +2544,7 @@ msgid "Net Revenue:"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:1329
+>>>>>>> 3.1.0.3
 msgid "View File Download Log"
 msgstr ""
 
@@ -2531,6 +2765,242 @@ msgstr ""
 
 #: includes/admin/notes/note-functions.php:148
 msgid "Add Note"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:101
+msgid "Onboarding"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:157
+msgid "Business"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:158
+msgid "Tell us a little bit about your business."
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:159
+msgid "Where is your business located? This helps Easy Digital Downloads configure the checkout and receipt templates."
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:163
+msgid "Payment Methods"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:164
+msgid "Start accepting payments today!"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:165
+msgid "Connect with Stripe."
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:169
+#: includes/admin/settings/contextual-help.php:77
+#: includes/admin/settings/register-settings.php:1734
+msgid "Emails"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:170
+msgid "Configure your Emails"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:171
+msgid "So that your dear users will receive good emails."
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:176
+msgid "Conversion and Optimization tools"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:177
+msgid "Below, we have selected our recommended tools and features to help boost conversions and optimize your digital store."
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:181
+#: includes/admin/reporting/class-export-payments.php:67
+#: includes/blocks/views/orders/receipt-items.php:20
+#: includes/reports/reports-functions.php:320
+#: templates/shortcode-receipt.php:200
+msgid "Products"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:182
+msgid "What are you going to sell?"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:183
+msgid "Let’s get started with your first product."
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:226
+msgid "Unknown Onboarding Step."
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:226
+msgid "Onboarding Wizard"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:374
+msgid "Step"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:382
+msgid "Go Back"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:386
+msgid "Skip this step"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:387
+msgid "Save & Continue"
+msgstr ""
+
+#: includes/admin/onboarding/onboarding.php:392
+msgid "Close and Exit Without Saving"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-business_info.php:65
+msgid "Welcome, and thanks for choosing us!"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-business_info.php:66
+msgid "Easy Digital Downloads setup is fast and easy. Click below, and we'll walk you through the quick initial process. And don't worry. You can go back and change anything you do – at anytime. Nothing's permanent (unless you want it to be). So feel free to explore!"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-business_info.php:67
+msgid "GET STARTED"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-business_info.php:68
+msgid "Creators ❤️ Easy Digital Downloads"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:72
+msgid "The world’s most powerful and easy to use payment gateway."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:75
+msgid "Stripe Features we can add:"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:79
+msgid "Secure checkout"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:80
+msgid "Accept all major credit cards"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:81
+msgid "Supports subscriptions"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:85
+msgid "Fraud prevention tools"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:86
+msgid "Apple Pay & Google Pay"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:87
+msgid "And more…"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-payment_methods.php:96
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:648
+msgid "Start accepting payments with Stripe by connecting your account. Stripe Connect helps ensure easier setup and improved security."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-products.php:77
+msgid "Pricing options:"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-products.php:86
+msgid "Product details"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-products.php:90
+msgid "Product name:"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-products.php:96
+msgid "Product image:"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-products.php:109
+msgid "Add your first file"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:42
+msgid "Essential eCommerce Features"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:43
+msgid "Get all the essential eCommerce features to sell digital products with WordPress."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:52
+msgid "Optimize Checkout"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:53
+msgid "Improve the checkout experience by auto-creating user accounts for new customers."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:61
+msgid "Reliable Email Delivery"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:62
+msgid "Email deliverability is one of the most important services for an eCommerce store. Don’t leave your customers in the dark."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:70
+msgid "SEO"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:71
+msgid "Get the tools used by millions of smart business owners to analyze and optimize their store’s traffic with SEO."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:79
+msgid "Conversion Tools"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:80
+msgid "Get the #1 conversion optimization plugin to convert your website traffic into subscribers, leads, and sales."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:146
+#: includes/admin/onboarding/steps/step-tools.php:175
+msgid "Your Email Address:"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:155
+msgid "Help make EDD better for everyone"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:156
+msgid "Explanation for the telemetry."
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:161
+msgid "The following plugins will be installed:"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:165
+msgid "Some features were not able to be installed!"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:170
+msgid "Don't worry, everything will still work without them! You can install %s later by going to the Plugins > Add New section of your admin"
+msgstr ""
+
+#: includes/admin/onboarding/steps/step-tools.php:176
+msgid "Continue"
 msgstr ""
 
 #: includes/admin/payments/actions.php:126
@@ -3595,13 +4065,6 @@ msgstr ""
 msgid "Zip / Postal Code"
 msgstr ""
 
-#: includes/admin/reporting/class-export-payments.php:67
-#: includes/blocks/views/orders/receipt-items.php:20
-#: includes/reports/reports-functions.php:320
-#: templates/shortcode-receipt.php:200
-msgid "Products"
-msgstr ""
-
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/admin/reporting/export/class-batch-export-payments.php:54
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:55
@@ -4408,11 +4871,6 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:72
 msgid "<strong>Stripe</strong> - The Stripe payment gateway is also included with Easy Digital Downloads. To test the Stripe gateway, you must \"Connect with Stripe\" and the site must be placed in Test Mode from the Payments > Gateways tab."
-msgstr ""
-
-#: includes/admin/settings/contextual-help.php:77
-#: includes/admin/settings/register-settings.php:1734
-msgid "Emails"
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:79
@@ -6501,7 +6959,7 @@ msgid "Upgrade Easy Digital Downloads"
 msgstr ""
 
 #: includes/admin/upgrades/upgrade-functions.php:1579
-#: includes/scripts.php:539
+#: includes/scripts.php:540
 msgid "Migration complete"
 msgstr ""
 
@@ -8479,7 +8937,7 @@ msgid "New Download Product"
 msgstr ""
 
 #: includes/class-edd-html-elements.php:45
-#: includes/scripts.php:508
+#: includes/scripts.php:509
 msgid "Choose a %s"
 msgstr ""
 
@@ -10875,10 +11333,6 @@ msgstr ""
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:648
-msgid "Start accepting payments with Stripe by connecting your account. Stripe Connect helps ensure easier setup and improved security."
-msgstr ""
-
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:659
 msgctxt "gateway test mode status"
 msgid "enabled"
@@ -12549,127 +13003,127 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: includes/scripts.php:493
+#: includes/scripts.php:494
 msgid "Add New Download"
 msgstr ""
 
-#: includes/scripts.php:494
+#: includes/scripts.php:495
 msgid "Use This File"
 msgstr ""
 
-#: includes/scripts.php:495
+#: includes/scripts.php:496
 msgid "Sorry, not available for variable priced products."
 msgstr ""
 
-#: includes/scripts.php:496
+#: includes/scripts.php:497
 msgid "Are you sure you want to delete this order?"
 msgstr ""
 
-#: includes/scripts.php:497
+#: includes/scripts.php:498
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: includes/scripts.php:498
+#: includes/scripts.php:499
 msgid "Are you sure you want to delete this adjustment?"
 msgstr ""
 
-#: includes/scripts.php:499
+#: includes/scripts.php:500
 msgid "Are you sure you want to delete this note?"
 msgstr ""
 
-#: includes/scripts.php:500
+#: includes/scripts.php:501
 msgid "Are you sure you want to delete this tax rate?"
 msgstr ""
 
-#: includes/scripts.php:501
+#: includes/scripts.php:502
 msgid "Are you sure you want to revoke this API key?"
 msgstr ""
 
-#: includes/scripts.php:502
+#: includes/scripts.php:503
 msgid "Are you sure you want to regenerate this API key?"
 msgstr ""
 
-#: includes/scripts.php:503
+#: includes/scripts.php:504
 msgid "Are you sure you want to resend the purchase receipt?"
 msgstr ""
 
-#: includes/scripts.php:504
+#: includes/scripts.php:505
 msgid "Are you sure you want to disconnect the WordPress user from this customer record?"
 msgstr ""
 
-#: includes/scripts.php:505
+#: includes/scripts.php:506
 msgid "Copy these links to your clipboard and give them to your customer"
 msgstr ""
 
-#: includes/scripts.php:506
+#: includes/scripts.php:507
 msgid "Are you sure you want to delete this %s?"
 msgstr ""
 
-#: includes/scripts.php:507
+#: includes/scripts.php:508
 msgid "Type to search %s"
 msgstr ""
 
-#: includes/scripts.php:509
+#: includes/scripts.php:510
 msgid "Choose one or more %s"
 msgstr ""
 
-#: includes/scripts.php:510
+#: includes/scripts.php:511
 msgid "You must have at least one price"
 msgstr ""
 
-#: includes/scripts.php:511
+#: includes/scripts.php:512
 msgid "You must have at least one field"
 msgstr ""
 
-#: includes/scripts.php:512
+#: includes/scripts.php:513
 msgid "Payments must contain at least one item"
 msgstr ""
 
-#: includes/scripts.php:513
+#: includes/scripts.php:514
 msgid "No match for:"
 msgstr ""
 
-#: includes/scripts.php:514
+#: includes/scripts.php:515
 msgid "Item price must be numeric"
 msgstr ""
 
-#: includes/scripts.php:515
+#: includes/scripts.php:516
 msgid "Item tax must be numeric"
 msgstr ""
 
-#: includes/scripts.php:516
+#: includes/scripts.php:517
 msgid "Quantity must be numeric"
 msgstr ""
 
-#: includes/scripts.php:518
+#: includes/scripts.php:519
 msgid "You must choose a method."
 msgstr ""
 
-#: includes/scripts.php:519
+#: includes/scripts.php:520
 msgid "Required fields not completed."
 msgstr ""
 
-#: includes/scripts.php:520
+#: includes/scripts.php:521
 msgid "Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup."
 msgstr ""
 
-#: includes/scripts.php:521
+#: includes/scripts.php:522
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: includes/scripts.php:523
+#: includes/scripts.php:524
 msgid "Hide advanced settings"
 msgstr ""
 
-#: includes/scripts.php:524
+#: includes/scripts.php:525
 msgid "There are no downloads attached to this payment"
 msgstr ""
 
-#: includes/scripts.php:525
+#: includes/scripts.php:526
 msgid "Please wait &hellip;"
 msgstr ""
 
-#: includes/scripts.php:526
+#: includes/scripts.php:527
 msgid "You must save your changes to send the test email."
 msgstr ""
 

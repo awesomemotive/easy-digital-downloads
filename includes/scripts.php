@@ -316,6 +316,7 @@ function edd_register_admin_scripts() {
 		'tools-export' => array(),
 		'tools-import' => array(),
 		'notes'        => array(),
+		'onboarding'   => array(),
 		'orders'       => array(
 			'edd-admin-notes',
 			'wp-util',
@@ -330,7 +331,7 @@ function edd_register_admin_scripts() {
 		'tools'        => array(
 			'edd-admin-tools-export'
 		),
-		'upgrades'     => array()
+		'upgrades'     => array(),
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
@@ -358,12 +359,13 @@ function edd_register_admin_styles() {
 	// Register styles
 	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(), $version );
 	wp_register_style( 'jquery-ui-css',         $css_dir . 'jquery-ui-fresh'      . $css_suffix, array(), $version );
-	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(), $version );
+	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array( 'forms' ), $version );
 	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin-chosen',      $css_dir . 'edd-admin-chosen'     . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, $deps,   $version );
+	wp_register_style( 'edd-admin-onboarding',  $css_dir . 'edd-admin-onboarding' . $css_suffix, $deps,   $version );
 }
 add_action( 'admin_init', 'edd_register_admin_styles' );
 

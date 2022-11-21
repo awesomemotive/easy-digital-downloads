@@ -8,3 +8,13 @@
 .edd-settings-color {
 	flex-direction: column;
 }
+
+.edd-upload-button-wrapper {
+	width: 100%;
+	display: flex;
+	gap: 5px;
+}
+
+.edd-upload-button-wrapper button.edd_settings_upload_button {
+    margin-bottom: 0;
+}

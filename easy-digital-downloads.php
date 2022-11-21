@@ -137,6 +137,8 @@ final class EDD_Requirements_Check {
 			// add-ons are loaded after us.
 			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 4 );
 
+			add_action( 'activated_plugin', array( $this, 'activated' ), 10, 2 );
+
 			// Register the activation hook
 			register_activation_hook( $this->file, array( $this, 'install' ) );
 		}
@@ -149,7 +151,7 @@ final class EDD_Requirements_Check {
 	 */
 	public function install() {
 
-		// Bootstrap to include all of the necessary files
+		// Bootstrap to include all of the necessary files.
 		$this->bootstrap();
 
 		// Network wide?
@@ -157,7 +159,7 @@ final class EDD_Requirements_Check {
 			? (bool) $_GET['networkwide']
 			: false;
 
-		// Call the installer directly during the activation hook
+		// Call the installer directly during the activation hook.
 		edd_install( $network_wide );
 	}
 
@@ -168,6 +170,24 @@ final class EDD_Requirements_Check {
 	 */
 	public function bootstrap() {
 		Easy_Digital_Downloads::instance( $this->file );
+	}
+
+	/**
+	 * Plugin activated.
+	 *
+	 * @since 3.2
+	 */
+	public function activated( $plugin, $network_wide ) {
+		if ( 'easy-digital-downloads/easy-digital-downloads.php' !== $plugin ) {
+			return;
+		}
+
+		// If Onboarding was already completed, abort.
+		if ( get_option( 'edd_onboarding_completed', false ) ) {
+			return;
+		}
+
+		edd_redirect( admin_url( 'edit.php?post_type=download&page=edd-onboarding-wizard' ) );
 	}
 
 	/**

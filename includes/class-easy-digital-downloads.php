@@ -731,6 +731,9 @@ final class Easy_Digital_Downloads {
 		// Downloads
 		require_once EDD_PLUGIN_DIR . 'includes/models/Download.php';
 
+		// Onboarding Wizard.
+		require_once EDD_PLUGIN_DIR . 'includes/admin/onboarding/onboarding.php';
+
 		// Blocks
 		$blocks = EDD_PLUGIN_DIR . 'includes/blocks/edd-blocks.php';
 
