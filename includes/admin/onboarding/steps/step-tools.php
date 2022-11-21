@@ -52,8 +52,9 @@ function ajax_save_telemetry_settings() {
  * @since 3.2
  */
 function step_html() {
-	$telemetry_email   = get_option( 'edd_telemetry_email' );
-	$extension_manager = new \EDD\Admin\Extensions\Extension_Manager();
+	$telemetry_email     = get_option( 'edd_telemetry_email' );
+	$extension_manager   = new \EDD\Admin\Extensions\Extension_Manager();
+	$can_install_plugins = current_user_can( 'install_plugins' );
 
 	$available_plugins = array(
 		array(
@@ -63,6 +64,7 @@ function step_html() {
 			'disabled'    => true,
 			'plugin_name' => '',
 			'plugin_file' => '',
+			'plugin_zip'  => '',
 			'plugin_url'  => '',
 			'action'      => '',
 		),
@@ -72,7 +74,8 @@ function step_html() {
 			'prechecked'  => true,
 			'plugin_name' => 'Auto Register',
 			'plugin_file' => 'edd-auto-register/edd-auto-register.php',
-			'plugin_url'  => 'https://downloads.wordpress.org/plugin/edd-auto-register.zip',
+			'plugin_zip'  => 'https://downloads.wordpress.org/plugin/edd-auto-register.zip',
+			'plugin_url'  => 'https://wordpress.org/plugins/edd-auto-register',
 			'action'      => 'install',
 		),
 		array(
@@ -81,7 +84,8 @@ function step_html() {
 			'prechecked'  => true,
 			'plugin_name' => 'WP Mail SMTP',
 			'plugin_file' => 'wp-mail-smtp/wp_mail_smtp.php',
-			'plugin_url'  => 'https://downloads.wordpress.org/plugin/wp-mail-smtp.zip',
+			'plugin_zip'  => 'https://downloads.wordpress.org/plugin/wp-mail-smtp.zip',
+			'plugin_url'  => 'https://wordpress.org/plugins/wp-mail-smtp/',
 			'action'      => 'install',
 		),
 		array(
@@ -90,7 +94,8 @@ function step_html() {
 			'prechecked'  => true,
 			'plugin_name' => 'All In One Seo',
 			'plugin_file' => 'all-in-one-seo-pack/all_in_one_seo_pack.php',
-			'plugin_url'  => 'https://downloads.wordpress.org/plugin/all-in-one-seo-pack.zip',
+			'plugin_zip'  => 'https://downloads.wordpress.org/plugin/all-in-one-seo-pack.zip',
+			'plugin_url'  => 'https://wordpress.org/plugins/all-in-one-seo-pack/',
 			'action'      => 'install',
 		),
 		array(
@@ -99,7 +104,8 @@ function step_html() {
 			'prechecked'  => true,
 			'plugin_name' => 'MonsterInsights',
 			'plugin_file' => 'google-analytics-for-wordpress/googleanalytics.php',
-			'plugin_url'  => 'https://downloads.wordpress.org/plugin/google-analytics-for-wordpress.zip',
+			'plugin_zip'  => 'https://downloads.wordpress.org/plugin/google-analytics-for-wordpress.zip',
+			'plugin_url'  => 'https://wordpress.org/plugins/google-analytics-for-wordpress/',
 			'action'      => 'install',
 		),
 	);
@@ -144,10 +150,14 @@ function step_html() {
 					</div>
 					<div class="edd-onboarding__plugins-control">
 
-					<label class="checkbox-control checkbox-control--checkbox">
-						<input class="edd-onboarding__plugin-install" data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] ); ?>" data-action="<?php echo esc_attr( $plugin['action'] ); ?>" data-plugin-file="<?php echo esc_attr( $plugin['plugin_file'] ); ?>" value="<?php echo esc_attr( $plugin['plugin_url'] ); ?>" type="checkbox"<?php echo $checked.$disabled;?>/>
-						<div class="checkbox-control__indicator"></div>
-					</label>
+					<?php if ( ! $can_install_plugins && ! empty( $plugin['plugin_url'] ) ) : ?>
+						<a href="<?php echo esc_url( $plugin['plugin_url'] ); ?>" class="edd-onboarding__plugins-external-link" target="_blank"><span class="dashicons dashicons-external"></span></a>
+					<?php else: ?>
+						<label class="checkbox-control checkbox-control--checkbox">
+							<input class="edd-onboarding__plugin-install" data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] ); ?>" data-action="<?php echo esc_attr( $plugin['action'] ); ?>" data-plugin-file="<?php echo esc_attr( $plugin['plugin_file'] ); ?>" value="<?php echo esc_attr( $plugin['plugin_zip'] ); ?>" type="checkbox"<?php echo $checked.$disabled;?>/>
+							<div class="checkbox-control__indicator"></div>
+						</label>
+					<?php endif; ?>
 
 					</div>
 				</div>
