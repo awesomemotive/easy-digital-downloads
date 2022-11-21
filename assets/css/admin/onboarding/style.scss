@@ -316,7 +316,10 @@
 			width: 100px;
 			text-align: right;
 	   }
-		.edd-onboarding__plugins-details {
+	   .edd-onboarding__plugins-external-link {
+			text-decoration: none;
+	   }
+	   .edd-onboarding__plugins-details {
 			h3 {
 				margin-top: 0;
 				transition: all 0.25s ease-out;
