@@ -156,12 +156,13 @@ function listen_for_ipn() {
 			$amount = 0;
 		}
 
-		$txn_type       = isset( $posted['txn_type'] ) ? $posted['txn_type'] : '';
+		$txn_type       = isset( $posted['txn_type'] ) ? strtolower( $posted['txn_type'] ) : '';
+		$payment_status = isset( $posted['payment_status'] ) ? strtolower( $posted['payment_status'] ) : '';
 		$currency_code  = isset( $posted['mc_currency'] ) ? $posted['mc_currency'] : $posted['currency_code'];
 		$transaction_id = isset( $posted['txn_id'] ) ? $posted['txn_id'] : '';
 
-		if ( empty( $txn_type ) ) {
-			ipn_debug_log( 'No txn_type, bailing' );
+		if ( empty( $txn_type ) && empty( $payment_status ) ) {
+			ipn_debug_log( 'No txn_type or payment_status in the IPN, bailing' );
 			return;
 		}
 
@@ -305,8 +306,7 @@ function listen_for_ipn() {
 		}
 
 		// We've processed recurring, now let's handle non-recurring IPNs.
-		$payment_status = strtolower( $posted['payment_status'] );
-		$order_id       = 0;
+		$order_id = 0;
 
 		if ( ! empty( $posted['parent_txn_id'] ) ) {
 			$order_id = edd_get_order_id_from_transaction_id( $posted['parent_txn_id'] );

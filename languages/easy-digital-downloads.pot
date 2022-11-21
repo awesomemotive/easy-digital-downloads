@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-18T15:08:55+00:00\n"
+"POT-Creation-Date: 2022-11-21T17:34:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: easy-digital-downloads\n"
@@ -253,11 +253,11 @@ msgstr ""
 #: includes/gateways/functions.php:320
 #: includes/gateways/manual.php:33
 #: includes/gateways/paypal-standard.php:170
-#: includes/gateways/paypal/admin/connect.php:518
-#: includes/gateways/paypal/admin/connect.php:522
-#: includes/gateways/paypal/admin/connect.php:559
-#: includes/gateways/paypal/admin/connect.php:563
-#: includes/gateways/paypal/admin/connect.php:705
+#: includes/gateways/paypal/admin/connect.php:517
+#: includes/gateways/paypal/admin/connect.php:521
+#: includes/gateways/paypal/admin/connect.php:558
+#: includes/gateways/paypal/admin/connect.php:562
+#: includes/gateways/paypal/admin/connect.php:704
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 #: includes/gateways/stripe/includes/payment-actions.php:1387
 #: includes/process-download.php:296
@@ -632,14 +632,14 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:163
 #: includes/gateways/paypal/admin/connect.php:218
 #: includes/gateways/paypal/admin/connect.php:328
-#: includes/gateways/paypal/admin/connect.php:518
-#: includes/gateways/paypal/admin/connect.php:522
-#: includes/gateways/paypal/admin/connect.php:559
-#: includes/gateways/paypal/admin/connect.php:563
-#: includes/gateways/paypal/admin/connect.php:619
-#: includes/gateways/paypal/admin/connect.php:653
-#: includes/gateways/paypal/admin/connect.php:676
-#: includes/gateways/paypal/admin/connect.php:705
+#: includes/gateways/paypal/admin/connect.php:517
+#: includes/gateways/paypal/admin/connect.php:521
+#: includes/gateways/paypal/admin/connect.php:558
+#: includes/gateways/paypal/admin/connect.php:562
+#: includes/gateways/paypal/admin/connect.php:618
+#: includes/gateways/paypal/admin/connect.php:652
+#: includes/gateways/paypal/admin/connect.php:675
+#: includes/gateways/paypal/admin/connect.php:704
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -9826,8 +9826,8 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:602
 #: includes/gateways/paypal-standard.php:675
 #: includes/gateways/paypal-standard.php:684
-#: includes/gateways/paypal/ipn.php:111
-#: includes/gateways/paypal/ipn.php:119
+#: includes/gateways/paypal/ipn.php:120
+#: includes/gateways/paypal/ipn.php:128
 msgid "IPN Error"
 msgstr ""
 
@@ -10219,28 +10219,28 @@ msgstr ""
 msgid "You need to address the following issues before you can start receiving payments:"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:388
+#: includes/gateways/paypal/admin/connect.php:387
 msgid "Ready to accept payments."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:410
+#: includes/gateways/paypal/admin/connect.php:409
 msgid "Webhook:"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:418
+#: includes/gateways/paypal/admin/connect.php:417
 msgid "Create Webhooks"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:423
+#: includes/gateways/paypal/admin/connect.php:422
 msgid "Webhook successfully configured for the following events:"
 msgstr ""
 
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag; %3$s: opening line item/status/strong tags; %4$s closing strong tag; %5$s: closing list item tag
-#: includes/gateways/paypal/admin/connect.php:448
+#: includes/gateways/paypal/admin/connect.php:447
 msgid "%3$sGateway Status: %4$s PayPal is not currently active. %1$sEnable PayPal%2$s in the general gateway settings to start using it.%5$s"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:626
+#: includes/gateways/paypal/admin/connect.php:625
 msgid "No merchant ID saved. Please reconnect to PayPal."
 msgstr ""
 
@@ -10444,42 +10444,42 @@ msgid "Response Code: %d; Message: %s"
 msgstr ""
 
 #. Translators: %s - IPN Verification response
-#: includes/gateways/paypal/ipn.php:111
-#: includes/gateways/paypal/ipn.php:119
-msgid "Invalid PayPal Express IPN verification response. IPN data: %s"
+#: includes/gateways/paypal/ipn.php:120
+#: includes/gateways/paypal/ipn.php:128
+msgid "Invalid PayPal Commerce/Express IPN verification response. IPN data: %s"
 msgstr ""
 
 #. Translators: %s - The payment data sent via the IPN
-#: includes/gateways/paypal/ipn.php:204
+#: includes/gateways/paypal/ipn.php:213
 msgid "Invalid Currency Code"
 msgstr ""
 
 #. Translators: %s - The payment data sent via the IPN
-#: includes/gateways/paypal/ipn.php:204
+#: includes/gateways/paypal/ipn.php:213
 msgid "The currency code in an IPN request did not match the site currency code. Payment data: %s"
 msgstr ""
 
 #. Translators: %s - The transaction ID of the failed payment
-#: includes/gateways/paypal/ipn.php:220
+#: includes/gateways/paypal/ipn.php:229
 msgid "Transaction ID %s failed in PayPal"
 msgstr ""
 
 #. Translators: %s - The collected outstanding balance of the subscription
-#: includes/gateways/paypal/ipn.php:245
+#: includes/gateways/paypal/ipn.php:254
 msgid "Outstanding subscription balance of %s collected successfully."
 msgstr ""
 
-#: includes/gateways/paypal/ipn.php:337
+#: includes/gateways/paypal/ipn.php:351
 #: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:53
 msgid "Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s"
 msgstr ""
 
-#: includes/gateways/paypal/ipn.php:349
+#: includes/gateways/paypal/ipn.php:363
 #: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:64
 msgid "Partial refund processed in PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/ipn.php:359
+#: includes/gateways/paypal/ipn.php:373
 #: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:72
 msgid "Full refund processed in PayPal."
 msgstr ""
