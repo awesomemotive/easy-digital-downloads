@@ -649,13 +649,6 @@ function edd_build_order( $order_data = array() ) {
 		return false;
 	}
 
-	$order_data = wp_parse_args(
-		$order_data,
-		array(
-			'user_info' => array(),
-		)
-	);
-
 	/* Order recovery ********************************************************/
 
 	$resume_order   = false;
