@@ -185,6 +185,13 @@ function step_html() {
 		</p>
 		<button class="button button-primary button-hero edd-onboarding__button-skip-step"><?php echo esc_html( __( 'Continue', 'easy-digital-downloads' ) ); ?></button>
 	</div>
+
+	<div class="edd-onboarding__install-success-wrapper" style="display: none;">
+		<div  class="edd-onboarding__install-success">
+			<span class="emoji">🥳</span>
+			<span><?php echo esc_html( __( 'Plugins were successfully installed!', 'easy-digital-downloads' ) ); ?></span>
+		</div>
+	</div>
 	<?php
 
 	return ob_get_clean();

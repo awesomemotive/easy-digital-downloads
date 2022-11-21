@@ -41,7 +41,7 @@
 	padding-left: 80px;
 	padding-top: 8px;
 	display: flex;
-	gap: 15px;
+	gap: 20px;
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
@@ -632,6 +632,34 @@
 .edd-onboarding__selected-plugins {
 	text-align: center;
 	margin-top: 25px;
+}
+
+.edd-onboarding__install-success-wrapper {
+	z-index: 99;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	padding-left: 80px;
+	padding-top: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 21px;
+	.edd-onboarding__install-success {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 25px;
+		text-align: center;
+		span {
+			display: block;
+			flex-basis: 100%;
+		}
+		.emoji {
+			font-size: 65px;
+		}
+	}
 }
 
 /* EDD ONBOARDING - Create product */

@@ -599,7 +599,21 @@ var EDD_Onboarding = {
 
 			// All of the plugins were installed and activated.
 			if ( installation_errors.length === 0 ) {
-				return Promise.resolve();
+				if ( selected_plugins.length === 0 ) {
+					return Promise.resolve();
+				}
+
+				// Show success screen.
+				return new Promise( (resolve, reject) => {
+					EDD_Onboarding.loading_state( false );
+					$( '.edd-onboarding' ).toggleClass( 'edd-onboarding__loading-in-progress', true );
+					$( '.edd-onboarding__install-success-wrapper' ).show();
+					setTimeout(() => {
+						$( '.edd-onboarding__install-success-wrapper' ).hide();
+						$( '.edd-onboarding' ).toggleClass( 'edd-onboarding__loading-in-progress', false );
+						resolve();
+					}, 3200);
+				});
 			}
 
 			// There were some errors while installing/activating.
