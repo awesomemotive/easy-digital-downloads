@@ -27,6 +27,15 @@ function listen_for_ipn() {
 
 	ipn_debug_log( 'IPN Backup Loaded' );
 
+	// Moving this up in the load order so we can check some things before even getting to verification.
+	$posted            = $_POST;
+	$ignored_txn_types = array( 'recurring_payment_profile_created' );
+
+	if ( isset( $posted['txn_type'] ) && in_array( $posted['txn_type'], $ignored_txn_types ) ) {
+		ipn_debug_log( 'Transaction Type ' . $posted['txn_type'] . ' is ignored by the PayPal Commerce IPN.' );
+		return;
+	}
+
 	nocache_headers();
 
 	$verified = false;
@@ -131,7 +140,6 @@ function listen_for_ipn() {
 	 * The processIpn() method returned true if the IPN was "VERIFIED" and false if it was "INVALID".
 	 */
 	if ( ( $verified || edd_get_option( 'disable_paypal_verification' ) ) || isset( $_POST['verification_override'] ) || edd_is_test_mode() ) {
-		$posted = $_POST;
 
 		status_header( 200 );
 
