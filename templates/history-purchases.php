@@ -24,10 +24,11 @@ $page    = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 $user_id = get_current_user_id();
 $orders  = edd_get_orders(
 	array(
-		'user_id' => $user_id,
-		'number'  => 20,
-		'offset'  => 20 * ( intval( $page ) - 1 ),
-		'type'    => 'sale',
+		'user_id'        => $user_id,
+		'number'         => 20,
+		'offset'         => 20 * ( intval( $page ) - 1 ),
+		'type'           => 'sale',
+		'status__not_in' => array( 'trash' ),
 	)
 );
 

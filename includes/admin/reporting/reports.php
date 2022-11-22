@@ -740,24 +740,24 @@ function edd_register_downloads_report( $reports ) {
 						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 
 						$sql_clauses = array(
-							'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month, DAY(edd_oi.date_created) AS day',
-							'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created)',
-							'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created)',
+							'select'  => 'edd_oi.date_created AS date',
+							'where'   => '',
+							'groupby' => '',
 						);
 
+						// Default to 'monthly'.
+						$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'edd_oi.date_created' );
+						$sql_clauses['orderby'] = 'MONTH(edd_oi.date_created)';
+
+						// Now drill down to the smallest unit.
 						if ( $hour_by_hour ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month, DAY(edd_oi.date_created) AS day, HOUR(edd_oi.date_created) AS hour',
-								'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created), HOUR(edd_oi.date_created)',
-								'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created), DAY(edd_oi.date_created), HOUR(edd_oi.date_created)',
-							);
-						} elseif ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(edd_oi.date_created) AS year, MONTH(edd_oi.date_created) AS month',
-								'groupby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created)',
-								'orderby' => 'YEAR(edd_oi.date_created), MONTH(edd_oi.date_created)',
-							);
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'edd_oi.date_created' );
+							$sql_clauses['orderby'] = 'HOUR(edd_oi.date_created)';
+						} elseif ( $day_by_day ) {
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'edd_oi.date_created' );
+							$sql_clauses['orderby'] = 'DATE(edd_oi.date_created)';
 						}
+
 
 						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
 							? sprintf( 'AND price_id = %d', absint( $download_data['price_id'] ) )
@@ -768,15 +768,13 @@ function edd_register_downloads_report( $reports ) {
 								"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, %1s
 								FROM {$wpdb->edd_order_items} edd_oi
 								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
-								GROUP BY %1s
-								ORDER BY %1s ASC",
+								GROUP BY {$sql_clauses['groupby']}
+								ORDER BY {$sql_clauses['orderby']} ASC",
 								$sql_clauses['select'],
 								$download_data['download_id'],
 								$price_id,
 								$dates['start']->copy()->format( 'mysql' ),
-								$dates['end']->copy()->format( 'mysql' ),
-								$sql_clauses['groupby'],
-								$sql_clauses['orderby']
+								$dates['end']->copy()->format( 'mysql' )
 							)
 						);
 
@@ -794,15 +792,13 @@ function edd_register_downloads_report( $reports ) {
 								FROM {$wpdb->edd_order_items} edd_oi
 								{$join}
 								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
-								GROUP BY %1s
-								ORDER BY %1s ASC",
+								GROUP BY {$sql_clauses['groupby']}
+								ORDER BY {$sql_clauses['orderby']} ASC",
 								$sql_clauses['select'],
 								$download_data['download_id'],
 								$price_id,
 								$dates['start']->copy()->format( 'mysql' ),
-								$dates['end']->copy()->format( 'mysql' ),
-								$sql_clauses['groupby'],
-								$sql_clauses['orderby']
+								$dates['end']->copy()->format( 'mysql' )
 							)
 						);
 
@@ -810,83 +806,73 @@ function edd_register_downloads_report( $reports ) {
 						$earnings = array();
 
 						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$timezone      = new DateTimeZone( edd_get_timezone_id() );
-							$date_on_chart = new DateTime( $chart_dates['start'], $timezone );
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart = $chart_dates['start'];
 
-							if ( $hour_by_hour ) {
-								$timestamp     = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+							$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
+							$sales[ $timestamp ][1] = 0;
 
-								$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$sales[ $timestamp ][1] = 0;
+							$earnings[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
+							$earnings[ $timestamp ][1] = 0.00;
 
-								$earnings[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$earnings[ $timestamp ][1] = 0.00;
+							// Loop through each date there were sales/earnings, which we queried from the database.
+							foreach ( $earnings_results as $earnings_result ) {
+								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $earnings_result->date ) );
 
-								$dates['start']->addHour( 1 );
-								$chart_dates['start']->addHour( 1 );
-							} else {
-								$day = ( true === $day_by_day )
-									? $dates['start']->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$sales[ $timestamp ][1] = 0;
-
-								$earnings[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$earnings[ $timestamp ][1] = 0.00;
-
-								if ( true === $day_by_day ) {
-									$dates['start']->addDays( 1 );
-									$chart_dates['start']->addDays( 1 );
+								// Add any sales/earnings that happened during this hour.
+								if ( $hour_by_hour ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+										$earnings[ $timestamp ][1] += $earnings_result->earnings;
+									}
+									// Add any sales/earnings that happened during this day.
+								} elseif ( $day_by_day ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+										$earnings[ $timestamp ][1] += $earnings_result->earnings;
+									}
+									// Add any sales/earnings that happened during this month.
 								} else {
-									$dates['start']->addMonth( 1 );
-									$chart_dates['start']->addMonth( 1 );
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+										$earnings[ $timestamp ][1] += $earnings_result->earnings;
+									}
 								}
 							}
-						}
 
-						foreach ( $earnings_results as $earnings_result ) {
+							// Loop through each date there were sales/earnings, which we queried from the database.
+							foreach ( $sales_results as $sales_result ) {
+								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $sales_result->date ) );
+
+								// Add any sales/earnings that happened during this hour.
+								if ( $hour_by_hour ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+										$sales[ $timestamp ][1] += $sales_result->sales;
+									}
+									// Add any sales/earnings that happened during this day.
+								} elseif ( $day_by_day ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+										$sales[ $timestamp ][1] += $sales_result->sales;
+									}
+									// Add any sales/earnings that happened during this month.
+								} else {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+										$sales[ $timestamp ][1] += $sales_result->sales;
+									}
+								}
+							}
+
+							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-
-								/**
-								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-								 * needs to be applied to that.
-								 */
-								$timestamp = \Carbon\Carbon::create( $earnings_result->year, $earnings_result->month, $earnings_result->day, $earnings_result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$chart_dates['start']->addHour( 1 );
+							} elseif ( $day_by_day ) {
+								$chart_dates['start']->addDays( 1 );
 							} else {
-								$day = ( true === $day_by_day )
-									? $earnings_result->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $earnings_result->year, $earnings_result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							}
-
-							if ( isset( $earnings[ $timestamp ] ) ) {
-								$earnings[ $timestamp ][1] += floatval( $earnings_result->earnings );
-							}
-						}
-
-						foreach ( $sales_results as $sales_result ) {
-							if ( $hour_by_hour ) {
-
-								/**
-								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-								 * needs to be applied to that.
-								 */
-								$timestamp = \Carbon\Carbon::create( $sales_result->year, $sales_result->month, $sales_result->day, $sales_result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							} else {
-								$day = ( true === $day_by_day )
-									? $sales_result->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $sales_result->year, $sales_result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							}
-
-							if ( isset( $sales[ $timestamp ] ) ) {
-								$sales[ $timestamp ][1] += $sales_result->sales;
+								$chart_dates['start']->addMonth( 1 );
 							}
 						}
 
@@ -1534,23 +1520,21 @@ function edd_register_payment_gateways_report( $reports ) {
 						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 
 						$sql_clauses = array(
-							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
-							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'select' => 'date_created AS date',
+							'where'  => '',
 						);
 
+						// Default to 'monthly'.
+						$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
+						$sql_clauses['orderby'] = 'MONTH(date_created)';
+
+						// Now drill down to the smallest unit.
 						if ( $hour_by_hour ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
-								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-							);
-						} elseif ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
+							$sql_clauses['orderby'] = 'HOUR(date_created)';
+						} elseif ( $day_by_day ) {
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
+							$sql_clauses['orderby'] = 'DATE(date_created)';
 						}
 
 						$gateway = Reports\get_filter_value( 'gateways' );
@@ -1577,63 +1561,57 @@ function edd_register_payment_gateways_report( $reports ) {
 						$sales = array();
 						$earnings = array();
 
-						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$timezone      = new DateTimeZone( edd_get_timezone_id() );
-							$date_on_chart = new DateTime( $chart_dates['start'], $timezone );
+						/**
+						 * Initialise all arrays with timestamps and set values to 0.
+						 *
+						 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
+						 */
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart = $chart_dates['start'];
 
-							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+							$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
+							$sales[ $timestamp ][1] = 0;
 
-								$sales[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$sales[ $timestamp ][] = 0;
+							$earnings[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
+							$earnings[ $timestamp ][1] = 0.00;
 
-								$earnings[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$earnings[ $timestamp ][] = 0.00;
+							// Loop through each date there were sales/earnings, which we queried from the database.
+							foreach ( $results as $result ) {
+								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
 
-								$dates['start']->addHour( 1 );
-								$chart_dates['start']->addHour( 1 );
-							} else {
-								$day = ( true === $day_by_day )
-									? $dates['start']->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$sales[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$sales[ $timestamp ][] = 0;
-
-								$earnings[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$earnings[ $timestamp ][] = 0.00;
-
-								if ( true === $day_by_day ) {
-									$dates['start']->addDays( 1 );
-									$chart_dates['start']->addDays( 1 );
+								// Add any sales/earnings that happened during this hour.
+								if ( $hour_by_hour ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+										$sales[ $timestamp ][1] += $result->sales;
+										$earnings[ $timestamp ][1] += $result->earnings;
+									}
+									// Add any sales/earnings that happened during this day.
+								} elseif ( $day_by_day ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+										$sales[ $timestamp ][1] += $result->sales;
+										$earnings[ $timestamp ][1] += $result->earnings;
+									}
+									// Add any sales/earnings that happened during this month.
 								} else {
-									$dates['start']->addMonth( 1 );
-									$chart_dates['start']->addMonth( 1 );
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+										$sales[ $timestamp ][1] += $result->sales;
+										$earnings[ $timestamp ][1] += $result->earnings;
+									}
 								}
 							}
-						}
 
-						foreach ( $results as $result ) {
+							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-
-								/**
-								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-								 * needs to be applied to that.
-								 */
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$chart_dates['start']->addHour( 1 );
+							} elseif ( $day_by_day ) {
+								$chart_dates['start']->addDays( 1 );
 							} else {
-								$day = ( true === $day_by_day )
-									? $result->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$chart_dates['start']->addMonth( 1 );
 							}
-
-							$sales[ $timestamp ][1]    += $result->sales;
-							$earnings[ $timestamp ][1] += floatval( $result->earnings );
 						}
 
 						$sales    = array_values( $sales );
@@ -2041,20 +2019,21 @@ function edd_register_file_downloads_report( $reports ) {
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 						$sql_clauses = array(
-							'select' => 'date_created AS date',
-							'where'  => '',
+							'select'  => 'date_created AS date',
+							'where'   => '',
+							'groupby' => '',
 						);
 
 						// Default to 'monthly'.
-						$sql_clauses['groupby'] = 'MONTH(date_created)';
+						$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
 						$sql_clauses['orderby'] = 'MONTH(date_created)';
 
 						// Now drill down to the smallest unit.
 						if ( $hour_by_hour ) {
-							$sql_clauses['groupby'] = 'HOUR(date_created)';
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
 							$sql_clauses['orderby'] = 'HOUR(date_created)';
 						} elseif ( $day_by_day ) {
-							$sql_clauses['groupby'] = 'DATE(date_created)';
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
 							$sql_clauses['orderby'] = 'DATE(date_created)';
 						}
 
@@ -2080,19 +2059,15 @@ function edd_register_file_downloads_report( $reports ) {
 						$file_downloads = array();
 
 						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$utc_timezone    = new DateTimeZone( 'UTC' );
-							$timezone        = new DateTimeZone( edd_get_timezone_id() );
-
-							$timestamp       = $dates['start']->copy()->format( 'U' );
-							$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp       = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart   = $chart_dates['start'];
 
 							$file_downloads[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 							$file_downloads[ $timestamp ][1] = 0;
 
 							foreach ( $results as $result ) {
-								$date_of_db_value = new DateTime( $result->date, $utc_timezone );
-								$date_of_db_value = $date_of_db_value->setTimeZone( $timezone );
+								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
 
 								// Add any file downloads that happened during this hour.
 								if ( $hour_by_hour ) {
@@ -2117,13 +2092,10 @@ function edd_register_file_downloads_report( $reports ) {
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-								$dates['start']->addHour( 1 );
 								$chart_dates['start']->addHour( 1 );
 							} elseif ( $day_by_day ) {
-								$dates['start']->addDays( 1 );
 								$chart_dates['start']->addDays( 1 );
 							} else {
-								$dates['start']->addMonth( 1 );
 								$chart_dates['start']->addMonth( 1 );
 							}
 						}
@@ -2385,24 +2357,23 @@ function edd_register_discounts_report( $reports ) {
 							$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 							$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 
+
 							$sql_clauses = array(
-								'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month, DAY(edd_oa.date_created) AS day',
-								'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created)',
-								'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created)',
+								'select' => 'edd_oa.date_created AS date',
+								'where'  => '',
 							);
 
+							// Default to 'monthly'.
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'edd_oa.date_created' );
+							$sql_clauses['orderby'] = 'MONTH(edd_oa.date_created)';
+
+							// Now drill down to the smallest unit.
 							if ( $hour_by_hour ) {
-								$sql_clauses = array(
-									'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month, DAY(edd_oa.date_created) AS day, HOUR(edd_oa.date_created) AS hour',
-									'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created), HOUR(edd_oa.date_created)',
-									'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created), HOUR(edd_oa.date_created)',
-								);
-							} elseif ( ! $day_by_day ) {
-								$sql_clauses = array(
-									'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month',
-									'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
-									'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
-								);
+								$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'edd_oa.date_created' );
+								$sql_clauses['orderby'] = 'HOUR(edd_oa.date_created)';
+							} elseif ( $day_by_day ) {
+								$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'edd_oa.date_created' );
+								$sql_clauses['orderby'] = 'DATE(edd_oa.date_created)';
 							}
 
 							$discount_code = ! empty( $d->code )
@@ -2420,56 +2391,45 @@ function edd_register_discounts_report( $reports ) {
 							$discount_usage = array();
 
 							// Initialise all arrays with timestamps and set values to 0.
-							while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timezone      = new DateTimeZone( edd_get_timezone_id() );
-								$date_on_chart = new DateTime( $chart_dates['start'], $timezone );
+							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+								$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+								$date_on_chart = $chart_dates['start'];
 
-								if ( $hour_by_hour ) {
-									$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$discount_usage[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
+								$discount_usage[ $timestamp ][1] = 0;
 
-									$discount_usage[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-									$discount_usage[ $timestamp ][] = 0;
+								// Loop through each date in which there were discount codes used, which we queried from the database.
+								foreach ( $results as $result ) {
+									$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
 
-									$dates['start']->addHour( 1 );
-									$chart_dates['start']->addHour( 1 );
-								} else {
-									$day = ( true === $day_by_day )
-										? $dates['start']->day
-										: 1;
-
-									$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-									$discount_usage[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-									$discount_usage[ $timestamp ][] = 0;
-
-									if ( true === $day_by_day ) {
-										$dates['start']->addDays( 1 );
-										$chart_dates['start']->addDays( 1 );
+									// Add any discount codes that were used during this hour.
+									if ( $hour_by_hour ) {
+										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+											$discount_usage[ $timestamp ][1] += abs( $result->total );
+										}
+										// Add any discount codes that were used during this day.
+									} elseif ( $day_by_day ) {
+										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+											$discount_usage[ $timestamp ][1] += abs( $result->total );
+										}
+										// Add any discount codes that were used during this month.
 									} else {
-										$dates['start']->addMonth( 1 );
-										$chart_dates['start']->addMonth( 1 );
+										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+										if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+											$discount_usage[ $timestamp ][1] += abs( $result->total );
+										}
 									}
 								}
-							}
 
-							foreach ( $results as $result ) {
+								// Move the chart along to the next hour/day/month to get ready for the next loop.
 								if ( $hour_by_hour ) {
-
-									/**
-									 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-									 * needs to be applied to that.
-									 */
-									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+									$chart_dates['start']->addHour( 1 );
+								} elseif ( $day_by_day ) {
+									$chart_dates['start']->addDays( 1 );
 								} else {
-									$day = ( true === $day_by_day )
-										? $result->day
-										: 1;
-
-									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-								}
-
-								if ( array_key_exists( $timestamp, $discount_usage ) ) {
-									$discount_usage[ $timestamp ][1] += $result->total;
+									$chart_dates['start']->addMonth( 1 );
 								}
 							}
 
@@ -2486,7 +2446,6 @@ function edd_register_discounts_report( $reports ) {
 									'backgroundColor'      => 'rgba(24,126,244,0.1)',
 									'fill'                 => true,
 									'borderWidth'          => 2,
-									'type'                 => 'currency',
 									'pointRadius'          => 4,
 									'pointHoverRadius'     => 6,
 									'pointBackgroundColor' => 'rgb(255,255,255)',
@@ -2643,23 +2602,17 @@ function edd_register_customer_report( $reports ) {
 						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
 
 						$sql_clauses = array(
-							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
-							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
+							'select'  => 'date_created AS date',
+							'groupby' => Reports\get_groupby_date_string( 'MONTH', 'date_created' ),
+							'orderby' => 'MONTH(date_created)',
 						);
 
 						if ( $hour_by_hour ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
-								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-							);
-						} elseif ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
+							$sql_clauses['orderby'] = 'HOUR(date_created)';
+						} elseif ( $day_by_day ) {
+							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
+							$sql_clauses['orderby'] = 'DATE(date_created)';
 						}
 
 						$results = $wpdb->get_results( $wpdb->prepare(
@@ -2673,64 +2626,49 @@ function edd_register_customer_report( $reports ) {
 						$customers = array();
 
 						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							$timezone      = new DateTimeZone( edd_get_timezone_id() );
-							$date_on_chart = new DateTime( $chart_dates['start'], $timezone );
+						while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+							$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+							$date_on_chart = $chart_dates['start'];
 
-							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+							$customers[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
+							$customers[ $timestamp ][1] = 0;
 
-								$customers[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$customers[ $timestamp ][] = 0;
+							foreach ( $results as $result ) {
+								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
 
-								$earnings[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$earnings[ $timestamp ][] = 0.00;
-
-								$dates['start']->addHour( 1 );
-								$chart_dates['start']->addHour( 1 );
-							} else {
-								$day = ( true === $day_by_day )
-									? $dates['start']->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$customers[ $timestamp ][] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$customers[ $timestamp ][] = 0;
-
-								if ( true === $day_by_day ) {
-									$dates['start']->addDays( 1 );
-									$chart_dates['start']->addDays( 1 );
+								// Add any new customers that were created during this hour.
+								if ( $hour_by_hour ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
+										$customers[ $timestamp ][1] += $result->total;
+									}
+									// Add any new customers that were created during this day.
+								} elseif ( $day_by_day ) {
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
+										$customers[ $timestamp ][1] += $result->total;
+									}
+									// Add any new customers that were created during this month.
 								} else {
-									$dates['start']->addMonth( 1 );
-									$chart_dates['start']->addMonth( 1 );
+									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
+									if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
+										$customers[ $timestamp ][1] += $result->total;
+									}
 								}
 							}
-						}
 
-						foreach ( $results as $result ) {
+							// Move the chart along to the next hour/day/month to get ready for the next loop.
 							if ( $hour_by_hour ) {
-
-								/**
-								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-								 * needs to be applied to that.
-								 */
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$chart_dates['start']->addHour( 1 );
+							} elseif ( $day_by_day ) {
+								$chart_dates['start']->addDays( 1 );
 							} else {
-								$day = ( true === $day_by_day )
-									? $result->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$chart_dates['start']->addMonth( 1 );
 							}
-
-							$customers[ $timestamp ][1] += $result->total;
 						}
-
-						$customers = array_values( $customers );
 
 						return array(
-							'customers' => $customers,
+							'customers' => array_values( $customers ),
 						);
 					},
 					'type'          => 'line',
