@@ -333,7 +333,7 @@ function listen_for_ipn() {
 				ipn_debug_log( 'Order ' . $order_id . ' is already refunded' );
 			}
 
-			$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $order->get_transaction_id() );
+			$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $transaction_id );
 			if ( ! empty( $transaction_exists ) ) {
 				ipn_debug_log( 'Refund transaction for ' . $transaction_id . ' already exists' );
 				return;
