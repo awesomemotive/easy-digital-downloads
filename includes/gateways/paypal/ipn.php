@@ -336,7 +336,6 @@ function listen_for_ipn() {
 			return;
 		}
 
-		$order = edd_get_order( $order_id );
 		if ( 'refunded' === $order->status ) {
 			ipn_debug_log( 'Order ' . $order_id . ' is already refunded' );
 		}
