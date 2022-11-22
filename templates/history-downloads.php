@@ -24,10 +24,11 @@ $page     = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 if ( ! empty( $customer ) ) {
 	$orders = edd_get_orders(
 		array(
-			'customer_id' => $customer->id,
-			'number'      => 20,
-			'offset'      => 20 * ( intval( $page ) - 1 ),
-			'type'        => 'sale',
+			'customer_id'    => $customer->id,
+			'number'         => 20,
+			'offset'         => 20 * ( intval( $page ) - 1 ),
+			'type'           => 'sale',
+			'status__not_in' => array( 'trash', 'refunded', 'abandoned' ),
 		)
 	);
 } else {
@@ -116,8 +117,9 @@ if ( $orders ) :
 	if ( ! empty( $customer->id ) ) {
 		$count = edd_count_orders(
 			array(
-				'customer_id' => $customer->id,
-				'type'        => 'sale',
+				'customer_id'    => $customer->id,
+				'type'           => 'sale',
+				'status__not_in' => array( 'trash', 'refunded', 'abandoned' ),
 			)
 		);
 		echo edd_pagination(

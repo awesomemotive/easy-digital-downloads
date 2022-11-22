@@ -175,17 +175,39 @@ class Data_Migrator {
 		$args            = array();
 		$meta            = get_post_custom( $data->ID );
 		$meta_to_migrate = array();
+		$core_meta       = array(
+			'code',
+			'name',
+			'status',
+			'uses',
+			'max_uses',
+			'amount',
+			'start',
+			'expiration',
+			'type',
+			'min_price',
+			'product_reqs',
+			'product_condition',
+			'excluded_products',
+			'is_not_global',
+			'is_single_use',
+		);
 
 		foreach ( $meta as $key => $value ) {
+			$value = maybe_unserialize( $value[0] );
 			if ( false === strpos( $key, '_edd_discount' ) ) {
 
 				// This is custom meta from another plugin that needs to be migrated to the new meta table.
-				$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+				$meta_to_migrate[ $key ] = $value;
+				continue;
+			}
+			$meta_key = str_replace( '_edd_discount_', '', $key );
+			if ( ! in_array( $meta_key, $core_meta, true ) ) {
+				$meta_to_migrate[ $meta_key ] = $value;
 				continue;
 			}
 
-			$value = maybe_unserialize( $value[0] );
-			$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
+			$args[ $meta_key ] = $value;
 		}
 
 		// If the discount name was not stored in post_meta, use value from the WP_Post object.
