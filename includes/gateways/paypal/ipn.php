@@ -329,11 +329,12 @@ function listen_for_ipn() {
 		}
 
 		if ( 'refunded' === $payment_status || 'reversed' === $payment_status ) {
+			$order = edd_get_order( $order_id );
 			if ( 'refunded' === $order->status ) {
 				ipn_debug_log( 'Order ' . $order_id . ' is already refunded' );
 			}
 
-			$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $transaction_id );
+			$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $order->get_transaction_id() );
 			if ( ! empty( $transaction_exists ) ) {
 				ipn_debug_log( 'Refund transaction for ' . $transaction_id . ' already exists' );
 				return;
