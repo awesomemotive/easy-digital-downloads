@@ -34,6 +34,35 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	} );
 
+	$( '#edd-paypal-commerce-reconnect' ).on( 'click', function ( e ) {
+		e.preventDefault();
+
+		// Clear errors.
+		var errorContainer = $( '#edd-paypal-commerce-errors' );
+		errorContainer.empty().removeClass( 'notice notice-error' );
+
+		var button = document.getElementById( 'edd-paypal-commerce-reconnect' );
+		button.classList.add( 'updating-message' );
+		button.disabled = true;
+
+		$.post( ajaxurl, {
+			action: 'edd_paypal_commerce_reconnect',
+			_ajax_nonce: $( this ).data( 'nonce' )
+		}, function( response ) {
+			if ( ! response.success ) {
+				console.log( 'Reconnect failure', response.data );
+				button.classList.remove( 'updating-message' );
+				button.disabled = false;
+
+				// Set errors.
+				errorContainer.html( '<p>' + response.data + '</p>' ).addClass( 'notice notice-error' );
+				return;
+			}
+
+
+		} );
+	} );
+
 	/**
 	 * Checks the PayPal connection & webhook status.
 	 */
@@ -51,6 +80,11 @@ jQuery( document ).ready( function ( $ ) {
 
 					if ( response.data.actions && response.data.actions.length ) {
 						newHtml += '<p class="edd-paypal-connect-actions">' + response.data.actions.join( ' ' ) + '</p>';
+					}
+
+					if ( response.data.disconnect_links && response.data.disconnect_links.length ) {
+						var disconnect_link_wrppper = document.getElementById('edd-paypal-disconnect');
+						disconnect_link_wrppper.innerHTML = response.data.disconnect_links.join( ' ' );
 					}
 				} else if ( response.data && response.data.message ) {
 					newHtml = response.data.message;
