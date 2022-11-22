@@ -219,7 +219,7 @@ function listen_for_ipn() {
 
 					}
 
-					if ( 'failed' === strtolower( $posted['payment_status'] ) ) {
+					if ( 'failed' === $payment_status ) {
 						if ( 'failing' === $subscription->status ) {
 							ipn_debug_log( 'Subscription ID ' . $subscription->id . ' arlready failing.' );
 							return;
@@ -306,6 +306,14 @@ function listen_for_ipn() {
 		}
 
 		// We've processed recurring, now let's handle non-recurring IPNs.
+
+		// First, if this isn't a refund or reversal, we don't need to process anything.
+		$statuses_to_process = array( 'refunded', 'reversed' );
+		if ( ! in_array( $payment_status, $statuses_to_process, true ) ) {
+			ipn_debug_log( 'Payment Status was not a status we need to process: ' . $payment_status );
+			return;
+		}
+
 		$order_id = 0;
 
 		if ( ! empty( $posted['parent_txn_id'] ) ) {
@@ -328,56 +336,54 @@ function listen_for_ipn() {
 			return;
 		}
 
-		if ( 'refunded' === $payment_status || 'reversed' === $payment_status ) {
-			$order = edd_get_order( $order_id );
-			if ( 'refunded' === $order->status ) {
-				ipn_debug_log( 'Order ' . $order_id . ' is already refunded' );
-			}
-
-			$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $order->get_transaction_id() );
-			if ( ! empty( $transaction_exists ) ) {
-				ipn_debug_log( 'Refund transaction for ' . $transaction_id . ' already exists' );
-				return;
-			}
-
-			$order_amount    = edd_get_payment_amount( $order->id );
-			$refunded_amount = ! empty( $amount ) ? $amount : $order_amount;
-			$currency        = ! empty( $currency_code ) ? $currency_code : $order->currency;
-
-			ipn_debug_log( 'Processing a refund for original transaction ' . $order->get_transaction_id() );
-
-			/* Translators: %1$s - Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID */
-			$payment_note = sprintf(
-				esc_html__( 'Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s', 'easy-digital-downloads' ),
-				edd_currency_filter( edd_format_amount( $refunded_amount ), $currency ),
-				esc_html( $order->get_transaction_id() ),
-				esc_html( $transaction_id )
-			);
-
-			// Partial refund.
-			if ( (float) $refunded_amount < (float) $order_amount ) {
-				edd_add_note(
-					array(
-						'object_type' => 'order',
-						'object_id'   => $order->id,
-						'content'     => __( 'Partial refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
-					)
-				);
-				edd_update_order_status( $order->id, 'partially_refunded' );
-			} else {
-				// Full refund.
-				edd_add_note(
-					array(
-						'object_type' => 'order',
-						'object_id'   => $order->id,
-						'content'     => __( 'Full refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
-					)
-				);
-				edd_update_order_status( $order->id, 'refunded' );
-			}
-
-			die( 'Refund processed' );
+		$order = edd_get_order( $order_id );
+		if ( 'refunded' === $order->status ) {
+			ipn_debug_log( 'Order ' . $order_id . ' is already refunded' );
 		}
+
+		$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $order->get_transaction_id() );
+		if ( ! empty( $transaction_exists ) ) {
+			ipn_debug_log( 'Refund transaction for ' . $transaction_id . ' already exists' );
+			return;
+		}
+
+		$order_amount    = edd_get_payment_amount( $order->id );
+		$refunded_amount = ! empty( $amount ) ? $amount : $order_amount;
+		$currency        = ! empty( $currency_code ) ? $currency_code : $order->currency;
+
+		ipn_debug_log( 'Processing a refund for original transaction ' . $order->get_transaction_id() );
+
+		/* Translators: %1$s - Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID */
+		$payment_note = sprintf(
+			esc_html__( 'Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s', 'easy-digital-downloads' ),
+			edd_currency_filter( edd_format_amount( $refunded_amount ), $currency ),
+			esc_html( $order->get_transaction_id() ),
+			esc_html( $transaction_id )
+		);
+
+		// Partial refund.
+		if ( (float) $refunded_amount < (float) $order_amount ) {
+			edd_add_note(
+				array(
+					'object_type' => 'order',
+					'object_id'   => $order->id,
+					'content'     => __( 'Partial refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
+				)
+			);
+			edd_update_order_status( $order->id, 'partially_refunded' );
+		} else {
+			// Full refund.
+			edd_add_note(
+				array(
+					'object_type' => 'order',
+					'object_id'   => $order->id,
+					'content'     => __( 'Full refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
+				)
+			);
+			edd_update_order_status( $order->id, 'refunded' );
+		}
+
+		die( 'Refund processed' );
 	} else {
 		ipn_debug_log( 'verification failed, bailing.' );
 		status_header( 400 );
