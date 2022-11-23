@@ -236,6 +236,12 @@ function edd_run_install( $site_id = false ) {
 	// Maybe set all upgrades as complete (only on fresh installation)
 	edd_set_all_upgrades_complete();
 
+	// Existing stores should have the Onboarding Wizard completed.
+	$db_version = edd_get_db_version();
+	if ( ! empty( $db_version ) ) {
+		update_option( 'edd_onboarding_completed', true );
+	}
+
 	// Update the database version (must be at end, but before site restore)
 	edd_update_db_version();
 
@@ -244,11 +250,6 @@ function edd_run_install( $site_id = false ) {
 		restore_current_blog();
 	}
 
-	// Existing stores should have the Onboarding Wizard completed.
-	$db_version = edd_get_db_version();
-	if ( ! empty( $db_version ) ) {
-		update_option( 'edd_onboarding_completed', true );
-	}
 }
 
 /**
