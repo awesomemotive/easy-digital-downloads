@@ -240,7 +240,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 = 3.1.0.3, November 23, 2022 =
 * Improvement: The PayPal webhook connect/disconnect process has been improved to ensure proper webhook delivery.
 * Improvement: An IPN Backup has been added to the PayPal gateway, to avoid missing webhooks that may have been disconnected.
-* Fix: PayPal Buy Now functionaliy has been fixed for guest users.
+* Fix: PayPal Buy Now functionality has been fixed for guest users.
 * Fix: Exporting orders was including orders with the Trash status.
 * Fix: Trashed orders were showing in the purchase history shortcode.
 * Fix: The file downloads graph was formatting integeters as currency.
