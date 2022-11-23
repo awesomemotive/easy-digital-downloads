@@ -243,7 +243,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: PayPal Buy Now functionality has been fixed for guest users.
 * Fix: Exporting orders was including orders with the Trash status.
 * Fix: Trashed orders were showing in the purchase history shortcode.
-* Fix: The file downloads graph was formatting integeters as currency.
+* Fix: The file downloads graph was formatting integers as currency.
 * Fix: Searching by download ID on the Orders list table was not working.
 * Fix: In some timezone settings, the reports could incorrectly display.
 * Fix: Determining if a product can be purchased was improved for performance.
