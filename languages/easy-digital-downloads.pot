@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-23T09:46:33+00:00\n"
+"POT-Creation-Date: 2022-11-23T23:45:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: easy-digital-downloads\n"
@@ -258,6 +258,8 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:558
 #: includes/gateways/paypal/admin/connect.php:562
 #: includes/gateways/paypal/admin/connect.php:704
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/upgrade-functions.php:80
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1387
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 #: includes/gateways/stripe/includes/payment-actions.php:1387
 #: includes/process-download.php:296
@@ -712,6 +714,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:230
 #: includes/admin/discounts/class-discount-codes-table.php:316
 #: includes/admin/settings/register-settings.php:293
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:444
 #: includes/gateways/stripe/includes/template-functions.php:444
 msgid "Delete"
 msgstr ""
@@ -772,6 +775,8 @@ msgstr ""
 #: includes/admin/views/tmpl-tax-rates-table-meta.php:16
 #: includes/admin/views/tmpl-tax-rates-table-row.php:18
 #: includes/blocks/views/checkout/purchase-form/address.php:8
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:513
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:522
 #: includes/gateways/stripe/includes/template-functions.php:513
 #: includes/gateways/stripe/includes/template-functions.php:522
 #: templates/shortcode-profile-editor.php:162
@@ -1074,6 +1079,9 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:471
 #: includes/admin/thickbox.php:182
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-filters.php:109
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:600
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:643
 #: includes/gateways/stripe/includes/admin/admin-filters.php:109
 #: includes/gateways/stripe/includes/template-functions.php:600
 #: includes/gateways/stripe/includes/template-functions.php:643
@@ -1081,6 +1089,7 @@ msgid "Cancel"
 msgstr ""
 
 #: includes/admin/customers/customers.php:472
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:428
 #: includes/gateways/stripe/includes/template-functions.php:428
 msgid "Update"
 msgstr ""
@@ -1107,6 +1116,7 @@ msgstr ""
 #: includes/blocks/views/checkout/purchase-form/address.php:54
 #: includes/blocks/views/checkout/purchase-form/address.php:60
 #: includes/checkout/template.php:393
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:488
 #: includes/gateways/stripe/includes/template-functions.php:488
 #: templates/shortcode-profile-editor.php:152
 msgid "City"
@@ -1236,6 +1246,8 @@ msgstr ""
 #: includes/admin/views/tmpl-order-total.php:16
 #: includes/blocks/views/checkout/cart/cart-total.php:8
 #: includes/blocks/views/orders/totals.php:63
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/functions.php:146
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/functions.php:192
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:146
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:192
 #: templates/checkout_cart.php:129
@@ -1288,6 +1300,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:909
 #: includes/admin/payments/orders.php:348
 #: includes/blocks/views/orders/guest.php:10
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/buy-now/template.php:110
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:110
 #: includes/privacy-functions.php:773
 msgid "Email Address"
@@ -2054,6 +2067,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:488
 #: includes/download-functions.php:674
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:407
 #: includes/gateways/stripe/includes/template-functions.php:407
 #: includes/blocks/build/downloads/index.js:1
 msgid "Default"
@@ -2239,6 +2253,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:1031
 #: includes/admin/thickbox.php:76
 #: includes/checkout/template.php:992
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/buy-now/template.php:215
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:215
 #: includes/shortcodes.php:49
 #: includes/template-functions.php:87
@@ -2293,6 +2308,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:1220
 #: includes/admin/settings/register-settings.php:1059
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/buy-now/template.php:47
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:47
 #: includes/shortcodes.php:47
 #: includes/template-functions.php:87
@@ -3167,6 +3183,7 @@ msgstr ""
 
 #: includes/admin/payments/orders.php:767
 #: includes/admin/views/tmpl-order-copy-download-link.php:35
+#: includes/gateways/stripe/build/edd-stripe/includes/utils/modal.php:69
 #: includes/gateways/stripe/includes/utils/modal.php:69
 msgid "Close"
 msgstr ""
@@ -3339,6 +3356,7 @@ msgid "Hey, I noticed you've made quite a few sales with Easy Digital Downloads!
 msgstr ""
 
 #: includes/admin/promos/notices/class-five-star-review-dashboard.php:80
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:146
 #: includes/gateways/stripe/includes/admin/admin-actions.php:146
 msgid "Yes"
 msgstr ""
@@ -3584,6 +3602,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:64
 #: includes/admin/reporting/export/class-batch-export-payments.php:49
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:50
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:535
 #: includes/gateways/stripe/includes/template-functions.php:535
 msgid "State"
 msgstr ""
@@ -3594,6 +3613,7 @@ msgstr ""
 #: includes/admin/tools.php:746
 #: includes/blocks/views/checkout/purchase-form/address.php:105
 #: includes/checkout/template.php:403
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:789
 #: includes/gateways/stripe/includes/template-functions.php:789
 #: templates/shortcode-profile-editor.php:157
 msgid "Zip / Postal Code"
@@ -5593,6 +5613,7 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:1785
 #: includes/blocks/includes/checkout/checkout.php:131
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:82
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:82
 #: includes/install.php:385
 #: templates/widget-cart-checkout.php:6
@@ -6071,12 +6092,14 @@ msgid "Purchased Product(s)"
 msgstr ""
 
 #: includes/admin/tools.php:708
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:460
 #: includes/gateways/stripe/includes/template-functions.php:460
 msgid "Address Line 1"
 msgstr ""
 
 #: includes/admin/tools.php:718
 #: includes/blocks/views/checkout/purchase-form/address.php:43
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:474
 #: includes/gateways/stripe/includes/template-functions.php:474
 msgid "Address Line 2"
 msgstr ""
@@ -6405,6 +6428,7 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:1028
 #: includes/admin/upgrades/upgrade-functions.php:1148
 #: includes/admin/upgrades/upgrade-functions.php:1230
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/upgrade-functions.php:80
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
@@ -7109,6 +7133,7 @@ msgstr ""
 #: includes/blocks/includes/checkout/checkout.php:122
 #: includes/blocks/includes/checkout/checkout.php:162
 #: includes/cart/template.php:120
+#: includes/gateways/stripe/build/edd-stripe/includes/compat.php:224
 #: includes/gateways/stripe/includes/compat.php:224
 msgid "Your cart is empty."
 msgstr ""
@@ -7309,6 +7334,7 @@ msgid "ZIP/Postal Code"
 msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/credit-card.php:2
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:39
 #: includes/gateways/stripe/includes/template-functions.php:39
 msgid "Credit Card Info"
 msgstr ""
@@ -7319,17 +7345,20 @@ msgid "Secure SSL encrypted payment"
 msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/credit-card.php:16
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:65
 #: includes/gateways/stripe/includes/template-functions.php:65
 msgid "This is a secure SSL encrypted payment."
 msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/credit-card.php:22
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:113
 #: includes/gateways/stripe/includes/template-functions.php:113
 msgid "Name on the Card"
 msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/credit-card.php:26
 #: includes/checkout/template.php:280
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:117
 #: includes/gateways/stripe/includes/template-functions.php:117
 msgid "Card name"
 msgstr ""
@@ -7346,6 +7375,7 @@ msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/credit-card.php:42
 #: includes/checkout/template.php:268
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:159
 #: includes/gateways/stripe/includes/template-functions.php:159
 msgid "CVC"
 msgstr ""
@@ -7357,6 +7387,7 @@ msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/credit-card.php:52
 #: includes/checkout/template.php:285
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:557
 #: includes/gateways/stripe/includes/template-functions.php:557
 msgid "Expiration (MM/YY)"
 msgstr ""
@@ -7367,6 +7398,7 @@ msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/gateways.php:51
 #: includes/checkout/template.php:947
+#: includes/gateways/stripe/build/edd-stripe/includes/scripts.php:81
 #: includes/gateways/stripe/includes/scripts.php:81
 msgid "Next"
 msgstr ""
@@ -7628,6 +7660,7 @@ msgid "Name on the card"
 msgstr ""
 
 #: includes/checkout/template.php:279
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:116
 #: includes/gateways/stripe/includes/template-functions.php:116
 msgid "The name printed on the front of your credit card."
 msgstr ""
@@ -7669,6 +7702,7 @@ msgid "Billing zip/Postal code"
 msgstr ""
 
 #: includes/checkout/template.php:402
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:788
 #: includes/gateways/stripe/includes/template-functions.php:788
 msgid "The zip or postal code for your billing address."
 msgstr ""
@@ -7678,6 +7712,7 @@ msgid "Billing country"
 msgstr ""
 
 #: includes/checkout/template.php:412
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:764
 #: includes/gateways/stripe/includes/template-functions.php:764
 msgid "The country for your billing address."
 msgstr ""
@@ -8439,6 +8474,7 @@ msgid "Draft"
 msgstr ""
 
 #: includes/class-edd-discount.php:678
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:329
 #: includes/gateways/stripe/includes/template-functions.php:329
 #: includes/misc-functions.php:1442
 msgid "Expired"
@@ -9718,6 +9754,7 @@ msgid "Billing"
 msgstr ""
 
 #: includes/gateways/actions.php:37
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/checkout.php:321
 #: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:321
 msgid "Missing nonce when loading the gateway fields. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
@@ -10143,6 +10180,7 @@ msgid "Sign up for PayPal"
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:79
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:342
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:342
 msgid "Retrieving account information..."
 msgstr ""
@@ -10278,6 +10316,7 @@ msgid "Documentation"
 msgstr ""
 
 #: includes/gateways/paypal/admin/settings.php:66
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:47
 #: includes/gateways/stripe/includes/admin/settings.php:47
 msgid "Connection Status"
 msgstr ""
@@ -10574,54 +10613,71 @@ msgstr ""
 msgid "Invalid response code %d while deleting webhook."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:63
 #: includes/gateways/stripe/includes/admin/admin-actions.php:63
 msgid "Preapproval cancelled"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:84
 #: includes/gateways/stripe/includes/admin/admin-actions.php:84
 msgid "Are you sure you want to cancel this order?"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:103
 #: includes/gateways/stripe/includes/admin/admin-actions.php:103
 msgid "The preapproved payment was successfully charged."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:106
 #: includes/gateways/stripe/includes/admin/admin-actions.php:106
 msgid "The preapproved payment failed to be charged. View order details for further details."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:109
 #: includes/gateways/stripe/includes/admin/admin-actions.php:109
 msgid "The preapproved payment was successfully cancelled."
 msgstr ""
 
 #. translators: %1$s Stripe Connect error message. %2$s Retry URL.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:114
 #: includes/gateways/stripe/includes/admin/admin-actions.php:114
 msgid "There was an error connecting your Stripe account. Message: %1$s. Please <a href=\"%2$s\">try again</a>."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:145
 #: includes/gateways/stripe/includes/admin/admin-actions.php:145
 msgid "Used Existing Card:"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-actions.php:210
+#: includes/gateways/stripe/build/edd-stripe/includes/scripts.php:149
 #: includes/gateways/stripe/includes/admin/admin-actions.php:210
 #: includes/gateways/stripe/includes/scripts.php:149
 msgid "Refund Charge in Stripe"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/admin-filters.php:99
 #: includes/gateways/stripe/includes/admin/admin-filters.php:99
 msgid "Process"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/class-notices-registry.php:92
 #: includes/gateways/stripe/includes/admin/class-notices-registry.php:92
 msgid "A message must be specified for each notice."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices.php:39
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:632
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/apple-pay.php:22
 #: includes/gateways/stripe/includes/admin/notices.php:39
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:632
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:22
 msgid "Unable to locate registry"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/edd-recurring-requirement.php:18
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/edd-requirement.php:18
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/php-requirement.php:21
 #: includes/gateways/stripe/includes/admin/notices/edd-recurring-requirement.php:18
 #: includes/gateways/stripe/includes/admin/notices/edd-requirement.php:18
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:21
@@ -10629,42 +10685,53 @@ msgid "Credit card payments with Stripe are currently disabled."
 msgstr ""
 
 #. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong tag, do not translate. %3$s Opening code tag, do not translate. %4$s Closing code tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/edd-recurring-requirement.php:26
 #: includes/gateways/stripe/includes/admin/notices/edd-recurring-requirement.php:26
 msgid "To continue accepting credit card payments with Stripe please update %1$sEasy Digital Downloads - Recurring Payments%2$s to version %3$s2.10%4$s or higher."
 msgstr ""
 
 #. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong tag, do not translate. %3$s Opening code tag, do not translate. %4$s Closing code tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/edd-requirement.php:26
 #: includes/gateways/stripe/includes/admin/notices/edd-requirement.php:26
 msgid "To continue accepting credit card payments with Stripe please update %1$sEasy Digital Downloads%2$s to version %3$s2.11%4$s or higher."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/edd-stripe-core.php:28
 #: includes/gateways/stripe/includes/admin/notices/edd-stripe-core.php:28
 msgid "Accept credit card payments with Stripe"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. %3$s Opening anchor tag, do not translate. %4$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/edd-stripe-core.php:34
 #: includes/gateways/stripe/includes/admin/notices/edd-stripe-core.php:34
 msgid "Easy Digital Downloads now lets you accept credit card payments using Stripe, including Apple Pay and Google Pay support. %1$sEnable Stripe%2$s now or %3$slearn more%4$s about the benefits of using Stripe."
 msgstr ""
 
 #. translators: %1$s Future PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate. %5$s Opening anchor tag, do not translate. %6$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/php-requirement.php:29
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:29
 msgid "Easy Digital Downloads Stripe Payment Gateway requires PHP version %1$s or higher. It looks like you're using version %2$s, which means you will need to %3$supgrade your version of PHP to allow the plugin to continue to function%4$s. Newer versions of PHP are both faster and more secure. The version you're using %5$sno longer receives security updates%6$s, which is another great reason to update."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/php-requirement.php:51
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:51
 msgid "Read More"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/php-requirement.php:65
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:65
 msgid "Which version should I upgrade to?"
 msgstr ""
 
 #. translators: %1$s Future PHP version requirement.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/php-requirement.php:73
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:73
 msgid "In order to be compatible with future versions of the Stripe payment gateway, you should update your PHP version to at least %1$s; however we recommend using version <code>7.4</code> if possible to receive the full speed and security benefits provided to more modern and fully supported versions of PHP. However, some plugins may not be fully compatible with PHP <code>7.4</code>, so more testing may be required."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/php-requirement.php:84
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:309
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:378
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:84
 #: includes/gateways/stripe/includes/admin/settings.php:309
 #: includes/gateways/stripe/includes/admin/settings.php:378
@@ -10672,298 +10739,375 @@ msgid "Need help upgrading? Ask your web host!"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/notices/php-requirement.php:92
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:92
 msgid "Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. %1$sRead more about updating PHP%2$s."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/reporting/class-stripe-reports.php:22
 #: includes/gateways/stripe/includes/admin/reporting/class-stripe-reports.php:22
 msgid "Stripe-specific reports have been removed."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:9
 #: includes/gateways/stripe/includes/admin/settings.php:9
 msgid "Stripe"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:35
 #: includes/gateways/stripe/includes/admin/settings.php:35
 msgid "Unmet Requirements"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:54
 #: includes/gateways/stripe/includes/admin/settings.php:54
 msgid "Test Publishable Key"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:55
 #: includes/gateways/stripe/includes/admin/settings.php:55
 msgid "Enter your test publishable key, found in your Stripe Account Settings"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:62
 #: includes/gateways/stripe/includes/admin/settings.php:62
 msgid "Test Secret Key"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:63
 #: includes/gateways/stripe/includes/admin/settings.php:63
 msgid "Enter your test secret key, found in your Stripe Account Settings"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:70
 #: includes/gateways/stripe/includes/admin/settings.php:70
 msgid "Live Publishable Key"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:71
 #: includes/gateways/stripe/includes/admin/settings.php:71
 msgid "Enter your live publishable key, found in your Stripe Account Settings"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:78
 #: includes/gateways/stripe/includes/admin/settings.php:78
 msgid "Live Secret Key"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:79
 #: includes/gateways/stripe/includes/admin/settings.php:79
 msgid "Enter your live secret key, found in your Stripe Account Settings"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:87
 #: includes/gateways/stripe/includes/admin/settings.php:87
 msgid "Webhooks"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:91
 #: includes/gateways/stripe/includes/admin/settings.php:91
 msgid "In order for Stripe to function completely, you must configure your Stripe webhooks. Visit your %1$saccount dashboard%2$s to configure them. Please add a webhook endpoint for the URL below."
 msgstr ""
 
 #. translators: %s Webhook URL. Do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:97
 #: includes/gateways/stripe/includes/admin/settings.php:97
 msgid "Webhook URL: %s"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Opening anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:102
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:53
 #: includes/gateways/stripe/includes/admin/settings.php:102
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:53
 msgid "See our %1$sdocumentation%2$s for more information."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:109
 #: includes/gateways/stripe/includes/admin/settings.php:109
 msgid "Billing Address Display"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:110
 #: includes/gateways/stripe/includes/admin/settings.php:110
 msgid "Select how you would like to display the billing address fields on the checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this option cannot be changed from \"Full address\".</p><p>If set to \"No address fields\", you <strong>must</strong> disable \"zip code verification\" in your Stripe account.</p>"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:113
 #: includes/gateways/stripe/includes/admin/settings.php:113
 msgid "Full address"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:114
 #: includes/gateways/stripe/includes/admin/settings.php:114
 msgid "Zip / Postal Code and Country only"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:115
 #: includes/gateways/stripe/includes/admin/settings.php:115
 msgid "No address fields"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:121
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:53
 #: includes/gateways/stripe/includes/admin/settings.php:121
 #: includes/gateways/stripe/includes/gateway-actions.php:53
 msgid "Statement Descriptor"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:122
 #: includes/gateways/stripe/includes/admin/settings.php:122
 msgid "Choose how charges will appear on customer's credit card statements. <em>Max 22 characters</em>"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:127
 #: includes/gateways/stripe/includes/admin/settings.php:127
 msgid "Show Previously Used Cards"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:128
 #: includes/gateways/stripe/includes/admin/settings.php:128
 msgid "Provides logged in customers with a list of previous used payment methods for faster checkout."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:133
 #: includes/gateways/stripe/includes/admin/settings.php:133
 msgid "Prepaid Cards"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:134
 #: includes/gateways/stripe/includes/admin/settings.php:134
 msgid "Allow prepaid cards as valid payment method."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:139
 #: includes/gateways/stripe/includes/admin/settings.php:139
 msgid "Split Credit Card Form"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:140
 #: includes/gateways/stripe/includes/admin/settings.php:140
 msgid "Use separate card number, expiration, and CVC fields in payment forms."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:145
 #: includes/gateways/stripe/includes/admin/settings.php:145
 msgid "Restrict Stripe Assets"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:146
 #: includes/gateways/stripe/includes/admin/settings.php:146
 msgid "Only load Stripe.com hosted assets on pages that specifically utilize Stripe functionality."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:148
 #: includes/gateways/stripe/includes/admin/settings.php:148
 msgid "Loading Javascript from Stripe"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:149
 #: includes/gateways/stripe/includes/admin/settings.php:149
 msgid "Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. Read more about Stripe's recommended setup here: https://stripe.com/docs/web/setup."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:156
 #: includes/gateways/stripe/includes/admin/settings.php:156
 msgid "Stripe Checkout"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:161
 #: includes/gateways/stripe/includes/admin/settings.php:161
 msgid "To ensure your website is compliant with the new %1$sStrong Customer Authentication%2$s (SCA) regulations, the legacy Stripe Checkout modal is no longer supported. Payments are still securely accepted through through Stripe on the standard Easy Digital Downloads checkout page. \"Buy Now\" buttons will also automatically redirect to the standard checkout page."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:183
 #: includes/gateways/stripe/includes/admin/settings.php:183
 msgid "You have disabled the \"Test Mode\" option. Once you have saved your changes, please verify your Stripe connection, especially if you have not previously connected in with \"Test Mode\" disabled."
 msgstr ""
 
 #. translators: %1$s Future PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate.
 #. translators: %1$s PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:291
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:363
 #: includes/gateways/stripe/includes/admin/settings.php:291
 #: includes/gateways/stripe/includes/admin/settings.php:363
 msgid "Processing credit cards with Stripe requires PHP version %1$s or higher. It looks like you're using version %2$s, which means you will need to %3$supgrade your version of PHP before acceping credit card payments%4$s."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:315
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings.php:383
 #: includes/gateways/stripe/includes/admin/settings.php:315
 #: includes/gateways/stripe/includes/admin/settings.php:383
 msgid "Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %1$sour hosting recommendations%2$s."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:109
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:109
 msgid "There was an error getting your Stripe credentials. Please %1$stry again%2$s. If you continue to have this problem, please contact support."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:295
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:576
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:638
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:295
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:576
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:638
 msgid "Connect with Stripe"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:305
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:305
 msgid "Connect with Stripe for pay as you go pricing: 2% per-transaction fee + Stripe fees."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:316
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:316
 msgid "Have questions about connecting with Stripe? See the %1$sdocumentation%2$s."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:355
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:355
 msgid "Manage API keys manually"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:365
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:365
 msgid "Hide API keys"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:371
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:371
 msgid "Although you can add your API keys manually, we recommend using Stripe Connect: an easier and more secure way of connecting your Stripe account to your website. Stripe Connect prevents issues that can arise when copying and pasting account details from Stripe into your Easy Digital Downloads payment gateway settings. With Stripe Connect you'll be ready to go with just a few clicks."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:389
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:389
 msgid "Unable to retrieve account information."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:407
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:407
 msgctxt "Stripe Connect mode"
 msgid "test"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:408
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:408
 msgctxt "Stripe Connect mode"
 msgid "live"
 msgstr ""
 
 #. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for reconnecting to Stripe, do not translate. %3$s Opening anchor tag for disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:414
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:414
 msgid "Your Stripe account is connected in %1$s mode. %2$sReconnect in %1$s mode%4$s, or %3$sdisconnect this account%4$s."
 msgstr ""
 
 #. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:436
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:436
 msgid "You are currently connected to a %1$stemporary%2$s Stripe test account, which can only be used for testing purposes. You cannot manage this account in Stripe."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:446
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:446
 msgid "Webhooks cannot be configured for recurring purchases with this account."
 msgstr ""
 
 #. translators: %1$s Opening link tag, do not translate. %2$s Closing link tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:453
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:453
 msgid "%1$sRegister a Stripe account%2$s for full access."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag for disconnecting Stripe, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:464
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:464
 msgid "%1$sDisconnect this account%2$s."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:530
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:530
 msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:542
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:542
 msgid "Administrator (Owner)"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:553
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:553
 msgid "The API keys provided do not match the Stripe Connect account associated with this installation. If you have manually modified these values after connecting your account, please reconnect below or update your API keys."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:579
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:579
 msgid "It is highly recommended to Connect with Stripe for easier setup and improved security."
 msgstr ""
 
 #. translators: %1$s Stripe payment mode.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:592
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:592
 msgid "Your manually managed %1$s mode API keys are valid."
 msgstr ""
 
 #. translators: %1$s Stripe payment mode.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:608
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:608
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:648
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:648
 msgid "Start accepting payments with Stripe by connecting your account. Stripe Connect helps ensure easier setup and improved security."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:659
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:659
 msgctxt "gateway test mode status"
 msgid "enabled"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:660
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:660
 msgctxt "gateway test mode status"
 msgid "disabled"
 msgstr ""
 
 #. translators: %s Test mode status. Enabled or disabled.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/settings/stripe-connect.php:669
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:669
 msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
 msgstr ""
 
 #. translators: %s Upgrade link.
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/upgrade-functions.php:55
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:55
 msgid "Easy Digital Downloads - Stripe Gateway needs to upgrade the customers database; <a href=\"%s\">click here to start the upgrade</a>. <a href=\"#\" onClick=\"jQuery(this).parent().next('p').slideToggle()\">Learn more about this upgrade</a>"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/upgrade-functions.php:58
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:58
 msgid "<strong>About this upgrade:</strong><br />This upgrade will improve the reliability of associating purchase records with your existing customer records in Stripe by changing their Stripe Customer IDs to be stored locally on their EDD customer record, instead of their user record."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/admin/upgrade-functions.php:60
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:60
 msgid "<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd-stripe migrate_customer_ids</code>"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:22
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:141
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:208
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:258
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:311
 #: includes/gateways/stripe/includes/card-actions.php:22
 #: includes/gateways/stripe/includes/card-actions.php:141
 #: includes/gateways/stripe/includes/card-actions.php:208
@@ -10972,6 +11116,15 @@ msgstr ""
 msgid "This feature is not available at this time."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:33
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:42
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:50
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:152
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:161
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:172
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:219
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:228
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:239
 #: includes/gateways/stripe/includes/card-actions.php:33
 #: includes/gateways/stripe/includes/card-actions.php:42
 #: includes/gateways/stripe/includes/card-actions.php:50
@@ -10984,103 +11137,129 @@ msgstr ""
 msgid "Error updating card."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:115
 #: includes/gateways/stripe/includes/card-actions.php:115
 msgid "Card successfully updated."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:182
 #: includes/gateways/stripe/includes/card-actions.php:182
 msgid "Card successfully set as default."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:285
 #: includes/gateways/stripe/includes/card-actions.php:285
 msgid "Card successfully removed."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:322
 #: includes/gateways/stripe/includes/card-actions.php:322
 msgid "Unable to update your account at this time, please try again later"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:333
 #: includes/gateways/stripe/includes/card-actions.php:333
 msgid "Missing card ID."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:342
 #: includes/gateways/stripe/includes/card-actions.php:342
 msgid "Error adding card."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:351
 #: includes/gateways/stripe/includes/card-actions.php:351
 msgid "Unable to retrieve customer."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:370
 #: includes/gateways/stripe/includes/card-actions.php:370
 msgid "Unable to create customer in Stripe."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/card-actions.php:398
 #: includes/gateways/stripe/includes/card-actions.php:398
 msgid "Card successfully added."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/class-edd-stripe.php:252
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:126
 #: includes/gateways/stripe/includes/class-edd-stripe.php:252
 #: includes/gateways/stripe/includes/template-functions.php:126
 msgid "Credit Card"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/class-stripe-api.php:51
 #: includes/gateways/stripe/includes/class-stripe-api.php:51
 msgid "Unable to process request: Unmet Stripe payment gateway requirements. Please contact the website administrator."
 msgstr ""
 
 #. translators: %1$s Stripe API class name. %2$s Stripe API method name.
+#: includes/gateways/stripe/build/edd-stripe/includes/class-stripe-api.php:69
 #: includes/gateways/stripe/includes/class-stripe-api.php:69
 msgid "Unable to call %1$s::%2$s"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/compat.php:116
 #: includes/gateways/stripe/includes/compat.php:116
 #: includes/process-purchase.php:569
 #: includes/process-purchase.php:942
 msgid "The user information is invalid"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/compat.php:228
 #: includes/gateways/stripe/includes/compat.php:228
 #: includes/process-purchase.php:44
 msgid "Missing nonce when processing checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/compat.php:233
 #: includes/gateways/stripe/includes/compat.php:233
 #: includes/process-purchase.php:51
 msgid "Error processing purchase. Please reload the page and try again."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/emails.php:29
 #: includes/gateways/stripe/includes/emails.php:29
 msgid "Your Preapproved Payment Requires Action"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/emails.php:30
 #: includes/gateways/stripe/includes/emails.php:30
 msgid "Payment Requires Action"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/emails.php:32
 #: includes/gateways/stripe/includes/emails.php:32
 msgid "Dear {name},"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/emails.php:33
 #: includes/gateways/stripe/includes/emails.php:33
 msgid "Your preapproved payment requires further action before your purchase can be completed. Please click the link below to take finalize your purchase"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/functions.php:641
 #: includes/gateways/stripe/includes/functions.php:641
 msgid "Invalid order ID."
 msgstr ""
 
 #. translators: %1$s the amount refunded; %2$s Stripe Refund ID
+#: includes/gateways/stripe/build/edd-stripe/includes/functions.php:709
 #: includes/gateways/stripe/includes/functions.php:709
 msgid "%1$s refunded in Stripe. Refund ID %2$s"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:11
 #: includes/gateways/stripe/includes/gateway-actions.php:11
 msgctxt "Pending preapproved payment"
 msgid "Preapproval Pending"
 msgstr ""
 
 #. translators: %s Payment status count
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:17
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:26
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:35
 #: includes/gateways/stripe/includes/gateway-actions.php:17
 #: includes/gateways/stripe/includes/gateway-actions.php:26
 #: includes/gateways/stripe/includes/gateway-actions.php:35
@@ -11090,137 +11269,179 @@ msgid_plural "Active <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:20
 #: includes/gateways/stripe/includes/gateway-actions.php:20
 msgctxt "Preapproved payment"
 msgid "Preapproved"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:29
 #: includes/gateways/stripe/includes/gateway-actions.php:29
 msgctxt "Cancelled payment"
 msgid "Cancelled"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-actions.php:51
 #: includes/gateways/stripe/includes/gateway-actions.php:51
 msgid "Outputs a line stating what charges will appear as on customer's credit card statements."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/gateway-filters.php:58
 #: includes/gateways/stripe/includes/gateway-filters.php:58
 msgid "Please enter a name for the credit card."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:24
 #: includes/gateways/stripe/includes/i18n.php:24
 msgid "There was an error processing your payment. Please try with a different payment method."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:25
 #: includes/gateways/stripe/includes/i18n.php:25
 msgid "There was an error processing your payment. Please contact your card issuer for more information."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:28
 #: includes/gateways/stripe/includes/i18n.php:28
 msgid "The card number is not a valid credit card number."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:29
 #: includes/gateways/stripe/includes/i18n.php:29
 msgid "The card's expiration month is invalid."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:30
 #: includes/gateways/stripe/includes/i18n.php:30
 msgid "The card's expiration year is invalid."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:31
 #: includes/gateways/stripe/includes/i18n.php:31
 msgid "The card's security code is invalid."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:32
 #: includes/gateways/stripe/includes/i18n.php:32
 msgid "The card number you provided is incorrect. Please check the number and try again."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:33
 #: includes/gateways/stripe/includes/i18n.php:33
 msgid "The card number is incomplete."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:34
 #: includes/gateways/stripe/includes/i18n.php:34
 msgid "The card's security code is incomplete."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:35
 #: includes/gateways/stripe/includes/i18n.php:35
 msgid "The card's expiration date is incomplete."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:36
 #: includes/gateways/stripe/includes/i18n.php:36
 msgid "The card's security code is incorrect."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:37
 #: includes/gateways/stripe/includes/i18n.php:37
 msgid "The card's zip code failed validation."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:38
 #: includes/gateways/stripe/includes/i18n.php:38
 msgid "The card's expiration year is in the past."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:39
 #: includes/gateways/stripe/includes/i18n.php:39
 msgid "An error occurred while processing the card. Please try again."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:40
 #: includes/gateways/stripe/includes/i18n.php:40
 msgid "Invalid email address, please correct and try again."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:41
 #: includes/gateways/stripe/includes/i18n.php:41
 msgid "Your purchase may require additional authentication. Please try again and confirm any authentication requests."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:42
 #: includes/gateways/stripe/includes/i18n.php:42
 msgid "There was an error processing your payment. Please try again, and if you continue to have problems, contact your card issuer."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:43
 #: includes/gateways/stripe/includes/i18n.php:43
 msgid "Your payment method is not authorized to make purchases in this currency. Please contact your card issuer."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:44
 #: includes/gateways/stripe/includes/i18n.php:44
 msgid "The payment method you have provided is expired. Please try a different payment method."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/i18n.php:45
 #: includes/gateways/stripe/includes/i18n.php:45
 msgid "There was an error processing your payment. Please try again."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/integrations/wp-cli.php:49
 #: includes/gateways/stripe/includes/integrations/wp-cli.php:49
 msgid "The Stripe customer ID migration has already been run. To do this anyway, use the --force argument."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/integrations/wp-cli.php:86
 #: includes/gateways/stripe/includes/integrations/wp-cli.php:86
 msgid "Migration complete."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/integrations/wp-cli.php:88
 #: includes/gateways/stripe/includes/integrations/wp-cli.php:88
 msgid "No user records were found that needed to be migrated."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:42
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:26
 #: includes/gateways/stripe/includes/payment-actions.php:42
 #: includes/gateways/stripe/includes/template-functions.php:26
 msgid "We are unable to process your payment at this time, please try again later or contact support."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:63
 #: includes/gateways/stripe/includes/payment-actions.php:63
 msgid "Unable to locate payment method. Please try again with a new payment method."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:81
 #: includes/gateways/stripe/includes/payment-actions.php:81
 msgid "Prepaid cards are not a valid payment method. Please try again with a new payment method."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:99
 #: includes/gateways/stripe/includes/payment-actions.php:99
 msgid "Unable to create customer. Please try again."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:218
 #: includes/gateways/stripe/includes/payment-actions.php:218
 msgid "Charges are no longer directly created in Stripe. Please read the following for more information: https://easydigitaldownloads.com/development/"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:346
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:368
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:386
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:462
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:544
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:626
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:713
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:918
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1055
 #: includes/gateways/stripe/includes/payment-actions.php:346
 #: includes/gateways/stripe/includes/payment-actions.php:368
 #: includes/gateways/stripe/includes/payment-actions.php:386
@@ -11233,11 +11454,36 @@ msgstr ""
 msgid "Stripe Error"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:348
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:370
 #: includes/gateways/stripe/includes/payment-actions.php:348
 #: includes/gateways/stripe/includes/payment-actions.php:370
 msgid "There was an error while processing a Stripe payment. Payment data: %s"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:428
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:438
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:497
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:507
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:578
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:589
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:660
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:670
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:748
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:759
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:771
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:783
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:800
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:831
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:952
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:963
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:973
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:992
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1040
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1086
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1097
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1110
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1144
 #: includes/gateways/stripe/includes/payment-actions.php:428
 #: includes/gateways/stripe/includes/payment-actions.php:438
 #: includes/gateways/stripe/includes/payment-actions.php:497
@@ -11264,229 +11510,319 @@ msgstr ""
 msgid "An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:903
 #: includes/gateways/stripe/includes/payment-actions.php:903
 msgid "Unable to create payment."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-actions.php:1429
 #: includes/gateways/stripe/includes/payment-actions.php:1429
 msgid "Charge not refunded in Stripe, as checkbox was not selected."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/buy-now/ajax.php:19
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/buy-now/ajax.php:32
 #: includes/gateways/stripe/includes/payment-methods/buy-now/ajax.php:19
 #: includes/gateways/stripe/includes/payment-methods/buy-now/ajax.php:32
 msgid "Unable to add item to cart."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/buy-now/checkout.php:81
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/checkout.php:274
 #: includes/gateways/stripe/includes/payment-methods/buy-now/checkout.php:81
 #: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:274
 #: includes/process-purchase.php:471
 msgid "Please enter a valid email address"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:32
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:40
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:32
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:40
 msgid "Apple Pay/Google Pay"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Opening anchor tag, do not translate. %3$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:45
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:45
 msgid "\"Express Checkout\" via Apple Pay, Google Pay, or Microsoft Pay digital wallets. By using Apple Pay, you agree to %1$sStripe%3$s and %2$sApple's%3$s terms of service."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:51
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:51
 msgid "Apple Pay is not available in Test Mode."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:74
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:74
 msgid "Single %s"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:79
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:79
 msgid "%s Archive (includes <code>[downloads]</code> shortcode)"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:110
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:110
 msgid "This feature is not available when taxes are enabled."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/admin/settings.php:118
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:118
 msgid "See the %1$sExpress Checkout documentation%2$s for more information."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/apple-pay.php:28
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:28
 msgid "Apple Pay domain verification error."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/apple-pay.php:174
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:174
 msgid "Unable to create domain association folder in domain root."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/apple-pay.php:181
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:181
 msgid "Unable to copy domain association file to domain .well-known directory."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/apple-pay.php:268
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:268
 msgid "Please %1$smanually add your domain%2$s %3$s to use Apple Pay."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/checkout.php:73
 #: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:73
 msgid "Express Checkout (Apple Pay/Google Pay)"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/checkout.php:74
 #: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:74
 msgid "Express Checkout"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/functions.php:161
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/functions.php:218
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:161
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:218
 msgid " × %d"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-methods/payment-request/template.php:200
 #: includes/gateways/stripe/includes/payment-methods/payment-request/template.php:200
 msgctxt "payment request button divider"
 msgid "or"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/payment-receipt.php:52
 #: includes/gateways/stripe/includes/payment-receipt.php:52
 msgid "To finalize your preapproved purchase, please confirm your payment method."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/pro/admin/settings/preapproval.php:27
+msgid "Preapproved Payments"
+msgstr ""
+
+#: includes/gateways/stripe/build/edd-stripe/includes/pro/admin/settings/preapproval.php:28
+msgid "Authorize payments for processing and collection at a future date."
+msgstr ""
+
+#: includes/gateways/stripe/build/edd-stripe/includes/pro/admin/settings/preapproval.php:30
+msgid "What does checking preapprove do?"
+msgstr ""
+
+#: includes/gateways/stripe/build/edd-stripe/includes/pro/admin/settings/preapproval.php:31
+msgid "If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option."
+msgstr ""
+
+#: includes/gateways/stripe/build/edd-stripe/includes/pro/gateway-filters.php:24
+msgid "Preapproved"
+msgstr ""
+
+#: includes/gateways/stripe/build/edd-stripe/includes/pro/gateway-filters.php:25
+msgid "Preapproval Pending"
+msgstr ""
+
+#: includes/gateways/stripe/build/edd-stripe/includes/pro/gateway-filters.php:26
+#: includes/misc-functions.php:1449
+msgid "Cancelled"
+msgstr ""
+
+#: includes/gateways/stripe/build/edd-stripe/includes/scripts.php:86
 #: includes/gateways/stripe/includes/scripts.php:86
 msgid "Stripe publishable key missing. Please enter your publishable key in Settings."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/scripts.php:87
 #: includes/gateways/stripe/includes/scripts.php:87
 msgid "Please fill out all required fields to continue your purchase."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/scripts.php:88
 #: includes/gateways/stripe/includes/scripts.php:88
 msgid "Please agree to the terms to complete your purchase."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/scripts.php:89
 #: includes/gateways/stripe/includes/scripts.php:89
 msgid "Please agree to the privacy policy to complete your purchase."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/scripts.php:90
 #: includes/gateways/stripe/includes/scripts.php:90
 msgid "Unable to complete your request. Please try again."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:103
 #: includes/gateways/stripe/includes/template-functions.php:103
 msgid "Adding new payment methods is currently unavailable."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:124
 #: includes/gateways/stripe/includes/template-functions.php:124
 msgid "Credit Card Number"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:150
 #: includes/gateways/stripe/includes/template-functions.php:150
 msgid "Expiration"
 msgstr ""
 
 #. translators: %1$s Card type. %2$s Card last 4.
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:241
 #: includes/gateways/stripe/includes/template-functions.php:241
 msgid "Update card billing address for %1$s •••• %2$s"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:269
 #: includes/gateways/stripe/includes/template-functions.php:269
 msgid "We are unable to process your payment at this time, please try again later or contacts support."
 msgstr ""
 
 #. translators: %1$s Card type. %2$s Card last 4.
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:304
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:393
 #: includes/gateways/stripe/includes/template-functions.php:304
 #: includes/gateways/stripe/includes/template-functions.php:393
 msgid "%1$s •••• %2$s"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:341
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:614
 #: includes/gateways/stripe/includes/template-functions.php:341
 #: includes/gateways/stripe/includes/template-functions.php:614
 msgid "Add New Card"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:370
 #: includes/gateways/stripe/includes/template-functions.php:370
 msgid "Payment method management is currently unavailable."
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:383
 #: includes/gateways/stripe/includes/template-functions.php:383
 msgid "Manage Payment Methods"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:412
 #: includes/gateways/stripe/includes/template-functions.php:412
 msgid "Expires"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:434
 #: includes/gateways/stripe/includes/template-functions.php:434
 msgid "Set as Default"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:452
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:756
 #: includes/gateways/stripe/includes/template-functions.php:452
 #: includes/gateways/stripe/includes/template-functions.php:756
 msgid "Billing Details"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:502
 #: includes/gateways/stripe/includes/template-functions.php:502
 msgid "ZIP Code"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:595
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:639
 #: includes/gateways/stripe/includes/template-functions.php:595
 #: includes/gateways/stripe/includes/template-functions.php:639
 msgid "Please Wait…"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:596
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:597
 #: includes/gateways/stripe/includes/template-functions.php:596
 #: includes/gateways/stripe/includes/template-functions.php:597
 msgid "Update Card"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:616
 #: includes/gateways/stripe/includes/template-functions.php:616
 msgid "Credit Card Details"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:640
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:641
 #: includes/gateways/stripe/includes/template-functions.php:640
 #: includes/gateways/stripe/includes/template-functions.php:641
 msgid "Add new card"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:759
 #: includes/gateways/stripe/includes/template-functions.php:759
 msgid "Billing Country"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:783
 #: includes/gateways/stripe/includes/template-functions.php:783
 msgid "Billing Zip / Postal Code"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:855
 #: includes/gateways/stripe/includes/template-functions.php:855
 #: includes/process-purchase.php:487
 msgid "Please enter your zip / postal code"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/template-functions.php:860
 #: includes/gateways/stripe/includes/template-functions.php:860
 #: includes/process-purchase.php:499
 msgid "Please select your billing country"
 msgstr ""
 
+#: includes/gateways/stripe/build/edd-stripe/includes/webhooks.php:27
 #: includes/gateways/stripe/includes/webhooks.php:27
 msgid "Unable to find Event"
 msgstr ""
 
 #. Translators: The charge ID from Stripe that is being refunded.
+#: includes/gateways/stripe/build/edd-stripe/includes/webhooks.php:73
 #: includes/gateways/stripe/includes/webhooks.php:73
 msgid "Charge %s has been fully refunded in Stripe."
 msgstr ""
 
 #. Translators: The charge ID from Stripe that is being partially refunded.
+#: includes/gateways/stripe/build/edd-stripe/includes/webhooks.php:78
 #: includes/gateways/stripe/includes/webhooks.php:78
 msgid "Charge %s partially refunded in Stripe."
 msgstr ""
 
 #. translators: %s Stripe Radar review opening reason.
+#: includes/gateways/stripe/build/edd-stripe/includes/webhooks.php:115
 #: includes/gateways/stripe/includes/webhooks.php:115
 msgid "Stripe Radar review opened with a reason of %s."
 msgstr ""
 
 #. translators: %s Stripe Radar review closing reason.
+#: includes/gateways/stripe/build/edd-stripe/includes/webhooks.php:157
 #: includes/gateways/stripe/includes/webhooks.php:157
 msgid "Stripe Radar review closed with a reason of %s."
 msgstr ""
@@ -11552,10 +11888,6 @@ msgstr ""
 
 #: includes/misc-functions.php:1448
 msgid "Deleted"
-msgstr ""
-
-#: includes/misc-functions.php:1449
-msgid "Cancelled"
 msgstr ""
 
 #: includes/misc-functions.php:1565
