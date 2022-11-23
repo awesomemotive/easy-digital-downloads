@@ -6,7 +6,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable Tag: 3.1.0.2
+Stable Tag: 3.1.0.3
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,24 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.1.0.3, November 23, 2022 =
+* Improvement: The PayPal webhook connect/disconnect process has been improve to ensure proper webhook delivery.
+* Improvement: An IPN Backup has been added to the PayPal gateway, to avoid missing webhooks that may have been disconnected.
+* Fix: PayPal Buy Now functionaliy has been fixed for guest users.
+* Fix: Exporting orders was including orders with the Trash status.
+* Fix: Trashed orders were showing in the purchase history shortcode.
+* Fix: The file downloads graph was formatting integeters as currency.
+* Fix: Searching by download ID on the Orders list table was not working.
+* Fix: In some timezone settings, the reports could incorreclty display.
+* Fix: Determining if a product can be purchased was improved for performance.
+* Fix: Switching gateways when resuming an order was resulting in the wrong gateway value being added to the database.
+* Fix: The migration process can now identify custom discount meta for migration to the new adjustment meta table.
+* Fix: Non-Standard (but still supported by WordPress) directory structures could fail if the site_url and home_url were different.
+* Fix: Discount amount calculations were assuming that the discount has Price ID assignments.
+* Fix: Logging in from the {receipt_link} in emails now properly redirects the user to the receipt page.
+* Fix - Blocks: The checkout block could prevent purchases if a logged in user did not have a name already.
+* Fix - Blocks: The Order History block no longer shows Trashed orders.
+* Fix - Blocks: Incompatible combinations of settings on the Checkout block could produce a fatal error.
 
 = 3.1.0.2, October 27, 2022 =
 * New - Blocks: The registration block now supports the WordPress password strength script.
