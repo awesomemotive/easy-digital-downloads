@@ -365,17 +365,51 @@ function edd_deliver_download( $file = '', $redirect = false ) {
  * Determine if the file being requested is hosted locally or not
  *
  * @since  2.5.10
+ * @since  3.1.0.3 - Updated to also check home_url (which is what previous versions of EDD were using).
+ *
  * @param  string $requested_file The file being requested
  * @return bool                   If the file is hosted locally or not
  */
 function edd_is_local_file( $requested_file ) {
-	$site_url       = preg_replace('#^https?://#', '', site_url() );
+	// By default, we assume the file is not locally hosted.
+	$is_local_file = false;
+
+	// Grab the home_url and site_url values, so we can use them to test file location.
+	$site_url = preg_replace('#^https?://#', '', site_url() );
+	$home_url = preg_replace('#^https?://#', '', home_url() );
+
+	// Sanitize the requested file.
 	$requested_file = preg_replace('#^(https?|file)://#', '', $requested_file );
 
-	$is_local_url  = strpos( $requested_file, $site_url ) === 0;
-	$is_local_path = strpos( $requested_file, '/' ) === 0;
+	// First, check the Site URL.
+	$is_local_url_site_url  = strpos( $requested_file, $site_url ) === 0;
+	$is_local_path_site_url = strpos( $requested_file, '/' ) === 0;
 
-	return ( $is_local_url || $is_local_path );
+	$is_local_file = ( $is_local_url_site_url || $is_local_path_site_url );
+
+	/**
+	 * If the site_url and home_url are different, and we still didn't detect a local file, try
+	 * again with the home_url value.
+	 */
+	if ( $home_url !== $site_url && false === $is_local_file ) {
+		$is_local_url_home_url  = strpos( $requested_file, $home_url ) === 0;
+		$is_local_path_home_url = strpos( $requested_file, '/' ) === 0;
+
+		$is_local_file = ( $is_local_url_home_url || $is_local_path_home_url );
+	}
+
+	/**
+	 * Allow filtering the edd_is_local_file detection.
+	 *
+	 * EDD tries to identify if a file is hosted locally, so that we can use the proper file delivery method.
+	 * By default we check the site_url, and then the home_url (in the event that those settings are different).
+	 *
+	 * @since 3.1.0.3
+	 *
+	 * @param boolean $is_local_file  If the file is hosted locally, on the server and within the site's contents.
+	 * @param string  $requested_file The file that is being requested to download.
+	 */
+	return apply_filters( 'edd_is_local_file', $is_local_file, $requested_file );
 }
 
 /**

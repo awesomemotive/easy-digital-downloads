@@ -873,7 +873,7 @@ class EDD_Download {
 	public function can_purchase() {
 		$can_purchase = true;
 
-		if ( ! current_user_can( 'edit_post', $this->ID ) && $this->post_status != 'publish' ) {
+		if ( 'publish' !== $this->post_status && ! current_user_can( 'edit_post', $this->ID ) ) {
 			$can_purchase = false;
 		}
 

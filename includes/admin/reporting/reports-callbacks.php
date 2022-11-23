@@ -105,10 +105,9 @@ function edd_overview_sales_earnings_chart() {
 	 *
 	 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
 	 */
-	while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-		$timezone        = new DateTimeZone( edd_get_timezone_id() );
-		$timestamp       = $dates['start']->copy()->format( 'U' );
-		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+	while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+		$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+		$date_on_chart = $chart_dates['start'];
 
 		$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 		$sales[ $timestamp ][1] = 0;
@@ -118,7 +117,7 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $earnings_results as $earnings_result ) {
-			$date_of_db_value = new DateTime( $earnings_result->date, $timezone );
+			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $earnings_result->date ) );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -143,8 +142,7 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $sales_results as $sales_result ) {
-
-			$date_of_db_value = new DateTime( $sales_result->date, $timezone );
+			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $sales_result->date ) );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -169,16 +167,15 @@ function edd_overview_sales_earnings_chart() {
 
 		// Move the chart along to the next hour/day/month to get ready for the next loop.
 		if ( $hour_by_hour ) {
-			$dates['start']->addHour( 1 );
 			$chart_dates['start']->addHour( 1 );
 		} elseif ( $day_by_day ) {
-			$dates['start']->addDays( 1 );
 			$chart_dates['start']->addDays( 1 );
 		} else {
-			$dates['start']->addMonth( 1 );
 			$chart_dates['start']->addMonth( 1 );
 		}
 	}
+
+
 
 	return array(
 		'sales'    => array_values( $sales ),
@@ -245,10 +242,9 @@ function edd_overview_refunds_chart() {
 	$amount = array();
 
 	// Initialise all arrays with timestamps and set values to 0.
-	while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-		$timezone        = new DateTimeZone( edd_get_timezone_id() );
-		$timestamp       = $dates['start']->copy()->format( 'U' );
-		$date_on_chart   = new DateTime( $chart_dates['start'], $timezone );
+	while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
+		$timestamp     = $chart_dates['start']->copy()->format( 'U' );
+		$date_on_chart = $chart_dates['start'];
 
 		$number[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
 		$number[ $timestamp ][1] = 0;
@@ -258,7 +254,7 @@ function edd_overview_refunds_chart() {
 
 		// Loop through each date there were refunds, which we queried from the database.
 		foreach ( $results as $result ) {
-			$date_of_db_value = new DateTime( $result->date, $timezone );
+			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
 
 			// Add any refunds that happened during this hour.
 			if ( $hour_by_hour ) {
@@ -286,13 +282,10 @@ function edd_overview_refunds_chart() {
 
 		// Move the chart along to the next hour/day/month to get ready for the next loop.
 		if ( $hour_by_hour ) {
-			$dates['start']->addHour( 1 );
 			$chart_dates['start']->addHour( 1 );
 		} elseif ( $day_by_day ) {
-			$dates['start']->addDays( 1 );
 			$chart_dates['start']->addDays( 1 );
 		} else {
-			$dates['start']->addMonth( 1 );
 			$chart_dates['start']->addMonth( 1 );
 		}
 	}

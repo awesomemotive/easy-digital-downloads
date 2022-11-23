@@ -90,11 +90,12 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 		$data = array();
 
 		$args = array(
-			'number'  => 30,
-			'offset'  => ( $this->step * 30 ) - 30,
-			'status'  => $this->status,
-			'order'   => 'ASC',
-			'orderby' => 'date_created',
+			'number'         => 30,
+			'offset'         => ( $this->step * 30 ) - 30,
+			'status'         => $this->status,
+			'order'          => 'ASC',
+			'orderby'        => 'date_created',
+			'status__not_in' => array( 'trash' ),
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {

@@ -221,11 +221,17 @@ function get_webhook_details( $mode = '' ) {
 	$api      = new API( $mode );
 	$response = $api->make_request( 'v1/notifications/webhooks/' . urlencode( $webhook_id ), array(), array(), 'GET' );
 	if ( 200 !== $api->last_response_code ) {
-		throw new API_Exception( sprintf(
-		/* Translators: %d - HTTP response code. */
-			__( 'Invalid response code %d while retrieving webhook details.', 'easy-digital-downloads' ),
-			$api->last_response_code
-		) );
+		if ( 404 === $api->last_response_code ) {
+			throw new API_Exception(
+				__( 'Your store is currently not receiving webhook notifications, create the webhooks to reconnect.', 'easy-digital-downloads' )
+			);
+		} else {
+			throw new API_Exception( sprintf(
+			/* Translators: %d - HTTP response code. */
+				__( 'Invalid response code %d while retrieving webhook details.', 'easy-digital-downloads' ),
+				$api->last_response_code
+			) );
+		}
 	}
 
 	if ( empty( $response->id ) ) {
@@ -261,9 +267,6 @@ function delete_webhook( $mode = '' ) {
 	$api = new API( $mode );
 
 	$api->make_request( 'v1/notifications/webhooks/' . urlencode( $webhook_id ), array(), array(), 'DELETE' );
-
-	// Delete the webhook ID.
-	delete_option( $webhook_name );
 
 	if ( 204 !== $api->last_response_code ) {
 		throw new API_Exception( sprintf(
