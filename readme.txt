@@ -242,7 +242,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Improvement: An IPN Backup has been added to the PayPal gateway, to avoid missing webhooks that may have been disconnected.
 * Fix: PayPal Buy Now functionality has been fixed for guest users.
 * Fix: Exporting orders was including orders with the Trash status.
-* Fix: Trashed orders were showing in the purchase history shortcode.
+* Fix: Trashed orders were showing in the purchase history shortcode (templates updated: history-downloads.php and history-purchases.php).
 * Fix: The file downloads graph was formatting integers as currency.
 * Fix: Searching by download ID on the Orders list table was not working.
 * Fix: In some timezone settings, the reports could incorrectly display.
