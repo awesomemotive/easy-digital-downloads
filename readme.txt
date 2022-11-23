@@ -245,7 +245,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Trashed orders were showing in the purchase history shortcode.
 * Fix: The file downloads graph was formatting integeters as currency.
 * Fix: Searching by download ID on the Orders list table was not working.
-* Fix: In some timezone settings, the reports could incorreclty display.
+* Fix: In some timezone settings, the reports could incorrectly display.
 * Fix: Determining if a product can be purchased was improved for performance.
 * Fix: Switching gateways when resuming an order was resulting in the wrong gateway value being added to the database.
 * Fix: The migration process can now identify custom discount meta for migration to the new adjustment meta table.
