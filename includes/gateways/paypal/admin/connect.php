@@ -30,7 +30,6 @@ if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
 function connect_settings_field() {
 	$is_connected = PayPal\has_rest_api_connection();
 	$mode         = edd_is_test_mode() ? __( 'sandbox', 'easy-digital-downloads' ) : __( 'live', 'easy-digital-downloads' );
-
 	ob_start();
 
 	if ( ! $is_connected ) {
@@ -81,9 +80,7 @@ function connect_settings_field() {
 				<span class="spinner is-active"></span>
 			</p>
 		</div>
-		<div id="edd-paypal-disconnect">
-			<a href="<?php echo esc_url( get_disconnect_url() ); ?>"><?php esc_html_e( 'Disconnect from PayPal', 'easy-digital-downloads' ); ?></a>
-		</div>
+		<div id="edd-paypal-disconnect"></div>
 		<?php
 	}
 	?>
@@ -153,6 +150,46 @@ function process_connect() {
 add_action( 'wp_ajax_edd_paypal_commerce_connect', __NAMESPACE__ . '\process_connect' );
 
 /**
+ * AJAX handler for processing the PayPal Reconnect.
+ *
+ * @since 3.1.0.3
+ * @return void
+ */
+function process_reconnect() {
+	// This validates the nonce.
+	check_ajax_referer( 'edd_process_paypal_connect' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
+	}
+
+	$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+
+	/**
+	 * Make sure we still have connection details from the previously connected site.
+	 */
+	$connection_details = get_option( 'edd_paypal_commerce_connect_details_' . $mode );
+
+	if ( empty( $connection_details ) ) {
+		// Somehow we ended up here, but now that we're in an invalid state, remove all settings so we can fully reset.
+		delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
+		delete_option( 'edd_paypal_commerce_webhook_id_' . $mode );
+		delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
+		wp_send_json_error( __( 'Failure reconnecting to PayPal. Please try again', 'easy-digital-downloads' ) );
+	}
+
+	try {
+		PayPal\Webhooks\create_webhook( $mode );
+	} catch ( \Exception $e ) {
+		$message = esc_html__( 'Your account has been successfully reconnected, but an error occurred while creating a webhook.', 'easy-digital-downloads' );
+	}
+
+	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
+}
+
+add_action( 'wp_ajax_edd_paypal_commerce_reconnect', __NAMESPACE__ . '\process_reconnect' );
+
+/**
  * Retrieves partner Connect details for the given mode.
  *
  * @param string $mode Store mode. If omitted, current mode is used.
@@ -163,7 +200,6 @@ function get_partner_details( $mode = '' ) {
 	if ( ! $mode ) {
 		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
 	}
-
 	return json_decode( get_option( 'edd_paypal_commerce_connect_details_' . $mode ) );
 }
 
@@ -300,6 +336,11 @@ function get_account_info() {
 			'webhook'          => '<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_update_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_update_webhook">' . esc_html__( 'Sync Webhook', 'easy-digital-downloads' ) . '</button>'
 		);
 
+		$disconnect_links = array(
+			'disconnect' => '<a class="button-secondary" id="edd-paypal-disconnect-link" href="' . esc_url( get_disconnect_url() ) . '">' . __( "Disconnect webhooks from PayPal", "easy-digital-downloads" ) . '</a>',
+			'delete'     => '<a class="button-secondary" id="edd-paypal-delete-link" href="' . esc_url( get_delete_url() ) . '">' . __( "Delete connection with PayPal", "easy-digital-downloads" ) . '</a>',
+		);
+
 		$validator = new AccountStatusValidator();
 		$validator->check();
 
@@ -372,9 +413,11 @@ function get_account_info() {
 			$webhook_message  .= $validator->errors_for_webhook->get_error_message();
 
 			if ( in_array( 'webhook_missing', $validator->errors_for_webhook->get_error_codes() ) ) {
-				$actions['webhook'] = '<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_create_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_create_webhook">' . esc_html__( 'Create Webhook', 'easy-digital-downloads' ) . '</button>';
+				unset( $disconnect_links['disconnect'] );
+				$actions['webhook'] = '<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_create_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_create_webhook">' . esc_html__( 'Create Webhooks', 'easy-digital-downloads' ) . '</button>';
 			}
 		} else {
+			unset( $disconnect_links['delete'] );
 			$webhook_dashicon = 'yes';
 			$webhook_message  .= __( 'Webhook successfully configured for the following events:', 'easy-digital-downloads' );
 		}
@@ -411,10 +454,11 @@ function get_account_info() {
 		}
 
 		wp_send_json_success( array(
-			'status'         => $status,
-			'account_status' => '<ul class="edd-paypal-account-status">' . $account_status . '</ul>',
-			'webhook_object' => isset( $validator ) ? $validator->webhook : null,
-			'actions'        => array_values( $actions )
+			'status'           => $status,
+			'account_status'   => '<ul class="edd-paypal-account-status">' . $account_status . '</ul>',
+			'webhook_object'   => isset( $validator ) ? $validator->webhook : null,
+			'actions'          => array_values( $actions ),
+			'disconnect_links' => array_values( $disconnect_links ),
 		) );
 	} catch ( \Exception $e ) {
 		wp_send_json_error( array(
@@ -445,6 +489,24 @@ function get_disconnect_url() {
 }
 
 /**
+ * Returns the URL for deleting the app PayPal Commerce.
+ *
+ * @since 3.1.0.3
+ * @return string
+ */
+function get_delete_url() {
+	return wp_nonce_url(
+		add_query_arg(
+			array(
+				'edd_action' => 'delete_paypal_commerce'
+			),
+			admin_url()
+		),
+		'edd_delete_paypal_commerce'
+	);
+}
+
+/**
  * Disconnects from PayPal in the current mode.
  *
  * @since 2.11
@@ -467,6 +529,7 @@ function process_disconnect() {
 		try {
 			// Disconnect the webhook.
 			// This is in another try/catch because we want to delete the token cache (below) even if this fails.
+			// This only deletes the webhooks in PayPal, we do not remove the webhook ID in EDD until we delete the connection.
 			PayPal\Webhooks\delete_webhook( $mode );
 		} catch ( \Exception $e ) {
 
@@ -478,6 +541,56 @@ function process_disconnect() {
 
 	}
 
+	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
+	exit;
+}
+
+add_action( 'edd_disconnect_paypal_commerce', __NAMESPACE__ . '\process_disconnect' );
+
+/**
+ * Fully deletes past Merchant Information from PayPal in the current mode.
+ *
+ * @since 3.1.0.3
+ * @return void
+ */
+function process_delete() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_delete_paypal_commerce' ) ) {
+		wp_die( esc_html__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
+
+	// Delete merchant information.
+	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
+
+	// Delete partner connect information.
+	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
+
+	try {
+		$api = new PayPal\API();
+
+		try {
+			// Disconnect the webhook.
+			// This is in another try/catch because we want to delete the token cache (below) even if this fails.
+			// This only deletes the webhooks in PayPal, we do not remove the webhook ID in EDD until we delete the connection.
+			PayPal\Webhooks\delete_webhook( $mode );
+		} catch ( \Exception $e ) {
+
+		}
+
+		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
+		delete_option( $api->token_cache_key );
+	} catch ( \Exception $e ) {
+
+	}
+
+	// Now delete our webhook ID.
+	delete_option( sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode ) );
+
 	// Delete API credentials.
 	$edd_settings_to_delete = array(
 		'paypal_' . $mode . '_client_id',
@@ -487,17 +600,11 @@ function process_disconnect() {
 		edd_delete_option( $option_name );
 	}
 
-	// Delete merchant information.
-	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
-
-	// Delete partner connect information.
-	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
-
 	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
 	exit;
 }
 
-add_action( 'edd_disconnect_paypal_commerce', __NAMESPACE__ . '\process_disconnect' );
+add_action( 'edd_delete_paypal_commerce', __NAMESPACE__ . '\process_delete' );
 
 /**
  * AJAX callback for refreshing payment status.

@@ -972,21 +972,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 'complete', $order_item->status );
 	}
 
-	public function test_inserting_payment_invalid_data_returns_false() {
-		$payment = edd_insert_payment(
-			array(
-				'customer_id' => 1,
-				'email'       => 'admin@edd.local',
-				'user_id'     => 1,
-				'gateway'     => 'manual',
-				'total'       => edd_sanitize_amount( sanitize_text_field( 20 ) ),
-				'status'      => 'pending',
-			)
-		);
-
-		$this->assertFalse( $payment );
-	}
-
 	public function test_inserting_payment_incomplete_data_returns_true() {
 		$payment = edd_insert_payment(
 			array(
