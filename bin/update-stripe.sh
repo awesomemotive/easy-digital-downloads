@@ -31,6 +31,8 @@ rm composer.lock
 rm webpack.config.js
 rm phpcs.ruleset.xml
 rm phpunit.xml.dist
+rm Gruntfile.js
+rm -rf build
 
 # Reset cwd
 cd ../../../
