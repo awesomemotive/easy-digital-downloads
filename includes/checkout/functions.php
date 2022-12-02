@@ -20,11 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_is_checkout() {
 
-	global $wp_query;
+	global $wp_query, $post;
 
 	$is_object_set    = isset( $wp_query->queried_object );
 	$is_object_id_set = isset( $wp_query->queried_object_id );
-	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
+	$purchase_page = edd_get_option( 'purchase_page' );
+	$is_checkout      = is_page( $purchase_page ) && is_object( $post ) && $post->post_title != $purchase_page && $post->post_name != $purchase_page;
 
 	if( ! $is_object_set ) {
 
