@@ -1507,4 +1507,3 @@ function edd_apply_preset_discount() {
 	EDD()->session->set( 'preset_discount', null );
 }
 add_action( 'init', 'edd_apply_preset_discount', 999 );
-f
