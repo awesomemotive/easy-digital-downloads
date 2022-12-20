@@ -1298,8 +1298,8 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						$discounted_price -= $discounted_amount;
 
 						$edd_flat_discount_total += round( $discounted_amount, edd_currency_decimal_filter() );
-
-						if( $edd_is_last_cart_item && $edd_flat_discount_total < $code_amount ) {
+						
+						if( $edd_is_last_cart_item && $edd_flat_discount_total != $code_amount ) {
 							$adjustment = $code_amount - $edd_flat_discount_total;
 							$discounted_price -= $adjustment;
 						}
