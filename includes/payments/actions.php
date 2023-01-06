@@ -234,6 +234,7 @@ add_action( 'edd_complete_purchase', 'edd_schedule_after_payment_action', 10, 1 
  * Executes the one time event used for after purchase actions.
  *
  * @since 2.8
+ * @since 3.1.0.4 This also verifies that all order items have the synced status as the order.
  * @param $payment_id
  * @param $force
  */
@@ -246,6 +247,31 @@ function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
 	$has_fired = $payment->get_meta( '_edd_complete_actions_run' );
 	if ( ! empty( $has_fired ) && false === $force ) {
 		return;
+	}
+
+	/**
+	 * In the event that during the order completion process, a timeout happens,
+	 * ensure that all the order items have the correct status, to match the order itself.
+	 *
+	 * @see https://github.com/awesomemotive/easy-digital-downloads-pro/issues/77
+	 */
+	$order_items = edd_get_order_items(
+		array(
+			'order_id'       => $payment_id,
+			'status__not_in' => edd_get_deliverable_order_item_statuses(),
+			'number'         => 200,
+		)
+	);
+
+	if ( ! empty( $order_items ) ) {
+		foreach ( $order_items as $order_item ) {
+			edd_update_order_item(
+				$order_item->id,
+				array(
+					'status' => $payment->status,
+				)
+			);
+		}
 	}
 
 	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );

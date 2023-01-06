@@ -86,6 +86,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 		'edd_use_php_sessions',
 		'edd_version',
 		'edd_version_upgraded_from',
+		'edd_notification_req_timeout',
 
 		// Widgets
 		'widget_edd_product_details',

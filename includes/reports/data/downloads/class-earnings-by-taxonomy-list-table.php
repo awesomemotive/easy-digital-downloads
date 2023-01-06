@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 use EDD\Reports as Reports;
 use EDD\Admin\List_Table;
+use EDD\Stats as Stats;
 
 /**
  * Earnings_By_Taxonomy_List_Table class.
@@ -34,26 +35,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		global $wpdb;
 
 		$dates      = Reports\get_filter_value( 'dates' );
-		$date_range = Reports\parse_dates_for_range( $dates['range'] );
 		$currency   = Reports\get_filter_value( 'currencies' );
-
-		// Generate date query SQL if dates have been set.
-		$date_query_sql = '';
-
-		if ( ! empty( $date_range['start'] ) || ! empty( $date_range['end'] ) ) {
-			if ( ! empty( $date_range['start'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'AND oi.date_created >= %s', $date_range['start']->format( 'mysql' ) );
-			}
-
-			// Join dates with `AND` if start and end date set.
-			if ( ! empty( $date_range['start'] ) && ! empty( $date_range['end'] ) ) {
-				$date_query_sql .= ' AND ';
-			}
-
-			if ( ! empty( $date_range['end'] ) ) {
-				$date_query_sql .= $wpdb->prepare( 'oi.date_created <= %s', $date_range['end']->format( 'mysql' ) );
-			}
-		}
 
 		$taxonomies = edd_get_download_taxonomies();
 		$taxonomies = array_map( 'sanitize_text_field', $taxonomies );
@@ -78,78 +60,62 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			$taxonomies[ absint( $r->term_id ) ]['parent']       = absint( $r->parent );
 		}
 
-		$data       = array();
-		$parent_ids = array();
+		// Setup an empty array for the final returned data.
+		$data = array();
 
-		$column          = Reports\get_taxes_excluded_filter() ? 'oi.total - oi.tax' : 'oi.total';
-		$join            = " INNER JOIN {$wpdb->edd_orders} o ON o.id = oi.order_id ";
-		$currency_clause = '';
-
-		if ( empty( $currency ) || 'convert' === $currency ) {
-			$column = sprintf( '(%s) / oi.rate', $column );
-		} elseif ( array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
-			$currency_clause = $wpdb->prepare(
-				" AND o.currency = %s ",
-				strtoupper( $currency )
-			);
-		}
-
-		$statuses      = edd_get_net_order_statuses();
-		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-		$status_sql    = $wpdb->prepare(
-			" AND oi.status IN('complete','partially_refunded')
-			AND o.status IN({$status_string})",
-			...$statuses
-		);
+		// Store each download's stats during the loop to avoid double queries.
+		$download_stats = array();
 
 		foreach ( $taxonomies as $k => $t ) {
 			$c       = new \stdClass();
 			$c->id   = $k;
 			$c->name = $taxonomies[ $k ]['name'];
 
-			$placeholders   = implode( ', ', array_fill( 0, count( $taxonomies[ $k ]['object_ids'] ), '%d' ) );
-			$product_id__in = $wpdb->prepare( "oi.product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
+			$earnings = 0.00;
+			$sales    = 0;
 
-			$sql = "SELECT SUM({$column}) as total
-					FROM {$wpdb->edd_order_items} oi
-					{$join}
-					WHERE {$product_id__in} {$currency_clause} {$date_query_sql} {$status_sql}";
+			$average_earnings = 0.00;
+			$average_sales    = 0;
 
-			$result = $wpdb->get_row( $sql ); // WPCS: unprepared SQL ok.
+			foreach ( $taxonomies[ $k ]['object_ids'] as $download_id ) {
+				if ( ! isset( $download_stats[ $download_id ] ) ) {
+					$stats = new Stats(
+						array(
+							'product_id' => absint( $download_id ),
+							'currency'   => $currency,
+							'range'      => $dates['range'],
+							'output'     => 'typed',
+						)
+					);
 
-			$earnings = null === $result && null === $result->total
-				? 0.00
-				: floatval( $result->total );
+					$download_stats[ $download_id ]['earnings'] = $stats->get_order_item_earnings(
+						array(
+							'function' => 'SUM',
+						)
+					);
 
-			$complete_orders = "SELECT SUM(oi.quantity) as sales
-				FROM {$wpdb->edd_order_items} oi
-				{$join}
-				WHERE {$product_id__in} {$currency_clause} {$date_query_sql} {$status_sql}";
-			$partial_orders  = "SELECT SUM(oi.quantity) as sales
-				FROM {$wpdb->edd_order_items} oi
-				LEFT JOIN {$wpdb->edd_order_items} ri
-				ON ri.parent = oi.id
-				{$join}
-				WHERE {$product_id__in} {$currency_clause} {$date_query_sql}
-				AND oi.status ='partially_refunded'
-				AND oi.quantity = - ri.quantity";
-			$sql_sales       = $wpdb->get_row( "SELECT SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
+					$download_stats[ $download_id ]['sales'] = $stats->get_order_item_count(
+						array(
+							'function' => 'COUNT',
+						)
+					);
 
-			$sales = ! empty( $sql_sales->sales ) ? $sql_sales->sales : 0;
+					$download_stats[ $download_id ]['average_earnings'] = edd_get_average_monthly_download_earnings( $download_id );
+					$download_stats[ $download_id ]['average_sales']    = edd_get_average_monthly_download_sales( $download_id );
+				}
+
+				$earnings += $download_stats[ $download_id ]['earnings'];
+				$sales    += $download_stats[ $download_id ]['sales'];
+
+				$average_earnings += $download_stats[ $download_id ]['average_earnings'];
+				$average_sales    += $download_stats[ $download_id ]['average_sales'];
+			}
 
 			$c->sales    = $sales;
 			$c->earnings = $earnings;
 			$c->parent   = 0 === $t['parent']
 				? null
 				: $t['parent'];
-
-			$average_sales    = 0;
-			$average_earnings = 0.00;
-
-			foreach ( $taxonomies[ $k ]['object_ids'] as $download ) {
-				$average_sales    += edd_get_average_monthly_download_sales( $download );
-				$average_earnings += edd_get_average_monthly_download_earnings( $download );
-			}
 
 			$c->average_sales    = $average_sales;
 			$c->average_earnings = $average_earnings;
@@ -161,7 +127,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 
 		foreach ( $data as $d ) {
 
-			// Get parent level elements
+			// Get parent level elements.
 			if ( null === $d->parent ) {
 				$sorted_data[] = $d;
 
@@ -173,7 +139,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			}
 		}
 
-		// Sort by total earnings
+		// Sort by total earnings.
 		usort( $sorted_data, function( $a, $b ) {
 			return ( $a->earnings < $b->earnings ) ? -1 : 1;
 		} );

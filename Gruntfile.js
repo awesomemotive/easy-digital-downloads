@@ -61,6 +61,8 @@ module.exports = function( grunt ) {
 					'includes/**',
 					'languages/**',
 					'templates/**',
+					'vendor/**',
+					'src/**',
 					'*.php',
 					'*.txt',
 				],
