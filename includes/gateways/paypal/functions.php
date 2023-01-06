@@ -280,8 +280,12 @@ function get_order_items( $purchase_data ) {
 		if ( $item_amount <= 0 ) {
 			$item_amount = 0;
 		}
+
+		$substr_func = function_exists( 'mb_substr' ) ? 'mb_substr' : 'substr';
+		$name        = $substr_func( edd_get_cart_item_name( $item ), 0, 127 );
+
 		$items[ $i ] = array(
-			'name'        => stripslashes_deep( html_entity_decode( substr( edd_get_cart_item_name( $item ), 0, 127 ), ENT_COMPAT, 'UTF-8' ) ),
+			'name'        => stripslashes_deep( html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) ),
 			'quantity'    => $item['quantity'],
 			'unit_amount' => array(
 				'currency_code' => edd_get_currency(),

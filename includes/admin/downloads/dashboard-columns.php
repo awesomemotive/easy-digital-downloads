@@ -226,33 +226,52 @@ add_action( 'load-edit.php', 'edd_download_load', 9999 );
 function edd_add_download_filters() {
 	global $typenow;
 
-	// Checks if the current post type is 'download'
-	if ( $typenow !== 'download') {
+	// Checks if the current post type is 'download'.
+	if ( 'download' !== $typenow ) {
 		return;
 	}
 
-	$terms = get_terms( 'download_category' );
-	if ( count( $terms ) > 0 ) {
-		echo "<select name='download_category' id='download_category' class='postform'>";
-			$category_labels = edd_get_taxonomy_labels( 'download_category' );
-			echo "<option value=''>" . sprintf( __( 'All %s', 'easy-digital-downloads' ), strtolower( $category_labels['name'] ) ) . "</option>";
-			foreach ( $terms as $term ) {
-				$selected = isset( $_GET['download_category'] ) && $_GET['download_category'] === $term->slug ? ' selected="selected"' : '';
-				echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
-			}
-		echo "</select>";
-	}
+	$category_args = array(
+		'taxonomy' => 'download_category',
+		'number'   => 30,
+	);
 
-	$terms = get_terms( 'download_tag' );
-	if ( count( $terms ) > 0 ) {
-		echo "<select name='download_tag' id='download_tag' class='postform'>";
-			$tag_labels = edd_get_taxonomy_labels( 'download_tag' );
-			echo "<option value=''>" . sprintf( __( 'All %s', 'easy-digital-downloads' ), strtolower( $tag_labels['name'] ) ) . "</option>";
-			foreach ( $terms as $term ) {
-				$selected = isset( $_GET['download_tag']) && $_GET['download_tag'] === $term->slug ? ' selected="selected"' : '';
-				echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
-			}
-		echo "</select>";
+	$categories = get_terms( $category_args );
+	if ( ! empty( $categories ) ) {
+		$category_labels = edd_get_taxonomy_labels( 'download_category' );
+
+		$options    = array();
+		$options[''] = sprintf( _x( 'All %s', 'plural: Example: "All Categories"', 'easy-digital-downloads' ), $category_labels['name'] );
+
+		// Ensure we include the selected value in the pre-populated list.
+		$selected = ! empty( $_GET['download_category'] ) ? $_GET['download_category'] : '';
+		if ( ! empty( $selected ) ) {
+			$selected_term = get_term_by( 'slug', $selected, 'download_category' );
+
+			$options[ $selected_term->slug ] = $selected_term->name . ' (' . $selected_term->count . ')';
+		}
+
+		foreach ( $categories as $category ) {
+			$options[ $category->slug ] = $category->name . ' (' . $category->count . ')';
+		}
+
+		echo EDD()->html->select(
+			array(
+				'name'             => 'download_category',
+				'id'               => 'download_category',
+				'class'            => 'postform',
+				'chosen'           => true,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+				'options'          => $options,
+				'selected'         => $selected,
+				'data'             => array(
+					'placeholder'        => sprintf( _x( 'Search %s', 'plural: Example: "Search Download Categories"', 'easy-digital-downloads' ), $category_labels['name'] ),
+					'search-type'        => 'download_category',
+					'search-placeholder' => sprintf( _x( 'Search %s', 'plural: Example: "Search Download Categories"', 'easy-digital-downloads' ), $category_labels['name'] ),
+				),
+			)
+		);
 	}
 
 	if ( isset( $_REQUEST['all_posts'] ) && '1' === $_REQUEST['all_posts'] ) {

@@ -73,6 +73,8 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 			)
 		) );
 
+		delete_option( 'edd_notification_req_timeout' );
+
 		$importer->run();
 
 		$notifications = $this->getNotifications();
@@ -125,6 +127,8 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 
 		$notifications = $this->getNotifications();
 		$this->assertSame( 'This is an exciting new EDD feature.', $notifications[0]->content );
+
+		delete_option( 'edd_notification_req_timeout' );
 
 		$importer = $this->getMockImporter( array(
 			array(

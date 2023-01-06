@@ -187,6 +187,7 @@ class Download {
 			"SELECT SUM((oa.total - oa.tax)/ oa.rate) as revenue
 			FROM {$wpdb->edd_order_adjustments} oa
 			INNER JOIN {$wpdb->edd_order_items} oi ON(oi.id = oa.object_id)
+			INNER JOIN {$wpdb->edd_orders} o ON oi.order_id = o.id AND o.type = 'sale' {$order_status_sql}
 			WHERE {$product_id_sql}
 			{$price_id_sql}
 			AND oa.object_type = 'order_item'
@@ -194,7 +195,9 @@ class Download {
 			AND oi.status IN('complete','partially_refunded')
 			{$date_query_sql}";
 
-		$results = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
+		$sql = "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a";
+
+		$results = $wpdb->get_row( $sql );
 
 		return ! empty( $results->revenue ) ? $results->revenue : 0.00;
 	}

@@ -745,38 +745,84 @@ function edd_register_downloads_report( $reports ) {
 							'groupby' => '',
 						);
 
+						$union_clauses = array(
+							'select'  => 'date',
+							'where'   => '',
+							'groupby' => '',
+						);
+
 						// Default to 'monthly'.
 						$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'edd_oi.date_created' );
 						$sql_clauses['orderby'] = 'MONTH(edd_oi.date_created)';
+
+						$union_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date' );
+						$union_clauses['orderby'] = 'MONTH(date)';
 
 						// Now drill down to the smallest unit.
 						if ( $hour_by_hour ) {
 							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'edd_oi.date_created' );
 							$sql_clauses['orderby'] = 'HOUR(edd_oi.date_created)';
+
+							$union_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date' );
+							$union_clauses['orderby'] = 'HOUR(date)';
 						} elseif ( $day_by_day ) {
 							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'edd_oi.date_created' );
 							$sql_clauses['orderby'] = 'DATE(edd_oi.date_created)';
-						}
 
+							$union_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date' );
+							$union_clauses['orderby'] = 'DATE(date)';
+						}
 
 						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
 							? sprintf( 'AND price_id = %d', absint( $download_data['price_id'] ) )
 							: '';
 
-						$earnings_results = $wpdb->get_results(
-							$wpdb->prepare(
-								"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, %1s
-								FROM {$wpdb->edd_order_items} edd_oi
-								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
-								GROUP BY {$sql_clauses['groupby']}
-								ORDER BY {$sql_clauses['orderby']} ASC",
-								$sql_clauses['select'],
-								$download_data['download_id'],
-								$price_id,
-								$dates['start']->copy()->format( 'mysql' ),
-								$dates['end']->copy()->format( 'mysql' )
-							)
+						$earnings_statuses      = edd_get_gross_order_statuses();
+						$earnings_status_string = implode( ', ', array_fill( 0, count( $earnings_statuses ), '%s' ) );
+
+						$order_item_earnings = $wpdb->prepare(
+							"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, %1s
+							FROM {$wpdb->edd_order_items} edd_oi
+							INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
+							WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_o.status IN ({$earnings_status_string})
+							GROUP BY {$sql_clauses['groupby']}",
+							$sql_clauses['select'],
+							$download_data['download_id'],
+							$price_id,
+							$dates['start']->copy()->format( 'mysql' ),
+							$dates['end']->copy()->format( 'mysql' ),
+							...$earnings_statuses
 						);
+
+						/**
+						 * The adjustments query needs a different order status check than the order items. This is due to the fact that
+						 * adjustments refunded would end up being double counted, and therefore create an inaccurate revenue report.
+						 */
+						$adjustments_statuses      = edd_get_net_order_statuses();
+						$adjustments_status_string = implode( ', ', array_fill( 0, count( $adjustments_statuses ), '%s' ) );
+
+						$order_adjustments = $wpdb->prepare(
+							"SELECT SUM(edd_oa.total / edd_oa.rate) AS earnings, %1s
+							FROM {$wpdb->edd_order_adjustments} edd_oa
+							INNER JOIN {$wpdb->edd_order_items} edd_oi ON
+								edd_oi.id = edd_oa.object_id
+								AND edd_oi.product_id = %d
+								%1s
+								AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s
+							INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id AND edd_o.type = 'sale' AND edd_o.status IN ({$adjustments_status_string})
+							WHERE edd_oa.object_type = 'order_item'
+							AND edd_oa.type != 'discount'
+							GROUP BY {$sql_clauses['groupby']}",
+							$sql_clauses['select'],
+							$download_data['download_id'],
+							$price_id,
+							$dates['start']->copy()->format( 'mysql' ),
+							$dates['end']->copy()->format( 'mysql' ),
+							...$adjustments_statuses
+						);
+
+						$earnings_sql     = "SELECT SUM(earnings) as earnings, {$union_clauses['select']} FROM ({$order_item_earnings} UNION {$order_adjustments})a GROUP BY {$union_clauses['groupby']} ORDER BY {$union_clauses['orderby']}";
+						$earnings_results = $wpdb->get_results( $earnings_sql );
 
 						$statuses      = edd_get_net_order_statuses();
 						$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
@@ -786,21 +832,21 @@ function edd_register_downloads_report( $reports ) {
 							...$statuses
 						);
 
-						$sales_results = $wpdb->get_results(
-							$wpdb->prepare(
-								"SELECT COUNT(edd_oi.total) AS sales, %1s
-								FROM {$wpdb->edd_order_items} edd_oi
-								{$join}
-								WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN (  'complete', 'refunded', 'partially_refunded' )
-								GROUP BY {$sql_clauses['groupby']}
-								ORDER BY {$sql_clauses['orderby']} ASC",
-								$sql_clauses['select'],
-								$download_data['download_id'],
-								$price_id,
-								$dates['start']->copy()->format( 'mysql' ),
-								$dates['end']->copy()->format( 'mysql' )
-							)
+						$sales_sql = $wpdb->prepare(
+							"SELECT COUNT(edd_oi.total) AS sales, {$sql_clauses['select']}
+							FROM {$wpdb->edd_order_items} edd_oi
+							{$join}
+							WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN ({$status_string})
+							GROUP BY {$sql_clauses['groupby']}
+							ORDER BY {$sql_clauses['orderby']} ASC",
+							$download_data['download_id'],
+							$price_id,
+							$dates['start']->copy()->format( 'mysql' ),
+							$dates['end']->copy()->format( 'mysql' ),
+							...$statuses
 						);
+
+						$sales_results = $wpdb->get_results( $sales_sql );
 
 						$sales    = array();
 						$earnings = array();

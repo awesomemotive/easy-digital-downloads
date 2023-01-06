@@ -15,8 +15,20 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	 */
 	protected static $payment;
 
+	/**
+	 * Order items test fixture.
+	 *
+	 * @var array
+	 */
+	protected static $order_items;
+
 	public function setUp() {
 		self::$payment = edd_get_payment( \EDD_Helper_Payment::create_simple_payment() );
+		self::$order_items = edd_get_order_items(
+			array(
+				'order_id' => self::$payment->ID,
+			)
+		);
 	}
 
 	public function tearDown() {
@@ -41,6 +53,39 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertTrue( is_array( (array) $payments[0] ) );
 		$this->assertArrayHasKey( 'ID', (array) $payments[0] );
 		$this->assertEquals( 'edd_payment', $payments[0]->post_type );
+	}
+
+	public function test_get_payments_download_array() {
+		$payments = edd_get_payments(
+			array(
+				'download' => array( self::$order_items[0]->product_id ),
+			)
+		);
+
+		$this->assertFalse( empty( $payments ) );
+		$this->assertSame( self::$payment->ID, $payments[0]->ID );
+	}
+
+	public function test_get_payments_download_string() {
+		$payments = edd_get_payments(
+			array(
+				'download' => (string) self::$order_items[0]->product_id,
+			)
+		);
+
+		$this->assertFalse( empty( $payments ) );
+		$this->assertSame( self::$payment->ID, $payments[0]->ID );
+	}
+
+	public function test_get_payments_download_numeric() {
+		$payments = edd_get_payments(
+			array(
+				'download' => (int) self::$order_items[0]->product_id,
+			)
+		);
+
+		$this->assertFalse( empty( $payments ) );
+		$this->assertSame( self::$payment->ID, $payments[0]->ID );
 	}
 
 	public function test_payments_query_edd_payments() {

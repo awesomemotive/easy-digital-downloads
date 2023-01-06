@@ -160,7 +160,7 @@ class EDD_Cart {
 	 */
 	private function get_tax_rate() {
 		if ( null === $this->tax_rate ) {
-			$this->tax_rate = edd_get_tax_rate();
+			$this->tax_rate = edd_use_taxes() ? edd_get_tax_rate() : 0;
 		}
 
 		return $this->tax_rate;

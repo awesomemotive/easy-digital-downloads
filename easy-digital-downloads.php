@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 3.1.0.3
+ * Version: 3.1.0.4
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  * Requires PHP: 5.6
@@ -26,7 +26,7 @@
  * @package EDD
  * @category Core
  * @author Easy Digital Downloads
- * @version 3.1.0.3
+ * @version 3.1.0.4
  */
 
 // Exit if accessed directly.
@@ -124,6 +124,8 @@ final class EDD_Requirements_Check {
 	 * @since 3.0
 	 */
 	private function load() {
+
+		require_once dirname( __FILE__ ) . '/vendor/autoload.php';
 
 		// Maybe include the bundled bootstrapper
 		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {

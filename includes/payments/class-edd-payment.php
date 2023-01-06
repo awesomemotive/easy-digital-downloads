@@ -3098,7 +3098,7 @@ class EDD_Payment {
 				}
 
 				$item_fees[ $id ] = array(
-					'amount'      => $item_fee->amount,
+					'amount'      => $item_fee->total,
 					'label'       => $item_fee->description,
 					'no_tax'      => $no_tax ? $no_tax : false,
 					'type'        => 'fee',
