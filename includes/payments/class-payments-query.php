@@ -527,22 +527,22 @@ class EDD_Payments_Query extends EDD_Stats {
 		$order_ids = array();
 
 		if ( is_array( $this->args['download'] ) ) {
-			$orders = edd_get_order_items( array(
+			$order_items = edd_get_order_items( array(
 				'product_id__in' => (array) $this->args['download'],
 			) );
 
-			foreach ( $orders as $order ) {
-				/** @var $order EDD\Orders\Order_Item */
-				$order_ids[] = $order->order_id;
+			foreach ( $order_items as $order_item ) {
+				/** @var $order_item EDD\Orders\Order_Item */
+				$order_ids[] = $order_item->order_id;
 			}
 		} else {
-			$orders = edd_get_order_items( array(
+			$order_items = edd_get_order_items( array(
 				'product_id' => $this->args['download'],
 			) );
 
-			foreach ( $orders as $order ) {
-				/** @var $order EDD\Orders\Order_Item */
-				$order_ids[] = $order->id;
+			foreach ( $order_items as $order_item ) {
+				/** @var $order_item EDD\Orders\Order_Item */
+				$order_ids[] = $order_item->order_id;
 			}
 		}
 

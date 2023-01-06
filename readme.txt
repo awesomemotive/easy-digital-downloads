@@ -6,7 +6,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable Tag: 3.1.0.3
+Stable Tag: 3.1.0.4
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,25 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.1.0.4, January 5, 2023 =
+* Improvement: The cart performance has been improved by disabling tax rate lookups when a customer address is supplied, but taxes are disabled.
+* Improvement: Reports now factor in order item adjustments like negative fees.
+* Improvement: The Downloads list table now loads faster on sites with a large number of download categories.
+* Improvement: The Sales REST API Endpoint was updated to respect the new order statuses in EDD 3.0.
+* Improvement: Improve semantic markup by not allowing two of the same ID attribute for redirect to checkout buttons.
+* Improvement: Discount code lookup performance has been improved when looking up a discount by the discount code.
+* Fix: Looking up payments with a Download ID that was a string or integer would return incorrect or no orders.
+* Fix: Reduced the number of HTTP calls that the notifications API can make per day.
+* Fix: Avoid the "Request-URI Too Long" error when performing multiple actions in a row on list tables.
+* Fix: Negative fee amounts are now properly considered when determining an item's final price in the cart.
+* Fix: PayPal: Arabic characters in download names could cause an unexpected error during checkout.
+* Fix: PayPal: The backup IPN is not loaded if the PayPal integration is not connected.
+* Fix: PayPal: The payment_date field was assumed to be present when processing the backup IPN.
+* Fix: The edd_get_payment_amount function could improperly return an empty string instead of a float value.
+* Fix: Add to cart buttons were not using the token values to improve caching compatibility.
+* Fix: When many items were purchased at once, some order item download links were not working due to an improper status.
+* Fix: Hardened the search query for the AJAX endpoint for searching for downloads by title.
+
 = 3.1.0.3, November 23, 2022 =
 * Improvement: The PayPal webhook connect/disconnect process has been improved to ensure proper webhook delivery.
 * Improvement: An IPN Backup has been added to the PayPal gateway, to avoid missing webhooks that may have been disconnected.

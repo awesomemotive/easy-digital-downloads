@@ -8,9 +8,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Database\Schemas;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Database\Schema;
@@ -30,18 +31,18 @@ final class Adjustments extends Schema {
 	 */
 	public $columns = array(
 
-		// id
+		// id.
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
-		// parent
+		// parent.
 		array(
 			'name'       => 'parent',
 			'type'       => 'bigint',
@@ -49,35 +50,36 @@ final class Adjustments extends Schema {
 			'unsigned'   => true,
 			'default'    => '0',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
-		// name
+		// name.
 		array(
 			'name'       => 'name',
 			'type'       => 'varchar',
 			'length'     => '200',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// code
+		// code.
 		array(
 			'name'       => 'code',
 			'type'       => 'varchar',
 			'length'     => '50',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+			'cache_key'  => true,
 		),
 
-		// status
+		// status.
 		array(
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'draft',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// type
@@ -87,124 +89,124 @@ final class Adjustments extends Schema {
 			'length'     => '20',
 			'default'    => '',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
-		// scope
+		// scope.
 		array(
 			'name'       => 'scope',
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
-		// amount_type
+		// amount_type.
 		array(
 			'name'       => 'amount_type',
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
-		// amount
+		// amount.
 		array(
-			'name'       => 'amount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'amount',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
 		),
 
-		// description
+		// description.
 		array(
 			'name'       => 'description',
 			'type'       => 'longtext',
 			'default'    => '',
-			'searchable' => true
+			'searchable' => true,
 		),
 
-		// max_uses
+		// max_uses.
 		array(
 			'name'       => 'max_uses',
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
-		),
-
-		// use_count
-		array(
-			'name'       => 'use_count',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
 			'default'    => '0',
-			'sortable'   => true,
 		),
 
-		// once_per_customer
+		// use_count.
 		array(
-			'name'       => 'once_per_customer',
-			'type'       => 'int',
-			'length'     => '1',
-			'default'    => '0'
+			'name'     => 'use_count',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
-		// min_charge_amount
+		// once_per_customer.
 		array(
-			'name'       => 'min_charge_amount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0'
+			'name'    => 'once_per_customer',
+			'type'    => 'int',
+			'length'  => '1',
+			'default' => '0',
 		),
 
-		// start_date
+		// min_charge_amount.
+		array(
+			'name'    => 'min_charge_amount',
+			'type'    => 'decimal',
+			'length'  => '18,9',
+			'default' => '0',
+		),
+
+		// start_date.
 		array(
 			'name'       => 'start_date',
 			'type'       => 'datetime',
 			'default'    => null,
 			'allow_null' => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// end_date
+		// end_date.
 		array(
 			'name'       => 'end_date',
 			'type'       => 'datetime',
 			'default'    => null,
 			'allow_null' => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// date_created
+		// date_created.
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '', // Defaults to current time in query class.
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// date_modified
+		// date_modified.
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '', // Defaults to current time in query class.
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// uuid
+		// uuid.
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

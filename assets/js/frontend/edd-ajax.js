@@ -177,6 +177,8 @@ jQuery( document ).ready( function( $ ) {
 			post_data: $( form ).serialize(),
 			nonce: nonce,
 			current_page: edd_scripts.current_page,
+			timestamp: $this.data( 'timestamp' ),
+			token: $this.data( 'token' ),
 		};
 
 		$.ajax( {
@@ -189,7 +191,7 @@ jQuery( document ).ready( function( $ ) {
 			},
 			success: function( response ) {
 				const store_redirect = edd_scripts.redirect_to_checkout === '1';
-				const item_redirect = form.find( '#edd_redirect_to_checkout' ).val() === '1';
+				const item_redirect = form.find( 'input[name=edd_redirect_to_checkout]' ).val() === '1';
 
 				if ( ( store_redirect && item_redirect ) || ( ! store_redirect && item_redirect ) ) {
 					window.location = edd_scripts.checkout_page;

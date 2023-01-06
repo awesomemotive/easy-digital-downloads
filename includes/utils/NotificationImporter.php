@@ -30,13 +30,24 @@ class NotificationImporter {
 	 * @since 2.11.4
 	 */
 	public function run() {
+		$request_timeout = get_option( 'edd_notification_req_timeout', false );
+		if ( false !== $request_timeout && current_time( 'timestamp' ) < $request_timeout ) {
+			edd_debug_log( 'Skipping notifications API request, timeout not reached' );
+			return;
+		}
+
 		edd_debug_log( 'Fetching notifications via ' . $this->getApiEndpoint() );
 
 		try {
 			$notifications = $this->fetchNotifications();
+
+			// If successful, make it so we don't request for another 23 hours.
+			update_option( 'edd_notification_req_timeout', current_time( 'timestamp' ) + ( HOUR_IN_SECONDS * 23 ), false );
 		} catch ( \Exception $e ) {
 			edd_debug_log( sprintf( 'Notification fetch exception: %s', $e->getMessage() ) );
 
+			// If for some reason our request failed, delay for 4 hours.
+			update_option( 'edd_notification_req_timeout', current_time( 'timestamp' ) + ( HOUR_IN_SECONDS * 4 ), false );
 			return;
 		}
 
