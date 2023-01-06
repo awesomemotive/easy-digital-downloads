@@ -13,6 +13,7 @@
 
 namespace EDD\Gateways\PayPal\IPN;
 
+use EDD\Gateways\PayPal;
 /**
  * Listens for an IPN call from PayPal
  *
@@ -22,6 +23,11 @@ namespace EDD\Gateways\PayPal\IPN;
  */
 function listen_for_ipn() {
 	if ( empty( $_GET['edd-listener'] ) || 'eppe' !== $_GET['edd-listener'] ) {
+		return;
+	}
+
+	// If PayPal is not connected, we don't need to run here.
+	if ( ! PayPal\has_rest_api_connection() ) {
 		return;
 	}
 
@@ -174,7 +180,7 @@ function listen_for_ipn() {
 
 
 			// Bail if this is the very first payment.
-			if ( date( 'Y-n-d', strtotime( $subscription->created ) ) == date( 'Y-n-d', strtotime( $posted['payment_date'] ) ) ) {
+			if ( ! empty( $posted['payment_date'] ) && date( 'Y-n-d', strtotime( $subscription->created ) ) == date( 'Y-n-d', strtotime( $posted['payment_date'] ) ) ) {
 				ipn_debug_log( 'IPN for subscription ' . $subscription->id . ': processing stopped because this is the initial payment.' );
 				return;
 			}

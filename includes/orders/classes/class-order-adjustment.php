@@ -164,4 +164,13 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 			'parent' => $this->id
 		) );
 	}
+
+	/**
+	 * Backwards compatibility for the `amount` property, which is now the `total`.
+	 *
+	 * @since 3.1.0.4
+	 */
+	public function get_amount() {
+		return $this->total;
+	}
 }

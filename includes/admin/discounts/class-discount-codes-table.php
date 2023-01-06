@@ -427,4 +427,33 @@ class EDD_Discount_Codes_Table extends List_Table {
 			'per_page'    => $this->per_page,
 		) );
 	}
+
+	/**
+	 * Generate the table navigation above or below the table.
+	 * We're overriding this to turn off the referer param in `wp_nonce_field()`.
+	 *
+	 * @param string $which
+	 * @since 3.1.0.4
+	 */
+	protected function display_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			wp_nonce_field( 'bulk-' . $this->_args['plural'], '_wpnonce', false );
+		}
+		?>
+		<div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+			<?php if ( $this->has_items() ) : ?>
+				<div class="alignleft actions bulkactions">
+					<?php $this->bulk_actions( $which ); ?>
+				</div>
+				<?php
+			endif;
+			$this->extra_tablenav( $which );
+			$this->pagination( $which );
+			?>
+
+			<br class="clear"/>
+		</div>
+		<?php
+	}
 }

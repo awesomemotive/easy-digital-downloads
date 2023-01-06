@@ -147,7 +147,8 @@ class Stats {
 		$args = wp_parse_args( $args, array(
 			'column_prefix'      => '',
 			'accepted_functions' => array(),
-			'rate'               => true
+			'requested_function' => false,
+			'rate'               => true,
 		) );
 
 		$column = $this->query_vars['column'];
@@ -165,11 +166,16 @@ class Stats {
 
 		$default_function = is_array( $args['accepted_functions'] ) && isset( $args['accepted_functions'][0] ) ? $args['accepted_functions'][0] : false;
 		$function = ! empty( $this->query_vars['function'] ) ? $this->query_vars['function'] : $default_function;
+
+		if ( ! empty( $args['requested_function'] ) ) {
+			$function = $args['requested_function'];
+		}
+
 		if ( empty( $function ) ) {
 			throw new \InvalidArgumentException( 'Missing select function.' );
 		}
 
-		if ( ! empty( $args['accepted_functions'] ) && ! in_array( strtoupper( $this->query_vars['function'] ), $args['accepted_functions'], true ) ) {
+		if ( ! empty( $args['accepted_functions'] ) && ! in_array( strtoupper( $function ), $args['accepted_functions'], true ) ) {
 			if ( ! empty( $default_function ) ) {
 				$function = $default_function;
 			} else {
@@ -177,7 +183,7 @@ class Stats {
 			}
 		}
 
-		$function = $this->query_vars['function'] = strtoupper( $function );
+		$function = strtoupper( $function );
 
 		// Multiply by rate if currency conversion is enabled.
 		if (
@@ -930,18 +936,13 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
 		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
-		$this->query_vars['status']            = array( 'complete', 'refunded', 'partially_refunded' );
+		$this->query_vars['status']            = edd_get_gross_order_statuses();
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = $this->get_amount_column_and_function( array(
-			'column_prefix'     => $this->query_vars['table'],
-			'accepted_functions' => array( 'SUM', 'AVG' )
-		) );
-
 		$product_id = ! empty( $this->query_vars['product_id'] )
-			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
+			? $this->get_db()->prepare( "AND {$this->query_vars['table']}.product_id = %d", absint( $this->query_vars['product_id'] ) )
 			: '';
 
 		$price_id = $this->generate_price_id_query_sql();
@@ -954,28 +955,119 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
+		$status = ! empty( $this->query_vars['status'] )
+			? " AND {$this->query_vars['table']}.status IN ('" . implode( "', '", $this->query_vars['status'] ) . "')"
+			: '';
+
 		$join = $currency = '';
 		if ( ! empty( $country ) || ! empty( $region ) ) {
 			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
 		}
 
+		$join .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) AND edd_o.status IN ('" . implode( "', '", $this->query_vars['status'] ) . "') ";
+
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
-			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
 			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
 		}
 
+		/**
+		 * The adjustments query needs a different order status check than the order items. This is due to the fact that
+		 * adjustments refunded would end up being double counted, and therefore create an inaccurate revenue report.
+		 */
+		$adjustments_join = " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) AND edd_o.type = 'sale' AND edd_o.status IN ('" . implode( "', '", edd_get_net_order_statuses() ) . "') ";
+
+		/**
+		 * With the addition of including fees into the calcualtion, the order_items
+		 * and order_adjustments for the order items needs to be a SUM and then the final function
+		 * (SUM or AVG) needs to be run on the final UNION Query.
+		 */
+		$order_item_function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'SUM', 'AVG' ),
+			'requested_function' => 'SUM',
+		) );
+
+		$order_adjustment_function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => 'oadj',
+			'accepted_functions' => array( 'SUM', 'AVG' ),
+			'requested_function' => 'SUM',
+		) );
+
+		$union_function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => '',
+			'accepted_functions' => array( 'SUM', 'AVG' ),
+			'rate'               => false,
+		) );
+
 		if ( true === $this->query_vars['grouped'] ) {
-			$sql = "SELECT product_id, price_id, {$function} AS total
-					FROM {$this->query_vars['table']}
-					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-					GROUP BY product_id, price_id
-					ORDER BY total DESC";
+			$order_items = "SELECT
+				{$this->query_vars['table']}.product_id,
+				{$this->query_vars['table']}.price_id,
+				{$order_item_function} AS total
+				FROM {$this->query_vars['table']}
+				{$join}
+				WHERE 1=1
+				{$product_id}
+				{$price_id}
+				{$region}
+				{$country}
+				{$currency}
+				{$this->query_vars['where_sql']}
+				{$this->query_vars['date_query_sql']}
+				GROUP BY {$this->query_vars['table']}.product_id, {$this->query_vars['table']}.price_id";
+
+			$order_adjustments = "SELECT
+				{$this->query_vars['table']}.product_id as product_id,
+				{$this->query_vars['table']}.price_id as price_id,
+				{$order_adjustment_function} as total
+				FROM {$this->get_db()->edd_order_adjustments} oadj
+				INNER JOIN {$this->query_vars['table']} ON
+					({$this->query_vars['table']}.id = oadj.object_id)
+					{$product_id}
+					{$price_id}
+					{$region}
+					{$country}
+					{$currency}
+				{$adjustments_join}
+				WHERE oadj.object_type = 'order_item'
+				AND oadj.type != 'discount'
+				{$this->query_vars['date_query_sql']}
+				GROUP BY {$this->query_vars['table']}.product_id, {$this->query_vars['table']}.price_id";
+
+			$sql = "SELECT product_id, price_id, {$union_function} AS total
+				FROM ({$order_items} UNION {$order_adjustments})a
+				GROUP BY product_id, price_id
+				ORDER BY total DESC";
 		} else {
-			$sql = "SELECT {$function} AS total
-					FROM {$this->query_vars['table']}
-					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+			$order_items = "SELECT
+				{$order_item_function} AS total
+				FROM {$this->query_vars['table']}
+				{$join}
+				WHERE 1=1
+				{$product_id}
+				{$price_id}
+				{$region}
+				{$country}
+				{$currency}
+				{$this->query_vars['where_sql']}
+				{$this->query_vars['date_query_sql']}";
+
+			$order_adjustments = "SELECT
+				{$order_adjustment_function} as total
+				FROM {$this->get_db()->edd_order_adjustments} oadj
+				INNER JOIN {$this->query_vars['table']} ON
+					({$this->query_vars['table']}.id = oadj.object_id)
+					{$product_id}
+					{$price_id}
+					{$region}
+					{$country}
+					{$currency}
+				{$adjustments_join}
+				WHERE oadj.object_type = 'order_item'
+				AND oadj.type != 'discount'
+				{$this->query_vars['date_query_sql']}";
+
+			$sql = "SELECT {$union_function} AS total FROM ({$order_items} UNION {$order_adjustments})a";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -2788,8 +2880,9 @@ class Stats {
 			$date_query_sql = ' AND ';
 
 			if ( ! empty( $this->query_vars['start'] ) ) {
+				$start_date      = EDD()->utils->date( $this->query_vars['start'], edd_get_timezone_id(), false )->format( 'mysql' );
 				$date_query_sql .= "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
-				$date_query_sql .= $this->get_db()->prepare( '>= %s', $this->query_vars['start'] );
+				$date_query_sql .= $this->get_db()->prepare( '>= %s', $start_date );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -2798,7 +2891,8 @@ class Stats {
 			}
 
 			if ( ! empty( $this->query_vars['end'] ) ) {
-				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $this->query_vars['end'] );
+				$end_date        = EDD()->utils->date( $this->query_vars['end'], edd_get_timezone_id(), false )->format( 'mysql' );
+				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $end_date );
 			}
 
 			$this->query_vars['date_query_sql'] = $date_query_sql;
@@ -2957,7 +3051,7 @@ class Stats {
 	 */
 	private function generate_price_id_query_sql() {
 		return ! is_null( $this->query_vars['price_id'] ) && is_numeric( $this->query_vars['price_id'] )
-			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			? $this->get_db()->prepare( "AND {$this->query_vars['table']}.price_id = %d", absint( $this->query_vars['price_id'] ) )
 			: '';
 	}
 

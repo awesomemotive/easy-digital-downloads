@@ -1249,7 +1249,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
 
 	// Bail if nothing was passed.
 	if ( empty( $order_id ) ) {
-		return '';
+		return 0.00;
 	}
 
 	$order = edd_get_order( $order_id );

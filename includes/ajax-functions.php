@@ -598,24 +598,30 @@ function edd_ajax_download_search() {
 	// but we'll worry about that later if that situation ever happens.
 	$args   = get_transient( 'edd_download_search' );
 
-	// Parse args
-	$search = wp_parse_args( (array) $args, array(
-		'text'    => '',
-		'results' => array()
-	) );
+	// Parse args.
+	$search = wp_parse_args(
+		(array) $args,
+		array(
+			'text'    => '',
+			'results' => array(),
+		)
+	);
 
-	// Get the search string
+	// Get the search string.
 	$new_search = isset( $_GET['s'] )
 		? sanitize_text_field( $_GET['s'] )
 		: '';
 
-	// Bail early if the search text has not changed
+	// Limit to only alphanumeric characters, including unicode and spaces.
+	$new_search = preg_replace( '/[^\pL^\pN\pZ]/', ' ', $new_search );
+
+	// Bail early if the search text has not changed.
 	if ( $search['text'] === $new_search ) {
-		echo json_encode( $search['results'] );
+		echo wp_json_encode( $search['results'] );
 		edd_die();
 	}
 
-	// Set the local static search variable
+	// Set the local static search variable.
 	$search['text'] = $new_search;
 
 	// Are we excluding the current ID?
@@ -640,17 +646,17 @@ function edd_ajax_download_search() {
 	// Are we including all statuses, or only public ones?
 	$status = ! current_user_can( 'edit_products' )
 		? apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) )
-		: apply_filters( 'edd_product_dropdown_status',        array( 'publish', 'draft', 'private', 'future' ) );
+		: apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
 
-	// Default query arguments
+	// Default query arguments.
 	$args = array(
 		'orderby'          => 'title',
 		'order'            => 'ASC',
 		'post_type'        => 'download',
 		'posts_per_page'   => 50,
-		'post_status'      => implode( ',', $status ), // String
-		'post__not_in'     => $excludes,               // Array
-		'edd_search'       => $new_search,              // String
+		'post_status'      => implode( ',', $status ), // String.
+		'post__not_in'     => $excludes,               // Array.
+		'edd_search'       => $new_search,             // String.
 		'suppress_filters' => false,
 	);
 
@@ -672,11 +678,11 @@ function edd_ajax_download_search() {
 	}
 
 	add_filter( 'posts_where', 'edd_ajax_filter_download_where', 10, 2 );
-	// Get downloads
+	// Get downloads.
 	$items = get_posts( $args );
 	remove_filter( 'posts_where', 'edd_ajax_filter_download_where', 10, 2 );
 
-	// Pluck title & ID
+	// Pluck title & ID.
 	if ( ! empty( $items ) ) {
 		$items = wp_list_pluck( $items, 'post_title', 'ID' );
 
@@ -684,25 +690,25 @@ function edd_ajax_download_search() {
 		foreach ( $items as $post_id => $title ) {
 			$product_title = $title;
 
-			// Look for variable pricing
+			// Look for variable pricing.
 			$prices = edd_get_variable_prices( $post_id );
 
-			if ( ! empty( $prices ) && ( false === $variations|| ! $variations_only ) ) {
+			if ( ! empty( $prices ) && ( false === $variations || ! $variations_only ) ) {
 				$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
 			}
 
 			if ( empty( $prices ) || ! $variations_only ) {
-				// Add item to results array
+				// Add item to results array.
 				$search['results'][] = array(
 					'id'   => $post_id,
 					'name' => $title,
 				);
 			}
 
-			// Maybe include variable pricing
+			// Maybe include variable pricing.
 			if ( ! empty( $variations ) && ! empty( $prices ) ) {
 				foreach ( $prices as $key => $value ) {
-					$name  = ! empty( $value['name']  ) ? $value['name']  : '';
+					$name = ! empty( $value['name'] ) ? $value['name'] : '';
 
 					if ( ! empty( $name ) ) {
 						$search['results'][] = array(
@@ -713,17 +719,16 @@ function edd_ajax_download_search() {
 				}
 			}
 		}
-
-	// Empty the results array
 	} else {
+		// Empty the results array.
 		$search['results'] = array();
 	}
 
-	// Update the transient
+	// Update the transient.
 	set_transient( 'edd_download_search', $search, 30 );
 
-	// Output the results
-	echo json_encode( $search['results'] );
+	// Output the results.
+	echo wp_json_encode( $search['results'] );
 
 	// Done!
 	edd_die();
@@ -801,6 +806,45 @@ function edd_ajax_customer_search() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
+
+/**
+ * Search the download categories via AJAX
+ *
+ * @since 3.1.0.4
+ * @return void
+ */
+function edd_ajax_download_category_search() {
+	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$results = array();
+
+	$category_args = array(
+		'taxonomy'   => array( 'download_category' ),
+		'orderby'    => 'id',
+		'order'      => 'ASC',
+		'hide_empty' => true,
+		'fields'     => 'all',
+		'name__like' => $search,
+	);
+
+	$categories_found = get_terms( $category_args );
+
+	if ( ! empty( $categories_found ) ) {
+		foreach ( $categories_found as $category ) {
+			$results[] = array(
+				'id'   => $category->slug,
+				'name' => $category->name . ' (' . $category->count . ')',
+			);
+		}
+	} else {
+		$results[] = array(
+			'id'   => 0,
+			'name' => __( 'No categories found', 'easy-digital-downloads' ),
+		);
+	}
+
+	echo wp_send_json( $results );
+}
+add_action( 'wp_ajax_edd_download_category_search', 'edd_ajax_download_category_search' );
 
 /**
  * Search the users database via AJAX
