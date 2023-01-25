@@ -281,7 +281,11 @@ class EDD_Email_Summary {
 			)
 		);
 
-		$new_customers = $stats->get_customer_count();
+		$new_customers = $stats->get_customer_count(
+			array(
+				'purchase_count' => true,
+			)
+		);
 
 		$top_selling_products = $stats->get_most_valuable_order_items(
 			array(

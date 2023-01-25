@@ -2116,3 +2116,22 @@ function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 		delete_transient( 'edd_user_' . $payment->user_id . '_purchases' );
 	}
 }
+
+/**
+ * Filters the WHERE SQL query for the edd_download_search.
+ * This searches the download titles only, not the excerpt/content.
+ *
+ * @since 3.1.0.2
+ * @deprecated 3.1.0.5
+ * @param string $where
+ * @param WP_Query $wp_query
+ * @return string
+ */
+function edd_ajax_filter_download_where( $where, $wp_query ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.1.0.5' );
+
+	$search  = new EDD\Downloads\Search();
+
+	return $search->filter_where( $where, $wp_query );
+}

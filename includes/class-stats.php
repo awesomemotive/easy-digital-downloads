@@ -2132,6 +2132,12 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
+		$where = $this->query_vars['where_sql'];
+		// Allow `purchase_count` to be set to `true` to query only customers with orders.
+		if ( isset( $query['purchase_count'] ) && true === $query['purchase_count'] ) {
+			$where .= " AND {$this->query_vars['table']}.purchase_count > 0";
+		}
+
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
 
@@ -2140,13 +2146,13 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL(COUNT(id), 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$where} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$where} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT COUNT(id) AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$where} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
