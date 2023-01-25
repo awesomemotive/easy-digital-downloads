@@ -64,6 +64,27 @@ function edd_add_order_address( $data ) {
 		return false;
 	}
 
+	// If this exact address exists already, we can return false.
+	if ( edd_get_order_addresses( $data ) ) {
+		return false;
+	}
+
+	// If the new address is a billing address and there is one already, update it instead of adding a new one.
+	if ( empty( $data['type'] ) || 'billing' === $data['type'] ) {
+		$order_addresses = edd_get_order_addresses(
+			array(
+				'type'     => 'billing',
+				'order_id' => $data['order_id'],
+			)
+		);
+		if ( ! empty( $order_addresses ) ) {
+			$order_address = reset( $order_addresses );
+			edd_update_order_address( $order_address->id, $data );
+
+			return false;
+		}
+	}
+
 	// Instantiate a query object
 	$order_addresses = new EDD\Database\Queries\Order_Address();
 

@@ -1331,3 +1331,5 @@ function edd_render_stats_meta_box() {
 <?php
 	do_action('edd_stats_meta_box');
 }
+
+new EDD\Admin\Downloads\Meta();
