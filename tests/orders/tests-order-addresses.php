@@ -659,4 +659,26 @@ class Order_Address_Tests extends \EDD_UnitTestCase {
 
 		$this->assertCount( 0, $transactions );
 	}
+
+	public function test_add_order_address_identical_should_return_false() {
+		$order_address = edd_get_order_address( self::$order_addresses[0] );
+		$data          = (array) $order_address;
+		unset( $data['id'] );
+
+		$this->assertFalse( edd_add_order_address( $data ) );
+	}
+
+	public function test_add_order_address_different_should_update_address() {
+		$order_address = edd_get_order_address( self::$order_addresses[0] );
+		$data          = array(
+			'order_id' => $order_address->order_id,
+			'city'     => 'A Totally New City',
+		);
+
+		$new_order_address_id = edd_add_order_address( $data );
+		$this->assertFalse( $new_order_address_id );
+
+		$new_order_address = edd_get_order_address( self::$order_addresses[0] );
+		$this->assertSame( 'A Totally New City', $new_order_address->city );
+	}
 }

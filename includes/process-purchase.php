@@ -1281,6 +1281,22 @@ function edd_check_purchase_email( $valid_data, $posted ) {
 add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
 
 /**
+ * Checks the length of the user's email address.
+ *
+ * @since 3.1.0.5
+ * @param array $valid_data  The array of validated data.
+ * @param array $posted_data The array of posted data.
+ * @return void
+ */
+function edd_check_purchase_email_length( $valid_data, $posted_data ) {
+	// Customer emails are limited to 100 characters.
+	if ( ! empty( $posted_data['edd_email'] ) && strlen( $posted_data['edd_email'] ) > 100 ) {
+		edd_set_error( 'email_length', __( 'Your email address must be shorter than 100 characters.', 'easy-digital-downloads' ) );
+	}
+}
+add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email_length', 10, 2 );
+
+/**
  * Process a straight-to-gateway purchase
  *
  * @since 1.7

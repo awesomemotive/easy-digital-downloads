@@ -29,6 +29,15 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	public $export_type = 'earnings_report';
 
 	/**
+	 * Refund amounts for partially refunded orders.
+	 * Stored separately from the main data as it's only required for the net columns.
+	 *
+	 * @since 3.1.0.5
+	 * @var array
+	 */
+	private $partial_refunds;
+
+	/**
 	 * Set the export headers.
 	 *
 	 * @since 2.7
@@ -103,7 +112,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		unset( $statuses['pending'], $statuses['processing'], $statuses['preapproval'] );
 		$supported_statuses = array_keys( $statuses );
 
-		return apply_filters( 'edd_export_earnings_supported_statuses', $supported_statuses );
+		return array_unique( apply_filters( 'edd_export_earnings_supported_statuses', $supported_statuses ) );
 	}
 
 	/**
@@ -188,11 +197,9 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 				}
 			}
 
-			$supported_statuses = $this->get_supported_statuses();
-
 			$gross_count  = 0;
 			$gross_amount = 0;
-			foreach ( $supported_statuses as $status ) {
+			foreach ( edd_get_gross_order_statuses() as $status ) {
 				$gross_count  += absint( $data[ $status ]['count'] );
 				$gross_amount += $data[ $status ]['amount'];
 			}
@@ -212,7 +219,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			}
 
 			// Allows extensions with other 'completed' statuses to alter net earnings, like recurring.
-			$completed_statuses = apply_filters( 'edd_export_earnings_completed_statuses', edd_get_complete_order_statuses() );
+			$completed_statuses = array_unique( apply_filters( 'edd_export_earnings_completed_statuses', edd_get_net_order_statuses() ) );
 
 			$net_count  = 0;
 			$net_amount = 0;
@@ -222,6 +229,9 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 				}
 				$net_count  += absint( $data[ $status ]['count'] );
 				$net_amount += floatval( $data[ $status ]['amount'] );
+			}
+			if ( ! empty( $this->partial_refunds ) ) {
+				$net_amount += floatval( $this->partial_refunds['total'] );
 			}
 			$row_data .= $net_count . ',';
 			$row_data .= '"' . edd_format_amount( $net_amount ) . '"';
@@ -265,7 +275,8 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$totals   = $wpdb->get_results( $wpdb->prepare(
 			"SELECT SUM(total) AS total, COUNT(DISTINCT id) AS count, status
 			 FROM {$wpdb->edd_orders}
-			 WHERE date_created >= %s AND date_created <= %s
+			 WHERE type = 'sale'
+			 AND date_created >= %s AND date_created <= %s
 			 GROUP BY YEAR(date_created), MONTH(date_created), status
 			 ORDER by date_created ASC", $start_date, $end_date ), ARRAY_A );
 
@@ -273,7 +284,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		foreach ( $totals as $row ) {
 			$total_data[ $row['status'] ] = array(
 				'count'  => $row['count'],
-				'amount' => floatval( $row['total'] )
+				'amount' => floatval( $row['total'] ),
 			);
 		}
 
@@ -290,7 +301,30 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 					'amount' => $total_data[ $status ]['amount'],
 				);
 			}
+		}
 
+		// Get partial refund amounts to factor into net activity amounts.
+		$partial_refunds = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT SUM(total) AS total, COUNT(DISTINCT id) AS count
+					FROM {$wpdb->edd_orders}
+					WHERE type = 'refund'
+					AND parent IN (
+					SELECT id
+					FROM {$wpdb->edd_orders}
+					WHERE status = 'partially_refunded'
+					AND date_created >= %s
+					AND date_created <= %s
+					GROUP BY YEAR(date_created), MONTH(date_created)
+					ORDER by date_created ASC
+				);",
+				$start_date,
+				$end_date
+			),
+			ARRAY_A
+		);
+		if ( ! empty( $partial_refunds ) ) {
+			$this->partial_refunds = reset( $partial_refunds );
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );

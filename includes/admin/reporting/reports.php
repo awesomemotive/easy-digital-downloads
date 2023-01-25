@@ -306,8 +306,9 @@ function edd_register_overview_report( $reports ) {
 					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return $stats->get_customer_count( array(
-							'range'    => $dates['range'],
-							'relative' => true,
+							'range'          => $dates['range'],
+							'relative'       => true,
+							'purchase_count' => true,
 						) );
 					},
 					'display_args'  => array(
@@ -2569,8 +2570,9 @@ function edd_register_customer_report( $reports ) {
 					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return $stats->get_customer_count( array(
-							'range'    => $dates['range'],
-							'relative' => true,
+							'range'          => $dates['range'],
+							'relative'       => true,
+							'purchase_count' => true,
 						) );
 					},
 					'display_args'  => array(
@@ -2663,11 +2665,13 @@ function edd_register_customer_report( $reports ) {
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(c.id) AS total, {$sql_clauses['select']}
-					         FROM {$wpdb->edd_customers} c
-					         WHERE c.date_created >= %s AND c.date_created <= %s
-					         GROUP BY {$sql_clauses['groupby']}
-					         ORDER BY {$sql_clauses['orderby']} ASC",
-							$dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
+							 FROM {$wpdb->edd_customers} c
+							 WHERE c.date_created >= %s AND c.date_created <= %s
+							 AND c.purchase_count > 0
+							 GROUP BY {$sql_clauses['groupby']}
+							 ORDER BY {$sql_clauses['orderby']} ASC",
+							$dates['start']->copy()->format( 'mysql' ),
+							$dates['end']->copy()->format( 'mysql' ) ) );
 
 						$customers = array();
 
