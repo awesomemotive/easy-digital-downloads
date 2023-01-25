@@ -123,7 +123,7 @@ jQuery( document ).ready( function( $ ) {
 				// Add any option that doesn't already exist
 				$.each( data, function( key, item ) {
 					if ( ! $( 'option[value="' + item.id + '"]', select ).length ) {
-						select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
+						select.append( '<option value="' + item.id + '">' + item.name + '</option>' );
 					}
 				} );
 

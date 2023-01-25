@@ -6,7 +6,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable Tag: 3.1.0.4
+Stable Tag: 3.1.0.5
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,16 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.1.0.5, January 25, 2023 =
+* Improvement: New customer report tiles now only count customers with purchases.
+* Improvement: The email address field at checkout now adheres to the database schema and limits to 100 characters.
+* Improvement: Further improve the AJAX download search to be more accurate.
+* Fix: Earnings exports report now accounts for partially refunded orders.
+* Fix: Added validation to prevent duplicate order addresses from being inserted.
+* Fix: When saving a non-variable product, an empty post meta value was being saved.
+* Improvement - Blocks: Updating the wording for the Disable Redownload setting if the block is available.
+* Fix - Blocks: Added sanitization to the 'additional classes' block setting before rendering the block.
+
 = 3.1.0.4, January 5, 2023 =
 * Improvement: The cart performance has been improved by disabling tax rate lookups when a customer address is supplied, but taxes are disabled.
 * Improvement: Reports now factor in order item adjustments like negative fees.

@@ -44,7 +44,7 @@ module.exports = function( grunt ) {
 
 		// Clean up build directory
 		clean: {
-			main: [ 'build/<%= pkg.name %>' ],
+			main: [ 'build/**' ],
 		},
 
 		// Copy the plugin into the build directory
@@ -147,6 +147,6 @@ module.exports = function( grunt ) {
 	} );
 
 	// Build task(s).
-	grunt.registerTask( 'prep', [ 'force:checktextdomain', 'clean', 'replace' ] );
+	grunt.registerTask( 'prep', [ 'clean', 'force:checktextdomain', 'replace' ] );
 	grunt.registerTask( 'build', [ 'copy', 'compress' ] );
 };
