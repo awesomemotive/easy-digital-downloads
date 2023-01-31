@@ -381,4 +381,6 @@ This table's data is intended to be immutable. However, some column data is also
 | total | This is the total amount of the order. |
 | date_created | The date this row was created. |
 | date_modified | The date this row was last modified. |
+| date_completed | The date the order was marked as completed by the gateway. |
+| date_refundable | The date after which that the order can no longer be reunded. |
 | uuid | A unique identifying string representing this row. |
