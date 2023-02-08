@@ -139,7 +139,7 @@ class Structured_Data {
 			'name'        => $download->post_title,
 			'url'         => get_permalink( $download->ID ),
 			'brand'       => array(
-				'@type' => 'Thing',
+				'@type' => 'http://schema.org/Brand',
 				'name'  => get_bloginfo( 'name' ),
 			),
 			'sku'         => '-' === $download->get_sku()
