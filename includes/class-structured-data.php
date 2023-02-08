@@ -165,34 +165,43 @@ class Structured_Data {
 			$offers = array();
 
 			foreach ( $variable_prices as $price ) {
-				$offers[] = array(
-					'@type'           => 'Offer',
-					'price'           => $price['amount'],
-					'priceCurrency'   => edd_get_currency(),
-					'priceValidUntil' => date( 'c', time() + YEAR_IN_SECONDS ),
-					'itemOffered'     => $data['name'] . ' - ' . $price['name'],
-					'url'             => $data['url'],
-					'availability'    => 'http://schema.org/InStock',
-					'seller'          => array(
-						'@type' => 'Organization',
-						'name'  => get_bloginfo( 'name' ),
+				$offers[] = apply_filters(
+					'edd_generate_download_structured_data_variable_price_offer',
+					array(
+						'@type'           => 'Offer',
+						'price'           => $price['amount'],
+						'priceCurrency'   => edd_get_currency(),
+						'priceValidUntil' => date( 'c', time() + YEAR_IN_SECONDS ),
+						'itemOffered'     => $data['name'] . ' - ' . $price['name'],
+						'url'             => $data['url'],
+						'availability'    => 'http://schema.org/InStock',
+						'seller'          => array(
+							'@type' => 'Organization',
+							'name'  => get_bloginfo( 'name' ),
+						),
 					),
+					$download,
+					$price
 				);
 			}
 
 			$data['offers'] = $offers;
 		} else {
-			$data['offers'] = array(
-				'@type'           => 'Offer',
-				'price'           => $download->get_price(),
-				'priceCurrency'   => edd_get_currency(),
-				'priceValidUntil' => null,
-				'url'             => $data['url'],
-				'availability'    => 'http://schema.org/InStock',
-				'seller'          => array(
-					'@type' => 'Organization',
-					'name'  => get_bloginfo( 'name' ),
+			$data['offers'] = apply_filters(
+				'edd_generate_download_structured_data_offer',
+				array(
+					'@type'           => 'Offer',
+					'price'           => $download->get_price(),
+					'priceCurrency'   => edd_get_currency(),
+					'priceValidUntil' => null,
+					'url'             => $data['url'],
+					'availability'    => 'http://schema.org/InStock',
+					'seller'          => array(
+						'@type' => 'Organization',
+						'name'  => get_bloginfo( 'name' ),
+					)
 				),
+				$download
 			);
 		}
 
