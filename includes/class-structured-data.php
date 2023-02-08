@@ -218,7 +218,7 @@ class Structured_Data {
 		 *
 		 * @param array $data Structured data for a download.
 		 */
-		$data = apply_filters( 'edd_generate_download_structured_data', $data );
+		$data = apply_filters( 'edd_generate_download_structured_data', $data, $download );
 
 		$this->set_data( $data );
 
