@@ -286,4 +286,41 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 		$this->assertTrue( 0 === strpos( edd_get_file_download_login_redirect( array( 'foo' => 'bar' ) ), get_permalink( $login_redirect_page_id ) ) );
 		edd_delete_option( 'login_redirect_page' );
 	}
+
+	public function test_login_uri_with_block_returns_uri() {
+		if ( version_compare( get_bloginfo( 'version' ), '5.8', '<' ) ) {
+			$this->markTestSkipped( 'This only runs if blocks are loaded.' );
+		}
+		$login_page_id = wp_insert_post(
+			array(
+				'post_title'   => 'Login Page',
+				'post_status'  => 'publish',
+				'post_type'    => 'page',
+				'post_content' => '<!-- wp:edd/login /-->',
+			)
+		);
+		edd_update_option( 'login_page', $login_page_id );
+
+		$this->assertContains( get_permalink( $login_page_id ), edd_get_login_page_uri() );
+
+		edd_delete_option( 'login_page' );
+		wp_delete_post( $login_page_id );
+	}
+
+	public function test_login_uri_without_block_returns_false() {
+		$login_page_id = wp_insert_post(
+			array(
+				'post_title'   => 'Login Page',
+				'post_status'  => 'publish',
+				'post_type'    => 'page',
+				'post_content' => '<!-- wp:shortcode -->[edd_login]<!-- /wp:shortcode -->',
+			)
+		);
+		edd_update_option( 'login_page', $login_page_id );
+
+		$this->assertFalse( edd_get_login_page_uri() );
+
+		edd_delete_option( 'login_page' );
+		wp_delete_post( $login_page_id );
+	}
 }

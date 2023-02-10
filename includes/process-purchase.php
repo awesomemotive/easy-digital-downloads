@@ -731,11 +731,11 @@ function edd_purchase_form_validate_user_login() {
 
 	// Start an array to collect valid user data.
 	$valid_user_data = array(
-		'user_id' => 0
+		'user_id' => 0,
 	);
 
 	$user_login = ! empty( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : '';
-	$user_pass  = ! empty( $_POST['edd_user_pass'] ) ? sanitize_text_field( $_POST['edd_user_pass'] ) : '';
+	$user_pass  = ! empty( $_POST['edd_user_pass'] ) ? $_POST['edd_user_pass'] : '';
 
 	// Username.
 	if ( empty( $user_login ) && edd_no_guest_checkout() ) {
@@ -747,19 +747,17 @@ function edd_purchase_form_validate_user_login() {
 
 	if ( ! $user instanceof WP_User ) {
 		return $valid_user_data;
-	} else {
-		// Re-populate the valid user data array.
-		$valid_user_data = array(
-			'user_id' => $user->ID,
-			'user_login' => $user->user_login,
-			'user_email' => $user->user_email,
-			'user_first' => $user->first_name,
-			'user_last' => $user->last_name,
-			'user_pass' => $user_pass,
-		);
 	}
 
-	return (array) $valid_user_data;
+	// Populate the valid user data array.
+	return array(
+		'user_id'    => $user->ID,
+		'user_login' => $user->user_login,
+		'user_email' => $user->user_email,
+		'user_first' => $user->first_name,
+		'user_last'  => $user->last_name,
+		'user_pass'  => $user_pass,
+	);
 }
 
 /**
