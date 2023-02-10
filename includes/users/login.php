@@ -165,6 +165,15 @@ function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
 		return $url;
 	}
 
+	/**
+	 * If the $wp_rewrite global hasn't been initialized, don't do anything.
+	 * This is added defensively for situations where `wp_login_url` may be called too early.
+	 */
+	global $wp_rewrite;
+	if ( ! $wp_rewrite ) {
+		return $url;
+	}
+
 	// Get the login page URL and return the default if it's not set.
 	$login_url = edd_get_login_page_uri();
 	if ( ! $login_url ) {
@@ -188,6 +197,9 @@ function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
  */
 function edd_get_login_page_uri() {
 	$login_page = edd_get_option( 'login_page', false );
+	if ( ! function_exists( 'has_block' ) || ( $login_page && ! has_block( 'edd/login', absint( $login_page ) ) ) ) {
+		return false;
+	}
 
 	return $login_page ? get_permalink( $login_page ) : false;
 }
