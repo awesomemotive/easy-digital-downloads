@@ -924,7 +924,7 @@ function edd_get_registered_settings() {
 					'tax_help' => array(
 						'id'   => 'tax_help',
 						'name' => '',
-						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. <p class="description">If you need VAT support, there are options listed on the documentation page.</p>', 'easy-digital-downloads' ), 'https://docs.easydigitaldownloads.com/article/238-tax-settings' ),
+						'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. <p class="description">If you need VAT support, there are options listed on the documentation page.</p>', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/docs/tax-settings/' ),
 						'type' => 'descriptive_text',
 					),
 					'prices_include_tax' => array(
@@ -1837,9 +1837,9 @@ function edd_get_registered_settings_sections() {
  */
 function edd_get_pages( $force = false ) {
 
-	$pages_options = array( '' => '' ); // Blank option
+	$pages_options = array( '' => __( 'None', 'easy-digital-downloads' ) );
 
-	if ( ( ! isset( $_GET['page'] ) || 'edd-settings' != $_GET['page'] ) && ! $force ) {
+	if ( ( ! isset( $_GET['page'] ) || 'edd-settings' !== $_GET['page'] ) && ! $force ) {
 		return $pages_options;
 	}
 

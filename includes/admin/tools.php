@@ -484,7 +484,7 @@ function edd_tools_import_export_display() {
 						<?php
 						printf(
 							__( 'Each column loaded from the CSV needs to be mapped to an order field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing payment records.', 'easy-digital-downloads' ),
-							'https://docs.easydigitaldownloads.com/category/1337-importexport'
+							'https://easydigitaldownloads.com/docs/importing-exporting-orders/'
 						);
 						?>
 					</p>
@@ -799,7 +799,7 @@ function edd_tools_import_export_display() {
 						<?php
 						printf(
 							__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing Download products.', 'easy-digital-downloads' ),
-							'https://docs.easydigitaldownloads.com/category/1337-importexport'
+							'https://easydigitaldownloads.com/docs/importing-exporting-products/'
 						);
 						?>
 					</p>

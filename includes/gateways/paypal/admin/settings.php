@@ -135,7 +135,7 @@ function documentation_settings_field() {
 		<?php
 		echo wp_kses( sprintf(
 			__( 'To learn more about the PayPal gateway, visit <a href="%s" target="_blank">our documentation</a>.', 'easy-digital-downloads' ),
-			'https://docs.easydigitaldownloads.com/article/2410-paypal'
+			'https://easydigitaldownloads.com/docs/paypal-setup/'
 		), array( 'a' => array( 'href' => true, 'target' => true ) ) )
 		?>
 	</p>
@@ -147,7 +147,7 @@ function documentation_settings_field() {
 				<?php
 				echo wp_kses( sprintf(
 					__( 'PayPal requires an SSL certificate to accept payments. You can learn more about obtaining an SSL certificate in our <a href="%s" target="_blank">SSL setup article</a>.', 'easy-digital-downloads' ),
-					'https://docs.easydigitaldownloads.com/article/994-how-to-set-up-ssl'
+					'https://easydigitaldownloads.com/docs/do-i-need-an-ssl-certificate/'
 				), array( 'a' => array( 'href' => true, 'target' => true ) ) );
 				?>
 			</p>
