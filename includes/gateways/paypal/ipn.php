@@ -115,6 +115,7 @@ function listen_for_ipn() {
 				'post'         => '/cgi-bin/webscr HTTP/1.1',
 
 			),
+			'user-agent'  => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
 		);
 
 		// Get response.
@@ -244,13 +245,28 @@ function listen_for_ipn() {
 
 					ipn_debug_log( 'subscription ' . $subscription->id . ': preparing to insert renewal payment' );
 
-					// when a user makes a recurring payment.
-					$payment_id = $subscription->add_payment(
-						array(
-							'amount'         => $amount,
-							'transaction_id' => $transaction_id,
-						)
+					// Build the array for adding a subscription order.
+					$subscription_payment_args = array(
+						'amount'         => $amount,
+						'transaction_id' => $transaction_id,
 					);
+
+					// Create a DateTime object of the payment_date, so we can adjust as needed.
+					$subscription_payment_date = new \DateTime( $posted['payment_date'] );
+
+					// To make sure we don't inadverntatly fail, make sure the date was parsed correctly before working with it.
+					if ( $subscription_payment_date instanceof \DateTime ) {
+						/**
+						 * Convert to GMT, as that is what EDD 3.0 expects the times to be in.
+						 */
+						$subscription_payment_date->setTimezone( new \DateTimeZone( 'GMT' ) );
+
+						// Now add the date into the arguments for creating the renewal payment.
+						$subscription_payment_args['date'] = $subscription_payment_date->format( 'Y-m-d H:i:s' );
+					}
+
+					// when a user makes a recurring payment.
+					$payment_id = $subscription->add_payment( $subscription_payment_args );
 
 					if ( ! empty( $payment_id ) ) {
 						ipn_debug_log( 'subscription ' . $subscription->id . ': renewal payment was recorded successfully, preparing to renew subscription' );

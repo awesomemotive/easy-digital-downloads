@@ -114,7 +114,8 @@ function process_connect() {
 			'country_code'  => edd_get_shop_country(),
 			'currency_code' => edd_get_currency(),
 			'return_url'    => get_settings_url()
-		) )
+		) ),
+		'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
 	) );
 
 	if ( is_wp_error( $response ) ) {
@@ -245,7 +246,8 @@ function get_and_save_credentials() {
 			'grant_type'    => 'authorization_code',
 			'code'          => $_POST['auth_code'],
 			'code_verifier' => $partner_details->nonce
-		)
+		),
+		'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
 	) );
 
 	if ( is_wp_error( $response ) ) {
@@ -272,7 +274,8 @@ function get_and_save_credentials() {
 			'Authorization' => sprintf( 'Bearer %s', $body->access_token ),
 			'Content-Type'  => 'application/json',
 			'timeout'       => 15
-		)
+		),
+		'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
 	) );
 
 	if ( is_wp_error( $response ) ) {
@@ -748,7 +751,8 @@ function get_merchant_status( $merchant_id, $nonce = '' ) {
 			'mode'        => edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE,
 			'merchant_id' => $merchant_id,
 			'nonce'       => $nonce
-		) )
+		) ),
+		'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
 	) );
 
 	$response_code = wp_remote_retrieve_response_code( $response );

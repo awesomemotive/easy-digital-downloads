@@ -194,7 +194,8 @@ class API {
 			),
 			'body'    => array(
 				'grant_type' => 'client_credentials'
-			)
+			),
+			'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
 		) );
 
 		$body = json_decode( wp_remote_retrieve_body( $response ) );

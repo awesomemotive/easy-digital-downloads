@@ -180,7 +180,7 @@ class Search {
 		global $wpdb;
 		$query = '';
 		foreach ( $terms as $term ) {
-			$operator = empty( $query ) ? '' : ' OR ';
+			$operator = empty( $query ) ? '' : ' AND ';
 			$term     = $wpdb->esc_like( $term );
 			$query   .= "{$operator}{$wpdb->posts}.post_title LIKE '%{$term}%'";
 		}

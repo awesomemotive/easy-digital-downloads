@@ -90,20 +90,20 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 		$data = array();
 
 		$args = array(
-			'number'         => 30,
-			'offset'         => ( $this->step * 30 ) - 30,
-			'status'         => $this->status,
-			'order'          => 'ASC',
-			'orderby'        => 'date_created',
-			'status__not_in' => array( 'trash' ),
+			'number'  => 30,
+			'offset'  => ( $this->step * 30 ) - 30,
+			'status'  => $this->status,
+			'order'   => 'ASC',
+			'orderby' => 'date_created',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_created_query'] = $this->get_date_query();
 		}
 
-		if ( 'any' === $args['status'] || 'all' === $args['status'] ) {
+		if ( in_array( $args['status'], array( 'any', 'all' ), true ) ) {
 			unset( $args['status'] );
+			$args['status__not_in'] = array( 'trash' );
 		}
 
 		add_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10, 2 );
@@ -236,14 +236,15 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	public function get_percentage_complete() {
 		$args = array(
 			'fields' => 'ids',
+			'status' => $this->status,
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_created_query'] = $this->get_date_query();
 		}
 
-		if ( 'any' !== $this->status ) {
-			$args['status'] = $this->status;
+		if ( in_array( $args['status'], array( 'any', 'all' ), true ) ) {
+			unset( $args['status'] );
 		}
 
 		$total      = edd_count_orders( $args );

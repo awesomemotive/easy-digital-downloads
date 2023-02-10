@@ -6,7 +6,7 @@ Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.9
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable Tag: 3.1.0.5
+Stable Tag: 3.1.0.6
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -237,6 +237,16 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.1.0.6, February 9, 2023 =
+* Improvement: The PayPal Backup IPN now sends the payment date when handling a renewal from Recurring Payments.
+* Improvement: Further improve the AJAX download search.
+* Fix: Improved reliablity with the PayPal API.
+* Fix: Some plugins could conflict with the login URL filter to customize the login page.
+* Fix: It is now possible to deselect a page in the settings after it's been set.
+* Fix: All documentation links have been updated to use the new locations.
+* Fix: Some passwords could not be validated when using the login form on the checkout page.
+* Fix: The orders export did not allow only orders with a specific status to be exported.
+
 = 3.1.0.5, January 25, 2023 =
 * Improvement: New customer report tiles now only count customers with purchases.
 * Improvement: The email address field at checkout now adheres to the database schema and limits to 100 characters.
