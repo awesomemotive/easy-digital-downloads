@@ -72,7 +72,10 @@ export function recalculateTaxes( state ) {
 		current_page: edd_global_vars.current_page,
 	};
 
-	jQuery( '#edd_purchase_submit [type=submit]' ).after( '<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>' );
+	// avoid duplicates https://cdn.screencast.com/uploads/g000302DdsRr7R9TdDPsCsJ7RE6kr/LWR_Recording.png?sv=2021-08-06&st=2022-12-02T09%3A35%3A05Z&se=2022-12-03T09%3A35%3A05Z&sr=b&sp=r&sig=tyuREJgE0tt6lacNYdZ0bzTWJyZnbldDxRQ5icT5VKw%3D
+	if ( ! jQuery( '#edd_purchase_submit [type=submit]' ).siblings('.edd-loading-ajax.edd-recalculate-taxes-loading').length ) {
+		jQuery( '#edd_purchase_submit [type=submit]' ).after( '<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>' );
+	}
 
 	const current_ajax_count = ++ajax_tax_count;
 
