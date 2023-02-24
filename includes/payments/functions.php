@@ -657,6 +657,7 @@ function edd_get_payment_statuses() {
     $payment_statuses = array(
         'pending'   => __( 'Pending', 'easy-digital-downloads' ),
         'publish'   => __( 'Complete', 'easy-digital-downloads' ),
+        'future'    => __( 'Future', 'easy-digital-downloads' ),
         'refunded'  => __( 'Refunded', 'easy-digital-downloads' ),
         'failed'    => __( 'Failed', 'easy-digital-downloads' ),
         'abandoned' => __( 'Abandoned', 'easy-digital-downloads' ),

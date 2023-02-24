@@ -2229,6 +2229,9 @@ msgstr ""
 msgid "Pending"
 msgstr "W toku"
 
+msgid "Future"
+msgstr "Zakończone (przedsprzedaż)"
+
 msgid "Pending / Failed Sales"
 msgstr "Oczekujące / Błędne transakcje"
 
