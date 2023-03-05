@@ -342,6 +342,10 @@ function edd_get_currencies() {
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'easy-digital-downloads' ),
 		'RUB'  => __( 'Russian Rubles', 'easy-digital-downloads' ),
 		'AOA'  => __( 'Angolan Kwanza', 'easy-digital-downloads' ),
+		'MZM'  => __( 'Mozambique Metical', 'easy-digital-downloads' ),
+		'AFN'  => __( 'Afghanistan Afghani (؋)', 'easy-digital-downloads' ),
+		'DZD'  => __( 'Algeria Dinar (د.ج)', 'easy-digital-downloads' ),
+
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -395,6 +399,15 @@ function edd_currency_symbol( $currency = '' ) {
 			break;
 		case "AOA" :
 			$symbol = 'Kz';
+			break;
+		case "MZM" :
+			$symbol = 'MT;';
+			break;
+		case "AFN" :
+			$symbol = '؋';
+			break;
+		case "DZD" :
+			$symbol = 'د.ج';
 			break;
 		default :
 			$symbol = $currency;
