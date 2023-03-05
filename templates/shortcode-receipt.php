@@ -195,7 +195,7 @@ $status    = edd_get_payment_status( $payment, true );
 													do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
 												endforeach;
 											else :
-												echo '<li>' . __( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
+												echo '<li>' . apply_filters('edd_receipt_no_files_found_text', __( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ), $item['id']) . '</li>';
 											endif;
 											?>
 										</ul>

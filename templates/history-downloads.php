@@ -75,7 +75,7 @@ if ( $purchases ) :
 										endforeach;
 
 									else :
-										_e( 'No downloadable files found.', 'easy-digital-downloads' );
+										echo apply_filters('edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $download['id']);
 									endif; // End if payment complete
 
 								else : ?>
@@ -98,7 +98,7 @@ if ( $purchases ) :
 		?>
 	</table>
 	<?php
-		echo edd_pagination( 
+		echo edd_pagination(
 			array(
 				'type'  => 'download_history',
 				'total' => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
