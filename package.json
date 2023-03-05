@@ -23,7 +23,7 @@
 	},
 	"main": "webpack.config.js",
 	"dependencies": {
-		"chart.js": "2.9.3",
+		"chart.js": "2.9.4",
 		"flot": "0.8.0-alpha",
 		"jquery-creditcardvalidator": "1.0.0",
 		"jquery-validation": "^1.19.3",
