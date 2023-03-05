@@ -585,6 +585,17 @@ class Order extends Rows\Order {
 	public function has_unlimited_downloads() {
 		return (bool) edd_get_order_meta( $this->id, 'unlimited_downloads', true );
 	}
+	
+	/**
+	 * Retrieve whether or not this order was free.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool True if order is free, false otherwise.
+	 */
+	public function is_free() {
+		return ( 'manual'=== $this->gateway ) && empty( (float) $this->total );
+	}
 
 	/**
 	 * Retrieve all the notes for this order.
