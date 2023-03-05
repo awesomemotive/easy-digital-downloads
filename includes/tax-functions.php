@@ -52,13 +52,21 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 
 	$user_address = edd_get_customer_address();
 
+	// Allow developer to decide whether an estimate should be shown based on the store location
+	// If this is false, a tax rate should not show for customers which have not yet entered their billing information
+	$use_store_tax_rate = apply_filters( 'edd_use_store_tax_rate', true );
+
 	if( empty( $country ) ) {
 		if( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
 		} elseif( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
 			$country = $user_address['country'];
 		}
-		$country = ! empty( $country ) ? $country : edd_get_shop_country();
+
+		// Ignore setting the country if we do not have the customer's location
+		if ( $use_store_tax_rate ){
+			$country = ! empty( $country ) ? $country : edd_get_shop_country();
+		}
 	}
 
 	if( empty( $state ) ) {
@@ -69,7 +77,12 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 		} elseif( is_user_logged_in() && ! empty( $user_address['state'] ) ) {
 			$state = $user_address['state'];
 		}
-		$state = ! empty( $state ) ? $state : edd_get_shop_state();
+
+		// Ignore setting the state if we do not have the customer's location
+		if ( $use_store_tax_rate ){
+			$state = ! empty( $state ) ? $state : edd_get_shop_state();
+		}
+
 	}
 
 	if( ! empty( $country ) ) {
