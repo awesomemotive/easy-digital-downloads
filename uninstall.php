@@ -20,7 +20,7 @@
  */
 
 // Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) || class_exists( 'Easy_Digital_Downloads' ) ) exit;
 
 // Load EDD file.
 include_once( 'easy-digital-downloads.php' );
