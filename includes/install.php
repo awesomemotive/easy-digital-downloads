@@ -236,6 +236,14 @@ function edd_run_install( $site_id = false ) {
 	// Maybe set all upgrades as complete (only on fresh installation)
 	edd_set_all_upgrades_complete();
 
+	/**
+	 * If EDD was downgraded to 2.11, reset the customer table upgrade as it may need to run again.
+	 * @since 3.1.0.3
+	 */
+	if ( version_compare( $current_version, '3.0', '<' ) ) {
+		edd_reset_upgrade( 'customer_table_30' );
+	}
+
 	// Update the database version (must be at end, but before site restore)
 	edd_update_db_version();
 

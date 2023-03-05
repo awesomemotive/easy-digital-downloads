@@ -104,7 +104,7 @@ final class Customer_Meta extends Table {
 	 * @return bool
 	 */
 	private function needs_initial_upgrade() {
-		return $this->exists() && $this->column_exists( 'customer_id' ) && ! $this->column_exists( 'edd_customer_id' );
+		return $this->exists() && $this->column_exists( 'customer_id' );
 	}
 
 	/**

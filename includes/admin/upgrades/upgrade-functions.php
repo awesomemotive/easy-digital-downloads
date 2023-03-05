@@ -50,6 +50,14 @@ function edd_do_automatic_upgrades() {
 		deactivate_plugins( 'edd-manual-purchases/edd-manual-purchases.php' );
 		delete_option( 'edd_manual_purchases_license_active' );
 	}
+
+	/**
+	 * If EDD was downgraded to 2.11, reset the customer table upgrade as it may need to run again.
+	 * @since 3.1.0.3
+	 */
+	if ( version_compare( $edd_version, '3.0', '<' ) ) {
+		edd_reset_upgrade( 'customer_table_30' );
+	}
 }
 add_action( 'admin_init', 'edd_do_automatic_upgrades' );
 
@@ -431,6 +439,26 @@ function edd_set_upgrade_complete( $upgrade_action = '' ) {
 
 	// Remove any blanks, and only show uniques
 	$completed_upgrades = array_unique( array_values( $completed_upgrades ) );
+
+	return update_option( 'edd_completed_upgrades', $completed_upgrades );
+}
+
+/**
+ * Removes an upgrade from the array of completed upgrades.
+ * This should be used with caution.
+ *
+ * @since 3.1.0.3
+ * @param string $upgrade_action
+ * @return bool
+ */
+function edd_reset_upgrade( $upgrade_action ) {
+	$completed_upgrades = edd_get_completed_upgrades();
+
+	if ( ! in_array( $upgrade_action, $completed_upgrades, true ) ) {
+		return false;
+	}
+	$key = array_search( $upgrade_action, $completed_upgrades, true );
+	unset( $completed_upgrades[ $key ] );
 
 	return update_option( 'edd_completed_upgrades', $completed_upgrades );
 }
