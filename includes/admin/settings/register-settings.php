@@ -1511,8 +1511,15 @@ function edd_checkbox_callback( $args ) {
 	}
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
-
-	$checked  = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
+    
+	if ( $edd_option ) {
+		$checked = checked( 1, $edd_option, false );
+	} elseif ( isset( $args['std'] ) ) {
+		$checked = checked( 1, $args['std'], false );
+	} else {
+		$checked = '';
+	}
+    
 	$html     = '<input type="hidden"' . $name . ' value="-1" />';
 	$html    .= '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
 	$html    .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
