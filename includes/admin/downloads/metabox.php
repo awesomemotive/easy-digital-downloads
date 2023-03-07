@@ -43,7 +43,7 @@ function edd_add_download_meta_box() {
 		}
 	}
 }
-add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
+add_action( 'add_meta_boxes', 'edd_add_download_meta_box', 9 );
 
 /**
  * Returns default EDD Download meta fields.
