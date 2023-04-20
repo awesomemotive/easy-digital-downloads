@@ -245,17 +245,17 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_e
 			switch ( $passed_view ) {
 				case 'list-table':
 				case 'new':
-					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' !== $action && 'download_tax' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' !== $action && 'download_tag' === $taxonomy ) {
 						$found = true;
 					}
 					break;
 				case 'edit':
-					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' === $action && 'download_tax' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'edit' === $action && 'download_tag' === $taxonomy ) {
 						$found = true;
 					}
 					break;
 				default:
-					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'download_tax' === $taxonomy ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit-tags.php' && 'download_tag' === $taxonomy ) {
 						$found = true;
 					}
 					break;
