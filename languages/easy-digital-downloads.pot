@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.1\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-03-14T18:21:38+00:00\n"
+"POT-Creation-Date: 2023-03-15T05:50:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: easy-digital-downloads\n"
@@ -10824,6 +10824,10 @@ msgstr ""
 msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
 msgstr ""
 
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:567
+msgid "%sUpgrade to Pro%s and install the Stripe Pro Gateway to remove transaction fees."
+msgstr ""
+
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:581
 msgid "Administrator (Owner)"
 msgstr ""
@@ -11246,16 +11250,16 @@ msgstr ""
 msgid "Apple Pay domain verification error."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-methods/apple-pay.php:172
+#: includes/gateways/stripe/includes/payment-methods/apple-pay.php:173
 msgid "Unable to create domain association folder in domain root."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-methods/apple-pay.php:179
+#: includes/gateways/stripe/includes/payment-methods/apple-pay.php:180
 msgid "Unable to copy domain association file to domain .well-known directory."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
-#: includes/gateways/stripe/includes/payment-methods/apple-pay.php:272
+#: includes/gateways/stripe/includes/payment-methods/apple-pay.php:283
 msgid "Please %1$smanually add your domain%2$s %3$s to use Apple Pay."
 msgstr ""
 
