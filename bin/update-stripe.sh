@@ -32,7 +32,8 @@ rm webpack.config.js
 rm phpcs.ruleset.xml
 rm phpunit.xml.dist
 rm Gruntfile.js
-rm -rf build
+rm -rf assets/css/src
+rm -rf assets/js/src
 
 # Reset cwd
 cd ../../../

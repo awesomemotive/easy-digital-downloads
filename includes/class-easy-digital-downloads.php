@@ -239,10 +239,9 @@ final class Easy_Digital_Downloads {
 			if ( edd_is_pro() ) {
 				new EDD\Pro\Core();
 			}
-		} elseif ( ! edd_is_pro() && class_exists( '\\EDD\\Lite\\Core' ) ) {
+		}
+		if ( ! edd_is_pro() && class_exists( '\\EDD\\Lite\\Core' ) ) {
 			new EDD\Lite\Core();
-		} else {
-			new EDD\Core();
 		}
 
 		self::$instance->tracking = edd_is_pro() ? new EDD\Pro\Telemetry\Tracking() : new EDD_Tracking();
@@ -356,7 +355,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.1.1.1' );
+			define( 'EDD_VERSION', '3.1.1.2' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -651,8 +650,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 
 		// Currency
-		require_once EDD_PLUGIN_DIR . 'includes/currency/class-currency.php';
-		require_once EDD_PLUGIN_DIR . 'includes/currency/class-money-formatter.php';
 		require_once EDD_PLUGIN_DIR . 'includes/currency/functions.php';
 
 		// Gateways

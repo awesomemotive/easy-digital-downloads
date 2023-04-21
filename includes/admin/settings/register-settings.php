@@ -1514,17 +1514,9 @@ function edd_settings_sanitize_misc_accounting( $input ) {
 		return $input;
 	}
 
-	if ( ! empty( $input['enable_sequential'] ) && ! edd_get_option( 'enable_sequential' ) ) {
-
-		// Shows an admin notice about upgrading previous order numbers
-		update_option( 'edd_upgrade_sequential', time() );
-
-	}
-
 	return $input;
 }
-
-add_filter( 'edd_settings_gateways-accounting_sanitize', 'edd_settings_sanitize_misc_accounting' );
+// add_filter( 'edd_settings_gateways-accounting_sanitize', 'edd_settings_sanitize_misc_accounting' );
 
 /**
  * Taxes Settings Sanitization

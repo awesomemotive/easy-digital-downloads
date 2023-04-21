@@ -765,6 +765,8 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 		Link missing? Visit the following URL: %3$s', 'easy-digital-downloads' ),
 		$name,
 		$from_name,
+		esc_url_raw( $url ),
+		// This parameter is not used, but is added for compatibility with past translations.
 		esc_url_raw( $url )
 	);
 
