@@ -7,14 +7,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-@import "~@wordpress/base-styles/colors";
-@import "~@wordpress/base-styles/variables";
-@import "~@wordpress/base-styles/mixins";
-@import "~@wordpress/base-styles/breakpoints";
-@import "~@wordpress/base-styles/animations";
-
-@import "../variables/colors";
-@import "../variables/mixins";
+@import "../variables/variables";
 
 @import "downloads/style";
 @import "forms/style";
@@ -99,7 +92,7 @@ body.post-type-download #screen-meta {
 #edd-header img {
 	display: block;
 	max-width: 300px;
-	margin: 0 0 0 20px;
+	margin: 0;
 }
 
 .edd-header-page-title-wrap {
@@ -412,97 +405,6 @@ button.edd-round:active {
 
 .download_page_edd-settings .taxrates .regular-text {
 	width: 100%;
-}
-
-
-/* =Add Ons Styles
--------------------------------------------------------------- */
-
-.edd-add-ons-footer {
-	padding-top: 10px;
-}
-
-#edd-add-ons .subsubsub .dashicons {
-	margin-top: 3px;
-}
-
-#edd-add-ons .edd-add-ons-container {
-	clear: both;
-	padding-top: 10px;
-}
-
-#edd-add-ons .search-box .button-secondary span {
-	margin: 2px -5px 0 4px;
-	padding: 0;
-	color: #aaa;
-}
-
-#edd-add-ons .edd-extension {
-	background: #fff;
-	border: 1px solid #ccc;
-	float: left;
-	padding: 14px;
-	position: relative;
-	margin: 0 15px 16px 0;
-	width: 320px;
-	height: 315px;
-	opacity: 0.9;
-	transition: all .2s ease-in-out;
-	cursor: default;
-}
-
-#edd-add-ons .edd-extension:hover {
-	border: 1px solid #bbb;
-	opacity: 1;
-	transform: scale(1.05);
-	z-index: 5;
-}
-
-#edd-add-ons .edd-extension h3 {
-	font-size: 13px;
-	margin: 0 0 8px;
-}
-
-#edd-add-ons .edd-extension .button-secondary {
-	position: absolute;
-	bottom: 14px;
-	left: 14px;
-}
-
-#edd-add-ons .edd-browse-all {
-	clear: both;
-	width: 100%;
-}
-
-#edd-add-ons .edd-extension .third-party {
-	display: none;
-}
-
-#edd-add-ons .edd-add-ons-container .edd-extension:first-child {
-	background-color: #85c0e5;
-	border-color: #62a9d7;
-	color: #fff;
-	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-}
-
-#edd-add-ons .edd-add-ons-container .edd-extension:first-child h3 {
-	color: #fff;
-}
-
-/* Mock blue "Primary" styling on Starter Package */
-#edd-add-ons .edd-add-ons-container .edd-extension:first-child .button-secondary {
-	background: #0085ba;
-	border-color: #0073aa #006799 #006799;
-	box-shadow: 0 1px 0 #006799;
-	color: #fff;
-	text-decoration: none;
-	text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
-}
-
-#edd-add-ons .edd-extension .wp-post-image {
-	width: 100%;
-	height: auto;
-	vertical-align: bottom;
 }
 
 /* Insert Download
@@ -1287,10 +1189,6 @@ textarea[name="edd-note"] {
 
 /* Nav Tab Styles
 -------------------------------------------------------------- */
-
-#edd-add-ons {
-	margin: 9px 20px -9px 2px;
-}
 
 .no-js.edit-tags-php.post-type-download .wp-heading-inline {
 	position: absolute;
@@ -2388,107 +2286,6 @@ span.edd-to-and-from--separator {
 /* Settings page styles
 -------------------------------------------------------------- */
 
-.wrap-licenses .form-table,
-.wrap-licenses thead,
-.wrap-licenses tbody,
-.wrap-licenses tfoot,
-.wrap-licenses tr,
-.wrap-licenses td,
-.wrap-licenses th,
-.wrap-licenses caption {
-	display: block;
-}
-
-.wrap-licenses .form-table tr {
-	float: left;
-	margin: 0 15px 15px 0;
-	background: #fff;
-	border: 1px solid #ccc;
-	width: 30.5%;
-	max-width: 350px;
-	padding: 14px;
-	min-height: 220px;
-	position: relative;
-	box-sizing: border-box;
-}
-
-.wrap-licenses .form-table th {
-	background: #f9f9f9;
-	padding: 14px;
-	border-bottom: 1px solid #ccc;
-	margin: -14px -14px 20px;
-	width: 100%;
-}
-
-.wrap-licenses .form-table td {
-	padding: 0;
-}
-
-.wrap-licenses td input.regular-text {
-	margin: 0 0 8px;
-	width: 100%;
-}
-
-.wrap-licenses .edd-license-data[class*="edd-license-"] {
-	position: absolute;
-	background: #fafafa;
-	padding: 14px;
-	border-top: 1px solid #eee;
-	margin: 20px -14px -14px;
-	min-height: 67px;
-	width: 100%;
-	bottom: 14px;
-	box-sizing: border-box;
-}
-
-.wrap-licenses .edd-license-data[class*="edd-license-"] a {
-	color: #444;
-}
-
-.wrap-licenses .edd-license-data[class*="edd-license-"] a:hover {
-	text-decoration: none;
-}
-
-.wrap-licenses .edd-license-data.license-expires-soon-notice {
-	background-color: #00a0d2;
-	color: #fff;
-	border-color: #00a0d2;
-}
-
-.wrap-licenses .edd-license-data.edd-license-expired {
-	background-color: #e24e4e;
-	color: #fff;
-	border-color: #e24e4e;
-}
-
-.wrap-licenses .edd-license-data.edd-license-error,
-.wrap-licenses .edd-license-data.edd-license-missing,
-.wrap-licenses .edd-license-data.edd-license-invalid,
-.wrap-licenses .edd-license-data.edd-license-site_inactive,
-.wrap-licenses .edd-license-data.edd-license-item_name_mismatch {
-	background-color: #ffebcd;
-	border-color: #ffebcd;
-}
-
-.wrap-licenses .edd-license-data p {
-	font-size: 13px;
-	margin-top: 0;
-}
-
-.wrap-licenses .edd-license-data.license-expires-soon-notice a,
-.wrap-licenses .edd-license-data.edd-license-expired a {
-	color: #fff;
-}
-
-.wrap-licenses .edd-license-data.license-expires-soon-notice a:hover,
-.wrap-licenses .edd-license-data.edd-license-expired a:hover {
-	text-decoration: none;
-}
-
-.wrap-licenses p.submit {
-	clear: both;
-}
-
 #edd-send-test-summary-save-changes-notice .notice p {
 	font-size: 13px;
 }
@@ -2539,6 +2336,7 @@ span.edd-to-and-from--separator {
 	margin: 0;
 	padding: 0;
 	width: 42px;
+	min-width: 42px;
 	height: 24px;
 	background-color: #ccc;
 	-webkit-transition: background 0.2s ease;
@@ -2567,8 +2365,15 @@ span.edd-to-and-from--separator {
 	border-radius: 50%;
 }
 
+@media only screen and (max-width: $break-medium) {
+	.edd-toggle input[type="checkbox"]:checked:before {
+		margin: -.1875rem 0 0 -.25rem;
+	}
+}
+
 .edd-toggle input[type="checkbox"]:checked {
 	background-color: #007cba;
+	background-color: var( --wp-admin-theme-color );
 }
 
 .edd-toggle input[type="checkbox"]:active,
@@ -2580,6 +2385,7 @@ span.edd-to-and-from--separator {
 .edd-toggle input[type="checkbox"]:checked:active,
 .edd-toggle input[type="checkbox"]:checked:focus {
 	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #007cba;
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px var( --wp-admin-theme-color );
 }
 
 .edd-toggle input[type="checkbox"]:checked:before {
@@ -2670,12 +2476,6 @@ span.edd-to-and-from--separator {
 		display: block;
 		width: 100%;
 	}
-
-	.wrap-licenses .form-table tr {
-		width: 46%;
-		max-width: none;
-		min-height: 230px;
-	}
 }
 
 @media screen and (max-width: 782px) {
@@ -2685,18 +2485,9 @@ span.edd-to-and-from--separator {
 	.license-null {
 		padding-left: 0;
 	}
-
-	[class^="license-"] input[type="text"] {
-		margin-bottom: 3px;
-	}
 }
 
 @media screen and (max-width: 600px) {
-	.wrap-licenses .form-table tr {
-		width: 100%;
-		min-height: 230px;
-	}
-
 	#edd-edit-order-form input.large-text {
 		width: 100%;
 	}

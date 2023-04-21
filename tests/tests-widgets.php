@@ -1,5 +1,7 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_widgets
@@ -24,10 +26,10 @@ class Tests_Widgets extends EDD_UnitTestCase {
 
 		edd_register_widgets();
 
-		$widgets = array_keys( $GLOBALS['wp_widget_factory']->widgets );
-		$this->assertContains( 'edd_cart_widget', $widgets );
-		$this->assertContains( 'edd_categories_tags_widget', $widgets );
-		$this->assertContains( 'edd_product_details_widget', $widgets );
+		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$this->assertArrayHasKey( 'edd_cart_widget', $widgets );
+		$this->assertArrayHasKey( 'edd_categories_tags_widget', $widgets );
+		$this->assertArrayHasKey( 'edd_product_details_widget', $widgets );
 
 	}
 
@@ -99,10 +101,10 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			) );
 		$output = ob_get_clean();
 
-		$this->assertContains( 'Number of items in cart:', $output );
-		$this->assertContains( '<li class="cart_item empty">', $output );
-		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
-		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
+		$this->assertStringContainsString( 'Number of items in cart:', $output );
+		$this->assertStringContainsString( '<li class="cart_item empty">', $output );
+		$this->assertStringContainsString( '<li class="cart_item edd-cart-meta edd_total"', $output );
+		$this->assertStringContainsString( '<li class="cart_item edd_checkout"', $output );
 
 	}
 
@@ -124,10 +126,10 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			) );
 		$output = ob_get_clean();
 
-		$this->assertContains( 'Number of items in cart:', $output );
-		$this->assertContains( '<li class="cart_item empty">', $output );
-		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
-		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
+		$this->assertStringContainsString( 'Number of items in cart:', $output );
+		$this->assertStringContainsString( '<li class="cart_item empty">', $output );
+		$this->assertStringContainsString( '<li class="cart_item edd-cart-meta edd_total"', $output );
+		$this->assertStringContainsString( '<li class="cart_item edd_checkout"', $output );
 
 	}
 
@@ -197,7 +199,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_categories_tags_widget'];
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
 		$terms = wp_set_object_terms( $download->ID, array( 'test1', 'test2' ), 'download_category', false );
 
 		$this->go_to( $download->ID );
@@ -217,11 +219,11 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			) );
 		$output = ob_get_clean();
 
-		$this->assertContains( '<ul class="edd-taxonomy-widget">', $output );
-		$this->assertContains( '<li class="cat-item cat-item-' . reset( $terms ), $output );
-		$this->assertContains( '<li class="cat-item cat-item-' . end( $terms ), $output );
+		$this->assertStringContainsString( '<ul class="edd-taxonomy-widget">', $output );
+		$this->assertStringContainsString( '<li class="cat-item cat-item-' . reset( $terms ), $output );
+		$this->assertStringContainsString( '<li class="cat-item cat-item-' . end( $terms ), $output );
 
-		EDD_Helper_Download::delete_download( $download->ID );
+		Helpers\EDD_Helper_Download::delete_download( $download->ID );
 
 	}
 
@@ -308,7 +310,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 */
 	public function test_edd_product_details_widget_function_bail_download() {
 
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
 		$this->go_to( get_permalink( $download->ID ) );
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
@@ -331,7 +333,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 
 		$this->assertNotEmpty( $output );
 
-		EDD_Helper_Download::delete_download( $download->ID );
+		Helpers\EDD_Helper_Download::delete_download( $download->ID );
 
 	}
 
@@ -344,7 +346,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 
 		$widgets = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
 		$terms = wp_set_object_terms( $download->ID, array( 'test1' ), 'download_category', false );
 
 		$this->go_to( $download->ID );
@@ -365,14 +367,14 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			) );
 		$output = ob_get_clean();
 
-		$this->assertContains( '<h3>' . $download->post_title . '</h3>', $output );
+		$this->assertStringContainsString( '<h3>' . $download->post_title . '</h3>', $output );
 		$this->assertRegExp( '/<form id="edd_purchase_[0-9]+" class="edd_download_purchase_form edd_purchase_[0-9]+" method="post">/', $output );
-		$this->assertContains( '<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">', $output );
-		$this->assertContains( '<input type="hidden" name="download_id" value="' . $download->ID . '">', $output );
-		$this->assertContains( '<p class="edd-meta">', $output );
-		$this->assertContains( '<span class="categories">Download Category: ', $output );
+		$this->assertStringContainsString( '<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">', $output );
+		$this->assertStringContainsString( '<input type="hidden" name="download_id" value="' . $download->ID . '">', $output );
+		$this->assertStringContainsString( '<p class="edd-meta">', $output );
+		$this->assertStringContainsString( '<span class="categories">Download Category: ', $output );
 
-		EDD_Helper_Download::delete_download( $download->ID );
+		Helpers\EDD_Helper_Download::delete_download( $download->ID );
 
 	}
 

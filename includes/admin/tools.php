@@ -1278,6 +1278,7 @@ function edd_tools_sysinfo_display() {
 				<p>
 					<input type="hidden" name="edd-action" value="download_sysinfo"/>
 					<?php
+					wp_nonce_field( 'edd_download_system_info', 'edd_system_info' );
 					submit_button( __( 'Download System Info File', 'easy-digital-downloads' ), 'primary', 'edd-download-sysinfo', false );
 					submit_button( __( 'Copy to Clipboard',         'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-system-info', false, array( 'onclick' => "this.form['edd-sysinfo'].focus();this.form['edd-sysinfo'].select();document.execCommand('copy');return false;" ) );
 					?>
@@ -1414,7 +1415,11 @@ function edd_tools_sysinfo_get() {
 	// EDD configuration
 	$return .= "\n" . '-- EDD Configuration' . "\n\n";
 	$return .= 'Version:                  ' . EDD_VERSION . "\n";
+	$return .= 'Activated On:             ' . edd_date_i18n( edd_get_activation_date(), 'Y-m-d' ) . "\n";
 	$return .= 'Upgraded From:            ' . get_option( 'edd_version_upgraded_from', 'None' ) . "\n";
+	$return .= 'EDD (Pro) Status:         ' . ( edd_is_pro() ? "Enabled\n" : "Disabled\n" );
+	$return .= 'EDD (Pro) Activated On:   ' . ( get_option( 'edd_pro_activation_date' ) ? edd_date_i18n( get_option( 'edd_pro_activation_date' ), 'Y-m-d' ) . "\n" : "N/A\n" );
+	$return .= 'EDD Pass Status:          ' . ( EDD\Admin\Pass_Manager::isPro() ? "Valid Pass\n" : "Missing\n" );
 	$return .= 'Test Mode:                ' . ( edd_is_test_mode() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'AJAX:                     ' . ( ! edd_is_ajax_disabled() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Guest Checkout:           ' . ( edd_no_guest_checkout() ? "Disabled\n" : "Enabled\n" );
@@ -1713,6 +1718,7 @@ function edd_tools_sysinfo_download() {
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
+	check_admin_referer( 'edd_download_system_info', 'edd_system_info' );
 
 	nocache_headers();
 

@@ -22,7 +22,7 @@ if [[ "${TEST_INPLACE:-x}" == "x" ]] || [[ "${TEST_INPLACE}" == "0" ]]; then
 	REPO_DIR="/tmp/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
 	echo "Copying repo to ${REPO_DIR} to and deleting composer files..."
 	mkdir "${REPO_DIR}"
-	cp -R . "${REPO_DIR}"
+	tar -cf - --exclude-from="./bin/.exclude" . | tar -xC "${REPO_DIR}"
 	cd "${REPO_DIR}"
 	if [[ -d vendor ]]; then
 		rm -rf vendor

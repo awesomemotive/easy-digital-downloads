@@ -41,6 +41,15 @@ class EDD_Email_Summary {
 	private $email_options;
 
 	/**
+	 * Image URI Path
+	 *
+	 * @since 3.1.1
+	 *
+	 * @var string
+	 */
+	private $image_path = 'https://plugin.easydigitaldownloads.com/cdn/summaries/';
+
+	/**
 	 * Class constructor.
 	 *
 	 * @since 3.1
@@ -325,7 +334,7 @@ class EDD_Email_Summary {
 		ob_start();
 		?>
 		<?php if ( $relative_data['comparable'] ) : ?>
-			<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/' . $arrow ); ?>" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
+			<img src="<?php echo esc_url( $this->image_path . $arrow ); ?>" width="12" height="10" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 12px; height: 10px; max-width: 100%; clear: both; vertical-align: text-top;">
 		<?php endif; ?>
 		<span style="padding-left: 1px;">
 			<?php echo esc_html( $output ); ?>

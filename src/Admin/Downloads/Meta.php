@@ -6,13 +6,21 @@
  */
 namespace EDD\Admin\Downloads;
 
-class Meta {
+use EDD\EventManagement\SubscriberInterface;
 
-	// TODO: Update to use EventManagement in EDD 3.1.1
-	public function __construct() {
-		add_filter( 'edd_metabox_save_edd_variable_prices', array( $this, 'variable_prices_value' ) );
-		add_filter( 'edd_metabox_save_edd_download_files', array( $this, 'download_files_value' ) );
-		add_action( 'edd_save_download', array( $this, 'bundled_conditions' ), 10, 2 );
+class Meta implements SubscriberInterface {
+
+	/**
+	 * Returns an array of events that this subscriber wants to listen to.
+	 *
+	 * @return array
+	 */
+	public static function get_subscribed_events() {
+		return array(
+			'edd_metabox_save_edd_variable_prices' => 'variable_prices_value',
+			'edd_metabox_save_edd_download_files'  => 'download_files_value',
+			'edd_save_download'                    => array( 'bundled_conditions', 10, 2 ),
+		);
 	}
 
 	/**

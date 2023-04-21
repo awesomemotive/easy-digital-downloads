@@ -1,12 +1,15 @@
 <?php
-namespace EDD\Customers;
+namespace EDD\Tests\Customers;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Customers Tests.
  *
  * @group edd_customers
  */
-class Tests_Customers extends \EDD_UnitTestCase {
+class Tests_Customers extends EDD_UnitTestCase {
 
 	/**
 	 * Customers fixture.
@@ -43,7 +46,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		}
 
 		self::$user  = 1;
-		self::$order = \EDD_Helper_Payment::create_simple_payment();
+		self::$order = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		// Don't trigger the updateing of the customer during this part of the setup.
 		remove_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
@@ -262,7 +265,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_add_past_purchases_to_new_user() {
-		$order_id = \EDD_Helper_Payment::create_simple_guest_payment();
+		$order_id = Helpers\EDD_Helper_Payment::create_simple_guest_payment();
 
 		$userdata = array(
 			'user_login' => 'guest',
@@ -326,16 +329,16 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	public function test_get_user_verification_url_should_return_true() {
 		$url = edd_get_user_verification_url( 1 );
 
-		$this->assertContains( 'edd_action=verify_user', $url );
-		$this->assertContains( 'user_id=1', $url );
-		$this->assertContains( 'ttl', $url );
-		$this->assertContains( 'token', $url );
+		$this->assertStringContainsString( 'edd_action=verify_user', $url );
+		$this->assertStringContainsString( 'user_id=1', $url );
+		$this->assertStringContainsString( 'ttl', $url );
+		$this->assertStringContainsString( 'token', $url );
 	}
 
 	public function test_get_user_verification_request_url_should_return_true() {
 		$url = edd_get_user_verification_request_url( 1 );
 
-		$this->assertContains( 'edd_action=send_verification_email', $url );
+		$this->assertStringContainsString( 'edd_action=send_verification_email', $url );
 	}
 
 	public function test_validate_user_verification_token_with_valid_url_should_true() {

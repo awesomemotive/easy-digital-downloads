@@ -1,5 +1,8 @@
 <?php
-namespace EDD\Logs;
+namespace EDD\Tests\Logs\Request;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
 
 /**
  * API Request Log DB Tests
@@ -10,7 +13,7 @@ namespace EDD\Logs;
  *
  * @coversDefaultClass \EDD_Log_API_Request_Query
  */
-class Api_Request_Logs_Tests extends \EDD_UnitTestCase {
+class Api_Request_Logs_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Logs fixture.

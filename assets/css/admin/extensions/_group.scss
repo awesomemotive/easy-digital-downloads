@@ -1,0 +1,22 @@
+.edd-extension-manager__wrap {
+	max-width: $break-huge;
+}
+
+.edd-extension-manager__card-group {
+	transition: all .5s;
+
+	@supports(grid-area: auto) {
+		display: grid;
+		grid-template-columns: auto;
+		gap: 1em;
+		margin-top: 24px;
+	}
+}
+
+.edd-extension-manager__group {
+	display: grid;
+}
+
+.edd-extension-manager__unlock {
+	margin-top: 4em;
+}

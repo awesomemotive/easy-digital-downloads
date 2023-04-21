@@ -6,27 +6,28 @@
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
  */
-
 namespace EDD\Tests\Notifications;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Utils\NotificationImporter;
 
 /**
  * @coversDefaultClass \EDD\Utils\NotificationImporter
  * @group edd_notifications
  */
-class NotificationImporterTests extends \EDD_UnitTestCase {
+class NotificationImporterTests extends EDD_UnitTestCase {
 
 	/**
 	 * Truncates the notification table before each test.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		global $wpdb;
-		$tableName = EDD()->notifications->table_name;
-
-		$wpdb->query( "TRUNCATE TABLE {$tableName}" );
+		$component = EDD()->components['notification'];
+		$thing     = $component->get_interface( 'table' );
+		if ( $thing instanceof \EDD\Database\Table ) {
+			$thing->truncate();
+		}
 	}
 
 	/**
@@ -53,10 +54,9 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	 * @return object[]
 	 */
 	protected function getNotifications() {
-		global $wpdb;
-		$tableName = EDD()->notifications->table_name;
+		$notifications = new \EDD\Database\Queries\Notification();
 
-		return $wpdb->get_results( "SELECT * FROM {$tableName}" );
+		return $notifications->query( array( 'number' => 99999 ) );
 	}
 
 	/**
@@ -149,16 +149,13 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	/**
 	 * Notification has an end date of 2 days ago, so it should not be imported.
 	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Notification has expired.
 	 * @throws \Exception
 	 */
 	public function test_ended_notification_doesnt_validate() {
 		$importer = new NotificationImporter();
 
-		if ( method_exists( $this, 'setExpectedException' ) ) {
-			$this->setExpectedException( 'Exception', 'Notification has expired.' );
-		}
+		$this->expectException( '\Exception' );
+		$this->expectExceptionMessage( 'Notification has expired.' );
 
 		$notification                    = new \stdClass();
 		$notification->title             = 'Announcing New EDD Feature';
@@ -176,16 +173,13 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	 *
 	 * @covers \EDD\Utils\NotificationImporter::validateNotification
 	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Notification created prior to EDD activation.
 	 * @throws \Exception
 	 */
 	public function test_notification_started_before_installation_date_doesnt_validate() {
 		$importer = new NotificationImporter();
 
-		if ( method_exists( $this, 'setExpectedException' ) ) {
-			$this->setExpectedException( 'Exception', 'Notification created prior to EDD activation.' );
-		}
+		$this->expectException( '\Exception' );
+		$this->expectExceptionMessage( 'Notification created prior to EDD activation.' );
 
 		$notification                    = new \stdClass();
 		$notification->title             = 'Announcing New EDD Feature';
@@ -200,15 +194,13 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	/**
 	 * @covers \EDD\Utils\NotificationImporter::validateNotification
 	 *
-	 * @expectedException \Exception
 	 * @throws \Exception
 	 */
 	public function test_notification_missing_properties_doesnt_validate() {
 		$importer = new NotificationImporter();
 
-		if ( method_exists( $this, 'setExpectedException' ) ) {
-			$this->setExpectedException( 'Exception', 'Missing required properties: ["title"]' );
-		}
+		$this->expectException( '\Exception' );
+		$this->expectExceptionMessage( 'Missing required properties: ["title"]' );
 
 		$notification                    = new \stdClass();
 		$notification->content           = 'This is an exciting new EDD feature.';
@@ -221,16 +213,13 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	/**
 	 * @covers \EDD\Utils\NotificationImporter::validateNotification
 	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Condition(s) not met.
 	 * @throws \Exception
 	 */
 	public function test_notification_for_pass_holders_not_validated_for_free_install() {
 		$importer = new NotificationImporter();
 
-		if ( method_exists( $this, 'setExpectedException' ) ) {
-			$this->setExpectedException( 'Exception', 'Condition(s) not met.' );
-		}
+		$this->expectException( '\Exception' );
+		$this->expectExceptionMessage( 'Condition(s) not met' );
 
 		$notification                    = new \stdClass();
 		$notification->title             = 'Announcing New EDD Feature for Pass Holders';
@@ -245,16 +234,13 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	/**
 	 * @covers \EDD\Utils\NotificationImporter::validateNotification
 	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Condition(s) not met.
 	 * @throws \Exception
 	 */
 	public function test_notification_for_version_1x_not_validated() {
 		$importer = new NotificationImporter();
 
-		if ( method_exists( $this, 'setExpectedException' ) ) {
-			$this->setExpectedException( 'Exception', 'Condition(s) not met.' );
-		}
+		$this->expectException( '\Exception' );
+		$this->expectExceptionMessage( 'Condition(s) not met' );
 
 		$notification                    = new \stdClass();
 		$notification->title             = 'Announcing New EDD Feature for Pass Holders';

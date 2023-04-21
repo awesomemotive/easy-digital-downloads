@@ -1,32 +1,59 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_formatting
  */
 class Tests_Formatting extends EDD_UnitTestCase {
 
-	public function setUp() {
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
-
-	public function test_sanitize_amount() {
-
+	public function test_sanitize_amount_empty_string() {
 		$this->assertEquals( 0.00, edd_sanitize_amount( '' ) );
-		$this->assertEquals( '20000.20', edd_sanitize_amount( '20,000.20' ) );
-		$this->assertEquals( '22000.20', edd_sanitize_amount( '22 000.20' ) );
-		$this->assertEquals( '20.20', edd_sanitize_amount( '20.2' ) );
-		$this->assertEquals( '25.42', edd_sanitize_amount( '25.42221112993' ) );
-		$this->assertEquals( '20.20', edd_sanitize_amount( '$20.2' ) );
-		$this->assertEquals( '10.00', edd_sanitize_amount( '£10' ) );
-		$this->assertEquals( '20.20', edd_sanitize_amount( '₱20.2' ) );
-		$this->assertEquals( '2000.00', edd_sanitize_amount( '¥2000' ) );
-		$this->assertEquals( '20.00', edd_sanitize_amount( 'Ð20' ) );
+	}
 
+	public function test_sanitize_amount_comma_thousands() {
+		$this->assertEquals( '20000.20', edd_sanitize_amount( '20,000.20' ) );
+	}
+
+	public function test_sanitize_amount_space_thousands() {
+		$this->assertEquals( '22000.20', edd_sanitize_amount( '22 000.20' ) );
+	}
+
+	public function test_sanitize_amount_incomplete_amount() {
+		$this->assertEquals( '20.20', edd_sanitize_amount( '20.2' ) );
+	}
+
+	public function test_sanitize_amount_amount_too_long() {
+		$this->assertEquals( '25.42', edd_sanitize_amount( '25.42221112993' ) );
+	}
+
+	public function test_sanitize_amount_includes_currency_usd() {
+		$this->assertEquals( '20.20', edd_sanitize_amount( '$20.2' ) );
+	}
+
+	public function test_sanitize_amount_includes_currency_gpb() {
+		$this->assertEquals( '10.00', edd_sanitize_amount( '£10' ) );
+	}
+
+	public function test_sanitize_amount_includes_currency_philippine() {
+		$this->assertEquals( '20.20', edd_sanitize_amount( '₱20.2' ) );
+	}
+
+	public function test_sanitize_amount_includes_currency_yen() {
+		$this->assertEquals( '2000.00', edd_sanitize_amount( '¥2000' ) );
+	}
+
+	public function test_sanitize_amount_includes_currency_doge() {
+		$this->assertEquals( '20.00', edd_sanitize_amount( 'Ð20' ) );
+	}
+
+	public function test_sanitize_amount_negative_amount() {
+		$this->assertEquals( -20.20, edd_sanitize_amount( '-20.2' ) );
+	}
+
+	public function test_sanitize_amount_negative_amount_with_currency() {
+		$this->assertEquals( -20.20, edd_sanitize_amount( '-$20.2' ) );
 	}
 
 	public function test_format_amount() {

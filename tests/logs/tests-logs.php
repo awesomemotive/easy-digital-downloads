@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Logs;
+namespace EDD\Tests\Logs\General;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Logs DB Tests
@@ -10,7 +12,7 @@ namespace EDD\Logs;
  *
  * @coversDefaultClass \EDD_Log_Query
  */
-class Logs_Tests extends \EDD_UnitTestCase {
+class Logs_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Logs fixture.

@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_privacy

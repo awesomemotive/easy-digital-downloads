@@ -115,8 +115,7 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 		),
 	) );
 
-	$pass_manager = new \EDD\Admin\Pass_Manager();
-	if ( false === $pass_manager->has_pass() ) {
+	if ( ! edd_is_pro() ) {
 		$url = edd_link_helper(
 			'https://easydigitaldownloads.com/lite-upgrade/',
 			array(

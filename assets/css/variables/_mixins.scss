@@ -8,3 +8,16 @@
 		}
 	}
 }
+
+@mixin edd-spinner( $size: 1em, $border-background: $white, $border-color: $black, $border-width: 2px ) {
+	animation: 1.5s linear infinite edd-spinning;
+	animation-play-state: inherit;
+	border: $border-width solid $border-background;
+	border-bottom-color: $border-color;
+	border-radius: 100%;
+	content: "";
+	width: $size;
+	height: $size;
+	transform: translate3d(-50%, -50%, 0);
+	will-change: transform;
+}

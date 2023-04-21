@@ -1,11 +1,9 @@
 <?php
-namespace EDD\Reports\Data\Charts\v2;
+namespace EDD\Tests\Data\Charts\V2;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
 
 /**
  * Tests for the Bar_Dataset class
@@ -15,7 +13,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Charts\v2\Bar_Dataset
  */
-class Bar_Dataset_Tests extends \EDD_UnitTestCase {
+class Bar_Dataset_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::$fields

@@ -1,5 +1,7 @@
 <?php
-namespace EDD\File_Download_Logs;
+namespace EDD\Tests\Logs\Download;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Logs Meta DB Tests
@@ -10,7 +12,7 @@ namespace EDD\File_Download_Logs;
  *
  * @coversDefaultClass \EDD\Database\Queries\Log_File_Download
  */
-class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
+class File_Download_Log_Meta_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.
@@ -27,7 +29,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 		self::$log = parent::edd()->file_download_log->create_and_get();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_get_component_interface( 'log_file_download', 'meta' )->truncate();

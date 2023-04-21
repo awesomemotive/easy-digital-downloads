@@ -54,8 +54,14 @@ class Remove_Legacy_Data extends Base {
 		if ( 1 === $this->step ) {
 			// Drop customer `payment_ids` column. It's no longer needed.
 			$customer_table = edd_get_component_interface( 'customer', 'table' );
-			if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
-				$this->get_db()->query( "ALTER TABLE {$this->get_db()->edd_customers} DROP `payment_ids`" );
+			if ( $customer_table instanceof \EDD\Database\Tables\Customers ) {
+				if ( $customer_table->column_exists( 'payment_ids' ) ) {
+					$this->get_db()->query( "ALTER TABLE {$this->get_db()->edd_customers} DROP `payment_ids`" );
+				}
+
+				if ( $customer_table->column_exists( 'notes' ) ) {
+					$this->get_db()->query( "ALTER TABLE {$this->get_db()->edd_customers} DROP `notes`" );
+				}
 			}
 
 			// Delete unneeded meta.

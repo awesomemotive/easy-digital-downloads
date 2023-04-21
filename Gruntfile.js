@@ -1,4 +1,4 @@
-module.exports = function( grunt ) {
+module.exports = function ( grunt ) {
 	// Load multiple grunt tasks using globbing patterns
 	require( 'load-grunt-tasks' )( grunt );
 
@@ -49,7 +49,7 @@ module.exports = function( grunt ) {
 
 		// Copy the plugin into the build directory
 		copy: {
-			main: {
+			pro: {
 				src: [
 					'assets/sample-products-import.xml',
 					'assets/css/*.min.css',
@@ -65,6 +65,32 @@ module.exports = function( grunt ) {
 					'src/**',
 					'*.php',
 					'*.txt',
+					'assets/pro/js/*.js',
+					'!src/Lite/**',
+					'!assets/lite/**'
+				],
+				dest: 'build/<%= pkg.name %>-pro/',
+			},
+			lite: {
+				src: [
+					'assets/sample-products-import.xml',
+					'assets/css/*.min.css',
+					'assets/css/admin/style.css',
+					'assets/js/*.js',
+					'assets/js/*.min.js',
+					'assets/js/vendor/**',
+					'assets/images/**',
+					'includes/**',
+					'!includes/blocks/pro/**',
+					'languages/**',
+					'templates/**',
+					'vendor/**',
+					'src/**',
+					'*.php',
+					'*.txt',
+					'!src/Pro/**',
+					'!assets/pro/**',
+					'assets/lite/**'
 				],
 				dest: 'build/<%= pkg.name %>/',
 			},
@@ -72,7 +98,17 @@ module.exports = function( grunt ) {
 
 		// Compress build directory into <name>.zip and <name>-<version>.zip
 		compress: {
-			main: {
+			pro: {
+				options: {
+					mode: 'zip',
+					archive: './build/<%= pkg.name %>-pro.zip',
+				},
+				expand: true,
+				cwd: 'build/<%= pkg.name %>-pro/',
+				src: [ '**/*' ],
+				dest: '<%= pkg.name %>-pro/',
+			},
+			lite: {
 				options: {
 					mode: 'zip',
 					archive: './build/<%= pkg.name %>.zip',
@@ -142,11 +178,29 @@ module.exports = function( grunt ) {
 						dest: 'includes/blocks'
 					}
 				]
+			},
+			pro: {
+				options: {
+					patterns: [
+						{
+							match: /Plugin Name: Easy Digital Downloads \(Pro\)/g,
+							replacement: 'Plugin Name: Easy Digital Downloads',
+							expression: true,
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'build/easy-digital-downloads/easy-digital-downloads.php' ],
+						dest: 'build/easy-digital-downloads'
+					}
+				]
 			}
 		}
 	} );
 
 	// Build task(s).
-	grunt.registerTask( 'prep', [ 'clean', 'force:checktextdomain', 'replace' ] );
-	grunt.registerTask( 'build', [ 'copy', 'compress' ] );
+	grunt.registerTask( 'prep', [ 'clean', 'force:checktextdomain' ] );
 };

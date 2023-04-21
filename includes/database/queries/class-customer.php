@@ -143,4 +143,62 @@ class Customer extends Query {
 	public function __construct( $query = array() ) {
 		parent::__construct( $query );
 	}
+
+	/**
+	 * Allow the customers query to be modified.
+	 *
+	 * @since 3.1.1
+	 * @access public
+	 *
+	 * @param string|array $query See Customers::__construct() for accepted arguments.
+	 *
+	 * @see Customers::__construct()
+	 */
+	public function query( $query = array() ) {
+		$query = $this->parse_query_for_emails( $query );
+
+		return parent::query( $query );
+	}
+
+	/**
+	 * If we are querying for an email, this queries the email addresses table first,
+	 * then updates the queries with the matching customer IDs.
+	 *
+	 * @since 3.1.1
+	 * @param array $query
+	 * @return array
+	 */
+	private function parse_query_for_emails( $query ) {
+		if ( empty( $query['email'] ) && empty( $query['email__in'] ) && empty( $query['email__not_in'] ) ) {
+			return $query;
+		}
+		$operator = 'id__in';
+		$args     = array(
+			'fields' => array( 'customer_id' ),
+		);
+		if ( ! empty( $query['email'] ) ) {
+			$args['email'] = $query['email'];
+			unset( $query['email'] );
+		} elseif ( ! empty( $query['email__in'] ) ) {
+			$args['email__in'] = $query['email__in'];
+			unset( $query['email__in'] );
+		} elseif ( ! empty( $query['email__not_in'] ) ) {
+			/**
+			 * Speical treatment for email__not_in
+			 *
+			 * When we are searching for email__not_in, we want to actually find any email
+			 * addresses in the customer email addresses table that match the email__not_in parameter
+			 * find the customer IDs for these excluded email addresses, and pass them back in as id__not_in
+			 * to the main query, so that we can ensure we're excluding them even if their main email value is
+			 * one of the excluded ones.
+			 */
+			$operator          = 'id__not_in';
+			$args['email__in'] = $query['email__not_in'];
+		}
+
+		$customer_ids       = edd_get_customer_email_addresses( $args );
+		$query[ $operator ] = array_map( 'absint', wp_list_pluck( $customer_ids, 'customer_id' ) );
+
+		return $query;
+	}
 }

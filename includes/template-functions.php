@@ -562,10 +562,9 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
  */
 function edd_get_purchase_download_links( $payment_id = 0 ) {
 
-	$downloads   = edd_get_payment_meta_cart_details( $payment_id, true );
-	$payment_key = edd_get_payment_key( $payment_id );
-	$email       = edd_get_payment_user_email( $payment_id );
-	$links       = '<ul class="edd_download_links">';
+	$downloads = edd_get_payment_meta_cart_details( $payment_id, true );
+	$order     = edd_get_order( $payment_id );
+	$links     = '<ul class="edd_download_links">';
 
 	foreach ( $downloads as $download ) {
 		$links .= '<li>';
@@ -575,7 +574,7 @@ function edd_get_purchase_download_links( $payment_id = 0 ) {
 			if ( is_array( $files ) ) {
 				foreach ( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
-						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '">';
+						$links .= '<a href="' . esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $download['id'], $price_id ) ) . '">';
 						$links .= edd_get_file_name( $file );
 						$links .= '</a>';
 					$links .= '</div>';

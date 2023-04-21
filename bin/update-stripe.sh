@@ -2,7 +2,7 @@
 rm -rf includes/gateways/stripe
 
 # Initial clone
-git clone -b master git@github.com:easydigitaldownloads/edd-stripe includes/gateways/stripe
+git clone git@github.com:awesomemotive/edd-stripe includes/gateways/stripe
 
 # Install dependencies
 cd includes/gateways/stripe

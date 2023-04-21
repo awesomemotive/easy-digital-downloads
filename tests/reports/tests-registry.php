@@ -1,11 +1,9 @@
 <?php
-namespace EDD\Reports;
+namespace EDD\Tests\Reports;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
 
 /**
  * Tests for the Report registry API.
@@ -15,7 +13,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Registry
  */
-class Registry_Tests extends \EDD_UnitTestCase {
+class Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Report registry fixture.
@@ -28,7 +26,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Set up fixtures once.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->registry = new \EDD\Reports\Registry();
@@ -39,7 +37,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->registry->exchangeArray( array() );
 
 		parent::tearDown();
@@ -50,10 +48,8 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_attributes_should_throw_exception_if_attribute_is_empty_and_not_filtered() {
-		$this->setExpectedException(
-			'\EDD\Reports\Exceptions\Invalid_Parameter',
-			"The 'foo' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
-		);
+		$this->expectException( '\EDD\Reports\Exceptions\Invalid_Parameter' );
+		$this->expectExceptionMessage( "The 'foo' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$this->registry->validate_attributes( array( 'foo' => '' ), 'some_item_id' );
 	}
@@ -70,10 +66,8 @@ class Registry_Tests extends \EDD_UnitTestCase {
 
 		$filter = array( 'foo' );
 
-		$this->setExpectedException(
-			'\EDD\Reports\Exceptions\Invalid_Parameter',
-			"The 'baz' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
-		);
+		$this->expectException( '\EDD\Reports\Exceptions\Invalid_Parameter' );
+		$this->expectExceptionMessage( "The 'baz' parameter for the 'some_item_id' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		/*
 		 * Tough to actually test for no exception, so we'll have to settle

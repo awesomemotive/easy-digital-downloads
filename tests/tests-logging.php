@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * EDD Logging Class Tests
@@ -29,7 +32,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$object = new EDD_Logging();
+		self::$object = new \EDD_Logging();
 
 		self::$log_id = self::$object->insert_log( array(
 			'log_type'     => 'gateway_error',

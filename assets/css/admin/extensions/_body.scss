@@ -1,0 +1,23 @@
+.edd-extension-manager__body {
+	display: grid;
+	gap: 1.5em;
+	grid-template-rows: auto 1fr;
+	flex-grow: 1;
+
+	img {
+		max-width: 100%;
+	}
+
+	.notice {
+		max-width: 320px;
+	}
+}
+
+.edd-extension-manager__title {
+	line-height: 1.4;
+	margin: 0 1em 1em 0;
+
+	a {
+		color: $wp-input-text;
+	}
+}

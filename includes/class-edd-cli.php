@@ -33,6 +33,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 	public function __construct() {
 		$this->api = new EDD_API();
+		edd_do_automatic_upgrades();
 	}
 
 
@@ -506,13 +507,15 @@ class EDD_CLI extends WP_CLI_Command {
 		$number   = 1;
 		$status   = 'complete';
 		$id       = false;
-		$price_id = false;
+		$price_id = null;
 		$tax      = 0;
 		$email    = 'guest@edd.local';
 		$fname    = 'Pippin';
 		$lname    = 'Williamson';
 		$date     = false;
 		$range    = 30;
+		$currency = edd_get_currency();
+		$gateway  = 'manual';
 
 		$generate_users = false;
 
@@ -670,6 +673,18 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 			}
 
+			// Allow random currencies.
+			if ( ! empty( $assoc_args['currency'] ) && 'random' === $assoc_args['currency'] ) {
+				$currencies = array( 'USD', 'EUR', 'GBP' );
+				$currency   = $currencies[ array_rand( $currencies ) ];
+			}
+
+			// Allow random gateways.
+			if ( ! empty( $assoc_args['gateway'] ) && 'random' === $assoc_args['gateway'] ) {
+				$gateways = array_keys( edd_get_payment_gateways() );
+				$gateway  = $gateways[ array_rand( $gateways ) ];
+			}
+
 			// Build purchase data.
 			$purchase_data = array(
 				'price'        => edd_sanitize_amount( $total ),
@@ -677,7 +692,7 @@ class EDD_CLI extends WP_CLI_Command {
 				'purchase_key' => strtolower( md5( uniqid() ) ),
 				'user_email'   => $email,
 				'user_info'    => $user_info,
-				'currency'     => edd_get_currency(),
+				'currency'     => $currency,
 				'downloads'    => $final_downloads,
 				'cart_details' => $cart_details,
 				'status'       => 'pending',
@@ -700,7 +715,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $timestring ) ) {
 				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
-				$payment->gateway        = 'manual';
+				$payment->gateway        = $gateway;
 				$payment->save();
 			}
 
@@ -930,7 +945,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_discounts' );
 
 		} else {
@@ -1054,7 +1068,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 		}
 
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_logs' );
 
 	}
@@ -1162,7 +1175,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'New order notes: ', 'easy-digital-downloads' ) . $new_count );
 		}
 
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_order_notes' );
 	}
 
@@ -1264,7 +1276,6 @@ class EDD_CLI extends WP_CLI_Command {
 				WP_CLI::line( __( 'New customer notes: ', 'easy-digital-downloads' ) . $new_count );
 			}
 
-			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_customer_notes' );
 		}
 	}
@@ -1466,7 +1477,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Migration complete: Customer Email Addresses', 'easy-digital-downloads' ) );
 		}
 
-		edd_update_db_version();
 	}
 
 	/**
@@ -1530,7 +1540,6 @@ class EDD_CLI extends WP_CLI_Command {
 		WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . count( $tax_rates ) );
 		WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_tax_rates' );
 	}
 
@@ -1767,7 +1776,6 @@ class EDD_CLI extends WP_CLI_Command {
 				$refund_count = edd_count_orders( array( 'type' => 'refund' ) );
 				WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
 
-				edd_update_db_version();
 				edd_set_upgrade_complete( 'migrate_orders' );
 
 				$progress->tick();
@@ -1943,10 +1951,20 @@ class EDD_CLI extends WP_CLI_Command {
 		 * @var \EDD\Database\Tables\Customers|false $customer_table
 		 */
 		$customer_table = edd_get_component_interface( 'customer', 'table' );
-		if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
+		if ( $customer_table instanceof \EDD\Database\Tables\Customers ) {
 			WP_CLI::line( __( 'Updating customers database table.', 'easy-digital-downloads' ) );
 
-			$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
+			if ( $customer_table->column_exists( 'payment_ids' ) ) {
+				WP_CLI::line( __( 'Removing Payment IDs column.', 'easy-digital-downloads' ) );
+
+				$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
+			}
+
+			if ( $customer_table->column_exists( 'notes' ) ) {
+				WP_CLI::line( __( 'Removing notes column.', 'easy-digital-downloads' ) );
+
+				$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `notes`" );
+			}
 		}
 
 		/**

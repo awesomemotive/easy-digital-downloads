@@ -22,6 +22,7 @@ const adminPages = [
 	'tools/export',
 	'tools/import',
 	'notes',
+	'onboarding',
 	'orders',
 	'reports',
 	'payments',
@@ -53,21 +54,27 @@ const config = {
 	entry: {
 		// Dynamic entry points for individual admin pages.
 		...adminPages.reduce( ( memo, path ) => {
-			memo[ `edd-admin-${ path.replace( '/', '-' ) }` ] = `./assets/js/admin/${ path }`;
+			memo[ `js/edd-admin-${ path.replace( '/', '-' ) }` ] = `./assets/js/admin/${ path }`;
 			return memo;
 		}, {} ),
 
 		// Static admin pages.
-		'edd-admin': './assets/js/admin',
-		'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
-		'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
-		'edd-admin-extension-manager': './assets/js/admin/settings/extension-manager',
-		'edd-admin-notices': './assets/js/admin/notices',
+		'js/edd-admin': './assets/js/admin',
+		'js/edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
+		'js/edd-admin-email-tags': './assets/js/admin/settings/email-tags',
+		'js/edd-admin-extension-manager': './assets/js/admin/settings/extension-manager',
+		'js/edd-admin-notices': './assets/js/admin/notices',
+		'js/edd-admin-pass-handler': './assets/js/admin/settings/pass-handler',
+		'js/edd-admin-onboarding': './assets/js/admin/onboarding',
+		'js/edd-admin-licensing': './assets/js/admin/settings/licensing',
 
 		// Front-end JavaScript.
-		'edd-ajax': './assets/js/frontend/edd-ajax.js',
-		'edd-checkout-global': './assets/js/frontend/checkout',
-		'paypal-checkout': './assets/js/frontend/gateways/paypal.js',
+		'js/edd-ajax': './assets/js/frontend/edd-ajax.js',
+		'js/edd-checkout-global': './assets/js/frontend/checkout',
+		'js/paypal-checkout': './assets/js/frontend/gateways/paypal.js',
+
+		'pro/js/checkout': './assets/pro/js/frontend/checkout.js',
+		'pro/js/duplicator': './assets/pro/js/admin/duplicator.js',
 
 		// Admin styles.
 		'edd-admin-style': './assets/css/admin/style.scss',
@@ -77,12 +84,14 @@ const config = {
 		'edd-admin-menu-style': './assets/css/admin/menu.scss',
 		'edd-admin-tax-rates-style': './assets/css/admin/tax-rates/style.scss',
 		'edd-admin-extension-manager-style': './assets/css/admin/extension-manager.scss',
+		'edd-admin-pass-handler-style': './assets/css/admin/pass-handler.scss',
+		'edd-admin-onboarding-style': './assets/css/admin/onboarding/style.scss',
 
 		'edd-style': './assets/css/frontend/style.scss'
 	},
 	output: {
-		filename: 'assets/js/[name].js',
-		path: __dirname,
+		filename: '[name].js',
+		path: path.resolve( __dirname, 'assets' ),
 	},
 	externals: {
 		jquery: 'jQuery',
@@ -92,7 +101,7 @@ const config = {
 		new MiniCSSExtractPlugin( {
 			esModule: false,
 			moduleFilename: ( chunk ) =>
-				`assets/css/${ chunk.name.replace( '-style', '' ) }.min.css`
+				`css/${ chunk.name.replace( '-style', '' ) }.min.css`
 		} ),
 		new WebpackRTLPlugin( {
 			filename: [ /(\.min\.css)/i, '-rtl$1' ],
@@ -109,52 +118,52 @@ const config = {
 				// Styles.
 				{
 					from: 'assets/css/vendor',
-					to: 'assets/css',
+					to: 'css',
 				},
 
 				// Scripts.
 				{
 					from: './node_modules/chart.js/dist/Chart.min.js',
-					to: 'assets/js/vendor/chartjs.min.js',
+					to: 'js/vendor/chartjs.min.js',
 				},
 				{
 					from: './node_modules/flot/jquery.flot.js',
-					to: 'assets/js/vendor/jquery.flot.min.js',
+					to: 'js/vendor/jquery.flot.min.js',
 					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/flot/jquery.flot.time.js',
-					to: 'assets/js/vendor/jquery.flot.time.min.js',
+					to: 'js/vendor/jquery.flot.time.min.js',
 					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/flot/jquery.flot.pie.js',
-					to: 'assets/js/vendor/jquery.flot.pie.min.js',
+					to: 'js/vendor/jquery.flot.pie.min.js',
 					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/moment/moment.js',
-					to: 'assets/js/vendor/moment.min.js',
+					to: 'js/vendor/moment.min.js',
 					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/moment-timezone/moment-timezone.js',
-					to: 'assets/js/vendor/moment-timezone.min.js',
+					to: 'js/vendor/moment-timezone.min.js',
 					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/jquery-creditcardvalidator/jquery.creditCardValidator.js',
-					to: 'assets/js/vendor/jquery.creditcardvalidator.min.js',
+					to: 'js/vendor/jquery.creditcardvalidator.min.js',
 					transform: ( content ) => minifyJs( content ),
 				},
 				{
 					from: './node_modules/jquery-validation/dist/jquery.validate.min.js',
 					// This file is not registered in EDD so the URL must remain the same.
-					to: 'assets/js/jquery.validate.min.js',
+					to: 'js/jquery.validate.min.js',
 				},
 				{
 					from: './node_modules/jquery.payment/lib/jquery.payment.min.js',
-					to: 'assets/js/vendor/jquery.payment.min.js',
+					to: 'js/vendor/jquery.payment.min.js',
 				},
 			]
 		} ),

@@ -234,6 +234,14 @@ function edd_setup_components() {
 		'object' => '\\EDD\\Logs\\File_Download_Log',
 	) );
 
+	edd_register_component( 'notification', array(
+		'schema' => '\\EDD\\Database\\Schemas\\Notifications',
+		'table'  => '\\EDD\\Database\\Tables\\Notifications',
+		'query'  => '\\EDD\\Database\\Queries\\Notification',
+		'object' => '\\EDD\\Notifications\\Notification',
+		'meta'   => false,
+	) );
+
 	// Set the locally static setup var.
 	$setup = true;
 

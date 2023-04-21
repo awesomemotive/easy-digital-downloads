@@ -1,6 +1,19 @@
 /* global ajaxurl */
 
 jQuery( document ).ready( function( $ ) {
+
+	/**
+	 * Show overlay notices on a delay.
+	 */
+	const overlayNotice = $( '.edd-admin-notice-overlay' );
+	const overlayNoticeClass = 'edd-promo-notice__overlay';
+	if ( overlayNotice ) {
+		overlayNotice.wrap( '<div class="' + overlayNoticeClass + '"></div>' );
+		$( '.edd-promo-notice__trigger' ).on( 'click', function () {
+			$( '.' + overlayNoticeClass ).css( 'display', 'flex' ).hide().fadeIn();
+		} );
+	}
+
 	/**
 	 * Dismiss notices
 	 */
@@ -23,9 +36,24 @@ jQuery( document ).ready( function( $ ) {
 				},
 				url: ajaxurl,
 				success: function( response ) {
-					notice.slideUp();
+					if ( $( '.' + overlayNoticeClass ).length ) {
+						$( '.' + overlayNoticeClass ).fadeOut();
+						$( '.edd-extension-manager__key-notice' ).hide();
+					} else {
+						notice.slideUp();
+					}
 				}
 			} );
+		} );
+
+		$( document ).on( 'keydown', function ( event ) {
+			if ( !$( '.' + overlayNoticeClass ).length ) {
+				return;
+			}
+			if ( 27 === event.keyCode ) {
+				$( '.' + overlayNoticeClass ).fadeOut();
+				$( '.edd-extension-manager__key-notice' ).hide();
+			}
 		} );
 	} );
 } );

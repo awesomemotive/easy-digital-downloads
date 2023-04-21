@@ -434,6 +434,27 @@ class Data_Migrator {
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
 		$user_info    = isset( $payment_meta['user_info'] ) ? maybe_unserialize( $payment_meta['user_info'] ) : array();
 
+		// It is possible that for some reason the entire unserialized array is invalid, so before trying to use it, let's just verify we got an array back.
+		if ( ! is_array( $payment_meta ) ) {
+			// Dump this data to a file to ensure we keep it for later use.
+			edd_debug_log( '==== Failed Migrating Legacy Payment ID: ' . $data->ID . ' ====', true );
+			edd_debug_log( 'Reason: Payment Meta Unserialization failed.', true );
+			edd_debug_log( '- Post Data', true );
+			foreach ( get_object_vars( $data ) as $key => $value ) {
+				edd_debug_log( '-- ' . $key . ': ' . $value, true );
+			}
+
+			edd_debug_log( '- Post Meta', true );
+			foreach ( $meta as $key => $value_array ) {
+				edd_debug_log( '-- Meta Key: ' . $key, true );
+				foreach ( $value_array as $value ) {
+					edd_debug_log( '--- ' . $value, true );
+				}
+			}
+
+			return false;
+		}
+
 		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
 		$user_info = self::fix_possible_serialization( $user_info );
 		$user_info = maybe_unserialize( $user_info );

@@ -50,7 +50,10 @@ const EDD_Export = {
 					const export_form = $( '.edd-export-form' ).find( '.edd-progress' ).parent().parent();
 					const notice_wrap = export_form.find( '.notice-wrap' );
 
-					export_form.find( 'button' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'updated-message' );
+					export_form.find( 'button' ).removeClass( 'updating-message' ).addClass( 'updated-message' );
+					setTimeout( function () {
+						export_form.find( 'button' ).attr( 'disabled', false ).removeClass( 'updated-message' )
+					}, 3000 );
 					export_form.find( 'button .spinner' ).hide().css( 'visibility', 'visible' );
 
 					if ( response.error ) {

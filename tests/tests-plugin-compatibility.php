@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group plugin_compatibility
@@ -97,7 +100,7 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	public function test_qtranslate_content() {
 
 		define( 'QT_LANGUAGE', true );
-		$content = edd_qtranslate_content( $content = 'This is some test content' );
+		$content = \edd_qtranslate_content( $content = 'This is some test content' );
 		$this->assertEquals( $content, 'This is some test content' );
 
 	}
@@ -167,15 +170,4 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	}
 
 
-}
-
-/**
- * Function required to test the qTranslate compatibility function.
- *
- * @since 2.3
- */
-if ( ! function_exists( 'qtrans_useCurrentLanguageIfNotFoundShowAvailable' ) ) {
-	function qtrans_useCurrentLanguageIfNotFoundShowAvailable( $content ) {
-		return $content;
-	}
 }

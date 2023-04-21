@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Notes;
+namespace EDD\Tests\Notes;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Notes DB Tests.
@@ -10,7 +12,7 @@ namespace EDD\Notes;
  *
  * @coversDefaultClass \EDD\Database\Queries\Notes
  */
-class Tests_Notes_DB extends \EDD_UnitTestCase {
+class Tests_Notes_DB extends EDD_UnitTestCase {
 
 	/**
 	 * Notes fixture.

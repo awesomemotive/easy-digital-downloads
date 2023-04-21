@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Cart tests.
@@ -42,7 +45,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_add_rewrite_endpoints( $wp_rewrite );
 
-		$current_user = new WP_User( 1 );
+		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
 
 		$post_id = static::factory()->post->create( array(
@@ -177,16 +180,16 @@ class Test_Cart extends EDD_UnitTestCase {
 		) );
 	}
 
-	public function setUp() {
+	public function setup(): void {
 		global $current_user;
 
 		parent::setUp();
 
-		$current_user = new WP_User( 1 );
+		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_empty_cart();
@@ -210,7 +213,7 @@ class Test_Cart extends EDD_UnitTestCase {
 	public function test_empty_cart_is_array() {
 		$cart_contents = edd_get_cart_contents();
 
-		$this->assertInternalType( 'array', $cart_contents );
+		$this->assertIsArray( $cart_contents );
 		$this->assertEmpty( $cart_contents );
 	}
 
@@ -598,7 +601,7 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_generate_cart_token() {
-		$this->assertInternalType( 'string', edd_generate_cart_token() );
+		$this->assertIsString( edd_generate_cart_token() );
 		$this->assertTrue( 32 === strlen( edd_generate_cart_token() ) );
 	}
 
