@@ -4,9 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, smub, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, lisacee, zkawesome
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.4
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.1
-Stable Tag: 3.1.1.1
+Stable Tag: 3.1.1.3
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the #1 eCommerce plugin written for digital creators by digital creators.
@@ -225,6 +225,15 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1.1.3, March 23, 2023 =
+* Improvement: The orders list table in the admin now sorts orders by date as the default.
+* Improvement: Removed unnecessary options in the onboarding wizard.
+* Improvement - Stripe: Store owners can now [control which payment methods to accept within their Stripe account](https://easydigitaldownloads.com/docs/stripe/#how-to-manage-payment-methods).
+* Improvement - Stripe: We've added a better explanation for the Restrict Stripe Assets setting.
+* Change: Translations are now always managed by WordPress.org.
+* Fix: Existing tables might not have been updated correctly.
+* Fix: Attempting to update the default email address from the profile editor could fail in some circumstances.
 
 = 3.1.1.2, March 17, 2023 =
 * Improvement: The order details screen in the admin has been updated to use the Currency class to be consistent with customer receipts.

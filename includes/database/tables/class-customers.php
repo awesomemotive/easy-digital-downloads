@@ -38,7 +38,7 @@ final class Customers extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202301021;
+	protected $version = 202303220;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,9 +48,9 @@ final class Customers extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'202002141' => 202002141,
 		'202006101' => 202006101,
 		'202301021' => 202301021,
+		'202303220' => 202303220,
 	);
 
 	/**
@@ -247,5 +247,19 @@ final class Customers extends Table {
 		delete_option( 'wp_edd_customers_db_version' );
 
 		return $this->is_success( $return_result );
+	}
+
+	/**
+	 * Upgrades the customer database for sites which got into a bit of a snarl with the database versions.
+	 *
+	 * @since 3.1.1.3
+	 * @return bool
+	 */
+	protected function __202303220() {
+		if ( $this->needs_initial_upgrade() ) {
+			return $this->__202301021();
+		}
+
+		return true;
 	}
 }

@@ -36,6 +36,9 @@ class Licenses {
 	 * @return array
 	 */
 	private function get_pro_license() {
+		if ( ! edd_is_pro() ) {
+			return false;
+		}
 		$pro_license = new License( 'pro' );
 
 		return array(

@@ -81,18 +81,7 @@ class Tools extends Step {
 				?>
 			</div>
 
-			<div class="edd-onboarding__get-suggestions-section">
-				<h3>
-					<?php esc_html_e( 'Join the EDD Community', 'easy-digital-downloads' ); ?>
-				</h3>
-
-				<label for="edd-onboarding__telemery-toggle" class="edd-onboarding__get-suggestions-section_label">
-					<?php esc_html_e( 'Help us provide a better experience and faster fixes by sharing some anonymous data about how you use Easy Digital Downloads.', 'easy-digital-downloads' ); ?>
-				</label>
-				<div class="edd-toggle">
-					<input type="checkbox" id="edd-onboarding__telemery-toggle" class="edd-onboarding__get-suggestions-section_input" name="telemetry" value="1" checked>
-				</div>
-			</div>
+			<?php $this->telemetry(); ?>
 
 			<div class="edd-onboarding__selected-plugins">
 				<p><?php esc_html_e( 'Based on your selection above, the following plugins will be installed:', 'easy-digital-downloads' ); ?> <span class="edd-onboarding__selected-plugins-text"></span></p>
@@ -234,5 +223,31 @@ class Tools extends Step {
 		}
 
 		return $available_plugins;
+	}
+
+	/**
+	 * Outputs the telemetry checkbox.
+	 *
+	 * @since 3.1.1.3
+	 * @return void
+	 */
+	private function telemetry() {
+		if ( edd_is_pro() ) {
+			return;
+		}
+		?>
+		<div class="edd-onboarding__get-suggestions-section">
+			<h3>
+				<?php esc_html_e( 'Join the EDD Community', 'easy-digital-downloads' ); ?>
+			</h3>
+
+			<label for="edd-onboarding__telemery-toggle" class="edd-onboarding__get-suggestions-section_label">
+				<?php esc_html_e( 'Help us provide a better experience and faster fixes by sharing some anonymous data about how you use Easy Digital Downloads.', 'easy-digital-downloads' ); ?>
+			</label>
+			<div class="edd-toggle">
+				<input type="checkbox" id="edd-onboarding__telemery-toggle" class="edd-onboarding__get-suggestions-section_input" name="telemetry" value="1" checked>
+			</div>
+		</div>
+		<?php
 	}
 }

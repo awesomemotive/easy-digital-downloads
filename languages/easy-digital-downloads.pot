@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.1.2\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-03-17T17:15:21+00:00\n"
+"POT-Creation-Date: 2023-03-23T15:17:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: easy-digital-downloads\n"
@@ -29,7 +29,7 @@ msgstr ""
 
 #. Author of the plugin
 #: includes/blocks/includes/functions.php:27
-#: src/Admin/Onboarding/Steps/Tools.php:139
+#: src/Admin/Onboarding/Steps/Tools.php:128
 msgid "Easy Digital Downloads"
 msgstr ""
 
@@ -2693,16 +2693,16 @@ msgstr ""
 msgid "Move to Trash"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:1097
-#: includes/admin/payments/class-payments-table.php:1100
+#: includes/admin/payments/class-payments-table.php:1103
+#: includes/admin/payments/class-payments-table.php:1106
 msgid "Confirmation Required"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:1098
+#: includes/admin/payments/class-payments-table.php:1104
 msgid "You are about to permanently delete orders from your store. Once deleted, these orders are not recoverable. Are you sure you want to continue?"
 msgstr ""
 
-#: includes/admin/payments/class-payments-table.php:1101
+#: includes/admin/payments/class-payments-table.php:1107
 msgid "You are about to permanently delete this order from your store. Once deleted, this order is not recoverable. Are you sure you want to continue?"
 msgstr ""
 
@@ -6114,7 +6114,7 @@ msgstr ""
 
 #: includes/admin/tracking.php:145
 #: includes/admin/tracking.php:270
-#: src/Admin/Onboarding/Steps/Tools.php:86
+#: src/Admin/Onboarding/Steps/Tools.php:241
 msgid "Join the EDD Community"
 msgstr ""
 
@@ -6131,7 +6131,7 @@ msgid "Do not allow"
 msgstr ""
 
 #: includes/admin/tracking.php:290
-#: src/Admin/Onboarding/Steps/Tools.php:90
+#: src/Admin/Onboarding/Steps/Tools.php:245
 msgid "Help us provide a better experience and faster fixes by sharing some anonymous data about how you use Easy Digital Downloads."
 msgstr ""
 
@@ -8522,23 +8522,23 @@ msgstr ""
 msgid "The date this payment was changed to the `completed` status."
 msgstr ""
 
-#: includes/class-edd-requirements-check.php:165
+#: includes/class-edd-requirements-check.php:162
 msgid "This plugin is not fully active."
 msgstr ""
 
-#: includes/class-edd-requirements-check.php:175
+#: includes/class-edd-requirements-check.php:172
 msgid "Requires %1$s (%2$s), but (%3$s) is installed."
 msgstr ""
 
-#: includes/class-edd-requirements-check.php:185
+#: includes/class-edd-requirements-check.php:182
 msgid "Requires %1$s (%2$s), but it appears to be missing."
 msgstr ""
 
-#: includes/class-edd-requirements-check.php:195
+#: includes/class-edd-requirements-check.php:192
 msgid "Requirements"
 msgstr ""
 
-#: includes/class-edd-requirements-check.php:205
+#: includes/class-edd-requirements-check.php:202
 msgid "Easy Digital Download Requirements"
 msgstr ""
 
@@ -10559,8 +10559,8 @@ msgid "In order to be compatible with future versions of the Stripe payment gate
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/notices/php-requirement.php:84
-#: includes/gateways/stripe/includes/admin/settings.php:330
-#: includes/gateways/stripe/includes/admin/settings.php:399
+#: includes/gateways/stripe/includes/admin/settings.php:334
+#: includes/gateways/stripe/includes/admin/settings.php:403
 msgid "Need help upgrading? Ask your web host!"
 msgstr ""
 
@@ -10663,86 +10663,83 @@ msgstr ""
 msgid "Only load Stripe.com hosted assets on pages that specifically utilize Stripe functionality."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:119
-msgid "Loading Javascript from Stripe"
-msgstr ""
-
-#: includes/gateways/stripe/includes/admin/settings.php:120
-msgid "Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. Read more about Stripe's recommended setup here: https://stripe.com/docs/web/setup."
-msgstr ""
-
-#: includes/gateways/stripe/includes/admin/settings.php:130
-msgid "Elements Mode"
-msgstr ""
-
-#: includes/gateways/stripe/includes/admin/settings.php:131
-msgid "Toggle between using the legacy Card Elements Stripe integration and the new Payment Elements experience."
+#. translators: 1. opening link tag; 2. closing link tag
+#: includes/gateways/stripe/includes/admin/settings.php:121
+msgid "Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. %1$sLearn more about Stripe's recommended setup.%2$s"
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/settings.php:134
-msgid "Card Element"
+msgid "Elements Mode"
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/settings.php:135
-msgid "Payment Element"
+msgid "Toggle between using the legacy Card Elements Stripe integration and the new Payment Elements experience."
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/settings.php:138
-msgid "Transitioning to Payment Elements"
+msgid "Card Element"
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/settings.php:139
+msgid "Payment Element"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:142
+msgid "Transitioning to Payment Elements"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:143
 msgid "You are seeing this option because your store has been using Card Elements prior to the EDD Stripe 2.9.0 update.<br /><br />To ensure that we do not affect your current checkout experience, you can use this setting to toggle between the Card Elements (legacy) and Payment Elements (updated version) to ensure that any customizations or theming you have done still function properly.<br /><br />Please be advised, that in a future version of the Stripe extension, we will deprecate the Card Elements, so take this time to update your store!"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:145
-#: includes/gateways/stripe/includes/admin/settings.php:158
+#: includes/gateways/stripe/includes/admin/settings.php:149
+#: includes/gateways/stripe/includes/admin/settings.php:162
 msgid "Prepaid Cards"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:146
+#: includes/gateways/stripe/includes/admin/settings.php:150
 msgid "Allow prepaid cards as valid payment method."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:160
+#: includes/gateways/stripe/includes/admin/settings.php:164
 msgid "Prepaid card allowance can now be managed in your <a href=\"%s\" target=\"_blank\">Stripe Radar Rules</a>."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:169
+#: includes/gateways/stripe/includes/admin/settings.php:173
 msgid "Split Credit Card Form"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:170
+#: includes/gateways/stripe/includes/admin/settings.php:174
 msgid "Use separate card number, expiration, and CVC fields in payment forms."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:177
-#: includes/gateways/stripe/includes/admin/settings.php:185
+#: includes/gateways/stripe/includes/admin/settings.php:181
+#: includes/gateways/stripe/includes/admin/settings.php:189
 msgid "Show Previously Used Cards"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:178
+#: includes/gateways/stripe/includes/admin/settings.php:182
 msgid "Provides logged in customers with a list of previous used payment methods for faster checkout."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:187
+#: includes/gateways/stripe/includes/admin/settings.php:191
 msgid "Previously used cards are now managed by <a href=\"%s\" target=\"_blank\">Link by Stripe</a>, for even better conversions and security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings.php:201
+#: includes/gateways/stripe/includes/admin/settings.php:205
 msgid "You have disabled the \"Test Mode\" option. Once you have saved your changes, please verify your Stripe connection, especially if you have not previously connected in with \"Test Mode\" disabled."
 msgstr ""
 
 #. translators: %1$s Future PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate.
 #. translators: %1$s PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate.
-#: includes/gateways/stripe/includes/admin/settings.php:312
-#: includes/gateways/stripe/includes/admin/settings.php:384
+#: includes/gateways/stripe/includes/admin/settings.php:316
+#: includes/gateways/stripe/includes/admin/settings.php:388
 msgid "Processing credit cards with Stripe requires PHP version %1$s or higher. It looks like you're using version %2$s, which means you will need to %3$supgrade your version of PHP before acceping credit card payments%4$s."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
-#: includes/gateways/stripe/includes/admin/settings.php:336
-#: includes/gateways/stripe/includes/admin/settings.php:404
+#: includes/gateways/stripe/includes/admin/settings.php:340
+#: includes/gateways/stripe/includes/admin/settings.php:408
 msgid "Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %1$sour hosting recommendations%2$s."
 msgstr ""
 
@@ -11159,7 +11156,7 @@ msgstr ""
 #: includes/gateways/stripe/includes/payment-actions/card-elements-actions.php:713
 #: includes/gateways/stripe/includes/payment-actions/card-elements-actions.php:919
 #: includes/gateways/stripe/includes/payment-actions/card-elements-actions.php:1056
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:656
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:657
 msgid "Stripe Error"
 msgstr ""
 
@@ -11202,43 +11199,43 @@ msgstr ""
 msgid "Charge not refunded in Stripe, as checkbox was not selected."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:304
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:305
 msgid "Stripe Error 002"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:306
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:307
 msgid "There was an error while processing a Stripe payment. Order data: %s"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:322
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:323
 msgid "Stripe Error 003"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:357
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:358
 msgid "Error 1001: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:368
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:369
 msgid "Error 1002: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:380
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:381
 msgid "Error 1003: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:392
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:393
 msgid "Error 1004: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:409
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:410
 msgid "Error 1005: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:441
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:442
 msgid "Error 1006: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:634
+#: includes/gateways/stripe/includes/payment-actions/payment-elements-actions.php:635
 msgid "Error 1007: An error occurred completing the order, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
@@ -13355,64 +13352,64 @@ msgstr ""
 msgid "You already have a solution installed for this feature."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:98
+#: src/Admin/Onboarding/Steps/Tools.php:87
 msgid "Based on your selection above, the following plugins will be installed:"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:102
+#: src/Admin/Onboarding/Steps/Tools.php:91
 msgid "Some features were not able to be installed!"
 msgstr ""
 
 #. translators: list of plugins that were not able to be installed or activated
-#: src/Admin/Onboarding/Steps/Tools.php:107
+#: src/Admin/Onboarding/Steps/Tools.php:96
 msgid "Don't worry, everything will still work without them! You can install %s later by going to Plugins > Add New."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:112
+#: src/Admin/Onboarding/Steps/Tools.php:101
 msgid "Continue"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:118
+#: src/Admin/Onboarding/Steps/Tools.php:107
 msgid "Plugins were successfully installed!"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:134
+#: src/Admin/Onboarding/Steps/Tools.php:123
 msgid "Essential eCommerce Features"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:135
+#: src/Admin/Onboarding/Steps/Tools.php:124
 msgid "Get all the essential eCommerce features to sell digital products with WordPress."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:146
+#: src/Admin/Onboarding/Steps/Tools.php:135
 msgid "Optimize Checkout"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:147
+#: src/Admin/Onboarding/Steps/Tools.php:136
 msgid "Improve the checkout experience by auto-creating user accounts for new customers."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:156
+#: src/Admin/Onboarding/Steps/Tools.php:145
 msgid "Reliable Email Delivery"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:157
+#: src/Admin/Onboarding/Steps/Tools.php:146
 msgid "Email deliverability is one of the most important services for an eCommerce store. Don’t leave your customers in the dark."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:169
+#: src/Admin/Onboarding/Steps/Tools.php:158
 msgid "Analytics Tools"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:170
+#: src/Admin/Onboarding/Steps/Tools.php:159
 msgid "Get the #1 analytics plugin to see useful information about your visitors right inside your WordPress dashboard."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:186
+#: src/Admin/Onboarding/Steps/Tools.php:175
 msgid "SEO"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Tools.php:187
+#: src/Admin/Onboarding/Steps/Tools.php:176
 msgid "Get the tools used by millions of smart business owners to analyze and optimize their store’s traffic with SEO."
 msgstr ""
 
@@ -13983,26 +13980,26 @@ msgstr ""
 msgid "Inactive &mdash; You've got EDD (Pro)!"
 msgstr ""
 
-#: src/Pro/Admin/PassHandler/Ajax.php:75
+#: src/Pro/Admin/PassHandler/Ajax.php:79
 msgid "Congratulations; your pass was successfully activated!"
 msgstr ""
 
-#: src/Pro/Admin/PassHandler/Ajax.php:99
+#: src/Pro/Admin/PassHandler/Ajax.php:103
 msgid "EDD (Pro)"
 msgstr ""
 
 #. translators: the name of a licensed extension.
-#: src/Pro/Admin/PassHandler/Ajax.php:110
+#: src/Pro/Admin/PassHandler/Ajax.php:114
 msgid "You have attempted to activate a license for %s instead of a pass. You will need to download the extension from your account."
 msgstr ""
 
 #. translators: the name of a licensed extension.
-#: src/Pro/Admin/PassHandler/Ajax.php:123
+#: src/Pro/Admin/PassHandler/Ajax.php:127
 msgid "You have attempted to activate a license for an extension instead of a pass. We have activated the license for %s, but you will need to download it and install it manually."
 msgstr ""
 
 #. translators: the name of a licensed extension.
-#: src/Pro/Admin/PassHandler/Ajax.php:131
+#: src/Pro/Admin/PassHandler/Ajax.php:135
 msgid "Download %s"
 msgstr ""
 

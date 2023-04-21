@@ -858,6 +858,12 @@ class EDD_Payment_History_Table extends List_Table {
 			'type'        => $type,
 		) );
 
+		// If no specific ordering has been requested, order by `date_created`.
+		if ( empty( $_GET['orderby'] ) ) {
+			$args['orderby'] = 'date_created';
+			$args['order']   = 'DESC';
+		}
+
 		// Update args by search query.
 		if ( ! empty( $search ) ) {
 			$args = $this->parse_search( $search, $args );
