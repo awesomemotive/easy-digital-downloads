@@ -77,7 +77,7 @@ class Integrations {
 			return true;
 		}
 		if ( in_array( untrailingslashit( $details['AuthorURI'] ), array( 'https://easydigitaldownloads.com', 'https://sandhillsdev.com' ), true ) ) {
-			return true;
+			return false !== strpos( $details['PluginURI'], 'easydigitaldownloads.com' );
 		}
 
 		return false;

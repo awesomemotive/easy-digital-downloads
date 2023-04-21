@@ -48,6 +48,11 @@ class Currency {
 	public $number_decimals = 2;
 
 	/**
+	 * @var string Currency position.
+	 */
+	public $position = 'before';
+
+	/**
 	 * Currency constructor.
 	 *
 	 * @param string $currency_code
@@ -80,6 +85,7 @@ class Currency {
 		$this->symbol              = $this->get_symbol();
 		$this->decimal_separator   = edd_get_option( 'decimal_separator', '.' );
 		$this->thousands_separator = edd_get_option( 'thousands_separator', ',' );
+		$this->position            = edd_get_option( 'currency_position', 'before' );
 
 		/**
 		 * Filters the decimal separator.
@@ -102,7 +108,7 @@ class Currency {
 		$this->thousands_separator = apply_filters( 'edd_currency_thousands_separator', $this->thousands_separator, $this->code );
 
 		$separator = $this->_has_space_around_symbol() ? ' ' : '';
-		if ( 'before' === edd_get_option( 'currency_position', 'before' ) ) {
+		if ( 'before' === $this->position ) {
 			$this->prefix = $this->symbol . $separator;
 		} else {
 			$this->suffix = $separator . $this->symbol;

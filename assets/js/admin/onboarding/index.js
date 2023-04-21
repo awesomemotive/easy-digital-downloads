@@ -79,7 +79,7 @@ var EDD_Onboarding = {
 
 		// Close and exit.
 		$( document.body ).on( 'click', '.edd-onboarding__dismiss', function ( e ) {
-			EDD_Onboarding.onboarding_skipped( true );
+			EDD_Onboarding.onboarding_skipped( true, e.target );
 		} );
 	},
 
@@ -212,8 +212,10 @@ var EDD_Onboarding = {
 	 * @since 3.1
 	 *
 	 */
-	onboarding_skipped: function ( redirect ) {
-		EDD_Onboarding.loading_state( true );
+	onboarding_skipped: function ( redirect, target ) {
+		if ( !target.classList.contains( 'edd-promo-notice-dismiss' ) ) {
+			EDD_Onboarding.loading_state( true );
+		}
 
 		var postData = {
 			action: 'edd_onboarding_skipped',

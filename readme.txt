@@ -225,6 +225,19 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1.1.2, March 17, 2023 =
+* Improvement: The order details screen in the admin has been updated to use the Currency class to be consistent with customer receipts.
+* Improvement: Determining whether a plugin is a core extension for telemetry data has been improved.
+* Fix: Enabling/disabling the sequential order numbers setting no longer prompts an upgrade notice, since that setting does not affect past orders.
+* Fix: When exiting the onboarding wizard, the double overlay has been removed.
+* Fix: The typos in the pro eligibility pointer notice have been corrected.
+* Fix: The user verification email could cause a fatal error with some translations.
+* Fix - Stripe: Improve custom Payment Element rules to merge with existing.
+* Fix - Stripe: Single price products purchased through "Buy Now" no longer have a price ID assigned in the order items table.
+* Dev: Using `get_page_by_title` has been deprecated in WordPress 6.2; our importer has been updated accordingly.
+* Dev - Stripe: Unneeded source files are no longer included in the release.
+
 = 3.1.1.1, March 14, 2023 =
 * Fix: Ensure that Stripe only tries to verify the domain for Apple Pay when Stripe is connected.
 * Fix: PHP 7.1 Compatibility with Stripe.
