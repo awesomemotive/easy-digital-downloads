@@ -848,7 +848,7 @@ function edd_process_profile_editor_updates( $data ) {
 		$customers = edd_get_customers(
 			array(
 				'email'           => $email,
-				'user_id__not_in' => $user_id,
+				'user_id__not_in' => array( $user_id ),
 			)
 		);
 		// Make sure the new email doesn't belong to another user.

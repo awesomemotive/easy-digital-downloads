@@ -30,8 +30,15 @@ class Settings {
 					foreach ( $section_settings as $setting_key => $setting ) {
 						$value = $this->get_setting_value( $tab_key, $section_key, $setting_key );
 						// If the value is null, it's a skipped setting.
-						if ( ! is_null( $value ) ) {
-							$setting_id          = isset( $setting['id'] ) ? $setting['id'] : sanitize_title( $setting['name'] );
+						if ( is_null( $value ) ) {
+							continue;
+						}
+						$setting_id = isset( $setting['id'] ) ? $setting['id'] : sanitize_title( $setting['name'] );
+						if ( is_array( $value ) ) {
+							foreach ( $value as $v ) {
+								$data[ "{$setting_id}_{$v}" ] = 1;
+							}
+						} else {
 							$data[ $setting_id ] = $value;
 						}
 					}
