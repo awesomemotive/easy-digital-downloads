@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.4
 Tested up to: 6.1
 Requires PHP: 7.1
-Stable Tag: 3.1.1
+Stable Tag: 3.1.1.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the #1 eCommerce plugin written for digital creators by digital creators.
@@ -225,8 +225,12 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.1.1.1, March 14, 2023 =
+* Fix: Ensure that Stripe only tries to verify the domain for Apple Pay when Stripe is connected.
+* Fix: PHP 7.1 Compatibility with Stripe.
+* Improvement: Avoid a race condition when updating where a function might not be available for a moment.
 
-= 3.1.1, March 14, 2023 =
+= 3.1.1 =
 * New: New installations will be directed to an onboarding wizard to help set up key features and get new stores up and running more quickly.
 * New: Users with an active pass can manage extensions with one license key and easily upgrade to Easy Digital Downloads (Pro).
 * New - Stripe: Our Stripe integration now uses the Universal Payment Elements and Link support. Legacy users are encouraged to opt in.
