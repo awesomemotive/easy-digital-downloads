@@ -38,7 +38,7 @@ final class Notifications extends Table {
 	 * @since 3.1.1
 	 * @var int
 	 */
-	protected $version = 202302131;
+	protected $version = 202303220;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,8 +48,7 @@ final class Notifications extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'202301251' => 202301251,
-		'202302131' => 202302131,
+		'202303220' => 202303220,
 	);
 
 	/**
@@ -103,8 +102,6 @@ final class Notifications extends Table {
 			'remote-id'  => false,
 		);
 
-		$columns = $this->get_db()->get_results( "SHOW FIELDS FROM {$this->table_name} WHERE Field = 'remote_id';" );
-
 		if ( false === $this->column_exists( 'source' ) ) {
 			$source = $this->get_db()->query(
 				"ALTER TABLE {$this->table_name} ADD COLUMN `source` varchar(20) NOT NULL DEFAULT 'api' AFTER `remote_id`;"
@@ -133,5 +130,17 @@ final class Notifications extends Table {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Runs another database upgrade for sites which got into a bit of a snarl with the database versions.
+	 *
+	 * @since 3.1.1.3
+	 * @return bool
+	 */
+	protected function __202303220() {
+		$this->__202301251();
+
+		return $this->__202302131();
 	}
 }
