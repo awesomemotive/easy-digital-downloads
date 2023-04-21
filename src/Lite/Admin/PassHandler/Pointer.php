@@ -70,11 +70,6 @@ class Pointer implements SubscriberInterface {
 
 		$valid_pointers = array();
 		$dismissed      = $this->get_user_dismissals( get_current_user_id() );
-		$settings_url   = edd_get_admin_url(
-			array(
-				'page' => 'edd-settings',
-			)
-		);
 
 		$pointers = array();
 		if ( ! edd_is_admin_page( 'download' ) ) {
@@ -83,16 +78,7 @@ class Pointer implements SubscriberInterface {
 				'pointer_id' => 'edd_activate_pass_non_edd_setting_page',
 				'target'     => '#menu-posts-download',
 				'options'    => array(
-					'content'  => sprintf(
-						'<h3>%s</h3><p>%s</p>',
-						__( 'You\'re eligible to install EDD Pro!', 'easy-digital-downloads' ),
-						sprintf(
-							/* translators: 1. opening anchor tag; 2. closing anchor tag */
-							__( 'Good news! With your Pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and install the Pro version of Easy Digital Downloads.', 'easy-digital-downloads' ),
-							'<a href="' . esc_url( $settings_url ) . '">',
-							'</a>'
-						)
-					),
+					'content'  => $this->get_default_pass_upgrade_content(),
 					'position' => array(
 						'edge'  => 'left',
 						'align' => 'middle',
@@ -105,16 +91,7 @@ class Pointer implements SubscriberInterface {
 				'pointer_id' => 'edd_activate_pass_edd_setting_page',
 				'target'     => '.edd-settings__menu-item:not(.current)',
 				'options'    => array(
-					'content'  => sprintf(
-						'<h3>%s</h3><p>%s</p>',
-						__( 'You\'re Pro Upgrde is waiting!', 'easy-digital-downloads' ),
-						sprintf(
-							/* translators: 1. opening anchor tag; 2. closing anchor tag */
-							__( 'You previously acitvated a license key that qualifies to install Easy Digital Downloads (Pro). Head to the settings to install it now!', 'easy-digital-downloads' ),
-							'<a href="' . esc_url( $settings_url ) . '">',
-							'</a>'
-						)
-					),
+					'content'  => $this->get_default_pass_upgrade_content(),
 					'position' => array(
 						'edge'  => 'left',
 						'align' => 'middle',
@@ -201,6 +178,10 @@ class Pointer implements SubscriberInterface {
 			$dismissals[] = 'edd_activate_pass_button';
 		}
 
+		if ( ! in_array( 'edd_activate_pass_non_edd_setting_page', $dismissals, true ) ) {
+			$dismissals[] = 'edd_activate_pass_non_edd_setting_page';
+		}
+
 		update_user_meta( $user_id, 'dismissed_wp_pointers', implode( ',', array_filter( $dismissals ) ) );
 	}
 
@@ -218,5 +199,30 @@ class Pointer implements SubscriberInterface {
 		$pass_manager = new \EDD\Admin\Pass_Manager();
 
 		return ! empty( $pass_manager->highest_license_key );
+	}
+
+	/**
+	 * Gets the default notice content for users with passes.
+	 *
+	 * @since 3.1.1.2
+	 * @return string
+	 */
+	private function get_default_pass_upgrade_content() {
+		$settings_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-settings',
+			)
+		);
+
+		return sprintf(
+			'<h3>%s</h3><p>%s</p>',
+			__( 'You\'re eligible to install EDD (Pro)!', 'easy-digital-downloads' ),
+			sprintf(
+				/* translators: 1. opening anchor tag; 2. closing anchor tag */
+				__( 'Good news! With your pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and access Pro only features.', 'easy-digital-downloads' ),
+				'<a href="' . esc_url( $settings_url ) . '">',
+				'</a>'
+			)
+		);
 	}
 }

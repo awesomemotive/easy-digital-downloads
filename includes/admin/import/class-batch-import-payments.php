@@ -513,33 +513,40 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 * Look up Download by title and create one if none is found
 	 *
 	 * @since 2.6
-	 * @return int Download ID
+	 * @return int|false Download ID or false if the download could not be created.
 	 */
 	private function maybe_create_download( $title = '' ) {
 
-		if( ! is_string( $title ) ) {
+		if ( ! is_string( $title ) ) {
 			return false;
 		}
 
-		$download = get_page_by_title( $title, OBJECT, 'download' );
+		$download = new WP_Query(
+			array(
+				'post_type'              => 'download',
+				'title'                  => $title,
+				'post_status'            => 'all',
+				'posts_per_page'         => 1,
+				'no_found_rows'          => true,
+				'ignore_sticky_posts'    => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+				'orderby'                => 'post_date ID',
+				'order'                  => 'ASC',
+			)
+		);
 
-		if( $download ) {
-
-			$download_id = $download->ID;
-
-		} else {
-
-			$args = array(
-				'post_type'   => 'download',
-				'post_title'  => $title,
-				'post_author' => get_current_user_id()
-			);
-
-			$download_id = wp_insert_post( $args );
-
+		if ( ! empty( $download->post ) ) {
+			return $download->post->ID;
 		}
 
-		return $download_id;
+		$args = array(
+			'post_type'   => 'download',
+			'post_title'  => $title,
+			'post_author' => get_current_user_id(),
+		);
+
+		return wp_insert_post( $args );
 	}
 
 	/**

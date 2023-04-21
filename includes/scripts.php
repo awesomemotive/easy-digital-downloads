@@ -150,17 +150,18 @@ add_action( 'wp_enqueue_scripts', 'edd_enqueue_styles' );
 function edd_localize_scripts() {
 	global $post;
 
-	$version = edd_admin_get_script_version();
+	$version  = edd_admin_get_script_version();
+	$currency = new \EDD\Currency\Currency( edd_get_currency() );
 
 	if ( edd_is_checkout() ) {
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
 			'ajaxurl'               => esc_url_raw( edd_get_ajax_url() ),
 			'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
 			'checkout_error_anchor' => '#edd_purchase_submit',
-			'currency_sign'         => edd_currency_filter(''),
-			'currency_pos'          => edd_get_option( 'currency_position', 'before' ),
-			'decimal_separator'     => edd_get_option( 'decimal_separator', '.' ),
-			'thousands_separator'   => edd_get_option( 'thousands_separator', ',' ),
+			'currency_sign'         => $currency->symbol,
+			'currency_pos'          => $currency->position,
+			'decimal_separator'     => $currency->decimal_separator,
+			'thousands_separator'   => $currency->thousands_separator,
 			'no_gateway'            => __( 'Please select a payment method', 'easy-digital-downloads' ),
 			'no_discount'           => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
 			'enter_discount'        => __( 'Enter discount', 'easy-digital-downloads' ),
@@ -488,16 +489,18 @@ function edd_localize_admin_scripts() {
 		}
 	}
 
+	$edd_currency = new EDD\Currency\Currency( $currency );
+
 	// Admin scripts
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
 		'post_id'                 => get_the_ID(),
 		'edd_version'             => edd_admin_get_script_version(),
-		'currency'                => $currency,
-		'currency_sign'           => edd_currency_filter( '', $currency ),
-		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
-		'currency_decimals'       => edd_currency_decimal_filter( 2, $currency ),
-		'decimal_separator'       => edd_get_option( 'decimal_separator', '.' ),
-		'thousands_separator'     => edd_get_option( 'thousands_separator', ',' ),
+		'currency'                => $edd_currency->code,
+		'currency_sign'           => $edd_currency->symbol,
+		'currency_pos'            => $edd_currency->position,
+		'currency_decimals'       => $edd_currency->number_decimals,
+		'decimal_separator'       => $edd_currency->decimal_separator,
+		'thousands_separator'     => $edd_currency->thousands_separator,
 		'date_picker_format'      => edd_get_date_picker_format( 'js' ),
 		'add_new_download'        => __( 'Add New Download', 'easy-digital-downloads' ),
 		'use_this_file'           => __( 'Use This File', 'easy-digital-downloads' ),

@@ -115,11 +115,8 @@ function edd_show_upgrade_notices() {
 		// Include all 'Stepped' upgrade process notices in this else statement,
 		// to avoid having a pending, and new upgrade suggested at the same time
 
-		if ( get_option( 'edd_upgrade_sequential' ) && edd_get_payments( array( 'fields' => 'ids' ) ) ) {
-			printf(
-				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade past orders to make them sequential. <a href="%s">Start the order numbers upgrade</a>.', 'easy-digital-downloads' ) . '</p></div>',
-				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' ) )
-			);
+		if ( get_option( 'edd_upgrade_sequential' ) ) {
+			delete_option( 'edd_upgrade_sequential' );
 		}
 
 		if ( version_compare( $edd_version, '2.1', '<' ) ) {
@@ -641,6 +638,7 @@ function edd_v20_upgrades() {
 /**
  * Upgrades for EDD v2.0 and sequential payment numbers
  *
+ * @deprecated 3.1.1.2 EDD no longer implies that past orders will be updated.
  * @since 2.0
  * @return void
  */
@@ -706,7 +704,6 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		edd_redirect( admin_url() );
 	}
 }
-add_action( 'edd_upgrade_sequential_payment_numbers', 'edd_v20_upgrade_sequential_payment_numbers' );
 
 /**
  * Upgrades for EDD v2.1 and the new customers database

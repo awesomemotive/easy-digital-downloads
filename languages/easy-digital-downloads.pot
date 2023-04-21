@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.1.1\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-03-15T05:50:04+00:00\n"
+"POT-Creation-Date: 2023-03-17T17:15:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: easy-digital-downloads\n"
@@ -46,7 +46,7 @@ msgstr ""
 #: includes/admin/admin-pages.php:88
 #: includes/admin/reporting/reports.php:2253
 #: includes/admin/settings/display-settings.php:40
-#: includes/admin/upgrades/upgrade-functions.php:1402
+#: includes/admin/upgrades/upgrade-functions.php:1399
 #: includes/post-types.php:129
 #: includes/reports/reports-functions.php:336
 msgid "Discounts"
@@ -189,14 +189,14 @@ msgstr ""
 #: includes/admin/tools/class-edd-tools-recount-store-earnings.php:157
 #: includes/admin/tools/class-edd-tools-reset-stats.php:121
 #: includes/admin/upgrades/classes/class-file-download-log-migration.php:134
-#: includes/admin/upgrades/upgrade-functions.php:338
-#: includes/admin/upgrades/upgrade-functions.php:650
-#: includes/admin/upgrades/upgrade-functions.php:721
-#: includes/admin/upgrades/upgrade-functions.php:818
-#: includes/admin/upgrades/upgrade-functions.php:929
-#: includes/admin/upgrades/upgrade-functions.php:1004
-#: includes/admin/upgrades/upgrade-functions.php:1122
-#: includes/admin/upgrades/upgrade-functions.php:1202
+#: includes/admin/upgrades/upgrade-functions.php:335
+#: includes/admin/upgrades/upgrade-functions.php:648
+#: includes/admin/upgrades/upgrade-functions.php:718
+#: includes/admin/upgrades/upgrade-functions.php:815
+#: includes/admin/upgrades/upgrade-functions.php:926
+#: includes/admin/upgrades/upgrade-functions.php:1001
+#: includes/admin/upgrades/upgrade-functions.php:1119
+#: includes/admin/upgrades/upgrade-functions.php:1199
 #: includes/admin/upgrades/v3/class-base.php:117
 #: includes/api/class-edd-api.php:2030
 #: includes/api/class-edd-api.php:2034
@@ -227,9 +227,9 @@ msgstr ""
 #: includes/process-download.php:296
 #: includes/process-download.php:924
 #: includes/query-filters.php:51
-#: includes/user-functions.php:893
-#: includes/user-functions.php:918
-#: includes/user-functions.php:970
+#: includes/user-functions.php:895
+#: includes/user-functions.php:920
+#: includes/user-functions.php:972
 msgid "Error"
 msgstr ""
 
@@ -270,7 +270,7 @@ msgstr ""
 
 #: includes/admin/admin-deprecated-functions.php:263
 #: includes/admin/settings/contextual-help.php:123
-#: includes/admin/settings/register-settings.php:1723
+#: includes/admin/settings/register-settings.php:1715
 #: src/Admin/Extensions/Menu.php:36
 msgid "Extensions"
 msgstr ""
@@ -283,7 +283,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:242
 #: includes/admin/payments/payments-history.php:159
 #: includes/admin/settings/display-settings.php:37
-#: includes/admin/upgrades/upgrade-functions.php:1406
+#: includes/admin/upgrades/upgrade-functions.php:1403
 #: includes/orders/functions/types.php:85
 msgid "Orders"
 msgstr ""
@@ -657,13 +657,13 @@ msgstr ""
 #: includes/admin/discounts/contextual-help.php:55
 #: includes/admin/settings/contextual-help.php:61
 #: includes/admin/settings/display-settings.php:196
-#: includes/admin/settings/register-settings.php:1716
-#: includes/admin/settings/register-settings.php:1767
-#: includes/admin/settings/register-settings.php:1773
-#: includes/admin/settings/register-settings.php:1779
-#: includes/admin/settings/register-settings.php:1782
-#: includes/admin/settings/register-settings.php:1786
-#: includes/admin/settings/register-settings.php:1799
+#: includes/admin/settings/register-settings.php:1708
+#: includes/admin/settings/register-settings.php:1759
+#: includes/admin/settings/register-settings.php:1765
+#: includes/admin/settings/register-settings.php:1771
+#: includes/admin/settings/register-settings.php:1774
+#: includes/admin/settings/register-settings.php:1778
+#: includes/admin/settings/register-settings.php:1791
 #: includes/admin/tools.php:96
 msgid "General"
 msgstr ""
@@ -871,7 +871,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:186
 #: includes/admin/payments/orders.php:141
 #: includes/admin/tools.php:99
-#: includes/admin/upgrades/upgrade-functions.php:1422
+#: includes/admin/upgrades/upgrade-functions.php:1419
 msgid "Logs"
 msgstr ""
 
@@ -941,7 +941,7 @@ msgid "An error has occured. Please try again."
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:215
-#: includes/user-functions.php:918
+#: includes/user-functions.php:920
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -1086,7 +1086,7 @@ msgstr ""
 #: includes/gateways/stripe/includes/admin/admin-filters.php:105
 #: includes/gateways/stripe/includes/template-functions.php:640
 #: includes/gateways/stripe/includes/template-functions.php:683
-#: includes/scripts.php:538
+#: includes/scripts.php:541
 msgid "Cancel"
 msgstr ""
 
@@ -1308,7 +1308,7 @@ msgid "Add Email"
 msgstr ""
 
 #: includes/admin/customers/customers.php:946
-#: includes/admin/upgrades/upgrade-functions.php:1410
+#: includes/admin/upgrades/upgrade-functions.php:1407
 msgid "Customer Addresses"
 msgstr ""
 
@@ -2042,7 +2042,7 @@ msgid "Price ID: %s"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:450
-#: includes/scripts.php:530
+#: includes/scripts.php:533
 msgid "Show advanced settings"
 msgstr ""
 
@@ -2053,7 +2053,7 @@ msgstr ""
 #: includes/admin/views/tmpl-tax-rates-table-row.php:47
 #: includes/blocks/views/checkout/cart/cart-fees.php:15
 #: includes/blocks/views/checkout/cart/cart-item.php:55
-#: includes/scripts.php:525
+#: includes/scripts.php:528
 #: templates/checkout_cart.php:57
 #: templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
@@ -2183,7 +2183,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:1380
 #: includes/admin/settings/register-settings.php:648
 #: includes/admin/settings/register-settings.php:651
-#: includes/admin/settings/register-settings.php:1769
+#: includes/admin/settings/register-settings.php:1761
 #: includes/orders/functions/types.php:93
 msgid "Refunds"
 msgstr ""
@@ -2356,7 +2356,7 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:634
+#: includes/admin/import/class-batch-import-payments.php:641
 msgid "payments"
 msgstr ""
 
@@ -3493,7 +3493,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:64
 #: includes/admin/settings/register-settings.php:468
 #: includes/admin/settings/register-settings.php:476
-#: includes/admin/settings/register-settings.php:1762
+#: includes/admin/settings/register-settings.php:1754
 msgid "Currency"
 msgstr ""
 
@@ -3959,7 +3959,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:1800
 #: includes/admin/settings/contextual-help.php:99
 #: includes/admin/settings/register-settings.php:897
-#: includes/admin/settings/register-settings.php:1721
+#: includes/admin/settings/register-settings.php:1713
 msgid "Taxes"
 msgstr ""
 
@@ -3977,7 +3977,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:1955
 #: includes/admin/reporting/reports.php:2158
-#: includes/admin/settings/register-settings.php:1801
+#: includes/admin/settings/register-settings.php:1793
 #: includes/admin/tools/logs.php:195
 #: includes/privacy-functions.php:546
 #: includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php:58
@@ -4055,8 +4055,8 @@ msgid "Most Valuable Customers"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:2885
-#: includes/user-functions.php:922
-#: includes/user-functions.php:926
+#: includes/user-functions.php:924
+#: includes/user-functions.php:928
 msgid "Notice"
 msgstr ""
 
@@ -4301,7 +4301,7 @@ msgid "This screen provides the most basic settings for configuring your store. 
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:67
-#: includes/admin/settings/register-settings.php:1717
+#: includes/admin/settings/register-settings.php:1709
 msgid "Payments"
 msgstr ""
 
@@ -4322,7 +4322,7 @@ msgid "<strong>Stripe</strong> - The Stripe payment gateway is also included wit
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:77
-#: includes/admin/settings/register-settings.php:1718
+#: includes/admin/settings/register-settings.php:1710
 #: src/Admin/Onboarding/Wizard.php:240
 msgid "Emails"
 msgstr ""
@@ -4336,7 +4336,7 @@ msgid "A set of email tag markers has also been provided to allow the creation o
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:85
-#: includes/admin/settings/register-settings.php:1719
+#: includes/admin/settings/register-settings.php:1711
 msgid "Marketing"
 msgstr ""
 
@@ -4349,7 +4349,7 @@ msgid "Marketing specific extensions will add their settings here as well."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:93
-#: includes/admin/settings/register-settings.php:1720
+#: includes/admin/settings/register-settings.php:1712
 msgid "Styles"
 msgstr ""
 
@@ -4398,7 +4398,7 @@ msgid "<strong>Additional Tax Rates</strong>: This section lets you add tax rate
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:115
-#: includes/admin/settings/register-settings.php:1722
+#: includes/admin/settings/register-settings.php:1714
 msgid "Policies"
 msgstr ""
 
@@ -4535,7 +4535,7 @@ msgid "Select a region"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:410
-#: includes/admin/settings/register-settings.php:1763
+#: includes/admin/settings/register-settings.php:1755
 msgid "Pages"
 msgstr ""
 
@@ -4646,7 +4646,7 @@ msgid "The symbol to separate decimal points. Usually <code>,</code> or <code>.<
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:516
-#: includes/admin/settings/register-settings.php:1764
+#: includes/admin/settings/register-settings.php:1756
 msgid "API"
 msgstr ""
 
@@ -4778,7 +4778,7 @@ msgid "Login Form Only"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:618
-#: includes/admin/settings/register-settings.php:1823
+#: includes/admin/settings/register-settings.php:1815
 #: includes/class-edd-discount.php:672
 #: includes/blocks/build/downloads/index.js:1
 #: includes/blocks/build/terms/index.js:1
@@ -5333,7 +5333,7 @@ msgid "Check this if you do not want to allow users to redownload items from the
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1103
-#: includes/admin/settings/register-settings.php:1790
+#: includes/admin/settings/register-settings.php:1782
 msgid "Privacy Policy"
 msgstr ""
 
@@ -5393,7 +5393,7 @@ msgid "Need help creating a Privacy Policy? We recommend %sTermageddon%s."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1137
-#: includes/admin/settings/register-settings.php:1791
+#: includes/admin/settings/register-settings.php:1783
 msgid "Terms & Agreements"
 msgstr ""
 
@@ -5477,19 +5477,19 @@ msgstr ""
 msgid "You currently cannot modify the Test Mode setting, as the 'EDD_TEST_MODE' constant has been defined as 'true' or the edd_is_test_mode filter is being forced to 'true'."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1724
+#: includes/admin/settings/register-settings.php:1716
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1725
+#: includes/admin/settings/register-settings.php:1717
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1761
+#: includes/admin/settings/register-settings.php:1753
 msgid "Store"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1768
+#: includes/admin/settings/register-settings.php:1760
 #: includes/blocks/includes/checkout/checkout.php:131
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:91
 #: includes/install.php:373
@@ -5498,118 +5498,118 @@ msgstr ""
 msgid "Checkout"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1770
+#: includes/admin/settings/register-settings.php:1762
 msgid "Accounting"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1774
+#: includes/admin/settings/register-settings.php:1766
 msgid "Purchase Receipts"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1775
+#: includes/admin/settings/register-settings.php:1767
 msgid "Sale Notifications"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1776
+#: includes/admin/settings/register-settings.php:1768
 msgid "Summaries"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1783
+#: includes/admin/settings/register-settings.php:1775
 msgid "Buttons"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1787
+#: includes/admin/settings/register-settings.php:1779
 msgid "Rates"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1792
+#: includes/admin/settings/register-settings.php:1784
 msgid "Export & Erase"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1795
+#: includes/admin/settings/register-settings.php:1787
 msgid "Main"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1800
+#: includes/admin/settings/register-settings.php:1792
 msgid "Purchase Buttons"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2165
+#: includes/admin/settings/register-settings.php:2157
 #: includes/gateways/functions.php:80
 #: includes/gateways/functions.php:81
 msgid "Store Gateway"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2165
+#: includes/admin/settings/register-settings.php:2157
 msgid "This is an internal payment gateway which can be used for manually added orders or test purchases. No money is actually processed."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2181
+#: includes/admin/settings/register-settings.php:2173
 msgid "These gateways will be offered at checkout."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2181
+#: includes/admin/settings/register-settings.php:2173
 msgid "More <a href=\"%s\">Payment Gateways</a> are available."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2210
+#: includes/admin/settings/register-settings.php:2202
 msgid "&mdash; No gateway &mdash;"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2439
+#: includes/admin/settings/register-settings.php:2431
 msgid "The callback function used for the %s setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2622
+#: includes/admin/settings/register-settings.php:2614
 msgid "Attach File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2622
+#: includes/admin/settings/register-settings.php:2614
 msgid "Attach"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2740
+#: includes/admin/settings/register-settings.php:2732
 msgid "Recapture plugin activated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2741
+#: includes/admin/settings/register-settings.php:2733
 msgid "%sAccess your Recapture account%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2746
+#: includes/admin/settings/register-settings.php:2738
 msgid "Disconnect Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2750
+#: includes/admin/settings/register-settings.php:2742
 msgid "%sComplete your connection to Recapture%s"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2758
+#: includes/admin/settings/register-settings.php:2750
 msgid "We recommend Recapture for recovering lost revenue by automatically sending effective, targeted emails to customers who abandon their shopping cart."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2758
+#: includes/admin/settings/register-settings.php:2750
 msgid "%sLearn more%s (Free trial available)"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2762
+#: includes/admin/settings/register-settings.php:2754
 msgid "Connect with Recapture"
 msgstr ""
 
 #. translators: Tax rate country code
-#: includes/admin/settings/register-settings.php:2795
+#: includes/admin/settings/register-settings.php:2787
 msgid "Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2796
+#: includes/admin/settings/register-settings.php:2788
 msgid "Please select a country."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2797
+#: includes/admin/settings/register-settings.php:2789
 msgid "Please enter a tax rate greater than 0."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2798
+#: includes/admin/settings/register-settings.php:2790
 msgid "Are you sure you want to add a 0% tax rate?"
 msgstr ""
 
@@ -5698,7 +5698,7 @@ msgid "Use these tools to recount / reset store stats."
 msgstr ""
 
 #: includes/admin/tools.php:140
-#: includes/scripts.php:199
+#: includes/scripts.php:200
 msgid "Please select an option"
 msgstr ""
 
@@ -6174,222 +6174,218 @@ msgstr ""
 msgid "Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href=\"%s\">here</a> to resume the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:120
-msgid "Easy Digital Downloads needs to upgrade past orders to make them sequential. <a href=\"%s\">Start the order numbers upgrade</a>."
-msgstr ""
-
-#: includes/admin/upgrades/upgrade-functions.php:127
+#: includes/admin/upgrades/upgrade-functions.php:124
 msgid "Easy Digital Downloads needs to upgrade the customer database, click %shere%s to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:135
-#: includes/admin/upgrades/upgrade-functions.php:152
+#: includes/admin/upgrades/upgrade-functions.php:132
+#: includes/admin/upgrades/upgrade-functions.php:149
 msgid "Easy Digital Downloads needs to upgrade the payment database, click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:143
+#: includes/admin/upgrades/upgrade-functions.php:140
 msgid "Easy Digital Downloads needs to upgrade the customer database, click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:161
+#: includes/admin/upgrades/upgrade-functions.php:158
 msgid "Easy Digital Downloads needs to upgrade the API Key database, click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:170
+#: includes/admin/upgrades/upgrade-functions.php:167
 msgid "Easy Digital Downloads needs to upgrade the payments database, click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:179
+#: includes/admin/upgrades/upgrade-functions.php:176
 msgid "Easy Digital Downloads needs to upgrade the file download logs database, click <a href=\"%s\">here</a> to start the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:213
+#: includes/admin/upgrades/upgrade-functions.php:210
 msgid "Easy Digital Downloads is performing a database migration via WP-CLI. This message will be removed when the migration is complete."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:220
+#: includes/admin/upgrades/upgrade-functions.php:217
 msgid "Easy Digital Downloads needs to upgrade the database. %sLearn more about this upgrade%s."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:228
+#: includes/admin/upgrades/upgrade-functions.php:225
 msgid "About this upgrade:"
 msgstr ""
 
 #. translators: 1. Opening strong/italics tag; do not translate. 2. Closing strong/italics tag; do not translate.
-#: includes/admin/upgrades/upgrade-functions.php:234
+#: includes/admin/upgrades/upgrade-functions.php:231
 msgid "This is a %1$smandatory%2$s update that will migrate all Easy Digital Downloads data to custom database tables. This upgrade will provide better performance and scalability."
 msgstr ""
 
 #. translators: 1. Opening strong tag; do not translate. 2. Closing strong tag; do not translate.
-#: includes/admin/upgrades/upgrade-functions.php:244
+#: includes/admin/upgrades/upgrade-functions.php:241
 msgid "%1$sPlease back up your database before starting this upgrade.%2$s This upgrade routine will make irreversible changes to the database."
 msgstr ""
 
 #. translators: 1. Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Line break; do not translate. 4. CLI command example; do not translate.
-#: includes/admin/upgrades/upgrade-functions.php:254
+#: includes/admin/upgrades/upgrade-functions.php:251
 msgid "%1$sAdvanced User?%2$s This upgrade can also be run via WP-CLI with the following command:%3$s%3$s%4$s"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:263
+#: includes/admin/upgrades/upgrade-functions.php:260
 msgid "For large sites, this is the recommended method of upgrading."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:276
+#: includes/admin/upgrades/upgrade-functions.php:273
 msgid "Begin the upgrade"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:286
+#: includes/admin/upgrades/upgrade-functions.php:283
 msgid "Easy Digital Downloads was unable to create the necessary database tables to complete this update. Your site may not meet the minimum requirements for EDD 3.0."
 msgstr ""
 
 #. translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate; 3. MySQL database version, do not translate
-#: includes/admin/upgrades/upgrade-functions.php:293
+#: includes/admin/upgrades/upgrade-functions.php:290
 msgid "Please contact your host and ask them to upgrade your environment to meet our %1$sminimum technical requirements%2$s. Your MySQL version is %3$s and needs to be updated."
 msgstr ""
 
 #. translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate
-#: includes/admin/upgrades/upgrade-functions.php:301
+#: includes/admin/upgrades/upgrade-functions.php:298
 msgid "%1$sContact our support team%2$s for help with next steps."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:338
-#: includes/admin/upgrades/upgrade-functions.php:650
-#: includes/admin/upgrades/upgrade-functions.php:721
-#: includes/admin/upgrades/upgrade-functions.php:818
-#: includes/admin/upgrades/upgrade-functions.php:929
-#: includes/admin/upgrades/upgrade-functions.php:1004
-#: includes/admin/upgrades/upgrade-functions.php:1122
-#: includes/admin/upgrades/upgrade-functions.php:1202
+#: includes/admin/upgrades/upgrade-functions.php:335
+#: includes/admin/upgrades/upgrade-functions.php:648
+#: includes/admin/upgrades/upgrade-functions.php:718
+#: includes/admin/upgrades/upgrade-functions.php:815
+#: includes/admin/upgrades/upgrade-functions.php:926
+#: includes/admin/upgrades/upgrade-functions.php:1001
+#: includes/admin/upgrades/upgrade-functions.php:1119
+#: includes/admin/upgrades/upgrade-functions.php:1199
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:112
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:512
+#: includes/admin/upgrades/upgrade-functions.php:509
 #: includes/install.php:382
 msgid "Transaction Failed"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:513
+#: includes/admin/upgrades/upgrade-functions.php:510
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1266
+#: includes/admin/upgrades/upgrade-functions.php:1263
 msgid "<strong>Migration complete:</strong> You have already completed the update to the file download logs."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1276
+#: includes/admin/upgrades/upgrade-functions.php:1273
 msgid "<strong>Upgrades Complete:</strong> You may now safely navigate away from this page."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1280
+#: includes/admin/upgrades/upgrade-functions.php:1277
 msgid "<strong>Important:</strong> Do not navigate away from this page until all upgrades complete."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1328
+#: includes/admin/upgrades/upgrade-functions.php:1325
 msgid "Update file download logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1333
+#: includes/admin/upgrades/upgrade-functions.php:1330
 msgid "This will update the file download logs to remove some <abbr title=\"Personally Identifiable Information\">PII</abbr> and make file download counts more accurate."
 msgstr ""
 
+#: includes/admin/upgrades/upgrade-functions.php:1339
 #: includes/admin/upgrades/upgrade-functions.php:1342
-#: includes/admin/upgrades/upgrade-functions.php:1345
 msgid "Update File Download Logs"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1346
+#: includes/admin/upgrades/upgrade-functions.php:1343
 msgid "File download logs have already been updated."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1398
+#: includes/admin/upgrades/upgrade-functions.php:1395
 msgid "Tax Rates"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1414
+#: includes/admin/upgrades/upgrade-functions.php:1411
 msgid "Customer Email Addresses"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1418
+#: includes/admin/upgrades/upgrade-functions.php:1415
 msgid "Customer Notes"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1426
+#: includes/admin/upgrades/upgrade-functions.php:1423
 msgid "Order Notes"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1430
-#: includes/admin/upgrades/upgrade-functions.php:1598
-#: includes/admin/upgrades/upgrade-functions.php:1669
+#: includes/admin/upgrades/upgrade-functions.php:1427
+#: includes/admin/upgrades/upgrade-functions.php:1595
+#: includes/admin/upgrades/upgrade-functions.php:1666
 msgid "Remove Legacy Data"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1487
+#: includes/admin/upgrades/upgrade-functions.php:1484
 msgid "<strong>Database Upgrade Complete:</strong> All database upgrades have been completed."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1489
+#: includes/admin/upgrades/upgrade-functions.php:1486
 msgid "You may now leave this page."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1494
+#: includes/admin/upgrades/upgrade-functions.php:1491
 msgid "Return to the dashboard"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1501
+#: includes/admin/upgrades/upgrade-functions.php:1498
 msgid "<strong>Important:</strong> Do not navigate away from this page until all upgrades have completed."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1505
+#: includes/admin/upgrades/upgrade-functions.php:1502
 msgid "Easy Digital Downloads needs to perform upgrades to your WordPress database. Your store data will be migrated to custom database tables to improve performance and efficiency. This process may take a while."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1506
+#: includes/admin/upgrades/upgrade-functions.php:1503
 msgid "Please create a full backup of your website before proceeding."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1510
+#: includes/admin/upgrades/upgrade-functions.php:1507
 msgid "This migration can also be run via WP-CLI with the following command: %s. This is the recommended method for large sites."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1520
+#: includes/admin/upgrades/upgrade-functions.php:1517
 msgid "I have secured a backup of my website data."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1525
+#: includes/admin/upgrades/upgrade-functions.php:1522
 msgid "Upgrade Easy Digital Downloads"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1550
-#: includes/scripts.php:552
+#: includes/admin/upgrades/upgrade-functions.php:1547
+#: includes/scripts.php:555
 msgid "Migration complete"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1555
+#: includes/admin/upgrades/upgrade-functions.php:1552
 msgid "Migration pending"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1574
+#: includes/admin/upgrades/upgrade-functions.php:1571
 msgid "The data migration has been successfully completed. You may now leave this page or proceed to remove legacy data below."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1601
+#: includes/admin/upgrades/upgrade-functions.php:1598
 msgid "<strong>Important:</strong> This removes all legacy data from where it was previously stored in custom post types and post meta. This is an optional step that is <strong><em>not reversible</em></strong>. Please back up your database and ensure your store is operational before completing this step."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1607
+#: includes/admin/upgrades/upgrade-functions.php:1604
 msgid "You can complete this step later by navigating to %sDownloads &raquo; Tools%s."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1618
+#: includes/admin/upgrades/upgrade-functions.php:1615
 msgid "I have confirmed my store is operational and I have a backup of my website data."
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1626
+#: includes/admin/upgrades/upgrade-functions.php:1623
 msgid "Permanently Remove Legacy Data"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1637
+#: includes/admin/upgrades/upgrade-functions.php:1634
 msgid "Legacy data has been successfully removed. You may now leave this page."
 msgstr ""
 
@@ -6795,12 +6791,12 @@ msgid "No download logs found!"
 msgstr ""
 
 #: includes/api/class-edd-api.php:1986
-#: includes/user-functions.php:1088
+#: includes/user-functions.php:1090
 msgid "Downloads API Keys"
 msgstr ""
 
 #: includes/api/class-edd-api.php:1996
-#: includes/user-functions.php:1095
+#: includes/user-functions.php:1097
 msgid "Generate API Key"
 msgstr ""
 
@@ -6813,12 +6809,12 @@ msgid "Secret key:"
 msgstr ""
 
 #: includes/api/class-edd-api.php:2006
-#: includes/user-functions.php:1106
+#: includes/user-functions.php:1108
 msgid "Token:"
 msgstr ""
 
 #: includes/api/class-edd-api.php:2010
-#: includes/user-functions.php:1112
+#: includes/user-functions.php:1114
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -7634,7 +7630,7 @@ msgstr ""
 
 #: includes/checkout/template.php:745
 #: includes/process-purchase.php:396
-#: includes/scripts.php:166
+#: includes/scripts.php:167
 msgid "Enter discount"
 msgstr ""
 
@@ -7670,8 +7666,8 @@ msgstr ""
 msgid "Go back"
 msgstr ""
 
-#: includes/class-easy-digital-downloads.php:266
-#: includes/class-easy-digital-downloads.php:278
+#: includes/class-easy-digital-downloads.php:265
+#: includes/class-easy-digital-downloads.php:277
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -8369,7 +8365,7 @@ msgid "New Download Product"
 msgstr ""
 
 #: includes/class-edd-html-elements.php:45
-#: includes/scripts.php:516
+#: includes/scripts.php:519
 msgid "Choose a %s"
 msgstr ""
 
@@ -11264,7 +11260,7 @@ msgid "Please %1$smanually add your domain%2$s %3$s to use Apple Pay."
 msgstr ""
 
 #: includes/gateways/stripe/includes/payment-methods/buy-now/ajax.php:19
-#: includes/gateways/stripe/includes/payment-methods/buy-now/ajax.php:29
+#: includes/gateways/stripe/includes/payment-methods/buy-now/ajax.php:26
 msgid "Unable to add item to cart."
 msgstr ""
 
@@ -12294,7 +12290,7 @@ msgid "File not found"
 msgstr ""
 
 #: includes/process-purchase.php:31
-#: includes/scripts.php:197
+#: includes/scripts.php:198
 msgid "Your cart is empty"
 msgstr ""
 
@@ -12564,164 +12560,164 @@ msgstr ""
 msgid "Try the Sales/Earnings iOS App!"
 msgstr ""
 
-#: includes/scripts.php:164
+#: includes/scripts.php:165
 msgid "Please select a payment method"
 msgstr ""
 
-#: includes/scripts.php:165
+#: includes/scripts.php:166
 msgid "Please enter a discount code"
 msgstr ""
 
-#: includes/scripts.php:167
+#: includes/scripts.php:168
 msgid "Discount Applied"
 msgstr ""
 
-#: includes/scripts.php:168
+#: includes/scripts.php:169
 msgid "Please enter an email address before applying a discount code"
 msgstr ""
 
-#: includes/scripts.php:169
+#: includes/scripts.php:170
 msgid "Please enter a username before applying a discount code"
 msgstr ""
 
-#: includes/scripts.php:170
+#: includes/scripts.php:171
 msgid "Please Wait..."
 msgstr ""
 
-#: includes/scripts.php:196
+#: includes/scripts.php:197
 msgid "You have already added this item to your cart"
 msgstr ""
 
-#: includes/scripts.php:198
+#: includes/scripts.php:199
 #: includes/template-functions.php:192
 msgid "Loading"
 msgstr ""
 
-#: includes/scripts.php:502
+#: includes/scripts.php:505
 msgid "Add New Download"
 msgstr ""
 
-#: includes/scripts.php:503
+#: includes/scripts.php:506
 msgid "Use This File"
 msgstr ""
 
-#: includes/scripts.php:504
+#: includes/scripts.php:507
 msgid "Sorry, not available for variable priced products."
 msgstr ""
 
-#: includes/scripts.php:505
+#: includes/scripts.php:508
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: includes/scripts.php:506
+#: includes/scripts.php:509
 msgid "Are you sure you want to delete this adjustment?"
 msgstr ""
 
-#: includes/scripts.php:507
+#: includes/scripts.php:510
 msgid "Are you sure you want to delete this note?"
 msgstr ""
 
-#: includes/scripts.php:508
+#: includes/scripts.php:511
 msgid "Are you sure you want to delete this tax rate?"
 msgstr ""
 
-#: includes/scripts.php:509
+#: includes/scripts.php:512
 msgid "Are you sure you want to revoke this API key?"
 msgstr ""
 
-#: includes/scripts.php:510
+#: includes/scripts.php:513
 msgid "Are you sure you want to regenerate this API key?"
 msgstr ""
 
-#: includes/scripts.php:511
+#: includes/scripts.php:514
 msgid "Are you sure you want to resend the purchase receipt?"
 msgstr ""
 
-#: includes/scripts.php:512
+#: includes/scripts.php:515
 msgid "Are you sure you want to disconnect the WordPress user from this customer record?"
 msgstr ""
 
-#: includes/scripts.php:513
+#: includes/scripts.php:516
 msgid "Copy these links to your clipboard and give them to your customer"
 msgstr ""
 
-#: includes/scripts.php:514
+#: includes/scripts.php:517
 msgid "Are you sure you want to delete this %s?"
 msgstr ""
 
-#: includes/scripts.php:515
+#: includes/scripts.php:518
 msgid "Type to search %s"
 msgstr ""
 
-#: includes/scripts.php:517
+#: includes/scripts.php:520
 msgid "Choose one or more %s"
 msgstr ""
 
-#: includes/scripts.php:518
+#: includes/scripts.php:521
 msgid "You must have at least one price"
 msgstr ""
 
-#: includes/scripts.php:519
+#: includes/scripts.php:522
 msgid "You must have at least one field"
 msgstr ""
 
-#: includes/scripts.php:520
+#: includes/scripts.php:523
 msgid "Payments must contain at least one item"
 msgstr ""
 
-#: includes/scripts.php:521
+#: includes/scripts.php:524
 msgid "No match for:"
 msgstr ""
 
-#: includes/scripts.php:522
+#: includes/scripts.php:525
 msgid "Item price must be numeric"
 msgstr ""
 
-#: includes/scripts.php:523
+#: includes/scripts.php:526
 msgid "Item tax must be numeric"
 msgstr ""
 
-#: includes/scripts.php:524
+#: includes/scripts.php:527
 msgid "Quantity must be numeric"
 msgstr ""
 
-#: includes/scripts.php:526
+#: includes/scripts.php:529
 msgid "You must choose a method."
 msgstr ""
 
-#: includes/scripts.php:527
+#: includes/scripts.php:530
 msgid "Required fields not completed."
 msgstr ""
 
-#: includes/scripts.php:528
+#: includes/scripts.php:531
 msgid "Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup."
 msgstr ""
 
-#: includes/scripts.php:529
+#: includes/scripts.php:532
 msgid "We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser."
 msgstr ""
 
-#: includes/scripts.php:531
+#: includes/scripts.php:534
 msgid "Hide advanced settings"
 msgstr ""
 
-#: includes/scripts.php:532
+#: includes/scripts.php:535
 msgid "There are no downloads attached to this payment"
 msgstr ""
 
-#: includes/scripts.php:533
+#: includes/scripts.php:536
 msgid "Please wait &hellip;"
 msgstr ""
 
-#: includes/scripts.php:534
+#: includes/scripts.php:537
 msgid "You must save your changes to send the test email."
 msgstr ""
 
-#: includes/scripts.php:537
+#: includes/scripts.php:540
 msgid "Confirm"
 msgstr ""
 
-#: includes/scripts.php:544
+#: includes/scripts.php:547
 msgid "The edd_use_35_media_ui filter is no longer supported."
 msgstr ""
 
@@ -12879,35 +12875,35 @@ msgid ""
 "\t\tLink missing? Visit the following URL: %3$s"
 msgstr ""
 
-#: includes/user-functions.php:889
+#: includes/user-functions.php:891
 msgid "Sorry but your account verification link has expired. <a href=\"%s\">Click here</a> to request a new verification URL."
 msgstr ""
 
-#: includes/user-functions.php:922
+#: includes/user-functions.php:924
 msgid "You must be logged in to verify your account."
 msgstr ""
 
-#: includes/user-functions.php:926
+#: includes/user-functions.php:928
 msgid "Your account has already been verified."
 msgstr ""
 
-#: includes/user-functions.php:970
+#: includes/user-functions.php:972
 msgid "Invalid verification token provided."
 msgstr ""
 
-#: includes/user-functions.php:1100
+#: includes/user-functions.php:1102
 msgid "Public Key:"
 msgstr ""
 
-#: includes/user-functions.php:1103
+#: includes/user-functions.php:1105
 msgid "Secret Key:"
 msgstr ""
 
-#: includes/user-functions.php:1127
+#: includes/user-functions.php:1129
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
-#: includes/user-functions.php:1134
+#: includes/user-functions.php:1136
 msgid "Add to iOS App"
 msgstr ""
 
@@ -13889,30 +13885,21 @@ msgstr ""
 msgid "Easy Digital Downloads (Pro) was installed, but needs to be activated on the Plugins page inside your WordPress admin."
 msgstr ""
 
-#: src/Lite/Admin/PassHandler/Pointer.php:88
-msgid "You're eligible to install EDD Pro!"
-msgstr ""
-
-#. translators: 1. opening anchor tag; 2. closing anchor tag
-#: src/Lite/Admin/PassHandler/Pointer.php:91
-msgid "Good news! With your Pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and install the Pro version of Easy Digital Downloads."
-msgstr ""
-
-#: src/Lite/Admin/PassHandler/Pointer.php:110
-msgid "You're Pro Upgrde is waiting!"
-msgstr ""
-
-#. translators: 1. opening anchor tag; 2. closing anchor tag
-#: src/Lite/Admin/PassHandler/Pointer.php:113
-msgid "You previously acitvated a license key that qualifies to install Easy Digital Downloads (Pro). Head to the settings to install it now!"
-msgstr ""
-
-#: src/Lite/Admin/PassHandler/Pointer.php:131
+#: src/Lite/Admin/PassHandler/Pointer.php:108
 msgid "Install the Pro Version!"
 msgstr ""
 
-#: src/Lite/Admin/PassHandler/Pointer.php:132
+#: src/Lite/Admin/PassHandler/Pointer.php:109
 msgid "We see you already have an active pass. Click here to verify your license key and we'll connect you to install Easy Digital Downloads (Pro)."
+msgstr ""
+
+#: src/Lite/Admin/PassHandler/Pointer.php:219
+msgid "You're eligible to install EDD (Pro)!"
+msgstr ""
+
+#. translators: 1. opening anchor tag; 2. closing anchor tag
+#: src/Lite/Admin/PassHandler/Pointer.php:222
+msgid "Good news! With your pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and access Pro only features."
 msgstr ""
 
 #. Translators: %s - a length of time (e.g. "1 second")
