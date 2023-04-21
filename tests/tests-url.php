@@ -1,18 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_url
  */
 class Tests_URL extends EDD_UnitTestCase {
-	public function setUp() {
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
-
 	public function test_ajax_url() {
 		$_SERVER['SERVER_PORT'] = 80;
 		$_SERVER['HTTPS'] = 'off';

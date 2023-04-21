@@ -1,12 +1,15 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * Payment tests.
  *
  * @group edd_payments
  */
-class Payment_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Payment_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Payment test fixture.
@@ -22,8 +25,8 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	 */
 	protected static $order_items;
 
-	public function setUp() {
-		self::$payment = edd_get_payment( \EDD_Helper_Payment::create_simple_payment() );
+	public function setup(): void {
+		self::$payment = edd_get_payment( Helpers\EDD_Helper_Payment::create_simple_payment() );
 		self::$order_items = edd_get_order_items(
 			array(
 				'order_id' => self::$payment->ID,
@@ -31,10 +34,10 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		);
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
-		\EDD_Helper_Payment::delete_payment( self::$payment->ID );
+		Helpers\EDD_Helper_Payment::delete_payment( self::$payment->ID );
 
 		edd_destroy_order( self::$payment->ID );
 
@@ -118,9 +121,9 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payments_query_search_discount() {
-		$discount = edd_get_discount( \EDD_Helper_Discount::create_simple_percent_discount() );
+		$discount = edd_get_discount( Helpers\EDD_Helper_Discount::create_simple_percent_discount() );
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment( array( 'discount' => $discount->code ) );
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment( array( 'discount' => $discount->code ) );
 
 		$payments_query = new \EDD_Payments_Query( array( 's' => 'discount:' . $discount->code ) );
 		$out            = $payments_query->get_payments();
@@ -128,7 +131,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1, count( $out ) );
 		$this->assertEquals( $payment_id, $out[0]->ID );
 
-		\EDD_Helper_Payment::delete_payment( $payment_id );
+		Helpers\EDD_Helper_Payment::delete_payment( $payment_id );
 
 		$payments_query = new \EDD_Payments_Query( array( 's' => 'discount:' . $discount->code ) );
 		$out            = $payments_query->get_payments();
@@ -229,7 +232,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 
 		$expected = array_keys( $expected );
 
-		$this->assertInternalType( 'array', $out );
+		$this->assertIsArray( $out );
 		$this->assertEquals( $expected, $out );
 	}
 
@@ -243,7 +246,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		edd_update_payment_status( self::$payment->ID, 'complete' );
 		$payment = new \EDD_Payment( self::$payment->ID );
 
-		$this->assertInternalType( 'string', $payment->completed_date );
+		$this->assertIsString( $payment->completed_date );
 		$this->assertTrue( in_array( date( 'Y-m-d H:i', strtotime( $payment->completed_date ) ), $this->get_expected_date_range() ) );
 	}
 
@@ -251,7 +254,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		edd_update_payment_status( self::$payment->ID, 'complete' );
 		$completed_date = edd_get_payment_completed_date( self::$payment->ID );
 
-		$this->assertInternalType( 'string', $completed_date );
+		$this->assertIsString( $completed_date );
 		$this->assertTrue( in_array( date( 'Y-m-d H:i', strtotime( $completed_date ) ), $this->get_expected_date_range() ) );
 	}
 
@@ -271,7 +274,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 			date( 'Y-m-d H:i', strtotime( '-2 seconds' ) ),
 			date( 'Y-m-d H:i', strtotime( '-1 second' ) ),
 			date( 'Y-m-d H:i' ),
-			date( 'Y-m-d H:i', strtotime( "+1 second" ) ),
+			date( 'Y-m-d H:i', strtotime( '+1 second' ) ),
 			date( 'Y-m-d H:i', strtotime( '+2 seconds' ) ),
 			date( 'Y-m-d H:i', strtotime( '+3 seconds' ) ),
 			date( 'Y-m-d H:i', strtotime( '+4 seconds' ) ),
@@ -289,10 +292,10 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$edd_options['enable_sequential'] = 1;
 		$edd_options['sequential_prefix'] = 'EDD-';
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
-		$this->assertInternalType( 'int', edd_get_next_payment_number() );
-		$this->assertInternalType( 'string', edd_format_payment_number( edd_get_next_payment_number() ) );
+		$this->assertIsInt( edd_get_next_payment_number() );
+		$this->assertIsString( edd_format_payment_number( edd_get_next_payment_number() ) );
 		$this->assertEquals( 'EDD-2', edd_format_payment_number( edd_get_next_payment_number() ) );
 
 		$payment             = new \EDD_Payment( $payment_id );
@@ -415,8 +418,17 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	public function test_is_guest_payment() {
 		$this->assertFalse( edd_is_guest_payment( self::$payment->ID ) );
 
-		$guest_payment_id = \EDD_Helper_Payment::create_simple_guest_payment();
+		$guest_payment_id = Helpers\EDD_Helper_Payment::create_simple_guest_payment();
 		$this->assertTrue( edd_is_guest_payment( $guest_payment_id ) );
+	}
+
+	public function test_is_guest_payment_with_order() {
+		$order = edd_get_order(  self::$payment->ID );
+		$this->assertFalse( edd_is_guest_payment( $order ) );
+
+		$guest_payment_id = Helpers\EDD_Helper_Payment::create_simple_guest_payment();
+		$guest_order      = edd_get_order( $guest_payment_id );
+		$this->assertTrue( edd_is_guest_payment( $guest_order ) );
 	}
 
 	public function test_get_payment() {
@@ -446,10 +458,10 @@ class Payment_Tests extends \EDD_UnitTestCase {
 			$component->truncate();
 		}
 
-		$payment_id_1 = \EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ) );
-		\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-4 days' ) ) );
-		\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-5 days' ) ) );
-		\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 month' ) ) );
+		$payment_id_1 = Helpers\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ) );
+		Helpers\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-4 days' ) ) );
+		Helpers\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-5 days' ) ) );
+		Helpers\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 month' ) ) );
 
 		$payments_query = new \EDD_Payments_Query( array(
 			'start_date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
@@ -462,6 +474,6 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1, count( $payments ) );
 		$this->assertEquals( $payment_id_1, $payments[0]->ID );
 
-		self::$payment = edd_get_payment( \EDD_Helper_Payment::create_simple_payment() );
+		self::$payment = edd_get_payment( Helpers\EDD_Helper_Payment::create_simple_payment() );
 	}
 }

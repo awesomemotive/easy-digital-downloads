@@ -1,14 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_filters
  */
 class Tests_Filters extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
 
 	public function test_the_content() {
 		global $wp_filter;

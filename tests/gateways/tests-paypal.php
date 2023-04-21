@@ -10,12 +10,13 @@
 
 namespace EDD\Tests\Gateways;
 
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Gateways\PayPal\MerchantAccount;
 use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed;
 use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Denied;
 use EDD\Gateways\PayPal\Webhooks\Webhook_Handler;
 use EDD\Orders\Order;
-use EDD_UnitTestCase;
 
 class Tests_PayPal extends EDD_UnitTestCase {
 
@@ -26,10 +27,10 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	 */
 	protected $order;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		$order_id = \EDD_Helper_Payment::create_simple_payment();
+		$order_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 		edd_set_payment_transaction_id( $order_id, self::TRANSACTION_ID );
 
 		wp_cache_flush();
@@ -251,7 +252,6 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedException \Exception
 	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
 	 */
 	public function test_payment_capture_completed_with_mismatching_amount_throws_exception() {
@@ -270,7 +270,6 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedException \Exception
 	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
 	 */
 	public function test_payment_capture_completed_with_mismatching_currency_throws_exception() {
@@ -289,7 +288,6 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedException \Exception
 	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::get_payment_from_capture
 	 * @throws \Exception
 	 */
@@ -327,7 +325,6 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Gateways\PayPal\MerchantAccount::__construct()
-	 * @expectedException \EDD\Gateways\PayPal\Exceptions\MissingMerchantDetails
 	 */
 	public function test_merchant_account_missing_merchant_id_throws_exception() {
 		$merchant = new MerchantAccount( array(
@@ -343,7 +340,6 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Gateways\PayPal\MerchantAccount::__construct()
-	 * @expectedException \EDD\Gateways\PayPal\Exceptions\InvalidMerchantDetails
 	 */
 	public function test_merchant_account_missing_required_fields_throws_exception() {
 		$merchant = new MerchantAccount( array(

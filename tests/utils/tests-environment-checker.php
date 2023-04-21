@@ -9,12 +9,13 @@
 
 namespace EDD\Tests\Utils;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Utils\EnvironmentChecker;
 
 /**
  * @coversDefaultClass \EDD\Utils\EnvironmentChecker
  */
-class EnvironmentCheckerTests extends \EDD_UnitTestCase {
+class EnvironmentCheckerTests extends EDD_UnitTestCase {
 
 	/**
 	 * @var EnvironmentChecker
@@ -22,19 +23,9 @@ class EnvironmentCheckerTests extends \EDD_UnitTestCase {
 	protected $environmentChecker;
 
 	/**
-	 * Runs once before any tests are executed.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-
-		// This is an admin file, so we need to include it manually.
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
-	}
-
-	/**
 	 * Runs once before each test.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		$this->environmentChecker = new EnvironmentChecker();
 
 		// Reset pass data so it can be set explicitly for each test.

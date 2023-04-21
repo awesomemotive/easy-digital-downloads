@@ -1,5 +1,8 @@
 <?php
-namespace EDD\Discounts;
+namespace EDD\Tests\Discounts;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Discount DB Tests
@@ -11,7 +14,7 @@ namespace EDD\Discounts;
  *
  * @coversDefaultClass \EDD\Compat\Discount_Query
  */
-class Tests_Discounts_DB extends \EDD_UnitTestCase {
+class Tests_Discounts_DB extends EDD_UnitTestCase {
 
 	/**
 	 * Discounts test fixture.
@@ -370,7 +373,7 @@ class Tests_Discounts_DB extends \EDD_UnitTestCase {
 	 * @covers ::count()
 	 */
 	public function test_count_with_expired_status() {
-		$discount_id = \EDD_Helper_Discount::created_expired_flat_discount();
+		$discount_id = Helpers\EDD_Helper_Discount::created_expired_flat_discount();
 
 		$this->assertSame( 1,count( edd_get_discounts( array(
 			'status' => 'expired',

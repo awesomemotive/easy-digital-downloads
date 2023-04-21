@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group query_filters
@@ -230,7 +233,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 
 		$this->go_to( get_permalink( $attach_id ) );
 
-		add_filter( 'wp_die_handler', function() { return 'Tests_Query_Filters::some_useless_function'; } );
+		add_filter( 'wp_die_handler', function() { return 'EDD\Tests\Tests_Query_Filters::some_useless_function'; } );
 		ob_start();
 			edd_block_attachments();
 		$return = ob_get_clean();

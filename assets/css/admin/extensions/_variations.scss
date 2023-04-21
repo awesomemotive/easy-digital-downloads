@@ -1,0 +1,50 @@
+/* Extension Manager Style Variations
+--------------------------------------- */
+.edd-extension-manager__card--horizontal {
+	margin: 24px 0;
+	max-width: 700px;
+}
+
+.edd-extension-manager__card--detailed {
+	background-color: transparent;
+	max-width: 700px;
+}
+
+.edd-extension-manager__card--detailed-2col {
+	background-color: transparent;
+	max-width: 900px;
+}
+
+.edd-extension-manager__card--detailed .edd-extension-manager__title,
+.edd-extension-manager__card--detailed-2col .edd-extension-manager__title {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 1em;
+}
+
+@media screen and (min-width: $break-small) {
+	.edd-extension-manager__card-group {
+		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+	}
+
+	.edd-extension-manager__card--horizontal .edd-extension-manager__body {
+		grid-template-columns: minmax(0, 300px) 1fr;
+		grid-template-rows: 1fr auto;
+		grid-auto-flow: column;
+	}
+
+	.edd-extension-manager__card--horizontal .edd-extension-manager__image {
+		grid-row: 1 / 4;
+	}
+
+	.edd-extension-manager__features,
+	.edd-extension-manager__card--horizontal .edd-extension-manager__description {
+		align-self: center;
+	}
+}
+
+@media screen and (min-width: 783px) {
+	.edd-extension-manager__card--detailed-2col .edd-extension-manager__body {
+		grid-template-columns: minmax(0, 375px) 1fr;
+		grid-auto-flow: column;
+	}
+}

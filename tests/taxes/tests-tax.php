@@ -1,9 +1,12 @@
 <?php
-
-
 /**
  * @group edd_tax
  */
+namespace EDD\Tests\Taxes;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
 class Tests_Taxes extends EDD_UnitTestCase {
 
 	/**
@@ -46,7 +49,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 		self::$download = edd_get_download( $post_id );
 
-		self::$order = edd_get_order( EDD_Helper_Payment::create_simple_payment_with_tax() );
+		self::$order = edd_get_order( Helpers\EDD_Helper_Payment::create_simple_payment_with_tax() );
 
 		edd_update_order_status( self::$order->ID, 'complete' );
 
@@ -121,11 +124,11 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_tax_rates() {
-		$this->assertInternalType( 'array', edd_get_tax_rates() );
+		$this->assertIsArray( edd_get_tax_rates() );
 	}
 
 	public function test_edd_get_tax_rate_is_float() {
-		$this->assertInternalType( 'float', edd_get_tax_rate( 'US', 'AL' ) );
+		$this->assertIsFloat( edd_get_tax_rate( 'US', 'AL' ) );
 	}
 
 	public function test_edd_get_tax_rate_state_returns_region_rate() {
@@ -133,31 +136,31 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_tax_rate_other_region_KS_is_fallback() {
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'US', 'KS' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'US', 'KS' ), 3 ) );
 	}
 
 	public function test_edd_get_tax_rate_other_region_AK_is_fallback() {
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'US', 'AK' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'US', 'AK' ), 3 ) );
 	}
 
 	public function test_edd_get_tax_rate_other_region_CA_is_fallback() {
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'US', 'CA' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'US', 'CA' ), 3 ) );
 	}
 
 	public function test_edd_get_tax_rate_other_country_JP_is_fallback() {
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'JP' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'JP' ), 3 ) );
 	}
 
 	public function test_edd_get_tax_rate_other_country_BR_is_fallback() {
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'BR' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'BR' ), 3 ) );
 	}
 
 	public function test_edd_get_tax_rate_other_country_CN_is_fallback() {
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'CN' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'CN' ), 3 ) );
 	}
 
 	public function test_edd_get_tax_rate_other_country_HK_is_fallback() {
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'HK' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'HK' ), 3 ) );
 	}
 
 	public function test_get_tax_rate_AZ_equals_0015() {
@@ -185,13 +188,13 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_tax_rate_by_country_returns_global_rate() {
-		$this->assertInternalType( 'float', edd_get_tax_rate( 'CA', 'AB' ) );
-		$this->assertEquals( '0.036', edd_get_tax_rate( 'CA', 'AB' ) );
+		$this->assertIsFloat( edd_get_tax_rate( 'CA', 'AB' ) );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate( 'CA', 'AB' ), 3 ) );
 	}
 
 	public function test_get_tax_rate_no_parameters_returns_global_rate() {
-		$this->assertInternalType( 'float', edd_get_tax_rate() );
-		$this->assertEquals( '0.036', edd_get_tax_rate() );
+		$this->assertIsFloat( edd_get_tax_rate() );
+		$this->assertEquals( 0.036, round( edd_get_tax_rate(), 3 ) );
 	}
 
 	public function test_get_tax_rate_post() {
@@ -210,7 +213,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 		global $current_user;
 
-		$current_user = new WP_User( 1 );
+		$current_user = new \WP_User( 1 );
 		$user_id      = get_current_user_id();
 
 		update_user_meta( $user_id, '_edd_user_address', array(
@@ -246,13 +249,13 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_calculate_tax() {
-		$this->assertEquals( '1.944', edd_calculate_tax( 54 ) );
-		$this->assertEquals( '1.9692', edd_calculate_tax( 54.7 ) );
-		$this->assertEquals( '5.5386', edd_calculate_tax( 153.85 ) );
-		$this->assertEquals( '9.29916', edd_calculate_tax( 258.31 ) );
-		$this->assertEquals( '37.41552', edd_calculate_tax( 1039.32 ) );
-		$this->assertEquals( '361.58724', edd_calculate_tax( 10044.09 ) );
-		$this->assertEquals( '0', edd_calculate_tax( - 1.50 ) );
+		$this->assertEquals( 1.944, round( edd_calculate_tax( 54 ), 3 ) );
+		$this->assertEquals( 1.9692, round( edd_calculate_tax( 54.7 ), 4 ) );
+		$this->assertEquals( 5.5386, round( edd_calculate_tax( 153.85 ), 4 ) );
+		$this->assertEquals( 9.29916, round( edd_calculate_tax( 258.31 ), 5 ) );
+		$this->assertEquals( 37.41552, round( edd_calculate_tax( 1039.32 ), 5 ) );
+		$this->assertEquals( 361.58724, round( edd_calculate_tax( 10044.09 ), 5 ) );
+		$this->assertEquals( 0, edd_calculate_tax( - 1.50 ) );
 	}
 
 	public function test_calculate_tax_amount_AZ_equals_810() {
@@ -286,12 +289,12 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		edd_update_option( 'prices_include_tax', 'yes' );
 
 		// Asserts
-		$this->assertEquals( '1.87644787645', edd_calculate_tax( 54 ) );
-		$this->assertEquals( '1.90077220077', edd_calculate_tax( 54.7 ) );
-		$this->assertEquals( '5.34613899614', edd_calculate_tax( 153.85 ) );
-		$this->assertEquals( '8.97602316602', edd_calculate_tax( 258.31 ) );
-		$this->assertEquals( '36.1153667954', edd_calculate_tax( 1039.32 ) );
-		$this->assertEquals( '349.02243243243356118910014629364013671875', edd_calculate_tax( 10044.09 ) );
+		$this->assertEquals( 1.87644787645, round( edd_calculate_tax( 54 ), 11 ) );
+		$this->assertEquals( 1.90077220077, round( edd_calculate_tax( 54.7 ), 11 ) );
+		$this->assertEquals( 5.34613899614, round( edd_calculate_tax( 153.85 ), 11 ) );
+		$this->assertEquals( 8.97602316602, round( edd_calculate_tax( 258.31 ), 11 ) );
+		$this->assertEquals( 36.1153667954, round( edd_calculate_tax( 1039.32 ), 10 ) );
+		$this->assertEquals( 349.02243243243356118910014629364013671875, round( edd_calculate_tax( 10044.09 ), 38 ) );
 
 		// Reset to origin
 		edd_update_option( 'prices_include_tax', $origin_price_include_tax );
@@ -332,7 +335,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_cart_needs_tax_address_fields() {
-		$this->assertInternalType( 'bool', edd_cart_needs_tax_address_fields() );
+		$this->assertIsBool( edd_cart_needs_tax_address_fields() );
 		$this->assertTrue( edd_cart_needs_tax_address_fields() );
 	}
 

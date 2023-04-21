@@ -1,10 +1,13 @@
 <?php
-
 /**
  * Tests covering `update_option( 'edd_get_tax_rates' )`.
  * @group edd_tax
  */
-class Test_Tax_Rates_Compat extends EDD_UnitTestCase {
+namespace EDD\Tests\Taxes;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+ class Test_Tax_Rates_Compat extends EDD_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {
 		$tax_rates = array(

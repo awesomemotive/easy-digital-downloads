@@ -1,4 +1,9 @@
 <?php
+namespace EDD\Tests\Downloads;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
 /**
  * Download Process Tests
  *
@@ -18,7 +23,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 	/**
 	 * Sets up fixtures once
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
 		$order_id = edd_add_order( array(
@@ -216,7 +221,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 	 * @covers edd_order_grants_access_to_download_files
 	 */
 	public function test_bundled_download_should_be_deliverable() {
-		$bundled_product    = EDD_Helper_Download::create_bundled_download();
+		$bundled_product    = Helpers\EDD_Helper_Download::create_bundled_download();
 		$bundled_order_item = edd_add_order_item(
 			array(
 				'order_id'   => self::$order->id,
@@ -283,9 +288,9 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 
 	public function test_custom_parameters() {
 
-		$payment_id = EDD_Helper_Payment::create_simple_payment();
-		$payment    = edd_get_payment( $payment_id );
-		$download   = EDD_Helper_Download::create_simple_download();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
+		$order      = edd_get_order( $payment_id );
+		$download   = Helpers\EDD_Helper_Download::create_simple_download();
 
 		add_filter( 'edd_get_download_file_url_args', function ( $args, $payment_id, $params ) {
 			$args['beta'] = 1;
@@ -299,7 +304,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 			return $args;
 		} );
 
-		$parts = parse_url( add_query_arg( array(), edd_get_download_file_url( $payment->key, $payment->email, '', $download->ID ) ) );
+		$parts = parse_url( add_query_arg( array(), edd_get_download_file_url( $order, $order->email, '', $download->ID ) ) );
 		wp_parse_str( $parts['query'], $query_args );
 		$url = add_query_arg( $query_args, site_url() );
 

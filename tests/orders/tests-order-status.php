@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * Order Status Tests.
  *
@@ -9,7 +7,11 @@ namespace EDD\Orders;
  *
  * @coversDefaultClass \EDD\Orders\Order
  */
-class Order_Status_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Order_Status_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers edd_get_complete_order_statuses()

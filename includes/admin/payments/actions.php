@@ -356,9 +356,6 @@ function edd_ajax_generate_file_download_link() {
 		die( '-3' );
 	}
 
-	$payment_key = edd_get_payment_key( $payment_id );
-	$email       = edd_get_payment_user_email( $payment_id );
-
 	$limit = edd_get_file_download_limit( $download_id );
 	if ( ! empty( $limit ) ) {
 		// Increase the file download limit when generating new links
@@ -370,10 +367,10 @@ function edd_ajax_generate_file_download_link() {
 		die( '-4' );
 	}
 
+	$order     = edd_get_order( $payment_id );
 	$file_urls = '';
-
-	foreach( $files as $file_key => $file ) {
-		$file_urls .= edd_get_download_file_url( $payment_key, $email, $file_key, $download_id, $price_id );
+	foreach ( $files as $file_key => $file ) {
+		$file_urls .= edd_get_download_file_url( $order, $order->email, $file_key, $download_id, $price_id );
 		$file_urls .= "\n\n";
 	}
 
@@ -587,14 +584,17 @@ function edd_orders_list_table_process_bulk_actions() {
 		_doing_it_wrong( __FUNCTION__, 'This method is not meant to be called directly.', 'EDD 3.0' );
 	}
 
-	// Check the current user's capability.
-	if ( ! current_user_can( 'edit_shop_payments' ) ) {
-		return;
-	}
-
 	$action = isset( $_REQUEST['action'] ) // WPCS: CSRF ok.
 		? sanitize_text_field( $_REQUEST['action'] )
 		: '';
+
+	// If this is a 'delete' action, the capability changes from edit to delete.
+	$cap = 'delete' === $action ? 'delete_shop_payments' : 'edit_shop_payments';
+
+	// Check the current user's capability.
+	if ( ! current_user_can( $cap ) ) {
+		return;
+	}
 
 	// Bail if we aren't processing bulk actions.
 	if ( '-1' === $action ) {
@@ -624,6 +624,9 @@ function edd_orders_list_table_process_bulk_actions() {
 				break;
 			case 'restore':
 				edd_restore_order( $id );
+				break;
+			case 'delete':
+				edd_destroy_order( $id );
 				break;
 			case 'set-status-complete':
 				edd_update_payment_status( $id, 'complete' );

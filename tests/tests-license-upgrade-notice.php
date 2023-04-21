@@ -9,23 +9,19 @@
  */
 
 namespace EDD\Tests;
-
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Admin\Promos\Notices\License_Upgrade_Notice;
 use EDD\Admin\Promos\Notices\Notice;
 
-class Tests_License_Upgrade_Notice extends \EDD_UnitTestCase {
+class Tests_License_Upgrade_Notice extends EDD_UnitTestCase {
 
 	/**
 	 * Runs once before any tests are executed.
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
 		// These are admin files, so we need to include them manually.
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/notices/abstract-notice.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/notices/class-license-upgrade-notice.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/class-promo-handler.php';
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
 	}
 
@@ -34,11 +30,13 @@ class Tests_License_Upgrade_Notice extends \EDD_UnitTestCase {
 	 *
 	 * Deletes the pass licenses option so we can customize this per test.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		// Always start with no option.
 		delete_option( 'edd_pass_licenses' );
+		add_filter( 'edd_is_pro', '__return_false' );
+		update_option( 'edd_onboarding_completed', true, false );
 
 		// Reset global variable.
 		global $edd_licensed_products;
@@ -49,6 +47,11 @@ class Tests_License_Upgrade_Notice extends \EDD_UnitTestCase {
 		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
 		wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
+	}
+
+	public function tearDown(): void {
+		parent::tearDown();
+		add_filter( 'edd_is_pro', '__return_true' );
 	}
 
 	/**
@@ -235,4 +238,16 @@ class Tests_License_Upgrade_Notice extends \EDD_UnitTestCase {
 		$this->assertNoticeContains( 'Grow your business and make more money with affiliate marketing.', $notice );
 	}
 
+	/**
+	 * Someone running the pro code without a pass license should always see a notice.
+	 *
+	 * @return void
+	 */
+	public function test_inactive_pro_sees_notice() {
+		add_filter( 'edd_is_pro', '__return_true' );
+
+		$notice = new \EDD\Pro\Admin\Promos\Notices\InactivePro();
+		$this->assertTrue( $notice->should_display() );
+		$this->assertNoticeContains( 'You are using Easy Digital Downloads (Pro) without an active license key.', $notice );
+	}
 }

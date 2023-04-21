@@ -1,11 +1,14 @@
 <?php
+namespace EDD\Tests\Helpers;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Class EDD_Helper_Discount.
  *
  * Helper class to create and delete a discount easily.
  */
-class EDD_Helper_Discount extends WP_UnitTestCase {
+class EDD_Helper_Discount extends EDD_UnitTestCase {
 
 	/**
 	 * Delete a discount.

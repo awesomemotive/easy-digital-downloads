@@ -676,13 +676,21 @@ function edd_purchase_form_validate_new_user() {
 		// Email address is unsafe (multisite only)
 		} elseif ( is_multisite() && is_email_address_unsafe( $user_email ) ) {
 			edd_set_error( 'email_unsafe', __( 'You cannot use that email address to signup at this time.', 'easy-digital-downloads' ) );
-
-		// Check if email exists
-		} elseif ( ( true === $registering_new_user ) && email_exists( $user_email ) ) {
-			edd_set_error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
-
-		// Add email to valid user data
+		} elseif ( true === $registering_new_user ) {
+			// Check if email exists.
+			$customers = edd_get_customers(
+				array(
+					'email'           => $user_email,
+					'user_id__not_in' => array( null ),
+				)
+			);
+			if ( email_exists( $user_email ) || ! empty( $customers ) ) {
+				edd_set_error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
+			} else {
+				$valid_user_data['user_email'] = $user_email;
+			}
 		} else {
+			// Add email to valid user data.
 			$valid_user_data['user_email'] = $user_email;
 		}
 

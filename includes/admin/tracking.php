@@ -29,89 +29,48 @@ class EDD_Tracking {
 	private $data;
 
 	/**
+	 * The server URL to receive the telemetry data.
+	 *
+	 * @var string
+	 */
+	protected $telemetry_server = 'https://telemetry.easydigitaldownloads.com/v1/checkin/';
+
+	/**
 	 * Get things going
 	 *
 	 */
 	public function __construct() {
-
-		// WordPress core actions.
-		add_action( 'init',          array( $this, 'schedule_send' ) );
-		add_action( 'admin_notices', array( $this, 'admin_notice'  ) );
+		add_action( 'init', array( $this, 'schedule_send' ) );
+		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
 
 		// Sanitize setting.
 		add_action( 'edd_settings_general_sanitize', array( $this, 'check_for_settings_optin' ) );
+		add_filter( 'edd_settings_misc', array( $this, 'register_setting' ), 50 );
 
 		// Handle opting in and out.
-		add_action( 'edd_opt_into_tracking',   array( $this, 'check_for_optin'  ) );
+		add_action( 'edd_opt_into_tracking', array( $this, 'check_for_optin'  ) );
 		add_action( 'edd_opt_out_of_tracking', array( $this, 'check_for_optout' ) );
 	}
 
 	/**
-	 * Check if the user has opted into tracking
+	 * Check if the user has opted into tracking.
 	 *
-	 * @access private
 	 * @return bool
 	 */
-	private function tracking_allowed() {
+	protected function tracking_allowed() {
 		return (bool) edd_get_option( 'allow_tracking', false );
 	}
 
 	/**
-	 * Setup the data that is going to be tracked
+	 * Setup the data that is going to be tracked.
 	 *
 	 * @access private
 	 * @return void
 	 */
 	private function setup_data() {
+		$data = new EDD\Telemetry\Data();
 
-		// Retrieve current theme info.
-		$theme_data    = wp_get_theme();
-		$theme         = $theme_data->Name . ' ' . $theme_data->Version;
-		$checkout_page = edd_get_option( 'purchase_page', false );
-		$date          = ( false !== $checkout_page )
-			? get_post_field( 'post_date', $checkout_page )
-			: 'not set';
-		$server        = isset( $_SERVER['SERVER_SOFTWARE'] )
-			? $_SERVER['SERVER_SOFTWARE']
-			: '';
-
-		// Setup data.
-		$data = array(
-			'php_version'  => phpversion(),
-			'edd_version'  => EDD_VERSION,
-			'wp_version'   => get_bloginfo( 'version' ),
-			'server'       => $server,
-			'install_date' => $date,
-			'multisite'    => is_multisite(),
-			'url'          => home_url(),
-			'theme'        => $theme,
-			'email'        => get_bloginfo( 'admin_email' )
-		);
-
-		// Retrieve current plugin information.
-		if ( ! function_exists( 'get_plugins' ) ) {
-			include ABSPATH . '/wp-admin/includes/plugin.php';
-		}
-
-		// Get plugins
-		$plugins        = array_keys( get_plugins() );
-		$active_plugins = get_option( 'active_plugins', array() );
-
-		// Remove active plugins from list so we can show active and inactive separately.
-		foreach ( $plugins as $key => $plugin ) {
-			if ( in_array( $plugin, $active_plugins, true ) ) {
-				unset( $plugins[ $key ] );
-			}
-		}
-
-		$data['active_plugins']   = $active_plugins;
-		$data['inactive_plugins'] = $plugins;
-		$data['active_gateways']  = array_keys( edd_get_enabled_payment_gateways() );
-		$data['products']         = wp_count_posts( 'download' )->publish;
-		$data['download_label']   = edd_get_label_singular( true );
-		$data['locale']           = get_locale();
-
-		$this->data = $data;
+		$this->data = $data->get();
 	}
 
 	/**
@@ -126,36 +85,30 @@ class EDD_Tracking {
 	 */
 	public function send_checkin( $override = false, $ignore_last_checkin = false ) {
 
-		$home_url = trailingslashit( home_url() );
-
-		// Allows us to stop our own site from checking in, and a filter for our additional sites.
-		if ( $home_url === 'https://easydigitaldownloads.com/' || apply_filters( 'edd_disable_tracking_checkin', false ) ) {
-			return false;
-		}
-
-		if ( ! $this->tracking_allowed() && ! $override ) {
-			return false;
-		}
-
-		// Send a maximum of once per week.
-		$last_send = $this->get_last_send();
-		if ( is_numeric( $last_send ) && $last_send > strtotime( '-1 week' ) && ! $ignore_last_checkin ) {
+		if ( ! $this->can_send_data( $override, $ignore_last_checkin ) ) {
 			return false;
 		}
 
 		$this->setup_data();
 
-		wp_remote_post( 'https://easydigitaldownloads.com/?edd_action=checkin', array(
-			'method'      => 'POST',
-			'timeout'     => 8,
-			'redirection' => 5,
-			'httpversion' => '1.1',
-			'blocking'    => false,
-			'body'        => $this->data,
-			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
-		) );
+		if ( empty( $this->data ) ) {
+			return false;
+		}
 
-		update_option( 'edd_tracking_last_send', time() );
+		wp_remote_post(
+			$this->telemetry_server,
+			array(
+				'method'      => 'POST',
+				'timeout'     => 8,
+				'redirection' => 5,
+				'httpversion' => '1.1',
+				'blocking'    => false,
+				'body'        => $this->data,
+				'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . $this->data['id'],
+			)
+		);
+
+		update_option( 'edd_tracking_last_send', time(), false );
 
 		return true;
 	}
@@ -178,6 +131,27 @@ class EDD_Tracking {
 	}
 
 	/**
+	 * Adds the tracking setting to the miscellaneous settings section.
+	 *
+	 * @since 3.1.1
+	 * @param array $settings
+	 * @return array
+	 */
+	public function register_setting( $settings ) {
+		$hidden = edd_get_option( 'allow_tracking', false ) ? '' : 'edd-hidden';
+
+		$settings['main']['allow_tracking'] = array(
+			'id'    => 'allow_tracking',
+			'name'  => __( 'Join the EDD Community', 'easy-digital-downloads' ),
+			'check' => __( 'Yes, I want to help!', 'easy-digital-downloads' ) . ' <span class="allow_tracking edd-heart ' . $hidden . '"><img src="' . esc_url( EDD_PLUGIN_URL . 'assets/images/icons/icon-edd-heart.svg' ) . '" alt="" class="emoji" /></span>',
+			'desc'  => $this->get_telemetry_description(),
+			'type'  => 'checkbox_description',
+		);
+
+		return $settings;
+	}
+
+	/**
 	 * Check for a new opt-in via the admin notice
 	 *
 	 * @return void
@@ -191,7 +165,7 @@ class EDD_Tracking {
 
 		$this->send_checkin( true );
 
-		update_option( 'edd_tracking_notice', '1' );
+		update_option( 'edd_tracking_notice', 1, false );
 	}
 
 	/**
@@ -205,7 +179,7 @@ class EDD_Tracking {
 		}
 
 		edd_delete_option( 'allow_tracking' );
-		update_option( 'edd_tracking_notice', '1' );
+		update_option( 'edd_tracking_notice', 1, false );
 		edd_redirect( remove_query_arg( 'edd_action' ) );
 	}
 
@@ -266,34 +240,92 @@ class EDD_Tracking {
 
 		// No notices for local installs.
 		if ( edd_is_dev_environment() ) {
-			update_option( 'edd_tracking_notice', '1' );
+			update_option( 'edd_tracking_notice', 1, false );
+			return;
+		}
 
-		// Notify the user.
-		} elseif ( edd_is_admin_page() && ! edd_is_admin_page( 'index.php' ) && ! edd_is_insertable_admin_page() ) {
-			$optin_url      = add_query_arg( 'edd_action', 'opt_into_tracking' );
-			$optout_url     = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
-
-			$base_url_slug = EDD\Admin\Pass_Manager::isPro() ? 'pricing' : 'lite-upgrade';
-			$pass_url      = edd_link_helper(
-				'https://easydigitaldownloads.com/' . $base_url_slug,
-				array(
-					'utm_medium'  => 'telemetry',
-					'utm_content' => 'notice',
-				)
-			);
+		if ( edd_is_admin_page() && ! edd_is_admin_page( 'index.php' ) && ! edd_is_insertable_admin_page() ) {
 
 			// Add the notice.
-			EDD()->notices->add_notice( array(
-				'id'      => 'edd-allow-tracking',
-				'class'   => 'updated',
-				'message' => array(
-					'<strong>' . __( 'Help us improve Easy Digital Downloads!', 'easy-digital-downloads' ) . '</strong>',
-					sprintf( __( 'Opt-in to sending the EDD team some information about your store, and immediately be emailed a discount, valid towards the <a href="%s" target="_blank">purchase of a pass</a>.', 'easy-digital-downloads' ), $pass_url ),
-					__( 'No sensitive data is tracked.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'easy-digital-downloads' ) . '</a> <a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'easy-digital-downloads' ) . '</a>'
-				),
-				'is_dismissible' => false,
-			) );
+			EDD()->notices->add_notice(
+				array(
+					'id'             => 'edd-allow-tracking',
+					'class'          => 'updated',
+					'message'        => $this->get_admin_notice_message(),
+					'is_dismissible' => false,
+				)
+			);
 		}
+	}
+
+	/**
+	 * Build the admin notice message.
+	 *
+	 * @since 3.1.1
+	 * @return array
+	 */
+	private function get_admin_notice_message() {
+
+		return array(
+			'<strong>' . __( 'Join the EDD Community', 'easy-digital-downloads' ) . '</strong>',
+			$this->get_telemetry_description(),
+			sprintf(
+				'<a href="%s" class="button button-primary">%s</a> <a href="%s" class="button button-secondary">%s</a>',
+				esc_url( add_query_arg( 'edd_action', 'opt_into_tracking' ) ),
+				__( 'Allow', 'easy-digital-downloads' ),
+				esc_url( add_query_arg( 'edd_action', 'opt_out_of_tracking' ) ),
+				__( 'Do not allow', 'easy-digital-downloads' )
+			),
+		);
+	}
+
+	/**
+	 * Gets the telemetry description.
+	 *
+	 * @since 3.1.1
+	 * @return string
+	 */
+	public function get_telemetry_description() {
+
+		return __( 'Help us provide a better experience and faster fixes by sharing some anonymous data about how you use Easy Digital Downloads.', 'easy-digital-downloads' ) .
+			' ' .
+			sprintf(
+				/* translators: %1$s Link to tracking information, do not translate. %2$s clsoing link tag, do not translate */
+				__( '%1$sHere is what we track.%2$s', 'easy-digital-downloads' ),
+				'<a href="' . edd_link_helper( 'https://easydigitaldownloads.com/docs/what-information-will-be-tracked-by-opting-into-usage-tracking/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) ) . '" target="_blank">',
+				'</a>'
+			);
+	}
+
+	/**
+	 * Whether we can send the data.
+	 *
+	 * @since 3.1.1
+	 * @param bool $override            If we should override the tracking setting.
+	 * @param bool $ignore_last_checkin If we should ignore when the last check in was.
+	 * @return bool
+	 */
+	public function can_send_data( $override, $ignore_last_checkin ) {
+
+		// Never send data from a dev site.
+		if ( edd_is_dev_environment() || edd_is_test_mode() ) {
+			return false;
+		}
+
+		if ( function_exists( 'wp_get_environment_type' ) && 'staging' === wp_get_environment_type() ) {
+			return false;
+		}
+
+		if ( ! $this->tracking_allowed() && ! $override ) {
+			return false;
+		}
+
+		// Send a maximum of once per week.
+		$last_send = $this->get_last_send();
+		if ( ! $ignore_last_checkin && is_numeric( $last_send ) && $last_send > strtotime( '-1 week' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }

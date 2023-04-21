@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * Payments backwards compatibility tests.
  *
@@ -8,7 +6,11 @@ namespace EDD\Orders;
  *
  * @coversDefaultClass \EDD\Compat\Payment
  */
-class Payment_Back_Compat_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Payment_Back_Compat_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Orders fixture.

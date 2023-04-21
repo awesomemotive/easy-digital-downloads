@@ -6,16 +6,16 @@
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
  */
-
 namespace EDD\Tests\Notifications;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\API\v3\Endpoint;
 use EDD\Models\Notification;
 
 /**
  * @coversDefaultClass \EDD\API\v3\Notifications
  */
-class NotificationApiTests extends \EDD_UnitTestCase {
+class NotificationApiTests extends EDD_UnitTestCase {
 
 	/**
 	 * @var int[] IDs of notifications we've created.
@@ -32,7 +32,7 @@ class NotificationApiTests extends \EDD_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
 		// Set up the REST API.
@@ -45,14 +45,14 @@ class NotificationApiTests extends \EDD_UnitTestCase {
 	/**
 	 * Runs before each test.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		// Truncate notifications table.
-		global $wpdb;
-		$tableName = EDD()->notifications->table_name;
-
-		$wpdb->query( "TRUNCATE TABLE {$tableName}" );
+		$component = EDD()->components['notification'];
+		$thing     = $component->get_interface( 'table' );
+		if ( $thing instanceof \EDD\Database\Table ) {
+			$thing->truncate();
+		}
 
 		// Insert 5 notifications.
 		for ( $i = 1; $i <= 5; $i ++ ) {

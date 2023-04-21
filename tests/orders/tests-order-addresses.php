@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Order;
-
 /**
  * Order Address Tests.
  *
@@ -9,7 +7,11 @@ namespace EDD\Order;
  *
  * @coversDefaultClass \EDD\Orders\Order_Address
  */
-class Order_Address_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Order_Address_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Customer addresses fixture.

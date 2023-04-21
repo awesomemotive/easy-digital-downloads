@@ -1,0 +1,10 @@
+.edd-extension-manager__key-notice {
+	background: white;
+	border: 1px solid $wp-red-50;
+	border-radius: 4px;
+	padding: 1em;
+
+	p:first-child {
+		margin-top: 0;
+	}
+}

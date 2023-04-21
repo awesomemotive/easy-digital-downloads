@@ -1,8 +1,8 @@
 # Remove anything that already exists.
 rm -rf includes/blocks
 
-# Initial clone (todo: change to main)
-git clone -b main git@github.com:awesomemotive/edd-blocks includes/blocks
+# Initial clone
+git clone git@github.com:awesomemotive/edd-blocks includes/blocks
 
 # Install dependencies
 cd includes/blocks

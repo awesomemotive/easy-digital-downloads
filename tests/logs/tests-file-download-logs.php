@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Logs;
+namespace EDD\Tests\Logs\Download;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * File Download Logs DB Tests
@@ -10,7 +12,7 @@ namespace EDD\Logs;
  *
  * @coversDefaultClass \EDD\Logs\File_Download_Log
  */
-class File_Downloads_Logs_Tests extends \EDD_UnitTestCase {
+class File_Downloads_Logs_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Logs fixture.

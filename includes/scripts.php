@@ -316,6 +316,7 @@ function edd_register_admin_scripts() {
 		'tools-export' => array(),
 		'tools-import' => array(),
 		'notes'        => array(),
+		'onboarding'   => array(),
 		'orders'       => array(
 			'edd-admin-notes',
 			'wp-util',
@@ -330,7 +331,7 @@ function edd_register_admin_scripts() {
 		'tools'        => array(
 			'edd-admin-tools-export'
 		),
-		'upgrades'     => array()
+		'upgrades'     => array(),
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
@@ -358,12 +359,13 @@ function edd_register_admin_styles() {
 	// Register styles
 	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(), $version );
 	wp_register_style( 'jquery-ui-css',         $css_dir . 'jquery-ui-fresh'      . $css_suffix, array(), $version );
-	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(), $version );
+	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array( 'forms' ), $version );
 	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin-chosen',      $css_dir . 'edd-admin-chosen'     . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, $deps,   $version );
 	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, $deps,   $version );
+	wp_register_style( 'edd-admin-onboarding',  $css_dir . 'edd-admin-onboarding' . $css_suffix, $deps,   $version );
 }
 add_action( 'admin_init', 'edd_register_admin_styles' );
 
@@ -378,6 +380,13 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	if ( ! edd_should_load_admin_scripts( $hook ) ) {
 		return;
 	}
+
+	/**
+	 * Prevent the CM Admin Tools JS from loading on our settings pages, as they
+	 * are including options and actions that can permemtnly harm a store's data.
+	 */
+	wp_deregister_script( 'cmadm-utils' );
+	wp_deregister_script( 'cmadm-backend' );
 
 	// Enqueue media on EDD admin pages
 	wp_enqueue_media();
@@ -493,7 +502,6 @@ function edd_localize_admin_scripts() {
 		'add_new_download'        => __( 'Add New Download', 'easy-digital-downloads' ),
 		'use_this_file'           => __( 'Use This File', 'easy-digital-downloads' ),
 		'quick_edit_warning'      => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
-		'delete_payment'          => __( 'Are you sure you want to delete this order?', 'easy-digital-downloads' ),
 		'delete_order_item'       => __( 'Are you sure you want to delete this item?', 'easy-digital-downloads' ),
 		'delete_order_adjustment' => __( 'Are you sure you want to delete this adjustment?', 'easy-digital-downloads' ),
 		'delete_note'             => __( 'Are you sure you want to delete this note?', 'easy-digital-downloads' ),
@@ -525,14 +533,19 @@ function edd_localize_admin_scripts() {
 		'wait'                    => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 		'test_email_save_changes' => __( 'You must save your changes to send the test email.', 'easy-digital-downloads' ),
 
-		// Features
-		'quantities_enabled'          => edd_item_quantities_enabled(),
-		'taxes_enabled'               => edd_use_taxes(),
-		'taxes_included'              => edd_use_taxes() && edd_prices_include_tax(),
-		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 ),
+		// Diaglog buttons.
+		'confirm_dialog_text'     => __( 'Confirm', 'easy-digital-downloads' ),
+		'cancel_dialog_text'      => __( 'Cancel', 'easy-digital-downloads' ),
 
-		'restBase'  => rest_url( \EDD\API\v3\Endpoint::$namespace ),
-		'restNonce' => wp_create_nonce( 'wp_rest' ),
+		// Features.
+		'quantities_enabled'      => edd_item_quantities_enabled(),
+		'taxes_enabled'           => edd_use_taxes(),
+		'taxes_included'          => edd_use_taxes() && edd_prices_include_tax(),
+		'new_media_ui'            => edd_apply_filters_deprecated( 'edd_use_35_media_ui', array( 1 ), '3.1.1', false, __( 'The edd_use_35_media_ui filter is no longer supported.', 'easy-digital-downloads' ) ),
+
+		// REST based items.
+		'restBase'                => rest_url( \EDD\API\v3\Endpoint::$namespace ),
+		'restNonce'               => wp_create_nonce( 'wp_rest' ),
 	) );
 
 	wp_localize_script( 'edd-admin-upgrades', 'edd_admin_upgrade_vars', array(

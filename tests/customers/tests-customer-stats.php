@@ -1,13 +1,16 @@
 <?php
 
-namespace EDD\Customers;
+namespace EDD\Tests\Customers;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Customers Tests.
  *
  * @group edd_customers
  */
-class Tests_Customer_Stats extends \EDD_UnitTestCase {
+class Tests_Customer_Stats extends EDD_UnitTestCase {
 
 	/**
 	 * Stats class fixture.

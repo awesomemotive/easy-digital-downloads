@@ -1,3 +1,5 @@
+@import '../../variables/variables';
+
 .edd-admin-notice-top-of-page {
 	font-size: 15px;
 	line-height: 1.4;
@@ -5,6 +7,10 @@
 	margin-left: -20px;
 	padding: 12px 32px 12px 20px;
 	background: #2d6ca2;
+
+	&.edd-pro-inactive {
+		background: $wp-red-50;
+	}
 
 	@media screen and ( min-width: 783px ) {
 		padding: 10px 46px 10px 22px;
@@ -89,3 +95,5 @@
 .edd-promo-notice .edd-peeking {
 	grid-area: 1/-1;
 }
+
+@import "overlay";

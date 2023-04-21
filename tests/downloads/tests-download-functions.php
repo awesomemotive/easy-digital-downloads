@@ -1,4 +1,8 @@
 <?php
+namespace EDD\Tests\Downloads;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_downloads
@@ -10,18 +14,18 @@ class Tests_Download_Functions extends EDD_UnitTestCase {
 
 	protected $variable_download;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		$this->simple_download   = EDD_Helper_Download::create_simple_download();
-		$this->variable_download = EDD_Helper_Download::create_variable_download();
+		$this->simple_download   = Helpers\EDD_Helper_Download::create_simple_download();
+		$this->variable_download = Helpers\EDD_Helper_Download::create_variable_download();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
-		EDD_Helper_Download::delete_download( $this->simple_download->ID );
-		EDD_Helper_Download::delete_download( $this->variable_download->ID );
+		Helpers\EDD_Helper_Download::delete_download( $this->simple_download->ID );
+		Helpers\EDD_Helper_Download::delete_download( $this->variable_download->ID );
 	}
 
 	/**

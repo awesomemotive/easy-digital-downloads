@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Discounts;
+namespace EDD\Tests\Discounts;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Test for the discount meta table.
@@ -9,7 +11,7 @@ namespace EDD\Discounts;
  * @group database
  * @group edd_discounts
  */
-class Tests_Meta extends \EDD_UnitTestCase {
+class Tests_Meta extends EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.

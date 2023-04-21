@@ -6,12 +6,22 @@ set -eu
 # begin the pipeline.yml file
 echo "steps:"
 
-phpVersions=('7.4')
-wpVersions=('5.4.12' '5.5.11' '5.6.10' '5.7.8' '5.8.6' '5.9.5' '6.0.3' 'latest')
+# First, handle all the 'modern' PHP/WP version combinations, that can run on PHPUnit 8.x.
+phpVersions=('7.2' '7.3' '7.4' '8.0')
+wpVersions=('5.9.5' '6.0.3' 'latest')
+
+# For now we don't have any exclusions, add them in `<PHP Version-WP Version> if we do`
+# And then uncomment out the if check in the loop below.
+# exclusions=()
 
 # add a new command step to run the tests in each test directory
 for phpVersion in ${phpVersions[@]}; do
   for wpVersion in ${wpVersions[@]}; do
+
+    #if [[ " ${exclusions[@]} " =~ " ${phpVersion}-${wpVersion} " ]]; then
+      #continue
+    #fi
+
     echo "  - env:"
     echo "      TEST_INPLACE: \"0\""
     echo "      TEST_PHP_VERSION: \""$phpVersion"\""
@@ -21,15 +31,13 @@ for phpVersion in ${phpVersions[@]}; do
     echo "      DOCKER_CLIENT_TIMEOUT: 180"
     echo "    label: 'PHP: "$phpVersion" | WP: "$wpVersion" | Multisite: No'"
     echo "    plugins:"
-    echo "      - docker-compose#v3.7.0:"
+    echo "      - docker-compose#v4.9.0:"
     echo "          config: docker-compose-phpunit.yml"
-	echo "          cpus: 2.5"
     echo "          env:"
     echo "            - WP_MULTISITE"
     echo "            - TEST_INPLACE"
     echo "          propagate-uid-gid: true"
     echo "          pull-retries: 3"
-    echo "          graceful-shutdown: true"
     echo "          run: wordpress"
   done
 done
@@ -43,115 +51,48 @@ echo "      COMPOSE_HTTP_TIMEOUT: 180"
 echo "      DOCKER_CLIENT_TIMEOUT: 180"
 echo "    label: 'PHP: "$phpVersion" | WP: "$wpVersion" | Multisite: Yes'"
 echo "    plugins:"
-echo "      - docker-compose#v3.7.0:"
+echo "      - docker-compose#v4.9.0:"
 echo "          config: docker-compose-phpunit.yml"
-echo "          cpus: 2.5"
 echo "          env:"
 echo "            - WP_MULTISITE"
 echo "            - TEST_INPLACE"
 echo "          propagate-uid-gid: true"
 echo "          pull-retries: 3"
-echo "          graceful-shutdown: true"
 echo "          run: wordpress"
 
-# Now test legacy PHP versions and WordPress versions.
+# Now, we can handle all the PHPUnit 7.x combinations.
+# We will be working to slowly work the required minimums up, so these should get smaller and smaller.
+legacyPhpVersions=('7.1')
+legacyWpVersions=('5.4.12' '5.5.11' '5.6.10' '5.7.8' '5.8.6')
 
-echo "  - env:"
-echo "      TEST_INPLACE: \"0\""
-echo "      TEST_PHP_VERSION: \"5.6\""
-echo "      TEST_WP_VERSION: \"4.9.22\""
-echo "      WP_MULTISITE: \"0\""
-echo "      COMPOSE_HTTP_TIMEOUT: 180"
-echo "      DOCKER_CLIENT_TIMEOUT: 180"
-echo "    label: 'PHP: "5.6" | WP: "4.9.22" | Multisite: No'"
-echo "    plugins:"
-echo "      - docker-compose#v3.7.0:"
-echo "          config: docker-compose-phpunit.yml"
-echo "          cpus: 2.5"
-echo "          env:"
-echo "            - WP_MULTISITE"
-echo "            - TEST_INPLACE"
-echo "          propagate-uid-gid: true"
-echo "          pull-retries: 3"
-echo "          graceful-shutdown: true"
-echo "          run: wordpress"
+# For now we don't have any exclusions, add them in `<PHP Version-WP Version> if we do`
+# And then uncomment out the if check in the loop below.
+#legacyExclusions=()
 
-echo "  - env:"
-echo "      TEST_INPLACE: \"0\""
-echo "      TEST_PHP_VERSION: \"7.0\""
-echo "      TEST_WP_VERSION: \"5.0.18\""
-echo "      WP_MULTISITE: \"0\""
-echo "      COMPOSE_HTTP_TIMEOUT: 180"
-echo "      DOCKER_CLIENT_TIMEOUT: 180"
-echo "    label: 'PHP: "7.0" | WP: "5.0.18" | Multisite: No'"
-echo "    plugins:"
-echo "      - docker-compose#v3.7.0:"
-echo "          config: docker-compose-phpunit.yml"
-echo "          cpus: 2.5"
-echo "          env:"
-echo "            - WP_MULTISITE"
-echo "            - TEST_INPLACE"
-echo "          propagate-uid-gid: true"
-echo "          pull-retries: 3"
-echo "          graceful-shutdown: true"
-echo "          run: wordpress"
+# add a new command step to run the tests in each test directory
+for legacyPhpVersion in ${legacyPhpVersions[@]}; do
+  for legacyWpVersion in ${legacyWpVersions[@]}; do
 
-echo "  - env:"
-echo "      TEST_INPLACE: \"0\""
-echo "      TEST_PHP_VERSION: \"7.1\""
-echo "      TEST_WP_VERSION: \"5.1.15\""
-echo "      WP_MULTISITE: \"0\""
-echo "      COMPOSE_HTTP_TIMEOUT: 180"
-echo "      DOCKER_CLIENT_TIMEOUT: 180"
-echo "    label: 'PHP: "7.1" | WP: "5.1.15" | Multisite: No'"
-echo "    plugins:"
-echo "      - docker-compose#v3.7.0:"
-echo "          config: docker-compose-phpunit.yml"
-echo "          cpus: 2.5"
-echo "          env:"
-echo "            - WP_MULTISITE"
-echo "            - TEST_INPLACE"
-echo "          propagate-uid-gid: true"
-echo "          pull-retries: 3"
-echo "          graceful-shutdown: true"
-echo "          run: wordpress"
+    #if [[ " ${legacyExclusions[@]} " =~ " ${legacyPhpVersion}-${legacyWpVersion} " ]]; then
+      #continue
+    #fi
 
-echo "  - env:"
-echo "      TEST_INPLACE: \"0\""
-echo "      TEST_PHP_VERSION: \"7.2\""
-echo "      TEST_WP_VERSION: \"5.2.17\""
-echo "      WP_MULTISITE: \"0\""
-echo "      COMPOSE_HTTP_TIMEOUT: 180"
-echo "      DOCKER_CLIENT_TIMEOUT: 180"
-echo "    label: 'PHP: "7.2" | WP: "5.2.17" | Multisite: No'"
-echo "    plugins:"
-echo "      - docker-compose#v3.7.0:"
-echo "          config: docker-compose-phpunit.yml"
-echo "          cpus: 2.5"
-echo "          env:"
-echo "            - WP_MULTISITE"
-echo "            - TEST_INPLACE"
-echo "          propagate-uid-gid: true"
-echo "          pull-retries: 3"
-echo "          graceful-shutdown: true"
-echo "          run: wordpress"
-
-echo "  - env:"
-echo "      TEST_INPLACE: \"0\""
-echo "      TEST_PHP_VERSION: \"7.3\""
-echo "      TEST_WP_VERSION: \"5.3.14\""
-echo "      WP_MULTISITE: \"0\""
-echo "      COMPOSE_HTTP_TIMEOUT: 180"
-echo "      DOCKER_CLIENT_TIMEOUT: 180"
-echo "    label: 'PHP: "7.3" | WP: "5.3.14" | Multisite: No'"
-echo "    plugins:"
-echo "      - docker-compose#v3.7.0:"
-echo "          config: docker-compose-phpunit.yml"
-echo "          cpus: 2.5"
-echo "          env:"
-echo "            - WP_MULTISITE"
-echo "            - TEST_INPLACE"
-echo "          propagate-uid-gid: true"
-echo "          pull-retries: 3"
-echo "          graceful-shutdown: true"
-echo "          run: wordpress"
+    echo "  - env:"
+    echo "      TEST_INPLACE: \"0\""
+    echo "      TEST_PHP_VERSION: \""$legacyPhpVersion"\""
+    echo "      TEST_WP_VERSION: "$legacyWpVersion""
+    echo "      WP_MULTISITE: \"0\""
+    echo "      COMPOSE_HTTP_TIMEOUT: 180"
+    echo "      DOCKER_CLIENT_TIMEOUT: 180"
+    echo "    label: 'PHP: "$legacyPhpVersion" | WP: "$legacyWpVersion" | Multisite: No'"
+    echo "    plugins:"
+    echo "      - docker-compose#v4.9.0:"
+    echo "          config: docker-compose-phpunit.yml"
+    echo "          env:"
+    echo "            - WP_MULTISITE"
+    echo "            - TEST_INPLACE"
+    echo "          propagate-uid-gid: true"
+    echo "          pull-retries: 3"
+    echo "          run: wordpress"
+  done
+done

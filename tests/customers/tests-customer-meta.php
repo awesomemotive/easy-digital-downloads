@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Customers;
+namespace EDD\Tests\Customers;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Customer Meta Tests.
@@ -8,7 +10,7 @@ namespace EDD\Customers;
  * @group database
  * @group edd_customers
  */
-class Tests_Customer_Meta extends \EDD_UnitTestCase {
+class Tests_Customer_Meta extends EDD_UnitTestCase {
 
 	/**
 	 * Customer fixture.
@@ -25,7 +27,7 @@ class Tests_Customer_Meta extends \EDD_UnitTestCase {
 		self::$customer = parent::edd()->customer->create_and_get();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_get_component_interface( 'customer', 'meta' )->truncate();
@@ -67,14 +69,14 @@ class Tests_Customer_Meta extends \EDD_UnitTestCase {
 		$this->assertEmpty( self::$customer->get_meta( 'key_that_does_not_exist', true ) );
 		self::$customer->update_meta( 'test_key_2', '1' );
 		$this->assertEquals( '1', self::$customer->get_meta( 'test_key_2', true ) );
-		$this->assertInternalType( 'array', self::$customer->get_meta( 'test_key_2', false ) );
+		$this->assertIsArray( self::$customer->get_meta( 'test_key_2', false ) );
 	}
 
 	public function test_get_metadata_after_update_should_return_1_and_be_of_type_array() {
 		self::$customer->update_meta( 'test_key_2', '1' );
 
 		$this->assertEquals( '1', self::$customer->get_meta( 'test_key_2', true ) );
-		$this->assertInternalType( 'array', self::$customer->get_meta( 'test_key_2', false ) );
+		$this->assertIsArray( self::$customer->get_meta( 'test_key_2', false ) );
 	}
 
 	public function test_delete_metadata_after_update() {

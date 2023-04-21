@@ -30,6 +30,7 @@ class EDD_Notices {
 	 * @since 2.3
 	 */
 	public function __construct() {
+		add_action( 'admin_notices',       array( $this, 'remove_notices' ), 0   );
 		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' )     );
 		add_action( 'admin_init',          array( $this, 'add_notices'     ), 20 );
 		add_action( 'admin_notices',       array( $this, 'display_notices' ), 30 );
@@ -55,10 +56,10 @@ class EDD_Notices {
 			'id'             => '',
 			'message'        => '',
 			'class'          => false,
-			'is_dismissible' => true
+			'is_dismissible' => true,
 		) );
 
-		$default_class ='updated';
+		$default_class = 'updated';
 
 		// One message as string
 		if ( is_string( $r['message'] ) ) {
@@ -142,6 +143,8 @@ class EDD_Notices {
 		if ( ! empty( $_REQUEST['edd-message'] ) ) {
 			$this->add_user_action_notices( $_REQUEST['edd-message'] );
 		}
+
+		$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'edd-message' ), $_SERVER['REQUEST_URI'] );
 	}
 
 	/**
@@ -203,6 +206,47 @@ class EDD_Notices {
 		if ( ! empty( $notices ) ) {
 			echo $notices;
 		}
+	}
+
+	/**
+	 * Remove unneed admin notices from EDD admin screens.
+	 *
+	 * @since 3.1.1
+	 * @return void
+	 */
+	public function remove_notices() {
+		if ( ! edd_is_admin_page() ) {
+			return;
+		}
+
+		global $wp_filter;
+		$all_hooks = $wp_filter['admin_notices']->callbacks;
+
+		foreach ( $all_hooks as $priority => $priority_actions ) {
+
+			$priority_functions = wp_list_pluck( $priority_actions, 'function' );
+
+			foreach ( $priority_functions as $key => $function ) {
+				if ( is_array( $function ) ) {
+
+					if ( ! empty( $function[0] ) && is_object( $function[0] ) ) {
+						$class_name = strtolower( get_class( $function[0] ) );
+
+						if ( false === strpos( $class_name, 'edd' ) ) {
+							unset( $all_hooks[ $priority ][ $key ] );
+						}
+					}
+				} elseif ( is_string( $function ) ) {
+
+					$function = strtolower( $function );
+					if ( false === strpos( $function, 'edd' ) ) {
+
+						unset( $all_hooks[ $priority ][ $key ] );
+					}
+				}
+			}
+		}
+		$wp_filter['admin_notices']->callbacks = $all_hooks;
 	}
 
 	/** Private Methods *******************************************************/
@@ -588,6 +632,16 @@ class EDD_Notices {
 						)
 					);
 					break;
+
+				case 'missing-pass-key':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-missing-pass-key',
+							'message' => __( 'Your extensions could not be refreshed because you have not verified your license key.', 'easy-digital-downloads' ),
+							'class'   => 'error',
+						)
+					);
+					break;
 			}
 		}
 
@@ -712,6 +766,20 @@ class EDD_Notices {
 					) );
 					break;
 			}
+		}
+
+		if ( 'one-click-upgrade' === $notice && edd_is_pro() && current_user_can( 'install_plugins' ) && edd_is_admin_page( 'settings' ) ) {
+			$this->add_notice(
+				array(
+					'id'      => 'edd-upgraded',
+					'message' => sprintf(
+						/* Translators: 1. opening strong tag, do not translate; 2. closing strong tag, do not translate */
+						__( 'Congratulations! You are now running %1$sEasy Digital Downloads (Pro)%2$s.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>'
+					),
+				)
+			);
 		}
 	}
 

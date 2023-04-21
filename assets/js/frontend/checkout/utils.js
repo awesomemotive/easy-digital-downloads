@@ -72,7 +72,10 @@ export function recalculateTaxes( state ) {
 		current_page: edd_global_vars.current_page,
 	};
 
-	jQuery( '#edd_purchase_submit [type=submit]' ).after( '<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>' );
+	const purchaseButton = jQuery( '#edd_purchase_submit [type=submit]' );
+	if ( ! purchaseButton.siblings( '.edd-loading-ajax.edd-recalculate-taxes-loading' ).length ) {
+		purchaseButton.after( '<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>' );
+	}
 
 	const current_ajax_count = ++ajax_tax_count;
 

@@ -1,12 +1,14 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * Order item meta tests.
  *
  * @group edd_orders
  */
-class Order_Adjustment_Meta_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Order_Adjustment_Meta_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Order adjustment fixture.
@@ -23,7 +25,7 @@ class Order_Adjustment_Meta_Tests extends \EDD_UnitTestCase {
 		self::$order_adjustment = parent::edd()->order_adjustment->create_and_get();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_get_component_interface( 'order_adjustment', 'meta' )->truncate();
@@ -85,7 +87,7 @@ class Order_Adjustment_Meta_Tests extends \EDD_UnitTestCase {
 		$this->assertEmpty( edd_get_order_adjustment_meta( self::$order_adjustment->id, 'key_that_does_not_exist', true ) );
 		edd_update_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', '1' );
 		$this->assertEquals( '1', edd_get_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', true ) );
-		$this->assertInternalType( 'array', edd_get_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', false ) );
+		$this->assertIsArray( edd_get_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', false ) );
 	}
 
 	/**
@@ -95,7 +97,7 @@ class Order_Adjustment_Meta_Tests extends \EDD_UnitTestCase {
 		edd_update_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', '1' );
 
 		$this->assertEquals( '1', edd_get_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', true ) );
-		$this->assertInternalType( 'array', edd_get_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', false ) );
+		$this->assertIsArray( edd_get_order_adjustment_meta( self::$order_adjustment->id, 'test_key_2', false ) );
 	}
 
 	/**

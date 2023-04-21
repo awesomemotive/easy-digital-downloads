@@ -20,36 +20,19 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_do_automatic_upgrades() {
 
-	$did_upgrade = false;
 	$edd_version = edd_get_db_version();
-
-	if ( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
-
-		// Let us know that an upgrade has happened
-		$did_upgrade = true;
+	if ( version_compare( $edd_version, EDD_VERSION, '>=' ) ) {
+		return;
 	}
 
-	if ( $did_upgrade ) {
-		edd_update_db_version();
-
-		// Send a check in. Note: this only sends if data tracking has been enabled
-		$tracking = new EDD_Tracking;
-		$tracking->send_checkin( false, true );
+	// Existing stores should set the upgraded version and the onboarding wizard as complete.
+	if ( ! empty( $edd_version ) ) {
+		update_option( 'edd_version_upgraded_from', $edd_version, false );
+		if ( ! get_option( 'edd_onboarding_completed', false ) && ! get_option( 'edd_onboarding_started', false ) ) {
+			update_option( 'edd_onboarding_completed', true, false );
+		}
 	}
-
-	// 2.9.2 to 2.9.3
-	$fix_show_privacy_policy_setting = edd_get_option( 'show_agree_to_privacy_policy_on_checkout', false );
-	if ( ! empty( $fix_show_privacy_policy_setting ) ) {
-		edd_update_option( 'show_privacy_policy_on_checkout', $fix_show_privacy_policy_setting );
-
-		edd_delete_option( 'show_agree_to_privacy_policy_on_checkout' );
-	}
-
-	// 3.0: deactivate Manual Purchases addon
-	if ( function_exists( 'edd_load_manual_purchases' ) ) {
-		deactivate_plugins( 'edd-manual-purchases/edd-manual-purchases.php' );
-		delete_option( 'edd_manual_purchases_license_active' );
-	}
+	edd_update_db_version();
 }
 add_action( 'admin_init', 'edd_do_automatic_upgrades' );
 
@@ -387,8 +370,6 @@ function edd_trigger_upgrades() {
 	if ( version_compare( $edd_version, '2.0', '<' ) ) {
 		edd_v20_upgrades();
 	}
-
-	edd_update_db_version();
 
 	// Let AJAX know that the upgrade is complete
 	if ( edd_doing_ajax() ) {
@@ -817,7 +798,6 @@ function edd_v21_upgrade_customers_db() {
 
 	// No more customers found, finish up
 	} else {
-		edd_update_db_version();
 		delete_option( 'edd_doing_upgrade' );
 
 		edd_redirect( admin_url() );
@@ -854,7 +834,6 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		$has_variable = $wpdb->get_col( $sql );
 		if ( empty( $has_variable ) ) {
 			// We had no variable priced products, so go ahead and just complete
-			edd_update_db_version();
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
 		}
@@ -931,7 +910,6 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 		edd_redirect( $redirect );
 	} else {
-		edd_update_db_version();
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );
 	}
@@ -968,7 +946,6 @@ function edd_v23_upgrade_payment_taxes() {
 
 		if ( empty( $has_payments ) ) {
 			// We had no payments, just complete
-			edd_update_db_version();
 			edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
@@ -1007,7 +984,6 @@ function edd_v23_upgrade_payment_taxes() {
 
 	// No more payments found, finish up
 	} else {
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_payment_taxes' );
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );
@@ -1045,7 +1021,6 @@ function edd_v23_upgrade_customer_purchases() {
 
 		if ( empty( $has_payments ) ) {
 			// We had no payments, just complete
-			edd_update_db_version();
 			edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
@@ -1126,7 +1101,6 @@ function edd_v23_upgrade_customer_purchases() {
 
 	// No more customers found, finish up
 	} else {
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
 		delete_option( 'edd_doing_upgrade' );
 
@@ -1165,7 +1139,6 @@ function edd_upgrade_user_api_keys() {
 
 		// We had no key, just complete
 		if ( empty( $has_key ) ) {
-			edd_update_db_version();
 			edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 			delete_option( 'edd_doing_upgrade' );
 			edd_redirect( admin_url() );
@@ -1209,7 +1182,6 @@ function edd_upgrade_user_api_keys() {
 
 	// No more customers found, finish up
 	} else {
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_user_api_keys' );
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );
@@ -1271,7 +1243,6 @@ function edd_remove_refunded_sale_logs() {
 
 	// No more refunded payments found, finish up
 	} else {
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
 		delete_option( 'edd_doing_upgrade' );
 		edd_redirect( admin_url() );

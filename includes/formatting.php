@@ -51,17 +51,20 @@ function edd_sanitize_amount( $amount = 0 ) {
 		$amount = str_replace( $decimal_sep, '.', $amount );
 
 	// Amount contains comma as thousands separator
-	} elseif( ( $thousands_sep === ',' ) && ( false !== $found_thousands ) ) {
+	} elseif ( ( $thousands_sep === ',' ) && ( false !== $found_thousands ) ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
-	// Check if negative (before stripping characters below)
+	// Remove anything that's not a number, period, or negative sign.
+	$amount = preg_replace( '/[^0-9\.\-]/', '', $amount );
+
+	// Check if negative.
 	$negative_exponent = ( $amount < 0 )
 		? -1
 		: 1;
 
-	// Only numbers and period
-	$amount = preg_replace( '/[^0-9\.]/', '', $amount );
+	// Cast the amount to an absolute value.
+	$amount = '' === $amount ? 0 : abs( (float) $amount );
 
 	/**
 	 * Filter number of decimals to use for sanitized amount
@@ -72,11 +75,6 @@ function edd_sanitize_amount( $amount = 0 ) {
 	 * @param int|string $amount Amount being sanitized.
 	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
-
-	// Check for empty strings before we multiply.
-	if ( '' === $amount ) {
-		$amount = 0;
-	}
 
 	// Flip back to negative
 	$sanitized = $amount * $negative_exponent;

@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Utils;
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Tests for the Registry API.
@@ -9,7 +11,7 @@ namespace EDD\Utils;
  *
  * @coversDefaultClass \EDD\Utils\Registry
  */
-class Registry_Tests extends \EDD_UnitTestCase {
+class Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Mock registry test fixture.
@@ -22,7 +24,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Set up fixtures once.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->mockRegistry = $this->getMockForAbstractClass( '\EDD\Utils\Registry' );
@@ -33,7 +35,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->mockRegistry->exchangeArray( array() );
 
 		parent::tearDown();
@@ -41,9 +43,10 @@ class Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::add_item()
-	 * @expectedException \EDD_Exception
 	 */
 	public function test_add_item_with_empty_attributes_should_return_false() {
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The attributes were missing when attempting to add the 'foo' item." );
 		$this->assertFalse( $this->mockRegistry->add_item( 'foo', array() ) );
 	}
 
@@ -52,7 +55,8 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_item_with_empty_attributes_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The attributes were missing when attempting to add the 'foo' item." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The attributes were missing when attempting to add the 'foo' item." );
 
 		$this->mockRegistry->add_item( 'foo', array() );
 	}
@@ -109,7 +113,8 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_item_with_invalid_item_id_should_return_an_empty_array() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' item does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' item does not exist." );
 
 		$result = $this->mockRegistry->get_item( 'foo' );
 
@@ -121,7 +126,8 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_item_with_invalid_item_id_should_throw_an_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' item does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' item does not exist." );
 
 		$this->mockRegistry->get_item( 'foo' );
 	}

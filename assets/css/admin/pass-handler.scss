@@ -1,0 +1,83 @@
+@import "../variables/variables";
+
+.edd-pass-handler {
+	&__description {
+		display: grid;
+		gap: 1em;
+		margin-bottom: 1em;
+	}
+
+	&__control {
+		display: flex;
+		gap: 4px;
+		flex-wrap: wrap;
+
+		> input {
+			max-width: 250px !important;
+		}
+
+		+ .notice {
+			max-width: 400px;
+			margin-top: 1em;
+		}
+
+		.button {
+			margin: 0;
+		}
+	}
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		gap: .5em;
+
+		&:before {
+			background: none;
+			display: block;
+			@include edd-spinner(
+				12px,
+				$wp-input-border,
+				$wp-alternate
+			);
+		}
+	}
+
+	&__verifying-wrap {
+		display: flex;
+		position: fixed;
+		left: 36px;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background: rgba(0,0,0,.5);
+		justify-content: center;
+		align-items: center;
+		z-index: 1;
+
+		p {
+			background: $white;
+			border: 1px solid $wp-input-border;
+			border-radius: 4px;
+			padding: 2em;
+		}
+
+		@media only screen and (min-width: $break-large) {
+			.wp-admin:not(.folded) & {
+				left: 160px;
+			}
+		}
+
+		@media only screen and (max-width: $break-medium) {
+			left: 0;
+		}
+	}
+
+	&__verifying ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
+		border-right-color: #787878;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 4px;
+	}
+}

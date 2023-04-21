@@ -304,11 +304,19 @@ window.EDD_Checkout = ( function( $ ) {
 				} );
 
 				$( '.edd_cart_tax_amount' ).each( function() {
-					$( this ).text( response.taxes );
+					$( this ).text( response.taxes )
+						.data( 'tax', response.taxes_raw )
+						.attr( 'data-tax', response.taxes_raw );
 				} );
 
+				$( '.edd_cart_discount' ).html( response.discounts );
+
 				$( '.edd_cart_amount' ).each( function() {
-					$( this ).text( response.total );
+					$( this ).text( response.total )
+						.data( 'subtotal', response.subtotal_raw )
+						.attr( 'data-subtotal', response.subtotal_raw )
+						.data( 'total', response.total_raw )
+						.attr( 'data-total', response.total_raw );
 					$body.trigger( 'edd_quantity_updated', [ response ] );
 				} );
 			},

@@ -1082,20 +1082,35 @@ function edd_set_upload_dir( $upload ) {
  * @param  string $payment_key The payment key.
  * @return bool                Whether the receipt is visible or not.
  */
-function edd_can_view_receipt( $payment_key = '' ) {
+/**
+ * Determines the receipt visibility status
+ *
+ * @param string  $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
+ * @return bool   whether the receipt is visible or not.
+ */
+function edd_can_view_receipt( $order_or_key = '' ) {
 
 	$user_can_view = false;
 
-	if ( empty( $payment_key ) ) {
+	if ( empty( $order_or_key ) ) {
 		return $user_can_view;
+	}
+
+	// Fetch order.
+	if ( $order_or_key instanceof EDD\Orders\Order ) {
+		$order = $order_or_key;
+		$key   = $order->payment_key;
+	} else {
+		$key   = $order_or_key;
+		$order = edd_get_order_by( 'payment_key', $key );
 	}
 
 	global $edd_receipt_args;
 
-	$order = edd_get_order_by( 'payment_key', $payment_key );
 	if ( empty( $order->id ) ) {
 		return $user_can_view;
 	}
+
 	$edd_receipt_args['id'] = $order->id;
 
 	// Some capabilities can always view the receipt, skip the filter.
@@ -1120,7 +1135,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
 		}
 	}
 
-	return (bool) apply_filters( 'edd_can_view_receipt', $user_can_view, $payment_key );
+	return (bool) apply_filters( 'edd_can_view_receipt', $user_can_view, $key, $order );
 }
 
 /**
@@ -1851,7 +1866,7 @@ function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $quer
 		'utm_source'   => 'WordPress',
 		'utm_medium'   => '',
 		'utm_content'  => '',
-		'utm_campaign' => EDD\Admin\Pass_Manager::isPro() ? 'edd-pro' : 'edd',
+		'utm_campaign' => edd_is_pro() ? 'edd-pro' : 'edd',
 	);
 
 	$args = wp_parse_args( $query_args, $default_args );
@@ -1873,6 +1888,48 @@ function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $quer
  */
 function edd_has_core_blocks() {
 	return defined( 'EDD_BLOCKS_DIR' );
+}
+
+/**
+ * Gets the correct namespace for a class/function.
+ *
+ * @since 3.1.1
+ * @param string $extension The rest of the namespace (optional).
+ * @return string
+ */
+function edd_get_namespace( $extension = '' ) {
+	$prefix = edd_is_pro() ? '\\EDD\\Pro\\' : '\\EDD\\';
+
+	return $prefix . $extension;
+}
+
+/**
+ * Whether EDD (Pro) is active.
+ * This only checks if the pro code is available; it does not check the validity of a pass.
+ *
+ * @since 3.1.1
+ * @return bool
+ */
+function edd_is_pro() {
+
+	// This filter is not intended for public consumption. Forcing it to return true will likely have negative consequences.
+	return (bool) apply_filters( 'edd_is_pro', EDD()->is_pro() );
+}
+
+/**
+ * Whether EDD (Pro) is active, but without a valid license key.
+ *
+ * @since 3.1.1
+ * @return bool
+ */
+function edd_is_inactive_pro() {
+	if ( ! edd_is_pro() ) {
+		return false;
+	}
+
+	$pass_manager = new EDD\Admin\Pass_Manager();
+
+	return ! $pass_manager->isPro();
 }
 
 /**

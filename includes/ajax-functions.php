@@ -344,12 +344,20 @@ function edd_ajax_update_cart_item_quantity() {
 
 		EDD()->cart->set_item_quantity( $download_id, $quantity, $options );
 
+		$subtotal = EDD()->cart->get_subtotal();
+		$taxes    = EDD()->cart->get_tax();
+		$total    = EDD()->cart->get_total();
+
 		$return = array(
-			'download_id' => $download_id,
-			'quantity'    => EDD()->cart->get_item_quantity( $download_id, $options ),
-			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'taxes'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_tax() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_total() ) ), ENT_COMPAT, 'UTF-8' )
+			'download_id'  => $download_id,
+			'quantity'     => EDD()->cart->get_item_quantity( $download_id, $options ),
+			'subtotal_raw' => $subtotal,
+			'taxes_raw'    => $taxes,
+			'total_raw'    => $total,
+			'subtotal'     => html_entity_decode( edd_currency_filter( edd_format_amount( $subtotal ) ), ENT_COMPAT, 'UTF-8' ),
+			'taxes'        => html_entity_decode( edd_currency_filter( edd_format_amount( $taxes ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'        => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+			'discounts'    => edd_get_cart_discounts_html(),
 		);
 
 		// Allow for custom cart item quantity handling

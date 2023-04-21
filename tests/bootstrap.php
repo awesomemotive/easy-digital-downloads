@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use Yoast\WPTestUtils\WPIntegration;
 
 $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 $_SERVER['SERVER_NAME'] = '';
@@ -8,21 +11,44 @@ define( 'EDD_USE_PHP_SESSIONS', false );
 define( 'WP_USE_THEMES', false );
 define( 'EDD_DOING_TESTS', true );
 
-require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
+$plugin_dir = dirname( dirname( __FILE__ ) );
 
-$_tests_dir = getenv('WP_TESTS_DIR');
-if ( !$_tests_dir ) $_tests_dir = '/tmp/wordpress-tests-lib';
+require_once $plugin_dir . '/vendor/autoload.php';
+require_once $plugin_dir . '/vendor/yoast/wp-test-utils/src/WPIntegration/bootstrap-functions.php';
 
+// Find WordPress.
+$_tests_dir = WPIntegration\get_path_to_wp_test_dir();
+
+// Find WordPress core.
+$_core_dir = getenv( 'WP_CORE_DIR' );
+
+if ( ! $_core_dir ) {
+	$_core_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress';
+}
+
+if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
+	echo "Could not find $_tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL; // WPCS: XSS ok.
+	exit( 1 );
+}
+
+// Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 
-function _manually_load_plugin() {
-	require dirname( __FILE__ ) . '/../easy-digital-downloads.php';
-}
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+/**
+ * Manually load the plugins.
+ *
+ * @since 1.0.0
+ */
+tests_add_filter(
+	'muplugins_loaded',
+	function() use ( $plugin_dir ) {
+		require $plugin_dir . '/easy-digital-downloads.php';
+	}
+);
 
-require $_tests_dir . '/includes/bootstrap.php';
+WPIntegration\bootstrap_it();
 
-activate_plugin( 'easy-digital-downloads/easy-digital-downloads.php' );
+activate_plugin( 'easy-digital-downloads-pro/easy-digital-downloads.php' );
 
 echo "Setting up Easy Digital Downloads...\n";
 
@@ -51,14 +77,11 @@ foreach ( $components as $component ) {
 }
 
 function _disable_reqs( $status = false, $args = array(), $url = '') {
-	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disabled for unit tests', 'easy-digital-downloads' ) );
 }
-add_filter( 'pre_http_request', '_disable_reqs' );
+add_filter( 'pre_http_request', function( $status = false, $args = array(), $url = '' ) {
+	return new \WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disabled for unit tests', 'easy-digital-downloads' ) );
+} );
 
-// Include helpers
 require_once 'helpers/shims.php';
-require_once 'helpers/class-helper-download.php';
-require_once 'helpers/class-helper-payment.php';
-require_once 'helpers/class-helper-discount.php';
-require_once 'phpunit/class-ajax-unittestcase.php';
-require_once 'phpunit/class-edd-unittestcase.php';
+
+remove_all_actions( 'send_headers' );
