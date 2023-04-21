@@ -69,9 +69,6 @@ final class EDD_Requirements_Check {
 		$this->file = EDD_PLUGIN_FILE;
 		$this->base = EDD_PLUGIN_BASE;
 
-		// Always load translations
-		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
-
 		// Load or quit
 		$this->met()
 			? $this->load()
@@ -416,6 +413,9 @@ final class EDD_Requirements_Check {
 	/**
 	 * Plugin specific text-domain loader.
 	 *
+	 * @deprecated 3.1.1.3. Since EDD no longer bundles any language files,
+	 * and WordPress Core automatically loads the custom wp-content/languages/easy-digital-downloads/.mo file if it's found,
+	 * this is no longer needed.
 	 * @since 1.4
 	 * @return void
 	 */
@@ -492,6 +492,7 @@ final class EDD_Requirements_Check {
 	/**
 	 * Load a .mo file for the old textdomain if one exists.
 	 *
+	 * @deprecated 3.1.1.3
 	 * @see https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
 	 */
 	public function load_old_textdomain( $mofile, $textdomain ) {
