@@ -1,11 +1,9 @@
 <?php
-namespace EDD\Reports\Data;
+namespace EDD\Tests\Reports\Data;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
 
 /**
  * Tests for the Report registry API.
@@ -15,7 +13,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Report_Registry
  */
-class Report_Registry_Tests extends \EDD_UnitTestCase {
+class Report_Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Report registry fixture.
@@ -28,7 +26,7 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Set up fixtures once.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->registry = new \EDD\Reports\Data\Report_Registry();
@@ -39,7 +37,7 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->registry->exchangeArray( array() );
 
 		parent::tearDown();
@@ -56,7 +54,8 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::__call()
 	 */
 	public function test_get_report_with_invalid_report_id_should_return_an_empty_array() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' report does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' report does not exist." );
 
 		$result = $this->registry->get_report( 'foo' );
 
@@ -67,7 +66,8 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::__call()
 	 */
 	public function test_get_report_with_invalid_report_id_should_throw_an_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' report does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' report does not exist." );
 
 		$this->registry->get_report( 'foo' );
 	}
@@ -114,9 +114,10 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::add_report()
-	 * @expectedException \EDD_Exception
 	 */
 	public function test_add_report_with_empty_attributes_should_return_false() {
+		$this->expectException( 'EDD\Reports\Exceptions\Invalid_Parameter' );
+		$this->expectExceptionMessage( "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 		$this->assertFalse( $this->registry->add_report( 'foo', array() ) );
 	}
 
@@ -125,7 +126,8 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_empty_label_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
+		$this->expectException( 'EDD\Reports\Exceptions\Invalid_Parameter' );
+		$this->expectExceptionMessage( "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$this->registry->add_report( 'foo', array(
 			'label'     => '',
@@ -141,7 +143,8 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_empty_endpoints_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
+		$this->expectException( 'EDD\Reports\Exceptions\Invalid_Parameter' );
+		$this->expectExceptionMessage( "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$added = $this->registry->add_report( 'foo', array(
 			'label'     => 'Foo',
@@ -155,7 +158,8 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_invalid_filter_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' report contains one or more invalid filters." );
 
 		$this->registry->add_report( 'foo', array(
 			'label'     => 'Foo',
@@ -171,7 +175,8 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_non_string_filter_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' report contains one or more invalid filters." );
 
 		$this->registry->add_report( 'foo', array(
 			'label'     => 'Foo',

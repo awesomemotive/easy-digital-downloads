@@ -1,24 +1,28 @@
 <?php
+namespace EDD\Tests\Downloads;
 
-class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Test_Download_Sales_Earnings extends EDD_UnitTestCase {
 
 	protected $variable_download = null;
 
 	protected $simple_download = null;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		$this->variable_download = EDD_Helper_Download::create_variable_download();
-		$this->simple_download   = EDD_Helper_Download::create_simple_download();
+		$this->variable_download = Helpers\EDD_Helper_Download::create_variable_download();
+		$this->simple_download   = Helpers\EDD_Helper_Download::create_simple_download();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 
 		parent::tearDown();
 
-		EDD_Helper_Download::delete_download( $this->variable_download->ID );
-		EDD_Helper_Download::delete_download( $this->simple_download->ID );
+		Helpers\EDD_Helper_Download::delete_download( $this->variable_download->ID );
+		Helpers\EDD_Helper_Download::delete_download( $this->simple_download->ID );
 	}
 
 	public function test_simple_download_no_earnings_sales() {
@@ -98,7 +102,7 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 		);
 
 		$download = edd_get_download( $this->simple_download->ID );
-		$this->assertEquals( get_post_meta( $download->ID, '_edd_download_gross_earnings', true ), $download->get_earnings() );
+		$this->assertEquals( (float) get_post_meta( $download->ID, '_edd_download_gross_earnings', true ), (float) $download->get_earnings() );
 
 		edd_delete_order( $order_id );
 	}
@@ -420,7 +424,7 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 		);
 
 		$download = edd_get_download( $this->simple_download->ID );
-		$this->assertEquals( $download->earnings, get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) );
+		$this->assertEquals( (float) $download->earnings, (float) get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) );
 
 		edd_delete_order( $order_id );
 	}

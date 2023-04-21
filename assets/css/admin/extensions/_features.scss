@@ -1,0 +1,11 @@
+.edd-extension-manager__features {
+	ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	}
+
+	.dashicons-yes {
+		color: #008a20;
+		margin-right: .25em;
+	}
+}

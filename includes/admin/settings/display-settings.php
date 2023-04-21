@@ -25,7 +25,7 @@ function edd_admin_header() {
 	$current_page        = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
 	$is_single_view      = (bool) apply_filters( 'edd_admin_is_single_view', ! empty( $_GET['view'] ) );
 
-	$page_title = '';
+	$page_title = __( 'Downloads', 'easy-digital-downloads' );
 	switch( $current_page ) {
 		case 'edd-settings':
 			$page_title = __( 'Settings', 'easy-digital-downloads' );
@@ -45,18 +45,19 @@ function edd_admin_header() {
 		case 'edd-tools':
 			$page_title = __( 'Tools', 'easy-digital-downloads' );
 			break;
+		case 'edd-addons':
+			$page_title = __( 'View Extensions', 'easy-digital-downloads' );
+			if ( edd_is_pro() ) {
+				$page_title = __( 'Manage Extensions', 'easy-digital-downloads' );
+			}
+			break;
 		default:
 			if ( ! empty( $_GET['page'] ) ) {
 				$page_title = ucfirst( str_replace( array( 'edd-', 'fes-' ), '', $current_page ) );
-			} else {
-				if ( ! empty( $_GET['post_type'] ) ) {
-					$post_type  = get_post_type_object( $_GET['post_type'] );
-					$page_title = $post_type->labels->name;
-				} else {
-					$page_title = __( 'Downloads', 'easy-digital-downloads' );
-				}
+			} elseif ( ! empty( $_GET['post_type'] ) ) {
+				$post_type  = get_post_type_object( $_GET['post_type'] );
+				$page_title = $post_type->labels->name;
 			}
-
 			break;
 	}
 
@@ -223,7 +224,11 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 
 		// Add to links array
 		$links[ $section_id ] = '<li class="' . esc_attr( $class ) . '"><a class="' . esc_attr( $class ) . '" href="' . esc_url( $tab_url ) . '">' . esc_html( $section_name ) . '</a><li>';
-	} ?>
+	}
+	if ( count( $links ) < 2 ) {
+		return;
+	}
+	?>
 
 	<div class="wp-clearfix">
 		<ul class="subsubsub edd-settings-sub-nav">

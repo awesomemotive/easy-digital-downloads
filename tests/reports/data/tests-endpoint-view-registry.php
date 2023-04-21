@@ -1,11 +1,9 @@
 <?php
-namespace EDD\Reports\Data;
+namespace EDD\Tests\Reports\Data;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
 
 /**
  * Tests for the Report registry API.
@@ -17,7 +15,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Endpoint_View_Registry
  */
-class Endpoint_View_Registry_Tests extends \EDD_UnitTestCase {
+class Endpoint_View_Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Report registry fixture.
@@ -30,7 +28,7 @@ class Endpoint_View_Registry_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Set up fixtures once.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->registry = new \EDD\Reports\Data\Endpoint_View_Registry();
@@ -41,7 +39,7 @@ class Endpoint_View_Registry_Tests extends \EDD_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->registry->exchangeArray( array() );
 
 		parent::tearDown();
@@ -58,7 +56,8 @@ class Endpoint_View_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::__call()
 	 */
 	public function test_get_endpoint_view_with_invalid_endpoint_view_id_should_return_an_empty_array() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' endpoint view does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' endpoint view does not exist." );
 
 		$result = $this->registry->get_endpoint_view( 'foo' );
 
@@ -69,7 +68,8 @@ class Endpoint_View_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::__call()
 	 */
 	public function test_get_endpoint_view_with_invalid_report_id_should_throw_an_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' endpoint view does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' endpoint view does not exist." );
 
 		$this->registry->get_endpoint_view( 'foo' );
 	}
@@ -104,7 +104,8 @@ class Endpoint_View_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_view_with_non_core_view_id_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' endpoint view is invalid." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' endpoint view is invalid." );
 
 		$this->registry->register_endpoint_view( 'foo', array() );
 	}

@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Utils;
-
 /**
  * Tests for EDD\Utils\Date
  *
@@ -9,7 +7,12 @@ namespace EDD\Utils;
  * @group edd_dates
  * @group edd_objects
  */
-class Date_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Utils\Date;
+
+class Date_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Date string test fixture.

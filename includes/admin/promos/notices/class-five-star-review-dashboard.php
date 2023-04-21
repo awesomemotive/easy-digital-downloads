@@ -160,10 +160,14 @@ class Five_Star_Review_Dashboard extends Notice {
 		if ( ! is_numeric( $activated ) || ( $activated + ( DAY_IN_SECONDS * 30 ) ) > time() ) {
 			return false;
 		}
-		// @todo Change this to edd_count_orders in 3.0
-		$payments = edd_count_payments();
+		$orders = edd_count_orders(
+			array(
+				'type'       => 'sale',
+				'status__in' => edd_get_complete_order_statuses(),
+			)
+		);
 
-		return isset( $payments->publish ) && $payments->publish >= 15;
+		return $orders >= 15;
 	}
 
 	/**

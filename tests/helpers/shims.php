@@ -5,3 +5,14 @@
  *
  * We'll need to periodly make sure these shims are in parity with the core functions.
  */
+
+ /**
+ * Function required to test the qTranslate compatibility function.
+ *
+ * @since 2.3
+ */
+if ( ! function_exists( 'qtrans_useCurrentLanguageIfNotFoundShowAvailable' ) ) {
+	function qtrans_useCurrentLanguageIfNotFoundShowAvailable( $content ) {
+		return $content;
+	}
+}

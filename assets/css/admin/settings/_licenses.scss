@@ -1,0 +1,167 @@
+.wrap-licenses {
+
+	.edd-licenses__description {
+		margin: 2em 1em;
+	}
+
+	.form-table,
+	thead,
+	tfoot,
+	tr,
+	th,
+	caption {
+		display: block;
+
+		@media screen and (min-width: $break-small) {
+			display: unset;
+		}
+	}
+
+	tbody {
+		display: grid;
+		gap: 1em;
+	}
+
+	.form-table {
+		tr {
+			margin: 0;
+			background: $white;
+			border: 1px solid $wp-gray-5;
+			border-radius: 3px;
+			padding: 0;
+			box-sizing: border-box;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+
+			@media screen and (min-width: $break-small) {
+				display: grid;
+				grid-template-columns: 200px 1fr;
+			}
+		}
+
+		th {
+			background: $wp-alternate;
+			margin-bottom: 2.5em;
+			padding: 1em;
+			border-bottom: 1px solid $wp-gray-5;
+			width: unset;
+
+			@media screen and (min-width: $break-small) {
+				border-bottom: none;
+				margin-bottom: 0;
+				display: flex;
+				align-items: center;
+			}
+		}
+
+		td {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 2.5em;
+			flex-grow: 1;
+
+			@media screen and (min-width: $break-small) {
+				flex-direction: row;
+				gap: unset;
+			}
+
+			input.regular-text {
+				margin: 0;
+				width: 100%;
+				max-width: 250px;
+			}
+
+			button {
+				margin: 0;
+			}
+		}
+
+		.edd-license__control {
+			flex-grow: 1;
+			padding: 0 1em;
+			display: flex;
+			gap: 4px;
+			align-items: center;
+			justify-content: center;
+
+			@media screen and (min-width: $break-small) {
+				justify-content: flex-end;
+			}
+		}
+
+		.edd-licensing__actions {
+			display: flex;
+			gap: 4px;
+		}
+	}
+
+	.edd-license-data[class*="edd-license-"] {
+		background: $wp-alternate;
+		padding: 1em;
+		border-top: 1px solid $wp-gray-5;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		display: flex;
+		align-items: flex-end;
+
+		a {
+			color: #444;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+
+		@media screen and (min-width: $break-small) {
+			border-top: none;
+			width: unset;
+			flex-basis: 100%;
+			align-items: center;
+
+			&:not(:only-child) {
+				flex: 0 1 300px;
+			}
+		}
+	}
+
+	.edd-license-data {
+		&.license-expires-soon-notice {
+			background-color: #00a0d2;
+			color: #fff;
+			border-color: #00a0d2;
+		}
+
+		&.edd-license-expired {
+			background-color: #e24e4e;
+			color: #fff;
+			border-color: #e24e4e;
+		}
+
+		&.edd-license-error,
+		&.edd-license-missing,
+		&.edd-license-invalid,
+		&.edd-license-site_inactive,
+		&.edd-license-item_name_mismatch {
+			background-color: #ffebcd;
+			border-color: #ffebcd;
+		}
+
+		p {
+			font-size: 13px;
+			margin-top: 0;
+		}
+
+		&.license-expires-soon-notice a,
+		&.edd-license-expired a {
+			color: $white;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+}

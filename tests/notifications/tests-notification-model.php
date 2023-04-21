@@ -6,19 +6,19 @@
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
  */
-
 namespace EDD\Tests\Notifications;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Models\Notification;
 
 /**
  * @coversDefaultClass \EDD\Models\Notification
  * @group edd_notifications
  */
-class NotificationModelTests extends \EDD_UnitTestCase {
+class NotificationModelTests extends EDD_UnitTestCase {
 
 	private function insertAndGetNotification( $data ) {
-		$notificationId = EDD()->notifications->insert( $data, 'notification' );
+		$notificationId = EDD()->notifications->insert( $data );
 
 		return new Notification( EDD()->notifications->get( $notificationId ) );
 	}

@@ -1,7 +1,11 @@
 <?php
 namespace EDD\Tests;
 
+use EDD\Tests\Factory;
+
 require_once dirname( __FILE__ ) . '/factory.php';
+
+use Yoast\WPTestUtils\WPIntegration\TestCase as BaseTestCase;
 
 /**
  * Defines a basic fixture to run AJAX tests.
@@ -10,9 +14,9 @@ require_once dirname( __FILE__ ) . '/factory.php';
  *
  * All EDD AJAX unit tests should inherit from this class.
  */
-class Ajax_UnitTestCase extends \WP_Ajax_UnitTestCase {
+class Ajax_UnitTestCase extends BaseTestCase {
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
 		edd_install();
@@ -25,7 +29,7 @@ class Ajax_UnitTestCase extends \WP_Ajax_UnitTestCase {
 		add_filter( 'edd_log_email_errors', '__return_false' );
 	}
 
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		self::_delete_all_edd_data();
 
 		parent::tearDownAfterClass();

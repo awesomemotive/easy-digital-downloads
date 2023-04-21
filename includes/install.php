@@ -167,6 +167,10 @@ function edd_run_multisite_install() {
  */
 function edd_run_install( $site_id = false ) {
 
+	if ( edd_get_db_version() ) {
+		return;
+	}
+
 	// Not switched
 	$switched = false;
 
@@ -175,9 +179,6 @@ function edd_run_install( $site_id = false ) {
 		switch_to_blog( $site_id );
 		$switched = true;
 	}
-
-	// Get the current database version
-	$current_version = edd_get_db_version();
 
 	// Setup the components (customers, discounts, logs, etc...)
 	edd_setup_components();
@@ -191,20 +192,8 @@ function edd_run_install( $site_id = false ) {
 	// Clear the permalinks
 	flush_rewrite_rules( false );
 
-	// Install the default pages
+	// Install the default pages and settings.
 	edd_install_pages();
-
-	// Maybe save the previous version, only if different than current
-	if ( ! empty( $current_version ) && ( edd_format_db_version( EDD_VERSION ) !== $current_version ) ) {
-		if ( version_compare( $current_version, edd_format_db_version( EDD_VERSION ), '>' ) ) {
-			$downgraded = true;
-			update_option( 'edd_version_downgraded_from', $current_version );
-		}
-
-		update_option( 'edd_version_upgraded_from', $current_version );
-	}
-
-	// Install the default settings
 	edd_install_settings();
 
 	// Set the activation date.
@@ -218,17 +207,12 @@ function edd_run_install( $site_id = false ) {
 		edd_create_protection_files( true );
 	}
 
-	// Create custom tables. (@todo move to BerlinDB)
-	EDD()->notifications->create_table();
-
 	// Create EDD shop roles
-	$roles = new EDD_Roles;
-	$roles->add_roles();
-	$roles->add_caps();
+	EDD()->roles->add_roles();
+	EDD()->roles->add_caps();
 
 	// API version
-	$api = new EDD_API;
-	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
+	update_option( 'edd_default_api_version', 'v' . EDD()->api->get_version() );
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
@@ -237,11 +221,15 @@ function edd_run_install( $site_id = false ) {
 	edd_set_all_upgrades_complete();
 
 	// Update the database version (must be at end, but before site restore)
-	edd_update_db_version();
+	edd_do_automatic_upgrades();
 
 	// Maybe switch back
 	if ( true === $switched ) {
 		restore_current_blog();
+	}
+
+	if ( ! get_option( 'edd_onboarding_completed', false ) ) {
+		set_transient( 'edd_onboarding_redirect', true, 30 );
 	}
 }
 
@@ -406,10 +394,11 @@ function edd_get_required_pages() {
  * Install the default settings
  *
  * @since 3.0
- *
  * @global array $edd_options
+ * @return void
  */
 function edd_install_settings() {
+
 	global $edd_options;
 
 	// Setup some default options
@@ -438,7 +427,6 @@ function edd_install_settings() {
 		}
 	}
 
-	// Get the settings
 	$settings       = get_option( 'edd_settings', array() );
 	$merged_options = array_merge( $settings, $options );
 	$edd_options    = $merged_options;
@@ -469,11 +457,7 @@ function edd_new_blog_created( $blog ) {
 	edd_install();
 	restore_current_blog();
 }
-if ( version_compare( get_bloginfo( 'version' ), '5.1', '>=' ) ) {
-	add_action( 'wp_initialize_site', 'edd_new_blog_created' );
-} else {
-	add_action( 'wpmu_new_blog', 'edd_new_blog_created' );
-}
+add_action( 'wp_initialize_site', 'edd_new_blog_created' );
 
 /**
  * Drop our custom tables when a mu site is deleted

@@ -1,19 +1,22 @@
 === Easy Digital Downloads - Simple eCommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, am, cklosows, littlerchicken, zkawesome, smub, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, lisacee
-Tags: ecommerce, e-commerce, sell, digital store, stripe
-Requires at least: 4.9
+Contributors: easydigitaldownloads, am, cklosows, littlerchicken, smub, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, lisacee, zkawesome
+Tags: ecommerce, payments, sell, digital store, stripe
+Requires at least: 5.4
 Tested up to: 6.1
-Requires PHP: 5.6
-Stable Tag: 3.1.0.6
+Requires PHP: 7.1
+Stable Tag: 3.1.1
 License: GNU Version 2 or Any Later Version
 
-Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
+Sell your digital products with the #1 eCommerce plugin written for digital creators by digital creators.
 
 == Description ==
 
-Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [EasyDigitalDownloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
+= eCommerce without limits =
+We believe that _your passion_ for creating shouldn't be restricted by your choice of ecommerce software. **Easy Digital Downloads** gives you unlimited products with no hidden listing fees, unlimited products, unlimited transactions, and provides unlimited possibilities.
+
+Too often, digital creators must choose between powerful and cheap. Not with Easy Digital Downloads. It's easy to start with limitless possibilities, which is why some of the most popular digital ecommerce businesses trust Easy Digital Downloads with their store.
 
 = Sell effortlessly =
 
@@ -23,23 +26,15 @@ Whether it is selling [software like WordPress plugins or themes](https://easydi
 
 > Mark Hunter - Mark of Approval
 
-= Easy and free, meet robust and powerful =
+Within minutes of starting the Setup Wizard, you'll have access to the base features you'll need to start selling:
 
-Too often digital creators have to make the hard choice between affordable and powerful. Not with Easy Digital Downloads. It's free forever. It's easy to get started. Then, as you grow, there are hundreds of extensions to add functionality when you need it.
-
-> EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
-
-> Brian Hogg – SellingPlugins.com
-
-Here are some of the features supported out-of-the-box:
-
-- **Complete shopping cart** - Customers can browse your product catalogue, add items to their cart, and checkout when they are ready. Or they can bypass the cart using Buy Now buttons.
-- **Highly customizable and clean checkout** - Buyers can complete their purchase with ease, directly on your site's checkout page.
-- **Payment flexibility** - Accept credit card payments using [Stripe](https://stripe.com/) as well as PayPal payments. Apple Pay and Google Pay are also included via Stripe's Payment Request Buttons.
+- **Complete shopping cart** - Customers can browse your products, add items to their cart, and checkout when ready. Or they can bypass the cart using Buy Now buttons from your product page.
+- **Flexible payment methods** - Your customers can pay by card, PayPal, PayPal Credit, Apple Pay, Google Pay, and Link by Stripe.
+- **Highly customizable and clean checkout** - Buyers can easily complete their purchase, directly on your site's checkout page with the included WordPress Block.
 - **Complete customer management** - View and manage detailed records of all customers and their purchase history.
-- **Detailed eCommerce reports** - Keep track of your earnings, refunds, sales, and more.
+- **Detailed eCommerce reports** - Keep track of your earnings, refunds, sales, average order value, and more.
 - **Secure file protection** - Prevent unauthorized visitors from accessing your product files without paying.
-- **Discount codes** - Boost sales by offering potential customers coupon or discount codes which can be applied at checkout.
+- **Discount codes** - Boost conversions by offering potential customers a coupon or discount code which can be applied at checkout.
 - **Works with any theme** - Let your chosen WordPress theme handle the design. Easy Digital Downloads will fit right in.
 - [And much more](https://easydigitaldownloads.com/edd-features/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=much-more&utm_term=description)!
 
@@ -47,35 +42,37 @@ Here are some of the features supported out-of-the-box:
 
 Easy Digital Downloads has been translated into more than two dozen languages and new translations are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](https://easydigitaldownloads.com/docs/easy-digital-downloads-in-your-own-language/?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
 
+> EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
+
+> Brian Hogg – SellingPlugins.com
+
 = Support for many payment gateways, including Stripe and PayPal =
 
-The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your e-Commerce solution. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
+The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your e-Commerce solution. We offer integrations for the most common merchant processors.
 
-Payment gateways supported in the free Easy Digital Downloads plugin:
+Offer multiple payment methods, and start selling today:
 
-* Stripe
+* Credit Cards/Bank Cards - Via Stripe
+* Apple Pay
+* Google Pay
+* Link by Stripe
 * PayPal
-* Amazon Payments
+* PayPal Credit
 
 Payment gateways supported through free or paid extensions:
 
 * Stripe Pro (reduced fees and preapproved payments functionality)
 * PayPal Commerce Pro (unbranded card payments and additional payment methods)
-* Braintree
-* Authorize.net
-* SOFORT Banking
 
-> What can I say? Stripe is my go-to payment processor and without this [integration] I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also a valuable development tool.
+> What can I say? Stripe is my go-to payment processor, and without this [integration] I don't know what I would do. Connect EDD to your Stripe account in seconds, and you're done! Having a simple test mode toggle is also a valuable development tool.
 
 > Matt Whiteley - Whiteley Designs
 
-See our [payment gateways](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalog for a complete list of supported payment processors.
+Easy Digital Downloads is a verified member of the [Stripe partner program](https://stripe.com/partners/directory/easy-digital-downloads). This program recognizes software that meets Stripe's strict quality requirements and provides users of Easy Digital Downloads and Stripe with the confidence they need to trust thier business is secure.
 
-Easy Digital Downloads is a verified member of the [Stripe partner program](https://stripe.com/accept-payments/easy-digital-downloads). This program recognizes software that meets Stripe's strict quality requirements and provides users of Easy Digital Downloads and Stripe with the confidence they need to trust us both with their payment integrations.
+= Take your store further with a Pass =
 
-= Take your store further with extensions =
-
-With extensions from our [extensive catalog](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your ecommerce business. Some of our most popular extensions are:
+With our Passes you can get access to [additional features](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) and super-charge your ecommerce business. Some of our most popular features in Pro are:
 
 * [Stripe Pro](https://easydigitaldownloads.com/downloads/stripe-gateway/?utm_source=extension&utm_medium=description_tab&utm_content=stripe-pro&utm_campaign=readme) removes the additional 2% processing fee as well as adds the ability to accept pre-approved payments (extension must be installed and activated).
 * [PayPal Commerce Pro](https://easydigitaldownloads.com/downloads/paypal-commerce-pro/?utm_source=extension&utm_medium=description_tab&utm_content=paypal-commerce-pro&utm_campaign=readme) allows customers to pay by debit or credit card as well as alternative payments such as Sofort, iDEAL, Bancontact, and Giropay (extension must be installed and activated).
@@ -83,17 +80,13 @@ With extensions from our [extensive catalog](https://easydigitaldownloads.com/do
 * [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) allows store owners to sell recurring subscriptions for digital products using payment gateways like Stripe and PayPal.
 * [Frontend Submissions](https://easydigitaldownloads.com/downloads/frontend-submissions/?utm_source=extension&utm_medium=description_tab&utm_content=frontend-submissions&utm_campaign=readme) transforms your store into a full-featured multi-vendor marketplace.
 * [Commissions](https://easydigitaldownloads.com/downloads/commissions/?utm_source=extension&utm_medium=description_tab&utm_content=commissions&utm_campaign=readme) enables store owners to easily track earnings for product vendors.
-* [Free Downloads](https://easydigitaldownloads.com/downloads/free-downloads/?utm_source=extension&utm_medium=description_tab&utm_content=free-downloads&utm_campaign=readme) allows free products to be purchased more easily by bypassing the standard checkout form.
-* [Zapier](https://easydigitaldownloads.com/downloads/zapier/?utm_source=extension&utm_medium=description_tab&utm_content=zapier&utm_campaign=readme) automates your store by connecting Easy Digital Downloads with more than 700 other web services and products.
+* [Free Downloads](https://easydigitaldownloads.com/downloads/free-downloads/?utm_source=extension&utm_medium=description_tab&utm_content=free-downloads&utm_campaign=readme) allows you to give free products away as lead magnets.
 * [Reviews](https://easydigitaldownloads.com/downloads/product-reviews/?utm_source=extension&utm_medium=description_tab&utm_content=reviews&utm_campaign=readme) allows customers to leave reviews and feedback on the products they have purchased.
 * [Recommended Products](https://easydigitaldownloads.com/downloads/recommended-products/?utm_source=extension&utm_medium=description_tab&utm_content=recommended-products&utm_campaign=readme) increases revenue by showing customers recommendations on additional products to purchase based on real sales data.
 * [Content Restriction](https://easydigitaldownloads.com/downloads/content-restriction/?utm_source=extension&utm_medium=description_tab&utm_content=content-restriction&utm_campaign=readme) allows site owners to restrict access to page content to paying customers.
 * [Mailchimp](https://easydigitaldownloads.com/downloads/mailchimp/?utm_source=extension&utm_medium=description_tab&utm_content=mailchimp&utm_campaign=readme) connects your store to your Mailchimp account so you can easily subscribe customers to email lists based on which products they purchase.
-* [AWeber](https://easydigitaldownloads.com/downloads/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme) connects your store to your AWeber account so you can easily subscribe customers to email lists based on what they purchase.
-* [Amazon S3](https://easydigitaldownloads.com/downloads/amazon-s3/?utm_source=extension&utm_medium=description_tab&utm_content=amazon-s3&utm_campaign=readme) lets you securely host files on Amazon S3 for more reliable and secure file delivery.
-* [Dropbox File Store](https://easydigitaldownloads.com/downloads/dropbox-file-store//?utm_source=extension&utm_medium=description_tab&utm_content=dropbox-file-store/&utm_campaign=readme) lets you securely host files in your Dropbox account for more reliable and secure file delivery.
 
-These are just a few of the extensions we offer to help you optimize your digital store and increase revenue. See our complete [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) for more. There are also hundreds of extensions created by Easy Digital Downloads community members, which can be found on our [3rd Party Extensions page](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=3rd-party-extensions&utm_medium=description_tab&utm_content=3rd-party-extensions&utm_campaign=readme).
+These are just a few of the features available to help you optimize your digital store and increase revenue. See our [complete list of extensions](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) for more.
 
 = Built with developers in mind =
 
@@ -116,7 +109,7 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 
 = Get help =
 
-Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://easydigitaldownloads.com/docs/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you're looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
+Easy Digital Downloads is backed by world-class technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://easydigitaldownloads.com/docs/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you're looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description).
 
 > EDD has been a long standing, rock-solid e-commerce solution for WordPress. The team lives and breathes WordPress, understands the platform, and is embedded in the community.
 
@@ -134,29 +127,31 @@ Check out some of our popular posts for actionable advice for running your busin
 
 **[Subscribe to our newsletter](https://easydigitaldownloads.com/subscribe/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=subscribe&utm_term=description)** to get posts like these in your inbox as soon as they're published.
 
-= Contribute to Easy Digital Downloads =
-
-Development for this plugin happens in a public GitHub repository to better facilitate contributions from an active community of users, developers and designers. If you have a suggestion, bug report, patch, or pull request, please feel free to [contribute here](https://github.com/easydigitaldownloads/easy-digital-downloads) or to our [code snippet library](https://github.com/easydigitaldownloads/library).
-
 = Looking to change e-Commerce solutions? =
 
 Easy Digital Downloads is the perfect digital e-Commerce alternative to Etsy, Gumroad, WooCommerce, Shopfiy, BigCommerce, or Wix.
 
-You can use Easy Digital Downloads to sell your digital products with less fees than Gumroad or Etsy.
+You can use Easy Digital Downloads to sell your digital products with less fees than Gumroad or Etsy, and create unlimited products, and never pay a listing fee.
 
-If Easy Digital Downloads doesn't quite fit your needs, take a look at some of our other projects.
+If Easy Digital Downloads doesn't quite fit your needs, we suggest you try WP Simple Pay.
 
-- [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A lightweight Stripe payments plugin
-- [AffiliateWP](https://affiliatewp.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A full-featured affiliate marketing solution
-- [Sugar Calendar](https://sugarcalendar.com?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – WordPress event management made simple
+[WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) is the #1 Stripe Payments Plugin for WordPress.
+
+= Branding guideline =
+Easy Digital Downloads is a product by Sandhills Development, LLC. When writing about the digital eCommerce plugin by Easy Digital Downloads, please make sure to always reference us by full name before you use our short name of EDD.
+
+Easy Digital Downloads (correct)
+EDD (correct)
+easy digital downloads (incorrect)
+Edd (incorrect, this is our mascot's name!)
+edd (incorrect)
 
 == Installation ==
 
 1. Activate the plugin
-2. Go to Downloads > Settings and configure the options
-3. Create Downloadable products from the Downloads page
-4. Insert purchase buttons for any download via the "Insert Download" button next the Upload Media buttons
-5. For detailed setup instructions, vist the official [Documentation](https://easydigitaldownloads.com/docs/quickstart-guide/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
+2. Complete the Onboarding Wizard
+3. Start selling your first product!
+4. For more detailed setup instructions, vist the official [Documentation](https://easydigitaldownloads.com/docs/quickstart-guide/?utm_source=docs&utm_medium=installation_tab&utm_content=documentation&utm_campaign=readme) page.
 
 == Frequently Asked Questions ==
 
@@ -166,11 +161,15 @@ Full searchable docs for Easy Digital Downloads and all our extensions can be fo
 
 = Where can I ask for help with my digital e-Commerce store? =
 
-You can submit a support ticket or pre-sale question from our [support page](https://easydigitaldownloads.com/support/?utm_source=docs&utm_medium=faq_tab&utm_content=support&utm_campaign=readme) at anytime.
+You can submit a support ticket via the [support forum](https://wordpress.org/support/plugin/easy-digital-downloads/) at anytime.
 
 = Which file types can I sell? =
 
 Any file type can be sold using Easy Digital Downloads. You can sell .PDF, .DOC, .MP3, .MOV, .EPUB, .PSD, .MP4, .JPG, or any other extension which exists. On the product creation form, there is a file upload field which will accept any file type. Whatever file is uploaded to that field is the file customers will receive instantly when they complete a purchase.
+
+= How can I increase conversions? =
+
+Due to its popularity, many ecommerce tools have built direct integrations with Easy Digital Downloads, such as [OptinMonster](https://optinmonster.com). With the direct EDD integration, you can optimize your sales funnel using OptinMonster's display rules based on the customer's EDD cart contents and conditions.
 
 = Is an SSL certificate required to sell digital products? =
 
@@ -178,11 +177,7 @@ Easy Digital Downloads can function without an SSL certificate just fine, making
 
 = What themes work with Easy Digital Downloads? =
 
-Any properly written theme will work with Easy Digital Downloads.
-
-That said, we have a nice collection of free themes that come with support for Easy Digital Downloads, requiring much less design work on the part of the store owner.
-
-[See the themes here.](https://easydigitaldownloads.com/docs/importing-exporting-products/?utm_source=docs&utm_medium=faq_tab&utm_term=free_themes&utm_content=faqs&utm_campaign=readme)
+While nearly any theme will work with Easy Digital Downloads, we've worked with industry-leading theme developers to curate a [list of themes that are specifically written for Easy Digital Downloads](https://easydigitaldownloads.com/themes/?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme).
 
 = Is there a sample import file I can use to setup a demo store? =
 
@@ -192,23 +187,17 @@ Yes! Simply go to Tools > Import and install the WordPress Importer, then naviga
 
 Yes! We do have a [basic import solution](https://easydigitaldownloads.com/docs/importing-exporting-products/?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme) that imports a CSV file, so if you can get your data into the appropriate format then we can import it.
 
-= My payments are being marked as "pending" =
+= How do I migrate from Gumroad? =
 
-There are several reasons this happens. Please follow the suggestions [here](https://easydigitaldownloads.com/docs/paypal-payments-not-marked-as-complete/?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
-
-= Getting a 404 error? =
-
-To get rid of the 404 error when viewing a download, you need to resave your permalink structure. Go to Settings > Permalinks and click "Save Changes".
+Check out our guide on [migrating to Easy Digital Downloads from Gumroad](https://easydigitaldownloads.com/docs/migrating-to-easy-digital-downloads-from-gumroad/?utm_source=docs&utm_medium=faq_tab&utm_term=import_addon&utm_content=faqs&utm_campaign=readme).
 
 = How do I show the user's purchase history? =
 
-Place the [purchase_history] shortcode on any page.
-
-If you want to just show a list of the files the user has purchased, use the [download_history] shortcode instead.
+You can display your customer's purchase history with the EDD Order History Block or if you prefer, you can show users a list of their available downloads with the EDD User Downloads block. Check out our documentation for more information about [Easy Digital Download's Blocks](https://easydigitaldownloads.com/docs/easy-digital-downloads-blocks/?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
 
 = How do I display my digital products? =
 
-There are several different ways to visually display your product catalogue, each [documented here](https://easydigitaldownloads.com/docs/downloads-shortcode/?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
+Easy Digital Downloads comes with a [customizable WordPress Block](https://easydigitaldownloads.com/docs/easy-digital-downloads-blocks/?utm_source=docs&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme), giving you the ability to display your products your way.
 
 = Can I set up an affiliate program? =
 
@@ -217,13 +206,12 @@ Yes! EDD integrates directly with several affiliate platforms that provide compl
 [Check out AffiliateWP](https://affiliatewp.com?utm_source=edd_readme&utm_medium=faq_tab&utm_content=home&utm_campaign=readme)
 
 = Can I give my customers downloadable PDF Invoices? =
-Yes, with the Invoices extension, you can provide beautiful and downloadable invoices to your customers.
 
-[Invoices](https://easydigitaldownloads.com/downloads/edd-invoices/?utm_source=edd-invoices&utm_medium=faq_tab&utm_content=pdf-invoices&utm_campaign=readme)
+Yes, with a Personal Pass, you can provide beautiful and downloadable invoices to your customers with the [Invoices](https://easydigitaldownloads.com/downloads/edd-invoices/?utm_source=edd-invoices&utm_medium=faq_tab&utm_content=pdf-invoices&utm_campaign=readme) extension.
 
 = Are recurring payments (subscriptions) supported? =
 
-Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). [Full documentation here](https://easydigitaldownloads.com/docs/recurring-payments-setup-overview/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). The Recurring Payments extension allows you to create subscriptions so that customers continue paying you over time. This is great for selling memberships, courses, all access passes, software licenses, and other products which require an ongoing payment.
+Yes, with an Extended Pass you get access to [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). [Full documentation here](https://easydigitaldownloads.com/docs/recurring-payments-setup-overview/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). The Recurring Payments extension allows you to create subscriptions so that customers continue paying you over time. This is great for selling memberships, courses, all access passes, software licenses, and other products which require an ongoing payment.
 
 == Screenshots ==
 
@@ -237,10 +225,46 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1.1, March 14, 2023 =
+* New: New installations will be directed to an onboarding wizard to help set up key features and get new stores up and running more quickly.
+* New: Users with an active pass can manage extensions with one license key and easily upgrade to Easy Digital Downloads (Pro).
+* New - Stripe: Our Stripe integration now uses the Universal Payment Elements and Link support. Legacy users are encouraged to opt in.
+* New - Blocks: A new EDD User Downloads block has been registered to show users the files they can download.
+* Improvement: Trashed orders can now be deleted in bulk.
+* Improvement: EDD's metaboxes have been moved up in priority when editing a download.
+* Improvement: Reports styling has been updated to account for different graph types.
+* Improvement: The Product Sales export tool has been added back to the Reports > Export screen.
+* Improvement: EDD telemetry tracking has been completely rewritten to anonymize data collection.
+* Improvement: The extensions licensing screen has been updated to improve messaging and the license management experience.
+* Improvement: Querying for a customer by email address has been improved to include all email addresses.
+* Improvement: The PayPal Commerce connection error messaging has been updated to give users more information to help troubleshoot before contacting support.
+* Improvement: Improved performance when using order related functions which have been updated to accept the order object directly.
+* Improvement: EDD admin screens now show only EDD notices.
+* Improvement - Blocks: New installs will automatically use the checkout block instead of the legacy shortcode.
+* Improvement - Blocks: The Login Page and Login Redirect Page settings have been reordered.
+* Improvement - Blocks: When adding the EDD Buy Button to a download, the current download is set as the default.
+* Improvement - Blocks: Additional security has been added to the checkout, login, and register blocks.
+* Fix: Report charts could group orders by date incorrectly when dates spanned a change in Daylight Savings.
+* Fix: In some cases, the customer database table was not getting the updates needed.
+* Fix: An additional security check has been added to the system info file download form.
+* Fix: The ajax spinner could be duplicated on the checkout screen for stores which collect taxes.
+* Fix: Stores with quantities enabled could experience unexpected behavior on checkout.
+* Fix - Stripe: Support links have been updated.
+* Fix - Blocks: Some themes/plugins caused the checkout forms script to not be enqueued.
+* Dev: The new minimum WordPress version is 5.4.
+* Dev: The new minimum PHP version is 7.1.
+* Dev: The `edd_sanitize_amount` function has been updated for PHP8 compatibility.
+* Dev: Notifications are now registered as an EDD component.
+* Dev: Notifications can now be registered locally.
+* Dev: Additional debugging has been added if a legacy payment cannot be migrated due to invalid payment metadata.
+* Dev: The discounts HTML is now always filterable, even if there are no discounts applied.
+* Dev: Code for the legacy WordPress media loader has been removed.
+
 = 3.1.0.6, February 9, 2023 =
 * Improvement: The PayPal Backup IPN now sends the payment date when handling a renewal from Recurring Payments.
 * Improvement: Further improve the AJAX download search.
-* Fix: Improved reliablity with the PayPal API.
+* Fix: Improved reliability with the PayPal API.
 * Fix: Some plugins could conflict with the login URL filter to customize the login page.
 * Fix: It is now possible to deselect a page in the settings after it's been set.
 * Fix: All documentation links have been updated to use the new locations.
@@ -493,183 +517,5 @@ It is not intended to resolve the issue within PayPal's API, but offer us some t
 * Dev: Moved all script and style generation to use webpack.
 * Dev: EDD style settings have been deprecated.
 
-= 2.11.7, June 29, 2022 =
-* Fix: Some settings for custom integrations were not showing settings screens, when no registered EDD settings were found in the section.
-* Fix: Improved sanitization when generating and using URLs.
-
-= 2.11.6, March 21, 2022 =
-* Fix: Improved reliablity of PayPal Commerce modal while on checkout page.
-* Fix: PayPal Standard could throw an undefined variable notice when listening to the IPN.
-* Improvement: The link to configure Mailchimp could be wrong depending on the version of the extension.
-* Improvement: There was a hard coded string that wasn't able to be translated.
-* Improvement: Add a link to documentation about how to activate a Pass license key.
-
-= 2.11.5, January 27, 2022 =
-* New: Add an admin notice when the EDD Debug Log is enabled.
-* Fix: Importer has been updated to work with PHP 8.
-* Fix: Change how data is added to the debug log to prevent errors due to size.
-* Fix: Bundled product metadata is no longer saved to the download for non-bundle products.
-* Fix: A PHP notice was thrown when a payment had an unregistered status.
-* Fix: Stripe - JavaScript error when viewing a preapproved payment record.
-* Fix: Stripe - EDD 3.0: Incorrect tax amount being charged when customer uses a different country from the store's base country.
-
-= 2.11.4.1, January 7, 2022 =
-* Fix: "Submit" buttons missing from Reviews and Recurring Payments settings pages.
-
-= 2.11.4, December 27, 2021 =
-* New: Set minimum PHP version to 5.4 in readme.txt.
-* New: Add notifications to EDD screens.
-* New: Reorganize some settings locations to make them more predictable for users.
-* New: Improve user opportunities to give feedback to the EDD team.
-* New: Add support for webp images.
-* Improvement: Add the `edd_ajax_remove_discount_response` filter inside the AJAX remove discount function.
-* Improvement: If a license key has not been entered for a specific product, but it's covered by an existing pass key, use the pass key for updates.
-* Improvement: Remove a confusing link for licenses near expiration date.
-* Fix: In some cases, download links were unexpectedly not allowing users to download files.
-* Fix: EDD Pass Manager was not saving the license key to the pass data during activation.
-* Fix: Purchase receipt emails were always assumed to be successfully sent, even if they weren't.
-* Fix: Variable prices were missing the index when a product was first saved.
-* Fix: Exporting earnings results with an incorrect date range generated invalid data.
-* Fix: A PHP notice was generated when an invalid license key was entered.
-* Fix: PayPal Standard - Transaction links were not directing to the transation.
-* Fix: The Arabic translation file caused a fatal error; it has been removed in deference to the repository translation.
-* Fix: Improve earnings export performance.
-* Dev: CLI - Prevent PHP error when a malformed payments command is used.
-* Dev: Add helper methods the to the Pass Manager class.
-* Dev: Create an option for the store activation date.
-* Dev: Introduce the EDD extension registry for managing licensed extensions.
-* Dev: Save EDD licensed products to options for improved reliability.
-* Dev: Explicitly declare the `payment_stats` property for `EDD_Payment_Stats`.
-* Dev: Improve performance of `edd_get_settings_tabs`.
-* Dev: FILTER_SANITIZE_STRING is deprecated in PHP 8.1.
-
-= 2.11.3.1, November 1, 2021 =
-* Fix: Fatal error in PHP versions lower than 7.3.
-
-= 2.11.3, November 1, 2021 =
-* New: Add contextual EDD header to relevant pages.
-* New: Add quick link to EDD reports in the Dashboard menu.
-* Improvement: Update styling for settings tabs.
-* Improvement: Rename and reorganize some settings menu items.
-* Improvement: Adjust formatting of plugins list in system info file.
-* Improvement: License key fields now use a password input.
-* Fix: Undefined index: post_data error.
-* Fix: Upgrade notice not appearing after enabling sequential order numbers.
-* Fix: PayPal - Disconnecting PayPal account not working.
-* Fix: PayPal - Improve check for declined payments.
-* Fix: PayPal - Unable to switch payment gateway after opening then closing PayPal modal.
-* Fix: PayPal - Purchase can't be completed when you have a long product title.
-* Fix: Unable to use discount deactivate/activate hover actions.
-* Fix: `_edd_deprecated_function()` - only trigger error with backtrace if there is a backtrace provided.
-* Fix: API requests have unexpected output when using Query Monitor.
-* Dev: Updated `EDD_SL_Plugin_Updater` to version 1.9.1.
-
-= 2.11.2.1, October 18, 2021 =
-* Security: Fix authenticated reflected XSS on payment history list table.
-
-= 2.11.2, September 29, 2021 =
-* Improvement: PayPal - Product names now appear in PayPal.
-* Improvement: File download token validation has been reworked to be more compatible with caching.
-* Fix: PayPal - Ensure all numbers are rounded when sending price data to PayPal. This prevents errors due to rounding issues.
-* Fix: PayPal - Excessive error text when triggering a validation error on a mobile device.
-* Fix: PayPal - Multiple "Buy Now" buttons not working on the same page.
-* Fix: JavaScript error if the checkout button has been customized to not have an `id` attribute.
-* Fix: WP-CLI - `price_id` parameter not working with `wp edd payments create` command.
-* Fix: Stripe - Transaction link not working if the payment is pre-approved.
-* Fix: Stripe - Connect not working with certain countries.
-* Fix: Stripe - Numeric product name causes error.
-* Fix: Stripe - Payments able to be marked for preapproval when they shouldn't be.
-* Refactor: SendWP - Update link to account area.
-
-= 2.11.1, August 30, 2021 =
-* Improved: Better compatibility with caching when using PayPal Commerce.
-* Improved: Made it more clear when PayPal Commerce is successfully connected, but not set as an active gaetway.
-* Fix: PayPal Commerce - Rely on end-user locale when loading the PayPal Javascript SDK.
-* Fix: The download history shortcode was not aware of bundles with variable prices.
-
-= 2.11, August 19, 2021 =
-* New: Introducing the new PayPal Commerce gateway integration.
-* New: System info page now shows Plugin Author or Update URI
-* New: Improved support for caching pages that contain add to cart buttons by using a custom token verification instead of nonces.
-* Improved: The extension updater class has been updated to version 1.9.0.
-* Fix: Download Notes could be duplicated in the email receipt.
-* Fix: The Paypal transaction ID links were using an older format.
-* Fix: The edd_items_in_cart cookie wasn't setting the correct attributes on sites with SSLs.
-* Fix: Some bundled images hadn't been optimized.
-* Fix: The discounts API endpoint could not filter a discount by ID.
-* Fix: When making an EDD Wallet deposit, the cart HTML would be removed when taxes were enabled.
-
-= 2.10.6, June 22, 2021 =
-* New: Added license upgrade notices to EDD admin pages.
-* Improvement: The discount API endpoint now includes `excluded_products`.
-* Improvement: The Hummingbird cache plugin is now detected in `edd_is_caching_plugin_active()`.
-* Fix: Currency symbol was prefixed with minus sign in PHP 8 on some interfaces.
-* Fix: Prevent multi purchase mode from reporting as enabled if a product does not have variable pricing turned on.
-* Fix: Deprecation notices in PHP 8.
-* Improvement: Stripe - When using the filter to adjust Stripe Element styles, we now merge those styles with the default generated ones.
-* Improvement: Stripe - The `edds_is_zero_decimal_currency()` function now accepts an optional `$currency` parameter, so you can check any currency instead of just the shop's selected currency.
-* Fix: Stripe - Fatal error when attempting to perform old database upgrades.
-* Fix: Stripe - Undefined index notice with Stripe Connect.
-
-= 2.10.5, May 20, 2021 =
-* Fix: Unexpected checkout fields may become required when they weren't before, after a discount code is applied.
-* Fix: Deprecation notices in PHP 8.
-* New: Stripe - Added UGX to zero decimal currency list.
-* Improvement: Stripe - The Express Checkout gateway option is now completely hidden until eligibility is confirmed, whereas before it was shown and then hidden if determined to be ineligible. This should remove the sudden "flash" of the gateway option disappearing.
-* Improvement: Stripe - Express Checkout settings are now disabled if taxes are enabled for the store.
-* Fix: Stripe - The "Buy Now" modal visible on the page if Buy Now is enabled but the Stripe gateway isn't active.
-* Fix: Stripe - Incorrect get_current_user() function usage.
-* Fix: Stripe - Express Checkout not using custom price (from the Custom Prices add-on).
-* Fix: Stripe - Undefined variable $purchase_data when making purchase that only contains fees.
-* Dev: Stripe - Update refund logic to use new refunds API in EDD 3.0.
-* Dev: Stripe - Remove composer/installer version lock.
-
-= 2.10.4, May 4, 2021 =
-* Security Fix: Reflected XSS.
-
-= 2.10.3, April 14, 2021 =
-* Security Fix: Fix nonce logic when disconnecting from Stripe Connect.
-* Fix: Not enough padding on file upload field.
-
-= 2.10.2, April 5, 2021 =
-* Fix: Stripe - Some Stripe errors were not localized.
-* Fix: Stripe - The pre-approval payment status was being registered when it was not supported.
-* Fix: Stripe - Use of the array_key_first function was only available in PHP 7.3+.
-* Fix: Registration form was not validating all fields.
-* Fix: Batch Download importer was using GLOB_BRACE which is not available on all containerized platforms.
-* Tweak: Re-Organized the gateway list in settings.
-* Tweak: Adjust SendWP setting description.
-* Tweak: Removed Jilt callout in Advanced Email settings.
-* New: Inform store owners of Recapture for abandoned cart recovery.
-* New: Add link to Termageddon for Terms of Agreement and Privacy Policy fields within Easy Digital Downloads settings.
-
-= 2.10.1, March 9, 2021 =
-* Fix: Removed incorrect inclusion of license key field for the Stripe integration when the Stripe Pro Payment Gateway extension is not active.
-
-= 2.10, March 9, 2021 =
-* New: Accept credit cards, Apple Pay, Google Pay, and Microsoft Pay with the included Stripe Standard payment gateway. Read more about this feature here: https://easydigitaldownloads.com/edd-stripe-integration
-* New: Updated bundled add-on updater class to the latest version (1.8.0).
-* New: Added a notice for users on older PHP versions about upcoming EOL for PHP 5.3, 5.4, and 5.5 support.
-* Fix: The select HTML helper improperly assumed the selected value was an array.
-* Fix: There was a memory leak when calling get_password_reset_key() caused by EDD's customers database class.
-* Fix: When adding items to the cart via AJAX, the presence of the download_id value was assumed, but not verified.
-* Fix: Imported CSV files were not being properly deleted after the import was completed.
-* Fix: The Colorbox JavaScript resources are no longer needed, but were still being enqueued.
-* Fix: Client-side validation of the discount field could cause unexpected issues with the checkout when applying a discount.
-* Fix: The discount amount was incorrect in the sales API endpoint when it was applied to a variably priced product.
-* Fix: When querying the customers API endpoint, it was possible for an undefined variable notice to be logged.
-* Fix: The password fields on the profile editor had incorrect attributes.
-* Fix: After a failed login, the reset password link always linked to the checkout page.
-* Fix: PayPal Standard: Negative fees were being applied twice.
-* Fix: Account for an undefined index of edd-cart-downloads.
-* Fix: The payment icons on checkout were missing alt tags.
-* Fix: The login process was not using wp_safe_redirect.
-* Fix: It was possible to save a non-numeric value for a discount.
-* Fix: The modify_cart_item() function did not allow for decreasing of the tax rate on an item.
-* Fix: Custom add to cart URLs with a malformed download_id value caused an undefined index notice.
-* Fix: When no customer exists for a query, the total_spent returns an undefined index notice.
-* Dev: When checking if a file download limit is reached, the price_id of the purchased download is now passed to the edd_is_file_at_download_limit filter.
-* Dev: The edd_download_price_table_head and edd_download_price_table_row actions have been formally deprecated.
-
 == Upgrade Notice ==
-IMPORTANT: Easy Digital Downloads 3.0 is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.
+IMPORTANT: Upgrading from Easy Digital Downloads 2.9.x to 3.0+ is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.

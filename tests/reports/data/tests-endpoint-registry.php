@@ -1,14 +1,10 @@
 <?php
-namespace EDD\Reports\Data;
+namespace EDD\Tests\Reports\Data;
 
-require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
-
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
-
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+use EDD\Reports\Data\Endpoint_Registry;
+new ReportsInit();
 /**
  * Tests for the Endpoint registry API.
  *
@@ -16,25 +12,25 @@ new \EDD\Reports\Init();
  * @group edd_reports
  * @group edd_reports_endpoints
  *
- * @coversDefaultClass \EDD\Reports\Data\Endpoint_Registry
+ * @coversDefaultClass EDD\Reports\Data\Endpoint_Registry
  */
-class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
+class Endpoint_Registry_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Endpoint registry fixture.
 	 *
 	 * @access protected
-	 * @var    \EDD\Reports\Data\Endpoint_Registry
+	 * @var    EDD\Reports\Data\Endpoint_Registry
 	 */
 	protected $registry;
 
 	/**
 	 * Set up fixtures once.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		$this->registry = new \EDD\Reports\Data\Endpoint_Registry();
+		$this->registry = new Endpoint_Registry();
 	}
 
 	/**
@@ -42,7 +38,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->registry->exchangeArray( array() );
 
 		parent::tearDown();
@@ -60,7 +56,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_return_an_empty_array() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' reports endpoint does not exist." );
 
 		$result = $this->registry->get_endpoint( 'foo' );
 
@@ -72,7 +69,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @group edd_errors
 	 */
 	public function test_get_endpoint_with_invalid_endpoint_id_should_throw_an_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'foo' reports endpoint does not exist." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'foo' reports endpoint does not exist." );
 
 		$this->registry->get_endpoint( 'foo' );
 	}
@@ -200,9 +198,9 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers ::register_endpoint()
-	 * @expectedException \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_attributes_should_return_false() {
+		$this->expectException( 'EDD\Reports\Exceptions\Invalid_Parameter' );
 		$this->assertFalse( $this->registry->register_endpoint( 'foo', array() ) );
 	}
 
@@ -212,10 +210,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_label_should_throw_exception() {
-		$this->setExpectedException(
-			'\EDD\Reports\Exceptions\Invalid_Parameter',
-			"The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
-		);
+		$this->expectException( 'EDD\Reports\Exceptions\Invalid_Parameter' );
+		$this->expectExceptionMessage( "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$this->registry->register_endpoint( 'foo', array(
 			'label' => ''
@@ -228,10 +224,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_empty_views_should_throw_exception() {
-		$this->setExpectedException(
-			'\EDD\Reports\Exceptions\Invalid_Parameter',
-			"The 'views' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
-		);
+		$this->expectException( 'EDD\Reports\Exceptions\Invalid_Parameter' );
+		$this->expectExceptionMessage( "The 'views' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
 		$added = $this->registry->register_endpoint( 'foo', array(
 			'label' => 'Foo',
@@ -347,7 +341,7 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 
 		$result = $this->registry->build_endpoint( 'foo', 'fake' );
 
-		$this->assertContains( 'invalid_view', $result->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_view', $result->get_error_codes() ) );
 	}
 
 	/**
@@ -355,10 +349,8 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_validate_views_with_invalid_view_should_throw_exception() {
-		$this->setExpectedException(
-			'\EDD\Reports\Exceptions\Invalid_View',
-			"The 'fake' view for the 'foo' item is missing or invalid in 'EDD\Reports\Data\Endpoint_Registry::validate_views'"
-		);
+		$this->expectException( 'EDD\Reports\Exceptions\Invalid_View' );
+		$this->expectExceptionMessage( "The 'fake' view for the 'foo' item is missing or invalid in 'EDD\Reports\Data\Endpoint_Registry::validate_views'" );
 
 		$this->registry->register_endpoint( 'foo', array(
 			'label'    => 'Foo',

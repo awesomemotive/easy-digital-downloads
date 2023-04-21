@@ -71,4 +71,4 @@ export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 3
 # Do this to make sure we cleanup
 set +e
 docker-compose -f docker-compose-phpunit.yml run -e "TEST_INPLACE=${TEST_INPLACE}" --rm --user $(id -u):$(id -g) wordpress
-docker-compose -f docker-compose-phpunit.yml down --remove-orphans
+docker-compose -f docker-compose-phpunit.yml down -v

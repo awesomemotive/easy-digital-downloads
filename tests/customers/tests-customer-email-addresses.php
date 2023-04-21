@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Orders;
+namespace EDD\Tests\Customers;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Customer Email Address Tests.
@@ -9,7 +11,7 @@ namespace EDD\Orders;
  *
  * @coversDefaultClass \EDD\Customers\Customer_Email_Address
  */
-class Customer_Email_Address_Tests extends \EDD_UnitTestCase {
+class Customer_Email_Address_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Customer email addresses fixture.

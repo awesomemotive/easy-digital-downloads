@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_api
@@ -28,18 +31,18 @@ class Tests_API extends EDD_UnitTestCase {
 		$GLOBALS['wp_rewrite']->init();
 		flush_rewrite_rules( false );
 
-		self::$api = new EDD_API();
+		self::$api = new \EDD_API();
 
 		self::$user_id = self::factory()->user->create( array(
 			'role' => 'administrator',
 		) );
 		EDD()->api->user_id = self::$user_id;
-		$user = new WP_User( self::$user_id );
+		$user = new \WP_User( self::$user_id );
 		$user->add_cap( 'view_shop_reports' );
 		$user->add_cap( 'view_shop_sensitive_data' );
 		$user->add_cap( 'manage_shop_discounts' );
 
-		$roles = new EDD_Roles;
+		$roles = new \EDD_Roles;
 		$roles->add_roles();
 		$roles->add_caps();
 
@@ -160,13 +163,11 @@ class Tests_API extends EDD_UnitTestCase {
 		self::$api_output       = self::$api->get_products();
 		self::$api_output_sales = self::$api->get_recent_sales();
 
-//		$wp_query->query_vars['format'] = 'override';
-
 		$_POST['edd_set_api_key'] = 1;
 		EDD()->api->update_key( self::$user_id );
 	}
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		wp_set_current_user( self::$user_id );
@@ -186,7 +187,7 @@ class Tests_API extends EDD_UnitTestCase {
 		self::$api->flush_api_output();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		// Revoke key to ensure `update_key()` will generate a new one.
@@ -231,7 +232,7 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_versions() {
-		$this->assertInternalType( 'array', self::$api->get_versions() );
+		$this->assertIsArray( self::$api->get_versions() );
 		$this->assertArrayHasKey( 'v1', self::$api->get_versions() );
 	}
 
@@ -258,13 +259,13 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-		} catch ( WPDieException $e ) {}
+		} catch ( \WPDieException $e ) {}
 		$this->assertEquals( 'v1', self::$api->get_queried_version() );
 
 		try {
 			$wp_query->query_vars['edd-api'] = 'v2/sales';
 			self::$api->process_query();
-		} catch ( WPDieException $e ) {}
+		} catch ( \WPDieException $e ) {}
 		$this->assertEquals( 'v2', self::$api->get_queried_version() );
 	}
 
@@ -303,9 +304,9 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
 
 		$this->assertEquals( '1', $out['products'][0]['stats']['total']['sales'] );
-		$this->assertEquals( '100.00', $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertEquals( 100.00, (float) $out['products'][0]['stats']['total']['earnings'] );
 		$this->assertEquals( '1', $out['products'][0]['stats']['monthly_average']['sales'] );
-		$this->assertEquals( '100.00', $out['products'][0]['stats']['monthly_average']['earnings'] );
+		$this->assertEquals( 100.00, (float) $out['products'][0]['stats']['monthly_average']['earnings'] );
 	}
 
 	public function test_get_products_pricing() {
@@ -427,7 +428,7 @@ class Tests_API extends EDD_UnitTestCase {
 			$this->assertEquals( 1, $out['customers'][0]['stats']['total_purchases'] );
 			$this->assertEquals( 100.0, $out['customers'][0]['stats']['total_spent'] );
 			$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
-		} catch ( WPDieException $e ) {}
+		} catch ( \WPDieException $e ) {}
 	}
 
 	public function test_missing_auth() {
@@ -439,7 +440,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-		} catch ( WPDieException $e ) {}
+		} catch ( \WPDieException $e ) {}
 
 		$out = self::$api->get_output();
 
@@ -460,7 +461,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-		} catch ( WPDieException $e ) {}
+		} catch ( \WPDieException $e ) {}
 
 		$out = self::$api->get_output();
 
@@ -480,7 +481,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-		} catch ( WPDieException $e ) {}
+		} catch ( \WPDieException $e ) {}
 
 		$out = self::$api->get_output();
 
@@ -518,7 +519,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-		} catch ( WPDieException $e ) {}
+		} catch ( \WPDieException $e ) {}
 
 		$out = self::$api->get_output();
 
@@ -583,7 +584,7 @@ class Tests_API extends EDD_UnitTestCase {
 	 */
 	public function test_recent_sales_contains_correct_discount_amount() {
 		// Create a 20% off discount code with code `20OFF`.
-		EDD_Helper_Discount::create_simple_percent_discount();
+		Helpers\EDD_Helper_Discount::create_simple_percent_discount();
 
 		// Update the payment information.
 		$payment                    = edd_get_payment( self::$payment_id );
@@ -592,7 +593,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$payment->discounts         = '20OFF';
 		$payment->save();
 
-		$api_v2       = new EDD_API_V2();
+		$api_v2       = new \EDD_API_V2();
 		$sales_output = $api_v2->get_recent_sales();
 
 		$this->assertEquals( 20, $sales_output['sales'][0]['discounts']['20OFF'] );

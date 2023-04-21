@@ -1,0 +1,89 @@
+/* Overlay Notice
+-------------------------------------------------- */
+
+.edd-promo-notice__overlay {
+	display: none;
+	position: fixed;
+	background: rgba($gray-100,.75);
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 160px;
+	z-index: 1;
+	justify-content: center;
+	align-items: center;
+
+	.folded & {
+		left: 36px;
+	}
+
+	@media screen and (max-width: $break-medium) {
+		left: 0;
+	}
+}
+
+.edd-admin-notice-overlay {
+	display: none;
+	background-color: $white;
+	padding: 2.5em;
+	text-align: center;
+	max-width: 650px;
+	position: relative;
+	flex-direction: column;
+
+	.edd-promo-notice__overlay & {
+		display: flex;
+	}
+
+	h2 {
+		line-height: 1.6em;
+		margin: 0 auto;
+		max-width: 540px;
+	}
+
+	.edd-promo-notice__features {
+		text-align: left;
+		display: grid;
+		grid-template-columns: repeat( 3, auto );
+		margin: 2em auto;
+		gap: 0 1.5em;
+
+		li {
+			display: flex;
+			gap: .5em;
+			align-items: center;
+		}
+
+		@media screen and (max-width: $break-small) {
+			grid-template-columns: unset;
+		}
+	}
+
+	.button-primary {
+		padding: 4px 36px;
+		margin: 0 auto .5em;
+		max-width: 360px;
+	}
+
+	&__link {
+		color: $gray-100;
+	}
+
+	.edd-promo-notice-dismiss.button-link {
+		position: absolute;
+		color: $wp-text;
+		text-decoration: none;
+		font-size: 2em;
+		top: 0;
+		right: .5em;
+
+		&:active,
+		&:hover {
+			color: $gray-100;
+		}
+	}
+
+	@media screen and (max-width: $break-medium) {
+		margin: 1em;
+	}
+}

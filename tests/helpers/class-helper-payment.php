@@ -1,11 +1,14 @@
 <?php
+namespace EDD\Tests\Helpers;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Class EDD_Helper_Payment.
  *
  * Helper class to create and delete a payment easily.
  */
-class EDD_Helper_Payment extends WP_UnitTestCase {
+class EDD_Helper_Payment extends EDD_UnitTestCase {
 
 	/**
 	 * Delete a payment.
@@ -121,10 +124,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
-		$key        = $purchase_data['purchase_key'];
 
 		$transaction_id = 'EDD_ORDER';
-		$payment = new EDD_Payment( $payment_id );
+		$payment        = new \EDD_Payment( $payment_id );
+
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
@@ -226,9 +229,7 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
-		$payment_id = edd_insert_payment( $purchase_data );
-		$key        = $purchase_data['purchase_key'];
-
+		$payment_id     = edd_insert_payment( $purchase_data );
 		$transaction_id = 'EDD_GUEST_ORDER';
 		edd_set_payment_transaction_id( $payment_id, $transaction_id );
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
@@ -332,10 +333,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
-		$key        = $purchase_data['purchase_key'];
 
 		$transaction_id = 'EDD_ORDER_TAX';
-		$payment = new EDD_Payment( $payment_id );
+		$payment        = new \EDD_Payment( $payment_id );
+
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
@@ -442,10 +443,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
-		$key        = $purchase_data['purchase_key'];
 
 		$transaction_id = 'EDD_ORDER_QUANTITY_TAX';
-		$payment = new EDD_Payment( $payment_id );
+		$payment        = new \EDD_Payment( $payment_id );
+
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
@@ -541,10 +542,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
-		$key        = $purchase_data['purchase_key'];
 
 		$transaction_id = 'EDD_ORDER_FEE';
-		$payment = new EDD_Payment( $payment_id );
+		$payment        = new \EDD_Payment( $payment_id );
+
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
@@ -651,10 +652,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd-virtual.local';
 
 		$payment_id = edd_insert_payment( $purchase_data );
-		$key        = $purchase_data['purchase_key'];
 
 		$transaction_id = 'EDD_ORDER_DATE';
-		$payment = new EDD_Payment( $payment_id );
+		$payment        = new \EDD_Payment( $payment_id );
+
 		$payment->transaction_id = $transaction_id;
 		$payment->date = $date;
 		$payment->save();

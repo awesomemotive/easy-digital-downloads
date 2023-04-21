@@ -1,5 +1,7 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_fees
@@ -7,7 +9,7 @@
 class Tests_Fee extends EDD_UnitTestCase {
 	protected $_post = null;
 
-	public function setUp() {
+	public function setup(): void {
 
 		parent::setUp();
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );

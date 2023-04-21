@@ -1,13 +1,12 @@
 <?php
-namespace EDD\Reports\Data;
+namespace EDD\Tests\Reports\Data;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Reports;
-
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Reports\Data\Report;
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
+use EDD\Reports\Data\Tile_Endpoint;
 
 /**
  * Tests for the Report object.
@@ -18,7 +17,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Report
  */
-class Report_Tests extends \EDD_UnitTestCase {
+class Report_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Report fixture with foo endpoint.
@@ -63,7 +62,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Runs after every test.
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		// Reset $report after every test.
 		self::$report = self::$_original_report;
 
@@ -99,7 +98,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'filters'    => array( 'dates' ),
 		) );
 
-		$this->assertContains( 'missing_endpoints', $report->get_errors()->get_error_codes() );
+		$this->assertTrue( in_array( 'missing_endpoints', $report->get_errors()->get_error_codes() ) );
 	}
 
 	/**
@@ -115,7 +114,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'filters'    => array( 'dates' ),
 		) );
 
-		$this->assertContains( 'missing_capability', $report->get_errors()->get_error_codes() );
+		$this->assertTrue( in_array( 'missing_capability', $report->get_errors()->get_error_codes() ) );
 	}
 
 	/**
@@ -159,7 +158,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'filters'    => array( 'products' ),
 		) );
 
-		$this->assertNotContains( 'dates', $report->get_filters() );
+		$this->assertFalse( in_array( 'dates', $report->get_filters() ) );
 	}
 
 	/**
@@ -205,7 +204,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'filters'    => array( 'fake' ),
 		) );
 
-		$this->assertContains( 'invalid_report_filter', $report->get_errors()->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_report_filter', $report->get_errors()->get_error_codes() ) );
 	}
 
 	/**
@@ -252,7 +251,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'display_callback' => 'fake',
 		) );
 
-		$this->assertContains( 'invalid_report_arg_type', $report->get_errors()->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_report_arg_type', $report->get_errors()->get_error_codes() ) );
 	}
 
 	/**
@@ -272,7 +271,8 @@ class Report_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_parse_endpoints_with_invalid_view_group_should_throw_exception() {
-		$this->setExpectedException( '\EDD_Exception', "The 'fake' view group does not correspond to a known endpoint view type." );
+		$this->expectException( 'EDD\Utils\Exception' );
+		$this->expectExceptionMessage( "The 'fake' view group does not correspond to a known endpoint view type." );
 
 		self::$report->parse_endpoints( array( 'fake' => array() ) );
 	}
@@ -296,7 +296,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	public function test_validate_endpoint_passed_a_WP_Error_object_should_add_a_new_error_to_errors() {
 		self::$report->validate_endpoint( 'tiles', new \WP_Error( 'foo' ) );
 
-		$this->assertContains( 'foo', self::$report->get_errors()->get_error_codes() );
+		$this->assertTrue( in_array( 'foo', self::$report->get_errors()->get_error_codes() ) );
 	}
 
 	/**
@@ -311,7 +311,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 
 		self::$report->validate_endpoint( 'tiles', $endpoint );
 
-		$this->assertContains( 'invalid_endpoint', self::$report->get_errors()->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_endpoint', self::$report->get_errors()->get_error_codes() ) );
 	}
 
 	/**
@@ -518,7 +518,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	public function test_get_endpoint_with_valid_endpoint_invalid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
 		$endpoint_or_error = self::$report->get_endpoint( 'foo', 'fake' );
 
-		$this->assertContains( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() ) );
 	}
 
 	/**
@@ -538,7 +538,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	public function test_get_endpoint_with_invalid_endpoint_valid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
 		$endpoint_or_error = self::$report->get_endpoint( 'fake', 'tiles' );
 
-		$this->assertContains( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() ) );
 	}
 
 	/**
@@ -558,7 +558,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	public function test_get_endpoint_with_invalid_endpoint_invalid_view_group_should_return_WP_Error_including_code_invalid_report_endpoint() {
 		$endpoint_or_error = self::$report->get_endpoint( 'fake', 'fake' );
 
-		$this->assertContains( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_report_endpoint', $endpoint_or_error->get_error_codes() ) );
 	}
 
 }

@@ -1,4 +1,9 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Utils\Date;
+
 /**
  * Tests for date functions in date-functions.php.
  *
@@ -17,7 +22,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		EDD()->utils->get_gmt_offset( true );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST['range'] = '';
 
 		parent::tearDown();
@@ -257,7 +262,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	public function test_date_invalid_date_returns_date() {
 		$date = EDD()->utils->date( '::00', edd_get_timezone_id(), false );
 
-		$this->assertTrue( $date instanceof EDD\Utils\Date );
+		$this->assertTrue( $date instanceof Date );
 	}
 
 	/**
@@ -286,6 +291,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$actual   = EDD()->utils->get_date_string( '2020-01-100', 100, 99 );
 		$expected = date( 'Y-m-d' ) . ' 23:59:00';
 
-		$this->assertContains( $expected, $actual );
+		$this->assertStringContainsString( $expected, $actual );
 	}
 }

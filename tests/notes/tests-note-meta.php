@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Notes;
+namespace EDD\Tests\Notes;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Note Meta DB Tests
@@ -9,7 +11,7 @@ namespace EDD\Notes;
  * @group database
  * @group edd_notes
  */
-class Tests_Note_Meta extends \EDD_UnitTestCase {
+class Tests_Note_Meta extends EDD_UnitTestCase {
 
 	/**
 	 * Note fixture.
@@ -26,7 +28,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 		self::$note = parent::edd()->note->create_and_get();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_get_component_interface( 'note', 'meta' )->truncate();
@@ -88,7 +90,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 		$this->assertEmpty( edd_get_note_meta( self::$note->id, 'key_that_does_not_exist', true ) );
 		edd_update_note_meta( self::$note->id, 'test_key_2', '1' );
 		$this->assertEquals( '1', edd_get_note_meta( self::$note->id, 'test_key_2', true ) );
-		$this->assertInternalType( 'array', edd_get_note_meta( self::$note->id, 'test_key_2', false ) );
+		$this->assertIsArray( edd_get_note_meta( self::$note->id, 'test_key_2', false ) );
 	}
 
 	/**
@@ -99,7 +101,7 @@ class Tests_Note_Meta extends \EDD_UnitTestCase {
 		edd_update_note_meta( self::$note->id, 'test_key_2', '1' );
 
 		$this->assertEquals( '1', edd_get_note_meta( self::$note->id, 'test_key_2', true ) );
-		$this->assertInternalType( 'array', edd_get_note_meta( self::$note->id, 'test_key_2', false ) );
+		$this->assertIsArray( edd_get_note_meta( self::$note->id, 'test_key_2', false ) );
 	}
 
 	/**

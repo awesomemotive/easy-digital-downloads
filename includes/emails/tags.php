@@ -296,7 +296,6 @@ function edd_email_tag_download_list( $payment_id ) {
 
 	$download_list = '<ul>';
 	$cart_items    = $payment->cart_details;
-	$email         = $payment->email;
 	$needs_notes   = array();
 
 	if ( $order->get_items() ) {
@@ -336,7 +335,7 @@ function edd_email_tag_download_list( $payment_id ) {
 
 					if ( $show_links ) {
 						$download_list .= '<div>';
-						$file_url       = edd_get_download_file_url( $order->payment_key, $email, $filekey, $item->product_id, $item->price_id );
+						$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id );
 						$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 						$download_list .= '</div>';
 					} else {
@@ -362,7 +361,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					foreach ( $download_files as $filekey => $file ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
-							$file_url       = edd_get_download_file_url( $order->payment_key, $email, $filekey, $bundle_item_id, $bundle_item_price_id );
+							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item_id, $bundle_item_price_id );
 							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
@@ -432,7 +431,6 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 	$payment_data  = $payment->get_meta();
 	$cart_items    = $payment->cart_details;
-	$email         = $payment->email;
 	$download_list = '';
 
 	if ( $order->get_items() ) {
@@ -473,7 +471,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				foreach ( $files as $filekey => $file ) {
 					if( $show_links ) {
 						$download_list .= "\n";
-						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item->product_id, $item->price_id );
+						$file_url = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id );
 						$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 					} else {
 						$download_list .= "\n";
@@ -493,7 +491,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 					foreach ( $files as $filekey => $file ) {
 						if( $show_links ) {
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $item->price_id );
+							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item, $item->price_id );
 							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 						} else {
 							$download_list .= edd_get_file_name( $file ) . "\n";

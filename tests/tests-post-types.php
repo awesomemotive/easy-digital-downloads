@@ -1,18 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_cpt
  */
 class Tests_Post_Types extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
 
 	/**
 	 * @covers ::edd_setup_edd_post_types
@@ -102,9 +96,9 @@ class Tests_Post_Types extends EDD_UnitTestCase {
 
 		global $wp_post_statuses;
 
-		$this->assertInternalType( 'object', $wp_post_statuses['refunded'] );
-		$this->assertInternalType( 'object', $wp_post_statuses['revoked'] );
-		$this->assertInternalType( 'object', $wp_post_statuses['active'] );
-		$this->assertInternalType( 'object', $wp_post_statuses['inactive'] );
+		$this->assertIsObject( $wp_post_statuses['refunded'] );
+		$this->assertIsObject( $wp_post_statuses['revoked'] );
+		$this->assertIsObject( $wp_post_statuses['active'] );
+		$this->assertIsObject( $wp_post_statuses['inactive'] );
 	}
 }

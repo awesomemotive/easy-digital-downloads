@@ -48,7 +48,7 @@ function connect_settings_field() {
 					<?php
 					echo wp_kses( sprintf(
 						/* Translators: %1$s opening <strong> tag; %2$s closing </strong> tag */
-						__( '%1$sConnection failure:%2$s Please ensure browser popups are enabled then click the button below to connect again. If you continue to experience this error, please contact support.', 'easy-digital-downloads' ),
+						__( '%1$sConnection failure:%2$s This is most likely due to your browser blocking the connection. Most store owners have the best success with Chrome, but for some reason, a few select browsers/devices prevent the connection from EDD and PayPal from working. You might have to enable popups, then restart your browser. If that doesn\'t work, please try a different browser or device and see if that works. If you continue to experience this error, please contact support.', 'easy-digital-downloads' ),
 						'<strong>',
 						'</strong>'
 					), array( 'strong' => array() ) );

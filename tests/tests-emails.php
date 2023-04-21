@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_emails
@@ -177,17 +180,17 @@ class Tests_Emails extends EDD_UnitTestCase {
 	public function test_edd_get_default_sale_notification_email() {
 		$email = edd_get_default_sale_notification_email();
 
-		$this->assertContains( 'Hello', $email );
-		$this->assertContains( 'A Downloads purchase has been made', $email );
-		$this->assertContains( 'Downloads sold:', $email );
-		$this->assertContains( '{download_list}', $email );
-		$this->assertContains( 'Amount:  {price}', $email );
+		$this->assertStringContainsString( 'Hello', $email );
+		$this->assertStringContainsString( 'A Downloads purchase has been made', $email );
+		$this->assertStringContainsString( 'Downloads sold:', $email );
+		$this->assertStringContainsString( '{download_list}', $email );
+		$this->assertStringContainsString( 'Amount:  {price}', $email );
 	}
 
 	public function test_email_tags_get_tags() {
 		$tags = edd_get_email_tags();
 
-		$this->assertInternalType( 'array', $tags );
+		$this->assertIsArray( $tags );
 		$this->assertarrayHasKey( 'download_list', $tags );
 		$this->assertarrayHasKey( 'file_urls', $tags );
 		$this->assertarrayHasKey( 'name', $tags );
@@ -218,19 +221,19 @@ class Tests_Emails extends EDD_UnitTestCase {
 
 	public function test_email_tags_download_list() {
 		$order_items = edd_get_order_items( array( 'order_id' => self::$payment_id ) );
-		$this->assertContains( '<strong>' . $order_items[0]->product_name . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
-		$this->assertContains( '<div><a href="', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringContainsString( '<strong>' . $order_items[0]->product_name . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringContainsString( '<div><a href="', edd_email_tag_download_list( self::$payment_id ) );
 	}
 
 	public function test_email_tag_download_list_with_names_disabled_via_filter() {
 		add_filter( 'edd_email_show_names', '__return_false' );
-		$this->assertNotContains( '<strong>' . get_the_title( self::$post->ID ) . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringNotContainsString( '<strong>' . get_the_title( self::$post->ID ) . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
 		remove_filter( 'edd_email_show_names', '__return_false' );
 	}
 
 	public function test_email_tag_download_list_with_links_disabled_via_filer() {
 		add_filter( 'edd_email_show_links', '__return_false' );
-		$this->assertContains( '<div>File 2</div>', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringContainsString( '<div>File 2</div>', edd_email_tag_download_list( self::$payment_id ) );
 		remove_filter( 'edd_email_show_links', '__return_false' );
 	}
 
@@ -285,7 +288,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_email_tags_receipt_link() {
-		$this->assertContains( 'View it in your browser &raquo;', edd_email_tag_receipt_link( self::$payment_id ) );
+		$this->assertStringContainsString( 'View it in your browser &raquo;', edd_email_tag_receipt_link( self::$payment_id ) );
 	}
 
 	public function test_get_from_name() {
@@ -315,7 +318,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$from_name = EDD()->emails->get_from_name();
 		$from_address = EDD()->emails->get_from_address();
 
-		$this->assertContains( "From: {$from_name} <{$from_address}>", EDD()->emails->get_headers() );
+		$this->assertStringContainsString( "From: {$from_name} <{$from_address}>", EDD()->emails->get_headers() );
 	}
 
 	public function test_get_heading() {

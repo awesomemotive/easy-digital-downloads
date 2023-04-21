@@ -282,6 +282,8 @@ var EDD_Download_Configuration = {
 				view.unset( 'gallery' );
 				view.unset( 'featured-image' );
 				view.unset( 'embed' );
+				view.unset( 'playlist' );
+				view.unset( 'video-playlist' );
 
 				// Initialize the views in our view object.
 				view.set( views );

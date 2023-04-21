@@ -1300,7 +1300,7 @@ function edd_cart_discounts_html() {
  * @since 1.4.1
  *
  * @param mixed $discounts Array of cart discounts.
- * @return mixed|void
+ * @return string
  */
 function edd_get_cart_discounts_html( $discounts = false ) {
 	if ( ! $discounts ) {
@@ -1308,7 +1308,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 	}
 
 	if ( empty( $discounts ) ) {
-		return;
+		return apply_filters( 'edd_get_cart_discounts_html', '', $discounts, 0, '' );
 	}
 
 	$html = _n( 'Discount', 'Discounts', count( $discounts ), 'easy-digital-downloads' ) . ':&nbsp;';

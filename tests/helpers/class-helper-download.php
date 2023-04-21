@@ -1,11 +1,14 @@
 <?php
+namespace EDD\Tests\Helpers;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Class EDD_Helper_Download.
  *
  * Helper class to create and delete a downlaod easily.
  */
-class EDD_Helper_Download extends WP_UnitTestCase {
+class EDD_Helper_Download extends EDD_UnitTestCase {
 
 	/**
 	 * Delete a download.
@@ -192,7 +195,7 @@ class EDD_Helper_Download extends WP_UnitTestCase {
 			update_post_meta( $post_id, $key, $value );
 		}
 
-		return new EDD_Download( $post_id );
+		return new \EDD_Download( $post_id );
 
 	}
 

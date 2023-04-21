@@ -693,10 +693,10 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	$order         = edd_get_order_by( 'payment_key', $payment_key );
-	$user_can_view = edd_can_view_receipt( $payment_key );
+	$user_can_view = edd_can_view_receipt( $order );
 
 	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
-	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order->id ) ) {
+	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order ) ) {
 		global $edd_login_redirect;
 		$edd_login_redirect = edd_get_receipt_page_uri( $order->id );
 
@@ -778,7 +778,7 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
 function edd_process_profile_editor_updates( $data ) {
 
 	// Profile field change request.
-	if ( empty( $_POST['edd_profile_editor_submit'] ) && ! is_user_logged_in() ) {
+	if ( empty( $data['edd_profile_editor_submit'] ) && ! is_user_logged_in() ) {
 		return false;
 	}
 
@@ -788,7 +788,7 @@ function edd_process_profile_editor_updates( $data ) {
 	}
 
 	// Verify nonce.
-	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
+	if ( empty( $data['edd_profile_editor_nonce'] ) || ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
 		return false;
 	}
 
@@ -845,9 +845,15 @@ function edd_process_profile_editor_updates( $data ) {
 			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'easy-digital-downloads' ) );
 		}
 
+		$customers = edd_get_customers(
+			array(
+				'email'           => $email,
+				'user_id__not_in' => $user_id,
+			)
+		);
 		// Make sure the new email doesn't belong to another user.
-		if ( email_exists( $email ) ) {
-			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'easy-digital-downloads' ) );
+		if ( email_exists( $email ) || ! empty( $customers ) ) {
+			edd_set_error( 'email_exists', __( 'This email address is not available.', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -856,7 +862,10 @@ function edd_process_profile_editor_updates( $data ) {
 
 	// Send back to the profile editor if there are errors.
 	if ( ! empty( $errors ) ) {
-		edd_redirect( $data['edd_redirect'] );
+		if ( ! empty( $data['edd_redirect'] ) ) {
+			edd_redirect( $data['edd_redirect'] );
+		}
+		return false;
 	}
 
 	// Update user.

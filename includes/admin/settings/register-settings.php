@@ -541,26 +541,6 @@ function edd_get_registered_settings() {
 						'type' => 'descriptive_text',
 					),
 				),
-				'tracking' => array(
-					'tracking_settings' => array(
-						'id'   => 'tracking_settings',
-						'name' => '<h3>' . __( 'Tracking', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-					),
-					'allow_tracking' => array(
-						'id'    => 'allow_tracking',
-						'name'  => __( 'Usage Tracking', 'easy-digital-downloads' ),
-						'check' => __( 'Allow',          'easy-digital-downloads' ),
-						'desc'  => sprintf(
-							/* translators: %1$s Link to tracking information, do not translate. %2$s Link to EDD newsleter, do not translate. %3$s Link to EDD extensions, do not translate */
-							__( 'Help us make Easy Digital Downloads better. <a href="%1$s" target="_blank">Here is what we track</a>.<br>If you opt-in, we will email you a discount code to <a href="%2$s" target="_blank">upgrade to a pass</a>.', 'easy-digital-downloads' ),
-							edd_link_helper( 'https://easydigitaldownloads.com/docs/what-information-will-be-tracked-by-opting-into-usage-tracking/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) ),
-							edd_link_helper( 'https://easydigitaldownloads.com/lite-upgrade/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) )
-						),
-						'type' => 'checkbox_description',
-					)
-				),
 			) ),
 
 			// Payment Gateways Settings
@@ -1329,6 +1309,10 @@ function edd_settings_sanitize( $input = array() ) {
 		$tab     = ! empty( $referrer['tab']     ) ? sanitize_key( $referrer['tab']     ) : 'general';
 		$section = ! empty( $referrer['section'] ) ? sanitize_key( $referrer['section'] ) : 'main';
 
+		if ( ! empty( $_POST['edd_tab_override'] ) ) {
+			$tab = sanitize_text_field( $_POST['edd_tab_override'] );
+		}
+
 		// Maybe override the tab section
 		if ( ! empty( $_POST['edd_section_override'] ) ) {
 			$section = sanitize_text_field( $_POST['edd_section_override'] );
@@ -1778,7 +1762,6 @@ function edd_get_registered_settings_sections() {
 				'currency'           => __( 'Currency',   'easy-digital-downloads' ),
 				'pages'              => __( 'Pages',      'easy-digital-downloads' ),
 				'api'                => __( 'API',        'easy-digital-downloads' ),
-				'tracking'           => __( 'Tracking',   'easy-digital-downloads' )
 			) ),
 			'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
 				'main'               => __( 'General',         'easy-digital-downloads' ),
@@ -2634,8 +2617,10 @@ function edd_upload_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$size  = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html  = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<span>&nbsp;<input type="button" data-uploader-title="' . esc_html__( 'Attach File', 'easy-digital-downloads' ) . '" data-uploader-button-text="' . esc_html__( 'Attach', 'easy-digital-downloads' ) . '" class="edd_settings_upload_button button-secondary" value="' . __( 'Attach File', 'easy-digital-downloads' ) . '"/></span>';
+	$html  = '<div class="edd-upload-button-wrapper">';
+	$html .= '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<button data-input="#edd_settings\\[' . edd_sanitize_key( $args['id'] ) . '\\]" data-uploader-title="' . esc_html__( 'Attach File', 'easy-digital-downloads' ) . '" data-uploader-button-text="' . esc_html__( 'Attach', 'easy-digital-downloads' ) . '" class="edd_settings_upload_button button button-secondary">' . __( 'Attach File', 'easy-digital-downloads' ) . '</button>';
+	$html .= '</div>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2856,217 +2841,16 @@ function edd_descriptive_text_callback( $args ) {
 }
 
 /**
- * Registers the license field callback for Software Licensing
+ * Registers the license field callback for Software Licensing.
  *
  * @since 1.5
- *
- * @param array $args Arguments passed by the setting
- *
+ * @since 3.1.1 Updated to use the extension licenses class.
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
-		$edd_option = edd_get_option( $args['id'] );
-
-		$messages = array();
-		$license  = get_option( $args['options']['is_valid_license_option'] );
-
-		if ( $edd_option ) {
-			$value = $edd_option;
-		} else {
-			$value = isset( $args['std'] )
-				? $args['std']
-				: '';
-		}
-
-		if ( ! empty( $license ) && is_object( $license ) ) {
-			$now        = current_time( 'timestamp' );
-			$expiration = ! empty( $license->expires )
-				? strtotime( $license->expires, $now )
-				: false;
-
-			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
-			if ( false === $license->success ) {
-
-				switch ( $license->error ) {
-
-					case 'expired' :
-						$url        = edd_link_helper(
-							'https://easydigitaldownloads.com/checkout/?edd_license_key=' . esc_attr( $value ),
-							array(
-								'utm_medium'  => 'license-notice',
-								'utm_content' => 'expired',
-							)
-						);
-						$class      = 'expired';
-						$messages[] = sprintf(
-							__( 'Your license key expired on %s. Please <a href="%s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
-							edd_date_i18n( $expiration ),
-							$url
-						);
-
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'revoked' :
-						$url        = edd_link_helper(
-							'https://easydigitaldownloads.com/support/',
-							array(
-								'utm_medium'  => 'license-notice',
-								'utm_content' => 'revoked',
-							)
-						);
-						$class      = 'error';
-						$messages[] = sprintf(
-							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
-							$url
-						);
-
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'missing' :
-						$url        = edd_link_helper(
-							'https://easydigitaldownloads.com/your-account/',
-							array(
-								'utm_medium'  => 'license-notice',
-								'utm_content' => 'missing',
-							)
-						);
-						$class      = 'error';
-						$messages[] = sprintf(
-							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
-							$url
-						);
-
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'invalid' :
-					case 'site_inactive' :
-						$url        = edd_link_helper(
-							'https://easydigitaldownloads.com/your-account/',
-							array(
-								'utm_medium'  => 'license-notice',
-								'utm_content' => 'inactive',
-							)
-						);
-						$class      = 'error';
-						$messages[] = sprintf(
-							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license keys.', 'easy-digital-downloads' ),
-							esc_html( $args['name'] ),
-							$url
-						);
-
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'item_name_mismatch' :
-						$class      = 'error';
-						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
-
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'no_activations_left':
-						$class      = 'error';
-						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
-
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'license_not_activable':
-						$class      = 'error';
-						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'easy-digital-downloads' );
-
-						$license_status = 'license-' . $class . '-notice';
-						break;
-
-					default :
-						$class      = 'error';
-						$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'easy-digital-downloads' );
-						$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownloads.com/support' );
-
-						$license_status = 'license-' . $class . '-notice';
-						break;
-				}
-
-			} else {
-
-				switch ( $license->license ) {
-
-					case 'valid' :
-					default:
-
-						$class = 'valid';
-
-						if ( 'lifetime' === $license->expires ) {
-							$messages[] = __( 'License key never expires.', 'easy-digital-downloads' );
-
-							$license_status = 'license-lifetime-notice';
-
-						} elseif ( ( $expiration > $now ) && ( $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) ) {
-							$messages[] = sprintf(
-								__( 'Your license key expires soon! It expires on %s.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
-							);
-
-							$license_status = 'license-expires-soon-notice';
-
-						} else {
-							$messages[] = sprintf(
-								__( 'Your license key expires on %s.', 'easy-digital-downloads' ),
-								edd_date_i18n( $expiration )
-							);
-
-							$license_status = 'license-expiration-date-notice';
-						}
-
-						break;
-				}
-			}
-
-		} else {
-			$class = 'empty';
-
-			$messages[] = sprintf(
-				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
-				$args['name']
-			);
-
-			$license_status = null;
-		}
-
-		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
-
-		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="password" autocomplete="off" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . sanitize_key( $value ) . '"/>';
-
-		if ( ( is_object( $license ) && ! empty( $license->license ) && 'valid' == $license->license ) || 'valid' == $license ) {
-			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
-		}
-
-		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
-
-		if ( ! empty( $messages ) ) {
-			foreach ( $messages as $message ) {
-
-				$html .= '<div class="edd-license-data edd-license-' . esc_attr( $class ) . ' ' . esc_attr( $license_status ) . '">';
-				$html .= '<p>' . wp_kses_post( $message ) . '</p>';
-				$html .= '</div>';
-
-			}
-		}
-
-		wp_nonce_field( edd_sanitize_key( $args['id'] ) . '-nonce', edd_sanitize_key( $args['id'] ) . '-nonce' );
-
-		echo $html;
+		$settings_field = new EDD\Licensing\Settings( $args );
 	}
 }
 
@@ -3173,3 +2957,21 @@ function edd_is_test_mode_forced() {
 	return false;
 }
 
+/**
+ * Checks for an incorrect setting for the privacy policy.
+ * Required in updating from EDD 2.9.2 to 2.9.3.
+ */
+add_filter( 'edd_get_option_show_privacy_policy_on_checkout', function( $value ) {
+	if ( ! empty( $value ) ) {
+		return $value;
+	}
+	$fix_show_privacy_policy_setting = edd_get_option( 'show_agree_to_privacy_policy_on_checkout', false );
+	if ( ! empty( $fix_show_privacy_policy_setting ) ) {
+		edd_update_option( 'show_privacy_policy_on_checkout', $fix_show_privacy_policy_setting );
+		edd_delete_option( 'show_agree_to_privacy_policy_on_checkout' );
+
+		return $fix_show_privacy_policy_setting;
+	}
+
+	return $value;
+}, 10, 3 );

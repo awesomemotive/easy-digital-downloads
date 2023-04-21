@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202108041;
+	protected $version = 202302241;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -55,6 +55,7 @@ final class Orders extends Table {
 		'202103261' => 202103261,
 		'202105221' => 202105221,
 		'202108041' => 202108041,
+		'202302241' => 202302241,
 	);
 
 	/**
@@ -96,7 +97,8 @@ final class Orders extends Table {
 			KEY customer_id (customer_id),
 			KEY email (email(100)),
 			KEY payment_key (payment_key(64)),
-			KEY date_created_completed (date_created,date_completed)";
+			KEY date_created_completed (date_created,date_completed),
+			KEY currency (currency)";
 	}
 
 	/**
@@ -279,5 +281,24 @@ final class Orders extends Table {
 		" );
 
 		return true;
+	}
+
+	/**
+	 * Upgrade to version 202302241
+	 * - Set an index for the 'currency' column as we use that in the admin frequenly.
+	 *
+	 * @since 3.1.1
+	 *
+	 * @return boolean
+	 */
+	protected function __202302241() {
+
+		if ( ! $this->index_exists( 'currency' ) ) {
+			$success = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX currency (currency)" );
+		} else {
+			$success = true;
+		}
+
+		return $this->is_success( $success );
 	}
 }

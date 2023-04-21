@@ -1,18 +1,21 @@
 <?php
-
 /**
  * Order Reovery Tests.
  *
  * @group edd_orders
  *
  */
-class Order_Recovery_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Order_Recovery_Tests extends EDD_UnitTestCase {
 
 	protected static $recoverable_payment_id;
 
 	protected static $recovered_payment_id;
 
-	public function setUp() {
+	public function setup(): void {
 		/**
 		 * @internal This call is necessary as we need to flush the meta cache.
 		 */
@@ -23,7 +26,7 @@ class Order_Recovery_Tests extends \EDD_UnitTestCase {
 		self::$recovered_payment_id = $this->generate_recovered_order();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_destroy_order( self::$recoverable_payment_id );
