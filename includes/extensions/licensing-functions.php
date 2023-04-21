@@ -43,7 +43,7 @@ add_action( 'admin_init', function () {
 		update_option( 'edd_licensed_extensions', json_encode( array(
 			'timeout'  => strtotime( '+1 day' ),
 			'products' => $edd_licensed_products,
-		) ) );
+		) ), false );
 	}
 }, 200 );
 

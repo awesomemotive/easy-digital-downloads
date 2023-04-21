@@ -3,7 +3,7 @@
         'name' => 'easydigitaldownloads/easy-digital-downloads',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '26efb5d43e732283d7043db0d47c586c2b7ea796',
+        'reference' => '35533feff7d220eccdc895b4bc2e545d42444a36',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'easydigitaldownloads/easy-digital-downloads' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '26efb5d43e732283d7043db0d47c586c2b7ea796',
+            'reference' => '35533feff7d220eccdc895b4bc2e545d42444a36',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

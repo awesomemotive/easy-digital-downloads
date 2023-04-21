@@ -1,16 +1,17 @@
 <?php
+namespace EDD\Tests;
 
 /**
  * These tests currently do not run
  *
  * @group edd_ajax
  */
-class Tests_AJAX extends WP_UnitTestCase {
+class Tests_AJAX extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	protected $_last_response;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$_actions = array(
@@ -37,7 +38,7 @@ class Tests_AJAX extends WP_UnitTestCase {
 		error_reporting( 0 & ~E_WARNING );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		$_POST = array();
 		remove_filter( 'wp_die_ajax_handler', array( $this, 'getDieHandler' ), 1, 1 );

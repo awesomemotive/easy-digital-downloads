@@ -35,13 +35,12 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
-		$cols = array(
-			'ID'          => __( 'Log ID', 'easy-digital-downloads' ),
+		return array(
+			'ID'          => __( 'Product ID', 'easy-digital-downloads' ),
 			'user_id'     => __( 'User', 'easy-digital-downloads' ),
 			'customer_id' => __( 'Customer ID', 'easy-digital-downloads' ),
 			'email'       => __( 'Email', 'easy-digital-downloads' ),
-			'first_name'  => __( 'First Name', 'easy-digital-downloads' ),
-			'last_name'   => __( 'Last Name', 'easy-digital-downloads' ),
+			'name'        => __( 'Name', 'easy-digital-downloads' ),
 			'download'    => edd_get_label_singular(),
 			'quantity'    => __( 'Quantity', 'easy-digital-downloads' ),
 			'amount'      => __( 'Item Amount', 'easy-digital-downloads' ),
@@ -49,8 +48,6 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			'price_id'    => __( 'Price ID', 'easy-digital-downloads' ),
 			'date'        => __( 'Date', 'easy-digital-downloads' ),
 		);
-
-		return $cols;
 	}
 
 	/**
@@ -82,29 +79,15 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 
 		foreach ( $items as $item ) {
 			/** @var EDD\Orders\Order_Item $item */
-			$order     = edd_get_order( $item->order_id );
-			$download  = edd_get_download( $item->product_id );
-			$user_info = $order->get_user_info();
-
-			$download_title = $item->product_name;
-
-			// Maybe append variable price name.
-			if ( $download->has_variable_prices() ) {
-				$price_option = edd_get_price_option_name( $item->product_id, $item->price_id, $order->id );
-
-				$download_title .= ! empty( $price_option )
-					? ' - ' . $price_option
-					: '';
-			}
+			$order = edd_get_order( $item->order_id );
 
 			$data[] = array(
 				'ID'          => $item->product_id,
 				'user_id'     => $order->user_id,
 				'customer_id' => $order->customer_id,
 				'email'       => $order->email,
-				'first_name'  => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
-				'last_name'   => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
-				'download'    => $download_title,
+				'name'        => edd_get_customer_field( $order->customer_id, 'name' ),
+				'download'    => $item->product_name,
 				'quantity'    => $item->quantity,
 				'amount'      => $order->total,
 				'payment_id'  => $order->id,
@@ -129,9 +112,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		$args = array(
-			'fields' => 'ids',
-		);
+		$args = array();
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_query'] = $this->get_date_query();
@@ -141,7 +122,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			$args['product_id'] = $this->download_id;
 		}
 
-		$total = edd_count_order_items( $args );
+		$total      = edd_count_order_items( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {

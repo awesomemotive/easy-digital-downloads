@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Logs;
+namespace EDD\Tests\Logs\General;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Logs Meta DB Tests
@@ -10,7 +12,7 @@ namespace EDD\Logs;
  *
  * @coversDefaultClass \EDD\Database\Queries\Logs
  */
-class Log_Meta_Tests extends \EDD_UnitTestCase {
+class Log_Meta_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.
@@ -27,7 +29,7 @@ class Log_Meta_Tests extends \EDD_UnitTestCase {
 		self::$log = parent::edd()->log->create_and_get();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_get_component_interface( 'log', 'meta' )->truncate();

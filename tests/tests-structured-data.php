@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Structured Data Tests
@@ -19,7 +22,7 @@ class Tests_Structured_Data extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$download = EDD_Helper_Download::create_simple_download();
+		self::$download = Helpers\EDD_Helper_Download::create_simple_download();
 	}
 
 	/**

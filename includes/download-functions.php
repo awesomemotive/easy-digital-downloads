@@ -1235,19 +1235,28 @@ function edd_get_file_price_condition( $download_id = 0, $file_key = '' ) {
  * @since 1.0
  * @since 3.0  Updated to use new query methods.
  *
- * @param string    $key         Payment key. Use edd_get_payment_key() to get key.
- * @param string    $email       Customer email address. Use edd_get_payment_user_email() to get user email.
- * @param int       $filekey     Index of array of files returned by edd_get_download_files() that this download link is for.
- * @param int       $download_id Optional. ID of download this download link is for. Default is 0.
- * @param bool|int  $price_id    Optional. Price ID when using variable prices. Default is false.
+ * @param string    $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
+ * @param string    $email        Customer email address. Use edd_get_payment_user_email() to get user email.
+ * @param int       $filekey      Index of array of files returned by edd_get_download_files() that this download link is for.
+ * @param int       $download_id  Optional. ID of download this download link is for. Default is 0.
+ * @param bool|int  $price_id     Optional. Price ID when using variable prices. Default is false.
  *
  * @return string Secure download URL.
  */
-function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $price_id = false ) {
+function edd_get_download_file_url( $order_or_key, $email, $filekey, $download_id = 0, $price_id = false ) {
 	$hours = absint( edd_get_option( 'download_link_expiration', 24 ) );
 
 	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp' ) ) ) ) {
 		$date = 2147472000; // Highest possible date, January 19, 2038
+	}
+
+	// Fetch order.
+	if ( $order_or_key instanceof EDD\Orders\Order ) {
+		$order = $order_or_key;
+		$key   = $order->payment_key;
+	} else {
+		$key   = $order_or_key;
+		$order = edd_get_order_by( 'payment_key', $key );
 	}
 
 	// Leaving in this array and the filter for backwards compatibility now
@@ -1261,9 +1270,6 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	);
 
 	$params = apply_filters( 'edd_download_file_url_args', $old_args );
-
-	// Fetch order.
-	$order = edd_get_order_by( 'payment_key', $params['download_key'] );
 
 	// Bail if order wasn't found.
 	if ( ! $order ) {
@@ -1288,8 +1294,16 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	// Ensure all custom args registered with extensions through edd_download_file_url_args get added to the URL, but without adding all the old args
 	$args = array_merge( $args, array_diff_key( $params, $old_args ) );
 
-	// Filter args.
-	$args = apply_filters( 'edd_get_download_file_url_args', $args, $order->id, $params );
+	/**
+	 * Allow the file download args to be filtered.
+	 *
+	 * @since 3.1.1 Includes the order object as the fourth parameter.
+	 * @param array            $args     The full array of parameters.
+	 * @param int              $order_id The order ID.
+	 * @param array            $params   The original array of parameters.
+	 * @param EDD\Orders\Order $order    The order object.
+	 */
+	$args = apply_filters( 'edd_get_download_file_url_args', $args, $order->id, $params, $order );
 
 	$args['file']  = $params['file'];
 	$args['token'] = edd_get_download_token( add_query_arg( array_filter( $args ), untrailingslashit( site_url() ) ) );

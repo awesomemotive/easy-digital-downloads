@@ -1,5 +1,7 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_misc
@@ -16,11 +18,7 @@ class Test_Misc extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$download = EDD_Helper_Download::create_simple_download();
-	}
-
-	public function setUp() {
-		parent::setUp();
+		self::$download = Helpers\EDD_Helper_Download::create_simple_download();
 	}
 
 	public function test_test_mode() {
@@ -660,7 +658,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_cart_url_formats() {
 		global $edd_options;
-		$post = EDD_Helper_Download::create_simple_download();
+		$post = Helpers\EDD_Helper_Download::create_simple_download();
 
 		edd_add_to_cart( $post->ID );
 
@@ -675,19 +673,19 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'nocache=true', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringContainsString( 'page_id=' . $edd_options['purchase_page'], $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'nocache=true', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
 
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 		unset( $edd_options['no_cache_checkout'] );
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
-		$this->assertNotContains( 'nocache=true', $remove_url );
+		$this->assertStringContainsString( 'page_id=' . $edd_options['purchase_page'], $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringNotContainsString( 'nocache=true', $remove_url );
 
 		// Go home and test again
 		$this->go_to( home_url( '/' ) );
@@ -697,19 +695,19 @@ class Test_Misc extends EDD_UnitTestCase {
 		$expected_url = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove&nocache=true';
 		$remove_url   = edd_remove_item_url( $item_position );
 
-		$this->assertNotContains( 'page_id=', $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
-		$this->assertContains( 'nocache=true', $remove_url );
+		$this->assertStringNotContainsString( 'page_id=', $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringContainsString( 'nocache=true', $remove_url );
 
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertNotContains( 'page_id=', $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
-		$this->assertNotContains( 'nocache=true', $remove_url );
+		$this->assertStringNotContainsString( 'page_id=', $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringNotContainsString( 'nocache=true', $remove_url );
 
 		// Go home and test again
 		$this->go_to( home_url( '/' ) );
@@ -725,16 +723,16 @@ class Test_Misc extends EDD_UnitTestCase {
 		$remove_url    = edd_remove_item_url( $item_position );
 		$expected_url  = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove';
 
-		EDD_Helper_Download::delete_download( $post->ID );
+		Helpers\EDD_Helper_Download::delete_download( $post->ID );
 	}
 
 	public function test_array_convert() {
 		$customer1_id = edd_add_customer( array( 'email' => 'test10@example.com' ) );
 
 		// Test sending a single object in
-		$customer_object = new EDD_Customer( $customer1_id );
+		$customer_object = new \EDD_Customer( $customer1_id );
 		$customer_array  = edd_object_to_array( $customer_object );
-		$this->assertInternalType( 'array', $customer_array );
+		$this->assertIsArray( $customer_array );
 		$this->assertEquals( $customer_object->id, $customer_array['id'] );
 		$this->assertEquals( $customer_object->email, $customer_array['email'] );
 		$this->assertEquals( $customer_object->purchase_count, $customer_array['purchase_count'] );
@@ -746,18 +744,18 @@ class Test_Misc extends EDD_UnitTestCase {
 		// Test sending in an array of objects
 		$customers = edd_get_customers();
 		$converted = edd_object_to_array( $customers );
-		$this->assertInternalType( 'array', $converted[0] );
+		$this->assertIsArray( $converted[0] );
 
 		// Test payments
-		$payment_1 = EDD_Helper_Payment::create_simple_payment();
-		$payment_2 = EDD_Helper_Payment::create_simple_payment();
+		$payment_1 = Helpers\EDD_Helper_Payment::create_simple_payment();
+		$payment_2 = Helpers\EDD_Helper_Payment::create_simple_payment();
 
-		$payment_1_obj = new EDD_Payment( $payment_1 );
-		$payment_2_obj = new EDD_Payment( $payment_2 );
+		$payment_1_obj = new \EDD_Payment( $payment_1 );
+		$payment_2_obj = new \EDD_Payment( $payment_2 );
 
 		// Test a single convert
 		$payment_1_array = edd_object_to_array( $payment_1_obj );
-		$this->assertInternalType( 'array',  $payment_1_array );
+		$this->assertIsArray(  $payment_1_array );
 		$this->assertEquals( $payment_1_obj->ID, $payment_1_array['ID'] );
 
 		$payments = array(
@@ -766,7 +764,7 @@ class Test_Misc extends EDD_UnitTestCase {
 		);
 
 		$payments_array = edd_object_to_array( $payments );
-		$this->assertInternalType( 'array', $payments_array[0] );
+		$this->assertIsArray( $payments_array[0] );
 		$this->assertEquals( 2, count( $payments_array ) );
 	}
 

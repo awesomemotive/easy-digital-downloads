@@ -1,5 +1,7 @@
 <?php
-namespace EDD\Api_Request_Logs;
+namespace EDD\Tests\Logs\Request;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Logs Meta DB Tests
@@ -10,7 +12,7 @@ namespace EDD\Api_Request_Logs;
  *
  * @coversDefaultClass \EDD\Database\Queries\Log_Api_Request
  */
-class Api_Request_Log_Meta_Tests extends \EDD_UnitTestCase {
+class Api_Request_Log_Meta_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.
@@ -27,7 +29,7 @@ class Api_Request_Log_Meta_Tests extends \EDD_UnitTestCase {
 		self::$log = parent::edd()->api_request_log->create_and_get();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		edd_get_component_interface( 'log_api_request', 'meta' )->truncate();

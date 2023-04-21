@@ -35,7 +35,7 @@ function edd_overview_sales_earnings_chart() {
 	}
 
 	$sql_clauses = array(
-		'select'  => 'date_created AS date',
+		'select'  => 'DATE_FORMAT(date_created, "%%Y-%%m") AS date',
 		'where'   => '',
 		'groupby' => '',
 	);
@@ -48,9 +48,11 @@ function edd_overview_sales_earnings_chart() {
 	if ( $hour_by_hour ) {
 		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
 		$sql_clauses['orderby'] = 'HOUR(date_created)';
+		$sql_clauses['select']  = 'DATE_FORMAT(date_created, "%%Y-%%m-%%d %%H:00:00") AS date';
 	} elseif ( $day_by_day ) {
 		$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
 		$sql_clauses['orderby'] = 'DATE(date_created)';
+		$sql_clauses['select']  = 'DATE_FORMAT(date_created, "%%Y-%%m-%%d") AS date';
 	}
 
 	if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
@@ -117,10 +119,11 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $earnings_results as $earnings_result ) {
-			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $earnings_result->date ) );
+			$date_of_db_value = EDD()->utils->date( $earnings_result->date );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
+				$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( $date_of_db_value );
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 					$earnings[ $timestamp ][1] += $earnings_result->earnings;
@@ -142,10 +145,11 @@ function edd_overview_sales_earnings_chart() {
 
 		// Loop through each date there were sales/earnings, which we queried from the database.
 		foreach ( $sales_results as $sales_result ) {
-			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $sales_result->date ) );
+			$date_of_db_value = EDD()->utils->date( $sales_result->date );
 
 			// Add any sales/earnings that happened during this hour.
 			if ( $hour_by_hour ) {
+				$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( $date_of_db_value );
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 					$sales[ $timestamp ][1] += $sales_result->sales;
@@ -174,8 +178,6 @@ function edd_overview_sales_earnings_chart() {
 			$chart_dates['start']->addMonth( 1 );
 		}
 	}
-
-
 
 	return array(
 		'sales'    => array_values( $sales ),
@@ -254,10 +256,11 @@ function edd_overview_refunds_chart() {
 
 		// Loop through each date there were refunds, which we queried from the database.
 		foreach ( $results as $result ) {
-			$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
+			$date_of_db_value = EDD()->utils->date( $result->date );
 
 			// Add any refunds that happened during this hour.
 			if ( $hour_by_hour ) {
+				$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( $date_of_db_value );
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 					$number[ $timestamp ][1] += $result->number;

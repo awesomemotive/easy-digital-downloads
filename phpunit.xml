@@ -7,8 +7,9 @@
 	convertWarningsToExceptions="true"
 	>
 	<testsuites>
-		<testsuite>
+		<testsuite name="unit">
 			<directory prefix="tests-" suffix=".php">./tests/</directory>
+			<exclude>./tests/phpunit/class-edd-unittestcase.php</exclude>
 		</testsuite>
 	</testsuites>
 	<filter>
@@ -42,15 +43,4 @@
 			<group>edd_ajax</group>
 		</exclude>
 	</groups>
-	<listeners>
-		<listener class="SpeedTrapListener" file="tests/phpunit/speed-trap-listener.php">
-			<arguments>
-				<array>
-					<element key="slowThreshold">
-						<integer>150</integer>
-					</element>
-				</array>
-			</arguments>
-		</listener>
-	</listeners>
 </phpunit>

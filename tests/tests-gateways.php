@@ -1,18 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_gateways
  */
 class Test_Gateways extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
 
 	public function test_payment_gateways() {
 		$out = edd_get_payment_gateways();
@@ -143,7 +137,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 
 		global $edd_options;
 
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download->ID );
 
 		$edd_options['gateways'] = array();

@@ -1,6 +1,4 @@
 <?php
-namespace EDD;
-
 /**
  * Stats Tests.
  *
@@ -9,7 +7,11 @@ namespace EDD;
  *
  * @coversDefaultClass \EDD\Stats
  */
-class Stats_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Stats;
+class Stats_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Stats class fixture.

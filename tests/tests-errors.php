@@ -1,12 +1,14 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_errors
  */
 class Tests_Errors extends EDD_UnitTestCase {
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		edd_set_error( 'invalid_email', 'Please enter a valid email address.' );
@@ -15,7 +17,7 @@ class Tests_Errors extends EDD_UnitTestCase {
 		edd_set_error( 'password_incorrect', 'The password you entered is incorrect' );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 	}
 

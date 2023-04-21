@@ -41,7 +41,6 @@ function edd_do_downgrade() {
 
 	return $did_downgrade;
 }
-add_action( 'admin_init', 'edd_do_downgrade' );
 
 /**
  * Performs a database downgrade from EDD 3.0 to 2.11 if one is needed.

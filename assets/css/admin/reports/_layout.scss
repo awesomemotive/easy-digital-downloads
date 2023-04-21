@@ -10,7 +10,8 @@
 		margin-bottom: 0;
 	}
 
-	.edd-reports-chart-line {
+	.edd-reports-chart-line,
+	.edd-reports-chart-bar {
 		grid-column: 1 / span 2;
 	}
 }

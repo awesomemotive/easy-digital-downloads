@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_scripts
@@ -28,10 +31,9 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_load_scripts_checkout() {
-		global $edd_options;
 
 		// Prepare test
-		$this->go_to( get_permalink( $edd_options['purchase_page'] ) );
+		$this->go_to( edd_get_checkout_uri() );
 		edd_load_scripts();
 
 		$this->assertTrue( wp_script_is( 'creditCardValidator', 'enqueued' ) );

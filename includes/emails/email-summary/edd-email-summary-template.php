@@ -171,7 +171,7 @@
 				<div class="email-container" style="max-width: 450px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif; color: #1F2937;">
 
 					<div class="logo-holder" style="padding: 12px 31px 7px 31px; display: inline-block;">
-						<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/edd-logo-white-2x.png' ); ?>" class="edd-logo" width="216" height="35" style="width: 100%; max-width: 100%; height: auto; max-width: 216px; max-height: 35px;">
+						<img src="<?php echo esc_url( 'https://plugin.easydigitaldownloads.com/cdn/summaries/edd-logo-white-2x.png' ); ?>" class="edd-logo" width="216" height="35" style="width: 100%; max-width: 100%; height: auto; max-width: 216px; max-height: 35px;">
 					</div>
 
 				</div>
@@ -218,7 +218,7 @@
 									<tr style="padding: 0; vertical-align: top; text-align: left;" valign="top" align="left">
 									<td class="stats-total-item-inner" style="width: 100%; min-width: 100%; word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; padding: 0px; vertical-align: top; text-align: center; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: normal; margin: 0; mso-line-height-rule: exactly; line-height: 140%; font-size: 14px; border-collapse: collapse;" width="100%" valign="top" align="center">
 										<p class="stats-total-item-icon-wrapper" style="font-weight: 400; font-size: 14px; line-height: 18px; margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #809EB0; padding: 0; text-align: center; mso-line-height-rule: exactly; margin-bottom: 1px; height: 32px;">
-											<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-gross.png' ); ?>" alt="#" title="#" width="28" height="28">
+											<img src="<?php echo esc_url( 'https://plugin.easydigitaldownloads.com/cdn/summaries/icon-gross.png' ); ?>" alt="#" title="#" width="28" height="28">
 										</p>
 										<p class="stats-total-item-title" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #1F2937; padding: 0; text-align: center; mso-line-height-rule: exactly; font-weight: 600; font-size: 14px; line-height: 18px; font-style: normal; margin-bottom: 5px; white-space: nowrap;">
 											<?php echo esc_html( __( 'Gross Revenue', 'easy-digital-downloads' ) ); ?>
@@ -243,7 +243,7 @@
 									<tr style="padding: 0; vertical-align: top; text-align: left;" valign="top" align="left">
 									<td class="stats-total-item-inner" style="width: 100%; min-width: 100%; word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; padding: 0px; vertical-align: top; text-align: center; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: normal; margin: 0; mso-line-height-rule: exactly; line-height: 140%; font-size: 14px; border-collapse: collapse;" width="100%" valign="top" align="center">
 										<p class="stats-total-item-icon-wrapper" style="font-weight: 400; font-size: 14px; line-height: 18px; margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #809EB0; padding: 0; text-align: center; mso-line-height-rule: exactly; margin-bottom: 1px; height: 32px;">
-											<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-net.png' ); ?>" alt="#" title="#" width="28" height="28">
+											<img src="<?php echo esc_url( 'https://plugin.easydigitaldownloads.com/cdn/summaries/icon-net.png' ); ?>" alt="#" title="#" width="28" height="28">
 										</p>
 										<p class="stats-total-item-title" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #1F2937; padding: 0; text-align: center; mso-line-height-rule: exactly; font-weight: 600; font-size: 14px; line-height: 18px; font-style: normal; margin-bottom: 5px; white-space: nowrap;">
 											<?php echo esc_html( __( 'Net Revenue', 'easy-digital-downloads' ) ); ?>
@@ -273,7 +273,7 @@
 									<tr style="padding: 0; vertical-align: top; text-align: left;" valign="top" align="left">
 									<td class="stats-total-item-inner" style="width: 100%; min-width: 100%; word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; padding: 0px; vertical-align: top; text-align: center; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: normal; margin: 0; mso-line-height-rule: exactly; line-height: 140%; font-size: 14px; border-collapse: collapse;" width="100%" valign="top" align="center">
 										<p class="stats-total-item-icon-wrapper" style="font-weight: 400; font-size: 14px; line-height: 18px; margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #809EB0; padding: 0; text-align: center; mso-line-height-rule: exactly; margin-bottom: 1px; height: 32px;">
-											<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-new-customers.png' ); ?>" alt="#" title="#" width="28" height="28">
+											<img src="<?php echo esc_url( 'https://plugin.easydigitaldownloads.com/cdn/summaries/icon-new-customers.png' ); ?>" alt="#" title="#" width="28" height="28">
 										</p>
 										<p class="stats-total-item-title" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #1F2937; padding: 0; text-align: center; mso-line-height-rule: exactly; font-weight: 600; font-size: 14px; line-height: 18px; font-style: normal; margin-bottom: 5px; white-space: nowrap;">
 											<?php echo esc_html( __( 'New Customers', 'easy-digital-downloads' ) ); ?>
@@ -298,7 +298,7 @@
 									<tr style="padding: 0; vertical-align: top; text-align: left;" valign="top" align="left">
 									<td class="stats-total-item-inner" style="width: 100%; min-width: 100%; word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; padding: 0px; vertical-align: top; text-align: center; mso-table-lspace: 0pt; mso-table-rspace: 0pt; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #444444; font-weight: normal; margin: 0; mso-line-height-rule: exactly; line-height: 140%; font-size: 14px; border-collapse: collapse;" width="100%" valign="top" align="center">
 										<p class="stats-total-item-icon-wrapper" style="font-weight: 400; font-size: 14px; line-height: 18px; margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #809EB0; padding: 0; text-align: center; mso-line-height-rule: exactly; margin-bottom: 1px; height: 32px;">
-											<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-average.png' ); ?>" alt="#" title="#" width="28" height="28">
+											<img src="<?php echo esc_url( 'https://plugin.easydigitaldownloads.com/cdn/summaries/icon-average.png' ); ?>" alt="#" title="#" width="28" height="28">
 										</p>
 										<p class="stats-total-item-title" style="margin: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #1F2937; padding: 0; text-align: center; mso-line-height-rule: exactly; font-weight: 600; font-size: 14px; line-height: 18px; font-style: normal; margin-bottom: 5px; white-space: nowrap;">
 											<?php echo esc_html( __( 'Average Order', 'easy-digital-downloads' ) ); ?>
@@ -328,7 +328,7 @@
 						<!-- TABLE DATA -->
 						<div class="table-data-holder pull-down-25 " style="margin-top: 25px; ">
 							<div class="table-top-icon align-c" style="text-align: center;">
-								<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-top-products.png' ); ?>" alt="#" title="#" width="28" height="28">
+								<img src="<?php echo esc_url( 'https://plugin.easydigitaldownloads.com/cdn/summaries/icon-top-products.png' ); ?>" alt="#" title="#" width="28" height="28">
 							</div>
 
 							<div class="table-top-title align-c" style="text-align: center; font-size: 14px; line-height: 18px; font-weight: 600; color: #1F2937; display: block; margin-top: 0px; margin-bottom: 12px;">
@@ -386,7 +386,7 @@
 						<div class="pro-tip-holder" style="background: #F3F8FE; border-radius: 10px; padding: 32px 40px;">
 
 							<div class="pro-tip-section-title" style="font-weight: 600; font-size: 18px; line-height: 23px; color: #2794DA;">
-								<img src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/icons/icon-megaphone.png' ); ?>" alt="#" title="#" width="24" height="24" style="vertical-align: bottom; display: inline-block; margin-right: 4px;">
+								<img src="<?php echo esc_url( 'https://plugin.easydigitaldownloads.com/cdn/summaries/icon-megaphone.png' ); ?>" alt="#" title="#" width="24" height="24" style="vertical-align: bottom; display: inline-block; margin-right: 4px;">
 								<?php echo esc_html( __( 'Pro-tip from our expert', 'easy-digital-downloads' ) ); ?>
 							</div>
 

@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * EDD_Payment Tests.
  *
@@ -9,8 +7,12 @@ namespace EDD\Orders;
  *
  * @coversDefaultClass \EDD_Payment
  */
+namespace EDD\Tests\Orders;
 
-class EDD_Payment_Tests extends \EDD_UnitTestCase {
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class EDD_Payment_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Payment test fixture.
@@ -19,18 +21,18 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	 */
 	protected $payment;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		$this->payment = edd_get_payment( $payment_id );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
-		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
+		Helpers\EDD_Helper_Payment::delete_payment( $this->payment->ID );
 
 		edd_destroy_order( $this->payment->ID );
 
@@ -68,13 +70,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_by_transaction_ID_for_guest_payment_should_be_true() {
-		$payment_id = \EDD_Helper_Payment::create_simple_guest_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_guest_payment();
 
 		$payment = edd_get_payment( 'EDD_GUEST_ORDER', true );
 
 		$this->assertSame( 'EDD_GUEST_ORDER', $payment->transaction_id );
 
-		\EDD_Helper_Payment::delete_payment( $payment_id );
+		Helpers\EDD_Helper_Payment::delete_payment( $payment_id );
 	}
 
 	public function test_instantiating_EDD_Payment_with_no_args_should_be_null() {
@@ -128,7 +130,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 2, count( $this->payment->downloads ) );
 		$this->assertEquals( 120.00, $this->payment->total );
 
-		$new_download = \EDD_Helper_Download::create_simple_download();
+		$new_download = Helpers\EDD_Helper_Download::create_simple_download();
 
 		$this->payment->add_download( $new_download->ID );
 		$this->payment->save();
@@ -143,7 +145,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 2, count( $this->payment->downloads ) );
 		$this->assertEquals( 120.00, $this->payment->total );
 
-		$new_download = \EDD_Helper_Download::create_simple_download();
+		$new_download = Helpers\EDD_Helper_Download::create_simple_download();
 
 		$args = array(
 			'item_price' => 0,
@@ -166,7 +168,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 			),
 		);
 
-		$new_download = \EDD_Helper_Download::create_simple_download();
+		$new_download = Helpers\EDD_Helper_Download::create_simple_download();
 
 		$this->payment->add_download( $new_download->ID, $args );
 		$this->payment->save();
@@ -210,7 +212,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$edd_options['item_quantities'] = true;
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_quantity_tax();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment_with_quantity_tax();
 
 		$payment = edd_get_payment( $payment_id );
 
@@ -232,7 +234,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 12, $payment->tax );
 		$this->assertEquals( 152.00, $payment->total );
 
-		\EDD_Helper_Payment::delete_payment( $payment_id );
+		Helpers\EDD_Helper_Payment::delete_payment( $payment_id );
 		unset( $edd_options['item_quantities'] );
 	}
 
@@ -275,7 +277,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$this->payment->save();
 
-		$this->assertInternalType( 'array', $this->payment->user_info );
+		$this->assertIsArray( $this->payment->user_info );
 
 		foreach ( $this->payment->user_info as $key => $value ) {
 			$this->assertFalse( is_serialized( $value ), $key . ' returned a searlized value' );
@@ -444,7 +446,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payment_with_initial_fee() {
-		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_fee();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment_with_fee();
 
 		$payment = edd_get_payment( $payment_id );
 
@@ -614,7 +616,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_filtering_payment_meta() {
 		add_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		remove_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
 
@@ -727,7 +729,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multi_price_points_by_price_id() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array( 'price_id' => 0 ) );
@@ -757,7 +759,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multi_price_points_by_cart_index() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array( 'price_id' => 0 ) );
@@ -785,7 +787,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multiple_same_price_by_price_id_different_prices() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array(
@@ -828,7 +830,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_remove_with_multiple_same_price_by_price_id_same_prices() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array(
@@ -950,7 +952,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$payment->total      = 0;
 		$payment->gateway    = 'manual';
 
-		$simple_download = \EDD_Helper_Download::create_simple_download();
+		$simple_download = Helpers\EDD_Helper_Download::create_simple_download();
 		$payment->add_download(
 			$simple_download->ID,
 			array(

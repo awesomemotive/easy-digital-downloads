@@ -67,8 +67,13 @@ function edd_process_register_form( $data ) {
 		edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
 
-	if ( email_exists( $data['edd_user_email'] ) ) {
-		edd_set_error( 'email_unavailable', __( 'Email address already taken', 'easy-digital-downloads' ) );
+	$customers = edd_get_customers(
+		array(
+			'email' => $data['edd_user_email'],
+		)
+	);
+	if ( email_exists( $data['edd_user_email'] ) || ! empty( $customers ) ) {
+		edd_set_error( 'email_unavailable', __( 'This email address is not available.', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $data['edd_user_email'] ) || ! is_email( $data['edd_user_email'] ) ) {

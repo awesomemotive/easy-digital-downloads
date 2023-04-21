@@ -1,4 +1,8 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
 /**
  * Tests for EDD core block functions.
  */
@@ -30,7 +34,7 @@ class Tests_Blocks extends EDD_UnitTestCase {
 			$this->markTestSkipped( 'This only runs if blocks are loaded.' );
 		}
 
-		$block_editor_context = new WP_Block_Editor_Context( array( 'name' => 'core/edit-post' ) );
+		$block_editor_context = new \WP_Block_Editor_Context( array( 'name' => 'core/edit-post' ) );
 		$block_categories     = get_block_categories( $block_editor_context );
 		$categories           = wp_list_pluck( $block_categories, 'slug' );
 		$expected             = $this->wp_version_supports_edd_blocks();
@@ -47,7 +51,7 @@ class Tests_Blocks extends EDD_UnitTestCase {
 		}
 		$button_colors = edd_update_option( 'button_colors', array( 'background' => '#333', 'text' => '#fff' ) );
 
-		$this->assertContains( 'has-edd-button-background-color', edd_get_button_color_class() );
+		$this->assertStringContainsString( 'has-edd-button-background-color', edd_get_button_color_class() );
 
 		edd_delete_option( 'button_colors' );
 	}

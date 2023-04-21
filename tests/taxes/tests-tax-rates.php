@@ -4,6 +4,9 @@
  *
  * @group taxes
  */
+namespace EDD\Tests\Taxes;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 class Tests_Tax_Rates extends EDD_UnitTestCase {
 

@@ -10,6 +10,7 @@
 
 namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Utils\Tokenizer;
 
 /**
@@ -19,7 +20,7 @@ use EDD\Utils\Tokenizer;
  *
  * @package EDD\Tests
  */
-class TestsTokenizer extends \EDD_UnitTestCase {
+class TestsTokenizer extends EDD_UnitTestCase {
 
 	/**
 	 * When a valid token is passed through using the current timestamp, it should be valid.

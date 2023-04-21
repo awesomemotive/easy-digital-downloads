@@ -1,15 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_misc
  */
 class Test_Template extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
-
 	public function test_pagination_onepage() {
 		ob_start();
 		$args = array(
