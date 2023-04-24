@@ -373,31 +373,52 @@ function edd_get_discount_notes( $discount_id = 0 ) {
  *
  * @since 1.0
  * @since 3.0 Updated to be more efficient and make direct calls to the EDD_Discount object.
+ * @since 3.1.0.3 Added Sample size and Refresh parameters to be able to cache the result as a transient.
+ *
+ * @param int  $sample_size The number of discount codes to query. Defaults to 10 for performance.
+ * @param bool $refresh     If we should force a refresh of the transient. Defaults to false.
  *
  * @return bool
  */
-function edd_has_active_discounts() {
+function edd_has_active_discounts( $sample_size = 10, $refresh = false ) {
 
-	// Query for active discounts.
-	$discounts = edd_get_discounts( array(
-		'number' => 10,
-		'status' => 'active'
-	) );
+	// If we are not forcing a refresh of the value, check the transient.
+	if ( false === $refresh ) {
+		$cached_result = get_transient( 'edd_has_active_discounts' );
 
-	// Bail if none.
-	if ( empty( $discounts ) ) {
-		return false;
-	}
-
-	// Check each discount for active status, applying filters, etc...
-	foreach ( $discounts as $discount ) {
-		/** @var $discount EDD_Discount */
-		if ( $discount->is_active( false, true ) ) {
-			return true;
+		if ( false !== $cached_result ) {
+			return boolval( $cached_result );
 		}
 	}
 
-	return false;
+	$has_active_discounts = false;
+
+	// Query for active discounts.
+	$discounts = edd_get_discounts(
+		array(
+			'number' => $sample_size,
+			'status' => 'active',
+		)
+	);
+
+	// Bail if none.
+	if ( ! empty( $discounts ) ) {
+		// Check each discount for active status, applying filters, etc...
+		foreach ( $discounts as $discount ) {
+			/** @var $discount EDD_Discount */
+			if ( $discount->is_active( $refresh, true ) ) {
+				$has_active_discounts = true;
+				break;
+			}
+		}
+	}
+
+	// Set a 5 minute transient.
+	$transient_value = $has_active_discounts ? 1 : 0;
+	$expiration_time = apply_filters( 'edd_has_active_discount_transient_expiration', 5 * MINUTE_IN_SECONDS );
+	set_transient( 'edd_has_active_discounts', $transient_value, $expiration_time );
+
+	return $has_active_discounts;
 }
 
 /**

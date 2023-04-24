@@ -55,7 +55,6 @@ function edd_admin_add_discount( $data = array() ) {
 	// Setup default discount values.
 	$to_add            = array();
 	$to_add['status']  = 'active';
-	$current_timestamp = current_time( 'timestamp' );
 
 	$data = array_filter( $data );
 
@@ -142,6 +141,11 @@ function edd_admin_add_discount( $data = array() ) {
 		? 'discount_added'
 		: 'discount_add_failed';
 
+	if ( ! empty( $created ) ) {
+		// Now re-prime the transient for the has_active_discounts check.
+		edd_has_active_discounts( 50, true );
+	}
+
 	// Redirect.
 	edd_redirect( add_query_arg( 'edd-message', sanitize_key( $arg ), $data['edd-redirect'] ) );
 }
@@ -186,7 +190,6 @@ function edd_admin_edit_discount( $data = array() ) {
 
 	// Prepare update
 	$to_update    = array();
-	$current_time = current_time( 'timestamp' );
 
 	$data = array_filter( $data );
 
@@ -284,6 +287,11 @@ function edd_admin_edit_discount( $data = array() ) {
 		? 'discount_updated'
 		: 'discount_not_changed';
 
+	if ( ! empty( $updated ) ) {
+		// Now re-prime the transient for the has_active_discounts check.
+		edd_has_active_discounts( 50, true );
+	}
+
 	// Redirect
 	edd_redirect( add_query_arg( 'edd-message', sanitize_key( $arg ), $data['edd-redirect'] ) );
 }
@@ -322,6 +330,11 @@ function edd_admin_delete_discount( $data = array() ) {
 		? 'discount_deleted'
 		: 'discount_deleted_failed';
 
+	if ( ! empty( $deleted ) ) {
+		// Now re-prime the transient for the has_active_discounts check.
+		edd_has_active_discounts( 50, true );
+	}
+
 	// Redirect
 	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
 }
@@ -355,6 +368,11 @@ function edd_activate_discount( $data = array() ) {
 		? 'discount_activated'
 		: 'discount_activation_failed';
 
+	if ( ! empty( $activated ) ) {
+		// Now re-prime the transient for the has_active_discounts check.
+		edd_has_active_discounts( 50, true );
+	}
+
 	// Redirect
 	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
 }
@@ -383,12 +401,50 @@ function edd_deactivate_discount( $data = array() ) {
 	}
 
 	$discount_id = absint( $data['discount'] );
-	$activated   = edd_update_discount_status( $discount_id, 'inactive' );
-	$arg         = ! empty( $activated )
+	$deactivated = edd_update_discount_status( $discount_id, 'inactive' );
+	$arg         = ! empty( $deactivated )
 		? 'discount_deactivated'
 		: 'discount_deactivation_failed';
+
+	if ( ! empty( $deactivated ) ) {
+		// Now re-prime the transient for the has_active_discounts check.
+		edd_has_active_discounts( 50, true );
+	}
 
 	// Redirect
 	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
+
+/**
+ * When running the after payment actions, checks if the order had discounts and if it does, refreshes the edd_has_active_discounts transient.
+ *
+ * @since 3.1.0.3
+ *
+ * @param int         $order_id       The order ID being processed
+ * @param EDD_Payment $payment_object The EDD_Payment object being processed.
+ * @param EDD_Customer $customer      The EDD_Customer object from the order.
+ *
+ * @uses edd_has_active_discounts()
+ *
+ * @return void
+ */
+function edd_refresh_has_active_discounts_on_complete( $order_id, $payment_object, $customer ) {
+	$order_adjustments = edd_get_order_adjustments(
+		array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+			'type'        => 'discount',
+		)
+	);
+
+	// If there were no discount adjustments on this order, just bail.
+	if ( empty( $order_adjustments ) ) {
+		return;
+	}
+
+	// Since we are running this outside of the userspace, use a large integer.
+	edd_has_active_discounts( 50, true );
+
+}
+add_action( 'edd_after_payment_actions', 'edd_refresh_has_active_discounts_on_complete', 10, 3 );
