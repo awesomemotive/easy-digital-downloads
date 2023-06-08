@@ -1794,6 +1794,16 @@ class Query extends Base {
 		// Transition item data
 		$this->transition_item( $save, $item_id );
 
+		/**
+		 * Adds a hook for a successfully added item.
+		 * Custom for EDD.
+		 *
+		 * @since 3.1.1.4
+		 * @param int    $item_id The item id.
+		 * @param array  $data    The array of data for the update.
+		 */
+		do_action( $this->apply_prefix( "{$this->item_name}_added" ), $item_id, $data );
+
 		// Return result
 		return $item_id;
 	}
@@ -1819,15 +1829,15 @@ class Query extends Base {
 		$primary = $this->get_primary_column_name();
 
 		// Get item to update (from database, not cache)
-		$item    = $this->get_item_raw( $primary, $item_id );
+		$item_raw = $this->get_item_raw( $primary, $item_id );
 
 		// Bail if item does not exist to update
-		if ( empty( $item ) ) {
+		if ( empty( $item_raw ) ) {
 			return false;
 		}
 
 		// Cast as an array for easier manipulation
-		$item = (array) $item;
+		$item = (array) $item_raw;
 
 		// Unset the primary key from data to parse
 		unset( $data[ $primary ] );
@@ -1876,6 +1886,17 @@ class Query extends Base {
 
 		// Transition item data
 		$this->transition_item( $save, $item );
+
+		/**
+		 * Adds a hook for a successfully updated item.
+		 * Custom for EDD.
+		 *
+		 * @since 3.1.1.4
+		 * @param int    $item_id  The item id.
+		 * @param array  $data     The array of data for the update.
+		 * @param object $item_raw The original item.
+		 */
+		do_action( $this->apply_prefix( "{$this->item_name}_updated" ), $item_id, $data, $item_raw );
 
 		// Return result
 		return $result;
@@ -1929,6 +1950,15 @@ class Query extends Base {
 		// Clean caches on successful delete
 		$this->delete_all_item_meta( $item_id );
 		$this->clean_item_cache( $item );
+
+		/**
+		 * Adds a hook for a successfully deleted item.
+		 * Custom for EDD.
+		 *
+		 * @since 3.1.1.4
+		 * @param int $item_id  The item id.
+		 */
+		do_action( $this->apply_prefix( "{$this->item_name}_deleted" ), $item_id );
 
 		// Return result
 		return $result;

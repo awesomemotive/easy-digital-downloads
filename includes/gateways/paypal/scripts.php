@@ -30,18 +30,8 @@ function maybe_enqueue_polyfills() {
 		return;
 	}
 
-	global $wp_version;
-	if ( version_compare( $wp_version, '5.0', '>=' ) ) {
-		wp_enqueue_script( 'wp-polyfill' );
-	} else {
-		wp_enqueue_script(
-			'wp-polyfill',
-			EDD_PLUGIN_URL . 'assets/js/wp-polyfill.min.js',
-			array(),
-			false,
-			false
-		);
-	}
+	wp_enqueue_script( 'wp-polyfill' );
+
 }
 
 /**

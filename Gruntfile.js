@@ -82,6 +82,8 @@ module.exports = function ( grunt ) {
 					'assets/images/**',
 					'includes/**',
 					'!includes/blocks/pro/**',
+					'!includes/blocks/assets/pro/**',
+					'!includes/blocks/build/pro/**',
 					'languages/**',
 					'templates/**',
 					'vendor/**',
@@ -101,7 +103,7 @@ module.exports = function ( grunt ) {
 			pro: {
 				options: {
 					mode: 'zip',
-					archive: './build/<%= pkg.name %>-pro.zip',
+					archive: './build/<%= pkg.name %>-pro-<%= pkg.version %>.zip',
 				},
 				expand: true,
 				cwd: 'build/<%= pkg.name %>-pro/',
@@ -111,7 +113,7 @@ module.exports = function ( grunt ) {
 			lite: {
 				options: {
 					mode: 'zip',
-					archive: './build/<%= pkg.name %>.zip',
+					archive: './build/<%= pkg.name %>-<%= pkg.version %>.zip',
 				},
 				expand: true,
 				cwd: 'build/<%= pkg.name %>/',

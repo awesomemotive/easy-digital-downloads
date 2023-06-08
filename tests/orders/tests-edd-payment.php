@@ -713,10 +713,10 @@ class EDD_Payment_Tests extends EDD_UnitTestCase {
 		$store_sales    = edd_get_total_sales();
 
 		$this->payment->refund();
-		$customer->recalculate_stats();
 		wp_cache_flush();
 
 		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+		$customer = edd_get_customer( $this->payment->customer_id );
 
 		$this->assertEquals( $customer_earnings - $this->payment->total, $customer->purchase_value );
 		$this->assertEquals( $customer_sales - 1, $customer->purchase_count );

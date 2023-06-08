@@ -144,10 +144,6 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
-	// Increase the customer's purchase stats
-	$customer = new EDD_Customer( $customer_id );
-	$customer->recalculate_stats();
-
 	edd_increase_total_earnings( $amount );
 
 	// Check for discount codes and increment their use counts
@@ -174,7 +170,8 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 		) );
 
 		// Required for backwards compatibility.
-		$payment = edd_get_payment( $order_id );
+		$payment  = edd_get_payment( $order_id );
+		$customer = edd_get_customer( $customer_id );
 
 		/**
 		 * Runs **when** a purchase is marked as "complete".

@@ -563,7 +563,7 @@ function edd_get_registered_settings() {
 					'default_gateway' => array(
 						'id'      => 'default_gateway',
 						'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
-						'desc'    => __( 'Automatically select this gateway on checkout pages.<br>If empty, the first active gateway is selected instead.', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose the gateway your checkout will use by default.<br />If you choose Automatic, the first enabled gateway from the Active Gateways will be used.', 'easy-digital-downloads' ),
 						'type'    => 'gateway_select',
 						'options' => $gateways,
 					),
@@ -2151,11 +2151,37 @@ function edd_gateways_callback( $args ) {
 
 			$html .= '<li class="edd-check-wrapper" data-key="' . edd_sanitize_key( $key ) . '">';
 			$html .= '<label>';
-			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" data-gateway-key="' . edd_sanitize_key( $key ) . '" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
+
+			$attributes = array(
+				'name'             => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']',
+				'id'               => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']',
+				'data-gateway-key' => edd_sanitize_key( $key ),
+				'checked'          => checked( '1', $enabled, false ),
+				'is_setup'         => edd_is_gateway_setup( $key ),
+				'disabled'         => '',
+			);
+
+			if ( ! $attributes['is_setup'] ) {
+				$attributes['disabled'] = 'disabled="disabled"';
+			}
+
+			$html .= '<input name="' . $attributes['name'] . '" id="' . $attributes['id'] . '" class="' . $class . '" type="checkbox" value="1" data-gateway-key="' . $attributes['data-gateway-key'] . '" ' . $attributes['checked'] . ' ' . $attributes['disabled'] . '/>&nbsp;';
 			$html .= esc_html( $option['admin_label'] );
 			if ( 'manual' === $key ) {
 				$html .= '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . esc_html__( 'Store Gateway', 'easy-digital-downloads' ) . '</strong>: ' . esc_html__( 'This is an internal payment gateway which can be used for manually added orders or test purchases. No money is actually processed.', 'easy-digital-downloads' ) . '"></span>';
 			}
+
+			// If a settings URL is returned, display a button to go to the settings page.
+			$gateway_settings_url = edd_get_gateway_settings_url( $key );
+			if ( ! empty( $gateway_settings_url ) ) {
+				$html .= sprintf(
+					'<a class="button edd-settings__button-settings" href="%s"><span class="screen-reader-text">%s</span></a>',
+					$gateway_settings_url,
+					__( 'Configure Gateway', 'easy-digital-downloads' )
+				);
+			}
+
+
 			$html .= '</label>';
 			$html .= '</li>';
 		}
@@ -2170,7 +2196,7 @@ function edd_gateways_callback( $args ) {
 			)
 		);
 
-		$html .= '<p class="description">' . esc_html__( 'These gateways will be offered at checkout.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), $url ) . '</p>';
+		$html .= '<p class="description">' . esc_html__( 'Choose how you want to allow your customers to pay you.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), $url ) . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2199,7 +2225,7 @@ function edd_gateway_select_callback( $args ) {
 	}
 
 	$html     = '<select name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '">';
-	$html    .= '<option value="">' . __( '&mdash; No gateway &mdash;', 'easy-digital-downloads' ) . '</option>';
+	$html    .= '<option value="">' . __( 'Automatic', 'easy-digital-downloads' ) . '</option>';
 	$gateways = edd_get_payment_gateways();
 
 	foreach ( $gateways as $key => $option ) {
@@ -2858,6 +2884,11 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
  * @return void
  */
 function edd_hook_callback( $args ) {
+	// Since our settings are hook based, just be sure the user can manage shop settings before firing the setting hook.
+	if ( ! current_user_can( 'manage_shop_settings') ) {
+		return;
+	}
+
 	do_action( 'edd_' . $args['id'], $args );
 }
 

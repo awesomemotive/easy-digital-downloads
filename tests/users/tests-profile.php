@@ -16,7 +16,14 @@ class Tests_Profile extends EDD_UnitTestCase {
 	}
 
 	public function test_update_user_fails_with_existing_customer_address() {
-		$customer = reset( self::$customers );
+		$customer_id = edd_add_customer(
+			array(
+				'name'    => 'Test User',
+				'email'   => 'email@email.local',
+				'user_id' => get_current_user_id(),
+			)
+		);
+		$customer    = reset( self::$customers );
 		edd_process_profile_editor_updates(
 			array(
 				'edd_profile_editor_submit' => true,

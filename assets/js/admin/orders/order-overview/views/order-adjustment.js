@@ -74,7 +74,7 @@ export const OrderAdjustment = Base.extend( {
 		if ( 'order_item' === model.get( 'objectType' ) ) {
 			orderItem = _.first( state.get( 'items' ).filter( ( item ) => {
 				return undefined !== item.get( 'adjustments' ).findWhere( {
-					objectId: item.get( 'id' ),
+					objectId: model.get( 'objectId' ),
 				} );
 			} ) );
 		}

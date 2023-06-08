@@ -23,6 +23,7 @@ function get_settings_url() {
 	return admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=paypal_commerce' );
 }
 
+
 /**
  * Register the PayPal Standard gateway subsection
  *
@@ -36,7 +37,6 @@ function register_paypal_gateway_section( $gateway_sections ) {
 
 	return $gateway_sections;
 }
-
 add_filter( 'edd_settings_sections_gateways', __NAMESPACE__ . '\register_paypal_gateway_section', 1, 1 );
 
 /**
@@ -55,58 +55,55 @@ function register_gateway_settings( $gateway_settings ) {
 			'name' => '<h3>' . __( 'PayPal Settings', 'easy-digital-downloads' ) . '</h3>',
 			'type' => 'header',
 		),
-		'paypal_documentation'         => array(
-			'id'   => 'paypal_documentation',
-			'name' => __( 'Documentation', 'easy-digital-downloads' ),
-			'desc' => documentation_settings_field(),
-			'type' => 'descriptive_text'
-		),
 		'paypal_connect_button'        => array(
 			'id'    => 'paypal_connect_button',
 			'name'  => __( 'Connection Status', 'easy-digital-downloads' ),
-			'desc'  => connect_settings_field(),
-			'type'  => 'descriptive_text',
 			'class' => 'edd-paypal-connect-row',
+			'type'  => 'hook',
 		),
 		'paypal_sandbox_client_id'     => array(
 			'id'    => 'paypal_sandbox_client_id',
 			'name'  => __( 'Test Client ID', 'easy-digital-downloads' ),
-			'desc' => __( 'Enter your test client ID.', 'easy-digital-downloads' ),
-			'type' => 'text',
-			'size' => 'regular',
-			'class' => 'edd-hidden'
+			'desc'  => __( 'Enter your test client ID.', 'easy-digital-downloads' ),
+			'type'  => 'text',
+			'size'  => 'regular',
+			'class' => 'edd-hidden',
 		),
 		'paypal_sandbox_client_secret' => array(
-			'id'   => 'paypal_sandbox_client_secret',
-			'name' => __( 'Test Client Secret', 'easy-digital-downloads' ),
-			'desc' => __( 'Enter your test client secret.', 'easy-digital-downloads' ),
-			'type' => 'password',
-			'size' => 'regular',
-			'class' => 'edd-hidden'
+			'id'    => 'paypal_sandbox_client_secret',
+			'name'  => __( 'Test Client Secret', 'easy-digital-downloads' ),
+			'desc'  => __( 'Enter your test client secret.', 'easy-digital-downloads' ),
+			'type'  => 'password',
+			'size'  => 'regular',
+			'class' => 'edd-hidden',
 		),
 		'paypal_live_client_id'        => array(
-			'id'   => 'paypal_live_client_id',
-			'name' => __( 'Live Client ID', 'easy-digital-downloads' ),
-			'desc' => __( 'Enter your live client ID.', 'easy-digital-downloads' ),
-			'type' => 'text',
-			'size' => 'regular',
-			'class' => 'edd-hidden'
+			'id'    => 'paypal_live_client_id',
+			'name'  => __( 'Live Client ID', 'easy-digital-downloads' ),
+			'desc'  => __( 'Enter your live client ID.', 'easy-digital-downloads' ),
+			'type'  => 'text',
+			'size'  => 'regular',
+			'class' => 'edd-hidden',
 		),
 		'paypal_live_client_secret'    => array(
-			'id'   => 'paypal_live_client_secret',
-			'name' => __( 'Live Client Secret', 'easy-digital-downloads' ),
-			'desc' => __( 'Enter your live client secret.', 'easy-digital-downloads' ),
-			'type' => 'password',
-			'size' => 'regular',
-			'class' => 'edd-hidden'
+			'id'    => 'paypal_live_client_secret',
+			'name'  => __( 'Live Client Secret', 'easy-digital-downloads' ),
+			'desc'  => __( 'Enter your live client secret.', 'easy-digital-downloads' ),
+			'type'  => 'password',
+			'size'  => 'regular',
+			'class' => 'edd-hidden',
+		),
+		'paypal_documentation'         => array(
+			'id'   => 'paypal_documentation',
+			'name' => '',
+			'type' => 'hook',
 		),
 	);
 
 	$is_connected = PayPal\has_rest_api_connection();
 	if ( ! $is_connected ) {
 		$paypal_settings['paypal_settings']['tooltip_title'] = __( 'Connect with PayPal', 'easy-digital-downloads' );
-		$paypal_settings['paypal_settings']['tooltip_desc']  = __( 'Connecting your store with PayPal allows Easy Digital Downloads to automatically configure your store to securely communicate PayPal.<br \><br \>You may see "Sandhills Development, LLC", mentioned during the process&mdash;that is the company behind Easy Digital Downloads.', 'easy-digital-downloads' );
-
+		$paypal_settings['paypal_settings']['tooltip_desc']  = __( 'Connecting your store with PayPal allows Easy Digital Downloads to automatically configure your store to securely communicate with PayPal.<br \><br \>You may see "Sandhills Development, LLC", mentioned during the process&mdash;that is the company behind Easy Digital Downloads.', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -129,15 +126,15 @@ add_filter( 'edd_settings_gateways', __NAMESPACE__ . '\register_gateway_settings
  * @return string
  */
 function documentation_settings_field() {
-	ob_start();
 	?>
 	<p>
-		<?php
-		echo wp_kses( sprintf(
-			__( 'To learn more about the PayPal gateway, visit <a href="%s" target="_blank">our documentation</a>.', 'easy-digital-downloads' ),
-			'https://easydigitaldownloads.com/docs/paypal-setup/'
-		), array( 'a' => array( 'href' => true, 'target' => true ) ) )
-		?>
+		<a class="button button-secondary" href="https://easydigitaldownloads.com/docs/paypal-setup/" target="_blank">
+			<?php esc_html_e( 'View Documentation', 'easy-digital-downloads' ); ?>
+		</a>
+
+		<a id="edd-paypal-commerce-get-help" class="edd-hidden" href="https://easydigitaldownloads.com/support/" target="_blank">
+			<?php esc_html_e( 'Get Help', 'easy-digital-downloads' ); ?>
+		</a>
 	</p>
 	<?php
 	if ( ! is_ssl() ) {
@@ -154,6 +151,5 @@ function documentation_settings_field() {
 		</div>
 		<?php
 	}
-
-	return ob_get_clean();
 }
+add_action( 'edd_paypal_documentation', __NAMESPACE__ . '\documentation_settings_field' );

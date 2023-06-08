@@ -797,6 +797,9 @@ function edd_process_profile_editor_updates( $data ) {
 
 	// Fetch customer record.
 	$customer = edd_get_customer_by( 'user_id', $user_id );
+	if ( empty( $customer->user_id ) || $customer->user_id != $user_id ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		return false;
+	}
 
 	$display_name = isset( $data['edd_display_name'] )    ? sanitize_text_field( $data['edd_display_name'] )    : $old_user_data->display_name;
 	$first_name   = isset( $data['edd_first_name'] )      ? sanitize_text_field( $data['edd_first_name'] )      : $old_user_data->first_name;
@@ -947,43 +950,46 @@ function edd_process_profile_editor_updates( $data ) {
 add_action( 'edd_edit_user_profile', 'edd_process_profile_editor_updates' );
 
 /**
- * Process the 'remove' URL on the profile editor when customers wish to remove an email address
+ * Process the 'remove' URL on the profile editor when customers wish to remove an email address.
  *
  * @since  2.6
+ * @param array $data The array of data passed from the profile editor.
  * @return void
  */
-function edd_process_profile_editor_remove_email() {
+function edd_process_profile_editor_remove_email( $data ) {
 	if ( ! is_user_logged_in() ) {
-		return false;
+		return;
 	}
 
 	// Pending users can't edit their profile
 	if ( edd_user_pending_verification() ) {
-		return false;
+		return;
 	}
 
 	// Nonce security
-	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-remove-customer-email' ) ) {
-		return false;
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-remove-customer-email' ) ) {
+		return;
 	}
 
-	if ( empty( $_GET['email'] ) || ! is_email( $_GET['email'] ) ) {
-		return false;
+	if ( empty( $data['email'] ) || ! is_email( $data['email'] ) ) {
+		return;
 	}
 
-	$customer = new EDD_Customer( get_current_user_id(), true );
-	if ( $customer->remove_email( $_GET['email'] ) ) {
+	$user_id  = get_current_user_id();
+	$customer = new EDD_Customer( $user_id, true );
 
-		$url = add_query_arg( 'updated', true, $_GET['redirect'] );
+	if ( $customer->user_id == $user_id && $customer->remove_email( $data['email'] ) ) {
+
+		$url = add_query_arg( 'updated', true, $data['redirect'] );
 
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $data['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
 		edd_set_error( 'profile-remove-email-failure', __( 'Error removing email address from profile. Please try again later.', 'easy-digital-downloads' ) );
-		$url = $_GET['redirect'];
+		$url = $data['redirect'];
 	}
 
 	edd_redirect( $url );

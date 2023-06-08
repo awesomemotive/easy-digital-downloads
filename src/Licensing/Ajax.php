@@ -63,15 +63,16 @@ class Ajax implements SubscriberInterface {
 			);
 		}
 
-		$this->name = filter_input( INPUT_POST, 'item_name', FILTER_SANITIZE_SPECIAL_CHARS );
-		$api_params = array(
-			'edd_action' => 'activate_license',
-			'license'    => $this->license_key,
-			'item_name'  => $this->name,
-			'item_id'    => filter_input( INPUT_POST, 'item_id', FILTER_SANITIZE_NUMBER_INT ),
+		$this->name   = filter_input( INPUT_POST, 'item_name', FILTER_SANITIZE_SPECIAL_CHARS );
+		$api_params   = array(
+			'edd_action'  => 'activate_license',
+			'license'     => $this->license_key,
+			'item_name'   => $this->name,
+			'item_id'     => filter_input( INPUT_POST, 'item_id', FILTER_SANITIZE_NUMBER_INT ),
+			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
 		);
-
-		$api          = new API();
+		$custom_api   = filter_input( INPUT_POST, 'api', FILTER_SANITIZE_URL );
+		$api          = new API( $custom_api );
 		$license_data = $api->make_request( $api_params );
 
 		if ( empty( $license_data->success ) ) {
@@ -141,11 +142,13 @@ class Ajax implements SubscriberInterface {
 		$this->license     = new License( $this->name );
 		$this->license_key = $this->license->key;
 		$api_params        = array(
-			'edd_action' => 'deactivate_license',
-			'license'    => $this->license_key,
-			'item_id'    => urlencode( $item_id ),
+			'edd_action'  => 'deactivate_license',
+			'license'     => $this->license_key,
+			'item_id'     => urlencode( $item_id ),
+			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
 		);
-		$api               = new API();
+		$custom_api        = filter_input( INPUT_POST, 'api', FILTER_SANITIZE_URL );
+		$api               = new API( $custom_api );
 		$license_data      = $api->make_request( $api_params );
 
 		$this->license->save( $license_data );

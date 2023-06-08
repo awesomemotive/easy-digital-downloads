@@ -15,29 +15,4 @@ jQuery( document ).ready( function( $ ) {
 			$( '.regprice', '#edd-download-data' ).val( edd_vars.quick_edit_warning ).attr( 'disabled', 'disabled' );
 		}
 	} );
-
-	// Bulk edit save
-	$( document.body ).on( 'click', '#bulk_edit', function() {
-		// define the bulk edit row
-		const $bulk_row = $( '#bulk-edit' );
-
-		// get the selected post ids that are being edited
-		const $post_ids = new Array();
-		$bulk_row.find( '#bulk-titles' ).children().each( function() {
-			$post_ids.push( $( this ).attr( 'id' ).replace( /^(ttle)/i, '' ) );
-		} );
-
-		// get the stock and price values to save for all the product ID's
-		const $price = $( '#edd-download-data input[name="_edd_regprice"]' ).val();
-
-		const data = {
-			action: 'edd_save_bulk_edit',
-			edd_bulk_nonce: $post_ids,
-			post_ids: $post_ids,
-			price: $price,
-		};
-
-		// save the data
-		$.post( ajaxurl, data );
-	} );
 } );

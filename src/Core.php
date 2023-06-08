@@ -19,6 +19,7 @@ class Core extends EventManagement\Subscribers {
 		return array(
 			new Admin\PassHandler\Ajax( $this->pass_handler ),
 			new Admin\Extensions\Extension_Manager(),
+			new Customers\Recalculations(),
 		);
 	}
 
@@ -47,6 +48,8 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Onboarding\Wizard(),
 			new Admin\Onboarding\Ajax(),
 			new Licensing\Ajax(),
+			new Admin\SiteHealth\Tests(),
+			new Admin\SiteHealth\Information(),
 		);
 	}
 

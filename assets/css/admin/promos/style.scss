@@ -77,17 +77,17 @@
 	margin-bottom: -1px;
 }
 
-@media screen and (max-width: 782px) {
+@media screen and (max-width: $break-medium) {
 	#edd-admin-notice-five-star-review.notice .edd-peeking {
 		margin-bottom: -6px;
 	}
 }
 
-@media screen and (min-width: 400px) {
-	.edd-promo-notice .edd-peeking {
+@media screen and (min-width: $break-mobile) {
+	.edd-promo-notice.notice-info .edd-peeking {
 		justify-self: flex-start;
 		margin-right: 0;
-		margin-left: 200px;
+		margin-left: 250px;
 	}
 }
 

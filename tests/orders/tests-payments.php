@@ -291,23 +291,31 @@ class Payment_Tests extends EDD_UnitTestCase {
 		global $edd_options;
 		$edd_options['enable_sequential'] = 1;
 		$edd_options['sequential_prefix'] = 'EDD-';
+		$edd_options['sequential_start']  = 11;
 
 		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
-		$this->assertIsInt( edd_get_next_payment_number() );
-		$this->assertIsString( edd_format_payment_number( edd_get_next_payment_number() ) );
-		$this->assertEquals( 'EDD-2', edd_format_payment_number( edd_get_next_payment_number() ) );
+		// Create more payments just because.
+		Helpers\EDD_Helper_Payment::create_simple_payment();
+		Helpers\EDD_Helper_Payment::create_simple_payment();
 
-		$payment             = new \EDD_Payment( $payment_id );
-		$last_payment_number = edd_remove_payment_prefix_postfix( $payment->number );
-		$this->assertEquals( 1, $last_payment_number );
-		$this->assertEquals( 'EDD-1', $payment->number );
-		$this->assertEquals( 2, edd_get_next_payment_number() );
+		$order_number = new \EDD\Orders\Number();
+		$next_number  = $order_number->get_next_payment_number();
+
+		$this->assertIsInt( $next_number );
+		$this->assertIsString( $order_number->format( $next_number ) );
+		$this->assertEquals( 'EDD-14', $order_number->format( $next_number ) );
+
+		$payment             = edd_get_payment( $payment_id );
+		$last_payment_number = $order_number->unformat( $payment->number );
+		$this->assertEquals( 11, $last_payment_number );
+		$this->assertEquals( 'EDD-11', $payment->number );
+		$this->assertEquals( 14, $next_number );
 
 		// Now disable sequential and ensure values come back as expected
 		$edd_options['enable_sequential'] = 0;
 
-		$payment = new \EDD_Payment( $payment_id );
+		$payment = edd_get_payment( $payment_id );
 		$this->assertEquals( $payment_id, $payment->number );
 	}
 

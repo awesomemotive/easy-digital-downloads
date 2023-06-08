@@ -978,6 +978,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	private function parse_search( $search, $args ) {
 
+		// Order ID/number.
+		if ( is_numeric( $search ) ) {
+			$args['id']           = $search;
+			$args['order_number'] = $search;
+
+			return $args;
+		}
+
 		// Transaction ID
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
 			$args['txn'] = trim( str_replace( 'txn:', '', $search ) );
@@ -995,13 +1003,6 @@ class EDD_Payment_History_Table extends List_Table {
 		// Download ID
 		if ( is_string( $search ) && ( false !== strpos( $search, '#' ) ) ) {
 			$args['product_id'] = intval( trim( str_replace( '#', '', $search ) ) );
-
-			return $args;
-		}
-
-		// Order ID
-		if ( is_numeric( $search ) ) {
-			$args['id'] = $search;
 
 			return $args;
 		}

@@ -103,7 +103,7 @@ class Pass_Manager {
 	 */
 	public function __construct() {
 		$this->pro_license = $this->get_pro_license();
-		if ( 'valid' === $this->pro_license ) {
+		if ( ! empty( $this->pro_license->license ) && 'valid' === $this->pro_license->license ) {
 			$this->highest_license_key = $this->pro_license->key;
 			$this->highest_pass_id     = $this->pro_license->item_id;
 			$this->has_pass_data       = true;
