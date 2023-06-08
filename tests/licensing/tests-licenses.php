@@ -26,6 +26,13 @@ class Tests_Licenses extends EDD_UnitTestCase {
 		delete_site_option( 'edd_pro_license_key' );
 	}
 
+	public function test_no_pro_license() {
+		$license = self::$pass_handler->get_pro_license();
+
+		$this->assertEmpty( $license->key );
+		$this->assertTrue( edd_is_inactive_pro() );
+	}
+
 	public function test_get_pro_license() {
 		$license_key = 'daksjfg98q3kjhJ3K4Q2354';
 		update_site_option( 'edd_pro_license_key', $license_key );
