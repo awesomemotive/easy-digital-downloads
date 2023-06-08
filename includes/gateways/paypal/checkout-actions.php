@@ -109,6 +109,11 @@ add_action( 'edd_checkout_user_error_checks', __NAMESPACE__ . '\send_ajax_errors
  * @return void
  */
 function create_order( $purchase_data ) {
+
+	if ( ! wp_verify_nonce( $purchase_data['gateway_nonce'], 'edd-gateway' ) ) {
+		wp_die( __( 'Nonce verification has failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
 	edd_debug_log( 'PayPal - create_order()' );
 
 	if ( ! ready_to_accept_payments() ) {

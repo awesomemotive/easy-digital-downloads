@@ -1310,6 +1310,10 @@ add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email_length', 10, 
  */
 function edd_process_straight_to_gateway( $data ) {
 
+	if ( empty( $data['edd_straight_to_gateway'] ) || ! wp_verify_nonce( $data['edd_straight_to_gateway'], 'edd_straight_to_gateway' ) ) {
+		return;
+	}
+
 	$download_id = $data['download_id'];
 	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
 	$quantity    = isset( $data['edd_download_quantity'] ) ? $data['edd_download_quantity'] : 1;

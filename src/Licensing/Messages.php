@@ -186,21 +186,7 @@ class Messages {
 				break;
 
 			default:
-				if ( ! empty( $this->license_data['license_key'] ) ) {
-					$error   = ! empty( $this->license->error ) ? $this->license->error : __( 'unknown_error', 'easy-digital-downloads' );
-					$message = sprintf(
-						/* translators: 1. the error code; 2. opening link tag; 3. closing link tag. */
-						__( 'There was an error with this license key: %1$s. Please %2$scontact our support team%3$s.', 'easy-digital-downloads' ),
-						'<code>' . $error . '</code>',
-						'<a href="https://easydigitaldownloads.com/support">',
-						'</a>'
-					);
-				} else {
-					$message = sprintf(
-						/* translators: the extension name. */
-						__( 'Unlicensed: currently not receiving updates.', 'easy-digital-downloads' )
-					);
-				}
+				$message = __( 'Unlicensed: currently not receiving updates.', 'easy-digital-downloads' );
 				break;
 		}
 

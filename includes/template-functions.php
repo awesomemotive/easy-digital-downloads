@@ -224,6 +224,7 @@ function edd_get_purchase_link( $args = array() ) {
 		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) && ! $download->is_free( $args['price_id'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
+			<?php wp_nonce_field( 'edd_straight_to_gateway', 'edd_straight_to_gateway', false ); ?>
 		<?php } else { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>

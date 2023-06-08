@@ -1260,7 +1260,7 @@ function edd_get_bot_name() {
 function edd_redirect( $location = '', $status = 302 ) {
 
 	// Prevent redirects in unit tests.
-	if ( (bool) ( defined( 'WP_TESTS_DIR' ) && WP_TESTS_DIR ) || function_exists( '_manually_load_plugin' ) ) {
+	if ( edd_is_doing_unit_tests() ) {
 		return;
 	}
 
@@ -1930,6 +1930,16 @@ function edd_is_inactive_pro() {
 	$pass_manager = new EDD\Admin\Pass_Manager();
 
 	return ! $pass_manager->isPro();
+}
+
+/**
+ * Whether unit tests are running.
+ *
+ * @since 3.1.2
+ * @return bool
+ */
+function edd_is_doing_unit_tests() {
+	return (bool) ( ( defined( 'EDD_DOING_TESTS' ) && EDD_DOING_TESTS ) || function_exists( '_manually_load_plugin' ) );
 }
 
 /**

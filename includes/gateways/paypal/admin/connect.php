@@ -25,30 +25,22 @@ if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
  * If they are connected, their account details are shown instead.
  *
  * @since 2.11
- * @return string
+ * @return void
  */
 function connect_settings_field() {
 	$is_connected = PayPal\has_rest_api_connection();
 	$mode         = edd_is_test_mode() ? __( 'sandbox', 'easy-digital-downloads' ) : __( 'live', 'easy-digital-downloads' );
-	ob_start();
 
 	if ( ! $is_connected ) {
-		/**
-		 * Show Connect
-		 */
-
-		/*
-		 * If we have Partner details but no REST credentials then that most likely means
-		 * PayPal wasn't opened in the modal. We'll show an error message about popups.
-		 */
-		if ( get_partner_details() ) {
+		$onboarding_data = get_onboarding_data();
+		if ( 200 !== $onboarding_data['code'] || empty( $onboarding_data['body']->signupLink ) ) {
 			?>
 			<div class="notice notice-error inline">
 				<p>
 					<?php
 					echo wp_kses( sprintf(
 						/* Translators: %1$s opening <strong> tag; %2$s closing </strong> tag */
-						__( '%1$sConnection failure:%2$s This is most likely due to your browser blocking the connection. Most store owners have the best success with Chrome, but for some reason, a few select browsers/devices prevent the connection from EDD and PayPal from working. You might have to enable popups, then restart your browser. If that doesn\'t work, please try a different browser or device and see if that works. If you continue to experience this error, please contact support.', 'easy-digital-downloads' ),
+						__( '%1$sPayPal Communication Error:%2$s We are having trouble communicating with PayPal at the moment. Please try again later, and if the issue persists, reach out to our support team.', 'easy-digital-downloads' ),
 						'<strong>',
 						'</strong>'
 					), array( 'strong' => array() ) );
@@ -56,17 +48,17 @@ function connect_settings_field() {
 				</p>
 			</div>
 			<?php
+		} else {
+			?>
+			<a type="button" target="_blank" id="edd-paypal-commerce-link" class="button button-secondary" href="<?php echo $onboarding_data['body']->signupLink; ?>&displayMode=minibrowser" data-paypal-onboard-complete="eddPayPalOnboardingCallback" data-paypal-button="true" data-paypal-onboard-button="true" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal_connect' ) ); ?>">
+				<?php
+				/* Translators: %s - the store mode, either `sandbox` or `live` */
+				printf( esc_html__( 'Connect with PayPal in %s mode', 'easy-digital-downloads' ), esc_html( $mode ) );
+				?>
+			</a>
+			<?php
 		}
 		?>
-		<button type="button" id="edd-paypal-commerce-connect" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal_connect' ) ); ?>">
-			<?php
-			/* Translators: %s - the store mode, either `sandbox` or `live` */
-			printf( esc_html__( 'Connect with PayPal in %s mode', 'easy-digital-downloads' ), esc_html( $mode ) );
-			?>
-		</button>
-		<a href="#" target="_blank" id="edd-paypal-commerce-link" class="edd-hidden" data-paypal-onboard-complete="eddPayPalOnboardingCallback" data-paypal-button="true">
-			<?php esc_html_e( 'Sign up for PayPal', 'easy-digital-downloads' ); ?>
-		</a>
 		<div id="edd-paypal-commerce-errors"></div>
 		<?php
 	} else {
@@ -86,69 +78,120 @@ function connect_settings_field() {
 	?>
 
 	<?php
-	return ob_get_clean();
+}
+add_action( 'edd_paypal_connect_button', __NAMESPACE__ . '\connect_settings_field' );
+
+/**
+ * Single function to make a request to get the onboarding URL and nonce.
+ *
+ * Previously we did this in process_connect method, but we've moved away from the AJAX useage of this
+ * in favor of doing it on loading the settings field, to make loading the modal more reliable and faster.
+ *
+ * @since 3.1.2
+ */
+function get_onboarding_data() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return array(
+			'code' => 403,
+			'body' => array(
+				'message' => __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ),
+			),
+		);
+	}
+
+	$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+
+	$existing_connect_details = get_partner_details( $mode );
+
+	if ( ! empty( $existing_connect_details ) ) {
+		// Ensure the data we have contains all necessary details.
+		if (
+			( ! empty( $existing_connect_details->expires ) && $existing_connect_details->expires > time() ) &&
+			! empty( $existing_connect_details->nonce ) &&
+			! empty( $existing_connect_details->signupLink ) && // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			! empty( $existing_connect_details->product )
+		) {
+			return array(
+				'code' => 200,
+				'body' => $existing_connect_details,
+			);
+		}
+	}
+
+	$response = wp_remote_post(
+		EDD_PAYPAL_PARTNER_CONNECT_URL . 'signup-link',
+		array(
+			'headers'    => array(
+				'Content-Type' => 'application/json',
+			),
+			'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
+			'body'       => wp_json_encode(
+				array(
+					'mode'          => $mode,
+					'country_code'  => edd_get_shop_country(),
+					'currency_code' => edd_get_currency(),
+					'return_url'    => get_settings_url(),
+				)
+			),
+		)
+	);
+
+	$code = wp_remote_retrieve_response_code( $response );
+
+	if ( is_wp_error( $response ) ) {
+
+		return array(
+			'code' => $code,
+			'body' => $response->get_error_message(),
+		);
+	}
+
+	$body = wp_remote_retrieve_body( $response );
+	$body = json_decode( $body );
+
+	// We're storing an expiration so we can get a new one if it's been a day.
+	$body->expires = time() + DAY_IN_SECONDS;
+
+	// We need to store this temporarily so we can use the nonce again in the next request.
+	update_option( 'edd_paypal_commerce_connect_details_' . $mode, wp_json_encode( $body ), false );
+
+	return array(
+		'code' => $code,
+		'body' => $body,
+	);
 }
 
 /**
  * AJAX handler for processing the PayPal Connection.
  *
  * @since 2.11
+ * @deprecated 3.1.2 Instead of doing this via an AJAX request, we now do this on page load.
+ *
  * @return void
  */
 function process_connect() {
+	_edd_deprecated_function( __FUNCTION__, '3.1.2', 'EDD_PayPal_Commerce::get_onboarding_data()' );
+
 	// This validates the nonce.
 	check_ajax_referer( 'edd_process_paypal_connect' );
 
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
-	}
+	$onboarding_data = get_onboarding_data();
 
-	$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
-
-	$response = wp_remote_post( EDD_PAYPAL_PARTNER_CONNECT_URL . 'signup-link', array(
-		'headers' => array(
-			'Content-Type' => 'application/json',
-		),
-		'body'    => json_encode( array(
-			'mode'          => $mode,
-			'country_code'  => edd_get_shop_country(),
-			'currency_code' => edd_get_currency(),
-			'return_url'    => get_settings_url()
-		) ),
-		'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
-	) );
-
-	if ( is_wp_error( $response ) ) {
-		wp_send_json_error( $response->get_error_message() );
-	}
-
-	$code = wp_remote_retrieve_response_code( $response );
-	$body = json_decode( wp_remote_retrieve_body( $response ) );
-
-	if ( 200 !== intval( $code ) ) {
+	if ( 200 !== intval( $onboarding_data['code'] ) ) {
 		wp_send_json_error( sprintf(
 		/* Translators: %d - HTTP response code; %s - Response from the API */
 			__( 'Unexpected response code: %d. Error: %s', 'easy-digital-downloads' ),
-			$code,
-			json_encode( $body )
+			$onboarding_data['code'],
+			wp_json_encode( $onboarding_data['body'] )
 		) );
 	}
 
-	if ( empty( $body->signupLink ) || empty( $body->nonce ) ) {
+	if ( empty( $onboarding_data['body']->signupLink ) || empty( $onboarding_data['body']->nonce ) ) {
 		wp_send_json_error( __( 'An unexpected error occurred.', 'easy-digital-downloads' ) );
 	}
 
-	/**
-	 * We need to store this temporarily so we can use the nonce again in the next request.
-	 *
-	 * @see get_access_token()
-	 */
-	update_option( 'edd_paypal_commerce_connect_details_' . $mode, json_encode( $body ) );
-
-	wp_send_json_success( $body );
+	wp_send_json_success( $onboarding_data['body'] );
 }
-
-add_action( 'wp_ajax_edd_paypal_commerce_connect', __NAMESPACE__ . '\process_connect' );
 
 /**
  * AJAX handler for processing the PayPal Reconnect.
@@ -187,7 +230,6 @@ function process_reconnect() {
 
 	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
 }
-
 add_action( 'wp_ajax_edd_paypal_commerce_reconnect', __NAMESPACE__ . '\process_reconnect' );
 
 /**
@@ -195,7 +237,7 @@ add_action( 'wp_ajax_edd_paypal_commerce_reconnect', __NAMESPACE__ . '\process_r
  *
  * @param string $mode Store mode. If omitted, current mode is used.
  *
- * @return array|null
+ * @return stdObj|null
  */
 function get_partner_details( $mode = '' ) {
 	if ( ! $mode ) {
@@ -232,23 +274,27 @@ function get_and_save_credentials() {
 
 	$paypal_subdomain = edd_is_test_mode() ? '.sandbox' : '';
 	$api_url          = 'https://api-m' . $paypal_subdomain . '.paypal.com/';
-
-	/*
-	 * First get a temporary access token from PayPal.
-	 */
-	$response = wp_remote_post( $api_url . 'v1/oauth2/token', array(
+	$api_args         = array(
 		'headers' => array(
 			'Content-Type'  => 'application/x-www-form-urlencoded',
 			'Authorization' => sprintf( 'Basic %s', base64_encode( $_POST['share_id'] ) ),
-			'timeout'       => 15
+			'timeout'       => 15,
 		),
 		'body'    => array(
 			'grant_type'    => 'authorization_code',
 			'code'          => $_POST['auth_code'],
-			'code_verifier' => $partner_details->nonce
+			'code_verifier' => $partner_details->nonce,
 		),
 		'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
-	) );
+	);
+
+	/*
+	 * First get a temporary access token from PayPal.
+	 */
+	$response = wp_remote_post(
+		$api_url . 'v1/oauth2/token',
+		$api_args
+	);
 
 	if ( is_wp_error( $response ) ) {
 		wp_send_json_error( $response->get_error_message() );
@@ -258,11 +304,13 @@ function get_and_save_credentials() {
 	$body = json_decode( wp_remote_retrieve_body( $response ) );
 
 	if ( empty( $body->access_token ) ) {
-		wp_send_json_error( sprintf(
-		/* Translators: %d - HTTP response code */
-			__( 'Unexpected response from PayPal while generating token. Response code: %d. Please try again.', 'easy-digital-downloads' ),
-			$code
-		) );
+		wp_send_json_error(
+			sprintf(
+				/* Translators: %d - HTTP response code */
+				__( 'Unexpected response from PayPal while generating token. Response code: %d. Please try again.', 'easy-digital-downloads' ),
+				$code
+			)
+		);
 	}
 
 	/*
@@ -599,9 +647,15 @@ function process_delete() {
 		'paypal_' . $mode . '_client_id',
 		'paypal_' . $mode . '_client_secret',
 	);
+
 	foreach ( $edd_settings_to_delete as $option_name ) {
 		edd_delete_option( $option_name );
 	}
+
+	// Unset the PayPal Commerce gateway as an enabled gateway.
+	$enabled_gateways = edd_get_option( 'gateways', array() );
+	unset( $enabled_gateways['paypal_commerce'] );
+	edd_update_option( 'gateways', $enabled_gateways );
 
 	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
 	exit;

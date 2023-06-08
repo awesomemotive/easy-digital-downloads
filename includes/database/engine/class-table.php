@@ -883,15 +883,7 @@ abstract class Table extends Base {
 	 * @return bool
 	 */
 	private function is_testing() {
-		return (bool)
-
-			// Tests constant is being used
-			( defined( 'WP_TESTS_DIR' ) && WP_TESTS_DIR )
-
-			||
-
-			// Scaffolded (https://make.wordpress.org/cli/handbook/plugin-unit-tests/)
-			function_exists( '_manually_load_plugin' );
+		return edd_is_doing_unit_tests();
 	}
 
 	/**

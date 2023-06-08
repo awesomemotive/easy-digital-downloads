@@ -161,7 +161,7 @@ add_filter( 'login_url', 'edd_update_login_url', 10, 3 );
 function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
 
 	// Don't change the login URL if the request is an admin request.
-	if ( is_admin() ) {
+	if ( ! edd_doing_ajax() && is_admin() ) {
 		return $url;
 	}
 

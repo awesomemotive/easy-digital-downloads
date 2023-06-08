@@ -75,20 +75,20 @@ class EDD_License {
 		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
 		$this->edd_license    = new License( $this->item_name, $_optname );
-		if ( empty( $this->edd_license->key ) ) {
-			$this->edd_license = new License( 'pro' );
-			if ( ! empty( $this->edd_license->key ) ) {
+		if ( empty( $_api_url ) && ( empty( $this->edd_license->key ) || empty( $this->edd_license->license ) ) ) {
+			$pro_license = new License( 'pro' );
+			if ( ! empty( $pro_license->key ) ) {
 				$this->is_pro_license = true;
+				$this->edd_license    = $pro_license;
 			}
 		}
 		$this->license      = $this->edd_license->key;
 		$this->author       = $_author;
-		$this->api_handler  = new API();
-		$this->api_url      = is_null( $_api_url ) ? $this->api_handler->get_url() : $_api_url;
+		$this->api_handler  = new API( $_api_url );
+		$this->api_url      = $_api_url;
 		$this->pass_manager = new \EDD\Admin\Pass_Manager();
 
 		// Setup hooks
-		$this->includes();
 		$this->hooks();
 
 		/**
@@ -100,12 +100,12 @@ class EDD_License {
 		 *
 		 * @see \EDD\Admin\Promos\Notices\License_Upgrade_Notice::__construct()
 		 */
-		if ( ! empty( $this->license ) ) {
+		if ( is_null( $this->api_url ) ) {
 			global $edd_licensed_products;
 			if ( ! is_array( $edd_licensed_products ) ) {
 				$edd_licensed_products = array();
 			}
-			$edd_licensed_products[] = $this->item_shortname;
+			$edd_licensed_products[ $this->item_shortname ] = (int) (bool) ( $this->license && empty( $this->edd_license->error ) );
 		}
 	}
 
@@ -115,11 +115,7 @@ class EDD_License {
 	 * @access  private
 	 * @return  void
 	 */
-	private function includes() {
-		if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) )  {
-			require_once 'EDD_SL_Plugin_Updater.php';
-		}
-	}
+	private function includes() {}
 
 	/**
 	 * Setup hooks
@@ -130,15 +126,10 @@ class EDD_License {
 	private function hooks() {
 
 		// Register settings
-		add_filter( 'edd_settings_licenses', array( $this, 'settings' ), 1 );
-
-		// Display help text at the top of the Licenses tab
-		add_action( 'edd_settings_tab_top', array( $this, 'license_help_text' ) );
+		add_filter( 'edd_settings_licenses', array( $this, 'settings' ) );
 
 		// Check that license is valid once per week
-		if ( edd_doing_cron() ) {
-			add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
-		}
+		add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
 
 		// For testing license notices, uncomment this line to force checks on every page load
 		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
@@ -176,7 +167,7 @@ class EDD_License {
 
 		$license = $this->license;
 		// Fall back to the highest license key if one is not saved for this extension or there isn't a pro license.
-		if ( empty( $license ) ) {
+		if ( empty( $license ) && empty( $this->api_url ) ) {
 			if ( $this->pass_manager->highest_license_key ) {
 				$license = $this->pass_manager->highest_license_key;
 			}
@@ -200,9 +191,13 @@ class EDD_License {
 			$args['item_name'] = $this->item_name;
 		}
 
+		if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
+			require_once 'EDD_SL_Plugin_Updater.php';
+		}
+
 		// Setup the updater
 		new EDD_SL_Plugin_Updater(
-			$this->api_url,
+			is_null( $this->api_url ) ? $this->api_handler->get_url() : $this->api_url,
 			$this->file,
 			$args
 		);
@@ -224,64 +219,11 @@ class EDD_License {
 				'options' => array(
 					'is_valid_license_option' => $this->item_shortname . '_license_active',
 					'item_id'                 => $this->item_id,
+					'api_url'                 => $this->api_url,
 				),
 				'size'    => 'regular',
 			)
 		) );
-	}
-
-	/**
-	 * Display help text at the top of the Licenses tag
-	 *
-	 * @since   2.5
-	 * @param   string   $active_tab
-	 * @return  void
-	 */
-	public function license_help_text( $active_tab = '' ) {
-		static $has_ran = false;
-
-		if ( 'licenses' !== $active_tab ) {
-			return;
-		}
-
-		if ( ! empty( $has_ran ) ) {
-			return;
-		}
-
-		?>
-		<div class="edd-licenses__description">
-			<p>
-				<?php
-				printf(
-					__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %srenew your license%s.', 'easy-digital-downloads' ),
-					'<a href="https://easydigitaldownloads.com/docs/license-renewal/" target="_blank">',
-					'</a>'
-				);
-				?>
-			</p>
-			<?php if ( ! $this->pass_manager->highest_license_key ) : ?>
-				<p>
-					<?php
-					$url = edd_get_admin_url(
-						array(
-							'page' => 'edd-settings',
-							'tab'  => 'general',
-						)
-					);
-					printf(
-						__( 'Have a pass? You\'re ready to set up EDD (Pro). %1$sActivate Your Pass%2$s' ),
-						'<a href="' . esc_url( $url ) . '" class="button button-primary">',
-						'</a>'
-					);
-					?>
-				</p>
-			<?php
-			endif;
-			?>
-		</div>
-		<?php
-
-		$has_ran = true;
 	}
 
 	/**
@@ -293,7 +235,7 @@ class EDD_License {
 	public function weekly_license_check() {
 
 		// If a pro license is active, that license check is handled separately.
-		if ( $this->is_pro_license ) {
+		if ( $this->is_pro_license && empty( $this->api_url ) ) {
 			return;
 		}
 
@@ -322,7 +264,9 @@ class EDD_License {
 			return false;
 		}
 
-		$this->pass_manager->maybe_set_pass_flag( $this->license, $license_data );
+		if ( empty( $this->api_url ) ) {
+			$this->pass_manager->maybe_set_pass_flag( $this->license, $license_data );
+		}
 		$this->edd_license->save( $license_data );
 	}
 
@@ -332,8 +276,6 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function notices() {
-		static $showed_invalid_message = false;
-
 		if ( empty( $this->license ) ) {
 			return;
 		}
@@ -342,28 +284,25 @@ class EDD_License {
 			return;
 		}
 
-		$messages = array();
-
-		$license = $this->edd_license;
-
-		if ( ( empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_invalid_message ) ) {
-			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
-
-				$messages[] = sprintf(
-					__( 'You have invalid or expired license keys for Easy Digital Downloads. <a href="%s">Fix this</a>', 'easy-digital-downloads' ),
-					esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'licenses' ) ) )
-				);
-
-				$showed_invalid_message = true;
-			}
+		if ( ! empty( $_GET['tab'] ) && 'licenses' === $_GET['tab'] ) {
+			return;
 		}
 
-		if ( ! empty( $messages ) ) {
-			foreach( $messages as $message ) {
-				echo '<div class="edd-notice error">';
-					echo '<p>' . $message . '</p>';
-				echo '</div>';
-			}
+		if ( ( empty( $this->edd_license->license ) || 'valid' !== $this->edd_license->license ) ) {
+
+			EDD()->notices->add_notice(
+				array(
+					'id'             => 'edd-missing-license',
+					'class'          => "error {$this->item_shortname}-license-error",
+					'message'        => sprintf(
+						/* translators: 1. opening anchor tag; 2. closing anchor tag */
+						__( 'You have invalid or expired license keys for Easy Digital Downloads. %1$sActivate License(s)%2$s', 'easy-digital-downloads' ),
+						'<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'licenses' ) ) ) . '" class="button button-secondary">',
+						'</a>'
+					),
+					'is_dismissible' => false,
+				)
+			);
 		}
 	}
 
@@ -568,6 +507,16 @@ class EDD_License {
 			delete_option( $this->item_shortname . '_license_active' );
 		}
 	}
+
+	/**
+	 * Display help text at the top of the Licenses tag
+	 *
+	 * @since   2.5
+	 * @deprecated 3.1.1.4
+	 * @param   string   $active_tab
+	 * @return  void
+	 */
+	public function license_help_text( $active_tab = '' ) {}
 }
 
 endif; // end class_exists check

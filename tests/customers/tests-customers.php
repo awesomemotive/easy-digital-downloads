@@ -220,6 +220,24 @@ class Tests_Customers extends EDD_UnitTestCase {
 		$this->assertFalse( edd_get_users_purchases( 0 ) );
 	}
 
+	public function test_edd_get_users_purchases_new_email_equals_1() {
+		$customer = self::$customers[0];
+		$email    = 'totallynewemail@edd.local';
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => $customer->id,
+				'type'        => 'primary',
+				'email'       => $email,
+			)
+		);
+		$purchases = edd_get_users_purchases( $email );
+		if ( is_array( $purchases ) ) {
+			$purchases = count( $purchases );
+		}
+
+		$this->assertEquals( 1, $purchases );
+	}
+
 	public function test_user_has_purchases_not_logged_in_should_return_false() {
 		$current_user = get_current_user_id();
 		wp_set_current_user( 0 );

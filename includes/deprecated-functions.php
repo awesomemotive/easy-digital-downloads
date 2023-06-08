@@ -2135,3 +2135,20 @@ function edd_ajax_filter_download_where( $where, $wp_query ) {
 
 	return $search->filter_where( $where, $wp_query );
 }
+
+/**
+ * Gets the next available order number.
+ *
+ * This is used when inserting a new order.
+ *
+ * @deprecated 3.1.2
+ * @since 2.0
+ * @return false|int $number The next available order number, unformatted.
+ */
+function edd_get_next_payment_number() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.1.2', 'EDD\Orders\Number\get_next_payment_number' );
+	$order_number = new EDD\Orders\Number();
+
+	return $order_number->get_next_payment_number();
+}

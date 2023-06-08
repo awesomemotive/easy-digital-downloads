@@ -610,7 +610,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		$items = edd_get_cart_content_details();
 
-		$this->assertEquals( 'Test Download - Simple', edd_get_cart_item_name( $items[0] ) );
+		$this->assertEquals( 'Test Download — Simple', edd_get_cart_item_name( $items[0] ) );
 	}
 
 	public function test_cart_total_with_global_fee() {
@@ -733,5 +733,27 @@ class Test_Cart extends EDD_UnitTestCase {
 	public function test_cart_is_not_empty() {
 		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
 		$this->assertFalse( edd_is_cart_empty() );
+	}
+
+	public function test_edd_process_add_to_cart_invalid_data_is_empty() {
+		edd_empty_cart();
+		edd_process_add_to_cart(
+			array(
+				'edd_options'           => '',
+				'edd_download_quantity' => 1,
+			)
+		);
+		$this->assertTrue( edd_is_cart_empty() );
+	}
+
+	public function test_edd_process_add_to_cart_valid_download_is_in_cart() {
+		edd_empty_cart();
+		edd_process_add_to_cart(
+			array(
+				'download_id' => self::$download->ID,
+			)
+		);
+
+		$this->assertTrue( edd_item_in_cart( self::$download->ID ) );
 	}
 }

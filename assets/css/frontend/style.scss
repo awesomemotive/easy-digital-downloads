@@ -336,6 +336,12 @@
 	margin-bottom: 15px;
 }
 
+/* Left align the loading on taxes */
+.edd_cart_tax .edd-loading-ajax.edd-loading {
+	margin: 0px 0px 0px auto;
+	display: inline-block;
+}
+
 /* Desktop and tablet */
 @media only screen and (min-width: 768px) {
 	#edd-amazon-address-box,
