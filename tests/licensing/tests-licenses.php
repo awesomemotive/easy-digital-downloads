@@ -27,6 +27,10 @@ class Tests_Licenses extends EDD_UnitTestCase {
 	}
 
 	public function test_no_pro_license() {
+		if ( ! class_exists( '\\EDD\\Pro\\Core' ) ) {
+			$this->markTestSkipped( 'EDD Pro is not available.' );
+		}
+
 		$license = self::$pass_handler->get_pro_license();
 
 		$this->assertEmpty( $license->key );
