@@ -156,7 +156,7 @@ class Handler {
 		$api_params = wp_parse_args(
 			$api_params,
 			array(
-				'url' => home_url(),
+				'url' => network_home_url(),
 			)
 		);
 		$api        = new \EDD\Licensing\API();

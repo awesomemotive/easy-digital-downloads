@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.4
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable Tag: 3.1.1.3
+Stable Tag: 3.1.2
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the #1 eCommerce plugin written for digital creators by digital creators.
@@ -226,7 +226,72 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 
 == Changelog ==
 
-= 3.1.1.3, March 23, 2023 =
+= 3.1.2 =
+* New: The EDD "System Info" has been retired and instead our data is registered with WordPress Core's Site Health.
+* Improvement: We've drastically reduced the possibility of a collision when using Sequential Order Numbers.
+* Improvement: We've changed the 'Default' item in the Product Type dropdown to 'Single Product' to avoid confusion.
+* Improvement: Gateways can now inform EDD if they are properly set up, and prevent enabling them if they are not configured.
+* Improvement: The PayPal Commerce onboarding process has been revamped for speed and reliability.
+* Improvement: The EDD 3.x migration process has been updated to defer all customer and product calculations until the migration is complete, with improved messaging.
+* Improvement - Stripe: We've added a filter to allow users to remove the 'Terms' text that shows below card fields.
+* Improvement - Stripe: When a user disconnects from Stripe Connect, Stripe is unchecked as an 'active' gateway.
+* Improvement - Blocks: When no downloads are created, download related blocks were not correctly showing the button to add a new download.
+* Improvement - Blocks: EDD's blocks were not respecting custom Download labels.
+* Fix: Pass license keys did not always hold their activation status on multisite installs.
+* Fix: In some edge cases, it was possible to produce a fatal error in PHP 8.0 when adding items to the cart.
+* Fix: Improved capability checks and nonce detection on some actions.
+* Fix: Item fees could fail validation in some cases, resulting in missed fees.
+* Fix: The Payments Query class was incorrectly passing the `id__not_in` as `id__in`.
+* Fix: The AJAX cart content response was not using the new method of getting cart item names.
+* Fix: A more user friendly error message is shown to non-privileged users if no gateways are enabled.
+* Fix: The Login URL in user registration emails was not correct when the purchase was made with Stripe.
+* Fix: The calculated fees could differ from the fees that are displayed in the cart contents.
+* Fix: When importing downloads, in some cases, the images were not identified as local files.
+* Fix: The Download Tag taxonomy admin area was not being identified as an EDD Admin area.
+* Fix: There was a possibility of an undefined variable when requesting a password reset.
+* Fix - Stripe: The Recurring Payments update form could load incorrectly if split fields was enabled prior to swtiching to Payment Elements.
+* Fix - Stripe: Multiple improvements to the Stripe form load states when cart recalculations are being run.
+* Fix - Stripe: In some cases, the purchase form was not re-enabled after fixing HTML5 validation errors.
+* Fix - Stripe: Customers updating the payment method for a failing subscription could see an error message when the failed invoice was voided, even though the subscription was updated successfully.
+* Fix - Blocks: The reCAPTCHA key field is now a Password field type.
+* Fix - Blocks: The User Downloads blocks could show duplicate items.
+* Fix - Blocks: Extensions which added data to the cart could display without styling.
+* Dev: The functions to get the lowest & highest price options have been abstracted, improved, and now have unit tests.
+* Dev: Upgrade routines prior to 3.0 have been deprecated.
+* Dev: A new CLI command, `recalculate_customer_values` has been registered to recalculate sales and earnings for all customers.
+* Dev - Stripe: It is now possible to force 'Card Fields' to be available on new installs, by switching on EDD's Debug Mode.
+
+View the full changelog at [https://easydigitaldownloads.com/changelog/](https://easydigitaldownloads.com/changelog/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
+= 3.1.1.4.2 =
+* Security: Improved validation for edd hooks.
+
+= 3.1.1.4.1 =
+* Fix - Blocks: Harden blocks loader to verify files exist before requiring them.
+
+= 3.1.1.4 =
+* Improvement: Removed a possible unsupported PHP configuration from the email summaries.
+* Improvement: The edd_get_users_purchases function has been updated to account for customer email address changes.
+* Improvement: Reports have been updated to more accurately account for timezones and date ranges.
+* Improvement: The onboarding wizard loading was not allowing a close and exit after the first step.
+* Improvement: License key handling for 3rd party extensions has been accounted for.
+* Improvement: When using sequential order numbers, searching has been updated to account for order number.
+* Improvement - Stripe: The Payment Element has been improved to handle failed 3DS challenges.
+* Improvement - Stripe: Failed payment attempts are now more reliably accounted for.
+* Improvement - Stripe: The Payment Element billing fields can now be filtered.
+* Improvement - Stripe: The Payment Element now supports mandates, improving multi-regional payments.
+* Improvement - Stripe: The 'Card Name' field is re-introduced for regions that require it.
+* Improvement - Blocks: Better support for custom fields with the Checkout Block.
+* Improvement - Blocks: Developers can now register custom columns for the User Downloads block.
+* Improvement - Blocks: The Buy Now button can now have its behavior defined as Add to Cart or Buy Now.
+* Fix: Discounts with high value amounts were not saving correctly.
+* Fix: Bulk Editing prices was not working with WordPress 6.1+.
+* Fix: Exporting product sales was not always respecting the date range filters.
+* Fix: Exports with date queries were not always accounting for timezones accurately.
+* Fix - Blocks: Cart section headings were not always displayed when reloading the section via AJAX.
+* Dev: New custom hooks in database row transitions have been added.
+
+= 3.1.1.3 =
 * Improvement: The orders list table in the admin now sorts orders by date as the default.
 * Improvement: Removed unnecessary options in the onboarding wizard.
 * Improvement - Stripe: Store owners can now [control which payment methods to accept within their Stripe account](https://easydigitaldownloads.com/docs/stripe/#how-to-manage-payment-methods).
@@ -235,7 +300,7 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Fix: Existing tables might not have been updated correctly.
 * Fix: Attempting to update the default email address from the profile editor could fail in some circumstances.
 
-= 3.1.1.2, March 17, 2023 =
+= 3.1.1.2 =
 * Improvement: The order details screen in the admin has been updated to use the Currency class to be consistent with customer receipts.
 * Improvement: Determining whether a plugin is a core extension for telemetry data has been improved.
 * Fix: Enabling/disabling the sequential order numbers setting no longer prompts an upgrade notice, since that setting does not affect past orders.
@@ -247,7 +312,7 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Dev: Using `get_page_by_title` has been deprecated in WordPress 6.2; our importer has been updated accordingly.
 * Dev - Stripe: Unneeded source files are no longer included in the release.
 
-= 3.1.1.1, March 14, 2023 =
+= 3.1.1.1 =
 * Fix: Ensure that Stripe only tries to verify the domain for Apple Pay when Stripe is connected.
 * Fix: PHP 7.1 Compatibility with Stripe.
 * Improvement: Avoid a race condition when updating where a function might not be available for a moment.
@@ -286,262 +351,6 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Dev: Additional debugging has been added if a legacy payment cannot be migrated due to invalid payment metadata.
 * Dev: The discounts HTML is now always filterable, even if there are no discounts applied.
 * Dev: Code for the legacy WordPress media loader has been removed.
-
-= 3.1.0.6, February 9, 2023 =
-* Improvement: The PayPal Backup IPN now sends the payment date when handling a renewal from Recurring Payments.
-* Improvement: Further improve the AJAX download search.
-* Fix: Improved reliability with the PayPal API.
-* Fix: Some plugins could conflict with the login URL filter to customize the login page.
-* Fix: It is now possible to deselect a page in the settings after it's been set.
-* Fix: All documentation links have been updated to use the new locations.
-* Fix: Some passwords could not be validated when using the login form on the checkout page.
-* Fix: The orders export did not allow only orders with a specific status to be exported.
-
-= 3.1.0.5, January 25, 2023 =
-* Improvement: New customer report tiles now only count customers with purchases.
-* Improvement: The email address field at checkout now adheres to the database schema and limits to 100 characters.
-* Improvement: Further improve the AJAX download search to be more accurate.
-* Fix: Earnings exports report now accounts for partially refunded orders.
-* Fix: Added validation to prevent duplicate order addresses from being inserted.
-* Fix: When saving a non-variable product, an empty post meta value was being saved.
-* Improvement - Blocks: Updating the wording for the Disable Redownload setting if the block is available.
-* Fix - Blocks: Added sanitization to the 'additional classes' block setting before rendering the block.
-
-= 3.1.0.4, January 5, 2023 =
-* Improvement: The cart performance has been improved by disabling tax rate lookups when a customer address is supplied, but taxes are disabled.
-* Improvement: Reports now factor in order item adjustments like negative fees.
-* Improvement: The Downloads list table now loads faster on sites with a large number of download categories.
-* Improvement: The Sales REST API Endpoint was updated to respect the new order statuses in EDD 3.0.
-* Improvement: Improve semantic markup by not allowing two of the same ID attribute for redirect to checkout buttons.
-* Improvement: Discount code lookup performance has been improved when looking up a discount by the discount code.
-* Fix: Looking up payments with a Download ID that was a string or integer would return incorrect or no orders.
-* Fix: Reduced the number of HTTP calls that the notifications API can make per day.
-* Fix: Avoid the "Request-URI Too Long" error when performing multiple actions in a row on list tables.
-* Fix: Negative fee amounts are now properly considered when determining an item's final price in the cart.
-* Fix: PayPal: Arabic characters in download names could cause an unexpected error during checkout.
-* Fix: PayPal: The backup IPN is not loaded if the PayPal integration is not connected.
-* Fix: PayPal: The payment_date field was assumed to be present when processing the backup IPN.
-* Fix: The edd_get_payment_amount function could improperly return an empty string instead of a float value.
-* Fix: Add to cart buttons were not using the token values to improve caching compatibility.
-* Fix: When many items were purchased at once, some order item download links were not working due to an improper status.
-* Fix: Hardened the search query for the AJAX endpoint for searching for downloads by title.
-
-= 3.1.0.3, November 23, 2022 =
-* Improvement: The PayPal webhook connect/disconnect process has been improved to ensure proper webhook delivery.
-* Improvement: An IPN Backup has been added to the PayPal gateway, to avoid missing webhooks that may have been disconnected.
-* Fix: PayPal Buy Now functionality has been fixed for guest users.
-* Fix: Exporting orders was including orders with the Trash status.
-* Fix: Trashed orders were showing in the purchase history shortcode (templates updated: history-downloads.php and history-purchases.php).
-* Fix: The file downloads graph was formatting integers as currency.
-* Fix: Searching by download ID on the Orders list table was not working.
-* Fix: In some timezone settings, the reports could incorrectly display.
-* Fix: Determining if a product can be purchased was improved for performance.
-* Fix: Switching gateways when resuming an order was resulting in the wrong gateway value being added to the database.
-* Fix: The migration process can now identify custom discount meta for migration to the new adjustment meta table.
-* Fix: Non-Standard (but still supported by WordPress) directory structures could fail if the site_url and home_url were different.
-* Fix: Discount amount calculations were assuming that the discount has Price ID assignments.
-* Fix: Logging in from the {receipt_link} in emails now properly redirects the user to the receipt page.
-* Fix - Blocks: The checkout block could prevent purchases if a logged in user did not have a name already.
-* Fix - Blocks: The Order History block no longer shows Trashed orders.
-* Fix - Blocks: Incompatible combinations of settings on the Checkout block could produce a fatal error.
-
-= 3.1.0.2, October 27, 2022 =
-* New - Blocks: The registration block now supports the WordPress password strength script.
-* Improvement: The products API now includes the product permalink.
-* Improvement: The user registration process and messaging has been updated to more closely match WordPress Core.
-* Improvement: Searching in the product dropdown is now restricted to titles only.
-* Improvement: The no-js/js class switcher has been prefixed and made more specific.
-* Improvement: Editing a bundled product has been updated to be more performant.
-* Improvement - Blocks: Fees in the cart/checkout blocks have been updated to more closely match cart items and other amounts.
-* Improvement - Blocks: Update block definitions so that icons show on the repository.
-* Improvement - Blocks: The order history block filter has been updated to not override filtered values.
-* Improvement - Blocks: A filter has been added to the Terms block to allow users to filter the query.
-* Fix: The 3.0 migration for customer addresses could create duplicate addresses.
-* Fix: A redundant database update for customer addresses was removed from the 3.0 migration.
-* Fix: The main checkout function now checks directly for the checkout block rather than relying on a filter.
-* Fix: The Tools screen could time out on a site with a large number of products.
-* Fix: The options for bundled products now show the general product in addition to each price option.
-* Fix: For some time zones, reports could show incorrect dates for a range such as "last quarter".
-* Fix: The block editor was not showing the correct list of authors for a download.
-* Fix: Some settings for the legacy cart widget could not be disabled once saved.
-* Fix: Customer names with unexpected characters could be improperly interpreted by spreadsheet apps.
-* Fix - Blocks: The checkout helper function was incorrectly returning true.
-* Fix - Blocks: The cart block is now disabled in the block editor.
-* Fix - Blocks: The purchase link filter could incorrectly override previous adjustments to the button class.
-* Dev: The CLI order migration has been updated to allow partial order migrations.
-
-= 3.1.0.1.1, October 21, 2022 =
-This is a very minor point release, with a single change to try and correct an issue within the PayPal API that is causing 403 and 400 errors.
-It is not intended to resolve the issue within PayPal's API, but offer us some time to continue to work with PayPal to solve the issue long term without it impacting customer's purchases.
-
-* IMPORTANT: If you have been experiencing issues with the PayPal webhooks, please update EDD and visit Downloads > Settings > Payments > PayPal and re-check your payment status and sync webhooks.
-* Fix: Attempts to create a specific user-agent to send to PayPal for webhook validation to avoid 403/400 errors.
-
-= 3.1.0.1, October 8, 2022 =
-* Fix: With taxes enabled, updating the address fields in the shortcode would replace the cart with the cart block.
-* Fix: The dashboard widget was not using the order currency to display amounts for recent orders.
-* Fix: No JS fallback buttons were being improperly toggled by JavaScript changes.
-
-= 3.1, October 6, 2022 =
-* New: Websites running WordPress 5.8 and above (and PHP 7.0 or greater) have access to ten new registered EDD blocks.
-* New: Store owners can receive weekly or monthly email summaries of their store's performance.
-* New - Blocks: A new EDD Products block has been registered to display downloads.
-* New - Blocks: A new EDD Terms block has been registered to display download categories or tags.
-* New - Blocks: A new EDD Buy Button block has been registered to display a purchase button for any download.
-* New - Blocks: A new EDD Cart block has been registered to show either a mini or full cart anywhere on your site.
-* New - Blocks: A new EDD Order History block has been registered to show a customer's order history.
-* New - Blocks: A new EDD Login block has been registered to render a login form which supports a full lost password recovery flow and reCAPTCHA support.
-* New - Blocks: A new EDD Registration block has been registered to render a registration form which includes reCAPTCHA support.
-* New - Blocks: A new EDD Receipt block has been registered to show a customer's receipt. This receipt supports guest purchases.
-* New - Blocks: A new EDD Confirmation block has been registered to show some order details when successfully completing a purchase.
-* New - Blocks: A new EDD Checkout block has been registered to completely update the EDD checkout experience. This block is still considered to be in beta.
-* Improvement: Store owners can now require that a user be logged into their account to download files.
-* Improvement: The CLI migration to EDD 3.0 has been updated to improve memory usage for larger stores.
-* Improvement: The PayPal Commerce button is disabled until required fields have been completed.
-* Improvement: Relative date ranges are now compared against similar ranges in reports.
-* Improvement: Report line graphs with multiple scales now use unique y-axes to display data.
-* Improvement: Development asset files have been removed from the final build.
-* Improvement: Updating download calculations has been moved from the order completion process to a slightly delayed cron event.
-* Improvement: Dismissing the advanced filters on the order table has been improved.
-* Improvement: Filters have been added to prevent certain logs from being recorded.
-* Improvement: EDD registered pages now show in the pages list table.
-* Improvement: The order ID column in the orders table no longer has a constrained width.
-* Improvement: Store admins can now view the customer receipt from a link on the orders table.
-* Improvement - Blocks: A confirmation page/block has been registered to separate the order completion view from the receipt.
-* Improvement - Blocks: If the core EDD cart and terms widgets are not already in use on the site, they will not be displayed in the block editor as legacy widgets.
-* Improvement - Stripe: Session validation throughout Stripe actions has been updated to improve reliability.
-* Improvement - Stripe: Error messages have been updated to help customers with failed purchases know what action to take.
-* Improvement - Stripe: Supported payment methods are included in the gateway registration.
-* Improvement - Stripe: Optimized validation during checkout.
-* Improvement - Stripe: Optimized cleanup of logging.
-* Improvement - Stripe: Added better checkout session handling.
-* Fix: Resetting the store was incorrectly deleting discounts and tax rates.
-* Fix: The price option assignment for variably priced bundled product conditions could be incorrectly assigned.
-* Fix: Report graphs could be inaccurate when grouping by month due to time zone adjustments.
-* Fix: Querying the Stats API for a store using a UTC relative time zone would crash the site.
-* Fix: Calculations for report tiles have been updated for consistency.
-* Fix: The `edd_load_gateway` JavaScript hook is now triggered when only one gateway is active.
-* Fix: Adding an adjustment on a manual order could cause unexpected cursor behavior.
-* Fix: Using `edd_insert_payment` with incomplete data now creates an order if possible, or fails without errors if not.
-* Fix: Legacy log functions now query logs correctly.
-* Fix: Stores with more than 30 tax rates now can view all rates on the settings screen.
-* Fix: Deleting a customer now properly deletes their orders as well.
-* Fix: It is now possible to set a 0% tax rate for a region to exclude taxes from being collected for that region even if a country wide rate exists.
-* Fix: When selecting a gateway and refreshing the checkout screen, some browsers could fail to load the payment fields.
-* Fix: Searching the orders table for a discount code which does not exist now correctly returns no orders.
-* Fix: The customers API endpoint now uses the correct parameters to return data.
-* Fix: When registering a new user from an EDD form, spaces were incorrectly removed from user names.
-* Fix: When the browser timezone differed from that of the Store, line graphs could offset the points from the gridlines.
-* Fix: Users with the shop worker role were not able to create new downloads.
-* Fix: Upon activation, EDD could have thrown a PHP notice about the orders table not existing on new installs.
-* Fix - Stripe: Customers were not always automatically logged in with Auto Register's successful purchase setting.
-* Fix - Stripe: When changing the store mode, the Stripe admin notice displayed incorrectly.
-* Dev: Legacy compatibility code has been removed from the downloads metabox.
-* Dev: A filter has been added to the customer row actions.
-* Dev: Drop-ins have been added to the system information file.
-* Dev: Templates which have been overridden now show in the system information file.
-* Dev: Test mode can now be activated by setting a constant and the setting will reflect this.
-
-= 3.0.4, September 6, 2022 =
-* Fix: Stripe Pro license key detection was not working on older versions of the Stripe Pro gateway.
-* Fix: Hour by hour graphs that spanned more than one day would group all data into the first day.
-* Fix: Reports that span more than one year would group stats by month only.
-* Fix: Some of the report tiles were not accurately accounting for refunded orders.
-* Fix: The purchase receipt was limited to only showing 30 items.
-* Fix: When using persistent object caching, discount codes would not always update immediately.
-* Fix: When manually adding a new order, region based tax rates were not updating.
-* Fix: Improved migration of order address data when checking tax rates of previous orders.
-* Fix: The `stats` API endpoint data did not match the reports data. This improves the iOS app accuracy.
-* Fix: The template modification checks for 3.0 compatibility were checking for modifications too often.
-* Fix: Guest customers using an email address associated with an existing user were not always connected.
-* Fix: When editing an order's address, it was not always saving changes.
-* Dev: Actions were added to the `edd_add_customer` and `edd_update_customer` functions.
-
-= 3.0.3, August 16, 2022 =
-* New: Added support for Global Tax rates as a fallback with the new Tax Rates UI.
-* Fix: The old 'fallback tax rate' was not imported as a new tax rate.
-* Fix: Improved discount code validation with product restrictions and requirements.
-* Fix: Viewing a custom report with a date range over 2 days could throw an undefined variable notice.
-* Fix: Single priced downloads were showing incorrect stats in reports.
-* Fix: Adding a download to a new order would not let you manually set prices in Safari.
-* Fix: When an order with a discount code is deleted, the discount code's usage count is decreased.
-* Fix: The total refund amount tile was incorrectly calculating the relative percentage.
-* Fix: The customer table upgrade assumed the table prefix hadn't been changed after installation of EDD 2.x.
-* Fix: The 3.0 migration could incorrectly identify a price ID as invalid and set it to the default price ID.
-* Fix: The file download log could produce an notice if a file had been deleted from a product.
-
-= 3.0.2.1, July 28, 2022 =
-* Fix: Upgrade warning notices were showing incorrectly for some sites.
-
-= 3.0.2, July 26, 2022 =
-* Fix: Customer verification URL was not working in the admin.
-* Fix: When cancelling an order once at PayPal, the checkout page could produce a Javascript error.
-* Fix: Swedish postal codes would not pass validation.
-* Fix: Non-Shop Manager roles could no longer leave notes on orders.
-* Fix: Searching orders was not working in the admin.
-* Fix: Template: Download History shortcode was not providing access to bundled products.
-* Fix: 3.0 Migration: Stores with no orders, but other data like discounts, did not prompt the user to run the migration.
-* Fix: EDD admin menu bar styles were not always loading correctly.
-* Fix: An admin notice is now shown if EDD detects that it was unable to create the proper database tables.
-* Fix: When showing taxes on product pricing, the % character was showing twice.
-* Fix: Improved error handling around importer tools.
-
-= 3.0.1, July 15, 2022 =
-* Fix: Setting the EDD_USE_PHP_SESSIONS constant to 'false' could result in empty carts.
-* Fix: Exporting reports with 'All Statuses' and a country/region fails.
-* Fix: Adding more than one additional customer email address in a row failed.
-* Fix: A fatal error could be triggered when attempting to output the JSON-LD structured data.
-* Fix: Adjust the debug mode setting to be more clearly stated.
-* Fix: Report graphs did not support hour-by-hour for some custom date queries.
-
-= 3.0, July 13, 2022 =
-* IMPORTANT: This is a major release, and should be tested in your staging environments prior to running on your live site.
-* Upgrade: This update will ask you to perform database maintenance once installed. Your site should remain functional during this time, but access to historical store data will be limited until the migration is complete.
-* New: Custom database tables have been added for all transactional data types in EDD.
-* New: Migrate orders, order items, tax rates, discount codes, fees, customer addresses, and transaction details to custom tables with the UI or WP-CLI migration tool.
-* New: All new reporting with advanced features for orders, downloads, customers, refunds, taxes, and more.
-* New: Downloads now use the Block Editor and are available in the REST API.
-* New: Improved tax settings, allowing historical data to be determined.
-* New: Fully featured Refund system, for accurate reporting which includes partial and full refund support.
-* New: Refunds can be initiated from within EDD for gateways which support it.
-* New: Filter orders with advanced rules like purchase total, product, country, or state.
-* New: New email marker insertion interface to assist in creating emails.
-* New: Ability to manually add orders, without an extension; the Manual Purchases extension will be deactivated automatically.
-* New: Discounts support start and end times, in addition to dates.
-* New: Discounts now support notes.
-* New: Use JSON-LD format for schema output.
-* New: The order details views have been redesigned completely to make managing orders easier.
-* Improvement: CSS styles have been updated and modernized throughout, including for jQuery and Chosen, as well as to improve mobile responsiveness.
-* Improvement: Chosen has been updated for improved performance and accessibility.
-* Improvement: Admin table views have been revised to be more responsive and consistent with WordPress core.
-* Improvement: Dates for orders and related data are stored in the database in UTC, and displayed in the store’s time zone.
-* Improvement: Discounts which have been used at least once can no longer be deleted.
-* Improvement: Admin screens, settings and input fields have been revised for improved accessibility.
-* Improvement: Order items for variably priced products now include the price option name.
-* Improvement: Language files have been removed from the deliverable package, and will rely on translate.wordpress.org going forward.
-* Improvement: Introduce a "Store Gateway" to handle free orders and orders not handled through another gateway.
-* Improvement: EDD HTML fields can now be required.
-* Improvement: Admin table views have been rewritten to more accurately represent object status counts.
-* Improvement: Because orders can be partially refunded, file deliverability is evaluated per order item, not order.
-* Improvement: Download and customer sales and earnings are now dynamically calculated.
-* Fix: Additional order statuses (like renewals) were not consistently included when querying for orders.
-* Fix: Customers were failing to be created when their email address exceeded 50 characters.
-* Fix: Improved performance of the `edd_has_user_purchased()` function.
-* Fix: Average earnings now accounts for fees.
-* Fix: The customer's list table could show an empty customer name.
-* Fix: Greatly improved the performance of the cart total calculation.
-* Fix: Single price products are saved to the order items table with a null price ID, to differentiate from variable products with a 0 price ID.
-* Templates: The receipt, order history, and download history templates have been updated to work with new order functions.
-* Dev: Introduced `edd_get_`, `edd_add_`, and `edd_delete_` helper functions to access new database methods.
-* Dev: Introduced `edd_maybe_add_customer_address` to ensure that only unique physical addresses are added to a customer.
-* Dev: Introduced helper functions such as `edd_get_admin_url`, `edd_is_dev_environment`, and `edd_redirect` to reduce the need to write repeated code.
-* Dev: The minimum PHP version has been updated to 5.6.
-* Dev: The minimum WordPress version has been updated to 4.9.
-* Dev: Added new helper functions to retrieve order status by state like gross, net, recoverable, deliverable.
-* Dev: A new `edd_is_cart_empty()` function was added.
-* Dev: Orders now use 'complete' as the final state instead of 'publish'.
-* Dev: Moved all script and style generation to use webpack.
-* Dev: EDD style settings have been deprecated.
 
 == Upgrade Notice ==
 IMPORTANT: Upgrading from Easy Digital Downloads 2.9.x to 3.0+ is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.

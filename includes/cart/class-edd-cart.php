@@ -438,7 +438,7 @@ class EDD_Cart {
 
 		if ( $download->has_variable_prices()  && ! isset( $options['price_id'] ) ) {
 			// Forces to the default price ID if none is specified and download has variable prices
-			$options['price_id'] = get_post_meta( $download->ID, '_edd_default_price_id', true );
+			$options['price_id'] = $download->get_default_price_id();
 		}
 
 		if ( isset( $options['quantity'] ) ) {
@@ -1222,19 +1222,20 @@ class EDD_Cart {
 	 * Get the name of an item in the cart.
 	 *
 	 * @since 2.7
+	 * @since 3.1.2 Updated to use edd_get_download_name() for consistency
 	 *
 	 * @param array $item Item details
 	 * @return string $name Item name
 	 */
 	public function get_item_name( $item = array() ) {
-		$item_title = get_the_title( $item['id'] );
+		$download_id = $item['id'];
+		$price_id    = $this->get_item_price_id( $item );
 
+		$item_title = edd_get_download_name( $download_id, $price_id );
+
+		// In the event that we dont' get a name back, use the ID.
 		if ( empty( $item_title ) ) {
 			$item_title = $item['id'];
-		}
-
-		if ( edd_has_variable_prices( $item['id'] ) && false !== edd_get_cart_item_price_id( $item ) ) {
-			$item_title .= ' - ' . edd_get_cart_item_price_name( $item );
 		}
 
 		return apply_filters( 'edd_get_cart_item_name', $item_title, $item['id'], $item );

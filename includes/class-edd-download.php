@@ -306,7 +306,38 @@ class EDD_Download {
 		 * @param array $prices The array of variables prices.
 		 * @param int|string The ID of the download.
 		 */
-		return apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID );
+		return (array) apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID );
+	}
+
+	/**
+	 * Get the default Price ID for variable priced products.
+	 *
+	 * Since it is possible for the value to not be set on older products, we'll set it to the first price in the array
+	 * if one is not set, as that has been the default behavior since default prices were introduced.
+	 *
+	 * Storing it as the first if found, is just more consistent and intentional.
+	 *
+	 * @since 3.1.2
+	 *
+	 * @return int|null The default price ID, or null if the product does not have variable prices.
+	 */
+	public function get_default_price_id() {
+		if ( ! $this->has_variable_prices() ) {
+			return null;
+		}
+
+		$default_price_id = get_post_meta( $this->ID, '_edd_default_price_id', true );
+
+		// If no default price ID is set, or the default price ID is not in the prices array, set the first price as the default.
+		$prices = $this->get_prices();
+		if ( is_array( $prices ) && ( ! is_numeric( $default_price_id ) || ! array_key_exists( (int) $default_price_id, $prices ) ) ) {
+			$default_price_id = key( $prices );
+
+			// Set the default price ID
+			update_post_meta( $this->ID, '_edd_default_price_id', $default_price_id );
+		}
+
+		return absint( apply_filters( 'edd_variable_default_price_id', $default_price_id, $this->ID ) );
 	}
 
 	/**

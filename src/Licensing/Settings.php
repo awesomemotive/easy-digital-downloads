@@ -89,8 +89,12 @@ class Settings {
 					data-name="<?php echo esc_attr( $this->args['name'] ); ?>"
 					data-key="<?php echo esc_attr( $this->args['id'] ); ?>"
 				/>
-
 				<?php
+				if ( ! empty( $this->args['options']['api_url'] ) ) {
+					?>
+					<input type="hidden" name="apiurl" value="<?php echo esc_url( $this->args['options']['api_url'] ); ?>" />
+					<?php
+				}
 				$this->get_actions( $this->license->license, true );
 				?>
 			</div>

@@ -10,7 +10,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 
 	public function setup(): void {
 		parent::setUp();
-		wp_set_current_user(0);
+		wp_set_current_user( 0 );
 	}
 
 	/**
@@ -34,10 +34,12 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_process_login_form_incorrect_username() {
 
-		edd_process_login_form( array(
-			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
-			'edd_user_login'  => 'wrong_username',
-		) );
+		edd_process_login_form(
+			array(
+				'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+				'edd_user_login'  => 'wrong_username',
+			)
+		);
 
 		$errors = edd_get_errors();
 		$this->assertArrayHasKey( 'edd_invalid_login', $errors );
@@ -54,11 +56,13 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_username_invalid_pass() {
-		edd_process_login_form( array(
-			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
-			'edd_user_login'  => 'admin@example.org',
-			'edd_user_pass'   => 'falsepass',
-		) );
+		edd_process_login_form(
+			array(
+				'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+				'edd_user_login'  => 'admin@example.org',
+				'edd_user_pass'   => 'falsepass',
+			)
+		);
 
 		$errors = edd_get_errors();
 		$this->assertArrayHasKey( 'edd_invalid_login', $errors );
@@ -75,12 +79,14 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 */
 	public function test_process_login_form_correct_login() {
 		try {
-			edd_process_login_form( array(
-				'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
-				'edd_user_login'  => 'admin@example.org',
-				'edd_user_pass'   => 'password',
-				'edd_redirect'    => '',
-			) );
+			edd_process_login_form(
+				array(
+					'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+					'edd_user_login'  => 'admin@example.org',
+					'edd_user_pass'   => 'password',
+					'edd_redirect'    => '',
+				)
+			);
 		} catch ( \WPDieException $e ) {
 
 		}

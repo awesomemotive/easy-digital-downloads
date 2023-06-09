@@ -1765,7 +1765,8 @@ class EDD_CLI extends WP_CLI_Command {
 		} else {
 			if ( ! $full_migration ) {
 				WP_CLI::line( __( 'Partial order migration complete. Orders Processed: ', 'easy-digital-downloads' ) . $total );
-				WP_CLI::line( __( 'To recalculate all download sales and earnings, run wp edd `recalculate_download_sales_earnings`.', 'easy-digital-downloads' ) );
+				WP_CLI::line( __( 'To recalculate all download sales and earnings, run `wp edd recalculate_download_sales_earnings`.', 'easy-digital-downloads' ) );
+				WP_CLI::line( __( 'To recalculate all customer sales and earnings, run `wp edd recalculate_customer_values`.', 'easy-digital-downloads' ) );
 			} else {
 				WP_CLI::line( __( 'Migration complete: Orders', 'easy-digital-downloads' ) );
 				$new_count = edd_count_orders( array( 'type' => 'sale' ) );
@@ -1780,6 +1781,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 				$progress->tick();
 				$this->recalculate_download_sales_earnings();
+				$this->recalculate_customer_values();
 			}
 		}
 
@@ -1855,6 +1857,33 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all downloads.', 'easy-digital-downloads' ) );
 		WP_CLI::line( __( 'Downloads Updated: ', 'easy-digital-downloads' ) . $total );
+	}
+
+	/**
+	 * Recalculates all customer values.
+	 *
+	 * @since 3.1.2
+	 * @return void
+	 */
+	public function recalculate_customer_values() {
+		$customers = edd_get_customers(
+			array(
+				'number' => 9999999,
+			)
+		);
+		$total     = count( $customers );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Recalculating Customer Values', $total );
+			foreach ( $customers as $customer ) {
+				$customer->recalculate_stats();
+				$progress->tick();
+			}
+			$progress->finish();
+		}
+
+		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all customers.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Customers Updated: ', 'easy-digital-downloads' ) . $total );
 	}
 
 	/**

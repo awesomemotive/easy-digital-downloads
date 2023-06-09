@@ -58,7 +58,7 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  */
 function edd_process_add_to_cart( $data ) {
 	$download_id = ! empty( $data['download_id'] ) ? absint( $data['download_id'] ) : false;
-	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
+	$options     = isset( $data['edd_options'] ) ? (array) $data['edd_options'] : array();
 
 	if ( ! empty( $data['edd_download_quantity'] ) ) {
 		$options['quantity'] = absint( $data['edd_download_quantity'] );

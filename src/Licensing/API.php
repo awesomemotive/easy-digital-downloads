@@ -23,6 +23,18 @@ class API {
 	private $api_url = 'https://easydigitaldownloads.com/edd-sl-api';
 
 	/**
+	 * The class constructor.
+	 *
+	 * @since 3.1.1.4
+	 * @param null|string $url Optional; used only for requests to non-EDD sites.
+	 */
+	public function __construct( $url = null ) {
+		if ( ! empty( $url ) ) {
+			$this->api_url = $url;
+		}
+	}
+
+	/**
 	 * Gets the API URL.
 	 *
 	 * @since 3.1.1

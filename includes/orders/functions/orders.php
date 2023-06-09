@@ -127,12 +127,6 @@ function edd_trash_order( $order_id ) {
 
 			}
 		}
-
-		// Update the customer records when an order is trashed.
-		if ( ! empty( $order->customer_id ) ) {
-			$customer = new EDD_Customer( $order->customer_id );
-			$customer->recalculate_stats();
-		}
 	}
 
 	return filter_var( $trashed, FILTER_VALIDATE_BOOLEAN );
@@ -362,14 +356,8 @@ function edd_destroy_order( $order_id = 0 ) {
  */
 function edd_update_order( $order_id = 0, $data = array() ) {
 	$orders = new EDD\Database\Queries\Order();
-	$update = $orders->update_item( $order_id, $data );
 
-	if ( ! empty( $data['customer_id'] ) ) {
-		$customer = new EDD_Customer( $data['customer_id'] );
-		$customer->recalculate_stats();
-	}
-
-	return $update;
+	return $orders->update_item( $order_id, $data );
 }
 
 /**
@@ -803,7 +791,8 @@ function edd_build_order( $order_data = array() ) {
 		unset( $order_args['date_created'] );
 		edd_update_order( $order_id, $order_args );
 	} else {
-		$order_id = edd_add_order( $order_args );
+		$order_args['order_number'] = edd_set_order_number();
+		$order_id                   = edd_add_order( $order_args );
 	}
 
 	// If there is no order ID at this point, something went wrong.
@@ -1153,18 +1142,8 @@ function edd_build_order( $order_data = array() ) {
 		}
 	}
 
-	// Setup order number.
-	if ( edd_get_option( 'enable_sequential' ) ) {
-		$number = edd_get_next_payment_number();
-
-		$order_args['order_number'] = edd_format_payment_number( $number );
-
-		update_option( 'edd_last_payment_number', $number );
-	}
-
 	// Update the order with all of the newly computed values.
 	edd_update_order( $order_id, array(
-		'order_number' => $order_args['order_number'],
 		'subtotal'     => $subtotal,
 		'tax'          => $total_tax,
 		'discount'     => $total_discount,
@@ -1384,4 +1363,16 @@ function edd_generate_order_payment_key( $key ) {
 	 * @return string
 	 */
 	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
+}
+
+/**
+ * Helper function to get and maybe update the order number.
+ *
+ * @since 3.1.1.2
+ * @return string
+ */
+function edd_set_order_number() {
+	$order_number = new EDD\Orders\Number();
+
+	return $order_number->apply();
 }

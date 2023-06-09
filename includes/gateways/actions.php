@@ -57,6 +57,8 @@ add_action( 'wp_ajax_nopriv_edd_load_gateway', 'edd_load_ajax_gateway' );
  * Sets an error on checkout if no gateways are enabled
  *
  * @since 1.3.4
+ * @since 3.1.2 Updated to include a different message for users who do not have the manage_shop_settings capability.
+ *
  * @return void
  */
 function edd_no_gateway_error() {
@@ -65,7 +67,12 @@ function edd_no_gateway_error() {
 	if ( empty( $gateways ) && edd_get_cart_total() > 0 ) {
 		remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 		remove_action( 'edd_cc_form', 'edd_get_cc_form' );
-		edd_set_error( 'no_gateways', __( 'You must enable a payment gateway to use Easy Digital Downloads', 'easy-digital-downloads' ) );
+		if ( current_user_can( 'manage_shop_settings' ) ) {
+			$error_message = __( 'You must enable a payment gateway to use Easy Digital Downloads', 'easy-digital-downloads' );
+		} else {
+			$error_message = __( 'Your order cannot be completed at this time. Please try again or contact site support.', 'easy-digital-downloads' );
+		}
+		edd_set_error( 'no_gateways', $error_message );
 	} else {
 		edd_unset_error( 'no_gateways' );
 	}

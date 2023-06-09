@@ -735,44 +735,16 @@ function edd_register_downloads_report( $reports ) {
 					'data_callback' => function () use ( $download_data, $currency ) {
 						global $wpdb;
 
-						$dates        = Reports\get_dates_filter( 'objects' );
-						$day_by_day   = Reports\get_dates_filter_day_by_day();
-						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-
-						$sql_clauses = array(
-							'select'  => 'edd_oi.date_created AS date',
-							'where'   => '',
-							'groupby' => '',
-						);
+						$dates       = Reports\get_dates_filter( 'objects' );
+						$chart_dates = Reports\parse_dates_for_range( null, 'now', false );
+						$period      = Reports\get_graph_period();
+						$sql_clauses = Reports\get_sql_clauses( $period, 'edd_oi.date_created' );
 
 						$union_clauses = array(
 							'select'  => 'date',
-							'where'   => '',
-							'groupby' => '',
+							'groupby' => 'date',
+							'orderby' => 'date',
 						);
-
-						// Default to 'monthly'.
-						$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'edd_oi.date_created' );
-						$sql_clauses['orderby'] = 'MONTH(edd_oi.date_created)';
-
-						$union_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date' );
-						$union_clauses['orderby'] = 'MONTH(date)';
-
-						// Now drill down to the smallest unit.
-						if ( $hour_by_hour ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'edd_oi.date_created' );
-							$sql_clauses['orderby'] = 'HOUR(edd_oi.date_created)';
-
-							$union_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date' );
-							$union_clauses['orderby'] = 'HOUR(date)';
-						} elseif ( $day_by_day ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'edd_oi.date_created' );
-							$sql_clauses['orderby'] = 'DATE(edd_oi.date_created)';
-
-							$union_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date' );
-							$union_clauses['orderby'] = 'DATE(date)';
-						}
 
 						$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
 							? sprintf( 'AND price_id = %d', absint( $download_data['price_id'] ) )
@@ -782,14 +754,12 @@ function edd_register_downloads_report( $reports ) {
 						$earnings_status_string = implode( ', ', array_fill( 0, count( $earnings_statuses ), '%s' ) );
 
 						$order_item_earnings = $wpdb->prepare(
-							"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, %1s
+							"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, {$sql_clauses['select']}
 							FROM {$wpdb->edd_order_items} edd_oi
 							INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
-							WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_o.status IN ({$earnings_status_string})
+							WHERE edd_oi.product_id = %d {$price_id} AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_o.status IN ({$earnings_status_string})
 							GROUP BY {$sql_clauses['groupby']}",
-							$sql_clauses['select'],
 							$download_data['download_id'],
-							$price_id,
 							$dates['start']->copy()->format( 'mysql' ),
 							$dates['end']->copy()->format( 'mysql' ),
 							...$earnings_statuses
@@ -803,20 +773,18 @@ function edd_register_downloads_report( $reports ) {
 						$adjustments_status_string = implode( ', ', array_fill( 0, count( $adjustments_statuses ), '%s' ) );
 
 						$order_adjustments = $wpdb->prepare(
-							"SELECT SUM(edd_oa.total / edd_oa.rate) AS earnings, %1s
+							"SELECT SUM(edd_oa.total / edd_oa.rate) AS earnings, {$sql_clauses['select']}
 							FROM {$wpdb->edd_order_adjustments} edd_oa
 							INNER JOIN {$wpdb->edd_order_items} edd_oi ON
 								edd_oi.id = edd_oa.object_id
 								AND edd_oi.product_id = %d
-								%1s
+								{$price_id}
 								AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s
 							INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id AND edd_o.type = 'sale' AND edd_o.status IN ({$adjustments_status_string})
 							WHERE edd_oa.object_type = 'order_item'
 							AND edd_oa.type != 'discount'
 							GROUP BY {$sql_clauses['groupby']}",
-							$sql_clauses['select'],
 							$download_data['download_id'],
-							$price_id,
 							$dates['start']->copy()->format( 'mysql' ),
 							$dates['end']->copy()->format( 'mysql' ),
 							...$adjustments_statuses
@@ -865,16 +833,16 @@ function edd_register_downloads_report( $reports ) {
 
 							// Loop through each date there were sales/earnings, which we queried from the database.
 							foreach ( $earnings_results as $earnings_result ) {
-								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $earnings_result->date ) );
+								$date_of_db_value = EDD()->utils->date( $earnings_result->date );
 
 								// Add any sales/earnings that happened during this hour.
-								if ( $hour_by_hour ) {
+								if ( 'hour' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 										$earnings[ $timestamp ][1] += $earnings_result->earnings;
 									}
 									// Add any sales/earnings that happened during this day.
-								} elseif ( $day_by_day ) {
+								} elseif ( 'day' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
 										$earnings[ $timestamp ][1] += $earnings_result->earnings;
@@ -890,16 +858,16 @@ function edd_register_downloads_report( $reports ) {
 
 							// Loop through each date there were sales/earnings, which we queried from the database.
 							foreach ( $sales_results as $sales_result ) {
-								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $sales_result->date ) );
+								$date_of_db_value = EDD()->utils->date( $sales_result->date );
 
 								// Add any sales/earnings that happened during this hour.
-								if ( $hour_by_hour ) {
+								if ( 'hour' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 										$sales[ $timestamp ][1] += $sales_result->sales;
 									}
 									// Add any sales/earnings that happened during this day.
-								} elseif ( $day_by_day ) {
+								} elseif ( 'day' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
 										$sales[ $timestamp ][1] += $sales_result->sales;
@@ -914,9 +882,9 @@ function edd_register_downloads_report( $reports ) {
 							}
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
-							if ( $hour_by_hour ) {
+							if ( 'hour' === $period ) {
 								$chart_dates['start']->addHour( 1 );
-							} elseif ( $day_by_day ) {
+							} elseif ( 'day' === $period ) {
 								$chart_dates['start']->addDays( 1 );
 							} else {
 								$chart_dates['start']->addMonth( 1 );
@@ -1562,27 +1530,9 @@ function edd_register_payment_gateways_report( $reports ) {
 						global $wpdb;
 
 						$dates        = Reports\get_dates_filter( 'objects' );
-						$day_by_day   = Reports\get_dates_filter_day_by_day();
-						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-
-						$sql_clauses = array(
-							'select' => 'date_created AS date',
-							'where'  => '',
-						);
-
-						// Default to 'monthly'.
-						$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
-						$sql_clauses['orderby'] = 'MONTH(date_created)';
-
-						// Now drill down to the smallest unit.
-						if ( $hour_by_hour ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
-							$sql_clauses['orderby'] = 'HOUR(date_created)';
-						} elseif ( $day_by_day ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
-							$sql_clauses['orderby'] = 'DATE(date_created)';
-						}
+						$period       = Reports\get_graph_period();
+						$sql_clauses  = Reports\get_sql_clauses( $period, 'date_created' );
 
 						$gateway = Reports\get_filter_value( 'gateways' );
 						$column  = $exclude_taxes
@@ -1605,7 +1555,7 @@ function edd_register_payment_gateways_report( $reports ) {
 							ORDER BY {$sql_clauses['orderby']} ASC",
 							esc_sql( $gateway ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
 
-						$sales = array();
+						$sales    = array();
 						$earnings = array();
 
 						/**
@@ -1625,17 +1575,17 @@ function edd_register_payment_gateways_report( $reports ) {
 
 							// Loop through each date there were sales/earnings, which we queried from the database.
 							foreach ( $results as $result ) {
-								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
+								$date_of_db_value = EDD()->utils->date( $result->date );
 
 								// Add any sales/earnings that happened during this hour.
-								if ( $hour_by_hour ) {
+								if ( 'hour' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 										$sales[ $timestamp ][1] += $result->sales;
 										$earnings[ $timestamp ][1] += $result->earnings;
 									}
 									// Add any sales/earnings that happened during this day.
-								} elseif ( $day_by_day ) {
+								} elseif ( 'day' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
 										$sales[ $timestamp ][1] += $result->sales;
@@ -1652,9 +1602,9 @@ function edd_register_payment_gateways_report( $reports ) {
 							}
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
-							if ( $hour_by_hour ) {
+							if ( 'hour' === $period ) {
 								$chart_dates['start']->addHour( 1 );
-							} elseif ( $day_by_day ) {
+							} elseif ( 'day' === $period ) {
 								$chart_dates['start']->addDays( 1 );
 							} else {
 								$chart_dates['start']->addMonth( 1 );
@@ -2060,29 +2010,10 @@ function edd_register_file_downloads_report( $reports ) {
 					'data_callback' => function () use ( $filter, $download_data ) {
 						global $wpdb;
 
-						$dates        = Reports\get_dates_filter( 'objects' );
-						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-						$day_by_day   = Reports\get_dates_filter_day_by_day();
-						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-
-						$sql_clauses = array(
-							'select'  => 'date_created AS date',
-							'where'   => '',
-							'groupby' => '',
-						);
-
-						// Default to 'monthly'.
-						$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'date_created' );
-						$sql_clauses['orderby'] = 'MONTH(date_created)';
-
-						// Now drill down to the smallest unit.
-						if ( $hour_by_hour ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
-							$sql_clauses['orderby'] = 'HOUR(date_created)';
-						} elseif ( $day_by_day ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
-							$sql_clauses['orderby'] = 'DATE(date_created)';
-						}
+						$dates       = Reports\get_dates_filter( 'objects' );
+						$chart_dates = Reports\parse_dates_for_range( null, 'now', false );
+						$period      = Reports\get_graph_period();
+						$sql_clauses = Reports\get_sql_clauses( $period );
 
 						$product_id = '';
 						$price_id   = '';
@@ -2114,16 +2045,16 @@ function edd_register_file_downloads_report( $reports ) {
 							$file_downloads[ $timestamp ][1] = 0;
 
 							foreach ( $results as $result ) {
-								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
+								$date_of_db_value = EDD()->utils->date( $result->date );
 
 								// Add any file downloads that happened during this hour.
-								if ( $hour_by_hour ) {
+								if ( 'hour' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 										$file_downloads[ $timestamp ][1] += absint( $result->total );
 									}
 									// Add any file downloads that happened during this day.
-								} elseif ( $day_by_day ) {
+								} elseif ( 'day' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
 										$file_downloads[ $timestamp ][1] += absint( $result->total );
@@ -2138,9 +2069,9 @@ function edd_register_file_downloads_report( $reports ) {
 							}
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
-							if ( $hour_by_hour ) {
+							if ( 'hour' === $period ) {
 								$chart_dates['start']->addHour( 1 );
-							} elseif ( $day_by_day ) {
+							} elseif ( 'day' === $period ) {
 								$chart_dates['start']->addDays( 1 );
 							} else {
 								$chart_dates['start']->addMonth( 1 );
@@ -2400,28 +2331,9 @@ function edd_register_discounts_report( $reports ) {
 							global $wpdb;
 
 							$dates        = Reports\get_dates_filter( 'objects' );
-							$day_by_day   = Reports\get_dates_filter_day_by_day();
-							$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 							$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-
-
-							$sql_clauses = array(
-								'select' => 'edd_oa.date_created AS date',
-								'where'  => '',
-							);
-
-							// Default to 'monthly'.
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'MONTH', 'edd_oa.date_created' );
-							$sql_clauses['orderby'] = 'MONTH(edd_oa.date_created)';
-
-							// Now drill down to the smallest unit.
-							if ( $hour_by_hour ) {
-								$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'edd_oa.date_created' );
-								$sql_clauses['orderby'] = 'HOUR(edd_oa.date_created)';
-							} elseif ( $day_by_day ) {
-								$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'edd_oa.date_created' );
-								$sql_clauses['orderby'] = 'DATE(edd_oa.date_created)';
-							}
+							$period       = Reports\get_graph_period();
+							$sql_clauses  = Reports\get_sql_clauses( $period, 'edd_oa.date_created' );
 
 							$discount_code = ! empty( $d->code )
 								? $wpdb->prepare( 'AND type = %s AND description = %s', 'discount', esc_sql( $d->code ) )
@@ -2447,16 +2359,16 @@ function edd_register_discounts_report( $reports ) {
 
 								// Loop through each date in which there were discount codes used, which we queried from the database.
 								foreach ( $results as $result ) {
-									$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
+									$date_of_db_value = EDD()->utils->date( $result->date );
 
 									// Add any discount codes that were used during this hour.
-									if ( $hour_by_hour ) {
+									if ( 'hour' === $period ) {
 										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 											$discount_usage[ $timestamp ][1] += abs( $result->total );
 										}
 										// Add any discount codes that were used during this day.
-									} elseif ( $day_by_day ) {
+									} elseif ( 'day' === $period ) {
 										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
 											$discount_usage[ $timestamp ][1] += abs( $result->total );
@@ -2471,9 +2383,9 @@ function edd_register_discounts_report( $reports ) {
 								}
 
 								// Move the chart along to the next hour/day/month to get ready for the next loop.
-								if ( $hour_by_hour ) {
+								if ( 'hour' === $period ) {
 									$chart_dates['start']->addHour( 1 );
-								} elseif ( $day_by_day ) {
+								} elseif ( 'day' === $period ) {
 									$chart_dates['start']->addDays( 1 );
 								} else {
 									$chart_dates['start']->addMonth( 1 );
@@ -2645,23 +2557,9 @@ function edd_register_customer_report( $reports ) {
 						global $wpdb;
 
 						$dates        = Reports\get_dates_filter( 'objects' );
-						$day_by_day   = Reports\get_dates_filter_day_by_day();
-						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 						$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-
-						$sql_clauses = array(
-							'select'  => 'date_created AS date',
-							'groupby' => Reports\get_groupby_date_string( 'MONTH', 'date_created' ),
-							'orderby' => 'MONTH(date_created)',
-						);
-
-						if ( $hour_by_hour ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'HOUR', 'date_created' );
-							$sql_clauses['orderby'] = 'HOUR(date_created)';
-						} elseif ( $day_by_day ) {
-							$sql_clauses['groupby'] = Reports\get_groupby_date_string( 'DATE', 'date_created' );
-							$sql_clauses['orderby'] = 'DATE(date_created)';
-						}
+						$period       = Reports\get_graph_period();
+						$sql_clauses  = Reports\get_sql_clauses( $period );
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(c.id) AS total, {$sql_clauses['select']}
@@ -2684,16 +2582,16 @@ function edd_register_customer_report( $reports ) {
 							$customers[ $timestamp ][1] = 0;
 
 							foreach ( $results as $result ) {
-								$date_of_db_value = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $result->date ) );
+								$date_of_db_value = EDD()->utils->date( $result->date );
 
 								// Add any new customers that were created during this hour.
-								if ( $hour_by_hour ) {
+								if ( 'hour' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 										$customers[ $timestamp ][1] += $result->total;
 									}
 									// Add any new customers that were created during this day.
-								} elseif ( $day_by_day ) {
+								} elseif ( 'day' === $period ) {
 									// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 									if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
 										$customers[ $timestamp ][1] += $result->total;
@@ -2708,9 +2606,9 @@ function edd_register_customer_report( $reports ) {
 							}
 
 							// Move the chart along to the next hour/day/month to get ready for the next loop.
-							if ( $hour_by_hour ) {
+							if ( 'hour' === $period ) {
 								$chart_dates['start']->addHour( 1 );
-							} elseif ( $day_by_day ) {
+							} elseif ( 'day' === $period ) {
 								$chart_dates['start']->addDays( 1 );
 							} else {
 								$chart_dates['start']->addMonth( 1 );

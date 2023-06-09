@@ -374,6 +374,25 @@ class Order extends Query {
 	}
 
 	/**
+	 * When searching by a numeric order number, we need to override the default where clause
+	 * to return orders matching either the ID or order number.
+	 *
+	 * @since 3.1.1.4
+	 * @param array $clauses
+	 * @return array
+	 */
+	public function query_by_order_search( $clauses ) {
+		global $wpdb;
+		$clauses['where'] = $wpdb->prepare(
+			"{$this->table_alias}.id = %d OR {$this->table_alias}.order_number = %d",
+			absint( $this->query_vars['id'] ),
+			absint( $this->query_vars['order_number'] )
+		);
+
+		return $clauses;
+	}
+
+	/**
 	 * Set the query var defaults for country and region.
 	 *
 	 * @since 3.0
@@ -440,6 +459,10 @@ class Order extends Query {
 			array(
 				'condition' => ! empty( $query['discount_id'] ),
 				'callback'  => 'query_by_discount_id',
+			),
+			array(
+				'condition' => ! empty( $query['id'] ) && ! empty( $query['order_number'] ) && $query['id'] === $query['order_number'],
+				'callback'  => 'query_by_order_search',
 			),
 		);
 	}

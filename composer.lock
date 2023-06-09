@@ -57,16 +57,16 @@
         },
         {
             "name": "brain/monkey",
-            "version": "2.6.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Brain-WP/BrainMonkey.git",
-                "reference": "a31c84515bb0d49be9310f52ef1733980ea8ffbb"
+                "reference": "26b83e93933458e7b32614b4e730d1f4b0e53f38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Brain-WP/BrainMonkey/zipball/a31c84515bb0d49be9310f52ef1733980ea8ffbb",
-                "reference": "a31c84515bb0d49be9310f52ef1733980ea8ffbb",
+                "url": "https://api.github.com/repos/Brain-WP/BrainMonkey/zipball/26b83e93933458e7b32614b4e730d1f4b0e53f38",
+                "reference": "26b83e93933458e7b32614b4e730d1f4b0e53f38",
                 "shasum": ""
             },
             "require": {
@@ -79,11 +79,12 @@
                 "phpcompatibility/php-compatibility": "^9.3.0",
                 "phpunit/phpunit": "^5.7.26 || ^6.0 || ^7.0 || >=8.0 <8.5.12 || ^8.5.14 || ^9.0"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-version/1": "1.x-dev",
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -123,7 +124,7 @@
                 "issues": "https://github.com/Brain-WP/BrainMonkey/issues",
                 "source": "https://github.com/Brain-WP/BrainMonkey"
             },
-            "time": "2021-11-11T15:53:55+00:00"
+            "time": "2023-05-01T16:33:47+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -250,16 +251,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.5.1",
+            "version": "1.6.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "e92dcc83d5a51851baf5f5591d32cb2b16e3684e"
+                "reference": "f9a267414e2a639dad23235e021a7df9c21647da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/e92dcc83d5a51851baf5f5591d32cb2b16e3684e",
-                "reference": "e92dcc83d5a51851baf5f5591d32cb2b16e3684e",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/f9a267414e2a639dad23235e021a7df9c21647da",
+                "reference": "f9a267414e2a639dad23235e021a7df9c21647da",
                 "shasum": ""
             },
             "require": {
@@ -271,7 +272,9 @@
                 "phpunit/phpunit": "<8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.5 || ^9.3"
+                "phpunit/phpunit": "^8.5 || ^9.3",
+                "psalm/plugin-phpunit": "^0.18",
+                "vimeo/psalm": "^5.9"
             },
             "type": "library",
             "extra": {
@@ -280,8 +283,12 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Mockery": "library/"
+                "files": [
+                    "library/helpers.php",
+                    "library/Mockery.php"
+                ],
+                "psr-4": {
+                    "Mockery\\": "library/Mockery"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -316,9 +323,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/1.5.1"
+                "source": "https://github.com/mockery/mockery/tree/1.6.x"
             },
-            "time": "2022-09-07T15:32:08+00:00"
+            "time": "2023-05-01T03:28:40+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -804,12 +811,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "dd5ade0546ce911c938da8b665f93b928efd3835"
+                "reference": "c1811148d4aa7cf8dacf9a07df668176eaf0fe88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/dd5ade0546ce911c938da8b665f93b928efd3835",
-                "reference": "dd5ade0546ce911c938da8b665f93b928efd3835",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c1811148d4aa7cf8dacf9a07df668176eaf0fe88",
+                "reference": "c1811148d4aa7cf8dacf9a07df668176eaf0fe88",
                 "shasum": ""
             },
             "require": {
@@ -894,7 +901,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-22T08:13:23+00:00"
+            "time": "2023-04-04T09:12:43+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1677,16 +1684,16 @@
         },
         {
             "name": "yoast/phpunit-polyfills",
-            "version": "dev-develop",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Yoast/PHPUnit-Polyfills.git",
-                "reference": "bb27ca08609ece113f88225648b3cd02f7aecd04"
+                "reference": "7607c773bea9a7a0c76c25bde529219378cf651d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/bb27ca08609ece113f88225648b3cd02f7aecd04",
-                "reference": "bb27ca08609ece113f88225648b3cd02f7aecd04",
+                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/7607c773bea9a7a0c76c25bde529219378cf651d",
+                "reference": "7607c773bea9a7a0c76c25bde529219378cf651d",
                 "shasum": ""
             },
             "require": {
@@ -1696,12 +1703,10 @@
             "require-dev": {
                 "yoast/yoastcs": "^2.3.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev",
-                    "dev-develop": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -1735,7 +1740,7 @@
                 "issues": "https://github.com/Yoast/PHPUnit-Polyfills/issues",
                 "source": "https://github.com/Yoast/PHPUnit-Polyfills"
             },
-            "time": "2023-03-13T18:24:33+00:00"
+            "time": "2023-04-30T23:38:56+00:00"
         },
         {
             "name": "yoast/wp-test-utils",

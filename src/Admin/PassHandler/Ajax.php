@@ -94,7 +94,7 @@ class Ajax implements SubscriberInterface {
 				'endpoint' => $endpoint,
 				'version'  => EDD_VERSION,
 				'siteurl'  => admin_url(),
-				'homeurl'  => home_url(),
+				'homeurl'  => network_home_url(),
 				'redirect' => rawurldecode( base64_encode( $redirect ) ), // phpcs:ignore
 			),
 			'https://upgrade.easydigitaldownloads.com'

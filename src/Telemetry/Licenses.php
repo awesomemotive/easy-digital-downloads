@@ -43,7 +43,7 @@ class Licenses {
 
 		return array(
 			'extension' => 'edd_pro',
-			'status'    => $pro_license->license,
+			'status'    => $this->get_license_status( $pro_license ),
 		);
 	}
 
@@ -59,14 +59,30 @@ class Licenses {
 		foreach ( $extensions as $slug ) {
 			$shortname = str_replace( 'edd_', '', $slug );
 			$license   = new License( $shortname );
-			if ( ! empty( $license->license ) ) {
-				$data[] = array(
-					'extension' => $slug,
-					'status'    => $license->license,
-				);
-			}
+			$data[]    = array(
+				'extension' => $slug,
+				'status'    => $this->get_license_status( $license ),
+			);
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Gets the license status.
+	 *
+	 * @since 3.1.2
+	 * @param \EDD\Licensing\License $license
+	 * @return string
+	 */
+	private function get_license_status( $license ) {
+		if ( ! empty( $license->license ) ) {
+			return $license->license;
+		}
+		if ( ! empty( $license->error ) ) {
+			return $license->error;
+		}
+
+		return 'missing';
 	}
 }

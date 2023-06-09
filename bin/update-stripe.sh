@@ -6,7 +6,6 @@ git clone git@github.com:awesomemotive/edd-stripe includes/gateways/stripe
 
 # Install dependencies
 cd includes/gateways/stripe
-composer install --no-dev
 npm install && npm run build
 
 git rev-parse HEAD > ../.stripe-hash

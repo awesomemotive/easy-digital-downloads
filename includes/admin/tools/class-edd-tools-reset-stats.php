@@ -138,6 +138,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			// Reset the sequential order numbers
 			if ( edd_get_option( 'enable_sequential' ) ) {
 				delete_option( 'edd_last_payment_number' );
+				delete_option( 'edd_next_order_number' );
 			}
 
 			$this->done    = true;

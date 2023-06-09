@@ -29,6 +29,14 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	public $export_type = 'sales';
 
 	/**
+	 * The array of order IDs.
+	 *
+	 * @since 3.1.1.4
+	 * @var array
+	 */
+	private $orders;
+
+	/**
 	 * Set the CSV columns
 	 *
 	 * @since 2.7
@@ -61,19 +69,14 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	public function get_data() {
 		$data = array();
 
-		$args = array(
-			'number' => 30,
-			'offset' => ( $this->step * 30 ) - 30,
-			'order'  => 'ASC',
+		$args = array_merge(
+			$this->get_order_item_args(),
+			array(
+				'number' => 30,
+				'offset' => ( $this->step * 30 ) - 30,
+				'order'  => 'ASC',
+			)
 		);
-
-		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = $this->get_date_query();
-		}
-
-		if ( 0 !== $this->download_id ) {
-			$args['product_id'] = $this->download_id;
-		}
 
 		$items = edd_get_order_items( $args );
 
@@ -112,16 +115,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		$args = array();
-
-		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = $this->get_date_query();
-		}
-
-		if ( 0 !== $this->download_id ) {
-			$args['product_id'] = $this->download_id;
-		}
-
+		$args       = $this->get_order_item_args();
 		$total      = edd_count_order_items( $args );
 		$percentage = 100;
 
@@ -136,9 +130,52 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		return $percentage;
 	}
 
+	/**
+	 * Gets the default order item parameters based on the class properties.
+	 *
+	 * @since 3.1.1.4
+	 * @return array
+	 */
+	private function get_order_item_args() {
+		$args = array();
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = $this->get_date_query();
+		}
+
+		if ( ! empty( $this->download_id ) ) {
+			$args['product_id'] = $this->download_id;
+		}
+
+		if ( ! empty( $this->orders ) ) {
+			$args['order_id__in'] = $this->orders;
+		}
+
+		return $args;
+	}
+
 	public function set_properties( $request ) {
-		$this->start       = isset( $request['orders-export-start'] ) ? sanitize_text_field( $request['orders-export-start'] ) : '';
-		$this->end         = isset( $request['orders-export-end'] ) ? sanitize_text_field( $request['orders-export-end'] ) . ' 23:59:59' : '';
+		$this->start       = isset( $request['sales-export-start'] ) ? sanitize_text_field( $request['sales-export-start'] ) : '';
+		$this->end         = isset( $request['sales-export-end'] ) ? sanitize_text_field( $request['sales-export-end'] ) . ' 23:59:59' : '';
 		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
+		$this->orders      = $this->get_orders();
+	}
+
+	/**
+	 * Gets the array of complete order IDs for the time period.
+	 *
+	 * @return array
+	 */
+	private function get_orders() {
+		$args = array(
+			'fields'     => 'ids',
+			'type'       => 'sale',
+			'number'     => 999999999,
+			'status__in' => edd_get_complete_order_statuses(),
+		);
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = $this->get_date_query();
+		}
+
+		return edd_get_orders( $args );
 	}
 }

@@ -179,11 +179,11 @@ class EDD_Fees {
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
 	 * @param int $download_id The download ID whose fees to retrieve
-	 * @param int $price_id The variable price ID whose fees to retrieve
+	 * @param null|int $price_id The variable price ID whose fees to retrieve
 	 * @uses EDD_Session::get()
 	 * @return array|bool List of fees when available, false when there are no fees
 	 */
-	public function get_fees( $type = 'fee', $download_id = 0, $price_id = NULL ) {
+	public function get_fees( $type = 'fee', $download_id = 0, $price_id = null ) {
 		$fees = EDD()->session->get( 'edd_cart_fees' );
 
 		if ( EDD()->cart->is_empty() ) {
@@ -208,14 +208,17 @@ class EDD_Fees {
 					unset( $fees[ $key ] );
 				}
 
-				$fee_hash   = md5( $fee['amount'] . $fee['label'] . $fee['type'] );
+				$string_to_hash = "{$key}_{$download_id}";
+				if ( ! is_null( $price_id ) && isset( $fee['price_id'] ) ) {
+					$string_to_hash .= "_{$fee['price_id']}";
+				}
+				$fee_hash = md5( $string_to_hash );
 
-				if ( in_array( $fee_hash, $applied_fees ) ) {
+				if ( in_array( $fee_hash, $applied_fees, true ) ) {
 					unset( $fees[ $key ] );
 				}
 
 				$applied_fees[] = $fee_hash;
-
 			}
 		}
 

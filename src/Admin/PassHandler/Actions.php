@@ -42,10 +42,7 @@ class Actions implements SubscriberInterface {
 	 * @return void
 	 */
 	public function refresh() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			edd_redirect( $this->handler->get_extensions_url() );
-		}
-		if ( get_transient( 'edd_pass_refreshed' ) ) {
+		if ( ! $this->can_refresh() ) {
 			edd_redirect( $this->handler->get_extensions_url() );
 		}
 
@@ -65,7 +62,6 @@ class Actions implements SubscriberInterface {
 			'edd_action' => 'check_license',
 			'license'    => $pass_data->key,
 			'item_id'    => $pass_data->pass_id,
-			'item_name'  => $pass_data->item_name,
 		);
 
 		$license_data = $this->handler->remote_request( $api_params );
@@ -79,5 +75,21 @@ class Actions implements SubscriberInterface {
 		set_transient( 'edd_pass_refreshed', true, 10 * MINUTE_IN_SECONDS );
 
 		edd_redirect( $this->handler->get_extensions_url() );
+	}
+
+	/**
+	 * Check if the current user can refresh the pass status.
+	 *
+	 * @return bool
+	 */
+	private function can_refresh() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+		if ( get_transient( 'edd_pass_refreshed' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }

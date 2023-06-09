@@ -696,7 +696,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( ! is_null( $this->args['post__not_in'] ) ) {
-			$arguments['id__in'] = $this->args['post__not_in'];
+			$arguments['id__not_in'] = $this->args['post__not_in'];
 		}
 
 		if ( ! empty( $this->args['mode'] ) && 'all' !== $this->args['mode'] ) {

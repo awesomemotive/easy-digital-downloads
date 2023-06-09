@@ -86,29 +86,6 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 /** Views *********************************************************************/
 
 /**
- * Sales Log View
- *
- * @deprecated 3.0
- *
- * @since 1.4
- * @uses EDD_Sales_Log_Table::prepare_items()
- * @uses EDD_Sales_Log_Table::display()
- * @return void
- */
-function edd_logs_view_sales() {
-
-	// Setup or bail
-	if ( ! edd_logs_view_setup( 'sales' ) ) {
-		return;
-	}
-
-	$logs_table = new EDD_Sales_Log_Table();
-
-	edd_logs_view_page( $logs_table, 'sales' );
-}
-add_action( 'edd_logs_view_sales', 'edd_logs_view_sales' );
-
-/**
  * File Download Logs
  *
  * @since 1.4

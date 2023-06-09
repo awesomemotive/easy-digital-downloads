@@ -36,6 +36,15 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 
 		global $current_user;
 
+		new \WP_Roles();
+
+		// Since roles are checked later, let's add these caps now.
+		$admin_role = get_role( 'administrator' );
+		$admin_role->add_cap( 'view_shop_sensitive_data' );
+		$admin_role->add_cap( 'export_shop_reports' );
+		$admin_role->add_cap( 'manage_shop_settings' );
+		$admin_role->add_cap( 'manage_shop_discounts' );
+
 		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
 		wp_update_user(
@@ -45,6 +54,7 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 				'last_name'  => 'User',
 			)
 		);
+
 		add_filter( 'edd_log_email_errors', '__return_false' );
 	}
 
