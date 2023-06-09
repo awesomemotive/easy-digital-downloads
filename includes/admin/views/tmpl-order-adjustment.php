@@ -29,9 +29,6 @@ $view_url = edd_get_admin_url(
 		<# } #>
 
 		<div>
-			<# if ( false !== data.orderItem ) { #>
-				{{ data.orderItem.productName }}:&nbsp;
-			<# } #>
 			<# if ( '' !== data.description ) { #>
 				{{ data.description }}
 			<# } #>
@@ -40,7 +37,9 @@ $view_url = edd_get_admin_url(
 				<br />
 				<small>
 			<# } #>
-				<# if ( 'credit' === data.type ) { #>
+				<# if ( false !== data.orderItem ) { #>
+					<?php esc_html_e( 'Fee', 'easy-digital-downloads' ); ?>: {{ data.orderItem.productName }}
+				<# } else if ( 'credit' === data.type ) { #>
 					<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
 				<# } else { #>
 					<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>

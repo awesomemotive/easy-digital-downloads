@@ -57,8 +57,7 @@ class EDD_Email_Summary {
 	public function __construct( $test_mode = false ) {
 		$this->test_mode     = $test_mode;
 		$this->email_options = array(
-			'email_summary_frequency'     => edd_get_option( 'email_summary_frequency', 'weekly' ),
-			'email_summary_start_of_week' => jddayofweek( (int) get_option( 'start_of_week' ) - 1, 1 ),
+			'email_summary_frequency' => edd_get_option( 'email_summary_frequency', 'weekly' ),
 		);
 	}
 
@@ -416,5 +415,4 @@ class EDD_Email_Summary {
 
 		return $email_sent;
 	}
-
 }

@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "3.1.1",
+	"version": "3.1.2",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"author": "Easy Digital Downloads",
@@ -60,7 +60,7 @@
 		"webpack-rtl-plugin": "^2.0.0"
 	},
 	"scripts": {
-		"build": "wp-scripts build --webpack-no-externals && npm run update && npm run stripe && npm run blocks && grunt prep && npm run translate && grunt copy && grunt replace:pro && npm run translate-lite",
+		"build": "wp-scripts build --webpack-no-externals && npm run stripe && npm run blocks && grunt prep && npm run translate && grunt copy && grunt replace:pro && npm run translate-lite",
 		"dev": "cross-env NODE_ENV=production wp-scripts start --webpack-no-externals",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses --production",
@@ -72,8 +72,8 @@
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
 		"blocks": "bash bin/update-blocks.sh && grunt replace:blocks",
 		"stripe": "bash bin/update-stripe.sh && grunt replace:stripe",
-		"translate": "wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets",
-		"translate-lite": "wp i18n make-pot build/easy-digital-downloads build/easy-digital-downloads/languages/easy-digital-downloads.pot --exclude=build/easy-digital-downloads/assets",
+		"translate": "wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets --ignore-domain",
+		"translate-lite": "wp i18n make-pot build/easy-digital-downloads build/easy-digital-downloads/languages/easy-digital-downloads.pot --exclude=build/easy-digital-downloads/assets --ignore-domain",
 		"update": "composer update --no-dev --ignore-platform-reqs",
 		"lite": "grunt clean && grunt copy:lite && grunt replace:pro && npm run translate-lite && grunt compress:lite",
 		"pro": "grunt clean && grunt copy:pro && grunt compress:pro",

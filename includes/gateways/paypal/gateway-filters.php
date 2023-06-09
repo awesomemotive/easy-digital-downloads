@@ -27,6 +27,11 @@ function maybe_remove_paypal_standard( $gateways ) {
 		unset( $gateways['paypal'] );
 	}
 
+	// Ensures we don't show the PayPal Standard option in Site Health.
+	if ( did_action( 'admin_head-site-health.php' ) && ! paypal_standard_enabled() ) {
+		unset( $gateways['paypal'] );
+	}
+
 	return $gateways;
 }
 

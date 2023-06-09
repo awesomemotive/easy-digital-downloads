@@ -518,4 +518,55 @@ class Tests_Fee extends EDD_UnitTestCase {
 	public function alter_decimal_filter() {
 		return 6;
 	}
+
+	public function test_adding_fees_for_two_variable_prices() {
+
+		EDD()->session->set( 'edd_cart_fees', null );
+		edd_add_to_cart( $this->_post->ID, array( 'price_id' => 2 ) );
+
+		//Test with variable price id attached to a fee.
+		EDD()->fees->add_fee(
+			array(
+				'amount'      => 10.00,
+				'label'       => 'Shipping Fee',
+				'download_id' => $this->_post->ID,
+				'price_id'    => 1,
+				'id'          => "simple_shipping_{$this->_post->ID}_1",
+			)
+		);
+		EDD()->fees->add_fee(
+			array(
+				'amount'      => 10.00,
+				'label'       => 'Shipping Fee',
+				'download_id' => $this->_post->ID,
+				'id'          => "simple_shipping_{$this->_post->ID}_2",
+				'price_id'    => 2,
+			)
+		);
+
+		$fee1 = array(
+			"simple_shipping_{$this->_post->ID}_1" => array(
+				'amount'      => '10.00',
+				'label'       => 'Shipping Fee',
+				'type'        => 'fee',
+				'no_tax'      => false,
+				'download_id' => $this->_post->ID,
+				'price_id'    => 1,
+			),
+		);
+		$fee2 = array(
+			"simple_shipping_{$this->_post->ID}_2" => array(
+				'amount'      => '10.00',
+				'label'       => 'Shipping Fee',
+				'download_id' => $this->_post->ID,
+				'type'        => 'fee',
+				'no_tax'      => false,
+				'price_id'    => 2,
+			),
+		);
+
+		$this->assertEquals( $fee1, EDD()->fees->get_fees( 'fee', $this->_post->ID, 1 ) );
+		$this->assertEquals( $fee2, EDD()->fees->get_fees( 'fee', $this->_post->ID, 2 ) );
+		$this->assertEquals( array_merge( $fee1, $fee2 ), EDD()->fees->get_fees( 'all' ) );
+	}
 }

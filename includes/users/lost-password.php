@@ -117,6 +117,13 @@ add_action( 'edd_user_lost_password', 'edd_handle_lost_password_request' );
  * @return void
  */
 function edd_handle_lost_password_request( $data ) {
+
+	// Verify the nonce.
+	if ( empty( $data['edd_lost-password_nonce'] ) || ! wp_verify_nonce( $data['edd_lost-password_nonce'], 'edd-lost-password-nonce' ) ) {
+		edd_set_error( 'edd_lost_password', __( 'Your request could not be completed.', 'easy-digital-downloads' ) );
+		return;
+	}
+
 	if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 		$errors = retrieve_password();
 		if ( ! is_wp_error( $errors ) ) {
@@ -127,8 +134,12 @@ function edd_handle_lost_password_request( $data ) {
 			if ( $message ) {
 				// WP_Error messages include "Error:" so we remove that here to prevent duplication.
 				$message = explode( ':', $message );
-				$message = ! empty( $message[1] ) ? trim( $message[1] ) : trim( $message[0] );
-				edd_set_error( $id, $message );
+				$output  = trim( $message[0] );
+				if ( ! empty( $message[1] ) ) {
+					unset( $message[0] );
+					$output = trim( implode( ':', $message ) );
+				}
+				edd_set_error( $error_code, $output );
 			}
 		}
 	}
@@ -247,6 +258,27 @@ add_action( 'edd_user_reset_password', 'edd_validate_password_reset' );
  * @return void
  */
 function edd_validate_password_reset( $data ) {
+
+	// We don't need or use AJAX requests for this, so die if one is received.
+	if ( edd_doing_ajax() ) {
+		wp_die( __( 'Invalid password reset request.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
+	}
+
+	// Verify the nonce.
+	if ( ! isset( $data['edd_resetpassword_nonce'] ) || ! wp_verify_nonce( $data['edd_resetpassword_nonce'], 'edd-reset-password-nonce' ) ) {
+		edd_set_error( 'password_reset_failed', __( 'Invalid password reset request.', 'easy-digital-downloads' ) );
+	}
+
+	if ( empty( $data['rp_key'] ) ) {
+		edd_set_error( 'password_reset_failed', __( 'Invalid password reset request.', 'easy-digital-downloads' ) );
+	}
+
+	$user = check_password_reset_key( $data['rp_key'], $data['user_login'] );
+
+	if ( ! $user || is_wp_error( $user ) ) {
+		edd_set_error( 'password_reset_failed', __( 'Invalid password reset request.', 'easy-digital-downloads' ) );
+	}
+
 	// Check if password is one or all empty spaces.
 	if ( ! empty( $data['pass1'] ) ) {
 		$_POST['pass1'] = trim( $data['pass1'] );
@@ -262,13 +294,15 @@ function edd_validate_password_reset( $data ) {
 	}
 
 	$user = get_user_by( 'login', $data['user_login'] );
-	if ( ! $user || is_wp_error( $user ) ) {
+	if ( false === $user ) {
 		edd_set_error( 'password_reset_unsuccessful', __( 'Your password could not be reset.', 'easy-digital-downloads' ) );
 	}
 
 	$redirect = remove_query_arg( 'action', $data['edd_redirect'] );
+
 	// If no errors were registered then reset the password.
-	if ( ! edd_get_errors() ) {
+	$errors = edd_get_errors();
+	if ( empty( $errors ) ) {
 		reset_password( $user, $data['pass1'] );
 		edd_set_success( 'password_reset_successful', __( 'Your password was successfully reset.', 'easy-digital-downloads' ) );
 		// todo: check if this is correct

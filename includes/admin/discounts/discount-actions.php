@@ -48,7 +48,8 @@ function edd_admin_add_discount( $data = array() ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
 	}
 
-	if ( ! is_numeric( $data['amount'] ) ) {
+	$sanitized_amount = (float) edd_sanitize_amount( $data['amount'] );
+	if ( empty( $data['amount'] ) || 0.00 === $sanitized_amount ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
 	}
 
@@ -71,6 +72,10 @@ function edd_admin_add_discount( $data = array() ) {
 
 			case 'product_reqs':
 				$to_add[ $column ] = $value;
+				break;
+
+			case 'amount':
+				$to_add['amount'] = edd_sanitize_amount( $value );
 				break;
 
 			default:
@@ -180,7 +185,8 @@ function edd_admin_edit_discount( $data = array() ) {
 		wp_die( __( 'Invalid discount', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	if ( empty( $data['amount'] ) || ! is_numeric( $data['amount'] ) ) {
+	$sanitized_amount = (float) edd_sanitize_amount( $data['amount'] );
+	if ( empty( $data['amount'] ) || 0.00 === $sanitized_amount ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
 	}
 
@@ -203,7 +209,11 @@ function edd_admin_edit_discount( $data = array() ) {
 				$to_update['id'] = $value;
 				break;
 
-			default :
+			case 'amount':
+				$to_update['amount'] = edd_sanitize_amount( $value );
+				break;
+
+			default:
 				$to_update[ $column ] = sanitize_text_field( $value );
 				break;
 		}

@@ -9,7 +9,7 @@ jQuery( document ).ready( function( $ ) {
 	const overlayNoticeClass = 'edd-promo-notice__overlay';
 	if ( overlayNotice ) {
 		overlayNotice.wrap( '<div class="' + overlayNoticeClass + '"></div>' );
-		$( '.edd-promo-notice__trigger' ).on( 'click', function () {
+		$( document ).on( 'click', '.edd-promo-notice__trigger', function () {
 			$( '.' + overlayNoticeClass ).css( 'display', 'flex' ).hide().fadeIn();
 		} );
 	}

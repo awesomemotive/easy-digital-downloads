@@ -34,8 +34,19 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$user = get_current_user_id();
 	}
 
+	if ( is_email( $user ) ) {
+		$customers = edd_get_customers(
+			array(
+				'email' => $user,
+			)
+		);
+		if ( $customers ) {
+			$user = $customers[0]->user_id;
+		}
+	}
+
 	// Bail if no user found.
-	if ( 0 === $user ) {
+	if ( empty( $user ) ) {
 		return false;
 	}
 

@@ -608,13 +608,14 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 */
 	public function get_percentage_complete() {
 
-		$total = count( $this->csv );
+		$percentage = 0;
+		$total      = count( $this->csv );
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( $this->step * $this->per_step / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 

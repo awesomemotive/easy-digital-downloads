@@ -346,7 +346,11 @@ add_action( 'bulk_edit_custom_box',  'edd_price_field_quick_edit', 10, 2 );
  * @return void
  */
 function edd_price_save_quick_edit( $post_id ) {
-	if ( ! isset( $_POST['post_type']) || 'download' !== $_POST['post_type'] ) {
+	if ( ! isset( $_REQUEST['_edd_regprice'] ) ) {
+		return;
+	}
+
+	if ( ! isset( $_REQUEST['post_type'] ) || 'download' !== $_REQUEST['post_type'] ) {
 		return;
 	}
 
@@ -358,40 +362,6 @@ function edd_price_save_quick_edit( $post_id ) {
 		return $post_id;
 	}
 
-	if ( isset( $_REQUEST['_edd_regprice'] ) ) {
-		update_post_meta( $post_id, 'edd_price', strip_tags( stripslashes( $_REQUEST['_edd_regprice'] ) ) );
-	}
+	update_post_meta( $post_id, 'edd_price', wp_strip_all_tags( stripslashes( $_REQUEST['_edd_regprice'] ) ) );
 }
 add_action( 'save_post', 'edd_price_save_quick_edit' );
-
-/**
- * Process bulk edit actions via AJAX
- *
- * @since 1.4.4
- * @return void
- */
-function edd_save_bulk_edit() {
-
-	$post_ids = ! empty( $_POST['post_ids'] )
-		? wp_parse_id_list( $_POST['post_ids'] )
-		: array();
-
-	if ( ! empty( $post_ids ) && is_array( $post_ids ) ) {
-		$price = isset( $_POST['price'] )
-			? strip_tags( stripslashes( $_POST['price'] ) )
-			: 0;
-
-		foreach ( $post_ids as $post_id ) {
-			if ( ! current_user_can( 'edit_post', $post_id ) ) {
-				continue;
-			}
-
-			if ( ! empty( $price ) ) {
-				update_post_meta( $post_id, 'edd_price', edd_sanitize_amount( $price ) );
-			}
-		}
-	}
-
-	die();
-}
-add_action( 'wp_ajax_edd_save_bulk_edit', 'edd_save_bulk_edit' );

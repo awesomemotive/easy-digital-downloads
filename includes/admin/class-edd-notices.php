@@ -51,6 +51,11 @@ class EDD_Notices {
 	 */
 	public function add_notice( $args = array() ) {
 
+		// Avoid malformed notices variable
+		if ( ! is_array( $this->notices ) ) {
+			$this->notices = array();
+		}
+
 		// Parse args
 		$r = wp_parse_args( $args, array(
 			'id'             => '',
@@ -58,6 +63,11 @@ class EDD_Notices {
 			'class'          => false,
 			'is_dismissible' => true,
 		) );
+
+		// Prevent a notice from being added more than once.
+		if ( ! empty( $r['id'] ) && array_key_exists( $r['id'], $this->notices ) ) {
+			return;
+		}
 
 		$default_class = 'updated';
 
@@ -93,9 +103,10 @@ class EDD_Notices {
 		}
 
 		// CSS Classes
-		$classes = ! empty( $r['class'] )
-			? array( $r['class'] )
-			: array( $default_class );
+		$classes = array( $default_class );
+		if ( ! empty( $r['class'] ) ) {
+			$classes = explode( ' ', $r['class'] );
+		}
 
 		// Add dismissible class
 		if ( ! empty( $r['is_dismissible'] ) ) {
@@ -106,13 +117,8 @@ class EDD_Notices {
 		$message = '<div class="notice ' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '">' . $message . '</div>';
 		$message = str_replace( "'", "\'", $message );
 
-		// Avoid malformed notices variable
-		if ( ! is_array( $this->notices ) ) {
-			$this->notices = array();
-		}
-
 		// Add notice to notices array
-		$this->notices[] = $message;
+		$this->notices[ $r['id'] ] = $message;
 	}
 
 	/**
@@ -122,11 +128,6 @@ class EDD_Notices {
 	 */
 	public function add_notices() {
 
-		// User can edit pages
-		if ( current_user_can( 'edit_pages' ) ) {
-			$this->add_page_notices();
-		}
-
 		// User can view shop reports
 		if ( current_user_can( 'view_shop_reports' ) ) {
 			$this->add_reports_notices();
@@ -134,9 +135,9 @@ class EDD_Notices {
 
 		// User can manage the entire shop
 		if ( current_user_can( 'manage_shop_settings' ) ) {
-			$this->add_system_notices();
 			$this->add_data_notices();
 			$this->add_settings_notices();
+			$this->add_order_upgrade_notice();
 		}
 
 		// Generic notices
@@ -183,6 +184,10 @@ class EDD_Notices {
 	 * @since 2.6.0 bbPress (r6771)
 	 */
 	public function display_notices() {
+		$screen = get_current_screen();
+		if ( 'site-health' === $screen->id ) {
+			return;
+		}
 
 		$this->show_debugging_notice();
 
@@ -255,6 +260,7 @@ class EDD_Notices {
 	 * Notices about missing pages
 	 *
 	 * @since 3.0
+	 * @deprecated 3.1.2
 	 */
 	private function add_page_notices() {
 
@@ -283,6 +289,7 @@ class EDD_Notices {
 	 * Notices for the entire shop
 	 *
 	 * @since 3.0
+	 * @deprecated 3.1.2
 	 */
 	private function add_system_notices() {
 
@@ -413,39 +420,46 @@ class EDD_Notices {
 	private function add_settings_notices() {
 
 		// Settings area
-		if ( ! empty( $_GET['page'] ) && ( 'edd-settings' === $_GET['page'] ) ) {
+		if ( empty( $_GET['page'] ) || ( 'edd-settings' !== $_GET['page'] ) ) {
+			return;
+		}
 
-			// Settings updated
-			if ( ! empty( $_GET['settings-updated'] ) ) {
-				$this->add_notice( array(
+		// Settings updated
+		if ( ! empty( $_GET['settings-updated'] ) ) {
+			$this->add_notice(
+				array(
 					'id'      => 'edd-notices',
 					'message' => __( 'Settings updated.', 'easy-digital-downloads' )
-				) );
-			}
-
-			// No payment gateways are enabled
-			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
-
-				// URL to fix this
-				$url = edd_get_admin_url(
-					array(
-						'page' => 'edd-settings',
-						'tab'  => 'gateways',
-					)
-				);
-
-				// Link
-				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Fix this', 'easy-digital-downloads' ) . '</a>';
-
-				// Add the notice
-				$this->add_notice( array(
-					'id'             => 'edd-gateways',
-					'class'          => 'error',
-					'message'        => sprintf( __( 'No payment gateways are enabled. %s.', 'easy-digital-downloads' ), $link ),
-					'is_dismissible' => false
-				) );
-			}
+				)
+			);
 		}
+	}
+
+	/**
+	 * Adds a notice if an order migration is running.
+	 * This is only shown if the migration is running via UI by a different user or on another screen.
+	 *
+	 * @since 3.1.2
+	 * @return void
+	 */
+	private function add_order_upgrade_notice() {
+		if ( edd_has_upgrade_completed( 'migrate_orders' ) ) {
+			return;
+		}
+		if ( ! get_option( '_edd_v30_doing_order_migration', false ) ) {
+			return;
+		}
+		if ( get_option( 'edd_v30_cli_migration_running', false ) ) {
+			return;
+		}
+		$this->add_notice(
+			array(
+				'id'             => 'edd-v30-order-migration-running',
+				'class'          => 'updated',
+				'message'        => __( 'Easy Digital Downloads is migrating orders. Sales and earnings data for your store will be updated when all orders have been migrated.', 'easy-digital-downloads' ),
+				'is_dismissible' => false,
+			)
+		);
 	}
 
 	/**

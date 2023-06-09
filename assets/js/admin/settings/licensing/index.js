@@ -13,7 +13,8 @@
 			ajaxAction = '',
 			text = button.text(),
 			control = $( this ).closest( '.edd-license__control' ),
-			input = control.find( 'input' );
+			input = control.find( 'input[type="password"]' ),
+			customAPI = control.find( 'input[name="apiurl"]' );
 
 		if ( button.attr( 'disabled' ) ) {
 			return;
@@ -45,6 +46,7 @@
 			item_id: input.attr( 'data-item' ),
 			item_name: input.attr( 'data-name' ),
 			key: input.attr( 'data-key' ),
+			api: customAPI.val(),
 		};
 
 		$.post( ajaxurl, data )

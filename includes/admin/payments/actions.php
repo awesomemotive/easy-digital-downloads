@@ -162,15 +162,6 @@ function edd_update_payment_details( $data = array() ) {
 		$previous_customer->remove_payment( $order_id, false );
 		$customer->attach_payment( $order_id, false );
 
-		// If purchase was completed and not ever refunded, adjust stats of customers
-		if ( 'revoked' === $new_status || 'complete' === $new_status ) {
-			$previous_customer->recalculate_stats();
-
-			if ( ! empty( $customer ) ) {
-				$customer->recalculate_stats();
-			}
-		}
-
 		$order_update_args['customer_id'] = $customer->id;
 	}
 

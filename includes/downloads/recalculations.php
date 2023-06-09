@@ -33,7 +33,7 @@ function edd_maybe_schedule_download_recalculation( $download_id ) {
 
 	// Check if the recalculation has already been scheduled.
 	if ( $is_scheduled && ! $bypass_cron ) {
-		edd_debug_log( 'Recalculation is already scheduled for ' . $download_id . ' at ' . edd_date_i18n( $is_scheduled, 'datetime' ) );
+		edd_debug_log( 'Recalculation is already scheduled for product ' . $download_id . ' at ' . edd_date_i18n( $is_scheduled, 'datetime' ) );
 		return;
 	}
 
@@ -43,7 +43,7 @@ function edd_maybe_schedule_download_recalculation( $download_id ) {
 		return;
 	}
 
-	edd_debug_log( 'Scheduling recalculation for ' . $download_id );
+	edd_debug_log( 'Scheduling recalculation for product ' . $download_id );
 	wp_schedule_single_event(
 		time() + ( 5 * MINUTE_IN_SECONDS ),
 		'edd_recalculate_download_sales_earnings_deferred',
@@ -64,6 +64,10 @@ add_action( 'edd_order_item_deleted', 'edd_recalculate_order_item_download' );
  * @return void
  */
 function edd_recalculate_order_item_download( $order_item_id, $data = array(), $previous_order_item = false ) {
+
+	if ( get_option( '_edd_v30_doing_order_migration', false ) ) {
+		return;
+	}
 
 	// Recalculations do not need to run when the order item is first being added to the database if it's pending.
 	if ( 'edd_order_item_added' === current_action() && ( empty( $data['status'] ) || 'pending' === $data['status'] ) ) {
@@ -119,6 +123,10 @@ add_action( 'edd_order_adjustment_updated', 'edd_recalculate_order_adjustment_do
  * @return void
  */
 function edd_recalculate_order_adjustment_download( $order_adjustment_id, $data = array(), $previous_order_adjustment = false ) {
+	if ( get_option( '_edd_v30_doing_order_migration', false ) ) {
+		return;
+	}
+
 	if ( $previous_order_adjustment instanceof EDD\Orders\Order_Adjustment ) {
 		$columns_affecting_stats = array( 'total', 'subtotal', 'object_id', 'object_type' );
 

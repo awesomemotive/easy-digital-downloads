@@ -35,7 +35,7 @@ class ExtensionRegistry extends \ArrayObject {
 
 		$this->offsetSet(
 			$pluginId,
-			new \EDD_License( $pluginFile, $pluginName, $currentVersion, 'Easy Digital Downloads', $optionName, null, $pluginId )
+			new Handler( $pluginFile, $pluginId, $pluginName, $currentVersion, $optionName )
 		);
 	}
 
@@ -46,8 +46,7 @@ class ExtensionRegistry extends \ArrayObject {
 	 * flexibility to change exactly what it returns in the future.
 	 *
 	 * @since 2.11.4
-	 *
-	 * @return \EDD_License[]
+	 * @return Handler[]
 	 */
 	private function getExtensions() {
 		return $this->getArrayCopy();
@@ -64,8 +63,8 @@ class ExtensionRegistry extends \ArrayObject {
 	 * @return int
 	 */
 	public function countLicensedExtensions() {
-		$licensedExtensions = array_filter( $this->getExtensions(), function ( \EDD_License $license ) {
-			return ! empty( $license->license );
+		$licensedExtensions = array_filter( $this->getExtensions(), function ( Handler $license ) {
+			return ! empty( $license->license_key );
 		} );
 
 		return count( $licensedExtensions );

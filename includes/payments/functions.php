@@ -215,10 +215,6 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 		}
 	}
 
-	if ( $customer && $customer->id && $update_customer ) {
-		$customer->recalculate_stats();
-	}
-
 	do_action( 'edd_payment_deleted', $payment_id );
 }
 
@@ -1147,106 +1143,30 @@ function edd_get_payment_number( $order = 0 ) {
 /**
  * Formats the order number with the prefix and postfix.
  *
+ * @todo As of 3.1.2, no longer used, but not officially deprecated. Deprecate.
  * @since 2.4
  *
  * @param int $number The order number to format.
  * @return string The formatted order number
  */
 function edd_format_payment_number( $number ) {
-	if ( ! edd_get_option( 'enable_sequential' ) ) {
-		return $number;
-	}
+	$order_number = new EDD\Orders\Number();
 
-	if ( ! is_numeric( $number ) ) {
-		return $number;
-	}
-
-	$prefix  = edd_get_option( 'sequential_prefix' );
-	$number  = absint( $number );
-	$postfix = edd_get_option( 'sequential_postfix' );
-
-	$formatted_number = $prefix . $number . $postfix;
-
-	return apply_filters( 'edd_format_payment_number', $formatted_number, $prefix, $number, $postfix );
-}
-
-/**
- * Gets the next available order number.
- *
- * This is used when inserting a new order.
- *
- * @since 2.0
- *
- * @return string $number The next available order number.
- */
-function edd_get_next_payment_number() {
-	if ( ! edd_get_option( 'enable_sequential' ) ) {
-		return false;
-	}
-
-	$number           = get_option( 'edd_last_payment_number' );
-	$start            = edd_get_option( 'sequential_start', 1 );
-	$increment_number = true;
-
-	if ( false !== $number ) {
-		if ( empty( $number ) ) {
-			$number = $start;
-			$increment_number = false;
-		}
-	} else {
-		$last_order = edd_get_orders( array(
-			'number'  => 1,
-			'orderby' => 'id',
-			'order'   => 'desc',
-		) );
-
-		if ( ! empty( $last_order ) && $last_order[0] instanceof EDD\Orders\Order ) {
-			$number = (int) $last_order[0]->get_number();
-		}
-
-		if ( ! empty( $number ) && $number !== (int) $last_order[0]->id ) {
-			$number = edd_remove_payment_prefix_postfix( $number );
-		} else {
-			$number = $start;
-			$increment_number = false;
-		}
-	}
-
-	$increment_number = apply_filters( 'edd_increment_payment_number', $increment_number, $number );
-
-	if ( $increment_number ) {
-		$number++;
-	}
-
-	return apply_filters( 'edd_get_next_payment_number', $number );
+	return $order_number->format( $number );
 }
 
 /**
  * Given a given a number, remove the pre/postfix.
  *
  * @since 2.4
- *
+ * @todo As of 3.1.2, no longer used, but not officially deprecated. Deprecate.
  * @param string $number The formatted number to increment.
  * @return string  The new order number without prefix and postfix.
  */
 function edd_remove_payment_prefix_postfix( $number ) {
-	$prefix  = (string) edd_get_option( 'sequential_prefix' );
-	$postfix = (string) edd_get_option( 'sequential_postfix' );
+	$order_number = new EDD\Orders\Number();
 
-	// Remove prefix
-	$number = preg_replace( '/' . $prefix . '/', '', $number, 1 );
-
-	// Remove the postfix
-	$length      = strlen( $number );
-	$postfix_pos = strrpos( $number, strval( $postfix ) );
-	if ( false !== $postfix_pos ) {
-		$number = substr_replace( $number, '', $postfix_pos, $length );
-	}
-
-	// Ensure it's a whole number
-	$number = intval( $number );
-
-	return apply_filters( 'edd_remove_payment_prefix_postfix', $number, $prefix, $postfix );
+	return $order_number->unformat( $number );
 }
 
 /**

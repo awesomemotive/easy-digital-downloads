@@ -753,14 +753,11 @@ class Data_Migrator {
 		 */
 		$order_data = apply_filters( 'edd_30_migration_order_creation_data', $order_data, $payment_meta, $cart_details, $meta );
 
+		update_option( '_edd_v30_doing_order_migration', true, false );
+
 		// Remove all order status transition actions.
 		remove_all_actions( 'edd_transition_order_status' );
 		remove_all_actions( 'edd_transition_order_item_status' );
-		remove_action( 'edd_order_item_added', 'edd_recalculate_order_item_download' );
-		remove_action( 'edd_order_item_updated', 'edd_recalculate_order_item_download' );
-		remove_action( 'edd_order_item_deleted', 'edd_recalculate_order_item_download' );
-		remove_action( 'edd_order_adjustment_added', 'edd_recalculate_order_adjustment_download' );
-		remove_action( 'edd_order_adjustment_updated', 'edd_recalculate_order_adjustment_download' );
 
 		$order_id = edd_add_order( $order_data );
 
@@ -1350,6 +1347,8 @@ class Data_Migrator {
 		 * @param array $meta         All post meta associated with the payment.
 		 */
 		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
+
+		delete_option( '_edd_v30_doing_order_migration' );
 
 		return $order_id;
 	}

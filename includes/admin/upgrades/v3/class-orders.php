@@ -93,6 +93,26 @@ class Orders extends Base {
 	}
 
 	/**
+	 * Recalculates all customer values.
+	 *
+	 * @since 3.1.2
+	 * @return void
+	 */
+	private function recalculate_customer_values() {
+		$customers = edd_get_customers(
+			array(
+				'number' => 9999999,
+			)
+		);
+
+		if ( ! empty( $customers ) ) {
+			foreach ( $customers as $customer ) {
+				$customer->recalculate_stats();
+			}
+		}
+	}
+
+	/**
 	 * Calculate the percentage completed.
 	 *
 	 * @since 3.0

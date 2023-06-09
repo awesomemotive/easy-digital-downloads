@@ -207,7 +207,7 @@ trait Controls {
 	private function is_included_in_pass() {
 		$pass_manager = $this->get_pass_manager();
 		// All Access and lifetime passes can access everything.
-		if ( $pass_manager->hasAllAccessPass() ) {
+		if ( $pass_manager->hasAllAccessPass() && empty( $this->args['options']['api_url'] ) ) {
 			return true;
 		}
 		// If we don't know the item ID we can't assume anything.

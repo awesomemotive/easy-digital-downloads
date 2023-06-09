@@ -967,11 +967,63 @@ function get_dates_filter_day_by_day() {
 }
 
 /**
+ * Gets the period for a graph.
+ *
+ * @since 3.1.1.4
+ * @return string
+ */
+function get_graph_period() {
+	if ( get_dates_filter_hour_by_hour() ) {
+		return 'hour';
+	}
+	if ( get_dates_filter_day_by_day() ) {
+		return 'day';
+	}
+
+	return 'month';
+}
+
+/**
+ * Gets the SQL clauses.
+ * The result of this function should be run through $wpdb->prepare().
+ *
+ * @since 3.1.1.4
+ * @param string $period The period for the query.
+ * @param string $column The column to query.
+ * @return array
+ */
+function get_sql_clauses( $period, $column = 'date_created' ) {
+
+	// Get the date for the query.
+	$converted_date = get_column_conversion( $column );
+
+	switch ( $period ) {
+		case 'hour':
+			$date_format = '%%Y-%%m-%%d %%H:00:00';
+			break;
+		case 'day':
+			$date_format = '%%Y-%%m-%%d';
+			break;
+		default:
+			$date_format = '%%Y-%%m';
+			break;
+	}
+
+	return array(
+		'select'  => "DATE_FORMAT({$converted_date}, \"{$date_format}\") AS date",
+		'where'   => '',
+		'groupby' => 'date',
+		'orderby' => 'date',
+	);
+}
+
+/**
  * Given a function and column, make a timezone converted groupby query.
  *
  * @since 3.0
  * @since 3.0.4 If MONTH is passed as the function, always add YEAR and MONTH
  *              to avoid issues with spanning multiple years.
+ * @since 3.1.1.4 This function isn't needed anymore due to using DATE_FORMAT in the select clause.
  *
  * @param string $function The function to run the value through, like DATE, HOUR, MONTH.
  * @param string $column   The column to group by.
@@ -979,25 +1031,40 @@ function get_dates_filter_day_by_day() {
  * @return string
  */
 function get_groupby_date_string( $function = 'DATE', $column = 'date_created' ) {
-	$function   = strtoupper( $function );
+	/**
+	 * If there is no offset, the default column will be returned.
+	 * Otherwise, the column will be converted to the timezone offset.
+	 */
+	$column_conversion = get_column_conversion( $column );
+
+	$function = strtoupper( $function );
+	switch ( $function ) {
+		case 'HOUR':
+			$group_by_string = "DAY({$column_conversion}), HOUR({$column_conversion})";
+			break;
+		case 'MONTH':
+			$group_by_string = "YEAR({$column_conversion}), MONTH({$column_conversion})";
+			break;
+		default:
+			$group_by_string = "{$function}({$column_conversion})";
+			break;
+	}
+
+	return $group_by_string;
+}
+
+/**
+ * Get the time zone converted dates for the query.
+ *
+ * @since 3.1.1.4
+ * @param string $column
+ * @return string
+ */
+function get_column_conversion( $column = 'date_created' ) {
 	$date       = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 	$gmt_offset = $date->getOffset();
-
 	if ( empty( $gmt_offset ) ) {
-
-		switch ( $function ) {
-			case 'HOUR':
-				$group_by_string = "DAY({$column}), HOUR({$column})";
-				break;
-			case 'MONTH':
-				$group_by_string = "YEAR({$column}), MONTH({$column})";
-				break;
-			default:
-				$group_by_string = "{$function}({$column})";
-				break;
-		}
-
-		return $group_by_string;
+		return $column;
 	}
 
 	// Output the offset in the proper format.
@@ -1017,20 +1084,7 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
 	 *
 	 * @see https://github.com/awesomemotive/easy-digital-downloads/pull/9449
 	 */
-	$column_conversion = "CONVERT_TZ({$column}, '+0:00', '{$math}{$formatted_offset}')";
-	switch ( $function ) {
-		case 'HOUR':
-			$group_by_string = "DAY({$column_conversion}), HOUR({$column_conversion})";
-			break;
-		case 'MONTH':
-			$group_by_string = "YEAR({$column_conversion}), MONTH({$column_conversion})";
-			break;
-		default:
-			$group_by_string = "{$function}({$column_conversion})";
-			break;
-	}
-
-	return $group_by_string;
+	return "CONVERT_TZ({$column}, '+00:00', '{$math}{$formatted_offset}')";
 }
 
 /**

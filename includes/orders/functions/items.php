@@ -62,20 +62,7 @@ function edd_add_order_item( $data = array() ) {
 	// Instantiate a query object
 	$order_items = new EDD\Database\Queries\Order_Item();
 
-	$order_item_id = $order_items->add_item( $data );
-
-	if ( ! empty( $order_item_id ) ) {
-		/**
-		 * Action that runs when an order item is successfully added.
-		 *
-		 * @since 3.1
-		 * @param int   Order item ID.
-		 * @param array Array of order item data.
-		 */
-		do_action( 'edd_order_item_added', $order_item_id, $data );
-	}
-
-	return $order_item_id;
+	return $order_items->add_item( $data );
 }
 
 /**
@@ -89,20 +76,7 @@ function edd_add_order_item( $data = array() ) {
 function edd_delete_order_item( $order_item_id = 0 ) {
 	$order_items = new EDD\Database\Queries\Order_Item();
 
-	$order_item_deleted = $order_items->delete_item( $order_item_id );
-
-	if ( ! empty( $order_item_deleted ) ) {
-		/**
-		 * Action that runs when an order item is deleted.
-		 *
-		 * @since 3.0.5
-		 *
-		 * @param int $order_item_id Order item ID being deleted.
-		 */
-		do_action( 'edd_order_item_deleted', $order_item_id );
-	}
-
-	return $order_item_deleted;
+	return $order_items->delete_item( $order_item_id );
 }
 
 /**
@@ -143,22 +117,7 @@ function edd_delete_order_item( $order_item_id = 0 ) {
 function edd_update_order_item( $order_item_id = 0, $data = array() ) {
 	$order_items = new EDD\Database\Queries\Order_Item();
 
-	$previous_order_item_data = edd_get_order_item( $order_item_id );
-	$order_item_updated       = $order_items->update_item( $order_item_id, $data );
-
-	if ( ! empty( $order_item_updated ) ) {
-		/**
-		 * Action that runs when an order item is updated.
-		 *
-		 * @since 3.1
-		 * @param int                   The order item ID.
-		 * @param array                 The array of data to update.
-		 * @param EDD\Orders\Order_Item The original order item object.
-		 */
-		do_action( 'edd_order_item_updated', $order_item_id, $data, $previous_order_item_data );
-	}
-
-	return $order_item_updated;
+	return $order_items->update_item( $order_item_id, $data );
 }
 
 /**

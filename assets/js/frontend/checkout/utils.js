@@ -47,6 +47,20 @@ export function recalculateTaxes( state ) {
 		return;
 	} // Taxes not enabled
 
+	let tax_amount_row = document.getElementsByClassName( 'edd_cart_tax' );
+
+	// See if the tax_amount_row has an edd-loading-ajax child before adding another one.
+	if ( tax_amount_row.length > 0 && ! tax_amount_row[0].querySelector( '.edd-recalculate-taxes-loading' ) ) {
+		tax_amount_row = tax_amount_row[0];
+		const taxes_loading = document.createElement('span');
+		const current_tax_amount = document.getElementsByClassName( 'edd_cart_tax_amount' );
+		if ( current_tax_amount.length > 0 ) {
+			tax_amount_row.removeChild( current_tax_amount[0] );
+		}
+		taxes_loading.classList.add( 'edd-loading-ajax', 'edd-recalculate-taxes-loading', 'edd-loading' );
+		tax_amount_row.appendChild( taxes_loading );
+	}
+
 	const $edd_cc_address = jQuery( '#edd_cc_address' );
 
 	const billing_country = $edd_cc_address.find( '#billing_country' ).val(),
@@ -71,11 +85,6 @@ export function recalculateTaxes( state ) {
 		nonce: jQuery( '#edd-checkout-address-fields-nonce' ).val(),
 		current_page: edd_global_vars.current_page,
 	};
-
-	const purchaseButton = jQuery( '#edd_purchase_submit [type=submit]' );
-	if ( ! purchaseButton.siblings( '.edd-loading-ajax.edd-recalculate-taxes-loading' ).length ) {
-		purchaseButton.after( '<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>' );
-	}
 
 	const current_ajax_count = ++ajax_tax_count;
 

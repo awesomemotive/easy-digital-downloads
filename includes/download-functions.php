@@ -356,31 +356,21 @@ function edd_has_variable_prices( $download_id = 0 ) {
  * none set.
  *
  * @since 2.2
+ * @since 3.1.2 Moved this behavior into the EDD_Download class as it really does belong there.
  *
  * @param  int $download_id Download ID.
- * @return int Price ID.
+ * @return int|null The default price ID, or false if the product does not have variable prices.
  */
 function edd_get_default_variable_price( $download_id = 0 ) {
 
 	// Bail if no download ID was passed.
-	if ( empty( $download_id ) ) {
-		return false;
+	if ( ! is_numeric( $download_id ) || empty( $download_id ) ) {
+		return null;
 	}
 
-	// Bail if download has no variable prices.
-	if ( ! edd_has_variable_prices( $download_id ) ) {
-		return false;
-	}
+	$download = new EDD_Download( $download_id );
 
-	$prices           = edd_get_variable_prices( $download_id );
-	$default_price_id = get_post_meta( $download_id, '_edd_default_price_id', true );
-
-	if ( '' === $default_price_id || ! isset( $prices[ $default_price_id ] ) ) {
-		$default_price_id = current( array_keys( $prices ) );
-	}
-
-	// Filter & return.
-	return apply_filters( 'edd_variable_default_price_id', absint( $default_price_id ), $download_id );
+	return $download->get_default_price_id();
 }
 
 /**
@@ -474,33 +464,13 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 		return edd_get_download_price( $download_id );
 	}
 
-	// Fetch variables prices.
-	$prices = edd_get_variable_prices( $download_id );
-
 	// Set lowest to 0.
-	$lowest = 0.00;
-
-	// Loop through all the prices.
-	if ( ! empty( $prices ) ) {
-		foreach ( $prices as $key => $price ) {
-
-			// Skip if amount doesn't exist.
-			if ( empty( $price['amount'] ) ) {
-				continue;
-			}
-
-			if ( ! isset( $min ) ) {
-				$min = $price['amount'];
-			} else {
-				$min = min( $min, $price['amount'] );
-			}
-
-			if ( $price['amount'] == $min ) {
-				$min_id = $key;
-			}
-		}
-
-		$lowest = $prices[ $min_id ]['amount'];
+	$lowest       = 0.00;
+	$prices       = edd_get_variable_prices( $download_id );
+	$list_handler = new EDD\Utils\ListHandler( $prices );
+	$min_key      = $list_handler->search( 'amount', 'min' );
+	if ( false !== $min_key ) {
+		$lowest = $prices[ $min_key ]['amount'];
 	}
 
 	return edd_sanitize_amount( $lowest );
@@ -531,31 +501,10 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
 		return edd_get_download_price( $download_id );
 	}
 
-	// Fetch variable prices.
-	$prices = edd_get_variable_prices( $download_id );
+	$list_handler = new EDD\Utils\ListHandler( edd_get_variable_prices( $download_id ) );
+	$min_key      = $list_handler->search( 'amount', 'min' );
 
-	// Loop through all the prices.
-	if ( ! empty( $prices ) ) {
-		foreach ( $prices as $key => $price ) {
-
-			// Skip if amount doesn't exist.
-			if ( empty( $price['amount'] ) ) {
-				continue;
-			}
-
-			if ( ! isset( $min ) ) {
-				$min = $price['amount'];
-			} else {
-				$min = min( $min, $price['amount'] );
-			}
-
-			if ( $price['amount'] == $min ) {
-				$min_id = $key;
-			}
-		}
-	}
-
-	return absint( $min_id );
+	return false !== $min_key ? absint( $min_key ) : false;
 }
 
 /**
@@ -582,31 +531,13 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 		return edd_get_download_price( $download_id );
 	}
 
-	// Fetch variables prices.
-	$prices = edd_get_variable_prices( $download_id );
-
 	// Set highest to 0.
-	$highest = 0.00;
-
-	// Loop through all the prices.
-	if ( ! empty( $prices ) ) {
-		$max = 0;
-
-		foreach ( $prices as $key => $price ) {
-
-			// Skip if amount doesn't exist.
-			if ( empty( $price['amount'] ) ) {
-				continue;
-			}
-
-			$max = max( $max, $price['amount'] );
-
-			if ( $price['amount'] == $max ) {
-				$max_id = $key;
-			}
-		}
-
-		$highest = $prices[ $max_id ]['amount'];
+	$highest      = 0.00;
+	$prices       = edd_get_variable_prices( $download_id );
+	$list_handler = new EDD\Utils\ListHandler( $prices );
+	$max_key      = $list_handler->search( 'amount', 'max' );
+	if ( false !== $max_key ) {
+		$highest = $prices[ $max_key ]['amount'];
 	}
 
 	return edd_sanitize_amount( $highest );
@@ -671,7 +602,7 @@ function edd_single_price_option_mode( $download_id = 0 ) {
  */
 function edd_get_download_types() {
 	$types = array(
-		'0'      => __( 'Default', 'easy-digital-downloads' ),
+		'0'      => __( 'Single Product', 'easy-digital-downloads' ),
 		'bundle' => __( 'Bundle', 'easy-digital-downloads' ),
 	);
 

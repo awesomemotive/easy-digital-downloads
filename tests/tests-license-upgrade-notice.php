@@ -237,4 +237,22 @@ class Tests_License_Upgrade_Notice extends EDD_UnitTestCase {
 		$this->assertTrue( $notice->should_display() );
 		$this->assertNoticeContains( 'Grow your business and make more money with affiliate marketing.', $notice );
 	}
+
+	/**
+	 * Someone running the pro code without a pass license should always see a notice.
+	 *
+	 * @return void
+	 */
+	public function test_inactive_pro_sees_notice() {
+		// skip this test if the inactive pro class doesn't exist
+		if ( ! class_exists( '\\EDD\\Pro\\Admin\\Promos\\Notices\\InactivePro' ) ) {
+			$this->markTestSkipped( 'Inactive Pro class does not exist.' );
+		}
+
+		add_filter( 'edd_is_pro', '__return_true' );
+
+		$notice = new \EDD\Pro\Admin\Promos\Notices\InactivePro();
+		$this->assertTrue( $notice->should_display() );
+		$this->assertNoticeContains( 'You are using Easy Digital Downloads (Pro) without an active license key.', $notice );
+	}
 }

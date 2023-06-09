@@ -355,7 +355,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.1.1.3' );
+			define( 'EDD_VERSION', '3.1.2' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -759,7 +759,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/template-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/extensions/licensing-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/extensions/ExtensionRegistry.php';
 		require_once EDD_PLUGIN_DIR . 'includes/date-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
@@ -834,6 +833,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/deprecated-upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/downgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
