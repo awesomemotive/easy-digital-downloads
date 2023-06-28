@@ -52,7 +52,8 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			'download'    => edd_get_label_singular(),
 			'quantity'    => __( 'Quantity', 'easy-digital-downloads' ),
 			'amount'      => __( 'Item Amount', 'easy-digital-downloads' ),
-			'payment_id'  => __( 'Payment ID', 'easy-digital-downloads' ),
+			'currency'    => __( 'Currency', 'easy-digital-downloads' ),
+			'order_id'    => __( 'Order ID', 'easy-digital-downloads' ),
 			'price_id'    => __( 'Price ID', 'easy-digital-downloads' ),
 			'date'        => __( 'Date', 'easy-digital-downloads' ),
 		);
@@ -72,17 +73,31 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		$args = array_merge(
 			$this->get_order_item_args(),
 			array(
-				'number' => 30,
-				'offset' => ( $this->step * 30 ) - 30,
-				'order'  => 'ASC',
+				'number'     => 30,
+				'offset'     => ( $this->step * 30 ) - 30,
+				'order'      => 'ASC'
 			)
 		);
 
 		$items = edd_get_order_items( $args );
 
 		foreach ( $items as $item ) {
+
+			if ( 'refunded' === $item->status ) {
+				continue;
+			}
+
 			/** @var EDD\Orders\Order_Item $item */
-			$order = edd_get_order( $item->order_id );
+			$order  = edd_get_order( $item->order_id );
+
+			// If the item has been partially refunded, we need to calculate the amount
+			$amount = array_reduce(
+				$item->get_refunded_items(),
+				function( $total, $refund_item ) {
+					return $total + $refund_item->total;
+				},
+				$item->total
+			);
 
 			$data[] = array(
 				'ID'          => $item->product_id,
@@ -92,8 +107,9 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 				'name'        => edd_get_customer_field( $order->customer_id, 'name' ),
 				'download'    => $item->product_name,
 				'quantity'    => $item->quantity,
-				'amount'      => $order->total,
-				'payment_id'  => $order->id,
+				'amount'      => edd_format_amount( $amount ),
+				'currency'    => $order->currency,
+				'order_id'    => $order->id,
 				'price_id'    => $item->price_id,
 				'date'        => $order->date_created,
 			);
@@ -155,7 +171,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 
 	public function set_properties( $request ) {
 		$this->start       = isset( $request['sales-export-start'] ) ? sanitize_text_field( $request['sales-export-start'] ) : '';
-		$this->end         = isset( $request['sales-export-end'] ) ? sanitize_text_field( $request['sales-export-end'] ) . ' 23:59:59' : '';
+		$this->end         = isset( $request['sales-export-end'] ) ? sanitize_text_field( $request['sales-export-end'] ) : '';
 		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
 		$this->orders      = $this->get_orders();
 	}

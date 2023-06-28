@@ -110,10 +110,12 @@ class EDD_HTML_Elements {
 				// If showing variations, add them to the list.
 				if ( $args['variations'] ) {
 					$prices = edd_get_variable_prices( $product->ID );
-					foreach ( $prices as $key => $value ) {
-						$name = ! empty( $value['name'] ) ? $value['name'] : '';
-						if ( $name ) {
-							$options[ absint( $product->ID ) . '_' . $key ] = esc_html( $product->post_title . ': ' . $name );
+					if ( ! empty( $prices ) ) {
+						foreach ( $prices as $key => $value ) {
+							$name = ! empty( $value['name'] ) ? $value['name'] : '';
+							if ( $name ) {
+								$options[ absint( $product->ID ) . '_' . $key ] = esc_html( $product->post_title . ': ' . $name );
+							}
 						}
 					}
 				}

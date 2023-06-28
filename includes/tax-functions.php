@@ -54,7 +54,7 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 
 	// Parse args
 	$r = wp_parse_args( $args, array(
-		'number'  => 30,
+		'number'  => 9999,
 		'type'    => 'tax_rate',
 		'orderby' => 'date_created',
 		'order'   => 'ASC',
