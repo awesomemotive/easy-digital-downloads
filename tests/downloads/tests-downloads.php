@@ -331,4 +331,13 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 		$this->assertEquals( 2, count( $bundled_downloads ) );
 	}
+
+	public function test_download_has_variable_pricing_but_no_prices() {
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
+		update_post_meta( $download->ID, '_variable_pricing', true );
+		update_post_meta( $download->ID, 'edd_variable_prices', array( 0 => '' ) );
+
+		$this->assertTrue( edd_has_variable_prices( $download->ID ) );
+		$this->assertEmpty( edd_get_variable_prices( $download->ID ) );
+	}
 }

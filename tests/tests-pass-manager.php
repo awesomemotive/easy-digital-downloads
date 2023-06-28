@@ -67,6 +67,16 @@ class Pass_Manager extends EDD_UnitTestCase {
 		);
 	}
 
+	public function test_invalid_pass_returns_false() {
+		$this->assertFalse(
+			\EDD\Admin\Pass_Manager::pass_compare(
+				1234856,
+				\EDD\Admin\Pass_Manager::PERSONAL_PASS_ID,
+				'='
+			)
+		);
+	}
+
 	/**
 	 * If you have both a Personal and Professional pass activated, the Professional should be highest.
 	 *

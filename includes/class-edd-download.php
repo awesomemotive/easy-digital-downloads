@@ -306,7 +306,7 @@ class EDD_Download {
 		 * @param array $prices The array of variables prices.
 		 * @param int|string The ID of the download.
 		 */
-		return (array) apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID );
+		return array_filter( (array) apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID ) );
 	}
 
 	/**

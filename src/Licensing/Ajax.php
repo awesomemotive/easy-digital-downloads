@@ -84,6 +84,7 @@ class Ajax implements SubscriberInterface {
 						'expires'      => ! empty( $license_data->expires ) ? $license_data->expires : false,
 						'name'         => $this->name,
 						'subscription' => ! empty( $license_data->subscription ) ? $license_data->subscription : null,
+						'api_url'      => $custom_api,
 					)
 				);
 				$message  = $messages->get_message();
