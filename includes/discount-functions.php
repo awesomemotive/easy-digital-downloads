@@ -406,9 +406,10 @@ function edd_has_active_discounts() {
  *
  * @internal This method exists for backwards compatibility. `edd_add_discount()` should be used.
  *
- * @since 1.0
- * @since 2.7 Updated to use EDD_Discount object.
- * @since 3.0 Updated to use new query class.
+ * @since      1.0
+ * @since      2.7 Updated to use EDD_Discount object.
+ * @since      3.0 Updated to use new query class.
+ * @deprecated 3.0 Use edd_add_discount()
  *
  * @param array $details     Discount args.
  * @param int   $discount_id Discount ID.
@@ -416,18 +417,32 @@ function edd_has_active_discounts() {
  */
 function edd_store_discount( $details, $discount_id = null ) {
 
+	edd_debug_log(
+		sprintf(
+			__( '%1$s is deprecated since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ),
+			__FUNCTION__,
+			'3.0',
+			'edd_add_discount()'
+		),
+		true
+	);
+
 	// Set default return value to false.
 	$return = false;
 
 	// Back-compat for start date.
 	if ( isset( $details['start'] ) && strstr( $details['start'], '/' ) ) {
-		$details['start_date'] = date( 'Y-m-d', strtotime( $details['start'] ) ) . ' 00:00:00';
+		$time_format           = date( 'H:i:s', strtotime( $details['start'] ) );
+		$date_format           = date( 'Y-m-d', strtotime( $details['start'] ) ) . ' ' . $time_format;
+		$details['start_date'] = edd_get_utc_equivalent_date( EDD()->utils->date( $date_format, edd_get_timezone_id(), false ));
 		unset( $details['start'] );
 	}
 
 	// Back-compat for end date.
 	if ( isset( $details['expiration'] ) && strstr( $details['expiration'], '/' ) ) {
-		$details['end_date'] = date( 'Y-m-d', strtotime( $details['expiration'] ) ) . ' 23:59:59';
+		$time_format         = date( 'H:i:s', strtotime( $details['expiration'] ) );
+		$date_format         = date( 'Y-m-d', strtotime( $details['expiration'] ) ) . ' ' . ( '00:00:00' !== $time_format ? $time_format : '23:59:59' );
+		$details['end_date'] = edd_get_utc_equivalent_date( EDD()->utils->date( $date_format, edd_get_timezone_id(), false ) );
 		unset( $details['expiration'] );
 	}
 

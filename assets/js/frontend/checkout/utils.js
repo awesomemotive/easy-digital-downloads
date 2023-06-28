@@ -47,15 +47,16 @@ export function recalculateTaxes( state ) {
 		return;
 	} // Taxes not enabled
 
-	let tax_amount_row = document.getElementsByClassName( 'edd_cart_tax' );
+	const cart = document.getElementById( 'edd_checkout_cart' );
+	let tax_amount_row = cart.getElementsByClassName( 'edd_cart_tax' );
 
 	// See if the tax_amount_row has an edd-loading-ajax child before adding another one.
 	if ( tax_amount_row.length > 0 && ! tax_amount_row[0].querySelector( '.edd-recalculate-taxes-loading' ) ) {
 		tax_amount_row = tax_amount_row[0];
 		const taxes_loading = document.createElement('span');
-		const current_tax_amount = document.getElementsByClassName( 'edd_cart_tax_amount' );
-		if ( current_tax_amount.length > 0 ) {
-			tax_amount_row.removeChild( current_tax_amount[0] );
+		const current_tax_amount = tax_amount_row.getElementsByClassName( 'edd_cart_tax_amount' );
+		for ( let i = 0; i < current_tax_amount.length; i++ ) {
+			current_tax_amount[ i ].remove();
 		}
 		taxes_loading.classList.add( 'edd-loading-ajax', 'edd-recalculate-taxes-loading', 'edd-loading' );
 		tax_amount_row.appendChild( taxes_loading );

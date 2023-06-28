@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.2\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-07T19:51:04+00:00\n"
+"POT-Creation-Date: 2023-06-26T22:38:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.8.1\n"
 
 #. Plugin Name of the plugin
 msgid "Easy Digital Downloads (Pro)"
@@ -136,7 +136,7 @@ msgstr ""
 #: includes/admin/payments/actions.php:77
 #: includes/admin/payments/actions.php:279
 #: includes/admin/payments/actions.php:309
-#: includes/emails/actions.php:59
+#: includes/emails/actions.php:60
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
@@ -204,14 +204,14 @@ msgstr ""
 #: includes/blocks/includes/forms/recaptcha.php:180
 #: includes/cart/class-edd-cart.php:1452
 #: includes/cart/class-edd-cart.php:1466
-#: includes/class-edd-license-handler.php:475
+#: includes/class-edd-license-handler.php:476
 #: includes/deprecated-functions.php:488
 #: includes/deprecated-functions.php:505
 #: includes/deprecated-functions.php:513
 #: includes/deprecated-functions.php:915
 #: includes/download-functions.php:1498
 #: includes/EDD_SL_Plugin_Updater.php:486
-#: includes/emails/actions.php:59
+#: includes/emails/actions.php:60
 #: includes/emails/template.php:241
 #: includes/error-tracking.php:60
 #: includes/gateways/functions.php:320
@@ -720,7 +720,6 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:127
 #: includes/misc-functions.php:1460
 #: includes/payments/functions.php:535
-#: tests/orders/tests-payments.php:221
 msgid "Pending"
 msgstr ""
 
@@ -855,7 +854,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:43
 #: includes/admin/reporting/export/class-batch-export-payments.php:62
 #: includes/admin/reporting/export/class-batch-export-sales-and-earnings.php:59
-#: includes/admin/reporting/export/class-batch-export-sales.php:57
+#: includes/admin/reporting/export/class-batch-export-sales.php:58
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:62
 #: includes/admin/tools.php:632
 #: includes/blocks/views/orders/totals.php:38
@@ -1011,12 +1010,12 @@ msgstr ""
 #: includes/admin/import/import-functions.php:106
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:2030
-#: includes/class-edd-license-handler.php:475
+#: includes/class-edd-license-handler.php:476
 msgid "Nonce verification failed"
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:325
-#: includes/shortcodes.php:987
+#: includes/shortcodes.php:989
 msgid "Email address %s removed by %s"
 msgstr ""
 
@@ -1460,14 +1459,12 @@ msgstr[1] ""
 #: includes/admin/dashboard-widgets.php:150
 #: includes/class-edd-stats.php:84
 #: includes/reports/reports-functions.php:501
-#: tests/reports/tests-reports-functions.php:334
 msgid "Last Month"
 msgstr ""
 
 #: includes/admin/dashboard-widgets.php:170
 #: includes/class-edd-stats.php:79
 #: includes/reports/reports-functions.php:495
-#: tests/reports/tests-reports-functions.php:328
 msgid "Today"
 msgstr ""
 
@@ -1863,7 +1860,7 @@ msgid "You do not have permission to delete discount codes"
 msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:56
-#: includes/class-edd-html-elements.php:442
+#: includes/class-edd-html-elements.php:444
 #: includes/post-types.php:125
 msgid "Search Discounts"
 msgstr ""
@@ -2016,7 +2013,7 @@ msgid "You do not have permission to view this data."
 msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:244
-#: includes/class-edd-html-elements.php:518
+#: includes/class-edd-html-elements.php:520
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
@@ -3412,12 +3409,6 @@ msgstr ""
 #: includes/admin/reporting/reports.php:1638
 #: includes/reports/data/downloads/class-top-selling-downloads-list-table.php:57
 #: includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php:60
-#: tests/reports/data/charts/v2/tests-dateset.php:207
-#: tests/reports/data/charts/v2/tests-manifest.php:264
-#: tests/reports/data/charts/v2/tests-manifest.php:335
-#: tests/reports/data/charts/v2/tests-manifest.php:447
-#: tests/reports/data/charts/v2/tests-manifest.php:484
-#: tests/reports/data/charts/v2/tests-manifest.php:523
 #: includes/blocks/build/downloads/index.js:1
 msgid "Sales"
 msgstr ""
@@ -3527,6 +3518,7 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:69
 #: includes/admin/reporting/export/class-batch-export-payments.php:55
+#: includes/admin/reporting/export/class-batch-export-sales.php:55
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:64
 #: includes/admin/settings/register-settings.php:468
 #: includes/admin/settings/register-settings.php:476
@@ -3780,6 +3772,7 @@ msgid "Gross Amount"
 msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-payments.php:41
+#: includes/admin/reporting/export/class-batch-export-sales.php:56
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:41
 #: includes/privacy-functions.php:868
 msgid "Order ID"
@@ -3818,12 +3811,7 @@ msgstr ""
 msgid "Product ID"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-sales.php:55
-#: includes/emails/tags.php:221
-msgid "Payment ID"
-msgstr ""
-
-#: includes/admin/reporting/export/class-batch-export-sales.php:56
+#: includes/admin/reporting/export/class-batch-export-sales.php:57
 msgid "Price ID"
 msgstr ""
 
@@ -4325,7 +4313,7 @@ msgid "Select Region"
 msgstr ""
 
 #: includes/admin/reporting/views/export-taxed-orders.php:62
-#: includes/class-edd-html-elements.php:656
+#: includes/class-edd-html-elements.php:658
 msgid "All Regions"
 msgstr ""
 
@@ -6495,7 +6483,7 @@ msgid "Orders placed through the Amazon gateway must be refunded through Amazon.
 msgstr ""
 
 #: includes/admin/views/tmpl-order-adjustment-discount.php:27
-#: includes/discount-functions.php:1350
+#: includes/discount-functions.php:1365
 msgid "Remove discount"
 msgstr ""
 
@@ -6505,7 +6493,7 @@ msgstr ""
 #: includes/blocks/views/checkout/discount.php:16
 #: includes/blocks/views/orders/discounts.php:7
 #: includes/checkout/template.php:741
-#: includes/discount-functions.php:1314
+#: includes/discount-functions.php:1329
 #: templates/shortcode-receipt.php:87
 msgid "Discount"
 msgid_plural "Discounts"
@@ -6696,7 +6684,7 @@ msgstr ""
 
 #: includes/ajax-functions.php:712
 #: includes/ajax-functions.php:850
-#: includes/class-edd-html-elements.php:379
+#: includes/class-edd-html-elements.php:381
 msgid "No users found"
 msgstr ""
 
@@ -7844,7 +7832,7 @@ msgid "%d customers created in %d seconds"
 msgstr ""
 
 #: includes/class-edd-cli.php:307
-#: includes/class-edd-html-elements.php:307
+#: includes/class-edd-html-elements.php:309
 msgid "No customers found"
 msgstr ""
 
@@ -7934,7 +7922,7 @@ msgid "  Product: %s - %s"
 msgstr ""
 
 #: includes/class-edd-cli.php:424
-#: includes/class-edd-html-elements.php:475
+#: includes/class-edd-html-elements.php:477
 #: includes/shortcodes.php:259
 msgid "No discounts found"
 msgstr ""
@@ -8379,7 +8367,7 @@ msgid "This discount has already been redeemed."
 msgstr ""
 
 #: includes/class-edd-discount.php:1617
-#: includes/discount-functions.php:918
+#: includes/discount-functions.php:933
 msgctxt "error for when a discount is invalid based on its configuration"
 msgid "This discount is invalid."
 msgstr ""
@@ -8406,73 +8394,73 @@ msgstr ""
 msgid "All Price Options"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:283
+#: includes/class-edd-html-elements.php:285
 msgid "Choose a Customer"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:287
+#: includes/class-edd-html-elements.php:289
 msgid "Search Customers"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:289
+#: includes/class-edd-html-elements.php:291
 msgid "No customer attached"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:357
+#: includes/class-edd-html-elements.php:359
 msgid "Select a User"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:361
+#: includes/class-edd-html-elements.php:363
 msgid "Search Users"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:437
+#: includes/class-edd-html-elements.php:439
 msgid "Choose a Discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:438
+#: includes/class-edd-html-elements.php:440
 #: includes/post-types.php:123
 msgid "All Discounts"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:617
+#: includes/class-edd-html-elements.php:619
 msgid "Choose a Country"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:618
+#: includes/class-edd-html-elements.php:620
 msgid "All Countries"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:655
+#: includes/class-edd-html-elements.php:657
 msgid "Choose a Region"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:688
+#: includes/class-edd-html-elements.php:690
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:689
+#: includes/class-edd-html-elements.php:691
 msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:987
+#: includes/class-edd-html-elements.php:989
 msgid "Enter Username"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:1017
+#: includes/class-edd-html-elements.php:1019
 #: includes/blocks/build/register/index.js:1
 msgid "Required"
 msgstr ""
 
 #. translators: 1. opening anchor tag; 2. closing anchor tag
-#: includes/class-edd-license-handler.php:299
+#: includes/class-edd-license-handler.php:300
 #: src/Extensions/Handler.php:263
 msgid "You have invalid or expired license keys for Easy Digital Downloads. %1$sActivate License(s)%2$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:321
+#: includes/class-edd-license-handler.php:322
 #: src/Extensions/Handler.php:282
 msgid "Enter valid license key for automatic updates."
 msgstr ""
@@ -8591,19 +8579,16 @@ msgstr ""
 
 #: includes/class-edd-stats.php:80
 #: includes/reports/reports-functions.php:496
-#: tests/reports/tests-reports-functions.php:329
 msgid "Yesterday"
 msgstr ""
 
 #: includes/class-edd-stats.php:81
 #: includes/reports/reports-functions.php:497
-#: tests/reports/tests-reports-functions.php:330
 msgid "This Week"
 msgstr ""
 
 #: includes/class-edd-stats.php:82
 #: includes/reports/reports-functions.php:498
-#: tests/reports/tests-reports-functions.php:331
 msgid "Last Week"
 msgstr ""
 
@@ -8617,7 +8602,6 @@ msgstr ""
 
 #: includes/class-edd-stats.php:86
 #: includes/reports/reports-functions.php:503
-#: tests/reports/tests-reports-functions.php:336
 msgid "Last Quarter"
 msgstr ""
 
@@ -8627,7 +8611,6 @@ msgstr ""
 
 #: includes/class-edd-stats.php:88
 #: includes/reports/reports-functions.php:505
-#: tests/reports/tests-reports-functions.php:338
 msgid "Last Year"
 msgstr ""
 
@@ -8916,217 +8899,174 @@ msgid "Zaragoza"
 msgstr ""
 
 #: includes/country-functions.php:1904
-#: tests/tests-misc.php:509
 msgid "Drenthe"
 msgstr ""
 
 #: includes/country-functions.php:1905
-#: tests/tests-misc.php:510
 msgid "Flevoland"
 msgstr ""
 
 #: includes/country-functions.php:1906
-#: tests/tests-misc.php:511
 msgid "Friesland"
 msgstr ""
 
 #: includes/country-functions.php:1907
-#: tests/tests-misc.php:512
 msgid "Gelderland"
 msgstr ""
 
 #: includes/country-functions.php:1908
-#: tests/tests-misc.php:513
 msgid "Groningen"
 msgstr ""
 
 #: includes/country-functions.php:1909
-#: tests/tests-misc.php:514
 msgid "Limburg"
 msgstr ""
 
 #: includes/country-functions.php:1910
-#: tests/tests-misc.php:515
 msgid "North Brabant"
 msgstr ""
 
 #: includes/country-functions.php:1911
-#: tests/tests-misc.php:516
 msgid "North Holland"
 msgstr ""
 
 #: includes/country-functions.php:1912
-#: tests/tests-misc.php:517
 msgid "Overijssel"
 msgstr ""
 
 #: includes/country-functions.php:1913
-#: tests/tests-misc.php:518
 msgid "South Holland"
 msgstr ""
 
 #: includes/country-functions.php:1914
-#: tests/tests-misc.php:519
 msgid "Utrecht"
 msgstr ""
 
 #: includes/country-functions.php:1915
-#: tests/tests-misc.php:520
 msgid "Zeeland"
 msgstr ""
 
 #: includes/country-functions.php:1918
-#: tests/tests-misc.php:521
 msgid "Bonaire"
 msgstr ""
 
 #: includes/country-functions.php:1919
-#: tests/tests-misc.php:522
 msgid "Saba"
 msgstr ""
 
 #: includes/country-functions.php:1920
-#: tests/tests-misc.php:523
 msgid "Sint Eustatius"
 msgstr ""
 
 #: includes/currency/functions.php:22
-#: tests/tests-misc.php:91
 msgid "US Dollars (&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:23
-#: tests/tests-misc.php:92
 msgid "Euros (&euro;)"
 msgstr ""
 
 #: includes/currency/functions.php:24
-#: tests/tests-misc.php:93
 msgid "Pound Sterling (&pound;)"
 msgstr ""
 
 #: includes/currency/functions.php:25
-#: tests/tests-misc.php:94
 msgid "Australian Dollars (&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:26
-#: tests/tests-misc.php:95
 msgid "Brazilian Real (R&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:27
-#: tests/tests-misc.php:96
 msgid "Canadian Dollars (&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:28
-#: tests/tests-misc.php:97
 msgid "Czech Koruna"
 msgstr ""
 
 #: includes/currency/functions.php:29
-#: tests/tests-misc.php:98
 msgid "Danish Krone"
 msgstr ""
 
 #: includes/currency/functions.php:30
-#: tests/tests-misc.php:99
 msgid "Hong Kong Dollar (&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:31
-#: tests/tests-misc.php:100
 msgid "Hungarian Forint"
 msgstr ""
 
 #: includes/currency/functions.php:32
-#: tests/tests-misc.php:101
 msgid "Israeli Shekel (&#8362;)"
 msgstr ""
 
 #: includes/currency/functions.php:33
-#: tests/tests-misc.php:102
 msgid "Japanese Yen (&yen;)"
 msgstr ""
 
 #: includes/currency/functions.php:34
-#: tests/tests-misc.php:103
 msgid "Malaysian Ringgits"
 msgstr ""
 
 #: includes/currency/functions.php:35
-#: tests/tests-misc.php:104
 msgid "Mexican Peso (&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:36
-#: tests/tests-misc.php:105
 msgid "New Zealand Dollar (&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:37
-#: tests/tests-misc.php:106
 msgid "Norwegian Krone"
 msgstr ""
 
 #: includes/currency/functions.php:38
-#: tests/tests-misc.php:107
 msgid "Philippine Pesos"
 msgstr ""
 
 #: includes/currency/functions.php:39
-#: tests/tests-misc.php:108
 msgid "Polish Zloty"
 msgstr ""
 
 #: includes/currency/functions.php:40
-#: tests/tests-misc.php:109
 msgid "Singapore Dollar (&#36;)"
 msgstr ""
 
 #: includes/currency/functions.php:41
-#: tests/tests-misc.php:110
 msgid "Swedish Krona"
 msgstr ""
 
 #: includes/currency/functions.php:42
-#: tests/tests-misc.php:111
 msgid "Swiss Franc"
 msgstr ""
 
 #: includes/currency/functions.php:43
-#: tests/tests-misc.php:112
 msgid "Taiwan New Dollars"
 msgstr ""
 
 #: includes/currency/functions.php:44
-#: tests/tests-misc.php:113
 msgid "Thai Baht (&#3647;)"
 msgstr ""
 
 #: includes/currency/functions.php:45
-#: tests/tests-misc.php:114
 msgid "Indian Rupee (&#8377;)"
 msgstr ""
 
 #: includes/currency/functions.php:46
-#: tests/tests-misc.php:115
 msgid "Turkish Lira (&#8378;)"
 msgstr ""
 
 #: includes/currency/functions.php:47
-#: tests/tests-misc.php:116
 msgid "Iranian Rial (&#65020;)"
 msgstr ""
 
 #: includes/currency/functions.php:48
-#: tests/tests-misc.php:117
 msgid "Russian Rubles"
 msgstr ""
 
 #: includes/currency/functions.php:49
-#: tests/tests-misc.php:118
 msgid "Angolan Kwanza"
 msgstr ""
 
@@ -9335,6 +9275,10 @@ msgstr ""
 #. Translators: The %s represents the link to the Product Reviews extension.
 #: includes/deprecated-functions.php:1771
 msgid "Would you like to enable reviews for this product? Check out our <a target=\"_blank\" href=\"%s\">Product Reviews</a> extension."
+msgstr ""
+
+#: includes/discount-functions.php:422
+msgid "%1$s is deprecated since Easy Digital Downloads version %2$s! Use %3$s instead."
 msgstr ""
 
 #: includes/download-functions.php:605
@@ -9566,6 +9510,10 @@ msgstr ""
 
 #: includes/emails/tags.php:204
 msgid "The price of the purchase before taxes."
+msgstr ""
+
+#: includes/emails/tags.php:221
+msgid "Payment ID"
 msgstr ""
 
 #: includes/emails/tags.php:222
@@ -9957,12 +9905,6 @@ msgstr ""
 #. Translators: %s - transaction ID
 #: includes/gateways/paypal-standard.php:692
 #: includes/gateways/paypal/checkout-actions.php:404
-#: tests/helpers/class-helper-payment.php:134
-#: tests/helpers/class-helper-payment.php:235
-#: tests/helpers/class-helper-payment.php:343
-#: tests/helpers/class-helper-payment.php:453
-#: tests/helpers/class-helper-payment.php:552
-#: tests/helpers/class-helper-payment.php:663
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
@@ -11767,37 +11709,30 @@ msgid "Array key \"post_status\" is no longer a supported attribute for the \"ed
 msgstr ""
 
 #: includes/payments/functions.php:536
-#: tests/orders/tests-payments.php:222
 msgid "Processing"
 msgstr ""
 
 #: includes/payments/functions.php:537
-#: tests/orders/tests-payments.php:223
 msgid "Completed"
 msgstr ""
 
 #: includes/payments/functions.php:538
-#: tests/orders/tests-payments.php:224
 msgid "Refunded"
 msgstr ""
 
 #: includes/payments/functions.php:539
-#: tests/orders/tests-payments.php:225
 msgid "Partially Refunded"
 msgstr ""
 
 #: includes/payments/functions.php:540
-#: tests/orders/tests-payments.php:226
 msgid "Revoked"
 msgstr ""
 
 #: includes/payments/functions.php:541
-#: tests/orders/tests-payments.php:227
 msgid "Failed"
 msgstr ""
 
 #: includes/payments/functions.php:542
-#: tests/orders/tests-payments.php:228
 msgid "Abandoned"
 msgstr ""
 
@@ -11806,12 +11741,10 @@ msgid "A store migration is in progress. Past orders will not appear in your pur
 msgstr ""
 
 #: includes/plugin-compatibility.php:73
-#: tests/tests-plugin-compatibility.php:88
 msgid "No Caching on Checkout?"
 msgstr ""
 
 #: includes/plugin-compatibility.php:74
-#: tests/tests-plugin-compatibility.php:89
 msgid "Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page."
 msgstr ""
 
@@ -12525,7 +12458,7 @@ msgstr ""
 msgid "Your email address must be shorter than 100 characters."
 msgstr ""
 
-#: includes/process-purchase.php:1336
+#: includes/process-purchase.php:1332
 msgid "There was an error completing your purchase. Please try again."
 msgstr ""
 
@@ -12534,12 +12467,10 @@ msgid "You do not have permission to view this file."
 msgstr ""
 
 #: includes/refund-functions.php:26
-#: tests/orders/tests-refunds.php:257
 msgid "Refundable"
 msgstr ""
 
 #: includes/refund-functions.php:27
-#: tests/orders/tests-refunds.php:258
 msgid "Non-Refundable"
 msgstr ""
 
@@ -12548,9 +12479,6 @@ msgid "Legacy"
 msgstr ""
 
 #: includes/reports/data/class-endpoint-view-registry.php:211
-#: tests/reports/data/tests-endpoint-registry.php:94
-#: tests/reports/tests-reports-functions.php:165
-#: tests/reports/tests-reports-functions.php:201
 msgid "All time"
 msgstr ""
 
@@ -12621,27 +12549,22 @@ msgid "Currencies"
 msgstr ""
 
 #: includes/reports/reports-functions.php:494
-#: tests/reports/tests-reports-functions.php:327
 msgid "Custom"
 msgstr ""
 
 #: includes/reports/reports-functions.php:499
-#: tests/reports/tests-reports-functions.php:332
 msgid "Last 30 Days"
 msgstr ""
 
 #: includes/reports/reports-functions.php:500
-#: tests/reports/tests-reports-functions.php:333
 msgid "Month to Date"
 msgstr ""
 
 #: includes/reports/reports-functions.php:502
-#: tests/reports/tests-reports-functions.php:335
 msgid "Quarter to Date"
 msgstr ""
 
 #: includes/reports/reports-functions.php:504
-#: tests/reports/tests-reports-functions.php:337
 msgid "Year to Date"
 msgstr ""
 
@@ -12855,6 +12778,10 @@ msgstr ""
 msgid "Receipt could not be retrieved, your purchase session has expired."
 msgstr ""
 
+#: includes/shortcodes.php:801
+msgid "Your profile could not be updated. Please contact a site administrator."
+msgstr ""
+
 #: includes/shortcodes.php:837
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
@@ -12868,7 +12795,7 @@ msgstr ""
 msgid "This email address is not available."
 msgstr ""
 
-#: includes/shortcodes.php:991
+#: includes/shortcodes.php:993
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
@@ -13717,23 +13644,23 @@ msgstr ""
 msgid "Already purchased? Simply enter your license key to enable EDD (Pro)."
 msgstr ""
 
-#: src/Admin/Pass_Manager.php:362
+#: src/Admin/Pass_Manager.php:363
 msgid "Personal Pass"
 msgstr ""
 
-#: src/Admin/Pass_Manager.php:363
+#: src/Admin/Pass_Manager.php:364
 msgid "Extended Pass"
 msgstr ""
 
-#: src/Admin/Pass_Manager.php:364
+#: src/Admin/Pass_Manager.php:365
 msgid "Professional Pass"
 msgstr ""
 
-#: src/Admin/Pass_Manager.php:365
+#: src/Admin/Pass_Manager.php:366
 msgid "All Access Pass"
 msgstr ""
 
-#: src/Admin/Pass_Manager.php:366
+#: src/Admin/Pass_Manager.php:367
 msgid "Lifetime All Access Pass"
 msgstr ""
 
@@ -14045,8 +13972,8 @@ msgid "Easy Digital Downloads &mdash; Customized Templates"
 msgstr ""
 
 #: src/Licensing/Ajax.php:50
-#: src/Licensing/Ajax.php:135
-#: src/Licensing/Ajax.php:177
+#: src/Licensing/Ajax.php:136
+#: src/Licensing/Ajax.php:178
 msgid "You do not have permission to manage this extension."
 msgstr ""
 
@@ -14056,119 +13983,149 @@ msgstr ""
 msgid "No key provided."
 msgstr ""
 
-#: src/Licensing/Ajax.php:91
+#: src/Licensing/Ajax.php:92
 msgid "Your license key could not be activated."
 msgstr ""
 
-#: src/Licensing/Ajax.php:161
-#: src/Licensing/Messages.php:178
+#: src/Licensing/Ajax.php:162
+#: src/Licensing/Messages.php:130
 msgid "Your license key has been deactivated."
 msgstr ""
 
-#: src/Licensing/Ajax.php:189
+#: src/Licensing/Ajax.php:190
 msgid "License key deleted."
 msgstr ""
 
-#: src/Licensing/Messages.php:62
+#: src/Licensing/Messages.php:89
 msgid "license key"
 msgstr ""
 
-#. translators: 1. license expiration date; 2. opening link tag; 3. closing link tag.
-#: src/Licensing/Messages.php:81
-msgid "Your license key expired on %1$s. Please %2$srenew your license key%3$s."
-msgstr ""
-
-#. translators: 1. opening link tag; 2. closing link tag.
-#: src/Licensing/Messages.php:89
-msgid "Your license key has expired. Please %1$srenew your license key%2$s."
-msgstr ""
-
-#. translators: 1. opening link tag; 2. closing link tag.
-#: src/Licensing/Messages.php:107
-msgid "Your license key has been disabled. Please %1$scontact support%2$s for more information."
-msgstr ""
-
-#. translators: 1. opening link tag; 2. closing link tag.
-#: src/Licensing/Messages.php:123
-msgid "Invalid license. Please %1$svisit your account page%2$s and verify it."
-msgstr ""
-
-#. translators: 1. the extension name; 2. opening link tag; 3. closing link tag.
-#: src/Licensing/Messages.php:139
-msgid "Your %1$s is not active for this URL. Please %2$svisit your account page%3$s to manage your license keys."
-msgstr ""
-
 #. translators: the extension name.
-#: src/Licensing/Messages.php:152
+#: src/Licensing/Messages.php:116
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#. translators: 1. opening link tag; 2 closing link tag.
-#: src/Licensing/Messages.php:167
-msgid "Your license key has reached its activation limit. %1$sView possible upgrades%2$s now."
-msgstr ""
-
-#: src/Licensing/Messages.php:174
+#: src/Licensing/Messages.php:126
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: src/Licensing/Messages.php:189
+#: src/Licensing/Messages.php:141
 msgid "Unlicensed: currently not receiving updates."
 msgstr ""
 
-#: src/Licensing/Messages.php:204
+#: src/Licensing/Messages.php:156
 msgid "License key never expires."
 msgstr ""
 
 #. translators: the license expiration date.
-#: src/Licensing/Messages.php:210
+#: src/Licensing/Messages.php:162
 msgid "Your license key expires soon! It expires on %s."
 msgstr ""
 
 #. translators: the license expiration date.
-#: src/Licensing/Messages.php:217
+#: src/Licensing/Messages.php:169
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: src/Licensing/Messages.php:230
+#: src/Licensing/Messages.php:182
 msgid "Your license subscription is active and will automatically renew."
 msgstr ""
 
 #. translators: the license subscription status.
-#: src/Licensing/Messages.php:235
+#: src/Licensing/Messages.php:187
 msgid "Your license subscription is %s and will not automatically renew."
 msgstr ""
 
-#: src/Licensing/Messages.php:249
-msgid "pending"
+#. translators: 1. license expiration date.
+#: src/Licensing/Messages.php:204
+msgid "Your license key expired on %1$s. Please renew your license key."
 msgstr ""
 
-#: src/Licensing/Messages.php:250
-msgid "active"
+#: src/Licensing/Messages.php:209
+msgid "Your license key has expired. Please renew your license key."
 msgstr ""
 
-#: src/Licensing/Messages.php:251
-msgid "cancelled"
+#. translators: 1. license expiration date; 2. opening link tag; 3. closing link tag.
+#: src/Licensing/Messages.php:228
+msgid "Your license key expired on %1$s. Please %2$srenew your license key%3$s."
+msgstr ""
+
+#. translators: 1. opening link tag; 2. closing link tag.
+#: src/Licensing/Messages.php:237
+msgid "Your license key has expired. Please %1$srenew your license key%2$s."
 msgstr ""
 
 #: src/Licensing/Messages.php:252
+msgid "Your license key has been disabled."
+msgstr ""
+
+#. translators: 1. opening link tag; 2. closing link tag.
+#: src/Licensing/Messages.php:267
+msgid "Your license key has been disabled. Please %1$scontact support%2$s for more information."
+msgstr ""
+
+#: src/Licensing/Messages.php:282
+msgid "Your license key has reached its activation limit."
+msgstr ""
+
+#. translators: 1. opening link tag; 2 closing link tag.
+#: src/Licensing/Messages.php:297
+msgid "Your license key has reached its activation limit. %1$sView possible upgrades%2$s now."
+msgstr ""
+
+#: src/Licensing/Messages.php:312
+msgid "Your license key is not active for this URL."
+msgstr ""
+
+#. translators: 1. opening link tag; 2. closing link tag.
+#: src/Licensing/Messages.php:328
+msgid "Your license key is not active for this URL. Please %1$svisit your account page%2$s to manage your license keys."
+msgstr ""
+
+#. translators: 1. the extension name; 2. opening link tag; 3. closing link tag.
+#: src/Licensing/Messages.php:336
+msgid "Your %1$s license key is not active for this URL. Please %2$svisit your account page%3$s to manage your license keys."
+msgstr ""
+
+#: src/Licensing/Messages.php:351
+msgid "Invalid license. Please verify it."
+msgstr ""
+
+#. translators: 1. opening link tag; 2. closing link tag.
+#: src/Licensing/Messages.php:364
+msgid "Invalid license. Please %1$svisit your account page%2$s and verify it."
+msgstr ""
+
+#: src/Licensing/Messages.php:379
+msgid "pending"
+msgstr ""
+
+#: src/Licensing/Messages.php:380
+msgid "active"
+msgstr ""
+
+#: src/Licensing/Messages.php:381
+msgid "cancelled"
+msgstr ""
+
+#: src/Licensing/Messages.php:382
 msgid "expired"
 msgstr ""
 
-#: src/Licensing/Messages.php:253
+#: src/Licensing/Messages.php:383
 msgid "trialling"
 msgstr ""
 
-#: src/Licensing/Messages.php:254
+#: src/Licensing/Messages.php:384
 msgid "failing"
 msgstr ""
 
-#: src/Licensing/Messages.php:255
+#: src/Licensing/Messages.php:385
 msgid "completed"
 msgstr ""
 
 #. translators: the all acess pass name.
-#: src/Licensing/Traits/Controls.php:193
+#: src/Licensing/Traits/Controls.php:200
 msgid "Your %s gives you access to this extension."
 msgstr ""
 
@@ -14206,8 +14163,9 @@ msgstr ""
 msgid "%s ago"
 msgstr ""
 
-#: src/Pro/Admin/Duplicator/Controls.php:42
-#: src/Pro/Admin/Duplicator/Controls.php:69
+#: src/Pro/Admin/Duplicator/Controls.php:48
+#: src/Pro/Admin/Duplicator/Controls.php:71
+#: src/Pro/Admin/Duplicator/Controls.php:92
 msgid "Duplicate"
 msgstr ""
 
@@ -14416,24 +14374,6 @@ msgstr ""
 
 #: templates/widget-cart.php:9
 msgid "Number of items in cart"
-msgstr ""
-
-#: tests/bootstrap.php:82
-msgid "HTTP Requests disabled for unit tests"
-msgstr ""
-
-#: tests/reports/data/charts/v2/tests-dateset.php:194
-#: tests/reports/data/charts/v2/tests-manifest.php:92
-#: tests/reports/data/charts/v2/tests-manifest.php:136
-#: tests/reports/data/charts/v2/tests-manifest.php:168
-#: tests/reports/data/charts/v2/tests-manifest.php:193
-#: tests/reports/data/charts/v2/tests-manifest.php:215
-#: tests/reports/data/charts/v2/tests-manifest.php:251
-#: tests/reports/data/charts/v2/tests-manifest.php:323
-#: tests/reports/data/charts/v2/tests-manifest.php:434
-#: tests/reports/data/charts/v2/tests-manifest.php:471
-#: tests/reports/data/charts/v2/tests-manifest.php:510
-msgid "Foo Dataset"
 msgstr ""
 
 #: includes/blocks/build/buy-button/index.js:1

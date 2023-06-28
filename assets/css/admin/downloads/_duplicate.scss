@@ -1,0 +1,6 @@
+#edd-duplicate-action {
+	& ~ #publishing-action {
+		position: relative;
+		top: -10px;
+	}
+}

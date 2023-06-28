@@ -797,8 +797,8 @@ function edd_process_profile_editor_updates( $data ) {
 
 	// Fetch customer record.
 	$customer = edd_get_customer_by( 'user_id', $user_id );
-	if ( empty( $customer->user_id ) || $customer->user_id != $user_id ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
-		return false;
+	if ( ! empty( $customer->user_id ) && $customer->user_id != $user_id ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		edd_set_error( 'customer_mismatch', __( 'Your profile could not be updated. Please contact a site administrator.', 'easy-digital-downloads' ) );
 	}
 
 	$display_name = isset( $data['edd_display_name'] )    ? sanitize_text_field( $data['edd_display_name'] )    : $old_user_data->display_name;
@@ -817,16 +817,16 @@ function edd_process_profile_editor_updates( $data ) {
 		'first_name'   => $first_name,
 		'last_name'    => $last_name,
 		'display_name' => $display_name,
-		'user_email'   => $email
+		'user_email'   => $email,
 	);
 
 	$address = array(
-		'line1'    => $line1,
-		'line2'    => $line2,
-		'city'     => $city,
-		'state'    => $state,
-		'zip'      => $zip,
-		'country'  => $country
+		'line1'   => $line1,
+		'line2'   => $line2,
+		'city'    => $city,
+		'state'   => $state,
+		'zip'     => $zip,
+		'country' => $country,
 	);
 
 	do_action( 'edd_pre_update_user_profile', $user_id, $userdata );
@@ -874,12 +874,14 @@ function edd_process_profile_editor_updates( $data ) {
 	// Update user.
 	$updated = wp_update_user( $userdata );
 
-	// If the current user does not have an associated customer record, create one.
+	// If the current user does not have an associated customer record, create one so that all of the customer's data is stored.
 	if ( ! $customer && $updated ) {
-		$customer_id = edd_add_customer( array(
-			'user_id' => $updated,
-			'email'   => $email,
-		) );
+		$customer_id = edd_add_customer(
+			array(
+				'user_id' => $updated,
+				'email'   => $email,
+			)
+		);
 
 		$customer = edd_get_customer_by( 'id', $customer_id );
 	}
@@ -893,7 +895,7 @@ function edd_process_profile_editor_updates( $data ) {
 			'type'        => 'billing',
 			'is_primary'  => 1,
 			'number'      => 1,
-			'fields'      => 'ids'
+			'fields'      => 'ids',
 		) );
 
 		// Try updating the address if it exists.

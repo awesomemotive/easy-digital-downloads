@@ -105,8 +105,10 @@ class Pass_Manager {
 		$this->pro_license = $this->get_pro_license();
 		if ( ! empty( $this->pro_license->license ) && 'valid' === $this->pro_license->license ) {
 			$this->highest_license_key = $this->pro_license->key;
-			$this->highest_pass_id     = $this->pro_license->item_id;
-			$this->has_pass_data       = true;
+			$this->highest_pass_id     = $this->get_pass_id_from_pro_license();
+			if ( $this->highest_pass_id ) {
+				$this->has_pass_data = true;
+			}
 		} else {
 			// Set up the highest pass data.
 			$pass_data = get_option( 'edd_pass_licenses' );
@@ -301,14 +303,13 @@ class Pass_Manager {
 	 * @param string $comparison Comparison operator.
 	 *
 	 * @return bool
-	 * @throws \InvalidArgumentException
 	 */
 	public static function pass_compare( $pass_1, $pass_2, $comparison = '>' ) {
 		if ( ! array_key_exists( $pass_1, self::$pass_hierarchy ) ) {
-			throw new \InvalidArgumentException( 'Invalid pass 1: ' . $pass_1 );
+			return false;
 		}
 		if ( ! array_key_exists( $pass_2, self::$pass_hierarchy ) ) {
-			throw new \InvalidArgumentException( 'Invalid pass 2: ' . $pass_2 );
+			return false;
 		}
 
 		return version_compare( self::$pass_hierarchy[ $pass_1 ], self::$pass_hierarchy[ $pass_2 ], $comparison );
@@ -418,5 +419,25 @@ class Pass_Manager {
 		}
 
 		update_option( 'edd_pass_licenses', json_encode( $passes ) );
+	}
+
+	/**
+	 * Gets the pass ID from the pro license.
+	 *
+	 * @since 3.1.3
+	 * @return int|null
+	 */
+	private function get_pass_id_from_pro_license() {
+		// A valid pro pass should always have a pass ID.
+		if ( ! empty( $this->pro_license->pass_id ) && array_key_exists( $this->pro_license->pass_id, self::$pass_hierarchy ) ) {
+			return $this->pro_license->pass_id;
+		}
+
+		// If the pro license is for a pass, but doesn't have a pass ID, we can try the item ID, if it's in the pass hierarchy
+		if ( array_key_exists( $this->pro_license->item_id, self::$pass_hierarchy ) ) {
+			return $this->pro_license->item_id;
+		}
+
+		return null;
 	}
 }

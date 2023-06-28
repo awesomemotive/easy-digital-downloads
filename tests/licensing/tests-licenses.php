@@ -30,7 +30,6 @@ class Tests_Licenses extends EDD_UnitTestCase {
 		if ( ! class_exists( '\\EDD\\Pro\\Core' ) ) {
 			$this->markTestSkipped( 'EDD Pro is not available.' );
 		}
-
 		$license = self::$pass_handler->get_pro_license();
 
 		$this->assertEmpty( $license->key );
@@ -76,6 +75,28 @@ class Tests_Licenses extends EDD_UnitTestCase {
 
 		$this->assertEquals( 167, $license->item_id );
 		$this->assertEquals( $license_key, $license->key );
+	}
+
+	public function test_pass_manager_highest_pass_id() {
+		$license_key = 'daksjfg98q3kjhJ3K4Q2354';
+		update_site_option( 'edd_pro_license_key', $license_key );
+		self::$pass_handler->update_pro_license( $this->get_pass_license_data() );
+
+		$pass_manager = new \EDD\Admin\Pass_Manager();
+		$this->assertEquals( 1464807, $pass_manager->highest_pass_id );
+	}
+
+	public function test_pass_manager_invalid_pass_highest_pass_id() {
+		$license_key = 'daksjfg98q3kjhJ3K4Q2354';
+		update_site_option( 'edd_pro_license_key', $license_key );
+
+		$license_data          = $this->get_pass_license_data();
+		$license_data->pass_id = null;
+		$license_data->item_id = 161667;
+		self::$pass_handler->update_pro_license( $license_data );
+
+		$pass_manager = new \EDD\Admin\Pass_Manager();
+		$this->assertNull( $pass_manager->highest_pass_id );
 	}
 
 	private function get_pass_license_data() {
