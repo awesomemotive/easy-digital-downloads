@@ -2800,7 +2800,7 @@ function edd_recapture_callback($args) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates( array( 'number' => 9999 ), OBJECT );
+	$rates = edd_get_tax_rates( array(), OBJECT );
 
 	wp_enqueue_script( 'edd-admin-tax-rates' );
 	wp_enqueue_style( 'edd-admin-tax-rates' );

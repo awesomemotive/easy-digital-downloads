@@ -220,6 +220,7 @@ class EDD_License {
 					'is_valid_license_option' => $this->item_shortname . '_license_active',
 					'item_id'                 => $this->item_id,
 					'api_url'                 => $this->api_url,
+					'file'                    => $this->file,
 				),
 				'size'    => 'regular',
 			)

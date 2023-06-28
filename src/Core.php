@@ -20,6 +20,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\PassHandler\Ajax( $this->pass_handler ),
 			new Admin\Extensions\Extension_Manager(),
 			new Customers\Recalculations(),
+			new Admin\PassHandler\Cron(),
 		);
 	}
 

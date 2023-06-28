@@ -151,16 +151,23 @@ trait Controls {
 
 		$class          = 'empty';
 		$license_status = null;
-		$status         = $this->license->license;
-		$messages       = new \EDD\Licensing\Messages(
-			array(
-				'status'      => $status,
-				'license_key' => $this->license_key,
-				'expires'     => ! empty( $this->license->expires ) ? $this->license->expires : '',
-				'name'        => $this->name,
-			)
+		$args           = array(
+			'status'      => $this->license->license,
+			'license_key' => $this->license_key,
+			'expires'     => ! empty( $this->license->expires ) ? $this->license->expires : '',
+			'name'        => $this->name,
 		);
-		$message        = $messages->get_message();
+		if ( ! empty( $this->args['options']['api_url'] ) ) {
+			$args['api_url'] = $this->args['options']['api_url'];
+			if ( ! empty( $this->args['options']['file'] ) && function_exists( 'get_plugin_data' ) ) {
+				$plugin_data = get_plugin_data( $this->args['options']['file'] );
+				if ( ! empty( $plugin_data['PluginURI'] ) ) {
+					$args['uri'] = $plugin_data['PluginURI'];
+				}
+			}
+		}
+		$messages = new \EDD\Licensing\Messages( $args );
+		$message  = $messages->get_message();
 
 		if ( ! empty( $this->license ) ) {
 			$now        = current_time( 'timestamp' );

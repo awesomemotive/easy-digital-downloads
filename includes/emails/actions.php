@@ -25,7 +25,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $customer = null ) {
 	// Make sure we don't send a purchase receipt while editing a payment
-	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] ) {
+	$action = filter_input( INPUT_POST, 'edd_action', FILTER_SANITIZE_STRING );
+	if ( 'update_payment_details' === $action ) {
 		return;
 	}
 	if ( null === $payment ) {

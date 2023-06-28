@@ -248,7 +248,6 @@ class Tests_License_Upgrade_Notice extends EDD_UnitTestCase {
 		if ( ! class_exists( '\\EDD\\Pro\\Admin\\Promos\\Notices\\InactivePro' ) ) {
 			$this->markTestSkipped( 'Inactive Pro class does not exist.' );
 		}
-
 		add_filter( 'edd_is_pro', '__return_true' );
 
 		$notice = new \EDD\Pro\Admin\Promos\Notices\InactivePro();

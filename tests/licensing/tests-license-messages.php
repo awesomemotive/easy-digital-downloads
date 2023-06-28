@@ -97,6 +97,29 @@ class Tests_License_Messages extends EDD_UnitTestCase {
 		$this->assertStringContainsString( $expected, $this->get_message( $args ) );
 	}
 
+	public function test_license_third_party_missing() {
+		$args = $this->get_args(
+			array(
+				'status'  => 'missing',
+				'api_url' => 'https://example.com',
+			)
+		);
+
+		$this->assertStringContainsString( 'Please verify it.', $this->get_message( $args ) );
+	}
+
+	public function test_license_third_party_custom_uri() {
+		$args = $this->get_args(
+			array(
+				'status'  => 'site_inactive',
+				'api_url' => 'https://example.com',
+				'uri'     => 'https://example.com',
+			)
+		);
+
+		$this->assertStringContainsString( 'https://example.com', $this->get_message( $args ) );
+	}
+
 	private function get_args( $args = array() ) {
 		return wp_parse_args(
 			$args,

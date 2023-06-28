@@ -90,6 +90,10 @@ class Settings {
 	 */
 	private function can_include_setting( $setting ) {
 
+		if ( empty( $setting ) ) {
+			return false;
+		}
+
 		// If the setting is marked readonly then it's not really a setting.
 		if ( ! empty( $setting['args']['readonly'] ) ) {
 			return false;
