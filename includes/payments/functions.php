@@ -274,7 +274,7 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
     $customer = new EDD_Customer( $customer_id );
 
-    if( $status == 'revoked' || $status == 'publish' ) {
+    if( $status == 'publish' ) {
         // Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
         edd_decrease_total_earnings( $amount );
         // Clear the This Month earnings (this_monththis_month is NOT a typo)
@@ -701,7 +701,7 @@ function edd_get_earnings_by_date( $day, $month_num, $year = null, $hour = null,
         'nopaging'       => true,
         'year'           => $year,
         'monthnum'       => $month_num,
-        'post_status'    => array( 'publish', 'revoked' ),
+        'post_status'    => array( 'publish' ),
         'fields'         => 'ids',
         'update_post_term_cache' => false,
         'include_taxes'  => $include_taxes,
@@ -758,7 +758,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
         'nopaging'       => true,
         'year'           => $year,
         'fields'         => 'ids',
-        'post_status'    => array( 'publish', 'revoked' ),
+        'post_status'    => array( 'publish' ),
         'update_post_meta_cache' => false,
         'update_post_term_cache' => false
     );
@@ -831,7 +831,7 @@ function edd_is_payment_complete( $payment_id = 0 ) {
  */
 function edd_get_total_sales() {
     $payments = edd_count_payments();
-    return $payments->revoked + $payments->publish;
+    return $payments->publish;
 }
 
 /**
