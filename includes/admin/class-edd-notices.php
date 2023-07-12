@@ -326,7 +326,7 @@ class EDD_Notices {
 				'message'        => array(
 					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
 					__( 'To protect them, you must add this <a href="https://easydigitaldownloads.com/docs/download-files-not-protected-on-nginx/">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
-					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
+					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permanently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
 				)
 			) );
 		}
@@ -345,7 +345,7 @@ class EDD_Notices {
 				'message'        => array(
 					sprintf( __( 'The .htaccess file is missing from: %s', 'easy-digital-downloads' ), '<strong>' . $upload_directory . '</strong>' ),
 					sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . $upload_directory . '</strong>' ),
-					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' ),
+					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permanently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' ),
 					'<pre>' . edd_get_htaccess_rules() . '</pre>'
 				)
 			) );
