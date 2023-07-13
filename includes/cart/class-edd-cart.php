@@ -1349,7 +1349,7 @@ class EDD_Cart {
 				return false;
 			}
 
-			if ( $saved_cart === EDD()->session->get( 'edd_cart' ) ) {
+			if ( $saved_cart !== EDD()->session->get( 'edd_cart' ) ) {
 				return false;
 			}
 
