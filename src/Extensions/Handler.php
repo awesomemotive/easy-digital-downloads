@@ -99,16 +99,9 @@ class Handler {
 		$this->item_name      = $_item_name;
 		$this->item_shortname = $this->get_shortname();
 		$this->version        = $_version;
-		$this->edd_license    = new License( $this->item_name, $_optname );
 		$this->pass_manager   = new Pass_Manager();
-		if ( empty( $this->edd_license->key ) || empty( $this->edd_license->license ) ) {
-			$pro_license = new License( 'pro' );
-			if ( ! empty( $pro_license->key ) && $this->is_included_in_pass() ) {
-				$this->is_pro_license = true;
-				$this->edd_license    = $pro_license;
-			}
-		}
-		$this->license_key = $this->edd_license->key;
+		$this->edd_license    = $this->get_license( $_optname );
+		$this->license_key    = $this->edd_license->key;
 
 		$this->hooks();
 		$this->update_global();
@@ -384,6 +377,10 @@ class Handler {
 			return false;
 		}
 
+		if ( ! edd_is_admin_page() ) {
+			return false;
+		}
+
 		// Not a pro license, but valid.
 		if ( ! $this->is_pro_license && $this->is_license_valid() ) {
 			return false;
@@ -395,10 +392,28 @@ class Handler {
 		}
 
 		// It's the licenses tab.
-		if ( ! empty( $_GET['tab'] ) && 'licenses' === $_GET['tab'] ) {
+		if ( ! empty( $_GET['tab'] ) && 'licenses' === $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Gets the license object.
+	 * The pro license is preferred; the individual extension license is used as a fallback.
+	 *
+	 * @since 3.1.4
+	 * @param null|string $option_name The custom option name for the license key.
+	 * @return \EDD\Licensing\License
+	 */
+	private function get_license( $option_name ) {
+		$pro_license = new License( 'pro' );
+		if ( ! empty( $pro_license->key ) && $this->is_included_in_pass() ) {
+			$this->is_pro_license = true;
+			return $pro_license;
+		}
+
+		return new License( $this->item_name, $option_name );
 	}
 }

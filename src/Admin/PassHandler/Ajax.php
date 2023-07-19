@@ -81,16 +81,17 @@ class Ajax implements SubscriberInterface {
 	 */
 	private function get_verification_response( $license_key ) {
 
-		$oth      = hash( 'sha512', wp_rand() );
-		$endpoint = admin_url( 'admin-ajax.php' );
-		$redirect = edd_get_admin_url( array( 'page' => 'edd-settings' ) );
+		$oth        = hash( 'sha512', wp_rand() );
+		$hashed_oth = hash_hmac( 'sha512', $oth, wp_salt() );
+		$endpoint   = admin_url( 'admin-ajax.php' );
+		$redirect   = edd_get_admin_url( array( 'page' => 'edd-settings' ) );
 
 		update_option( 'edd_connect_token', $oth );
 
 		$url = add_query_arg(
 			array(
 				'key'      => $license_key,
-				'oth'      => $oth,
+				'oth'      => $hashed_oth,
 				'endpoint' => $endpoint,
 				'version'  => EDD_VERSION,
 				'siteurl'  => admin_url(),
@@ -107,7 +108,7 @@ class Ajax implements SubscriberInterface {
 			'back_url' => add_query_arg(
 				array(
 					'action' => 'edd_connect',
-					'oth'    => $oth,
+					'oth'    => $hashed_oth,
 				),
 				$endpoint
 			),

@@ -256,6 +256,7 @@ function edd_customers_list( $active_tab = 'customers' ) {
 		<form id="edd-customers-filter" method="get" action="<?php echo esc_url( $action_url ); ?>">
 			<?php
 			$customers_table->views();
+			/* translators: the active screen, eg "Search Customers" or "Search Customer Email Addresses" */
 			$customers_table->search_box( sprintf( __( 'Search %s', 'easy-digital-downloads' ), $name ), 'edd-customers' );
 			$customers_table->display();
 			?>
@@ -560,6 +561,7 @@ function edd_customers_view( $customer = null ) {
 
 							<span data-key="user_id">
 								<?php if ( empty( $user_login ) ) :
+									/* translators: %s: user id */
 									printf( __( 'User %s missing', 'easy-digital-downloads' ), '<code>' . esc_html( $user_id ) . '</code>');
 								endif; ?>
 								<a href="<?php echo esc_url( admin_url( 'user-edit.php?user_id=' . absint( $user_id ) ) ); ?>"><?php echo esc_html( $user_login ); ?></a>
@@ -776,7 +778,12 @@ function edd_customers_view( $customer = null ) {
 			</tbody>
 		</table>
 
-		<h3><?php printf( __( 'Purchased %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></h3>
+		<h3>
+			<?php
+			/* translators: %s: plural downloads label */
+			printf( esc_html__( 'Purchased %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) );
+			?>
+		</h3>
 		<table class="wp-list-table widefat striped customer-downloads">
 			<thead>
 				<tr>
@@ -796,7 +803,12 @@ function edd_customers_view( $customer = null ) {
 
 				<?php else: ?>
 
-					<tr><td class="no-items"><?php printf( __( 'No %s Found', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></td></tr>
+					<tr><td class="no-items">
+						<?php
+						/* translators: %s: plural downloads label */
+						printf( esc_html__( 'No %s Found', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) );
+						?>
+					</td></tr>
 
 				<?php endif; ?>
 			</tbody>

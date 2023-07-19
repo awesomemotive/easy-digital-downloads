@@ -94,6 +94,7 @@ class Direct extends Test {
 
 				$result['description'] = wpautop(
 					sprintf(
+						/* translators: %1$s - opening <code> tag, %2$s - closing <code> tag */
 						__( 'Your checkout page is configured; however, it is currently using the legacy %1$s[download_checkout]%2$s shortcode. We recommend changing your checkout to use the EDD Checkout Block.', 'easy-digital-downloads' ),
 						'<code>',
 						'</code>'

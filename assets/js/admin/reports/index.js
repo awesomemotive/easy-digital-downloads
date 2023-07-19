@@ -28,7 +28,7 @@ const EDD_Reports = {
 
 		// Use a timeout to ensure this happens after core binding
 		setTimeout( function() {
-			$( '.edd-reports-wrapper .postbox .hndle' ).unbind( 'click.postboxes' );
+			$( '.edd-reports-wrapper .postbox .hndle' ).off( 'click.postboxes' );
 		}, 1 );
 	},
 
@@ -148,7 +148,7 @@ const EDD_Reports = {
 
 	customers_export: function() {
 		// Show / hide Download option when exporting customers
-		$( '#edd_customer_export_download' ).change( function() {
+		$( '#edd_customer_export_download' ).on( 'change', function () {
 			const $this = $( this ),
 				download_id = $( 'option:selected', $this ).val(),
 				customer_export_option = $( '#edd_customer_export_option' );

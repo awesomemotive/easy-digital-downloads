@@ -50,7 +50,16 @@ class Information implements \EDD\EventManagement\SubscriberInterface {
 	 * @return array
 	 */
 	public function get_data( $information ) {
+		return array_merge( $information, $this->get_edd_data() );
+	}
 
+	/**
+	 * Gets all of the EDD data for the Site Health.
+	 *
+	 * @since 3.1.4
+	 * @return array
+	 */
+	private function get_edd_data() {
 		$collectors = array(
 			'edd_general'   => new General(),
 			'edd_tables'    => new Tables(),
@@ -61,10 +70,17 @@ class Information implements \EDD\EventManagement\SubscriberInterface {
 			'edd_sessions'  => new Sessions(),
 		);
 
+		$information = array();
 		foreach ( $collectors as $key => $class ) {
 			$information[ $key ] = $class->get();
 		}
 
-		return $information;
+		/**
+		 * Allow extensions to add their own debug information that's specific to EDD.
+		 *
+		 * @since 3.1.4
+		 * @param array $information The debug information.
+		 */
+		return apply_filters( 'edd_debug_information', $information );
 	}
 }

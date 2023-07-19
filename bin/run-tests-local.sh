@@ -66,7 +66,7 @@ export WP_MULTISITE="${TEST_WP_MULTISITE:-0}"
 export TEST_INPLACE="${TEST_INPLACE:-0}"
 
 # Create a random project name
-export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
+export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)"
 
 # Do this to make sure we cleanup
 set +e
