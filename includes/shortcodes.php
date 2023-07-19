@@ -610,8 +610,9 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		<?php
 
-	else:
-		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
+	else :
+		/* translators: plural download label */
+		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) );
 	endif;
 
 	do_action( 'edd_downloads_list_after', $atts, $downloads, $query );
@@ -984,9 +985,10 @@ function edd_process_profile_editor_remove_email( $data ) {
 
 		$url = add_query_arg( 'updated', true, $data['redirect'] );
 
-		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $data['email'] ), $user_login );
+		$user       = wp_get_current_user();
+		$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
+		/* translators: 1. email address; 2. user who removed email. */
+		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $data['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {

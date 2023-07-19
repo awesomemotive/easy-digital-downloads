@@ -62,7 +62,7 @@ class Connect implements SubscriberInterface {
 		// Verify oth.
 		$oth = get_option( 'edd_connect_token' );
 
-		if ( empty( $oth ) || ! hash_equals( $oth, $post_oth ) ) {
+		if ( empty( $post_oth ) || hash_hmac( 'sha512', $oth, wp_salt() ) !== $post_oth ) {
 			wp_send_json_error( $error );
 		}
 

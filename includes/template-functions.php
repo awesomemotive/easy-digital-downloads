@@ -60,6 +60,7 @@ function edd_get_purchase_link( $args = array() ) {
 		edd_set_error(
 			'set_checkout',
 			sprintf(
+				/* translators: the settings screen URL */
 				__( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ),
 				esc_url( edd_get_admin_url( array(
 					'page'    => 'edd-settings',

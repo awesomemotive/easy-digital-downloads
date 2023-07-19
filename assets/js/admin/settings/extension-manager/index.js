@@ -111,6 +111,10 @@
 		searchInput = $( '#edd-extension-manager__bar-search' );
 
 	if ( searchInput ) {
+		if ( EDDExtensionManager.filter ) {
+			searchInput.val( EDDExtensionManager.filter );
+			startSearch();
+		}
 		searchInput.on( 'keyup', function ( event ) {
 			startSearch();
 		} );

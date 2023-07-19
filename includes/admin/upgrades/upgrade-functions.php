@@ -1,6 +1,8 @@
 <?php
 /**
  * Upgrade Functions
+ * Note: Do not move, rename, or delete this file as many extensions will attempt
+ * to require it during an installation or upgrade process.
  *
  * @package     EDD
  * @subpackage  Admin/Upgrades
@@ -12,28 +14,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Perform automatic database upgrades when necessary
- *
- * @since 2.6
- * @return void
- */
-function edd_do_automatic_upgrades() {
-
-	$edd_version = edd_get_db_version();
-	if ( version_compare( $edd_version, EDD_VERSION, '>=' ) ) {
-		return;
-	}
-
-	// Existing stores should set the upgraded version and the onboarding wizard as complete.
-	if ( ! empty( $edd_version ) ) {
-		update_option( 'edd_version_upgraded_from', $edd_version, false );
-		if ( ! get_option( 'edd_onboarding_completed', false ) && ! get_option( 'edd_onboarding_started', false ) ) {
-			update_option( 'edd_onboarding_completed', true, false );
-		}
-	}
-	edd_update_db_version();
-}
+// edd_do_automatic upgrades is defined in includes/upgrades/functions.php
 add_action( 'admin_init', 'edd_do_automatic_upgrades' );
 
 /**
@@ -214,7 +195,7 @@ function edd_show_upgrade_notices() {
 		 * NOTICE:
 		 *
 		 * When adding new upgrade notices, please be sure to put the action
-		 * into the upgrades array during install: /includes/install.php @ Appox Line 156
+		 * into the upgrades array in `edd_get_all_upgrades`.
 		 */
 
 		// End 'Stepped' upgrade process notices
@@ -269,79 +250,7 @@ function edd_maybe_resume_upgrade() {
 	return $doing_upgrade;
 }
 
-/**
- * Adds an upgrade action to the completed upgrades array
- *
- * @since  2.3
- * @param  string $upgrade_action The action to add to the copmleted upgrades array
- * @return bool                   If the function was successfully added
- */
-function edd_set_upgrade_complete( $upgrade_action = '' ) {
-
-	if ( empty( $upgrade_action ) ) {
-		return false;
-	}
-
-	$completed_upgrades   = edd_get_completed_upgrades();
-	$completed_upgrades[] = $upgrade_action;
-
-	// Remove any blanks, and only show uniques
-	$completed_upgrades = array_unique( array_values( $completed_upgrades ) );
-
-	return update_option( 'edd_completed_upgrades', $completed_upgrades );
-}
-
 /** 3.0 Upgrades *************************************************************/
-
-/**
- * Returns an array of upgrades for 3.0
- *
- * Key is the name of the upgrade, which can be used in `edd_has_upgrade_completed()` completed functions.
- * The value is the name of the associated batch processor class for that upgrade.
- *
- * @since 3.0
- * @return array
- */
-function edd_get_v30_upgrades() {
-	return array(
-		'migrate_tax_rates'                => array(
-			'name'  => __( 'Tax Rates', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Tax_Rates'
-		),
-		'migrate_discounts'                => array(
-			'name'  => __( 'Discounts', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Discounts'
-		),
-		'migrate_orders'                   => array(
-			'name'  => __( 'Orders', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Orders'
-		),
-		'migrate_customer_addresses'       => array(
-			'name'  => __( 'Customer Addresses', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Customer_Addresses'
-		),
-		'migrate_customer_email_addresses' => array(
-			'name'  => __( 'Customer Email Addresses', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Customer_Email_Addresses'
-		),
-		'migrate_customer_notes'           => array(
-			'name'  => __( 'Customer Notes', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Customer_Notes'
-		),
-		'migrate_logs'                     => array(
-			'name'  => __( 'Logs', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Logs'
-		),
-		'migrate_order_notes'              => array(
-			'name'  => __( 'Order Notes', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Order_Notes'
-		),
-		'v30_legacy_data_removed'          => array(
-			'name'  => __( 'Remove Legacy Data', 'easy-digital-downloads' ),
-			'class' => 'EDD\\Admin\\Upgrades\\v3\\Remove_Legacy_Data'
-		)
-	);
-}
 
 /**
  * Render 3.0 upgrade page.

@@ -269,9 +269,10 @@ class EDD_Notices {
 		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-no-purchase-page',
+				/* translators: %s: URL to the settings page */
 				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'general', 'section' => 'pages' ) ) ) ),
 				'class'          => 'error',
-				'is_dismissible' => false
+				'is_dismissible' => false,
 			) );
 		}
 	}
@@ -324,8 +325,10 @@ class EDD_Notices {
 				'class'          => 'error',
 				'is_dismissible' => false,
 				'message'        => array(
+					/* translators: %s: Uploads directory */
 					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
 					__( 'To protect them, you must add this <a href="https://easydigitaldownloads.com/docs/download-files-not-protected-on-nginx/">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
+					/* translators: %s: Dismiss notice URL */
 					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
 				)
 			) );
@@ -366,7 +369,8 @@ class EDD_Notices {
 				'class'          => 'error',
 				'is_dismissible' => false,
 				'message'        => sprintf(
-					__( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ),
+					/* translators: 1. link to the recount tool; 2. link to the plugins screen. */
+					__( 'Easy Digital Downloads 2.5 contains a <a href="%1$s">built in recount tool</a>. Please <a href="%2$s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ),
 					esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'general' ) ) ),
 					esc_url( admin_url( 'plugins.php' ) )
 				)
@@ -432,6 +436,24 @@ class EDD_Notices {
 					'message' => __( 'Settings updated.', 'easy-digital-downloads' )
 				)
 			);
+		}
+
+		if ( 'accounting' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING ) ) {
+			if ( ! empty( edd_get_option( 'sequential_start_update_failed', false ) ) ) {
+				$order_number = new \EDD\Orders\Number();
+				$this->add_notice(
+					array(
+						'id'      => 'edd-sequential-order-numbers-not-updated',
+						'message' => sprintf(
+							/* translators: %s: Next order number */
+							__( 'The sequential starting number could not be updated because it could conflict with existing orders. The next assigned order number is %s.', 'easy-digital-downloads' ),
+							'<code>' . $order_number->format( (int) get_option( 'edd_next_order_number' ) ) . '</code>'
+						),
+						'class'   => 'error',
+					)
+				);
+				edd_delete_option( 'sequential_start_update_failed' );
+			}
 		}
 	}
 

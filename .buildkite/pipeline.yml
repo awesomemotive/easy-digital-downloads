@@ -1,7 +1,5 @@
 steps:
 
-  - wait
-
   - label: "Pull PHP 7.1"
     command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.1"
     retry:
@@ -32,11 +30,67 @@ steps:
       automatic: true
 
   - label: "Pull MariaDB"
-    command: "docker pull mariadb:10.2"
+    command: "docker pull mariadb:10.4"
     retry:
       automatic: true
 
   - wait
 
-  - command: .buildkite/pipeline.sh | buildkite-agent pipeline upload
-    label: ":pipeline: Upload"
+  - env:
+      TEST_INPLACE: "0"
+      TEST_PHP_VERSION: "{{matrix.php}}"
+      TEST_WP_VERSION: "{{matrix.wp}}"
+      WP_MULTISITE: "{{matrix.multisite}}"
+      COMPOSE_HTTP_TIMEOUT: 180
+      DOCKER_CLIENT_TIMEOUT: 180
+    label: 'PHP: "{{matrix.php}}" | WP: "{{matrix.wp}}" | Multisite: {{matrix.multisite}}'
+    plugins:
+      - docker-compose#v4.14.0:
+          config: docker-compose-phpunit.yml
+          propagate-environment: true
+          propagate-uid-gid: true
+          pull-retries: 3
+          run: wordpress
+    matrix:
+      setup: # Max of 6 Dimensions.
+        php: # Max of 20 elements.
+          - "8.0"
+          - "7.4"
+        wp:
+          - "6.1.1"
+          - "latest"
+        multisite:
+          - "0"
+      adjustments: # Max of 12 adjustments.
+        - with:
+            php: "8.0"
+            wp: "latest"
+            multisite: "1"
+        - with:
+            php: "7.1"
+            wp: "5.4.12"
+            multisite: "0"
+        - with:
+            php: "7.1"
+            wp: "5.5.11"
+            multisite: "0"
+        - with:
+            php: "7.1"
+            wp: "5.6.10"
+            multisite: "0"
+        - with:
+            php: "7.1"
+            wp: "5.7.8"
+            multisite: "0"
+        - with:
+            php: "7.1"
+            wp: "5.8.6"
+            multisite: "0"
+        - with:
+            php: "7.2"
+            wp: "5.9.5"
+            multisite: "0"
+        - with:
+            php: "7.3"
+            wp: "6.0.3"
+            multisite: "0"
