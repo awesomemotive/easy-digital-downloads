@@ -739,7 +739,7 @@ class Reports_Functions_Tests extends EDD_UnitTestCase {
 		$dates    = Reports\parse_dates_for_range( $range );
 		$expected = array(
 			'start' => $dates['start']->copy()->subMonth( 1 ),
-			'end'   => $dates['end']->copy()->subMonth( 1 ),
+			'end'   => $dates['end']->copy()->subMonthNoOverflow( 1 ),
 			'range' => $range,
 		);
 
@@ -787,7 +787,7 @@ class Reports_Functions_Tests extends EDD_UnitTestCase {
 		$dates    = Reports\parse_dates_for_range( $range );
 		$expected = array(
 			'start' => $dates['start']->copy()->subYear( 1 ),
-			'end'   => $dates['end']->copy()->subYear( 1 ),
+			'end'   => $dates['end']->copy()->subMonthNoOverflow( 0 )->subYear( 1 ),
 			'range' => $range,
 		);
 
@@ -798,6 +798,16 @@ class Reports_Functions_Tests extends EDD_UnitTestCase {
 		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
 
 		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	public function test_parse_relative_dates_for_previous_month_with_fewer_days_should_return_last_day_of_last_month() {
+		$range          = 'this_month';
+		$relative_range = 'previous_month';
+		$date           = '2018-03-31 00:00:00';
+		$result         = Reports\parse_relative_dates_for_range( $range, $relative_range, $date );
+		$formatted      = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEquals( '2018-02-28 23:59', $formatted['end'] );
 	}
 
 	public function test_parse_dates_for_range_with_last_quarter_range_should_return_those_dates_utc_plus() {

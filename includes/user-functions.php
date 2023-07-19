@@ -581,10 +581,13 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$emails->__set( 'from_name', $from_name );
 	$emails->__set( 'from_email', $from_email );
 
-	$admin_subject  = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
+	/* translators: Site name */
+	$admin_subject  = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __( '[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
 	$admin_heading  = apply_filters( 'edd_user_registration_admin_email_heading', __( 'New user registration', 'easy-digital-downloads' ), $user_data );
-	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads'), $user_data['user_login'] ) . "\r\n\r\n";
-	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads'), $user_data['user_email'] ) . "\r\n";
+	/* translators: the username */
+	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n\r\n";
+	/* translators: the user email */
+	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads' ), $user_data['user_email'] ) . "\r\n";
 
 	$admin_message = apply_filters( 'edd_user_registration_admin_email_message', $admin_message, $user_data );
 
@@ -593,6 +596,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
 
 	// Setup and send the new user email for the end user.
+	/* translators: Site name */
 	$user_subject  = apply_filters( 'edd_user_registration_email_subject', sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name ), $user_data );
 	$user_heading  = apply_filters( 'edd_user_registration_email_heading', __( 'Your account info', 'easy-digital-downloads' ), $user_data );
 	$user_message  = apply_filters( 'edd_user_registration_email_username', sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n", $user_data );
@@ -603,6 +607,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
 	}
 
+	/* translators: %s: password message */
 	$user_message .= apply_filters( 'edd_user_registration_email_password', sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n" );
 
 	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
@@ -611,9 +616,8 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		$user_message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &rarr;</a>' . "\r\n";
 
 	} else {
-
+		/* translators: %s: login URL */
 		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), esc_url( $login_url ) ) . "\r\n";
-
 	}
 
 	$user_message = apply_filters( 'edd_user_registration_email_message', $user_message, $user_data );
@@ -769,6 +773,7 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
 	$message    = sprintf(
+		/* translators: 1: User display name, 2: Site name, 3: Verification URL */
 		__( 'Hello %1$s,
 
 		Your account with %2$s needs to be verified before you can access your purchase history. <a href="%3$s">Click here</a> to verify your account.
@@ -899,6 +904,7 @@ function edd_validate_user_verification_token( $url = '' ) {
 			do_action( 'edd_user_verification_token_expired' );
 
 			$link_text = sprintf(
+				/* translators: %s: URL to request a new verification link */
 				__( 'Sorry but your account verification link has expired. <a href="%s">Click here</a> to request a new verification URL.', 'easy-digital-downloads' ),
 				esc_url( edd_get_user_verification_request_url() )
 			);
@@ -1137,7 +1143,10 @@ function edd_show_user_api_key_field( $user ) {
 			<tbody>
 			<tr>
 				<th>
-					<?php printf( __( 'Easy Digital Downloads <a href="%s">iOS App</a>', 'easy-digital-downloads' ), 'https://itunes.apple.com/us/app/easy-digital-downloads-2/id1169488828?ls=1&mt=8' ); ?>
+					<?php
+					/* translators: %s: iOS App URL */
+					printf( __( 'Easy Digital Downloads <a href="%s">iOS App</a>', 'easy-digital-downloads' ), 'https://itunes.apple.com/us/app/easy-digital-downloads-2/id1169488828?ls=1&mt=8' );
+					?>
 				</th>
 				<td>
 					<?php

@@ -58,6 +58,16 @@ class Structured_Data {
 	}
 
 	/**
+	 * Reset the data.
+	 *
+	 * @since 3.1.4
+	 * @return void
+	 */
+	public function reset() {
+		$this->data = array();
+	}
+
+	/**
 	 * Set structured data. This is then output in `wp_footer`.
 	 *
 	 * @access private
@@ -135,66 +145,25 @@ class Structured_Data {
 		}
 
 		$data = array(
-			'@type'       => 'Product',
-			'name'        => $download->post_title,
-			'url'         => get_permalink( $download->ID ),
-			'brand'       => array(
-				'@type' => 'Thing',
+			'@type' => 'Product',
+			'name'  => $download->post_title,
+			'url'   => $this->get_url( $download ),
+			'brand' => array(
+				'@type' => 'https://schema.org/Brand',
 				'name'  => get_bloginfo( 'name' ),
 			),
-			'sku'         => '-' === $download->get_sku()
+			'sku'   => '-' === $download->get_sku()
 				? $download->ID
 				: $download->get_sku(),
+			'image' => $this->get_image( $download ),
 		);
-
-		// Add image if it exists.
-		$image_url = wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) );
-
-		if ( false !== $image_url ) {
-			$data['image'] = esc_url( $image_url );
-		}
 
 		// Add description if it is not blank.
 		if ( '' !== $download->post_excerpt ) {
 			$data['description'] = $download->post_excerpt;
 		}
 
-		if ( $download->has_variable_prices() ) {
-			$variable_prices = $download->get_prices();
-
-			$offers = array();
-
-			foreach ( $variable_prices as $price ) {
-				$offers[] = array(
-					'@type'           => 'Offer',
-					'price'           => $price['amount'],
-					'priceCurrency'   => edd_get_currency(),
-					'priceValidUntil' => date( 'c', time() + YEAR_IN_SECONDS ),
-					'itemOffered'     => $data['name'] . ' - ' . $price['name'],
-					'url'             => $data['url'],
-					'availability'    => 'http://schema.org/InStock',
-					'seller'          => array(
-						'@type' => 'Organization',
-						'name'  => get_bloginfo( 'name' ),
-					),
-				);
-			}
-
-			$data['offers'] = $offers;
-		} else {
-			$data['offers'] = array(
-				'@type'           => 'Offer',
-				'price'           => $download->get_price(),
-				'priceCurrency'   => edd_get_currency(),
-				'priceValidUntil' => null,
-				'url'             => $data['url'],
-				'availability'    => 'http://schema.org/InStock',
-				'seller'          => array(
-					'@type' => 'Organization',
-					'name'  => get_bloginfo( 'name' ),
-				),
-			);
-		}
+		$data['offers'] = $this->get_offers( $download, $data );
 
 		$download_categories = wp_get_post_terms( $download->ID, 'download_category' );
 		if ( is_array( $download_categories ) && ! empty( $download_categories ) ) {
@@ -207,9 +176,10 @@ class Structured_Data {
 		 *
 		 * @since 3.0
 		 *
-		 * @param array $data Structured data for a download.
+		 * @param array        $data Structured data for a download.
+		 * @param EDD_Download $download Download object (added in 3.1.4).
 		 */
-		$data = apply_filters( 'edd_generate_download_structured_data', $data );
+		$data = apply_filters( 'edd_generate_download_structured_data', $data, $download );
 
 		$this->set_data( $data );
 
@@ -254,14 +224,14 @@ class Structured_Data {
 		$this->generate_structured_data();
 
 		// Bail if no data was generated.
-		if ( empty( $this->data ) ) {
+		$data = $this->get_data();
+		if ( empty( $data ) ) {
 			return;
 		}
 
-		$structured_data = $this->get_data();
-
+		$structured_data = $this->sanitize_data( $data );
 		foreach ( $structured_data as $k => $v ) {
-			$structured_data[ $k ]['@context'] = 'http://schema.org/';
+			$structured_data[ $k ]['@context'] = 'https://schema.org/';
 		}
 
 		return wp_json_encode( $structured_data );
@@ -276,10 +246,8 @@ class Structured_Data {
 	 * @return bool True by default, false if structured data does not exist.
 	 */
 	public function output_structured_data() {
-		$this->data = $this->sanitize_data( $this->data );
 
 		$output_data = $this->encoded_data();
-
 		if ( empty( $output_data ) ) {
 			return false;
 		}
@@ -287,5 +255,123 @@ class Structured_Data {
 		echo '<script type="application/ld+json">' . $output_data . '</script>';
 
 		return true;
+	}
+
+	/**
+	 * Gets the offer(s) for a download.
+	 *
+	 * @since 3.1.4
+	 * @param EDD_Download $download Download object.
+	 * @return array
+	 */
+	private function get_offers( $download ) {
+		if ( $download->has_variable_prices() ) {
+			$variable_prices = $download->get_prices();
+
+			$offers = array();
+			foreach ( $variable_prices as $key => $price ) {
+				$offers[] = $this->get_variable_price_offer( $price, $download, $key );
+			}
+
+			return $offers;
+		}
+
+		return $this->get_single_price_offer( $download );
+	}
+
+	/**
+	 * Gets the offer data for a variable price.
+	 *
+	 * @since 3.1.4
+	 * @param array        $price
+	 * @param EDD_Download $download
+	 * @param int          $key
+	 * @return array
+	 */
+	private function get_variable_price_offer( $price, $download, $key ) {
+		$price_id = isset( $price['index'] ) ? $price['index'] : $key;
+		$offer    = array(
+			'@type'           => 'Offer',
+			'price'           => $price['amount'],
+			'priceCurrency'   => edd_get_currency(),
+			'priceValidUntil' => date( 'c', time() + YEAR_IN_SECONDS ),
+			'itemOffered'     => edd_get_download_name( $download->ID, $price_id ),
+			'url'             => $this->get_url( $download ),
+			'availability'    => 'https://schema.org/InStock',
+			'seller'          => array(
+				'@type' => 'Organization',
+				'name'  => get_bloginfo( 'name' ),
+			),
+		);
+
+		/**
+		 * Filter the structured data for a variable price offer.
+		 *
+		 * @since 3.1.4
+		 * @param array        $offer   Structured data for a variable price offer.
+		 * @param EDD_Download $download Download object.
+		 * @param array        $price    Price data.
+		 */
+		return apply_filters( 'edd_generate_download_structured_data_variable_price_offer', $offer, $download, $price );
+	}
+
+	/**
+	 * Gets the offer data for a single price product.
+	 *
+	 * @param EDD_Download $download
+	 * @return array
+	 */
+	private function get_single_price_offer( $download ) {
+		$offer = array(
+			'@type'           => 'Offer',
+			'price'           => $download->get_price(),
+			'priceCurrency'   => edd_get_currency(),
+			'priceValidUntil' => null,
+			'url'             => $this->get_url( $download ),
+			'availability'    => 'https://schema.org/InStock',
+			'seller'          => array(
+				'@type' => 'Organization',
+				'name'  => get_bloginfo( 'name' ),
+			),
+		);
+
+		/**
+		 * Filter the structured data for a single price offer.
+		 *
+		 * @since 3.1.4
+		 * @param array        $offer   Structured data for a single price offer.
+		 * @param EDD_Download $download Download object.
+		 */
+		return apply_filters( 'edd_generate_download_structured_data_offer', $offer, $download );
+	}
+
+	/**
+	 * Gets the download URL.
+	 *
+	 * @param EDD_Download $download
+	 * @return string
+	 */
+	private function get_url( $download ) {
+		return get_permalink( $download->ID );
+	}
+
+	/**
+	 * Gets the download image URL.
+	 *
+	 * @since 3.1.4
+	 * @param EDD_Download $download
+	 * @return string
+	 */
+	private function get_image( $download ) {
+		if ( ! has_post_thumbnail( $download->ID ) ) {
+			return '';
+		}
+
+		$image_url = wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) );
+		if ( false !== $image_url ) {
+			return esc_url( $image_url );
+		}
+
+		return '';
 	}
 }

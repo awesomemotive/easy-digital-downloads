@@ -1871,6 +1871,36 @@ function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $quer
 
 	$args = wp_parse_args( $query_args, $default_args );
 
+	if ( empty( $args['utm_medium'] ) ) {
+		if ( is_admin() ) {
+			$screen = get_current_screen();
+			if ( $screen ) {
+				$args['utm_medium'] = $screen->id;
+			}
+		} else {
+
+			$template = '';
+
+			if ( is_home() ) {
+				$template = get_home_template();
+			} elseif ( is_front_page() ) {
+				$template = get_front_page_template();
+			} elseif ( is_search() ) {
+				$template = get_search_template();
+			} elseif ( is_single() ) {
+				$template = get_single_template();
+			} elseif ( is_page() ) {
+				$template = get_page_template();
+			} elseif ( is_post_type_archive() ) {
+				$template = get_post_type_archive_template();
+			} elseif ( is_archive() ) {
+				$template = get_archive_template();
+			}
+
+			$args['utm_medium'] = wp_basename( $template, 'php' );
+		}
+	}
+
 	// Ensure we sanitize the medium and content.
 	$args['utm_medium']  = str_replace( '_', '-', sanitize_title( $args['utm_medium'] ) );
 	$args['utm_content'] = str_replace( '_', '-', sanitize_title( $args['utm_content'] ) );

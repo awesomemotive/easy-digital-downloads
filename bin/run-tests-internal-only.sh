@@ -19,7 +19,7 @@ bin/install-wp-tests.sh "${DB_NAME}" "${DB_USER}" "${DB_PASS}" "${DB_HOST}" "${W
 
 # Default to copying the repo elsewhere
 if [[ "${TEST_INPLACE:-x}" == "x" ]] || [[ "${TEST_INPLACE}" == "0" ]]; then
-	REPO_DIR="/tmp/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
+	REPO_DIR="/tmp/$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)"
 	echo "Copying repo to ${REPO_DIR} to and deleting composer files..."
 	mkdir "${REPO_DIR}"
 	tar -cf - --exclude-from="./bin/.exclude" . | tar -xC "${REPO_DIR}"

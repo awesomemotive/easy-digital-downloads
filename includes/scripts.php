@@ -514,9 +514,13 @@ function edd_localize_admin_scripts() {
 		'resend_receipt'          => __( 'Are you sure you want to resend the purchase receipt?', 'easy-digital-downloads' ),
 		'disconnect_customer'     => __( 'Are you sure you want to disconnect the WordPress user from this customer record?', 'easy-digital-downloads' ),
 		'copy_download_link_text' => __( 'Copy these links to your clipboard and give them to your customer', 'easy-digital-downloads' ),
+		/* translators: singular download label */
 		'delete_payment_download' => sprintf( __( 'Are you sure you want to delete this %s?', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'type_to_search'          => sprintf( __( 'Type to search %s',     'easy-digital-downloads' ), edd_get_label_plural() ),
-		'one_option'              => sprintf( __( 'Choose a %s',           'easy-digital-downloads' ), edd_get_label_singular() ),
+		/* translators: plural download label */
+		'type_to_search'          => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		/* translators: singular download label */
+		'one_option'              => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		/* translators: plural download label */
 		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 		'one_price_min'           => __( 'You must have at least one price', 'easy-digital-downloads' ),
 		'one_field_min'           => __( 'You must have at least one field', 'easy-digital-downloads' ),

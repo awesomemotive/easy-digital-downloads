@@ -586,4 +586,4 @@ function edd_add_custom_roles_rest_user_query( $prepared_args, $request ) {
 
 	return $prepared_args;
 }
-add_filter( 'rest_user_query', 'edd_add_custom_roles_rest_user_query', 5, 2 );
+add_filter( 'rest_user_query', 'edd_add_custom_roles_rest_user_query', 15, 2 );

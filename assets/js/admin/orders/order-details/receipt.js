@@ -6,27 +6,21 @@
 import { jQueryReady } from 'utils/jquery.js';
 
 jQueryReady( () => {
-	const emails_wrap = $( '.edd-order-resend-receipt-addresses' );
 
-	$( document.body ).on( 'click', '#edd-select-receipt-email', function( e ) {
-		e.preventDefault();
-		emails_wrap.slideDown();
+	const emailSelectSelector = '.edd-order-resend-receipt-email';
+	const sendEmailButton = $( '#edd-resend-receipt' );
+	const url = new URLSearchParams( sendEmailButton.attr( 'href' ) );
+
+	$( document.body ).on( 'change', emailSelectSelector, function() {
+		url.set( 'email', $( this ).val() );
+		sendEmailButton.attr( 'href', decodeURIComponent( url.toString() ) );
 	} );
 
-	$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
-		const selected = $('input:radio.edd-order-resend-receipt-email:checked').val();
+	// trigger initial value to be set on change
+	$( emailSelectSelector ).trigger( 'change' );
 
-		$( '#edd-select-receipt-email').data( 'email', selected );
-	} );
-
-	$( document.body).on( 'click', '#edd-select-receipt-email', function () {
-		if ( confirm( edd_vars.resend_receipt ) ) {
-			const href = $( this ).prop( 'href' ) + '&email=' + $( this ).data( 'email' );
-			window.location = href;
-		}
-	} );
-
-	$( document.body ).on( 'click', '#edd-resend-receipt', function() {
+	// confirm before sending
+	sendEmailButton.on( 'click', function() {
 		return confirm( edd_vars.resend_receipt );
-	} );
+	});
 } );

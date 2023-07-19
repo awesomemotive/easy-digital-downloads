@@ -66,12 +66,14 @@ function edd_edit_customer( $args = array() ) {
 
 		// Make sure we don't already have this user attached to a customer
 		if ( ! empty( $customer_info['user_id'] ) && false !== edd_get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
+			/* translators: %d: user ID */
 			edd_set_error( 'edd-invalid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 
 		// Make sure it's actually a user
 		$user = get_user_by( 'id', $customer_info['user_id'] );
 		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
+			/* translators: %d: user ID */
 			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 	}
@@ -98,6 +100,7 @@ function edd_edit_customer( $args = array() ) {
 		if ( $user ) {
 			$user_id = $user->ID;
 		} else {
+			/* translators: %s: user login or email address */
 			edd_set_error( 'edd-invalid-user-string', sprintf( __( 'Failed to attach user. The login or email address %s was not found.', 'easy-digital-downloads' ), $customer_info['user_login'] ) );
 		}
 	}
@@ -259,13 +262,15 @@ function edd_add_customer_email( $args = array() ) {
 				'redirect' => $redirect . '#edd_general_emails',
 			);
 
-			$user          = wp_get_current_user();
-			$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
+			$user       = wp_get_current_user();
+			$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
+			/* translators: 1. email address; 2. username */
+			$customer_note = sprintf( __( 'Email address %1$s added by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
 			if ( $primary ) {
-				$customer_note =  sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), $email, $user_login );
+				/* translators: 1. email address; 2. username */
+				$customer_note =  sprintf( __( 'Email address %1$s set as primary by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 				$customer->add_note( $customer_note );
 			}
 		}
@@ -320,9 +325,10 @@ function edd_remove_customer_email() {
 				'edd-message' => 'email-removed',
 			)
 		);
-		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		$user       = wp_get_current_user();
+		$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
+		/* translators: 1. email address; 2. username */
+		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {

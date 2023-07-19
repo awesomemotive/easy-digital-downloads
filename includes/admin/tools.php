@@ -152,9 +152,19 @@ function edd_tools_recount_stats_display() {
 						<option data-type="recount-store"
 								value="EDD_Tools_Recount_Store_Earnings"><?php esc_html_e( 'Recount Store Earnings and Sales', 'easy-digital-downloads' ); ?></option>
 						<option data-type="recount-download"
-								value="EDD_Tools_Recount_Download_Stats"><?php printf( __( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></option>
+								value="EDD_Tools_Recount_Download_Stats">
+								<?php
+								/* translators: %s: Singular download label, lowercase */
+								printf( esc_html__( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), esc_html( edd_get_label_singular( true ) ) );
+								?>
+						</option>
 						<option data-type="recount-all"
-								value="EDD_Tools_Recount_All_Stats"><?php printf( __( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></option>
+								value="EDD_Tools_Recount_All_Stats">
+								<?php
+								/* translators: %s: Plural download label, lowercase */
+								printf( esc_html__( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural( true ) ) );
+								?>
+						</option>
 						<option data-type="recount-customer-stats"
 								value="EDD_Tools_Recount_Customer_Stats"><?php esc_html_e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></option>
 						<?php do_action( 'edd_recount_tool_options' ); ?>
@@ -180,11 +190,21 @@ function edd_tools_recount_stats_display() {
 
 					<span class="edd-recount-stats-descriptions">
 						<span id="recount-store"><?php _e( 'Recalculates the total store earnings and sales.', 'easy-digital-downloads' ); ?></span>
-						<span id="recount-download"><?php printf( __( 'Recalculates the earnings and sales stats for a specific %s.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></span>
-						<span id="recount-all"><?php printf( __( 'Recalculates the earnings and sales stats for all %s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></span>
-						<span id="recount-customer-stats"><?php _e( 'Recalculates the lifetime value and purchase counts for all customers.', 'easy-digital-downloads' ); ?></span>
+						<span id="recount-download">
+							<?php
+							/* translators: %s: Singular wownload label, lowercase */
+							printf( esc_html__( 'Recalculates the earnings and sales stats for a specific %s.', 'easy-digital-downloads' ), esc_html( edd_get_label_singular( true ) ) );
+							?>
+						</span>
+						<span id="recount-all">
+							<?php
+							/* translators: %s: Pural download label, lowercase */
+							printf( esc_html__( 'Recalculates the earnings and sales stats for all %s.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural( true ) ) );
+							?>
+						</span>
+						<span id="recount-customer-stats"><?php esc_html_e( 'Recalculates the lifetime value and purchase counts for all customers.', 'easy-digital-downloads' ); ?></span>
 						<?php do_action( 'edd_recount_tool_descriptions' ); ?>
-						<span id="reset-stats"><?php _e( '<strong>Deletes</strong> all payment records, customers, and related log entries.', 'easy-digital-downloads' ); ?></span>
+						<span id="reset-stats"><?php echo wp_kses_post( __( '<strong>Deletes</strong> all payment records, customers, and related log entries.', 'easy-digital-downloads' ) ); ?></span>
 					</span>
 
 					<span class="spinner"></span>
@@ -270,12 +290,16 @@ function edd_tools_api_keys_display() {
     <p>
 		<?php
 		printf(
-			__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile app</a>.', 'easy-digital-downloads' ),
-			$docs_link,
-			$ios_link
+			wp_kses_post(
+				/* translators: %1$s: API documentation linktag , %2$s: iOS app link tag, %3$s: closing link tag */
+				__( 'These API keys allow you to use the %1$sEDD REST API%3$s to retrieve store data in JSON or XML for external applications or devices, such as the %2$sEDD mobile app%3$s.', 'easy-digital-downloads' )
+			),
+			'<a href="' . esc_url( $docs_link ) . '">',
+			'<a href="' . esc_url( $ios_link ) . '">',
+			'</a>'
 		);
 		?>
-    </p>
+	</p>
 	<?php
 
 	do_action( 'edd_tools_api_keys_after' );
@@ -315,7 +339,12 @@ function edd_tools_betas_display() {
 								<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]"
 										id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
 										value="1"/>
-								<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), esc_html( $product ) ); ?></label>
+								<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]">
+									<?php
+									/* translators: %s: Product name */
+									printf( esc_html__( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), esc_html( $product ) );
+									?>
+								</label>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -483,7 +512,7 @@ function edd_tools_import_export_display() {
 						<input name="edd-import-file" id="edd-payments-import-file" type="file" accept=".csv" required/>
 					</p>
 					<span>
-						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>"
+						<input type="submit" value="<?php esc_html_e( 'Import CSV', 'easy-digital-downloads' ); ?>"
 								class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
@@ -494,8 +523,12 @@ function edd_tools_import_export_display() {
 					<p>
 						<?php
 						printf(
-							__( 'Each column loaded from the CSV needs to be mapped to an order field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing payment records.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/docs/importing-exporting-orders/'
+							wp_kses_post(
+								/* translators: %1$s opening anchor tag, %2$s closing anchor tag */
+								__( 'Each column loaded from the CSV needs to be mapped to an order field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing payment records.', 'easy-digital-downloads' )
+							),
+							'<a href="https://easydigitaldownloads.com/docs/importing-exporting-orders/" target="_blank">',
+							'</a>'
 						);
 						?>
 					</p>
@@ -809,8 +842,12 @@ function edd_tools_import_export_display() {
 					<p>
 						<?php
 						printf(
-							__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing Download products.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/docs/importing-exporting-products/'
+							wp_kses_post(
+								/* translators: %1$s and %2$s opening and closing anchor tags respectively */
+								__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing Download products.', 'easy-digital-downloads' ),
+								'<a href="https://easydigitaldownloads.com/docs/importing-exporting-products/" target="_blank">',
+								'</a>'
+							)
 						);
 						?>
 					</p>
@@ -1005,13 +1042,18 @@ function edd_tools_import_export_display() {
 			<p>
 				<?php
 				printf(
-					__( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ),
-					esc_url( edd_get_admin_url(
-						array(
-						'page' => 'edd-reports',
-						'view' => 'export',
+					wp_kses_post(
+						/* translators: %s: Reports page URL */
+						__( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' )
+					),
+					esc_url(
+						edd_get_admin_url(
+							array(
+							'page' => 'edd-reports',
+							'view' => 'export',
+							)
 						)
-					) )
+					)
 				);
 				?>
 			</p>
@@ -1188,23 +1230,36 @@ function edd_tools_debug_log_display() {
 		: esc_html__( 'No File', 'easy-digital-downloads' );
 	$log_output  = ! empty( $log )
 		? wp_normalize_path( $log )
-		: esc_html__( 'Log is Empty', 'easy-digital-downloads' ); ?>
+		: esc_html__( 'Log is Empty', 'easy-digital-downloads' );
+	?>
 
-    <div class="postbox">
-        <h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <form id="edd-debug-log" method="post">
-                <p><?php _e( 'When debug mode is enabled, specific information will be logged here. (<a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">Learn how</a> to use <code>EDD_Logging</code> in your own code.)', 'easy-digital-downloads' ); ?></p>
-                <textarea
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<form id="edd-debug-log" method="post">
+				<p>
+					<?php
+					printf(
+						wp_kses_post(
+							/* translators: 1. opening anchor tag, do not translate; 2. function name, do not translate; 3. closing anchor tag, do not translate */
+							__( 'When debug mode is enabled, specific information will be logged here. (%1$sLearn how to use %2$s in your own code.%3$s)', 'easy-digital-downloads' )
+						),
+						'<a href="https://easydigitaldownloads.com/docs/edd-debug-log">',
+						'<code>edd_debug_log</code>',
+						'</a>'
+					);
+					?>
+				</p>
+				<textarea
 					readonly="readonly"
 					class="edd-tools-textarea"
 					rows="15"
 					name="edd-debug-log-contents"><?php echo esc_textarea( $log_output ); ?></textarea>
-                <p>
-                    <input type="hidden" name="edd_action" value="submit_debug_log"/>
+				<p>
+					<input type="hidden" name="edd_action" value="submit_debug_log"/>
 					<?php
-					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary',                     'edd-download-debug-log', false );
-					submit_button( __( 'Copy to Clipboard',       'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log',     false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
+					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary', 'edd-download-debug-log', false );
+					submit_button( __( 'Copy to Clipboard', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
 
 					// Only show the "Clear Log" button if there is a log to clear
 					if ( ! empty( $log ) ) {
@@ -1212,16 +1267,16 @@ function edd_tools_debug_log_display() {
 					}
 
 					?>
-                </p>
+				</p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
-            </form>
+			</form>
 
-            <p>
-				<?php _e( 'Log file', 'easy-digital-downloads' ); ?>:
-                <code><?php echo esc_html( $path_output ); ?></code>
+			<p>
+				<?php esc_html_e( 'Log file', 'easy-digital-downloads' ); ?>:
+				<code><?php echo esc_html( $path_output ); ?></code>
 			</p>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
 	<?php
 }

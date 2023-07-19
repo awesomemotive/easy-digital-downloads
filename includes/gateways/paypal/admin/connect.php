@@ -506,7 +506,7 @@ function get_account_info() {
 
 		wp_send_json_success( array(
 			'status'           => $status,
-			'account_status'   => '<ul class="edd-paypal-account-status">' . $account_status . '</ul>',
+			'account_status'   => '<ul class="edd-paypal-account-status edd-settings__list--disc">' . $account_status . '</ul>',
 			'webhook_object'   => isset( $validator ) ? $validator->webhook : null,
 			'actions'          => array_values( $actions ),
 			'disconnect_links' => array_values( $disconnect_links ),

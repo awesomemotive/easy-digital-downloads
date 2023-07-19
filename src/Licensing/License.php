@@ -160,17 +160,29 @@ class License {
 	 */
 	public function save( $license_data ) {
 		if ( $this->single_site ) {
-			return update_option(
+			$updated = update_option(
 				$this->option_name,
 				$license_data,
 				false
 			);
+		} else {
+			$updated = update_site_option(
+				$this->option_name,
+				$license_data
+			);
 		}
 
-		return update_site_option(
-			$this->option_name,
-			$license_data
-		);
+		$this->get();
+		/**
+		 * Fires after a license is saved.
+		 *
+		 * @since 3.1.4
+		 * @param License $license      The license object.
+		 * @param object  $license_data The license data.
+		 */
+		do_action( 'edd/license/saved', $this, $license_data ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+
+		return $updated;
 	}
 
 	/**
@@ -183,15 +195,23 @@ class License {
 		if ( ! $this->single_site ) {
 			delete_site_option( $this->option_name );
 			delete_site_option( "{$this->product_shortname}_license_key" );
-
-			return;
+		} else {
+			delete_option( $this->option_name );
+			edd_delete_option( "{$this->product_shortname}_license_key" );
+			if ( $this->custom_key_option ) {
+				edd_delete_option( $this->custom_key_option );
+			}
 		}
 
-		delete_option( $this->option_name );
-		edd_delete_option( "{$this->product_shortname}_license_key" );
-		if ( $this->custom_key_option ) {
-			edd_delete_option( $this->custom_key_option );
-		}
+		$this->get();
+		/**
+		 * Fires after a license is deleted.
+		 *
+		 * @since 3.1.4
+		 * @param string  $product_shortname The product shortname.
+		 * @param License $license           The license object.
+		 */
+		do_action( 'edd/license/deleted', $this->product_shortname, $this ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 	}
 
 	/**

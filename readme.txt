@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.4
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable Tag: 3.1.3
+Stable Tag: 3.1.4
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the #1 eCommerce plugin written for digital creators by digital creators.
@@ -226,23 +226,35 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 
 == Changelog ==
 
-= 3.1.3 =
-* Improvement: Licensing messages for third party extensions no longer link to the main EDD site.
-* Improvement: The default number of tax rates to query has been increased.
-* Fix: Using a custom `straight_to_gateway` link did not add a product to the cart.
-* Fix: Products which are marked as having variable prices, but which don't have any prices, could cause a PHP notice or error.
-* Fix: Duplicate purchase receipt emails could be sent when editing an order.
-* Fix: The product sales export was not respecting the end date when set.
-* Fix: The product sales export was showing incorrect amounts for orders with multiple items, or partially refunded orders.
-* Fix: For stores which collect sales tax, tax exempt fees sometimes had tax applied.
-* Fix: `edd_store_discount` now accepts times for start/expiration dates.
-* Fix: Users who are not also customers were unable to update their profile using the EDD profile editor.
-* Fix: The pass ID for pro licenses could be incorrect in some cases.
-* Fix: If EDD settings were removed, the telemetry data could cause a PHP notice.
-* Fix: Prevent a JavaScript error that could occur if the cart widget was present on the checkout page when taxes are enabled.
-* Dev: Third party developers who use EDD's licensing screen can now customize licensing messages.
+= 3.1.4 =
+* Improvement: The checkout cart markup is now aware if the cart is using the shortcode or the block.
+* Improvement: A filter has been added to the structured data for products to allow extensions to add additional offers.
+* Improvement: The email marker (tagging) experience has been updated to be more accessible and easier to use.
+* Improvement: EDD's admin JavaScript has been updated to prevent deprecation notices.
+* Improvement: It is now possible to update the sequential start number as long as it does not conflict with existing orders.
+* Improvement: The current file name is now stored with the file download log.
+* Improvement: The emails on the order details screen has been updated to always include the customer's primary address, even if it wasn't used on an order.
+* Fix: When the "last month" had fewer days than "month to date", reporting could incorrectly cross months.
+* Fix: The `edd_link_helper` function could sometimes have an empty UTM medium attribute.
+* Fix: Checkbox inputs for privacy/terms are now marked required with the HTML5 attribute.
+* Fix: The Recapture onbording process could inconsistently fail to install or connect.
+* Fix - Stripe: Recurring products with free trials were immediately creating an invoice with Payment Elements.
+* Fix - Stripe: When using Payment Elements, clicking the purchase button did not show the loading animation.
+* Fix - Stripe: Stripe data will be included in the Site Health debug information with EDD 3.1.4.
+* Fix - Stripe: The list of countries which do not allow application fees has been updated.
+* i18n: All countries and states are now translation ready.
+* i18n: We have started the process of updating strings to add comments for translators where recommended.
+* Dev: Hooks have been added to the license update/delete methods.
+* Dev: EDD's pointer registration has been updated so that extensions can hook into it.
+* Dev: EDD now has a status badge utility class to allow order status badges to be more universally used.
+* Dev: The `edd_set_upgrade_complete` function is now in a file that's loaded outside of the admin, so it can be used in cron upgrades.
+* Dev: The EDD debugging information under Site Health can now be filtered so that extensions can add key data.
+* Dev: Extensions which use the EDD extension registry will attempt to validate the pro pass license before the individual extension license.
+* Dev: The EDD debug log description has been updated to link to a support doc explaining the `edd_debug_log` function.
+* Dev: The `edd_get_utc_date_string` helper function has been created to simplify getting a formatted UTC date.
+* Dev: The EDD settings have been refactored for readability.
 
-View the full changelog at [https://easydigitaldownloads.com/changelog/](https://easydigitaldownloads.com/changelog/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 == Upgrade Notice ==
-IMPORTANT: Upgrading from Easy Digital Downloads 2.9.x to 3.0+ is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.
+IMPORTANT: Upgrading from Easy Digital Downloads 2.x to 3.0+ is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.

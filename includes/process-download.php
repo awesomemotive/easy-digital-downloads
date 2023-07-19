@@ -163,17 +163,7 @@ function edd_process_download() {
 		 */
 		do_action( 'edd_process_download_pre_record_log', $requested_file, $args, $method );
 
-		// Record this file download in the log
-		$user_info = array();
-		$user_info['email'] = $args['email'];
-
-		if ( is_user_logged_in() ) {
-			$user_data         = get_userdata( get_current_user_id() );
-			$user_info['id']   = get_current_user_id();
-			$user_info['name'] = $user_data->display_name;
-		}
-
-		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $args['payment'], $args['price_id'] );
+		edd_record_download_in_log( $args['download'], $args['file_key'], array(), edd_get_ip(), $args['payment'], $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );

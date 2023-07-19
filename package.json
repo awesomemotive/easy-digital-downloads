@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "3.1.3",
+	"version": "3.1.4",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"author": "Easy Digital Downloads",
@@ -72,7 +72,7 @@
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
 		"blocks": "bash bin/update-blocks.sh && grunt replace:blocks",
 		"stripe": "bash bin/update-stripe.sh && grunt replace:stripe",
-		"translate": "wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets --ignore-domain",
+		"translate": "grunt clean && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets,tests --ignore-domain",
 		"translate-lite": "wp i18n make-pot build/easy-digital-downloads build/easy-digital-downloads/languages/easy-digital-downloads.pot --exclude=build/easy-digital-downloads/assets --ignore-domain",
 		"update": "composer update --no-dev --ignore-platform-reqs",
 		"lite": "grunt clean && grunt copy:lite && grunt replace:pro && npm run translate-lite && grunt compress:lite",

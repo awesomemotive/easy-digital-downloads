@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Builds the Cart by providing hooks and calling all the hooks for the Cart
@@ -20,13 +20,20 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_checkout_cart() {
 
+	if ( function_exists( '\\EDD\\Blocks\\Checkout\\Functions\\checkout_has_blocks' ) && \EDD\Blocks\Checkout\Functions\checkout_has_blocks() ) {
+		$cart_items = edd_get_cart_contents();
+		include EDD_BLOCKS_DIR . 'views/checkout/cart/cart.php';
+
+		return;
+	}
+
 	// Check if the Update cart button should be shown
-	if( edd_item_quantities_enabled() ) {
+	if ( edd_item_quantities_enabled() ) {
 		add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
 	}
 
 	// Check if the Save Cart button should be shown
-	if( ! edd_is_cart_saving_disabled() ) {
+	if ( ! edd_is_cart_saving_disabled() ) {
 		add_action( 'edd_cart_footer_buttons', 'edd_save_cart_button' );
 	}
 

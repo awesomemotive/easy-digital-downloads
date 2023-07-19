@@ -788,7 +788,7 @@ function parse_relative_dates_for_range( $range = null, $relative_range = null, 
 		case 'previous_month':
 			$dates = array(
 				'start' => $dates['start']->copy()->subMonth( 1 ),
-				'end'   => $dates['end']->copy()->subMonth( 1 ),
+				'end'   => $dates['end']->copy()->subMonthNoOverflow( 1 ),
 			);
 			break;
 		case 'previous_quarter':

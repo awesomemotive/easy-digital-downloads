@@ -136,8 +136,7 @@ function edd_add_manual_order( $args = array() ) {
 	);
 
 	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
-	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date_string, edd_get_timezone_id(), false ) );
-	$date = $date->format( 'Y-m-d H:i:s' );
+	$date = edd_get_utc_date_string( $date_string );
 
 	// Get mode
 	$mode = edd_is_test_mode()

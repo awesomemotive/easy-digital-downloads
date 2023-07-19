@@ -283,3 +283,15 @@ function edd_get_minute_values() {
 		'59' => '59'
 	) );
 }
+
+/**
+ * Gets the UTC equivalent of a date in the local timezone.
+ *
+ * @since 3.1.4
+ * @param string $date_string The date string to convert.
+ * @param string $format      The format to return the date in.
+ * @return string
+ */
+function edd_get_utc_date_string( $date_string = 'now', $format = 'Y-m-d H:i:s' ) {
+	return EDD()->utils->date( $date_string, edd_get_timezone_id(), false )->get_utc_from_local( $format );
+}

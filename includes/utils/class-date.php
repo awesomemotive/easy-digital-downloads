@@ -112,4 +112,18 @@ final class Date extends \Carbon\Carbon {
 	public function getWPTimestamp() {
 		return $this->getTimestamp() + EDD()->utils->get_gmt_offset();
 	}
+
+	/**
+	 * Converts a localized date string to UTC.
+	 *
+	 * @since 3.1.4
+	 * @param $format string
+	 * @return string
+	 */
+	public function get_utc_from_local( $format = 'Y-m-d H:i:s' ) {
+		$utc_timezone = new \DateTimeZone( 'utc' );
+		$this->setTimezone( $utc_timezone );
+
+		return $this->format( $format );
+	}
 }
