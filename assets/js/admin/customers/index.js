@@ -96,7 +96,7 @@ var EDD_Customer = {
 		} );
 	},
 	change_country: function() {
-		$( 'select[name="customerinfo[country]"]' ).change( function() {
+		$( 'select[name="customerinfo[country]"]' ).on( 'change', function () {
 			const select = $( this ),
 				state_input = $( ':input[name="customerinfo[region]"]' ),
 				data = {
@@ -119,7 +119,7 @@ var EDD_Customer = {
 		} );
 	},
 	delete_checked: function() {
-		$( '#edd-customer-delete-confirm' ).change( function() {
+		$( '#edd-customer-delete-confirm' ).on( 'change', function () {
 			const records_input = $( '#edd-customer-delete-records' );
 			const submit_button = $( '#edd-delete-customer' );
 

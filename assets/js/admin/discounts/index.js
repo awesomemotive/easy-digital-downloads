@@ -15,7 +15,7 @@ jQueryReady( () => {
 	/**
 	 * Show/hide conditions based on input value.
 	 */
-	products.change( function() {
+	products.on( 'change', function () {
 		$( '#edd-discount-product-conditions' ).toggle( null !== products.val() );
 	} );
 } );

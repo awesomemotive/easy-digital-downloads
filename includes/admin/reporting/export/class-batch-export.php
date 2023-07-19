@@ -328,7 +328,6 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @return array
 	 */
 	protected function get_date_query() {
-		$time_zone  = edd_get_timezone_id();
 		$date_query = array(
 			'after'     => '',
 			'before'    => '',
@@ -336,13 +335,13 @@ class EDD_Batch_Export extends EDD_Export {
 		);
 
 		if ( $this->start ) {
-			$date                = edd_get_utc_equivalent_date( EDD()->utils->date( $this->start . '00:00:00', $time_zone, false ) );
-			$date_query['after'] = $date->format( 'Y-m-d H:i:s' );
+			$start_date_string   = EDD()->utils->get_date_string( $this->start );
+			$date_query['after'] = edd_get_utc_date_string( $start_date_string );
 		}
 
 		if ( $this->end ) {
-			$date                 = edd_get_utc_equivalent_date( EDD()->utils->date( $this->end . '23:59:59', $time_zone, false ) );
-			$date_query['before'] = $date->format( 'Y-m-d H:i:s' );
+			$end_date_string      = EDD()->utils->get_date_string( $this->end, 23, 59, 59 );
+			$date_query['before'] = edd_get_utc_date_string( $end_date_string );
 		}
 
 		return array( $date_query );

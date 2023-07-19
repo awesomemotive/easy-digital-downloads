@@ -355,7 +355,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.1.3' );
+			define( 'EDD_VERSION', '3.1.4' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -723,9 +723,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary-blurb.php';
 
-		// Structured Data
-		require_once EDD_PLUGIN_DIR . 'includes/class-structured-data.php';
-
 		// Stats
 		require_once EDD_PLUGIN_DIR . 'includes/class-stats.php';
 
@@ -778,6 +775,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/users/register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
+		require_once EDD_PLUGIN_DIR . 'includes/upgrades/functions.php';
 
 		// Admin files to load globally (cron, bar, etc...)
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';

@@ -13,81 +13,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Get the current database version
- *
- * @since 3.0
- *
- * @return string
- */
-function edd_get_db_version() {
-	$db_version = get_option( 'edd_version' );
-	$retval     = ! empty( $db_version )
-		? edd_format_db_version( $db_version )
-		: false;
-
-	return $retval;
-}
-
-/**
- * Update the EDD version in the options table
- *
- * @since 3.0
- */
-function edd_update_db_version() {
-	if ( defined( 'EDD_VERSION' ) ) {
-		update_option( 'edd_version', edd_format_db_version( EDD_VERSION ) );
-	}
-}
-
-/**
- * Format the EDD version (going into or coming from the database.)
- *
- * @since 3.0
- *
- * @param string $version
- * @return string
- */
-function edd_format_db_version( $version = '' ) {
-	return preg_replace( '/[^0-9.].*/', '', $version );
-}
-
-/**
- * Check if the upgrade routine has been run for a specific action
- *
- * @since  2.3
- * @param  string $upgrade_action The upgrade action to check completion for
- * @return bool                   If the action has been added to the copmleted actions array
- */
-function edd_has_upgrade_completed( $upgrade_action = '' ) {
-
-	// Bail if no upgrade action to check
-	if ( empty( $upgrade_action ) ) {
-		return false;
-	}
-
-	// Get completed upgrades
-	$completed_upgrades = edd_get_completed_upgrades();
-
-	// Return true if in array, false if not
-	return in_array( $upgrade_action, $completed_upgrades, true );
-}
-
-/**
- * Get's the array of completed upgrade actions
- *
- * @since  2.3
- * @return array The array of completed upgrades
- */
-function edd_get_completed_upgrades() {
-
-	// Get the completed upgrades for this site
-	$completed_upgrades = get_option( 'edd_completed_upgrades', array() );
-
-	// Return array of completed upgrades
-	return (array) $completed_upgrades;
-}
-
-/**
  * Install
  *
  * Runs on plugin install by setting up the post types, custom taxonomies,
@@ -244,21 +169,8 @@ function edd_set_all_upgrades_complete() {
 		return;
 	}
 
-	// Maybe include an admin-area only file/function
-	if ( ! function_exists( 'edd_set_upgrade_complete' ) ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
-	}
-
 	// When new upgrade routines are added, mark them as complete on fresh install
-	$upgrade_routines = array(
-		'upgrade_payment_taxes',
-		'upgrade_customer_payments_association',
-		'upgrade_user_api_keys',
-		'remove_refunded_sale_logs',
-		'update_file_download_log_data',
-	);
-	$edd_30_upgrades  = edd_get_v30_upgrades();
-	$upgrade_routines = array_merge( $upgrade_routines, array_keys( $edd_30_upgrades ) );
+	$upgrade_routines = edd_get_all_upgrades();
 
 	// Loop through upgrade routines and mark them as complete
 	foreach ( $upgrade_routines as $upgrade ) {

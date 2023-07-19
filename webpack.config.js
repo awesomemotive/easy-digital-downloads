@@ -67,6 +67,7 @@ const config = {
 		'js/edd-admin-pass-handler': './assets/js/admin/settings/pass-handler',
 		'js/edd-admin-onboarding': './assets/js/admin/onboarding',
 		'js/edd-admin-licensing': './assets/js/admin/settings/licensing',
+		'js/edd-admin-pointers': './assets/js/admin/pointers',
 
 		// Front-end JavaScript.
 		'js/edd-ajax': './assets/js/frontend/edd-ajax.js',

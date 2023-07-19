@@ -411,7 +411,7 @@ class Messages {
 	/**
 	 * Sanitizes the third-party license name for use as a hook.
 	 *
-	 * @since <next-version>
+	 * @since 3.1.4
 	 * @return string
 	 */
 	private function sanitize_third_party_name() {

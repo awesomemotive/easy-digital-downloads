@@ -107,7 +107,7 @@ class Recurring extends Extension implements SubscriberInterface {
 			return $sections;
 		}
 
-		$sections[ $this->settings_section ] = __( 'Recurring Payments', 'easy-digital-downloads' );
+		$sections[ $this->settings_section ] = __( 'Subscriptions', 'easy-digital-downloads' );
 
 		return $sections;
 	}

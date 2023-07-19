@@ -4,10 +4,9 @@ export const recaptureRemoteInstall = () => {
 	};
 
 	jQuery.post( ajaxurl, data, function( response ) {
+		if ( !response.success ) {
 
-		if( ! response.success ) {
-
-			if( confirm( response.data.error ) ) {
+			if ( response.data && confirm( response.data.error ) ) {
 				location.reload();
 				return;
 			}

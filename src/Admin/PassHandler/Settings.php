@@ -180,7 +180,7 @@ class Settings implements SubscriberInterface {
 					sprintf(
 						/* translators: 1. opening link tag; do not translate; 2. closing link tag; do not translate. */
 						__( 'To unlock more features, consider %1$supgrading to Pro%2$s.', 'easy-digital-downloads' ),
-						'<strong><a href="' . $url . '">',
+						'<strong><a href="' . $url . '" class="edd-pro-upgrade">',
 						'</a></strong>'
 					)
 				);

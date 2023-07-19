@@ -104,8 +104,9 @@ function edd_maybe_remove_menu_profile_links() {
 
 	if ( edd_user_pending_verification() ) {
 
-		if( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
-			$url     = esc_url( edd_get_user_verification_request_url() );
+		if ( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
+			$url = esc_url( edd_get_user_verification_request_url() );
+			/* translators: link to send an email */
 			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), esc_url( $url ) );
 			$title   = __( 'Account Pending Verification', 'easy-digital-downloads' );
 			$args    = array(

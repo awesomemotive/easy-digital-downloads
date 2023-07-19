@@ -27,6 +27,7 @@ function edd_media_button() {
 
 	// Setup the icon
 	$icon = '<span class="wp-media-buttons-icon dashicons dashicons-download" id="edd-media-button"></span>';
+	/* translators: singular download label */
 	$text = sprintf( __( 'Insert %s', 'easy-digital-downloads' ), edd_get_label_singular() );
 
 	// Output the thickbox button

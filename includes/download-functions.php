@@ -709,31 +709,53 @@ function edd_get_download_sales_stats( $download_id = 0 ) {
  * @param int    $download_id Download ID.
  * @param int    $file_id     File ID.
  * @param array  $user_info   User information (deprecated).
- * @param string $ip          User IP.
+ * @param string $ip          Optional. IP address.
  * @param int    $order_id    Order ID.
  * @param int    $price_id    Optional. Price ID,
+ * @param string $user_agent  Optional. User agent.
  * @return void
  */
-function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info = array(), $ip = '', $order_id = 0, $price_id = 0 ) {
+function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info = array(), $ip = '', $order_id = 0, $price_id = 0, $user_agent = '' ) {
 	$order = edd_get_order( $order_id );
 
-	if ( ! class_exists( 'Browser' ) ) {
-		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
+	if ( empty( $user_agent ) ) {
+		if ( ! class_exists( 'Browser' ) ) {
+			require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
+		}
+		$browser    = new Browser();
+		$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
 	}
 
-	$browser = new Browser();
+	if ( empty( $ip ) ) {
+		$ip = edd_get_ip();
+	}
 
-	$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
+	$file_id   = absint( $file_id );
+	$files     = edd_get_download_files( $download_id );
+	$file_name = '';
 
-	edd_add_file_download_log( array(
+	if ( is_array( $files ) ) {
+		foreach ( $files as $key => $file ) {
+			if ( absint( $key ) === $file_id ) {
+				$file_name = edd_get_file_name( $file );
+				break;
+			}
+		}
+	}
+
+	$log_id = edd_add_file_download_log( array(
 		'product_id'  => absint( $download_id ),
-		'file_id'     => absint( $file_id ),
+		'file_id'     => $file_id,
 		'order_id'    => absint( $order_id ),
 		'price_id'    => absint( $price_id ),
 		'customer_id' => $order->customer_id,
 		'ip'          => sanitize_text_field( $ip ),
 		'user_agent'  => $user_agent,
 	) );
+
+	if ( $log_id && ! empty( $file_name ) ) {
+		edd_add_file_download_log_meta( $log_id, 'file_name', $file_name );
+	}
 }
 
 /**

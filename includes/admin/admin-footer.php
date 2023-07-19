@@ -23,8 +23,10 @@ if( !defined( 'ABSPATH' ) ) exit;
 function edd_admin_rate_us( $footer_text ) {
 	global $typenow;
 
-	if ( $typenow == 'download' ) {
-		$rate_text = sprintf( __( 'Thank you for using <a href="%1$s" target="_blank">Easy Digital Downloads</a>! Please <a href="%2$s" target="_blank">rate us on WordPress.org</a>', 'easy-digital-downloads' ),
+	if ( 'download' === $typenow ) {
+		$rate_text = sprintf(
+			/* translators: 1. link to EDD site; 2. link to wordpress.org to review */
+			__( 'Thank you for using <a href="%1$s" target="_blank">Easy Digital Downloads</a>! Please <a href="%2$s" target="_blank">rate us on WordPress.org</a>', 'easy-digital-downloads' ),
 			'https://easydigitaldownloads.com',
 			'https://wordpress.org/support/plugin/easy-digital-downloads/reviews/?rate=5#new-post'
 		);

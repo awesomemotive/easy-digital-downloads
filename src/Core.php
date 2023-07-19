@@ -51,6 +51,8 @@ class Core extends EventManagement\Subscribers {
 			new Licensing\Ajax(),
 			new Admin\SiteHealth\Tests(),
 			new Admin\SiteHealth\Information(),
+			new Admin\Pointers(),
+			new Admin\Settings\Sanitize(),
 		);
 	}
 
