@@ -180,7 +180,7 @@ return array(
 		'VE' => __( 'Veszprém', 'easy-digital-downloads' ),
 		'ZA' => __( 'Zala', 'easy-digital-downloads' ),
 	),
-	'IN' => EDD_PLUGIN_DIR . 'i18n/states-in.php',
+	'IN' => include EDD_PLUGIN_DIR . 'i18n/states-in.php',
 	'ID' => array(
 		''   => '',
 		'AC' => __( 'Daerah Istimewa Aceh', 'easy-digital-downloads' ),
