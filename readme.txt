@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.4
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable Tag: 3.1.4
+Stable Tag: 3.1.5
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the #1 eCommerce plugin written for digital creators by digital creators.
@@ -225,6 +225,11 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.1.5 =
+* Fix: India Regions were not being properly loaded.
+* Fix: Fixed compatibility with PHP 7.1 when adding a new discount.
+* Dev: Tax settings tab was overriding the base class method for getting the ID.
 
 = 3.1.4 =
 * Improvement: The checkout cart markup is now aware if the cart is using the shortcode or the block.

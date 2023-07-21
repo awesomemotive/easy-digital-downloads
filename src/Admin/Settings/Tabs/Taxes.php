@@ -20,9 +20,7 @@ class Taxes extends Tab {
 	 * @since 3.1.4
 	 * @return string
 	 */
-	protected function get_id() {
-		return 'taxes';
-	}
+	protected $id = 'taxes';
 
 	/**
 	 * Register the settings for this tab.

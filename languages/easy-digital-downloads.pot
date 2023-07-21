@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.4\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.1.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-07-19T16:08:26+00:00\n"
+"POT-Creation-Date: 2023-07-21T20:11:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 
@@ -9619,7 +9619,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:1750
 #: includes/admin/settings/contextual-help.php:99
 #: includes/admin/settings/register-settings.php:724
-#: src/Admin/Settings/Tabs/Taxes.php:38
+#: src/Admin/Settings/Tabs/Taxes.php:36
 msgid "Taxes"
 msgstr ""
 
@@ -12346,7 +12346,7 @@ msgstr ""
 #: includes/class-edd-cli.php:70
 #: src/Admin/Settings/Tabs/Gateways.php:174
 #: src/Admin/Settings/Tabs/Misc.php:38
-#: src/Admin/Settings/Tabs/Taxes.php:39
+#: src/Admin/Settings/Tabs/Taxes.php:37
 msgid "Enabled"
 msgstr ""
 
@@ -19125,96 +19125,96 @@ msgstr ""
 msgid "The %s settings class is missing the required ID property."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:40
+#: src/Admin/Settings/Tabs/Taxes.php:38
 msgid "Check this to enable taxes on purchases."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:42
+#: src/Admin/Settings/Tabs/Taxes.php:40
 msgid "Enabling Taxes"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:43
+#: src/Admin/Settings/Tabs/Taxes.php:41
 msgid "With taxes enabled, customers will be taxed based on the rates you define, and are required to input their address on checkout so rates can be calculated accordingly."
 msgstr ""
 
 #. translators: %s - tax setup documentation URL.
-#: src/Admin/Settings/Tabs/Taxes.php:49
+#: src/Admin/Settings/Tabs/Taxes.php:47
 msgid "Visit the <a href=\"%s\" target=\"_blank\">Tax setup documentation</a> for further information. <p class=\"description\">If you need VAT support, there are options listed on the documentation page.</p>"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:54
+#: src/Admin/Settings/Tabs/Taxes.php:52
 msgid "Prices Include Tax"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:55
+#: src/Admin/Settings/Tabs/Taxes.php:53
 msgid "This option affects how you enter prices."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:59
+#: src/Admin/Settings/Tabs/Taxes.php:57
 msgid "Yes, I will enter prices inclusive of tax"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:60
+#: src/Admin/Settings/Tabs/Taxes.php:58
 msgid "No, I will enter prices exclusive of tax"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:62
+#: src/Admin/Settings/Tabs/Taxes.php:60
 msgid "Prices Inclusive of Tax"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:63
+#: src/Admin/Settings/Tabs/Taxes.php:61
 msgid "When using prices inclusive of tax, you will be entering your prices as the total amount you want a customer to pay for the download, including tax. Easy Digital Downloads will calculate the proper amount to tax the customer for the defined total price."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:67
+#: src/Admin/Settings/Tabs/Taxes.php:65
 msgid "Show Tax Rate on Prices"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:68
+#: src/Admin/Settings/Tabs/Taxes.php:66
 msgid "Show"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:69
+#: src/Admin/Settings/Tabs/Taxes.php:67
 msgid "Some countries require a notice that product prices include tax."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:74
+#: src/Admin/Settings/Tabs/Taxes.php:72
 msgid "Show in Checkout"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:75
+#: src/Admin/Settings/Tabs/Taxes.php:73
 msgid "Should prices on the checkout page be shown with or without tax?"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:79
+#: src/Admin/Settings/Tabs/Taxes.php:77
 msgid "Including tax"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:80
+#: src/Admin/Settings/Tabs/Taxes.php:78
 msgid "Excluding tax"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:82
+#: src/Admin/Settings/Tabs/Taxes.php:80
 msgid "Taxes Displayed for Products on Checkout"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:83
+#: src/Admin/Settings/Tabs/Taxes.php:81
 msgid "This option will determine whether the product price displays with or without tax on checkout."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:101
+#: src/Admin/Settings/Tabs/Taxes.php:99
 msgid "Regional Rates"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:102
+#: src/Admin/Settings/Tabs/Taxes.php:100
 msgid "Configure rates for each region you wish to collect sales tax in."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:117
+#: src/Admin/Settings/Tabs/Taxes.php:115
 msgid "Default Rate"
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:119
+#: src/Admin/Settings/Tabs/Taxes.php:117
 msgid "This setting is no longer used in this version of Easy Digital Downloads. We have migrated any fallback tax rates for you to verify below. Click \"Save Changes\" to dismiss this notice."
 msgstr ""
 
