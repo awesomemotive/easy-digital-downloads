@@ -118,7 +118,7 @@ function edd_admin_add_discount( $data = array() ) {
 		$end_date_string = EDD()->utils->get_date_string(
 			$end_date,
 			$end_date_hour,
-			$end_date_minute,
+			$end_date_minute
 		);
 		// The end date is entered in the user's WP timezone. We need to convert it to UTC prior to saving now.
 		$to_add['end_date'] = edd_get_utc_date_string( $end_date_string );
@@ -240,7 +240,7 @@ function edd_admin_edit_discount( $data = array() ) {
 		$start_date_string = EDD()->utils->get_date_string(
 			$start_date,
 			$start_date_hour,
-			$start_date_minute,
+			$start_date_minute
 		);
 
 		// The start date is entered in the user's WP timezone. We need to convert it to UTC prior to saving now.
