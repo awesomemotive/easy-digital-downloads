@@ -845,9 +845,9 @@ function edd_tools_import_export_display() {
 							wp_kses_post(
 								/* translators: %1$s and %2$s opening and closing anchor tags respectively */
 								__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing Download products.', 'easy-digital-downloads' ),
-								'<a href="https://easydigitaldownloads.com/docs/importing-exporting-products/" target="_blank">',
-								'</a>'
-							)
+							),
+							'<a href="https://easydigitaldownloads.com/docs/importing-exporting-products/" target="_blank">',
+							'</a>'
 						);
 						?>
 					</p>
