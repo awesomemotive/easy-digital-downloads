@@ -1452,7 +1452,6 @@ final class EDD_Payment {
 					$this->process_refund();
 					break;
 				case 'failed':
-					$this->process_failure();
 					break;
 				case 'pending':
 					$this->process_pending();
@@ -1586,6 +1585,19 @@ final class EDD_Payment {
 		$decrease_customer_value = apply_filters( 'edd_decrease_customer_value_on_refund', true, $this );
 		$decrease_purchase_count = apply_filters( 'edd_decrease_customer_purchase_count_on_refund', true, $this );
 
+		$discounts = $this->discounts;
+		if ( 'none' === $discounts || empty( $discounts ) ) {
+		    return;
+		}
+		
+		if ( ! is_array( $discounts ) ) {
+		    $discounts = array_map( 'trim', explode( ',', $discounts ) );
+		}
+		
+		foreach ( $discounts as $discount ) {
+		    edd_decrease_discount_usage( $discount );
+		}
+		
 		$this->maybe_alter_stats( $decrease_store_earnings, $decrease_customer_value, $decrease_purchase_count );
 		$this->delete_sales_logs();
 
@@ -1593,29 +1605,6 @@ final class EDD_Payment {
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
 		do_action( 'edd_post_refund_payment', $this );
-	}
-
-	/**
-	 * Process when a payment is set to failed, decrement discount usages and other stats
-	 *
-	 * @since  2.5.7
-	 * @return void
-	 */
-	private function process_failure() {
-
-		$discounts = $this->discounts;
-		if ( 'none' === $discounts || empty( $discounts ) ) {
-			return;
-		}
-
-		if ( ! is_array( $discounts ) ) {
-			$discounts = array_map( 'trim', explode( ',', $discounts ) );
-		}
-
-		foreach ( $discounts as $discount ) {
-			edd_decrease_discount_usage( $discount );
-		}
-
 	}
 
 	/**
