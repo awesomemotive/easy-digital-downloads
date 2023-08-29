@@ -10,7 +10,7 @@ More information can be found at [easydigitaldownloads.com](https://easydigitald
 
 ## Installation ##
 
-For detailed setup instructions, visit the official [Documentation](https://easydigitaldownloads.com/documentation/) page.
+For detailed setup instructions, visit the official [Documentation](https://easydigitaldownloads.com/docs/) page.
 
 1. You can clone the GitHub repository: `https://github.com/easydigitaldownloads/easy-digital-downloads.git`
 2. Or download it directly as a ZIP file: `https://github.com/easydigitaldownloads/easy-digital-downloads/archive/master.zip`
