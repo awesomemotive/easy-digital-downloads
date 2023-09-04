@@ -81,7 +81,7 @@ jQuery(document).ready(function ($) {
 				var button = $( this ),
 				row = button.parent().parent().prev( 'tr' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
-
+				clone.find( 'td [type="checkbox"]' ).prop('checked', false);
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 
 				// Setup chosen fields again if they exist
