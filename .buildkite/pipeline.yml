@@ -24,37 +24,6 @@ steps:
 
   - wait
 
-  - label: "Creating build's artifact directory"
-    command: "mkdir -p /tmp/artifacts/${BUILDKITE_BUILD_ID} && chmod 775 /tmp/artifacts/${BUILDKITE_BUILD_ID}"
-
-  - wait
-
-  - env:
-    label: 'PHPCS Report'
-    soft_fail: true
-    artifact_paths:
-      - "/tmp/artifacts/${BUILDKITE_BUILD_ID}/phpcs-report.txt"
-    plugins:
-      - docker-compose#v4.14.0:
-          config: docker-compose-phpcs.yml
-          propagate-environment: true
-          skip-pull: true
-          run: phpcs
-  - wait
-
-  - env:
-    label: 'PHPStan Report'
-    soft_fail: true
-    artifact_paths:
-      - "/tmp/artifacts/${BUILDKITE_BUILD_ID}/phpstan-report.txt"
-    plugins:
-      - docker-compose#v4.14.0:
-          config: docker-compose-phpstan.yml
-          propagate-environment: true
-          skip-pull: true
-          run: phpstan
-  - wait
-
   - env:
       TEST_INPLACE: "0"
       TEST_PHP_VERSION: "7.4"
@@ -62,7 +31,7 @@ steps:
       WP_MULTISITE: "0"
       COMPOSE_HTTP_TIMEOUT: 180
       DOCKER_CLIENT_TIMEOUT: 180
-    label: 'PHP: 7.4 | WP: 5.8.6 | Multisite: 0 + Coverage'
+    label: 'PHP: 7.4 | WP: 5.8.6 | Multisite: 0'
     plugins:
       - docker-compose#v4.14.0:
           config: docker-compose-phpunit.yml
@@ -70,9 +39,6 @@ steps:
           propagate-uid-gid: true
           skip-pull: true
           run: wordpress
-          env:
-            - CODECOV_TOKEN
-            - COVERAGE=1
 
   - env:
       TEST_INPLACE: "0"
