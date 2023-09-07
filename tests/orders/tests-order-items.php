@@ -848,4 +848,20 @@ class Order_Item_Tests extends EDD_UnitTestCase {
 	public function test_order_item_deliverable_statuses_includes_partially_refunded() {
 		$this->assertTrue( in_array( 'partially_refunded', edd_get_deliverable_order_item_statuses(), true ) );
 	}
+
+	/**
+	 * @covers ::is_deliverable
+	 */
+	public function test_order_item_marked_on_hold_is_deliverable_returns_false() {
+		edd_update_order_item(
+			self::$order_items[3],
+			array(
+				'status' => 'on_hold',
+			)
+		);
+
+		$order_item = edd_get_order_item( self::$order_items[3] );
+
+		$this->assertFalse( $order_item->is_deliverable() );
+	}
 }

@@ -19,8 +19,6 @@
 			case 'verify':
 				ajaxAction = 'edd_verify_pass';
 				$btn.text( EDDPassManager.verifying );
-				$( 'body' ).addClass( 'edd-pass-handler__verifying' );
-				$( '.edd-pass-handler__control' ).after( '<div class="edd-pass-handler__verifying-wrap"><p class="edd-pass-handler__loading">' + EDDPassManager.verify_loader + '</p></div>' );
 				break;
 
 			case 'activate':
@@ -40,6 +38,11 @@
 		$( '.edd-pass-handler__control + .notice' ).remove();
 		$( '.edd-pass-handler__control + p' ).remove();
 		$btn.removeClass( 'button-primary' ).attr( 'disabled', true ).addClass( 'updating-message' );
+
+		if ( 'verify' === action ) {
+			$( 'body' ).addClass( 'edd-pass-handler__verifying' );
+			$( '.edd-pass-handler__control' ).after( '<div class="edd-pass-handler__verifying-wrap"><p class="edd-pass-handler__loading">' + EDDPassManager.verify_loader + '</p></div>' );
+		}
 
 		var data = {
 			action: ajaxAction,
@@ -67,12 +70,16 @@
 							return;
 						}
 						if ( 'activate' === action ) {
-							$( '.edd-pass-handler__description' ).slideUp();
+							$( '#edd-admin-notice-inactivepro, .edd-pass-handler__description' ).slideUp();
 						}
 					}
 				} else {
 					$btn.text( text );
 					$( '.edd-pass-handler__control' ).after( '<div class="notice inline-notice notice-warning edd-pass-handler__notice">' + res.data.message + '</div>' );
+					if ( 'verify' === action ) {
+						$( 'body' ).removeClass( 'edd-pass-handler__verifying' );
+						$( '.edd-pass-handler__verifying-wrap' ).remove();
+					}
 				}
 				$btn.attr( 'disabled', false ).removeClass( 'updating-message' );
 			} );

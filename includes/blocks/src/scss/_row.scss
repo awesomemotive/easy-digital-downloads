@@ -1,0 +1,23 @@
+@import "~@wordpress/base-styles/breakpoints";
+
+.edd-blocks__row {
+	display: grid;
+	align-items: center;
+	gap: 1rem;
+
+	&-label {
+		font-weight: bold;
+	}
+
+	@media (min-width: $break-mobile) {
+		grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
+
+		> div:last-of-type:not(:first-of-type) {
+			text-align: right;
+		}
+
+		> div:only-child {
+			grid-column: 1 / span 2;
+		}
+	}
+}

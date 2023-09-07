@@ -296,9 +296,6 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	}
 
 	public function test_login_uri_with_block_returns_uri() {
-		if ( version_compare( get_bloginfo( 'version' ), '5.8', '<' ) ) {
-			$this->markTestSkipped( 'This only runs if blocks are loaded.' );
-		}
 		$login_page_id = wp_insert_post(
 			array(
 				'post_title'   => 'Login Page',

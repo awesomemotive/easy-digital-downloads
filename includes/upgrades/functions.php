@@ -121,6 +121,7 @@ function edd_get_all_upgrades() {
 		'upgrade_user_api_keys',
 		'remove_refunded_sale_logs',
 		'update_file_download_log_data',
+		'migrate_order_actions_date', // Added in 3.2, migrates the order actions run date to the order table.
 	);
 	$edd_30_upgrades  = edd_get_v30_upgrades();
 
@@ -197,5 +198,25 @@ function edd_do_automatic_upgrades() {
 			update_option( 'edd_onboarding_completed', true, false );
 		}
 	}
+
+	/**
+	 * If PayPal is connected, silently sync the webhooks to ensure the dispute hook is registered.
+	 *
+	 * @since 3.2.0
+	 */
+	if ( EDD\Gateways\PayPal\has_rest_api_connection() && EDD\Gateways\PayPal\Webhooks\get_webhook_id() ) {
+		EDD\Gateways\PayPal\Webhooks\sync_webhook();
+	}
+
+	/**
+	 * If Stripe is active and EDD Pro or EDD Stripe is active, set a transient to check the license.
+	 *
+	 * @since 3.2.0
+	 */
+	if ( edd_is_gateway_active( 'stripe' ) && ( edd_is_pro() || edds_is_pro() ) ) {
+		set_transient( 'edd_stripe_check_license', true, 30 );
+		set_transient( 'edd_stripe_new_install', time(), HOUR_IN_SECONDS * 72 );
+	}
+
 	edd_update_db_version();
 }

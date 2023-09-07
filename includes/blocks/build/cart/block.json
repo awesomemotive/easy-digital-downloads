@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "edd/cart",
+  "version": "2.0.0",
+  "title": "EDD Cart",
+  "category": "easy-digital-downloads",
+  "icon": "cart",
+  "description": "Display a mini or full shopping cart outside of checkout for Easy Digital Downloads.",
+  "keywords": [
+    "easy digital downloads",
+    "edd",
+    "cart"
+  ],
+  "supports": {
+    "html": false
+  },
+  "textdomain": "easy-digital-downloads",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "hide_on_checkout": {
+      "type": "boolean",
+      "default": true
+    },
+    "mini": {
+      "type": "boolean",
+      "default": true
+    },
+    "link": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_quantity": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_total": {
+      "type": "boolean",
+      "default": true
+    },
+    "hide_empty": {
+      "type": "boolean",
+      "default": false
+    },
+    "title": {
+      "type": "string"
+    }
+  },
+  "example": {
+    "attributes": {}
+  }
+}

@@ -1,0 +1,23 @@
+@import '../scss/cart';
+
+.edd-blocks__cart-mini,
+.edd-blocks__cart-mini a {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.25rem;
+	color: unset;
+	text-decoration: none;
+
+	svg {
+		width: 1.5rem;
+		height: 1.5rem;
+		fill: none;
+	}
+}
+
+.wp-block-edd-cart {
+	.edd-blocks-cart__row-footer {
+		padding: .5rem 1.5rem;
+	}
+}

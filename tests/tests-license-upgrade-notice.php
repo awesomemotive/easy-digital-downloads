@@ -12,8 +12,9 @@ namespace EDD\Tests;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Admin\Promos\Notices\License_Upgrade_Notice;
 use EDD\Admin\Promos\Notices\Notice;
+use EDD\Tests\Helpers\Licenses as LicenseData;
 
-class Tests_License_Upgrade_Notice extends EDD_UnitTestCase {
+class LicenseUpgradeNotice extends EDD_UnitTestCase {
 
 	/**
 	 * Runs once before any tests are executed.
@@ -253,5 +254,42 @@ class Tests_License_Upgrade_Notice extends EDD_UnitTestCase {
 		$notice = new \EDD\Pro\Admin\Promos\Notices\InactivePro();
 		$this->assertTrue( $notice->should_display() );
 		$this->assertNoticeContains( 'You are using Easy Digital Downloads (Pro) without an active license key.', $notice );
+	}
+
+	public function test_inactive_pro_expired_license_sees_notice() {
+		// skip this test if the inactive pro class doesn't exist
+		if ( ! class_exists( '\\EDD\\Pro\\Admin\\Promos\\Notices\\InactivePro' ) ) {
+			$this->markTestSkipped( 'Inactive Pro class does not exist.' );
+		}
+		add_filter( 'edd_is_pro', '__return_true' );
+
+		LicenseData::get_pro_license(
+			array(
+				'license' => 'expired',
+				'expires' => strtotime( '-1 day' ),
+			)
+		);
+		$notice = new \EDD\Pro\Admin\Promos\Notices\InactivePro();
+		$this->assertTrue( $notice->should_display() );
+		$this->assertNoticeContains( 'Your license for Easy Digital Downloads (Pro) has expired.', $notice );
+	}
+
+	public function test_inactive_pro_expired_license_with_subscription_id_sees_notice() {
+		// skip this test if the inactive pro class doesn't exist
+		if ( ! class_exists( '\\EDD\\Pro\\Admin\\Promos\\Notices\\InactivePro' ) ) {
+			$this->markTestSkipped( 'Inactive Pro class does not exist.' );
+		}
+		add_filter( 'edd_is_pro', '__return_true' );
+
+		LicenseData::get_pro_license(
+			array(
+				'license'         => 'expired',
+				'expires'         => strtotime( '-1 day' ),
+				'subscription_id' => 1234,
+			)
+		);
+		$notice = new \EDD\Pro\Admin\Promos\Notices\InactivePro();
+		$this->assertTrue( $notice->should_display() );
+		$this->assertNoticeContains( 'The last attempt to renew your subscription for Easy Digital Downloads (Pro) failed.', $notice );
 	}
 }

@@ -844,10 +844,10 @@ function edd_tools_import_export_display() {
 						printf(
 							wp_kses_post(
 								/* translators: %1$s and %2$s opening and closing anchor tags respectively */
-								__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing Download products.', 'easy-digital-downloads' ),
-								'<a href="https://easydigitaldownloads.com/docs/importing-exporting-products/" target="_blank">',
-								'</a>'
-							)
+								__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing Download products.', 'easy-digital-downloads' )
+							),
+							'<a href="https://easydigitaldownloads.com/docs/importing-exporting-products/" target="_blank">',
+							'</a>'
 						);
 						?>
 					</p>
@@ -1220,6 +1220,10 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  * @since       2.8.7
  */
 function edd_tools_debug_log_display() {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	$edd_logs = EDD()->debug_log;
 
 	// Setup fallback incase no file exists

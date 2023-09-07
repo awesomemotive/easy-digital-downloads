@@ -170,10 +170,6 @@ function edd_process_download() {
 
 		edd_set_time_limit( false );
 
-		if ( version_compare( phpversion(), '5.4', '<' ) && function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
-			set_magic_quotes_runtime( 0 );
-		}
-
 		// If we're using an attachment ID to get the file, even by path, we can ignore this check.
 		if ( false === $from_attachment_id ) {
 			$file_is_in_allowed_location = edd_local_file_location_is_allowed( $file_details, $schemes, $requested_file );

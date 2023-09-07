@@ -173,12 +173,18 @@ class Tests_Customers extends EDD_UnitTestCase {
 		$this->assertCount( 1, self::$customers[0]->get_notes( 1, 2 ) );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_payment_ids_of_customer_should_return_1() {
 		self::$customers[0]->attach_payment( self::$order );
 
 		$this->assertCount( 1, self::$customers[0]->get_payment_ids() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_payment_ids_of_customer_with_no_payments_should_return_0() {
 		$this->assertCount( 0, parent::edd()->customer->create_and_get()->get_payment_ids() );
 	}
@@ -380,19 +386,36 @@ class Tests_Customers extends EDD_UnitTestCase {
 		$this->assertSame( '120.00', $purchase_total );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_payment_ids_with_invalid_customer_should_be_empty() {
 		$customer_id  = edd_add_customer( array(
 			'email' => 'test_user@example.com'
 		) );
 		$customer = new \EDD_Customer( $customer_id );
-
 		$this->assertEmpty( $customer->get_payment_ids() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payments
+	 */
 	public function test_get_payments_with_invalid_customer_should_be_empty() {
 		$customer = new \EDD_Customer( 'test_user@example.com' );
 
 		$this->assertEmpty( $customer->get_payments() );
+	}
+
+	public function test_get_orders_with_invalid_customer_should_be_empty() {
+		$customer = new \EDD_Customer( 'test_user@example.com' );
+
+		$this->assertEmpty( $customer->get_orders() );
+	}
+
+	public function test_get_orders_valid() {
+		$customer = self::$customers[0];
+
+		$this->assertNotEmpty( $customer->get_orders() );
 	}
 
 	public function test_get_users_purchased_products_should_return_2() {
@@ -406,14 +429,23 @@ class Tests_Customers extends EDD_UnitTestCase {
 		$this->assertSame( '120.00', $stats['total_spent'] );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_customer_payment_ids_should_return_1() {
 		$this->assertCount( 1, self::$customers[0]->get_payment_ids() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payments
+	 */
 	public function test_get_customer_payments_should_return_1() {
 		$this->assertCount( 1, self::$customers[0]->get_payments() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payments
+	 */
 	public function test_get_customer_pending_payments_should_be_empty() {
 		$this->assertEmpty( self::$customers[0]->get_payments( 'pending' ) );
 	}

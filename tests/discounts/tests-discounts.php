@@ -12,7 +12,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  *
  * @coversDefaultClass \EDD_Discount
  */
-class Tests_Discounts extends EDD_UnitTestCase {
+class Discounts extends EDD_UnitTestCase {
 
 	/**
 	 * Download test fixture.
@@ -165,34 +165,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::get_uses()
-	 */
-	public function test_get_discount_uses_by_property() {
-		$this->assertEquals( 54, self::$discount->uses );
-	}
-
-	/**
-	 * @covers ::get_uses()
-	 */
-	public function test_get_discount_uses_by_method() {
-		$this->assertEquals( 54, self::$discount->get_uses() );
-	}
-
-	/**
-	 * @covers ::get_max_uses()
-	 */
-	public function test_get_discount_max_uses_by_property() {
-		$this->assertEquals( 10, self::$discount->max_uses );
-	}
-
-	/**
-	 * @covers ::get_max_uses()
-	 */
-	public function test_get_discount_max_uses_by_method() {
-		$this->assertEquals( 10, self::$discount->get_max_uses() );
-	}
-
-	/**
 	 * @covers ::get_min_price()
 	 */
 	public function test_get_discount_min_price_by_property() {
@@ -291,6 +263,22 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertSame( array(), self::$discount->excluded_products );
 	}
 
+	public function test_get_discount_categories_by_method() {
+		$this->assertSame( array(), self::$discount->get_categories() );
+	}
+
+	public function test_get_discount_categories_by_property() {
+		$this->assertSame( array(), self::$discount->categories );
+	}
+
+	public function test_get_discount_term_condition_by_method() {
+		$this->assertSame( '', self::$discount->get_term_condition() );
+	}
+
+	public function test_get_discount_term_condition_by_property() {
+		$this->assertSame( '', self::$discount->term_condition );
+	}
+
 	/**
 	 * @covers ::save()
 	 * @covers ::add()
@@ -378,6 +366,16 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::update_status()
+	 * @covers ::get_status()
+	 */
+	public function test_discount_update_status_to_archived() {
+		self::$discount->update_status( 'archived' );
+
+		$this->assertEquals( 'archived', self::$discount->status );
+	}
+
+	/**
 	 * @covers ::is_product_requirements_met()
 	 */
 	public function test_discount_is_product_requirements_met() {
@@ -389,7 +387,75 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		edd_add_to_cart( self::$download->ID );
 
-		$this->assertTrue( self::$discount->is_product_requirements_met() );
+		$discount = edd_get_discount( self::$discount_id );
+
+		$this->assertTrue( $discount->is_product_requirements_met() );
+	}
+
+	/**
+	 * @covers ::is_product_requirements_met() with variable download
+	 * @covers edd_validate_discount() with variable download
+	 */
+	public function test_discount_is_product_requirements_met_with_variable_download() {
+		$variable_download_id = Helpers\EDD_Helper_Download::create_variable_download();
+		$variable_download    = edd_get_download( $variable_download_id->ID );
+		$price_id             = 0;
+
+		$args = array(
+			'product_reqs' => array( $variable_download->ID . '_' . $price_id ),
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => $price_id ) );
+
+		$discount = edd_get_discount( self::$discount_id );
+
+		$this->assertTrue( $discount->is_product_requirements_met() );
+		$this->assertTrue( edd_validate_discount( self::$discount_id, array( $variable_download->ID . '_' . $price_id ) ) );
+	}
+
+	public function test_discount_is_product_requirements_met_with_variable_download_all_variations() {
+		$variable_download_id = Helpers\EDD_Helper_Download::create_variable_download();
+		$variable_download    = edd_get_download( $variable_download_id->ID );
+		$price_id             = 0;
+
+		$args = array(
+			'product_reqs' => array( $variable_download->ID ),
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => $price_id ) );
+
+		$discount = edd_get_discount( self::$discount_id );
+
+		$this->assertTrue( $discount->is_product_requirements_met() );
+		$this->assertTrue( edd_validate_discount( self::$discount_id, array( $variable_download->ID . '_' . $price_id ) ) );
+	}
+
+
+	/**
+	 * @covers ::is_product_requirements_met() with variable download
+	 * @covers edd_validate_discount() with variable download
+	 */
+	public function test_discount_is_product_requirements_met_with_variable_download_is_false() {
+		$variable_download_id = Helpers\EDD_Helper_Download::create_variable_download();
+		$variable_download    = edd_get_download( $variable_download_id->ID );
+		$price_id             = 0;
+
+		$args = array(
+			'product_reqs' => array( $variable_download->ID . '_' . $price_id ),
+		);
+
+		edd_update_discount( self::$discount_id, $args );
+
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => 1 ) );
+
+		$discount = edd_get_discount( self::$discount_id );
+
+		$this->assertFalse( $discount->is_product_requirements_met() );
+		$this->assertFalse( edd_validate_discount( self::$discount_id, array( $variable_download->ID . '_1' ) ) );
 	}
 
 	/**
@@ -619,15 +685,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \edd_has_active_discounts()
-	 */
-	public function test_discounts_exists() {
-		edd_update_discount_status( self::$discount_id, 'active' );
-
-		$this->assertTrue( edd_has_active_discounts() );
-	}
-
-	/**
 	 * @covers \edd_update_discount_status()
 	 * @covers \edd_is_discount_active()
 	 * @covers \edd_store_discount()
@@ -704,20 +761,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \edd_get_discount_max_uses()
-	 */
-	public function test_discount_max_uses() {
-		$this->assertSame( 10, edd_get_discount_max_uses( self::$discount_id ) );
-	}
-
-	/**
-	 * @covers \edd_get_discount_uses()
-	 */
-	public function test_discount_uses() {
-		$this->assertSame( 54, edd_get_discount_uses( self::$discount_id ) );
-	}
-
-	/**
 	 * @covers \edd_get_discount_min_price()
 	 */
 	public function test_discount_min_price() {
@@ -780,13 +823,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \edd_is_discount_maxed_out()
-	 */
-	public function test_discount_is_maxed_out() {
-		$this->assertTrue( edd_is_discount_maxed_out( self::$discount_id ) );
-	}
-
-	/**
 	 * @covers \edd_discount_is_min_met()
 	 */
 	public function test_discount_is_min_met() {
@@ -805,6 +841,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 * @covers ::setup_discount()
 	 * @covers ::get_is_single_use()
 	 * @covers ::is_used()
+	 *
+	 * @expectedDeprecated edd_trigger_purchase_receipt
 	 */
 	public function test_is_used_case_insensitive() {
 		$payment_id         = Helpers\EDD_Helper_Payment::create_simple_payment();
@@ -914,22 +952,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \edd_get_discount_id_by_code()
-	 * @covers \edd_get_discount_uses()
-	 * @covers \edd_decrease_discount_usage()
-	 */
-	public function test_decrease_discount_usage() {
-		$id   = edd_get_discount_id_by_code( '20OFF' );
-		$uses = edd_get_discount_uses( $id );
-
-		$decreased = edd_decrease_discount_usage( '20OFF' );
-		$this->assertSame( $decreased, (int) $uses - 1 );
-
-		// Test missing codes
-		$this->assertFalse( edd_decrease_discount_usage( 'INVALIDDISCOUNTCODE' ) );
-	}
-
-	/**
 	 * @covers _edd_discount_post_meta_bc_filter()
 	 * @covers \edd_format_discount_rate()
 	 */
@@ -985,20 +1007,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	 */
 	public function test_discount_product_reqs() {
 		$this->assertIsArray( edd_get_discount_product_reqs( self::$discount_id ) );
-	}
-
-	/**
-	 * @covers \edd_delete_discount()
-	 * @covers \edd_get_discount()
-	 */
-	public function test_deletion_of_discount_should_be_false_because_use_count_greater_than_1() {
-		edd_delete_discount( self::$discount_id );
-
-		$this->assertInstanceOf( 'EDD_Discount', edd_get_discount( self::$discount_id ) );
-
-		edd_delete_discount( self::$negativediscount_id );
-
-		$this->assertInstanceOf( 'EDD_Discount', edd_get_discount( self::$negativediscount_id ) );
 	}
 
 	/**
@@ -1145,13 +1153,55 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertTrue( 3 === count( $found_discounts ) );
 	}
 
-	/**
-	 * @covers _edd_discounts_bc_wp_count_posts()
-	 */
-	public function test_edd_discounts_bc_wp_count_posts() {
-		$counts = wp_count_posts( 'edd_discount' );
+	public function test_edd_validate_discount_product_requirements_all_all_variations_in_array() {
+		$variable_download_id = Helpers\EDD_Helper_Download::create_variable_download();
+		$variable_download    = edd_get_download( $variable_download_id->ID );
+		$products = array( self::$download->ID, $variable_download->ID );
+		$args     = array(
+			'product_reqs'      => array( self::$download->ID ),
+			'product_condition' => 'all',
+			'max_uses'          => 10000,
+		);
+		edd_update_discount( self::$discount_id, $args );
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => array( 0, 1 ) ) );
 
-		$this->assertEquals( 3, (int) $counts->active );
-		$this->assertEquals( 0, (int) $counts->inactive );
+		$discount = edd_get_discount( self::$discount_id );
+		$this->assertFalse( $discount->is_product_requirements_met( false ) );
+	}
+
+	/**
+	 * Tests a discount for a single price product when a false price ID is added to the cart.
+	 */
+	public function test_discount_product_requirements_false_price_id() {
+		$args     = array(
+			'product_reqs'      => array( self::$download->ID ),
+			'product_condition' => 'all',
+			'max_uses'          => 10000,
+			'scope'             => 'not_global',
+		);
+		edd_update_discount( self::$discount_id, $args );
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => false ) );
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = reset( $cart_contents );
+		$discount      = edd_get_discount( self::$discount_id );
+		$this->assertTrue( $discount->is_product_requirements_met( false ) );
+		$this->assertEquals( 4.0, edd_get_item_discount_amount( $first_item, $cart_contents, array( $discount ) ) );
+	}
+
+	/**
+	 * Tests a discount for a single price product when an empty string price ID is added to the cart.
+	 */
+	public function test_discount_product_requirements_empty_string_price_id() {
+		$args     = array(
+			'product_reqs'      => array( self::$download->ID ),
+			'product_condition' => 'all',
+			'max_uses'          => 10000,
+		);
+		edd_update_discount( self::$discount_id, $args );
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => '' ) );
+
+		$discount = edd_get_discount( self::$discount_id );
+		$this->assertTrue( $discount->is_product_requirements_met( false ) );
 	}
 }

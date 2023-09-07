@@ -35,7 +35,10 @@ function edd_get_success_page_uri( $query_string = null ) {
  * @return bool True if on the Success page, false otherwise.
  */
 function edd_is_success_page() {
-	$is_success_page = edd_get_option( 'success_page', false );
+	$is_success_page = edd_get_option( 'confirmation_page', false );
+	if ( empty( $is_success_page ) ) {
+		$is_success_page = edd_get_option( 'success_page', false );
+	}
 	$is_success_page = isset( $is_success_page ) ? is_page( $is_success_page ) : false;
 
 	return (bool) apply_filters( 'edd_is_success_page', $is_success_page );

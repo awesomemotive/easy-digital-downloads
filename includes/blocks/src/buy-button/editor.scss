@@ -1,0 +1,14 @@
+@import "../scss/edit";
+@import "../scss/new-download";
+
+.editor-styles-wrapper .wp-block.wp-block-edd-buy-button {
+	.components-placeholder {
+		background-color: #fefefe;
+		border-radius: 2px;
+		align-items: center;
+
+		&__fieldset {
+			justify-content: center;
+		}
+	}
+}

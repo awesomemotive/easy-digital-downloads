@@ -1,0 +1,52 @@
+@import "~@wordpress/base-styles/breakpoints";
+
+.edd-blocks-form {
+	border: 1px solid var(--edd-blocks-light-grey);
+	padding: 2rem;
+	display: grid;
+	gap: 1.25rem;
+
+	.widget & {
+		border: none;
+		padding: 0;
+	}
+
+	legend,
+	.edd-blocks-form__group {
+		display: block;
+		margin: 0;
+	}
+
+	.edd-blocks-form__group > label {
+		display: block;
+		margin-bottom: .5rem !important;
+	}
+
+	select,
+	input[type="text"],
+	input[type="email"],
+	input[type="password"] {
+		box-sizing: border-box;
+		display: block;
+		padding: 4px 6px;
+		width: 100%;
+	}
+
+	.edd-blocks-form__halves {
+		display: flex !important;
+		justify-content: space-between;
+		gap: 1rem;
+
+		@media (min-width: $break-small) {
+			> * {
+				flex-basis: 50%;
+			}
+		}
+	}
+}
+
+p + .edd-blocks-form {
+	margin-top: 2rem;
+}
+
+@import "./buttons";

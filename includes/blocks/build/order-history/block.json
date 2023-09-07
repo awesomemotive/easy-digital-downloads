@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "edd/order-history",
+  "version": "2.0.0",
+  "title": "EDD Order History",
+  "category": "easy-digital-downloads",
+  "icon": "editor-table",
+  "description": "Display the Easy Digital Downloads order history of a logged in user.",
+  "keywords": [
+    "easy digital downloads",
+    "edd",
+    "orders"
+  ],
+  "supports": {
+    "html": false
+  },
+  "textdomain": "easy-digital-downloads",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "columns": {
+      "type": "number",
+      "default": 2
+    },
+    "number": {
+      "type": "number",
+      "default": 20
+    },
+    "recurring": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "columns": 1,
+      "number": 2
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "edd/login",
+	"version": "2.0.0",
+	"title": "EDD Login Form",
+	"category": "easy-digital-downloads",
+	"icon": "unlock",
+	"description": "Login form for Easy Digital Downloads.",
+	"keywords": [ "easy digital downloads", "edd", "login" ],
+	"supports": {
+		"html": false
+	},
+	"textdomain": "easy-digital-downloads",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"attributes": {
+		"current": {
+			"type": "boolean",
+			"default": false
+		},
+		"redirect": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"example": {
+		"attributes": {}
+	}
+}

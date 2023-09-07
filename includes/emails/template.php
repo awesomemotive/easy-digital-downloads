@@ -45,11 +45,18 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
 /**
  * Email Preview Template Tags
  *
+ * @todo Currently this has a hardcoded set of tags for replacement, and doesn't include
+ * all tags registered, when we udpate the tag registration we should update to allow adding a 'sample' data
+ * for each tag.
+ *
  * @since 1.0
+ * @since 3.2.0 - Added $wpautop parameter.
  * @param string $message Email message with template tags
+ * @param bool $disable_wpautop If we should fully disable wpautop for this content.
+ *
  * @return string $message Fully formatted message
  */
-function edd_email_preview_template_tags( $message ) {
+function edd_email_preview_template_tags( $message, $disable_wpautop = false ) {
 	$download_list = '<ul>';
 	$download_list .= '<li>' . __( 'Sample Product Title', 'easy-digital-downloads' ) . '<br />';
 	$download_list .= '<div>';
@@ -72,7 +79,9 @@ function edd_email_preview_template_tags( $message ) {
 
 	$sub_total = edd_currency_filter( edd_format_amount( 9.50 ) );
 
-	$payment_id = rand(1, 100);
+	$order_numbers = new EDD\Orders\Number();
+	$order_id      = rand(1, 100);
+	$order_number  = $order_numbers->format( $order_id );
 
 	$user = wp_get_current_user();
 
@@ -89,13 +98,15 @@ function edd_email_preview_template_tags( $message ) {
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
-	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( $payment_id ), $message );
-	$message = str_replace( '{receipt}', edd_email_tag_receipt( $payment_id ), $message );
+	$message = str_replace( '{payment_id}', $order_number, $message );
+	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( $order_id ), $message );
+	$message = str_replace( '{receipt}', edd_email_tag_receipt( $order_id ), $message );
 
 	$message = apply_filters( 'edd_email_preview_template_tags', $message );
 
-	return apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $message ) : $message;
+	$wpautop = $disable_wpautop ? false : apply_filters( 'edd_email_preview_template_wpautop', true );;
+
+	return $wpautop ? wpautop( $message ) : $message;
 }
 
 /**
@@ -112,117 +123,50 @@ function edd_email_template_preview() {
 	ob_start();
 	?>
 	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank"><?php _e( 'Preview Purchase Receipt', 'easy-digital-downloads' ); ?></a>
-	<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ) ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
+	<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email', 'email' => 'order_receipt' ) ), 'edd-test-email' ) ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
 	<?php
 	echo ob_get_clean();
 }
 add_action( 'edd_purchase_receipt_email_settings', 'edd_email_template_preview' );
 
 /**
- * Displays the email preview
- *
- * @since 2.1
- * @return void
- */
-function edd_display_email_template_preview() {
-
-	if( empty( $_GET['edd_action'] ) ) {
-		return;
-	}
-
-	if( 'preview_email' !== $_GET['edd_action'] ) {
-		return;
-	}
-
-	if( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-
-	EDD()->emails->heading = edd_email_preview_template_tags( edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) ) );
-
-	echo EDD()->emails->build_email( edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ) ) );
-
-	exit;
-
-}
-add_action( 'template_redirect', 'edd_display_email_template_preview' );
-
-/**
  * Email Template Body
  *
  * @since 1.0.8.2
+ *
+ * @deprecated 3.2.0
+ *
  * @param int $payment_id Payment ID
  * @param array $payment_data Payment Data
  * @return string $email_body Body of the email
  */
 function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
-	$default_email_body = __( "Dear", "easy-digital-downloads" ) . " {name},\n\n";
-	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "easy-digital-downloads" ) . "\n\n";
-	$default_email_body .= "{download_list}\n\n";
-	$default_email_body .= "{sitename}";
+	_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
 
-	$email = edd_get_option( 'purchase_receipt', false );
-	$email = $email ? stripslashes( $email ) : $default_email_body;
+	$order         = edd_get_order( $payment_id );
+	$order_receipt = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
 
-	$email_body = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $email ) : $email;
-
-	$email_body = apply_filters( 'edd_purchase_receipt_' . EDD()->emails->get_template(), $email_body, $payment_id, $payment_data );
-
-	return apply_filters( 'edd_purchase_receipt', $email_body, $payment_id, $payment_data );
+	return $order_receipt->get_raw_body_content();
 }
 
 /**
  * Sale Notification Template Body
  *
  * @since 1.7
- * @author Daniel J Griffiths
+ *
+ * @deprecated 3.2.0
+ *
  * @param int $payment_id Payment ID
  * @param array $payment_data Payment Data
  * @return string $email_body Body of the email
  */
 function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
-	$payment = edd_get_payment( $payment_id );
-	$order   = edd_get_order( $payment_id );
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\AdminOrderNotice' );
 
-	$name = $payment->email;
-	if ( $payment->user_id > 0 ) {
-		$user_data = get_userdata( $payment->user_id );
-		if ( ! empty( $user_data->display_name ) ) {
-			$name = $user_data->display_name;
-		}
-	} elseif ( ! empty( $payment->first_name ) && ! empty( $payment->last_name ) ) {
-		$name = $payment->first_name . ' ' . $payment->last_name;
-	}
+	$order              = edd_get_order( $payment_id );
+	$admin_order_notice = EDD\Emails\Registry::get( 'admin_order_notice', array( $order ) );
 
-	$download_list = '';
-
-	$order_items = $order->get_items();
-	if( ! empty( $order_items ) ) {
-		foreach( $order_items as $item ) {
-			$download_list .= html_entity_decode( $item->product_name, ENT_COMPAT, 'UTF-8' ) . "\n";
-		}
-	}
-
-	$gateway = edd_get_gateway_checkout_label( $payment->gateway );
-
-	$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
-	$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";
-	$default_email_body .= $download_list . "\n\n";
-	$default_email_body .= __( 'Purchased by: ', 'easy-digital-downloads' ) . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
-	$default_email_body .= __( 'Amount: ', 'easy-digital-downloads' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( $payment->total ) ), ENT_COMPAT, 'UTF-8' ) . "\n";
-	$default_email_body .= __( 'Payment Method: ', 'easy-digital-downloads' ) . " " . $gateway . "\n\n";
-	$default_email_body .= __( 'Thank you', 'easy-digital-downloads' );
-
-	$message = edd_get_option( 'sale_notification', false );
-	$message   = $message ? stripslashes( $message ) : $default_email_body;
-
-	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
-	$email_body = edd_do_email_tags( $message, $payment_id );
-
-	$email_body = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $email_body ) : $email_body;
-
-	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
+	return $admin_order_notice->get_raw_body_content();
 }
 
 /**

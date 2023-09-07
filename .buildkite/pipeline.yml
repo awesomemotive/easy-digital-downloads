@@ -1,40 +1,78 @@
 steps:
 
-  - label: "Pull PHP 7.1"
-    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.1"
-    retry:
-      automatic: true
-
-  - label: "Pull PHP 7.2"
-    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.2"
-    retry:
-      automatic: true
-
-  - wait
-
-  - label: "Pull PHP 7.3"
-    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.3"
-    retry:
-      automatic: true
-
   - label: "Pull PHP 7.4"
-    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.4"
+    command: "docker pull -q public.ecr.aws/q7y6e9n2/unit-test-images/php:7.4"
     retry:
       automatic: true
-
-  - wait
 
   - label: "Pull PHP 8.0"
-    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:8.0"
+    command: "docker pull -q public.ecr.aws/q7y6e9n2/unit-test-images/php:8.0"
+    retry:
+      automatic: true
+
+  - wait
+
+  - label: "Pull PHP 8.1"
+    command: "docker pull -q public.ecr.aws/q7y6e9n2/unit-test-images/php:8.1"
     retry:
       automatic: true
 
   - label: "Pull MariaDB"
-    command: "docker pull mariadb:10.4"
+    command: "docker pull -q mariadb:10.4"
     retry:
       automatic: true
 
   - wait
+
+  - label: "Creating build's artifact directory"
+    command: "mkdir -p /tmp/artifacts/${BUILDKITE_BUILD_ID} && chmod 775 /tmp/artifacts/${BUILDKITE_BUILD_ID}"
+
+  - wait
+
+  - env:
+    label: 'PHPCS Report'
+    soft_fail: true
+    artifact_paths:
+      - "/tmp/artifacts/${BUILDKITE_BUILD_ID}/phpcs-report.txt"
+    plugins:
+      - docker-compose#v4.14.0:
+          config: docker-compose-phpcs.yml
+          propagate-environment: true
+          skip-pull: true
+          run: phpcs
+  - wait
+
+  - env:
+    label: 'PHPStan Report'
+    soft_fail: true
+    artifact_paths:
+      - "/tmp/artifacts/${BUILDKITE_BUILD_ID}/phpstan-report.txt"
+    plugins:
+      - docker-compose#v4.14.0:
+          config: docker-compose-phpstan.yml
+          propagate-environment: true
+          skip-pull: true
+          run: phpstan
+  - wait
+
+  - env:
+      TEST_INPLACE: "0"
+      TEST_PHP_VERSION: "7.4"
+      TEST_WP_VERSION: "5.8.6"
+      WP_MULTISITE: "0"
+      COMPOSE_HTTP_TIMEOUT: 180
+      DOCKER_CLIENT_TIMEOUT: 180
+    label: 'PHP: 7.4 | WP: 5.8.6 | Multisite: 0 + Coverage'
+    plugins:
+      - docker-compose#v4.14.0:
+          config: docker-compose-phpunit.yml
+          propagate-environment: true
+          propagate-uid-gid: true
+          skip-pull: true
+          run: wordpress
+          env:
+            - CODECOV_TOKEN
+            - COVERAGE=1
 
   - env:
       TEST_INPLACE: "0"
@@ -49,48 +87,29 @@ steps:
           config: docker-compose-phpunit.yml
           propagate-environment: true
           propagate-uid-gid: true
-          pull-retries: 3
+          skip-pull: true
           run: wordpress
     matrix:
       setup: # Max of 6 Dimensions.
         php: # Max of 20 elements.
           - "8.0"
-          - "7.4"
+          - "8.1"
         wp:
-          - "6.1.1"
+          - "6.1.2"
+          - "6.2.2"
           - "latest"
         multisite:
           - "0"
       adjustments: # Max of 12 adjustments.
         - with:
-            php: "8.0"
+            php: "8.1"
             wp: "latest"
             multisite: "1"
         - with:
-            php: "7.1"
-            wp: "5.4.12"
-            multisite: "0"
-        - with:
-            php: "7.1"
-            wp: "5.5.11"
-            multisite: "0"
-        - with:
-            php: "7.1"
-            wp: "5.6.10"
-            multisite: "0"
-        - with:
-            php: "7.1"
-            wp: "5.7.8"
-            multisite: "0"
-        - with:
-            php: "7.1"
-            wp: "5.8.6"
-            multisite: "0"
-        - with:
-            php: "7.2"
+            php: "8.0"
             wp: "5.9.5"
             multisite: "0"
         - with:
-            php: "7.3"
+            php: "8.1"
             wp: "6.0.3"
             multisite: "0"

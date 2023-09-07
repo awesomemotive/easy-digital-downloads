@@ -43,7 +43,11 @@ defined( 'ABSPATH' ) || exit;
 						<label for="edd-code"><?php esc_html_e( 'Code', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" required="required" id="edd-code" name="code" class="code" value="" pattern="[a-zA-Z0-9-_]+" placeholder="<?php esc_html_e( '10PERCENT', 'easy-digital-downloads' ); ?>" />
+						<div class="edd-code-wrapper">
+							<input type="text" required="required" id="edd-code" name="code" class="code" value="" pattern="[a-zA-Z0-9\-_]+" maxlength="50" placeholder="<?php esc_html_e( '10PERCENT', 'easy-digital-downloads' ); ?>" />
+							<?php do_action( 'edd_add_discount_form_after_code_field' ); ?>
+						</div>
+						<?php do_action( 'edd_add_discount_form_after_code_field_wrapper' ); ?>
 						<p class="description"><?php esc_html_e( 'The code customers will enter to apply this discount. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
@@ -83,6 +87,7 @@ defined( 'ABSPATH' ) || exit;
 							'multiple'    => true,
 							'chosen'      => true,
 							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
+							'variations'  => true,
 						) ); // WPCS: XSS ok. ?>
 						<div id="edd-discount-product-conditions" style="display:none;">
 							<p>
@@ -124,6 +129,12 @@ defined( 'ABSPATH' ) || exit;
 						<p class="description"><?php printf( esc_html__( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></p>
 					</td>
 				</tr>
+
+				<?php
+				$categories     = array();
+				$term_condition = '';
+				include 'views/categories.php';
+				?>
 
 				<?php do_action( 'edd_add_discount_form_before_start' ); ?>
 

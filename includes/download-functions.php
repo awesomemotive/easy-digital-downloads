@@ -602,8 +602,9 @@ function edd_single_price_option_mode( $download_id = 0 ) {
  */
 function edd_get_download_types() {
 	$types = array(
-		'0'      => __( 'Single Product', 'easy-digital-downloads' ),
-		'bundle' => __( 'Bundle', 'easy-digital-downloads' ),
+		''        => __( 'Single Product', 'easy-digital-downloads' ),
+		'bundle'  => __( 'Bundle', 'easy-digital-downloads' ),
+		'service' => __( 'Service', 'easy-digital-downloads' ),
 	);
 
 	return apply_filters( 'edd_download_types', $types );
@@ -1564,19 +1565,10 @@ function edd_parse_product_dropdown_values( $values = array() ) {
 
 	if ( is_array( $values ) ) {
 		foreach ( $values as $value ) {
-			$value = edd_parse_product_dropdown_value( $value );
-
-			$parsed_values[] = array(
-				'download_id' => $value['download_id'],
-				'price_id'    => $value['price_id'],
-			);
+			$parsed_values[] = edd_parse_product_dropdown_value( $value );
 		}
 	} else {
-		$value           = edd_parse_product_dropdown_value( $values );
-		$parsed_values[] = array(
-			'download_id' => $value['download_id'],
-			'price_id'    => $value['price_id'],
-		);
+		$parsed_values[] = edd_parse_product_dropdown_value( $values );
 	}
 
 	return $parsed_values;
@@ -1592,10 +1584,10 @@ function edd_parse_product_dropdown_values( $values = array() ) {
  */
 function edd_parse_product_dropdown_value( $value ) {
 	$parts       = explode( '_', $value );
-	$download_id = $parts[0];
+	$download_id = absint( $parts[0] );
 	$price_id    = isset( $parts[1] )
-		? $parts[1]
-		: false;
+		? (int) $parts[1]
+		: null;
 
 	return array(
 		'download_id' => $download_id,

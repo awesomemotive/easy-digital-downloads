@@ -1,0 +1,19 @@
+
+@import "../scss/general";
+
+.wp-block-edd-terms {
+	display: grid;
+	grid-gap: 1rem;
+
+	img {
+		display: block;
+		max-width: 100%;
+		height: auto;
+	}
+}
+
+.edd-blocks__term-title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}

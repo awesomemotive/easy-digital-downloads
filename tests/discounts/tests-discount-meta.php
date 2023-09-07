@@ -11,7 +11,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * @group database
  * @group edd_discounts
  */
-class Tests_Meta extends EDD_UnitTestCase {
+class Meta extends EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.

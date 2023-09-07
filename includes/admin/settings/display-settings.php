@@ -383,6 +383,10 @@ function edd_options_page() {
  * @since 3.0
  */
 function edd_tax_settings_display_tax_disabled_notice() {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	if ( edd_use_taxes() ) {
 		return;
 	}
@@ -407,6 +411,10 @@ add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_settings_display_tax_di
  * @return void
  */
 function edd_license_settings_help_text() {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	?>
 	<div class="edd-licenses__description">
 		<p>

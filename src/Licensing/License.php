@@ -2,6 +2,13 @@
 
 namespace EDD\Licensing;
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Class to handle and normalize the license data.
+ *
+ * @since 3.1.1
+ */
 class License {
 
 	/**
@@ -102,6 +109,14 @@ class License {
 	 * @var string
 	 */
 	public $subscription;
+
+	/**
+	 * The subscription ID.
+	 *
+	 * @since 3.2.0
+	 * @var string
+	 */
+	public $subscription_id;
 
 	/**
 	 * The product shortname.
@@ -290,12 +305,26 @@ class License {
 	}
 
 	/**
+	 * Whether the license is expired.
+	 *
+	 * @since 3.2.0
+	 * @return bool
+	 */
+	public function is_expired() {
+		if ( ! empty( $this->license ) && 'expired' === $this->license ) {
+			return true;
+		}
+
+		return ( ! empty( $this->error ) && 'expired' === $this->error );
+	}
+
+	/**
 	 * Only allow certain keys to be modified.
 	 *
 	 * @since 3.1.1
 	 * @return array
 	 */
 	private function get_editable_keys() {
-		return array( 'license', 'error', 'success' );
+		return array( 'license', 'error', 'success', 'pass_id', 'subscription', 'subscription_id', 'expires' );
 	}
 }

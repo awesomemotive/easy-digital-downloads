@@ -68,9 +68,13 @@ function edd_admin_add_discount( $data = array() ) {
 			case 'start':
 			case 'end_date':
 			case 'expiration':
+			case 'edd-action':
+			case 'edd-discount-nonce':
+			case 'edd-redirect':
 				break;
 
 			case 'product_reqs':
+			case 'categories':
 				$to_add[ $column ] = $value;
 				break;
 
@@ -125,17 +129,16 @@ function edd_admin_add_discount( $data = array() ) {
 	}
 
 	// Meta values.
-	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
+	$to_add['product_reqs']      = isset( $data['product_reqs'] ) ? preg_filter( '/\d|\d_\d/', '$0', (array) $data['product_reqs'] ) : ''; // only accepts patterns like 123 or 123_4
 	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : '';
+	$to_add['categories']        = isset( $data['categories'] ) ? wp_parse_id_list( $data['categories'] ) : array();
+	$to_add['term_condition']    = isset( $data['term_condition'] ) ? $data['term_condition'] : '';
 
 	$to_add = array_filter( $to_add );
 
 	// Strip out data that should not be sent to the query methods.
 	$to_strip = array(
 		'discount-id',
-		'edd-redirect',
-		'edd-action',
-		'edd-discount-nonce',
 		'start_date_minute',
 		'start_date_hour',
 		'end_date_minute',
@@ -211,6 +214,10 @@ function edd_admin_edit_discount( $data = array() ) {
 			case 'start':
 			case 'end_date':
 			case 'expiration':
+			case 'edd-redirect':
+			case 'edd-action':
+			case 'edd-discount-nonce':
+			case '_wp_http_referer':
 				break;
 
 			case 'discount-id':
@@ -222,7 +229,9 @@ function edd_admin_edit_discount( $data = array() ) {
 				break;
 
 			default:
-				$to_update[ $column ] = sanitize_text_field( $value );
+				$to_update[ $column ] = is_array( $value )
+					? array_map( 'sanitize_text_field', $value )
+					: sanitize_text_field( $value );
 				break;
 		}
 	}
@@ -271,9 +280,11 @@ function edd_admin_edit_discount( $data = array() ) {
 		$to_update['end_date'] = null;
 	}
 
-	// Known & accepted core discount meta
-	$to_update['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
+	// Known & accepted core discount meta.
+	$to_update['product_reqs']      = isset( $data['product_reqs'] ) ? preg_filter( '/\d|\d_\d/', '$0', (array) $data['product_reqs'] ) : ''; // only accepts patterns like 123 or 123_4
 	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : '';
+	$to_update['categories']        = ! empty( $data['categories'] ) ? wp_parse_id_list( $data['categories'] ) : array();
+	$to_update['term_condition']    = isset( $data['term_condition'] ) ? $data['term_condition'] : '';
 
 	// "Once per customer" checkbox.
 	$to_update['once_per_customer'] = isset( $data['once_per_customer'] )
@@ -285,12 +296,6 @@ function edd_admin_edit_discount( $data = array() ) {
 
 		// Legacy
 		'discount-id',
-
-		// Redirect
-		'edd-redirect',
-		'edd-action',
-		'edd-discount-nonce',
-		'_wp_http_referer',
 
 		// Time
 		'start_date_minute',
@@ -330,7 +335,7 @@ function edd_admin_delete_discount( $data = array() ) {
 
 	// Bail if no nonce or nonce fails
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	// Bail if current user cannot manage shop
@@ -369,7 +374,7 @@ function edd_activate_discount( $data = array() ) {
 
 	// Bail if no nonce or nonce fails
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	// Bail if current user cannot manage shop
@@ -402,7 +407,7 @@ function edd_deactivate_discount( $data = array() ) {
 
 	// Bail if no nonce or nonce fails
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	// Bail if current user cannot manage shop
@@ -420,3 +425,35 @@ function edd_deactivate_discount( $data = array() ) {
 	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
+
+/**
+ * Archive Discount
+ *
+ * Sets a discount status to archived
+ *
+ * @since 3.2.0
+ * @param array $data Discount code data
+ *
+ * @uses edd_update_discount_status()
+ */
+function edd_archive_discount( $data = array() ) {
+	// Bail if no nonce or nonce fails
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) ) {
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	// Bail if current user cannot manage shop
+	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to create discount codes', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$discount_id = absint( $data['discount'] );
+	$archived    = edd_update_discount_status( $discount_id, 'archived' );
+	$arg         = ! empty( $archived )
+		? 'discount_archived'
+		: 'discount_archived_failed';
+
+	// Redirect
+	edd_redirect( remove_query_arg( 'edd-action', add_query_arg( 'edd-message', sanitize_key( $arg ), $_SERVER['REQUEST_URI'] ) ) );
+}
+add_action( 'edd_archive_discount', 'edd_archive_discount' );

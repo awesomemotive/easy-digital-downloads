@@ -1,0 +1,29 @@
+/**
+ * Internal dependencices
+ */
+ @import './frontend/shared.scss';
+ @import './frontend/modal.scss';
+
+#edd_purchase_submit {
+
+	& #edd-purchase-button {
+		&[data-edd-button-state="disabled"]
+		{
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&[data-edd-button-state="updating"],
+		[data-edd-button-state="processing"] {
+			opacity: 0.5;
+			cursor: wait;
+		}
+	}
+}
+
+#card_name,
+.card-name {
+	padding: 8px !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}

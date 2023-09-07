@@ -84,3 +84,37 @@ select.edd-form-group__input {
 	line-height: initial;
 	margin: 8px 0 0;
 }
+
+.edd-range {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+
+	.edd-range__slider {
+		min-width: 90px;
+		height: 2px;
+		border-radius: 10px;
+		border: none;
+		background: #cccccc;
+
+		.ui-slider-range {
+			background: var(--wp-admin-theme-color);
+		}
+
+		.ui-slider-handle {
+			height: 15px;
+			width: 15px;
+			top: -6.5px;
+			border-radius: 100%;
+			background: var(--wp-admin-theme-color);
+			border: none;
+			cursor: pointer;
+			display: inline-block;
+			position: relative;
+		}
+	}
+
+	.edd-range__input {
+		max-width: 60px;
+	}
+}
