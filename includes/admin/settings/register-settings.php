@@ -70,6 +70,9 @@ function edd_update_option( $key = '', $value = false ) {
 
 	// First let's grab the current settings
 	$options = get_option( 'edd_settings' );
+	if ( empty( $options ) ) {
+		$options = array();
+	}
 
 	// Let's let devs alter that value coming in
 	$value = apply_filters( 'edd_update_option', $value, $key );
@@ -146,6 +149,7 @@ function edd_get_settings() {
 
 	// Look for old option keys
 	if ( empty( $settings ) ) {
+		$settings = array();
 
 		// Old option keys
 		$old_keys = array(
@@ -156,7 +160,7 @@ function edd_get_settings() {
 			'edd_settings_taxes',
 			'edd_settings_extensions',
 			'edd_settings_licenses',
-			'edd_settings_misc'
+			'edd_settings_misc',
 		);
 
 		// Merge old keys together

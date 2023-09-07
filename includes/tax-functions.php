@@ -131,7 +131,7 @@ function edd_get_tax_rate_counts( $args = array() ) {
  * @return array $clauses Updated query clauses.
  */
 function edd_active_tax_rates_query_clauses( $clauses ) {
-	$date = \Carbon\Carbon::now( edd_get_timezone_id() )->toDateTimeString();
+	$date = \EDD\Utils\Date::now( edd_get_timezone_id() )->toDateTimeString();
 
 	$clauses['where'] .= "
 		AND ( start_date < '{$date}' OR start_date IS NULL )

@@ -18,3 +18,5 @@
 ./readme.md
 ./package.json
 ./package-lock.json
+./vendor
+./includes/blocks/node_modules

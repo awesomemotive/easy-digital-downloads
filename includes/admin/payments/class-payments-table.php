@@ -685,8 +685,6 @@ class EDD_Payment_History_Table extends List_Table {
 				'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
 				'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
 				'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
-				'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
-				'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
 				'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
 			);
 		} else {

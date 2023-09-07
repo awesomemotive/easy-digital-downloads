@@ -109,7 +109,8 @@ class Date extends Base {
 		'IN',
 		'NOT IN',
 		'BETWEEN',
-		'NOT BETWEEN'
+		'NOT BETWEEN',
+		'IS NULL',
 	);
 
 	/**
@@ -257,7 +258,6 @@ class Date extends Base {
 	 * @return array Sanitized queries.
 	 */
 	public function sanitize_query( $queries = array(), $parent_query = array() ) {
-
 		// Default return value.
 		$retval = array();
 
@@ -278,7 +278,6 @@ class Date extends Base {
 		// Each query should have a value for each default key.
 		// Inherit from the parent when possible.
 		foreach ( $defaults as $dkey => $dvalue ) {
-
 			// Skip if already set.
 			if ( isset( $queries[ $dkey ] ) ) {
 				continue;
@@ -293,19 +292,18 @@ class Date extends Base {
 		}
 
 		// Validate the dates passed in the query.
-		if ( $this->is_first_order_clause( $queries ) ) {
+		if ( $this->is_first_order_clause( $queries ) || $this->is_null_check( $queries ) ) {
 			$this->validate_date_values( $queries );
 		}
 
 		// Add queries to return array.
 		foreach ( $queries as $key => $q ) {
 
-			// This is a first-order query. Trust the values and sanitize when building SQL.
-			if ( ! is_array( $q ) || in_array( $key, $this->time_keys, true ) ) {
+			if ( ! is_array( $q ) || in_array( $key, $this->time_keys, true ) ) { // This is a first-order query. Trust the values and sanitize when building SQL.
 				$retval[ $key ] = $q;
-
-			// Any array without a time key is another query, so we recurse.
-			} else {
+			} elseif ( array_key_exists( 'compare', $q ) && 'IS NULL' === $q['compare'] ) { // If this isn't a time query, but is a compare for `IS NULL` we can trust the value.
+				$retval[ $key ] = $q;
+			} else { // Any array without a time key is another query, so we recurse.
 				$retval[] = $this->sanitize_query( $q, $queries );
 			}
 		}
@@ -330,6 +328,22 @@ class Date extends Base {
 		$time_keys = array_intersect( $this->time_keys, array_keys( $query ) );
 
 		return ! empty( $time_keys );
+	}
+
+	/**
+	 * Determines whether this is a null check.
+	 *
+	 * This allows the `compare` of a date query to be `IS NULL`. Usually this wouldn't be something used in date columns,
+	 * but in some tables the date is an optional value and this allows for querying for null values.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param array $queries A date query or a date subquery.
+	 *
+	 * @return bool True if this is a null check.
+	 */
+	protected function is_null_check( $queries = array() ) {
+		return ( array_key_exists( 'compare', $queries ) && 'IS NULL' === $queries['compare'] );
 	}
 
 	/**
@@ -409,6 +423,11 @@ class Date extends Base {
 		}
 
 		$valid = true;
+
+		// Allow IS NULL values.
+		if ( array_key_exists( 'compare', $date_query ) && 'IS NULL' === $date_query['compare'] ) {
+			return $valid;
+		}
 
 		/*
 		 * Validate 'before' and 'after' up front, then let the
@@ -665,10 +684,8 @@ class Date extends Base {
 				$relation = $query['relation'];
 
 			} elseif ( is_array( $clause ) ) {
-
 				// This is a first-order clause.
-				if ( $this->is_first_order_clause( $clause ) ) {
-
+				if ( $this->is_first_order_clause( $clause ) || $this->is_null_check( $clause ) ) {
 					// Get clauses & where count
 					$clause_sql  = $this->get_sql_for_clause( $clause, $query );
 					$where_count = count( $clause_sql['where'] );
@@ -748,6 +765,11 @@ class Date extends Base {
 		if ( $inclusive ) {
 			$lt .= '=';
 			$gt .= '=';
+		}
+
+		// NULL values.
+		if ( isset( $query['compare'] ) && 'IS NULL' === $query['compare'] ) {
+			$where_parts[] = "{$column} IS NULL";
 		}
 
 		// Range queries.
@@ -875,6 +897,9 @@ class Date extends Base {
 
 				return $value[0] . ' AND ' . $value[1];
 
+			case 'IS NULL':
+				return '';
+
 			default:
 				if ( ! is_numeric( $value ) ) {
 					return false;
@@ -929,8 +954,9 @@ class Date extends Base {
 				$where   = $this->get_db()->prepare( '%s', $value );
 				break;
 
-			// 'value' is ignored for NOT EXISTS.
+			// 'value' is ignored for NOT EXISTS and IS NULL.
 			case 'NOT EXISTS':
+			case 'IS NULL':
 				$where = '';
 				break;
 

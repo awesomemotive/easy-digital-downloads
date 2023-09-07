@@ -312,7 +312,7 @@ class EDD_Tracking {
 			return false;
 		}
 
-		if ( function_exists( 'wp_get_environment_type' ) && 'staging' === wp_get_environment_type() ) {
+		if ( 'staging' === wp_get_environment_type() ) {
 			return false;
 		}
 

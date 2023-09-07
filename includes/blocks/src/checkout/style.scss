@@ -1,0 +1,150 @@
+@import "~@wordpress/base-styles/breakpoints";
+@import "../scss/cart";
+@import "../scss/buttons";
+
+.wp-block-edd-checkout {
+	display: grid;
+	gap: 1rem;
+
+	#edd_purchase_form {
+		@import "../scss/forms";
+
+		select {
+			padding: 4px 6px;
+		}
+	}
+
+	.edd-blocks-form__cart,
+	.edd-blocks-form__purchase {
+		padding: 0;
+		border: none;
+	}
+
+	#edd_discount_code {
+		background: none;
+		margin: 0;
+	}
+
+	#edd_checkout_cart_form #edd-discount-code-wrap,
+	#edd_checkout_cart_form #edd_show_discount {
+		padding: 0;
+		border: none;
+		background: transparent;
+		margin: 0;
+	}
+
+	#edd-payment-mode-wrap {
+		display: flex;
+		gap: .5rem;
+		clear: both;
+		flex-wrap: wrap;
+
+		label.edd-gateway-option {
+			display: flex !important;
+			margin: 0 !important;
+			padding: .5rem 1rem;
+			border: 1px solid;
+			flex-grow: 1;
+			text-align: center;
+			border-radius: 3px;
+			position: relative;
+			justify-content: center;
+			align-items: center;
+			gap: .5rem;
+			font-size: 1rem;
+
+			&.edd-gateway-option-selected,
+			&:hover {
+				background-color: var(--edd-blocks-light-grey);
+			}
+
+			&:hover {
+				cursor: pointer;
+				transform: translateY(-1px);
+			}
+		}
+
+		input {
+			position: absolute;
+			height: 1em;
+			width: 1em;
+			opacity: 0;
+			margin: 0;
+		}
+
+		.edd-payment-icons {
+			display: flex;
+			margin: 0;
+			gap: .25rem;
+			align-items: center;
+
+			.payment-icon {
+				max-height: 1rem;
+				width: auto;
+				margin: 0;
+
+				&.icon-paypal {
+					max-height: 1.5rem;
+				}
+			}
+		}
+	}
+
+	.edd-discount-code-field-wrap {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.edd-loading-ajax.edd-loading {
+		margin: 0 auto;
+		display: block;
+	}
+}
+
+#edd_checkout_form_wrap.wp-block-edd-checkout > p {
+	margin-bottom: 0;
+}
+
+.edd-blocks-form__cart {
+	.edd-blocks-cart__discount {
+		text-align: left;
+	}
+
+	#edd_checkout_cart .edd_discount {
+		display: inline-flex;
+		margin-left: .5rem;
+		align-items: center;
+		gap: 0.25rem;
+	}
+}
+
+.edd-blocks__checkout-user {
+	margin-bottom: 2rem;
+	position: relative;
+
+	fieldset.edd-blocks-form {
+		margin-bottom: 0 !important;
+	}
+}
+
+.edd-blocks__checkout-forms {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+
+	button {
+		padding: .5rem 1rem;
+	}
+
+	@media (min-width: $break-small) {
+		margin-bottom: 0;
+		position: absolute;
+		right: 2rem;
+		z-index: 99;
+	}
+}
+
+.edd-blocks-cart__row-buttons {
+	justify-content: flex-end;
+}

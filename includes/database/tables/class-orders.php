@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202302241;
+	protected $version = 202307111;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -56,6 +56,7 @@ final class Orders extends Table {
 		'202105221' => 202105221,
 		'202108041' => 202108041,
 		'202302241' => 202302241,
+		'202307111' => 202307111,
 	);
 
 	/**
@@ -89,6 +90,7 @@ final class Orders extends Table {
 			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			date_completed datetime default null,
 			date_refundable datetime default null,
+			date_actions_run datetime default null,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_number (order_number({$max_index_length})),
@@ -300,5 +302,17 @@ final class Orders extends Table {
 		}
 
 		return $this->is_success( $success );
+	}
+
+	protected function __202307111() {
+		if ( ! $this->column_exists( 'date_actions_run' ) ) {
+			return $this->is_success(
+				$this->get_db()->query(
+					"ALTER TABLE {$this->table_name} ADD COLUMN date_actions_run datetime default NULL AFTER date_refundable"
+				)
+			);
+		}
+
+		return true;
 	}
 }

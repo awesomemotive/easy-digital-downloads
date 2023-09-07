@@ -1,0 +1,12 @@
+@import "../scss/edit";
+@import "../scss/new-download";
+
+.edd-blocks-term-selector {
+	select {
+		min-height: 60px !important;
+	}
+
+	svg {
+		display: none !important;
+	}
+}

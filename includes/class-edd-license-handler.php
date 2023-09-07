@@ -289,6 +289,10 @@ class EDD_License {
 			return;
 		}
 
+		if ( edd_is_pro() ) {
+			return;
+		}
+
 		if ( ( empty( $this->edd_license->license ) || 'valid' !== $this->edd_license->license ) ) {
 
 			EDD()->notices->add_notice(
@@ -473,7 +477,7 @@ class EDD_License {
 		}
 
 		if ( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
-			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		if ( ! current_user_can( 'manage_shop_settings' ) ) {

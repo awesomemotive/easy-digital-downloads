@@ -203,6 +203,7 @@ class Card {
 		?>
 		<div class="edd-extension-manager__icon">
 			<img alt="" src="<?php echo esc_url( $this->product->icon ); ?>" />
+			<?php $this->do_recommended(); ?>
 		</div>
 		<?php
 	}
@@ -264,6 +265,23 @@ class Card {
 			<div class="edd-extension-manager__step">
 				<?php $this->link( $this->active_parameters ); ?>
 			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Adds a recommended tag to the extension card.
+	 *
+	 * @since 3.2.0
+	 * @return void
+	 */
+	private function do_recommended() {
+		if ( ! in_array( 'recommended', $this->get_product_terms(), true ) ) {
+			return;
+		}
+		?>
+		<div class="edd-plugin__recommended">
+			<?php esc_html_e( 'Recommended', 'easy-digital-downloads' ); ?>
 		</div>
 		<?php
 	}
@@ -360,14 +378,25 @@ class Card {
 	 * @return string
 	 */
 	private function get_filter_terms() {
-		$terms = array();
-		if ( ! empty( $this->product->terms ) ) {
-			$terms = array_keys( (array) $this->product->terms );
-		}
+		$terms = $this->get_product_terms();
 		if ( ! empty( $this->product->tab ) ) {
 			$terms[] = $this->product->tab;
 		}
 
 		return implode( ',', array_map( 'strtolower', array_filter( $terms ) ) );
+	}
+
+	/**
+	 * Gets the product terms for a card.
+	 *
+	 * @since 3.2.0
+	 * @return array
+	 */
+	private function get_product_terms() {
+		if ( ! empty( $this->product->terms ) ) {
+			return array_keys( (array) $this->product->terms );
+		}
+
+		return array();
 	}
 }

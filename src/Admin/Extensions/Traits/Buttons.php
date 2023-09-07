@@ -41,7 +41,7 @@ trait Buttons {
 			class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager__action"
 			<?php
 			foreach ( $args as $key => $attribute ) {
-				if ( empty( $attribute ) || in_array( $key, array( 'button_class', 'button_text' ), true ) ) {
+				if ( empty( $attribute ) || in_array( $key, array( 'button_class', 'button_text', 'disabled' ), true ) ) {
 					continue;
 				}
 				printf(
@@ -49,6 +49,9 @@ trait Buttons {
 					esc_attr( $key ),
 					esc_attr( $attribute )
 				);
+			}
+			if ( ! empty( $args['disabled'] ) ) {
+				echo ' disabled';
 			}
 			?>
 		>

@@ -239,7 +239,7 @@ if ( empty( $order_items ) ) {
 						<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
 					<?php endif; ?>
 
-					<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
+					<?php if ( $item->is_deliverable() && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
 					<ul class="edd_purchase_receipt_files">
 						<?php
 						if ( ! empty( $download_files ) && is_array( $download_files ) ) :

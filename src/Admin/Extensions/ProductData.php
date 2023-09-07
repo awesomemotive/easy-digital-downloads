@@ -69,6 +69,14 @@ class ProductData {
 	public $features = array();
 
 	/**
+	 * The product required pass ID.
+	 *
+	 * @since 3.2.0
+	 * @var int
+	 */
+	public $pass_id = '';
+
+	/**
 	 * Take array and return object.
 	 *
 	 * @since 2.11.4

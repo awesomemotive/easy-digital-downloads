@@ -187,96 +187,42 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 		// If cron doesn't work on a site, allow the filter to use __return_false and run the events immediately.
 		$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $order_id );
 		if ( false === $use_cron ) {
+
+			if ( has_action( 'edd_after_payment_actions' ) ) {
+				/**
+				 * Runs **after** a purchase is marked as "complete".
+				 *
+				 * @see edd_process_after_payment_actions()
+				 *
+				 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
+				 *
+				 * @param int          $order_id Payment ID.
+				 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
+				 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+				 */
+				do_action( 'edd_after_payment_actions', $order_id, $payment, $customer );
+			}
+
 			/**
 			 * Runs **after** a purchase is marked as "complete".
 			 *
-			 * @see edd_process_after_payment_actions()
+			 * @since 3.2.0
 			 *
-			 * @since 2.8 - Added EDD_Payment and EDD_Customer object to action.
-			 *
-			 * @param int          $order_id Payment ID.
-			 * @param EDD_Payment  $payment    EDD_Payment object containing all payment data.
-			 * @param EDD_Customer $customer   EDD_Customer object containing all customer data.
+			 * @param int          $order->id The order ID.
+			 * @param EDD_Order    $order     The EDD_Order object containing all order data.
+			 * @param EDD_Customer $customer  The EDD_Customer object containing all customer data.
 			 */
-			do_action( 'edd_after_payment_actions', $order_id, $payment, $customer );
+			do_action( 'edd_after_order_actions', $order->id, $order, $customer );
+
+			// Update the order with the date the actions were run in UTC.
+			edd_update_order( $order->id, array( 'date_actions_run' => current_time( 'mysql' ) ) );
 		}
 	}
 
-	// Empty the shopping cart
+	// Empty the shopping cart.
 	edd_empty_cart();
 }
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
-
-/**
- * Schedules the one time event via WP_Cron to fire after purchase actions.
- *
- * Is run on the edd_complete_purchase action.
- *
- * @since 2.8
- * @param $payment_id
- */
-function edd_schedule_after_payment_action( $payment_id ) {
-	$use_cron = apply_filters( 'edd_use_after_payment_actions', true, $payment_id );
-	if ( $use_cron ) {
-		$after_payment_delay = apply_filters( 'edd_after_payment_actions_delay', 30, $payment_id );
-
-		// Use time() instead of current_time( 'timestamp' ) to avoid scheduling the event in the past when server time
-		// and WordPress timezone are different.
-		wp_schedule_single_event( time() + $after_payment_delay, 'edd_after_payment_scheduled_actions', array( $payment_id, false ) );
-	}
-}
-add_action( 'edd_complete_purchase', 'edd_schedule_after_payment_action', 10, 1 );
-
-/**
- * Executes the one time event used for after purchase actions.
- *
- * @since 2.8
- * @since 3.1.0.4 This also verifies that all order items have the synced status as the order.
- * @param $payment_id
- * @param $force
- */
-function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
-	if ( empty( $payment_id ) ) {
-		return;
-	}
-
-	$payment   = new EDD_Payment( $payment_id );
-	$has_fired = $payment->get_meta( '_edd_complete_actions_run' );
-	if ( ! empty( $has_fired ) && false === $force ) {
-		return;
-	}
-
-	/**
-	 * In the event that during the order completion process, a timeout happens,
-	 * ensure that all the order items have the correct status, to match the order itself.
-	 *
-	 * @see https://github.com/awesomemotive/easy-digital-downloads-pro/issues/77
-	 */
-	$order_items = edd_get_order_items(
-		array(
-			'order_id'       => $payment_id,
-			'status__not_in' => edd_get_deliverable_order_item_statuses(),
-			'number'         => 200,
-		)
-	);
-
-	if ( ! empty( $order_items ) ) {
-		foreach ( $order_items as $order_item ) {
-			edd_update_order_item(
-				$order_item->id,
-				array(
-					'status' => $payment->status,
-				)
-			);
-		}
-	}
-
-	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );
-	$payment->update_meta( '_edd_complete_actions_run', time() ); // This is in GMT
-
-	do_action( 'edd_after_payment_actions', $payment_id, $payment, new EDD_Customer( $payment->customer_id ) );
-}
-add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
 
 /**
  * Updates week-old+ 'pending' orders to 'abandoned'

@@ -119,6 +119,7 @@ final class Adjustments extends Schema {
 			'length'   => '18,9',
 			'default'  => '0',
 			'sortable' => true,
+			'compare'  => true,
 		),
 
 		// description.
@@ -136,6 +137,7 @@ final class Adjustments extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
+			'compare'  => true,
 		),
 
 		// use_count.
@@ -146,6 +148,7 @@ final class Adjustments extends Schema {
 			'unsigned' => true,
 			'default'  => '0',
 			'sortable' => true,
+			'compare'  => true,
 		),
 
 		// once_per_customer.

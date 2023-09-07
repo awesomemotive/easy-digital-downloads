@@ -10,7 +10,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  *
  * @coversDefaultClass EDD_HTML_Elements
  */
-class Test_HTML_Elements extends EDD_UnitTestCase {
+class HTMLElements extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::product_dropdown
@@ -20,9 +20,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertStringContainsString( $expected, EDD()->html->product_dropdown() );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_value_parse_should_be_123_1() {
 		$expected = array(
 			'download_id' => '123',
@@ -32,9 +29,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, edd_parse_product_dropdown_value( '123_1' ) );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_value_parse_should_be_123() {
 		$expected = array(
 			'download_id' => '123',
@@ -45,9 +39,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, edd_parse_product_dropdown_value( 123 ) );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_array_parse() {
 		$saved_values = array( 123, '155_1', '155_2', 99 );
 		$expected     = array(
@@ -72,9 +63,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, edd_parse_product_dropdown_values( $saved_values ) );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_string_parse() {
 		$saved_values = '155';
 		$expected     = array(
@@ -248,5 +236,40 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	 */
 	public function test_text_is_not_required() {
 		$this->assertStringNotContainsString( 'required', EDD()->html->text() );
+	}
+
+	public function test_category_select() {
+		for ( $i = 0; $i < 5; $i++ ) {
+			$category = wp_insert_term( 'Download Category ' . $i, 'download_category' );
+			// create a post and assign it to the category
+			$post = wp_insert_post(
+				array(
+					'post_title'   => 'Download ' . $i,
+					'post_content' => 'Download ' . $i,
+					'post_status'  => 'publish',
+					'post_type'    => 'download',
+					'post_author'  => 1,
+					'post_date'    => date( 'Y-m-d H:i:s' ),
+					'post_category' => array( $category['term_id'] ),
+				)
+			);
+			wp_set_object_terms( $post, $category['term_id'], 'download_category' );
+		}
+
+		$dropdown = new \EDD\HTML\CategorySelect(
+			array(
+				'name'             => 'categories[]',
+				'id'               => 'edd-categories',
+				'selected'         => array(),
+				'multiple'         => true,
+				'chosen'           => true,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+				'number'           => 30,
+			)
+		);
+		$expected = '<select name="categories[]" id="edd_categories" class="edd-select  edd-select-chosen"';
+
+		$this->assertStringContainsString( $expected, $dropdown->get() );
 	}
 }

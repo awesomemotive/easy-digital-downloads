@@ -24,7 +24,6 @@ use EDD\Reports;
  * @method array get_endpoint_view( string $view_id )
  */
 final class Endpoint_View_Registry extends Reports\Registry implements Utils\Static_Registry {
-
 	/**
 	 * Item error label.
 	 *
@@ -163,11 +162,10 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 	 *
 	 * @since 3.0
 	 *
-	 * @param mixed $index Item index to check.
+	 * @param mixed $key Item index to check.
 	 */
-	public function offsetUnset( $index ) {
-		return;
-	}
+	#[\ReturnTypeWillChange]
+	public function offsetUnset( $key ) {}
 
 	/**
 	 * Retrieves the core-defined views and their (mostly) immutable defaults.

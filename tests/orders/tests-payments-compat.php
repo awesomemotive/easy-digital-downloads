@@ -3,6 +3,7 @@
  * Payment tests.
  *
  * @group edd_payments
+ * @group edd_legacy
  */
 namespace EDD\Tests\Orders;
 

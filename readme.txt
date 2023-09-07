@@ -3,13 +3,13 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, lisacee, zkawesome
 Tags: ecommerce, payments, sell, digital store, stripe
-Requires at least: 5.4
-Tested up to: 6.2
-Requires PHP: 7.1
-Stable Tag: 3.1.5
+Requires at least: 5.8
+Tested up to: 6.3
+Requires PHP: 7.4
+Stable Tag: 3.2.0
 License: GNU Version 2 or Any Later Version
 
-Sell your digital products with the #1 eCommerce plugin written for digital creators by digital creators.
+The #1 ecommerce WordPress plugin to sell digital products. Effortlessly manage orders, maximize revenue, and accept payments through Stripe & PayPal.
 
 == Description ==
 
@@ -44,7 +44,7 @@ Easy Digital Downloads has been translated into more than two dozen languages an
 
 > EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
 
-> Brian Hogg – SellingPlugins.com
+> Brian Hogg - SellingPlugins.com
 
 = Support for many payment gateways, including Stripe and PayPal =
 
@@ -55,9 +55,12 @@ Offer multiple payment methods, and start selling today:
 * Credit Cards/Bank Cards - Via Stripe
 * Apple Pay
 * Google Pay
+* CashApp
 * Link by Stripe
 * PayPal
 * PayPal Credit
+* Venmo
+* Sofort
 
 Payment gateways supported through free or paid extensions:
 
@@ -70,25 +73,23 @@ Payment gateways supported through free or paid extensions:
 
 Easy Digital Downloads is a verified member of the [Stripe partner program](https://stripe.com/partners/directory/easy-digital-downloads). This program recognizes software that meets Stripe's strict quality requirements and provides users of Easy Digital Downloads and Stripe with the confidence they need to trust thier business is secure.
 
-= Take your store further with a Pass =
+= Grow revenue with a Pass =
 
 With our Passes you can get access to [additional features](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) and super-charge your ecommerce business. Some of our most popular features in Pro are:
 
-* [Stripe Pro](https://easydigitaldownloads.com/downloads/stripe-gateway/?utm_source=extension&utm_medium=description_tab&utm_content=stripe-pro&utm_campaign=readme) removes the additional 2% processing fee as well as adds the ability to accept pre-approved payments (extension must be installed and activated).
-* [PayPal Commerce Pro](https://easydigitaldownloads.com/downloads/paypal-commerce-pro/?utm_source=extension&utm_medium=description_tab&utm_content=paypal-commerce-pro&utm_campaign=readme) allows customers to pay by debit or credit card as well as alternative payments such as Sofort, iDEAL, Bancontact, and Giropay (extension must be installed and activated).
+* [Subscriptions](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) allows store owners to sell recurring subscriptions for digital products using payment gateways like Stripe and PayPal.
+* [Reviews](https://easydigitaldownloads.com/downloads/product-reviews/?utm_source=extension&utm_medium=description_tab&utm_content=reviews&utm_campaign=readme) allows customers to leave reviews and feedback on the products they have purchased.
+* [Content Restriction](https://easydigitaldownloads.com/downloads/content-restriction/?utm_source=extension&utm_medium=description_tab&utm_content=content-restriction&utm_campaign=readme) allows site owners to restrict access to page content to paying customers.
 * [Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) provides a complete solution for selling software license keys and distributing software updates to customers. Trusted by some of the most successful WordPress Theme and Plugin developers.
-* [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) allows store owners to sell recurring subscriptions for digital products using payment gateways like Stripe and PayPal.
 * [Frontend Submissions](https://easydigitaldownloads.com/downloads/frontend-submissions/?utm_source=extension&utm_medium=description_tab&utm_content=frontend-submissions&utm_campaign=readme) transforms your store into a full-featured multi-vendor marketplace.
 * [Commissions](https://easydigitaldownloads.com/downloads/commissions/?utm_source=extension&utm_medium=description_tab&utm_content=commissions&utm_campaign=readme) enables store owners to easily track earnings for product vendors.
 * [Free Downloads](https://easydigitaldownloads.com/downloads/free-downloads/?utm_source=extension&utm_medium=description_tab&utm_content=free-downloads&utm_campaign=readme) allows you to give free products away as lead magnets.
-* [Reviews](https://easydigitaldownloads.com/downloads/product-reviews/?utm_source=extension&utm_medium=description_tab&utm_content=reviews&utm_campaign=readme) allows customers to leave reviews and feedback on the products they have purchased.
 * [Recommended Products](https://easydigitaldownloads.com/downloads/recommended-products/?utm_source=extension&utm_medium=description_tab&utm_content=recommended-products&utm_campaign=readme) increases revenue by showing customers recommendations on additional products to purchase based on real sales data.
-* [Content Restriction](https://easydigitaldownloads.com/downloads/content-restriction/?utm_source=extension&utm_medium=description_tab&utm_content=content-restriction&utm_campaign=readme) allows site owners to restrict access to page content to paying customers.
 * [Mailchimp](https://easydigitaldownloads.com/downloads/mailchimp/?utm_source=extension&utm_medium=description_tab&utm_content=mailchimp&utm_campaign=readme) connects your store to your Mailchimp account so you can easily subscribe customers to email lists based on which products they purchase.
 
 These are just a few of the features available to help you optimize your digital store and increase revenue. See our [complete list of extensions](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) for more.
 
-= Built with developers in mind =
+= Powerful yet flexible =
 
 Extensible, adaptable, and open source -- Easy Digital Downloads is created with designers and developers in mind. Consult our detailed [developer documentation](https://easydigitaldownloads.com/categories/docs/developer-docs/?utm_source=wporg&utm_medium=readme&utm_content=documentation&utm_campaign=dev-docs) to learn how you can extend and customize your Easy Digital Downloads powered eCommerce store.
 
@@ -226,19 +227,71 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 
 == Changelog ==
 
+= 3.2.0 =
+* Important: This release requires PHP 7.4 or higher and WordPress 5.8 or higher.
+* Important: Amazon Pay has been formally deprecated and is no longer available for new installs. Existing stores using Amazon Pay are encouraged to explore other options.
+* New: PHP 8.1 is now fully supported.
+* New: Discount codes can now be applied to specific price variations.
+* New: A discount code can now be set to include or exclude specific download categories.
+* New: Store owners can now archive discount codes, to make managing their promotions simpler.
+* New: The discount list now has improved visibility for the status and usage of discounts.
+* New: A new 'Service' product type was added to the Product Type dropdown, to allow for non-downloadable products.
+* New: Disputed payments in PayPal and Stripe set the order to a new 'On Hold' status, and restrict access to downloads.
+* New: When a payment is disputed with PayPal or Stripe, a link to the dispute is added to the view order details in the admin along with order notes.
+* New: The date that the completed order actions were run is now stored as part of the order itself, not as metadata, and will be displayed more clearly on the order details screens. Existing meta will be migrated in the background; notifications will be updated to keep store owners advised of progress.
+* Improvement: Purchase receipts are now sent using deferred actions, to improve the performance of the payment processing.
+* Improvement: The bundle product metabox has been improved for performance on sites with many products.
+* Improvement: The query for non-bundled products has been updated to be more performant, specifically when editing a download product.
+* Improvement: Improved performance of checkout and customer lookups by conditionally running legacy hooks and filters that contained payment objects.
+* Improvement: Site Health and telemetry now check the health of the REST API via a test endpoint.
+* Improvement: The application fee for Stripe payments is removed for pass holders who have access to the Stripe Pro extension even if they do not have Stripe Pro installed.
+* Improvement: Easy Digital Downloads' block styles have been updated for non block themes to load only when the block is rendered.
+* Improvement: The EDD Products block now allows products to be filtered by author.
+* Fix: Update Stripe's non-licensed application fee to 3%.
+* Fix: Stripe Payment Elements no longer supported a theme of 'none', and 'stripe' has been defaulted.
+* Fix: Added hardening around viewing the adjustments list table.
+* Fix: To avoid conflicts with other plugins, critical vendor libraries have been moved to the EDD namespace.
+* Fix: Regional support for Stripe now checks the Stripe account country before checking the store country.
+* Fix: PayPal Commerce orders where not always being completed when using the confirmation page.
+* Fix: The Stripe Payment Element now uses the browser's locale for localization.
+* Fix: Using the Import tool could produce a fatal error.
+* Fix: Discount codes resulting in a 100% discount could restrict the cart from allowing the user to complete the purchase.
+* Fix: Saved cards were not correctly saving for some users.
+* Fix: When saving a cart with Stripe as the active gateway, the message stating the cart was saved was removed prematurely.
+* Fix: Recalculating a customer's stats was not always being scheduled correctly.
+* Fix: Malformed add to cart URLs could result in a PHP warning being thrown.
+* Fix: Flat discount can result in an incorrect rounding total depending on the cart conditions.
+* Fix: Viewing the order details of a migrated order that had its discount deleted looked incomplete.
+* Fix: It was possible for sites with incompatible MySQL versions to not see the appropriate warnings.
+* Fix: Attempting to activate a pass with an empty license key could appear to be stuck.
+* Fix: The Stripe JavaScript has been improved to be more efficient, remove only error messages, and only run when the Stripe gateway is selected.
+* Fix: Stripe could attempt to update a property that is not supported by the Stripe API.
+* Fix: New PayPal Commerce subscriptions might not be correctly marked as complete.
+* Fix: EDD Blocks placeholder styles could interfere with WordPress Core placeholders.
+* Fix: Additional, not officially supported fee data is now stored as order adjustment metadata.
+* Dev: Many filters and hooks that passed `EDD_Payment` objects now have a complementary hook or filter that uses `EDD\Orders\Order` objects. Custom code should be updated for improved performance.
+* Dev: Easy Digital Downloads is no longer registering the `edd_payment` and `edd_discount` post types.
+* Dev: Easy Digital Downloads - Core now holds the Stripe base code, and Stripe Pro 3.0.0 only contains pro features.
+* Dev: Code for old, unsupported versions of PHP has been removed.
+* Dev: A new `edd_after_order_actions` hook has been introduced to manage all events which should happen when an order is created. This uses the order object for improved performance and any usage of `edd_after_payment_actions` should be updated accordingly.
+* i18n: 141 Additions, 199 Removals/Location Changes, 17 Differences (counts are approximate).
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.1.5 =
 * Fix: India Regions were not being properly loaded.
 * Fix: Fixed compatibility with PHP 7.1 when adding a new discount.
 * Dev: Tax settings tab was overriding the base class method for getting the ID.
+
 
 = 3.1.4 =
 * Improvement: The checkout cart markup is now aware if the cart is using the shortcode or the block.
 * Improvement: A filter has been added to the structured data for products to allow extensions to add additional offers.
 * Improvement: The email marker (tagging) experience has been updated to be more accessible and easier to use.
 * Improvement: EDD's admin JavaScript has been updated to prevent deprecation notices.
-* Improvement: It is now possible to update the sequential start number as long as it does not conflict with existing orders.
+* Improvement: Sequential payment numbers are more flexible.
 * Improvement: The current file name is now stored with the file download log.
-* Improvement: The emails on the order details screen has been updated to always include the customer's primary address, even if it wasn't used on an order.
+* Improvement: The emails on the order details screen has been updated to always include the customer's primary address, even if it wasn't used on a payment.
 * Fix: When the "last month" had fewer days than "month to date", reporting could incorrectly cross months.
 * Fix: The `edd_link_helper` function could sometimes have an empty UTM medium attribute.
 * Fix: Checkbox inputs for privacy/terms are now marked required with the HTML5 attribute.
@@ -259,7 +312,145 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Dev: The `edd_get_utc_date_string` helper function has been created to simplify getting a formatted UTC date.
 * Dev: The EDD settings have been refactored for readability.
 
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+= 3.1.3 =
+* Improvement: Licensing messages for third party extensions no longer link to the main EDD site.
+* Improvement: The default number of tax rates to query has been increased.
+* Fix: Using a custom `straight_to_gateway` link did not add a product to the cart.
+* Fix: Products which are marked as having variable prices, but which don't have any prices, could cause a PHP notice or error.
+* Fix: Duplicate purchase receipt emails could be sent when editing an order.
+* Fix: The product sales export was not respecting the end date when set.
+* Fix: The product sales export was showing incorrect payment amounts for orders with multiple items, or partially refunded orders.
+* Fix: For stores which collect sales tax, tax exempt fees sometimes had tax applied.
+* Fix: `edd_store_discount` now accepts times for start/expiration dates.
+* Fix: Users who are not also customers were unable to update their profile using the EDD profile editor.
+* Fix: The pass ID for pro licenses could be incorrect in some cases.
+* Fix: If EDD settings were removed, the telemetry data could cause a PHP notice.
+* Fix: Prevent a JavaScript error that could occur if the cart widget was present on the checkout page when taxes are enabled.
+* Dev: Third party developers who use EDD's licensing screen can now customize licensing messages.
+
+= 3.1.2 =
+* New: The EDD "System Info" has been retired and instead our data is registered with WordPress Core's Site Health.
+* Improvement: We've drastically reduced the possibility of duplicate orders numbers when using Sequential Order Numbers.
+* Improvement: We've changed the 'Default' item in the Product Type dropdown to 'Single Product' to avoid confusion.
+* Improvement: Gateways can now inform EDD if they are properly set up, and prevent enabling them if they are not configured for payments.
+* Improvement: The PayPal Commerce onboarding process has been revamped for speed and reliability.
+* Improvement: The EDD 3.x migration process has been updated to defer all customer and product calculations until the migration is complete, with improved messaging.
+* Improvement - Stripe: We've added a filter to allow users to remove the 'Terms' text that shows below card fields.
+* Improvement - Stripe: When a user disconnects from Stripe Connect, Stripe is unchecked as an 'active' gateway.
+* Improvement - Blocks: When no downloads are created, download related blocks were not correctly showing the button to add a new download.
+* Improvement - Blocks: EDD's blocks were not respecting custom Download labels.
+* Fix: Pass license keys did not always hold their activation status on multisite installs.
+* Fix: In some edge cases, it was possible to produce a fatal error in PHP 8.0 when adding items to the cart.
+* Fix: Improved capability checks and nonce detection on some actions.
+* Fix: Item fees could fail validation in some cases, resulting in missed fees.
+* Fix: The Payments Query class was incorrectly passing the `id__not_in` as `id__in`.
+* Fix: The AJAX cart content response was not using the new method of getting cart item names.
+* Fix: A more user friendly error message is shown to non-privileged users if no gateways are enabled.
+* Fix: The Login URL in user registration emails was not correct when the purchase was made with Stripe.
+* Fix: The calculated fees could differ from the fees that are displayed in the cart contents.
+* Fix: When importing downloads, in some cases, the images were not identified as local files.
+* Fix: The Download Tag taxonomy admin area was not being identified as an EDD Admin area.
+* Fix: There was a possibility of an undefined variable when requesting a password reset.
+* Fix - Stripe: The Recurring Payments update form could load incorrectly if split fields was enabled prior to swtiching to Payment Elements.
+* Fix - Stripe: Multiple improvements to the Stripe form load states when cart recalculations are being run.
+* Fix - Stripe: In some cases, the purchase form was not re-enabled after fixing HTML5 validation errors.
+* Fix - Stripe: Customers updating the payment method for a failing subscription could see an error message when the failed invoice was voided, even though the subscription was updated successfully.
+* Fix - Blocks: The reCAPTCHA key field is now a Password field type.
+* Fix - Blocks: The User Downloads blocks could show duplicate items.
+* Fix - Blocks: Extensions which added data to the cart could display without styling.
+* Dev: The functions to get the lowest & highest price options have been abstracted, improved, and now have unit tests.
+* Dev: Upgrade routines prior to 3.0 have been deprecated.
+* Dev: A new CLI command, `recalculate_customer_values` has been registered to recalculate sales and earnings for all customers.
+* Dev - Stripe: It is now possible to force 'Card Fields' to be available on new installs, by switching on EDD's Debug Mode.
+
+= 3.1.1.4.2 =
+* Security: Improved validation for edd hooks.
+
+= 3.1.1.4.1 =
+* Fix - Blocks: Harden blocks loader to verify files exist before requiring them.
+
+= 3.1.1.4 =
+* Improvement: Removed a possible unsupported PHP configuration from the email summaries.
+* Improvement: The edd_get_users_purchases function has been updated to account for customer email address changes.
+* Improvement: Reports have been updated to more accurately account for timezones and date ranges.
+* Improvement: The onboarding wizard loading was not allowing a close and exit after the first step.
+* Improvement: License key handling for 3rd party extensions has been accounted for.
+* Improvement: When using sequential order numbers, searching has been updated to account for order number.
+* Improvement - Stripe: The Payment Element has been improved to handle failed 3DS challenges.
+* Improvement - Stripe: Failed payment attempts are now more reliably accounted for.
+* Improvement - Stripe: The Payment Element billing fields can now be filtered.
+* Improvement - Stripe: The Payment Element now supports mandates, improving multi-regional payments.
+* Improvement - Stripe: The 'Card Name' field is re-introduced for regions that require it.
+* Improvement - Blocks: Better support for custom fields with the Checkout Block.
+* Improvement - Blocks: Developers can now register custom columns for the User Downloads block.
+* Improvement - Blocks: The Buy Now button can now have its behavior defined as Add to Cart or Buy Now.
+* Fix: Discounts with high value amounts were not saving correctly.
+* Fix: Bulk Editing prices was not working with WordPress 6.1+.
+* Fix: Exporting product sales was not always respecting the date range filters.
+* Fix: Exports with date queries were not always accounting for timezones accurately.
+* Fix - Blocks: Cart section headings were not always displayed when reloading the section via AJAX.
+* Dev: New custom hooks in database row transitions have been added.
+
+= 3.1.1.3 =
+* Improvement: The orders list table in the admin now sorts orders by date as the default.
+* Improvement: Removed unnecessary options in the onboarding wizard.
+* Improvement - Stripe: Store owners can now [control which payment methods to accept within their Stripe account](https://easydigitaldownloads.com/docs/stripe/#how-to-manage-payment-methods).
+* Improvement - Stripe: We've added a better explanation for the Restrict Stripe Assets setting.
+* Change: Translations are now always managed by WordPress.org.
+* Fix: Existing tables might not have been updated correctly.
+* Fix: Attempting to update the default email address from the profile editor could fail in some circumstances.
+
+= 3.1.1.2 =
+* Improvement: The order details screen in the admin has been updated to use the Currency class to be consistent with customer receipts.
+* Improvement: Determining whether a plugin is a core extension for telemetry data has been improved.
+* Fix: Enabling/disabling the sequential order numbers setting no longer prompts an upgrade notice, since that setting does not affect past orders.
+* Fix: When exiting the onboarding wizard, the double overlay has been removed.
+* Fix: The typos in the pro eligibility pointer notice have been corrected.
+* Fix: The user verification email could cause a fatal error with some translations.
+* Fix - Stripe: Improve custom Payment Element rules to merge with existing.
+* Fix - Stripe: Single price products purchased through "Buy Now" no longer have a price ID assigned in the order items table.
+* Dev: Using `get_page_by_title` has been deprecated in WordPress 6.2; our importer has been updated accordingly.
+* Dev - Stripe: Unneeded source files are no longer included in the release.
+
+= 3.1.1.1 =
+* Fix: Ensure that Stripe only tries to verify the domain for Apple Pay when Stripe is connected.
+* Fix: PHP 7.1 Compatibility with Stripe.
+* Improvement: Avoid a race condition when updating where a function might not be available for a moment.
+
+= 3.1.1 =
+* New: New installations will be directed to an onboarding wizard to help set up key features and get new stores up and running more quickly.
+* New: Users with an active pass can manage extensions with one license key and easily upgrade to Easy Digital Downloads (Pro).
+* New - Stripe: Our Stripe integration now uses the Universal Payment Elements and Link support. Legacy users are encouraged to opt in.
+* New - Blocks: A new EDD User Downloads block has been registered to show users the files they can download.
+* Improvement: Trashed orders can now be deleted in bulk.
+* Improvement: EDD's metaboxes have been moved up in priority when editing a download.
+* Improvement: Reports styling has been updated to account for different graph types.
+* Improvement: The Product Sales export tool has been added back to the Reports > Export screen.
+* Improvement: EDD telemetry tracking has been completely rewritten to anonymize data collection.
+* Improvement: The extensions licensing screen has been updated to improve messaging and the license management experience.
+* Improvement: Querying for a customer by email address has been improved to include all email addresses.
+* Improvement: The PayPal Commerce connection error messaging has been updated to give users more information to help troubleshoot before contacting support.
+* Improvement: Improved performance when using order related functions which have been updated to accept the order object directly.
+* Improvement: EDD admin screens now show only EDD notices.
+* Improvement - Blocks: New installs will automatically use the checkout block instead of the legacy shortcode.
+* Improvement - Blocks: The Login Page and Login Redirect Page settings have been reordered.
+* Improvement - Blocks: When adding the EDD Buy Button to a download, the current download is set as the default.
+* Improvement - Blocks: Additional security has been added to the checkout, login, and register blocks.
+* Fix: Report charts could group orders by date incorrectly when dates spanned a change in Daylight Savings.
+* Fix: In some cases, the customer database table was not getting the updates needed.
+* Fix: An additional security check has been added to the system info file download form.
+* Fix: The ajax spinner could be duplicated on the checkout screen for stores which collect taxes.
+* Fix: Stores with quantities enabled could experience unexpected behavior on checkout.
+* Fix - Stripe: Support links have been updated.
+* Fix - Blocks: Some themes/plugins caused the checkout forms script to not be enqueued.
+* Dev: The new minimum WordPress version is 5.4.
+* Dev: The new minimum PHP version is 7.1.
+* Dev: The `edd_sanitize_amount` function has been updated for PHP8 compatibility.
+* Dev: Notifications are now registered as an EDD component.
+* Dev: Notifications can now be registered locally.
+* Dev: Additional debugging has been added if a legacy payment cannot be migrated due to invalid payment metadata.
+* Dev: The discounts HTML is now always filterable, even if there are no discounts applied.
+* Dev: Code for the legacy WordPress media loader has been removed.
 
 == Upgrade Notice ==
 IMPORTANT: Upgrading from Easy Digital Downloads 2.x to 3.0+ is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.

@@ -51,7 +51,6 @@ else
 	fi
 	WP_TESTS_TAG="tags/$LATEST_VERSION"
 fi
-set -ex
 
 install_wp() {
 
@@ -167,6 +166,21 @@ install_db() {
 	fi
 }
 
+set -e
+
+printf "\n"
+printf "Installing WordPress"
 install_wp
+# Add a checkmark before the last echo statement when it's complete
+printf "\r\xE2\x9C\x94 Installing WordPress"
+
+printf "\n"
+printf "Installing test suite"
 install_test_suite
+printf "\r\xE2\x9C\x94 Installing test suite"
+
+printf "\n"
+printf "Installing database"
 install_db
+printf "\r\xE2\x9C\x94 Installing database"
+printf "\n"

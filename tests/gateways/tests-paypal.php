@@ -235,6 +235,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::process_event
+	 * @expectEDDeprecated edd_trigger_purchase_receipt
 	 */
 	public function test_payment_capture_completed_marks_payment_complete() {
 		// Status should be pending at first.

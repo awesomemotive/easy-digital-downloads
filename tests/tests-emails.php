@@ -143,15 +143,28 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	/**
-     * Test that each of the actions are added and each hooked in with the right priority
-     */
+	 * Test that each of the actions are added and each hooked in with the right priority
+	 */
 	public function test_email_actions() {
 		global $wp_filter;
 
-		$this->assertarrayHasKey( 'edd_admin_email_notice',       $wp_filter['edd_admin_sale_notice'][10]  );
-		$this->assertarrayHasKey( 'edd_trigger_purchase_receipt', $wp_filter['edd_complete_purchase'][999] );
-		$this->assertarrayHasKey( 'edd_resend_purchase_receipt',  $wp_filter['edd_email_links'][10]        );
-		$this->assertarrayHasKey( 'edd_send_test_email',          $wp_filter['edd_send_test_email'][10]    );
+		// This is a legacy filter that we need to test, simply for extensions that unhook it.
+		$this->assertarrayHasKey( 'edd_admin_email_notice', $wp_filter['edd_admin_sale_notice'][10]  );
+
+		// Verify the order receipt email is hooked.
+		$hooked_into = array_keys( $wp_filter['edd_after_order_actions'][9999] );
+		$has_hook    = $this->determine_if_hook_found( 'send_order_receipt', $hooked_into );
+		$this->assertTrue( $has_hook, 'Did not find send_order_receipt hook for edd_after_order_actions' );
+
+		// Verify the resend order receipt email is hooked.
+		$hooked_into = array_keys( $wp_filter['edd_email_links'][10] );
+		$has_hook    = $this->determine_if_hook_found( 'resend_order_receipt', $hooked_into );
+		$this->assertTrue( $has_hook, 'Did not find resend_order_receipt hook for edd_email_links' );
+
+		// Verify the resend order receipt email is hooked.
+		$hooked_into = array_keys( $wp_filter['edd_send_test_email'][10] );
+		$has_hook    = $this->determine_if_hook_found( 'send_test_email', $hooked_into );
+		$this->assertTrue( $has_hook, 'Did not find edd_send_test_email hook for send_test_email' );
 	}
 
 	public function test_admin_notice_emails() {
@@ -178,13 +191,24 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_default_sale_notification_email() {
+		$admin_order_notice = new \EDD\Emails\Types\AdminOrderNotice( false );
+		$email = $admin_order_notice->get_raw_body_content();
+
+		$this->assertStringContainsString( 'Hello', $email );
+		$this->assertStringContainsString( 'A Downloads purchase has been made', $email );
+		$this->assertStringContainsString( 'Downloads sold:', $email );
+		$this->assertStringContainsString( '{download_list}', $email );
+		$this->assertStringContainsString( 'Amount: {price}', $email );
+	}
+
+	public function test_edd_get_default_sale_notification_email_legacy() {
 		$email = edd_get_default_sale_notification_email();
 
 		$this->assertStringContainsString( 'Hello', $email );
 		$this->assertStringContainsString( 'A Downloads purchase has been made', $email );
 		$this->assertStringContainsString( 'Downloads sold:', $email );
 		$this->assertStringContainsString( '{download_list}', $email );
-		$this->assertStringContainsString( 'Amount:  {price}', $email );
+		$this->assertStringContainsString( 'Amount: {price}', $email );
 	}
 
 	public function test_email_tags_get_tags() {
@@ -337,5 +361,17 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$message = EDD()->emails->text_to_html( $message, EDD()->emails );
 
 		$this->assertEquals( $expected, $message );
+	}
+
+	private function determine_if_hook_found( $desired_hook, $hooks ) {
+		$found = false;
+
+		foreach ( $hooks as $hook ) {
+			if ( false !== strpos( $hook, $desired_hook ) ) {
+				$found = true;
+			}
+		}
+
+		return $found;
 	}
 }

@@ -154,29 +154,34 @@ function edd_localize_scripts() {
 	$currency = new \EDD\Currency\Currency( edd_get_currency() );
 
 	if ( edd_is_checkout() ) {
-		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
-			'ajaxurl'               => esc_url_raw( edd_get_ajax_url() ),
-			'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
-			'checkout_error_anchor' => '#edd_purchase_submit',
-			'currency_sign'         => $currency->symbol,
-			'currency_pos'          => $currency->position,
-			'decimal_separator'     => $currency->decimal_separator,
-			'thousands_separator'   => $currency->thousands_separator,
-			'no_gateway'            => __( 'Please select a payment method', 'easy-digital-downloads' ),
-			'no_discount'           => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
-			'enter_discount'        => __( 'Enter discount', 'easy-digital-downloads' ),
-			'discount_applied'      => __( 'Discount Applied', 'easy-digital-downloads' ), // Discount verified message
-			'no_email'              => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
-			'no_username'           => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
-			'purchase_loading'      => __( 'Please Wait...', 'easy-digital-downloads' ),
-			'complete_purchase'     => edd_get_checkout_button_purchase_label(),
-			'taxes_enabled'         => edd_use_taxes() ? '1' : '0',
-			'edd_version'           => $version,
-			'current_page'          => get_the_ID(),
-		) ) );
+		$checkout_variables = apply_filters(
+			'edd_global_checkout_script_vars',
+			array(
+				'ajaxurl'               => esc_url_raw( edd_get_ajax_url() ),
+				'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
+				'checkout_error_anchor' => '#edd_purchase_submit',
+				'currency_sign'         => $currency->symbol,
+				'currency_pos'          => $currency->position,
+				'decimal_separator'     => $currency->decimal_separator,
+				'thousands_separator'   => $currency->thousands_separator,
+				'no_gateway'            => __( 'Please select a payment method', 'easy-digital-downloads' ),
+				'no_discount'           => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message.
+				'enter_discount'        => __( 'Enter discount', 'easy-digital-downloads' ),
+				'discount_applied'      => __( 'Discount Applied', 'easy-digital-downloads' ), // Discount verified message.
+				'no_email'              => __( 'Please enter an email address before applying a discount code', 'easy-digital-downloads' ),
+				'no_username'           => __( 'Please enter a username before applying a discount code', 'easy-digital-downloads' ),
+				'purchase_loading'      => __( 'Please Wait...', 'easy-digital-downloads' ),
+				'complete_purchase'     => edd_get_checkout_button_purchase_label(),
+				'taxes_enabled'         => edd_use_taxes() ? '1' : '0',
+				'edd_version'           => $version,
+				'current_page'          => get_the_ID(),
+				'showStoreErrors'       => current_user_can( 'manage_shop_settings' ) ? 'true' : 'false',
+			)
+		);
+		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', $checkout_variables );
 	}
 
-	// Load AJAX scripts, if enabled
+	// Load AJAX scripts, if enabled.
 	if ( ! edd_is_ajax_disabled() ) {
 
 		// Get position in cart of current download
@@ -490,9 +495,7 @@ function edd_localize_admin_scripts() {
 	}
 
 	$edd_currency = new EDD\Currency\Currency( $currency );
-
-	// Admin scripts
-	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
+	$edd_vars     = array(
 		'post_id'                 => get_the_ID(),
 		'edd_version'             => edd_admin_get_script_version(),
 		'currency'                => $edd_currency->code,
@@ -539,6 +542,7 @@ function edd_localize_admin_scripts() {
 		'no_downloads_error'      => __( 'There are no downloads attached to this payment', 'easy-digital-downloads' ),
 		'wait'                    => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 		'test_email_save_changes' => __( 'You must save your changes to send the test email.', 'easy-digital-downloads' ),
+		'no_letters_or_numbers'   => __( 'Either Letters or Numbers should be selected.', 'easy-digital-downloads' ),
 
 		// Diaglog buttons.
 		'confirm_dialog_text'     => __( 'Confirm', 'easy-digital-downloads' ),
@@ -553,7 +557,15 @@ function edd_localize_admin_scripts() {
 		// REST based items.
 		'restBase'                => rest_url( \EDD\API\v3\Endpoint::$namespace ),
 		'restNonce'               => wp_create_nonce( 'wp_rest' ),
-	) );
+		'download_has_files'      => false,
+	);
+
+	if ( function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'download', 'edit' ) ) {
+		$edd_vars['download_has_files'] = (bool) edd_get_download_files( get_the_ID() );
+	}
+
+	// Admin scripts
+	wp_localize_script( 'edd-admin-scripts', 'edd_vars', $edd_vars );
 
 	wp_localize_script( 'edd-admin-upgrades', 'edd_admin_upgrade_vars', array(
 			'migration_complete' => esc_html__( 'Migration complete', 'easy-digital-downloads' )

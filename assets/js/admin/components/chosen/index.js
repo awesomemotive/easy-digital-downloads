@@ -110,6 +110,7 @@ jQuery( document ).ready( function( $ ) {
 				no_bundles: no_bundles,
 				variations: variations,
 				variations_only: variations_only,
+				current_id: edd_vars.post_id,
 			},
 
 			beforeSend: function() {

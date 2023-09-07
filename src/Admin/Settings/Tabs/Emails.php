@@ -10,6 +10,8 @@
  */
 namespace EDD\Admin\Settings\Tabs;
 
+use EDD\Emails\Registry;
+
 defined( 'ABSPATH' ) || exit;
 
 class Emails extends Tab {
@@ -29,6 +31,7 @@ class Emails extends Tab {
 	 * @return array
 	 */
 	protected function register() {
+
 		return array(
 			'main'               => array(
 				'email_header'   => array(
@@ -98,7 +101,7 @@ class Emails extends Tab {
 					'name' => __( 'Purchase Receipt', 'easy-digital-downloads' ),
 					'desc' => __( 'Text to email customers after completing a purchase. Personalize with HTML and <code>{tag}</code> markers.', 'easy-digital-downloads' ) . '<br/><br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
-					'std'  => __( 'Dear', 'easy-digital-downloads' ) . " {name},\n\n" . __( 'Thank you for your purchase. Please click on the link(s) below to download your files.', 'easy-digital-downloads' ) . "\n\n{download_list}\n\n{sitename}",
+					'std'  => $this->get_default_email_content( 'order_receipt' ),
 				),
 			),
 			'sale_notifications' => array(
@@ -121,7 +124,7 @@ class Emails extends Tab {
 					'name' => __( 'Sale Notification', 'easy-digital-downloads' ),
 					'desc' => __( 'Text to email as a notification for every completed purchase. Personalize with HTML and <code>{tag}</code> markers.', 'easy-digital-downloads' ) . '<br/><br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
-					'std'  => edd_get_default_sale_notification_email(),
+					'std'  => $this->get_default_email_content( 'admin_order_notice' ),
 				),
 				'admin_notice_emails'       => array(
 					'id'   => 'admin_notice_emails',
@@ -139,6 +142,22 @@ class Emails extends Tab {
 			),
 			'email_summaries'    => $this->get_email_summaries(),
 		);
+	}
+
+	/**
+	 * Gets the default email content for a registered email.
+	 *
+	 * @since 3.2.0
+	 * @param string $email The registered email to get the default content for.
+	 * @return string
+	 */
+	private function get_default_email_content( $email ) {
+		if ( ! Registry::is_registered( $email ) ) {
+			return '';
+		}
+		$registered_email = Registry::get( $email, array( false ) );
+
+		return $registered_email->get_raw_body_content();
 	}
 
 	/**
@@ -163,7 +182,7 @@ class Emails extends Tab {
 		$email_summary_schedule      = wp_next_scheduled( \EDD_Email_Summary_Cron::CRON_EVENT_NAME );
 		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
 		if ( $email_summary_schedule ) {
-			$email_summary_schedule_date = \Carbon\Carbon::createFromTimestamp( $email_summary_schedule )->setTimezone( edd_get_timezone_id() );
+			$email_summary_schedule_date = \EDD\Utils\Date::createFromTimestamp( $email_summary_schedule )->setTimezone( edd_get_timezone_id() );
 			/* Translators: formatted date */
 			$email_summary_schedule_text = sprintf( __( 'The next summary email is scheduled to send on %s.', 'easy-digital-downloads' ), $email_summary_schedule_date->format( get_option( 'date_format' ) ) );
 		}

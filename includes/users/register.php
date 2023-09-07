@@ -72,7 +72,7 @@ function edd_process_register_form( $data ) {
 			'email' => $data['edd_user_email'],
 		)
 	);
-	if ( email_exists( $data['edd_user_email'] ) || ! empty( $customers ) ) {
+	if ( ( ! empty( $data['edd_user_email'] ) && email_exists( $data['edd_user_email'] ) ) || ! empty( $customers ) ) {
 		edd_set_error( 'email_unavailable', __( 'This email address is not available.', 'easy-digital-downloads' ) );
 	}
 

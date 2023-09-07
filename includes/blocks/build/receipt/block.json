@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "edd/receipt",
+  "version": "2.0.0",
+  "title": "EDD Receipt",
+  "category": "easy-digital-downloads",
+  "icon": "money",
+  "description": "Show customers their detailed receipt. Supports guest orders.",
+  "keywords": [
+    "easy digital downloads",
+    "edd",
+    "orders"
+  ],
+  "supports": {
+    "html": false
+  },
+  "textdomain": "easy-digital-downloads",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "payment_key": {
+      "type": "boolean",
+      "default": false
+    },
+    "payment_method": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "example": {
+    "attributes": {}
+  }
+}

@@ -38,6 +38,7 @@ class Data {
 			'refunds'      => new Orders( 'refund' ),
 			'settings'     => new Settings(),
 			'stats'        => new Stats(),
+			'products'     => new Products(),
 		);
 
 		foreach ( $classes as $key => $class ) {

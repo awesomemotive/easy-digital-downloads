@@ -630,6 +630,10 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
  * @param array $form_data POSTed data from the filters form.
  */
 function edd_parse_report_dates( $form_data ) {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+
 	// Load the Reports API dependencies.
 	Reports\Init::bootstrap();
 
@@ -740,6 +744,9 @@ add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
  * @description: Outputs a "Refresh Reports" button for graphs
  */
 function edd_reports_refresh_button() {
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
 
 	$url = wp_nonce_url( add_query_arg( array(
 		'edd_action'  => 'refresh_reports_transients',
@@ -761,6 +768,11 @@ add_action( 'edd_reports_graph_after', 'edd_reports_refresh_button' );
  */
 function edd_run_refresh_reports_transients( $data ) {
 	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-refresh-reports' ) ) {
+		return;
+	}
+
+	// Users who cannot view shop reports should not be able to refresh them.
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		return;
 	}
 

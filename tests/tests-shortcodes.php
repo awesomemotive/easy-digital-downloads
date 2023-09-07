@@ -231,15 +231,6 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		$this->assertStringContainsString( '"' . get_permalink( $purchase_history_page ) . '"', $login_form );
 	}
 
-	public function test_discounts_shortcode() {
-		Helpers\EDD_Helper_Discount::create_simple_percent_discount();
-
-		$actual = edd_discounts_shortcode( array() );
-
-		$this->assertIsString( $actual );
-		$this->assertEquals( '<ul id="edd_discounts_list"><li class="edd_discount"><span class="edd_discount_name">20OFF</span><span class="edd_discount_separator"> - </span><span class="edd_discount_amount">20.00%</span></li></ul>', $actual );
-	}
-
 	public function test_purchase_collection_shortcode() {
 		$this->go_to( '/' );
 

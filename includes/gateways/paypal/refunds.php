@@ -38,11 +38,23 @@ add_action( 'edd_after_submit_refund_table', function( Order $order ) {
 	?>
 	<div class="edd-form-group edd-paypal-refund-transaction">
 		<div class="edd-form-group__control">
-			<input type="checkbox" id="edd-paypal-commerce-refund" name="edd-paypal-commerce-refund" class="edd-form-group__input" value="1">
+			<input
+				type="checkbox"
+				id="edd-paypal-commerce-refund"
+				name="edd-paypal-commerce-refund"
+				class="edd-form-group__input"
+				value="1"
+				<?php echo esc_attr( 'on_hold' === $order->status ? 'disabled' : '' ); ?>
+			>
 			<label for="edd-paypal-commerce-refund" class="edd-form-group__label">
 				<?php esc_html_e( 'Refund transaction in PayPal', 'easy-digital-downloads' ); ?>
 			</label>
 		</div>
+		<?php if ( 'on_hold' === $order->status ) : ?>
+			<p class="edd-form-group__help description">
+				<?php esc_html_e( 'This order is currently on hold. You can create the refund transaction in EDD; PayPal may have already issued a refund.', 'easy-digital-downloads' ); ?>
+			</p>
+		<?php endif; ?>
 	</div>
 	<?php
 } );

@@ -14,7 +14,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  *
  * @coversDefaultClass \EDD\Compat\Discount_Query
  */
-class Tests_Discounts_DB extends EDD_UnitTestCase {
+class DiscountsDB extends EDD_UnitTestCase {
 
 	/**
 	 * Discounts test fixture.

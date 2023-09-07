@@ -202,9 +202,10 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			case 'emails':
 				return $this->get_emails();
 			case 'payment_ids':
-				$payment_ids = $this->get_payment_ids();
-				$payment_ids = implode( ',', $payment_ids );
-				return $payment_ids;
+				$payment_ids = $this->get_order_ids();
+				return implode( ',', $payment_ids );
+			case 'order_ids':
+				return $this->get_order_ids();
 			default:
 				return isset( $this->{$key} )
 					? $this->{$key}
@@ -565,17 +566,22 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 */
 	public function update_order_email_addresses( $email = '' ) {
 
-		// Get the payments
-		$payment_ids = $this->get_payment_ids();
+		// Get the order IDs.
+		$order_ids = $this->get_order_ids();
 
-		// Bail if no payments
+		// Bail if no orders.
 		if ( empty( $payment_ids ) ) {
 			return;
 		}
 
-		// Update payment emails to primary email
-		foreach ( $payment_ids as $payment_id ) {
-			edd_update_payment_meta( $payment_id, 'email', $email );
+		// Update order emails to primary email.
+		foreach ( $order_ids as $order_id ) {
+			edd_update_order(
+				$order_id,
+				array(
+					'email' => $email,
+				)
+			);
 		}
 	}
 
@@ -583,62 +589,131 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * Get the payment ids of the customer in an array.
 	 *
 	 * @since 2.6
+	 * @deprecated 3.2 Use the get_order_ids method of the EDD_Customer object instead.
 	 *
 	 * @return array An array of payment IDs for the customer, or an empty array if none exist.
 	 */
 	public function get_payment_ids() {
+		_edd_deprecated_function( __METHOD__, '3.2', 'EDD_Customer::get_order_ids' );
 
-		// Bail if no customer
-		if ( empty( $this->id ) ) {
-			return array();
-		}
-
-		// Get total orders
-		$count = edd_count_orders( array(
-			'customer_id' => $this->id
-		) );
-
-		// Get order IDs
-		$ids = edd_get_orders( array(
-			'customer_id'   => $this->id,
-			'number'        => $count,
-			'fields'        => 'ids',
-			'no_found_rows' => true
-		) );
-
-		// Cast IDs to ints
-		return array_map( 'absint', $ids );
+		return $this->get_order_ids();
 	}
 
 	/**
 	 * Get an array of EDD_Payment objects from the payment_ids attached to the customer.
 	 *
 	 * @since 2.6
+	 * @deprecated 3.2 Use the get_orders method of the EDD_Customer object instead.
 	 *
-	 * @param  array|string  $status A single status as a string or an array of statuses.
+	 * @param array|string  $status A single status as a string or an array of statuses.
+	 *
 	 * @return array An array of EDD_Payment objects or an empty array.
 	 */
 	public function get_payments( $status = array() ) {
+		_edd_deprecated_function( __METHOD__, '3.2', 'EDD_Customer::get_orders' );
 
-		// Get payment IDs
-		$payment_ids = $this->get_payment_ids();
+		// Get payment IDs.
+		$payment_ids = $this->get_order_ids( $status );
 		$payments    = array();
 
-		// Bail if no IDs
+		// Bail if no IDs.
 		if ( empty( $payment_ids ) ) {
 			return $payments;
 		}
 
-		// Get payments one at a time (ugh...)
-		foreach ( $payment_ids as $payment_id ) {
-			$payment = new EDD_Payment( $payment_id );
-
-			if ( empty( $status ) || ( is_array( $status ) && in_array( $payment->status, $status, true ) ) || $status === $payment->status ) {
-				$payments[] = $payment;
-			}
-		}
+		// Get payments one at a time.
+		$payments = edd_get_payments(
+			array(
+				'number'        => count( $payment_ids ),
+				'no_found_rows' => true,
+				'include'       => $payment_ids,
+			)
+		);
 
 		return $payments;
+	}
+
+	/**
+	 * Get the custoemr's orders
+	 *
+	 * @since 3.2
+	 *
+	 * @param array $status The status or statuses of the orders to get.
+	 *
+	 * @return array An array of EDD\Orders\Order objects.
+	 */
+	public function get_orders( $status = array() ) {
+		$order_args = array(
+			'customer_id' => $this->id,
+			'type'        => 'sale',
+		);
+
+		if ( ! empty( $status ) ) {
+			$order_args['status__in'] = $status;
+		}
+
+		// Get the order IDs for the user and the total number of orders.
+		$order_ids            = $this->get_order_ids( $status );
+
+		// Since the `edd_get_orders` function limits to 30 by default, we need to override that.
+		$order_args['number'] = count( $order_ids );
+
+		// Get the customer's orders.
+		$orders = edd_get_orders( $order_args );
+
+		return $orders;
+	}
+
+	/**
+	 * Get the customer's order IDs.
+	 *
+	 * @since 3.2
+	 *
+	 * @param array $status The status or statuses of the orders to get.
+	 *
+	 * @return array An array of order IDs.
+	 */
+	public function get_order_ids( $status = array() ) {
+		// Bail if no customer.
+		if ( empty( $this->id ) ) {
+			return array();
+		}
+
+		// Previously, a string was allowed in other methods, so let's ensure we have an array.
+		if ( is_string( $status ) ) {
+			$status = (array) $status;
+		}
+
+		$count_args = array(
+			'customer_id' => $this->id,
+			'type'        => 'sale',
+		);
+
+		if ( ! empty( $status ) ) {
+			$count_args['status__in'] = $status;
+		}
+
+		// Get total orders.
+		$count = edd_count_orders( $count_args );
+
+
+		$order_args = array(
+			'customer_id'   => $this->id,
+			'number'        => $count,
+			'fields'        => 'ids',
+			'no_found_rows' => true,
+			'type'          => 'sale',
+		);
+
+		if ( ! empty( $status ) ) {
+			$order_args['status__in'] = $status;
+		}
+
+		// Get order IDs.
+		$ids = edd_get_orders( $order_args );
+
+		// Cast IDs to ints.
+		return ! empty( $ids ) ? array_map( 'absint', $ids ) : array();
 	}
 
 	/**
@@ -696,54 +771,58 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * Remove a payment from this customer, then triggers reducing stats
 	 *
 	 * @since 2.3
+	 * @since 3.2 Updated to use order objects.
 	 *
-	 * @param integer $payment_id   The Payment ID to remove.
+	 * @param integer $order_id     The Order ID to remove.
 	 * @param bool    $update_stats For backwards compatibility, if we should increase the stats or not.
 	 *
 	 * @return bool $detached True if removed successfully, false otherwise.
 	 */
-	public function remove_payment( $payment_id = 0, $update_stats = true ) {
+	public function remove_payment( $order_id = 0, $update_stats = true ) {
 
-		// Bail if no payment ID
-		if ( empty( $payment_id ) ) {
+		// Bail if no payment ID.
+		if ( empty( $order_id ) ) {
 			return false;
 		}
 
-		// Get payment
-		$payment = edd_get_payment( $payment_id );
+		// Get payment.
+		$order = edd_get_order( $order_id );
 
-		// Bail if payment does not exist
-		if ( empty( $payment ) ) {
+		// Bail if payment does not exist.
+		if ( empty( $order ) ) {
 			return false;
 		}
 
 		// Get all previous payment IDs
-		$payments = $this->get_payment_ids();
+		$order_ids = $this->get_order_ids();
 
-		// Bail if already attached
-		if ( ! in_array( $payment_id, $payments, true ) ) {
+		// Bail if already detached.
+		if ( ! in_array( $order_id, $order_ids, true ) ) {
 			return true;
 		}
 
-		// Only update stats when published or revoked
-		if ( ! in_array( $payment->status, array( 'complete', 'revoked' ), true ) ) {
+		// Only update stats when in a completed state.
+		if ( ! in_array( $order->status, edd_get_complete_order_statuses(), true ) ) {
 			$update_stats = false;
 		}
 
-		do_action( 'edd_customer_pre_remove_payment', $payment->ID, $this->id, $this );
+		do_action( 'edd_customer_pre_remove_payment', $order_id, $this->id, $this );
 
-		// Update the order
-		$success = (bool) edd_update_order( $payment_id, array(
-			'customer_id' => 0,
-			'email'       => ''
-		) );
+		// Update the order.
+		$success = (bool) edd_update_order(
+			$order_id,
+			array(
+				'customer_id' => 0,
+				'email'       => '',
+			)
+		);
 
-		// Maybe update stats
+		// Maybe update stats.
 		if ( ! empty( $success ) && ! empty( $update_stats ) ) {
 			$this->recalculate_stats();
 		}
 
-		do_action( 'edd_customer_post_remove_payment', $success, $payment->ID, $this->id, $this );
+		do_action( 'edd_customer_post_remove_payment', $success, $order_id, $this->id, $this );
 
 		return $success;
 	}

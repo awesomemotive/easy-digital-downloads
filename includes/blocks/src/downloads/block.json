@@ -1,0 +1,108 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "edd/downloads",
+	"version": "2.0.0",
+	"title": "EDD Products",
+	"category": "easy-digital-downloads",
+	"icon": "download",
+	"description": "A block to show your Easy Digital Download products based on visual customizations and query parameters.",
+	"keywords": [ "easy digital downloads", "edd", "downloads" ],
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"textdomain": "easy-digital-downloads",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"attributes": {
+		"image_location": {
+			"type": "string",
+			"default": "before_entry_title"
+		},
+		"image_size": {
+			"type": "string",
+			"default": "large"
+		},
+		"image_alignment": {
+			"type": "string",
+			"default": "center"
+		},
+		"content": {
+			"type"   : "string",
+			"default": "excerpt"
+		},
+		"columns": {
+			"type"   : "number",
+			"default": 3
+		},
+		"number": {
+			"type"   : "number",
+			"default": 6
+		},
+		"align": {
+			"type"   : "string",
+			"default": ""
+		},
+		"order": {
+			"type"   : "string",
+			"default": "DESC"
+		},
+		"orderby": {
+			"type"   : "string",
+			"default": "date"
+		},
+		"title": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"purchase_link": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"price": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"category": {
+			"type" : "array",
+			"default": [ "" ]
+		},
+		"tag": {
+			"type" : "array",
+			"default": [ "" ]
+		},
+		"pagination": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"image_link": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"purchase_link_align": {
+			"type": "string",
+			"default": "none"
+		},
+		"show_price": {
+			"type": "boolean",
+			"default": true
+		},
+		"all_access": {
+			"type": "boolean",
+			"default": false
+		},
+		"author": {
+			"type"   : "string",
+			"default": ""
+		}
+	},
+	"example": {
+		"attributes": {
+			"columns": 1,
+			"number": 2,
+			"pagination": false
+		}
+	}
+}

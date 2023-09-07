@@ -28,7 +28,7 @@ class Orders extends Base {
 		parent::__construct( $step );
 
 		$this->completed_message = __( 'Orders migration completed successfully.', 'easy-digital-downloads' );
-		$this->upgrade           = 'migrate_orders';
+		$this->upgrade           = array( 'migrate_orders', 'migrate_order_actions_date' );
 	}
 
 	/**

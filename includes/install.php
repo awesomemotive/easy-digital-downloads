@@ -433,19 +433,19 @@ function edd_install_roles_on_network() {
 
 	global $wp_roles;
 
-	if( ! is_object( $wp_roles ) ) {
+	if ( ! is_object( $wp_roles ) ) {
 		return;
 	}
 
+	if ( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
 
-	if( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
-
+		if ( empty( $wp_roles->roles ) ) {
+			$wp_roles->roles = array();
+		}
 		// Create EDD shop roles
-		$roles = new EDD_Roles;
+		$roles = new EDD_Roles();
 		$roles->add_roles();
 		$roles->add_caps();
-
 	}
-
 }
 add_action( 'admin_init', 'edd_install_roles_on_network' );

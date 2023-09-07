@@ -56,7 +56,6 @@ class PromoHandler implements SubscriberInterface {
 	 * @since 2.10.6
 	 */
 	private function load_notices() {
-
 		foreach ( $this->get_notices() as $notice_class_name ) {
 			if ( ! class_exists( $notice_class_name ) ) {
 				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice_class_name ) ) ) );
