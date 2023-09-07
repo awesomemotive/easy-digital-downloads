@@ -43,30 +43,14 @@ class Recalculations implements SubscriberInterface {
 			return;
 		}
 
-		// If the order item data being updated doesn't affect sales/earnings, recalculations do not need to be run.
-		if ( $previous_order instanceof EDD\Orders\Order ) {
-			$columns_affecting_stats = array( 'status', 'total', 'subtotal', 'discount', 'tax', 'rate', 'customer_id' );
-
-			// If the data being updated isn't one of these columns then we don't need to recalculate.
-			if ( empty( array_intersect( array_keys( $data ), $columns_affecting_stats ) ) ) {
-				return;
-			}
-
-			// If the data exists but matches, we don't need to recalculate.
-			if (
-			( empty( $data['status'] ) || $previous_order->status === $data['status'] ) &&
-			( ! isset( $data['total'] ) || $previous_order->total == $data['total'] ) &&
-			( ! isset( $data['subtotal'] ) || $previous_order->subtotal == $data['subtotal'] ) &&
-			( ! isset( $data['discount'] ) || $previous_order->discount == $data['discount'] ) &&
-			( ! isset( $data['tax'] ) || $previous_order->tax == $data['tax'] ) &&
-			( ! isset( $data['rate'] ) || $previous_order->rate == $data['rate'] ) &&
-			( empty( $data['customer_id'] ) || $previous_order->customer_id == $data['customer_id'] )
-			) {
+		if ( is_object( $previous_order ) ) {
+			// If the order item data being updated doesn't affect sales/earnings, recalculations do not need to be run.
+			if ( ! $this->should_recalculate_from_previous( $data, $previous_order ) ) {
 				return;
 			}
 
 			// Recalculate the previous product values if the product ID has changed.
-			if ( ! empty( $data['customer_id'] ) && $previous_order->customer_id != $data['customer_id'] ) {
+			if ( isset( $data['customer_id'] ) && $previous_order->customer_id != $data['customer_id'] ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
 				$this->schedule_recalculation( $previous_order->customer_id );
 			}
 		}
@@ -102,6 +86,9 @@ class Recalculations implements SubscriberInterface {
 	 * @return void
 	 */
 	private function schedule_recalculation( $customer_id ) {
+		if ( empty( $customer_id ) ) {
+			return;
+		}
 		$is_scheduled = wp_next_scheduled( 'edd_recalculate_customer_deferred', array( $customer_id ) );
 		$bypass_cron  = apply_filters( 'edd_recalculate_bypass_cron', false );
 
@@ -123,5 +110,29 @@ class Recalculations implements SubscriberInterface {
 			'edd_recalculate_customer_deferred',
 			array( $customer_id )
 		);
+	}
+
+	/**
+	 * Determines if the customer stats should be recalculated based on the previous order data.
+	 *
+	 * @param array    $data           The array of order data.
+	 * @param stdClass $previous_order The previous order object.
+	 * @return bool
+	 */
+	private function should_recalculate_from_previous( $data, $previous_order ) {
+		$columns_affecting_stats = array( 'status', 'total', 'subtotal', 'discount', 'tax', 'rate', 'customer_id' );
+
+		// If the data being updated isn't one of these columns then we don't need to recalculate.
+		if ( empty( array_intersect( array_keys( $data ), $columns_affecting_stats ) ) ) {
+			return false;
+		}
+
+		foreach ( $columns_affecting_stats as $key ) {
+			if ( isset( $data[ $key ] ) && $previous_order->$key != $data[ $key ] ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

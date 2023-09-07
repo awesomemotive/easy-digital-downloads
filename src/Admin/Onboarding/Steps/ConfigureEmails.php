@@ -11,6 +11,8 @@
 
 namespace EDD\Admin\Onboarding\Steps;
 
+use EDD\Emails\Registry;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -36,6 +38,9 @@ class ConfigureEmails extends Step {
 			),
 		);
 
+		// Get an empty instance of the order receipt email, so we can use it to get the raw body content.
+		$order_receipt = Registry::get( 'order_receipt', array( false ) );
+
 		?>
 		<form method="post" action="options.php" class="edd-settings-form">
 			<?php settings_fields( 'edd_settings' ); ?>
@@ -58,7 +63,7 @@ class ConfigureEmails extends Step {
 									<?php esc_html_e( 'Insert Marker', 'easy-digital-downloads' ); ?>
 								</a>
 							</div>
-							<textarea name="edd_settings[purchase_receipt]" id="edd_settings_purchase_receipt" rows="12" style="width: 100%;"><?php echo wp_kses_post( wpautop( edd_get_option( 'purchase_receipt', edd_get_email_body_content() ) ) ); ?></textarea>
+							<textarea name="edd_settings[purchase_receipt]" id="edd_settings_purchase_receipt" rows="12" style="width: 100%;"><?php echo wp_kses_post( wpautop( $order_receipt->get_raw_body_content() ) ); ?></textarea>
 						</td>
 					</tr>
 				</tbody>

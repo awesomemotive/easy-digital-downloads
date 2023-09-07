@@ -131,7 +131,16 @@ class Base extends \EDD_Batch_Export {
 		} else {
 			$this->done    = true;
 			$this->message = $this->completed_message;
-			edd_set_upgrade_complete( $this->upgrade );
+
+			// We may have multiple upgrades to mark as completed...
+			if ( is_array( $this->upgrade ) ) {
+				foreach ( $this->upgrade as $upgrade ) {
+					edd_set_upgrade_complete( $upgrade );
+				}
+			} else {
+				edd_set_upgrade_complete( $this->upgrade );
+			}
+
 			delete_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->upgrade ) ) );
 			edd_v30_is_migration_complete();
 			return false;

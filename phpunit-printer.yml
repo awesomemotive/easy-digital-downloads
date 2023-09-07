@@ -1,0 +1,13 @@
+options:
+  cd-printer-hide-class: false
+  cd-printer-simple-output: false
+  cd-printer-show-config: false
+  cd-printer-hide-namespace: false
+  cd-printer-dont-format-classname: false
+markers:
+  cd-pass: "✔ "
+  cd-fail: "✖ "
+  cd-error: "⚈ "
+  cd-skipped: "⇢ "
+  cd-incomplete: "∅ "
+  cd-risky: "⌽ "

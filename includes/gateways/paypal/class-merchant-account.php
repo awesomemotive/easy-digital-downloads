@@ -43,6 +43,16 @@ class MerchantAccount {
 	private $wp_error;
 
 	/**
+	 * @var string The tracking ID of the merchant account.
+	 */
+	public $tracking_id;
+
+	/**
+	 * @var string The legal name of the merchant account.
+	 */
+	public $legal_name;
+
+	/**
 	 * MerchantAccount constructor.
 	 *
 	 * @param array $details

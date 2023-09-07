@@ -94,12 +94,12 @@ function edd_is_order_refund_window_passed( $order_id = 0 ) {
 		if ( 0 === $refund_window ) {
 			return true;
 		} else {
-			$date_refundable = \Carbon\Carbon::parse( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() )->addDays( $refund_window );
+			$date_refundable = \EDD\Utils\Date::parse( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() )->addDays( $refund_window );
 		}
 
 	// Parse date using Carbon.
 	} else {
-		$date_refundable = \Carbon\Carbon::parse( $order->date_refundable, 'UTC' )->setTimezone( edd_get_timezone_id() );
+		$date_refundable = \EDD\Utils\Date::parse( $order->date_refundable, 'UTC' )->setTimezone( edd_get_timezone_id() );
 	}
 
 	return true === $date_refundable->isPast();

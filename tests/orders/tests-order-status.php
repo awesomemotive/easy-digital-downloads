@@ -95,4 +95,27 @@ class Order_Status_Tests extends EDD_UnitTestCase {
 
 		$this->assertTrue( $order->is_recoverable() );
 	}
+
+	public function test_order_status_on_hold_is_not_complete() {
+		$order = parent::edd()->order->create_and_get();
+		edd_update_order( $order->id, array( 'status' => 'on_hold' ) );
+		$order = edd_get_order( $order->id );
+
+		$this->assertFalse( $order->is_complete() );
+	}
+
+	public function test_recording_dispute_sets_status_on_hold() {
+		$order = parent::edd()->order->create_and_get();
+		edd_record_order_dispute( $order->id, 'dispute_id_1', 'dispute_reason_1' );
+		$order = edd_get_order( $order->id );
+
+		$this->assertEquals( 'on_hold', $order->status );
+		$this->assertEquals( 'dispute_id_1', edd_get_order_dispute_id( $order->id ) );
+		$this->assertEquals( 'dispute_reason_1', edd_get_order_hold_reason( $order->id ) );
+
+		foreach ( $order->get_items() as $item ) {
+			$this->assertEquals( 'on_hold', $item->status );
+			$this->assertFalse( $item->is_deliverable() );
+		}
+	}
 }

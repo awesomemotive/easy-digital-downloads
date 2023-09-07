@@ -36,26 +36,40 @@ class Pages {
 	 */
 	private function get_pages() {
 		$purchase_page = edd_get_option( 'purchase_page', '' );
-		$success_page  = edd_get_option( 'success_page', '' );
-		$failure_page  = edd_get_option( 'failure_page', '' );
 		$pages         = array(
-			'checkout'       => array(
+			'checkout'           => array(
 				'label' => 'Checkout',
 				'value' => ! empty( $purchase_page ) ? 'Valid' : 'Invalid',
 			),
-			'checkout_uri'   => array(
+			'checkout_uri'       => array(
 				'label' => 'Checkout Page',
 				'value' => ! empty( $purchase_page ) ? get_permalink( $purchase_page ) : '',
 			),
-			'success_uri'    => array(
-				'label' => 'Success Page',
-				'value' => ! empty( $success_page ) ? get_permalink( $success_page ) : '',
+			'confirmation_uri'   => array(
+				'label' => 'Confirmation Page',
+				'value' => get_permalink( edd_get_option( 'confirmation_page', '' ) ),
 			),
-			'failure_uri'    => array(
+			'success_uri'        => array(
+				'label' => 'Receipt (Success) Page',
+				'value' => get_permalink( edd_get_option( 'success_page', '' ) ),
+			),
+			'failure_uri'        => array(
 				'label' => 'Failure Page',
-				'value' => ! empty( $failure_page ) ? get_permalink( $failure_page ) : '',
+				'value' => get_permalink( edd_get_option( 'failure_page', '' ) ),
 			),
-			'downloads_slug' => array(
+			'order_history_uri'  => array(
+				'label' => 'Order History Page',
+				'value' => get_permalink( edd_get_option( 'purchase_history_page', '' ) ),
+			),
+			'login_uri'          => array(
+				'label' => 'Login Page',
+				'value' => get_permalink( edd_get_option( 'login_page', '' ) ),
+			),
+			'login_redirect_uri' => array(
+				'label' => 'Login Redirect Page',
+				'value' => get_permalink( edd_get_option( 'login_redirect_page', '' ) ),
+			),
+			'downloads_slug'     => array(
 				'label' => 'Downloads Slug',
 				'value' => defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG : '/downloads',
 			),

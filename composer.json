@@ -9,20 +9,69 @@
         "issues": "https://easydigitaldownloads.com/support"
     },
     "config": {
-      "platform-check": false
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^6.5 || ^7.5 || ^8",
-        "yoast/phpunit-polyfills": "^1.0.4",
-        "yoast/wp-test-utils": "^1.0"
-    },
-    "minimum-stability": "dev",
-    "autoload": {
-      "psr-4": {
-        "EDD\\": "src"
+      "platform-check": false,
+      "allow-plugins": {
+        "dealerdirect/phpcodesniffer-composer-installer": true,
+        "phpstan/extension-installer": true
       }
     },
+    "require": {
+      "nesbot/carbon": "^2.69.0",
+      "stripe/stripe-php": "7.128.0"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^8",
+      "stevegrunwell/phpunit-markup-assertions": "^1.2",
+      "yoast/phpunit-polyfills": "^1.0.5",
+      "yoast/wp-test-utils": "^1.0",
+      "codedungeon/phpunit-result-printer": "dev-master",
+      "coenjacobs/mozart": "dev-master",
+      "wp-coding-standards/wpcs": "dev-develop",
+      "szepeviktor/phpstan-wordpress": "^1.3.0",
+      "phpstan/extension-installer": "^1.3.1",
+      "squizlabs/php_codesniffer": "^3.7.2",
+      "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+      "phpcompatibility/phpcompatibility-wp": "^2.1.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+      "psr-4": {
+        "EDD\\": "src/",
+        "EDD\\Vendor\\Stripe\\": "libraries/Stripe/lib/",
+        "EDD\\Vendor\\Carbon\\": "libraries/Carbon/src/Carbon/"
+      },
+      "files": [ "src/Globals/Polyfills/PHP.php"   ]
+    },
     "autoload-dev": {
-      "classmap": ["src","tests"]
+      "classmap": ["src/", "tests/"]
+    },
+    "scripts": {
+      "mozart": "vendor/bin/mozart compose && composer dump-autoload --no-dev"
+    },
+    "extra": {
+      "mozart": {
+        "dep_namespace": "EDD\\Vendor",
+        "dep_directory": "/libraries/",
+        "classmap_directory": "/libraries/",
+        "classmap_prefix": "EDD_",
+        "packages": [
+          "stripe/stripe-php",
+          "nesbot/carbon"
+        ],
+        "delete_vendor_directories": true,
+        "override_autoload": {
+          "stripe/stripe-php": {
+            "psr-4": {
+              "Stripe\\": ""
+            }
+          },
+          "nesbot/carbon": {
+            "psr-4": {
+              "Carbon\\": ""
+            }
+          }
+        }
+      }
     }
 }

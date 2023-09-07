@@ -22,6 +22,7 @@ class Environment {
 			'multisite'      => (int) (bool) is_multisite(),
 			'is_ssl'         => (int) (bool) is_ssl(),
 			'stripe_connect' => (int) (bool) edd_get_option( 'stripe_connect_account_id' ),
+			'rest_enabled'   => (int) (bool) $this->is_rest_enabled(),
 		);
 		$server = $this->parse_server();
 
@@ -71,5 +72,20 @@ class Environment {
 		$active_theme = wp_get_theme();
 
 		return $active_theme->name;
+	}
+
+	/**
+	 * Test if the REST API is accessible.
+	 *
+	 * The REST API might be inaccessible due to various security measures,
+	 * or it might be completely disabled by a plugin.
+	 *
+	 * @since 3.2.0
+	 * @return bool
+	 */
+	private function is_rest_enabled() {
+		$checker = new \EDD\Utils\RESTChecker( 'wp/v2/edd-downloads' );
+
+		return $checker->is_enabled();
 	}
 }

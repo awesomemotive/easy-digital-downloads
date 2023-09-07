@@ -38,7 +38,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202102161;
+	protected $version = 202307311;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -50,7 +50,8 @@ final class Adjustments extends Table {
 	protected $upgrades = array(
 		'201906031' => 201906031,
 		'202002121' => 202002121,
-		'202102161' => 202102161
+		'202102161' => 202102161,
+		'202307311' => 202307311,
 	);
 
 	/**
@@ -81,6 +82,7 @@ final class Adjustments extends Table {
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY type_status (type(20), status(20)),
+			KEY type_status_dates (type(20), status(20), start_date, end_date),
 			KEY code (code),
 			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
@@ -200,6 +202,23 @@ final class Adjustments extends Table {
 
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX type_status (type(20), status(20))" );
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX code (code)" );
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202307311
+	 *
+	 * 	- Create new `type_status_dates` index that includes the start and end dates.
+	 *
+	 * @since 3.2.0
+	 * @return bool
+	 */
+	protected function __202307311() {
+		if ( ! $this->index_exists( 'type_status_dates') ) {
+			$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX type_status_dates (type(20), status(20), start_date, end_date)" );
+			return $this->is_success( $result );
+		}
 
 		return true;
 	}

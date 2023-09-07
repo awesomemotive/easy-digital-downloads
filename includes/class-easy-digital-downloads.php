@@ -172,6 +172,13 @@ final class Easy_Digital_Downloads {
 	private $pro = false;
 
 	/**
+	 * Email Summary Admin
+	 *
+	 * @var EDD_Email_Summary_Admin
+	 */
+	public $email_summary_admin;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -262,7 +269,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public function __clone() {
 		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
+		_doing_it_wrong( __FUNCTION__, __( 'Method Not Allowed.', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
@@ -274,7 +281,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public function __wakeup() {
 		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
+		_doing_it_wrong( __FUNCTION__, __( 'Method Not Allowed.', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
@@ -355,7 +362,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.1.5' );
+			define( 'EDD_VERSION', '3.2.0' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -422,8 +429,7 @@ final class Easy_Digital_Downloads {
 
 		$GLOBALS['edd_options'] = edd_get_settings();
 
-		// Load Amazon Payments.
-		PayWithAmazon\EDD_Amazon_Payments::getInstance();
+		$this->maybe_load_amazon();
 
 		// Load cache helper.
 		new EDD_Cache_Helper();
@@ -655,7 +661,6 @@ final class Easy_Digital_Downloads {
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
@@ -703,6 +708,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/ui.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transitions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/statuses.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/disputes.php';
 
 		// Payments
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
@@ -889,6 +895,22 @@ final class Easy_Digital_Downloads {
 				}
 			}
 		} );
+	}
+
+	/**
+	 * Maybe load the Amazon Payments gateway.
+	 * If the gateway is not set up, this will do nothing.
+	 *
+	 * @since 3.2.0
+	 * @return void
+	 */
+	private function maybe_load_amazon() {
+		if ( ! edd_is_gateway_setup( 'amazon', true ) ) {
+			return;
+		}
+
+		require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
+		PayWithAmazon\EDD_Amazon_Payments::getInstance();
 	}
 }
 endif; // End if class_exists check.

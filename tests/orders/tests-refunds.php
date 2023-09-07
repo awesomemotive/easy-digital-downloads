@@ -11,11 +11,11 @@
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
-use Carbon\Carbon;
+use EDD\Utils\Date;
 use EDD\Utils\Exceptions\Invalid_Argument;
 use EDD\Orders\Refund_Validator;
 
- class Refunds_Tests extends EDD_UnitTestCase {
+class Refunds extends EDD_UnitTestCase {
 
 	/**
 	 * Orders fixture.
@@ -269,7 +269,7 @@ use EDD\Orders\Refund_Validator;
 		// Static date to ensure unit tests don't fail if this test runs for longer than 1 second.
 		$date = '2010-01-01 00:00:00';
 
-		$this->assertSame( Carbon::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
+		$this->assertSame( Date::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
 	}
 
 	/**

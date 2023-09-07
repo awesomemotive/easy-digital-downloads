@@ -39,7 +39,7 @@ final class EDD_Requirements_Check {
 
 		// PHP
 		'php' => array(
-			'minimum' => '7.1',
+			'minimum' => '7.4',
 			'name'    => 'PHP',
 			'exists'  => true,
 			'current' => false,
@@ -49,7 +49,7 @@ final class EDD_Requirements_Check {
 
 		// WordPress
 		'wp'  => array(
-			'minimum' => '5.4',
+			'minimum' => '5.8',
 			'name'    => 'WordPress',
 			'exists'  => true,
 			'current' => false,

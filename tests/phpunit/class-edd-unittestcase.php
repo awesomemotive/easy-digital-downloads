@@ -87,12 +87,11 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 				$this->expected_deprecated = array_merge( $this->expected_deprecated, $annotations[ $depth ]['expectEDDeprecated'] );
 			}
 		}
+
+		add_action( 'edd_should_trigger_deprecation_notices', '__return_false' );
 		add_action( 'edd_deprecated_function_run', array( $this, 'deprecated_function_run' ), 10, 3 );
 		add_action( 'edd_deprecated_argument_run', array( $this, 'deprecated_function_run' ), 10, 3 );
 		add_action( 'edd_deprecated_hook_run', array( $this, 'deprecated_function_run' ), 10, 3 );
-		add_action( 'edd_deprecated_function_trigger_error', '__return_false' );
-		add_action( 'edd_deprecated_argument_trigger_error', '__return_false' );
-		add_action( 'edd_deprecated_hook_trigger_error', '__return_false' );
 	}
 
 	protected static function edd() {

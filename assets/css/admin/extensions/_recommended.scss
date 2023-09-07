@@ -1,0 +1,21 @@
+.edd-extension-manager__card--installer {
+	&[data-filter*="recommended"] {
+		.edd-extension-manager__icon {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+}
+
+.edd-plugin__recommended {
+	font-size: 8px;
+	background: $wp-green-50;
+	color: $white;
+	margin-left: -1px;
+	margin-right: -1px;
+	padding: 6px 0;
+	border-radius: 0 0 4px 4px;
+	line-height: 1;
+	text-align: center;
+	width: 80px;
+}

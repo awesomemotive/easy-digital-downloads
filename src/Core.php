@@ -1,13 +1,21 @@
 <?php
-
 /**
  * Core class for adding event subscribers.
  *
  * @since 3.1.1
  * @package EDD
  */
+
 namespace EDD;
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Class Core
+ *
+ * @since 3.1.1
+ * @package EDD
+ */
 class Core extends EventManagement\Subscribers {
 
 	/**
@@ -21,6 +29,13 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Extensions\Extension_Manager(),
 			new Customers\Recalculations(),
 			new Admin\PassHandler\Cron(),
+			new Downloads\Services(),
+			new Orders\DeferredActions(),
+			new Emails\Triggers(),
+			new Globals\Polyfills\Loader(),
+
+			// Upgrades.
+			new Upgrades\Orders\MigrateAfterActionsDate(),
 		);
 	}
 
@@ -35,7 +50,7 @@ class Core extends EventManagement\Subscribers {
 			return array();
 		}
 
-		return array(
+		$providers = array(
 			new Admin\PassHandler\Settings( $this->pass_handler ),
 			new Admin\PassHandler\Actions( $this->pass_handler ),
 			new Admin\Extensions\Menu(),
@@ -53,7 +68,11 @@ class Core extends EventManagement\Subscribers {
 			new Admin\SiteHealth\Information(),
 			new Admin\Pointers(),
 			new Admin\Settings\Sanitize(),
+			new Admin\Downloads\Metabox(),
+			new Gateways\Stripe\Admin\LicenseManager(),
 		);
+
+		return $providers;
 	}
 
 	/**
@@ -63,8 +82,25 @@ class Core extends EventManagement\Subscribers {
 	 */
 	protected function get_replaceable_providers() {
 		return array(
-			new Admin\Extensions\Legacy(),
-			new Admin\Promos\PromoHandler(),
+			'Admin\Extensions\Legacy'   => new Admin\Extensions\Legacy(),
+			'Admin\Promos\PromoHandler' => new Admin\Promos\PromoHandler(),
+			'Admin\Discounts\Generate'  => new Admin\Discounts\Generate(),
+		);
+	}
+
+	/**
+	 * Gets the replaceable provider class names.
+	 *
+	 * This allows us to conditionally load the pro version of a provider.
+	 *
+	 * @since 3.2.0
+	 * @return array
+	 */
+	protected function get_replaceable_core_provider_classes() {
+		return array(
+			'Admin\Extensions\Legacy'   => 'EDD\Admin\Extensions\Legacy',
+			'Admin\Promos\PromoHandler' => 'EDD\Admin\Promos\PromoHandler',
+			'Admin\Discounts\Generate'  => 'EDD\Admin\Discounts\Generate',
 		);
 	}
 }

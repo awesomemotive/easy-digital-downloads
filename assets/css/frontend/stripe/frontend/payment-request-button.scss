@@ -1,0 +1,83 @@
+.edds-prb {
+	margin: 15px 0;
+	display: none;
+
+	&__or {
+		font-size: 90%;
+		text-align: center;
+		margin: 15px 0;
+		overflow: hidden;
+
+		&::before,
+		&::after {
+			background-color: rgba(0, 0, 0, .10);
+			content: "";
+			display: inline-block;
+			height: 1px;
+			position: relative;
+			vertical-align: middle;
+			width: 50%;
+		}
+
+		&::before {
+			right: 0.5em;
+			margin-left: -50%;
+		}
+
+		&::after {
+			left: 0.5em;
+			margin-right: -50%;
+		}
+	}
+}
+
+@mixin loadingState {
+
+	&.loading {
+		position: relative;
+
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			z-index: 100;
+		}
+
+		> * {
+			opacity: 0.65;
+		}
+	}
+}
+
+/**
+ * Purchase link loading state.
+ *
+ * Disables interaction while redirecting.
+ */
+.edd_download_purchase_form {
+
+	@include loadingState;
+}
+
+/**
+ * Checkout
+ */
+#edd_checkout_form_wrap {
+
+	@include loadingState;
+
+	&:not(.edd-prb--is-active) #edd-payment-mode-wrap #edd-gateway-option-stripe-prb {
+		display: none !important;
+	}
+
+	.edds-prb {
+		margin-bottom: 0;
+	}
+
+	.edds-prb__or {
+		display: none;
+	}
+}

@@ -25,7 +25,7 @@ add_action( 'admin_init', 'edd_do_automatic_upgrades' );
  */
 function edd_show_upgrade_notices() {
 	// Don't show notices on the upgrades page
-	$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+	$page = wp_strip_all_tags( filter_input( INPUT_GET, 'page' ) );
 	if ( ! empty( $page ) && ( 'edd-upgrades' === $page ) ) {
 		return;
 	}
@@ -76,7 +76,7 @@ function edd_show_upgrade_notices() {
 			} else {
 				$component = edd_get_component( 'order' );
 				$table     = $component->get_interface( 'table' );
-				if ( ! empty( $table ) ) {
+				if ( ! empty( $table ) && $table->exists() ) {
 					$version = $table->get_version();
 				}
 			}

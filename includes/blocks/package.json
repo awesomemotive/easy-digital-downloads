@@ -1,0 +1,20 @@
+{
+	"name": "edd-blocks",
+	"version": "2.0.8",
+	"description": "Core blocks for Easy Digital Downloads.",
+	"author": "Easy Digital Downloads",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"dev": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^23.6.0"
+	}
+}

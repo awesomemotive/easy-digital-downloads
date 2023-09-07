@@ -172,8 +172,7 @@ class ExtensionPage extends Extension {
 	protected function get_configuration( ProductData $product_data ) {
 
 		return array(
-			'style'   => 'installer',
-			'pass_id' => $this->pass_manager->can_access_categories( $product_data->categories ),
+			'style' => 'installer',
 		);
 	}
 

@@ -1,0 +1,27 @@
+@import "../scss/search";
+@import "../scss/row";
+
+div.edd-blocks__user-downloads {
+	border: 1px solid var(--edd-blocks-light-grey);
+	padding: 1rem;
+
+	.edd-blocks__row-column {
+		text-align: left;
+	}
+}
+
+.edd-order-items__header,
+.edd-order-item__product {
+	border-bottom: 1px solid var(--edd-blocks-light-grey);
+	padding: .5em 0;
+	gap: 1em;
+
+	&:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+}
+
+.edd-order-items__header {
+	padding-top: 0;
+}

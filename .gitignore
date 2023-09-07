@@ -33,8 +33,11 @@ node_modules
 # Temporary files
 *~
 
-# Stripe
-includes/gateways/stripe
-
 # Blocks
-includes/blocks
+includes/blocks/node_modules
+includes/blocks/package-lock.json
+
+/vendor
+!vendor/autoload.php
+!vendor/composer
+!vendor/symfony/deprecation-contracts

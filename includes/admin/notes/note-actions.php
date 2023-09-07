@@ -90,6 +90,10 @@ function edd_admin_delete_note( $data = array() ) {
 		return;
 	}
 
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		return;
+	}
+
 	// Try to delete
 	edd_delete_note( $data['note_id'] );
 

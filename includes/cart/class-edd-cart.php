@@ -436,8 +436,8 @@ class EDD_Cart {
 
 		$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
 
-		if ( $download->has_variable_prices()  && ! isset( $options['price_id'] ) ) {
-			// Forces to the default price ID if none is specified and download has variable prices
+		if ( $download->has_variable_prices() && ! isset( $options['price_id'] ) ) {
+			// Forces to the default price ID if none is specified and download has variable prices.
 			$options['price_id'] = $download->get_default_price_id();
 		}
 
@@ -456,7 +456,7 @@ class EDD_Cart {
 			$quantity = 1;
 		}
 
-		// If the price IDs are a string and is a coma separated list, make it an array (allows custom add to cart URLs)
+		// If the price IDs are a string and is a coma separated list, make it an array (allows custom add to cart URLs).
 		if ( isset( $options['price_id'] ) && ! is_array( $options['price_id'] ) && false !== strpos( $options['price_id'], ',' ) ) {
 			$options['price_id'] = explode( ',', $options['price_id'] );
 		}
@@ -464,34 +464,34 @@ class EDD_Cart {
 		$items = array();
 
 		if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
-			// Process multiple price options at once
+			// Process multiple price options at once.
 			foreach ( $options['price_id'] as $key => $price ) {
 				$items[] = array(
-					'id'           => $download_id,
-					'options'      => array(
-						'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
+					'id'       => $download_id,
+					'options'  => array(
+						'price_id' => preg_replace( '/[^0-9\.-]/', '', $price ),
 					),
-					'quantity'     => is_array( $quantity ) && isset( $quantity[ $key ] ) ? $quantity[ $key ] : $quantity,
+					'quantity' => is_array( $quantity ) && isset( $quantity[ $key ] ) ? $quantity[ $key ] : $quantity,
 				);
 			}
 		} else {
-			// Sanitize price IDs
-			foreach( $options as $key => $option ) {
+			// Sanitize price IDs.
+			foreach ( $options as $key => $option ) {
 				if ( 'price_id' == $key ) {
 					$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
 				}
 			}
 
-			// Add a single item
+			// Add a single item.
 			$items[] = array(
 				'id'       => $download_id,
 				'options'  => $options,
-				'quantity' => $quantity
+				'quantity' => $quantity,
 			);
 		}
 
 		foreach ( $items as &$item ) {
-			$item = apply_filters( 'edd_add_to_cart_item', $item );
+			$item   = apply_filters( 'edd_add_to_cart_item', $item );
 			$to_add = $item;
 
 			if ( ! is_array( $to_add ) ) {
@@ -511,6 +511,8 @@ class EDD_Cart {
 					$this->contents[ $key ]['quantity'] += $quantity;
 				}
 			} else {
+				// Generate a unique disposable hash for this item.
+				$to_add['hash']   = md5( $to_add['id'] . serialize( $to_add['options'] ) . time() . wp_rand( 0, 1000 ) );
 				$this->contents[] = $to_add;
 			}
 		}
@@ -923,8 +925,8 @@ class EDD_Cart {
 	 *
 	 * @param  int        $download_id               Download ID for the cart item
 	 * @param  array      $options                   Optional parameters, used for defining variable prices
- 	 * @param  bool       $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
- 	 * @return float|bool Price for this item
+	* @param  bool       $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
+	* @return float|bool Price for this item
 	 */
 	public function get_item_price( $download_id = 0, $options = array(), $remove_tax_from_inclusive = false ) {
 		$price = 0;
@@ -934,10 +936,9 @@ class EDD_Cart {
 			$prices = edd_get_variable_prices( $download_id );
 
 			if ( $prices ) {
-				if ( ! empty( $options ) ) {
-					$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : false;
-				} else {
-					$price = false;
+				$price = false;
+				if ( ! empty( $options ) && isset( $options['price_id'] ) ) {
+					$price = $prices[ $options['price_id'] ]['amount'];
 				}
 			}
 		}
@@ -1342,29 +1343,21 @@ class EDD_Cart {
 			return false;
 		}
 
-		$saved_cart = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
-
 		if ( is_user_logged_in() ) {
+			$saved_cart = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
 			if ( ! $saved_cart ) {
 				return false;
 			}
 
-			if ( $saved_cart === EDD()->session->get( 'edd_cart' ) ) {
-				return false;
-			}
-
-			return true;
-		} else {
-			if ( ! isset( $_COOKIE['edd_saved_cart'] ) ) {
-				return false;
-			}
-
-			if ( json_decode( stripslashes( $_COOKIE['edd_saved_cart'] ), true ) === EDD()->session->get( 'edd_cart' ) ) {
-				return false;
-			}
-
-			return true;
+			return EDD()->session->get( 'edd_cart' ) === $saved_cart;
 		}
+
+		if ( ! isset( $_COOKIE['edd_saved_cart'] ) ) {
+			return false;
+		}
+
+		// If there is a saved cart and it doesn't match the current cart, return true.
+		return json_decode( stripslashes( $_COOKIE['edd_saved_cart'] ), true ) !== EDD()->session->get( 'edd_cart' );
 	}
 
 	/**

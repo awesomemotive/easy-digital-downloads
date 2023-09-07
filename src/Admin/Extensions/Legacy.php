@@ -33,6 +33,39 @@ class Legacy implements \EDD\EventManagement\SubscriberInterface {
 				continue;
 			}
 			if ( $this->should_deactivate( $extension['basename'] ) ) {
+
+				// If a legacy extension has a notification ID, then add a local notification.
+				if ( ! empty( $extension['notification-id'] ) ) {
+					EDD()->notifications->maybe_add_local_notification(
+						array(
+							'remote_id' => $extension['notification-id'],
+							'type'      => 'info',
+							// translators: %s is the name of the extension.
+							'title'     => sprintf(
+								__( '%s is now part of EDD!', 'easy-digital-downloads' ),
+								$extension['name']
+							),
+							// translators: %s is the name of the extension.
+							'content'   => sprintf(
+								__( 'The functionality of %s has been merged into Easy Digital Downloads. It has been deactivated and you can safely delete the %s plugin.', 'easy-digital-downloads' ),
+								$extension['name'],
+								$extension['name']
+							),
+							'buttons'   => array(
+								array(
+									'text' => __( 'View Plugins', 'easy-digital-downloads' ),
+									'url'  => add_query_arg(
+										array(
+											's' => urlencode( $extension['name'] ),
+										),
+										admin_url( 'plugins.php' )
+									)
+								),
+							),
+						)
+					);
+				}
+
 				deactivate_plugins( $extension['basename'] );
 			}
 			if ( ! empty( $extension['option'] ) ) {
@@ -50,7 +83,7 @@ class Legacy implements \EDD\EventManagement\SubscriberInterface {
 	 * @return array
 	 */
 	public function update_plugin_links( $links, $plugin_file ) {
-		$links['activate'] = __( 'Inactive &mdash; part of EDD', 'easy-digital-downloads' );
+		$links['activate'] = __( 'Inactive &mdash; Part of EDD', 'easy-digital-downloads' );
 
 		return $links;
 	}
@@ -64,8 +97,15 @@ class Legacy implements \EDD\EventManagement\SubscriberInterface {
 	protected function get_extensions() {
 		return array(
 			'edd-manual-purchases' => array(
-				'basename' => 'edd-manual-purchases/edd-manual-purchases.php',
-				'option'   => 'edd_manual_purchases_license_active',
+				'notification-id' => 'mp-legacy-notice',
+				'name'            => 'Manual Purchases',
+				'basename'        => 'edd-manual-purchases/edd-manual-purchases.php',
+				'option'          => 'edd_manual_purchases_license_active',
+			),
+			'edd-downloads-as-services' => array(
+				'notification-id' => 'das-legacy-notice',
+				'name'            => 'Downloads as Services',
+				'basename'        => 'edd-downloads-as-services/edd-downloads-as-services.php',
 			),
 		);
 	}

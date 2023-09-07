@@ -11,6 +11,7 @@
  * @since       1.0
  */
 
+use EDD\Emails\Registry;
 use EDD\Reports;
 
 // Exit if accessed directly
@@ -2151,4 +2152,225 @@ function edd_get_next_payment_number() {
 	$order_number = new EDD\Orders\Number();
 
 	return $order_number->get_next_payment_number();
+}
+
+/**
+ * Schedules the one time event via WP_Cron to fire after purchase actions.
+ *
+ * Is run on the edd_complete_purchase action.
+ *
+ * @since 2.8
+ * @since 3.2.0 - Updated to call the DeferredActions class. Throwing an edd_debug_log entry instead of full deprecation.
+ *
+ * @deprecated 3.2.0 Moved to EDD\Orders\DeferredActions::schedule_deferred_actions(). This should not be used by anyone.
+ *
+ * @param $payment_id
+ */
+function edd_schedule_after_payment_action( $payment_id ) {
+	edd_debug_log( 'Calling edd_scheduled_after_payment_action directly has been deprecated in EDD 3.2. Please use the EDD\Orders\DeferredActions class instead.' );
+
+	/**
+	 * @todo offiically throw a deprecated function notice.
+	 */
+
+	EDD\Orders\DeferredActions::schedule_deferred_actions( $payment_id );
+}
+
+/**
+ * Executes the one time event used for after purchase actions.
+ *
+ * This function should have never been called from anywhere but outselves and on our cron.
+ *
+ * @since 2.8
+ * @since 3.1.0.4 This also verifies that all order items have the synced status as the order.
+ *
+ * @deprecated 3.2.0 - Moved to \EDD\Orders\DeferredActions\run_deferred_actions(). This should not be used by anyone.
+ *
+ * @param $payment_id
+ * @param $force
+ */
+function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', '\EDD\Orders\DeferredActions\run_deferred_actions' );
+}
+
+/*
+ * Registers custom post statuses which are used by the Payments and Discount
+ * Codes.
+ *
+ * @since 1.0.9.1
+ * @deprecated 3.2.0
+ */
+function edd_register_post_type_statuses() {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0' );
+}
+
+/**
+ * Triggers Purchase Receipt to be sent after the payment status is updated.
+ *
+ * This is a deprecated function but still exists, so that we can detect if a plugin has removed the action.
+ *
+ * @since 1.0.8.4
+ * @since 2.8 - Add parameters for EDD_Payment and EDD_Customer object.
+ *
+ * @deprecated 3.2.0 - Use EDD\Emails\Types\OrderReceipt instead.
+ *
+ * @param int          $payment_id Payment ID.
+ * @param EDD_Payment  $payment    Payment object for payment ID.
+ * @param EDD_Customer $customer   Customer object for associated payment.
+ * @return void
+ */
+function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $customer = null ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
+
+	/**
+	 * In EDD 3.2.0 we will be using the EDD\Emails\Triggers\send_purchase_receipt() function to send the email.
+	 *
+	 * Previously if you wanted to disable this email from sending you would just unhook this action. In order to still support this,
+	 * we'll set a meta here, and check for it when it comes time to send the email.
+	 *
+	 * Developers: If you want to disable sending the purchase receipt email you should use the filter `edd_disable_order_receipt` filter.
+	 */
+	edd_add_order_meta( $payment_id, '_edd_should_send_order_receipt', '1' );
+}
+add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 3 );
+
+/**
+ * Email the download link(s) and payment confirmation to the buyer in a
+ * customizable Purchase Receipt
+ *
+ * @since 1.0
+ * @since 2.8 - Add parameters for EDD_Payment and EDD_Customer object.
+ * @since 3.2.0 - Removed most logic and using the EDD\Emails\Types\OrderReceipt class to send the email.
+ *
+ * @deprecated 3.2.0 Use EDD\Emails\Types\OrderReceipt instead.
+ *
+ * @param int          $payment_id   Payment ID
+ * @param bool         $admin_notice Whether to send the admin email notification or not (default: true)
+ * @param EDD_Payment  $payment      Payment object for payment ID.
+ * @param EDD_Customer $customer     Customer object for associated payment.
+ * @return bool Whether the email was sent successfully.
+ */
+function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '', $payment = null, $customer = null ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
+
+	if ( ! empty( $payment_id ) ) {
+		$order = edd_get_order( $payment_id );
+	}
+
+	$order_receipt                    = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
+	$order_receipt->send_admin_notice = $admin_notice;
+	$order_receipt->send_to           = $to_email;
+
+	$sent = $order_receipt->send();
+
+	return $sent;
+}
+
+/**
+ * Resend the Email Purchase Receipt. (This can be done from the Payment History page)
+ *
+ * @since 1.0
+ *
+ * @deprecated 3.2.0 - Handeled with EDD\Emails\Triggers\resend_purchase_receipt instead.
+ *
+ * @param array $data Payment Data
+ * @return void
+ */
+function edd_resend_purchase_receipt( $data ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Triggers\resend_purchase_receipt' );
+
+	/**
+	 * In EDD 3.2.0 we will be using the EDD\Emails\Triggers\send_purchase_receipt() function to send the email.
+	 *
+	 * Previously if you wanted to disable this email from sending you would just unhook this action. In order to still support this,
+	 * we'll set a meta here, and check for it when it comes time to send the email.
+	 *
+	 * Developers: If you want to disable sending the purchase receipt email you should use the filter `edd_disable_order_receipt` filter.
+	 */
+	edd_add_order_meta( $data['purchase_id'], '_edd_should_send_order_receipt', '1' );
+}
+add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
+
+/**
+ * Trigger the sending of a Test Email
+ *
+ * @since 1.5
+ *
+ * @deprecated 3.2.0 - Handeled with EDD\Emails\Triggers\send_test_email instead.
+ *
+ * @param array $data Parameters sent from Settings page
+ * @return void
+ */
+function edd_send_test_email( $data ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Triggers\send_test_email' );
+}
+
+/**
+ * Email the download link(s) and payment confirmation to the admin accounts for testing.
+ *
+ * @since 1.5
+ *
+ * @since 3.2.0 - Removed all logic as we are now using the EDD\Emails\Triggers and EDD\Emails\Types\OrderReceipt class to send the email.
+ *
+ * @return void
+ */
+function edd_email_test_purchase_receipt() {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Triggers' );
+}
+
+/**
+ * This is a deprecated function now, but still exists so we can know if users are removeing it's action,
+ * to know if we are supposed to send the admin notices or not.
+ *
+ * @since 1.4.2
+ * @since 3.2.0 - Removed all logic as we are now using the EDD\Emails\Types\AdminOrderNotice class to send the email.
+ *
+ * @param int $payment_id Payment ID (default: 0)
+ * @param array $payment_data Payment Meta and Data
+ * @return void
+ */
+function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\AdminOrderNotice' );
+
+	/**
+	 * In EDD 3.2.0 we will be using the EDD\Emails\Triggers\edd_email_sent_order_receipt() function to send the email.
+	 *
+	 * Previously if you wanted to disable this email from sending you would just unhook this action. In order to still support this,
+	 * we'll set a meta here, and check for it when it comes time to send the email.
+	 *
+	 * Developers: If you want to disable sending the admin order notice email you should use the filter `edd_disable_admin_order_notice` filter.
+	 */
+	edd_add_order_meta( $payment_id, '_edd_should_send_admin_order_notice', '1' );
+}
+add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
+
+/**
+ * Displays the email preview
+ *
+ * @since 2.1
+ *
+ * @deprecated 3.2.0 This is now handeled by EDD\Emails\Triggers\preview_email()
+ *
+ * @return void
+ */
+function edd_display_email_template_preview() {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Triggers\preview_email()' );
+}
+
+/**
+ * Get sale notification email text
+ *
+ * Returns the stored email text if available, the standard email text if not
+ *
+ * @since 1.7
+ * @since 3.2.0 - Uses the EDD\Emails\Types\AdminOrderNotice class.
+ *
+ * @deprecated 3.2.0
+ *
+ * @return string $message
+ */
+function edd_get_default_sale_notification_email() {
+	$admin_order_notice = EDD\Emails\Registry::get( 'admin_order_notice', array( false ) );
+
+	return $admin_order_notice->get_raw_body_content();
 }

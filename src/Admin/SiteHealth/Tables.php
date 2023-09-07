@@ -73,6 +73,8 @@ class Tables {
 	 * @return string
 	 */
 	private function get_value_string( $thing ) {
-		return sprintf( '%s / %s', $thing->get_version(), $thing->count() );
+		return $thing->exists() ?
+			sprintf( '%s / %s', $thing->get_version(), $thing->count() ) :
+			'Error &mdash; table is missing';
 	}
 }

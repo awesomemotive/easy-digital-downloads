@@ -438,7 +438,7 @@ class EDD_Notices {
 			);
 		}
 
-		if ( 'accounting' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING ) ) {
+		if ( 'accounting' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
 			if ( ! empty( edd_get_option( 'sequential_start_update_failed', false ) ) ) {
 				$order_number = new \EDD\Orders\Number();
 				$this->add_notice(
@@ -600,6 +600,19 @@ class EDD_Notices {
 					$this->add_notice( array(
 						'id'      => 'edd-discount-deactivation-fail',
 						'message' => __( 'There was a problem deactivating that discount code, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_archived':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-archived',
+						'message' => __( 'Discount code archived.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_archived_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-archived-fail',
+						'message' => __( 'There was a problem archiving that discount code, please try again.', 'easy-digital-downloads' ),
 						'class'   => 'error'
 					) );
 					break;

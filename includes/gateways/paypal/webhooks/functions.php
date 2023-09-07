@@ -59,6 +59,7 @@ function get_webhook_events( $mode = '' ) {
 		'PAYMENT.CAPTURE.DENIED'    => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Payment_Capture_Denied',
 		'PAYMENT.CAPTURE.REFUNDED'  => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
 		'PAYMENT.CAPTURE.REVERSED'  => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
+		'CUSTOMER.DISPUTE.CREATED'  => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Customer_Dispute_Created',
 	);
 
 	/**
@@ -270,9 +271,14 @@ function delete_webhook( $mode = '' ) {
 
 	if ( 204 !== $api->last_response_code ) {
 		throw new API_Exception( sprintf(
-		/* Translators: %d - HTTP response code. */
+			/* Translators: %d - HTTP response code. */
 			__( 'Invalid response code %d while deleting webhook.', 'easy-digital-downloads' ),
 			$api->last_response_code
 		) );
 	}
 }
+
+add_action( 'rest_api_init', function () {
+	$handler = new Webhook_Handler();
+	$handler->register_routes();
+} );

@@ -248,6 +248,16 @@ class Orders extends Schema {
 			'sortable'   => true,
 		),
 
+		// date_actions_run.
+		array(
+			'name'       => 'date_actions_run',
+			'type'       => 'datetime',
+			'default'    => null,
+			'allow_null' => true,
+			'date_query' => true,
+			'sortable'   => true,
+		),
+
 		// uuid.
 		array(
 			'uuid' => true,

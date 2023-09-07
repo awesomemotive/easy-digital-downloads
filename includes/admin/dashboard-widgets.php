@@ -144,23 +144,6 @@ function edd_load_dashboard_sales_widget( ) {
 					</tr>
 				</tbody>
 			</table>
-			<table>
-				<thead>
-					<tr>
-						<td colspan="2"><?php esc_html_e( 'Last Month', 'easy-digital-downloads' ); ?> &mdash; <?php esc_html_e( 'Net', 'easy-digital-downloads' ); ?></td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="first t earnings"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="b b-last-month-earnings"><?php echo esc_html( $data['last_month']['earnings'] ); ?></td>
-					</tr>
-					<tr>
-						<td class="first t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['last_month']['count'], 'easy-digital-downloads' ) ); ?></td>
-						<td class="b b-last-month-sales"><?php echo esc_html( $data['last_month']['count'] ); ?></td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 		<div class="table table_right table_today">
 			<table>
@@ -181,6 +164,25 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr class="t sales">
 						<td class="t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['today']['count'], 'easy-digital-downloads' ) ); ?></td>
 						<td class="last b b-sales"><?php echo esc_html( $data['today']['count'] ); ?></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="table table_left table_last_month">
+			<table>
+				<thead>
+					<tr>
+						<td colspan="2"><?php esc_html_e( 'Last Month', 'easy-digital-downloads' ); ?> &mdash; <?php esc_html_e( 'Net', 'easy-digital-downloads' ); ?></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="first t earnings"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
+						<td class="b b-last-month-earnings"><?php echo esc_html( $data['last_month']['earnings'] ); ?></td>
+					</tr>
+					<tr>
+						<td class="first t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['last_month']['count'], 'easy-digital-downloads' ) ); ?></td>
+						<td class="b b-last-month-sales"><?php echo esc_html( $data['last_month']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>

@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 function edd_do_ajax_import_file_upload() {
 
 	if ( ! wp_verify_nonce( $_REQUEST['edd_ajax_import'], 'edd_ajax_import' ) ) {
-		wp_send_json_error( array( 'error' => __( 'Nonce verification failed', 'easy-digital-downloads' ) ) );
+		wp_send_json_error( array( 'error' => __( 'Nonce verification failed.', 'easy-digital-downloads' ) ) );
 	}
 
 	if ( empty( $_POST['edd-import-class'] ) ) {
@@ -103,7 +103,7 @@ function edd_do_ajax_import() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import.php';
 
 	if( ! wp_verify_nonce( $_REQUEST['nonce'], 'edd_ajax_import' ) ) {
-		wp_send_json_error( array( 'error' => __( 'Nonce verification failed', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+		wp_send_json_error( array( 'error' => __( 'Nonce verification failed.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
 	if ( empty( $_REQUEST['class'] ) ) {

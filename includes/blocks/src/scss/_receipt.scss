@@ -1,0 +1,23 @@
+.edd-blocks-receipt__totals,
+.edd-blocks-receipt__items {
+	border: 1px solid var(--edd-blocks-light-grey);
+	padding: 1rem;
+	margin: 0 auto 1.5rem;
+	display: grid;
+}
+
+.edd-blocks-receipt__row-item {
+	padding: .5rem 0;
+	border-bottom: 1px solid var(--edd-blocks-light-grey);
+
+	&:last-child {
+		border-bottom: none !important;
+	}
+}
+
+.edd-blocks-receipt__row-header {
+	font-size: 1.1rem;
+	font-weight: bold;
+	border-bottom: 1px solid var(--edd-blocks-light-grey);
+	padding-bottom: 0.5rem;
+}
