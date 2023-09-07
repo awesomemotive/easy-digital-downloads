@@ -84,7 +84,7 @@ class Extension_Manager implements SubscriberInterface {
 				'results'                  => __( 'extensions found', 'easy-digital-downloads' ),
 				'deactivating'             => __( 'Deactivating', 'easy-digital-downloads' ),
 				'debug'                    => edd_doing_script_debug(),
-				'filter'                   => filter_input( INPUT_GET, 'filter', FILTER_SANITIZE_STRING ),
+				'filter'                   => filter_input( INPUT_GET, 'filter', FILTER_SANITIZE_SPECIAL_CHARS ),
 			)
 		);
 	}

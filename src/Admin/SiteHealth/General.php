@@ -114,6 +114,14 @@ class General {
 					'label' => 'Download Link Expiration',
 					'value' => edd_get_option( 'download_link_expiration' ) . ' hour(s)',
 				),
+				'rest_enabled'             => array(
+					'label' => 'REST API',
+					'value' => $this->is_rest_api_enabled( 'wp/v2/edd-downloads' ) ? 'Accessible' : 'Not Accessible',
+				),
+				'paypal_rest_available'    => array(
+					'label' => 'PayPal REST Endpoints',
+					'value' => $this->is_rest_api_enabled( 'edd/webhooks/v1/paypal/webhook-test' ) ? 'Accessible' : 'Not Accessible',
+				),
 			),
 		);
 	}
@@ -143,5 +151,24 @@ class General {
 		}
 
 		return $this->pass_manager::isPro() ? 'Enabled' : 'Missing License';
+	}
+
+	/**
+	 * Test if the REST API is accessible.
+	 *
+	 * The REST API might be inaccessible due to various security measures,
+	 * or it might be completely disabled by a plugin.
+	 *
+	 * @since 3.2.0
+	 * @return bool
+	 */
+	private function is_rest_api_enabled( $endpoint = '' ) {
+		if ( empty( $endpoint ) ) {
+			return;
+		}
+
+		$checker = new \EDD\Utils\RESTChecker( $endpoint );
+
+		return $checker->is_enabled();
 	}
 }

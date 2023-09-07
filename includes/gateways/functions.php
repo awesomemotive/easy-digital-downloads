@@ -508,10 +508,10 @@ function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'compl
  * @since 3.1.2
  *
  * @param string $gateway The gateway to check.
- *
+ * @param bool   $ignore_registration Whether or not to ignore if the gateway is registered.
  * @return bool True if the gateway is setup, false otherwise.
  */
-function edd_is_gateway_setup( $gateway = '' ) {
+function edd_is_gateway_setup( $gateway = '', $ignore_registration = false ) {
 	// Return false if no gateway is passed.
 	if ( empty( $gateway ) ) {
 		return false;
@@ -520,7 +520,7 @@ function edd_is_gateway_setup( $gateway = '' ) {
 	$gateways = edd_get_payment_gateways();
 
 	// If the gateway is not registered, return false.
-	if ( ! array_key_exists( $gateway, $gateways ) ) {
+	if ( ! array_key_exists( $gateway, $gateways ) && ! $ignore_registration ) {
 		return false;
 	}
 
@@ -536,6 +536,23 @@ function edd_is_gateway_setup( $gateway = '' ) {
 
 		case 'paypal_commerce':
 			$is_setup = EDD\Gateways\PayPal\ready_to_accept_payments();
+			break;
+
+		case 'amazon':
+			$amazon_settings = array(
+				'amazon_seller_id',
+				'amazon_client_id',
+				'amazon_mws_access_key',
+				'amazon_mws_secret_key',
+			);
+
+			$is_setup = true;
+			foreach ( $amazon_settings as $key ) {
+				if ( empty( edd_get_option( $key, '' ) ) ) {
+					$is_setup = false;
+					break;
+				}
+			}
 			break;
 
 		default:
@@ -595,6 +612,16 @@ function edd_get_gateway_settings_url( $gateway = '' ) {
 
 		case 'paypal_commerce':
 			$gateway_settings_url = EDD\Gateways\PayPal\Admin\get_settings_url();
+			break;
+
+		case 'amazon':
+			$gateway_settings_url = edd_get_admin_url(
+				array(
+					'page'    => 'edd-settings',
+					'tab'     => 'gateways',
+					'section' => 'amazon',
+				)
+			);
 			break;
 
 		default:

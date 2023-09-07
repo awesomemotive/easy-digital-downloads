@@ -60,7 +60,11 @@ module.exports = function ( grunt ) {
 					'assets/images/**',
 					'i18n/**',
 					'includes/**',
+					'!includes/blocks/node_modules/**',
+					'!includes/blocks/composer.json',
+					'!includes/blocks/package.json',
 					'languages/**',
+					'libraries/**',
 					'templates/**',
 					'vendor/**',
 					'src/**',
@@ -68,7 +72,11 @@ module.exports = function ( grunt ) {
 					'*.txt',
 					'assets/pro/js/*.js',
 					'!src/Lite/**',
-					'!assets/lite/**'
+					'!assets/lite/**',
+					'!vendor/**',
+					'vendor/autoload.php',
+					'vendor/composer/**',
+					'vendor/symfony/deprecation-contracts/**'
 				],
 				dest: 'build/<%= pkg.name %>-pro/',
 			},
@@ -86,7 +94,12 @@ module.exports = function ( grunt ) {
 					'!includes/blocks/pro/**',
 					'!includes/blocks/assets/pro/**',
 					'!includes/blocks/build/pro/**',
+					'!includes/blocks/node_modules/**',
+					'!includes/blocks/src/pro/**',
+					'!includes/blocks/composer.json',
+					'!includes/blocks/package.json',
 					'languages/**',
+					'libraries/**',
 					'templates/**',
 					'vendor/**',
 					'src/**',
@@ -94,7 +107,11 @@ module.exports = function ( grunt ) {
 					'*.txt',
 					'!src/Pro/**',
 					'!assets/pro/**',
-					'assets/lite/**'
+					'assets/lite/**',
+					'!vendor/**',
+					'vendor/autoload.php',
+					'vendor/composer/**',
+					'vendor/symfony/deprecation-contracts/**'
 				],
 				dest: 'build/<%= pkg.name %>/',
 			},
@@ -125,30 +142,6 @@ module.exports = function ( grunt ) {
 		},
 
 		replace: {
-			stripe: {
-				options: {
-					patterns: [
-						{
-							match: /edd_stripe_bootstrap/g,
-							replacement: 'edd_stripe_core_bootstrap',
-							expression: true,
-						},
-						{
-							match: /remove_action(.*);/g,
-							replacement: '',
-							expression: true,
-						}
-					]
-				},
-				files: [
-					{
-						expand: true,
-						flatten: true,
-						src: [ 'includes/gateways/stripe/edd-stripe.php' ],
-						dest: 'includes/gateways/stripe'
-					}
-				]
-			},
 			blocks: {
 				options: {
 					patterns: [

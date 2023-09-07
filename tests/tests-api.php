@@ -158,7 +158,11 @@ class Tests_API extends EDD_UnitTestCase {
 
 		self::$payment_id = edd_insert_payment( $purchase_data );
 
+		// We don't want to trigger purchase receipts here.
+		remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 		edd_update_payment_status( self::$payment_id, 'complete' );
+		// Now add it back.
+		add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 
 		self::$api_output       = self::$api->get_products();
 		self::$api_output_sales = self::$api->get_recent_sales();

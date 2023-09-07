@@ -65,7 +65,12 @@ function edd_process_add_to_cart( $data ) {
 	}
 
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
-		foreach ( $options['price_id'] as  $key => $price_id ) {
+		if ( ! isset( $options['quantity'] ) ) {
+			$options['quantity'] = array();
+		} elseif ( ! is_array( $options['quantity'] ) ) {
+			$options['quantity'] = (array) $options['quantity'];
+		}
+		foreach ( $options['price_id'] as $key => $price_id ) {
 			$options['quantity'][ $key ] = isset( $data[ 'edd_download_quantity_' . $price_id ] ) ? absint( $data[ 'edd_download_quantity_' . $price_id ] ) : 1;
 		}
 	}
@@ -75,7 +80,7 @@ function edd_process_add_to_cart( $data ) {
 	}
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
-		$query_args = remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) );
+		$query_args = remove_query_arg( array( 'edd_action', 'download_id', 'edd_options', 'edd_download_quantity' ) );
 		$query_part = strpos( $query_args, "?" );
 		$url_parameters = '';
 
@@ -85,7 +90,7 @@ function edd_process_add_to_cart( $data ) {
 
 		edd_redirect( edd_get_checkout_uri() . $url_parameters, 303 );
 	} else {
-		edd_redirect( remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) ) );
+		edd_redirect( remove_query_arg( array( 'edd_action', 'download_id', 'edd_options', 'edd_download_quantity' ) ) );
 	}
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );

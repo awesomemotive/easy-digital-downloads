@@ -3,6 +3,7 @@
  * Payment tests.
  *
  * @group edd_payments
+ * @group edd_legacy
  */
 namespace EDD\Tests\Orders;
 
@@ -209,6 +210,7 @@ class Payment_Tests extends EDD_UnitTestCase {
 			'revoked'            => 'Revoked',
 			'abandoned'          => 'Abandoned',
 			'processing'         => 'Processing',
+			'on_hold'            => 'On Hold',
 		);
 
 		$this->assertEquals( $expected, $out );
@@ -218,14 +220,15 @@ class Payment_Tests extends EDD_UnitTestCase {
 		$out = edd_get_payment_status_keys();
 
 		$expected = array(
-			'pending'            => __( 'Pending',    'easy-digital-downloads' ),
+			'pending'            => __( 'Pending', 'easy-digital-downloads' ),
 			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
-			'complete'           => __( 'Completed',  'easy-digital-downloads' ),
-			'refunded'           => __( 'Refunded',   'easy-digital-downloads' ),
+			'complete'           => __( 'Completed', 'easy-digital-downloads' ),
+			'refunded'           => __( 'Refunded', 'easy-digital-downloads' ),
 			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
-			'revoked'            => __( 'Revoked',    'easy-digital-downloads' ),
-			'failed'             => __( 'Failed',     'easy-digital-downloads' ),
-			'abandoned'          => __( 'Abandoned',  'easy-digital-downloads' )
+			'revoked'            => __( 'Revoked', 'easy-digital-downloads' ),
+			'failed'             => __( 'Failed', 'easy-digital-downloads' ),
+			'abandoned'          => __( 'Abandoned', 'easy-digital-downloads' ),
+			'on_hold'            => __( 'On Hold', 'easy-digital-downloads' ),
 		);
 
 		asort( $expected );

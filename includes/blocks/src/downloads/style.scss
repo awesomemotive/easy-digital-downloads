@@ -1,0 +1,47 @@
+@import "../scss/general";
+
+.wp-block-edd-downloads {
+	.navigation {
+		display: flex;
+		justify-content: center;
+		margin: 2rem 0;
+		border: none;
+		gap: .5rem;
+	}
+
+	.page-numbers {
+		border: 1px solid;
+		border-radius: 3px;
+		padding: .5rem 1rem;
+	}
+}
+
+.edd-blocks__downloads {
+	display: grid;
+	gap: 2rem;
+}
+
+.edd-blocks__columns {
+	.edd-blocks__download {
+		display: flex;
+		flex-direction: column;
+		padding: 1rem;
+	}
+
+	.edd-blocks__download-content {
+		flex-grow: 1;
+	}
+}
+
+.edd-blocks__download-image-link {
+	border: none;
+	padding: 0;
+
+	img {
+		display: block;
+		max-width: 100%;
+		height: auto;
+	}
+}
+
+@import "../scss/buy-button";

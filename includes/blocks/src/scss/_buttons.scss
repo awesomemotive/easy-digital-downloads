@@ -1,0 +1,22 @@
+.edd-submit,
+.edd-button-secondary {
+	transition: all .2s ease-in-out;
+
+	&:active,
+	&:hover {
+		transform: translateY(-1px);
+	}
+}
+
+.edd-button-secondary {
+	background-color: var(--edd-blocks-light-grey);
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	color: unset;
+	margin: 0;
+	padding: .5rem 1rem;
+
+	&:disabled {
+		opacity: .6;
+	}
+}

@@ -65,10 +65,45 @@ export WP_MULTISITE="${TEST_WP_MULTISITE:-0}"
 # Default TEST_INPLACE to 0
 export TEST_INPLACE="${TEST_INPLACE:-0}"
 
+# Default OFFLINE to 0
+export OFFLINE="${OFFLINE:-0}"
+
 # Create a random project name
 export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)"
 
+
+# If the wp command exists, try and run our action checks.
+if [[ -f "$(which wp)" ]]; then
+
+	set +e
+	site_url=$(wp option get siteurl 2>&1 | tail -n1)
+
+	# If the last command had a non 0 exit code, then we know that the siteurl option is not set.
+	if [[ $? != 0 ]]; then
+		printf "\e[1;31mError: The siteurl option is not available. Skipping action tests.\e[0m"
+		printf "\n"
+		printf "\n"
+	elif [[ $(curl -s -o /dev/null -w "%{http_code}" "$site_url") != "200" ]]; then
+		printf "\e[1;31mError: The site at ${site_url} is not available. Skipping action tests.\e[0m"
+		printf "\n"
+		printf "\n"
+	else
+		printf "\e[1;32mSite found at ${site_url}. Running action tests...\e[0m"
+		printf "\n"
+		printf "\n"
+
+		# Run our checks on admin actions.
+		./bin/check-actions.sh
+	fi
+else
+	printf "\e[1;31mWP-CLI not found. Skipping action tests.\e[0m"
+	printf "\n"
+fi
+
 # Do this to make sure we cleanup
 set +e
-docker-compose -f docker-compose-phpunit.yml run -e "TEST_INPLACE=${TEST_INPLACE}" --rm --user $(id -u):$(id -g) wordpress
-docker-compose -f docker-compose-phpunit.yml down -v
+echo "Starting Docker containers..."
+docker-compose --progress quiet -f docker-compose-phpunit.yml run -e "TEST_INPLACE=${TEST_INPLACE}" --rm --user $(id -u):$(id -g) wordpress
+
+echo "Removing Docker containers..."
+docker-compose --progress quiet -f docker-compose-phpunit.yml down -v

@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_process_batch_export_download() {
 	if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'edd-batch-export' ) ) {
-		wp_die( esc_html__( 'Nonce verification failed', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( esc_html__( 'Nonce verification failed.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';

@@ -599,7 +599,7 @@ class EDD_CLI extends WP_CLI_Command {
 				if ( edd_has_variable_prices( $download->ID ) ) {
 					$prices = edd_get_variable_prices( $download->ID );
 
-					if ( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
+					if ( false === $price_id || ( ! empty( $prices ) && ! array_key_exists( $price_id, (array) $prices ) ) ) {
 						$item_price_id = array_rand( $prices );
 					} else {
 						$item_price_id = $price_id;
@@ -734,89 +734,96 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * --legacy: Create legacy discount codes using pre-3.0 schema
 	 * --number: The number of discounts to create
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd create_discounts --number=100
-	 * wp edd create_discounts --number=50 --legacy
 	 */
 	public function create_discounts( $args, $assoc_args ) {
 		$number = array_key_exists( 'number', $assoc_args ) ? absint( $assoc_args['number'] ) : 1;
-		$legacy = array_key_exists( 'legacy', $assoc_args ) ? true : false;
 
 		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Discount Codes', $number );
 
 		for ( $i = 0; $i < $number; $i ++ ) {
-			if ( $legacy ) {
-				$discount_id = wp_insert_post( array(
-					'post_type'   => 'edd_discount',
-					'post_title'  => 'Auto-Generated Legacy Discount #' . $i,
-					'post_status' => 'active',
-				) );
+			$type              = array( 'flat', 'percent' );
+			$status            = array( 'active', 'inactive', 'archived' );
+			$product_condition = array( 'any', 'all' );
 
-				$download_ids = get_posts( array(
-					'post_type'      => 'download',
-					'posts_per_page' => 2,
-					'fields'         => 'ids',
-					'orderby'        => 'rand',
-				) );
+			$type_index              = array_rand( $type, 1 );
+			$status_index            = array_rand( $status, 1 );
+			$product_condition_index = array_rand( $product_condition, 1 );
 
-				$meta = array(
-					'code'              => 'LEGACY' . $i,
-					'status'            => 'active',
-					'uses'              => 10,
-					'max_uses'          => 20,
-					'name'              => 'Auto-Generated Legacy Discount #' . $i,
-					'amount'            => 20,
-					'start'             => '01/01/2000 00:00:00',
-					'expiration'        => '12/31/2050 23:59:59',
-					'type'              => 'percent',
-					'min_price'         => '10.50',
-					'product_reqs'      => array( $download_ids[0] ),
-					'product_condition' => 'all',
-					'excluded_products' => array( $download_ids[1] ),
-					'is_not_global'     => true,
-					'is_single_use'     => true,
-				);
-
-				remove_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
-				remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99 );
-
-				foreach ( $meta as $key => $value ) {
-					add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+			// Randomly set a start date and time.
+			if ( rand( 0, 1 ) ) {
+				// Generate a start date randomly between 90 days ago and 90 days in the future.
+				$start_date_range = rand( -90, 90 );
+				if ( 0 > $start_date_range ) {
+					$start_date_range = '+' . intval( $start_date_range );
 				}
 
-				add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
-				add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
-			} else {
-				$type              = array( 'flat', 'percent' );
-				$status            = array( 'active', 'inactive' );
-				$product_condition = array( 'any', 'all' );
+				$start_date_string = date( 'Y-m-d', strtotime( $start_date_range . ' days' ) );
 
-				$type_index              = array_rand( $type, 1 );
-				$status_index            = array_rand( $status, 1 );
-				$product_condition_index = array_rand( $product_condition, 1 );
+				$start_hour = rand( 0, 23 );
+				$start_min  = rand( 0, 59 );
 
-				$post = array(
-					'code'              => md5( time() ),
-					'uses'              => mt_rand( 0, 100 ),
-					'max'               => mt_rand( 0, 100 ),
-					'name'              => 'Auto-Generated Discount #' . $i,
-					'type'              => $type[ $type_index ],
-					'amount'            => mt_rand( 10, 95 ),
-					'start'             => '12/12/2010 00:00:00',
-					'expiration'        => '12/31/2050 23:59:59',
-					'min_price'         => mt_rand( 30, 255 ),
-					'status'            => $status[ $status_index ],
-					'product_condition' => $product_condition[ $product_condition_index ],
+				$start_date = edd_get_utc_date_string(
+					EDD()->utils->get_date_string(
+						$start_date_string,
+						$start_hour,
+						$start_min
+					)
 				);
-
-				edd_store_discount( $post );
-
-				$progress->tick();
 			}
+
+			// Randomly set a end date and time.
+			if ( rand( 0, 1 ) ) {
+				// Generate a start date randomly between 90 days ago and 90 days in the future.
+				$end_date_range = rand( 1, 90 );
+
+				if ( isset( $start_date_string ) ) {
+					$end_date_string = date( 'Y-m-d', strtotime( $start_date_string . ' +' . $end_date_range . ' days' ) );
+				} else {
+					$end_date_string = date( 'Y-m-d', strtotime( '+' . $end_date_range . ' days' ) );
+				}
+
+				$end_hour = rand( 0, 23 );
+				$end_min  = rand( 0, 59 );
+
+				$end_date = edd_get_utc_date_string(
+					EDD()->utils->get_date_string(
+						$end_date_string,
+						$end_hour,
+						$end_min
+					)
+				);
+			}
+
+			$max = mt_rand( 0, 100 );
+
+			$discount = array(
+				'code'              => md5( wp_generate_uuid4() ),
+				'uses'              => mt_rand( 0, $max ),
+				'max'               => $max,
+				'name'              => 'Auto-Generated Discount #' . $i,
+				'type'              => $type[ $type_index ],
+				'amount'            => mt_rand( 10, 95 ),
+				'min_price'         => mt_rand( 1, 255 ),
+				'status'       => $status[ $status_index ],
+				'product_reqs' => $product_condition[ $product_condition_index ],
+			);
+
+			if ( isset( $start_date ) ) {
+				$discount['start_date'] = $start_date;
+			}
+
+			if ( isset( $end_date ) ) {
+				$discount['end_date'] = $end_date;
+			}
+
+			edd_add_discount( $discount );
+
+			$progress->tick();
 		}
 
 		$progress->finish();
@@ -1682,7 +1689,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 					// Delete the existing order to re-run the migration fresh.
 					if ( $destroy ) {
-						$parent_id = 'refund' === $migrated->type && ! empty( $migrated->parent ) ? $migrated->parent : false;
+						$parent_id = ! empty( $migrated->type ) && 'refund' === $migrated->type && ! empty( $migrated->parent ) ? $migrated->parent : false;
 
 						// EDD has detected a collision between a refund ID and a payment ID.
 						if ( ! empty( $parent_id ) ) {
@@ -1694,7 +1701,7 @@ class EDD_CLI extends WP_CLI_Command {
 									$parent_id
 								)
 							);
-						} elseif ( $result->post_date_gmt !== $migrated->date_created ) {
+						} elseif ( ! empty( $migrated->date_created ) && $result->post_date_gmt !== $migrated->date_created ) {
 							// The migrated order does not appear to be the same as the original order, so let's confirm.
 							WP_CLI::confirm(
 								sprintf(
@@ -1761,6 +1768,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( $full_migration ) {
 				edd_set_upgrade_complete( 'migrate_orders' );
 				edd_set_upgrade_complete( 'remove_legacy_payments' );
+				edd_set_upgrade_complete( 'migrate_order_actions_date' );
 			}
 		} else {
 			if ( ! $full_migration ) {
@@ -2152,6 +2160,19 @@ class EDD_CLI extends WP_CLI_Command {
 			$i ++;
 		}
 		$progress->finish();
+	}
+
+	/**
+	 * Migrate missing discounts.
+	 *
+	 * wp edd migrate_missing_discounts
+	 *
+	 * @since 3.2.0
+	 * @return void
+	 */
+	public function migrate_missing_discounts() {
+		$discounts = new EDD\CLI\Migration\Discounts();
+		$discounts->migrate_missing();
 	}
 
 	protected function get_fname() {

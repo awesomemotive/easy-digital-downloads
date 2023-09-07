@@ -11,7 +11,7 @@ use EDD\Licensing\API;
 use EDD\Licensing\License;
 use EDD\Admin\Pass_Manager;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -87,11 +87,11 @@ class Handler {
 	/**
 	 * Class constructor
 	 *
-	 * @param string  $_file
-	 * @param int     $_item_id
-	 * @param string  $_item_name
-	 * @param string  $_version
-	 * @param string  $_optname
+	 * @param string $_file
+	 * @param int    $_item_id
+	 * @param string $_item_name
+	 * @param string $_version
+	 * @param string $_optname
 	 */
 	public function __construct( $_file, $_item_id, $_item_name, $_version, $_optname = null ) {
 		$this->file           = $_file;
@@ -371,6 +371,11 @@ class Handler {
 	 * @return bool
 	 */
 	private function should_show_error_notice() {
+
+		// Don't show the notice if EDD (Pro) is active.
+		if ( edd_is_pro() ) {
+			return false;
+		}
 
 		// Included in pass.
 		if ( $this->is_included_in_pass() ) {

@@ -1,0 +1,52 @@
+.edd-promo-notice__popup {
+	display: flex;
+	justify-content: center;
+	justify-items: center;
+	flex-direction: column;
+	margin: 2em auto;
+	gap: 0 1.5em;
+
+	& h2 {
+		line-height: 1.6em;
+		margin: 0 auto;
+		max-width: 540px;
+		font-size: 1.25em;
+	}
+
+	& .content {
+		display: inherit;
+		flex-direction: inherit;
+		justify-items: center;
+		text-align: center;
+
+		.edd-promo-notice__features {
+			text-align: left;
+			display: grid;
+			grid-template-columns: repeat( 3, auto );
+			margin: 2em auto;
+			gap: 0 1.5em;
+			flex-direction: row;
+
+			li {
+				display: flex;
+				gap: .5em;
+				align-items: center;
+				min-width: 50%;
+			}
+
+			@media screen and (max-width: $break-small) {
+				grid-template-columns: unset;
+			}
+		}
+
+		& .button-primary {
+			padding: 4px 36px;
+			margin: .5em auto .5em;
+			max-width: 360px;
+		}
+
+		&__link {
+			color: $gray-100;
+		}
+	}
+}

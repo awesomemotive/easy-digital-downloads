@@ -54,6 +54,37 @@ class Orders extends EDD_UnitTestCase {
 		$this->assertEquals( 2.2, $fee->total );
 	}
 
+	public function test_fee_with_custom_data_gets_saved() {
+		// Replace the fees.
+		$fees       = array(
+			'custom_fee_data' => array(
+				'id'          => 'custom_fee_data',
+				'label'       => 'Custom Fee With Extra Data',
+				'amount'      => 10,
+				'no_tax'      => true,
+				'type'        => 'fee',
+				'download_id' => self::$download->ID,
+				'price_id'    => null,
+				'points_type' => 'custom',
+				'points'      => 5,
+				'money'       => edd_format_amount( 10 ),
+			),
+		);
+		$order_data = $this->get_order_data( false, $fees );
+
+		$order_id = edd_build_order( $order_data );
+
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'object_id' => $order_id,
+			)
+		);
+
+		$adjustment = reset( $order_adjustments );
+
+		$this->assertSame( 'custom', edd_get_order_adjustment_meta( $adjustment->id, 'points_type', true ) );
+	}
+
 	private function build_order_and_get_fee( $no_tax = false ) {
 		$order_id = edd_build_order( $this->get_order_data( $no_tax ) );
 
@@ -66,7 +97,19 @@ class Orders extends EDD_UnitTestCase {
 		return reset( $order_adjustments );
 	}
 
-	private function get_order_data( $no_tax = false ) {
+	private function get_order_data( $no_tax = false, $fees = array() ) {
+		if ( empty( $fees ) ) {
+			$fees = array(
+				'simple_shipping_1234' => array(
+					'amount'      => 2.00,
+					'label'       => 'Simple Download Fee',
+					'no_tax'      => $no_tax,
+					'type'        => 'fee',
+					'download_id' => self::$download->ID,
+				),
+			);
+		}
+
 		return array(
 			'price'        => 24,
 			'date'         => '2023-06-12 13:41:53',
@@ -108,15 +151,7 @@ class Orders extends EDD_UnitTestCase {
 					'discount'    => 0,
 					'subtotal'    => 22,
 					'tax'         => 0.10,
-					'fees'        => array(
-						'simple_shipping_1234' => array(
-							'amount'      => 2.00,
-							'label'       => 'Simple Download Fee',
-							'no_tax'      => $no_tax,
-							'type'        => 'fee',
-							'download_id' => self::$download->ID,
-						),
-					),
+					'fees'        => $fees,
 					'price'       => 24,
 				),
 			),

@@ -13,7 +13,6 @@ define( 'EDD_DOING_TESTS', true );
 
 $plugin_dir = dirname( dirname( __FILE__ ) );
 
-require_once $plugin_dir . '/vendor/autoload.php';
 require_once $plugin_dir . '/vendor/yoast/wp-test-utils/src/WPIntegration/bootstrap-functions.php';
 
 // Find WordPress.

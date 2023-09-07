@@ -26,11 +26,19 @@ function edd_discounts_page() {
 
 	// Edit
 	if ( ! empty( $_GET['edd-action'] ) && ( 'edit_discount' === $_GET['edd-action'] ) ) {
+		if ( ! current_user_can( 'edit_shop_discounts' ) ) {
+			wp_die( __( 'You do not have permission to edit discounts.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		}
+
 		wp_enqueue_script( 'edd-admin-notes' );
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php';
 
 	// Add
 	} elseif ( ! empty( $_GET['edd-action'] ) && ( 'add_discount' === $_GET['edd-action'] ) ) {
+		if ( ! current_user_can( 'manage_shop_discounts' ) ) {
+			wp_die( __( 'You do not have permission to manage discounts.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		}
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php';
 
 	// List tables
@@ -45,6 +53,10 @@ function edd_discounts_page() {
  * @since 3.0
  */
 function edd_discounts_page_content() {
+	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
+		wp_die( __( 'You do not have permission to manage discounts.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
 	require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php';
 
 	$discount_codes_table = new EDD_Discount_Codes_Table();

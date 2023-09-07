@@ -419,7 +419,7 @@ function edd_connect_guest_customer_to_existing_user( $success, $payment_id, $cu
 		return;
 	}
 
-	if ( ! empty( $customer->user_id ) ) {
+	if ( ! empty( $customer->user_id ) || empty( $customer->email ) ) {
 		return;
 	}
 

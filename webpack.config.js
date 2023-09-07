@@ -68,11 +68,15 @@ const config = {
 		'js/edd-admin-onboarding': './assets/js/admin/onboarding',
 		'js/edd-admin-licensing': './assets/js/admin/settings/licensing',
 		'js/edd-admin-pointers': './assets/js/admin/pointers',
+		'js/stripe-admin': './assets/js/admin/stripe/index.js',
+		'js/stripe-notices': './assets/js/admin/stripe/notices.js',
 
 		// Front-end JavaScript.
 		'js/edd-ajax': './assets/js/frontend/edd-ajax.js',
 		'js/edd-checkout-global': './assets/js/frontend/checkout',
 		'js/paypal-checkout': './assets/js/frontend/gateways/paypal.js',
+		'js/stripe-cardelements': './assets/js/frontend/gateways/stripe/loader/card-elements.js',
+		'js/stripe-paymentelements': './assets/js/frontend/gateways/stripe/loader/payment-elements.js',
 
 		'pro/js/checkout': './assets/pro/js/frontend/checkout.js',
 		'pro/js/duplicator': './assets/pro/js/admin/duplicator.js',
@@ -87,8 +91,11 @@ const config = {
 		'edd-admin-extension-manager-style': './assets/css/admin/extension-manager.scss',
 		'edd-admin-pass-handler-style': './assets/css/admin/pass-handler.scss',
 		'edd-admin-onboarding-style': './assets/css/admin/onboarding/style.scss',
+		'stripe-admin': './assets/css/admin/gateways/stripe.scss',
 
-		'edd-style': './assets/css/frontend/style.scss'
+		'edd-style': './assets/css/frontend/style.scss',
+		'stripe-cardelements': './assets/css/frontend/stripe/card-elements.scss',
+		'stripe-paymentelements': './assets/css/frontend/stripe/payment-elements.scss',
 	},
 	output: {
 		filename: '[name].js',

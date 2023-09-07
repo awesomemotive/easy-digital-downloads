@@ -630,6 +630,8 @@ class EDD_Payment {
 						'total'       => floatval( $fee['amount'] ) + $tax,
 					) );
 
+					edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
+
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
@@ -789,7 +791,10 @@ class EDD_Payment {
 								$args['subtotal'] = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
 								$args['total']    = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
 							}
-							edd_add_order_adjustment( $args );
+							$adjustment_id = edd_add_order_adjustment( $args );
+							if ( 'fee' === $args['type'] ) {
+								edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
+							}
 						}
 
 						$this->user_info['discount'] = implode( ',', $this->discounts );
@@ -2237,6 +2242,8 @@ class EDD_Payment {
 									'tax'         => $tax,
 									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
+
+								edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 							}
 						} else {
 							$adjustment_id = edd_get_order_adjustments( array(

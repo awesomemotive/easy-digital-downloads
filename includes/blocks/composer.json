@@ -1,0 +1,20 @@
+{
+	"name": "easydigitaldownloads/edd-blocks",
+	"type": "wordpress-plugin",
+	"description": "Easy Digital Downloads - Blocks",
+	"keywords": [
+		"edd",
+		"WordPress",
+		"plugins",
+		"blocks"
+	],
+	"homepage": "https://easydigitaldownloads.com",
+	"authors": [{
+		"name": "Easy Digital Downloads",
+		"email": "support@easydigitaldownloads.com",
+		"homepage": "https://easydigitaldownloads.com"
+	}],
+	"support": {
+		"issues": "https://easydigitaldownloads.com/support"
+	}
+}

@@ -1,0 +1,20 @@
+@import "~@wordpress/base-styles/breakpoints";
+
+.edd-blocks__columns {
+	display: grid;
+	grid-gap: 1rem;
+}
+
+@media (min-width: $break-small) {
+	.edd-blocks__columns {
+		grid-template-columns: repeat(2, 50%);
+	}
+}
+
+@media (min-width: $break-large) {
+	@for $i from 3 through 6 {
+		.edd-blocks__columns-#{ $i } {
+			grid-template-columns: repeat($i, 1fr);
+		}
+	}
+}

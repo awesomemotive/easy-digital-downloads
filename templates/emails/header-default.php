@@ -2,12 +2,14 @@
 /**
  * Email Header
  *
- * @author 		Easy Digital Downloads
- * @package 	Easy Digital Downloads/Templates/Emails
- * @version     2.1
+ * @author  Easy Digital Downloads
+ * @package Easy Digital Downloads/Templates/Emails
+ * @version 2.1
+ *
+ * @since 3.2.0 - Removed the lookup of get_heading() and instead put in placeholders to be replaced.
  */
 
- // Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 // For gmail compatibility, including CSS styles in head/body are stripped out therefore styles need to be inline. These variables contain rules which are added to the template inline. !important; is a gmail hack to prevent styles being stripped if it doesn't like something.
@@ -61,7 +63,6 @@ $header_content_h1 = "
 	line-height: 1.2;
 ";
 $header_img = edd_get_option( 'email_logo', '' );
-$heading    = EDD()->emails->get_heading();
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,21 +81,21 @@ $heading    = EDD()->emails->get_heading();
 						</div>
 					<?php endif; ?>
 					<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_container" style="<?php echo $template_container; ?>">
-						<?php if ( ! empty ( $heading ) ) : ?>
-							<tr>
-								<td align="center" valign="top">
-									<!-- Header -->
-									<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_header" style="<?php echo $template_header; ?>" bgcolor="#ffffff">
-										<tr>
-											<td>
-												<h1 style="<?php echo $header_content_h1; ?>"><?php echo $heading; ?></h1>
-											</td>
-										</tr>
-									</table>
-									<!-- End Header -->
-								</td>
-							</tr>
-						<?php endif; ?>
+						{begin_heading}
+						<tr>
+							<td align="center" valign="top">
+								<!-- Header -->
+								<table border="0" cellpadding="0" cellspacing="0" width="520" id="template_header" style="<?php echo $template_header; ?>" bgcolor="#ffffff">
+									<tr>
+										<td>
+											<h1 style="<?php echo $header_content_h1; ?>">{heading}</h1>
+										</td>
+									</tr>
+								</table>
+								<!-- End Header -->
+							</td>
+						</tr>
+						{end_heading}
 						<tr>
 							<td align="center" valign="top">
 								<!-- Body -->

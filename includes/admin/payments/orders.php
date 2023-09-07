@@ -953,6 +953,21 @@ function edd_order_details_extras( $order = false ) {
 					</div>
 				<?php endif; ?>
 
+				<?php
+				if ( ! edd_is_add_order_page() && 'on_hold' === $order->status ) {
+					$dispute_id = edd_get_order_dispute_id( $order->id );
+					if ( $dispute_id ) {
+						$dispute_id = apply_filters( "edd_payment_details_dispute_id_{$order->gateway}", $dispute_id, $order );
+						?>
+						<div class="edd-order-dispute-id edd-admin-box-inside edd-admin-box-inside--row">
+							<span class="label"><?php esc_html_e( 'Dispute ID', 'easy-digital-downloads' ); ?></span>
+							<span><?php echo wp_kses_post( $dispute_id ); ?></span>
+						</div>
+						<?php
+					}
+				}
+				?>
+
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside edd-admin-box-inside--row">
 						<div class="edd-form-group">
@@ -975,6 +990,36 @@ function edd_order_details_extras( $order = false ) {
 						</div>
 					</div>
 				</div>
+
+				<?php if ( ! edd_is_add_order_page() ) : ?>
+				<div class="edd-order-tx-id edd-admin-box-inside edd-admin-box-inside--row">
+					<span class="label"><?php esc_html_e( 'Deferred Actions', 'easy-digital-downloads' ); ?></span>
+					<?php
+					$status = '';
+					$label  = __( 'Not Run', 'easy-digital-downloads' );
+
+					if ( ! empty( $order->date_actions_run ) ) {
+						$status  = 'success';
+						$label   = __( 'Completed', 'easy-digital-downloads' );
+					} elseif ( wp_next_scheduled( 'edd_after_payment_scheduled_actions', array( intval( $order->id ), false ) ) ) {
+						$status = 'processing';
+						$label  = __( 'Scheduled', 'easy-digital-downloads' );
+					}
+
+					$status_badge = new EDD\Utils\StatusBadge(
+						array(
+							'status' => $status,
+							'label'  => $label,
+						)
+					);
+
+					echo $status_badge->get();
+					if ( empty( $status ) ) {
+						?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Deferred Actions were added in Easy Digital Downloads 2.8. Orders placed on prior versions will not have a deferred actions status. If this order was placed on a version of Easy Digital Downloads supporting Deferred Actions, please verify that WP Cron is able to be run.', 'easy-digital-downloads' ); ?>"></span><?php
+					}
+					?>
+				</div>
+				<?php endif; ?>
 
 				<?php do_action( 'edd_view_order_details_payment_meta_after', $order->id ); ?>
 			</div>
@@ -1036,6 +1081,25 @@ function edd_order_details_attributes( $order ) {
 
 					<?php
 					if ( ! edd_is_add_order_page() ) :
+						$hold_reason = edd_get_order_hold_reason( $order->id );
+						if ( $hold_reason ) {
+							$label = 'on_hold' === $order->status ?
+								__( 'On Hold Due To:', 'easy-digital-downloads' ) :
+								__( 'Original Hold Reason:', 'easy-digital-downloads' );
+							if ( is_array( $hold_reason ) ) {
+								$hold_reason = array_map( 'edd_get_order_hold_reason_label', $hold_reason );
+								$hold_reason = implode( ', ', $hold_reason );
+							} else {
+								$hold_reason = edd_get_order_hold_reason_label( $hold_reason );
+							}
+							?>
+							<div style="margin-top: 8px;">
+								<strong><?php echo esc_html( $label ); ?></strong>
+								<?php echo esc_html( $hold_reason ); ?>
+							</div>
+							<?php
+						}
+
 						$trash_url = wp_nonce_url(
 							edd_get_admin_url( array(
 								'page'        => 'edd-payment-history',
@@ -1146,6 +1210,10 @@ function edd_get_order_status_badge( $order_status ) {
 			break;
 		case 'pending':
 			$status = 'warning';
+			break;
+		case 'on_hold':
+			$icon   = 'warning';
+			$status = 'error';
 			break;
 	}
 

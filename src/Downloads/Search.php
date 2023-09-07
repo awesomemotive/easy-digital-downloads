@@ -47,7 +47,7 @@ class Search {
 		$search['text'] = $new_search;
 
 		// Are we excluding the current ID?
-		$excludes = isset( $_GET['current_id'] )
+		$excludes = ! empty( $_GET['current_id'] )
 			? array_unique( array_map( 'absint', (array) $_GET['current_id'] ) )
 			: array();
 
@@ -82,23 +82,6 @@ class Search {
 			'suppress_filters' => false,
 		);
 
-		// Maybe exclude bundles.
-		if ( true === $no_bundles ) {
-			$args['meta_query'] = array(
-				'relation' => 'OR',
-				array(
-					'key'     => '_edd_product_type',
-					'value'   => 'bundle',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => '_edd_product_type',
-					'value'   => 'bundle',
-					'compare' => 'NOT EXISTS',
-				),
-			);
-		}
-
 		add_filter( 'posts_where', array( $this, 'filter_where' ), 10, 2 );
 		// Get downloads.
 		$items = get_posts( $args );
@@ -110,6 +93,10 @@ class Search {
 
 			// Loop through all items...
 			foreach ( $items as $post_id => $title ) {
+				// Skip bundles if we're excluding them.
+				if ( true === $no_bundles && 'bundle' === edd_get_download_type( $post_id ) ) {
+					continue;
+				}
 				$product_title = $title;
 
 				// Look for variable pricing.

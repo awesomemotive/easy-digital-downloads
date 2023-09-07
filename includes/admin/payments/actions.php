@@ -640,16 +640,15 @@ function edd_orders_list_table_process_bulk_actions() {
 				edd_update_payment_status( $id, 'abandoned' );
 				break;
 
-			case 'set-status-preapproval':
-				edd_update_payment_status( $id, 'preapproval' );
-				break;
-
 			case 'set-status-cancelled':
 				edd_update_payment_status( $id, 'cancelled' );
 				break;
 
 			case 'resend-receipt':
-				edd_email_purchase_receipt( $id, false );
+				$order = edd_get_order( $id );
+				$order_receipt                    = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
+				$order_receipt->send_admin_notice = false;
+				$order_receipt->send();
 				break;
 		}
 

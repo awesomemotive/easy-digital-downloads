@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "edd/buy-button",
+	"version": "2.0.0",
+	"title": "EDD Buy Button",
+	"category": "easy-digital-downloads",
+	"icon": "button",
+	"description": "Quickly add a \"buy now\" button for any EDD product.",
+	"keywords": [ "easy digital downloads", "edd", "button" ],
+	"supports": {
+		"html": false,
+		"align": [ "center", "left", "right", "wide" ]
+	},
+	"textdomain": "easy-digital-downloads",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"attributes": {
+		"download_id": {
+			"type": "string"
+		},
+		"width": {
+			"type": "string"
+		},
+		"show_price": {
+			"type": "boolean",
+			"default": true
+		},
+		"direct": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"example": {
+		"attributes": {}
+	}
+}

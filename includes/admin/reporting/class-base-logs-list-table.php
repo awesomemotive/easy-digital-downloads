@@ -415,7 +415,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 			if ( ! empty( $start_date ) ) {
 				$retval['date_created_query'][] = array(
 					'column' => 'date_created',
-					'after'  => \Carbon\Carbon::parse( date( 'Y-m-d H:i:s', strtotime( "{$start_date} midnight" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
+					'after'  => \EDD\Utils\Date::parse( date( 'Y-m-d H:i:s', strtotime( "{$start_date} midnight" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
 				);
 			}
 
@@ -423,7 +423,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 			if ( ! empty( $end_date ) ) {
 				$retval['date_created_query'][] = array(
 					'column' => 'date_created',
-					'before' => \Carbon\Carbon::parse( date( 'Y-m-d H:i:s', strtotime( "{$end_date} + 1 day" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
+					'before' => \EDD\Utils\Date::parse( date( 'Y-m-d H:i:s', strtotime( "{$end_date} + 1 day" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
 				);
 			}
 		}

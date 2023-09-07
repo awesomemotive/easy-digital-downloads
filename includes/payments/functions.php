@@ -531,16 +531,20 @@ function edd_get_payment_status_label( $status = '' ) {
  * @return array $payment_status All the available payment statuses.
  */
 function edd_get_payment_statuses() {
-	return apply_filters( 'edd_payment_statuses', array(
-		'pending'            => __( 'Pending',    'easy-digital-downloads' ),
-		'processing'         => __( 'Processing', 'easy-digital-downloads' ),
-		'complete'           => __( 'Completed',  'easy-digital-downloads' ),
-		'refunded'           => __( 'Refunded',   'easy-digital-downloads' ),
-		'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
-		'revoked'            => __( 'Revoked',    'easy-digital-downloads' ),
-		'failed'             => __( 'Failed',     'easy-digital-downloads' ),
-		'abandoned'          => __( 'Abandoned',  'easy-digital-downloads' )
-	) );
+	return apply_filters(
+		'edd_payment_statuses',
+		array(
+			'pending'            => __( 'Pending', 'easy-digital-downloads' ),
+			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
+			'complete'           => __( 'Completed', 'easy-digital-downloads' ),
+			'refunded'           => __( 'Refunded', 'easy-digital-downloads' ),
+			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
+			'revoked'            => __( 'Revoked', 'easy-digital-downloads' ),
+			'failed'             => __( 'Failed', 'easy-digital-downloads' ),
+			'abandoned'          => __( 'Abandoned', 'easy-digital-downloads' ),
+			'on_hold'            => __( 'On Hold', 'easy-digital-downloads' ),
+		)
+	);
 }
 
 /**
@@ -1743,6 +1747,7 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	$count = $wpdb->get_results( "SELECT comment_approved, COUNT( * ) AS num_comments FROM {$wpdb->comments} {$where} GROUP BY comment_approved", ARRAY_A );
 
 	$total = 0;
+	$stats = array();
 
 	$approved = array(
 		'0'            => 'moderated',
@@ -1761,7 +1766,6 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 
 		if ( isset( $approved[ $row['comment_approved'] ] ) ) {
 			$stats[ $approved[ $row['comment_approved'] ] ] = $row['num_comments'];
-
 		}
 	}
 

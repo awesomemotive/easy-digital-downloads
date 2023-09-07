@@ -1,0 +1,35 @@
+.editor-styles-wrapper .components-placeholder.edd-downloads--new-placeholder {
+	background-color: #fefefe;
+	border-radius: 2px;
+	align-items: center;
+
+	&__fieldset {
+		justify-content: center;
+	}
+
+	div.edd-downloads--actions {
+
+		display: flex;
+		justify-content: space-around;
+		gap: 2em;
+
+		a.components-button {
+			line-height: 1.5;
+			padding: .5em 1em;
+			text-decoration: none;
+			margin-right: 0px;
+
+			&.edd-downloads--primary {
+				background-color: var(--wp-admin-theme-color);
+				color: #fff;
+			}
+
+			&.edd-downloads--secondary {
+				background-color: #fff;
+				border: 1px solid var(--wp-admin-theme-color);
+				color: var(--wp-admin-theme-color);
+			}
+		}
+	}
+
+}

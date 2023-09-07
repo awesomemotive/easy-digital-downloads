@@ -77,6 +77,55 @@ final class EDD_Amazon_Payments {
 	 */
 	private function register() {
 		add_filter( 'edd_payment_gateways', array( $this, 'register_gateway' ), 1, 1 );
+		if ( is_admin() ) {
+			add_filter( 'edd_settings_sections_gateways', array( $this, 'register_gateway_section' ), 1, 1 );
+			add_filter( 'edd_settings_gateways', array( $this, 'register_gateway_settings' ), 1, 1 );
+			add_action( 'admin_notices', array( $this, 'amazon_payments_notice' ) );
+			add_filter( 'edd_payment_details_transaction_id-' . $this->gateway_id, array( $this, 'link_transaction_id' ), 10, 2 );
+		}
+	}
+
+	/**
+	 * Adds an admin notice to switch to Stripe.
+	 * This notice is only shown if the user has Amazon Payments enabled.
+	 *
+	 * @todo Update words, especially if Stripe is already active.
+	 * @since 3.2.0
+	 * @return void
+	 */
+	public function amazon_payments_notice() {
+		if ( ! edd_is_gateway_active( $this->gateway_id ) ) {
+			return;
+		}
+		$stripe_url   = edd_get_admin_url(
+			array(
+				'page'    => 'edd-settings',
+				'tab'     => 'gateways',
+				'section' => 'edd-stripe',
+			)
+		);
+		$benefits_url = edd_link_helper(
+			'https://easydigitaldownloads.com/edd-stripe-integration',
+			array(
+				'utm_medium'  => 'admin-notice',
+				'utm_content' => 'amazon-deprecated-notice',
+			),
+			false
+		);
+		EDD()->notices->add_notice(
+			array(
+				'id'             => 'amazon-gateway-notice',
+				'class'          => 'error',
+				'message'        => sprintf(
+					/* translators: %1$s Opening anchor tag, %2$s Closing anchor tag, %3$s Opening anchor tag */
+					__( 'Amazon Payments for Easy Digital Downloads has been deprecated and will be removed in a future version. To continue to accept credit card payments in the future, please %1$senable Stripe now%2$s or %3$slearn more about the benefits of using Stripe%2$s.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( $stripe_url ) . '">',
+					'</a>',
+					'<a href="' . esc_url( $benefits_url ) . '" target="_blank" rel="noopener noreferrer">',
+				),
+				'is_dismissible' => false,
+			)
+		);
 	}
 
 	/**
@@ -100,27 +149,11 @@ final class EDD_Amazon_Payments {
 	 * @return bool
 	 */
 	public function is_setup() {
-		if ( null !== $this->is_setup ) {
+		if ( ! is_null( $this->is_setup ) ) {
 			return $this->is_setup;
 		}
 
-		$required_items = array( 'merchant_id', 'client_id', 'access_key', 'secret_key' );
-
-		$current_values = array(
-			'merchant_id' => edd_get_option( 'amazon_seller_id', '' ),
-			'client_id'   => edd_get_option( 'amazon_client_id', '' ),
-			'access_key'  => edd_get_option( 'amazon_mws_access_key', '' ),
-			'secret_key'  => edd_get_option( 'amazon_mws_secret_key', '' ),
-		);
-
-		$this->is_setup = true;
-
-		foreach ( $required_items as $key ) {
-			if ( empty( $current_values[ $key ] ) ) {
-				$this->is_setup = false;
-				break;
-			}
-		}
+		$this->is_setup = edd_is_gateway_setup( 'amazon' );
 
 		return $this->is_setup;
 	}
@@ -150,12 +183,6 @@ final class EDD_Amazon_Payments {
 
 		// Since the Amazon Gateway loads scripts on page, it needs the scripts to load in the header.
 		add_filter( 'edd_load_scripts_in_footer', '__return_false' );
-
-		if ( is_admin() ) {
-			add_filter( 'edd_settings_sections_gateways', array( $this, 'register_gateway_section' ), 1, 1 );
-			add_filter( 'edd_settings_gateways', array( $this, 'register_gateway_settings' ), 1, 1 );
-			add_filter( 'edd_payment_details_transaction_id-' . $this->gateway_id, array( $this, 'link_transaction_id' ), 10, 2 );
-		}
 	}
 
 	/**

@@ -273,9 +273,11 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		EDD()->customers->attach_payment( self::$customers[0], $payment_id );
 
 		$customer    = edd_get_customer( self::$customers[0] );
-		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+		$payment_ids = array_values( explode( ',', $customer->payment_ids ) );
+		$order_ids   = $customer->order_ids;
 
 		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $order_ids ) );
 	}
 
 	public function test_legacy_remove_payment_should_return_false() {

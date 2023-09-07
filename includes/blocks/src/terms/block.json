@@ -1,0 +1,74 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "edd/terms",
+	"version": "2.0.0",
+	"title": "EDD Download Terms",
+	"category": "easy-digital-downloads",
+	"icon": "category",
+	"description": "Show categories, or tags for Easy Digital Download products.",
+	"keywords": [ "easy digital downloads", "edd", "downloads" ],
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"textdomain": "easy-digital-downloads",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"attributes": {
+		"taxonomy": {
+			"type": "string",
+			"default": "download_category"
+		},
+		"thumbnails": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"description": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"columns": {
+			"type"   : "number",
+			"default": 3
+		},
+		"align": {
+			"type"   : "string",
+			"default": ""
+		},
+		"order": {
+			"type"   : "string",
+			"default": "DESC"
+		},
+		"orderby": {
+			"type"   : "string",
+			"default": "count"
+		},
+		"title": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"count": {
+			"type"   : "boolean",
+			"default": true
+		},
+		"show_empty": {
+			"type"   : "boolean",
+			"default": false
+		},
+		"image_size": {
+			"type"   : "string",
+			"default": "large"
+		},
+		"image_alignment": {
+			"type"   : "string",
+			"default": "center"
+		}
+	},
+	"example": {
+		"attributes": {
+			"columns": 1
+		}
+	}
+}

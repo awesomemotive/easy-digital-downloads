@@ -102,6 +102,7 @@ class ExtensionsAPI {
 	 * @return array
 	 */
 	private function get_pass_extensions_data( $all_product_data ) {
+		$recommended     = array();
 		$personal_pass   = array();
 		$extended_pass   = array();
 		$pro_pass        = array();
@@ -112,11 +113,23 @@ class ExtensionsAPI {
 				if ( ! in_array( 1592, $item->categories, true ) ) {
 					continue;
 				}
+				$pass_id = '';
 				if ( in_array( $pass_manager->categories[ $pass_manager::PERSONAL_PASS_ID ], $item->categories, true ) ) {
-					$personal_pass[ $item_id ] = $this->get_item_data( $item );
+					$pass_id = $pass_manager::PERSONAL_PASS_ID;
 				} elseif ( in_array( $pass_manager->categories[ $pass_manager::EXTENDED_PASS_ID ], $item->categories, true ) ) {
-					$extended_pass[ $item_id ] = $this->get_item_data( $item );
+					$pass_id = $pass_manager::EXTENDED_PASS_ID;
 				} elseif ( in_array( $pass_manager->categories[ $pass_manager::PROFESSIONAL_PASS_ID ], $item->categories, true ) ) {
+					$pass_id = $pass_manager::PROFESSIONAL_PASS_ID;
+				}
+
+				$item->pass_id = $pass_id;
+				if ( ! empty( $item->tags ) && in_array( 2333, $item->tags, true ) ) {
+					$recommended[ $item_id ] = $this->get_item_data( $item );
+				} elseif ( $pass_manager::PERSONAL_PASS_ID === $pass_id ) {
+					$personal_pass[ $item_id ] = $this->get_item_data( $item );
+				} elseif ( $pass_manager::EXTENDED_PASS_ID === $pass_id ) {
+					$extended_pass[ $item_id ] = $this->get_item_data( $item );
+				} elseif ( $pass_manager::PROFESSIONAL_PASS_ID === $pass_id ) {
 					$pro_pass[ $item_id ] = $this->get_item_data( $item );
 				} else {
 					$all_access_pass[ $item_id ] = $this->get_item_data( $item );
@@ -124,7 +137,7 @@ class ExtensionsAPI {
 			}
 		}
 
-		return $personal_pass + $extended_pass + $pro_pass + $all_access_pass;
+		return $recommended + $personal_pass + $extended_pass + $pro_pass + $all_access_pass;
 	}
 
 	/**
@@ -204,6 +217,7 @@ class ExtensionsAPI {
 			'categories'  => ! empty( $item->categories ) ? $item->categories : array(),
 			'terms'       => ! empty( $item->terms ) ? $item->terms : array(),
 			'version'     => ! empty( $item->version ) ? $item->version : false,
+			'pass_id'     => ! empty( $item->pass_id ) ? $item->pass_id : '',
 		);
 	}
 

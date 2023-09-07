@@ -8,10 +8,8 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  *
  * @group edd_customers
  * @group database
- *
- * @coversDefaultClass \EDD\Customers\Customer_Email_Address
  */
-class Customer_Email_Address_Tests extends EDD_UnitTestCase {
+class Customer_Email_Address extends EDD_UnitTestCase {
 
 	/**
 	 * Customer email addresses fixture.

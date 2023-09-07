@@ -17,14 +17,15 @@
 		font-family: unset;
 		height: unset;
 		margin: 0;
-		padding: 3px 10px;
+		padding: 3px 24px 3px 10px;
 		width: 100% !important;
 	}
 
 	.spinner {
+		margin: 0;
 		position: absolute;
 		top: 4px;
-		right: -4px;
+		right: 30px;
 	}
 
 	.chosen-choices li.search-choice {

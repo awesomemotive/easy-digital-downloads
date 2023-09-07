@@ -269,3 +269,33 @@ function edd_update_order_adjustment_meta( $adjustment_id, $meta_key, $meta_valu
 function edd_delete_order_adjustment_meta_by_key( $meta_key ) {
 	return delete_metadata( 'edd_order_adjustment', null, $meta_key, '', true );
 }
+
+/**
+ * Add extra metadata to a fee.
+ *
+ * @since 3.2.0
+ *
+ * @param int   $adjustment_id The adjustment ID.
+ * @param array $fee           The fee data.
+ * @return void
+ */
+function edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee ) {
+	$adjustment_properties = array(
+		'id',
+		'label',
+		'amount',
+		'no_tax',
+		'type',
+		'download_id',
+		'price_id',
+	);
+	$adjustment_meta       = array_diff_key( $fee, array_flip( $adjustment_properties ) );
+	if ( empty( $adjustment_meta ) ) {
+		return;
+	}
+	foreach ( $adjustment_meta as $meta_key => $meta_value ) {
+		$meta_key = sanitize_key( $meta_key );
+
+		edd_add_order_adjustment_meta( $adjustment_id, $meta_key, $meta_value );
+	}
+}

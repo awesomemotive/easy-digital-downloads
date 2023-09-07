@@ -225,6 +225,24 @@ class EDD_Discount extends Adjustment {
 	protected $once_per_customer = null;
 
 	/**
+	 * Categories.
+	 *
+	 * @since 3.2.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $categories;
+
+	/**
+	 * Term Condition.
+	 *
+	 * @since 3.2.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $term_condition;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.7
@@ -679,6 +697,9 @@ class EDD_Discount extends Adjustment {
 				break;
 			case 'inactive':
 				$label = __( 'Inactive', 'easy-digital-downloads' );
+				break;
+			case 'archived':
+				$label = __( 'Archived', 'easy-digital-downloads' );
 				break;
 			case 'active':
 				$label = __( 'Active',   'easy-digital-downloads' );
@@ -1346,7 +1367,7 @@ class EDD_Discount extends Adjustment {
 	public function is_maxed_out( $set_error = true ) {
 		$return = false;
 
-		if ( $this->uses >= $this->max_uses && ! empty( $this->max_uses ) ) {
+		if ( ! empty( $this->max_uses ) && $this->get_uses() >= $this->max_uses ) {
 			if ( $set_error ) {
 				edd_set_error( 'edd-discount-error', __( 'This discount has reached its maximum usage.', 'easy-digital-downloads' ) );
 			}
@@ -1421,39 +1442,53 @@ class EDD_Discount extends Adjustment {
 	 *
 	 * @since 2.7
 	 *
-	 * @param bool $set_error Whether an error message be set in session.
+	 * @param bool        $set_error Whether an error message be set in session.
+	 * @param false|array $cart_ids  Cart item IDs or a specific array of download IDs to check (added in 3.2.0).
 	 * @return bool Are required products in the cart?
 	 */
-	public function is_product_requirements_met( $set_error = true ) {
-		$product_reqs = $this->get_product_reqs();
-		$excluded_ps  = $this->get_excluded_products();
-		$cart_items   = edd_get_cart_contents();
-		$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
+	public function is_product_requirements_met( $set_error = true, $cart_ids = false ) {
 		$is_met       = true;
+		$product_reqs = $this->get_product_reqs();
+		// Filter out any empty values.
+		$product_reqs = array_map( 'strval', array_filter( array_values( $product_reqs ) ) );
 
-		/**
-		 * Normalize our data for product requirements, exclusions and cart data.
-		 */
+		if ( empty( $cart_ids ) ) {
+			$cart_items = edd_get_cart_contents();
+			// Combine cart item IDs with their price IDs and convert to strings as we are going to deal with string values.
+			$cart_ids = array_map(
+				function ( $cart_item ) {
+					$price_id = isset( $cart_item['options']['price_id'] ) && is_numeric( $cart_item['options']['price_id'] ) ? $cart_item['options']['price_id'] : null;
 
-		// First absint the items, then sort, and reset the array keys
-		$product_reqs = array_map( 'absint', $product_reqs );
-		asort( $product_reqs );
-		$product_reqs = array_filter( array_values( $product_reqs ) );
+					return ! is_null( $price_id ) ? $cart_item['id'] . '_' . $price_id : strval( $cart_item['id'] );
+				},
+				$cart_items
+			);
+		}
 
-		$cart_ids = array_map( 'absint', $cart_ids );
-		asort( $cart_ids );
-		$cart_ids = array_values( $cart_ids );
-
-		// Ensure we have requirements before proceeding
+		// Ensure we have requirements before proceeding.
 		if ( ! empty( $product_reqs ) ) {
-			$matches = array_intersect( $product_reqs, $cart_ids );
+			// Set up an array of requirements with all values set to false.
+			$requirements = array_fill_keys( $product_reqs, false );
+			foreach ( $cart_ids as $cart_id ) {
+				$key             = $cart_id;
+				$requirement_met = array_key_exists( $cart_id, $requirements );
 
-			switch ( $this->get_product_condition() ) {
-				case 'all':
-					$is_met = count( $matches ) === count( $product_reqs );
-					break;
-				default:
-					$is_met = 0 < count( $matches );
+				// If requirement is not met and the cart item is a variable product, check if the parent product is in the requirements.
+				if ( ! $requirement_met && preg_match( '/^(\d+)_(\d+)$/', $cart_id ) ) {
+					// Using absint to strip out anything after the _ in price id, so we can have the parent ID.
+					$key             = (string) absint( $cart_id );
+					$requirement_met = array_key_exists( $key, $requirements );
+				}
+
+				if ( $requirement_met ) {
+					$requirements[ $key ] = true;
+				}
+			}
+
+			if ( 'all' === $this->get_product_condition() ) {
+				$is_met = ! in_array( false, $requirements, true );
+			} else {
+				$is_met = in_array( true, $requirements, true );
 			}
 
 			if ( ! $is_met && $set_error ) {
@@ -1461,11 +1496,14 @@ class EDD_Discount extends Adjustment {
 			}
 		}
 
+		$excluded_ps = $this->get_excluded_products();
 		$excluded_ps = array_map( 'absint', $excluded_ps );
 		asort( $excluded_ps );
 		$excluded_ps = array_filter( array_values( $excluded_ps ) );
 
 		if ( ! empty( $excluded_ps ) ) {
+			// Cast the card IDs back to integers.
+			$cart_ids = array_unique( array_map( 'absint', $cart_ids ) );
 			if ( count( array_intersect( $cart_ids, $excluded_ps ) ) === count( $cart_ids ) ) {
 				$is_met = false;
 
@@ -1489,90 +1527,101 @@ class EDD_Discount extends Adjustment {
 	}
 
 	/**
+	 * Is the discount valid for the selected categories?
+	 *
+	 * @since 3.2.0
+	 * @param bool        $set_error Whether an error message be set in session.
+	 * @param false|array $cart_ids  Cart item IDs or a specific array of download IDs to check.
+	 * @return bool
+	 */
+	public function is_valid_for_categories( $set_error = true, $cart_ids = false ) {
+		$categories = $this->get_categories();
+		// If no categories are set, then the condition is met.
+		if ( empty( $categories ) ) {
+			return true;
+		}
+
+		// Assume the condition is not met.
+		$categories     = array_map( 'intval', $categories );
+		$term_condition = $this->get_term_condition();
+		if ( false === $cart_ids ) {
+			$cart_ids = $this->get_cart_ids();
+		}
+
+		// If any of the cart items have a category that matches the discount and the condition is include, return true.
+		if ( empty( $term_condition ) ) {
+			if ( $this->item_has_terms( $cart_ids, $categories ) ) {
+				return true;
+			}
+		}
+
+		if ( 'exclude' === $term_condition ) {
+			// Check each item in the cart to see if it has a category that matches the discount. Return true as soon as one is found.
+			foreach ( $cart_ids as $download_id ) {
+				if ( ! $this->item_has_terms( $download_id, $categories ) ) {
+					return true;
+				}
+			}
+		}
+
+		if ( $set_error ) {
+			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'easy-digital-downloads' ) );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets the categories for the discount.
+	 *
+	 * @since 3.2.0
+	 * @return array
+	 */
+	public function get_categories() {
+		return array_filter( (array) edd_get_adjustment_meta( $this->id, 'categories', true ) );
+	}
+
+	/**
+	 * Gets the term condition for the discount.
+	 *
+	 * @since 3.2.0
+	 * @return string
+	 */
+	public function get_term_condition() {
+		return (string) edd_get_adjustment_meta( $this->id, 'term_condition', true );
+	}
+
+	/**
 	 * Has the discount code been used.
 	 *
 	 * @since 2.7
 	 * @since 3.0 Refactored to use new query methods.
+	 * @since 3.2 Refactored to use the order adjustments table, and always run the filter.
 	 *
-	 * @param string $user User info.
-	 * @param bool $set_error Whether an error message be set in session.
+	 * @param string $user      User info.
+	 * @param bool   $set_error Whether an error message be set in session.
 	 *
 	 * @return bool Whether the discount has been used or not.
 	 */
 	public function is_used( $user = '', $set_error = true ) {
-		$return = false;
+		$discount_used = false;
 
 		if ( $this->is_single_use ) {
-			$payments = array();
+			$by_user_id = ! is_email( $user );
+			$customer   = new EDD_Customer( $user, $by_user_id );
 
-			if ( edd_get_component_interface( 'customer', 'table' )->exists() ) {
-				$by_user_id = ! is_email( $user );
+			if ( ! empty( $customer ) ) {
+				$order_ids         = $customer->get_order_ids( edd_get_complete_order_statuses() );
+				$order_adjustments = edd_get_order_adjustments(
+					array(
+						'type'          => 'discount',
+						'type_id'       => $this->id,
+						'object_id__in' => $order_ids,
+						'object_type'   => 'order',
+					)
+				);
 
-				$customer = new EDD_Customer( $user, $by_user_id );
-
-				$payments = explode( ',', $customer->payment_ids );
-			} else {
-				$user_found = false;
-
-				if ( is_email( $user ) ) {
-					$user_found = true; // All we need is the email
-					$key        = '_edd_payment_user_email';
-					$value      = $user;
-				} else {
-					$user_data = get_user_by( 'login', $user );
-
-					if ( $user_data ) {
-						$user_found = true;
-						$key        = '_edd_payment_user_id';
-						$value      = $user_data->ID;
-					}
-				}
-
-				if ( $user_found ) {
-					$query_args = array(
-						'post_type'  => 'edd_payment',
-						'meta_query' => array(
-							array(
-								'key'     => $key,
-								'value'   => $value,
-								'compare' => '=',
-							),
-						),
-						'fields'     => 'ids',
-					);
-
-					$payments = get_posts( $query_args ); // Get all payments with matching email
-				}
-			}
-
-			if ( $payments ) {
-				foreach ( $payments as $payment ) {
-					$payment = new EDD_Payment( $payment );
-
-					if ( empty( $payment->discounts ) ) {
-						continue;
-					}
-
-					if ( in_array( $payment->status, edd_get_incomplete_order_statuses(), true ) ) {
-						continue;
-					}
-
-					$discounts = explode( ',', $payment->discounts );
-
-					if ( is_array( $discounts ) ) {
-						$discounts = array_map( 'strtoupper', $discounts );
-						$key       = array_search( strtoupper( $this->code ), $discounts, true );
-
-						if ( false !== $key ) {
-							if ( $set_error ) {
-								edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
-							}
-
-							$return = true;
-							break;
-						}
-					}
-				}
+				$discount_used = ! empty( $order_adjustments );
 			}
 		}
 
@@ -1580,13 +1629,21 @@ class EDD_Discount extends Adjustment {
 		 * Filters if the discount is used or not.
 		 *
 		 * @since 2.7
+		 * @since 3.2 This filter is now always run prior to returning if it has been used. Previously if the discount was found to be used,
+		 * the method returned early and this filter would have never been run.
 		 *
-		 * @param bool   $return If the discount is used or not.
+		 * @param bool   $discount_used If the discount is used or not.
 		 * @param int    $ID     Discount ID.
 		 * @param string $user   User info.
 		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user, $set_error );
+		$discount_used = apply_filters( 'edd_is_discount_used', $discount_used, $this->id, $user, $set_error );
+
+		if ( true === $discount_used && $set_error ) {
+			edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
+		}
+
+		return $discount_used;
 	}
 
 	/**
@@ -1604,12 +1661,14 @@ class EDD_Discount extends Adjustment {
 
 		if ( edd_get_cart_contents() && $this->id ) {
 			if (
-				$this->is_active( true, $set_error ) &&
+				! $this->is_archived( $set_error ) &&
 				$this->is_started( $set_error ) &&
+				$this->is_active( true, $set_error ) &&
 				! $this->is_maxed_out( $set_error ) &&
 				! $this->is_used( $user, $set_error ) &&
 				$this->is_product_requirements_met( $set_error ) &&
-				$this->is_min_price_met( $set_error )
+				$this->is_min_price_met( $set_error ) &&
+				$this->is_valid_for_categories( $set_error )
 			) {
 				$return = true;
 			}
@@ -1632,9 +1691,31 @@ class EDD_Discount extends Adjustment {
 	}
 
 	/**
+	 * Checks if a discount code is archived.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param bool $set_error Whether an error message be set in session.
+	 * @return bool If the discount is archived or not.
+	 */
+	public function is_archived( $set_error = true ) {
+		$is_archived = false;
+
+		if ( 'archived' === $this->status ) {
+			$is_archived = true;
+			if ( $set_error ) {
+				edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration', 'easy-digital-downloads' ) );
+			}
+		}
+
+		return $is_archived;
+	}
+
+	/**
 	 * Checks if a discount code is active.
 	 *
 	 * @since 2.7
+	 * @since 3.2 Also verifies that a discount hasn't started before returning `active`.
 	 *
 	 * @param bool $update    Update the discount to expired if an one is found but has an active status.
 	 * @param bool $set_error Whether an error message be set in session.
@@ -1643,12 +1724,14 @@ class EDD_Discount extends Adjustment {
 	public function is_active( $update = true, $set_error = true ) {
 		$return = false;
 
-		if ( $this->exists() ) {
+		if ( $this->exists() && 'archived' !== $this->status ) {
 
 			if ( $this->is_expired( $update ) ) {
 				if ( edd_doing_ajax() && $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
 				}
+			} elseif ( ! $this->is_started( $set_error ) ) {
+				$return = false;
 			} elseif ( 'active' === $this->status ) {
 				$return = true;
 			} elseif ( edd_doing_ajax() && $set_error ) {
@@ -1906,5 +1989,55 @@ class EDD_Discount extends Adjustment {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Gets the IDs of all of the items in the cart.
+	 *
+	 * @since 3.2.0
+	 * @return array
+	 */
+	private function get_cart_ids() {
+		$cart_items = edd_get_cart_contents();
+		if ( empty( $cart_items ) ) {
+			return array();
+		}
+
+		$cart_ids = wp_list_pluck( $cart_items, 'id' );
+		$cart_ids = array_filter( array_map( 'absint', $cart_ids ) );
+		asort( $cart_ids );
+
+		return array_values( $cart_ids );
+	}
+
+	/**
+	 * Checks if a cart item/download has any of the specified categories.
+	 *
+	 * @since 3.2.0
+	 * @param int|int[] $download_ids Download ID(s) to check.
+	 * @param array     $categories   Category IDs to check.
+	 * @return bool
+	 */
+	private function item_has_terms( $download_ids, $categories ) {
+		$cart_item_categories = wp_get_object_terms( $download_ids, 'download_category', array( 'fields' => 'ids' ) );
+		if ( empty( $cart_item_categories ) || is_wp_error( $cart_item_categories ) ) {
+			return false;
+		}
+
+		$cart_item_categories = array_map( 'intval', $cart_item_categories );
+		if ( count( array_intersect( $cart_item_categories, $categories ) ) > 0 ) {
+			return true;
+		}
+
+		// Check for parent categories.
+		foreach ( $cart_item_categories as $term_id ) {
+			$parent_category_ids = array_map( 'intval', get_ancestors( $term_id, 'download_category', 'taxonomy' ) );
+
+			if ( count( array_intersect( $parent_category_ids, $categories ) ) > 0 ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
