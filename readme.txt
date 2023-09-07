@@ -44,7 +44,7 @@ Easy Digital Downloads has been translated into more than two dozen languages an
 
 > EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
 
-> Brian Hogg â€“ SellingPlugins.com
+> Brian Hogg - SellingPlugins.com
 
 = Support for many payment gateways, including Stripe and PayPal =
 
