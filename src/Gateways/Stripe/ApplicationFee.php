@@ -228,7 +228,7 @@ final class ApplicationFee {
 
 		return ' ' . sprintf(
 			/* translators: opening link tag, do not translate; closing link tag, do not translate */
-			__( '%1$sActivate your license%2$s to remove additional fees.', 'easy-digital-downloads' ),
+			__( '%1$sActivate or upgrade your license%2$s to remove additional fees.', 'easy-digital-downloads' ),
 			'<a href="' . esc_url( $license->get_licensing_url() ) . '">',
 			'</a>'
 		);
