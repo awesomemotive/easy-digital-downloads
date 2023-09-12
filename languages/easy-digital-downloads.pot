@@ -2,19 +2,19 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.2.0\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-09-07T19:49:49+00:00\n"
+"POT-Creation-Date: 2023-09-12T00:48:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 
 #. Plugin Name of the plugin
-#: src/Gateways/Stripe/Admin/LicenseManager.php:261
+#: src/Gateways/Stripe/Admin/LicenseManager.php:249
 msgid "Easy Digital Downloads (Pro)"
 msgstr ""
 
@@ -5686,9 +5686,9 @@ msgstr ""
 msgid "Store Status: %s"
 msgstr ""
 
-#: includes/admin/admin-bar.php:131
+#: includes/admin/admin-bar.php:133
 #: includes/admin/admin-deprecated-functions.php:267
-#: includes/admin/plugins.php:38
+#: includes/admin/plugins.php:39
 #: src/Admin/Discounts/Generate.php:82
 #: src/Admin/Promos/Notices/Lite.php:42
 #: src/Admin/Settings/Tabs/Gateways.php:305
@@ -5698,7 +5698,7 @@ msgid "Upgrade to Pro"
 msgstr ""
 
 #. translators: %s: Whether this is a development domain (1 for true, 0 for false)
-#: includes/admin/admin-bar.php:146
+#: includes/admin/admin-bar.php:148
 msgid "Development Domain %s"
 msgstr ""
 
@@ -5790,14 +5790,14 @@ msgstr ""
 #: includes/admin/upgrades/deprecated-upgrade-functions.php:593
 #: includes/admin/upgrades/deprecated-upgrade-functions.php:711
 #: includes/admin/upgrades/v3/class-base.php:117
-#: includes/api/class-edd-api.php:2030
-#: includes/api/class-edd-api.php:2034
-#: includes/api/class-edd-api.php:2046
-#: includes/api/class-edd-api.php:2048
+#: includes/api/class-edd-api.php:2005
+#: includes/api/class-edd-api.php:2009
+#: includes/api/class-edd-api.php:2021
+#: includes/api/class-edd-api.php:2023
 #: includes/blocks/includes/forms/recaptcha.php:180
 #: includes/cart/class-edd-cart.php:1445
 #: includes/cart/class-edd-cart.php:1459
-#: includes/class-edd-license-handler.php:480
+#: includes/class-edd-license-handler.php:478
 #: includes/deprecated-functions.php:489
 #: includes/deprecated-functions.php:506
 #: includes/deprecated-functions.php:514
@@ -5815,7 +5815,7 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:613
 #: includes/gateways/paypal/admin/connect.php:761
 #: includes/gateways/paypal/checkout-actions.php:114
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:110
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:87
 #: includes/process-download.php:282
 #: includes/process-download.php:910
 #: includes/query-filters.php:51
@@ -5894,7 +5894,7 @@ msgstr ""
 #: includes/admin/upgrades/deprecated-upgrade-functions.php:518
 #: includes/admin/upgrades/deprecated-upgrade-functions.php:593
 #: includes/admin/upgrades/deprecated-upgrade-functions.php:711
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:110
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:87
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
@@ -5931,7 +5931,7 @@ msgid "EDD Settings"
 msgstr ""
 
 #: includes/admin/admin-pages.php:90
-#: includes/admin/plugins.php:47
+#: includes/admin/plugins.php:48
 #: includes/admin/settings/display-settings.php:31
 #: includes/admin/settings/display-settings.php:361
 #: includes/blocks/build/buy-button/index.js:12
@@ -6015,269 +6015,279 @@ msgid "Generate New API Keys"
 msgstr ""
 
 #. translators: %s: URL to the settings page
-#: includes/admin/class-edd-notices.php:273
+#: includes/admin/class-edd-notices.php:275
 msgid "No checkout page is configured. Set one in <a href=\"%s\">Settings</a>."
 msgstr ""
 
 #. translators: %s: Uploads directory
-#: includes/admin/class-edd-notices.php:329
+#: includes/admin/class-edd-notices.php:331
 msgid "The files in %s are not currently protected."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:330
+#: includes/admin/class-edd-notices.php:332
 msgid "To protect them, you must add this <a href=\"https://easydigitaldownloads.com/docs/download-files-not-protected-on-nginx/\">NGINX redirect rule</a>."
 msgstr ""
 
 #. translators: %s: Dismiss notice URL
-#: includes/admin/class-edd-notices.php:332
-#: includes/admin/class-edd-notices.php:351
+#: includes/admin/class-edd-notices.php:334
+#: includes/admin/class-edd-notices.php:353
 msgid "If you have already done this, or it does not apply to your site, you may permenently %s."
 msgstr ""
 
 #. translators: %s: Dismiss notice URL
-#: includes/admin/class-edd-notices.php:332
-#: includes/admin/class-edd-notices.php:351
+#: includes/admin/class-edd-notices.php:334
+#: includes/admin/class-edd-notices.php:353
 msgid "dismiss this notice"
 msgstr ""
 
 #. translators: the upload directory
-#: includes/admin/class-edd-notices.php:349
+#: includes/admin/class-edd-notices.php:351
 #: src/Admin/SiteHealth/Direct.php:220
 msgid "The .htaccess file is missing from: %s"
 msgstr ""
 
 #. translators: the upload directory
-#: includes/admin/class-edd-notices.php:350
+#: includes/admin/class-edd-notices.php:352
 #: src/Admin/SiteHealth/Direct.php:225
 msgid "First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called \".htaccess\" in the %s directory, and copy the following into it:"
 msgstr ""
 
 #. translators: 1. link to the recount tool; 2. link to the plugins screen.
-#: includes/admin/class-edd-notices.php:373
+#: includes/admin/class-edd-notices.php:375
 msgid "Easy Digital Downloads 2.5 contains a <a href=\"%1$s\">built in recount tool</a>. Please <a href=\"%2$s\">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:407
+#: includes/admin/class-edd-notices.php:409
 msgid "Review Tax Rates"
 msgstr ""
 
 #. translators: Link to review existing tax rates.
-#: includes/admin/class-edd-notices.php:414
+#: includes/admin/class-edd-notices.php:416
 msgid "A default tax rate was detected."
 msgstr ""
 
 #. translators: Link to review existing tax rates.
-#: includes/admin/class-edd-notices.php:414
+#: includes/admin/class-edd-notices.php:416
 msgid "This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured and update tax settings to remove this notice."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:436
+#: includes/admin/class-edd-notices.php:438
 msgid "Settings updated."
 msgstr ""
 
 #. translators: %s: Next order number
-#: includes/admin/class-edd-notices.php:449
+#: includes/admin/class-edd-notices.php:451
 msgid "The sequential starting number could not be updated because it could conflict with existing orders. The next assigned order number is %s."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:481
+#: includes/admin/class-edd-notices.php:483
 msgid "Easy Digital Downloads is migrating orders. Sales and earnings data for your store will be updated when all orders have been migrated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:510
+#. translators: 1. opening link tag; 2. opening link tag; 3. closing link tag.
+#: includes/admin/class-edd-notices.php:506
+msgid "You are running an outdated version of the Easy Digital Downloads &mdash; Stripe Pro Payment Gateway. You may need to log into %1$syour account%3$s to download the latest version and %2$smanually upgrade%3$s it."
+msgstr ""
+
+#. translators: %1$s: Opening anchor tag; %2$s: Closing anchor tag.
+#: includes/admin/class-edd-notices.php:540
+msgid "New webhooks have been registered for PayPal Commerce, but we were unable to update them automatically. Please %1$ssync your webhooks manually%2$s."
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:572
 msgid "Discount code added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:516
+#: includes/admin/class-edd-notices.php:578
 msgid "There was a problem adding that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:523
+#: includes/admin/class-edd-notices.php:585
 msgid "A discount with that code already exists, please use a different code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:530
+#: includes/admin/class-edd-notices.php:592
 msgid "Discount code updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:536
+#: includes/admin/class-edd-notices.php:598
 msgid "No changes were made to that discount code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:542
+#: includes/admin/class-edd-notices.php:604
 msgid "There was a problem updating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:549
+#: includes/admin/class-edd-notices.php:611
 msgid "The discount code could not be added because one or more of the required fields was empty, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:556
+#: includes/admin/class-edd-notices.php:618
 msgid "The discount code entered is invalid; only alphanumeric characters are allowed, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:563
+#: includes/admin/class-edd-notices.php:625
 msgid "The discount amount must be a valid percentage or numeric flat amount. Please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:570
+#: includes/admin/class-edd-notices.php:632
 msgid "Discount code deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:576
+#: includes/admin/class-edd-notices.php:638
 msgid "There was a problem deleting that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:583
+#: includes/admin/class-edd-notices.php:645
 msgid "Discount code activated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:589
+#: includes/admin/class-edd-notices.php:651
 msgid "There was a problem activating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:596
+#: includes/admin/class-edd-notices.php:658
 msgid "Discount code deactivated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:602
+#: includes/admin/class-edd-notices.php:664
 msgid "There was a problem deactivating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:609
+#: includes/admin/class-edd-notices.php:671
 msgid "Discount code archived."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:615
+#: includes/admin/class-edd-notices.php:677
 msgid "There was a problem archiving that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:628
+#: includes/admin/class-edd-notices.php:690
 msgid "The reports have been refreshed."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:640
+#: includes/admin/class-edd-notices.php:702
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:646
+#: includes/admin/class-edd-notices.php:708
 msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:652
+#: includes/admin/class-edd-notices.php:714
 msgid "The specified user already has API keys."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:659
+#: includes/admin/class-edd-notices.php:721
 msgid "API keys successfully regenerated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:665
+#: includes/admin/class-edd-notices.php:727
 msgid "API keys successfully revoked."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:672
+#: includes/admin/class-edd-notices.php:734
 msgid "The test email was sent successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:680
+#: includes/admin/class-edd-notices.php:742
 msgid "The test email summary was sent successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:689
+#: includes/admin/class-edd-notices.php:751
 msgid "Your extensions could not be refreshed because you have not verified your license key."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:703
+#: includes/admin/class-edd-notices.php:765
 msgid "The note has been added successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:709
+#: includes/admin/class-edd-notices.php:771
 msgid "The order has been updated successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:715
+#: includes/admin/class-edd-notices.php:777
 msgid "Order successfully created."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:721
+#: includes/admin/class-edd-notices.php:783
 msgid "The order has been moved to the trash."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:727
+#: includes/admin/class-edd-notices.php:789
 msgid "The order has been restored."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:733
+#: includes/admin/class-edd-notices.php:795
 msgid "The order has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:739
+#: includes/admin/class-edd-notices.php:801
 msgid "The purchase receipt has been resent."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:745
+#: includes/admin/class-edd-notices.php:807
 msgid "Failed to send purchase receipt."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:751
+#: includes/admin/class-edd-notices.php:813
 msgid "The order note has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:763
+#: includes/admin/class-edd-notices.php:825
 msgid "Customer successfully deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:769
+#: includes/admin/class-edd-notices.php:831
 msgid "User successfully verified."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:775
+#: includes/admin/class-edd-notices.php:837
 msgid "Customer email added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:781
+#: includes/admin/class-edd-notices.php:843
 msgid "Customer email deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:787
+#: includes/admin/class-edd-notices.php:849
 msgid "Failed to delete customer email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:794
+#: includes/admin/class-edd-notices.php:856
 msgid "Primary email updated for customer."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:800
+#: includes/admin/class-edd-notices.php:862
 msgid "Failed to set primary email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:807
+#: includes/admin/class-edd-notices.php:869
 msgid "Customer address deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:813
+#: includes/admin/class-edd-notices.php:875
 msgid "Failed to delete customer address."
 msgstr ""
 
 #. Translators: 1. opening strong tag, do not translate; 2. closing strong tag, do not translate
-#: includes/admin/class-edd-notices.php:826
+#: includes/admin/class-edd-notices.php:888
 msgid "Congratulations! You are now running %1$sEasy Digital Downloads (Pro)%2$s."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:871
+#: includes/admin/class-edd-notices.php:933
 msgid "Easy Digital Downloads debug logging is enabled. Please only leave it enabled for as long as it is needed for troubleshooting."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:874
+#: includes/admin/class-edd-notices.php:936
 msgid "View Debug Log"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:875
+#: includes/admin/class-edd-notices.php:937
 msgid "Delete Log File and Disable Logging"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:891
+#: includes/admin/class-edd-notices.php:953
 #: includes/admin/customers/customer-actions.php:618
 #: includes/admin/emails/email-summary/class-edd-email-summary-admin.php:55
 #: includes/admin/tools/class-edd-tools-recount-all-stats.php:78
@@ -6300,7 +6310,7 @@ msgstr ""
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:896
+#: includes/admin/class-edd-notices.php:958
 msgid "The debug log has been cleared and logging has been disabled."
 msgstr ""
 
@@ -6579,8 +6589,8 @@ msgstr ""
 #: includes/admin/import/import-functions.php:25
 #: includes/admin/import/import-functions.php:106
 #: includes/admin/reporting/export/export-actions.php:24
-#: includes/api/class-edd-api.php:2030
-#: includes/class-edd-license-handler.php:480
+#: includes/api/class-edd-api.php:2005
+#: includes/class-edd-license-handler.php:478
 #: includes/user-functions.php:937
 #: src/Pro/Admin/Discounts/Generate.php:96
 msgid "Nonce verification failed."
@@ -11433,9 +11443,9 @@ msgid "Unable to find download. Please refresh the page and try again."
 msgstr ""
 
 #: includes/api/class-edd-api-v2.php:166
-#: includes/api/class-edd-api.php:1131
-#: includes/api/class-edd-api.php:1338
-#: includes/api/class-edd-api.php:1457
+#: includes/api/class-edd-api.php:1128
+#: includes/api/class-edd-api.php:1335
+#: includes/api/class-edd-api.php:1454
 msgid "Product %s not found!"
 msgstr ""
 
@@ -11444,7 +11454,7 @@ msgid "Customer not found!"
 msgstr ""
 
 #: includes/api/class-edd-api-v2.php:354
-#: includes/api/class-edd-api.php:1079
+#: includes/api/class-edd-api.php:1076
 msgid "No customers found!"
 msgstr ""
 
@@ -11464,70 +11474,70 @@ msgstr ""
 msgid "Invalid API version!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:688
+#: includes/api/class-edd-api.php:685
 msgid "Invalid query!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1073
+#: includes/api/class-edd-api.php:1070
 msgid "Customer %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1239
-#: includes/api/class-edd-api.php:1354
+#: includes/api/class-edd-api.php:1236
+#: includes/api/class-edd-api.php:1351
 msgid "The end date must be later than the start date!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1244
-#: includes/api/class-edd-api.php:1359
+#: includes/api/class-edd-api.php:1241
+#: includes/api/class-edd-api.php:1356
 msgid "Invalid or no date range specified!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1613
+#: includes/api/class-edd-api.php:1610
 msgid "No discounts found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1659
+#: includes/api/class-edd-api.php:1656
 msgid "Discount %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1730
+#: includes/api/class-edd-api.php:1702
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1986
+#: includes/api/class-edd-api.php:1961
 #: includes/user-functions.php:1107
 msgid "Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1996
+#: includes/api/class-edd-api.php:1971
 #: includes/user-functions.php:1114
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2000
+#: includes/api/class-edd-api.php:1975
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2003
+#: includes/api/class-edd-api.php:1978
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2006
+#: includes/api/class-edd-api.php:1981
 #: includes/user-functions.php:1125
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2010
+#: includes/api/class-edd-api.php:1985
 #: includes/user-functions.php:1131
 msgid "Revoke API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2034
+#: includes/api/class-edd-api.php:2009
 msgid "User ID Required"
 msgstr ""
 
-#: includes/api/class-edd-api.php:2046
-#: includes/api/class-edd-api.php:2048
+#: includes/api/class-edd-api.php:2021
+#: includes/api/class-edd-api.php:2023
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -13231,12 +13241,12 @@ msgid "Required"
 msgstr ""
 
 #. translators: 1. opening anchor tag; 2. closing anchor tag
-#: includes/class-edd-license-handler.php:304
+#: includes/class-edd-license-handler.php:301
 #: src/Extensions/Handler.php:256
 msgid "You have invalid or expired license keys for Easy Digital Downloads. %1$sActivate License(s)%2$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:326
+#: includes/class-edd-license-handler.php:323
 #: src/Extensions/Handler.php:275
 msgid "Enter valid license key for automatic updates."
 msgstr ""
@@ -14848,38 +14858,38 @@ msgid "An SSL certificate is required to create a PayPal webhook."
 msgstr ""
 
 #. Translators: %d - HTTP response code; %s - Full response from the API.
-#: includes/gateways/paypal/webhooks/functions.php:128
-msgid "Invalid response code %d while creating webhook. Response: %s"
+#: includes/gateways/paypal/webhooks/functions.php:132
+msgid "Invalid response code %1$d while creating webhook. Response: %2$s"
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:135
+#: includes/gateways/paypal/webhooks/functions.php:140
 msgid "Unexpected response from PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:162
+#: includes/gateways/paypal/webhooks/functions.php:170
 msgid "Webhook not configured."
 msgstr ""
 
 #. Translators: %d - HTTP response code; %s - Full response from the API.
-#: includes/gateways/paypal/webhooks/functions.php:192
-msgid "Invalid response code %d while syncing webhook. Response: %s"
+#: includes/gateways/paypal/webhooks/functions.php:201
+msgid "Invalid response code %1$d while syncing webhook. Response: %2$s"
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:227
+#: includes/gateways/paypal/webhooks/functions.php:252
 msgid "Your store is currently not receiving webhook notifications, create the webhooks to reconnect."
 msgstr ""
 
 #. Translators: %d - HTTP response code.
-#: includes/gateways/paypal/webhooks/functions.php:232
+#: includes/gateways/paypal/webhooks/functions.php:258
 msgid "Invalid response code %d while retrieving webhook details."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:239
+#: includes/gateways/paypal/webhooks/functions.php:266
 msgid "Unexpected response from PayPal when retrieving webhook details."
 msgstr ""
 
 #. Translators: %d - HTTP response code.
-#: includes/gateways/paypal/webhooks/functions.php:275
+#: includes/gateways/paypal/webhooks/functions.php:303
 msgid "Invalid response code %d while deleting webhook."
 msgstr ""
 
@@ -15348,15 +15358,15 @@ msgid "Easy Digital Downloads &mdash; Stripe"
 msgstr ""
 
 #. translators: %s Upgrade link.
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:85
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:62
 msgid "Easy Digital Downloads - Stripe Gateway needs to upgrade the customers database; <a href=\"%s\">click here to start the upgrade</a>. <a href=\"#\" onClick=\"jQuery(this).parent().next('p').slideToggle()\">Learn more about this upgrade</a>"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:88
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:65
 msgid "<strong>About this upgrade:</strong><br />This upgrade will improve the reliability of associating purchase records with your existing customer records in Stripe by changing their Stripe Customer IDs to be stored locally on their EDD customer record, instead of their user record."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:90
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:67
 msgid "<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI with the following command:<br /><code>wp edd-stripe migrate_customer_ids</code>"
 msgstr ""
 
@@ -15422,7 +15432,7 @@ msgstr ""
 msgid "We are unable to process your payment at this time, please try again later or contact support."
 msgstr ""
 
-#: includes/gateways/stripe/includes/class-edd-stripe.php:231
+#: includes/gateways/stripe/includes/class-edd-stripe.php:232
 #: includes/gateways/stripe/includes/template-functions.php:177
 msgid "Credit Card"
 msgstr ""
@@ -17503,12 +17513,21 @@ msgstr ""
 msgid "Add functionality to your Easy Digital Downloads powered store."
 msgstr ""
 
+#. translators: 1. pass name; 2. opening anchor tag; 3. closing anchor tag.
+#: src/Admin/Extensions/ExtensionPage.php:162
+msgid "Using the 1-Click Installation feature requires Easy Digital Downloads (Pro), which you have access to with your %1$s. %2$sInstall (Pro) now%3$s."
+msgstr ""
+
 #. translators: 1. opening anchor tag; 2. closing anchor tag.
-#: src/Admin/Extensions/ExtensionPage.php:158
+#: src/Admin/Extensions/ExtensionPage.php:180
 msgid "Missing access to an extension? %1$sAdd your license key now%2$s."
 msgstr ""
 
-#: src/Admin/Extensions/ExtensionPage.php:191
+#: src/Admin/Extensions/ExtensionPage.php:214
+msgid "EDD (Pro) Required"
+msgstr ""
+
+#: src/Admin/Extensions/ExtensionPage.php:218
 msgid "Upgrade Now"
 msgstr ""
 
@@ -17965,20 +17984,20 @@ msgstr ""
 msgid "Go Pro With Easy Digital Downloads"
 msgstr ""
 
-#: src/Admin/PassHandler/Settings.php:167
+#: src/Admin/PassHandler/Settings.php:175
 msgid "You're using Easy Digital Downloads &mdash; no license needed. Enjoy!"
 msgstr ""
 
 #. translators: 1. opening link tag; do not translate; 2. closing link tag; do not translate.
-#: src/Admin/PassHandler/Settings.php:182
+#: src/Admin/PassHandler/Settings.php:190
 msgid "To unlock more features, consider %1$supgrading to Pro%2$s."
 msgstr ""
 
-#: src/Admin/PassHandler/Settings.php:189
+#: src/Admin/PassHandler/Settings.php:197
 msgid "As a valued EDD user you receive 50% off, automatically applied at checkout!"
 msgstr ""
 
-#: src/Admin/PassHandler/Settings.php:190
+#: src/Admin/PassHandler/Settings.php:198
 msgid "Already purchased? Simply enter your license key to enable EDD (Pro)."
 msgstr ""
 
@@ -19483,66 +19502,66 @@ msgid "Full refund processed in PayPal."
 msgstr ""
 
 #. translators: %1$s is the opening link tag; %2$s is the closing link tag.
-#: src/Gateways/Stripe/Admin/LicenseManager.php:160
+#: src/Gateways/Stripe/Admin/LicenseManager.php:148
 msgid "Your license is not active. Please %1$sactivate your license%2$s."
 msgstr ""
 
 #. translators: %1$s is the opening link tag; %2$s is the closing link tag.
-#: src/Gateways/Stripe/Admin/LicenseManager.php:167
+#: src/Gateways/Stripe/Admin/LicenseManager.php:155
 msgid "Your license has expired. Please %1$srenew your license%2$s."
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/LicenseManager.php:261
+#: src/Gateways/Stripe/Admin/LicenseManager.php:249
 msgid "Easy Digital Downloads - Stripe Pro Payment Gateway"
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/LicenseManager.php:265
+#: src/Gateways/Stripe/Admin/LicenseManager.php:253
 msgid "Easy Digital Downloads - Stripe Pro Payment Gateway Is Not Fully Activated!"
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/LicenseManager.php:266
+#: src/Gateways/Stripe/Admin/LicenseManager.php:254
 msgid "Activate your license key to receive important security and feature updates and remove application fees."
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/LicenseManager.php:271
+#: src/Gateways/Stripe/Admin/LicenseManager.php:259
 msgid "Complete Activation"
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/LicenseManager.php:276
-#: src/Gateways/Stripe/Admin/LicenseManager.php:302
-#: src/Gateways/Stripe/Admin/LicenseManager.php:324
-#: src/Gateways/Stripe/Admin/LicenseManager.php:351
+#: src/Gateways/Stripe/Admin/LicenseManager.php:264
+#: src/Gateways/Stripe/Admin/LicenseManager.php:290
+#: src/Gateways/Stripe/Admin/LicenseManager.php:312
+#: src/Gateways/Stripe/Admin/LicenseManager.php:339
 msgid "Learn More"
 msgstr ""
 
 #. translators: %s is the name of the license.
-#: src/Gateways/Stripe/Admin/LicenseManager.php:285
-#: src/Gateways/Stripe/Admin/LicenseManager.php:311
+#: src/Gateways/Stripe/Admin/LicenseManager.php:273
+#: src/Gateways/Stripe/Admin/LicenseManager.php:299
 msgid "Your %s license has expired!"
 msgstr ""
 
 #. translators: %s is the date the grace period ends.
-#: src/Gateways/Stripe/Admin/LicenseManager.php:290
+#: src/Gateways/Stripe/Admin/LicenseManager.php:278
 msgid "Renew your license before %s to continue using Stripe without paying additional fees and to continue receiving important security and feature updates."
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/LicenseManager.php:297
-#: src/Gateways/Stripe/Admin/LicenseManager.php:319
-#: src/Gateways/Stripe/Admin/LicenseManager.php:346
+#: src/Gateways/Stripe/Admin/LicenseManager.php:285
+#: src/Gateways/Stripe/Admin/LicenseManager.php:307
+#: src/Gateways/Stripe/Admin/LicenseManager.php:334
 msgid "Renew License"
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/LicenseManager.php:314
+#: src/Gateways/Stripe/Admin/LicenseManager.php:302
 msgid "You are now paying additional fees with every Stripe transaction. You are no longer receiving important security and feature updates for Stripe Pro."
 msgstr ""
 
 #. translators: %s is the name of the license.
-#: src/Gateways/Stripe/Admin/LicenseManager.php:333
+#: src/Gateways/Stripe/Admin/LicenseManager.php:321
 msgid "Your %s License Is Expiring Soon!"
 msgstr ""
 
 #. translators: 1. the name of the license; 2. the date the license expires.
-#: src/Gateways/Stripe/Admin/LicenseManager.php:338
+#: src/Gateways/Stripe/Admin/LicenseManager.php:326
 msgid "Your %1$s license is set to expire on %2$s. An active license key is required to create and edit payment forms, enable automatic updates, and to keep Easy Digital Downloads - Stripe Pro Payment Gateway fully activated."
 msgstr ""
 
@@ -19588,7 +19607,7 @@ msgstr ""
 
 #. translators: opening link tag, do not translate; closing link tag, do not translate
 #: src/Gateways/Stripe/ApplicationFee.php:231
-msgid "%1$sActivate your license%2$s to remove additional fees."
+msgid "%1$sActivate or upgrade your license%2$s to remove additional fees."
 msgstr ""
 
 #. translators: %s: Category name

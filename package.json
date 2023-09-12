@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "3.2.0",
+	"version": "3.2.1",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"author": "Easy Digital Downloads",
@@ -75,11 +75,13 @@
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
 		"blocks": "bash bin/update-blocks.sh && grunt replace:blocks",
 		"translate": "grunt clean && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets,tests,libraries --ignore-domain",
-		"translate-lite": "wp i18n make-pot build/easy-digital-downloads build/easy-digital-downloads/languages/easy-digital-downloads.pot --exclude=build/easy-digital-downloads/assets,build/easy-digital-downloads/libraries --ignore-domain",
+		"translate-lite": "cd build/easy-digital-downloads && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=assets,libraries --ignore-domain && cd ../../",
+		"translate-repo": "cd build/easy-digital-downloads-public && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=assets,libraries --ignore-domain && cd ../../",
 		"update": "composer update --ignore-platform-reqs && composer run mozart",
 		"lite": "grunt clean && grunt copy:lite && grunt replace:pro && npm run translate-lite && grunt compress:lite",
 		"pro": "grunt clean && grunt copy:pro && grunt compress:pro",
 		"local": "grunt clean && grunt copy && grunt replace:pro && npm run translate-lite && grunt compress",
-		"postinstall": "cd includes/blocks && npm install && cd ../../"
+		"postinstall": "cd includes/blocks && npm install && cd ../../",
+		"public": "grunt clean:repo && grunt copy:repo && grunt replace:repo && npm run translate-repo"
 	}
 }

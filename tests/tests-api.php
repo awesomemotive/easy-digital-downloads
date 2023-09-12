@@ -23,6 +23,8 @@ class Tests_API extends EDD_UnitTestCase {
 
 	protected static $payment_id;
 
+	protected static $payment;
+
 	/**
 	 * Set up fixtures once.
 	 */
@@ -157,6 +159,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 
 		self::$payment_id = edd_insert_payment( $purchase_data );
+		self::$payment    = edd_get_payment( self::$payment_id );
 
 		// We don't want to trigger purchase receipts here.
 		remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
@@ -169,6 +172,9 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$_POST['edd_set_api_key'] = 1;
 		EDD()->api->update_key( self::$user_id );
+
+		// Generate a file download log.
+		edd_record_download_in_log( self::$post->ID, 0, array(), '127.0.0.1', self::$payment_id, 'EDD\Tests' );
 	}
 
 	public function setup(): void {
@@ -431,7 +437,7 @@ class Tests_API extends EDD_UnitTestCase {
 			$this->assertEquals( 'admin@example.org', $out['customers'][0]['info']['email'] );
 			$this->assertEquals( 1, $out['customers'][0]['stats']['total_purchases'] );
 			$this->assertEquals( 100.0, $out['customers'][0]['stats']['total_spent'] );
-			$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
+			$this->assertEquals( 1, $out['customers'][0]['stats']['total_downloads'] );
 		} catch ( \WPDieException $e ) {}
 	}
 
@@ -601,6 +607,85 @@ class Tests_API extends EDD_UnitTestCase {
 		$sales_output = $api_v2->get_recent_sales();
 
 		$this->assertEquals( 20, $sales_output['sales'][0]['discounts']['20OFF'] );
+	}
+
+	public function test_file_download_logs_generic() {
+		try {
+			$out = EDD()->api->get_download_logs();
+
+			$this->assertArrayHasKey( 'download_logs', $out );
+
+			$logs = $out['download_logs'];
+
+			$this->assertEquals( 1, count( $logs ) );
+
+			$this->assertArrayHasKey( 'ID', $logs[0] );
+			$this->assertArrayHasKey( 'user_id', $logs[0] );
+			$this->assertArrayHasKey( 'product_id', $logs[0] );
+			$this->assertArrayHasKey( 'product_name', $logs[0] );
+			$this->assertArrayHasKey( 'customer_id', $logs[0] );
+			$this->assertArrayHasKey( 'payment_id', $logs[0] );
+			$this->assertArrayHasKey( 'file', $logs[0] );
+			$this->assertArrayHasKey( 'ip', $logs[0] );
+			$this->assertArrayHasKey( 'date', $logs[0] );
+
+		} catch ( \WPDieException $e ) {}
+	}
+
+	public function test_file_download_logs_by_customer_id() {
+		try {
+			$out = EDD()->api->get_download_logs( self::$payment->customer_id );
+
+			$this->assertArrayHasKey( 'download_logs', $out );
+
+			$logs = $out['download_logs'];
+
+			$this->assertEquals( 1, count( $logs ) );
+
+			$this->assertArrayHasKey( 'ID', $logs[0] );
+			$this->assertArrayHasKey( 'user_id', $logs[0] );
+			$this->assertArrayHasKey( 'product_id', $logs[0] );
+			$this->assertArrayHasKey( 'product_name', $logs[0] );
+			$this->assertArrayHasKey( 'customer_id', $logs[0] );
+			$this->assertArrayHasKey( 'payment_id', $logs[0] );
+			$this->assertArrayHasKey( 'file', $logs[0] );
+			$this->assertArrayHasKey( 'ip', $logs[0] );
+			$this->assertArrayHasKey( 'date', $logs[0] );
+
+		} catch ( \WPDieException $e ) {}
+	}
+
+	public function test_file_download_logs_by_customer_email() {
+		try {
+			$out = EDD()->api->get_download_logs( self::$payment->email );
+
+			$this->assertArrayHasKey( 'download_logs', $out );
+
+			$logs = $out['download_logs'];
+
+			$this->assertEquals( 1, count( $logs ) );
+
+			$this->assertArrayHasKey( 'ID', $logs[0] );
+			$this->assertArrayHasKey( 'user_id', $logs[0] );
+			$this->assertArrayHasKey( 'product_id', $logs[0] );
+			$this->assertArrayHasKey( 'product_name', $logs[0] );
+			$this->assertArrayHasKey( 'customer_id', $logs[0] );
+			$this->assertArrayHasKey( 'payment_id', $logs[0] );
+			$this->assertArrayHasKey( 'file', $logs[0] );
+			$this->assertArrayHasKey( 'ip', $logs[0] );
+			$this->assertArrayHasKey( 'date', $logs[0] );
+
+		} catch ( \WPDieException $e ) {}
+	}
+
+	public function test_file_download_logs_by_invalid_customer_id() {
+		try {
+			$out = EDD()->api->get_download_logs( 99999 );
+
+			$this->assertArrayHasKey( 'error', $out );
+			$this->assertSame( 'No download logs found!', $out['error'] );
+
+		} catch ( \WPDieException $e ) {}
 	}
 
 }

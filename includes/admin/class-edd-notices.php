@@ -128,19 +128,21 @@ class EDD_Notices {
 	 */
 	public function add_notices() {
 
-		// User can view shop reports
+		// User can view shop reports.
 		if ( current_user_can( 'view_shop_reports' ) ) {
 			$this->add_reports_notices();
 		}
 
-		// User can manage the entire shop
+		// User can manage the entire shop.
 		if ( current_user_can( 'manage_shop_settings' ) ) {
 			$this->add_data_notices();
 			$this->add_settings_notices();
 			$this->add_order_upgrade_notice();
+			$this->add_stripe_notice();
+			$this->add_paypal_sync_notice();
 		}
 
-		// Generic notices
+		// Generic notices.
 		if ( ! empty( $_REQUEST['edd-message'] ) ) {
 			$this->add_user_action_notices( $_REQUEST['edd-message'] );
 		}
@@ -479,6 +481,66 @@ class EDD_Notices {
 				'id'             => 'edd-v30-order-migration-running',
 				'class'          => 'updated',
 				'message'        => __( 'Easy Digital Downloads is migrating orders. Sales and earnings data for your store will be updated when all orders have been migrated.', 'easy-digital-downloads' ),
+				'is_dismissible' => false,
+			)
+		);
+	}
+
+	/**
+	 * Adds a notice if the Stripe Pro gateway is outdated.
+	 * This is due to a name change in the gateway.
+	 *
+	 * @since 3.2.1
+	 * @return void
+	 */
+	private function add_stripe_notice() {
+		if ( ! defined( 'EDD_STRIPE_VERSION' ) || ( defined( 'EDD_STRIPE_VERSION' ) && version_compare( EDD_STRIPE_VERSION, '2.8.4', '>=' ) ) ) {
+			return;
+		}
+		$this->add_notice(
+			array(
+				'id'             => 'edd-stripe-outdated',
+				'class'          => 'notice-warning',
+				'message'        => sprintf(
+					// translators: 1. opening link tag; 2. opening link tag; 3. closing link tag.
+					__( 'You are running an outdated version of the Easy Digital Downloads &mdash; Stripe Pro Payment Gateway. You may need to log into %1$syour account%3$s to download the latest version and %2$smanually upgrade%3$s it.', 'easy-digital-downloads' ),
+					'<a href="https://easydigitaldownloads.com/your-account/" target="_blank">',
+					'<a href="https://easydigitaldownloads.com/docs/how-do-i-install-an-extension/#faq" target="_blank">',
+					'</a>'
+				),
+				'is_dismissible' => false,
+			)
+		);
+	}
+
+	/**
+	 * Adds a notice if PayPal webhooks need to synced.
+	 *
+	 * @since 3.2.1
+	 * @return void
+	 */
+	private function add_paypal_sync_notice() {
+		if ( ! get_option( 'edd_paypal_webhook_sync_failed' ) ) {
+			return;
+		}
+		$url = edd_get_admin_url(
+			array(
+				'page'    => 'edd-settings',
+				'tab'     => 'gateways',
+				'section' => 'paypal_commerce',
+			)
+		);
+
+		$this->add_notice(
+			array(
+				'id'             => 'edd-paypal-webhook-sync',
+				'class'          => 'updated',
+				'message'        => sprintf(
+					/* translators: %1$s: Opening anchor tag; %2$s: Closing anchor tag. */
+					__( 'New webhooks have been registered for PayPal Commerce, but we were unable to update them automatically. Please %1$ssync your webhooks manually%2$s.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( $url ) . '">',
+					'</a>'
+				),
 				'is_dismissible' => false,
 			)
 		);

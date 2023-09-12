@@ -201,6 +201,7 @@ class EDD_Stripe {
 	private function setup_classes() {
 		$this->rate_limiting   = new EDD_Stripe_Rate_Limiting();
 		$this->application_fee = new EDD\Gateways\Stripe\ApplicationFee();
+		new EDD\Gateways\Stripe\Admin\LicenseManager();
 	}
 
 	/**

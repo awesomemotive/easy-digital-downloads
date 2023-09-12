@@ -147,6 +147,28 @@ class ExtensionPage extends Extension {
 		if ( ! empty( $this->pass_manager->highest_pass_id ) && edd_is_pro() ) {
 			return;
 		}
+
+		// If this is Lite, and there is a pass active, mention that (Pro) is needed to install addons.
+		if ( $this->pass_manager->has_pass() ) {
+			$url = edd_get_admin_url(
+				array(
+					'page' => 'edd-settings',
+				)
+			);
+
+			wp_kses_post(
+				printf(
+					// translators: 1. pass name; 2. opening anchor tag; 3. closing anchor tag.
+					__( 'Using the 1-Click Installation feature requires Easy Digital Downloads (Pro), which you have access to with your %1$s. %2$sInstall (Pro) now%3$s.', 'easy-digital-downloads' ),
+					$this->pass_manager->get_pass_name(),
+					'<a href="' . esc_url( $url ) . '">',
+					'</a>'
+				)
+			);
+
+			return;
+		}
+
 		$url = edd_get_admin_url(
 			array(
 				'page' => 'edd-settings',
@@ -187,10 +209,16 @@ class ExtensionPage extends Extension {
 	protected function get_button_parameters( ProductData $product_data, $item_id = false ) {
 		$button = parent::get_button_parameters( $product_data, $item_id );
 
-		// Lite always shows "Upgrade Now".
-		$button['button_text']  = __( 'Upgrade Now', 'easy-digital-downloads' );
-		$button['button_class'] = 'button-primary edd-promo-notice__trigger';
-		$button['type']         = 'extension';
+		// Lite can show two cases, since you can have a pass activated on lite, but lite cannot install addons.
+		if ( $this->pass_manager->has_pass() ) {
+			$button['button_text'] = __( 'EDD (Pro) Required', 'easy-digital-downloads' );
+			$button['disabled']    = true;
+			unset( $button['href'] );
+		} else {
+			$button['button_text']  = __( 'Upgrade Now', 'easy-digital-downloads' );
+			$button['button_class'] = 'button-primary edd-promo-notice__trigger';
+			$button['type']         = 'extension';
+		}
 
 		return $button;
 	}

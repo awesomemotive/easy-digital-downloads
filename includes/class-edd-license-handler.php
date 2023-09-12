@@ -147,9 +147,6 @@ class EDD_License {
 
 		// Add the EDD version to the API parameters.
 		add_filter( 'edd_sl_plugin_updater_api_params', array( $this, 'filter_sl_api_params' ), 10, 3 );
-
-		// Fix missing Stripe keys due to option name change.
-		add_action( 'admin_init', array( $this, 'fix_stripe_key' ) );
 	}
 
 	/**
@@ -365,6 +362,7 @@ class EDD_License {
 	 * update the license key to fix automatic updates.
 	 *
 	 * @since 3.0.4
+	 * @deprecated 3.2.1
 	 * @return void
 	 */
 	public function fix_stripe_key() {

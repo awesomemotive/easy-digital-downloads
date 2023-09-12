@@ -47,10 +47,6 @@ class LicenseManager extends EDD_UnitTestCase {
 		$current_user = self::$original_user;
 	}
 
-	public function test_admin_notice_missing_license() {
-		$this->assertStringContainsString( 'Activate your license key', $this->get_notice() );
-	}
-
 	public function test_admin_notice_valid_license_empty() {
 		LicenseData::get_pro_license();
 

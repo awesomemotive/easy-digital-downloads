@@ -45,6 +45,7 @@ module.exports = function ( grunt ) {
 		// Clean up build directory
 		clean: {
 			main: [ 'build/**' ],
+			repo: [ 'build/<%= pkg.name %>-public/**' ],
 		},
 
 		// Copy the plugin into the build directory
@@ -115,6 +116,33 @@ module.exports = function ( grunt ) {
 				],
 				dest: 'build/<%= pkg.name %>/',
 			},
+			repo: {
+				src: [
+					'**',
+					'assets/**',
+					'!assets/pro/**',
+					'!build/**',
+					'i18n/**',
+					'includes/**',
+					'!includes/blocks/pro/**',
+					'!includes/blocks/assets/pro/**',
+					'!includes/blocks/build/pro/**',
+					'!includes/blocks/node_modules/**',
+					'!includes/blocks/src/pro/**',
+					'languages/**',
+					'libraries/**',
+					'!node_modules/**',
+					'templates/**',
+					'vendor/**',
+					'src/**',
+					'!assets/pro/**',
+					'!vendor/**',
+					'vendor/autoload.php',
+					'vendor/composer/**',
+					'vendor/symfony/deprecation-contracts/**'
+				],
+				dest: 'build/<%= pkg.name %>-public/',
+			}
 		},
 
 		// Compress build directory into <name>.zip and <name>-<version>.zip
@@ -142,40 +170,6 @@ module.exports = function ( grunt ) {
 		},
 
 		replace: {
-			blocks: {
-				options: {
-					patterns: [
-						{
-							match: /init_blocks/g,
-							replacement: 'init_core_blocks',
-							expression: true,
-						},
-						{
-							match: /update_required_pages/g,
-							replacement: 'update_core_required_pages',
-							expression: true,
-						},
-						{
-							match: /remove_action(.*);/g,
-							replacement: '',
-							expression: true,
-						},
-						{
-							match: /remove_filter(.*);/g,
-							replacement: '',
-							expression: true,
-						},
-					]
-				},
-				files: [
-					{
-						expand: true,
-						flatten: true,
-						src: [ 'includes/blocks/edd-blocks.php' ],
-						dest: 'includes/blocks'
-					}
-				]
-			},
 			pro: {
 				options: {
 					patterns: [
@@ -192,6 +186,25 @@ module.exports = function ( grunt ) {
 						flatten: true,
 						src: [ 'build/easy-digital-downloads/easy-digital-downloads.php' ],
 						dest: 'build/easy-digital-downloads'
+					}
+				]
+			},
+			repo: {
+				options: {
+					patterns: [
+						{
+							match: /Plugin Name: Easy Digital Downloads \(Pro\)/g,
+							replacement: 'Plugin Name: Easy Digital Downloads',
+							expression: true,
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'build/easy-digital-downloads-public/easy-digital-downloads.php' ],
+						dest: 'build/easy-digital-downloads-public'
 					}
 				]
 			}
