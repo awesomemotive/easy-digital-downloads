@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.8
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable Tag: 3.2.0
+Stable Tag: 3.2.1
 License: GNU Version 2 or Any Later Version
 
 The #1 ecommerce WordPress plugin to sell digital products. Effortlessly manage orders, maximize revenue, and accept payments through Stripe & PayPal.
@@ -226,6 +226,11 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.2.1 =
+* Stripe: We've improved the error handling and informational messaging related to the Stripe Payments integration.
+* PayPal: When new features are added to the PayPal integration, a background process attempts to register new payment endpoints automatically.
+* API: Accessing the file download logs via the EDD API now supports querying by both customer ID and customer email address.
 
 = 3.2.0 =
 * Important: This release requires PHP 7.4 or higher and WordPress 5.8 or higher.

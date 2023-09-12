@@ -170,7 +170,7 @@ class ApplicationFee extends EDD_UnitTestCase {
 		$this->assertFalse( $license->is_license_valid() );
 		$this->assertTrue( edd_stripe()->application_fee->has_application_fee() );
 		if ( edd_is_pro() ) {
-			$this->assertStringContainsString( 'Activate your license', edd_stripe()->application_fee->get_fee_message() );
+			$this->assertStringContainsString( 'Activate or upgrade your license', edd_stripe()->application_fee->get_fee_message() );
 		}
 
 		remove_filter( 'wp_doing_ajax', '__return_true' );

@@ -1034,6 +1034,10 @@ class EDD_Payment_Tests extends EDD_UnitTestCase {
 		$this->assertNotEmpty( $payment );
 	}
 
+	public function test_no_empty_payment_meta_is_saved() {
+		$this->assertFalse( $this->payment->update_meta( '_edd_payment_meta', array() ) );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {

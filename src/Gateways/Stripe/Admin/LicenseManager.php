@@ -9,14 +9,12 @@ namespace EDD\Gateways\Stripe\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-use EDD\EventManagement\SubscriberInterface;
-
 /**
  * Class to handle the admin notifications.
  *
  * @since 3.2.0
  */
-final class LicenseManager implements SubscriberInterface {
+final class LicenseManager {
 
 	/**
 	 * The license object, if found.
@@ -26,24 +24,19 @@ final class LicenseManager implements SubscriberInterface {
 	private $license;
 
 	/**
-	 * Returns an array of events that this subscriber wants to listen to.
+	 * The class constructor.
 	 *
-	 * @since 3.2.0
-	 * @return array
+	 * @since 3.2.1
 	 */
-	public static function get_subscribed_events() {
-		$events = array(
-			'edd_daily_scheduled_events'            => 'check_license',
-			'edd/license/deleted'                   => 'license_updated',
-			'edd/license/saved'                     => 'license_updated',
-			'admin_notices'                         => 'register_admin_notices',
-			'edd_sales_summary_widget_after_orders' => 'do_dashboard_notice',
-		);
+	public function __construct() {
+		add_action( 'edd_daily_scheduled_events', array( $this, 'check_license' ) );
+		add_action( 'edd/license/deleted', array( $this, 'license_updated' ) );
+		add_action( 'edd/license/saved', array( $this, 'license_updated' ) );
+		add_action( 'admin_notices', array( $this, 'register_admin_notices' ) );
+		add_action( 'edd_sales_summary_widget_after_orders', array( $this, 'do_dashboard_notice' ) );
 		if ( get_transient( 'edd_stripe_check_license' ) || get_transient( 'edds_stripe_check_license' ) ) {
-			$events['admin_init'] = 'check_license';
+			add_action( 'admin_init', array( $this, 'check_license' ) );
 		}
-
-		return $events;
 	}
 
 	/**
@@ -116,13 +109,11 @@ final class LicenseManager implements SubscriberInterface {
 		if ( function_exists( 'edd_is_admin_page' ) && ! edd_is_admin_page() ) {
 			return;
 		}
-		if ( ! $this->are_requirements_met() ) {
+		if ( ! $this->should_show_warnings() ) {
 			return;
 		}
-		$license = $this->get_license();
-		if ( $license->is_license_valid() ) {
-			return;
-		}
+
+		$license           = $this->get_license();
 		$admin_notice_args = array(
 			'id'   => 'missing',
 			'type' => 'error',
@@ -147,14 +138,11 @@ final class LicenseManager implements SubscriberInterface {
 		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
-		if ( ! $this->are_requirements_met() ) {
-			return;
-		}
-		$license = $this->get_license();
-		if ( $license->is_license_valid() ) {
+		if ( ! $this->should_show_warnings() ) {
 			return;
 		}
 
+		$license = $this->get_license();
 		$message = sprintf(
 			/* translators: %1$s is the opening link tag; %2$s is the closing link tag. */
 			__( 'Your license is not active. Please %1$sactivate your license%2$s.', 'easy-digital-downloads' ),
@@ -437,5 +425,44 @@ final class LicenseManager implements SubscriberInterface {
 		}
 
 		return edd_is_gateway_active( 'stripe' );
+	}
+
+	/**
+	 * Whether the admin warnings should be shown.
+	 *
+	 * @since 3.2.1
+	 * @return bool
+	 */
+	private function should_show_warnings() {
+
+		// If Stripe is not connected and active, don't show the warnings.
+		if ( ! $this->are_requirements_met() ) {
+			return false;
+		}
+
+		$license = $this->get_license();
+
+		// If the requirements are met to remove the application fee, don't show the warnings.
+		if ( ! edd_stripe()->application_fee->has_application_fee() ) {
+			// (Unless the license is in a grace period).
+			return $license->is_in_grace_period();
+		}
+
+		// There is an application fee, but Stripe Pro is active, so show the warnings.
+		if ( edds_is_pro() ) {
+			return true;
+		}
+
+		// There isn't a Stripe qualified license, but it's EDD Lite.
+		if ( empty( $license->license_data->key ) && ! edd_is_pro() ) {
+			return false;
+		}
+
+		// There is pass license active, but it's not for a pass that includes Stripe.
+		if ( ! empty( $license->pass_id ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }

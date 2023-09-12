@@ -191,21 +191,31 @@ function edd_do_automatic_upgrades() {
 		return;
 	}
 
-	// Existing stores should set the upgraded version and the onboarding wizard as complete.
+	$set_stripe_transients = true;
 	if ( ! empty( $edd_version ) ) {
 		update_option( 'edd_version_upgraded_from', $edd_version, false );
+
+		// Existing stores should set the upgraded version and the onboarding wizard as complete.
 		if ( ! get_option( 'edd_onboarding_completed', false ) && ! get_option( 'edd_onboarding_started', false ) ) {
 			update_option( 'edd_onboarding_completed', true, false );
+		}
+
+		// Stores upgrading from 3.2.0 or greater should not set the Stripe transients.
+		if ( version_compare( $edd_version, '3.2.0', '>=' ) ) {
+			$set_stripe_transients = false;
 		}
 	}
 
 	/**
-	 * If PayPal is connected, silently sync the webhooks to ensure the dispute hook is registered.
+	 * If PayPal is connected, schedule a cron event to sync the webhooks in the background.
 	 *
 	 * @since 3.2.0
 	 */
 	if ( EDD\Gateways\PayPal\has_rest_api_connection() && EDD\Gateways\PayPal\Webhooks\get_webhook_id() ) {
-		EDD\Gateways\PayPal\Webhooks\sync_webhook();
+		// Schedule a one time cron event to sync the webhooks.
+		if ( ! wp_next_scheduled( 'edd_paypal_commerce_sync_webhooks' ) ) {
+			wp_schedule_single_event( time() + ( 5 * MINUTE_IN_SECONDS ), 'edd_paypal_commerce_sync_webhooks' );
+		}
 	}
 
 	/**
@@ -213,7 +223,7 @@ function edd_do_automatic_upgrades() {
 	 *
 	 * @since 3.2.0
 	 */
-	if ( edd_is_gateway_active( 'stripe' ) && ( edd_is_pro() || edds_is_pro() ) ) {
+	if ( $set_stripe_transients && edd_is_gateway_active( 'stripe' ) && ( edd_is_pro() || edds_is_pro() ) ) {
 		set_transient( 'edd_stripe_check_license', true, 30 );
 		set_transient( 'edd_stripe_new_install', time(), HOUR_IN_SECONDS * 72 );
 	}

@@ -2383,7 +2383,7 @@ class EDD_Payment {
 				$meta_value = array_diff_key( $meta_value, array_flip( $core_meta_keys ) );
 
 				// If the above checks fall through, store anything else in a "payment_meta" meta key.
-				return edd_update_order_meta( $this->ID, 'payment_meta', $meta_value );
+				return ! empty( $meta_value ) ? edd_update_order_meta( $this->ID, 'payment_meta', $meta_value ) : false;
 			case '_edd_completed_date':
 				$meta_value = empty( $meta_value )
 					? null
