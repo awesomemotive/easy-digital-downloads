@@ -158,9 +158,17 @@ class Settings implements SubscriberInterface {
 	 * @return void
 	 */
 	private function show_free_message( $pro_license ) {
+		// If we're running the Pro version of EDD, we don't need to show this.
 		if ( edd_is_pro() ) {
 			return;
 		}
+
+		// The user could have the Lite version, but with a Pass activated on extensions, so we need to check for that.
+		$pass_manager = new \EDD\Admin\Pass_Manager();
+		if ( $pass_manager->has_pass() ) {
+			return;
+		}
+
 		?>
 		<div class="edd-pass-handler__description">
 			<p>

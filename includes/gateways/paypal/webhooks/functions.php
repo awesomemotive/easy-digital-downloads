@@ -117,18 +117,23 @@ function create_webhook( $mode = '' ) {
 		$event_types[] = array( 'name' => $event );
 	}
 
-	$response = $api->make_request( 'v1/notifications/webhooks', array(
-		'url'         => $webhook_url,
-		'event_types' => $event_types
-	) );
+	$response = $api->make_request(
+		'v1/notifications/webhooks',
+		array(
+			'url'         => $webhook_url,
+			'event_types' => $event_types,
+		)
+	);
 
 	if ( 201 !== $api->last_response_code ) {
-		throw new API_Exception( sprintf(
-		/* Translators: %d - HTTP response code; %s - Full response from the API. */
-			__( 'Invalid response code %d while creating webhook. Response: %s', 'easy-digital-downloads' ),
-			$api->last_response_code,
-			json_encode( $response )
-		) );
+		throw new API_Exception(
+			sprintf(
+				/* Translators: %d - HTTP response code; %s - Full response from the API. */
+				__( 'Invalid response code %1$d while creating webhook. Response: %2$s', 'easy-digital-downloads' ),
+				$api->last_response_code,
+				json_encode( $response )
+			)
+		);
 	}
 
 	if ( empty( $response->id ) ) {
@@ -157,6 +162,9 @@ function sync_webhook( $mode = '' ) {
 		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
 	}
 
+	// If the webhook sync failed during a cron event and we are syncing again, delete the option to clear the admin notice.
+	delete_option( 'edd_paypal_webhook_sync_failed' );
+
 	$webhook_id = get_webhook_id( $mode );
 	if ( empty( $webhook_id ) ) {
 		throw new \Exception( esc_html__( 'Webhook not configured.', 'easy-digital-downloads' ) );
@@ -171,13 +179,13 @@ function sync_webhook( $mode = '' ) {
 		array(
 			'op'    => 'replace',
 			'path'  => '/url',
-			'value' => get_webhook_url()
+			'value' => get_webhook_url(),
 		),
 		array(
 			'op'    => 'replace',
 			'path'  => '/event_types',
-			'value' => $event_types
-		)
+			'value' => $event_types,
+		),
 	);
 
 	$api      = new API( $mode );
@@ -187,16 +195,33 @@ function sync_webhook( $mode = '' ) {
 	}
 
 	if ( 200 !== $api->last_response_code ) {
-		throw new API_Exception( sprintf(
-		/* Translators: %d - HTTP response code; %s - Full response from the API. */
-			__( 'Invalid response code %d while syncing webhook. Response: %s', 'easy-digital-downloads' ),
-			$api->last_response_code,
-			json_encode( $response )
-		) );
+		throw new API_Exception(
+			sprintf(
+				/* Translators: %d - HTTP response code; %s - Full response from the API. */
+				__( 'Invalid response code %1$d while syncing webhook. Response: %2$s', 'easy-digital-downloads' ),
+				$api->last_response_code,
+				json_encode( $response )
+			)
+		);
 	}
 
 	return true;
 }
+
+/**
+ * Syncs the webhook on a cron event.
+ *
+ * @since 3.2.1
+ * @return void
+ */
+function sync_webhook_on_cron() {
+	try {
+		sync_webhook();
+	} catch ( \Exception $e ) {
+		add_option( 'edd_paypal_webhook_sync_failed', time(), '', false );
+	}
+}
+add_action( 'edd_paypal_commerce_sync_webhooks', __NAMESPACE__ . '\\sync_webhook_on_cron' );
 
 /**
  * Retrieves information about the webhook EDD created.
@@ -227,11 +252,13 @@ function get_webhook_details( $mode = '' ) {
 				__( 'Your store is currently not receiving webhook notifications, create the webhooks to reconnect.', 'easy-digital-downloads' )
 			);
 		} else {
-			throw new API_Exception( sprintf(
-			/* Translators: %d - HTTP response code. */
-				__( 'Invalid response code %d while retrieving webhook details.', 'easy-digital-downloads' ),
-				$api->last_response_code
-			) );
+			throw new API_Exception(
+				sprintf(
+					/* Translators: %d - HTTP response code. */
+					__( 'Invalid response code %d while retrieving webhook details.', 'easy-digital-downloads' ),
+					$api->last_response_code
+				)
+			);
 		}
 	}
 
@@ -270,15 +297,20 @@ function delete_webhook( $mode = '' ) {
 	$api->make_request( 'v1/notifications/webhooks/' . urlencode( $webhook_id ), array(), array(), 'DELETE' );
 
 	if ( 204 !== $api->last_response_code ) {
-		throw new API_Exception( sprintf(
-			/* Translators: %d - HTTP response code. */
-			__( 'Invalid response code %d while deleting webhook.', 'easy-digital-downloads' ),
-			$api->last_response_code
-		) );
+		throw new API_Exception(
+			sprintf(
+				/* Translators: %d - HTTP response code. */
+				__( 'Invalid response code %d while deleting webhook.', 'easy-digital-downloads' ),
+				$api->last_response_code
+			)
+		);
 	}
 }
 
-add_action( 'rest_api_init', function () {
-	$handler = new Webhook_Handler();
-	$handler->register_routes();
-} );
+add_action(
+	'rest_api_init',
+	function () {
+		$handler = new Webhook_Handler();
+		$handler->register_routes();
+	}
+);

@@ -1,29 +1,6 @@
 <?php
 
 /**
- * Handles automatic upgrades behind the scenes.
- *
- * @since 2.8.10
- */
-add_action( 'admin_init', function() {
-	/*
-	 * Move license data to new option, after product name change.
-	 * @link https://github.com/awesomemotive/edd-stripe/issues/715
-	 */
-	$license_key = edd_get_option( 'edd_stripe_payment_gateway_license_key' );
-	if ( $license_key ) {
-		edd_update_option( 'edd_stripe_pro_payment_gateway_license_key', sanitize_text_field( $license_key ) );
-		edd_delete_option( 'edd_stripe_payment_gateway_license_key' );
-
-		$license_status = get_option( 'edd_stripe_payment_gateway_license_active' );
-		if ( $license_status ) {
-			update_option( 'edd_stripe_pro_payment_gateway_license_active', $license_status );
-			delete_option( 'edd_stripe_payment_gateway_license_active' );
-		}
-	}
-} );
-
-/**
  * Automatic 'upgrade' to detect an existing Stripe install to keep them on card-elements.
  *
  * Since people can customize the checkout experiance, we need to keep existing installs on card

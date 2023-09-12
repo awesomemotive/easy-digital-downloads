@@ -23,9 +23,10 @@ defined( 'ABSPATH' ) || exit;
  * @return array $links
  */
 function edd_plugin_action_links( $links = array() ) {
-	$edd_links = array();
+	$edd_links    = array();
+	$pass_manager = new \EDD\Admin\Pass_Manager();
 
-	if ( ! edd_is_pro() ) {
+	if ( ! $pass_manager->has_pass() ) {
 
 		$url = edd_link_helper(
 			'https://easydigitaldownloads.com/lite-upgrade/',

@@ -1,7 +1,7 @@
 <?php
 
 namespace EDD\Licensing\Traits;
-use \EDD\Admin\Pass_Manager;
+use EDD\Admin\Pass_Manager;
 
 trait Controls {
 

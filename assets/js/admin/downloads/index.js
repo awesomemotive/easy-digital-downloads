@@ -231,6 +231,7 @@ var EDD_Download_Configuration = {
 			} );
 
 			if ( 'bundle' === product_type ) {
+				product_files.show();
 				edd_download_limit_wrap.hide();
 			} else if ( 'service' === $( this ).val() ) {
 				const has_files = product_files.find( '.edd_upload_field' ).toArray().some( el => !!el.value );
@@ -245,6 +246,7 @@ var EDD_Download_Configuration = {
 					edd_download_limit_wrap.show();
 				}
 			} else {
+				product_files.show();
 				edd_download_limit_wrap.show();
 			}
 		} );

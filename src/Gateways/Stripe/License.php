@@ -26,9 +26,31 @@ final class License {
 	public $is_pass_license = false;
 
 	/**
+	 * The pass ID.
+	 *
+	 * @var int
+	 */
+	public $pass_id;
+
+	/**
+	 * Whether the pass is valid for Stripe Pro, even if it's not a pro license.
+	 *
+	 * @var bool
+	 */
+	private $is_pass_valid_for_stripe;
+
+	/**
+	 * The item name.
+	 *
+	 * @var string
+	 */
+	private $item_name = 'Stripe Pro Payment Gateway';
+
+	/**
 	 * The class constructor.
 	 */
 	public function __construct() {
+		$this->is_pass_valid_for_stripe();
 		$this->license_data = $this->get_license_data();
 	}
 
@@ -223,9 +245,13 @@ final class License {
 		}
 
 		// Check for a Stripe Pro license key.
-		$license = new \EDD\Licensing\License( 'Stripe Pro Payment Gateway' );
+		$license = new \EDD\Licensing\License( $this->item_name );
 		if ( ! empty( $license->key ) ) {
 			return $license;
+		}
+
+		if ( $this->is_pass_valid_for_stripe() ) {
+			return $this->maybe_fix_missing_license();
 		}
 
 		return false;
@@ -242,15 +268,33 @@ final class License {
 		if ( empty( $pro_license->key ) ) {
 			return false;
 		}
-		$pass_manager = new \EDD\Admin\Pass_Manager();
-		if ( $pass_manager::pass_compare( $pass_manager->highest_pass_id, $pass_manager::EXTENDED_PASS_ID, '>=' ) ) {
-			return $pro_license;
-		}
-		if ( $pass_manager->hasExtendedPass() || $pass_manager->hasAllAccessPass() ) {
+		if ( ! empty( $pro_license->key ) && $this->is_pass_valid_for_stripe() ) {
 			return $pro_license;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Whether the pass is valid for Stripe Pro, even if it's not a pro license.
+	 *
+	 * @since 3.2.1
+	 * @return bool
+	 */
+	private function is_pass_valid_for_stripe() {
+		if ( ! is_null( $this->is_pass_valid_for_stripe ) ) {
+			return $this->is_pass_valid_for_stripe;
+		}
+		$this->is_pass_valid_for_stripe = false;
+		$pass_manager                   = new \EDD\Admin\Pass_Manager();
+		if ( empty( $pass_manager->highest_pass_id ) ) {
+			return $this->is_pass_valid_for_stripe;
+		}
+
+		$this->pass_id                  = $pass_manager->highest_pass_id;
+		$this->is_pass_valid_for_stripe = $pass_manager::pass_compare( $pass_manager->highest_pass_id, $pass_manager::EXTENDED_PASS_ID, '>=' );
+
+		return $this->is_pass_valid_for_stripe;
 	}
 
 	/**
@@ -282,5 +326,48 @@ final class License {
 			$format,
 			$date
 		);
+	}
+
+	/**
+	 * Fixes a missing Stripe Pro license.
+	 *
+	 * @since 3.2.1
+	 * @return bool|\EDD\Licensing\License
+	 */
+	private function maybe_fix_missing_license() {
+		if ( ! empty( $this->license_data ) ) {
+			return false;
+		}
+		if ( edd_is_pro() ) {
+			return false;
+		}
+
+		$pass_manager = new \EDD\Admin\Pass_Manager();
+		$shortname    = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
+
+		// Save the license key for Stripe.
+		edd_update_option( "{$shortname}_license_key", $pass_manager->highest_license_key );
+
+		$api_params   = array(
+			'edd_action'  => 'activate_license',
+			'license'     => $pass_manager->highest_license_key,
+			'item_name'   => $this->item_name,
+			'item_id'     => 167,
+			'environment' => wp_get_environment_type(),
+		);
+		$api          = new \EDD\Licensing\API();
+		$license_data = $api->make_request( $api_params );
+
+		// Save the license data, no matter what the response was.
+		$license = new \EDD\Licensing\License( $this->item_name );
+		$license->save( $license_data );
+
+		// Clear the option for licensed extensions to force regeneration.
+		if ( ! empty( $license_data->license ) && 'valid' === $license_data->license ) {
+			delete_option( 'edd_licensed_extensions' );
+		}
+
+		// Return a new license object.
+		return new \EDD\Licensing\License( $this->item_name );
 	}
 }

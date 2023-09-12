@@ -69,7 +69,6 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Pointers(),
 			new Admin\Settings\Sanitize(),
 			new Admin\Downloads\Metabox(),
-			new Gateways\Stripe\Admin\LicenseManager(),
 		);
 
 		return $providers;
