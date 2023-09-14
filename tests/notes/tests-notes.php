@@ -1,13 +1,7 @@
 <?php
-namespace EDD\Notes;
+namespace EDD\Tests\Notes;
 
-use EDD\Tests\Ajax_UnitTestCase;
-
-/**
- * Discount Ajax functions to be tested
- */
-require_once EDD_PLUGIN_DIR . 'includes/admin/notes/note-actions.php';
-require_once EDD_PLUGIN_DIR . 'includes/admin/notes/note-functions.php';
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Class Tests_Notes
@@ -15,7 +9,7 @@ require_once EDD_PLUGIN_DIR . 'includes/admin/notes/note-functions.php';
  * @group edd_notes
  * @group edd_ajax
  */
-class Tests_Notes extends Ajax_UnitTestCase {
+class Tests_Notes extends EDD_UnitTestCase {
 
 	/**
 	 * Discount fixture.
@@ -30,13 +24,6 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	 * @var \EDD\Notes\Note
 	 */
 	protected static $note;
-
-	/**
-	 * Setup the parent
-	 */
-	public function setUp() {
-		parent::setup();
-	}
 
 	/**
 	 * Set up fixtures once.
@@ -133,7 +120,7 @@ class Tests_Notes extends Ajax_UnitTestCase {
 			unset( $e );
 		}
 
-		$this->assertContains( 'edd_note_html', $this->_last_response );
+		$this->assertStringContainsString( 'edd_note_html', $this->_last_response );
 	}
 
 	/**

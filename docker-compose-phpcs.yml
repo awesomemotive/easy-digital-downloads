@@ -1,0 +1,10 @@
+---
+version: "3.7"
+services:
+    phpcs:
+        image: public.ecr.aws/q7y6e9n2/unit-test-images/php:8.1
+        volumes:
+            - .:/app
+            - /tmp/artifacts:/tmp/artifacts
+        working_dir: /app
+        command: ["bin/run-phpcs.sh"]

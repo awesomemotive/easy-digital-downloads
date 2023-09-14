@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Registers and sets up the Downloads custom post type
  *
  * @since 1.0
+ * @since <next version> Removes `edd_payment` and `edd_discount` from registered post types.
  * @return void
  */
 function edd_setup_edd_post_types() {
@@ -80,67 +81,6 @@ function edd_setup_edd_post_types() {
 		'supports'           => apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
-
-
-	/** Payment Post Type */
-	$payment_labels = array(
-		'name'               => _x( 'Payments', 'post type general name', 'easy-digital-downloads' ),
-		'singular_name'      => _x( 'Payment', 'post type singular name', 'easy-digital-downloads' ),
-		'add_new'            => __( 'Add New', 'easy-digital-downloads' ),
-		'add_new_item'       => __( 'Add New Payment', 'easy-digital-downloads' ),
-		'edit_item'          => __( 'Edit Payment', 'easy-digital-downloads' ),
-		'new_item'           => __( 'New Payment', 'easy-digital-downloads' ),
-		'all_items'          => __( 'All Payments', 'easy-digital-downloads' ),
-		'view_item'          => __( 'View Payment', 'easy-digital-downloads' ),
-		'search_items'       => __( 'Search Payments', 'easy-digital-downloads' ),
-		'not_found'          => __( 'No Payments found', 'easy-digital-downloads' ),
-		'not_found_in_trash' => __( 'No Payments found in Trash', 'easy-digital-downloads' ),
-		'parent_item_colon'  => '',
-		'menu_name'          => __( 'Payment History', 'easy-digital-downloads' ),
-	);
-
-	$payment_args = array(
-		'labels'          => apply_filters( 'edd_payment_labels', $payment_labels ),
-		'public'          => false,
-		'query_var'       => false,
-		'rewrite'         => false,
-		'capability_type' => 'shop_payment',
-		'map_meta_cap'    => true,
-		'supports'        => array( 'title' ),
-		'can_export'      => true,
-	);
-	register_post_type( 'edd_payment', $payment_args );
-
-
-	/** Discounts Post Type */
-	$discount_labels = array(
-		'name'               => _x( 'Discounts', 'post type general name', 'easy-digital-downloads' ),
-		'singular_name'      => _x( 'Discount', 'post type singular name', 'easy-digital-downloads' ),
-		'add_new'            => __( 'Add New', 'easy-digital-downloads' ),
-		'add_new_item'       => __( 'Add New Discount', 'easy-digital-downloads' ),
-		'edit_item'          => __( 'Edit Discount', 'easy-digital-downloads' ),
-		'new_item'           => __( 'New Discount', 'easy-digital-downloads' ),
-		'all_items'          => __( 'All Discounts', 'easy-digital-downloads' ),
-		'view_item'          => __( 'View Discount', 'easy-digital-downloads' ),
-		'search_items'       => __( 'Search Discounts', 'easy-digital-downloads' ),
-		'not_found'          => __( 'No Discounts found', 'easy-digital-downloads' ),
-		'not_found_in_trash' => __( 'No Discounts found in Trash', 'easy-digital-downloads' ),
-		'parent_item_colon'  => '',
-		'menu_name'          => __( 'Discounts', 'easy-digital-downloads' ),
-	);
-
-	$discount_args = array(
-		'labels'          => apply_filters( 'edd_discount_labels', $discount_labels ),
-		'public'          => false,
-		'query_var'       => false,
-		'rewrite'         => false,
-		'show_ui'         => false,
-		'capability_type' => 'shop_discount',
-		'map_meta_cap'    => true,
-		'supports'        => array( 'title' ),
-		'can_export'      => true,
-	);
-	register_post_type( 'edd_discount', $discount_args );
 }
 add_action( 'init', 'edd_setup_edd_post_types', 1 );
 
@@ -370,76 +310,6 @@ function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
 }
 
 /**
- * Registers custom post statuses which are used by the Payments and Discount
- * Codes.
- *
- * @since 1.0.9.1
- */
-function edd_register_post_type_statuses() {
-
-	// Payment Statuses
-	register_post_status( 'refunded', array(
-		'label'                     => _x( 'Refunded', 'Refunded payment status', 'easy-digital-downloads' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'easy-digital-downloads' )
-	) );
-	register_post_status( 'failed', array(
-		'label'                     => _x( 'Failed', 'Failed payment status', 'easy-digital-downloads' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'easy-digital-downloads' )
-	)  );
-	register_post_status( 'revoked', array(
-		'label'                     => _x( 'Revoked', 'Revoked payment status', 'easy-digital-downloads' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Revoked <span class="count">(%s)</span>', 'Revoked <span class="count">(%s)</span>', 'easy-digital-downloads' )
-	)  );
-	register_post_status( 'abandoned', array(
-		'label'                     => _x( 'Abandoned', 'Abandoned payment status', 'easy-digital-downloads' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Abandoned <span class="count">(%s)</span>', 'Abandoned <span class="count">(%s)</span>', 'easy-digital-downloads' )
-	)  );
-	register_post_status( 'processing', array(
-		'label'                     => _x( 'Processing', 'Processing payment status', 'easy-digital-downloads' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>', 'easy-digital-downloads' )
-	)  );
-
-	// Discount Code Statuses
-	register_post_status( 'active', array(
-		'label'                     => _x( 'Active', 'Active discount code status', 'easy-digital-downloads' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'easy-digital-downloads' )
-	)  );
-	register_post_status( 'inactive', array(
-		'label'                     => _x( 'Inactive', 'Inactive discount code status', 'easy-digital-downloads' ),
-		'public'                    => true,
-		'exclude_from_search'       => false,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		'label_count'               => _n_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'easy-digital-downloads' )
-	)  );
-}
-add_action( 'init', 'edd_register_post_type_statuses', 2 );
-
-/**
  * Post updated messages.
  *
  * @since 1.0
@@ -586,4 +456,4 @@ function edd_add_custom_roles_rest_user_query( $prepared_args, $request ) {
 
 	return $prepared_args;
 }
-add_filter( 'rest_user_query', 'edd_add_custom_roles_rest_user_query', 5, 2 );
+add_filter( 'rest_user_query', 'edd_add_custom_roles_rest_user_query', 15, 2 );

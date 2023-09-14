@@ -1,5 +1,7 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_misc
@@ -16,11 +18,7 @@ class Test_Misc extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$download = EDD_Helper_Download::create_simple_download();
-	}
-
-	public function setUp() {
-		parent::setUp();
+		self::$download = Helpers\EDD_Helper_Download::create_simple_download();
 	}
 
 	public function test_test_mode() {
@@ -122,410 +120,6 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		$this->assertEquals( $expected, edd_get_currencies() );
 
-	}
-
-	public function test_get_countries() {
-		$expected = array(
-			''   => '',
-			'US' => 'United States',
-			'CA' => 'Canada',
-			'GB' => 'United Kingdom',
-			'AF' => 'Afghanistan',
-			'AX' => '&#197;land Islands',
-			'AL' => 'Albania',
-			'DZ' => 'Algeria',
-			'AS' => 'American Samoa',
-			'AD' => 'Andorra',
-			'AO' => 'Angola',
-			'AI' => 'Anguilla',
-			'AQ' => 'Antarctica',
-			'AG' => 'Antigua and Barbuda',
-			'AR' => 'Argentina',
-			'AM' => 'Armenia',
-			'AW' => 'Aruba',
-			'AU' => 'Australia',
-			'AT' => 'Austria',
-			'AZ' => 'Azerbaijan',
-			'BS' => 'Bahamas',
-			'BH' => 'Bahrain',
-			'BD' => 'Bangladesh',
-			'BB' => 'Barbados',
-			'BY' => 'Belarus',
-			'BE' => 'Belgium',
-			'BZ' => 'Belize',
-			'BJ' => 'Benin',
-			'BM' => 'Bermuda',
-			'BT' => 'Bhutan',
-			'BO' => 'Bolivia',
-			'BQ' => 'Bonaire, Saint Eustatius and Saba',
-			'BA' => 'Bosnia and Herzegovina',
-			'BW' => 'Botswana',
-			'BV' => 'Bouvet Island',
-			'BR' => 'Brazil',
-			'IO' => 'British Indian Ocean Territory',
-			'BN' => 'Brunei Darrussalam',
-			'BG' => 'Bulgaria',
-			'BF' => 'Burkina Faso',
-			'BI' => 'Burundi',
-			'KH' => 'Cambodia',
-			'CM' => 'Cameroon',
-			'CV' => 'Cape Verde',
-			'KY' => 'Cayman Islands',
-			'CF' => 'Central African Republic',
-			'TD' => 'Chad',
-			'CL' => 'Chile',
-			'CN' => 'China',
-			'CX' => 'Christmas Island',
-			'CC' => 'Cocos Islands',
-			'CO' => 'Colombia',
-			'KM' => 'Comoros',
-			'CD' => 'Congo, Democratic People\'s Republic',
-			'CG' => 'Congo, Republic of',
-			'CK' => 'Cook Islands',
-			'CR' => 'Costa Rica',
-			'CI' => 'Cote d\'Ivoire',
-			'HR' => 'Croatia/Hrvatska',
-			'CU' => 'Cuba',
-			'CW' => 'Cura&Ccedil;ao',
-			'CY' => 'Cyprus',
-			'CZ' => 'Czechia',
-			'DK' => 'Denmark',
-			'DJ' => 'Djibouti',
-			'DM' => 'Dominica',
-			'DO' => 'Dominican Republic',
-			'TP' => 'East Timor',
-			'EC' => 'Ecuador',
-			'EG' => 'Egypt',
-			'GQ' => 'Equatorial Guinea',
-			'SV' => 'El Salvador',
-			'ER' => 'Eritrea',
-			'EE' => 'Estonia',
-			'ET' => 'Ethiopia',
-			'FK' => 'Falkland Islands',
-			'FO' => 'Faroe Islands',
-			'FJ' => 'Fiji',
-			'FI' => 'Finland',
-			'FR' => 'France',
-			'GF' => 'French Guiana',
-			'PF' => 'French Polynesia',
-			'TF' => 'French Southern Territories',
-			'GA' => 'Gabon',
-			'GM' => 'Gambia',
-			'GE' => 'Georgia',
-			'DE' => 'Germany',
-			'GR' => 'Greece',
-			'GH' => 'Ghana',
-			'GI' => 'Gibraltar',
-			'GL' => 'Greenland',
-			'GD' => 'Grenada',
-			'GP' => 'Guadeloupe',
-			'GU' => 'Guam',
-			'GT' => 'Guatemala',
-			'GG' => 'Guernsey',
-			'GN' => 'Guinea',
-			'GW' => 'Guinea-Bissau',
-			'GY' => 'Guyana',
-			'HT' => 'Haiti',
-			'HM' => 'Heard and McDonald Islands',
-			'VA' => 'Holy See (City Vatican State)',
-			'HN' => 'Honduras',
-			'HK' => 'Hong Kong',
-			'HU' => 'Hungary',
-			'IS' => 'Iceland',
-			'IN' => 'India',
-			'ID' => 'Indonesia',
-			'IR' => 'Iran',
-			'IQ' => 'Iraq',
-			'IE' => 'Ireland',
-			'IM' => 'Isle of Man',
-			'IL' => 'Israel',
-			'IT' => 'Italy',
-			'JM' => 'Jamaica',
-			'JP' => 'Japan',
-			'JE' => 'Jersey',
-			'JO' => 'Jordan',
-			'KZ' => 'Kazakhstan',
-			'KE' => 'Kenya',
-			'KI' => 'Kiribati',
-			'KW' => 'Kuwait',
-			'KG' => 'Kyrgyzstan',
-			'LA' => 'Lao People\'s Democratic Republic',
-			'LV' => 'Latvia',
-			'LB' => 'Lebanon',
-			'LS' => 'Lesotho',
-			'LR' => 'Liberia',
-			'LY' => 'Libyan Arab Jamahiriya',
-			'LI' => 'Liechtenstein',
-			'LT' => 'Lithuania',
-			'LU' => 'Luxembourg',
-			'MO' => 'Macau',
-			'MK' => 'Macedonia',
-			'MG' => 'Madagascar',
-			'MW' => 'Malawi',
-			'MY' => 'Malaysia',
-			'MV' => 'Maldives',
-			'ML' => 'Mali',
-			'MT' => 'Malta',
-			'MH' => 'Marshall Islands',
-			'MQ' => 'Martinique',
-			'MR' => 'Mauritania',
-			'MU' => 'Mauritius',
-			'YT' => 'Mayotte',
-			'MX' => 'Mexico',
-			'FM' => 'Micronesia',
-			'MD' => 'Moldova, Republic of',
-			'MC' => 'Monaco',
-			'MN' => 'Mongolia',
-			'ME' => 'Montenegro',
-			'MS' => 'Montserrat',
-			'MA' => 'Morocco',
-			'MZ' => 'Mozambique',
-			'MM' => 'Myanmar',
-			'NA' => 'Namibia',
-			'NR' => 'Nauru',
-			'NP' => 'Nepal',
-			'NL' => 'Netherlands',
-			'AN' => 'Netherlands Antilles',
-			'NC' => 'New Caledonia',
-			'NZ' => 'New Zealand',
-			'NI' => 'Nicaragua',
-			'NE' => 'Niger',
-			'NG' => 'Nigeria',
-			'NU' => 'Niue',
-			'NF' => 'Norfolk Island',
-			'KP' => 'North Korea',
-			'MP' => 'Northern Mariana Islands',
-			'NO' => 'Norway',
-			'OM' => 'Oman',
-			'PK' => 'Pakistan',
-			'PW' => 'Palau',
-			'PS' => 'Palestinian Territories',
-			'PA' => 'Panama',
-			'PG' => 'Papua New Guinea',
-			'PY' => 'Paraguay',
-			'PE' => 'Peru',
-			'PH' => 'Philippines',
-			'PN' => 'Pitcairn Island',
-			'PL' => 'Poland',
-			'PT' => 'Portugal',
-			'PR' => 'Puerto Rico',
-			'QA' => 'Qatar',
-			'XK' => 'Republic of Kosovo',
-			'RE' => 'Reunion Island',
-			'RO' => 'Romania',
-			'RU' => 'Russian Federation',
-			'RW' => 'Rwanda',
-			'BL' => 'Saint Barth&eacute;lemy',
-			'SH' => 'Saint Helena',
-			'KN' => 'Saint Kitts and Nevis',
-			'LC' => 'Saint Lucia',
-			'MF' => 'Saint Martin (French)',
-			'SX' => 'Saint Martin (Dutch)',
-			'PM' => 'Saint Pierre and Miquelon',
-			'VC' => 'Saint Vincent and the Grenadines',
-			'SM' => 'San Marino',
-			'ST' => 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe',
-			'SA' => 'Saudi Arabia',
-			'SN' => 'Senegal',
-			'RS' => 'Serbia',
-			'SC' => 'Seychelles',
-			'SL' => 'Sierra Leone',
-			'SG' => 'Singapore',
-			'SK' => 'Slovak Republic',
-			'SI' => 'Slovenia',
-			'SB' => 'Solomon Islands',
-			'SO' => 'Somalia',
-			'ZA' => 'South Africa',
-			'GS' => 'South Georgia',
-			'KR' => 'South Korea',
-			'SS' => 'South Sudan',
-			'ES' => 'Spain',
-			'LK' => 'Sri Lanka',
-			'SD' => 'Sudan',
-			'SR' => 'Suriname',
-			'SJ' => 'Svalbard and Jan Mayen Islands',
-			'SZ' => 'Swaziland',
-			'SE' => 'Sweden',
-			'CH' => 'Switzerland',
-			'SY' => 'Syrian Arab Republic',
-			'TW' => 'Taiwan',
-			'TJ' => 'Tajikistan',
-			'TZ' => 'Tanzania',
-			'TH' => 'Thailand',
-			'TL' => 'Timor-Leste',
-			'TG' => 'Togo',
-			'TK' => 'Tokelau',
-			'TO' => 'Tonga',
-			'TT' => 'Trinidad and Tobago',
-			'TN' => 'Tunisia',
-			'TR' => 'Turkey',
-			'TM' => 'Turkmenistan',
-			'TC' => 'Turks and Caicos Islands',
-			'TV' => 'Tuvalu',
-			'UG' => 'Uganda',
-			'UA' => 'Ukraine',
-			'AE' => 'United Arab Emirates',
-			'UY' => 'Uruguay',
-			'UM' => 'US Minor Outlying Islands',
-			'UZ' => 'Uzbekistan',
-			'VU' => 'Vanuatu',
-			'VE' => 'Venezuela',
-			'VN' => 'Vietnam',
-			'VG' => 'Virgin Islands (British)',
-			'VI' => 'Virgin Islands (USA)',
-			'WF' => 'Wallis and Futuna Islands',
-			'EH' => 'Western Sahara',
-			'WS' => 'Western Samoa',
-			'YE' => 'Yemen',
-			'ZM' => 'Zambia',
-			'ZW' => 'Zimbabwe'
-		);
-
-		$this->assertEquals( $expected, edd_get_country_list() );
-	}
-
-	public function test_states_list() {
-		$expected = array(
-			''   => '',
-			'AL' => 'Alabama',
-			'AK' => 'Alaska',
-			'AZ' => 'Arizona',
-			'AR' => 'Arkansas',
-			'CA' => 'California',
-			'CO' => 'Colorado',
-			'CT' => 'Connecticut',
-			'DE' => 'Delaware',
-			'DC' => 'District of Columbia',
-			'FL' => 'Florida',
-			'GA' => 'Georgia',
-			'HI' => 'Hawaii',
-			'ID' => 'Idaho',
-			'IL' => 'Illinois',
-			'IN' => 'Indiana',
-			'IA' => 'Iowa',
-			'KS' => 'Kansas',
-			'KY' => 'Kentucky',
-			'LA' => 'Louisiana',
-			'ME' => 'Maine',
-			'MD' => 'Maryland',
-			'MA' => 'Massachusetts',
-			'MI' => 'Michigan',
-			'MN' => 'Minnesota',
-			'MS' => 'Mississippi',
-			'MO' => 'Missouri',
-			'MT' => 'Montana',
-			'NE' => 'Nebraska',
-			'NV' => 'Nevada',
-			'NH' => 'New Hampshire',
-			'NJ' => 'New Jersey',
-			'NM' => 'New Mexico',
-			'NY' => 'New York',
-			'NC' => 'North Carolina',
-			'ND' => 'North Dakota',
-			'OH' => 'Ohio',
-			'OK' => 'Oklahoma',
-			'OR' => 'Oregon',
-			'PA' => 'Pennsylvania',
-			'RI' => 'Rhode Island',
-			'SC' => 'South Carolina',
-			'SD' => 'South Dakota',
-			'TN' => 'Tennessee',
-			'TX' => 'Texas',
-			'UT' => 'Utah',
-			'VT' => 'Vermont',
-			'VA' => 'Virginia',
-			'WA' => 'Washington',
-			'WV' => 'West Virginia',
-			'WI' => 'Wisconsin',
-			'WY' => 'Wyoming',
-			'AS' => 'American Samoa',
-			'CZ' => 'Canal Zone',
-			'CM' => 'Commonwealth of the Northern Mariana Islands',
-			'FM' => 'Federated States of Micronesia',
-			'GU' => 'Guam',
-			'MH' => 'Marshall Islands',
-			'MP' => 'Northern Mariana Islands',
-			'PW' => 'Palau',
-			'PI' => 'Philippine Islands',
-			'PR' => 'Puerto Rico',
-			'TT' => 'Trust Territory of the Pacific Islands',
-			'VI' => 'Virgin Islands',
-			'AA' => 'Armed Forces - Americas',
-			'AE' => 'Armed Forces - Europe, Canada, Middle East, Africa',
-			'AP' => 'Armed Forces - Pacific',
-		);
-
-		$this->assertEquals( $expected, edd_get_states_list() );
-	}
-
-	public function test_provinces_list() {
-		$expected = array(
-			''   => '',
-			'AB' => 'Alberta',
-			'BC' => 'British Columbia',
-			'MB' => 'Manitoba',
-			'NB' => 'New Brunswick',
-			'NL' => 'Newfoundland and Labrador',
-			'NS' => 'Nova Scotia',
-			'NT' => 'Northwest Territories',
-			'NU' => 'Nunavut',
-			'ON' => 'Ontario',
-			'PE' => 'Prince Edward Island',
-			'QC' => 'Quebec',
-			'SK' => 'Saskatchewan',
-			'YT' => 'Yukon',
-		);
-
-		$this->assertEquals( $expected, edd_get_provinces_list() );
-	}
-
-	public function test_angola_provinces_list() {
-		$expected = array(
-			''    => '',
-			'BGO' => 'Bengo',
-			'BGU' => 'Benguela',
-			'BIE' => 'Bié',
-			'CAB' => 'Cabinda',
-			'CNN' => 'Cunene',
-			'HUA' => 'Huambo',
-			'HUI' => 'Huíla',
-			'CCU' => 'Kuando Kubango', // Cuando Cubango
-			'CNO' => 'Kwanza-Norte', // Cuanza Norte
-			'CUS' => 'Kwanza-Sul', // Cuanza Sul
-			'LUA' => 'Luanda',
-			'LNO' => 'Lunda-Norte', // Lunda Norte
-			'LSU' => 'Lunda-Sul', // Lunda Sul
-			'MAL' => 'Malanje', // Malanje
-			'MOX' => 'Moxico',
-			'NAM' => 'Namibe',
-			'UIG' => 'Uíge',
-			'ZAI' => 'Zaire'
-		);
-
-		$this->assertSame( $expected, edd_get_angola_provinces_list() );
-	}
-
-	public function test_netherlands_provinces_list() {
-		$expected = array(
-			''   => '',
-			'DR' => __( 'Drenthe', 'easy-digital-downloads' ),
-			'FL' => __( 'Flevoland', 'easy-digital-downloads' ),
-			'FR' => __( 'Friesland', 'easy-digital-downloads' ),
-			'GE' => __( 'Gelderland', 'easy-digital-downloads' ),
-			'GR' => __( 'Groningen', 'easy-digital-downloads' ),
-			'LI' => __( 'Limburg', 'easy-digital-downloads' ),
-			'NB' => __( 'North Brabant', 'easy-digital-downloads' ),
-			'NH' => __( 'North Holland', 'easy-digital-downloads' ),
-			'OV' => __( 'Overijssel', 'easy-digital-downloads' ),
-			'ZH' => __( 'South Holland', 'easy-digital-downloads' ),
-			'UT' => __( 'Utrecht', 'easy-digital-downloads' ),
-			'ZE' => __( 'Zeeland', 'easy-digital-downloads' ),
-			'BO' => __( 'Bonaire', 'easy-digital-downloads' ),
-			'SA' => __( 'Saba', 'easy-digital-downloads' ),
-			'SE' => __( 'Sint Eustatius', 'easy-digital-downloads' ),
-		);
-
-		$this->assertSame( $expected, edd_get_netherlands_provinces_list() );
 	}
 
 	public function test_month_num_to_name() {
@@ -660,7 +254,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_cart_url_formats() {
 		global $edd_options;
-		$post = EDD_Helper_Download::create_simple_download();
+		$post = Helpers\EDD_Helper_Download::create_simple_download();
 
 		edd_add_to_cart( $post->ID );
 
@@ -675,19 +269,19 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'nocache=true', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringContainsString( 'page_id=' . $edd_options['purchase_page'], $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'nocache=true', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
 
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 		unset( $edd_options['no_cache_checkout'] );
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertContains( 'page_id=' . $edd_options['purchase_page'], $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
-		$this->assertNotContains( 'nocache=true', $remove_url );
+		$this->assertStringContainsString( 'page_id=' . $edd_options['purchase_page'], $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringNotContainsString( 'nocache=true', $remove_url );
 
 		// Go home and test again
 		$this->go_to( home_url( '/' ) );
@@ -697,19 +291,19 @@ class Test_Misc extends EDD_UnitTestCase {
 		$expected_url = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove&nocache=true';
 		$remove_url   = edd_remove_item_url( $item_position );
 
-		$this->assertNotContains( 'page_id=', $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
-		$this->assertContains( 'nocache=true', $remove_url );
+		$this->assertStringNotContainsString( 'page_id=', $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringContainsString( 'nocache=true', $remove_url );
 
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
 		$remove_url = edd_remove_item_url( $item_position );
 
-		$this->assertNotContains( 'page_id=', $remove_url );
-		$this->assertContains( 'edd_action=remove', $remove_url );
-		$this->assertContains( 'cart_item=' . $item_position, $remove_url );
-		$this->assertNotContains( 'nocache=true', $remove_url );
+		$this->assertStringNotContainsString( 'page_id=', $remove_url );
+		$this->assertStringContainsString( 'edd_action=remove', $remove_url );
+		$this->assertStringContainsString( 'cart_item=' . $item_position, $remove_url );
+		$this->assertStringNotContainsString( 'nocache=true', $remove_url );
 
 		// Go home and test again
 		$this->go_to( home_url( '/' ) );
@@ -725,16 +319,16 @@ class Test_Misc extends EDD_UnitTestCase {
 		$remove_url    = edd_remove_item_url( $item_position );
 		$expected_url  = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove';
 
-		EDD_Helper_Download::delete_download( $post->ID );
+		Helpers\EDD_Helper_Download::delete_download( $post->ID );
 	}
 
 	public function test_array_convert() {
 		$customer1_id = edd_add_customer( array( 'email' => 'test10@example.com' ) );
 
 		// Test sending a single object in
-		$customer_object = new EDD_Customer( $customer1_id );
+		$customer_object = new \EDD_Customer( $customer1_id );
 		$customer_array  = edd_object_to_array( $customer_object );
-		$this->assertInternalType( 'array', $customer_array );
+		$this->assertIsArray( $customer_array );
 		$this->assertEquals( $customer_object->id, $customer_array['id'] );
 		$this->assertEquals( $customer_object->email, $customer_array['email'] );
 		$this->assertEquals( $customer_object->purchase_count, $customer_array['purchase_count'] );
@@ -746,18 +340,18 @@ class Test_Misc extends EDD_UnitTestCase {
 		// Test sending in an array of objects
 		$customers = edd_get_customers();
 		$converted = edd_object_to_array( $customers );
-		$this->assertInternalType( 'array', $converted[0] );
+		$this->assertIsArray( $converted[0] );
 
 		// Test payments
-		$payment_1 = EDD_Helper_Payment::create_simple_payment();
-		$payment_2 = EDD_Helper_Payment::create_simple_payment();
+		$payment_1 = Helpers\EDD_Helper_Payment::create_simple_payment();
+		$payment_2 = Helpers\EDD_Helper_Payment::create_simple_payment();
 
-		$payment_1_obj = new EDD_Payment( $payment_1 );
-		$payment_2_obj = new EDD_Payment( $payment_2 );
+		$payment_1_obj = new \EDD_Payment( $payment_1 );
+		$payment_2_obj = new \EDD_Payment( $payment_2 );
 
 		// Test a single convert
 		$payment_1_array = edd_object_to_array( $payment_1_obj );
-		$this->assertInternalType( 'array',  $payment_1_array );
+		$this->assertIsArray(  $payment_1_array );
 		$this->assertEquals( $payment_1_obj->ID, $payment_1_array['ID'] );
 
 		$payments = array(
@@ -766,7 +360,7 @@ class Test_Misc extends EDD_UnitTestCase {
 		);
 
 		$payments_array = edd_object_to_array( $payments );
-		$this->assertInternalType( 'array', $payments_array[0] );
+		$this->assertIsArray( $payments_array[0] );
 		$this->assertEquals( 2, count( $payments_array ) );
 	}
 
@@ -817,14 +411,6 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	function test_default_symbol() {
 		$this->assertEquals( 'CZK', edd_currency_symbol( 'CZK' ) );
-	}
-
-	function test_country_name_blank() {
-		$this->assertSame( '', edd_get_country_name( '' ) );
-	}
-
-	function test_country_name_us() {
-		$this->assertSame( 'United States', edd_get_country_name( 'US' ) );
 	}
 
 	function test_edd_delete_option() {

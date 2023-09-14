@@ -179,6 +179,9 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$key    = md5( wp_json_encode( $args ) );
 
 			if ( ! isset( $cached[ $key ] ) ) {
+				if ( empty( $cached ) ) {
+					$cached = array();
+				}
 				$orders = edd_get_orders( array(
 					'type'          => 'sale',
 					'status__in'    => $args['post_status'],
@@ -252,6 +255,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$args   = apply_filters( 'edd_stats_earnings_args', $args );
 			$cached = get_transient( 'edd_stats_earnings' );
 			$key    = md5( wp_json_encode( $args ) );
+
+			if ( false === $cached ) {
+				$cached = array();
+			}
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$this->timestamp = false;
@@ -366,6 +373,9 @@ class EDD_Payment_Stats extends EDD_Stats {
 		$sales  = isset( $cached[ $key ] ) ? $cached[ $key ] : false;
 
 		if ( false === $sales || ! $this->is_cacheable( $range ) ) {
+			if ( false === $cached ) {
+				$cached = array();
+			}
 			if ( ! $day_by_day ) {
 				$select   = "DATE_FORMAT(edd_o.date_created, '%%m') AS m, YEAR(edd_o.date_created) AS y, COUNT(DISTINCT edd_o.id) as count";
 				$grouping = "YEAR(edd_o.date_created), MONTH(edd_o.date_created)";

@@ -614,12 +614,9 @@ class EDD_API {
 
 				break;
 
-			case 'file-download-logs' :
-
+			case 'file-download-logs':
 				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer'] : null;
-
-				$data = $this->get_download_logs( $customer );
-
+				$data     = $this->get_download_logs( $customer );
 				break;
 
 			case 'info' :
@@ -1669,62 +1666,37 @@ class EDD_API {
 	 * Process Get Downloads API Request to retrieve download logs
 	 *
 	 * @since  2.5
-	 * @author Daniel J Griffiths
+	 * @since 3.2.1 Updated to use edd_get_file_download_logs().
 	 *
-	 * @param  int $customer_id The customer ID you wish to retrieve download logs for
-	 *
+	 * @param  int $customer_id The customer ID or email you wish to retrieve download logs for.
 	 * @return array            Multidimensional array of the download logs
 	 */
 	public function get_download_logs( $customer_id = 0 ) {
-		$edd_logs = EDD()->debug_log;
 
-		$downloads        = array();
-		$invalid_customer = false;
+		$downloads      = array();
+		$paged          = $this->get_paged();
+		$per_page       = $this->per_page();
+		$offset         = $per_page * ( $paged - 1 );
+		$valid_customer = true;
 
-		$paged    = $this->get_paged();
-		$per_page = $this->per_page();
-		$offset   = $per_page * ( $paged - 1 );
-
-		$meta_query = array();
+		$query = array(
+			'number' => $per_page,
+			'offset' => $offset,
+		);
 		if ( ! empty( $customer_id ) ) {
-
-			$customer = new EDD_Customer( $customer_id );
-
-			if ( $customer->id > 0 ) {
-				$meta_query['relation'] = 'OR';
-
-				if ( $customer->id > 0 ) {
-					// Based on customer->user_id
-					$meta_query[] = array(
-						'key'   => '_edd_log_user_id',
-						'value' => $customer->user_id,
-					);
-				}
-
-				// Based on customer->email
-				$meta_query[] = array(
-					'key'     => '_edd_log_user_info',
-					'value'   => $customer->email,
-					'compare' => 'LIKE',
-				);
+			if ( is_email( $customer_id ) ) {
+				$customer = edd_get_customer_by( 'email', $customer_id );
 			} else {
-				$invalid_customer = true;
+				$customer = edd_get_customer( $customer_id );
+			}
+			if ( $customer ) {
+				$query['customer_id'] = $customer->id;
+			} else {
+				$valid_customer = false;
 			}
 		}
 
-		$query = array(
-			'log_type'               => 'file_download',
-			'paged'                  => $paged,
-			'meta_query'             => $meta_query,
-			'posts_per_page'         => $per_page,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		);
-
-		$logs = array();
-		if ( ! $invalid_customer ) {
-			$logs = $edd_logs->get_connected_logs( $query );
-		}
+		$logs = $valid_customer ? edd_get_file_download_logs( $query ) : false;
 
 		if ( empty( $logs ) ) {
 			$error['error'] = __( 'No download logs found!', 'easy-digital-downloads' );
@@ -1734,33 +1706,36 @@ class EDD_API {
 
 		foreach ( $logs as $log ) {
 
-			$log_meta   = get_post_custom( $log->ID );
-			$payment_id = isset( $log_meta['_edd_log_payment_id'] ) ? $log_meta['_edd_log_payment_id'][0] : false;
+			$customer  = edd_get_customer( $log->customer_id );
+			$file_id   = $log->file_id;
+			$file_name = edd_get_file_download_log_meta( $log->id, 'file_name', true );
+			if ( empty( $file_name ) ) {
+				$files = get_post_meta( $log->product_id, 'edd_download_files', true );
+				if ( is_array( $files ) && isset( $files[ $file_id ] ) ) {
+					$file_name = ! empty( $files[ $file_id ]['name'] )
+						? $files[ $file_id ]['name']
+						: edd_get_file_name( $files[ $file_id ] );
+				}
+			}
 
-			$payment_customer_id = edd_get_payment_customer_id( $payment_id );
-			$payment_customer    = new EDD_Customer( $payment_customer_id );
-			$user_id             = ( $payment_customer->user_id > 0 ) ? $payment_customer->user_id : false;
-			$ip                  = $log_meta['_edd_log_ip'][0];
-			$files               = edd_get_payment_meta_downloads( $payment_id );
-			$files               = edd_get_download_files( $files[0]['id'] );
-			$file_id             = (int) $log_meta['_edd_log_file_id'][0];
-			$file_id             = $file_id !== false ? $file_id : 0;
-			$file_name           = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
-
-			$item = (array) apply_filters( 'edd_api_download_log_item', array(
-				'ID'           => $log->ID,
-				'user_id'      => $user_id,
-				'product_id'   => $log->post_parent,
-				'product_name' => get_the_title( $log->post_parent ),
-				'customer_id'  => $payment_customer_id,
-				'payment_id'   => $payment_id,
-				'file'         => $file_name,
-				'ip'           => $ip,
-				'date'         => $log->post_date,
-			), $log, $log_meta );
+			$item = (array) apply_filters(
+				'edd_api_download_log_item',
+				array(
+					'ID'           => (int) $log->id,
+					'user_id'      => (int) $customer->user_id,
+					'product_id'   => (int) $log->product_id,
+					'product_name' => edd_get_download_name( $log->product_id, $log->product_id ),
+					'customer_id'  => (int) $log->customer_id,
+					'payment_id'   => (int) $log->order_id,
+					'file'         => $file_name,
+					'ip'           => $log->ip,
+					'date'         => $log->date_created,
+				),
+				$log,
+				edd_get_file_download_log_meta( $log->id )
+			);
 
 			$downloads['download_logs'][] = $item;
-
 		}
 
 		return apply_filters( 'edd_api_download_logs', $downloads, $this );
@@ -2027,7 +2002,7 @@ class EDD_API {
 	 */
 	public function process_api_key( $args ) {
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'edd-api-nonce' ) ) {
-			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		if ( empty( $args['user_id'] ) ) {

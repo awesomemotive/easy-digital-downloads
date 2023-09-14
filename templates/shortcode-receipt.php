@@ -161,7 +161,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
 				<td><strong><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo esc_html( edd_payment_amount( $order->id ) ); ?></td>
+				<td><?php echo esc_html( edd_payment_amount( $order ) ); ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -239,14 +239,14 @@ if ( empty( $order_items ) ) {
 						<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
 					<?php endif; ?>
 
-					<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
+					<?php if ( $item->is_deliverable() && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
 					<ul class="edd_purchase_receipt_files">
 						<?php
 						if ( ! empty( $download_files ) && is_array( $download_files ) ) :
 							foreach ( $download_files as $filekey => $file ) :
 								?>
 								<li class="edd_download_file">
-									<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+									<a href="<?php echo esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 								</li>
 								<?php
 								/**
@@ -278,7 +278,7 @@ if ( empty( $order_items ) ) {
 											foreach ( $download_files as $filekey => $file ) :
 												?>
 												<li class="edd_download_file">
-													<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $bundle_item_price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+													<a href="<?php echo esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item, $bundle_item_price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 												</li>
 												<?php
 												/**

@@ -1,4 +1,5 @@
 <?php
+namespace EDD\Tests;
 
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-api-request-logs.php' );
 require_once( dirname( __FILE__ ) . '/factories/class-edd-factory-for-discounts.php' );

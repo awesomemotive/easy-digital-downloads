@@ -83,9 +83,6 @@ class Utilities {
 		require_once $utils_dir . 'exceptions/class-invalid-argument.php';
 		require_once $utils_dir . 'exceptions/class-invalid-parameter.php';
 
-		// Date management.
-		require_once $utils_dir . 'class-date.php';
-
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';
 	}

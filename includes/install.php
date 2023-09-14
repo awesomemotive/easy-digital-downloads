@@ -13,81 +13,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Get the current database version
- *
- * @since 3.0
- *
- * @return string
- */
-function edd_get_db_version() {
-	$db_version = get_option( 'edd_version' );
-	$retval     = ! empty( $db_version )
-		? edd_format_db_version( $db_version )
-		: false;
-
-	return $retval;
-}
-
-/**
- * Update the EDD version in the options table
- *
- * @since 3.0
- */
-function edd_update_db_version() {
-	if ( defined( 'EDD_VERSION' ) ) {
-		update_option( 'edd_version', edd_format_db_version( EDD_VERSION ) );
-	}
-}
-
-/**
- * Format the EDD version (going into or coming from the database.)
- *
- * @since 3.0
- *
- * @param string $version
- * @return string
- */
-function edd_format_db_version( $version = '' ) {
-	return preg_replace( '/[^0-9.].*/', '', $version );
-}
-
-/**
- * Check if the upgrade routine has been run for a specific action
- *
- * @since  2.3
- * @param  string $upgrade_action The upgrade action to check completion for
- * @return bool                   If the action has been added to the copmleted actions array
- */
-function edd_has_upgrade_completed( $upgrade_action = '' ) {
-
-	// Bail if no upgrade action to check
-	if ( empty( $upgrade_action ) ) {
-		return false;
-	}
-
-	// Get completed upgrades
-	$completed_upgrades = edd_get_completed_upgrades();
-
-	// Return true if in array, false if not
-	return in_array( $upgrade_action, $completed_upgrades, true );
-}
-
-/**
- * Get's the array of completed upgrade actions
- *
- * @since  2.3
- * @return array The array of completed upgrades
- */
-function edd_get_completed_upgrades() {
-
-	// Get the completed upgrades for this site
-	$completed_upgrades = get_option( 'edd_completed_upgrades', array() );
-
-	// Return array of completed upgrades
-	return (array) $completed_upgrades;
-}
-
-/**
  * Install
  *
  * Runs on plugin install by setting up the post types, custom taxonomies,
@@ -167,6 +92,10 @@ function edd_run_multisite_install() {
  */
 function edd_run_install( $site_id = false ) {
 
+	if ( edd_get_db_version() ) {
+		return;
+	}
+
 	// Not switched
 	$switched = false;
 
@@ -175,9 +104,6 @@ function edd_run_install( $site_id = false ) {
 		switch_to_blog( $site_id );
 		$switched = true;
 	}
-
-	// Get the current database version
-	$current_version = edd_get_db_version();
 
 	// Setup the components (customers, discounts, logs, etc...)
 	edd_setup_components();
@@ -191,20 +117,8 @@ function edd_run_install( $site_id = false ) {
 	// Clear the permalinks
 	flush_rewrite_rules( false );
 
-	// Install the default pages
+	// Install the default pages and settings.
 	edd_install_pages();
-
-	// Maybe save the previous version, only if different than current
-	if ( ! empty( $current_version ) && ( edd_format_db_version( EDD_VERSION ) !== $current_version ) ) {
-		if ( version_compare( $current_version, edd_format_db_version( EDD_VERSION ), '>' ) ) {
-			$downgraded = true;
-			update_option( 'edd_version_downgraded_from', $current_version );
-		}
-
-		update_option( 'edd_version_upgraded_from', $current_version );
-	}
-
-	// Install the default settings
 	edd_install_settings();
 
 	// Set the activation date.
@@ -218,17 +132,12 @@ function edd_run_install( $site_id = false ) {
 		edd_create_protection_files( true );
 	}
 
-	// Create custom tables. (@todo move to BerlinDB)
-	EDD()->notifications->create_table();
-
 	// Create EDD shop roles
-	$roles = new EDD_Roles;
-	$roles->add_roles();
-	$roles->add_caps();
+	EDD()->roles->add_roles();
+	EDD()->roles->add_caps();
 
 	// API version
-	$api = new EDD_API;
-	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
+	update_option( 'edd_default_api_version', 'v' . EDD()->api->get_version() );
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
@@ -237,11 +146,15 @@ function edd_run_install( $site_id = false ) {
 	edd_set_all_upgrades_complete();
 
 	// Update the database version (must be at end, but before site restore)
-	edd_update_db_version();
+	edd_do_automatic_upgrades();
 
 	// Maybe switch back
 	if ( true === $switched ) {
 		restore_current_blog();
+	}
+
+	if ( ! get_option( 'edd_onboarding_completed', false ) ) {
+		set_transient( 'edd_onboarding_redirect', true, 30 );
 	}
 }
 
@@ -256,21 +169,8 @@ function edd_set_all_upgrades_complete() {
 		return;
 	}
 
-	// Maybe include an admin-area only file/function
-	if ( ! function_exists( 'edd_set_upgrade_complete' ) ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
-	}
-
 	// When new upgrade routines are added, mark them as complete on fresh install
-	$upgrade_routines = array(
-		'upgrade_payment_taxes',
-		'upgrade_customer_payments_association',
-		'upgrade_user_api_keys',
-		'remove_refunded_sale_logs',
-		'update_file_download_log_data',
-	);
-	$edd_30_upgrades  = edd_get_v30_upgrades();
-	$upgrade_routines = array_merge( $upgrade_routines, array_keys( $edd_30_upgrades ) );
+	$upgrade_routines = edd_get_all_upgrades();
 
 	// Loop through upgrade routines and mark them as complete
 	foreach ( $upgrade_routines as $upgrade ) {
@@ -406,10 +306,11 @@ function edd_get_required_pages() {
  * Install the default settings
  *
  * @since 3.0
- *
  * @global array $edd_options
+ * @return void
  */
 function edd_install_settings() {
+
 	global $edd_options;
 
 	// Setup some default options
@@ -438,7 +339,6 @@ function edd_install_settings() {
 		}
 	}
 
-	// Get the settings
 	$settings       = get_option( 'edd_settings', array() );
 	$merged_options = array_merge( $settings, $options );
 	$edd_options    = $merged_options;
@@ -469,11 +369,7 @@ function edd_new_blog_created( $blog ) {
 	edd_install();
 	restore_current_blog();
 }
-if ( version_compare( get_bloginfo( 'version' ), '5.1', '>=' ) ) {
-	add_action( 'wp_initialize_site', 'edd_new_blog_created' );
-} else {
-	add_action( 'wpmu_new_blog', 'edd_new_blog_created' );
-}
+add_action( 'wp_initialize_site', 'edd_new_blog_created' );
 
 /**
  * Drop our custom tables when a mu site is deleted
@@ -537,19 +433,19 @@ function edd_install_roles_on_network() {
 
 	global $wp_roles;
 
-	if( ! is_object( $wp_roles ) ) {
+	if ( ! is_object( $wp_roles ) ) {
 		return;
 	}
 
+	if ( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
 
-	if( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
-
+		if ( empty( $wp_roles->roles ) ) {
+			$wp_roles->roles = array();
+		}
 		// Create EDD shop roles
-		$roles = new EDD_Roles;
+		$roles = new EDD_Roles();
 		$roles->add_roles();
 		$roles->add_caps();
-
 	}
-
 }
 add_action( 'admin_init', 'edd_install_roles_on_network' );

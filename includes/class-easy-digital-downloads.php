@@ -167,6 +167,18 @@ final class Easy_Digital_Downloads {
 	public $components = array();
 
 	/**
+	 * Pro Install
+	 */
+	private $pro = false;
+
+	/**
+	 * Email Summary Admin
+	 *
+	 * @var EDD_Email_Summary_Admin
+	 */
+	public $email_summary_admin;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -213,7 +225,6 @@ final class Easy_Digital_Downloads {
 		self::$instance->email_summary_cron = new EDD_Email_Summary_Cron();
 		self::$instance->payment_stats      = new EDD_Payment_Stats();
 		self::$instance->cart               = new EDD_Cart();
-		self::$instance->tracking           = new EDD_Tracking();
 		self::$instance->structured_data    = new EDD\Structured_Data();
 		self::$instance->notifications      = new \EDD\Database\NotificationsDB();
 		self::$instance->extensionRegistry  = new \EDD\Extensions\ExtensionRegistry();
@@ -228,6 +239,19 @@ final class Easy_Digital_Downloads {
 		self::$instance->backcompat_globals();
 
 		self::$instance->registerApiEndpoints();
+
+		// Check if the pro code is present.
+		if ( class_exists( '\\EDD\\Pro\\Core' ) ) {
+			self::$instance->pro = true;
+			if ( edd_is_pro() ) {
+				new EDD\Pro\Core();
+			}
+		}
+		if ( ! edd_is_pro() && class_exists( '\\EDD\\Lite\\Core' ) ) {
+			new EDD\Lite\Core();
+		}
+
+		self::$instance->tracking = edd_is_pro() ? new EDD\Pro\Telemetry\Tracking() : new EDD_Tracking();
 
 		// Return the instance
 		return self::$instance;
@@ -245,7 +269,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public function __clone() {
 		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
+		_doing_it_wrong( __FUNCTION__, __( 'Method Not Allowed.', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
@@ -257,7 +281,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public function __wakeup() {
 		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
+		_doing_it_wrong( __FUNCTION__, __( 'Method Not Allowed.', 'easy-digital-downloads' ), '1.6' );
 	}
 
 	/**
@@ -286,6 +310,16 @@ final class Easy_Digital_Downloads {
 	}
 
 	/**
+	 * Whether the current install is a pro install.
+	 *
+	 * @since 3.1.1
+	 * @return bool
+	 */
+	public function is_pro() {
+		return $this->pro;
+	}
+
+	/**
 	 * Return whether the main loading class has been instantiated or not.
 	 *
 	 * @since 3.0
@@ -310,7 +344,10 @@ final class Easy_Digital_Downloads {
 	 * @param string $file
 	 */
 	private static function setup_instance( $file = '' ) {
-		self::$instance       = new Easy_Digital_Downloads;
+		if ( empty( $file ) && defined( EDD_PLUGIN_FILE ) ) {
+			$file = EDD_PLUGIN_FILE;
+		}
+		self::$instance       = new Easy_Digital_Downloads();
 		self::$instance->file = $file;
 	}
 
@@ -325,27 +362,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.1.0.6' );
-		}
-
-		// Plugin Root File.
-		if ( ! defined( 'EDD_PLUGIN_FILE' ) ) {
-			define( 'EDD_PLUGIN_FILE', $this->file );
-		}
-
-		// Plugin Base Name.
-		if ( ! defined( 'EDD_PLUGIN_BASE' ) ) {
-			define( 'EDD_PLUGIN_BASE', plugin_basename( EDD_PLUGIN_FILE ) );
-		}
-
-		// Plugin Folder Path.
-		if ( ! defined( 'EDD_PLUGIN_DIR' ) ) {
-			define( 'EDD_PLUGIN_DIR', plugin_dir_path( EDD_PLUGIN_FILE ) );
-		}
-
-		// Plugin Folder URL.
-		if ( ! defined( 'EDD_PLUGIN_URL' ) ) {
-			define( 'EDD_PLUGIN_URL', plugin_dir_url( EDD_PLUGIN_FILE ) );
+			define( 'EDD_VERSION', '3.2.1' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -412,8 +429,7 @@ final class Easy_Digital_Downloads {
 
 		$GLOBALS['edd_options'] = edd_get_settings();
 
-		// Load Amazon Payments.
-		PayWithAmazon\EDD_Amazon_Payments::getInstance();
+		$this->maybe_load_amazon();
 
 		// Load cache helper.
 		new EDD_Cache_Helper();
@@ -524,8 +540,6 @@ final class Easy_Digital_Downloads {
 
 		// Old Database Components
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
-
-		require_once EDD_PLUGIN_DIR . 'includes/database/NotificationsDB.php';
 	}
 
 	/**
@@ -642,14 +656,11 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 
 		// Currency
-		require_once EDD_PLUGIN_DIR . 'includes/currency/class-currency.php';
-		require_once EDD_PLUGIN_DIR . 'includes/currency/class-money-formatter.php';
 		require_once EDD_PLUGIN_DIR . 'includes/currency/functions.php';
 
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
@@ -678,11 +689,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/notes/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/notes/meta.php';
 
-		// Notifications
-		require_once EDD_PLUGIN_DIR . 'includes/models/Notification.php';
-		require_once EDD_PLUGIN_DIR . 'includes/utils/EnvironmentChecker.php';
-		require_once EDD_PLUGIN_DIR . 'includes/utils/NotificationImporter.php';
-
 		// Orders
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-address.php';
@@ -702,6 +708,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/ui.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transitions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/statuses.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/disputes.php';
 
 		// Payments
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
@@ -721,9 +728,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary-blurb.php';
-
-		// Structured Data
-		require_once EDD_PLUGIN_DIR . 'includes/class-structured-data.php';
 
 		// Stats
 		require_once EDD_PLUGIN_DIR . 'includes/class-stats.php';
@@ -758,7 +762,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/template-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/extensions/licensing-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/extensions/ExtensionRegistry.php';
 		require_once EDD_PLUGIN_DIR . 'includes/date-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
@@ -768,7 +771,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/customers/customer-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
@@ -779,6 +781,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/users/register.php';
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
+		require_once EDD_PLUGIN_DIR . 'includes/upgrades/functions.php';
 
 		// Admin files to load globally (cron, bar, etc...)
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
@@ -791,7 +794,6 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function include_admin() {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
@@ -835,24 +837,16 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/deprecated-upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/downgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/upgrade-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extension-manager.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/abstract-extension.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extension-product-data.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-wpsmtp.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-recurring.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-reviews.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-email-marketing.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-invoices.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/settings-compatibility.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-deprecated-functions.php';
 
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/class-promo-handler.php';
 	}
 
 	/**
@@ -901,6 +895,22 @@ final class Easy_Digital_Downloads {
 				}
 			}
 		} );
+	}
+
+	/**
+	 * Maybe load the Amazon Payments gateway.
+	 * If the gateway is not set up, this will do nothing.
+	 *
+	 * @since 3.2.0
+	 * @return void
+	 */
+	private function maybe_load_amazon() {
+		if ( ! edd_is_gateway_setup( 'amazon', true ) ) {
+			return;
+		}
+
+		require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
+		PayWithAmazon\EDD_Amazon_Payments::getInstance();
 	}
 }
 endif; // End if class_exists check.

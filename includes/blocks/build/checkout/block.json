@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "edd/checkout",
+  "version": "2.0.0",
+  "title": "EDD Checkout",
+  "category": "easy-digital-downloads",
+  "icon": "products",
+  "description": "Full checkout block for Easy Digital Downloads.",
+  "keywords": [
+    "easy digital downloads",
+    "edd",
+    "checkout"
+  ],
+  "supports": {
+    "html": false
+  },
+  "textdomain": "easy-digital-downloads",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "example": {
+    "attributes": {}
+  }
+}

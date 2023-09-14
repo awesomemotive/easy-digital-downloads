@@ -28,7 +28,7 @@ class Orders extends Base {
 		parent::__construct( $step );
 
 		$this->completed_message = __( 'Orders migration completed successfully.', 'easy-digital-downloads' );
-		$this->upgrade           = 'migrate_orders';
+		$this->upgrade           = array( 'migrate_orders', 'migrate_order_actions_date' );
 	}
 
 	/**
@@ -88,6 +88,26 @@ class Orders extends Base {
 		if ( ! empty( $total ) ) {
 			foreach ( $downloads as $download ) {
 				edd_recalculate_download_sales_earnings( $download->ID );
+			}
+		}
+	}
+
+	/**
+	 * Recalculates all customer values.
+	 *
+	 * @since 3.1.2
+	 * @return void
+	 */
+	private function recalculate_customer_values() {
+		$customers = edd_get_customers(
+			array(
+				'number' => 9999999,
+			)
+		);
+
+		if ( ! empty( $customers ) ) {
+			foreach ( $customers as $customer ) {
+				$customer->recalculate_stats();
 			}
 		}
 	}

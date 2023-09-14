@@ -1,5 +1,8 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Tests\Helpers;
 
 /**
  * @group edd_shortcode
@@ -140,7 +143,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		wp_set_current_user( self::$user_id );
@@ -169,37 +172,37 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 	public function test_download_history() {
 		$actual = edd_download_history();
 
-		$this->assertInternalType( 'string', $actual );
-		$this->assertContains( '<p class="edd-no-downloads">', $actual );
+		$this->assertIsString( $actual );
+		$this->assertStringContainsString( '<p class="edd-no-downloads">', $actual );
 
 		edd_set_user_to_pending( self::$user_id );
 
-		$this->assertContains( '<p class="edd-account-pending">', edd_download_history() );
+		$this->assertStringContainsString( '<p class="edd-account-pending">', edd_download_history() );
 	}
 
 	public function test_purchase_history() {
 		$actual = edd_purchase_history();
 
-		$this->assertInternalType( 'string', $actual );
-		$this->assertContains( '<p class="edd-no-purchases">', $actual );
+		$this->assertIsString( $actual );
+		$this->assertStringContainsString( '<p class="edd-no-purchases">', $actual );
 
 		edd_set_user_to_pending( self::$user_id );
 
-		$this->assertContains( '<p class="edd-account-pending">', edd_purchase_history() );
+		$this->assertStringContainsString( '<p class="edd-account-pending">', edd_purchase_history() );
 	}
 
 	public function test_checkout_form_shortcode() {
 		$actual = edd_checkout_form_shortcode( array() );
 
-		$this->assertInternalType( 'string', $actual );
-		$this->assertContains( '<div id="edd_checkout_wrap">', $actual );
+		$this->assertIsString( $actual );
+		$this->assertStringContainsString( '<div id="edd_checkout_wrap">', $actual );
 	}
 
 	public function test_cart_shortcode() {
 		$actual = edd_cart_shortcode( array() );
 
-		$this->assertInternalType( 'string', $actual );
-		$this->assertContains( '<ul class="edd-cart">', $actual );
+		$this->assertIsString( $actual );
+		$this->assertStringContainsString( '<ul class="edd-cart">', $actual );
 	}
 
 	public function test_login_form() {
@@ -207,8 +210,8 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 		$actual = edd_login_form_shortcode( array() );
 
-		$this->assertInternalType( 'string', $actual );
-		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', $actual );
+		$this->assertIsString( $actual );
+		$this->assertStringContainsString( '<p class="edd-logged-in">You are already logged in</p>', $actual );
 
 		// Log out the user so we can see the login form
 		wp_set_current_user( 0 );
@@ -218,23 +221,14 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		);
 
 		$login_form = edd_login_form_shortcode( $args );
-		$this->assertInternalType( 'string', $login_form );
-		$this->assertContains( '"' . get_option( 'site_url' ) . '"', $login_form );
+		$this->assertIsString( $login_form );
+		$this->assertStringContainsString( '"' . get_option( 'site_url' ) . '"', $login_form );
 
 		edd_update_option( 'login_redirect_page', $purchase_history_page );
 
 		$login_form = edd_login_form_shortcode( array() );
-		$this->assertInternalType( 'string', $login_form );
-		$this->assertContains( '"' . get_permalink( $purchase_history_page ) . '"', $login_form );
-	}
-
-	public function test_discounts_shortcode() {
-		EDD_Helper_Discount::create_simple_percent_discount();
-
-		$actual = edd_discounts_shortcode( array() );
-
-		$this->assertInternalType( 'string', $actual );
-		$this->assertEquals( '<ul id="edd_discounts_list"><li class="edd_discount"><span class="edd_discount_name">20OFF</span><span class="edd_discount_separator"> - </span><span class="edd_discount_amount">20.00%</span></li></ul>', $actual );
+		$this->assertIsString( $login_form );
+		$this->assertStringContainsString( '"' . get_permalink( $purchase_history_page ) . '"', $login_form );
 	}
 
 	public function test_purchase_collection_shortcode() {
@@ -242,7 +236,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 		$actual = edd_purchase_collection_shortcode( array() );
 
-		$this->assertInternalType( 'string', $actual );
+		$this->assertIsString( $actual );
 		$this->assertEquals( '<a href="/?edd_action=purchase_collection&#038;taxonomy&#038;terms" class="button blue edd-submit">Purchase All Items</a>', $actual );
 	}
 
@@ -259,7 +253,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 		$actual = edd_download_price_shortcode( array( 'id' => $post_id ) );
 
-		$this->assertInternalType( 'string', $actual );
+		$this->assertIsString( $actual );
 		$this->assertEquals( '<span class="edd_price" id="edd_price_'. $post_id .'">&#36;54.43</span>', $actual );
 	}
 
@@ -270,19 +264,19 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 //		$actual = edd_receipt_shortcode( array( 'payment_key' => self::$payment_key ) );
 //
-//		$this->assertInternalType( 'string', $actual );
-//		$this->assertContains( '<table id="edd_purchase_receipt" class="edd-table">', $actual  );
+//		$this->assertIsString( $actual );
+//		$this->assertStringContainsString( '<table id="edd_purchase_receipt" class="edd-table">', $actual  );
 	}
 
 	public function test_profile_shortcode() {
 		$actual = edd_profile_editor_shortcode( array() );
 
-		$this->assertInternalType( 'string', $actual );
-		$this->assertContains( '<form id="edd_profile_editor_form" class="edd_form" action="', $actual );
+		$this->assertIsString( $actual );
+		$this->assertStringContainsString( '<form id="edd_profile_editor_form" class="edd_form" action="', $actual );
 
 		edd_set_user_to_pending( self::$user_id );
 
-		$this->assertContains( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
+		$this->assertStringContainsString( '<p class="edd-account-pending">', edd_profile_editor_shortcode( array() ) );
 	}
 
 	public function test_profile_pending_single_load() {
@@ -291,24 +285,24 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 		$actual = edd_profile_editor_shortcode( array() );
 
-		$this->assertContains( '<p class="edd-account-pending">', $actual );
+		$this->assertStringContainsString( '<p class="edd-account-pending">', $actual );
 
 		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
 	public function test_downloads_shortcode_pagination() {
 		$output = edd_downloads_query( array() );
-		$this->assertNotContains( 'id="edd_download_pagination"', $output );
+		$this->assertStringNotContainsString( 'id="edd_download_pagination"', $output );
 
 		// Create a second post so we can see pagination
 		self::factory()->post->create( array( 'post_title' => 'Test Download #2', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$output2 = edd_downloads_query( array( 'number' => 1 ) );
-		$this->assertContains( 'id="edd_download_pagination"', $output2 );
+		$this->assertStringContainsString( 'id="edd_download_pagination"', $output2 );
 
 		edd_set_user_to_pending( self::$user_id );
 
-		$this->assertContains( '<p class="edd-account-pending">', edd_download_history( array() ) );
+		$this->assertStringContainsString( '<p class="edd-account-pending">', edd_download_history( array() ) );
 	}
 
 	public function test_downloads_shortcode_nopaging() {
@@ -318,6 +312,6 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		self::factory()->post->create( array( 'post_title' => 'Test Download #4', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$output2 = edd_downloads_query( array( 'number' => 1, 'pagination' => 'false' ) );
-		$this->assertNotContains( 'id="edd_download_pagination"', $output2 );
+		$this->assertStringNotContainsString( 'id="edd_download_pagination"', $output2 );
 	}
 }

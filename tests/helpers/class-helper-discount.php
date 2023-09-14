@@ -1,11 +1,14 @@
 <?php
+namespace EDD\Tests\Helpers;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Class EDD_Helper_Discount.
  *
  * Helper class to create and delete a discount easily.
  */
-class EDD_Helper_Discount extends WP_UnitTestCase {
+class EDD_Helper_Discount extends EDD_UnitTestCase {
 
 	/**
 	 * Delete a discount.
@@ -23,20 +26,49 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 *
 	 * @since 2.3
 	 */
-	public static function create_simple_percent_discount() {
-		return edd_add_discount( array(
-			'name'              => '20 Percent Off',
-			'code'              => '20OFF',
-			'status'            => 'active',
-			'type'              => 'percent',
-			'amount'            => '20',
-			'use_count'         => 54,
-			'max_uses'          => 10,
-			'min_charge_amount' => 128,
-			'product_condition' => 'all',
-			'start'             => date( 'm/d/Y', time() ) . ' 00:00:00',
-			'expiration'        => date( 'm/d/Y', time() ) . ' 23:59:59',
-		) );
+	public static function create_simple_percent_discount( $args = array() ) {
+		return edd_add_discount(
+			wp_parse_args(
+				$args,
+				array(
+					'name'              => '20 Percent Off',
+					'code'              => '20OFF',
+					'status'            => 'active',
+					'type'              => 'percent',
+					'amount'            => '20',
+					'use_count'         => 0,
+					'max_uses'          => 10,
+					'min_charge_amount' => 128,
+					'product_condition' => 'all',
+					'start_date'        => date( 'm/d/Y', time() ) . ' 00:00:00',
+					'end_date'          => date( 'm/d/Y', time() ) . ' 23:59:59',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Create a simple percentage discount.
+	 *
+	 * @since 2.3
+	 */
+	public static function create_simple_percent_discount_nodates_nouses( $args = array() ) {
+		return edd_add_discount(
+			wp_parse_args(
+				$args,
+				array(
+					'name'              => '20 Percent Off NO DATES NO USES',
+					'code'              => '20OFF',
+					'status'            => 'active',
+					'type'              => 'percent',
+					'amount'            => '20',
+					'use_count'         => 0,
+					'max_uses'          => 0,
+					'min_charge_amount' => 0,
+					'product_condition' => 'all',
+				)
+			)
+		);
 	}
 
 	/**
@@ -65,20 +97,25 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 *
 	 * @since 2.3
 	 */
-	public static function create_simple_flat_discount() {
-		return edd_add_discount( array(
-			'name'              => '$10 Off',
-			'code'              => '10FLAT',
-			'type'              => 'flat',
-			'status'            => 'active',
-			'amount'            => '10',
-			'max_uses'          => 10,
-			'use_count'         => 0,
-			'min_charge_amount' => 128,
-			'product_condition' => 'all',
-			'start'             => date( 'm/d/Y', time() ) . ' 00:00:00',
-			'expiration'        => date( 'm/d/Y', time() ) . ' 23:59:59',
-		) );
+	public static function create_simple_flat_discount( $args = array() ) {
+		return edd_add_discount(
+			wp_parse_args(
+				$args,
+				array(
+					'name'              => '$10 Off',
+					'code'              => '10FLAT',
+					'type'              => 'flat',
+					'status'            => 'active',
+					'amount'            => '10',
+					'max_uses'          => 10,
+					'use_count'         => 0,
+					'min_charge_amount' => 128,
+					'product_condition' => 'all',
+					'start_date'        => date( 'm/d/Y', time() ) . ' 00:00:00',
+					'end_date'          => date( 'm/d/Y', time() ) . ' 23:59:59',
+				)
+			)
+		);
 	}
 
 	/**

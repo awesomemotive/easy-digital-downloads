@@ -1,18 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_gateways
  */
 class Test_Gateways extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
 
 	public function test_payment_gateways() {
 		$out = edd_get_payment_gateways();
@@ -139,11 +133,13 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$this->assertEquals( 'manual', edd_get_chosen_gateway() );
 	}
 
-	public function test_no_gateway_error() {
+	public function test_no_gateway_error_with_priv() {
+		global $edd_options, $current_user;
 
-		global $edd_options;
+		$original_user  = $current_user;
+		$current_user   = wp_set_current_user( 1 );
 
-		$download = EDD_Helper_Download::create_simple_download();
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download->ID );
 
 		$edd_options['gateways'] = array();
@@ -152,8 +148,33 @@ class Test_Gateways extends EDD_UnitTestCase {
 
 		$errors = edd_get_errors();
 
+		// Reset to origin
+		$current_user = $original_user;
+
 		$this->assertArrayHasKey( 'no_gateways', $errors );
 		$this->assertEquals( 'You must enable a payment gateway to use Easy Digital Downloads', $errors['no_gateways'] );
+	}
+
+	public function test_no_gateway_error_no_priv() {
+		global $edd_options, $current_user;
+
+		$original_user  = $current_user;
+		$current_user   = wp_set_current_user( 0 );
+
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
+		edd_add_to_cart( $download->ID );
+
+		$edd_options['gateways'] = array();
+
+		edd_no_gateway_error();
+
+		$errors = edd_get_errors();
+
+		// Reset to origin
+		$current_user = $original_user;
+
+		$this->assertArrayHasKey( 'no_gateways', $errors );
+		$this->assertEquals( 'Your order cannot be completed at this time. Please try again or contact site support.', $errors['no_gateways'] );
 	}
 
 }

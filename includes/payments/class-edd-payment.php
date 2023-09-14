@@ -630,18 +630,18 @@ class EDD_Payment {
 						'total'       => floatval( $fee['amount'] ) + $tax,
 					) );
 
+					edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
+
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
 
-			if ( edd_get_option( 'enable_sequential' ) ) {
-				$number       = edd_get_next_payment_number();
-				$this->number = edd_format_payment_number( $number );
+			$order_number = edd_set_order_number();
+			if ( $order_number ) {
+				$this->number = $order_number;
 
 				$this->update_meta( '_edd_payment_number', $this->number );
 				$order_data['order_number'] = $this->number;
-
-				update_option( 'edd_last_payment_number', $number );
 			}
 
 			edd_update_order( $order_id, $order_data );
@@ -791,7 +791,10 @@ class EDD_Payment {
 								$args['subtotal'] = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
 								$args['total']    = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
 							}
-							edd_add_order_adjustment( $args );
+							$adjustment_id = edd_add_order_adjustment( $args );
+							if ( 'fee' === $args['type'] ) {
+								edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
+							}
 						}
 
 						$this->user_info['discount'] = implode( ',', $this->discounts );
@@ -988,9 +991,6 @@ class EDD_Payment {
 			 */
 			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
-
-		$customer = new EDD_Customer( $this->customer_id );
-		$customer->recalculate_stats();
 
 		/**
 		 * Update the payment in the object cache
@@ -2242,6 +2242,8 @@ class EDD_Payment {
 									'tax'         => $tax,
 									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
+
+								edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 							}
 						} else {
 							$adjustment_id = edd_get_order_adjustments( array(
@@ -2381,7 +2383,7 @@ class EDD_Payment {
 				$meta_value = array_diff_key( $meta_value, array_flip( $core_meta_keys ) );
 
 				// If the above checks fall through, store anything else in a "payment_meta" meta key.
-				return edd_update_order_meta( $this->ID, 'payment_meta', $meta_value );
+				return ! empty( $meta_value ) ? edd_update_order_meta( $this->ID, 'payment_meta', $meta_value ) : false;
 			case '_edd_completed_date':
 				$meta_value = empty( $meta_value )
 					? null
@@ -2654,15 +2656,6 @@ class EDD_Payment {
 		// Decrease store earnings
 		if ( true === $alter_store_earnings ) {
 			edd_decrease_total_earnings( $this->total );
-		}
-
-		// Decrement the stats for the customer
-		if ( ! empty( $this->customer_id ) ) {
-			$customer = new EDD_Customer( $this->customer_id );
-
-			if ( ! empty( $alter_customer_value || $alter_customer_purchase_count ) ) {
-				$customer->recalculate_stats();
-			}
 		}
 	}
 

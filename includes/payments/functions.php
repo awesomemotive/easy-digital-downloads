@@ -215,10 +215,6 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 		}
 	}
 
-	if ( $customer && $customer->id && $update_customer ) {
-		$customer->recalculate_stats();
-	}
-
 	do_action( 'edd_payment_deleted', $payment_id );
 }
 
@@ -535,16 +531,20 @@ function edd_get_payment_status_label( $status = '' ) {
  * @return array $payment_status All the available payment statuses.
  */
 function edd_get_payment_statuses() {
-	return apply_filters( 'edd_payment_statuses', array(
-		'pending'            => __( 'Pending',    'easy-digital-downloads' ),
-		'processing'         => __( 'Processing', 'easy-digital-downloads' ),
-		'complete'           => __( 'Completed',  'easy-digital-downloads' ),
-		'refunded'           => __( 'Refunded',   'easy-digital-downloads' ),
-		'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
-		'revoked'            => __( 'Revoked',    'easy-digital-downloads' ),
-		'failed'             => __( 'Failed',     'easy-digital-downloads' ),
-		'abandoned'          => __( 'Abandoned',  'easy-digital-downloads' )
-	) );
+	return apply_filters(
+		'edd_payment_statuses',
+		array(
+			'pending'            => __( 'Pending', 'easy-digital-downloads' ),
+			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
+			'complete'           => __( 'Completed', 'easy-digital-downloads' ),
+			'refunded'           => __( 'Refunded', 'easy-digital-downloads' ),
+			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
+			'revoked'            => __( 'Revoked', 'easy-digital-downloads' ),
+			'failed'             => __( 'Failed', 'easy-digital-downloads' ),
+			'abandoned'          => __( 'Abandoned', 'easy-digital-downloads' ),
+			'on_hold'            => __( 'On Hold', 'easy-digital-downloads' ),
+		)
+	);
 }
 
 /**
@@ -848,18 +848,21 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
  *
  * @since 1.2
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return string $email User email.
  */
-function edd_get_payment_user_email( $order_id = 0 ) {
+function edd_get_payment_user_email( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return '';
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->email
@@ -871,25 +874,27 @@ function edd_get_payment_user_email( $order_id = 0 ) {
  *
  * @since 2.4.4
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return bool True if the payment is **not** associated with a user, false otherwise.
  */
-function edd_is_guest_payment( $order_id = 0 ) {
+function edd_is_guest_payment( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return false;
 	}
 
-	$order   = edd_get_order( $order_id );
-	$user_id = $order->user_id;
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
-	$is_guest_payment = ! empty( $user_id ) && $user_id > 0
+	$is_guest_payment = ! empty( $order->user_id ) && $order->user_id > 0
 		? false
 		: true;
 
-	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $order_id );
+	return (bool) apply_filters( 'edd_is_guest_payment', $is_guest_payment, $order->id );
 }
 
 /**
@@ -897,18 +902,21 @@ function edd_is_guest_payment( $order_id = 0 ) {
  *
  * @since 1.5.1
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return string $user_id User ID.
  */
-function edd_get_payment_user_id( $order_id = 0 ) {
+function edd_get_payment_user_id( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return 0;
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->user_id
@@ -920,18 +928,21 @@ function edd_get_payment_user_id( $order_id = 0 ) {
  *
  * @since 2.1
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return int $customer_id Customer ID.
  */
-function edd_get_payment_customer_id( $order_id = 0 ) {
+function edd_get_payment_customer_id( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return 0;
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->customer_id
@@ -943,18 +954,21 @@ function edd_get_payment_customer_id( $order_id = 0 ) {
  *
  * @since 2.0
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return bool True if the payment has unlimited downloads, false otherwise.
  */
-function edd_payment_has_unlimited_downloads( $order_id = 0 ) {
+function edd_payment_has_unlimited_downloads( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return false;
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->has_unlimited_downloads()
@@ -966,18 +980,21 @@ function edd_payment_has_unlimited_downloads( $order_id = 0 ) {
  *
  * @since 1.9
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return string User's IP address.
  */
-function edd_get_payment_user_ip( $order_id = 0 ) {
+function edd_get_payment_user_ip( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return '';
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->ip
@@ -1003,18 +1020,21 @@ function edd_get_payment_completed_date( $order_id = 0 ) {
  *
  * @since 1.2
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return string Payment gateway used for the order.
  */
-function edd_get_payment_gateway( $order_id = 0 ) {
+function edd_get_payment_gateway( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return '';
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->gateway
@@ -1026,18 +1046,21 @@ function edd_get_payment_gateway( $order_id = 0 ) {
  *
  * @since 2.2
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return string $currency The currency code
  */
-function edd_get_payment_currency_code( $order_id = 0 ) {
+function edd_get_payment_currency_code( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return '';
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->currency
@@ -1072,18 +1095,21 @@ function edd_get_payment_currency( $order_id = 0 ) {
  *
  * @since 1.2
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return string $key Purchase key.
  */
-function edd_get_payment_key( $order_id = 0 ) {
+function edd_get_payment_key( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return '';
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->payment_key
@@ -1097,18 +1123,21 @@ function edd_get_payment_key( $order_id = 0 ) {
  *
  * @since 2.0
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return int|string Payment order number.
  */
-function edd_get_payment_number( $order_id = 0 ) {
+function edd_get_payment_number( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return 0;
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->get_number()
@@ -1118,106 +1147,30 @@ function edd_get_payment_number( $order_id = 0 ) {
 /**
  * Formats the order number with the prefix and postfix.
  *
+ * @todo As of 3.1.2, no longer used, but not officially deprecated. Deprecate.
  * @since 2.4
  *
  * @param int $number The order number to format.
  * @return string The formatted order number
  */
 function edd_format_payment_number( $number ) {
-	if ( ! edd_get_option( 'enable_sequential' ) ) {
-		return $number;
-	}
+	$order_number = new EDD\Orders\Number();
 
-	if ( ! is_numeric( $number ) ) {
-		return $number;
-	}
-
-	$prefix  = edd_get_option( 'sequential_prefix' );
-	$number  = absint( $number );
-	$postfix = edd_get_option( 'sequential_postfix' );
-
-	$formatted_number = $prefix . $number . $postfix;
-
-	return apply_filters( 'edd_format_payment_number', $formatted_number, $prefix, $number, $postfix );
-}
-
-/**
- * Gets the next available order number.
- *
- * This is used when inserting a new order.
- *
- * @since 2.0
- *
- * @return string $number The next available order number.
- */
-function edd_get_next_payment_number() {
-	if ( ! edd_get_option( 'enable_sequential' ) ) {
-		return false;
-	}
-
-	$number           = get_option( 'edd_last_payment_number' );
-	$start            = edd_get_option( 'sequential_start', 1 );
-	$increment_number = true;
-
-	if ( false !== $number ) {
-		if ( empty( $number ) ) {
-			$number = $start;
-			$increment_number = false;
-		}
-	} else {
-		$last_order = edd_get_orders( array(
-			'number'  => 1,
-			'orderby' => 'id',
-			'order'   => 'desc',
-		) );
-
-		if ( ! empty( $last_order ) && $last_order[0] instanceof EDD\Orders\Order ) {
-			$number = (int) $last_order[0]->get_number();
-		}
-
-		if ( ! empty( $number ) && $number !== (int) $last_order[0]->id ) {
-			$number = edd_remove_payment_prefix_postfix( $number );
-		} else {
-			$number = $start;
-			$increment_number = false;
-		}
-	}
-
-	$increment_number = apply_filters( 'edd_increment_payment_number', $increment_number, $number );
-
-	if ( $increment_number ) {
-		$number++;
-	}
-
-	return apply_filters( 'edd_get_next_payment_number', $number );
+	return $order_number->format( $number );
 }
 
 /**
  * Given a given a number, remove the pre/postfix.
  *
  * @since 2.4
- *
+ * @todo As of 3.1.2, no longer used, but not officially deprecated. Deprecate.
  * @param string $number The formatted number to increment.
  * @return string  The new order number without prefix and postfix.
  */
 function edd_remove_payment_prefix_postfix( $number ) {
-	$prefix  = (string) edd_get_option( 'sequential_prefix' );
-	$postfix = (string) edd_get_option( 'sequential_postfix' );
+	$order_number = new EDD\Orders\Number();
 
-	// Remove prefix
-	$number = preg_replace( '/' . $prefix . '/', '', $number, 1 );
-
-	// Remove the postfix
-	$length      = strlen( $number );
-	$postfix_pos = strrpos( $number, strval( $postfix ) );
-	if ( false !== $postfix_pos ) {
-		$number = substr_replace( $number, '', $postfix_pos, $length );
-	}
-
-	// Ensure it's a whole number
-	$number = intval( $number );
-
-	return apply_filters( 'edd_remove_payment_prefix_postfix', $number, $prefix, $postfix );
+	return $order_number->unformat( $number );
 }
 
 /**
@@ -1227,13 +1180,18 @@ function edd_remove_payment_prefix_postfix( $number ) {
  *
  * @since 1.4
  * @since 3.0 Parameter renamed to $order_id.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  *
  * @return string $amount Fully formatted payment amount
  */
-function edd_payment_amount( $order_id = 0 ) {
-	return edd_display_amount( edd_get_payment_amount( $order_id ), edd_get_payment_currency_code( $order_id ) );
+function edd_payment_amount( $order = 0 ) {
+	if ( is_numeric( $order ) && ! empty( $order ) ) {
+		$order = edd_get_order( $order );
+	}
+
+	return edd_display_amount( edd_get_payment_amount( $order ), edd_get_payment_currency_code( $order ) );
 }
 
 /**
@@ -1241,18 +1199,21 @@ function edd_payment_amount( $order_id = 0 ) {
  *
  * @since 1.2
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return float Order amount.
  */
-function edd_get_payment_amount( $order_id = 0 ) {
+function edd_get_payment_amount( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return 0.00;
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	$total = $order
 		? $order->total
@@ -1266,7 +1227,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
 	 * @param float $total    Order total.
 	 * @param int   $order_id Order ID.
 	 */
-	return apply_filters( 'edd_payment_amount', floatval( $total ), $order_id );
+	return apply_filters( 'edd_payment_amount', floatval( $total ), $order->id );
 }
 
 /**
@@ -1276,6 +1237,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
  *
  * @since 1.3.3
  * @since 3.0 Parameter renamed to $order_id.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
  * @param int $order_id Order ID.
  *
@@ -1293,18 +1255,21 @@ function edd_payment_subtotal( $order_id = 0 ) {
  *
  * @since 1.3.3
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @return float $subtotal Subtotal for the order (non formatted).
  */
-function edd_get_payment_subtotal( $order_id = 0 ) {
+function edd_get_payment_subtotal( $order = 0 ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return 0.00;
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->subtotal
@@ -1334,20 +1299,23 @@ function edd_payment_tax( $order_id = 0, $payment_meta = null ) {
  *
  * @since 1.3.3
  * @since 3.0 Refactored to use EDD\Orders\Order.
+ * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int  $order_id     Order ID.
+ * @param int $order Order ID or the EDD\Orders\Order object
  * @param bool $payment_meta Parameter no longer used.
  *
  * @return float $tax Tax for payment (non formatted)
  */
-function edd_get_payment_tax( $order_id = 0, $payment_meta = null ) {
+function edd_get_payment_tax( $order = 0, $payment_meta = null ) {
 
 	// Bail if nothing was passed.
-	if ( empty( $order_id ) ) {
+	if ( empty( $order ) ) {
 		return 0.00;
 	}
 
-	$order = edd_get_order( $order_id );
+	if ( is_numeric( $order ) ) {
+		$order = edd_get_order( $order );
+	}
 
 	return $order
 		? $order->tax
@@ -1779,6 +1747,7 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	$count = $wpdb->get_results( "SELECT comment_approved, COUNT( * ) AS num_comments FROM {$wpdb->comments} {$where} GROUP BY comment_approved", ARRAY_A );
 
 	$total = 0;
+	$stats = array();
 
 	$approved = array(
 		'0'            => 'moderated',
@@ -1797,7 +1766,6 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 
 		if ( isset( $approved[ $row['comment_approved'] ] ) ) {
 			$stats[ $approved[ $row['comment_approved'] ] ] = $row['num_comments'];
-
 		}
 	}
 

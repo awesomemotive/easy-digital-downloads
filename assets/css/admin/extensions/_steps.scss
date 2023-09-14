@@ -1,0 +1,19 @@
+.edd-extension-manager__step {
+	grid-area: 1/-1;
+	margin: 0;
+
+	&:not(:first-of-type) {
+		display: none;
+	}
+
+	.button {
+		display: table;
+		margin: 0 auto;
+		text-align: center;
+		white-space: normal;
+	}
+}
+
+td .edd-extension-manager__step .button {
+	display: inline-block;
+}

@@ -1,4 +1,4 @@
-module.exports = function( grunt ) {
+module.exports = function ( grunt ) {
 	// Load multiple grunt tasks using globbing patterns
 	require( 'load-grunt-tasks' )( grunt );
 
@@ -45,11 +45,12 @@ module.exports = function( grunt ) {
 		// Clean up build directory
 		clean: {
 			main: [ 'build/**' ],
+			repo: [ 'build/<%= pkg.name %>-public/**' ],
 		},
 
 		// Copy the plugin into the build directory
 		copy: {
-			main: {
+			pro: {
 				src: [
 					'assets/sample-products-import.xml',
 					'assets/css/*.min.css',
@@ -58,24 +59,108 @@ module.exports = function( grunt ) {
 					'assets/js/*.min.js',
 					'assets/js/vendor/**',
 					'assets/images/**',
+					'i18n/**',
 					'includes/**',
+					'!includes/blocks/node_modules/**',
+					'!includes/blocks/composer.json',
+					'!includes/blocks/package.json',
 					'languages/**',
+					'libraries/**',
 					'templates/**',
 					'vendor/**',
 					'src/**',
 					'*.php',
 					'*.txt',
+					'assets/pro/js/*.js',
+					'!src/Lite/**',
+					'!assets/lite/**',
+					'!vendor/**',
+					'vendor/autoload.php',
+					'vendor/composer/**',
+					'vendor/symfony/deprecation-contracts/**'
+				],
+				dest: 'build/<%= pkg.name %>-pro/',
+			},
+			lite: {
+				src: [
+					'assets/sample-products-import.xml',
+					'assets/css/*.min.css',
+					'assets/css/admin/style.css',
+					'assets/js/*.js',
+					'assets/js/*.min.js',
+					'assets/js/vendor/**',
+					'assets/images/**',
+					'i18n/**',
+					'includes/**',
+					'!includes/blocks/pro/**',
+					'!includes/blocks/assets/pro/**',
+					'!includes/blocks/build/pro/**',
+					'!includes/blocks/node_modules/**',
+					'!includes/blocks/src/pro/**',
+					'!includes/blocks/composer.json',
+					'!includes/blocks/package.json',
+					'languages/**',
+					'libraries/**',
+					'templates/**',
+					'vendor/**',
+					'src/**',
+					'*.php',
+					'*.txt',
+					'!src/Pro/**',
+					'!assets/pro/**',
+					'assets/lite/**',
+					'!vendor/**',
+					'vendor/autoload.php',
+					'vendor/composer/**',
+					'vendor/symfony/deprecation-contracts/**'
 				],
 				dest: 'build/<%= pkg.name %>/',
 			},
+			repo: {
+				src: [
+					'**',
+					'assets/**',
+					'!assets/pro/**',
+					'!build/**',
+					'i18n/**',
+					'includes/**',
+					'!includes/blocks/pro/**',
+					'!includes/blocks/assets/pro/**',
+					'!includes/blocks/build/pro/**',
+					'!includes/blocks/node_modules/**',
+					'!includes/blocks/src/pro/**',
+					'languages/**',
+					'libraries/**',
+					'!node_modules/**',
+					'templates/**',
+					'vendor/**',
+					'src/**',
+					'!assets/pro/**',
+					'!vendor/**',
+					'vendor/autoload.php',
+					'vendor/composer/**',
+					'vendor/symfony/deprecation-contracts/**'
+				],
+				dest: 'build/<%= pkg.name %>-public/',
+			}
 		},
 
 		// Compress build directory into <name>.zip and <name>-<version>.zip
 		compress: {
-			main: {
+			pro: {
 				options: {
 					mode: 'zip',
-					archive: './build/<%= pkg.name %>.zip',
+					archive: './build/<%= pkg.name %>-pro-<%= pkg.version %>.zip',
+				},
+				expand: true,
+				cwd: 'build/<%= pkg.name %>-pro/',
+				src: [ '**/*' ],
+				dest: '<%= pkg.name %>-pro/',
+			},
+			lite: {
+				options: {
+					mode: 'zip',
+					archive: './build/<%= pkg.name %>-<%= pkg.version %>.zip',
 				},
 				expand: true,
 				cwd: 'build/<%= pkg.name %>/',
@@ -85,17 +170,12 @@ module.exports = function( grunt ) {
 		},
 
 		replace: {
-			stripe: {
+			pro: {
 				options: {
 					patterns: [
 						{
-							match: /edd_stripe_bootstrap/g,
-							replacement: 'edd_stripe_core_bootstrap',
-							expression: true,
-						},
-						{
-							match: /remove_action(.*);/g,
-							replacement: '',
+							match: /Plugin Name: Easy Digital Downloads \(Pro\)/g,
+							replacement: 'Plugin Name: Easy Digital Downloads',
 							expression: true,
 						}
 					]
@@ -104,42 +184,27 @@ module.exports = function( grunt ) {
 					{
 						expand: true,
 						flatten: true,
-						src: [ 'includes/gateways/stripe/edd-stripe.php' ],
-						dest: 'includes/gateways/stripe'
+						src: [ 'build/easy-digital-downloads/easy-digital-downloads.php' ],
+						dest: 'build/easy-digital-downloads'
 					}
 				]
 			},
-			blocks: {
+			repo: {
 				options: {
 					patterns: [
 						{
-							match: /init_blocks/g,
-							replacement: 'init_core_blocks',
+							match: /Plugin Name: Easy Digital Downloads \(Pro\)/g,
+							replacement: 'Plugin Name: Easy Digital Downloads',
 							expression: true,
-						},
-						{
-							match: /update_required_pages/g,
-							replacement: 'update_core_required_pages',
-							expression: true,
-						},
-						{
-							match: /remove_action(.*);/g,
-							replacement: '',
-							expression: true,
-						},
-						{
-							match: /remove_filter(.*);/g,
-							replacement: '',
-							expression: true,
-						},
+						}
 					]
 				},
 				files: [
 					{
 						expand: true,
 						flatten: true,
-						src: [ 'includes/blocks/edd-blocks.php' ],
-						dest: 'includes/blocks'
+						src: [ 'build/easy-digital-downloads-public/easy-digital-downloads.php' ],
+						dest: 'build/easy-digital-downloads-public'
 					}
 				]
 			}
@@ -147,6 +212,5 @@ module.exports = function( grunt ) {
 	} );
 
 	// Build task(s).
-	grunt.registerTask( 'prep', [ 'clean', 'force:checktextdomain', 'replace' ] );
-	grunt.registerTask( 'build', [ 'copy', 'compress' ] );
+	grunt.registerTask( 'prep', [ 'clean', 'force:checktextdomain' ] );
 };

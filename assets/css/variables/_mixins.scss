@@ -8,3 +8,73 @@
 		}
 	}
 }
+
+@mixin edd-spinner( $size: 1em, $border-background: $white, $border-color: $black, $border-width: 2px ) {
+	animation: 1.5s linear infinite edd-spinning;
+	animation-play-state: inherit;
+	border: $border-width solid $border-background;
+	border-bottom-color: $border-color;
+	border-radius: 100%;
+	content: "";
+	width: $size;
+	height: $size;
+	transform: translate3d(-50%, -50%, 0);
+	will-change: transform;
+}
+
+
+@mixin edd-popup( $width: 300px, $height: auto, $transformY: 0, $transformX: 0, $pointer-size: 10px, $pointer-position: bottom ) {
+
+	$box-shadow-y: if( $pointer-position == bottom, 2px, -2px );
+
+	position: absolute;
+	z-index: 99;
+	width: $width;
+	height: $height;
+	margin: auto;
+	padding: 10px;
+	transform: translate( $transformX, $transformY );
+	background-color: #fff;
+	border: 1px solid $wp-input-border-2;
+	border-radius: 4px;
+	box-shadow: 0 $box-shadow-y 5px 0 rgba(0,0,0,.25);
+	box-sizing: border-box;
+	display: none;
+
+	&::after {
+		content: "";
+		width: $pointer-size;
+		height: $pointer-size;
+		background: #fff;
+		position: absolute;
+		margin: auto;
+		transform: rotate(45deg);
+		z-index: -1;
+		border-style: solid;
+		border-color: #8c8f94;
+
+		$pointer-offset: calc( -1 * ( ( $pointer-size / 2 ) + 1px ) );
+
+		@if $pointer-position == bottom {
+			left: 0;
+			right: 0;
+			bottom: $pointer-offset;
+			border-width: 0 1px 1px 0;
+		} @else if $pointer-position == top {
+			left: 0;
+			right: 0;
+			top: $pointer-offset;
+			border-width: 1px 0 0 1px;
+		} @else if $pointer-position == right {
+			top: 0;
+			bottom: 0;
+			right: $pointer-offset;
+			border-width: 1px 1px 0 0;
+		} @else if $pointer-position == left {
+			top: 0;
+			bottom: 0;
+			left: $pointer-offset;
+			border-width: 0 0 1px 1px;
+		}
+	}
+}

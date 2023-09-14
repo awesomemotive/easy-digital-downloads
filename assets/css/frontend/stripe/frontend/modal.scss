@@ -1,0 +1,143 @@
+:root {
+	--edds-modal-grid-unit: 1rem;
+	--edds-modal-overlay: rgba(0, 0, 0, 0.60);
+}
+
+.edds-modal__overlay {
+	z-index: 9999;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: var(--edds-modal-overlay);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.edds-modal__container {
+	background-color: #fff;
+	min-width: 350px;
+	max-width: 90vw;
+	max-height: 90vh;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+.admin-bar .edds-modal__container {
+	margin-top: 32px;
+}
+
+.edds-modal__header {
+	padding: calc(var(--edds-modal-grid-unit) * 1.5);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+}
+
+.edds-modal__title {
+	text-align: left;
+	font-size: 150%;
+	margin: 0;
+}
+
+.edds-modal__close {
+	line-height: 1;
+	padding: 1rem;
+
+	&:before {
+		content: "\2715";
+	}
+}
+
+.edds-modal__content {
+	margin: calc(var(--edds-modal-grid-unit) * 1.5);
+}
+
+/**
+ * Animations
+ */
+@keyframes eddsSlideIn {
+	from {
+		transform: translateY(15%);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
+@keyframes eddsSlideOut {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(15%);
+	}
+}
+
+.edds-modal.has-slide {
+	display: none;
+}
+
+.edds-modal.has-slide.is-open {
+	display: block;
+}
+
+.edds-modal.has-slide[aria-hidden="false"] .edds-modal__container {
+	animation: eddsSlideIn 0.3s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+.edds-modal.has-slide[aria-hidden="true"] .edds-modal__container {
+	animation: eddsSlideOut 0.3s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+.edds-modal.has-slide .edds-modal__container,
+.edds-modal.has-slide .edds-modal__overlay {
+	will-change: transform;
+}
+
+ /**
+  * "Buy Now" modal.
+  */
+  .edds-buy-now-modal {
+	width: 500px;
+
+	.edds-modal__close {
+		padding: 0.5rem;
+	}
+
+	#edd_checkout_form_wrap {
+
+		input.edd-input,
+		textarea.edd-input {
+			width: 100%;
+		}
+
+		#edd_purchase_submit {
+			margin-top: 1.5rem;
+			margin-bottom: 0;
+		}
+	}
+
+	.edds-field-spacer-shim {
+		margin-bottom: 1rem;
+	}
+
+	.edd-alert-error {
+		margin: 20px 0;
+	}
+
+	#edd-stripe-card-errors:not(:empty) {
+		margin-bottom: 20px;
+
+		.edd-alert-error {
+			margin: 0;
+		}
+	}
+}

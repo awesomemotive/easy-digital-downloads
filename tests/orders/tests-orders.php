@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * Order Tests.
  *
@@ -9,7 +7,11 @@ namespace EDD\Orders;
  *
  * @coversDefaultClass \EDD\Orders\Order
  */
-class Orders_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Orders_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Orders fixture.

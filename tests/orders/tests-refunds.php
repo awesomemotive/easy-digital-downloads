@@ -1,9 +1,4 @@
 <?php
-namespace EDD\Orders;
-
-use Carbon\Carbon;
-use EDD\Utils\Exceptions\Invalid_Argument;
-
 /**
  * Refund Tests.
  *
@@ -13,7 +8,14 @@ use EDD\Utils\Exceptions\Invalid_Argument;
  *
  * @coversDefaultClass \EDD\Orders\Order
  */
-class Refunds_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Utils\Date;
+use EDD\Utils\Exceptions\Invalid_Argument;
+use EDD\Orders\Refund_Validator;
+
+class Refunds extends EDD_UnitTestCase {
 
 	/**
 	 * Orders fixture.
@@ -151,7 +153,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$this->assertInstanceOf( 'WP_Error', $refund_id );
 
 		$this->assertEquals( 'refund_validation_error', $refund_id->get_error_code() );
-		$this->assertContains( 'The maximum refund subtotal', $refund_id->get_error_message() );
+		$this->assertStringContainsString( 'The maximum refund subtotal', $refund_id->get_error_message() );
 	}
 
 	/**
@@ -267,7 +269,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		// Static date to ensure unit tests don't fail if this test runs for longer than 1 second.
 		$date = '2010-01-01 00:00:00';
 
-		$this->assertSame( Carbon::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
+		$this->assertSame( Date::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
 	}
 
 	/**
@@ -311,8 +313,8 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 			)
 		), 'all' );
 
-		$exception = $this->getExpectedException();
-		$this->assertContains( 'order_item_id', $exception->getMessage() );
+		$exception = $this->getexpectException();
+		$this->assertStringContainsString( 'order_item_id', $exception->getMessage() );
 	}
 
 	/**
@@ -334,7 +336,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 			)
 		), 'all' );
 
-		$exception = $this->getExpectedException();
-		$this->assertContains( 'subtotal', $exception->getMessage() );
+		$exception = $this->getexpectException();
+		$this->assertStringContainsString( 'subtotal', $exception->getMessage() );
 	}
 }

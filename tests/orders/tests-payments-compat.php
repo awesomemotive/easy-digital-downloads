@@ -1,17 +1,22 @@
 <?php
-
 /**
  * Payment tests.
  *
  * @group edd_payments
+ * @group edd_legacy
  */
-class Payment_Compat_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Orders\Order;
+
+class Payment_Compat_Tests extends EDD_UnitTestCase {
 
 	public $payment_id;
 
 	public $payment;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->payment_id = wp_insert_post(
@@ -51,7 +56,7 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 		$this->payment = edd_get_payment( $this->payment_id );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
 		wp_delete_post( $this->payment_id );
@@ -59,7 +64,7 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_return_object() {
-		$this->assertTrue( $this->payment instanceof EDD_Payment );
+		$this->assertTrue( $this->payment instanceof \EDD_Payment );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_have_payment_id() {
@@ -67,7 +72,7 @@ class Payment_Compat_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_should_have_order_object() {
-		$this->assertTrue( $this->payment->order instanceof \EDD\Orders\Order );
+		$this->assertTrue( $this->payment->order instanceof Order );
 	}
 
 	public function test_edd_get_payment_no_order_during_migration_payment_id_should_match_order_id() {

@@ -610,8 +610,9 @@ function edd_downloads_query( $atts, $content = null ) {
 
 		<?php
 
-	else:
-		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
+	else :
+		/* translators: plural download label */
+		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) );
 	endif;
 
 	do_action( 'edd_downloads_list_after', $atts, $downloads, $query );
@@ -693,10 +694,10 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	$order         = edd_get_order_by( 'payment_key', $payment_key );
-	$user_can_view = edd_can_view_receipt( $payment_key );
+	$user_can_view = edd_can_view_receipt( $order );
 
 	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
-	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order->id ) ) {
+	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order ) ) {
 		global $edd_login_redirect;
 		$edd_login_redirect = edd_get_receipt_page_uri( $order->id );
 
@@ -778,7 +779,7 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
 function edd_process_profile_editor_updates( $data ) {
 
 	// Profile field change request.
-	if ( empty( $_POST['edd_profile_editor_submit'] ) && ! is_user_logged_in() ) {
+	if ( empty( $data['edd_profile_editor_submit'] ) && ! is_user_logged_in() ) {
 		return false;
 	}
 
@@ -788,7 +789,7 @@ function edd_process_profile_editor_updates( $data ) {
 	}
 
 	// Verify nonce.
-	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
+	if ( empty( $data['edd_profile_editor_nonce'] ) || ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) ) {
 		return false;
 	}
 
@@ -797,6 +798,9 @@ function edd_process_profile_editor_updates( $data ) {
 
 	// Fetch customer record.
 	$customer = edd_get_customer_by( 'user_id', $user_id );
+	if ( ! empty( $customer->user_id ) && $customer->user_id != $user_id ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		edd_set_error( 'customer_mismatch', __( 'Your profile could not be updated. Please contact a site administrator.', 'easy-digital-downloads' ) );
+	}
 
 	$display_name = isset( $data['edd_display_name'] )    ? sanitize_text_field( $data['edd_display_name'] )    : $old_user_data->display_name;
 	$first_name   = isset( $data['edd_first_name'] )      ? sanitize_text_field( $data['edd_first_name'] )      : $old_user_data->first_name;
@@ -814,16 +818,16 @@ function edd_process_profile_editor_updates( $data ) {
 		'first_name'   => $first_name,
 		'last_name'    => $last_name,
 		'display_name' => $display_name,
-		'user_email'   => $email
+		'user_email'   => $email,
 	);
 
 	$address = array(
-		'line1'    => $line1,
-		'line2'    => $line2,
-		'city'     => $city,
-		'state'    => $state,
-		'zip'      => $zip,
-		'country'  => $country
+		'line1'   => $line1,
+		'line2'   => $line2,
+		'city'    => $city,
+		'state'   => $state,
+		'zip'     => $zip,
+		'country' => $country,
 	);
 
 	do_action( 'edd_pre_update_user_profile', $user_id, $userdata );
@@ -845,9 +849,15 @@ function edd_process_profile_editor_updates( $data ) {
 			edd_set_error( 'email_invalid', __( 'The email you entered is invalid. Please enter a valid email.', 'easy-digital-downloads' ) );
 		}
 
+		$customers = edd_get_customers(
+			array(
+				'email'           => $email,
+				'user_id__not_in' => array( $user_id ),
+			)
+		);
 		// Make sure the new email doesn't belong to another user.
-		if ( email_exists( $email ) ) {
-			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'easy-digital-downloads' ) );
+		if ( email_exists( $email ) || ! empty( $customers ) ) {
+			edd_set_error( 'email_exists', __( 'This email address is not available.', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -856,18 +866,23 @@ function edd_process_profile_editor_updates( $data ) {
 
 	// Send back to the profile editor if there are errors.
 	if ( ! empty( $errors ) ) {
-		edd_redirect( $data['edd_redirect'] );
+		if ( ! empty( $data['edd_redirect'] ) ) {
+			edd_redirect( $data['edd_redirect'] );
+		}
+		return false;
 	}
 
 	// Update user.
 	$updated = wp_update_user( $userdata );
 
-	// If the current user does not have an associated customer record, create one.
+	// If the current user does not have an associated customer record, create one so that all of the customer's data is stored.
 	if ( ! $customer && $updated ) {
-		$customer_id = edd_add_customer( array(
-			'user_id' => $updated,
-			'email'   => $email,
-		) );
+		$customer_id = edd_add_customer(
+			array(
+				'user_id' => $updated,
+				'email'   => $email,
+			)
+		);
 
 		$customer = edd_get_customer_by( 'id', $customer_id );
 	}
@@ -881,7 +896,7 @@ function edd_process_profile_editor_updates( $data ) {
 			'type'        => 'billing',
 			'is_primary'  => 1,
 			'number'      => 1,
-			'fields'      => 'ids'
+			'fields'      => 'ids',
 		) );
 
 		// Try updating the address if it exists.
@@ -938,43 +953,47 @@ function edd_process_profile_editor_updates( $data ) {
 add_action( 'edd_edit_user_profile', 'edd_process_profile_editor_updates' );
 
 /**
- * Process the 'remove' URL on the profile editor when customers wish to remove an email address
+ * Process the 'remove' URL on the profile editor when customers wish to remove an email address.
  *
  * @since  2.6
+ * @param array $data The array of data passed from the profile editor.
  * @return void
  */
-function edd_process_profile_editor_remove_email() {
+function edd_process_profile_editor_remove_email( $data ) {
 	if ( ! is_user_logged_in() ) {
-		return false;
+		return;
 	}
 
 	// Pending users can't edit their profile
 	if ( edd_user_pending_verification() ) {
-		return false;
+		return;
 	}
 
 	// Nonce security
-	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-remove-customer-email' ) ) {
-		return false;
+	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-remove-customer-email' ) ) {
+		return;
 	}
 
-	if ( empty( $_GET['email'] ) || ! is_email( $_GET['email'] ) ) {
-		return false;
+	if ( empty( $data['email'] ) || ! is_email( $data['email'] ) ) {
+		return;
 	}
 
-	$customer = new EDD_Customer( get_current_user_id(), true );
-	if ( $customer->remove_email( $_GET['email'] ) ) {
+	$user_id  = get_current_user_id();
+	$customer = new EDD_Customer( $user_id, true );
 
-		$url = add_query_arg( 'updated', true, $_GET['redirect'] );
+	if ( $customer->user_id == $user_id && $customer->remove_email( $data['email'] ) ) {
 
-		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		$url = add_query_arg( 'updated', true, $data['redirect'] );
+
+		$user       = wp_get_current_user();
+		$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
+		/* translators: 1. email address; 2. user who removed email. */
+		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $data['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
 		edd_set_error( 'profile-remove-email-failure', __( 'Error removing email address from profile. Please try again later.', 'easy-digital-downloads' ) );
-		$url = $_GET['redirect'];
+		$url = $data['redirect'];
 	}
 
 	edd_redirect( $url );

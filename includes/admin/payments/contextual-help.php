@@ -92,13 +92,13 @@ function edd_payments_contextual_help() {
 	) );
 
 	$screen->add_help_tab( array(
-		'id'	    => 'edd-payments-search',
-		'title'	    => __( 'Search', 'easy-digital-downloads' ),
-		'content'	=>
+		'id'      => 'edd-payments-search',
+		'title'   => __( 'Search', 'easy-digital-downloads' ),
+		'content' =>
 			'<p>' . __( 'The order history can be searched in several different ways.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'You can enter:', 'easy-digital-downloads' ) . '</p>' .
 			'<ul>
-				<li>' . __( 'The order ID', 'easy-digital-downloads' ) . '</li>
+				<li>' . __( 'The specific order ID', 'easy-digital-downloads' ) . '</li>
 				<li>' . __( 'The 32-character order key', 'easy-digital-downloads' ) . '</li>
 				<li>' . __( 'The customer\'s email address', 'easy-digital-downloads' ) . '</li>
 				<li>' . sprintf(

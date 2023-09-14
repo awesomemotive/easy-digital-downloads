@@ -8,9 +8,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Database\Schemas;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Database\Schema;
@@ -30,117 +31,117 @@ class Orders extends Schema {
 	 */
 	public $columns = array(
 
-		// id
+		// id.
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
-		// parent
+		// parent.
 		array(
-			'name'       => 'parent',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'parent',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
-		// order_number
+		// order_number.
 		array(
 			'name'       => 'order_number',
 			'type'       => 'varchar',
 			'length'     => '255',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// status
+		// status.
 		array(
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'pending',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
-		// type
+		// type.
 		array(
-			'name'       => 'type',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => 'sale',
-			'sortable'   => true
+			'name'     => 'type',
+			'type'     => 'varchar',
+			'length'   => '20',
+			'default'  => 'sale',
+			'sortable' => true,
 		),
 
-		// user_id
+		// user_id.
 		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'user_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
-		// customer_id
+		// customer_id.
 		array(
-			'name'       => 'customer_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'customer_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
-		// email
+		// email.
 		array(
 			'name'       => 'email',
 			'type'       => 'varchar',
 			'length'     => '100',
 			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// ip
-		array(
-			'name'       => 'ip',
-			'type'       => 'varchar',
-			'length'     => '60',
-			'sortable'   => true
-		),
-
-		// gateway
-		array(
-			'name'       => 'gateway',
-			'type'       => 'varchar',
-			'length'     => '100',
 			'sortable'   => true,
-			'default'    => 'manual',
 		),
 
-		// mode
+		// ip.
 		array(
-			'name'       => 'mode',
-			'type'       => 'varchar',
-			'length'     => '20'
+			'name'     => 'ip',
+			'type'     => 'varchar',
+			'length'   => '60',
+			'sortable' => true,
 		),
 
-		// currency
+		// gateway.
 		array(
-			'name'       => 'currency',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'validate'   => 'strtoupper',
+			'name'     => 'gateway',
+			'type'     => 'varchar',
+			'length'   => '100',
+			'sortable' => true,
+			'default'  => 'manual',
 		),
 
-		// payment_key
+		// mode.
+		array(
+			'name'   => 'mode',
+			'type'   => 'varchar',
+			'length' => '20',
+		),
+
+		// currency.
+		array(
+			'name'     => 'currency',
+			'type'     => 'varchar',
+			'length'   => '20',
+			'validate' => 'strtoupper',
+		),
+
+		// payment_key.
 		array(
 			'name'       => 'payment_key',
 			'type'       => 'varchar',
@@ -148,7 +149,7 @@ class Orders extends Schema {
 			'searchable' => true,
 		),
 
-		// tax_rate_id
+		// tax_rate_id.
 		array(
 			'name'       => 'tax_rate_id',
 			'type'       => 'bigint',
@@ -156,100 +157,110 @@ class Orders extends Schema {
 			'unsigned'   => true,
 			'default'    => null,
 			'allow_null' => true,
-			'sortable'   => true
-		),
-
-		// subtotal
-		array(
-			'name'       => 'subtotal',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
 			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
 		),
 
-		// discount
+		// subtotal.
 		array(
-			'name'       => 'discount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'subtotal',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
-		// tax
+		// discount.
 		array(
-			'name'       => 'tax',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'discount',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
-		// total
+		// tax.
 		array(
-			'name'       => 'total',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'tax',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
-		// rate
+		// total.
 		array(
-			'name'       => 'rate',
-			'type'       => 'decimal',
-			'length'     => '10,5',
-			'default'    => '1.00000',
+			'name'     => 'total',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
-		// date_created
+		// rate.
+		array(
+			'name'    => 'rate',
+			'type'    => 'decimal',
+			'length'  => '10,5',
+			'default' => '1.00000',
+		),
+
+		// date_created.
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '', // Defaults to current time in query class.
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// date_modified
+		// date_modified.
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '', // Defaults to current time in query class.
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// date_completed
+		// date_completed.
 		array(
 			'name'       => 'date_completed',
 			'type'       => 'datetime',
 			'default'    => null,
 			'allow_null' => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// date_refundable
+		// date_refundable.
 		array(
 			'name'       => 'date_refundable',
 			'type'       => 'datetime',
 			'default'    => null,
 			'allow_null' => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// uuid
+		// date_actions_run.
 		array(
-			'uuid'       => true,
-		)
+			'name'       => 'date_actions_run',
+			'type'       => 'datetime',
+			'default'    => null,
+			'allow_null' => true,
+			'date_query' => true,
+			'sortable'   => true,
+		),
+
+		// uuid.
+		array(
+			'uuid' => true,
+		),
 	);
 }

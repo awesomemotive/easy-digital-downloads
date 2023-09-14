@@ -501,3 +501,146 @@ function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'compl
 		'status'  => $status,
 	) );
 }
+
+/**
+ * Determines if a gateway is setup.
+ *
+ * @since 3.1.2
+ *
+ * @param string $gateway The gateway to check.
+ * @param bool   $ignore_registration Whether or not to ignore if the gateway is registered.
+ * @return bool True if the gateway is setup, false otherwise.
+ */
+function edd_is_gateway_setup( $gateway = '', $ignore_registration = false ) {
+	// Return false if no gateway is passed.
+	if ( empty( $gateway ) ) {
+		return false;
+	}
+
+	$gateways = edd_get_payment_gateways();
+
+	// If the gateway is not registered, return false.
+	if ( ! array_key_exists( $gateway, $gateways ) && ! $ignore_registration ) {
+		return false;
+	}
+
+	// Some core gateways, we can just determine here, otherwise we'll use the default case to run the filter.
+	switch ( $gateway ) {
+		case 'stripe':
+			$api_key = edd_is_test_mode()
+			? edd_get_option( 'test_publishable_key' )
+			: edd_get_option( 'live_publishable_key' );
+
+			$is_setup = ! empty( $api_key );
+			break;
+
+		case 'paypal_commerce':
+			$is_setup = EDD\Gateways\PayPal\ready_to_accept_payments();
+			break;
+
+		case 'amazon':
+			$amazon_settings = array(
+				'amazon_seller_id',
+				'amazon_client_id',
+				'amazon_mws_access_key',
+				'amazon_mws_secret_key',
+			);
+
+			$is_setup = true;
+			foreach ( $amazon_settings as $key ) {
+				if ( empty( edd_get_option( $key, '' ) ) ) {
+					$is_setup = false;
+					break;
+				}
+			}
+			break;
+
+		default:
+			/**
+			 * Run a filter to determine if a gateway is setup.
+			 *
+			 * This defaults to 'true' so that gateways that do not have a setup check to
+			 * continue to work.
+			 *
+			 * This hook would fire on the gateway slug, prefixed with `edd_is_gateway_setup_`.
+			 * Example: edd_is_gateway_setup_paypal_express
+			 *
+			 * @since 3.1.2
+			 *
+			 * @param bool $is_setup Whether or not the gateway is setup.
+			 */
+			$is_setup = apply_filters( 'edd_is_gateway_setup_' . $gateway, true );
+			break;
+	}
+
+	return $is_setup;
+}
+
+/**
+ * Gets the URL to the gateway settings page.
+ *
+ * @since 3.1.2
+ *
+ * @param string $gateway The gateway to get the settings URL for.
+ *
+ * @return string The URL to the gateway settings page.
+ */
+function edd_get_gateway_settings_url( $gateway = '' ) {
+	// Return false if no gateway is passed.
+	if ( empty( $gateway ) ) {
+		return '';
+	}
+
+	$gateways = edd_get_payment_gateways();
+
+	// If the gateway is not registered, return false.
+	if ( ! array_key_exists( $gateway, $gateways ) ) {
+		return '';
+	}
+
+	// Some core gateways, we can just determine here, otherwise we'll use the default case to run the filter.
+	switch ( $gateway ) {
+		case 'stripe':
+			$gateway_settings_url = edd_get_admin_url(
+				array(
+					'page'    => 'edd-settings',
+					'tab'     => 'gateways',
+					'section' => 'edd-stripe',
+				)
+			);
+			break;
+
+		case 'paypal_commerce':
+			$gateway_settings_url = EDD\Gateways\PayPal\Admin\get_settings_url();
+			break;
+
+		case 'amazon':
+			$gateway_settings_url = edd_get_admin_url(
+				array(
+					'page'    => 'edd-settings',
+					'tab'     => 'gateways',
+					'section' => 'amazon',
+				)
+			);
+			break;
+
+		default:
+			/**
+			 * Run a filter to assign a settings URL for the gateway.
+			 *
+			 * This defaults to an empty string so that gateways that do not have
+			 * a setup check to continue to work.
+			 *
+			 * This hook would fire on the gateway slug, prefixed with `edd_gateway_settings_url_`.
+			 * Example: edd_gateway_settings_url_paypal_express
+			 *
+			 * @since 3.1.2
+			 *
+			 * @param string $gateway_settings_url The URL to the gateway settings.
+			 */
+			$gateway_settings_url = apply_filters( 'edd_gateway_settings_url_' . $gateway, '' );
+			break;
+	}
+
+	return $gateway_settings_url;
+}

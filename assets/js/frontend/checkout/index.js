@@ -174,9 +174,11 @@ window.EDD_Checkout = ( function( $ ) {
 
 						$( '.edd_cart_amount' ).each( function() {
 							// Format discounted amount for display.
-							$( this ).text( discount_response.total );
-							// Set data attribute to new (unformatted) discounted amount.'
-							$( this ).data( 'total', discount_response.total_plain );
+							$( this ).text( discount_response.total )
+							.data( 'subtotal', discount_response.subtotal_raw )
+							.attr( 'data-subtotal', discount_response.subtotal_raw )
+							.data( 'total', discount_response.total_plain )
+							.attr( 'data-total', discount_response.total_plain );
 						} );
 
 						$( '#edd-discount', $checkout_form_wrap ).val( '' );
@@ -191,6 +193,7 @@ window.EDD_Checkout = ( function( $ ) {
 							required_inputs.prop( 'required', true );
 							$( '#edd_cc_fields,#edd_cc_address' ).slideDown();
 						}
+						$( '#edd-purchase-button' ).val( discount_response.complete_purchase );
 
 						$body.trigger( 'edd_discount_applied', [ discount_response ] );
 					} else {
@@ -241,9 +244,11 @@ window.EDD_Checkout = ( function( $ ) {
 					}
 
 					// Format discounted amount for display.
-					$( this ).text( discount_response.total );
-					// Set data attribute to new (unformatted) discounted amount.'
-					$( this ).data( 'total', discount_response.total_plain );
+					$( this ).text( discount_response.total )
+						.data( 'subtotal', discount_response.subtotal_raw )
+						.attr( 'data-subtotal', discount_response.subtotal_raw )
+						.data( 'total', discount_response.total_plain )
+						.attr( 'data-total', discount_response.total_plain );
 				} );
 
 				$( '.edd_cart_discount' ).html( discount_response.html );
@@ -255,6 +260,7 @@ window.EDD_Checkout = ( function( $ ) {
 				recalculateTaxes();
 
 				$( '#edd_cc_fields,#edd_cc_address' ).slideDown();
+				$( '#edd-purchase-button' ).val( discount_response.complete_purchase );
 
 				$body.trigger( 'edd_discount_removed', [ discount_response ] );
 			},
@@ -304,13 +310,22 @@ window.EDD_Checkout = ( function( $ ) {
 				} );
 
 				$( '.edd_cart_tax_amount' ).each( function() {
-					$( this ).text( response.taxes );
+					$( this ).text( response.taxes )
+						.data( 'tax', response.taxes_raw )
+						.attr( 'data-tax', response.taxes_raw );
 				} );
 
+				$( '.edd_cart_discount' ).html( response.discounts );
+
 				$( '.edd_cart_amount' ).each( function() {
-					$( this ).text( response.total );
+					$( this ).text( response.total )
+						.data( 'subtotal', response.subtotal_raw )
+						.attr( 'data-subtotal', response.subtotal_raw )
+						.data( 'total', response.total_raw )
+						.attr( 'data-total', response.total_raw );
 					$body.trigger( 'edd_quantity_updated', [ response ] );
 				} );
+				$( '#edd-purchase-button' ).val( response.complete_purchase );
 			},
 		} ).fail( function( data ) {
 			if ( window.console && window.console.log ) {

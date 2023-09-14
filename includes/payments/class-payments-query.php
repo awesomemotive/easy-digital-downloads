@@ -591,10 +591,10 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( $this->args['start_date'] ) {
 			if ( is_numeric( $this->start_date ) ) {
-				$this->start_date = \Carbon\Carbon::createFromTimestamp( $this->start_date )->toDateTimeString();
+				$this->start_date = \EDD\Utils\Date::createFromTimestamp( $this->start_date )->toDateTimeString();
 			}
 
-			$this->start_date = \Carbon\Carbon::parse( $this->start_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
+			$this->start_date = \EDD\Utils\Date::parse( $this->start_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
 
 			$arguments['date_created_query']['after'] = array(
 				'year'  => date( 'Y', $this->start_date ),
@@ -607,10 +607,10 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( $this->args['end_date'] ) {
 			if ( is_numeric( $this->end_date ) ) {
-				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->end_date )->toDateTimeString();
+				$this->end_date = \EDD\Utils\Date::createFromTimestamp( $this->end_date )->toDateTimeString();
 			}
 
-			$this->end_date = \Carbon\Carbon::parse( $this->end_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
+			$this->end_date = \EDD\Utils\Date::parse( $this->end_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
 
 			$arguments['date_created_query']['before'] = array(
 				'year'  => date( 'Y', $this->end_date ),
@@ -696,7 +696,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		if ( ! is_null( $this->args['post__not_in'] ) ) {
-			$arguments['id__in'] = $this->args['post__not_in'];
+			$arguments['id__not_in'] = $this->args['post__not_in'];
 		}
 
 		if ( ! empty( $this->args['mode'] ) && 'all' !== $this->args['mode'] ) {

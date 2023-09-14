@@ -307,6 +307,10 @@ function edd_order_details_email( $order ) {
 	$customer   = edd_get_customer( $order->customer_id );
 	$all_emails = array( 'primary' => $customer->email );
 
+	if ( $customer->email !== $order->email ) {
+		$all_emails['order'] = $order->email;
+	}
+
 	foreach ( $customer->emails as $key => $email ) {
 		if ( $customer->email === $email ) {
 			continue;
@@ -315,59 +319,63 @@ function edd_order_details_email( $order ) {
 		$all_emails[ $key ] = $email;
 	}
 
-	$help = __( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' );
+	$help = sprintf(
+		/* translators: email type */
+		__('Send a new copy of the purchase receipt to the %s email address. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ),
+		count( $all_emails ) > 1 ? __( 'selected', 'easy-digital-downloads' ) : __( 'customer', 'easy-digital-downloads' )
+	);
+
+	$is_multiselect = count( $all_emails ) > 1;
+	$label_text     = $is_multiselect ? __( 'Send email receipt to', 'easy-digital-downloads' ) : __( 'Email Address', 'easy-digital-downloads' );
 ?>
 
 	<div>
-		<?php
-		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
-			<fieldset class="edd-form-group">
-				<legend class="edd-form-group__label">
-					<?php _e( 'Send email receipt to', 'easy-digital-downloads' ); ?>
-				</legend>
+		<div class="edd-form-group">
+			<label class="edd-form-group__label <?php echo esc_attr( ! $is_multiselect ? 'screen-reader-text' : '' ); ?>"
+				for="edd-order-receipt-email"
+			>
+				<?php echo esc_html( $label_text ); ?>
+			</label>
 
-				<?php foreach ( $all_emails as $key => $email ) : ?>
-				<div class="edd-form-group__control is-radio">
-					<input id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
-
-					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
-						<?php echo esc_attr( $email ); ?>
-					</label>
-				</div>
-				<?php endforeach; ?>
-
-				<p class="edd-form-group__help description">
-					<?php echo esc_html( $help ); ?>
-				</p>
-			</fieldset>
-
-		<?php else : ?>
-
-			<div class="edd-form-group">
-				<label class="edd-form-group__label screen-reader-text" for="<?php echo esc_attr( $order->email ); ?>">
-					<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>
-				</label>
-
-				<div class="edd-form-group__control">
-					<input readonly type="email" id="<?php echo esc_attr( $order->email ); ?>" class="edd-form-group__input regular-text" value="<?php echo esc_attr( $order->email ); ?>" />
-				</div>
-
-				<p class="edd-form-group__help description">
-					<?php echo esc_html( $help ); ?>
-				</p>
+			<div class="edd-form-group__control">
+				<?php if ( $is_multiselect ) : ?>
+					<select class="edd-form-group__input edd-order-resend-receipt-email" name="edd-select-receipt-email" id="edd-order-receipt-email">
+						<?php foreach ( $all_emails as $key => $email ) : ?>
+						<option
+							value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>"
+							<?php selected( 'primary', $key ); ?>
+						>
+							<?php
+							echo sprintf(
+								'%1$s (%2$s)',
+								esc_attr( $email ),
+								esc_html(
+									$key === 'primary' ? __( 'Customer Primary', 'easy-digital-downloads' ) :
+										(
+											$key === 'order' ? __( 'Order Email', 'easy-digital-downloads' ) :
+											__( 'Customer Email', 'easy-digital-downloads' )
+										)
+								)
+							);
+							?>
+						</option>
+						<?php endforeach; ?>
+					</select>
+				<?php else : ?>
+					<input readonly type="email" id="edd-order-receipt-email" class="edd-form-group__input regular-text" value="<?php echo esc_attr( $order->email ); ?>" />
+				<?php endif; ?>
 			</div>
 
-		<?php endif; ?>
+			<p class="edd-form-group__help description">
+				<?php echo esc_html( $help ); ?>
+			</p>
+		</div>
 
 		<p>
 			<a href="<?php echo esc_url( add_query_arg( array(
 				'edd-action'  => 'email_links',
 				'purchase_id' => absint( $order->id ),
-			) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
-				echo esc_attr( 'edd-select-receipt-email' );
-			} else {
-				echo esc_attr( 'edd-resend-receipt' );
-			} ?>" class="button button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+			) ) ); ?>" id="<?php echo esc_attr( 'edd-resend-receipt' ); ?>" class="button button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
 		</p>
 
 		<?php do_action( 'edd_view_order_details_resend_receipt_after', $order->id ); ?>
@@ -945,6 +953,21 @@ function edd_order_details_extras( $order = false ) {
 					</div>
 				<?php endif; ?>
 
+				<?php
+				if ( ! edd_is_add_order_page() && 'on_hold' === $order->status ) {
+					$dispute_id = edd_get_order_dispute_id( $order->id );
+					if ( $dispute_id ) {
+						$dispute_id = apply_filters( "edd_payment_details_dispute_id_{$order->gateway}", $dispute_id, $order );
+						?>
+						<div class="edd-order-dispute-id edd-admin-box-inside edd-admin-box-inside--row">
+							<span class="label"><?php esc_html_e( 'Dispute ID', 'easy-digital-downloads' ); ?></span>
+							<span><?php echo wp_kses_post( $dispute_id ); ?></span>
+						</div>
+						<?php
+					}
+				}
+				?>
+
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside edd-admin-box-inside--row">
 						<div class="edd-form-group">
@@ -967,6 +990,36 @@ function edd_order_details_extras( $order = false ) {
 						</div>
 					</div>
 				</div>
+
+				<?php if ( ! edd_is_add_order_page() ) : ?>
+				<div class="edd-order-tx-id edd-admin-box-inside edd-admin-box-inside--row">
+					<span class="label"><?php esc_html_e( 'Deferred Actions', 'easy-digital-downloads' ); ?></span>
+					<?php
+					$status = '';
+					$label  = __( 'Not Run', 'easy-digital-downloads' );
+
+					if ( ! empty( $order->date_actions_run ) ) {
+						$status  = 'success';
+						$label   = __( 'Completed', 'easy-digital-downloads' );
+					} elseif ( wp_next_scheduled( 'edd_after_payment_scheduled_actions', array( intval( $order->id ), false ) ) ) {
+						$status = 'processing';
+						$label  = __( 'Scheduled', 'easy-digital-downloads' );
+					}
+
+					$status_badge = new EDD\Utils\StatusBadge(
+						array(
+							'status' => $status,
+							'label'  => $label,
+						)
+					);
+
+					echo $status_badge->get();
+					if ( empty( $status ) ) {
+						?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Deferred Actions were added in Easy Digital Downloads 2.8. Orders placed on prior versions will not have a deferred actions status. If this order was placed on a version of Easy Digital Downloads supporting Deferred Actions, please verify that WP Cron is able to be run.', 'easy-digital-downloads' ); ?>"></span><?php
+					}
+					?>
+				</div>
+				<?php endif; ?>
 
 				<?php do_action( 'edd_view_order_details_payment_meta_after', $order->id ); ?>
 			</div>
@@ -1028,6 +1081,25 @@ function edd_order_details_attributes( $order ) {
 
 					<?php
 					if ( ! edd_is_add_order_page() ) :
+						$hold_reason = edd_get_order_hold_reason( $order->id );
+						if ( $hold_reason ) {
+							$label = 'on_hold' === $order->status ?
+								__( 'On Hold Due To:', 'easy-digital-downloads' ) :
+								__( 'Original Hold Reason:', 'easy-digital-downloads' );
+							if ( is_array( $hold_reason ) ) {
+								$hold_reason = array_map( 'edd_get_order_hold_reason_label', $hold_reason );
+								$hold_reason = implode( ', ', $hold_reason );
+							} else {
+								$hold_reason = edd_get_order_hold_reason_label( $hold_reason );
+							}
+							?>
+							<div style="margin-top: 8px;">
+								<strong><?php echo esc_html( $label ); ?></strong>
+								<?php echo esc_html( $hold_reason ); ?>
+							</div>
+							<?php
+						}
+
 						$trash_url = wp_nonce_url(
 							edd_get_admin_url( array(
 								'page'        => 'edd-payment-history',
@@ -1121,20 +1193,48 @@ function edd_is_add_order_page() {
  * @return string
  */
 function edd_get_order_status_badge( $order_status ) {
-
-	switch( $order_status ) {
-		case 'refunded' :
-			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-undo"></span>';
+	$icon   = '';
+	$status = $order_status;
+	switch ( $order_status ) {
+		case 'refunded':
+			$icon = 'undo';
 			break;
-		case 'failed' :
-			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-no-alt"></span>';
+		case 'failed':
+			$icon   = 'no-alt';
+			$status = 'error';
 			break;
-		case 'complete' :
-			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-yes"></span>';
+		case 'complete':
+		case 'partially_refunded':
+			$icon   = 'yes';
+			$status = 'success';
 			break;
-		default:
-			$icon = '';
+		case 'pending':
+			$status = 'warning';
+			break;
+		case 'on_hold':
+			$icon   = 'warning';
+			$status = 'error';
+			break;
 	}
+
+	/**
+	 * Filters the arguments for the order status badge.
+	 *
+	 * @since 3.1.4
+	 * @param array  $status_badge_args Array of arguments for the status badge.
+	 * @param string $order_status      Order status slug.
+	 */
+	$status_badge_args = apply_filters(
+		'edd_get_order_status_badge_args',
+		array(
+			'status' => $status,
+			'label'  => edd_get_payment_status_label( $order_status ),
+			'icon'   => $icon,
+			'class'  => "edd-admin-order-status-badge--{$order_status}",
+		),
+		$order_status
+	);
+	$status_badge      = new EDD\Utils\StatusBadge( $status_badge_args );
 
 	/**
 	 * Filters the markup for the order status badge icon.
@@ -1143,54 +1243,7 @@ function edd_get_order_status_badge( $order_status ) {
 	 *
 	 * @param string $icon Icon HTML markup.
 	 */
-	$icon = apply_filters( 'edd_get_order_status_badge_icon', $icon, $order_status );
+	$icon = apply_filters( 'edd_get_order_status_badge_icon', $status_badge->get_icon(), $order_status );
 
-	ob_start();
-?>
-
-<span class="edd-admin-order-status-badge edd-admin-order-status-badge--<?php echo esc_attr( $order_status ); ?>">
-
-	<span class="edd-admin-order-status-badge__text">
-		<?php echo edd_get_payment_status_label( $order_status ); ?>
-	</span>
-	<span class="edd-admin-order-status-badge__icon">
-		<?php
-		echo wp_kses(
-			$icon,
-			array(
-				'span'    => array(
-					'class' => true,
-				),
-				'svg'     => array(
-					'class'       => true,
-					'xmlns'       => true,
-					'width'       => true,
-					'height'      => true,
-					'viewbox'     => true,
-					'aria-hidden' => true,
-					'role'        => true,
-					'focusable'   => true,
-				),
-				'path'    => array(
-					'fill'      => true,
-					'fill-rule' => true,
-					'd'         => true,
-					'transform' => true,
-				),
-				'polygon' => array(
-					'fill'      => true,
-					'fill-rule' => true,
-					'points'    => true,
-					'transform' => true,
-					'focusable' => true,
-				),
-			)
-		);
-		?>
-	</span>
-
-</span>
-
-<?php
-	return ob_get_clean();
+	return $status_badge->get( $icon );
 }

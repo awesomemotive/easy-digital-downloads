@@ -21,21 +21,36 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_do_ajax_import_file_upload() {
 
+	if ( ! wp_verify_nonce( $_REQUEST['edd_ajax_import'], 'edd_ajax_import' ) ) {
+		wp_send_json_error( array( 'error' => __( 'Nonce verification failed.', 'easy-digital-downloads' ) ) );
+	}
+
+	if ( empty( $_POST['edd-import-class'] ) ) {
+		wp_send_json_error( array( 'error' => __( 'Missing import parameters. Import class must be specified.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+	}
+
 	if ( ! function_exists( 'wp_handle_upload' ) ) {
-		require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		require_once ABSPATH . 'wp-admin/includes/file.php';
 	}
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import.php';
 
-	if( ! wp_verify_nonce( $_REQUEST['edd_ajax_import'], 'edd_ajax_import' ) ) {
-		wp_send_json_error( array( 'error' => __( 'Nonce verification failed', 'easy-digital-downloads' ) ) );
+	$importer_class   = sanitize_text_field( $_POST['edd-import-class'] );
+	$is_class_allowed = edd_importer_is_class_allowed( $importer_class );
+	if ( false === $is_class_allowed ) {
+		wp_send_json_error( array( 'error' => __( 'Invalid importer class supplied', 'easy-digital-downloads' ) ) );
 	}
 
-	if( empty( $_POST['edd-import-class'] ) ) {
-		wp_send_json_error( array( 'error' => __( 'Missing import parameters. Import class must be specified.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+	do_action( 'edd_batch_import_class_include', $importer_class );
+
+	$import = new $importer_class();
+
+	// The import class checks for the user's capability.
+	if ( ! $import->can_import() ) {
+		wp_send_json_error( array( 'error' => __( 'You do not have permission to import data', 'easy-digital-downloads' ) ) );
 	}
 
-	if( empty( $_FILES['edd-import-file'] ) ) {
+	if ( empty( $_FILES['edd-import-file'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Missing import file. Please provide an import file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
@@ -43,7 +58,7 @@ function edd_do_ajax_import_file_upload() {
 		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	if( ! file_exists( $_FILES['edd-import-file']['tmp_name'] ) ) {
+	if ( ! file_exists( $_FILES['edd-import-file']['tmp_name'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Something went wrong during the upload process, please try again.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
@@ -52,20 +67,7 @@ function edd_do_ajax_import_file_upload() {
 
 	if ( $import_file && empty( $import_file['error'] ) ) {
 
-		$importer_class   = sanitize_text_field( $_POST['edd-import-class'] );
-		$is_class_allowed = edd_importer_is_class_allowed( $importer_class );
-		if ( false === $is_class_allowed ) {
-			wp_send_json_error( array( 'error' => __( 'Invalid importer class supplied', 'easy-digital-downloads' ) ) );
-		}
-
-		do_action( 'edd_batch_import_class_include', $importer_class );
-
-		$import = new $importer_class( $import_file['file'] );
-
-		if( ! $import->can_import() ) {
-			wp_send_json_error( array( 'error' => __( 'You do not have permission to import data', 'easy-digital-downloads' ) ) );
-		}
-
+		$import->set_up_csv( $import_file['file'] );
 		wp_send_json_success( array(
 			'form'      => $_POST,
 			'class'     => $importer_class,
@@ -101,14 +103,14 @@ function edd_do_ajax_import() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import.php';
 
 	if( ! wp_verify_nonce( $_REQUEST['nonce'], 'edd_ajax_import' ) ) {
-		wp_send_json_error( array( 'error' => __( 'Nonce verification failed', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
+		wp_send_json_error( array( 'error' => __( 'Nonce verification failed.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	if( empty( $_REQUEST['class'] ) ) {
+	if ( empty( $_REQUEST['class'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Missing import parameters. Import class must be specified.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	if( ! file_exists( $_REQUEST['upload']['file'] ) ) {
+	if ( ! file_exists( $_REQUEST['upload']['file'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Something went wrong during the upload process, please try again.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
@@ -140,13 +142,12 @@ function edd_do_ajax_import() {
 
 	$step   = absint( $_REQUEST['step'] );
 	$class  = $importer_class;
-	$import = new $class( $file, $step );
+	$import = new $class( '', $step );
 
-	if( ! $import->can_import() ) {
-
+	if ( ! $import->can_import() ) {
 		wp_send_json_error( array( 'error' => __( 'You do not have permission to import data', 'easy-digital-downloads' ) ) );
-
 	}
+	$import->set_up_csv( $file );
 
 	parse_str( $_REQUEST['mapping'], $map );
 

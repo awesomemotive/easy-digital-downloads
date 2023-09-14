@@ -87,6 +87,11 @@ class EDD_HTML_Elements {
 		);
 		if ( $products ) {
 			foreach ( $products as $product ) {
+				// If bundles are not allowed, skip any products that are bundles.
+				if ( ! $args['bundles'] && 'bundle' === edd_get_download_type( $product->ID ) ) {
+					continue;
+				}
+
 				$has_variations = edd_has_variable_prices( $product->ID );
 
 				// If a product has no variations, just add it to the list and continue.
@@ -110,24 +115,26 @@ class EDD_HTML_Elements {
 				// If showing variations, add them to the list.
 				if ( $args['variations'] ) {
 					$prices = edd_get_variable_prices( $product->ID );
-					foreach ( $prices as $key => $value ) {
-						$name = ! empty( $value['name'] ) ? $value['name'] : '';
-						if ( $name ) {
-							$options[ absint( $product->ID ) . '_' . $key ] = esc_html( $product->post_title . ': ' . $name );
+					if ( ! empty( $prices ) ) {
+						foreach ( $prices as $key => $value ) {
+							$name = ! empty( $value['name'] ) ? $value['name'] : '';
+							if ( $name ) {
+								$options[ absint( $product->ID ) . '_' . $key ] = esc_html( $product->post_title . ': ' . $name );
+							}
 						}
 					}
 				}
 			}
 		}
 
-		// This ensures that any selected products are included in the drop down
+		// This ensures that any selected products are included in the drop down.
 		if ( is_array( $args['selected'] ) ) {
 			foreach ( $args['selected'] as $item ) {
 				if ( ! array_key_exists( $item, $options ) ) {
 
 					$parsed_item = edd_parse_product_dropdown_value( $item );
 
-					if ( $parsed_item['price_id'] !== false ) {
+					if ( ! is_null( $parsed_item['price_id'] ) ) {
 						$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
 						foreach ( $prices as $key => $value ) {
 							$name = ( isset( $value['name'] ) && ! empty( $value['name'] ) ) ? $value['name'] : '';
@@ -145,7 +152,7 @@ class EDD_HTML_Elements {
 			if ( ! array_key_exists( $args['selected'], $options ) ) {
 				$parsed_item = edd_parse_product_dropdown_value( $args['selected'] );
 
-				if ( $parsed_item['price_id'] !== false ) {
+				if ( ! is_null( $parsed_item['price_id'] ) ) {
 					$prices = edd_get_variable_prices( (int) $parsed_item['download_id'] );
 
 					foreach ( $prices as $key => $value ) {
@@ -241,21 +248,9 @@ class EDD_HTML_Elements {
 			$product_args['post_status'] = array( 'publish' );
 		}
 
-		// Maybe disable bundles.
-		if ( ! $args['bundles'] ) {
-			$product_args['meta_query'] = array(
-				'relation' => 'OR',
-				array(
-					'key'     => '_edd_product_type',
-					'value'   => 'bundle',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => '_edd_product_type',
-					'value'   => 'bundle',
-					'compare' => 'NOT EXISTS',
-				),
-			);
+		// If bundles are not allowed, get a few more products to account for the ones that will be removed.
+		if ( ! $args['bundles'] && 30 === $args['number'] ) {
+			$product_args['posts_per_page'] = 40;
 		}
 
 		$product_args = apply_filters( 'edd_product_dropdown_args', $product_args );
@@ -463,6 +458,8 @@ class EDD_HTML_Elements {
 		if ( ! empty( $status ) ) {
 			$discount_args['status'] = $status;
 		}
+
+		$discount_args['status'] = ! empty( $status ) ? $status : array( 'active', 'expired', 'inactive', 'archived' );
 
 		$discounts = edd_get_discounts( $discount_args );
 		$options   = array();

@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * Order Adjustment Tests.
  *
@@ -10,7 +8,11 @@ namespace EDD\Orders;
  *
  * @coversDefaultClass \EDD\Orders\Order_Item
  */
-class Order_Adjustment_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Order_Adjustment_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Order adjustments fixture.

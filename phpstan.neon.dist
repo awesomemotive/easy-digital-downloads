@@ -1,0 +1,13 @@
+parameters:
+    level: 5
+    paths:
+        - src/
+    scanDirectories:
+      - i18n/
+      - includes/
+      - templates/
+    bootstrapFiles:
+        - %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
+        - %rootDir%/../../autoload.php
+    checkGenericClassInNonGenericObjectType: false
+    treatPhpDocTypesAsCertain: false

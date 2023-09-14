@@ -127,12 +127,6 @@ function edd_trash_order( $order_id ) {
 
 			}
 		}
-
-		// Update the customer records when an order is trashed.
-		if ( ! empty( $order->customer_id ) ) {
-			$customer = new EDD_Customer( $order->customer_id );
-			$customer->recalculate_stats();
-		}
 	}
 
 	return filter_var( $trashed, FILTER_VALIDATE_BOOLEAN );
@@ -362,14 +356,8 @@ function edd_destroy_order( $order_id = 0 ) {
  */
 function edd_update_order( $order_id = 0, $data = array() ) {
 	$orders = new EDD\Database\Queries\Order();
-	$update = $orders->update_item( $order_id, $data );
 
-	if ( ! empty( $data['customer_id'] ) ) {
-		$customer = new EDD_Customer( $data['customer_id'] );
-		$customer->recalculate_stats();
-	}
-
-	return $update;
+	return $orders->update_item( $order_id, $data );
 }
 
 /**
@@ -803,7 +791,8 @@ function edd_build_order( $order_data = array() ) {
 		unset( $order_args['date_created'] );
 		edd_update_order( $order_id, $order_args );
 	} else {
-		$order_id = edd_add_order( $order_args );
+		$order_args['order_number'] = edd_set_order_number();
+		$order_id                   = edd_add_order( $order_args );
 	}
 
 	// If there is no order ID at this point, something went wrong.
@@ -1018,17 +1007,20 @@ function edd_build_order( $order_data = array() ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
 
 					$adjustment_subtotal = floatval( $fee['amount'] );
-					$tax_rate_amount     = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
-					$tax                 = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
-					$adjustment_total    = floatval( $fee['amount'] ) + $tax;
-					$adjustment_data     = array(
+					$adjustment_total    = floatval( $fee['amount'] );
+					$adjustment_tax      = 0;
+					if ( ! empty( $tax_rate->amount ) && empty( $fee['no_tax'] ) ) {
+						$adjustment_tax   = EDD()->fees->get_calculated_tax( $fee, $tax_rate->amount );
+						$adjustment_total = floatval( $fee['amount'] ) + $adjustment_tax;
+					}
+					$adjustment_data = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
 						'type_key'    => $fee_id,
 						'type'        => 'fee',
 						'description' => $fee['label'],
 						'subtotal'    => $adjustment_subtotal,
-						'tax'         => $tax,
+						'tax'         => $adjustment_tax,
 						'total'       => $adjustment_total,
 					);
 
@@ -1037,6 +1029,8 @@ function edd_build_order( $order_data = array() ) {
 
 					$total_fees += $adjustment_data['subtotal'];
 					$total_tax  += $adjustment_data['tax'];
+
+					edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 				}
 			}
 
@@ -1065,10 +1059,13 @@ function edd_build_order( $order_data = array() ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
-			$fee_subtotal    = floatval( $fee['amount'] );
-			$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
-			$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
-			$fee_total       = floatval( $fee['amount'] ) + $tax;
+			$fee_subtotal = floatval( $fee['amount'] );
+			$fee_total    = floatval( $fee['amount'] );
+			$fee_tax      = 0;
+			if ( ! empty( $tax_rate->amount ) && empty( $fee['no_tax'] ) ) {
+				$fee_tax   = EDD()->fees->get_calculated_tax( $fee, $tax_rate->amount );
+				$fee_total = floatval( $fee['amount'] ) + $fee_tax;
+			}
 
 			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -1079,7 +1076,7 @@ function edd_build_order( $order_data = array() ) {
 				'type'        => 'fee',
 				'description' => $fee['label'],
 				'subtotal'    => $fee_subtotal,
-				'tax'         => $tax,
+				'tax'         => $fee_tax,
 				'total'       => $fee_total,
 			);
 
@@ -1087,7 +1084,9 @@ function edd_build_order( $order_data = array() ) {
 			$adjustment_id = edd_add_order_adjustment( $args );
 
 			$total_fees += (float) $fee['amount'];
-			$total_tax  += $tax;
+			$total_tax  += $fee_tax;
+
+			edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 		}
 	}
 
@@ -1153,18 +1152,8 @@ function edd_build_order( $order_data = array() ) {
 		}
 	}
 
-	// Setup order number.
-	if ( edd_get_option( 'enable_sequential' ) ) {
-		$number = edd_get_next_payment_number();
-
-		$order_args['order_number'] = edd_format_payment_number( $number );
-
-		update_option( 'edd_last_payment_number', $number );
-	}
-
 	// Update the order with all of the newly computed values.
 	edd_update_order( $order_id, array(
-		'order_number' => $order_args['order_number'],
 		'subtotal'     => $subtotal,
 		'tax'          => $total_tax,
 		'discount'     => $total_discount,
@@ -1384,4 +1373,16 @@ function edd_generate_order_payment_key( $key ) {
 	 * @return string
 	 */
 	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
+}
+
+/**
+ * Helper function to get and maybe update the order number.
+ *
+ * @since 3.1.1.2
+ * @return string
+ */
+function edd_set_order_number() {
+	$order_number = new EDD\Orders\Number();
+
+	return $order_number->apply();
 }

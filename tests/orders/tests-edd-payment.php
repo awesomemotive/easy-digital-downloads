@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Orders;
-
 /**
  * EDD_Payment Tests.
  *
@@ -9,8 +7,12 @@ namespace EDD\Orders;
  *
  * @coversDefaultClass \EDD_Payment
  */
+namespace EDD\Tests\Orders;
 
-class EDD_Payment_Tests extends \EDD_UnitTestCase {
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class EDD_Payment_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Payment test fixture.
@@ -19,18 +21,18 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	 */
 	protected $payment;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		$this->payment = edd_get_payment( $payment_id );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 
-		\EDD_Helper_Payment::delete_payment( $this->payment->ID );
+		Helpers\EDD_Helper_Payment::delete_payment( $this->payment->ID );
 
 		edd_destroy_order( $this->payment->ID );
 
@@ -68,13 +70,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_payment_by_transaction_ID_for_guest_payment_should_be_true() {
-		$payment_id = \EDD_Helper_Payment::create_simple_guest_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_guest_payment();
 
 		$payment = edd_get_payment( 'EDD_GUEST_ORDER', true );
 
 		$this->assertSame( 'EDD_GUEST_ORDER', $payment->transaction_id );
 
-		\EDD_Helper_Payment::delete_payment( $payment_id );
+		Helpers\EDD_Helper_Payment::delete_payment( $payment_id );
 	}
 
 	public function test_instantiating_EDD_Payment_with_no_args_should_be_null() {
@@ -112,6 +114,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 'Pending', $this->payment->status_nicename );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_updating_payment_status_to_publish() {
 		// Test backwards compat
 		edd_update_payment_status( $this->payment->ID, 'complete' );
@@ -128,7 +133,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 2, count( $this->payment->downloads ) );
 		$this->assertEquals( 120.00, $this->payment->total );
 
-		$new_download = \EDD_Helper_Download::create_simple_download();
+		$new_download = Helpers\EDD_Helper_Download::create_simple_download();
 
 		$this->payment->add_download( $new_download->ID );
 		$this->payment->save();
@@ -143,7 +148,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 2, count( $this->payment->downloads ) );
 		$this->assertEquals( 120.00, $this->payment->total );
 
-		$new_download = \EDD_Helper_Download::create_simple_download();
+		$new_download = Helpers\EDD_Helper_Download::create_simple_download();
 
 		$args = array(
 			'item_price' => 0,
@@ -166,7 +171,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 			),
 		);
 
-		$new_download = \EDD_Helper_Download::create_simple_download();
+		$new_download = Helpers\EDD_Helper_Download::create_simple_download();
 
 		$this->payment->add_download( $new_download->ID, $args );
 		$this->payment->save();
@@ -210,7 +215,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$edd_options['item_quantities'] = true;
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_quantity_tax();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment_with_quantity_tax();
 
 		$payment = edd_get_payment( $payment_id );
 
@@ -232,7 +237,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 12, $payment->tax );
 		$this->assertEquals( 152.00, $payment->total );
 
-		\EDD_Helper_Payment::delete_payment( $payment_id );
+		Helpers\EDD_Helper_Payment::delete_payment( $payment_id );
 		unset( $edd_options['item_quantities'] );
 	}
 
@@ -275,7 +280,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$this->payment->save();
 
-		$this->assertInternalType( 'array', $this->payment->user_info );
+		$this->assertIsArray( $this->payment->user_info );
 
 		foreach ( $this->payment->user_info as $key => $value ) {
 			$this->assertFalse( is_serialized( $value ), $key . ' returned a searlized value' );
@@ -444,7 +449,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payment_with_initial_fee() {
-		$payment_id = \EDD_Helper_Payment::create_simple_payment_with_fee();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment_with_fee();
 
 		$payment = edd_get_payment( $payment_id );
 
@@ -473,6 +478,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $new_date, $date2 );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_refund_payment() {
 		$this->payment->status = 'complete';
 		$this->payment->save();
@@ -501,6 +509,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @expectEDDeprecated edd_undo_purchase_on_refund
+	 * @expectedDeprecated edd_trigger_purchase_receipt
 	 */
 	public function test_refund_payment_legacy() {
 		$this->payment->status = 'complete';
@@ -538,6 +547,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $new_address, $this->payment->address );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_modify_cart_item_price() {
 		$this->payment->status = 'complete';
 		$this->payment->save();
@@ -551,6 +563,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1.00, $download->get_earnings() );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_modify_cart_item_quantity() {
 		$this->payment->status = 'complete';
 		$this->payment->save();
@@ -569,6 +584,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 3, $download->get_sales() );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_modify_cart_item_tax() {
 		$this->payment->status = 'complete';
 		$this->payment->save();
@@ -586,6 +604,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0, $this->payment->tax );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_modify_cart_item_discount() {
 		$this->payment->status = 'complete';
 		$this->payment->save();
@@ -599,6 +620,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 1, $this->payment->discounted_amount );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_modify_cart_item_with_disallowed_changes_should_return_false() {
 		$this->payment->status = 'complete';
 		$this->payment->save();
@@ -614,7 +638,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_filtering_payment_meta() {
 		add_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		remove_filter( 'edd_payment_meta', array( $this, 'alter_payment_meta' ), 10, 2 );
 
@@ -658,6 +682,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $payment->user_id, $customer->user_id );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_pending_affecting_stats() {
 		$this->payment->status = 'complete';
 		$this->payment->save();
@@ -693,6 +720,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_refund_affecting_stats() {
 
 		$this->payment->status = 'complete';
@@ -711,10 +741,10 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$store_sales    = edd_get_total_sales();
 
 		$this->payment->refund();
-		$customer->recalculate_stats();
 		wp_cache_flush();
 
 		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
+		$customer = edd_get_customer( $this->payment->customer_id );
 
 		$this->assertEquals( $customer_earnings - $this->payment->total, $customer->purchase_value );
 		$this->assertEquals( $customer_sales - 1, $customer->purchase_count );
@@ -726,8 +756,11 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_remove_with_multi_price_points_by_price_id() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array( 'price_id' => 0 ) );
@@ -756,8 +789,11 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 3, $payment->cart_details[3]['item_number']['options']['price_id'] );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_remove_with_multi_price_points_by_cart_index() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array( 'price_id' => 0 ) );
@@ -784,8 +820,11 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 3, $payment->cart_details[3]['item_number']['options']['price_id'] );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_remove_with_multiple_same_price_by_price_id_different_prices() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array(
@@ -827,8 +866,11 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 30, $payment->cart_details[2]['item_price'] );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_remove_with_multiple_same_price_by_price_id_same_prices() {
-		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
+		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
 		$payment->add_download( $download->ID, array(
@@ -941,6 +983,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertTrue( edd_receipt_show_download_files( $download_id, $receipt_args, $cart_item ) );
 	}
 
+	/**
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 */
 	public function test_creating_complete_payment_marks_order_items_complete() {
 		$payment             = new \EDD_Payment();
 		$payment->first_name = 'John';
@@ -950,7 +995,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$payment->total      = 0;
 		$payment->gateway    = 'manual';
 
-		$simple_download = \EDD_Helper_Download::create_simple_download();
+		$simple_download = Helpers\EDD_Helper_Download::create_simple_download();
 		$payment->add_download(
 			$simple_download->ID,
 			array(
@@ -987,6 +1032,10 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		);
 
 		$this->assertNotEmpty( $payment );
+	}
+
+	public function test_no_empty_payment_meta_is_saved() {
+		$this->assertFalse( $this->payment->update_meta( '_edd_payment_meta', array() ) );
 	}
 
 	/* Helpers ***************************************************************/

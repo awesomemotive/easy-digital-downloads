@@ -287,6 +287,15 @@ class Column extends Base {
 	 */
 	public $not_in = true;
 
+	/**
+	 * Is __compare supported?
+	 *
+	 * Allows for comparing two columns in the same table.
+	 *
+	 * @var bool
+	 */
+	public $compare = false;
+
 	/** Cache Attributes ******************************************************/
 
 	/**
@@ -399,6 +408,7 @@ class Column extends Base {
 	 *     @type bool     $date_query     Is this column a datetime?
 	 *     @type bool     $in             Is __in supported?
 	 *     @type bool     $not_in         Is __not_in supported?
+	 *     @type bool     $compare        Is __compare supported?
 	 *     @type bool     $cache_key      Is this column queried independently?
 	 *     @type bool     $transition     Does this column transition between changes?
 	 *     @type string   $validate       A callback function used to validate on save.
@@ -454,6 +464,7 @@ class Column extends Base {
 			'transition' => false,
 			'in'         => true,
 			'not_in'     => true,
+			'compare'    => false,
 
 			// Special
 			'primary'    => false,
@@ -522,6 +533,7 @@ class Column extends Base {
 			'transition'    => 'wp_validate_boolean',
 			'in'            => 'wp_validate_boolean',
 			'not_in'        => 'wp_validate_boolean',
+			'compare'       => 'wp_validate_boolean',
 			'cache_key'     => 'wp_validate_boolean',
 
 			'pattern'       => array( $this, 'sanitize_pattern'       ),
@@ -590,9 +602,10 @@ class Column extends Base {
 	public function is_numeric() {
 		return $this->is_type( array(
 			'tinyint',
+			'smallint',
 			'int',
 			'mediumint',
-			'bigint'
+			'bigint',
 		) );
 	}
 

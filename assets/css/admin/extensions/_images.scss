@@ -1,0 +1,22 @@
+.edd-extension-manager__icon {
+	background-color: $white;
+	border: 1px solid $gray-200;
+	border-radius: 4px;
+	width: 78px;
+	height: 78px;
+
+	img {
+		border-radius: 12px;
+		display: block;
+		margin: 0;
+		padding: 9px;
+		width: 60px;
+	}
+}
+
+.edd-extension-manager__image img {
+	display: block;
+	margin: 0 auto;
+	max-width: 500px;
+	width: 100%;
+}

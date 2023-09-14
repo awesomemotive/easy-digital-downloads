@@ -1,0 +1,14 @@
+.edd-pro-search__control {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 2em;
+
+	input {
+		width: 300px;
+		max-width: 100%;
+	}
+}
+
+.edd-pro-search__hidden {
+	display: none !important;
+}

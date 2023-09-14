@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * EDD_Payment_Stats Tests.
@@ -33,7 +36,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$stats  = new EDD_Payment_Stats();
+		self::$stats  = new \EDD_Payment_Stats();
 		self::$order  = parent::edd()->order->create_and_get();
 		self::$order2 = parent::edd()->order->create_and_get();
 	}
@@ -58,32 +61,32 @@ class Tests_Stats extends EDD_UnitTestCase {
 	public function test_setting_up_date_yesterday_start_should_return_true() {
 		self::$stats->setup_dates( 'yesterday' );
 
-		$this->assertInternalType( 'numeric', self::$stats->start_date );
-		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertIsNumeric( self::$stats->start_date );
+		$this->assertIsNumeric( self::$stats->end_date );
 		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 
 	public function test_setting_up_date_yesterday_start_today_end_should_return_true() {
 		self::$stats->setup_dates( 'yesterday', 'today' );
 
-		$this->assertInternalType( 'numeric', self::$stats->start_date );
-		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertIsNumeric( self::$stats->start_date );
+		$this->assertIsNumeric( self::$stats->end_date );
 		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 
 	public function test_setting_up_dates_with_date_time_strings_should_return_true() {
 		self::$stats->setup_dates( 'January 15, 2013', 'February 24, 2013' );
 
-		$this->assertInternalType( 'numeric', self::$stats->start_date );
-		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertIsNumeric( self::$stats->start_date );
+		$this->assertIsNumeric( self::$stats->end_date );
 		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 
 	public function test_setting_up_dates_With_timestamps_should_return_true() {
 		self::$stats->setup_dates( '1379635200', '1379645200' );
 
-		$this->assertInternalType( 'numeric', self::$stats->start_date );
-		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertIsNumeric( self::$stats->start_date );
+		$this->assertIsNumeric( self::$stats->end_date );
 		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 

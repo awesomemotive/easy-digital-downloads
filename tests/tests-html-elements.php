@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * EDD HTML Elements Tests
@@ -7,19 +10,16 @@
  *
  * @coversDefaultClass EDD_HTML_Elements
  */
-class Test_HTML_Elements extends EDD_UnitTestCase {
+class HTMLElements extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::product_dropdown
 	 */
 	public function test_product_dropdown() {
 		$expected = '<select name="products" id="products" class="edd-select " data-placeholder="Choose a Download" data-search-type="download" data-search-placeholder="Search Downloads">';
-		$this->assertContains( $expected, EDD()->html->product_dropdown() );
+		$this->assertStringContainsString( $expected, EDD()->html->product_dropdown() );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_value_parse_should_be_123_1() {
 		$expected = array(
 			'download_id' => '123',
@@ -29,9 +29,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, edd_parse_product_dropdown_value( '123_1' ) );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_value_parse_should_be_123() {
 		$expected = array(
 			'download_id' => '123',
@@ -42,9 +39,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, edd_parse_product_dropdown_value( 123 ) );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_array_parse() {
 		$saved_values = array( 123, '155_1', '155_2', 99 );
 		$expected     = array(
@@ -69,9 +63,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, edd_parse_product_dropdown_values( $saved_values ) );
 	}
 
-	/**
-	 * @covers ::edd_parse_product_dropdown_value
-	 */
 	public function test_product_dropdown_string_parse() {
 		$saved_values = '155';
 		$expected     = array(
@@ -100,7 +91,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	public function test_customer_dropdown() {
 		$expected = '<select name="customers" id="customers" class="edd-select  edd-customer-select edd-select-chosen" data-placeholder="Choose a Customer" data-search-type="customer" data-search-placeholder="Search Customers"><option value="0" selected=\'selected\'>No customers found</option></select>';
 
-		$this->assertContains( $expected, EDD()->html->customer_dropdown() );
+		$this->assertStringContainsString( $expected, EDD()->html->customer_dropdown() );
 	}
 
 	/**
@@ -183,19 +174,19 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	public function test_month_dropdown() {
 		$out = EDD()->html->month_dropdown();
 
-		$this->assertContains( '<select name="month" id="edd_month_select_month" class="edd-select "', $out );
-		$this->assertContains( '<option value="1"', $out );
-		$this->assertContains( '<option value="2"', $out );
-		$this->assertContains( '<option value="3"', $out );
-		$this->assertContains( '<option value="4"', $out );
-		$this->assertContains( '<option value="5"', $out );
-		$this->assertContains( '<option value="6"', $out );
-		$this->assertContains( '<option value="7"', $out );
-		$this->assertContains( '<option value="8"', $out );
-		$this->assertContains( '<option value="9"', $out );
-		$this->assertContains( '<option value="10"', $out );
-		$this->assertContains( '<option value="11"', $out );
-		$this->assertContains( '<option value="12"', $out );
+		$this->assertStringContainsString( '<select name="month" id="edd_month_select_month" class="edd-select "', $out );
+		$this->assertStringContainsString( '<option value="1"', $out );
+		$this->assertStringContainsString( '<option value="2"', $out );
+		$this->assertStringContainsString( '<option value="3"', $out );
+		$this->assertStringContainsString( '<option value="4"', $out );
+		$this->assertStringContainsString( '<option value="5"', $out );
+		$this->assertStringContainsString( '<option value="6"', $out );
+		$this->assertStringContainsString( '<option value="7"', $out );
+		$this->assertStringContainsString( '<option value="8"', $out );
+		$this->assertStringContainsString( '<option value="9"', $out );
+		$this->assertStringContainsString( '<option value="10"', $out );
+		$this->assertStringContainsString( '<option value="11"', $out );
+		$this->assertStringContainsString( '<option value="12"', $out );
 	}
 
 	/**
@@ -213,7 +204,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertContains( 'required', $select );
+		$this->assertStringContainsString( 'required', $select );
 	}
 
 	/**
@@ -230,20 +221,55 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 			)
 		);
 
-		$this->assertNotContains( 'required', $select );
+		$this->assertStringNotContainsString( 'required', $select );
 	}
 
 	/**
 	 * @covers EDD_HTML_Elements::text
 	 */
 	public function test_text_is_required() {
-		$this->assertContains( 'required', EDD()->html->text( array( 'required' => true ) ) );
+		$this->assertStringContainsString( 'required', EDD()->html->text( array( 'required' => true ) ) );
 	}
 
 	/**
 	 * @covers EDD_HTML_Elements::text
 	 */
 	public function test_text_is_not_required() {
-		$this->assertNotContains( 'required', EDD()->html->text() );
+		$this->assertStringNotContainsString( 'required', EDD()->html->text() );
+	}
+
+	public function test_category_select() {
+		for ( $i = 0; $i < 5; $i++ ) {
+			$category = wp_insert_term( 'Download Category ' . $i, 'download_category' );
+			// create a post and assign it to the category
+			$post = wp_insert_post(
+				array(
+					'post_title'   => 'Download ' . $i,
+					'post_content' => 'Download ' . $i,
+					'post_status'  => 'publish',
+					'post_type'    => 'download',
+					'post_author'  => 1,
+					'post_date'    => date( 'Y-m-d H:i:s' ),
+					'post_category' => array( $category['term_id'] ),
+				)
+			);
+			wp_set_object_terms( $post, $category['term_id'], 'download_category' );
+		}
+
+		$dropdown = new \EDD\HTML\CategorySelect(
+			array(
+				'name'             => 'categories[]',
+				'id'               => 'edd-categories',
+				'selected'         => array(),
+				'multiple'         => true,
+				'chosen'           => true,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+				'number'           => 30,
+			)
+		);
+		$expected = '<select name="categories[]" id="edd_categories" class="edd-select  edd-select-chosen"';
+
+		$this->assertStringContainsString( $expected, $dropdown->get() );
 	}
 }

@@ -1,3 +1,10 @@
+@import "../../variables/variables";
+@import 'licenses';
+
+.edd-settings-content {
+	max-width: $break-huge;
+}
+
 .edd-settings-colors,
 .edd-settings-color {
 	display: flex;
@@ -7,4 +14,45 @@
 
 .edd-settings-color {
 	flex-direction: column;
+}
+
+.edd-upload-button-wrapper {
+	width: 100%;
+	display: flex;
+	gap: 5px;
+}
+
+.edd-upload-button-wrapper button.edd_settings_upload_button {
+    margin-bottom: 0;
+}
+
+#edd-payment-gateways a.button.edd-settings__button-settings {
+	position: absolute;
+	right: 2em;
+	background-image: $icon-settings;
+	background-size: 1em;
+	background-repeat: no-repeat;
+	background-position: center;
+	min-height: unset;
+	height: 1.5em;
+	width: 1.5em;
+	border: none;
+	background-color: $wp-alternate;
+
+	&:hover,
+	&:active {
+		background-image: $icon-settings;
+		background-size: 1em;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	.edd-plugin__active & {
+		display: block;
+	}
+}
+
+.edd-settings__list--disc {
+	list-style: disc;
+	list-style-position: inside;
 }

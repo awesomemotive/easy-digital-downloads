@@ -1,12 +1,15 @@
 <?php
-namespace EDD\Customers;
+namespace EDD\Tests\Customers;
+
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Customers Tests.
  *
  * @group edd_customers
  */
-class Tests_Customers extends \EDD_UnitTestCase {
+class Tests_Customers extends EDD_UnitTestCase {
 
 	/**
 	 * Customers fixture.
@@ -43,7 +46,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		}
 
 		self::$user  = 1;
-		self::$order = \EDD_Helper_Payment::create_simple_payment();
+		self::$order = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		// Don't trigger the updateing of the customer during this part of the setup.
 		remove_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
@@ -170,12 +173,18 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertCount( 1, self::$customers[0]->get_notes( 1, 2 ) );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_payment_ids_of_customer_should_return_1() {
 		self::$customers[0]->attach_payment( self::$order );
 
 		$this->assertCount( 1, self::$customers[0]->get_payment_ids() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_payment_ids_of_customer_with_no_payments_should_return_0() {
 		$this->assertCount( 0, parent::edd()->customer->create_and_get()->get_payment_ids() );
 	}
@@ -215,6 +224,24 @@ class Tests_Customers extends \EDD_UnitTestCase {
 
 	public function test_get_users_purchases_with_invalid_user_id_should_return_false() {
 		$this->assertFalse( edd_get_users_purchases( 0 ) );
+	}
+
+	public function test_edd_get_users_purchases_new_email_equals_1() {
+		$customer = self::$customers[0];
+		$email    = 'totallynewemail@edd.local';
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => $customer->id,
+				'type'        => 'primary',
+				'email'       => $email,
+			)
+		);
+		$purchases = edd_get_users_purchases( $email );
+		if ( is_array( $purchases ) ) {
+			$purchases = count( $purchases );
+		}
+
+		$this->assertEquals( 1, $purchases );
 	}
 
 	public function test_user_has_purchases_not_logged_in_should_return_false() {
@@ -262,7 +289,7 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_edd_add_past_purchases_to_new_user() {
-		$order_id = \EDD_Helper_Payment::create_simple_guest_payment();
+		$order_id = Helpers\EDD_Helper_Payment::create_simple_guest_payment();
 
 		$userdata = array(
 			'user_login' => 'guest',
@@ -326,16 +353,16 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	public function test_get_user_verification_url_should_return_true() {
 		$url = edd_get_user_verification_url( 1 );
 
-		$this->assertContains( 'edd_action=verify_user', $url );
-		$this->assertContains( 'user_id=1', $url );
-		$this->assertContains( 'ttl', $url );
-		$this->assertContains( 'token', $url );
+		$this->assertStringContainsString( 'edd_action=verify_user', $url );
+		$this->assertStringContainsString( 'user_id=1', $url );
+		$this->assertStringContainsString( 'ttl', $url );
+		$this->assertStringContainsString( 'token', $url );
 	}
 
 	public function test_get_user_verification_request_url_should_return_true() {
 		$url = edd_get_user_verification_request_url( 1 );
 
-		$this->assertContains( 'edd_action=send_verification_email', $url );
+		$this->assertStringContainsString( 'edd_action=send_verification_email', $url );
 	}
 
 	public function test_validate_user_verification_token_with_valid_url_should_true() {
@@ -359,19 +386,36 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertSame( '120.00', $purchase_total );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_payment_ids_with_invalid_customer_should_be_empty() {
 		$customer_id  = edd_add_customer( array(
 			'email' => 'test_user@example.com'
 		) );
 		$customer = new \EDD_Customer( $customer_id );
-
 		$this->assertEmpty( $customer->get_payment_ids() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payments
+	 */
 	public function test_get_payments_with_invalid_customer_should_be_empty() {
 		$customer = new \EDD_Customer( 'test_user@example.com' );
 
 		$this->assertEmpty( $customer->get_payments() );
+	}
+
+	public function test_get_orders_with_invalid_customer_should_be_empty() {
+		$customer = new \EDD_Customer( 'test_user@example.com' );
+
+		$this->assertEmpty( $customer->get_orders() );
+	}
+
+	public function test_get_orders_valid() {
+		$customer = self::$customers[0];
+
+		$this->assertNotEmpty( $customer->get_orders() );
 	}
 
 	public function test_get_users_purchased_products_should_return_2() {
@@ -385,14 +429,23 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertSame( '120.00', $stats['total_spent'] );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payment_ids
+	 */
 	public function test_get_customer_payment_ids_should_return_1() {
 		$this->assertCount( 1, self::$customers[0]->get_payment_ids() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payments
+	 */
 	public function test_get_customer_payments_should_return_1() {
 		$this->assertCount( 1, self::$customers[0]->get_payments() );
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Customer::get_payments
+	 */
 	public function test_get_customer_pending_payments_should_be_empty() {
 		$this->assertEmpty( self::$customers[0]->get_payments( 'pending' ) );
 	}

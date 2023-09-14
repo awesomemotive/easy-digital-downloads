@@ -33,6 +33,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 	public function __construct() {
 		$this->api = new EDD_API();
+		edd_do_automatic_upgrades();
 	}
 
 
@@ -506,13 +507,15 @@ class EDD_CLI extends WP_CLI_Command {
 		$number   = 1;
 		$status   = 'complete';
 		$id       = false;
-		$price_id = false;
+		$price_id = null;
 		$tax      = 0;
 		$email    = 'guest@edd.local';
 		$fname    = 'Pippin';
 		$lname    = 'Williamson';
 		$date     = false;
 		$range    = 30;
+		$currency = edd_get_currency();
+		$gateway  = 'manual';
 
 		$generate_users = false;
 
@@ -596,7 +599,7 @@ class EDD_CLI extends WP_CLI_Command {
 				if ( edd_has_variable_prices( $download->ID ) ) {
 					$prices = edd_get_variable_prices( $download->ID );
 
-					if ( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
+					if ( false === $price_id || ( ! empty( $prices ) && ! array_key_exists( $price_id, (array) $prices ) ) ) {
 						$item_price_id = array_rand( $prices );
 					} else {
 						$item_price_id = $price_id;
@@ -670,6 +673,18 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 			}
 
+			// Allow random currencies.
+			if ( ! empty( $assoc_args['currency'] ) && 'random' === $assoc_args['currency'] ) {
+				$currencies = array( 'USD', 'EUR', 'GBP' );
+				$currency   = $currencies[ array_rand( $currencies ) ];
+			}
+
+			// Allow random gateways.
+			if ( ! empty( $assoc_args['gateway'] ) && 'random' === $assoc_args['gateway'] ) {
+				$gateways = array_keys( edd_get_payment_gateways() );
+				$gateway  = $gateways[ array_rand( $gateways ) ];
+			}
+
 			// Build purchase data.
 			$purchase_data = array(
 				'price'        => edd_sanitize_amount( $total ),
@@ -677,7 +692,7 @@ class EDD_CLI extends WP_CLI_Command {
 				'purchase_key' => strtolower( md5( uniqid() ) ),
 				'user_email'   => $email,
 				'user_info'    => $user_info,
-				'currency'     => edd_get_currency(),
+				'currency'     => $currency,
 				'downloads'    => $final_downloads,
 				'cart_details' => $cart_details,
 				'status'       => 'pending',
@@ -700,7 +715,7 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( ! empty( $timestring ) ) {
 				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
-				$payment->gateway        = 'manual';
+				$payment->gateway        = $gateway;
 				$payment->save();
 			}
 
@@ -719,89 +734,96 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * --legacy: Create legacy discount codes using pre-3.0 schema
 	 * --number: The number of discounts to create
 	 *
 	 * ## EXAMPLES
 	 *
 	 * wp edd create_discounts --number=100
-	 * wp edd create_discounts --number=50 --legacy
 	 */
 	public function create_discounts( $args, $assoc_args ) {
 		$number = array_key_exists( 'number', $assoc_args ) ? absint( $assoc_args['number'] ) : 1;
-		$legacy = array_key_exists( 'legacy', $assoc_args ) ? true : false;
 
 		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Discount Codes', $number );
 
 		for ( $i = 0; $i < $number; $i ++ ) {
-			if ( $legacy ) {
-				$discount_id = wp_insert_post( array(
-					'post_type'   => 'edd_discount',
-					'post_title'  => 'Auto-Generated Legacy Discount #' . $i,
-					'post_status' => 'active',
-				) );
+			$type              = array( 'flat', 'percent' );
+			$status            = array( 'active', 'inactive', 'archived' );
+			$product_condition = array( 'any', 'all' );
 
-				$download_ids = get_posts( array(
-					'post_type'      => 'download',
-					'posts_per_page' => 2,
-					'fields'         => 'ids',
-					'orderby'        => 'rand',
-				) );
+			$type_index              = array_rand( $type, 1 );
+			$status_index            = array_rand( $status, 1 );
+			$product_condition_index = array_rand( $product_condition, 1 );
 
-				$meta = array(
-					'code'              => 'LEGACY' . $i,
-					'status'            => 'active',
-					'uses'              => 10,
-					'max_uses'          => 20,
-					'name'              => 'Auto-Generated Legacy Discount #' . $i,
-					'amount'            => 20,
-					'start'             => '01/01/2000 00:00:00',
-					'expiration'        => '12/31/2050 23:59:59',
-					'type'              => 'percent',
-					'min_price'         => '10.50',
-					'product_reqs'      => array( $download_ids[0] ),
-					'product_condition' => 'all',
-					'excluded_products' => array( $download_ids[1] ),
-					'is_not_global'     => true,
-					'is_single_use'     => true,
-				);
-
-				remove_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
-				remove_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99 );
-
-				foreach ( $meta as $key => $value ) {
-					add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+			// Randomly set a start date and time.
+			if ( rand( 0, 1 ) ) {
+				// Generate a start date randomly between 90 days ago and 90 days in the future.
+				$start_date_range = rand( -90, 90 );
+				if ( 0 > $start_date_range ) {
+					$start_date_range = '+' . intval( $start_date_range );
 				}
 
-				add_filter( 'add_post_metadata', '_edd_discount_update_meta_backcompat', 99, 5 );
-				add_action( 'pre_get_posts', '_edd_discount_get_post_doing_it_wrong', 99, 1 );
-			} else {
-				$type              = array( 'flat', 'percent' );
-				$status            = array( 'active', 'inactive' );
-				$product_condition = array( 'any', 'all' );
+				$start_date_string = date( 'Y-m-d', strtotime( $start_date_range . ' days' ) );
 
-				$type_index              = array_rand( $type, 1 );
-				$status_index            = array_rand( $status, 1 );
-				$product_condition_index = array_rand( $product_condition, 1 );
+				$start_hour = rand( 0, 23 );
+				$start_min  = rand( 0, 59 );
 
-				$post = array(
-					'code'              => md5( time() ),
-					'uses'              => mt_rand( 0, 100 ),
-					'max'               => mt_rand( 0, 100 ),
-					'name'              => 'Auto-Generated Discount #' . $i,
-					'type'              => $type[ $type_index ],
-					'amount'            => mt_rand( 10, 95 ),
-					'start'             => '12/12/2010 00:00:00',
-					'expiration'        => '12/31/2050 23:59:59',
-					'min_price'         => mt_rand( 30, 255 ),
-					'status'            => $status[ $status_index ],
-					'product_condition' => $product_condition[ $product_condition_index ],
+				$start_date = edd_get_utc_date_string(
+					EDD()->utils->get_date_string(
+						$start_date_string,
+						$start_hour,
+						$start_min
+					)
 				);
-
-				edd_store_discount( $post );
-
-				$progress->tick();
 			}
+
+			// Randomly set a end date and time.
+			if ( rand( 0, 1 ) ) {
+				// Generate a start date randomly between 90 days ago and 90 days in the future.
+				$end_date_range = rand( 1, 90 );
+
+				if ( isset( $start_date_string ) ) {
+					$end_date_string = date( 'Y-m-d', strtotime( $start_date_string . ' +' . $end_date_range . ' days' ) );
+				} else {
+					$end_date_string = date( 'Y-m-d', strtotime( '+' . $end_date_range . ' days' ) );
+				}
+
+				$end_hour = rand( 0, 23 );
+				$end_min  = rand( 0, 59 );
+
+				$end_date = edd_get_utc_date_string(
+					EDD()->utils->get_date_string(
+						$end_date_string,
+						$end_hour,
+						$end_min
+					)
+				);
+			}
+
+			$max = mt_rand( 0, 100 );
+
+			$discount = array(
+				'code'              => md5( wp_generate_uuid4() ),
+				'uses'              => mt_rand( 0, $max ),
+				'max'               => $max,
+				'name'              => 'Auto-Generated Discount #' . $i,
+				'type'              => $type[ $type_index ],
+				'amount'            => mt_rand( 10, 95 ),
+				'min_price'         => mt_rand( 1, 255 ),
+				'status'       => $status[ $status_index ],
+				'product_reqs' => $product_condition[ $product_condition_index ],
+			);
+
+			if ( isset( $start_date ) ) {
+				$discount['start_date'] = $start_date;
+			}
+
+			if ( isset( $end_date ) ) {
+				$discount['end_date'] = $end_date;
+			}
+
+			edd_add_discount( $discount );
+
+			$progress->tick();
 		}
 
 		$progress->finish();
@@ -930,7 +952,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_discounts' );
 
 		} else {
@@ -1054,7 +1075,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 		}
 
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_logs' );
 
 	}
@@ -1162,7 +1182,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'New order notes: ', 'easy-digital-downloads' ) . $new_count );
 		}
 
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_order_notes' );
 	}
 
@@ -1264,7 +1283,6 @@ class EDD_CLI extends WP_CLI_Command {
 				WP_CLI::line( __( 'New customer notes: ', 'easy-digital-downloads' ) . $new_count );
 			}
 
-			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_customer_notes' );
 		}
 	}
@@ -1466,7 +1484,6 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Migration complete: Customer Email Addresses', 'easy-digital-downloads' ) );
 		}
 
-		edd_update_db_version();
 	}
 
 	/**
@@ -1530,7 +1547,6 @@ class EDD_CLI extends WP_CLI_Command {
 		WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . count( $tax_rates ) );
 		WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
-		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_tax_rates' );
 	}
 
@@ -1673,7 +1689,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 					// Delete the existing order to re-run the migration fresh.
 					if ( $destroy ) {
-						$parent_id = 'refund' === $migrated->type && ! empty( $migrated->parent ) ? $migrated->parent : false;
+						$parent_id = ! empty( $migrated->type ) && 'refund' === $migrated->type && ! empty( $migrated->parent ) ? $migrated->parent : false;
 
 						// EDD has detected a collision between a refund ID and a payment ID.
 						if ( ! empty( $parent_id ) ) {
@@ -1685,7 +1701,7 @@ class EDD_CLI extends WP_CLI_Command {
 									$parent_id
 								)
 							);
-						} elseif ( $result->post_date_gmt !== $migrated->date_created ) {
+						} elseif ( ! empty( $migrated->date_created ) && $result->post_date_gmt !== $migrated->date_created ) {
 							// The migrated order does not appear to be the same as the original order, so let's confirm.
 							WP_CLI::confirm(
 								sprintf(
@@ -1752,11 +1768,13 @@ class EDD_CLI extends WP_CLI_Command {
 			if ( $full_migration ) {
 				edd_set_upgrade_complete( 'migrate_orders' );
 				edd_set_upgrade_complete( 'remove_legacy_payments' );
+				edd_set_upgrade_complete( 'migrate_order_actions_date' );
 			}
 		} else {
 			if ( ! $full_migration ) {
 				WP_CLI::line( __( 'Partial order migration complete. Orders Processed: ', 'easy-digital-downloads' ) . $total );
-				WP_CLI::line( __( 'To recalculate all download sales and earnings, run wp edd `recalculate_download_sales_earnings`.', 'easy-digital-downloads' ) );
+				WP_CLI::line( __( 'To recalculate all download sales and earnings, run `wp edd recalculate_download_sales_earnings`.', 'easy-digital-downloads' ) );
+				WP_CLI::line( __( 'To recalculate all customer sales and earnings, run `wp edd recalculate_customer_values`.', 'easy-digital-downloads' ) );
 			} else {
 				WP_CLI::line( __( 'Migration complete: Orders', 'easy-digital-downloads' ) );
 				$new_count = edd_count_orders( array( 'type' => 'sale' ) );
@@ -1767,11 +1785,11 @@ class EDD_CLI extends WP_CLI_Command {
 				$refund_count = edd_count_orders( array( 'type' => 'refund' ) );
 				WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
 
-				edd_update_db_version();
 				edd_set_upgrade_complete( 'migrate_orders' );
 
 				$progress->tick();
 				$this->recalculate_download_sales_earnings();
+				$this->recalculate_customer_values();
 			}
 		}
 
@@ -1847,6 +1865,33 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all downloads.', 'easy-digital-downloads' ) );
 		WP_CLI::line( __( 'Downloads Updated: ', 'easy-digital-downloads' ) . $total );
+	}
+
+	/**
+	 * Recalculates all customer values.
+	 *
+	 * @since 3.1.2
+	 * @return void
+	 */
+	public function recalculate_customer_values() {
+		$customers = edd_get_customers(
+			array(
+				'number' => 9999999,
+			)
+		);
+		$total     = count( $customers );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Recalculating Customer Values', $total );
+			foreach ( $customers as $customer ) {
+				$customer->recalculate_stats();
+				$progress->tick();
+			}
+			$progress->finish();
+		}
+
+		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all customers.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Customers Updated: ', 'easy-digital-downloads' ) . $total );
 	}
 
 	/**
@@ -1943,10 +1988,20 @@ class EDD_CLI extends WP_CLI_Command {
 		 * @var \EDD\Database\Tables\Customers|false $customer_table
 		 */
 		$customer_table = edd_get_component_interface( 'customer', 'table' );
-		if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
+		if ( $customer_table instanceof \EDD\Database\Tables\Customers ) {
 			WP_CLI::line( __( 'Updating customers database table.', 'easy-digital-downloads' ) );
 
-			$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
+			if ( $customer_table->column_exists( 'payment_ids' ) ) {
+				WP_CLI::line( __( 'Removing Payment IDs column.', 'easy-digital-downloads' ) );
+
+				$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
+			}
+
+			if ( $customer_table->column_exists( 'notes' ) ) {
+				WP_CLI::line( __( 'Removing notes column.', 'easy-digital-downloads' ) );
+
+				$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `notes`" );
+			}
 		}
 
 		/**
@@ -2091,21 +2146,33 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$file_id_key = array_rand( $download_ids_with_files[ $product_id ], 1 );
 			$file_key    = $download_ids_with_files[ $product_id ][ $file_id_key ];
-			edd_add_file_download_log( array(
-				'product_id'   => absint( $product_id ),
-				'file_id'      => absint( $file_key ),
-				'order_id'     => absint( $order_id ),
-				'price_id'     => absint( $price_id ),
-				'customer_id'  => $order->customer_id,
-				'ip'           => edd_get_ip(),
-				'user_agent'   => 'EDD; WPCLI; download_logs;',
-				'date_created' => $order->date_completed,
-			) );
+			edd_record_download_in_log(
+				absint( $product_id ),
+				absint( $file_key ),
+				array(),
+				edd_get_ip(),
+				absint( $order_id ),
+				absint( $price_id ),
+				'EDD; WPCLI; download_logs;'
+			);
 
 			$progress->tick();
 			$i ++;
 		}
 		$progress->finish();
+	}
+
+	/**
+	 * Migrate missing discounts.
+	 *
+	 * wp edd migrate_missing_discounts
+	 *
+	 * @since 3.2.0
+	 * @return void
+	 */
+	public function migrate_missing_discounts() {
+		$discounts = new EDD\CLI\Migration\Discounts();
+		$discounts->migrate_missing();
 	}
 
 	protected function get_fname() {

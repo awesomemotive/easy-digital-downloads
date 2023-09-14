@@ -1,15 +1,15 @@
 <?php
-namespace EDD\Customers;
+namespace EDD\Tests\Customers;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Customer Address Tests.
  *
  * @group edd_customers
  * @group database
- *
- * @coversDefaultClass \EDD\Customers\Customer_Address
  */
-class Customer_Address_Tests extends \EDD_UnitTestCase {
+class Customer_Address extends EDD_UnitTestCase {
 
 	/**
 	 * Customer addresses fixture.
@@ -30,9 +30,12 @@ class Customer_Address_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_update_customer_address
 	 */
 	public function test_update_should_return_true() {
-		$success = edd_update_customer_address( self::$customer_addresses[0], array(
-			'address' => 'Address Line 1',
-		) );
+		$success = edd_update_customer_address(
+			self::$customer_addresses[0],
+			array(
+				'address' => 'Address Line 1',
+			)
+		);
 
 		$this->assertSame( 1, $success );
 	}

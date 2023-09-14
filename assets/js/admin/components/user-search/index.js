@@ -1,9 +1,9 @@
-jQuery( document ).ready( function( $ ) {
+jQuery( function ( $ ) {
 	// AJAX user search
 	$( '.edd-ajax-user-search' )
 
 		// Search
-		.keyup( function() {
+		.on( 'keyup focus', function () {
 			let user_search = $( this ).val(),
 				exclude = '';
 
@@ -37,18 +37,13 @@ jQuery( document ).ready( function( $ ) {
 		} )
 
 		// Hide
-		.blur( function() {
+		.on( 'blur', function () {
 			if ( edd_user_search_mouse_down ) {
 				edd_user_search_mouse_down = false;
 			} else {
 				$( this ).removeClass( 'loading' );
 				$( '.edd_user_search_results' ).addClass( 'hidden' );
 			}
-		} )
-
-		// Show
-		.focus( function() {
-			$( this ).keyup();
 		} );
 
 	$( document.body ).on( 'click.eddSelectUser', '.edd_user_search_results span a', function( e ) {
@@ -68,7 +63,7 @@ jQuery( document ).ready( function( $ ) {
 
 	// Cancel user-search.blur when picking a user
 	var edd_user_search_mouse_down = false;
-	$( '.edd_user_search_results' ).mousedown( function() {
+	$( '.edd_user_search_results' ).on( 'mousedown', function () {
 		edd_user_search_mouse_down = true;
 	} );
 } );

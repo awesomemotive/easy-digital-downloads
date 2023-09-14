@@ -9,7 +9,7 @@
  */
 namespace EDD\Admin\Upgrades\v3;
 
-use Carbon\Carbon;
+use \EDD\Utils\Date;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;

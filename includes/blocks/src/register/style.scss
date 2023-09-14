@@ -1,0 +1,81 @@
+@import "../scss/forms";
+
+.wp-block-edd-register {
+
+	.edd-blocks-form__group-password .edd-blocks-form__control {
+		position: relative;
+	}
+
+	#pass-strength-result {
+		background-color: #f0f0f1;
+		border: 1px solid #dcdcde;
+		color: #1d2327;
+		margin: -1px 1px 5px;
+		padding: 3px 5px;
+		text-align: center;
+		box-sizing: border-box;
+		opacity: 0;
+
+		&.short {
+			background-color: #ffabaf;
+			border-color: #e65054;
+			opacity: 1;
+		}
+
+		&.bad {
+			background-color: #facfd2;
+			border-color: #f86368;
+			opacity: 1;
+		}
+
+		&.good {
+			background-color: #f5e6ab;
+			border-color: #f0c33c;
+			opacity: 1;
+		}
+
+		&.strong {
+			background-color: #b8e6bf;
+			border-color: #68de7c;
+			opacity: 1;
+		}
+	}
+
+	.wp-pwd.is-open {
+		position: relative;
+	}
+
+	.button.wp-hide-pw {
+		background: transparent;
+		border: 1px solid transparent;
+		box-shadow: none;
+		font-size: 14px;
+		line-height: 2;
+		width: 2.5rem;
+		height: 2.5rem;
+		min-width: 40px;
+		min-height: 40px;
+		margin: 0;
+		padding: 5px 9px;
+		position: absolute;
+		right: 0;
+		top: 0;
+		color: #555;
+
+		.dashicons {
+			display: block;
+		}
+	}
+
+	div.edd-blocks-form__group-submit {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	p,
+	.edd-alert p {
+		padding: 0;
+		margin: 0;
+	}
+}

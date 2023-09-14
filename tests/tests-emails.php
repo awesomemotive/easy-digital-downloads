@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_emails
@@ -140,15 +143,28 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	/**
-     * Test that each of the actions are added and each hooked in with the right priority
-     */
+	 * Test that each of the actions are added and each hooked in with the right priority
+	 */
 	public function test_email_actions() {
 		global $wp_filter;
 
-		$this->assertarrayHasKey( 'edd_admin_email_notice',       $wp_filter['edd_admin_sale_notice'][10]  );
-		$this->assertarrayHasKey( 'edd_trigger_purchase_receipt', $wp_filter['edd_complete_purchase'][999] );
-		$this->assertarrayHasKey( 'edd_resend_purchase_receipt',  $wp_filter['edd_email_links'][10]        );
-		$this->assertarrayHasKey( 'edd_send_test_email',          $wp_filter['edd_send_test_email'][10]    );
+		// This is a legacy filter that we need to test, simply for extensions that unhook it.
+		$this->assertarrayHasKey( 'edd_admin_email_notice', $wp_filter['edd_admin_sale_notice'][10]  );
+
+		// Verify the order receipt email is hooked.
+		$hooked_into = array_keys( $wp_filter['edd_after_order_actions'][9999] );
+		$has_hook    = $this->determine_if_hook_found( 'send_order_receipt', $hooked_into );
+		$this->assertTrue( $has_hook, 'Did not find send_order_receipt hook for edd_after_order_actions' );
+
+		// Verify the resend order receipt email is hooked.
+		$hooked_into = array_keys( $wp_filter['edd_email_links'][10] );
+		$has_hook    = $this->determine_if_hook_found( 'resend_order_receipt', $hooked_into );
+		$this->assertTrue( $has_hook, 'Did not find resend_order_receipt hook for edd_email_links' );
+
+		// Verify the resend order receipt email is hooked.
+		$hooked_into = array_keys( $wp_filter['edd_send_test_email'][10] );
+		$has_hook    = $this->determine_if_hook_found( 'send_test_email', $hooked_into );
+		$this->assertTrue( $has_hook, 'Did not find edd_send_test_email hook for send_test_email' );
 	}
 
 	public function test_admin_notice_emails() {
@@ -175,19 +191,30 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_default_sale_notification_email() {
+		$admin_order_notice = new \EDD\Emails\Types\AdminOrderNotice( false );
+		$email = $admin_order_notice->get_raw_body_content();
+
+		$this->assertStringContainsString( 'Hello', $email );
+		$this->assertStringContainsString( 'A Downloads purchase has been made', $email );
+		$this->assertStringContainsString( 'Downloads sold:', $email );
+		$this->assertStringContainsString( '{download_list}', $email );
+		$this->assertStringContainsString( 'Amount: {price}', $email );
+	}
+
+	public function test_edd_get_default_sale_notification_email_legacy() {
 		$email = edd_get_default_sale_notification_email();
 
-		$this->assertContains( 'Hello', $email );
-		$this->assertContains( 'A Downloads purchase has been made', $email );
-		$this->assertContains( 'Downloads sold:', $email );
-		$this->assertContains( '{download_list}', $email );
-		$this->assertContains( 'Amount:  {price}', $email );
+		$this->assertStringContainsString( 'Hello', $email );
+		$this->assertStringContainsString( 'A Downloads purchase has been made', $email );
+		$this->assertStringContainsString( 'Downloads sold:', $email );
+		$this->assertStringContainsString( '{download_list}', $email );
+		$this->assertStringContainsString( 'Amount: {price}', $email );
 	}
 
 	public function test_email_tags_get_tags() {
 		$tags = edd_get_email_tags();
 
-		$this->assertInternalType( 'array', $tags );
+		$this->assertIsArray( $tags );
 		$this->assertarrayHasKey( 'download_list', $tags );
 		$this->assertarrayHasKey( 'file_urls', $tags );
 		$this->assertarrayHasKey( 'name', $tags );
@@ -218,19 +245,19 @@ class Tests_Emails extends EDD_UnitTestCase {
 
 	public function test_email_tags_download_list() {
 		$order_items = edd_get_order_items( array( 'order_id' => self::$payment_id ) );
-		$this->assertContains( '<strong>' . $order_items[0]->product_name . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
-		$this->assertContains( '<div><a href="', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringContainsString( '<strong>' . $order_items[0]->product_name . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringContainsString( '<div><a href="', edd_email_tag_download_list( self::$payment_id ) );
 	}
 
 	public function test_email_tag_download_list_with_names_disabled_via_filter() {
 		add_filter( 'edd_email_show_names', '__return_false' );
-		$this->assertNotContains( '<strong>' . get_the_title( self::$post->ID ) . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringNotContainsString( '<strong>' . get_the_title( self::$post->ID ) . '</strong>', edd_email_tag_download_list( self::$payment_id ) );
 		remove_filter( 'edd_email_show_names', '__return_false' );
 	}
 
 	public function test_email_tag_download_list_with_links_disabled_via_filer() {
 		add_filter( 'edd_email_show_links', '__return_false' );
-		$this->assertContains( '<div>File 2</div>', edd_email_tag_download_list( self::$payment_id ) );
+		$this->assertStringContainsString( '<div>File 2</div>', edd_email_tag_download_list( self::$payment_id ) );
 		remove_filter( 'edd_email_show_links', '__return_false' );
 	}
 
@@ -285,7 +312,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_email_tags_receipt_link() {
-		$this->assertContains( 'View it in your browser &raquo;', edd_email_tag_receipt_link( self::$payment_id ) );
+		$this->assertStringContainsString( 'View it in your browser &raquo;', edd_email_tag_receipt_link( self::$payment_id ) );
 	}
 
 	public function test_get_from_name() {
@@ -315,7 +342,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$from_name = EDD()->emails->get_from_name();
 		$from_address = EDD()->emails->get_from_address();
 
-		$this->assertContains( "From: {$from_name} <{$from_address}>", EDD()->emails->get_headers() );
+		$this->assertStringContainsString( "From: {$from_name} <{$from_address}>", EDD()->emails->get_headers() );
 	}
 
 	public function test_get_heading() {
@@ -334,5 +361,17 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$message = EDD()->emails->text_to_html( $message, EDD()->emails );
 
 		$this->assertEquals( $expected, $message );
+	}
+
+	private function determine_if_hook_found( $desired_hook, $hooks ) {
+		$found = false;
+
+		foreach ( $hooks as $hook ) {
+			if ( false !== strpos( $hook, $desired_hook ) ) {
+				$found = true;
+			}
+		}
+
+		return $found;
 	}
 }

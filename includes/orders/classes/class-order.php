@@ -123,6 +123,14 @@ class Order extends Rows\Order {
 	protected $date_refundable;
 
 	/**
+	 * Date Actions Run
+	 *
+	 * @since 3.2.0
+	 * @var string|null
+	 */
+	protected $date_actions_run;
+
+	/**
 	 * User ID.
 	 *
 	 * @since 3.0
@@ -639,7 +647,7 @@ class Order extends Rows\Order {
 	 * @return bool True if the order is complete, false otherwise.
 	 */
 	public function is_complete() {
-		return ( 'complete' === $this->status );
+		return in_array( $this->status, edd_get_complete_order_statuses(), true );
 	}
 
 	/**

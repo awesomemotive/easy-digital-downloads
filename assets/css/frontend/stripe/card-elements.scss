@@ -1,0 +1,396 @@
+/**
+ * Internal dependencices
+ */
+ @import './frontend/shared.scss';
+ @import './frontend/modal.scss';
+ @import './frontend/payment-request-button.scss';
+
+ #edd_checkout_form_wrap .edd-card-selector-radio label {
+	 display: inline;
+	 vertical-align: middle;
+	 font-weight: normal;
+	 line-height: 24px;
+	 font-size: 100%;
+	 margin: 0px;
+ }
+
+ .edd-card-selector-radio .edd-stripe-card-radio-item {
+	 width: 100%;
+	 font-size: 15px;
+	 padding: 8px 12px;
+	 border: 1px solid transparent;
+
+	 label {
+		 line-height: 1;
+		 margin: 0;
+		 display: flex;
+		 align-items: center;
+
+		 .add-new-card,
+		 .card-label {
+			 margin-left: 8px;
+		 }
+	 }
+ }
+
+ .edd-card-selector-radio .edd-stripe-card-radio-item.selected {
+	 border: 1px solid #f0f0f0;
+	 background-color: #fcfcfc;
+	 -webkit-border-radius: 3px;
+	 -moz-border-radius: 3px;
+	 border-radius: 3px;
+ }
+
+ .edd-card-selector-radio div.card-label {
+	 width: 65%;
+	 display: inline-block;
+ }
+
+ .edd-card-selector-radio span.card-is-default {
+	 font-style: italic;
+ }
+
+ .edd-card-selector-radio span.card-expired {
+	 color: #ff3333;
+ }
+
+ .edd-stripe-card-selector + .edd-stripe-new-card {
+	 margin-top: 20px;
+ }
+
+ #edd-stripe-manage-cards .edd-stripe-add-new-card {
+	 margin: 20px 0 10px;
+ }
+
+ #edd-stripe-manage-cards div.edd-stripe-card-item {
+	 list-style: none;
+	 width: 100%;
+	 display: inline-grid;
+	 border: 1px solid #f0f0f0;
+	 padding: 5px 10px;
+	 min-height: 100px;
+	 margin-bottom: 10px;
+	 -webkit-border-radius: 3px;
+	 -moz-border-radius: 3px;
+	 border-radius: 3px;
+	 margin-left: 0px;
+ }
+
+ .edd-stripe-card-item > span {
+	 display: block;
+ }
+
+ .edd-stripe-card-item .card-meta > span {
+	 color: #999;
+	 display: block;
+ }
+
+ .edd-stripe-card-item .card-actions a {
+	 text-decoration: none;
+ }
+
+ .edd-stripe-card-item .card-actions a.delete {
+	 color: #ff3333;
+ }
+
+ .card-actions .edd-loading-ajax {
+	 display: inline-block;
+	 margin-right: 4px;
+ }
+
+ .edd-stripe-card-item .card-update-form {
+	 display: none;
+ }
+
+ .edd-stripe-card-item .card-update-form label {
+	 font-weight: bold;
+ }
+
+ .edd-stripe-card-item .card-update-form input {
+	 margin-bottom: 3px;
+ }
+
+ .edd-stripe-card-item .card-update-form select {
+	 background: #fff;
+	 border: 1px solid #e4e4e4;
+	 height: 40px;
+	 margin-right: 3px;
+ }
+
+ .edd-stripe-card-item .card-update-form select:first-of-type {
+	 margin-right: 3px;
+ }
+
+ .edd-stripe-card-item .card-address-fields input,
+ .edd-stripe-card-item .card-address-fields select {
+	 width: 49%;
+	 display: inline-block;
+ }
+
+ /* Checkout Fields */
+ .edd-stripe-add-new-card label {
+	 font-weight: bold;
+	 display: block;
+	 position: relative;
+	 line-height: 100%;
+	 font-size: 95%;
+	 margin: 0 0 5px;
+ }
+ .edd-stripe-add-new-card label:after {
+	 display: block;
+	 visibility: hidden;
+	 float: none;
+	 clear: both;
+	 height: 0;
+	 text-indent: -9999px;
+	 content: ".";
+ }
+ .edd-stripe-add-new-card span.edd-description {
+	 color: #666;
+	 font-size: 80%;
+	 display: block;
+	 margin: 0 0 5px;
+ }
+ .edd-stripe-add-new-card input.edd-input,
+ .edd-stripe-add-new-card textarea.edd-input {
+	 display: inline-block;
+	 width: 70%;
+ }
+ .edd-stripe-add-new-card select.edd-select {
+	 display: block;
+	 width: 60%;
+ }
+ .edd-stripe-add-new-card select.edd-select.edd-select-small {
+	 display: inline;
+	 width: auto;
+ }
+ .edd-stripe-add-new-card input.edd-input.error,
+ .edd-stripe-add-new-card textarea.edd-input.error {
+	 border-color: #c4554e;
+ }
+ .edd-stripe-add-new-card > p {
+	 margin: 0 0 21px;
+ }
+ .edd-stripe-add-new-card span.edd-required-indicator {
+	 color: #b94a48;
+	 display: inline;
+ }
+ .edd-stripe-add-new-card textarea,
+ .edd-stripe-add-new-card input[type="text"],
+ .edd-stripe-add-new-card input[type="email"],
+ .edd-stripe-add-new-card input[type="password"],
+ .edd-stripe-add-new-card input[type="tel"] {
+	 padding: 4px 6px;
+ }
+ .edd-stripe-add-new-card input[type="radio"] {
+	 border: none;
+	 margin-right: 5px;
+ }
+ .edd-stripe-add-new-card input[type="checkbox"] {
+	 display: inline-block;
+	 margin: 0 5px 0 0;
+ }
+ .edd-stripe-add-new-card input[type="checkbox"] + label,
+ .edd-stripe-add-new-card input[type="checkbox"] + label:after {
+	 display: inline;
+ }
+ .edd-stripe-add-new-card .edd-payment-icons {
+	 height: 32px;
+	 display: block;
+	 margin: 0 0 8px;
+ }
+ .edd-stripe-add-new-card .edd-payment-icons img.payment-icon {
+	 max-height: 32px;
+	 width: auto;
+	 margin: 0 3px 0 0;
+	 float: left;
+	 background: none;
+	 padding: 0;
+	 border: none;
+	 -webkit-box-shadow: none;
+	 -moz-box-shadow: none;
+	 box-shadow: none;
+ }
+ .edd-stripe-add-new-card #edd-payment-mode-wrap label {
+	 display: inline-block;
+	 margin: 0 20px 0 0;
+ }
+ .edd-stripe-add-new-card #edd-payment-mode-wrap .edd-payment-mode-label {
+	 font-weight: bold;
+	 display: inline-block;
+	 position: relative;
+	 margin-bottom: 5px;
+ }
+ .edd-stripe-add-new-card fieldset {
+	 border: 1px solid #eee;
+	 padding: 1.387em;
+	 margin: 0 0 21px;
+ }
+ .edd-stripe-add-new-card #edd_purchase_submit,
+ .edd-stripe-add-new-card #edd_discount_code,
+ .edd-stripe-add-new-card #edd_register_account_fields {
+	 padding: 0;
+	 border: none;
+ }
+ .edd-stripe-add-new-card fieldset fieldset {
+	 margin: 0;
+	 border: none;
+	 padding: 0;
+ }
+ .edd-stripe-add-new-card #edd-login-account-wrap,
+ .edd-stripe-add-new-card #edd-new-account-wrap,
+ .edd-stripe-add-new-card #edd_show_discount,
+ .edd-stripe-add-new-card .edd-cart-adjustment,
+ .edd-stripe-add-new-card #edd_final_total_wrap {
+	 background: #fafafa;
+	 color: #666;
+	 padding: 0.5em 1.387em;
+ }
+ .edd-stripe-add-new-card #edd-discount-code-wrap,
+ .edd-stripe-add-new-card #edd_final_total_wrap,
+ .edd-stripe-add-new-card #edd_show_discount {
+	 border: 1px solid #eee;
+ }
+ .edd-stripe-add-new-card .edd-cart-adjustment {
+	 padding: 1.387em;
+ }
+ .edd-stripe-add-new-card .edd-cart-adjustment input.edd-input,
+ .edd-stripe-add-new-card .edd-cart-adjustment input.edd-submit {
+	 display: inline-block;
+ }
+ .edd-stripe-add-new-card .edd-cart-adjustment input.edd-submit {
+	 padding: 3px 12px;
+	 margin-bottom: 2px;
+ }
+ .edd-stripe-add-new-card #edd-discount-error-wrap {
+	 width: 100%;
+	 display: inline-block;
+	 margin: 1em 0 0;
+ }
+ .edd-stripe-add-new-card #edd-new-account-wrap,
+ .edd-stripe-add-new-card #edd-login-account-wrap {
+	 margin: -1.387em -1.387em 21px;
+	 border-left: none;
+	 border-right: none;
+	 border-top: none;
+ }
+ .edd-stripe-add-new-card #edd_payment_mode_select {
+	 margin-bottom: 21px;
+ }
+ .edd-stripe-add-new-card fieldset#edd_register_fields #edd_checkout_user_info {
+	 margin-bottom: 21px;
+ }
+ .edd-stripe-add-new-card fieldset#edd_register_account_fields legend {
+	 padding-top: 11px;
+ }
+ .edd-stripe-add-new-card fieldset#edd_register_account_fields p.edd_register_password,
+ .edd-stripe-add-new-card fieldset#edd_register_account_fields p.edd_login_password {
+	 margin: 0;
+ }
+ .edd-stripe-add-new-card fieldset#edd_cc_fields {
+	 border: 1px solid #f0f0f0;
+	 background: #f9f9f9;
+	 position: relative;
+ }
+ .edd-stripe-add-new-card fieldset#edd_cc_fields legend {
+	 border: none;
+	 padding: 0;
+ }
+ .edd-stripe-add-new-card fieldset p:last-child {
+	 margin-bottom: 0;
+ }
+ #edd_secure_site_wrapper {
+	 padding: 4px 4px 4px 0;
+	 font-weight: bold;
+ }
+ .edd-stripe-add-new-card span.exp-divider {
+	 display: inline;
+ }
+
+ /**
+  * Stripe Elements - Card
+  */
+ .edd-stripe-card-element.StripeElement,
+ .edd-stripe-card-exp-element.StripeElement,
+ .edd-stripe-card-cvc-element.StripeElement {
+	 box-sizing: border-box;
+	 padding: 10px 12px;
+	 border: 1px solid #ccc;
+	 background-color: white;
+ }
+
+ .edd-stripe-card-element.StripeElement--invalid {
+	 border-color: #c4554e !important;
+ }
+
+ #edd-card-wrap {
+	 position: relative;
+ }
+
+ #edd-card-details-wrap {
+	 display: flex;
+	 justify-content: space-between;
+	 flex-wrap: wrap;
+ }
+
+ #edd-card-details-wrap p:empty {
+	 width: 100%;
+ }
+
+ #edd-card-exp-wrap,
+ #edd-card-cvv-wrap {
+	 width: 48%;
+ }
+
+ #edd-stripe-card-element-wrapper {
+	 position: relative;
+ }
+
+ #edd_checkout_form_wrap .edd-stripe-new-card span.card-type {
+	 background-size: 32px 24px !important;
+	 width: 32px;
+	 height: 24px;
+	 top: 50%;
+	 transform: translate3d(0, -50%, 0);
+	 right: 10px;
+ }
+
+ /**
+  * "Buy Now" modal.
+  */
+ .edds-buy-now-modal {
+	 width: 500px;
+
+	 .edds-modal__close {
+		 padding: 0.5rem;
+	 }
+
+	 #edd_checkout_form_wrap {
+
+		 input.edd-input,
+		 textarea.edd-input {
+			 width: 100%;
+		 }
+
+		 #edd_purchase_submit {
+			 margin-top: 1.5rem;
+			 margin-bottom: 0;
+		 }
+	 }
+
+	 .edds-field-spacer-shim {
+		 margin-bottom: 1rem;
+	 }
+
+	 .edd-alert-error {
+		 margin: 20px 0;
+	 }
+
+	 #edd-stripe-card-errors:not(:empty) {
+		 margin-bottom: 20px;
+
+		 .edd-alert-error {
+			 margin: 0;
+		 }
+	 }
+ }

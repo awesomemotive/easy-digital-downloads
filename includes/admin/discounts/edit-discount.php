@@ -123,7 +123,8 @@ $minutes              = edd_get_minute_values();
 							'selected'    => $product_requirements,
 							'multiple'    => true,
 							'chosen'      => true,
-							'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() )
+							'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+							'variations'  => true,
 						) ); ?>
 						<div id="edd-discount-product-conditions"<?php echo $condition_display; ?>>
 							<p>
@@ -165,6 +166,13 @@ $minutes              = edd_get_minute_values();
 						<p class="description"><?php printf( __( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
 					</td>
 				</tr>
+
+				<?php
+				$categories     = edd_get_adjustment_meta( $discount->id, 'categories', true );
+				$term_condition = edd_get_adjustment_meta( $discount->id, 'term_condition', true );
+				$term_condition = $term_condition ?: '';
+				include 'views/categories.php';
+				?>
 
 				<?php do_action( 'edd_edit_discount_form_before_start', $discount->id, $discount ); ?>
 
@@ -260,8 +268,9 @@ $minutes              = edd_get_minute_values();
 					</th>
 					<td>
 						<select name="status" id="edd-status">
-						<option value="active" <?php selected( $discount->status, 'active' ); ?>><?php _e( 'Active', 'easy-digital-downloads' ); ?></option>
-						<option value="inactive"<?php selected( $discount->status, 'inactive' ); ?>><?php _e( 'Inactive', 'easy-digital-downloads' ); ?></option>
+							<option value="active" <?php selected( $discount->status, 'active' ); ?>><?php esc_html_e( 'Active', 'easy-digital-downloads' ); ?></option>
+							<option value="inactive"<?php selected( $discount->status, 'inactive' ); ?>><?php esc_html_e( 'Inactive', 'easy-digital-downloads' ); ?></option>
+							<option value="archived"<?php selected( $discount->status, 'archived' ); ?>><?php esc_html_e( 'Archived', 'easy-digital-downloads' ); ?></option>
 						</select>
 						<p class="description"><?php _e( 'The status of this discount code.', 'easy-digital-downloads' ); ?></p>
 					</td>

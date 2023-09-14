@@ -1,5 +1,7 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_meta
@@ -10,18 +12,18 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 
 	protected $download_id;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
-		$this->payment_id  = EDD_Helper_Payment::create_simple_payment();
-		$variable_download = EDD_Helper_Download::create_variable_download();
+		$this->payment_id  = Helpers\EDD_Helper_Payment::create_simple_payment();
+		$variable_download = Helpers\EDD_Helper_Download::create_variable_download();
 
 		$this->download_id = $variable_download->ID;
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
-		EDD_Helper_Payment::delete_payment( $this->payment_id );
-		EDD_Helper_Download::delete_download( $this->download_id );
+		Helpers\EDD_Helper_Payment::delete_payment( $this->payment_id );
+		Helpers\EDD_Helper_Download::delete_download( $this->download_id );
 	}
 
 	public function test_intval_wrapper() {
@@ -38,19 +40,19 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 	public function test_sanitize_array() {
 		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
 
-		$object = new StdClass;
+		$object = new \StdClass;
 		$object->one = 1;
 		$object->two = 2;
 
 		update_post_meta( $this->payment_id, '_edd_payment_meta', $object );
-		$this->assertInternalType( 'array', edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
+		$this->assertIsArray( edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
 
 		$serialized = serialize( array(
 			1, 2, 3,
 		) );
 
 		update_post_meta( $this->payment_id, '_edd_payment_meta', $serialized );
-		$this->assertInternalType( 'array', edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
+		$this->assertIsArray( edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
 		$this->assertFalse( is_serialized( edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) ) );
 	}
 

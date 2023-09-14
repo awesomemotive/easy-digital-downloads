@@ -1,5 +1,8 @@
 <?php
+namespace EDD\Tests\Downloads;
 
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_downloads
@@ -12,17 +15,17 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 	protected $_download_files = null;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
-		$this->_post = EDD_Helper_Download::create_variable_download();
+		$this->_post = Helpers\EDD_Helper_Download::create_variable_download();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 
 		parent::tearDown();
 
-		EDD_Helper_Download::delete_download( $this->_post->ID );
+		Helpers\EDD_Helper_Download::delete_download( $this->_post->ID );
 
 	}
 
@@ -77,14 +80,14 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	public function test_edd_download() {
 
 		// Verify passing nothing gives us an empty download
-		$download = new EDD_Download;
+		$download = new \EDD_Download;
 		$this->assertEquals( 0, $download->ID );
 
 		// Create a Download
 		$args = array(
 			'post_title'  => 'Test Create Download'
 		);
-		$download2 = new EDD_Download;
+		$download2 = new \EDD_Download;
 		$this->assertEquals( 0, $download2->ID );
 
 		$download2->create( $args );
@@ -120,7 +123,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 				'condition' => 'all'
 			)
 		);
-		$download3 = new EDD_Download( $this->_post->ID );
+		$download3 = new \EDD_Download( $this->_post->ID );
 		$this->assertNotEmpty( $download3->ID );
 		$this->assertEquals( $this->_post->ID, $download3->ID );
 		$this->assertEquals( 'download', $download3->post_type );
@@ -142,9 +145,9 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertEquals( 'all', $download3->get_file_price_condition( 1 ) );
 		$this->assertEquals( 'default', $download3->get_type() );
 		$this->assertFalse( $download3->is_bundled_download() );
-		$this->assertInternalType( 'array', $download3->get_bundled_downloads() );
-		$this->assertInternalType( 'string', $download3->get_notes() );
-		$this->assertInternalType( 'string', $download3->notes );
+		$this->assertIsArray( $download3->get_bundled_downloads() );
+		$this->assertIsString( $download3->get_notes() );
+		$this->assertIsString( $download3->notes );
 		$this->assertEquals( 'Purchase Notes', $download3->get_notes() );
 		$this->assertEquals( 'add_to_cart', $download3->get_button_behavior() );
 		$this->assertFalse( $download3->is_free() );
@@ -152,7 +155,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertFalse( $download3->is_free( 1 ) );
 
 		update_post_meta( $download3->ID, '_variable_pricing', false );
-		$download4 = new EDD_Download( $download3->ID );
+		$download4 = new \EDD_Download( $download3->ID );
 		$this->assertEmpty( $download4->prices );
 
 		// Test the magic __get function
@@ -162,7 +165,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_can_purchase() {
-		$download = new EDD_Download( $this->_post->ID );
+		$download = new \EDD_Download( $this->_post->ID );
 		$this->assertTrue( $download->can_purchase() );
 
 		add_filter( 'edd_can_purchase_download', '__return_false' );
@@ -203,7 +206,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	public function test_variable_pricing_edd_price() {
 		$out = edd_get_variable_prices( $this->_post->ID );
 		$price_text = edd_price( $this->_post->ID, false, 0);
-		$this->assertContains( '&#36;20.00', $price_text, 'Variable Price edd_price incorrect' );
+		$this->assertStringContainsString( '&#36;20.00', $price_text, 'Variable Price edd_price incorrect' );
 	}
 
 	public function test_has_variable_prices() {
@@ -233,7 +236,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	public function test_price_range() {
 		$range = edd_price_range( $this->_post->ID );
 		$expected = '<span class="edd_price edd_price_range_low" id="edd_price_low_' . $this->_post->ID . '">&#36;20.00</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price edd_price_range_high" id="edd_price_high_' . $this->_post->ID . '">&#36;100.00</span>';
-		$this->assertInternalType( 'string', $range );
+		$this->assertIsString( $range );
 		$this->assertEquals( $expected, $range );
 	}
 
@@ -246,7 +249,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_download_earnings() {
-		$download = new EDD_Download( $this->_post->ID );
+		$download = new \EDD_Download( $this->_post->ID );
 
 		$this->assertEquals( 120, edd_get_download_earnings_stats( $this->_post->ID ) );
 	}
@@ -316,16 +319,25 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_bundled_products_conditions_price_id_has_one_download() {
-		$bundle            = EDD_Helper_Download::create_variable_bundled_download();
+		$bundle            = Helpers\EDD_Helper_Download::create_variable_bundled_download();
 		$bundled_downloads = edd_get_bundled_products( $bundle->ID, 2 );
 
 		$this->assertEquals( 1, count( $bundled_downloads ) );
 	}
 
 	public function test_bundled_products_conditions_no_price_id_has_two_downloads() {
-		$bundle            = EDD_Helper_Download::create_variable_bundled_download();
+		$bundle            = Helpers\EDD_Helper_Download::create_variable_bundled_download();
 		$bundled_downloads = edd_get_bundled_products( $bundle->ID );
 
 		$this->assertEquals( 2, count( $bundled_downloads ) );
+	}
+
+	public function test_download_has_variable_pricing_but_no_prices() {
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
+		update_post_meta( $download->ID, '_variable_pricing', true );
+		update_post_meta( $download->ID, 'edd_variable_prices', array( 0 => '' ) );
+
+		$this->assertTrue( edd_has_variable_prices( $download->ID ) );
+		$this->assertEmpty( edd_get_variable_prices( $download->ID ) );
 	}
 }

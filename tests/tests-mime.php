@@ -1,18 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_mime
  */
 class Tests_Mime extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
 
 	public function testAllowedMimeTypes() {
 		$mime = get_allowed_mime_types();

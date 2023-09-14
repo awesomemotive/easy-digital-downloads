@@ -1,14 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_filters
  */
 class Tests_Filters extends EDD_UnitTestCase {
-
-	public function setUp() {
-		parent::setUp();
-	}
 
 	public function test_the_content() {
 		global $wp_filter;
@@ -37,7 +35,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'edd_no_gateway_error', $wp_filter['init'][10] );
 		$this->assertArrayHasKey( 'edd_listen_for_paypal_ipn', $wp_filter['init'][10] );
 		$this->assertArrayHasKey( 'edd_setup_download_taxonomies', $wp_filter['init'][0] );
-		$this->assertArrayHasKey( 'edd_register_post_type_statuses', $wp_filter['init'][2] );
 		$this->assertArrayHasKey( 'edd_setup_edd_post_types', $wp_filter['init'][1] );
 		$this->assertArrayHasKey( 'edd_process_download', $wp_filter['init'][100] );
 	}
@@ -303,11 +300,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'edd_append_no_cache_param', $wp_filter['edd_settings_misc'][-1] );
 	}
 
-	public function test_edd_admin_sale_notice() {
-		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_admin_email_notice', $wp_filter['edd_admin_sale_notice'][10] );
-	}
-
 	public function test_edd_email_settings() {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_email_template_preview', $wp_filter['edd_purchase_receipt_email_settings'][10] );
@@ -316,16 +308,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 	public function test_edd_view_receipt() {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_render_receipt_in_browser', $wp_filter['edd_view_receipt'][10] );
-	}
-
-	public function test_edd_email_links() {
-		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_resend_purchase_receipt', $wp_filter['edd_email_links'][10] );
-	}
-
-	public function test_edd_send_test_email() {
-		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_send_test_email', $wp_filter['edd_send_test_email'][10] );
 	}
 
 	public function test_edd_purchase() {

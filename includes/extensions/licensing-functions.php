@@ -38,12 +38,11 @@ add_action( 'admin_init', function () {
 	 * even if there are no licensed products.
 	 */
 	if ( empty( $saved_products['timeout'] ) || $saved_products['timeout'] < time() ) {
-		global $edd_licensed_products;
 
 		update_option( 'edd_licensed_extensions', json_encode( array(
 			'timeout'  => strtotime( '+1 day' ),
-			'products' => $edd_licensed_products,
-		) ) );
+			'products' => get_licensed_products(),
+		) ), false );
 	}
 }, 200 );
 
@@ -65,11 +64,7 @@ function get_licensed_extension_slugs() {
 	 * the global is not, but worth a shot.
 	 */
 	if ( empty( $products ) ) {
-		global $edd_licensed_products;
-
-		return ! empty( $edd_licensed_products ) && is_array( $edd_licensed_products )
-			? $edd_licensed_products
-			: array();
+		return get_licensed_products();
 	}
 
 	$products = json_decode( $products, true );
@@ -95,3 +90,25 @@ add_action( 'plugins_loaded', function() {
 	 */
 	do_action( 'edd_extension_license_init', EDD()->extensionRegistry );
 }, PHP_INT_MAX );
+
+/**
+ * Helper function to get the actually licensed products from the global.
+ * In 3.1.1.2, all products using the licensing class add their slug to the global,
+ * but we are now tracking unlicensed products as well as licensed ones.
+ *
+ * @return void
+ */
+function get_licensed_products() {
+	$products = array();
+	global $edd_licensed_products;
+	if ( empty( $edd_licensed_products ) || ! is_array( $edd_licensed_products ) ) {
+		return $products;
+	}
+	foreach ( $edd_licensed_products as $slug => $is_licensed ) {
+		if ( $is_licensed ) {
+			$products[] = $slug;
+		}
+	}
+
+	return $products;
+}

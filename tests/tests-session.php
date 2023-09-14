@@ -1,17 +1,19 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_session
  */
 class Tests_Session extends EDD_UnitTestCase {
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 		new \EDD_Session;
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 	}
 

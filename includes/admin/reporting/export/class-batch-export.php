@@ -328,13 +328,22 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @return array
 	 */
 	protected function get_date_query() {
-		return array(
-			array(
-				'after'     => $this->start ? date( 'Y-m-d 00:00:00', strtotime( $this->start ) ) : '',
-				'before'    => $this->end ? date( 'Y-m-d 23:59:59', strtotime( $this->end ) ) : '',
-				'inclusive' => true,
-			),
+		$date_query = array(
+			'after'     => '',
+			'before'    => '',
+			'inclusive' => true,
 		);
-	}
 
+		if ( $this->start ) {
+			$start_date_string   = EDD()->utils->get_date_string( $this->start );
+			$date_query['after'] = edd_get_utc_date_string( $start_date_string );
+		}
+
+		if ( $this->end ) {
+			$end_date_string      = EDD()->utils->get_date_string( $this->end, 23, 59, 59 );
+			$date_query['before'] = edd_get_utc_date_string( $end_date_string );
+		}
+
+		return array( $date_query );
+	}
 }

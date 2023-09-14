@@ -1,13 +1,11 @@
 <?php
-namespace EDD\Reports\Data\Charts\v2;
+namespace EDD\Tests\Data\Charts\V2;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Reports\Data\Chart_Endpoint;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
 
 /**
  * Tests for the Dataset class.
@@ -18,7 +16,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Charts\v2\Dataset
  */
-class Dataset_Tests extends \EDD_UnitTestCase {
+class Dataset_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @var \EDD\Reports\Data\Charts\v2\Dataset
@@ -28,7 +26,7 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Set up before each test.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->mock_Dataset = $this->get_Dataset_mock( 'test' );
@@ -132,7 +130,7 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 			),
 		) );
 
-		$this->assertContains( 'missing_chart_data', $dataset->get_errors()->get_error_codes() );
+		$this->assertTrue( in_array( 'missing_chart_data', $dataset->get_errors()->get_error_codes() ) );
 	}
 
 	/**

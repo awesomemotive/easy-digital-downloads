@@ -1,11 +1,10 @@
 <?php
-namespace EDD\Reports\Data;
+namespace EDD\Tests\Reports\Data;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+use EDD\Reports\Data\Table_Endpoint;
+new ReportsInit();
 
 /**
  * Tests for the Tile_Endpoint object.
@@ -16,7 +15,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Table_Endpoint
  */
-class Table_Endpoint_Tests extends \EDD_UnitTestCase {
+class Table_Endpoint_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::check_view()

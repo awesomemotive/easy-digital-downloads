@@ -1,19 +1,12 @@
 <?php
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @group edd_activation
  */
 class Tests_Activation extends EDD_UnitTestCase {
-
-	/**
-	 * SetUp test class.
-	 *
-	 * @since 2.1.0
-	 */
-	public function setUp() {
-		parent::setUp();
-	}
 
 	/**
 	 * Test if the global settings are set and have settings pages.
@@ -40,18 +33,14 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$origin_upgraded_from = get_option( 'edd_version_upgraded_from' );
 		$origin_edd_version   = edd_get_db_version();
 
-		// Prepare values for testing
-		delete_option( 'edd_settings' ); // Needed for the install test to succeed
-		update_option( 'edd_version', '2.1' );
-		$edd_options = array();
-
+		parent::_delete_all_edd_data();
 		edd_install();
 
 		// Test that function exists
 		$this->assertTrue( function_exists( 'edd_create_protection_files' ) );
 
 		// Test the edd_version_upgraded_from value
-		$this->assertEquals( get_option( 'edd_version_upgraded_from' ), '2.1' );
+		$this->assertFalse( get_option( 'edd_version_upgraded_from' ) );
 
 		// Test that new pages are created, and not the same as the already created ones.
 		// This is to make sure the test is giving the most accurate results.
@@ -66,10 +55,7 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'purchase_history_page', $new_settings );
 		$this->assertNotEquals( $origin_edd_options['purchase_history_page'], $new_settings['purchase_history_page'] );
 
-		// Check for the new confirmation page if the blocks files are loaded and the WordPress version is 5.8 or higher.
-		if ( file_exists( EDD_PLUGIN_DIR . 'includes/blocks/edd-blocks.php' ) && version_compare( get_bloginfo( 'version' ), '5.8', '>=' ) ) {
-			$this->assertArrayHasKey( 'confirmation_page', $new_settings );
-		}
+		$this->assertArrayHasKey( 'confirmation_page', $new_settings );
 
 		$this->assertEquals( edd_format_db_version( EDD_VERSION ), get_option( 'edd_version' ) );
 
@@ -87,7 +73,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$edd_options = $origin_edd_options;
 		update_option( 'edd_settings', $edd_options );
 		update_option( 'edd_version', $origin_edd_version );
-
 	}
 
 	public function test_edd_upgrades_have_completed_upgrade_payment_taxes_is_true() {
@@ -248,4 +233,11 @@ class Tests_Activation extends EDD_UnitTestCase {
 
 	}
 
+	public function test_automatic_upgrade_updates_edd_version() {
+		update_option( 'edd_version', '2.1' );
+		edd_do_automatic_upgrades();
+
+		$this->assertEquals( '2.1', get_option( 'edd_version_upgraded_from' ) );
+		$this->assertEquals( edd_format_db_version( EDD_VERSION ), get_option( 'edd_version' ) );
+	}
 }

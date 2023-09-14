@@ -1,7 +1,9 @@
 <?php
-namespace EDD;
+namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Reports as Reports;
+use EDD\Utilities;
 
 /**
  * Tests for EDD_Utilities.
@@ -10,7 +12,7 @@ use EDD\Reports as Reports;
  *
  * @coversDefaultClass \EDD\Utilities
  */
-class Utilities_Tests extends \EDD_UnitTestCase {
+class Utilities_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * \EDD\Utilities fixture.
@@ -58,9 +60,6 @@ class Utilities_Tests extends \EDD_UnitTestCase {
 			array( $utils_dir . 'exceptions/class-invalid-argument.php' ),
 			array( $utils_dir . 'exceptions/class-invalid-parameter.php' ),
 
-			// Date management.
-			array( $utils_dir . 'class-date.php' ),
-
 			// Registry.
 			array( $utils_dir . 'class-registry.php' ),
 		);
@@ -85,7 +84,7 @@ class Utilities_Tests extends \EDD_UnitTestCase {
 	public function test_get_registry_with_invalid_registry_should_return_a_WP_Error_including_code_invalid_registry() {
 		$result = self::$utils->get_registry( 'fake' );
 
-		$this->assertContains( 'invalid_registry', $result->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_registry', $result->get_error_codes() ) );
 	}
 
 	/**
@@ -117,7 +116,7 @@ class Utilities_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_date_default_date_string_and_timeszone_should_return_a_Carbon_instance() {
-		$this->assertInstanceOf( '\Carbon\Carbon', self::$utils->date() );
+		$this->assertInstanceOf( '\EDD\Utils\Date', self::$utils->date() );
 	}
 
 	/**

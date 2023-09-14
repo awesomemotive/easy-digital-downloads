@@ -117,12 +117,7 @@ var EDD_Download_Configuration = {
 			clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
 
 			// Setup chosen fields again if they exist
-			clone.find( '.edd-select-chosen' ).each( function() {
-				const el = $( this );
-				el.chosen( getChosenVars( el ) );
-			} );
-			clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
-			clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
+			EDD_Download_Configuration.initChosen( clone );
 		} );
 	},
 
@@ -211,18 +206,47 @@ var EDD_Download_Configuration = {
 	},
 
 	type: function() {
+		const product_files = $( '#edd_product_files' );
+		setTimeout( function () {
+			if ( !edd_vars.download_has_files && 'service' === $( '#_edd_product_type' ).val() ) {
+				product_files.hide();
+			}
+		}, 100 );
 		$( document.body ).on( 'change', '#_edd_product_type', function( e ) {
-			const edd_products = $( '#edd_products' ),
-				edd_download_files = $( '#edd_download_files' ),
+			const product_type = $( this ).val(),
 				edd_download_limit_wrap = $( '#edd_download_limit_wrap' );
 
-			if ( 'bundle' === $( this ).val() ) {
-				edd_products.show();
-				edd_download_files.hide();
+			product_files.addClass( 'ajax--loading' );
+			let data = {
+				action: 'edd_swap_download_type',
+				product_type: product_type,
+				post_id: edd_vars.post_id,
+			}
+			$.post( ajaxurl, data, function ( response ) {
+				if ( response.success ) {
+					product_files.find( '.inside' ).empty().append( response.data.html );
+					EDD_Download_Configuration.initChosen( product_files );
+				}
+				product_files.removeClass( 'ajax--loading' );
+			} );
+
+			if ( 'bundle' === product_type ) {
+				product_files.show();
 				edd_download_limit_wrap.hide();
+			} else if ( 'service' === $( this ).val() ) {
+				const has_files = product_files.find( '.edd_upload_field' ).toArray().some( el => !!el.value );
+				if ( !has_files ) {
+					// Hide the product files after a brief timeout to override All Access.
+					setTimeout( function () {
+						product_files.hide();
+					}, 100 );
+					edd_download_limit_wrap.hide();
+				} else {
+					product_files.show();
+					edd_download_limit_wrap.show();
+				}
 			} else {
-				edd_products.hide();
-				edd_download_files.show();
+				product_files.show();
 				edd_download_limit_wrap.show();
 			}
 		} );
@@ -282,6 +306,8 @@ var EDD_Download_Configuration = {
 				view.unset( 'gallery' );
 				view.unset( 'featured-image' );
 				view.unset( 'embed' );
+				view.unset( 'playlist' );
+				view.unset( 'video-playlist' );
 
 				// Initialize the views in our view object.
 				view.set( views );
@@ -401,6 +427,15 @@ var EDD_Download_Configuration = {
 			}
 			first_input.focus();
 		} );
+	},
+
+	initChosen: function ( element ) {
+		element.find( '.edd-select-chosen' ).each( function () {
+			const el = $( this );
+			el.chosen( getChosenVars( el ) );
+		} );
+		element.find( '.edd-select-chosen' ).css( 'width', '100%' );
+		element.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 	}
 };
 

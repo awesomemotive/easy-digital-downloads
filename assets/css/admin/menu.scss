@@ -10,6 +10,17 @@
 @import "~@wordpress/base-styles/breakpoints";
 @import "../variables/colors";
 
+
+/* Main Menu
+-------------------------------------------------------------- */
+#menu-posts-download .wp-submenu {
+	display: flex;
+	flex-wrap: wrap;
+	li {
+		width: 100%;
+	}
+}
+
 /* Submenu Styles
 -------------------------------------------------------------- */
 
@@ -29,7 +40,7 @@
 #menu-posts-download li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
 #menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
 #menu-posts-download li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
-#menu-posts-download li:nth-last-child(3) a:after {
+#menu-posts-download li:nth-last-child(2) a:after {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	display: block;
 	float: left;
@@ -65,4 +76,21 @@ ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 	pointer-events: none;
 	border-right-color: $wp-gray-0;
 	margin-top: 2px;
+}
+
+/* Onboarding Submenu Item */
+a.edd-onboarding__menu-item {
+	background: #dd823b !important;
+	color: $white !important;
+	font-weight: 600;
+	&:hover {
+		color: $black !important;
+	}
+}
+
+a.edd-sidebar__upgrade-pro,
+a.edd-sidebar__upgrade-pro:hover {
+	background-color: #1da867 !important;
+	color: $white !important;
+	font-weight: 600;
 }

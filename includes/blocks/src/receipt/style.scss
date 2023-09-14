@@ -1,0 +1,10 @@
+@import "../scss/row";
+@import "../scss/forms";
+@import "../scss/receipt";
+
+.edd-blocks-receipt__items {
+	.edd-blocks__row {
+		border-bottom: 1px solid var(--edd-blocks-light-grey);
+		padding: .5rem 0;
+	}
+}

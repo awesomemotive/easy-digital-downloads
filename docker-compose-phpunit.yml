@@ -2,16 +2,21 @@
 version: "3.7"
 services:
     wordpress:
-        image: public.ecr.aws/q7y6e9n2/unit-test-images/php:${TEST_PHP_VERSION}-legacy
+        image: public.ecr.aws/q7y6e9n2/unit-test-images/php:${TEST_PHP_VERSION}
         depends_on:
-            - mysql
+            db:
+              condition: service_healthy
+        links:
+            - db:mysql
         volumes:
             - .:/app
         working_dir: /app
-        command: [ "bin/run-tests-internal-only.sh", "wordpress_test", "root", "", "mysql", "${TEST_WP_VERSION}", "${FILTER}" ]
-    mysql:
-        image: mariadb:10.2
+        command: [ "bin/run-tests-internal-only.sh", "wordpress_test", "root", "", "mysql", "${TEST_WP_VERSION}", "${FILTER}", 'true' ]
+    db:
+        image: mariadb:10.4
         environment:
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
             MYSQL_DATABASE: "wordpress_test"
             MYSQL_ROOT_PASSWORD: ""
+        healthcheck:
+            test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect" ]

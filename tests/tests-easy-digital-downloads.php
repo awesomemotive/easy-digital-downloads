@@ -1,4 +1,7 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * EDD class tests.
@@ -8,12 +11,12 @@
 class Tests_EDD extends EDD_UnitTestCase {
 	protected $object;
 
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 		$this->object = EDD();
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 	}
 
@@ -114,7 +117,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-attribute-not-found.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-invalid-argument.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-invalid-parameter.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/admin/add-ons.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php' ),

@@ -222,6 +222,7 @@ abstract class List_Table extends \WP_List_Table {
 		$orderby  = $this->get_request_var( 'orderby' );
 		$order    = $this->get_request_var( 'order'   );
 		$input_id = $input_id . '-search-input';
+		$status   = $this->get_status();
 
 		if ( ! empty( $orderby ) ) {
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $orderby ) . '" />';
@@ -229,6 +230,10 @@ abstract class List_Table extends \WP_List_Table {
 
 		if ( ! empty( $order ) ) {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $order ) . '" />';
+		}
+
+		if ( ! empty( $status ) ) {
+			echo '<input type="hidden" name="status" value="' . esc_attr( $status ) . '" />';
 		}
 
 		?>

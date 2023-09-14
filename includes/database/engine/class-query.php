@@ -180,6 +180,22 @@ class Query extends Base {
 	);
 
 	/**
+	 * Compare operators supported by this query.
+	 *
+	 * These are restricted to values that can be done on numeric values.
+	 */
+	protected $supported_compare_opperators = array(
+		'=',
+		'!=',
+		'>',
+		'>=',
+		'<',
+		'<=',
+		'BETWEEN',
+		'NOT BETWEEN'
+	);
+
+	/**
 	 * Meta query container.
 	 *
 	 * @since 1.0.0
@@ -316,6 +332,8 @@ class Query extends Base {
 	 *                                           Default false.
 	 *     @type bool         $update_meta_cache Whether to prime the meta cache for found items.
 	 *                                           Default false.
+	 *     @type array        ${column}__compare An array to compare one column against another value, including another column.
+	 *                                           Restircted to numeric column types and values.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -477,6 +495,13 @@ class Query extends Base {
 		$possible_not_ins = $this->get_columns( array( 'not_in' => true ), 'and', 'name' );
 		foreach ( $possible_not_ins as $in ) {
 			$key = "{$in}__not_in";
+			$this->query_var_defaults[ $key ] = false;
+		}
+
+		// Possible compares.
+		$possible_compares = $this->get_columns( array( 'compare' => true ), 'and', 'name' );
+		foreach ( $possible_compares as $compare ) {
+			$key = "{$compare}__compare";
 			$this->query_var_defaults[ $key ] = false;
 		}
 
@@ -1206,6 +1231,16 @@ class Query extends Base {
 				}
 			}
 
+			// __compare
+			if ( true === $column->compare ) {
+				$where_id = "{$column->name}__compare";
+
+				// Parse item for a compare clause.
+				if ( isset( $this->query_vars[ $where_id ] ) && is_array( $this->query_vars[ $where_id  ] ) ) {
+					$where[ $where_id] = $this->parse_compare( $this->query_vars[ $where_id ], $column );
+				}
+			}
+
 			// date_query
 			if ( true === $column->date_query ) {
 				$where_id    = "{$column->name}_query";
@@ -1481,6 +1516,110 @@ class Query extends Base {
 		return ( 'ASC' === strtoupper( $order ) )
 			? 'ASC'
 			: 'DESC';
+	}
+
+	/**
+	 * Parses a 'compare' query variable and cast it to a valid compare operator.
+	 *
+	 * This is used to compare one column in a table against a value, or another column in the same table.
+	 * Note: Currently this only supports numeric values. Added in EDD 3.2, only the adjustments max_uses and use_count are supported.
+	 *
+	 * Adding a compare can either be a single array or an array of arrays, with a `relation` key. There is no default relation, so it will be ignored if not set.
+	 *
+	 * Not yet supported is relations within relations.
+	 *
+	 * Example:
+	 * Get a column with values ranging from 11 and 19
+	 * <column>__compare => array(
+	 *     'relation' => 'AND',
+	 *     array(
+	 *         'value'   => 10,
+	 *         'compare' => '>',
+	 *     ),
+	 *     array(
+	 *         'value'   => 20,
+	 *         'compare' => '<',
+	 *     ),
+	 * )
+	 *
+	 * Check a column is greater than another column in the same table.
+	 * <column>__compare => array(
+	 *     'value'   => 'another_column',
+	 *     'compare' => '>',
+	 * )
+	 */
+	private function parse_compare( $compare, $column ) {
+		// Check if a relation key exists. Save it for the main loop.
+		$relation = isset( $compare['relation'] ) ? $compare['relation'] : false;
+		unset( $compare['relation'] );
+
+		$where = '';
+
+		// If we have multiple arrays, we need to itterate over them.
+		if ( isset( $compare[0] ) ) {
+			$where = array();
+
+			foreach ( $compare as $compare_array ) {
+				$compare_hash  = md5( wp_json_encode( $compare_array ) );
+				$compare_where = $this->parse_compare( $compare_array, $column );
+
+				if ( ! empty( $compare_where ) ) {
+					$where[ $compare_hash ] = $compare_where;
+				}
+			}
+		}
+
+		if ( ! is_array( $where ) ) {
+
+			// Continue if we don't have a value or an operator.
+			if ( ! isset( $compare['value'] ) || ! isset( $compare['compare'] ) ) {
+				return false;
+			}
+
+			// Ensure we have a valid compare operator in the compare array key.
+			$operator = in_array( $compare['compare'], $this->supported_compare_opperators, true )
+				? $compare['compare']
+				: false;
+
+			$compare_with = false;
+			$value_type   = '%d';
+			// Only add the compare clause if we have a valid operator.
+			if ( false !== $operator ) {
+				$compare_with = $compare['value'];
+
+				// If the value isn't numeric, we are comapreing with another column.
+				if ( ! is_numeric( $compare_with ) ) {
+
+					// Verify this column supports doing a 'compare'.
+					$supports_compare = $this->get_column_field( array( 'name' => $compare_with ), 'compare', false );
+					if ( false === $supports_compare ) {
+						return false;
+					}
+
+					// Define the compare with column, including the alias.
+					$compare_with = "{$this->table_alias}.{$compare_with}";
+
+					// A column compare
+					$value_type   = '%1s';
+				} elseif ( is_float( $compare_with ) ) {
+					$compare_with = floatval( $compare_with );
+					$value_type = '%f';
+				}
+
+				$statement = "{$this->table_alias}.{$column->name} {$operator} {$value_type}";
+				$where     = $this->get_db()->prepare( $statement, $compare_with );
+
+				// Return the where statement for an individual comparrison.
+				return $where;
+			}
+		}
+
+		// If we have a relation, we need to wrap the where clauses in parenthesis.
+		if ( false !== $relation ) {
+			$where = '(' . implode( ' ' . strtoupper( $relation ) . ' ', $where ) . ')';
+		}
+
+		return $where;
 	}
 
 	/** Private Shapers *******************************************************/
@@ -1794,6 +1933,16 @@ class Query extends Base {
 		// Transition item data
 		$this->transition_item( $save, $item_id );
 
+		/**
+		 * Adds a hook for a successfully added item.
+		 * Custom for EDD.
+		 *
+		 * @since 3.1.1.4
+		 * @param int    $item_id The item id.
+		 * @param array  $data    The array of data for the update.
+		 */
+		do_action( $this->apply_prefix( "{$this->item_name}_added" ), $item_id, $data );
+
 		// Return result
 		return $item_id;
 	}
@@ -1819,15 +1968,15 @@ class Query extends Base {
 		$primary = $this->get_primary_column_name();
 
 		// Get item to update (from database, not cache)
-		$item    = $this->get_item_raw( $primary, $item_id );
+		$item_raw = $this->get_item_raw( $primary, $item_id );
 
 		// Bail if item does not exist to update
-		if ( empty( $item ) ) {
+		if ( empty( $item_raw ) ) {
 			return false;
 		}
 
 		// Cast as an array for easier manipulation
-		$item = (array) $item;
+		$item = (array) $item_raw;
 
 		// Unset the primary key from data to parse
 		unset( $data[ $primary ] );
@@ -1876,6 +2025,17 @@ class Query extends Base {
 
 		// Transition item data
 		$this->transition_item( $save, $item );
+
+		/**
+		 * Adds a hook for a successfully updated item.
+		 * Custom for EDD.
+		 *
+		 * @since 3.1.1.4
+		 * @param int    $item_id  The item id.
+		 * @param array  $data     The array of data for the update.
+		 * @param object $item_raw The original item.
+		 */
+		do_action( $this->apply_prefix( "{$this->item_name}_updated" ), $item_id, $data, $item_raw );
 
 		// Return result
 		return $result;
@@ -1929,6 +2089,15 @@ class Query extends Base {
 		// Clean caches on successful delete
 		$this->delete_all_item_meta( $item_id );
 		$this->clean_item_cache( $item );
+
+		/**
+		 * Adds a hook for a successfully deleted item.
+		 * Custom for EDD.
+		 *
+		 * @since 3.1.1.4
+		 * @param int $item_id  The item id.
+		 */
+		do_action( $this->apply_prefix( "{$this->item_name}_deleted" ), $item_id );
 
 		// Return result
 		return $result;

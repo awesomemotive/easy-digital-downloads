@@ -25,7 +25,7 @@ function edd_admin_header() {
 	$current_page        = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
 	$is_single_view      = (bool) apply_filters( 'edd_admin_is_single_view', ! empty( $_GET['view'] ) );
 
-	$page_title = '';
+	$page_title = __( 'Downloads', 'easy-digital-downloads' );
 	switch( $current_page ) {
 		case 'edd-settings':
 			$page_title = __( 'Settings', 'easy-digital-downloads' );
@@ -45,18 +45,19 @@ function edd_admin_header() {
 		case 'edd-tools':
 			$page_title = __( 'Tools', 'easy-digital-downloads' );
 			break;
+		case 'edd-addons':
+			$page_title = __( 'View Extensions', 'easy-digital-downloads' );
+			if ( edd_is_pro() ) {
+				$page_title = __( 'Manage Extensions', 'easy-digital-downloads' );
+			}
+			break;
 		default:
 			if ( ! empty( $_GET['page'] ) ) {
 				$page_title = ucfirst( str_replace( array( 'edd-', 'fes-' ), '', $current_page ) );
-			} else {
-				if ( ! empty( $_GET['post_type'] ) ) {
-					$post_type  = get_post_type_object( $_GET['post_type'] );
-					$page_title = $post_type->labels->name;
-				} else {
-					$page_title = __( 'Downloads', 'easy-digital-downloads' );
-				}
+			} elseif ( ! empty( $_GET['post_type'] ) ) {
+				$post_type  = get_post_type_object( $_GET['post_type'] );
+				$page_title = $post_type->labels->name;
 			}
-
 			break;
 	}
 
@@ -223,7 +224,11 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 
 		// Add to links array
 		$links[ $section_id ] = '<li class="' . esc_attr( $class ) . '"><a class="' . esc_attr( $class ) . '" href="' . esc_url( $tab_url ) . '">' . esc_html( $section_name ) . '</a><li>';
-	} ?>
+	}
+	if ( count( $links ) < 2 ) {
+		return;
+	}
+	?>
 
 	<div class="wp-clearfix">
 		<ul class="subsubsub edd-settings-sub-nav">
@@ -378,6 +383,10 @@ function edd_options_page() {
  * @since 3.0
  */
 function edd_tax_settings_display_tax_disabled_notice() {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	if ( edd_use_taxes() ) {
 		return;
 	}
@@ -394,3 +403,47 @@ function edd_tax_settings_display_tax_disabled_notice() {
 
 }
 add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_settings_display_tax_disabled_notice', 10 );
+
+/**
+ * Display help text at the top of the Licenses tab.
+ *
+ * @since 3.1.1.4
+ * @return void
+ */
+function edd_license_settings_help_text() {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
+	?>
+	<div class="edd-licenses__description">
+		<p>
+			<?php esc_html_e( 'Manage extensions for Easy Digital Downloads which are not included with a pass. Having an active license for your extensions gives you access to updates when they\'re available.', 'easy-digital-downloads' ); ?>
+		</p>
+		<?php
+		$pass_manager = new \EDD\Admin\Pass_Manager();
+		if ( ! $pass_manager->highest_license_key ) :
+			?>
+			<p>
+				<?php
+				$url = edd_get_admin_url(
+					array(
+						'page' => 'edd-settings',
+						'tab'  => 'general',
+					)
+				);
+				printf(
+					wp_kses_post(
+						/* translators: 1. opening anchor tag; 2. closing anchor tag */
+						__( 'Have a pass? You\'re ready to set up EDD (Pro). %1$sActivate Your Pass%2$s' )
+					),
+					'<a href="' . esc_url( $url ) . '" class="button button-primary">',
+					'</a>'
+				);
+				?>
+			</p>
+		<?php endif; ?>
+	</div>
+	<?php
+}
+add_action( 'edd_settings_tab_top_licenses_main', 'edd_license_settings_help_text' );

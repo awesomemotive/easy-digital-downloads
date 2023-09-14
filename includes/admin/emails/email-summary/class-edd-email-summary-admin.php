@@ -47,6 +47,16 @@ class EDD_Email_Summary_Admin {
 	 * @param array $data GET Request array.
 	 */
 	public function send_test_email_summary() {
+
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			echo wp_json_encode(
+				array(
+					'status'  => 'error',
+					'message' => __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ),
+				)
+			);
+		}
+
 		add_action( 'wp_mail_failed', array( $this, 'mail_failed' ) );
 
 		$output       = array(

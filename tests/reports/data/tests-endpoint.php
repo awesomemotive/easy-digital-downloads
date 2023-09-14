@@ -1,11 +1,10 @@
 <?php
-namespace EDD\Reports\Data;
+namespace EDD\Tests\Reports\Data;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
+use EDD\Reports\Data\Tile_Endpoint;
 
 /**
  * Tests for the Endpoint object.
@@ -17,7 +16,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Endpoint
  */
-class Endpoint_Tests extends \EDD_UnitTestCase {
+class Endpoint_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Endpoint registry fixture.
@@ -30,7 +29,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Set up fixtures once.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->registry = new \EDD\Reports\Data\Endpoint_Registry();
@@ -41,7 +40,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->registry->exchangeArray( array() );
 
 		parent::tearDown();
@@ -80,7 +79,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'invalid_view', $errors->get_error_code() );
+		$this->assertStringContainsString( 'invalid_view', $errors->get_error_code() );
 	}
 
 	/**
@@ -185,7 +184,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'invalid_view_arg_type', $errors->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_view_arg_type', $errors->get_error_codes() ) );
 	}
 
 	/**
@@ -227,7 +226,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'missing_display_callback', $errors->get_error_codes() );
+		$this->assertTrue( in_array( 'missing_display_callback', $errors->get_error_codes() ) );
 	}
 
 	/**
@@ -250,7 +249,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'invalid_view_arg_type', $errors->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_view_arg_type', $errors->get_error_codes() ) );
 	}
 
 	/**
@@ -292,7 +291,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'missing_data_callback', $errors->get_error_codes() );
+		$this->assertTrue( in_array( 'missing_data_callback', $errors->get_error_codes() ) );
 	}
 
 	/**
@@ -315,7 +314,7 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 
 		$errors = $endpoint->get_errors();
 
-		$this->assertContains( 'invalid_view_arg_type', $errors->get_error_codes() );
+		$this->assertTrue( in_array( 'invalid_view_arg_type', $errors->get_error_codes() ) );
 	}
 
 	/**

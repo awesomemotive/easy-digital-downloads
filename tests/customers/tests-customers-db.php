@@ -1,6 +1,4 @@
 <?php
-namespace EDD\Customers;
-
 /**
  * Customers DB Tests.
  *
@@ -8,8 +6,11 @@ namespace EDD\Customers;
  * @group database
  * @group edd_customers
  */
+namespace EDD\Tests\Customers;
 
-class Tests_Customers_DB extends \EDD_UnitTestCase {
+use EDD\Tests\Helpers;
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+class Tests_Customers_DB extends EDD_UnitTestCase {
 
 	/**
 	 * Customers fixture.
@@ -193,20 +194,94 @@ class Tests_Customers_DB extends \EDD_UnitTestCase {
 		$this->assertEquals( self::$customers[3], $updated_customer->id );
 	}
 
+	public function test_querying_customer_by_secondary_email_should_return_customer() {
+		$customer_id   = self::$customers[4];
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => $customer_id,
+				'email'       => 'totallynewemail@edd.test',
+				'type'        => 'secondary',
+			)
+		);
+
+		$customers = edd_get_customers(
+			array(
+				'email' => 'totallynewemail@edd.test',
+			)
+		);
+		$customer = reset( $customers );
+
+		$this->assertEquals( $customer_id, $customer->id );
+	}
+
+	public function test_querying_customer_by_secondary_email_in_should_return_customers() {
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => self::$customers[3],
+				'email'       => 'totallynewemail3@edd.test',
+				'type'        => 'secondary',
+			)
+		);
+
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => self::$customers[4],
+				'email'       => 'totallynewemail4@edd.test',
+				'type'        => 'secondary',
+			)
+		);
+
+		$customers = edd_get_customers(
+			array(
+				'email__in' => array( 'totallynewemail3@edd.test', 'totallynewemail4@edd.test' ),
+			)
+		);
+
+		$found_customer_ids = array_map( 'absint', wp_list_pluck( $customers, 'id' ) );
+
+		$this->assertTrue( in_array( self::$customers[3], $found_customer_ids, true ) );
+		$this->assertTrue( in_array( self::$customers[4], $found_customer_ids, true ) );
+	}
+
+	public function test_querying_customer_by_secondary_email_not_in_should_not_return_customer() {
+		$customer_id = self::$customers[4];
+		$customer    = edd_get_customer( $customer_id );
+
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => $customer_id,
+				'email'       => 'totallynewemail@edd.test',
+				'type'        => 'secondary',
+			)
+		);
+
+		$customers = edd_get_customers(
+			array(
+				'email__not_in' => array( 'totallynewemail@edd.test', $customer->email ),
+			)
+		);
+
+		$found_customer_ids = array_map( 'absint', wp_list_pluck( $customers, 'id' ) );
+
+		$this->assertFalse( in_array( $customer_id, $found_customer_ids, true ) );
+	}
+
 	public function test_legacy_attach_payment_should_return_true() {
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		// Legacy method that should be handled by Customer back-compat class.
 		EDD()->customers->attach_payment( self::$customers[0], $payment_id );
 
 		$customer    = edd_get_customer( self::$customers[0] );
-		$payment_ids = array_map( 'absint', explode( ',', $customer->payment_ids ) );
+		$payment_ids = array_values( explode( ',', $customer->payment_ids ) );
+		$order_ids   = $customer->order_ids;
 
 		$this->assertTrue( in_array( $payment_id, $payment_ids ) );
+		$this->assertTrue( in_array( $payment_id, $order_ids ) );
 	}
 
 	public function test_legacy_remove_payment_should_return_false() {
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
 
 		// Legacy method that should be handled by Customer back-compat class.
 		EDD()->customers->attach_payment( self::$customers[0], $payment_id );

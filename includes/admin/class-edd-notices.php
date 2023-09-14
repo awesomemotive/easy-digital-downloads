@@ -30,6 +30,7 @@ class EDD_Notices {
 	 * @since 2.3
 	 */
 	public function __construct() {
+		add_action( 'admin_notices',       array( $this, 'remove_notices' ), 0   );
 		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' )     );
 		add_action( 'admin_init',          array( $this, 'add_notices'     ), 20 );
 		add_action( 'admin_notices',       array( $this, 'display_notices' ), 30 );
@@ -50,15 +51,25 @@ class EDD_Notices {
 	 */
 	public function add_notice( $args = array() ) {
 
+		// Avoid malformed notices variable
+		if ( ! is_array( $this->notices ) ) {
+			$this->notices = array();
+		}
+
 		// Parse args
 		$r = wp_parse_args( $args, array(
 			'id'             => '',
 			'message'        => '',
 			'class'          => false,
-			'is_dismissible' => true
+			'is_dismissible' => true,
 		) );
 
-		$default_class ='updated';
+		// Prevent a notice from being added more than once.
+		if ( ! empty( $r['id'] ) && array_key_exists( $r['id'], $this->notices ) ) {
+			return;
+		}
+
+		$default_class = 'updated';
 
 		// One message as string
 		if ( is_string( $r['message'] ) ) {
@@ -92,9 +103,10 @@ class EDD_Notices {
 		}
 
 		// CSS Classes
-		$classes = ! empty( $r['class'] )
-			? array( $r['class'] )
-			: array( $default_class );
+		$classes = array( $default_class );
+		if ( ! empty( $r['class'] ) ) {
+			$classes = explode( ' ', $r['class'] );
+		}
 
 		// Add dismissible class
 		if ( ! empty( $r['is_dismissible'] ) ) {
@@ -105,13 +117,8 @@ class EDD_Notices {
 		$message = '<div class="notice ' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '">' . $message . '</div>';
 		$message = str_replace( "'", "\'", $message );
 
-		// Avoid malformed notices variable
-		if ( ! is_array( $this->notices ) ) {
-			$this->notices = array();
-		}
-
 		// Add notice to notices array
-		$this->notices[] = $message;
+		$this->notices[ $r['id'] ] = $message;
 	}
 
 	/**
@@ -121,27 +128,26 @@ class EDD_Notices {
 	 */
 	public function add_notices() {
 
-		// User can edit pages
-		if ( current_user_can( 'edit_pages' ) ) {
-			$this->add_page_notices();
-		}
-
-		// User can view shop reports
+		// User can view shop reports.
 		if ( current_user_can( 'view_shop_reports' ) ) {
 			$this->add_reports_notices();
 		}
 
-		// User can manage the entire shop
+		// User can manage the entire shop.
 		if ( current_user_can( 'manage_shop_settings' ) ) {
-			$this->add_system_notices();
 			$this->add_data_notices();
 			$this->add_settings_notices();
+			$this->add_order_upgrade_notice();
+			$this->add_stripe_notice();
+			$this->add_paypal_sync_notice();
 		}
 
-		// Generic notices
+		// Generic notices.
 		if ( ! empty( $_REQUEST['edd-message'] ) ) {
 			$this->add_user_action_notices( $_REQUEST['edd-message'] );
 		}
+
+		$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'edd-message' ), $_SERVER['REQUEST_URI'] );
 	}
 
 	/**
@@ -180,6 +186,10 @@ class EDD_Notices {
 	 * @since 2.6.0 bbPress (r6771)
 	 */
 	public function display_notices() {
+		$screen = get_current_screen();
+		if ( 'site-health' === $screen->id ) {
+			return;
+		}
 
 		$this->show_debugging_notice();
 
@@ -205,12 +215,54 @@ class EDD_Notices {
 		}
 	}
 
+	/**
+	 * Remove unneed admin notices from EDD admin screens.
+	 *
+	 * @since 3.1.1
+	 * @return void
+	 */
+	public function remove_notices() {
+		if ( ! edd_is_admin_page() ) {
+			return;
+		}
+
+		global $wp_filter;
+		$all_hooks = $wp_filter['admin_notices']->callbacks;
+
+		foreach ( $all_hooks as $priority => $priority_actions ) {
+
+			$priority_functions = wp_list_pluck( $priority_actions, 'function' );
+
+			foreach ( $priority_functions as $key => $function ) {
+				if ( is_array( $function ) ) {
+
+					if ( ! empty( $function[0] ) && is_object( $function[0] ) ) {
+						$class_name = strtolower( get_class( $function[0] ) );
+
+						if ( false === strpos( $class_name, 'edd' ) ) {
+							unset( $all_hooks[ $priority ][ $key ] );
+						}
+					}
+				} elseif ( is_string( $function ) ) {
+
+					$function = strtolower( $function );
+					if ( false === strpos( $function, 'edd' ) ) {
+
+						unset( $all_hooks[ $priority ][ $key ] );
+					}
+				}
+			}
+		}
+		$wp_filter['admin_notices']->callbacks = $all_hooks;
+	}
+
 	/** Private Methods *******************************************************/
 
 	/**
 	 * Notices about missing pages
 	 *
 	 * @since 3.0
+	 * @deprecated 3.1.2
 	 */
 	private function add_page_notices() {
 
@@ -219,9 +271,10 @@ class EDD_Notices {
 		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-no-purchase-page',
+				/* translators: %s: URL to the settings page */
 				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'general', 'section' => 'pages' ) ) ) ),
 				'class'          => 'error',
-				'is_dismissible' => false
+				'is_dismissible' => false,
 			) );
 		}
 	}
@@ -239,6 +292,7 @@ class EDD_Notices {
 	 * Notices for the entire shop
 	 *
 	 * @since 3.0
+	 * @deprecated 3.1.2
 	 */
 	private function add_system_notices() {
 
@@ -273,8 +327,10 @@ class EDD_Notices {
 				'class'          => 'error',
 				'is_dismissible' => false,
 				'message'        => array(
+					/* translators: %s: Uploads directory */
 					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
 					__( 'To protect them, you must add this <a href="https://easydigitaldownloads.com/docs/download-files-not-protected-on-nginx/">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
+					/* translators: %s: Dismiss notice URL */
 					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
 				)
 			) );
@@ -315,7 +371,8 @@ class EDD_Notices {
 				'class'          => 'error',
 				'is_dismissible' => false,
 				'message'        => sprintf(
-					__( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ),
+					/* translators: 1. link to the recount tool; 2. link to the plugins screen. */
+					__( 'Easy Digital Downloads 2.5 contains a <a href="%1$s">built in recount tool</a>. Please <a href="%2$s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ),
 					esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'general' ) ) ),
 					esc_url( admin_url( 'plugins.php' ) )
 				)
@@ -369,39 +426,124 @@ class EDD_Notices {
 	private function add_settings_notices() {
 
 		// Settings area
-		if ( ! empty( $_GET['page'] ) && ( 'edd-settings' === $_GET['page'] ) ) {
+		if ( empty( $_GET['page'] ) || ( 'edd-settings' !== $_GET['page'] ) ) {
+			return;
+		}
 
-			// Settings updated
-			if ( ! empty( $_GET['settings-updated'] ) ) {
-				$this->add_notice( array(
+		// Settings updated
+		if ( ! empty( $_GET['settings-updated'] ) ) {
+			$this->add_notice(
+				array(
 					'id'      => 'edd-notices',
 					'message' => __( 'Settings updated.', 'easy-digital-downloads' )
-				) );
-			}
+				)
+			);
+		}
 
-			// No payment gateways are enabled
-			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
-
-				// URL to fix this
-				$url = edd_get_admin_url(
+		if ( 'accounting' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
+			if ( ! empty( edd_get_option( 'sequential_start_update_failed', false ) ) ) {
+				$order_number = new \EDD\Orders\Number();
+				$this->add_notice(
 					array(
-						'page' => 'edd-settings',
-						'tab'  => 'gateways',
+						'id'      => 'edd-sequential-order-numbers-not-updated',
+						'message' => sprintf(
+							/* translators: %s: Next order number */
+							__( 'The sequential starting number could not be updated because it could conflict with existing orders. The next assigned order number is %s.', 'easy-digital-downloads' ),
+							'<code>' . $order_number->format( (int) get_option( 'edd_next_order_number' ) ) . '</code>'
+						),
+						'class'   => 'error',
 					)
 				);
-
-				// Link
-				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Fix this', 'easy-digital-downloads' ) . '</a>';
-
-				// Add the notice
-				$this->add_notice( array(
-					'id'             => 'edd-gateways',
-					'class'          => 'error',
-					'message'        => sprintf( __( 'No payment gateways are enabled. %s.', 'easy-digital-downloads' ), $link ),
-					'is_dismissible' => false
-				) );
+				edd_delete_option( 'sequential_start_update_failed' );
 			}
 		}
+	}
+
+	/**
+	 * Adds a notice if an order migration is running.
+	 * This is only shown if the migration is running via UI by a different user or on another screen.
+	 *
+	 * @since 3.1.2
+	 * @return void
+	 */
+	private function add_order_upgrade_notice() {
+		if ( edd_has_upgrade_completed( 'migrate_orders' ) ) {
+			return;
+		}
+		if ( ! get_option( '_edd_v30_doing_order_migration', false ) ) {
+			return;
+		}
+		if ( get_option( 'edd_v30_cli_migration_running', false ) ) {
+			return;
+		}
+		$this->add_notice(
+			array(
+				'id'             => 'edd-v30-order-migration-running',
+				'class'          => 'updated',
+				'message'        => __( 'Easy Digital Downloads is migrating orders. Sales and earnings data for your store will be updated when all orders have been migrated.', 'easy-digital-downloads' ),
+				'is_dismissible' => false,
+			)
+		);
+	}
+
+	/**
+	 * Adds a notice if the Stripe Pro gateway is outdated.
+	 * This is due to a name change in the gateway.
+	 *
+	 * @since 3.2.1
+	 * @return void
+	 */
+	private function add_stripe_notice() {
+		if ( ! defined( 'EDD_STRIPE_VERSION' ) || ( defined( 'EDD_STRIPE_VERSION' ) && version_compare( EDD_STRIPE_VERSION, '2.8.4', '>=' ) ) ) {
+			return;
+		}
+		$this->add_notice(
+			array(
+				'id'             => 'edd-stripe-outdated',
+				'class'          => 'notice-warning',
+				'message'        => sprintf(
+					// translators: 1. opening link tag; 2. opening link tag; 3. closing link tag.
+					__( 'You are running an outdated version of the Easy Digital Downloads &mdash; Stripe Pro Payment Gateway. You may need to log into %1$syour account%3$s to download the latest version and %2$smanually upgrade%3$s it.', 'easy-digital-downloads' ),
+					'<a href="https://easydigitaldownloads.com/your-account/" target="_blank">',
+					'<a href="https://easydigitaldownloads.com/docs/how-do-i-install-an-extension/#faq" target="_blank">',
+					'</a>'
+				),
+				'is_dismissible' => false,
+			)
+		);
+	}
+
+	/**
+	 * Adds a notice if PayPal webhooks need to synced.
+	 *
+	 * @since 3.2.1
+	 * @return void
+	 */
+	private function add_paypal_sync_notice() {
+		if ( ! get_option( 'edd_paypal_webhook_sync_failed' ) ) {
+			return;
+		}
+		$url = edd_get_admin_url(
+			array(
+				'page'    => 'edd-settings',
+				'tab'     => 'gateways',
+				'section' => 'paypal_commerce',
+			)
+		);
+
+		$this->add_notice(
+			array(
+				'id'             => 'edd-paypal-webhook-sync',
+				'class'          => 'updated',
+				'message'        => sprintf(
+					/* translators: %1$s: Opening anchor tag; %2$s: Closing anchor tag. */
+					__( 'New webhooks have been registered for PayPal Commerce, but we were unable to update them automatically. Please %1$ssync your webhooks manually%2$s.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( $url ) . '">',
+					'</a>'
+				),
+				'is_dismissible' => false,
+			)
+		);
 	}
 
 	/**
@@ -523,6 +665,19 @@ class EDD_Notices {
 						'class'   => 'error'
 					) );
 					break;
+				case 'discount_archived':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-archived',
+						'message' => __( 'Discount code archived.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_archived_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-archived-fail',
+						'message' => __( 'There was a problem archiving that discount code, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
 			}
 		}
 
@@ -585,6 +740,16 @@ class EDD_Notices {
 						array(
 							'id'      => 'edd-test-summary-email-sent',
 							'message' => __( 'The test email summary was sent successfully.', 'easy-digital-downloads' )
+						)
+					);
+					break;
+
+				case 'missing-pass-key':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-missing-pass-key',
+							'message' => __( 'Your extensions could not be refreshed because you have not verified your license key.', 'easy-digital-downloads' ),
+							'class'   => 'error',
 						)
 					);
 					break;
@@ -712,6 +877,20 @@ class EDD_Notices {
 					) );
 					break;
 			}
+		}
+
+		if ( 'one-click-upgrade' === $notice && edd_is_pro() && current_user_can( 'install_plugins' ) && edd_is_admin_page( 'settings' ) ) {
+			$this->add_notice(
+				array(
+					'id'      => 'edd-upgraded',
+					'message' => sprintf(
+						/* Translators: 1. opening strong tag, do not translate; 2. closing strong tag, do not translate */
+						__( 'Congratulations! You are now running %1$sEasy Digital Downloads (Pro)%2$s.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>'
+					),
+				)
+			);
 		}
 	}
 

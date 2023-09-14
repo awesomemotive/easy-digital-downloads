@@ -1,0 +1,53 @@
+@import "../../variables/colors";
+/** Status labels */
+.edd-status-badge,
+.edd-admin-order-status-badge {
+	padding: 2px 7px;
+	border-radius: 4px;
+	background: #ececec;
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+
+	&__icon {
+		opacity: 0.8;
+	}
+
+	&--red,
+	&--error,
+	&--failed,
+	&--failing,
+	&--expired,
+	&--rejected,
+	&--revoked {
+		color: #ac3d3d;
+		background: #ffd6d6;
+	}
+
+	&--green,
+	&--success,
+	&--complete,
+	&--partially_refunded,
+	&--active,
+	&--completed,
+	&--edd_subscription,
+	&--approved {
+		color: #017d5c;
+		background: #e5f5f0;
+	}
+
+	&--yellow,
+	&--warning,
+	&--pending {
+		color: $wp-yellow-50;
+		background: #f5f2e5;
+	}
+
+	&--blue,
+	&--info,
+	&--processing,
+	&--trialling {
+		color: $blue-500;
+		background: #e5f1f5;
+	}
+}

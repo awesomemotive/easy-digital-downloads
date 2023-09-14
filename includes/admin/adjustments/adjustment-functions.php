@@ -10,7 +10,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  * types (Discounts|Credits|Fees)
  *
  * @since 3.0
- * @author Daniel J Griffiths
  */
 function edd_adjustments_page() {
 

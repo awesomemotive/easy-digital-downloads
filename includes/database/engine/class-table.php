@@ -846,30 +846,8 @@ abstract class Table extends Base {
 	 */
 	private function get_db_version() {
 		$this->db_version = $this->is_global()
-			? get_network_option( get_main_network_id(), $this->db_version_key, false )
-			:         get_option(                        $this->db_version_key, false );
-
- 		/**
- 		 * If the DB version is higher than the stated version and is 12 digits
-		 * long, we need to update it to our new, shorter format of 9 digits.
- 		 *
- 		 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
- 		 *
- 		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7579
- 		 */
- 		if ( version_compare( $this->db_version, $this->version, '<=' ) || ( 12 !== strlen( $this->db_version ) ) ) {
- 			return;
- 		}
-
- 		// Parse the new version number from the existing. Converting from
-		// {YYYY}{mm}{dd}{xxxx} to {YYYY}{mm}{dd}{x}
- 		$date             = substr( $this->db_version, 0, 8 );
- 		$increment        = substr( $this->db_version, 8, 4 );
-
-		// Trims off the three prefixed zeros.
- 		$this->db_version = intval( $date . intval( $increment ) );
-
- 		$this->set_db_version( $this->db_version );
+			? get_network_option( get_main_network_id(), $this->db_version_key, 1 )
+			: get_option( $this->db_version_key, 1 );
 	}
 
 	/**
@@ -905,15 +883,7 @@ abstract class Table extends Base {
 	 * @return bool
 	 */
 	private function is_testing() {
-		return (bool)
-
-			// Tests constant is being used
-			( defined( 'WP_TESTS_DIR' ) && WP_TESTS_DIR )
-
-			||
-
-			// Scaffolded (https://make.wordpress.org/cli/handbook/plugin-unit-tests/)
-			function_exists( '_manually_load_plugin' );
+		return edd_is_doing_unit_tests();
 	}
 
 	/**

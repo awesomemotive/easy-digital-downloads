@@ -296,7 +296,6 @@ function edd_email_tag_download_list( $payment_id ) {
 
 	$download_list = '<ul>';
 	$cart_items    = $payment->cart_details;
-	$email         = $payment->email;
 	$needs_notes   = array();
 
 	if ( $order->get_items() ) {
@@ -336,7 +335,7 @@ function edd_email_tag_download_list( $payment_id ) {
 
 					if ( $show_links ) {
 						$download_list .= '<div>';
-						$file_url       = edd_get_download_file_url( $order->payment_key, $email, $filekey, $item->product_id, $item->price_id );
+						$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id );
 						$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 						$download_list .= '</div>';
 					} else {
@@ -362,7 +361,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					foreach ( $download_files as $filekey => $file ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
-							$file_url       = edd_get_download_file_url( $order->payment_key, $email, $filekey, $bundle_item_id, $bundle_item_price_id );
+							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item_id, $bundle_item_price_id );
 							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
@@ -432,7 +431,6 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 	$payment_data  = $payment->get_meta();
 	$cart_items    = $payment->cart_details;
-	$email         = $payment->email;
 	$download_list = '';
 
 	if ( $order->get_items() ) {
@@ -473,7 +471,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				foreach ( $files as $filekey => $file ) {
 					if( $show_links ) {
 						$download_list .= "\n";
-						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item->product_id, $item->price_id );
+						$file_url = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id );
 						$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 					} else {
 						$download_list .= "\n";
@@ -493,7 +491,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 					foreach ( $files as $filekey => $file ) {
 						if( $show_links ) {
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $item->price_id );
+							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item, $item->price_id );
 							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 						} else {
 							$download_list .= edd_get_file_name( $file ) . "\n";
@@ -770,8 +768,8 @@ function edd_email_tag_sitename( $payment_id ) {
  *
  * Adds a link to the user's receipt page on the website.
  *
- * @param [type] $order_id
- * @return void
+ * @param int $order_id
+ * @return string
  */
 function edd_email_tag_receipt( $order_id ) {
 
@@ -840,4 +838,75 @@ function edd_email_tag_discount_codes( $payment_id ) {
 function edd_email_tag_ip_address( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
 	return $payment->ip;
+}
+
+/**
+ * Get various correctly formatted names used in emails
+ *
+ * @since 1.9
+ * @since 3.2.0 - Moved to the tags.php file, as it is exclusively is used for email tags, even in extensions.
+ *
+ * @param $user_info
+ * @param $payment   EDD_Payment for getting the names
+ *
+ * @return array $email_names
+ */
+function edd_get_email_names( $user_info, $payment = false ) {
+	$email_names = array();
+	$email_names['fullname'] = '';
+
+	if ( $payment instanceof EDD_Payment ) {
+
+		$email_names['name']     = $payment->email;
+		$email_names['username'] = $payment->email;
+		if ( $payment->user_id > 0 ) {
+
+			$user_data               = get_userdata( $payment->user_id );
+			$email_names['name']     = $payment->first_name;
+			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
+			if ( ! empty( $user_data->user_login ) ) {
+				$email_names['username'] = $user_data->user_login;
+			}
+
+		} elseif ( ! empty( $payment->first_name ) ) {
+
+			$email_names['name']     = $payment->first_name;
+			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
+			$email_names['username'] = $payment->first_name;
+
+		}
+	} else {
+
+		if ( is_serialized( $user_info ) ) {
+
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $user_info, $matches );
+			if ( ! empty( $matches ) ) {
+				return array(
+					'name'     => '',
+					'fullname' => '',
+					'username' => '',
+				);
+			} else {
+				$user_info = maybe_unserialize( $user_info );
+			}
+
+		}
+
+		if ( isset( $user_info['id'] ) && $user_info['id'] > 0 && isset( $user_info['first_name'] ) ) {
+			$user_data = get_userdata( $user_info['id'] );
+			$email_names['name']      = $user_info['first_name'];
+			$email_names['fullname']  = $user_info['first_name'] . ' ' . $user_info['last_name'];
+			$email_names['username']  = $user_data->user_login;
+		} elseif ( isset( $user_info['first_name'] ) ) {
+			$email_names['name']     = $user_info['first_name'];
+			$email_names['fullname'] = $user_info['first_name'] . ' ' . $user_info['last_name'];
+			$email_names['username'] = $user_info['first_name'];
+		} else {
+			$email_names['name']     = $user_info['email'];
+			$email_names['username'] = $user_info['email'];
+		}
+
+	}
+
+	return $email_names;
 }

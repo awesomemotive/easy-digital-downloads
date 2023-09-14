@@ -28,10 +28,8 @@ function edd_edit_customer( $args = array() ) {
 		return false;
 	}
 
-	$customer_edit_role = edd_get_edit_customers_role();
-
 	// Bail if user cannot edit customers.
-	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
+	if ( ! is_admin() || ! current_user_can( edd_get_edit_customers_role() ) ) {
 		wp_die( esc_html__( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
@@ -41,7 +39,7 @@ function edd_edit_customer( $args = array() ) {
 
 	// Bail if nonce check fails
 	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
-		wp_die( esc_html__( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
+		wp_die( esc_html__( 'Nonce verification failed.', 'easy-digital-downloads' ) );
 	}
 
 	// Bail if customer does not exist.
@@ -66,12 +64,14 @@ function edd_edit_customer( $args = array() ) {
 
 		// Make sure we don't already have this user attached to a customer
 		if ( ! empty( $customer_info['user_id'] ) && false !== edd_get_customer_by( 'user_id', $customer_info['user_id'] ) ) {
+			/* translators: %d: user ID */
 			edd_set_error( 'edd-invalid-customer-user_id', sprintf( __( 'The User ID %d is already associated with a different customer.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 
 		// Make sure it's actually a user
 		$user = get_user_by( 'id', $customer_info['user_id'] );
 		if ( ! empty( $customer_info['user_id'] ) && false === $user ) {
+			/* translators: %d: user ID */
 			edd_set_error( 'edd-invalid-user_id', sprintf( __( 'The User ID %d does not exist. Please assign an existing user.', 'easy-digital-downloads' ), $customer_info['user_id'] ) );
 		}
 	}
@@ -98,6 +98,7 @@ function edd_edit_customer( $args = array() ) {
 		if ( $user ) {
 			$user_id = $user->ID;
 		} else {
+			/* translators: %s: user login or email address */
 			edd_set_error( 'edd-invalid-user-string', sprintf( __( 'Failed to attach user. The login or email address %s was not found.', 'easy-digital-downloads' ), $customer_info['user_login'] ) );
 		}
 	}
@@ -189,9 +190,8 @@ add_action( 'edd_edit-customer', 'edd_edit_customer', 10, 1 );
  * @return mixed        Echos JSON if doing AJAX. Returns array of success (bool) and message (string) if not AJAX.
  */
 function edd_add_customer_email( $args = array() ) {
-	$customer_edit_role = edd_get_edit_customers_role();
 
-	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
+	if ( ! is_admin() || ! current_user_can( edd_get_edit_customers_role() ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
@@ -259,13 +259,15 @@ function edd_add_customer_email( $args = array() ) {
 				'redirect' => $redirect . '#edd_general_emails',
 			);
 
-			$user          = wp_get_current_user();
-			$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
+			$user       = wp_get_current_user();
+			$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
+			/* translators: 1. email address; 2. username */
+			$customer_note = sprintf( __( 'Email address %1$s added by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
 			if ( $primary ) {
-				$customer_note =  sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), $email, $user_login );
+				/* translators: 1. email address; 2. username */
+				$customer_note =  sprintf( __( 'Email address %1$s set as primary by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 				$customer->add_note( $customer_note );
 			}
 		}
@@ -307,7 +309,11 @@ function edd_remove_customer_email() {
 
 	$nonce = $_GET['_wpnonce'];
 	if ( ! wp_verify_nonce( $nonce, 'edd-remove-customer-email' ) ) {
-		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( edd_get_edit_customers_role() ) ) {
+		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
 	$customer = new EDD_Customer( $_GET['id'] );
@@ -320,9 +326,10 @@ function edd_remove_customer_email() {
 				'edd-message' => 'email-removed',
 			)
 		);
-		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		$user       = wp_get_current_user();
+		$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
+		/* translators: 1. email address; 2. username */
+		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {
@@ -362,7 +369,11 @@ function edd_set_customer_primary_email() {
 
 	$nonce = $_GET['_wpnonce'];
 	if ( ! wp_verify_nonce( $nonce, 'edd-set-customer-primary-email' ) ) {
-		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( edd_get_edit_customers_role() ) ) {
+		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
 	$customer = new EDD_Customer( $_GET['id'] );
@@ -403,9 +414,8 @@ add_action( 'edd_customer-primary-email', 'edd_set_customer_primary_email', 10 )
  * @return int         Whether it was a successful deletion
  */
 function edd_customer_delete( $args = array() ) {
-	$customer_edit_role = edd_get_edit_customers_role();
 
-	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
+	if ( ! is_admin() || ! current_user_can( edd_get_edit_customers_role() ) ) {
 		wp_die( __( 'You do not have permission to delete this customer.', 'easy-digital-downloads' ) );
 	}
 
@@ -419,7 +429,7 @@ function edd_customer_delete( $args = array() ) {
 	$nonce       = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'delete-customer' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ) );
 	}
 
 	if ( ! $confirm ) {
@@ -490,9 +500,7 @@ add_action( 'edd_delete-customer', 'edd_customer_delete', 10, 1 );
  * @return bool        If the disconnect was successful
  */
 function edd_disconnect_customer_user_id( $args = array() ) {
-	$customer_edit_role = edd_get_edit_customers_role();
-
-	if ( ! is_admin() || ! current_user_can( $customer_edit_role ) ) {
+	if ( ! is_admin() || ! current_user_can( edd_get_edit_customers_role() ) ) {
 		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
@@ -504,7 +512,7 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 	$nonce         = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
-		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ) );
 	}
 
 	$customer = new EDD_Customer( $customer_id );
@@ -554,7 +562,11 @@ function edd_process_admin_user_verification() {
 
 	$nonce = $_GET['_wpnonce'];
 	if ( ! wp_verify_nonce( $nonce, 'edd-verify-user' ) ) {
-		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! is_admin() || ! current_user_can( edd_get_edit_customers_role() ) ) {
+		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
 	$customer = new EDD_Customer( $_GET['id'] );
@@ -611,7 +623,7 @@ function edd_remove_customer_address() {
 	}
 
 	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-remove-customer-address' ) ) {
-		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$address = edd_fetch_customer_address( absint( $_GET['id'] ) );

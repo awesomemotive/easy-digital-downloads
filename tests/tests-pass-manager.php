@@ -10,28 +10,20 @@
 
 namespace EDD\Tests;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
 /**
  * Class Pass_Manager
  *
  * @package EDD\Tests
  * @coversDefaultClass \EDD\Admin\Pass_Manager
  */
-class Pass_Manager extends \EDD_UnitTestCase {
-
-	/**
-	 * Runs once before any tests are executed.
-	 */
-	public static function setUpBeforeClass() {
-		parent::setUpBeforeClass();
-
-		// This is an admin file, so we need to include it manually.
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
-	}
+class Pass_Manager extends EDD_UnitTestCase {
 
 	/**
 	 * Runs before each test is executed.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		global $edd_licensed_products;
@@ -69,6 +61,16 @@ class Pass_Manager extends \EDD_UnitTestCase {
 		$this->assertTrue(
 			\EDD\Admin\Pass_Manager::pass_compare(
 				1245715,
+				\EDD\Admin\Pass_Manager::PERSONAL_PASS_ID,
+				'='
+			)
+		);
+	}
+
+	public function test_invalid_pass_returns_false() {
+		$this->assertFalse(
+			\EDD\Admin\Pass_Manager::pass_compare(
+				1234856,
 				\EDD\Admin\Pass_Manager::PERSONAL_PASS_ID,
 				'='
 			)

@@ -1,11 +1,9 @@
 <?php
-namespace EDD\Reports;
+namespace EDD\Tests\Reports;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
-}
-
-new \EDD\Reports\Init();
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
 
 /**
  * Tests for the Reports Init class.
@@ -15,7 +13,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Init
  */
-class Init_Tests extends \EDD_UnitTestCase {
+class Init_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @dataProvider _test_bootstrap_dp

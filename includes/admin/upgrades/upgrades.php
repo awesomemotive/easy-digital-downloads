@@ -76,12 +76,17 @@ function edd_upgrades_screen() {
 		if ( ! empty( $action ) ) :
 
 			// Redirect URL
-			$redirect = add_query_arg( array(
-				'edd_action' => sanitize_key( $action ),
-				'step'       => absint( $step ),
-				'total'      => absint( $total ),
-				'custom'     => absint( $custom ),
-			), admin_url( 'index.php' ) ); ?>
+			$redirect = add_query_arg(
+				array(
+					'edd_action' => sanitize_key( $action ),
+					'step'       => absint( $step ),
+					'total'      => absint( $total ),
+					'custom'     => absint( $custom ),
+					'_wpnonce'   => wp_create_nonce( 'edd-upgrade' ),
+				),
+				admin_url( 'index.php' )
+			);
+			?>
 
 			<div id="edd-upgrade-status">
 				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?></p>
@@ -113,7 +118,8 @@ function edd_upgrades_screen() {
 
 					// Trigger upgrades on page load
 					var data = {
-						action: 'edd_trigger_upgrades'
+						action: 'edd_trigger_upgrades',
+						nonce: '<?php echo esc_attr( wp_create_nonce( 'edd-upgrade' ) ); ?>'
 					};
 
 					jQuery.post( ajaxurl, data, function (response) {

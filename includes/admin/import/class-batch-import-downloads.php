@@ -259,11 +259,12 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	 */
 	public function get_percentage_complete() {
 
-		if( $this->total > 0 ) {
+		$percentage = 0;
+		if ( $this->total > 0 ) {
 			$percentage = ( $this->step * $this->per_step / $this->total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -368,7 +369,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	private function set_image( $download_id = 0, $image = '', $post_author = 0 ) {
 
 		$is_url   = false !== filter_var( $image, FILTER_VALIDATE_URL );
-		$is_local = $is_url && false !== strpos( site_url(), $image );
+		$is_local = $is_url && false !== strpos( $image, site_url() );
 		$ext      = edd_get_file_extension( $image );
 
 		if( $is_url && $is_local ) {

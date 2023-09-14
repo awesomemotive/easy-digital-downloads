@@ -1,0 +1,47 @@
+.edd-extension-manager__card--installer {
+	border: 1px solid $wp-gray-5;
+	border-radius: 3px;
+	padding: 0;
+
+	> div {
+		padding: 2em;
+
+		&:not(:last-child) {
+			border-bottom: 1px solid $gray-200;
+		}
+	}
+
+	.notice {
+		margin: 0 -1em !important;
+
+		&:not(:last-child) {
+			margin-bottom: 1em;
+		}
+	}
+
+	.edd-extension-manager__body {
+		grid-template-columns: 80px 1fr;
+		grid-template-rows: unset;
+		position: relative;
+
+		p:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.edd-extension-manager__actions {
+		background: $wp-alternate;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1em 2em;
+
+		> *:only-child {
+			margin-left: auto;
+		}
+	}
+
+	.edd-extension-manager__status {
+		font-weight: 600;
+	}
+}

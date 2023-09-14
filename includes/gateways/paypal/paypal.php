@@ -61,13 +61,7 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/functions.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/gateway-filters.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/refunds.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/scripts.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/class-webhook-handler.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/class-webhook-validator.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/functions.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/abstract-webhook-event.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-payment-capture-completed.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-payment-capture-denied.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/integrations.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/ipn.php';
 

@@ -434,6 +434,27 @@ class Data_Migrator {
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
 		$user_info    = isset( $payment_meta['user_info'] ) ? maybe_unserialize( $payment_meta['user_info'] ) : array();
 
+		// It is possible that for some reason the entire unserialized array is invalid, so before trying to use it, let's just verify we got an array back.
+		if ( ! is_array( $payment_meta ) ) {
+			// Dump this data to a file to ensure we keep it for later use.
+			edd_debug_log( '==== Failed Migrating Legacy Payment ID: ' . $data->ID . ' ====', true );
+			edd_debug_log( 'Reason: Payment Meta Unserialization failed.', true );
+			edd_debug_log( '- Post Data', true );
+			foreach ( get_object_vars( $data ) as $key => $value ) {
+				edd_debug_log( '-- ' . $key . ': ' . $value, true );
+			}
+
+			edd_debug_log( '- Post Meta', true );
+			foreach ( $meta as $key => $value_array ) {
+				edd_debug_log( '-- Meta Key: ' . $key, true );
+				foreach ( $value_array as $value ) {
+					edd_debug_log( '--- ' . $value, true );
+				}
+			}
+
+			return false;
+		}
+
 		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
 		$user_info = self::fix_possible_serialization( $user_info );
 		$user_info = maybe_unserialize( $user_info );
@@ -456,15 +477,16 @@ class Data_Migrator {
 		 */
 		$payment_meta = apply_filters( 'edd_30_migration_payment_meta', $payment_meta, $data->ID, $meta );
 
-		$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
-		$user_id        = isset( $meta['_edd_payment_user_id'][0] ) && ! empty( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
-		$ip             = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
-		$mode           = isset( $meta['_edd_payment_mode'][0] ) ? $meta['_edd_payment_mode'][0] : 'live';
-		$gateway        = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
-		$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
-		$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : null;
-		$purchase_key   = isset( $meta['_edd_payment_purchase_key'][0]) ? $meta['_edd_payment_purchase_key'][0] : false;
-		$purchase_email = isset( $meta['_edd_payment_user_email'][0] ) ? $meta['_edd_payment_user_email'][0] : $payment_meta['email'];
+		$order_number     = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
+		$user_id          = isset( $meta['_edd_payment_user_id'][0] ) && ! empty( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
+		$ip               = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
+		$mode             = isset( $meta['_edd_payment_mode'][0] ) ? $meta['_edd_payment_mode'][0] : 'live';
+		$gateway          = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
+		$customer_id      = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
+		$date_completed   = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : null;
+		$purchase_key     = isset( $meta['_edd_payment_purchase_key'][0]) ? $meta['_edd_payment_purchase_key'][0] : false;
+		$purchase_email   = isset( $meta['_edd_payment_user_email'][0] ) ? $meta['_edd_payment_user_email'][0] : $payment_meta['email'];
+		$date_actions_run = isset( $meta['_edd_complete_actions_run'][0] ) ? $meta['_edd_complete_actions_run'][0] : null;
 
 		// Get the customer object
 		if ( ! empty( $customer_id ) ) {
@@ -720,6 +742,17 @@ class Data_Migrator {
 			'total'          => $order_total,
 		);
 
+		// Orders placed prior to 2.8 won't have this meta, so only include it if the value isn't empty.
+		if ( ! empty( $date_actions_run ) ) {
+			$actions_date = new \EDD\Utils\Date();
+
+			// We store the dates in the DB as UTC.
+			$actions_date->setTimestamp( $date_actions_run )->setTimezone( new \DateTimeZone( 'UTC' ) );
+
+			// Format the date in MySQL DATETIME format.
+			$order_data['date_actions_run'] = $actions_date->format( 'mysql' );
+		}
+
 		/**
 		 * Filters the data used to create the order.
 		 *
@@ -732,14 +765,11 @@ class Data_Migrator {
 		 */
 		$order_data = apply_filters( 'edd_30_migration_order_creation_data', $order_data, $payment_meta, $cart_details, $meta );
 
+		update_option( '_edd_v30_doing_order_migration', true, false );
+
 		// Remove all order status transition actions.
 		remove_all_actions( 'edd_transition_order_status' );
 		remove_all_actions( 'edd_transition_order_item_status' );
-		remove_action( 'edd_order_item_added', 'edd_recalculate_order_item_download' );
-		remove_action( 'edd_order_item_updated', 'edd_recalculate_order_item_download' );
-		remove_action( 'edd_order_item_deleted', 'edd_recalculate_order_item_download' );
-		remove_action( 'edd_order_adjustment_added', 'edd_recalculate_order_adjustment_download' );
-		remove_action( 'edd_order_adjustment_updated', 'edd_recalculate_order_adjustment_download' );
 
 		$order_id = edd_add_order( $order_data );
 
@@ -1045,6 +1075,7 @@ class Data_Migrator {
 						$adjustment_args = apply_filters( 'edd_30_migration_order_item_adjustment_creation_data', $adjustment_args, $fee, $cart_item, $payment_meta, $meta );
 
 						$adjustment_id = edd_add_order_adjustment( $adjustment_args );
+						edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 
 						// If we refunded the main order, the fees also need to be added to the refund order type we created.
 						if ( ! empty( $refund_id ) ) {
@@ -1152,6 +1183,7 @@ class Data_Migrator {
 				$adjustment_args = apply_filters( 'edd_30_migration_order_adjustment_creation_data', $adjustment_args, $fee, $payment_meta, $meta );
 
 				$adjustment_id = edd_add_order_adjustment( $adjustment_args );
+				edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 
 				if ( ! empty( $refund_id ) ) {
 
@@ -1196,7 +1228,17 @@ class Data_Migrator {
 			$discounts = explode( ',', $discounts );
 		}
 
-		if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
+		$first_discount        = reset( $discounts );
+		$discount_arg_defaults = array(
+			'object_id'     => $order_id,
+			'object_type'   => 'order',
+			'type'          => 'discount',
+			'subtotal'      => $order_discount,
+			'total'         => $order_discount,
+			'date_created'  => $date_created_gmt,
+			'date_modified' => $data->post_modified_gmt,
+		);
+		if ( ! empty( $discounts ) && ( 'none' !== $first_discount ) ) {
 			if ( 1 === count( $discounts ) ) {
 				$discount_code = reset( $discounts );
 
@@ -1204,41 +1246,44 @@ class Data_Migrator {
 				$discount_object = edd_get_discount_by( 'code', $discount_code );
 
 				if ( $discount_object instanceof \EDD_Discount ) {
-					$discount_args = array(
-						'object_id'     => $order_id,
-						'object_type'   => 'order',
-						'type_id'       => $discount_object->id,
-						'type'          => 'discount',
-						'description'   => $discount_object->code,
-						'subtotal'      => $order_discount,
-						'total'         => $order_discount,
-						'date_created'  => $date_created_gmt,
-						'date_modified' => $data->post_modified_gmt,
+					$discount_args = wp_parse_args(
+						array(
+							'type_id'     => $discount_object->id,
+							'description' => $discount_object->code,
+						),
+						$discount_arg_defaults
 					);
+				} else {
+					$discount_args = wp_parse_args(
+						array(
+							'description' => $discount_code,
+						),
+						$discount_arg_defaults
+					);
+				}
 
-					/**
-					 * Filters the arguments used to create a discount adjustment.
-					 *
-					 * @since 3.0
-					 *
-					 * @param array         $discount_args   Order adjustment arguments.
-					 * @param \EDD_Discount $discount_object Discount object.
-					 * @param float         $order_subtotal  Order subtotal.
-					 * @param array         $user_info       User info array.
-					 * @param array         $payment_meta    Payment meta.
-					 * @param array         $meta            All post meta.
-					 */
-					$discount_args = apply_filters( 'edd_30_migration_order_discount_creation_data', $discount_args, $discount_object, $order_subtotal, $user_info, $payment_meta, $meta );
+				/**
+				 * Filters the arguments used to create a discount adjustment.
+				 *
+				 * @since 3.0
+				 *
+				 * @param array         $discount_args   Order adjustment arguments.
+				 * @param \EDD_Discount $discount_object Discount object.
+				 * @param float         $order_subtotal  Order subtotal.
+				 * @param array         $user_info       User info array.
+				 * @param array         $payment_meta    Payment meta.
+				 * @param array         $meta            All post meta.
+				 */
+				$discount_args = apply_filters( 'edd_30_migration_order_discount_creation_data', $discount_args, $discount_object, $order_subtotal, $user_info, $payment_meta, $meta );
 
-					$new_discount_id = edd_add_order_adjustment( $discount_args );
-					if ( $order_discount <= 0 ) {
-						edd_add_order_adjustment_meta(
-							$new_discount_id,
-							'migrated_order_discount_unknown',
-							(int) $order_id,
-							true
-						);
-					}
+				$new_discount_id = edd_add_order_adjustment( $discount_args );
+				if ( $order_discount <= 0 ) {
+					edd_add_order_adjustment_meta(
+						$new_discount_id,
+						'migrated_order_discount_unknown',
+						(int) $order_id,
+						true
+					);
 				}
 			} else {
 				foreach ( $discounts as $discount_code ) {
@@ -1246,22 +1291,27 @@ class Data_Migrator {
 					/** @var \EDD_Discount $discount_object */
 					$discount_object = edd_get_discount_by( 'code', $discount_code );
 
-					if ( false === $discount_object ) {
-						continue;
+					if ( $discount_object instanceof \EDD_Discount ) {
+						$calculated_discount = $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal );
+						$discount_args       = wp_parse_args(
+							array(
+								'type_id'     => $discount_object->id,
+								'description' => $discount_object->code,
+								'subtotal'    => $calculated_discount,
+								'total'       => $calculated_discount,
+							),
+							$discount_arg_defaults
+						);
+					} else {
+						$discount_args = wp_parse_args(
+							array(
+								'description' => $discount_code,
+								'subtotal'    => 0.00,
+								'total'       => 0.00,
+							),
+							$discount_arg_defaults
+						);
 					}
-
-					$calculated_discount = $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal );
-					$discount_args       = array(
-						'object_id'     => $order_id,
-						'object_type'   => 'order',
-						'type_id'       => $discount_object->id,
-						'type'          => 'discount',
-						'description'   => $discount_object->code,
-						'subtotal'      => $calculated_discount,
-						'total'         => $calculated_discount,
-						'date_created'  => $date_created_gmt,
-						'date_modified' => $data->post_modified_gmt,
-					);
 
 					/**
 					 * Filters the arguments used to create a discount adjustment.
@@ -1288,6 +1338,17 @@ class Data_Migrator {
 					}
 				}
 			}
+		} elseif ( ! empty( $discounts ) && 'none' === $first_discount && $order_discount > 0 ) {
+			// The order was saved with a discount amount, but no discount code.
+			$discount_args = wp_parse_args(
+				array(
+					'description' => __( 'Legacy Discount', 'easy-digital-downloads' ),
+				),
+				$discount_arg_defaults
+			);
+
+			// There is no filter applied here because there is no discount object.
+			edd_add_order_adjustment( $discount_args );
 		}
 
 		/** Create order meta ****************************************/
@@ -1308,6 +1369,7 @@ class Data_Migrator {
 			'_edd_payment_unlimited_downloads',
 			'_edd_payment_number',
 			'_edd_payment_transaction_id',
+			'_edd_complete_actions_run',
 		);
 
 		// Determine what main payment meta keys were from core and what were custom...
@@ -1329,6 +1391,8 @@ class Data_Migrator {
 		 * @param array $meta         All post meta associated with the payment.
 		 */
 		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
+
+		delete_option( '_edd_v30_doing_order_migration' );
 
 		return $order_id;
 	}

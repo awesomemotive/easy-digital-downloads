@@ -136,8 +136,7 @@ function edd_add_manual_order( $args = array() ) {
 	);
 
 	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
-	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date_string, edd_get_timezone_id(), false ) );
-	$date = $date->format( 'Y-m-d H:i:s' );
+	$date = edd_get_utc_date_string( $date_string );
 
 	// Get mode
 	$mode = edd_is_test_mode()
@@ -187,6 +186,7 @@ function edd_add_manual_order( $args = array() ) {
 			'discount'     => $order_discount,
 			'total'        => $order_total,
 			'date_created' => $date,
+			'order_number' => edd_set_order_number(),
 		)
 	);
 
@@ -423,22 +423,6 @@ function edd_add_manual_order( $args = array() ) {
 	// Unlimited downloads.
 	if ( isset( $order_data['edd-unlimited-downloads'] ) && 1 === (int) $order_data['edd-unlimited-downloads'] ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', 1 );
-	}
-
-	// Setup order number.
-	$order_number = '';
-
-	if ( edd_get_option( 'enable_sequential' ) ) {
-		$number = edd_get_next_payment_number();
-
-		$order_number = edd_format_payment_number( $number );
-
-		update_option( 'edd_last_payment_number', $number );
-
-		// Update totals & maybe add order number.
-		edd_update_order( $order_id, array(
-			'order_number' => $order_number,
-		) );
 	}
 
 	// Stop purchase receipt from being sent.

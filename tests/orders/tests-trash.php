@@ -1,8 +1,4 @@
 <?php
-namespace EDD\Orders;
-
-use Carbon\Carbon;
-
 /**
  * Trash Tests.
  *
@@ -12,7 +8,11 @@ use Carbon\Carbon;
  *
  * @coversDefaultClass \EDD\Orders\Order
  */
-class Trash_Tests extends \EDD_UnitTestCase {
+namespace EDD\Tests\Orders;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
+class Trash_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * Orders fixture.

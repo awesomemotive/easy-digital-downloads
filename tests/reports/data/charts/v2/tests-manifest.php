@@ -1,14 +1,12 @@
 <?php
-namespace EDD\Reports\Data\Charts\v2;
+namespace EDD\Tests\Data\Charts\V2;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Reports\Data\Chart_Endpoint;
 use EDD\Reports;
 
-if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
-}
-
-new \EDD\Reports\Init();
+use EDD\Reports\Init as ReportsInit;
+new ReportsInit();
 
 /**
  * Tests for the Manifest class.
@@ -19,7 +17,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Charts\v2\Manifest
  */
-class Manifest_Tests extends \EDD_UnitTestCase {
+class Manifest_Tests extends EDD_UnitTestCase {
 
 	/**
 	 * @var \EDD\Reports\Data\Charts\v2\Manifest
@@ -29,7 +27,7 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Set up before each test.
 	 */
-	public function setUp() {
+	public function setup(): void {
 		parent::setUp();
 
 		$this->mock_Manifest = $this->get_Manifest_mock( 'test' );
@@ -73,7 +71,7 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_datasets()
 	 */
 	public function test_get_datasets_should_retrieve_an_array_with_Dataset_values() {
-		$this->assertContainsOnlyType( 'EDD\\Reports\\Data\\Charts\\v2\\Dataset', $this->mock_Manifest->get_datasets() );
+		$this->assertStringContainsStringOnlyType( 'EDD\\Reports\\Data\\Charts\\v2\\Dataset', $this->mock_Manifest->get_datasets() );
 	}
 
 	/**
@@ -82,7 +80,7 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 	public function test_get_datasets_should_be_keyed_with_strings() {
 		$keys = array_keys( $this->mock_Manifest->get_datasets() );
 
-		$this->assertContainsOnlyType( 'string', $keys );
+		$this->assertStringContainsStringOnlyType( 'string', $keys );
 	}
 
 	/**

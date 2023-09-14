@@ -305,12 +305,13 @@ function edd_ajax_apply_discount() {
 			$total     = edd_get_cart_total( $discounts );
 
 			$return = array(
-				'msg'         => 'valid',
-				'amount'      => $amount,
-				'total_plain' => $total,
-				'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-				'code'        => $discount_code,
-				'html'        => edd_get_cart_discounts_html( $discounts ),
+				'msg'               => 'valid',
+				'amount'            => $amount,
+				'total_plain'       => $total,
+				'total'             => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+				'code'              => $discount_code,
+				'html'              => edd_get_cart_discounts_html( $discounts ),
+				'complete_purchase' => edd_get_checkout_button_purchase_label(),
 			);
 		} else {
 			$errors        = edd_get_errors();
@@ -344,12 +345,21 @@ function edd_ajax_update_cart_item_quantity() {
 
 		EDD()->cart->set_item_quantity( $download_id, $quantity, $options );
 
+		$subtotal = EDD()->cart->get_subtotal();
+		$taxes    = EDD()->cart->get_tax();
+		$total    = EDD()->cart->get_total();
+
 		$return = array(
-			'download_id' => $download_id,
-			'quantity'    => EDD()->cart->get_item_quantity( $download_id, $options ),
-			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-			'taxes'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_tax() ) ), ENT_COMPAT, 'UTF-8' ),
-			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( EDD()->cart->get_total() ) ), ENT_COMPAT, 'UTF-8' )
+			'download_id'       => $download_id,
+			'quantity'          => EDD()->cart->get_item_quantity( $download_id, $options ),
+			'subtotal_raw'      => $subtotal,
+			'taxes_raw'         => $taxes,
+			'total_raw'         => $total,
+			'subtotal'          => html_entity_decode( edd_currency_filter( edd_format_amount( $subtotal ) ), ENT_COMPAT, 'UTF-8' ),
+			'taxes'             => html_entity_decode( edd_currency_filter( edd_format_amount( $taxes ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'             => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+			'discounts'         => edd_get_cart_discounts_html(),
+			'complete_purchase' => edd_get_checkout_button_purchase_label(),
 		);
 
 		// Allow for custom cart item quantity handling
@@ -376,11 +386,12 @@ function edd_ajax_remove_discount() {
 		$total = edd_get_cart_total();
 
 		$return = array(
-			'total_plain' => $total,
-			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-			'code'        => sanitize_text_field( $_POST['code'] ),
-			'discounts'   => edd_get_cart_discounts(),
-			'html'        => edd_get_cart_discounts_html()
+			'total_plain'       => $total,
+			'total'             => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+			'code'              => sanitize_text_field( $_POST['code'] ),
+			'discounts'         => edd_get_cart_discounts(),
+			'html'              => edd_get_cart_discounts_html(),
+			'complete_purchase' => edd_get_checkout_button_purchase_label(),
 		);
 
 		/**
@@ -935,25 +946,25 @@ function edd_ajax_add_order_item() {
 
 			<td class="overridable amount column-amount" data-type="amount">
 				<?php echo esc_html( $symbol ); ?>
-				<input type="text" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" <?php readonly( $editable ); ?> />
+				<input type="text" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" <?php wp_readonly( $editable ); ?> />
 			</td>
 
 			<?php if ( edd_item_quantities_enabled() ) : ?>
 				<td class="overridable quantity column-quantity" data-type="quantity">
-					<input type="text" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" <?php readonly( $editable ); ?> />
+					<input type="text" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" <?php wp_readonly( $editable ); ?> />
 				</td>
 			<?php endif; ?>
 
 			<?php if ( edd_use_taxes() ) : ?>
 				<td class="overridable tax column-tax" data-type="tax">
 					<?php echo esc_html( $symbol ); ?>
-					<input type="text" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" <?php readonly( $editable ); ?> />
+					<input type="text" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" <?php wp_readonly( $editable ); ?> />
 				</td>
 			<?php endif; ?>
 
 			<td class="overridable total column-total" data-type="total">
 					<?php echo esc_html( $symbol ); ?>
-					<input type="text" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" <?php readonly( $editable ); ?> />
+					<input type="text" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" <?php wp_readonly( $editable ); ?> />
 			</td>
 
 			<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>

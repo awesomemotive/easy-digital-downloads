@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "edd/user-downloads",
+  "version": "2.0.0",
+  "title": "EDD User Downloads",
+  "category": "easy-digital-downloads",
+  "icon": "admin-links",
+  "description": "Allows a user to access the Easy Digital Downloads products they have purchased.",
+  "keywords": [
+    "easy digital downloads",
+    "edd",
+    "orders"
+  ],
+  "supports": {
+    "html": false
+  },
+  "textdomain": "easy-digital-downloads",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "search": {
+      "type": "boolean",
+      "default": false
+    },
+    "variations": {
+      "type": "boolean",
+      "default": true
+    },
+    "nofiles": {
+      "type": "string",
+      "default": "No downloadable files found."
+    },
+    "hide_empty": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

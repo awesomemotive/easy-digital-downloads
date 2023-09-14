@@ -1,0 +1,132 @@
+
+#edd-products {
+	height: 100px;
+	min-width: 200px;
+}
+
+#edd-add-discount input[type="text"],
+#edd-edit-discount input[type="text"] {
+	width: 300px;
+}
+
+#edd-add-discount .edd-discount-datetime input,
+#edd-edit-discount .edd-discount-datetime input {
+	vertical-align: middle;
+}
+
+#edd-add-discount input[type="text"].edd_datepicker,
+#edd-edit-discount input[type="text"].edd_datepicker {
+	display: inline-block;
+	width: 183px;
+}
+
+#edd-edit-discount textarea {
+	height: 100px;
+}
+
+.edd-amount-type-wrapper {
+	position: relative;
+	display: flex;
+}
+
+.edd-amount-type-wrapper select {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	width: auto !important;
+}
+
+.edd-amount-type-wrapper #edd-amount {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	margin-right: -2px;
+	padding: 0 8px;
+	width: unset;
+	max-width: 125px;
+}
+
+.edd-amount-type-wrapper input:focus {
+	z-index: 2;
+}
+
+.edd-code-wrapper {
+	display: flex;
+	align-items: stretch;
+	gap: 3px;
+}
+
+.edd-popup-trigger {
+	display: flex !important;
+	align-items: center;
+	gap: 3px;
+
+	@media screen and (max-width: 782px) {
+		margin-bottom: 0 !important;
+	}
+
+	@media screen and (max-width: 480px) {
+		span:not(.dashicons) {
+			display: none;
+		}
+	}
+}
+
+.edd-code-generator-popup {
+	@include edd-popup( $width: 250px, $transformX: 240px, $transformY: 15px, $pointer-size: 15px, $pointer-position: top );
+
+	@media screen and (max-width: 480px) {
+		transform: translateY(15px) translateX(105px);
+
+		&:after {
+			left: 70%;
+		}
+	}
+
+	.edd-form-group {
+		width: 100%;
+		margin-bottom: 10px;
+		padding-bottom: 10px;
+		box-sizing: border-box;
+		margin-top: 0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid $wp-gray-5;
+		height: 40px;
+
+		&:last-of-type {
+			border-bottom: 0;
+		}
+
+		label {
+			padding: 5px 0;
+			width: 60px;
+			font-size: 12px;
+			margin-bottom: 0;
+			box-sizing: border-box;
+
+			@media screen and (max-width: 782px) {
+				line-height: 28px;
+			}
+		}
+
+		input:not([type="checkbox"]):not([type="radio"]) {
+			width: 120px !important;
+			min-height: 0;
+			height: 30px;
+
+			&:not(:focus) {
+				border: 1px solid $wp-input-border-2;
+			}
+		}
+	}
+
+	#edd-generate-code {
+		width: 100%;
+
+		@media screen and (max-width: 782px) {
+			&:before {
+				margin-top: 8px;
+			}
+		}
+	}
+}

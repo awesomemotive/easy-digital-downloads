@@ -1,4 +1,9 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Utils\Date;
+
 /**
  * Tests for date functions in date-functions.php.
  *
@@ -17,7 +22,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		EDD()->utils->get_gmt_offset( true );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$_REQUEST['range'] = '';
 
 		parent::tearDown();
@@ -65,16 +70,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 * @covers ::edd_get_timezone_id()
 	 */
 	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings() {
-		if ( version_compare( phpversion(), '5.5', '<' ) ) {
-
-			// Tests our logic around a shortcoming in PHP 5.3 and 5.4 with DateTimeZone
-			$is_dst   = date( 'I' );
-			$expected = timezone_name_from_abbr('', get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS, $is_dst );
-			$this->assertSame( $expected, edd_get_timezone_id() );
-
-		} else {
-			$this->assertSame( 'GMT-5', edd_get_timezone_id() );
-		}
+		$this->assertSame( 'GMT-5', edd_get_timezone_id() );
 	}
 
 	/**
@@ -257,7 +253,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	public function test_date_invalid_date_returns_date() {
 		$date = EDD()->utils->date( '::00', edd_get_timezone_id(), false );
 
-		$this->assertTrue( $date instanceof EDD\Utils\Date );
+		$this->assertTrue( $date instanceof Date );
 	}
 
 	/**
@@ -286,6 +282,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$actual   = EDD()->utils->get_date_string( '2020-01-100', 100, 99 );
 		$expected = date( 'Y-m-d' ) . ' 23:59:00';
 
-		$this->assertContains( $expected, $actual );
+		$this->assertStringContainsString( $expected, $actual );
 	}
 }

@@ -1,4 +1,8 @@
 <?php
+namespace EDD\Tests;
+
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+
 /**
  * Checkout tests.
  *
@@ -104,19 +108,19 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	 * Test to make sure the checkout form returns the expected HTML
 	 */
 	public function test_checkout_form() {
-		$this->assertInternalType( 'string', edd_checkout_form() );
+		$this->assertIsString( edd_checkout_form() );
 
-		$this->assertContains( '<div id="edd_checkout_wrap">', edd_checkout_form() );
+		$this->assertStringContainsString( '<div id="edd_checkout_wrap">', edd_checkout_form() );
 
-		$this->assertContains( '<div id="edd_checkout_form_wrap" class="edd_clearfix">', edd_checkout_form() );
+		$this->assertStringContainsString( '<div id="edd_checkout_form_wrap" class="edd_clearfix">', edd_checkout_form() );
 	}
 
 	/**
 	 * Test to make sure the Next button is returned properly
 	 */
 	public function test_checkout_button_next() {
-		$this->assertInternalType( 'string', edd_checkout_button_next() );
-		$this->assertContains( '<input type="hidden" name="edd_action" value="gateway_select" />', edd_checkout_button_next() );
+		$this->assertIsString( edd_checkout_button_next() );
+		$this->assertStringContainsString( '<input type="hidden" name="edd_action" value="gateway_select" />', edd_checkout_button_next() );
 	}
 
 	/**
@@ -126,8 +130,8 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		// We need activate gateways in order for this to pass.
 		add_filter( 'edd_enabled_payment_gateways', array( $this, 'modify_gateaways' ) );
 
-		$this->assertInternalType( 'string', edd_checkout_button_purchase() );
-		$this->assertContains( '<input type="submit" class="edd-submit blue button" id="edd-purchase-button" name="edd-purchase" value="Purchase"/>', edd_checkout_button_purchase() );
+		$this->assertIsString( edd_checkout_button_purchase() );
+		$this->assertStringContainsString( '<input type="submit" class="edd-submit blue button" id="edd-purchase-button" name="edd-purchase" value="Purchase"/>', edd_checkout_button_purchase() );
 
 		remove_filter( 'edd_enabled_payment_gateways', array( $this, 'modify_gateaways' ) );
 	}
@@ -136,7 +140,7 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	 * Test for retrieving banned emails
 	 */
 	public function test_edd_get_banned_emails() {
-		$this->assertInternalType( 'array', edd_get_banned_emails() );
+		$this->assertIsArray( edd_get_banned_emails() );
 		$this->assertEmpty( edd_get_banned_emails() );
 	}
 

@@ -6,16 +6,16 @@
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
  */
-
 namespace EDD\Tests\Notifications;
 
+use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Models\Notification;
 
 /**
  * @coversDefaultClass \EDD\Database\NotificationsDB
  * @group edd_notifications
  */
-class NotificationDBTests extends \EDD_UnitTestCase {
+class NotificationDBTests extends EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Database\NotificationsDB::getActiveNotifications

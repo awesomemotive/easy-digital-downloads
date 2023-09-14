@@ -58,6 +58,17 @@ function edd_tools_page() {
 				$tab_url
 			);
 
+			// System Info is now found in Site Health.
+			if ( 'system_info' === $tab_id ) {
+				$tab_url = add_query_arg(
+					array(
+						'tab' => 'debug',
+						'edd' => 'filter',
+					),
+					admin_url( 'site-health.php' )
+				);
+			}
+
 			$active = ( $active_tab === $tab_id )
 				? ' nav-tab-active'
 				: '';
@@ -141,9 +152,19 @@ function edd_tools_recount_stats_display() {
 						<option data-type="recount-store"
 								value="EDD_Tools_Recount_Store_Earnings"><?php esc_html_e( 'Recount Store Earnings and Sales', 'easy-digital-downloads' ); ?></option>
 						<option data-type="recount-download"
-								value="EDD_Tools_Recount_Download_Stats"><?php printf( __( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></option>
+								value="EDD_Tools_Recount_Download_Stats">
+								<?php
+								/* translators: %s: Singular download label, lowercase */
+								printf( esc_html__( 'Recount Earnings and Sales for a %s', 'easy-digital-downloads' ), esc_html( edd_get_label_singular( true ) ) );
+								?>
+						</option>
 						<option data-type="recount-all"
-								value="EDD_Tools_Recount_All_Stats"><?php printf( __( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></option>
+								value="EDD_Tools_Recount_All_Stats">
+								<?php
+								/* translators: %s: Plural download label, lowercase */
+								printf( esc_html__( 'Recount Earnings and Sales for All %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural( true ) ) );
+								?>
+						</option>
 						<option data-type="recount-customer-stats"
 								value="EDD_Tools_Recount_Customer_Stats"><?php esc_html_e( 'Recount Customer Stats', 'easy-digital-downloads' ); ?></option>
 						<?php do_action( 'edd_recount_tool_options' ); ?>
@@ -169,11 +190,21 @@ function edd_tools_recount_stats_display() {
 
 					<span class="edd-recount-stats-descriptions">
 						<span id="recount-store"><?php _e( 'Recalculates the total store earnings and sales.', 'easy-digital-downloads' ); ?></span>
-						<span id="recount-download"><?php printf( __( 'Recalculates the earnings and sales stats for a specific %s.', 'easy-digital-downloads' ), edd_get_label_singular( true ) ); ?></span>
-						<span id="recount-all"><?php printf( __( 'Recalculates the earnings and sales stats for all %s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></span>
-						<span id="recount-customer-stats"><?php _e( 'Recalculates the lifetime value and purchase counts for all customers.', 'easy-digital-downloads' ); ?></span>
+						<span id="recount-download">
+							<?php
+							/* translators: %s: Singular wownload label, lowercase */
+							printf( esc_html__( 'Recalculates the earnings and sales stats for a specific %s.', 'easy-digital-downloads' ), esc_html( edd_get_label_singular( true ) ) );
+							?>
+						</span>
+						<span id="recount-all">
+							<?php
+							/* translators: %s: Pural download label, lowercase */
+							printf( esc_html__( 'Recalculates the earnings and sales stats for all %s.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural( true ) ) );
+							?>
+						</span>
+						<span id="recount-customer-stats"><?php esc_html_e( 'Recalculates the lifetime value and purchase counts for all customers.', 'easy-digital-downloads' ); ?></span>
 						<?php do_action( 'edd_recount_tool_descriptions' ); ?>
-						<span id="reset-stats"><?php _e( '<strong>Deletes</strong> all payment records, customers, and related log entries.', 'easy-digital-downloads' ); ?></span>
+						<span id="reset-stats"><?php echo wp_kses_post( __( '<strong>Deletes</strong> all payment records, customers, and related log entries.', 'easy-digital-downloads' ) ); ?></span>
 					</span>
 
 					<span class="spinner"></span>
@@ -259,12 +290,16 @@ function edd_tools_api_keys_display() {
     <p>
 		<?php
 		printf(
-			__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile app</a>.', 'easy-digital-downloads' ),
-			$docs_link,
-			$ios_link
+			wp_kses_post(
+				/* translators: %1$s: API documentation linktag , %2$s: iOS app link tag, %3$s: closing link tag */
+				__( 'These API keys allow you to use the %1$sEDD REST API%3$s to retrieve store data in JSON or XML for external applications or devices, such as the %2$sEDD mobile app%3$s.', 'easy-digital-downloads' )
+			),
+			'<a href="' . esc_url( $docs_link ) . '">',
+			'<a href="' . esc_url( $ios_link ) . '">',
+			'</a>'
 		);
 		?>
-    </p>
+	</p>
 	<?php
 
 	do_action( 'edd_tools_api_keys_after' );
@@ -304,7 +339,12 @@ function edd_tools_betas_display() {
 								<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]"
 										id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
 										value="1"/>
-								<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), esc_html( $product ) ); ?></label>
+								<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]">
+									<?php
+									/* translators: %s: Product name */
+									printf( esc_html__( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), esc_html( $product ) );
+									?>
+								</label>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -469,10 +509,10 @@ function edd_tools_import_export_display() {
 					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
 					<input type="hidden" name="edd-import-class" value="EDD_Batch_Payments_Import"/>
 					<p>
-						<input name="edd-import-file" id="edd-payments-import-file" type="file"/>
+						<input name="edd-import-file" id="edd-payments-import-file" type="file" accept=".csv" required/>
 					</p>
 					<span>
-						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>"
+						<input type="submit" value="<?php esc_html_e( 'Import CSV', 'easy-digital-downloads' ); ?>"
 								class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
@@ -483,8 +523,12 @@ function edd_tools_import_export_display() {
 					<p>
 						<?php
 						printf(
-							__( 'Each column loaded from the CSV needs to be mapped to an order field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing payment records.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/docs/importing-exporting-orders/'
+							wp_kses_post(
+								/* translators: %1$s opening anchor tag, %2$s closing anchor tag */
+								__( 'Each column loaded from the CSV needs to be mapped to an order field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing payment records.', 'easy-digital-downloads' )
+							),
+							'<a href="https://easydigitaldownloads.com/docs/importing-exporting-orders/" target="_blank">',
+							'</a>'
 						);
 						?>
 					</p>
@@ -784,7 +828,7 @@ function edd_tools_import_export_display() {
 					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
 					<input type="hidden" name="edd-import-class" value="EDD_Batch_Downloads_Import"/>
 					<p>
-						<input name="edd-import-file" id="edd-downloads-import-file" type="file"/>
+						<input name="edd-import-file" id="edd-downloads-import-file" type="file" accept=".csv" required/>
 					</p>
 					<span>
 						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>"
@@ -798,8 +842,12 @@ function edd_tools_import_export_display() {
 					<p>
 						<?php
 						printf(
-							__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing Download products.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/docs/importing-exporting-products/'
+							wp_kses_post(
+								/* translators: %1$s and %2$s opening and closing anchor tags respectively */
+								__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing Download products.', 'easy-digital-downloads' )
+							),
+							'<a href="https://easydigitaldownloads.com/docs/importing-exporting-products/" target="_blank">',
+							'</a>'
 						);
 						?>
 					</p>
@@ -994,13 +1042,18 @@ function edd_tools_import_export_display() {
 			<p>
 				<?php
 				printf(
-					__( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ),
-					esc_url( edd_get_admin_url(
-						array(
-						'page' => 'edd-reports',
-						'view' => 'export',
+					wp_kses_post(
+						/* translators: %s: Reports page URL */
+						__( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' )
+					),
+					esc_url(
+						edd_get_admin_url(
+							array(
+							'page' => 'edd-reports',
+							'view' => 'export',
+							)
 						)
-					) )
+					)
 				);
 				?>
 			</p>
@@ -1022,7 +1075,7 @@ function edd_tools_import_export_display() {
 			<form method="post" enctype="multipart/form-data"
 				action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'import_export' ) ) ); ?>">
 				<p>
-					<input type="file" name="import_file"/>
+					<input type="file" name="import_file" accept=".json" required/>
 				</p>
 				<p>
 					<input type="hidden" name="edd_action" value="import_settings"/>
@@ -1167,6 +1220,10 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  * @since       2.8.7
  */
 function edd_tools_debug_log_display() {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+
 	$edd_logs = EDD()->debug_log;
 
 	// Setup fallback incase no file exists
@@ -1177,23 +1234,36 @@ function edd_tools_debug_log_display() {
 		: esc_html__( 'No File', 'easy-digital-downloads' );
 	$log_output  = ! empty( $log )
 		? wp_normalize_path( $log )
-		: esc_html__( 'Log is Empty', 'easy-digital-downloads' ); ?>
+		: esc_html__( 'Log is Empty', 'easy-digital-downloads' );
+	?>
 
-    <div class="postbox">
-        <h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <form id="edd-debug-log" method="post">
-                <p><?php _e( 'When debug mode is enabled, specific information will be logged here. (<a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">Learn how</a> to use <code>EDD_Logging</code> in your own code.)', 'easy-digital-downloads' ); ?></p>
-                <textarea
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<form id="edd-debug-log" method="post">
+				<p>
+					<?php
+					printf(
+						wp_kses_post(
+							/* translators: 1. opening anchor tag, do not translate; 2. function name, do not translate; 3. closing anchor tag, do not translate */
+							__( 'When debug mode is enabled, specific information will be logged here. (%1$sLearn how to use %2$s in your own code.%3$s)', 'easy-digital-downloads' )
+						),
+						'<a href="https://easydigitaldownloads.com/docs/edd-debug-log">',
+						'<code>edd_debug_log</code>',
+						'</a>'
+					);
+					?>
+				</p>
+				<textarea
 					readonly="readonly"
 					class="edd-tools-textarea"
 					rows="15"
 					name="edd-debug-log-contents"><?php echo esc_textarea( $log_output ); ?></textarea>
-                <p>
-                    <input type="hidden" name="edd_action" value="submit_debug_log"/>
+				<p>
+					<input type="hidden" name="edd_action" value="submit_debug_log"/>
 					<?php
-					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary',                     'edd-download-debug-log', false );
-					submit_button( __( 'Copy to Clipboard',       'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log',     false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
+					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary', 'edd-download-debug-log', false );
+					submit_button( __( 'Copy to Clipboard', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
 
 					// Only show the "Clear Log" button if there is a log to clear
 					if ( ! empty( $log ) ) {
@@ -1201,16 +1271,16 @@ function edd_tools_debug_log_display() {
 					}
 
 					?>
-                </p>
+				</p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
-            </form>
+			</form>
 
-            <p>
-				<?php _e( 'Log file', 'easy-digital-downloads' ); ?>:
-                <code><?php echo esc_html( $path_output ); ?></code>
+			<p>
+				<?php esc_html_e( 'Log file', 'easy-digital-downloads' ); ?>:
+				<code><?php echo esc_html( $path_output ); ?></code>
 			</p>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
 	<?php
 }
@@ -1251,478 +1321,6 @@ function edd_handle_submit_debug_log() {
 	}
 }
 add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );
-
-/**
- * Display the system info tab
- *
- * @since 2.0
- */
-function edd_tools_sysinfo_display() {
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	?>
-
-	<div class="postbox">
-		<h3><span><?php esc_html_e( 'System Information', 'easy-digital-downloads' ); ?></span></h3>
-		<div class="inside">
-			<p>
-				<?php esc_html_e( 'Use the system information below to help troubleshoot problems.', 'easy-digital-downloads' ); ?>
-			</p>
-
-			<form id="edd-system-info" action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=system_info' ) ); ?>" method="post" dir="ltr">
-				<textarea readonly="readonly" onclick="this.focus(); this.select()" id="system-info-textarea" class="edd-tools-textarea" name="edd-sysinfo"
-					><?php echo edd_tools_sysinfo_get(); ?></textarea>
-
-				<p>
-					<input type="hidden" name="edd-action" value="download_sysinfo"/>
-					<?php
-					submit_button( __( 'Download System Info File', 'easy-digital-downloads' ), 'primary', 'edd-download-sysinfo', false );
-					submit_button( __( 'Copy to Clipboard',         'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-system-info', false, array( 'onclick' => "this.form['edd-sysinfo'].focus();this.form['edd-sysinfo'].select();document.execCommand('copy');return false;" ) );
-					?>
-				</p>
-			</form>
-		</div>
-	</div>
-
-	<?php
-}
-add_action( 'edd_tools_tab_system_info', 'edd_tools_sysinfo_display' );
-
-/**
- * Get system info.
- *
- * @since 2.0
- *
- * @return string $return A string containing the info to output
- */
-function edd_tools_sysinfo_get() {
-	global $wpdb;
-
-	if ( ! class_exists( 'Browser' ) ) {
-		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
-	}
-
-	$browser = new Browser();
-
-	// Get theme info
-	$theme_data   = wp_get_theme();
-	$theme        = $theme_data->Name . ' ' . $theme_data->Version;
-	$parent_theme = $theme_data->Template;
-	if ( ! empty( $parent_theme ) ) {
-		$parent_theme_data = wp_get_theme( $parent_theme );
-		$parent_theme      = $parent_theme_data->Name . ' ' . $parent_theme_data->Version;
-	}
-
-	// Try to identify the hosting provider
-	$host = edd_get_host();
-
-	$return  = '### Begin System Info (Generated ' . date( 'Y-m-d H:i:s' ) . ') ###' . "\n\n";
-
-	// Start with the basics...
-	$return .= '-- Site Info' . "\n\n";
-	$return .= 'Site URL:                 ' . site_url() . "\n";
-	$return .= 'Home URL:                 ' . home_url() . "\n";
-	$return .= 'Multisite:                ' . ( is_multisite() ? 'Yes' : 'No' ) . "\n";
-
-	$return = apply_filters( 'edd_sysinfo_after_site_info', $return );
-
-	// Can we determine the site's host?
-	if ( $host ) {
-		$return .= "\n" . '-- Hosting Provider' . "\n\n";
-		$return .= 'Host:                     ' . $host . "\n";
-
-		$return = apply_filters( 'edd_sysinfo_after_host_info', $return );
-	}
-
-	// The local users' browser information, handled by the Browser class
-	$return .= "\n" . '-- User Browser' . "\n\n";
-	$return .= $browser;
-
-	$return = apply_filters( 'edd_sysinfo_after_user_browser', $return );
-
-	$locale = get_locale();
-
-	// WordPress configuration
-	$return .= "\n" . '-- WordPress Configuration' . "\n\n";
-	$return .= 'Version:                  ' . get_bloginfo( 'version' ) . "\n";
-	$return .= 'Language:                 ' . ( ! empty( $locale ) ? $locale : 'en_US' ) . "\n";
-	$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
-	$return .= 'Active Theme:             ' . $theme . "\n";
-	$return .= 'WP Timezone:              ' . wp_timezone_string() . "\n";
-	$return .= 'EDD Timezone:             ' . edd_get_timezone_abbr() . "\n";
-	if ( $parent_theme !== $theme ) {
-		$return .= 'Parent Theme:             ' . $parent_theme . "\n";
-	}
-
-	$customized_template_files = edd_get_theme_edd_templates();
-	$return .= "\n" . '-- Customized Templates' . "\n\n";
-	if ( empty( $customized_template_files ) ) {
-		$return .= 'No custom templates found.' . "\n\n";
-	} else {
-		foreach ( $customized_template_files as $customized_template_file ) {
-			$return .= $customized_template_file . "\n";
-		}
-	}
-
-	$return .= "\n";
-
-	$return = apply_filters( 'edd_sysinfo_after_customized_templates', $return );
-
-	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
-
-	// Only show page specs if frontpage is set to 'page'
-	if ( get_option( 'show_on_front' ) == 'page' ) {
-		$front_page_id = get_option( 'page_on_front' );
-		$blog_page_id  = get_option( 'page_for_posts' );
-
-		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? '#' . $front_page_id : 'Unset' ) . "\n";
-		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? '#' . $blog_page_id : 'Unset' ) . "\n";
-	}
-
-	$return .= 'ABSPATH:                  ' . ABSPATH . "\n";
-
-	// Make sure wp_remote_post() is working
-	$request['cmd'] = '_notify-validate';
-
-	$params = array(
-		'sslverify'  => false,
-		'timeout'    => 60,
-		'user-agent' => 'EDD/' . EDD_VERSION,
-		'body'       => $request,
-	);
-
-	$response = wp_remote_post( 'https://www.paypal.com/cgi-bin/webscr', $params );
-
-	if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
-		$WP_REMOTE_POST = 'wp_remote_post() works';
-	} else {
-		$WP_REMOTE_POST = 'wp_remote_post() does not work';
-	}
-
-	$return .= 'Remote Post:              ' . $WP_REMOTE_POST . "\n";
-	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
-	// Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
-	//$return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
-	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n";
-	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
-	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
-
-	$return = apply_filters( 'edd_sysinfo_after_wordpress_config', $return );
-
-	// EDD configuration
-	$return .= "\n" . '-- EDD Configuration' . "\n\n";
-	$return .= 'Version:                  ' . EDD_VERSION . "\n";
-	$return .= 'Upgraded From:            ' . get_option( 'edd_version_upgraded_from', 'None' ) . "\n";
-	$return .= 'Test Mode:                ' . ( edd_is_test_mode() ? "Enabled\n" : "Disabled\n" );
-	$return .= 'AJAX:                     ' . ( ! edd_is_ajax_disabled() ? "Enabled\n" : "Disabled\n" );
-	$return .= 'Guest Checkout:           ' . ( edd_no_guest_checkout() ? "Disabled\n" : "Enabled\n" );
-	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', edd_get_option( 'symlink_file_downloads', false ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
-	$return .= 'Download Method:          ' . ucfirst( edd_get_file_download_method() ) . "\n";
-	$return .= 'Currency Code:            ' . edd_get_currency() . "\n";
-	$return .= 'Currency Position:        ' . edd_get_option( 'currency_position', 'before' ) . "\n";
-	$return .= 'Decimal Separator:        ' . edd_get_option( 'decimal_separator', '.' ) . "\n";
-	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', ',' ) . "\n";
-	$return .= 'Upgrades Completed:       ' . implode( ',', edd_get_completed_upgrades() ) . "\n";
-	$return .= 'Download Link Expiration: ' . edd_get_option( 'download_link_expiration' ) . " hour(s)\n";
-
-	$return = apply_filters( 'edd_sysinfo_after_edd_config', $return );
-
-	// EDD Database tables
-	$return .= "\n" . '-- EDD Database Tables' . "\n\n";
-
-	foreach ( EDD()->components as $component ) {
-
-		// Object
-		$thing = $component->get_interface( 'table' );
-		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->get_version() . "\n";
-		}
-
-		// Meta
-		$thing = $component->get_interface( 'meta' );
-		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->get_version() . "\n";
-		}
-	}
-
-	$return = apply_filters( 'edd_sysinfo_after_edd_database_tables', $return );
-
-	// EDD Database tables
-	$return .= "\n" . '-- EDD Database Row Counts' . "\n\n";
-
-	foreach ( EDD()->components as $component ) {
-
-		// Object
-		$thing = $component->get_interface( 'table' );
-		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->count() . "\n";
-		}
-
-		// Meta
-		$thing = $component->get_interface( 'meta' );
-		if ( ! empty( $thing ) ) {
-			$return .= str_pad( $thing->name . ': ', 32, ' ' ) . $thing->count() . "\n";
-		}
-	}
-
-	$return = apply_filters( 'edd_sysinfo_after_edd_database_row_counts', $return );
-
-	// EDD pages
-	$purchase_page = edd_get_option( 'purchase_page', '' );
-	$success_page  = edd_get_option( 'success_page', '' );
-	$failure_page  = edd_get_option( 'failure_page', '' );
-
-	$return .= "\n" . '-- EDD Page Configuration' . "\n\n";
-	$return .= 'Checkout:                 ' . ( ! empty( $purchase_page ) ? "Valid\n" : "Invalid\n" );
-	$return .= 'Checkout Page:            ' . ( ! empty( $purchase_page ) ? get_permalink( $purchase_page ) . "\n" : "Unset\n" );
-	$return .= 'Success Page:             ' . ( ! empty( $success_page ) ? get_permalink( $success_page ) . "\n" : "Unset\n" );
-	$return .= 'Failure Page:             ' . ( ! empty( $failure_page ) ? get_permalink( $failure_page ) . "\n" : "Unset\n" );
-	$return .= 'Downloads Slug:           ' . ( defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\n" : "/downloads\n" );
-
-	$return = apply_filters( 'edd_sysinfo_after_edd_pages', $return );
-
-	// EDD gateways
-	$return .= "\n" . '-- EDD Gateway Configuration' . "\n\n";
-
-	$active_gateways = edd_get_enabled_payment_gateways();
-	if ( $active_gateways ) {
-		$default_gateway_is_active = edd_is_gateway_active( edd_get_default_gateway() );
-		if ( $default_gateway_is_active ) {
-			$default_gateway = edd_get_default_gateway();
-			$default_gateway = $active_gateways[ $default_gateway ]['admin_label'];
-		} else {
-			$default_gateway = 'Test Payment';
-		}
-
-		$gateways = array();
-		foreach ( $active_gateways as $gateway ) {
-			$gateways[] = $gateway['admin_label'];
-		}
-
-		$return .= 'Enabled Gateways:         ' . implode( ', ', $gateways ) . "\n";
-		$return .= 'Default Gateway:          ' . $default_gateway . "\n";
-	} else {
-		$return .= 'Enabled Gateways:         None' . "\n";
-	}
-
-	$return = apply_filters( 'edd_sysinfo_after_edd_gateways', $return );
-
-
-	// EDD Taxes
-	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
-	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
-	$return .= 'Default Rate:             ' . edd_get_formatted_tax_rate() . "\n";
-	$return .= 'Display On Checkout:      ' . ( edd_get_option( 'checkout_include_tax', false ) ? "Displayed\n" : "Not Displayed\n" );
-	$return .= 'Prices Include Tax:       ' . ( edd_prices_include_tax() ? "Yes\n" : "No\n" );
-
-	$rates = edd_get_tax_rates();
-	if ( ! empty( $rates ) ) {
-		$return .= 'Country / State Rates:    ' . "\n";
-		foreach ( $rates as $rate ) {
-			$return .= '                          Country: ' . $rate['country'] . ', State: ' . $rate['state'] . ', Rate: ' . $rate['rate'] . "\n";
-		}
-	}
-
-	$return = apply_filters( 'edd_sysinfo_after_edd_taxes', $return );
-
-	// EDD Templates
-	$dir = get_stylesheet_directory() . '/edd_templates/*';
-	if ( is_dir( $dir ) && ( count( glob( "$dir/*" ) ) !== 0 ) ) {
-		$return .= "\n" . '-- EDD Template Overrides' . "\n\n";
-
-		foreach ( glob( $dir ) as $file ) {
-			$return .= 'Filename:                 ' . basename( $file ) . "\n";
-		}
-
-		$return = apply_filters( 'edd_sysinfo_after_edd_templates', $return );
-	}
-
-	// Drop Ins
-	$dropins = get_dropins();
-	if ( count( $dropins ) > 0 ) {
-		$return .= "\n" . '-- Drop Ins' . "\n\n";
-
-		foreach ( $dropins as $plugin => $plugin_data ) {
-			$return .= str_pad( $plugin_data['Name'] . ': ', 26, ' ' ) . $plugin_data['Version'] . "\n";
-		}
-
-		$return = apply_filters( 'edd_sysinfo_after_wordpress_dropin_plugins', $return );
-	}
-
-	// Get plugins that have an update
-	$updates = get_plugin_updates();
-
-	// Must-use plugins
-	// NOTE: MU plugins can't show updates!
-	$muplugins = get_mu_plugins();
-	if ( count( $muplugins ) > 0 ) {
-		$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
-
-		foreach ( $muplugins as $plugin => $plugin_data ) {
-			$return .= str_pad( $plugin_data['Name'] . ': ', 26, ' ' ) . $plugin_data['Version'] . "\n";
-		}
-
-		$return = apply_filters( 'edd_sysinfo_after_wordpress_mu_plugins', $return );
-	}
-
-	// WordPress active plugins
-	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
-
-	$plugins        = get_plugins();
-	$active_plugins = get_option( 'active_plugins', array() );
-
-	foreach ( $plugins as $plugin_path => $plugin ) {
-		if ( ! in_array( $plugin_path, $active_plugins ) ) {
-			continue;
-		}
-
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$plugin_url = '';
-		if ( ! empty( $plugin['PluginURI'] ) ) {
-			$plugin_url = $plugin['PluginURI'];
-		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
-			$plugin_url = $plugin['AuthorURI'];
-		} elseif ( ! empty( $plugin['Author'] ) ) {
-			$plugin_url = $plugin['Author'];
-		}
-		if ( $plugin_url ) {
-			$plugin_url = "\n" . $plugin_url;
-		}
-		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . $plugin_url . "\n\n";
-	}
-
-	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
-
-	// WordPress inactive plugins
-	$return .= "\n" . '-- WordPress Inactive Plugins' . "\n\n";
-
-	foreach ( $plugins as $plugin_path => $plugin ) {
-		if ( in_array( $plugin_path, $active_plugins ) ) {
-			continue;
-		}
-
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$plugin_url = '';
-		if ( ! empty( $plugin['PluginURI'] ) ) {
-			$plugin_url = $plugin['PluginURI'];
-		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
-			$plugin_url = $plugin['AuthorURI'];
-		} elseif ( ! empty( $plugin['Author'] ) ) {
-			$plugin_url = $plugin['Author'];
-		}
-		if ( $plugin_url ) {
-			$plugin_url = "\n" . $plugin_url;
-		}
-		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . $plugin_url . "\n\n";
-	}
-
-	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
-
-	if ( is_multisite() ) {
-		// WordPress Multisite active plugins
-		$return .= "\n" . '-- Network Active Plugins' . "\n\n";
-
-		$plugins        = wp_get_active_network_plugins();
-		$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
-
-		foreach ( $plugins as $plugin_path ) {
-			$plugin_base = plugin_basename( $plugin_path );
-
-			if ( ! array_key_exists( $plugin_base, $active_plugins ) ) {
-				continue;
-			}
-
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-			$plugin = get_plugin_data( $plugin_path );
-			$plugin_url = '';
-			if ( ! empty( $plugin['PluginURI'] ) ) {
-				$plugin_url = $plugin['PluginURI'];
-			} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
-				$plugin_url = $plugin['AuthorURI'];
-			} elseif ( ! empty( $plugin['Author'] ) ) {
-				$plugin_url = $plugin['Author'];
-			}
-			if ( $plugin_url ) {
-				$plugin_url = "\n" . $plugin_url;
-			}
-			$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . $plugin_url . "\n\n";
-		}
-
-		$return = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );
-	}
-
-	// Server configuration (really just versioning)
-	$return .= "\n" . '-- Webserver Configuration' . "\n\n";
-	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
-	$return .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
-	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
-
-	$return = apply_filters( 'edd_sysinfo_after_webserver_config', $return );
-
-	// PHP configs... now we're getting to the important stuff
-	$return .= "\n" . '-- PHP Configuration' . "\n\n";
-	$return .= 'Memory Limit:             ' . ini_get( 'memory_limit' ) . "\n";
-	$return .= 'Upload Max Size:          ' . ini_get( 'upload_max_filesize' ) . "\n";
-	$return .= 'Post Max Size:            ' . ini_get( 'post_max_size' ) . "\n";
-	$return .= 'Upload Max Filesize:      ' . ini_get( 'upload_max_filesize' ) . "\n";
-	$return .= 'Time Limit:               ' . ini_get( 'max_execution_time' ) . "\n";
-	$return .= 'Max Input Vars:           ' . ini_get( 'max_input_vars' ) . "\n";
-	$return .= 'Display Errors:           ' . ( ini_get( 'display_errors' ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A' ) . "\n";
-	$return .= 'PHP Arg Separator:        ' . edd_get_php_arg_separator_output() . "\n";
-
-	$return = apply_filters( 'edd_sysinfo_after_php_config', $return );
-
-	// PHP extensions and such
-	$return .= "\n" . '-- PHP Extensions' . "\n\n";
-	$return .= 'cURL:                     ' . ( function_exists( 'curl_init' ) ? 'Supported' : 'Not Supported' ) . "\n";
-	$return .= 'fsockopen:                ' . ( function_exists( 'fsockopen' ) ? 'Supported' : 'Not Supported' ) . "\n";
-	$return .= 'SOAP Client:              ' . ( class_exists( 'SoapClient' ) ? 'Installed' : 'Not Installed' ) . "\n";
-	$return .= 'Suhosin:                  ' . ( extension_loaded( 'suhosin' ) ? 'Installed' : 'Not Installed' ) . "\n";
-
-	$return = apply_filters( 'edd_sysinfo_after_php_ext', $return );
-
-	// Session stuff
-	$return .= "\n" . '-- Session Configuration' . "\n\n";
-	$return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ? 'Enforced' : ( EDD()->session->use_php_sessions() ? 'Enabled' : 'Disabled' ) ) . "\n";
-	$return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
-
-	// The rest of this is only relevant is session is enabled
-	if ( isset( $_SESSION ) ) {
-		$return .= 'Session Name:             ' . esc_html( ini_get( 'session.name' ) ) . "\n";
-		$return .= 'Cookie Path:              ' . esc_html( ini_get( 'session.cookie_path' ) ) . "\n";
-		$return .= 'Save Path:                ' . esc_html( ini_get( 'session.save_path' ) ) . "\n";
-		$return .= 'Use Cookies:              ' . ( ini_get( 'session.use_cookies' ) ? 'On' : 'Off' ) . "\n";
-		$return .= 'Use Only Cookies:         ' . ( ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off' ) . "\n";
-	}
-
-	$return = apply_filters( 'edd_sysinfo_after_session_config', $return );
-
-	$return .= "\n" . '### End System Info ###';
-
-	return $return;
-}
-
-/**
- * Generates a System Info download file
- *
- * @since 2.0
- */
-function edd_tools_sysinfo_download() {
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	nocache_headers();
-
-	header( 'Content-Type: text/plain' );
-	header( 'Content-Disposition: attachment; filename="edd-system-info.txt"' );
-
-	echo wp_strip_all_tags( $_POST['edd-sysinfo'] );
-	edd_die();
-}
-add_action( 'edd_download_sysinfo', 'edd_tools_sysinfo_download' );
 
 /**
  * Redirects requests to the old sales log to the orders page.

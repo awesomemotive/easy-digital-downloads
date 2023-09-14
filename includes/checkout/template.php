@@ -830,7 +830,7 @@ function edd_terms_agreement() {
 			?>
 
 			<div class="edd-terms-agreement">
-				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
+				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1" required/>
 				<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
 			</div>
 		</fieldset>
@@ -905,7 +905,7 @@ function edd_privacy_agreement() {
 			if ( '1' === $show_privacy_policy_checkbox ) {
 				?>
 				<div class="edd-privacy-policy-agreement">
-					<input name="edd_agree_to_privacy_policy" class="required" type="checkbox" id="edd-agree-to-privacy-policy" value="1"/>
+					<input name="edd_agree_to_privacy_policy" class="required" type="checkbox" id="edd-agree-to-privacy-policy" value="1" required/>
 					<label for="edd-agree-to-privacy-policy"><?php echo stripslashes( $agree_label ); ?></label>
 				</div>
 				<?php

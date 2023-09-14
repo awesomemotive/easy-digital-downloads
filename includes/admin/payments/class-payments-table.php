@@ -368,7 +368,27 @@ class EDD_Payment_History_Table extends List_Table {
 				return;
 			}
 		}
-		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
+
+		$status = $this->get_status();
+
+		if ( ! empty( $status ) ) {
+			$status_label = edd_get_status_label( $status );
+
+			switch ( $status ) {
+				case 'trash':
+					/* Translators: %s is for the status of 'Trash', telling the user no items were found in the trash. */
+					$message = sprintf( __( 'No orders found in %s.', 'easy-digital-downloads' ), $status_label );
+					break;
+				default:
+					/* Translators: %s is for the currently viewed order status filter */
+					$message = sprintf( __( 'No %s orders found.', 'easy-digital-downloads' ), $status_label );
+					break;
+			}
+
+			echo esc_html( $message );
+		} else {
+			esc_html_e( 'No orders found.', 'easy-digital-downloads' );
+		}
 	}
 
 	/**
@@ -509,7 +529,7 @@ class EDD_Payment_History_Table extends List_Table {
 	public function column_number( $order ) {
 		$status = $this->get_status();
 
-		// View URL
+		// View URL.
 		$view_url = edd_get_admin_url( array(
 			'page' => 'edd-payment-history',
 			'view' => 'sale' === $order->type
@@ -518,13 +538,13 @@ class EDD_Payment_History_Table extends List_Table {
 			'id'   => absint( $order->id ),
 		) );
 
-		// Default row actions
+		// Default row actions.
 		$row_actions = array(
 			'view' => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'Edit', 'easy-digital-downloads' ) . '</a>',
 		);
 
-		// View receipt
-		if ( 'sale' === $order->type && edd_can_view_receipt( $order->payment_key ) ) {
+		// View receipt.
+		if ( 'sale' === $order->type && edd_can_view_receipt( $order ) ) {
 			$row_actions['receipt'] = sprintf(
 				'<a href="%s" target="_blank">%s</a>',
 				edd_get_receipt_page_uri( $order->id ),
@@ -532,7 +552,7 @@ class EDD_Payment_History_Table extends List_Table {
 			);
 		}
 
-		// Resend Receipt
+		// Resend Receipt.
 		if ( 'sale' === $this->type && 'complete' === $order->status && ! empty( $order->email ) ) {
 			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
 					'edd-action'  => 'email_links',
@@ -540,7 +560,7 @@ class EDD_Payment_History_Table extends List_Table {
 				), $this->base_url ) ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		// Keep Delete at the end
+		// Keep Delete at the end.
 		if ( edd_is_order_trashable( $order->id ) ) {
 			$trash_url = wp_nonce_url( add_query_arg( array(
 				'edd-action'  => 'trash_order',
@@ -665,8 +685,6 @@ class EDD_Payment_History_Table extends List_Table {
 				'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
 				'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
 				'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
-				'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
-				'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
 				'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
 			);
 		} else {
@@ -677,6 +695,10 @@ class EDD_Payment_History_Table extends List_Table {
 			$action = array(
 				'restore' => __( 'Restore', 'easy-digital-downloads' ),
 			);
+
+			if ( current_user_can( 'delete_shop_payments' ) ) {
+				$action['delete'] = __( 'Delete permanently', 'easy-digital-downloads' );
+			}
 		} else {
 			$action['trash'] = __( 'Move to Trash', 'easy-digital-downloads' );
 		}
@@ -834,6 +856,12 @@ class EDD_Payment_History_Table extends List_Table {
 			'type'        => $type,
 		) );
 
+		// If no specific ordering has been requested, order by `date_created`.
+		if ( empty( $_GET['orderby'] ) ) {
+			$args['orderby'] = 'date_created';
+			$args['order']   = 'DESC';
+		}
+
 		// Update args by search query.
 		if ( ! empty( $search ) ) {
 			$args = $this->parse_search( $search, $args );
@@ -849,24 +877,18 @@ class EDD_Payment_History_Table extends List_Table {
 
 			// Start (of day)
 			if ( ! empty( $start_date ) ) {
-
-				$start_date_obj   = EDD()->utils->date( $start_date, edd_get_timezone_id(), false )->copy()->startOfDay();
-				$query_start_date = edd_get_utc_equivalent_date( $start_date_obj->copy() );
-
 				$args['date_query'][] = array(
 					'column' => 'date_created',
-					'after'  => $query_start_date->format( 'mysql' ),
+					'after'  => edd_get_utc_date_string( $start_date, 'mysql' ),
 				);
 			}
 
 			// End (of day)
 			if ( ! empty( $end_date ) ) {
-				$end_date_obj   = EDD()->utils->date( $end_date, edd_get_timezone_id(), false )->copy()->endOfDay();
-				$query_end_date = edd_get_utc_equivalent_date( $end_date_obj->copy() );
-
+				$end_date_string      = EDD()->utils->get_date_string( $end_date, 23, 59, 59 );
 				$args['date_query'][] = array(
-					'column'  => 'date_created',
-					'before'  => $query_end_date->format( 'mysql' ),
+					'column' => 'date_created',
+					'before' => edd_get_utc_date_string( $end_date_string, 'mysql' ),
 				);
 			}
 		}
@@ -948,6 +970,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	private function parse_search( $search, $args ) {
 
+		// Order ID/number.
+		if ( is_numeric( $search ) ) {
+			$args['id']           = $search;
+			$args['order_number'] = $search;
+
+			return $args;
+		}
+
 		// Transaction ID
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
 			$args['txn'] = trim( str_replace( 'txn:', '', $search ) );
@@ -965,13 +995,6 @@ class EDD_Payment_History_Table extends List_Table {
 		// Download ID
 		if ( is_string( $search ) && ( false !== strpos( $search, '#' ) ) ) {
 			$args['product_id'] = intval( trim( str_replace( '#', '', $search ) ) );
-
-			return $args;
-		}
-
-		// Order ID
-		if ( is_numeric( $search ) ) {
-			$args['id'] = $search;
 
 			return $args;
 		}
@@ -1064,12 +1087,19 @@ class EDD_Payment_History_Table extends List_Table {
 	 *
 	 * @param string $which
 	 * @since 3.1.0.4
+	 * @since 3.1.1 Outputs the dialogs for deleting orders.
 	 */
 	protected function display_tablenav( $which ) {
-		if ( 'top' === $which ) {
+		if ( 'top' === $which ) :
 			wp_nonce_field( 'bulk-' . $this->_args['plural'], '_wpnonce', false );
-		}
-		?>
+			?>
+			<div id="edd-bulk-delete-dialog" class="edd-dialog" title="<?php esc_html_e( 'Confirmation Required', 'easy-digital-downloads' ); ?>">
+				<?php esc_html_e( 'You are about to permanently delete orders from your store. Once deleted, these orders are not recoverable. Are you sure you want to continue?', 'easy-digital-downloads' ); ?>
+			</div>
+			<div id="edd-single-delete-dialog" class="edd-dialog" title="<?php esc_html_e( 'Confirmation Required', 'easy-digital-downloads' ); ?>">
+				<?php esc_html_e( 'You are about to permanently delete this order from your store. Once deleted, this order is not recoverable. Are you sure you want to continue?', 'easy-digital-downloads' ); ?>
+			</div>
+		<?php endif; ?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
 			<?php if ( $this->has_items() ) : ?>
