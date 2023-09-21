@@ -43,14 +43,17 @@ class Data_Migrator {
 
 		$customer = edd_get_customer_by( 'user_id', $user_id );
 
-		$address = wp_parse_args( $address, array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'state'   => '',
-			'zip'     => '',
-			'country' => '',
-		) );
+		$address = wp_parse_args(
+			$address,
+			array(
+				'line1'   => '',
+				'line2'   => '',
+				'city'    => '',
+				'state'   => '',
+				'zip'     => '',
+				'country' => '',
+			)
+		);
 
 		$address_to_check = array_filter( $address );
 
@@ -61,8 +64,8 @@ class Data_Migrator {
 
 		if ( $customer ) {
 			edd_maybe_add_customer_address(
+				$customer->id,
 				array(
-					'customer_id'  => $customer->id,
 					'is_primary'   => true,
 					'name'         => $customer->name,
 					'address'      => $address['line1'],
@@ -397,6 +400,14 @@ class Data_Migrator {
 		// Bail if no data passed.
 		if ( ! $data ) {
 			return;
+		}
+
+		$date_actions_run_note = __( 'After payment actions processed.', 'easy-digital-downloads' );
+		if ( $date_actions_run_note === $data->comment_content ) {
+			$order = edd_get_order( $data->object_id );
+			if ( $order->date_actions_run ) {
+				return;
+			}
 		}
 
 		$note_data = array(

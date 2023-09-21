@@ -69,7 +69,8 @@ function edd_process_register_form( $data ) {
 
 	$customers = edd_get_customers(
 		array(
-			'email' => $data['edd_user_email'],
+			'email'           => $data['edd_user_email'],
+			'user_id__not_in' => array( null ),
 		)
 	);
 	if ( ( ! empty( $data['edd_user_email'] ) && email_exists( $data['edd_user_email'] ) ) || ! empty( $customers ) ) {

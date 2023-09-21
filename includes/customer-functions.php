@@ -218,12 +218,33 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 		$customer_emails = new EDD\Database\Queries\Customer_Email_Address();
 		$customer_email  = $customer_emails->get_item_by( 'email', $value );
 
+		if ( empty( $customer_email ) ) {
+			$customer = $customers->get_item_by( 'email', $value );
+
+			if ( ! empty( $customer ) ) {
+				$customer_has_primary = edd_count_customer_email_addresses(
+					array(
+						'customer_id' => $customer->id,
+						'type'        => 'primary',
+					)
+				);
+				$email_address_id     = edd_add_customer_email_address(
+					array(
+						'customer_id' => $customer->id,
+						'email'       => $value,
+						'type'        => $customer_has_primary ? 'secondary' : 'primary',
+					)
+				);
+				$customer_email       = $customer_emails->get_item( $email_address_id );
+			}
+		}
+
 		$customer = false;
 		if ( ! empty( $customer_email->customer_id ) ) {
-			$customer  = $customers->get_item_by( 'id', $customer_email->customer_id );
+			$customer = $customers->get_item_by( 'id', $customer_email->customer_id );
 		}
 	} else {
-		$customer  = $customers->get_item_by( $field, $value );
+		$customer = $customers->get_item_by( $field, $value );
 	}
 
 	/**

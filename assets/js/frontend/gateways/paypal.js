@@ -272,6 +272,10 @@ jQuery( document.body ).on( 'edd_gateway_loaded', function( e, gateway ) {
  * Initialize Buy Now buttons.
  */
 jQuery( document ).ready( function( $ ) {
+	EDDPayPalBuyNowbuttons();
+} );
+
+export function EDDPayPalBuyNowbuttons() {
 	var buyButtons = document.querySelectorAll( '.edd-paypal-checkout-buy-now' );
 	for ( var i = 0; i < buyButtons.length; i++ ) {
 		var element = buyButtons[ i ];
@@ -282,6 +286,12 @@ jQuery( document ).ready( function( $ ) {
 
 		var wrapper = element.closest( '.edd_purchase_submit_wrapper' );
 		if ( ! wrapper ) {
+			continue;
+		}
+
+		// Find the closest input with a class of edd_action_input and get it's value.
+		var edd_input_action = element.closest( 'form' ).querySelector( '.edd_action_input' ).value;
+		if ( 'add_to_cart' === edd_input_action ) {
 			continue;
 		}
 
@@ -302,4 +312,4 @@ jQuery( document ).ready( function( $ ) {
 		// Initialize button.
 		EDD_PayPal.initButtons( wrapper, 'buy_now' );
 	}
-} );
+}

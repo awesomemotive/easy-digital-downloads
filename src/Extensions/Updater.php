@@ -36,6 +36,7 @@ class Updater {
 
 		global $edd_plugin_data;
 
+		$_plugin_file                   = $this->get_plugin_file( $_plugin_file );
 		$this->api_handler              = new \EDD\Licensing\API();
 		$this->api_url                  = trailingslashit( $this->api_handler->get_url() );
 		$this->api_data                 = $_api_data;
@@ -601,5 +602,28 @@ class Updater {
 		$string = $this->slug . $this->api_data['license'] . $this->beta;
 
 		return 'edd_sl_' . md5( serialize( $string ) );
+	}
+
+	/**
+	 * Gets the plugin file. This is to correct an incorrect plugin file passed by Stripe 3.0.0 and 3.0.1.
+	 *
+	 * @since 3.2.2
+	 * @param string $file The plugin file.
+	 * @return string
+	 */
+	private function get_plugin_file( $file ) {
+
+		// Return the file if it's not the Stripe plugin with the wrong file.
+		if ( false === strpos( $file, 'functions.php' ) ) {
+			return $file;
+		}
+
+		// Replace the incorrect file path and return the correct string.
+		if ( false !== strpos( $file, 'edd-stripe/includes/functions.php' ) ) {
+			return str_replace( 'includes/functions.php', 'edd-stripe.php', $file );
+		}
+
+		// Otherwise, return the file as is.
+		return $file;
 	}
 }

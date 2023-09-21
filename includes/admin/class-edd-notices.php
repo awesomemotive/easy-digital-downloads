@@ -735,6 +735,15 @@ class EDD_Notices {
 						)
 					);
 					break;
+				case 'test-purchase-email-failed':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-test-purchase-receipt-failed',
+							'message' => __( 'The test email could not be sent. Please check your email settings and try again.', 'easy-digital-downloads' ),
+							'class'   => 'error',
+						)
+					);
+					break;
 				case 'test-summary-email-sent':
 					$this->add_notice(
 						array(
@@ -803,8 +812,16 @@ class EDD_Notices {
 					break;
 				case 'email_send_failed':
 					$this->add_notice( array(
-						'id'      => 'edd-payment-sent',
-						'message' => __( 'Failed to send purchase receipt.', 'easy-digital-downloads' )
+						'id'      => 'edd-payment-not-sent',
+						'message' => __( 'The purchase receipt could not be resent.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'email_possibly_not_sent':
+					$this->add_notice( array(
+						'id'      => 'edd-order-receipt-maybe-not-sent',
+						'message' => __( 'The purchase receipt may not have been sent.', 'easy-digital-downloads' ),
+						'class'   => 'notice-warning'
 					) );
 					break;
 				case 'payment-note-deleted' :

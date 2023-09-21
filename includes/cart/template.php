@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,19 +20,19 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_checkout_cart() {
 
-	if ( \EDD\Blocks\Checkout\Functions\checkout_has_blocks() ) {
+	if ( function_exists( '\\EDD\\Blocks\\Checkout\\Functions\\checkout_has_blocks' ) && \EDD\Blocks\Checkout\Functions\checkout_has_blocks() ) {
 		$cart_items = edd_get_cart_contents();
 		include EDD_BLOCKS_DIR . 'views/checkout/cart/cart.php';
 
 		return;
 	}
 
-	// Check if the Update cart button should be shown
+	// Check if the Update cart button should be shown.
 	if ( edd_item_quantities_enabled() ) {
 		add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
 	}
 
-	// Check if the Save Cart button should be shown
+	// Check if the Save Cart button should be shown.
 	if ( ! edd_is_cart_saving_disabled() ) {
 		add_action( 'edd_cart_footer_buttons', 'edd_save_cart_button' );
 	}
@@ -53,10 +53,10 @@ function edd_checkout_cart() {
  *
  * @since 1.0
  *
- * @param bool $echo
+ * @param bool $echo_template Echo or return.
  * @return string Fully formatted cart
  */
-function edd_shopping_cart( $echo = false ) {
+function edd_shopping_cart( $echo_template = false ) {
 	ob_start();
 
 	do_action( 'edd_before_cart' );
@@ -65,7 +65,7 @@ function edd_shopping_cart( $echo = false ) {
 
 	do_action( 'edd_after_cart' );
 
-	if ( $echo ) {
+	if ( $echo_template ) {
 		echo ob_get_clean();
 	} else {
 		return ob_get_clean();
@@ -76,11 +76,12 @@ function edd_shopping_cart( $echo = false ) {
  * Get Cart Item Template
  *
  * @since 1.0
- * @param int $cart_key Cart key
- * @param array $item Cart item
- * @param bool $ajax AJAX?
+ * @param int   $cart_key Cart key.
+ * @param array $item Cart item.
+ * @param bool  $ajax AJAX?.
+ *
  * @return string Cart item
-*/
+ */
 function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	global $post;
 
@@ -88,7 +89,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 
 	$remove_url = edd_remove_item_url( $cart_key );
 	$title      = get_the_title( $id );
-	$options    = !empty( $item['options'] ) ? $item['options'] : array();
+	$options    = ! empty( $item['options'] ) ? $item['options'] : array();
 	$quantity   = edd_get_cart_item_quantity( $id, $options );
 	$price      = edd_get_cart_item_price( $id, $options );
 
@@ -102,17 +103,19 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 
 	$item = ob_get_clean();
 
-	$item = str_replace( '{item_title}', $title, $item );
-	$item = str_replace( '{item_amount}', edd_currency_filter( edd_format_amount( $price ) ), $item );
-	$item = str_replace( '{cart_item_id}', absint( $cart_key ), $item );
-	$item = str_replace( '{item_id}', absint( $id ), $item );
-	$item = str_replace( '{item_quantity}', absint( $quantity ), $item );
-	$item = str_replace( '{remove_url}', esc_url( $remove_url ), $item );
-  	$subtotal = '';
-  	if ( $ajax ){
-   	 $subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) ;
-  	}
- 	$item = str_replace( '{subtotal}', $subtotal, $item );
+	$item     = str_replace( '{item_title}', $title, $item );
+	$item     = str_replace( '{item_amount}', edd_currency_filter( edd_format_amount( $price ) ), $item );
+	$item     = str_replace( '{cart_item_id}', absint( $cart_key ), $item );
+	$item     = str_replace( '{item_id}', absint( $id ), $item );
+	$item     = str_replace( '{item_quantity}', absint( $quantity ), $item );
+	$item     = str_replace( '{remove_url}', esc_url( $remove_url ), $item );
+	$subtotal = '';
+
+	if ( $ajax ) {
+		$subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) );
+	}
+
+	$item = str_replace( '{subtotal}', $subtotal, $item );
 
 	return apply_filters( 'edd_cart_item', $item, $id );
 }
@@ -138,7 +141,7 @@ function edd_empty_checkout_cart() {
 }
 add_action( 'edd_cart_empty', 'edd_empty_checkout_cart' );
 
-/*
+/**
  * Calculate the number of columns in the cart table dynamically.
  *
  * @since 1.8
@@ -186,7 +189,18 @@ function edd_save_cart_button() {
 	$color = edd_get_button_color_class();
 
 	if ( edd_is_cart_saved() ) : ?>
-		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . esc_attr( $color ); ?>" id="edd-restore-cart-button" href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => urlencode( edd_get_cart_token() ) ) ) ); ?>"><?php esc_html_e( 'Restore Previous Cart', 'easy-digital-downloads' ); ?></a>
+		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . esc_attr( $color ); ?>" id="edd-restore-cart-button" href="
+																	<?php
+																		echo esc_url(
+																			add_query_arg(
+																				array(
+																					'edd_action'     => 'restore_cart',
+																					'edd_cart_token' => urlencode( edd_get_cart_token() ),
+																				)
+																			)
+																		);
+																	?>
+															"><?php esc_html_e( 'Restore Previous Cart', 'easy-digital-downloads' ); ?></a>
 	<?php endif; ?>
 	<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . esc_attr( $color ); ?>" id="edd-save-cart-button" href="<?php echo esc_url( add_query_arg( 'edd_action', 'save_cart' ) ); ?>"><?php esc_html_e( 'Save Cart', 'easy-digital-downloads' ); ?></a>
 	<?php
@@ -205,7 +219,14 @@ function edd_empty_cart_restore_cart_link() {
 	}
 
 	if ( edd_is_cart_saved() ) {
-		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . esc_url( add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => urlencode( edd_get_cart_token() ) ) ) ) . '">' . esc_html__( 'Restore Previous Cart.', 'easy-digital-downloads' ) . '</a>';
+		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . esc_url(
+			add_query_arg(
+				array(
+					'edd_action'     => 'restore_cart',
+					'edd_cart_token' => urlencode( edd_get_cart_token() ),
+				)
+			)
+		) . '">' . esc_html__( 'Restore Previous Cart.', 'easy-digital-downloads' ) . '</a>';
 	}
 }
 add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
@@ -217,15 +238,15 @@ add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
  * @return void
  */
 function edd_update_cart_button() {
-	if ( ! edd_item_quantities_enabled() )
+	if ( ! edd_item_quantities_enabled() ) {
 		return;
+	}
 
 	$color = edd_get_button_color_class();
-?>
+	?>
 	<input type="submit" name="edd_update_cart_submit" class="edd-submit edd-no-js button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'easy-digital-downloads' ); ?>"/>
 	<input type="hidden" name="edd_action" value="update_cart"/>
-<?php
-
+	<?php
 }
 
 /**
@@ -240,7 +261,7 @@ function edd_display_cart_messages() {
 	if ( $messages ) {
 		foreach ( $messages as $message_id => $message ) {
 
-			// Try and detect what type of message this is
+			// Try and detect what type of message this is.
 			if ( strpos( strtolower( $message ), 'error' ) ) {
 				$type = 'error';
 			} elseif ( strpos( strtolower( $message ), 'success' ) ) {
@@ -249,18 +270,23 @@ function edd_display_cart_messages() {
 				$type = 'info';
 			}
 
-			$classes = apply_filters( 'edd_' . $type . '_class', array(
-				'edd_errors', 'edd-alert', 'edd-alert-' . $type
-			) );
+			$classes = apply_filters(
+				'edd_' . $type . '_class',
+				array(
+					'edd_errors',
+					'edd-alert',
+					'edd-alert-' . $type,
+				)
+			);
 
 			echo '<div class="' . implode( ' ', $classes ) . '">';
-				// Loop message codes and display messages
+				// Loop message codes and display messages.
 					echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
 			echo '</div>';
 
 		}
 
-		// Remove all of the cart saving messages
+		// Remove all of the cart saving messages.
 		EDD()->session->set( 'edd_cart_messages', null );
 	}
 }
@@ -270,20 +296,22 @@ add_action( 'edd_before_checkout_cart', 'edd_display_cart_messages' );
  * Show Added To Cart Messages
  *
  * @since 1.0
- * @param int $download_id Download (Post) ID
+ * @param int $download_id Download (Post) ID.
  * @return void
  */
 function edd_show_added_to_cart_messages( $download_id ) {
-	if ( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
-		if ( $download_id != absint( $_POST['download_id'] ) )
+	if ( isset( $_POST['edd_action'] ) && 'add_to_cart' === $_POST['edd_action'] ) {
+		if ( $download_id != absint( $_POST['download_id'] ) ) {
 			$download_id = absint( $_POST['download_id'] );
+		}
 
 		$alert = '<div class="edd_added_to_cart_alert">'
-		. sprintf( __('You have successfully added %s to your shopping cart.','easy-digital-downloads' ), get_the_title( $download_id ) )
-		. ' <a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_alert_checkout_link">' . __('Checkout.','easy-digital-downloads' ) . '</a>'
+		// Translators: %s is the name of the download that was added to the cart.
+		. sprintf( __( 'You have successfully added %s to your shopping cart.', 'easy-digital-downloads' ), get_the_title( $download_id ) )
+		. ' <a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_alert_checkout_link">' . __( 'Checkout.', 'easy-digital-downloads' ) . '</a>'
 		. '</div>';
 
 		echo apply_filters( 'edd_show_added_to_cart_messages', $alert );
 	}
 }
-add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
+add_action( 'edd_after_download_content', 'edd_show_added_to_cart_messages' );
