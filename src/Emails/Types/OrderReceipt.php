@@ -10,11 +10,19 @@
 
 namespace EDD\Emails\Types;
 
+/**
+ * The OrderReceipt email class.
+ *
+ * This is sent to customers as their 'purchase confirmation'.
+ *
+ * @since 3.2.0
+ */
 class OrderReceipt extends Email {
 	use LegacyPaymentFilters;
 
 	/**
 	 * The email ID.
+	 *
 	 * @var string
 	 * @since 3.2.0
 	 */
@@ -22,6 +30,7 @@ class OrderReceipt extends Email {
 
 	/**
 	 * The email context.
+	 *
 	 * @var string
 	 * @since 3.2.0
 	 */
@@ -29,6 +38,7 @@ class OrderReceipt extends Email {
 
 	/**
 	 * The email recipient type.
+	 *
 	 * @var string
 	 * @since 3.2.0
 	 */
@@ -36,6 +46,7 @@ class OrderReceipt extends Email {
 
 	/**
 	 * The order object.
+	 *
 	 * @var EDD\Orders\Order
 	 * @since 3.2.0
 	 */
@@ -43,17 +54,11 @@ class OrderReceipt extends Email {
 
 	/**
 	 * The order ID.
+	 *
 	 * @var int
 	 * @since 3.2.0
 	 */
 	protected $order_id;
-
-	/**
-	 * Whether or not to send an admin notice.
-	 * @var bool
-	 * @since 3.2.0
-	 */
-	public $send_admin_notice;
 
 	/**
 	 * OrderReceipt constructor.
@@ -68,13 +73,6 @@ class OrderReceipt extends Email {
 
 		// To support previews, we need to possibly set a `0` order ID.
 		$this->order_id = false !== $order ? $order->id : 0;
-
-		/**
-		 * By default we send an admin notice, users, can disable this by setting `send_admin_notice` to false before using the `send` method,
-		 * or by using the `edd_order_receipt_send_admin_notice` filter.
-		 *
-		 */
-		$this->send_admin_notice = true;
 
 		// Since we are refactoring this, we need to set the legacy filters.
 		$this->set_legacy_filters();
@@ -166,7 +164,6 @@ class OrderReceipt extends Email {
 		$this->maybe_run_legacy_filter( 'edd_receipt_headers' );
 
 		$this->headers = apply_filters( 'edd_order_receipt_headers', $this->headers, $this->order );
-
 	}
 
 	/**
@@ -232,10 +229,10 @@ class OrderReceipt extends Email {
 	 * @return string
 	 */
 	protected function get_default_body_content() {
-		$default_email_body  = __( "Dear", "easy-digital-downloads" ) . " {name},\n\n";
-		$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "easy-digital-downloads" ) . "\n\n";
-		$default_email_body .= "{download_list}\n\n";
-		$default_email_body .= "{sitename}";
+		$default_email_body  = __( 'Dear', 'easy-digital-downloads' ) . " {name},\n\n";
+		$default_email_body .= __( 'Thank you for your purchase. Please click on the link(s) below to download your files.', 'easy-digital-downloads' ) . "\n\n";
+		$default_email_body .= '{download_list}' . "\n\n";
+		$default_email_body .= '{sitename}';
 
 		return $default_email_body;
 	}
@@ -249,19 +246,9 @@ class OrderReceipt extends Email {
 	 */
 	protected function should_send() {
 		// Allow developers to unhook this email via a filter.
-		if ( false === apply_filters( 'edd_disable_' . $this->id, true, $this ) ) {
+		if ( true === apply_filters( 'edd_disable_' . $this->id, false, $this ) ) {
 			return false;
 		}
-
-		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
-		$should_send = edd_get_order_meta( $this->order_id, '_edd_should_send_' . $this->id, true );
-
-		if ( empty( $should_send ) && false === $this->is_test ) {
-			return false;
-		}
-
-		// Delete the meta so we don't keep it around.
-		edd_delete_order_meta( $this->order_id, '_edd_should_send_' . $this->id );
 
 		return true;
 	}

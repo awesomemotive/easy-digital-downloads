@@ -417,28 +417,33 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 	// Update state field
-	$( document.body ).on( 'change', '#edd_cc_address input.card_state, #edd_cc_address select, #edd_address_country', update_state_field );
+	$( document.body ).on( 'change', '#edd_cc_address input.card_state, #edd_cc_address select, #edd_address_country, .edd-stripe-card-item .card-address-fields .address_country', update_state_field );
 
 	function update_state_field() {
-		const $this = $( this );
-		let $form;
-		const is_checkout = typeof edd_global_vars !== 'undefined';
+		const $this = $( this ),
+			is_checkout = typeof edd_global_vars !== 'undefined';
 		let field_name = 'card_state';
 		if ( $( this ).attr( 'id' ) === 'edd_address_country' ) {
 			field_name = 'edd_address_state';
+		} else if ( $( this ).hasClass( 'address_country' ) ) {
+			// Get the data-source from the parent form element.
+			let payment_method = $( this ).closest( 'form' ).data( 'source' );
+			if ( payment_method ) {
+				payment_method = payment_method.replace( 'edd-', '' );
+				field_name = 'edds_address_state_' + payment_method;
+			}
 		}
 
-		let state_inputs = document.getElementById( field_name );
+		const stateInput = $( '#' + field_name );
 
-		if ( 'card_state' !== $this.attr( 'id' ) && null != state_inputs ) {
-			const nonce = $( this ).data( 'nonce' );
+		if ( field_name !== $this.attr( 'id' ) && stateInput.length ) {
 
 			// If the country field has changed, we need to update the state/province field
 			const postData = {
 				action: 'edd_get_shop_states',
 				country: $this.val(),
 				field_name: field_name,
-				nonce: nonce,
+				nonce: $( this ).data( 'nonce' ),
 			};
 
 			$.ajax( {
@@ -448,20 +453,16 @@ jQuery( document ).ready( function( $ ) {
 				xhrFields: {
 					withCredentials: true,
 				},
-				success: function( response ) {
-					if ( is_checkout ) {
-						$form = $( '#edd_purchase_form' );
-					} else {
-						$form = $this.closest( 'form' );
-					}
+				success: function ( response ) {
 
-					const state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
-
+					let newStateField = '';
 					if ( 'nostates' === $.trim( response ) ) {
-						const text_field = '<input type="text" id="' + field_name + '" name="card_state" class="card-state edd-input required" value=""/>';
-						$form.find( state_inputs ).replaceWith( text_field );
+						newStateField = '<input type="text" id="' + field_name + '" name="card_state" class="card-state edd-input required" value=""/>';
 					} else {
-						$form.find( state_inputs ).replaceWith( response );
+						newStateField = response;
+					}
+					if ( newStateField ) {
+						stateInput.replaceWith( newStateField );
 					}
 
 					if ( is_checkout ) {

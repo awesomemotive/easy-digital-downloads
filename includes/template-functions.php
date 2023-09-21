@@ -78,6 +78,10 @@ function edd_get_purchase_link( $args = array() ) {
 	}
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
+	if ( empty( $post_id ) && isset( $args['download_id'] ) ) {
+		$post_id = $args['download_id'];
+	}
+
 	$button_behavior = edd_get_download_button_behavior( $post_id );
 
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
@@ -223,7 +227,7 @@ function edd_get_purchase_link( $args = array() ) {
 		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
 			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo esc_attr( $download->ID ); ?>_<?php echo esc_attr( $price_id ); ?>" class="edd_price_option_<?php echo esc_attr( $download->ID ); ?>" value="<?php echo esc_attr( $price_id ); ?>">
 		<?php endif; ?>
-		<?php if( ! empty( $args['direct'] ) && ! $download->is_free( $args['price_id'] ) ) { ?>
+		<?php if( ! empty( $args['direct'] ) && $download->supports_buy_now() && ! $download->is_free( $args['price_id'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
 			<?php wp_nonce_field( 'edd_straight_to_gateway', 'edd_straight_to_gateway', false ); ?>
 		<?php } else { ?>

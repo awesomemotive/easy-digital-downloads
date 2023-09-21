@@ -1479,11 +1479,56 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			// Now look for customers without email addresses in the emails table.
+			$sql_base     =
+				"SELECT *
+				FROM {$wpdb->edd_customers}
+				WHERE email != ''
+				AND email NOT IN (
+					SELECT email
+					FROM {$wpdb->edd_customer_email_addresses}
+				)";
+			$sql          = $sql_base . ' LIMIT 1';
+			$check_result = $wpdb->get_results( $sql );
+			$check_total  = count( $check_result );
+			$has_results  = ! empty( $check_total );
+
+			while ( $has_results ) {
+				$progress->tick();
+
+				// Query & count.
+				$sql     = $sql_base . " LIMIT {$number}";
+				$results = $wpdb->get_results( $sql );
+
+				if ( ! empty( $results ) ) {
+					foreach ( $results as $result ) {
+						$customer_has_primary = edd_count_customer_email_addresses(
+							array(
+								'customer_id' => $result->id,
+								'type'        => 'primary',
+							)
+						);
+						edd_add_customer_email_address(
+							array(
+								'customer_id'  => $result->id,
+								'email'        => $result->email,
+								'date_created' => $result->date_created,
+								'type'         => $customer_has_primary ? 'secondary' : 'primary',
+							)
+						);
+
+						// Tick the spinner...
+						$progress->tick();
+					}
+				} else {
+					$has_results = false;
+				}
+			}
+
 			$progress->finish();
 			edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
 			WP_CLI::line( __( 'Migration complete: Customer Email Addresses', 'easy-digital-downloads' ) );
 		}
-
 	}
 
 	/**
@@ -2173,6 +2218,19 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_missing_discounts() {
 		$discounts = new EDD\CLI\Migration\Discounts();
 		$discounts->migrate_missing();
+	}
+
+	/**
+	 * Migrate missing customer emails.
+	 *
+	 * Command: wp edd migrate_missing_emails
+	 *
+	 * @since 3.2.2
+	 * @return void
+	 */
+	public function migrate_missing_emails() {
+		$emails = new EDD\CLI\Migration\CustomerEmails();
+		$emails->migrate_missing();
 	}
 
 	protected function get_fname() {

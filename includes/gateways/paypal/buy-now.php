@@ -54,24 +54,17 @@ function maybe_add_purchase_link_class( $args ) {
 		return $args;
 	}
 
-	// Don't add class if "Free Downloads" is active and available for this download.
-	if ( function_exists( 'edd_free_downloads_use_modal' ) ) {
-		if ( edd_free_downloads_use_modal( $args['download_id'] ) && ! edd_has_variable_prices( $args['download_id'] ) ) {
-			return $args;
-		}
+	$download = new \EDD_Download( $args['download_id'] );
+	if ( empty( $download ) ) {
+		return $args;
 	}
 
-	// Don't add class if Recurring is enabled for this download.
-	if ( function_exists( 'edd_recurring' ) ) {
-		// Overall download is recurring.
-		if ( edd_recurring()->is_recurring( $args['download_id'] ) ) {
-			return $args;
-		}
+	// Use the Download Class to determine if it supports Buy Now.
+	$price_id         = is_numeric( $args['price_id'] ) ? absint( $args['price_id'] ) : null;
+	$supports_buy_now = $download->supports_buy_now( $price_id );
 
-		// Price ID is recurring.
-		if ( ! empty( $args['price_id'] ) && edd_recurring()->is_price_recurring( $args['download_id'], $args['price_id'] ) ) {
-			return $args;
-		}
+	if ( false === $supports_buy_now ) {
+		return $args;
 	}
 
 	if ( ! empty( $args['direct'] ) ) {
@@ -92,14 +85,29 @@ add_filter( 'edd_purchase_link_args', __NAMESPACE__ . '\maybe_add_purchase_link_
  * @since 2.11
  */
 function maybe_enable_buy_now_js( $download_id, $args ) {
-	if ( ! empty( $args['direct'] ) && is_buy_now_enabled() ) {
-		register_js( true );
-		$timestamp = time();
-		?>
-		<input type="hidden" name="edd_process_paypal_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal' ) ); ?>">
-		<input type="hidden" name="edd-process-paypal-token" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>" />
-		<?php
+	if ( empty( $args['direct'] ) || ! is_buy_now_enabled() ) {
+		return;
 	}
+
+	$download = new \EDD_Download( $download_id );
+	if ( empty( $download ) ) {
+		return;
+	}
+
+	// Use the Download Class to determine if it supports Buy Now.
+	$price_id         = is_numeric( $args['price_id'] ) ? absint( $args['price_id'] ) : null;
+	$supports_buy_now = $download->supports_buy_now( $price_id );
+
+	if ( false === $supports_buy_now ) {
+		return;
+	}
+
+	register_js( true );
+	$timestamp = time();
+	?>
+	<input type="hidden" name="edd_process_paypal_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal' ) ); ?>">
+	<input type="hidden" name="edd-process-paypal-token" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>" />
+	<?php
 }
 
 add_action( 'edd_purchase_link_end', __NAMESPACE__ . '\maybe_enable_buy_now_js', 10, 2 );

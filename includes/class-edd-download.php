@@ -657,7 +657,7 @@ class EDD_Download {
 
 			$this->button_behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
 
-			if ( empty( $this->button_behavior ) || ! edd_shop_supports_buy_now() ) {
+			if ( empty( $this->button_behavior ) || ! edd_shop_supports_buy_now() || ! $this->supports_buy_now() ) {
 				$this->button_behavior = 'add_to_cart';
 			}
 		}
@@ -919,5 +919,61 @@ class EDD_Download {
 	 */
 	public function get_bundle_pricing_variations() {
 		return get_post_meta( $this->ID, '_edd_bundled_products_conditions' );
+	}
+
+	/**
+	 * Determine if the download can support the Buy Now feature.
+	 *
+	 * @since 3.2.2
+	 * @param int|null $price_id The price ID to check for.
+	 *
+	 * @return bool True if the download can support Buy Now, false otherwise.
+	 */
+	public function supports_buy_now( $price_id = null ) {
+		// We have a few addons we have to check for, that would prevent Buy Now from working.
+		$recurring_active      = function_exists( 'edd_recurring' );
+		$free_downloads_active = function_exists( 'edd_free_downloads_use_modal' );
+
+		// If Recurring and Free Downloads are not present, we can return true.
+		if ( false === $recurring_active && false === $free_downloads_active ) {
+			return true;
+		}
+
+		// Parse if we have a price ID passed in.
+		$price_id = is_numeric( $price_id ) ? intval( $price_id ) : null;
+
+		// Free downloads does not support Buy Now.
+		if ( $free_downloads_active && ! $this->has_variable_prices() ) {
+			// If the download is free, we can return false.
+			$use_free_downloads_modal = edd_free_downloads_use_modal( $this->ID );
+
+			if ( $use_free_downloads_modal ) {
+				return false;
+			}
+		}
+
+		// Subscription products cannot support Buy Now.
+		if ( $recurring_active ) {
+			if ( $this->has_variable_prices() ) {
+				// If no Price ID was passed in, and the product has variable prices, return false if any of the prices are recurring.
+				if ( null === $price_id ) {
+					foreach ( $this->get_prices() as $key => $price ) {
+						if ( edd_recurring()->is_price_recurring( $this->ID, $key ) ) {
+							return false;
+						}
+					}
+				}
+
+				$is_recurring = edd_recurring()->is_price_recurring( $this->ID, $price_id );
+			} else {
+				$is_recurring = edd_recurring()->is_recurring( $this->ID );
+			}
+
+			if ( $is_recurring ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

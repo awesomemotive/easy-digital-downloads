@@ -9,7 +9,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  *
  * @group edd_customers
  */
-class Tests_Customers extends EDD_UnitTestCase {
+class Customers extends EDD_UnitTestCase {
 
 	/**
 	 * Customers fixture.
@@ -440,7 +440,14 @@ class Tests_Customers extends EDD_UnitTestCase {
 	 * @expectedDeprecated EDD_Customer::get_payments
 	 */
 	public function test_get_customer_payments_should_return_1() {
-		$this->assertCount( 1, self::$customers[0]->get_payments() );
+		// create some extra orders
+		$orders   = parent::edd()->order->create_many( 5 );
+		$customer = reset( self::$customers );
+		$payments = $customer->get_payments();
+		$this->assertCount( 1, $payments );
+
+		$payment = reset( $payments );
+		$this->assertEquals( $customer->id, $payment->customer_id );
 	}
 
 	/**

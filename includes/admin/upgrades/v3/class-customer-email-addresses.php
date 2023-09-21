@@ -39,24 +39,31 @@ class Customer_Email_Addresses extends Base {
 	 * @return bool True if data was migrated, false otherwise.
 	 */
 	public function get_data() {
-		$offset = ( $this->step - 1 ) * $this->per_step;
+		$success = false;
+		$offset  = ( $this->step - 1 ) * $this->per_step;
 
-		$results = $this->get_db()->get_results( $this->get_db()->prepare(
-			"SELECT *
+		$results = $this->get_db()->get_results(
+			$this->get_db()->prepare(
+				"SELECT *
 			 FROM {$this->get_db()->edd_customermeta}
 			 WHERE meta_key = %s
 			 LIMIT %d, %d",
-			esc_sql( 'additional_email' ), $offset, $this->per_step
-		) );
+				esc_sql( 'additional_email' ),
+				$offset,
+				$this->per_step
+			)
+		);
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
 				// Check if email has already been migrated.
 				if ( ! empty( $result->edd_customer_id ) && $result->meta_value ) {
-					$number_results = edd_count_customer_email_addresses( array(
-						'customer_id' => $result->edd_customer_id,
-						'email'       => $result->meta_value
-					) );
+					$number_results = edd_count_customer_email_addresses(
+						array(
+							'customer_id' => $result->edd_customer_id,
+							'email'       => $result->meta_value,
+						)
+					);
 					if ( $number_results > 0 ) {
 						continue;
 					}
@@ -65,10 +72,46 @@ class Customer_Email_Addresses extends Base {
 				Data_Migrator::customer_email_addresses( $result );
 			}
 
-			return true;
+			$success = true;
 		}
 
-		return false;
+		// Query customers without email address objects.
+		$customers_without_emails = $this->get_db()->get_results(
+			$this->get_db()->prepare(
+				"SELECT *
+				FROM {$this->get_db()->edd_customers}
+				WHERE email != ''
+				AND email NOT IN (
+					SELECT email
+					FROM {$this->get_db()->edd_customer_email_addresses}
+				)
+				LIMIT %d",
+				$this->per_step
+			)
+		);
+
+		if ( $customers_without_emails ) {
+			foreach ( $customers_without_emails as $customer ) {
+				$customer_has_primary = edd_count_customer_email_addresses(
+					array(
+						'customer_id' => $customer->id,
+						'type'        => 'primary',
+					)
+				);
+				edd_add_customer_email_address(
+					array(
+						'customer_id'  => $customer->id,
+						'email'        => $customer->email,
+						'date_created' => $customer->date_created,
+						'type'         => $customer_has_primary ? 'secondary' : 'primary',
+					)
+				);
+			}
+
+			$success = true;
+		}
+
+		return $success;
 	}
 
 	/**

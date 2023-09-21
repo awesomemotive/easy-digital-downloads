@@ -126,7 +126,7 @@ class Base extends \EDD_Batch_Export {
 		if ( $had_data ) {
 			$this->done = false;
 			// Save the *next* step to do.
-			update_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->upgrade ) ), $this->step + 1 );
+			update_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->get_upgrade_step() ) ), $this->step + 1 );
 			return true;
 		} else {
 			$this->done    = true;
@@ -141,7 +141,7 @@ class Base extends \EDD_Batch_Export {
 				edd_set_upgrade_complete( $this->upgrade );
 			}
 
-			delete_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->upgrade ) ) );
+			delete_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $this->get_upgrade_step() ) ) );
 			edd_v30_is_migration_complete();
 			return false;
 		}
@@ -202,5 +202,19 @@ class Base extends \EDD_Batch_Export {
 	 * @since 3.0
 	 */
 	public function pre_fetch() {
+	}
+
+	/**
+	 * Gets the next upgrade step (used for saving to an option).
+	 *
+	 * @since 3.2.2
+	 * @return string
+	 */
+	private function get_upgrade_step() {
+		if ( is_array( $this->upgrade ) ) {
+			return reset( $this->upgrade );
+		}
+
+		return $this->upgrade;
 	}
 }

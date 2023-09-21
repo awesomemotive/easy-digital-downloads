@@ -139,6 +139,12 @@ export function setup() {
 			return;
 		}
 
+		// Find the closest input with a class of edd_action_input and get it's value.
+		var edd_input_action = el.closest( 'form' ).querySelector( '.edd_action_input' ).value;
+		if ( 'add_to_cart' === edd_input_action ) {
+			return;
+		}
+
 		/**
 		 * Launches "Buy Now" modal when clicking "Buy Now" link.
 		 *
