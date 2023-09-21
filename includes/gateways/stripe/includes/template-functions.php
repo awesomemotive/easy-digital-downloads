@@ -573,7 +573,10 @@ function edd_stripe_manage_cards() {
 									'options'          => $countries,
 									'selected'         => $country,
 									'class'            => 'card-update-field address_country',
-									'data'             => array( 'key' => 'address_country' ),
+									'data'             => array(
+										'key'   => 'address_country',
+										'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+									),
 									'show_option_all'  => false,
 									'show_option_none' => false,
 								) );

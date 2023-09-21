@@ -626,7 +626,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			array(
 				'number'        => count( $payment_ids ),
 				'no_found_rows' => true,
-				'include'       => $payment_ids,
+				'id__in'        => $payment_ids,
 			)
 		);
 
@@ -634,7 +634,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	}
 
 	/**
-	 * Get the custoemr's orders
+	 * Get the customer's orders
 	 *
 	 * @since 3.2
 	 *

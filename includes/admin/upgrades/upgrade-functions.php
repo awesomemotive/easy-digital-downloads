@@ -572,20 +572,16 @@ function edd_load_batch_processors_for_v30_upgrade( $class ) {
 
 /**
  * Checks whether all 3.0 migrations have run, ignoring the legacy data removal.
+ * This function also clears out options used to indicate that the upgrade is in progress.
  *
  * @since 3.0
  * @return bool
  */
 function edd_v30_is_migration_complete() {
-	$upgrades = edd_get_v30_upgrades();
-	unset( $upgrades['v30_legacy_data_removed'] );
-	$upgrades = array_keys( $upgrades );
-	foreach ( $upgrades as $upgrade ) {
-		// If any migration has not completed, return false.
-		if ( ! edd_has_upgrade_completed( $upgrade ) ) {
-			return false;
-		}
+	if ( ! EDD\Upgrades\Utilities\MigrationCheck::is_v30_migration_complete() ) {
+		return false;
 	}
+
 	// If the migration is complete, delete the pending option.
 	delete_option( 'edd_v3_migration_pending' );
 

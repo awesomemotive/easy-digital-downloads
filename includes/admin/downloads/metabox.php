@@ -325,7 +325,11 @@ function edd_render_settings_meta_box() {
  * @param $post_id
  */
 function edd_render_price_field( $post_id ) {
-	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+	if ( is_numeric( $post_id ) && ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+
+	if ( is_null( $post_id ) && ! current_user_can( 'edit_products' ) ) {
 		return;
 	}
 
@@ -440,7 +444,11 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
 function edd_render_price_row( $key, $args, $post_id, $index ) {
 	global $wp_filter;
 
-	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+	if ( is_numeric( $post_id ) && ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+
+	if ( is_null( $post_id ) && ! current_user_can( 'edit_products' ) ) {
 		return;
 	}
 
@@ -619,16 +627,22 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_products_field', 10 );
  * @return void
  */
 function edd_render_files_field( $post_id = 0, $type = '' ) {
-	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+	if ( is_numeric( $post_id ) && ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+
+	if ( is_null( $post_id ) && ! current_user_can( 'edit_products' ) ) {
 		return;
 	}
 
 	if ( empty( $type ) ) {
 		$type = edd_get_download_type( $post_id );
 	}
+
 	if ( 'bundle' === $type ) {
 		return;
 	}
+
 	include 'views/metabox-files.php';
 }
 add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );

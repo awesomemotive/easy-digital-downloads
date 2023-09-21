@@ -100,6 +100,13 @@ class IPN {
 			return;
 		}
 
+		// If the transaction type is ignored, we don't need to run here.
+		$ignored_txn_types = array( 'recurring_payment_profile_created' );
+		if ( isset( $this->posted['txn_type'] ) && in_array( $this->posted['txn_type'], $ignored_txn_types, true ) ) {
+			$this->debug_log( 'Transaction Type ' . $this->posted['txn_type'] . ' is ignored by the PayPal Commerce IPN.' );
+			return;
+		}
+
 		$this->debug_log( 'IPN Backup Loaded' );
 
 		/**
@@ -155,7 +162,7 @@ class IPN {
 	private function is_verified() {
 		$encoded_data_array = $this->get_encoded_data_array();
 		if ( ! $encoded_data_array ) {
-			// return false;
+			return false;
 		}
 
 		// In certain cases, we will bypass the verification process.
@@ -214,12 +221,6 @@ class IPN {
 	 * @return array|bool
 	 */
 	private function get_encoded_data_array() {
-		// Moving this up in the load order so we can check some things before even getting to verification.
-		$ignored_txn_types = array( 'recurring_payment_profile_created' );
-		if ( isset( $this->posted['txn_type'] ) && in_array( $this->posted['txn_type'], $ignored_txn_types, true ) ) {
-			$this->debug_log( 'Transaction Type ' . $this->posted['txn_type'] . ' is ignored by the PayPal Commerce IPN.' );
-			return false;
-		}
 
 		nocache_headers();
 

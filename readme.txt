@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.8
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable Tag: 3.2.1
+Stable Tag: 3.2.2
 License: GNU Version 2 or Any Later Version
 
 The #1 ecommerce WordPress plugin to sell digital products. Effortlessly manage orders, maximize revenue, and accept payments through Stripe & PayPal.
@@ -226,6 +226,20 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.2.2 =
+* PayPal: The IPN Backup for PayPal was fixed to prevent a fatal error.
+* PayPal: Improved the Buy Now with PayPal payments to bypass Checkout only when Buy Now is fully supported.
+* PayPal: Improved the reliability of the PayPal IPN listener.
+* Stripe: Improved the Buy Now with Stripe payments to bypass Checkout only when Buy Now is fully supported by the product.
+* Stripe: The State/Region ensures that it is updated when the Country field is changed.
+* Emails: Further improved the reliability of payment emails and admin payment notifications.
+* Customers: Migrating the customer data from EDD 2.x to EDD 3.x is now more reliable.
+* Customers: Existing guest customers can now use the EDD Registration form to create a user.
+* Customers: Improved the customer email address detection and reliability.
+* Payments: Updated the customer recent payments list to use the correct date format.
+* Blocks: Improved the reliability of checkout when EDD Blocks or Gutenberg are disabled.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.2.1 =
 * Stripe: We've improved the error handling and informational messaging related to the Stripe Payments integration.
@@ -281,13 +295,10 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Dev: A new `edd_after_order_actions` hook has been introduced to manage all events which should happen when an order is created. This uses the order object for improved performance and any usage of `edd_after_payment_actions` should be updated accordingly.
 * i18n: 141 Additions, 199 Removals/Location Changes, 17 Differences (counts are approximate).
 
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
-
 = 3.1.5 =
 * Fix: India Regions were not being properly loaded.
 * Fix: Fixed compatibility with PHP 7.1 when adding a new discount.
 * Dev: Tax settings tab was overriding the base class method for getting the ID.
-
 
 = 3.1.4 =
 * Improvement: The checkout cart markup is now aware if the cart is using the shortcode or the block.

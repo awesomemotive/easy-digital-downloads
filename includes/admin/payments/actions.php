@@ -646,8 +646,7 @@ function edd_orders_list_table_process_bulk_actions() {
 
 			case 'resend-receipt':
 				$order = edd_get_order( $id );
-				$order_receipt                    = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
-				$order_receipt->send_admin_notice = false;
+				$order_receipt = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
 				$order_receipt->send();
 				break;
 		}

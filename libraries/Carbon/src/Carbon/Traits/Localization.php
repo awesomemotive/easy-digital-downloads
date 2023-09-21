@@ -23,6 +23,7 @@ use EDD\Vendor\Symfony\Component\Translation\TranslatorInterface;
 use EDD\Vendor\Symfony\Contracts\Translation\LocaleAwareInterface;
 use EDD\Vendor\Symfony\Contracts\Translation\TranslatorInterface as ContractsTranslatorInterface;
 
+// @codeCoverageIgnoreStart
 if (interface_exists('Symfony\\Contracts\\Translation\\TranslatorInterface') &&
     !interface_exists('Symfony\\Component\\Translation\\TranslatorInterface')
 ) {
@@ -31,6 +32,7 @@ if (interface_exists('Symfony\\Contracts\\Translation\\TranslatorInterface') &&
         'Symfony\\Component\\Translation\\TranslatorInterface'
     );
 }
+// @codeCoverageIgnoreEnd
 
 /**
  * Trait Localization.

@@ -13,7 +13,13 @@ namespace EDD\Upgrades\Orders;
 
 use EDD\Utils\Date;
 use EDD\EventManagement\SubscriberInterface;
+use EDD\Upgrades\Utilities\MigrationCheck;
 
+/**
+ * Class MigrateAfterActionsDate
+ *
+ * @since 3.2.0
+ */
 class MigrateAfterActionsDate implements SubscriberInterface {
 
 	/**
@@ -62,10 +68,15 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 			return array();
 		}
 
-		$hooks = array();
+		// If the initial EDD 3.x migration hasn't completed, don't hook anything.
+		if ( ! MigrationCheck::is_v30_migration_complete() ) {
+			return array();
+		}
 
 		// Always hook the migration hook.
-		$hooks['edd_migrate_order_actions_date'] = 'process_step';
+		$hooks = array(
+			'edd_migrate_order_actions_date' => 'process_step',
+		);
 
 		if ( ! wp_next_scheduled( 'edd_migrate_order_actions_date' ) ) {
 			$hooks['shutdown'] = array( 'maybe_schedule_background_update', 99 );
@@ -78,6 +89,7 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 	 * Maybe schedules the background update.
 	 *
 	 * We're running this on shutdown, so we can be sure that the Orders table has been created.
+	 *
 	 * @since 3.2.0
 	 *
 	 * @return void
@@ -164,7 +176,7 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 		// We don't need to schedule a recalculation here.
 		add_filter( 'edd_recalculate_bypass_cron', '__return_true' );
 
-		foreach( $meta_rows as $row ) {
+		foreach ( $meta_rows as $row ) {
 			// Convert the timestamp to a DateTime object.
 
 			$date = new Date();
@@ -178,23 +190,28 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 				$migrated_meta_ids[] = $row->meta_id;
 
 				// Store the note ids we can remove.
-				$note_content        = __( 'After payment actions processed.', 'easy-digital-downloads' );
-				$migrated_note_ids[] = $wpdb->get_var( "SELECT id FROM {$this->get_notes_table_name()} WHERE object_id = {$row->edd_order_id} AND object_type = 'order' AND content = '{$note_content}'" );
+				$note_content = __( 'After payment actions processed.', 'easy-digital-downloads' );
+				$note_id      = $wpdb->get_var( "SELECT id FROM {$this->get_notes_table_name()} WHERE object_id = {$row->edd_order_id} AND object_type = 'order' AND content = '{$note_content}'" );
+				if ( $note_id ) {
+					$migrated_note_ids[] = $note_id;
+				}
 			}
 		}
 
 		// Remove our filter for bypassing the cron.
 		remove_filter( 'edd_recalculate_bypass_cron', '__return_true' );
 
+		$migrated_meta_ids = array_filter( $migrated_meta_ids );
 		// If we have any migrated meta IDs, delete them.
 		if ( ! empty( $migrated_meta_ids ) ) {
 			// Delete the meta rows we just migrated.
-			$wpdb->query( "DELETE FROM {$this->get_meta_table_name()} WHERE meta_id IN (" . implode( ',', $migrated_meta_ids ) . ")" );
+			$wpdb->query( "DELETE FROM {$this->get_meta_table_name()} WHERE meta_id IN (" . implode( ',', $migrated_meta_ids ) . ')' );
 		}
 
+		$migrated_note_ids = array_filter( $migrated_note_ids );
 		// If we found notes to delete, delete them.
 		if ( ! empty( $migrated_note_ids ) ) {
-			$wpdb->query( "DELETE FROM {$this->get_notes_table_name()} WHERE id IN (" . implode( ',', $migrated_note_ids ) . ")" );
+			$wpdb->query( "DELETE FROM {$this->get_notes_table_name()} WHERE id IN (" . implode( ',', $migrated_note_ids ) . ')' );
 		}
 
 		$this->add_or_update_initial_notification();
@@ -267,11 +284,11 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 		$percent_complete     = $this->get_percentage_complete();
 
 		// translators: %s is the % complete.
-		$notification_title   = sprintf( __( 'Optimizing Orders Table ( %d%% )', 'easy-digital-downloads' ), $percent_complete );
+		$notification_title = sprintf( __( 'Optimizing Orders Table ( %d%% )', 'easy-digital-downloads' ), $percent_complete );
 
 		if ( ! empty( $initial_notification ) ) {
 			$date = new Date();
-			$date->setTimestamp( current_time( 'timestamp', true ) )->setTimezone( new \DateTimeZone( 'UTC' ) );
+			$date->setTimestamp( time() )->setTimezone( new \DateTimeZone( 'UTC' ) );
 
 			// Update the notification.
 			EDD()->notifications->update(
@@ -294,7 +311,6 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 				)
 			);
 		}
-
 	}
 
 	/**
