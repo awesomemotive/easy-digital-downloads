@@ -113,23 +113,15 @@ class ExtensionsAPI {
 				if ( ! in_array( 1592, $item->categories, true ) ) {
 					continue;
 				}
-				$pass_id = '';
-				if ( in_array( $pass_manager->categories[ $pass_manager::PERSONAL_PASS_ID ], $item->categories, true ) ) {
-					$pass_id = $pass_manager::PERSONAL_PASS_ID;
-				} elseif ( in_array( $pass_manager->categories[ $pass_manager::EXTENDED_PASS_ID ], $item->categories, true ) ) {
-					$pass_id = $pass_manager::EXTENDED_PASS_ID;
-				} elseif ( in_array( $pass_manager->categories[ $pass_manager::PROFESSIONAL_PASS_ID ], $item->categories, true ) ) {
-					$pass_id = $pass_manager::PROFESSIONAL_PASS_ID;
-				}
 
-				$item->pass_id = $pass_id;
+				$item->pass_id = $this->get_pass_id( $item->categories, $pass_manager );
 				if ( ! empty( $item->tags ) && in_array( 2333, $item->tags, true ) ) {
 					$recommended[ $item_id ] = $this->get_item_data( $item );
-				} elseif ( $pass_manager::PERSONAL_PASS_ID === $pass_id ) {
+				} elseif ( $pass_manager::PERSONAL_PASS_ID === $item->pass_id ) {
 					$personal_pass[ $item_id ] = $this->get_item_data( $item );
-				} elseif ( $pass_manager::EXTENDED_PASS_ID === $pass_id ) {
+				} elseif ( $pass_manager::EXTENDED_PASS_ID === $item->pass_id ) {
 					$extended_pass[ $item_id ] = $this->get_item_data( $item );
-				} elseif ( $pass_manager::PROFESSIONAL_PASS_ID === $pass_id ) {
+				} elseif ( $pass_manager::PROFESSIONAL_PASS_ID === $item->pass_id ) {
 					$pro_pass[ $item_id ] = $this->get_item_data( $item );
 				} else {
 					$all_access_pass[ $item_id ] = $this->get_item_data( $item );
@@ -138,6 +130,28 @@ class ExtensionsAPI {
 		}
 
 		return $recommended + $personal_pass + $extended_pass + $pro_pass + $all_access_pass;
+	}
+
+	/**
+	 * Gets the pass ID required to be able to install the extension.
+	 *
+	 * @since 3.2.2
+	 * @param array $categories          The extension categories.
+	 * @param Pass_Manager $pass_manager The pass manager.
+	 * @return string
+	 */
+	private function get_pass_id( $categories, $pass_manager ) {
+		if ( in_array( $pass_manager->categories[ $pass_manager::PERSONAL_PASS_ID ], $categories, true ) ) {
+			return $pass_manager::PERSONAL_PASS_ID;
+		}
+		if ( in_array( $pass_manager->categories[ $pass_manager::EXTENDED_PASS_ID ], $categories, true ) ) {
+			return $pass_manager::EXTENDED_PASS_ID;
+		}
+		if ( in_array( $pass_manager->categories[ $pass_manager::PROFESSIONAL_PASS_ID ], $categories, true ) ) {
+			return $pass_manager::PROFESSIONAL_PASS_ID;
+		}
+
+		return $pass_manager::ALL_ACCESS_PASS_ID;
 	}
 
 	/**

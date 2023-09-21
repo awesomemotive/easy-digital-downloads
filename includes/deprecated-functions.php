@@ -2231,6 +2231,10 @@ function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $custom
 	 * Developers: If you want to disable sending the purchase receipt email you should use the filter `edd_disable_order_receipt` filter.
 	 */
 	edd_add_order_meta( $payment_id, '_edd_should_send_order_receipt', '1' );
+	edd_debug_log( 'Adding meta for sending the order_receipt for order #' . $payment_id );
+
+	// Trigger this to setup the edd_admin_sale_notice hook.
+	do_action( 'edd_admin_sale_notice', $payment_id, array() );
 }
 add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 3 );
 
@@ -2257,9 +2261,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 		$order = edd_get_order( $payment_id );
 	}
 
-	$order_receipt                    = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
-	$order_receipt->send_admin_notice = $admin_notice;
-	$order_receipt->send_to           = $to_email;
+	$order_receipt          = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
+	$order_receipt->send_to = $to_email;
 
 	$sent = $order_receipt->send();
 
@@ -2341,6 +2344,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	 * Developers: If you want to disable sending the admin order notice email you should use the filter `edd_disable_admin_order_notice` filter.
 	 */
 	edd_add_order_meta( $payment_id, '_edd_should_send_admin_order_notice', '1' );
+	edd_debug_log( 'Adding meta for sending the admin_order_notice for order #' . $payment_id );
 }
 add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
 

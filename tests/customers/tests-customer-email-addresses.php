@@ -415,4 +415,34 @@ class Customer_Email_Address extends EDD_UnitTestCase {
 
 		$this->assertCount( 0, $transactions );
 	}
+
+	/**
+	 * This test covers a scenario where a customer exists but does not have an email address assigned.
+	 * This could have happened during the migration, if a customer had no orders which could be migrated.
+	 */
+	public function test_get_customer_by_email_missing_email_returns_customer() {
+		$customer_id = edd_add_customer(
+			array(
+				'name'  => 'Test Customer',
+				'email' => 'missing@edd.test',
+			)
+		);
+
+		// EDD does add the email, so we need to delete it to shim the missing email experience.
+		$emails = edd_get_customer_email_addresses(
+			array(
+			'customer_id' => $customer_id,
+			)
+		);
+		foreach ( $emails as $email ) {
+			edd_delete_customer_email_address( $email->id );
+		}
+		$this->assertEmpty( edd_get_customer_email_addresses( array(
+			'customer_id' => $customer_id,
+		) ) );
+
+		$customer = edd_get_customer_by( 'email', 'missing@edd.test' );
+		$this->assertEquals( $customer_id, $customer->id );
+		$this->assertSame( 'missing@edd.test', $customer->email );
+	}
 }

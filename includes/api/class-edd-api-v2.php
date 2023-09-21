@@ -145,6 +145,17 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 			}
 
+			/**
+			 * Filter the query arguments for the products API
+			 *
+			 * @since <next-version>
+			 *
+			 * @param array $query_args The query arguments.
+			 * @param array $args       The original arguments passed to the API.
+			 *
+			 * @return array $query_args The modified query arguments.
+			 */
+			$query_args   = apply_filters( 'edd_api_v2_products_query_args', $query_args, $args );
 			$product_list = get_posts( $query_args );
 
 			if ( $product_list ) {

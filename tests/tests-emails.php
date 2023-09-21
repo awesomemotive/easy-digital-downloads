@@ -6,7 +6,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 /**
  * @group edd_emails
  */
-class Tests_Emails extends EDD_UnitTestCase {
+class Emails extends EDD_UnitTestCase {
 
 	/**
 	 * Payment fixture.
@@ -153,8 +153,8 @@ class Tests_Emails extends EDD_UnitTestCase {
 
 		// Verify the order receipt email is hooked.
 		$hooked_into = array_keys( $wp_filter['edd_after_order_actions'][9999] );
-		$has_hook    = $this->determine_if_hook_found( 'send_order_receipt', $hooked_into );
-		$this->assertTrue( $has_hook, 'Did not find send_order_receipt hook for edd_after_order_actions' );
+		$has_hook    = $this->determine_if_hook_found( 'send_order_emails', $hooked_into );
+		$this->assertTrue( $has_hook, 'Did not find send_order_emails hook for edd_after_order_actions' );
 
 		// Verify the resend order receipt email is hooked.
 		$hooked_into = array_keys( $wp_filter['edd_email_links'][10] );

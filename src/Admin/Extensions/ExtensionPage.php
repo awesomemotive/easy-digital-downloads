@@ -210,7 +210,7 @@ class ExtensionPage extends Extension {
 		$button = parent::get_button_parameters( $product_data, $item_id );
 
 		// Lite can show two cases, since you can have a pass activated on lite, but lite cannot install addons.
-		if ( $this->pass_manager->has_pass() ) {
+		if ( $this->pass_manager->has_pass() && ! edd_is_pro() ) {
 			$button['button_text'] = __( 'EDD (Pro) Required', 'easy-digital-downloads' );
 			$button['disabled']    = true;
 			unset( $button['href'] );

@@ -218,7 +218,7 @@ class AdminOrderNotice extends Email {
 		}
 
 		// Allows disabling this email by filter.
-		if ( false === apply_filters( 'edd_disable_' . $this->id, true, $this ) ) {
+		if ( true === apply_filters( 'edd_disable_' . $this->id, false, $this ) ) {
 			return false;
 		}
 

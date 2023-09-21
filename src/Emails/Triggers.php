@@ -24,9 +24,8 @@ class Triggers implements SubscriberInterface {
 	public static function get_subscribed_events() {
 		return array(
 			'init'                              => array( 'register_emails', 3 ),
-			'edd_after_order_actions'           => array( 'send_order_receipt', 9999, 3 ), // Run this late, so that other plugins can modify the order before the email is sent.
+			'edd_after_order_actions'           => array( 'send_order_emails', 9999, 3 ), // Run this late, so that other plugins can modify the order before the email is sent.
 			'edd_email_links'                   => array( 'resend_order_receipt', 10, 1 ),
-			'edd_email_sent_order_receipt'      => array( 'maybe_send_admin_order_notification', 10, 2 ),
 			'edd_send_test_email'               => array( 'send_test_email', 10, 1 ),
 			'edd_preview_email'                 => array( 'preview_email', 10 ),
 			'edd_send_test_email_order_receipt' => array( 'send_test_order_receipt', 10, 1 ),
@@ -39,7 +38,7 @@ class Triggers implements SubscriberInterface {
 	}
 
 	/**
-	 * Send the order receipt.
+	 * Send the order receipt and admin order notice.
 	 *
 	 * @since 3.2.0
 	 *
@@ -49,7 +48,7 @@ class Triggers implements SubscriberInterface {
 	 *
 	 * @return void
 	 */
-	public function send_order_receipt( $order_id = 0, $order = null, $customer = null ) {
+	public function send_order_emails( $order_id = 0, $order = null, $customer = null ) {
 		// No order ID and no Order object, we can't move forward, just return.
 		if ( empty( $order_id ) && ! $order instanceof Order ) {
 			return;
@@ -73,9 +72,33 @@ class Triggers implements SubscriberInterface {
 			return;
 		}
 
-		// Send the email.
-		$order_receipt = Registry::get( 'order_receipt', array( $order ) );
-		$order_receipt->send();
+		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
+		$should_send_order_receipt = edd_get_order_meta( $order_id, '_edd_should_send_order_receipt', true );
+
+		edd_debug_log( 'order_receipt should send: ' . var_export( $should_send_order_receipt, true ) );
+
+		// Delete the meta so we don't keep it around.
+		edd_delete_order_meta( $order_id, '_edd_should_send_order_receipt' );
+
+		if ( $should_send_order_receipt ) {
+			// Send the email.
+			$order_receipt = Registry::get( 'order_receipt', array( $order ) );
+			$order_receipt->send();
+		}
+
+		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
+		$should_send_admin_order_notice = edd_get_order_meta( $order_id, '_edd_should_send_admin_order_notice', true );
+
+		edd_debug_log( 'admin_order_notice should send: ' . var_export( $should_send_admin_order_notice, true ) );
+
+		// Delete the meta so we don't keep it around.
+		edd_delete_order_meta( $order_id, '_edd_should_send_admin_order_notice' );
+
+		if ( $should_send_admin_order_notice ) {
+			// Send the email.
+			$admin_notice = Registry::get( 'admin_order_notice', array( $order ) );
+			$admin_notice->send();
+		}
 	}
 
 	/**
@@ -88,9 +111,9 @@ class Triggers implements SubscriberInterface {
 	 * @return void
 	 */
 	public function resend_order_receipt( $data ) {
-		$purchase_id = absint( $data['purchase_id'] );
+		$order_id = absint( $data['purchase_id'] );
 
-		if ( empty( $purchase_id ) ) {
+		if ( empty( $order_id ) ) {
 			return;
 		}
 
@@ -99,79 +122,66 @@ class Triggers implements SubscriberInterface {
 		}
 
 		$email = ! empty( $data['email'] ) ? sanitize_email( $data['email'] ) : '';
-		$order = edd_get_order( $purchase_id );
+		$order = edd_get_order( $order_id );
 
 		if ( empty( $email ) ) {
 			$customer = new \EDD_Customer( $order->customer_id );
 			$email    = $customer->email;
 		}
 
-		$order_receipt = Registry::get( 'order_receipt', array( $order ) );
+		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
+		$should_send_order_receipt = edd_get_order_meta( $order_id, '_edd_should_send_order_receipt', true );
 
-		$order_receipt->send_to           = $email;
-		$order_receipt->send_admin_notice = false;
+		edd_debug_log( 'order_receipt should send: ' . var_export( $should_send_order_receipt, true ) );
 
-		$sent = $order_receipt->send();
+		// Delete the meta so we don't keep it around.
+		edd_delete_order_meta( $order_id, '_edd_should_send_order_receipt' );
 
-		// Since extensions like Per Product Emails might ask this to not send, we'll assume 'true'.
-		if ( is_null( $sent ) ) {
-			$sent = true;
+		$sent = false;
+
+		if ( $should_send_order_receipt ) {
+			$order_receipt          = Registry::get( 'order_receipt', array( $order ) );
+			$order_receipt->send_to = $email;
+			$sent                   = $order_receipt->send();
 		}
 
 		// Allow filtering this as extensions like Per Product Emails may disable sending the main receipt.
 		$sent = apply_filters( 'edd_resend_order_receipt_was_sent', $sent, $order, $email );
 
 		// If the email was sent, reset the file download limits.
-		if ( $sent ) {
+		if ( false !== $sent ) {
 			if ( is_array( $order->order_items ) ) {
 				foreach ( $order->order_items as $order_item ) {
 					$limit = edd_get_file_download_limit( $order_item->product_id );
 					if ( ! empty( $limit ) ) {
-						edd_set_file_download_limit_override( $order_item->product_id, $purchase_id );
+						edd_set_file_download_limit_override( $order_item->product_id, $order_id );
 					}
 				}
 			}
 		}
 
+		switch ( $sent ) {
+			case true:
+				$edd_message = 'email_sent';
+				break;
+			case false:
+				$edd_message = 'email_send_failed';
+				break;
+			case null:
+				$edd_message = 'email_possibly_not_sent';
+				break;
+		}
+
 		edd_redirect(
 			add_query_arg(
 				array(
-					'edd-message' => $sent ? 'email_sent' : 'email_send_failed',
+					'edd-message' => $edd_message,
 					'edd-action'  => false,
 					'purchase_id' => false,
 					'email'       => false,
 				)
 			)
 		);
-	}
-
-	/**
-	 * Maybe send the admin order notification.
-	 *
-	 * @since 3.2.0
-	 *
-	 * @param EDD\Emmails\Types\OrderReceipt $order_receipt The OrderReceipt object.
-	 * @param bool                           $sent          Whether the main order receipt email was sent.
-	 */
-	public function maybe_send_admin_order_notification( $order_receipt, $sent ) {
-		if ( false === $sent ) {
-			return;
-		}
-
-		// If this isn't an OrderReceipt object, return.
-		if ( 'order_receipt' !== $order_receipt->get_id() ) {
-			return;
-		}
-
-		if ( false === apply_filters( 'send_admin_order_notification', true, $order_receipt ) ) {
-			return;
-		}
-
-		// If the order receipt was sent, and it was supposed to send an admin email, send it.
-		if ( $order_receipt->send_admin_notice ) {
-			$admin_order_notice = Registry::get( 'admin_order_notice', array( $order_receipt->get_order() ) );
-			$admin_order_notice->send();
-		}
 	}
 
 	/**
@@ -215,19 +225,17 @@ class Triggers implements SubscriberInterface {
 		// For the test email we'll send it to all the admin notice emails.
 		$order_receipt->send_to = edd_get_admin_notice_emails();
 
-		// For the testing, we don't need to send the admin notice.
-		$order_receipt->send_admin_notice = false;
-
 		// Send the receipt.
-		$order_receipt->send();
+		$sent = $order_receipt->send();
 
+		$edd_message = $sent ? 'test-purchase-email-sent' : 'test-purchase-email-failed';
 		// Redirect the user back to the email settings.
 		$url = edd_get_admin_url(
 			array(
 				'page'        => 'edd-settings',
 				'tab'         => 'emails',
 				'section'     => 'purchase_receipts',
-				'edd-message' => 'test-purchase-email-sent',
+				'edd-message' => $edd_message,
 			)
 		);
 

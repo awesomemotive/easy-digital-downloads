@@ -843,6 +843,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers ::is_used()
 	 *
 	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_is_used_case_insensitive() {
 		$payment_id         = Helpers\EDD_Helper_Payment::create_simple_payment();

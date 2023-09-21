@@ -734,7 +734,11 @@ function edd_customers_view( $customer = null ) {
 						<td class="column-primary"><strong><a class="row-title" href="<?php echo esc_url( $view_url ); ?>"><?php echo esc_html( $order->get_number() ); ?></a><?php echo esc_html( $state ); ?></strong></td>
 						<td><?php echo esc_html( edd_get_gateway_admin_label( $order->gateway ) ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $order->total ), $order->currency ); ?></td>
-						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time></td>
+						<td>
+							<time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>">
+								<?php echo edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?>
+							</time>
+						</td>
 					</tr>
 
 				<?php endforeach;
@@ -900,7 +904,7 @@ function edd_customers_emails_view( $customer ) {
 							<?php endif; ?>
 						</td>
 						<td class="column-type">
-							<time datetime="<?php echo esc_attr( EDD()->utils->date( $email->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $email->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $email->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time>
+							<time datetime="<?php echo esc_attr( EDD()->utils->date( $email->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( $email->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $email->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time>
 						</td>
 					</tr>
 
