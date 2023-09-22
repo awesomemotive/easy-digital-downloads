@@ -670,10 +670,12 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 		'thumbnail_size' => null,
 	) );
 
-	$prices           = edd_get_variable_prices( $post_id );
-	$variable_pricing = edd_has_variable_prices( $post_id );
-	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
-	$variable_class   = $variable_pricing ? ' has-variable-pricing' : ''; ?>
+	$prices              = edd_get_variable_prices( $post_id );
+	$variable_pricing    = edd_has_variable_prices( $post_id );
+	$variable_display    = $variable_pricing ? '' : ' style="display:none;"';
+	$variable_class      = $variable_pricing ? ' has-variable-pricing' : '';
+	$custom_file_options = has_action( 'edd_download_file_option_row' );
+	?>
 
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
@@ -681,9 +683,16 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 			<input type="hidden" name="edd_download_files[<?php echo esc_attr( $key ); ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
 		</span>
 		<span class="edd-repeatable-row-actions">
-			<a class="edd-remove-row edd-delete" data-type="file">
-				<?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( esc_html__( 'Remove file %s', 'easy-digital-downloads' ), esc_html( $key ) ); ?></span>
-			</a>
+			<?php
+			$actions = array(
+				'remove' => '<a class="edd-remove-row edd-delete" data-type="file">' . esc_html__( 'Remove', 'easy-digital-downloads' ) . '<span class="screen-reader-text">' . sprintf( __( 'Remove file %s', 'easy-digital-downloads' ), esc_html( $key ) ) . '</span></a>',
+			);
+			if ( $custom_file_options ) {
+				array_unshift( $actions, '<a class="toggle-custom-price-option-section">' . esc_html__( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>' );
+			}
+
+			echo implode( '&nbsp;&#124;&nbsp;', $actions );
+			?>
 		</span>
 	</div>
 
@@ -749,9 +758,15 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 		</div>
 
 		<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
-
 	</div>
-<?php
+	<?php if ( $custom_file_options ) { ?>
+		<div class="edd-custom-price-option-sections-wrap edd-download-file-option-sections-wrap">
+			<div class="edd-custom-price-option-sections edd-download-file-option-sections">
+				<?php do_action( 'edd_download_file_option_row', $post_id, $key, $args ); ?>
+			</div>
+		</div>
+		<?php
+	}
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 4 );
 
