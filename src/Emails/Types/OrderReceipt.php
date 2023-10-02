@@ -76,8 +76,6 @@ class OrderReceipt extends Email {
 
 		// Since we are refactoring this, we need to set the legacy filters.
 		$this->set_legacy_filters();
-
-		$this->set_email_body_content();
 	}
 
 	/**
@@ -203,7 +201,7 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_message() {
-		$message = $this->raw_body_content;
+		$message = $this->get_raw_body_content();
 
 		$this->message = $this->process_tags( $this->maybe_apply_autop( $message ), $this->order_id );
 	}
@@ -228,7 +226,7 @@ class OrderReceipt extends Email {
 	 * @since 3.2.0
 	 * @return string
 	 */
-	protected function get_default_body_content() {
+	public function get_default_body_content() {
 		$default_email_body  = __( 'Dear', 'easy-digital-downloads' ) . " {name},\n\n";
 		$default_email_body .= __( 'Thank you for your purchase. Please click on the link(s) below to download your files.', 'easy-digital-downloads' ) . "\n\n";
 		$default_email_body .= '{download_list}' . "\n\n";

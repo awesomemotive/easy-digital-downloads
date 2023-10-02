@@ -410,12 +410,14 @@ class EDD_Cart {
 	public function add( $download_id, $options = array() ) {
 		$download = new EDD_Download( $download_id );
 
+		// Not a download product.
 		if ( empty( $download->ID ) ) {
-			return; // Not a download product
+			return;
 		}
 
+		// Do not allow draft/pending to be purchased if can't edit. Fixes #1056.
 		if ( ! $download->can_purchase() ) {
-			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
+			return;
 		}
 
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
@@ -434,14 +436,13 @@ class EDD_Cart {
 		 */
 		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->contents, $download_id, $options );
 
-		$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
-
 		if ( $download->has_variable_prices() && ! isset( $options['price_id'] ) ) {
 			// Forces to the default price ID if none is specified and download has variable prices.
 			$options['price_id'] = $download->get_default_price_id();
 		}
 
 		if ( isset( $options['quantity'] ) ) {
+			$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
 			if ( is_array( $options['quantity'] ) ) {
 				$quantity = array();
 				foreach ( $options['quantity'] as $q ) {
@@ -464,12 +465,17 @@ class EDD_Cart {
 		$items = array();
 
 		if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+			$prices = $download->get_prices();
 			// Process multiple price options at once.
 			foreach ( $options['price_id'] as $key => $price ) {
+				$price_id = preg_replace( '/[^0-9\.-]/', '', $price );
+				if ( ! isset( $prices[ $price_id ] ) ) {
+					$price_id = $download->get_default_price_id();
+				}
 				$items[] = array(
 					'id'       => $download_id,
 					'options'  => array(
-						'price_id' => preg_replace( '/[^0-9\.-]/', '', $price ),
+						'price_id' => $price_id,
 					),
 					'quantity' => is_array( $quantity ) && isset( $quantity[ $key ] ) ? $quantity[ $key ] : $quantity,
 				);
@@ -477,8 +483,13 @@ class EDD_Cart {
 		} else {
 			// Sanitize price IDs.
 			foreach ( $options as $key => $option ) {
-				if ( 'price_id' == $key ) {
-					$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
+				if ( 'price_id' === $key ) {
+					$prices   = $download->get_prices();
+					$price_id = preg_replace( '/[^0-9\.-]/', '', $option );
+					if ( ! isset( $prices[ $price_id ] ) ) {
+						$price_id = $download->get_default_price_id();
+					}
+					$options[ $key ] = $price_id;
 				}
 			}
 
@@ -523,7 +534,7 @@ class EDD_Cart {
 
 		do_action( 'edd_post_add_to_cart', $download_id, $options, $items );
 
-		// Clear all the checkout errors, if any
+		// Clear all the checkout errors, if any.
 		edd_clear_errors();
 
 		return count( $this->contents ) - 1;
@@ -535,7 +546,7 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int $key Cart key to remove. This key is the numerical index of the item contained within the cart array.
- 	 * @return array Updated cart contents
+	 * @return array Updated cart contents
 	 */
 	public function remove( $key ) {
 		$cart = $this->get_contents();

@@ -148,7 +148,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 			/**
 			 * Filter the query arguments for the products API
 			 *
-			 * @since <next-version>
+			 * @since 3.2.2
 			 *
 			 * @param array $query_args The query arguments.
 			 * @param array $args       The original arguments passed to the API.

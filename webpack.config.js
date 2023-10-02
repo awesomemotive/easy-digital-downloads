@@ -68,6 +68,7 @@ const config = {
 		'js/edd-admin-onboarding': './assets/js/admin/onboarding',
 		'js/edd-admin-licensing': './assets/js/admin/settings/licensing',
 		'js/edd-admin-pointers': './assets/js/admin/pointers',
+		'js/edd-admin-downloads-editor': './assets/js/admin/downloads/editor',
 		'js/stripe-admin': './assets/js/admin/stripe/index.js',
 		'js/stripe-notices': './assets/js/admin/stripe/notices.js',
 
