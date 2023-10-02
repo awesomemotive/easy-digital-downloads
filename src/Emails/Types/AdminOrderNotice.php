@@ -60,9 +60,6 @@ class AdminOrderNotice extends Email {
 
 		// Setup any of the legacy filters we need to run.
 		$this->set_legacy_filters();
-
-		// Now set the body content for this email.
-		$this->set_email_body_content();
 	}
 
 	/**
@@ -111,11 +108,12 @@ class AdminOrderNotice extends Email {
 
 	/**
 	 * Set the email to address.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
 	protected function set_to_email() {
-		$this->send_to = edd_get_admin_notice_emails();
+		$this->send_to = edd_get_admin_notice_emails( $this->order );
 	}
 
 	/**
@@ -165,7 +163,7 @@ class AdminOrderNotice extends Email {
 	 * @return void
 	 */
 	protected function set_message() {
-		$message = $this->maybe_apply_autop( $this->raw_body_content );
+		$message = $this->maybe_apply_autop( $this->get_raw_body_content() );
 
 		// We don't want admins to get the users download links, so we'll set edd_email_show_links to false.
 		add_filter( 'edd_email_show_links', '__return_false' );
@@ -192,8 +190,10 @@ class AdminOrderNotice extends Email {
 	 * @since 3.2.0
 	 * @return string
 	 */
-	protected function get_default_body_content() {
-		$default_email_body  = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
+	public function get_default_body_content() {
+		/* translators: %s: The plural label for the store items. */
+		$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
+		/* translators: %s: The plural label for the store items. */
 		$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";
 		$default_email_body .= '{download_list}' . "\n\n";
 		$default_email_body .= __( 'Purchased by: {fullname}', 'easy-digital-downloads' ) . "\n";

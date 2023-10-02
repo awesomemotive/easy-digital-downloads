@@ -743,4 +743,17 @@ class Cart extends EDD_UnitTestCase {
 		);
 		$this->assertTrue( edd_is_cart_empty() );
 	}
+
+	public function test_edd_process_add_to_cart_invalid_price_id_adds_default_price_id() {
+		edd_empty_cart();
+		edd_add_to_cart(
+			self::$download_2->ID,
+			array(
+				'price_id' => 45,
+			)
+		);
+		$cart_contents = edd_get_cart_contents();
+		$cart_item     = reset( $cart_contents );
+		$this->assertEquals( 0, $cart_item['options']['price_id'] );
+	}
 }

@@ -655,11 +655,16 @@ class EDD_Download {
 
 		if ( ! isset( $this->button_behavior ) ) {
 
-			$this->button_behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
-
-			if ( empty( $this->button_behavior ) || ! edd_shop_supports_buy_now() || ! $this->supports_buy_now() ) {
-				$this->button_behavior = 'add_to_cart';
+			if ( ! edd_shop_supports_buy_now() ) {
+				$button_behavior = 'add_to_cart';
+			} else {
+				$button_behavior = get_post_meta( $this->ID, '_edd_button_behavior', true );
+				if ( empty( $button_behavior ) || ( 'direct' === $button_behavior && ! $this->supports_buy_now() ) ) {
+					$button_behavior = 'add_to_cart';
+				}
 			}
+
+			$this->button_behavior = $button_behavior;
 		}
 
 		return apply_filters( 'edd_get_download_button_behavior', $this->button_behavior, $this->ID );
@@ -939,15 +944,11 @@ class EDD_Download {
 			return true;
 		}
 
-		// Parse if we have a price ID passed in.
-		$price_id = is_numeric( $price_id ) ? intval( $price_id ) : null;
-
 		// Free downloads does not support Buy Now.
 		if ( $free_downloads_active && ! $this->has_variable_prices() ) {
-			// If the download is free, we can return false.
-			$use_free_downloads_modal = edd_free_downloads_use_modal( $this->ID );
-
-			if ( $use_free_downloads_modal ) {
+			$price = get_post_meta( $this->ID, 'edd_price', true );
+			// If the download is free, we can return false. This check bypasses the is_free() method, to omit the filter.
+			if ( empty( $price ) && edd_free_downloads_use_modal( $this->ID ) ) {
 				return false;
 			}
 		}
@@ -955,6 +956,8 @@ class EDD_Download {
 		// Subscription products cannot support Buy Now.
 		if ( $recurring_active ) {
 			if ( $this->has_variable_prices() ) {
+				// Parse if we have a price ID passed in.
+				$price_id = is_numeric( $price_id ) ? intval( $price_id ) : null;
 				// If no Price ID was passed in, and the product has variable prices, return false if any of the prices are recurring.
 				if ( null === $price_id ) {
 					foreach ( $this->get_prices() as $key => $price ) {

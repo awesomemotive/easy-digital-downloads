@@ -648,10 +648,7 @@ class EDD_Payment {
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
 
-			$tax_rate = $this->tax_rate;
-			if ( ! empty( $tax_rate ) && $this->tax_rate > 0 && $this->tax_rate < 1 ) {
-				$tax_rate = $tax_rate * 100;
-			}
+			$tax_rate   = $this->maybe_update_tax_rate();
 			$order_meta = array(
 				'tax_rate' => $tax_rate,
 			);
@@ -821,7 +818,7 @@ class EDD_Payment {
 
 
 					case 'tax_rate':
-						$tax_rate = $this->tax_rate > 1 ? $this->tax_rate : ( $this->tax_rate * 100 );
+						$tax_rate = $this->maybe_update_tax_rate();
 						$this->update_meta( '_edd_payment_tax_rate', $tax_rate );
 						break;
 
@@ -2426,7 +2423,7 @@ class EDD_Payment {
 				) );
 				return true;
 			case '_edd_payment_tax_rate':
-				$tax_rate = $meta_value > 0 ? $meta_value : ( $meta_value * 100 );
+				$tax_rate = $this->maybe_update_tax_rate( $meta_value );
 				edd_update_order_meta( $this->ID, 'tax_rate', $tax_rate, $prev_value );
 				return true;
 			case '_edd_payment_customer_id':
@@ -3573,7 +3570,30 @@ class EDD_Payment {
 	private function _shim_edd_get_order( $order_id ) {
 		$orders = new EDD\Database\Queries\Order();
 
-		// Return order
+		// Return order.
 		return $orders->get_item( $order_id );
+	}
+
+	/**
+	 * Ensure that the tax rate is a percentage.
+	 *
+	 * @since 3.2.3
+	 * @return string|float
+	 */
+	private function maybe_update_tax_rate( $tax_rate = null ) {
+		if ( is_null( $tax_rate ) ) {
+			$tax_rate = $this->tax_rate;
+		}
+
+		if ( empty( $tax_rate ) ) {
+			return $tax_rate;
+		}
+
+		// If the tax rate is a decimal instead of a percentage, get the percentage.
+		if ( $tax_rate > 0 && $tax_rate < 1 ) {
+			return $tax_rate * 100;
+		}
+
+		return $tax_rate;
 	}
 }

@@ -16,7 +16,7 @@ class Metabox implements SubscriberInterface {
 	 */
 	public static function get_subscribed_events() {
 		return array(
-			'wp_ajax_edd_swap_download_type'=> 'swap_download_type',
+			'wp_ajax_edd_swap_download_type' => 'swap_download_type',
 		);
 	}
 
@@ -35,18 +35,23 @@ class Metabox implements SubscriberInterface {
 			wp_send_json_error();
 		}
 
-		$new_type_is_bundle = (bool) ( ! empty( $_POST['product_type'] ) && 'bundle' === $_POST['product_type'] );
 		ob_start();
-		if ( $new_type_is_bundle ) {
-			edd_render_products_field( $download_id, 'bundle' );
-		} else {
-			edd_render_files_field( $download_id, 'default' );
-		}
+		do_action( 'edd_meta_box_files_fields', $download_id, $this->get_download_type() );
 
 		wp_send_json_success(
 			array(
 				'html' => ob_get_clean(),
 			)
 		);
+	}
+
+	/**
+	 * Gets the download type.
+	 *
+	 * @since 3.2.3
+	 * @return string
+	 */
+	private function get_download_type() {
+		return ( ! empty( $_POST['product_type'] ) && 'bundle' === $_POST['product_type'] ) ? 'bundle' : 'default';
 	}
 }

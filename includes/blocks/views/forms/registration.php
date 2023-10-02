@@ -2,6 +2,7 @@
 /**
  * @var string $redirect_url
  */
+
 wp_enqueue_script( 'utils' );
 wp_enqueue_script( 'user-profile' );
 wp_enqueue_style( 'dashicons' );
@@ -42,13 +43,13 @@ wp_enqueue_style( 'dashicons' );
 			<button type="button" class="button button-secondary wp-hide-pw edd-has-js" data-toggle="0" aria-label="<?php esc_attr_e( 'Hide password', 'easy-digital-downloads' ); ?>">
 				<span class="dashicons dashicons-hidden" aria-hidden="true"></span>
 			</button>
-			<div id="pass-strength-result" class="edd-has-js" aria-live="polite"><?php esc_html_e( 'Strength indicator' ); ?></div>
+			<div id="pass-strength-result" class="edd-has-js" aria-live="polite"><?php esc_html_e( 'Strength indicator', 'easy-digital-downloads' ); ?></div>
 		</div>
 	</div>
 	<div class="edd-blocks-form__group edd-blocks-form__group-pw-weak pw-weak">
 		<div class="edd-blocks-form__control">
 			<input type="checkbox" name="pw_weak" id="pw-weak" class="pw-checkbox" />
-			<label for="pw-weak"><?php esc_html_e( 'Confirm use of weak password' ); ?></label>
+			<label for="pw-weak"><?php esc_html_e( 'Confirm use of weak password', 'easy-digital-downloads' ); ?></label>
 		</div>
 	</div>
 	<div class="edd-blocks-form__group edd-blocks-form__group-password-confirm user-pass2-wrap">
@@ -65,12 +66,12 @@ wp_enqueue_style( 'dashicons' );
 
 	<p class="description indicator-hint"><?php echo wp_kses_post( wp_get_password_hint() ); ?></p>
 	<div class="edd-blocks-form__group edd-blocks-form__group-submit reset-pass-submit">
-		<?php EDD\Blocks\Recaptcha\initialize(); ?>
 		<input type="hidden" name="edd_honeypot" value="" />
 		<input type="hidden" name="edd_action" value="user_register" />
 		<input type="hidden" name="edd_submit" value="edd_register_submit" />
 		<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $redirect_url ); ?>"/>
-		<button type="button" class="button wp-generate-pw edd-has-js edd-button-secondary"><?php esc_html_e( 'Generate Password' ); ?></button>
+		<button type="button" class="button wp-generate-pw edd-has-js edd-button-secondary"><?php esc_html_e( 'Generate Password', 'easy-digital-downloads' ); ?></button>
 		<input class="<?php echo esc_attr( implode( ' ', EDD\Blocks\Functions\get_button_classes() ) ); ?>" name="edd_register_submit" id="edd_register_submit" type="submit" value="<?php esc_html_e( 'Register', 'easy-digital-downloads' ); ?>" />
 	</div>
+	<?php do_action( 'edd_register_form_fields_after' ); ?>
 </form>

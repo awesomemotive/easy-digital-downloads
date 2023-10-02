@@ -12,7 +12,7 @@ namespace EDD\Tests\Orders;
 use EDD\Tests\Helpers;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-class EDD_Payment_Tests extends EDD_UnitTestCase {
+class EDD_Payment extends EDD_UnitTestCase {
 
 	/**
 	 * Payment test fixture.
@@ -1083,5 +1083,11 @@ class EDD_Payment_Tests extends EDD_UnitTestCase {
 
 	public function delete_meta_missing_key() {
 		$this->assertFalse( $this->payment->delete_meta( '_edd_nonexistant_key' ) );
+	}
+
+	public function test_custom_tax_rate_updates_as_percent() {
+		$this->payment->update_meta( '_edd_payment_tax_rate', 0.25 );
+
+		$this->assertEquals( 25, edd_get_order_meta( $this->payment->ID, 'tax_rate', true ) );
 	}
 }
