@@ -1,4 +1,4 @@
-=== Easy Digital Downloads - Simple eCommerce for Selling Digital Files ===
+=== Easy Digital Downloads – Sell Digital Files (eCommerce Store & Payments Made Easy) ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, lisacee, zkawesome
@@ -6,10 +6,10 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.8
 Tested up to: 6.3
 Requires PHP: 7.4
-Stable Tag: 3.2.2
+Stable Tag: 3.2.3
 License: GNU Version 2 or Any Later Version
 
-The #1 ecommerce WordPress plugin to sell digital products. Effortlessly manage orders, maximize revenue, and accept payments through Stripe & PayPal.
+The #1 eCommerce plugin to sell digital products. Manage eCommerce orders, increase store revenue & accept credit card payments with Stripe + PayPal.
 
 == Description ==
 
@@ -216,7 +216,7 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 
 == Screenshots ==
 
-1. Detailed and actional reports
+1. Detailed and actionable reports
 2. Customer Management
 3. Order History
 4. Order Details
@@ -226,6 +226,18 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+
+= 3.2.3 =
+* Blocks: The user registration forms and lost password feature have been updated to allow customization via hooks.
+* Stripe: Refunded payments initiated within the Stripe Dashboard now create a refund order in EDD.
+* Cart: Improved product validation when adding an item to the cart.
+* Emails: Admin payment & order notifications have been updated to allow further customization.
+* Block Editor: Improved compatibility with themes and page builders.
+* Payments: Ensure that tax rates are accurately stored when using legacy payment creation processes.
+* Customers: Improved the performance and accuracy of checking if a user has previously made purchases.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.2.2 =
 * PayPal: The IPN Backup for PayPal was fixed to prevent a fatal error.
 * PayPal: Improved the Buy Now with PayPal payments to bypass Checkout only when Buy Now is fully supported.
@@ -238,8 +250,6 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Customers: Improved the customer email address detection and reliability.
 * Payments: Updated the customer recent payments list to use the correct date format.
 * Blocks: Improved the reliability of checkout when EDD Blocks or Gutenberg are disabled.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.2.1 =
 * Stripe: We've improved the error handling and informational messaging related to the Stripe Payments integration.

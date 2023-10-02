@@ -177,7 +177,7 @@ class ValidFakeEmail extends \EDD\Emails\Types\Email {
 		);
 	}
 
-	protected function get_default_body_content() {
+	public function get_default_body_content() {
 		return '';
 	}
 }

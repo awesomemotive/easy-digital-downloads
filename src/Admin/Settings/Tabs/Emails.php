@@ -157,7 +157,7 @@ class Emails extends Tab {
 		}
 		$registered_email = Registry::get( $email, array( false ) );
 
-		return $registered_email->get_raw_body_content();
+		return $registered_email->get_default_body_content();
 	}
 
 	/**

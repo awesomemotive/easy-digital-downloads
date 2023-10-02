@@ -135,13 +135,7 @@ abstract class Email {
 	 * @since 3.2.0
 	 * @return void
 	 */
-	public function __construct() {
-		/**
-		 * When intantiating the class, the `raw_body_content` is set, which is essentially the
-		 * default setting for the email content.
-		 */
-		$this->set_email_body_content();
-	}
+	public function __construct() {}
 
 	/**
 	 * Get the email ID.
@@ -174,6 +168,10 @@ abstract class Email {
 	 * @return string
 	 */
 	public function get_raw_body_content() {
+		if ( ! $this->raw_body_content ) {
+			$this->set_email_body_content();
+		}
+
 		return $this->raw_body_content;
 	}
 
@@ -339,10 +337,11 @@ abstract class Email {
 
 	/**
 	 * Get the default email body content.
+	 *
 	 * @since 3.2.0
 	 * @return string
 	 */
-	abstract protected function get_default_body_content();
+	abstract public function get_default_body_content();
 
 	/**
 	 * Possibly runs the content provided through wpautop.

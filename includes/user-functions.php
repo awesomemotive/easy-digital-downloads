@@ -266,9 +266,14 @@ function edd_has_purchases( $user_id = null ) {
 		return false;
 	}
 
-	$count = edd_count_orders( array( 'user_id' => $user_id ) );
-
-	return (bool) $count;
+	return (bool) edd_get_orders(
+		array(
+			'user_id'    => $user_id,
+			'type'       => 'sale',
+			'status__in' => edd_get_complete_order_statuses(),
+			'number'     => 1,
+		)
+	);
 }
 
 

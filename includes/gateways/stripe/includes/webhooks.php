@@ -18,7 +18,7 @@ function edds_stripe_event_listener() {
 
 	try {
 		// Retrieve the request's body and parse it as JSON.
-		$body = @file_get_contents( 'php://input' );
+		$body  = @file_get_contents( 'php://input' );
 		$event = json_decode( $body );
 
 		if ( isset( $event->id ) ) {
@@ -57,41 +57,51 @@ function edds_stripe_event_listener() {
 
 			// Charge refunded. Ensure EDD Payment status is correct.
 			case 'charge.refunded':
-				$charge   = $event->data->object;
-				$order_id = edd_get_order_id_from_transaction_id( $charge->id );
-				$order    = edd_get_order( $order_id );
-
+				$charge = $event->data->object;
 				// This is an uncaptured PaymentIntent, not a true refund.
 				if ( ! $charge->captured ) {
 					return;
 				}
 
-				if ( $order instanceof \EDD\Orders\Order ) {
+				$order_id = edd_get_order_id_from_transaction_id( $charge->id );
+				$order    = edd_get_order( $order_id );
 
-					// If this was completely refunded, set the status to refunded.
-					if ( $charge->refunded ) {
-						$status = 'refunded';
-						// Translators: The charge ID from Stripe that is being refunded.
-						$note = sprintf( __( 'Charge %s has been fully refunded in Stripe.', 'easy-digital-downloads' ), $charge->id );
-					} else {
-						$status = 'partially_refunded';
-						// Translators: The charge ID from Stripe that is being partially refunded.
-						$note = sprintf( __( 'Charge %s partially refunded in Stripe.', 'easy-digital-downloads' ), $charge->id );
-					}
-					edd_update_order(
-						$order->id,
-						array(
-							'status' => $status,
-						)
-					);
-					edd_add_note(
-						array(
-							'object_id'   => $order_id,
-							'object_type' => 'order',
-							'content'     => $note,
-						)
-					);
+				if ( ! $order instanceof \EDD\Orders\Order ) {
+					return;
 				}
+
+				// If this was completely refunded, set the status to refunded.
+				if ( $charge->refunded ) {
+					$refund_id = edd_refund_order( $order->id );
+					if ( $refund_id ) {
+						edd_add_order_transaction(
+							array(
+								'object_type'    => 'order',
+								'object_id'      => $refund_id,
+								'transaction_id' => $charge->id,
+								'gateway'        => 'stripe',
+								'total'          => $order->total,
+								'status'         => 'complete',
+								'currency'       => $order->currency,
+							)
+						);
+					} else {
+						edd_update_order_status( $order->id, 'refunded' );
+					}
+					// Translators: The charge ID from Stripe that is being refunded.
+					$note = sprintf( __( 'Charge %s has been fully refunded in Stripe.', 'easy-digital-downloads' ), $charge->id );
+				} else {
+					edd_update_order_status( $order->id, 'partially_refunded' );
+					// Translators: The charge ID from Stripe that is being partially refunded.
+					$note = sprintf( __( 'Charge %s partially refunded in Stripe.', 'easy-digital-downloads' ), $charge->id );
+				}
+				edd_add_note(
+					array(
+						'object_id'   => $order_id,
+						'object_type' => 'order',
+						'content'     => $note,
+					)
+				);
 
 				break;
 

@@ -292,7 +292,7 @@ function edd_render_files_meta_box() {
 	 * Output the files fields
 	 * @since 1.9
 	 */
-	do_action( 'edd_meta_box_files_fields', get_the_ID() );
+	do_action( 'edd_meta_box_files_fields', get_the_ID(), 'default' );
 }
 
 /**
@@ -611,7 +611,7 @@ function edd_render_products_field( $post_id, $type = '' ) {
 	}
 	include 'views/metabox-bundled-products.php';
 }
-add_action( 'edd_meta_box_files_fields', 'edd_render_products_field', 10 );
+add_action( 'edd_meta_box_files_fields', 'edd_render_products_field', 10, 2 );
 
 /**
  * File Downloads section.
@@ -645,7 +645,7 @@ function edd_render_files_field( $post_id = 0, $type = '' ) {
 
 	include 'views/metabox-files.php';
 }
-add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
+add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20, 2 );
 
 
 /**
