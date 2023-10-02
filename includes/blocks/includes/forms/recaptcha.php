@@ -53,6 +53,8 @@ function initialize() {
 	enqueue();
 	do_inputs();
 }
+add_action( 'edd_register_form_fields_after', __NAMESPACE__ . '\initialize' );
+add_action( 'edd_lost_password_fields_after', __NAMESPACE__ . '\initialize' );
 
 /**
  * Renders the hidden inputs needed for reCAPTCHA validation.

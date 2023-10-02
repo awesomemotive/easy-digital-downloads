@@ -17,14 +17,21 @@ defined( 'ABSPATH' ) || exit;
  * changed in the EDD Settings)
  *
  * @since 1.0
- * @return mixed
+ * @param null|EDD\Orders\Order $order Optional. The order object. Default: null. Added in 3.2.3.
+ * @return array $emails The emails to send admin notices to
  */
-function edd_get_admin_notice_emails() {
+function edd_get_admin_notice_emails( $order = null ) {
 	$emails = edd_get_option( 'admin_notice_emails', false );
 	$emails = strlen( trim( $emails ) ) > 0 ? $emails : get_bloginfo( 'admin_email' );
 	$emails = array_map( 'trim', explode( "\n", $emails ) );
 
-	return apply_filters( 'edd_admin_notice_emails', $emails );
+	/**
+	 * Filters the emails for which admin notifications are sent.
+	 *
+	 * @param array $emails The emails to send admin notices to.
+	 * @param null|EDD\Orders\Order $order Optional. The order object. Default: null. Added in 3.2.3.
+	 */
+	return apply_filters( 'edd_admin_notice_emails', $emails, $order );
 }
 
 /**

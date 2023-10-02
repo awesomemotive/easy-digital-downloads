@@ -264,6 +264,18 @@ class Customers extends EDD_UnitTestCase {
 		$this->assertTrue( edd_has_purchases( self::$user ) );
 	}
 
+	public function test_edd_has_purchases_pending_orders_should_return_false() {
+		edd_update_order(
+			self::$order,
+			array(
+				'status' => 'pending',
+			)
+		);
+		self::$customers[0]->attach_payment( self::$order );
+
+		$this->assertFalse( edd_has_purchases( self::$user ) );
+	}
+
 	public function test_count_purchases_of_user_should_return_1() {
 		$this->assertEquals( 1, edd_count_purchases_of_customer( self::$user ) );
 	}
