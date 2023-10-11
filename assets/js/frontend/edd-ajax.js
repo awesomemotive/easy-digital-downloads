@@ -493,13 +493,6 @@ jQuery( document ).ready( function( $ ) {
 			recalculateTaxes();
 		}
 	} );
-	
-	// Change email toggler on Checkout.
-	$( document.body ).on( 'click', '.edd-change-email', function() {
-	    	$( document.body ).find( '.edd-personal-data-wrap' ).toggle();
-		
-	    	return false;
-	} );
 } );
 
 // Load a payment gateway
