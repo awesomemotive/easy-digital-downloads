@@ -176,32 +176,31 @@ function edd_user_info_fields() {
 	$customer = array_map( 'sanitize_text_field', $customer );
 	?>
 	<fieldset id="edd_checkout_user_info">
-		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html__( 'Personal info', 'easy-digital-downloads' ) ); ?></legend>
-		<?php $is_change_email = get_query_var('change-email') ? get_query_var('change-email') : 0; ?>
-		<?php if( is_user_logged_in() && !empty( $customer ) && !empty( $customer['first_name'] ) && !empty( $customer['email'] ) && !$is_change_email ) { ?>
-		<?php $name = !empty($customer['last_name']) ? $customer['first_name'] . " " . $customer['last_name'] : $customer['first_name'] ?>
+		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html__( 'Personal Info', 'easy-digital-downloads' ) ); ?></legend>
+
+		<?php if( is_user_logged_in() && !empty( $customer ) && !empty( $customer['first_name'] ) && !empty( $customer['email'] ) ) { ?>
+			<?php $name = !empty($customer['last_name']) ? $customer['first_name'] . " " . $customer['last_name'] : $customer['first_name'] ?>
 			<p id="edd-logged-in-wrap">
 				<?php 
 					printf( 
 						esc_html__( 'You are logged in as %s (%s). %s | %s', 'easy-digital-downloads' ), 
 						esc_attr( $name ), 
 						esc_attr( $customer['email'] ),
-						'<a href="' . edd_get_checkout_uri() . add_query_arg( 'change-email', 1 ) . '">' . esc_html__( 'Change Email', 'easy-digital-downloads' ) . '</a>',
+						'<a href="#" class="edd-change-email">' . esc_html__( 'Change Email', 'easy-digital-downloads' ) . '</a>',
 						'<a href="' . wp_logout_url( edd_get_checkout_uri() ) . '">' . esc_html__( 'Logout?', 'easy-digital-downloads' ) . '</a>'
 					);
 				?>
-				<input class="edd-input" style="display:none;" type="email" name="edd_email" id="edd-email" value="<?php echo esc_attr( $customer['email'] ); ?>">
-				<input class="edd-input" style="display:none;" type="text" name="edd_first" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>">
-				<input class="edd-input" style="display:none;" type="text" name="edd_last" id="edd-last" value="<?php echo esc_attr( $customer['last_name'] ); ?>">
 			</p>
-		<?php } else { ?>
+		<?php } ?>
+			
+		<div id="edd-personal-data-wrap" class="edd-personal-data-wrap" style="<?php echo is_user_logged_in() && !empty( $customer ) && !empty( $customer['first_name'] ) && !empty( $customer['email'] ) ? "display:none;" : "" ?>">
 			<?php do_action( 'edd_purchase_form_before_email' ); ?>
 			<p id="edd-email-wrap">
 				<label class="edd-label" for="edd-email">
-					<?php esc_html_e( 'Email address', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_field_is_required( 'edd_email' ) ) : ?>
+					<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>
+					<?php if( edd_field_is_required( 'edd_email' ) ) { ?>
 						<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php } ?>
 				</label>
 				<span class="edd-description" id="edd-email-description"><?php esc_html_e( 'We will send the purchase receipt to this address.', 'easy-digital-downloads' ); ?></span>
 				<input class="edd-input required" type="email" name="edd_email" placeholder="<?php esc_html_e( 'Email address', 'easy-digital-downloads' ); ?>" id="edd-email" value="<?php echo esc_attr( $customer['email'] ); ?>" aria-describedby="edd-email-description"<?php if( edd_field_is_required( 'edd_email' ) ) {  echo ' required '; } ?>/>
@@ -209,27 +208,27 @@ function edd_user_info_fields() {
 			<?php do_action( 'edd_purchase_form_after_email' ); ?>
 			<p id="edd-first-name-wrap">
 				<label class="edd-label" for="edd-first">
-					<?php esc_html_e( 'First name', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_field_is_required( 'edd_first' ) ) : ?>
+					<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>
+					<?php if( edd_field_is_required( 'edd_first' ) ) { ?>
 						<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php } ?>
 				</label>
 				<span class="edd-description" id="edd-first-description"><?php esc_html_e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-				<input class="edd-input required" type="text" name="edd_first" placeholder="<?php esc_html_e( 'First name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?> aria-describedby="edd-first-description" />
+				<input class="edd-input required" type="text" name="edd_first" placeholder="<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?> aria-describedby="edd-first-description" />
 			</p>
 			<p id="edd-last-name-wrap">
 				<label class="edd-label" for="edd-last">
-					<?php esc_html_e( 'Last name', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_field_is_required( 'edd_last' ) ) : ?>
+					<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>
+					<?php if( edd_field_is_required( 'edd_last' ) ) { ?>
 						<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php } ?>
 				</label>
 				<span class="edd-description" id="edd-last-description"><?php esc_html_e( 'We will use this as well to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-				<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php esc_html_e( 'Last name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"<?php if( edd_field_is_required( 'edd_last' ) ) {  echo ' required '; } ?> aria-describedby="edd-last-description"/>
+				<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"<?php if( edd_field_is_required( 'edd_last' ) ) {  echo ' required '; } ?> aria-describedby="edd-last-description"/>
 			</p>
-			<?php do_action( 'edd_purchase_form_user_info' ); ?>
-			<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
-		<?php } ?>
+		</div>
+		<?php do_action( 'edd_purchase_form_user_info' ); ?>
+		<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
 	</fieldset>
 	<?php
 }
@@ -237,16 +236,27 @@ add_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
 add_action( 'edd_register_fields_before', 'edd_user_info_fields' );
 
 /**
- * Add change-email query var to WP_Query.
+ * Outputs the JavaScript code for the Personal Info section to toggle email section
  *
  * @since 1.0
  * @return void
  */
-function edd_change_email_query_vars( $qvars ) {
-    $qvars[] = 'change-email';
-    return $qvars;
+function edd_change_email_js() {
+	if ( is_user_logged_in() ) {
+?>
+	<script type="text/javascript">
+		jQuery(document).ready(function($){
+			$( document.body ).on('click', '.edd-change-email', function(e) {
+				//e.preventDefault();
+				$( document.body ).find('.edd-personal-data-wrap').toggle();
+				return false;
+			});
+		});
+	</script>
+<?php
+	}
 }
-add_filter( 'query_vars', 'edd_change_email_query_vars' );
+add_action( 'edd_checkout_form_top', 'edd_change_email_js' );
 
 /**
  * Renders the credit card info form.
