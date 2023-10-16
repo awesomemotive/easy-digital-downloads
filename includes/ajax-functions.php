@@ -196,6 +196,8 @@ function edd_ajax_add_to_cart() {
 		edd_die( '', '', 403 );
 	}
 
+	do_action( 'edd_ajax_add_to_cart_validate', $download_id );
+
 	$to_add = array();
 
 	if ( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
