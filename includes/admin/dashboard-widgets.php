@@ -96,6 +96,7 @@ function edd_get_dashboard_sales_widget_data() {
 			'range'         => $range,
 			'output'        => 'formatted',
 			'revenue_type'  => 'net',
+			'convert_to_selected_currency' => true
 		);
 		if ( 'total' === $range ) {
 			unset( $args['range'] );
