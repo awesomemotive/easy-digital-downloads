@@ -191,7 +191,7 @@ function edd_is_gateway_active( $gateway ) {
  * @return string $default Default gateway ID.
  */
 function edd_get_default_gateway() {
-	$default = edd_get_option( 'default_gateway', 'paypal' );
+	$default = edd_get_option( 'default_gateway', 'stripe' );
 
 	// Use the first enabled one
 	if ( ! edd_is_gateway_active( $default ) ) {
