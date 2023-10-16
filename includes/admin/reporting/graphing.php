@@ -408,10 +408,14 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 	$earnings_totals = (float) 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;            // Total sales for time period shown
+	$rec_earnings_totals = (float) 0.00; // Total earnings for time period shown
+	$rec_sales_totals    = 0;            // Total sales for time period shown
 
 	$include_taxes = empty( $_GET['exclude_taxes'] ) ? true : false;
 	$earnings_data = array();
 	$sales_data    = array();
+	$rec_earnings_data = array();
+	$rec_sales_data    = array();
 
 	if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
@@ -435,6 +439,20 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 			$sales_data[] = array( $date * 1000, $sales );
 			$earnings_data[] = array( $date * 1000, $earnings );
+
+			if ( class_exists( 'EDD_Recurring_Reports' ) ) {
+				if ( empty($rr) ) {
+					$rr  = new EDD_Recurring_Reports();
+				}
+
+				$subscriptions = $rr->get_subscriptions_by_date( $dates['day'], $month, $dates['year'], $hour, $include_taxes, $download_id );
+
+				$rec_sales_totals += $subscriptions['count'];
+				$rec_earnings_totals += $subscriptions['earnings'];
+
+				$rec_sales_data[] = array( $date * 1000, $subscriptions['count'] );
+				$rec_earnings_data[] = array( $date * 1000, $subscriptions['earnings'] );
+			}
 
 			$hour++;
 		endwhile;
@@ -472,6 +490,20 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 			$sales_data[] = array( $date * 1000, $sales );
 			$earnings_data[] = array( $date * 1000, $earnings );
+
+			if ( class_exists( 'EDD_Recurring_Reports' ) ) {
+				if ( empty($rr) ) {
+					$rr  = new EDD_Recurring_Reports();
+				}
+
+				$subscriptions = $rr->get_subscriptions_by_date( $report_date['day'], $report_date['month'], $report_date['year'], null, $include_taxes, $download_id );
+
+				$rec_sales_totals += $subscriptions['count'];
+				$rec_earnings_totals += $subscriptions['earnings'];
+
+				$rec_sales_data[] = array( $date * 1000, $subscriptions['count'] );
+				$rec_earnings_data[] = array( $date * 1000, $subscriptions['earnings'] );
+			}
 		}
 	} else {
 		$y = $dates['year'];
@@ -526,6 +558,20 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$temp_data['earnings'][ $y ][ $i ][ $d ] = $earnings;
 					$temp_data['sales'][ $y ][ $i ][ $d ]    = $sales;
 
+					if ( class_exists( 'EDD_Recurring_Reports' ) ) {
+						if ( empty($rr) ) {
+							$rr  = new EDD_Recurring_Reports();
+						}
+
+						$subscriptions = $rr->get_subscriptions_by_date( $d, $i, $y, null, $include_taxes, $download_id );
+
+						$rec_sales_totals += $subscriptions['count'];
+						$rec_earnings_totals += $subscriptions['earnings'];
+
+						$temp_data['rec_earnings'][ $y ][ $i ][ $d ] = $subscriptions['earnings'];
+						$temp_data['rec_sales'][ $y ][ $i ][ $d ]    = $subscriptions['count'];
+					}
+
 					$d++;
 				}
 
@@ -554,6 +600,26 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					foreach ( $dates as $day => $earnings ) {
 						$date            = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
 						$earnings_data[] = array( $date, $earnings );
+					}
+				}
+			}
+
+			if ( class_exists( 'EDD_Recurring_Reports' ) ) {
+				foreach ( $temp_data[ 'rec_sales' ] as $year => $months ) {
+					foreach( $months as $month => $dates ) {
+						foreach ( $dates as $day => $sales ) {
+							$date         = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+							$rec_sales_data[] = array( $date, $sales );
+						}
+					}
+				}
+
+				foreach ( $temp_data[ 'rec_earnings' ] as $year => $months ) {
+					foreach( $months as $month => $dates ) {
+						foreach ( $dates as $day => $earnings ) {
+							$date            = mktime( 0, 0, 0, $month, $day, $year ) * 1000;
+							$rec_earnings_data[] = array( $date, $earnings );
+						}
 					}
 				}
 			}
@@ -591,6 +657,40 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$earnings_data[] = array( $date, $earnings );
 				}
 			}
+
+			if ( class_exists( 'EDD_Recurring_Reports' ) ) {
+				foreach ( $temp_data[ 'rec_sales' ] as $year => $months ) {
+					$month_keys = array_keys( $months );
+					$last_month = end( $month_keys );
+
+					foreach ( $months as $month => $days ) {
+						$day_keys = array_keys( $days );
+						$last_day = end( $day_keys );
+
+						$consolidated_date = $month === $last_month ? $last_day : 1;
+
+						$sales        = array_sum( $days );
+						$date         = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$rec_sales_data[] = array( $date, $sales );
+					}
+				}
+
+				foreach ( $temp_data[ 'rec_earnings' ] as $year => $months ) {
+					$month_keys = array_keys( $months );
+					$last_month = end( $month_keys );
+
+					foreach ( $months as $month => $days ) {
+						$day_keys = array_keys( $days );
+						$last_day = end( $day_keys );
+
+						$consolidated_date = $month === $last_month ? $last_day : 1;
+
+						$earnings        = array_sum( $days );
+						$date            = mktime( 0, 0, 0, $month, $consolidated_date, $year ) * 1000;
+						$rec_earnings_data[] = array( $date, $earnings );
+					}
+				}
+			}
 		}
 	}
 
@@ -598,6 +698,11 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 		__( 'Earnings', 'easy-digital-downloads' ) => $earnings_data,
 		__( 'Sales', 'easy-digital-downloads' )    => $sales_data
 	);
+
+	if ( class_exists( 'EDD_Recurring' ) ) {
+		$data[ __( 'Renewals Earnings', 'easy-digital-downloads' ) ] = $rec_earnings_data;
+		$data[ __( 'Renewals Sales', 'easy-digital-downloads' ) ] = $rec_sales_data;
+	}
 
 	?>
 	<div class="metabox-holder" style="padding-top: 0;">
@@ -611,10 +716,17 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 				$graph->set( 'multiple_y_axes', true );
 				$graph->display();
 				?>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'easy-digital-downloads' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'easy-digital-downloads' ); echo edd_currency_filter( edd_format_amount( $earnings_totals + $rec_earnings_totals ) ); ?></strong></p>
+				<?php if ( class_exists( 'EDD_Recurring_Reports' ) ): ?>
+					<p class="edd_graph_totals"><strong><?php _e( 'Total new earnings for period shown: ', 'easy-digital-downloads' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Total recurring earnings for period shown: ', 'easy-digital-downloads' ); echo edd_currency_filter( edd_format_amount( $rec_earnings_totals ) ); ?></strong></p>
+				<?php endif; ?>
 				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'easy-digital-downloads' ); echo $sales_totals; ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly earnings: %s', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( edd_get_average_monthly_download_earnings( $download_id ) ) ) ); ?>
-				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly sales: %s', 'easy-digital-downloads' ), number_format( edd_get_average_monthly_download_sales( $download_id ), 0 ) ); ?>
+				<?php if ( class_exists( 'EDD_Recurring_Reports' ) ): ?>
+					<p class="edd_graph_totals"><strong><?php _e( 'Total recurring sales for period shown: ', 'easy-digital-downloads' ); echo $rec_sales_totals; ?></strong></p>
+				<?php endif; ?>
+				<p class="edd_graph_totals"><strong><?php printf( __( 'Average new monthly earnings: %s', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( edd_get_average_monthly_download_earnings( $download_id ) ) ) ); ?>
+				<p class="edd_graph_totals"><strong><?php printf( __( 'Average new monthly sales: %s', 'easy-digital-downloads' ), number_format( edd_get_average_monthly_download_sales( $download_id ), 0 ) ); ?>
 			</div>
 		</div>
 	</div>
