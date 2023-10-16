@@ -3042,10 +3042,12 @@ class Stats {
 		if (empty($currency)) {
 			$currency = edd_get_currency();
 		}
-		if ($currency !== 'USD') {
+		$edd_settings = edd_get_settings();
+            	$edd_currency = !empty($edd_settings['currency']) ? $edd_settings['currency'] : edd_get_currency();
+		if ($currency !== $edd_currency) {
 			// Compatibility with Multi Currency Addon by Easy Digital Downloads
 			if (class_exists('\EDD_Multi_Currency') && \EDD_Multi_Currency\Utils\Currency::isValidCurrency($currency)) { 
-				$value = \EDD_Multi_Currency\Utils\Currency::convert($value, $currency, 'USD');
+				$value = \EDD_Multi_Currency\Utils\Currency::convert($value, $currency, $edd_currency);
 			}
 		}
 		return $value;
