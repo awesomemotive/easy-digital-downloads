@@ -193,6 +193,29 @@ jQuery( document ).ready( function( $ ) {
 				const store_redirect = edd_scripts.redirect_to_checkout === '1';
 				const item_redirect = form.find( 'input[name=edd_redirect_to_checkout]' ).val() === '1';
 
+				if (response.toast_notice) {
+					$this.toggleClass("edd-add-to-cart-error");
+					setTimeout(function () {
+						$this.toggleClass("edd-add-to-cart-error");
+					}, 3000);
+
+					$this.prop('disabled', false);
+
+					showToast(response.message, {
+						duration: "lifetime",
+						background: '#f59a01',
+						color: '#ffffff',
+						borderRadius: '5px',
+						icon_style: 'fas fa-cart-arrow-down',
+						text_style: 'checkout-toast-default',
+						close: true,
+						progressBar: true,
+						pageReload: false
+					});
+
+					return false;
+				}
+
 				if ( ( store_redirect && item_redirect ) || ( ! store_redirect && item_redirect ) ) {
 					window.location = edd_scripts.checkout_page;
 				} else {
