@@ -540,9 +540,231 @@ function edd_load_gateway( payment_mode ) {
 		function( response ) {
 			jQuery( '#edd_purchase_form_wrap' ).html( response );
 			jQuery( 'body' ).trigger( 'edd_gateway_loaded', [ payment_mode ] );
+
+			var query_vars = getUrlVars();
+			if ('scroll-to-error' in query_vars && query_vars['scroll-to-error'] == 1) {
+				jQuery('html, body').animate({
+					scrollTop: jQuery('#edd_final_total_wrap').offset().top - 200
+				}, 1000);
+			}
 		}
 	);
 }
+
+// Read a page's GET URL variables and return them as an associative array.
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+/**
+ * jToast 
+ * A modern & easy-going jQuery Plugin to create Toasts.
+ * 
+ * Version: 1.0.0
+ * Author: Nextpost.tech
+ * Author URI: https://nextpost.tech
+ */
+let toasts = 0;
+let manager = {
+	ready: true,
+	jobs: [],
+	currentWorkingID: 0,
+	addJob(job) {
+		this.ready = false;
+		job.type === "show" ? this.jobs.push({ text: job.text, args: job.args, type: "show", is_remove: job.isRemove }) : this.jobs.push({ id: job.id, type: "hide", is_remove: job.isRemove });
+
+		const waitUntilReady = setInterval(() => {
+			if (this.workJobOff()) {
+				clearInterval(waitUntilReady);
+			}
+		}, 250);
+	},
+	removeJob(id) {
+		if (this.currentWorkingID === id) {
+			this.ready = true;
+		}
+	},
+	workJobOff() {
+		if (this.ready && this.jobs.length > 0) {
+			this.jobs[0].type === "show" ? showToast(this.jobs[0].text, this.jobs[0].args) : hideToast(this.jobs[0].id, this.jobs[0].is_remove);
+			this.jobs.splice(0, 1);
+			return true;
+		}
+	}
+};
+function showToast(text, { duration = 3000, background = "#232323", color = "#fff", borderRadius = "0px", icon_style = false, text_style = false, close = false, progressBar = false, pageReload = false, isRemove = false} = {}) {
+	const selectedToast = toasts;
+	if (!manager.ready) {
+		manager.addJob({ text: text, args: showToast.arguments[1], workingID: selectedToast, type: "show", isRemove: isRemove });
+		return;
+	}
+	manager.currentWorkingID = selectedToast;
+
+	jQuery("#toasts").append(`
+		<div style="background: ${background}; color: ${color}; border-radius: ${borderRadius}; ${close ? 'display: flex;' : ''}" data-toast-id="${toasts}" class="toast">
+			${icon_style ? `<span class="${icon_style}" style="font-size: 14px;line-height: 20px;margin-right: 7px;"></span>` : ""}
+			<span ${text_style ? `class="${text_style}"` : ""}>${text}</span>
+			${progressBar && duration !== "lifetime" ? `<div style="animation-duration: ${duration}ms; background: ${color};" class="progress"></div>` : ""}
+		</div>
+	`);
+
+	if (close)
+		jQuery(`[data-toast-id="${selectedToast}"]`).append(`
+			<div style="height: ${jQuery(`[data-toast-id="${selectedToast}"] > span`).height()}px" onclick="hideToast(${selectedToast})" class="close">&times;</div>
+		`);
+
+		jQuery(".toast").map((i) => {
+		manager.ready = false;
+		if (i !== selectedToast) {
+		jQuery(".toast").eq(i).animate({
+				"margin-top": "+=" + parseInt(jQuery(`[data-toast-id="${selectedToast}"]`).height() + (15 * 2) + 15 + 5) + "px"
+			}, 300);
+
+			setTimeout(() => {
+				manager.removeJob(selectedToast);
+			}, 300);
+		} else {
+			setTimeout(() => {
+				jQuery(".toast").eq(i).animate({
+					"margin-top": "25px"
+				}, 300);
+
+				setTimeout(() => {
+					manager.removeJob(selectedToast);
+				}, 300);
+			}, 150);
+		}
+	});
+
+	if (duration !== "lifetime") {
+		setTimeout(() => {
+			jQuery(`[data-toast-id="${selectedToast}"]`).animate({
+				"margin-right": "-" + parseInt(jQuery(`[data-toast-id="${selectedToast}"]`).width() + (15 * 2) + 25 + 100) + "px"
+			}, 300);
+
+			if (selectedToast !== toasts) {
+				jQuery(".toast").map((i) => {
+					if (i < selectedToast) {
+						setTimeout(() => {
+							jQuery(".toast").eq(i).animate({
+								"margin-top": "-=" + parseInt(jQuery(`[data-toast-id="${selectedToast}"]`).height() + (15 * 2) + 15 + 5) + "px"
+							}, 300);
+						}, 300);
+					}
+				});
+			}
+
+			setTimeout(() => {
+				jQuery(`[data-toast-id="${selectedToast}"]`).addClass("hidden");
+				if (pageReload) {
+					window.location.reload();
+				}
+			}, 300);
+		}, duration);
+	}
+
+	toasts++;
+	return selectedToast;
+}
+function hideToast(id, isRemove = false) {
+	if (parseInt(jQuery(`[data-toast-id="${id}"]`).css("margin-right").replace("px", "")) === 0) {
+		jQuery(`[data-toast-id="${id}"]`).animate({
+			"margin-right": "-" + parseInt(jQuery(`[data-toast-id="${id}"]`).width() + (15 * 2) + 25 + 100) + "px"
+		}, 300);
+
+		if (id !== toasts) {
+			jQuery(".toast").map((i) => {
+				if (i < id) {
+					setTimeout(() => {
+						jQuery(".toast").eq(i).animate({
+							"margin-top": "-=" + parseInt(jQuery(`[data-toast-id="${id}"]`).height() + (15 * 2) + 15 + 5) + "px"
+						}, 300);
+					}, 300);
+				}
+			});
+		}
+
+		setTimeout(() => {
+			var toast = jQuery(`[data-toast-id="${id}"]`);
+			toast.addClass("hidden");
+			if (isRemove) {
+				toast.remove();
+			}
+		}, 300);
+	}
+}
+jQuery("head").append(`
+	<style>
+		.toast {
+			padding: 15px;
+			color: #fff;
+			position: fixed;
+			right: 25px;
+			top: 0;
+			margin-top: -100px;
+			box-shadow: 0 10px 40px 0 rgba(62,57,107,.07), 0 2px 9px 0 rgba(62,57,107,.12);
+			max-width: 50%;
+			z-index: 2147483647;
+		}
+
+		@media only screen and (max-width: 768px) {
+			.toast {
+				max-width: 80%;
+			}
+		}
+		
+		@keyframes progress {
+			from { width: 100% }
+			to { width: 0% }
+		}
+		
+		.toast > .progress {
+			position: absolute;
+			height: 2px;
+			width: 100%;
+			margin-left: -15px;
+			bottom: 0;
+			opacity: 0.75;
+			animation: progress linear forwards;
+		}
+		
+		.toast > .close {
+			margin-left: 15px;
+			opacity: 0.75;
+			font-size: 24px;
+			display: flex;
+			align-items: center;
+			cursor: pointer;
+		}
+
+		.checkout-toast-default {
+			font-size: 14px;
+		}
+
+		.checkout-toast-default a {
+			color: #ffffff;
+			border-bottom: dotted 1px #ffffff;
+		}
+		
+		.checkout-toast-default a:hover {
+			color: #222222;
+			border-bottom: dotted 1px #222222;
+		}
+
+		.checkout-toast-default a:focus {
+			outline: none;
+		}
+	</style>
+`);
+jQuery("body").append(`<div id="toasts"></div>`);
 
 // Backwards compatibility. Assign function to global namespace.
 window.edd_load_gateway = edd_load_gateway;
