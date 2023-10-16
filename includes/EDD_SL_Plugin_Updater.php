@@ -313,6 +313,9 @@ class EDD_SL_Plugin_Updater {
 		//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
 		if ( empty( $edd_api_request_transient ) ) {
 
+			// Temporary
+			return $_data;
+
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 
 			// Expires in 3 hours
@@ -405,6 +408,9 @@ class EDD_SL_Plugin_Updater {
 	 */
 	private function api_request( $_action, $_data ) {
 		$data = array_merge( $this->api_data, $_data );
+
+		// Temporary
+		return false;
 
 		if ( $data['slug'] !== $this->slug ) {
 			return;
@@ -516,6 +522,9 @@ class EDD_SL_Plugin_Updater {
 			'php_version' => phpversion(),
 			'wp_version'  => get_bloginfo( 'version' ),
 		);
+
+		// Temporary
+		return false;
 
 		/**
 		 * Filters the parameters sent in the API request.
