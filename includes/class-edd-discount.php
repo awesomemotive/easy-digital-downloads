@@ -1763,7 +1763,9 @@ class EDD_Discount extends Adjustment {
 		$base_price = floatval( $base_price );
 
 		if ( 'flat' === $this->amount_type ) {
-			$amount = $base_price - floatval( $this->amount );
+			$discount_amount = apply_filters( 'edd_discounted_amount_flat_amount_before', $this->amount );
+			
+			$amount = $base_price - floatval( $discount_amount );
 
 			if ( $amount < 0 ) {
 				$amount = 0;
