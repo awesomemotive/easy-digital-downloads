@@ -2985,6 +2985,10 @@ class Stats {
 		if ( is_object( $data ) ) {
 			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
 				if ( is_numeric( $data->{$field} ) ) {
+					if (isset( $this->query_vars['convert_to_selected_currency'] ) && $this->query_vars['convert_to_selected_currency']) {
+						$data->{$field} = $this->convert_to_selected_currency( $data->{$field} );
+					}
+					
 					$data->{$field} = edd_format_amount( $data->{$field}, true, $currency, $output );
 
 					if ( 'formatted' === $output ) {
@@ -2995,6 +2999,10 @@ class Stats {
 		} elseif ( is_array( $data ) ) {
 			foreach ( array_keys( $data ) as $field ) {
 				if ( is_numeric( $data[ $field ] ) ) {
+					if (isset( $this->query_vars['convert_to_selected_currency'] ) && $this->query_vars['convert_to_selected_currency']) {
+						$data[ $field ] = $this->convert_to_selected_currency( $data[ $field ] );
+					}
+					
 					$data[ $field ] = edd_format_amount( $data[ $field ], true, $currency, $output );
 
 					if ( 'formatted' === $output ) {
@@ -3004,6 +3012,10 @@ class Stats {
 			}
 		} else {
 			if ( is_numeric( $data ) ) {
+				if (isset( $this->query_vars['convert_to_selected_currency'] ) && $this->query_vars['convert_to_selected_currency']) {
+					$data = $this->convert_to_selected_currency( $data );
+				}
+				
 				$data = edd_format_amount( $data, true, $currency, $output );
 
 				if ( 'formatted' === $output ) {
@@ -3013,6 +3025,28 @@ class Stats {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Convert value to selected currency
+	 *
+	 * @since 3.2.0
+	 * @return float
+	 */
+	private function convert_to_selected_currency( $value ) {
+		$currency = get_user_meta(get_current_user_id(), 'aelia_cs_selected_currency', true);
+		if (empty($currency)) {
+			$currency = edd_get_currency();
+		}
+		if ($currency !== 'USD') {
+			$enabled_currencies = apply_filters('edd_aelia_cs_enabled_currencies', '');
+			if (class_exists('\EDD_Multi_Currency') && \EDD_Multi_Currency\Utils\Currency::isValidCurrency($currency)) { // Compatibility with Multi Currency Addon by Easy Digital Downloads 
+				$value = \EDD_Multi_Currency\Utils\Currency::convert($value, $currency, 'USD');
+			} elseif (has_filter('edd_aelia_cs_convert') && in_array($currency, $enabled_currencies)) { // Compatibility with Aelia Currency Switcher Plugin
+				$value = apply_filters('edd_aelia_cs_convert', $value, 'USD', $currency);
+			}
+		}
+		return $value;
 	}
 
 	/**
