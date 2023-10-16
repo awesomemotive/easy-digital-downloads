@@ -3043,11 +3043,9 @@ class Stats {
 			$currency = edd_get_currency();
 		}
 		if ($currency !== 'USD') {
-			$enabled_currencies = apply_filters('edd_aelia_cs_enabled_currencies', '');
-			if (class_exists('\EDD_Multi_Currency') && \EDD_Multi_Currency\Utils\Currency::isValidCurrency($currency)) { // Compatibility with Multi Currency Addon by Easy Digital Downloads 
+			// Compatibility with Multi Currency Addon by Easy Digital Downloads
+			if (class_exists('\EDD_Multi_Currency') && \EDD_Multi_Currency\Utils\Currency::isValidCurrency($currency)) { 
 				$value = \EDD_Multi_Currency\Utils\Currency::convert($value, $currency, 'USD');
-			} elseif (has_filter('edd_aelia_cs_convert') && in_array($currency, $enabled_currencies)) { // Compatibility with Aelia Currency Switcher Plugin
-				$value = apply_filters('edd_aelia_cs_convert', $value, 'USD', $currency);
 			}
 		}
 		return $value;
