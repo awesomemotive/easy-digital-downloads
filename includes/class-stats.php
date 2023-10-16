@@ -294,6 +294,8 @@ class Stats {
 			? 0.00
 			: (float) $initial_result->total;
 
+		$total = self::convertToSelectedCurrency($total);
+
 		if ( 'array' === $this->query_vars['output'] ) {
 			$output = array(
 				'value'         => $total,
@@ -311,6 +313,28 @@ class Stats {
 		$this->post_query();
 
 		return $output;
+	}
+
+	/**
+	 * Convert value to selected currency
+	 *
+	 * @since 3.2.0
+	 * @return float
+	 */
+	public static function convertToSelectedCurrency( $value ) {
+		$currency = get_user_meta(get_current_user_id(), 'aelia_cs_selected_currency', true);
+		if (empty($currency)) {
+			$currency = edd_get_currency();
+		}
+		if ($currency !== 'USD') {
+			$enabled_currencies = apply_filters('edd_aelia_cs_enabled_currencies', '');
+			if (has_filter('edd_aelia_cs_convert') && in_array($currency, $enabled_currencies)) { // Compatibility with Aelia Currency Switcher Plugin
+				$value = apply_filters('edd_aelia_cs_convert', $value, 'USD', $currency);
+			} elseif (class_exists('\EDD_Multi_Currency') && \EDD_Multi_Currency\Utils\Currency::isValidCurrency($currency)) { // Compatibility with Multi Currency Addon by Easy Digital Downloads 
+				$value = \EDD_Multi_Currency\Utils\Currency::convert($value, $currency, 'USD');
+			}
+		}
+		return $value;
 	}
 
 	/**
