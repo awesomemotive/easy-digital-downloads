@@ -2978,6 +2978,10 @@ class Stats {
 		}
 
 		$currency = $this->query_vars['currency'];
+		if (isset( $this->query_vars['convert_to_selected_currency'] ) && $this->query_vars['convert_to_selected_currency']) {
+			$currency = get_user_meta(get_current_user_id(), 'aelia_cs_selected_currency', true);
+			
+		}
 		if ( empty( $currency ) || 'convert' === strtolower( $currency ) ) {
 			$currency = edd_get_currency();
 		}
