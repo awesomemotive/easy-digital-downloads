@@ -622,7 +622,7 @@ function edd_get_download_type( $download_id = 0 ) {
 	$download = edd_get_download( $download_id );
 
 	return $download
-		? $download->type
+		? $download->get_type()
 		: false;
 }
 
