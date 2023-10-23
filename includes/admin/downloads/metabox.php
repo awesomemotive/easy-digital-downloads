@@ -292,7 +292,7 @@ function edd_render_files_meta_box() {
 	 * Output the files fields
 	 * @since 1.9
 	 */
-	do_action( 'edd_meta_box_files_fields', get_the_ID(), 'default' );
+	do_action( 'edd_meta_box_files_fields', get_the_ID(), '' );
 }
 
 /**
