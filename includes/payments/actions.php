@@ -115,6 +115,18 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	}
 
+	if ( is_array( $cart_details ) ) {
+	    foreach ( $cart_details as $cart_index => $download ) {
+	        $download_type = edd_get_download_type( $download['id'] );
+	        $price_id      = isset( $download['item_number']['options']['price_id'] ) ? (int) $download['item_number']['options']['price_id'] : false;
+	        for( $i = 0; $i < $download['quantity']; $i++ ) {
+	            if ( empty( $completed_date ) ) {
+	                do_action( 'edd_post_complete_download_purchase', $download['id'], $payment_id, $download_type, $download, $cart_index );
+	            }
+	        }
+	    }
+	}
+	
 	// Empty the shopping cart
 	edd_empty_cart();
 }
