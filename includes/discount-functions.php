@@ -205,7 +205,6 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * @return int The discount ID of the discount code, or WP_Error on failure.
  */
 function edd_store_discount( $details, $discount_id = null ) {
-
 	$meta = array(
 		'code'              => isset( $details['code'] )             ? $details['code']              : '',
 		'name'              => isset( $details['name'] )             ? $details['name']              : '',
@@ -294,11 +293,12 @@ function edd_store_discount( $details, $discount_id = null ) {
 		$discount_id = wp_insert_post( array(
 			'post_type'   => 'edd_discount',
 			'post_title'  => $meta['name'],
+		    'post_name'   => $meta['name'],
 			'post_status' => $meta['status']
 		) );
 
 		foreach( $meta as $key => $value ) {
-			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+			add_metadata( 'post',  $discount_id, '_edd_discount_' . $key, $value );
 		}
 
 		/**
