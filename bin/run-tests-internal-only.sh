@@ -49,6 +49,10 @@ composer -q --no-cache install
 printf "\r\xE2\x9C\x94 Installing compser dependencies"
 printf "\n"
 
+# Move files from the bin/compat directory into place, replacing any files we find.
+printf "Copying compat files into place"
+cp -R bin/compat/* .
+
 coverage=""
 if [[ ${COVERAGE} == 1 ]]; then
 

@@ -31,7 +31,6 @@ function maybe_enqueue_polyfills() {
 	}
 
 	wp_enqueue_script( 'wp-polyfill' );
-
 }
 
 /**
@@ -64,12 +63,15 @@ function register_js( $force_load = false ) {
 	 *
 	 * @since 2.11
 	 */
-	$sdk_query_args = apply_filters( 'edd_paypal_js_sdk_query_args', array(
-		'client-id'       => urlencode( $api->client_id ),
-		'currency'        => urlencode( strtoupper( edd_get_currency() ) ),
-		'intent'          => 'capture',
-		'disable-funding' => 'card,credit,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sepa,sofort,venmo'
-	) );
+	$sdk_query_args = apply_filters(
+		'edd_paypal_js_sdk_query_args',
+		array(
+			'client-id'       => urlencode( $api->client_id ),
+			'currency'        => urlencode( strtoupper( edd_get_currency() ) ),
+			'intent'          => 'capture',
+			'disable-funding' => 'card,credit,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sepa,sofort,venmo',
+		)
+	);
 
 	wp_register_script(
 		'sandhills-paypal-js-sdk',
@@ -82,7 +84,7 @@ function register_js( $force_load = false ) {
 		array(
 			'sandhills-paypal-js-sdk',
 			'jquery',
-			'edd-ajax'
+			'edd-ajax',
 		),
 		EDD_VERSION,
 		true
@@ -101,9 +103,11 @@ function register_js( $force_load = false ) {
 			 * @since 2.11
 			 */
 			'approvalAction' => apply_filters( 'edd_paypal_on_approve_action', 'edd_capture_paypal_order' ),
-			'defaultError'   => edd_build_errors_html( array(
-				'paypal-error' => esc_html__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' )
-			) ),
+			'defaultError'   => edd_build_errors_html(
+				array(
+					'paypal-error' => esc_html__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
+				)
+			),
 			'intent'         => ! empty( $sdk_query_args['intent'] ) ? $sdk_query_args['intent'] : 'capture',
 			'style'          => get_button_styles(),
 		);
@@ -118,16 +122,21 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_js', 100 );
  * Removes the "?ver=" query arg from the PayPal JS SDK URL, because PayPal will throw an error
  * if it's included.
  *
- * @param string $url
+ * @param string $url The URL for the script source.
  *
  * @since 2.11
  * @return string
  */
 function remove_ver_query_arg( $url ) {
+	// Account for a possibly empty URL here.
+	if ( empty( $url ) ) {
+		return $url;
+	}
+
 	$sdk_url = 'https://www.paypal.com/sdk/js';
 
 	if ( false !== strpos( $url, $sdk_url ) ) {
-		$new_url = preg_split( "/(&ver|\?ver)/", $url );
+		$new_url = preg_split( '/(&ver|\?ver)/', $url );
 
 		return $new_url[0];
 	}
@@ -162,17 +171,24 @@ function add_data_attributes( $script_tag, $handle, $src ) {
 	 *
 	 * @param array $data_attributes
 	 */
-	$data_attributes = apply_filters( 'edd_paypal_js_sdk_data_attributes', array(
-		'partner-attribution-id' => EDD_PAYPAL_PARTNER_ATTRIBUTION_ID
-	) );
+	$data_attributes = apply_filters(
+		'edd_paypal_js_sdk_data_attributes',
+		array(
+			'partner-attribution-id' => EDD_PAYPAL_PARTNER_ATTRIBUTION_ID,
+		)
+	);
 
 	if ( empty( $data_attributes ) || ! is_array( $data_attributes ) ) {
 		return $script_tag;
 	}
 
-	$formatted_attributes = array_map( function ( $key, $value ) {
-		return sprintf( 'data-%s="%s"', sanitize_html_class( $key ), esc_attr( $value ) );
-	}, array_keys( $data_attributes ), $data_attributes );
+	$formatted_attributes = array_map(
+		function ( $key, $value ) {
+			return sprintf( 'data-%s="%s"', sanitize_html_class( $key ), esc_attr( $value ) );
+		},
+		array_keys( $data_attributes ),
+		$data_attributes
+	);
 
 	return str_replace( ' src', ' ' . implode( ' ', $formatted_attributes ) . ' src', $script_tag );
 }

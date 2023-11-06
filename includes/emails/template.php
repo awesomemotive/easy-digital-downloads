@@ -80,8 +80,7 @@ function edd_email_preview_template_tags( $message, $disable_wpautop = false ) {
 	$sub_total = edd_currency_filter( edd_format_amount( 9.50 ) );
 
 	$order_numbers = new EDD\Orders\Number();
-	$order_id      = rand(1, 100);
-	$order_number  = $order_numbers->format( $order_id );
+	$order_number  = $order_numbers->format( wp_rand( 100, 987 ) );
 
 	$user = wp_get_current_user();
 
@@ -89,7 +88,7 @@ function edd_email_preview_template_tags( $message, $disable_wpautop = false ) {
 	$message = str_replace( '{file_urls}', $file_urls, $message );
 	$message = str_replace( '{name}', $user->display_name, $message );
 	$message = str_replace( '{fullname}', $user->display_name, $message );
- 	$message = str_replace( '{username}', $user->user_login, $message );
+	$message = str_replace( '{username}', $user->user_login, $message );
 	$message = str_replace( '{date}', edd_date_i18n( current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
 	$message = str_replace( '{tax}', $tax, $message );
@@ -99,8 +98,8 @@ function edd_email_preview_template_tags( $message, $disable_wpautop = false ) {
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $order_number, $message );
-	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( $order_id ), $message );
-	$message = str_replace( '{receipt}', edd_email_tag_receipt( $order_id ), $message );
+	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( 0 ), $message );
+	$message = str_replace( '{receipt}', edd_email_tag_receipt( 0 ), $message );
 
 	$message = apply_filters( 'edd_email_preview_template_tags', $message );
 
@@ -128,46 +127,6 @@ function edd_email_template_preview() {
 	echo ob_get_clean();
 }
 add_action( 'edd_purchase_receipt_email_settings', 'edd_email_template_preview' );
-
-/**
- * Email Template Body
- *
- * @since 1.0.8.2
- *
- * @deprecated 3.2.0
- *
- * @param int $payment_id Payment ID
- * @param array $payment_data Payment Data
- * @return string $email_body Body of the email
- */
-function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
-	_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
-
-	$order         = edd_get_order( $payment_id );
-	$order_receipt = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
-
-	return $order_receipt->get_raw_body_content();
-}
-
-/**
- * Sale Notification Template Body
- *
- * @since 1.7
- *
- * @deprecated 3.2.0
- *
- * @param int $payment_id Payment ID
- * @param array $payment_data Payment Data
- * @return string $email_body Body of the email
- */
-function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
-	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\AdminOrderNotice' );
-
-	$order              = edd_get_order( $payment_id );
-	$admin_order_notice = EDD\Emails\Registry::get( 'admin_order_notice', array( $order ) );
-
-	return $admin_order_notice->get_raw_body_content();
-}
 
 /**
  * Render Receipt in the Browser

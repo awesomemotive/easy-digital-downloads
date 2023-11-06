@@ -292,7 +292,7 @@ function edd_render_files_meta_box() {
 	 * Output the files fields
 	 * @since 1.9
 	 */
-	do_action( 'edd_meta_box_files_fields', get_the_ID(), 'default' );
+	do_action( 'edd_meta_box_files_fields', get_the_ID(), '' );
 }
 
 /**
@@ -863,7 +863,8 @@ function edd_render_download_limit_row( $post_id ) {
 		return;
 	}
 
-	$edd_download_limit = edd_get_file_download_limit( $post_id );
+	// Get the downlaod limit directly from the post meta so that the global is not involved.
+	$edd_download_limit = get_post_meta( $post_id, '_edd_download_limit', true );
 	$display            = 'default' === edd_get_download_type( $post_id ) || ! empty( edd_get_download_files( $post_id ) ) ? '' : ' style="display: none;"';
 ?>
 	<div class="edd-form-group edd-product-options-wrapper" id="edd_download_limit_wrap"<?php echo $display; ?>>

@@ -14,6 +14,12 @@ use EDD\Models\Notification;
 use EDD\Utils\EnvironmentChecker;
 use EDD\Utils\NotificationImporter;
 
+/**
+ * Class NotificationsDB
+ *
+ * @since 2.11.4
+ * @package EDD\Database
+ */
 class NotificationsDB {
 
 	/**
@@ -21,6 +27,8 @@ class NotificationsDB {
 	 */
 	public function __construct() {
 		add_action( 'edd_daily_scheduled_events', array( $this, 'schedule_daily_notification_checks' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_filter( 'script_loader_tag', array( $this, 'defer_alpine' ) );
 	}
 
 	/**
@@ -31,6 +39,43 @@ class NotificationsDB {
 	public static function schedule_daily_notification_checks() {
 		$importer = new NotificationImporter();
 		$importer->run();
+	}
+
+	/**
+	 * Enqueue the notifications scripts/style on the admin pages, but not the block editor.
+	 *
+	 * @since 3.2.4
+	 * @param string $hook_suffix The current admin page.
+	 * @return void
+	 */
+	public function enqueue( $hook_suffix = '' ) {
+		if ( ! edd_should_load_admin_scripts( $hook_suffix ) ) {
+			return;
+		}
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : false;
+		if ( $screen && $screen->is_block_editor ) {
+			return;
+		}
+		$version    = edd_admin_get_script_version();
+		$css_suffix = is_rtl() ? '-rtl.min.css' : '.min.css';
+
+		wp_register_script( 'alpinejs', EDD_PLUGIN_URL . 'assets/js/alpine.min.js', array(), '3.4.2', true );
+		wp_enqueue_script( 'edd-admin-notifications', EDD_PLUGIN_URL . 'assets/js/edd-admin-notifications.js', array( 'alpinejs' ), $version, true );
+		wp_enqueue_style( 'edd-admin-notifications', EDD_PLUGIN_URL . 'assets/css/edd-admin-notifications' . $css_suffix, array(), $version );
+	}
+
+	/**
+	 * Add `defer` to the AlpineJS script tag.
+	 *
+	 * @since 3.2.4
+	 */
+	public function defer_alpine( $url ) {
+		$alpine = wp_make_link_relative( EDD_PLUGIN_URL . 'assets/js/alpine.min.js' );
+		if ( false !== strpos( $url, $alpine ) ) {
+			$url = str_replace( ' src', ' defer src', $url );
+		}
+
+		return $url;
 	}
 
 	/**

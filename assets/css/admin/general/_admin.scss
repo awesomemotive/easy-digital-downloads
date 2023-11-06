@@ -1,0 +1,62 @@
+body.edd-admin-page {
+
+	@media (min-width: $break-medium) {
+		& #wpbody-content {
+			padding-bottom: 200px;
+		}
+	}
+
+	& #wpfooter {
+		.edd-footer-promotion {
+			text-align: center;
+			font-weight: 400;
+			font-size: 13px;
+			line-height: 16px;
+			color: $wp-gray-40;
+			padding: 20px 0 30px 0;
+			margin-bottom: 20px;
+			margin-top: 20px;
+
+			& p {
+				font-weight: 600;
+			}
+
+			& .edd-footer-promotion-links, .edd-footer-promotion-social {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			& .edd-footer-promotion-links {
+				margin: 9px 0 0;
+
+				& span {
+					color: $wp-gray-10;
+					padding: 0 7px;
+				}
+			}
+
+			& .edd-footer-promotion-social {
+				margin: 10px 0 0 0;
+				gap: 10px;
+
+				& li {
+					margin-bottom: 0;
+
+					& path {
+						fill: $edd-footer-social-link;
+					}
+
+					&:hover path {
+						fill: $edd-footer-social-link-hover;
+					}
+				}
+
+				& a {
+					display: block;
+					height: 16px;
+				}
+			}
+		}
+	}
+}

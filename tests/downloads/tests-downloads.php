@@ -8,7 +8,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * @group edd_downloads
  * @group edd_functions
  */
-class Tests_Downloads extends EDD_UnitTestCase {
+class Downloads extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	protected $_variable_pricing = null;
@@ -139,8 +139,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertNotEmpty( $download3->files );
 		$this->assertEquals( $files, $download3->files );
 		$this->assertEquals( $files, $download3->get_files() );
-		$this->assertEquals( 20, $download3->file_download_limit );
-		$this->assertEquals( 20, $download3->get_file_download_limit() );
 		$this->assertEquals( 0, $download3->get_file_price_condition( 0 ) );
 		$this->assertEquals( 'all', $download3->get_file_price_condition( 1 ) );
 		$this->assertEquals( 'default', $download3->get_type() );
@@ -159,7 +157,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertEmpty( $download4->prices );
 
 		// Test the magic __get function
-		$this->assertEquals( 20, $download3->file_download_limit );
 		$this->assertTrue( is_wp_error( $download3->__get( 'asdf') ) );
 
 	}
@@ -276,18 +273,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 				$this->assertEquals( 'all', $file['condition'] );
 			}
 		}
-	}
-
-	public function test_get_file_download_limit() {
-		$this->assertEquals( 20, edd_get_file_download_limit( $this->_post->ID ) );
-	}
-
-	public function test_get_file_download_limit_override() {
-		$this->assertEquals( 1, edd_get_file_download_limit_override( $this->_post->ID, 1 ) );
-	}
-
-	public function test_is_file_at_download_limit() {
-		$this->assertFalse( edd_is_file_at_download_limit( $this->_post->ID, 1, 1 ) );
 	}
 
 	public function test_get_file_price_condition() {

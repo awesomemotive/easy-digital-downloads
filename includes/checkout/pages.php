@@ -84,8 +84,12 @@ function edd_get_confirmation_page_uri() {
  * @return string
  */
 function edd_get_receipt_page_uri( $order_id ) {
-	$page_id    = absint( edd_get_option( 'success_page', 0 ) );
-	$order      = edd_get_order( $order_id );
+	$page_id = absint( edd_get_option( 'success_page', 0 ) );
+	$order   = edd_get_order( $order_id );
+	if ( ! $order ) {
+		return get_permalink( $page_id );
+	}
+
 	$query_args = array(
 		'id'    => $order_id,
 		'order' => urlencode( md5( $order_id . $order->payment_key . $order->email ) ),

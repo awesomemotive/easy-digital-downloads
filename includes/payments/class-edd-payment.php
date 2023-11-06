@@ -65,7 +65,7 @@ class EDD_Payment {
 	 * @since  2.5
 	 * @var    integer
 	 */
-	public $ID = 0;
+	public $ID     = 0;
 	protected $_ID = 0;
 
 	/**
@@ -187,7 +187,7 @@ class EDD_Payment {
 	 * @since  2.5
 	 * @var string
 	 */
-	protected $status = 'pending';
+	protected $status      = 'pending';
 	protected $post_status = 'pending'; // Same as $status but here for backwards compat
 
 	/**
@@ -493,41 +493,39 @@ class EDD_Payment {
 		$this->post_status     = $this->order->status;
 		$this->mode            = $this->order->mode;
 		$this->parent_payment  = $this->order->parent;
-
-		$all_payment_statuses  = edd_get_payment_statuses();
-		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
+		$this->status_nicename = $this->get_status_nicename();
 
 		// Items
-		$this->fees            = $this->setup_fees();
-		$this->cart_details    = $this->setup_cart_details();
-		$this->downloads       = $this->setup_downloads();
+		$this->fees         = $this->setup_fees();
+		$this->cart_details = $this->setup_cart_details();
+		$this->downloads    = $this->setup_downloads();
 
 		// Currency Based
-		$this->total           = $this->order->total;
-		$this->tax             = $this->order->tax;
-		$this->tax_rate        = $this->setup_tax_rate();
-		$this->fees_total      = $this->setup_fees_total();
-		$this->subtotal        = $this->order->subtotal;
-		$this->currency        = $this->setup_currency();
+		$this->total      = $this->order->total;
+		$this->tax        = $this->order->tax;
+		$this->tax_rate   = $this->setup_tax_rate();
+		$this->fees_total = $this->setup_fees_total();
+		$this->subtotal   = $this->order->subtotal;
+		$this->currency   = $this->setup_currency();
 
 		// Gateway based
-		$this->gateway         = $this->order->gateway;
-		$this->transaction_id  = $this->setup_transaction_id();
+		$this->gateway        = $this->order->gateway;
+		$this->transaction_id = $this->setup_transaction_id();
 
 		// User based
-		$this->ip              = $this->order->ip;
-		$this->customer_id     = $this->order->customer_id;
-		$this->user_id         = $this->setup_user_id();
-		$this->email           = $this->setup_email();
-		$this->discounts       = $this->setup_discounts();
-		$this->user_info       = $this->setup_user_info();
-		$this->first_name      = $this->user_info['first_name'];
-		$this->last_name       = $this->user_info['last_name'];
-		$this->address         = $this->setup_address();
+		$this->ip          = $this->order->ip;
+		$this->customer_id = $this->order->customer_id;
+		$this->user_id     = $this->setup_user_id();
+		$this->email       = $this->setup_email();
+		$this->discounts   = $this->setup_discounts();
+		$this->user_info   = $this->setup_user_info();
+		$this->first_name  = $this->user_info['first_name'];
+		$this->last_name   = $this->user_info['last_name'];
+		$this->address     = $this->setup_address();
 
 		// Other Identifiers
-		$this->key             = $this->order->payment_key;
-		$this->number          = $this->setup_payment_number();
+		$this->key    = $this->order->payment_key;
+		$this->number = $this->setup_payment_number();
 
 		// Additional Attributes
 		$this->has_unlimited_downloads = $this->setup_has_unlimited();
@@ -619,16 +617,18 @@ class EDD_Payment {
 
 					remove_filter( 'edd_prices_include_tax', '__return_false' );
 
-					$adjustment_id = edd_add_order_adjustment( array(
-						'object_id'   => $this->ID,
-						'object_type' => 'order',
-						'type_key'    => $key,
-						'type'        => 'fee',
-						'description' => $fee['label'],
-						'subtotal'    => floatval( $fee['amount'] ),
-						'tax'         => $tax,
-						'total'       => floatval( $fee['amount'] ) + $tax,
-					) );
+					$adjustment_id = edd_add_order_adjustment(
+						array(
+							'object_id'   => $this->ID,
+							'object_type' => 'order',
+							'type_key'    => $key,
+							'type'        => 'fee',
+							'description' => $fee['label'],
+							'subtotal'    => floatval( $fee['amount'] ),
+							'tax'         => $tax,
+							'total'       => floatval( $fee['amount'] ) + $tax,
+						)
+					);
 
 					edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 
@@ -711,15 +711,21 @@ class EDD_Payment {
 						break;
 
 					case 'gateway':
-						edd_update_order( $this->ID, array(
-							'gateway' => $this->gateway,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'gateway' => $this->gateway,
+							)
+						);
 						break;
 
 					case 'mode':
-						edd_update_order( $this->ID, array(
-							'mode' => $this->mode,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'mode' => $this->mode,
+							)
+						);
 						break;
 
 					case 'transaction_id':
@@ -727,9 +733,12 @@ class EDD_Payment {
 						break;
 
 					case 'customer_id':
-						edd_update_order( $this->ID, array(
-							'customer_id' => $this->customer_id,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'customer_id' => $this->customer_id,
+							)
+						);
 
 						$customer = new EDD_Customer( $this->customer_id );
 						$customer->attach_payment( $this->ID, false );
@@ -805,17 +814,22 @@ class EDD_Payment {
 						$this->payment_meta['email'] = $this->email;
 						$this->user_info['email']    = $this->email;
 
-						edd_update_order( $this->ID, array(
-							'email' => $this->email,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'email' => $this->email,
+							)
+						);
 						break;
 
 					case 'key':
-						edd_update_order( $this->ID, array(
-							'payment_key' => $this->key,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'payment_key' => $this->key,
+							)
+						);
 						break;
-
 
 					case 'tax_rate':
 						$tax_rate = $this->maybe_update_tax_rate();
@@ -823,21 +837,30 @@ class EDD_Payment {
 						break;
 
 					case 'number':
-						edd_update_order( $this->ID, array(
-							'order_number' => $this->number,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'order_number' => $this->number,
+							)
+						);
 						break;
 
 					case 'date':
-						edd_update_order( $this->ID, array(
-							'date_created' => $this->date,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'date_created' => $this->date,
+							)
+						);
 						break;
 
 					case 'completed_date':
-						edd_update_order( $this->ID, array(
-							'date_completed' => $this->completed_date,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'date_completed' => $this->completed_date,
+							)
+						);
 						break;
 
 					case 'has_unlimited_downloads':
@@ -845,9 +868,12 @@ class EDD_Payment {
 						break;
 
 					case 'parent_payment':
-						edd_update_order( $this->ID, array(
-							'parent' => $this->parent_payment,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'parent' => $this->parent_payment,
+							)
+						);
 						break;
 
 					default:
@@ -866,12 +892,15 @@ class EDD_Payment {
 				$discount += $item['discount'];
 			}
 
-			edd_update_order( $this->ID, array(
-				'subtotal' => (float) $this->subtotal,
-				'tax'      => (float) $this->tax,
-				'discount' => $discount,
-				'total'    => (float) $this->total,
-			) );
+			edd_update_order(
+				$this->ID,
+				array(
+					'subtotal' => (float) $this->subtotal,
+					'tax'      => (float) $this->tax,
+					'discount' => $discount,
+					'total'    => (float) $this->total,
+				)
+			);
 
 			$this->downloads = array_values( $this->downloads );
 
@@ -936,29 +965,33 @@ class EDD_Payment {
 				edd_update_order( $this->ID, $order_info );
 
 				// We need to check if all of the order items exist in the database.
-				$items = edd_get_order_items( array(
-					'order_id' => $this->ID,
-				) );
+				$items = edd_get_order_items(
+					array(
+						'order_id' => $this->ID,
+					)
+				);
 
 				// If an empty set was returned, this is a new payment.
 				if ( empty( $items ) ) {
 					foreach ( $merged_meta['cart_details'] as $key => $item ) {
-						edd_add_order_item( array(
-							'order_id'     => $this->ID,
-							'product_id'   => $item['id'],
-							'product_name' => $item['name'],
-							'price_id'     => isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
-								? absint( $item['item_number']['options']['price_id'] )
-								: null,
-							'cart_index'   => $key,
-							'quantity'     => $item['quantity'],
-							'amount'       => $item['item_price'],
-							'subtotal'     => $item['subtotal'],
-							'discount'     => $item['discount'],
-							'tax'          => $item['tax'],
-							'total'        => $item['price'],
-							'status'       => ! empty( $item['status'] ) ? $item['status'] : $this->status,
-						) );
+						edd_add_order_item(
+							array(
+								'order_id'     => $this->ID,
+								'product_id'   => $item['id'],
+								'product_name' => $item['name'],
+								'price_id'     => isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
+									? absint( $item['item_number']['options']['price_id'] )
+									: null,
+								'cart_index'   => $key,
+								'quantity'     => $item['quantity'],
+								'amount'       => $item['item_price'],
+								'subtotal'     => $item['subtotal'],
+								'discount'     => $item['discount'],
+								'tax'          => $item['tax'],
+								'total'        => $item['price'],
+								'status'       => ! empty( $item['status'] ) ? $item['status'] : $this->status,
+							)
+						);
 					}
 				}
 
@@ -1091,7 +1124,7 @@ class EDD_Payment {
 			$fees = round( $fees, edd_currency_decimal_filter() );
 		}
 
-		$total      = $subtotal - $discount + $tax + $fees;
+		$total = $subtotal - $discount + $tax + $fees;
 
 		// Do not allow totals to go negative
 		if ( $total < 0 ) {
@@ -1188,7 +1221,7 @@ class EDD_Payment {
 
 					// If this item has a price ID, make sure it matches the cart indexed item's price ID before removing
 					if ( ( isset( $item['options']['price_id'] ) && isset( $cart_item['item_number']['options']['price_id'] ) )
-					     && (int) $item['options']['price_id'] !== (int) $cart_item['item_number']['options']['price_id'] ) {
+						&& (int) $item['options']['price_id'] !== (int) $cart_item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 				}
@@ -1299,11 +1332,14 @@ class EDD_Payment {
 		 */
 
 		// Find the order item based on the cart index.
-		$order_item = array_filter( $this->order->items, function ( $i ) use ( $found_cart_key ) {
-			/** @var EDD\Orders\Order_Item $i */
+		$order_item = array_filter(
+			$this->order->items,
+			function ( $i ) use ( $found_cart_key ) {
+				/** @var EDD\Orders\Order_Item $i */
 
-			return (int) $i->cart_index === (int) $found_cart_key;
-		} );
+				return (int) $i->cart_index === (int) $found_cart_key;
+			}
+		);
 
 		// Reset array index.
 		$order_item = array_values( $order_item );
@@ -1319,14 +1355,17 @@ class EDD_Payment {
 
 			// Update the order item if the quantity is being modified.
 			if ( isset( $this->cart_details[ $found_cart_key ] ) ) {
-				edd_update_order_item( $order_item->id, array(
-					'quantity' => $this->cart_details[ $found_cart_key ]['quantity'],
-					'amount'   => $this->cart_details[ $found_cart_key ]['item_price'],
-					'subtotal' => $this->cart_details[ $found_cart_key ]['subtotal'],
-					'discount' => $this->cart_details[ $found_cart_key ]['discount'],
-					'tax'      => $this->cart_details[ $found_cart_key ]['tax'],
-					'total'    => $this->cart_details[ $found_cart_key ]['price'],
-				) );
+				edd_update_order_item(
+					$order_item->id,
+					array(
+						'quantity' => $this->cart_details[ $found_cart_key ]['quantity'],
+						'amount'   => $this->cart_details[ $found_cart_key ]['item_price'],
+						'subtotal' => $this->cart_details[ $found_cart_key ]['subtotal'],
+						'discount' => $this->cart_details[ $found_cart_key ]['discount'],
+						'tax'      => $this->cart_details[ $found_cart_key ]['tax'],
+						'total'    => $this->cart_details[ $found_cart_key ]['price'],
+					)
+				);
 
 				// Remove the order item.
 			} else {
@@ -1360,12 +1399,15 @@ class EDD_Payment {
 		}
 
 		$current_args  = $this->cart_details[ $cart_index ];
-		$allowed_items = apply_filters( 'edd_allowed_cart_item_modifications', array(
-			'item_price',
-			'tax',
-			'discount',
-			'quantity',
-		) );
+		$allowed_items = apply_filters(
+			'edd_allowed_cart_item_modifications',
+			array(
+				'item_price',
+				'tax',
+				'discount',
+				'quantity',
+			)
+		);
 
 		// Remove any items we don't want to modify.
 		foreach ( $args as $key => $arg ) {
@@ -1387,10 +1429,10 @@ class EDD_Payment {
 			? (float) $merged_item['discount']
 			: 0.00;
 
-		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
-		$merged_item['tax']                 = edd_sanitize_amount( $merged_item['tax'] );
-		$merged_item['price']               = edd_prices_include_tax() ? $new_subtotal - $discount : $new_subtotal + $merged_item['tax'] - $discount;
-		$this->cart_details[ $cart_index ]  = $merged_item;
+		$new_subtotal                      = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
+		$merged_item['tax']                = edd_sanitize_amount( $merged_item['tax'] );
+		$merged_item['price']              = edd_prices_include_tax() ? $new_subtotal - $discount : $new_subtotal + $merged_item['tax'] - $discount;
+		$this->cart_details[ $cart_index ] = $merged_item;
 
 		// Sort the current and new args, and checksum them. If no changes. No need to fire a modification.
 		ksort( $current_args );
@@ -1430,14 +1472,17 @@ class EDD_Payment {
 		}
 
 		if ( $order_item_id ) {
-			edd_update_order_item( $order_item_id, array(
-				'quantity' => $modified_download['quantity'],
-				'amount'   => (float) $modified_download['item_price'],
-				'subtotal' => (float) $new_subtotal,
-				'tax'      => (float) $modified_download['tax'],
-				'discount' => (float) $modified_download['discount'],
-				'total'    => (float) $modified_download['price'],
-			) );
+			edd_update_order_item(
+				$order_item_id,
+				array(
+					'quantity' => $modified_download['quantity'],
+					'amount'   => (float) $modified_download['item_price'],
+					'subtotal' => (float) $new_subtotal,
+					'tax'      => (float) $modified_download['tax'],
+					'discount' => (float) $modified_download['discount'],
+					'total'    => (float) $modified_download['price'],
+				)
+			);
 		}
 
 		return true;
@@ -1503,12 +1548,15 @@ class EDD_Payment {
 	 * @return boolean If the item is removed.
 	 */
 	public function remove_fee_by( $key, $value, $global = false ) {
-		$allowed_fee_keys = apply_filters( 'edd_payment_fee_keys', array(
-			'index',
-			'label',
-			'amount',
-			'type',
-		) );
+		$allowed_fee_keys = apply_filters(
+			'edd_payment_fee_keys',
+			array(
+				'index',
+				'label',
+				'amount',
+				'type',
+			)
+		);
 
 		if ( ! in_array( $key, $allowed_fee_keys, true ) ) {
 			return false;
@@ -1812,9 +1860,12 @@ class EDD_Payment {
 		if ( $do_change ) {
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
-			$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
-				'status' => $status,
-			) );
+			$update_fields = apply_filters(
+				'edd_update_payment_status_fields',
+				array(
+					'status' => $status,
+				)
+			);
 
 			// Account for someone filtering and using `post_status`
 			if ( isset( $update_fields['post_status'] ) ) {
@@ -1856,10 +1907,7 @@ class EDD_Payment {
 			$this->status      = $status;
 			$this->post_status = $status;
 
-			$all_payment_statuses  = edd_get_payment_statuses();
-			$this->status_nicename = array_key_exists( $status, $all_payment_statuses )
-				? $all_payment_statuses[ $status ]
-				: ucfirst( $status );
+			$this->status_nicename = $this->get_status_nicename();
 
 			// Process any specific status functions.
 			switch ( $status ) {
@@ -1902,14 +1950,18 @@ class EDD_Payment {
 				break;
 
 			case '_edd_payment_transaction_id':
-				$transactions = array_values( edd_get_order_transactions( array(
-					'number'      => 1,
-					'object_id'   => $this->ID,
-					'object_type' => 'order',
-					'orderby'     => 'date_created',
-					'order'       => 'ASC',
-					'fields'      => 'transaction_id',
-				) ) );
+				$transactions = array_values(
+					edd_get_order_transactions(
+						array(
+							'number'      => 1,
+							'object_id'   => $this->ID,
+							'object_type' => 'order',
+							'orderby'     => 'date_created',
+							'order'       => 'ASC',
+							'fields'      => 'transaction_id',
+						)
+					)
+				);
 
 				$transaction_id = '';
 
@@ -2046,27 +2098,39 @@ class EDD_Payment {
 		switch ( $meta_key ) {
 			case '_edd_payment_meta':
 				if ( isset( $meta_value['tax'] ) && ! empty( $meta_value['tax'] ) ) {
-					edd_update_order( $this->ID, array(
-						'tax' => $meta_value['tax'],
-					) );
+					edd_update_order(
+						$this->ID,
+						array(
+							'tax' => $meta_value['tax'],
+						)
+					);
 				}
 
 				if ( isset( $meta_value['key'] ) && ! empty( $meta_value['key'] ) ) {
-					edd_update_order( $this->ID, array(
-						'key' => $meta_value['key'],
-					) );
+					edd_update_order(
+						$this->ID,
+						array(
+							'key' => $meta_value['key'],
+						)
+					);
 				}
 
 				if ( isset( $meta_value['email'] ) && ! empty( $meta_value['email'] ) ) {
-					edd_update_order( $this->ID, array(
-						'email' => $meta_value['email'],
-					) );
+					edd_update_order(
+						$this->ID,
+						array(
+							'email' => $meta_value['email'],
+						)
+					);
 				}
 
 				if ( isset( $meta_value['currency'] ) && ! empty( $meta_value['currency'] ) ) {
-					edd_update_order( $this->ID, array(
-						'currency' => $meta_value['currency'],
-					) );
+					edd_update_order(
+						$this->ID,
+						array(
+							'currency' => $meta_value['currency'],
+						)
+					);
 				}
 
 				if ( isset( $meta_value['user_info'] ) && ! empty( $meta_value['user_info'] ) ) {
@@ -2092,11 +2156,14 @@ class EDD_Payment {
 
 							$adjustments = $this->order->adjustments;
 
-							$found_discount = array_filter( $adjustments, function( $adjustment ) use ( $discount ) {
-								/** @var EDD\Orders\Order_Adjustment $adjustment */
+							$found_discount = array_filter(
+								$adjustments,
+								function ( $adjustment ) use ( $discount ) {
+									/** @var EDD\Orders\Order_Adjustment $adjustment */
 
-								return (string) $adjustment->description === (string) $discount->code;
-							} );
+									return (string) $adjustment->description === (string) $discount->code;
+								}
+							);
 
 							// Discount exists so update the amount.
 							if ( 1 === count( $found_discount ) ) {
@@ -2104,9 +2171,12 @@ class EDD_Payment {
 
 								/** @var EDD\Orders\Order_Adjustment $found_discount */
 
-								edd_update_order_adjustment( $found_discount->id, array(
-									'amount' => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
-								) );
+								edd_update_order_adjustment(
+									$found_discount->id,
+									array(
+										'amount' => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
+									)
+								);
 							} else {
 								// Add the discount as an adjustment.
 								edd_add_order_adjustment(
@@ -2124,11 +2194,16 @@ class EDD_Payment {
 						}
 					}
 
-					$user_info = array_diff_key( $meta_value['user_info'], array_flip( array(
-						'id',
-						'email',
-						'discount'
-					) ) );
+					$user_info = array_diff_key(
+						$meta_value['user_info'],
+						array_flip(
+							array(
+								'id',
+								'email',
+								'discount',
+							)
+						)
+					);
 
 					$defaults = array(
 						'first_name' => '',
@@ -2153,36 +2228,46 @@ class EDD_Payment {
 					if ( null !== $this->order && $this->order->get_address()->id ) {
 						$order_address = $this->order->get_address();
 
-						edd_update_order_address( $order_address->id, array(
-							'name'        => $name,
-							'address'     => $user_info['address']['line1'],
-							'address2'    => $user_info['address']['line2'],
-							'city'        => $user_info['address']['city'],
-							'region'      => $user_info['address']['state'],
-							'postal_code' => $user_info['address']['zip'],
-							'country'     => $user_info['address']['country'],
-						) );
+						edd_update_order_address(
+							$order_address->id,
+							array(
+								'name'        => $name,
+								'address'     => $user_info['address']['line1'],
+								'address2'    => $user_info['address']['line2'],
+								'city'        => $user_info['address']['city'],
+								'region'      => $user_info['address']['state'],
+								'postal_code' => $user_info['address']['zip'],
+								'country'     => $user_info['address']['country'],
+							)
+						);
 					} else {
-						edd_add_order_address( array(
-							'order_id'    => $this->ID,
-							'name'        => $name,
-							'address'     => $user_info['address']['line1'],
-							'address2'    => $user_info['address']['line2'],
-							'city'        => $user_info['address']['city'],
-							'region'      => $user_info['address']['state'],
-							'postal_code' => $user_info['address']['zip'],
-							'country'     => $user_info['address']['country'],
-						) );
+						edd_add_order_address(
+							array(
+								'order_id'    => $this->ID,
+								'name'        => $name,
+								'address'     => $user_info['address']['line1'],
+								'address2'    => $user_info['address']['line2'],
+								'city'        => $user_info['address']['city'],
+								'region'      => $user_info['address']['state'],
+								'postal_code' => $user_info['address']['zip'],
+								'country'     => $user_info['address']['country'],
+							)
+						);
 					}
 
-					$remaining_user_info = array_diff_key( $meta_value['user_info'], array_flip( array(
-						'id',
-						'first_name',
-						'last_name',
-						'email',
-						'address',
-						'discount'
-					) ) );
+					$remaining_user_info = array_diff_key(
+						$meta_value['user_info'],
+						array_flip(
+							array(
+								'id',
+								'first_name',
+								'last_name',
+								'email',
+								'address',
+								'discount',
+							)
+						)
+					);
 
 					if ( ! empty( $remaining_user_info ) ) {
 						edd_update_order_meta( $this->ID, 'user_info', $remaining_user_info );
@@ -2192,34 +2277,41 @@ class EDD_Payment {
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
 					foreach ( $meta_value['fees'] as $fee_id => $fee ) {
 						if ( ! empty( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
-							$order_item_id = edd_get_order_items( array(
-								'number'     => 1,
-								'order_id'   => $this->ID,
-								'product_id' => $fee['download_id'],
-								'price_id'   => isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ? intval( $fee['price_id'] ) : 0,
-								'fields'     => 'ids',
-							) );
+							$order_item_id = edd_get_order_items(
+								array(
+									'number'     => 1,
+									'order_id'   => $this->ID,
+									'product_id' => $fee['download_id'],
+									'price_id'   => isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ? intval( $fee['price_id'] ) : 0,
+									'fields'     => 'ids',
+								)
+							);
 
 							if ( is_array( $order_item_id ) ) {
 								$order_item_id = (int) $order_item_id[0];
 							}
 
-							$adjustment_id = edd_get_order_adjustments( array(
-								'number'      => 1,
-								'object_id'   => $order_item_id,
-								'object_type' => 'order_item',
-								'type'        => 'fee',
-								'fields'      => 'ids',
-								'type_key'    => $fee_id,
-							) );
+							$adjustment_id = edd_get_order_adjustments(
+								array(
+									'number'      => 1,
+									'object_id'   => $order_item_id,
+									'object_type' => 'order_item',
+									'type'        => 'fee',
+									'fields'      => 'ids',
+									'type_key'    => $fee_id,
+								)
+							);
 
 							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
 								$adjustment_id = $adjustment_id[0];
 
-								edd_update_order_adjustment( $adjustment_id, array(
-									'description' => $fee['label'],
-									'subtotal'    => (float) $fee['amount'],
-								) );
+								edd_update_order_adjustment(
+									$adjustment_id,
+									array(
+										'description' => $fee['label'],
+										'subtotal'    => (float) $fee['amount'],
+									)
+								);
 							} else {
 								add_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -2229,36 +2321,43 @@ class EDD_Payment {
 
 								remove_filter( 'edd_prices_include_tax', '__return_false' );
 
-								$adjustment_id = edd_add_order_adjustment( array(
-									'object_id'   => $order_item_id,
-									'object_type' => 'order_item',
-									'type_key'    => $fee_id,
-									'type'        => 'fee',
-									'description' => $fee['label'],
-									'subtotal'    => floatval( $fee['amount'] ),
-									'tax'         => $tax,
-									'total'       => floatval( $fee['amount'] ) + $tax
-								) );
+								$adjustment_id = edd_add_order_adjustment(
+									array(
+										'object_id'   => $order_item_id,
+										'object_type' => 'order_item',
+										'type_key'    => $fee_id,
+										'type'        => 'fee',
+										'description' => $fee['label'],
+										'subtotal'    => floatval( $fee['amount'] ),
+										'tax'         => $tax,
+										'total'       => floatval( $fee['amount'] ) + $tax,
+									)
+								);
 
 								edd_add_extra_fee_order_adjustment_meta( $adjustment_id, $fee );
 							}
 						} else {
-							$adjustment_id = edd_get_order_adjustments( array(
-								'number'      => 1,
-								'object_id'   => $this->ID,
-								'object_type' => 'order',
-								'type'        => 'fee',
-								'fields'      => 'ids',
-								'type_key'    => $fee_id,
-							) );
+							$adjustment_id = edd_get_order_adjustments(
+								array(
+									'number'      => 1,
+									'object_id'   => $this->ID,
+									'object_type' => 'order',
+									'type'        => 'fee',
+									'fields'      => 'ids',
+									'type_key'    => $fee_id,
+								)
+							);
 
 							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
 								$adjustment_id = $adjustment_id[0];
 
-								edd_update_order_adjustment( $adjustment_id, array(
-									'description' => $fee['label'],
-									'subtotal'    => (float) $fee['amount'],
-								) );
+								edd_update_order_adjustment(
+									$adjustment_id,
+									array(
+										'description' => $fee['label'],
+										'subtotal'    => (float) $fee['amount'],
+									)
+								);
 							} else {
 								add_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -2268,16 +2367,18 @@ class EDD_Payment {
 
 								remove_filter( 'edd_prices_include_tax', '__return_false' );
 
-								$adjustment_id = edd_add_order_adjustment( array(
-									'object_id'   => $this->ID,
-									'object_type' => 'order',
-									'type_key'    => $fee_id,
-									'type'        => 'fee',
-									'description' => $fee['label'],
-									'subtotal'    => floatval( $fee['amount'] ),
-									'tax'         => $tax,
-									'total'       => floatval( $fee['amount'] ) + $tax
-								) );
+								$adjustment_id = edd_add_order_adjustment(
+									array(
+										'object_id'   => $this->ID,
+										'object_type' => 'order',
+										'type_key'    => $fee_id,
+										'type'        => 'fee',
+										'description' => $fee['label'],
+										'subtotal'    => floatval( $fee['amount'] ),
+										'tax'         => $tax,
+										'total'       => floatval( $fee['amount'] ) + $tax,
+									)
+								);
 							}
 						}
 					}
@@ -2292,17 +2393,19 @@ class EDD_Payment {
 				if ( isset( $meta_value['cart_details'] ) && ! empty( $meta_value['cart_details'] ) ) {
 
 					// Totals need to be updated based on cart details.
-					$new_tax = 0.00;
+					$new_tax      = 0.00;
 					$new_subtotal = 0.00;
 
 					foreach ( $meta_value['cart_details'] as $key => $item ) {
-						$order_item_id = edd_get_order_items( array(
-							'number'       => 1,
-							'fields'       => 'ids',
-							'order_id'     => $this->ID,
-							'product_id'   => $item['id'],
-							'product_name' => $item['name'],
-						) );
+						$order_item_id = edd_get_order_items(
+							array(
+								'number'       => 1,
+								'fields'       => 'ids',
+								'order_id'     => $this->ID,
+								'product_id'   => $item['id'],
+								'product_name' => $item['name'],
+							)
+						);
 
 						$item['item_number']['options']['price_id'] = isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
 							? absint( $item['item_number']['options']['price_id'] )
@@ -2311,39 +2414,44 @@ class EDD_Payment {
 						if ( is_array( $order_item_id ) && ! empty( $order_item_id ) ) {
 							$order_item_id = $order_item_id[0];
 
-							edd_update_order_item( $order_item_id, array(
-								'order_id'     => $this->ID,
-								'product_id'   => $item['id'],
-								'product_name' => $item['name'],
-								'price_id'     => $item['item_number']['options']['price_id'],
-								'cart_index'   => $key,
-								'quantity'     => $item['quantity'],
-								'amount'       => $item['item_price'],
-								'subtotal'     => $item['subtotal'],
-								'discount'     => $item['discount'],
-								'tax'          => $item['tax'],
-								'total'        => $item['price'],
-							) );
+							edd_update_order_item(
+								$order_item_id,
+								array(
+									'order_id'     => $this->ID,
+									'product_id'   => $item['id'],
+									'product_name' => $item['name'],
+									'price_id'     => $item['item_number']['options']['price_id'],
+									'cart_index'   => $key,
+									'quantity'     => $item['quantity'],
+									'amount'       => $item['item_price'],
+									'subtotal'     => $item['subtotal'],
+									'discount'     => $item['discount'],
+									'tax'          => $item['tax'],
+									'total'        => $item['price'],
+								)
+							);
 
 							$new_subtotal = $item['subtotal'];
-							$new_tax += $item['tax'];
+							$new_tax     += $item['tax'];
 						} else {
-							$order_item_id = edd_add_order_item( array(
-								'order_id'     => $this->ID,
-								'product_id'   => $item['id'],
-								'product_name' => $item['name'],
-								'price_id'     => $item['item_number']['options']['price_id'],
-								'cart_index'   => $key,
-								'quantity'     => $item['quantity'],
-								'amount'       => $item['item_price'],
-								'subtotal'     => $item['subtotal'],
-								'discount'     => $item['discount'],
-								'tax'          => $item['tax'],
-								'total'        => $item['price'],
-								'status'       => ! empty( $item['status'] ) ? $item->status : $this->status,
-							) );
+							$order_item_id = edd_add_order_item(
+								array(
+									'order_id'     => $this->ID,
+									'product_id'   => $item['id'],
+									'product_name' => $item['name'],
+									'price_id'     => $item['item_number']['options']['price_id'],
+									'cart_index'   => $key,
+									'quantity'     => $item['quantity'],
+									'amount'       => $item['item_price'],
+									'subtotal'     => $item['subtotal'],
+									'discount'     => $item['discount'],
+									'tax'          => $item['tax'],
+									'total'        => $item['price'],
+									'status'       => ! empty( $item['status'] ) ? $item->status : $this->status,
+								)
+							);
 
-							$new_tax += $item['tax'];
+							$new_tax      += $item['tax'];
 							$new_subtotal += $item['subtotal'];
 
 							if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
@@ -2356,16 +2464,18 @@ class EDD_Payment {
 
 									remove_filter( 'edd_prices_include_tax', '__return_false' );
 
-									$adjustment_id = edd_add_order_adjustment( array(
-										'object_id'   => $order_item_id,
-										'object_type' => 'order_item',
-										'type_key'    => $fee_id,
-										'type'        => 'fee',
-										'description' => $fee['label'],
-										'subtotal'    => floatval( $fee['amount'] ),
-										'tax'         => $tax,
-										'total'       => floatval( $fee['amount'] ) + $tax,
-									) );
+									$adjustment_id = edd_add_order_adjustment(
+										array(
+											'object_id'   => $order_item_id,
+											'object_type' => 'order_item',
+											'type_key'    => $fee_id,
+											'type'        => 'fee',
+											'description' => $fee['label'],
+											'subtotal'    => floatval( $fee['amount'] ),
+											'tax'         => $tax,
+											'total'       => floatval( $fee['amount'] ) + $tax,
+										)
+									);
 
 									$new_tax += $tax;
 								}
@@ -2386,93 +2496,135 @@ class EDD_Payment {
 					? null
 					: $meta_value;
 
-				edd_update_order( $this->ID, array(
-					'date_completed' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'date_completed' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_gateway':
-				edd_update_order( $this->ID, array(
-					'gateway' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'gateway' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_user_id':
-				edd_update_order( $this->ID, array(
-					'user_id' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'user_id' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_user_email':
 			case 'email':
-				edd_update_order( $this->ID, array(
-					'email' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'email' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_user_ip':
-				edd_update_order( $this->ID, array(
-					'ip' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'ip' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_purchase_key':
 			case 'key':
-				edd_update_order( $this->ID, array(
-					'payment_key' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'payment_key' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_mode':
-				edd_update_order( $this->ID, array(
-					'mode' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'mode' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_tax_rate':
 				$tax_rate = $this->maybe_update_tax_rate( $meta_value );
 				edd_update_order_meta( $this->ID, 'tax_rate', $tax_rate, $prev_value );
 				return true;
 			case '_edd_payment_customer_id':
-				edd_update_order( $this->ID, array(
-					'customer_id' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'customer_id' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_total':
-				edd_update_order( $this->ID, array(
-					'total' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'total' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_tax':
-				edd_update_order( $this->ID, array(
-					'tax' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'tax' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_number':
-				edd_update_order( $this->ID, array(
-					'order_number' => $meta_value,
-				) );
+				edd_update_order(
+					$this->ID,
+					array(
+						'order_number' => $meta_value,
+					)
+				);
 				return true;
 			case '_edd_payment_transaction_id':
 			case 'transaction_id':
-				$transaction_ids = array_values( edd_get_order_transactions( array(
-					'fields'      => 'ids',
-					'number'      => 1,
-					'object_id'   => $this->ID,
-					'object_type' => 'order',
-					'orderby'     => 'date_created',
-					'order'       => 'ASC',
-				) ) );
+				$transaction_ids = array_values(
+					edd_get_order_transactions(
+						array(
+							'fields'      => 'ids',
+							'number'      => 1,
+							'object_id'   => $this->ID,
+							'object_type' => 'order',
+							'orderby'     => 'date_created',
+							'order'       => 'ASC',
+						)
+					)
+				);
 
 				if ( $transaction_ids ) {
 					$transaction_id = $transaction_ids[0];
 
-					return edd_update_order_transaction( $transaction_id, array(
-						'transaction_id' => $meta_value,
-						'gateway'        => $this->gateway,
-					) );
+					return edd_update_order_transaction(
+						$transaction_id,
+						array(
+							'transaction_id' => $meta_value,
+							'gateway'        => $this->gateway,
+						)
+					);
 				} else {
-					return edd_add_order_transaction( array(
-						'object_id'      => $this->ID,
-						'object_type'    => 'order',
-						'transaction_id' => $meta_value,
-						'gateway'        => $this->gateway,
-						'status'         => 'complete',
-						'total'          => $this->total,
-					) );
+					return edd_add_order_transaction(
+						array(
+							'object_id'      => $this->ID,
+							'object_type'    => 'order',
+							'transaction_id' => $meta_value,
+							'gateway'        => $this->gateway,
+							'status'         => 'complete',
+							'total'          => $this->total,
+						)
+					);
 				}
 		}
 
@@ -2547,12 +2699,12 @@ class EDD_Payment {
 	private function process_refund() {
 		$process_refund = true;
 
-		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
-		if ( ( 'complete' !== $this->old_status && 'revoked' !== $this->old_status ) || 'refunded' !== $this->status ) {
+		// If the old status is refunded or the new status is not refunded, don't try to refund.
+		if ( 'refunded' === $this->old_status || 'refunded' !== $this->status ) {
 			$process_refund = false;
 		}
 
-		// Allow extensions to filter for their own payment types, Example: Recurring Payments
+		// Allow extensions to filter for their own payment types, Example: Recurring Payments.
 		$process_refund = apply_filters( 'edd_should_process_refund', $process_refund, $this );
 
 		if ( false === $process_refund ) {
@@ -2567,7 +2719,7 @@ class EDD_Payment {
 
 		$this->maybe_alter_stats( $decrease_store_earnings, $decrease_customer_value, $decrease_purchase_count );
 
-		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		// Clear the This Month earnings (this_monththis_month is NOT a typo).
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 
 		do_action( 'edd_post_refund_payment', $this );
@@ -2630,27 +2782,45 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Used during the process of moving to refunded or pending, to decrement stats
+	 * Used during the process of moving to refunded or pending, to decrement stats.
 	 *
 	 * @since 2.5.10
+	 * @since 3.2.4 Updated to better handle manual status changes.
 	 * @access private
 	 *
-	 * @param bool $alter_store_earnings          If the method should alter the store earnings
-	 * @param bool $alter_customer_value          If the method should reduce the customer value
-	 * @param bool $alter_customer_purchase_count If the method should reduce the customer's purchase count
+	 * @param bool $alter_store_earnings          If the method should alter the store earnings.
+	 * @param bool $alter_customer_value          If the method should reduce the customer value.
+	 * @param bool $alter_customer_purchase_count If the method should reduce the customer's purchase count.
 	 */
 	private function maybe_alter_stats( $alter_store_earnings, $alter_customer_value, $alter_customer_purchase_count ) {
-		if ( edd_undo_purchase( false, $this->ID ) ) {
-			$this->status      = 'refunded';
-			$this->post_status = 'refunded';
 
-			$statuses              = edd_get_payment_statuses();
-			$this->status_nicename = array_key_exists( 'refunded', $statuses )
-				? $statuses['refunded']
-				: ucfirst( 'refunded' );
+		$refund = false;
+		// Attempt to refund the order.
+		if ( 'refunded' === $this->status ) {
+			$refund = edd_refund_order( $this->ID );
 		}
 
-		// Decrease store earnings
+		// If a refund wasn't processed, update the status manually and add a note.
+		if ( ! $refund || is_wp_error( $refund ) ) {
+			edd_update_order(
+				$this->ID,
+				array(
+					'status' => $this->status,
+				)
+			);
+			if ( 'refunded' === $this->status ) {
+				edd_add_note(
+					array(
+						'object_id'   => $this->ID,
+						'object_type' => 'order',
+						'user_id'     => get_current_user_id(),
+						'content'     => __( 'The refund order could not be created, but the order status was manually set to Refunded.', 'easy-digital-downloads' ),
+					)
+				);
+			}
+		}
+
+		// Decrease store earnings.
 		if ( true === $alter_store_earnings ) {
 			edd_decrease_total_earnings( $this->total );
 		}
@@ -2741,14 +2911,17 @@ class EDD_Payment {
 	 * @return float Total fee amount applied to the payment.
 	 */
 	private function setup_fees_total() {
-		$fees_total = array_reduce( $this->fees, function( $carry, $item ) {
-			$carry += (float) $item['amount'];
+		$fees_total = array_reduce(
+			$this->fees,
+			function ( $carry, $item ) {
+				$carry += (float) $item['amount'];
 
-			return $carry;
-		}, (float) 0.00 );
+				return $carry;
+			},
+			(float) 0.00
+		);
 
 		return $fees_total;
-
 	}
 
 	/**
@@ -2769,8 +2942,8 @@ class EDD_Payment {
 				}
 			}
 		} else {
-			$subtotal = $this->total;
-			$tax      = edd_use_taxes() ? $this->tax : 0;
+			$subtotal  = $this->total;
+			$tax       = edd_use_taxes() ? $this->tax : 0;
 			$subtotal -= $tax;
 		}
 
@@ -2834,7 +3007,7 @@ class EDD_Payment {
 				 */
 				$order_items[ intval( $order_item->id ) ] = array(
 					'download_id' => $order_item->product_id,
-					'price_id'    => $order_item->price_id
+					'price_id'    => $order_item->price_id,
 				);
 			}
 
@@ -2851,8 +3024,8 @@ class EDD_Payment {
 					$price_id    = $order_items[ intval( $order_fee->object_id ) ]['price_id'];
 				}
 
-				$no_tax      = (bool) 0.00 === $order_fee->tax;
-				$id          = is_null( $order_fee->type_key ) ? $order_fee->id : $order_fee->type_key;
+				$no_tax = (bool) 0.00 === $order_fee->tax;
+				$id     = is_null( $order_fee->type_key ) ? $order_fee->id : $order_fee->type_key;
 				if ( array_key_exists( $id, $fees ) ) {
 					$id .= '_2';
 				}
@@ -2865,9 +3038,12 @@ class EDD_Payment {
 					 *
 					 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8412
 					 */
-					edd_update_order_adjustment( $order_fee->id, array(
-						'type_key' => $id
-					) );
+					edd_update_order_adjustment(
+						$order_fee->id,
+						array(
+							'type_key' => $id,
+						)
+					);
 				}
 
 				$fees[ $id ] = array(
@@ -3003,7 +3179,6 @@ class EDD_Payment {
 							break;
 					}
 				}
-
 			}
 		}
 
@@ -3039,7 +3214,14 @@ class EDD_Payment {
 	 */
 	private function setup_address() {
 		$address  = ! empty( $this->user_info['address'] ) ? $this->user_info['address'] : array();
-		$defaults = array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+		$defaults = array(
+			'line1'   => '',
+			'line2'   => '',
+			'city'    => '',
+			'country' => '',
+			'state'   => '',
+			'zip'     => '',
+		);
 
 		$address = wp_parse_args( $address, $defaults );
 
@@ -3165,7 +3347,7 @@ class EDD_Payment {
 				'options'  => array(
 					'quantity' => $item->quantity,
 					'price_id' => $item->price_id,
-				)
+				),
 			);
 		}
 
@@ -3512,8 +3694,7 @@ class EDD_Payment {
 		$this->mode           = $payment_compat->mode;
 		$this->parent_payment = $payment->post_parent;
 
-		$all_payment_statuses  = edd_get_payment_statuses();
-		$this->status_nicename = array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
+		$this->status_nicename = $this->get_status_nicename();
 
 		// Items
 		$this->fees         = $payment_compat->fees;
@@ -3595,5 +3776,17 @@ class EDD_Payment {
 		}
 
 		return $tax_rate;
+	}
+
+	/**
+	 * Get the status nicename for the payment.
+	 *
+	 * @since 3.2.4
+	 * @return string
+	 */
+	private function get_status_nicename() {
+		$all_payment_statuses = edd_get_payment_statuses();
+
+		return array_key_exists( $this->status, $all_payment_statuses ) ? $all_payment_statuses[ $this->status ] : ucfirst( $this->status );
 	}
 }

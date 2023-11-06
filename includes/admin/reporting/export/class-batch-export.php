@@ -11,7 +11,7 @@
  * @since       2.4
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -32,6 +32,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * The file the data is stored in
 	 *
 	 * @since 2.4
+	 * @var string
 	 */
 	protected $file;
 
@@ -39,6 +40,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * The name of the file the data is stored in
 	 *
 	 * @since 2.4
+	 * @var string
 	 */
 	public $filename;
 
@@ -46,6 +48,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * The file type, typically .csv
 	 *
 	 * @since 2.4
+	 * @var string
 	 */
 	public $filetype;
 
@@ -53,6 +56,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * The current step being processed
 	 *
 	 * @since 2.4
+	 * @var int
 	 */
 	public $step;
 
@@ -60,6 +64,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Start date, Y-m-d H:i:s
 	 *
 	 * @since 2.4
+	 * @var string
 	 */
 	public $start;
 
@@ -67,6 +72,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * End date, Y-m-d H:i:s
 	 *
 	 * @since 2.4
+	 * @var string
 	 */
 	public $end;
 
@@ -74,6 +80,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Status to export
 	 *
 	 * @since 2.4
+	 * @var string
 	 */
 	public $status;
 
@@ -81,6 +88,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Download to export data for
 	 *
 	 * @since 2.4
+	 * @var int
 	 */
 	public $download = null;
 
@@ -88,6 +96,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Download Price ID to export data for
 	 *
 	 * @since 2.4
+	 * @var int
 	 */
 	public $price_id = null;
 
@@ -95,6 +104,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Is the export file writable
 	 *
 	 * @since 2.4.4
+	 * @var bool
 	 */
 	public $is_writable = true;
 
@@ -102,6 +112,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 *  Is the export file empty
 	 *
 	 * @since 2.4.4
+	 * @var bool
 	 */
 	public $is_empty = false;
 
@@ -116,22 +127,23 @@ class EDD_Batch_Export extends EDD_Export {
 	/**
 	 * Get things started
 	 *
-	 * @param $_step int The step to process
 	 * @since 2.4
+	 *
+	 * @param int $_step The step to process.
 	 */
 	public function __construct( $_step = 1 ) {
 
-		$upload_dir       = wp_upload_dir();
-		$this->filetype   = '.csv';
-		$this->filename   = 'edd-' . $this->export_type . $this->filetype;
-		$this->file       = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+		$upload_dir     = wp_upload_dir();
+		$this->filetype = '.csv';
+		$this->filename = 'edd-' . $this->export_type . $this->filetype;
+		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
 
 		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
 		}
 
-		$this->step       = $_step;
-		$this->done       = false;
+		$this->step = $_step;
+		$this->done = false;
 	}
 
 	/**
@@ -146,9 +158,9 @@ class EDD_Batch_Export extends EDD_Export {
 			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
-		if( $this->step < 2 ) {
+		if ( $this->step < 2 ) {
 
-			// Make sure we start with a fresh file on step 1
+			// Make sure we start with a fresh file on step 1.
 			if ( file_exists( $this->file ) ) {
 				unlink( $this->file );
 			}
@@ -157,7 +169,7 @@ class EDD_Batch_Export extends EDD_Export {
 
 		$rows = $this->print_csv_rows();
 
-		if( $rows ) {
+		if ( $rows ) {
 			return true;
 		} else {
 			return false;
@@ -174,19 +186,18 @@ class EDD_Batch_Export extends EDD_Export {
 	public function print_csv_cols() {
 
 		$col_data = '';
-		$cols = $this->get_csv_cols();
-		$i = 1;
-		foreach( $cols as $col_id => $column ) {
+		$cols     = $this->get_csv_cols();
+		$i        = 1;
+		foreach ( $cols as $col_id => $column ) {
 			$col_data .= '"' . addslashes( $column ) . '"';
-			$col_data .= $i == count( $cols ) ? '' : ',';
-			$i++;
+			$col_data .= count( $cols ) === $i ? '' : ',';
+			++$i;
 		}
 		$col_data .= "\r\n";
 
 		$this->stash_step_data( $col_data );
 
 		return $col_data;
-
 	}
 
 	/**
@@ -201,17 +212,18 @@ class EDD_Batch_Export extends EDD_Export {
 		$data     = $this->get_data();
 		$cols     = $this->get_csv_cols();
 
-		if( $data ) {
+		if ( $data ) {
 
-			// Output each row
+			// Output each row.
 			foreach ( $data as $row ) {
 				$i = 1;
 				foreach ( $row as $col_id => $column ) {
-					// Make sure the column is valid
+					// Make sure the column is valid. If not, skip it.
 					if ( array_key_exists( $col_id, $cols ) ) {
-						$row_data .= '"' . addslashes( preg_replace( "/\"/","'", $column ) ) . '"';
-						$row_data .= $i == count( $cols ) ? '' : ',';
-						$i++;
+						$column    = is_numeric( $column ) || ! empty( $column ) ? $column : '';
+						$row_data .= '"' . addslashes( preg_replace( '/\"/', "'", $column ) ) . '"';
+						$row_data .= count( $cols ) === $i ? '' : ',';
+						++$i;
 					}
 				}
 				$row_data .= "\r\n";
@@ -255,8 +267,8 @@ class EDD_Batch_Export extends EDD_Export {
 
 		} else {
 
-			@file_put_contents( $this->file, '' );
-			@chmod( $this->file, 0664 );
+			@file_put_contents( $this->file, '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			@chmod( $this->file, 0664 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 
 		}
 
@@ -267,22 +279,21 @@ class EDD_Batch_Export extends EDD_Export {
 	 * Append data to export file
 	 *
 	 * @since 2.4
-	 * @param $data string The data to add to the file
+	 * @param string $data The data to add to the file.
 	 * @return void
 	 */
 	protected function stash_step_data( $data = '' ) {
 
-		$file = $this->get_file();
+		$file  = $this->get_file();
 		$file .= $data;
-		@file_put_contents( $this->file, $file );
+		@file_put_contents( $this->file, $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 
-		// If we have no rows after this step, mark it as an empty export
-		$file_rows    = file( $this->file, FILE_SKIP_EMPTY_LINES);
+		// If we have no rows after this step, mark it as an empty export.
+		$file_rows    = file( $this->file, FILE_SKIP_EMPTY_LINES );
 		$default_cols = $this->get_csv_cols();
 		$default_cols = empty( $default_cols ) ? 0 : 1;
 
-		$this->is_empty = count( $file_rows ) == $default_cols ? true : false;
-
+		$this->is_empty = count( $file_rows ) === $default_cols ? true : false;
 	}
 
 	/**
@@ -293,7 +304,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 */
 	public function export() {
 
-		// Set headers
+		// Set headers.
 		$this->headers();
 
 		$file = $this->get_file();
@@ -305,11 +316,11 @@ class EDD_Batch_Export extends EDD_Export {
 		die();
 	}
 
-	/*
+	/**
 	 * Set the properties specific to the export
 	 *
 	 * @since 2.4.2
-	 * @param array $request The Form Data passed into the batch processing
+	 * @param array $request The Form Data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {}
 

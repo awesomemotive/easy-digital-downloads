@@ -505,33 +505,40 @@ function edd_get_register_fields() {
 			<?php do_action( 'edd_register_account_fields_before' ); ?>
 			<p id="edd-user-login-wrap">
 				<label for="edd_user_login">
-					<?php _e( 'Username', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_no_guest_checkout() ) : ?>
-					<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php esc_html_e( 'Username', 'easy-digital-downloads' ); ?>
+					<?php
+					$require_login = edd_no_guest_checkout();
+					if ( $require_login ) {
+						echo EDD()->html->show_required();
+					}
+					?>
 				</label>
 				<span class="edd-description"><?php _e( 'The username you will use to log into your account.', 'easy-digital-downloads' ); ?></span>
-				<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo sanitize_html_class( 'required ' ); } ?>edd-input" type="text" placeholder="<?php _e( 'Username', 'easy-digital-downloads' ); ?>"/>
+				<input name="edd_user_login" id="edd_user_login" class="<?php if ( $require_login ) { echo sanitize_html_class( 'required' ) . ' '; } ?>edd-input" type="text" placeholder="<?php esc_html_e( 'Username', 'easy-digital-downloads' ); ?>" <?php echo esc_attr( $require_login ? 'required' : '' ); ?> />
 			</p>
 			<p id="edd-user-pass-wrap">
 				<label for="edd_user_pass">
-					<?php _e( 'Password', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_no_guest_checkout() ) : ?>
-					<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php
+					esc_html_e( 'Password', 'easy-digital-downloads' );
+					if ( $require_login ) {
+						echo EDD()->html->show_required();
+					}
+					?>
 				</label>
-				<span class="edd-description"><?php _e( 'The password used to access your account.', 'easy-digital-downloads' ); ?></span>
-				<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo sanitize_html_class( 'required ' ); } ?>edd-input" placeholder="<?php _e( 'Password', 'easy-digital-downloads' ); ?>" type="password"/>
+				<span class="edd-description"><?php esc_html_e( 'The password used to access your account.', 'easy-digital-downloads' ); ?></span>
+				<input name="edd_user_pass" id="edd_user_pass" class="<?php if ( $require_login ) { echo sanitize_html_class( 'required' ) . ' '; } ?>edd-input" placeholder="<?php esc_html_e( 'Password', 'easy-digital-downloads' ); ?>" type="password" <?php echo esc_attr( $require_login ? 'required' : '' ); ?>/>
 			</p>
 			<p id="edd-user-pass-confirm-wrap" class="edd_register_password">
 				<label for="edd_user_pass_confirm">
-					<?php _e( 'Password again', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_no_guest_checkout() ) : ?>
-					<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php
+					esc_html_e( 'Password again', 'easy-digital-downloads' );
+					if ( $require_login ) {
+						echo EDD()->html->show_required();
+					}
+					?>
 				</label>
-				<span class="edd-description"><?php _e( 'Confirm your password.', 'easy-digital-downloads' ); ?></span>
-				<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="<?php if ( edd_no_guest_checkout() ) { echo sanitize_html_class( 'required ' ); } ?>edd-input" placeholder="<?php _e( 'Confirm password', 'easy-digital-downloads' ); ?>" type="password"/>
+				<span class="edd-description"><?php esc_html_e( 'Confirm your password.', 'easy-digital-downloads' ); ?></span>
+				<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="<?php if ( $require_login ) { echo sanitize_html_class( 'required' ) . ' '; } ?>edd-input" placeholder="<?php esc_html_e( 'Confirm password', 'easy-digital-downloads' ); ?>" type="password" <?php echo esc_attr( $require_login ? 'required' : '' ); ?>/>
 			</p>
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
 		</fieldset>
@@ -563,14 +570,15 @@ function edd_get_login_fields() {
 	$style = edd_get_option( 'button_style', 'button' );
 
 	$show_register_form = edd_get_option( 'show_register_form', 'none' );
+	$require_login      = edd_no_guest_checkout();
 
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
 			<?php if ( 'both' === $show_register_form ) : ?>
 				<p id="edd-new-account-wrap">
-					<?php _e( 'Need to create an account?', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Need to create an account?', 'easy-digital-downloads' ); ?>
 					<a href="<?php echo esc_url( remove_query_arg( 'login' ) ); ?>" class="edd_checkout_register_login" data-action="checkout_register"  data-nonce="<?php echo wp_create_nonce( 'edd_checkout_register' ); ?>">
-						<?php _e( 'Register', 'easy-digital-downloads' ); if ( ! edd_no_guest_checkout() ) { echo esc_html( ' ' . __( 'or checkout as a guest', 'easy-digital-downloads' ) ); } ?>
+						<?php esc_html_e( 'Register', 'easy-digital-downloads' ); if ( ! $require_login ) { echo esc_html( ' ' . __( 'or checkout as a guest', 'easy-digital-downloads' ) ); } ?>
 					</a>
 				</p>
 			<?php endif; ?>
@@ -579,27 +587,31 @@ function edd_get_login_fields() {
 
 			<p id="edd-user-login-wrap">
 				<label class="edd-label" for="edd_user_login">
-					<?php _e( 'Username or email', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_no_guest_checkout() ) : ?>
-					<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php
+					esc_html_e( 'Username or email', 'easy-digital-downloads' );
+					if ( $require_login ) {
+						echo ' ' . EDD()->html->show_required();
+					}
+					?>
 				</label>
-				<input class="<?php if(edd_no_guest_checkout()) { echo sanitize_html_class( 'required ' ); } ?>edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="<?php _e( 'Your username or email address', 'easy-digital-downloads' ); ?>"/>
+				<input class="<?php if( $require_login ) { echo sanitize_html_class( 'required' ) . ' '; } ?>edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="<?php _e( 'Your username or email address', 'easy-digital-downloads' ); ?>" <?php echo esc_attr( $require_login ? 'required' : '' ); ?>/>
 			</p>
 			<p id="edd-user-pass-wrap" class="edd_login_password">
 				<label class="edd-label" for="edd_user_pass">
-					<?php _e( 'Password', 'easy-digital-downloads' ); ?>
-					<?php if ( edd_no_guest_checkout() ) : ?>
-					<span class="edd-required-indicator">*</span>
-					<?php endif; ?>
+					<?php
+					esc_html_e( 'Password', 'easy-digital-downloads' );
+					if ( $require_login ) {
+						echo ' ' . EDD()->html->show_required();
+					}
+					?>
 				</label>
-				<input class="<?php if ( edd_no_guest_checkout() ) { echo sanitize_html_class( 'required '); } ?>edd-input" type="password" name="edd_user_pass" id="edd_user_pass" placeholder="<?php _e( 'Your password', 'easy-digital-downloads' ); ?>"/>
-				<?php if ( edd_no_guest_checkout() ) : ?>
+				<input class="<?php if ( $require_login ) { echo sanitize_html_class( 'required') . ' '; } ?>edd-input" type="password" name="edd_user_pass" id="edd_user_pass" placeholder="<?php esc_html_e( 'Your password', 'easy-digital-downloads' ); ?>" <?php echo esc_attr( $require_login ? 'required' : '' ); ?>/>
+				<?php if ( $require_login ) : ?>
 					<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
 				<?php endif; ?>
 			</p>
 			<p id="edd-user-login-submit">
-				<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" name="edd_login_submit" value="<?php _e( 'Log in', 'easy-digital-downloads' ); ?>"/>
+				<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" name="edd_login_submit" value="<?php esc_html_e( 'Log in', 'easy-digital-downloads' ); ?>"/>
 				<?php wp_nonce_field( 'edd-login-form', 'edd_login_nonce', false, true ); ?>
 			</p>
 

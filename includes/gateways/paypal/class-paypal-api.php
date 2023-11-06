@@ -21,6 +21,7 @@ use EDD\Gateways\PayPal\Exceptions\Authentication_Exception;
  * @property string $api_url
  * @property string $client_id
  * @property string $client_secret
+ * @property string $cache_key
  * @property string $token_cache_key
  * @property int    $last_response_code
  *
@@ -58,6 +59,13 @@ class API {
 	 * @var string
 	 */
 	private $client_secret;
+
+	/**
+	 * Cache key
+	 *
+	 * @var string
+	 */
+	private $cache_key;
 
 	/**
 	 * Cache key to use for the token.

@@ -10,7 +10,7 @@
  */
 
 // @codeCoverageIgnoreStart
-use EDD\Vendor\Symfony\Component\Translation\PluralizationRules;
+use Symfony\Component\Translation\PluralizationRules;
 
 if (class_exists('Symfony\\Component\\Translation\\PluralizationRules')) {
     PluralizationRules::set(static function ($number) {

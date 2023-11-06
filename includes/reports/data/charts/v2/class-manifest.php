@@ -318,7 +318,11 @@ class Manifest implements Error_Logger {
 	 */
 	public function render() {
 		// Render a <canvas> element to inject the chart in to.
-		printf( '<canvas id="%s"></canvas>', esc_attr( $this->get_target_el() ) );
+		printf(
+			'<div class="edd-canvas__container edd-canvas__type-%1$s" id="%2$s-container"><canvas id="%2$s"></canvas></div>',
+			esc_attr( $this->get_type() ),
+			esc_attr( $this->get_target_el() )
+		);
 
 		// Enqueue script and configuration to render the chart.
 		wp_enqueue_script( 'edd-admin-reports' );

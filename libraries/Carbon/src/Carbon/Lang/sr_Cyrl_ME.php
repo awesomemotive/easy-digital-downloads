@@ -16,7 +16,7 @@
  */
 
 use EDD\Vendor\Carbon\CarbonInterface;
-use EDD\Vendor\Symfony\Component\Translation\PluralizationRules;
+use Symfony\Component\Translation\PluralizationRules;
 
 // @codeCoverageIgnoreStart
 if (class_exists(PluralizationRules::class)) {

@@ -1,5 +1,7 @@
 @import "~@wordpress/base-styles/colors";
 @import "~@wordpress/base-styles/colors.native";
+
+@import "../../variables/colors";
 /**
  * WordPress Core colors current as of 5.5.1.
  */
@@ -159,7 +161,7 @@ $buddypress-colors: (
 }
 
 .edds-stripe-connect-acount-info span.edd-pro-upgrade a {
-	color: #1da867;
+	color: $edd-pro-upgrade;
 	font-weight: 600;
 	text-decoration: none;
 }

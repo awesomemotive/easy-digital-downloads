@@ -145,6 +145,7 @@ class Extension_Manager implements SubscriberInterface {
 		$generic_error = esc_html__( 'There was an error while performing your request.', 'easy-digital-downloads' );
 		$type          = ! empty( $_POST['type'] ) ? sanitize_text_field( $_POST['type'] ) : '';
 		$required_pass = ! empty( $_POST['pass'] ) ? sanitize_text_field( $_POST['pass'] ) : '';
+		$plugin        = ! empty( $_POST['plugin'] ) ? esc_url( $_POST['plugin'] ) : '';
 		$result        = array(
 			'message'      => $generic_error,
 			'is_activated' => false,
@@ -164,17 +165,25 @@ class Extension_Manager implements SubscriberInterface {
 		}
 
 		$result['message'] = 'plugin' === $type
-			? __( 'Could not install the plugin. Please download and install it manually via Plugins > Add New.', 'easy-digital-downloads' )
+			? sprintf(
+				// translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate.
+				__( 'Could not install the plugin. Please %1$sdownload%2$s and install it manually via Plugins > Add New.', 'easy-digital-downloads' ),
+				! empty( $plugin ) ? '<a href="' . $plugin . '" target="_blank" rel="noopener noreferrer">' : '',
+				! empty( $plugin ) ? '</a>' : ''
+			)
 			: sprintf(
-				/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate */
+				// translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate.
 				__( 'Could not install the extension. Please %1$sdownload it from your account%2$s and install it manually.', 'easy-digital-downloads' ),
 				'<a href="https://easydigitaldownloads.com/your-account/" target="_blank" rel="noopener noreferrer">',
 				'</a>'
 			);
 
-		$download_url_classname = \edd_get_namespace( 'Admin\\Extensions\\DownloadURL' );
-		$download_url_class     = new $download_url_classname( $this->pass_manager->highest_license_key );
-		$plugin                 = $download_url_class->get_url();
+		if ( 'plugin' !== $type ) {
+			$download_url_classname = \edd_get_namespace( 'Admin\\Extensions\\DownloadURL' );
+			$download_url_class     = new $download_url_classname( $this->pass_manager->highest_license_key );
+			$plugin                 = $download_url_class->get_url();
+		}
+
 		if ( empty( $plugin ) ) {
 			wp_send_json_error( $result );
 		}

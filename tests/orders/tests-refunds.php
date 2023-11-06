@@ -339,4 +339,19 @@ class Refunds extends EDD_UnitTestCase {
 		$exception = $this->getexpectException();
 		$this->assertStringContainsString( 'subtotal', $exception->getMessage() );
 	}
+
+	public function test_is_order_refundable_refunded_order_returns_false() {
+		$order = parent::edd()->order->create_and_get();
+		edd_refund_order( $order->id );
+
+		$this->assertFalse( edd_is_order_refundable( $order->id ) );
+	}
+
+	public function test_is_order_refundable_child_order_refunded_returns_true() {
+		$order = parent::edd()->order->create_and_get();
+		$child = parent::edd()->order->create_and_get( array( 'parent' => $order->id ) );
+		edd_refund_order( $child->id );
+
+		$this->assertTrue( edd_is_order_refundable( $order->id ) );
+	}
 }

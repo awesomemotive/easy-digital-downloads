@@ -22,6 +22,7 @@ function edd_get_gross_order_statuses() {
 		'refunded',
 		'partially_refunded',
 		'revoked',
+		'on_hold',
 	);
 
 	/**
@@ -34,7 +35,6 @@ function edd_get_gross_order_statuses() {
 	 *
 	 * @param array $statuses {
 	 *     An array of order status array keys.
-	 *
 	 */
 	return apply_filters( 'edd_gross_order_statuses', $statuses );
 }
@@ -51,6 +51,7 @@ function edd_get_net_order_statuses() {
 		'complete',
 		'partially_refunded',
 		'revoked',
+		'on_hold',
 	);
 
 	/**
@@ -63,7 +64,6 @@ function edd_get_net_order_statuses() {
 	 *
 	 * @param array $statuses {
 	 *     An array of order status array keys.
-	 *
 	 */
 	return apply_filters( 'edd_net_order_statuses', $statuses );
 }
@@ -142,7 +142,7 @@ function edd_get_incomplete_order_statuses( $include_labels = false ) {
  * @return array
  */
 function edd_get_refundable_order_statuses() {
-	$refundable_order_statuses = array( 'complete', 'publish', 'partially_refunded' );
+	$refundable_order_statuses = array( 'complete', 'publish', 'partially_refunded', 'on_hold' );
 
 	/**
 	 * Filters the order statuses that are allowed to be refunded.

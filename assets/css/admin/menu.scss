@@ -21,6 +21,12 @@
 	}
 }
 
+@media screen and (max-width: $break-mobile) {
+	#menu-posts-download.wp-not-current-submenu .wp-submenu {
+		display: none;
+	}
+}
+
 /* Submenu Styles
 -------------------------------------------------------------- */
 
@@ -90,7 +96,7 @@ a.edd-onboarding__menu-item {
 
 a.edd-sidebar__upgrade-pro,
 a.edd-sidebar__upgrade-pro:hover {
-	background-color: #1da867 !important;
+	background-color: $edd-pro-upgrade !important;
 	color: $white !important;
 	font-weight: 600;
 }

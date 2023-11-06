@@ -13,6 +13,14 @@ class ProductData {
 	public $title;
 
 	/**
+	 * The product heading.
+	 *
+	 * @since 2.11.4
+	 * @var string
+	 */
+	public $heading;
+
+	/**
 	 * The product slug.
 	 *
 	 * @since 2.11.4
@@ -75,6 +83,41 @@ class ProductData {
 	 * @var int
 	 */
 	public $pass_id = '';
+
+	/**
+	 * The style for the product card.
+	 *
+	 * @var string
+	 */
+	public $style = '';
+
+	/**
+	 * The version of the product.
+	 *
+	 * @var string
+	 */
+	public $version = '';
+
+	/**
+	 * The product terms.
+	 *
+	 * @var array
+	 */
+	public $terms = array();
+
+	/**
+	 * The product categories.
+	 *
+	 * @var array
+	 */
+	public $categories = array();
+
+	/**
+	 * The product icon.
+	 *
+	 * @var string
+	 */
+	public $icon = '';
 
 	/**
 	 * Take array and return object.

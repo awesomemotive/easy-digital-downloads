@@ -55,7 +55,6 @@ class EDD_Register_Meta {
 	 */
 	private function hooks() {
 		add_action( 'init', array( $this, 'register_download_meta' ) );
-		add_action( 'init', array( $this, 'register_payment_meta' ) );
 	}
 
 	/**
@@ -196,6 +195,7 @@ class EDD_Register_Meta {
 	 * Register the meta for the edd_payment post type.
 	 *
 	 * @since  2.5
+	 * @deprecated 3.2.4
 	 * @return void
 	 */
 	public function register_payment_meta() {

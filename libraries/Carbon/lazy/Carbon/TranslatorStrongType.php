@@ -11,7 +11,7 @@
 
 namespace EDD\Vendor\Carbon;
 
-use EDD\Vendor\Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 if (!class_exists(LazyTranslator::class, false)) {
     class LazyTranslator extends AbstractTranslator implements TranslatorStrongTypeInterface

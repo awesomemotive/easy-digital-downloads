@@ -53,11 +53,12 @@ export const toolTipBaseConfig = {
 	 */
 	custom: function( tooltip ) {
 		// Tooltip element.
-		let tooltipEl = document.getElementById( 'edd-chartjs-tooltip' );
+		let tooltipEl = document.getElementById( this._chart.canvas.parentNode.id + '-tooltip' );
 
 		if ( ! tooltipEl ) {
 			tooltipEl = document.createElement( 'div' );
-			tooltipEl.id = 'edd-chartjs-tooltip';
+			tooltipEl.id = this._chart.canvas.parentNode.id + '-tooltip';
+			tooltipEl.classList.add( 'edd-chartjs-tooltip' );
 			tooltipEl.innerHTML = '<table></table>';
 
 			this._chart.canvas.parentNode.appendChild( tooltipEl );

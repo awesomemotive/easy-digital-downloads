@@ -1,0 +1,514 @@
+body.edd-about {
+	& div.notice {
+		display: none;
+	}
+
+	& #edd-admin-about *, & #edd-admin-about *::before, & #edd-admin-about *::after {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	& #edd-admin-about {
+		display: flex;
+		flex-direction: column;
+
+		& .edd-about-nav {
+			display: flex;
+			flex-direction: row;
+			justify-content: left;
+			box-shadow: inset 0 -2px 0 0 $edd-very-light-gray;
+			margin: 0 20px 20px;
+			gap: 8px;
+
+			& a.tab {
+				border-bottom: none;
+				text-decoration: none;
+				color: $wp-gray-50;
+				padding: 10px 12px;
+				font-weight: 600;
+
+				&:hover, &:focus {
+					border-bottom: 2px solid $wp-gray-20;
+				}
+
+				&.active {
+					color: $edd-notice-blue;
+					border-bottom: 2px solid $edd-notice-blue;
+				}
+
+			}
+		}
+
+		& .edd-admin-about-section {
+			box-shadow: 0 2px 5px $edd-very-light-gray;
+			margin: 0 20px 20px;
+			padding: 30px;
+			background: #ffffff;
+			border: 1px solid #dddddd;
+			line-height: 2;
+			display: flex;
+			flex-direction: row;
+
+			& h2 {
+				font-size: 24px;
+				line-height: 32px;
+				color: $wp-gray-50;
+				margin: 0px;
+			}
+
+			& h3 {
+				font-size: 16px;
+				line-height: 22px;
+				color: $wp-gray-40;
+			}
+
+			& ul, p {
+				font-size: 14px;
+			}
+
+			& p {
+				margin-bottom: 10px;
+
+				&.bigger {
+					font-size: 18px;
+				}
+
+				&.smaller {
+					font-size: 14px;
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			& hr {
+				margin: 30px 0;
+			}
+
+			& figure {
+				margin: 0;
+
+				& img.shadow {
+					width: 100%;
+					box-shadow: 0 2px 5px $edd-very-light-gray;
+				}
+
+				& figcaption {
+					font-size: 14px;
+					color: #888888;
+					margin-top: 5px;
+					text-align: center;
+					line-height: initial;
+				}
+			}
+
+			& .edd-admin-columns {
+				display: flex;
+			}
+
+			& .column {
+				display: flex;
+				flex-direction: column;
+
+				&--20 {
+					width: 20%;
+				}
+				&--40 {
+					width: 40%;
+				}
+				&--50 {
+					width: 50%;
+				}
+				&--60 {
+					width: 60%;
+				}
+				&--80 {
+					width: 80%;
+				}
+
+				&.align--middle {
+					align-items: center;
+					justify-content: center;
+				}
+
+				&.m {
+					&-l {
+						&-15 {
+							margin-left: 15px;
+						}
+					}
+					&-r {
+						&-15 {
+							margin-right: 15px;
+						}
+					}
+				}
+			}
+
+			& ul {
+				&.list-plain {
+					margin-top: 0;
+					margin-bottom: 0;
+
+					& li {
+						margin-bottom: 0;
+					}
+				}
+
+				&.list-features {
+					& li {
+						display: flex;
+						align-items: center;
+						justify-items: left;
+						gap: 8px;
+					}
+				}
+			}
+
+			& .dashicons-star-filled {
+				color: gold;
+			}
+
+			& .no-margin {
+				margin: 0 !important;
+			}
+
+			& .no-padding {
+				padding: 0 !important;
+			}
+
+			& .centered {
+				text-align: center !important;
+			}
+		}
+
+		& .edd-admin-about-section-first-form {
+			display: flex;
+
+			& .edd-admin-about-section-first-form-text {
+				flex: 1;
+				padding-right: 30px;
+			}
+
+			& .edd-admin-about-section-first-form-video {
+
+				& iframe {
+					border: 1px solid #dddddd;
+				}
+			}
+		}
+
+		& .edd-admin-about-section-hero {
+			display: flex;
+			flex-direction: column;
+			padding: 0;
+
+			& .edd-admin-about-section-hero-main, & .edd-admin-about-section-hero-extra {
+
+				& div.notice {
+					display: none;
+				}
+
+				padding: 30px;
+
+				& h3.call-to-action {
+					margin-bottom: -10px;
+				}
+
+			}
+
+			& .edd-admin-about-section-hero-main {
+				background-color: #fafafa;
+				border-bottom: 1px solid #dddddd;
+
+				&.no-border {
+					border-bottom: 0;
+				}
+
+				& p {
+					color: #666;
+				}
+			}
+		}
+
+		& .edd-admin-about-section-squashed {
+			margin-bottom: 0;
+
+			&:not(:last-of-type) {
+				border-bottom: 0;
+			}
+		}
+
+		& .edd-admin-about-section-post {
+			flex-direction: row;
+			gap: 50px;
+
+			& h2 {
+				margin-bottom: -10px;
+			}
+
+			& h3 {
+				margin-bottom: 15px;
+			}
+
+			& p {
+				&:last-of-type {
+					margin-bottom: 30px;
+				}
+			}
+
+			& img {
+				max-width: 250px;
+			}
+
+			& .column--20 {
+				width: 250px;
+			}
+
+			& .column--80{
+				width: calc(100% - 270px);
+			}
+
+			& .button-secondary {
+				transition: all 0.1s ease-in-out;
+				&:hover, &:focus {
+					background-color: #2271B1;
+					color: $white;
+				}
+			}
+		}
+
+		& #edd-admin-addons {
+			padding: 0 30px;
+			& .addons-container {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: space-between;
+
+				& .addon-container {
+					display: flex;
+					padding: 10px;
+					flex: 1 0 33.3333%;
+					max-width: 33.3333%;
+
+					& .addon-item {
+						display: flex;
+						flex-direction: column;
+						border: 1px solid #dddddd;
+						box-shadow: 0 2px 5px $edd-very-light-gray;
+
+						& .details {
+							padding: 20px;
+							display: flex;
+							flex-direction: row;
+							background-color: #ffffff;
+							flex-grow: 1;
+
+							& .leftcol {
+								& img {
+									max-width: 100px;
+									padding: 10px;
+									box-shadow: 0 2px 3px $edd-very-light-gray;
+								}
+							}
+
+							& .rightcol {
+								flex-direction: column;
+								justify-content: left;
+								flex-grow: 4;
+								padding-left: 20px;
+								& h5 {
+									font-size: 14px;
+									margin-bottom: 10px;
+									margin-top: 0px;
+								}
+							}
+						}
+
+						& .actions {
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+							align-items: center;
+							padding: 8px 12px;
+
+							&.has-response {
+								justify-content: center;
+								flex-grow: 10;
+							}
+
+							& .status {
+								& span.status-label {
+									font-weight: 600;
+									&.active {
+										color: $wp-green-50;
+									}
+
+									&.inactive {
+										color: $wp-red-50;
+									}
+
+									&.not-installed {
+										color: $wp-gray-50;
+									}
+								}
+							}
+
+							& .action-button {
+								& .button.disabled, & .button.loading {
+									cursor: default;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		@media (max-width: $break-huge) {
+			& #edd-admin-addons {
+				& .addons-container {
+					& .addon-container {
+						display: flex;
+						padding: 10px;
+						flex: 1 0 50%;
+						max-width: 50%;
+					}
+				}
+			}
+		}
+
+		@media (max-width: $break-wide) {
+			& .welcome-message {
+				flex-direction: column-reverse;
+
+				&.column--20, .column--40, .column--50, .column--60, .column--80 {
+					width: 100%;
+
+					&.m-l-15 {
+						margin-left: 0px;
+					}
+
+					&.m-r-15 {
+						margin-right: 0px;
+					}
+				}
+			}
+		}
+
+		@media (max-width: $break-large) {
+			& .edd-admin-about-section {
+				flex-direction: column;
+				gap: 20px;
+
+				&.welcome-message {
+					flex-flow: column-reverse;
+				}
+
+				& .edd-admin-columns {
+					flex-direction: column;
+				}
+
+				&.column--20, .column--40, .column--50, .column--60, .column--80 {
+					display: flex;
+					width: 100%;
+
+					&.m-l-15 {
+						margin-left: 0px;
+					}
+
+					&.m-r-15 {
+						margin-right: 0px;
+					}
+				}
+			}
+
+			& .edd-admin-about-section-first-form {
+				display: block !important;
+
+				& .edd-admin-about-section-first-form-text {
+					flex: none;
+				}
+
+				& .edd-admin-about-section-first-form-video {
+					padding-top: 20px;
+				}
+			}
+
+			& .edd-admin-about-section-hero {
+				& .edd-admin-about-section-hero-extra {
+					& .edd-admin-column-50 {
+						float: none;
+						width: 100%;
+					}
+				}
+			}
+
+			& .edd-admin-about-section-post {
+				flex-direction: column;
+
+				& .column--20, .column--80 {
+					display: flex;
+					width: 100%;
+
+					& img {
+						width: auto;
+						max-width: 100%;
+					}
+
+					&.image {
+						margin: 0 auto;
+						align-content: center;
+						justify-content: center;
+					}
+
+					&.content {
+						flex-direction: column;
+						justify-items: left;
+					}
+
+					& .edd-admin-about-section-post-link {
+						font-size: 1.25rem;
+						display: flex;
+						justify-items: space-around;
+						justify-content: center;
+
+						& .dashicons {
+							display: none;
+						}
+					}
+				}
+			}
+
+			& #edd-admin-addons {
+				& .addons-container {
+					display: flex;
+					flex-direction: column;
+
+					& .addon-container {
+						padding: 10px;
+						flex: 1 0 100%;
+						max-width: 100%;
+
+						& .addon-item {
+							& .details {
+								flex-direction: row;
+
+								& .rightcol {
+									padding-left: 20px;
+
+									& .addon-name {
+										text-align: left;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

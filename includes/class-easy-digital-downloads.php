@@ -179,6 +179,13 @@ final class Easy_Digital_Downloads {
 	public $email_summary_admin;
 
 	/**
+	 * The currently viewed report.
+	 *
+	 * @var EDD\Reports\Report
+	 */
+	public $report;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -362,7 +369,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.2.3' );
+			define( 'EDD_VERSION', '3.2.4' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.

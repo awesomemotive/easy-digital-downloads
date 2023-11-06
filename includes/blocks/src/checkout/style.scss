@@ -99,6 +99,7 @@
 	.edd-loading-ajax.edd-loading {
 		margin: 0 auto;
 		display: block;
+		opacity: 1;
 	}
 }
 
@@ -132,16 +133,23 @@
 	display: flex;
 	gap: 0.5rem;
 	margin-bottom: 1rem;
+	justify-content: center;
 
 	button {
 		padding: .5rem 1rem;
+
+		&:disabled {
+			display: none;
+		}
 	}
 
-	@media (min-width: $break-small) {
-		margin-bottom: 0;
-		position: absolute;
-		right: 2rem;
-		z-index: 99;
+	&--inline {
+		@media (min-width: $break-small) {
+			margin-bottom: 0;
+			position: absolute;
+			right: 2rem;
+			z-index: 99;
+		}
 	}
 }
 

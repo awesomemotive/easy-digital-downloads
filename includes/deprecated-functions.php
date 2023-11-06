@@ -2378,3 +2378,58 @@ function edd_get_default_sale_notification_email() {
 
 	return $admin_order_notice->get_raw_body_content();
 }
+
+/**
+ * Add rating links to the admin dashboard
+ *
+ * @since       1.8.5
+ * @deprecated  3.2.4
+ * @global      string $typenow
+ * @param       string $footer_text The existing footer text.
+ * @return      string
+ */
+function edd_admin_rate_us( $footer_text = '' ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.4' );
+
+	return $footer_text;
+}
+
+/**
+ * Email Template Body
+ *
+ * @since 1.0.8.2
+ *
+ * @deprecated 3.2.0
+ *
+ * @param int $payment_id Payment ID
+ * @param array $payment_data Payment Data
+ * @return string $email_body Body of the email
+ */
+function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
+	_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
+
+	$order         = edd_get_order( $payment_id );
+	$order_receipt = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
+
+	return $order_receipt->get_raw_body_content();
+}
+
+/**
+ * Sale Notification Template Body
+ *
+ * @since 1.7
+ *
+ * @deprecated 3.2.0
+ *
+ * @param int $payment_id Payment ID
+ * @param array $payment_data Payment Data
+ * @return string $email_body Body of the email
+ */
+function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\AdminOrderNotice' );
+
+	$order              = edd_get_order( $payment_id );
+	$admin_order_notice = EDD\Emails\Registry::get( 'admin_order_notice', array( $order ) );
+
+	return $admin_order_notice->get_raw_body_content();
+}

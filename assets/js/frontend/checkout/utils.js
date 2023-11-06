@@ -48,6 +48,10 @@ export function recalculateTaxes( state ) {
 	} // Taxes not enabled
 
 	const cart = document.getElementById( 'edd_checkout_cart' );
+	if ( ! cart ) {
+		return;
+	}
+
 	let tax_amount_row = cart.getElementsByClassName( 'edd_cart_tax' );
 
 	// See if the tax_amount_row has an edd-loading-ajax child before adding another one.
