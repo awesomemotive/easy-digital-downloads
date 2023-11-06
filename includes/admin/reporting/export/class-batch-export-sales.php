@@ -37,6 +37,13 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	private $orders;
 
 	/**
+	 * The download ID for the export.
+	 *
+	 * @var int
+	 */
+	private $download_id;
+
+	/**
 	 * Set the CSV columns
 	 *
 	 * @since 2.7

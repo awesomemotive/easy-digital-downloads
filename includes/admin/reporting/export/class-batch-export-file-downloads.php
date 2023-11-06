@@ -31,6 +31,13 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	public $export_type = 'file_downloads';
 
 	/**
+	 * The download ID to export.
+	 *
+	 * @var int
+	 */
+	private $download_id;
+
+	/**
 	 * Set the CSV columns.
 	 *
 	 * @since 2.4

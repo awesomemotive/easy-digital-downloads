@@ -12,8 +12,8 @@
 namespace EDD\Vendor\Carbon;
 
 use ReflectionMethod;
-use EDD\Vendor\Symfony\Component\Translation;
-use EDD\Vendor\Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 $transMethod = new ReflectionMethod(
     class_exists(TranslatorInterface::class)

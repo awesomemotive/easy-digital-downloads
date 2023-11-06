@@ -15,9 +15,9 @@ use EDD\Vendor\Carbon\MessageFormatter\MessageFormatterMapper;
 use Closure;
 use ReflectionException;
 use ReflectionFunction;
-use EDD\Vendor\Symfony\Component\Translation;
-use EDD\Vendor\Symfony\Component\Translation\Formatter\MessageFormatterInterface;
-use EDD\Vendor\Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation;
+use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
+use Symfony\Component\Translation\Loader\ArrayLoader;
 
 abstract class AbstractTranslator extends Translation\Translator
 {

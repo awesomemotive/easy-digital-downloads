@@ -42,10 +42,14 @@ function edd_is_order_refundable( $order_id = 0 ) {
 		return false;
 	}
 
-	// Check order hasn't already been refunded.
-	$query          = "SELECT COUNT(id) FROM {$wpdb->edd_orders} WHERE parent = %d AND status = '%s'";
-	$prepare        = sprintf( $query, $order_id, esc_sql( 'refunded' ) );
-	$refunded_order = $wpdb->get_var( $prepare ); // WPCS: unprepared SQL ok.
+	// Check that a full refund has not already been created.
+	$refunded_order = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT COUNT(id) FROM {$wpdb->edd_orders} WHERE parent = %d AND type = 'refund' AND status = 'complete' AND total = %s",
+			$order_id,
+			- abs( $order->total )
+		)
+	);
 
 	if ( 0 < absint( $refunded_order ) ) {
 		return false;
@@ -428,14 +432,15 @@ function edd_get_order_refunds( $order_id = 0 ) {
 function edd_get_order_total( $order_id ) {
 	global $wpdb;
 
-	$query   = "SELECT SUM(total) FROM {$wpdb->edd_orders} WHERE id = %d OR parent = %d";
-	$prepare = $wpdb->prepare( $query, $order_id, $order_id );
-	$total   = $wpdb->get_var( $prepare ); // WPCS: unprepared SQL ok.
-	$retval  = ( null === $total )
-		? 0.00
-		: floatval( $total );
+	$total = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT SUM(total) FROM {$wpdb->edd_orders} WHERE id = %d OR ( type = 'refund' AND parent = %d )",
+			$order_id,
+			$order_id
+		)
+	);
 
-	return $retval;
+	return is_null( $total ) ? 0.00 : floatval( $total );
 }
 
 /**

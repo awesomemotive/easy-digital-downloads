@@ -1,9 +1,8 @@
 @media screen and (min-width: $break-small) {
 	#edd-reports-charts-wrap {
-		display: -ms-grid;
 		display: grid;
 		grid-template-columns: repeat(2, minmax(200px, 50%));
-		grid-gap: 20px;
+		grid-gap: 2em;
 	}
 
 	.edd-reports-chart {
@@ -16,12 +15,29 @@
 	}
 }
 
-.edd-reports-chart {
-	height: 500px;
-	max-height: 700px;
+.edd-canvas__container {
+	margin: auto;
+	position: relative;
+	max-width: 100%;
+	max-height: 75vh;
+
+	&.edd-canvas__type-line,
+	&.edd-canvas__type-bar {
+		@media screen and (min-width: $break-mobile) {
+			height: 450px;
+		}
+
+		@media screen and (min-width: $break-medium) {
+			height: 500px;
+		}
+
+		@media screen and (min-width: $break-xlarge) {
+			height: 700px;
+		}
+	}
 }
 
 .chart-timezone {
 	font-size: .75rem;
-	color: #CCCCCC;
+	color: $wp-gray-10;
 }

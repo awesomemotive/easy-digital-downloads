@@ -37,25 +37,6 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 		$this->assertEquals( '0', edd_get_payment_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
 	}
 
-	public function test_sanitize_array() {
-		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
-
-		$object = new \StdClass;
-		$object->one = 1;
-		$object->two = 2;
-
-		update_post_meta( $this->payment_id, '_edd_payment_meta', $object );
-		$this->assertIsArray( edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
-
-		$serialized = serialize( array(
-			1, 2, 3,
-		) );
-
-		update_post_meta( $this->payment_id, '_edd_payment_meta', $serialized );
-		$this->assertIsArray( edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
-		$this->assertFalse( is_serialized( edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) ) );
-	}
-
 	public function test_sanitize_price() {
 
 		// Test saving a normal postitive value

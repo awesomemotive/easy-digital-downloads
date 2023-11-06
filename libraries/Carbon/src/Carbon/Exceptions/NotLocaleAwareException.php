@@ -27,6 +27,6 @@ class NotLocaleAwareException extends BaseInvalidArgumentException implements In
     {
         $dump = \is_object($object) ? \get_class($object) : \gettype($object);
 
-        parent::__construct("$dump does neither implements EDD\Vendor\Symfony\Contracts\Translation\LocaleAwareInterface nor getLocale() method.", $code, $previous);
+        parent::__construct("$dump does neither implements Symfony\Contracts\Translation\LocaleAwareInterface nor getLocale() method.", $code, $previous);
     }
 }

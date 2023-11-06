@@ -123,10 +123,6 @@ class Wizard implements \EDD\EventManagement\SubscriberInterface {
 	 */
 	public function add_menu_item() {
 		add_submenu_page( 'edit.php?post_type=download', __( 'Setup', 'easy-digital-downloads' ), __( 'Setup', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-onboarding-wizard', array( $this, 'onboarding_wizard_sub_page' ) );
-		if ( $this->has_onboarding_been_completed() ) {
-			remove_submenu_page( 'edit.php?post_type=download', 'edd-onboarding-wizard' );
-		}
-
 		add_action( 'admin_head', array( $this, 'adjust_menu_item_class' ) );
 	}
 
@@ -138,6 +134,9 @@ class Wizard implements \EDD\EventManagement\SubscriberInterface {
 	 */
 	public function adjust_menu_item_class() {
 		new \EDD\Admin\Menu\LinkClass( 'edd-onboarding-wizard', 'edd-onboarding__menu-item' );
+		if ( $this->has_onboarding_been_completed() ) {
+			remove_submenu_page( 'edit.php?post_type=download', 'edd-onboarding-wizard' );
+		}
 	}
 
 	/**
@@ -165,9 +164,12 @@ class Wizard implements \EDD\EventManagement\SubscriberInterface {
 		// Override Stripe callback urls.
 		add_filter( 'edds_stripe_connect_url', array( $this, 'update_stripe_connect_url' ), 15 );
 
-		add_filter( 'edd_pointers', function( $pointers ) {
-			return array();
-		} );
+		add_filter(
+			'edd_pointers',
+			function ( $pointers ) {
+				return array();
+			}
+		);
 	}
 
 	/**
@@ -278,7 +280,7 @@ class Wizard implements \EDD\EventManagement\SubscriberInterface {
 		$index = 1;
 		foreach ( $this->onboarding_steps as $key => $value ) {
 			$this->onboarding_steps[ $key ]['step_index'] = $index;
-			$index++;
+			++$index;
 		}
 	}
 

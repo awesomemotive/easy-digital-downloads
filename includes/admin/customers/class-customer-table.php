@@ -120,15 +120,21 @@ class EDD_Customer_Reports_Table extends List_Table {
 			? $item['status']
 			: 'active';
 
-		// State
-		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
-			switch ( $status ) {
-				case 'pending' :
+		// State.
+		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( 'active' !== $item_status ) ) {
+			switch ( $item_status ) {
+				case 'pending':
 					$value = __( 'Pending', 'easy-digital-downloads' );
 					break;
-				case 'active' :
-				case '' :
-				default :
+				case 'disabled':
+					$value = __( 'Disabled', 'easy-digital-downloads' );
+					break;
+				case 'inactive':
+					$value = __( 'Inactive', 'easy-digital-downloads' );
+					break;
+				case 'active':
+				case '':
+				default:
 					$value = __( 'Active', 'easy-digital-downloads' );
 					break;
 			}
@@ -136,10 +142,10 @@ class EDD_Customer_Reports_Table extends List_Table {
 			$state = ' &mdash; ' . $value;
 		}
 
-		// Get the customer's avatar
+		// Get the customer's avatar.
 		$avatar = get_avatar( $item['email'], 32 );
 
-		// View URL
+		// View URL.
 		$view_url = edd_get_admin_url(
 			array(
 				'page' => 'edd-customers',
@@ -148,8 +154,8 @@ class EDD_Customer_Reports_Table extends List_Table {
 			)
 		);
 
-		// Concatenate and return
-		return $avatar . '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $this->get_row_actions( $item ) );
+		// Concatenate and return.
+		return $avatar . '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $name ) . '</a>' . esc_html( $state ) . $this->row_actions( $this->get_row_actions( $item ) );
 	}
 
 	/**
@@ -395,6 +401,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 					'order_count'  => $customer->purchase_count,
 					'spent'        => $customer->purchase_value,
 					'date_created' => $customer->date_created,
+					'status'       => $customer->status,
 				);
 			}
 		}

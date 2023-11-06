@@ -68,8 +68,13 @@ class Settings {
 		if ( in_array( $setting['type'], array( 'checkbox', 'checkbox_description' ), true ) ) {
 			return (int) (bool) $value;
 		}
-		if ( empty( $value ) && 'currency' === $setting['id'] ) {
-			return edd_get_currency();
+		if ( empty( $value ) ) {
+			if ( 'currency' === $setting['id'] ) {
+				return edd_get_currency();
+			}
+			if ( 'base_country' === $setting['id'] ) {
+				return strtoupper( edd_get_option( 'stripe_connect_account_country', $value ) );
+			}
 		}
 		if ( in_array( $setting['type'], $this->text_settings(), true ) ) {
 			return $this->anonymize_setting( $value );
@@ -191,6 +196,7 @@ class Settings {
 
 	/**
 	 * Attempts to anonymize a setting value.
+	 *
 	 * @todo check how we want to replace--values or empty strings?
 	 *
 	 * @since 3.1.1

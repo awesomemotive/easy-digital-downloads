@@ -33,6 +33,7 @@ class Core extends EventManagement\Subscribers {
 			new Orders\DeferredActions(),
 			new Emails\Triggers(),
 			new Globals\Polyfills\Loader(),
+			new Integrations\Registry(),
 
 			// Upgrades.
 			new Upgrades\Orders\MigrateAfterActionsDate(),
@@ -51,6 +52,7 @@ class Core extends EventManagement\Subscribers {
 		}
 
 		$providers = array(
+			new Admin\Styles(),
 			new Admin\PassHandler\Settings( $this->pass_handler ),
 			new Admin\PassHandler\Actions( $this->pass_handler ),
 			new Admin\Extensions\Menu(),
@@ -69,6 +71,9 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Pointers(),
 			new Admin\Settings\Sanitize(),
 			new Admin\Downloads\Metabox(),
+			new Admin\Promos\Footer\Loader(),
+			new Admin\Promos\About(),
+			new Admin\Settings\Pointers(),
 		);
 
 		return $providers;

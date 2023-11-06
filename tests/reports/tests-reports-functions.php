@@ -15,7 +15,7 @@ new ReportsInit();
  * @group edd_reports_functions
  * @group edd_objects
  */
-class Reports_Functions_Tests extends EDD_UnitTestCase {
+class Functions extends EDD_UnitTestCase {
 
 	/**
 	 * Date fixture.
@@ -854,6 +854,7 @@ class Reports_Functions_Tests extends EDD_UnitTestCase {
 			'refunded',
 			'partially_refunded',
 			'revoked',
+			'on_hold',
 		);
 
 		$this->assertSame( $expected, edd_get_gross_order_statuses() );
@@ -864,6 +865,7 @@ class Reports_Functions_Tests extends EDD_UnitTestCase {
 			'complete',
 			'partially_refunded',
 			'revoked',
+			'on_hold',
 		);
 
 		$this->assertSame( $expected, edd_get_net_order_statuses() );

@@ -13,8 +13,8 @@ jQuery( document ).ready( function ( $ ) {
 			},
 			url: edd_global_vars.ajaxurl,
 			success: function ( response ) {
-				button.prop( 'disabled', true ).hide();
-				current.prop( 'disabled', false ).show();
+				button.prop( 'disabled', true );
+				current.prop( 'disabled', false );
 				$( '.edd-checkout-block__personal-info' ).empty();
 				$( '.edd-checkout-block__personal-info' ).html( response.data );
 			},

@@ -14,13 +14,23 @@ class Base {
 	 * Holds the from address
 	 *
 	 * @since 2.1
+	 * @var string
 	 */
 	private $from_address;
+
+	/**
+	 * Holds the legacy from_email value.
+	 *
+	 * @deprecated 3.2.0
+	 * @var string
+	 */
+	private $from_email;
 
 	/**
 	 * Holds the from name
 	 *
 	 * @since 2.1
+	 * @var string
 	 */
 	private $from_name;
 
@@ -28,6 +38,7 @@ class Base {
 	 * Holds the email content type
 	 *
 	 * @since 2.1
+	 * @var string
 	 */
 	private $content_type;
 
@@ -35,6 +46,7 @@ class Base {
 	 * Holds the email headers
 	 *
 	 * @since 2.1
+	 * @var array
 	 */
 	private $headers;
 
@@ -42,6 +54,7 @@ class Base {
 	 * Whether to send email in HTML
 	 *
 	 * @since 2.1
+	 * @var bool
 	 */
 	private $html = true;
 
@@ -49,6 +62,7 @@ class Base {
 	 * The email template to use
 	 *
 	 * @since 2.1
+	 * @var string
 	 */
 	private $template;
 
@@ -56,6 +70,7 @@ class Base {
 	 * The header text for the email
 	 *
 	 * @since  2.1
+	 * @var string
 	 */
 	private $heading = '';
 
@@ -81,7 +96,12 @@ class Base {
 	 * @since 2.1
 	 */
 	public function __set( $key, $value ) {
-		$this->$key = $value;
+		// If we have a setter, use it.
+		if ( method_exists( $this, "set_{$key}" ) ) {
+			$this->{"set_{$key}"}( $value );
+		} else {
+			$this->$key = $value;
+		}
 	}
 
 	/**
@@ -386,4 +406,16 @@ class Base {
 		return $message;
 	}
 
+	/**
+	 * Set the from_address if someone uses the `from_email` property.
+	 *
+	 * @since 3.2.4
+	 */
+	private function set_from_email( $from_email ) {
+		_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Base->__set(\'from_address\', \'<email address>\'' );
+
+		// Since this is now `from_address` we need to set the old `from_email` and `from_address`.
+		$this->from_email   = $from_email;
+		$this->from_address = $from_email;
+	}
 }

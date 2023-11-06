@@ -1,0 +1,19 @@
+.edd-chartjs-tooltip {
+	position: absolute;
+	background-color: #fff;
+	border-radius: 7px;
+	transition: all .1s ease;
+	pointer-events: none;
+	transform: translate(-50%, 0);
+	font-size: 12px;
+	box-shadow: 0 0 0 1px rgba(89, 94, 100, .1), 0 15px 35px 0 rgba(89, 94, 100, .1), 0 5px 15px 0 rgba(0, 0, 0, .12);
+	min-width: 120px;
+	opacity: 0;
+}
+
+.edd-chartjs-tooltip-key {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-right: 5px;
+}

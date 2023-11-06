@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-use EDD\Vendor\Symfony\Component\Translation\PluralizationRules;
+use Symfony\Component\Translation\PluralizationRules;
 
 // @codeCoverageIgnoreStart
 if (class_exists(PluralizationRules::class)) {

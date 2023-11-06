@@ -11,7 +11,7 @@
 
 namespace EDD\Vendor\Carbon;
 
-use EDD\Vendor\Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Mark translator using strong type from symfony/translation >= 6.

@@ -2,7 +2,7 @@
 version: "3.7"
 services:
     phpstan:
-        image: public.ecr.aws/q7y6e9n2/unit-test-images/php:8.1
+        image: public.ecr.aws/q7y6e9n2/unit-test-images/php:8.2
         volumes:
             - .:/app
             - /tmp/artifacts:/tmp/artifacts

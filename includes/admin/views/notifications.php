@@ -12,7 +12,7 @@
 	id="edd-notifications"
 	class="edd-hidden"
 	x-data
-	x-init="function() { $el.classList.remove( 'edd-hidden' ) }"
+	x-init="function() { if ( 'undefined' !== typeof $store.eddNotifications ) { $el.classList.remove( 'edd-hidden' ); } }"
 >
 	<div
 		class="edd-overlay"
