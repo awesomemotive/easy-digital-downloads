@@ -124,6 +124,36 @@ var EDD_PayPal = {
 				if ( ! form.reportValidity() ) {
 					return false;
 				}
+
+				spinner.style.display = 'block';
+
+				// Clear errors at the start of each attempt.
+				if ( errorWrapper ) {
+					errorWrapper.innerHTML = '';
+				}
+
+				// Submit the form via AJAX.
+				return fetch( edd_scripts.ajaxurl, {
+					method: 'POST',
+					body: new FormData( form )
+				} ).then( function ( response ) {
+					return response.json();
+				} ).then( function ( response ) {
+					if ( ! response.success ) {
+						// Error message.
+						var errorHtml = eddPayPalVars.defaultError;
+						if ( response.data && 'string' === typeof response.data ) {
+							errorHtml = response.data;
+						} else if ( 'string' === typeof response ) {
+							errorHtml = response;
+						}
+
+						spinner.style.display = 'none';
+						EDD_PayPal.setErrorHtml( errorWrapper, context, errorHtml );
+
+						return false;
+					}
+				} );
 			},
 			onApprove: function( data, actions ) {
 				var formData = new FormData();
@@ -166,7 +196,6 @@ var EDD_PayPal = {
 				// Hide spinner.
 				spinner.style.display = 'none';
 
-				error.name = '';
 				EDD_PayPal.setErrorHtml( container, context, error );
 			},
 			onCancel: function( data ) {

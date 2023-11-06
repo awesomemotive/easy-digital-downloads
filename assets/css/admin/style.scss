@@ -25,8 +25,6 @@
 
 @import "gateways/style";
 
-@import "notifications/style";
-
 @import "general/style";
 
 @import "settings/style.scss";
@@ -141,6 +139,10 @@ body.post-type-download #screen-meta {
 	margin-left: 10px;
 	cursor: pointer;
 	transition: background-color .2s ease;
+
+	&.edd-hidden {
+		display: none;
+	}
 }
 
 button.edd-round {
@@ -2034,29 +2036,6 @@ span.edd-to-and-from--separator {
 		-webkit-transform: rotate(360deg);
 		transform: rotate(360deg);
 	}
-}
-#edd-chartjs-tooltip {
-	position: absolute;
-	background-color: #fff;
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	-webkit-transition: all .1s ease;
-	transition: all .1s ease;
-	pointer-events: none;
-	-webkit-transform: translate(-50%, 0);
-	transform: translate(-50%, 0);
-	font-size: 12px;
-	box-shadow: 0 0 0 1px rgba(89, 94, 100, .1), 0 15px 35px 0 rgba(89, 94, 100, .1), 0 5px 15px 0 rgba(0, 0, 0, .12);
-	min-width: 120px;
-	opacity: 0;
-}
-
-.edd-chartjs-tooltip-key {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	margin-right: 5px;
 }
 
 /* Upgrades page styles

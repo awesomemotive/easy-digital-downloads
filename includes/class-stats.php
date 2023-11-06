@@ -59,6 +59,15 @@ class Stats {
 	protected $relative_date_ranges = array();
 
 	/**
+	 * Query vars defaults.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $query_vars_defaults = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.0

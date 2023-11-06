@@ -33,6 +33,13 @@ class Card {
 	private $active_parameters = array();
 
 	/**
+	 * The required pass ID.
+	 *
+	 * @var int
+	 */
+	private $required_pass_id;
+
+	/**
 	 * Whether the current plugin is active.
 	 *
 	 * @var bool

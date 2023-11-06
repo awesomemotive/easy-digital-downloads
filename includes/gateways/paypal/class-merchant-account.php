@@ -59,6 +59,10 @@ class MerchantAccount {
 	 */
 	public function __construct( $details ) {
 		foreach ( $details as $key => $value ) {
+			if ( ! property_exists( $this, $key ) ) {
+				continue;
+			}
+
 			$this->{$key} = $value;
 		}
 

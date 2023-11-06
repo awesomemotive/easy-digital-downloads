@@ -40,7 +40,7 @@ function edds_preapproved_payment_needs_action_notification( $payment_id ) {
 	$emails = EDD()->emails;
 
 	$emails->__set( 'from_name', $from_name );
-	$emails->__set( 'from_email', $from_email );
+	$emails->__set( 'from_address', $from_email );
 	$emails->__set( 'heading', $heading );
 
 	$headers = $emails->get_headers();

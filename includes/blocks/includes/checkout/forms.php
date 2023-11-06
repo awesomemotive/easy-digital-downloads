@@ -26,28 +26,15 @@ function get_personal_info_forms( $block_attributes, $customer_info_complete = t
 	if ( is_user_logged_in() && $customer_info_complete ) {
 		return $forms;
 	}
-	$options = array(
-		'login'    => array(
-			'label' => __( 'Log in', 'easy-digital-downloads' ),
-			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/login.php',
-		),
-		'register' => array(
-			'label' => __( 'Register for a new account', 'easy-digital-downloads' ),
-			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/register.php',
-		),
-		'guest'    => array(
-			'label' => __( 'Check out as a guest', 'easy-digital-downloads' ),
-			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/personal-info.php',
-		),
-	);
+	$options = get_forms();
 	if ( ! edd_no_guest_checkout() || ( ! $customer_info_complete && is_user_logged_in() ) ) {
 		$forms['guest'] = $options['guest'];
 	}
 	if ( ! empty( $block_attributes['show_register_form'] ) && ! is_user_logged_in() ) {
 		$setting = $block_attributes['show_register_form'];
 		if ( 'both' === $setting ) {
-			$forms['login']    = $options['login'];
 			$forms['register'] = $options['register'];
+			$forms['login']    = $options['login'];
 		} elseif ( 'registration' === $setting ) {
 			$forms['register'] = $options['register'];
 		} elseif ( ! empty( $options[ $setting ] ) ) {
@@ -85,19 +72,23 @@ function do_personal_info_forms( $block_attributes ) {
 	<div class="edd-blocks__checkout-user">
 		<?php
 		$forms = get_personal_info_forms( $block_attributes, $customer_info_complete );
-		if ( ! empty( $forms ) && count( $forms ) > 1 ) {
+		$count = count( $forms );
+		if ( ! empty( $forms ) && $count > 1 ) {
 			wp_enqueue_script( 'edd-blocks-checkout-forms' );
-			$i = 0;
-			echo '<div class="edd-blocks__checkout-forms">';
+			$i     = 0;
+			$class = 'edd-blocks__checkout-forms';
+			if ( $count < 3 ) {
+				$class .= ' edd-blocks__checkout-forms--inline';
+			}
+			echo '<div class="' . esc_attr( $class ) . '">';
 			foreach ( $forms as $id => $form ) {
 				printf(
-					'<button class="edd-button-secondary edd-blocks__checkout-%1$s link" data-attr="%1$s"%2$s%4$s>%3$s</button>',
+					'<button class="edd-button-secondary edd-blocks__checkout-%1$s link" data-attr="%1$s"%2$s>%3$s</button>',
 					esc_attr( $id ),
 					empty( $i ) ? ' disabled' : '',
-					esc_html( $form['label'] ),
-					'guest' === $id ? ' style="display:none;"' : ''
+					esc_html( $form['label'] )
 				);
-				$i++;
+				++$i;
 			}
 			echo '</div>';
 		}
@@ -181,8 +172,11 @@ function swap_form() {
 	if ( empty( $_GET['form_id'] ) ) {
 		return;
 	}
-	$form_id  = sanitize_text_field( $_GET['form_id'] );
-	$forms    = get_personal_info_forms( array( 'show_register_form' => 'both' ) );
+	$form_id = sanitize_text_field( $_GET['form_id'] );
+	$forms   = get_forms();
+	if ( empty( $forms[ $form_id ] ) ) {
+		return;
+	}
 	$form     = $forms[ $form_id ];
 	$customer = \EDD\Blocks\Checkout\get_customer();
 	if ( is_callable( $form['view'] ) ) {
@@ -192,4 +186,27 @@ function swap_form() {
 	ob_start();
 	$form = include $form['view'];
 	wp_send_json_success( ob_get_clean() );
+}
+
+/**
+ * Gets the array of forms for the checkout form.
+ *
+ * @since 3.2.4
+ * @return array
+ */
+function get_forms() {
+	return array(
+		'login'    => array(
+			'label' => __( 'Log in', 'easy-digital-downloads' ),
+			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/login.php',
+		),
+		'register' => array(
+			'label' => __( 'Register for a new account', 'easy-digital-downloads' ),
+			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/register.php',
+		),
+		'guest'    => array(
+			'label' => __( 'Check out as a guest', 'easy-digital-downloads' ),
+			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/personal-info.php',
+		),
+	);
 }

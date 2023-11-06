@@ -22,6 +22,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int $id
  * @property int $order_id
+ * @property string $type
+ * @property string $name
  * @property string $first_name
  * @property string $last_name
  * @property string $address
@@ -52,6 +54,24 @@ class Order_Address extends Base_Object {
 	 * @var    int
 	 */
 	protected $order_id;
+
+	/**
+	 * Type.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $type;
+
+	/**
+	 * Name.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $name;
 
 	/**
 	 * First name.

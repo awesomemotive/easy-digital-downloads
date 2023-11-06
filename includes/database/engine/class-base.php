@@ -10,6 +10,8 @@
  */
 namespace EDD\Database;
 
+use AllowDynamicProperties;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0
  */
+#[AllowDynamicProperties]
 class Base {
 
 	/**

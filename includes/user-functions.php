@@ -584,7 +584,7 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
 	// Setup and send the new user email for Admins.
 	$emails->__set( 'from_name', $from_name );
-	$emails->__set( 'from_email', $from_email );
+	$emails->__set( 'from_address', $from_email );
 
 	/* translators: Site name */
 	$admin_subject  = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __( '[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
@@ -796,7 +796,7 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	$emails     = new EDD_Emails;
 
 	$emails->__set( 'from_name', $from_name );
-	$emails->__set( 'from_email', $from_email );
+	$emails->__set( 'from_address', $from_email );
 	$emails->__set( 'heading', $heading );
 
 	$emails->send( $user_data->user_email, $subject, $message );

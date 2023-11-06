@@ -24,6 +24,7 @@ class EDD_Download {
 	 * The download ID
 	 *
 	 * @since 2.2
+	 * @var int
 	 */
 	public $ID = 0;
 
@@ -31,6 +32,7 @@ class EDD_Download {
 	 * The download price
 	 *
 	 * @since 2.2
+	 * @var float
 	 */
 	private $price;
 
@@ -38,6 +40,7 @@ class EDD_Download {
 	 * The download prices, if Variable Prices are enabled
 	 *
 	 * @since 2.2
+	 * @var array
 	 */
 	private $prices;
 
@@ -45,6 +48,7 @@ class EDD_Download {
 	 * The download files
 	 *
 	 * @since 2.2
+	 * @var array
 	 */
 	private $files;
 
@@ -52,6 +56,7 @@ class EDD_Download {
 	 * The file download limit
 	 *
 	 * @since 2.2
+	 * @var int
 	 */
 	private $file_download_limit;
 
@@ -59,6 +64,7 @@ class EDD_Download {
 	 * The refund window
 	 *
 	 * @since 2.2
+	 * @var int
 	 */
 	private $refund_window;
 
@@ -66,6 +72,7 @@ class EDD_Download {
 	 * The download type, default or bundle
 	 *
 	 * @since 2.2
+	 * @var string
 	 */
 	private $type;
 
@@ -73,6 +80,7 @@ class EDD_Download {
 	 * The bundled downloads, if this is a bundle type
 	 *
 	 * @since 2.2
+	 * @var array
 	 */
 	private $bundled_downloads;
 
@@ -80,6 +88,7 @@ class EDD_Download {
 	 * The sale count
 	 *
 	 * @since 2.2
+	 * @var int
 	 */
 	private $sales;
 
@@ -87,6 +96,7 @@ class EDD_Download {
 	 * The total earnings
 	 *
 	 * @since 2.2
+	 * @var float
 	 */
 	private $earnings;
 
@@ -94,6 +104,7 @@ class EDD_Download {
 	 * The notes
 	 *
 	 * @since 2.2
+	 * @var string
 	 */
 	private $notes;
 
@@ -101,6 +112,7 @@ class EDD_Download {
 	 * The download SKU
 	 *
 	 * @since 2.2
+	 * @var string
 	 */
 	private $sku;
 
@@ -108,6 +120,7 @@ class EDD_Download {
 	 * The purchase button behavior
 	 *
 	 * @since 2.2
+	 * @var string
 	 */
 	private $button_behavior;
 
@@ -115,28 +128,203 @@ class EDD_Download {
 	 * Declare the default properties in WP_Post as we can't extend it
 	 * Anything we've declared above has been removed.
 	 */
+	/**
+	 * ID of post author.
+	 *
+	 * A numeric string, for compatibility reasons.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_author = 0;
+
+	/**
+	 * The post's local publication time.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_date = '0000-00-00 00:00:00';
+
+	/**
+	 * The post's GMT publication time.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_date_gmt = '0000-00-00 00:00:00';
+
+	/**
+	 * The post's content.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_content = '';
+
+	/**
+	 * The post's title.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_title = '';
+
+	/**
+	 * The post's excerpt.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_excerpt = '';
+
+	/**
+	 * The post's status.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_status = 'publish';
+
+	/**
+	 * Whether comments are allowed.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $comment_status = 'open';
+
+	/**
+	 * Whether pings are allowed.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $ping_status = 'open';
+
+	/**
+	 * The post's password in plain text.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_password = '';
+
+	/**
+	 * The post's slug.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_name = '';
+
+	/**
+	 * URLs queued to be pinged.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $to_ping = '';
+
+	/**
+	 * URLs that have been pinged.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $pinged = '';
+
+	/**
+	 * The post's local modified time.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_modified = '0000-00-00 00:00:00';
+
+	/**
+	 * The post's GMT modified time.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_modified_gmt = '0000-00-00 00:00:00';
+
+	/**
+	 * A utility DB field for post content.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_content_filtered = '';
+
+	/**
+	 * ID of a post's parent post.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var int
+	 */
 	public $post_parent = 0;
+
+	/**
+	 * The unique identifier for a post, not necessarily a URL, used as the feed GUID.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $guid = '';
+
+	/**
+	 * A field used for ordering posts.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var int
+	 */
 	public $menu_order = 0;
+
+	/**
+	 * The post's type, like post or page.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
+	public $post_type = 'post';
+
+	/**
+	 * An attachment's mime type.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $post_mime_type = '';
+
+	/**
+	 * Cached comment count.
+	 *
+	 * A numeric string, for compatibility reasons.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $comment_count = 0;
+
+	/**
+	 * Stores the post object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
+	 *
+	 * @since 3.5.0 - WP Version
+	 * @var string
+	 */
 	public $filter;
+
+	/**
+	 * The refundability of the download.
+	 *
+	 * @since 3.0
+	 * @var string
+	 */
+	public $refundability = '';
 
 	/**
 	 * Get things going
@@ -427,27 +615,17 @@ class EDD_Download {
 	public function get_file_download_limit() {
 
 		if ( ! isset( $this->file_download_limit ) ) {
-			$limit  = get_post_meta( $this->ID, '_edd_download_limit', true );
-			$global = edd_get_option( 'file_download_limit', 0 );
 
-			// Download specific limit
-			if ( is_numeric( $limit ) ) {
-				$retval = absint( $limit );
+			// Check the global limit first. The default is 0.
+			$limit = edd_get_option( 'file_download_limit', 0 );
+			$meta  = get_post_meta( $this->ID, '_edd_download_limit', true );
 
-			// Use global
-			} elseif ( '' === $limit ) {
-				$retval = '';
-
-			// Global limit
-			} elseif ( ! empty( $global ) ) {
-				$retval = absint( $global );
-
-			// Default
-			} else {
-				$retval = 0;
+			// The download specific limit will override the global limit.
+			if ( ! empty( $meta ) ) {
+				$limit = $meta;
 			}
 
-			$this->file_download_limit = $retval;
+			$this->file_download_limit = absint( $limit );
 		}
 
 		return apply_filters( 'edd_file_download_limit', $this->file_download_limit, $this->ID );

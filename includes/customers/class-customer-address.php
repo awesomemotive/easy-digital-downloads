@@ -24,6 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int $customer_id
  * @property string $type
  * @property string $status
+ * @property string $name
  * @property string $address
  * @property string $address2
  * @property string $city
@@ -32,6 +33,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $country
  * @property string $date_created
  * @property string $date_modified
+ * @property bool   $is_primary
  */
 class Customer_Address extends Base_Object {
 
@@ -70,6 +72,15 @@ class Customer_Address extends Base_Object {
 	 * @var    string
 	 */
 	protected $status;
+
+	/**
+	 * Name.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $name;
 
 	/**
 	 * Address.
@@ -142,4 +153,13 @@ class Customer_Address extends Base_Object {
 	 * @var    string
 	 */
 	protected $date_modified;
+
+	/**
+	 * Is primary.
+	 *
+	 * @since  3.0
+	 * @access protected
+	 * @var    bool
+	 */
+	protected $is_primary;
 }

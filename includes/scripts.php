@@ -298,10 +298,9 @@ function edd_admin_get_script_version() {
 function edd_register_admin_scripts() {
 	$js_dir     = EDD_PLUGIN_URL . 'assets/js/';
 	$version    = edd_admin_get_script_version();
-	$admin_deps = array( 'jquery', 'jquery-form', 'underscore', 'alpinejs' );
+	$admin_deps = array( 'jquery', 'jquery-form', 'underscore' );
 
-	// Register scripts
-	wp_register_script( 'alpinejs',                        $js_dir . 'alpine.min.js',                        array(), '3.4.2', false );
+	// Register scripts.
 	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/chosen.jquery.min.js',          array( 'jquery' ), $version );
 	wp_register_script( 'edd-jquery-flot',                 $js_dir . 'vendor/jquery.flot.min.js',            array( 'jquery' ), $version );
 	wp_register_script( 'edd-moment-js',                   $js_dir . 'vendor/moment.min.js',                 array(), $version );
@@ -577,17 +576,6 @@ function edd_localize_admin_scripts() {
 	) );
 }
 add_action( 'admin_enqueue_scripts', 'edd_localize_admin_scripts' );
-
-/**
- * Add `defer` to the AlpineJS script tag.
- */
-add_filter( 'script_loader_tag', function( $url ) {
-	if ( false !== strpos( $url, EDD_PLUGIN_URL . 'assets/js/alpine.min.js' ) ) {
-		$url = str_replace( ' src', ' defer src', $url );
-	}
-
-	return $url;
-} );
 
 /**
  * Admin Downloads Icon

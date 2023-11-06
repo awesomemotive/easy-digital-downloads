@@ -136,6 +136,7 @@ function edd_edit_customer( $args = array() ) {
 	$customer_data['email']        = $customer_info['email'];
 	$customer_data['user_id']      = $user_id;
 	$customer_data['date_created'] = gmdate( 'Y-m-d H:i:s', strtotime( $customer_info['date_created'] ) );
+	$customer_data['status']       = $customer_info['status'];
 
 	$customer_data = apply_filters( 'edd_edit_customer_info', $customer_data, $customer_id );
 	$address       = apply_filters( 'edd_edit_customer_address', $address, $customer_id );

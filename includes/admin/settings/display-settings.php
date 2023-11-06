@@ -21,6 +21,10 @@ function edd_admin_header() {
 	if ( ! edd_is_admin_page( '', '', false ) ) {
 		return;
 	}
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : false;
+	if ( $screen && $screen->is_block_editor() ) {
+		return;
+	}
 	$numberNotifications = EDD()->notifications->countActiveNotifications();
 	$current_page        = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
 	$is_single_view      = (bool) apply_filters( 'edd_admin_is_single_view', ! empty( $_GET['view'] ) );
@@ -95,7 +99,7 @@ function edd_admin_header() {
 	<div id="edd-header" class="edd-header">
 		<div id="edd-header-wrapper">
 			<span id="edd-header-branding">
-				<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>" />
+				<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/logo-edd-dark.svg' ); ?>" />
 			</span>
 
 			<?php if ( ! empty( $page_title ) ) : ?>
@@ -109,9 +113,14 @@ function edd_admin_header() {
 			<div id="edd-header-actions">
 				<button
 					id="edd-notification-button"
-					class="edd-round"
+					class="edd-round edd-hidden"
 					x-data
-					x-init="$store.eddNotifications.numberActiveNotifications = <?php echo esc_js( $numberNotifications ); ?>"
+					x-init="function() {
+						if ( 'undefined' !== typeof $store.eddNotifications ) {
+							$el.classList.remove( 'edd-hidden' );
+							$store.eddNotifications.numberActiveNotifications = <?php echo esc_js( $numberNotifications ); ?>
+						}
+					}"
 					@click="$store.eddNotifications.openPanel()"
 				>
 					<span

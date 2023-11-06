@@ -71,6 +71,9 @@
 						}
 						if ( 'activate' === action ) {
 							$( '#edd-admin-notice-inactivepro, .edd-pass-handler__description' ).slideUp();
+							$( '#edd-flyout-button' ).removeClass( 'has-alert' );
+							$( '.edd-flyout-item-license' ).remove();
+							$( '.edd-flyout-item-activate' ).remove();
 						}
 					}
 				} else {

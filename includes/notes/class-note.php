@@ -85,6 +85,15 @@ class Note extends Base_Object {
 	protected $date_created;
 
 	/**
+	 * Date modified.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $date_modified;
+
+	/**
 	 * Comment ID.
 	 *
 	 * @since 3.0

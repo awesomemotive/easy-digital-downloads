@@ -98,19 +98,20 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	// Override the straight_to_gateway if the shop doesn't support it
-	if ( ! edd_shop_supports_buy_now() ) {
-		$args['direct'] = false;
-	}
-
 	$download = new EDD_Download( $args['download_id'] );
 
 	if( empty( $download->ID ) ) {
 		return false;
 	}
 
-	if( 'publish' !== $download->post_status && ! current_user_can( 'edit_product', $download->ID ) ) {
-		return false; // Product not published or user doesn't have permission to view drafts
+	// Product not published or user doesn't have permission to view drafts.
+	if ( 'publish' !== $download->post_status && ! current_user_can( 'edit_product', $download->ID ) ) {
+		return false;
+	}
+
+	// Override the straight_to_gateway if the shop doesn't support it.
+	if ( ! edd_shop_supports_buy_now() || ! $download->supports_buy_now() ) {
+		$args['direct'] = false;
 	}
 
 	$options          = array();
@@ -180,7 +181,13 @@ function edd_get_purchase_link( $args = array() ) {
 		$form_id .= '-' . $edd_displayed_form_ids[ $download->ID ];
 	}
 
-	$args = apply_filters( 'edd_purchase_link_args', $args );
+	/**
+	 * Filter the purchase link arguments.
+	 *
+	 * @param array        $args     The purchase link arguments.
+	 * @param EDD_Download $download The download object. Added in 3.2.4.
+	 */
+	$args = apply_filters( 'edd_purchase_link_args', $args, $download );
 
 	ob_start();
 ?>
@@ -227,7 +234,7 @@ function edd_get_purchase_link( $args = array() ) {
 		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
 			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo esc_attr( $download->ID ); ?>_<?php echo esc_attr( $price_id ); ?>" class="edd_price_option_<?php echo esc_attr( $download->ID ); ?>" value="<?php echo esc_attr( $price_id ); ?>">
 		<?php endif; ?>
-		<?php if( ! empty( $args['direct'] ) && $download->supports_buy_now() && ! $download->is_free( $args['price_id'] ) ) { ?>
+		<?php if ( ! empty( $args['direct'] ) && ! $download->is_free( $args['price_id'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
 			<?php wp_nonce_field( 'edd_straight_to_gateway', 'edd_straight_to_gateway', false ); ?>
 		<?php } else { ?>

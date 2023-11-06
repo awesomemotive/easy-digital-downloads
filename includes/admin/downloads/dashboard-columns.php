@@ -346,7 +346,7 @@ add_action( 'bulk_edit_custom_box',  'edd_price_field_quick_edit', 10, 2 );
  * @return void
  */
 function edd_price_save_quick_edit( $post_id ) {
-	if ( ! isset( $_REQUEST['_edd_regprice'] ) ) {
+	if ( ! isset( $_REQUEST['_edd_regprice'] ) || '' === $_REQUEST['_edd_regprice'] ) {
 		return;
 	}
 

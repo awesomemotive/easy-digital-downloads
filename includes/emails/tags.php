@@ -798,13 +798,12 @@ function edd_email_tag_receipt_link( $payment_id ) {
 			home_url()
 		)
 	);
-	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'easy-digital-downloads' ), '<a href="' . esc_url_raw( $receipt_url ) . '">', '&raquo;</a>' );
-
-	if ( edd_get_option( 'email_template' ) !== 'none' ) {
-		return $formatted;
-	} else {
+	if ( 'none' === edd_get_option( 'email_template' ) ) {
 		return $receipt_url;
 	}
+
+	/* translators: 1. opening anchor tag; 2. closing anchor tag */
+	return sprintf( __( '%1$sView it in your browser %2$s', 'easy-digital-downloads' ), '<a href="' . esc_url_raw( $receipt_url ) . '">', '&raquo;</a>' );
 }
 
 /**

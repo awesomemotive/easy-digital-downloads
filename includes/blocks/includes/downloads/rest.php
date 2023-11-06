@@ -38,23 +38,41 @@ function register_rest_fields() {
  * Get term meta.
  *
  * @since 2.0
- * @param array  $object
- * @param string $field_name
- * @param mixed  $request
+ * @param array           $term       The term data.
+ * @param string          $field_name The field name.
+ * @param WP_REST_Request $request    WP_REST_Request object.
  *
  * @return array
  */
-function get_term_meta( $object, $field_name, $request ) {
+function get_term_meta( $term, $field_name, $request ) {
 
-	if ( empty( $object['id'] ) ) {
+	if ( empty( $term['id'] ) ) {
 		return false;
 	}
 
 	// Get the image ID.
-	$image_id = get_term_meta( $object['id'], 'download_term_image', true );
+	$image_id     = \get_term_meta( $term['id'], 'download_term_image', true );
+	$image_source = array();
+	$image_html   = '';
+	if ( $image_id ) {
+		$size       = ! empty( $_GET['image_size'] ) ? sanitize_text_field( $_GET['image_size'] ) : 'thumbnail';
+		$image_id   = absint( $image_id );
+		$image_html = wp_get_attachment_image( $image_id, $size );
+		$all_sizes  = get_intermediate_image_sizes();
+		foreach ( $all_sizes as $image_size ) {
+			$src = wp_get_attachment_image_src( $image_id, $image_size );
+			if ( ! empty( $src[0] ) ) {
+				$image_source[ $image_size ] = $src[0];
+			}
+		}
+	}
 
 	// Build meta array.
-	return array( 'image' => wp_get_attachment_image( $image_id ) );
+	return array(
+		'image_id'  => $image_id,
+		'image_src' => $image_source,
+		'image'     => $image_html,
+	);
 }
 
 add_filter( 'edd_api_products_product', __NAMESPACE__ . '\update_products_api' );

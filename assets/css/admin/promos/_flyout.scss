@@ -1,0 +1,229 @@
+#edd-flyout {
+	position: fixed;
+	z-index: 99999;
+	transition: all 0.2s ease-in-out;
+	right: 40px;
+	bottom: 40px;
+	opacity: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+
+	@media (max-width: $break-large) {
+		display: none;
+	}
+
+	& .edd-flyout-label {
+		transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
+		color: $white;
+		background-color: $gray-700;
+		font-size: 12px;
+		white-space: nowrap;
+		padding: 5px 10px;
+		transition: all 0.2s ease-out;
+		border-radius: 3px;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		margin-top: 20px;
+		opacity: 0;
+		transform: scale(0);
+	}
+
+	& #edd-flyout-button {
+		border: none;
+		padding: 0px;
+		background: none;
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+		align-items: center;
+
+		& img {
+			width: 54px;
+			height: 54px;
+			display: block;
+			border-radius: 50%;
+			border: 3px solid $edd-notice-blue;
+			overflow: hidden;
+			transition: all 0.2s ease-in-out;
+			background: $white;
+		}
+
+		&:hover img {
+			cursor: pointer;
+			box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
+		}
+
+		& .edd-flyout-label {
+			opacity: 0;
+			transform: translateY(-50%) scale(0);
+		}
+
+		&:hover .edd-flyout-label {
+			opacity: 1;
+			transform: translateY(-50%) scale(1);
+		}
+
+		&.has-alert:after {
+			transform: scale(1);
+			opacity: 1;
+			font-family: "dashicons";
+			content: "\f534";
+			color: $edd-alert-red;
+			font-size: 16px;
+			height: 16px;
+			width: 16px;
+			text-decoration: none;
+			border-radius: 999999px;
+			line-height: 16px;
+			transition: all 0.2s ease-in-out;
+			background-color: $white;
+			position: absolute;
+			right: 3px;
+			bottom: 46px;
+		}
+	}
+
+	& #edd-flyout-items {
+		display: flex;
+		flex-direction: column-reverse;
+		gap: 10px;
+		margin-right: 12px;
+		margin-bottom: 12px;
+		height: 0px;
+
+		& .edd-flyout-item {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 25px;
+			visibility: collapse;
+
+			& a {
+				text-decoration: none;
+				color: $white;
+			}
+
+			& .edd-flyout-label, .edd-flyout-icon {
+				transition: all 0.2s ease-in-out;
+				transform: scale(0);
+				opacity: 0;
+			}
+
+			& .edd-flyout-label {
+				margin-top: 0px;
+
+				& a {
+					display: inline-block;
+					line-height: initial;
+					height: auto !important;
+				}
+			}
+
+			& .edd-flyout-icon {
+				display: flex;
+				justify-content: space-around;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
+				background: $edd-notice-blue 0 0 no-repeat padding-box;
+
+				&.red {
+					background: $edd-alert-red 0 0 no-repeat padding-box;
+				}
+
+				&.green {
+					background: $edd-notice-green 0 0 no-repeat padding-box;
+				}
+
+				& span.dashicons:before {
+					color: $white;
+					font-size: 20px;
+					line-height: 40px;
+					vertical-align: middle;
+				}
+			}
+
+			&:hover {
+				cursor: pointer;
+
+				& .edd-flyout-icon, .edd-flyout-label {
+					box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
+				}
+
+				& .edd-flyout-icon {
+					background: $edd-blue-gray 0 0 no-repeat padding-box;
+
+					&.red {
+						background: $edd-alert-red-hover 0 0 no-repeat padding-box;
+					}
+
+					&.green {
+						background: $edd-notice-green-hover 0 0 no-repeat padding-box;
+					}
+				}
+
+				& .edd-flyout-label {
+					background-color: $gray-800;
+				}
+			}
+		}
+	}
+
+	&.opened {
+
+		& #edd-flyout-items {
+			height: auto;
+
+			& .edd-flyout-item {
+				visibility: visible;
+
+				&.edd-flyout-item {
+					$elements: 4;
+					@for $i from 0 to $elements {
+						&:nth-of-type( #{ $i + 1 } ) {
+							& .edd-flyout-icon {
+								transition: transform 0.2s #{ $i * 24 }ms, background-color 0.2s;
+							}
+
+							& .edd-flyout-label {
+								transition: transform 0.2s #{ ( $i + 1 ) * 24}ms, background-color 0.2s;
+							}
+						}
+					}
+				}
+
+				& .edd-flyout-label, .edd-flyout-icon {
+					opacity: 1;
+					transform: scale(1);
+				}
+			}
+		}
+
+
+		& #edd-flyout-button {
+			& img {
+				box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
+
+			}
+
+			& .edd-flyout-label {
+				opacity: 0;
+			}
+
+			&.has-alert:after {
+				opacity: 0;
+				transition: scale(0);
+			}
+		}
+	}
+
+	&.out {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
