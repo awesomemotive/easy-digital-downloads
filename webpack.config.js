@@ -29,6 +29,8 @@ const adminPages = [
 	'settings',
 	'tools',
 	'upgrades',
+	'flyout',
+	'notifications',
 ];
 
 const minifyJs = ( content ) => {
@@ -93,6 +95,7 @@ const config = {
 		'edd-admin-pass-handler-style': './assets/css/admin/pass-handler.scss',
 		'edd-admin-onboarding-style': './assets/css/admin/onboarding/style.scss',
 		'stripe-admin': './assets/css/admin/gateways/stripe.scss',
+		'edd-admin-notifications-style': './assets/css/admin/notifications/style.scss',
 
 		'edd-style': './assets/css/frontend/style.scss',
 		'stripe-cardelements': './assets/css/frontend/stripe/card-elements.scss',

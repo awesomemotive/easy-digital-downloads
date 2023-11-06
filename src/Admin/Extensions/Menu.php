@@ -1,9 +1,20 @@
 <?php
+/**
+ * Adds the Extensions submenu page under the "Downloads" menu
+ *
+ * @package     EDD
+ * @subpackage  Admin/Extensions
+ */
 
 namespace EDD\Admin\Extensions;
 
 use EDD\EventManagement\SubscriberInterface;
 
+/**
+ * Extensions menu class.
+ *
+ * @since 3.1.1
+ */
 class Menu implements SubscriberInterface {
 
 	/**

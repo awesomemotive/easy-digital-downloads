@@ -30,6 +30,22 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	public $export_type = 'taxed_orders';
 
 	/**
+	 * The country to filter by.
+	 *
+	 * @var string
+	 * @since 3.0
+	 */
+	public $country;
+
+	/**
+	 * The region to filter by.
+	 *
+	 * @var string
+	 * @since 3.0
+	 */
+	public $region;
+
+	/**
 	 * Set the CSV columns
 	 *
 	 * @since 3.0

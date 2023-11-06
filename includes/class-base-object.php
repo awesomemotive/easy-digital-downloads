@@ -19,7 +19,17 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  * @abstract
  */
+#[\AllowDynamicProperties]
 abstract class Base_Object {
+
+	/**
+	 * The UUID for the object.
+	 *
+	 * @since 3.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $uuid;
 
 	/**
 	 * Object constructor.

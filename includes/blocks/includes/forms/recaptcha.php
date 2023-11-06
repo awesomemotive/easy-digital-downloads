@@ -57,6 +57,20 @@ add_action( 'edd_register_form_fields_after', __NAMESPACE__ . '\initialize' );
 add_action( 'edd_lost_password_fields_after', __NAMESPACE__ . '\initialize' );
 
 /**
+ * Removes the reCAPTCHA initialization from the [edd_register] shortcode.
+ * This hook is not used in the block.
+ *
+ * @since 3.2.4
+ * @return void
+ */
+add_action(
+	'edd_register_form_fields_before_submit',
+	function () {
+		remove_action( 'edd_register_form_fields_after', __NAMESPACE__ . '\initialize' );
+	}
+);
+
+/**
  * Renders the hidden inputs needed for reCAPTCHA validation.
  *
  * @since 2.0

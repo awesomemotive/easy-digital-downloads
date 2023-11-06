@@ -390,7 +390,7 @@ abstract class Email {
 	 */
 	private function set_email_properties() {
 		$this->processor()->__set( 'from_name', $this->from_name );
-		$this->processor()->__set( 'from_email', $this->from_email );
+		$this->processor()->__set( 'from_address', $this->from_email );
 		$this->processor()->__set( 'heading', $this->heading );
 		$this->processor()->__set( 'headers', $this->headers );
 	}

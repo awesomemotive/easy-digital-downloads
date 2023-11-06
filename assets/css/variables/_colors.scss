@@ -30,3 +30,59 @@ $buddypress-colors: (
 	'evergreen': #36533f,
 	'mint': #4f6d59,
 );
+
+/**
+ * EDD Brand Colors
+ */
+$edd-blue-gray: #35495c; // Found on our brand assets page.
+$edd-light-blue: #2794da; // Found on our brand assets page.
+$edd-light-gray: #f4f7fa; // Found on our brand assets page.
+
+/**
+ * EDD Admin Colors
+ */
+
+/**
+ * Used in:
+ * Admin bar thin line.
+ * Persistent dismissables.
+ * Flyout item backgrounds.
+ */
+$edd-notice-blue: #0c5d95;
+$edd-notice-blue-hover: $edd-blue-gray;
+
+/**
+ * Used in:
+ * Persistent dismissables - Alerts
+ * Flyout item backgrounds - Activate License key
+ * Flyout bubble - Alert Icon.
+ */
+$edd-alert-red: #d63638; // The red used in our notice bars and the flyout items.
+$edd-alert-red-hover: #b60012; // The hover color for the alert red.
+
+/**
+ * Used in:
+ * Flyout item backgrounds - Upgrade to Pro/Get a License
+ * Upgrade to Pro links
+ */
+$edd-notice-green: #1da867;
+$edd-notice-green-hover: #199155;
+
+$edd-very-light-gray: #E8E8E8; // A light gray used for box shadows in some section content that overlays the WP core background.
+
+/**
+ * Used In:
+ * Social Links in our footer.
+ */
+$edd-footer-social-link: #A7AAAD;
+$edd-footer-social-link-hover: #50575e;
+
+/**
+ * Supplemental colors that WP Core Is Missing:
+ */
+$gray-800: #494949;
+
+/**
+ * Upgrade to Pro Colors
+ */
+$edd-pro-upgrade: #1da867;

@@ -41,7 +41,7 @@
         "EDD\\Vendor\\Stripe\\": "libraries/Stripe/lib/",
         "EDD\\Vendor\\Carbon\\": "libraries/Carbon/src/Carbon/"
       },
-      "files": [ "src/Globals/Polyfills/PHP.php"   ]
+      "files": [ "src/Globals/Polyfills/PHP.php" ]
     },
     "autoload-dev": {
       "classmap": ["src/", "tests/"]
@@ -51,13 +51,19 @@
     },
     "extra": {
       "mozart": {
-        "dep_namespace": "EDD\\Vendor",
+        "dep_namespace": "EDD\\Vendor\\",
         "dep_directory": "/libraries/",
-        "classmap_directory": "/libraries/",
+        "classmap_directory": "/libraries/classes/",
         "classmap_prefix": "EDD_",
         "packages": [
           "stripe/stripe-php",
           "nesbot/carbon"
+        ],
+        "excluded_packages": [
+          "symfony/polyfill-mbstring",
+          "symfony/polyfill-php80",
+          "symfony/translation-contracts",
+          "symfony/translation"
         ],
         "delete_vendor_directories": true,
         "override_autoload": {

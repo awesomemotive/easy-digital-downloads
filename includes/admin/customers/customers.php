@@ -552,6 +552,13 @@ function edd_customers_view( $customer = null ) {
 						);
 						?>
 					</span>
+					<span class="customer-status info-item edit-item">
+						<select name="customerinfo[status]">
+							<option value="active"<?php selected( $customer->status, 'active' ); ?>><?php esc_html_e( 'Active', 'easy-digital-downloads' ); ?></option>
+							<option value="inactive"<?php selected( $customer->status, 'inactive' ); ?>><?php esc_html_e( 'Inactive', 'easy-digital-downloads' ); ?></option>
+							<option value="disabled"<?php selected( $customer->status, 'disabled' ); ?>><?php esc_html_e( 'Disabled', 'easy-digital-downloads' ); ?></option>
+						</select>
+					</span>
 					<span class="customer-user-id info-item edit-item">
 						<?php echo EDD()->html->ajax_user_search( $user_args ); ?>
 						<input type="hidden" name="customerinfo[user_id]" data-key="user_id" value="<?php echo esc_attr( $user_id ); ?>" />

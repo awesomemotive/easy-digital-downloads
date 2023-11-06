@@ -1,0 +1,13 @@
+.edd-pointer {
+	&.warning {
+		& h3 {
+			background: $alert-yellow;
+			border-color: $wp-yellow-50;
+			color: $gray-900;
+
+			&:before {
+				color: $alert-yellow;
+			}
+		}
+	}
+}

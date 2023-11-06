@@ -35,7 +35,7 @@ function get_details( $order ) {
 	<?php else : ?>
 		<div class="edd-blocks-orders__order-downloads-link">
 			<a href="<?php echo esc_url( edd_get_receipt_page_uri( $order->id ) ); ?>">
-				<?php esc_html_e( 'View Details and Downloads', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'View Order Details', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
 		<?php

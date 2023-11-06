@@ -11,7 +11,7 @@
 
 namespace EDD\Vendor\Carbon\MessageFormatter;
 
-use EDD\Vendor\Symfony\Component\Translation\Formatter\MessageFormatterInterface;
+use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 
 if (!class_exists(LazyMessageFormatter::class, false)) {
     abstract class LazyMessageFormatter implements MessageFormatterInterface

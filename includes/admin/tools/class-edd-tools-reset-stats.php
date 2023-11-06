@@ -47,6 +47,13 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	public $per_step = 1;
 
 	/**
+	 * Sets the message to use when returning a response to the customer.
+	 *
+	 * @var string
+	 */
+	public $message = '';
+
+	/**
 	 * Retrieve the export data.
 	 *
 	 * @since 2.5

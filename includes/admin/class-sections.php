@@ -211,31 +211,36 @@ class Sections {
 	protected function get_all_section_links() {
 		ob_start();
 
-		// Loop through sections
+		// Loop through sections.
 		foreach ( $this->sections as $section ) :
 
+			// If were using JS, the URL is a hash, otherwise use query args.
 			$url = $this->use_js
 				? '#' . esc_attr( $this->id . $section->id )
 				: add_query_arg( 'view', sanitize_key( $section->id ), $this->base_url );
 
-			// Special selected section
+			// Special selected section.
 			$selected = ! $this->use_js && $this->is_current_section( $section->id )
 				? 'aria-current="true"'
 				: '';
+
 			$class           = $this->is_current_section( $section->id ) ? 'section-title section-title--is-active' : 'section-title';
 			$aria_attributes = $this->use_js ? 'role="tab" aria-controls="' . esc_attr( $this->id . $section->id ) . '"' : 'role="menuitem"';
 			?>
 
-			<li class="<?php echo esc_attr( $class ); ?>" <?php echo $aria_attributes . ' ' . $selected; ?>>
+			<li id="<?php echo esc_attr( $this->id . $section->id ); ?>-nav-item" class="<?php echo esc_attr( $class ); ?>" <?php echo $aria_attributes . ' ' . $selected; ?>>
 				<a href="<?php echo esc_url( $url ); ?>">
 					<span class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></span>
-					<span class="label"><?php echo $section->label; // Allow HTML ?></span>
+					<span class="label">
+						<?php echo $section->label; // Allow HTML. ?>
+					</span>
 				</a>
 			</li>
 
-		<?php endforeach;
+			<?php
+		endforeach;
 
-		// Return current buffer
+		// Return current buffer.
 		return ob_get_clean();
 	}
 

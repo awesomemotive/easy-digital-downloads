@@ -251,6 +251,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	if ( empty( $customer->id ) ) {
 		return array(
 			'success' => false,
+			/* translators: %d is the customer ID. */
 			'message' => sprintf( __( 'No customer with ID %d', 'easy-digital-downloads' ), $customer_id ),
 		);
 	}
@@ -271,10 +272,14 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	 *     @type string $message          A message to display if the customer could not be anonymized.
 	 * }
 	 */
-	$should_anonymize_customer = apply_filters( 'edd_should_anonymize_customer', array(
-		'should_anonymize' => true,
-		'message'          => '',
-	), $customer );
+	$should_anonymize_customer = apply_filters(
+		'edd_should_anonymize_customer',
+		array(
+			'should_anonymize' => true,
+			'message'          => '',
+		),
+		$customer
+	);
 
 	if ( empty( $should_anonymize_customer['should_anonymize'] ) ) {
 		return array(
@@ -283,16 +288,19 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 		);
 	}
 
+	remove_action( 'edd_customer_updated', 'edd_process_customer_updated', 10, 3 );
+
 	// Now we should look at payments this customer has associated, and if there are any payments that should not be modified,
 	// do not modify the customer.
-	$payments = edd_get_payments( array(
-		'customer' => $customer->id,
-		'output'   => 'payments',
-		'number'   => 9999999,
-	) );
+	$orders = edd_get_orders(
+		array(
+			'customer_id' => $customer->id,
+			'number'      => 9999999,
+		)
+	);
 
-	foreach ( $payments as $payment ) {
-		$action = _edd_privacy_get_payment_action( $payment );
+	foreach ( $orders as $order ) {
+		$action = _edd_privacy_get_payment_action( $order );
 		if ( 'none' === $action ) {
 			return array(
 				'success' => false,
@@ -301,22 +309,42 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 		}
 	}
 
+	$anonymized_email = edd_anonymize_email( $customer->email );
+
+	$emails = edd_get_customer_email_addresses(
+		array(
+			'number'      => 9999999,
+			'customer_id' => $customer->id,
+		)
+	);
+
 	// Loop through all their email addresses, and remove any additional email addresses.
-	foreach ( $customer->emails as $email ) {
-		$customer->remove_email( $email );
+	foreach ( $emails as $email ) {
+		edd_delete_customer_email_address( $email->id );
 	}
 
-	if ( $customer->user_id > 0 ) {
-		delete_user_meta( $customer->user_id, '_edd_user_address' );
+	$addresses = edd_get_customer_addresses(
+		array(
+			'number'      => 9999999,
+			'customer_id' => $customer->id,
+		)
+	);
+
+	foreach ( $addresses as $address ) {
+		edd_delete_customer_address( $address->id );
 	}
 
-	$customer->update( array(
-		'name'         => __( 'Anonymized Customer', 'easy-digital-downloads' ),
-		'email'        => edd_anonymize_email( $customer->email ),
-		'date_created' => date( 'Y-m-d H:i:s', 0 ),
-		'notes'        => '',
-		'user_id'      => 0,
-	) );
+	edd_update_customer(
+		$customer->id,
+		array(
+			'name'         => __( 'Anonymized Customer', 'easy-digital-downloads' ),
+			'email'        => $anonymized_email,
+			'date_created' => date( 'Y-m-d H:i:s', 0 ),
+			'notes'        => '',
+			'user_id'      => 0,
+			'status'       => 'disabled',
+		)
+	);
 
 	/**
 	 * Run further anonymization on a customer
@@ -334,6 +362,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 
 	return array(
 		'success' => true,
+		/* translators: %d is the customer ID. */
 		'message' => sprintf( __( 'Customer ID %d successfully anonymized.', 'easy-digital-downloads' ), $customer_id ),
 	);
 }
