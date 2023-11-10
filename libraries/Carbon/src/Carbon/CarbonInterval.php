@@ -212,7 +212,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
     /**
      * A translator to ... er ... translate stuff
      *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface
      */
     protected static $translator;
 
@@ -1779,7 +1779,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $transId = $relativeToNow ? ($isFuture ? 'from_now' : 'ago') : ($isFuture ? 'after' : 'before');
         $declensionMode = null;
 
-        /** @var \Symfony\Component\Translation\Translator $translator */
+        /** @var \EDD\Vendor\Symfony\Component\Translation\Translator $translator */
         $translator = $this->getLocalTranslator();
 
         $handleDeclensions = function ($unit, $count, $index = 0, $parts = 1) use ($interpolations, $transId, $translator, $altNumbers, $absolute, &$declensionMode) {

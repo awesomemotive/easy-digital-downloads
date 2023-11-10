@@ -1,21 +1,24 @@
 # Copyright (C) 2023 Easy Digital Downloads
-# This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
+# This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.2.4\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
+"Project-Id-Version: Easy Digital Downloads 3.2.5\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-public\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-06T18:22:52+00:00\n"
+"POT-Creation-Date: 2023-11-10T00:06:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 
 #. Plugin Name of the plugin
-#: src/Gateways/Stripe/Admin/LicenseManager.php:249
-msgid "Easy Digital Downloads (Pro)"
+#. Author of the plugin
+#: includes/blocks/includes/functions.php:27
+#: src/Admin/Onboarding/Steps/Tools.php:128
+#: src/Admin/SiteHealth/Test.php:21
+msgid "Easy Digital Downloads"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -25,13 +28,6 @@ msgstr ""
 
 #. Description of the plugin
 msgid "The easiest way to sell digital products with WordPress."
-msgstr ""
-
-#. Author of the plugin
-#: includes/blocks/includes/functions.php:27
-#: src/Admin/Onboarding/Steps/Tools.php:128
-#: src/Admin/SiteHealth/Test.php:21
-msgid "Easy Digital Downloads"
 msgstr ""
 
 #: easy-digital-downloads.php:132
@@ -5755,7 +5751,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:190
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:77
-#: includes/admin/import/class-batch-import.php:199
+#: includes/admin/import/class-batch-import.php:206
 #: includes/admin/payments/actions.php:72
 #: includes/admin/payments/actions.php:77
 #: includes/admin/payments/actions.php:210
@@ -5934,14 +5930,12 @@ msgstr ""
 #: includes/blocks/build/cart/index.js:1
 #: includes/blocks/build/confirmation/index.js:1
 #: includes/blocks/build/login/index.js:1
-#: includes/blocks/build/pro/currency-selector/index.js:1
 #: includes/blocks/build/receipt/index.js:1
 #: includes/blocks/build/register/index.js:1
 #: includes/blocks/src/buy-button/edit.js:55
 #: includes/blocks/src/cart/edit.js:27
 #: includes/blocks/src/confirmation/edit.js:26
 #: includes/blocks/src/login/edit.js:23
-#: includes/blocks/src/pro/currency-selector/edit.js:23
 #: includes/blocks/src/receipt/edit.js:26
 #: includes/blocks/src/register/edit.js:22
 msgid "Settings"
@@ -6467,8 +6461,6 @@ msgstr ""
 #: includes/admin/customers/class-customer-addresses-table.php:287
 #: includes/admin/customers/class-customer-email-addresses-table.php:278
 #: includes/admin/views/tmpl-order-form-add-order-adjustment.php:17
-#: includes/blocks/build/pro/currency-selector/index.js:1
-#: includes/blocks/src/pro/currency-selector/edit.js:26
 msgid "Type"
 msgstr ""
 
@@ -8096,7 +8088,7 @@ msgstr ""
 
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:77
-#: includes/admin/import/class-batch-import.php:199
+#: includes/admin/import/class-batch-import.php:206
 msgid "You do not have permission to import data."
 msgstr ""
 
@@ -10285,8 +10277,6 @@ msgid "Summaries"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:790
-#: includes/blocks/build/pro/currency-selector/index.js:1
-#: includes/blocks/src/pro/currency-selector/edit.js:31
 msgid "Buttons"
 msgstr ""
 
@@ -11860,10 +11850,6 @@ msgstr ""
 
 #: includes/blocks/includes/terms/images.php:214
 msgid "Image"
-msgstr ""
-
-#: includes/blocks/pro/search.php:16
-msgid "downloads found"
 msgstr ""
 
 #: includes/blocks/views/checkout/cart/cart-item.php:23
@@ -19995,6 +19981,10 @@ msgid "Your license has expired. Please %1$srenew your license%2$s."
 msgstr ""
 
 #: src/Gateways/Stripe/Admin/LicenseManager.php:249
+msgid "Easy Digital Downloads (Pro)"
+msgstr ""
+
+#: src/Gateways/Stripe/Admin/LicenseManager.php:249
 msgid "Easy Digital Downloads - Stripe Pro Payment Gateway"
 msgstr ""
 
@@ -20974,11 +20964,6 @@ msgstr ""
 msgid "Do Not Show Renewal Orders"
 msgstr ""
 
-#: includes/blocks/build/pro/currency-selector/index.js:1
-#: includes/blocks/src/pro/currency-selector/edit.js:35
-msgid "Dropdown"
-msgstr ""
-
 #: includes/blocks/build/receipt/index.js:1
 #: includes/blocks/src/receipt/edit.js:40
 msgid "The editor will display a sample random order from your site."
@@ -21116,7 +21101,6 @@ msgstr ""
 #: includes/blocks/build/downloads/block.json
 #: includes/blocks/build/login/block.json
 #: includes/blocks/build/order-history/block.json
-#: includes/blocks/build/pro/currency-selector/block.json
 #: includes/blocks/build/receipt/block.json
 #: includes/blocks/build/register/block.json
 #: includes/blocks/build/terms/block.json
@@ -21128,7 +21112,6 @@ msgstr ""
 #: includes/blocks/src/downloads/block.json
 #: includes/blocks/src/login/block.json
 #: includes/blocks/src/order-history/block.json
-#: includes/blocks/src/pro/currency-selector/block.json
 #: includes/blocks/src/receipt/block.json
 #: includes/blocks/src/register/block.json
 #: includes/blocks/src/terms/block.json
@@ -21144,7 +21127,6 @@ msgstr ""
 #: includes/blocks/build/downloads/block.json
 #: includes/blocks/build/login/block.json
 #: includes/blocks/build/order-history/block.json
-#: includes/blocks/build/pro/currency-selector/block.json
 #: includes/blocks/build/receipt/block.json
 #: includes/blocks/build/register/block.json
 #: includes/blocks/build/terms/block.json
@@ -21156,7 +21138,6 @@ msgstr ""
 #: includes/blocks/src/downloads/block.json
 #: includes/blocks/src/login/block.json
 #: includes/blocks/src/order-history/block.json
-#: includes/blocks/src/pro/currency-selector/block.json
 #: includes/blocks/src/receipt/block.json
 #: includes/blocks/src/register/block.json
 #: includes/blocks/src/terms/block.json
@@ -21279,24 +21260,6 @@ msgstr ""
 #: includes/blocks/src/order-history/block.json
 msgctxt "block description"
 msgid "Display the Easy Digital Downloads order history of a logged in user."
-msgstr ""
-
-#: includes/blocks/build/pro/currency-selector/block.json
-#: includes/blocks/src/pro/currency-selector/block.json
-msgctxt "block title"
-msgid "EDD Currency Selector"
-msgstr ""
-
-#: includes/blocks/build/pro/currency-selector/block.json
-#: includes/blocks/src/pro/currency-selector/block.json
-msgctxt "block description"
-msgid "Allows your customers to switch the store's currency."
-msgstr ""
-
-#: includes/blocks/build/pro/currency-selector/block.json
-#: includes/blocks/src/pro/currency-selector/block.json
-msgctxt "block keyword"
-msgid "currency"
 msgstr ""
 
 #: includes/blocks/build/receipt/block.json

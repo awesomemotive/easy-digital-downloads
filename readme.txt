@@ -4,9 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, chriscct7, sumobi, SpencerFinnell, drewapicture, johnjamesjacoby, lisacee
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.8
-Tested up to: 6.3
+Tested up to: 6.4
 Requires PHP: 7.4
-Stable Tag: 3.2.4
+Stable Tag: 3.2.5
 License: GNU Version 2 or Any Later Version
 
 The #1 eCommerce plugin to sell digital products. Manage eCommerce orders, increase store revenue & accept credit card payments with Stripe + PayPal.
@@ -226,6 +226,10 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.2.5 =
+* Compatibility: Improved compatibility with servers not configured with `mbstring`.
+* PayPal: Improved detection of PayPal order session handling and processing.
+
 = 3.2.4 =
 * Compatibility: Adds support for PHP 8.2.
 * PayPal: Improve error handling of PayPal API responses.

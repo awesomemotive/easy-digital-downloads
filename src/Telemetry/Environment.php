@@ -7,10 +7,26 @@
  * @license   GPL2+
  * @since     3.1.1
  */
+
 namespace EDD\Telemetry;
 
-class Environment {
+defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class Environment
+ *
+ * @since 3.1.1
+ * @package EDD\Telemetry
+ */
+class Environment {
+	use Traits\Anonymize;
+
+	/**
+	 * Gets the array of environment data.
+	 *
+	 * @since 3.1.1
+	 * @return array
+	 */
 	public function get() {
 		$data   = array(
 			'php_version'    => phpversion(),
@@ -71,7 +87,7 @@ class Environment {
 	private function get_active_theme() {
 		$active_theme = wp_get_theme();
 
-		return $active_theme->name;
+		return $this->anonymize_site_name( $active_theme->name );
 	}
 
 	/**
