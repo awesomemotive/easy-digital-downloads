@@ -10,7 +10,7 @@
  */
 
 use EDD\Vendor\Carbon\CarbonInterface;
-use Symfony\Component\Translation\PluralizationRules;
+use EDD\Vendor\Symfony\Component\Translation\PluralizationRules;
 
 // @codeCoverageIgnoreStart
 if (class_exists(PluralizationRules::class)) {
