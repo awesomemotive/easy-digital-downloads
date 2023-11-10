@@ -78,6 +78,14 @@ class EDD_Batch_Import {
 	public $field_mapping = array();
 
 	/**
+	 * Is the import done?
+	 *
+	 * @since 2.6
+	 * @var bool
+	 */
+	public $done = false;
+
+	/**
 	 * Get things started
 	 *
 	 * @param $_step int The step to process
@@ -86,7 +94,6 @@ class EDD_Batch_Import {
 	public function __construct( $_file = '', $_step = 1 ) {
 
 		$this->step = $_step;
-		$this->done = false;
 		if ( ! empty( $_file ) ) {
 			$this->set_up_csv( $_file );
 		}

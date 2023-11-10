@@ -28,7 +28,7 @@ use DateTimeZone;
 use JsonSerializable;
 use ReflectionException;
 use ReturnTypeWillChange;
-use Symfony\Component\Translation\TranslatorInterface;
+use EDD\Vendor\Symfony\Component\Translation\TranslatorInterface;
 use Throwable;
 
 /**
@@ -1090,7 +1090,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @param string                                             $time
      * @param DateTimeZone|string|false|null                     $tz         optional timezone
      * @param string|null                                        $locale     locale to be used for LTS, LT, LL, LLL, etc. macro-formats (en by fault, unneeded if no such macro-format in use)
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator optional custom translator to use for macro-formats
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface $translator optional custom translator to use for macro-formats
      *
      * @throws InvalidFormatException
      *
@@ -2190,7 +2190,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     /**
      * Get the translator of the current instance or the default if none set.
      *
-     * @return \Symfony\Component\Translation\TranslatorInterface
+     * @return \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface
      */
     public function getLocalTranslator();
 
@@ -2347,7 +2347,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @param string                                             $key        key to find
      * @param string|null                                        $locale     current locale used if null
      * @param string|null                                        $default    default value if translation returns the key
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator an optional translator to use
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface $translator an optional translator to use
      *
      * @return string
      */
@@ -2356,7 +2356,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     /**
      * Returns raw translation message for a given key.
      *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator the translator to use
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface $translator the translator to use
      * @param string                                             $key        key to find
      * @param string|null                                        $locale     current locale used if null
      * @param string|null                                        $default    default value if translation returns the key
@@ -2368,7 +2368,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     /**
      * Get the default translator instance in use.
      *
-     * @return \Symfony\Component\Translation\TranslatorInterface
+     * @return \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface
      */
     public static function getTranslator();
 
@@ -3859,7 +3859,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     /**
      * Set the translator for the current instance.
      *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface $translator
      *
      * @return $this
      */
@@ -4008,7 +4008,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     /**
      * Set the default translator instance to use.
      *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface $translator
      *
      * @return void
      */
@@ -4882,7 +4882,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
      * @param string                                                  $key
      * @param array                                                   $parameters
      * @param string|int|float|null                                   $number
-     * @param \Symfony\Component\Translation\TranslatorInterface|null $translator
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface|null $translator
      * @param bool                                                    $altNumbers
      *
      * @return string
@@ -4929,7 +4929,7 @@ interface CarbonInterface extends DateTimeInterface, JsonSerializable
     /**
      * Translate using translation string or callback available.
      *
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface $translator
      * @param string                                             $key
      * @param array                                              $parameters
      * @param null                                               $number

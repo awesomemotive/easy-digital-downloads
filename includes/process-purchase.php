@@ -134,9 +134,9 @@ function edd_process_purchase_form() {
 	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
 
 	if ( ! empty( $existing_payment ) ) {
-		$payment = new EDD_Payment( $existing_payment );
-		if ( $payment->is_recoverable() && ! empty( $payment->key ) ) {
-			$purchase_key = $payment->key;
+		$order = edd_get_order( $existing_payment );
+		if ( $order->is_recoverable() && ! empty( $order->payment_key ) ) {
+			$purchase_key = $order->payment_key;
 		}
 	}
 

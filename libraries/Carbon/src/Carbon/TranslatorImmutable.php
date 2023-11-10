@@ -13,7 +13,7 @@ namespace EDD\Vendor\Carbon;
 
 use EDD\Vendor\Carbon\Exceptions\ImmutableException;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
-use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
+use EDD\Vendor\Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 
 class TranslatorImmutable extends Translator
 {

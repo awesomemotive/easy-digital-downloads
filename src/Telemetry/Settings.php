@@ -7,9 +7,19 @@
  * @license   GPL2+
  * @since     3.1.1
  */
+
 namespace EDD\Telemetry;
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Class Settings
+ *
+ * @since 3.1.1
+ * @package EDD\Telemetry
+ */
 class Settings {
+	use Traits\Anonymize;
 
 	/**
 	 * Gets the array of settings data.
@@ -77,7 +87,7 @@ class Settings {
 			}
 		}
 		if ( in_array( $setting['type'], $this->text_settings(), true ) ) {
-			return $this->anonymize_setting( $value );
+			return $this->anonymize( $value );
 		}
 		if ( $this->should_populate_array( $setting ) ) {
 			return $this->update_setting_value_array( $value, $setting );
@@ -137,6 +147,7 @@ class Settings {
 				'upload',
 				'color',
 				'recapture',
+				'password',
 			)
 		);
 	}
@@ -192,26 +203,6 @@ class Settings {
 		$settings = array( 'gateways', 'accepted_cards' );
 
 		return 'multicheck' === $setting['type'] || in_array( $setting['id'], $settings, true );
-	}
-
-	/**
-	 * Attempts to anonymize a setting value.
-	 *
-	 * @todo check how we want to replace--values or empty strings?
-	 *
-	 * @since 3.1.1
-	 * @param string $value
-	 * @return string
-	 */
-	private function anonymize_setting( $value ) {
-		$admin_email = get_bloginfo( 'admin_email' );
-		$value       = str_replace( $admin_email, 'email@website.dev', $value );
-		$site_name   = get_bloginfo( 'name' );
-		$value       = str_replace( $site_name, 'Site Name', $value );
-		$home_url    = get_home_url();
-		$value       = str_replace( $home_url, 'website.dev', $value );
-
-		return $value;
 	}
 
 	/**

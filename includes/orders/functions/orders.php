@@ -708,7 +708,6 @@ function edd_build_order( $order_data = array() ) {
 	// Build order information based on data passed from the gateway.
 	$order_args = array(
 		'parent'       => ! empty( $order_data['parent'] ) ? absint( $order_data['parent'] ) : '',
-		'order_number' => '',
 		'status'       => ! empty( $order_data['status'] ) ? $order_data['status'] : 'pending',
 		'user_id'      => ! empty( $order_data['user_info']['id'] ) ? $order_data['user_info']['id'] : 0,
 		'email'        => $order_data['user_info']['email'],
@@ -799,6 +798,7 @@ function edd_build_order( $order_data = array() ) {
 	if ( empty( $order_id ) ) {
 		return false;
 	}
+	EDD()->session->set( 'edd_resume_payment', $order_id );
 
 	// Attach order to the customer record.
 	$customer->attach_payment( $order_id, false );

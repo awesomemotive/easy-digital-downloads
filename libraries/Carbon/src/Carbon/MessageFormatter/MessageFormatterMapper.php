@@ -12,8 +12,8 @@
 namespace EDD\Vendor\Carbon\MessageFormatter;
 
 use ReflectionMethod;
-use Symfony\Component\Translation\Formatter\MessageFormatter;
-use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
+use EDD\Vendor\Symfony\Component\Translation\Formatter\MessageFormatter;
+use EDD\Vendor\Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 
 // @codeCoverageIgnoreStart
 $transMethod = new ReflectionMethod(MessageFormatterInterface::class, 'format');
