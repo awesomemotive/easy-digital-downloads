@@ -4,26 +4,23 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita9dc9013925c51d0fbf377fec9608140
+class ComposerStaticInit90b78d2443e310e04b1f14c18b400110
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'df9547068186d5bd9161c63e6cc8097a' => __DIR__ . '/../..' . '/src/Globals/Polyfills/PHP.php',
+        '689537902e03683e53e4251d0635d0b4' => __DIR__ . '/../..' . '/libraries/Symfony/Polyfill/Mbstring/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Contracts\\Translation\\' => 30,
-            'Symfony\\Component\\Translation\\' => 30,
         ),
         'E' => 
         array (
+            'EDD\\Vendor\\Symfony\\Polyfill\\Mbstring\\' => 37,
             'EDD\\Vendor\\Stripe\\' => 18,
             'EDD\\Vendor\\Carbon\\' => 18,
             'EDD\\' => 4,
@@ -35,17 +32,9 @@ class ComposerStaticInita9dc9013925c51d0fbf377fec9608140
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'EDD\\Vendor\\Symfony\\Polyfill\\Mbstring\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
-        'Symfony\\Contracts\\Translation\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/translation-contracts',
-        ),
-        'Symfony\\Component\\Translation\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/translation',
+            0 => __DIR__ . '/../..' . '/libraries/Symfony/Polyfill/Mbstring',
         ),
         'EDD\\Vendor\\Stripe\\' => 
         array (
@@ -73,9 +62,9 @@ class ComposerStaticInita9dc9013925c51d0fbf377fec9608140
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita9dc9013925c51d0fbf377fec9608140::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita9dc9013925c51d0fbf377fec9608140::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita9dc9013925c51d0fbf377fec9608140::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit90b78d2443e310e04b1f14c18b400110::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit90b78d2443e310e04b1f14c18b400110::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit90b78d2443e310e04b1f14c18b400110::$classMap;
 
         }, null, ClassLoader::class);
     }

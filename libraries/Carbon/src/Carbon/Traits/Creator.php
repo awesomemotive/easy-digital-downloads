@@ -727,7 +727,7 @@ trait Creator
      * @param string                                             $time
      * @param DateTimeZone|string|false|null                     $tz         optional timezone
      * @param string|null                                        $locale     locale to be used for LTS, LT, LL, LLL, etc. macro-formats (en by fault, unneeded if no such macro-format in use)
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator optional custom translator to use for macro-formats
+     * @param \EDD\Vendor\Symfony\Component\Translation\TranslatorInterface $translator optional custom translator to use for macro-formats
      *
      * @throws InvalidFormatException
      *

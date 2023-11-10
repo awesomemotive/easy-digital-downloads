@@ -369,7 +369,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.2.4' );
+			define( 'EDD_VERSION', '3.2.5' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.

@@ -39,9 +39,13 @@
       "psr-4": {
         "EDD\\": "src/",
         "EDD\\Vendor\\Stripe\\": "libraries/Stripe/lib/",
-        "EDD\\Vendor\\Carbon\\": "libraries/Carbon/src/Carbon/"
+        "EDD\\Vendor\\Carbon\\": "libraries/Carbon/src/Carbon/",
+        "EDD\\Vendor\\Symfony\\Polyfill\\Mbstring\\": "libraries/Symfony/Polyfill/Mbstring/"
       },
-      "files": [ "src/Globals/Polyfills/PHP.php" ]
+      "files": [
+        "src/Globals/Polyfills/PHP.php",
+        "libraries/Symfony/Polyfill/Mbstring/bootstrap.php"
+      ]
     },
     "autoload-dev": {
       "classmap": ["src/", "tests/"]
@@ -60,10 +64,8 @@
           "nesbot/carbon"
         ],
         "excluded_packages": [
-          "symfony/polyfill-mbstring",
-          "symfony/polyfill-php80",
-          "symfony/translation-contracts",
-          "symfony/translation"
+          "symfony/deprecation-contracts",
+          "symfony/polyfill-php80"
         ],
         "delete_vendor_directories": true,
         "override_autoload": {
