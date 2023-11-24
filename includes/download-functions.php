@@ -416,9 +416,9 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
 
 function edd_is_variant_sales_enabled(array $price): bool
 {
-    $sales_enabled_key_exists = array_key_exists('sales_enabled', $price);
-    
-    if (!$sales_enabled_key_exists) {
+    $old_variant_data_format = !array_key_exists('sales_enabled', $price);
+
+    if ($old_variant_data_format) {
         return true;
     }
 
