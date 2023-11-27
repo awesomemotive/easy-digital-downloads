@@ -395,7 +395,7 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
 
         foreach ( $prices as $key => $price ) {
 
-            if ( empty( $price['amount'] ) ) {
+            if ( empty( $price['amount'] ) || !edd_is_variant_sales_enabled($price) ) {
                 continue;
             }
 
@@ -412,6 +412,17 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
     }
 
     return (int) $min_id;
+}
+
+function edd_is_variant_sales_enabled(array $price): bool
+{
+    $old_variant_data_format = !array_key_exists('sales_enabled', $price);
+
+    if ($old_variant_data_format) {
+        return true;
+    }
+
+    return (bool)$price['sales_enabled'];
 }
 
 /**
