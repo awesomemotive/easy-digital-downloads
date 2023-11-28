@@ -137,6 +137,19 @@ class Date extends Base {
 		'AND'
 	);
 
+
+	/**
+	 * @since 3.2.6
+	 * @var string|null Table name
+	 */
+	public $table_name = null;
+
+	/**
+	 * @since 3.2.6
+	 * @var string|null Table alias
+	 */
+	public $table_alias = null;
+
 	/**
 	 * Constructor.
 	 *
@@ -361,6 +374,12 @@ class Date extends Base {
 		$retval = ! empty( $query['column'] )
 			? esc_sql( $this->validate_column( $query['column'] ) )
 			: $this->column;
+
+		if (!empty($this->table_alias)) {
+			$retval = $this->table_alias . '.' . $retval;
+		} elseif (!empty($this->table_name)) {
+			$retval = $this->table_name . '.' . $retval;
+		}
 
 		return $retval;
 	}
@@ -602,11 +621,15 @@ class Date extends Base {
 	 * Generate WHERE clause to be appended to a main query.
 	 *
 	 * @since 1.0.0
+	 * @param string $table_name Optional. Table name. Default null.
+	 * @param string $table_alias Optional. Table alias. Default null.
 	 *
 	 * @return string MySQL WHERE clauses.
 	 */
-	public function get_sql() {
-		$sql = $this->get_sql_clauses();
+	public function get_sql( $table_name = null, $table_alias = null ) {
+		$this->table_name  = $this->sanitize_table_name( $table_name );
+		$this->table_alias = $this->sanitize_table_name( $table_alias );
+		$sql               = $this->get_sql_clauses();
 
 		/**
 		 * Filters the date query clauses.
