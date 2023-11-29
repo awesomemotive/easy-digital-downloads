@@ -347,7 +347,7 @@ class EDD_Customer {
 
         $payment = new EDD_Payment( $payment_id );
 
-        if ( 'publish' !== $payment->status && 'revoked' !== $payment->status ) {
+        if ( 'publish' !== $payment->status ) {
             $update_stats = false;
         }
 
@@ -429,7 +429,6 @@ class EDD_Customer {
      * @return mixed          If successful, the new count, otherwise false
      */
     public function decrease_purchase_count( $count = 1 ) {
-
         // Make sure it's numeric and not negative
         if ( ! is_numeric( $count ) || $count != absint( $count ) ) {
             return false;
@@ -448,7 +447,6 @@ class EDD_Customer {
         }
 
         do_action( 'edd_customer_post_decrease_purchase_count', $this->purchase_count, $count, $this->id );
-
         return $this->purchase_count;
     }
 
