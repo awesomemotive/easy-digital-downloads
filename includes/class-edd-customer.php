@@ -347,7 +347,7 @@ class EDD_Customer {
 
         $payment = new EDD_Payment( $payment_id );
 
-        if ( 'publish' !== $payment->status && 'revoked' !== $payment->status ) {
+        if ( 'publish' !== $payment->status ) {
             $update_stats = false;
         }
 

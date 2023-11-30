@@ -214,10 +214,10 @@ function edd_update_payment_details( $data ) {
 		$customer->attach_payment( $payment_id, false );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
-		if( 'revoked' == $status || 'publish' == $status ) {
+		if( 'publish' == $status ) {
 
 			$previous_customer->decrease_purchase_count();
-			$previous_customer->decrease_value( $new_total );
+			$previous_customer->decrease_value( $curr_total );
 
 			$customer->increase_purchase_count();
 			$customer->increase_value( $new_total );
@@ -250,18 +250,23 @@ function edd_update_payment_details( $data ) {
 	$payment->status = $status;
 
 	// Adjust total store earnings if the payment total has been changed
-	if ( $new_total !== $curr_total && ( 'publish' == $status || 'revoked' == $status ) ) {
+	if ( $new_total !== $curr_total && ( 'publish' == $status ) ) {
 
 		if ( $new_total > $curr_total ) {
 			// Increase if our new total is higher
 			$difference = $new_total - $curr_total;
 			edd_increase_total_earnings( $difference );
+			if ( !$customer_changed ) {
+			    $customer->increase_value( $difference );
+			}
 
 		} elseif ( $curr_total > $new_total ) {
 			// Decrease if our new total is lower
 			$difference = $curr_total - $new_total;
 			edd_decrease_total_earnings( $difference );
-
+			if ( !$customer_changed ) {
+			    $customer->decrease_value( $difference );
+			}
 		}
 
 	}
