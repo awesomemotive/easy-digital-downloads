@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.8
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable Tag: 3.2.5
+Stable Tag: 3.2.6
 License: GNU Version 2 or Any Later Version
 
 The #1 eCommerce plugin to sell digital products. Manage eCommerce orders, increase store revenue & accept credit card payments with Stripe + PayPal.
@@ -226,6 +226,24 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.2.6 =
+* Checkout: Improved checkout block field handling for guest customers.
+* Checkout: Login fields on checkout were incorrectly trying to process the checkout when hitting the 'Enter' key.
+* Admin: Better compatibility when loading EDD footer and documentation links for non-store admin pages.
+* Admin: Custom EDD admin pages could throw an error if incorrectly filtered.
+* Downloads: Improved handling of detecting download variable prices.
+* Downloads: Custom product dropdown could incorrectly exclude the download being edited.
+* Reports: The store dashboard widget revenue and sales stats sometimes parsed dates with an incorrect offset.
+* Reports: Pie charts for revenue currency values were not correctly applying the currency symbol.
+* Reports: Improve Export Product Sales accuracy.
+* Compatibility: Further improve PHP 8.0+ support.
+* Shortcodes: Some shortcode attributes were hardened before being output.
+* Orders: Better handling of refunding orders.
+* Stripe: Better error messages when some cart contents are not compatible with the Stripe gateway.
+* Discounts: Ensure store discounts recorded for orders are unique.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.2.5 =
 * Compatibility: Improved compatibility with servers not configured with `mbstring`.
 * PayPal: Improved detection of PayPal order session handling and processing.
@@ -248,8 +266,6 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Support: Made links to support and documentation more accessible.
 * Taxes: Corrected an issue with subscription updates when taxes are enabled.
 * Registration: Fixed an issue with Recaptcha on the registration form.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.2.3 =
 * Block Editor: The user registration forms and lost password feature have been updated to allow customization via hooks.
