@@ -58,7 +58,7 @@ jQuery( document ).ready( function( $ ) {
 			no_bundles = container.hasClass( 'no-bundles' ),
 			variations = container.hasClass( 'variations' ),
 			variations_only = container.hasClass( 'variations-only' ),
-
+			current_id = container.hasClass( 'exclude-current' ) ? edd_vars.post_id : 0,
 			lastKey = e.which,
 			search_type = 'edd_download_search';
 
@@ -110,7 +110,7 @@ jQuery( document ).ready( function( $ ) {
 				no_bundles: no_bundles,
 				variations: variations,
 				variations_only: variations_only,
-				current_id: edd_vars.post_id,
+				current_id: current_id,
 			},
 
 			beforeSend: function() {

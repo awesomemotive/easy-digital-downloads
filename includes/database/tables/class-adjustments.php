@@ -200,8 +200,13 @@ final class Adjustments extends Table {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX code_status_type_scope_amount" );
 		}
 
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX type_status (type(20), status(20))" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX code (code)" );
+		if ( ! $this->index_exists( 'type_status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX type_status (type(20), status(20))" );
+		}
+
+		if ( ! $this->index_exists( 'code' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX code (code)" );
+		}
 
 		return true;
 	}

@@ -797,7 +797,6 @@ function edd_render_refund_row( $post_id ) {
 
 	$types             = edd_get_refundability_types();
 	$global_ability    = edd_get_option( 'refundability', 'refundable' );
-	$refundability     = edd_get_download_refundability( $post_id );
 	$global_window     = edd_get_option( 'refund_window', 30 );
 	$edd_refund_window = edd_get_download_refund_window( $post_id ); ?>
 
@@ -821,7 +820,7 @@ function edd_render_refund_row( $post_id ) {
 						'' => sprintf(
 							/* translators: Default refund status */
 							esc_html_x( 'Default (%1$s)', 'Download refund status', 'easy-digital-downloads' ),
-							ucwords( $refundability )
+							ucwords( $global_ability )
 						),
 					),
 					$types

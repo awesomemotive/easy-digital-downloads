@@ -271,4 +271,32 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	public function is_deliverable() {
 		return in_array( $this->status, edd_get_deliverable_order_item_statuses(), true );
 	}
+
+
+	/**
+	 * Retrieves the net total for this order item.
+	 *
+	 * @since 3.2.6
+	 * @return float Item net total.
+	 */
+	public function get_net_total() {
+		$net_total = $this->total -  floatval( $this->tax );
+
+		$net_total = array_reduce(
+			$this->get_refunded_items(),
+			function( $total, $refund_item ) {
+				return $total + $refund_item->total;
+			},
+			$net_total
+		);
+
+		/**
+		 * Allow item net total to be filtered.
+		 *
+		 * @since 3.2.6
+		 * @param float $net_total Item net total.
+		 * @param EDD\Orders\Order_Item $this Order item object.
+		 */
+		return (float) apply_filters( 'edd_order_item_net_total', $net_total, $this );
+	}
 }

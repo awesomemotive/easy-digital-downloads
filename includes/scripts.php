@@ -479,7 +479,7 @@ function edd_localize_admin_scripts() {
 
 	// Customize the currency on a few individual pages.
 	if ( function_exists( 'edd_is_admin_page' ) ) {
-		if ( edd_is_admin_page( 'reports' ) ) {
+		if ( edd_is_admin_page( 'reports' ) && function_exists( '\EDD\Reports\get_filter_value' ) ) {
 			/*
 			 * For reports, use the currency currently being filtered.
 			 */

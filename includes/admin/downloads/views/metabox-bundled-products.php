@@ -55,6 +55,7 @@ $bundle_options   = EDD()->html->get_products(
 											'show_variations_only' => false,
 											'class'                => 'edd-form-group__input',
 											'bundles'              => false,
+											'exclude_current'      => true,
 										)
 									);
 									?>
@@ -124,6 +125,7 @@ $bundle_options   = EDD()->html->get_products(
 									'variations'           => true,
 									'show_variations_only' => false,
 									'bundles'              => false,
+									'exclude_current'      => true,
 								) );
 								?>
 								</div>
