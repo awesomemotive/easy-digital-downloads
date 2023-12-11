@@ -651,42 +651,53 @@ function edd_build_order( $order_data = array() ) {
 			$transaction_id = $order->get_transaction_id();
 
 			if ( in_array( $order->status, $recoverable_statuses, true ) && empty( $transaction_id ) ) {
-				$payment      = edd_get_payment( $existing_order );
 				$resume_order = true;
 			}
 		}
 	}
 
 	if ( $resume_order ) {
-		$payment->add_note( __( 'Payment recovery processed', 'easy-digital-downloads' ) );
+		edd_add_note(
+			array(
+				'object_id'   => $order->id,
+				'object_type' => 'order',
+				'user_id'     => is_admin() ? get_current_user_id() : 0,
+				'content'     => __( 'Payment recovery processed', 'easy-digital-downloads' ),
+			)
+		);
 
 		// Since things could have been added/removed since we first crated this...rebuild the cart details.
-		foreach ( $payment->fees as $fee_index => $fee ) {
-			$payment->remove_fee_by( 'index', $fee_index, true );
+		foreach ( $order->get_items() as $item ) {
+			$adjustments = $item->adjustments;
+			if ( ! empty( $adjustments ) ) {
+				foreach ( $adjustments as $adjustment ) {
+					edd_delete_order_adjustment( $adjustment->id );
+				}
+			}
+			edd_delete_order_item( $item->id );
 		}
 
-		foreach ( $payment->downloads as $cart_index => $download ) {
-			$item_args = array(
-				'quantity'   => isset( $download['quantity'] ) ? $download['quantity'] : 1,
-				'cart_index' => $cart_index,
-			);
-			$payment->remove_download( $download['id'], $item_args );
+		// Remove any remainders of possible fees and discounts from the order.
+		foreach ( $order->get_adjustments() as $adjustment ) {
+			edd_delete_order_adjustment( $adjustment->id );
 		}
 
-		if ( strtolower( $payment->email ) !== strtolower( $order_data['user_info']['email'] ) ) {
+		if ( strtolower( $order->email ) !== strtolower( $order_data['user_info']['email'] ) ) {
 
 			// Remove the payment from the previous customer.
-			$previous_customer = new EDD_Customer( $payment->customer_id );
-			$previous_customer->remove_payment( $payment->ID, false );
+			$previous_customer = new EDD_Customer( $order->customer_id );
+			$previous_customer->remove_payment( $order->id, false );
 
 			// Redefine the email first and last names.
-			$payment->email      = $order_data['user_info']['email'];
-			$payment->first_name = $order_data['user_info']['first_name'];
-			$payment->last_name  = $order_data['user_info']['last_name'];
+			edd_update_order(
+				$order->id,
+				array(
+					'email'      => $order_data['user_info']['email'],
+					'first_name' => $order_data['user_info']['first_name'],
+					'last_name'  => $order_data['user_info']['last_name'],
+				)
+			);
 		}
-
-		// Remove any remainders of possible fees from items.
-		$payment->save();
 	}
 
 	/** Setup order information ***********************************************/
@@ -786,7 +797,7 @@ function edd_build_order( $order_data = array() ) {
 
 	// Add order into the edd_orders table.
 	if ( true === $resume_order ) {
-		$order_id = $payment->ID;
+		$order_id = $order->id;
 		unset( $order_args['date_created'] );
 		edd_update_order( $order_id, $order_args );
 	} else {

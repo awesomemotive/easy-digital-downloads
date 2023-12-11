@@ -2895,9 +2895,8 @@ class Stats {
 			$date_query_sql = ' AND ';
 
 			if ( ! empty( $this->query_vars['start'] ) ) {
-				$start_date      = EDD()->utils->date( $this->query_vars['start'], edd_get_timezone_id(), false )->format( 'mysql' );
 				$date_query_sql .= "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} ";
-				$date_query_sql .= $this->get_db()->prepare( '>= %s', $start_date );
+				$date_query_sql .= $this->get_db()->prepare( '>= %s', $this->query_vars['start'] );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -2906,8 +2905,7 @@ class Stats {
 			}
 
 			if ( ! empty( $this->query_vars['end'] ) ) {
-				$end_date        = EDD()->utils->date( $this->query_vars['end'], edd_get_timezone_id(), false )->format( 'mysql' );
-				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $end_date );
+				$date_query_sql .= $this->get_db()->prepare( "{$this->query_vars['table']}.{$this->query_vars['date_query_column']} <= %s", $this->query_vars['end'] );
 			}
 
 			$this->query_vars['date_query_sql'] = $date_query_sql;

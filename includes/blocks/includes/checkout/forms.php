@@ -83,7 +83,7 @@ function do_personal_info_forms( $block_attributes ) {
 			echo '<div class="' . esc_attr( $class ) . '">';
 			foreach ( $forms as $id => $form ) {
 				printf(
-					'<button class="edd-button-secondary edd-blocks__checkout-%1$s link" data-attr="%1$s"%2$s>%3$s</button>',
+					'<button type="button" class="edd-button-secondary edd-blocks__checkout-%1$s link" data-attr="%1$s"%2$s>%3$s</button>',
 					esc_attr( $id ),
 					empty( $i ) ? ' disabled' : '',
 					esc_html( $form['label'] )

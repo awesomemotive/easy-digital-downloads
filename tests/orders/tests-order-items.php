@@ -10,8 +10,9 @@
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Tests\Helpers\EDD_Helper_Payment;
 
-class Order_Item_Tests extends EDD_UnitTestCase {
+class OrderItem extends EDD_UnitTestCase {
 
 	/**
 	 * Order items fixture.
@@ -863,5 +864,59 @@ class Order_Item_Tests extends EDD_UnitTestCase {
 		$order_item = edd_get_order_item( self::$order_items[3] );
 
 		$this->assertFalse( $order_item->is_deliverable() );
+	}
+
+	/**
+	 * @covers ::get_net_total
+	 */
+	public function test_order_item_net_total_equal_to_total_before_refund() {
+		$order_item     = edd_get_order_item( self::$order_items[0] );
+		$expected_total = $order_item->total - $order_item->tax;
+
+		$this->assertEquals( $expected_total, $order_item->get_net_total() );
+	}
+
+	/**
+	 * @covers ::get_net_total
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 * @expectedDeprecated edd_admin_email_notice
+	 */
+	public function test_order_item_net_total_not_equal_to_total_after_tax() {
+		$order_id = EDD_Helper_Payment::create_simple_payment_with_tax();
+		edd_update_order_status( $order_id, 'complete' );
+		$order       = edd_get_order( $order_id );
+		$order_items = $order->get_items();
+		$order_item  = reset( $order_items );
+
+		$this->assertNotEquals( $order_item->total, $order_item->get_net_total() );
+	}
+
+	/**
+	 * @covers ::get_net_total
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 * @expectedDeprecated edd_admin_email_notice
+	 */
+	public function test_order_item_net_total_equal_to_total_after_refund() {
+		$order_id = EDD_Helper_Payment::create_simple_payment();
+		edd_update_order_status( $order_id, 'complete' );
+		$order       = edd_get_order( $order_id );
+		$order_items = $order->get_items();
+		$order_item  = reset( $order_items );
+
+		$refund = edd_refund_order(
+			$order_id,
+			array(
+				array(
+					'order_item_id' => $order_item->id,
+					'subtotal'      => $order_item->subtotal / 2,
+					'tax'           => $order_item->tax,
+					'total'         => $order_item->total / 2
+				)
+			)
+		);
+
+		$this->assertIsInt( $refund );
+		$this->assertNotEquals( $order_item->total, $order_item->get_net_total() );
+		$this->assertEquals( 10.00, $order_item->get_net_total() );
 	}
 }
