@@ -482,7 +482,7 @@ class EDD_Download {
 
 		if ( true === $this->has_variable_prices() ) {
 			if ( empty( $this->prices ) ) {
-				$this->prices = get_post_meta( $this->ID, 'edd_variable_prices', true );
+				$this->prices = array_filter( (array) get_post_meta( $this->ID, 'edd_variable_prices', true ) );
 			}
 		}
 
@@ -494,7 +494,7 @@ class EDD_Download {
 		 * @param array $prices The array of variables prices.
 		 * @param int|string The ID of the download.
 		 */
-		return array_filter( (array) apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID ) );
+		return (array) apply_filters( 'edd_get_variable_prices', $this->prices, $this->ID );
 	}
 
 	/**
@@ -676,27 +676,21 @@ class EDD_Download {
 	public function get_refundability() {
 
 		if ( ! isset( $this->refundability ) ) {
-			$default    = 'refundable';
-			$refundable = get_post_meta( $this->ID, '_edd_refundability', true );
-			$global     = edd_get_option( 'refundability', $default );
 
-			// Download specific window
-			if ( ! empty( $refundable ) ) {
-				$retval = $refundable;
+			// Check the global value first. The default is `refundable`.
+			$refundability = edd_get_option( 'refundability', 'refundable' );
+			$meta          = get_post_meta( $this->ID, '_edd_refundability', true );
 
-			// Use global
-			} elseif ( ! empty( $global ) ) {
-				$retval = $global;
-
-			// Default
-			} else {
-				$retval = $default;
+			// The download specific value will override the global.
+			if ( ! empty( $meta ) ) {
+				$refundability = $meta;
 			}
 
-			$this->refundability = $retval;
+			$this->refundability = $refundability;
 		}
 
-		return $this->refundability; // No filter
+		// This is not filtered.
+		return $this->refundability;
 	}
 
 	/**

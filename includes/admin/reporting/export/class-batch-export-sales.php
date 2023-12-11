@@ -59,6 +59,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			'download'    => edd_get_label_singular(),
 			'quantity'    => __( 'Quantity', 'easy-digital-downloads' ),
 			'amount'      => __( 'Item Amount', 'easy-digital-downloads' ),
+			'tax'         => __( 'Tax', 'easy-digital-downloads' ),
 			'currency'    => __( 'Currency', 'easy-digital-downloads' ),
 			'order_id'    => __( 'Order ID', 'easy-digital-downloads' ),
 			'price_id'    => __( 'Price ID', 'easy-digital-downloads' ),
@@ -97,15 +98,6 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			/** @var EDD\Orders\Order_Item $item */
 			$order  = edd_get_order( $item->order_id );
 
-			// If the item has been partially refunded, we need to calculate the amount
-			$amount = array_reduce(
-				$item->get_refunded_items(),
-				function( $total, $refund_item ) {
-					return $total + $refund_item->total;
-				},
-				$item->total
-			);
-
 			$data[] = array(
 				'ID'          => $item->product_id,
 				'user_id'     => $order->user_id,
@@ -114,7 +106,8 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 				'name'        => edd_get_customer_field( $order->customer_id, 'name' ),
 				'download'    => $item->product_name,
 				'quantity'    => $item->quantity,
-				'amount'      => edd_format_amount( $amount ),
+				'amount'      => edd_format_amount( $item->get_net_total() ),
+				'tax'         => edd_format_amount( $item->tax ),
 				'currency'    => $order->currency,
 				'order_id'    => $order->id,
 				'price_id'    => $item->price_id,

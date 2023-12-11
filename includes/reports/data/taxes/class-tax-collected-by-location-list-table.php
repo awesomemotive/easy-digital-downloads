@@ -72,13 +72,11 @@ class Tax_Collected_By_Location extends List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'country'  => __( 'Country/Region', 'easy-digital-downloads' ),
-			'from'     => __( 'From', 'easy-digital-downloads' ),
-			'to'       => __( 'To', 'easy-digital-downloads' ),
-			'gross'    => __( 'Gross', 'easy-digital-downloads' ),
-			'tax'      => __( 'Tax', 'easy-digital-downloads' ),
-			'net'      => __( 'Net', 'easy-digital-downloads' ),
- 		);
+			'country' => __( 'Country/Region', 'easy-digital-downloads' ),
+			'gross'   => __( 'Gross', 'easy-digital-downloads' ),
+			'tax'     => __( 'Tax', 'easy-digital-downloads' ),
+			'net'     => __( 'Net', 'easy-digital-downloads' ),
+		);
 	}
 
 	/**
@@ -103,20 +101,12 @@ class Tax_Collected_By_Location extends List_Table {
 		$date_query  = '';
 
 		if ( ! empty( $date_range['start'] ) && '0000-00-00 00:00:00' !== $date_range['start'] ) {
-			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( EDD()->utils->date( $date_range['start'], null, false )->startOfDay()->format( 'mysql' ) ) );
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( $date_range['start']->format( 'mysql' ) ) );
 		}
 
 		if ( ! empty( $date_range['end'] ) && '0000-00-00 00:00:00' !== $date_range['end'] ) {
-			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( EDD()->utils->date( $date_range['end'], null, false )->endOfDay()->format( 'mysql' ) ) );
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( $date_range['end']->format( 'mysql' ) ) );
 		}
-
-		$from = empty( $date_range['start'] ) || '0000-00-00 00:00:00' === $date_range['start']
-				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $date_range['start'], null, false )->startOfDay()->timestamp );
-
-		$to = empty( $date_range['end'] ) || '0000-00-00 00:00:00' === $date_range['end']
-			? '&mdash;'
-			: edd_date_i18n( EDD()->utils->date( $date_range['end'], null, false )->endOfDay()->timestamp );
 
 		$tax_column   = $convert_currency ? 'tax / rate' : 'tax';
 		$total_column = $convert_currency ? 'total / rate' : 'total';
@@ -166,24 +156,20 @@ class Tax_Collected_By_Location extends List_Table {
 			$all_orders[0]['total'] -= $results[0]['total'];
 
 			$data[ $country_region ] = array(
-				'country'  => $location,
-				'from'     => $from,
-				'to'       => $to,
-				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] ) ), $format_currency ),
-				'tax'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['tax'] ) ), $format_currency ),
-				'net'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] - $results[0]['tax'] ) ), $format_currency ),
+				'country' => $location,
+				'gross'   => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] ) ), $format_currency ),
+				'tax'     => edd_currency_filter( edd_format_amount( floatval( $results[0]['tax'] ) ), $format_currency ),
+				'net'     => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] - $results[0]['tax'] ) ), $format_currency ),
 			);
 		}
 
-		if( $all_orders[0]['total'] > 0 && $all_orders[0]['tax'] > 0 ) {
+		if ( $all_orders[0]['total'] > 0 && $all_orders[0]['tax'] > 0 ) {
 
-			$data[ 'global' ] = array(
-				'country'  => __( 'Global Rate', 'easy-digital-downloads' ),
-				'from'     => $from,
-				'to'       => $to,
-				'gross'    => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] ) ) ), $format_currency ),
-				'tax'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['tax'] ) ) ), $format_currency ),
-				'net'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] - $all_orders[0]['tax'] ) ) ), $format_currency ),
+			$data['global'] = array(
+				'country' => __( 'Global Rate', 'easy-digital-downloads' ),
+				'gross'   => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] ) ) ), $format_currency ),
+				'tax'     => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['tax'] ) ) ), $format_currency ),
+				'net'     => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] - $all_orders[0]['tax'] ) ) ), $format_currency ),
 			);
 
 		}

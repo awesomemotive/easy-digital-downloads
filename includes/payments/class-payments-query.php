@@ -224,14 +224,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		foreach ( $this->items as $order ) {
-			$payment = edd_get_payment( $order->id );
-
-			if ( edd_get_option( 'enable_sequential' ) ) {
-				// Backwards compatibility, needs to set `payment_number` attribute
-				$payment->payment_number = $payment->number;
-			}
-
-			$this->payments[] = apply_filters( 'edd_payment', $payment, $order->id, $this );
+			$this->payments[] = apply_filters( 'edd_payment', edd_get_payment( $order->id ), $order->id, $this );
 		}
 
 		do_action( 'edd_post_get_payments', $this );

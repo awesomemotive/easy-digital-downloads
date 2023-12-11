@@ -27,7 +27,7 @@ add_action( 'init', 'edd_add_rewrite_endpoints' );
  * Process cart endpoints.
  *
  * @since 1.3.4
-*/
+ */
 function edd_process_cart_endpoints() {
 	global $wp_query;
 
@@ -80,8 +80,8 @@ function edd_process_add_to_cart( $data ) {
 	}
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
-		$query_args = remove_query_arg( array( 'edd_action', 'download_id', 'edd_options', 'edd_download_quantity' ) );
-		$query_part = strpos( $query_args, "?" );
+		$query_args     = remove_query_arg( array( 'edd_action', 'download_id', 'edd_options', 'edd_download_quantity' ) );
+		$query_part     = strpos( $query_args, '?' );
 		$url_parameters = '';
 
 		if ( false !== $query_part ) {
@@ -118,7 +118,7 @@ function edd_process_remove_from_cart( $data ) {
 		edd_remove_from_cart( $cart_key );
 	}
 
-	edd_redirect( remove_query_arg( array( 'edd_action', 'cart_item', 'nocache' ) ) );
+	edd_redirect( remove_query_arg( array( 'edd_action', 'cart_item', 'nocache', 'edd_remove_from_cart_nonce' ) ) );
 }
 add_action( 'edd_remove', 'edd_process_remove_from_cart' );
 

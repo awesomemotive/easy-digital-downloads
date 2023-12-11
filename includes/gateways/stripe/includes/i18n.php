@@ -21,8 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array $error_list List of error codes and corresponding error messages.
  */
 function edds_get_localized_error_messages() {
-	$generic_different_payment_method  = __( 'There was an error processing your payment. Please try with a different payment method.', 'easy-digital-downloads' );
-	$generic_contact_issuer_message    = __( 'There was an error processing your payment. Please contact your card issuer for more information.', 'easy-digital-downloads' );
+	$generic_different_payment_method = __( 'There was an error processing your payment. Please try with a different payment method.', 'easy-digital-downloads' );
+	$generic_contact_issuer_message   = __( 'There was an error processing your payment. Please contact your card issuer for more information.', 'easy-digital-downloads' );
 
 	$error_list = array(
 		'incomplete'                            => __( 'Payment processing cancelled; your order is not yet complete.', 'easy-digital-downloads' ),
@@ -128,7 +128,14 @@ function edds_get_localized_error_message( $error_code, $error_message, $decline
  * @return string The translatable string for the single subscription requirement error.
  */
 function edds_get_single_subscription_cart_error() {
-	return 	esc_html__(
+	if ( function_exists( 'edd_recurring' ) && edd_recurring()->cart_is_mixed() ) {
+		return esc_html__(
+			'Subscriptions and non-subscriptions may not be purchased at the same time. Please purchase each separately.',
+			'easy-digital-downloads'
+		);
+	}
+
+	return esc_html__(
 		'Subscriptions must be purchased individually. Please update your cart to only contain a single subscription.',
 		'easy-digital-downloads'
 	);

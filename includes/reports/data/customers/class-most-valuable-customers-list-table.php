@@ -51,18 +51,21 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 			$currency_clause = $wpdb->prepare( " AND currency = %s ", $currency );
 		}
 
-		$start_date = sanitize_text_field( date( 'Y-m-d 00:00:00', strtotime( $date_range['start'] ) ) );
-		$end_date   = sanitize_text_field( date( 'Y-m-d 23:59:59', strtotime( $date_range['end'] ) ) );
-
 		$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM({$column}) AS total_spent
 				FROM {$wpdb->edd_orders}
-				WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s AND type = 'sale'
+				WHERE status IN ('complete','revoked') AND date_created >= %s AND date_created <= %s AND type = 'sale'
 				{$currency_clause}
 				GROUP BY customer_id
 				ORDER BY total_spent DESC
 				LIMIT 5";
 
-		$results = $wpdb->get_results( $wpdb->prepare( $sql, sanitize_text_field( 'complete' ), sanitize_text_field( 'revoked' ), $start_date, $end_date ) );
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				$sql,
+				$date_range['start']->format( 'mysql' ),
+				$date_range['end']->format( 'mysql' )
+			)
+		);
 
 		foreach ( $results as $result ) {
 			$customer = edd_get_customer( (int) $result->customer_id );
