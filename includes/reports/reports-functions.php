@@ -764,8 +764,6 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
  */
 function parse_relative_dates_for_range( $range = null, $relative_range = null, $date = 'now', $convert_to_utc = true ) {
 
-	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
-	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range();
@@ -804,7 +802,6 @@ function parse_relative_dates_for_range( $range = null, $relative_range = null, 
 			);
 			break;
 	}
-
 
 	if ( $convert_to_utc ) {
 		// Convert the values to the UTC equivalent so that we can query the database using UTC.

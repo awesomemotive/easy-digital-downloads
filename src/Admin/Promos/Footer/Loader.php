@@ -36,7 +36,7 @@ class Loader implements SubscriberInterface {
 	 */
 	public function add_hooks_and_filters() {
 		// Bail if we're not on an EDD admin page.
-		if ( ! edd_is_admin_page() ) {
+		if ( ! edd_is_admin_page( '', '', false ) ) {
 			return;
 		}
 

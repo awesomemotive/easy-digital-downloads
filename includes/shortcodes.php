@@ -50,6 +50,8 @@ function edd_download_shortcode( $atts, $content = null ) {
 		}
 	}
 
+	$atts['text'] = sanitize_text_field( $atts['text'] );
+
 	if( ! empty( $atts['sku'] ) ) {
 
 		$download = edd_get_download_by( 'sku', $atts['sku'] );
@@ -589,12 +591,12 @@ function edd_downloads_query( $atts, $content = null ) {
 	if ( $downloads->have_posts() ) :
 		$i = 1;
 		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
-		$custom_classes  = array_filter( explode( ',', $atts['class'] ) );
+		$custom_classes  = array_map( 'sanitize_html_class', explode( ',', $atts['class'] ) );
 		$wrapper_classes = array_unique( array_merge( $columns_class, $custom_classes ) );
 		$wrapper_classes = implode( ' ', $wrapper_classes );
 	?>
 
-		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ); ?>">
+		<div class="edd_downloads_list <?php echo esc_attr( apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ) ); ?>">
 
 			<?php do_action( 'edd_downloads_list_top', $atts, $downloads ); ?>
 

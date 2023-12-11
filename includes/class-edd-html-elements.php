@@ -180,6 +180,10 @@ class EDD_HTML_Elements {
 			$args['class'] .= ' variations-only';
 		}
 
+		if ( ! empty( $args['exclude_current'] ) ) {
+			$args['class'] .= ' exclude-current';
+		}
+
 		// 'all' gets created as an option if passed via the `selected` argument.
 		if ( isset( $options['all'] ) ) {
 			unset( $options['all'] );

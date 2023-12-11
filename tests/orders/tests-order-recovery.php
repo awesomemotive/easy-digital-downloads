@@ -9,7 +9,7 @@ namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-class Order_Recovery_Tests extends EDD_UnitTestCase {
+class Recovery extends EDD_UnitTestCase {
 
 	protected static $recoverable_payment_id;
 
@@ -35,7 +35,11 @@ class Order_Recovery_Tests extends EDD_UnitTestCase {
 	}
 
 	public function test_recovering_payment_ids_match() {
-		$this->assertSame( self::$recoverable_payment_id, self::$recovered_payment_id );
+		$this->assertEquals( self::$recoverable_payment_id, self::$recovered_payment_id );
+	}
+
+	public function test_recoverable_payment_matches_session() {
+		$this->assertEquals( self::$recoverable_payment_id, EDD()->session->get( 'edd_resume_payment' ) );
 	}
 
 	public function test_recovering_payment_guest_to_guest() {
@@ -111,7 +115,7 @@ class Order_Recovery_Tests extends EDD_UnitTestCase {
 			'status'       => 'pending',
 		);
 
-		return edd_insert_payment( $initial_purchase_data );
+		return edd_build_order( $initial_purchase_data );
 	}
 
 	private function generate_recovered_order() {
@@ -172,6 +176,6 @@ class Order_Recovery_Tests extends EDD_UnitTestCase {
 			'status'       => 'pending',
 		);
 
-		return edd_insert_payment( $recovery_purchase_data );
+		return edd_build_order( $recovery_purchase_data );
 	}
 }

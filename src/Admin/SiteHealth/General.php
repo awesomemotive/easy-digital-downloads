@@ -94,7 +94,7 @@ class General {
 					'label' => 'Currency Code',
 					'value' => edd_get_currency(),
 				),
-				'currency_code'            => array(
+				'currency_position'        => array(
 					'label' => 'Currency Position',
 					'value' => edd_get_option( 'currency_position', 'before' ),
 				),
