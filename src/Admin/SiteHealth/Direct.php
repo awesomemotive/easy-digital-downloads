@@ -266,8 +266,10 @@ class Direct extends Test {
 			return $result;
 		}
 
+		$result['label']          = __( 'You do not have any gateway enabled', 'easy-digital-downloads' );
 		$result['status']         = 'critical';
 		$result['badge']['color'] = 'red';
+		$result['description']    = '';
 		$result['actions']        = sprintf(
 			'<a href="%s">%s</a>',
 			edd_get_admin_url(
