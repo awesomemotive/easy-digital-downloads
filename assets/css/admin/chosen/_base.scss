@@ -1,5 +1,24 @@
 .chosen-container {
 	font-size: 14px;
+
+	.chosen-drop {
+		position: absolute;
+		top: 100%;
+		z-index: 1010;
+		width: 100%;
+		border-radius: 0 0 4px 4px;
+		border-width: 0 1px 0 1px;
+		border-color: transparent;
+		background: $white;
+		outline: 2px solid transparent;
+	}
+
+	.spinner {
+		margin: 0;
+		position: absolute;
+		top: 4px;
+		right: 30px;
+	}
 }
 
 .chosen-container-multi .search-field,
@@ -28,16 +47,4 @@
 	border-radius: 0 0 4px 4px;
 	border-width: 0 1px 0 1px;
 	z-index: 1011;
-}
-
-.chosen-container .chosen-drop {
-	position: absolute;
-	top: 100%;
-	z-index: 1010;
-	width: 100%;
-	border-radius: 0 0 4px 4px;
-	border-width: 0 1px 0 1px;
-	border-color: transparent;
-	background: $white;
-	outline: 2px solid transparent;
 }

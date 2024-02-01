@@ -208,20 +208,35 @@ add_action( 'wp_ajax_nopriv_edd_process_checkout', 'edd_process_purchase_form' )
  */
 function edd_checkout_check_existing_email( $valid_data, $post ) {
 
-	// Verify that the email address belongs to this customer
-	if ( is_user_logged_in() ) {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
 
-		$email    = strtolower( $valid_data['logged_in_user']['user_email'] );
-		$customer = new EDD_Customer( get_current_user_id(), true );
+	$email    = strtolower( $valid_data['logged_in_user']['user_email'] );
+	$customer = edd_get_customer_by( 'user_id', get_current_user_id() );
 
-		// If this email address is not registered with this customer, see if it belongs to any other customer
-		if ( $email != strtolower( $customer->email ) && ( is_array( $customer->emails ) && ! in_array( $email, array_map( 'strtolower', $customer->emails ) ) ) ) {
-			$found_customer = new EDD_Customer( $email );
+	// If the current user has a customer record and the email address matches, we're good to go.
+	if ( ! empty( $customer->email ) && strtolower( $customer->email ) === $email ) {
+		return;
+	}
 
-			if ( $found_customer->id > 0 ) {
-				edd_set_error( 'edd-customer-email-exists', sprintf( __( 'The email address %s is already in use.', 'easy-digital-downloads' ), $email ) );
-			}
-		}
+	// If the current user has a customer record and the email address is in the list of emails, we're good to go.
+	if (
+		! empty( $customer->emails ) && // If the customer has emails.
+		is_array( $customer->emails ) && // ...and if the customer emails are an array.
+		in_array( $email, array_map( 'strtolower', $customer->emails ), true ) // ...and the email is in the array.
+	) {
+		return; // ...we're good to go here.
+	}
+
+	// Now we are checking to see if any other customers have this email address.
+	$found_email = edd_get_customer_email_address_by( 'email', $email );
+	if ( ! empty( $found_email->customer_id ) ) {
+		edd_set_error(
+			'edd-customer-email-exists',
+			/* translators: %s: email address */
+			sprintf( __( 'The email address %s is already in use.', 'easy-digital-downloads' ), $email )
+		);
 	}
 }
 add_action( 'edd_checkout_error_checks', 'edd_checkout_check_existing_email', 10, 2 );

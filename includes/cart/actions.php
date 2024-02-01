@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -34,7 +34,7 @@ function edd_process_cart_endpoints() {
 	// Adds an item to the cart with a /edd-add/# URL.
 	if ( isset( $wp_query->query_vars['edd-add'] ) ) {
 		$download_id = absint( $wp_query->query_vars['edd-add'] );
-		$cart        = edd_add_to_cart( $download_id, array() );
+		edd_add_to_cart( $download_id, array() );
 
 		edd_redirect( edd_get_checkout_uri() );
 	}
@@ -42,7 +42,7 @@ function edd_process_cart_endpoints() {
 	// Removes an item from the cart with a /edd-remove/# URL.
 	if ( isset( $wp_query->query_vars['edd-remove'] ) ) {
 		$cart_key = absint( $wp_query->query_vars['edd-remove'] );
-		$cart     = edd_remove_from_cart( $cart_key );
+		edd_remove_from_cart( $cart_key );
 
 		edd_redirect( edd_get_checkout_uri() );
 	}
@@ -54,7 +54,7 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  *
  * @since 1.0
  *
- * @param array $data
+ * @param array $data The data sent via the add to cart form.
  */
 function edd_process_add_to_cart( $data ) {
 	$download_id = ! empty( $data['download_id'] ) ? absint( $data['download_id'] ) : false;
@@ -100,7 +100,7 @@ add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
  *
  * @since 1.0
  *
- * @param $data
+ * @param array $data The data sent via the remove from cart form.
  */
 function edd_process_remove_from_cart( $data ) {
 	$cart_key = absint( $_GET['cart_item'] );
@@ -127,7 +127,7 @@ add_action( 'edd_remove', 'edd_process_remove_from_cart' );
  *
  * @since 2.0
  *
- * @param $data
+ * @param array $data The data sent via the remove fee from cart form.
  */
 function edd_process_remove_fee_from_cart( $data ) {
 	$fee = sanitize_text_field( $data['fee'] );
@@ -141,7 +141,7 @@ add_action( 'edd_remove_fee', 'edd_process_remove_fee_from_cart' );
  *
  * @since 1.0
  *
- * @param $data
+ * @param array $data The data sent via the collection purchase form.
  */
 function edd_process_collection_purchase( $data ) {
 	$taxonomy = urldecode( $data['taxonomy'] );

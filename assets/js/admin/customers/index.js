@@ -29,7 +29,8 @@ var EDD_Customer = {
 		$( document.body ).on( 'click', '#add-customer-email', function( e ) {
 			e.preventDefault();
 			const button = $( this ),
-				wrapper = button.parent().parent().parent().parent(),
+				wrapper = button.parents( '.customer-section' ),
+				notice = wrapper.find( '.notice-wrap' ),
 				customer_id = wrapper.find( 'input[name="customer-id"]' ).val(),
 				email = wrapper.find( 'input[name="additional-email"]' ).val(),
 				primary = wrapper.find( 'input[name="make-additional-primary"]' ).is( ':checked' ),
@@ -42,18 +43,16 @@ var EDD_Customer = {
 					_wpnonce: nonce,
 				};
 
-			wrapper.parent().find( '.notice-container' ).remove();
-			wrapper.find( '.spinner' ).css( 'visibility', 'visible' );
-			button.attr( 'disabled', true );
+			notice.empty();
+			button.attr( 'disabled', true ).addClass( 'updating-message' );
 
 			$.post( ajaxurl, postData, function( response ) {
 				setTimeout( function() {
 					if ( true === response.success ) {
 						window.location.href = response.redirect;
 					} else {
-						button.attr( 'disabled', false );
-						wrapper.before( '<div class="notice-container"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>' );
-						wrapper.find( '.spinner' ).css( 'visibility', 'hidden' );
+						button.attr( 'disabled', false ).removeClass( 'updating-message' );
+						notice.append( '<div class="notice notice-error inline"><p>' + response.message + '</p></div>' );
 					}
 				}, 342 );
 			}, 'json' );

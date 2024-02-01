@@ -130,7 +130,8 @@ class Order_Items extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'compare'    => true,
 		),
 
 		// amount

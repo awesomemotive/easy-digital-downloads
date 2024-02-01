@@ -18,7 +18,7 @@ class Search {
 		// We store the last search in a transient for 30 seconds. This _might_
 		// result in a race condition if 2 users are looking at the exact same time,
 		// but we'll worry about that later if that situation ever happens.
-		$args   = get_transient( 'edd_download_search' );
+		$args = get_transient( 'edd_download_search' );
 
 		// Parse args.
 		$search = wp_parse_args(
@@ -30,12 +30,7 @@ class Search {
 		);
 
 		// Get the search string.
-		$new_search = isset( $_GET['s'] )
-			? sanitize_text_field( $_GET['s'] )
-			: '';
-
-		// Limit to only alphanumeric characters, including unicode and spaces.
-		$new_search = preg_replace( '/[^\pL^\pN\pZ]/', ' ', $new_search );
+		$new_search = $this->get_search();
 
 		// Bail early if the search text has not changed.
 		if ( $search['text'] === $new_search ) {
@@ -149,7 +144,7 @@ class Search {
 	 *
 	 * @since 3.1.0.2
 	 * @since 3.1.0.5 Moved to EDD\Downloads\Ajax.
-	 * @param string $where
+	 * @param string   $where
 	 * @param WP_Query $wp_query
 	 * @return string
 	 */
@@ -207,5 +202,19 @@ class Search {
 		}
 
 		return $checked;
+	}
+
+	/**
+	 * Gets the search string.
+	 *
+	 * @since 3.2.7
+	 * @return string
+	 */
+	private function get_search() {
+		$search = isset( $_GET['s'] )
+			? sanitize_text_field( urldecode( $_GET['s'] ) )
+			: '';
+
+		return esc_sql( $search );
 	}
 }

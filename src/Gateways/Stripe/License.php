@@ -246,7 +246,7 @@ final class License {
 
 		// Check for a Stripe Pro license key.
 		$license = new \EDD\Licensing\License( $this->item_name );
-		if ( ! empty( $license->key ) ) {
+		if ( ! empty( $license->key ) && ! empty( $license->item_id ) ) {
 			return $license;
 		}
 

@@ -111,7 +111,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Tracking Object
 	 *
-	 * @var object|EDD_Tracking
+	 * @var object|EDD\Telemetry\Tracking
 	 * @since 3.0
 	 */
 	public $tracking;
@@ -258,9 +258,10 @@ final class Easy_Digital_Downloads {
 			new EDD\Lite\Core();
 		}
 
-		self::$instance->tracking = edd_is_pro() ? new EDD\Pro\Telemetry\Tracking() : new EDD_Tracking();
+		$tracking                 = edd_get_namespace( 'Telemetry\\Tracking' );
+		self::$instance->tracking = new $tracking();
 
-		// Return the instance
+		// Return the instance.
 		return self::$instance;
 	}
 
@@ -369,7 +370,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.2.6' );
+			define( 'EDD_VERSION', '3.2.7' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -621,6 +622,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/deprecated-hooks.php';
+		require_once EDD_PLUGIN_DIR . 'includes/deprecated/classes.php';
 	}
 
 	/**
@@ -791,7 +793,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/upgrades/functions.php';
 
 		// Admin files to load globally (cron, bar, etc...)
-		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-bar.php';
 	}
 

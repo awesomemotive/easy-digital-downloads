@@ -10,7 +10,7 @@
  * @since       2.5
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,6 +20,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class EDD_Register_Meta {
 
+	/**
+	 * Holds the instance
+	 *
+	 * Ensures that only one instance of EDD_Register_Meta exists in memory at any one
+	 * time and it also prevents needing to define globals all over the place.
+	 *
+	 * @since  2.5
+	 * @var    EDD_Register_Meta
+	 */
 	private static $instance;
 
 	/**
@@ -37,14 +46,13 @@ class EDD_Register_Meta {
 	 * @since  2.5
 	 * @return $instance
 	 */
-	static public function instance() {
+	public static function instance() {
 
-		if ( !self::$instance ) {
+		if ( ! self::$instance ) {
 			self::$instance = new EDD_Register_Meta();
 		}
 
 		return self::$instance;
-
 	}
 
 	/**
@@ -160,8 +168,8 @@ class EDD_Register_Meta {
 						'type'  => 'array',
 						'items' => array(
 							'type' => 'string',
-						)
-					)
+						),
+					),
 				),
 			)
 		);
@@ -320,7 +328,7 @@ class EDD_Register_Meta {
 	 *
 	 * @since  2.5
 	 * @param  int $value The value to sanitize.
-	 * @return int        The value sanitiezed to be an int.
+	 * @return int        The value sanitized to be an int.
 	 */
 	public function intval_wrapper( $value ) {
 		return intval( $value );
@@ -330,7 +338,7 @@ class EDD_Register_Meta {
 	 * Sanitize values that come in as arrays
 	 *
 	 * @since  2.5
-	 * @param  array  $value The value passed into the meta.
+	 * @param  array|string $value The value passed into the meta.
 	 * @return array         The sanitized value.
 	 */
 	public function sanitize_array( $value = array() ) {
@@ -351,7 +359,6 @@ class EDD_Register_Meta {
 				$value = (array) maybe_unserialize( $value );
 
 			}
-
 		}
 
 		return $value;
@@ -361,7 +368,7 @@ class EDD_Register_Meta {
 	 * Perform some sanitization on the amount field including not allowing negative values by default
 	 *
 	 * @since  2.6.5
-	 * @param  float $price The price to sanitize
+	 * @param  float $price The price to sanitize.
 	 * @return float        A sanitized price
 	 */
 	public function sanitize_price( $price ) {
@@ -381,7 +388,7 @@ class EDD_Register_Meta {
 	 * Ensures prices are correctly mapped to an array starting with an index of 0
 	 *
 	 * @since 2.5
-	 * @param array $prices Variable prices
+	 * @param array $prices Variable prices.
 	 * @return array $prices Array of the remapped variable prices
 	 */
 	public function sanitize_variable_prices( $prices = array() ) {
@@ -405,6 +412,7 @@ class EDD_Register_Meta {
 			}
 
 			$prices[ $id ]['amount'] = $this->sanitize_price( $price['amount'] );
+			$prices[ $id ]['name']   = sanitize_text_field( $price['name'] );
 
 		}
 
@@ -417,10 +425,10 @@ class EDD_Register_Meta {
 	 * Ensures files are correctly mapped to an array starting with an index of 0
 	 *
 	 * @since 2.5
-	 * @param array $files Array of all the file downloads
+	 * @param array $files Array of all the file downloads.
 	 * @return array $files Array of the remapped file downloads
 	 */
-	function sanitize_files( $files = array() ) {
+	public function sanitize_files( $files = array() ) {
 		$files = $this->remove_blank_rows( $files );
 
 		// Files should always be in array format, even when there are none.
@@ -428,19 +436,19 @@ class EDD_Register_Meta {
 			$files = array();
 		}
 
-		// Clean up filenames to ensure whitespaces are stripped
-		foreach( $files as $id => $file ) {
+		// Clean up filenames to ensure whitespace is stripped.
+		foreach ( $files as $id => $file ) {
 
-			if( ! empty( $files[ $id ]['file'] ) ) {
+			if ( ! empty( $files[ $id ]['file'] ) ) {
 				$files[ $id ]['file'] = trim( $file['file'] );
 			}
 
-			if( ! empty( $files[ $id ]['name'] ) ) {
+			if ( ! empty( $files[ $id ]['name'] ) ) {
 				$files[ $id ]['name'] = sanitize_text_field( $file['name'] );
 			}
 		}
 
-		// Make sure all files are rekeyed starting at 0
+		// Make sure all files are rekeyed starting at 0.
 		return $files;
 	}
 
@@ -452,21 +460,20 @@ class EDD_Register_Meta {
 	 * be saved.
 	 *
 	 * @since 2.5
-	 * @param array $new Array of all the meta values
+	 * @param array $updated_meta Array of all the meta values.
 	 * @return array $new New meta value with empty keys removed
 	 */
-	private function remove_blank_rows( $new ) {
+	private function remove_blank_rows( $updated_meta ) {
 
-		if ( is_array( $new ) ) {
-			foreach ( $new as $key => $value ) {
+		if ( is_array( $updated_meta ) ) {
+			foreach ( $updated_meta as $key => $value ) {
 				if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) ) {
-					unset( $new[ $key ] );
+					unset( $updated_meta[ $key ] );
 				}
 			}
 		}
 
-		return $new;
+		return $updated_meta;
 	}
-
 }
 EDD_Register_Meta::instance();

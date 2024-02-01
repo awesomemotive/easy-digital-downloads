@@ -919,4 +919,23 @@ class OrderItem extends EDD_UnitTestCase {
 		$this->assertNotEquals( $order_item->total, $order_item->get_net_total() );
 		$this->assertEquals( 10.00, $order_item->get_net_total() );
 	}
+
+	/**
+	 * Tests that an order item in a refund, which will have a status of `complete` but a negative quantity, is not deliverable.
+	 *
+	 * @return void
+	 */
+	public function test_order_item_marked_complete_in_refund_is_deliverable_returns_false() {
+		edd_update_order_item(
+			self::$order_items[3],
+			array(
+				'status'   => 'complete',
+				'quantity' => -1,
+			)
+		);
+
+		$order_item = edd_get_order_item( self::$order_items[3] );
+
+		$this->assertFalse( $order_item->is_deliverable() );
+	}
 }

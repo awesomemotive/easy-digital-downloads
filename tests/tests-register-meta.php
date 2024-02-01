@@ -2,7 +2,7 @@
 namespace EDD\Tests;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
-
+use \EDD_Register_Meta;
 /**
  * @group edd_meta
  */
@@ -12,8 +12,18 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 
 	protected $download_id;
 
+	/**
+	 * Holds the EDD_Register_Meta instance
+	 *
+	 * @var \EDD_Register_Meta
+	 */
+	private $meta_handler;
+
 	public function setup(): void {
 		parent::setUp();
+
+		$this->meta_handler = EDD_Register_Meta::instance();
+
 		$this->payment_id  = Helpers\EDD_Helper_Payment::create_simple_payment();
 		$variable_download = Helpers\EDD_Helper_Download::create_variable_download();
 
@@ -37,34 +47,38 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 		$this->assertEquals( '0', edd_get_payment_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
 	}
 
-	public function test_sanitize_price() {
-
-		// Test saving a normal postitive value
+	public function test_sanitize_price_positive_value() {
 		$price = '9';
-		update_post_meta( $this->download_id, 'edd_price', $price );
-		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
-		$this->assertEquals( 9, $saved_price );
 
-		// Test saving a negative value
+		$sanitized = $this->meta_handler->sanitize_price( $price );
+		$this->assertEquals( 9, $sanitized );
+	}
+
+	public function test_sanitize_negative_value() {
 		$price = -1;
-		update_post_meta( $this->download_id, 'edd_price', $price );
-		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
-		$this->assertEquals( 0, $saved_price );
 
+		$sanitized = $this->meta_handler->sanitize_price( $price );
+		$this->assertEquals( 0, $sanitized );
+	}
+
+	public function test_sanitize_zero_value() {
 		// Test saving a zero value
 		$price = 0;
-		update_post_meta( $this->download_id, 'edd_price', $price );
-		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
-		$this->assertEquals( 0, $saved_price );
 
-		// Test negative values with the filter now
+		$sanitized = $this->meta_handler->sanitize_price( $price );
+		$this->assertEquals( 0, $sanitized );
+	}
+
+	public function test_sanitize_allow_negative_values_value() {
+		// Add our filter to allow negative prices.
 		add_filter( 'edd_allow_negative_prices', '__return_true' );
 		$price = -1;
-		update_post_meta( $this->download_id, 'edd_price', $price );
-		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
-		$this->assertEquals( -1, $saved_price );
-		remove_filter( 'edd_allow_negative_prices', '__return_true' );
 
+		$sanitized = $this->meta_handler->sanitize_price( $price );
+		$this->assertEquals( -1, $sanitized );
+
+		// Remove our filter.
+		remove_filter( 'edd_allow_negative_prices', '__return_true' );
 	}
 
 	public function test_sanitize_variable_prices() {
@@ -74,10 +88,18 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 			array( 'foo'    => 'bar', 'bar' => 'baz' ),
 		);
 
-		update_post_meta( $this->download_id, 'edd_variable_prices', $variable_prices );
-		$saved_variable_prices = get_post_meta( $this->download_id, 'edd_variable_prices', true );
-		$this->assertEquals( 2, count( $saved_variable_prices ) );
-		$this->assertEquals( 0, $saved_variable_prices[0]['amount'] );
+		$sanitized = $this->meta_handler->sanitize_variable_prices( $variable_prices );
+		$this->assertEquals( 2, count( $sanitized ) );
+		$this->assertEquals( 0, $sanitized[0]['amount'] );
+	}
+
+	public function test_sanitize_variable_prices_with_tags() {
+		$variable_prices = array(
+			array( 'name' => '<script>alert("hello");</script>First Option' ),
+		);
+
+		$sanitized = $this->meta_handler->sanitize_variable_prices( $variable_prices );
+		$this->assertEquals( 'First Option', $sanitized[0]['name'] );
 	}
 
 	public function test_sanitize_files() {
@@ -96,11 +118,10 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 			),
 		);
 
-		update_post_meta( $this->download_id, 'edd_download_files', $files );
-		$saved_files = get_post_meta( $this->download_id, 'edd_download_files', true );
-		$this->assertEquals( 2, count( $saved_files ) );
-		$this->assertEquals( 'file2.zip', $saved_files[1]['file'] );
-		$this->assertEquals( 'File 3', $saved_files[2]['name'] );
+		$sanitized = $this->meta_handler->sanitize_files( $files );
+		$this->assertEquals( 2, count( $sanitized ) );
+		$this->assertEquals( 'file2.zip', $sanitized[1]['file'] );
+		$this->assertEquals( 'File 3', $sanitized[2]['name'] );
 	}
 
 

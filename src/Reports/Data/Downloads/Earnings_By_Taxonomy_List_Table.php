@@ -8,14 +8,15 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Reports\Data\Downloads;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-use EDD\Reports as Reports;
+use EDD\Reports;
 use EDD\Admin\List_Table;
-use EDD\Stats as Stats;
+use EDD\Stats;
 
 /**
  * Earnings_By_Taxonomy_List_Table class.
@@ -25,6 +26,14 @@ use EDD\Stats as Stats;
 class Earnings_By_Taxonomy_List_Table extends List_Table {
 
 	/**
+	 * Whether or not to show the warning.
+	 *
+	 * @since 3.2.7
+	 * @var   bool
+	 */
+	private $show_warning;
+
+	/**
 	 * Query the database and fetch the top five most downloaded products.
 	 *
 	 * @since 3.0
@@ -32,10 +41,13 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 * @return array Taxonomies.
 	 */
 	public function get_data() {
+		if ( $this->show_warning() ) {
+			return array();
+		}
 		global $wpdb;
 
-		$dates      = Reports\get_filter_value( 'dates' );
-		$currency   = Reports\get_filter_value( 'currencies' );
+		$dates    = Reports\get_filter_value( 'dates' );
+		$currency = Reports\get_filter_value( 'currencies' );
 
 		$taxonomies = edd_get_download_taxonomies();
 		$taxonomies = array_map( 'sanitize_text_field', $taxonomies );
@@ -55,6 +67,10 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		// Build intermediate array to allow for better data processing.
 		$taxonomies = array();
 		foreach ( $results as $r ) {
+			if ( isset( $taxonomies[ absint( $r->term_id ) ] ) ) {
+				$taxonomies[ absint( $r->term_id ) ]['object_ids'][] = absint( $r->object_id );
+				continue;
+			}
 			$taxonomies[ absint( $r->term_id ) ]['name']         = esc_html( $r->name );
 			$taxonomies[ absint( $r->term_id ) ]['object_ids'][] = absint( $r->object_id );
 			$taxonomies[ absint( $r->term_id ) ]['parent']       = absint( $r->parent );
@@ -140,9 +156,12 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		}
 
 		// Sort by total earnings.
-		usort( $sorted_data, function( $a, $b ) {
-			return ( $a->earnings < $b->earnings ) ? -1 : 1;
-		} );
+		usort(
+			$sorted_data,
+			function ( $a, $b ) {
+				return ( $a->earnings < $b->earnings ) ? -1 : 1;
+			}
+		);
 
 		return $sorted_data;
 	}
@@ -156,11 +175,11 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'             => __( 'Name',                     'easy-digital-downloads' ),
-			'sales'            => __( 'Total Sales',              'easy-digital-downloads' ),
-			'earnings'         => __( 'Total Earnings',           'easy-digital-downloads' ),
-			'average_sales'    => __( 'Monthly Sales Average',    'easy-digital-downloads' ),
-			'average_earnings' => __( 'Monthly Earnings Average', 'easy-digital-downloads' )
+			'name'             => __( 'Name', 'easy-digital-downloads' ),
+			'sales'            => __( 'Total Sales', 'easy-digital-downloads' ),
+			'earnings'         => __( 'Total Earnings', 'easy-digital-downloads' ),
+			'average_sales'    => __( 'Monthly Sales Average', 'easy-digital-downloads' ),
+			'average_earnings' => __( 'Monthly Earnings Average', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -246,6 +265,35 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function no_items() {
+		if ( $this->show_warning() ) {
+			?>
+			<p style="text-align:center;">
+				<?php
+				esc_html_e(
+					'Due to the large number of products or terms on your site, this report may be slow or sometimes fail to load.',
+					'easy-digital-downloads'
+				);
+				?>
+			</p>
+			<p style="text-align:center;">
+				<a href="
+				<?php
+					echo esc_url(
+						add_query_arg(
+							'edd-action',
+							'show_downloads_taxonomy_report'
+						)
+					);
+				?>
+				" class="button button-primary"
+				>
+					<?php esc_html_e( 'Continue to Report', 'easy-digital-downloads' ); ?>
+				</a>
+			</p>
+			<?php
+			return;
+		}
+
 		esc_html_e( 'No taxonomies found.', 'easy-digital-downloads' );
 	}
 
@@ -291,7 +339,6 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 * @param string $which
 	 */
 	protected function pagination( $which ) {
-
 	}
 
 	/**
@@ -302,6 +349,38 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
+	}
 
+	/**
+	 * Show the button to allow the user to display the report.
+	 *
+	 * @since 3.2.7
+	 * @return bool
+	 */
+	private function show_warning() {
+		if ( ! is_null( $this->show_warning ) ) {
+			return $this->show_warning;
+		}
+
+		// If the user has already dismissed this warning, we don't need to show it again.
+		if ( get_transient( 'edd_earnings_by_taxonomy_show_report' ) ) {
+			$this->show_warning = false;
+			return $this->show_warning;
+		}
+
+		// We only want to show this warning if there are more than 200 products or terms.
+		// This is, admittedly, an arbitrary number, but it's a good starting point.
+		$threshold = 200;
+
+		if (
+			wp_count_posts( 'download' )->publish > $threshold
+			|| wp_count_terms( array( 'taxonomy' => edd_get_download_taxonomies() ) ) > $threshold
+		) {
+			$this->show_warning = true;
+		} else {
+			$this->show_warning = false;
+		}
+
+		return $this->show_warning;
 	}
 }

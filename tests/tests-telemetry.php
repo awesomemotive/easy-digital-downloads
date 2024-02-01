@@ -105,4 +105,10 @@ class Telemetry extends EDD_UnitTestCase {
 		$this->assertEquals( 'WordPress', get_bloginfo( 'name' ) );
 		$this->assertFalse( strpos( self::$data['environment']['active_theme'], 'WordPress' ) );
 	}
+
+	public function test_deprecated_class_instance_matches() {
+		$tracking = new \EDD_Tracking();
+
+		$this->assertTrue( $tracking instanceof \EDD\Telemetry\Tracking );
+	}
 }
