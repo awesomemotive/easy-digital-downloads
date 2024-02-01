@@ -85,6 +85,27 @@ class Orders extends EDD_UnitTestCase {
 		$this->assertSame( 'custom', edd_get_order_adjustment_meta( $adjustment->id, 'points_type', true ) );
 	}
 
+	public function test_negative_fee_no_tax_is_true() {
+		// Replace the fees.
+		$fees       = array(
+			'discount_pro_123' => array(
+				'id'          => 'discount_pro_123',
+				'label'       => 'Something from Discounts Pro',
+				'amount'      => -10,
+				'type'        => 'fee',
+				'download_id' => self::$download->ID,
+				'price_id'    => null,
+				'no_tax'      => false, // This is incorrect and should be overridden.
+			),
+		);
+		$order_data = $this->get_order_data( false, $fees );
+		$order_id   = edd_build_order( $order_data );
+		$payment    = edd_get_payment( $order_id );
+		$fee        = $payment->fees[0];
+
+		$this->assertTrue( $fee['no_tax'] );
+	}
+
 	private function build_order_and_get_fee( $no_tax = false ) {
 		$order_id = edd_build_order( $this->get_order_data( $no_tax ) );
 

@@ -3,19 +3,14 @@
  * API Key Table Class
  *
  * @package     EDD
- * @subpackage  Admin/Tools/APIKeys
+ * @subpackage  Admin/Tools/EDD_API_Keys_Table
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
 
 /**
  * EDD_API_Keys_Table Class
@@ -27,17 +22,27 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class EDD_API_Keys_Table extends WP_List_Table {
 
 	/**
+	 * Number of results to show per page
+	 *
+	 * @since 3.2.7
+	 * @var int
+	 */
+	private $per_page = 30;
+
+	/**
 	 * Get things started
 	 *
 	 * @since 1.5
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular'  => __( 'API Key',  'easy-digital-downloads' ),
-			'plural'    => __( 'API Keys', 'easy-digital-downloads' ),
-			'ajax'      => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'api-key',
+				'plural'   => 'api-keys',
+				'ajax'     => false,
+			)
+		);
 
 		$this->query();
 	}
@@ -59,8 +64,8 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 *
 	 * @since 2.0
 	 *
-	 * @param array $item Contains all the data of the keys
-	 * @param string $column_name The name of the column
+	 * @param array  $item Contains all the data of the keys.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
@@ -73,13 +78,12 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 *
 	 * @since 2.4
 	 *
-	 * @param array $item Contains all the data of the keys
-	 * @param string $column_name The name of the column
+	 * @param array $item Contains all the data of the keys.
 	 *
 	 * @return string Column Name
 	 */
 	public function column_key( $item ) {
-		return '<input readonly="readonly" type="text" class="code" value="' . esc_attr( $item[ 'key' ] ) . '"/>';
+		return '<input readonly="readonly" type="text" class="code" value="' . esc_attr( $item['key'] ) . '"/>';
 	}
 
 	/**
@@ -87,13 +91,12 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 *
 	 * @since 2.4
 	 *
-	 * @param array $item Contains all the data of the keys
-	 * @param string $column_name The name of the column
+	 * @param array $item Contains all the data of the keys.
 	 *
 	 * @return string Column Name
 	 */
 	public function column_token( $item ) {
-		return '<input readonly="readonly" type="text" class="code" value="' . esc_attr( $item[ 'token' ] ) . '"/>';
+		return '<input readonly="readonly" type="text" class="code" value="' . esc_attr( $item['token'] ) . '"/>';
 	}
 
 	/**
@@ -101,20 +104,48 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 *
 	 * @since 2.4
 	 *
-	 * @param array $item Contains all the data of the keys
-	 * @param string $column_name The name of the column
+	 * @param array $item Contains all the data of the keys.
 	 *
 	 * @return string Column Name
 	 */
 	public function column_secret( $item ) {
-		return '<input readonly="readonly" type="text" class="code" value="' . esc_attr( $item[ 'secret' ] ) . '"/>';
+		return '<input readonly="readonly" type="text" class="code" value="' . esc_attr( $item['secret'] ) . '"/>';
+	}
+
+	/**
+	 * Displays the last used rows
+	 *
+	 * @since 3.2.7
+	 *
+	 * @param array $item Contains all the data of the keys.
+	 *
+	 * @return string The data for the last used column.
+	 */
+	public function column_last_used( $item ) {
+		if ( empty( $item['last_used'] ) ) {
+			return __( 'Never Used', 'easy-digital-downloads' );
+		}
+
+		// Convert the date to the store timezone.
+		$converted_date = EDD()->utils->date( $item['last_used'], null, true )->toDateTimeString();
+
+		// Use the UTC time for the human time diff.
+		$date_diff = human_time_diff( strtotime( $item['last_used'] ) );
+
+		// Build the date diff string.
+		$date_diff_string = sprintf(
+			/* translators: %s: human-readable time difference */
+			__( '%s ago', 'easy-digital-downloads' ),
+			$date_diff
+		);
+
+		return '<time datetime="' . esc_attr( $converted_date ) . '">' . esc_html( $date_diff_string ) . '</time>';
 	}
 
 	/**
 	 * Renders the column for the user field
 	 *
 	 * @since 2.0
-	 * @return void
 	 */
 	public function column_user( $item ) {
 
@@ -123,20 +154,51 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		if ( apply_filters( 'edd_api_log_requests', true ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( edd_get_admin_url( array( 'view' => 'api_requests', 'page' => 'edd-tools', 'tab' => 'logs', 's' => rawurlencode( $item['email'] ) ) ) ),
+				esc_url(
+					edd_get_admin_url(
+						array(
+							'view' => 'api_requests',
+							'page' => 'edd-tools',
+							'tab'  => 'logs',
+							's'    => rawurlencode( $item['email'] ),
+						)
+					)
+				),
 				__( 'View Log', 'easy-digital-downloads' )
 			);
 		}
 
 		$actions['reissue'] = sprintf(
 			'<a href="%s" class="edd-regenerate-api-key">%s</a>',
-			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => absint( $item['id'] ), 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ), 'edd-api-nonce' ) ),
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'user_id'         => absint( $item['id'] ),
+							'edd_action'      => 'process_api_key',
+							'edd_api_process' => 'regenerate',
+						)
+					),
+					'edd-api-nonce'
+				)
+			),
 			__( 'Reissue', 'easy-digital-downloads' )
 		);
 
 		$actions['revoke'] = sprintf(
 			'<a href="%s" class="edd-revoke-api-key edd-delete">%s</a>',
-			esc_url( wp_nonce_url( add_query_arg( array( 'user_id' => absint( $item['id'] ), 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ), 'edd-api-nonce' ) ),
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'user_id'         => absint( $item['id'] ),
+							'edd_action'      => 'process_api_key',
+							'edd_api_process' => 'revoke',
+						)
+					),
+					'edd-api-nonce'
+				)
+			),
 			__( 'Revoke', 'easy-digital-downloads' )
 		);
 
@@ -153,10 +215,11 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'user'   => __( 'Username',   'easy-digital-downloads' ),
-			'key'    => __( 'Public Key', 'easy-digital-downloads' ),
-			'token'  => __( 'Token',      'easy-digital-downloads' ),
-			'secret' => __( 'Secret Key', 'easy-digital-downloads' )
+			'user'      => __( 'Username', 'easy-digital-downloads' ),
+			'key'       => __( 'Public Key', 'easy-digital-downloads' ),
+			'token'     => __( 'Token', 'easy-digital-downloads' ),
+			'secret'    => __( 'Secret Key', 'easy-digital-downloads' ),
+			'last_used' => __( 'Last Used', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -179,7 +242,18 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		$edd_api_is_bottom = true; ?>
 
-		<form id="api-key-generate-form" method="post" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'api_keys' ) ) ); ?>">
+		<form id="api-key-generate-form" method="post" action="
+			<?php
+			echo esc_url(
+				edd_get_admin_url(
+					array(
+						'page' => 'edd-tools',
+						'tab'  => 'api_keys',
+					)
+				)
+			);
+			?>
+		">
 			<input type="hidden" name="edd_action" value="process_api_key" />
 			<input type="hidden" name="edd_api_process" value="generate" />
 			<?php wp_nonce_field( 'edd-api-nonce' ); ?>
@@ -194,25 +268,30 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * Generate the table navigation above or below the table
 	 *
 	 * @since 3.1.0
+	 *
 	 * @access protected
-	 * @param string $which
+	 *
+	 * @param string $which Position of the nav (top or bottom).
 	 */
 	protected function display_tablenav( $which ) {
 
 		if ( 'top' === $which ) {
 			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
-		} ?>
+		}
+		?>
 
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
 			<div class="alignleft actions bulkactions">
 				<?php $this->bulk_actions( $which ); ?>
-			</div><?php
+			</div>
+			<?php
 
 			$this->extra_tablenav( $which );
 			$this->pagination( $which );
 
-			?><br class="clear" />
+			?>
+			<br class="clear" />
 		</div>
 
 		<?php
@@ -222,24 +301,26 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * Performs the key query
 	 *
 	 * @since 2.0
-	 * @return void
 	 */
 	public function query() {
-		$users = get_users( array(
-			'meta_value' => 'edd_user_secret_key',
-			'number'     => $this->per_page,
-			'offset'     => $this->per_page * ( $this->get_paged() - 1 )
-		) );
+		$users = get_users(
+			array(
+				'meta_value' => 'edd_user_secret_key',
+				'number'     => $this->per_page,
+				'offset'     => $this->per_page * ( $this->get_pagenum() - 1 ),
+			)
+		);
 
 		$keys = array();
 
-		foreach( $users as $user ) {
-			$keys[$user->ID]['id']     = $user->ID;
-			$keys[$user->ID]['email']  = $user->user_email;
-			$keys[$user->ID]['user']   = '<a href="' . esc_url( add_query_arg( 'user_id', urlencode( $user->ID ), 'user-edit.php' ) ) . '"><strong>' . esc_html( $user->user_login ) . '</strong></a>';
-			$keys[$user->ID]['key']    = EDD()->api->get_user_public_key( $user->ID );
-			$keys[$user->ID]['secret'] = EDD()->api->get_user_secret_key( $user->ID );
-			$keys[$user->ID]['token']  = EDD()->api->get_token( $user->ID );
+		foreach ( $users as $user ) {
+			$keys[ $user->ID ]['id']        = $user->ID;
+			$keys[ $user->ID ]['email']     = $user->user_email;
+			$keys[ $user->ID ]['user']      = '<a href="' . esc_url( add_query_arg( 'user_id', urlencode( $user->ID ), 'user-edit.php' ) ) . '"><strong>' . esc_html( $user->user_login ) . '</strong></a>';
+			$keys[ $user->ID ]['key']       = EDD()->api->get_user_public_key( $user->ID );
+			$keys[ $user->ID ]['secret']    = EDD()->api->get_user_secret_key( $user->ID );
+			$keys[ $user->ID ]['token']     = EDD()->api->get_token( $user->ID );
+			$keys[ $user->ID ]['last_used'] = EDD()->api->get_last_used( $user->ID );
 		}
 
 		return $keys;
@@ -260,7 +341,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			set_transient( 'edd_total_api_keys', $total_items, 60 * 60 );
 		}
 
-		return get_transient( 'edd_total_api_keys' );
+		return intval( get_transient( 'edd_total_api_keys' ) );
 	}
 
 	/**
@@ -274,21 +355,20 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			$this->get_columns(),
 			array(),
 			array(),
-			'user'
+			'user',
 		);
 
 		$total_items = $this->total_items();
 		$this->items = $this->query();
-		$per_page    = ! empty( $this->per_page )
-			? $this->per_page
-			: 30;
 
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => $total_items > 0
-				? ceil( $total_items / $per_page )
-				: 0
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => $total_items > 0
+					? intval( ceil( $total_items / $this->per_page ) )
+					: 0,
+			)
+		);
 	}
 }

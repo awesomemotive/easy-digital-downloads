@@ -118,16 +118,14 @@ add_action( 'edd_stripe_new_card_form', 'edd_stripe_new_card_form' );
  */
 function edds_output_payment_elements_form() {
 	// Payment Elements needs to not allow checking out with mixed carts or multiple subscriptions.
-	if ( function_exists( 'edd_recurring' ) ) {
-		if ( ( count( edd_get_cart_contents() ) > 1 && edd_recurring()->cart_contains_recurring() ) || edd_recurring()->cart_is_mixed() ) {
-			add_filter( 'edd_checkout_button_purchase', '__return_empty_string', 999 );
-			?>
-				<div class="edd_errors edd-alert edd-alert-info">
-					<p class="edd_error" id="edd_error_edd-stripe-incompatible-cart"><?php echo edds_get_single_subscription_cart_error(); ?></p>
-				</div>
-			<?php
-			return;
-		}
+	if ( ! edd_gateway_supports_cart_contents( 'stripe' ) ) {
+		add_filter( 'edd_checkout_button_purchase', '__return_empty_string', 999 );
+		?>
+		<div class="edd_errors edd-alert edd-alert-info">
+			<p class="edd_error" id="edd_error_edd-stripe-incompatible-cart"><?php echo edds_get_single_subscription_cart_error(); ?></p>
+		</div>
+		<?php
+		return;
 	}
 
 	// Clear any errors that might be sitting from a previous AJAX loading of errors.

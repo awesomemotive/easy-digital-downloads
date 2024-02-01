@@ -392,12 +392,14 @@ function get_purchased_products( $block_attributes ) {
 		'fields'     => 'ids',
 		'status__in' => \edd_get_complete_order_statuses(),
 		'number'     => 9999,
+		'type'       => 'sale',
 	);
 	if ( Helpers\is_block_editor() ) {
 		$args['number'] = 50;
 		unset( $args['user_id'] );
 	}
 	$order_ids = edd_get_orders( $args );
+
 	if ( empty( $order_ids ) ) {
 		return false;
 	}
