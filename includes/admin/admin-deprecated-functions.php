@@ -886,3 +886,18 @@ function edd_logs_view_sales() {
 
 	edd_logs_view_page( $logs_table, 'sales' );
 }
+
+/**
+ * Product tax settings
+ *
+ * Outputs the option to mark whether a product is exclusive of tax
+ *
+ * @since 1.9
+ * @deprecated 3.2.7
+ * @param int $post_id Download (Post) ID.
+ * @return void
+ */
+function edd_render_dowwn_tax_options( $post_id = 0 ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.7', 'edd_render_down_tax_options' );
+	edd_render_down_tax_options( $post_id );
+}

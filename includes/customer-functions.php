@@ -161,6 +161,10 @@ function edd_destroy_customer( $customer_id = 0 ) {
  * @return int|false Number of rows updated if successful, false otherwise.
  */
 function edd_update_customer( $customer_id = 0, $data = array() ) {
+	if ( isset( $data['email'] ) && empty( $data['email'] ) ) {
+		return false;
+	}
+
 	$customers = new EDD\Database\Queries\Customer();
 
 	return $customers->update_item( $customer_id, $data );

@@ -3019,12 +3019,15 @@ class EDD_Payment {
 				$download_id = 0;
 				$price_id    = null;
 
-				if ( 'order_item' === $order_fee->object_type && array_key_exists( intval( $order_fee->object_id ), $order_items ) ) {
+				if (
+					'order_item' === $order_fee->object_type &&
+					array_key_exists( intval( $order_fee->object_id ), $order_items )
+					) {
 					$download_id = $order_items[ intval( $order_fee->object_id ) ]['download_id'];
 					$price_id    = $order_items[ intval( $order_fee->object_id ) ]['price_id'];
 				}
 
-				$no_tax = (bool) 0.00 === $order_fee->tax;
+				$no_tax = $order_fee->tax <= 0;
 				$id     = is_null( $order_fee->type_key ) ? $order_fee->id : $order_fee->type_key;
 				if ( array_key_exists( $id, $fees ) ) {
 					$id .= '_2';

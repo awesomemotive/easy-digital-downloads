@@ -289,4 +289,52 @@ class EDD_Helper_Download extends EDD_UnitTestCase {
 
 		return get_post( $post_id );
 	}
+
+		/**
+	 * Add a filter for the edd_download_files hook.
+	 *
+	 * This allows us to 'fake' the download files for a download.
+	 */
+	public static function add_download_files() {
+		add_filter( 'edd_download_files', array( __CLASS__, 'helper_filter_download_files' ), 10, 3 );
+	}
+
+	/**
+	 * Remove the filter for the edd_download_files hook.
+	 */
+	public static function remove_download_files() {
+		remove_filter( 'edd_download_files', array( __CLASS__, 'helper_filter_download_files' ), 10, 3 );
+	}
+
+	/**
+	 * Filter the download files for a download, by adding fake files, for testing.
+	 *
+	 * @param array $files      The download files.
+	 * @param int   $download_id The download ID.
+	 * @param int   $payment_id  The payment ID.
+	 *
+	 * @return array The filtered download files.
+	 */
+	public function helper_filter_download_files( $files, $download_id, $payment_id ) {
+		$files = array(
+			array (
+				'index'          => '0',
+				'attachment_id'  => '0',
+				'thumbnail_size' => '',
+				'name'           => 'Test File',
+				'file'           => 'https://example.org/wp-content/uploads/edd/2019/05/test-file.zip',
+				'condition'      => 'all',
+			),
+			array (
+				'index'          => '1',
+				'attachment_id'  => '0',
+				'thumbnail_size' => '',
+				'name'           => 'Test File',
+				'file'           => 'https://example.org/wp-content/uploads/edd/2019/05/test-file.zip',
+				'condition'      => '0',
+			),
+		);
+
+		return $files;
+	}
 }

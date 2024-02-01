@@ -75,8 +75,7 @@ class Direct extends Test {
 				'<p>%s</p>',
 				__( 'Easy Digital Downloads requires a specific checkout page to be set to easily handle user interactions.', 'easy-digital-downloads' )
 			);
-			$result['actions'] = sprintf(
-				'<a class="button button-primary" href="%s">%s</a>',
+			$result['actions']     = $this->get_action_button(
 				edd_get_admin_url(
 					array(
 						'page'    => 'edd-settings',
@@ -88,7 +87,7 @@ class Direct extends Test {
 			);
 		} else {
 			if ( ! has_block( 'edd/checkout', $purchase_page ) ) {
-				$result['label'] = __( 'Your checkout page is using the legacy shortcode', 'easy-digital-downloads' );
+				$result['label']          = __( 'Your checkout page is using the legacy shortcode', 'easy-digital-downloads' );
 				$result['status']         = 'recommended';
 				$result['badge']['color'] = 'orange';
 
@@ -102,8 +101,7 @@ class Direct extends Test {
 				);
 
 				// Link the action to edit the checkout page.
-				$result['actions'] = sprintf(
-					'<a class="button button-secondary" href="%s">%s</a>',
+				$result['actions'] = $this->get_action_button(
 					admin_url( 'post.php?post=' . $purchase_page . '&action=edit' ),
 					__( 'Edit Checkout Page', 'easy-digital-downloads' )
 				);
@@ -182,8 +180,7 @@ class Direct extends Test {
 					__( 'You currently are using the \'Redirect\' download method, which may expose your downloadable products. Either switch to the \'Forced\' method or enable \'Symlinks\'.', 'easy-digital-downloads' )
 				);
 
-				$result['actions'] = sprintf(
-					'<a class="button button-primary" href="%s">%s</a>',
+				$result['actions'] = $this->get_action_button(
 					edd_get_admin_url(
 						array(
 							'page'    => 'edd-settings',
@@ -226,8 +223,7 @@ class Direct extends Test {
 					'<strong>' . $upload_directory . '</strong>'
 				)
 			);
-			$result['actions'] = sprintf(
-				'<a href="%s">%s</a>',
+			$result['actions'] = $this->get_action_button(
 				edd_get_admin_url(
 					array(
 						'page' => 'edd-settings',
@@ -268,15 +264,31 @@ class Direct extends Test {
 
 		$result['status']         = 'critical';
 		$result['badge']['color'] = 'red';
-		$result['actions']        = sprintf(
-			'<a href="%s">%s</a>',
+		$result['label']          = __( 'Your store is not accepting payments', 'easy-digital-downloads' );
+		$result['description']    = sprintf(
+			'<p>%1$s</p><p>%2$s %3$s</p>',
+			__(
+				'To process orders that require payment, you must have a gateway enabled.',
+				'easy-digital-downloads'
+			),
+			__(
+				'A gateway is a service, such as PayPal or Stripe, that allows your store to accept payments.',
+				'easy-digital-downloads'
+			),
+			__(
+				'Stores that offer multiple ways for their customers to pay see higher conversion rates.',
+				'easy-digital-downloads'
+			)
+		);
+
+		$result['actions'] = $this->get_action_button(
 			edd_get_admin_url(
 				array(
 					'page' => 'edd-settings',
 					'tab'  => 'gateways',
 				)
 			),
-			__( 'Please enable at least one gateway in order to allow customers to make purchases.', 'easy-digital-downloads' )
+			__( 'Configure a Gateway', 'easy-digital-downloads' )
 		);
 
 		if ( edd_is_test_mode() ) {

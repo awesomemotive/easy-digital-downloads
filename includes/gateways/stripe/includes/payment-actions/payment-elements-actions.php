@@ -6,15 +6,15 @@
  * @since   2.7.0
  */
 
- /**
-  * If regional support is enabled, check if the card name field is required.
-  */
+/**
+ * If regional support is enabled, check if the card name field is required.
+ */
 function edds_maybe_disable_card_name() {
 	// We no longer need a card name field for some regions, so remove the requirement if it's not needed.
 	if ( false === edd_stripe()->has_regional_support() || false === edd_stripe()->regional_support->requires_card_name ) {
 		add_filter(
 			'edd_purchase_form_required_fields',
-			function( $required_fields ) {
+			function ( $required_fields ) {
 				unset( $required_fields['card_name'] );
 				return $required_fields;
 			}
@@ -42,7 +42,7 @@ function edds_process_purchase_form( $purchase_data ) {
 	// Remove the error set by the "gateway mismatch" and allow the redirect.
 	if ( isset( $_REQUEST['edd_action'] ) && 'straight_to_gateway' === $_REQUEST['edd_action'] ) {
 		foreach ( $purchase_data['downloads'] as $download ) {
-			$options = isset( $download['options'] ) ? $download['options'] : array();
+			$options             = isset( $download['options'] ) ? $download['options'] : array();
 			$options['quantity'] = isset( $download['quantity'] ) ? $download['quantity'] : 1;
 
 			edd_add_to_cart( $download['id'], $options );
@@ -82,7 +82,7 @@ function edds_process_purchase_form( $purchase_data ) {
 		$cart_contains_subscription = (bool) ( function_exists( 'edd_recurring' ) && edd_recurring()->cart_contains_recurring() );
 
 		if ( $cart_contains_subscription ) {
-			if ( count( edd_get_cart_contents() ) > 1 || edd_recurring()->cart_is_mixed() ) {
+			if ( ! edd_gateway_supports_cart_contents( 'stripe' ) ) {
 				throw new \EDD_Stripe_Gateway_Exception( edds_get_single_subscription_cart_error() );
 			}
 
@@ -188,7 +188,7 @@ function edds_process_purchase_form( $purchase_data ) {
 			 */
 			add_action(
 				'edds_pre_stripe_api_request',
-				function() {
+				function () {
 					\EDD\Vendor\Stripe\Stripe::setApiVersion( '2018-09-24;automatic_payment_methods_beta=v1' );
 				},
 				11
@@ -260,14 +260,16 @@ function edds_process_purchase_form( $purchase_data ) {
 		// Only update the intent, and process this further if we've made changes to the intent.
 		if ( ! empty( $_REQUEST['intent_id'] ) && ! empty( $_REQUEST['intent_fingerprint'] ) ) {
 			if ( hash_equals( $_REQUEST['intent_fingerprint'], $new_fingerprint ) ) {
-				return wp_send_json_success( array(
-					'intent_id'          => $intent->id,
-					'client_secret'      => $intent->client_secret,
-					'intent_type'        => $intent_type,
-					'token'              => wp_create_nonce( 'edd-process-checkout' ),
-					'intent_fingerprint' => $new_fingerprint,
-					'intent_changed'     => 0,
-				) );
+				return wp_send_json_success(
+					array(
+						'intent_id'          => $intent->id,
+						'client_secret'      => $intent->client_secret,
+						'intent_type'        => $intent_type,
+						'token'              => wp_create_nonce( 'edd-process-checkout' ),
+						'intent_fingerprint' => $new_fingerprint,
+						'intent_changed'     => 0,
+					)
+				);
 			}
 		}
 
@@ -311,14 +313,16 @@ function edds_process_purchase_form( $purchase_data ) {
 		 */
 		do_action( 'edds_process_purchase_form', $purchase_data, $intent );
 
-		return wp_send_json_success( array(
-			'intent_id'          => $intent->id,
-			'client_secret'      => $intent->client_secret,
-			'intent_type'        => $intent_type,
-			'token'              => wp_create_nonce( 'edd-process-checkout' ),
-			'intent_fingerprint' => $new_fingerprint,
-			'intent_changed'     => 1,
-		) );
+		return wp_send_json_success(
+			array(
+				'intent_id'          => $intent->id,
+				'client_secret'      => $intent->client_secret,
+				'intent_type'        => $intent_type,
+				'token'              => wp_create_nonce( 'edd-process-checkout' ),
+				'intent_fingerprint' => $new_fingerprint,
+				'intent_changed'     => 1,
+			)
+		);
 
 	} catch ( \Stripe\Exception\ApiErrorException $e ) {
 		$error = $e->getJsonBody()['error'];
@@ -333,13 +337,15 @@ function edds_process_purchase_form( $purchase_data ) {
 			0
 		);
 
-		return wp_send_json_error( array(
-			'message' => esc_html(
-				edds_get_localized_error_message( $error['code'], $error['message'] )
-			),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html(
+					edds_get_localized_error_message( $error['code'], $error['message'] )
+				),
+			)
+		);
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		if ( true === $e->hasLogMessage() ) {
 			edd_record_gateway_error(
@@ -349,16 +355,20 @@ function edds_process_purchase_form( $purchase_data ) {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( \Exception $e ) {
+		// Catch any remaining error.
+	} catch ( \Exception $e ) {
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'edd_gateway_stripe', 'edds_process_purchase_form' );
@@ -477,11 +487,16 @@ function edds_create_and_complete_order() {
 		if ( 'setup_intent' === $intent->object ) {
 			$order_transaction_id = false;
 
-			$intent = edds_api_request( 'SetupIntent', 'update', $intent->id, array(
-				'metadata' => array(
-					'edd_payment_id' => $order->id,
-				),
-			) );
+			$intent = edds_api_request(
+				'SetupIntent',
+				'update',
+				$intent->id,
+				array(
+					'metadata' => array(
+						'edd_payment_id' => $order->id,
+					),
+				)
+			);
 
 			edd_add_note(
 				array(
@@ -498,11 +513,16 @@ function edds_create_and_complete_order() {
 				$intent->id
 			);
 		} else {
-			$intent = edds_api_request( 'PaymentIntent', 'update', $intent->id, array(
-				'metadata' => array(
-					'edd_payment_id' => $order->id,
-				),
-			) );
+			$intent = edds_api_request(
+				'PaymentIntent',
+				'update',
+				$intent->id,
+				array(
+					'metadata' => array(
+						'edd_payment_id' => $order->id,
+					),
+				)
+			);
 
 			edd_add_note(
 				array(
@@ -686,14 +706,16 @@ function edds_create_and_complete_order() {
 			);
 		}
 
-		return wp_send_json_success( array(
-			'intent' => $intent,
-			'order'  => $order,
-			// Send back a new nonce because the user might have logged in via Auto Register.
-			'nonce'  => wp_create_nonce( 'edd-process-checkout' ),
-		) );
+		return wp_send_json_success(
+			array(
+				'intent' => $intent,
+				'order'  => $order,
+				// Send back a new nonce because the user might have logged in via Auto Register.
+				'nonce'  => wp_create_nonce( 'edd-process-checkout' ),
+			)
+		);
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		// Increase the rate limit count when something goes wrong mid-process.
 		edd_stripe()->rate_limiting->increment_card_error_count();
@@ -706,15 +728,19 @@ function edds_create_and_complete_order() {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( \Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		// Catch any remaining error.
+	} catch ( \Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_create_and_complete_order', 'edds_create_and_complete_order' );
@@ -751,7 +777,7 @@ function edds_get_payment_description( $cart_details ) {
 	$purchase_summary = '';
 
 	if ( is_array( $cart_details ) && ! empty( $cart_details ) ) {
-		foreach( $cart_details as $item ) {
+		foreach ( $cart_details as $item ) {
 			$purchase_summary .= $item['name'];
 			$price_id          = isset( $item['item_number']['options']['price_id'] )
 				? absint( $item['item_number']['options']['price_id'] )

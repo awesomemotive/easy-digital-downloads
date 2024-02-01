@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -51,8 +51,8 @@ function edd_get_cart_quantity() {
  *
  * @since 1.0
  *
- * @param int $download_id Download IDs to be added to the cart
- * @param array $options Array of options, such as variable price
+ * @param int   $download_id Download IDs to be added to the cart.
+ * @param array $options Array of options, such as variable price.
  *
  * @return string Cart key of the new item
  */
@@ -76,8 +76,8 @@ function edd_remove_from_cart( $cart_key ) {
  *
  * @since 1.0
  *
- * @param int   $download_id ID of the download to remove
- * @param array $options
+ * @param int   $download_id ID of the download to remove.
+ * @param array $options Array of options, such as variable price.
  * @return bool Item in the cart or not?
  */
 function edd_item_in_cart( $download_id = 0, $options = array() ) {
@@ -89,8 +89,8 @@ function edd_item_in_cart( $download_id = 0, $options = array() ) {
  *
  * @since 1.0.7.2
  *
- * @param int   $download_id ID of the download to get position of
- * @param array $options array of price options
+ * @param int   $download_id ID of the download to get position of.
+ * @param array $options array of price options.
  * @return bool|int|string false if empty cart |  position of the item in the cart
  */
 function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
@@ -113,9 +113,9 @@ function edd_item_quantities_enabled() {
  *
  * @since 1.7
  *
- * @param int   $download_id Download (cart item) ID number
- * @param int   $quantity
- * @param array $options Download options, such as price ID
+ * @param int   $download_id Download (cart item) ID number.
+ * @param int   $quantity Quantity to set.
+ * @param array $options Download options, such as price ID.
  * @return mixed New Cart array
  */
 function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
@@ -126,8 +126,8 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
  * Get Cart Item Quantity
  *
  * @since 1.0
- * @param int $download_id Download (cart item) ID number
- * @param array $options Download options, such as price ID
+ * @param int   $download_id Download (cart item) ID number.
+ * @param array $options Download options, such as price ID.
  * @return int $quantity Cart item quantity
  */
 function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
@@ -139,8 +139,8 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
  *
  * @since 1.0
  *
- * @param int   $item_id Download (cart item) ID number
- * @param array $options Optional parameters, used for defining variable prices
+ * @param int   $item_id Download (cart item) ID number.
+ * @param array $options Optional parameters, used for defining variable prices.
  * @return string Fully formatted price
  */
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
@@ -156,8 +156,8 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * Use edd_get_cart_item_final_price()
  *
  * @since 1.0
- * @param int   $download_id Download ID number
- * @param array $options Optional parameters, used for defining variable prices
+ * @param int   $download_id Download ID number.
+ * @param array $options Optional parameters, used for defining variable prices.
  * @param bool  $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
  * @return float|bool Price for this item
  */
@@ -171,7 +171,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
  * Gets the amount after taxes and discounts
  *
  * @since 1.9
- * @param int    $item_key Cart item key
+ * @param int $item_key Cart item key.
  * @return float Final price for the item
  */
 function edd_get_cart_item_final_price( $item_key = 0 ) {
@@ -182,9 +182,9 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  * Get cart item tax
  *
  * @since 1.9
- * @param array $download_id Download ID
- * @param array $options Cart item options
- * @param float $subtotal Cart item subtotal
+ * @param array $download_id Download ID.
+ * @param array $options Cart item options.
+ * @param float $subtotal Cart item subtotal.
  * @return float Tax amount
  */
 function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal = '' ) {
@@ -199,8 +199,8 @@ function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal 
  *
  * @since 1.0
  *
- * @param       $download_id Download ID number
- * @param array $options Optional parameters, used for defining variable prices
+ * @param int   $download_id Download ID number.
+ * @param array $options Optional parameters, used for defining variable prices.
  * @return mixed|void Name of the price option
  */
 function edd_get_price_name( $download_id = 0, $options = array() ) {
@@ -218,7 +218,7 @@ function edd_get_price_name( $download_id = 0, $options = array() ) {
 		$return = $name;
 	}
 
-	return apply_filters( 'edd_get_price_name', $return, $download_id, $options );
+	return sanitize_text_field( apply_filters( 'edd_get_price_name', $return, $download_id, $options ) );
 }
 
 /**
@@ -226,7 +226,7 @@ function edd_get_price_name( $download_id = 0, $options = array() ) {
  *
  * @since 1.0
  *
- * @param array $item Cart item array
+ * @param array $item Cart item array.
  * @return int Price id
  */
 function edd_get_cart_item_price_id( $item = array() ) {
@@ -237,7 +237,7 @@ function edd_get_cart_item_price_id( $item = array() ) {
  * Get cart item price name
  *
  * @since 1.8
- * @param int $item Cart item array
+ * @param int $item Cart item array.
  * @return string Price name
  */
 function edd_get_cart_item_price_name( $item = array() ) {
@@ -248,7 +248,7 @@ function edd_get_cart_item_price_name( $item = array() ) {
  * Get cart item title
  *
  * @since 2.4.3
- * @param array $item Cart item array
+ * @param array $item Cart item array.
  * @return string item title
  */
 function edd_get_cart_item_name( $item = array() ) {
@@ -291,7 +291,8 @@ function edd_get_cart_discountable_subtotal( $code_id ) {
 
 /**
  * Get cart items subtotal
- * @param array $items Cart items array
+ *
+ * @param array $items Cart items array.
  *
  * @return float items subtotal
  */
@@ -304,7 +305,7 @@ function edd_get_cart_items_subtotal( $items ) {
  * Returns amount after taxes and discounts
  *
  * @since 1.4.1
- * @param bool $discounts Array of discounts to apply (needed during AJAX calls)
+ * @param bool $discounts Array of discounts to apply (needed during AJAX calls).
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
@@ -320,7 +321,7 @@ function edd_get_cart_total( $discounts = false ) {
  *
  * @since 1.3.3
  *
- * @param bool $echo
+ * @param bool $echo Whether to echo or return the value.
  * @return mixed|string|void
  */
 function edd_cart_total( $echo = true ) {
@@ -333,7 +334,7 @@ function edd_cart_total( $echo = true ) {
  * Just a simple wrapper function for EDD_Fees::has_fees()
  *
  * @since 1.5
- * @param string $type
+ * @param string $type Type of fees to check for.
  * @uses EDD()->fees->has_fees()
  * @return bool Whether the cart has fees applied or not
  */
@@ -347,12 +348,12 @@ function edd_cart_has_fees( $type = 'all' ) {
  * Just a simple wrapper function for EDD_Fees::get_fees()
  *
  * @since 1.5
- * @param string $type
- * @param int $download_id
+ * @param string $type Type of fees to get.
+ * @param int    $download_id Download ID to get fees for.
  * @uses EDD()->fees->get_fees()
  * @return array All the cart fees that have been applied
  */
-function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) {
+function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = null ) {
 	return EDD()->cart->get_fees( $type, $download_id, $price_id );
 }
 
@@ -398,8 +399,8 @@ function edd_is_cart_empty() {
  *
  * @since       1.0
  *
- * @param      $purchase_data
- * @param bool $email
+ * @param array $purchase_data Purchase data.
+ * @param bool  $email Whether to include the email address or not.
  * @return string
  */
 function edd_get_purchase_summary( $purchase_data, $email = true ) {
@@ -450,7 +451,7 @@ function edd_get_cart_tax_rate( $country = '', $state = '', $postal_code = '' ) 
  * Gets the total tax amount for the cart contents in a fully formatted way
  *
  * @since 1.2.3
- * @param bool $echo Whether to echo the tax amount or not (default: false)
+ * @param bool $echo Whether to echo the tax amount or not (default: false).
  * @return string Total tax amount (if $echo is set to true)
  */
 function edd_cart_tax( $echo = false ) {
@@ -463,13 +464,13 @@ function edd_cart_tax( $echo = false ) {
  * Adds all downloads within a taxonomy term to the cart.
  *
  * @since 1.0.6
- * @param string $taxonomy Name of the taxonomy
- * @param mixed $terms Slug or ID of the term from which to add | An array of terms
+ * @param string $taxonomy Name of the taxonomy.
+ * @param mixed  $terms Slug or ID of the term from which to add | An array of terms.
  * @return array Array of IDs for each item added to the cart
  */
 function edd_add_collection_to_cart( $taxonomy, $terms ) {
 
-	// Bail if taxonomy is not a string
+	// Bail if taxonomy is not a string.
 	if ( ! is_string( $taxonomy ) ) {
 		return false;
 	}
@@ -481,11 +482,13 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 
 	$cart_item_ids = array();
 
-	$items = get_posts( array(
-		'post_type'      => 'download',
-		'posts_per_page' => -1,
-		$taxonomy        => $terms
-	) );
+	$items = get_posts(
+		array(
+			'post_type'      => 'download',
+			'posts_per_page' => -1,
+			$taxonomy        => $terms,
+		)
+	);
 
 	if ( ! empty( $items ) ) {
 		foreach ( $items as $item ) {
@@ -502,7 +505,7 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
  *
  * @since 1.0
  * @global $post
- * @param int $cart_key Cart item key
+ * @param int $cart_key Cart item key.
  * @return string $remove_url URL to remove the cart item
  */
 function edd_remove_item_url( $cart_key ) {
@@ -514,10 +517,10 @@ function edd_remove_item_url( $cart_key ) {
  *
  * @since 1.0
  * @global $post
- * @param string $fee_id Fee ID
+ * @param string $fee_id Fee ID.
  * @return string $remove_url URL to remove the cart item
  */
-function edd_remove_cart_fee_url( $fee_id = '') {
+function edd_remove_cart_fee_url( $fee_id = '' ) {
 	return EDD()->cart->remove_fee_url( $fee_id );
 }
 
@@ -539,7 +542,7 @@ function edd_empty_cart() {
  *
  * @since 1.1.5
  *
- * @param $purchase_data
+ * @param array $purchase_data Purchase data.
  *
  * @uses EDD()->session->set()
  */
@@ -624,18 +627,18 @@ function edd_get_cart_token() {
 function edd_delete_saved_carts() {
 	global $wpdb;
 
-	// Bail if not in WordPress cron
+	// Bail if not in WordPress cron.
 	if ( ! edd_doing_cron() ) {
 		return;
 	}
 
-	$start = date( 'Y-m-d', strtotime( '-7 days' ) );
 	$carts = $wpdb->get_results(
 		"
 		SELECT user_id, meta_key, FROM_UNIXTIME(meta_value, '%Y-%m-%d') AS date
 		FROM {$wpdb->usermeta}
 		WHERE meta_key = 'edd_cart_token'
-		", ARRAY_A
+		",
+		ARRAY_A
 	);
 
 	if ( $carts ) {
@@ -648,7 +651,7 @@ function edd_delete_saved_carts() {
 					$wpdb->usermeta,
 					array(
 						'user_id'  => $user_id,
-						'meta_key' => 'edd_cart_token'
+						'meta_key' => 'edd_cart_token',
 					)
 				);
 
@@ -656,7 +659,7 @@ function edd_delete_saved_carts() {
 					$wpdb->usermeta,
 					array(
 						'user_id'  => $user_id,
-						'meta_key' => 'edd_saved_cart'
+						'meta_key' => 'edd_saved_cart',
 					)
 				);
 			}

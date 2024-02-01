@@ -919,12 +919,18 @@ function edd_process_signed_download_url( $args ) {
 	$args['email']    = $order->email;
 	$args['key']      = $order->payment_key;
 
-	// Access is granted if there's at least one `complete` order item that matches the order + download + price ID.
-	$args['has_access'] = edd_order_grants_access_to_download_files( array(
-		'order_id'   => $order->id,
-		'product_id' => $args['download'],
-		'price_id'   => $args['price_id'],
-	) );
+	if ( 'refund' === $order->type ) {
+		$args['has_access'] = false;
+	} else {
+		// Access is granted if there's at least one `complete` order item that matches the order + download + price ID.
+		$args['has_access'] = edd_order_grants_access_to_download_files(
+			array(
+				'order_id'   => $order->id,
+				'product_id' => $args['download'],
+				'price_id'   => $args['price_id'],
+			)
+		);
+	}
 
 	return $args;
 }
@@ -941,9 +947,13 @@ function edd_process_signed_download_url( $args ) {
  */
 function edd_order_grants_access_to_download_files( $args ) {
 	$args = wp_parse_args( $args, array(
-		'order_id'   => 0,
-		'product_id' => 0,
-		'price_id'   => null,
+		'order_id'          => 0,
+		'product_id'        => 0,
+		'price_id'          => null,
+		'quantity__compare' => array(
+			'value'   => 0,
+			'compare' => '>',
+		),
 	) );
 
 	// Order and product IDs are required.

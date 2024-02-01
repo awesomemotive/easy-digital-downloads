@@ -111,7 +111,7 @@ function edds_has_met_requirements( $requirement = false ) {
  *
  * @param string $object Name of the Stripe object to request.
  * @param string $method Name of the API operation to perform during the request.
- * @param mixed ...$args Additional arguments to pass to the request.
+ * @param mixed  ...$args Additional arguments to pass to the request.
  * @return \EDD\Vendor\Stripe\Stripe\StripeObject
  */
 function edds_api_request( $object, $method, $args = null ) {
@@ -143,6 +143,7 @@ function edds_truthy_to_bool( $truthy_value ) {
 
 /**
  * Retrieve the exsting cards setting.
+ *
  * @return bool
  */
 function edd_stripe_existing_cards_enabled() {

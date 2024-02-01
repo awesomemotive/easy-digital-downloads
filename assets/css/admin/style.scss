@@ -349,28 +349,6 @@ button.edd-round:active {
 	margin-right: 5px;
 }
 
-/* Tooltips */
-.edd-help-tip {
-	cursor: help;
-	margin-top: -2px;
-	font-size: 24px;
-	color: grey;
-}
-
-.edd-ui-tooltip {
-	position: absolute;
-	background: #333 !important;
-	border-width: 1px !important;
-	border-radius: 3px !important;
-	box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
-	color: #dedede !important;
-	max-width: 300px !important;
-	padding: 7px !important;
-	text-rendering: optimizeLegibility;
-	text-shadow: none !important;
-	z-index: 9999 !important;
-}
-
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
@@ -1313,11 +1291,11 @@ input[class*="edd-price-field"] {
 .edd-admin-box .label--has-tip {
 	display: flex;
 	align-items: center;
-}
 
-.edd-admin-box .label--has-tip .edd-help-tip {
-	margin-top: 0;
-	font-size: 20px;
+	.edd-help-tip {
+		margin-top: 0;
+		font-size: 20px;
+	}
 }
 
 .edd-admin-box div:not(.edd-admin-box-inside--row) .label--has-checkbox {
@@ -1826,6 +1804,10 @@ span.edd-to-and-from--separator {
 
 .notice-wrap div.notice {
 	margin: 0;
+}
+
+h3 + .notice-wrap .notice {
+	margin-bottom: 1em;
 }
 
 .admin-color-fresh .edd-import-export-form .edd-progress div {

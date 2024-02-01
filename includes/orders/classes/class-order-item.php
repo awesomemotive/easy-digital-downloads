@@ -269,7 +269,7 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @return bool
 	 */
 	public function is_deliverable() {
-		return in_array( $this->status, edd_get_deliverable_order_item_statuses(), true );
+		return in_array( $this->status, edd_get_deliverable_order_item_statuses(), true ) && $this->quantity > 0;
 	}
 
 

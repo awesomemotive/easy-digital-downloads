@@ -38,7 +38,7 @@ if ( is_user_logged_in() ):
 
 		<fieldset id="edd_profile_personal_fieldset">
 
-			<legend id="edd_profile_name_label"><?php _e( 'Change your Name', 'easy-digital-downloads' ); ?></legend>
+			<legend id="edd_profile_name_label"><?php _e( 'Change Your Name', 'easy-digital-downloads' ); ?></legend>
 
 			<p id="edd_profile_first_name_wrap">
 				<label for="edd_first_name"><?php _e( 'First Name', 'easy-digital-downloads' ); ?></label>

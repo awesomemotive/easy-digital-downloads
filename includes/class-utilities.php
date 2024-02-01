@@ -10,8 +10,8 @@
  */
 namespace EDD;
 
-use EDD\Utils as Utils;
-use EDD\Reports as Reports;
+use EDD\Utils;
+use EDD\Reports;
 
 /**
  * Class that bootstraps various utilities leveraged in EDD core.
@@ -219,11 +219,11 @@ class Utilities {
 	 */
 	public function date( $date_string = 'now', $timezone = null, $localize = false ) {
 
-		// Fallback to this time zone
-		if ( null === $timezone && true === $localize ) {
-			$timezone = $this->get_time_zone();
-		} elseif ( null === $timezone && false === $localize ) {
-			$timezone = 'UTC';
+		$localize = (bool) $localize;
+
+		// Fallback to this time zone.
+		if ( null === $timezone ) {
+			$timezone = $localize ? $this->get_time_zone() : 'UTC';
 		}
 
 		// If the date string cannot be property converted to a valid time, reset it to now.
@@ -246,7 +246,7 @@ class Utilities {
 			 * If $apply_offset is false, the interval needs to be removed again after the fact.
 			 */
 			$offset   = $date->getOffset();
-			$interval = \DateInterval::createFromDateString( "-{$offset} seconds" );
+			$interval = \DateInterval::createFromDateString( "{$offset} seconds" );
 			$date->add( $interval );
 		}
 
@@ -386,27 +386,27 @@ class Utilities {
 	 */
 	private function set_time_zone() {
 
-		// Default return value
-		$retval = 'UTC';
+		// Default return value.
+		$time_zone = 'UTC';
 
-		// Get some useful values
+		// Get some useful values.
 		$timezone   = get_option( 'timezone_string' );
-		$gmt_offset = $this->get_gmt_offset();
+		$gmt_offset = $this->get_gmt_offset( true );
 
-		// Use timezone string if it's available
+		// Use timezone string if it's available.
 		if ( ! empty( $timezone ) ) {
-			$retval = $timezone;
-
-		// Use GMT offset to calculate
+			$time_zone = $timezone;
 		} elseif ( is_numeric( $gmt_offset ) ) {
-			$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
-			$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
-			$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
-			$value   = ! empty( $minutes )  ? "{$hours}:{$minutes}" : $hours;
-			$retval  = "GMT{$math}{$value}";
+			// Use GMT offset to calculate.
+			$hours     = abs( intval( $gmt_offset / HOUR_IN_SECONDS ) );
+			$hours     = str_pad( $hours, 2, '0', STR_PAD_LEFT );
+			$minutes   = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+			$minutes   = str_pad( $minutes, 2, '0', STR_PAD_LEFT );
+			$math      = ( $gmt_offset >= 0 ) ? '+' : '-';
+			$time_zone = "GMT{$math}{$hours}:{$minutes}";
 		}
 
-		// Set
-		$this->time_zone = $retval;
+		// Set.
+		$this->time_zone = $time_zone;
 	}
 }

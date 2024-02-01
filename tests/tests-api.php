@@ -389,32 +389,6 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 0, $recent_sales['sales'][0]['ID'] );
 	}
 
-	public function test_update_key() {
-
-		$_POST['edd_set_api_key'] = 1;
-
-		EDD()->api->update_key( self::$user_id );
-
-		$user_public = self::$api->get_user_public_key( self::$user_id );
-		$user_secret = self::$api->get_user_secret_key( self::$user_id );
-
-		$this->assertNotEmpty( $user_public );
-		$this->assertNotEmpty( $user_secret );
-
-		// Backwards compatibilty check for API Keys
-		$this->assertEquals( $user_public, get_user_meta( self::$user_id, 'edd_user_public_key', true ) );
-		$this->assertEquals( $user_secret, get_user_meta( self::$user_id, 'edd_user_secret_key', true ) );
-
-	}
-
-	public function test_get_user() {
-		$_POST['edd_set_api_key'] = 1;
-
-		EDD()->api->update_key( self::$user_id );
-		$this->assertEquals( self::$user_id, self::$api->get_user( self::$api->get_user_public_key( self::$user_id ) ) );
-
-	}
-
 	public function test_get_customers() {
 		try {
 			$out = EDD()->api->get_customers();

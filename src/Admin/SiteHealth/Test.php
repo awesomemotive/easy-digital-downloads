@@ -22,4 +22,22 @@ abstract class Test {
 			'color' => 'blue',
 		);
 	}
+
+	/**
+	 * Build the markup for the action button.
+	 *
+	 * @since 3.2.7
+	 *
+	 * @param string $url   The URL to link to.
+	 * @param string $label The label for the button.
+	 *
+	 * @return string
+	 */
+	protected function get_action_button( $url = '', $label = '' ) {
+		return sprintf(
+			'<a class="button button-primary" href="%1$s">%2$s</a>',
+			esc_url( $url ),
+			esc_html( $label )
+		);
+	}
 }

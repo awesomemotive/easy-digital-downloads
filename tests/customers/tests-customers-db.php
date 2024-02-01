@@ -10,7 +10,8 @@ namespace EDD\Tests\Customers;
 
 use EDD\Tests\Helpers;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
-class Tests_Customers_DB extends EDD_UnitTestCase {
+
+class CustomersDB extends EDD_UnitTestCase {
 
 	/**
 	 * Customers fixture.
@@ -349,5 +350,18 @@ class Tests_Customers_DB extends EDD_UnitTestCase {
 		$customer = edd_get_customer( self::$customers[0] );
 
 		$this->assertSame( 0, $customer->purchase_count );
+	}
+
+	public function test_updating_customer_with_empty_email_is_false() {
+		$customer = edd_get_customer( self::$customers[0] );
+
+		$this->assertFalse(
+			edd_update_customer(
+				self::$customers[0],
+				array(
+					'email' => '',
+				)
+			)
+		);
 	}
 }

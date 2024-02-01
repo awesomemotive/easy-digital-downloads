@@ -1,16 +1,13 @@
 <?php
-namespace EDD\Tests;
+namespace EDD\Tests\Dates;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Utils\Date;
 
 /**
  * Tests for date functions in date-functions.php.
- *
- * @group edd_dates
- * @group edd_functions
  */
-class Date_Functions_Tests extends EDD_UnitTestCase {
+class Functions extends EDD_UnitTestCase {
 
 	/**
 	 * Set up fixtures once.
@@ -28,13 +25,6 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		parent::tearDown();
 	}
 
-	//
-	// Tests
-	//
-
-	/**
-	 * @covers ::edd_date_i18n()
-	 */
 	public function test_date_i18n_with_timestamp_and_no_format_should_return_localized_date_in_date_format() {
 		$expected = 'January 1, 2003';
 		$actual   = edd_date_i18n( '01/02/2003' );
@@ -69,8 +59,19 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_timezone_id()
 	 */
+	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings_with_offset() {
+		$this->assertSame( 'GMT-05:00', edd_get_timezone_id( true ) );
+	}
+
+	/**
+	 * @covers ::edd_get_timezone_id()
+	 */
 	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings() {
-		$this->assertSame( 'GMT-5', edd_get_timezone_id() );
+		update_option( 'timezone_string', 'America/Chicago' );
+
+		$this->assertSame( 'America/Chicago', edd_get_timezone_id() );
+
+		delete_option( 'timezone_string' );
 	}
 
 	/**

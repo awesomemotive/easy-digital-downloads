@@ -130,6 +130,10 @@ function edds_debug_information( $information ) {
 					'label' => 'Stripe Assets',
 					'value' => edd_get_option( 'stripe_restrict_assets', false ) ? 'Limited' : 'Global',
 				),
+				'connect_status'       => array(
+					'label' => 'Connect Status',
+					'value' => edd_stripe()->application_fee->get_status(),
+				),
 			),
 		),
 	);

@@ -497,7 +497,6 @@ function edd_register_downloads_report( $reports ) {
 
 		$tables = array_filter( array(
 			'top_selling_downloads',
-			'earnings_by_taxonomy',
 		), function( $endpoint ) use ( $download_data ) {
 			return false === $download_data;
 		} );
@@ -598,18 +597,6 @@ function edd_register_downloads_report( $reports ) {
 					},
 					'display_args'  => array(
 						'comparison_label' => $label . $download_label,
-					),
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'earnings_by_taxonomy', array(
-			'label' => __( 'Earnings By Taxonomy', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-			'views' => array(
-				'table' => array(
-					'display_args' => array(
-						'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Earnings_By_Taxonomy_List_Table',
-						'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-earnings-by-taxonomy-list-table.php',
 					),
 				),
 			),
@@ -970,6 +957,56 @@ function edd_register_downloads_report( $reports ) {
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_downloads_report' );
+
+/**
+ * Register downloads taxonomy report and endpoints.
+ *
+ * @since 3.2.7
+ * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
+ */
+function edd_register_downloads_taxonomy_report( $reports ) {
+	try {
+		$options = Reports\get_dates_filter_options();
+		$dates   = Reports\get_filter_value( 'dates' );
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
+
+		$reports->add_report(
+			'downloads_taxonomy',
+			array(
+				/* translators: %s: Downloads label */
+				'label'     => sprintf( __( '%s Terms', 'easy-digital-downloads' ), edd_get_label_singular() ),
+				'priority'  => 11,
+				'icon'      => 'category',
+				'endpoints' => array(
+					'tables' => array(
+						'earnings_by_taxonomy',
+					),
+				),
+				'filters'   => array( 'dates' ),
+			)
+		);
+
+		$reports->register_endpoint(
+			'earnings_by_taxonomy',
+			array(
+				'label' => __( 'Earnings By Term', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
+				'views' => array(
+					'table' => array(
+						'display_args' => array(
+							'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Earnings_By_Taxonomy_List_Table',
+							'class_file' => EDD_PLUGIN_DIR . 'src/Reports/Data/Downloads/Earnings_By_Taxonomy_List_Table.php',
+						),
+					),
+				),
+			)
+		);
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
+}
+add_action( 'edd_reports_init', 'edd_register_downloads_taxonomy_report' );
 
 
 /**
@@ -2812,3 +2849,28 @@ function edd_reports_get_relative_date_ranges() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_reports_get_relative_date_ranges', 'edd_reports_get_relative_date_ranges' );
+
+/**
+ * Sets a transient to show the earnings by taxonomy report.
+ *
+ * @since 3.2.7
+ * @return void
+ */
+function edd_show_earnings_by_taxonomy_report( $data ) {
+	if ( empty( $data['edd-action'] ) || 'show_downloads_taxonomy_report' !== $data['edd-action'] ) {
+		return;
+	}
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		return;
+	}
+	set_transient( 'edd_earnings_by_taxonomy_show_report', true, 7 * DAY_IN_SECONDS );
+	edd_redirect(
+		edd_get_admin_url(
+			array(
+				'page' => 'edd-reports',
+				'view' => 'downloads_taxonomy',
+			)
+		)
+	);
+}
+add_action( 'edd_show_downloads_taxonomy_report', 'edd_show_earnings_by_taxonomy_report' );

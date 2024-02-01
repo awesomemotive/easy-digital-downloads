@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Registers and sets up the Downloads custom post type
  *
  * @since 1.0
- * @since <next version> Removes `edd_payment` and `edd_discount` from registered post types.
+ * @since 3.2.0 Removes `edd_payment` and `edd_discount` from registered post types.
  * @return void
  */
 function edd_setup_edd_post_types() {

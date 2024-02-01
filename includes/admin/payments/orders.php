@@ -1189,10 +1189,11 @@ function edd_is_add_order_page() {
  *
  * @since 3.0
  *
- * @param string $order_status Order status slug.
+ * @param string           $order_status Order status slug.
+ * @param EDD\Orders\Order $order        Order object. Added in 3.2.7.
  * @return string
  */
-function edd_get_order_status_badge( $order_status ) {
+function edd_get_order_status_badge( $order_status, $order = false ) {
 	$icon   = '';
 	$status = $order_status;
 	switch ( $order_status ) {
@@ -1221,8 +1222,9 @@ function edd_get_order_status_badge( $order_status ) {
 	 * Filters the arguments for the order status badge.
 	 *
 	 * @since 3.1.4
-	 * @param array  $status_badge_args Array of arguments for the status badge.
-	 * @param string $order_status      Order status slug.
+	 * @param array            $status_badge_args Array of arguments for the status badge.
+	 * @param string           $order_status      Order status slug.
+	 * @param EDD\Orders\Order $order             Order object. Added in 3.2.7.
 	 */
 	$status_badge_args = apply_filters(
 		'edd_get_order_status_badge_args',
@@ -1232,7 +1234,8 @@ function edd_get_order_status_badge( $order_status ) {
 			'icon'   => $icon,
 			'class'  => "edd-admin-order-status-badge--{$order_status}",
 		),
-		$order_status
+		$order_status,
+		$order
 	);
 	$status_badge      = new EDD\Utils\StatusBadge( $status_badge_args );
 
@@ -1241,9 +1244,11 @@ function edd_get_order_status_badge( $order_status ) {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $icon Icon HTML markup.
+	 * @param string           $icon         Icon HTML markup.
+	 * @param string           $order_status Order status slug.
+	 * @param EDD\Orders\Order $order        Order object. Added in 3.2.7.
 	 */
-	$icon = apply_filters( 'edd_get_order_status_badge_icon', $status_badge->get_icon(), $order_status );
+	$icon = apply_filters( 'edd_get_order_status_badge_icon', $status_badge->get_icon(), $order_status, $order );
 
 	return $status_badge->get( $icon );
 }
