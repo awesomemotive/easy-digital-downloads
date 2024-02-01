@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.8
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable Tag: 3.2.6
+Stable Tag: 3.2.7
 License: GNU Version 2 or Any Later Version
 
 The #1 eCommerce plugin to sell digital products. Manage eCommerce orders, increase store revenue & accept credit card payments with Stripe + PayPal.
@@ -226,6 +226,21 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.2.7 =
+Admin: Improved validation of saving some settings.
+API: Improved API Key management for admins, including showing the last time a key was used.
+Customers: Prevent updating a customer to have no email address.
+Downloads: Improved the consistency of the results of setting and getting a price option name.
+Downloads: Searching the downloads dropdown was not working correctly for international characters.
+Downloads: Improved download access validation.
+Fees: Improved the reliability of the fees and tax calculations.
+Orders: The Order Status Badge API now includes the order as a parameter on filters.
+Reports: Download Taxonomy reports have been improved for large data sets.
+Reports: Some timezones and date calculations were getting incorrect date ranges.
+Stripe: Improved mixed cart messaging.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.2.6 =
 * Checkout: Improved checkout block field handling for guest customers.
 * Checkout: Login fields on checkout were incorrectly trying to process the checkout when hitting the 'Enter' key.
@@ -241,8 +256,6 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Orders: Better handling of refunding orders.
 * Stripe: Better error messages when some cart contents are not compatible with the Stripe gateway.
 * Discounts: Ensure store discounts recorded for orders are unique.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.2.5 =
 * Compatibility: Improved compatibility with servers not configured with `mbstring`.
@@ -342,11 +355,6 @@ View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/e
 * Cart: When saving a cart with Stripe as the active gateway, the message stating the cart was saved was removed prematurely.
 * Fees: Additional, not officially supported fee data is now stored as order adjustment metadata.
 * i18n: 141 Additions, 199 Removals/Location Changes, 17 Differences (counts are approximate).
-
-= 3.1.5 =
-* Stripe: India Regions were not being properly loaded.
-* Compatibility: Fixed compatibility with PHP 7.1 when adding a new discount.
-* Taxes: Tax settings tab was overriding the base class method for getting the ID.
 
 == Upgrade Notice ==
 IMPORTANT: Upgrading from Easy Digital Downloads 2.x to 3.0+ is a major release that includes many improvements and changes. You will be asked to perform database maintenance once installed. Please ensure you make a backup of your site prior to upgrading. Your site should remain functional during this maintenance, but as with all updates, it is best to make a backup of your site prior to updating.

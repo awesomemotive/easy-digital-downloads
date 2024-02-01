@@ -636,7 +636,7 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
 function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = true ) {
 
 	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
-	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
+	$date = EDD()->utils->date( $date, null, true );
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range();

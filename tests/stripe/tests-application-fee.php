@@ -50,6 +50,7 @@ class ApplicationFee extends EDD_UnitTestCase {
 		$this->assertFalse( $license->is_expiring_soon() );
 		$this->assertFalse( edd_stripe()->application_fee->has_application_fee() );
 		$this->assertEmpty( edd_stripe()->application_fee->get_fee_message() );
+		$this->assertEquals( 'Valid License', edd_stripe()->application_fee->get_status() );
 	}
 
 	public function test_edd_is_pro_fee_message_says_upgrade() {
@@ -121,6 +122,7 @@ class ApplicationFee extends EDD_UnitTestCase {
 		$this->assertFalse( $license->is_expiring_soon() );
 		$this->assertFalse( edd_stripe()->application_fee->has_application_fee() );
 		$this->assertStringContainsString( 'you are in a grace period.', edd_stripe()->application_fee->get_fee_message() );
+		$this->assertEquals( 'Grace Period', edd_stripe()->application_fee->get_status() );
 
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 	}
@@ -156,7 +158,7 @@ class ApplicationFee extends EDD_UnitTestCase {
 	}
 
 	public function test_pro_license_disabled_has_application_fee_is_true() {
-		LicenseData::get_pro_license(
+		$pro_license = LicenseData::get_pro_license(
 			array(
 				'license' => 'invalid',
 				'error'   => 'disabled',
@@ -172,6 +174,7 @@ class ApplicationFee extends EDD_UnitTestCase {
 		if ( edd_is_pro() ) {
 			$this->assertStringContainsString( 'Activate or upgrade your license', edd_stripe()->application_fee->get_fee_message() );
 		}
+		$this->assertEquals( 'License Error: disabled', edd_stripe()->application_fee->get_status() );
 
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 	}

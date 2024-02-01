@@ -485,7 +485,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 				break;
 			case 'status':
-				$value = edd_get_order_status_badge( $order->status );
+				$value = edd_get_order_status_badge( $order->status, $order );
 				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )

@@ -10,7 +10,9 @@
  * @since       1.8.2
  */
 
-// Exit if accessed directly
+namespace EDD\Telemetry;
+
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -19,12 +21,12 @@ defined( 'ABSPATH' ) || exit;
  * @since  1.8.2
  * @return void
  */
-class EDD_Tracking {
+class Tracking {
 
 	/**
 	 * The data to send to the EDD site
 	 *
-	 * @access private
+	 * @var array
 	 */
 	private $data;
 
@@ -37,7 +39,6 @@ class EDD_Tracking {
 
 	/**
 	 * Get things going
-	 *
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'schedule_send' ) );
@@ -48,7 +49,7 @@ class EDD_Tracking {
 		add_filter( 'edd_settings_misc', array( $this, 'register_setting' ), 50 );
 
 		// Handle opting in and out.
-		add_action( 'edd_opt_into_tracking', array( $this, 'check_for_optin'  ) );
+		add_action( 'edd_opt_into_tracking', array( $this, 'check_for_optin' ) );
 		add_action( 'edd_opt_out_of_tracking', array( $this, 'check_for_optout' ) );
 	}
 
@@ -114,16 +115,14 @@ class EDD_Tracking {
 	}
 
 	/**
-	 * Check for a new opt-in on settings save
-	 *
+	 * Check for a new opt-in on settings save.
 	 * This runs during the sanitation of General settings, thus the return
 	 *
 	 * @return array
 	 */
 	public function check_for_settings_optin( $input ) {
 
-		// Send an intial check in on settings save
-		if ( isset( $input['allow_tracking'] ) && $input['allow_tracking'] == 1 ) {
+		if ( isset( $input['allow_tracking'] ) && 1 === absint( $input['allow_tracking'] ) ) {
 			$this->send_checkin( true );
 		}
 
@@ -134,7 +133,7 @@ class EDD_Tracking {
 	 * Adds the tracking setting to the miscellaneous settings section.
 	 *
 	 * @since 3.1.1
-	 * @param array $settings
+	 * @param array $settings The settings array.
 	 * @return array
 	 */
 	public function register_setting( $settings ) {
@@ -161,20 +160,26 @@ class EDD_Tracking {
 			return;
 		}
 
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_optin' ) ) {
+			return;
+		}
+
 		edd_update_option( 'allow_tracking', 1 );
-
 		$this->send_checkin( true );
-
 		update_option( 'edd_tracking_notice', 1, false );
 	}
 
 	/**
-	 * Check for a new opt-in via the admin notice
+	 * Check for a new opt-out via the admin notice
 	 *
 	 * @return void
 	 */
 	public function check_for_optout() {
 		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_optout' ) ) {
 			return;
 		}
 
@@ -271,9 +276,9 @@ class EDD_Tracking {
 			$this->get_telemetry_description(),
 			sprintf(
 				'<a href="%s" class="button button-primary">%s</a> <a href="%s" class="button button-secondary">%s</a>',
-				esc_url( add_query_arg( 'edd_action', 'opt_into_tracking' ) ),
+				esc_url( wp_nonce_url( add_query_arg( 'edd_action', 'opt_into_tracking' ), 'edd_optin' ) ),
 				__( 'Allow', 'easy-digital-downloads' ),
-				esc_url( add_query_arg( 'edd_action', 'opt_out_of_tracking' ) ),
+				esc_url( wp_nonce_url( add_query_arg( 'edd_action', 'opt_out_of_tracking' ), 'edd_optout' ) ),
 				__( 'Do not allow', 'easy-digital-downloads' )
 			),
 		);
@@ -292,7 +297,13 @@ class EDD_Tracking {
 			sprintf(
 				/* translators: %1$s Link to tracking information, do not translate. %2$s clsoing link tag, do not translate */
 				__( '%1$sHere is what we track.%2$s', 'easy-digital-downloads' ),
-				'<a href="' . edd_link_helper( 'https://easydigitaldownloads.com/docs/what-information-will-be-tracked-by-opting-into-usage-tracking/', array( 'utm_medium' => 'telemetry', 'utm_content' => 'option' ) ) . '" target="_blank">',
+				'<a href="' . edd_link_helper(
+					'https://easydigitaldownloads.com/docs/what-information-will-be-tracked-by-opting-into-usage-tracking/',
+					array(
+						'utm_medium'  => 'telemetry',
+						'utm_content' => 'option',
+					)
+				) . '" target="_blank">',
 				'</a>'
 			);
 	}
@@ -307,12 +318,7 @@ class EDD_Tracking {
 	 */
 	public function can_send_data( $override, $ignore_last_checkin ) {
 
-		// Never send data from a dev site.
-		if ( edd_is_dev_environment() || edd_is_test_mode() ) {
-			return false;
-		}
-
-		if ( 'staging' === wp_get_environment_type() ) {
+		if ( ! $this->environment_allows_tracking() ) {
 			return false;
 		}
 
@@ -323,6 +329,25 @@ class EDD_Tracking {
 		// Send a maximum of once per week.
 		$last_send = $this->get_last_send();
 		if ( ! $ignore_last_checkin && is_numeric( $last_send ) && $last_send > strtotime( '-1 week' ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Whether the environment allows sending telemetry data.
+	 *
+	 * @since 3.2.7
+	 * @return bool
+	 */
+	private function environment_allows_tracking() {
+
+		if ( edd_is_dev_environment() || edd_is_test_mode() ) {
+			return false;
+		}
+
+		if ( 'staging' === wp_get_environment_type() ) {
 			return false;
 		}
 

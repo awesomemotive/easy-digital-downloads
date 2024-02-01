@@ -54,9 +54,8 @@ function edd_process_customer_updated( $customer_id, $data, $prev_customer_obj )
 	if ( intval( $customer->user_id ) !== intval( $prev_customer_obj->user_id ) ) {
 		// Attach the User Email to the customer as well.
 		$user = new WP_User( $customer->user_id );
-		if ( $user instanceof WP_User ) {
-
-			// Only update this if it doesn't match already.
+		// Make sure we have a valid user object and that the user has an email address.
+		if ( $user instanceof WP_User && ! empty( $user->user_email ) ) {
 			if ( $customer->email !== $user->user_email ) {
 				$customers = new EDD\Database\Queries\Customer();
 				$customers->update_item( $customer_id, array( 'email' => $user->user_email ) );
@@ -92,8 +91,14 @@ function edd_process_customer_updated( $customer_id, $data, $prev_customer_obj )
 			}
 		}
 
-		// Update some payment meta if we need to.
-		$order_ids = edd_get_orders( array( 'customer_id' => $customer->id, 'number' => 9999999 ) );
+		// Update the user IDs for any orders that may have been placed by this customer.
+		$order_ids = edd_get_orders(
+			array(
+				'customer_id' => $customer->id,
+				'number'      => 9999999,
+				'fields'      => 'id',
+			)
+		);
 
 		foreach ( $order_ids as $order_id ) {
 			edd_update_order( $order_id, array( 'user_id' => $customer->user_id ) );
@@ -158,7 +163,7 @@ add_action( 'edd_transition_customer_email_address_type', 'edd_demote_customer_p
  *
  * @param string $old_value The previous value of `is_primary`.
  * @param string $new_value The new value of `is_primary`.
- * @param int $item_id      The address ID in the edd_customer_addresses table.
+ * @param int    $item_id      The address ID in the edd_customer_addresses table.
  * @return void
  */
 function edd_demote_customer_primary_addresses( $old_value, $new_value, $item_id ) {

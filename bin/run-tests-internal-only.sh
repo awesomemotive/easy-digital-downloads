@@ -53,15 +53,6 @@ printf "\n"
 printf "Copying compat files into place"
 cp -R bin/compat/* .
 
-coverage=""
-if [[ ${COVERAGE} == 1 ]]; then
-
-coverage=" --coverage-clover coverage.xml"
-
-# Set the XDEBUG_MODE environment variable to 'coverage'
-export XDEBUG_MODE=coverage
-fi
-
 if [[ -z "${FILTER}" ]]; then
 	printf "No filter provided, running all tests."
 	filter=""
@@ -71,29 +62,7 @@ else
 fi
 
 printf "\n"
-printf "Running tests with flags ${coverage} ${filter}"
+printf "Running tests with flags ${filter}"
 printf "\n"
 
-vendor/bin/phpunit${filter} -c phpunit.xml${coverage}
-
-# Reset the XDEBUG_MODE environment variable to 'off'
-export XDEBUG_MODE=off
-
-
-if [[ -z "${CODECOV_TOKEN}" ]]; then
-  printf "\n"
-  printf "No CodeCov token provided, skipping upload."
-else
-	printf "\n"
-	printf "Uploading coverage report to CodeCov."
-	printf "\n"
-
-	# Get the CodeCoverage uploader
-	curl -Os https://uploader.codecov.io/latest/alpine/codecov
-
-	# Make it executable
-	chmod +x codecov
-
-	# Now upload the coverage report with the token, file, commit hash, and branch.
-	./codecov -t ${CODECOV_TOKEN} -f coverage.xml -C ${BUILDKITE_COMMIT} -B ${BUILDKITE_BRANCH}
-fi
+vendor/bin/phpunit${filter} -c phpunit.xml

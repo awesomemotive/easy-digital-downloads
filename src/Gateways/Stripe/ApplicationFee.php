@@ -18,6 +18,14 @@ final class ApplicationFee {
 	private $license;
 
 	/**
+	 * The status of the license.
+	 *
+	 * @since 3.2.7
+	 * @var string
+	 */
+	private $status = '';
+
+	/**
 	 * Whether the application fee should be added to the payment/setup intent.
 	 *
 	 * @since 3.2.0
@@ -26,31 +34,37 @@ final class ApplicationFee {
 	public function has_application_fee() {
 		// Not connected (always false).
 		if ( empty( edd_stripe()->connect()->get_connect_id() ) ) {
+			$this->status = 'Not Connected';
 			return false;
 		}
 
 		// Not in country that supports the fees (always false).
 		if ( true !== edds_stripe_connect_account_country_supports_application_fees() ) {
+			$this->status = 'Not Supported';
 			return false;
 		}
 
 		// No license (always true).
 		if ( ! $this->get_license() ) {
+			$this->status = 'No License';
 			return true;
 		}
 
 		// The license is valid (always false).
 		if ( $this->license->is_license_valid() ) {
+			$this->status = 'Valid License';
 			return false;
 		}
 
 		// It's a new pro install, so false for now.
 		if ( $this->license->is_in_new_install_grace_period() ) {
+			$this->status = 'New Install Grace Period';
 			return false;
 		}
 
 		// License is expired, but in the grace period, so false for now.
 		if ( $this->license->is_in_grace_period() ) {
+			$this->status = 'Grace Period';
 			return false;
 		}
 
@@ -121,6 +135,35 @@ final class ApplicationFee {
 	 */
 	public function reset_license() {
 		$this->license = null;
+		$this->status  = '';
+	}
+
+	/**
+	 * Gets the status of the Stripe connection.
+	 *
+	 * @since 3.2.7
+	 * @return string
+	 */
+	public function get_status() {
+		if ( empty( $this->status ) ) {
+			$this->has_application_fee();
+		}
+
+		$status = 'License Data Missing';
+		if ( empty( $this->status ) ) {
+			$license = $this->get_license();
+			if ( ! empty( $license->license_data->error ) ) {
+				$status = 'License Error: ' . $license->license_data->error;
+			} else {
+				$pro_license = new \EDD\Licensing\License( 'pro' );
+				if ( ! empty( $pro_license->error ) ) {
+					$status = 'License Error: ' . $pro_license->error;
+				}
+			}
+			$this->status = $status;
+		}
+
+		return $this->status;
 	}
 
 	/**

@@ -1,0 +1,64 @@
+.edd-help-tip {
+	cursor: help;
+	margin-top: -2px;
+	font-size: 24px;
+	color: grey;
+}
+
+.edd-ui-tooltip {
+	position: absolute;
+	background: #333 !important;
+	border-width: 1px !important;
+	border-radius: 3px !important;
+	box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
+	color: #dedede !important;
+	max-width: 300px !important;
+	padding: 7px !important;
+	text-rendering: optimizeLegibility;
+	text-shadow: none !important;
+	z-index: 9999 !important;
+
+	.title {
+		font-weight: bold;
+	}
+
+	.timeline {
+		position: relative;
+		margin: 6px 0 0;
+		padding-left: 15px;
+
+		li {
+			position: relative;
+			margin: 0 0 3px 0;
+
+			&::before {
+				content: '';
+				position: absolute;
+				width: 4px;
+				height: 4px;
+				left: -16px;
+				background: rgb(0 0 0 / 0%);
+				border: 2px solid #FFFFFF;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+				border-radius: 100%;
+				z-index: 1;
+			}
+
+			&::after {
+				content: '';
+				width: 2px;
+				height: calc(100% - 4px);
+				background: white;
+				position: absolute;
+				left: -13px;
+				top: calc(50% + 3px);
+			}
+
+			&:last-child::after {
+				display: none;
+			}
+		}
+	}
+}

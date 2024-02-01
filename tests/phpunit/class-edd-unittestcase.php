@@ -62,8 +62,10 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 		self::_delete_all_edd_data();
 
 		delete_option( 'gmt_offset' );
-
 		EDD()->utils->get_gmt_offset( true );
+
+		delete_option( 'timezone_string', '' );
+		EDD()->utils->get_time_zone( true );
 
 		parent::tearDownAfterClass();
 	}

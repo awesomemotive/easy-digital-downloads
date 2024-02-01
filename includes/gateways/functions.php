@@ -26,11 +26,11 @@ function edd_get_payment_modes() {
 	if ( is_null( $modes ) ) {
 		$modes = array(
 			'live' => array(
-				'admin_label' => __( 'Live', 'easy-digital-downloads' )
+				'admin_label' => __( 'Live', 'easy-digital-downloads' ),
 			),
 			'test' => array(
-				'admin_label' => __( 'Test', 'easy-digital-downloads' )
-			)
+				'admin_label' => __( 'Test', 'easy-digital-downloads' ),
+			),
 		);
 	}
 
@@ -66,7 +66,7 @@ function edd_get_payment_gateways() {
 			 *
 			 * @see \EDD\Gateways\PayPal\maybe_remove_paypal_standard()
 			 */
-			'paypal' => array(
+			'paypal'          => array(
 				'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
 				'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
 				'supports'       => array(
@@ -76,7 +76,7 @@ function edd_get_payment_gateways() {
 					'paypal',
 				),
 			),
-			'manual' => array(
+			'manual'          => array(
 				'admin_label'    => __( 'Store Gateway', 'easy-digital-downloads' ),
 				'checkout_label' => __( 'Store Gateway', 'easy-digital-downloads' ),
 			),
@@ -119,7 +119,7 @@ function edd_order_gateways( $gateways = array() ) {
 	// Return ordered gateways
 	return $gateways;
 }
-add_filter( 'edd_payment_gateways',                     'edd_order_gateways', 99 );
+add_filter( 'edd_payment_gateways', 'edd_order_gateways', 99 );
 add_filter( 'edd_enabled_payment_gateways_before_sort', 'edd_order_gateways', 99 );
 
 /**
@@ -128,7 +128,7 @@ add_filter( 'edd_enabled_payment_gateways_before_sort', 'edd_order_gateways', 99
  * @since 1.0
  * @param  bool $sort If true, the default gateway will be first
  * @return array $gateway_list All the available gateways
-*/
+ */
 function edd_get_enabled_payment_gateways( $sort = false ) {
 	$gateways = edd_get_payment_gateways();
 	$enabled  = (array) edd_get_option( 'gateways', false );
@@ -175,7 +175,7 @@ function edd_get_enabled_payment_gateways( $sort = false ) {
  *
  * @param string $gateway Name of the gateway to check for.
  * @return boolean true if enabled, false otherwise.
-*/
+ */
 function edd_is_gateway_active( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
 	$retval   = array_key_exists( $gateway, $gateways );
@@ -322,17 +322,17 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 		$price_options = array(
 			'price_id' => $price_id,
-			'amount'   => $prices[ $price_id ]['amount']
+			'amount'   => $prices[ $price_id ]['amount'],
 		);
-		$price = $prices[ $price_id ]['amount'];
+		$price         = $prices[ $price_id ]['amount'];
 	}
 
 	// Set up Downloads array
 	$downloads = array(
 		array(
 			'id'      => $download_id,
-			'options' => $price_options
-		)
+			'options' => $price_options,
+		),
 	);
 
 	// Set up Cart Details array
@@ -342,7 +342,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 			'id'          => $download_id,
 			'item_number' => array(
 				'id'      => $download_id,
-				'options' => $price_options
+				'options' => $price_options,
 			),
 			'tax'         => 0,
 			'discount'    => 0,
@@ -350,7 +350,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 			'subtotal'    => ( $price * $quantity ),
 			'price'       => ( $price * $quantity ),
 			'quantity'    => $quantity,
-		)
+		),
 	);
 
 	if ( is_user_logged_in() ) {
@@ -359,12 +359,12 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 	// Setup user information
 	$user_info = array(
-		'id'         => is_user_logged_in() ? get_current_user_id()         : -1,
-		'email'      => is_user_logged_in() ? $current_user->user_email     : '',
+		'id'         => is_user_logged_in() ? get_current_user_id() : -1,
+		'email'      => is_user_logged_in() ? $current_user->user_email : '',
 		'first_name' => is_user_logged_in() ? $current_user->user_firstname : '',
-		'last_name'  => is_user_logged_in() ? $current_user->user_lastname  : '',
+		'last_name'  => is_user_logged_in() ? $current_user->user_lastname : '',
 		'discount'   => 'none',
-		'address'    => array()
+		'address'    => array(),
 	);
 
 	// Setup purchase information
@@ -383,7 +383,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'cart_details' => $cart_details,
 		'gateway'      => \EDD\Gateways\PayPal\paypal_standard_enabled() ? 'paypal' : 'paypal_commerce',
 		'buy_now'      => true,
-		'card_info'    => array()
+		'card_info'    => array(),
 	);
 
 	return apply_filters( 'edd_straight_to_gateway_purchase_data', $purchase_data );
@@ -395,8 +395,8 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
  * @since 1.0
  *
  * @param string $gateway     Name of the gateway.
- * @param array $payment_data All the payment data to be sent to the gateway.
-*/
+ * @param array  $payment_data All the payment data to be sent to the gateway.
+ */
 function edd_send_to_gateway( $gateway, $payment_data ) {
 	$payment_data['gateway_nonce'] = wp_create_nonce( 'edd-gateway' );
 
@@ -496,10 +496,12 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
  * @return int Number of orders placed based on the gateway.
  */
 function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'complete' ) {
-	return edd_count_orders( array(
-		'gateway' => $gateway_label,
-		'status'  => $status,
-	) );
+	return edd_count_orders(
+		array(
+			'gateway' => $gateway_label,
+			'status'  => $status,
+		)
+	);
 }
 
 /**
@@ -643,4 +645,29 @@ function edd_get_gateway_settings_url( $gateway = '' ) {
 	}
 
 	return $gateway_settings_url;
+}
+
+/**
+ * Checks whether the current cart setup is supported. This is intended for subscription orders.
+ * If the cart contains multiple products and one of them is a subscription, we need to check
+ * if the gateway supports a mixed cart.
+ *
+ * @since 3.2.7
+ * @return bool
+ */
+function edd_gateway_supports_cart_contents( string $gateway ) {
+
+	// If the cart only contains a single item, the cart is supported.
+	if ( count( edd_get_cart_contents() ) === 1 ) {
+		return true;
+	}
+
+	// If Recurring isn't active, or if the cart doesn't contain a subscription, the cart is supported.
+	if ( ! function_exists( 'edd_recurring' ) || ! edd_recurring()->cart_contains_recurring() ) {
+		return true;
+	}
+
+	// If the cart is mixed and the gateway supports it, the cart is supported.
+	// Historically, mixed carts also support multiple subscriptions.
+	return in_array( 'mixed_cart', edd_get_gateway_supports( $gateway ), true );
 }
