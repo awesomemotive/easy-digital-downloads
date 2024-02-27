@@ -358,7 +358,11 @@ class Utilities {
 	 * @since 3.0
 	 */
 	private function set_gmt_offset() {
-		$this->gmt_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
+		$gmt_offset = get_option( 'gmt_offset', 0 );
+		if ( empty( $gmt_offset ) ) {
+			$gmt_offset = 0;
+		}
+		$this->gmt_offset = $gmt_offset * HOUR_IN_SECONDS;
 	}
 
 	/**
@@ -391,19 +395,20 @@ class Utilities {
 
 		// Get some useful values.
 		$timezone   = get_option( 'timezone_string' );
-		$gmt_offset = $this->get_gmt_offset( true );
+		$gmt_offset = get_option( 'gmt_offset' );
 
 		// Use timezone string if it's available.
 		if ( ! empty( $timezone ) ) {
 			$time_zone = $timezone;
-		} elseif ( is_numeric( $gmt_offset ) ) {
+		} elseif ( ! empty( $gmt_offset ) && is_numeric( $gmt_offset ) ) {
 			// Use GMT offset to calculate.
-			$hours     = abs( intval( $gmt_offset / HOUR_IN_SECONDS ) );
-			$hours     = str_pad( $hours, 2, '0', STR_PAD_LEFT );
-			$minutes   = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
-			$minutes   = str_pad( $minutes, 2, '0', STR_PAD_LEFT );
-			$math      = ( $gmt_offset >= 0 ) ? '+' : '-';
-			$time_zone = "GMT{$math}{$hours}:{$minutes}";
+			$gmt_offset = $gmt_offset * HOUR_IN_SECONDS;
+			$hours      = abs( intval( $gmt_offset / HOUR_IN_SECONDS ) );
+			$hours      = str_pad( $hours, 2, '0', STR_PAD_LEFT );
+			$minutes    = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+			$minutes    = str_pad( $minutes, 2, '0', STR_PAD_LEFT );
+			$math       = ( $gmt_offset >= 0 ) ? '+' : '-';
+			$time_zone  = "GMT{$math}{$hours}:{$minutes}";
 		}
 
 		// Set.

@@ -2,20 +2,21 @@
 	cursor: help;
 	margin-top: -2px;
 	font-size: 24px;
-	color: grey;
+	color: $edd-tool-tip-icon-color;
 }
 
 .edd-ui-tooltip {
 	position: absolute;
-	background: #333 !important;
-	border-width: 1px !important;
-	border-radius: 3px !important;
-	box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
-	color: #dedede !important;
+	background: $white !important;
+	border-width: 0px;
+	border-radius: 12px !important;
+	box-shadow: $edd-tool-tip-shadow !important;
+	color: $edd-tooltip-text !important;
 	max-width: 300px !important;
-	padding: 7px !important;
+	padding: 16px !important;
 	text-rendering: optimizeLegibility;
 	text-shadow: none !important;
+	font-size: 13px !important;
 	z-index: 9999 !important;
 
 	.title {
@@ -38,7 +39,7 @@
 				height: 4px;
 				left: -16px;
 				background: rgb(0 0 0 / 0%);
-				border: 2px solid #FFFFFF;
+				border: 2px solid $edd-tooltip-text;
 				top: 0;
 				bottom: 0;
 				margin: auto;
@@ -50,7 +51,7 @@
 				content: '';
 				width: 2px;
 				height: calc(100% - 4px);
-				background: white;
+				background: $edd-tooltip-text;
 				position: absolute;
 				left: -13px;
 				top: calc(50% + 3px);

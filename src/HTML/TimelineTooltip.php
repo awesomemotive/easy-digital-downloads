@@ -24,35 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.2.7
  */
-final class TimelineTooltip {
-	/**
-	 * Array of arguments for the tooltip.
-	 *
-	 * @var array
-	 */
-	private $args = array();
-
-	/**
-	 * CategorySelect constructor.
-	 *
-	 * @since 3.2.7
-	 * @param array $args {
-	 *    Array of arguments for the timeline tooltip.
-	 *    @type string   $title         Title of the tooltip.
-	 *    @type array    $items         Array of items to display in the tooltip. These can either be timestamps or strings.
-	 *                                  Timestamps will be converted to date strings for display.
-	 *                                  Warning: If you used current_time( 'timestamp' ) and did not specify GMT,
-	 *                                  you will need to do the conversion to a date string before passing into this class.
-	 *                                  This class assumes that timestamps are in GMT.
-	 *    @type int|bool $max_items     Maximum number of items to display in the tooltip. Accepts false for no limit.
-	 *    @type string   $slice_from    Position to slice the items from. Accepts 'start' or 'end'.
-	 *    @type string   $more_position Position of the "More" item. Accepts 'top', 'bottom', or false.
-	 *    @type string   $dashicon      Dashicon to use for the tooltip icon.
-	 * }
-	 */
-	public function __construct( $args ) {
-		$this->args = $this->parse_args( $args );
-	}
+final class TimelineTooltip extends Tooltip {
 
 	/**
 	 * Gets the HTML for the tooltip.
@@ -72,27 +44,6 @@ final class TimelineTooltip {
 	}
 
 	/**
-	 * Parses the arguments for the tooltip.
-	 *
-	 * @since 3.2.7
-	 * @param array $args Array of arguments for the tooltip that were passed in.
-	 * @return array
-	 */
-	private function parse_args( $args = array() ) {
-		return wp_parse_args( $args, $this->defaults() );
-	}
-
-	/**
-	 * Echos the HTML for the tooltip.
-	 *
-	 * @since 3.2.7
-	 * @return void
-	 */
-	public function output() {
-		echo $this->get();
-	}
-
-	/**
 	 * Gets the HTML for the tooltip.
 	 *
 	 * @since 3.2.7
@@ -107,7 +58,7 @@ final class TimelineTooltip {
 		$title      = $this->get_title_markup();
 		$opening_ul = sprintf(
 			'<ul class=\'%1$s\'>', // As this is content added to a title attribute, we have to use single quotes here.
-			$this->get_css_class_string( array( 'timeline' ) )
+			$this->array_to_css_string( array( 'timeline' ) )
 		);
 
 		$list_item_markup = '';
@@ -133,39 +84,9 @@ final class TimelineTooltip {
 
 		// Return the icon for the tooltip, with the tooltip content added as the title attribute.
 		return sprintf(
-			'<span alt="f223" class="%1$s" title="%2$s"></span>',
-			$this->get_css_class_string( array( 'edd-help-tip', 'dashicons', $this->args['dashicon'] ) ),
+			'<span class="%1$s" title="%2$s"></span>',
+			$this->get_css_class_string(),
 			$tooltip_content
-		);
-	}
-
-	/**
-	 * Gets the HTML for the title of the tooltip.
-	 *
-	 * @since 3.2.7
-	 *
-	 * @return string
-	 */
-	private function get_title_markup() {
-		// Ensure the title only contains allowed HTML tags and trim it up.
-		$title = trim(
-			wp_kses(
-				$this->args['title'],
-				array(
-					'em'     => array(),
-					'strong' => array(),
-				)
-			)
-		);
-
-		// After sanitizing, if the title is empty, return an empty string.
-		if ( empty( $this->args['title'] ) ) {
-			return '';
-		}
-
-		return sprintf(
-			'<span class=\'title\'>%s</span>',
-			$title
 		);
 	}
 
@@ -226,25 +147,4 @@ final class TimelineTooltip {
 
 		return $list_items;
 	}
-
-	/**
-	 * Given an array of classes, returns a string of sanitized classes.
-	 *
-	 * @since 3.2.7
-	 *
-	 * @param array $classes Array of classes to sanitize.
-	 *
-	 * @return string
-	 */
-	protected function get_css_class_string( $classes = array() ) {
-		$custom_classes = $this->args['class'] ?? false;
-		if ( ! is_array( $custom_classes ) ) {
-			$custom_classes = explode( ' ', $custom_classes );
-		}
-		$custom_classes = array_map( 'sanitize_html_class', array_filter( $custom_classes ) );
-		$classes        = array_merge( $classes, $custom_classes );
-
-		return implode( ' ', array_map( 'sanitize_html_class', array_unique( array_filter( $classes ) ) ) );
-	}
-
 }

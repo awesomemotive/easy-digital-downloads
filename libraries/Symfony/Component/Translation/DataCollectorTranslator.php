@@ -40,7 +40,7 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
         $this->translator = $translator;
     }
 
-    public function trans(?string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    public function trans(?string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         $trans = $this->translator->trans($id = (string) $id, $parameters, $domain, $locale);
         $this->collectMessage($locale, $domain, $id, $trans, $parameters);
@@ -61,7 +61,7 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
         return $this->translator->getLocale();
     }
 
-    public function getCatalogue(string $locale = null): MessageCatalogueInterface
+    public function getCatalogue(?string $locale = null): MessageCatalogueInterface
     {
         return $this->translator->getCatalogue($locale);
     }
@@ -71,13 +71,10 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
         return $this->translator->getCatalogues();
     }
 
-    /**
-     * @return string[]
-     */
-    public function warmUp(string $cacheDir): array
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         if ($this->translator instanceof WarmableInterface) {
-            return (array) $this->translator->warmUp($cacheDir);
+            return (array) $this->translator->warmUp($cacheDir, $buildDir);
         }
 
         return [];
@@ -96,7 +93,7 @@ class DataCollectorTranslator implements TranslatorInterface, TranslatorBagInter
     }
 
     /**
-     * Passes through all unknown calls onto the translator object.
+     * @return mixed
      */
     public function __call(string $method, array $args)
     {

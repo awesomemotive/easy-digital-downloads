@@ -137,6 +137,13 @@ class Utilities extends EDD_UnitTestCase {
 		$this->assertEquals( $dates['local_time'], $dates['utils_date'] );
 	}
 
+	public function test_date_utility_matches_utc_empty_offset() {
+		$dates = $this->get_dates( 'UTC', '' );
+
+		$this->assertEquals( $dates['local_time'], $dates['new_utils_date'] );
+		$this->assertEquals( $dates['local_time'], $dates['utils_date'] );
+	}
+
 	public function test_date_utility_with_localize_string() {
 		$timezone_format = 'Y-m-d H:i:00';
 		$new_utils_date  = new \EDD\Utils\Date( 'now' );

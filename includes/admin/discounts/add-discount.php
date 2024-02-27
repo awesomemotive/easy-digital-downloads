@@ -80,15 +80,19 @@ defined( 'ABSPATH' ) || exit;
 						<label for="edd_products"><?php printf( esc_html__( '%s Requirements', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 					</th>
 					<td>
-						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'product_reqs[]',
-							'id'          => 'edd_products',
-							'selected'    => array(),
-							'multiple'    => true,
-							'chosen'      => true,
-							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
-							'variations'  => true,
-						) ); // WPCS: XSS ok. ?>
+						<?php
+						echo EDD()->html->product_dropdown(
+							array(
+								'name'        => 'product_reqs[]',
+								'id'          => 'edd_products',
+								'selected'    => array(),
+								'multiple'    => true,
+								'chosen'      => true,
+								'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
+								'variations'  => true,
+							)
+						); // WPCS: XSS ok.
+						?>
 						<div id="edd-discount-product-conditions" style="display:none;">
 							<p>
 								<select id="edd-product-condition" name="product_condition">
@@ -118,14 +122,18 @@ defined( 'ABSPATH' ) || exit;
 						<label for="edd-excluded-products"><?php printf( esc_html__( 'Excluded %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></label>
 					</th>
 					<td>
-						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'excluded_products[]',
-							'id'          => 'excluded_products',
-							'selected'    => array(),
-							'multiple'    => true,
-							'chosen'      => true,
-							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
-						) ); // WPCS: XSS ok. ?>
+						<?php
+						echo EDD()->html->product_dropdown(
+							array(
+								'name'        => 'excluded_products[]',
+								'id'          => 'excluded_products',
+								'selected'    => array(),
+								'multiple'    => true,
+								'chosen'      => true,
+								'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
+							)
+						); // WPCS: XSS ok.
+						?>
 						<p class="description"><?php printf( esc_html__( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></p>
 					</td>
 				</tr>
@@ -133,7 +141,7 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				$categories     = array();
 				$term_condition = '';
-				include 'views/categories.php';
+				require_once 'views/categories.php';
 				?>
 
 				<?php do_action( 'edd_add_discount_form_before_start' ); ?>
@@ -214,11 +222,18 @@ defined( 'ABSPATH' ) || exit;
 
 				<tr>
 					<th scope="row" valign="top">
-						<label for="edd-use-once"><?php esc_html_e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
+						<label for="once_per_customer"><?php esc_html_e( 'Use Once Per Customer', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="checkbox" id="edd-use-once" name="once_per_customer" value="1"/>
-						<span class="description"><?php esc_html_e( 'Prevent customers from using this discount more than once.', 'easy-digital-downloads' ); ?></span>
+						<?php
+						$toggle = new EDD\HTML\CheckboxToggle(
+							array(
+								'name'  => 'once_per_customer',
+								'label' => __( 'Prevent customers from using this discount more than once.', 'easy-digital-downloads' ),
+							)
+						);
+						$toggle->output();
+						?>
 					</td>
 				</tr>
 

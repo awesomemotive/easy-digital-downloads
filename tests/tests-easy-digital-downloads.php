@@ -75,7 +75,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/api/class-edd-api-v1.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-fees.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' ),

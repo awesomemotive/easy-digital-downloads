@@ -242,7 +242,7 @@ final class ApplicationFee {
 		if ( $new_install_grace ) {
 			return ' ' . sprintf(
 				/* translators: the date the grace period ends */
-				__( 'You are in a grace period for your new license. Activate your license by %s to remove additional fees.', 'easy-digital-downloads' ),
+				__( 'You are in a grace period for your new license. Activate your license by %s to prevent additional fees.', 'easy-digital-downloads' ),
 				$new_install_grace
 			);
 		}
@@ -262,7 +262,7 @@ final class ApplicationFee {
 
 			return ' ' . sprintf(
 				/* translators: 1. the date the license expired; 2. opening link tag, do not translate; 3. closing link tag, do not translate  */
-				__( 'Your license expired on %1$s. %2$sRenew your license%3$s to remove additional fees.', 'easy-digital-downloads' ),
+				__( 'Your license expired on %1$s. %2$sRenew your license%3$s to prevent additional fees.', 'easy-digital-downloads' ),
 				$license->get_expiration_date(),
 				'<a href="' . esc_url( $license->get_renewal_url( 'expired' ) ) . '" target="_blank">',
 				'</a>'
@@ -271,7 +271,7 @@ final class ApplicationFee {
 
 		return ' ' . sprintf(
 			/* translators: opening link tag, do not translate; closing link tag, do not translate */
-			__( '%1$sActivate or upgrade your license%2$s to remove additional fees.', 'easy-digital-downloads' ),
+			__( '%1$sActivate or upgrade your license%2$s to prevent additional fees.', 'easy-digital-downloads' ),
 			'<a href="' . esc_url( $license->get_licensing_url() ) . '">',
 			'</a>'
 		);

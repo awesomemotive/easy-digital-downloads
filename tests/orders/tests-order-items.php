@@ -878,8 +878,6 @@ class OrderItem extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::get_net_total
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_order_item_net_total_not_equal_to_total_after_tax() {
 		$order_id = EDD_Helper_Payment::create_simple_payment_with_tax();
@@ -893,8 +891,6 @@ class OrderItem extends EDD_UnitTestCase {
 
 	/**
 	 * @covers ::get_net_total
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_order_item_net_total_equal_to_total_after_refund() {
 		$order_id = EDD_Helper_Payment::create_simple_payment();
@@ -937,5 +933,31 @@ class OrderItem extends EDD_UnitTestCase {
 		$order_item = edd_get_order_item( self::$order_items[3] );
 
 		$this->assertFalse( $order_item->is_deliverable() );
+	}
+
+	/**
+	 */
+	public function test_order_items_in_bundle_are_deliverable() {
+		$order_id = EDD_Helper_Payment::create_simple_payment();
+		edd_update_order_status( $order_id, 'complete' );
+		$bundle = \EDD\Tests\Helpers\EDD_Helper_Download::create_bundled_download();
+		edd_add_order_item(
+			array(
+				'order_id'    => $order_id,
+				'product_id'  => $bundle->ID,
+				'quantity'    => 1,
+				'total'       => 9.99,
+				'status'      => 'complete',
+			)
+		);
+		$order = edd_get_order( $order_id );
+		$items = $order->get_items();
+		$this->assertCount( 3, $items );
+		$items_with_bundles = $order->get_items_with_bundles();
+		$this->assertCount( 4, $items_with_bundles );
+		foreach ( $items_with_bundles as $item ) {
+			$this->assertTrue( $item->is_deliverable() );
+		}
+
 	}
 }

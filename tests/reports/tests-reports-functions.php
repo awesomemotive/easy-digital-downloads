@@ -4,6 +4,7 @@ namespace EDD\Tests\Reports;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Reports\Init as ReportsInit;
 use EDD\Reports;
+use EDD\Tests\Helpers\EDD_Helper_Download;
 new ReportsInit();
 
 
@@ -869,6 +870,26 @@ class Functions extends EDD_UnitTestCase {
 		);
 
 		$this->assertSame( $expected, edd_get_net_order_statuses() );
+	}
+
+	public function get_download_label_no_data_is_empty() {
+		$this->assertEmpty( Reports\get_download_label() );
+	}
+
+	public function get_download_label_invalid_id_is_empty() {
+		$this->assertEmpty( Reports\get_download_label( array( 'download_id' => 2346546 ) ) );
+	}
+
+	public function get_download_label_returns_post_title() {
+		$download = EDD_Helper_Download::create_simple_download();
+
+		$this->assertSame( $download->post_title, Reports\get_download_label( array( 'download_id' => $download->ID ) ) );
+	}
+
+	public function get_download_label__variable_returns_post_title_with_price_id() {
+		$download = EDD_Helper_Download::create_variable_download();
+
+		$this->assertSame( 'Variable Test Download Product (Advanced)', Reports\get_download_label( array( 'download_id' => $download->ID, 'price_id' => 1 ) ) );
 	}
 
 	/**

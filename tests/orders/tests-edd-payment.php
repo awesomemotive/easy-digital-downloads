@@ -115,8 +115,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_updating_payment_status_to_publish() {
 		// Test backwards compat
@@ -480,8 +478,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_refund_payment() {
 		$this->payment->status = 'complete';
@@ -511,8 +507,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 
 	/**
 	 * @expectEDDeprecated edd_undo_purchase_on_refund
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_refund_payment_legacy() {
 		$this->payment->status = 'complete';
@@ -551,8 +545,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_modify_cart_item_price() {
 		$this->payment->status = 'complete';
@@ -568,8 +560,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_modify_cart_item_quantity() {
 		$this->payment->status = 'complete';
@@ -590,8 +580,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_modify_cart_item_tax() {
 		$this->payment->status = 'complete';
@@ -611,8 +599,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_modify_cart_item_discount() {
 		$this->payment->status = 'complete';
@@ -628,8 +614,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_modify_cart_item_with_disallowed_changes_should_return_false() {
 		$this->payment->status = 'complete';
@@ -691,8 +675,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_pending_affecting_stats() {
 		$this->payment->status = 'complete';
@@ -730,8 +712,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_refund_affecting_stats() {
 
@@ -767,8 +747,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_remove_with_multi_price_points_by_price_id() {
 		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
@@ -801,8 +779,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_remove_with_multi_price_points_by_cart_index() {
 		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
@@ -833,8 +809,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_remove_with_multiple_same_price_by_price_id_different_prices() {
 		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
@@ -880,8 +854,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_remove_with_multiple_same_price_by_price_id_same_prices() {
 		$download = Helpers\EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
@@ -998,8 +970,6 @@ class EDD_Payment extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_creating_complete_payment_marks_order_items_complete() {
 		$payment             = new \EDD_Payment();

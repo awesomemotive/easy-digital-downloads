@@ -11,25 +11,6 @@ use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 class Functions extends EDD_UnitTestCase {
 
 	/**
-	 * @covers edds_sanitize_statement_descriptor
-	 */
-	public function test_sanitize_statement_descriptor_length() {
-		$test_descriptor = 'test_statement_descriptor';
-		$this->assertEquals( 'test_statement_descrip', edds_sanitize_statement_descriptor( $test_descriptor ) );
-	}
-
-	/**
-	 * @covers edds_sanitize_statement_descriptor
-	 */
-	public function test_sanitize_statement_descriptor_unsupported_characters() {
-		$unsupported_characters        = edds_get_statement_descriptor_unsupported_characters();
-		$unsupported_characters_string = implode( '', $unsupported_characters );
-
-		$test_descriptor = '@!test_statement_descriptor' . $unsupported_characters_string;
-		$this->assertEquals( '@!test_statement_descr', edds_sanitize_statement_descriptor( $test_descriptor ) );
-	}
-
-	/**
 	 * @covers edds_string_to_bool
 	 */
 	public function test_string_to_bool() {

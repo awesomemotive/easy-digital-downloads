@@ -69,7 +69,7 @@ class Tracking {
 	 * @return void
 	 */
 	private function setup_data() {
-		$data = new EDD\Telemetry\Data();
+		$data = new Data();
 
 		$this->data = $data->get();
 	}

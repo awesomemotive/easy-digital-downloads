@@ -66,10 +66,50 @@ function connect_settings_field() {
 		 * Show Account Info & Disconnect
 		 */
 		?>
-		<div id="edd-paypal-commerce-connect-wrap" class="edd-paypal-connect-account-info notice inline" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_paypal_account_information' ) ); ?>">
-			<p>
-				<em><?php esc_html_e( 'Retrieving account information...', 'easy-digital-downloads' ); ?></em>
-				<span class="spinner is-active"></span>
+		<div id="edd-paypal-commerce-connect-wrap" class="edd-paypal-connect-account-info notice inline loading" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_paypal_account_information' ) ); ?>">
+			<ul class="edd-paypal-account-status">
+				<li>
+					<span></span>
+				</li>
+				<li>
+					<span></span>
+				</li>
+				<li>
+					<span></span>
+						<ul class="edd-paypal-webhook-events">
+							<li>
+								<span></span>
+							</li>
+							<li>
+								<span></span>
+							</li>
+							<li>
+								<span></span>
+							</li>
+							<li>
+								<span></span>
+							</li>
+							<li>
+								<span></span>
+							</li>
+							<li>
+								<span></span>
+							</li>
+							<li>
+								<span></span>
+							</li>
+							<li>
+								<span></span>
+							</li>
+						</ul>
+				</li>
+				<li>
+					<span></span>
+				</li>
+			</ul>
+			<p class="edd-paypal-connect-actions">
+				<span></span>
+				<span></span>
 			</p>
 		</div>
 		<div id="edd-paypal-disconnect"></div>
@@ -266,6 +306,13 @@ function get_and_save_credentials() {
 	}
 
 	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
+
+	// Store a transient to indicate that we've started the connect process.
+	set_transient(
+		'edd_paypal_commerce_connect_started_' . $mode,
+		wp_hash( get_current_user_id() . '_' . $mode . '_started', 'nonce' ),
+		15 * MINUTE_IN_SECONDS
+	);
 
 	$partner_details = get_partner_details( $mode );
 	if ( empty( $partner_details->nonce ) ) {
@@ -483,7 +530,7 @@ function get_account_info() {
 					<?php foreach ( array_keys( PayPal\Webhooks\get_webhook_events() ) as $event_name ) : ?>
 						<li>
 							<span class="dashicons dashicons-<?php echo in_array( $event_name, $validator->enabled_webhook_events ) ? 'yes' : 'no'; ?>"></span>
-							<span class="edd-paypal-webhook-event-name"><?php echo esc_html( $event_name ); ?></span>
+							<span><?php echo esc_html( $event_name ); ?></span>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -506,7 +553,7 @@ function get_account_info() {
 
 		wp_send_json_success( array(
 			'status'           => $status,
-			'account_status'   => '<ul class="edd-paypal-account-status edd-settings__list--disc">' . $account_status . '</ul>',
+			'account_status'   => '<ul class="edd-paypal-account-status">' . $account_status . '</ul>',
 			'webhook_object'   => isset( $validator ) ? $validator->webhook : null,
 			'actions'          => array_values( $actions ),
 			'disconnect_links' => array_values( $disconnect_links ),
@@ -757,8 +804,25 @@ add_action( 'admin_init', function () {
 		return;
 	}
 
+	$mode = edd_is_test_mode() ? 'sandbox' : 'live';
+
+	$connect_process = get_transient( 'edd_paypal_commerce_connect_started_'. $mode );
+	$check           = wp_hash( get_current_user_id() . '_' . $mode . '_started', 'nonce' );
+
+	if ( ! hash_equals( $connect_process, $check ) ) {
+		wp_die(
+			__( 'There was an error processing the connection to PayPal. Please attempt to connect again.', 'easy-digital-downloads' ),
+			__( 'Error', 'easy-digital-downloads' ),
+			array( 'response' => 403 )
+		);
+	}
+
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die(
+			__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ),
+			__( 'Error', 'easy-digital-downloads' ),
+			array( 'response' => 403 )
+		);
 	}
 
 	edd_debug_log( 'PayPal Connect - Checking merchant status.' );
@@ -782,6 +846,9 @@ add_action( 'admin_init', function () {
 
 	$merchant_account = new PayPal\MerchantAccount( $details );
 	$merchant_account->save();
+
+	// Remove our transient, instead of waiting for it to be removed automatically.
+	delete_transient( 'edd_paypal_commerce_connect_started_' . $mode );
 
 	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
 	exit;

@@ -8,17 +8,23 @@
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since 3.1.4
  */
+
 namespace EDD\Admin\Settings\Tabs;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Gateway settings tab.
+ *
+ * @since 3.1.4
+ */
 class Gateways extends Tab {
 
 	/**
 	 * Get the ID for this tab.
 	 *
 	 * @since 3.1.4
-	 * @return string
+	 * @var string
 	 */
 	protected $id = 'gateways';
 
@@ -110,6 +116,16 @@ class Gateways extends Tab {
 					'type'          => 'checkbox',
 					'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
 					'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
+				),
+				'geolocation'         => array(
+					'id'       => 'geolocation',
+					'name'     => __( 'Geolocation Detection', 'easy-digital-downloads' ),
+					'desc'     => $this->get_geolocation_description(),
+					'type'     => 'select',
+					'options'  => array(
+						'' => __( 'Disabled', 'easy-digital-downloads' ),
+					),
+					'disabled' => true,
 				),
 				'moderation_settings' => array(
 					'id'            => 'moderation_settings',
@@ -320,5 +336,44 @@ class Gateways extends Tab {
 		}
 
 		return $text;
+	}
+
+	/**
+	 * Get the geolocation description.
+	 *
+	 * @since 3.2.8
+	 * @return string
+	 */
+	private function get_geolocation_description() {
+		if ( ! empty( $this->get_pass_id() ) ) {
+			$settings_url = add_query_arg(
+				array(
+					'page' => 'edd-settings',
+				),
+				edd_get_admin_url()
+			);
+
+			return sprintf(
+				/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+				__( 'GeoLocation Detection is only available in Easy Digital Downloads Pro. %1$sVerify your pass to get access to pro features.%2$s', 'easy-digital-downloads' ),
+				'<a href="' . esc_url( $settings_url ) . '">',
+				'</a>'
+			);
+		}
+
+		$upgrade_link = edd_link_helper(
+			'https://easydigitaldownloads.com/lite-upgrade',
+			array(
+				'utm_medium'  => 'settings',
+				'utm-content' => 'geolocation',
+			)
+		);
+
+		return sprintf(
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+			__( 'Increase conversions by auto-filling address information for customers during checkout. To enable GeoLocation Dectection, %1$sUpgrade to Pro%2$s.', 'easy-digital-downloads' ),
+			'<a href="' . $upgrade_link . '" class="edd-pro-upgrade" target="_blank">',
+			'</a>'
+		);
 	}
 }

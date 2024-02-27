@@ -226,7 +226,7 @@ final class Easy_Digital_Downloads {
 		self::$instance->debug_log          = new EDD_Logging();
 		self::$instance->utils              = new EDD\Utilities();
 		self::$instance->session            = new EDD_Session();
-		self::$instance->html               = new EDD_HTML_Elements();
+		self::$instance->html               = new EDD\HTML\Elements();
 		self::$instance->emails             = new EDD_Emails();
 		self::$instance->email_tags         = new EDD_Email_Template_Tags();
 		self::$instance->email_summary_cron = new EDD_Email_Summary_Cron();
@@ -370,7 +370,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.2.7' );
+			define( 'EDD_VERSION', '3.2.9' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -610,7 +610,6 @@ final class Easy_Digital_Downloads {
 		// Classes
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';

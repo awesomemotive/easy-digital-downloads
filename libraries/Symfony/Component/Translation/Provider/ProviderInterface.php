@@ -14,10 +14,8 @@ namespace EDD\Vendor\Symfony\Component\Translation\Provider;
 use EDD\Vendor\Symfony\Component\Translation\TranslatorBag;
 use EDD\Vendor\Symfony\Component\Translation\TranslatorBagInterface;
 
-interface ProviderInterface
+interface ProviderInterface extends \Stringable
 {
-    public function __toString(): string;
-
     /**
      * Translations available in the TranslatorBag only must be created.
      * Translations available in both the TranslatorBag and on the provider
