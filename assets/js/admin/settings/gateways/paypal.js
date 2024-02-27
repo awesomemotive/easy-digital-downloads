@@ -114,7 +114,7 @@ jQuery( document ).ready( function ( $ ) {
 					accountInfoEl.innerHTML = newHtml;
 
 					// Remove old status messages.
-					accountInfoEl.classList.remove( 'notice-success', 'notice-warning', 'notice-error' );
+					accountInfoEl.classList.remove( 'notice-success', 'notice-warning', 'notice-error', 'loading' );
 
 					// Add new one.
 					var newClass = response.success && response.data.status ? 'notice-' + response.data.status : 'notice-error';

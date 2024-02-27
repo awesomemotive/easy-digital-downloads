@@ -2,6 +2,7 @@
 namespace EDD\Tests\Emails;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Tests\Helpers\EDD_Helper_Payment;
 
 /**
  * @group edd_emails
@@ -100,6 +101,14 @@ class Registry extends EDD_UnitTestCase {
 	public function test_get_registered_email_with_arguments() {
 		$email = \EDD\Emails\Registry::get( 'order_receipt', array( false ) );
 		$this->assertInstanceOf( 'EDD\Emails\Types\OrderReceipt', $email );
+	}
+
+	public function test_order_receipt_magic_getter_gets_order() {
+		$order_id = EDD_Helper_Payment::create_simple_payment();
+		$email    = \EDD\Emails\Registry::get( 'order_receipt', array( edd_get_order( $order_id ) ) );
+
+		$this->assertInstanceOf( 'EDD\Orders\Order', $email->order );
+		$this->assertEquals( $order_id, $email->order->id );
 	}
 
 	/**

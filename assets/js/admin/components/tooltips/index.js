@@ -10,8 +10,8 @@ export const edd_attach_tooltips = function( selector ) {
 		},
 		tooltipClass: 'edd-ui-tooltip',
 		position: {
-			my: 'center top',
-			at: 'center bottom+10',
+			my: 'bottom',
+			at: 'top-10',
 			collision: 'flipfit',
 		},
 		hide: {

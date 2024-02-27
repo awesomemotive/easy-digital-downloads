@@ -114,6 +114,12 @@ class Services implements SubscriberInterface {
 			return $value;
 		}
 
+		// If the value is already an array of term IDs, return it.
+		if ( array_key_exists( 0, $value ) ) {
+			return $value;
+		}
+
+		// The original extension used the term name as the value and the term name as the value.
 		$terms = array_filter( array_keys( $value ) );
 		if ( ! $terms ) {
 			return $value;

@@ -2,6 +2,8 @@
 @import "~@wordpress/base-styles/colors.native";
 
 @import "../../variables/colors";
+@import "../../variables/animations";
+
 /**
  * WordPress Core colors current as of 5.5.1.
  */
@@ -31,10 +33,36 @@ $buddypress-colors: (
 	'mint': #4f6d59,
 );
 
-.edds-stripe-connect-acount-info .spinner {
-	float: none;
-	display: inline-block;
-	margin: -2px 5px 0 0;
+.edds-stripe-connect-acount-info {
+	& .display-name, .info {
+		display: block;
+	}
+
+	& .display-name {
+		font-weight: 700;
+	}
+
+	&.loading {
+		& span {
+			display: block;
+		}
+
+		& .account-name, .info {
+			animation: skeleton-loading 1s linear infinite alternate;
+			width: 200px;
+			height: 14px;
+			margin: 0.25rem 0;
+		}
+	}
+}
+
+#edds-stripe-disconnect-reconnect {
+	&.loading {
+		animation: skeleton-loading 1s linear infinite alternate;
+		width: 350px;
+		height: 1rem;
+		margin: 0.5rem 0;
+	}
 }
 
 // Payment Gateways setting.
@@ -174,6 +202,10 @@ only screen and (min-device-pixel-ratio: 1.5) {
 	}
 }
 /* End of Stripe Connect */
+
+.edd-text-loading {
+	animation: skeleton-loading 1s infinite alternate;
+}
 
 .edd-button__toggle {
 	position: relative;

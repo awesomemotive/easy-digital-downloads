@@ -128,6 +128,20 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 		'remember'      => $remember,
 	);
 
+	/**
+	 * Fires before a user is logged in.
+	 *
+	 * This can be useful for performing actions prior to the user being logged in. Since EDD sparingly logs users in,
+	 * it's important to note that this action is not used in most normal WordPress operations, but primarily during checkout,
+	 * and with the Auto Register functions.
+	 *
+	 * @since 3.2.8
+	 *
+	 * @param int    $user_id    The user ID.
+	 * @param string $user_login The user login.
+	 */
+	do_action( 'edd_pre_log_user_in', $user_id, $user_login );
+
 	$user = wp_signon( $credentials );
 
 	if ( ! $user instanceof WP_User ) {

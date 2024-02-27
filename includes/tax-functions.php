@@ -271,11 +271,13 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
  * @return float $tax Taxed amount.
  */
 function edd_calculate_tax( $amount = 0.00, $country = '', $region = '', $fallback = true, $tax_rate = null ) {
-	$rate = ( null === $tax_rate ) ? edd_get_tax_rate( $country, $region, $fallback ) : $tax_rate;
+	$rate = $tax_rate;
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
-
+		if ( is_null( $rate ) ) {
+			$rate = edd_get_tax_rate( $country, $region, $fallback );
+		}
 		if ( edd_prices_include_tax() ) {
 			$pre_tax = ( $amount / ( 1 + $rate ) );
 			$tax     = $amount - $pre_tax;
@@ -436,6 +438,15 @@ function edd_get_tax_rate_by_location( $args ) {
 	$rate      = false;
 	$tax_rates = array();
 
+	// Ensure the region is a string (CFM may pass an array).
+	$region = false;
+	if ( ! empty( $args['region'] ) ) {
+		$region = $args['region'];
+		if ( is_array( $region ) ) {
+			$region = reset( $region );
+		}
+	}
+
 	// Fetch all the active country tax rates from the database.
 	// The region is not passed in deliberately in order to check for country-wide tax rates.
 	if ( ! empty( $args['country'] ) ) {
@@ -452,8 +463,8 @@ function edd_get_tax_rate_by_location( $args ) {
 		foreach ( $tax_rates as $tax_rate ) {
 
 			// Regional tax rate.
-			if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) && 'region' === $tax_rate->scope ) {
-				if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
+			if ( ! empty( $region ) && ! empty( $tax_rate->description ) && 'region' === $tax_rate->scope ) {
+				if ( strtolower( $region ) !== strtolower( $tax_rate->description ) ) {
 					continue;
 				}
 

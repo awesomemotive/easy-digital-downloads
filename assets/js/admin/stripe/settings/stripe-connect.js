@@ -25,10 +25,26 @@ domReady( () => {
 		...containerEl.dataset,
 	} )
 		.done( ( response ) => {
+			containerEl.classList.remove( 'loading' );
 			containerEl.innerHTML = response.message;
 			containerEl.classList.add( `notice-${ response.status }` );
+
+			actionsEl.classList.remove( 'loading' );
 			if ( response.actions ) {
 				actionsEl.innerHTML = response.actions;
+			}
+
+			const statement_descriptor_target = document.getElementById( 'edd_settings[stripe_statement_descriptor]' ),
+			statement_descriptor_prefix_target = document.getElementById( 'edd_settings[stripe_statement_descriptor_prefix]' );
+
+			statement_descriptor_target.classList.remove( 'edd-text-loading' );
+			statement_descriptor_prefix_target.classList.remove( 'edd-text-loading' );
+			if ( response.account ) {
+				const statement_descriptor = response.account.settings.payments.statement_descriptor || '',
+				statement_descriptor_prefix = response.account.settings.card_payments.statement_descriptor_prefix || '';
+
+				statement_descriptor_target.value = statement_descriptor || '';
+				statement_descriptor_prefix_target.value = statement_descriptor_prefix || '';
 			}
 		} )
 		.fail( ( error ) => {

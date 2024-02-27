@@ -906,8 +906,16 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 		<div class="edd-form-group edd-file-assignment pricing"<?php echo $variable_display; ?>>
 
 			<label for="edd_download_files_<?php echo esc_attr( $key ); ?>_condition" class="edd-form-group__label edd-repeatable-row-setting-label">
-				<?php esc_html_e( 'Price Assignment', 'easy-digital-downloads' ); ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span>
+				<?php
+				esc_html_e( 'Price Assignment', 'easy-digital-downloads' );
+				$tooltip = new EDD\HTML\Tooltip(
+					array(
+						'title'   => __( 'Price Assignment', 'easy-digital-downloads' ),
+						'content' => __( 'With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ),
+					)
+				);
+				$tooltip->output();
+				?>
 			</label>
 			<div class="edd-form-group__control">
 			<?php
@@ -989,18 +997,16 @@ function edd_render_refund_row( $post_id ) {
 
 	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-product-options__title">
-				<?php esc_html_e( 'Refunds', 'easy-digital-downloads' ); ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="
-				<?php
-				echo wp_kses(
-					__( '<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ),
-					array(
-						'strong' => true,
-						'br'     => true,
-					)
-				);
-				?>
-				"></span>
+			<?php
+			esc_html_e( 'Refunds', 'easy-digital-downloads' );
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'title'   => __( 'Refundable', 'easy-digital-downloads' ),
+					'content' => __( 'Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ),
+				)
+			);
+			$tooltip->output();
+			?>
 		</div>
 
 		<div class="edd-form-group__control">
@@ -1074,8 +1080,16 @@ function edd_render_download_limit_row( $post_id ) {
 	<div class="edd-form-group edd-product-options-wrapper" id="edd_download_limit_wrap"<?php echo $display; ?>>
 		<div class="edd-form-group__control">
 			<label class="edd-form-group__label edd-product-options__title" for="edd_download_limit">
-				<?php esc_html_e( 'File Download Limit', 'easy-digital-downloads' ); ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
+				<?php
+				esc_html_e( 'File Download Limit', 'easy-digital-downloads' );
+				$tooltip = new EDD\HTML\Tooltip(
+					array(
+						'title'   => __( 'File Download Limit', 'easy-digital-downloads' ),
+						'content' => __( 'Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ),
+					)
+				);
+				$tooltip->output();
+				?>
 			</label>
 			<input class="edd-form-group__input small-text" name="_edd_download_limit" id="edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr( $edd_download_limit ); ?>" />
 		</div>
@@ -1109,8 +1123,16 @@ function edd_render_down_tax_options( $post_id = 0 ) {
 
 	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-product-options__title">
-			<?php esc_html_e( 'Taxability', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Taxability</strong>: When taxes are enabled, all products are taxable by default. Check this box to mark this product as non-taxable.', 'easy-digital-downloads' ); ?>"></span>
+			<?php
+			esc_html_e( 'Taxability', 'easy-digital-downloads' );
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'title'   => __( 'Taxability', 'easy-digital-downloads' ),
+					'content' => __( 'When taxes are enabled, all products are taxable by default. Check this box to mark this product as non-taxable.', 'easy-digital-downloads' ),
+				)
+			);
+			$tooltip->output();
+			?>
 		</div>
 		<div class="edd-form-group__control">
 			<?php
@@ -1151,8 +1173,16 @@ function edd_render_download_quantity_option( $post_id = 0 ) {
 
 	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-product-options__title">
-			<?php esc_html_e( 'Item Quantities', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Item Quantities</strong>: if disabled, customers will not be provided an option to change the number they wish to purchase.', 'easy-digital-downloads' ); ?>"></span>
+			<?php
+			esc_html_e( 'Item Quantities', 'easy-digital-downloads' );
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'title'   => __( 'Item Quantities', 'easy-digital-downloads' ),
+					'content' => __( 'If disabled, customers will not be provided an option to change the number they wish to purchase.', 'easy-digital-downloads' ),
+				)
+			);
+			$tooltip->output();
+			?>
 		</div>
 		<div class="edd-form-group__control">
 			<?php
@@ -1208,8 +1238,16 @@ function edd_render_meta_box_shortcode() {
 	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-form-group__control">
 			<label class="edd-form-group__label edd-product-options__title" for="edd-purchase-shortcode">
-				<?php esc_html_e( 'Purchase Shortcode', 'easy-digital-downloads' ); ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
+				<?php
+				esc_html_e( 'Purchase Shortcode', 'easy-digital-downloads' );
+				$tooltip = new EDD\HTML\Tooltip(
+					array(
+						'title'   => __( 'Purchase Shortcode', 'easy-digital-downloads' ),
+						'content' => __( 'Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ),
+					)
+				);
+				$tooltip->output();
+				?>
 			</label>
 			<input type="text" id="edd-purchase-shortcode" class="edd-form-group__input" readonly value="<?php echo htmlentities( $shortcode ); ?>">
 		</div>
@@ -1239,8 +1277,16 @@ function edd_render_accounting_options( $post_id ) {
 
 	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-product-options__title">
-			<?php esc_html_e( 'Accounting Options', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>SKU</strong>: If an SKU is entered for this product, it will be shown on the purchase receipt and exported purchase histories.', 'easy-digital-downloads' ); ?>"></span>
+			<?php
+			esc_html_e( 'Accounting Options', 'easy-digital-downloads' );
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'title'   => __( 'SKU', 'easy-digital-downloads' ),
+					'content' => __( 'If an SKU is entered for this product, it will be shown on the purchase receipt and exported purchase histories.', 'easy-digital-downloads' ),
+				)
+			);
+			$tooltip->output();
+			?>
 		</div>
 		<div class="edd-form-group__control">
 			<label class="edd-form-group__label" for="edd_sku">
@@ -1275,22 +1321,30 @@ function edd_render_disable_button( $post_id ) {
 		return;
 	}
 
-	$supports_buy_now           = edd_shop_supports_buy_now();
-	$hide_button                = get_post_meta( $post_id, '_edd_hide_purchase_link', true ) ? 1 : 0;
-	$behavior                   = get_post_meta( $post_id, '_edd_button_behavior', true );
-	$buy_now_support_tooltip    = __( '<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' );
-	$no_buy_now_support_tooltip = __( '<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
+	$supports_buy_now = edd_shop_supports_buy_now();
+	$hide_button      = get_post_meta( $post_id, '_edd_hide_purchase_link', true ) ? 1 : 0;
+	$behavior         = get_post_meta( $post_id, '_edd_button_behavior', true );
+	$content          = __( 'By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' );
+	$content         .= '<br /><br />';
+	if ( $supports_buy_now ) {
+		$content .= __( '<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product.', 'easy-digital-downloads' );
+	} else {
+		$content .= __( '<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
+	}
 	?>
 
 	<div class="edd-form-group edd-product-options-wrapper">
-		<div class="edd-product-options__title"><?php esc_html_e( 'Button Options', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="
-				<?php
-				_e( '<strong>Hide purchase button</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' );
-				echo '<br><br>';
-				echo ! empty( $supports_buy_now ) ? $buy_now_support_tooltip : $no_buy_now_support_tooltip;
-				?>">
-			</span>
+		<div class="edd-product-options__title">
+			<?php
+			esc_html_e( 'Button Options', 'easy-digital-downloads' );
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'title'   => __( 'Hide purchase buttons', 'easy-digital-downloads' ),
+					'content' => $content,
+				)
+			);
+			$tooltip->output();
+			?>
 		</div>
 		<div class="edd-form-group__control">
 			<?php

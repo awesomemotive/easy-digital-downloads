@@ -483,7 +483,7 @@ class EDD_Cart {
 		} else {
 			// Sanitize price IDs.
 			foreach ( $options as $key => $option ) {
-				if ( 'price_id' === $key ) {
+				if ( 'price_id' === $key && ! is_null( $option ) ) {
 					$prices   = $download->get_prices();
 					$price_id = preg_replace( '/[^0-9\.-]/', '', $option );
 					if ( ! isset( $prices[ $price_id ] ) ) {

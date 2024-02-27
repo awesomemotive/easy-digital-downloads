@@ -30,7 +30,17 @@ $( document ).ready( function() {
 		// Listen to the elements mode toggle.
 		elementsModeToggle.on( 'change', function() {
 			$( '.card-elements-feature' ).toggleClass( 'edd-hidden' );
-			$( '.payment-elements-feature').toggleClass( 'edd-hidden' );
+			$( '.payment-elements-feature' ).toggleClass( 'edd-hidden' );
+		} );
+	}
+
+	/**
+	 * Handle showing/hiding the Statement Descriptor Prefix field based on the toggle.
+	 */
+	const statementDescriptorSummaryToggle = document.getElementById( 'edd_settings[stripe_include_purchase_summary_in_statement_descriptor]' );
+	if ( statementDescriptorSummaryToggle ) {
+		statementDescriptorSummaryToggle.addEventListener( 'change', function() {
+			$( '.statement-descriptor-prefix' ).toggleClass( 'edd-hidden' );
 		} );
 	}
 } );

@@ -29,7 +29,6 @@ function edds_buy_now_ajax_add_to_cart() {
 
 	$args = array(
 		'quantity' => absint( $data['quantity'] ),
-		'price_id' => null,
 	);
 
 	if ( edd_has_variable_prices( $download_id ) ) {

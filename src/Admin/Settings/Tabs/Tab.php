@@ -8,10 +8,18 @@
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since 3.1.4
  */
+
 namespace EDD\Admin\Settings\Tabs;
 
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Admin\Pass_Manager;
+
+/**
+ * Abstract class for settings tabs.
+ *
+ * @since 3.1.4
+ */
 abstract class Tab {
 
 	/**
@@ -21,6 +29,14 @@ abstract class Tab {
 	 * @var string
 	 */
 	protected $id;
+
+	/**
+	 * The pass ID.
+	 *
+	 * @since 3.2.8
+	 * @var int|bool
+	 */
+	private $pass_id;
 
 	/**
 	 * Get the settings for this tab.
@@ -77,5 +93,20 @@ abstract class Tab {
 	 */
 	protected function get_admin_email() {
 		return get_bloginfo( 'admin_email' );
+	}
+
+	/**
+	 * Gets the pass ID.
+	 *
+	 * @since 3.2.8
+	 * @return int
+	 */
+	protected function get_pass_id() {
+		if ( is_null( $this->pass_id ) ) {
+			$pass_manager  = new \EDD\Admin\Pass_Manager();
+			$this->pass_id = $pass_manager->highest_pass_id;
+		}
+
+		return $this->pass_id;
 	}
 }

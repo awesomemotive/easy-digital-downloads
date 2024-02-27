@@ -27,6 +27,8 @@ class Tests_API extends EDD_UnitTestCase {
 
 	/**
 	 * Set up fixtures once.
+	 * @expectedDeprecated edd_trigger_purchase_receipt
+	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public static function wpSetUpBeforeClass() {
 		global $wp_rewrite, $wp_query;
