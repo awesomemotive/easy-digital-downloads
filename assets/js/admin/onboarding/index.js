@@ -389,10 +389,15 @@ var EDD_Onboarding = {
 						onboardingWizard: true,
 					},
 					success: function( response ) {
+						stripe_connect_account.removeClass( 'loading' )
+						stripe_connect_actions.removeClass( 'loading' );
+
 						// Account is sucessfully connected.
 						if ( response.success ) {
 							stripe_connect_account.html( response.data.message );
 							stripe_connect_account.addClass( `notice-${ response.data.status }` );
+
+
 							if ( response.data.actions ) {
 								stripe_connect_actions.html( response.data.actions );
 							}

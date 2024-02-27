@@ -462,7 +462,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_product_requirements_any_all_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => $products,
 			'product_condition' => 'any',
@@ -477,7 +477,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_product_requirements_any_none_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => $products,
 			'product_condition' => 'any',
@@ -492,7 +492,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_product_requirements_any_one_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => $products,
 			'product_condition' => 'any',
@@ -507,7 +507,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_product_requirements_all_all_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => $products,
 			'product_condition' => 'all',
@@ -522,7 +522,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_product_requirements_all_none_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => $products,
 			'product_condition' => 'all',
@@ -537,7 +537,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_product_requirements_all_one_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => $products,
 			'product_condition' => 'all',
@@ -552,7 +552,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_excluded_products_all_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => array(),
 			'max_uses'          => 10000,
@@ -567,7 +567,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_excluded_products_none_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => array(),
 			'max_uses'          => 10000,
@@ -582,7 +582,7 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers edd_validate_discount
 	 */
 	public function test_edd_validate_discount_excluded_products_one_in_array() {
-		$products = array( self::$download->ID, 100 );
+		$products = array( self::$download->ID, 99999 );
 		$args     = array(
 			'product_reqs'      => array(),
 			'max_uses'          => 10000,
@@ -842,8 +842,6 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers ::get_is_single_use()
 	 * @covers ::is_used()
 	 *
-	 * @expectedDeprecated edd_trigger_purchase_receipt
-	 * @expectedDeprecated edd_admin_email_notice
 	 */
 	public function test_is_used_case_insensitive() {
 		$payment_id         = Helpers\EDD_Helper_Payment::create_simple_payment();

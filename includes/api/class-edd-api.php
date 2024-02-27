@@ -2386,7 +2386,16 @@ class EDD_API {
 	 * @since  2.7
 	 */
 	public function log_requests() {
-		return apply_filters( 'edd_api_log_requests', true );
+		switch ( $this->is_public_query() ) {
+			case true:
+				$log_requests = (bool) edd_get_option( 'enable_public_request_logs', false );
+				break;
+			default:
+				$log_requests = true;
+				break;
+		}
+
+		return apply_filters( 'edd_api_log_requests', $log_requests );
 	}
 
 	/**

@@ -246,6 +246,7 @@ function edds_stripe_connect_process_disconnect() {
 		'test_secret_key',
 		'live_publishable_key',
 		'live_secret_key',
+		'stripe_statement_descriptor_prefix',
 	);
 
 	foreach ( $options as $option ) {
@@ -367,14 +368,16 @@ function edds_stripe_connect_setting_field() {
 
 	<div
 		id="edds-stripe-connect-account"
-		class="edds-stripe-connect-acount-info notice inline"
+		class="edds-stripe-connect-acount-info notice inline loading"
 		data-account-id="<?php echo esc_attr( $stripe_connect_account_id ); ?>"
 		data-nonce="<?php echo wp_create_nonce( 'edds-stripe-connect-account-information' ); ?>"
 		<?php echo ( ! empty( $_GET['page'] ) && 'edd-onboarding-wizard' === $_GET['page'] ) ? ' data-onboarding-wizard="true"' : ''; ?>>
-		<p><span class="spinner is-active"></span>
-		<em><?php esc_html_e( 'Retrieving account information...', 'easy-digital-downloads' ); ?></em>
+		<p>
+			<span class="account-name"></span>
+			<span class="info"></span>
+		</p>
 	</div>
-	<div id="edds-stripe-disconnect-reconnect">
+	<div id="edds-stripe-disconnect-reconnect" class="loading">
 	</div>
 
 	<?php endif; ?>
@@ -536,7 +539,7 @@ function edds_stripe_connect_account_info_ajax_response() {
 			}
 
 			if ( ! empty( $display_name ) ) {
-				$display_name = '<strong>' . $display_name . '</strong><br/ >';
+				$display_name = '<span class="display-name">' . $display_name . '</span>';
 			}
 
 			if ( ! empty( $email ) ) {
@@ -556,15 +559,32 @@ function edds_stripe_connect_account_info_ajax_response() {
 				? wpautop( $show_fee_message )
 				: '';
 
+			$message = sprintf(
+				'<span class="display-name">%1$s</span><span class="info">%2$s %3$s %4$s</span>',
+				$display_name,
+				$email,
+				esc_html__( 'Administrator (Owner)', 'easy-digital-downloads' ),
+				$fee_message
+			);
+
+			/**
+			 * If we have a statement descriptor prefix in the account settings, save it so we can use it later.
+			 *
+			 * Saving it now ensures that if someone visits the Stripe settings page, it is updated.
+			 */
+			if ( isset( $account->settings->card_payments->statement_descriptor_prefix ) ) {
+				edd_update_option( 'stripe_statement_descriptor_prefix', sanitize_text_field( $account->settings->card_payments->statement_descriptor_prefix ) );
+			}
+
 			// Return a message with name, email, and reconnect/disconnect actions.
 			return wp_send_json_success(
 				array(
 					'message' => wpautop(
-						// $display_name is already escaped
-						$display_name . esc_html( $email ) . esc_html__( 'Administrator (Owner)', 'easy-digital-downloads' ) . $fee_message
+						$message
 					),
 					'actions' => $reconnect_disconnect_actions,
 					'status'  => ! empty( $show_fee_message ) ? 'warning' : 'success',
+					'account' => $account,
 				)
 			);
 		} catch ( \Stripe\Exception\AuthenticationException $e ) {

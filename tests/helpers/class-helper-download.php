@@ -18,10 +18,21 @@ class EDD_Helper_Download extends EDD_UnitTestCase {
 	 * @param int $download_id ID of the download to delete.
 	 */
 	public static function delete_download( $download_id ) {
-
 		// Delete the post
 		wp_delete_post( $download_id, true );
+	}
 
+	public static function delete_all_downloads() {
+		$query = new \WP_Query(
+			array(
+				'post_type'      => 'download',
+				'posts_per_page' => -1,
+			)
+		);
+
+		foreach ( $query->posts as $post ) {
+			wp_delete_post( $post->ID, true );
+		}
 	}
 
 	/**

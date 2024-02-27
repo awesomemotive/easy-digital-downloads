@@ -138,6 +138,26 @@ abstract class Email {
 	public function __construct() {}
 
 	/**
+	 * Magic method to get properties.
+	 *
+	 * @since <next-version>
+	 * @param string $property The property to get.
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+
+		if ( property_exists( $this, $property ) && ! is_null( $this->$property ) ) {
+			return $this->$property;
+		}
+
+		if ( is_callable( array( $this, 'get_' . $property ) ) ) {
+			return call_user_func( array( $this, 'get_' . $property ) );
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the email ID.
 	 *
 	 * @since 3.2.0

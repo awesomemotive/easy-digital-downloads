@@ -727,11 +727,13 @@ function edd_customers_view( $customer = null ) {
 				);
 
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
-				?>
-
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php esc_html_e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php esc_html_e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
-
-				<?php
+				$tooltip = new EDD\HTML\Tooltip(
+					array(
+						'title'   => __( 'Estimated Terms Agreement Date', 'easy-digital-downloads' ),
+						'content' => __( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ),
+					)
+				);
+				$tooltip->output();
 			} else {
 				esc_html_e( 'No terms agreement found.', 'easy-digital-downloads' );
 			}
@@ -781,11 +783,13 @@ function edd_customers_view( $customer = null ) {
 				);
 
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
-				?>
-
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php esc_html_e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php esc_html_e( 'This customer made a purchase prior to privacy policy dates being logged, this is the date of their last purchase. If your site was displaying the privacy policy checkbox at that time, this is our best estimate as to when they last agreed to your privacy policy.', 'easy-digital-downloads' ); ?>"></span>
-
-				<?php
+				$tooltip = new EDD\HTML\Tooltip(
+					array(
+						'title'   => __( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ),
+						'content' => __( 'This customer made a purchase prior to privacy policy dates being logged, this is the date of their last purchase. If your site was displaying the privacy policy checkbox at that time, this is our best estimate as to when they last agreed to your privacy policy.', 'easy-digital-downloads' ),
+					)
+				);
+				$tooltip->output();
 			} else {
 				esc_html_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
 			}
@@ -953,8 +957,15 @@ function edd_customers_emails_view( $customer ) {
 	<div class="info-wrapper customer-section">
 		<?php edd_render_customer_details_header( $customer ); ?>
 		<h3>
-			<?php esc_html_e( 'Customer Emails', 'easy-digital-downloads' ); ?>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'This customer can use any of the emails listed here when making new purchases.', 'easy-digital-downloads' ); ?>"></span>
+			<?php
+			esc_html_e( 'Customer Emails', 'easy-digital-downloads' );
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'content' => __( 'This customer can use any of the emails listed here when making new purchases.', 'easy-digital-downloads' ),
+				)
+			);
+			$tooltip->output();
+			?>
 		</h3>
 
 		<div class="notice-wrap"></div>

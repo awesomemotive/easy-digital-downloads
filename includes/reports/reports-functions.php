@@ -733,8 +733,8 @@ function parse_dates_for_range( $range = null, $date = 'now', $convert_to_utc = 
 			}
 
 			$dates = array(
-				'start' => EDD()->utils->date( $start, edd_get_timezone_id(), false )->startOfDay(),
-				'end'   => EDD()->utils->date( $end, edd_get_timezone_id(), false )->endOfDay(),
+				'start' => EDD()->utils->date( $start )->startOfDay(),
+				'end'   => EDD()->utils->date( $end )->endOfDay(),
 			);
 			break;
 	}
@@ -1803,4 +1803,31 @@ function compat_filter_date_range( $range ) {
 	return isset( $_REQUEST['range'] )
 		? sanitize_key( $_REQUEST['range'] )
 		: $range;
+}
+
+/**
+ * Gets a download label from a download data array.
+ *
+ * @since 3.2.8
+ * @param array $download_data
+ * @return string
+ */
+function get_download_label( $download_data = array() ) {
+	if ( empty( $download_data ) ) {
+		return '';
+	}
+	$download = edd_get_download( $download_data['download_id'] );
+	if ( ! $download ) {
+		return '';
+	}
+
+	if ( isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ) {
+		$args       = array( 'price_id' => $download_data['price_id'] );
+		$price_name = edd_get_price_name( $download->ID, $args );
+		if ( $price_name ) {
+			$download->post_title .= ': ' . $price_name;
+		}
+	}
+
+	return esc_html( ' (' . $download->post_title . ')' );
 }

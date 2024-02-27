@@ -286,7 +286,7 @@ function edd_scripts_in_footer() {
  */
 function edd_admin_get_script_version() {
 	return edd_doing_script_debug()
-		? current_time( 'timestamp' )
+		? time()
 		: EDD_VERSION;
 }
 
