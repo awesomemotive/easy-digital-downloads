@@ -42,9 +42,7 @@ class Search {
 		$search['text'] = $new_search;
 
 		// Are we excluding the current ID?
-		$excludes = ! empty( $_GET['current_id'] )
-			? array_unique( array_map( 'absint', (array) $_GET['current_id'] ) )
-			: array();
+		$excludes = $this->get_exclusions();
 
 		// Are we excluding bundles?
 		$no_bundles = isset( $_GET['no_bundles'] )
@@ -77,10 +75,7 @@ class Search {
 			'suppress_filters' => false,
 		);
 
-		add_filter( 'posts_where', array( $this, 'filter_where' ), 10, 2 );
-		// Get downloads.
-		$items = get_posts( $args );
-		remove_filter( 'posts_where', array( $this, 'filter_where' ), 10, 2 );
+		$items = $this->get_items( $args );
 
 		// Pluck title & ID.
 		if ( ! empty( $items ) ) {
@@ -136,6 +131,21 @@ class Search {
 
 		// Done!
 		edd_die();
+	}
+
+	/**
+	 * Gets the items.
+	 *
+	 * @since 3.2.8
+	 * @param array $args The array of arguments for WP_Query.
+	 * @return array
+	 */
+	private function get_items( $args ) {
+		add_filter( 'posts_where', array( $this, 'filter_where' ), 10, 2 );
+		$items = get_posts( $args );
+		remove_filter( 'posts_where', array( $this, 'filter_where' ), 10, 2 );
+
+		return $items;
 	}
 
 	/**
@@ -216,5 +226,23 @@ class Search {
 			: '';
 
 		return esc_sql( $search );
+	}
+
+	/**
+	 * Gets the excluded downloads.
+	 *
+	 * @since 3.2.8
+	 * @return array
+	 */
+	private function get_exclusions() {
+		$excludes = ! empty( $_GET['current_id'] )
+			? array_map( 'absint', (array) $_GET['current_id'] )
+			: array();
+
+		if ( ! empty( $_GET['exclusions'] ) ) {
+			$excludes = array_merge( $excludes, array_map( 'absint', explode( ',', $_GET['exclusions'] ) ) );
+		}
+
+		return array_unique( array_filter( $excludes ) );
 	}
 }

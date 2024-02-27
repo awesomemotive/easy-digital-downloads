@@ -10,7 +10,7 @@
  */
 namespace EDD\Orders;
 
-use EDD\Database\Rows as Rows;
+use EDD\Database\Rows;
 use EDD\Database\Rows\Adjustment;
 
 // Exit if accessed directly
@@ -276,12 +276,14 @@ class Order extends Rows\Order {
 	 */
 	public function __get( $key = '' ) {
 		if ( 'adjustments' === $key && null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+			$this->adjustments = edd_get_order_adjustments(
+				array(
+					'object_id'     => $this->id,
+					'object_type'   => 'order',
+					'no_found_rows' => true,
+					'order'         => 'ASC',
+				)
+			);
 		} elseif ( 'items' === $key ) {
 			$this->get_items();
 		}
@@ -347,13 +349,15 @@ class Order extends Rows\Order {
 	 */
 	public function get_items() {
 		if ( null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-				'number'        => 200,
-			) );
+			$this->items = edd_get_order_items(
+				array(
+					'order_id'      => $this->id,
+					'orderby'       => 'cart_index',
+					'order'         => 'ASC',
+					'no_found_rows' => true,
+					'number'        => 200,
+				)
+			);
 		}
 
 		return $this->items;
@@ -368,8 +372,8 @@ class Order extends Rows\Order {
 	 * @return Order_Item[] Order items.
 	 */
 	public function get_items_with_bundles() {
-		$items = $this->get_items();
-		foreach ( $items as $index => $item ) {
+		$items = array();
+		foreach ( $this->get_items() as $index => $item ) {
 			if ( edd_is_bundled_product( $item->product_id ) ) {
 				$new_items        = array();
 				$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
@@ -380,15 +384,18 @@ class Order extends Rows\Order {
 						'product_id'   => edd_get_bundle_item_id( $bundle_item ),
 						'product_name' => edd_get_bundle_item_title( $bundle_item ),
 						'price_id'     => edd_get_bundle_item_price_id( $bundle_item ),
+						'quantity'     => $item->quantity,
 					);
 					$new_items[]     = new \EDD\Orders\Order_Item( $order_item_args );
 				}
 				if ( ! empty( $new_items ) ) {
-					// The parent item should be replaced at its original position with its bundle items.
-					array_splice( $items, $index, 1, $new_items );
+					$items = array_merge( $items, $new_items );
 				}
+			} else {
+				$items[] = $item;
 			}
 		}
+
 		return $items;
 	}
 
@@ -402,12 +409,14 @@ class Order extends Rows\Order {
 	 */
 	public function get_adjustments() {
 		if ( null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+			$this->adjustments = edd_get_order_adjustments(
+				array(
+					'object_id'     => $this->id,
+					'object_type'   => 'order',
+					'no_found_rows' => true,
+					'order'         => 'ASC',
+				)
+			);
 		}
 
 		return $this->adjustments;
@@ -480,7 +489,7 @@ class Order extends Rows\Order {
 	 *
 	 * @since 3.0
 	 *
-	 *@return Order_Adjustment[] Order credits.
+	 * @return Order_Adjustment[] Order credits.
 	 */
 	public function get_credits() {
 		// Default values
@@ -511,28 +520,34 @@ class Order extends Rows\Order {
 
 		// Retrieve first transaction ID only.
 		if ( 'primary' === $type ) {
-			$transactions = array_values( edd_get_order_transactions( array(
-				'object_id'   => $this->id,
-				'object_type' => 'order',
-				'orderby'     => 'date_created',
-				'order'       => 'ASC',
-				'fields'      => 'transaction_id',
-				'number'      => 1,
-			) ) );
+			$transactions = array_values(
+				edd_get_order_transactions(
+					array(
+						'object_id'   => $this->id,
+						'object_type' => 'order',
+						'orderby'     => 'date_created',
+						'order'       => 'ASC',
+						'fields'      => 'transaction_id',
+						'number'      => 1,
+					)
+				)
+			);
 
 			if ( $transactions ) {
 				$retval = esc_attr( $transactions[0] );
 			}
 
-		// Retrieve all transaction IDs.
+			// Retrieve all transaction IDs.
 		} else {
-			$retval = edd_get_order_transactions( array(
-				'object_id'   => $this->id,
-				'object_type' => 'order',
-				'orderby'     => 'date_created',
-				'order'       => 'ASC',
-				'fields'      => 'transaction_id',
-			) );
+			$retval = edd_get_order_transactions(
+				array(
+					'object_id'   => $this->id,
+					'object_type' => 'order',
+					'orderby'     => 'date_created',
+					'order'       => 'ASC',
+					'fields'      => 'transaction_id',
+				)
+			);
 		}
 
 		return $retval;
@@ -632,11 +647,13 @@ class Order extends Rows\Order {
 	 * @return array Notes associated with this order.
 	 */
 	public function get_notes() {
-		return edd_get_notes( array(
-			'object_id'   => $this->id,
-			'object_type' => 'order',
-			'order'       => 'ASC',
-		) );
+		return edd_get_notes(
+			array(
+				'object_id'   => $this->id,
+				'object_type' => 'order',
+				'order'       => 'ASC',
+			)
+		);
 	}
 
 	/**

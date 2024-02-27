@@ -2220,7 +2220,10 @@ function edd_register_post_type_statuses() {
  * @return void
  */
 function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $customer = null ) {
-	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
+
+	if ( 'edd_complete_purchase' !== current_action() ) {
+		_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
+	}
 
 	/**
 	 * In EDD 3.2.0 we will be using the EDD\Emails\Triggers\send_purchase_receipt() function to send the email.
@@ -2333,8 +2336,6 @@ function edd_email_test_purchase_receipt() {
  * @return void
  */
 function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
-	_edd_deprecated_function( __FUNCTION__, '3.2.0', 'EDD\Emails\Types\AdminOrderNotice' );
-
 	/**
 	 * In EDD 3.2.0 we will be using the EDD\Emails\Triggers\edd_email_sent_order_receipt() function to send the email.
 	 *

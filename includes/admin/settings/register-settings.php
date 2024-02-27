@@ -1183,7 +1183,13 @@ function edd_gateways_callback( $args ) {
 			$html .= '<input name="' . $attributes['name'] . '" id="' . $attributes['id'] . '" class="' . $class . '" type="checkbox" value="1" data-gateway-key="' . $attributes['data-gateway-key'] . '" ' . $attributes['checked'] . ' ' . $attributes['disabled'] . '/>&nbsp;';
 			$html .= esc_html( $option['admin_label'] );
 			if ( 'manual' === $key ) {
-				$html .= '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . esc_html__( 'Store Gateway', 'easy-digital-downloads' ) . '</strong>: ' . esc_html__( 'This is an internal payment gateway which can be used for manually added orders or test purchases. No money is actually processed.', 'easy-digital-downloads' ) . '"></span>';
+				$tooltip = new EDD\HTML\Tooltip(
+					array(
+						'title'   => __( 'Store Gateway', 'easy-digital-downloads' ),
+						'content' => __( 'This is an internal payment gateway which can be used for manually added orders or test purchases. No money is actually processed.', 'easy-digital-downloads' ),
+					)
+				);
+				$html   .= $tooltip->get();
 			}
 
 			// If a settings URL is returned, display a button to go to the settings page.
@@ -1497,53 +1503,32 @@ function edd_select_callback( $args ) {
 		$value = $edd_option;
 	} else {
 
-		// Properly set default fallback if the Select Field allows Multiple values
+		// Properly set default fallback if the Select Field allows Multiple values.
 		if ( empty( $args['multiple'] ) ) {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		} else {
 			$value = ! empty( $args['std'] ) ? $args['std'] : array();
 		}
-
 	}
 
-	$placeholder = isset( $args['placeholder'] )
-		? $args['placeholder']
-		: '';
-
-	$class = edd_sanitize_html_class( $args['field_class'] );
-
-	if ( isset( $args['chosen'] ) ) {
-		$class .= ' edd-select-chosen';
-		if ( is_rtl() ) {
-			$class .= ' chosen-rtl';
-		}
+	$args['name'] = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
+	$args['id']   = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
+	if ( ! empty( $args['multiple'] ) ) {
+		$args['name'] .= '[]';
+	}
+	$args['selected'] = $value;
+	$args['class']    = edd_sanitize_html_class( $args['field_class'] );
+	if ( ! isset( $args['show_option_all'] ) ) {
+		$args['show_option_all'] = false;
+	}
+	if ( ! isset( $args['show_option_none'] ) ) {
+		$args['show_option_none'] = false;
 	}
 
-	// Nonce
-	$nonce = isset( $args['data']['nonce'] )
-		? ' data-nonce="' . sanitize_text_field( $args['data']['nonce'] ) . '"'
-		: '';
-
-	// If the Select Field allows Multiple values, save as an Array
-	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
-	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
-
-	$html = '<select ' . $nonce . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
-
-	foreach ( $args['options'] as $option => $name ) {
-
-		if ( ! $args['multiple'] ) {
-			$selected = selected( $option, $value, false );
-			$html    .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
-		} else {
-			// Do an in_array() check to output selected attribute for Multiple
-			$html .= '<option value="' . esc_attr( $option ) . '" ' . ( ( in_array( $option, $value ) ) ? 'selected="true"' : '' ) . '>' . esc_html( $name ) . '</option>';
-		}
-
+	$html = EDD()->html->select( $args );
+	if ( ! empty( $args['desc'] ) ) {
+		$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 	}
-
-	$html .= '</select>';
-	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
@@ -1942,6 +1927,38 @@ function edd_hook_callback( $args ) {
 }
 
 /**
+ * Checkbox toggle callback.
+ *
+ * @param [type] $args
+ * @return void
+ */
+function edd_checkbox_toggle_callback( $args ) {
+	$edd_option = edd_get_option( $args['id'] );
+
+	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
+		$name = '';
+	} else {
+		$name = 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']';
+	}
+
+	$args['name']    = $name;
+	$args['class']   = edd_sanitize_html_class( $args['field_class'] );
+	$args['current'] = ! empty( $edd_option )
+		? $edd_option
+		: '';
+	$args['label']   = $args['check'];
+	$args['value']   = 1;
+
+	$checkbox = new EDD\HTML\CheckboxToggle( $args );
+	$html     = $checkbox->get();
+	if ( ! empty( $args['desc'] ) ) {
+		$html .= '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
+	}
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
+}
+
+/**
  * Set manage_shop_settings as the cap required to save EDD settings pages
  *
  * @since 1.9
@@ -1962,21 +1979,27 @@ add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
  */
 function edd_add_setting_tooltip( $html = '', $args = array() ) {
 
-	// Tooltip has title & description
+	// Tooltip has title & description.
 	if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
-		$tooltip   = '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . esc_html( $args['tooltip_title'] ) . '</strong>: ' . esc_html( $args['tooltip_desc'] ) . '"></span>';
-		$has_p_tag = strstr( $html, '</p>'     );
+		$tooltip = new EDD\HTML\Tooltip(
+			array(
+				'title'   => $args['tooltip_title'],
+				'content' => $args['tooltip_desc'],
+			)
+		);
+		$tooltip   = $tooltip->get();
+		$has_p_tag = strstr( $html, '</p>' );
 		$has_label = strstr( $html, '</label>' );
 
-		// Insert tooltip at end of paragraph
+		// Insert tooltip at end of paragraph.
 		if ( false !== $has_p_tag ) {
 			$html = str_replace( '</p>', $tooltip . '</p>', $html );
 
-		// Insert tooltip at end of label
+			// Insert tooltip at end of label.
 		} elseif ( false !== $has_label ) {
 			$html = str_replace( '</label>', '</label>' . $tooltip, $html );
 
-		// Append tooltip to end of HTML
+			// Append tooltip to end of HTML.
 		} else {
 			$html .= $tooltip;
 		}

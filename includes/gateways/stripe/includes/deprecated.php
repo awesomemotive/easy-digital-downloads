@@ -240,3 +240,73 @@ function edds_charge_preapproved( $payment_id = 0 ) {
  * @deprecated 3.2.0
  */
 function edds_complete_payment_authorization() {}
+
+/**
+ * Retrieves a sanitized statement descriptor.
+ *
+ * @since 2.6.19
+ * @deprecated 3.2.8
+ *
+ * @return string $statement_descriptor Sanitized statement descriptor.
+ */
+function edds_get_statement_descriptor() {
+	_edd_deprecated_function( __FUNCTION__, '3.2.8' );
+	$statement_descriptor = edd_get_option( 'stripe_statement_descriptor', '' );
+	$statement_descriptor = edds_sanitize_statement_descriptor( $statement_descriptor );
+
+	return $statement_descriptor;
+}
+
+/**
+ * Retrieves a list of unsupported characters for Stripe statement descriptors.
+ *
+ * @since 2.6.19
+ * @deprecated 3.2.8
+ *
+ * @return array $unsupported_characters List of unsupported characters.
+ */
+function edds_get_statement_descriptor_unsupported_characters() {
+	_edd_deprecated_function( __FUNCTION__, '3.2.8' );
+
+	$unsupported_characters = array(
+		'<',
+		'>',
+		'"',
+		'\'',
+		'\\',
+		'*',
+	);
+
+	/**
+	 * Filters the list of unsupported characters for Stripe statement descriptors.
+	 *
+	 * @since 2.6.19
+	 *
+	 * @param array $unsupported_characters List of unsupported characters.
+	 */
+	$unsupported_characters = apply_filters( 'edds_get_statement_descriptor_unsupported_characters', $unsupported_characters );
+
+	return $unsupported_characters;
+}
+
+/**
+ * Sanitizes a string to be used for a statement descriptor.
+ *
+ * @since 2.6.19
+ * @deprecated 3.2.8
+ *
+ * @link https://stripe.com/docs/connect/statement-descriptors#requirements
+ *
+ * @param string $statement_descriptor Statement descriptor to sanitize.
+ * @return string $statement_descriptor Sanitized statement descriptor.
+ */
+function edds_sanitize_statement_descriptor( $statement_descriptor ) {
+	_edd_deprecated_function( __FUNCTION__, '3.2.8' );
+
+	$unsupported_characters = edds_get_statement_descriptor_unsupported_characters();
+
+	$statement_descriptor = trim( str_replace( $unsupported_characters, '', $statement_descriptor ) );
+	$statement_descriptor = substr( $statement_descriptor, 0, 22 );
+
+	return $statement_descriptor;
+}

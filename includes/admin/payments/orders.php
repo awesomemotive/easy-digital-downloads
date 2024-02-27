@@ -42,7 +42,14 @@ function edd_order_details_publish( $order ) {
 								<label for="edd-order-send-receipt">
 								<?php esc_html_e( 'Send Purchase Receipt', 'easy-digital-downloads' ); ?>
 								</label>
-								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Checking this box will email the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
+								<?php
+								$tooltip = new EDD\HTML\Tooltip(
+									array(
+										'content' => __( 'Checking this box will email the purchase receipt to the selected customer.', 'easy-digital-downloads' ),
+									)
+								);
+								$tooltip->output();
+								?>
 							</div>
 						</div>
 					</div>
@@ -986,7 +993,14 @@ function edd_order_details_extras( $order = false ) {
 
 							<label for="edd_unlimited_downloads">
 							<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?></label>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Checking this box will override all other file download limits for this purchase, granting the customer unlimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+							<?php
+							$tooltip = new EDD\HTML\Tooltip(
+								array(
+									'content' => __( 'Checking this box will override all other file download limits for this purchase, granting the customer unlimited downloads of all files included on the purchase.', 'easy-digital-downloads' ),
+								)
+							);
+							$tooltip->output();
+							?>
 						</div>
 					</div>
 				</div>
@@ -1015,7 +1029,12 @@ function edd_order_details_extras( $order = false ) {
 
 					echo $status_badge->get();
 					if ( empty( $status ) ) {
-						?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Deferred Actions were added in Easy Digital Downloads 2.8. Orders placed on prior versions will not have a deferred actions status. If this order was placed on a version of Easy Digital Downloads supporting Deferred Actions, please verify that WP Cron is able to be run.', 'easy-digital-downloads' ); ?>"></span><?php
+						$tooltip = new EDD\HTML\Tooltip(
+							array(
+								'content' => __( 'Deferred Actions were added in Easy Digital Downloads 2.8. Orders placed on prior versions will not have a deferred actions status. If this order was placed on a version of Easy Digital Downloads supporting Deferred Actions, please verify that WP Cron is able to be run.', 'easy-digital-downloads' ),
+							)
+						);
+						$tooltip->output();
 					}
 					?>
 				</div>
@@ -1058,17 +1077,59 @@ function edd_order_details_attributes( $order ) {
 						<label for="edd_payment_status" class="edd-form-group__label">
 							<?php
 							esc_html_e( 'Status', 'easy-digital-downloads' );
+							$statuses = apply_filters(
+								'edd_order_statuses_tooltip',
+								array(
+									'pending'   => array(
+										'title'       => __( 'Pending', 'easy-digital-downloads' ),
+										'description' => __( 'Order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ),
+									),
+									'complete'  => array(
+										'title'       => __( 'Complete', 'easy-digital-downloads' ),
+										'description' => __( 'All processing is completed for this purchase.', 'easy-digital-downloads' ),
+									),
+									'revoked'   => array(
+										'title'       => __( 'Revoked', 'easy-digital-downloads' ),
+										'description' => __( 'Access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ),
+									),
+									'refunded'  => array(
+										'title'       => __( 'Refunded', 'easy-digital-downloads' ),
+										'description' => __( 'The purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ),
+									),
+									'abandoned' => array(
+										'title'       => __( 'Abandoned', 'easy-digital-downloads' ),
+										'description' => __( 'The purchase attempt was not completed by the customer.', 'easy-digital-downloads' ),
+									),
+									'failed'    => array(
+										'title'       => __( 'Failed', 'easy-digital-downloads' ),
+										'description' => __( 'Customer clicked Cancel before completing the purchase.', 'easy-digital-downloads' ),
+									),
+									'on_hold'   => array(
+										'title'       => __( 'On Hold', 'easy-digital-downloads' ),
+										'description' => __( 'Order is held for review. Order items are not available to download.', 'easy-digital-downloads' ),
+									),
+								)
+							);
 
 							$status_help  = '<ul>';
-							$status_help .= '<li>' . __( '<strong>Pending</strong>: order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
-							$status_help .= '<li>' . __( '<strong>Complete</strong>: all processing is completed for this purchase.', 'easy-digital-downloads' ) . '</li>';
-							$status_help .= '<li>' . __( '<strong>Revoked</strong>: access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ) . '</li>';
-							$status_help .= '<li>' . __( '<strong>Refunded</strong>: the purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ) . '</li>';
-							$status_help .= '<li>' . __( '<strong>Abandoned</strong>: the purchase attempt was not completed by the customer.', 'easy-digital-downloads' ) . '</li>';
-							$status_help .= '<li>' . __( '<strong>Failed</strong>: customer clicked Cancel before completing the purchase.', 'easy-digital-downloads' ) . '</li>';
+							$status_help  = implode(
+								'',
+								array_map(
+									function( $status, $data ) {
+										return '<li><strong>' . esc_html( $data['title'] ) . ':</strong> ' . esc_html( $data['description'] ) . '</li>';
+									},
+									array_keys( $statuses ),
+									$statuses
+								)
+							);
 							$status_help .= '</ul>';
+							$tooltip      = new EDD\HTML\Tooltip(
+								array(
+									'content' => $status_help,
+								)
+							);
+							$tooltip->output();
 							?>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
 						</label>
 						<div class="edd-form-group__control">
 							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input">
@@ -1122,8 +1183,15 @@ function edd_order_details_attributes( $order ) {
 					<div class="edd-admin-box-inside">
 						<div class="edd-form-group">
 							<label class="edd-form-group__label" for="edd_recovery_url">
-								<?php esc_html_e( 'Recover', 'easy-digital-downloads' ); ?>
-								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>"></span>
+								<?php
+								esc_html_e( 'Recover', 'easy-digital-downloads' );
+								$tooltip = new EDD\HTML\Tooltip(
+									array(
+										'content' => __( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ),
+									)
+								);
+								$tooltip->output();
+								?>
 							</label>
 							<div class="edd-form-group__control">
 								<input type="text" class="edd-form-group__input" id="edd_recovery_url" readonly="readonly" value="<?php echo esc_url( $recovery_url ); ?>"/>

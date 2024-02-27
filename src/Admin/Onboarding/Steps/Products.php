@@ -30,7 +30,16 @@ class Products extends Step {
 				<tbody>
 					<tr>
 						<th scope="row"><h3><?php echo esc_html_e( 'Product details', 'easy-digital-downloads' ); ?></h3></th>
-						<td><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'We\'ll get started with some basic information. Don\'t worry, you can add more details later. When you\'re finished here, the product will be saved as a draft so you can finish up later.', 'easy-digital-downloads' ) ); ?>"></span></td>
+						<td>
+							<?php
+							$tooltip = new \EDD\HTML\Tooltip(
+								array(
+									'content' => __( 'We\'ll get started with some basic information. Don\'t worry, you can add more details later. When you\'re finished here, the product will be saved as a draft so you can finish up later.', 'easy-digital-downloads' ),
+								)
+							);
+							$tooltip->output();
+							?>
+						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="product_title"><?php echo esc_html_e( 'Product Name', 'easy-digital-downloads' ); ?></label></th>
@@ -121,7 +130,14 @@ class Products extends Step {
 							</div>
 						</th>
 						<td>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( __( 'Ready to add your first downloadable file to your product? Great! These files will be protected and only available to people who purchase your product. Not ready yet? No problem, you can always add and update files later.', 'easy-digital-downloads' ) ); ?>"></span>
+							<?php
+							$tooltip = new \EDD\HTML\Tooltip(
+								array(
+									'content' => __( 'Ready to add your first downloadable file to your product? Great! These files will be protected and only available to people who purchase your product. Not ready yet? No problem, you can always add and update files later.', 'easy-digital-downloads' ),
+								)
+							);
+							$tooltip->output();
+							?>
 						</td>
 					</tr>
 					<tr class="edd-onboarding__product-files-row" style="display: none;">

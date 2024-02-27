@@ -241,7 +241,10 @@ function edds_process_purchase_form( $purchase_data ) {
 			 */
 			$intent_args = apply_filters( 'edds_create_setup_intent_args', $intent_args, $purchase_data );
 			if ( edd_stripe()->application_fee->has_application_fee() ) {
-				$intent_args['application_fee_amount'] = edd_stripe()->application_fee->get_application_fee_amount( $amount );
+				$application_fee = edd_stripe()->application_fee->get_application_fee_amount( $amount );
+				if ( ! empty( $application_fee ) ) {
+					$intent_args['application_fee_amount'] = $application_fee;
+				}
 			}
 
 			$intent = edds_api_request( 'SetupIntent', 'create', $intent_args );
@@ -256,31 +259,24 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		// Create a PaymentIntent for an immediate charge.
 		} else {
-			$purchase_summary     = edds_get_payment_description( $purchase_data['cart_details'] );
-			$statement_descriptor = edds_get_statement_descriptor();
+			$purchase_summary = edds_get_payment_description( $purchase_data['cart_details'] );
 
-			if ( empty( $statement_descriptor ) ) {
-				$statement_descriptor = substr( $purchase_summary, 0, 22 );
-			}
-
-			$statement_descriptor = apply_filters( 'edds_statement_descriptor', $statement_descriptor, $purchase_data );
-			$statement_descriptor = edds_sanitize_statement_descriptor( $statement_descriptor );
-
-			if ( empty( $statement_descriptor ) ) {
-				$statement_descriptor = null;
-			} elseif ( is_numeric( $statement_descriptor ) ) {
-				$statement_descriptor = edd_get_label_singular() . ' ' . $statement_descriptor;
+			// If this is a card payment method, we need to add the statement descriptor suffix.
+			if ( $card ) {
+				$statement_descriptor_suffix = EDD\Gateways\Stripe\StatementDescriptor::sanitize_suffix( $purchase_summary );
+				if ( ! empty( $statement_descriptor_suffix ) ) {
+					$intent_args['statement_descriptor_suffix'] = $statement_descriptor_suffix;
+				}
 			}
 
 			$intent_args = array_merge(
 				array(
-					'amount'                 => $amount,
-					'currency'               => edd_get_currency(),
-					'setup_future_usage'     => 'off_session',
-					'confirmation_method'    => 'manual',
-					'save_payment_method'    => true,
-					'description'            => $purchase_summary,
-					'statement_descriptor'   => $statement_descriptor,
+					'amount'              => $amount,
+					'currency'            => edd_get_currency(),
+					'setup_future_usage'  => 'off_session',
+					'confirmation_method' => 'manual',
+					'save_payment_method' => true,
+					'description'         => $purchase_summary,
 				),
 				$intent_args
 			);
@@ -298,8 +294,26 @@ function edds_process_purchase_form( $purchase_data ) {
 			 */
 			$intent_args = apply_filters( 'edds_create_payment_intent_args', $intent_args, $purchase_data );
 
+			/**
+			 * As of Feb 1, 2024, Stripe no longer allows Statement Descriptors for PaymentIntents with cards.
+			 *
+			 * @since 3.2.8
+			 *
+			 * Because of this EDD will always default to the Stripe settings, by sending no statement descriptor.
+			 * If a developer was altering it with this method, then the filters will no longer work, in order to avoid
+			 * failed payments from happening.
+			 *
+			 * Dynamic statement descriptors can be enabled by including the Order ID in the EDD Stripe
+			 */
+			if ( isset( $intent_args['statement_descriptor'] ) ) {
+				unset( $intent_args['statement_descriptor'] );
+			}
+
 			if ( edd_stripe()->application_fee->has_application_fee() ) {
-				$intent_args['application_fee_amount'] = edd_stripe()->application_fee->get_application_fee_amount( $amount );
+				$application_fee = edd_stripe()->application_fee->get_application_fee_amount( $amount );
+				if ( ! empty( $application_fee ) ) {
+					$intent_args['application_fee_amount'] = $application_fee;
+				}
 			}
 
 			$intent = edds_api_request( 'PaymentIntent', 'create', $intent_args );

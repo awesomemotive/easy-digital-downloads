@@ -14,7 +14,7 @@ $is_override      = edd_is_order_refundable_by_override( $order->id );
 $is_window_passed = edd_is_order_refund_window_passed( $order->id );
 
 if ( true === edd_is_add_order_page() ) :
-?>
+	?>
 	<button
 		id="add-adjustment"
 		class="button button-secondary"
@@ -40,17 +40,40 @@ if ( true === edd_is_add_order_page() ) :
 	</button>
 <?php elseif ( 'refunded' !== $order->status && edd_get_order_total( $order->id ) > 0 ) : ?>
 	<div class="edd-order-overview-actions__locked">
-		<?php esc_html_e( 'Order items cannot be modified.', 'easy-digital-downloads' ); ?>
-		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Issue a refund to adjust the net total for this order.', 'easy-digital-downloads' ); ?>"></span>
+		<?php
+		esc_html_e( 'Order items cannot be modified.', 'easy-digital-downloads' );
+		$tooltip = new EDD\HTML\Tooltip(
+			array(
+				'content' => __( 'Issue a refund to adjust the net total for this order.', 'easy-digital-downloads' ),
+			)
+		);
+		$tooltip->output();
+		?>
 	</div>
 
 	<div class="edd-order-overview-actions__refund">
 		<?php if ( 'amazon' === $order->gateway ) : ?>
 			<span class="dashicons dashicons-lock" title="<?php esc_attr_e( 'Amazon orders must be refunded at the gateway.', 'easy-digital-downloads' ); ?>"></span>
 		<?php elseif ( true === $is_refundable && true === $is_override && true === $is_window_passed ) : ?>
-			<span class="edd-help-tip dashicons dashicons-unlock" title="<?php esc_attr_e( 'The refund window for this Order has passed; however, you have the ability to override this.', 'easy-digital-downloads' ); ?>"></span>
+			<?php
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'content'  => __( 'The refund window for this Order has passed; however, you have the ability to override this.', 'easy-digital-downloads' ),
+					'dashicon' => 'dashicons-unlock',
+				)
+			);
+			$tooltip->output();
+			?>
 		<?php elseif ( false === $is_refundable && true === $is_window_passed ) : ?>
-			<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'The refund window for this Order has passed.', 'easy-digital-downloads' ); ?>"></span>
+			<?php
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'content'  => __( 'The refund window for this Order has passed.', 'easy-digital-downloads' ),
+					'dashicon' => 'dashicons-lock',
+				)
+			);
+			$tooltip->output();
+			?>
 		<?php endif; ?>
 
 		<button

@@ -43,8 +43,15 @@ function edd_refund_details_notice( $refund ) {
 		</div>
 
 		<div class="edit-post-header__toolbar">
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'A refund is a read-only record to help balance your store&#39;s books.', 'easy-digital-downloads' ); ?>"></span>&nbsp;
-			<?php esc_html_e( 'You are viewing a refund record.', 'easy-digital-downloads' ); ?>
+			<?php
+			esc_html_e( 'You are viewing a refund record.', 'easy-digital-downloads' );
+			$tooltip = new EDD\HTML\Tooltip(
+				array(
+					'content' => __( 'A refund is a read-only record to help balance your store&#39;s books.', 'easy-digital-downloads' ),
+				)
+			);
+			$tooltip->output();
+			?>
 		</div>
 
 	</div>

@@ -99,23 +99,61 @@ function edds_add_settings( $settings ) {
 			'desc'    => __( 'Select how you would like to display the billing address fields on the checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this option cannot be changed from "Full address".</p><p>If set to "No address fields", you <strong>must</strong> disable "zip code verification" in your Stripe account.</p>', 'easy-digital-downloads' ),
 			'type'    => 'select',
 			'std'     => 'full',
+			'class'   => edd_stripe()->connect->is_connected ? '' : 'edd-hidden',
 			'options' => array(
 				'full'        => __( 'Full address', 'easy-digital-downloads' ),
 				'zip_country' => __( 'Zip / Postal Code and Country only', 'easy-digital-downloads' ),
 				'none'        => __( 'No address fields', 'easy-digital-downloads' ),
 			),
 		),
-		'stripe_statement_descriptor'   => array(
-			'id'   => 'stripe_statement_descriptor',
-			'name' => __( 'Statement Descriptor', 'easy-digital-downloads' ),
-			'desc' => __( 'Choose how charges will appear on customer\'s credit card statements. <em>Max 22 characters</em>', 'easy-digital-downloads' ),
-			'type' => 'text',
+		'statement_descriptor_settings' => array(
+			'id'    => 'statement_descriptor_settings',
+			'name'  => __( 'Statement Descriptors', 'easy-digital-downloads' ),
+			'type'  => 'header',
+			'class' => edd_stripe()->connect->is_connected ? '' : 'edd-hidden',
+		),
+		'statement_descriptor'          => array(
+			'id'          => 'stripe_statement_descriptor',
+			'name'        => __( 'Statement Descriptor', 'easy-digital-downloads' ),
+			'desc'        => sprintf(
+				__( 'You can change the description of charges on a customer\'s bank statement in your %1$sStripe Settings%2$s.', 'easy-digital-downloads' ),
+				'<a href="https://dashboard.stripe.com/settings/public" target="_blank" rel="noopener noreferrer">',
+				'</a>'
+			),
+			'type'        => 'text',
+			'faux'        => true,
+			'disabled'    => true,
+			'class'       => edd_stripe()->connect->is_connected ? '' : 'edd-hidden',
+			'field_class' => 'edd-text-loading',
+		),
+		'include_purchase_summary'      => array(
+			'id'    => 'stripe_include_purchase_summary_in_statement_descriptor',
+			'name'  => __( 'Include Purchase Summary', 'easy-digital-downloads' ),
+			'check' => __( 'Include the product name(s) purchased in the payment descriptor for card payments. If the product name(s) are too long they will be shortened automatically.', 'easy-digital-downloads' ),
+			'desc'  => __( 'Note: This setting does not affect non-card payment methods. Non-card payment methods will always use the Statement Descriptor above.', 'easy-digital-downloads'),
+			'type'  => 'checkbox_toggle',
+			'class' => edd_stripe()->connect->is_connected ? '' : 'edd-hidden',
+		),
+		'statement_descriptor_prefix'   => array(
+			'id'          => 'stripe_statement_descriptor_prefix',
+			'name'        => __( 'Shortened Descriptor', 'easy-digital-downloads' ),
+			'desc'        => __( 'When including the purchase summary in the payment descriptor for card payments, Stripe will use this shortened description as a prefix to the purchase summary.', 'easy-digital-downloads' ),
+			'type'        => 'text',
+			'faux'        => true,
+			'disabled'    => true,
+			'class'       => edd_stripe()->connect->is_connected && ! empty( edd_get_option( 'stripe_include_purchase_summary_in_statement_descriptor', false ) ) ? 'statement-descriptor-prefix' : 'edd-hidden statement-descriptor-prefix',
+			'field_class' => 'edd-text-loading',
+		),
+		'stripe_more_settings_header'   => array(
+			'id'   => 'stripe_additional_settings_header',
+			'name' => __( 'Additional Settings', 'easy-digital-downloads' ),
+			'type' => 'header',
 		),
 		'stripe_restrict_assets'        => array(
 			'id'    => 'stripe_restrict_assets',
 			'name'  => ( __( 'Restrict Stripe Assets', 'easy-digital-downloads' ) ),
 			'check' => ( __( 'Only load Stripe.com hosted assets on pages that specifically utilize Stripe functionality.', 'easy-digital-downloads' ) ),
-			'type'  => 'checkbox_description',
+			'type'  => 'checkbox_toggle',
 			'desc'  => sprintf(
 				/* translators: 1. opening link tag; 2. closing link tag */
 				__( 'Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. %1$sLearn more about Stripe\'s recommended setup.%2$s', 'easy-digital-downloads' ),
@@ -486,3 +524,23 @@ function edds_maybe_add_billing_support_message( $settings ) {
 	return edd_stripe()->regional_support->add_billing_address_message( $settings );
 }
 add_filter( 'edd_settings_gateways', 'edds_maybe_add_billing_support_message', 30 );
+
+/**
+ * Filter the flyout documentation link.
+ *
+ * Links users to the Stripe setup documentation when on the Stripe settings pgae.
+ *
+ * @since 3.2.8
+ *
+ * @param string $route The route to the documentation.
+ *
+ * @return string
+ */
+function edds_documentation_flyout_link( $link ) {
+	if ( edd_is_admin_page() && isset( $_GET['section'] ) && 'edd-stripe' === $_GET['section'] ) {
+		$link = 'https://easydigitaldownloads.com/docs/stripe/';
+	}
+
+	return $link;
+}
+add_filter( 'edd_flyout_docs_link', 'edds_documentation_flyout_link' );

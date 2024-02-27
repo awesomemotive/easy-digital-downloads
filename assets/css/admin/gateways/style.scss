@@ -1,7 +1,30 @@
 /* PayPal Connect
 -------------------------------------------------------------- */
+#edd-paypal-commerce-connect-wrap.loading {
+	& ul.edd-paypal-account-status, ul.edd-paypal-webhook-events {
+		& li {
+			& span {
+				animation: skeleton-loading 1s infinite alternate;
+				width: 250px;
+				height: 18px;
+				display: inline-block;
+			}
+		}
+	}
+
+	& .edd-paypal-connect-actions {
+		& span {
+			animation: skeleton-loading 1s infinite alternate;
+			width: 150px;
+			height: 32px;
+			display: inline-block;
+		}
+	}
+}
+
 .edd-paypal-account-status ul {
 	margin-left: 25px;
+	list-style-type: none;
 }
 .edd-paypal-account-status > li {
 	margin-bottom: 1em;

@@ -66,6 +66,7 @@ class Triggers implements SubscriberInterface {
 
 		/**
 		 * Currently we only send for orders, not refunds, but that is a requested feature:
+		 *
 		 * @see https://github.com/awesomemotive/easy-digital-downloads-pro/issues/546
 		 */
 		if ( 'refund' === $order->type ) {
@@ -84,6 +85,8 @@ class Triggers implements SubscriberInterface {
 			// Send the email.
 			$order_receipt = Registry::get( 'order_receipt', array( $order ) );
 			$order_receipt->send();
+		} else {
+			_edd_deprecated_function( 'edd_trigger_purchase_receipt', '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
 		}
 
 		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
@@ -98,6 +101,8 @@ class Triggers implements SubscriberInterface {
 			// Send the email.
 			$admin_notice = Registry::get( 'admin_order_notice', array( $order ) );
 			$admin_notice->send();
+		} else {
+			_edd_deprecated_function( 'edd_admin_email_notice', '3.2.0', 'EDD\Emails\Types\AdminOrderNotice' );
 		}
 	}
 
