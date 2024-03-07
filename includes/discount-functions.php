@@ -1292,7 +1292,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 							}
 						}
 
-						$subtotal_percent  = ( ( $price * $item['quantity'] ) / $items_subtotal );
+                        $subtotal_percent  = $items_subtotal ? (($price * $item['quantity']) / $items_subtotal) : 0;
 						$code_amount       = edd_get_discount_amount( $code_id );
 						$discounted_amount = $code_amount * $subtotal_percent;
 						$discounted_price -= $discounted_amount;
