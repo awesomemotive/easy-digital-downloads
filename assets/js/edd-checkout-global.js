@@ -218,7 +218,7 @@ window.EDD_Checkout = (function($) {
 			success: function (discount_response) {
 				if( discount_response ) {
 					if (discount_response.msg == 'valid') {
-						if (discount_response.previous_total === 0){
+						if (discount_response.total_plain === 0){
 							window.location.reload();
 							return;
 						}
