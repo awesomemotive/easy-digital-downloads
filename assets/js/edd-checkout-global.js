@@ -218,11 +218,6 @@ window.EDD_Checkout = (function($) {
 			success: function (discount_response) {
 				if( discount_response ) {
 					if (discount_response.msg == 'valid') {
-						if (discount_response.total_plain === 0){
-							window.location.reload();
-							return;
-						}
-
 						$('.edd_cart_discount').html(discount_response.html);
 						$('.edd_cart_discount_row').show();
 						$('.edd_cart_amount').each(function() {
@@ -231,6 +226,21 @@ window.EDD_Checkout = (function($) {
 						$('#edd-discount', $checkout_form_wrap ).val('');
 
 						recalculate_taxes();
+
+						var inputs = $('#edd_cc_fields .edd-input, #edd_cc_fields .edd-select,#edd_cc_address .edd-input, #edd_cc_address .edd-select,#edd_payment_mode_select .edd-input, #edd_payment_mode_select .edd-select');
+
+						if( '0.00' == discount_response.total_plain ) {
+
+							$('#edd_cc_fields,#edd_cc_address,#edd_payment_mode_select,.secure_payments').slideUp();
+							inputs.removeAttr('required');
+							$('input[name="edd-gateway"]').val( 'manual' );
+							edd_load_gateway('manual');
+						} else {
+
+							inputs.attr('required','required');
+							$('#edd_cc_fields,#edd_cc_address,#edd_payment_mode_select,.secure_payments').slideDown();
+							edd_load_gateway($('#edd-gateway option:selected, input.edd-gateway:checked').val());
+						}
 
 						$body.trigger('edd_discount_applied', [ discount_response ]);
 
@@ -272,9 +282,9 @@ window.EDD_Checkout = (function($) {
 				withCredentials: true
 			},
 			success: function (discount_response) {
-				if (discount_response.previous_total === 0){
-					window.location.reload();
-					return;
+				if (discount_response.previous_total === 0) {
+					$('#edd_payment_mode_select,.secure_payments').slideDown();
+					edd_load_gateway($('#edd-gateway option:selected, input.edd-gateway:checked').val());
 				}
 
 				var zero = '0' + edd_global_vars.decimal_separator + '00';
