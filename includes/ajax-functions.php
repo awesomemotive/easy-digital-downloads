@@ -278,6 +278,7 @@ add_action( 'wp_ajax_nopriv_edd_update_quantity', 'edd_ajax_update_cart_item_qua
  */
 function edd_ajax_remove_discount() {
 	if ( isset( $_POST['code'] ) ) {
+        $previous_total = edd_get_cart_total(edd_get_cart_discounts());
 
 		edd_unset_cart_discount( urldecode( $_POST['code'] ) );
 
@@ -287,7 +288,8 @@ function edd_ajax_remove_discount() {
 			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
 			'code'      => $_POST['code'],
 			'discounts' => edd_get_cart_discounts(),
-			'html'      => edd_get_cart_discounts_html()
+			'html'      => edd_get_cart_discounts_html(),
+            'previous_total' => $previous_total,
 		);
 
 		echo json_encode( $return );
