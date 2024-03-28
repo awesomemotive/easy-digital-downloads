@@ -1,5 +1,5 @@
 <?php
-namespace EDD\Tests;
+namespace EDD\Tests\Blocks;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
@@ -7,7 +7,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * Tests for EDD core block functions.
  */
 
-class Blocks extends EDD_UnitTestCase {
+class Registration extends EDD_UnitTestCase {
 
 	private static $registry;
 
@@ -122,5 +122,15 @@ class Blocks extends EDD_UnitTestCase {
 		do_action( 'template_redirect' ); // Necessary to trigger correct actions
 		// This secondary checkout does not.
 		$this->assertFalse( \EDD\Blocks\Checkout\Functions\checkout_has_blocks() );
+	}
+
+	public function test_edd_get_blocks_includes_core_blocks() {
+		$blocks = \EDD\Blocks\Styles\get_edd_blocks();
+
+		$this->assertTrue( in_array( 'edd/checkout', $blocks, true ) );
+		$this->assertTrue( in_array( 'edd/cart', $blocks, true ) );
+		$this->assertTrue( in_array( 'edd/login', $blocks, true ) );
+		$this->assertTrue( in_array( 'edd/downloads', $blocks, true ) );
+		$this->assertTrue( in_array( 'edd/receipt', $blocks, true ) );
 	}
 }

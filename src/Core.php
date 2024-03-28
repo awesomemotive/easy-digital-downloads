@@ -36,7 +36,7 @@ class Core extends EventManagement\Subscribers {
 			new Integrations\Registry(),
 
 			// Upgrades.
-			new Upgrades\Orders\MigrateAfterActionsDate(),
+			new Upgrades\Loader(),
 
 			// Compatibility.
 			new Compatibility\Loader(),

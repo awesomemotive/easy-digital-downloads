@@ -1203,4 +1203,25 @@ class Discounts extends EDD_UnitTestCase {
 		$discount = edd_get_discount( self::$discount_id );
 		$this->assertTrue( $discount->is_product_requirements_met( false ) );
 	}
+
+	public function test_store_discount_empty_start_end_is_empty() {
+		$time = time();
+		$data = array(
+			'code'       => 'EXP' . (string) $time,
+			'uses'       => 703,
+			'max_uses'   => '',
+			'amount'     => 15,
+			'start'      => '',
+			'expiration' => '',
+			'type'       => 'percent',
+			'min_price'  => '',
+			'name'       => 'Expiration Testing',
+		);
+
+		$discount_id = edd_store_discount( $data );
+		$discount    = edd_get_adjustment( $discount_id );
+
+		$this->assertEmpty( $discount->start_date );
+		$this->assertEmpty( $discount->end_date );
+	}
 }

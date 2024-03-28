@@ -285,4 +285,38 @@ class Functions extends EDD_UnitTestCase {
 
 		$this->assertStringContainsString( $expected, $actual );
 	}
+
+	/**
+	 * @covers ::edd_get_utc_date_string()
+	 */
+	public function test_get_utc_date_string_from_local() {
+		$local_date = '2020-01-10 13:09:00';
+		$utc_date   = edd_get_utc_date_string( $local_date );
+
+		$this->assertSame( '2020-01-10 18:09:00', $utc_date );
+	}
+
+	/**
+	 * @covers ::edd_get_utc_date_string()ß
+	 */
+	public function test_get_utc_date_string_from_local_with_possitive_offset() {
+		update_option( 'gmt_offset', +5 );
+
+		$local_date = '2020-01-10 13:09:00';
+		$utc_date   = edd_get_utc_date_string( $local_date, 'Y-m-d H:i:s' );
+
+		$this->assertSame( '2020-01-10 08:09:00', $utc_date );
+	}
+
+	/**
+	 * @covers ::edd_get_utc_date_string()
+	 */
+	public function test_get_utc_date_string_from_local_with_zero_offset() {
+		update_option( 'gmt_offset', 0 );
+
+		$local_date = '2020-01-10 13:09:00';
+		$utc_date   = edd_get_utc_date_string( $local_date, 'Y-m-d H:i:s' );
+
+		$this->assertSame( '2020-01-10 13:09:00', $utc_date );
+	}
 }

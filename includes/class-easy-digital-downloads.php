@@ -146,7 +146,7 @@ final class Easy_Digital_Downloads {
 	public $payment_stats;
 
 	/**
-	 * @var EDD_Logging
+	 * @var EDD\Logging
 	 */
 	public $debug_log;
 
@@ -223,7 +223,7 @@ final class Easy_Digital_Downloads {
 		self::$instance->roles              = new EDD_Roles();
 		self::$instance->fees               = new EDD_Fees();
 		self::$instance->api                = new EDD_API();
-		self::$instance->debug_log          = new EDD_Logging();
+		self::$instance->debug_log          = new EDD\Logging();
 		self::$instance->utils              = new EDD\Utilities();
 		self::$instance->session            = new EDD_Session();
 		self::$instance->html               = new EDD\HTML\Elements();
@@ -370,7 +370,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.2.9' );
+			define( 'EDD_VERSION', '3.2.10' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -611,7 +611,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
@@ -679,7 +678,8 @@ final class Easy_Digital_Downloads {
 			require_once( $stripe );
 		}
 
-		// Logs
+		// Logs.
+		require_once EDD_PLUGIN_DIR . 'includes/logs/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/class-api-request-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/meta.php';

@@ -167,4 +167,43 @@ class Adjustment extends Query {
 	public function __construct( $query = array() ) {
 		parent::__construct( $query );
 	}
+
+	/**
+	 * Adds a new adjustment to the database.
+	 *
+	 * @param array $data The array of data to insert into the database.
+	 * @return int|false
+	 */
+	public function add_item( $data = array() ) {
+		return parent::add_item( $this->update_empty_start_end_dates( $data ) );
+	}
+
+	/**
+	 * Updates an adjustment in the database.
+	 *
+	 * @param int   $item_id The ID of the adjustment to update.
+	 * @param array $data    The array of data to update in the database.
+	 * @return int|false
+	 */
+	public function update_item( $item_id = 0, $data = array() ) {
+		return parent::update_item( $item_id, $this->update_empty_start_end_dates( $data ) );
+	}
+
+	/**
+	 * Updates empty start and end dates.
+	 *
+	 * @param array $data The data to filter.
+	 * @return array
+	 */
+	private function update_empty_start_end_dates( $data ) {
+		if ( empty( $data['start_date'] ) ) {
+			$data['start_date'] = null;
+		}
+
+		if ( empty( $data['end_date'] ) ) {
+			$data['end_date'] = null;
+		}
+
+		return $data;
+	}
 }

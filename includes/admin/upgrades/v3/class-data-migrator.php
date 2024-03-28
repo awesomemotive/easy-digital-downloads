@@ -7,10 +7,13 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Admin\Upgrades\v3;
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+use EDD\Utils\Data\Serializer;
 
 /**
  * Data_Migrator Class.
@@ -429,6 +432,12 @@ class Data_Migrator {
 		}
 	}
 
+	/**
+	 * Orders.
+	 *
+	 * @since 3.0
+	 * @param object $data Data to migrate.
+	 */
 	public static function orders( $data = null ) {
 
 		// Bail if no data passed.
@@ -436,13 +445,10 @@ class Data_Migrator {
 			return false;
 		}
 
-		/** Create a new order ***************************************/
-		global $wpdb;
-
-		// Get's all the post meta for this payment.
+		// Gets all the post meta for this payment.
 		$meta = get_post_custom( $data->ID );
 
-		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
+		$payment_meta = Serializer::maybe_unserialize( $meta['_edd_payment_meta'][0] );
 		$user_info    = isset( $payment_meta['user_info'] ) ? maybe_unserialize( $payment_meta['user_info'] ) : array();
 
 		// It is possible that for some reason the entire unserialized array is invalid, so before trying to use it, let's just verify we got an array back.
@@ -1573,16 +1579,10 @@ class Data_Migrator {
 	 * Given that some data quite possible has bad serialization, we need to possibly fix the bad serialization.
 	 *
 	 * @since 3.0.0
-	 *
-	 * @param $data
-	 *
+	 * @param mixed $data The data to fix.
 	 * @return mixed
 	 */
 	public static function fix_possible_serialization( $data ) {
-		if ( ! is_array( $data ) && is_string( $data ) ) {
-			$data = substr_replace( $data, 'a', 0, 1 );
-		}
-
-		return $data;
+		return Serializer::fix_possible_serialization( $data );
 	}
 }
