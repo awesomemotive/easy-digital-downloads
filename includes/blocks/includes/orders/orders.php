@@ -106,7 +106,11 @@ function orders( $block_attributes = array() ) {
  */
 function confirmation( $block_attributes = array() ) {
 	$session = Functions\get_purchase_session();
-	if ( empty( $session['purchase_key'] ) ) {
+	$order   = false;
+	if ( ! empty( $session['purchase_key'] ) ) {
+		$order = edd_get_order_by( 'payment_key', $session['purchase_key'] );
+	}
+	if ( ! $order ) {
 		if ( Helpers\is_block_editor() ) {
 			return '<p class="edd-alert edd-alert-info">' . esc_html( __( 'To view a sample confirmation screen, you need to have at least one order in your store.', 'easy-digital-downloads' ) ) . '</p>';
 		}
@@ -133,7 +137,6 @@ function confirmation( $block_attributes = array() ) {
 	?>
 	<div class="<?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 		<?php
-		$order                  = edd_get_order_by( 'payment_key', $session['purchase_key'] );
 		$edd_receipt_args['id'] = $order->id;
 		include EDD_BLOCKS_DIR . 'views/orders/receipt-items.php';
 		include EDD_BLOCKS_DIR . 'views/orders/totals.php';
@@ -168,9 +171,10 @@ function receipt( $block_attributes = array() ) {
 		)
 	);
 	$payment_key      = Functions\get_payment_key();
+	$order            = edd_get_order_by( 'payment_key', $payment_key );
 
-	// No key found.
-	if ( ! $payment_key ) {
+	// No order found.
+	if ( ! $order ) {
 		if ( Helpers\is_block_editor() ) {
 			return '<p class="edd-alert edd-alert-info">' . esc_html( __( 'To view a sample receipt, you need to have at least one order in your store.', 'easy-digital-downloads' ) ) . '</p>';
 		}
@@ -181,7 +185,6 @@ function receipt( $block_attributes = array() ) {
 	ob_start();
 	edd_print_errors();
 
-	$order         = edd_get_order_by( 'payment_key', $payment_key );
 	$user_can_view = edd_can_view_receipt( $order );
 	if ( ! $user_can_view ) {
 		show_no_access_message( $order );

@@ -9,8 +9,8 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Add a discount.
@@ -34,15 +34,16 @@ function edd_add_discount( $data = array() ) {
 	$pre_convert_args     = $data;
 	unset( $data['product_reqs'], $data['excluded_products'], $data['product_condition'], $data['categories'], $data['term_condition'] );
 
-	if ( isset( $data['expiration'] ) ) {
+	if ( ! empty( $data['expiration'] ) ) {
 		$data['end_date'] = $data['expiration'];
-		unset( $data['expiration'] );
 	}
 
-	if ( isset( $data['start'] ) ) {
+	if ( ! empty( $data['start'] ) ) {
 		$data['start_date'] = $data['start'];
-		unset( $data['start'] );
 	}
+
+	// Always unset the old keys, even if they were empty.
+	unset( $data['expiration'], $data['start'] );
 
 	// Setup the discounts query.
 	$discounts = new EDD\Compat\Discount_Query();
@@ -152,7 +153,7 @@ function edd_delete_discount( $discount_id = 0 ) {
 function edd_get_discount( $discount_id = 0 ) {
 	$discounts = new EDD\Compat\Discount_Query();
 
-	// Return discount
+	// Return discount.
 	return $discounts->get_item( $discount_id );
 }
 
@@ -176,7 +177,7 @@ function edd_get_discount_by_code( $code = '' ) {
 	 * @since 3.0
 	 *
 	 * @param \EDD_Discount $discount     Discount object.
-	 * @param string        $code 				Discount code.
+	 * @param string        $code               Discount code.
 	 */
 	return apply_filters( 'edd_get_discount_by_code', $discount, $code );
 }
@@ -195,7 +196,7 @@ function edd_get_discount_by_code( $code = '' ) {
 function edd_get_discount_by( $field = '', $value = '' ) {
 	$discounts = new EDD\Compat\Discount_Query();
 
-	// Return discount
+	// Return discount.
 	return $discounts->get_item_by( $field, $value );
 }
 
@@ -206,14 +207,14 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * @since 2.7 Updated to use EDD_Discount object
  * @since 3.0 Updated to call edd_get_discount()
  *
- * @param int $discount_id Discount ID.
+ * @param int    $discount_id Discount ID.
  * @param string $field The field to retrieve the discount with.
  * @return mixed object|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount_field( $discount_id, $field = '' ) {
 	$discount = edd_get_discount( $discount_id );
 
-	// Check that field exists
+	// Check that field exists.
 	return isset( $discount->{$field} )
 		? $discount->{$field}
 		: null;
@@ -223,13 +224,13 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * Update a discount
  *
  * @since 3.0
- * @param int $discount_id Discount ID.
+ * @param int   $discount_id Discount ID.
  * @param array $data
  * @return int
  */
 function edd_update_discount( $discount_id = 0, $data = array() ) {
 
-	// Pre-3.0 pre action
+	// Pre-3.0 pre action.
 	do_action( 'edd_pre_update_discount', $data, $discount_id );
 
 	// Product requirements.
@@ -270,7 +271,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		}
 
 		unset( $data['excluded_products'] );
-	} elseif( isset( $data['excluded_products'] ) ) {
+	} elseif ( isset( $data['excluded_products'] ) ) {
 		edd_delete_adjustment_meta( $discount_id, 'excluded_product' );
 	}
 
@@ -300,7 +301,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 
 	$retval = $discounts->update_item( $discount_id, $data );
 
-	// Pre-3.0 post action
+	// Pre-3.0 post action.
 	do_action( 'edd_post_update_discount', $data, $discount_id );
 
 	return $retval;
@@ -318,7 +319,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 function edd_get_discounts( $args = array() ) {
 	// By default we avoid archived discounts.
 	$default_args = array(
-		'number' => 30,
+		'number'         => 30,
 		'status__not_in' => array( 'archived' ),
 	);
 
@@ -345,7 +346,7 @@ function edd_get_discounts( $args = array() ) {
 	// Instantiate a query object.
 	$discounts = new EDD\Compat\Discount_Query();
 
-	// Return discounts
+	// Return discounts.
 	return $discounts->query( $r );
 }
 
@@ -360,9 +361,12 @@ function edd_get_discounts( $args = array() ) {
 function edd_get_discount_count( $args = array() ) {
 
 	// Parse args.
-	$r = wp_parse_args( $args, array(
-		'count' => true,
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s).
 	$discounts = new EDD\Compat\Discount_Query( $r );
@@ -380,16 +384,19 @@ function edd_get_discount_count( $args = array() ) {
  */
 function edd_get_discount_counts( $args = array() ) {
 
-	// Parse arguments
-	$r = wp_parse_args( $args, array(
-		'count'   => true,
-		'groupby' => 'status'
-	) );
+	// Parse arguments.
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count'   => true,
+			'groupby' => 'status',
+		)
+	);
 
 	// Query for count.
 	$counts = new EDD\Compat\Discount_Query( $r );
 
-	// Format & return
+	// Format & return.
 	return edd_format_counts( $counts, $r['groupby'] );
 }
 
@@ -402,11 +409,13 @@ function edd_get_discount_counts( $args = array() ) {
  * @return array Retrieved notes.
  */
 function edd_get_discount_notes( $discount_id = 0 ) {
-	return edd_get_notes( array(
-		'object_id'   => $discount_id,
-		'object_type' => 'discount',
-		'order'       => 'asc'
-	) );
+	return edd_get_notes(
+		array(
+			'object_id'   => $discount_id,
+			'object_type' => 'discount',
+			'order'       => 'asc',
+		)
+	);
 }
 
 /**
@@ -427,19 +436,21 @@ function edd_has_active_discounts() {
 	 * Searching by date is done with WP_Date_Query.
 	 */
 	$discount_arguments = array(
-		'status__not_in' => array( 'expired', 'inactive', 'archived' ),
+		'number'            => 1,
+		'type'              => 'discount',
+		'status__not_in'    => array( 'expired', 'inactive', 'archived' ),
 		'max_uses__compare' => array(
-			'relation'      => 'OR',
+			'relation' => 'OR',
 			array(
-				'value'     => 'use_count',
-				'compare'   => '>',
+				'value'   => 'use_count',
+				'compare' => '>',
 			),
 			array(
-				'value'     => 0,
-				'compare'   => '=',
-			)
+				'value'   => 0,
+				'compare' => '=',
+			),
 		),
-		'date_query'     => array(
+		'date_query'        => array(
 			'relation' => 'AND',
 			array(
 				'relation' => 'OR',
@@ -464,19 +475,11 @@ function edd_has_active_discounts() {
 					'column'  => 'end_date',
 					'compare' => 'IS NULL',
 				),
-			)
+			),
 		),
 	);
 
-	// Query for active discounts.
-	$discounts = edd_get_discount_count( $discount_arguments );
-
-	// Bail if none.
-	if ( empty( $discounts ) ) {
-		return false;
-	}
-
-	return true;
+	return ! empty( edd_get_adjustments( $discount_arguments ) );
 }
 
 /**
@@ -498,6 +501,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 
 	edd_debug_log(
 		sprintf(
+			/* translators: 1: Function name, 2: Version number, 3: Replacement function name */
 			__( '%1$s is deprecated since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ),
 			__FUNCTION__,
 			'3.0',
@@ -506,15 +510,11 @@ function edd_store_discount( $details, $discount_id = null ) {
 		true
 	);
 
-	// Set default return value to false.
-	$return = false;
-
 	// Back-compat for start date.
 	if ( isset( $details['start'] ) && strstr( $details['start'], '/' ) ) {
 		$time_format           = date( 'H:i:s', strtotime( $details['start'] ) );
 		$date_format           = date( 'Y-m-d', strtotime( $details['start'] ) ) . ' ' . $time_format;
-		$details['start_date'] = edd_get_utc_equivalent_date( EDD()->utils->date( $date_format, edd_get_timezone_id(), false ));
-		unset( $details['start'] );
+		$details['start_date'] = edd_get_utc_equivalent_date( EDD()->utils->date( $date_format, edd_get_timezone_id(), false ) );
 	}
 
 	// Back-compat for end date.
@@ -522,8 +522,10 @@ function edd_store_discount( $details, $discount_id = null ) {
 		$time_format         = date( 'H:i:s', strtotime( $details['expiration'] ) );
 		$date_format         = date( 'Y-m-d', strtotime( $details['expiration'] ) ) . ' ' . ( '00:00:00' !== $time_format ? $time_format : '23:59:59' );
 		$details['end_date'] = edd_get_utc_equivalent_date( EDD()->utils->date( $date_format, edd_get_timezone_id(), false ) );
-		unset( $details['expiration'] );
 	}
+
+	// Always unset the old keys, even if they were empty.
+	unset( $details['start'], $details['expiration'] );
 
 	/**
 	 * Filters the args before being inserted into the database. This hook
@@ -551,13 +553,11 @@ function edd_store_discount( $details, $discount_id = null ) {
 	$details = EDD_Discount::convert_legacy_args( $details );
 
 	if ( null === $discount_id ) {
-		$return = (int) edd_add_discount( $details );
-	} else {
-		edd_update_discount( $discount_id, $details );
-		$return = $discount_id;
+		return (int) edd_add_discount( $details );
 	}
 
-	return $return;
+	edd_update_discount( $discount_id, $details );
+	return $discount_id;
 }
 
 /**
@@ -605,9 +605,12 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
 
 	// Try to update status.
 	if ( ! empty( $discount->id ) ) {
-		$updated = (bool) edd_update_discount( $discount->id, array(
-			'status' => $new_status
-		) );
+		$updated = (bool) edd_update_discount(
+			$discount->id,
+			array(
+				'status' => $new_status,
+			)
+		);
 	}
 
 	// Return.
@@ -984,7 +987,7 @@ function edd_discount_product_reqs_met( $discount_id = 0, $set_error = true ) {
  * @return bool $return Whether the the discount code is used.
  */
 function edd_is_discount_used( $code = null, $user = '', $discount_id = 0, $set_error = true ) {
-	$discount = ( null == $code )
+	$discount = is_null( $code )
 		? edd_get_discount( $discount_id )
 		: edd_get_discount_by_code( $code );
 
@@ -1067,7 +1070,7 @@ function edd_get_discounted_amount( $code = '', $base_price = 0 ) {
 function edd_increase_discount_usage( $code = '' ) {
 	$discount = edd_get_discount_by_code( $code );
 
-	// Increase if discount exists
+	// Increase if discount exists.
 	return ! empty( $discount->id )
 		? (int) $discount->increase_usage()
 		: false;
@@ -1086,7 +1089,7 @@ function edd_increase_discount_usage( $code = '' ) {
 function edd_decrease_discount_usage( $code = '' ) {
 	$discount = edd_get_discount_by_code( $code );
 
-	// Decrease if discount exists
+	// Decrease if discount exists.
 	return ! empty( $discount->id )
 		? (int) $discount->decrease_usage()
 		: false;
@@ -1096,7 +1099,7 @@ function edd_decrease_discount_usage( $code = '' ) {
  * Format Discount Rate
  *
  * @since 1.0
- * @param string $type Discount code type
+ * @param string     $type Discount code type
  * @param string|int $amount Discount code amount
  * @return string $amount Formatted amount
  */
@@ -1152,25 +1155,25 @@ function edd_get_item_discount_amount( $item, $items, $discounts, $item_unit_pri
  */
 function edd_set_cart_discount( $code = '' ) {
 
-	// Get all active cart discounts
+	// Get all active cart discounts.
 	if ( edd_multiple_discounts_allowed() ) {
 		$discounts = edd_get_cart_discounts();
 
-	// Only one discount allowed per purchase, so override any existing
+		// Only one discount allowed per purchase, so override any existing.
 	} else {
 		$discounts = false;
 	}
 
 	if ( $discounts ) {
-		$key = array_search( strtolower( $code ), array_map( 'strtolower', $discounts ) );
+		$key = array_search( strtolower( $code ), array_map( 'strtolower', $discounts ), true );
 
-		// Can't set the same discount more than once
+		// Can't set the same discount more than once.
 		if ( false !== $key ) {
 			unset( $discounts[ $key ] );
 		}
 		$discounts[] = $code;
 	} else {
-		$discounts = array();
+		$discounts   = array();
 		$discounts[] = $code;
 	}
 
@@ -1194,14 +1197,14 @@ function edd_unset_cart_discount( $code = '' ) {
 
 	if ( $discounts ) {
 		$discounts = array_map( 'strtoupper', $discounts );
-		$key       = array_search( strtoupper( $code ), $discounts );
+		$key       = array_search( strtoupper( $code ), $discounts, true );
 
 		if ( false !== $key ) {
 			unset( $discounts[ $key ] );
 		}
 
 		$discounts = implode( '|', array_values( $discounts ) );
-		// update the active discounts
+		// Update the active discounts.
 		EDD()->session->set( 'cart_discounts', $discounts );
 	}
 
@@ -1222,10 +1225,10 @@ function edd_unset_all_cart_discounts() {
 }
 
 /**
- * Retrieve the currently applied discount
+ * Retrieve the currently applied discount.
  *
  * @since 1.4.1
- * @return array $discounts The active discount codes
+ * @return array $discounts The active discount codes.
  */
 function edd_get_cart_discounts() {
 	return EDD()->cart->get_discounts();
@@ -1258,7 +1261,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
  * Get the discounted amount on a price
  *
  * @since 1.9
- * @param array $item Cart item array
+ * @param array       $item Cart item array
  * @param bool|string $discount False to use the cart discounts or a string to check with a discount code
  * @return float The discounted amount
  */
@@ -1367,30 +1370,30 @@ function edd_display_cart_discount( $formatted = false, $echo = false ) {
  */
 function edd_remove_cart_discount() {
 
-	// Get ID
+	// Get ID.
 	$discount_id = isset( $_GET['discount_id'] )
 		? absint( $_GET['discount_id'] )
 		: 0;
 
-	// Get code
+	// Get code.
 	$discount_code = isset( $_GET['discount_code'] )
 		? urldecode( $_GET['discount_code'] )
 		: '';
 
-	// Bail if either ID or code are empty
+	// Bail if either ID or code are empty.
 	if ( empty( $discount_id ) || empty( $discount_code ) ) {
 		return;
 	}
 
-	// Pre-3.0 pre action
+	// Pre-3.0 pre action.
 	do_action( 'edd_pre_remove_cart_discount', $discount_id );
 
 	edd_unset_cart_discount( $discount_code );
 
-	// Pre-3.0 post action
+	// Pre-3.0 post action.
 	do_action( 'edd_post_remove_cart_discount', $discount_id );
 
-	// Redirect
+	// Redirect.
 	edd_redirect( edd_get_checkout_uri() );
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
@@ -1440,17 +1443,17 @@ function edd_multiple_discounts_allowed() {
  */
 function edd_listen_for_cart_discount() {
 
-	// Bail if in admin
+	// Bail if in admin.
 	if ( is_admin() ) {
 		return;
 	}
 
-	// Array stops the bulk delete of discount codes from storing as a preset_discount
+	// Array stops the bulk delete of discount codes from storing as a preset_discount.
 	if ( empty( $_REQUEST['discount'] ) || is_array( $_REQUEST['discount'] ) ) {
 		return;
 	}
 
-	$code = preg_replace('/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
+	$code = preg_replace( '/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
 
 	EDD()->session->set( 'preset_discount', $code );
 }
@@ -1464,7 +1467,7 @@ add_action( 'init', 'edd_listen_for_cart_discount', 0 );
  */
 function edd_apply_preset_discount() {
 
-	// Bail if in admin
+	// Bail if in admin.
 	if ( is_admin() ) {
 		return;
 	}

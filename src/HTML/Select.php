@@ -26,6 +26,7 @@ class Select extends Base {
 	 * @return string
 	 */
 	public function get() {
+		$this->maybe_update_selected();
 		ob_start();
 		?>
 		<select
@@ -51,9 +52,6 @@ class Select extends Base {
 			class="<?php echo esc_attr( $this->get_css_class_string() ); ?>"
 			<?php if ( $this->args['multiple'] ) : ?>
 				multiple
-			<?php endif; ?>
-			<?php if ( $this->args['placeholder'] ) : ?>
-				data-placeholder="<?php echo esc_attr( $this->args['placeholder'] ); ?>"
 			<?php endif; ?>
 			<?php echo $this->get_data_elements(); ?>
 		>
@@ -144,12 +142,25 @@ class Select extends Base {
 	 */
 	private function is_selected( $value ) {
 		if ( $this->args['multiple'] ) {
-			return selected( true, in_array( $value, (array) $this->args['selected'] ), false ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+			return selected( true, in_array( (string) $value, $this->args['selected'], true ), false );
 		}
 		if ( ! empty( $this->args['selected'] ) && ! is_array( $this->args['selected'] ) ) {
 			return selected( $this->args['selected'], $value, false );
 		}
 
 		return false;
+	}
+
+	/**
+	 * Updates the selected value. If the select is a multiple select, the selected value will be an array of strings.
+	 * This is only for comparison purposes.
+	 *
+	 * @since 3.2.10
+	 * @return void
+	 */
+	private function maybe_update_selected() {
+		if ( $this->args['multiple'] || is_array( $this->args['selected'] ) ) {
+			$this->args['selected'] = array_map( 'strval', (array) $this->args['selected'] );
+		}
 	}
 }

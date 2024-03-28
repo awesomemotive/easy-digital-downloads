@@ -75,6 +75,9 @@ abstract class Base {
 		foreach ( $this->args['data'] as $key => $value ) {
 			$data_elements[] = 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
+		if ( empty( $this->args['data']['placeholder'] ) && ! empty( $this->args['placeholder'] ) ) {
+			$data_elements[] = 'data-placeholder="' . esc_attr( $this->args['placeholder'] ) . '"';
+		}
 
 		return implode( ' ', $data_elements );
 	}
