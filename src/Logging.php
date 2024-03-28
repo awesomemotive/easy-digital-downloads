@@ -9,18 +9,22 @@
  * @since       1.3.1
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+namespace EDD;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+use EDD\Utils\FileSystem;
 
 /**
- * EDD_Logging Class
+ * Logging Class
  *
  * A general use class for logging events and errors.
  *
  * @since 1.3.1
  * @since 3.0 - Updated to work with the new tables and classes as part of the migration to custom tables.
  */
-class EDD_Logging {
+class Logging {
 
 	/**
 	 * Whether the debug log file is writable or not.
@@ -60,12 +64,15 @@ class EDD_Logging {
 	 * @return array $terms Log types.
 	 */
 	public function log_types() {
-		return apply_filters( 'edd_log_types', array(
-			'sale',
-			'file_download',
-			'gateway_error',
-			'api_request'
-		) );
+		return apply_filters(
+			'edd_log_types',
+			array(
+				'sale',
+				'file_download',
+				'gateway_error',
+				'api_request',
+			)
+		);
 	}
 
 	/**
@@ -79,7 +86,7 @@ class EDD_Logging {
 	 * @return bool True if valid log type, false otherwise.
 	 */
 	public function valid_type( $type ) {
-		return in_array( $type, $this->log_types() );
+		return in_array( $type, $this->log_types(), true );
 	}
 
 	/**
@@ -98,12 +105,14 @@ class EDD_Logging {
 	 * @return int ID of the newly created log item.
 	 */
 	public function add( $title = '', $message = '', $parent = 0, $type = null ) {
-		return $this->insert_log( array(
-			'post_title'   => $title,
-			'post_content' => $message,
-			'post_parent'  => $parent,
-			'log_type'     => $type
-		) );
+		return $this->insert_log(
+			array(
+				'post_title'   => $title,
+				'post_content' => $message,
+				'post_parent'  => $parent,
+				'log_type'     => $type,
+			)
+		);
 	}
 
 	/**
@@ -116,13 +125,15 @@ class EDD_Logging {
 	 * @param int    $paged     Page number (default: null).
 	 *
 	 * @return array Array of the connected logs.
-	*/
+	 */
 	public function get_logs( $object_id = 0, $type = null, $paged = null ) {
-		return $this->get_connected_logs( array(
-			'post_parent' => $object_id,
-			'paged'       => $paged,
-			'log_type'    => $type
-		) );
+		return $this->get_connected_logs(
+			array(
+				'post_parent' => $object_id,
+				'paged'       => $paged,
+				'log_type'    => $type,
+			)
+		);
 	}
 
 	/**
@@ -137,14 +148,17 @@ class EDD_Logging {
 	 */
 	public function insert_log( $log_data = array(), $log_meta = array() ) {
 
-		// Parse args
-		$args = wp_parse_args( $log_data, array(
-			'post_type'    => 'edd_log',
-			'post_status'  => 'publish',
-			'post_parent'  => 0,
-			'post_content' => '',
-			'log_type'     => false,
-		) );
+		// Parse args.
+		$args = wp_parse_args(
+			$log_data,
+			array(
+				'post_type'    => 'edd_log',
+				'post_status'  => 'publish',
+				'post_parent'  => 0,
+				'post_content' => '',
+				'log_type'     => false,
+			)
+		);
 
 		/**
 		 * Triggers just before a log is inserted.
@@ -166,11 +180,12 @@ class EDD_Logging {
 			'object_type' => isset( $args['log_type'] )
 				? $args['log_type']
 				: null,
+
 			/*
 			 * Fallback user ID is the current user, due to it previously being set to that by WordPress
 			 * core when setting post_author on the CPT.
 			 */
-			'user_id'     => ! empty( $log_meta['user'] ) ? $log_meta['user'] : get_current_user_id()
+			'user_id'     => ! empty( $log_meta['user'] ) ? $log_meta['user'] : get_current_user_id(),
 		);
 
 		$type = $args['log_type'];
@@ -203,11 +218,11 @@ class EDD_Logging {
 		} elseif ( 'file_download' === $args['log_type'] ) {
 			$insert_method = 'edd_add_file_download_log';
 
-			if ( ! class_exists( 'Browser' ) ) {
+			if ( ! class_exists( '\\Browser' ) ) {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 			}
 
-			$browser = new Browser();
+			$browser = new \Browser();
 
 			$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
 
@@ -229,12 +244,12 @@ class EDD_Logging {
 			unset( $log_meta[ $meta_key ] );
 		}
 
-		// Get the log ID if method is callable
+		// Get the log ID if method is callable.
 		$log_id = is_callable( $insert_method )
 			? call_user_func( $insert_method, $data )
 			: false;
 
-		// Set log meta, if any
+		// Set log meta, if any.
 		if ( $log_id && ! empty( $log_meta ) ) {
 
 			// Use the right log fetching function based on the type of log this is.
@@ -359,19 +374,17 @@ class EDD_Logging {
 
 		unset( $data['type'] );
 
-		// Bail if not callable
+		// Bail if not callable.
 		if ( ! is_callable( $update_method ) ) {
 			return false;
 		}
 
 		call_user_func( $update_method, $data );
 
-		// Set log meta, if any
-		if ( is_callable( $update_meta_function ) ) {
-			if ( 'edd_update_log' === $update_method && ! empty( $log_meta ) ) {
-				foreach ( (array) $log_meta as $key => $meta ) {
-					$update_meta_function( $log_id, sanitize_key( $key ), $meta );
-				}
+		// Set log meta, if any.
+		if ( is_callable( $update_meta_function ) && 'edd_update_log' === $update_method && ! empty( $log_meta ) ) {
+			foreach ( (array) $log_meta as $key => $meta ) {
+				$update_meta_function( $log_id, sanitize_key( $key ), $meta );
 			}
 		}
 
@@ -395,18 +408,16 @@ class EDD_Logging {
 			? $args['log_type']
 			: false;
 
-		// Parse arguments
+		// Parse arguments.
 		$r = $this->parse_args( $args );
 
 		// Used to dynamically dispatch the call to the correct class.
 		$log_type = $this->get_log_table( $log_type );
 		$func     = "edd_get_{$log_type}";
-		$logs     = is_callable( $func )
+
+		return is_callable( $func )
 			? call_user_func( $func, $r )
 			: false;
-
-		// Return the logs (or false)
-		return $logs;
 	}
 
 	/**
@@ -442,13 +453,12 @@ class EDD_Logging {
 		// Used to dynamically dispatch the call to the correct class.
 		$log_type = $this->get_log_table( $type );
 
-		// Call the func, or not
-		$func  = "edd_count_{$log_type}";
-		$count = is_callable( $func )
+		// Call the func, or not.
+		$func = "edd_count_{$log_type}";
+
+		return is_callable( $func )
 			? call_user_func( $func, $r )
 			: 0;
-
-		return $count;
 	}
 
 	/**
@@ -504,7 +514,7 @@ class EDD_Logging {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $type
+	 * @param string $type The old log type.
 	 *
 	 * @return string
 	 */
@@ -525,42 +535,45 @@ class EDD_Logging {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $args
+	 * @param array $args Arguments to parse.
 	 * @return array
 	 */
 	private function parse_args( $args = array() ) {
 
-		// Parse args
-		$r = wp_parse_args( $args, array(
-			'log_type'       => false,
-			'post_type'      => 'edd_log',
-			'post_status'    => 'publish',
-			'post_parent'    => 0,
-			'posts_per_page' => 20,
-			'paged'          => get_query_var( 'paged' ),
-			'orderby'        => 'id',
-		) );
+		// Parse args.
+		$r = wp_parse_args(
+			$args,
+			array(
+				'log_type'       => false,
+				'post_type'      => 'edd_log',
+				'post_status'    => 'publish',
+				'post_parent'    => 0,
+				'posts_per_page' => 20,
+				'paged'          => get_query_var( 'paged' ),
+				'orderby'        => 'id',
+			)
+		);
 
-		// Back-compat for ID ordering
+		// Back-compat for ID ordering.
 		if ( 'ID' === $r['orderby'] ) {
 			$r['orderby'] = 'id';
 		}
 
-		// Back-compat for log_type
+		// Back-compat for log_type.
 		if ( ! empty( $r['log_type'] ) ) {
 			$r['type'] = $r['log_type'];
 		}
 
 		// Back-compat for post_parent.
 		if ( ! empty( $r['post_parent'] ) ) {
-			$type                                        = ! empty( $r['log_type'] ) ? $r['log_type'] : '';
+			$type = ! empty( $r['log_type'] ) ? $r['log_type'] : '';
 			$r[ $this->get_object_id_column_name_for_type( $type ) ] = $r['post_parent'];
 		}
 
-		// Back compat for posts_per_page
+		// Back compat for posts_per_page.
 		$r['number'] = $r['posts_per_page'];
 
-		// Unset old keys
+		// Unset old keys.
 		unset(
 			$r['posts_per_page'],
 			$r['post_parent'],
@@ -576,7 +589,7 @@ class EDD_Logging {
 			unset( $r['paged'] );
 		}
 
-		// Return parsed args
+		// Return parsed args.
 		return $r;
 	}
 
@@ -615,49 +628,15 @@ class EDD_Logging {
 	 * @return void
 	 */
 	public function setup_log_file() {
-		$this->init_fs();
 
-		$upload_dir     = wp_upload_dir();
+		$upload_dir     = edd_get_upload_dir();
 		$this->filename = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
-		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+		$this->file     = trailingslashit( $upload_dir ) . $this->filename;
+		FileSystem::maybe_move_file( $this->filename, $this->file );
 
-		if ( ! $this->get_fs()->is_writable( $upload_dir['basedir'] ) ) {
+		if ( ! FileSystem::get_fs()->is_writable( $upload_dir ) ) {
 			$this->is_writable = false;
 		}
-	}
-
-	/**
-	 * Initialize the WordPress file system
-	 *
-	 * @since 3.0
-	 *
-	 * @global WP_Filesystem_Base $wp_filesystem
-	 */
-	private function init_fs() {
-		global $wp_filesystem;
-
-		if ( ! empty( $wp_filesystem ) ) {
-			return;
-		}
-
-		// Include the file-system
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-
-		// Initialize the file system
-		WP_Filesystem();
-	}
-
-	/**
-	 * Get the WordPress file-system
-	 *
-	 * @since 3.0
-	 *
-	 * @return WP_Filesystem_Base
-	 */
-	private function get_fs() {
-		return ! empty( $GLOBALS['wp_filesystem'] )
-			? $GLOBALS['wp_filesystem']
-			: false;
 	}
 
 	/**
@@ -674,7 +653,7 @@ class EDD_Logging {
 	}
 
 	/**
-	 * Return the location of the log file that EDD_Logging will use.
+	 * Return the location of the log file that EDD\Logging will use.
 	 *
 	 * @since 2.9.1
 	 *
@@ -707,15 +686,15 @@ class EDD_Logging {
 	protected function get_file() {
 		$file = '';
 
-		if ( $this->get_fs()->exists( $this->file ) ) {
-			if ( ! $this->get_fs()->is_writable( $this->file ) ) {
+		if ( FileSystem::get_fs()->exists( $this->file ) ) {
+			if ( ! FileSystem::get_fs()->is_writable( $this->file ) ) {
 				$this->is_writable = false;
 			}
 
-			$file = $this->get_fs()->get_contents( $this->file );
+			$file = FileSystem::get_fs()->get_contents( $this->file );
 		} else {
-			$this->get_fs()->put_contents( $this->file, '' );
-			$this->get_fs()->chmod( $this->file, 0664 );
+			FileSystem::get_fs()->put_contents( $this->file, '' );
+			FileSystem::get_fs()->chmod( $this->file, 0664 );
 		}
 
 		return $file;
@@ -740,17 +719,17 @@ class EDD_Logging {
 	 * @return bool True if the log was cleared, false otherwise.
 	 */
 	public function clear_log_file() {
-		$this->get_fs()->delete( $this->file );
+		FileSystem::get_fs()->delete( $this->file );
 
-		if ( $this->get_fs()->exists( $this->file ) ) {
+		if ( FileSystem::get_fs()->exists( $this->file ) ) {
 
-			// It's still there, so maybe server doesn't have delete rights
-			$this->get_fs()->chmod( $this->file, 0664 );
-			$this->get_fs()->delete( $this->file );
+			// It's still there, so maybe server doesn't have delete rights.
+			FileSystem::get_fs()->chmod( $this->file, 0664 );
+			FileSystem::get_fs()->delete( $this->file );
 
 			// See if it's still there...
-			if ( $this->get_fs()->exists( $this->file ) ) {
-				$this->get_fs()->put_contents( $this->file, '' );
+			if ( FileSystem::get_fs()->exists( $this->file ) ) {
+				FileSystem::get_fs()->put_contents( $this->file, '' );
 			}
 		}
 
@@ -775,83 +754,8 @@ class EDD_Logging {
 	 *
 	 * @since 1.3.1
 	 * @deprecated 3.0 Due to migration to custom tables.
-	*/
+	 */
 	public function register_taxonomy() {
 		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
 	}
-}
-
-/**
- * Helper method to insert a new log into the database.
- *
- * @since 1.3.3
- *
- * @see EDD_Logging::add()
- *
- * @param string $title   Log title.
- * @param string $message Log message.
- * @param int    $parent  Download ID.
- * @param null   $type    Log type.
- *
- * @return int ID of the new log.
- */
-function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
-	$edd_logs = EDD()->debug_log;
-
-	return $edd_logs->add( $title, $message, $parent, $type );
-}
-
-/**
- * Logs a message to the debug log file.
- *
- * @since 2.8.7
- * @since 2.9.4 Added the 'force' option.
- *
- * @param string $message Log message.
- * @param bool   $force   Whether to force a log entry to be added. Default false.
- */
-function edd_debug_log( $message = '', $force = false ) {
-	$edd_logs = EDD()->debug_log;
-
-	if ( edd_is_debug_mode() || $force ) {
-
-		if ( function_exists( 'mb_convert_encoding' ) ) {
-
-			$message = mb_convert_encoding( $message, 'UTF-8' );
-
-		}
-
-		$edd_logs->log_to_file( $message );
-	}
-}
-
-/**
- * Logs an exception to the debug log file.
- *
- * @since 3.0
- *
- * @param \Exception $exception Exception object.
- */
-function edd_debug_log_exception( $exception ) {
-
-	$label = get_class( $exception );
-
-	if ( $exception->getCode() ) {
-
-		$message = sprintf( '%1$s: %2$s - %3$s',
-			$label,
-			$exception->getCode(),
-			$exception->getMessage()
-		);
-
-	} else {
-
-		$message = sprintf( '%1$s: %2$s',
-			$label,
-			$exception->getMessage()
-		);
-
-	}
-
-	edd_debug_log( $message );
 }

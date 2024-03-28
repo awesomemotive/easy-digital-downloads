@@ -293,5 +293,5 @@ function edd_get_minute_values() {
  * @return string
  */
 function edd_get_utc_date_string( $date_string = 'now', $format = 'Y-m-d H:i:s' ) {
-	return EDD()->utils->date( $date_string, edd_get_timezone_id(), false )->get_utc_from_local( $format );
+	return EDD()->utils->date( $date_string, edd_get_timezone_id(), true )->get_utc_from_local( $format );
 }

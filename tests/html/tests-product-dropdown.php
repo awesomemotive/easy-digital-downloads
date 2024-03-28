@@ -106,6 +106,7 @@ class ProductDropdown extends EDD_UnitTestCase {
 
 		$this->assertStringContainsString( 'value="' . $download1->ID . '" selected', $product_dropdown );
 		$this->assertStringContainsString( 'value="' . $variation . '" selected', $product_dropdown );
+		$this->assertStringNotContainsString( 'value="' . $download2->ID . '" selected', $product_dropdown );
 	}
 
 	public function test_product_dropdown_value_parse_should_be_123_1() {
@@ -171,5 +172,21 @@ class ProductDropdown extends EDD_UnitTestCase {
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, edd_parse_product_dropdown_values( $saved_values ) );
+	}
+
+	public function test_post_type_not_download_is_not_included() {
+		$not_download = wp_insert_post(
+			array(
+				'post_type' => 'page',
+				'post_title' => 'Not a Download',
+			)
+		);
+		$product_dropdown = EDD()->html->product_dropdown(
+			array(
+				'selected' => $not_download,
+			)
+		);
+
+		$this->assertStringNotContainsString( 'value="' . $not_download . '"', $product_dropdown );
 	}
 }

@@ -364,4 +364,16 @@ class CustomersDB extends EDD_UnitTestCase {
 			)
 		);
 	}
+
+	/**
+	 * @expectedDeprecated EDD\Deprecated\EmptyClass->non_existent_property
+	 */
+	public function test_edd_customer_db_empty_class_is_deprecated() {
+		$this->assertTrue( class_exists( 'EDD_DB_Customers' ) );
+		$this->assertTrue( class_exists( 'EDD_DB_Customer_Meta' ) );
+
+		$deprecated = new \EDD_DB_Customers();
+		$this->assertTrue( $deprecated instanceof \EDD\Deprecated\EmptyClass );
+		$this->assertNull( $deprecated->non_existent_property );
+	}
 }

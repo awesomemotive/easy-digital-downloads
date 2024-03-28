@@ -45,9 +45,9 @@ class Checkbox extends Base {
 				readonly
 				<?php
 			}
-			if ( ! empty( $this->args['value]'] ) ) {
+			if ( ! empty( $this->args['value'] ) ) {
 				?>
-				value= "<?php echo esc_attr( $this->args['value'] ); ?>"
+				value="<?php echo esc_attr( $this->args['value'] ); ?>"
 				<?php
 			}
 			// Checked could mean 'on' or 1 or true, so sanitize it for checked().

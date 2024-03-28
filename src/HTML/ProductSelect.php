@@ -93,9 +93,7 @@ class ProductSelect extends Select {
 	 */
 	private function get_options() {
 		$products = $this->get_products();
-		$options  = array(
-			'' => '',
-		);
+		$options  = array();
 		if ( $products ) {
 			foreach ( $products as $product ) {
 				// If bundles are not allowed, skip any products that are bundles.
@@ -162,6 +160,9 @@ class ProductSelect extends Select {
 		$selected_items = (array) $this->args['selected'];
 		$existing_ids   = wp_list_pluck( $products, 'ID' );
 		foreach ( $selected_items as $selected_item ) {
+			if ( 'download' !== get_post_type( $selected_item ) ) {
+				continue;
+			}
 			if ( ! in_array( $selected_item, $existing_ids, true ) ) {
 
 				// If the selected item has a variation, we just need the product ID.
@@ -218,10 +219,14 @@ class ProductSelect extends Select {
 	 * @return array
 	 */
 	private function get_missing_selected_product( $item ) {
+		$options     = array();
 		$parsed_item = edd_parse_product_dropdown_value( $item );
 		$download_id = (int) $parsed_item['download_id'];
 
-		$options = array();
+		if ( 'download' !== get_post_type( $download_id ) ) {
+			return $options;
+		}
+
 		if ( ! is_null( $parsed_item['price_id'] ) ) {
 			$prices = edd_get_variable_prices( $download_id );
 			foreach ( $prices as $key => $value ) {

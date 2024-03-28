@@ -666,20 +666,25 @@ add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
 function edd_receipt_shortcode( $atts, $content = null ) {
 	global $edd_receipt_args;
 
-	$edd_receipt_args = shortcode_atts( array(
-		'error'          => __( 'Sorry, trouble retrieving order receipt.', 'easy-digital-downloads' ),
-		'price'          => true,
-		'discount'       => true,
-		'products'       => true,
-		'date'           => true,
-		'notes'          => true,
-		'payment_key'    => false,
-		'payment_method' => true,
-		'payment_id'     => true,
-	), $atts, 'edd_receipt' );
+	$edd_receipt_args = shortcode_atts(
+		array(
+			'error'          => __( 'Sorry, trouble retrieving order receipt.', 'easy-digital-downloads' ),
+			'price'          => true,
+			'discount'       => true,
+			'products'       => true,
+			'date'           => true,
+			'notes'          => true,
+			'payment_key'    => false,
+			'payment_method' => true,
+			'payment_id'     => true,
+		),
+		$atts,
+		'edd_receipt'
+	);
 
 	$session = edd_get_purchase_session();
 
+	$payment_key = false;
 	if ( isset( $_GET['payment_key'] ) ) {
 		$payment_key = urldecode( $_GET['payment_key'] );
 	} elseif ( ! empty( $_GET['order'] ) && ! empty( $_GET['id'] ) ) {
@@ -690,15 +695,14 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		$payment_key = $edd_receipt_args['payment_key'];
 	}
 
-	// No key found
-	if ( ! isset( $payment_key ) ) {
+	$order = edd_get_order_by( 'payment_key', $payment_key );
+	if ( ! $order ) {
 		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 
-	$order         = edd_get_order_by( 'payment_key', $payment_key );
 	$user_can_view = edd_can_view_receipt( $order );
 
-	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
+	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt.
 	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order ) ) {
 		global $edd_login_redirect;
 		$edd_login_redirect = edd_get_receipt_page_uri( $order->id );
@@ -715,7 +719,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 	$user_can_view = apply_filters( 'edd_user_can_view_receipt', $user_can_view, $edd_receipt_args );
 
-	// If this was a guest checkout and the purchase session is empty, output a relevant error message
+	// If this was a guest checkout and the purchase session is empty, output a relevant error message.
 	if ( empty( $session ) && ! is_user_logged_in() && ! $user_can_view ) {
 		return '<p class="edd-alert edd-alert-error">' . apply_filters( 'edd_receipt_guest_error_message', __( 'Receipt could not be retrieved, your purchase session has expired.', 'easy-digital-downloads' ) ) . '</p>';
 	}

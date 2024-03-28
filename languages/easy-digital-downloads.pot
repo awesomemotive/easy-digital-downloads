@@ -2,32 +2,36 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.2.9\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.2.10\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-26T21:11:56+00:00\n"
+"POT-Creation-Date: 2024-03-28T20:28:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 
 #. Plugin Name of the plugin
+#: easy-digital-downloads.php
 #: src/Gateways/Stripe/Admin/LicenseManager.php:249
 msgid "Easy Digital Downloads (Pro)"
 msgstr ""
 
 #. Plugin URI of the plugin
 #. Author URI of the plugin
+#: easy-digital-downloads.php
 msgid "https://easydigitaldownloads.com"
 msgstr ""
 
 #. Description of the plugin
+#: easy-digital-downloads.php
 msgid "The easiest way to sell digital products with WordPress."
 msgstr ""
 
 #. Author of the plugin
+#: easy-digital-downloads.php
 #: includes/blocks/includes/functions.php:27
 #: src/Admin/Onboarding/Steps/Tools.php:128
 #: src/Admin/SiteHealth/Test.php:21
@@ -5634,7 +5638,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:2187
 #: includes/admin/settings/display-settings.php:44
 #: includes/reports/reports-functions.php:336
-#: includes/upgrades/functions.php:147
+#: includes/upgrades/functions.php:148
 msgid "Discounts"
 msgstr ""
 
@@ -5826,7 +5830,7 @@ msgstr ""
 #: includes/user-functions.php:1007
 #: includes/users/lost-password.php:264
 #: src/Emails/Triggers.php:126
-#: src/Extensions/Updater.php:481
+#: src/Extensions/Updater.php:580
 msgid "Error"
 msgstr ""
 
@@ -5905,7 +5909,7 @@ msgstr ""
 #: includes/admin/payments/payments-history.php:159
 #: includes/admin/settings/display-settings.php:41
 #: includes/orders/functions/types.php:85
-#: includes/upgrades/functions.php:151
+#: includes/upgrades/functions.php:152
 msgid "Orders"
 msgstr ""
 
@@ -6572,7 +6576,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:192
 #: includes/admin/payments/orders.php:148
 #: includes/admin/tools.php:110
-#: includes/upgrades/functions.php:167
+#: includes/upgrades/functions.php:168
 msgid "Logs"
 msgstr ""
 
@@ -6693,7 +6697,7 @@ msgstr ""
 #. translators: 1. email address; 2. username
 #. translators: 1. email address; 2. user who removed email.
 #: includes/admin/customers/customer-actions.php:333
-#: includes/shortcodes.php:993
+#: includes/shortcodes.php:997
 msgid "Email address %1$s removed by %2$s"
 msgstr ""
 
@@ -7034,7 +7038,7 @@ msgid "Add Email"
 msgstr ""
 
 #: includes/admin/customers/customers.php:1104
-#: includes/upgrades/functions.php:155
+#: includes/upgrades/functions.php:156
 msgid "Customer Addresses"
 msgstr ""
 
@@ -7819,6 +7823,7 @@ msgstr ""
 msgid "Show advanced settings"
 msgstr ""
 
+#. translators: %1$s is the remove link, %2$s is the screen reader text.
 #: includes/admin/downloads/metabox.php:589
 #: includes/admin/downloads/metabox.php:847
 #: includes/admin/downloads/views/metabox-bundled-products.php:95
@@ -8372,7 +8377,7 @@ msgstr ""
 #: includes/admin/payments/class-refund-items-table.php:77
 #: includes/admin/reporting/class-export-download-history.php:62
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:54
-#: includes/blocks/includes/orders/orders.php:551
+#: includes/blocks/includes/orders/orders.php:554
 #: includes/emails/email-summary/edd-email-summary-template.php:340
 msgid "Product"
 msgstr ""
@@ -9580,7 +9585,7 @@ msgid "Tags"
 msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-downloads.php:52
-#: includes/blocks/includes/orders/orders.php:576
+#: includes/blocks/includes/orders/orders.php:579
 #: templates/history-downloads.php:46
 msgid "Files"
 msgstr ""
@@ -11156,7 +11161,7 @@ msgstr ""
 
 #: includes/admin/upgrades/upgrade-functions.php:427
 #: includes/admin/upgrades/upgrade-functions.php:498
-#: includes/upgrades/functions.php:175
+#: includes/upgrades/functions.php:176
 msgid "Remove Legacy Data"
 msgstr ""
 
@@ -11205,12 +11210,12 @@ msgstr ""
 msgid "Customer notes migration completed successfully."
 msgstr ""
 
-#: includes/admin/upgrades/v3/class-data-migrator.php:405
+#: includes/admin/upgrades/v3/class-data-migrator.php:408
 #: src/Upgrades/Orders/MigrateAfterActionsDate.php:193
 msgid "After payment actions processed."
 msgstr ""
 
-#: includes/admin/upgrades/v3/class-data-migrator.php:1356
+#: includes/admin/upgrades/v3/class-data-migrator.php:1362
 #: src/CLI/Migration/Discounts.php:60
 msgid "Legacy Discount"
 msgstr ""
@@ -11312,7 +11317,7 @@ msgid "Orders placed through the Amazon gateway must be refunded through Amazon.
 msgstr ""
 
 #: includes/admin/views/tmpl-order-adjustment-discount.php:27
-#: includes/discount-functions.php:1333
+#: includes/discount-functions.php:1336
 msgid "Remove discount"
 msgstr ""
 
@@ -11322,7 +11327,7 @@ msgstr ""
 #: includes/blocks/views/checkout/discount.php:16
 #: includes/blocks/views/orders/discounts.php:7
 #: includes/checkout/template.php:753
-#: includes/discount-functions.php:1297
+#: includes/discount-functions.php:1300
 #: templates/shortcode-receipt.php:87
 msgid "Discount"
 msgid_plural "Discounts"
@@ -11817,49 +11822,49 @@ msgid "Complete Purchase"
 msgstr ""
 
 #: includes/blocks/includes/orders/functions.php:38
-#: includes/blocks/includes/orders/orders.php:143
+#: includes/blocks/includes/orders/orders.php:146
 msgid "View Order Details"
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:111
+#: includes/blocks/includes/orders/orders.php:115
 msgid "To view a sample confirmation screen, you need to have at least one order in your store."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:114
+#: includes/blocks/includes/orders/orders.php:118
 msgid "Your purchase session could not be retrieved."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:165
-#: includes/shortcodes.php:670
+#: includes/blocks/includes/orders/orders.php:168
+#: includes/shortcodes.php:671
 msgid "Sorry, trouble retrieving order receipt."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:175
+#: includes/blocks/includes/orders/orders.php:179
 msgid "To view a sample receipt, you need to have at least one order in your store."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:220
+#: includes/blocks/includes/orders/orders.php:223
 msgid "Sorry, you do not have permission to view this receipt."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:229
+#: includes/blocks/includes/orders/orders.php:232
 msgid "Please confirm your email address to access your downloads."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:239
+#: includes/blocks/includes/orders/orders.php:242
 msgid "Please log in to view your order."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:271
+#: includes/blocks/includes/orders/orders.php:274
 msgid "Please log in to access your downloads."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:287
-#: includes/blocks/includes/orders/orders.php:299
+#: includes/blocks/includes/orders/orders.php:290
+#: includes/blocks/includes/orders/orders.php:302
 msgid "Your email address could not be verified."
 msgstr ""
 
-#: includes/blocks/includes/orders/orders.php:326
+#: includes/blocks/includes/orders/orders.php:329
 #: includes/blocks/views/orders/receipt-files.php:70
 #: includes/emails/tags.php:377
 #: templates/history-downloads.php:89
@@ -12302,6 +12307,7 @@ msgstr ""
 msgid "You have successfully added %s to your shopping cart."
 msgstr ""
 
+#. Translators: %s is the name of the download that was added to the cart.
 #: includes/cart/template.php:311
 msgid "Checkout."
 msgstr ""
@@ -13205,7 +13211,7 @@ msgstr ""
 
 #: includes/class-edd-discount.php:1676
 #: includes/class-edd-discount.php:1707
-#: includes/discount-functions.php:1016
+#: includes/discount-functions.php:1019
 msgctxt "error for when a discount is invalid based on its configuration"
 msgid "This discount is invalid."
 msgstr ""
@@ -13777,7 +13783,8 @@ msgstr ""
 msgid "Would you like to enable reviews for this product? Check out our <a target=\"_blank\" href=\"%s\">Product Reviews</a> extension."
 msgstr ""
 
-#: includes/discount-functions.php:501
+#. translators: 1: Function name, 2: Version number, 3: Replacement function name
+#: includes/discount-functions.php:505
 msgid "%1$s is deprecated since Easy Digital Downloads version %2$s! Use %3$s instead."
 msgstr ""
 
@@ -13795,33 +13802,34 @@ msgstr ""
 
 #. translators: the plugin name.
 #: includes/EDD_SL_Plugin_Updater.php:224
-#: src/Extensions/Updater.php:244
+#: src/Extensions/Updater.php:338
 msgid "There is a new version of %1$s available."
 msgstr ""
 
 #: includes/EDD_SL_Plugin_Updater.php:230
-#: src/Extensions/Updater.php:250
+#: src/Extensions/Updater.php:344
 msgid "Contact your network administrator to install the update."
 msgstr ""
 
 #. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate.
 #: includes/EDD_SL_Plugin_Updater.php:235
-#: src/Extensions/Updater.php:255
+#: src/Extensions/Updater.php:349
 msgid "%1$sView version %2$s details%3$s."
 msgstr ""
 
+#. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate.
 #: includes/EDD_SL_Plugin_Updater.php:243
-#: src/Extensions/Updater.php:263
+#: src/Extensions/Updater.php:358
 msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
 msgstr ""
 
 #: includes/EDD_SL_Plugin_Updater.php:254
-#: src/Extensions/Updater.php:274
+#: src/Extensions/Updater.php:369
 msgid "Update now."
 msgstr ""
 
 #: includes/EDD_SL_Plugin_Updater.php:486
-#: src/Extensions/Updater.php:481
+#: src/Extensions/Updater.php:580
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
@@ -15437,7 +15445,7 @@ msgstr ""
 msgid "Card successfully added."
 msgstr ""
 
-#: includes/gateways/stripe/includes/class-edd-stripe-rate-limiting.php:430
+#: includes/gateways/stripe/includes/class-edd-stripe-rate-limiting.php:429
 #: includes/gateways/stripe/includes/payment-actions/card-elements-actions.php:42
 #: includes/gateways/stripe/includes/template-functions.php:24
 msgid "We are unable to process your payment at this time, please try again later or contact support."
@@ -17046,32 +17054,32 @@ msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
 
-#: includes/shortcodes.php:708
+#: includes/shortcodes.php:712
 msgid "You must be logged in to view this payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:720
+#: includes/shortcodes.php:724
 msgid "Receipt could not be retrieved, your purchase session has expired."
 msgstr ""
 
-#: includes/shortcodes.php:804
+#: includes/shortcodes.php:808
 msgid "Your profile could not be updated. Please contact a site administrator."
 msgstr ""
 
-#: includes/shortcodes.php:840
+#: includes/shortcodes.php:844
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:851
+#: includes/shortcodes.php:855
 msgid "The email you entered is invalid. Please enter a valid email."
 msgstr ""
 
-#: includes/shortcodes.php:862
+#: includes/shortcodes.php:866
 #: includes/users/register.php:77
 msgid "This email address is not available."
 msgstr ""
 
-#: includes/shortcodes.php:997
+#: includes/shortcodes.php:1001
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
@@ -17148,19 +17156,19 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/upgrades/functions.php:143
+#: includes/upgrades/functions.php:144
 msgid "Tax Rates"
 msgstr ""
 
-#: includes/upgrades/functions.php:159
+#: includes/upgrades/functions.php:160
 msgid "Customer Email Addresses"
 msgstr ""
 
-#: includes/upgrades/functions.php:163
+#: includes/upgrades/functions.php:164
 msgid "Customer Notes"
 msgstr ""
 
-#: includes/upgrades/functions.php:171
+#: includes/upgrades/functions.php:172
 msgid "Order Notes"
 msgstr ""
 
@@ -17640,10 +17648,12 @@ msgstr ""
 msgid "Extension deactivated."
 msgstr ""
 
+#. translators: %s is the name of the extension.
 #: src/Admin/Extensions/Legacy.php:45
 msgid "%s is now part of EDD!"
 msgstr ""
 
+#. translators: %s is the name of the extension.
 #: src/Admin/Extensions/Legacy.php:50
 msgid "The functionality of %s has been merged into Easy Digital Downloads. It has been deactivated and you can safely delete the %s plugin."
 msgstr ""
@@ -19836,7 +19846,7 @@ msgid "Missing Discounts Added:"
 msgstr ""
 
 #: src/Downloads/Search.php:96
-#: src/HTML/ProductSelect.php:252
+#: src/HTML/ProductSelect.php:257
 msgid "All Price Options"
 msgstr ""
 
@@ -20194,12 +20204,12 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: src/HTML/Select.php:109
+#: src/HTML/Select.php:107
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: src/HTML/Select.php:110
+#: src/HTML/Select.php:108
 msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
@@ -20605,6 +20615,23 @@ msgstr ""
 #. translators: %1$s Link to tracking information, do not translate. %2$s clsoing link tag, do not translate
 #: src/Telemetry/Tracking.php:299
 msgid "%1$sHere is what we track.%2$s"
+msgstr ""
+
+#: src/Upgrades/Adjustments/DiscountsStartEnd.php:197
+msgid "Discount Updates Complete!"
+msgstr ""
+
+#: src/Upgrades/Adjustments/DiscountsStartEnd.php:198
+msgid "Easy Digital Downloads has finished updating your discount codes! Thank you for your patience."
+msgstr ""
+
+#. translators: %s is the % complete.
+#: src/Upgrades/Adjustments/DiscountsStartEnd.php:226
+msgid "Updating Discounts ( %d%% )"
+msgstr ""
+
+#: src/Upgrades/Adjustments/DiscountsStartEnd.php:249
+msgid "Easy Digital Downloads is performing maintenance in the background on discount codes that may contain invalid start and end dates. This process may take a while to complete depending on the number of discounts you have. We'll let you know when the process is complete."
 msgstr ""
 
 #: src/Upgrades/Orders/MigrateAfterActionsDate.php:258

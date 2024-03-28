@@ -5,17 +5,13 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * EDD Logging Class Tests
- *
- * @group edd_logs
- *
- * @coversDefaultClass EDD_Logging
  */
-class Tests_Logging extends EDD_UnitTestCase {
+class Logging extends EDD_UnitTestCase {
 
 	/**
-	 * EDD_Logging fixture.
+	 * EDD\Logging fixture.
 	 *
-	 * @var EDD_Logging
+	 * @var \EDD\Logging
 	 * @static
 	 */
 	protected static $object;
@@ -32,7 +28,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$object = new \EDD_Logging();
+		self::$object = new \EDD\Logging();
 
 		self::$log_id = self::$object->insert_log( array(
 			'log_type'     => 'gateway_error',
