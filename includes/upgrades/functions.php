@@ -122,6 +122,7 @@ function edd_get_all_upgrades() {
 		'remove_refunded_sale_logs',
 		'update_file_download_log_data',
 		'migrate_order_actions_date', // Added in 3.2, migrates the order actions run date to the order table.
+		'discounts_start_end',
 	);
 	$edd_30_upgrades  = edd_get_v30_upgrades();
 

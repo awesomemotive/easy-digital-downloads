@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_add_manual_order( $args = array() ) {
 	// Bail if user cannot manage shop settings or no data was passed.
-	if ( empty( $args ) || ! current_user_can( 'manage_shop_settings' ) ) {
+	if ( empty( $args ) || ! current_user_can( 'edit_shop_payments' ) ) {
 		return;
 	}
 

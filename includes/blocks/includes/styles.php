@@ -7,10 +7,11 @@
  * @copyright 2022 Easy Digital Downloads
  * @license   GPL2+
  */
+
 namespace EDD\Blocks\Styles;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Adds our custom EDD button colors to the edd-blocks stylesheet.
@@ -85,13 +86,7 @@ function filter_block_type_metadata( $metadata ) {
 	if ( should_let_wp_manage_styles() ) {
 		return $metadata;
 	}
-	$blocks     = glob( EDD_BLOCKS_DIR . 'build/**', GLOB_ONLYDIR );
-	$edd_blocks = array();
-	foreach ( $blocks as $block_path ) {
-		$block_name   = explode( '/', $block_path );
-		$block_name   = end( $block_name );
-		$edd_blocks[] = "edd/{$block_name}";
-	}
+	$edd_blocks = get_edd_blocks();
 	if ( in_array( $metadata['name'], $edd_blocks, true ) ) {
 		unset( $metadata['style'] );
 	}
@@ -139,9 +134,15 @@ add_filter( 'render_block', __NAMESPACE__ . '\enqueue_on_render', 10, 2 );
  */
 function enqueue_base_styles( $block_name ) {
 	$block_name = str_replace( 'edd/', '', $block_name );
+	$style_uri  = apply_filters(
+		'edd_block_style_uri',
+		EDD_BLOCKS_URL . "build/{$block_name}/style-index.css",
+		$block_name
+	);
+
 	wp_enqueue_style(
 		"edd-{$block_name}-style",
-		EDD_BLOCKS_URL . "build/{$block_name}/style-index.css",
+		$style_uri,
 		array( 'edd-blocks' ),
 		EDD_VERSION
 	);
@@ -160,4 +161,33 @@ function should_let_wp_manage_styles() {
 	}
 
 	return function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
+}
+
+/**
+ * Get all registered EDD blocks.
+ *
+ * @since 3.2.10
+ * @return array
+ */
+function get_edd_blocks() {
+	$cached_blocks = wp_cache_get( 'edd-registered-blocks', 'edd-blocks' );
+	if ( false !== $cached_blocks ) {
+		return $cached_blocks;
+	}
+
+	$blocks     = glob( EDD_BLOCKS_DIR . 'build/**', GLOB_ONLYDIR | GLOB_NOSORT );
+	$edd_blocks = array();
+	foreach ( $blocks as $block_path ) {
+		$block_name = explode( '/', $block_path );
+		$block_name = end( $block_name );
+		if ( 'pro' === $block_name ) {
+			continue;
+		}
+		$edd_blocks[] = "edd/{$block_name}";
+	}
+
+	$blocks = apply_filters( 'edd_registered_blocks', $edd_blocks );
+	wp_cache_set( 'edd-registered-blocks', $blocks, 'edd-blocks', 5 * MINUTE_IN_SECONDS );
+
+	return $blocks;
 }

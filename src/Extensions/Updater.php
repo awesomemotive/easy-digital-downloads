@@ -5,22 +5,87 @@
  *
  * @since 3.1.1.4
  */
+
 namespace EDD\Extensions;
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+/**
+ * Class Updater
+ *
+ * @package EDD\Extensions
+ */
 class Updater {
 
+	/**
+	 * The API handler.
+	 *
+	 * @var \EDD\Licensing\API
+	 */
 	private $api_handler;
-	private $api_url     = '';
-	private $api_data    = array();
+
+	/**
+	 * The API URL.
+	 *
+	 * @var string
+	 */
+	private $api_url = '';
+
+	/**
+	 * The API data.
+	 *
+	 * @var array
+	 */
+	private $api_data = array();
+
+	/**
+	 * The plugin file.
+	 *
+	 * @var string
+	 */
 	private $plugin_file = '';
-	private $name        = '';
-	private $slug        = '';
-	private $version     = '';
+
+	/**
+	 * The plugin name.
+	 *
+	 * @var string
+	 */
+	private $name = '';
+
+	/**
+	 * The plugin slug.
+	 *
+	 * @var string
+	 */
+	private $slug = '';
+
+	/**
+	 * The plugin version.
+	 *
+	 * @var string
+	 */
+	private $version = '';
+
+	/**
+	 * Whether to override WP's update check.
+	 *
+	 * @var bool
+	 */
 	private $wp_override = false;
-	private $beta        = false;
+
+	/**
+	 * Whether to use the beta channel.
+	 *
+	 * @var bool
+	 */
+	private $beta = false;
+
+	/**
+	 * The failed request cache key.
+	 *
+	 * @var string
+	 */
 	private $failed_request_cache_key;
 
 	/**
@@ -29,8 +94,8 @@ class Updater {
 	 * @uses plugin_basename()
 	 * @uses hook()
 	 *
-	 * @param string  $_plugin_file Path to the plugin file.
-	 * @param array   $_api_data    Optional data to send with API calls.
+	 * @param string $_plugin_file Path to the plugin file.
+	 * @param array  $_api_data    Optional data to send with API calls.
 	 */
 	public function __construct( $_plugin_file, $_api_data = null ) {
 
@@ -42,7 +107,7 @@ class Updater {
 		$this->api_data                 = $_api_data;
 		$this->plugin_file              = $_plugin_file;
 		$this->name                     = plugin_basename( $_plugin_file );
-		$this->slug                     = basename( $_plugin_file, '.php' );
+		$this->slug                     = basename( dirname( $_plugin_file ) );
 		$this->version                  = $_api_data['version'];
 		$this->wp_override              = isset( $_api_data['wp_override'] ) ? (bool) $_api_data['wp_override'] : false;
 		$this->beta                     = ! empty( $this->api_data['beta'] ) ? true : false;
@@ -78,7 +143,7 @@ class Updater {
 	 *
 	 * @uses api_request()
 	 *
-	 * @param array   $_transient_data Update array build by WordPress.
+	 * @param array $_transient_data Update array build by WordPress.
 	 * @return array Modified update array with custom plugin data.
 	 */
 	public function check_update( $_transient_data ) {
@@ -91,7 +156,7 @@ class Updater {
 			return $_transient_data;
 		}
 
-		$current = $this->get_repo_api_data();
+		$current = $this->get_limited_data();
 		if ( false !== $current && is_object( $current ) && isset( $current->new_version ) ) {
 			if ( version_compare( $this->version, $current->new_version, '<' ) ) {
 				$_transient_data->response[ $this->name ] = $current;
@@ -139,10 +204,39 @@ class Updater {
 	}
 
 	/**
+	 * Gets a limited set of data from the API response.
+	 * This is used for the update_plugins transient.
+	 *
+	 * @since 3.2.10
+	 * @return \stdClass|false
+	 */
+	private function get_limited_data() {
+		$version_info = $this->get_repo_api_data();
+
+		if ( ! $version_info ) {
+			return false;
+		}
+
+		$limited_data               = new \stdClass();
+		$limited_data->slug         = $this->slug;
+		$limited_data->plugin       = $this->name;
+		$limited_data->url          = $version_info->url;
+		$limited_data->package      = $version_info->package;
+		$limited_data->icons        = $this->convert_object_to_array( $version_info->icons );
+		$limited_data->banners      = $this->convert_object_to_array( $version_info->banners );
+		$limited_data->new_version  = $version_info->new_version;
+		$limited_data->tested       = $version_info->tested;
+		$limited_data->requires     = $version_info->requires;
+		$limited_data->requires_php = $version_info->requires_php;
+
+		return $limited_data;
+	}
+
+	/**
 	 * Gets the plugin's tested version.
 	 *
 	 * @since 1.9.2
-	 * @param object $version_info
+	 * @param object $version_info The version info.
 	 * @return null|string
 	 */
 	private function get_tested_version( $version_info ) {
@@ -173,8 +267,8 @@ class Updater {
 	/**
 	 * Show the update notification on multisite subsites.
 	 *
-	 * @param string  $file
-	 * @param array   $plugin
+	 * @param string $file   The plugin file.
+	 * @param array  $plugin The plugin data.
 	 */
 	public function show_update_notification( $file, $plugin ) {
 
@@ -260,6 +354,7 @@ class Updater {
 		} elseif ( ! empty( $changelog_link ) ) {
 			echo ' ';
 			printf(
+				/* translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate. */
 				__( '%1$sView version %2$s details%3$s or %4$supdate now%5$s.', 'easy-digital-downloads' ),
 				'<a target="_blank" class="thickbox open-plugin-details-modal" href="' . esc_url( $changelog_link ) . '">',
 				esc_html( $update_cache->response[ $this->name ]->new_version ),
@@ -276,7 +371,7 @@ class Updater {
 			);
 		}
 
-		do_action( "in_plugin_update_message-{$file}", $plugin, $plugin );
+		do_action( "in_plugin_update_message-{$file}", $plugin, $plugin ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 
 		echo '</p></div></td></tr>';
 	}
@@ -298,9 +393,9 @@ class Updater {
 	 *
 	 * @uses api_request()
 	 *
-	 * @param mixed   $_data
-	 * @param string  $_action
-	 * @param object  $_args
+	 * @param mixed  $_data   The default data.
+	 * @param string $_action The requested action.
+	 * @param object $_args   The Plugin API arguments.
 	 * @return object $_data
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
@@ -323,15 +418,15 @@ class Updater {
 			),
 		);
 
-		// Get the transient where we store the api request for this plugin for 24 hours
+		// Get the transient where we store the api request for this plugin for 24 hours.
 		$edd_api_request_transient = $this->get_cached_version_info();
 
-		//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
+		// If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
 		if ( empty( $edd_api_request_transient ) ) {
 
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 
-			// Expires in 3 hours
+			// Expires in 3 hours.
 			$this->set_version_info_cache( $api_response );
 
 			if ( false !== $api_response ) {
@@ -365,6 +460,10 @@ class Updater {
 			$_data->plugin = $this->name;
 		}
 
+		if ( ! isset( $_data->version ) && ! empty( $_data->new_version ) ) {
+			$_data->version = $_data->new_version;
+		}
+
 		return $_data;
 	}
 
@@ -376,7 +475,7 @@ class Updater {
 	 *
 	 * @since 3.6.5
 	 *
-	 * @param stdClass $data
+	 * @param stdClass $data The data to convert.
 	 *
 	 * @return array
 	 */
@@ -399,8 +498,8 @@ class Updater {
 	 * @uses wp_remote_get()
 	 * @uses is_wp_error()
 	 *
-	 * @param string  $_action The requested action.
-	 * @param array   $_data   Parameters for the API action.
+	 * @param string $_action The requested action.
+	 * @param array  $_data   Parameters for the API action.
 	 * @return false|object
 	 */
 	private function api_request( $_action, $_data ) {
@@ -527,7 +626,7 @@ class Updater {
 	/**
 	 * Get the version info from the cache, if it exists.
 	 *
-	 * @param string $cache_key
+	 * @param string $cache_key The cache key.
 	 * @return object
 	 */
 	public function get_cached_version_info( $cache_key = '' ) {
@@ -538,7 +637,7 @@ class Updater {
 
 		$cache = get_option( $cache_key );
 
-		// Cache is expired
+		// Cache is expired.
 		if ( empty( $cache['timeout'] ) || time() > $cache['timeout'] ) {
 			return false;
 		}
@@ -555,8 +654,8 @@ class Updater {
 	/**
 	 * Adds the plugin version information to the database.
 	 *
-	 * @param string $value
-	 * @param string $cache_key
+	 * @param string|\stdClass $value     The value to store.
+	 * @param string           $cache_key The cache key.
 	 */
 	public function set_version_info_cache( $value = '', $cache_key = '' ) {
 

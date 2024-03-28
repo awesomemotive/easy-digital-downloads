@@ -140,7 +140,7 @@ abstract class Email {
 	/**
 	 * Magic method to get properties.
 	 *
-	 * @since <next-version>
+	 * @since 3.2.10
 	 * @param string $property The property to get.
 	 * @return mixed
 	 */
