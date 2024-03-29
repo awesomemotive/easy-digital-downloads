@@ -93,7 +93,7 @@ class ProductSelect extends Select {
 	 */
 	private function get_options() {
 		$products = $this->get_products();
-		$options  = array();
+		$options  = array( '' => '' );
 		if ( $products ) {
 			foreach ( $products as $product ) {
 				// If bundles are not allowed, skip any products that are bundles.
