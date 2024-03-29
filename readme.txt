@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 5.8
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable Tag: 3.2.10
+Stable Tag: 3.2.11
 License: GNU Version 2 or Any Later Version
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -54,6 +54,7 @@ With our included integrations, new payment methods are added when they become a
 Unlock the full potential of your digital store with Easy Digital Downloads — the best WordPress ecommerce solution renowned for its powerful reporting features. Dive deep into the heart of your digital business with tools designed not just to give you insights into what is happening in your business now, but also to help you make decisions that will help you grow your business.
 
 With the included date comparison tools, you can compare your sales, revenue, customers, and other data from one period to another, giving you the insights to make informed decisions and accelerate your growth. Some of the data points you get access to include:
+
 * Customer growth
 * Revenue and Sales
 * Filtering by product
@@ -223,6 +224,11 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.2.11 =
+* Order Management: When searching orders, a Product ID was being erroneously added to the filter arguments when it not have been.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.2.10 =
 * Downloads: Improved performance when creating and managing download directories.
 * Discounts: Start and End dates are properly handling the timezone.
@@ -241,8 +247,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Orders: Manually creating orders in the admin could fail to save the order due to a capability check.
 * Migration: Improved the reliability of the EDD 3.0+ migration routine for possibly corrupt serialized data.
 * Migration: Improved PHP 8.0+ compatibility for the EDD 3.0+ migration routine.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.2.9 =
 * Stripe: Resending the purchase receipt could fail if including the Stripe statement descriptor in the email template.
