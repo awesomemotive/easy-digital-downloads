@@ -323,6 +323,19 @@ class Base {
 			return false;
 		}
 
+		$log_errors = apply_filters( 'edd_log_email_errors', true, $to, $subject, $message );
+
+		if ( empty( $to) && true === $log_errors ) {
+			$log_message = sprintf(
+				__( "Email from Easy Digital Downloads failed to send. \nTo is empty\n\n", 'easy-digital-downloads' ),
+				$to
+			);
+
+			edd_debug_log( $log_message );
+			
+			return false;
+		}
+
 		/**
 		 * Hooks before the email is sent
 		 *
@@ -337,8 +350,7 @@ class Base {
 
 		$attachments = apply_filters( 'edd_email_attachments', $attachments, $this );
 
-		$sent       = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
-		$log_errors = apply_filters( 'edd_log_email_errors', true, $to, $subject, $message );
+		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
 
 		if( ! $sent && true === $log_errors ) {
 			if ( is_array( $to ) ) {
