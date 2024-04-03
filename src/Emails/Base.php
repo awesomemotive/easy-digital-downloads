@@ -325,13 +325,15 @@ class Base {
 
 		$log_errors = apply_filters( 'edd_log_email_errors', true, $to, $subject, $message );
 
-		if ( empty( $to) && true === $log_errors ) {
-			$log_message = sprintf(
-				__( "Email from Easy Digital Downloads failed to send. \nTo is empty\n\n", 'easy-digital-downloads' ),
-				$to
-			);
+		if ( empty( $to) {
+			if ( true === $log_errors ) {
+				$log_message = sprintf(
+					__( "Email from Easy Digital Downloads failed to send. \nTo is empty\n\n", 'easy-digital-downloads' ),
+					$to
+				);
 
-			edd_debug_log( $log_message );
+				edd_debug_log( $log_message );
+			}
 			
 			return false;
 		}
