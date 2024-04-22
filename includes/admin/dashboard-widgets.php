@@ -141,7 +141,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<?php
 					foreach ( $payments as $payment ) { ?>
 						<?php
-							$user_id = $payment->user_info['id'];
+							$user_id = $payment->user_id ?? 0;
 							$user_email = $payment->user_info['email'];
 
 							$email = apply_filters( 'lms_filter_sensitive__customer_email', $user_email, $user_id, $user_email );
