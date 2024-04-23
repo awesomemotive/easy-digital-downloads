@@ -411,6 +411,10 @@ function edd_get_lowest_price_id( $download_id = 0 ) {
         }
     }
 
+    if (!isset($min_id)) {
+        return edd_get_default_variable_price($download_id);
+    }
+
     return (int) $min_id;
 }
 
