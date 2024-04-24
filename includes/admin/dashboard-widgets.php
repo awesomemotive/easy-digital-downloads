@@ -39,7 +39,7 @@ function edd_load_dashboard_sales_widget( ) {
 						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
 					</tr>
 					<tr>
-						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
+						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish') ); ?>
 						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'easy-digital-downloads' ); ?></td>
 						<td class="b b-sales"><?php echo edd_format_amount( $monthly_sales, false ); ?></td>
 					</tr>
@@ -58,7 +58,7 @@ function edd_load_dashboard_sales_widget( ) {
 					</tr>
 					<tr>
 						<td class="first t sales">
-							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
+							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish') ); ?>
 							<?php echo _n( 'Sale', 'Sales', edd_format_amount( $last_month_sales, false ), 'easy-digital-downloads' ); ?>
 						</td>
 						<td class="b b-last-month-sales">
@@ -90,7 +90,7 @@ function edd_load_dashboard_sales_widget( ) {
 							<?php _e( 'Sales', 'easy-digital-downloads' ); ?>
 						</td>
 						<td class="last b b-sales">
-							<?php $sales_today = $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+							<?php $sales_today = $stats->get_sales( 0, 'today', false, array( 'publish' ) ); ?>
 							<?php echo edd_format_amount( $sales_today, false ); ?>
 						</td>
 					</tr>
