@@ -12,8 +12,11 @@
 namespace EDD\Admin\Onboarding\Steps;
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+/**
+ * Products step class.
+ */
 class Products extends Step {
 
 	/**
@@ -22,7 +25,10 @@ class Products extends Step {
 	 * @since 3.1.1
 	 */
 	public function step_html() {
-		$currency_position  = edd_get_option( 'currency_position', 'before' );
+		$currency_position = edd_get_option( 'currency_position', 'before' );
+		// Remove all actions that may have been added by extensions.
+		remove_all_actions( 'edd_after_price_field' );
+		remove_all_actions( 'edd_download_price_option_row' );
 		?>
 		<form method="post" class="edd-onboarding__create-product-form">
 			<input type="hidden" name="_edd_product_type" value="0">
@@ -123,7 +129,15 @@ class Products extends Step {
 							<div class="edd-form-group">
 								<div class="edd-form-group__control">
 									<label class="edd-toggle edd-onboarding__upload-files-toggle" for="_edd_upload_files">
-										<?php echo EDD()->html->checkbox( array( 'name' => '_edd_upload_files', 'current' => null, 'class' => 'edd-form-group__input', ) ); ?>
+										<?php
+										echo EDD()->html->checkbox(
+											array(
+												'name'    => '_edd_upload_files',
+												'current' => null,
+												'class'   => 'edd-form-group__input',
+											)
+										);
+										?>
 										<span><?php echo esc_html_e( 'Add your first file', 'easy-digital-downloads' ); ?></span>
 									</label>
 								</div>
