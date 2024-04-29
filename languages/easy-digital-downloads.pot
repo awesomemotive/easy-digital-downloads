@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads (Pro) plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads (Pro) 3.2.11\n"
+"Project-Id-Version: Easy Digital Downloads (Pro) 3.2.12\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-pro\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-29T18:25:17+00:00\n"
+"POT-Creation-Date: 2024-04-29T18:20:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 
@@ -2518,7 +2518,7 @@ msgid "Chandigarh"
 msgstr ""
 
 #: i18n/states-in.php:38
-msgid "Dadar and Nagar Haveli"
+msgid "Dadra and Nagar Haveli"
 msgstr ""
 
 #: i18n/states-in.php:39
@@ -5777,7 +5777,7 @@ msgstr ""
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:106
 #: includes/admin/reporting/class-export.php:188
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:109
-#: includes/admin/reporting/export/class-batch-export.php:158
+#: includes/admin/reporting/export/class-batch-export.php:166
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/admin/tools.php:1161
 #: includes/admin/tools.php:1167
@@ -6365,7 +6365,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-email-addresses-table.php:131
 #: includes/admin/customers/class-customer-table.php:127
 #: includes/admin/payments/orders.php:1084
-#: includes/misc-functions.php:1436
+#: includes/misc-functions.php:1456
 #: includes/payments/functions.php:537
 msgid "Pending"
 msgstr ""
@@ -6376,7 +6376,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:583
 #: includes/admin/discounts/edit-discount.php:287
 #: includes/class-edd-discount.php:705
-#: includes/misc-functions.php:1431
+#: includes/misc-functions.php:1451
 #: src/Admin/Promos/About.php:865
 msgid "Active"
 msgstr ""
@@ -6562,7 +6562,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:584
 #: includes/admin/discounts/edit-discount.php:288
 #: includes/class-edd-discount.php:699
-#: includes/misc-functions.php:1432
+#: includes/misc-functions.php:1452
 #: src/Admin/Promos/About.php:871
 msgid "Inactive"
 msgstr ""
@@ -6632,6 +6632,7 @@ msgstr ""
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:1978
 #: includes/class-edd-license-handler.php:478
+#: includes/emails/recapture.php:24
 #: includes/user-functions.php:958
 #: src/Pro/Admin/Discounts/Generate.php:96
 msgid "Nonce verification failed."
@@ -7805,7 +7806,7 @@ msgid "Enable multi-option purchase mode. Allows multiple price options to be ad
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:522
-#: src/Admin/Onboarding/Steps/Products.php:114
+#: src/Admin/Onboarding/Steps/Products.php:120
 msgid "Add New Price"
 msgstr ""
 
@@ -7823,7 +7824,6 @@ msgstr ""
 msgid "Show advanced settings"
 msgstr ""
 
-#. translators: %1$s is the remove link, %2$s is the screen reader text.
 #: includes/admin/downloads/metabox.php:589
 #: includes/admin/downloads/metabox.php:847
 #: includes/admin/downloads/views/metabox-bundled-products.php:95
@@ -9416,7 +9416,7 @@ msgid "guest"
 msgstr ""
 
 #: includes/admin/reporting/class-export.php:188
-#: includes/admin/reporting/export/class-batch-export.php:158
+#: includes/admin/reporting/export/class-batch-export.php:166
 #: includes/admin/tools/class-edd-tools-recount-customer-stats.php:114
 #: includes/admin/tools/class-edd-tools-recount-store-earnings.php:157
 #: includes/admin/tools/class-edd-tools-reset-stats.php:128
@@ -10484,24 +10484,24 @@ msgstr ""
 msgid "%1$sLearn more%2$s (Free trial available)"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1814
+#: includes/admin/settings/register-settings.php:1815
 msgid "Connect with Recapture"
 msgstr ""
 
 #. translators: Tax rate country code
-#: includes/admin/settings/register-settings.php:1847
+#: includes/admin/settings/register-settings.php:1849
 msgid "Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1848
+#: includes/admin/settings/register-settings.php:1850
 msgid "Please select a country."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1849
+#: includes/admin/settings/register-settings.php:1851
 msgid "Please enter a tax rate greater than 0."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1850
+#: includes/admin/settings/register-settings.php:1852
 msgid "Are you sure you want to add a 0% tax rate?"
 msgstr ""
 
@@ -10871,7 +10871,7 @@ msgid "Product Excerpt"
 msgstr ""
 
 #: includes/admin/tools.php:915
-#: src/Admin/Onboarding/Steps/Products.php:51
+#: src/Admin/Onboarding/Steps/Products.php:57
 msgid "Product Image"
 msgstr ""
 
@@ -12307,7 +12307,6 @@ msgstr ""
 msgid "You have successfully added %s to your shopping cart."
 msgstr ""
 
-#. Translators: %s is the name of the download that was added to the cart.
 #: includes/cart/template.php:311
 msgid "Checkout."
 msgstr ""
@@ -13164,7 +13163,7 @@ msgstr ""
 msgid "Removing old orders."
 msgstr ""
 
-#: includes/class-edd-cron.php:46
+#: includes/class-edd-cron.php:47
 msgid "Once Weekly"
 msgstr ""
 
@@ -13179,7 +13178,7 @@ msgstr ""
 
 #: includes/class-edd-discount.php:696
 #: includes/gateways/stripe/includes/template-functions.php:377
-#: includes/misc-functions.php:1433
+#: includes/misc-functions.php:1453
 msgid "Expired"
 msgstr ""
 
@@ -13722,7 +13721,7 @@ msgstr ""
 #: includes/deprecated-functions.php:1445
 #: includes/deprecated-functions.php:1591
 #: includes/deprecated-functions.php:1667
-#: includes/emails/functions.php:59
+#: includes/emails/recapture.php:16
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -13738,7 +13737,7 @@ msgstr ""
 
 #. Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag
 #: includes/deprecated-functions.php:1499
-#: includes/emails/functions.php:151
+#: includes/emails/recapture.php:126
 msgid "%1$s %2$s %3$s %4$s Dismiss this notice. %5$s"
 msgstr ""
 
@@ -13897,12 +13896,12 @@ msgstr ""
 msgid "Pro-tip from our expert"
 msgstr ""
 
-#: includes/emails/functions.php:110
+#: includes/emails/recapture.php:84
 msgid "Something went wrong. Recapture for EDD was not installed correctly."
 msgstr ""
 
 #. Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s - </a> tag
-#: includes/emails/functions.php:138
+#: includes/emails/recapture.php:113
 msgid "%1$sRecover abandoned purchases like this one.%2$s %3$sTry Recapture for free%4$s."
 msgstr ""
 
@@ -15945,22 +15944,22 @@ msgid "Unable to find Event"
 msgstr ""
 
 #. Translators: The charge ID from Stripe that is being refunded.
-#: includes/gateways/stripe/includes/webhooks.php:92
+#: includes/gateways/stripe/includes/webhooks.php:105
 msgid "Charge %s has been fully refunded in Stripe."
 msgstr ""
 
 #. Translators: The charge ID from Stripe that is being partially refunded.
-#: includes/gateways/stripe/includes/webhooks.php:96
+#: includes/gateways/stripe/includes/webhooks.php:109
 msgid "Charge %s partially refunded in Stripe."
 msgstr ""
 
 #. translators: %s Stripe Radar review opening reason.
-#: includes/gateways/stripe/includes/webhooks.php:142
+#: includes/gateways/stripe/includes/webhooks.php:155
 msgid "Stripe Radar review opened with a reason of %s."
 msgstr ""
 
 #. translators: %s Stripe Radar review closing reason.
-#: includes/gateways/stripe/includes/webhooks.php:187
+#: includes/gateways/stripe/includes/webhooks.php:200
 msgid "Stripe Radar review closed with a reason of %s."
 msgstr ""
 
@@ -16011,31 +16010,31 @@ msgstr ""
 msgid "The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available."
 msgstr ""
 
-#: includes/misc-functions.php:1217
+#: includes/misc-functions.php:1237
 msgid "Store Bot"
 msgstr ""
 
-#: includes/misc-functions.php:1437
+#: includes/misc-functions.php:1457
 msgid "Verified"
 msgstr ""
 
-#: includes/misc-functions.php:1438
+#: includes/misc-functions.php:1458
 msgid "Spam"
 msgstr ""
 
-#: includes/misc-functions.php:1439
+#: includes/misc-functions.php:1459
 msgid "Deleted"
 msgstr ""
 
-#: includes/misc-functions.php:1440
+#: includes/misc-functions.php:1460
 msgid "Cancelled"
 msgstr ""
 
-#: includes/misc-functions.php:1554
+#: includes/misc-functions.php:1574
 msgid "Please define default parameters in the form of an array."
 msgstr ""
 
-#: includes/misc-functions.php:1559
+#: includes/misc-functions.php:1579
 msgid "Please define an SVG icon filename."
 msgstr ""
 
@@ -16065,7 +16064,7 @@ msgstr ""
 
 #. Translators: %1$s - type of amount being refunded (subtotal, tax, or total); %1$s - adjustment description; %3$s - maximum amount allowed for refund
 #: includes/orders/classes/class-refund-validator.php:390
-msgid "The maximum refund %s for the adjustment \"%s\" is %s."
+msgid "The maximum refund %1$s for the adjustment \"%2$s\" is %3$s."
 msgstr ""
 
 #: includes/orders/functions/orders.php:665
@@ -17648,12 +17647,10 @@ msgstr ""
 msgid "Extension deactivated."
 msgstr ""
 
-#. translators: %s is the name of the extension.
 #: src/Admin/Extensions/Legacy.php:45
 msgid "%s is now part of EDD!"
 msgstr ""
 
-#. translators: %s is the name of the extension.
 #: src/Admin/Extensions/Legacy.php:50
 msgid "The functionality of %s has been merged into Easy Digital Downloads. It has been deactivated and you can safely delete the %s plugin."
 msgstr ""
@@ -17718,63 +17715,63 @@ msgstr ""
 msgid "And more…"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:32
+#: src/Admin/Onboarding/Steps/Products.php:38
 msgid "Product details"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:37
+#: src/Admin/Onboarding/Steps/Products.php:43
 msgid "We'll get started with some basic information. Don't worry, you can add more details later. When you're finished here, the product will be saved as a draft so you can finish up later."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:45
+#: src/Admin/Onboarding/Steps/Products.php:51
 msgid "Product Name"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:57
+#: src/Admin/Onboarding/Steps/Products.php:63
 msgid "Set image"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:57
+#: src/Admin/Onboarding/Steps/Products.php:63
 msgid "Set Image"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:63
+#: src/Admin/Onboarding/Steps/Products.php:69
 msgid "Pricing Options"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:67
+#: src/Admin/Onboarding/Steps/Products.php:73
 msgid "Single price"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:68
+#: src/Admin/Onboarding/Steps/Products.php:74
 msgid "Variable price"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:73
+#: src/Admin/Onboarding/Steps/Products.php:79
 msgid "Product Price"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:127
+#: src/Admin/Onboarding/Steps/Products.php:141
 msgid "Add your first file"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:136
+#: src/Admin/Onboarding/Steps/Products.php:150
 msgid "Ready to add your first downloadable file to your product? Great! These files will be protected and only available to people who purchase your product. Not ready yet? No problem, you can always add and update files later."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:152
+#: src/Admin/Onboarding/Steps/Products.php:166
 msgid "Congratulations!"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:153
+#: src/Admin/Onboarding/Steps/Products.php:167
 msgid "You've set up your store and your first product has been created."
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:154
+#: src/Admin/Onboarding/Steps/Products.php:168
 msgid "Edit My Product"
 msgstr ""
 
-#: src/Admin/Onboarding/Steps/Products.php:155
+#: src/Admin/Onboarding/Steps/Products.php:169
 msgid "Explore Extensions"
 msgstr ""
 
@@ -18929,7 +18926,7 @@ msgid "SKUs will be shown on purchase receipt and exported purchase histories."
 msgstr ""
 
 #: src/Admin/Settings/Tabs/Gateways.php:229
-msgid "Enable Sequental Numbering"
+msgid "Enable Sequential Numbering"
 msgstr ""
 
 #: src/Admin/Settings/Tabs/Gateways.php:230
@@ -19005,7 +19002,7 @@ msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 #: src/Admin/Settings/Tabs/Gateways.php:374
-msgid "Increase conversions by auto-filling address information for customers during checkout. To enable GeoLocation Dectection, %1$sUpgrade to Pro%2$s."
+msgid "Increase conversions by auto-filling address information for customers during checkout. To enable GeoLocation Detection, %1$sUpgrade to Pro%2$s."
 msgstr ""
 
 #: src/Admin/Settings/Tabs/General.php:45
