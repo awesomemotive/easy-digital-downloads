@@ -133,12 +133,20 @@ class EDD_Batch_Export extends EDD_Export {
 	 */
 	public function __construct( $_step = 1 ) {
 
-		$upload_dir     = wp_upload_dir();
+		$exports_dir    = edd_get_exports_dir();
 		$this->filetype = '.csv';
-		$this->filename = 'edd-' . $this->export_type . $this->filetype;
-		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+		$file_date      = date( 'Y-m-d' );
+		$file_hash      = substr( wp_hash( 'edd-' . $this->export_type . '-export', 'nonce' ), 0, 8 );
+		$this->filename = sprintf(
+			'edd-%1$s-export-%2$s-%3$s%4$s',
+			$this->export_type,
+			$file_date,
+			$file_hash,
+			$this->filetype
+		);
+		$this->file     = trailingslashit( $exports_dir ) . $this->filename;
 
-		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
+		if ( ! is_writeable( $exports_dir ) ) {
 			$this->is_writable = false;
 		}
 
