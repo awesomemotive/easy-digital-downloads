@@ -859,6 +859,26 @@ function edd_get_upload_dir() {
 }
 
 /**
+ * Retrieve the absolute path to the file export directory without the trailing slash.
+ *
+ * @since 3.2.12
+ *
+ * @return string $path Absolute path to the EDD export directory
+ */
+function edd_get_exports_dir() {
+	$wp_upload_dir = wp_upload_dir();
+	$edd_dir       = edd_get_uploads_base_dir();
+	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir . '/exports';
+	$exports_dir   = apply_filters( 'edd_get_exports_dir', $path );
+
+	// Make sure the directory exists.
+	wp_mkdir_p( $exports_dir );
+
+	// Return, possibly filtered.
+	return $exports_dir;
+}
+
+/**
  * Retrieve the URL to the file upload directory without the trailing slash
  *
  * @since  3.0

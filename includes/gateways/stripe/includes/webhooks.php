@@ -72,8 +72,21 @@ function edds_stripe_event_listener() {
 
 				// If this was completely refunded, set the status to refunded.
 				if ( $charge->refunded ) {
-					$refund_id = edd_refund_order( $order->id );
-					if ( $refund_id ) {
+					$refund_id = false;
+					if ( edd_is_order_refundable( $order->id ) ) {
+						$refund_id = edd_refund_order( $order->id );
+					} else {
+						$refunds = edd_get_orders(
+							array(
+								'type'   => 'refund',
+								'parent' => $order->id,
+							)
+						);
+						if ( ! empty( $refunds ) ) {
+							$refund_id = $refunds[0]->id;
+						}
+					}
+					if ( $refund_id && ! is_wp_error( $refund_id ) ) {
 						edd_add_order_transaction(
 							array(
 								'object_type'    => 'order',

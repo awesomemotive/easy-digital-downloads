@@ -1811,8 +1811,10 @@ function edd_recapture_callback($args) {
 		</p>
 		<?php if ( current_user_can( 'install_plugins' ) ) : ?>
 		<p>
-			<button type="button" id="edd-recapture-connect" class="button button-primary"><?php esc_html_e( 'Connect with Recapture', 'easy-digital-downloads' ); ?>
+			<button type="button" id="edd-recapture-connect" class="button button-primary">
+				<?php esc_html_e( 'Connect with Recapture', 'easy-digital-downloads' ); ?>
 			</button>
+			<?php wp_nonce_field( 'edd-recapture-connect', 'edd-recapture-connect-nonce' ); ?>
 		</p>
 	<?php endif; ?>
 

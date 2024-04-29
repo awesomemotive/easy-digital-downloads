@@ -226,7 +226,7 @@ class Gateways extends Tab {
 			),
 			'enable_sequential'  => array(
 				'id'    => 'enable_sequential',
-				'name'  => __( 'Enable Sequental Numbering', 'easy-digital-downloads' ),
+				'name'  => __( 'Enable Sequential Numbering', 'easy-digital-downloads' ),
 				'check' => __( 'Check this box to enable sequential order numbers.', 'easy-digital-downloads' ),
 				'desc'  => __( 'Does not impact previous orders. Future orders will be sequential.', 'easy-digital-downloads' ),
 				'type'  => 'checkbox_description',
@@ -371,7 +371,7 @@ class Gateways extends Tab {
 
 		return sprintf(
 			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
-			__( 'Increase conversions by auto-filling address information for customers during checkout. To enable GeoLocation Dectection, %1$sUpgrade to Pro%2$s.', 'easy-digital-downloads' ),
+			__( 'Increase conversions by auto-filling address information for customers during checkout. To enable GeoLocation Detection, %1$sUpgrade to Pro%2$s.', 'easy-digital-downloads' ),
 			'<a href="' . $upgrade_link . '" class="edd-pro-upgrade" target="_blank">',
 			'</a>'
 		);

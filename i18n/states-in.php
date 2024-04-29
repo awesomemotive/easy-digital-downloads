@@ -35,7 +35,7 @@ return array(
 	'WB' => __( 'West Bengal', 'easy-digital-downloads' ),
 	'AN' => __( 'Andaman and Nicobar Islands', 'easy-digital-downloads' ),
 	'CH' => __( 'Chandigarh', 'easy-digital-downloads' ),
-	'DN' => __( 'Dadar and Nagar Haveli', 'easy-digital-downloads' ),
+	'DN' => __( 'Dadra and Nagar Haveli', 'easy-digital-downloads' ),
 	'DD' => __( 'Daman and Diu', 'easy-digital-downloads' ),
 	'DL' => __( 'Delhi', 'easy-digital-downloads' ),
 	'LD' => __( 'Lakshadweep', 'easy-digital-downloads' ),

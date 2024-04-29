@@ -370,7 +370,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.2.11' );
+			define( 'EDD_VERSION', '3.2.12' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -729,6 +729,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-emails.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-email-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/recapture.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/tags-inserter.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';

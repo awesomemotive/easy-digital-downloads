@@ -263,7 +263,7 @@ function edd_include_taxed_orders_batch_processor( $class ) {
 }
 
 /**
- * Register the taxed orders report batch exporter.
+ * Register the taxed customers report batch exporter.
  *
  * @since 3.0
  */

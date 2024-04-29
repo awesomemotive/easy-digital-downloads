@@ -387,7 +387,7 @@ class Refund_Validator {
 						 * %1$s - adjustment description;
 						 * %3$s - maximum amount allowed for refund
 						 */
-						__( 'The maximum refund %s for the adjustment "%s" is %s.', 'easy-digital-downloads' ),
+						__( 'The maximum refund %1$s for the adjustment "%2$s" is %3$s.', 'easy-digital-downloads' ),
 						$column_name,
 						$original_item->description,
 						edd_currency_filter( $maximum_refundable_amounts[ $column_name ] )
