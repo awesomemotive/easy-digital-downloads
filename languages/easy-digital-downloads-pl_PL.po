@@ -3693,3 +3693,7 @@ msgstr "Tagi"
 
 msgid "to"
 msgstr "do"
+
+#: includes/discount-functions.php:688
+msgid "Minimum order of %s not met."
+msgstr "Aby użyć kodu zniżkowego wartość zamówienia musi wynosić co najmniej %s"
