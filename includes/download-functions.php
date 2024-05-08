@@ -1189,11 +1189,11 @@ function edd_get_file_price_condition( $download_id = 0, $file_key = '' ) {
  * @since 1.0
  * @since 3.0  Updated to use new query methods.
  *
- * @param string    $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
- * @param string    $email        Customer email address. Use edd_get_payment_user_email() to get user email.
- * @param int       $filekey      Index of array of files returned by edd_get_download_files() that this download link is for.
- * @param int       $download_id  Optional. ID of download this download link is for. Default is 0.
- * @param bool|int  $price_id     Optional. Price ID when using variable prices. Default is false.
+ * @param string|\EDD\Orders\Order $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
+ * @param string                   $email        Customer email address. Use edd_get_payment_user_email() to get user email.
+ * @param int                      $filekey      Index of array of files returned by edd_get_download_files() that this download link is for.
+ * @param int                      $download_id  Optional. ID of download this download link is for. Default is 0.
+ * @param bool|int                 $price_id     Optional. Price ID when using variable prices. Default is false.
  *
  * @return string Secure download URL.
  */
