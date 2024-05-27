@@ -331,7 +331,17 @@ class EDD_Notices {
 					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
 					__( 'To protect them, you must add this <a href="https://easydigitaldownloads.com/docs/download-files-not-protected-on-nginx/">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
 					/* translators: %s: Dismiss notice URL */
-					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
+					sprintf(
+						wp_kses(
+							__( 'If you have already done this, or it does not apply to your site, you may permanently <a href="%s">dismiss this notice</a>.', 'easy-digital-downloads' ), 
+							array(
+								'a' => array(
+									'href' => array(),
+								)
+							)
+						),
+						$dismiss_notice_url
+					)
 				)
 			) );
 		}
