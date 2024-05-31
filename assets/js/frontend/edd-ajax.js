@@ -403,6 +403,8 @@ jQuery( document ).ready( function( $ ) {
 				$( '.edd_errors' ).remove();
 				$( '.edd-error' ).hide();
 				$( eddPurchaseform ).submit();
+
+				$( document.body ).trigger( 'edd_checkout_success', [ data ] );
 			} else {
 				$( '#edd-purchase-button' ).val( complete_purchase_val );
 				$( '.edd-loading-ajax' ).remove();
