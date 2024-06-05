@@ -607,7 +607,7 @@ function edd_purchase_form_validate_guest_user() {
 	// Check email
 	if ( $guest_email && strlen( $guest_email ) > 0 ) {
 		// Validate email
-		if ( ! is_email( $guest_email ) ) {
+        if ( ! is_email( $guest_email ) || filter_var($guest_email, FILTER_VALIDATE_EMAIL) === false ) {
 			// Invalid email
 			edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 		} else {
