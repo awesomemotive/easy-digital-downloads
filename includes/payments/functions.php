@@ -1706,6 +1706,8 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
     if ( false !== $stats )
         return $stats;
 
+    $stats = [];
+
     $where = 'WHERE comment_type != "edd_payment_note"';
 
     if ( $post_id > 0 )
