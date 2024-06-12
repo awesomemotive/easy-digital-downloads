@@ -258,13 +258,13 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
-		return array(
+		return apply_filters( 'edd_customers_table_sortable_columns', (
 			'date_created'  => array( 'date_created',   true  ),
 			'name'          => array( 'name',           true  ),
 			'email'         => array( 'email',          true  ),
 			'order_count'   => array( 'purchase_count', false ),
 			'spent'         => array( 'purchase_value', false )
-		);
+		) );
 	}
 
 	/**
