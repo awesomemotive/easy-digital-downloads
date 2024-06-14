@@ -774,8 +774,8 @@ class EDD_Download {
 		$price_assignments = $price_assignments[0];
 
 		foreach ( $price_assignments as $key => $value ) {
-			if ( isset( $bundled_downloads[ $key ] ) && ( $value == $price_id || $value == 'all' ) ) {
-				$downloads[] = $bundled_downloads[ $key ];
+			if ( isset( $bundled_downloads[ $key - 1 ] ) && ( $value == $price_id || $value == 'all' ) ) {
+				$downloads[] = $bundled_downloads[ $key - 1 ];
 			}
 		}
 
