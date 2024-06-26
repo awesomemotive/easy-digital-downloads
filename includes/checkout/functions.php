@@ -21,6 +21,12 @@ defined( 'ABSPATH' ) || exit;
 function edd_is_checkout() {
 	global $wp_query;
 
+	static $edd_is_checkout = null;
+
+	if( is_bool( $edd_is_checkout ) ) {
+		return $edd_is_checkout;
+	}
+
 	$is_object_set    = isset( $wp_query->queried_object );
 	$is_object_id_set = isset( $wp_query->queried_object_id );
 	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
@@ -42,7 +48,9 @@ function edd_is_checkout() {
 		}
 	}
 
-	return apply_filters( 'edd_is_checkout', $is_checkout );
+	$edd_is_checkout = apply_filters( 'edd_is_checkout', $is_checkout );
+
+	return $edd_is_checkout;
 }
 
 /**
