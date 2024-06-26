@@ -23,7 +23,7 @@ function edd_is_checkout() {
 
 	static $edd_is_checkout = null;
 
-	if( is_bool( $edd_is_checkout ) ) {
+	if( did_action( 'template_redirect' ) && is_bool( $edd_is_checkout ) ) {
 		return $edd_is_checkout;
 	}
 
