@@ -24,6 +24,12 @@ defined( 'ABSPATH' ) || exit;
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
 
+	static $cached_options = array();
+
+	if( isset( $cached_options[ $key ] ) ) {
+		return $cached_options[ $key ];
+    	}
+
 	$value = $default;
 
 	if ( isset( $edd_options[ $key ] ) ) {
@@ -36,7 +42,9 @@ function edd_get_option( $key = '', $default = false ) {
 
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 
-	return apply_filters( 'edd_get_option_' . $key, $value, $key, $default );
+	$cached_options[ $key ] = apply_filters( 'edd_get_option_' . $key, $value, $key, $default );
+
+	return $cached_options[ $key ];
 }
 
 /**
