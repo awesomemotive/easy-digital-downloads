@@ -112,7 +112,12 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	public function get_percentage_complete() {
 
 		$payments = $this->get_stored_data( 'edd_recount_customer_payments_' . $this->customer_id );
-		$total       = count( $payments );
+
+        if (!is_array($payments)) {
+            $payments = [];
+        }
+
+		$total = count( $payments );
 
 		$percentage = 100;
 
