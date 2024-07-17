@@ -94,7 +94,7 @@ function maybe_refund_transaction( \EDD_Payment $payment ) {
 		refund_transaction( $payment );
 	} catch ( \Exception $e ) {
 		edd_insert_payment_note( $payment->ID, sprintf(
-		/* Translators: %s - The error message */
+		/* translators: %s: The error message */
 			__( 'Failed to refund transaction in PayPal. Error Message: %s', 'easy-digital-downloads' ),
 			$e->getMessage()
 		) );

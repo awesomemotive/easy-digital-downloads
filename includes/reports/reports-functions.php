@@ -191,9 +191,21 @@ function get_reports() {
  * @return string The active report, or the 'overview' report if no view defined
  */
 function get_current_report() {
+	/**
+	 * Filters the default report view.
+	 *
+	 * Due to the reports being registered later on, we cannot validate this, however, the reports do gracefully fail
+	 * and redirect the user back to the `overview` report if someone supplies a bad value in the filter.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param string $default_report_view The default report view.
+	 */
+	$default_report_view = apply_filters( 'edd_default_report_view', 'overview' );
+
 	return isset( $_REQUEST['view'] )
 		? sanitize_key( $_REQUEST['view'] )
-		: 'overview'; // Hardcoded default
+		: $default_report_view;
 }
 
 /** Endpoints *****************************************************************/
@@ -391,8 +403,33 @@ function get_filter_value( $filter ) {
 	switch ( $filter ) {
 		// Handle dates.
 		case 'dates':
-			$default_range          = 'this_month';
-			$default_relative_range = 'previous_period';
+			/**
+			 * Default date range.
+			 *
+			 * @since 3.3.0
+			 *
+			 * @param string $default_range Default date range.
+			 */
+			$default_range = apply_filters( 'edd_reports_default_date_range', 'this_month' );
+
+			// If the default range is not valid, default to 'this_month'.
+			if ( ! array_key_exists( $default_range, get_dates_filter_options() ) ) {
+				$default_range = 'this_month';
+			}
+
+			/**
+			 * Default relative date range.
+			 *
+			 * @since 3.3.0
+			 *
+			 * @param string $default_relative_range Default relative date range.
+			 */
+			$default_relative_range = apply_filters( 'edd_reports_default_relative_date_range', 'previous_period' );
+
+			// If the default relative range is not valid, default to 'previous_period'.
+			if ( ! array_key_exists( $default_relative_range, get_relative_dates_filter_options() ) ) {
+				$default_relative_range = 'previous_period';
+			}
 
 			if ( ! isset( $_GET['range'] ) ) {
 				$dates   = parse_dates_for_range( $default_range );
@@ -1277,7 +1314,13 @@ function default_display_charts_group( $report ) {
 	}
 	?>
 		<div class="chart-timezone">
-			<?php printf( esc_html__( 'Chart time zone: %s', 'easy-digital-downloads' ), esc_html( edd_get_timezone_id() ) ); ?>
+			<?php
+			printf(
+				/* translators: %s: Timezone ID */
+				esc_html__( 'Chart time zone: %s', 'easy-digital-downloads' ),
+				esc_html( edd_get_timezone_id() )
+			);
+			?>
 		</div>
 	</div>
 	<?php
@@ -1641,9 +1684,13 @@ function display_currency_filter() {
 
 	$all_currencies = array_intersect_key( edd_get_currencies(), array_flip( $order_currencies ) );
 	if ( array_key_exists( edd_get_currency(), $all_currencies ) ) {
-		$all_currencies = array_merge( array(
-			'convert' => sprintf( __( '%s - Converted', 'easy-digital-downloads' ), $all_currencies[ edd_get_currency() ] )
-		), $all_currencies );
+		$all_currencies = array_merge(
+			array(
+				/* translators: %s: Default currency of the store, in standard 3 character format (example: USD or EUR) */
+				'convert' => sprintf( __( '%s - Converted', 'easy-digital-downloads' ), $all_currencies[ edd_get_currency() ] ),
+			),
+			$all_currencies
+		);
 	}
 	?>
 	<span class="edd-graph-filter-options graph-option-section">

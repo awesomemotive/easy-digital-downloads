@@ -10,6 +10,7 @@
 
 namespace EDD\Telemetry;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**

@@ -2,9 +2,23 @@
 
 namespace EDD\Admin\Extensions;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use EDD\Admin\Pass_Manager;
 
+/**
+ * Extensions API clas.
+ */
 class ExtensionsAPI {
+
+	/**
+	 * The pass manager.
+	 *
+	 * @since 3.3.0
+	 * @var Pass_Manager
+	 */
+	private $pass_manager;
 
 	/**
 	 * Gets the product data from the EDD Products API.
@@ -107,7 +121,7 @@ class ExtensionsAPI {
 		$extended_pass   = array();
 		$pro_pass        = array();
 		$all_access_pass = array();
-		$pass_manager    = new Pass_Manager();
+		$pass_manager    = $this->get_pass_manager();
 		foreach ( $all_product_data as $item_id => $item ) {
 			if ( ! empty( $item->categories ) ) {
 				if ( ! in_array( 1592, $item->categories, true ) ) {
@@ -136,7 +150,7 @@ class ExtensionsAPI {
 	 * Gets the pass ID required to be able to install the extension.
 	 *
 	 * @since 3.2.2
-	 * @param array $categories          The extension categories.
+	 * @param array        $categories   The extension categories.
 	 * @param Pass_Manager $pass_manager The pass manager.
 	 * @return string
 	 */
@@ -218,6 +232,11 @@ class ExtensionsAPI {
 	 * @return array
 	 */
 	private function get_item_data( $item ) {
+
+		if ( ! isset( $item->pass_id ) ) {
+			$pass_manager  = $this->get_pass_manager();
+			$item->pass_id = $this->get_pass_id( $item->categories, $pass_manager );
+		}
 
 		return array(
 			'title'       => ! empty( $item->title ) ? $item->title : '',
@@ -310,5 +329,19 @@ class ExtensionsAPI {
 	 */
 	private function option_has_expired( $option ) {
 		return empty( $option['timeout'] ) || time() > $option['timeout'];
+	}
+
+	/**
+	 * Gets the pass manager.
+	 *
+	 * @since 3.3.0
+	 * @return Pass_Manager
+	 */
+	private function get_pass_manager() {
+		if ( is_null( $this->pass_manager ) ) {
+			$this->pass_manager = new Pass_Manager();
+		}
+
+		return $this->pass_manager;
 	}
 }

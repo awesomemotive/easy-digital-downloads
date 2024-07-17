@@ -31,7 +31,7 @@
 				<?php
 				echo wp_kses(
 					sprintf(
-					/* Translators: %s - number of notifications */
+					/* translators: %s: number of notifications */
 						__( '(%s) New Notifications', 'easy-digital-downloads' ),
 						'<span x-text="$store.eddNotifications.numberActiveNotifications"></span>'
 					),

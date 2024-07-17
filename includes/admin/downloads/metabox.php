@@ -29,8 +29,8 @@ function edd_add_download_meta_box() {
 		add_meta_box(
 			'edd_product_prices',
 			sprintf(
-				// translators: %1$s is the singular label.
-				__( '%1$s Details', 'easy-digital-downloads' ),
+				/* translators: %s: Download singular label */
+				__( '%s Details', 'easy-digital-downloads' ),
 				edd_get_label_singular(),
 			),
 			'edd_render_download_meta_box',
@@ -43,8 +43,8 @@ function edd_add_download_meta_box() {
 		add_meta_box(
 			'edd_product_files',
 			sprintf(
-				// translators: %1$s is the singular label.
-				__( '%1$s Files', 'easy-digital-downloads' ),
+				/* translators: %s: Download singular label */
+				__( '%s Files', 'easy-digital-downloads' ),
 				edd_get_label_singular(),
 			),
 			'edd_render_files_meta_box',
@@ -57,8 +57,8 @@ function edd_add_download_meta_box() {
 		add_meta_box(
 			'edd_product_settings',
 			sprintf(
-				// translators: %1$s is the singular label.
-				__( '%1$s Settings', 'easy-digital-downloads' ),
+				/* translators: %s: Download singular label */
+				__( '%s Settings', 'easy-digital-downloads' ),
 				edd_get_label_singular(),
 			),
 			'edd_render_settings_meta_box',
@@ -71,8 +71,8 @@ function edd_add_download_meta_box() {
 		add_meta_box(
 			'edd_product_notes',
 			sprintf(
-				// translators: %1$s is the singular label.
-				__( '%1$s Instructions', 'easy-digital-downloads' ),
+				/* translators: %s: Download singular label */
+				__( '%s Instructions', 'easy-digital-downloads' ),
 				edd_get_label_singular(),
 			),
 			'edd_render_product_notes_meta_box',
@@ -86,8 +86,8 @@ function edd_add_download_meta_box() {
 			add_meta_box(
 				'edd_product_stats',
 				sprintf(
-					// translators: %1$s is the singular label.
-					__( '%1$s Stats', 'easy-digital-downloads' ),
+					/* translators: %s: Download singular label */
+					__( '%s Stats', 'easy-digital-downloads' ),
 					edd_get_label_singular(),
 				),
 				'edd_render_stats_meta_box',
@@ -567,7 +567,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
 			<?php
 			printf(
-				// translators: %s is the price ID.
+				/* translators: %s: price ID. */
 				__( 'Price ID: %s', 'easy-digital-downloads' ),
 				'<span class="edd_price_id">' . esc_html( $key ) . '</span>'
 			);
@@ -584,11 +584,11 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 		}
 
 		$actions['remove'] = sprintf(
-			// translators: %1$s is the remove link, %2$s is the screen reader text.
+			/* translators: %1$s is the remove link, %2$s is the screen reader text. */
 			'<a class="edd-remove-row edd-delete" data-type="price">%1$s<span class="screen-reader-text">%2$s</span></a>',
 			__( 'Remove', 'easy-digital-downloads' ),
 			sprintf(
-				// translators: %s is the price ID.
+				/* translators: %s: price ID. */
 				__( 'Remove price option %s', 'easy-digital-downloads' ),
 				esc_html( $key )
 			)
@@ -666,7 +666,7 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 			?>
 			<span class="screen-reader-text">
 				<?php
-				// translators: %s is the price ID.
+				/* translators: %s: price ID. */
 				printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key );
 				?>
 			</span>
@@ -829,7 +829,7 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order files', 'easy-digital-downloads' ); ?>">
 			<?php
 			printf(
-				// translators: %1$s is the singular label, %2$s is the file ID.
+				/* translators: %1$s is the singular label, %2$s is the file ID. */
 				esc_html__( '%1$s file ID: %2$s', 'easy-digital-downloads' ),
 				esc_html( edd_get_label_singular() ),
 				'<span class="edd_file_id">' . esc_html( $key ) . '</span>'
@@ -847,7 +847,7 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 				<?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?>
 				<span class="screen-reader-text">
 					<?php
-					// translators: %s is the file ID.
+					/* translators: %s: file ID. */
 					printf( esc_html__( 'Remove file %s', 'easy-digital-downloads' ), esc_html( $key ) );
 					?>
 				</span>
@@ -965,7 +965,7 @@ function edd_download_media_strings( $strings ) {
 	$downloads_object = get_post_type_object( 'download' );
 	$labels           = $downloads_object->labels;
 
-	// translators: %s is the singular label for downloads, in lowercase form.
+	/* translators: %s: Download singular label, in lowercase form. */
 	$strings['insertIntoPost'] = sprintf( __( 'Insert into %s', 'easy-digital-downloads' ), strtolower( $labels->singular_name ) );
 
 	return $strings;
@@ -1023,9 +1023,9 @@ function edd_render_refund_row( $post_id ) {
 					// Manually define a "none" option to set a blank value, vs. -1.
 						array(
 							'' => sprintf(
-							/* translators: Default refund status */
-								esc_html_x( 'Default (%1$s)', 'Download refund status', 'easy-digital-downloads' ),
-								ucwords( $global_ability )
+								/* translators: %s: Default refund status */
+								esc_html_x( 'Default (%s)', 'Download refund status', 'easy-digital-downloads' ),
+								$types[ $global_ability ],
 							),
 						),
 						$types
@@ -1226,7 +1226,7 @@ function edd_render_meta_box_shortcode() {
 	$style         = edd_get_option( 'button_style', 'button' );
 	$color         = edd_get_button_color_class();
 	$shortcode     = sprintf(
-		// translators: %1$d is the download ID, %2$s is the purchase text, %3$s is the button style, %4$s is the button color.
+		/* translators: %1$d is the download ID, %2$s is the purchase text, %3$s is the button style, %4$s is the button color. */
 		'[purchase_link id="%1$d" text="%2$s" style="%3$s" color="%4$s"]',
 		absint( get_the_ID() ),
 		esc_html( $purchase_text ),
@@ -1432,7 +1432,7 @@ function edd_render_product_notes_field( $post_id ) {
 		<p>
 			<?php
 			printf(
-				// translators: %s is the singular label.
+				/* translators: %s: singular label. */
 				esc_html__( 'Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ),
 				edd_get_label_singular()
 			);

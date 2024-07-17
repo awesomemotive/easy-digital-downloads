@@ -59,6 +59,21 @@ function edds_process_purchase_form( $purchase_data ) {
 			throw new \EDD_Stripe_Gateway_Exception( edd_stripe()->rate_limiting->get_rate_limit_error_message() );
 		}
 
+		$payment_method = false;
+		if ( ! empty( $_REQUEST['payment_method'] ) && is_array( $_REQUEST['payment_method'] ) ) {
+			$payment_method = $_REQUEST['payment_method'];
+		}
+
+		if ( empty( $payment_method ) ) {
+			throw new \EDD_Stripe_Gateway_Exception(
+				esc_html__(
+					'Error 1008: An error occurred, but your payment may have gone through. Please contact the site administrator.',
+					'easy-digital-downloads'
+				),
+				'No payment method provided.'
+			);
+		}
+
 		/**
 		 * Allows processing before an Intent is created.
 		 *
@@ -144,8 +159,8 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		// Shared Intent arguments.
 		$intent_args = array(
-			'customer' => $customer->id,
-			'metadata' => array(
+			'customer'                  => $customer->id,
+			'metadata'                  => array(
 				'email'                => esc_html( $purchase_data['user_info']['email'] ),
 				'edd_payment_subtotal' => esc_html( $purchase_data['subtotal'] ),
 				'edd_payment_discount' => esc_html( $purchase_data['discount'] ),
@@ -156,15 +171,9 @@ function edds_process_purchase_form( $purchase_data ) {
 				'edd_payment_items'    => esc_html( implode( ', ', $payment_items ) ),
 				'zero_decimal_amount'  => $amount,
 			),
+			'payment_method'            => sanitize_text_field( $payment_method['id'] ),
+			'automatic_payment_methods' => array( 'enabled' => true ),
 		);
-
-		$payment_method = $_REQUEST['payment_method'];
-
-		// Attach the payment method.
-		$intent_args['payment_method'] = sanitize_text_field( $payment_method['id'] );
-
-		// Set to automatic payment methods so any of the supported methods can be used here.
-		$intent_args['automatic_payment_methods'] = array( 'enabled' => true );
 
 		// We need the intent type later, so we'll set it here.
 		$intent_type = ( edds_is_preapprove_enabled() || 0 === $amount ) ? 'SetupIntent' : 'PaymentIntent';
@@ -335,15 +344,18 @@ function edds_process_purchase_form( $purchase_data ) {
 			)
 		);
 
-	} catch ( \Stripe\Exception\ApiErrorException $e ) {
+	} catch ( \EDD\Vendor\Stripe\Exception\ApiErrorException $e ) {
 		$error = $e->getJsonBody()['error'];
+		$data  = $purchase_data;
+		unset( $data['card_info'] );
 
 		// Record error in log.
 		edd_record_gateway_error(
 			esc_html__( 'Stripe Error 002', 'easy-digital-downloads' ),
 			sprintf(
+				/* translators: %s: Error message */
 				esc_html__( 'There was an error while processing a Stripe payment. Order data: %s', 'easy-digital-downloads' ),
-				wp_json_encode( $error )
+				wp_json_encode( $data )
 			),
 			0
 		);
@@ -351,7 +363,7 @@ function edds_process_purchase_form( $purchase_data ) {
 		return wp_send_json_error(
 			array(
 				'message' => esc_html(
-					edds_get_localized_error_message( $error['code'], $error['message'] )
+					edds_get_localized_error_message( $error['type'], $error['message'] )
 				),
 			)
 		);
@@ -459,6 +471,15 @@ function edds_create_and_complete_order() {
 			);
 		}
 
+		if ( empty( $purchase_data['user_email'] ) && ! empty( $purchase_data['user_info']['email'] ) ) {
+			$purchase_data['user_email'] = $purchase_data['user_info']['email'];
+		}
+
+		// If the user email is not set, but the Intent has an email in the billing details, use that.
+		if ( empty( $purchase_data['user_email'] ) && ! empty( $intent->billing_details ) && ! empty( $intent->billing_details->email ) ) {
+			$purchase_data['user_email'] = $intent->billing_details->email;
+		}
+
 		$order_data = array(
 			'price'        => $purchase_data['price'],
 			'date'         => $purchase_data['date'],
@@ -473,7 +494,7 @@ function edds_create_and_complete_order() {
 		);
 
 		// Ensure $_COOKIE is available without a new HTTP request.
-		if ( class_exists( 'EDD_Auto_Register' ) ) {
+		if ( EDD\Checkout\AutoRegister::is_enabled() ) {
 			add_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
 			add_filter( 'edd_get_option_edd_auto_register_complete_orders_only', '__return_false' );
 		}
@@ -487,7 +508,7 @@ function edds_create_and_complete_order() {
 					'Error 1006: An error occurred, but your payment may have gone through. Please contact the site administrator.',
 					'easy-digital-downloads'
 				),
-				'Unable to insert order record.'
+				'Unable to insert order record. (1006)'
 			);
 		}
 
@@ -606,7 +627,7 @@ function edds_create_and_complete_order() {
 			$edd_customer->update_meta( edd_stripe_get_customer_key(), $intent->customer );
 		}
 
-		if ( class_exists( 'EDD_Auto_Register' ) ) {
+		if ( EDD\Checkout\AutoRegister::is_enabled() ) {
 			remove_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
 		}
 
@@ -715,7 +736,7 @@ function edds_create_and_complete_order() {
 					'Error 1007: An error occurred completing the order, but your payment may have gone through. Please contact the site administrator.',
 					'easy-digital-downloads'
 				),
-				'Unable to insert order record.'
+				'Unable to insert order record. (1007)'
 			);
 		}
 

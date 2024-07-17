@@ -242,7 +242,7 @@ function edd_load_dashboard_sales_widget( ) {
 						$item_count    = edd_count_order_items( array( 'order_id' => $order->id ) );
 						echo wp_kses_post(
 							sprintf(
-								/* translators: 1. customer name; 2. number of items purchased; 3. order total */
+								/* translators: 1: customer name, 2: number of items purchased, 3: order total */
 								_n(
 									'%1$s purchased %2$s item for <strong>%3$s</strong>',
 									'%1$s purchased %2$s items for <strong>%3$s</strong>',
@@ -291,7 +291,6 @@ add_action( 'wp_ajax_edd_load_dashboard_widget', 'edd_load_dashboard_sales_widge
 /**
  * Add download count to At a glance widget
  *
- * @author Daniel J Griffiths
  * @since 2.1
  * @return void
  */
@@ -299,14 +298,25 @@ function edd_dashboard_at_a_glance_widget( $items ) {
 	$num_posts = wp_count_posts( 'download' );
 
 	if ( $num_posts && $num_posts->publish ) {
-		$text = _n( '%s ' . edd_get_label_singular(), '%s ' . edd_get_label_plural(), $num_posts->publish, 'easy-digital-downloads' );
-
-		$text = sprintf( $text, number_format_i18n( $num_posts->publish ) );
+		if ( 1 === $num_posts->publish ) {
+			$text = sprintf(
+				/* translators: %s: Download label singular */
+				__( '1 %s', 'easy-digital-downloads' ),
+				edd_get_label_singular()
+			);
+		} else {
+			$text = sprintf(
+				/* translators: 1: Number of downloads, 2: Download label plural */
+				__( '%1$d %2$s', 'easy-digital-downloads' ),
+				number_format_i18n( $num_posts->publish ),
+				edd_get_label_plural()
+			);
+		}
 
 		if ( current_user_can( 'edit_products' ) ) {
-			$text = sprintf( '<a class="download-count" href="edit.php?post_type=download">%1$s</a>', $text );
+			$text = '<a class="download-count" href="edit.php?post_type=download">' . $text . '</a>';
 		} else {
-			$text = sprintf( '<span class="download-count">%1$s</span>', $text );
+			$text = '<span class="download-count">' . $text . '</span>';
 		}
 
 		$items[] = $text;

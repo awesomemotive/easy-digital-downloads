@@ -7,10 +7,19 @@
  * @license   GPL2+
  * @since     3.1.1
  */
+
 namespace EDD\Telemetry;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 use EDD\Licensing\License;
 
+/**
+ * Class Licenses
+ *
+ * @since 3.1.1
+ */
 class Licenses {
 
 	/**
@@ -72,7 +81,7 @@ class Licenses {
 	 * Gets the license status.
 	 *
 	 * @since 3.1.2
-	 * @param \EDD\Licensing\License $license
+	 * @param \EDD\Licensing\License $license The license object.
 	 * @return string
 	 */
 	private function get_license_status( $license ) {

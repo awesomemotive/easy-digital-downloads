@@ -107,7 +107,7 @@ const EDD_Stripe_Connect_Scripts = {
 			return;
 		}
 
-		element.className = 'notice notice-' + type;
+		element.className = 'notice inline notice-' + type;
 	},
 
 	hideNotice( element = false ) {

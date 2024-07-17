@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Hooks into the WP heartbeat API to update various parts of the dashboard as new sales are made
  *
  * Dashboard components that are effect:
- *	- Dashboard Summary Widget
+ *  - Dashboard Summary Widget
  *
  * @since 1.8
  */
@@ -44,11 +44,12 @@ class EDD_Heartbeat {
 	 */
 	public static function heartbeat_received( $response, $data ) {
 
+		// Only proceed if the current user can view shop reports.
 		if ( ! current_user_can( 'view_shop_reports' ) ) {
-			return $response; // Only modify heartbeat if current user can view show reports
+			return $response;
 		}
 
-		// Make sure we only run our query if the edd_heartbeat key is present
+		// Make sure we only run our query if the edd_heartbeat key is present.
 		if ( ( isset( $data['edd_heartbeat'] ) ) && ( 'dashboard_summary' === $data['edd_heartbeat'] ) ) {
 
 			$stats                          = edd_get_dashboard_sales_widget_data();
@@ -61,7 +62,6 @@ class EDD_Heartbeat {
 		}
 
 		return $response;
-
 	}
 
 	/**
@@ -72,8 +72,8 @@ class EDD_Heartbeat {
 	 */
 	public static function enqueue_scripts() {
 
-		if( ! current_user_can( 'view_shop_reports' ) ) {
-			return; // Only load heartbeat if current user can view show reports
+		if ( ! self::can_do_heartbeat() ) {
+			return;
 		}
 
 		// Make sure the JS part of the Heartbeat API is loaded.
@@ -88,15 +88,8 @@ class EDD_Heartbeat {
 	 * @return array
 	 */
 	public static function footer_js() {
-		global $pagenow;
-
-		// Only proceed if on the dashboard
-		if( 'index.php' != $pagenow ) {
+		if ( ! self::can_do_heartbeat() ) {
 			return;
-		}
-
-		if( ! current_user_can( 'view_shop_reports' ) ) {
-			return; // Only load heartbeat if current user can view show reports
 		}
 
 		?>
@@ -145,5 +138,23 @@ class EDD_Heartbeat {
 		</script>
 		<?php
 	}
+
+	/**
+	 * Check if we can do the heartbeat.
+	 *
+	 * @since 3.3.0
+	 * @return bool
+	 */
+	private static function can_do_heartbeat() {
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		if ( ! edd_is_admin_page( 'index.php' ) ) {
+			return false;
+		}
+
+		return current_user_can( 'view_shop_reports' );
+	}
 }
-add_action( 'plugins_loaded', array( 'EDD_Heartbeat', 'init' ) );
+add_action( 'admin_init', array( 'EDD_Heartbeat', 'init' ) );

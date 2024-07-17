@@ -7,7 +7,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * @group edd_misc
  * @group edd_functions
  */
-class Test_Misc extends EDD_UnitTestCase {
+class Misc extends EDD_UnitTestCase {
 
 	/**
 	 * Download fixture.
@@ -17,7 +17,9 @@ class Test_Misc extends EDD_UnitTestCase {
 	/**
 	 * Set up fixtures once.
 	 */
-	public static function wpSetUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
+		parent::setUpBeforeClass();
+
 		self::$download = Helpers\EDD_Helper_Download::create_simple_download();
 	}
 

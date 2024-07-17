@@ -128,7 +128,6 @@ class EDD_Stripe {
 				break;
 		}
 
-		require_once EDDS_PLUGIN_DIR . '/includes/webhooks.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/scripts.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/template-functions.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/class-edd-stripe-rate-limiting.php';
@@ -172,7 +171,7 @@ class EDD_Stripe {
 			require_once EDDS_PLUGIN_DIR . '/includes/integrations/edd-all-access.php';
 		}
 
-		if ( class_exists( 'EDD_Auto_Register' ) ) {
+		if ( EDD\Checkout\AutoRegister::is_enabled() ) {
 			require_once EDDS_PLUGIN_DIR . '/includes/integrations/edd-auto-register.php';
 		}
 	}

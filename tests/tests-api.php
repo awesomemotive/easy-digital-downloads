@@ -208,6 +208,11 @@ class Tests_API extends EDD_UnitTestCase {
 		self::$api->flush_api_output();
 	}
 
+	public static function tearDownAfterClass(): void {
+		parent::tearDownAfterClass();
+		unset( $_SERVER['REMOTE_ADDR'] );
+	}
+
 	public function test_endpoints() {
 		global $wp_rewrite;
 

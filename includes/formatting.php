@@ -152,12 +152,12 @@ function edd_format_amount( $amount = 0, $decimals = true, $currency = '', $cont
  */
 function edd_currency_filter( $price = '', $currency = '' ) {
 
-	// Fallback to default currency
+	// Fallback to default currency.
 	if ( empty( $currency ) ) {
 		$currency = edd_get_currency();
 	}
 
-	$currency = new \EDD\Currency\Currency( $currency );
+	$currency = new \EDD\Currency\Currency( esc_html( $currency ) );
 	if ( '' === $price ) {
 		return $currency->symbol;
 	}

@@ -266,8 +266,10 @@ function edd_add_download_filters() {
 				'options'          => $options,
 				'selected'         => $selected,
 				'data'             => array(
+					/* translators: %s: Download Category taxonomy name */
 					'placeholder'        => sprintf( _x( 'Search %s', 'plural: Example: "Search Download Categories"', 'easy-digital-downloads' ), $category_labels['name'] ),
 					'search-type'        => 'download_category',
+					/* translators: %s: Download Category taxonomy name */
 					'search-placeholder' => sprintf( _x( 'Search %s', 'plural: Example: "Search Download Categories"', 'easy-digital-downloads' ), $category_labels['name'] ),
 				),
 			)
@@ -322,6 +324,7 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 
 	<fieldset class="inline-edit-col-left">
 		<div id="edd-download-data" class="inline-edit-col">
+			<?php /* translators: %s: Download singular label */ ?>
 			<h4><?php echo sprintf( __( '%s Configuration', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></h4>
 			<label>
 				<span class="title"><?php _e( 'Price', 'easy-digital-downloads' ); ?></span>

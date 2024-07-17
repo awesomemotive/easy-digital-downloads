@@ -92,7 +92,14 @@ function edd_upgrades_screen() {
 				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?></p>
 
 				<?php if ( ! empty( $total ) ) : ?>
-					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'easy-digital-downloads' ), $step, $steps ); ?></strong></p>
+					<p>
+						<strong>
+							<?php
+							/* translators: 1: Step number, %2$d: Total steps */
+							printf( __( 'Step %1$d of approximately %2$d running', 'easy-digital-downloads' ), $step, $steps );
+							?>
+						</strong>
+					</p>
 				<?php endif; ?>
 			</div>
 			<script type="text/javascript">

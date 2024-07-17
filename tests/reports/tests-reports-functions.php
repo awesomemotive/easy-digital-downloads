@@ -36,6 +36,7 @@ class Functions extends EDD_UnitTestCase {
 	 * Runs after every test method.
 	 */
 	public function tearDown(): void {
+		unset( $_REQUEST['view'] );
 		unset( $_REQUEST['filter_from'] );
 		unset( $_REQUEST['filter_to'] );
 		unset( $_REQUEST['range'] );
@@ -54,6 +55,22 @@ class Functions extends EDD_UnitTestCase {
 		$_REQUEST['view'] = 'overview';
 
 		$this->assertSame( 'overview', Reports\get_current_report() );
+	}
+
+	/**
+	 * @covers \EDD\Reports\get_current_report()
+	 */
+	public function test_get_current_report_should_default_to_overview() {
+		$this->assertSame( 'overview', Reports\get_current_report() );
+	}
+
+	/**
+	 * @covers \EDD\Reports\get_current_report()
+	 */
+	public function test_get_current_report_should_respect_filter() {
+		add_filter( 'edd_default_report_view', array( $this, 'filter_default_report_to_customers' ), 10, 1 );
+		$this->assertSame( 'customers', Reports\get_current_report() );
+		remove_filter( 'edd_default_report_view', array( $this, 'filter_default_report_to_customers' ), 10, 1 );
 	}
 
 	/**
@@ -317,6 +334,46 @@ class Functions extends EDD_UnitTestCase {
 		$_GET['filter_to']      = $expected['to'];
 
 		$this->assertEqualSetsWithIndex( $expected, Reports\get_filter_value( 'dates' ) );
+	}
+
+	public function test_get_filter_value_with_a_valid_filter_should_retrieve_that_filters_value_filter_default() {
+		add_filter( 'edd_reports_default_date_range', function() { return 'last_30_days'; }, 10, 1 );
+		add_filter( 'edd_reports_default_relative_date_range', function() { return 'previous_year'; }, 10, 1 );
+
+		$expected = array(
+			'from'           => date( 'Y-m-d', strtotime( '-30 days') ),
+			'to'             => date( 'Y-m-d' ),
+			'range'          => 'last_30_days',
+			'relative_range' => 'previous_year',
+		);
+
+		$_GET['filter_from']    = $expected['from'];
+		$_GET['filter_to']      = $expected['to'];
+
+		$this->assertEqualSetsWithIndex( $expected, Reports\get_filter_value( 'dates' ) );
+
+		remove_filter( 'edd_reports_default_date_range', function() { return 'last_30_days'; }, 10, 1 );
+		remove_filter( 'edd_reports_default_relative_date_range', function() { return 'previous_year'; }, 10, 1 );
+	}
+
+	public function test_get_filter_value_with_an_invalid_filter_should_retrieve_revert_to_core_default() {
+		add_filter( 'edd_reports_default_date_range', function() { return 'foo'; }, 10, 1 );
+		add_filter( 'edd_reports_default_relative_date_range', function() { return 'bar'; }, 10, 1 );
+
+		$expected = array(
+			'from'           => date( 'Y-m-d', strtotime( 'first day of this month' ) ),
+			'to'             => date( 'Y-m-d' ),
+			'range'          => 'this_month',
+			'relative_range' => 'previous_period',
+		);
+
+		$_GET['filter_from']    = $expected['from'];
+		$_GET['filter_to']      = $expected['to'];
+
+		$this->assertEqualSetsWithIndex( $expected, Reports\get_filter_value( 'dates' ) );
+
+		remove_filter( 'edd_reports_default_date_range', function() { return 'foo'; }, 10, 1 );
+		remove_filter( 'edd_reports_default_relative_date_range', function() { return 'bar'; }, 10, 1 );
 	}
 
 	/**
@@ -916,5 +973,13 @@ class Functions extends EDD_UnitTestCase {
 		$dates['end']   = $dates['end']->toDateTimeString();
 
 		return $dates;
+	}
+
+	public function filter_default_report_to_customers() {
+		return 'customers';
+	}
+
+	public function filter_default_report_to_fake() {
+		return 'fake';
 	}
 }

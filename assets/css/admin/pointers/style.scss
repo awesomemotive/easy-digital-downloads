@@ -1,0 +1,35 @@
+@import "../../variables/variables";
+
+$pointer-blue: #2271b1;
+
+.edd-pointer {
+	&.warning {
+		& h3 {
+			background: $alert-yellow;
+			border-color: $wp-yellow-50;
+			color: $gray-900;
+
+			&:before {
+				color: $alert-yellow;
+			}
+		}
+	}
+
+	&.edd-has-action p:last-of-type {
+		margin-bottom: 2em;
+	}
+
+	.edd-pointer-action {
+		position: absolute;
+		left: 15px;
+		bottom: 15px;
+		background: $pointer-blue;
+		border-color: $pointer-blue;
+
+		&:hover,
+		&:focus {
+			background: darken($pointer-blue, 10%);
+			border-color: darken($pointer-blue, 10%);
+		}
+	}
+}

@@ -10,8 +10,14 @@
 
 namespace EDD\Admin\Promos\Notices;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
 use EDD\Admin\Promos\PromoHandler;
 
+/**
+ * Abstract class for promotional notices.
+ */
 abstract class Notice {
 
 	/**
@@ -110,15 +116,39 @@ abstract class Notice {
 			data-id="<?php echo esc_attr( $this->get_id() ); ?>"
 			data-lifespan="<?php echo esc_attr( static::dismiss_duration() ); ?>"
 		>
-			<?php $this->_display(); ?>
-
-			<?php if ( static::DISMISSIBLE ) : ?>
-				<button class="button-link edd-promo-notice-dismiss">
-					&times;
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss notice', 'easy-digital-downloads' ); ?></span>
-				</button>
-			<?php endif; ?>
+			<?php
+			$this->_display();
+			$this->dismiss_button();
+			?>
 		</div>
+		<?php
+	}
+
+	/**
+	 * Gets the notice content for AJAX requests.
+	 *
+	 * @since 3.3.0
+	 * @return string
+	 */
+	public function get_ajax_content() {
+		return '';
+	}
+
+	/**
+	 * Renders the dismiss button for the notice.
+	 *
+	 * @since 3.3.0
+	 * @return void
+	 */
+	public function dismiss_button() {
+		if ( ! static::DISMISSIBLE ) {
+			return;
+		}
+		?>
+		<button class="button-link edd-promo-notice-dismiss">
+			&times;
+			<span class="screen-reader-text"><?php esc_html_e( 'Dismiss notice', 'easy-digital-downloads' ); ?></span>
+		</button>
 		<?php
 	}
 

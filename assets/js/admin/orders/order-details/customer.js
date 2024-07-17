@@ -43,11 +43,12 @@ jQueryReady( () => {
 	$( '.edd-payment-change-customer-input' ).trigger( 'change' );
 
 	// New Customer.
-	$( '#edd-customer-details' ).on( 'click', '.edd-payment-new-customer, .edd-payment-new-customer-cancel', function( e ) {
+	$( '.edd-order-customer__actions button' ).on( 'click', function( e ) {
 		e.preventDefault();
 
 		var new_customer = $( this ).hasClass( 'edd-payment-new-customer' ),
 			cancel = $( this ).hasClass( 'edd-payment-new-customer-cancel' );
+		$( this ).addClass( 'active' ).siblings().removeClass( 'active' );
 
 		if ( new_customer ) {
 			$( '.order-customer-info' ).hide();

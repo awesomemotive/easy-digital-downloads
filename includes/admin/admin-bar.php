@@ -89,7 +89,7 @@ function edd_maybe_add_store_mode_admin_bar_menu( $wp_admin_bar ) {
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'edd-store-menu',
 		'id'     => 'edd-store-prodcuts',
-		/* translators: plural downlaods label */
+		/* translators: %s: Downloads plural label */
 		'title'  => sprintf( __( 'All %1$s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 		'href'   => edd_get_admin_url(),
 	) );

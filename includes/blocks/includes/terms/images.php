@@ -128,7 +128,7 @@ class Images {
 				<p class="description">
 					<?php
 					printf(
-						/* translators: 1. name of the term */
+						/* translators: 1: name of the term */
 						esc_attr__( 'Set Term Image for %1$s.', 'easy-digital-downloads' ),
 						esc_attr( $term->name )
 					);

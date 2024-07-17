@@ -4,9 +4,6 @@ defined( 'ABSPATH' ) || exit;
 
 return array(
 	''   => '',
-	'US' => __( 'United States', 'easy-digital-downloads' ),
-	'CA' => __( 'Canada', 'easy-digital-downloads' ),
-	'GB' => __( 'United Kingdom', 'easy-digital-downloads' ),
 	'AF' => __( 'Afghanistan', 'easy-digital-downloads' ),
 	'AX' => __( '&#197;land Islands', 'easy-digital-downloads' ),
 	'AL' => __( 'Albania', 'easy-digital-downloads' ),
@@ -46,6 +43,7 @@ return array(
 	'BI' => __( 'Burundi', 'easy-digital-downloads' ),
 	'KH' => __( 'Cambodia', 'easy-digital-downloads' ),
 	'CM' => __( 'Cameroon', 'easy-digital-downloads' ),
+	'CA' => __( 'Canada', 'easy-digital-downloads' ),
 	'CV' => __( 'Cape Verde', 'easy-digital-downloads' ),
 	'KY' => __( 'Cayman Islands', 'easy-digital-downloads' ),
 	'CF' => __( 'Central African Republic', 'easy-digital-downloads' ),
@@ -242,6 +240,8 @@ return array(
 	'UG' => __( 'Uganda', 'easy-digital-downloads' ),
 	'UA' => __( 'Ukraine', 'easy-digital-downloads' ),
 	'AE' => __( 'United Arab Emirates', 'easy-digital-downloads' ),
+	'GB' => __( 'United Kingdom', 'easy-digital-downloads' ),
+	'US' => __( 'United States', 'easy-digital-downloads' ),
 	'UY' => __( 'Uruguay', 'easy-digital-downloads' ),
 	'UM' => __( 'US Minor Outlying Islands', 'easy-digital-downloads' ),
 	'UZ' => __( 'Uzbekistan', 'easy-digital-downloads' ),

@@ -46,6 +46,11 @@ class Registry extends EDD_UnitTestCase {
 	public function test_register_valid_email() {
 		\EDD\Emails\Registry::register( 'fake_email', 'EDD\Tests\Emails\ValidFakeEmail' );
 		$this->assertTrue( \EDD\Emails\Registry::is_registered( 'fake_email' ) );
+
+		$fake_email = new \EDD\Tests\Emails\ValidFakeEmail();
+		$this->assertInstanceOf( '\EDD\Emails\Email', $fake_email->email );
+		$this->assertEquals( 'fake_email', $fake_email->email->email_id );
+		$this->assertEmpty( $fake_email->email->is_enabled() );
 	}
 
 	/**

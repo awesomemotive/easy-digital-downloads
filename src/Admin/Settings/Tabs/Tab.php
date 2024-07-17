@@ -2,21 +2,19 @@
 /**
  * Easy Digital Downloads Settings Tabs
  *
- * @package EDD
+ * @package     EDD
  * @subpackage  Settings
  * @copyright   Copyright (c) 2023, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 3.1.4
+ * @since       3.1.4
  */
 
 namespace EDD\Admin\Settings\Tabs;
 
 defined( 'ABSPATH' ) || exit;
 
-use EDD\Admin\Pass_Manager;
-
 /**
- * Abstract class for settings tabs.
+ * Abstract class for a settings tab.
  *
  * @since 3.1.4
  */
@@ -26,6 +24,7 @@ abstract class Tab {
 	 * The ID for this tab.
 	 *
 	 * @since 3.1.4
+	 *
 	 * @var string
 	 */
 	protected $id;
@@ -39,6 +38,13 @@ abstract class Tab {
 	private $pass_id;
 
 	/**
+	 * Constructor for the Tab class.
+	 */
+	public function __construct() {
+		add_filter( 'edd_flyout_docs_link', array( $this, 'update_docs_link' ) );
+	}
+
+	/**
 	 * Get the settings for this tab.
 	 *
 	 * @since 3.1.4
@@ -49,15 +55,29 @@ abstract class Tab {
 	}
 
 	/**
+	 * Updates the documentation link.
+	 *
+	 * @since 3.3.0
+	 * @param string $link The current documentation link.
+	 * @return string
+	 */
+	public function update_docs_link( $link ) {
+		return $link;
+	}
+
+	/**
 	 * Get the ID for this tab.
 	 *
 	 * @since 3.1.4
+	 *
+	 * @throws \Exception If the ID property is not set.
+	 *
 	 * @return string
 	 */
 	protected function get_id() {
 		try {
 			if ( empty( $this->id ) ) {
-				// translators: %s: Tab class name.
+				/* translators: %s: Tab class name. */
 				throw new \Exception( sprintf( __( 'The %s settings class is missing the required ID property.', 'easy-digital-downloads' ), get_class( $this ) ) );
 			}
 		} catch ( \Exception $e ) {

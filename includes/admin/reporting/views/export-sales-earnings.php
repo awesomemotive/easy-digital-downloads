@@ -38,7 +38,7 @@
 					'name'        => 'download_id',
 					'id'          => 'edd_orders_export_download',
 					'chosen'      => true,
-					/* translators: the plural post type label */
+					/* translators: %s: Download plural label */
 					'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 				)
 			);

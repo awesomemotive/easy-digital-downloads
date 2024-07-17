@@ -205,7 +205,7 @@ function create_order( $purchase_data ) {
 				edd_record_gateway_error(
 					__( 'PayPal Gateway Warning', 'easy-digital-downloads' ),
 					sprintf(
-						/* Translators: %s - Original order data sent to PayPal. */
+						/* translators: %s: Original order data sent to PayPal. */
 						__( 'PayPal could not complete the transaction with the itemized breakdown. Original order data sent: %s', 'easy-digital-downloads' ),
 						json_encode( $order_data )
 					),
@@ -400,7 +400,7 @@ function capture_order() {
 					$payment->transaction_id = sanitize_text_field( $transaction_id );
 
 					edd_insert_payment_note( $payment->ID, sprintf(
-					/* Translators: %s - transaction ID */
+					/* translators: %s: PayPal Transaction ID */
 						__( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ),
 						esc_html( $transaction_id )
 					) );

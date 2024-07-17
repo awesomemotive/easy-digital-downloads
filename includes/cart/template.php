@@ -306,7 +306,7 @@ function edd_show_added_to_cart_messages( $download_id ) {
 		}
 
 		$alert = '<div class="edd_added_to_cart_alert">'
-		// Translators: %s is the name of the download that was added to the cart.
+		// Translators: %s: name of the download that was added to the cart.
 		. sprintf( __( 'You have successfully added %s to your shopping cart.', 'easy-digital-downloads' ), get_the_title( $download_id ) )
 		. ' <a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_alert_checkout_link">' . __( 'Checkout.', 'easy-digital-downloads' ) . '</a>'
 		. '</div>';

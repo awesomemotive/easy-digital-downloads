@@ -252,7 +252,7 @@ class Handler {
 				'id'             => 'edd-missing-license',
 				'class'          => "error {$this->item_shortname}-license-error",
 				'message'        => sprintf(
-					/* translators: 1. opening anchor tag; 2. closing anchor tag */
+					/* translators: 1: opening anchor tag, 2: closing anchor tag */
 					__( 'You have invalid or expired license keys for Easy Digital Downloads. %1$sActivate License(s)%2$s', 'easy-digital-downloads' ),
 					'<a href="' . esc_url( $this->get_license_tab_url() ) . '" class="button button-secondary">',
 					'</a>'

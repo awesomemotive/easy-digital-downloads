@@ -193,7 +193,6 @@ const EDD_Settings = {
 
 
 			} );
-
 	}
 };
 

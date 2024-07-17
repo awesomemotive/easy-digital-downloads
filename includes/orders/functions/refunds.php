@@ -9,9 +9,7 @@
  * @since       3.0
  */
 
-use EDD\Orders\Refund_Validator;
-
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -196,8 +194,6 @@ function edd_is_order_refundable_by_override( $order_id = 0 ) {
  * @return int|WP_Error New order ID if successful, WP_Error on failure.
  */
 function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all' ) {
-	global $wpdb;
-
 	// Ensure the order ID is an integer.
 	$order_id = absint( $order_id );
 
@@ -226,58 +222,20 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 		return new WP_Error( 'refund_not_allowed', __( 'Refund not allowed on this order.', 'easy-digital-downloads' ) );
 	}
 
-	/** Generate new order number *********************************************/
+	// Determine the refund order number.
+	$number = \EDD\Orders\Refunds\Number::generate( $order->id );
 
-	$last_order = $wpdb->get_row( $wpdb->prepare( "SELECT id, order_number
-		FROM {$wpdb->edd_orders}
-		WHERE parent = %d
-		ORDER BY id DESC
-		LIMIT 1", $order_id ) );
-
-	/**
-	 * Filter the suffix applied to order numbers for refunds.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string Suffix.
-	 */
-	$refund_suffix = apply_filters( 'edd_order_refund_suffix', '-R-' );
-
-	if ( $last_order ) {
-
-		// Check for order number first.
-		if ( $last_order->order_number && ! empty( $last_order->order_number ) ) {
-
-			// Order has been previously revised.
-			if ( false !== strpos( $last_order->order_number, $refund_suffix ) ) {
-				$number = $last_order->order_number;
-				++$number;
-
-			// First revision to order.
-			} else {
-				$number = $last_order->id . $refund_suffix . '1';
-			}
-
-		// Append to ID.
-		} else {
-			$number = $last_order->id . $refund_suffix . '1';
-		}
-	} else {
-		$number = $order->id . $refund_suffix . '1';
-	}
-
-	/** Validate refund amounts *************************************************/
-
+	// Now validate the refund amounts.
 	try {
-		$validator = new Refund_Validator( $order, $order_items, $adjustments );
+		$validator = new EDD\Orders\Refunds\Validator( $order, $order_items, $adjustments );
 		$validator->validate_and_calculate_totals();
-	} catch( \EDD\Utils\Exceptions\Invalid_Argument $e ) {
+	} catch ( \EDD\Utils\Exceptions\Invalid_Argument $e ) {
 		return new WP_Error( 'refund_validation_error', __( 'Invalid argument. Please check your amounts and try again.', 'easy-digital-downloads' ) );
 	} catch ( \Exception $e ) {
 		return new WP_Error( 'refund_validation_error', $e->getMessage() );
 	}
 
-	/** Insert order **********************************************************/
+	// Insert the order (refund) record.
 
 	$order_data = array(
 		'parent'       => $order_id,
@@ -309,7 +267,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 		edd_update_order_meta( $refund_id, 'tax_rate', $tax_rate_meta );
 	}
 
-	/** Insert order items ****************************************************/
+	// Insert the order (refund) items.
 
 	// Maintain a mapping of old order item IDs => new for easier lookup when we do fees.
 	$order_item_id_map = array();
@@ -328,7 +286,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 		}
 	}
 
-	/** Insert order adjustments **********************************************/
+	// Insert the order (refund) adjustments.
 
 	foreach ( $validator->get_refunded_adjustments() as $adjustment ) {
 		if ( ! empty( $adjustment['object_type'] ) && 'order' === $adjustment['object_type'] ) {

@@ -4,7 +4,7 @@
 		sprintf( __( 'Export %s Products', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?></span></h2>
 	<div class="inside">
 		<p><?php esc_html_e(
-			/* translators: the plural post type label */
+			/* translators: %s: Download plural label */
 			sprintf( __( 'Download a CSV of product %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
 		<form id="edd-export-downloads" class="edd-export-form edd-import-export-form" method="post">
 			<label for="edd_download_export_download" class="screen-reader-text"><?php esc_html_e( 'Select Download', 'easy-digital-downloads' ); ?></label>
@@ -13,7 +13,7 @@
 					'name'        => 'download_id',
 					'id'          => 'edd_download_export_download',
 					'chosen'      => true,
-					/* translators: the plural post type label */
+					/* translators: %s: Download plural label */
 					'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 				)
 			);

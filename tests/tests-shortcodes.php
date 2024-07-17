@@ -154,6 +154,12 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		remove_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
 	}
 
+	public static function tearDownAfterClass(): void {
+		parent::tearDownAfterClass();
+		unset( $_SERVER['REMOTE_ADDR'] );
+		unset( $_SERVER['SERVER_NAME'] );
+	}
+
 	public function test_shortcodes_are_registered() {
 		global $shortcode_tags;
 

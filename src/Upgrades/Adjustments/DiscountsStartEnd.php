@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 use EDD\EventManagement\SubscriberInterface;
 use EDD\Upgrades\Utilities\MigrationCheck;
 use EDD\Utils\Date;
+use EDD\Cron\Events\SingleEvent;
 
 /**
  * Class DiscountsStartEnd
@@ -88,7 +89,7 @@ class DiscountsStartEnd implements SubscriberInterface {
 			self::$cron_action => 'process_step',
 		);
 
-		if ( ! wp_next_scheduled( self::$cron_action ) ) {
+		if ( ! SingleEvent::next_scheduled( self::$cron_action ) ) {
 			$hooks['shutdown'] = array( 'maybe_schedule_background_update', 99 );
 		}
 
@@ -103,7 +104,7 @@ class DiscountsStartEnd implements SubscriberInterface {
 	 */
 	public function maybe_schedule_background_update() {
 		// If we've already scheduled the cleanup, no need to schedule it again.
-		if ( wp_next_scheduled( self::$cron_action ) ) {
+		if ( SingleEvent::next_scheduled( self::$cron_action ) ) {
 			return;
 		}
 
@@ -124,7 +125,10 @@ class DiscountsStartEnd implements SubscriberInterface {
 		$this->add_or_update_initial_notification();
 
 		// ...And schedule a single event a minute from now to start the processing of this data.
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, self::$cron_action );
+		SingleEvent::add(
+			time() + MINUTE_IN_SECONDS,
+			self::$cron_action
+		);
 	}
 
 	/**
@@ -160,7 +164,11 @@ class DiscountsStartEnd implements SubscriberInterface {
 
 		$this->add_or_update_initial_notification();
 
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, self::$cron_action );
+		// Schedule the next step.
+		SingleEvent::add(
+			time() + MINUTE_IN_SECONDS,
+			self::$cron_action
+		);
 	}
 
 	/**
@@ -222,7 +230,7 @@ class DiscountsStartEnd implements SubscriberInterface {
 		$initial_notification = $this->get_initial_notification();
 		$percent_complete     = $this->get_percentage_complete();
 
-		// translators: %s is the % complete.
+		/* translators: %s: % complete. */
 		$notification_title = sprintf( __( 'Updating Discounts ( %d%% )', 'easy-digital-downloads' ), $percent_complete );
 
 		if ( ! empty( $initial_notification ) ) {

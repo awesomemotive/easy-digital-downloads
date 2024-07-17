@@ -64,6 +64,24 @@ class Callbacks extends EDD_UnitTestCase {
 		$this->assertStringContainsString( 'class="edd-toggle', $output );
 	}
 
+	public function test_upload() {
+		$args = array(
+			'id'   => 'email_logo',
+			'name' => __( 'Logo', 'easy-digital-downloads' ),
+			'desc' => __( 'Upload or choose a logo to be displayed at the top of sales receipt emails. Displayed on HTML emails only.', 'easy-digital-downloads' ),
+			'type' => 'upload',
+		);
+
+		ob_start();
+		edd_upload_callback( $this->parse_args( $args ) );
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'name="edd_settings[email_logo]"', $output );
+		$this->assertStringContainsString( 'type="text"', $output );
+		$this->assertStringContainsString( 'class="regular-text"', $output );
+
+	}
+
 	private function parse_args( $args ) {
 		return wp_parse_args(
 			$args,

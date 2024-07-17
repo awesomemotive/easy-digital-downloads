@@ -366,12 +366,12 @@ function do_cc_fields() {
 	do_action( 'edd_after_cc_fields' );
 }
 
-add_filter( 'edd_is_checkout', __NAMESPACE__ . '\is_checkout' );
 /**
  * If the checkout block is on a page that isn't set as the checkout option, set edd_is_checkout to true.
  *
  * @since 2.0
- * @param bool $is_checkout
+ * @deprecated 3.3.0
+ * @param bool $is_checkout Whether we are currently on the checkout page.
  * @return bool
  */
 function is_checkout( $is_checkout ) {

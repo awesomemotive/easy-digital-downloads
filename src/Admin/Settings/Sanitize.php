@@ -27,6 +27,7 @@ class Sanitize implements SubscriberInterface {
 
 		return array(
 			'edd_settings_gateways-accounting_sanitize' => 'sanitize_sequential_order_numbers',
+			'edd_settings_general-currency_sanitize'    => 'sanitize_currency',
 		);
 	}
 
@@ -101,5 +102,27 @@ class Sanitize implements SubscriberInterface {
 		$order_number      = new \EDD\Orders\Number();
 
 		return $order_number->unformat( $last_order_number );
+	}
+
+	/**
+	 * Sanitizes the currency code when saving settings.
+	 *
+	 * @since 3.3.1
+	 * @param array $input The input.
+	 * @return array
+	 */
+	public function sanitize_currency( $input ) {
+		if ( empty( $input['currency'] ) ) {
+			return $input;
+		}
+		$registered_currencies = edd_get_currencies();
+		$is_registered         = array_key_exists( $input['currency'], $registered_currencies );
+
+		if ( ! $is_registered ) {
+			$current_currency  = edd_get_option( 'currency', 'USD' );
+			$input['currency'] = array_key_exists( $current_currency, $registered_currencies ) ? $current_currency : 'USD';
+		}
+
+		return $input;
 	}
 }

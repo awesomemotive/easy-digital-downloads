@@ -901,3 +901,161 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 	_edd_deprecated_function( __FUNCTION__, '3.2.7', 'edd_render_down_tax_options' );
 	edd_render_down_tax_options( $post_id );
 }
+
+/**
+ * Email Template Preview
+ *
+ * @deprecated 3.3.0
+ * @access private
+ * @since 1.0.8.2
+ */
+function edd_email_template_preview( $email ) {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0' );
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return;
+	}
+	if ( 'purchase_receipt' !== $email->get_id() ) {
+		return;
+	}
+
+	?>
+	<div class="edd-email-editor-actions">
+		<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank"><?php esc_html_e( 'Preview Purchase Receipt', 'easy-digital-downloads' ); ?></a>
+		<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email', 'email' => 'order_receipt' ) ), 'edd-test-email' ) ); ?>" class="button-secondary"><?php esc_html_e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
+	</div>
+	<?php
+}
+
+/**
+ * Output the entire options page
+ *
+ * @since 1.0
+ * @deprecated 3.3.0
+ * @return void
+ */
+function edd_options_page() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Admin\Settings\Screen::render' );
+	EDD\Admin\Settings\Screen::render();
+}
+
+/**
+ * Output the options page form and fields for this tab & section
+ *
+ * @since 3.0
+ * @deprecated 3.3.0
+ * @param string  $active_tab
+ * @param string  $section
+ * @param boolean $override
+ */
+function edd_options_page_form( $active_tab = '', $section = '', $override = false ) {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Admin\Settings\Screen::form' );
+	EDD\Admin\Settings\Screen::form( $active_tab, $section, $override );
+}
+
+/**
+ * Output the primary options page navigation
+ *
+ * @since 3.0
+ *
+ * @param array  $tabs       All available tabs.
+ * @param string $active_tab Current active tab.
+ */
+function edd_options_page_primary_nav( $tabs, $active_tab = '' ) {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Admin\Settings\Screen::primary_navigation' );
+	EDD\Admin\Settings\Screen::primary_navigation( $tabs, $active_tab );
+}
+
+/**
+ * Output the secondary options page navigation
+ *
+ * @since 3.0
+ *
+ * @param string $active_tab
+ * @param string $section
+ * @param array  $sections
+ */
+function edd_options_page_secondary_nav( $active_tab = '', $section = '', $sections = array() ) {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Admin\Settings\Screen::secondary_navigation' );
+	EDD\Admin\Settings\Screen::secondary_navigation( $active_tab, $section, $sections );
+}
+
+/**
+ * Shows the tools panel which contains EDD-specific tools including the built-in import/export system.
+ *
+ * @since 1.8
+ * @deprecated 3.3.0
+ */
+function edd_tools_page() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Admin\Tools\Screen::render' );
+	EDD\Admin\Tools\Screen::render();
+}
+
+
+/**
+ * Retrieve tools tabs.
+ *
+ * @since 2.0
+ *
+ * @return array Tabs for the 'Tools' page.
+ */
+function edd_get_tools_tabs() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Admin\Tools\Screen\get_tabs' );
+	return EDD\Admin\Tools\Screen::get_tabs();
+}
+
+/**
+ * Adds the EDD branded header to the EDD settings pages.
+ *
+ * @since 2.11.3
+ * @deprecated 3.3.0
+ */
+function edd_admin_header() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Admin\Menu\Header\render' );
+}
+
+/**
+ * When the Download list table loads, call the function to view our tabs.
+ *
+ * @since 2.8.9
+ * @since 2.11.3 Unhooked this to revert to standard admin H1 tags.
+ * @since 3.0    Added back as download categories/tags have been removed from the admin menu.
+ * @deprecated 3.3.0
+ *
+ * @return void
+ */
+function edd_products_tabs() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0' );
+	$screen = get_current_screen();
+	if ( 'download' !== $screen->post_type || 'edit' !== $screen->base ) {
+		return;
+	}
+	edd_display_product_tabs();
+}
+
+/**
+ * When the Download list table loads, call the function to view our tabs.
+ *
+ * @since 3.0
+ *
+ * @return void
+ */
+function edd_taxonomies_tabs() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0' );
+
+	// Bail if not viewing a taxonomy.
+	if ( empty( $_GET['taxonomy'] ) ) {
+		return;
+	}
+
+	// Get taxonomies.
+	$taxonomy   = sanitize_key( $_GET['taxonomy'] );
+	$taxonomies = get_object_taxonomies( 'download' );
+
+	// Bail if current taxonomy is not a download taxonomy.
+	if ( ! in_array( $taxonomy, $taxonomies, true ) ) {
+		return;
+	}
+
+	// Output the tabs.
+	edd_display_product_tabs();
+}

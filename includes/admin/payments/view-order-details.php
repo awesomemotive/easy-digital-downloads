@@ -39,6 +39,7 @@ if ( 'refund' === $order->type ) {
 			'id'   => urlencode( $order->id ),
 		)
 	);
+	/* translators: %s: refund link */
 	wp_die( sprintf( __( 'The specified ID is for a refund, not an order. Please <a href="%s">access the refund directly</a>.', 'easy-digital-downloads' ), esc_url( $refund_link ) ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
@@ -52,6 +53,7 @@ wp_enqueue_script( 'edd-admin-payments' );
 	<?php edd_order_details_publish( $order ); ?>
 
 	<div class="wrap edd-wrap edd-clearfix">
+		<?php /* translators: %s: order number */ ?>
 		<h1><?php printf( esc_html__( 'Order: %s', 'easy-digital-downloads' ), esc_html( $order->number ) ); ?></h1>
 
 		<hr class="wp-header-end">
@@ -132,6 +134,7 @@ wp_enqueue_script( 'edd-admin-payments' );
 
 <div
 	id="edd-admin-order-copy-download-link-dialog"
+	<?php /* translators: %s: singular label */ ?>
 	title="<?php printf( esc_html__( 'Copy %s Links', 'easy-digital-downloads' ), esc_html( edd_get_label_singular() ) ); ?>"
 	style="display: none;"
 >

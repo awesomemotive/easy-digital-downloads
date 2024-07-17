@@ -1,0 +1,21 @@
+.edd-hidden {
+	display: none;
+}
+
+.edd-clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.edd-fadein {
+	visibility: visible;
+	opacity: 1;
+	transition: opacity 1s linear;
+}
+
+.edd-fadeout {
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 0s 1s, opacity 1s linear;
+}

@@ -20,6 +20,9 @@
 		</label>
 		<div class="edd-blocks-form__control">
 			<input name="edd_user_pass" id="edd_user_pass" class="edd-password edd-required edd-input" type="password" required/>
+			<?php if ( edd_no_guest_checkout() ) : ?>
+				<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
+			<?php endif; ?>
 		</div>
 	</div>
 	<div id="edd-user-login-submit">

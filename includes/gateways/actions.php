@@ -68,7 +68,7 @@ function edd_no_gateway_error() {
 		remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 		remove_action( 'edd_cc_form', 'edd_get_cc_form' );
 		if ( current_user_can( 'manage_shop_settings' ) ) {
-			$error_message = __( 'You must enable a payment gateway to use Easy Digital Downloads', 'easy-digital-downloads' );
+			$error_message = __( 'You must enable a payment gateway to use Easy Digital Downloads.', 'easy-digital-downloads' );
 		} else {
 			$error_message = __( 'Your order cannot be completed at this time. Please try again or contact site support.', 'easy-digital-downloads' );
 		}
@@ -77,4 +77,4 @@ function edd_no_gateway_error() {
 		edd_unset_error( 'no_gateways' );
 	}
 }
-add_action( 'init', 'edd_no_gateway_error' );
+add_action( 'edd_before_checkout_cart', 'edd_no_gateway_error', 5 );

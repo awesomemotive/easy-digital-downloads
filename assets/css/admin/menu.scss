@@ -100,3 +100,10 @@ a.edd-sidebar__upgrade-pro:hover {
 	color: $white !important;
 	font-weight: 600;
 }
+
+.edd-admin-menu__new {
+	color: $warning;
+	vertical-align: super;
+	font-size: 9px;
+	margin-left: 3px;
+}

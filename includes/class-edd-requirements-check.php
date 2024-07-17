@@ -49,7 +49,7 @@ final class EDD_Requirements_Check {
 
 		// WordPress
 		'wp'  => array(
-			'minimum' => '5.8',
+			'minimum' => '6.0',
 			'name'    => 'WordPress',
 			'exists'  => true,
 			'current' => false,
@@ -169,6 +169,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_description_text() {
+		/* translators: 1: Requirement name, 2: Minimum version, 3: Current version */
 		return esc_html__( 'Requires %1$s (%2$s), but (%3$s) is installed.', 'easy-digital-downloads' );
 	}
 
@@ -179,6 +180,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_missing_text() {
+		/* translators: 1: Requirement name, 2: Minimum version */
 		return esc_html__( 'Requires %1$s (%2$s), but it appears to be missing.', 'easy-digital-downloads' );
 	}
 

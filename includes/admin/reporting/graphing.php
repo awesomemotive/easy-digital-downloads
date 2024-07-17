@@ -602,7 +602,14 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	?>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
-			<h3><span><?php printf( __('Earnings Over Time for %s', 'easy-digital-downloads' ), get_the_title( $download_id ) ); ?></span></h3>
+			<h3>
+				<span>
+					<?php
+					/* translators: %s: Download title */
+					printf( __( 'Earnings Over Time for %s', 'easy-digital-downloads' ), get_the_title( $download_id ) );
+					?>
+				</span>
+			</h3>
 
 			<div class="inside">
 				<?php
@@ -611,10 +618,44 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 				$graph->set( 'multiple_y_axes', true );
 				$graph->display();
 				?>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'easy-digital-downloads' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'easy-digital-downloads' ); echo $sales_totals; ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly earnings: %s', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( edd_get_average_monthly_download_earnings( $download_id ) ) ) ); ?>
-				<p class="edd_graph_totals"><strong><?php printf( __( 'Average monthly sales: %s', 'easy-digital-downloads' ), number_format( edd_get_average_monthly_download_sales( $download_id ), 0 ) ); ?>
+				<p class="edd_graph_totals">
+					<strong>
+						<?php
+						_e( 'Total earnings for period shown: ', 'easy-digital-downloads' );
+						echo edd_currency_filter( edd_format_amount( $earnings_totals ) );
+						?>
+					</strong>
+				</p>
+				<p class="edd_graph_totals">
+					<strong>
+						<?php
+						_e( 'Total sales for period shown: ', 'easy-digital-downloads' );
+						echo $sales_totals;
+						?>
+					</strong>
+				</p>
+				<p class="edd_graph_totals">
+					<strong>
+						<?php
+						printf(
+							/* translators: %s: Formatted currency value for earnings */
+							__( 'Average monthly earnings: %s', 'easy-digital-downloads' ),
+							edd_currency_filter( edd_format_amount( edd_get_average_monthly_download_earnings( $download_id ) ) )
+						);
+						?>
+					</strong>
+				</p>
+				<p class="edd_graph_totals">
+					<strong>
+						<?php
+						printf(
+							/* translators: %s: Number of sales */
+							__( 'Average monthly sales: %s', 'easy-digital-downloads' ),
+							number_format( edd_get_average_monthly_download_sales( $download_id ), 0 )
+						);
+						?>
+					</strong>
+				</p>
 			</div>
 		</div>
 	</div>
@@ -641,9 +682,11 @@ function edd_parse_report_dates( $form_data ) {
 
 	$redirect = ! empty( $form_data['edd_redirect'] )
 		? $form_data['edd_redirect']
-		: edd_get_admin_url( array(
-			'page' => 'edd-reports',
-		) );
+		: edd_get_admin_url(
+			array(
+				'page' => 'edd-reports',
+			)
+		);
 
 	$filter_args = array();
 

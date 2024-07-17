@@ -1,0 +1,47 @@
+.edd-sub-nav {
+	margin: 0;
+	display: flex;
+	justify-content: flex-start;
+	gap: 4px;
+	overflow-x: auto;
+
+	&__wrapper {
+		margin: 16px 0;
+	}
+
+	li {
+		border: 2px solid #f0f0f1;
+		border-radius: 4px;
+		margin: 0;
+
+		a {
+			color: $wp-gray-50;
+			display: block;
+			padding: 6px 14px;
+			text-decoration: none;
+
+			&:active,
+			&:focus {
+				box-shadow: none;
+			}
+		}
+
+		&:hover,
+		&:active,
+		&:focus {
+			background-color: $white;
+			box-shadow: none;
+			outline: none;
+			border-color: $wp-gray-20;
+		}
+
+		&.current {
+			background-color: #d7dade;
+			font-weight: 600;
+		}
+	}
+
+	&__wrapper + .notice {
+		margin-left: 0;
+	}
+}

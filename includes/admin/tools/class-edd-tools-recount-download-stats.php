@@ -22,6 +22,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 2.5
 	 */
@@ -29,6 +30,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Allows for a non-download batch processing to be run.
+	 *
 	 * @since  2.5
 	 * @var boolean
 	 */
@@ -36,6 +38,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Sets the number of items to pull on each step
+	 *
 	 * @since  2.5
 	 * @var integer
 	 */
@@ -48,6 +51,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 	/**
 	 * ID of the download we're recounting stats for
+	 *
 	 * @var int|false
 	 */
 	protected $download_id = false;
@@ -65,17 +69,21 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 		$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', edd_get_gross_order_statuses() );
 
 		// These arguments are no longer used, but keeping the filter here to apply the deprecation notice.
-		$deprecated_args = edd_apply_filters_deprecated( 'edd_recount_download_stats_args', array(
+		$deprecated_args = edd_apply_filters_deprecated(
+			'edd_recount_download_stats_args',
 			array(
-				'post_parent'    => $this->download_id,
-				'post_type'      => 'edd_log',
-				'posts_per_page' => $this->per_step,
-				'post_status'    => 'publish',
-				'paged'          => $this->step,
-				'log_type'       => 'sale',
-				'fields'         => 'ids',
-			)
-		), '3.0' );
+				array(
+					'post_parent'    => $this->download_id,
+					'post_type'      => 'edd_log',
+					'posts_per_page' => $this->per_step,
+					'post_status'    => 'publish',
+					'paged'          => $this->step,
+					'log_type'       => 'sale',
+					'fields'         => 'ids',
+				),
+			),
+			'3.0'
+		);
 
 		if ( ! empty( $this->download_id ) && is_numeric( $this->download_id ) ) {
 			edd_recalculate_download_sales_earnings( $this->download_id );
@@ -119,13 +127,14 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 		$more_to_do = $this->get_data();
 
-		if( $more_to_do ) {
+		if ( $more_to_do ) {
 			$this->done = false;
 			return true;
 		} else {
 			$this->delete_data( 'edd_recount_total_' . $this->download_id );
 			$this->delete_data( 'edd_temp_recount_download_stats' );
 			$this->done    = true;
+			/* translators: %s: download title */
 			$this->message = sprintf( __( 'Earnings and sales stats successfully recounted for %s.', 'easy-digital-downloads' ), get_the_title( $this->download_id ) );
 			return false;
 		}
@@ -160,5 +169,4 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 		global $wpdb;
 		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
 	}
-
 }

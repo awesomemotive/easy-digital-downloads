@@ -60,8 +60,11 @@ function login( $block_attributes = array() ) {
 
 	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : false;
 	if ( 'rp' === $action ) {
-		list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 );
-		$user                      = check_password_reset_key( $rp_key, $rp_login );
+		$user = false;
+		if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) ) {
+			list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ), 2 );
+			$user                      = check_password_reset_key( $rp_key, $rp_login );
+		}
 		if ( ! $user || is_wp_error( $user ) ) {
 			$action = 'lostpassword';
 			edd_set_error( 'invalidkey', __( 'Your password reset link appears to be invalid. Please request a new link below.', 'easy-digital-downloads' ) );

@@ -38,6 +38,7 @@ class Loader implements SubscriberInterface {
 		$upgrade_classes = array(
 			new Orders\MigrateAfterActionsDate(),
 			new Adjustments\DiscountsStartEnd(),
+			new Emails\Registration(),
 		);
 
 		$events = new EventManager();

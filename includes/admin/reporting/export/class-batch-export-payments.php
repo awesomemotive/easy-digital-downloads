@@ -116,7 +116,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			$items        = $order->get_items();
 			$address      = $order->get_address();
 			$total        = $order->total;
-			$user_id      = $order->id && $order->id != - 1 ? $order->id : $order->email;
+			$user_id      = ! empty( $order->user_id ) ? $order->user_id : $order->email;
 			$customer     = edd_get_customer( $order->customer_id );
 			$products     = '';
 			$products_raw = '';
@@ -206,7 +206,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
 				'currency'     => $order->currency,
-				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
+				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price.
 				'tax'          => html_entity_decode( edd_format_amount( $order->tax ) ),
 				'discount'     => $discounts,
 				'gateway'      => edd_get_gateway_admin_label( $order->gateway ),

@@ -9,11 +9,19 @@
 
 namespace EDD\Emails;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
 use EDD\EventManagement\SubscriberInterface;
-use EDD\Emails\Registry;
 use EDD\Orders\Order;
 
+/**
+ * Class Triggers
+ *
+ * @since 3.2.0
+ */
 class Triggers implements SubscriberInterface {
+	use Traits\Preview;
 
 	/**
 	 * Get the events that this subscriber is subscribed to.
@@ -23,18 +31,14 @@ class Triggers implements SubscriberInterface {
 	 */
 	public static function get_subscribed_events() {
 		return array(
-			'init'                              => array( 'register_emails', 3 ),
-			'edd_after_order_actions'           => array( 'send_order_emails', 9999, 3 ), // Run this late, so that other plugins can modify the order before the email is sent.
-			'edd_email_links'                   => array( 'resend_order_receipt', 10, 1 ),
-			'edd_send_test_email'               => array( 'send_test_email', 10, 1 ),
-			'edd_preview_email'                 => array( 'preview_email', 10 ),
-			'edd_send_test_email_order_receipt' => array( 'send_test_order_receipt', 10, 1 ),
+			'edd_after_order_actions'        => array( 'send_order_emails', 9999, 3 ), // Run this late, so that other plugins can modify the order before the email is sent.
+			'edd_email_links'                => array( 'resend_order_receipt', 10, 1 ),
+			'edd_send_test_email'            => array( 'send_test_email', 10, 1 ),
+			'edd_preview_email'              => array( 'preview_email', 10 ),
+			'edd_refund_order'               => array( 'send_refund_receipt', 10, 2 ),
+			'edd_insert_user'                => array( 'send_new_user_email', 10, 2 ),
+			'edd_stripe_early_fraud_warning' => array( 'send_stripe_early_fraud_warning', 10, 1 ),
 		);
-	}
-
-	public function register_emails() {
-		Registry::register( 'order_receipt', 'EDD\Emails\Types\OrderReceipt' );
-		Registry::register( 'admin_order_notice', 'EDD\Emails\Types\AdminOrderNotice' );
 	}
 
 	/**
@@ -64,11 +68,6 @@ class Triggers implements SubscriberInterface {
 			return;
 		}
 
-		/**
-		 * Currently we only send for orders, not refunds, but that is a requested feature:
-		 *
-		 * @see https://github.com/awesomemotive/easy-digital-downloads-pro/issues/546
-		 */
 		if ( 'refund' === $order->type ) {
 			return;
 		}
@@ -130,7 +129,7 @@ class Triggers implements SubscriberInterface {
 		$order = edd_get_order( $order_id );
 
 		if ( empty( $email ) ) {
-			$customer = new \EDD_Customer( $order->customer_id );
+			$customer = edd_get_customer( $order->customer_id );
 			$email    = $customer->email;
 		}
 
@@ -190,81 +189,67 @@ class Triggers implements SubscriberInterface {
 	}
 
 	/**
-	 * Determine the test email to send and call the action based on the id.
+	 * Send the refund receipt.
 	 *
-	 * @since 3.2.0
-	 * @param array $data The $_POST data.
+	 * @since 3.3.0
+	 * @param int $order_id  The order ID.
+	 * @param int $refund_id The refund ID.
 	 *
 	 * @return void
 	 */
-	public function send_test_email( $data ) {
-		// Get the email object.
-		$id = ! empty( $data['email'] ) ? sanitize_text_field( $data['email'] ) : 'order_receipt';
-		do_action( 'edd_send_test_email_' . $id, $data );
+	public function send_refund_receipt( $order_id, $refund_id ) {
+		if ( ! $refund_id ) {
+			return;
+		}
+		$refund = edd_get_order( $refund_id );
+		if ( $refund && 'refund' === $refund->type ) {
+			$refund_notice = Registry::get( 'order_refund', array( $refund, $order_id ) );
+			$refund_notice->send();
+
+			$admin_notice = Registry::get( 'admin_order_refund', array( $refund, $order_id ) );
+			$admin_notice->send();
+		}
 	}
 
 	/**
-	 * Send the test purchase confirmation email.
+	 * Send the new user email.
 	 *
-	 * This does the work of verifying the nonce and checking the capabilities.
+	 * @since 3.3.0
+	 * @param int   $user_id   The user ID.
+	 * @param array $user_data The user data.
 	 *
-	 * @since 3.2.0
-	 * @param array $data The $_POST data.
-	 */
-	public function send_test_order_receipt( $data ) {
-		// Only people who can amnage the shop settings should be able to send these.
-		if ( ! current_user_can( 'manage_shop_settings' ) ) {
-			return;
-		}
-
-		// Verify the nonce.
-		if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd-test-email' ) ) {
-			return;
-		}
-
-		$order_receipt = Registry::get( $data['email'], array( false ) );
-
-		// Set this as a preview email.
-		$order_receipt->is_test = true;
-
-		// For the test email we'll send it to all the admin notice emails.
-		$order_receipt->send_to = edd_get_admin_notice_emails();
-
-		// Send the receipt.
-		$sent = $order_receipt->send();
-
-		$edd_message = $sent ? 'test-purchase-email-sent' : 'test-purchase-email-failed';
-		// Redirect the user back to the email settings.
-		$url = edd_get_admin_url(
-			array(
-				'page'        => 'edd-settings',
-				'tab'         => 'emails',
-				'section'     => 'purchase_receipts',
-				'edd-message' => $edd_message,
-			)
-		);
-
-		edd_redirect( $url );
-	}
-
-	/**
-	 * Preview the purchase confirmation emails.
-	 *
-	 * This previously ran on `template_redirect` but now runs on it's own EDD Action, to avoid always running it.
-	 *
-	 * @since 3.2.0
 	 * @return void
 	 */
-	public function preview_email() {
-		if( ! current_user_can( 'manage_shop_settings' ) ) {
+	public function send_new_user_email( $user_id, $user_data ) {
+		if ( empty( $user_id ) || empty( $user_data ) ) {
 			return;
 		}
 
-		$order_receipt_preview = Registry::get( 'order_receipt', array( false ) );
-		$order_receipt_preview->is_preview = true;
+		$user_email = Registry::get( 'new_user', array( $user_id, $user_data ) );
+		$user_email->send();
+		$admin_email = Registry::get( 'new_user_admin', array( $user_id, $user_data ) );
+		$admin_email->send();
+	}
 
-		echo $order_receipt_preview->get_preview();
+	/**
+	 * Register the emails.
+	 *
+	 * @since 3.2.0
+	 * @deprecated 3.3.0
+	 * @return void
+	 */
+	public function register_emails() {}
 
-		exit;
+	/**
+	 * Send the Stripe Early Fraud Warning email.
+	 *
+	 * @since 3.3.0
+	 * @param EDD\Orders\Order $order The order object.
+	 *
+	 * @return void
+	 */
+	public function send_stripe_early_fraud_warning( $order ) {
+		$early_fraud_warning = Registry::get( 'stripe_early_fraud_warning', array( $order ) );
+		$early_fraud_warning->send();
 	}
 }

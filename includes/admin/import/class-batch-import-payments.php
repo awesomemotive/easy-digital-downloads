@@ -77,10 +77,6 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			wp_die( __( 'You do not have permission to import data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
-		// Remove certain actions to ensure they don't fire when creating the payments
-		remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
-		remove_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10 );
-
 		$i      = 1;
 		$offset = $this->step > 1 ? ( $this->per_step * ( $this->step - 1 ) ) : 0;
 
@@ -392,9 +388,19 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		// Save a second time to update stats
+		// Save a second time to update stats.
 		$payment->save();
 
+		// Add a meta key to indicate this payment was imported.
+		edd_add_order_meta( $payment->ID, '_edd_imported', time() );
+
+		/**
+		 * Fires after an order is created during a batch import of payments.
+		 *
+		 * @since 3.3.0
+		 * @param int $payment_id The ID of the payment.
+		 */
+		do_action( 'edd_batch_import_order_created', $payment->ID );
 	}
 
 	private function set_customer( $row ) {

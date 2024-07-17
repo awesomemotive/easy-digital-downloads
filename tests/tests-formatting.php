@@ -89,6 +89,20 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$this->assertEquals( '&#36;20,000.20', edd_currency_filter( '20,000.20' ) );
 	}
 
+	public function test_currency_filter_invalid_currency() {
+		// Prepare test data
+		$price    = '19.99';
+		$currency = '<img src="image.jpg" onerror="alert(\'0\')">';
+
+		// Call the function with the test data
+		$result = edd_currency_filter( $price, $currency );
+
+		// Assert: ensure that the image tag is escaped in the result
+		$this->assertStringNotContainsString( '<IMG="', $result );
+		$this->assertStringNotContainsString( 'ONERROR="', $result );
+		$this->assertStringContainsString( strtoupper( '&lt;img src=&quot;image.jpg&quot; onerror=&quot;alert(&#039;0&#039;)&quot;&gt;' ), $result );
+	}
+
 	public function test_currency_symbol() {
 		$this->assertEquals( '&#36;', edd_currency_symbol( 'USD' ) );
 		$this->assertEquals( '&yen;', edd_currency_symbol( 'JPY' ) );

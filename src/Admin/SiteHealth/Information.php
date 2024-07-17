@@ -68,6 +68,7 @@ class Information implements \EDD\EventManagement\SubscriberInterface {
 			'edd_gateways'  => new Gateways(),
 			'edd_taxes'     => new Taxes(),
 			'edd_sessions'  => new Sessions(),
+			'edd_cron'      => new Cron(),
 		);
 
 		$information = array();

@@ -443,8 +443,8 @@ class Refund_Items_Table extends List_Table {
 				'refund_' . esc_attr( $object_type ),
 				/*$2%s*/
 				esc_attr( $item->id ),
-				/* translators: product name */
-				esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $this->get_item_display_name( $item ) ) )
+				/* translators: %s: The product name */
+				esc_html( sprintf( _x( 'Select %s', 'Title: The title of the current download product', 'easy-digital-downloads' ), $this->get_item_display_name( $item ) ) )
 			);
 		}
 

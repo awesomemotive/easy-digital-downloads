@@ -94,14 +94,21 @@ function edd_is_dev_environment() {
 }
 
 /**
- * Checks if Guest checkout is enabled
+ * Checks if Guest checkout is enabled.
+ * This actually returns false if guest checkout is enabled.
  *
  * @since 1.0
- * @return bool $ret True if guest checkout is enabled, false otherwise
+ * @return bool $allow_guest_checkout False if guest checkout is enabled, true otherwise.
  */
 function edd_no_guest_checkout() {
-	$ret = edd_get_option( 'logged_in_only', false );
-	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
+	$guest_checkout = edd_get_option( 'logged_in_only', false );
+	// Selecting `auto` bypasses the filters.
+	if ( 'auto' === $guest_checkout ) {
+		return false;
+	}
+	$allow_guest_checkout = 'required' === $guest_checkout;
+
+	return (bool) apply_filters( 'edd_no_guest_checkout', $allow_guest_checkout );
 }
 
 /**
@@ -111,9 +118,32 @@ function edd_no_guest_checkout() {
  * @return bool $ret Whether or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
-	$ret = edd_get_option( 'logged_in_only', false );
-	return (bool) apply_filters( 'edd_logged_in_only', $ret );
+	$logged_in_only = edd_get_option( 'logged_in_only', false );
+	// Selecting `auto` bypasses the filters.
+	if ( 'auto' === $logged_in_only ) {
+		return false;
+	}
+	$require_login = 'required' === $logged_in_only;
+
+	return (bool) apply_filters( 'edd_logged_in_only', $require_login );
 }
+
+/**
+ * Update the logged_in_only setting to be `required` if it was formerly true.
+ * This is to ensure that the auto-register feature works as expected,
+ * because the `logged_in_only` setting used to be a checkbox.
+ *
+ * @param mixed $value The value for the logged_in_only setting.
+ * @return string The value for the logged_in_only setting.
+ */
+function edd_update_logged_in_only_for_auto_register( $value ) {
+	if ( in_array( $value, array( true, '1', 1, 'yes' ), true ) ) {
+		return 'required';
+	}
+
+	return $value;
+}
+add_filter( 'edd_get_option_logged_in_only', 'edd_update_logged_in_only_for_auto_register' );
 
 /**
  * Redirect to checkout immediately after adding items to the cart?
@@ -480,7 +510,8 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 
 	if ( _edd_maybe_trigger_deprecation() ) {
 		if ( ! is_null( $replacement ) ) {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $function, $version, $replacement ) );
+			/* translators: 1: function, 2: version, 3: replacement */
+			trigger_error( sprintf( _x( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'deprecated function error logging with replacement function', 'easy-digital-downloads' ), $function, $version, $replacement ) );
 
 			if ( ! empty( $backtrace ) ) {
 				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
@@ -488,7 +519,8 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 
 			// Alternatively we could dump this to a file.
 		} else {
-			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $function, $version ) );
+			/* translators: 1: function, 2: version */
+			trigger_error( sprintf( _x( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'deprecated function error logging with no replacement', 'easy-digital-downloads' ), $function, $version ) );
 
 			if ( ! empty( $backtrace ) ) {
 				trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
@@ -526,7 +558,8 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 
 	if ( _edd_maybe_trigger_deprecation() ) {
 		if ( ! is_null( $replacement ) ) {
-			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead.', 'easy-digital-downloads' ), $argument, $function, $version, $replacement ) );
+			/* translators: 1: argument, 2: function, 3: version, 4: replacement */
+			trigger_error( sprintf( _x( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead.', 'deprecated function argument error logging with replacement', 'easy-digital-downloads' ), $argument, $function, $version, $replacement ) );
 
 			if ( ! empty( $backtrace ) ) {
 				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
@@ -534,7 +567,8 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 
 			// Alternatively we could dump this to a file.
 		} else {
-			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available.', 'easy-digital-downloads' ), $argument, $function, $version ) );
+			/* translators: 1: argument, 2: function, 3: version */
+			trigger_error( sprintf( _x( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available.', 'deprecated function argument error logging with no replacement', 'easy-digital-downloads' ), $argument, $function, $version ) );
 
 			if ( ! empty( $backtrace ) ) {
 				trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
@@ -622,6 +656,48 @@ function _edd_generic_deprecated( $function, $version, $message ) {
 
 		/* translators: 1: PHP file name, 2: EDD version number */
 		trigger_error( sprintf( __( 'Code within %1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s. See message for further details.', 'easy-digital-downloads' ), $function, $version ) . $message );
+	}
+}
+
+/**
+ * Marks a class as deprecated and informs when it has been used.
+ *
+ * When deprecating a class you will need to stub out the class and call this function in the __construct method.
+ *
+ * There is a hook edd_deprecated_class_run that will be called that can be used.
+ *
+ * @since 3.3.0
+ *
+ * @param string $class_name The class that was called.
+ * @param string $version    The version of EDD that deprecated the class.
+ * @param string $message    The message to supply for the deprecation.
+ *
+ * @return void
+ */
+function _edd_deprecated_class( $class_name, $version, $message = '' ) {
+	/**
+	 * Fires immediately before a deprecated class notice is output.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param string $class_name The class that was called.
+	 * @param string $version    The version of EDD that deprecated the class.
+	 * @param string $message    The message to supply for the deprecation.
+	 */
+	do_action( 'edd_deprecated_class_run', $class_name, $version, $message );
+
+	/**
+	 * Filters whether to trigger the error output for deprecated EDD classes.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param bool $show_errors Whether to trigger errors for deprecated classes.
+	 */
+	if ( _edd_maybe_trigger_deprecation() ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
+		/* translators: 1: PHP file name, 2: EDD version number */
+		trigger_error( sprintf( __( 'The class %1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s. See message for further details.', 'easy-digital-downloads' ), $class_name, $version ) . $message );
 	}
 }
 
@@ -1899,7 +1975,18 @@ function edd_link_helper( $base_url = 'https://easydigitaldownloads.com/', $quer
 	$args['utm_medium']  = str_replace( '_', '-', sanitize_title( $args['utm_medium'] ) );
 	$args['utm_content'] = str_replace( '_', '-', sanitize_title( $args['utm_content'] ) );
 
+	// If the URL has an anchor we need to preserve it and move it to the end.
+	$anchor = '';
+	if ( false !== strpos( $base_url, '#' ) ) {
+		$parts    = explode( '#', $base_url );
+		$base_url = $parts[0];
+		$anchor   = '#' . $parts[1];
+	}
+
 	$url = add_query_arg( $args, trailingslashit( $base_url ) );
+
+	// Now re-add the anchor, after it's been processed.
+	$url .= $anchor;
 
 	return $run_esc_url ? esc_url( $url ) : $url;
 }

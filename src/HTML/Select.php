@@ -56,7 +56,17 @@ class Select extends Base {
 			<?php echo $this->get_data_elements(); ?>
 		>
 			<?php
-			if ( ! empty( $this->args['show_option_all'] ) ) {
+			if ( ! empty( $this->args['show_option_empty'] ) ) {
+				$empty_option = array_search( '', $this->args['options'], true );
+				if ( false !== $empty_option ) {
+					unset( $this->args['options'][ $empty_option ] );
+				}
+				?>
+				<option value="">
+					<?php echo esc_html( $this->args['show_option_empty'] ); ?>
+				</option>
+				<?php
+			} elseif ( ! empty( $this->args['show_option_all'] ) ) {
 				?>
 				<option value="all"<?php echo $this->is_selected( 0 ) ? ' selected' : ''; ?>>
 					<?php echo esc_html( $this->args['show_option_all'] ); ?>
@@ -96,20 +106,21 @@ class Select extends Base {
 	 */
 	protected function defaults() {
 		return array(
-			'options'          => array(),
-			'name'             => null,
-			'class'            => '',
-			'id'               => '',
-			'selected'         => 0,
-			'chosen'           => false,
-			'placeholder'      => null,
-			'multiple'         => false,
-			'show_option_all'  => _x( 'All', 'all dropdown items', 'easy-digital-downloads' ),
-			'show_option_none' => _x( 'None', 'no dropdown items', 'easy-digital-downloads' ),
-			'data'             => array(),
-			'readonly'         => false,
-			'disabled'         => false,
-			'required'         => false,
+			'options'           => array(),
+			'name'              => null,
+			'class'             => '',
+			'id'                => '',
+			'selected'          => 0,
+			'chosen'            => false,
+			'placeholder'       => null,
+			'multiple'          => false,
+			'show_option_all'   => _x( 'All', 'all dropdown items', 'easy-digital-downloads' ),
+			'show_option_none'  => _x( 'None', 'no dropdown items', 'easy-digital-downloads' ),
+			'data'              => array(),
+			'readonly'          => false,
+			'disabled'          => false,
+			'required'          => false,
+			'show_option_empty' => false,
 		);
 	}
 

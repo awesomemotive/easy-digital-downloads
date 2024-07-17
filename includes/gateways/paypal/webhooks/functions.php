@@ -128,7 +128,7 @@ function create_webhook( $mode = '' ) {
 	if ( 201 !== $api->last_response_code ) {
 		throw new API_Exception(
 			sprintf(
-				/* Translators: %d - HTTP response code; %s - Full response from the API. */
+				/* translators: %d: HTTP response code; %s - Full response from the API. */
 				__( 'Invalid response code %1$d while creating webhook. Response: %2$s', 'easy-digital-downloads' ),
 				$api->last_response_code,
 				json_encode( $response )
@@ -197,7 +197,7 @@ function sync_webhook( $mode = '' ) {
 	if ( 200 !== $api->last_response_code ) {
 		throw new API_Exception(
 			sprintf(
-				/* Translators: %d - HTTP response code; %s - Full response from the API. */
+				/* translators: %d: HTTP response code; %s - Full response from the API. */
 				__( 'Invalid response code %1$d while syncing webhook. Response: %2$s', 'easy-digital-downloads' ),
 				$api->last_response_code,
 				json_encode( $response )
@@ -254,7 +254,7 @@ function get_webhook_details( $mode = '' ) {
 		} else {
 			throw new API_Exception(
 				sprintf(
-					/* Translators: %d - HTTP response code. */
+					/* translators: %d: HTTP response code. */
 					__( 'Invalid response code %d while retrieving webhook details.', 'easy-digital-downloads' ),
 					$api->last_response_code
 				)
@@ -299,7 +299,7 @@ function delete_webhook( $mode = '' ) {
 	if ( 204 !== $api->last_response_code ) {
 		throw new API_Exception(
 			sprintf(
-				/* Translators: %d - HTTP response code. */
+				/* translators: %d: HTTP response code. */
 				__( 'Invalid response code %d while deleting webhook.', 'easy-digital-downloads' ),
 				$api->last_response_code
 			)

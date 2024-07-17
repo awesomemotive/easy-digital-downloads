@@ -74,6 +74,7 @@ class Discount extends Base {
 
 		// Setup doing-it-wrong message
 		$message = sprintf(
+			/* translators: 1: posts table, 2: adjustments table, 3: edd_get_discounts(), 4: edd_get_discount(), 5: EDD_Discount, 6: development URL */
 			__( 'As of Easy Digital Downloads 3.0, discounts no longer exist in the %1$s table. They have been migrated to %2$s. Discounts should be accessed using %3$s, %4$s or instantiating a new instance of %5$s. See %6$s for more information.', 'easy-digital-downloads' ),
 			'<code>' . $wpdb->posts . '</code>',
 			'<code>' . edd_get_component_interface( 'adjustment', 'table' )->table_name . '</code>',

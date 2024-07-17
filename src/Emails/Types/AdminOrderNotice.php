@@ -9,11 +9,22 @@
 
 namespace EDD\Emails\Types;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+/**
+ * Class AdminOrderNotice
+ *
+ * @since 3.2.0
+ * @package EDD
+ * @subpackage Emails
+ */
 class AdminOrderNotice extends Email {
 	use LegacyPaymentFilters;
 
 	/**
 	 * The email ID.
+	 *
 	 * @var string
 	 * @since 3.2.0
 	 */
@@ -21,6 +32,7 @@ class AdminOrderNotice extends Email {
 
 	/**
 	 * The email context.
+	 *
 	 * @var string
 	 * @since 3.2.0
 	 */
@@ -28,6 +40,7 @@ class AdminOrderNotice extends Email {
 
 	/**
 	 * The email recipient type.
+	 *
 	 * @var string
 	 * @since 3.2.0
 	 */
@@ -35,17 +48,19 @@ class AdminOrderNotice extends Email {
 
 	/**
 	 * The order object.
+	 *
 	 * @var EDD\Orders\Order
 	 * @since 3.2.0
 	 */
-	private $order;
+	protected $order;
 
 	/**
 	 * The order ID.
+	 *
 	 * @var int
 	 * @since 3.2.0
 	 */
-	private $order_id;
+	protected $order_id;
 
 	/**
 	 * AdminOrderNotice constructor.
@@ -72,8 +87,7 @@ class AdminOrderNotice extends Email {
 	 * @return void
 	 */
 	protected function set_email_body_content() {
-		$option_value           = edd_get_option( 'sale_notification', false );
-		$this->raw_body_content = $option_value ? stripslashes( $option_value ) : $this->get_default_body_content();
+		$this->raw_body_content = $this->get_email()->content;
 
 		$this->maybe_run_legacy_filter( 'edd_sale_notification' );
 
@@ -82,11 +96,12 @@ class AdminOrderNotice extends Email {
 
 	/**
 	 * Set the email from name.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
 	protected function set_from_name() {
-		$this->from_name = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+		parent::set_from_name();
 
 		$this->maybe_run_legacy_filter( 'edd_purchase_from_name' );
 
@@ -95,11 +110,12 @@ class AdminOrderNotice extends Email {
 
 	/**
 	 * Set the email from address.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
 	protected function set_from_email() {
-		$this->from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+		parent::set_from_email();
 
 		$this->maybe_run_legacy_filter( 'edd_admin_sale_from_address' );
 
@@ -113,16 +129,17 @@ class AdminOrderNotice extends Email {
 	 * @return void
 	 */
 	protected function set_to_email() {
-		$this->send_to = edd_get_admin_notice_emails( $this->order );
+		$this->send_to = $this->get_email()->get_admin_recipient_emails( $this->order );
 	}
 
 	/**
 	 * Set the email headers.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
 	protected function set_headers() {
-		$this->headers = $this->processor()->get_headers();
+		parent::set_headers();
 
 		$this->maybe_run_legacy_filter( 'edd_admin_sale_notification_headers' );
 
@@ -131,48 +148,52 @@ class AdminOrderNotice extends Email {
 
 	/**
 	 * Set the email subject.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
 	protected function set_subject() {
-		$this->subject = edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'easy-digital-downloads' ), $this->order_id ) );
+		parent::set_subject();
 
 		$this->maybe_run_legacy_filter( 'edd_admin_sale_notification_subject' );
 
 		$this->subject = apply_filters( 'edd_order_admin_notice_subject', $this->subject, $this->order );
-		$this->subject = wp_strip_all_tags( $this->process_tags( $this->subject, $this->order_id ) );
+		$this->subject = $this->process_tags( $this->subject, $this->order_id, $this->order );
 	}
 
 	/**
 	 * Set the email heading.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
 	protected function set_heading() {
-		$this->heading = edd_get_option( 'sale_notification_heading', __( 'New Sale!', 'easy-digital-downloads' ) );
+		parent::set_heading();
 
 		$this->maybe_run_legacy_filter( 'edd_admin_sale_notification_heading' );
 
 		$this->heading = apply_filters( 'edd_order_admin_notice_heading', $this->heading, $this->order );
-		$this->heading = $this->process_tags( $this->heading, $this->order_id );
+		$this->heading = $this->process_tags( $this->heading, $this->order_id, $this->order );
 	}
 
 	/**
 	 * Set the email message.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
 	protected function set_message() {
-		$message = $this->maybe_apply_autop( $this->get_raw_body_content() );
+		parent::set_message();
 
 		// We don't want admins to get the users download links, so we'll set edd_email_show_links to false.
 		add_filter( 'edd_email_show_links', '__return_false' );
-		$this->message = $this->process_tags( $message, $this->order_id );
+		$this->message = $this->process_tags( $this->message, $this->order_id, $this->order );
 		remove_filter( 'edd_email_show_links', '__return_false' );
 	}
 
 	/**
 	 * Set the email attachments.
+	 *
 	 * @since 3.2.0
 	 * @return void
 	 */
@@ -185,26 +206,6 @@ class AdminOrderNotice extends Email {
 	}
 
 	/**
-	 * Get the default email body content.
-	 *
-	 * @since 3.2.0
-	 * @return string
-	 */
-	public function get_default_body_content() {
-		/* translators: %s: The plural label for the store items. */
-		$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
-		/* translators: %s: The plural label for the store items. */
-		$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";
-		$default_email_body .= '{download_list}' . "\n\n";
-		$default_email_body .= __( 'Purchased by: {fullname}', 'easy-digital-downloads' ) . "\n";
-		$default_email_body .= __( 'Amount: {price}', 'easy-digital-downloads' ) . "\n";
-		$default_email_body .= __( 'Payment Method: {payment_method}', 'easy-digital-downloads' ) . "\n\n";
-		$default_email_body .= __( 'Thank you', 'easy-digital-downloads' );
-
-		return $default_email_body;
-	}
-
-	/**
 	 * Allows filtering to disable sending the admin sale notification.
 	 *
 	 * @since 3.2.0
@@ -212,8 +213,13 @@ class AdminOrderNotice extends Email {
 	 * @return bool
 	 */
 	protected function should_send() {
-		// If the setting to send admin notices is disabled, we don't send.
-		if ( ! empty( edd_get_option( 'disable_admin_notices', false ) ) ) {
+
+		// Emails should not be sent for imported orders.
+		if ( edd_get_order_meta( $this->order->id, '_edd_imported', true ) ) {
+			return false;
+		}
+
+		if ( ! parent::should_send() ) {
 			return false;
 		}
 

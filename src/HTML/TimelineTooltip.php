@@ -130,7 +130,7 @@ final class TimelineTooltip extends Tooltip {
 			$more_count = $total_items - $max_items;
 
 			$more_items = sprintf(
-				// translators: %s: number of additional items that are not being displayed.
+				/* translators: %s: number of additional items that are not being displayed. */
 				__( '%s More', 'easy-digital-downloads' ),
 				$more_count > 10 ?
 					'10+' :

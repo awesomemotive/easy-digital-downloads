@@ -177,4 +177,21 @@ class Elements extends EDD_UnitTestCase {
 		$this->assertStringContainsString( 'disabled', $output );
 		$this->assertStringContainsString( 'readonly', $output );
 	}
+
+	public function test_upload() {
+		$upload = new \EDD\HTML\Upload(
+			array(
+				'id'   => 'edd-upload',
+				'name' => 'edd-upload',
+				'value' => 'http://example.com/image.jpg',
+				'desc' => 'Upload or choose a logo to be displayed at the top of sales receipt emails. Displayed on HTML emails only.',
+			)
+		);
+		$output = $upload->get();
+
+		$this->assertStringContainsString( 'name="edd-upload"', $output );
+		$this->assertStringContainsString( 'http://example.com/image.jpg', $output );
+		$this->assertStringContainsString( 'Attach File', $output );
+		$this->assertStringContainsString( 'Upload or choose a logo', $output );
+	}
 }

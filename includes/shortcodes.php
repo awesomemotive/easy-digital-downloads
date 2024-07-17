@@ -993,7 +993,7 @@ function edd_process_profile_editor_remove_email( $data ) {
 
 		$user       = wp_get_current_user();
 		$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		/* translators: 1. email address; 2. user who removed email. */
+		/* translators: 1: email address, 2: username */
 		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $data['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 

@@ -1,8 +1,13 @@
 @import "../../variables/variables";
 @import 'licenses';
+@import 'subnav';
 
 .edd-settings-content {
 	max-width: $break-huge;
+
+	h3 {
+		margin: 0;
+	}
 }
 
 .edd-settings-colors,

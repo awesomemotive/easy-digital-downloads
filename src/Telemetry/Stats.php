@@ -7,10 +7,18 @@
  * @license   GPL2+
  * @since     3.1.1
  */
-namespace EDD\Telemetry;
 
+namespace EDD\Telemetry;
 use EDD\Admin\Pass_Manager;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Class Stats
+ *
+ * @since 3.1.1
+ */
 class Stats {
 
 	/**
@@ -60,7 +68,7 @@ class Stats {
 	 * Converts a timestamp value to a date string for consistent dates.
 	 *
 	 * @since 3.1.1
-	 * @param string $timestamp
+	 * @param string $timestamp The timestamp to convert.
 	 * @return string
 	 */
 	private function convert_timestamp( $timestamp = '' ) {

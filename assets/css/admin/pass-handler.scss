@@ -52,7 +52,7 @@
 		background: rgba(0,0,0,.5);
 		justify-content: center;
 		align-items: center;
-		z-index: 1;
+		z-index: 110;
 
 		p {
 			background: $white;
@@ -79,5 +79,9 @@
 	&__actions {
 		display: flex;
 		gap: 4px;
+	}
+
+	&__heading {
+		width: 100%;
 	}
 }

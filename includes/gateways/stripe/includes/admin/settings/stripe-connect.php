@@ -186,6 +186,7 @@ function edds_stripe_connect_disconnect_url() {
 			'tab'                    => 'gateways',
 			'section'                => 'edd-stripe',
 			'edds-stripe-disconnect' => true,
+			'edd-action'             => 'disconnect_stripe_connect',
 		),
 		admin_url( 'edit.php' )
 	);
@@ -202,9 +203,7 @@ function edds_stripe_connect_disconnect_url() {
 		$stripe_connect_disconnect_url
 	);
 
-	$stripe_connect_disconnect_url = wp_nonce_url( $stripe_connect_disconnect_url, 'edds-stripe-connect-disconnect' );
-
-	return $stripe_connect_disconnect_url;
+	return wp_nonce_url( $stripe_connect_disconnect_url, 'edds-stripe-connect-disconnect' );
 }
 
 /**
@@ -267,7 +266,7 @@ function edds_stripe_connect_process_disconnect() {
 
 	return wp_redirect( esc_url_raw( $redirect ) );
 }
-add_action( 'admin_init', 'edds_stripe_connect_process_disconnect' );
+add_action( 'edd_disconnect_stripe_connect', 'edds_stripe_connect_process_disconnect' );
 
 /**
  * Updates the `stripe_connect_account_country` setting if using Stripe Connect
@@ -490,7 +489,7 @@ function edds_stripe_connect_account_info_ajax_response() {
 				) . ' ' .
 				'<br /><br />' .
 				sprintf(
-					/* translators: %1$s Opening anchor tag for disconnecting Stripe, do not translate. %2$s Closing anchor tag, do not translate. */
+					/* translators: 1: Opening anchor tag for disconnecting Stripe, do not translate. 2: Closing anchor tag, do not translate. */
 					__( '%1$sDisconnect this account%2$s.', 'easy-digital-downloads' ),
 					'<a href="' . esc_url( edds_stripe_connect_disconnect_url() ) . '">',
 					'</a>'
@@ -587,7 +586,7 @@ function edds_stripe_connect_account_info_ajax_response() {
 					'account' => $account,
 				)
 			);
-		} catch ( \Stripe\Exception\AuthenticationException $e ) {
+		} catch ( \EDD\Vendor\Stripe\Exception\AuthenticationException $e ) {
 			// API keys were changed after using Stripe Connect.
 			return wp_send_json_error(
 				array(
@@ -608,6 +607,15 @@ function edds_stripe_connect_account_info_ajax_response() {
 			);
 		} catch ( \Exception $e ) {
 			// General error.
+			$unknown_error['message'] .= ' ' . wpautop(
+				sprintf(
+					/* translators: 1: Opening anchor tag for disconnecting Stripe, do not translate. 2: Closing anchor tag, do not translate. */
+					__( '%1$sDisconnect this account%2$s.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( edds_stripe_connect_disconnect_url() ) . '">',
+					'</a>'
+				)
+			);
+
 			return wp_send_json_error( $unknown_error );
 		}
 		// Manual API key management.
@@ -696,7 +704,7 @@ function edds_stripe_connect_admin_notices_register() {
 		);
 
 		// Stripe Connect reconnect.
-		/** translators: %s Test mode status. */
+		/* translators: %s Test mode status. */
 		$test_mode_status = edd_is_test_mode()
 			? _x( 'enabled', 'gateway test mode status', 'easy-digital-downloads' )
 			: _x( 'disabled', 'gateway test mode status', 'easy-digital-downloads' );

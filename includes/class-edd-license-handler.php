@@ -8,7 +8,7 @@
  * @version 1.1
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Licensing\API;
@@ -85,6 +85,7 @@ class EDD_License {
 		$this->license      = $this->edd_license->key;
 		$this->author       = $_author;
 		$this->api_handler  = new API( $_api_url );
+		$this->api_handler->should_check_failed_request = true;
 		$this->api_url      = $_api_url;
 		$this->pass_manager = new \EDD\Admin\Pass_Manager();
 
@@ -157,7 +158,7 @@ class EDD_License {
 	 */
 	public function auto_updater() {
 
-		$doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+		$doing_cron = EDD\Utils\Request::is_request( 'cron' );
 		if ( ! current_user_can( 'manage_options' ) && ! $doing_cron ) {
 			return;
 		}
@@ -297,7 +298,7 @@ class EDD_License {
 					'id'             => 'edd-missing-license',
 					'class'          => "error {$this->item_shortname}-license-error",
 					'message'        => sprintf(
-						/* translators: 1. opening anchor tag; 2. closing anchor tag */
+						/* translators: 1: opening anchor tag, 2: closing anchor tag */
 						__( 'You have invalid or expired license keys for Easy Digital Downloads. %1$sActivate License(s)%2$s', 'easy-digital-downloads' ),
 						'<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'licenses' ) ) ) . '" class="button button-secondary">',
 						'</a>'

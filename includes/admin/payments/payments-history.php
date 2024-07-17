@@ -9,8 +9,8 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /** Navigation ****************************************************************/
 
@@ -20,42 +20,29 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  * @param string $active_tab
  */
-function edd_orders_page_primary_nav( $active_tab = '' ) {
+function edd_orders_page_primary_nav( $active_tab = '', $show_search = false ) {
+	$tabs = array();
+	foreach ( edd_get_order_pages() as $type => $label ) {
+		$tabs[ $type ] = array(
+			'name' => $label,
+			'url'  => edd_get_admin_url(
+				array(
+					'page'       => 'edd-payment-history',
+					'order_type' => $type,
+				),
+			),
+		);
+	}
 
-	ob_start();?>
-
-	<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
-		<?php
-
-		// Get the order pages
-		$tabs = edd_get_order_pages();
-
-		// Loop through order pages and create tabs
-		foreach ( $tabs as $tab_id => $tab_name ) {
-
-			// Remove
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'order_type'       => sanitize_key( $tab_id )
-			) );
-
-			// Remove the section from the tabs so we always end up at the main section
-			$tab_url = remove_query_arg( array( 'section', 'status' ), $tab_url );
-			$active  = $active_tab === $tab_id
-				? ' nav-tab-active'
-				: '';
-
-			// Link
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
-				echo esc_html( $tab_name );
-			echo '</a>';
-		}
-		?>
-	</nav>
-
-	<?php
-
-	echo ob_get_clean(); // WPCS: XSS ok.
+	$navigation = new EDD\Admin\Menu\SecondaryNavigation(
+		$tabs,
+		'edd-payment-history',
+		array(
+			'active_tab'  => $active_tab,
+			'show_search' => $show_search,
+		)
+	);
+	$navigation->render();
 }
 
 /**
@@ -118,25 +105,25 @@ function edd_payment_history_page() {
 	switch ( edd_get_payment_view() ) {
 
 		// View Order
-		case 'view-order-details' :
+		case 'view-order-details':
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
 			break;
 
 		// Add Order
-		case 'add-order' :
+		case 'add-order':
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
 			edd_add_order_page_content();
 			break;
 
 		// View Refund
-		case 'view-refund-details' :
+		case 'view-refund-details':
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-refund.php';
 			edd_view_refund_page_content();
 			break;
 
 		// List Table
-		case 'list' :
-		default :
+		case 'list':
+		default:
 			edd_order_list_table_content();
 			break;
 	}
@@ -153,8 +140,10 @@ function edd_order_list_table_content() {
 	$orders_table->prepare_items();
 
 	$active_tab = sanitize_key( $orders_table->get_request_var( 'order_type', 'sale' ) );
-	$admin_url  = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ); ?>
+	$admin_url  = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) );
 
+	edd_orders_page_primary_nav( $active_tab, true );
+	?>
 	<div class="wrap">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
 		<?php
@@ -168,8 +157,6 @@ function edd_order_list_table_content() {
 		}
 		?>
 		<hr class="wp-header-end">
-
-		<?php edd_orders_page_primary_nav( $active_tab ); ?>
 
 		<?php do_action( 'edd_payments_page_top' ); ?>
 
@@ -226,7 +213,7 @@ function edd_view_order_details_title( $admin_title, $title ) {
 			break;
 
 		// List
-		case 'list' :
+		case 'list':
 		default:
 			$title = $admin_title;
 			break;

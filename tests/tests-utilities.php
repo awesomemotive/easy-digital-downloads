@@ -33,39 +33,6 @@ class Utilities_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @dataProvider _test_includes_dp
-	 * @covers ::includes()
-	 *
-	 * @group edd_includes
-	 */
-	public function test_includes( $path_to_file ) {
-		$this->assertFileExists( $path_to_file );
-	}
-
-	/**
-	 * Data provider for test_includes().
-	 */
-	public function _test_includes_dp() {
-		$utils_dir = EDD_PLUGIN_DIR . 'includes/utils/';
-
-		return array(
-
-			// Interfaces.
-			array( $utils_dir . 'interface-static-registry.php' ),
-			array( $utils_dir . 'interface-error-logger.php' ),
-
-			// Exceptions.
-			array( $utils_dir . 'class-edd-exception.php' ),
-			array( $utils_dir . 'exceptions/class-attribute-not-found.php' ),
-			array( $utils_dir . 'exceptions/class-invalid-argument.php' ),
-			array( $utils_dir . 'exceptions/class-invalid-parameter.php' ),
-
-			// Registry.
-			array( $utils_dir . 'class-registry.php' ),
-		);
-	}
-
-	/**
 	 * @covers ::get_registry()
 	 * @group edd_registry
 	 * @group edd_errors

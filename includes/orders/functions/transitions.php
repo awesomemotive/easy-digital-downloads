@@ -26,7 +26,7 @@ function edd_record_order_status_change( $old_status, $new_status, $order_id ) {
 	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
 
 	$status_change = sprintf(
-		/* translators: %1$s Old order status. %2$s New order status. */
+		/* translators: 1: Old status, 2: New status */
 		__( 'Status changed from %1$s to %2$s', 'easy-digital-downloads' ),
 		$old_status,
 		$new_status
