@@ -94,7 +94,7 @@ if ( $orders ) :
 									<?php
 									printf(
 										/* translators: the order item's status. */
-										esc_html__( 'Status: %s', 'easy-digital-downloads' ),
+										esc_html_x( 'Status: %s', 'The status of an order item', 'easy-digital-downloads' ),
 										esc_html( edd_get_status_label( $item->status ) )
 									);
 									?>

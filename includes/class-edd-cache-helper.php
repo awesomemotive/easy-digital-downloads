@@ -110,6 +110,7 @@ class EDD_Cache_Helper {
 					<p>
 						<?php
 						printf(
+							/* translators: %s: W3 Total Cache settings URL */
 							__( 'In order for <strong>database caching</strong> to work with Easy Digital Downloads you must add <code>_wp_session_</code> to the "Ignored query stems" option in W3 Total Cache settings <a href="%s">here</a>.', 'easy-digital-downloads' ),
 							esc_url( admin_url( 'admin.php?page=w3tc_dbcache' ) )
 						);

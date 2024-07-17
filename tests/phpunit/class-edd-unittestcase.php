@@ -185,7 +185,7 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 			'edd_pass_licenses',
 			'edd_pass_data',
 			'edd_tokenizer_signing_key',
-			'edd_use_php_sessions',
+			'edd_session_handling',
 			'edd_licensed_extensions',
 			'edd_activation_date',
 			'edd_pro_activation_date',

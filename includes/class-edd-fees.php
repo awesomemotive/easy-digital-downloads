@@ -38,7 +38,7 @@ class EDD_Fees {
 	 * @param array $args Fee arguments
 	 *
 	 * @uses EDD_Fees::get_fees()
-	 * @uses EDD_Session::set()
+	 * @uses EDD\Sessions\Handler::set()
 	 *
 	 * @return array The fees.
 	 */
@@ -135,7 +135,7 @@ class EDD_Fees {
 	 * @since 1.5
 	 * @param string $id Fee ID
 	 * @uses EDD_Fees::get_fees()
-	 * @uses EDD_Session::set()
+	 * @uses EDD\Sessions\Handler::set()
 	 * @return array Remaining fees
 	 */
 	public function remove_fee( $id = '' ) {
@@ -180,7 +180,7 @@ class EDD_Fees {
 	 * @param string $type Fee type, "fee" or "item"
 	 * @param int $download_id The download ID whose fees to retrieve
 	 * @param null|int $price_id The variable price ID whose fees to retrieve
-	 * @uses EDD_Session::get()
+	 * @uses EDD\Sessions\Handler::get()
 	 * @return array|bool List of fees when available, false when there are no fees
 	 */
 	public function get_fees( $type = 'fee', $download_id = 0, $price_id = null ) {
@@ -322,7 +322,7 @@ class EDD_Fees {
 	 * Stores the fees in the payment meta
 	 *
 	 * @since 1.5
-	 * @uses EDD_Session::set()
+	 * @uses EDD\Sessions\Handler::set()
 	 * @param array $payment_meta The meta data to store with the payment
 	 * @param array $payment_data The info sent from process-purchase.php
 	 * @return array Return the payment meta with the fees added

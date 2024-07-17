@@ -183,7 +183,7 @@ class Notification {
 
 		$data['icon_name'] = $this->getIcon();
 
-		/* Translators: %s - a length of time (e.g. "1 second") */
+		/* translators: %s: a length of time (e.g. "1 second") */
 		$data['relative_date'] = sprintf( __( '%s ago', 'easy-digital-downloads' ), human_time_diff( strtotime( $this->date_updated ) ) );
 
 		return $data;

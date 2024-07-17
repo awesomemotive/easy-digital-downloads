@@ -406,6 +406,7 @@ final class EDD_Amazon_Payments {
 			'amazon_mws_ipn_url' => array(
 				'id'       => 'amazon_ipn_url',
 				'name'     => __( 'Amazon Merchant IPN URL', 'easy-digital-downloads' ),
+				/* translators: %s: Integration Settings URL */
 				'desc'     => sprintf( __( 'The IPN URL to provide in your MWS account. Enter this under your <a href="%s">Integration Settings</a>', 'easy-digital-downloads' ), 'https://sellercentral.amazon.com/gp/pyop/seller/account/settings/user-settings-edit.html' ),
 				'type'     => 'text',
 				'size'     => 'large',
@@ -888,6 +889,7 @@ final class EDD_Amazon_Payments {
 			if ( 'Declined' === $status ) {
 
 				$reason = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'];
+				/* translators: %s: Payment Failure Reason (dynamic, provided by the gateway) */
 				edd_set_error( 'payment_declined', sprintf( __( 'Your payment could not be authorized, please try a different payment method. Reason: %s', 'easy-digital-downloads' ), $reason ) );
 				edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 			}
@@ -934,6 +936,7 @@ final class EDD_Amazon_Payments {
 
 		// Set an error
 		} else {
+			/* translators: %s: Amazon Error (dynamic, provided by the gateway) */
 			edd_set_error( 'amazon_error',sprintf( __( 'There was an issue processing your payment. Amazon error: %s', 'easy-digital-downloads' ), print_r( $charge, true ) ) );
 			edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 		}
@@ -1048,7 +1051,11 @@ final class EDD_Amazon_Payments {
 			$seller_id = $data['SellerId'];
 
 			if ( $seller_id != edd_get_option( 'amazon_seller_id', '' ) ) {
-				wp_die( __( 'Invalid Amazon seller ID', 'easy-digital-downloads' ), __( 'IPN Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
+				wp_die(
+					__( 'Invalid Amazon seller ID', 'easy-digital-downloads' ),
+					__( 'IPN Error', 'easy-digital-downloads' ),
+					array( 'response' => 401 )
+				);
 			}
 
 			switch( $data['NotificationType'] ) {
@@ -1081,14 +1088,18 @@ final class EDD_Amazon_Payments {
 
 						edd_update_payment_status( $payment_id, 'refunded' );
 
+						/* translators: %s: Amazon Refund ID */
 						edd_insert_payment_note( $payment_id, sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'easy-digital-downloads' ), $data['RefundDetails']['AmazonRefundId'] ) );
 					}
 
 					break;
 			}
-
-		} catch( Exception $e ) {
-			wp_die( $e->getErrorMessage(), __( 'IPN Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
+		} catch ( Exception $e ) {
+			wp_die(
+				$e->getErrorMessage(),
+				__( 'IPN Error', 'easy-digital-downloads' ),
+				array( 'response' => 401 )
+			);
 		}
 	}
 
@@ -1151,15 +1162,18 @@ final class EDD_Amazon_Payments {
 
 			switch( $status ) {
 				case 'Declined' :
+					/* translators: %s: Amazon Refund ID */
 					$note   = __( 'Refund declined in Amazon. Refund ID: %s', 'easy-digital-downloads' );
 					break;
 
 				case 'Completed' :
 					$refund_id = $refund['RefundResult']['RefundDetails']['AmazonRefundId'];
+					/* translators: %s: Amazon Refund ID */
 					$note      = sprintf( __( 'Refund completed in Amazon. Refund ID: %s', 'easy-digital-downloads' ), $refund_id );
 					break;
 
 				case 'Pending' :
+					/* translators: %s: Amazon Refund ID */
 					$note = sprintf( __( 'Refund initiated in Amazon. Reference ID: %s', 'easy-digital-downloads' ), $reference_id );
 					break;
 			}

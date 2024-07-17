@@ -90,6 +90,18 @@ class Telemetry extends EDD_UnitTestCase {
 		$this->assertEquals( EDD_VERSION, self::$data['environment']['edd_version'] );
 	}
 
+	public function test_environment_contains_multiste() {
+		$this->assertEquals( is_multisite(), self::$data['environment']['multisite'] );
+
+		if ( is_multisite() ) {
+			$this->assertEquals( 'subdirectory', self::$data['environment']['multisite_mode'] );
+			$this->assertEquals( 0, self::$data['environment']['network_activated'] );
+			$this->assertEquals( 1, self::$data['environment']['network_sites'] );
+			$this->assertEquals( 0, self::$data['environment']['domain_mapping'] );
+			$this->assertEquals( 1, self::$data['environment']['is_main_site'] );
+		}
+	}
+
 	public function test_no_data_includes_admin_email() {
 		$list_handler = new ListHandler( self::$data );
 		$emails       = $list_handler->search( get_bloginfo( 'admin_email' ) );
@@ -110,5 +122,9 @@ class Telemetry extends EDD_UnitTestCase {
 		$tracking = new \EDD_Tracking();
 
 		$this->assertTrue( $tracking instanceof \EDD\Telemetry\Tracking );
+	}
+
+	public function test_email_template_order_receipt_is_enabled() {
+		$this->assertEquals( 1, self::$data['settings']['email_template_order_receipt'] );
 	}
 }

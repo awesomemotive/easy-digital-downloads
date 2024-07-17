@@ -15,7 +15,7 @@ if ( empty( $orders ) ) {
 				<div class="edd-blocks-orders__order-id">
 					<?php
 					printf(
-						/* translators: the order */
+						/* translators: %s: order number */
 						esc_html__( 'Order: %s', 'easy-digital-downloads' ),
 						esc_html( $order->get_number() )
 					);

@@ -210,6 +210,17 @@ class Customers extends EDD_UnitTestCase {
 		$this->assertFalse( in_array( 'added-email@edd.test', self::$customers[1]->emails, true ) );
 	}
 
+	public function test_remove_email_for_customer_cannot_remove_other_email() {
+		self::$customers[1]->add_email( 'added-email@edd.test' );
+
+		// Verify the email is on the customer.
+		$this->assertTrue( in_array( 'added-email@edd.test', self::$customers[1]->emails, true ) );
+
+		// Try and remove it from a different customer.
+		$this->assertFalse( self::$customers[2]->remove_email( 'added-email@edd.test' ) );
+		$this->assertTrue( in_array( 'added-email@edd.test', self::$customers[1]->emails, true ) );
+	}
+
 	public function test_validate_username_should_return_true() {
 		$this->assertTrue( edd_validate_username( 'easydigitaldownloads' ) );
 	}

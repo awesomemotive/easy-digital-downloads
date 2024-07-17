@@ -2,11 +2,11 @@
 /**
  * Easy Digital Downloads General Settings
  *
- * @package EDD
+ * @package     EDD
  * @subpackage  Settings
  * @copyright   Copyright (c) 2023, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 3.1.4
+ * @since       3.1.4
  */
 
 namespace EDD\Admin\Settings\Tabs;
@@ -14,7 +14,7 @@ namespace EDD\Admin\Settings\Tabs;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * General settings tab.
+ * General settings tab class.
  *
  * @since 3.1.4
  */
@@ -200,8 +200,8 @@ class General extends Tab {
 				),
 				'thousands_separator' => array(
 					'id'          => 'thousands_separator',
-					'name'        => __( 'Thousandths Separator', 'easy-digital-downloads' ),
-					'desc'        => __( 'The symbol to separate thousandths. Usually <code>,</code> or <code>.</code>.', 'easy-digital-downloads' ),
+					'name'        => __( 'Thousands Separator', 'easy-digital-downloads' ),
+					'desc'        => __( 'The symbol to separate thousands. Usually <code>,</code> or <code>.</code>.', 'easy-digital-downloads' ),
 					'type'        => 'text',
 					'size'        => 'small',
 					'field_class' => 'code',
@@ -275,7 +275,7 @@ class General extends Tab {
 			'name'  => __( 'Request Logs', 'easy-digital-downloads' ),
 			'check' => __( 'Log public API requests.', 'easy-digital-downloads' ),
 			'desc'  => sprintf(
-				/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+				/* translators: 1: opening anchor tag, 2: closing anchor tag */
 				__( 'Authenticated requests to the EDD API are always logged. %1$sView the API request logs.%2$s', 'easy-digital-downloads' ),
 				'<a href="' . $link . '">',
 				'</a>'

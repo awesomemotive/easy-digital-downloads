@@ -2,11 +2,11 @@
 /**
  * Easy Digital Downloads Gateway Settings
  *
- * @package EDD
+ * @package     EDD
  * @subpackage  Settings
  * @copyright   Copyright (c) 2023, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 3.1.4
+ * @since       3.1.4
  */
 
 namespace EDD\Admin\Settings\Tabs;
@@ -14,7 +14,7 @@ namespace EDD\Admin\Settings\Tabs;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Gateway settings tab.
+ * Gateway settings tab class.
  *
  * @since 3.1.4
  */
@@ -74,46 +74,41 @@ class Gateways extends Tab {
 			),
 			'checkout'   => array(
 				'enforce_ssl'         => array(
-					'id'    => 'enforce_ssl',
-					'name'  => __( 'Enforce SSL on Checkout', 'easy-digital-downloads' ),
-					'check' => __( 'Enforced', 'easy-digital-downloads' ),
-					'desc'  => __( 'Redirect all customers to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
-					'type'  => 'checkbox_description',
+					'id'      => 'enforce_ssl',
+					'name'    => __( 'Enforce SSL on Checkout', 'easy-digital-downloads' ),
+					'check'   => __( 'Redirect all customers to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
+					'type'    => 'checkbox_toggle',
+					'options' => array(
+						'disabled' => is_ssl() ? false : true,
+					),
 				),
 				'redirect_on_add'     => array(
 					'id'            => 'redirect_on_add',
 					'name'          => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-					'desc'          => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
-					'type'          => 'checkbox',
+					'check'         => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
+					'type'          => 'checkbox_toggle',
 					'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
 					'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
 				),
 				'logged_in_only'      => array(
-					'id'            => 'logged_in_only',
-					'name'          => __( 'Require Login', 'easy-digital-downloads' ),
-					'desc'          => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
-					'type'          => 'checkbox',
-					'tooltip_title' => __( 'Require Login', 'easy-digital-downloads' ),
-					'tooltip_desc'  => __( 'You can require that customers create and login to user accounts prior to purchasing from your store by enabling this option. When unchecked, users can purchase without being logged in by using their name and email address.', 'easy-digital-downloads' ),
-				),
-				'show_register_form'  => array(
-					'id'      => 'show_register_form',
-					'name'    => __( 'Show Register / Login Form', 'easy-digital-downloads' ),
-					'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
+					'id'      => 'logged_in_only',
+					'name'    => __( 'Customer Registration', 'easy-digital-downloads' ),
 					'type'    => 'select',
-					'std'     => 'none',
+					'desc'    => __( 'You may allow customers to place orders without a user account.', 'easy-digital-downloads' ) .
+						'<br />' .
+						__( 'Setting this to auto will create a user account if one does not exist for a customer.', 'easy-digital-downloads' ),
 					'options' => array(
-						'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
-						'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
-						'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
-						'none'         => __( 'None', 'easy-digital-downloads' ),
+						''         => __( 'Allow customers to place orders without an account', 'easy-digital-downloads' ),
+						'required' => __( 'Customers must log in or create an account to purchase', 'easy-digital-downloads' ),
+						'auto'     => __( 'Automatically register new user accounts', 'easy-digital-downloads' ),
 					),
 				),
+				'show_register_form'  => $this->get_register_form(),
 				'enable_cart_saving'  => array(
 					'id'            => 'enable_cart_saving',
 					'name'          => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
-					'desc'          => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
-					'type'          => 'checkbox',
+					'check'         => __( 'Allow users to temporarily save their cart at checkout.', 'easy-digital-downloads' ),
+					'type'          => 'checkbox_toggle',
 					'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
 					'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
 				),
@@ -167,7 +162,7 @@ class Gateways extends Tab {
 					'std'  => 30,
 					'type' => 'number',
 					'size' => 'small',
-					'max'  => 3650, // Ten year maximum, because why explicitly support longer
+					'max'  => 3650, // Ten year maximum, because why explicitly support longer.
 					'min'  => 0,
 					'step' => 1,
 				),
@@ -185,11 +180,11 @@ class Gateways extends Tab {
 	private function get_test_mode() {
 
 		$test_mode = array(
-			'id'    => 'test_mode',
-			'name'  => __( 'Test Mode', 'easy-digital-downloads' ),
-			'check' => __( 'Enabled', 'easy-digital-downloads' ),
-			'desc'  => __( 'While test mode is enabled, no live transactions are processed.<br>Use test mode in conjunction with the sandbox/test account for the payment gateways to test.', 'easy-digital-downloads' ),
-			'type'  => 'checkbox_description',
+			'id'            => 'test_mode',
+			'name'          => __( 'Enable Test Mode', 'easy-digital-downloads' ),
+			'tooltip_title' => __( 'What is Test Mode?', 'easy-digital-downloads' ),
+			'tooltip_desc'  => __( 'While test mode is enabled, no live transactions are processed.<br>Use test mode in conjunction with the sandbox/test account for the payment gateways to test your checkout process.', 'easy-digital-downloads' ),
+			'type'          => 'checkbox_toggle',
 		);
 		// If test_mode is being forced to true, alter the setting so it cannot be modified.
 		if ( ! edd_is_test_mode_forced() ) {
@@ -220,16 +215,15 @@ class Gateways extends Tab {
 			'enable_skus'        => array(
 				'id'    => 'enable_skus',
 				'name'  => __( 'Enable SKU Entry', 'easy-digital-downloads' ),
-				'check' => __( 'Check this box to allow entry of product SKUs.', 'easy-digital-downloads' ),
-				'desc'  => __( 'SKUs will be shown on purchase receipt and exported purchase histories.', 'easy-digital-downloads' ),
-				'type'  => 'checkbox_description',
+				'check' => __( 'SKUs will be shown on purchase receipt and exported purchase histories.', 'easy-digital-downloads' ),
+				'type'  => 'checkbox_toggle',
 			),
 			'enable_sequential'  => array(
-				'id'    => 'enable_sequential',
-				'name'  => __( 'Enable Sequential Numbering', 'easy-digital-downloads' ),
-				'check' => __( 'Check this box to enable sequential order numbers.', 'easy-digital-downloads' ),
-				'desc'  => __( 'Does not impact previous orders. Future orders will be sequential.', 'easy-digital-downloads' ),
-				'type'  => 'checkbox_description',
+				'id'            => 'enable_sequential',
+				'name'          => __( 'Enable Sequential Numbering', 'easy-digital-downloads' ),
+				'tooltip_title' => __( 'Sequential Order Numbers', 'easy-digital-downloads' ),
+				'tooltip_desc'  => __( 'This setting will not impact previous orders. Future orders will be assigned a sequential number.', 'easy-digital-downloads' ),
+				'type'          => 'checkbox_toggle',
 			),
 			'sequential_start'   => $this->get_sequential_start(),
 			'sequential_prefix'  => array(
@@ -321,7 +315,7 @@ class Gateways extends Tab {
 			$text .= sprintf( '<a href="%s" target="_blank" class="edd-pro-upgrade">' . __( 'Upgrade to Pro', 'easy-digital-downloads' ) . '</a>', $url );
 		} else {
 			$text .= sprintf(
-				/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+				/* translators: 1: opening anchor tag, 2: closing anchor tag */
 				__( 'Access %1$sAdvanced Sequential Order Numbers%2$s today.', 'easy-digital-downloads' ),
 				'<a href="' . esc_url(
 					edd_get_admin_url(
@@ -354,7 +348,7 @@ class Gateways extends Tab {
 			);
 
 			return sprintf(
-				/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+				/* translators: 1: opening anchor tag, 2: closing anchor tag */
 				__( 'GeoLocation Detection is only available in Easy Digital Downloads Pro. %1$sVerify your pass to get access to pro features.%2$s', 'easy-digital-downloads' ),
 				'<a href="' . esc_url( $settings_url ) . '">',
 				'</a>'
@@ -370,10 +364,38 @@ class Gateways extends Tab {
 		);
 
 		return sprintf(
-			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+			/* translators: 1: opening anchor tag, 2: closing anchor tag */
 			__( 'Increase conversions by auto-filling address information for customers during checkout. To enable GeoLocation Detection, %1$sUpgrade to Pro%2$s.', 'easy-digital-downloads' ),
 			'<a href="' . $upgrade_link . '" class="edd-pro-upgrade" target="_blank">',
 			'</a>'
+		);
+	}
+
+	/**
+	 * Gets the register form setting.
+	 *
+	 * @since 3.3.0
+	 * @return array
+	 */
+	private function get_register_form() {
+		$options = array(
+			'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
+			'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
+			'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
+			'none'         => __( 'None', 'easy-digital-downloads' ),
+		);
+		if ( 'auto' === edd_get_option( 'logged_in_only', '' ) ) {
+			unset( $options['both'] );
+			unset( $options['registration'] );
+		}
+
+		return array(
+			'id'      => 'show_register_form',
+			'name'    => __( 'Show Register / Login Form', 'easy-digital-downloads' ),
+			'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
+			'type'    => 'select',
+			'std'     => 'none',
+			'options' => $options,
 		);
 	}
 }

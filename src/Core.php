@@ -8,7 +8,8 @@
 
 namespace EDD;
 
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Class Core
@@ -28,18 +29,24 @@ class Core extends EventManagement\Subscribers {
 			new Admin\PassHandler\Ajax( $this->pass_handler ),
 			new Admin\Extensions\Extension_Manager(),
 			new Customers\Recalculations(),
-			new Admin\PassHandler\Cron(),
 			new Downloads\Services(),
 			new Orders\DeferredActions(),
-			new Emails\Triggers(),
+			new Emails\Loader(),
 			new Globals\Polyfills\Loader(),
 			new Integrations\Registry(),
+			Checkout\AutoRegister::get_instance(),
+
+			// Gateways.
+			new Gateways\Stripe\Webhooks\Listener(),
 
 			// Upgrades.
 			new Upgrades\Loader(),
 
 			// Compatibility.
 			new Compatibility\Loader(),
+
+			// Cron Loader.
+			new Cron\Loader(),
 		);
 	}
 
@@ -77,6 +84,8 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Promos\Footer\Loader(),
 			new Admin\Promos\About(),
 			new Admin\Settings\Pointers(),
+			new Admin\Menu\Header(),
+			new Admin\Notifications\Loader(),
 		);
 
 		return $providers;

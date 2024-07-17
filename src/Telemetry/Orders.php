@@ -7,8 +7,17 @@
  * @license   GPL2+
  * @since     3.1.1
  */
+
 namespace EDD\Telemetry;
 
+// Exit if accessed directly.
+
+defined( 'ABSPATH' ) || exit;
+/**
+ * Class Orders
+ *
+ * @since 3.1.1
+ */
 class Orders {
 
 	/**

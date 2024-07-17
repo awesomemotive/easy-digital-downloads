@@ -3,10 +3,10 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, chriscct7, sumobi, SpencerFinnell, drewapicture, johnjamesjacoby, lisacee
 Tags: ecommerce, payments, sell, digital store, stripe
-Requires at least: 5.8
-Tested up to: 6.5
+Requires at least: 6.0
+Tested up to: 6.6
 Requires PHP: 7.4
-Stable Tag: 3.2.12
+Stable Tag: 3.3.1
 License: GNU Version 2 or Any Later Version
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -224,16 +224,68 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.3.1 =
+* Settings: Fixed a PHP warning related to a store's region when managing settings.
+* Settings: Ensure that the selected currency option is a registered currency.
+* Orders: Fixed an issue resulting in searching for orders not always working.
+* Emails: Ensure that email subjects do not contain HTML tags.
+* Emails: The Admin Sale Notification wasn't sending to multiple recipients.
+* Checkout: Improved checkout page detection compatibility for extensions.
+* Onboarding: Improved the onboarding wizard styles and content.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
+= 3.3.0 =
+* Important: This release requires WordPress 6.0 or higher.
+* Emails: **NEW** Managing emails is now easier than ever with the new Email Editor. All emails are now visible and managed from Downloads > Emails.
+* Emails: **NEW** You can now easily toggle the status of most emails to enable or disable them.
+* Emails: **NEW** Email tags have been improved to be more widely available to extensions and are now context aware by email type and recipient.
+* Emails: **NEW** You can now send an email to the customer when an order is marked as refunded.
+* Emails: **NEW** Added email tags for the refund amount and refund ID.
+* Emails: **NEW** You can now see a log of emails sent to customers by EDD in Downloads > Emails > Logs.
+* Emails: **NEW** Added a new email tag for the order fees.
+* Emails: **NEW** Added the ability to email store owners about the Stripe "Early Fraud Warning" webhook.
+* Emails: **NEW** You can now easily restore the default email templates from the editor.
+* Emails: More emails are now able to be previewed and tested.
+* Emails: Added the ability to edit the New User, Password Reset, and User Verification emails.
+* Emails: Email settings have been moved to Downloads > Emails > Settings.
+* Sessions: **NEW** The session handling has been rewritten from the ground up to be more reliable and improve performance.
+* Sessions: The session storage method can now be changed via a setting in Downloads > Settings > Misc.
+* Sessions: Added a custom database table for session storage, when using the database storage method.
+* Sessions: Improved the performance and reliability of the session cleanup Cron event.
+* Sessions: Improved session handling to only start when necessary, allowing more pages to be cached for guests.
+* Extensions: The Disable Purchase Receipts extension is now marked as legacy and will be deactivated, as the functionality is now built into EDD.
+* Extensions: The Auto Register extension is now marked as legacy and will be deactivated, as the functionality is now built into EDD.
+* Stripe: Improved the handling when a Stripe customer cannot be found.
+* Stripe: Added a disconnect button to the Stripe settings if the Stripe account that is connected has been closed.
+* Stripe: Improved and implemented fallbacks to reduce failures when processing Stripe payments.
+* PayPal: Improved the onboarding process for PayPal to avoid a possible fatal error.
+* HTML: The Product Dropdown element has been improved for reliability, search, and performance.
+* Migration: Improved the reliability of the EDD 3.0+ migration routine.
+* Reports: When the percentage difference was calculated, it was possible for a positive change to show as a negative percentage.
+* Cart: In some cases, the Add to Cart button was not redirecting logged-in users to the checkout page.
+* Checkout: Improved the handling of the purchase form when showing the login form.
+* Checkout: Improved the handling of the address fields when using the Stripe Payment Element.
+* Checkout: Improved purchase validation during the checkout process.
+* Exports: The Orders Export could sometimes use the product ID as the User ID.
+* WPCron: We've refactored how EDD uses WPCron to improve performance and reliability.
+* Customers: Improved the validation when removing email addresses from a customer.
+* Admin: Many of our 'checkbox' settings have been updated to use the new 'toggle' setting type.
+* Admin: Improved the consistency of the EDD Admin Pages.
+* i18n: Updated the list of regions for the UK.
+* i18n: Added Regions for Benin.
+* i18n: We reviewed, updated, and improved a large number of translations with translator comments and context.
+* Performance: Improved integration with the Heartbeat API to reduce the number of requests.
+* Refunds: Improved the reliability and performance of generating a refund number.
+
 = 3.2.12 =
-* Compatibility: Fixed a conflict between Setup Wizard and the Multi-Currency extension.
+* Compatibility: Fixed a conflict between Setup Wizard and the Multi Currency extension.
 * Stripe: Improved the handling of refunding charges via the Stripe Dashboard.
 * Exports: Improved performance, management, and protection of export files generated by EDD.
 * Emails: Improved the validation before installing the Recapture integration.
 
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
-
 = 3.2.11 =
-* Order Management: When searching orders, a Product ID was being erroneously added to the filter arguments when it not have been.
+* Order Management: When searching orders, a Product ID was being erroneously added to the filter arguments when it should not have been.
 
 = 3.2.10 =
 * Downloads: Improved performance when creating and managing download directories.

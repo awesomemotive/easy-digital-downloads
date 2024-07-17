@@ -63,7 +63,7 @@ final class Easy_Digital_Downloads {
 	 *
 	 * This holds cart items, purchase sessions, and anything else stored in the session.
 	 *
-	 * @var object|EDD_Session
+	 * @var object|EDD\Sessions\Handler
 	 * @since 1.5
 	 */
 	public $session;
@@ -87,18 +87,10 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Email Template Tags Object.
 	 *
-	 * @var object|EDD_Email_Template_Tags
+	 * @var object|EDD\Emails\Tags\Handler
 	 * @since 1.9
 	 */
 	public $email_tags;
-
-	/**
-	 * EDD Email Summary Cron Object.
-	 *
-	 * @var object|EDD_Email_Summary_Cron
-	 * @since 3.1
-	 */
-	public $email_summary_cron;
 
 	/**
 	 * EDD Cart Object
@@ -225,11 +217,10 @@ final class Easy_Digital_Downloads {
 		self::$instance->api                = new EDD_API();
 		self::$instance->debug_log          = new EDD\Logging();
 		self::$instance->utils              = new EDD\Utilities();
-		self::$instance->session            = new EDD_Session();
+		self::$instance->session            = new EDD\Sessions\Handler();
 		self::$instance->html               = new EDD\HTML\Elements();
 		self::$instance->emails             = new EDD_Emails();
-		self::$instance->email_tags         = new EDD_Email_Template_Tags();
-		self::$instance->email_summary_cron = new EDD_Email_Summary_Cron();
+		self::$instance->email_tags         = new EDD\Emails\Tags\Handler();
 		self::$instance->payment_stats      = new EDD_Payment_Stats();
 		self::$instance->cart               = new EDD_Cart();
 		self::$instance->structured_data    = new EDD\Structured_Data();
@@ -370,7 +361,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.2.12' );
+			define( 'EDD_VERSION', '3.3.1' );
 		}
 
 		// Make sure CAL_GREGORIAN is defined.
@@ -565,7 +556,6 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function include_utilities() {
-		require_once EDD_PLUGIN_DIR . 'includes/class-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
 	}
 
@@ -608,10 +598,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 
 		// Classes
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 
@@ -703,7 +691,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-transaction.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-refund-validator.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/actions.php';
@@ -725,16 +712,12 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/class-edd-payment.php';
 
-		// Emails
-		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-emails.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-email-tags.php';
+		// Emails.
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/recapture.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/tags-inserter.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary-blurb.php';
 

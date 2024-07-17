@@ -134,7 +134,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		// Build the date diff string.
 		$date_diff_string = sprintf(
-			/* translators: %s: human-readable time difference */
+			/* translators: %s: a length of time (e.g. "1 second") */
 			__( '%s ago', 'easy-digital-downloads' ),
 			$date_diff
 		);

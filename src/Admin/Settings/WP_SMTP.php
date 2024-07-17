@@ -10,10 +10,19 @@
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.11.4
  */
+
 namespace EDD\Admin\Settings;
 
 use EDD\EventManagement\SubscriberInterface;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+/**
+ * Class WP_SMTP
+ *
+ * @since 2.11.4
+ */
 class WP_SMTP implements SubscriberInterface {
 
 	/**
@@ -49,8 +58,9 @@ class WP_SMTP implements SubscriberInterface {
 	 */
 	public static function get_subscribed_events() {
 		return array(
-			'edd_settings_emails' => 'register_setting',
-			'edd_wpsmtp'          => 'settings_field',
+			'edd_settings_emails'      => 'register_setting',
+			'edd_wpsmtp'               => 'settings_field',
+			'edd_email_manager_bottom' => 'link_to_settings',
 		);
 	}
 
@@ -104,6 +114,32 @@ class WP_SMTP implements SubscriberInterface {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Output the link to the EDD emails settings screen to activate WP Mail SMTP.
+	 *
+	 * @since 3.3.0
+	 * @return void
+	 */
+	public function link_to_settings() {
+		if ( $this->is_smtp_configured() ) {
+			return;
+		}
+
+		printf(
+			'<span class="edd-emails__wpsmtp"><a href="%s" class="edd-emails__wpsmtp">%s<img src="%s" alt=""/></a></span>',
+			esc_url(
+				edd_get_admin_url(
+					array(
+						'page' => 'edd-emails',
+						'tab'  => 'settings',
+					)
+				)
+			),
+			esc_html__( 'Ensure your emails are always delivered with WP Mail SMTP', 'easy-digital-downloads' ),
+			esc_url( EDD_PLUGIN_URL . 'assets/images/promo/brands/plugin-smtp.png' )
+		);
 	}
 
 	/**

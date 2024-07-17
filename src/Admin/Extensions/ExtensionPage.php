@@ -29,7 +29,7 @@ class ExtensionPage extends Extension {
 	public function init() {
 		?>
 		<div class="wrap edd-extension-manager__wrap">
-			<div class="wp-header-end"></div>
+			<hr class="wp-header-end">
 			<div class="edd-extension-manager__bar">
 				<div class="edd-extension-manager__bar-description">
 					<div class="edd-extension-manager__bar-heading">
@@ -158,7 +158,7 @@ class ExtensionPage extends Extension {
 
 			wp_kses_post(
 				printf(
-					// translators: 1. pass name; 2. opening anchor tag; 3. closing anchor tag.
+					/* translators: 1: pass name, 2: opening anchor tag, 3: closing anchor tag. */
 					__( 'Using the 1-Click Installation feature requires Easy Digital Downloads (Pro), which you have access to with your %1$s. %2$sInstall (Pro) now%3$s.', 'easy-digital-downloads' ),
 					$this->pass_manager->get_pass_name(),
 					'<a href="' . esc_url( $url ) . '">',
@@ -176,7 +176,7 @@ class ExtensionPage extends Extension {
 		);
 		printf(
 			wp_kses_post(
-				/* translators: 1. opening anchor tag; 2. closing anchor tag. */
+				/* translators: 1: opening anchor tag, 2: closing anchor tag. */
 				__( 'Missing access to an extension? %1$sAdd your license key now%2$s.', 'easy-digital-downloads' )
 			),
 			'<a href="' . esc_url( $url ) . '">',

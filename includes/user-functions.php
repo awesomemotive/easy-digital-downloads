@@ -576,76 +576,6 @@ function edd_get_customer_address( $user_id = 0 ) {
 }
 
 /**
- * Sends the new user notification email when a user registers during checkout
- *
- * @since       1.8.8
- * @param int   $user_id The User ID of the newly registered user.
- * @param array $user_data The user data.
- *
- * @return      void
- */
-function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
-
-	if ( empty( $user_id ) || empty( $user_data ) ) {
-		return;
-	}
-
-	$emails     = EDD()->emails;
-	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
-	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-
-	// Setup and send the new user email for Admins.
-	$emails->__set( 'from_name', $from_name );
-	$emails->__set( 'from_address', $from_email );
-
-	/* translators: Site name */
-	$admin_subject = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __( '[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
-	$admin_heading = apply_filters( 'edd_user_registration_admin_email_heading', __( 'New user registration', 'easy-digital-downloads' ), $user_data );
-	/* translators: the username */
-	$admin_message = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n\r\n";
-	/* translators: the user email */
-	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads' ), $user_data['user_email'] ) . "\r\n";
-
-	$admin_message = apply_filters( 'edd_user_registration_admin_email_message', $admin_message, $user_data );
-
-	$emails->__set( 'heading', $admin_heading );
-
-	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
-
-	// Setup and send the new user email for the end user.
-	/* translators: Site name */
-	$user_subject = apply_filters( 'edd_user_registration_email_subject', sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name ), $user_data );
-	$user_heading = apply_filters( 'edd_user_registration_email_heading', __( 'Your account info', 'easy-digital-downloads' ), $user_data );
-	$user_message = apply_filters( 'edd_user_registration_email_username', sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n", $user_data );
-
-	if ( did_action( 'edd_pre_process_purchase' ) ) {
-		$password_message = __( 'Password entered at checkout', 'easy-digital-downloads' );
-	} else {
-		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
-	}
-
-	/* translators: %s: password message */
-	$user_message .= apply_filters( 'edd_user_registration_email_password', sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n" );
-
-	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
-	if ( $emails->html ) {
-
-		$user_message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &rarr;</a>' . "\r\n";
-
-	} else {
-		/* translators: %s: login URL */
-		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), esc_url( $login_url ) ) . "\r\n";
-	}
-
-	$user_message = apply_filters( 'edd_user_registration_email_message', $user_message, $user_data );
-
-	$emails->__set( 'heading', $user_heading );
-
-	$emails->send( $user_data['user_email'], $user_subject, $user_message );
-}
-add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
-
-/**
  * Set a user's status to pending
  *
  * @since  2.4.4
@@ -782,45 +712,8 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 	if ( ! edd_user_pending_verification( $user_id ) ) {
 		return;
 	}
-
-	$user_data = get_userdata( $user_id );
-
-	if ( ! $user_data ) {
-		return;
-	}
-
-	$name       = $user_data->display_name;
-	$url        = edd_get_user_verification_url( $user_id );
-	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
-	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-	$subject    = apply_filters( 'edd_user_verification_email_subject', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
-	$heading    = apply_filters( 'edd_user_verification_email_heading', __( 'Verify your account', 'easy-digital-downloads' ), $user_id );
-	$message    = sprintf(
-		/* translators: 1: User display name, 2: Site name, 3: Verification URL */
-		__(
-			'Hello %1$s,
-
-		Your account with %2$s needs to be verified before you can access your purchase history. <a href="%3$s">Click here</a> to verify your account.
-
-		Link missing? Visit the following URL: %3$s',
-			'easy-digital-downloads'
-		),
-		$name,
-		$from_name,
-		esc_url_raw( $url ),
-		// This parameter is not used, but is added for compatibility with past translations.
-		esc_url_raw( $url )
-	);
-
-	$message = apply_filters( 'edd_user_verification_email_message', $message, $user_id );
-
-	$emails = new EDD_Emails();
-
-	$emails->__set( 'from_name', $from_name );
-	$emails->__set( 'from_address', $from_email );
-	$emails->__set( 'heading', $heading );
-
-	$emails->send( $user_data->user_email, $subject, $message );
+	$email = new EDD\Emails\Types\UserVerification( $user_id );
+	$email->send();
 }
 
 /**
@@ -1171,7 +1064,7 @@ function edd_show_user_api_key_field( $user ) {
 
 									// Build the date diff string.
 									$date_diff_string = sprintf(
-										/* translators: %s: human-readable time difference */
+										/* translators: %s: a length of time (e.g. "1 second") */
 										__( '%s ago', 'easy-digital-downloads' ),
 										$date_diff
 									);

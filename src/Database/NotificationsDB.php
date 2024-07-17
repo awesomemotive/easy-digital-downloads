@@ -12,7 +12,6 @@ namespace EDD\Database;
 
 use EDD\Models\Notification;
 use EDD\Utils\EnvironmentChecker;
-use EDD\Utils\NotificationImporter;
 
 /**
  * Class NotificationsDB
@@ -26,19 +25,8 @@ class NotificationsDB {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'edd_daily_scheduled_events', array( $this, 'schedule_daily_notification_checks' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_filter( 'script_loader_tag', array( $this, 'defer_alpine' ) );
-	}
-
-	/**
-	 * Add a cron event to check for new notifications.
-	 *
-	 * @since 2.11.4
-	 */
-	public static function schedule_daily_notification_checks() {
-		$importer = new NotificationImporter();
-		$importer->run();
 	}
 
 	/**

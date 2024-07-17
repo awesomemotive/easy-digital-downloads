@@ -9,7 +9,7 @@
  * @since       1.5
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Admin\List_Table;
@@ -30,11 +30,13 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'customer',
-			'plural'   => 'customers',
-			'ajax'     => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'customer',
+				'plural'   => 'customers',
+				'ajax'     => false,
+			)
+		);
 
 		$this->process_bulk_action();
 		$this->get_counts();
@@ -57,8 +59,8 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 *
 	 * @since 1.5
 	 *
-	 * @param array $item Contains all the data of the customers
-	 * @param string $column_name The name of the column
+	 * @param array  $item Contains all the data of the customers.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
@@ -68,27 +70,29 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 		switch ( $column_name ) {
 
-			case 'id' :
+			case 'id':
 				$value = esc_html( $item['id'] );
 				break;
 
-			case 'email' :
+			case 'email':
 				$value = '<a href="mailto:' . rawurlencode( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
 				break;
 
-			case 'order_count' :
-				$url = edd_get_admin_url( array(
-					'page'     => 'edd-payment-history',
-					'customer' => rawurlencode( $item['id'] ),
-				) );
+			case 'order_count':
+				$url   = edd_get_admin_url(
+					array(
+						'page'     => 'edd-payment-history',
+						'customer' => rawurlencode( $item['id'] ),
+					)
+				);
 				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( number_format_i18n( $item['order_count'] ) ) . '</a>';
 				break;
 
-			case 'spent' :
+			case 'spent':
 				$value = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 				break;
 
-			case 'date_created' :
+			case 'date_created':
 				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
 				break;
 
@@ -99,7 +103,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 				break;
 		}
 
-		// Filter & return
+		// Filter & return.
 		return apply_filters( 'edd_customers_column_' . esc_attr( $column_name ), $value, $item['id'] );
 	}
 
@@ -108,7 +112,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $item
+	 * @param array $item The current item.
 	 * @return string
 	 */
 	public function column_name( $item ) {
@@ -162,7 +166,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * Gets the row actions for the customer.
 	 *
 	 * @since 3.0
-	 * @param array $item
+	 * @param array $item The current item.
 	 * @return array
 	 */
 	private function get_row_actions( $item ) {
@@ -217,10 +221,10 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
-			/*$1%s*/ 'customer',
-			/*$2%s*/ esc_attr( $item['id'] ),
-			/* translators: customer name or email */
-			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name ) )
+			'customer',
+			esc_attr( $item['id'] ),
+			/* translators: %s: the customer name or email address */
+			esc_html( sprintf( _x( 'Select %s', 'Noun: The customer name or Email Address', 'easy-digital-downloads' ), $name ) )
 		);
 	}
 
@@ -241,14 +245,17 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		return apply_filters( 'edd_report_customer_columns', array(
-			'cb'            => '<input type="checkbox" />',
-			'name'          => __( 'Name',   'easy-digital-downloads' ),
-			'email'         => __( 'Email',  'easy-digital-downloads' ),
-			'order_count'   => __( 'Orders', 'easy-digital-downloads' ),
-			'spent'         => __( 'Spent',  'easy-digital-downloads' ),
-			'date_created'  => __( 'Date',   'easy-digital-downloads' )
-		) );
+		return apply_filters(
+			'edd_report_customer_columns',
+			array(
+				'cb'           => '<input type="checkbox" />',
+				'name'         => __( 'Name', 'easy-digital-downloads' ),
+				'email'        => __( 'Email', 'easy-digital-downloads' ),
+				'order_count'  => __( 'Orders', 'easy-digital-downloads' ),
+				'spent'        => __( 'Spent', 'easy-digital-downloads' ),
+				'date_created' => __( 'Date', 'easy-digital-downloads' ),
+			)
+		);
 	}
 
 	/**
@@ -259,11 +266,11 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'date_created'  => array( 'date_created',   true  ),
-			'name'          => array( 'name',           true  ),
-			'email'         => array( 'email',          true  ),
-			'order_count'   => array( 'purchase_count', false ),
-			'spent'         => array( 'purchase_value', false )
+			'date_created' => array( 'date_created', true ),
+			'name'         => array( 'name', true ),
+			'email'        => array( 'email', true ),
+			'order_count'  => array( 'purchase_count', false ),
+			'spent'        => array( 'purchase_value', false ),
 		);
 	}
 
@@ -275,7 +282,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'delete' => __( 'Delete', 'easy-digital-downloads' )
+			'delete' => __( 'Delete', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -305,7 +312,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
-				case 'delete' :
+				case 'delete':
 					edd_delete_customer( $id );
 					break;
 			}
@@ -369,7 +376,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 			$args['search_columns'] = array( 'name', 'email' );
 		}
 
-		// Parse pagination
+		// Parse pagination.
 		$this->args = $this->parse_pagination_args( $args );
 
 		if ( is_email( $search ) ) {
@@ -387,10 +394,10 @@ class EDD_Customer_Reports_Table extends List_Table {
 				)
 			);
 		} else {
-			$customers  = edd_get_customers( $this->args );
+			$customers = edd_get_customers( $this->args );
 		}
 
-		// Get the data
+		// Get the data.
 		if ( ! empty( $customers ) ) {
 			foreach ( $customers as $customer ) {
 				$data[] = array(
@@ -419,7 +426,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
-			$this->get_sortable_columns()
+			$this->get_sortable_columns(),
 		);
 
 		$this->items = $this->get_data();
@@ -430,19 +437,21 @@ class EDD_Customer_Reports_Table extends List_Table {
 		// If $this->per_page is 0, then set total pages to 1.
 		$total_pages = $this->per_page ? ceil( (int) $this->counts[ $status ] / (int) $this->per_page ) : 1;
 
-		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_pages' => $total_pages,
-			'total_items' => $this->counts[ $status ],
-			'per_page'    => $this->per_page,
-		) );
+		// Setup pagination.
+		$this->set_pagination_args(
+			array(
+				'total_pages' => $total_pages,
+				'total_items' => $this->counts[ $status ],
+				'per_page'    => $this->per_page,
+			)
+		);
 	}
 
 	/**
 	 * Generate the table navigation above or below the table.
 	 * We're overriding this to turn off the referer param in `wp_nonce_field()`.
 	 *
-	 * @param string $which
+	 * @param string $which Which part of the table nav we're rendering, top or bottom.
 	 * @since 3.1.0.4
 	 */
 	protected function display_tablenav( $which ) {

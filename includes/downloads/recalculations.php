@@ -44,7 +44,7 @@ function edd_maybe_schedule_download_recalculation( $download_id ) {
 	}
 
 	edd_debug_log( 'Scheduling recalculation for product ' . $download_id );
-	wp_schedule_single_event(
+	\EDD\Cron\Events\SingleEvent::add(
 		time() + ( 5 * MINUTE_IN_SECONDS ),
 		'edd_recalculate_download_sales_earnings_deferred',
 		array( $download_id )

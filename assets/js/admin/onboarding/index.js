@@ -474,12 +474,19 @@ var EDD_Onboarding = {
 				purchase_receipt_content = wp.editor.getContent(editor_id);
 			}
 
-			$( 'textarea#edd_settings_purchase_receipt' ).val( purchase_receipt_content );
+			let data = {
+				action: 'edd_onboarding_save_email',
+				content: purchase_receipt_content,
+				email_logo: $( '#email_logo' ).val(),
+				from_name: $( '#from_name' ).val(),
+				from_email: $( '#from_email' ).val(),
+				nonce: EDD_Onboarding.vars.nonce,
+			};
 
 			return $.ajax( {
 				type: 'POST',
-				url: $('.edd-settings-form').attr("action"),
-				data: $('.edd-settings-form').serialize(),
+				url: ajaxurl,
+				data: data,
 				beforeSend: function() {
 					EDD_Onboarding.loading_state( true );
 				},
@@ -519,7 +526,9 @@ var EDD_Onboarding = {
 
 			$( '.edd-onboarding__selected-plugins' ).show();
 			$( '.edd-onboarding__plugin-install:checked:not(:disabled)' ).each( function() {
-				selected_plugins.push( $(this).data( 'plugin-name' ) );
+				if ( $( this ).data( 'plugin-name' ) && $( this ).data( 'action' ).length > 0 ) {
+					selected_plugins.push( $( this ).data( 'plugin-name' ) );
+				}
 			});
 
 			$( '.edd-onboarding__selected-plugins-text' ).html( selected_plugins.join( ', ' ) );
@@ -547,6 +556,7 @@ var EDD_Onboarding = {
 						action: 'edd_onboarding_telemetry_settings',
 						page: 'edd-onboarding-wizard',
 						telemetry_toggle: $( '#edd-onboarding__telemery-toggle' ).is( ':checked' ),
+						auto_register: $( '#auto-register' ).is( ':checked' ),
 						_wpnonce: EDD_Onboarding.vars.nonce,
 					},
 					function() {
@@ -557,12 +567,14 @@ var EDD_Onboarding = {
 			let selected_plugins = [];
 			let installation_errors = [];
 			$( '.edd-onboarding__plugin-install:checked:not(:disabled)' ).each( function() {
-				selected_plugins.push({
-					plugin_name: $(this).data( 'plugin-name' ),
-					plugin_file: $(this).data( 'plugin-file' ),
-					plugin_url: $(this).val(),
-					action: $(this).data( 'action' ),
-				});
+				if ( $( this ).data( 'plugin-name' ) && $( this ).data( 'action' ).length > 0 ) {
+					selected_plugins.push({
+						plugin_name: $(this).data( 'plugin-name' ),
+						plugin_file: $(this).data( 'plugin-file' ),
+						plugin_url: $(this).val(),
+						action: $(this).data( 'action' ),
+					});
+				}
 			} );
 
 			// Install and activate selected plugins.

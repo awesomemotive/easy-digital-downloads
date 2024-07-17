@@ -233,7 +233,7 @@ function edds_apple_pay_verify_domain() {
 	}
 
 	// Avoid getting caught in AJAX requests.
-	if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX ) {
+	if ( EDD\Utils\Request::is_request( 'ajax' ) ) {
 		return;
 	}
 

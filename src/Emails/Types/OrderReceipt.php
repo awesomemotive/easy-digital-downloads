@@ -10,6 +10,9 @@
 
 namespace EDD\Emails\Types;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
 /**
  * The OrderReceipt email class.
  *
@@ -99,8 +102,7 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_email_body_content() {
-		$option_value           = edd_get_option( 'purchase_receipt', false );
-		$this->raw_body_content = $option_value ? stripslashes( $option_value ) : $this->get_default_body_content();
+		parent::set_email_body_content();
 
 		$this->maybe_run_legacy_filter( 'edd_purchase_receipt_' . $this->processor()->get_template() );
 		$this->maybe_run_legacy_filter( 'edd_purchase_receipt' );
@@ -117,7 +119,7 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_from_name() {
-		$this->from_name = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+		parent::set_from_name();
 
 		$this->maybe_run_legacy_filter( 'edd_purchase_from_name' );
 
@@ -131,7 +133,7 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_from_email() {
-		$this->from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+		parent::set_from_email();
 
 		$this->maybe_run_legacy_filter( 'edd_purchase_from_address' );
 
@@ -157,7 +159,7 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_headers() {
-		$this->headers = $this->processor()->get_headers();
+		parent::set_headers();
 
 		$this->maybe_run_legacy_filter( 'edd_receipt_headers' );
 
@@ -171,12 +173,12 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_subject() {
-		$this->subject = edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
+		parent::set_subject();
 
 		$this->maybe_run_legacy_filter( 'edd_purchase_subject' );
 
 		$this->subject = apply_filters( 'edd_order_receipt_email_subject', $this->subject, $this->order );
-		$this->subject = wp_strip_all_tags( $this->process_tags( $this->subject, $this->order_id ) );
+		$this->subject = $this->process_tags( $this->subject, $this->order_id, $this->order );
 	}
 
 	/**
@@ -186,12 +188,12 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_heading() {
-		$this->heading = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
+		parent::set_heading();
 
 		$this->maybe_run_legacy_filter( 'edd_purchase_heading' );
 
 		$this->heading = apply_filters( 'edd_order_receipt_email_heading', wp_strip_all_tags( $this->heading ), $this->order );
-		$this->heading = $this->process_tags( $this->heading, $this->order_id );
+		$this->heading = $this->process_tags( $this->heading, $this->order_id, $this->order );
 	}
 
 	/**
@@ -201,9 +203,9 @@ class OrderReceipt extends Email {
 	 * @return void
 	 */
 	protected function set_message() {
-		$message = $this->get_raw_body_content();
+		parent::set_message();
 
-		$this->message = $this->process_tags( $this->maybe_apply_autop( $message ), $this->order_id );
+		$this->message = $this->process_tags( $this->message, $this->order_id, $this->order );
 	}
 
 	/**
@@ -221,21 +223,6 @@ class OrderReceipt extends Email {
 	}
 
 	/**
-	 * Get the default email body content.
-	 *
-	 * @since 3.2.0
-	 * @return string
-	 */
-	public function get_default_body_content() {
-		$default_email_body  = __( 'Dear', 'easy-digital-downloads' ) . " {name},\n\n";
-		$default_email_body .= __( 'Thank you for your purchase. Please click on the link(s) below to download your files.', 'easy-digital-downloads' ) . "\n\n";
-		$default_email_body .= '{download_list}' . "\n\n";
-		$default_email_body .= '{sitename}';
-
-		return $default_email_body;
-	}
-
-	/**
 	 * Allows filtering to disable sending the default order receipt email.
 	 *
 	 * @since 3.2.0
@@ -243,6 +230,16 @@ class OrderReceipt extends Email {
 	 * @return bool
 	 */
 	protected function should_send() {
+
+		// Do not send receipts for orders that have been marked as 'imported'.
+		if ( edd_get_order_meta( $this->order->id, '_edd_imported', true ) ) {
+			return false;
+		}
+
+		if ( ! $this->get_email()->is_enabled() ) {
+			return false;
+		}
+
 		// Allow developers to unhook this email via a filter.
 		if ( true === apply_filters( 'edd_disable_' . $this->id, false, $this ) ) {
 			return false;
@@ -306,5 +303,15 @@ class OrderReceipt extends Email {
 				'arguments'  => array( 'order_id', 'payment_meta' ),
 			),
 		);
+	}
+
+	/**
+	 * Gets the test recipient.
+	 *
+	 * @since 3.3.0
+	 * @return string
+	 */
+	protected function get_test_recipient() {
+		return edd_get_admin_notice_emails();
 	}
 }

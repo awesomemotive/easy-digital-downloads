@@ -57,6 +57,7 @@ class Reviews extends Extension implements SubscriberInterface {
 			'edd_settings_tab_top_marketing_reviews'    => 'settings_field',
 			'edd_settings_tab_bottom_marketing_reviews' => 'hide_submit_button',
 			'add_meta_boxes'                            => 'maybe_do_metabox',
+			'edd_settings_wrap_classes'                 => 'add_wrap_class',
 		);
 	}
 
@@ -69,18 +70,18 @@ class Reviews extends Extension implements SubscriberInterface {
 	 */
 	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 		$configuration          = array(
-			'heading' => 'Build Trust With Real Customer Reviews',
+			'heading' => __( 'Build Trust With Real Customer Reviews', 'easy-digital-downloads' ),
 		);
 		$settings_configuration = array(
 			'style'       => 'detailed-2col',
 			'description' => $this->get_custom_description(),
 			'features'    => array(
-				'Request Reviews',
-				'Incentivize Reviewers',
-				'Full Schema.org Support',
-				'Embed Reviews Via Blocks',
-				'Limit Reviews to Customers',
-				'Vendor Reviews (with Frontend Submissions)',
+				__( 'Request Reviews', 'easy-digital-downloads' ),
+				__( 'Incentivize Reviewers', 'easy-digital-downloads' ),
+				__( 'Full Schema.org Support', 'easy-digital-downloads' ),
+				__( 'Embed Reviews Via Blocks', 'easy-digital-downloads' ),
+				__( 'Limit Reviews to Customers', 'easy-digital-downloads' ),
+				__( 'Vendor Reviews (with Frontend Submissions)', 'easy-digital-downloads' ),
 			),
 		);
 		return $this->is_edd_settings_screen() ? array_merge( $configuration, $settings_configuration ) : $configuration;
@@ -94,8 +95,8 @@ class Reviews extends Extension implements SubscriberInterface {
 	 */
 	private function get_custom_description() {
 		$description = array(
-			'Increase sales on your site with social proof. 70% of online shoppers don\'t purchase before reading reviews.',
-			'Easily collect, manage, and beautifully display reviews all from your WordPress dashboard.',
+			__( 'Increase sales on your site with social proof. 70% of online shoppers don\'t purchase before reading reviews.', 'easy-digital-downloads' ),
+			__( 'Easily collect, manage, and beautifully display reviews all from your WordPress dashboard.', 'easy-digital-downloads' ),
 		);
 
 		return $this->format_description( $description );

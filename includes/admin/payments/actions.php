@@ -142,6 +142,7 @@ function edd_update_payment_details( $data = array() ) {
 				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'easy-digital-downloads' ) );
 			}
 		} else {
+			/* translators: %s: email address */
 			wp_die( sprintf( __( 'A customer with the email address %s already exists. Please go back and assign this payment to them.', 'easy-digital-downloads' ), $email ) );
 		}
 
@@ -154,7 +155,7 @@ function edd_update_payment_details( $data = array() ) {
 		$customer = new EDD_Customer( $curr_customer_id );
 	}
 
-	// Remove the stats and payment from the previous customer and attach it to the new customer
+	// Remove the stats and payment from the previous customer and attach it to the new customer.
 	if ( isset( $previous_customer ) ) {
 		$previous_customer->remove_payment( $order_id, false );
 		$customer->attach_payment( $order_id, false );

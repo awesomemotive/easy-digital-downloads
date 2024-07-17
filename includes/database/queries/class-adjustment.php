@@ -196,11 +196,11 @@ class Adjustment extends Query {
 	 * @return array
 	 */
 	private function update_empty_start_end_dates( $data ) {
-		if ( empty( $data['start_date'] ) ) {
+		if ( isset( $data['start_date'] ) && empty( $data['start_date'] ) ) {
 			$data['start_date'] = null;
 		}
 
-		if ( empty( $data['end_date'] ) ) {
+		if ( isset( $data['end_date'] ) && empty( $data['end_date'] ) ) {
 			$data['end_date'] = null;
 		}
 

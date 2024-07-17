@@ -1,0 +1,67 @@
+.edd-email-editor__description {
+	margin: 2em 0;
+}
+
+.edd-editor__header--actions {
+	position: relative;
+
+	.edd-email-status-badge {
+		position: absolute;
+		right: 0;
+		top: 53px;
+		margin-right: 20px;
+		border: 1px solid;
+		padding: 12px;
+	}
+
+	#submit.edd-updating {
+		&:before {
+			background: none;
+			@include edd-spinner(
+				12px,
+				$wp-alternate,
+				$wp-input-border
+			);
+		}
+	}
+}
+
+.edd-form__email {
+	background: $white;
+	border: 1px solid #e2e4e7;
+	padding: 2em;
+	max-width: $break-huge;
+
+	@media screen and (min-width: $break-medium) {
+		$first-column-width: 200px;
+		.edd-form-group {
+			display: grid;
+			grid-template-columns: $first-column-width 1fr;
+			margin-bottom: 2em;
+
+			> .description {
+				grid-column-start: 1;
+				grid-column-end: 3;
+			}
+		}
+
+		.edd-form-group > .description,
+		.notice {
+			margin-left: $first-column-width;
+		}
+	}
+}
+
+.edd-email-action-reset {
+	border-color: $edd-alert-red !important;
+	color: $edd-alert-red !important;
+
+	&:hover {
+		border-color: $edd-alert-red-hover !important;
+		color: $edd-alert-red-hover !important;
+	}
+}
+
+.edd-editor__actions--test + .notice {
+	margin-top: 2em;
+}

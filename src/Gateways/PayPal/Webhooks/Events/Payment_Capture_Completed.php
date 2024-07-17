@@ -54,7 +54,7 @@ class Payment_Capture_Completed extends Webhook_Event {
 			edd_record_gateway_error(
 				__( 'Webhook Error', 'easy-digital-downloads' ),
 				sprintf(
-					/* Translators: %s is the webhook data */
+					/* translators: %s: webhook data */
 					__( 'Invalid payment amount in webhook response. Webhook data: %s', 'easy-digital-downloads' ),
 					json_encode( $this->event )
 				)

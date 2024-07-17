@@ -558,7 +558,7 @@ function edd_set_purchase_session( $purchase_data = array() ) {
  *
  * @since 1.1.5
  * @uses EDD()->session->get()
- * @return mixed array | false
+ * @return mixed|array|null
  */
 function edd_get_purchase_session() {
 	return EDD()->session->get( 'edd_purchase' );
@@ -614,59 +614,6 @@ function edd_restore_cart() {
 function edd_get_cart_token() {
 	return EDD()->cart->get_token();
 }
-
-/**
- * Delete Saved Carts after one week
- *
- * This function is only intended to be used by WordPress cron.
- *
- * @since 1.8
- * @global $wpdb
- * @return void
- */
-function edd_delete_saved_carts() {
-	global $wpdb;
-
-	// Bail if not in WordPress cron.
-	if ( ! edd_doing_cron() ) {
-		return;
-	}
-
-	$carts = $wpdb->get_results(
-		"
-		SELECT user_id, meta_key, FROM_UNIXTIME(meta_value, '%Y-%m-%d') AS date
-		FROM {$wpdb->usermeta}
-		WHERE meta_key = 'edd_cart_token'
-		",
-		ARRAY_A
-	);
-
-	if ( $carts ) {
-		foreach ( $carts as $cart ) {
-			$user_id    = $cart['user_id'];
-			$meta_value = $cart['date'];
-
-			if ( strtotime( $meta_value ) < strtotime( '-1 week' ) ) {
-				$wpdb->delete(
-					$wpdb->usermeta,
-					array(
-						'user_id'  => $user_id,
-						'meta_key' => 'edd_cart_token',
-					)
-				);
-
-				$wpdb->delete(
-					$wpdb->usermeta,
-					array(
-						'user_id'  => $user_id,
-						'meta_key' => 'edd_saved_cart',
-					)
-				);
-			}
-		}
-	}
-}
-add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
 
 /**
  * Generate URL token to restore the cart via a URL

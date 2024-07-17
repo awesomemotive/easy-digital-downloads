@@ -114,13 +114,15 @@ class About implements SubscriberInterface {
 		$this->manager->enqueue();
 
 		$this->setup_tabs();
+
+		$navigation = new \EDD\Admin\Menu\SecondaryNavigation(
+			$this->tabs,
+			'edd-about'
+		);
+		$navigation->render();
 		?>
 		<div id="edd-admin-about" class="wrap edd-admin-wrap">
-		<?php
-			$this->render_tabs();
-
-			$this->render_tab( $this->get_current_tab() );
-		?>
+			<?php $this->render_tab( $this->get_current_tab() ); ?>
 		</div>
 		<?php
 	}
@@ -159,39 +161,6 @@ class About implements SubscriberInterface {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Render the tabs.
-	 *
-	 * @since 3.2.4
-	 */
-	private function render_tabs() {
-		?>
-		<nav class="edd-about-nav" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
-			<?php
-
-			foreach ( $this->tabs as $tab_slug => $tab_name ) {
-				$tab_url = edd_get_admin_url(
-					array(
-						'page' => 'edd-about',
-						'tab'  => sanitize_key( $tab_slug ),
-					)
-				);
-
-				$class = 'tab';
-				if ( $this->get_current_tab() === $tab_slug ) {
-					$class .= ' active';
-				}
-
-				// Link.
-				echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">';
-				echo esc_html( $tab_name );
-				echo '</a>';
-			}
-			?>
-		</nav>
-		<?php
 	}
 
 	/**
@@ -300,8 +269,8 @@ class About implements SubscriberInterface {
 								<div class="status">
 									<?php
 									printf(
-										/* translators: %s - status label. */
-										esc_html__( 'Status: %s', 'easy-digital-downloads' ),
+										/* translators: %s: status label. */
+										esc_html_x( 'Status: %s', 'The status of an installed WordPress plugin', 'easy-digital-downloads' ),
 										'<span class="status-label ' . esc_attr( $plugin_data['plugin_status'] ) . '">' . wp_kses_post( $plugin_data['status_text'] ) . '</span>'
 									);
 									?>
@@ -393,7 +362,7 @@ class About implements SubscriberInterface {
 					<p>
 						<?php
 						printf(
-							wp_kses( /* translators: %s - stars. */
+							wp_kses( /* translators: %s: stars. */
 								__( 'We know that you will truly love Easy Digital Downloads. It has over <strong>450+ five star ratings</strong> (%s) and over 50,000+ professionals and creators use it to run their businesses and projects.', 'easy-digital-downloads' ),
 								array(
 									'strong' => array(),
@@ -473,7 +442,7 @@ class About implements SubscriberInterface {
 							)
 						);
 						echo sprintf(
-							// translators: %1$s - opening link tag, %2$s - closing link tag.
+							/* translators: 1:  opening link tag, 2.  closing link tag. */
 							__( '%1$sUpgrade to Pro Today%2$s', 'easy-digital-downloads' ),
 							'<a class="button edd-pro-upgrade" href="' . $upgrade_link . '" target="_blank" rel="noopener noreferrer">',
 							'</a>'

@@ -33,7 +33,7 @@ abstract class Extension {
 	 *
 	 * @var \EDD\Admin\Extensions\Extension_Manager
 	 */
-	protected $manager;
+	public $manager;
 
 	/**
 	 * The settings section for this item.
@@ -240,14 +240,8 @@ abstract class Extension {
 		if ( empty( $array ) ) {
 			return $type;
 		}
-		if ( function_exists( 'array_key_first' ) ) {
-			return array_key_first( $array );
-		}
-		foreach ( $array as $key => $unused ) {
-			return $key;
-		}
 
-		return $type;
+		return array_key_first( $array );
 	}
 
 	/**
@@ -399,5 +393,22 @@ abstract class Extension {
 	 */
 	protected function current_user_can( $capability = 'activate_plugins' ) {
 		return current_user_can( $capability );
+	}
+
+	/**
+	 * Add the body classes
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param array $classes The body classes.
+	 *
+	 * @return array
+	 */
+	public function add_wrap_class( $classes ) {
+		if ( ! in_array( 'has-product-education', $classes, true ) && $this->can_show_product_section() ) {
+			$classes[] = 'has-product-education';
+		}
+
+		return $classes;
 	}
 }

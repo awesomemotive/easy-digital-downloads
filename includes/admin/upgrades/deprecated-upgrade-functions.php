@@ -909,3 +909,21 @@ function edd_include_file_download_log_migration_batch_processor( $class = '' ) 
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/classes/class-file-download-log-migration.php';
 	}
 }
+
+/**
+ * Register batch processors for upgrade routines for EDD 3.0.
+ *
+ * @since 3.0
+ * @deprecated 3.3.0
+ */
+function edd_register_batch_processors_for_v30_upgrade() {
+	add_action( 'edd_batch_export_class_include', 'edd_load_batch_processors_for_v30_upgrade', 10, 1 );
+}
+
+/**
+ * Load the batch processor for upgrade routines for EDD 3.0.
+ *
+ * @deprecated 3.3.0
+ * @param $class string Class name.
+ */
+function edd_load_batch_processors_for_v30_upgrade( $class ) {}

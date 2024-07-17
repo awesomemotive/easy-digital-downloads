@@ -125,7 +125,8 @@ $minutes             = edd_get_minute_values();
 								'selected'    => $product_requirements,
 								'multiple'    => true,
 								'chosen'      => true,
-								'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+								/* translators: %s: Downloads plural label */
+								'placeholder' => sprintf( _x( 'Select %s', 'Noun: The plural label for the download post type as a placeholder for a dropdown', 'easy-digital-downloads' ), edd_get_label_plural() ),
 								'variations'  => true,
 							)
 						);
@@ -156,7 +157,12 @@ $minutes             = edd_get_minute_values();
 
 				<tr>
 					<th scope="row" valign="top">
-						<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></label>
+						<label for="edd-excluded-products">
+							<?php
+							/* translators: %s: Downloads plural label */
+							printf( _x( 'Excluded %s', 'Noun: Downloads plural label', 'easy-digital-downloads' ), edd_get_label_plural() );
+							?>
+						</label>
 					</th>
 					<td>
 						<?php
@@ -167,11 +173,17 @@ $minutes             = edd_get_minute_values();
 								'selected'    => $excluded_products,
 								'multiple'    => true,
 								'chosen'      => true,
-								'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+								/* translators: %s: Downloads plural label */
+								'placeholder' => sprintf( _x( 'Select %s', 'Noun: The plural label for the download post type as a placeholder for a dropdown', 'easy-digital-downloads' ), edd_get_label_plural() ),
 							)
 						);
 						?>
-						<p class="description"><?php printf( __( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
+						<p class="description">
+							<?php
+							/* translators: %s: Downloads plural label */
+							printf( __( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), edd_get_label_plural() );
+							?>
+						</p>
 					</td>
 				</tr>
 

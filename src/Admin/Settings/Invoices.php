@@ -69,14 +69,14 @@ class Invoices extends Extension implements SubscriberInterface {
 	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 		return array(
 			'style'       => 'detailed-2col',
-			'heading'     => 'Attractive Invoices For Your Customers',
+			'heading'     => __( 'Attractive Invoices For Your Customers', 'easy-digital-downloads' ),
 			'description' => $this->get_custom_description(),
 			'features'    => array(
-				'Generate Attractive Invoices',
-				'Build Customer Confidence',
-				'PDF Download Support',
-				'Include in Purchase Emails',
-				'Customizable Templates',
+				__( 'Generate Attractive Invoices', 'easy-digital-downloads' ),
+				__( 'Build Customer Confidence', 'easy-digital-downloads' ),
+				__( 'PDF Download Support', 'easy-digital-downloads' ),
+				__( 'Include in Purchase Emails', 'easy-digital-downloads' ),
+				__( 'Customizable Templates', 'easy-digital-downloads' ),
 			),
 		);
 	}
@@ -89,8 +89,8 @@ class Invoices extends Extension implements SubscriberInterface {
 	 */
 	private function get_custom_description() {
 		$description = array(
-			'Impress customers and build customer loyalty with attractive invoices. Making it easy to locate, save, and print purchase history builds trust with customers.',
-			'Provide a professional experience with customizable templates and one-click PDF downloads. ',
+			__( 'Impress customers and build customer loyalty with attractive invoices. Making it easy to locate, save, and print purchase history builds trust with customers.', 'easy-digital-downloads' ),
+			__( 'Provide a professional experience with customizable templates and one-click PDF downloads. ', 'easy-digital-downloads' ),
 		);
 
 		return $this->format_description( $description );

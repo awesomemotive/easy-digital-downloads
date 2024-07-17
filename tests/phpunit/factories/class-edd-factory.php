@@ -73,6 +73,11 @@ class Factory extends \WP_UnitTest_Factory {
 	 */
 	public $order_transaction;
 
+	/**
+	 * @var Factory\EmailLog
+	 */
+	public $email_logs;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -89,5 +94,6 @@ class Factory extends \WP_UnitTest_Factory {
 		$this->order_item             = new Factory\Order_Item( $this );
 		$this->order_adjustment       = new Factory\Order_Adjustment( $this );
 		$this->order_transaction      = new Factory\Order_Transaction( $this );
+		$this->email_logs             = new Factory\EmailLog( $this );
 	}
 }

@@ -24,7 +24,7 @@ function edds_process_purchase_form( $purchase_data ) {
 	// Remove the error set by the "gateway mismatch" and allow the redirect.
 	if ( isset( $_REQUEST['edd_action'] ) && 'straight_to_gateway' === $_REQUEST['edd_action'] ) {
 		foreach ( $purchase_data['downloads'] as $download ) {
-			$options = isset( $download['options'] ) ? $download['options'] : array();
+			$options             = isset( $download['options'] ) ? $download['options'] : array();
 			$options['quantity'] = isset( $download['quantity'] ) ? $download['quantity'] : 1;
 
 			edd_add_to_cart( $download['id'], $options );
@@ -69,7 +69,7 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		// Ensure Payment Method is still valid.
 		$payment_method = edds_api_request( 'PaymentMethod', 'retrieve', $payment_method_id );
-		$card = isset( $payment_method->card ) ? $payment_method->card : null;
+		$card           = isset( $payment_method->card ) ? $payment_method->card : null;
 
 		// ...block prepaid cards if option is not enabled.
 		if (
@@ -126,7 +126,7 @@ function edds_process_purchase_form( $purchase_data ) {
 
 			foreach ( $address_info as $key => $value ) {
 				// Adjusts address data keys to work with PaymentMethods.
-				switch( $key ) {
+				switch ( $key ) {
 					case 'zip':
 						$key = 'postal_code';
 						break;
@@ -135,11 +135,16 @@ function edds_process_purchase_form( $purchase_data ) {
 				$billing_address[ $key ] = ! empty( $value ) ? sanitize_text_field( $value ) : '';
 			}
 
-			edds_api_request( 'PaymentMethod', 'update', $payment_method_id, array(
-				'billing_details' => array(
-					'address' => $billing_address,
-				),
-			) );
+			edds_api_request(
+				'PaymentMethod',
+				'update',
+				$payment_method_id,
+				array(
+					'billing_details' => array(
+						'address' => $billing_address,
+					),
+				)
+			);
 		}
 
 		// Create a list of {$download_id}_{$price_id}
@@ -252,12 +257,14 @@ function edds_process_purchase_form( $purchase_data ) {
 			// Manually attach PaymentMethod to the Customer.
 			if ( ! $payment_method_exists && edd_stripe_existing_cards_enabled() ) {
 				$payment_method = edds_api_request( 'PaymentMethod', 'retrieve', $payment_method_id );
-				$payment_method->attach( array(
-					'customer' => $customer->id,
-				) );
+				$payment_method->attach(
+					array(
+						'customer' => $customer->id,
+					)
+				);
 			}
 
-		// Create a PaymentIntent for an immediate charge.
+			// Create a PaymentIntent for an immediate charge.
 		} else {
 			$purchase_summary = edds_get_payment_description( $purchase_data['cart_details'] );
 
@@ -321,11 +328,16 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		// Set the default payment method when attaching the first one.
 		if ( $is_first_payment_method ) {
-			edds_api_request( 'Customer', 'update', $customer->id, array(
-				'invoice_settings' => array(
-					'default_payment_method' => $payment_method_id,
-				),
-			) );
+			edds_api_request(
+				'Customer',
+				'update',
+				$customer->id,
+				array(
+					'invoice_settings' => array(
+						'default_payment_method' => $payment_method_id,
+					),
+				)
+			);
 		}
 
 		/**
@@ -339,14 +351,16 @@ function edds_process_purchase_form( $purchase_data ) {
 		 */
 		do_action( 'edds_process_purchase_form', $purchase_data, $intent );
 
-		return wp_send_json_success( array(
-			'intent' => $intent,
-			// Send back a new nonce because the user might have logged in.
-			'nonce'  => wp_create_nonce( 'edd-process-checkout' ),
-		) );
+		return wp_send_json_success(
+			array(
+				'intent' => $intent,
+				// Send back a new nonce because the user might have logged in.
+				'nonce'  => wp_create_nonce( 'edd-process-checkout' ),
+			)
+		);
 
-	// Catch card-specific errors to handle rate limiting.
-	} catch ( \Stripe\Exception\CardException $e ) {
+		// Catch card-specific errors to handle rate limiting.
+	} catch ( \EDD\Vendor\Stripe\Exception\CardException $e ) {
 		// Increase the card error count.
 		edd_stripe()->rate_limiting->increment_card_error_count();
 
@@ -356,6 +370,7 @@ function edds_process_purchase_form( $purchase_data ) {
 		edd_record_gateway_error(
 			esc_html__( 'Stripe Error', 'easy-digital-downloads' ),
 			sprintf(
+				/* translators: %s: Error message */
 				esc_html__( 'There was an error while processing a Stripe payment. Payment data: %s', 'easy-digital-downloads' ),
 				wp_json_encode( $error )
 			),
@@ -364,33 +379,38 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		$decline_code = ! empty( $error['decline_code'] ) ? $error['decline_code'] : false;
 
-		return wp_send_json_error( array(
-			'message' => esc_html(
-				edds_get_localized_error_message( $error['code'], $error['message'], $decline_code )
-			),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html(
+					edds_get_localized_error_message( $error['code'], $error['message'], $decline_code )
+				),
+			)
+		);
 
-	// Catch Stripe-specific errors.
-	} catch ( \Stripe\Exception\ApiErrorException $e ) {
+		// Catch Stripe-specific errors.
+	} catch ( \EDD\Vendor\Stripe\Exception\ApiErrorException $e ) {
 		$error = $e->getJsonBody()['error'];
 
 		// Record error in log.
 		edd_record_gateway_error(
 			esc_html__( 'Stripe Error', 'easy-digital-downloads' ),
 			sprintf(
+				/* translators: %s: Error message */
 				esc_html__( 'There was an error while processing a Stripe payment. Payment data: %s', 'easy-digital-downloads' ),
 				wp_json_encode( $error )
 			),
 			0
 		);
 
-		return wp_send_json_error( array(
-			'message' => esc_html(
-				edds_get_localized_error_message( $error['code'], $error['message'] )
-			),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html(
+					edds_get_localized_error_message( $error['code'], $error['message'] )
+				),
+			)
+		);
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		if ( true === $e->hasLogMessage() ) {
 			edd_record_gateway_error(
@@ -400,12 +420,14 @@ function edds_process_purchase_form( $purchase_data ) {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( \Exception $e ) {
+		// Catch any remaining error.
+	} catch ( \Exception $e ) {
 
 		// Safety precaution in case the payment form is submitted directly.
 		// Redirects back to the Checkout.
@@ -414,9 +436,11 @@ function edds_process_purchase_form( $purchase_data ) {
 			edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['gateway'] );
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'edd_gateway_stripe', 'edds_process_purchase_form' );
@@ -430,7 +454,7 @@ function edds_get_intent() {
 	// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
 	_edds_map_form_data_to_request( $_POST );
 
-	$intent_id = isset( $_REQUEST['intent_id'] ) ? sanitize_text_field( $_REQUEST['intent_id'] ) : null;
+	$intent_id   = isset( $_REQUEST['intent_id'] ) ? sanitize_text_field( $_REQUEST['intent_id'] ) : null;
 	$intent_type = isset( $_REQUEST['intent_type'] ) ? sanitize_text_field( $_REQUEST['intent_type'] ) : 'payment_intent';
 
 	try {
@@ -460,10 +484,12 @@ function edds_get_intent() {
 			$intent = edds_api_request( 'PaymentIntent', 'retrieve', $intent_id );
 		}
 
-		return wp_send_json_success( array(
-			'intent' => $intent,
-		) );
-	// Catch gateway processing errors.
+		return wp_send_json_success(
+			array(
+				'intent' => $intent,
+			)
+		);
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		// Increase the rate limit if an exception occurs mid-process.
 		edd_stripe()->rate_limiting->increment_card_error_count();
@@ -476,15 +502,19 @@ function edds_get_intent() {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( \Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		// Catch any remaining error.
+	} catch ( \Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_get_intent', 'edds_get_intent' );
@@ -541,11 +571,13 @@ function edds_confirm_intent() {
 		 */
 		do_action( 'edds_confirm_payment_intent', $intent );
 
-		return wp_send_json_success( array(
-			'intent' => $intent,
-		) );
+		return wp_send_json_success(
+			array(
+				'intent' => $intent,
+			)
+		);
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		// Increase the rate limit if an exception occurs mid-process.
 		edd_stripe()->rate_limiting->increment_card_error_count();
@@ -558,15 +590,19 @@ function edds_confirm_intent() {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		// Catch any remaining error.
+	} catch ( Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_confirm_intent', 'edds_confirm_intent' );
@@ -618,16 +654,20 @@ function edds_capture_intent() {
 
 		// Capture capturable amount if nothing else has captured the intent.
 		if ( 'requires_capture' === $intent->status ) {
-			$intent->capture( array(
-				'amount_to_capture' => $intent->amount_capturable,
-			) );
+			$intent->capture(
+				array(
+					'amount_to_capture' => $intent->amount_capturable,
+				)
+			);
 		}
 
-		return wp_send_json_success( array(
-			'intent' => $intent,
-		) );
+		return wp_send_json_success(
+			array(
+				'intent' => $intent,
+			)
+		);
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		// Increase the rate limit if an exception occurs mid-process.
 		edd_stripe()->rate_limiting->increment_card_error_count();
@@ -640,15 +680,19 @@ function edds_capture_intent() {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		// Catch any remaining error.
+	} catch ( Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_capture_intent', 'edds_capture_intent' );
@@ -710,11 +754,13 @@ function edds_update_intent() {
 
 		$intent = edds_api_request( 'PaymentIntent', 'update', $intent_id, $intent_args );
 
-		return wp_send_json_success( array(
-			'intent' => $intent,
-		) );
+		return wp_send_json_success(
+			array(
+				'intent' => $intent,
+			)
+		);
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		// Increase the rate limit if an exception occurs mid-process.
 		edd_stripe()->rate_limiting->increment_card_error_count();
@@ -727,15 +773,19 @@ function edds_update_intent() {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		// Catch any remaining error.
+	} catch ( Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_update_intent', 'edds_update_intent' );
@@ -830,7 +880,7 @@ function edds_create_payment() {
 		);
 
 		// Ensure $_COOKIE is available without a new HTTP request.
-		if ( class_exists( 'EDD_Auto_Register' ) ) {
+		if ( EDD\Checkout\AutoRegister::is_enabled() ) {
 			add_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
 			add_filter( 'edd_get_option_edd_auto_register_complete_orders_only', '__return_false' );
 		}
@@ -853,20 +903,30 @@ function edds_create_payment() {
 
 		// Retrieve the relevant Intent.
 		if ( 'setup_intent' === $intent->object ) {
-			$intent = edds_api_request( 'SetupIntent', 'update', $intent->id, array(
-				'metadata' => array(
-					'edd_payment_id' => $payment_id,
-				),
-			) );
+			$intent = edds_api_request(
+				'SetupIntent',
+				'update',
+				$intent->id,
+				array(
+					'metadata' => array(
+						'edd_payment_id' => $payment_id,
+					),
+				)
+			);
 
 			$payment->add_note( 'Stripe SetupIntent ID: ' . $intent->id );
 			$payment->update_meta( '_edds_stripe_setup_intent_id', $intent->id );
 		} else {
-			$intent = edds_api_request( 'PaymentIntent', 'update', $intent->id, array(
-				'metadata' => array(
-					'edd_payment_id' => $payment_id,
-				),
-		  ) );
+			$intent = edds_api_request(
+				'PaymentIntent',
+				'update',
+				$intent->id,
+				array(
+					'metadata' => array(
+						'edd_payment_id' => $payment_id,
+					),
+				)
+			);
 
 			$payment->add_note( 'Stripe PaymentIntent ID: ' . $intent->id );
 			$payment->update_meta( '_edds_stripe_payment_intent_id', $intent->id );
@@ -889,7 +949,7 @@ function edds_create_payment() {
 
 		$saved = $payment->save();
 
-		if ( class_exists( 'EDD_Auto_Register' ) ) {
+		if ( EDD\Checkout\AutoRegister::is_enabled() ) {
 			remove_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
 		}
 
@@ -904,12 +964,14 @@ function edds_create_payment() {
 			 */
 			do_action( 'edds_payment_created', $payment, $intent );
 
-			return wp_send_json_success( array(
-				'intent'  => $intent,
-				'payment' => $payment,
-				// Send back a new nonce because the user might have logged in via Auto Register.
-				'nonce'  => wp_create_nonce( 'edd-process-checkout' ),
-			) );
+			return wp_send_json_success(
+				array(
+					'intent'  => $intent,
+					'payment' => $payment,
+					// Send back a new nonce because the user might have logged in via Auto Register.
+					'nonce'   => wp_create_nonce( 'edd-process-checkout' ),
+				)
+			);
 		} else {
 			throw new \EDD_Stripe_Gateway_Exception(
 				esc_html__(
@@ -920,7 +982,7 @@ function edds_create_payment() {
 			);
 		}
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		// Increase the rate limit count when something goes wrong mid-process.
 		edd_stripe()->rate_limiting->increment_card_error_count();
@@ -933,15 +995,19 @@ function edds_create_payment() {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( \Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		// Catch any remaining error.
+	} catch ( \Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_create_payment', 'edds_create_payment' );
@@ -1020,7 +1086,7 @@ function edds_complete_payment() {
 		if ( edds_is_preapprove_enabled() ) {
 			$payment->status = 'preapproval';
 
-		// Complete payment and transition the Transaction ID to the actual Charge ID.
+			// Complete payment and transition the Transaction ID to the actual Charge ID.
 		} else {
 			$payment->status = 'publish';
 		}
@@ -1043,10 +1109,12 @@ function edds_complete_payment() {
 			// Empty cart.
 			edd_empty_cart();
 
-			return wp_send_json_success( array(
-				'payment' => $payment,
-				'intent'  => $intent,
-			) );
+			return wp_send_json_success(
+				array(
+					'payment' => $payment,
+					'intent'  => $intent,
+				)
+			);
 		} else {
 			throw new \EDD_Stripe_Gateway_Exception(
 				esc_html__(
@@ -1057,7 +1125,7 @@ function edds_complete_payment() {
 			);
 		}
 
-	// Catch gateway processing errors.
+		// Catch gateway processing errors.
 	} catch ( \EDD_Stripe_Gateway_Exception $e ) {
 		// Increase the rate limit count when something goes wrong mid-process.
 		edd_stripe()->rate_limiting->increment_card_error_count();
@@ -1070,15 +1138,19 @@ function edds_complete_payment() {
 			);
 		}
 
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 
-	// Catch any remaining error.
-	} catch( \Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		// Catch any remaining error.
+	} catch ( \Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_complete_payment', 'edds_complete_payment' );
@@ -1095,8 +1167,8 @@ add_action( 'wp_ajax_nopriv_edds_complete_payment', 'edds_complete_payment' );
 function edds_get_payment_description( $cart_details ) {
 	$purchase_summary = '';
 
-	if( is_array( $cart_details ) && ! empty( $cart_details ) ) {
-		foreach( $cart_details as $item ) {
+	if ( is_array( $cart_details ) && ! empty( $cart_details ) ) {
+		foreach ( $cart_details as $item ) {
 			$purchase_summary .= $item['name'];
 			$price_id          = isset( $item['item_number']['options']['price_id'] )
 				? absint( $item['item_number']['options']['price_id'] )

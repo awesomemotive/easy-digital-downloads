@@ -3,10 +3,7 @@ namespace EDD\Tests;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-/**
- * @group edd_errors
- */
-class Tests_Errors extends EDD_UnitTestCase {
+class Errors extends EDD_UnitTestCase {
 
 	public function setup(): void {
 		parent::setUp();
@@ -15,10 +12,6 @@ class Tests_Errors extends EDD_UnitTestCase {
 		edd_set_error( 'invalid_user', 'The user information is invalid.' );
 		edd_set_error( 'username_incorrect', 'The username you entered does not exist' );
 		edd_set_error( 'password_incorrect', 'The password you entered is incorrect' );
-	}
-
-	public function tearDown(): void {
-		parent::tearDown();
 	}
 
 	public function test_set_errors() {
@@ -32,7 +25,7 @@ class Tests_Errors extends EDD_UnitTestCase {
 
 	public function test_clear_errors() {
 		$errors = edd_clear_errors();
-		$this->assertFalse( EDD()->session->get( 'edd_errors' ) );
+		$this->assertEmpty( EDD()->session->get( 'edd_errors' ) );
 	}
 
 	public function test_unset_error() {

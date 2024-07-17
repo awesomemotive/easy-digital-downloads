@@ -115,8 +115,8 @@ add_action( 'edd_refund_order', function( $order_id, $refund_id, $all_refunded )
 			'object_type' => 'order',
 			'user_id'     => is_admin() ? get_current_user_id() : 0,
 			'content'     => sprintf(
-				/* Translators: %d - ID of the refund; %s - error message from PayPal */
-				__( 'Failure when processing PayPal refund #%d: %s', 'easy-digital-downloads' ),
+				/* translators: 1: Refund ID, 2: Error message */
+				__( 'Failure when processing PayPal refund #%1$d: %2$s', 'easy-digital-downloads' ),
 				$refund->id,
 				$e->getMessage()
 			)
@@ -183,8 +183,8 @@ function refund_transaction( $payment_or_order, Order $refund_object = null ) {
 
 	if ( 201 !== $api->last_response_code ) {
 		throw new API_Exception( sprintf(
-		/* Translators: %d - The HTTP response code; %s - Full API response from PayPal */
-			__( 'Unexpected response code: %d. Response: %s', 'easy-digital-downloads' ),
+			/* translators: 1: Response code, 2: Response message */
+			__( 'Unexpected response code: %1$d. Response: %2$s', 'easy-digital-downloads' ),
 			$api->last_response_code,
 			json_encode( $response )
 		), $api->last_response_code );
@@ -192,7 +192,7 @@ function refund_transaction( $payment_or_order, Order $refund_object = null ) {
 
 	if ( empty( $response->status ) || 'COMPLETED' !== strtoupper( $response->status ) ) {
 		throw new API_Exception( sprintf(
-		/* Translators: %s - API response from PayPal */
+		/* translators: %s: API response from PayPal */
 			__( 'Missing or unexpected refund status. Response: %s', 'easy-digital-downloads' ),
 			json_encode( $response )
 		) );
@@ -205,14 +205,14 @@ function refund_transaction( $payment_or_order, Order $refund_object = null ) {
 		// Add a note to the original order, and, if provided, the new refund object.
 		if ( isset( $response->amount->value ) ) {
 			$note_message = sprintf(
-				/* Translators: %1$s - amount refunded; %$2$s - transaction ID. */
+				/* translators: 1: amount refunded; 2: transaction ID. */
 				__( '%1$s refunded in PayPal. Refund transaction ID: %2$s', 'easy-digital-downloads' ),
 				edd_currency_filter( edd_format_amount( $response->amount->value ), $order->currency ),
 				esc_html( $response->id )
 			);
 		} else {
 			$note_message = sprintf(
-				/* Translators: %s - ID of the refund in PayPal */
+				/* translators: %s: ID of the refund in PayPal */
 				__( 'Successfully refunded in PayPal. Refund transaction ID: %s', 'easy-digital-downloads' ),
 				esc_html( $response->id )
 			);

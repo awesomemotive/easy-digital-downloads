@@ -15,7 +15,10 @@
 
 		<p>
 			<label for="link">
-				<?php echo esc_html( sprintf( __( '%s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
+				<?php
+				/* translators: %s: Download label singular */
+				echo esc_html( sprintf( __( '%s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) );
+				?>
 			</label>
 
 			<# if ( false === data.link ) { #>

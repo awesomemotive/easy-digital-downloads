@@ -9,7 +9,7 @@
  * @since       3.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Admin\List_Table;
@@ -30,11 +30,13 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'email',
-			'plural'   => 'emails',
-			'ajax'     => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'email',
+				'plural'   => 'emails',
+				'ajax'     => false,
+			)
+		);
 
 		$this->process_bulk_action();
 		$this->get_counts();
@@ -57,29 +59,29 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $item Contains all the data of the customers
-	 * @param string $column_name The name of the column
+	 * @param array  $item Contains all the data of the customers.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 
-			case 'id' :
+			case 'id':
 				$value = $item['id'];
 				break;
 
-			case 'email' :
+			case 'email':
 				$value = '<a href="mailto:' . rawurlencode( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
 				break;
 
-			case 'type' :
+			case 'type':
 				$value = ( 'primary' === $item['type'] )
-					? esc_html__( 'Primary',   'easy-digital-downloads' )
+					? esc_html__( 'Primary', 'easy-digital-downloads' )
 					: esc_html__( 'Secondary', 'easy-digital-downloads' );
 				break;
 
-			case 'date_created' :
+			case 'date_created':
 				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . ' ' . edd_get_timezone_abbr() . '</time>';
 				break;
 
@@ -90,7 +92,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 				break;
 		}
 
-		// Filter & return
+		// Filter & return.
 		return apply_filters( 'edd_customers_column_' . $column_name, $value, $item['id'] );
 	}
 
@@ -99,40 +101,42 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $item
+	 * @param array $item The current item.
 	 * @return string
 	 */
 	public function column_email( $item ) {
-		$state    = '';
-		$status   = $this->get_status();
-		$email    = ! empty( $item['email']  ) ? $item['email'] : '&mdash;';
+		$state  = '';
+		$status = $this->get_status();
+		$email  = ! empty( $item['email'] ) ? $item['email'] : '&mdash;';
 
-		// Get the item status
+		// Get the item status.
 		$item_status = ! empty( $item['status'] )
 			? $item['status']
 			: 'verified';
 
-		// Get the customer ID
+		// Get the customer ID.
 		$customer_id = ! empty( $item['customer_id'] )
 			? absint( $item['customer_id'] )
 			: 0;
 
-		// Link to customer
-		$customer_url = edd_get_admin_url( array(
-			'page' => 'edd-customers',
-			'view' => 'overview',
-			'id'   => absint( $customer_id ),
-		) );
+		// Link to customer.
+		$customer_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => absint( $customer_id ),
+			)
+		);
 
-		// State
-		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
+		// State.
+		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( 'active' !== $item_status ) ) {
 			switch ( $status ) {
-				case 'pending' :
+				case 'pending':
 					$value = __( 'Pending', 'easy-digital-downloads' );
 					break;
-				case 'verified' :
-				case '' :
-				default :
+				case 'verified':
+				case '':
+				default:
 					$value = __( 'Active', 'easy-digital-downloads' );
 					break;
 			}
@@ -140,7 +144,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			$state = ' &mdash; ' . $value;
 		}
 
-		// Concatenate and return
+		// Concatenate and return.
 		return '<strong><a class="row-title" href="' . esc_url( $customer_url ) . '#edd_general_emails">' . esc_html( $email ) . '</a>' . esc_html( $state ) . '</strong>' . $this->row_actions( $this->get_row_actions( $item ) );
 	}
 
@@ -148,11 +152,11 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * Gets the row actions for the customer email address.
 	 *
 	 * @since 3.0
-	 * @param array $item
+	 * @param array $item The current item.
 	 * @return array
 	 */
 	private function get_row_actions( $item ) {
-		// Link to customer
+		// Link to customer.
 		$customer_url = edd_get_admin_url(
 			array(
 				'page' => 'edd-customers',
@@ -161,20 +165,25 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			)
 		);
 
-		// Actions
+		// Actions.
 		$actions = array(
 			'view' => '<a href="' . esc_url( $customer_url ) . '#edd_general_emails">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
 		);
 
-		// Non-primary email actions
+		// Non-primary email actions.
 		if ( ! empty( $item['email'] ) && ( empty( $item['type'] ) || 'primary' !== $item['type'] ) ) {
-			$delete_url = wp_nonce_url( edd_get_admin_url( array(
-				'page'       => 'edd-customers',
-				'view'       => 'overview',
-				'id'         => urlencode( $item['customer_id'] ),
-				'email'      => rawurlencode( $item['email'] ),
-				'edd_action' => 'customer-remove-email',
-			) ), 'edd-remove-customer-email' );
+			$delete_url        = wp_nonce_url(
+				edd_get_admin_url(
+					array(
+						'page'       => 'edd-customers',
+						'view'       => 'overview',
+						'id'         => urlencode( $item['customer_id'] ),
+						'email'      => rawurlencode( $item['email'] ),
+						'edd_action' => 'customer-remove-email',
+					)
+				),
+				'edd-remove-customer-email'
+			);
 			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -193,37 +202,39 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $item
+	 * @param array $item The current item.
 	 * @return string
 	 */
 	public function column_customer( $item ) {
 
-		// Get the customer ID
+		// Get the customer ID.
 		$customer_id = ! empty( $item['customer_id'] )
 			? absint( $item['customer_id'] )
 			: 0;
 
-		// Bail if no customer ID
+		// Bail if no customer ID.
 		if ( empty( $customer_id ) ) {
 			return '&mdash;';
 		}
 
-		// Try to get the customer
+		// Try to get the customer.
 		$customer = edd_get_customer( $customer_id );
 
-		// Bail if customer no longer exists
+		// Bail if customer no longer exists.
 		if ( empty( $customer ) ) {
 			return '&mdash;';
 		}
 
-		// Link to customer
-		$customer_url = edd_get_admin_url( array(
-			'page'      => 'edd-customers',
-			'page_type' => 'emails',
-			's'         => 'c:' . absint( $customer_id )
-		) );
+		// Link to customer.
+		$customer_url = edd_get_admin_url(
+			array(
+				'page'      => 'edd-customers',
+				'page_type' => 'emails',
+				's'         => 'c:' . absint( $customer_id ),
+			)
+		);
 
-		// Concatenate and return
+		// Concatenate and return.
 		return '<a href="' . esc_url( $customer_url ) . '">' . esc_html( $customer->name ) . '</a>';
 	}
 
@@ -233,7 +244,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param array $item
+	 * @param array $item The current item.
 	 *
 	 * @return string Displays a checkbox
 	 */
@@ -244,12 +255,12 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" title="%4$s"%5$s /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
-			/*$1%s*/ esc_attr( 'customer' ),
-			/*$2%s*/ esc_attr( $item['id'] ),
-			/* translators: customer email */
-			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $item['email'] ) ),
-			/*$4%s*/ esc_attr( $title ),
-			/*$5%s*/ $primary_attributes
+			esc_attr( 'customer' ),
+			esc_attr( $item['id'] ),
+			/* translators: %s: the customer email address */
+			esc_html( sprintf( _x( 'Select %s', 'Noun: The customer email address', 'easy-digital-downloads' ), $item['email'] ) ),
+			esc_attr( $title ),
+			$primary_attributes
 		);
 	}
 
@@ -271,13 +282,16 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		return apply_filters( 'edd_report_customer_columns', array(
-			'cb'            => '<input type="checkbox" />',
-			'email'         => __( 'Email',    'easy-digital-downloads' ),
-			'customer'      => __( 'Customer', 'easy-digital-downloads' ),
-			'type'          => __( 'Type',     'easy-digital-downloads' ),
-			'date_created'  => __( 'Date',     'easy-digital-downloads' )
-		) );
+		return apply_filters(
+			'edd_report_customer_columns',
+			array(
+				'cb'           => '<input type="checkbox" />',
+				'email'        => __( 'Email', 'easy-digital-downloads' ),
+				'customer'     => __( 'Customer', 'easy-digital-downloads' ),
+				'type'         => __( 'Type', 'easy-digital-downloads' ),
+				'date_created' => __( 'Date', 'easy-digital-downloads' ),
+			)
+		);
 	}
 
 	/**
@@ -288,10 +302,10 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'date_created'  => array( 'date_created',   true  ),
-			'email'         => array( 'email',          true  ),
-			'customer'      => array( 'customer_id',    false ),
-			'type'          => array( 'type',           false )
+			'date_created' => array( 'date_created', true ),
+			'email'        => array( 'email', true ),
+			'customer'     => array( 'customer_id', false ),
+			'type'         => array( 'type', false ),
 		);
 	}
 
@@ -304,7 +318,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'delete' => __( 'Delete', 'easy-digital-downloads' )
+			'delete' => __( 'Delete', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -335,16 +349,18 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		 * Only non-primary email addresses can be deleted, so we're building up a safelist using the provided
 		 * IDs. Each ID will be matched against this prior to deletion.
 		 */
-		$non_primary_address_ids = edd_get_customer_email_addresses( array(
-			'id__in'       => $ids,
-			'type__not_in' => array( 'primary' ),
-			'fields'       => 'id'
-		) );
+		$non_primary_address_ids = edd_get_customer_email_addresses(
+			array(
+				'id__in'       => $ids,
+				'type__not_in' => array( 'primary' ),
+				'fields'       => 'id',
+			)
+		);
 
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
-				case 'delete' :
-					if ( in_array( $id, $non_primary_address_ids ) ) {
+				case 'delete':
+					if ( in_array( $id, $non_primary_address_ids, true ) ) {
 						edd_delete_customer_email_address( $id );
 					}
 					break;
@@ -362,7 +378,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	public function get_data() {
 		$data   = array();
 		$search = $this->get_search();
-		$args   = array( 'status'  => $this->get_status() );
+		$args   = array( 'status' => $this->get_status() );
 
 		// Account for search stripping the "+" from emails.
 		if ( strpos( $search, ' ' ) ) {
@@ -377,15 +393,15 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-		// Address ID.
+			// Address ID.
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 
-		// Customer ID.
+			// Customer ID.
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
 
-		// Any...
+			// Any...
 		} else {
 			$args['search']         = $search;
 			$args['search_columns'] = array( 'email' );
@@ -423,26 +439,28 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
-			$this->get_sortable_columns()
+			$this->get_sortable_columns(),
 		);
 
 		$this->items = $this->get_data();
 
 		$status = $this->get_status( 'total' );
 
-		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
-			'total_items' => $this->counts[ $status ],
-			'per_page'    => $this->per_page
-		) );
+		// Setup pagination.
+		$this->set_pagination_args(
+			array(
+				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
+				'total_items' => $this->counts[ $status ],
+				'per_page'    => $this->per_page,
+			)
+		);
 	}
 
 	/**
 	 * Generate the table navigation above or below the table.
 	 * We're overriding this to turn off the referer param in `wp_nonce_field()`.
 	 *
-	 * @param string $which
+	 * @param string $which Which table nav we're rendering, top or bottom.
 	 * @since 3.1.0.4
 	 */
 	protected function display_tablenav( $which ) {

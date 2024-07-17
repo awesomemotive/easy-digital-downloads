@@ -50,7 +50,7 @@ add_action( 'admin_notices', function () {
 		<p>
 			<?php
 			echo wp_kses( sprintf(
-				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+				/* translators: %1$s opening anchor tag; %2$s closing anchor tag */
 				__( 'A new, improved PayPal experience is now available in Easy Digital Downloads. You can learn more about the new integration in %1$sour documentation%2$s.', 'easy-digital-downloads' ),
 				'<a href="https://easydigitaldownloads.com/docs/paypal-setup/#upgrade" target="_blank">',
 				'</a>'

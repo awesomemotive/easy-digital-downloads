@@ -31,7 +31,7 @@ function pages( $settings ) {
 	$login_description  = __( 'This page must include the EDD Login block. Setting this allows the front end form to be used for resetting passwords.', 'easy-digital-downloads' );
 	$login_description .= '<br />';
 	$login_description .= sprintf(
-		/* translators: 1. opening code tag, do not translate; 2. closing code tag, do not translate. */
+		/* translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate. */
 		__( 'Do not use this with the %1$s[edd_login]%2$s shortcode; it does not support resetting passwords.', 'easy-digital-downloads' ),
 		'<code>',
 		'</code>'
@@ -55,7 +55,7 @@ function pages( $settings ) {
 		$description  = __( 'This is the checkout page where customers will complete their purchases.', 'easy-digital-downloads' );
 		$description .= '<br />';
 		$description .= sprintf(
-			/* translators: 1. opening code tag, do not translate; 2. closing code tag, do not translate. */
+			/* translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate. */
 			__( 'The Checkout block or %1$s[download_checkout]%2$s shortcode must be on this page.', 'easy-digital-downloads' ),
 			'<code>',
 			'</code>'
@@ -67,7 +67,7 @@ function pages( $settings ) {
 	// Update the login redirect description.
 	if ( ! empty( $settings['pages']['login_redirect_page']['desc'] ) ) {
 		$description = sprintf(
-			/* translators: 1. opening code tag, do not translate; 2. closing code tag, do not translate. */
+			/* translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate. */
 			__( 'If a customer logs in using the EDD Login block or %1$s[edd_login]%2$s shortcode, will be redirected to this page.', 'easy-digital-downloads' ),
 			'<code>',
 			'</code>'
@@ -83,7 +83,7 @@ function pages( $settings ) {
 		$description  = __( 'This page shows a complete order history for the current user, including download links.', 'easy-digital-downloads' );
 		$description .= '<br />';
 		$description .= sprintf(
-			/* translators: 1. opening code tag, do not translate; 2. closing code tag, do not translate. */
+			/* translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate. */
 			__( 'Either the EDD Order History block or the %1$s[purchase_history]%2$s shortcode must be on this page.', 'easy-digital-downloads' ),
 			'<code>',
 			'</code>'
@@ -115,7 +115,7 @@ function pages( $settings ) {
 		$receipt_description  = __( 'This is the page to show a detailed receipt for an order.', 'easy-digital-downloads' );
 		$receipt_description .= '<br />';
 		$receipt_description .= sprintf(
-			/* translators: 1. opening code tag, do not translate; 2. closing code tag, do not translate. */
+			/* translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate. */
 			__( 'Use the EDD Receipt block or the %1$s[edd_receipt]%2$s shortcode to work with the confirmation page.', 'easy-digital-downloads' ),
 			'<code>',
 			'</code>'
@@ -182,12 +182,12 @@ function button_colors( $args ) {
 	echo '</div>';
 }
 
-add_filter( 'edd_settings_misc', __NAMESPACE__ . '\disable_redownload' );
 /**
  * Update the text for the `disable_redownload` setting.
  *
  * @since 2.0.4
- * @param array $settings
+ * @deprecated 3.3.0
+ * @param array $settings The settings array.
  * @return array
  */
 function disable_redownload( $settings ) {

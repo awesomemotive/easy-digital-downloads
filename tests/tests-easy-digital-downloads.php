@@ -8,7 +8,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  *
  * @coversDefaultClass EDD
  */
-class Tests_EDD extends EDD_UnitTestCase {
+class EDD extends EDD_UnitTestCase {
 	protected $object;
 
 	public function setup(): void {
@@ -75,10 +75,9 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/api/class-edd-api-v1.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-fees.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' ),
+			array( EDD_PLUGIN_DIR . 'includes/deprecated/classes.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/class-utilities.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/formatting.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/widgets.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/mime-types.php' ),
@@ -100,7 +99,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/reports/exceptions/class-invalid-parameter.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/emails/functions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/emails/template.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/emails/actions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/error-tracking.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/user-functions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/query-filters.php' ),
@@ -110,12 +108,6 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/users/lost-password.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/users/register.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/utils/class-edd-exception.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/utils/class-registry.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/utils/interface-static-registry.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-attribute-not-found.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-invalid-argument.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/utils/exceptions/class-invalid-parameter.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php' ),

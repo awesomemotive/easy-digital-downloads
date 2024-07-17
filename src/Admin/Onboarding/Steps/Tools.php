@@ -53,7 +53,21 @@ class Tools extends Step {
 										<a href="<?php echo esc_url( $plugin['plugin_url'] ); ?>" class="edd-onboarding__plugins-external-link" target="_blank"><span class="dashicons dashicons-external"></span></a>
 									<?php else : ?>
 										<div class="checkbox-control checkbox-control--checkbox">
-											<input id="<?php echo esc_attr( $id ); ?>" class="edd-onboarding__plugin-install" data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] ); ?>" data-action="<?php echo esc_attr( $plugin['action'] ); ?>" data-plugin-file="<?php echo esc_attr( $plugin['plugin_file'] ); ?>" value="<?php echo esc_attr( $plugin['plugin_zip'] ); ?>" type="checkbox"<?php echo $checked.$disabled.$readonly;?>/>
+											<input
+												type="checkbox"
+												id="<?php echo esc_attr( $id ); ?>"
+												class="edd-onboarding__plugin-install"
+												data-plugin-name="<?php echo esc_attr( $plugin['plugin_name'] ); ?>"
+												data-action="<?php echo esc_attr( $plugin['action'] ); ?>"
+												data-plugin-file="<?php echo esc_attr( $plugin['plugin_file'] ); ?>"
+												value="<?php echo esc_attr( $plugin['plugin_zip'] ); ?>"
+												<?php
+												if ( empty( $plugin['action'] ) ) {
+													echo ' name="' . esc_attr( $plugin['plugin_name'] ) . '"';
+												}
+												echo $checked . $disabled . $readonly;
+												?>
+											/>
 											<div class="checkbox-control__indicator"></div>
 										</div>
 									<?php endif; ?>
@@ -73,6 +87,16 @@ class Tools extends Step {
 								<p>
 									<em><?php esc_html_e( 'You already have a solution installed for this feature.', 'easy-digital-downloads' ); ?></em>
 								</p>
+							<?php elseif ( 'install' === $plugin['action'] ) : ?>
+								<p>
+									<?php /* translators: %s The plugin name. */ ?>
+									<em><?php printf( esc_html__( 'Installs %s', 'easy-digital-downloads' ), esc_html( $plugin['plugin_name'] ) ); ?></em>
+								</p>
+							<?php elseif ( 'activate' === $plugin['action'] ) : ?>
+								<p>
+									<?php /* translators: %s The plugin name. */ ?>
+									<em><?php printf( esc_html__( 'Activates %s', 'easy-digital-downloads' ), esc_html( $plugin['plugin_name'] ) ); ?></em>
+								</p>
 							<?php endif; ?>
 						</div>
 					</div>
@@ -84,7 +108,7 @@ class Tools extends Step {
 			<?php $this->telemetry(); ?>
 
 			<div class="edd-onboarding__selected-plugins">
-				<p><?php esc_html_e( 'Based on your selection above, the following plugins will be installed:', 'easy-digital-downloads' ); ?> <span class="edd-onboarding__selected-plugins-text"></span></p>
+				<p><?php esc_html_e( 'Based on your selection above, the following plugins will be installed and activated:', 'easy-digital-downloads' ); ?> <span class="edd-onboarding__selected-plugins-text"></span></p>
 			</div>
 		</div>
 		<div class="edd-onboarding__install-failed" style="display: none;">
@@ -132,16 +156,6 @@ class Tools extends Step {
 				'action'      => '',
 			),
 			array(
-				'name'        => __( 'Optimize Checkout', 'easy-digital-downloads' ),
-				'description' => __( 'Improve the checkout experience by auto-creating user accounts for new customers.', 'easy-digital-downloads' ),
-				'prechecked'  => true,
-				'plugin_name' => 'Auto Register',
-				'plugin_file' => 'edd-auto-register/edd-auto-register.php',
-				'plugin_zip'  => 'https://downloads.wordpress.org/plugin/edd-auto-register.zip',
-				'plugin_url'  => 'https://wordpress.org/plugins/edd-auto-register',
-				'action'      => 'install',
-			),
-			array(
 				'name'        => __( 'Reliable Email Delivery', 'easy-digital-downloads' ),
 				'description' => __( 'Email deliverability is one of the most important services for an eCommerce store. Don’t leave your customers in the dark.', 'easy-digital-downloads' ),
 				'prechecked'  => true,
@@ -172,7 +186,7 @@ class Tools extends Step {
 				),
 			),
 			array(
-				'name'        => __( 'SEO', 'easy-digital-downloads' ),
+				'name'        => __( 'SEO Tools', 'easy-digital-downloads' ),
 				'description' => __( 'Get the tools used by millions of smart business owners to analyze and optimize their store’s traffic with SEO.', 'easy-digital-downloads' ),
 				'prechecked'  => true,
 				'plugin_name' => 'All In One SEO Pack',
@@ -185,6 +199,17 @@ class Tools extends Step {
 					'wordpress-seo/wp-seo.php',
 					'wordpress-seo-premium/wp-seo-premium.php',
 				),
+			),
+			array(
+				'name'        => __( 'Conversion Tools', 'easy-digital-downloads' ),
+				'description' => __( 'Get the #1 conversion optimization plugin to convert your growing website traffic into subscribers, leads and sales.', 'easy-digital-downloads' ),
+				'prechecked'  => true,
+				'plugin_name' => 'OptinMonster',
+				'plugin_file' => 'optinmonster/optin-monster-wp-api.php',
+				'plugin_zip'  => 'https://downloads.wordpress.org/plugin/optinmonster.zip',
+				'plugin_url'  => 'https://wordpress.org/plugins/optinmonster/',
+				'action'      => 'install',
+				'conflicts'   => array(),
 			),
 		);
 
@@ -242,7 +267,22 @@ class Tools extends Step {
 			</h3>
 
 			<label for="edd-onboarding__telemery-toggle" class="edd-onboarding__get-suggestions-section_label">
-				<?php esc_html_e( 'Help us provide a better experience and faster fixes by sharing some anonymous data about how you use Easy Digital Downloads.', 'easy-digital-downloads' ); ?>
+				<?php
+					$link = edd_link_helper(
+						'https://easydigitaldownloads.com/docs/what-information-will-be-tracked-by-opting-into-usage-tracking/',
+						array(
+							'utm_medium'  => 'onboarding',
+							'utm_content' => 'join-the-community',
+						)
+					);
+
+					printf(
+						/* translators: %1$s: the opening anchor tag, %2$s: the closing anchor tag */
+						esc_html__( 'Help us provide a better experience and faster fixes by sharing some %1$sanonymous data%2$s about how you use Easy Digital Downloads.', 'easy-digital-downloads' ),
+						'<a href="' . $link . '" target="_blank">',
+						'</a>'
+					);
+				?>
 			</label>
 			<div class="edd-toggle">
 				<input type="checkbox" id="edd-onboarding__telemery-toggle" class="edd-onboarding__get-suggestions-section_input" name="telemetry" value="1" checked>

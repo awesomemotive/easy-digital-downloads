@@ -1,0 +1,70 @@
+button.edd-button__toggle {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	width: 36px;
+	height: 20px;
+	min-height: unset;
+	background-color: $wp-border;
+	transition: background 0.2s ease;
+	border-radius: 30px;
+	box-shadow: none;
+	border: none;
+
+	&:after {
+		position: absolute;
+		content: "";
+		height: 14px;
+		width: 14px;
+		left: 3px;
+		bottom: 3px;
+		background-color: $white;
+		transition: 0.1s transform ease;
+		border-radius: 50%;
+	}
+
+	&.edd-button-toggle--active:after {
+		transform: translateX(16px);
+	}
+
+	&:active,
+	&:focus {
+		outline: 0;
+		box-shadow: 0 0 0 1px $white, 0 0 0 3px $wp-input-border;
+	}
+
+	&:hover {
+		background-color: $wp-input-border;
+	}
+
+	&:disabled {
+		opacity: .5;
+	}
+
+	&.edd-updating {
+		background-color: $wp-input-border !important; // remove important when enabling buttons
+
+		&:before {
+			position: absolute;
+			top: 3px;
+			@include edd-spinner(
+				10px,
+				$wp-input-border,
+				$wp-alternate
+			);
+		}
+
+		&:after {
+			display: none;
+		}
+	}
+
+	&.edd-button-toggle--active {
+		background-color: var(--wp-admin-theme-color) !important; // remove important when enabling buttons
+
+		:active,
+		:focus {
+			box-shadow: 0 0 0 1px $white, 0 0 0 3px var(--wp-admin-theme-color);
+		}
+	}
+}

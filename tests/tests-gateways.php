@@ -152,7 +152,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$current_user = $original_user;
 
 		$this->assertArrayHasKey( 'no_gateways', $errors );
-		$this->assertEquals( 'You must enable a payment gateway to use Easy Digital Downloads', $errors['no_gateways'] );
+		$this->assertEquals( 'You must enable a payment gateway to use Easy Digital Downloads.', $errors['no_gateways'] );
 	}
 
 	public function test_no_gateway_error_no_priv() {

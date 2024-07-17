@@ -3,17 +3,18 @@
 ; ( function ( document, $ ) {
 	'use strict';
 
-	$( '.edd-extension-manager__actions' ).on( 'click', '.edd-extension-manager__action', function ( e ) {
+	$( 'body' ).on( 'click', '.edd-extension-manager__actions .edd-extension-manager__action', function ( e ) {
 		e.preventDefault();
 
-		var $btn = $( this ),
+		let $btn = $( this ),
 			action = $btn.attr( 'data-action' ),
 			plugin = $btn.attr( 'data-plugin' ),
 			type = $btn.attr( 'data-type' ),
 			ajaxAction = '',
 			removeClass = '',
 			addClass = '',
-			isInstaller = $btn.hasClass( 'edd-button__toggle' );
+			isInstaller = $btn.hasClass( 'edd-button__toggle' ),
+			product = $btn.attr( 'data-product' );
 
 		if ( $btn.attr( 'disabled' ) ) {
 			return;
@@ -60,7 +61,7 @@
 			type: type,
 			pass: $btn.attr( 'data-pass' ),
 			id: $btn.attr( 'data-id' ),
-			product: $btn.attr( 'data-product' ),
+			product: product,
 		};
 
 		$.post( ajaxurl, data )

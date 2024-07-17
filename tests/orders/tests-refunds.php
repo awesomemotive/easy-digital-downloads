@@ -13,6 +13,8 @@ namespace EDD\Tests\Orders;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Utils\Date;
 use EDD\Utils\Exceptions\Invalid_Argument;
+use EDD\Orders\Refunds\Validator;
+use EDD\Orders\Refunds\Number;
 use EDD\Orders\Refund_Validator;
 
 class Refunds extends EDD_UnitTestCase {
@@ -41,6 +43,36 @@ class Refunds extends EDD_UnitTestCase {
 				'total'       => 5,
 			) );
 		}
+	}
+
+	public function test_get_refund_number_returns_1() {
+		$order = parent::edd()->order->create_and_get();
+		$refund_number = Number::generate( $order->id );
+
+		$this->assertEquals( $order->id . '-R-1', $refund_number );
+	}
+
+	public function test_get_refund_number_returns_2() {
+		$order = parent::edd()->order->create_and_get();
+		edd_refund_order( $order->id );
+
+		$refund_number = Number::generate( $order->id );
+		$this->assertEquals( $order->id . '-R-2', $refund_number );
+	}
+
+	public function test_get_refund_number_with_filtered_suffix() {
+		add_filter( 'edd_order_refund_suffix', function( $suffix ) {
+			return 'TEST';
+		} );
+
+		$order = parent::edd()->order->create_and_get();
+		$refund_number = Number::generate( $order->id );
+
+		$this->assertEquals( $order->id . 'TEST1', $refund_number );
+
+		remove_filter( 'edd_order_refund_suffix', function( $suffix ) {
+			return 'TEST';
+		} );
 	}
 
 	/**
@@ -215,7 +247,7 @@ class Refunds extends EDD_UnitTestCase {
 
 	public function test_partial_refund_with_free_download_remaining() {
 		$order_id = self::$orders[2];
-		$oid      = edd_add_order_item( array(
+		edd_add_order_item( array(
 			'order_id'     => $order_id,
 			'product_id'   => 17,
 			'product_name' => 'Free Download',
@@ -241,7 +273,7 @@ class Refunds extends EDD_UnitTestCase {
 			}
 		}
 
-		$refund_id = edd_refund_order( $order->id, $to_refund );
+		edd_refund_order( $order->id, $to_refund );
 
 		// Fetch original order.
 		$o = edd_get_order( $order->id );
@@ -249,9 +281,6 @@ class Refunds extends EDD_UnitTestCase {
 		$this->assertSame( 'partially_refunded', $o->status );
 	}
 
-	/**
-	 * @covers ::edd_get_refundability_types
-	 */
 	public function test_get_refundability_types() {
 		$expected = array(
 			'refundable'    => __( 'Refundable', 'easy-digital-downloads' ),
@@ -272,12 +301,25 @@ class Refunds extends EDD_UnitTestCase {
 		$this->assertSame( Date::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
 	}
 
-	/**
-	 * @covers \EDD\Orders\Refund_Validator::validate_and_calculate_totals
-	 * @covers \EDD\Orders\Refund_Validator::get_refunded_order_items
-	 * @throws \Exception
-	 */
 	public function test_refund_validator_all_returns_original_amounts() {
+		$order     = edd_get_order( self::$orders[1] );
+		$validator = new Validator( $order, 'all', 'all' );
+		$validator->validate_and_calculate_totals();
+
+		$this->assertEquals( ( $order->subtotal - $order->discount ), $validator->subtotal );
+		$this->assertEquals( $order->tax, $validator->tax );
+		$this->assertEquals( $order->total, $validator->total );
+
+		$order_item_ids  = wp_list_pluck( $order->items, 'id' );
+		$refund_item_ids = wp_list_pluck( $validator->get_refunded_order_items(), 'parent' );
+
+		sort( $order_item_ids );
+		sort( $refund_item_ids );
+
+		$this->assertEquals( $order_item_ids, $refund_item_ids );
+	}
+
+	public function test_refund_validator_alias_all_returns_original_amounts() {
 		$order     = edd_get_order( self::$orders[1] );
 		$validator = new Refund_Validator( $order, 'all', 'all' );
 		$validator->validate_and_calculate_totals();
@@ -297,15 +339,13 @@ class Refunds extends EDD_UnitTestCase {
 
 	/**
 	 * An Invalid_Argument exception is thrown if the `order_item_id` argument is missing.
-	 *
-	 * @covers \EDD\Orders\Refund_Validator::validate_and_format_order_items
 	 */
 	public function test_refund_validator_throws_exception_missing_order_item_id() {
 		$order = edd_get_order( self::$orders[1] );
 
 		$this->expectException( Invalid_Argument::class );
 
-		$validator = new Refund_Validator( $order, array(
+		$validator = new Validator( $order, array(
 			array(
 				'subtotal' => 100,
 				'tax'      => 20,
@@ -319,16 +359,13 @@ class Refunds extends EDD_UnitTestCase {
 
 	/**
 	 * An Invalid_Argument exception is thrown if the `subtotal` argument is missing.
-	 *
-	 * @covers \EDD\Orders\Refund_Validator::validate_and_format_order_items
-	 * @covers \EDD\Orders\Refund_Validator::validate_required_fields
 	 */
 	public function test_refund_validator_throws_exception_missing_subtotal() {
 		$order = edd_get_order( self::$orders[1] );
 
 		$this->expectException( Invalid_Argument::class );
 
-		$validator = new Refund_Validator( $order, array(
+		$validator = new Validator( $order, array(
 			array(
 				'order_item_id' => $order->items[0]->id,
 				'tax'           => $order->items[0]->tax,

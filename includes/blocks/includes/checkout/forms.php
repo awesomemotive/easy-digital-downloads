@@ -205,7 +205,7 @@ function get_forms() {
 			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/register.php',
 		),
 		'guest'    => array(
-			'label' => __( 'Check out as a guest', 'easy-digital-downloads' ),
+			'label' => __( 'Checkout as a guest', 'easy-digital-downloads' ),
 			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/personal-info.php',
 		),
 	);

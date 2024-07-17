@@ -1,7 +1,14 @@
 <?php
+/**
+ * Anonymize Trait
+ *
+ * @since 3.2.5
+ * @package EDD\Telemetry\Traits
+ */
 
 namespace EDD\Telemetry\Traits;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -11,6 +18,12 @@ defined( 'ABSPATH' ) || exit;
  * @package EDD\Telemetry\Traits
  */
 trait Anonymize {
+	/**
+	 * The unique anonymized site ID.
+	 *
+	 * @var string
+	 */
+	private $id;
 
 	/**
 	 * Attempts to anonymize a string.
@@ -44,5 +57,29 @@ trait Anonymize {
 		}
 
 		return str_replace( $site_name, edd_mask_string( $site_name ), $value );
+	}
+
+	/**
+	 * Gets the unique site ID.
+	 * This is generated from the home URL and two random pieces of data
+	 * to create a hashed site ID that anonymizes the site data.
+	 *
+	 * @since 3.1.1
+	 * @since 3.3.0 Moved to the Anonymize trait, to modularize the information.
+	 * @return string
+	 */
+	private function get_id() {
+		$this->id = get_option( 'edd_telemetry_uuid' );
+		if ( $this->id ) {
+			return $this->id;
+		}
+		$home_url = get_home_url();
+		$uuid     = wp_generate_uuid4();
+		$today    = gmdate( 'now' );
+		$this->id = md5( $home_url . $uuid . $today );
+
+		update_option( 'edd_telemetry_uuid', $this->id, false );
+
+		return $this->id;
 	}
 }

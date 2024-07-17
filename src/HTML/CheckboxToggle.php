@@ -70,6 +70,7 @@ class CheckboxToggle extends Base {
 			'options' => array(
 				'disabled' => false,
 				'readonly' => false,
+				'inverse'  => false,
 			),
 			'label'   => '',
 			'value'   => 1,
@@ -83,8 +84,14 @@ class CheckboxToggle extends Base {
 	 * @return array
 	 */
 	protected function get_base_classes(): array {
-		return array(
+		$classes = array(
 			'edd-toggle',
 		);
+
+		if ( ! empty( $this->args['options']['inverse'] ) ) {
+			$classes[] = 'inverse';
+		}
+
+		return $classes;
 	}
 }

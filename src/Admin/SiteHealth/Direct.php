@@ -93,7 +93,7 @@ class Direct extends Test {
 
 				$result['description'] = wpautop(
 					sprintf(
-						/* translators: %1$s - opening <code> tag, %2$s - closing <code> tag */
+						/* translators: 1:  opening <code> tag, 2.  closing <code> tag */
 						__( 'Your checkout page is configured; however, it is currently using the legacy %1$s[download_checkout]%2$s shortcode. We recommend changing your checkout to use the EDD Checkout Block.', 'easy-digital-downloads' ),
 						'<code>',
 						'</code>'
@@ -152,7 +152,7 @@ class Direct extends Test {
 			$result['description']    = sprintf(
 				'<p>%s %s</p>',
 				sprintf(
-					/* translators: 1. opening link tag; 2. closing link tag */
+					/* translators: 1: opening link tag, 2: closing link tag */
 					__( 'To ensure the best protection, you should use this doc to add this %1$sNGINX redirect rule%2$s.', 'easy-digital-downloads' ),
 					'<a href="https://easydigitaldownloads.com/docs/download-files-not-protected-on-nginx/">',
 					'</a>'
@@ -213,13 +213,13 @@ class Direct extends Test {
 			$result['description']    = sprintf(
 				'<p>%s %s</p>',
 				sprintf(
-					/* translators: the upload directory */
+					/* translators: %s: Uploads directory */
 					__( 'The .htaccess file is missing from: %s', 'easy-digital-downloads' ),
 					'<strong>' . $upload_directory . '</strong>'
 				),
 				sprintf(
-					/* translators: the upload directory */
-					__( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ),
+					/* translators: %s: Uploads directory */
+					__( 'First, please re-save the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ),
 					'<strong>' . $upload_directory . '</strong>'
 				)
 			);

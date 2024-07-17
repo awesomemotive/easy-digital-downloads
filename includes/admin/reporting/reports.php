@@ -30,7 +30,8 @@ function edd_admin_load_report() {
 
 	// Redirect URL (on error)
 	$redirect_url = edd_get_admin_url( array(
-		'page' => 'edd-reports'
+		'page' => 'edd-reports',
+		'view' => 'overview',
 	) );
 
 	// Redirect if user cannot view reports
@@ -502,6 +503,7 @@ function edd_register_downloads_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
+			/* translators: %s: Download singular label */
 			'label' => sprintf( __( 'Most Valuable %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'views' => array(
 				'tile' => array(
@@ -591,6 +593,7 @@ function edd_register_downloads_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'top_selling_downloads', array(
+			/* translators: %s: Downloads plural label */
 			'label' => sprintf( __( 'Top Selling %s', 'easy-digital-downloads' ), edd_get_label_plural() ) . ' &mdash; ' . $label,
 			'views' => array(
 				'table' => array(
@@ -1200,7 +1203,7 @@ function edd_register_refunds_report( $reports ) {
 								'yAxisID'              => 'amount-y',
 							),
 							'number' => array(
-								'label'                => __( 'Number', 'easy-digital-downloads' ),
+								'label'                => _x( 'Number', 'Context: As in the total number of items', 'easy-digital-downloads' ),
 								'borderColor'          => 'rgba(252,108,18,0.75)',
 								'backgroundColor'      => 'rgba(252,108,18,0.05)',
 								'fill'                 => true,

@@ -30,7 +30,8 @@ class Pointers implements SubscriberInterface {
 		if ( empty( $pointers ) ) {
 			return;
 		}
-		wp_enqueue_style( 'wp-pointer' );
+		$rtl = is_rtl() ? '-rtl' : '';
+		wp_enqueue_style( 'edd-pointers', EDD_PLUGIN_URL . "assets/css/edd-admin-pointers{$rtl}.min.css", array( 'wp-pointer' ), EDD_VERSION );
 		wp_enqueue_script( 'edd-pointers', EDD_PLUGIN_URL . 'assets/js/edd-admin-pointers.js', array( 'wp-pointer' ), EDD_VERSION, true );
 		wp_localize_script(
 			'edd-pointers',

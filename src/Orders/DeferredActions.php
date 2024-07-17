@@ -37,7 +37,11 @@ class DeferredActions implements SubscriberInterface {
 
 			// Use time() instead of current_time( 'timestamp' ) to avoid scheduling the event in the past when server time
 			// and WordPress timezone are different.
-			wp_schedule_single_event( time() + $after_payment_delay, 'edd_after_payment_scheduled_actions', array( $payment_id, false ) );
+			\EDD\Cron\Events\SingleEvent::add(
+				time() + $after_payment_delay,
+				'edd_after_payment_scheduled_actions',
+				array( $payment_id, false )
+			);
 		}
 	}
 

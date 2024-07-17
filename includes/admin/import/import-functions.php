@@ -179,7 +179,8 @@ function edd_do_ajax_import() {
 		wp_send_json_success( array(
 			'step'    => 'done',
 			'message' => sprintf(
-				__( 'Import complete! <a href="%s">View imported %s</a>.', 'easy-digital-downloads' ),
+				/* translators: 1: URL to view imported items, 2: Import type label */
+				__( 'Import complete! <a href="%1$s">View imported %2$s</a>.', 'easy-digital-downloads' ),
 				esc_url( $import->get_list_table_url() ),
 				esc_html( $import->get_import_type_label() )
 			)

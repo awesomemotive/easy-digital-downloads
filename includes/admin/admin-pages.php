@@ -15,50 +15,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Get the admin pages.
  *
- * This largely exists for back-compat in edd_is_admin_page(). Maybe eventually
- * we'll move away from globals for all of these, but who knows what add-ons are
- * doing, so we're keeping these around until we can formally deprecate them.
- *
  * @since 3.0
- *
- * @global $edd_discounts_page $edd_discounts_page
- * @global $edd_payments_page $edd_payments_page
- * @global $edd_settings_page $edd_settings_page
- * @global $edd_reports_page $edd_reports_page
- * @global type $edd_system_info_page
- * @global $edd_add_ons_page $edd_add_ons_page
- * @global $edd_settings_export $edd_settings_export
- * @global $edd_upgrades_screen $edd_upgrades_screen
- * @global $edd_customers_page $edd_customers_page
- * @global $edd_reports_page $edd_reports_page
+ * @since 3.3.0 Moved to EDD\Admin\Menu\Pages::get_pages().
  *
  * @return array
  */
 function edd_get_admin_pages() {
-	global  $edd_discounts_page,
-			$edd_payments_page,
-			$edd_settings_page,
-			$edd_reports_page,
-			$edd_system_info_page,
-			$edd_add_ons_page,
-			$edd_settings_export,
-			$edd_upgrades_screen,
-			$edd_customers_page,
-			$edd_reports_page;
-
-	// Filter & return
-	return (array) apply_filters( 'edd_admin_pages', array(
-		$edd_discounts_page,
-		$edd_payments_page,
-		$edd_settings_page,
-		$edd_reports_page,
-		$edd_system_info_page,
-		$edd_add_ons_page,
-		$edd_settings_export,
-		$edd_upgrades_screen,
-		$edd_customers_page,
-		$edd_reports_page
-	) );
+	return (array) apply_filters( 'edd_admin_pages', EDD\Admin\Menu\Pages::get_pages() );
 }
 
 /**
@@ -77,28 +40,7 @@ function edd_get_admin_pages() {
  * @global $edd_upgrades_screen
  */
 function edd_add_options_link() {
-	global $submenu, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
-
-	// Filter the "View Customers" role
-	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
-
-	// Setup pages
-	$edd_payments_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Orders', 'easy-digital-downloads' ), __( 'Orders', 'easy-digital-downloads' ), 'edit_shop_payments', 'edd-payment-history', 'edd_payment_history_page' );
-	$edd_customers_page = add_submenu_page( 'edit.php?post_type=download', __( 'Customers', 'easy-digital-downloads' ), __( 'Customers', 'easy-digital-downloads' ), $customer_view_role, 'edd-customers', 'edd_customers_page' );
-	$edd_discounts_page = add_submenu_page( 'edit.php?post_type=download', __( 'Discounts', 'easy-digital-downloads' ), __( 'Discounts', 'easy-digital-downloads' ), 'manage_shop_discounts', 'edd-discounts', 'edd_discounts_page' );
-	$edd_reports_page   = add_submenu_page( 'edit.php?post_type=download', __( 'Reports', 'easy-digital-downloads' ), __( 'Reports', 'easy-digital-downloads' ), 'view_shop_reports', 'edd-reports', 'edd_reports_page' );
-	$edd_settings_page  = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Settings', 'easy-digital-downloads' ), __( 'Settings', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-settings', 'edd_options_page' );
-	$edd_tools_page     = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Tools', 'easy-digital-downloads' ), __( 'Tools', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-tools', 'edd_tools_page' );
-
-	// Setup hidden upgrades page
-	$edd_upgrades_screen = add_submenu_page( '', __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'EDD Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
-
-	// Add our reports link in the main Dashboard menu.
-	$submenu['index.php'][] = array( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		__( 'Store Reports', 'easy-digital-downloads' ),
-		'view_shop_reports',
-		'edit.php?post_type=download&page=edd-reports',
-	);
+	EDD\Admin\Menu\Pages::register();
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
 
@@ -114,18 +56,18 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
 function edd_is_insertable_admin_page() {
 	global $pagenow, $typenow;
 
-	// Allowed pages
+	// Allowed pages.
 	$pages = array(
 		'post.php',
 		'page.php',
 		'post-new.php',
-		'post-edit.php'
+		'post-edit.php',
 	);
 
-	// Allowed post types
+	// Allowed post types.
 	$types = get_post_types_by_support( 'edd_insert_download' );
 
-	// Return if page and type are allowed
+	// Return if page and type are allowed.
 	return in_array( $pagenow, $pages, true ) && in_array( $typenow, $types, true );
 }
 
@@ -151,13 +93,13 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_e
 	global $pagenow, $typenow;
 
 	$found      = false;
-	$post_type  = isset( $_GET['post_type'] )  ? strtolower( $_GET['post_type'] )  : false;
-	$action     = isset( $_GET['action'] )     ? strtolower( $_GET['action'] )     : false;
-	$taxonomy   = isset( $_GET['taxonomy'] )   ? strtolower( $_GET['taxonomy'] )   : false;
-	$page       = isset( $_GET['page'] )       ? strtolower( $_GET['page'] )       : false;
-	$view       = isset( $_GET['view'] )       ? strtolower( $_GET['view'] )       : false;
+	$post_type  = isset( $_GET['post_type'] ) ? strtolower( $_GET['post_type'] ) : false;
+	$action     = isset( $_GET['action'] ) ? strtolower( $_GET['action'] ) : false;
+	$taxonomy   = isset( $_GET['taxonomy'] ) ? strtolower( $_GET['taxonomy'] ) : false;
+	$page       = isset( $_GET['page'] ) ? strtolower( $_GET['page'] ) : false;
+	$view       = isset( $_GET['view'] ) ? strtolower( $_GET['view'] ) : false;
 	$edd_action = isset( $_GET['edd-action'] ) ? strtolower( $_GET['edd-action'] ) : false;
-	$tab        = isset( $_GET['tab'] )        ? strtolower( $_GET['tab'] )        : false;
+	$tab        = isset( $_GET['tab'] ) ? strtolower( $_GET['tab'] ) : false;
 
 	switch ( $passed_page ) {
 		case 'download':
@@ -227,7 +169,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_e
 		case 'payments':
 			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-payment-history' === $page && false === $view  ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-payment-history' === $page && false === $view ) {
 						$found = true;
 					}
 					break;
@@ -429,8 +371,13 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_e
 				$found = true;
 			}
 			break;
-		case 'index.php' :
+		case 'index.php':
 			if ( 'index.php' === $pagenow ) {
+				$found = true;
+			}
+			break;
+		case 'emails':
+			if ( 'download' === $post_type && 'edd-emails' === $page ) {
 				$found = true;
 			}
 			break;
@@ -442,15 +389,15 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_e
 			if ( ( 'download' === $typenow ) || ( $include_non_exclusive && 'index.php' === $pagenow ) ) {
 				$found = true;
 
-			// Registered global pages
+				// Registered global pages
 			} elseif ( in_array( $pagenow, $admin_pages, true ) ) {
 				$found = true;
 
-			// Supported post types
+				// Supported post types
 			} elseif ( $include_non_exclusive && edd_is_insertable_admin_page() ) {
 				$found = true;
 
-			// The EDD settings screen (fallback if mislinked)
+				// The EDD settings screen (fallback if mislinked)
 			} elseif ( 'edd-settings' === $page ) {
 				$found = true;
 			}

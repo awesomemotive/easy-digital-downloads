@@ -2,6 +2,7 @@
 namespace EDD\Tests\Privacy;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use \EDD\Database\Queries\LogEmail;
 
 class Anonymization extends EDD_UnitTestCase {
 
@@ -81,5 +82,19 @@ class Anonymization extends EDD_UnitTestCase {
 		$anonymized_customer = edd_get_customer( self::$customer->id );
 
 		$this->assertEquals( 'disabled', $anonymized_customer->status );
+	}
+
+	public function test_customer_anonymization_deletes_email_logs() {
+		$query            = new LogEmail();
+		$random_email_key = array_rand( self::$emails );
+		$random_email     = edd_get_customer_email_address( self::$emails[ $random_email_key ] );
+		parent::edd()->email_logs->create_many( 3, array( 'email' => $random_email->email ) );
+
+		// Ensure that the email logs exist.
+		$this->assertEquals( 3, $query->query( array( 'email' => $random_email->email, 'count' => true ) ) );
+		$anonymized = _edd_anonymize_customer( self::$customer->id );
+
+		// Ensure that the email logs have been deleted.
+		$this->assertEquals( 0, $query->query( array( 'email' => $random_email->email, 'count' => true ) ) );
 	}
 }

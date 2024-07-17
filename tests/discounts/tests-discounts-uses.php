@@ -50,6 +50,7 @@ class UseCounts extends EDD_UnitTestCase {
 	public function test_get_discount_uses_by_property() {
 		edd_update_discount( self::$discount_id, array( 'use_count' => 54 ) );
 		$this->assertEquals( 54, $this->get_discount()->uses );
+		$this->assertNotEmpty( $this->get_discount()->end_date );
 	}
 
 	/**

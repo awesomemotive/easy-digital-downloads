@@ -212,7 +212,18 @@ function edd_checkout_check_existing_email( $valid_data, $post ) {
 		return;
 	}
 
-	$email    = strtolower( $valid_data['logged_in_user']['user_email'] );
+	// If the logged in user was validated.
+	if ( isset( $valid_data['logged_in_user']['user_email'] ) ) {
+		$email = strtolower( $valid_data['logged_in_user']['user_email'] );
+	} elseif ( isset( $valid_data['login_user_data']['user_email'] ) ) {
+		// If the user is logging in.
+		$email = strtolower( $valid_data['login_user_data']['user_email'] );
+	} else {
+		// The user is already logged in and EDD didn't validate the email.
+		$user  = wp_get_current_user();
+		$email = strtolower( $user->user_email );
+	}
+
 	$customer = edd_get_customer_by( 'user_id', get_current_user_id() );
 
 	// If the current user has a customer record and the email address matches, we're good to go.
@@ -856,22 +867,23 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		return -1;
 	}
 
-	// Bail if errors
+	// Bail if errors.
 	if ( edd_get_errors() ) {
 		return -1;
 	}
 
+	$defaults  = array(
+		'user_login' => '',
+		'user_pass'  => '',
+		'user_email' => '',
+		'first_name' => '',
+		'last_name'  => '',
+		'role'       => get_option( 'default_role' ),
+	);
+	$user_args = wp_parse_args( $user_data, $defaults );
 	$user_args = apply_filters(
 		'edd_insert_user_args',
-		array(
-			'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : '',
-			'user_pass'       => isset( $user_data['user_pass'] ) ? $user_data['user_pass'] : '',
-			'user_email'      => isset( $user_data['user_email'] ) ? $user_data['user_email'] : '',
-			'first_name'      => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
-			'last_name'       => isset( $user_data['user_last'] ) ? $user_data['user_last'] : '',
-			'user_registered' => date( 'Y-m-d H:i:s' ),
-			'role'            => get_option( 'default_role' ),
-		),
+		$user_args,
 		$user_data
 	);
 
@@ -1267,37 +1279,37 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 function edd_check_purchase_email( $valid_data, $posted ) {
 
 	$banned = edd_get_banned_emails();
-
 	if ( empty( $banned ) ) {
 		return;
 	}
 
-	$user_emails = array( $posted['edd_email'] );
+	$user_emails = array();
+	if ( ! empty( $posted['edd_email'] ) ) {
+		$user_emails[] = $posted['edd_email'];
+	}
 	if ( is_user_logged_in() ) {
 
-		// The user is logged in, check that their account email is not banned
+		// The user is logged in, check that their account email is not banned.
 		$user_data     = get_userdata( get_current_user_id() );
 		$user_emails[] = $user_data->user_email;
 
-	} elseif ( isset( $posted['edd-purchase-var'] ) && $posted['edd-purchase-var'] == 'needs-to-login' ) {
+	} elseif ( isset( $posted['edd-purchase-var'] ) && 'needs-to-login' === $posted['edd-purchase-var'] ) {
 
-		// The user is logging in, check that their email is not banned
-		if ( $user_data = get_user_by( 'login', $posted['edd_user_login'] ) ) {
+		// The user is logging in, check that their email is not banned.
+		$user_data = get_user_by( 'login', $posted['edd_user_login'] );
+		if ( $user_data ) {
 			$user_emails[] = $user_data->user_email;
 		}
-
 	}
 
 	foreach ( $user_emails as $email ) {
 
-		// Set an error and give the customer a general error (don't alert
-		// them that they were banned)
+		// Set an error and give the customer a general error (don't alert them that they were banned).
 		if ( edd_is_email_banned( $email ) ) {
 			edd_set_error( 'email_banned', __( 'An internal error has occurred, please try again or contact support.', 'easy-digital-downloads' ) );
 			break;
 		}
 	}
-
 }
 add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
 

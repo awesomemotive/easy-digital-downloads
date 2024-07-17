@@ -26,6 +26,7 @@ function edd_email_tags_inserter_get_registered_emails() {
 	$emails   = $settings['emails'];
 
 	unset( $emails['main'] );
+	unset( $emails['templates'] );
 
 	return array_keys( $emails );
 }
@@ -38,15 +39,8 @@ function edd_email_tags_inserter_get_registered_emails() {
  */
 function edd_email_tags_inserter_register() {
 	foreach ( edd_email_tags_inserter_get_registered_emails() as $email ) {
-
 		// Add Thickbox button.
 		add_action( 'edd_settings_tab_top_emails_' . $email, 'edd_email_tags_inserter_media_button' );
-
-		// Output Thickbox content.
-		add_action( 'edd_settings_tab_top_emails_' . $email, 'edd_email_tags_inserter_thickbox_content' );
-
-		// Enqueue scripts.
-		add_action( 'edd_settings_tab_top_emails_' . $email, 'edd_email_tags_inserter_enqueue_scripts' );
 	}
 }
 add_action( 'admin_menu', 'edd_email_tags_inserter_register' );
@@ -59,11 +53,13 @@ add_action( 'admin_menu', 'edd_email_tags_inserter_register' );
  * @since 3.0
  */
 function edd_email_tags_inserter_media_button() {
+	remove_all_actions( 'media_buttons' );
+	add_action( 'media_buttons', 'media_buttons' );
 	add_action( 'media_buttons', 'edd_email_tags_inserter_media_button_output' );
 }
 
 /**
- * Adds an 'Insert Marker' button above the TinyMCE Editor on email-related
+ * Adds an 'Insert Tag' button above the TinyMCE Editor on email-related
  * `wp_editor()` instances.
  *
  * @since 3.0
@@ -72,24 +68,49 @@ function edd_email_tags_inserter_media_button_output() {
 	?>
 	<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
 		<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
-		<?php esc_html_e( 'Insert Marker', 'easy-digital-downloads' ); ?>
+		<?php esc_html_e( 'Insert Tag', 'easy-digital-downloads' ); ?>
 	</a>
 	<?php
+	$page      = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS );
+	$email_id  = filter_input( INPUT_GET, 'email', FILTER_SANITIZE_SPECIAL_CHARS );
+	$context   = '';
+	$recipient = '';
+	if ( 'edd-emails' === $page && ! empty( $email_id ) ) {
+		?>
+		<button type="button" class="button button-secondary edd-email-action-reset edd-promo-notice__trigger" data-email="<?php echo esc_attr( $email_id ); ?>">
+			<?php esc_html_e( 'Restore Default', 'easy-digital-downloads' ); ?>
+		</button>
+		<?php
+		$email = edd_get_email( $email_id );
+		if ( $email ) {
+			$context   = $email->context;
+			$recipient = $email->recipient;
+		}
+	}
+	if ( wp_script_is( 'edd-admin-email-tags' ) ) {
+		return;
+	}
+	// Output Thickbox content.
+	edd_email_tags_inserter_thickbox_content( $context, $recipient );
+	// Enqueue scripts.
+	edd_email_tags_inserter_enqueue_scripts( $context, $recipient );
 }
 
 /**
  * Enqueue scripts for clicking a tag inside of Thickbox.
  *
  * @since 3.0
+ * @param string $context The context to get tags for.
+ * @param string $recipient The recipient to get tags for.
  */
-function edd_email_tags_inserter_enqueue_scripts() {
+function edd_email_tags_inserter_enqueue_scripts( $context = '', $recipient = '' ) {
 
 	wp_enqueue_style( 'edd-admin-email-tags' );
-	wp_enqueue_script( 'edd-admin-email-tags' ) ;
+	wp_enqueue_script( 'edd-admin-email-tags' );
 
 	// Send information about tags to script.
 	$items = array();
-	$tags  = edd_get_email_tags();
+	$tags  = edd_get_email_tags( $context, $recipient );
 
 	foreach ( $tags as $tag ) {
 		$items[] = array(
@@ -115,9 +136,11 @@ function edd_email_tags_inserter_enqueue_scripts() {
  * Output Thickbox content.
  *
  * @since 3.0
+ * @param string $context The context to get tags for.
+ * @param string $recipient The recipient to get tags for.
  */
-function edd_email_tags_inserter_thickbox_content() {
-	$tags = edd_get_email_tags();
+function edd_email_tags_inserter_thickbox_content( $context = '', $recipient = '' ) {
+	$tags = edd_get_email_tags( $context, $recipient );
 	?>
 	<div id="edd-insert-email-tag" style="display: none;">
 		<div class="edd-email-tags-filter">
