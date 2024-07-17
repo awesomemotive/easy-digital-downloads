@@ -54,7 +54,7 @@ class Customer_Dispute_Created extends Webhook_Event {
 					'object_type' => 'order',
 					'object_id'   => $order_id,
 					'content'     => sprintf(
-						/* Translators: 1. Dispute ID; 2. Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt. */
+						/* translators: 1: Dispute ID, 2: Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt. */
 						__( 'The PayPal transaction has been disputed. Case ID: %1$s. Reason given: %2$s.', 'easy-digital-downloads' ),
 						$dispute_id,
 						implode( ', ', $reasons )
@@ -68,7 +68,7 @@ class Customer_Dispute_Created extends Webhook_Event {
 						'object_type' => 'order',
 						'object_id'   => $order_id,
 						'content'     => sprintf(
-							/* Translators: dispute message added by the customer */
+							/* translators: dispute message added by the customer */
 							__( 'PayPal Dispute Message: %s', 'easy-digital-downloads' ),
 							$message->content
 						),

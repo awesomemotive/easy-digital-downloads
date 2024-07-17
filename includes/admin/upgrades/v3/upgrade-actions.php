@@ -41,6 +41,7 @@ function edd_process_v3_upgrade() {
 	}
 
 	if ( ! array_key_exists( $upgrade_key, $all_upgrades ) ) {
+		/* translators: %s: Upgrade step name/key */
 		wp_send_json_error( sprintf( __( '"%s" is not a valid 3.0 upgrade.', 'easy-digital-downloads' ), $upgrade_key ) );
 	}
 

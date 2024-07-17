@@ -1,0 +1,89 @@
+
+#edd-emails__add {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	justify-content: space-between;
+}
+
+.edd-list-table__item td {
+	padding: 10px;
+}
+
+th.column-status {
+	text-align: right;
+	width: 80px;
+}
+
+td.column-status {
+	min-height: 30px;
+	text-align: right;
+	width: 80px;
+
+	& .edd-help-tip {
+		margin-top: 2px;
+	}
+
+	@media screen and (max-width: $break-medium) {
+		text-align: left;
+		width: unset;
+		min-height: 40px;
+	}
+}
+
+tr.no-items {
+	display: none;
+}
+
+@media screen and (min-width: $break-wide) {
+	.column-primary {
+		width: 250px;
+	}
+
+	.column-recipient,
+	.column-sender {
+		width: 125px;
+	}
+
+	.column-context,
+	.column-date_modified {
+		width: 150px;
+	}
+}
+
+table.email_templates {
+	margin-top: 1em;
+}
+
+.tablenav {
+	&.top {
+		position: relative;
+	}
+
+	.alignright.actions {
+		padding-right: 0;
+	}
+}
+
+.edd-list-table__name {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.edd-emails__wpsmtp {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	justify-content: flex-end;
+
+	& a {
+		text-decoration: none;
+		color: $wp-text;
+	}
+
+	img {
+		width: 20px;
+		height: auto;
+	}
+}

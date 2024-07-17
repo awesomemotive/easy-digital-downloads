@@ -57,6 +57,8 @@ var EDD_Flyout = {
 
 		window.addEventListener('load', this.handleScroll.bind(this));
 
+		document.addEventListener( 'edd_promo_notice_enter', () => this.flyoutMenu.classList.add('out') );
+		document.addEventListener( 'edd_promo_notice_dismiss', () => setTimeout( this.flyoutMenu.classList.remove('out'), 500 ) );
 	},
 	handleScroll: function() {
 		if ( this.overlap.length < 1 ) {

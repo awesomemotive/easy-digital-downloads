@@ -9,7 +9,11 @@
 		display: grid;
 		grid-template-columns: auto;
 		gap: 1em;
-		margin-top: 24px;
+		margin-top: 40px;
+
+		p + & {
+			margin-top: 24px;
+		}
 	}
 }
 

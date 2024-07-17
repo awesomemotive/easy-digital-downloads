@@ -3,10 +3,7 @@ namespace EDD\Tests;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-/**
- * @group edd_scripts
- */
-class Tests_Scripts extends EDD_UnitTestCase {
+class Scripts extends EDD_UnitTestCase {
 
 	/**
 	 * Test if all the file hooks are working.
@@ -134,7 +131,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 
 	/**
 	 * @dataProvider _admin_scripts_dp
-	 * @covers ::edd_load_admin_scripts()
 	 *
 	 * @param string $script    Registered script handle.
 	 * @param string $script_is Status of the script to check.
@@ -161,7 +157,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 
 	/**
 	 * @dataProvider _admin_styles_dp
-	 * @covers ::edd_load_admin_scripts()
 	 *
 	 * @param string $style    Registered stylesheet handle.
 	 * @param string $style_is Status of the stylesheet to check.
@@ -188,10 +183,11 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 * Helper to load admin scripts.
 	 */
 	protected function load_admin_scripts() {
-		if ( ! function_exists( 'edd_is_admin_page' ) ) {
-			include EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
-		}
-
+		$this->go_to( edd_get_admin_url(
+			array(
+				'page' => 'edd-settings',
+			)
+		) );
 		edd_load_admin_scripts( 'settings.php' );
 	}
 

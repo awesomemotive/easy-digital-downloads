@@ -2,23 +2,30 @@
 /**
  * Easy Digital Downloads Taxes Settings
  *
- * @package EDD
+ * @package     EDD
  * @subpackage  Settings
  * @copyright   Copyright (c) 2023, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 3.1.4
+ * @since       3.1.4
  */
+
 namespace EDD\Admin\Settings\Tabs;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Taxes settings tab class.
+ *
+ * @since 3.1.4
+ */
 class Taxes extends Tab {
 
 	/**
 	 * Get the ID for this tab.
 	 *
 	 * @since 3.1.4
-	 * @return string
+	 *
+	 * @var string
 	 */
 	protected $id = 'taxes';
 
@@ -33,17 +40,15 @@ class Taxes extends Tab {
 			'main'  => array(
 				'enable_taxes'         => array(
 					'id'            => 'enable_taxes',
-					'name'          => __( 'Taxes', 'easy-digital-downloads' ),
-					'check'         => __( 'Enabled', 'easy-digital-downloads' ),
-					'desc'          => __( 'Check this to enable taxes on purchases.', 'easy-digital-downloads' ),
-					'type'          => 'checkbox_description',
+					'name'          => __( 'Enable Taxes', 'easy-digital-downloads' ),
+					'type'          => 'checkbox_toggle',
 					'tooltip_title' => __( 'Enabling Taxes', 'easy-digital-downloads' ),
 					'tooltip_desc'  => __( 'With taxes enabled, customers will be taxed based on the rates you define, and are required to input their address on checkout so rates can be calculated accordingly.', 'easy-digital-downloads' ),
 				),
 				'tax_help'             => array(
 					'id'   => 'tax_help',
 					'name' => '',
-					/* translators: %s - tax setup documentation URL. */
+					/* translators: %s: tax setup documentation URL. */
 					'desc' => sprintf( __( 'Visit the <a href="%s" target="_blank">Tax setup documentation</a> for further information. <p class="description">If you need VAT support, there are options listed on the documentation page.</p>', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/docs/tax-settings/' ),
 					'type' => 'descriptive_text',
 				),
@@ -63,9 +68,8 @@ class Taxes extends Tab {
 				'display_tax_rate'     => array(
 					'id'    => 'display_tax_rate',
 					'name'  => __( 'Show Tax Rate on Prices', 'easy-digital-downloads' ),
-					'check' => __( 'Show', 'easy-digital-downloads' ),
-					'desc'  => __( 'Some countries require a notice that product prices include tax.', 'easy-digital-downloads' ),
-					'type'  => 'checkbox_description',
+					'check' => __( 'Some countries require a notice that product prices include tax.', 'easy-digital-downloads' ),
+					'type'  => 'checkbox_toggle',
 				),
 				'checkout_include_tax' => array(
 					'id'            => 'checkout_include_tax',

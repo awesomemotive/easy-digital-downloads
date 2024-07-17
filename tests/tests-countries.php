@@ -438,4 +438,12 @@ class Countries extends EDD_UnitTestCase {
 	public function test_get_state_name_empty() {
 		$this->assertEmpty( edd_get_state_name() );
 	}
+
+	public function test_get_legacy_gb_state_returns_name() {
+		$this->assertEquals( 'Barnsley', edd_get_state_name( 'GB', 'GB-BNS' ) );
+	}
+
+	public function test_get_bj_region_state_returns_name() {
+		$this->assertEquals( 'Alibori', edd_get_state_name( 'BJ', 'AL' ) );
+	}
 }

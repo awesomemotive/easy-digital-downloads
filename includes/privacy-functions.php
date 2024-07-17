@@ -9,8 +9,8 @@
  * @since       2.9.2
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Register the EDD template for a privacy policy.
@@ -320,6 +320,18 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 
 	// Loop through all their email addresses, and remove any additional email addresses.
 	foreach ( $emails as $email ) {
+		// Remove any logs of emails sent to this email address.
+		$query = new EDD\Database\Queries\LogEmail();
+		$logs  = $query->query(
+			array(
+				'email' => $email->email,
+			)
+		);
+		if ( ! empty( $logs ) ) {
+			foreach ( $logs as $email_log ) {
+				$query->delete_item( $email_log->id );
+			}
+		}
 		edd_delete_customer_email_address( $email->id );
 	}
 
@@ -387,6 +399,7 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 	if ( ! $order ) {
 		return array(
 			'success' => false,
+			/* translators: %d is the order ID. */
 			'message' => sprintf( __( 'No order with ID %d.', 'easy-digital-downloads' ), $order_id ),
 		);
 	}
@@ -424,6 +437,7 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 		default:
 			$return = array(
 				'success' => false,
+				/* translators: %d is the order status. */
 				'message' => sprintf( __( 'Order not modified, due to status: %s.', 'easy-digital-downloads' ), $order->status ),
 			);
 			break;
@@ -433,7 +447,8 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 
 			$return = array(
 				'success' => true,
-				'message' => sprintf( __( 'Order %d with status %s deleted.', 'easy-digital-downloads' ), $order->id, $order->status ),
+				/* translators: %1$d is the order ID, %2$s is the order status. */
+				'message' => sprintf( __( 'Order %1$d with status %2$s deleted.', 'easy-digital-downloads' ), $order->id, $order->status ),
 			);
 			break;
 
@@ -471,6 +486,7 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 
 			$return = array(
 				'success' => true,
+				/* translators: %d is the order ID. */
 				'message' => sprintf( __( 'Order ID %d successfully anonymized.', 'easy-digital-downloads' ), $order_id ),
 			);
 			break;
@@ -1130,6 +1146,7 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
 			'items_removed'  => false,
 			'items_retained' => false,
 			'messages'       => array(
+				/* translators: %s: email address */
 				sprintf( __( 'Customer for %s not deleted, due to remaining payments.', 'easy-digital-downloads' ), $email_address ),
 			),
 			'done'           => true,
@@ -1144,6 +1161,7 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
 				'items_removed'  => true,
 				'items_retained' => false,
 				'messages'       => array(
+					/* translators: %s: email address */
 					sprintf( __( 'Customer for %s successfully deleted.', 'easy-digital-downloads' ), $email_address ),
 				),
 				'done'           => true,
@@ -1155,6 +1173,7 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
 		'items_removed'  => false,
 		'items_retained' => false,
 		'messages'       => array(
+			/* translators: %s: email address */
 			sprintf( __( 'Customer for %s failed to be deleted.', 'easy-digital-downloads' ), $email_address ),
 		),
 		'done'           => true,
@@ -1225,6 +1244,7 @@ function edd_privacy_customer_anonymizer( $email_address, $page = 1 ) {
 	return array(
 		'items_removed'  => true,
 		'items_retained' => false,
+		/* translators: %s: email address */
 		'messages'       => array( sprintf( __( 'Customer for %s has been anonymized.', 'easy-digital-downloads' ), $email_address ) ),
 		'done'           => true,
 	);
@@ -1249,7 +1269,9 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 
 	if ( empty( $orders ) ) {
 		$message = 1 === $page
+			/* translators: %s: email address */
 			? sprintf( __( 'No orders found for %s.', 'easy-digital-downloads' ), $email_address )
+			/* translators: %s: email address */
 			: sprintf( __( 'All eligible orders anonymized or deleted for %s.', 'easy-digital-downloads' ), $email_address );
 
 		return array(
@@ -1311,6 +1333,7 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
+			/* translators: %s: email address */
 			'messages'       => array( sprintf( __( 'All eligible file download logs anonymized or deleted for %s.', 'easy-digital-downloads' ), $email_address ) ),
 			'done'           => true,
 		);
@@ -1360,6 +1383,7 @@ function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
+			/* translators: %s: email address */
 			'messages'       => array( sprintf( __( 'No User found for %s, no access logs to remove.', 'easy-digital-downloads' ), $email_address ) ),
 			'done'           => true,
 		);
@@ -1377,6 +1401,7 @@ function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
 		return array(
 			'items_removed'  => false,
 			'items_retained' => false,
+			/* translators: %s: email address */
 			'messages'       => array( sprintf( __( 'All API access logs deleted for %s.', 'easy-digital-downloads' ), $email_address ) ),
 			'done'           => true,
 		);

@@ -2,6 +2,7 @@
 
 /**
  * Settings display/functions for EDD passes.
+ *
  * @package EDD
  * @subpackage Admin/PassHandler
  */
@@ -52,9 +53,13 @@ class Settings implements SubscriberInterface {
 		}
 		$this->enqueue();
 		?>
-		<h3><?php echo esc_html( $this->get_heading_text() ); ?></h3>
 		<table class="form-table" role="presentation">
 			<tbody>
+				<tr>
+					<th class="edd-pass-handler__heading" colspan="2">
+						<h3><?php echo esc_html( $this->get_heading_text() ); ?></h3>
+					</th>
+				</tr>
 				<tr>
 					<th scope="row">
 						<label for="edd_pass_key"><?php esc_html_e( 'License Key', 'easy-digital-downloads' ); ?></label>
@@ -186,7 +191,7 @@ class Settings implements SubscriberInterface {
 				);
 				echo wp_kses_post(
 					sprintf(
-						/* translators: 1. opening link tag; do not translate; 2. closing link tag; do not translate. */
+						/* translators: 1: opening link tag; do not translate, 2: closing link tag; do not translate. */
 						__( 'To unlock more features, consider %1$supgrading to Pro%2$s.', 'easy-digital-downloads' ),
 						'<strong><a href="' . $url . '" class="edd-pro-upgrade">',
 						'</a></strong>'

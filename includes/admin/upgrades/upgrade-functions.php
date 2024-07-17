@@ -94,7 +94,7 @@ function edd_show_upgrade_notices() {
 							<?php
 							printf(
 								wp_kses_post(
-									/* translators: 1. Opening strong tag; do not translate. 2. Closing strong tag; do not translate. */
+									/* translators: 1: Opening strong tag; do not translate. 2. Closing strong tag; do not translate. */
 									__( 'Easy Digital Downloads needs to upgrade the database. %1$sLearn more about this upgrade%2$s.', 'easy-digital-downloads' )
 								),
 								'<button class="button button-link" onClick="jQuery(this).parent().next(\'div\').slideToggle()">',
@@ -109,7 +109,7 @@ function edd_show_upgrade_notices() {
 							<p>
 								<?php
 								printf(
-									/* translators: 1. Opening strong/italics tag; do not translate. 2. Closing strong/italics tag; do not translate. */
+									/* translators: 1: Opening strong/italics tag; do not translate. 2. Closing strong/italics tag; do not translate. */
 									esc_html__( 'This is a %1$smandatory%2$s update that will migrate all Easy Digital Downloads data to custom database tables. This upgrade will provide better performance and scalability.', 'easy-digital-downloads' ),
 									'<strong><em>',
 									'</em></strong>'
@@ -119,7 +119,7 @@ function edd_show_upgrade_notices() {
 							<p>
 								<?php
 								printf(
-									/* translators: 1. Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Plural download label */
+									/* translators: 1: Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Plural download label */
 									esc_html__( '%1$sPlease back up your database before starting this upgrade.%2$s This upgrade routine will make irreversible changes to the database.', 'easy-digital-downloads' ),
 									'<strong>',
 									'</strong>'
@@ -129,7 +129,7 @@ function edd_show_upgrade_notices() {
 							<p>
 								<?php
 								printf(
-									/* translators: 1. Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Line break; do not translate. 4. CLI command example; do not translate. */
+									/* translators: 1: Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Line break; do not translate. 4. CLI command example; do not translate. */
 									esc_html__( '%1$sAdvanced User?%2$s This upgrade can also be run via WP-CLI with the following command:%3$s%3$s%4$s', 'easy-digital-downloads' ),
 									'<strong>',
 									'</strong>',
@@ -169,7 +169,7 @@ function edd_show_upgrade_notices() {
 				// The database version is the problem.
 				if ( version_compare( $database_version, '5.6', '<' ) ) {
 					$message .= ' ' . sprintf(
-						/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate; 3. MySQL database version, do not translate */
+						/* translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate, 3: MySQL database version, do not translate */
 						__( 'Please contact your host and ask them to upgrade your environment to meet our %1$sminimum technical requirements%2$s. Your MySQL version is %3$s and needs to be updated.', 'easy-digital-downloads' ),
 						'<a href="https://easydigitaldownloads.com/recommended-wordpress-hosting/">',
 						'</a>',
@@ -177,7 +177,7 @@ function edd_show_upgrade_notices() {
 					);
 				} else {
 					$message .= ' ' . sprintf(
-						/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate */
+						/* translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate */
 						__( '%1$sContact our support team%2$s for help with next steps.', 'easy-digital-downloads' ),
 						'<a href="https://easydigitaldownloads.com/support/">',
 						'</a>'
@@ -433,7 +433,8 @@ function edd_v3_remove_legacy_data_form( $hide_wrapper_initially = false ) {
 		<p>
 			<?php
 			printf(
-				esc_html__( 'You can complete this step later by navigating to %sDownloads &raquo; Tools%s.', 'easy-digital-downloads' ),
+				/* translators: 1: Opening anchor tag; do not translate. 2: Closing anchor tag; do not translate. */
+				esc_html__( 'You can complete this step later by navigating to %1$sDownloads &raquo; Tools%2$s.', 'easy-digital-downloads' ),
 				'<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-tools' ) ) ) . '">',
 				'</a>'
 			);
@@ -504,71 +505,6 @@ function edd_v3_remove_legacy_data_tool() {
 	<?php
 }
 add_action( 'edd_tools_recount_stats_after', 'edd_v3_remove_legacy_data_tool' );
-
-/**
- * Register batch processors for upgrade routines for EDD 3.0.
- *
- * @since 3.0
- */
-function edd_register_batch_processors_for_v30_upgrade() {
-	add_action( 'edd_batch_export_class_include', 'edd_load_batch_processors_for_v30_upgrade', 10, 1 );
-}
-add_action( 'edd_register_batch_exporter', 'edd_register_batch_processors_for_v30_upgrade', 10 );
-
-/**
- * Load the batch processor for upgrade routines for EDD 3.0.
- *
- * @param $class string Class name.
- */
-function edd_load_batch_processors_for_v30_upgrade( $class ) {
-	switch ( $class ) {
-		case 'EDD\Admin\Upgrades\v3\Orders':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-orders.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Customer_Addresses':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-addresses.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Customer_Email_Addresses':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-email-addresses.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Logs':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-logs.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Tax_Rates':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-tax-rates.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Discounts':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-discounts.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Order_Notes':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-order-notes.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Customer_Notes':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-notes.php';
-			break;
-		case 'EDD\Admin\Upgrades\v3\Remove_Legacy_Data':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-remove-legacy-data.php';
-			break;
-	}
-}
 
 /**
  * Checks whether all 3.0 migrations have run, ignoring the legacy data removal.

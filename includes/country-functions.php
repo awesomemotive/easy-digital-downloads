@@ -416,5 +416,12 @@ function edd_get_state_name( $country_code = '', $state_code = '' ) {
 	$countries  = new EDD\Utils\Countries();
 	$state_name = $countries->get_state_name( $country_code, $state_code );
 
-	return apply_filters( 'edd_get_state_name', $state_name, $state_code );
+	/**
+	 * Filters the state name for a given country and state code.
+	 *
+	 * @param string $state_name   The state name.
+	 * @param string $state_code   The ISO Code for the state.
+	 * @param string $country_code The ISO Code for the country. (added in 3.3.0).
+	 */
+	return apply_filters( 'edd_get_state_name', $state_name, $state_code, $country_code );
 }

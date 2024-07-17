@@ -262,12 +262,12 @@ function edd_add_customer_email( $args = array() ) {
 
 			$user       = wp_get_current_user();
 			$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-			/* translators: 1. email address; 2. username */
+			/* translators: 1: email address, 2: username */
 			$customer_note = sprintf( __( 'Email address %1$s added by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
 			if ( $primary ) {
-				/* translators: 1. email address; 2. username */
+				/* translators: 1: email address, 2: username */
 				$customer_note =  sprintf( __( 'Email address %1$s set as primary by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 				$customer->add_note( $customer_note );
 			}
@@ -329,7 +329,7 @@ function edd_remove_customer_email() {
 		);
 		$user       = wp_get_current_user();
 		$user_login = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		/* translators: 1. email address; 2. username */
+		/* translators: 1: email address, 2: username */
 		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
@@ -389,7 +389,8 @@ function edd_set_customer_primary_email() {
 		);
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		/* translators: 1: email address, 2: username */
+		$customer_note = sprintf( __( 'Email address %1$s set as primary by %2$s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
 
 	} else {

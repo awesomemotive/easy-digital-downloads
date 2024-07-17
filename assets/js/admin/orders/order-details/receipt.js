@@ -7,8 +7,12 @@ import { jQueryReady } from 'utils/jquery.js';
 
 jQueryReady( () => {
 
-	const emailSelectSelector = '.edd-order-resend-receipt-email';
 	const sendEmailButton = $( '#edd-resend-receipt' );
+	// If the button is disabled, do nothing.
+	if ( ! sendEmailButton.attr( 'href' ) ) {
+		return;
+	}
+	const emailSelectSelector = '.edd-order-resend-receipt-email';
 	const url = new URLSearchParams( sendEmailButton.attr( 'href' ) );
 
 	$( document.body ).on( 'change', emailSelectSelector, function() {

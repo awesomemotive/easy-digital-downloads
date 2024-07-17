@@ -225,44 +225,6 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
 
 /**
- * Updates week-old+ 'pending' orders to 'abandoned'
- *
- *  This function is only intended to be used by WordPress cron.
- *
- * @since 1.6
- * @return void
-*/
-function edd_mark_abandoned_orders() {
-
-	// Bail if not in WordPress cron
-	if ( ! edd_doing_cron() ) {
-		return;
-	}
-
-	$args = array(
-		'status' => 'pending',
-		'number' => 9999999,
-		'output' => 'edd_payments',
-	);
-
-	add_filter( 'posts_where', 'edd_filter_where_older_than_week' );
-
-	$payments = edd_get_payments( $args );
-
-	remove_filter( 'posts_where', 'edd_filter_where_older_than_week' );
-
-	if( $payments ) {
-		foreach( $payments as $payment ) {
-			if( 'pending' === $payment->post_status ) {
-				$payment->status = 'abandoned';
-				$payment->save();
-			}
-		}
-	}
-}
-add_action( 'edd_weekly_scheduled_events', 'edd_mark_abandoned_orders' );
-
-/**
  * Process an attempt to complete a recoverable payment.
  *
  * @since  2.7

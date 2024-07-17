@@ -1,0 +1,28 @@
+.edd-extension-manager__card--overlay {
+	text-align: left;
+	padding: 0;
+
+	.edd-extension-manager__card {
+		padding: 0;
+	}
+
+	.edd-extension-manager__title {
+		line-height: unset;
+		margin-bottom: .5em;
+	}
+
+	.edd-extension-manager__actions {
+		background-color: $wp-alternate;
+		border-top: 1px solid $gray-200;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		gap: .5em;
+		margin: 0 -2em -2em -2em;
+		padding: 16px 24px;
+
+		.button {
+			margin: 0;
+		}
+	}
+}

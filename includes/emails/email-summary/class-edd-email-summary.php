@@ -84,7 +84,7 @@ class EDD_Email_Summary {
 	 * @return string Email subject.
 	 */
 	public function get_email_subject() {
-		/* Translators: Site domain name */
+		/* translators: Site domain name */
 		$email_subject = sprintf( __( 'Easy Digital Downloads Summary - %s', 'easy-digital-downloads' ), $this->get_site_url() );
 
 		if ( $this->test_mode ) {
@@ -370,7 +370,7 @@ class EDD_Email_Summary {
 		);
 		$wp_date_format = get_option( 'date_format' );
 		$period_name    = ( 'monthly' === $this->email_options['email_summary_frequency'] ) ? __( 'month', 'easy-digital-downloads' ) : __( 'week', 'easy-digital-downloads' );
-		/* Translators: period name (e.g. week) */
+		/* translators: period name (e.g. week) */
 		$relative_text  = sprintf( __( 'vs previous %s', 'easy-digital-downloads' ), $period_name );
 
 		ob_start();

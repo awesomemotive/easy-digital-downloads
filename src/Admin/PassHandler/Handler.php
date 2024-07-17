@@ -14,7 +14,7 @@ class Handler {
 	 * Gets the pass data.
 	 *
 	 * @since 3.1.1
-	 * @return array
+	 * @return \EDD\Licensing\License
 	 */
 	public function get_pro_license() {
 		return new \EDD\Licensing\License( 'pro' );

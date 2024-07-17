@@ -10,7 +10,7 @@
  */
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /** Navigation ****************************************************************/
 
@@ -21,42 +21,28 @@ defined( 'ABSPATH' ) || exit;
  * @param string $active_tab The currently active tab. Default is empty string.
  */
 function edd_customers_page_primary_nav( $active_tab = '' ) {
-
-	ob_start();?>
-
-	<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
-		<?php
-
-		// Get the pages.
-		$tabs = edd_get_customer_pages();
-
-		// Loop through pages and create tabs.
-		foreach ( $tabs as $tab_id => $tab_name ) {
-
-			// Remove.
-			$tab_url = edd_get_admin_url(
+	$tabs = array();
+	foreach ( edd_get_customer_pages() as $tab_id => $tab_name ) {
+		$tabs[ $tab_id ] = array(
+			'name' => $tab_name,
+			'url'  => edd_get_admin_url(
 				array(
 					'page'      => 'edd-customers',
 					'page_type' => urlencode( $tab_id ),
 				)
-			);
+			),
+		);
+	}
 
-			$class = 'nav-tab';
-			if ( $active_tab === $tab_id ) {
-				$class .= ' nav-tab-active';
-			}
-
-			// Link.
-			echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">'; // WPCS: XSS ok.
-				echo esc_html( $tab_name );
-			echo '</a>';
-		}
-		?>
-	</nav>
-
-	<?php
-
-	echo ob_get_clean(); // WPCS: XSS ok.
+	$navigation = new EDD\Admin\Menu\SecondaryNavigation(
+		$tabs,
+		'edd-customers',
+		array(
+			'active_tab'  => $active_tab,
+			'show_search' => true,
+		)
+	);
+	$navigation->render();
 }
 
 /**
@@ -250,14 +236,12 @@ function edd_customers_list( $active_tab = 'customers' ) {
 	// Initialize the list table.
 	$customers_table = new $list_table_class();
 	$customers_table->prepare_items();
+	edd_customers_page_primary_nav( $active_tab );
 	?>
 
 	<div class="wrap">
 		<h1 class="wp-heading-inline"><?php echo esc_html( $name ); ?></h1>
 		<hr class="wp-header-end">
-
-		<?php edd_customers_page_primary_nav( $active_tab ); ?>
-		<br>
 
 		<?php do_action( 'edd_' . sanitize_key( $active_tab ) . '_table_top' ); ?>
 
@@ -265,12 +249,11 @@ function edd_customers_list( $active_tab = 'customers' ) {
 			<?php
 			$customers_table->views();
 			/* translators: the active screen, eg "Search Customers" or "Search Customer Email Addresses" */
-			$customers_table->search_box( sprintf( __( 'Search %s', 'easy-digital-downloads' ), $name ), 'edd-customers' );
+			$customers_table->search_box( sprintf( _x( 'Search %s', 'Noun: Customers or Customer Email Addresses placeholder for a search box', 'easy-digital-downloads' ), $name ), 'edd-customers' );
 			$customers_table->display();
 			?>
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-customers" />
-			<input type="hidden" name="view" value="customers" />
 			<input type="hidden" name="page_type" value="<?php echo esc_attr( $active_tab ); ?>" />
 		</form>
 
@@ -572,7 +555,7 @@ function edd_customers_view( $customer = null ) {
 					<span class="customer-since info-item editable">
 						<?php
 						printf(
-							/* translators: The date. */
+							/* translators: %s: i18n formatted date that the customer was created */
 							esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
 							esc_html( edd_date_i18n( $customer->date_created ) )
 						);

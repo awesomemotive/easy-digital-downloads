@@ -103,7 +103,11 @@ function register_gateway_settings( $gateway_settings ) {
 	$is_connected = PayPal\has_rest_api_connection();
 	if ( ! $is_connected ) {
 		$paypal_settings['paypal_settings']['tooltip_title'] = __( 'Connect with PayPal', 'easy-digital-downloads' );
-		$paypal_settings['paypal_settings']['tooltip_desc']  = __( 'Connecting your store with PayPal allows Easy Digital Downloads to automatically configure your store to securely communicate with PayPal.<br \><br \>You may see "Sandhills Development, LLC", mentioned during the process&mdash;that is the company behind Easy Digital Downloads.', 'easy-digital-downloads' );
+		$paypal_settings['paypal_settings']['tooltip_desc']  = _x(
+			'Connecting your store with PayPal allows Easy Digital Downloads to automatically configure your store to securely communicate with PayPal.<br \><br \>You may see \'Sandhills Development, LLC\', mentioned during the process&mdash;that is the company behind Easy Digital Downloads.',
+			"It is important to escape any quotations within this string, specifically \'Sandhills Development, LLC\'",
+			'easy-digital-downloads'
+		);
 	}
 
 	/**
@@ -143,6 +147,7 @@ function documentation_settings_field() {
 			<p>
 				<?php
 				echo wp_kses( sprintf(
+					/* translators: %s: SSL setup article URL */
 					__( 'PayPal requires an SSL certificate to accept payments. You can learn more about obtaining an SSL certificate in our <a href="%s" target="_blank">SSL setup article</a>.', 'easy-digital-downloads' ),
 					'https://easydigitaldownloads.com/docs/do-i-need-an-ssl-certificate/'
 				), array( 'a' => array( 'href' => true, 'target' => true ) ) );

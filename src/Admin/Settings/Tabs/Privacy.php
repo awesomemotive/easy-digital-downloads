@@ -2,23 +2,30 @@
 /**
  * Easy Digital Downloads Privacy Settings
  *
- * @package EDD
+ * @package     EDD
  * @subpackage  Settings
  * @copyright   Copyright (c) 2023, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 3.1.4
+ * @since       3.1.4
  */
+
 namespace EDD\Admin\Settings\Tabs;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Privacy settings tab class.
+ *
+ * @since 3.1.4
+ */
 class Privacy extends Tab {
 
 	/**
 	 * Get the ID for this tab.
 	 *
 	 * @since 3.1.4
-	 * @return string
+	 *
+	 * @var string
 	 */
 	protected $id = 'privacy';
 
@@ -42,9 +49,8 @@ class Privacy extends Tab {
 				'show_agree_to_privacy_policy'    => array(
 					'id'    => 'show_agree_to_privacy_policy',
 					'name'  => __( 'Agreement', 'easy-digital-downloads' ),
-					'check' => __( 'Check this box to show an "Agree to Privacy Policy" checkbox on checkout.', 'easy-digital-downloads' ),
-					'desc'  => __( 'Customers must agree to your privacy policy before purchasing.', 'easy-digital-downloads' ),
-					'type'  => 'checkbox_description',
+					'check' => __( 'Customers must agree to your privacy policy before purchasing.', 'easy-digital-downloads' ),
+					'type'  => 'checkbox_toggle',
 				),
 				'agree_privacy_label'             => array(
 					'id'          => 'privacy_agree_label',
@@ -57,12 +63,8 @@ class Privacy extends Tab {
 				'show_privacy_policy_on_checkout' => array(
 					'id'    => 'show_privacy_policy_on_checkout',
 					'name'  => __( 'Privacy Policy on Checkout', 'easy-digital-downloads' ),
-					'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_url( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) . '</a>.',
-					'desc'  =>
-						__( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_url( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) . '</a>.' .
-						/* translators: %1$s: Opening anchor tag, %2$s: Closing anchor tag. */
-						'<p>' . sprintf( __( 'Need help creating a Privacy Policy? We recommend %1$sTermageddon%2$s.', 'easy-digital-downloads' ), '<a href="https://termageddon.com/i/easy-digital-downloads-edd-termageddon-promotion/" target="_blank" rel="noopener noreferrer">', '</a>' ) . '</p>',
-					'type'  => 'checkbox',
+					'check' => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_url( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) . '</a>.',
+					'type'  => 'checkbox_toggle',
 				),
 			),
 			'site_terms'   => array(
@@ -77,18 +79,8 @@ class Privacy extends Tab {
 				'show_agree_to_terms' => array(
 					'id'    => 'show_agree_to_terms',
 					'name'  => __( 'Agreement', 'easy-digital-downloads' ),
-					'check' => __( 'Check this box to show an "Agree to Terms" checkbox on checkout.', 'easy-digital-downloads' ),
-					'desc'  =>
-						__( 'Check this to show an agree to terms on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ) .
-						'<p>' .
-						sprintf(
-							/* translators: 1: Opening anchor tag, 2: Closing anchor tag. */
-							__( 'Need help creating a Terms of Agreement? We recommend using %1$sTermageddon%2$s.', 'easy-digital-downloads' ),
-							'<a href="https://termageddon.com/i/easy-digital-downloads-edd-termageddon-promotion/" target="_blank" rel="noopener noreferrer">',
-							'</a>'
-						) .
-						'</p>',
-					'type'  => 'checkbox_description',
+					'check' => __( 'Customers must agree to your terms before purchasing.', 'easy-digital-downloads' ),
+					'type'  => 'checkbox_toggle',
 				),
 				'agree_label'         => array(
 					'id'          => 'agree_label',
@@ -139,7 +131,7 @@ class Privacy extends Tab {
 		);
 		$payment_statuses = edd_get_payment_statuses();
 
-		// Add Privacy settings for statuses
+		// Add Privacy settings for statuses.
 		foreach ( $payment_statuses as $status => $label ) {
 
 			$export_erase[] = array(

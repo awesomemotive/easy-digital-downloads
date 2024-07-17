@@ -74,10 +74,10 @@ function _edds_fake_process_purchase_step() {
  * @return array
  */
 function _edds_get_purchase_form_user( $valid_data = array() ) {
-	// Initialize user
+	// Initialize user.
 	$user = false;
 
-	if ( is_user_logged_in() ) {
+	if ( is_user_logged_in() && isset( $valid_data['logged_in_user'] ) ) {
 
 		// Set the valid user as the logged in collected data.
 		$user = $valid_data['logged_in_user'];

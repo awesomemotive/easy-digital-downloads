@@ -219,9 +219,7 @@ class Base {
 	 */
 	public function parse_tags( $content ) {
 
-		// The email tags are parsed during setup for purchase receipts and sale notifications
-		// Onoce tags are not restricted to payments, we'll expand this. See https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/2151
-
+		// The email tags are parsed during setup for purchase receipts and sale notifications.
 		return $content;
 	}
 
@@ -280,7 +278,7 @@ class Base {
 		 */
 		do_action( 'edd_email_footer', $this );
 
-		$body    = ob_get_clean();
+		$body = ob_get_clean();
 
 		/**
 		 * Added in 3.2.0, we need to replace {heading} with the heading string.
@@ -301,7 +299,6 @@ class Base {
 
 		// Replace the email body now.
 		$message = str_replace( '{email}', $message, $body );
-
 
 		return apply_filters( 'edd_email_message', $message, $this );
 	}
@@ -330,23 +327,28 @@ class Base {
 		 */
 		do_action( 'edd_email_send_before', $this );
 
-		$subject = $this->parse_tags( $subject );
+		$subject = wp_strip_all_tags( $this->parse_tags( $subject ), true );
 		$message = $this->parse_tags( $message );
 
-		$message = $this->build_email( $message );
-
+		$message     = $this->build_email( $message );
+		$headers     = $this->get_headers();
 		$attachments = apply_filters( 'edd_email_attachments', $attachments, $this );
 
-		$sent       = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
+		if ( empty( $to ) || empty( $subject ) || empty( $message ) || empty( $headers ) ) {
+			return false;
+		}
+
+		$sent       = wp_mail( $to, $subject, $message, $headers, $attachments );
 		$log_errors = apply_filters( 'edd_log_email_errors', true, $to, $subject, $message );
 
-		if( ! $sent && true === $log_errors ) {
+		if ( ! $sent && true === $log_errors ) {
 			if ( is_array( $to ) ) {
 				$to = implode( ',', $to );
 			}
 
 			$log_message = sprintf(
-				__( "Email from Easy Digital Downloads failed to send. \nTo: %s\nSubject: %s\n\n", 'easy-digital-downloads' ),
+				/* translators: 1: To address, 2: Subject */
+				__( "Email from Easy Digital Downloads failed to send. \nTo: %1\$s\nSubject: %2\$s\n\n", 'easy-digital-downloads' ),
 				$to,
 				$subject
 			);
@@ -362,7 +364,6 @@ class Base {
 		do_action( 'edd_email_send_after', $this );
 
 		return $sent;
-
 	}
 
 	/**
@@ -386,7 +387,7 @@ class Base {
 		remove_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
 		remove_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
 
-		// Reset heading to an empty string
+		// Reset heading to an empty string.
 		$this->heading = '';
 	}
 
@@ -397,7 +398,7 @@ class Base {
 	 */
 	public function text_to_html( $message ) {
 
-		if ( 'text/html' == $this->content_type || true === $this->html ) {
+		if ( 'text/html' === $this->content_type || true === $this->html ) {
 			$message = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $message ) : $message;
 			$message = apply_filters( 'edd_email_template_make_clickable', true ) ? make_clickable( $message ) : $message;
 			$message = str_replace( '&#038;', '&amp;', $message );

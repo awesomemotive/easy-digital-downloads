@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -35,33 +35,50 @@ function edd_setup_edd_post_types() {
 			'with_front' => false,
 		);
 
-	$download_labels = apply_filters( 'edd_download_labels', array(
-		'name'                  => _x( '%2$s', 'download post type name', 'easy-digital-downloads' ),
-		'singular_name'         => _x( '%1$s', 'singular download post type name', 'easy-digital-downloads' ),
-		'add_new'               => __( 'Add New', 'easy-digital-downloads' ),
-		'add_new_item'          => __( 'Add New %1$s', 'easy-digital-downloads' ),
-		'edit_item'             => __( 'Edit %1$s', 'easy-digital-downloads' ),
-		'new_item'              => __( 'New %1$s', 'easy-digital-downloads' ),
-		'all_items'             => __( '%2$s', 'easy-digital-downloads' ),
-		'view_item'             => __( 'View %1$s', 'easy-digital-downloads' ),
-		'search_items'          => __( 'Search %2$s', 'easy-digital-downloads' ),
-		'not_found'             => __( 'No %2$s found', 'easy-digital-downloads' ),
-		'not_found_in_trash'    => __( 'No %2$s found in Trash', 'easy-digital-downloads' ),
-		'parent_item_colon'     => '',
-		'menu_name'             => _x( '%2$s', 'download post type menu name', 'easy-digital-downloads' ),
-		'featured_image'        => __( '%1$s Image', 'easy-digital-downloads' ),
-		'set_featured_image'    => __( 'Set %1$s Image', 'easy-digital-downloads' ),
-		'remove_featured_image' => __( 'Remove %1$s Image', 'easy-digital-downloads' ),
-		'use_featured_image'    => __( 'Use as %1$s Image', 'easy-digital-downloads' ),
-		'attributes'            => __( '%1$s Attributes', 'easy-digital-downloads' ),
-		'filter_items_list'     => __( 'Filter %2$s list', 'easy-digital-downloads' ),
-		'items_list_navigation' => __( '%2$s list navigation', 'easy-digital-downloads' ),
-		'items_list'            => __( '%2$s list', 'easy-digital-downloads' ),
-	) );
+	$singular_label = edd_get_label_singular();
+	$plural_label   = edd_get_label_plural();
 
-	foreach ( $download_labels as $key => $value ) {
-		$download_labels[ $key ] = sprintf( $value, edd_get_label_singular(), edd_get_label_plural() );
-	}
+	$download_labels = apply_filters(
+		'edd_download_labels',
+		array(
+			'name'                  => $plural_label,
+			'singular_name'         => $singular_label,
+			'add_new'               => __( 'Add New', 'easy-digital-downloads' ),
+			/* translators: %s: Download singular label */
+			'add_new_item'          => sprintf( _x( 'Add New %s', 'Text for adding a new Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Download singular label */
+			'edit_item'             => sprintf( _x( 'Edit %s', 'Text for editing an existing Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Download singular label */
+			'new_item'              => sprintf( _x( 'New %s', 'Text for adding a new Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			'all_items'             => $plural_label,
+			/* translators: %s: Download singular label */
+			'view_item'             => sprintf( _x( 'View %s', 'Text for viewing an existing Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Downloads plural label */
+			'search_items'          => sprintf( _x( 'Search %s', 'Verb: Text hinting the user to search for Downloads/Products', 'easy-digital-downloads' ), $plural_label ),
+			/* translators: %s: Downloads plural label */
+			'not_found'             => sprintf( _x( 'No %s found', 'Context: When no search results are found for Downloads/Products', 'easy-digital-downloads' ), $plural_label ),
+			/* translators: %s: Download plural label */
+			'not_found_in_trash'    => sprintf( _x( 'No %s found in Trash', 'Context: When no Downloads/Products are found in the trash', 'easy-digital-downloads' ), $plural_label ),
+			'parent_item_colon'     => '',
+			'menu_name'             => $plural_label,
+			/* translators: %s: Download singular label */
+			'featured_image'        => sprintf( _x( '%s Image', 'Context: Label for the featured images for a Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Download singular label */
+			'set_featured_image'    => sprintf( _x( 'Set %s Image', 'Context: Text to set the featured image for a Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Download singular label */
+			'remove_featured_image' => sprintf( _x( 'Remove %s Image', 'Context: Text to remove the feature image for a Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Download singular label */
+			'use_featured_image'    => sprintf( _x( 'Use as %s Image', 'Context: Text to use an image as the featured image for a Download/Produt', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Download singular label */
+			'attributes'            => sprintf( _x( '%s Attributes', 'Context: Label for listing the attributes of a Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			/* translators: %s: Download plural label */
+			'filter_items_list'     => sprintf( _x( 'Filter %s list', 'Context: Label for filtering the Downloads/Products list', 'easy-digital-downloads' ), $plural_label ),
+			/* translators: %s: Download plural label */
+			'items_list_navigation' => sprintf( _x( '%s list navigation', 'Context: Label for the Downloads/Products list navigation', 'easy-digital-downloads' ), $plural_label ),
+			/* translators: %s: Download plural label */
+			'items_list'            => sprintf( _x( '%s list', 'Context: Lable for the Downloads/Products list', 'easy-digital-downloads' ), $plural_label ),
+		)
+	);
 
 	$download_args = array(
 		'labels'             => $download_labels,
@@ -158,8 +175,8 @@ function edd_change_default_title( $title ) {
 
 	// If a frontend plugin uses this filter (check extensions before changing this function).
 	if ( ! is_admin() ) {
-		$label = edd_get_label_singular();
-		$title = sprintf( __( 'Enter %s name here', 'easy-digital-downloads' ), $label );
+		/* translators: %s: Download singular label */
+		$title = sprintf( __( 'Enter %s name here', 'easy-digital-downloads' ), edd_get_label_singular() );
 
 		return $title;
 	}
@@ -167,8 +184,8 @@ function edd_change_default_title( $title ) {
 	$screen = get_current_screen();
 
 	if ( 'download' === $screen->post_type ) {
-		$label = edd_get_label_singular();
-		$title = sprintf( __( 'Enter %s name here', 'easy-digital-downloads' ), $label );
+		/* translators: %s: Download singular label */
+		$title = sprintf( __( 'Enter %s name here', 'easy-digital-downloads' ), edd_get_label_singular() );
 	}
 
 	return $title;
@@ -182,33 +199,51 @@ add_filter( 'enter_title_here', 'edd_change_default_title' );
  * @return void
 */
 function edd_setup_download_taxonomies() {
-	$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+	$slug           = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+	$singular_label = edd_get_label_singular();
 
 	/** Categories */
 	$category_labels = array(
-		'name'              => sprintf( _x( '%s Categories', 'taxonomy general name', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'singular_name'     => sprintf( _x( '%s Category', 'taxonomy singular name', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'search_items'      => sprintf( __( 'Search %s Categories', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'all_items'         => sprintf( __( 'All %s Categories', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'parent_item'       => sprintf( __( 'Parent %s Category', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'parent_item_colon' => sprintf( __( 'Parent %s Category:', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'edit_item'         => sprintf( __( 'Edit %s Category', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'update_item'       => sprintf( __( 'Update %s Category', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'add_new_item'      => sprintf( __( 'Add New %s Category', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'new_item_name'     => sprintf( __( 'New %s Category Name', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		/* translators: %s: Download singular label */
+		'name'              => sprintf( _x( '%s Categories', 'taxonomy general name', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'singular_name'     => sprintf( _x( '%s Category', 'taxonomy singular name', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'search_items'      => sprintf( __( 'Search %s Categories', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'all_items'         => sprintf( __( 'All %s Categories', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'parent_item'       => sprintf( __( 'Parent %s Category', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'parent_item_colon' => sprintf( __( 'Parent %s Category:', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'edit_item'         => sprintf( __( 'Edit %s Category', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'update_item'       => sprintf( __( 'Update %s Category', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'add_new_item'      => sprintf( __( 'Add New %s Category', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'new_item_name'     => sprintf( __( 'New %s Category Name', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
 		'menu_name'         => __( 'Categories', 'easy-digital-downloads' ),
 	);
 
-	$category_args = apply_filters( 'edd_download_category_args', array(
-			'hierarchical' => true,
-			'labels'       => apply_filters( 'edd_download_category_labels', $category_labels ),
-			'show_ui'      => true,
-			'query_var'    => 'download_category',
-			'rewrite'      => array( 'slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
+	$category_args = apply_filters(
+		'edd_download_category_args',
+		array(
+			'hierarchical'          => true,
+			'labels'                => apply_filters( 'edd_download_category_labels', $category_labels ),
+			'show_ui'               => true,
+			'query_var'             => 'download_category',
+			'rewrite'               => array(
+				'slug'         => $slug . '/category',
+				'with_front'   => false,
+				'hierarchical' => true,
+			),
 			'show_in_rest'          => true,
 			'rest_base'             => 'edd-categories',
 			'rest_controller_class' => 'WP_REST_Terms_Controller',
-			'capabilities' => array(
+			'capabilities'          => array(
 				'manage_terms' => 'manage_product_terms',
 				'edit_terms'   => 'edit_product_terms',
 				'assign_terms' => 'assign_product_terms',
@@ -221,30 +256,48 @@ function edd_setup_download_taxonomies() {
 
 	/** Tags */
 	$tag_labels = array(
-		'name'                  => sprintf( _x( '%s Tags', 'taxonomy general name', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'singular_name'         => sprintf( _x( '%s Tag', 'taxonomy singular name', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'search_items'          => sprintf( __( 'Search %s Tags', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'all_items'             => sprintf( __( 'All %s Tags', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'parent_item'           => sprintf( __( 'Parent %s Tag', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'parent_item_colon'     => sprintf( __( 'Parent %s Tag:', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'edit_item'             => sprintf( __( 'Edit %s Tag', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'update_item'           => sprintf( __( 'Update %s Tag', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'add_new_item'          => sprintf( __( 'Add New %s Tag', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'new_item_name'         => sprintf( __( 'New %s Tag Name', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		/* translators: %s: Download singular label */
+		'name'                  => sprintf( _x( '%s Tags', 'taxonomy general name', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'singular_name'         => sprintf( _x( '%s Tag', 'taxonomy singular name', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'search_items'          => sprintf( _x( 'Search %s Tags', 'singular: Download singular label', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'all_items'             => sprintf( __( 'All %s Tags', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'parent_item'           => sprintf( __( 'Parent %s Tag', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'parent_item_colon'     => sprintf( __( 'Parent %s Tag:', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'edit_item'             => sprintf( __( 'Edit %s Tag', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'update_item'           => sprintf( __( 'Update %s Tag', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'add_new_item'          => sprintf( __( 'Add New %s Tag', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
+		'new_item_name'         => sprintf( __( 'New %s Tag Name', 'easy-digital-downloads' ), $singular_label ),
+		/* translators: %s: Download singular label */
 		'menu_name'             => __( 'Tags', 'easy-digital-downloads' ),
-		'choose_from_most_used' => sprintf( __( 'Choose from most used %s tags', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		/* translators: %s: Download singular label */
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s tags', 'easy-digital-downloads' ), $singular_label ),
 	);
 
-	$tag_args = apply_filters( 'edd_download_tag_args', array(
-			'hierarchical' => false,
-			'labels'       => apply_filters( 'edd_download_tag_labels', $tag_labels ),
-			'show_ui'      => true,
-			'query_var'    => 'download_tag',
-			'rewrite'      => array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true ),
+	$tag_args = apply_filters(
+		'edd_download_tag_args',
+		array(
+			'hierarchical'          => false,
+			'labels'                => apply_filters( 'edd_download_tag_labels', $tag_labels ),
+			'show_ui'               => true,
+			'query_var'             => 'download_tag',
 			'show_in_rest'          => true,
 			'rest_base'             => 'edd-tags',
 			'rest_controller_class' => 'WP_REST_Terms_Controller',
-			'capabilities' => array(
+			'rewrite'               => array(
+				'slug'         => $slug . '/tag',
+				'with_front'   => false,
+				'hierarchical' => true,
+			),
+			'capabilities'          => array(
 				'manage_terms' => 'manage_product_terms',
 				'edit_terms'   => 'edit_product_terms',
 				'assign_terms' => 'assign_product_terms',
@@ -278,14 +331,17 @@ function edd_get_download_taxonomies() {
  * Get the singular and plural labels for a download taxonomy
  *
  * @since  2.4
- * @param  string $taxonomy The Taxonomy to get labels for
+ * @param  string $taxonomy The Taxonomy to get labels for.
  * @return array            Associative array of labels (name = plural)
  */
 function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
-	$allowed_taxonomies = apply_filters( 'edd_allowed_download_taxonomies', array(
-		'download_category',
-		'download_tag',
-	) );
+	$allowed_taxonomies = apply_filters(
+		'edd_allowed_download_taxonomies',
+		array(
+			'download_category',
+			'download_tag',
+		)
+	);
 
 	if ( ! in_array( $taxonomy, $allowed_taxonomies, true ) ) {
 		return false;
@@ -314,22 +370,27 @@ function edd_get_taxonomy_labels( $taxonomy = 'download_category' ) {
  *
  * @since 1.0
  *
- * @param array $messages Post updated message
+ * @param  array $messages Post updated message.
  * @return array $messages New post updated messages
  */
 function edd_updated_messages( $messages ) {
-	global $post, $post_ID;
+	global $post_ID;
 
-	$url1 = '<a href="' . esc_url( get_permalink( $post_ID ) ) . '">';
-	$url2 = edd_get_label_singular();
-	$url3 = '</a>';
+	$open_tag  = '<a href="' . esc_url( get_permalink( $post_ID ) ) . '">';
+	$label     = edd_get_label_singular();
+	$close_tag = '</a>';
 
 	$messages['download'] = array(
-		1 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		4 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		6 => sprintf( __( '%2$s published. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		7 => sprintf( __( '%2$s saved. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 ),
-		8 => sprintf( __( '%2$s submitted. %1$sView %2$s%3$s.', 'easy-digital-downloads' ), $url1, $url2, $url3 )
+		/* translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate) */
+		1 => sprintf( __( '%1$s updated. %2$sView %1$s%3$s.', 'easy-digital-downloads' ), $label, $open_tag, $close_tag ),
+		/* translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate) */
+		4 => sprintf( __( '%1$s updated. %2$sView %1$s%3$s.', 'easy-digital-downloads' ), $label, $open_tag, $close_tag ),
+		/* translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate) */
+		6 => sprintf( __( '%1$s published. %2$sView %1$s%3$s.', 'easy-digital-downloads' ), $label, $open_tag, $close_tag ),
+		/* translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate) */
+		7 => sprintf( __( '%1$s saved. %2$sView %1$s%3$s.', 'easy-digital-downloads' ), $label, $open_tag, $close_tag ),
+		/* translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate) */
+		8 => sprintf( __( '%1$s submitted. %2$sView %1$s%3$s.', 'easy-digital-downloads' ), $label, $open_tag, $close_tag ),
 	);
 
 	return $messages;
@@ -352,11 +413,31 @@ function edd_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 	$plural   = edd_get_label_plural();
 
 	$bulk_messages['download'] = array(
-		'updated'   => sprintf( _n( '%1$s %2$s updated.', '%1$s %3$s updated.', $bulk_counts['updated'], 'easy-digital-downloads' ), $bulk_counts['updated'], $singular, $plural ),
-		'locked'    => sprintf( _n( '%1$s %2$s not updated, somebody is editing it.', '%1$s %3$s not updated, somebody is editing them.', $bulk_counts['locked'], 'easy-digital-downloads' ), $bulk_counts['locked'], $singular, $plural ),
-		'deleted'   => sprintf( _n( '%1$s %2$s permanently deleted.', '%1$s %3$s permanently deleted.', $bulk_counts['deleted'], 'easy-digital-downloads' ), $bulk_counts['deleted'], $singular, $plural ),
-		'trashed'   => sprintf( _n( '%1$s %2$s moved to the Trash.', '%1$s %3$s moved to the Trash.', $bulk_counts['trashed'], 'easy-digital-downloads' ), $bulk_counts['trashed'], $singular, $plural ),
-		'untrashed' => sprintf( _n( '%1$s %2$s restored from the Trash.', '%1$s %3$s restored from the Trash.', $bulk_counts['untrashed'], 'easy-digital-downloads' ), $bulk_counts['untrashed'], $singular, $plural )
+		'updated'   => intval( $bulk_counts['updated'] ) > 1
+			/* translators: 1: Number of downloads updated, 2: Downloads plural label */
+			? sprintf( _x( '%1$d %2$s updated.', 'Context: Admin notice for multiple Downloads/Products updated in bulk', 'easy-digital-downloads' ), intval( $bulk_counts['updated'] ), $plural )
+			/* translators: %s: Download singular label */
+			: sprintf( _x( '1 %s updated.', 'Context: Admin notice for one Downloads/Products updated in bulk', 'easy-digital-downloads' ), $singular ),
+		'locked'    => intval( $bulk_counts['locked'] ) > 1
+			/* translators: 1: Number of downloads locked, 2: Downloads plural label */
+			? sprintf( _x( '%1$d %2$s not updated, somebody is editing them.', 'Context: Admin notice for multiple Downloads/Products not updated in bulk because they are being edited', 'easy-digital-downloads' ), intval( $bulk_counts['locked'] ), $plural )
+			/* translators: %s: Download singular label */
+			: sprintf( _x( '1 %s not updated, somebody is editing it.', 'Context: Admin notice for one Downloads/Products not updated in bulk because it is being edited', 'easy-digital-downloads' ), $singular ),
+		'deleted'   => intval( $bulk_counts['deleted'] ) > 1
+			/* translators: 1: Number of downloads deleted, 2: Downloads plural label */
+			? sprintf( _x( '%1$d %2$s permanently deleted.', 'Context: Admin notice for multiple Downloads/Products permanently deleted', 'easy-digital-downloads' ), intval( $bulk_counts['deleted'] ), $plural )
+			/* translators: %s: Download singular label */
+			: sprintf( _x( '1 %s permanently deleted.', 'Context: Admin notice for one Downloads/Products permanently deleted', 'easy-digital-downloads' ), $singular ),
+		'trashed'   => intval( $bulk_counts['trashed'] ) > 1
+			/* translators: 1: Number of downloads moved to the Trash, 2: Downloads plural label */
+			? sprintf( _x( '%1$d %2$s moved to the Trash.', 'Context: Admin notice for multiple Downloads/Products moved to the Trash', 'easy-digital-downloads' ), intval( $bulk_counts['trashed'] ), $plural )
+			/* translators: %s: Download singular label */
+			: sprintf( _x( '1 %s moved to the Trash.', 'Context: Admin notice for one Downloads/Products moved to the Trash', 'easy-digital-downloads' ), $singular ),
+		'untrashed' => intval( $bulk_counts['untrashed'] ) > 1
+			/* translators: 1: Number of downloads restored from the Trash, 2: Downloads plural label */
+			? sprintf( _x( '%1$d %2$s restored from the Trash.', 'Context: Admin notice for multiple Downloads/Products restored from the Trash', 'easy-digital-downloads' ), intval( $bulk_counts['untrashed'] ), $plural )
+			/* translators: %s: Download singular label */
+			: sprintf( _x( '1 %s restored from the Trash.', 'Context: Admin notice for one Downloads/Products restored from the Trash', 'easy-digital-downloads' ), $singular ),
 	);
 
 	return $bulk_messages;

@@ -5,10 +5,10 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 3.2.12
+ * Version: 3.3.1
  * Text Domain: easy-digital-downloads
  * Domain Path: /languages
- * Requires at least: 5.8
+ * Requires at least: 6.0
  * Requires PHP: 7.4
  *
  * Easy Digital Downloads is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  * @package EDD
  * @category Core
  * @author Easy Digital Downloads
- * @version 3.2.12
+ * @version 3.3.1
  */
 
 // Exit if accessed directly.

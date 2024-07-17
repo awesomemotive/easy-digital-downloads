@@ -19,30 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
-	global $wp_query;
-
-	$is_object_set    = isset( $wp_query->queried_object );
-	$is_object_id_set = isset( $wp_query->queried_object_id );
-	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
-
-	if ( ! $is_object_set ) {
-		unset( $wp_query->queried_object );
-	} elseif ( is_singular() ) {
-		$content = $wp_query->queried_object->post_content;
-	}
-
-	if ( ! $is_object_id_set ) {
-		unset( $wp_query->queried_object_id );
-	}
-
-	// If we know this isn't the primary checkout page, check other methods.
-	if ( ! $is_checkout && isset( $content ) ) {
-		if ( has_shortcode( $content, 'download_checkout' ) || ( edd_has_core_blocks() && has_block( 'edd/checkout', $content ) ) ) {
-			$is_checkout = true;
-		}
-	}
-
-	return apply_filters( 'edd_is_checkout', $is_checkout );
+	return apply_filters( 'edd_is_checkout', EDD\Checkout\Validator::is_checkout() );
 }
 
 /**

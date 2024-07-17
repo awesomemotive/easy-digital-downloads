@@ -1,3 +1,5 @@
+@import '../../variables/variables';
+
 /* Notifications
 -------------------------------------------------------------- */
 .edd-overlay {
@@ -76,7 +78,7 @@ body.admin-bar #edd-notifications-panel {
 	color: #005ae0;
 }
 .edd-notification--icon.edd-notification--icon-warning {
-	color: #f18200;
+	color: $warning;
 }
 .edd-notification--icon.edd-notification--icon-error {
 	color: #df2a4a;

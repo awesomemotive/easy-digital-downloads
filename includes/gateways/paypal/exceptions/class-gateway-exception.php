@@ -47,8 +47,8 @@ class Gateway_Exception extends \Exception {
 		edd_record_gateway_error(
 			__( 'PayPal Gateway Error', 'easy-digital-downloads' ),
 			sprintf(
-			/* Translators: %d - HTTP response code; %s - Error message */
-				__( 'Response Code: %d; Message: %s', 'easy-digital-downloads' ),
+				/* translators: 1: Response code, 2: Response message */
+				__( 'Response Code: %1$d; Message: %2$s', 'easy-digital-downloads' ),
 				$this->getCode(),
 				$message
 			),

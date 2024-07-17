@@ -373,6 +373,7 @@ class EDD_Discount extends Adjustment {
 					return 'global' === $this->scope ? false : true;
 			}
 
+			/* translators: %s: discount property name */
 			return new WP_Error( 'edd-discount-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 		}
 	}
@@ -1403,6 +1404,7 @@ class EDD_Discount extends Adjustment {
 		if ( (float) $cart_amount >= (float) $this->min_charge_amount ) {
 			$return = true;
 		} elseif ( $set_error ) {
+			/* translators: %s: Minimum order amount, formatted for the currency */
 			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_charge_amount ) ) ) );
 		}
 

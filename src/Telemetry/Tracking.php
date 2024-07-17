@@ -41,7 +41,6 @@ class Tracking {
 	 * Get things going
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'schedule_send' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
 
 		// Sanitize setting.
@@ -206,11 +205,7 @@ class Tracking {
 	 *
 	 * @return void
 	 */
-	public function schedule_send() {
-		if ( edd_doing_cron() ) {
-			add_action( 'edd_weekly_scheduled_events', array( $this, 'send_checkin' ) );
-		}
-	}
+	public function schedule_send() {}
 
 	/**
 	 * Display the admin notice to users that have not opted-in or out

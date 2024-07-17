@@ -3173,8 +3173,11 @@ class Stats {
 			$positive_change             = false;
 
 			if ( absint( $percentage_change ) < 100 ) {
+				// Format the percentage change to two decimal places.
 				$formatted_percentage_change = number_format( $percentage_change, 2 );
-				$formatted_percentage_change = $formatted_percentage_change < 1 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
+
+				// If the percentage change is negative, make it positive for display purposes. We handle the visual aspect via an icon in the UI.
+				$formatted_percentage_change = $formatted_percentage_change < 0 ? $formatted_percentage_change * -1 : $formatted_percentage_change;
 			}
 
 			// Check if stat is in a 'reverse' state, where lower is better.
@@ -3211,16 +3214,18 @@ class Stats {
 
 		if ( $relative_data['no_change'] ) {
 			$relative_output = esc_html__( 'No Change', 'easy-digital-downloads' );
-		} else if ( $relative_data['comparable'] ) {
-			if ( 0 < $relative_data['percentage_change'] ) {
-				$direction       = $relative_data['reverse'] ? 'up reverse' : 'up';
-				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $relative_data['formatted_percentage_change'] . '%';
-			} else {
-				$direction       = $relative_data['reverse'] ? 'down reverse' : 'down';
-				$relative_output = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span> ' . $relative_data['formatted_percentage_change'] . '%';
-			}
+		} elseif ( $relative_data['comparable'] ) {
+			// Determine the direction of the change.
+			$direction_suffix = $relative_data['reverse'] ? ' reverse' : '';
+			$direction        = $relative_data['percentage_change'] > 0 ? 'up' : 'down';
+			$direction       .= $direction_suffix;
+
+			// Prepare the output with proper escaping and formatting.
+			$icon            = '<span class="dashicons dashicons-arrow-' . esc_attr( $direction ) . '"></span>';
+			$percentage      = $relative_data['formatted_percentage_change'] . '%';
+			$relative_output = $icon . ' ' . $percentage;
 		} else {
-			$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . __( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
+			$relative_output = '<span aria-hidden="true">&mdash;</span><span class="screen-reader-text">' . esc_html__( 'No data to compare', 'easy-digital-downloads' ) . '</span>';
 		}
 
 		$relative_markup = $total_output;

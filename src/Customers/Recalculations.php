@@ -7,7 +7,11 @@ namespace EDD\Customers;
 defined( 'ABSPATH' ) || exit;
 
 use EDD\EventManagement\SubscriberInterface;
+use EDD\Cron\Events\SingleEvent;
 
+/**
+ * Recalculations class.
+ */
 class Recalculations implements SubscriberInterface {
 
 	/**
@@ -27,9 +31,10 @@ class Recalculations implements SubscriberInterface {
 	/**
 	 * When an order is added, updated, or changed, the customer stats may need to be recalculated.
 	 *
-	 * @param int   $order_id                       The order ID.
-	 * @param array $data                           The array of order data.
+	 * @param int                   $order_id The order ID.
+	 * @param array                 $data     The array of order data.
 	 * @param bool|EDD\Orders|Order $previous_order The previous order object (when updating).
+	 *
 	 * @return void
 	 */
 	public function maybe_schedule_recalculation( $order_id, $data = array(), $previous_order = false ) {
@@ -67,7 +72,7 @@ class Recalculations implements SubscriberInterface {
 	 * Recalculate the value of a customer.
 	 *
 	 * @since 3.1.1.4
-	 * @param int $customer_id
+	 * @param int $customer_id The customer ID.
 	 * @return void
 	 */
 	public function recalculate( $customer_id ) {
@@ -82,14 +87,14 @@ class Recalculations implements SubscriberInterface {
 	 * Maybe schedule the customer recalculation--it will be skipped if already scheduled.
 	 *
 	 * @since 3.1.1.4
-	 * @param int $customer_id
+	 * @param int $customer_id The customer ID.
 	 * @return void
 	 */
 	private function schedule_recalculation( $customer_id ) {
 		if ( empty( $customer_id ) ) {
 			return;
 		}
-		$is_scheduled = wp_next_scheduled( 'edd_recalculate_customer_deferred', array( $customer_id ) );
+		$is_scheduled = SingleEvent::next_scheduled( 'edd_recalculate_customer_deferred', array( $customer_id ) );
 		$bypass_cron  = apply_filters( 'edd_recalculate_bypass_cron', false );
 
 		// Check if the recalculation has already been scheduled.
@@ -105,7 +110,7 @@ class Recalculations implements SubscriberInterface {
 		}
 
 		edd_debug_log( 'Scheduling recalculation for customer ' . $customer_id );
-		wp_schedule_single_event(
+		SingleEvent::add(
 			time() + ( 5 * MINUTE_IN_SECONDS ),
 			'edd_recalculate_customer_deferred',
 			array( $customer_id )

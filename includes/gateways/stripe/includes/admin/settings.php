@@ -116,6 +116,7 @@ function edds_add_settings( $settings ) {
 			'id'          => 'stripe_statement_descriptor',
 			'name'        => __( 'Statement Descriptor', 'easy-digital-downloads' ),
 			'desc'        => sprintf(
+				/* translators: 1: opening link tag (do not translate), 2: closing link tag (do not translate) */
 				__( 'You can change the description of charges on a customer\'s bank statement in your %1$sStripe Settings%2$s.', 'easy-digital-downloads' ),
 				'<a href="https://dashboard.stripe.com/settings/public" target="_blank" rel="noopener noreferrer">',
 				'</a>'
@@ -155,9 +156,9 @@ function edds_add_settings( $settings ) {
 			'check' => ( __( 'Only load Stripe.com hosted assets on pages that specifically utilize Stripe functionality.', 'easy-digital-downloads' ) ),
 			'type'  => 'checkbox_toggle',
 			'desc'  => sprintf(
-				/* translators: 1. opening link tag; 2. closing link tag */
+				/* translators: 1: opening link tag, 2: closing link tag */
 				__( 'Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. %1$sLearn more about Stripe\'s recommended setup.%2$s', 'easy-digital-downloads' ),
-				'<a href="https://stripe.com/docs/web/setup" target="_blank" rel="noopener noreferrer">',
+				'<a href="https://docs.stripe.com/js/including" target="_blank" rel="noopener noreferrer">',
 				'</a>'
 			),
 		),
@@ -281,23 +282,25 @@ function edds_add_settings( $settings ) {
 		$settings['edd-stripe'] = array_merge( $settings['edd-stripe'], $debug_settings );
 	}
 
-	// Set up the new setting field for the Test Mode toggle notice.
-	$notice = array(
-		'stripe_connect_test_mode_toggle_notice' => array(
-			'id'          => 'stripe_connect_test_mode_toggle_notice',
-			'desc'        => '<p>' . __( 'You have disabled the "Test Mode" option. Once you have saved your changes, please verify your Stripe connection, especially if you have not previously connected in with "Test Mode" disabled.', 'easy-digital-downloads' ) . '</p>',
-			'type'        => 'stripe_connect_notice',
-			'field_class' => 'edd-hidden',
-		),
-	);
+	if ( function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'settings', 'gateways' ) ) {
+		// Set up the new setting field for the Test Mode toggle notice.
+		$notice = array(
+			'stripe_connect_test_mode_toggle_notice' => array(
+				'id'          => 'stripe_connect_test_mode_toggle_notice',
+				'desc'        => '<p>' . __( 'You have disabled the "Test Mode" option. Once you have saved your changes, please verify your Stripe connection, especially if you have not previously connected in with "Test Mode" disabled.', 'easy-digital-downloads' ) . '</p>',
+				'type'        => 'stripe_connect_notice',
+				'field_class' => 'edd-hidden',
+			),
+		);
 
-	// Insert the new setting after the Test Mode checkbox.
-	$position = array_search( 'test_mode', array_keys( $settings['main'] ), true );
-	$settings = array_merge(
-		array_slice( $settings['main'], $position, 1, true ),
-		$notice,
-		$settings
-	);
+		// Insert the new setting after the Test Mode checkbox.
+		$position = array_search( 'test_mode', array_keys( $settings['main'] ), true );
+		$settings = array_merge(
+			array_slice( $settings['main'], $position, 1, true ),
+			$notice,
+			$settings
+		);
+	}
 
 	return $settings;
 }

@@ -173,8 +173,8 @@ class Search {
 		$query = '';
 		foreach ( $terms as $term ) {
 			$operator = empty( $query ) ? '' : ' AND ';
-			$term     = $wpdb->esc_like( $term );
-			$query   .= "{$operator}{$wpdb->posts}.post_title LIKE '%{$term}%'";
+			$term     = '%' . $wpdb->esc_like( wp_unslash( $term ) ) . '%';
+			$query   .= $wpdb->prepare( "{$operator}{$wpdb->posts}.post_title LIKE %s", $term );
 		}
 		if ( $query ) {
 			$where .= " AND ({$query})";
@@ -225,7 +225,7 @@ class Search {
 			? sanitize_text_field( urldecode( $_GET['s'] ) )
 			: '';
 
-		return esc_sql( $search );
+		return $search;
 	}
 
 	/**

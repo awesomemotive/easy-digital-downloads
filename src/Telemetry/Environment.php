@@ -10,6 +10,7 @@
 
 namespace EDD\Telemetry;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -28,21 +29,22 @@ class Environment {
 	 * @return array
 	 */
 	public function get() {
-		$data   = array(
+		$data = array(
 			'php_version'    => phpversion(),
 			'wp_version'     => $this->get_wp_version(),
 			'edd_version'    => EDD_VERSION,
 			'edd_pro'        => (int) (bool) edd_is_pro(),
 			'locale'         => get_locale(),
 			'active_theme'   => $this->get_active_theme(),
-			'multisite'      => (int) (bool) is_multisite(),
 			'is_ssl'         => (int) (bool) is_ssl(),
 			'stripe_connect' => (int) (bool) edd_get_option( 'stripe_connect_account_id' ),
 			'rest_enabled'   => (int) (bool) $this->is_rest_enabled(),
 		);
-		$server = $this->parse_server();
 
-		return array_merge( $data, $server );
+		$server    = $this->parse_server();
+		$multisite = $this->parse_multisite();
+
+		return array_merge( $data, $server, $multisite );
 	}
 
 	/**
@@ -60,6 +62,40 @@ class Environment {
 		);
 		if ( isset( $server[1] ) ) {
 			$data['server_version'] = $server[1];
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Adds the multisite data to the array of data.
+	 *
+	 * @since 3.3.0
+	 * @return array
+	 */
+	private function parse_multisite() {
+		$data = array(
+			'multisite' => (int) (bool) is_multisite(),
+		);
+
+		if ( is_multisite() ) {
+			$data['multisite_mode']    = defined( 'SUBDOMAIN_INSTALL' ) && SUBDOMAIN_INSTALL ? 'subdomain' : 'subdirectory';
+			$data['network_activated'] = (int) (bool) is_plugin_active_for_network( EDD_PLUGIN_BASE );
+
+			$sites                 = get_sites();
+			$data['network_sites'] = count( $sites );
+
+			$domains = wp_list_pluck( $sites, 'domain' );
+
+			$data['domain_mapping'] = count( array_unique( $domains ) ) > 1 ? 1 : 0;
+
+			$main_site            = is_main_site();
+			$data['is_main_site'] = $main_site ? 1 : 0;
+
+			if ( empty( $main_site ) ) {
+				$main_site_uuid       = get_blog_option( get_main_site_id(), 'edd_telemetry_uuid', 0 );
+				$data['main_site_id'] = $main_site_uuid;
+			}
 		}
 
 		return $data;

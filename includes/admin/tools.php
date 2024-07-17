@@ -10,118 +10,8 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
-
-/**
- * Shows the tools panel which contains EDD-specific tools including the built-in import/export system.
- *
- * @since 1.8
- * @author Daniel J Griffiths
- */
-function edd_tools_page() {
-
-	// Get tabs and active tab
-	$tabs       = edd_get_tools_tabs();
-	$active_tab = isset( $_GET['tab'] )
-		? sanitize_key( $_GET['tab'] )
-		: 'general';
-
-	wp_enqueue_script( 'edd-admin-tools' );
-
-	if ( 'import_export' === $active_tab ) {
-		wp_enqueue_script( 'edd-admin-tools-import' );
-		wp_enqueue_script( 'edd-admin-tools-export' );
-	}
-?>
-
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Tools', 'easy-digital-downloads' ); ?></h1>
-		<hr class="wp-header-end">
-
-		<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
-		<?php
-
-		foreach ( $tabs as $tab_id => $tab_name ) {
-
-			$tab_url = edd_get_admin_url(
-				array(
-					'page' => 'edd-tools',
-					'tab'  => sanitize_key( $tab_id ),
-				)
-			);
-
-			$tab_url = remove_query_arg(
-				array(
-					'edd-message',
-				),
-				$tab_url
-			);
-
-			// System Info is now found in Site Health.
-			if ( 'system_info' === $tab_id ) {
-				$tab_url = add_query_arg(
-					array(
-						'tab' => 'debug',
-						'edd' => 'filter',
-					),
-					admin_url( 'site-health.php' )
-				);
-			}
-
-			$active = ( $active_tab === $tab_id )
-				? ' nav-tab-active'
-				: '';
-
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
-		}
-
-		?>
-		</nav>
-
-		<div class="metabox-holder">
-			<?php
-			do_action( 'edd_tools_tab_' . esc_attr( $active_tab ) );
-			?>
-		</div><!-- .metabox-holder -->
-	</div><!-- .wrap -->
-
-	<?php
-}
-
-/**
- * Retrieve tools tabs.
- *
- * @since 2.0
- *
- * @return array Tabs for the 'Tools' page.
- */
-function edd_get_tools_tabs() {
-	static $tabs = array();
-
-	// Set tabs if empty
-	if ( empty( $tabs ) ) {
-
-		// Define all tabs
-		$tabs = array(
-			'general'       => __( 'General',       'easy-digital-downloads' ),
-			'api_keys'      => __( 'API Keys',      'easy-digital-downloads' ),
-			'betas'         => __( 'Beta Versions', 'easy-digital-downloads' ),
-			'logs'          => __( 'Logs',          'easy-digital-downloads' ),
-			'system_info'   => __( 'System Info',   'easy-digital-downloads' ),
-			'debug_log'     => __( 'Debug Log',     'easy-digital-downloads' ),
-			'import_export' => __( 'Import/Export', 'easy-digital-downloads' )
-		);
-
-		// Unset the betas tab if not allowed
-		if ( count( edd_get_beta_enabled_extensions() ) <= 0 ) {
-			unset( $tabs['betas'] );
-		}
-	}
-
-	// Filter & return
-	return apply_filters( 'edd_tools_tabs', $tabs );
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Display the recount stats.
@@ -291,7 +181,7 @@ function edd_tools_api_keys_display() {
 		<?php
 		printf(
 			wp_kses_post(
-				/* translators: %1$s: API documentation linktag , %2$s: iOS app link tag, %3$s: closing link tag */
+				/* translators: 1: API documentation linktag, 2: iOS app link tag, 3: closing link tag */
 				__( 'These API keys allow you to use the %1$sEDD REST API%3$s to retrieve store data in JSON or XML for external applications or devices, such as the %2$sEDD mobile app%3$s.', 'easy-digital-downloads' )
 			),
 			'<a href="' . esc_url( $docs_link ) . '">',
@@ -1245,7 +1135,7 @@ function edd_tools_debug_log_display() {
 					<?php
 					printf(
 						wp_kses_post(
-							/* translators: 1. opening anchor tag, do not translate; 2. function name, do not translate; 3. closing anchor tag, do not translate */
+							/* translators: 1: opening anchor tag, do not translate, 2: function name, do not translate, 3: closing anchor tag, do not translate */
 							__( 'When debug mode is enabled, specific information will be logged here. (%1$sLearn how to use %2$s in your own code.%3$s)', 'easy-digital-downloads' )
 						),
 						'<a href="https://easydigitaldownloads.com/docs/edd-debug-log">',

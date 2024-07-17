@@ -1,5 +1,12 @@
 /* Extension Manager Style Variations
 --------------------------------------- */
+.edd-settings-wrap.has-product-education {
+	& .edd-settings-content {
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
 .edd-extension-manager__card--horizontal {
 	margin: 24px 0;
 	max-width: 700px;
@@ -13,6 +20,19 @@
 .edd-extension-manager__card--detailed-2col {
 	background-color: transparent;
 	max-width: 900px;
+	margin: 0 auto;
+
+	& h3 {
+		font-size: 1.5rem;
+		margin-bottom: 10px;
+		text-align: center;
+	}
+
+	& .edd-extension-manager__body {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 1em;
+	}
 }
 
 .edd-extension-manager__card--detailed .edd-extension-manager__title,

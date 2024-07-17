@@ -12,10 +12,16 @@
 
 namespace EDD\Admin\Promos;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
 use EDD\EventManagement\SubscriberInterface;
 use EDD\Admin\Promos\Notices\Notice;
 use Sandhills\Utils\Persistent_Dismissible;
 
+/**
+ * PromoHandler class.
+ */
 class PromoHandler implements SubscriberInterface {
 
 	/**
@@ -29,6 +35,8 @@ class PromoHandler implements SubscriberInterface {
 		'\\EDD\\Admin\\Promos\\Notices\\Five_Star_Review_Settings',
 		'\\EDD\\Admin\\Promos\\Notices\\Lite',
 		'\\EDD\\Admin\\Onboarding\\Notice',
+		'\\EDD\\Admin\\Promos\\Notices\\Emails',
+		'\\EDD\\Admin\\Emails\\Reset',
 	);
 
 	/**
@@ -47,6 +55,7 @@ class PromoHandler implements SubscriberInterface {
 	public static function get_subscribed_events() {
 		return array(
 			'wp_ajax_edd_dismiss_promo_notice' => 'dismiss_notice',
+			'wp_ajax_edd_get_promo_notice'     => 'get_notice',
 		);
 	}
 
@@ -70,13 +79,17 @@ class PromoHandler implements SubscriberInterface {
 				continue;
 			}
 
-			add_action( $notice_class_name::DISPLAY_HOOK, function () use ( $notice_class_name ) {
-				/** @var Notice $notice */
-				$notice = new $notice_class_name();
-				if ( $notice->should_display() ) {
-					$notice->display();
-				}
-			}, $notice_class_name::DISPLAY_PRIORITY );
+			add_action(
+				$notice_class_name::DISPLAY_HOOK,
+				function () use ( $notice_class_name ) {
+					/** @var Notice $notice */
+					$notice = new $notice_class_name();
+					if ( $notice->should_display() ) {
+						$notice->display();
+					}
+				},
+				$notice_class_name::DISPLAY_PRIORITY
+			);
 		}
 	}
 
@@ -101,9 +114,11 @@ class PromoHandler implements SubscriberInterface {
 	 * @return bool
 	 */
 	public static function is_dismissed( $id ) {
-		$is_dismissed = (bool) Persistent_Dismissible::get( array(
-			'id' => 'edd-' . $id
-		) );
+		$is_dismissed = (bool) Persistent_Dismissible::get(
+			array(
+				'id' => 'edd-' . $id,
+			)
+		);
 
 		return true === $is_dismissed;
 	}
@@ -117,10 +132,12 @@ class PromoHandler implements SubscriberInterface {
 	 * @param int    $dismissal_length Number of seconds to dismiss the notice for, or `0` for forever.
 	 */
 	public static function dismiss( $id, $dismissal_length = 0 ) {
-		Persistent_Dismissible::set( array(
-			'id'   => 'edd-' . $id,
-			'life' => $dismissal_length
-		) );
+		Persistent_Dismissible::set(
+			array(
+				'id'   => 'edd-' . $id,
+				'life' => $dismissal_length,
+			)
+		);
 	}
 
 	/**
@@ -158,6 +175,34 @@ class PromoHandler implements SubscriberInterface {
 	}
 
 	/**
+	 * AJAX callback for getting a notice.
+	 *
+	 * @since 3.3.0
+	 */
+	public function get_notice() {
+		$notice_id = filter_input( INPUT_GET, 'notice_id', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( empty( $notice_id ) ) {
+			wp_send_json_error( __( 'Missing notice ID.', 'easy-digital-downloads' ), 400 );
+		}
+		$notice_class_name = $this->get_notice_class_name( $notice_id );
+
+		// No matching notice class was found.
+		if ( ! $notice_class_name ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
+		}
+
+		$notice  = new $notice_class_name();
+		$content = $notice->get_ajax_content();
+		if ( $content ) {
+			ob_start();
+			$notice->dismiss_button();
+			$content .= ob_get_clean();
+		}
+
+		wp_send_json_success( $content );
+	}
+
+	/**
 	 * Gets the notice class name for a given notice ID.
 	 *
 	 * @since 2.11.4
@@ -167,7 +212,7 @@ class PromoHandler implements SubscriberInterface {
 	private function get_notice_class_name( $notice_id ) {
 		$notice_class_name = false;
 		// Look through the registered notice classes for the one being dismissed.
-		foreach ( $this->notices as $notice_class_to_check ) {
+		foreach ( $this->get_notices() as $notice_class_to_check ) {
 			if ( ! class_exists( $notice_class_to_check ) ) {
 				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice_class_to_check ) ) ) );
 				$file_path = EDD_PLUGIN_DIR . 'includes/admin/promos/notices/class-' . $file_name . '.php';

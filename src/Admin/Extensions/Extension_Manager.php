@@ -2,10 +2,18 @@
 
 namespace EDD\Admin\Extensions;
 
+// Exist if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
 use EDD\Admin\Pass_Manager;
 use EDD\Admin\Extensions\Card;
 use EDD\EventManagement\SubscriberInterface;
 
+/**
+ * The extension manager.
+ *
+ * @since 2.11.4
+ */
 class Extension_Manager implements SubscriberInterface {
 	use \EDD\Admin\Extensions\Traits\Buttons;
 
@@ -21,6 +29,7 @@ class Extension_Manager implements SubscriberInterface {
 	 * The minimum pass ID required to install the extension.
 	 *
 	 * @since 3.1.1
+	 * @var int The pass ID.
 	 */
 	private $required_pass_id;
 
@@ -31,6 +40,12 @@ class Extension_Manager implements SubscriberInterface {
 	 */
 	protected $pass_manager;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param null|int $required_pass_id
+	 * @since 2.11.4
+	 */
 	public function __construct( $required_pass_id = null ) {
 		if ( $required_pass_id ) {
 			$this->required_pass_id = $required_pass_id;
@@ -75,7 +90,7 @@ class Extension_Manager implements SubscriberInterface {
 				'installing'               => __( 'Installing', 'easy-digital-downloads' ),
 				'plugin_install_failed'    => __( 'Could not install the plugin. Please download and install it manually via Plugins > Add New.', 'easy-digital-downloads' ),
 				'extension_install_failed' => sprintf(
-					/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate */
+					/* translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate */
 					__( 'Could not install the extension. Please %1$sdownload it from your account%2$s and install it manually.', 'easy-digital-downloads' ),
 					'<a href="https://easydigitaldownloads.com/your-account/" target="_blank" rel="noopener noreferrer">',
 					'</a>'
@@ -166,13 +181,13 @@ class Extension_Manager implements SubscriberInterface {
 
 		$result['message'] = 'plugin' === $type
 			? sprintf(
-				// translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate.
+				/* translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate. */
 				__( 'Could not install the plugin. Please %1$sdownload%2$s and install it manually via Plugins > Add New.', 'easy-digital-downloads' ),
 				! empty( $plugin ) ? '<a href="' . $plugin . '" target="_blank" rel="noopener noreferrer">' : '',
 				! empty( $plugin ) ? '</a>' : ''
 			)
 			: sprintf(
-				// translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate.
+				/* translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate */
 				__( 'Could not install the extension. Please %1$sdownload it from your account%2$s and install it manually.', 'easy-digital-downloads' ),
 				'<a href="https://easydigitaldownloads.com/your-account/" target="_blank" rel="noopener noreferrer">',
 				'</a>'
@@ -466,10 +481,10 @@ class Extension_Manager implements SubscriberInterface {
 	 * Gets the plugin version.
 	 *
 	 * @since 3.1.1
-	 * @param string $basename
+	 * @param string $basename The plugin basename.
 	 * @return false|string
 	 */
-	protected function get_plugin_version( $basename ) {
+	public function get_plugin_version( $basename ) {
 		if ( empty( $basename ) ) {
 			return false;
 		}

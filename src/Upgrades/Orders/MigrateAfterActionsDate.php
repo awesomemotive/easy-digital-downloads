@@ -14,6 +14,8 @@ namespace EDD\Upgrades\Orders;
 use EDD\Utils\Date;
 use EDD\EventManagement\SubscriberInterface;
 use EDD\Upgrades\Utilities\MigrationCheck;
+use EDD\Cron\Traits\NextScheduled;
+use EDD\Cron\Events\SingleEvent;
 
 /**
  * Class MigrateAfterActionsDate
@@ -21,6 +23,7 @@ use EDD\Upgrades\Utilities\MigrationCheck;
  * @since 3.2.0
  */
 class MigrateAfterActionsDate implements SubscriberInterface {
+	use NextScheduled;
 
 	/**
 	 * The name of the upgrade.
@@ -78,7 +81,7 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 			'edd_migrate_order_actions_date' => 'process_step',
 		);
 
-		if ( ! wp_next_scheduled( 'edd_migrate_order_actions_date' ) ) {
+		if ( ! self::next_scheduled( 'edd_migrate_order_actions_date' ) ) {
 			$hooks['shutdown'] = array( 'maybe_schedule_background_update', 99 );
 		}
 
@@ -117,7 +120,7 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 	 */
 	private function register_first_background_event() {
 		// If we've already scheduled the cleanup, no need to schedule it again.
-		if ( wp_next_scheduled( $this->cron_action ) ) {
+		if ( self::next_scheduled( $this->cron_action ) ) {
 			return;
 		}
 
@@ -139,7 +142,10 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 		$this->add_or_update_initial_notification();
 
 		// ...And schedule a single event a minute from now to start the processing of this data.
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, $this->cron_action );
+		SingleEvent::add(
+			time() + MINUTE_IN_SECONDS,
+			$this->cron_action
+		);
 	}
 
 	/**
@@ -221,7 +227,10 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 		edd_debug_log( 'Processed step of order actions date migration. Percentage Complete: ' . $percent_complete . '%' );
 
 		// ...And schedule another single event so we can process the next batch.
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'edd_migrate_order_actions_date' );
+		SingleEvent::add(
+			time() + MINUTE_IN_SECONDS,
+			$this->cron_action
+		);
 	}
 
 	/**
@@ -283,7 +292,7 @@ class MigrateAfterActionsDate implements SubscriberInterface {
 		$initial_notification = $this->get_initial_notification();
 		$percent_complete     = $this->get_percentage_complete();
 
-		// translators: %s is the % complete.
+		/* translators: %s: % complete. */
 		$notification_title = sprintf( __( 'Optimizing Orders Table ( %d%% )', 'easy-digital-downloads' ), $percent_complete );
 
 		if ( ! empty( $initial_notification ) ) {

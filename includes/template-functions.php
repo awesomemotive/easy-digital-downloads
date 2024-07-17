@@ -575,24 +575,25 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
  */
 function edd_get_purchase_download_links( $payment_id = 0 ) {
 
-	$downloads = edd_get_payment_meta_cart_details( $payment_id, true );
 	$order     = edd_get_order( $payment_id );
+	$downloads = $order->get_items();
 	$links     = '<ul class="edd_download_links">';
 
 	foreach ( $downloads as $download ) {
 		$links .= '<li>';
-			$links .= '<h3 class="edd_download_link_title">' . esc_html( get_the_title( $download['id'] ) ) . '</h3>';
-			$price_id = isset( $download['options'] ) && isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
-			$files    = edd_get_download_files( $download['id'], $price_id );
-			if ( is_array( $files ) ) {
-				foreach ( $files as $filekey => $file ) {
-					$links .= '<div class="edd_download_link_file">';
-						$links .= '<a href="' . esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $download['id'], $price_id ) ) . '">';
-						$links .= edd_get_file_name( $file );
-						$links .= '</a>';
-					$links .= '</div>';
-				}
+		$links .= '<h3 class="edd_download_link_title">' . esc_html( edd_get_download_name( $download->product_id ) ) . '</h3>';
+		$files  = edd_get_download_files( $download->product_id, $download->price_id );
+		if ( is_array( $files ) ) {
+			foreach ( $files as $filekey => $file ) {
+				$links .= '<div class="edd_download_link_file">';
+				$links .= sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $download->product_id, $download->price_id ) ),
+					edd_get_file_name( $file )
+				);
+				$links .= '</div>';
 			}
+		}
 		$links .= '</li>';
 	}
 

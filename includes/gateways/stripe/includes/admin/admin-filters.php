@@ -23,29 +23,6 @@ function edds_get_payment_transaction_id( $payment_id ) {
 add_filter( 'edd_get_payment_transaction_id-stripe', 'edds_get_payment_transaction_id', 10, 1 );
 
 /**
- * Given a transaction ID, generate a link to the Stripe transaction ID details
- *
- * @since  1.9.1
- * @param  string $transaction_id The Transaction ID
- * @param  int    $payment_id     The payment ID for this transaction
- * @return string                 A link to the Stripe transaction details
- */
-function edd_stripe_link_transaction_id( $transaction_id, $payment_id ) {
-
-	$order = edd_get_order( $payment_id );
-	$test  = 'test' === $order->mode ? 'test/' : '';
-
-	if ( 'preapproval' === $order->status ) {
-		$url = '<a href="https://dashboard.stripe.com/' . esc_attr( $test ) . 'setup_intents/' . esc_attr( $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
-	} else {
-		$url = '<a href="https://dashboard.stripe.com/' . esc_attr( $test ) . 'payments/' . esc_attr( $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
-	}
-	return apply_filters( 'edd_stripe_link_payment_details_transaction_id', $url );
-
-}
-add_filter( 'edd_payment_details_transaction_id-stripe', 'edd_stripe_link_transaction_id', 10, 2 );
-
-/**
  * Add a link to the dispute ID in the payment details
  *
  * @since  3.2.0

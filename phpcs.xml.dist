@@ -41,7 +41,9 @@
 	<file>src</file>
 	<file>templates</file>
 
-	<exclude-pattern>*/assets/*</exclude-pattern>
+	<exclude-pattern>*/assets/css/*</exclude-pattern>
+	<exclude-pattern>*/assets/js/*</exclude-pattern>
+	<exclude-pattern>*/assets/pro/*</exclude-pattern>
 	<exclude-pattern>*/bin/*</exclude-pattern>
 	<exclude-pattern>*/build/*</exclude-pattern>
 	<exclude-pattern>*/languages/*</exclude-pattern>
