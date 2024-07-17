@@ -8,7 +8,7 @@
  */
 
 @import "../variables/variables";
-
+@import "general/style";
 @import "downloads/style";
 
 @import "discounts/style";
@@ -25,29 +25,19 @@
 
 @import "gateways/style";
 
-@import "general/style";
-
-@import "settings/style.scss";
+@import "settings/style";
 
 @import "discounts/style";
 
 @import "dashboard/style";
+
+@import "../components/toggle-checkbox";
 
 /**
  * Notes:
  *
  * [1] Backwards compatibility for vertical tabs < 3.0
  */
-
-.edd-hidden {
-	display: none;
-}
-
-.edd-clearfix:after {
-	content: "";
-	display: table;
-	clear: both;
-}
 
 .edd-wrap a,
 .edd-notice .notice-dismiss {
@@ -223,74 +213,6 @@ button.edd-round:active {
 	position: relative;
 }
 
-.edd-settings-sub-nav {
-	margin: 0 0px 10px 0;
-	width: 100%;
-	border-bottom: 1px solid #ccc;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-}
-
-.edd-settings-sub-nav a {
-	padding: 13px;
-	display: block;
-}
-
-.edd-settings-sub-nav a.current {
-	border-bottom: 4px solid #000;
-	padding-bottom: 9px;
-}
-
-.admin-color-fresh .edd-settings-sub-nav a.current {
-	border-bottom-color: #00a0d2;
-}
-
-/* Blue */
-.admin-color-blue .edd-settings-sub-nav a.current {
-	border-bottom-color: #096484;
-}
-
-/* Coffee */
-.admin-color-coffee .edd-settings-sub-nav a.current {
-	border-bottom-color: #c7a589;
-}
-
-/* Ectoplasm */
-.admin-color-ectoplasm .edd-settings-sub-nav a.current {
-	border-bottom-color: #a3b745;
-}
-
-/* Midnight */
-.admin-color-midnight .edd-settings-sub-nav a.current {
-	border-bottom-color: #e14d43;
-}
-
-/* Ocean */
-.admin-color-ocean .edd-settings-sub-nav a.current {
-	border-bottom-color: #627c83;
-}
-
-/* Sunrise */
-.admin-color-sunrise .edd-settings-sub-nav a.current {
-	border-bottom-color: #be3631;
-}
-
-/* Light */
-.admin-color-light .edd-settings-sub-nav a.current {
-	border-bottom-color: #888;
-}
-
-/* bbPress Color Schemes */
-
-/* Evergreen */
-.admin-color-evergreen .edd-settings-sub-nav a.current {
-	border-bottom-color: #36533f;
-}
-
-/* Mint */
-.admin-color-mint .edd-settings-sub-nav a.current {
-	border-bottom-color: #4f6d59;
-}
-
 .download_page_edd-settings .edd-check-wrapper {
 	clear: both;
 }
@@ -314,6 +236,10 @@ button.edd-round:active {
 	position: relative;
 	height: 28px;
 	cursor: move;
+
+	&.edd-toggle {
+		padding: 4px 0;
+	}
 }
 
 .edd-sortable-list li label * {
@@ -345,7 +271,6 @@ button.edd-round:active {
 	width: 32px;
 	height: 24px;
 	position: relative;
-	top: -2px;
 	margin-right: 5px;
 }
 
@@ -2057,86 +1982,6 @@ h3 + .notice-wrap .notice {
 	border: 1px solid #ddd;
 	box-shadow: none;
 	color: #555;
-}
-
-
-/* Toggle Styles
--------------------------------------------------------------- */
-
-.edd-toggle {
-	position: relative;
-	display: inline-block;
-	overflow: visible;
-}
-
-.edd-toggle input[type="checkbox"] {
-	display: inline-block;
-	vertical-align: middle;
-	position: relative;
-	margin: 0 2px 0 0;
-	padding: 0;
-	width: 42px;
-	min-width: 42px;
-	height: 24px;
-	background-color: #ccc;
-	-webkit-transition: background 0.2s ease;
-	transition: background 0.2s ease;
-	border-radius: 34px;
-	box-shadow: none;
-	border: none;
-}
-
-.edd-toggle .label {
-	display: inline-block;
-	vertical-align: middle;
-	white-space: nowrap;
-}
-
-.edd-toggle input[type="checkbox"]:before {
-	position: absolute;
-	content: "";
-	height: 18px;
-	width: 18px;
-	left: 3px;
-	bottom: 3px;
-	background-color: white;
-	-webkit-transition: 0.1s transform ease;
-	transition: 0.1s transform ease;
-	border-radius: 50%;
-}
-
-@media only screen and (max-width: $break-medium) {
-	.edd-toggle input[type="checkbox"]:checked:before {
-		margin: -.1875rem 0 0 -.25rem;
-	}
-}
-
-.edd-toggle input[type="checkbox"]:checked {
-	background-color: #007cba;
-	background-color: var( --wp-admin-theme-color );
-}
-
-.edd-toggle input[type="checkbox"]:active,
-.edd-toggle input[type="checkbox"]:focus {
-	outline: 0;
-	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #7e8993;
-}
-
-.edd-toggle input[type="checkbox"]:checked:active,
-.edd-toggle input[type="checkbox"]:checked:focus {
-	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #007cba;
-	box-shadow: 0 0 0 1px #fff, 0 0 0 3px var( --wp-admin-theme-color );
-}
-
-.edd-toggle input[type="checkbox"]:checked:before {
-	-webkit-transform: translateX(22px);
-	-ms-transform: translateX(22px);
-	transform: translateX(22px);
-}
-
-.edd-toggle input+.label,
-.edd-toggle .label+input {
-	margin-left: 5px;
 }
 
 /* List Table Styles

@@ -1,0 +1,61 @@
+.edd-editor__header {
+	height: auto;
+	border-bottom: 1px solid #e2e4e7;
+	z-index: 30;
+	position: sticky;
+	top: 32px;
+	margin-left: -20px;
+	background: $white;
+
+	@media screen and (max-width: $break-medium) {
+		top: 0;
+	}
+
+	p.submit {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+.edd-editor__header--actions {
+	padding: 4px 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.edd-editor__title,
+.edd-editor__actions {
+	display: flex;
+	gap: .5em;
+	align-items: center;
+}
+
+.edd-editor__actions--test {
+	display: flex;
+	gap: .5em;
+
+	@media screen and (max-width: $break-medium) {
+		.edd-editor__header & {
+			display: none;
+		}
+	}
+}
+
+.edd-editor__status {
+	display: flex;
+	gap: .5em;
+	padding-right: .5em;
+
+	.edd-help-tip {
+		display: block;
+		cursor: unset;
+		margin: 0;
+	}
+}
+
+@media screen and (max-width: $break-medium) {
+	.button.edd-back {
+		display: none !important;
+	}
+}

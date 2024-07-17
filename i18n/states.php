@@ -55,6 +55,7 @@ return array(
 		'WA'  => __( 'Western Australia', 'easy-digital-downloads' ),
 	),
 	'BD' => include EDD_PLUGIN_DIR . 'i18n/states-bd.php',
+	'BJ' => include EDD_PLUGIN_DIR . 'i18n/states-bj.php',
 	'BR' => array(
 		''   => '',
 		'AC' => __( 'Acre', 'easy-digital-downloads' ),

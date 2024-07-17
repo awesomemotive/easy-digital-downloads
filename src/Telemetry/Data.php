@@ -9,16 +9,19 @@
  * @license   GPL2+
  * @since     3.1.1
  */
+
 namespace EDD\Telemetry;
 
-class Data {
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
-	/**
-	 * The unique anonymized site ID.
-	 *
-	 * @var string
-	 */
-	private $id;
+/**
+ * Class Data
+ *
+ * @since 3.1.1
+ */
+class Data {
+	use Traits\Anonymize;
 
 	/**
 	 * Gets all of the site data.
@@ -46,28 +49,5 @@ class Data {
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Gets the unique site ID.
-	 * This is generated from the home URL and two random pieces of data
-	 * to create a hashed site ID that anonymizes the site data.
-	 *
-	 * @since 3.1.1
-	 * @return string
-	 */
-	private function get_id() {
-		$this->id = get_option( 'edd_telemetry_uuid' );
-		if ( $this->id ) {
-			return $this->id;
-		}
-		$home_url = get_home_url();
-		$uuid     = wp_generate_uuid4();
-		$today    = gmdate( 'now' );
-		$this->id = md5( $home_url . $uuid . $today );
-
-		update_option( 'edd_telemetry_uuid', $this->id, false );
-
-		return $this->id;
 	}
 }

@@ -492,7 +492,8 @@ h1.edd-onboarding__single-step-title {
 }
 
 .edd-onboarding .form-table th,
-.edd-onboarding .form-wrap label {
+.edd-onboarding .form-wrap label,
+.edd-settings-form__email label {
 	color: #141b38;
 	font-weight: 400;
 	text-shadow: none;
@@ -704,6 +705,10 @@ h1.edd-onboarding__single-step-title {
 		display: block;
 		margin-bottom: 1em;
 	}
+
+	.edd-toggle {
+		justify-content: center;
+	}
 }
 
 .edd-onboarding__selected-plugins {
@@ -840,5 +845,25 @@ h1.edd-onboarding__single-step-title {
 
 	button.edd-promo-notice-dismiss {
 		margin: 0;
+	}
+}
+
+.edd-settings-form__email {
+	@media screen and (min-width: $break-medium) {
+		.edd-form-group:not(.edd-form-group__wide) {
+			display: table-row;
+
+			label,
+			.edd-form-group__control {
+				display: table-cell;
+			}
+
+			label {
+				text-align: left;
+				padding: 20px 10px 20px 0;
+				width: 200px;
+				line-height: 1.3;
+			}
+		}
 	}
 }

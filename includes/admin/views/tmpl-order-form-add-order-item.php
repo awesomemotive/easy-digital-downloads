@@ -92,9 +92,9 @@ if ( ! empty( $recent_downloads ) ) {
 			<# if ( true === data.state.isDuplicate ) { #>
 			<span class="edd-order-overview-error">
 			<?php
-			/* translators: %s "Download" singular label. */
 			echo esc_html(
 				sprintf(
+					/* translators: %s: Download label singular */
 					__( 'This %s already exists in the Order. Please remove it before adding it again.', 'easy-digital-downloads' ),
 					edd_get_label_singular()
 				)
@@ -197,6 +197,7 @@ if ( ! empty( $recent_downloads ) ) {
 						<# if ( '' !== data.state.hasTax.country ) { #>
 							<?php
 							printf(
+								/* translators: %s: Tax rate as a percentage */
 								esc_html_x( '(%s)', 'add order item tax rate', 'easy-digital-downloads' ),
 								'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
 							); // WPCS: XSS okay.

@@ -109,7 +109,7 @@ function maybe_add_recapture_notice_to_abandoned_payment( $payment_id ) {
 				<?php
 				echo wp_kses_post(
 					sprintf(
-						/* Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s - </a> tag */
+						/* translators: 1:  <strong> tag, 2.  </strong> tag, 3.  <a> tag, 4.  </a> tag */
 						__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Recapture for free%4$s.', 'easy-digital-downloads' ),
 						'<strong>',
 						'</strong>',
@@ -122,7 +122,7 @@ function maybe_add_recapture_notice_to_abandoned_payment( $payment_id ) {
 			<?php
 			echo wp_kses_post(
 				sprintf(
-					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
+					/* translators: 1:  Opening anchor tag, 2:  The url to dismiss the ajax notice, 3: Complete the opening of the anchor tag, 4: Open span tag, 5:  Close span tag */
 					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
 					'<a href="',
 					esc_url(

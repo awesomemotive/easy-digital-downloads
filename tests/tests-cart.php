@@ -756,4 +756,16 @@ class Cart extends EDD_UnitTestCase {
 		$cart_item     = reset( $cart_contents );
 		$this->assertEquals( 0, $cart_item['options']['price_id'] );
 	}
+
+	public function test_adding_discount_to_cart_and_removing_it_removes_from_session() {
+		edd_add_to_cart( self::$download->ID, array(
+			'price_id' => 0,
+		) );
+
+		edd_set_cart_discount( '20OFF' );
+		$this->assertTrue( in_array( '20OFF', explode( '|', EDD()->session->get( 'cart_discounts' ) ) ) );
+
+		EDD()->cart->remove_discount( '20OFF' );
+		$this->assertEmpty( EDD()->session->get( 'cart_discounts' ) );
+	}
 }

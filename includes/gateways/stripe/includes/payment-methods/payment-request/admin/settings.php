@@ -81,7 +81,7 @@ function edds_prb_add_settings( $settings ) {
 						edd_get_label_singular()
 					),
 					'archive'  => sprintf(
-						/* translators: 1. Download noun; 2. shortcode tag wrapped in <code> span */
+						/* translators: 1: Download singular label, 2: shortcode tag wrapped in <code> span */
 						__( '%1$s Archive (includes %2$s shortcode)', 'easy-digital-downloads' ),
 						edd_get_label_singular(),
 						'<code>[downloads]</code>'

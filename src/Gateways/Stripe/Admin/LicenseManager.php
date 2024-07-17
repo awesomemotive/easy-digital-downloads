@@ -29,7 +29,6 @@ final class LicenseManager {
 	 * @since 3.2.1
 	 */
 	public function __construct() {
-		add_action( 'edd_daily_scheduled_events', array( $this, 'check_license' ) );
 		add_action( 'edd/license/deleted', array( $this, 'license_updated' ) );
 		add_action( 'edd/license/saved', array( $this, 'license_updated' ) );
 		add_action( 'admin_notices', array( $this, 'register_admin_notices' ) );
@@ -269,12 +268,12 @@ final class LicenseManager {
 			'edds-grace'    => array(
 				'remote_id' => 'edds-grace',
 				'title'     => sprintf(
-					/* translators: %s is the name of the license. */
+					/* translators: %s: name of the license. */
 					__( 'Your %s license has expired!', 'easy-digital-downloads' ),
 					$license_name
 				),
 				'content'   => sprintf(
-					/* translators: %s is the date the grace period ends. */
+					/* translators: %s: date the grace period ends. */
 					__( 'Renew your license before %s to continue using Stripe without paying additional fees and to continue receiving important security and feature updates.', 'easy-digital-downloads' ),
 					$license->get_grace_period_end_date()
 				),
@@ -295,7 +294,7 @@ final class LicenseManager {
 			'edds-expired'  => array(
 				'remote_id' => 'edds-expired',
 				'title'     => sprintf(
-					/* translators: %s is the name of the license. */
+					/* translators: %s: name of the license. */
 					__( 'Your %s license has expired!', 'easy-digital-downloads' ),
 					$license_name
 				),
@@ -317,12 +316,12 @@ final class LicenseManager {
 			'edds-expiring' => array(
 				'remote_id' => 'edds-expiring',
 				'title'     => sprintf(
-					/* translators: %s is the name of the license. */
+					/* translators: %s: name of the license. */
 					__( 'Your %s License Is Expiring Soon!', 'easy-digital-downloads' ),
 					$license_name
 				),
 				'content'   => sprintf(
-					/* translators: 1. the name of the license; 2. the date the license expires. */
+					/* translators: 1: the name of the license, 2: the date the license expires. */
 					__( 'Your %1$s license is set to expire on %2$s. An active license key is required to create and edit payment forms, enable automatic updates, and to keep Easy Digital Downloads - Stripe Pro Payment Gateway fully activated.', 'easy-digital-downloads' ),
 					$license_name,
 					$license->get_expiration_date()

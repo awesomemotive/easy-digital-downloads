@@ -45,6 +45,15 @@ class ProductSelect extends Select {
 		$this->args['options']          = $options;
 		$this->args['show_option_none'] = false;
 
+		// The product select must always show an empty option.
+		if ( empty( $this->args['show_option_empty'] ) ) {
+			$this->args['show_option_empty'] = sprintf(
+				/* translators: %s: Download plural label */
+				__( 'All %s', 'easy-digital-downloads' ),
+				edd_get_label_plural()
+			);
+		}
+
 		return parent::get();
 	}
 
@@ -75,13 +84,17 @@ class ProductSelect extends Select {
 				'search-type'        => 'download',
 				'search-placeholder' => sprintf(
 					/* translators: %s: Download plural label */
-					__( 'Search %s', 'easy-digital-downloads' ),
+					_x( 'Search %s', 'Noun: Download plural label for product select input', 'easy-digital-downloads' ),
 					edd_get_label_plural()
 				),
 			),
 			'required'             => false,
 			'products'             => array(),
-			'show_option_all'      => false,
+			'show_option_empty'    => sprintf(
+				/* translators: %s: Download plural label */
+				_x( 'All %s', 'Noun: Download plural label for selecting All Downloads', 'easy-digital-downloads' ),
+				edd_get_label_plural()
+			),
 		);
 	}
 
@@ -93,7 +106,7 @@ class ProductSelect extends Select {
 	 */
 	private function get_options() {
 		$products = $this->get_products();
-		$options  = array( '' => '' );
+		$options  = array();
 		if ( $products ) {
 			foreach ( $products as $product ) {
 				// If bundles are not allowed, skip any products that are bundles.

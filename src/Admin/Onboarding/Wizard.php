@@ -419,22 +419,58 @@ class Wizard implements \EDD\EventManagement\SubscriberInterface {
 		$testimonials = array(
 			array(
 				'name'    => 'Joe Casabona',
-				'company' => 'How I Built It',
-				'content' => 'The problem with many e-commerce platforms to sell online courses is they aren\'t made with only digital goods in mind. <span class="big">EDD doesn\'t have that problem, and as a result their platform is perfectly made for selling my online courses.</span>',
+				'company' => sprintf(
+					/* translators: %s: The company name of the person giving the testimonial */
+					_x(
+						'Podcast Coach - %s',
+						'Context: The title/role of the person giving the testimonial. Example: Podcast Coach - How I Built It. The company name remains untranslated',
+						'easy-digital-downloads'
+					),
+					'How I Built It'
+				),
+				'content' => _x(
+					'The problem with many e-commerce platforms to sell online courses is they aren\'t made with only digital goods in mind. <span class="big">EDD doesn\'t have that problem, and as a result their platform is perfectly made for selling my online courses.</span>',
+					'Context: Direct quote used as a testimonial for Easy Digital Downloads',
+					'easy-digital-downloads'
+				),
 				'avatar'  => 'joe.jpg',
 				'stars'   => 5,
 			),
 			array(
 				'name'    => 'Nicolas Martin',
-				'company' => 'Flea Market Insiders',
-				'content' => 'Before EDD\'s Recurring Payments was made available, we were only able to sell one-time subscriptions to our customers. Since implementing recurring payments, we\'ve been able to offer quarterly and yearly subscriptions and subsequently <span class="big">increase our subscriptions revenue by 200%.</span>',
+				'company' => sprintf(
+					/* translators: %s: The company name of the person giving the testimonial */
+					_x(
+						'Founder - %s',
+						'Context: The title/role of the person giving the testimonial. Example: Flea Market Insiders. The company name remains untranslated',
+						'easy-digital-downloads'
+					),
+					'Flea Market Insiders'
+				),
+				'content' => _x(
+					'Before EDD\'s Recurring Payments was made available, we were only able to sell one-time subscriptions to our customers. Since implementing recurring payments, we\'ve been able to offer quarterly and yearly subscriptions and subsequently <span class="big">increase our subscriptions revenue by 200%.</span>',
+					'Context: Direct quote used as a testimonial for Easy Digital Downloads',
+					'easy-digital-downloads'
+				),
 				'avatar'  => 'nicolas.jpg',
 				'stars'   => 5,
 			),
 			array(
 				'name'    => 'Bob Dunn',
-				'company' => 'BobWP',
-				'content' => 'If anyone asks me what they should use for downloadable products on their WordPress site, <span class="big">it\'s a no-brainer as far as EDD goes.</span>',
+				'company' => sprintf(
+					/* translators: %s: The company name of the person giving the testimonial */
+					_x(
+						'Community Leader & Podcaster - %s',
+						'Context: The title/role of the person giving the testimonial. Example: Community Leader - BobWP. The company name remains untranslated',
+						'easy-digital-downloads'
+					),
+					'BobWP'
+				),
+				'content' => _x(
+					'If anyone asks me what they should use for downloadable products on their WordPress site, <span class="big">it\'s a no-brainer as far as EDD goes.</span>',
+					'Context: Direct quote used as a testimonial for Easy Digital Downloads',
+					'easy-digital-downloads'
+				),
 				'avatar'  => 'bob.jpg',
 				'stars'   => 5,
 			),

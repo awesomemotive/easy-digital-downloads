@@ -117,6 +117,7 @@
 					<small>
 						<?php
 						printf(
+							/* translators: %s: Tax rate as a percentage */
 							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
 							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
 						); // WPCS: XSS okay.

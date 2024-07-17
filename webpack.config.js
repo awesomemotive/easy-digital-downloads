@@ -31,6 +31,8 @@ const adminPages = [
 	'upgrades',
 	'flyout',
 	'notifications',
+	'emails/list-table',
+	'emails/editor',
 ];
 
 const minifyJs = ( content ) => {
@@ -96,6 +98,8 @@ const config = {
 		'edd-admin-onboarding-style': './assets/css/admin/onboarding/style.scss',
 		'stripe-admin': './assets/css/admin/gateways/stripe.scss',
 		'edd-admin-notifications-style': './assets/css/admin/notifications/style.scss',
+		'edd-admin-emails-style': './assets/css/admin/emails/style.scss',
+		'edd-admin-pointers-style': './assets/css/admin/pointers/style.scss',
 
 		'edd-style': './assets/css/frontend/style.scss',
 		'stripe-cardelements': './assets/css/frontend/stripe/card-elements.scss',

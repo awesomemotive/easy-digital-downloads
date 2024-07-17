@@ -35,6 +35,7 @@ class StatusBadge {
 				'color'    => '',
 				'dashicon' => true,
 				'class'    => '',
+				'position' => 'after',
 			)
 		);
 	}
@@ -50,12 +51,16 @@ class StatusBadge {
 		if ( empty( $this->args['label'] ) ) {
 			return '';
 		}
+		if ( empty( $icon ) ) {
+			$icon = $this->get_icon();
+		}
 
 		return sprintf(
-			'<span class="%s"><span class="edd-status-badge__text">%s</span>%s</span>',
+			'<span class="%1$s">%4$s<span class="edd-status-badge__text">%2$s</span>%3$s</span>',
 			$this->get_class_string( $this->get_classes() ),
 			esc_html( $this->args['label'] ),
-			! empty( $icon ) ? $icon : $this->get_icon()
+			'after' === $this->args['position'] ? $icon : '',
+			'before' === $this->args['position'] ? $icon : ''
 		);
 	}
 
@@ -93,12 +98,18 @@ class StatusBadge {
 	 * @return array
 	 */
 	private function get_classes() {
-		return array(
+		$classes = array(
 			'edd-status-badge',
 			"edd-status-badge--{$this->args['status']}",
-			$this->args['class'],
 			$this->get_color_class(),
 		);
+		if ( is_array( $this->args['class'] ) ) {
+			$classes = array_merge( $classes, $this->args['class'] );
+		} elseif ( ! empty( $this->args['class'] ) ) {
+			$classes[] = $this->args['class'];
+		}
+
+		return $classes;
 	}
 
 	/**

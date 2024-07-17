@@ -24,25 +24,22 @@ function edds_buy_now_modal() {
 	}
 
 	// Enqueue core scripts.
-	add_filter( 'edd_is_checkout', '__return_true' );
-
-	edd_enqueue_scripts();
-	edd_localize_scripts();
-
-	remove_filter( 'edd_is_checkout', '__return_true' );
+	EDD\Assets\Checkout::enqueue();
 
 	// Enqueue scripts.
 	edd_stripe_js( true );
 	edd_stripe_css( true );
 
-	echo edds_modal( array(
-		'id'      => 'edds-buy-now',
-		'title'   => __( 'Buy Now', 'easy-digital-downloads' ),
-		'class'   => array(
-			'edds-buy-now-modal',
-		),
-		'content' => '<span class="edd-loading-ajax edd-loading"></span>',
-	) ); // WPCS: XSS okay.
+	echo edds_modal(
+		array(
+			'id'      => 'edds-buy-now',
+			'title'   => __( 'Buy Now', 'easy-digital-downloads' ),
+			'class'   => array(
+				'edds-buy-now-modal',
+			),
+			'content' => '<span class="edd-loading-ajax edd-loading"></span>',
+		)
+	); // WPCS: XSS okay.
 }
 add_action( 'wp_print_footer_scripts', 'edds_buy_now_modal', 0 );
 
@@ -54,7 +51,7 @@ add_action( 'wp_print_footer_scripts', 'edds_buy_now_modal', 0 );
 function edds_buy_now_checkout() {
 	$total = (int) edd_get_cart_total();
 
-	$form_mode      = $total > 0
+	$form_mode = $total > 0
 		? 'payment-mode=stripe'
 		: 'payment-mode=manual';
 
@@ -72,7 +69,7 @@ function edds_buy_now_checkout() {
 	if ( is_user_logged_in() ) {
 		$user_data = get_userdata( get_current_user_id() );
 
-		foreach( $customer as $key => $field ) {
+		foreach ( $customer as $key => $field ) {
 			if ( 'email' == $key && empty( $field ) ) {
 				$customer[ $key ] = $user_data->user_email;
 			} elseif ( empty( $field ) ) {
@@ -90,7 +87,7 @@ function edds_buy_now_checkout() {
 	add_filter( 'edd_get_checkout_button_purchase_label', 'edds_buy_now_checkout_purchase_label' );
 
 	ob_start();
-?>
+	?>
 
 <div id="edd_checkout_form_wrap">
 	<form
@@ -101,7 +98,7 @@ function edds_buy_now_checkout() {
 	>
 		<?php if ( is_user_logged_in() && ! empty( $customer['email'] ) ) : ?>
 			<input type="hidden" name="edd_email" id="edd-email" value="<?php echo esc_attr( $customer['email'] ); ?>" required/>
-		<?php else: ?>
+		<?php else : ?>
 		<p>
 			<label class="edd-label" for="edd-email">
 				<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>
@@ -165,7 +162,7 @@ function edds_buy_now_checkout() {
 	</form>
 </div>
 
-<?php
+	<?php
 		return ob_get_clean();
 }
 
@@ -212,7 +209,7 @@ function edds_buy_now_vars( $vars ) {
 	$label             = edd_get_option( 'checkout_label', '' );
 	$complete_purchase = ! empty( $label )
 		? $label
-	  : esc_html__( 'Purchase', 'easy-digital-downloads' );
+		: esc_html__( 'Purchase', 'easy-digital-downloads' );
 
 	/* This filter is documented in easy-digital-downloads/includes/checkout/template.php */
 	$complete_purchase = apply_filters(

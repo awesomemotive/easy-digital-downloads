@@ -39,6 +39,7 @@ class ProductDropdown extends EDD_UnitTestCase {
 		$this->assertStringContainsString( 'data-placeholder="Choose a Download"', $product_dropdown );
 		$this->assertStringContainsString( 'data-search-type="download"', $product_dropdown );
 		$this->assertStringContainsString( 'data-search-placeholder="Search Downloads"', $product_dropdown );
+		$this->assertStringContainsString( 'value=""', $product_dropdown );
 	}
 
 	public function test_product_dropdown_with_simple_download_selected() {
@@ -188,5 +189,16 @@ class ProductDropdown extends EDD_UnitTestCase {
 		);
 
 		$this->assertStringNotContainsString( 'value="' . $not_download . '"', $product_dropdown );
+	}
+
+	public function test_product_dropdown_with_show_empty_false_still_has_empty_option() {
+		$product_dropdown = EDD()->html->product_dropdown(
+			array(
+				'show_option_empty' => false,
+			)
+		);
+
+		$this->assertStringContainsString( '<option value="">', $product_dropdown );
+		$this->assertStringContainsString( 'All Downloads', $product_dropdown );
 	}
 }

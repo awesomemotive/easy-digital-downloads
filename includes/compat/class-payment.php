@@ -105,6 +105,7 @@ class Payment extends Base {
 
 		// Setup doing-it-wrong message
 		$message = sprintf(
+			/* translators: 1: wp_posts table, 2: edd_orders table, 3: edd_get_orders(), 4: edd_get_order(), 5: EDD development blog */
 			__( 'As of Easy Digital Downloads 3.0, orders no longer exist in the %1$s table. They have been migrated to %2$s. Orders should be accessed using %3$s or %4$s. See %5$s for more information.', 'easy-digital-downloads' ),
 			'<code>' . $wpdb->posts . '</code>',
 			'<code>' . edd_get_component_interface( 'order', 'table' )->table_name . '</code>',

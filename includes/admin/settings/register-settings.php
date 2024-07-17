@@ -777,10 +777,8 @@ function edd_get_registered_settings_sections() {
 				'accounting'         => __( 'Accounting',      'easy-digital-downloads' ),
 			) ),
 			'emails'     => apply_filters( 'edd_settings_sections_emails', array(
-				'main'               => __( 'General',            'easy-digital-downloads' ),
-				'purchase_receipts'  => __( 'Purchase Receipts',  'easy-digital-downloads' ),
-				'sale_notifications' => __( 'Sale Notifications', 'easy-digital-downloads' ),
-				'email_summaries'    => __( 'Summaries', 'easy-digital-downloads' ),
+				'main'            => __( 'General', 'easy-digital-downloads' ),
+				'email_summaries' => __( 'Summaries', 'easy-digital-downloads' ),
 			) ),
 			'marketing'  => apply_filters( 'edd_settings_sections_marketing', array(
 				'main' => __( 'General', 'easy-digital-downloads' ),
@@ -1009,7 +1007,7 @@ function edd_payment_icons_callback( $args = array() ) {
 				? $option
 				: null; ?>
 
-			<li class="edd-check-wrapper" data-key="<?php echo edd_sanitize_key( $key ); ?>">
+			<li class="edd-toggle" data-key="<?php echo edd_sanitize_key( $key ); ?>">
 				<label>
 					<input name="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>][<?php echo edd_sanitize_key( $key ); ?>]" id="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>][<?php echo edd_sanitize_key( $key ); ?>]" class="<?php echo $class; ?>" type="checkbox" value="<?php echo esc_attr( $option ); ?>" <?php echo checked( $option, $enabled, false ); ?> />
 
@@ -1164,7 +1162,7 @@ function edd_gateways_callback( $args ) {
 				$enabled = null;
 			}
 
-			$html .= '<li class="edd-check-wrapper" data-key="' . edd_sanitize_key( $key ) . '">';
+			$html .= '<li class="edd-toggle" data-key="' . edd_sanitize_key( $key ) . '">';
 			$html .= '<label>';
 
 			$attributes = array(
@@ -1217,7 +1215,7 @@ function edd_gateways_callback( $args ) {
 			)
 		);
 
-		/* translators: 1. opening link tag; do not translate; 2. closing link tag; do not translate */
+		/* translators: 1: opening link tag; do not translate, 2: closing link tag; do not translate */
 		$html .= '<p class="description">' . esc_html__( 'Choose how you want to allow your customers to pay you.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More %1$sPayment Gateways%2$s are available.', 'easy-digital-downloads' ), '<a href="' . $url . '">', '</a>' ) . '</p>';
 	}
 
@@ -1629,24 +1627,16 @@ function edd_rich_editor_callback( $args ) {
  * @return void
  */
 function edd_upload_callback( $args ) {
-	$edd_option = edd_get_option( $args['id'] );
+	$uploader = new EDD\HTML\Upload(
+		array(
+			'value' => edd_get_option( $args['id'], $args['std'] ),
+			'desc'  => $args['desc'],
+			'id'    => 'edd_settings[' . esc_attr( $args['id'] ) . ']',
+			'name'  => 'edd_settings[' . esc_attr( $args['id'] ) . ']',
+		)
+	);
 
-	if ( $edd_option ) {
-		$value = $edd_option;
-	} else {
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-	}
-
-	$class = edd_sanitize_html_class( $args['field_class'] );
-
-	$size  = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html  = '<div class="edd-upload-button-wrapper">';
-	$html .= '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<button data-input="#edd_settings\\[' . edd_sanitize_key( $args['id'] ) . '\\]" data-uploader-title="' . esc_html__( 'Attach File', 'easy-digital-downloads' ) . '" data-uploader-button-text="' . esc_html__( 'Attach', 'easy-digital-downloads' ) . '" class="edd_settings_upload_button button button-secondary">' . __( 'Attach File', 'easy-digital-downloads' ) . '</button>';
-	$html .= '</div>';
-	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
-
-	echo apply_filters( 'edd_after_setting_output', $html, $args );
+	echo apply_filters( 'edd_after_setting_output', $uploader->get(), $args );
 }
 
 /**
@@ -1682,42 +1672,45 @@ function edd_color_callback( $args ) {
 /**
  * Shop States Callback
  *
- * Renders states drop down based on the currently selected country
+ * Renders states drop down based on the currently selected country.
  *
  * @since 1.6
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args Arguments passed by the setting.
  *
  * @return void
  */
 function edd_shop_states_callback( $args ) {
-	$edd_option  = edd_get_option( $args['id'] );
-	$states      = edd_get_shop_states();
-	$class       = edd_sanitize_html_class( $args['field_class'] );
-	$placeholder = isset( $args['placeholder'] )
-		? $args['placeholder']
-		: '';
+	$edd_option = edd_get_option( $args['id'] );
+	$class      = edd_sanitize_html_class( $args['field_class'] );
+	$html       = '';
 
-	if ( $args['chosen'] ) {
-		$class .= ' edd-select-chosen';
-		if ( is_rtl() ) {
-			$class .= ' chosen-rtl';
+	if ( empty( edd_get_shop_states() ) ) {
+		$placeholder = __( 'Enter a region', 'easy-digital-downloads' );
+		$html        = '<input type="text" class="' . esc_attr( trim( $class ) ) . ' regular-text" name="edd_settings[' . esc_attr( $args['id'] ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . $edd_option . '"  placeholder="' . esc_html( $placeholder ) . '"/>';
+	} else {
+		$placeholder = isset( $args['placeholder'] )
+			? $args['placeholder']
+			: '';
+		if ( $args['chosen'] ) {
+			$class .= ' edd-select-chosen';
+			if ( is_rtl() ) {
+				$class .= ' chosen-rtl';
+			}
 		}
+		$html = EDD()->html->region_select(
+			array(
+				'name'              => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']',
+				'id'                => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']',
+				'class'             => $class,
+				'show_option_empty' => $placeholder,
+				'placeholder'       => $placeholder,
+			),
+			'',
+			$edd_option
+		);
 	}
-
-	if ( empty( $states ) ) {
-		$class .= ' edd-no-states';
-	}
-
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" class="' . esc_attr( trim( $class ) ) . '" data-placeholder="' . esc_html( $placeholder ) . '">';
-
-	foreach ( $states as $option => $name ) {
-		$selected = isset( $edd_option ) ? selected( $option, $edd_option, false ) : '';
-		$html     .= '<option value="' . esc_attr( $option ) . '" ' . $selected . '>' . esc_html( $name ) . '</option>';
-	}
-
-	$html .= '</select>';
-	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
+	$html .= ! empty( $args['desc'] ) ? '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>' : '';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
@@ -1764,7 +1757,7 @@ function edd_recapture_callback($args) {
 				<?php
 				printf(
 					wp_kses_post(
-						/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
+						/* translators: 1:  opening anchor tag, 2:  closing anchor tag */
 						__( '%1$sAccess your Recapture account%2$s.', 'easy-digital-downloads' )
 					),
 					'<a href="https://recapture.io/account" target="_blank" rel="noopener noreferrer">',
@@ -1782,7 +1775,7 @@ function edd_recapture_callback($args) {
 					<?php
 					printf(
 						wp_kses_post(
-							/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
+							/* translators: 1:  opening anchor tag, 2:  closing anchor tag */
 							__( '%1$sComplete your connection to Recapture%2$s', 'easy-digital-downloads' )
 						),
 						'<a href="' . esc_url( admin_url( 'admin.php?page=recapture' ) ) . '">',
@@ -1801,7 +1794,7 @@ function edd_recapture_callback($args) {
 			echo '&nbsp;';
 			printf(
 				wp_kses_post(
-					/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
+					/* translators: 1:  opening anchor tag, 2:  closing anchor tag */
 					__( '%1$sLearn more%2$s (Free trial available)', 'easy-digital-downloads' )
 				),
 				'<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" target="_blank" rel="noopener noreferrer">',
@@ -1948,6 +1941,11 @@ function edd_checkbox_toggle_callback( $args ) {
 	$args['current'] = ! empty( $edd_option )
 		? $edd_option
 		: '';
+
+	$args['check'] = isset( $args['check'] )
+		? $args['check']
+		: '';
+
 	$args['label']   = $args['check'];
 	$args['value']   = 1;
 

@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @return array $templates All the registered email templates
  */
 function edd_get_email_templates() {
-	$templates = new EDD_Emails;
+	$templates = new EDD_Emails();
 	return $templates->get_templates();
 }
 
@@ -32,9 +32,9 @@ function edd_get_email_templates() {
  * @since 1.0
  *
  * @param string $message Message with the template tags
- * @param array $payment_data Payment Data
- * @param int $payment_id Payment ID
- * @param bool $admin_notice Whether or not this is a notification email
+ * @param array  $payment_data Payment Data
+ * @param int    $payment_id Payment ID
+ * @param bool   $admin_notice Whether or not this is a notification email
  *
  * @return string $message Fully formatted message
  */
@@ -52,81 +52,46 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
  * @since 1.0
  * @since 3.2.0 - Added $wpautop parameter.
  * @param string $message Email message with template tags
- * @param bool $disable_wpautop If we should fully disable wpautop for this content.
+ * @param bool   $disable_wpautop If we should fully disable wpautop for this content.
  *
  * @return string $message Fully formatted message
  */
-function edd_email_preview_template_tags( $message, $disable_wpautop = false ) {
-	$download_list = '<ul>';
-	$download_list .= '<li>' . __( 'Sample Product Title', 'easy-digital-downloads' ) . '<br />';
-	$download_list .= '<div>';
-	$download_list .= '<a href="#">' . __( 'Sample Download File Name', 'easy-digital-downloads' ) . '</a> - <small>' . __( 'Optional notes about this download.', 'easy-digital-downloads' ) . '</small>';
-	$download_list .= '</div>';
-	$download_list .= '</li>';
-	$download_list .= '</ul>';
+function edd_email_preview_template_tags( $message, $disable_wpautop = false, $order_id = 0 ) {
 
-	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
+	$notes   = __( 'These are some sample notes added to a product.', 'easy-digital-downloads' );
+	$message = str_replace( '{product_notes}', $notes, $message );
 
-	$price = edd_currency_filter( edd_format_amount( 10.50 ) );
+	if ( empty( $order_id ) ) {
+		$order_numbers = new EDD\Orders\Number();
+		$order_number  = $order_numbers->format( wp_rand( 100, 987 ) );
+		$price         = edd_currency_filter( edd_format_amount( 10.50 ) );
+		$gateway       = edd_get_gateway_admin_label( edd_get_default_gateway() );
+		$receipt_id    = strtolower( md5( uniqid() ) );
+		$tax           = edd_currency_filter( edd_format_amount( 1.00 ) );
+		$sub_total     = edd_currency_filter( edd_format_amount( 9.50 ) );
+		$message       = str_replace( '{date}', edd_date_i18n( current_time( 'timestamp' ) ), $message );
+		$message       = str_replace( '{subtotal}', $sub_total, $message );
+		$message       = str_replace( '{tax}', $tax, $message );
+		$message       = str_replace( '{price}', $price, $message );
+		$message       = str_replace( '{receipt_id}', $receipt_id, $message );
+		$message       = str_replace( '{payment_method}', $gateway, $message );
+		$message       = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
+		$message       = str_replace( '{payment_id}', $order_number, $message );
+		$message       = str_replace( '{receipt_link}', edd_email_tag_receipt_link( 0 ), $message );
+		$message       = str_replace( '{receipt}', edd_email_tag_receipt( 0 ), $message );
+	}
 
-	$gateway = edd_get_gateway_admin_label( edd_get_default_gateway() );
-
-	$receipt_id = strtolower( md5( uniqid() ) );
-
-	$notes = __( 'These are some sample notes added to a product.', 'easy-digital-downloads' );
-
-	$tax = edd_currency_filter( edd_format_amount( 1.00 ) );
-
-	$sub_total = edd_currency_filter( edd_format_amount( 9.50 ) );
-
-	$order_numbers = new EDD\Orders\Number();
-	$order_number  = $order_numbers->format( wp_rand( 100, 987 ) );
-
-	$user = wp_get_current_user();
-
-	$message = str_replace( '{download_list}', $download_list, $message );
-	$message = str_replace( '{file_urls}', $file_urls, $message );
+	$user    = wp_get_current_user();
 	$message = str_replace( '{name}', $user->display_name, $message );
 	$message = str_replace( '{fullname}', $user->display_name, $message );
 	$message = str_replace( '{username}', $user->user_login, $message );
-	$message = str_replace( '{date}', edd_date_i18n( current_time( 'timestamp' ) ), $message );
-	$message = str_replace( '{subtotal}', $sub_total, $message );
-	$message = str_replace( '{tax}', $tax, $message );
-	$message = str_replace( '{price}', $price, $message );
-	$message = str_replace( '{receipt_id}', $receipt_id, $message );
-	$message = str_replace( '{payment_method}', $gateway, $message );
-	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
-	$message = str_replace( '{product_notes}', $notes, $message );
-	$message = str_replace( '{payment_id}', $order_number, $message );
-	$message = str_replace( '{receipt_link}', edd_email_tag_receipt_link( 0 ), $message );
-	$message = str_replace( '{receipt}', edd_email_tag_receipt( 0 ), $message );
 
 	$message = apply_filters( 'edd_email_preview_template_tags', $message );
 
-	$wpautop = $disable_wpautop ? false : apply_filters( 'edd_email_preview_template_wpautop', true );;
+	$wpautop = $disable_wpautop ? false : apply_filters( 'edd_email_preview_template_wpautop', true );
 
 	return $wpautop ? wpautop( $message ) : $message;
 }
-
-/**
- * Email Template Preview
- *
- * @access private
- * @since 1.0.8.2
- */
-function edd_email_template_preview() {
-	if( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	ob_start();
-	?>
-	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank"><?php _e( 'Preview Purchase Receipt', 'easy-digital-downloads' ); ?></a>
-	<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email', 'email' => 'order_receipt' ) ), 'edd-test-email' ) ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
-	<?php
-	echo ob_get_clean();
-}
-add_action( 'edd_purchase_receipt_email_settings', 'edd_email_template_preview' );
 
 /**
  * Render Receipt in the Browser
@@ -153,12 +118,12 @@ function edd_render_receipt_in_browser( $data ) {
 	ob_start();
 
 	// Disallows caching of the page
-	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-	header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-	header("Cache-Control: post-check=0, pre-check=0", false);
-	header("Pragma: no-cache"); // HTTP/1.0
-	header("Expires: Sat, 23 Oct 1977 05:00:00 PST"); // Date in the past
-?>
+	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
+	header( 'Cache-Control: no-store, no-cache, must-revalidate' ); // HTTP/1.1
+	header( 'Cache-Control: post-check=0, pre-check=0', false );
+	header( 'Pragma: no-cache' ); // HTTP/1.0
+	header( 'Expires: Sat, 23 Oct 1977 05:00:00 PST' ); // Date in the past
+	?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -199,10 +164,10 @@ function edd_render_receipt_in_browser( $data ) {
 		<?php echo do_shortcode( '[edd_receipt payment_key=' . $key . ']' ); ?>
 		<?php do_action( 'edd_render_receipt_in_browser_after' ); ?>
 	</div>
-<?php wp_footer(); ?>
+	<?php wp_footer(); ?>
 </body>
 </html>
-<?php
+	<?php
 	echo ob_get_clean();
 	die();
 }

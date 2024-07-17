@@ -195,16 +195,22 @@ class IPN {
 		$body         = wp_remote_retrieve_body( $api_response );
 
 		if ( is_wp_error( $api_response ) ) {
-			/* Translators: %s - IPN Verification response */
-			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+			edd_record_gateway_error(
+				__( 'IPN Error', 'easy-digital-downloads' ),
+				/* translators: %s: IPN Verification response */
+				sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) )
+			);
 			$this->debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
 			status_header( 401 );
 			return false; // Something went wrong.
 		}
 
 		if ( 'VERIFIED' !== $body ) {
-			/* Translators: %s - IPN Verification response */
-			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
+			edd_record_gateway_error(
+				__( 'IPN Error', 'easy-digital-downloads' ),
+				/* translators: %s: IPN Verification response */
+				sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) )
+			);
 			$this->debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
 			status_header( 401 );
 			return false; // Response not okay.
@@ -314,7 +320,7 @@ class IPN {
 				'object_type' => 'order',
 				'object_id'   => $order_id,
 				'content'     => sprintf(
-					/* Translators: 1. Dispute ID; 2. Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt. */
+					/* translators: 1: Dispute ID, 2: Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt. */
 					__( 'The PayPal transaction has been disputed (IPN). Case ID: %1$s. Reason given: %2$s.', 'easy-digital-downloads' ),
 					$dispute_id,
 					! empty( $reason ) ? $reason : __( 'unknown', 'easy-digital-downloads' )
@@ -424,7 +430,7 @@ class IPN {
 
 			// the currency code is invalid
 			// @TODO: Does this need a parent_id for better error organization?
-			/* Translators: %s - The payment data sent via the IPN */
+			/* translators: %s: The payment data sent via the IPN */
 			edd_record_gateway_error( __( 'Invalid Currency Code', 'easy-digital-downloads' ), sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'easy-digital-downloads' ), json_encode( $this->posted ) ) );
 
 			$this->debug_log( 'subscription ' . $subscription->id . ': invalid currency code detected in IPN data: ' . var_export( $this->posted, true ) );
@@ -439,7 +445,7 @@ class IPN {
 			}
 
 			$transaction_link = '<a href="https://www.paypal.com/activity/payment/' . $this->transaction_id . '" target="_blank">' . $this->transaction_id . '</a>';
-			/* Translators: %s - The transaction ID of the failed payment */
+			/* translators: %s: The transaction ID of the failed payment */
 			$subscription->add_note( sprintf( __( 'Transaction ID %s failed in PayPal', 'easy-digital-downloads' ), $transaction_link ) );
 			$subscription->failing();
 
@@ -469,7 +475,7 @@ class IPN {
 			$subscription->renew( $payment_id );
 
 			if ( 'recurring_payment_outstanding_payment' === $this->txn_type ) {
-				/* Translators: %s - The collected outstanding balance of the subscription */
+				/* translators: %s: The collected outstanding balance of the subscription */
 				$subscription->add_note( sprintf( __( 'Outstanding subscription balance of %s collected successfully.', 'easy-digital-downloads' ), $this->amount ) );
 			}
 		} else {
@@ -569,7 +575,7 @@ class IPN {
 					'object_type' => 'order',
 					'object_id'   => $order->id,
 					'content'     => sprintf(
-						/* Translators: %s - Transaction ID */
+						/* translators: %s: Transaction ID */
 						__( 'Reversal processed in PayPal (IPN). Transaction ID: %s', 'easy-digital-downloads' ),
 						$this->transaction_id
 					),
@@ -587,7 +593,7 @@ class IPN {
 		$this->debug_log( 'Processing a refund for original transaction ' . $order->get_transaction_id() );
 
 		$payment_note = sprintf(
-		/* Translators: %1$s - Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID */
+		/* translators: 1:  Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID */
 			esc_html__( 'Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s', 'easy-digital-downloads' ),
 			edd_currency_filter( edd_format_amount( $refunded_amount ), $currency ),
 			esc_html( $order->get_transaction_id() ),

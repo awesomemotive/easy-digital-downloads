@@ -99,7 +99,7 @@ $edd_options = array(
 	'edd_pass_licenses',
 	'edd_pass_data',
 	'edd_tokenizer_signing_key',
-	'edd_use_php_sessions',
+	'edd_session_handling',
 	'edd_licensed_extensions',
 	'edd_activation_date',
 	'edd_pro_activation_date',
@@ -135,7 +135,7 @@ foreach ( $site_options as $site_option ) {
 }
 
 // Load EDD file.
-require_once dirname( __FILE__ ) . '/easy-digital-downloads.php';
+require_once __DIR__ . '/easy-digital-downloads.php';
 
 // Set the EDD instance.
 EDD();
@@ -152,7 +152,7 @@ foreach ( $edd_roles as $role ) {
 	remove_role( $role );
 }
 
-// Remove all database tables
+// Remove all database tables.
 foreach ( EDD()->components as $component ) {
 	/**
 	 * @var EDD\Database\Table $table
@@ -181,8 +181,9 @@ wp_clear_scheduled_hook( 'edd_daily_cron' );
 wp_clear_scheduled_hook( 'edd_weekly_cron' );
 wp_clear_scheduled_hook( 'edd_email_summary_cron' );
 wp_clear_scheduled_hook( 'edd_weekly_scheduled_events' );
+wp_clear_scheduled_hook( 'edd_cleanup_sessions' );
 
-// Remove any transients we've left behind
+// Remove any transients we've left behind.
 $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_transient\_edd\_%'" );
 $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_site\_transient\_edd\_%'" );
 $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_transient\_timeout\_edd\_%'" );

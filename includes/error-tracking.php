@@ -97,7 +97,7 @@ function edd_build_successes_html( $successes ) {
  * If errors exist, they are returned.
  *
  * @since 1.0
- * @uses EDD_Session::get()
+ * @uses EDD\Sessions\Handler::get()
  * @return mixed array if errors are present, false if none found
  */
 function edd_get_errors() {
@@ -112,7 +112,7 @@ function edd_get_errors() {
  * Stores an error in a session var.
  *
  * @since 1.0
- * @uses EDD_Session::get()
+ * @uses EDD\Sessions\Handler::get()
  * @param int $error_id ID of the error being set
  * @param string $error_message Message to store with the error
  * @return void
@@ -130,7 +130,7 @@ function edd_set_error( $error_id, $error_message ) {
  * Stores an array of success messages in a session variable.
  *
  * @since 3.1
- * @uses EDD_Session::set()
+ * @uses EDD\Sessions\Handler::set()
  * @param string $error_id
  * @param string $error_message
  * @return void
@@ -149,7 +149,7 @@ function edd_set_success( $error_id, $error_message ) {
  * Clears all stored errors.
  *
  * @since 1.0
- * @uses EDD_Session::set()
+ * @uses EDD\Sessions\Handler::set()
  * @return void
  */
 function edd_clear_errors() {
@@ -161,7 +161,7 @@ function edd_clear_errors() {
  * Removes (unsets) a stored error
  *
  * @since 1.3.4
- * @uses EDD_Session::set()
+ * @uses EDD\Sessions\Handler::set()
  * @param int $error_id ID of the error being set
  * @return string
  */

@@ -171,7 +171,7 @@ class Pointer implements SubscriberInterface {
 			'<h3>%s</h3><p>%s</p>',
 			__( 'You\'re eligible to install EDD (Pro)!', 'easy-digital-downloads' ),
 			sprintf(
-				/* translators: 1. opening anchor tag; 2. closing anchor tag */
+				/* translators: 1: opening anchor tag, 2: closing anchor tag */
 				__( 'Good news! With your pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and access Pro only features.', 'easy-digital-downloads' ),
 				'<a href="' . esc_url( $settings_url ) . '">',
 				'</a>'

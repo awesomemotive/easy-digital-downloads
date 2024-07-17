@@ -132,7 +132,7 @@ function edd_local_taxes_only() {
  *
  * @since 1.4.1
  * @deprecated 1.6
- * @uses EDD_Session::get()
+ * @uses EDD\Sessions\Handler::get()
  * @return bool
  */
 function edd_local_tax_opted_in() {
@@ -1149,12 +1149,13 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 
 	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_record_order_status_change', $backtrace );
 
-	// Get the list of statuses so that status in the payment note can be translated
+	// Get the list of statuses so that status in the payment note can be translated.
 	$stati      = edd_get_payment_statuses();
 	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
 	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
 
-	$status_change = sprintf( __( 'Status changed from %s to %s', 'easy-digital-downloads' ), $old_status, $new_status );
+	/* translators: 1: Old status, 2: New status */
+	$status_change = sprintf( __( 'Status changed from %1$s to %2$s', 'easy-digital-downloads' ), $old_status, $new_status );
 
 	edd_insert_payment_note( $payment_id, $status_change );
 }
@@ -1290,7 +1291,7 @@ function edd_jilt_callback( $args ) {
 			<?php
 			wp_kses_post(
 				sprintf(
-				/* Translators: %1$s - <a> tag, %2$s - </a> tag */
+				/* translators: 1:  <a> tag, 2.  </a> tag */
 					__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
 					'<a href="' . esc_url( $account_url ) . '" target="_blank">',
 					'</a>'
@@ -1482,7 +1483,7 @@ function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
 				<?php
 				echo wp_kses_post(
 					sprintf(
-						/* Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s - </a> tag */
+						/* translators: 1:  <strong> tag, 2.  </strong> tag, 3.  <a> tag, 4.  </a> tag */
 						__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Jilt for free%4$s.', 'easy-digital-downloads' ),
 						'<strong>',
 						'</strong>',
@@ -1495,7 +1496,7 @@ function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
 			<?php
 			echo wp_kses_post(
 				sprintf(
-					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
+					/* translators: 1:  Opening anchor tag, 2:  The url to dismiss the ajax notice, 3: Complete the opening of the anchor tag, 4: Open span tag, 5:  Close span tag */
 					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
 					'<a href="',
 					esc_url(
@@ -1564,7 +1565,11 @@ function edd_sendwp_callback( $args ) {
 	else :
 		?>
 		<p>
-			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+			<?php
+			_e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' );
+			/* translators: 1: Opening anchor tag (do not translate) 2. Closing anchor tag (do not translate) */
+			printf( __( '%1$sLearn more%2$s', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" target="_blank" rel="noopener noreferrer">', '</a>' );
+			?>
 		</p>
 		<p>
 			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
@@ -1768,7 +1773,7 @@ function edd_render_review_status_metabox() {
 		?>
 		<p>
 			<?php
-			// Translators: The %s represents the link to the Product Reviews extension.
+			/* translators: The %s represents the link to the Product Reviews extension. */
 			echo wp_kses_post( sprintf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), $url ) );
 			?>
 		</p>
@@ -2375,9 +2380,9 @@ function edd_display_email_template_preview() {
  * @return string $message
  */
 function edd_get_default_sale_notification_email() {
-	$admin_order_notice = EDD\Emails\Registry::get( 'admin_order_notice', array( false ) );
+	$admin_order_notice = new \EDD\Emails\Templates\AdminOrderNotice();
 
-	return $admin_order_notice->get_raw_body_content();
+	return $admin_order_notice->get_default( 'content' );
 }
 
 /**
@@ -2433,4 +2438,125 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$admin_order_notice = EDD\Emails\Registry::get( 'admin_order_notice', array( $order ) );
 
 	return $admin_order_notice->get_raw_body_content();
+}
+
+/**
+ * Delete Saved Carts after one week
+ *
+ * This function is only intended to be used by WordPress cron.
+ *
+ * @since 1.8
+ * @deprecated 3.3.0
+ *
+ * @global $wpdb
+ * @return void
+ */
+function edd_delete_saved_carts() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0' );
+}
+
+/**
+ * Updates week-old+ 'pending' orders to 'abandoned'
+ *
+ *  This function is only intended to be used by WordPress cron.
+ *
+ * @since 1.6
+ * @deprecated 3.3.0
+ * @return void
+*/
+function edd_mark_abandoned_orders() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0' );
+}
+
+/**
+ * Sends the new user notification email when a user registers during checkout
+ *
+ * @since       1.8.8
+ * @param int   $user_id
+ * @param array $user_data
+ *
+ * @return      void
+ */
+function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
+
+	if( empty( $user_id ) || empty( $user_data ) ) {
+		return;
+	}
+
+	$emails     = EDD()->emails;
+	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+
+	// Setup and send the new user email for Admins.
+	$emails->__set( 'from_name', $from_name );
+	$emails->__set( 'from_email', $from_email );
+
+	/* translators: %s: The site name */
+	$admin_subject  = apply_filters( 'edd_user_registration_admin_email_subject', sprintf( __( '[%s] New User Registration', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$admin_heading  = apply_filters( 'edd_user_registration_admin_email_heading', __( 'New user registration', 'easy-digital-downloads' ), $user_data );
+	/* translators: %s: The customer's username */
+	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n\r\n";
+	/* translators: the user email */
+	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads' ), $user_data['user_email'] ) . "\r\n";
+
+	$admin_message = apply_filters( 'edd_user_registration_admin_email_message', $admin_message, $user_data );
+
+	$emails->__set( 'heading', $admin_heading );
+
+	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
+
+	// Setup and send the new user email for the end user.
+	/* translators: Site name */
+	$user_subject  = apply_filters( 'edd_user_registration_email_subject', sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name ), $user_data );
+	$user_heading  = apply_filters( 'edd_user_registration_email_heading', __( 'Your account info', 'easy-digital-downloads' ), $user_data );
+	/* translators: %s: The customer's username */
+	$user_message  = apply_filters( 'edd_user_registration_email_username', sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n", $user_data );
+
+	if ( did_action( 'edd_pre_process_purchase' ) ) {
+		$password_message = __( 'Password entered at checkout', 'easy-digital-downloads' );
+	} else {
+		$password_message = __( 'Password entered at registration', 'easy-digital-downloads' );
+	}
+
+	/* translators: %s: password message */
+	$user_message .= apply_filters( 'edd_user_registration_email_password', sprintf( __( 'Password: %s', 'easy-digital-downloads' ), '[' . $password_message . ']' ) . "\r\n" );
+
+	$login_url = apply_filters( 'edd_user_registration_email_login_url', wp_login_url() );
+	if( $emails->html ) {
+
+		$user_message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &rarr;</a>' . "\r\n";
+
+	} else {
+		/* translators: %s: login URL */
+		$user_message .= sprintf( __( 'To log in, visit: %s', 'easy-digital-downloads' ), esc_url( $login_url ) ) . "\r\n";
+	}
+
+	$user_message = apply_filters( 'edd_user_registration_email_message', $user_message, $user_data );
+
+	$emails->__set( 'heading', $user_heading );
+
+	$emails->send( $user_data['user_email'], $user_subject, $user_message );
+}
+
+/**
+ * Drop our custom tables when a mu site is deleted
+ *
+ * @deprecated 3.0   Handled by WP_DB_Table
+ * @since      2.5
+ * @param      array $tables  The tables to drop
+ * @param      int   $blog_id The Blog ID being deleted
+ * @return     array          The tables to drop
+ */
+function edd_wpmu_drop_tables( $tables, $blog_id ) {
+
+	switch_to_blog( $blog_id );
+	$customers_db     = new EDD_DB_Customers();
+	$customer_meta_db = new EDD_DB_Customer_Meta();
+	if ( $customers_db->installed() ) {
+		$tables[] = $customers_db->table_name;
+		$tables[] = $customer_meta_db->table_name;
+	}
+	restore_current_blog();
+
+	return $tables;
 }

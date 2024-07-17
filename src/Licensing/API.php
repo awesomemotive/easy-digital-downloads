@@ -12,7 +12,21 @@
 
 namespace EDD\Licensing;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+/**
+ * Represents the API class for handling licensing in Easy Digital Downloads Pro.
+ */
 class API {
+
+	/**
+	 * Whether or not to log failed requests.
+	 *
+	 * @since 3.3.0
+	 * @var bool
+	 */
+	public $should_check_failed_request = false;
 
 	/**
 	 * The Software Licensing API URL.
@@ -56,6 +70,11 @@ class API {
 			return false;
 		}
 
+		// If a request has recently failed, don't try again.
+		if ( $this->request_recently_failed() ) {
+			return false;
+		}
+
 		$request = wp_remote_get(
 			$this->api_url,
 			array(
@@ -67,6 +86,8 @@ class API {
 
 		// If there was an API error, return false.
 		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+			$this->log_failed_request();
+
 			return false;
 		}
 
@@ -86,5 +107,60 @@ class API {
 				'url' => home_url(),
 			)
 		);
+	}
+
+	/**
+	 * Determines if a request has recently failed.
+	 *
+	 * @since 1.9.1
+	 *
+	 * @return bool
+	 */
+	private function request_recently_failed() {
+		if ( ! $this->should_check_failed_request ) {
+			return false;
+		}
+
+		$failed_request_details = get_option( $this->get_failed_request_cache_key() );
+
+		// Request has never failed.
+		if ( empty( $failed_request_details ) || ! is_numeric( $failed_request_details ) ) {
+			return false;
+		}
+
+		/*
+		 * Request previously failed, but the timeout has expired.
+		 * This means we're allowed to try again.
+		 */
+		if ( time() > $failed_request_details ) {
+			delete_option( $this->get_failed_request_cache_key() );
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Logs a failed HTTP request for this API URL.
+	 * We set a timestamp for 1 hour from now. This prevents future API requests from being
+	 * made to this domain for 1 hour. Once the timestamp is in the past, API requests
+	 * will be allowed again. This way if the site is down for some reason we don't bombard
+	 * it with failed API requests.
+	 *
+	 * @since 3.3.0
+	 */
+	private function log_failed_request() {
+		update_option( $this->get_failed_request_cache_key(), strtotime( '+1 hour' ) );
+	}
+
+	/**
+	 * Retrieves the cache key for the failed requests option.
+	 *
+	 * @since 3.3.0
+	 * @return string The cache key for failed requests.
+	 */
+	private function get_failed_request_cache_key() {
+		return 'edd_failed_request_' . md5( $this->api_url );
 	}
 }

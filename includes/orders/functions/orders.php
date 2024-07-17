@@ -634,6 +634,7 @@ function edd_build_order( $order_data = array() ) {
 
 	// Bail if no order data passed.
 	if ( empty( $order_data ) ) {
+		edd_debug_log( 'No order data passed to edd_build_order' );
 		return false;
 	}
 
@@ -807,6 +808,7 @@ function edd_build_order( $order_data = array() ) {
 
 	// If there is no order ID at this point, something went wrong.
 	if ( empty( $order_id ) ) {
+		edd_debug_log( 'Failed to create order. Order data: ' . var_export( $order_args, true ) );
 		return false;
 	}
 	EDD()->session->set( 'edd_resume_payment', $order_id );

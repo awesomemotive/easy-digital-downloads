@@ -52,9 +52,7 @@ class Logging {
 	 *
 	 * @since 1.3.1
 	 */
-	public function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'setup_log_file' ), 8 );
-	}
+	public function __construct() {}
 
 	/**
 	 * Get log types.
@@ -628,11 +626,16 @@ class Logging {
 	 * @return void
 	 */
 	public function setup_log_file() {
+		if ( ! empty( $this->file ) ) {
+			return;
+		}
 
 		$upload_dir     = edd_get_upload_dir();
 		$this->filename = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
 		$this->file     = trailingslashit( $upload_dir ) . $this->filename;
-		FileSystem::maybe_move_file( $this->filename, $this->file );
+		if ( ! FileSystem::get_fs()->exists( $this->file ) ) {
+			FileSystem::maybe_move_file( $this->filename, $this->file );
+		}
 
 		if ( ! FileSystem::get_fs()->is_writable( $upload_dir ) ) {
 			$this->is_writable = false;
@@ -660,6 +663,8 @@ class Logging {
 	 * @return string
 	 */
 	public function get_log_file_path() {
+		$this->setup_log_file();
+
 		return $this->file;
 	}
 
@@ -685,6 +690,7 @@ class Logging {
 	 */
 	protected function get_file() {
 		$file = '';
+		$this->setup_log_file();
 
 		if ( FileSystem::get_fs()->exists( $this->file ) ) {
 			if ( ! FileSystem::get_fs()->is_writable( $this->file ) ) {
@@ -707,6 +713,8 @@ class Logging {
 	 * @since 2.8.7
 	 */
 	protected function write_to_log( $message = '' ) {
+		$this->setup_log_file();
+
 		file_put_contents( $this->file, $message, FILE_APPEND );
 	}
 
@@ -719,6 +727,7 @@ class Logging {
 	 * @return bool True if the log was cleared, false otherwise.
 	 */
 	public function clear_log_file() {
+		$this->setup_log_file();
 		FileSystem::get_fs()->delete( $this->file );
 
 		if ( FileSystem::get_fs()->exists( $this->file ) ) {

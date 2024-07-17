@@ -154,7 +154,7 @@ class API {
 		foreach ( $required_creds as $cred_id ) {
 			if ( empty( $creds[ $cred_id ] ) ) {
 				throw new Authentication_Exception( sprintf(
-				/* Translators: %s - The ID of the PayPal credential */
+				/* translators: %s: The ID of the PayPal credential */
 					__( 'Missing PayPal credential: %s', 'easy-digital-downloads' ),
 					$cred_id
 				) );
@@ -219,7 +219,7 @@ class API {
 
 		if ( 200 !== $code ) {
 			throw new API_Exception( sprintf(
-			/* Translators: %d - HTTP response code. */
+			/* translators: %d: HTTP response code. */
 				__( 'Unexpected response code: %d', 'easy-digital-downloads' ),
 				$code
 			), $code );

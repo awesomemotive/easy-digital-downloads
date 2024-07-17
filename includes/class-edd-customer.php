@@ -410,11 +410,27 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 		do_action( 'edd_customer_pre_remove_email', $email, $this->id, $this );
 
-		$email_address = edd_get_customer_email_address_by( 'email', $email );
+		$email_addresses = edd_get_customer_email_addresses(
+			array(
+				'customer_id' => $this->id,
+				'email'       => $email,
+			)
+		);
 
-		$ret = $email_address
-			? (bool) edd_delete_customer_email_address( $email_address->id )
-			: false;
+		if ( empty( $email_addresses ) ) {
+			$ret = false;
+		} else {
+			$found   = count( $email_addresses );
+			$removed = 0;
+
+			foreach ( $email_addresses as $email_address ) {
+				$removed = (bool) edd_delete_customer_email_address( $email_address->id )
+					? $removed + 1
+					: $removed;
+			}
+
+			$ret = ( $found === $removed );
+		}
 
 		do_action( 'edd_customer_post_remove_email', $email, $this->id, $this );
 

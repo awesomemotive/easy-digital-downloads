@@ -310,3 +310,15 @@ function edds_sanitize_statement_descriptor( $statement_descriptor ) {
 
 	return $statement_descriptor;
 }
+
+/**
+ * Listen for Stripe Webhooks.
+ *
+ * We've moved all webhook listeners to the EDD\Gateways\Stripe\Webhooks\Listener class.
+ *
+ * @since 1.5
+ * @deprecated 3.3.0
+ */
+function edds_stripe_event_listener() {
+	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Gateways\Stripe\Webhooks\Listener' );
+}

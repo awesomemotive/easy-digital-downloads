@@ -4,6 +4,7 @@
  * Forked from the EDD_SL_Updater class, but customized for EDD.
  *
  * @since 3.1.1.4
+ * @package EDD
  */
 
 namespace EDD\Extensions;
@@ -17,20 +18,6 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  * @package EDD\Extensions
  */
 class Updater {
-
-	/**
-	 * The API handler.
-	 *
-	 * @var \EDD\Licensing\API
-	 */
-	private $api_handler;
-
-	/**
-	 * The API URL.
-	 *
-	 * @var string
-	 */
-	private $api_url = '';
 
 	/**
 	 * The API data.
@@ -82,13 +69,6 @@ class Updater {
 	private $beta = false;
 
 	/**
-	 * The failed request cache key.
-	 *
-	 * @var string
-	 */
-	private $failed_request_cache_key;
-
-	/**
 	 * Class constructor.
 	 *
 	 * @uses plugin_basename()
@@ -101,17 +81,14 @@ class Updater {
 
 		global $edd_plugin_data;
 
-		$_plugin_file                   = $this->get_plugin_file( $_plugin_file );
-		$this->api_handler              = new \EDD\Licensing\API();
-		$this->api_url                  = trailingslashit( $this->api_handler->get_url() );
-		$this->api_data                 = $_api_data;
-		$this->plugin_file              = $_plugin_file;
-		$this->name                     = plugin_basename( $_plugin_file );
-		$this->slug                     = basename( dirname( $_plugin_file ) );
-		$this->version                  = $_api_data['version'];
-		$this->wp_override              = isset( $_api_data['wp_override'] ) ? (bool) $_api_data['wp_override'] : false;
-		$this->beta                     = ! empty( $this->api_data['beta'] ) ? true : false;
-		$this->failed_request_cache_key = 'edd_sl_failed_http_' . md5( $this->api_url );
+		$_plugin_file      = $this->get_plugin_file( $_plugin_file );
+		$this->api_data    = $_api_data;
+		$this->plugin_file = $_plugin_file;
+		$this->name        = plugin_basename( $_plugin_file );
+		$this->slug        = basename( dirname( $_plugin_file ) );
+		$this->version     = $_api_data['version'];
+		$this->wp_override = isset( $_api_data['wp_override'] ) ? (bool) $_api_data['wp_override'] : false;
+		$this->beta        = ! empty( $this->api_data['beta'] ) ? true : false;
 
 		$edd_plugin_data[ $this->slug ] = $this->api_data;
 
@@ -345,7 +322,7 @@ class Updater {
 		} elseif ( empty( $update_cache->response[ $this->name ]->package ) && ! empty( $changelog_link ) ) {
 			echo ' ';
 			printf(
-				/* translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate. */
+				/* translators: 1: opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate. */
 				__( '%1$sView version %2$s details%3$s.', 'easy-digital-downloads' ),
 				'<a target="_blank" class="thickbox open-plugin-details-modal" href="' . esc_url( $changelog_link ) . '">',
 				esc_html( $update_cache->response[ $this->name ]->new_version ),
@@ -354,7 +331,7 @@ class Updater {
 		} elseif ( ! empty( $changelog_link ) ) {
 			echo ' ';
 			printf(
-				/* translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate. */
+				/* translators: 1: opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate. */
 				__( '%1$sView version %2$s details%3$s or %4$supdate now%5$s.', 'easy-digital-downloads' ),
 				'<a target="_blank" class="thickbox open-plugin-details-modal" href="' . esc_url( $changelog_link ) . '">',
 				esc_html( $update_cache->response[ $this->name ]->new_version ),
@@ -509,54 +486,7 @@ class Updater {
 			return false;
 		}
 
-		if ( $this->request_recently_failed() ) {
-			return false;
-		}
-
 		return $this->get_version_from_remote();
-	}
-
-	/**
-	 * Determines if a request has recently failed.
-	 *
-	 * @since 1.9.1
-	 *
-	 * @return bool
-	 */
-	private function request_recently_failed() {
-		$failed_request_details = get_option( $this->failed_request_cache_key );
-
-		// Request has never failed.
-		if ( empty( $failed_request_details ) || ! is_numeric( $failed_request_details ) ) {
-			return false;
-		}
-
-		/*
-		 * Request previously failed, but the timeout has expired.
-		 * This means we're allowed to try again.
-		 */
-		if ( time() > $failed_request_details ) {
-			delete_option( $this->failed_request_cache_key );
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Logs a failed HTTP request for this API URL.
-	 * We set a timestamp for 1 hour from now. This prevents future API requests from being
-	 * made to this domain for 1 hour. Once the timestamp is in the past, API requests
-	 * will be allowed again. This way if the site is down for some reason we don't bombard
-	 * it with failed API requests.
-	 *
-	 * @see EDD_SL_Plugin_Updater::request_recently_failed
-	 *
-	 * @since 1.9.1
-	 */
-	private function log_failed_request() {
-		update_option( $this->failed_request_cache_key, strtotime( '+1 hour' ), false );
 	}
 
 	/**
@@ -598,12 +528,15 @@ class Updater {
 	 */
 	private function get_version_from_remote() {
 
-		$request = $this->api_handler->make_request( $this->get_api_params() );
-
-		if ( $request && isset( $request->sections ) ) {
-			$request->sections = maybe_unserialize( $request->sections );
-		} else {
+		$api_handler                              = new \EDD\Licensing\API();
+		$api_handler->should_check_failed_request = true;
+		$request                                  = $api_handler->make_request( $this->get_api_params() );
+		if ( ! $request ) {
 			return false;
+		}
+
+		if ( isset( $request->sections ) ) {
+			$request->sections = maybe_unserialize( $request->sections );
 		}
 
 		if ( isset( $request->banners ) ) {

@@ -32,7 +32,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'edd_get_actions', $wp_filter['init'][10] );
 		$this->assertArrayHasKey( 'edd_post_actions', $wp_filter['init'][10] );
 		$this->assertArrayHasKey( 'edd_add_rewrite_endpoints', $wp_filter['init'][10] );
-		$this->assertArrayHasKey( 'edd_no_gateway_error', $wp_filter['init'][10] );
+		$this->assertArrayHasKey( 'edd_no_gateway_error', $wp_filter['edd_before_checkout_cart'][5] );
 		$this->assertArrayHasKey( 'edd_listen_for_paypal_ipn', $wp_filter['init'][10] );
 		$this->assertArrayHasKey( 'edd_setup_download_taxonomies', $wp_filter['init'][0] );
 		$this->assertArrayHasKey( 'edd_setup_edd_post_types', $wp_filter['init'][1] );
@@ -298,11 +298,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 	public function test_edd_settings_misc() {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_append_no_cache_param', $wp_filter['edd_settings_misc'][-1] );
-	}
-
-	public function test_edd_email_settings() {
-		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_email_template_preview', $wp_filter['edd_purchase_receipt_email_settings'][10] );
 	}
 
 	public function test_edd_view_receipt() {

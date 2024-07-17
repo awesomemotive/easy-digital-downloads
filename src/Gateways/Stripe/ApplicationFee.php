@@ -102,7 +102,7 @@ final class ApplicationFee {
 		}
 
 		$message = sprintf(
-			/* translators: 1. opening strong tag; 2. closing strong tag; 3. the message explaining the application fee (eg "3% per-transaction fee + Stripe fees"). */
+			/* translators: 1: opening strong tag, 2: closing strong tag, 3: the message explaining the application fee (eg "3% per-transaction fee + Stripe fees"). */
 			__( '%1$sPay as you go pricing:%2$s %3$s.', 'easy-digital-downloads' ),
 			'<strong>',
 			'</strong>',
@@ -110,7 +110,7 @@ final class ApplicationFee {
 		);
 		if ( empty( $this->license->license_data->key ) && ! edds_is_pro() && ! edd_is_pro() ) {
 			$message .= ' ' . sprintf(
-				/* Translators: Replacements are for the html wrappers for the phrse Upgrade to Pro and should not be translated. */
+				/* translators: Replacements are for the html wrappers for the phrse Upgrade to Pro and should not be translated. */
 				__( '%1$sUpgrade to Pro%2$s to remove transaction fees.', 'easy-digital-downloads' ),
 				'<span class="edd-pro-upgrade"><a href="' . edd_link_helper(
 					'https://easydigitaldownloads.com/pricing/',
@@ -252,7 +252,7 @@ final class ApplicationFee {
 			$grace_period_end_date = $license->get_grace_period_end_date();
 			if ( $grace_period_end_date ) {
 				return ' ' . sprintf(
-					/* translators: 1. opening link tag, do not translate; 2. closing link tag, do not translate;  3. the date the grace period ends */
+					/* translators: 1: opening link tag, do not translate, 2: closing link tag, do not translate;  3. the date the grace period ends */
 					__( 'Your license has expired, but you are in a grace period. %1$sRenew your license key%2$s before %3$s to prevent being charged additional transaction fees.', 'easy-digital-downloads' ),
 					'<a href="' . esc_url( $license->get_renewal_url( 'expired' ) ) . '" target="_blank">',
 					'</a>',
@@ -261,7 +261,7 @@ final class ApplicationFee {
 			}
 
 			return ' ' . sprintf(
-				/* translators: 1. the date the license expired; 2. opening link tag, do not translate; 3. closing link tag, do not translate  */
+				/* translators: 1: the date the license expired, 2: opening link tag, do not translate, 3: closing link tag, do not translate  */
 				__( 'Your license expired on %1$s. %2$sRenew your license%3$s to prevent additional fees.', 'easy-digital-downloads' ),
 				$license->get_expiration_date(),
 				'<a href="' . esc_url( $license->get_renewal_url( 'expired' ) ) . '" target="_blank">',

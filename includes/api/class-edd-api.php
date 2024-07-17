@@ -1064,6 +1064,7 @@ class EDD_API {
 			}
 		} elseif ( $customer ) {
 
+			/* translators: %s: customer ID. */
 			$error['error'] = sprintf( __( 'Customer %s not found!', 'easy-digital-downloads' ), $customer );
 
 			return $error;
@@ -1120,7 +1121,7 @@ class EDD_API {
 
 				$products['products'][0] = $this->get_product_data( $product_info );
 		} else {
-			// translators: %s is the product ID.
+			/* translators: %s: product ID. */
 			$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $args['product'] );
 
 			return $error;
@@ -1666,7 +1667,7 @@ class EDD_API {
 				$discount_list['discounts'][0]['excluded_products']     = $discount_object->excluded_products;
 				$discount_list['discounts'][0]['single_use']            = $discount_object->once_per_customer;
 			} else {
-				// translators: %s is the discount ID.
+				/* translators: %s: discount ID. */
 				$error['error'] = sprintf( __( 'Discount %s not found!', 'easy-digital-downloads' ), $discount );
 
 				return $error;
@@ -1997,7 +1998,7 @@ class EDD_API {
 		) {
 			wp_die(
 				sprintf(
-					// translators: %s is the action being performed.
+					/* translators: %s: action being performed. */
 					__( 'You do not have permission to %s API keys for this user', 'easy-digital-downloads' ),
 					$process
 				),
@@ -2007,7 +2008,7 @@ class EDD_API {
 		} elseif ( ! current_user_can( 'manage_shop_settings' ) ) {
 			wp_die(
 				sprintf(
-					// translators: %s is the action being performed.
+					/* translators: %s: action being performed. */
 					__( 'You do not have permission to %s API keys for this user', 'easy-digital-downloads' ),
 					$process
 				),

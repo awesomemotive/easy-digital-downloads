@@ -2,23 +2,30 @@
 /**
  * Easy Digital Downloads Marketing Settings
  *
- * @package EDD
+ * @package     EDD
  * @subpackage  Settings
  * @copyright   Copyright (c) 2023, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since 3.1.4
+ * @since       3.1.4
  */
+
 namespace EDD\Admin\Settings\Tabs;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Marketing settings tab class.
+ *
+ * @since 3.1.4
+ */
 class Marketing extends Tab {
 
 	/**
 	 * Get the ID for this tab.
 	 *
 	 * @since 3.1.4
-	 * @return string
+	 *
+	 * @var string
 	 */
 	protected $id = 'marketing';
 
@@ -38,10 +45,10 @@ class Marketing extends Tab {
 					'type' => 'recapture',
 				),
 				'allow_multiple_discounts' => array(
-					'id'   => 'allow_multiple_discounts',
-					'name' => __( 'Multiple Discounts', 'easy-digital-downloads' ),
-					'desc' => __( 'Allow customers to use multiple discounts on the same purchase?', 'easy-digital-downloads' ),
-					'type' => 'checkbox',
+					'id'    => 'allow_multiple_discounts',
+					'name'  => __( 'Multiple Discounts', 'easy-digital-downloads' ),
+					'check' => __( 'Allow customers to use multiple discounts on the same purchase?', 'easy-digital-downloads' ),
+					'type'  => 'checkbox_toggle',
 				),
 			),
 		);

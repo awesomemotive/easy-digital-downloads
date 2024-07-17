@@ -7,8 +7,16 @@
  * @license   GPL2+
  * @since     3.1.1
  */
+
 namespace EDD\Telemetry;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+/**
+ * Class Integrations
+ *
+ * @since 3.1.1
+ */
 class Integrations {
 
 	/**
@@ -52,8 +60,8 @@ class Integrations {
 	 * Whether the integration should be included in the data.
 	 *
 	 * @since 3.1.1
-	 * @param string $basename
-	 * @param array $details
+	 * @param string $basename The plugin basename.
+	 * @param array $details The plugin details.
 	 * @return bool
 	 */
 	private function should_log_integration( $basename, $details ) {
@@ -68,8 +76,8 @@ class Integrations {
 	 * Whether the integration is an EDD or third party integration.
 	 *
 	 * @since 3.1.1
-	 * @param string $basename
-	 * @param array $details
+	 * @param string $basename The plugin basename.
+	 * @param array $details The plugin details.
 	 * @return bool
 	 */
 	private function is_core_integration( $basename, $details ) {

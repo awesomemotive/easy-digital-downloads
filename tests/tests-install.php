@@ -3,10 +3,7 @@ namespace EDD\Tests;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-/**
- * @group edd_activation
- */
-class Tests_Activation extends EDD_UnitTestCase {
+class Activation extends EDD_UnitTestCase {
 
 	/**
 	 * Test if the global settings are set and have settings pages.

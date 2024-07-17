@@ -24,7 +24,12 @@ $view_url = edd_get_admin_url(
 		<# if ( true === data.state.isAdding ) { #>
 		<button class="button-link delete">
 			<span class="dashicons dashicons-no"></span>
-			<span class="screen-reader-text"><?php printf( __( 'Remove %s', 'easy-digital-downloads' ), '{{{ data.type }}}' ); ?></span>
+			<span class="screen-reader-text">
+				<?php
+				/* translators: %s: Adjustment type (discount, fee, etc) */
+				printf( __( 'Remove %s', 'easy-digital-downloads' ), '{{{ data.type }}}' );
+				?>
+			</span>
 		</button>
 		<# } #>
 

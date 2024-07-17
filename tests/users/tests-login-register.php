@@ -6,7 +6,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 /**
  * @group edd_login_register
  */
-class Tests_Login_Register extends EDD_UnitTestCase {
+class LoginRegister extends EDD_UnitTestCase {
 
 	public function setup(): void {
 		parent::setUp();
@@ -359,5 +359,60 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 
 		// Clear errors for other test
 		edd_clear_errors();
+	}
+
+	public function test_edd_get_password_reset_link_with_invalid_user() {
+		$this->assertFalse( edd_get_password_reset_link( 'invalid_user' ) );
+	}
+
+	public function test_edd_get_password_reset_link_is_core_login_url() {
+		$user_id = $this->factory->user->create();
+		$this->assertStringContainsString( 'wp-login.php', edd_get_password_reset_link( get_userdata( $user_id ) ) );
+	}
+
+	public function test_edd_get_password_reset_link_uses_edd_login_uri() {
+		$login_page_id = wp_insert_post(
+			array(
+				'post_title'   => 'Login Page',
+				'post_status'  => 'publish',
+				'post_type'    => 'page',
+				'post_content' => '<!-- wp:edd/login /-->',
+			)
+		);
+		edd_update_option( 'login_page', $login_page_id );
+
+		$user_id = $this->factory->user->create();
+
+		$this->assertStringContainsString( get_permalink( $login_page_id ), edd_get_password_reset_link( get_userdata( $user_id ) ) );
+
+		edd_delete_option( 'login_page' );
+		wp_delete_post( $login_page_id );
+	}
+
+	public function test_edd_validate_password_reset_empty_has_errors() {
+		edd_validate_password_reset( array() );
+		$this->assertArrayHasKey( 'password_reset_failed', edd_get_errors() );
+	}
+
+	public function test_edd_validate_password_reset_user_login_has_errors() {
+		edd_validate_password_reset(
+			array(
+				'edd_resetpassword_nonce' => wp_create_nonce( 'edd-resetpassword-nonce' ),
+				'user_login'              => 'admin',
+				'rp_key'                  => 'key',
+			)
+		);
+		$this->assertArrayHasKey( 'password_reset_failed', edd_get_errors() );
+	}
+
+	public function test_edd_validate_password_reset_invalid_user_has_errors() {
+		edd_validate_password_reset(
+			array(
+				'edd_resetpassword_nonce' => wp_create_nonce( 'edd-resetpassword-nonce' ),
+				'user_login'              => 'fake_user',
+				'rp_key'                  => 'key',
+			)
+		);
+		$this->assertArrayHasKey( 'password_reset_unsuccessful', edd_get_errors() );
 	}
 }

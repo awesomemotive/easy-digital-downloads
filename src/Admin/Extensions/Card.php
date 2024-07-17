@@ -6,8 +6,15 @@
  * @subpackage Extensions
  * @copyright 2022 Easy Digital Downloads
  */
+
 namespace EDD\Admin\Extensions;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+/**
+ * Class Card
+ */
 class Card {
 	use Traits\Buttons;
 
@@ -61,6 +68,12 @@ class Card {
 	 */
 	private $version = false;
 
+	/**
+	 * Card constructor.
+	 *
+	 * @param \EDD\Admin\Extensions\ProductData $product The product data.
+	 * @param array                             $args    The arguments.
+	 */
 	public function __construct( ProductData $product, $args ) {
 		$this->product             = $product;
 		$this->inactive_parameters = $args['inactive_parameters'];
@@ -70,7 +83,10 @@ class Card {
 		$this->is_plugin_installed = $args['is_plugin_installed'];
 		$this->version             = $args['version'];
 
-		if ( ! empty( $this->product->style ) && 'installer' === $this->product->style ) {
+		$style = ! empty( $this->product->style ) ? $this->product->style : false;
+		if ( 'overlay' === $style ) {
+			$this->do_card_overlay();
+		} elseif ( 'installer' === $style ) {
 			$this->do_card_extension_installer();
 		} else {
 			$this->do_card_product_education();
@@ -135,6 +151,43 @@ class Card {
 	}
 
 	/**
+	 * Outputs the card with the overlay style markup.
+	 *
+	 * @since 3.3.0
+	 * @return void
+	 */
+	private function do_card_overlay() {
+		?>
+		<div
+			class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $this->get_card_classes() ) ) ); ?>"
+		>
+			<div class="edd-extension-manager__body">
+				<?php
+				$this->do_icon();
+				echo '<div class="edd-extension-manager__content">';
+					$this->do_title();
+					$this->do_description();
+				echo '</div>';
+				?>
+			</div>
+			<div class="edd-extension-manager__actions">
+				<?php
+				$this->do_installer_action();
+				$link = $this->get_product_link();
+				if ( $link ) {
+					printf(
+						'<a href="%s" class="button button-secondary" target="_blank" rel="noopener noreferrer">%s</a>',
+						esc_url( $link ),
+						esc_html__( 'Learn More', 'easy-digital-downloads' )
+					);
+				}
+				?>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Gets the settings link.
 	 *
 	 * @since 3.1.1
@@ -151,33 +204,56 @@ class Card {
 	 * @return void
 	 */
 	private function do_title( $link = false ) {
-		$title = ! empty( $this->product->heading ) ? $this->product->heading : $this->product->title;
-		$url   = false;
-		if ( $link && ! empty( $this->product->slug ) ) {
-			$url = edd_link_helper(
-				'https://easydigitaldownloads.com/downloads/' . esc_attr( $this->product->slug ),
-				array(
-					'utm_content' => esc_attr( $this->product->slug ),
-					'utm_medium'  => 'extensions-page',
-				),
-				false
-			);
-		}
 		?>
 		<h3 class="edd-extension-manager__title">
-			<?php
-			if ( $url ) {
-				printf(
-					'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
-					esc_url( $url ),
-					esc_html( $title )
-				);
-			} else {
-				echo esc_html( $title );
-			}
-			?>
+			<?php echo wp_kses_post( $this->get_title( $link ) ); ?>
 		</h3>
 		<?php
+	}
+
+	/**
+	 * Gets the title, possibly with a link, for the extension.
+	 *
+	 * @since 3.3.0
+	 * @param bool $link Whether the title should be linked.
+	 * @return string
+	 */
+	private function get_title( $link = false ) {
+		$title = ! empty( $this->product->heading ) ? $this->product->heading : $this->product->title;
+		$url   = false;
+		if ( $link ) {
+			$url = $this->get_product_link();
+		}
+		if ( $url ) {
+			return sprintf(
+				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+				esc_url( $url ),
+				esc_html( $title )
+			);
+		}
+
+		return esc_html( $title );
+	}
+
+	/**
+	 * Gets the product link.
+	 *
+	 * @since 3.3.0
+	 * @return string|false
+	 */
+	private function get_product_link() {
+		if ( empty( $this->product->slug ) ) {
+			return false;
+		}
+
+		return edd_link_helper(
+			'https://easydigitaldownloads.com/downloads/' . esc_attr( $this->product->slug ),
+			array(
+				'utm_content' => esc_attr( $this->product->slug ),
+				'utm_medium'  => 'extensions-page',
+			),
+			false
+		);
 	}
 
 	/**

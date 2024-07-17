@@ -888,11 +888,9 @@ function edd_stripe_setup_billing_address_fields() {
 			remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields', 10 );
 
 			break;
-
 	}
-
 }
-add_action( 'init', 'edd_stripe_setup_billing_address_fields', 9 );
+add_action( 'edd_purchase_form_before_cc_form', 'edd_stripe_setup_billing_address_fields', 9 );
 
 /**
  * Force zip code and country to be required when billing address display is zip only

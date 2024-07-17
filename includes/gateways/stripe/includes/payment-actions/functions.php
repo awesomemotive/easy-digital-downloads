@@ -102,7 +102,7 @@ function edd_stripe_maybe_refund_charge( $order_id, $refund_id, $all_refunded ) 
 	$refund = edd_get_order( $refund_id );
 	if ( empty( $refund->total ) ) {
 		edd_debug_log( sprintf(
-			'Stripe - Exiting refund for order #%d - refund total is empty.',
+			'Stripe - Exiting refund for order #%d: refund total is empty.',
 			$order_id
 		) );
 

@@ -10,6 +10,7 @@
 
 namespace EDD\Telemetry;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -56,15 +57,20 @@ class Settings {
 			}
 		}
 
+		$emails = $this->get_registered_emails();
+		if ( $emails ) {
+			$data = array_merge( $data, $emails );
+		}
+
 		return $data;
 	}
 
 	/**
 	 * Gets the id and value for an individual setting.
 	 *
-	 * @param string $tab_key
-	 * @param string $section_key
-	 * @param string $setting_key
+	 * @param string $tab_key The tab key.
+	 * @param string $section_key The section key.
+	 * @param string $setting_key The setting key.
 	 * @return mixed
 	 */
 	private function get_setting_value( $tab_key, $section_key, $setting_key ) {
@@ -100,7 +106,7 @@ class Settings {
 	 * Evaluates whether a setting can be included in the telemetry data.
 	 *
 	 * @since 3.1.1
-	 * @param array $setting
+	 * @param array $setting The setting definition.
 	 * @return bool
 	 */
 	private function can_include_setting( $setting ) {
@@ -196,7 +202,7 @@ class Settings {
 	 * Whether an array of settings should be populated, due to the setting type.
 	 *
 	 * @since 3.1.1
-	 * @param array $setting
+	 * @param array $setting The setting definition.
 	 * @return bool
 	 */
 	private function should_populate_array( $setting ) {
@@ -222,5 +228,24 @@ class Settings {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Gets the array of registered email templates.
+	 *
+	 * @since 3.3.0
+	 * @return array
+	 */
+	private function get_registered_emails() {
+		$registry = edd_get_email_registry();
+		$data     = array();
+		foreach ( $registry->get_emails() as $key => $email_class ) {
+			$email = $registry->make_email_class( $email_class, array( $key ) );
+			if ( $email->can_view ) {
+				$data[ "email_template_{$email->email_id}" ] = (int) (bool) $email->status;
+			}
+		}
+
+		return $data;
 	}
 }

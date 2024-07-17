@@ -1,7 +1,15 @@
 <div class="postbox edd-export-customers">
 	<h2 class="hndle"><span><?php esc_html_e( 'Export Customers', 'easy-digital-downloads' ); ?></span></h2>
 	<div class="inside">
-		<p><?php printf( esc_html__( 'Download a CSV of customers. Select a taxonomy to see all the customers who purchased %s in that taxonomy.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></p>
+		<p>
+			<?php
+			printf(
+				/* translators: %s: Downloads plural label */
+				esc_html__( 'Download a CSV of customers. Select a taxonomy to see all the customers who purchased %s in that taxonomy.', 'easy-digital-downloads' ),
+				edd_get_label_plural( true )
+			);
+			?>
+		</p>
 		<form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
 			<?php
 			global $wpdb;
@@ -49,7 +57,7 @@
 					'name'        => 'download',
 					'id'          => 'edd_customer_export_download',
 					'chosen'      => true,
-					/* translators: the plural post type label */
+					/* translators: %s: Download plural label */
 					'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 				)
 			);

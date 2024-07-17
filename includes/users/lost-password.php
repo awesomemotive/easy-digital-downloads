@@ -18,7 +18,7 @@ add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
  *
  * @since 2.10
  * @param object \WP_Error $errors
- * @param string $redirect
+ * @param string           $redirect
  * @return void
  */
 function edd_login_register_error_message( $errors, $redirect ) {
@@ -72,7 +72,7 @@ function edd_get_lostpassword_url() {
 /**
  * Gets the password reset link for a user.
  *
- * @param WP_User $user
+ * @param WP_User $user The user object.
  * @return false|string
  */
 function edd_get_password_reset_link( $user ) {
@@ -80,13 +80,17 @@ function edd_get_password_reset_link( $user ) {
 	if ( is_wp_error( $key ) ) {
 		return false;
 	}
+	$args = array(
+		'action' => 'rp',
+		'key'    => rawurlencode( $key ),
+		'login'  => rawurlencode( $user->user_login ),
+	);
+	if ( edd_get_login_page_uri() ) {
+		$args['edd_action'] = 'password_reset_requested';
+	}
 
 	return add_query_arg(
-		array(
-			'action' => 'rp',
-			'key'    => rawurlencode( $key ),
-			'login'  => rawurlencode( $user->user_login ),
-		),
+		$args,
 		wp_login_url()
 	);
 }
@@ -164,44 +168,28 @@ function edd_retrieve_password_message( $message, $key, $user_login, $user_data 
 	if ( empty( $_POST['edd_lost-password_nonce'] ) || ! wp_verify_nonce( $_POST['edd_lost-password_nonce'], 'edd-lost-password-nonce' ) ) {
 		return $message;
 	}
-	if ( is_multisite() ) {
-		$site_name = get_network()->site_name;
-	} else {
-		/*
-		 * The blogname option is escaped with esc_html on the way into the database
-		 * in sanitize_option. We want to reverse this for the plain text arena of emails.
-		 */
-		$site_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+	$email = edd_get_email( 'password_reset' );
+	if ( ! $email ) {
+		return $message;
 	}
-	$message = __( 'Someone has requested a password reset for the following account:', 'easy-digital-downloads' ) . "\r\n\r\n";
-	/* translators: %s: Site name. */
-	$message .= sprintf( __( 'Site Name: %s', 'easy-digital-downloads' ), $site_name ) . "\r\n\r\n";
-	/* translators: %s: User login. */
-	$message .= sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_login ) . "\r\n\r\n";
-	$message .= __( 'If this was a mistake, ignore this email and nothing will happen.', 'easy-digital-downloads' ) . "\r\n\r\n";
-	$message .= __( 'To reset your password, visit the following address:', 'easy-digital-downloads' ) . "\r\n\r\n";
-	$message .= add_query_arg(
-		array(
-			'edd_action' => 'password_reset_requested',
-			'key'        => $key,
-			'login'      => rawurlencode( $user_login ),
+	$message = $email->content;
+	if ( false === strpos( $message, '{password_reset_link}' ) ) {
+		$message = $email->get_template()->get_default( 'content' );
+	}
+	$message = str_replace(
+		'{password_reset_link}',
+		add_query_arg(
+			array(
+				'edd_action' => 'password_reset_requested',
+				'key'        => $key,
+				'login'      => rawurlencode( $user_login ),
+			),
+			esc_url_raw( $_POST['edd_redirect'] )
 		),
-		esc_url_raw( $_POST['edd_redirect'] )
+		$message
 	);
-	$message .= "\r\n\r\n";
 
-	if ( ! is_user_logged_in() ) {
-		$requester_ip = $_SERVER['REMOTE_ADDR'];
-		if ( $requester_ip ) {
-			$message .= sprintf(
-				/* translators: %s: IP address of password reset requester. */
-				__( 'This password reset request originated from the IP address %s.', 'easy-digital-downloads' ),
-				$requester_ip
-			) . "\r\n";
-		}
-	}
-
-	return $message;
+	return edd_do_email_tags( $message, $user_data->ID, $user_data, 'user' );
 }
 
 add_action( 'edd_password_reset_requested', 'edd_validate_password_reset_link' );
@@ -269,11 +257,12 @@ function edd_validate_password_reset( $data ) {
 		edd_set_error( 'password_reset_failed', __( 'Invalid password reset request.', 'easy-digital-downloads' ) );
 	}
 
+	$user = false;
 	if ( empty( $data['rp_key'] ) ) {
 		edd_set_error( 'password_reset_failed', __( 'Invalid password reset request.', 'easy-digital-downloads' ) );
+	} elseif ( ! empty( $data['user_login'] ) ) {
+		$user = check_password_reset_key( $data['rp_key'], $data['user_login'] );
 	}
-
-	$user = check_password_reset_key( $data['rp_key'], $data['user_login'] );
 
 	if ( ! $user || is_wp_error( $user ) ) {
 		edd_set_error( 'password_reset_failed', __( 'Invalid password reset request.', 'easy-digital-downloads' ) );
@@ -281,7 +270,7 @@ function edd_validate_password_reset( $data ) {
 
 	// Check if password is one or all empty spaces.
 	if ( ! empty( $data['pass1'] ) ) {
-		$_POST['pass1'] = trim( $data['pass1'] );
+		$data['pass1'] = trim( $data['pass1'] );
 	}
 
 	if ( empty( $data['pass1'] ) ) {
@@ -293,19 +282,23 @@ function edd_validate_password_reset( $data ) {
 		edd_set_error( 'password_reset_mismatch', __( 'The passwords do not match.', 'easy-digital-downloads' ) );
 	}
 
-	$user = get_user_by( 'login', $data['user_login'] );
+	$user = !empty( $data['user_login'] ) ? get_user_by( 'login', $data['user_login'] ) : false;
 	if ( false === $user ) {
 		edd_set_error( 'password_reset_unsuccessful', __( 'Your password could not be reset.', 'easy-digital-downloads' ) );
 	}
 
-	$redirect = remove_query_arg( 'action', $data['edd_redirect'] );
+	if ( empty( $data['edd_redirect'] ) ) {
+		$redirect = edd_get_login_page_uri() ?: home_url(); // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+		edd_set_error( 'password_reset_unsuccessful', __( 'Your password could not be reset.', 'easy-digital-downloads' ) );
+	} else {
+		$redirect = remove_query_arg( 'action', $data['edd_redirect'] );
+	}
 
 	// If no errors were registered then reset the password.
 	$errors = edd_get_errors();
 	if ( empty( $errors ) ) {
 		reset_password( $user, $data['pass1'] );
 		edd_set_success( 'password_reset_successful', __( 'Your password was successfully reset.', 'easy-digital-downloads' ) );
-		// todo: check if this is correct
 		setcookie( 'wp-resetpass-' . COOKIEHASH, ' ', time() - YEAR_IN_SECONDS, wp_make_link_relative( wp_get_referer() ), COOKIE_DOMAIN, is_ssl(), true );
 		edd_redirect( $redirect );
 	}

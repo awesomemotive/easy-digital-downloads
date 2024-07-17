@@ -200,7 +200,7 @@ class Messages {
 		if ( empty( $url ) && $this->is_third_party_license() ) {
 			if ( $this->expiration ) {
 				return sprintf(
-					/* translators: 1. license expiration date. */
+					/* translators: 1: license expiration date. */
 					__( 'Your license key expired on %1$s. Please renew your license key.', 'easy-digital-downloads' ),
 					edd_date_i18n( $this->expiration )
 				);
@@ -224,7 +224,7 @@ class Messages {
 		}
 		if ( $this->expiration ) {
 			return sprintf(
-				/* translators: 1. license expiration date; 2. opening link tag; 3. closing link tag. */
+				/* translators: 1: license expiration date, 2: opening link tag, 3: closing link tag. */
 				__( 'Your license key expired on %1$s. Please %2$srenew your license key%3$s.', 'easy-digital-downloads' ),
 				edd_date_i18n( $this->expiration ),
 				'<a href="' . $url . '" target="_blank">',
@@ -233,7 +233,7 @@ class Messages {
 		}
 
 		return sprintf(
-			/* translators: 1. opening link tag; 2. closing link tag. */
+			/* translators: 1: opening link tag, 2: closing link tag. */
 			__( 'Your license key has expired. Please %1$srenew your license key%2$s.', 'easy-digital-downloads' ),
 			'<a href="' . $url . '" target="_blank">',
 			'</a>'
@@ -263,7 +263,7 @@ class Messages {
 		}
 
 		return sprintf(
-			/* translators: 1. opening link tag; 2. closing link tag. */
+			/* translators: 1: opening link tag, 2: closing link tag. */
 			__( 'Your license key has been disabled. Please %1$scontact support%2$s for more information.', 'easy-digital-downloads' ),
 			'<a href="' . $url . '" target="_blank">',
 			'</a>'
@@ -293,7 +293,7 @@ class Messages {
 		}
 
 		return sprintf(
-			/* translators: 1. opening link tag; 2 closing link tag. */
+			/* translators: 1: opening link tag; 2 closing link tag. */
 			__( 'Your license key has reached its activation limit. %1$sView possible upgrades%2$s now.', 'easy-digital-downloads' ),
 			'<a href="' . $url . '">',
 			'</a>'
@@ -324,7 +324,7 @@ class Messages {
 
 		if ( empty( $this->license_data['name'] ) ) {
 			return sprintf(
-				/* translators: 1. opening link tag; 2. closing link tag. */
+				/* translators: 1: opening link tag, 2: closing link tag. */
 				__( 'Your license key is not active for this URL. Please %1$svisit your account page%2$s to manage your license keys.', 'easy-digital-downloads' ),
 				'<a href="' . $url . '" target="_blank">',
 				'</a>'
@@ -332,7 +332,7 @@ class Messages {
 		}
 
 		return sprintf(
-			/* translators: 1. the extension name; 2. opening link tag; 3. closing link tag. */
+			/* translators: 1: the extension name, 2: opening link tag, 3: closing link tag. */
 			__( 'Your %1$s license key is not active for this URL. Please %2$svisit your account page%3$s to manage your license keys.', 'easy-digital-downloads' ),
 			esc_html( $this->license_data['name'] ),
 			'<a href="' . $url . '" target="_blank">',
@@ -360,7 +360,7 @@ class Messages {
 		);
 
 		return sprintf(
-			/* translators: 1. opening link tag; 2. closing link tag. */
+			/* translators: 1: opening link tag, 2: closing link tag. */
 			__( 'Invalid license. Please %1$svisit your account page%2$s and verify it.', 'easy-digital-downloads' ),
 			'<a href="' . $url . '" target="_blank">',
 			'</a>'

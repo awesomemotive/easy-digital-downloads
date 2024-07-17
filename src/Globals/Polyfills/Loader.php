@@ -37,5 +37,8 @@ class Loader implements SubscriberInterface {
 	 */
 	public function include_polyfills() {
 		require_once __DIR__ . '/WordPress.php';
+		if ( 'auto' === edd_get_option( 'logged_in_only' ) ) {
+			require_once __DIR__ . '/AutoRegister.php';
+		}
 	}
 }

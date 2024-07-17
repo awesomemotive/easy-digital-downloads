@@ -318,10 +318,11 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 		// Set a transient to ensure this symlink is not deleted before it can be used
 		set_transient( md5( $file_name ), '1', 30 );
 
-		// Schedule deletion of the symlink
-		if ( ! wp_next_scheduled( 'edd_cleanup_file_symlinks' ) ) {
-			wp_schedule_single_event( current_time( 'timestamp' ) + 60, 'edd_cleanup_file_symlinks' );
-		}
+		// Schedule deletion of the symlink.
+		\EDD\Cron\Events\SingleEvent::add(
+			time() + ( 60 * 60 ),
+			'edd_cleanup_file_symlinks'
+		);
 
 		// Make sure the symlink doesn't already exist before we create it
 		if( ! file_exists( $path ) ) {

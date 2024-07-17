@@ -27,7 +27,6 @@ class Version {
 	public static function version_message( $version ) {
 		$edd_name = edd_is_pro() ? 'EDD (Pro)' : 'EDD';
 
-		// translators: %1$s - EDD plugin name, %2$s - EDD version.
 		$version .= sprintf( ' | %1$s %2$s', $edd_name, EDD_VERSION );
 
 		return $version;

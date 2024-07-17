@@ -36,7 +36,10 @@ if ( true === edd_is_add_order_page() ) :
 		class="button button-secondary"
 		autofocus
 	>
-		<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
+		<?php
+		/* translators: %s: Download singular label */
+		echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) );
+		?>
 	</button>
 <?php elseif ( 'refunded' !== $order->status && edd_get_order_total( $order->id ) > 0 ) : ?>
 	<div class="edd-order-overview-actions__locked">

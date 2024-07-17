@@ -487,7 +487,7 @@ function edds_get_stripe_customer( $stripe_customer_id, $customer_args ) {
 			if ( isset( $customer->deleted ) && $customer->deleted ) { // If customer was deleted in Stripe, try to create a new one.
 				$customer = edds_create_stripe_customer( $customer_args );
 			}
-		} catch ( \Stripe\Error\Base $e ) {
+		} catch ( \EDD\Vendor\Stripe\Exception\ApiErrorException $e ) {
 			$error_code = $e->getStripeCode();
 			if ( 'resource_missing' === $error_code ) { // If Stripe returns an error of 'resource_missing', try to create a new Stripe Customer.
 				try {
@@ -548,5 +548,4 @@ function edds_create_stripe_customer( $customer_args = array() ) {
 	}
 
 	return $customer;
-
 }

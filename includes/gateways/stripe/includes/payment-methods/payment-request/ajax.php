@@ -53,17 +53,20 @@ function edds_prb_ajax_process_checkout() {
 		edd_empty_cart();
 
 		// Add individual item.
-		edd_add_to_cart( $download_id, array(
-			'quantity' => $quantity,
-			'price_id' => $price_id,
-		) );
+		edd_add_to_cart(
+			$download_id,
+			array(
+				'quantity' => $quantity,
+				'price_id' => $price_id,
+			)
+		);
 
 		// Refilter guest checkout when the item is added to the cart dynamically.
 		// This is a duplicate of EDD_Recurring_Gateway::require_login().
 		if ( defined( 'EDD_RECURRING_VERSION' ) ) {
 			$cart_items    = edd_get_cart_contents();
 			$has_recurring = false;
-			$auto_register = class_exists( 'EDD_Auto_Register' );
+			$auto_register = EDD\Checkout\AutoRegister::is_enabled();
 
 			if ( ! empty( $cart_items ) ) {
 				foreach ( $cart_items as $item ) {
@@ -132,7 +135,7 @@ function edds_prb_ajax_process_checkout() {
 				$form_data
 			);
 
-		// Single-download data.
+			// Single-download data.
 		} else {
 			// Fake checkout form data.
 			$_POST['form_data'] = http_build_query(
@@ -166,9 +169,11 @@ function edds_prb_ajax_process_checkout() {
 		// This will send a JSON response.
 		_edds_process_purchase_form();
 	} catch ( \Exception $e ) {
-		wp_send_json_error( array(
-			'message' => esc_html( $e->getMessage() ),
-		) );
+		wp_send_json_error(
+			array(
+				'message' => esc_html( $e->getMessage() ),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_prb_ajax_process_checkout', 'edds_prb_ajax_process_checkout' );
@@ -238,7 +243,7 @@ function edds_prb_ajax_get_options() {
 
 		$data = edds_prb_get_download_data( $download_id, $price_id, $quantity );
 
-	// Handle cart eventually?
+		// Handle cart eventually?
 	} else {
 		$data = edds_prb_get_cart_data();
 	}

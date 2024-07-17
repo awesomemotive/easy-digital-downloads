@@ -494,6 +494,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		<?php if ( ! empty( $customer ) ) : ?>
 
 			<span id="edd-customer-filter">
+				<?php /* translators: %d: customer ID */ ?>
 				<?php printf( esc_html__( 'Customer ID: %d', 'easy-digital-downloads' ), $customer ); ?>
 			</span>
 

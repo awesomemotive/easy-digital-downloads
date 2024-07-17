@@ -1224,4 +1224,20 @@ class Discounts extends EDD_UnitTestCase {
 		$this->assertEmpty( $discount->start_date );
 		$this->assertEmpty( $discount->end_date );
 	}
+
+	public function test_discount_with_expiration_keeps_expiration_after_update() {
+		// Create a discount with an expiration date.
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount();
+		edd_update_adjustment(
+			$discount_id,
+			array(
+				'status' => 'inactive',
+			)
+		);
+		$discount = edd_get_discount( $discount_id );
+
+		$this->assertNotEmpty( $discount->end_date );
+		$this->assertEquals( 'inactive', $discount->status );
+		$this->assertNotEmpty( $discount->start_date );
+	}
 }

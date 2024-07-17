@@ -139,8 +139,10 @@ function edd_run_install( $site_id = false ) {
 	// API version
 	update_option( 'edd_default_api_version', 'v' . EDD()->api->get_version() );
 
-	// Check for PHP Session support, and enable if available
-	EDD()->session->use_php_sessions();
+	// Set session handling to database by default.
+	if ( ! get_option( 'edd_session_handling', false ) ) {
+		update_option( 'edd_session_handling', 'db' );
+	}
 
 	// Maybe set all upgrades as complete (only on fresh installation)
 	edd_set_all_upgrades_complete();
@@ -370,30 +372,6 @@ function edd_new_blog_created( $blog ) {
 	restore_current_blog();
 }
 add_action( 'wp_initialize_site', 'edd_new_blog_created' );
-
-/**
- * Drop our custom tables when a mu site is deleted
- *
- * @deprecated 3.0   Handled by WP_DB_Table
- * @since      2.5
- * @param      array $tables  The tables to drop
- * @param      int   $blog_id The Blog ID being deleted
- * @return     array          The tables to drop
- */
-function edd_wpmu_drop_tables( $tables, $blog_id ) {
-
-	switch_to_blog( $blog_id );
-	$customers_db     = new EDD_DB_Customers();
-	$customer_meta_db = new EDD_DB_Customer_Meta();
-	if ( $customers_db->installed() ) {
-		$tables[] = $customers_db->table_name;
-		$tables[] = $customer_meta_db->table_name;
-	}
-	restore_current_blog();
-
-	return $tables;
-
-}
 
 /**
  * Post-installation

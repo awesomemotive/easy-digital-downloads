@@ -11,9 +11,17 @@
 
 namespace EDD\Admin\Onboarding;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+/**
+ * Ajax class.
+ *
+ * @since 3.1.1
+ */
 class Ajax implements \EDD\EventManagement\SubscriberInterface {
 
-		/**
+	/**
 	 * Returns an array of events that this subscriber wants to listen to.
 	 *
 	 * @since 3.1.1
@@ -27,6 +35,7 @@ class Ajax implements \EDD\EventManagement\SubscriberInterface {
 			'wp_ajax_edd_onboarding_completed'          => 'ajax_onboarding_completed',
 			'wp_ajax_edd_onboarding_skipped'            => 'ajax_onboarding_skipped',
 			'wp_ajax_edds_stripe_connect_account_info'  => array( 'disconnect_url', 5 ),
+			'wp_ajax_edd_onboarding_save_email'         => 'save_email',
 		);
 	}
 
@@ -46,6 +55,10 @@ class Ajax implements \EDD\EventManagement\SubscriberInterface {
 
 		if ( isset( $_REQUEST['telemetry_toggle'] ) ) {
 			edd_update_option( 'allow_tracking', filter_var( $_REQUEST['telemetry_toggle'], FILTER_VALIDATE_BOOLEAN ) );
+		}
+
+		if ( isset( $_REQUEST['auto_register'] ) ) {
+			edd_update_option( 'logged_in_only', 'auto' );
 		}
 
 		update_option( 'edd_tracking_notice', true );
@@ -178,7 +191,7 @@ class Ajax implements \EDD\EventManagement\SubscriberInterface {
 	public function disconnect_url() {
 		add_filter(
 			'edds_stripe_connect_disconnect_url',
-			function( $url ) {
+			function ( $url ) {
 				if ( empty( $_REQUEST['onboardingWizard'] ) ) {
 					return $url;
 				}
@@ -193,6 +206,41 @@ class Ajax implements \EDD\EventManagement\SubscriberInterface {
 			},
 			15
 		);
+	}
+
+	public function save_email() {
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd_onboarding_wizard' ) ) {
+			exit;
+		}
+
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			exit;
+		}
+
+		$settings = array(
+			'email_logo',
+			'from_name',
+			'from_email',
+		);
+
+		foreach ( $settings as $setting ) {
+			$value = isset( $_POST[ $setting ] ) ? sanitize_text_field( wp_unslash( $_POST[ $setting ] ) ) : '';
+			edd_update_option( $setting, $value );
+		}
+
+		if ( isset( $_POST['content'] ) ) {
+			$email = edd_get_email( 'order_receipt' );
+			if ( $email ) {
+				edd_update_email(
+					$email->id,
+					array(
+						'content' => wp_kses_post( wp_unslash( $_POST['content'] ) ),
+					)
+				);
+			}
+		}
+
+		exit;
 	}
 
 	/**
