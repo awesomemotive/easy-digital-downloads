@@ -319,15 +319,15 @@ function edd_purchase_form_validate_fields() {
 
 	// Start an array to collect valid data.
 	$valid_data = array(
-		'gateway'          => edd_purchase_form_validate_gateway(),   // Gateway fallback.
-		'discount'         => edd_purchase_form_validate_discounts(), // Set default discount.
-		'need_new_user'    => false,     // New user flag.
-		'need_user_login'  => false,     // Login user flag.
-		'logged_user_data' => array(),   // Logged user collected data.
-		'new_user_data'    => array(),   // New user collected data.
-		'login_user_data'  => array(),   // Login user collected data.
-		'guest_user_data'  => array(),   // Guest user collected data.
-		'cc_info'          => edd_purchase_form_validate_cc(),    // Credit card info.
+		'gateway'         => edd_purchase_form_validate_gateway(),   // Gateway fallback.
+		'discount'        => edd_purchase_form_validate_discounts(), // Set default discount.
+		'need_new_user'   => false,     // New user flag.
+		'need_user_login' => false,     // Login user flag.
+		'logged_in_user'  => array(),   // Logged user collected data.
+		'new_user_data'   => array(),   // New user collected data.
+		'login_user_data' => array(),   // Login user collected data.
+		'guest_user_data' => array(),   // Guest user collected data.
+		'cc_info'         => edd_purchase_form_validate_cc(),    // Credit card info.
 	);
 
 	// Validate agree to terms.

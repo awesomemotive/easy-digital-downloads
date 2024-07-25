@@ -6,8 +6,8 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable Tag: 3.3.1
-License: GNU Version 2 or Any Later Version
+Stable Tag: 3.3.2
+License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
 
@@ -224,6 +224,15 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout - Default Theme
 
 == Changelog ==
+= 3.3.2 =
+* Checkout: Improved session handling with Stripe payments.
+* Settings: Improved pass validation that could cause deactivation on certain server configurations.
+* Admin: Improve responsiveness of EDD admin menus.
+* Sessions: Set default session handling to database on new installs.
+* i18n: Ensure that some block strings are able to be translated.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.3.1 =
 * Settings: Fixed a PHP warning related to a store's region when managing settings.
 * Settings: Ensure that the selected currency option is a registered currency.
@@ -232,8 +241,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Emails: The Admin Sale Notification wasn't sending to multiple recipients.
 * Checkout: Improved checkout page detection compatibility for extensions.
 * Onboarding: Improved the onboarding wizard styles and content.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.0 =
 * Important: This release requires WordPress 6.0 or higher.

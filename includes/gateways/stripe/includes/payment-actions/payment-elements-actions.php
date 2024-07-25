@@ -442,9 +442,8 @@ function edds_create_and_complete_order() {
 			);
 		}
 
-		$purchase_data = edd_get_purchase_session();
-
-		if ( false === $purchase_data ) {
+		$purchase_data = EDD\Sessions\PurchaseData::get( false );
+		if ( empty( $purchase_data ) ) {
 			throw new \EDD_Stripe_Gateway_Exception(
 				esc_html__(
 					'Error 1004: An error occurred, but your payment may have gone through. Please contact the site administrator.',
@@ -482,7 +481,6 @@ function edds_create_and_complete_order() {
 
 		$order_data = array(
 			'price'        => $purchase_data['price'],
-			'date'         => $purchase_data['date'],
 			'user_email'   => $purchase_data['user_email'],
 			'purchase_key' => $purchase_data['purchase_key'],
 			'currency'     => edd_get_currency(),

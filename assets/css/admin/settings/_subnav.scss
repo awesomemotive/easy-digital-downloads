@@ -3,7 +3,11 @@
 	display: flex;
 	justify-content: flex-start;
 	gap: 4px;
-	overflow-x: auto;
+	flex-wrap: wrap;
+
+	@media screen and (max-width: $break-medium) {
+		justify-content: center;
+	}
 
 	&__wrapper {
 		margin: 16px 0;
@@ -19,6 +23,7 @@
 			display: block;
 			padding: 6px 14px;
 			text-decoration: none;
+			white-space: nowrap;
 
 			&:active,
 			&:focus {
