@@ -17,18 +17,18 @@ wp_enqueue_style( 'dashicons' );
 			<button type="button" class="button button-secondary wp-hide-pw edd-has-js" data-toggle="0" aria-label="<?php esc_attr_e( 'Hide password', 'easy-digital-downloads' ); ?>">
 				<span class="dashicons dashicons-hidden" aria-hidden="true"></span>
 			</button>
-			<div id="pass-strength-result" class="edd-has-js" aria-live="polite"><?php esc_html_e( 'Strength indicator' ); ?></div>
+			<div id="pass-strength-result" class="edd-has-js" aria-live="polite"><?php esc_html_e( 'Strength indicator', 'easy-digital-downloads' ); ?></div>
 		</div>
 	</div>
 	<div class="edd-blocks-form__group edd-blocks-form__group-pw-weak pw-weak">
 		<div class="edd-blocks-form__control">
 			<input type="checkbox" name="pw_weak" id="pw-weak" class="pw-checkbox" />
-			<label for="pw-weak"><?php esc_html_e( 'Confirm use of weak password' ); ?></label>
+			<label for="pw-weak"><?php esc_html_e( 'Confirm use of weak password', 'easy-digital-downloads' ); ?></label>
 		</div>
 	</div>
 
 	<div class="edd-blocks-form__group edd-blocks-form__group-pass2 user-pass2-wrap">
-		<label for="pass2"><?php esc_html_e( 'Confirm new password' ); ?></label>
+		<label for="pass2"><?php esc_html_e( 'Confirm new password', 'easy-digital-downloads' ); ?></label>
 		<div class="edd-blocks-form__control">
 			<input type="password" name="pass2" id="pass2" class="input" size="20" value="" autocomplete="new-password" />
 		</div>
@@ -40,7 +40,7 @@ wp_enqueue_style( 'dashicons' );
 		<input type="hidden" name="edd_redirect" value="<?php echo esc_url( remove_query_arg( 'action', edd_get_current_page_url() ) ); ?>"/>
 		<input type="hidden" name="edd_resetpassword_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd-reset-password-nonce' ) ); ?>"/>
 		<input type="hidden" name="edd_action" value="user_reset_password"/>
-		<button type="button" class="button wp-generate-pw edd-has-js edd-button-secondary"><?php esc_html_e( 'Generate Password' ); ?></button>
-		<input type="submit" id="wp-submit" class="<?php echo esc_attr( implode( ' ', EDD\Blocks\Functions\get_button_classes() ) ); ?>" value="<?php esc_attr_e( 'Save Password' ); ?>" />
+		<button type="button" class="button wp-generate-pw edd-has-js edd-button-secondary"><?php esc_html_e( 'Generate Password', 'easy-digital-downloads' ); ?></button>
+		<input type="submit" id="wp-submit" class="<?php echo esc_attr( implode( ' ', EDD\Blocks\Functions\get_button_classes() ) ); ?>" value="<?php esc_attr_e( 'Save Password', 'easy-digital-downloads' ); ?>" />
 	</div>
 </form>

@@ -96,25 +96,25 @@ function edd_run_install( $site_id = false ) {
 		return;
 	}
 
-	// Not switched
+	// Not switched.
 	$switched = false;
 
-	// Maybe switch to a site
+	// Maybe switch to a site.
 	if ( ! empty( $site_id ) ) {
 		switch_to_blog( $site_id );
 		$switched = true;
 	}
 
-	// Setup the components (customers, discounts, logs, etc...)
+	// Setup the components (customers, discounts, logs, etc...).
 	edd_setup_components();
 
-	// Setup the Downloads Custom Post Type
+	// Setup the Downloads Custom Post Type.
 	edd_setup_edd_post_types();
 
-	// Setup the Download Taxonomies
+	// Setup the Download Taxonomies.
 	edd_setup_download_taxonomies();
 
-	// Clear the permalinks
+	// Clear the permalinks.
 	flush_rewrite_rules( false );
 
 	// Install the default pages and settings.
@@ -124,7 +124,7 @@ function edd_run_install( $site_id = false ) {
 	// Set the activation date.
 	edd_get_activation_date();
 
-	// Create wp-content/uploads/edd/ folder and the .htaccess file
+	// Create wp-content/uploads/edd/ folder and the .htaccess file.
 	if ( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
 	}
@@ -132,25 +132,23 @@ function edd_run_install( $site_id = false ) {
 		edd_create_protection_files( true );
 	}
 
-	// Create EDD shop roles
+	// Create EDD shop roles.
 	EDD()->roles->add_roles();
 	EDD()->roles->add_caps();
 
-	// API version
+	// API version.
 	update_option( 'edd_default_api_version', 'v' . EDD()->api->get_version() );
 
 	// Set session handling to database by default.
-	if ( ! get_option( 'edd_session_handling', false ) ) {
-		update_option( 'edd_session_handling', 'db' );
-	}
+	update_option( 'edd_session_handling', 'db' );
 
-	// Maybe set all upgrades as complete (only on fresh installation)
+	// Maybe set all upgrades as complete (only on fresh installation).
 	edd_set_all_upgrades_complete();
 
-	// Update the database version (must be at end, but before site restore)
+	// Update the database version (must be at end, but before site restore).
 	edd_do_automatic_upgrades();
 
-	// Maybe switch back
+	// Maybe switch back.
 	if ( true === $switched ) {
 		restore_current_blog();
 	}

@@ -74,6 +74,7 @@ function edds_register_gateway( $gateways ) {
 /**
  * Process refund in Stripe, in EDD 2.x
  * For EDD 3.0, see `edd_stripe_maybe_refund_charge()`
+ *
  * @see edd_stripe_maybe_refund_charge()
  *
  * @access      public
@@ -98,7 +99,7 @@ function edd_stripe_process_refund( $payment_id, $new_status, $old_status ) {
  * @deprecated  2.9.0 - Deprecated as 2.9.0 requires EDD 3.1+
  * @return      void
  */
-function edd_stripe_admin_js( $payment_id  = 0 ) {
+function edd_stripe_admin_js( $payment_id = 0 ) {
 	/**
 	 * Since Stripe 2.9.0 requires EDD 3.1, we no longer need to load this.
 	 */
@@ -321,4 +322,107 @@ function edds_sanitize_statement_descriptor( $statement_descriptor ) {
  */
 function edds_stripe_event_listener() {
 	_edd_deprecated_function( __FUNCTION__, '3.3.0', 'EDD\Gateways\Stripe\Webhooks\Listener' );
+}
+
+/**
+ * A rewritten version of `edds_get_purchase_form_user()` that can be run during AJAX.
+ *
+ * @since 2.7.0
+ * @deprecated 3.3.2 Use `edd_get_purchase_form_user()` instead.
+ *
+ * @return array
+ */
+function _edds_get_purchase_form_user( $valid_data = array() ) {
+	// Initialize user.
+	$user = false;
+
+	if ( is_user_logged_in() ) {
+
+		// Set the valid user as the logged in collected data.
+		$user = $valid_data['logged_in_user'];
+
+	} elseif ( true === $valid_data['need_new_user'] || true === $valid_data['need_user_login'] ) {
+
+		// Ensure $_COOKIE is available without a new HTTP request.
+		add_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
+
+		// New user registration.
+		if ( true === $valid_data['need_new_user'] ) {
+
+			// Set user.
+			$user = $valid_data['new_user_data'];
+
+			// Register and login new user.
+			$user['user_id'] = edd_register_and_login_new_user( $user );
+
+		} elseif ( true === $valid_data['need_user_login'] ) { // User login.
+
+			/*
+			 * The login form is now processed in the edd_process_purchase_login() function.
+			 * This is still here for backwards compatibility.
+			 * This also allows the old login process to still work if a user removes the
+			 * checkout login submit button.
+			 *
+			 * This also ensures that the customer is logged in correctly if they click "Purchase"
+			 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
+			 */
+
+			// Set user.
+			$user = $valid_data['login_user_data'];
+
+			// Login user.
+			if ( empty( $user ) || -1 === $user['user_id'] ) {
+				edd_set_error( 'invalid_user', __( 'The user information is invalid', 'easy-digital-downloads' ) );
+				return false;
+			} else {
+				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
+			}
+		}
+
+		remove_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
+	}
+
+	// Check guest checkout.
+	if ( false === $user && false === edd_no_guest_checkout() ) {
+		// Set user.
+		$user = $valid_data['guest_user_data'];
+	}
+
+	// Verify we have an user.
+	if ( false === $user || empty( $user ) ) {
+		return false;
+	}
+
+	// Get user first name.
+	if ( ! isset( $user['user_first'] ) || strlen( trim( $user['user_first'] ) ) < 1 ) {
+		$user['user_first'] = isset( $_POST['edd_first'] ) ? strip_tags( trim( $_POST['edd_first'] ) ) : '';
+	}
+
+	// Get user last name.
+	if ( ! isset( $user['user_last'] ) || strlen( trim( $user['user_last'] ) ) < 1 ) {
+		$user['user_last'] = isset( $_POST['edd_last'] ) ? strip_tags( trim( $_POST['edd_last'] ) ) : '';
+	}
+
+	// Get the user's billing address details.
+	$user['address']            = array();
+	$user['address']['line1']   = ! empty( $_POST['card_address'] ) ? sanitize_text_field( $_POST['card_address'] ) : '';
+	$user['address']['line2']   = ! empty( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) : '';
+	$user['address']['city']    = ! empty( $_POST['card_city'] ) ? sanitize_text_field( $_POST['card_city'] ) : '';
+	$user['address']['state']   = ! empty( $_POST['card_state'] ) ? sanitize_text_field( $_POST['card_state'] ) : '';
+	$user['address']['country'] = ! empty( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : '';
+	$user['address']['zip']     = ! empty( $_POST['card_zip'] ) ? sanitize_text_field( $_POST['card_zip'] ) : '';
+
+	if ( empty( $user['address']['country'] ) ) {
+		$user['address'] = false; // Country will always be set if address fields are present.
+	}
+
+	if ( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $user['address'] ) ) {
+		$customer = edd_get_customer_by( 'user_id', $user['user_id'] );
+		if ( $customer ) {
+			edd_maybe_add_customer_address( $customer->id, $user['address'] );
+		}
+	}
+
+	// Return valid user.
+	return $user;
 }
