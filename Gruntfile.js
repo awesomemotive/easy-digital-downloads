@@ -37,6 +37,10 @@ module.exports = function ( grunt ) {
 					'**/*.php', // Include all files
 					'!node_modules/**', // Exclude node_modules/
 					'!build/**', // Exclude build/
+					'!vendor/**', // Exclude vendor/
+					'!tests/**', // Exclude tests/
+					'!includes/blocks/node_modules/**', // Exclude includes/blocks/node_modules/
+					'!includes/libraries/**', // Exclude includes/libraries/
 				],
 				expand: true,
 			},

@@ -67,108 +67,6 @@ function _edds_fake_process_purchase_step() {
 }
 
 /**
- * A rewritten version of `edds_get_purchase_form_user()` that can be run during AJAX.
- *
- * @since 2.7.0
- *
- * @return array
- */
-function _edds_get_purchase_form_user( $valid_data = array() ) {
-	// Initialize user.
-	$user = false;
-
-	if ( is_user_logged_in() && isset( $valid_data['logged_in_user'] ) ) {
-
-		// Set the valid user as the logged in collected data.
-		$user = $valid_data['logged_in_user'];
-
-	} elseif ( true === $valid_data['need_new_user'] || true === $valid_data['need_user_login'] ) {
-
-		// Ensure $_COOKIE is available without a new HTTP request.
-		add_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
-
-		// New user registration.
-		if ( true === $valid_data['need_new_user'] ) {
-
-			// Set user.
-			$user = $valid_data['new_user_data'];
-
-			// Register and login new user.
-			$user['user_id'] = edd_register_and_login_new_user( $user );
-
-		} elseif ( true === $valid_data['need_user_login'] ) { // User login.
-
-			/*
-			 * The login form is now processed in the edd_process_purchase_login() function.
-			 * This is still here for backwards compatibility.
-			 * This also allows the old login process to still work if a user removes the
-			 * checkout login submit button.
-			 *
-			 * This also ensures that the customer is logged in correctly if they click "Purchase"
-			 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
-			 */
-
-			// Set user.
-			$user = $valid_data['login_user_data'];
-
-			// Login user.
-			if ( empty( $user ) || -1 === $user['user_id'] ) {
-				edd_set_error( 'invalid_user', __( 'The user information is invalid', 'easy-digital-downloads' ) );
-				return false;
-			} else {
-				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
-			}
-		}
-
-		remove_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
-	}
-
-	// Check guest checkout.
-	if ( false === $user && false === edd_no_guest_checkout() ) {
-		// Set user.
-		$user = $valid_data['guest_user_data'];
-	}
-
-	// Verify we have an user.
-	if ( false === $user || empty( $user ) ) {
-		return false;
-	}
-
-	// Get user first name.
-	if ( ! isset( $user['user_first'] ) || strlen( trim( $user['user_first'] ) ) < 1 ) {
-		$user['user_first'] = isset( $_POST["edd_first"] ) ? strip_tags( trim( $_POST["edd_first"] ) ) : '';
-	}
-
-	// Get user last name.
-	if ( ! isset( $user['user_last'] ) || strlen( trim( $user['user_last'] ) ) < 1 ) {
-		$user['user_last'] = isset( $_POST["edd_last"] ) ? strip_tags( trim( $_POST["edd_last"] ) ) : '';
-	}
-
-	// Get the user's billing address details.
-	$user['address'] = array();
-	$user['address']['line1']   = ! empty( $_POST['card_address']    ) ? sanitize_text_field( $_POST['card_address']    ) : '';
-	$user['address']['line2']   = ! empty( $_POST['card_address_2']  ) ? sanitize_text_field( $_POST['card_address_2']  ) : '';
-	$user['address']['city']    = ! empty( $_POST['card_city']       ) ? sanitize_text_field( $_POST['card_city']       ) : '';
-	$user['address']['state']   = ! empty( $_POST['card_state']      ) ? sanitize_text_field( $_POST['card_state']      ) : '';
-	$user['address']['country'] = ! empty( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : '';
-	$user['address']['zip']     = ! empty( $_POST['card_zip']        ) ? sanitize_text_field( $_POST['card_zip']        ) : '';
-
-	if ( empty( $user['address']['country'] ) ) {
-		$user['address'] = false; // Country will always be set if address fields are present.
-	}
-
-	if ( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $user['address'] ) ) {
-		$customer = edd_get_customer_by( 'user_id', $user['user_id'] );
-		if ( $customer ) {
-			edd_maybe_add_customer_address( $customer->id, $user['address'] );
-		}
-	}
-
-	// Return valid user.
-	return $user;
-}
-
-/**
  * A rewritten version of `edd_process_purchase_form()` that allows for full AJAX processing.
  *
  * `edd_process_purchase_form()` is run up until:
@@ -184,6 +82,7 @@ function _edds_get_purchase_form_user( $valid_data = array() ) {
  * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/process-purchase.php
  *
  * @since 2.7.0
+ * @throws \Exception If an error occurs during processing.
  */
 function _edds_process_purchase_form() {
 	// Unset any Errors so they aren't left over form other attempts.
@@ -206,9 +105,7 @@ function _edds_process_purchase_form() {
 		 * Reset the tax rate so that it will be recalculated correctly.
 		 * This is only needed on EDD 3.0+.
 		 */
-		if ( method_exists( EDD()->cart, 'set_tax_rate' ) ) {
-			EDD()->cart->set_tax_rate( null );
-		}
+		EDD()->cart->set_tax_rate( null );
 
 		/**
 		 * @since unknown
@@ -217,7 +114,7 @@ function _edds_process_purchase_form() {
 		do_action( 'edd_pre_process_purchase' );
 
 		// Make sure the cart isn't empty.
-		if ( empty( EDD()->cart->contents ) && empty( EDD()->cart->fees) ) {
+		if ( empty( EDD()->cart->contents ) && empty( EDD()->cart->fees ) ) {
 			throw new \Exception( esc_html__( 'Your cart is empty.', 'easy-digital-downloads' ) );
 		}
 
@@ -239,142 +136,92 @@ function _edds_process_purchase_form() {
 		do_action( 'edd_checkout_error_checks', $valid_data, $_POST );
 
 		// Validate the user.
-		$user = _edds_get_purchase_form_user( $valid_data );
+		$user = edd_get_purchase_form_user( $valid_data, false );
 
-		// Let extensions validate fields after user is logged in if user has used login/registration form
+		// Let extensions validate fields after user is logged in if user has used login/registration form.
 		do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
 
-		if ( false === $valid_data || edd_get_errors() || ! $user ) {
+		if ( false === $valid_data || ! $user || edd_get_errors() ) {
 			$errors = edd_get_errors();
-
 			if ( is_array( $errors ) ) {
 				throw new \Exception( current( $errors ) );
 			}
+
+			throw new \Exception( esc_html__( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
 		}
 
-		// Setup user information.
-		$user_info = array(
-			'id'         => $user['user_id'],
-			'email'      => $user['user_email'],
-			'first_name' => $user['user_first'],
-			'last_name'  => $user['user_last'],
-			'discount'   => $valid_data['discount'],
-			'address'    => ! empty( $user['address'] ) ? $user['address'] : array(),
-		);
-
 		// Update a customer record if they have added/updated information.
-		$customer = new EDD_Customer( $user_info['email'] );
+		$customer = new EDD_Customer( $user['user_email'] );
 
-		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+		$name = $user['user_first'] . ' ' . $user['user_last'];
 
-		if ( empty( $customer->name ) || $name != $customer->name ) {
+		if ( empty( $customer->name ) || $name !== $customer->name ) {
 			$update_data = array(
-				'name' => $name
+				'name' => $name,
 			);
 
 			// Update the customer's name and update the user record too.
 			$customer->update( $update_data );
 
-			wp_update_user( array(
-				'ID'         => get_current_user_id(),
-				'first_name' => $user_info['first_name'],
-				'last_name'  => $user_info['last_name']
-			) );
-		}
-
-		// Update the customer's address if different to what's in the database
-		$address = wp_parse_args( $user_info['address'], array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'state'   => '',
-			'country' => '',
-			'zip'     => '',
-		) );
-
-		$address = array(
-			'address'     => $address['line1'],
-			'address2'    => $address['line2'],
-			'city'        => $address['city'],
-			'region'      => $address['state'],
-			'country'     => $address['country'],
-			'postal_code' => $address['zip'],
-		);
-
-		if ( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $address ) ) {
-			$customer = edd_get_customer_by( 'user_id', $user['user_id'] );
-			if ( $customer ) {
-				edd_maybe_add_customer_address( $customer->id, $user['address'] );
+			if ( is_user_logged_in() ) {
+				wp_update_user(
+					array(
+						'ID'         => get_current_user_id(),
+						'first_name' => $user['user_first'],
+						'last_name'  => $user['user_last'],
+					)
+				);
 			}
 		}
 
-		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+		// Update the customer's address if different to what's in the database.
+		if ( ! empty( $user['address'] ) ) {
+			$address = wp_parse_args(
+				$user['address'],
+				array(
+					'line1'   => '',
+					'line2'   => '',
+					'city'    => '',
+					'state'   => '',
+					'country' => '',
+					'zip'     => '',
+				)
+			);
 
-		$card_country = isset( $valid_data['cc_info']['card_country'] ) ? $valid_data['cc_info']['card_country'] : false;
-		$card_state   = isset( $valid_data['cc_info']['card_state'] )   ? $valid_data['cc_info']['card_state']   : false;
-		$card_zip     = isset( $valid_data['cc_info']['card_zip'] )     ? $valid_data['cc_info']['card_zip']     : false;
+			$address = array(
+				'address'     => $address['line1'],
+				'address2'    => $address['line2'],
+				'city'        => $address['city'],
+				'region'      => $address['state'],
+				'country'     => $address['country'],
+				'postal_code' => $address['zip'],
+			);
 
-		// Set up the unique purchase key. If we are resuming a payment, we'll overwrite this with the existing key.
-		$purchase_key     = strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
-		$existing_payment = EDD()->session->get( 'edd_resume_payment' );
-
-		if ( ! empty( $existing_payment ) ) {
-			$payment = new EDD_Payment( $existing_payment );
-
-			if( $payment->is_recoverable() && ! empty( $payment->key ) ) {
-				$purchase_key = $payment->key;
+			if ( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $address ) ) {
+				$customer = edd_get_customer_by( 'user_id', $user['user_id'] );
+				if ( $customer ) {
+					edd_maybe_add_customer_address( $customer->id, $user['address'] );
+				}
 			}
 		}
 
-		// Setup purchase information.
-		$purchase_data = array(
-			'downloads'    => edd_get_cart_contents(),
-			'fees'         => edd_get_cart_fees(),        // Any arbitrary fees that have been added to the cart
-			'subtotal'     => edd_get_cart_subtotal(),    // Amount before taxes and discounts
-			'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
-			'tax'          => edd_get_cart_tax(),               // Taxed amount
-			'tax_rate'     => edd_use_taxes() ? edd_get_cart_tax_rate( $card_country, $card_state, $card_zip ) : 0, // Tax rate
-			'price'        => edd_get_cart_total(),    // Amount after taxes
-			'purchase_key' => $purchase_key,
-			'user_email'   => $user['user_email'],
-			'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-			'user_info'    => stripslashes_deep( $user_info ),
-			'post_data'    => $_POST,
-			'cart_details' => edd_get_cart_content_details(),
-			'gateway'      => $valid_data['gateway'],
-			'card_info'    => $valid_data['cc_info']
-		);
+		EDD\Sessions\PurchaseData::set( $valid_data, $user );
 
-		// Add the user data for hooks
-		$valid_data['user'] = $user;
-
-		// Allow themes and plugins to hook before the gateway
-		do_action( 'edd_checkout_before_gateway', $_POST, $user_info, $valid_data );
-
-		// Store payment method data.
-		$purchase_data['gateway_nonce'] = wp_create_nonce( 'edd-gateway' );
-
-		// Allow the purchase data to be modified before it is sent to the gateway
-		$purchase_data = apply_filters(
-			'edd_purchase_data_before_gateway',
-			$purchase_data,
-			$valid_data
-		);
-
-		// Setup the data we're storing in the purchase session
-		$session_data = $purchase_data;
-
-		// Used for showing download links to non logged-in users after purchase, and for other plugins needing purchase data.
-		edd_set_purchase_session( $session_data );
+		$purchase_data = edd_get_purchase_session();
+		if ( empty( $purchase_data ) ) {
+			throw new \Exception( esc_html__( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
+		}
 
 		/**
 		 * Allows further processing...
 		 */
-		do_action( 'edd_gateway_' . $purchase_data['gateway'], $purchase_data );
-	} catch( \Exception $e ) {
-		return wp_send_json_error( array(
-			'message' => $e->getMessage(),
-		) );
+		do_action( 'edd_gateway_' . $valid_data['gateway'], $purchase_data );
+	} catch ( \Exception $e ) {
+		return wp_send_json_error(
+			array(
+				'message' => $e->getMessage(),
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_edds_process_purchase_form', '_edds_process_purchase_form' );

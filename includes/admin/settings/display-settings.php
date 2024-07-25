@@ -70,7 +70,7 @@ function edd_license_settings_help_text() {
 				printf(
 					wp_kses_post(
 						/* translators: 1: opening anchor tag, 2: closing anchor tag */
-						__( 'Have a pass? You\'re ready to set up EDD (Pro). %1$sActivate Your Pass%2$s' )
+						__( 'Have a pass? You\'re ready to set up EDD (Pro). %1$sActivate Your Pass%2$s', 'easy-digital-downloads' )
 					),
 					'<a href="' . esc_url( $url ) . '" class="button button-primary">',
 					'</a>'
