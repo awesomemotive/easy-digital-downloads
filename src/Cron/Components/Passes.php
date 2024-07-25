@@ -62,7 +62,6 @@ class Passes extends Component {
 			'item_id'    => $license->item_id,
 			'item_name'  => $license->item_name,
 			'pass_id'    => $license->item_id,
-			'url'        => network_home_url(),
 		);
 
 		$api_handler  = new \EDD\Licensing\API();

@@ -2,9 +2,6 @@
 	&__wrapper {
 		background-color: $white;
 		box-shadow: inset 0 -3px $edd-very-light-gray;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
 		margin: 0 0 10px -20px;
 		padding: 0 20px;
 		position: sticky;
@@ -12,7 +9,8 @@
 		z-index: 30;
 
 		@media screen and (max-width: $break-medium) {
-			top: 0;
+			top: auto;
+			position: relative;
 		}
 	}
 
@@ -20,9 +18,13 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: left;
+		flex-wrap: wrap;
 		margin: 0;
 		gap: 8px;
-		overflow-x: auto;
+
+		@media screen and (max-width: $break-medium) {
+			justify-content: center;
+		}
 
 		li {
 			display: flex;
@@ -51,6 +53,7 @@
 			font-weight: 600;
 			font-size: 16px;
 			text-align: center;
+			white-space: nowrap;
 		}
 	}
 }

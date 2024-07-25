@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "3.3.1",
+	"version": "3.3.2",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"author": "Easy Digital Downloads",
@@ -62,7 +62,7 @@
 		"webpack-rtl-plugin": "^2.0.0"
 	},
 	"scripts": {
-		"build": "wp-scripts build --webpack-no-externals && npm run build-blocks && grunt prep && npm run translate && grunt copy && grunt replace:pro && npm run translate-lite",
+		"build": "wp-scripts build --webpack-no-externals && npm run build-blocks && npm run translate && grunt copy && grunt replace:pro && npm run translate-lite",
 		"build-blocks": "cd includes/blocks && npm run build && cd ../../",
 		"dev": "cross-env NODE_ENV=production wp-scripts start --webpack-no-externals",
 		"check-engines": "wp-scripts check-engines",
@@ -71,7 +71,7 @@
 		"lint:js": "wp-scripts lint-js ./assets/js/ ",
 		"lint:js--fix": "wp-scripts lint-js ./assets/js --fix",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
-		"package-plugin": "npm run build && grunt compress",
+		"package": "npm run build && grunt compress",
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
 		"blocks": "bash bin/update-blocks.sh && grunt replace:blocks",
 		"translate": "grunt clean && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets,tests,libraries --ignore-domain",
