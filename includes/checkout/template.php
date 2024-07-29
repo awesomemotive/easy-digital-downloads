@@ -575,6 +575,7 @@ add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
  */
 function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways( true );
+    $gateways = apply_filters('filter_available_gateways_for_payment', $gateways);
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
 	<?php if( edd_is_ajax_disabled() ) { ?>
