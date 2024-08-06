@@ -10,7 +10,17 @@
  * @since     3.0
  */
 
-final class EDD_Requirements_Check {
+namespace EDD;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+/**
+ * Requirements Check
+ *
+ * @since 3.0
+ */
+final class RequirementsCheck {
 
 	/**
 	 * Plugin file
@@ -37,7 +47,7 @@ final class EDD_Requirements_Check {
 	 */
 	private $requirements = array(
 
-		// PHP
+		// PHP.
 		'php' => array(
 			'minimum' => '7.4',
 			'name'    => 'PHP',
@@ -47,7 +57,7 @@ final class EDD_Requirements_Check {
 			'met'     => false,
 		),
 
-		// WordPress
+		// WordPress.
 		'wp'  => array(
 			'minimum' => '6.0',
 			'name'    => 'WordPress',
@@ -65,11 +75,11 @@ final class EDD_Requirements_Check {
 	 */
 	public function __construct() {
 
-		// Setup file & base
+		// Setup file & base.
 		$this->file = EDD_PLUGIN_FILE;
 		$this->base = EDD_PLUGIN_BASE;
 
-		// Load or quit
+		// Load or quit.
 		$this->met()
 			? $this->load()
 			: $this->quit();
@@ -95,21 +105,19 @@ final class EDD_Requirements_Check {
 	 */
 	private function load() {
 
-		require_once dirname( $this->file ) . '/vendor/autoload.php';
-
-		// Maybe include the bundled bootstrapper
+		// Maybe include the bundled bootstrapper.
 		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
 			require_once dirname( $this->file ) . '/includes/class-easy-digital-downloads.php';
 		}
 
-		// Maybe hook-in the bootstrapper
+		// Maybe hook-in the bootstrapper.
 		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
 
 			// Bootstrap to plugins_loaded before priority 10 to make sure
 			// add-ons are loaded after us.
 			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 4 );
 
-			// Register the activation hook
+			// Register the activation hook.
 			register_activation_hook( $this->file, array( $this, 'install' ) );
 		}
 	}
@@ -156,7 +164,7 @@ final class EDD_Requirements_Check {
 	 * Plugin specific text to quickly explain what's wrong.
 	 *
 	 * @since 3.0
-	 * @return string
+	 * @return void
 	 */
 	private function unmet_requirements_text() {
 		esc_html_e( 'This plugin is not fully active.', 'easy-digital-downloads' );
@@ -256,11 +264,11 @@ final class EDD_Requirements_Check {
 	 * Plugin agnostic method to output specific unmet requirement information
 	 *
 	 * @since 3.0
-	 * @param array $requirement
+	 * @param array $requirement The requirement parameters.
 	 */
 	private function unmet_requirement_description( $requirement = array() ) {
 
-		// Requirement exists, but is out of date
+		// Requirement exists, but is out of date.
 		if ( ! empty( $requirement['exists'] ) ) {
 			$text = sprintf(
 				$this->unmet_requirements_description_text(),
@@ -269,7 +277,7 @@ final class EDD_Requirements_Check {
 				'<strong>' . esc_html( $requirement['current'] ) . '</strong>'
 			);
 
-			// Requirement could not be found
+			// Requirement could not be found.
 		} else {
 			$text = sprintf(
 				$this->unmet_requirements_missing_text(),
@@ -278,7 +286,7 @@ final class EDD_Requirements_Check {
 			);
 		}
 
-		// Output the description
+		// Output the description.
 		echo '<p>' . $text . '</p>';
 	}
 
@@ -289,7 +297,7 @@ final class EDD_Requirements_Check {
 	 */
 	public function admin_head() {
 
-		// Get the requirements row name
+		// Get the requirements row name.
 		$name = $this->unmet_requirements_name();
 		?>
 
@@ -326,18 +334,18 @@ final class EDD_Requirements_Check {
 	 * Plugin agnostic method to add the "Requirements" link to row actions
 	 *
 	 * @since 3.0
-	 * @param array $links
+	 * @param array $links The existing plugin row links.
 	 * @return array
 	 */
 	public function plugin_row_links( $links = array() ) {
 
-		// Add the Requirements link
+		// Add the Requirements link.
 		$links['requirements'] =
 			'<a href="' . esc_url( $this->unmet_requirements_url() ) . '" aria-label="' . esc_attr( $this->unmet_requirements_label() ) . '">'
 			. esc_html( $this->unmet_requirements_link() )
 			. '</a>';
 
-		// Return links with Requirements link
+		// Return links with Requirements link.
 		return $links;
 	}
 
@@ -350,29 +358,29 @@ final class EDD_Requirements_Check {
 	 */
 	private function check() {
 
-		// Loop through requirements
+		// Loop through requirements.
 		foreach ( $this->requirements as $dependency => $properties ) {
 
 			// Which dependency are we checking?
 			switch ( $dependency ) {
 
-				// PHP
+				// PHP.
 				case 'php':
 					$version = phpversion();
 					break;
 
-				// WP
+				// WP.
 				case 'wp':
 					$version = get_bloginfo( 'version' );
 					break;
 
-				// Unknown
+				// Unknown.
 				default:
 					$version = false;
 					break;
 			}
 
-			// Merge to original array
+			// Merge to original array.
 			if ( ! empty( $version ) ) {
 				$this->requirements[ $dependency ] = array_merge(
 					$this->requirements[ $dependency ],
@@ -395,12 +403,12 @@ final class EDD_Requirements_Check {
 	 */
 	public function met() {
 
-		// Run the check
+		// Run the check.
 		$this->check();
 
 		$to_meet = wp_list_pluck( $this->requirements, 'met' );
 
-		// Look for unmet dependencies, and exit if so
+		// Look for unmet dependencies, and exit if so.
 		foreach ( $to_meet as $met ) {
 			if ( empty( $met ) ) {
 				return false;
@@ -422,7 +430,6 @@ final class EDD_Requirements_Check {
 	 * @return void
 	 */
 	public function load_textdomain() {
-
 		/*
 		 * Due to the introduction of language packs through translate.wordpress.org,
 		 * loading our textdomain is complex.
@@ -464,28 +471,28 @@ final class EDD_Requirements_Check {
 		$locale = apply_filters( 'plugin_locale', get_user_locale(), 'easy-digital-downloads' );
 		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
-		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
+		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo.
 		$mofile_global1 = WP_LANG_DIR . "/edd/easy-digital-downloads-{$locale}.mo";
 
-		// Look for wp-content/languages/edd/edd-{lang}_{country}.mo
+		// Look for wp-content/languages/edd/edd-{lang}_{country}.mo.
 		$mofile_global2 = WP_LANG_DIR . "/edd/edd-{$locale}.mo";
 
-		// Look in wp-content/languages/plugins/easy-digital-downloads
+		// Look in wp-content/languages/plugins/easy-digital-downloads.
 		$mofile_global3 = WP_LANG_DIR . "/plugins/easy-digital-downloads/{$mofile}";
 
-		// Try to load from first global location
+		// Try to load from first global location.
 		if ( file_exists( $mofile_global1 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
 
-			// Try to load from next global location
+			// Try to load from next global location.
 		} elseif ( file_exists( $mofile_global2 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
 
-			// Try to load from next global location
+			// Try to load from next global location.
 		} elseif ( file_exists( $mofile_global3 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
 
-			// Load the default language files
+			// Load the default language files.
 		} else {
 			load_plugin_textdomain( 'easy-digital-downloads', false, $edd_lang_dir );
 		}
@@ -499,12 +506,12 @@ final class EDD_Requirements_Check {
 	 */
 	public function load_old_textdomain( $mofile, $textdomain ) {
 
-		// Fallback for old text domain
+		// Fallback for old text domain.
 		if ( ( 'easy-digital-downloads' === $textdomain ) && ! file_exists( $mofile ) ) {
 			$mofile = dirname( $mofile ) . DIRECTORY_SEPARATOR . str_replace( $textdomain, 'edd', basename( $mofile ) );
 		}
 
-		// Return (possibly overridden) mofile
+		// Return (possibly overridden) mofile.
 		return $mofile;
 	}
 }

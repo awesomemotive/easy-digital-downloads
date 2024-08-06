@@ -110,6 +110,13 @@ class_alias( \EDD\Emails\Templates\Previews\Data::class, '\\EDD\\Emails\\Templat
 class_alias( \EDD\Orders\Refunds\Validator::class, 'EDD\Orders\Refund_Validator' );
 
 /**
+ * Class Alias for the `EDD\RequirementsCheck` class.
+ *
+ * @deprecated 3.3.3
+ */
+class_alias( \EDD\RequirementsCheck::class, 'EDD_Requirements_Check' );
+
+/**
  * Fully Deprecated Classes
  *
  * These classes are fully deprecated and are no longer used internally. There are no aliases for them, and their original class

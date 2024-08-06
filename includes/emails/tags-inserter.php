@@ -27,6 +27,9 @@ function edd_email_tags_inserter_get_registered_emails() {
 
 	unset( $emails['main'] );
 	unset( $emails['templates'] );
+	unset( $emails['purchase_receipts'] );
+	unset( $emails['sale_notifications'] );
+	unset( $emails['email_summaries'] );
 
 	return array_keys( $emails );
 }
@@ -43,7 +46,7 @@ function edd_email_tags_inserter_register() {
 		add_action( 'edd_settings_tab_top_emails_' . $email, 'edd_email_tags_inserter_media_button' );
 	}
 }
-add_action( 'admin_menu', 'edd_email_tags_inserter_register' );
+add_action( 'load-download_page_edd-settings', 'edd_email_tags_inserter_register' );
 
 /**
  * Wait until `media_buttons` action is called.

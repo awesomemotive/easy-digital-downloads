@@ -236,7 +236,7 @@ function edd_ajax_add_to_cart() {
 		);
 
 		$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
-		$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
+		$items .= edd_get_cart_item_template( $key, $item, true );
 	}
 
 	$return = array(

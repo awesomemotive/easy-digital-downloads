@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,75 +18,34 @@ defined( 'ABSPATH' ) || exit;
  * Looks to see if the specified setting exists, returns default if not
  *
  * @since 1.8.4
- * @global $edd_options Array of all the EDD Options
+ * @since 3.3.3 Passes through to EDD\Settings\Setting::get() to help with future proofing.
+ *
+ * @param string $key The setting to look for.
+ * @param mixed  $default_value Value to return if the setting is not found.
  * @return mixed
  */
-function edd_get_option( $key = '', $default = false ) {
-	global $edd_options;
-
-	$value = $default;
-
-	if ( isset( $edd_options[ $key ] ) ) {
-		if ( is_numeric( $edd_options[ $key ] ) ) {
-			$value = $edd_options[ $key ];
-		} else {
-			$value = ! empty( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
-		}
-	}
-
-	$value = apply_filters( 'edd_get_option', $value, $key, $default );
-
-	return apply_filters( 'edd_get_option_' . $key, $value, $key, $default );
+function edd_get_option( $key = '', $default_value = false ) {
+	return EDD\Settings\Setting::get( $key, $default_value );
 }
 
 /**
  * Update an option
  *
  * Updates an edd setting value in both the db and the global variable.
- * Warning: Passing in an empty, false or null string value will remove
+ * Warning: Passing in an empty string, false or null value will remove
  *          the key from the edd_options array.
  *
+ * Note: A numeric empty value will not remove the key.
+ *
  * @since 2.3
+ * @since 3.3.3 Passes through to EDD\Settings\Setting::update() to help with future proofing.
  *
- * @param string          $key         The Key to update
- * @param string|bool|int $value       The value to set the key to
- *
- * @global                $edd_options Array of all the EDD Options
+ * @param string          $key   The Key to update.
+ * @param string|bool|int $value The value to set the key to.
  * @return boolean True if updated, false if not.
  */
 function edd_update_option( $key = '', $value = false ) {
-	global $edd_options;
-
-	// If no key, exit
-	if ( empty( $key ) ) {
-		return false;
-	}
-
-	if ( empty( $value ) ) {
-		$remove_option = edd_delete_option( $key );
-
-		return $remove_option;
-	}
-
-	// First let's grab the current settings
-	$options = get_option( 'edd_settings' );
-	if ( empty( $options ) ) {
-		$options = array();
-	}
-
-	// Let's let devs alter that value coming in
-	$value = apply_filters( 'edd_update_option', $value, $key );
-
-	// Next let's try to update the value
-	$options[ $key ] = $value;
-	$did_update      = update_option( 'edd_settings', $options );
-
-	// If it updated, let's update the global variable
-	if ( $did_update ) {
-		$edd_options[ $key ] = $value;
-	}
-
-	return $did_update;
+	return EDD\Settings\Setting::update( $key, $value );
 }
 
 /**
@@ -95,43 +54,13 @@ function edd_update_option( $key = '', $value = false ) {
  * Removes an edd setting value in both the db and the global variable.
  *
  * @since 2.3
+ * @since 3.3.3 Passes through to EDD\Settings\Setting::delete() to help with future proofing.
  *
- * @param string $key         The Key to delete
- *
- * @global       $edd_options Array of all the EDD Options
+ * @param string $key The Key to delete.
  * @return boolean True if removed, false if not.
  */
 function edd_delete_option( $key = '' ) {
-	global $edd_options;
-
-	// If no key, exit
-	if ( empty( $key ) ) {
-		return false;
-	}
-
-	// First let's grab the current settings
-	$options = get_option( 'edd_settings' );
-
-	// Next let's try to update the value
-	if ( isset( $options[ $key ] ) ) {
-
-		unset( $options[ $key ] );
-
-	}
-
-	// Remove this option from the global EDD settings to the array_merge in edd_settings_sanitize() doesn't re-add it.
-	if ( isset( $edd_options[ $key ] ) ) {
-		unset( $edd_options[ $key ] );
-	}
-
-	$did_update = update_option( 'edd_settings', $options );
-
-	// If it updated, let's update the global variable
-	if ( $did_update ) {
-		$edd_options = $options;
-	}
-
-	return $did_update;
+	return EDD\Settings\Setting::delete( $key );
 }
 
 /**
@@ -285,7 +214,7 @@ function edd_get_registered_settings() {
 	static $edd_settings = null;
 
 	// Only build settings if not already built.
-	if ( null === $edd_settings ) {
+	if ( null === $edd_settings && class_exists( '\\EDD\\Admin\\Settings\\Register' ) ) {
 		$settings     = new EDD\Admin\Settings\Register();
 		$edd_settings = $settings->get();
 	}
@@ -310,7 +239,7 @@ function edd_get_registered_settings() {
 function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
 
-	// Default values
+	// Default values.
 	$referrer      = '';
 	$setting_types = edd_get_registered_settings_types();
 	$doing_section = ! empty( $_POST['_wp_http_referer'] );
@@ -320,7 +249,7 @@ function edd_settings_sanitize( $input = array() ) {
 
 	if ( true === $doing_section ) {
 
-		// Pull out the tab and section
+		// Pull out the tab and section.
 		parse_str( $_POST['_wp_http_referer'], $referrer );
 		$tab     = ! empty( $referrer['tab']     ) ? sanitize_key( $referrer['tab']     ) : 'general';
 		$section = ! empty( $referrer['section'] ) ? sanitize_key( $referrer['section'] ) : 'main';
@@ -329,19 +258,34 @@ function edd_settings_sanitize( $input = array() ) {
 			$tab = sanitize_text_field( $_POST['edd_tab_override'] );
 		}
 
-		// Maybe override the tab section
+		// Maybe override the tab section.
 		if ( ! empty( $_POST['edd_section_override'] ) ) {
 			$section = sanitize_text_field( $_POST['edd_section_override'] );
 		}
 
-		// Get setting types for this section
+		// Get setting types for this section.
 		$setting_types = edd_get_registered_settings_types( $tab, $section );
 
-		// Run a general sanitization for the tab for special fields (like taxes)
+		// Run a general sanitization for the tab for special fields (like taxes).
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
-		// Run a general sanitization for the section so custom tabs with sub-sections can save special data
+		// If we have a class for this tab, use it to sanitize the input.
+		// Normalize the tab name to be a class name.
+		$tab_class = EDD\Utils\Convert::snake_to_camel( $tab );
+		$tab_class = 'EDD\\Admin\\Settings\\Sanitize\\Tabs\\' . $tab_class;
+		if ( class_exists( $tab_class ) ) {
+			$input = $tab_class::sanitize( $input );
+		}
+
+		// Run a general sanitization for the section so custom tabs with sub-sections can save special data.
 		$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
+
+		// If we have a class for this section, use it to sanitize the input.
+		// Normalize the section name to be a class name.
+		$section_class = $tab_class . '\\' . EDD\Utils\Convert::snake_to_camel( $section );
+		if ( class_exists( $section_class ) ) {
+			$input = $section_class::sanitize( $input );
+		}
 	}
 
 	// Remove non setting types and merge settings together
@@ -360,6 +304,12 @@ function edd_settings_sanitize( $input = array() ) {
 		if ( array_key_exists( $key, $output ) ) {
 			$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $output[ $key ], $key );
 			$output[ $key ] = apply_filters( 'edd_settings_sanitize', $output[ $key ], $key );
+
+			// See if we have a setting specific sanitization class for this type.
+			$type_class = 'EDD\\Settings\\Sanitize\\Types\\' . EDD\Utils\Convert::snake_to_camel( $type );
+			if ( class_exists( $type_class ) ) {
+				$output[ $key ] = $type_class::sanitize( $output[ $key ], $key );
+			}
 		}
 
 		if ( true === $doing_section ) {
@@ -468,8 +418,8 @@ function edd_get_registered_setting_details( $filtered_tab = '', $filtered_secti
 	$settings        = edd_get_registered_settings();
 	$setting_details = array();
 
-	if ( isset( $settings[ $filtered_tab ][ $filtered_section][ $setting_key ] ) ) {
-		$setting_details = $settings[ $filtered_tab ][ $filtered_section][ $setting_key ];
+	if ( isset( $settings[ $filtered_tab ][ $filtered_section ][ $setting_key ] ) ) {
+		$setting_details = $settings[ $filtered_tab ][ $filtered_section ][ $setting_key ];
 	}
 
 	return $setting_details;
@@ -483,184 +433,29 @@ function edd_get_registered_setting_details( $filtered_tab = '', $filtered_secti
  * @return array
  */
 function edd_get_non_setting_types() {
-	return apply_filters( 'edd_non_setting_types', array(
-		'header',
-		'descriptive_text',
-		'hook',
-	) );
+	return apply_filters(
+		'edd_non_setting_types',
+		array(
+			'header',
+			'descriptive_text',
+			'hook',
+		)
+	);
 }
-
-/**
- * Misc File Download Settings Sanitization
- *
- * @since 2.5
- *
- * @param array $input The value inputted in the field
- *
- * @return string $input Sanitized value
- */
-function edd_settings_sanitize_misc_file_downloads( $input ) {
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return $input;
-	}
-
-	if ( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
-		// Force the .htaccess files to be updated if the Download method was changed.
-		edd_create_protection_files( true, $input['download_method'] );
-	}
-
-	return $input;
-}
-
-add_filter( 'edd_settings_misc-file_downloads_sanitize', 'edd_settings_sanitize_misc_file_downloads' );
-
-/**
- * Misc Accounting Settings Sanitization
- *
- * @since 2.5
- *
- * @param array $input The value inputted in the field
- *
- * @return array $input Sanitized value
- */
-function edd_settings_sanitize_misc_accounting( $input ) {
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return $input;
-	}
-
-	return $input;
-}
-
-/**
- * Taxes Settings Sanitization
- *
- * Adds a settings error (for the updated message)
- * This also saves the tax rates table
- *
- * @since 1.6
- *
- * @param array $input The value inputted in the field
- *
- * @return array $input Sanitized value.
- */
-function edd_settings_sanitize_taxes( $input ) {
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return $input;
-	}
-
-	if ( ! isset( $_POST['tax_rates'] ) ) {
-		return $input;
-	}
-
-	$tax_rates = ! empty( $_POST['tax_rates'] )
-		? $_POST['tax_rates']
-		: array();
-
-	foreach ( $tax_rates as $tax_rate ) {
-
-		$scope = isset( $tax_rate['global'] )
-			? 'country'
-			: 'region';
-
-		$region = isset( $tax_rate['state'] )
-			? sanitize_text_field( $tax_rate['state'] )
-			: '';
-
-		$name = '*' === $tax_rate['country']
-			? ''
-			: sanitize_text_field( $tax_rate['country'] );
-
-		if ( empty( $name ) ) {
-			$scope  = 'global';
-		}
-
-		$adjustment_data = array(
-			'name'        => $name,
-			'type'        => 'tax_rate',
-			'scope'       => $scope,
-			'amount_type' => 'percent',
-			'amount'      => floatval( $tax_rate['rate'] ),
-			'description' => $region,
-		);
-
-		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] < 0 ) {
-			continue;
-		}
-
-		$existing_adjustment = edd_get_adjustments( $adjustment_data );
-
-		if ( ! empty( $existing_adjustment ) ) {
-			$adjustment                = $existing_adjustment[0];
-			$adjustment_data['status'] = sanitize_text_field( $tax_rate['status'] );
-
-			edd_update_adjustment( $adjustment->id, $adjustment_data );
-		} else {
-			$adjustment_data['status'] = 'active';
-
-			edd_add_tax_rate( $adjustment_data );
-		}
-	}
-
-	return $input;
-}
-add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
-
-/**
- * Payment Gateways Settings Sanitization
- *
- * @since 2.7
- *
- * @param array $input The value inputted in the field
- *
- * @return string $input Sanitized value
- */
-function edd_settings_sanitize_gateways( $input = array() ) {
-
-	// Bail if user cannot manage shop settings
-	if ( ! current_user_can( 'manage_shop_settings' ) || empty( $input['default_gateway'] ) ) {
-		return $input;
-	}
-
-	// Unset the default gateway if there are no `gateways` enabled
-	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
-		unset( $input['default_gateway'] );
-
-	// Current gateway is no longer enabled, so
-	} elseif ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
-		$enabled_gateways = $input['gateways'];
-
-		reset( $enabled_gateways );
-
-		$first_gateway = key( $enabled_gateways );
-
-		if ( $first_gateway ) {
-			$input['default_gateway'] = $first_gateway;
-		}
-	}
-
-	return $input;
-}
-add_filter( 'edd_settings_gateways_sanitize', 'edd_settings_sanitize_gateways' );
 
 /**
  * Sanitize text fields
  *
  * @since 1.8
+ * @since 3.3.3 Converted to use setting type sanitization class.
  *
- * @param array $input The field value
+ * @param string $input The field value.
  *
  * @return string $input Sanitized value
  */
 function edd_sanitize_text_field( $input = '' ) {
-	$allowed_tags = edd_get_allowed_tags();
-
-	return trim( wp_kses( $input, $allowed_tags ) );
+	return EDD\Settings\Sanitize\Types\Text::sanitize( $input );
 }
-
-add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
 
 /**
  * Sanitize HTML Class Names
@@ -675,40 +470,13 @@ function edd_sanitize_html_class( $class = '' ) {
 
 	if ( is_string( $class ) ) {
 		$class = sanitize_html_class( $class );
-	} else if ( is_array( $class ) ) {
+	} elseif ( is_array( $class ) ) {
 		$class = array_values( array_map( 'sanitize_html_class', $class ) );
 		$class = implode( ' ', array_unique( $class ) );
 	}
 
 	return $class;
 }
-
-
-/**
- * Sanitizes banned emails.
- *
- * @since 3.0
- */
-function edd_sanitize_banned_emails( $input ) {
-
-	$emails = '';
-	if ( ! empty( $input['banned_emails'] ) ) {
-		// Sanitize the input
-		$emails = array_map( 'trim', explode( "\n", $input['banned_emails'] ) );
-		$emails = array_unique( $emails );
-		$emails = array_map( 'sanitize_text_field', $emails );
-
-		foreach ( $emails as $id => $email ) {
-			if ( ! is_email( $email ) && $email[0] != '@' && $email[0] != '.' ) {
-				unset( $emails[ $id ] );
-			}
-		}
-	}
-	$input['banned_emails'] = $emails;
-
-	return $input;
-}
-add_filter( 'edd_settings_gateways-checkout_sanitize', 'edd_sanitize_banned_emails' );
 
 /**
  * Retrieve settings tabs

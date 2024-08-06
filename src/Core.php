@@ -79,7 +79,6 @@ class Core extends EventManagement\Subscribers {
 			new Admin\SiteHealth\Tests(),
 			new Admin\SiteHealth\Information(),
 			new Admin\Pointers(),
-			new Admin\Settings\Sanitize(),
 			new Admin\Downloads\Metabox(),
 			new Admin\Promos\Footer\Loader(),
 			new Admin\Promos\About(),

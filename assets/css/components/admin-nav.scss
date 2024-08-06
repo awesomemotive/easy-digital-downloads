@@ -2,6 +2,9 @@
 	&__wrapper {
 		background-color: $white;
 		box-shadow: inset 0 -3px $edd-very-light-gray;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 		margin: 0 0 10px -20px;
 		padding: 0 20px;
 		position: sticky;
@@ -11,6 +14,12 @@
 		@media screen and (max-width: $break-medium) {
 			top: auto;
 			position: relative;
+			justify-content: center;
+			flex-wrap: wrap;
+
+			.subtitle {
+				padding: 18px 12px;
+			}
 		}
 	}
 

@@ -201,13 +201,13 @@ class EDD_Email_Summary {
 			'no_found_rows'  => true,
 		);
 
-		$downloads = new WP_Query( $args );
+		$downloads            = new WP_Query( $args );
 		$top_selling_products = array();
 
 		foreach ( $downloads->posts as $post ) {
 			$download = new EDD_Download( $post );
 
-			$product = new stdClass();
+			$product         = new stdClass();
 			$product->object = $download;
 			$product->total  = 100;
 
@@ -217,7 +217,7 @@ class EDD_Email_Summary {
 		$data = array(
 			'earnings_gross'       => array(
 				'value'         => 5000,
-				'relative_data' => $stats->generate_relative_data( 5000, 4000  ),
+				'relative_data' => $stats->generate_relative_data( 5000, 4000 ),
 			),
 			'earnings_net'         => array(
 				'value'         => 4500,
@@ -371,7 +371,7 @@ class EDD_Email_Summary {
 		$wp_date_format = get_option( 'date_format' );
 		$period_name    = ( 'monthly' === $this->email_options['email_summary_frequency'] ) ? __( 'month', 'easy-digital-downloads' ) : __( 'week', 'easy-digital-downloads' );
 		/* translators: period name (e.g. week) */
-		$relative_text  = sprintf( __( 'vs previous %s', 'easy-digital-downloads' ), $period_name );
+		$relative_text = sprintf( __( 'vs previous %s', 'easy-digital-downloads' ), $period_name );
 
 		ob_start();
 		include EDD_PLUGIN_DIR . 'includes/emails/email-summary/edd-email-summary-template.php';

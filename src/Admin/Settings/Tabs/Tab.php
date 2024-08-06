@@ -129,4 +129,40 @@ abstract class Tab {
 
 		return $this->pass_id;
 	}
+
+	/**
+	 * Checks if the current page is an admin page.
+	 *
+	 * @since 3.3.3
+	 * @param string $page The page to check.
+	 * @param string $view The view to check.
+	 * @return bool
+	 */
+	protected function is_admin_page( $page = 'settings', $view = '' ) {
+		if ( ! function_exists( 'edd_is_admin_page' ) ) {
+			return false;
+		}
+
+		return edd_is_admin_page( $page, $view );
+	}
+
+	/**
+	 * Gets the current tab.
+	 *
+	 * @since 3.3.3
+	 * @return string
+	 */
+	protected function get_tab() {
+		return filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
+	}
+
+	/**
+	 * Gets the current section.
+	 *
+	 * @since 3.3.3
+	 * @return string
+	 */
+	protected function get_section() {
+		return filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+	}
 }
