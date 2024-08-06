@@ -781,7 +781,7 @@ function edd_terms_agreement() {
 	 */
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
 
-		$agree_text  = edd_get_option( 'agree_text', '' );
+		$agree_text  = EDD\Settings\Sanitize\Types\RichEditor::sanitize( edd_get_option( 'agree_text', '' ) );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
 
 		ob_start();

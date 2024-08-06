@@ -12,7 +12,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-use \EDD\Utils\EnvironmentChecker;
+use EDD\Utils\EnvironmentChecker;
 
 /**
  * EDD_Email_Summary_Blurb Class.
@@ -50,7 +50,6 @@ class EDD_Email_Summary_Blurb {
 		// Load plugin.php so that we can use is_plugin_active().
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		$this->environment_checker = new EnvironmentChecker();
-
 	}
 
 	/**
@@ -61,6 +60,11 @@ class EDD_Email_Summary_Blurb {
 	 * @return array
 	 */
 	public function fetch_blurbs() {
+		$existing_blurbs = get_option( 'edd_email_summary_blurbs', false );
+		if ( false !== $existing_blurbs ) {
+			return $existing_blurbs;
+		}
+
 		$blurbs       = array();
 		$request_body = false;
 
@@ -70,6 +74,7 @@ class EDD_Email_Summary_Blurb {
 		if ( ! is_wp_error( $request ) && 200 === wp_remote_retrieve_response_code( $request ) ) {
 			$request_body = wp_remote_retrieve_body( $request );
 			$blurbs       = json_decode( $request_body, true );
+			update_option( 'edd_email_summary_blurbs', $blurbs, false );
 		}
 
 		if ( empty( $request_body ) ) {

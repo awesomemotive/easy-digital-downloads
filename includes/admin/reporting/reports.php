@@ -1050,11 +1050,15 @@ function edd_register_refunds_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $currency ) {
 						$stats  = new EDD\Stats();
-						$number = $stats->get_order_refund_count( array(
-							'range'    => $dates['range'],
-							'currency' => $currency
-						) );
-						return esc_html( $number );
+
+						return esc_html(
+							$stats->get_order_refund_count(
+								array(
+									'range'    => $dates['range'],
+									'currency' => $currency,
+								)
+							)
+						);
 					},
 					'display_args'  => array(
 						'comparison_label' => $label,
@@ -1069,12 +1073,16 @@ function edd_register_refunds_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $dates, $currency ) {
 						$stats  = new EDD\Stats();
-						$number = $stats->get_order_refund_count( array(
-							'range'    => $dates['range'],
-							'status'   => array( 'complete' ),
-							'currency' => $currency
-						) );
-						return esc_html( $number );
+
+						return esc_html(
+							$stats->get_order_refund_count(
+								array(
+									'range'          => $dates['range'],
+									'currency'       => $currency,
+									'fully_refunded' => true,
+								)
+							)
+						);
 					},
 					'display_args'  => array(
 						'comparison_label' => $label,
@@ -1091,8 +1099,7 @@ function edd_register_refunds_report( $reports ) {
 						$stats  = new EDD\Stats();
 						$number = $stats->get_order_item_refund_count( array(
 							'range'    => $dates['range'],
-							'status'   => array( 'refunded' ),
-							'currency' => $currency
+							'currency' => $currency,
 						) );
 						return esc_html( $number );
 					},

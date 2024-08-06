@@ -78,9 +78,13 @@ class General {
 					'label' => 'AJAX',
 					'value' => ! edd_is_ajax_disabled() ? 'Enabled' : 'Disabled',
 				),
-				'edd_guest_checkout'       => array(
-					'label' => 'Guest Checkout',
-					'value' => edd_no_guest_checkout() ? 'Disabled' : 'Enabled',
+				'checkout_registration'    => array(
+					'label' => 'Customer Registration',
+					'value' => $this->get_checkout_type(),
+				),
+				'checkout_forms'           => array(
+					'label' => 'Checkout Forms',
+					'value' => $this->get_checkout_forms(),
 				),
 				'symlinks'                 => array(
 					'label' => 'Symlinks',
@@ -104,7 +108,7 @@ class General {
 				),
 				'thousands_separator'      => array(
 					'label' => 'Thousands Separator',
-					'value' => edd_get_option( 'thousands_separator', '.' ),
+					'value' => edd_get_option( 'thousands_separator', ',' ),
 				),
 				'completed_upgrades'       => array(
 					'label' => 'Upgrades Completed',
@@ -170,5 +174,43 @@ class General {
 		$checker = new \EDD\Utils\RESTChecker( $endpoint );
 
 		return $checker->is_enabled();
+	}
+
+	/**
+	 * Retrieves the checkout type.
+	 *
+	 * @since 3.3.3
+	 * @return string The checkout type.
+	 */
+	private function get_checkout_type() {
+		$registration = edd_get_option( 'logged_in_only', false );
+
+		if ( 'auto' === $registration ) {
+			return 'Automatically register new user accounts';
+		}
+
+		if ( 'required' === $registration ) {
+			return 'Customers must log in or create an account to purchase';
+		}
+
+		return 'Allow customers to place orders without an account';
+	}
+
+	/**
+	 * Get the checkout forms.
+	 *
+	 * @since 3.3.3
+	 * @return string
+	 */
+	private function get_checkout_forms() {
+		$form   = edd_get_option( 'show_register_form', 'none' );
+		$labels = array(
+			'both'         => 'Registration and Login Forms',
+			'registration' => 'Registration Form Only',
+			'login'        => 'Login Form Only',
+			'none'         => 'None',
+		);
+
+		return isset( $labels[ $form ] ) ? $labels[ $form ] : __( 'Unknown', 'easy-digital-downloads' );
 	}
 }
