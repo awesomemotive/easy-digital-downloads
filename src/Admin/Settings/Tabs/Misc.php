@@ -48,11 +48,8 @@ class Misc extends Tab {
 	 * @return string
 	 */
 	public function update_docs_link( $link ) {
-		if ( function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'settings', 'misc' ) ) {
-			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
-			if ( 'file_downloads' === $section ) {
-				return 'https://easydigitaldownloads.com/docs/misc-settings/';
-			}
+		if ( $this->is_admin_page( 'settings', 'misc' ) && 'file_downloads' === $this->get_section() ) {
+			return 'https://easydigitaldownloads.com/docs/misc-settings/';
 		}
 
 		return parent::update_docs_link( $link );

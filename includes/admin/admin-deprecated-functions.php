@@ -1059,3 +1059,186 @@ function edd_taxonomies_tabs() {
 	// Output the tabs.
 	edd_display_product_tabs();
 }
+
+/**
+ * Misc File Download Settings Sanitization
+ *
+ * @since 2.5
+ * @deprecated 3.3.3 Moved to EDD\Admin\Settings\Sanitize
+ *
+ * @param array $input The value inputted in the field.
+ *
+ * @return string $input Sanitized value
+ */
+function edd_settings_sanitize_misc_file_downloads( $input ) {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
+	_edd_deprecated_function( __FUNCTION__, '3.3.3', 'EDD\Admin\Settings\Sanitize\Tabs\Misc\FileDownloads::additional_processing' );
+
+	if ( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
+		// Force the .htaccess files to be updated if the Download method was changed.
+		edd_create_protection_files( true, $input['download_method'] );
+	}
+
+	return $input;
+}
+
+/**
+ * Misc Accounting Settings Sanitization
+ *
+ * @since 2.5
+ * @deprecated 3.3.3 Moved to EDD\Admin\Settings\Sanitize
+ *
+ * @param array $input The value inputted in the field.
+ *
+ * @return array $input Sanitized value
+ */
+function edd_settings_sanitize_misc_accounting( $input ) {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
+	return $input;
+}
+
+/**
+ * Sanitizes banned emails.
+ *
+ * @since 3.0
+ * @deprecated 3.3.3 Moved to EDD\Admin\Settings\Sanitize
+ */
+function edd_sanitize_banned_emails( $input ) {
+
+	$emails = '';
+	if ( ! empty( $input['banned_emails'] ) ) {
+		// Sanitize the input.
+		$emails = array_map( 'trim', explode( "\n", $input['banned_emails'] ) );
+		$emails = array_unique( $emails );
+		$emails = array_map( 'sanitize_text_field', $emails );
+
+		foreach ( $emails as $id => $email ) {
+			if ( ! is_email( $email ) && $email[0] != '@' && $email[0] != '.' ) {
+				unset( $emails[ $id ] );
+			}
+		}
+	}
+	$input['banned_emails'] = $emails;
+
+	return $input;
+}
+
+/**
+ * Payment Gateways Settings Sanitization
+ *
+ * @since 2.7
+ * @deprecated 3.3.3 Moved to EDD\Admin\Settings\Sanitize
+ *
+ * @param array $input The value inputted in the field
+ *
+ * @return string $input Sanitized value
+ */
+function edd_settings_sanitize_gateways( $input = array() ) {
+
+	// Bail if user cannot manage shop settings
+	if ( ! current_user_can( 'manage_shop_settings' ) || empty( $input['default_gateway'] ) ) {
+		return $input;
+	}
+
+	// Unset the default gateway if there are no `gateways` enabled
+	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
+		unset( $input['default_gateway'] );
+
+	// Current gateway is no longer enabled, so
+	} elseif ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
+		$enabled_gateways = $input['gateways'];
+
+		reset( $enabled_gateways );
+
+		$first_gateway = key( $enabled_gateways );
+
+		if ( $first_gateway ) {
+			$input['default_gateway'] = $first_gateway;
+		}
+	}
+
+	return $input;
+}
+
+/**
+ * Taxes Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ * This also saves the tax rates table
+ *
+ * @since 1.6
+ * @deprecated 3.3.3 Moved to EDD\Admin\Settings\Sanitize
+ *
+ * @param array $input The value inputted in the field
+ *
+ * @return array $input Sanitized value.
+ */
+function edd_settings_sanitize_taxes( $input ) {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return $input;
+	}
+
+	if ( ! isset( $_POST['tax_rates'] ) ) {
+		return $input;
+	}
+
+	$tax_rates = ! empty( $_POST['tax_rates'] )
+		? $_POST['tax_rates']
+		: array();
+
+	foreach ( $tax_rates as $tax_rate ) {
+
+		$scope = isset( $tax_rate['global'] )
+			? 'country'
+			: 'region';
+
+		$region = isset( $tax_rate['state'] )
+			? sanitize_text_field( $tax_rate['state'] )
+			: '';
+
+		$name = '*' === $tax_rate['country']
+			? ''
+			: sanitize_text_field( $tax_rate['country'] );
+
+		if ( empty( $name ) ) {
+			$scope  = 'global';
+		}
+
+		$adjustment_data = array(
+			'name'        => $name,
+			'type'        => 'tax_rate',
+			'scope'       => $scope,
+			'amount_type' => 'percent',
+			'amount'      => floatval( $tax_rate['rate'] ),
+			'description' => $region,
+		);
+
+		if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] < 0 ) {
+			continue;
+		}
+
+		$existing_adjustment = edd_get_adjustments( $adjustment_data );
+
+		if ( ! empty( $existing_adjustment ) ) {
+			$adjustment                = $existing_adjustment[0];
+			$adjustment_data['status'] = sanitize_text_field( $tax_rate['status'] );
+
+			edd_update_adjustment( $adjustment->id, $adjustment_data );
+		} else {
+			$adjustment_data['status'] = 'active';
+
+			edd_add_tax_rate( $adjustment_data );
+		}
+	}
+
+	return $input;
+}

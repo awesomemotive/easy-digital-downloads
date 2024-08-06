@@ -131,8 +131,20 @@ function edd_process_download() {
 			}
 		}
 
-		// Allow the file to be altered before any headers are sent
+		/**
+		 * Filter the requested file before it is processed
+		 *
+		 * @param string $requested_file The requested file.
+		 * @param array  $download_files The download files.
+		 * @param int    $file_key       The file key.
+		 * @param array  $args           The download arguments.
+		 */
 		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'], $args );
+
+		// Validate the file, since we just filtered it, we need to make sure it is still a local file.
+		if ( edd_is_local_file( $requested_file ) && ! EDD\Downloads\Process::validate( $requested_file ) ) {
+			wp_die( __( 'Error 104: Sorry, this file could not be downloaded.', 'easy-digital-downloads' ), __( 'Error Downloading File', 'easy-digital-downloads' ), 403 );
+		}
 
 		if ( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
 			// If X-Sendfile is selected but is not supported, fallback to Direct
@@ -763,6 +775,11 @@ function edd_get_file_ctype( $extension ) {
  * @return   bool|string        If string, $status || $cnt
  */
 function edd_readfile_chunked( $file, $retbytes = true ) {
+
+	if ( ! \EDD\Downloads\Process::validate( $file ) ) {
+		return false;
+	}
+
 	while ( ob_get_level() > 0 ) {
 		ob_end_clean();
 	}

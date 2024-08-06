@@ -88,7 +88,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$id = is_array( $item ) ? $item['id'] : $item;
 
 	$remove_url = edd_remove_item_url( $cart_key );
-	$title      = get_the_title( $id );
+	$title      = sanitize_text_field( get_the_title( $id ) );
 	$options    = ! empty( $item['options'] ) ? $item['options'] : array();
 	$quantity   = edd_get_cart_item_quantity( $id, $options );
 	$price      = edd_get_cart_item_price( $id, $options );

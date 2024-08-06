@@ -2,11 +2,10 @@
 if ( function_exists( 'EDD_CFM' ) ) {
 	return;
 }
-$is_user_logged_in = is_user_logged_in();
 ?>
 <fieldset id="edd_checkout_user_info" class="edd-blocks-form">
 	<legend><?php esc_html_e( 'Personal Info', 'easy-digital-downloads' ); ?></legend>
-	<?php if ( ! $is_user_logged_in || empty( $customer['email'] ) ) : ?>
+	<?php if ( empty( $customer['email'] ) ) : ?>
 		<div id="edd-email-wrap">
 			<label class="edd-label" for="edd-email">
 				<?php
@@ -18,7 +17,7 @@ $is_user_logged_in = is_user_logged_in();
 			<p class="edd-description" id="edd-email-description"><?php esc_html_e( 'We will send the purchase receipt to this address.', 'easy-digital-downloads' ); ?></p>
 		</div>
 	<?php endif; ?>
-	<?php if ( ! $is_user_logged_in || empty( $customer['first_name'] ) ) : ?>
+	<?php if ( ! $customer_info_complete ) : ?>
 		<div id="edd-first-name-wrap">
 			<label class="edd-label" for="edd-first">
 				<?php
@@ -32,7 +31,7 @@ $is_user_logged_in = is_user_logged_in();
 			<p class="edd-description" id="edd-first-description"><?php esc_html_e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></p>
 		</div>
 	<?php endif; ?>
-	<?php if ( ! $is_user_logged_in || empty( $customer['last_name'] ) ) : ?>
+	<?php if ( ! $customer_info_complete ) : ?>
 		<div id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last">
 				<?php
