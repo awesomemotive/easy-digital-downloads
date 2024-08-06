@@ -202,16 +202,6 @@ class Handler {
 			$this->is_active = false;
 		}
 
-		// If the user logs in, update session.
-		if ( is_user_logged_in() && $this->get_logged_in_user_key() !== $this->session_key ) {
-			$guest_session_id  = $this->session_key;
-			$this->session_key = $this->get_logged_in_user_key();
-			$this->dirty       = true;
-			$this->save( $guest_session_id );
-			$this->set_session_cookie();
-			edd_debug_log( sprintf( 'Session cookie updated to %1$s from %2$s', $this->session_key, $guest_session_id ) );
-		}
-
 		// Update session if it's close to expiring.
 		if ( time() > $this->session_expiring ) {
 			$this->session_expiry   = $this->get_session_expiry( true );

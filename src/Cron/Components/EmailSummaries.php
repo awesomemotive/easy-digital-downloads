@@ -172,6 +172,9 @@ class EmailSummaries extends Component {
 		$email = new \EDD_Email_Summary();
 		$email->send_email();
 
+		EmailSummariesBlurbs::clear( EmailSummariesBlurbs::CRON_EVENT_NAME );
+		delete_option( 'edd_email_summary_blurbs' );
+
 		// Schedule the next event.
 		$this->schedule_cron_events();
 	}

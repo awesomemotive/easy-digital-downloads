@@ -305,7 +305,15 @@ function edd_get_allowed_tags() {
 			'class' => array(),
 			'id'    => array(),
 		),
+		'ol'     => array(
+			'class' => array(),
+			'id'    => array(),
+		),
 		'li'     => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'blockquote' => array(
 			'class' => array(),
 			'id'    => array(),
 		),

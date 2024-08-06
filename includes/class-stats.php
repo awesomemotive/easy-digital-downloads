@@ -521,6 +521,13 @@ class Stats {
 		}
 
 		$query['type'] = array( 'refund' );
+		if ( ! empty( $query['fully_refunded'] ) ) {
+			$query['where_sql'] = "AND {$this->get_db()->edd_orders}.parent IN (
+				SELECT id
+				FROM {$this->get_db()->edd_orders}
+				WHERE type = 'sale' AND status = 'refunded'
+			)";
+		}
 
 		return $this->get_order_count( $query );
 	}
@@ -566,13 +573,14 @@ class Stats {
 		// Base value for status.
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'refunded' );
+			: array( 'complete' );
 
-		/*
-		 * The type should be `sale` because we're querying for fully refunded order items only.
-		 * That means we look in `type` = `sale` and `status` = `refunded`.
-		 */
-		$this->query_vars['where_sql'] .= " AND {$this->get_db()->edd_orders}.type = 'sale' ";
+		// Include a query for the parent order item being refunded.
+		$query['where_sql'] = "AND {$this->get_db()->edd_order_items}.parent IN (
+			SELECT id
+			FROM {$this->get_db()->edd_order_items}
+			WHERE status = 'refunded'
+		)";
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );

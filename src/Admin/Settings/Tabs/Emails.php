@@ -11,10 +11,11 @@
 
 namespace EDD\Admin\Settings\Tabs;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
 use EDD\Cron\Components\EmailSummaries;
 use EDD\Cron\Events\SingleEvent;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Emails settings tab.
@@ -155,33 +156,13 @@ class Emails extends Tab {
 	 * @return array
 	 */
 	private function get_email_summaries() {
-		$email_summary_recipient     = edd_get_option( 'email_summary_recipient', 'admin' );
-		$email_summary_trigger_url   = wp_nonce_url(
-			edd_get_admin_url(
-				array(
-					'page'       => 'edd-settings',
-					'tab'        => 'emails',
-					'section'    => 'email_summaries',
-					'edd_action' => 'trigger_email_summary',
-				)
-			),
-			'edd_trigger_email_summary'
-		);
-		$email_summary_schedule      = SingleEvent::next_scheduled( EmailSummaries::CRON_EVENT_NAME );
-		$email_summary_schedule_text = '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
-		if ( $email_summary_schedule ) {
-			$email_summary_schedule_date = \EDD\Utils\Date::createFromTimestamp( $email_summary_schedule )->setTimezone( edd_get_timezone_id() );
-			/* translators: formatted date */
-			$email_summary_schedule_text = sprintf( __( 'The next summary email is scheduled to send on %s.', 'easy-digital-downloads' ), $email_summary_schedule_date->format( get_option( 'date_format' ) ) );
-		}
-
 		return array(
 			'email_summary_frequency'         => array(
 				'id'      => 'email_summary_frequency',
 				'name'    => __( 'Email Frequency', 'easy-digital-downloads' ),
 				'type'    => 'select',
 				'std'     => 'weekly',
-				'desc'    => $email_summary_schedule_text,
+				'desc'    => $this->get_email_summary_text(),
 				'options' => array(
 					'weekly'  => __( 'Weekly', 'easy-digital-downloads' ),
 					'monthly' => __( 'Monthly', 'easy-digital-downloads' ),
@@ -200,7 +181,7 @@ class Emails extends Tab {
 			),
 			'email_summary_custom_recipients' => array(
 				'id'    => 'email_summary_custom_recipients',
-				'class' => ( 'admin' === $email_summary_recipient ) ? 'hidden' : '',
+				'class' => $this->get_custom_recipient_class(),
 				'name'  => __( 'Custom Recipients', 'easy-digital-downloads' ),
 				'desc'  => __( 'Enter the email address(es) that should receive Email Summaries. One per line.', 'easy-digital-downloads' ),
 				'type'  => 'textarea',
@@ -209,7 +190,7 @@ class Emails extends Tab {
 				'id'   => 'email_summary_buttons',
 				'name' => '',
 				'desc' => '
-							<a href="' . esc_url( $email_summary_trigger_url ) . '" class="button" id="edd-send-test-summary">' . esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>
+							<a href="' . esc_url( $this->get_trigger_url() ) . '" class="button" id="edd-send-test-summary">' . esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>
 							<div id="edd-send-test-summary-save-changes-notice"></div>
 							<div id="edd-send-test-summary-notice"></div>
 						',
@@ -224,6 +205,71 @@ class Emails extends Tab {
 					'inverse' => true,
 				),
 			),
+		);
+	}
+
+	/**
+	 * Retrieves the email summary text for the settings screen.
+	 *
+	 * @since 3.3.3
+	 * @return string The email summary text.
+	 */
+	private function get_email_summary_text() {
+		if ( ! $this->is_admin_page( 'emails' ) ) {
+			return '';
+		}
+
+		if ( 'email_summaries' !== $this->get_tab() ) {
+			return '';
+		}
+
+		if ( ! class_exists( '\\EDD\\Utils\\Date' ) ) {
+			return '';
+		}
+
+		$schedule = SingleEvent::next_scheduled( EmailSummaries::CRON_EVENT_NAME );
+		if ( ! $schedule ) {
+			return '<span><span class="dashicons dashicons-warning"></span> ' . esc_html( __( 'The summary email is not yet scheduled. Save the settings to manually schedule it.', 'easy-digital-downloads' ) ) . '</span>';
+		}
+
+		$date = \EDD\Utils\Date::createFromTimestamp( $schedule )->setTimezone( edd_get_timezone_id() );
+
+		return sprintf(
+			/* translators: formatted date */
+			__( 'The next summary email is scheduled to send on %s.', 'easy-digital-downloads' ),
+			$date->format( get_option( 'date_format' ) )
+		);
+	}
+
+	/**
+	 * Retrieves the custom recipient class.
+	 *
+	 * @since 3.3.3
+	 * @return string The custom recipient class.
+	 */
+	private function get_custom_recipient_class() {
+		$email_summary_recipient = edd_get_option( 'email_summary_recipient', 'admin' );
+
+		return 'admin' === $email_summary_recipient ? 'hidden' : '';
+	}
+
+	/**
+	 * Retrieves the trigger URL for the Emails tab.
+	 *
+	 * @since 3.3.3
+	 * @return string The trigger URL.
+	 */
+	private function get_trigger_url() {
+		return wp_nonce_url(
+			edd_get_admin_url(
+				array(
+					'page'       => 'edd-settings',
+					'tab'        => 'emails',
+					'section'    => 'email_summaries',
+					'edd_action' => 'trigger_email_summary',
+				)
+			),
+			'edd_trigger_email_summary'
 		);
 	}
 }

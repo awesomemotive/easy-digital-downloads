@@ -1,4 +1,4 @@
-=== Easy Digital Downloads – Sell Digital Files & Subscriptions (eCommerce Store + Payments Made Easy) ===
+=== Easy Digital Downloads – eCommerce Payments and Subscriptions made easy ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, chriscct7, sumobi, SpencerFinnell, drewapicture, johnjamesjacoby, lisacee
@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable Tag: 3.3.2
+Stable Tag: 3.3.3
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -69,7 +69,7 @@ With the included date comparison tools, you can compare your sales, revenue, cu
 * Digital Product Management - Create as many digital products as you want, with no added costs. Create single products, product variations, and product bundles.
 * Discount Codes - Run sales and promotions with the built-in discount code management. Set start and expiration dates, product limitations, price limitations, and reward your best customers with custom discount codes.
 * eCommerce Reports - Easy Digital Downloads provides the best reporting available in WordPress ecommerce with the included reporting features. You'll get access to valuable insights into the growth of your ecommerce business.
-* 1-Click Payment Setup - Go from Install to Selling in a matter of minutes with our official integrations with Stripe and PayPal.
+* 1-Click Payments - Go from Install to Selling in a matter of minutes with our official integrations with Stripe and PayPal.
 * Flexible Payment Methods - With the included integrations for Stripe and PayPal, it's even easier for you to collect payments and sell access to your digital products.
 * File Downloads Protection - Your downloadable products are safe with Easy Digital Downloads. When a user purchases your product, we generate a secure and unique link that allows only your customers to download your files from your ecommerce site.
 * Email Receipts - The included email receipts are fully customizable to ensure that your brand is represented in your receipts.
@@ -214,24 +214,35 @@ Check out some of our popular posts for actionable advice for running your busin
 
 == Screenshots ==
 
-1. Detailed and actionable reports
-2. Customer Management
-3. Order History
-4. Order Details
+1. Detailed Reports and Analytics
+2. Manage Easy Digital Download Customers
+3. History of Payments
+4. View and Manage Payment Details
 5. Product Grid - Vendd
-6. Checkout - Vendd
+6. Checkout Form Block - Vendd
 7. Product Grid - Default Theme
-8. Checkout - Default Theme
+8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.3.3 =
+* Reports: Refund tiles for fully refunded items could include partial refunds.
+* Sessions: Improve session handling during checkout when logging in a user at the same time.
+* Admin: Fixed a display issue when searching for EDD items in list views.
+* Emails: Prevent a PHP error related to the Email Summary settings.
+* Emails: Improved the Email Summaries reliability.
+* Blocks: Fixed an issue on the Checkout block for existing customers without a last name.
+* Downloads: Improved the handling of the cart widget markup when adding an item to the cart.
+* Downloads: Improved the detection and handling of local files when they are downloaded.
+* Settings: Refactored the process of saving settings for consistency.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.3.2 =
 * Checkout: Improved session handling with Stripe payments.
 * Settings: Improved pass validation that could cause deactivation on certain server configurations.
 * Admin: Improve responsiveness of EDD admin menus.
 * Sessions: Set default session handling to database on new installs.
 * i18n: Ensure that some block strings are able to be translated.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.1 =
 * Settings: Fixed a PHP warning related to a store's region when managing settings.
