@@ -135,7 +135,6 @@ function edd_process_download() {
 		@ini_set( 'zlib.output_compression', 'Off' );
 
 		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $args['payment'] );
-        do_action( 'file_downloaded', (int)$attachment_id);
 
 		nocache_headers();
 		header("Robots: none");
@@ -143,6 +142,8 @@ function edd_process_download() {
 		header("Content-Description: File Transfer");
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
 		header("Content-Transfer-Encoding: binary");
+
+        do_action( 'file_downloaded', (int)$attachment_id);
 
 		// If the file isn't locally hosted, process the redirect
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
