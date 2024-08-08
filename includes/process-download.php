@@ -135,6 +135,7 @@ function edd_process_download() {
 		@ini_set( 'zlib.output_compression', 'Off' );
 
 		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $args['payment'] );
+        do_action( 'file_downloaded', (int)$attachment_id);
 
 		nocache_headers();
 		header("Robots: none");
