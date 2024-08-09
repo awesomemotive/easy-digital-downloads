@@ -143,7 +143,7 @@ function edd_process_download() {
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
 		header("Content-Transfer-Encoding: binary");
 
-        do_action( 'file_downloaded', (int)$attachment_id);
+        do_action( 'wpi_file_downloaded', (int)$attachment_id);
 
 		// If the file isn't locally hosted, process the redirect
 		if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
