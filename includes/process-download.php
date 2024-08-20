@@ -143,7 +143,7 @@ function edd_process_download() {
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
 		header("Content-Transfer-Encoding: binary");
 
-        if($attachment_id > 0) {
+        if($attachment_id > 0){
             do_action('wpi_file_downloaded', (int)$attachment_id);
         }
 
