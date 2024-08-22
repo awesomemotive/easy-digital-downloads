@@ -129,6 +129,7 @@ class EDD_Download {
 	public $post_mime_type = '';
 	public $comment_count = 0;
 	public $filter;
+	public $post_type;
 
 	/**
 	 * Get things going
