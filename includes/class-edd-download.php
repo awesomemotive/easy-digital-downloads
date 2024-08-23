@@ -130,6 +130,7 @@ class EDD_Download {
 	public $comment_count = 0;
 	public $filter;
 	public $post_type;
+    public $from_email;
 
 	/**
 	 * Get things going
