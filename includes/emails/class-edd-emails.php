@@ -70,6 +70,8 @@ class EDD_Emails {
 	 */
 	private $heading = '';
 
+    public $from_email;
+
 	/**
 	 * Get things going
 	 *
