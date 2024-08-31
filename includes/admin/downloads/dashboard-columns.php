@@ -237,7 +237,7 @@ function edd_add_download_filters() {
 	);
 
 	$categories = get_terms( $category_args );
-	if ( ! empty( $categories ) ) {
+	if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
 		$category_labels = edd_get_taxonomy_labels( 'download_category' );
 
 		$options    = array();

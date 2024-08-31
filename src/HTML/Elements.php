@@ -340,8 +340,10 @@ class Elements {
 		$categories = get_terms( 'download_category', apply_filters( 'edd_category_dropdown', array() ) );
 		$options    = array();
 
-		foreach ( $categories as $category ) {
-			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
+		if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+			foreach ( $categories as $category ) {
+				$options[ absint( $category->term_id ) ] = esc_html( $category->name );
+			}
 		}
 
 		$category_labels = edd_get_taxonomy_labels( 'download_category' );
