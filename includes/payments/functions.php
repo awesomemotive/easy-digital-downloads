@@ -193,7 +193,6 @@ function edd_insert_payment( $payment_data = array() ) {
     $payment->user_info      = $payment_data['user_info'];
     $payment->gateway        = $gateway;
     $payment->user_id        = $payment_data['user_info']['id'];
-    $payment->email          = $payment_data['user_email'];
     $payment->first_name     = $payment_data['user_info']['first_name'];
     $payment->last_name      = $payment_data['user_info']['last_name'];
     $payment->email          = $payment_data['user_info']['email'];
