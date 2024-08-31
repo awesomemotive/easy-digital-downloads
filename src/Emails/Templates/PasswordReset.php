@@ -2,6 +2,9 @@
 
 namespace EDD\Emails\Templates;
 
+use WP_Error;
+use WP_User;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -208,7 +211,53 @@ class PasswordReset extends EmailTemplate {
 		/* translators: %s: Site name. */
 		$title = sprintf( __( '[%s] Password Reset', 'easy-digital-downloads' ), $site_name );
 
+		$errors    = new WP_Error();
+		$user_data = false;
+		$user_login = null;
+
+		if ( ! empty( $_POST['user_login'] ) ) {
+			$user_login = $_POST['user_login'];
+		} elseif ( ! empty( $_POST['login'] ) ) {
+			$user_login = $_POST['login'];
+		}
+
+		$user_login = trim( wp_unslash( $user_login ) );
+
+		if ( empty( $user_login ) ) {
+			$errors->add( 'empty_username', __( '<strong>Error:</strong> Please enter a username or email address.' ) );
+		} elseif ( strpos( $user_login, '@' ) ) {
+			$user_data = get_user_by( 'email', $user_login );
+
+			if ( empty( $user_data ) ) {
+				$user_data = get_user_by( 'login', $user_login );
+			}
+
+			if ( empty( $user_data ) ) {
+				$errors->add( 'invalid_email', __( '<strong>Error:</strong> There is no account with that username or email address.' ) );
+			}
+		} else {
+			$user_data = get_user_by( 'login', $user_login );
+		}
+
+		/**
+		 * This is a WP Core filter.
+		 * Filters the user data during a password reset request.
+		 *
+		 * Allows, for example, custom validation using data other than username or email address.
+		 *
+		 * @since 5.7.0
+		 *
+		 * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
+		 * @param WP_Error      $errors    A WP_Error object containing any errors generated
+		 *                                 by using invalid credentials.
+		 */
+		$user_data = apply_filters( 'lostpassword_user_data', $user_data, $errors );
+
+		if ( $user_data instanceof WP_User ) {
+			$user_login = $user_data->user_login;
+		}
+
 		// This is a WP Core filter.
-		return apply_filters( 'retrieve_password_title', $title );
+		return apply_filters( 'retrieve_password_title', $title, $user_login, $user_data );
 	}
 }
