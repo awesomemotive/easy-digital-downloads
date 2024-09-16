@@ -571,7 +571,6 @@ final class EDD_Amazon_Payments {
 			remove_all_actions( 'edd_purchase_form_register_fields' );
 			remove_all_actions( 'edd_purchase_form_login_fields' );
 			remove_all_actions( 'edd_register_fields_before' );
-			remove_all_actions( 'edd_cc_form' );
 			remove_all_actions( 'edd_checkout_form_top' );
 
 			ob_start(); ?>
