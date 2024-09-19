@@ -9,10 +9,7 @@
       "issues": "https://easydigitaldownloads.com/support"
   },
   "config": {
-    "platform-check": false,
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+    "platform-check": false
   },
   "require": {
     "nesbot/carbon": "^2.69.0",
@@ -24,11 +21,7 @@
     "yoast/phpunit-polyfills": "^1.0.5",
     "yoast/wp-test-utils": "^1.0",
     "codedungeon/phpunit-result-printer": "dev-master",
-    "coenjacobs/mozart": "dev-master",
-    "wp-coding-standards/wpcs": "dev-develop",
-    "squizlabs/php_codesniffer": "^3.7.2",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
-    "phpcompatibility/phpcompatibility-wp": "^2.1.4"
+    "coenjacobs/mozart": "^0.7.1"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

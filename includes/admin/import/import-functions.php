@@ -10,8 +10,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Utils\FileSystem;
 
 /**
  * Upload an import file with ajax
@@ -58,7 +60,7 @@ function edd_do_ajax_import_file_upload() {
 		wp_send_json_error( array( 'error' => __( 'The file you uploaded does not appear to be a CSV file.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	if ( ! file_exists( $_FILES['edd-import-file']['tmp_name'] ) ) {
+	if ( ! FileSystem::file_exists( $_FILES['edd-import-file']['tmp_name'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Something went wrong during the upload process, please try again.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
@@ -110,7 +112,7 @@ function edd_do_ajax_import() {
 		wp_send_json_error( array( 'error' => __( 'Missing import parameters. Import class must be specified.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 
-	if ( ! file_exists( $_REQUEST['upload']['file'] ) ) {
+	if ( ! FileSystem::file_exists( $_REQUEST['upload']['file'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Something went wrong during the upload process, please try again.', 'easy-digital-downloads' ), 'request' => $_REQUEST ) );
 	}
 

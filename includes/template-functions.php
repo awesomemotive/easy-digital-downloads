@@ -697,29 +697,30 @@ add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_te
  * @return string The template filename if one is located.
  */
 function edd_locate_template( $template_names, $load = false, $require_once = true ) {
-	// No file found yet
+	// No file found yet.
 	$located = false;
 
-	// Try to find a template file
+	// Try to find a template file.
 	foreach ( (array) $template_names as $template_name ) {
 
-		// Continue if template is empty
-		if ( empty( $template_name ) )
+		// Continue if template is empty.
+		if ( empty( $template_name ) ) {
 			continue;
+		}
 
-		// Trim off any slashes from the template name
+		// Trim off any slashes from the template name.
 		$template_name = ltrim( $template_name, '/' );
 
-		// try locating this template file by looping through the template paths
-		foreach( edd_get_theme_template_paths() as $template_path ) {
+		// try locating this template file by looping through the template paths.
+		foreach ( edd_get_theme_template_paths() as $template_path ) {
 
-			if( file_exists( $template_path . $template_name ) ) {
+			if ( EDD\Utils\FileSystem::file_exists( $template_path . $template_name ) ) {
 				$located = $template_path . $template_name;
 				break;
 			}
 		}
 
-		if( $located ) {
+		if ( $located ) {
 			break;
 		}
 	}

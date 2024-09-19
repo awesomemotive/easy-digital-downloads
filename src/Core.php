@@ -32,7 +32,7 @@ class Core extends EventManagement\Subscribers {
 			new Downloads\Services(),
 			new Orders\DeferredActions(),
 			new Emails\Loader(),
-			new Globals\Polyfills\Loader(),
+			new Globals\Loader(),
 			new Integrations\Registry(),
 			Checkout\AutoRegister::get_instance(),
 

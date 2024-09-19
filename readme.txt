@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable Tag: 3.3.3
+Stable Tag: 3.3.4
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -224,6 +224,31 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.3.4 =
+* NEW! Stripe: When connecting EDD to Stripe, the necessary webhooks are registered.
+* Cart: Enhanced cookie handling when emptying and re-adding items to cart.
+* Checkout: Resolved undefined variable issue when using block registration form.
+* Downloads: Improved response header handling to prevent invalid content-length headers.
+* Downloads: Resolved inconsistency in author availability for new vs existing downloads.
+* Emails: Improved email tag loading for more efficient processing.
+* Emails: Removed image insertion capability from password reset email editor.
+* Emails: Corrected filter name in new user email for proper functionality.
+* Emails: Fixed a fatal error in password reset due to missing parameters.
+* Emails: Fixed empty {password_link} email tag for first-time users.
+* File System: Consolidate filesystem interactions by normalizing file paths.
+* Orders: Improve order total calculations for orders with multiple adjustments.
+* Orders: Fixed an issue with resumed orders and date_created values.
+* Orders: Deleting an order now deletes the related transactions entry.
+* Orders: Implemented safeguard to prevent negative order totals.
+* Reports: Fixed PHP notices occurring in certain time zones.
+* Sessions: Added new filters for more flexible cookie management.
+* Sessions: Added built-in support for Pantheon cookie exclusions.
+* Sessions: Added built-in support for WP Engine cookie exclusions.
+* Stripe: Improve legacy card elements session compatibility.
+* Users: Added a tool to help fix corrupted capabilities that prevent access to EDD settings screens.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.3.3 =
 * Reports: Refund tiles for fully refunded items could include partial refunds.
 * Sessions: Improve session handling during checkout when logging in a user at the same time.
@@ -234,8 +259,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Downloads: Improved the handling of the cart widget markup when adding an item to the cart.
 * Downloads: Improved the detection and handling of local files when they are downloaded.
 * Settings: Refactored the process of saving settings for consistency.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.2 =
 * Checkout: Improved session handling with Stripe payments.

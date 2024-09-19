@@ -8,13 +8,14 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Orders;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\Database\Rows;
 use EDD\Database\Rows\Adjustment;
-
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Order Class.
@@ -267,11 +268,19 @@ class Order extends Rows\Order {
 	protected $address = null;
 
 	/**
+	 * Total fees/credits. This is used only for recalculating the order total.
+	 *
+	 * @since 3.3.4
+	 * @var   float
+	 */
+	private $total_adjustments = 0;
+
+	/**
 	 * Magic getter for immutability.
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $key
+	 * @param string $key Key to retrieve.
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
@@ -452,7 +461,7 @@ class Order extends Rows\Order {
 	 */
 	public function get_fees() {
 
-		// Default values
+		// Default values.
 		$fees = array();
 
 		// Fetch the fees that applied to the entire order.
@@ -492,7 +501,7 @@ class Order extends Rows\Order {
 	 * @return Order_Adjustment[] Order credits.
 	 */
 	public function get_credits() {
-		// Default values
+		// Default values.
 		$credits = array();
 
 		// Fetch the fees that applied to the entire order.
@@ -576,10 +585,10 @@ class Order extends Rows\Order {
 	 */
 	public function get_tax_rate() {
 
-		// Default rate
+		// Default rate.
 		$rate = 0;
 
-		// Get rates from adjustments
+		// Get rates from adjustments.
 		$tax_rate_object = $this->get_tax_rate_object();
 		if ( is_object( $tax_rate_object ) && isset( $tax_rate_object->amount ) ) {
 			$rate = $tax_rate_object->amount;
@@ -720,5 +729,66 @@ class Order extends Rows\Order {
 		 * @param \EDD\Orders\Order $this         The order object.
 		 */
 		return apply_filters( 'edd_order_recovery_url', $recovery_url, $this );
+	}
+
+	/**
+	 * Recalculate the order totals.
+	 *
+	 * @since 3.3.4
+	 * @return bool True if the order was successfully recalculated, false otherwise.
+	 */
+	public function recalculate() {
+		$this->subtotal = 0;
+		$this->tax      = 0;
+		$this->discount = 0;
+
+		foreach ( $this->get_items() as $order_item ) {
+			$this->subtotal += (float) $order_item->subtotal;
+			$this->tax      += (float) $order_item->tax;
+			$this->discount += (float) $order_item->discount;
+		}
+
+		// Work through the order fees and credits. Discounts are included in the order items.
+		$this->total_adjustments = 0;
+		foreach ( $this->get_fees() as $fee ) {
+			$this->total_adjustments += (float) $fee->total;
+			$this->tax               += (float) $fee->tax;
+		}
+
+		foreach ( $this->get_credits() as $credit ) {
+			$this->total_adjustments -= (float) $credit->total;
+			$this->tax               -= (float) $credit->tax;
+		}
+
+		return edd_update_order(
+			$this->id,
+			array(
+				'subtotal' => $this->subtotal,
+				'tax'      => $this->tax,
+				'discount' => $this->discount,
+				'total'    => $this->get_order_total(),
+			)
+		);
+	}
+
+	/**
+	 * Get the total value of an order.
+	 *
+	 * @since 3.3.4
+	 * @return float
+	 */
+	private function get_order_total() {
+		$order_total =
+			  $this->subtotal // phpcs:ignore
+			- $this->discount
+			+ $this->tax
+			+ $this->total_adjustments;
+
+		// Ensure the order total is not negative.
+		if ( $order_total < 0 ) {
+			$order_total = 0;
+		}
+
+		return $order_total;
 	}
 }
