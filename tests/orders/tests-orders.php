@@ -1,17 +1,12 @@
 <?php
 /**
  * Order Tests.
- *
- * @group edd_orders
- * @group database
- *
- * @coversDefaultClass \EDD\Orders\Order
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-class Orders_Tests extends EDD_UnitTestCase {
+class Orders extends EDD_UnitTestCase {
 
 	/**
 	 * Orders fixture.
@@ -627,9 +622,6 @@ class Orders_Tests extends EDD_UnitTestCase {
 		}
 	}
 
-	/**
-	 * @covers ::__get
-	 */
 	public function test_order_object_magic_getter_for_items_should_return_true() {
 		foreach ( self::$orders as $order ) {
 			$o = edd_get_order( $order );
@@ -640,5 +632,33 @@ class Orders_Tests extends EDD_UnitTestCase {
 				$this->assertInstanceOf( 'EDD\Orders\Order_Item', $item );
 			}
 		}
+	}
+
+	public function test_order_recalculate_returns_same_total() {
+		$order = edd_get_order( self::$orders[0] );
+		$order->recalculate();
+
+		$updated = edd_get_order( $order->id );
+
+		$this->assertSame( $order->total, $updated->total );
+	}
+
+	public function test_order_with_large_negative_fee_total_is_zero() {
+		$order = edd_get_order( self::$orders[4] );
+		edd_add_order_adjustment(
+			array(
+				'object_id'   => $order->id,
+				'object_type' => 'order',
+				'label'       => 'Negative Fee',
+				'subtotal'    => -1000,
+				'tax'         => 0,
+				'total'       => -1000,
+				'type'        => 'fee',
+			)
+		);
+		$order->recalculate();
+		$updated = edd_get_order( $order->id );
+
+		$this->assertSame( '0.000000000', $updated->total );
 	}
 }

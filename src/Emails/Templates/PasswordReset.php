@@ -94,6 +94,16 @@ class PasswordReset extends EmailTemplate {
 	}
 
 	/**
+	 * Determines whether the email supports HTML.
+	 *
+	 * @since 3.3.4
+	 * @return false
+	 */
+	public function supports_html(): bool {
+		return false;
+	}
+
+	/**
 	 * The email editable properties.
 	 *
 	 * @since 3.3.0
@@ -209,6 +219,6 @@ class PasswordReset extends EmailTemplate {
 		$title = sprintf( __( '[%s] Password Reset', 'easy-digital-downloads' ), $site_name );
 
 		// This is a WP Core filter.
-		return apply_filters( 'retrieve_password_title', $title );
+		return apply_filters( 'retrieve_password_title', $title, '', new \WP_User( false ) );
 	}
 }

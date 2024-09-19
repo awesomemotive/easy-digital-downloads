@@ -849,6 +849,25 @@ class EDD_Notices {
 						)
 					);
 					break;
+
+				case 'stripe_webhooks_created':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-webhooks-created',
+							'message' => __( 'Webhooks have been created for the Stripe gateway.', 'easy-digital-downloads' ),
+						)
+					);
+					break;
+
+				case 'stripe_webhooks_error':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-webhooks-error',
+							'message' => __( 'There was an error creating webhooks for the Stripe gateway.', 'easy-digital-downloads' ),
+							'class'   => 'error',
+						)
+					);
+					break;
 			}
 		}
 
@@ -934,6 +953,23 @@ class EDD_Notices {
 						array(
 							'id'      => 'edd-note-deleted',
 							'message' => __( 'The order note has been deleted.', 'easy-digital-downloads' ),
+						)
+					);
+					break;
+				case 'order_recalculated':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-order-recalculated',
+							'message' => __( 'The order values have been recalculated.', 'easy-digital-downloads' ),
+						)
+					);
+					break;
+				case 'order_not_recalculated':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-order-not-recalculated',
+							'message' => __( 'The order values could not be recalculated.', 'easy-digital-downloads' ),
+							'class'   => 'error',
 						)
 					);
 					break;
@@ -1031,6 +1067,15 @@ class EDD_Notices {
 						'<strong>',
 						'</strong>'
 					),
+				)
+			);
+		}
+
+		if ( current_user_can( 'edit_users' ) && 'capabilities_reset' === $notice ) {
+			$this->add_notice(
+				array(
+					'id'      => 'edd-capabilities-reset',
+					'message' => __( 'The user capabilities for Easy Digital Downloads have been reset.', 'easy-digital-downloads' ),
 				)
 			);
 		}

@@ -12,6 +12,8 @@ namespace EDD\Assets;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+use EDD\Utils\FileSystem;
+
 /**
  * Styles class.
  */
@@ -79,8 +81,8 @@ class Styles {
 
 		// Look in the child theme directory first, followed by the parent theme, followed by the EDD core templates directory
 		// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
-		// This allows users to copy just edd.css to their theme
-		if ( file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $child_theme_style_sheet_2 ) ) ) ) {
+		// This allows users to copy just edd.css to their theme.
+		if ( FileSystem::file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = FileSystem::file_exists( $child_theme_style_sheet_2 ) ) ) ) {
 			if ( ! empty( $nonmin ) ) {
 				return trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . 'edd.css';
 			}
@@ -88,7 +90,7 @@ class Styles {
 			return trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
 		}
 
-		if ( file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $parent_theme_style_sheet_2 ) ) ) ) {
+		if ( FileSystem::file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = FileSystem::file_exists( $parent_theme_style_sheet_2 ) ) ) ) {
 			if ( ! empty( $nonmin ) ) {
 				return trailingslashit( get_template_directory_uri() ) . $templates_dir . 'edd.css';
 			}
@@ -96,7 +98,7 @@ class Styles {
 			return trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
 		}
 
-		if ( file_exists( $edd_plugin_style_sheet ) ) {
+		if ( FileSystem::file_exists( $edd_plugin_style_sheet ) ) {
 			return trailingslashit( EDD_PLUGIN_URL ) . 'assets/css/edd' . $css_suffix;
 		}
 
@@ -127,10 +129,11 @@ class Styles {
 		$parent_theme_style_sheet   = trailingslashit( get_template_directory() ) . $templates_dir . $file;
 		$parent_theme_style_sheet_2 = trailingslashit( get_template_directory() ) . $templates_dir . 'edd.css';
 
-		if ( file_exists( $child_theme_style_sheet ) ||
-			file_exists( $child_theme_style_sheet_2 ) ||
-			file_exists( $parent_theme_style_sheet ) ||
-			file_exists( $parent_theme_style_sheet_2 )
+		if (
+			FileSystem::file_exists( $child_theme_style_sheet ) ||
+			FileSystem::file_exists( $child_theme_style_sheet_2 ) ||
+			FileSystem::file_exists( $parent_theme_style_sheet ) ||
+			FileSystem::file_exists( $parent_theme_style_sheet_2 )
 		) {
 			return apply_filters( 'edd_load_head_styles', true );
 		}

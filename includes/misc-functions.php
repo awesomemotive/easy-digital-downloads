@@ -998,8 +998,8 @@ function edd_is_uploads_url_protected() {
 			$file_path = trailingslashit( $upload_path ) . $file_name;
 
 			// Save a temporary file - we will try to access it
-			if ( ! file_exists( $file_path ) ) {
-				@file_put_contents( $file_path, 'Just testing!' );
+			if ( ! \EDD\Utils\FileSystem::file_exists( $file_path ) ) {
+				\EDD\Utils\FileSystem::get_fs()->put_contents( $file_path, 'Just testing!' );
 			}
 
 			// Setup vars for request
@@ -1016,9 +1016,9 @@ function edd_is_uploads_url_protected() {
 			$code       = wp_remote_retrieve_response_code( $response );
 			$protected  = (int) ( 200 !== (int) $code );
 
-			// Delete the temporary file
-			if ( file_exists( $file_path ) ) {
-				@unlink( $file_path );
+			// Delete the temporary file.
+			if ( EDD\Utils\FileSystem::file_exists( $file_path ) ) {
+				EDD\Utils\FileSystem::get_fs()->delete( $file_path );
 			}
 		}
 
@@ -1055,13 +1055,13 @@ function edd_cleanup_file_symlinks() {
 	$dir = opendir( $path );
 
 	while ( ( $file = readdir( $dir ) ) !== false ) {
-		if ( $file == '.' || $file == '..' ) {
+		if ( '.' === $file || '..' === $file ) {
 			continue;
 		}
 
 		$transient = get_transient( md5( $file ) );
-		if ( $transient === false ) {
-			@unlink( $path . '/' . $file );
+		if ( false === $transient ) {
+			EDD\Utils\FileSystem::get_fs()->delete( $path . '/' . $file );
 		}
 	}
 }

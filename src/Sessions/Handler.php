@@ -96,6 +96,7 @@ class Handler {
 		}
 		add_action( 'shutdown', array( $this, 'save' ), 20 );
 		add_action( 'wp_logout', array( $this, 'destroy' ) );
+		add_action( 'edd_post_add_to_cart', array( $this, 'set_cart_cookie' ) );
 	}
 
 	/**
@@ -131,7 +132,6 @@ class Handler {
 	 */
 	public function set( $key, $value ) {
 		if ( ! $this->is_active ) {
-			$this->set_cart_cookie();
 			$this->maybe_start_session( true );
 		}
 		if ( ! is_array( $this->data ) ) {
@@ -254,7 +254,7 @@ class Handler {
 	 * @since 3.3.0
 	 */
 	public function forget() {
-		\EDD\Utils\Cookies::set( $this->cookie );
+		\EDD\Utils\Cookies::set( $this->get_cookie_name() );
 		$this->set_cart_cookie( false );
 
 		edd_empty_cart();

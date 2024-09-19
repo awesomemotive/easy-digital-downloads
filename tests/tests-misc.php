@@ -2,6 +2,7 @@
 namespace EDD\Tests;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Utils\FileSystem;
 
 /**
  * @group edd_misc
@@ -511,7 +512,7 @@ class Misc extends EDD_UnitTestCase {
 	}
 
 	private function write_test_file( $full_file_path ) {
-		$file = fopen( $full_file_path,"w" );
+		$file = FileSystem::fopen( $full_file_path, "w" );
 		fwrite( $file,"" );
 		fclose( $file );
 	}

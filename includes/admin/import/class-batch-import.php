@@ -139,7 +139,7 @@ class EDD_Batch_Import {
 	 */
 	public function get_csv_file( $file ) {
 		$this->file = $file;
-		$csv        = array_map( 'str_getcsv', file( $file ) );
+		$csv        = array_map( 'str_getcsv', EDD\Utils\FileSystem::file( $file ) );
 		array_walk(
 			$csv,
 			function ( &$a ) use ( $csv ) {

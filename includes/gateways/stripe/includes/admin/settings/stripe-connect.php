@@ -575,6 +575,11 @@ function edds_stripe_connect_account_info_ajax_response() {
 				edd_update_option( 'stripe_statement_descriptor_prefix', sanitize_text_field( $account->settings->card_payments->statement_descriptor_prefix ) );
 			}
 
+			$webhooks = EDD\Gateways\Stripe\Admin\Connect::check_webhooks();
+			if ( $webhooks ) {
+				$message .= '<br /><br />' . $webhooks;
+			}
+
 			// Return a message with name, email, and reconnect/disconnect actions.
 			return wp_send_json_success(
 				array(
@@ -785,3 +790,5 @@ function edds_stripe_connect_admin_notices_print() {
 	}
 }
 add_action( 'admin_notices', 'edds_stripe_connect_admin_notices_print' );
+
+add_action( 'edd_create_stripe_webhooks', EDD\Gateways\Stripe\Admin\Connect::class . '::create_webhooks' );

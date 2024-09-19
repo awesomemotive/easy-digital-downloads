@@ -132,7 +132,7 @@ function edds_apple_pay_is_valid() {
 function edds_apple_pay_has_domain_verification_file() {
 	$fileinfo = edds_apple_pay_get_fileinfo();
 
-	if ( ! @file_exists( $fileinfo['fullpath'] ) ) {
+	if ( ! EDD\Utils\FileSystem::file_exists( $fileinfo['fullpath'] ) ) {
 		return false;
 	}
 
@@ -167,15 +167,15 @@ function edds_apple_pay_create_directory_and_move_file() {
 	$fileinfo = edds_apple_pay_get_fileinfo();
 
 	// Create directory if it does not exist.
-	if ( ! file_exists( trailingslashit( $fileinfo['path'] ) . $fileinfo['dir'] ) ) {
-		if ( ! @mkdir( trailingslashit( $fileinfo['path'] ) . $fileinfo['dir'], 0755 ) ) { // @codingStandardsIgnoreLine
+	if ( ! EDD\Utils\FileSystem::file_exists( trailingslashit( $fileinfo['path'] ) . $fileinfo['dir'] ) ) {
+		if ( ! EDD\Utils\FileSystem::get_fs()->mkdir( trailingslashit( $fileinfo['path'] ) . $fileinfo['dir'], 0755 ) ) { // @codingStandardsIgnoreLine
 			throw new \Exception( __( 'Unable to create domain association folder in domain root.', 'easy-digital-downloads' ) );
 		}
 	}
 
 	// Move file if needed.
 	if ( ! edds_apple_pay_has_domain_verification_file() ) {
-		if ( ! @copy( trailingslashit( EDDS_PLUGIN_DIR ) . $fileinfo['file'], $fileinfo['fullpath'] ) ) { // @codingStandardsIgnoreLine
+		if ( ! EDD\Utils\FileSystem::get_fs()->copy( trailingslashit( EDDS_PLUGIN_DIR ) . $fileinfo['file'], $fileinfo['fullpath'] ) ) { // @codingStandardsIgnoreLine
 			throw new \Exception( __( 'Unable to copy domain association file to domain .well-known directory.', 'easy-digital-downloads' ) );
 		}
 	}

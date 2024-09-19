@@ -119,8 +119,8 @@ function edd_process_download() {
 					$attached_file = get_attached_file( $attachment_id, false );
 				}
 
-				// Confirm the file exists
-				if ( ! file_exists( $attached_file ) ) {
+				// Confirm the file exists.
+				if ( ! file_exists( EDD\Utils\FileSystem::sanitize_file_path( $attached_file ) ) ) {
 					$attached_file = false;
 				}
 			}
@@ -159,7 +159,11 @@ function edd_process_download() {
 			wp_die( __( 'Error 103: Error downloading file. Please contact support.', 'easy-digital-downloads' ), __( 'File download error', 'easy-digital-downloads' ), 501 );
 		}
 
-		if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+		if (
+			( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) &&
+			isset( $file_details['path'] ) &&
+			file_exists( EDD\Utils\FileSystem::sanitize_file_path( $requested_file ) )
+		) {
 
 			/**
 			 * Download method is set to Redirect in settings but an absolute path was provided
@@ -222,7 +226,11 @@ function edd_process_download() {
 				$direct    = false;
 				$file_path = $requested_file;
 
-				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+				if (
+					( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) &&
+					isset( $file_details['path'] ) &&
+					file_exists( EDD\Utils\FileSystem::sanitize_file_path( $requested_file ) )
+				) {
 
 					/** This is an absolute path */
 					$direct    = true;
@@ -251,8 +259,13 @@ function edd_process_download() {
 					$direct    = true;
 				}
 
-				// Set the file size header
-				header( "Content-Length: " . @filesize( $file_path ) );
+				// Check the filesize so we can either switch the download method or set the header.
+				$file_size = filesize( EDD\Utils\FileSystem::sanitize_file_path( $file_path ) );
+				if ( ! empty( $file_size ) ) {
+					header( "Content-Length: " . $file_size );
+				} else {
+					$direct = false;
+				}
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
@@ -337,8 +350,8 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 		);
 
 		// Make sure the symlink doesn't already exist before we create it
-		if( ! file_exists( $path ) ) {
-			$link = @symlink( realpath( $file ), $path );
+		if ( ! file_exists( EDD\Utils\FileSystem::sanitize_file_path( $path ) ) ) {
+			$link = EDD\Utils\FileSystem::symlink( realpath( $file ), $path );
 		} else {
 			$link = true;
 		}
@@ -794,9 +807,10 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 	$chunksize = 1024 * 1024;
 	$buffer    = '';
 	$cnt       = 0;
-	$handle    = @fopen( $file, 'r' );
+	$handle    = EDD\Utils\FileSystem::fopen( $file, 'r' );
 
-	if ( $size = @filesize( $file ) ) {
+	$size = @filesize( EDD\Utils\FileSystem::sanitize_file_path( $file ) );
+	if ( ! empty( $size ) ) {
 		header( "Content-Length: " . $size );
 	}
 

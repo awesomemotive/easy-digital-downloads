@@ -208,4 +208,8 @@ module.exports = function ( grunt ) {
 
 	// Build task(s).
 	grunt.registerTask( 'prep', [ 'clean', 'force:checktextdomain' ] );
+	grunt.registerTask( 'build', [ 'clean', 'pro', 'lite' ] );
+	grunt.registerTask( 'pro', [ 'copy:pro', 'compress:pro' ] );
+	grunt.registerTask( 'lite', [ 'copy:lite', 'replace:pro' ] );
+	grunt.registerTask( 'repo', [ 'clean:repo', 'copy:repo', 'replace:repo' ] );
 };

@@ -32,6 +32,8 @@ class EDD_Roles {
 	 */
 	public function __construct() {
 		add_filter( 'map_meta_cap', array( $this, 'meta_caps' ), 10, 4 );
+		add_action( 'manage_users_extra_tablenav', array( $this, 'add_reset_tool' ) );
+		add_action( 'edd_reset_capabilities', array( $this, 'reset_capabilities' ) );
 	}
 
 	/**
@@ -40,56 +42,72 @@ class EDD_Roles {
 	 * @since 1.4.4
 	 */
 	public function add_roles() {
-		add_role( 'shop_manager', __( 'Shop Manager', 'easy-digital-downloads' ), array(
-			'read'                   => true,
-			'edit_posts'             => true,
-			'delete_posts'           => true,
-			'unfiltered_html'        => true,
-			'upload_files'           => true,
-			'export'                 => true,
-			'import'                 => true,
-			'delete_others_pages'    => true,
-			'delete_others_posts'    => true,
-			'delete_pages'           => true,
-			'delete_private_pages'   => true,
-			'delete_private_posts'   => true,
-			'delete_published_pages' => true,
-			'delete_published_posts' => true,
-			'edit_others_pages'      => true,
-			'edit_others_posts'      => true,
-			'edit_pages'             => true,
-			'edit_private_pages'     => true,
-			'edit_private_posts'     => true,
-			'edit_published_pages'   => true,
-			'edit_published_posts'   => true,
-			'manage_categories'      => true,
-			'manage_links'           => true,
-			'moderate_comments'      => true,
-			'publish_pages'          => true,
-			'publish_posts'          => true,
-			'read_private_pages'     => true,
-			'read_private_posts'     => true,
-		) );
+		add_role(
+			'shop_manager',
+			__( 'Shop Manager', 'easy-digital-downloads' ),
+			array(
+				'read'                   => true,
+				'edit_posts'             => true,
+				'delete_posts'           => true,
+				'unfiltered_html'        => true,
+				'upload_files'           => true,
+				'export'                 => true,
+				'import'                 => true,
+				'delete_others_pages'    => true,
+				'delete_others_posts'    => true,
+				'delete_pages'           => true,
+				'delete_private_pages'   => true,
+				'delete_private_posts'   => true,
+				'delete_published_pages' => true,
+				'delete_published_posts' => true,
+				'edit_others_pages'      => true,
+				'edit_others_posts'      => true,
+				'edit_pages'             => true,
+				'edit_private_pages'     => true,
+				'edit_private_posts'     => true,
+				'edit_published_pages'   => true,
+				'edit_published_posts'   => true,
+				'manage_categories'      => true,
+				'manage_links'           => true,
+				'moderate_comments'      => true,
+				'publish_pages'          => true,
+				'publish_posts'          => true,
+				'read_private_pages'     => true,
+				'read_private_posts'     => true,
+			)
+		);
 
-		add_role( 'shop_accountant', __( 'Shop Accountant', 'easy-digital-downloads' ), array(
-			'read'         => true,
-			'edit_posts'   => false,
-			'delete_posts' => false,
-		) );
+		add_role(
+			'shop_accountant',
+			__( 'Shop Accountant', 'easy-digital-downloads' ),
+			array(
+				'read'         => true,
+				'edit_posts'   => false,
+				'delete_posts' => false,
+			)
+		);
 
-		add_role( 'shop_worker', __( 'Shop Worker', 'easy-digital-downloads' ), array(
-			'read'         => true,
-			'edit_posts'   => false,
-			'upload_files' => true,
-			'delete_posts' => false,
-		) );
+		add_role(
+			'shop_worker',
+			__( 'Shop Worker', 'easy-digital-downloads' ),
+			array(
+				'read'         => true,
+				'edit_posts'   => false,
+				'upload_files' => true,
+				'delete_posts' => false,
+			)
+		);
 
-		add_role( 'shop_vendor', __( 'Shop Vendor', 'easy-digital-downloads' ), array(
-			'read'         => true,
-			'edit_posts'   => false,
-			'upload_files' => true,
-			'delete_posts' => false,
-		) );
+		add_role(
+			'shop_vendor',
+			__( 'Shop Vendor', 'easy-digital-downloads' ),
+			array(
+				'read'         => true,
+				'edit_posts'   => false,
+				'upload_files' => true,
+				'delete_posts' => false,
+			)
+		);
 	}
 
 	/**
@@ -234,7 +252,6 @@ class EDD_Roles {
 		}
 
 		return $caps;
-
 	}
 
 	/**
@@ -293,5 +310,60 @@ class EDD_Roles {
 			$wp_roles->remove_cap( 'shop_vendor', 'edit_published_products' );
 			$wp_roles->remove_cap( 'shop_vendor', 'upload_files' );
 		}
+	}
+
+	/**
+	 * Adds a capabiilities reset tool to the users.php page.
+	 *
+	 * @since 3.3.4
+	 * @param string $which
+	 * @return void
+	 */
+	public function add_reset_tool( $which ) {
+		if ( 'top' === $which ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_users' ) ) {
+			return;
+		}
+		$url = wp_nonce_url(
+			add_query_arg(
+				'edd-action',
+				'reset_capabilities',
+				admin_url( 'users.php' )
+			),
+			'edd-reset-capabilities'
+		);
+		?>
+		<div class="alignleft actions">
+			<a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Reset EDD User Roles', 'easy-digital-downloads' ); ?></a>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Resets the capabilities for the shop roles.
+	 *
+	 * @since 3.3.4
+	 * @param array $data
+	 * @return void
+	 */
+	public function reset_capabilities( $data ) {
+		if ( ! current_user_can( 'edit_users' ) ) {
+			edd_redirect( admin_url( 'users.php' ) );
+		}
+		if ( empty( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd-reset-capabilities' ) ) {
+			edd_redirect( admin_url( 'users.php' ) );
+		}
+		$this->add_roles();
+		$this->add_caps();
+
+		edd_redirect(
+			add_query_arg(
+				'edd-message',
+				'capabilities_reset',
+				admin_url( 'users.php' )
+			)
+		);
 	}
 }

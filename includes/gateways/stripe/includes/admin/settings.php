@@ -41,7 +41,7 @@ function edds_add_settings( $settings ) {
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
 		),
-		'test_secret_key'             => array(
+		'test_secret_key'               => array(
 			'id'    => 'test_secret_key',
 			'name'  => __( 'Test Secret Key', 'easy-digital-downloads' ),
 			'desc'  => __( 'Enter your test secret key, found in your Stripe Account Settings', 'easy-digital-downloads' ),
@@ -64,34 +64,6 @@ function edds_add_settings( $settings ) {
 			'type'  => 'text',
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
-		),
-		'stripe_webhook_description'    => array(
-			'id'   => 'stripe_webhook_description',
-			'type' => 'descriptive_text',
-			'name' => __( 'Webhooks', 'easy-digital-downloads' ),
-			'desc' =>
-			'<p>' . sprintf(
-				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
-				__( 'In order for Stripe to function completely, you must configure your Stripe webhooks. Visit your %1$saccount dashboard%2$s to configure them. Please add a webhook endpoint for the URL below.', 'easy-digital-downloads' ),
-				'<a href="https://dashboard.stripe.com/account/webhooks" target="_blank" rel="noopener noreferrer">',
-				'</a>'
-			) .
-			'</p>' .
-			'<p><strong>' .
-			sprintf(
-				/* translators: %s Webhook URL. Do not translate. */
-				__( 'Webhook URL: %s', 'easy-digital-downloads' ),
-				home_url( 'index.php?edd-listener=stripe' )
-			) .
-			'</strong></p>' .
-			'<p>' .
-			sprintf(
-				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
-				__( 'See our %1$sdocumentation%2$s for more information.', 'easy-digital-downloads' ),
-				'<a href="' . esc_url( edds_documentation_route( 'stripe' ) ) . '#webhook-configuration' . '" target="_blank" rel="noopener noreferrer">',
-				'</a>'
-			) .
-			'</p>',
 		),
 		'stripe_billing_fields'         => array(
 			'id'      => 'stripe_billing_fields',
@@ -131,7 +103,7 @@ function edds_add_settings( $settings ) {
 			'id'    => 'stripe_include_purchase_summary_in_statement_descriptor',
 			'name'  => __( 'Include Purchase Summary', 'easy-digital-downloads' ),
 			'check' => __( 'Include the product name(s) purchased in the payment descriptor for card payments. If the product name(s) are too long they will be shortened automatically.', 'easy-digital-downloads' ),
-			'desc'  => __( 'Note: This setting does not affect non-card payment methods. Non-card payment methods will always use the Statement Descriptor above.', 'easy-digital-downloads'),
+			'desc'  => __( 'Note: This setting does not affect non-card payment methods. Non-card payment methods will always use the Statement Descriptor above.', 'easy-digital-downloads' ),
 			'type'  => 'checkbox_toggle',
 			'class' => edd_stripe()->connect->is_connected ? '' : 'edd-hidden',
 		),
@@ -169,15 +141,15 @@ function edds_add_settings( $settings ) {
 
 		if ( ! edds_stripe_connect_can_manage_keys() ) {
 			$stripe_settings['stripe_elements_mode'] = array(
-				'id'      => 'stripe_elements_mode',
-				'name'    => __( 'Elements Mode', 'easy-digital-downloads' ),
-				'desc'    => __( 'Toggle between using the legacy Card Elements Stripe integration and the new Payment Elements experience.', 'easy-digital-downloads' ),
-				'type'    => 'select',
-				'options' => array(
+				'id'            => 'stripe_elements_mode',
+				'name'          => __( 'Elements Mode', 'easy-digital-downloads' ),
+				'desc'          => __( 'Toggle between using the legacy Card Elements Stripe integration and the new Payment Elements experience.', 'easy-digital-downloads' ),
+				'type'          => 'select',
+				'options'       => array(
 					'card-elements'    => __( 'Card Element', 'easy-digital-downloads' ),
 					'payment-elements' => __( 'Payment Element', 'easy-digital-downloads' ),
 				),
-				'class'   => 'stripe-elements-mode',
+				'class'         => 'stripe-elements-mode',
 				'tooltip_title' => __( 'Transitioning to Payment Elements', 'easy-digital-downloads' ),
 				'tooltip_desc'  => __( 'You are seeing this option because your store has been using Card Elements prior to the EDD Stripe 2.9.0 update.<br /><br />To ensure that we do not affect your current checkout experience, you can use this setting to toggle between the Card Elements (legacy) and Payment Elements (updated version) to ensure that any customizations or theming you have done still function properly.<br /><br />Please be advised, that in a future version of the Stripe extension, we will deprecate the Card Elements, so take this time to update your store!', 'easy-digital-downloads' ),
 			);
@@ -259,24 +231,29 @@ function edds_add_settings( $settings ) {
 
 		$card_elements_action       = $card_elements_enabled ? 'disable-card-elements' : 'enable-card-elements';
 		$card_elements_button_label = $card_elements_enabled ? __( 'Disable access to Card Elements', 'easy-digital-downloads' ) : __( 'Enable access to Card Elements', 'easy-digital-downloads' );
-		$card_elements_state_label  = $card_elements_enabled  ? __( 'Access to Legacy Card Elements is Enabled', 'easy-digital-downloads' ) : __( 'Access to Legacy Card Elements is Disabled', 'easy-digital-downloads' );
+		$card_elements_state_label  = $card_elements_enabled ? __( 'Access to Legacy Card Elements is Enabled', 'easy-digital-downloads' ) : __( 'Access to Legacy Card Elements is Disabled', 'easy-digital-downloads' );
 
 		$link_class = $card_elements_enabled ? 'edd-button__toggle--enabled' : 'edd-button__toggle--disabled';
 
 		$debug_settings['toggle_card_elements'] = array(
-				'id'   => 'stripe_toggle_card_elements',
-				'name' => __( 'Toggle Card Elements', 'easy-digital-downloads' ),
-				'type' => 'descriptive_text',
-				'desc' => sprintf(
-					'%1$s<span class="screen-reader-text">' . $card_elements_button_label . '</span>%2$s',
-					'<a class="edd-button__toggle ' . $link_class . '" href="' . wp_nonce_url( edd_get_admin_url( array(
-						'page'    => 'edd-settings',
-						'tab'     => 'gateways',
-						'section' => 'edd-stripe',
-						'flag'    => $card_elements_action,
-					) ), $card_elements_action ) . '">',
-					'</a>'
-				) .'<strong>' . $card_elements_state_label . '</strong><br />' . __( 'Card Elements is the legacy Stripe integration. Easy Digital Downloads has updated to use the more secure and reliable Payment Elements feature of Stripe. This toggle allows sites without access to Card Elements to enable or disable it.', 'easy-digital-downloads' ),
+			'id'   => 'stripe_toggle_card_elements',
+			'name' => __( 'Toggle Card Elements', 'easy-digital-downloads' ),
+			'type' => 'descriptive_text',
+			'desc' => sprintf(
+				'%1$s<span class="screen-reader-text">' . $card_elements_button_label . '</span>%2$s',
+				'<a class="edd-button__toggle ' . $link_class . '" href="' . wp_nonce_url(
+					edd_get_admin_url(
+						array(
+							'page'    => 'edd-settings',
+							'tab'     => 'gateways',
+							'section' => 'edd-stripe',
+							'flag'    => $card_elements_action,
+						)
+					),
+					$card_elements_action
+				) . '">',
+				'</a>'
+			) . '<strong>' . $card_elements_state_label . '</strong><br />' . __( 'Card Elements is the legacy Stripe integration. Easy Digital Downloads has updated to use the more secure and reliable Payment Elements feature of Stripe. This toggle allows sites without access to Card Elements to enable or disable it.', 'easy-digital-downloads' ),
 		);
 
 		$settings['edd-stripe'] = array_merge( $settings['edd-stripe'], $debug_settings );
@@ -326,7 +303,6 @@ function edd_stripe_sanitize_stripe_billing_fields_save( $value, $key ) {
 	}
 
 	return $value;
-
 }
 add_filter( 'edd_settings_sanitize_select', 'edd_stripe_sanitize_stripe_billing_fields_save', 10, 2 );
 
