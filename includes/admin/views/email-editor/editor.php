@@ -16,7 +16,11 @@ get_current_screen()->action = 'edit';
 wp_enqueue_style( 'edd-admin-emails' );
 if ( $email->can_edit( 'content' ) ) {
 	$email->maybe_add_required_tag();
-	edd_email_tags_inserter_media_button();
+	$html_allowed = $email->supports_html();
+	edd_email_tags_inserter_media_button( $html_allowed );
+	if ( ! $html_allowed ) {
+		add_filter( 'user_can_richedit', '__return_false', 50 );
+	}
 } else {
 	remove_action( 'media_buttons', 'media_buttons' );
 }

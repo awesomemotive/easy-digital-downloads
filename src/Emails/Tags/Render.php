@@ -59,11 +59,11 @@ class Render {
 			if ( ! $email_object instanceof Order ) {
 				return '';
 			}
-			if ( ! $this->is_first_purchase( $email_object->user_id ) ) {
-				return '';
-			}
 			$user = $this->get_user_data( $email_object->user_id );
 			if ( ! $user ) {
+				return '';
+			}
+			if ( ! $this->is_first_purchase( $email_object->user_id, $email_object->id ) ) {
 				return '';
 			}
 		} elseif ( 'user' === $context ) {
@@ -309,10 +309,11 @@ class Render {
 	 *
 	 * @since 3.3.0
 	 *
-	 * @param int $user_id The user ID.
+	 * @param int $user_id  The user ID.
+	 * @param int $order_id The order ID.
 	 * @return bool
 	 */
-	private function is_first_purchase( $user_id ) {
+	private function is_first_purchase( $user_id, $order_id ) {
 		return empty(
 			edd_get_orders(
 				array(
@@ -320,6 +321,7 @@ class Render {
 					'number'     => 1,
 					'status__in' => edd_get_complete_order_statuses(),
 					'user_id'    => $user_id,
+					'id__not_in' => array( $order_id ),
 				)
 			)
 		);

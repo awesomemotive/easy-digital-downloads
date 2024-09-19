@@ -11,7 +11,7 @@
  * @since       1.4.4
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -23,8 +23,10 @@ class EDD_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
-	 * @var string
+	 *
 	 * @since 1.4.4
+	 *
+	 * @var string
 	 */
 	public $export_type = 'default';
 
@@ -71,7 +73,7 @@ class EDD_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'   => __( 'ID',   'easy-digital-downloads' ),
+			'id'   => __( 'ID', 'easy-digital-downloads' ),
 			'date' => __( 'Date', 'easy-digital-downloads' ),
 		);
 		return $cols;
@@ -107,7 +109,7 @@ class EDD_Export {
 				? ''
 				: ',';
 
-			$i++;
+			++$i;
 		}
 		echo "\r\n";
 	}
@@ -121,7 +123,7 @@ class EDD_Export {
 	 */
 	public function get_data() {
 
-		// Just a sample data array
+		// Just a sample data array.
 		$data = array(
 			0 => array(
 				'id'   => '',
@@ -175,7 +177,6 @@ class EDD_Export {
 	 *
 	 * @since 1.4.4
 	 *
-	 *
 	 * @uses EDD_Export::can_export()
 	 * @uses EDD_Export::headers()
 	 * @uses EDD_Export::csv_cols_out()
@@ -188,13 +189,13 @@ class EDD_Export {
 			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
-		// Set headers
+		// Set headers.
 		$this->headers();
 
-		// Output CSV columns (headers)
+		// Output CSV columns (headers).
 		$this->csv_cols_out();
 
-		// Output CSV rows
+		// Output CSV rows.
 		$this->csv_rows_out();
 
 		edd_die();

@@ -4,7 +4,7 @@ namespace EDD\Admin\Installers;
 
 use WP_Error;
 use WP_Upgrader;
-use WP_Filesystem_Base;
+use EDD\Utils\FileSystem;
 
 /** \WP_Upgrader class */
 require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -60,9 +60,9 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 
 		$defaults = array(
 			'package'                     => '', // Please always pass this.
-			'destination'                 => '', // And this
+			'destination'                 => '', // And this.
 			'clear_destination'           => false,
-			'abort_if_destination_exists' => true, // Abort if the Destination directory exists, Pass clear_destination as false please
+			'abort_if_destination_exists' => true, // Abort if the Destination directory exists, Pass clear_destination as false please.
 			'clear_working'               => true,
 			'is_multi'                    => false,
 			'hook_extra'                  => array(), // Pass any extra $hook_extra args here, this will be passed to any hooked filters.
@@ -102,7 +102,7 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 		 */
 		$options = apply_filters( 'upgrader_package_options', $options );
 
-		if ( ! $options['is_multi'] ) { // call $this->header separately if running multiple times
+		if ( ! $options['is_multi'] ) { // call $this->header separately if running multiple times.
 			$this->skin->header();
 		}
 
@@ -139,8 +139,8 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 
 			// Don't output the 'no signature could be found' failure message for now.
 			if ( (string) $download->get_error_code() !== 'signature_verification_no_signature' || WP_DEBUG ) {
-				// Outout the failure error as a normal feedback, and not as an error:
-				//$this->skin->feedback( $download->get_error_message() );
+				// Output the failure error as a normal feedback, and not as an error:
+				// $this->skin->feedback( $download->get_error_message() );
 
 				// Report this failure back to WordPress.org for debugging purposes.
 				wp_version_check(
@@ -246,23 +246,22 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 	 * Create/delete the maintenance file to enable/disable maintenance mode.
 	 *
 	 * @since 2.8.0
-	 *
-	 * @global WP_Filesystem_Base $wp_filesystem Subclass
-	 *
+	 * @since 3.3.4 Switched to using the EDD\Utils\FileSystem class.
 	 * @param bool $enable True to enable maintenance mode, false to disable.
 	 */
 	public function maintenance_mode( $enable = false ) {
-		global $wp_filesystem;
-		$file = $wp_filesystem->abspath() . '.maintenance';
+		$file_system = FileSystem::get_fs();
+
+		$file = $file_system->abspath() . '.maintenance';
 		if ( $enable ) {
 			//$this->skin->feedback( 'maintenance_start' );
 			// Create maintenance file to signal that we are upgrading
 			$maintenance_string = '<?php $upgrading = ' . time() . '; ?>';
-			$wp_filesystem->delete( $file );
-			$wp_filesystem->put_contents( $file, $maintenance_string, FS_CHMOD_FILE );
-		} elseif ( ! $enable && $wp_filesystem->exists( $file ) ) {
+			$file_system->delete( $file );
+			$file_system->put_contents( $file, $maintenance_string, FS_CHMOD_FILE );
+		} elseif ( ! $enable && FileSystem::file_exists( $file ) ) {
 			//$this->skin->feedback( 'maintenance_end' );
-			$wp_filesystem->delete( $file );
+			$file_system->delete( $file );
 		}
 	}
 
@@ -297,7 +296,7 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 			return $reply;
 		}
 
-		if ( ! preg_match( '!^(http|https|ftp)://!i', $package ) && file_exists( $package ) ) { // Local file or remote?
+		if ( ! preg_match( '!^(http|https|ftp)://!i', $package ) && FileSystem::file_exists( $package ) ) { // Local file or remote?
 			return $package; // Must be a local file.
 		}
 
@@ -320,8 +319,7 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 	 * Unpack a compressed package file.
 	 *
 	 * @since 2.8.0
-	 *
-	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
+	 * @since 3.3.4 Switched to using the EDD\Utils\FileSystem class.
 	 *
 	 * @param string $package        Full path to the package file.
 	 * @param bool   $delete_package Optional. Whether to delete the package file after attempting
@@ -329,29 +327,29 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 	 * @return string|WP_Error The path to the unpacked contents, or a WP_Error on failure.
 	 */
 	public function unpack_package( $package, $delete_package = true ) {
-		global $wp_filesystem;
+		$file_system = FileSystem::get_fs();
 
 		//$this->skin->feedback( 'unpack_package' );
 
-		$upgrade_folder = $wp_filesystem->wp_content_dir() . 'upgrade/';
+		$upgrade_folder = $file_system->wp_content_dir() . 'upgrade/';
 
-		//Clean up contents of upgrade directory beforehand.
-		$upgrade_files = $wp_filesystem->dirlist( $upgrade_folder );
+		// Clean up contents of upgrade directory beforehand.
+		$upgrade_files = $file_system->dirlist( $upgrade_folder );
 		if ( ! empty( $upgrade_files ) ) {
 			foreach ( $upgrade_files as $file ) {
-				$wp_filesystem->delete( $upgrade_folder . $file['name'], true );
+				$file_system->delete( $upgrade_folder . $file['name'], true );
 			}
 		}
 
-		// We need a working directory - Strip off any .tmp or .zip suffixes
+		// We need a working directory - Strip off any .tmp or .zip suffixes.
 		$working_dir = $upgrade_folder . basename( basename( $package, '.tmp' ), '.zip' );
 
-		// Clean up working directory
-		if ( $wp_filesystem->is_dir( $working_dir ) ) {
-			$wp_filesystem->delete( $working_dir, true );
+		// Clean up working directory.
+		if ( $file_system->is_dir( $working_dir ) ) {
+			$file_system->delete( $working_dir, true );
 		}
 
-		// Unzip package to working directory
+		// Unzip package to working directory.
 		$result = unzip_file( $package, $working_dir );
 
 		// Once extracted, delete the package if required.
@@ -360,7 +358,7 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 		}
 
 		if ( is_wp_error( $result ) ) {
-			$wp_filesystem->delete( $working_dir, true );
+			$file_system->delete( $working_dir, true );
 			if ( $result->get_error_code() === 'incompatible_archive' ) {
 				return new WP_Error( 'incompatible_archive', $this->strings['incompatible_archive'], $result->get_error_data() );
 			}
@@ -379,8 +377,8 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 	 * clear out the destination folder if it already exists.
 	 *
 	 * @since 2.8.0
+	 * @since 3.3.4 Switched to using the EDD\Utils\FileSystem class.
 	 *
-	 * @global WP_Filesystem_Base $wp_filesystem        WordPress filesystem subclass.
 	 * @global array              $wp_theme_directories
 	 *
 	 * @param array|string $args {
@@ -402,11 +400,12 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 	 * @return array|WP_Error The result (also stored in `WP_Upgrader::$result`), or a WP_Error on failure.
 	 */
 	public function install_package( $args = array() ) {
-		global $wp_filesystem, $wp_theme_directories;
+		global $wp_theme_directories;
+		$file_system = FileSystem::get_fs();
 
 		$defaults = array(
-			'source'                      => '', // Please always pass this
-			'destination'                 => '', // and this
+			'source'                      => '', // Please always pass this.
+			'destination'                 => '', // and this.
 			'clear_destination'           => false,
 			'clear_working'               => false,
 			'abort_if_destination_exists' => true,
@@ -419,9 +418,6 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 		$source            = $args['source'];
 		$destination       = $args['destination'];
 		$clear_destination = $args['clear_destination'];
-
-		// @todo does this need to be replaced?
-		// wpforms_set_time_limit( 300 );
 
 		if ( empty( $source ) || empty( $destination ) ) {
 			return new WP_Error( 'bad_request', $this->strings['bad_request'] );
@@ -450,12 +446,12 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 		$remote_source     = $args['source'];
 		$local_destination = $destination;
 
-		$source_files       = array_keys( $wp_filesystem->dirlist( $remote_source ) );
-		$remote_destination = $wp_filesystem->find_folder( $local_destination );
+		$source_files       = array_keys( $file_system->dirlist( $remote_source ) );
+		$remote_destination = $file_system->find_folder( $local_destination );
 		$count_source_files = count( $source_files );
 
 		// Locate which directory to copy to the new folder, This is based on the actual folder holding the files.
-		if ( $count_source_files === 1 && $wp_filesystem->is_dir( trailingslashit( $args['source'] ) . $source_files[0] . '/' ) ) { // Only one folder? Then we want its contents.
+		if ( $count_source_files === 1 && $file_system->is_dir( trailingslashit( $args['source'] ) . $source_files[0] . '/' ) ) { // Only one folder? Then we want its contents.
 			$source = trailingslashit( $args['source'] ) . trailingslashit( $source_files[0] );
 		} elseif ( $count_source_files === 0 ) {
 			return new WP_Error( 'incompatible_archive_empty', $this->strings['incompatible_archive'], $this->strings['no_files'] ); // There are no files?
@@ -482,7 +478,7 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 
 		// Has the source location changed? If so, we need a new source_files list.
 		if ( $source !== $remote_source ) {
-			$source_files = array_keys( $wp_filesystem->dirlist( $source ) );
+			$source_files = array_keys( $file_system->dirlist( $source ) );
 		}
 
 		/*
@@ -522,21 +518,21 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 			if ( is_wp_error( $removed ) ) {
 				return $removed;
 			}
-		} elseif ( $args['abort_if_destination_exists'] && $wp_filesystem->exists( $remote_destination ) ) {
+		} elseif ( $args['abort_if_destination_exists'] && FileSystem::file_exists( $remote_destination ) ) {
 			// If we're not clearing the destination folder and something exists there already, Bail.
 			// But first check to see if there are actually any files in the folder.
-			$_files = $wp_filesystem->dirlist( $remote_destination );
+			$_files = $file_system->dirlist( $remote_destination );
 
 			if ( ! empty( $_files ) ) {
-				$wp_filesystem->delete( $remote_source, true ); // Clear out the source files.
+				$file_system->delete( $remote_source, true ); // Clear out the source files.
 
 				return new WP_Error( 'folder_exists', $this->strings['folder_exists'], $remote_destination );
 			}
 		}
 
 		// Create destination if needed.
-		if ( ! $wp_filesystem->exists( $remote_destination ) ) {
-			if ( ! $wp_filesystem->mkdir( $remote_destination, FS_CHMOD_DIR ) ) {
+		if ( ! FileSystem::file_exists( $remote_destination ) ) {
+			if ( ! $file_system->mkdir( $remote_destination, FS_CHMOD_DIR ) ) {
 				return new WP_Error( 'mkdir_failed_destination', $this->strings['mkdir_failed'], $remote_destination );
 			}
 		}
@@ -546,7 +542,7 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 
 		if ( is_wp_error( $result ) ) {
 			if ( $args['clear_working'] ) {
-				$wp_filesystem->delete( $remote_source, true );
+				$file_system->delete( $remote_source, true );
 			}
 
 			return $result;
@@ -554,12 +550,12 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 
 		// Clear the Working folder?
 		if ( $args['clear_working'] ) {
-			$wp_filesystem->delete( $remote_source, true );
+			$file_system->delete( $remote_source, true );
 		}
 
 		$destination_name = basename( str_replace( $local_destination, '', $destination ) );
 
-		if ( $destination_name === '.' ) {
+		if ( '.' === $destination_name ) {
 			$destination_name = '';
 		}
 

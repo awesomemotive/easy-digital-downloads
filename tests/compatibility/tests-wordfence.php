@@ -41,8 +41,8 @@ class Wordfence extends EDD_UnitTestCase {
 	public function test_wordfence_compatibility_class_not_loaded() {
 		Loader::load_plugin_compatibility();
 
-		$this->assertTrue( array_key_exists( 'EDD\Compatibility\Plugins\Wordfence', Loader::get_loaded() ) );
-		$this->assertFalse( Loader::get_loaded()['EDD\Compatibility\Plugins\Wordfence'] );
+		$this->assertTrue( array_key_exists( 'wordfence', Loader::get_loaded()['plugins'] ) );
+		$this->assertFalse( Loader::get_loaded()['plugins']['wordfence'] );
 	}
 
 	public function test_wordfence_compatibility_class_is_loaded() {
@@ -51,7 +51,7 @@ class Wordfence extends EDD_UnitTestCase {
 
 		Loader::load_plugin_compatibility();
 
-		$this->assertTrue( array_key_exists( 'EDD\Compatibility\Plugins\Wordfence', Loader::get_loaded() ) );
-		$this->assertTrue( Loader::get_loaded()['EDD\Compatibility\Plugins\Wordfence'] );
+		$this->assertTrue( array_key_exists( 'wordfence', Loader::get_loaded()['plugins'] ) );
+		$this->assertTrue( Loader::get_loaded()['plugins']['wordfence'] );
 	}
 }

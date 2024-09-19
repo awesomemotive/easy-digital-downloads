@@ -57,10 +57,16 @@ class Recovery extends EDD_UnitTestCase {
 		$this->assertEquals( 'stripe', $order->gateway );
 	}
 
+	public function test_recovering_payment_date_is_today() {
+		$order = edd_get_order( self::$recovered_payment_id );
+
+		$this->assertEquals( gmdate( 'Y-m-d' ), gmdate( 'Y-m-d', strtotime( $order->date_created ) ) );
+	}
+
 	private function generate_recoverable_order() {
 		$initial_purchase_data = array(
 			'price'        => 299.0,
-			'date'         => date( 'Y-m-d H:i:s' ),
+			'date'         => '2017-08-15 18:10:37',
 			'user_email'   => 'bruce@waynefoundation.org',
 			'purchase_key' => '186c2fb5402d756487bd4b6192d59bc2',
 			'currency'     => 'USD',
@@ -121,7 +127,6 @@ class Recovery extends EDD_UnitTestCase {
 	private function generate_recovered_order() {
 		$recovery_purchase_data = array(
 			'price'        => 299.0,
-			'date'         => '2017-08-15 18:10:37',
 			'user_email'   => 'batman@thebatcave.co',
 			'purchase_key' => '4f2b5cda76c2a997996f4cf8b68255ed',
 			'currency'     => 'USD',

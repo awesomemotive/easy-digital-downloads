@@ -517,8 +517,10 @@ function edd_add_custom_roles_rest_user_query( $prepared_args, $request ) {
 		return $prepared_args;
 	}
 
-	$post_id = (int) filter_var( $referer['query'], FILTER_SANITIZE_NUMBER_INT );
-	if ( empty( $post_id ) || 'download' !== get_post_type( $post_id ) ) {
+	$post_id   = (int) filter_var( $referer['query'], FILTER_SANITIZE_NUMBER_INT );
+	$post_type = filter_var( $referer['query'], FILTER_SANITIZE_SPECIAL_CHARS );
+	$post_type = str_replace( 'post_type=', '', $post_type );
+	if ( 'download' !== $post_type && 'download' !== get_post_type( $post_id ) ) {
 		return $prepared_args;
 	}
 

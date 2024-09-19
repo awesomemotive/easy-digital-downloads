@@ -17,6 +17,16 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.2.8
  */
 class Wordfence extends Plugin {
+
+	/**
+	 * The plugin name
+	 *
+	 * @since 3.2.8
+	 *
+	 * @var string
+	 */
+	public $plugin_name = 'wordfence';
+
 	/**
 	 * Check if the plugin is active
 	 *

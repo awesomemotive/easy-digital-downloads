@@ -9,9 +9,9 @@
  */
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
+
+use EDD\Utils\FileSystem;
 
 /**
  * EDD_Stripe class.
@@ -276,7 +276,7 @@ class EDD_Stripe {
 
 		$possible_region_file = 'class-edd-stripe-region-' . $stripe_account_country . '.php';
 		$possible_region_path = EDDS_PLUGIN_DIR . 'includes/utils/regional-support/' . $possible_region_file;
-		if ( ! file_exists( $possible_region_path ) ) {
+		if ( ! FileSystem::file_exists( $possible_region_path ) ) {
 			return false;
 		}
 

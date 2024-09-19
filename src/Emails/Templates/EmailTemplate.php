@@ -1,6 +1,7 @@
 <?php
 
 namespace EDD\Emails\Templates;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 use EDD\Emails\Email;
@@ -362,6 +363,16 @@ abstract class EmailTemplate implements TemplateInterface {
 		$this->installed = true;
 
 		return $email_id;
+	}
+
+	/**
+	 * Determines whether the email supports HTML.
+	 *
+	 * @since 3.3.4
+	 * @return bool
+	 */
+	public function supports_html(): bool {
+		return 'text/html' === EDD()->emails->get_content_type();
 	}
 
 	/**

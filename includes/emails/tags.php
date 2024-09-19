@@ -127,6 +127,9 @@ function edd_get_emails_tags_list() {
  */
 function edd_do_email_tags( $content = '', $order_id = 0, $email_object = null, $context = 'order' ) {
 
+	// Load email tags.
+	edd_load_email_tags();
+
 	// Replace all tags.
 	$content = EDD()->email_tags->do_tags( $content, $order_id, $email_object, $context );
 
@@ -142,11 +145,13 @@ function edd_do_email_tags( $content = '', $order_id = 0, $email_object = null, 
  * Load email tags.
  *
  * @since 1.9
+ * @since 3.3.4 No longer loads on `init`; called as needed.
  */
 function edd_load_email_tags() {
-	do_action( 'edd_add_email_tags' );
+	if ( ! did_action( 'edd_add_email_tags' ) ) {
+		do_action( 'edd_add_email_tags' );
+	}
 }
-add_action( 'init', 'edd_load_email_tags', -999 );
 
 /**
  * Add default EDD email template tags.

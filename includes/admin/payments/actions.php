@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -25,8 +25,8 @@ function edd_handle_order_item_change( $request = array() ) {
 
 	// Bail if missing necessary properties
 	if (
-		empty( $request['_wpnonce']   ) ||
-		empty( $request['id']         ) ||
+		empty( $request['_wpnonce'] ) ||
+		empty( $request['id'] ) ||
 		empty( $request['order_item'] )
 	) {
 		return false;
@@ -41,18 +41,22 @@ function edd_handle_order_item_change( $request = array() ) {
 	$data = array();
 
 	// Maybe add status to data to update
-	if ( ! empty( $request['status'] ) && ( 'inherit' === $request['status'] ) || in_array( $request['status'], array_keys( edd_get_payment_statuses() ), true )) {
+	if ( ! empty( $request['status'] ) && ( 'inherit' === $request['status'] ) || in_array( $request['status'], array_keys( edd_get_payment_statuses() ), true ) ) {
 		$data['status'] = sanitize_key( $request['status'] );
 	}
 
 	// Update order item
 	if ( ! empty( $data ) ) {
 		edd_update_order_item( $request['order_item'], $data );
-		edd_redirect( edd_get_admin_url( array(
-			'page' => 'edd-payment-history',
-			'view' => 'view-order-details',
-			'id'   => absint( $request['id'] )
-		) ) );
+		edd_redirect(
+			edd_get_admin_url(
+				array(
+					'page' => 'edd-payment-history',
+					'view' => 'view-order-details',
+					'id'   => absint( $request['id'] ),
+				)
+			)
+		);
 	}
 }
 add_action( 'edd_handle_order_item_change', 'edd_handle_order_item_change' );
@@ -64,7 +68,7 @@ add_action( 'edd_handle_order_item_change', 'edd_handle_order_item_change' );
  * @since 3.0 Refactored to use new core objects and query methods.
  *
  * @param array $data Order data.
-*/
+ */
 function edd_update_payment_details( $data = array() ) {
 
 	// Bail if an empty array is passed.
@@ -219,12 +223,16 @@ function edd_update_payment_details( $data = array() ) {
 
 	do_action( 'edd_updated_edited_purchase', $order_id );
 
-	edd_redirect( edd_get_admin_url( array(
-		'page'        => 'edd-payment-history',
-		'view'        => 'view-order-details',
-		'edd-message' => 'payment-updated',
-		'id'          => absint( $order_id ),
-	) ) );
+	edd_redirect(
+		edd_get_admin_url(
+			array(
+				'page'        => 'edd-payment-history',
+				'view'        => 'view-order-details',
+				'edd-message' => 'payment-updated',
+				'id'          => absint( $order_id ),
+			)
+		)
+	);
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 
@@ -279,11 +287,13 @@ function edd_trigger_trash_order( $data ) {
 
 		edd_trash_order( $payment_id );
 
-		$redirect = edd_get_admin_url( array(
-			'page'        => 'edd-payment-history',
-			'edd-message' => 'order_trashed',
-			'order_type'  => esc_attr( $data['order_type'] ),
-		) );
+		$redirect = edd_get_admin_url(
+			array(
+				'page'        => 'edd-payment-history',
+				'edd-message' => 'order_trashed',
+				'order_type'  => esc_attr( $data['order_type'] ),
+			)
+		);
 
 		edd_redirect( $redirect );
 	}
@@ -309,11 +319,13 @@ function edd_trigger_restore_order( $data ) {
 
 		edd_restore_order( $payment_id );
 
-		$redirect = edd_get_admin_url( array(
-			'page'        => 'edd-payment-history',
-			'edd-message' => 'order_restored',
-			'order_type'  => esc_attr( $data['order_type'] ),
-		) );
+		$redirect = edd_get_admin_url(
+			array(
+				'page'        => 'edd-payment-history',
+				'edd-message' => 'order_restored',
+				'order_type'  => esc_attr( $data['order_type'] ),
+			)
+		);
 
 		edd_redirect( $redirect );
 	}
@@ -325,7 +337,7 @@ add_action( 'edd_restore_order', 'edd_trigger_restore_order' );
  *
  * @since 2.0
  * @return string
-*/
+ */
 function edd_ajax_generate_file_download_link() {
 
 	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
@@ -463,7 +475,6 @@ function edd_ajax_generate_refund_form() {
 	);
 
 	wp_send_json( $return, 200 );
-
 }
 add_action( 'wp_ajax_edd_generate_refund_form', 'edd_ajax_generate_refund_form' );
 
@@ -501,7 +512,7 @@ function edd_ajax_process_refund_form() {
 	// Collect selected order items.
 	$order_items = array();
 	if ( ! empty( $form_data['refund_order_item'] ) && is_array( $form_data['refund_order_item'] ) ) {
-		foreach( $form_data['refund_order_item'] as $order_item_id => $order_item ) {
+		foreach ( $form_data['refund_order_item'] as $order_item_id => $order_item ) {
 			// If there's no quantity or subtotal - bail.
 			if ( empty( $order_item['quantity'] ) || empty( $order_item['subtotal'] ) ) {
 				continue;
@@ -511,7 +522,7 @@ function edd_ajax_process_refund_form() {
 				'order_item_id' => absint( $order_item_id ),
 				'quantity'      => intval( $order_item['quantity'] ),
 				'subtotal'      => edd_sanitize_amount( $order_item['subtotal'] ),
-				'tax'           => ! empty( $order_item['tax'] ) ? edd_sanitize_amount( $order_item['tax'] ) : 0.00
+				'tax'           => ! empty( $order_item['tax'] ) ? edd_sanitize_amount( $order_item['tax'] ) : 0.00,
 			);
 		}
 	}
@@ -519,7 +530,7 @@ function edd_ajax_process_refund_form() {
 	// Collect selected adjustments.
 	$adjustments = array();
 	if ( ! empty( $form_data['refund_order_adjustment'] ) && is_array( $form_data['refund_order_adjustment'] ) ) {
-		foreach( $form_data['refund_order_adjustment'] as $adjustment_id => $adjustment ) {
+		foreach ( $form_data['refund_order_adjustment'] as $adjustment_id => $adjustment ) {
 			// If there's no quantity or subtotal - bail.
 			if ( empty( $adjustment['quantity'] ) || empty( $adjustment['subtotal'] ) ) {
 				continue;
@@ -529,7 +540,7 @@ function edd_ajax_process_refund_form() {
 				'adjustment_id' => absint( $adjustment_id ),
 				'quantity'      => intval( $adjustment['quantity'] ),
 				'subtotal'      => floatval( edd_sanitize_amount( $adjustment['subtotal'] ) ),
-				'tax'           => ! empty( $adjustment['tax'] ) ? floatval( edd_sanitize_amount( $adjustment['tax'] ) ) : 0.00
+				'tax'           => ! empty( $adjustment['tax'] ) ? floatval( edd_sanitize_amount( $adjustment['tax'] ) ) : 0.00,
 			);
 		}
 	}
@@ -545,11 +556,11 @@ function edd_ajax_process_refund_form() {
 			'message'    => sprintf( __( 'Refund successfully processed.', 'easy-digital-downloads' ) ),
 			'refund_url' => edd_get_admin_url(
 				array(
-					'page'      => 'edd-payment-history',
-					'view'      => 'view-refund-details',
-					'id'        => urlencode( $refund_id ),
+					'page' => 'edd-payment-history',
+					'view' => 'view-refund-details',
+					'id'   => urlencode( $refund_id ),
 				)
-			)
+			),
 		);
 		wp_send_json_success( $return, 200 );
 	} else {
@@ -646,7 +657,7 @@ function edd_orders_list_table_process_bulk_actions() {
 				break;
 
 			case 'resend-receipt':
-				$order = edd_get_order( $id );
+				$order         = edd_get_order( $id );
 				$order_receipt = EDD\Emails\Registry::get( 'order_receipt', array( $order ) );
 				$order_receipt->send();
 				break;
@@ -658,3 +669,30 @@ function edd_orders_list_table_process_bulk_actions() {
 	wp_safe_redirect( wp_get_referer() );
 }
 add_action( 'load-download_page_edd-payment-history', 'edd_orders_list_table_process_bulk_actions' );
+
+/**
+ * Recalculate the values of an order.
+ *
+ * @since 3.3.4
+ * @param array $data
+ */
+function edd_recalculate_order_values( $data ) {
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		return;
+	}
+	if ( empty( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_recalculate_order_nonce' ) ) {
+		return;
+	}
+	$order        = edd_get_order( $data['id'] );
+	$recalculated = $order->recalculate();
+
+	$url = remove_query_arg( 'edd-action', wp_get_referer() );
+	if ( $recalculated ) {
+		$url = add_query_arg( 'edd-message', 'order_recalculated', $url );
+	} else {
+		$url = add_query_arg( 'edd-message', 'order_not_recalculated', $url );
+	}
+
+	edd_redirect( $url );
+}
+add_action( 'edd_recalculate_order', 'edd_recalculate_order_values' );
