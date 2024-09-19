@@ -1,4 +1,10 @@
 <?php
+/**
+ * Cookie trait
+ *
+ * @package EDD\Sessions\Traits
+ * @since 3.3.0
+ */
 
 namespace EDD\Sessions\Traits;
 
@@ -11,7 +17,7 @@ trait Cookie {
 	 *
 	 * @var string
 	 */
-	private $cookie = 'edd_session_' . COOKIEHASH;
+	private $cookie;
 
 	/**
 	 * True when the cookie exists.
@@ -28,7 +34,8 @@ trait Cookie {
 	 * @return bool|array
 	 */
 	public function get_session_cookie() {
-		$cookie_value = isset( $_COOKIE[ $this->cookie ] ) ? wp_unslash( $_COOKIE[ $this->cookie ] ) : false;
+		$cookie_name  = $this->get_cookie_name();
+		$cookie_value = isset( $_COOKIE[ $cookie_name ] ) ? wp_unslash( $_COOKIE[ $cookie_name ] ) : false;
 		if ( empty( $cookie_value ) || ! is_string( $cookie_value ) ) {
 			return false;
 		}
@@ -79,7 +86,7 @@ trait Cookie {
 		$this->has_cookie = true;
 
 		edd_debug_log( 'Setting session cookie for: ' . $this->session_key );
-		\EDD\Utils\Cookies::set( $this->cookie, $cookie_value, $expiry );
+		\EDD\Utils\Cookies::set( $this->get_cookie_name(), $cookie_value, $expiry );
 	}
 
 	/**
@@ -100,6 +107,22 @@ trait Cookie {
 		}
 
 		return \EDD\Utils\Cookies::set( 'edd_items_in_cart', '1', time() + 30 * MINUTE_IN_SECONDS );
+	}
+
+	/**
+	 * Gets the cookie name.
+	 *
+	 * @since 3.3.4
+	 * @return string
+	 */
+	protected function get_cookie_name() {
+		if ( $this->cookie ) {
+			return $this->cookie;
+		}
+
+		$this->cookie = $this->get_cookie_prefix() . 'edd_session_' . COOKIEHASH;
+
+		return $this->cookie;
 	}
 
 	/**
@@ -154,6 +177,24 @@ trait Cookie {
 	 * @return bool
 	 */
 	private function has_session() {
-		return isset( $_COOKIE[ $this->cookie ] ) || $this->has_cookie || is_user_logged_in(); // @codingStandardsIgnoreLine.
+		return isset( $_COOKIE[ $this->get_cookie_name() ] ) || $this->has_cookie || is_user_logged_in(); // @codingStandardsIgnoreLine.
+	}
+
+	/**
+	 * Gets the cookie prefix.
+	 *
+	 * @since 3.3.4
+	 * @return string
+	 */
+	private function get_cookie_prefix() {
+		/**
+		 * Allow developers to filter the session cookie prefix.
+		 *
+		 * By default the prefix is an empty string.
+		 *
+		 * @since 3.3.4
+		 * @param string $prefix The session cookie prefix.
+		 */
+		return apply_filters( 'edd_session_cookie_prefix', '' );
 	}
 }

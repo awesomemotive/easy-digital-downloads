@@ -329,6 +329,8 @@ abstract class Email {
 	 * @return void
 	 */
 	protected function build() {
+		edd_load_email_tags();
+
 		$this->set_from_name();
 
 		$this->set_from_email();

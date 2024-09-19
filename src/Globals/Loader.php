@@ -7,10 +7,10 @@
  * @since 3.2.0
  *
  * @package     EDD
- * @subpackage  Globals\Polyfills
+ * @subpackage  Globals
  */
 
-namespace EDD\Globals\Polyfills;
+namespace EDD\Globals;
 
 use EDD\EventManagement\SubscriberInterface;
 
@@ -36,9 +36,10 @@ class Loader implements SubscriberInterface {
 	 * @since 3.2.0
 	 */
 	public function include_polyfills() {
-		require_once __DIR__ . '/WordPress.php';
+		$directory = __DIR__ . '/Polyfills';
+		require_once $directory . '/WordPress.php';
 		if ( 'auto' === edd_get_option( 'logged_in_only' ) ) {
-			require_once __DIR__ . '/AutoRegister.php';
+			require_once $directory . '/AutoRegister.php';
 		}
 	}
 }

@@ -49,7 +49,7 @@ function init_core_blocks() {
 	}
 
 	if ( edd_is_pro() ) {
-		if ( file_exists( EDD_BLOCKS_DIR . 'pro/pro.php' ) ) {
+		if ( \EDD\Utils\FileSystem::file_exists( EDD_BLOCKS_DIR . 'pro/pro.php' ) ) {
 			require_once EDD_BLOCKS_DIR . 'pro/pro.php';
 			Pro\init();
 		}

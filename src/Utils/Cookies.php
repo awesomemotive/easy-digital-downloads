@@ -60,13 +60,25 @@ class Cookies {
 	 * @return array
 	 */
 	private static function get_options( $expiration ) {
-		return array(
-			'expires'  => self::get_expiration( $expiration ),
-			'path'     => COOKIEPATH,
-			'domain'   => COOKIE_DOMAIN,
-			'secure'   => is_ssl(),
-			'httponly' => true,
-			'samesite' => 'Lax',
+
+		/**
+		 * Allow developers to filter the cookie options.
+		 *
+		 * @since 3.3.4
+		 * @param array     $cookie_options The cookie options.
+		 * @param null|int  $expiration     The expiration timestamp. Use null to set the cookie to expire immediately.
+		 */
+		return apply_filters(
+			'edd_cookie_options',
+			array(
+				'expires'  => self::get_expiration( $expiration ),
+				'path'     => COOKIEPATH,
+				'domain'   => COOKIE_DOMAIN,
+				'secure'   => is_ssl(),
+				'httponly' => true,
+				'samesite' => 'Lax',
+			),
+			$expiration
 		);
 	}
 

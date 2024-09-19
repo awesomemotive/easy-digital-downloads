@@ -203,7 +203,7 @@ class Utilities {
 		}
 
 		// If the date string cannot be property converted to a valid time, reset it to now.
-		if ( ! strtotime( $date_string ) ) {
+		if ( ! $date_string || ! strtotime( $date_string ) ) {
 			$date_string = 'now';
 		}
 

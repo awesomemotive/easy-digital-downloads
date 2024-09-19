@@ -168,9 +168,12 @@ function edd_get_order_item_by( $field = '', $value = '' ) {
 function edd_get_order_items( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30,
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$order_items = new EDD\Database\Queries\Order_Item();
@@ -193,9 +196,12 @@ function edd_get_order_items( $args = array() ) {
 function edd_count_order_items( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true,
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$order_items = new EDD\Database\Queries\Order_Item( $r );
@@ -218,15 +224,50 @@ function edd_count_order_items( $args = array() ) {
 function edd_get_order_item_counts( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'order_id' => 0,
-		'count'    => true,
-		'groupby'  => 'status',
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'order_id' => 0,
+			'count'    => true,
+			'groupby'  => 'status',
+		)
+	);
 
 	// Query for count
 	$counts = new EDD\Database\Queries\Order_Item( $r );
 
 	// Format & return
 	return edd_format_counts( $counts, $r['groupby'] );
+}
+
+/**
+ * Destroy an order item.
+ *
+ * @since 3.3.4
+ *
+ * @param int $order_item_id Order item ID.
+ * @return bool True if the order item was destroyed, false otherwise.
+ */
+function edd_destroy_order_item( $order_item_id ) {
+
+	$destroyed = edd_delete_order_item( $order_item_id );
+
+	if ( $destroyed ) {
+		$adjustments = edd_get_order_adjustments(
+			array(
+				'object_id'     => $order_item_id,
+				'object_type'   => 'order_item',
+				'no_found_rows' => true,
+			)
+		);
+
+		// Destroy adjustments (fees).
+		if ( ! empty( $adjustments ) ) {
+			foreach ( $adjustments as $adjustment ) {
+				edd_delete_order_adjustment( $adjustment->id );
+			}
+		}
+	}
+
+	return $destroyed;
 }

@@ -17,7 +17,7 @@ if ( function_exists( 'EDD_CFM' ) ) {
 			<p class="edd-description" id="edd-email-description"><?php esc_html_e( 'We will send the purchase receipt to this address.', 'easy-digital-downloads' ); ?></p>
 		</div>
 	<?php endif; ?>
-	<?php if ( ! $customer_info_complete ) : ?>
+	<?php if ( empty( $customer_info_complete ) ) : ?>
 		<div id="edd-first-name-wrap">
 			<label class="edd-label" for="edd-first">
 				<?php
@@ -31,7 +31,7 @@ if ( function_exists( 'EDD_CFM' ) ) {
 			<p class="edd-description" id="edd-first-description"><?php esc_html_e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></p>
 		</div>
 	<?php endif; ?>
-	<?php if ( ! $customer_info_complete ) : ?>
+	<?php if ( empty( $customer_info_complete ) ) : ?>
 		<div id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last">
 				<?php

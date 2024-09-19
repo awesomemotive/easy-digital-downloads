@@ -145,7 +145,7 @@ function edd_get_order_details_sections( $order ) {
 		),
 		array(
 			'id'       => 'logs',
-			'label'    => __( 'Logs', 'easy-digital-downloads' ),
+			'label'    => __( 'Tools', 'easy-digital-downloads' ),
 			'icon'     => 'admin-tools',
 			'callback' => 'edd_order_details_logs',
 		),
@@ -595,7 +595,7 @@ function edd_order_details_logs( $order ) {
 			)
 		);
 		?>
-
+		<h3><?php esc_html_e( 'Logs', 'easy-digital-downloads' ); ?></h3>
 		<p><a href="<?php echo esc_url( $download_log_url ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></p>
 		<p><a href="<?php echo esc_url( $customer_log_url ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></p>
 		<p><a href="<?php echo esc_url( $customer_orders_url ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></p>
@@ -609,6 +609,16 @@ function edd_order_details_logs( $order ) {
 		 * @param int $order_id ID of the current order.
 		 */
 		do_action( 'edd_view_order_details_logs_after', $order->id );
+
+		if ( current_user_can( 'edit_shop_payments' ) ) {
+			$link = wp_nonce_url( add_query_arg( 'edd-action', 'recalculate_order' ), 'edd_recalculate_order_nonce' );
+			?>
+			<br>
+			<div>
+				<a class="button button-secondary" href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Recalculate Order Values', 'easy-digital-downloads' ); ?></a>
+			</div>
+			<?php
+		}
 		?>
 	</div>
 
