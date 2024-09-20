@@ -35,6 +35,7 @@ class Database extends Manager {
 		add_filter( 'edd_cron_schedules', array( $this, 'add_cron_schedule' ) );
 		add_filter( 'edd_cron_events', array( $this, 'add_cron_event' ) );
 		add_filter( 'edd_cron_components', array( $this, 'add_cron_component' ) );
+		add_filter( 'edd_start_session', array( $this, 'should_start_session' ) );
 	}
 
 	/**
@@ -160,5 +161,21 @@ class Database extends Manager {
 				'meta'   => false,
 			)
 		);
+	}
+
+	/**
+	 * Determines if we should start the session.
+	 * This is used to prevent the session from starting before the EDD database components are loaded.
+	 *
+	 * @since 3.3.4
+	 * @param bool $should_start Whether we should start the session.
+	 * @return bool
+	 */
+	public function should_start_session( $should_start ) {
+		if ( ! did_action( 'edd_setup_components' ) ) {
+			return false;
+		}
+
+		return $should_start;
 	}
 }

@@ -54,10 +54,16 @@ add_action( 'load-download_page_edd-settings', 'edd_email_tags_inserter_register
  * @see edd_email_tags_inserter_media_button_output()
  *
  * @since 3.0
+ *
+ * @param bool $allow_html Whether to allow HTML tags in the email.
  */
-function edd_email_tags_inserter_media_button() {
+function edd_email_tags_inserter_media_button( $allow_html = true ) {
+	edd_load_email_tags();
+
 	remove_all_actions( 'media_buttons' );
-	add_action( 'media_buttons', 'media_buttons' );
+	if ( $allow_html ) {
+		add_action( 'media_buttons', 'media_buttons' );
+	}
 	add_action( 'media_buttons', 'edd_email_tags_inserter_media_button_output' );
 }
 
@@ -88,6 +94,19 @@ function edd_email_tags_inserter_media_button_output() {
 		if ( $email ) {
 			$context   = $email->context;
 			$recipient = $email->recipient;
+			if ( ! $email->get_template()->supports_html() ) {
+				$content = __( 'This email will be sent as a plain text email and does not support images or HTML markup.', 'easy-digital-downloads' );
+				if ( 'text/html' === EDD()->emails->get_content_type() ) {
+					$content .= ' ' . __( 'This is specific to this email and does not affect other emails.', 'easy-digital-downloads' );
+				}
+				$tooltip = new \EDD\HTML\Tooltip(
+					array(
+						'content'  => $content,
+						'dashicon' => 'dashicons-warning',
+					)
+				);
+				$tooltip->output();
+			}
 		}
 	}
 	if ( wp_script_is( 'edd-admin-email-tags' ) ) {

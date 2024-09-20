@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 use EDD\EventManagement\SubscriberInterface;
 use EDD\Admin\Promos\Notices\Notice;
 use Sandhills\Utils\Persistent_Dismissible;
+use EDD\Utils\FileSystem;
 
 /**
  * PromoHandler class.
@@ -70,7 +71,7 @@ class PromoHandler implements SubscriberInterface {
 				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice_class_name ) ) ) );
 				$file_path = EDD_PLUGIN_DIR . 'includes/admin/promos/notices/class-' . $file_name . '.php';
 
-				if ( file_exists( $file_path ) ) {
+				if ( FileSystem::file_exists( $file_path ) ) {
 					require_once $file_path;
 				}
 			}
@@ -217,7 +218,7 @@ class PromoHandler implements SubscriberInterface {
 				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice_class_to_check ) ) ) );
 				$file_path = EDD_PLUGIN_DIR . 'includes/admin/promos/notices/class-' . $file_name . '.php';
 
-				if ( file_exists( $file_path ) ) {
+				if ( FileSystem::file_exists( $file_path ) ) {
 					require_once $file_path;
 				}
 			}

@@ -189,7 +189,7 @@ final class Table_Endpoint extends Endpoint {
 		if ( ! class_exists( $class ) ) {
 			$path_to_file = $this->get_class_file();
 
-			if ( file_exists( $path_to_file ) ) {
+			if ( \EDD\Utils\FileSystem::file_exists( $path_to_file ) ) {
 				require_once $path_to_file;
 			}
 		}

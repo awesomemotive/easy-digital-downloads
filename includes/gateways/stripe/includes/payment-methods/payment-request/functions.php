@@ -31,22 +31,21 @@ function edds_prb_is_enabled( $context = array() ) {
 		(array) edd_get_option( 'stripe_prb', array() )
 	);
 
+	if ( empty( $enabled_contexts ) ) {
+		return false;
+	}
+
 	if ( ! is_array( $context ) ) {
 		$context = array( $context );
 	}
 
-	// Nothing particular is being checked for; check if any values are checked.
-	if ( empty( $context ) ) {
-		return count( $enabled_contexts ) > 0;
-	}
-
 	// Passed context is not allowed. Disabled.
-	if ( 0 === count( array_intersect( $context, $allowed_contexts ) ) ) {
+	if ( ! empty( $context ) && 0 === count( array_intersect( $context, $allowed_contexts ) ) ) {
 		return false;
 	}
 
 	// Passed context is not enabled in setting. Disabled.
-	if ( 0 === count( array_intersect( $context, $enabled_contexts ) ) ) {
+	if ( ! empty( $context ) && 0 === count( array_intersect( $context, $enabled_contexts ) ) ) {
 		return false;
 	}
 
@@ -82,7 +81,7 @@ function edds_prb_is_enabled( $context = array() ) {
  * @return array Payment Request Button data.
  */
 function edds_prb_get_download_data( $download_id, $price_id = false, $quantity = 1 ) {
-	$data  = array(
+	$data = array(
 		'currency'      => strtolower( edd_get_currency() ),
 		'country'       => strtoupper( edd_get_shop_country() ),
 		'total'         => array(),
@@ -125,7 +124,7 @@ function edds_prb_get_download_data( $download_id, $price_id = false, $quantity 
 
 		$prices = $download->prices;
 
-		$price    = isset( $prices[ $price_id ] )
+		$price = isset( $prices[ $price_id ] )
 			? $prices[ $price_id ]['amount']
 			: false;
 
@@ -179,7 +178,7 @@ function edds_prb_get_download_data( $download_id, $price_id = false, $quantity 
  * @return array Payment Request Button data.
  */
 function edds_prb_get_cart_data() {
-	$data  = array(
+	$data = array(
 		'currency'      => strtolower( edd_get_currency() ),
 		'country'       => strtoupper( edd_get_shop_country() ),
 		'total'         => array(),

@@ -73,7 +73,7 @@ class NewUser extends Email {
 	 * @return void
 	 */
 	protected function set_email_body_content() {
-		$this->raw_body_content = apply_filters( 'edd_user_registration_admin_email_message', $this->get_email()->content, $this->user_data );
+		$this->raw_body_content = apply_filters( 'edd_user_registration_email_message', $this->get_email()->content, $this->user_data );
 	}
 
 	/**

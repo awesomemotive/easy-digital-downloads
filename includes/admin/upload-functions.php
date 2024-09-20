@@ -51,7 +51,6 @@ add_filter( 'wp_handle_upload_prefilter', 'edd_change_downloads_upload_dir', 5 )
  * @param bool $method The method used to download files.
  */
 function edd_create_protection_files( $force = false, $method = false ) {
-	$file_system = EDD\Utils\FileSystem::get_fs();
 	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
 
 		$upload_path = edd_get_upload_dir();
@@ -62,23 +61,23 @@ function edd_create_protection_files( $force = false, $method = false ) {
 		// Top level .htaccess file.
 		$rules = edd_get_htaccess_rules( $method );
 		if ( edd_htaccess_exists() ) {
-			$contents = $file_system->get_contents( $upload_path . '/.htaccess' );
+			$contents = EDD\Utils\FileSystem::get_contents( $upload_path . '/.htaccess' );
 			if ( $contents !== $rules || ! $contents ) {
 				// Update the .htaccess rules if they don't match.
-				$file_system->put_contents( $upload_path . '/.htaccess', $rules );
+				EDD\Utils\FileSystem::put_contents( $upload_path . '/.htaccess', $rules );
 			}
 		} elseif ( $upload_path_writeable ) {
 			// Create the file if it doesn't exist.
-			$file_system->put_contents( $upload_path . '/.htaccess', $rules );
+			EDD\Utils\FileSystem::put_contents( $upload_path . '/.htaccess', $rules );
 		}
 
 		// Top level blank index.php.
-		if ( $upload_path_writeable && ! file_exists( $upload_path . '/index.php' ) ) {
-			$file_system->put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+		if ( $upload_path_writeable && ! EDD\Utils\FileSystem::file_exists( $upload_path . '/index.php' ) ) {
+			EDD\Utils\FileSystem::put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 		}
 
-		if ( $upload_path_writeable && ! file_exists( $upload_path . '/index.html' ) ) {
-			$file_system->put_contents( $upload_path . '/index.html', '' );
+		if ( $upload_path_writeable && ! EDD\Utils\FileSystem::file_exists( $upload_path . '/index.html' ) ) {
+			EDD\Utils\FileSystem::put_contents( $upload_path . '/index.html', '' );
 		}
 
 		// Now place index.php files in all sub folders.
@@ -90,12 +89,12 @@ function edd_create_protection_files( $force = false, $method = false ) {
 			}
 
 			// Create index.php, if it doesn't exist.
-			if ( ! file_exists( $folder . 'index.php' ) ) {
-				$file_system->put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+			if ( ! EDD\Utils\FileSystem::file_exists( $folder . 'index.php' ) ) {
+				EDD\Utils\FileSystem::put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 			}
 
-			if ( ! file_exists( $folder . 'index.html' ) ) {
-				$file_system->put_contents( $folder . 'index.html', '' );
+			if ( ! EDD\Utils\FileSystem::file_exists( $folder . 'index.html' ) ) {
+				EDD\Utils\FileSystem::put_contents( $folder . 'index.html', '' );
 			}
 		}
 
@@ -114,7 +113,7 @@ add_action( 'admin_init', 'edd_create_protection_files' );
 function edd_htaccess_exists() {
 	$upload_path = edd_get_upload_dir();
 
-	return file_exists( $upload_path . '/.htaccess' );
+	return EDD\Utils\FileSystem::file_exists( $upload_path . '/.htaccess' );
 }
 
 /**

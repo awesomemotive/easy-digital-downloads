@@ -76,11 +76,10 @@ class API {
 		}
 
 		$request = wp_remote_get(
-			$this->api_url,
+			add_query_arg( $this->get_body( $api_params ), $this->api_url ),
 			array(
 				'timeout'   => 15,
 				'sslverify' => true,
-				'body'      => $this->get_body( $api_params ),
 			)
 		);
 
@@ -104,7 +103,7 @@ class API {
 		return wp_parse_args(
 			$api_params,
 			array(
-				'url' => home_url(),
+				'url' => urlencode( home_url() ),
 			)
 		);
 	}

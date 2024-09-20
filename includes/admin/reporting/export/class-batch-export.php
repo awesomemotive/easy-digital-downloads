@@ -14,6 +14,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Utils\FileSystem;
+
 /**
  * EDD_Export Class
  *
@@ -51,6 +53,15 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @var string
 	 */
 	public $filetype;
+
+	/**
+	 * File system object
+	 *
+	 * @since 3.3.4
+	 *
+	 * @var object
+	 */
+	private $file_system;
 
 	/**
 	 * The current step being processed
@@ -132,6 +143,7 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @param int $_step The step to process.
 	 */
 	public function __construct( $_step = 1 ) {
+		$this->file_system = FileSystem::get_fs();
 
 		$exports_dir    = edd_get_exports_dir();
 		$this->filetype = '.csv';
@@ -146,7 +158,7 @@ class EDD_Batch_Export extends EDD_Export {
 		);
 		$this->file     = trailingslashit( $exports_dir ) . $this->filename;
 
-		if ( ! is_writeable( $exports_dir ) ) {
+		if ( ! $this->file_system->is_writable( $exports_dir ) ) {
 			$this->is_writable = false;
 		}
 
@@ -169,8 +181,8 @@ class EDD_Batch_Export extends EDD_Export {
 		if ( $this->step < 2 ) {
 
 			// Make sure we start with a fresh file on step 1.
-			if ( file_exists( $this->file ) ) {
-				unlink( $this->file );
+			if ( FileSystem::file_exists( $this->file ) ) {
+				$this->file_system->delete( $this->file );
 			}
 			$this->print_csv_cols();
 		}
@@ -265,18 +277,18 @@ class EDD_Batch_Export extends EDD_Export {
 
 		$file = '';
 
-		if ( @file_exists( $this->file ) ) {
+		if ( FileSystem::file_exists( $this->file ) ) {
 
-			if ( ! is_writeable( $this->file ) ) {
+			if ( ! $this->file_system->is_writable( $this->file ) ) {
 				$this->is_writable = false;
 			}
 
-			$file = @file_get_contents( $this->file );
+			$file = FileSystem::get_contents( $this->file );
 
 		} else {
 
-			@file_put_contents( $this->file, '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			@chmod( $this->file, 0664 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$this->file_system->put_contents( $this->file, '' );
+			$this->file_system->chmod( $this->file, 0664 );
 
 		}
 
@@ -294,10 +306,10 @@ class EDD_Batch_Export extends EDD_Export {
 
 		$file  = $this->get_file();
 		$file .= $data;
-		@file_put_contents( $this->file, $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$this->file_system->put_contents( $this->file, $file );
 
 		// If we have no rows after this step, mark it as an empty export.
-		$file_rows    = file( $this->file, FILE_SKIP_EMPTY_LINES );
+		$file_rows    = FileSystem::file( $this->file, FILE_SKIP_EMPTY_LINES );
 		$default_cols = $this->get_csv_cols();
 		$default_cols = empty( $default_cols ) ? 0 : 1;
 
@@ -317,7 +329,7 @@ class EDD_Batch_Export extends EDD_Export {
 
 		$file = $this->get_file();
 
-		@unlink( $this->file );
+		$this->file_system->delete( $this->file );
 
 		echo $file;
 

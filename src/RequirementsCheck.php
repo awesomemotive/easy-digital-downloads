@@ -15,6 +15,8 @@ namespace EDD;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+use EDD\Utils\FileSystem;
+
 /**
  * Requirements Check
  *
@@ -481,15 +483,15 @@ final class RequirementsCheck {
 		$mofile_global3 = WP_LANG_DIR . "/plugins/easy-digital-downloads/{$mofile}";
 
 		// Try to load from first global location.
-		if ( file_exists( $mofile_global1 ) ) {
+		if ( FileSystem::file_exists( $mofile_global1 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
 
 			// Try to load from next global location.
-		} elseif ( file_exists( $mofile_global2 ) ) {
+		} elseif ( FileSystem::file_exists( $mofile_global2 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
 
 			// Try to load from next global location.
-		} elseif ( file_exists( $mofile_global3 ) ) {
+		} elseif ( FileSystem::file_exists( $mofile_global3 ) ) {
 			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
 
 			// Load the default language files.
