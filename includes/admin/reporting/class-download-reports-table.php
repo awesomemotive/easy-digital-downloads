@@ -169,7 +169,9 @@ class EDD_Download_Reports_Table extends List_Table {
 	 * @return void
 	 */
 	public function category_filter() {
-		if ( get_terms( 'download_category' ) ) {
+		$categories = get_terms( 'download_category' );
+
+		if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
 			echo EDD()->html->category_dropdown( 'category', $this->get_category() );
 		}
 	}

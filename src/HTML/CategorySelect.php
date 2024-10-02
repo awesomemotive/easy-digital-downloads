@@ -86,8 +86,10 @@ class CategorySelect {
 		$categories = get_terms( $this->get_category_args() );
 		$options    = array();
 
-		foreach ( $categories as $category ) {
-			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
+		if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+			foreach ( $categories as $category ) {
+				$options[ absint( $category->term_id ) ] = esc_html( $category->name );
+			}
 		}
 
 		return $options;
