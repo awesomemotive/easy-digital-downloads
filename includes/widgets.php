@@ -363,6 +363,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function form( $instance ) {
 		// Set up some default widget settings.
 		$defaults = array(
+			// Translators: %s is the singular label of the product/item.
 			'title'           => sprintf( __( '%s Details', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'display_type'    => 'current',
 			'download_id'     => false,
