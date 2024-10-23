@@ -5,14 +5,14 @@ window.EDD_Checkout = (function($) {
 		$form,
 		$edd_cart_amount,
 		before_discount,
-		$checkout_form_wrap;
+		$content_wrap;
 
 	function init() {
 		$body = $(document.body);
 		$form = $("#edd_purchase_form");
 		$edd_cart_amount = $('.edd_cart_amount');
 		before_discount = $edd_cart_amount.text();
-		$checkout_form_wrap = $('#edd_checkout_form_wrap');
+		$content_wrap = $("#content");
 
 		// Update state/province field on checkout page
 		$body.on('change', '#edd_cc_address input.card_state, #edd_cc_address select', update_state_field);
@@ -37,19 +37,19 @@ window.EDD_Checkout = (function($) {
 		});
 
 		// Validate and apply a discount
-		$checkout_form_wrap.on('click', '.edd-apply-discount', apply_discount);
+		$content_wrap.on('click', '.edd-apply-discount', apply_discount);
 
 		// Prevent the checkout form from submitting when hitting Enter in the discount field
-		$checkout_form_wrap.on('keypress', '#edd-discount', function (event) {
+		$content_wrap.on('keypress', '#edd-discount', function (event) {
 			if (event.keyCode == '13') {
 				return false;
 			}
 		});
 
 		// Apply the discount when hitting Enter in the discount field instead
-		$checkout_form_wrap.on('keyup', '#edd-discount', function (event) {
+		$content_wrap.on('keyup', '#edd-discount', function (event) {
 			if (event.keyCode == '13') {
-				$checkout_form_wrap.find('.edd-apply-discount').trigger('click');
+				$content_wrap.find('.edd-apply-discount').trigger('click');
 			}
 		});
 
@@ -187,7 +187,6 @@ window.EDD_Checkout = (function($) {
 	}
 
 	function apply_discount(event) {
-
 		event.preventDefault();
 
 		var $this = $(this),
@@ -223,7 +222,7 @@ window.EDD_Checkout = (function($) {
 						$('.edd_cart_amount').each(function() {
 							$(this).text(discount_response.total);
 						});
-						$('#edd-discount', $checkout_form_wrap ).val('');
+						$('#edd-discount', $content_wrap ).val('');
 
 						recalculate_taxes();
 
