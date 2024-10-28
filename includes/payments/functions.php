@@ -850,7 +850,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return string $email User email.
  */
 function edd_get_payment_user_email( $order = 0 ) {
@@ -876,7 +876,7 @@ function edd_get_payment_user_email( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return bool True if the payment is **not** associated with a user, false otherwise.
  */
 function edd_is_guest_payment( $order = 0 ) {
@@ -904,7 +904,7 @@ function edd_is_guest_payment( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return string $user_id User ID.
  */
 function edd_get_payment_user_id( $order = 0 ) {
@@ -930,7 +930,7 @@ function edd_get_payment_user_id( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return int $customer_id Customer ID.
  */
 function edd_get_payment_customer_id( $order = 0 ) {
@@ -956,7 +956,7 @@ function edd_get_payment_customer_id( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return bool True if the payment has unlimited downloads, false otherwise.
  */
 function edd_payment_has_unlimited_downloads( $order = 0 ) {
@@ -982,7 +982,7 @@ function edd_payment_has_unlimited_downloads( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return string User's IP address.
  */
 function edd_get_payment_user_ip( $order = 0 ) {
@@ -1022,7 +1022,7 @@ function edd_get_payment_completed_date( $order_id = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return string Payment gateway used for the order.
  */
 function edd_get_payment_gateway( $order = 0 ) {
@@ -1048,7 +1048,7 @@ function edd_get_payment_gateway( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return string $currency The currency code
  */
 function edd_get_payment_currency_code( $order = 0 ) {
@@ -1097,7 +1097,7 @@ function edd_get_payment_currency( $order_id = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return string $key Purchase key.
  */
 function edd_get_payment_key( $order = 0 ) {
@@ -1125,7 +1125,7 @@ function edd_get_payment_key( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return int|string Payment order number.
  */
 function edd_get_payment_number( $order = 0 ) {
@@ -1182,7 +1182,7 @@ function edd_remove_payment_prefix_postfix( $number ) {
  * @since 3.0 Parameter renamed to $order_id.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  *
  * @return string $amount Fully formatted payment amount
  */
@@ -1201,7 +1201,7 @@ function edd_payment_amount( $order = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return float Order amount.
  */
 function edd_get_payment_amount( $order = 0 ) {
@@ -1239,7 +1239,7 @@ function edd_get_payment_amount( $order = 0 ) {
  * @since 3.0 Parameter renamed to $order_id.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order_id Order ID.
+ * @param int|\EDD\Orders\Order $order_id Order ID or the EDD\Orders\Order object.
  *
  * @return string Fully formatted order subtotal.
  */
@@ -1257,7 +1257,7 @@ function edd_payment_subtotal( $order_id = 0 ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @return float $subtotal Subtotal for the order (non formatted).
  */
 function edd_get_payment_subtotal( $order = 0 ) {
@@ -1301,7 +1301,7 @@ function edd_payment_tax( $order_id = 0, $payment_meta = null ) {
  * @since 3.0 Refactored to use EDD\Orders\Order.
  * @since 3.1.1 Allows passing a full EDD\Orders\Order object in, instead of just the ID
  *
- * @param int $order Order ID or the EDD\Orders\Order object
+ * @param int|\EDD\Orders\Order $order Order ID or the EDD\Orders\Order object
  * @param bool $payment_meta Parameter no longer used.
  *
  * @return float $tax Tax for payment (non formatted)
