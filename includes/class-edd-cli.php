@@ -2036,21 +2036,38 @@ class EDD_CLI extends WP_CLI_Command {
 	public function recalculate_download_sales_earnings() {
 		global $wpdb;
 
-		$downloads = $wpdb->get_results(
-			"SELECT ID
+		$step        = 0;
+		$offset      = 0;
+		$number      = 1000;
+		$has_results = true;
+		$total       = $wpdb->get_var(
+			"SELECT COUNT(*)
 			FROM {$wpdb->posts}
-			WHERE post_type = 'download'
-			ORDER BY ID ASC"
+			WHERE post_type = 'download'"
 		);
-		$total     = count( $downloads );
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Recalculating Download Sales and Earnings', $total );
-			foreach ( $downloads as $download ) {
-				edd_recalculate_download_sales_earnings( $download->ID );
-				$progress->tick();
+
+		$progress = new \cli\progress\Bar( 'Recalculating Download Sales and Earnings', $total );
+
+		while ( $has_results ) {
+			$downloads = $wpdb->get_results(
+				"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = 'download'
+				ORDER BY ID ASC
+				LIMIT {$offset}, {$number}"
+			);
+			if ( ! empty( $downloads ) ) {
+				foreach ( $downloads as $download ) {
+					edd_recalculate_download_sales_earnings( $download->ID );
+					$progress->tick();
+				}
+				$step++;
+				$offset = ( $step * $number );
+			} else {
+				$has_results = false;
 			}
-			$progress->finish();
 		}
+		$progress->finish();
 		WP_CLI::line( __( 'Sales and Earnings successfully recalculated for all downloads.', 'easy-digital-downloads' ) );
 		WP_CLI::line( __( 'Downloads Updated: ', 'easy-digital-downloads' ) . $total );
 	}
