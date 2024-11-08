@@ -192,7 +192,7 @@ function edds_add_settings( $settings ) {
 		$stripe_settings['stripe_use_existing_cards'] = array(
 			'id'    => 'stripe_use_existing_cards',
 			'name'  => __( 'Show Previously Used Cards', 'easy-digital-downloads' ),
-			'desc'  => __( 'Provides logged in customers with a list of previous used payment methods for faster checkout.', 'easy-digital-downloads' ),
+			'desc'  => __( 'Provides logged in customers with a list of previously used payment methods for faster checkout.', 'easy-digital-downloads' ),
 			'type'  => 'checkbox',
 			'class' => 'payment-elements' === $elements_mode ? 'edd-hidden card-elements-feature' : 'card-elements-feature',
 		);
