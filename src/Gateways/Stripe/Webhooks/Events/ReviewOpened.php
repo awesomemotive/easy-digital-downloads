@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  * @since 3.3.0
  */
 class ReviewOpened extends Event {
+	use Traits\Order;
 
 	/**
 	 * The event object.
@@ -56,13 +57,11 @@ class ReviewOpened extends Event {
 			}
 		}
 
-		$order_id = edd_get_order_id_from_transaction_id( $charge );
-		$order    = edd_get_order( $order_id );
-
+		$order = $this->get_order( $charge );
 		if ( $order instanceof \EDD\Orders\Order ) {
 			edd_add_note(
 				array(
-					'object_id'   => $order_id,
+					'object_id'   => $order->id,
 					'object_type' => 'order',
 					'content'     => sprintf(
 						/* translators: %s Stripe Radar review opening reason. */

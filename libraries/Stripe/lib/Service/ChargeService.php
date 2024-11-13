@@ -4,6 +4,10 @@
 
 namespace EDD\Vendor\Stripe\Service;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class ChargeService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
@@ -11,7 +15,7 @@ class ChargeService extends \EDD\Vendor\Stripe\Service\AbstractService
      * sorted order, with the most recent charges appearing first.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -23,18 +27,19 @@ class ChargeService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * Capture the payment of an existing, uncaptured, charge. This is the second half
-     * of the two-step payment flow, where first you <a href="#create_charge">created a
-     * charge</a> with the capture option set to false.
+     * Capture the payment of an existing, uncaptured charge that was created with the
+     * <code>capture</code> option set to false.
      *
      * Uncaptured payments expire a set number of days after they are created (<a
-     * href="/docs/charges/placing-a-hold">7 by default</a>). If they are not captured
-     * by that point in time, they will be marked as refunded and will no longer be
-     * capturable.
+     * href="/docs/charges/placing-a-hold">7 by default</a>), after which they are
+     * marked as refunded and capture attempts will fail.
+     *
+     * Don’t use this method to capture a PaymentIntent-initiated charge. Use <a
+     * href="/docs/api/payment_intents/capture">Capture a PaymentIntent</a>.
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -46,14 +51,13 @@ class ChargeService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * To charge a credit card or other payment source, you create a
-     * <code>Charge</code> object. If your API key is in test mode, the supplied
-     * payment source (e.g., card) won’t actually be charged, although everything else
-     * will occur as if in live mode. (EDD\Vendor\Stripe assumes that the charge would have
-     * completed successfully).
+     * This method is no longer recommended—use the <a
+     * href="/docs/api/payment_intents">Payment Intents API</a> to initiate a new
+     * payment instead. Confirmation of the PaymentIntent creates the
+     * <code>Charge</code> object used to request payment.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -72,7 +76,7 @@ class ChargeService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -92,7 +96,7 @@ class ChargeService extends \EDD\Vendor\Stripe\Service\AbstractService
      * during outages. Search functionality is not available to merchants in India.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -109,7 +113,7 @@ class ChargeService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *

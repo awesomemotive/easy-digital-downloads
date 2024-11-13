@@ -127,22 +127,13 @@ function _edds_process_purchase_form() {
 			throw new \Exception( esc_html__( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
 		}
 
-		// Validate the form $_POST data.
-		$valid_data = edd_purchase_form_validate_fields();
+		$purchase_data = EDD\Sessions\PurchaseData::start( false );
+		if ( empty( $purchase_data ) ) {
+			throw new \Exception( esc_html__( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
+		}
 
-		// Allow themes and plugins to hook to errors.
-		//
-		// In the future these should throw exceptions, existing `edd_set_error()` usage will be caught below.
-		do_action( 'edd_checkout_error_checks', $valid_data, $_POST );
-
-		// Validate the user.
-		$user = edd_get_purchase_form_user( $valid_data, false );
-
-		// Let extensions validate fields after user is logged in if user has used login/registration form.
-		do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
-
-		if ( false === $valid_data || ! $user || edd_get_errors() ) {
-			$errors = edd_get_errors();
+		$errors = edd_get_errors();
+		if ( empty( $purchase_data['user_info'] ) || ! empty( $errors ) ) {
 			if ( is_array( $errors ) ) {
 				throw new \Exception( current( $errors ) );
 			}
@@ -150,72 +141,12 @@ function _edds_process_purchase_form() {
 			throw new \Exception( esc_html__( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
 		}
 
-		// Update a customer record if they have added/updated information.
-		$customer = new EDD_Customer( $user['user_email'] );
-
-		$name = $user['user_first'] . ' ' . $user['user_last'];
-
-		if ( empty( $customer->name ) || $name !== $customer->name ) {
-			$update_data = array(
-				'name' => $name,
-			);
-
-			// Update the customer's name and update the user record too.
-			$customer->update( $update_data );
-
-			if ( is_user_logged_in() ) {
-				wp_update_user(
-					array(
-						'ID'         => get_current_user_id(),
-						'first_name' => $user['user_first'],
-						'last_name'  => $user['user_last'],
-					)
-				);
-			}
-		}
-
-		// Update the customer's address if different to what's in the database.
-		if ( ! empty( $user['address'] ) ) {
-			$address = wp_parse_args(
-				$user['address'],
-				array(
-					'line1'   => '',
-					'line2'   => '',
-					'city'    => '',
-					'state'   => '',
-					'country' => '',
-					'zip'     => '',
-				)
-			);
-
-			$address = array(
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'country'     => $address['country'],
-				'postal_code' => $address['zip'],
-			);
-
-			if ( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $address ) ) {
-				$customer = edd_get_customer_by( 'user_id', $user['user_id'] );
-				if ( $customer ) {
-					edd_maybe_add_customer_address( $customer->id, $user['address'] );
-				}
-			}
-		}
-
-		EDD\Sessions\PurchaseData::set( $valid_data, $user );
-
-		$purchase_data = edd_get_purchase_session();
-		if ( empty( $purchase_data ) ) {
-			throw new \Exception( esc_html__( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
-		}
-
 		/**
-		 * Allows further processing...
+		 * Allows further processing.
+		 *
+		 * @param array $purchase_data The purchase data.
 		 */
-		do_action( 'edd_gateway_' . $valid_data['gateway'], $purchase_data );
+		do_action( "edd_gateway_{$purchase_data['gateway']}", $purchase_data );
 	} catch ( \Exception $e ) {
 		return wp_send_json_error(
 			array(

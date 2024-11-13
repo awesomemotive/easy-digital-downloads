@@ -3,6 +3,7 @@
 namespace EDD\Tests\Session;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Tests\Helpers;
 
 class PurchaseData extends EDD_UnitTestCase {
 
@@ -29,11 +30,7 @@ class PurchaseData extends EDD_UnitTestCase {
 			'edd_last'  => 'Doe',
 			'edd_email' => 'john@doe.example',
 		);
-		$valid_data = edd_purchase_form_validate_fields();
-		$user       = edd_get_purchase_form_user( $valid_data, false );
-		\EDD\Sessions\PurchaseData::set( $valid_data, $user );
-
-		$purchase_session = edd_get_purchase_session();
+		$purchase_session = \EDD\Sessions\PurchaseData::start( false );
 
 		$this->assertEquals( $user_id, $purchase_session['user_info']['id'] );
 		$this->assertEquals( $_POST['edd_email'], $purchase_session['user_info']['email'] );
@@ -50,11 +47,7 @@ class PurchaseData extends EDD_UnitTestCase {
 			'edd_email' => 'guest@edd.local',
 		);
 
-		$valid_data = edd_purchase_form_validate_fields();
-		$user       = edd_get_purchase_form_user( $valid_data, false );
-		\EDD\Sessions\PurchaseData::set( $valid_data, $user );
-
-		$purchase_session = edd_get_purchase_session();
+		$purchase_session = \EDD\Sessions\PurchaseData::start();
 
 		$this->assertEmpty( $purchase_session['user_info']['id'] );
 		$this->assertEquals( $_POST['edd_email'], $purchase_session['user_info']['email'] );
@@ -76,5 +69,21 @@ class PurchaseData extends EDD_UnitTestCase {
 		$this->assertEmpty( $purchase_session['user_info']['id'] );
 		$this->assertEquals( $_POST['edd_email'], $purchase_session['user_info']['email'] );
 		$this->assertEquals( $_POST['edd_email'], $purchase_session['user_email'] );
+	}
+
+	public function test_edd_get_purchase_session_add_to_cart_is_null() {
+
+		$_POST = array(
+			'edd_first' => 'John',
+			'edd_last'  => 'Doe',
+			'edd_email' => 'guest2@edd.local',
+		);
+
+		$this->assertNotEmpty( \EDD\Sessions\PurchaseData::get() );
+
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
+		edd_add_to_cart( $download->ID );
+
+		$this->assertEmpty( edd_get_purchase_session() );
 	}
 }

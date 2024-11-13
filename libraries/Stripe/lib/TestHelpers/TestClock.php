@@ -5,12 +5,9 @@
 namespace EDD\Vendor\Stripe\TestHelpers;
 
 /**
- * A test clock enables deterministic control over objects in testmode. With a test
- * clock, you can create objects at a frozen time in the past or future, and
- * advance to a specific future time to observe webhooks and state changes. After
- * the clock advances, you can either validate the current state of your scenario
- * (and test your assumptions), change the current state of your scenario (and test
- * more complex scenarios), or keep advancing forward in time.
+ * A test clock enables deterministic control over objects in testmode. With a test clock, you can create
+ * objects at a frozen time in the past or future, and advance to a specific future time to observe webhooks and state changes. After the clock advances,
+ * you can either validate the current state of your scenario (and test your assumptions), change the current state of your scenario (and test more complex scenarios), or keep advancing forward in time.
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
@@ -20,19 +17,94 @@ namespace EDD\Vendor\Stripe\TestHelpers;
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string $name The custom name supplied at creation.
  * @property string $status The status of the Test Clock.
+ * @property \EDD\Vendor\Stripe\StripeObject $status_details
  */
 class TestClock extends \EDD\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'test_helpers.test_clock';
 
-    use \EDD\Vendor\Stripe\ApiOperations\All;
-    use \EDD\Vendor\Stripe\ApiOperations\Create;
-    use \EDD\Vendor\Stripe\ApiOperations\Delete;
-    use \EDD\Vendor\Stripe\ApiOperations\Retrieve;
-
     const STATUS_ADVANCING = 'advancing';
     const STATUS_INTERNAL_FAILURE = 'internal_failure';
     const STATUS_READY = 'ready';
+
+    /**
+     * Creates a new test clock that can be attached to new customers and quotes.
+     *
+     * @param null|array $params
+     * @param null|array|string $options
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\TestHelpers\TestClock the created resource
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Deletes a test clock.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\TestHelpers\TestClock the deleted resource
+     */
+    public function delete($params = null, $opts = null)
+    {
+        self::_validateParams($params);
+
+        $url = $this->instanceUrl();
+        list($response, $opts) = $this->_request('delete', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * Returns a list of your test clocks.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\TestHelpers\TestClock> of ApiResources
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves a test clock.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\TestHelpers\TestClock
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
 
     /**
      * @param null|array $params

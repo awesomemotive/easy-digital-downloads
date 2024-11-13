@@ -38,6 +38,7 @@ class PromoHandler implements SubscriberInterface {
 		'\\EDD\\Admin\\Onboarding\\Notice',
 		'\\EDD\\Admin\\Promos\\Notices\\Emails',
 		'\\EDD\\Admin\\Emails\\Reset',
+		'\\EDD\\Admin\\Promos\\Notices\\Recurring',
 	);
 
 	/**

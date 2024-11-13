@@ -99,15 +99,13 @@ class NotificationImporter {
 	 * @throws \Exception
 	 */
 	public function fetchNotifications() {
-		$response = wp_remote_get( $this->getApiEndpoint() );
+		$request = new \EDD\Utils\RemoteRequest( $this->getApiEndpoint() );
 
-		if ( is_wp_error( $response ) ) {
-			throw new \Exception( $response->get_error_message() );
+		if ( is_wp_error( $request->response ) ) {
+			throw new \Exception( $request->response->get_error_message() );
 		}
 
-		$notifications = wp_remote_retrieve_body( $response );
-
-		return ! empty( $notifications ) ? json_decode( $notifications ) : array();
+		return ! empty( $request->body ) ? json_decode( $request->body ) : array();
 	}
 
 	/**
@@ -231,9 +229,15 @@ class NotificationImporter {
 	 * @param object $notification
 	 */
 	protected function updateExistingNotification( $existingId, $notification ) {
-		EDD()->notifications->update( $existingId, wp_parse_args( $this->getNotificationData( $notification ), array(
-			'date_updated' => gmdate( 'Y-m-d H:i:s' ),
-		) ) );
+		EDD()->notifications->update(
+			$existingId,
+			wp_parse_args(
+				$this->getNotificationData( $notification ),
+				array(
+					'date_updated' => gmdate( 'Y-m-d H:i:s' ),
+				)
+			)
+		);
 	}
 
 	/**

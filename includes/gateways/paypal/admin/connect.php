@@ -41,12 +41,15 @@ function connect_settings_field() {
 			<div class="notice notice-error inline">
 				<p>
 					<?php
-					echo wp_kses( sprintf(
+					echo wp_kses(
+						sprintf(
 						/* translators: 1. opening <strong> tag, 2. closing </strong> tag */
-						__( '%1$sPayPal Communication Error:%2$s We are having trouble communicating with PayPal at the moment. Please try again later, and if the issue persists, reach out to our support team.', 'easy-digital-downloads' ),
-						'<strong>',
-						'</strong>'
-					), array( 'strong' => array() ) );
+							__( '%1$sPayPal Communication Error:%2$s We are having trouble communicating with PayPal at the moment. Please try again later, and if the issue persists, reach out to our support team.', 'easy-digital-downloads' ),
+							'<strong>',
+							'</strong>'
+						),
+						array( 'strong' => array() )
+					);
 					?>
 				</p>
 			</div>
@@ -161,7 +164,7 @@ function get_onboarding_data() {
 		}
 	}
 
-	$response = wp_remote_post(
+	$request = new \EDD\Utils\RemoteRequest(
 		EDD_PAYPAL_PARTNER_CONNECT_URL . 'signup-link',
 		array(
 			'headers'    => array(
@@ -176,21 +179,19 @@ function get_onboarding_data() {
 					'return_url'    => get_settings_url(),
 				)
 			),
+			'method'     => 'POST',
 		)
 	);
 
-	$code = wp_remote_retrieve_response_code( $response );
-
-	if ( is_wp_error( $response ) ) {
+	if ( is_wp_error( $request->response ) ) {
 
 		return array(
-			'code' => $code,
-			'body' => $response->get_error_message(),
+			'code' => $request->code,
+			'body' => $request->response->get_error_message(),
 		);
 	}
 
-	$body = wp_remote_retrieve_body( $response );
-	$body = json_decode( $body );
+	$body = json_decode( $request->body );
 
 	// We're storing an expiration so we can get a new one if it's been a day.
 	$body->expires = time() + DAY_IN_SECONDS;
@@ -199,7 +200,7 @@ function get_onboarding_data() {
 	update_option( 'edd_paypal_commerce_connect_details_' . $mode, wp_json_encode( $body ), false );
 
 	return array(
-		'code' => $code,
+		'code' => $request->code,
 		'body' => $body,
 	);
 }
@@ -221,12 +222,14 @@ function process_connect() {
 	$onboarding_data = get_onboarding_data();
 
 	if ( 200 !== intval( $onboarding_data['code'] ) ) {
-		wp_send_json_error( sprintf(
+		wp_send_json_error(
+			sprintf(
 			/* translators: 1: HTTP response code, 2: error message */
-			__( 'Unexpected response code: %1$d. Error: %2$s', 'easy-digital-downloads' ),
-			$onboarding_data['code'],
-			wp_json_encode( $onboarding_data['body'] )
-		) );
+				__( 'Unexpected response code: %1$d. Error: %2$s', 'easy-digital-downloads' ),
+				$onboarding_data['code'],
+				wp_json_encode( $onboarding_data['body'] )
+			)
+		);
 	}
 
 	if ( empty( $onboarding_data['body']->signupLink ) || empty( $onboarding_data['body']->nonce ) ) {
@@ -336,29 +339,29 @@ function get_and_save_credentials() {
 			'code_verifier' => $partner_details->nonce,
 		),
 		'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
+		'method'     => 'POST',
 	);
 
 	/*
 	 * First get a temporary access token from PayPal.
 	 */
-	$response = wp_remote_post(
+	$request = new \EDD\Utils\RemoteRequest(
 		$api_url . 'v1/oauth2/token',
 		$api_args
 	);
 
-	if ( is_wp_error( $response ) ) {
-		wp_send_json_error( $response->get_error_message() );
+	if ( is_wp_error( $request->response ) ) {
+		wp_send_json_error( $request->response->get_error_message() );
 	}
 
-	$code = wp_remote_retrieve_response_code( $response );
-	$body = json_decode( wp_remote_retrieve_body( $response ) );
+	$body = json_decode( $request->body );
 
 	if ( empty( $body->access_token ) ) {
 		wp_send_json_error(
 			sprintf(
 				/* translators: %d: HTTP response code */
 				__( 'Unexpected response from PayPal while generating token. Response code: %d. Please try again.', 'easy-digital-downloads' ),
-				$code
+				$request->code
 			)
 		);
 	}
@@ -367,7 +370,7 @@ function get_and_save_credentials() {
 	 * Now we can use this access token to fetch the seller's credentials for all future
 	 * API requests.
 	 */
-	$response = wp_remote_get(
+	$request = new \EDD\Utils\RemoteRequest(
 		$api_url . 'v1/customer/partners/' . urlencode( \EDD\Gateways\PayPal\get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/',
 		array(
 			'headers'    => array(
@@ -379,19 +382,21 @@ function get_and_save_credentials() {
 		)
 	);
 
-	if ( is_wp_error( $response ) ) {
-		wp_send_json_error( $response->get_error_message() );
+	if ( is_wp_error( $request->response ) ) {
+		wp_send_json_error( $request->response->get_error_message() );
 	}
 
-	$code = wp_remote_retrieve_response_code( $response );
-	$body = json_decode( wp_remote_retrieve_body( $response ) );
+	$code = $request->code;
+	$body = json_decode( $request->body );
 
 	if ( empty( $body->client_id ) || empty( $body->client_secret ) ) {
-		wp_send_json_error( sprintf(
+		wp_send_json_error(
+			sprintf(
 			/* translators: %d: HTTP response code */
-			__( 'Unexpected response from PayPal. Response code: %d. Please try again.', 'easy-digital-downloads' ),
-			$code
-		) );
+				__( 'Unexpected response from PayPal. Response code: %d. Please try again.', 'easy-digital-downloads' ),
+				$code
+			)
+		);
 	}
 
 	edd_update_option( 'paypal_' . $mode . '_client_id', sanitize_text_field( $body->client_id ) );
@@ -877,43 +882,39 @@ add_action(
  * @throws PayPal\Exceptions\API_Exception If the request fails.
  */
 function get_merchant_status( $merchant_id, $nonce = '' ) {
-	$response = wp_remote_post(
-		EDD_PAYPAL_PARTNER_CONNECT_URL . 'merchant-status',
-		array(
-			'headers'    => array(
-				'Content-Type' => 'application/json',
-			),
-			'body'       => json_encode(
-				array(
-					'mode'        => edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE,
-					'merchant_id' => $merchant_id,
-					'nonce'       => $nonce,
-				)
-			),
-			'user-agent' => 'Easy Digital Downloads/' . EDD_VERSION . '; ' . get_bloginfo( 'name' ),
-		)
+	$api = new API();
+
+	$response = $api->make_request(
+		sprintf(
+			'v1/customer/partners/%s/merchant-integrations/%s',
+			\EDD\Gateways\PayPal\get_partner_merchant_id(),
+			$merchant_id
+		),
+		array(),
+		array(),
+		'GET'
 	);
 
-	$response_code = wp_remote_retrieve_response_code( $response );
-	$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-	if ( 200 !== (int) $response_code ) {
-		if ( ! empty( $response_body['error'] ) ) {
-			$error_message = $response_body['error'];
-		} else {
-			$error_message = sprintf(
-				'Invalid HTTP response code: %d. Response: %s',
-				$response_code,
-				wp_remote_retrieve_body( $response )
-			);
-		}
-		// If the response code is a string, we'll default to a 403 because the API Exception requires an integer.
-		if ( ! is_int( $response_code ) ) {
-			$response_code = 403;
-		}
-
-		throw new PayPal\Exceptions\API_Exception( $error_message, $response_code );
+	if ( 200 === (int) $api->last_response_code ) {
+		return $response;
 	}
 
-	return $response_body;
+	if ( ! empty( $response['error'] ) ) {
+		$error_message = $response['error'];
+	} elseif ( ! empty( $response['message'] ) ) {
+		$error_message = $response['message'];
+	} else {
+		$error_message = sprintf(
+			'Invalid HTTP response code: %d. Response: %s',
+			$api->last_response_code,
+			$response
+		);
+	}
+
+	// If the response code is a string, we'll default to a 403 because the API Exception requires an integer.
+	if ( ! is_int( $api->last_response_code ) ) {
+		throw new PayPal\Exceptions\API_Exception( $error_message, 403 );
+	}
+
+	throw new PayPal\Exceptions\API_Exception( $error_message, $api->last_response_code );
 }

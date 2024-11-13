@@ -141,12 +141,24 @@ function get_payment_key() {
 			return $sample_order_key;
 		}
 	}
+
 	if ( isset( $_GET['payment_key'] ) ) {
 		return urldecode( $_GET['payment_key'] );
 	}
 
 	if ( ! empty( $_GET['order'] ) && ! empty( $_GET['id'] ) ) {
-		return edd_get_payment_key( absint( $_GET['id'] ) );
+		$order_hash = urldecode( $_GET['order'] );
+		$order      = edd_get_order( absint( $_GET['id'] ) );
+
+		if ( ! $order ) {
+			return false;
+		}
+
+		if ( ! hash_equals( $order_hash, md5( $order->id . $order->payment_key . $order->email ) ) ) {
+			return false;
+		}
+
+		return $order->payment_key;
 	}
 
 	$session = edd_get_purchase_session();

@@ -7,7 +7,7 @@ class OAuthService extends \EDD\Vendor\Stripe\Service\AbstractService
     /**
      * Sends a request to Stripe's Connect API.
      *
-     * @param string $method the HTTP method
+     * @param 'delete'|'get'|'post' $method the HTTP method
      * @param string $path the path of the request
      * @param array $params the parameters of the request
      * @param array|\EDD\Vendor\Stripe\Util\RequestOptions $opts the special modifiers of the request

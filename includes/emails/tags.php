@@ -707,7 +707,7 @@ function edd_email_tag_payment_method( $payment_id, $email_object = null ) {
 		$email_object = edd_get_order( $payment_id );
 	}
 
-	return edd_get_gateway_checkout_label( $email_object->gateway );
+	return edd_get_gateway_checkout_label( $email_object->gateway, $email_object );
 }
 
 /**

@@ -9,53 +9,62 @@ jQuery( document ).ready( function( $ ) {
 	// Hides the section content.
 	$( `${ sectionSelector } .section-content` ).hide();
 
-	const hash = window.location.hash;
-	if ( hash && hash.includes( 'edd_' ) ) {
-		// Show the section content related to the URL.
-		$( sectionSelector ).find( hash ).show();
+	// Handle the hash existing on page load.
+	const hash = window.location.hash,
+		defaultSectionHash = $( `${ sectionSelector } .section-nav li:first-child a` ).attr( 'href' );
 
-		// Set the aria-selected for section titles to be false
-		$( `${ sectionSelector } .section-title` ).attr( 'aria-selected', 'false' ).removeClass( 'section-title--is-active' );
-
-		// Set aria-selected true on the related link.
-		$( sectionSelector ).find( '.section-title a[href="' + hash + '"]' ).parents( '.section-title' ).attr( 'aria-selected', 'true' ).addClass( 'section-title--is-active' );
-
-	} else {
-		// Shows the first section's content.
-		$( `${ sectionSelector } .section-content:first-child` ).show();
-
-		// Makes the 'aria-selected' attribute true for the first section nav item.
-		$( `${ sectionSelector } .section-nav li:first-child` ).attr( 'aria-selected', 'true' ).addClass( 'section-title--is-active' );
-	}
+	// When the page loads, make sure a section is selected.
+	processSectionChange( hash );
 
 	// When a section nav item is clicked.
 	$( `${ sectionSelector } .section-nav li a` ).on( 'click',
-		function( j ) {
+		function( e ) {
 			// Prevent the default browser action when a link is clicked.
-			j.preventDefault();
+			e.preventDefault();
 
-			// Get the `href` attribute of the item.
-			const them = $( this ),
-				href = them.attr( 'href' ),
-				rents = them.parents( '.edd-vertical-sections' );
+			let href = $( this ).attr( 'href' );
 
-			// Hide all section content.
-			rents.find( '.section-content' ).hide();
-
-			// Find the section content that matches the section nav item and show it.
-			rents.find( href ).show();
-
-			// Set the `aria-selected` attribute to false for all section nav items.
-			rents.find( '.section-title' ).attr( 'aria-selected', 'false' ).removeClass( 'section-title--is-active' );
-
-			// Set the `aria-selected` attribute to true for this section nav item.
-			them.parent().attr( 'aria-selected', 'true' ).addClass( 'section-title--is-active' );
-
-			// Maybe re-Chosen
-			rents.find( 'div.chosen-container' ).css( 'width', '100%' );
+			processSectionChange( href );
 
 			// Add the current "link" to the page URL
 			window.history.pushState( 'object or string', '', href );
 		}
 	); // click()
+
+	$( window ).on( 'hashchange', function() {
+		processSectionChange( window.location.hash );
+	} ); // Back/Forward Navigation.
+
+	function processSectionChange( hash ) {
+		// If the has is empty or doesn't include edd_, use the default section hash.
+		if ( hash.length === 0 || ! hash.includes( 'edd_' ) ) {
+			hash = defaultSectionHash;
+		}
+
+		// If the selected nav item doesn't exist, use the default section hash.
+		let selectedNavItem = $( sectionSelector + ' ' + hash + '-nav-item' );
+
+		if ( ! selectedNavItem.length ) {
+			hash = defaultSectionHash;
+			selectedNavItem = $( sectionSelector + ' ' + defaultSectionHash + '-nav-item' );
+		}
+
+		let selectedContent = $( sectionSelector + ' ' + hash ),
+			parents  = selectedNavItem.parents( '.edd-vertical-sections' );
+
+			// Hide all section content.
+			parents.find( '.section-content' ).hide();
+
+			// Set the `aria-selected` attribute to false for all section nav items.
+			parents.find( '.section-title' ).attr( 'aria-selected', 'false' ).removeClass( 'section-title--is-active' ).find( 'a' ).trigger( 'blur' );
+
+			// Set the `aria-selected` attribute to true for this section nav item.
+			selectedNavItem.attr( 'aria-selected', 'true' ).addClass( 'section-title--is-active' ).find( 'a' ).trigger( 'focus' );
+
+			// Find the section content that matches the section nav item and show it.
+			selectedContent.show();
+
+			// Maybe re-Chosen
+			selectedContent.find( 'div.chosen-container' ).css( 'width', '100%' );
+	}
 } );

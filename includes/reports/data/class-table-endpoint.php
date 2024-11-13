@@ -8,10 +8,11 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Reports\Data;
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Handler for building a table endpoint in the Reports API.
@@ -108,7 +109,9 @@ final class Table_Endpoint extends Endpoint {
 
 			if ( ! empty( $display_args['class_name'] ) ) {
 
-				if ( ! empty( $display_args['class_file'] ) ) {
+				if ( class_exists( $display_args['class_name'] ) ) {
+					$this->set_list_table( $display_args['class_name'] );
+				} elseif ( ! empty( $display_args['class_file'] ) ) {
 
 					$this->set_class_file( $display_args['class_file'] );
 
@@ -122,23 +125,20 @@ final class Table_Endpoint extends Endpoint {
 					);
 
 				}
-
 			} else {
 
 				$this->errors->add(
 					'missing_table_class_name',
-					sprintf( 'The list table class name for the \'%1$s\' endpoint is missing.',
+					sprintf(
+						'The list table class name for the \'%1$s\' endpoint is missing.',
 						$this->get_id()
 					)
 				);
-
 			}
 
 			// Dump the display args as they're no longer needed.
 			$endpoint['views'][ $this->view ]['display_args'] = array();
-
 		}
-
 	}
 
 	/**
@@ -193,7 +193,7 @@ final class Table_Endpoint extends Endpoint {
 				require_once $path_to_file;
 			}
 		}
-		$this->list_table = new $class;
+		$this->list_table = new $class();
 	}
 
 	/**
@@ -211,13 +211,15 @@ final class Table_Endpoint extends Endpoint {
 				// Prep the table data for display (prepare_items).
 				$this->get_data();
 
-				call_user_func_array( $callback, array(
-					$this, // Endpoint
-					$table, // Table
-					$this->get_display_args(), // Args
-				) );
+				call_user_func_array(
+					$callback,
+					array(
+						$this, // Endpoint
+						$table, // Table
+						$this->get_display_args(), // Args
+					)
+				);
 			}
 		}
 	}
-
 }

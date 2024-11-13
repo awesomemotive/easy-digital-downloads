@@ -18,18 +18,24 @@ use EDD\Gateways\PayPal;
  * @since 2.11
  */
 function enqueue_connect_scripts() {
-	if ( edd_is_admin_page( 'settings' ) && isset( $_GET['section'] ) && 'paypal_commerce' === $_GET['section'] ) { /* phpcs:ignore WordPress.Security.NonceVerification.Recommended */
-		PayPal\maybe_enqueue_polyfills();
-
-		wp_localize_script(
-			'edd-admin-settings',
-			'eddPayPalConnectVars',
-			array(
-				'defaultError' => esc_html__( 'An unexpected error occurred. Please refresh the page and try again.', 'easy-digital-downloads' ),
-				'isConnected'  => PayPal\has_rest_api_connection(),
-			)
-		);
+	if ( ! function_exists( 'edd_is_admin_page' ) || ! edd_is_admin_page( 'settings' ) ) {
+		return;
 	}
+
+	$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+	if ( 'paypal_commerce' !== $section ) {
+		return;
+	}
+
+	PayPal\maybe_enqueue_polyfills();
+	wp_localize_script(
+		'edd-admin-settings',
+		'eddPayPalConnectVars',
+		array(
+			'defaultError' => esc_html__( 'An unexpected error occurred. Please refresh the page and try again.', 'easy-digital-downloads' ),
+			'isConnected'  => PayPal\has_rest_api_connection(),
+		)
+	);
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_connect_scripts' );
 

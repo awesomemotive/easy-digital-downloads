@@ -10,11 +10,20 @@
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.11.4
  */
+
 namespace EDD\Admin\Settings;
 
-use \EDD\Admin\Extensions\Extension;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+use EDD\Admin\Extensions\Extension;
 use EDD\EventManagement\SubscriberInterface;
 
+/**
+ * Recurring Payments
+ *
+ * @since 2.11.4
+ */
 class Recurring extends Extension implements SubscriberInterface {
 
 	/**
@@ -100,7 +109,7 @@ class Recurring extends Extension implements SubscriberInterface {
 	/**
 	 * Adds the Recurring Payments section to the settings.
 	 *
-	 * @param array $sections
+	 * @param array $sections The existing sections.
 	 * @return array
 	 */
 	public function add_section( $sections ) {

@@ -30,7 +30,7 @@ do_action( 'edd_order_receipt_before_table', $order, array() );
 	<?php if ( $edd_receipt_args['payment_method'] ) : ?>
 		<div class="edd-blocks__row edd-blocks-receipt__row-item">
 			<div class="edd-blocks__row-label"><?php esc_html_e( 'Payment Method', 'easy-digital-downloads' ); ?>:</div>
-			<div class="edd-blocks__row-value"><?php echo esc_html( edd_get_gateway_checkout_label( $order->gateway ) ); ?></div>
+			<div class="edd-blocks__row-value"><?php echo esc_html( edd_get_gateway_checkout_label( $order->gateway, $order ) ); ?></div>
 		</div>
 	<?php endif; ?>
 

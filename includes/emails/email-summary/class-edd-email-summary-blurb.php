@@ -65,19 +65,16 @@ class EDD_Email_Summary_Blurb {
 			return $existing_blurbs;
 		}
 
-		$blurbs       = array();
-		$request_body = false;
-
-		$request = wp_safe_remote_get( self::BLURBS_ENDPOINT_URL );
+		$blurbs  = array();
+		$request = new \EDD\Utils\RemoteRequest( self::BLURBS_ENDPOINT_URL );
 
 		// @todo  - Detect first response code, before redirect!
-		if ( ! is_wp_error( $request ) && 200 === wp_remote_retrieve_response_code( $request ) ) {
-			$request_body = wp_remote_retrieve_body( $request );
-			$blurbs       = json_decode( $request_body, true );
+		if ( ! is_wp_error( $request ) && 200 === $request->code ) {
+			$blurbs = json_decode( $request->body, true );
 			update_option( 'edd_email_summary_blurbs', $blurbs, false );
 		}
 
-		if ( empty( $request_body ) ) {
+		if ( empty( $request->body ) ) {
 			// HTTP Request for blurbs is empty, fallback to local .json file.
 			$fallback_json = wp_json_file_decode( EDD_PLUGIN_DIR . 'includes/admin/promos/email-summary/blurbs.json', array( 'associative' => true ) );
 			if ( ! empty( $fallback_json ) ) {

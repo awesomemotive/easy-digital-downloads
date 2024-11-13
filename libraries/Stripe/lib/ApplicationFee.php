@@ -8,36 +8,73 @@ namespace EDD\Vendor\Stripe;
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property string|\EDD\Vendor\Stripe\Account $account ID of the EDD\Vendor\Stripe account this fee was taken from.
- * @property int $amount Amount earned, in %s.
- * @property int $amount_refunded Amount in %s refunded (can be less than the amount attribute on the fee if a partial refund was issued)
- * @property string|\EDD\Vendor\Stripe\StripeObject $application ID of the Connect application that earned the fee.
+ * @property int $amount Amount earned, in cents (or local equivalent).
+ * @property int $amount_refunded Amount in cents (or local equivalent) refunded (can be less than the amount attribute on the fee if a partial refund was issued)
+ * @property string|\EDD\Vendor\Stripe\Application $application ID of the Connect application that earned the fee.
  * @property null|string|\EDD\Vendor\Stripe\BalanceTransaction $balance_transaction Balance transaction that describes the impact of this collected application fee on your account balance (not including refunds).
  * @property string|\EDD\Vendor\Stripe\Charge $charge ID of the charge that the application fee was taken from.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
+ * @property null|\EDD\Vendor\Stripe\StripeObject $fee_source Polymorphic source of the application fee. Includes the ID of the object the application fee was created from.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string|\EDD\Vendor\Stripe\Charge $originating_transaction ID of the corresponding charge on the platform account, if this fee was the result of a charge using the <code>destination</code> parameter.
  * @property bool $refunded Whether the fee has been fully refunded. If the fee is only partially refunded, this attribute will still be false.
- * @property \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\StripeObject> $refunds A list of refunds that have been applied to the fee.
+ * @property \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\ApplicationFeeRefund> $refunds A list of refunds that have been applied to the fee.
  */
 class ApplicationFee extends ApiResource
 {
     const OBJECT_NAME = 'application_fee';
 
-    use ApiOperations\All;
     use ApiOperations\NestedResource;
-    use ApiOperations\Retrieve;
-
-    const PATH_REFUNDS = '/refunds';
 
     /**
-     * @param string $id the ID of the application fee on which to retrieve the fee refunds
+     * Returns a list of application fees you’ve previously collected. The application
+     * fees are returned in sorted order, with the most recent fees appearing first.
+     *
      * @param null|array $params
      * @param null|array|string $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\ApplicationFeeRefund> the list of fee refunds
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\ApplicationFee> of ApiResources
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves the details of an application fee that your account has collected. The
+     * same information is returned when refunding the application fee.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\ApplicationFee
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
+
+    const PATH_REFUNDS = '/refunds';
+
+    /**
+     * @param string $id the ID of the application fee on which to retrieve the application fee refunds
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\ApplicationFeeRefund> the list of application fee refunds
      */
     public static function allRefunds($id, $params = null, $opts = null)
     {
@@ -45,7 +82,7 @@ class ApplicationFee extends ApiResource
     }
 
     /**
-     * @param string $id the ID of the application fee on which to create the fee refund
+     * @param string $id the ID of the application fee on which to create the application fee refund
      * @param null|array $params
      * @param null|array|string $opts
      *
@@ -59,8 +96,8 @@ class ApplicationFee extends ApiResource
     }
 
     /**
-     * @param string $id the ID of the application fee to which the fee refund belongs
-     * @param string $refundId the ID of the fee refund to retrieve
+     * @param string $id the ID of the application fee to which the application fee refund belongs
+     * @param string $refundId the ID of the application fee refund to retrieve
      * @param null|array $params
      * @param null|array|string $opts
      *
@@ -74,8 +111,8 @@ class ApplicationFee extends ApiResource
     }
 
     /**
-     * @param string $id the ID of the application fee to which the fee refund belongs
-     * @param string $refundId the ID of the fee refund to update
+     * @param string $id the ID of the application fee to which the application fee refund belongs
+     * @param string $refundId the ID of the application fee refund to update
      * @param null|array $params
      * @param null|array|string $opts
      *

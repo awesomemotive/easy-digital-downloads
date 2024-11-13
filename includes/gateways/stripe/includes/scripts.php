@@ -75,9 +75,7 @@ function edd_stripe_js( $force_load_scripts = false ) {
 			'elementsMode'                   => $elements_mode,
 			'is_ajaxed'                      => edd_is_ajax_enabled() ? 'true' : 'false',
 			'currency'                       => edd_get_currency(),
-			// @todo Replace with country code derived from Stripe Account information if available.
-			// @link https://github.com/easydigitaldownloads/edd-stripe/issues/654
-			'country'                        => edd_get_option( 'base_country', 'US' ),
+			'country'                        => strtoupper( edd_stripe()->connect->get_connect_country() ),
 			'locale'                         => edds_get_stripe_checkout_locale(),
 			'is_zero_decimal'                => edds_is_zero_decimal_currency() ? 'true' : 'false',
 			'checkout'                       => edd_get_option( 'stripe_checkout' ) ? 'true' : 'false',
@@ -106,7 +104,6 @@ function edd_stripe_js( $force_load_scripts = false ) {
 		);
 
 		wp_localize_script( 'edd-stripe-js', 'edd_stripe_vars', $stripe_vars );
-
 	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_stripe_js', 100 );

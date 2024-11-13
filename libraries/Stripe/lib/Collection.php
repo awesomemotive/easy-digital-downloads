@@ -50,6 +50,9 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
         $this->filters = $filters;
     }
 
+    /**
+     * @return mixed
+     */
     #[\ReturnTypeWillChange]
     public function offsetGet($k)
     {
@@ -162,6 +165,8 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
     }
 
     /**
+     * @throws Exception\ApiErrorException
+     *
      * @return \Generator|TStripeObject[] A generator that can be used to
      *    iterate across all objects across all pages. As page boundaries are
      *    encountered, the next page will be fetched automatically for
@@ -225,6 +230,8 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
      * @param null|array $params
      * @param null|array|string $opts
      *
+     * @throws Exception\ApiErrorException
+     *
      * @return Collection<TStripeObject>
      */
     public function nextPage($params = null, $opts = null)
@@ -252,6 +259,8 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
      *
      * @param null|array $params
      * @param null|array|string $opts
+     *
+     * @throws Exception\ApiErrorException
      *
      * @return Collection<TStripeObject>
      */

@@ -37,7 +37,7 @@ function edds_credit_card_form( $echo = true ) {
 		<?php $elements_mode = edds_get_elements_mode(); ?>
 		<?php if ( 'card-elements' === $elements_mode ) : ?>
 			<legend><?php esc_html_e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
-		<?php else: ?>
+		<?php else : ?>
 			<legend><?php esc_html_e( 'Payment Info', 'easy-digital-downloads' ); ?></legend>
 		<?php endif; ?>
 		<?php if ( is_ssl() ) : ?>
@@ -65,10 +65,18 @@ function edds_credit_card_form( $echo = true ) {
 		if ( 'card-elements' === $elements_mode ) {
 			$existing_cards = edd_stripe_get_existing_cards( get_current_user_id() );
 			?>
-			<?php if ( ! empty( $existing_cards ) ) { edd_stripe_existing_card_field_radio( get_current_user_id() ); } ?>
+			<?php
+			if ( ! empty( $existing_cards ) ) {
+				edd_stripe_existing_card_field_radio( get_current_user_id() ); }
+			?>
 		<?php } ?>
 
-		<div class="edd-stripe-new-card" <?php if ( ! empty( $existing_cards ) ) { echo 'style="display: none;"'; } ?>>
+		<div class="edd-stripe-new-card"
+		<?php
+		if ( ! empty( $existing_cards ) ) {
+			echo 'style="display: none;"'; }
+		?>
+		>
 			<?php do_action( 'edd_stripe_new_card_form' ); ?>
 			<?php do_action( 'edd_after_cc_expiration' ); ?>
 		</div>
@@ -237,7 +245,7 @@ function edds_output_legacy_new_card_form() {
  * @return void
  */
 function edd_stripe_update_billing_address_field() {
-	$payment_mode   = strtolower( edd_get_chosen_gateway() );
+	$payment_mode = strtolower( edd_get_chosen_gateway() );
 	if ( edd_is_checkout() && 'stripe' !== $payment_mode ) {
 		return;
 	}
@@ -292,7 +300,7 @@ function edd_stripe_update_billing_address_field() {
 				),
 				array(
 					'strong' => true,
-					'span' => array(
+					'span'   => array(
 						'class' => true,
 					),
 				)
@@ -323,11 +331,17 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
 
 	edd_stripe_css( true );
 	$existing_cards = edd_stripe_get_existing_cards( $user_id );
-	if ( ! empty( $existing_cards ) ) : ?>
+	if ( ! empty( $existing_cards ) ) :
+		?>
 	<div class="edd-stripe-card-selector edd-card-selector-radio">
 		<?php foreach ( $existing_cards as $card ) : ?>
 			<?php $source = $card['source']; ?>
-			<div class="edd-stripe-card-radio-item existing-card-wrapper <?php if ( $card['default'] ) { echo ' selected'; } ?>">
+			<div class="edd-stripe-card-radio-item existing-card-wrapper
+			<?php
+			if ( $card['default'] ) {
+				echo ' selected'; }
+			?>
+			">
 				<input
 					type="hidden"
 					id="<?php echo esc_attr( $source->id ); ?>-billing-details"
@@ -371,10 +385,10 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
 						<?php
 							$current  = strtotime( date( 'm/Y' ) );
 							$exp_date = strtotime( $source->exp_month . '/' . $source->exp_year );
-							if ( $exp_date < $current ) :
+						if ( $exp_date < $current ) :
 							?>
 							<span class="card-expired">
-									<?php _e( 'Expired', 'easy-digital-downloads' ); ?>
+								<?php _e( 'Expired', 'easy-digital-downloads' ); ?>
 								</span>
 							<?php
 							endif;
@@ -390,7 +404,8 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
 			</label>
 		</div>
 	</div>
-	<?php endif;
+		<?php
+	endif;
 }
 
 /**
@@ -425,14 +440,14 @@ function edd_stripe_manage_cards() {
 	edd_stripe_css( true );
 	edd_stripe_js( true );
 	$display = edd_get_option( 'stripe_billing_fields', 'full' );
-?>
+	?>
 	<div id="edd-stripe-manage-cards">
 		<fieldset>
 			<legend><?php _e( 'Manage Payment Methods', 'easy-digital-downloads' ); ?></legend>
 			<input type="hidden" id="stripe-update-card-user_id" name="stripe-update-user-id" value="<?php echo esc_attr( get_current_user_id() ); ?>" />
 			<?php if ( ! empty( $existing_cards ) ) : ?>
-				<?php foreach( $existing_cards as $card ) : ?>
-				<?php $source = $card['source']; ?>
+				<?php foreach ( $existing_cards as $card ) : ?>
+					<?php $source = $card['source']; ?>
 				<div id="<?php echo esc_attr( $source->id ); ?>_card_item" class="edd-stripe-card-item">
 					<span class="card-details">
 						<?php
@@ -452,7 +467,7 @@ function edd_stripe_manage_cards() {
 
 						<?php if ( $card['default'] ) { ?>
 							<span class="default-card-sep"><?php echo '&mdash; '; ?></span>
-							<span class="card-is-default"><?php _e( 'Default', 'easy-digital-downloads'); ?></span>
+							<span class="card-is-default"><?php _e( 'Default', 'easy-digital-downloads' ); ?></span>
 						<?php } ?>
 					</span>
 
@@ -477,16 +492,16 @@ function edd_stripe_manage_cards() {
 						</span>
 
 						<?php if ( ! $card['default'] ) : ?>
-						 |
+						|
 						<span class="card-set-as-default">
 							<a href="#" class="edd-stripe-default-card" data-source="<?php echo esc_attr( $source->id ); ?>"><?php _e( 'Set as Default', 'easy-digital-downloads' ); ?></a>
 						</span>
-						<?php
+							<?php
 						endif;
 
 						$can_delete = apply_filters( 'edd_stripe_can_delete_card', true, $card, $existing_cards );
 						if ( $can_delete ) :
-						?>
+							?>
 						|
 						<span class="card-delete">
 							<a href="#" class="edd-stripe-delete-card delete" data-source="<?php echo esc_attr( $source->id ); ?>"><?php _e( 'Delete', 'easy-digital-downloads' ); ?></a>
@@ -502,58 +517,66 @@ function edd_stripe_manage_cards() {
 						<div class="card-address-fields">
 							<p class="edds-card-address-field edds-card-address-field--address1">
 							<?php
-							echo EDD()->html->text( array(
-								'id'    => sprintf( 'edds_address_line1_%1$s', $source->id ),
-								'value' => sanitize_text_field( isset( $source->address_line1 ) ? $source->address_line1 : '' ),
-								'label' => esc_html__( 'Address Line 1', 'easy-digital-downloads' ),
-								'name'  => 'address_line1',
-								'class' => 'card-update-field address_line1 text edd-input',
-								'data'  => array(
-									'key' => 'address_line1',
+							echo EDD()->html->text(
+								array(
+									'id'    => sprintf( 'edds_address_line1_%1$s', $source->id ),
+									'value' => sanitize_text_field( isset( $source->address_line1 ) ? $source->address_line1 : '' ),
+									'label' => esc_html__( 'Address Line 1', 'easy-digital-downloads' ),
+									'name'  => 'address_line1',
+									'class' => 'card-update-field address_line1 text edd-input',
+									'data'  => array(
+										'key' => 'address_line1',
+									),
 								)
-							) );
+							);
 							?>
 							</p>
 							<p class="edds-card-address-field edds-card-address-field--address2">
 							<?php
-							echo EDD()->html->text( array(
-								'id'    => sprintf( 'edds_address_line2_%1$s', $source->id ),
-								'value' => sanitize_text_field( isset( $source->address_line2 ) ? $source->address_line2 : '' ),
-								'label' => esc_html__( 'Address Line 2', 'easy-digital-downloads' ),
-								'name'  => 'address_line2',
-								'class' => 'card-update-field address_line2 text edd-input',
-								'data'  => array(
-									'key' => 'address_line2',
+							echo EDD()->html->text(
+								array(
+									'id'    => sprintf( 'edds_address_line2_%1$s', $source->id ),
+									'value' => sanitize_text_field( isset( $source->address_line2 ) ? $source->address_line2 : '' ),
+									'label' => esc_html__( 'Address Line 2', 'easy-digital-downloads' ),
+									'name'  => 'address_line2',
+									'class' => 'card-update-field address_line2 text edd-input',
+									'data'  => array(
+										'key' => 'address_line2',
+									),
 								)
-							) );
+							);
 							?>
 							</p>
 							<p class="edds-card-address-field edds-card-address-field--city">
 							<?php
-							echo EDD()->html->text( array(
-								'id'    => sprintf( 'edds_address_city_%1$s', $source->id ),
-								'value' => sanitize_text_field( isset( $source->address_city ) ? $source->address_city : '' ),
-								'label' => esc_html__( 'City', 'easy-digital-downloads' ),
-								'name'  => 'address_city',
-								'class' => 'card-update-field address_city text edd-input',
-								'data'  => array(
-									'key' => 'address_city',
+							echo EDD()->html->text(
+								array(
+									'id'    => sprintf( 'edds_address_city_%1$s', $source->id ),
+									'value' => sanitize_text_field( isset( $source->address_city ) ? $source->address_city : '' ),
+									'label' => esc_html__( 'City', 'easy-digital-downloads' ),
+									'name'  => 'address_city',
+									'class' => 'card-update-field address_city text edd-input',
+									'data'  => array(
+										'key' => 'address_city',
+									),
 								)
-							) );
+							);
 							?>
 							</p>
 							<p class="edds-card-address-field edds-card-address-field--zip">
 							<?php
-							echo EDD()->html->text( array(
-								'id'    => sprintf( 'edds_address_zip_%1$s', $source->id ),
-								'value' => sanitize_text_field( isset( $source->address_zip ) ? $source->address_zip : '' ),
-								'label' => esc_html__( 'ZIP Code', 'easy-digital-downloads' ),
-								'name'  => 'address_zip',
-								'class' => 'card-update-field address_zip text edd-input',
-								'data'  => array(
-									'key' => 'address_zip',
+							echo EDD()->html->text(
+								array(
+									'id'    => sprintf( 'edds_address_zip_%1$s', $source->id ),
+									'value' => sanitize_text_field( isset( $source->address_zip ) ? $source->address_zip : '' ),
+									'label' => esc_html__( 'ZIP Code', 'easy-digital-downloads' ),
+									'name'  => 'address_zip',
+									'class' => 'card-update-field address_zip text edd-input',
+									'data'  => array(
+										'key' => 'address_zip',
+									),
 								)
-							) );
+							);
 							?>
 							</p>
 							<p class="edds-card-address-field edds-card-address-field--country">
@@ -564,20 +587,22 @@ function edd_stripe_manage_cards() {
 								<?php
 								$countries = array_filter( edd_get_country_list() );
 								$country   = isset( $source->address_country ) ? $source->address_country : edd_get_shop_country();
-								echo EDD()->html->select( array(
-									'id'               => sprintf( 'edds_address_country_%1$s', $source->id ),
-									'name'             => 'address_country',
-									'label'            => esc_html__( 'Country', 'easy-digital-downloads' ),
-									'options'          => $countries,
-									'selected'         => $country,
-									'class'            => 'card-update-field address_country',
-									'data'             => array(
-										'key'   => 'address_country',
-										'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
-									),
-									'show_option_all'  => false,
-									'show_option_none' => false,
-								) );
+								echo EDD()->html->select(
+									array(
+										'id'               => sprintf( 'edds_address_country_%1$s', $source->id ),
+										'name'             => 'address_country',
+										'label'            => esc_html__( 'Country', 'easy-digital-downloads' ),
+										'options'          => $countries,
+										'selected'         => $country,
+										'class'            => 'card-update-field address_country',
+										'data'             => array(
+											'key'   => 'address_country',
+											'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+										),
+										'show_option_all'  => false,
+										'show_option_none' => false,
+									)
+								);
 								?>
 							</p>
 
@@ -589,16 +614,18 @@ function edd_stripe_manage_cards() {
 								<?php
 								$selected_state = isset( $source->address_state ) ? $source->address_state : edd_get_shop_state();
 								$states         = edd_get_shop_states( $country );
-								echo EDD()->html->select( array(
-									'id'               => sprintf( 'edds_address_state_%1$s', $source->id ),
-									'name'             => 'address_state',
-									'options'          => $states,
-									'selected'         => $selected_state,
-									'class'            => 'card-update-field address_state card_state',
-									'data'             => array( 'key' => 'address_state' ),
-									'show_option_all'  => false,
-									'show_option_none' => false,
-								) );
+								echo EDD()->html->select(
+									array(
+										'id'               => sprintf( 'edds_address_state_%1$s', $source->id ),
+										'name'             => 'address_state',
+										'options'          => $states,
+										'selected'         => $selected_state,
+										'class'            => 'card-update-field address_state card_state',
+										'data'             => array( 'key' => 'address_state' ),
+										'show_option_all'  => false,
+										'show_option_none' => false,
+									)
+								);
 								?>
 							</p>
 						</div>
@@ -610,32 +637,36 @@ function edd_stripe_manage_cards() {
 
 							<?php
 								$months = array_combine( $r = range( 1, 12 ), $r );
-								echo EDD()->html->select( array(
-									'id'               => sprintf( 'edds_card_exp_month_%1$s', $source->id ),
-									'name'             => 'exp_month',
-									'options'          => $months,
-									'selected'         => $source->exp_month,
-									'class'            => 'card-expiry-month edd-select edd-select-small card-update-field exp_month',
-									'data'             => array( 'key' => 'exp_month' ),
-									'show_option_all'  => false,
-									'show_option_none' => false,
-								) );
+								echo EDD()->html->select(
+									array(
+										'id'               => sprintf( 'edds_card_exp_month_%1$s', $source->id ),
+										'name'             => 'exp_month',
+										'options'          => $months,
+										'selected'         => $source->exp_month,
+										'class'            => 'card-expiry-month edd-select edd-select-small card-update-field exp_month',
+										'data'             => array( 'key' => 'exp_month' ),
+										'show_option_all'  => false,
+										'show_option_none' => false,
+									)
+								);
 							?>
 
 							<span class="exp-divider"> / </span>
 
 							<?php
 								$years = array_combine( $r = range( date( 'Y' ), date( 'Y' ) + 30 ), $r );
-								echo EDD()->html->select( array(
-									'id'               => sprintf( 'edds_card_exp_year_%1$s', $source->id ),
-									'name'             => 'exp_year',
-									'options'          => $years,
-									'selected'         => $source->exp_year,
-									'class'            => 'card-expiry-year edd-select edd-select-small card-update-field exp_year',
-									'data'             => array( 'key' => 'exp_year' ),
-									'show_option_all'  => false,
-									'show_option_none' => false,
-								) );
+								echo EDD()->html->select(
+									array(
+										'id'               => sprintf( 'edds_card_exp_year_%1$s', $source->id ),
+										'name'             => 'exp_year',
+										'options'          => $years,
+										'selected'         => $source->exp_year,
+										'class'            => 'card-expiry-year edd-select edd-select-small card-update-field exp_year',
+										'data'             => array( 'key' => 'exp_year' ),
+										'show_option_all'  => false,
+										'show_option_none' => false,
+									)
+								);
 							?>
 						</p>
 
@@ -668,16 +699,16 @@ function edd_stripe_manage_cards() {
 						<?php do_action( 'edd_stripe_new_card_form' ); ?>
 					</fieldset>
 					<?php
-					switch( $display ) {
-					case 'full' :
-						edd_default_cc_address_fields();
-						break;
+					switch ( $display ) {
+						case 'full':
+							edd_default_cc_address_fields();
+							break;
 
-					case 'zip_country' :
-						edd_stripe_zip_and_country();
-						add_filter( 'edd_purchase_form_required_fields', 'edd_stripe_require_zip_and_country' );
+						case 'zip_country':
+							edd_stripe_zip_and_country();
+							add_filter( 'edd_purchase_form_required_fields', 'edd_stripe_require_zip_and_country' );
 
-						break;
+							break;
 					}
 					?>
 				</div>
@@ -757,31 +788,35 @@ function edd_stripe_zip_and_country() {
 
 	$logged_in = is_user_logged_in();
 	$customer  = EDD()->session->get( 'customer' );
-	$customer  = wp_parse_args( $customer, array( 'address' => array(
-		'line1'   => '',
-		'line2'   => '',
-		'city'    => '',
-		'zip'     => '',
-		'state'   => '',
-		'country' => ''
-	) ) );
+	$customer  = wp_parse_args(
+		$customer,
+		array(
+			'address' => array(
+				'line1'   => '',
+				'line2'   => '',
+				'city'    => '',
+				'zip'     => '',
+				'state'   => '',
+				'country' => '',
+			),
+		)
+	);
 
 	$customer['address'] = array_map( 'sanitize_text_field', $customer['address'] );
 
-	if( $logged_in ) {
+	if ( $logged_in ) {
 		$existing_cards = edd_stripe_get_existing_cards( get_current_user_id() );
 		if ( empty( $existing_cards ) ) {
 
 			$user_address = edd_get_customer_address( get_current_user_id() );
 
-			foreach( $customer['address'] as $key => $field ) {
+			foreach ( $customer['address'] as $key => $field ) {
 
 				if ( empty( $field ) && ! empty( $user_address[ $key ] ) ) {
 					$customer['address'][ $key ] = $user_address[ $key ];
 				} else {
 					$customer['address'][ $key ] = '';
 				}
-
 			}
 		} else {
 			foreach ( $existing_cards as $card ) {
@@ -789,7 +824,7 @@ function edd_stripe_zip_and_country() {
 					continue;
 				}
 
-				$source = $card['source'];
+				$source              = $card['source'];
 				$customer['address'] = array(
 					'line1'   => $source->address_line1,
 					'line2'   => $source->address_line2,
@@ -800,30 +835,39 @@ function edd_stripe_zip_and_country() {
 				);
 			}
 		}
-
 	}
-?>
+	?>
 	<fieldset id="edd_cc_address" class="cc-address">
 		<legend><?php _e( 'Billing Details', 'easy-digital-downloads' ); ?></legend>
 		<p id="edd-card-country-wrap">
 			<label for="billing_country" class="edd-label">
 				<?php _e( 'Billing Country', 'easy-digital-downloads' ); ?>
-				<?php if( edd_field_is_required( 'billing_country' ) ) { ?>
+				<?php if ( edd_field_is_required( 'billing_country' ) ) { ?>
 					<span class="edd-required-indicator">*</span>
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<select name="billing_country" id="billing_country" class="billing_country edd-select<?php if( edd_field_is_required( 'billing_country' ) ) { echo ' required'; } ?>"<?php if( edd_field_is_required( 'billing_country' ) ) {  echo ' required '; } ?> autocomplete="billing country">
+			<select name="billing_country" id="billing_country" class="billing_country edd-select
+			<?php
+			if ( edd_field_is_required( 'billing_country' ) ) {
+				echo ' required'; }
+			?>
+			"
+	<?php
+	if ( edd_field_is_required( 'billing_country' ) ) {
+				echo ' required '; }
+	?>
+autocomplete="billing country">
 				<?php
 
 				$selected_country = edd_get_shop_country();
 
-				if( ! empty( $customer['address']['country'] ) && '*' !== $customer['address']['country'] ) {
+				if ( ! empty( $customer['address']['country'] ) && '*' !== $customer['address']['country'] ) {
 					$selected_country = $customer['address']['country'];
 				}
 
 				$countries = edd_get_country_list();
-				foreach( $countries as $country_code => $country ) {
+				foreach ( $countries as $country_code => $country ) {
 					echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . esc_html( $country ) . '</option>';
 				}
 				?>
@@ -832,15 +876,25 @@ function edd_stripe_zip_and_country() {
 		<p id="edd-card-zip-wrap">
 			<label for="card_zip" class="edd-label">
 				<?php _e( 'Billing Zip / Postal Code', 'easy-digital-downloads' ); ?>
-				<?php if( edd_field_is_required( 'card_zip' ) ) { ?>
+				<?php if ( edd_field_is_required( 'card_zip' ) ) { ?>
 					<span class="edd-required-indicator">*</span>
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" size="4" name="card_zip" id="card_zip" class="card-zip edd-input<?php if( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['address']['zip'] ); ?>"<?php if( edd_field_is_required( 'card_zip' ) ) {  echo ' required '; } ?> autocomplete="billing postal-code" />
+			<input type="text" size="4" name="card_zip" id="card_zip" class="card-zip edd-input
+			<?php
+			if ( edd_field_is_required( 'card_zip' ) ) {
+				echo ' required'; }
+			?>
+			" placeholder="<?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['address']['zip'] ); ?>"
+							<?php
+							if ( edd_field_is_required( 'card_zip' ) ) {
+											echo ' required '; }
+							?>
+autocomplete="billing postal-code" />
 		</p>
 	</fieldset>
-<?php
+	<?php
 }
 
 /**
@@ -855,28 +909,31 @@ function edd_stripe_setup_billing_address_fields() {
 		return;
 	}
 
-	$hook = 'payment-elements' === edds_get_elements_mode() || apply_filters( 'edds_address_before_payment', false ) ? 'edd_before_cc_fields' : 'edd_after_cc_fields';
+	remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 
-	if ( edd_use_taxes() ) {
-		remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
+	$hook                 = 'payment-elements' === edds_get_elements_mode() || apply_filters( 'edds_address_before_payment', false ) ? 'edd_before_cc_fields' : 'edd_after_cc_fields';
+	$should_force_address = edd_use_taxes();
+	$display              = edd_get_option( 'stripe_billing_fields', 'full' );
+
+	if ( ! $should_force_address && EDD\Gateways\Stripe\PaymentMethods::affirm_requires_support() ) {
+		$should_force_address = true;
+	}
+
+	if ( $should_force_address ) {
 		add_action( $hook, 'edd_default_cc_address_fields' );
 		return;
 	}
-
-	$display = edd_get_option( 'stripe_billing_fields', 'full' );
 
 	switch ( $display ) {
 
 		case 'full':
 			// Make address fields required.
 			add_filter( 'edd_require_billing_address', '__return_true' );
-			remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 			add_action( $hook, 'edd_default_cc_address_fields' );
 
 			break;
 
 		case 'zip_country':
-			remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields', 10 );
 			add_action( $hook, 'edd_stripe_zip_and_country', 9 );
 
 			// Make Zip required.
@@ -885,8 +942,6 @@ function edd_stripe_setup_billing_address_fields() {
 			break;
 
 		case 'none':
-			remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields', 10 );
-
 			break;
 	}
 }
@@ -902,13 +957,13 @@ add_action( 'edd_purchase_form_before_cc_form', 'edd_stripe_setup_billing_addres
 function edd_stripe_require_zip_and_country( $fields ) {
 
 	$fields['card_zip'] = array(
-		'error_id' => 'invalid_zip_code',
-		'error_message' => __( 'Please enter your zip / postal code', 'easy-digital-downloads' )
+		'error_id'      => 'invalid_zip_code',
+		'error_message' => __( 'Please enter your zip / postal code', 'easy-digital-downloads' ),
 	);
 
 	$fields['billing_country'] = array(
-		'error_id' => 'invalid_country',
-		'error_message' => __( 'Please select your billing country', 'easy-digital-downloads' )
+		'error_id'      => 'invalid_country',
+		'error_message' => __( 'Please select your billing country', 'easy-digital-downloads' ),
 	);
 
 	return $fields;

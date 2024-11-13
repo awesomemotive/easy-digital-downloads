@@ -95,7 +95,7 @@ class Tracking {
 			return false;
 		}
 
-		wp_remote_post(
+		new \EDD\Utils\RemoteRequest(
 			$this->telemetry_server,
 			array(
 				'method'      => 'POST',

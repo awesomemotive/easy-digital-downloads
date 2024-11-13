@@ -25,7 +25,7 @@ function edd_get_admin_base_url() {
 
 	// Default args
 	$args = array(
-		'post_type' => 'download'
+		'post_type' => 'download',
 	);
 
 	// Default URL
@@ -76,7 +76,7 @@ function edd_is_test_mode() {
  */
 function edd_is_debug_mode() {
 	$ret = edd_get_option( 'debug_mode', false );
-	if( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
+	if ( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
 		$ret = true;
 	}
 	return (bool) apply_filters( 'edd_is_debug_mode', $ret );
@@ -185,9 +185,9 @@ function edd_is_cc_verify_enabled() {
 
 	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) ) {
 		$ret = true;
-	} else if ( count( $gateways ) == 1 ) {
+	} elseif ( count( $gateways ) == 1 ) {
 		$ret = false;
-	} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
+	} elseif ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
 		$ret = false;
 	}
 
@@ -219,7 +219,7 @@ function edd_is_odd( $int ) {
  * @return mixed File extension
  */
 function edd_get_file_extension( $str ) {
-	$parts = explode( '.', $str );
+	$parts          = explode( '.', $str );
 	$file_extension = end( $parts );
 
 	if ( false !== strpos( $file_extension, '?' ) ) {
@@ -294,27 +294,27 @@ function edd_get_ip() {
 function edd_get_host() {
 	$host = false;
 
-	if( defined( 'WPE_APIKEY' ) ) {
+	if ( defined( 'WPE_APIKEY' ) ) {
 		$host = 'WP Engine';
-	} elseif( defined( 'PAGELYBIN' ) ) {
+	} elseif ( defined( 'PAGELYBIN' ) ) {
 		$host = 'Pagely';
-	} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+	} elseif ( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
 		$host = 'ICDSoft';
-	} elseif( DB_HOST == 'mysqlv5' ) {
+	} elseif ( DB_HOST == 'mysqlv5' ) {
 		$host = 'NetworkSolutions';
-	} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
 		$host = 'iPage';
-	} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
 		$host = 'IPower';
-	} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
 		$host = 'MediaTemple Grid';
-	} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.pair.com' ) !== false ) {
 		$host = 'pair Networks';
-	} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
 		$host = 'Rackspace Cloud';
-	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
-	} elseif( isset( $_SERVER['SERVER_NAME'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ), 'Flywheel' ) !== false ) {
+	} elseif ( isset( $_SERVER['SERVER_NAME'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ), 'Flywheel' ) !== false ) {
 		$host = 'Flywheel';
 	} else {
 
@@ -341,54 +341,65 @@ function edd_is_host( $host = false ) {
 
 	$return = false;
 
-	if( $host ) {
+	if ( $host ) {
 		$host = str_replace( ' ', '', strtolower( $host ) );
 
-		switch( $host ) {
+		switch ( $host ) {
 			case 'wpengine':
-				if( defined( 'WPE_APIKEY' ) )
+				if ( defined( 'WPE_APIKEY' ) ) {
 					$return = true;
+				}
 				break;
 			case 'pagely':
-				if( defined( 'PAGELYBIN' ) )
+				if ( defined( 'PAGELYBIN' ) ) {
 					$return = true;
+				}
 				break;
 			case 'icdsoft':
-				if( DB_HOST == 'localhost:/tmp/mysql5.sock' )
+				if ( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
 					$return = true;
+				}
 				break;
 			case 'networksolutions':
-				if( DB_HOST == 'mysqlv5' )
+				if ( DB_HOST == 'mysqlv5' ) {
 					$return = true;
+				}
 				break;
 			case 'ipage':
-				if( strpos( DB_HOST, 'ipagemysql.com' ) !== false )
+				if ( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'ipower':
-				if( strpos( DB_HOST, 'ipowermysql.com' ) !== false )
+				if ( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'mediatemplegrid':
-				if( strpos( DB_HOST, '.gridserver.com' ) !== false )
+				if ( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'pairnetworks':
-				if( strpos( DB_HOST, '.pair.com' ) !== false )
+				if ( strpos( DB_HOST, '.pair.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'rackspacecloud':
-				if( strpos( DB_HOST, '.stabletransit.com' ) !== false )
+				if ( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'sysfix.eu':
 			case 'sysfix.eupowerhosting':
-				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
+				if ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'flywheel':
-				if ( isset( $_SERVER['SERVER_NAME'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ), 'Flywheel' ) !== false )
+				if ( isset( $_SERVER['SERVER_NAME'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ), 'Flywheel' ) !== false ) {
 					$return = true;
+				}
 				break;
 			default:
 				$return = false;
@@ -437,7 +448,7 @@ function edd_get_current_page_url( $nocache = false ) {
 
 	global $wp;
 
-	if( get_option( 'permalink_structure' ) ) {
+	if ( get_option( 'permalink_structure' ) ) {
 
 		$base = trailingslashit( home_url( $wp->request ) );
 
@@ -514,7 +525,7 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 			trigger_error( sprintf( _x( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'deprecated function error logging with replacement function', 'easy-digital-downloads' ), $function, $version, $replacement ) );
 
 			if ( ! empty( $backtrace ) ) {
-				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+				trigger_error( print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			}
 
 			// Alternatively we could dump this to a file.
@@ -562,7 +573,7 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 			trigger_error( sprintf( _x( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead.', 'deprecated function argument error logging with replacement', 'easy-digital-downloads' ), $argument, $function, $version, $replacement ) );
 
 			if ( ! empty( $backtrace ) ) {
-				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+				trigger_error( print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			}
 
 			// Alternatively we could dump this to a file.
@@ -925,7 +936,7 @@ function edd_get_upload_dir() {
 	$wp_upload_dir = wp_upload_dir();
 	$edd_dir       = edd_get_uploads_base_dir();
 	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir;
-	$retval        =  apply_filters( 'edd_get_upload_dir', $path );
+	$retval        = apply_filters( 'edd_get_upload_dir', $path );
 
 	// Make sure the directory exists
 	wp_mkdir_p( $retval );
@@ -1008,13 +1019,13 @@ function edd_is_uploads_url_protected() {
 			$args       = array(
 				'sslverify'   => false,
 				'timeout'     => 2,
-				'redirection' => 0
+				'redirection' => 0,
 			);
 
-			// Send the request
-			$response   = wp_remote_get( $url, $args );
-			$code       = wp_remote_retrieve_response_code( $response );
-			$protected  = (int) ( 200 !== (int) $code );
+			// Send the request.
+			$request   = new \EDD\Utils\RemoteRequest( $url, $args );
+			$code      = $request->code;
+			$protected = (int) ( 200 !== (int) $code );
 
 			// Delete the temporary file.
 			if ( EDD\Utils\FileSystem::file_exists( $file_path ) ) {
@@ -1052,7 +1063,7 @@ function edd_cleanup_file_symlinks() {
 	}
 
 	$path = edd_get_symlink_dir();
-	$dir = opendir( $path );
+	$dir  = opendir( $path );
 
 	while ( ( $file = readdir( $dir ) ) !== false ) {
 		if ( '.' === $file || '..' === $file ) {
@@ -1101,24 +1112,20 @@ function edd_object_to_array( $object = array() ) {
 			} else {
 				$return[] = edd_object_to_array( $item );
 			}
-
 		}
-	} else {
-		if ( $object instanceof EDD_Payment ) {
+	} elseif ( $object instanceof EDD_Payment ) {
 			$return = $object->array_convert();
-		} else {
-			$return = get_object_vars( $object );
+	} else {
+		$return = get_object_vars( $object );
 
-			// Now look at the items that came back and convert any nested objects to arrays
-			foreach ( $return as $key => $value ) {
-				$value = ( is_array( $value ) || is_object( $value ) ) ? edd_object_to_array( $value ) : $value;
-				$return[ $key ] = $value;
-			}
+		// Now look at the items that came back and convert any nested objects to arrays
+		foreach ( $return as $key => $value ) {
+			$value          = ( is_array( $value ) || is_object( $value ) ) ? edd_object_to_array( $value ) : $value;
+			$return[ $key ] = $value;
 		}
 	}
 
 	return $return;
-
 }
 
 /**
@@ -1135,9 +1142,9 @@ function edd_set_upload_dir( $upload ) {
 	// Override the year / month being based on the post publication date, if year/month organization is enabled
 	if ( get_option( 'uploads_use_yearmonth_folders' ) ) {
 		// Generate the yearly and monthly dirs
-		$time = current_time( 'mysql' );
-		$y = substr( $time, 0, 4 );
-		$m = substr( $time, 5, 2 );
+		$time             = current_time( 'mysql' );
+		$y                = substr( $time, 0, 4 );
+		$m                = substr( $time, 5, 2 );
 		$upload['subdir'] = "/$y/$m";
 	}
 
@@ -1222,7 +1229,7 @@ function edd_can_view_receipt( $order_or_key = '' ) {
 function edd_payment_get_ip_address_url( $order_id ) {
 	$order = edd_get_order( $order_id );
 
-	$base_url = 'https://ipinfo.io/';
+	$base_url     = 'https://ipinfo.io/';
 	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $order->ip ) . '" target="_blank">' . esc_attr( $order->ip ) . '</a>';
 
 	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $order->ip, $order->id );
@@ -1360,7 +1367,7 @@ function edd_redirect( $location = '', $status = 302 ) {
  * @return bool Whether or not function is disabled.
  */
 function edd_is_func_disabled( $function ) {
-	$disabled = explode( ',',  @ini_get( 'disable_functions' ) );
+	$disabled = explode( ',', @ini_get( 'disable_functions' ) );
 
 	return in_array( $function, $disabled, true );
 }
@@ -1442,7 +1449,8 @@ add_filter( 'edd_batch_memory_limit', 'edd_set_batch_memory_limit' );
  */
 function edd_admin_filter_bar( $context = '', $item = null ) {
 
-	?><div class="wp-filter" id="edd-filters"><?php
+	?><div class="wp-filter" id="edd-filters">
+	<?php
 
 		/**
 		 * Fires before filtered items, usually unused
@@ -1453,7 +1461,9 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 		 */
 		do_action( "edd_before_admin_filter_bar_{$context}", $item );
 
-		?><div class="filter-items"><?php
+	?>
+		<div class="filter-items">
+		<?php
 
 			/**
 			 * Output filter bar items, used primarily for selects/inputs/buttons
@@ -1464,7 +1474,9 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 			 */
 			do_action( "edd_admin_filter_bar_{$context}", $item );
 
-		?></div><?php
+		?>
+		</div>
+		<?php
 
 		/**
 		 * Fires after filtered items, usually used by search boxes
@@ -1475,7 +1487,9 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 		 */
 		do_action( "edd_after_admin_filter_bar_{$context}", $item );
 
-	?></div><?php
+		?>
+	</div>
+	<?php
 }
 
 /**
@@ -1524,16 +1538,16 @@ function edd_get_status_label( $status = '' ) {
 		// Otherwise, fetch from generic array. This covers all other non-payment statuses.
 		$labels = array(
 			// Discounts
-			'active'             => __( 'Active', 'easy-digital-downloads' ),
-			'inactive'           => __( 'Inactive', 'easy-digital-downloads' ),
-			'expired'            => __( 'Expired', 'easy-digital-downloads' ),
+			'active'    => __( 'Active', 'easy-digital-downloads' ),
+			'inactive'  => __( 'Inactive', 'easy-digital-downloads' ),
+			'expired'   => __( 'Expired', 'easy-digital-downloads' ),
 
 			// Common
-			'pending'            => __( 'Pending', 'easy-digital-downloads' ),
-			'verified'           => __( 'Verified', 'easy-digital-downloads' ),
-			'spam'               => __( 'Spam', 'easy-digital-downloads' ),
-			'deleted'            => __( 'Deleted', 'easy-digital-downloads' ),
-			'cancelled'          => __( 'Cancelled', 'easy-digital-downloads' ),
+			'pending'   => __( 'Pending', 'easy-digital-downloads' ),
+			'verified'  => __( 'Verified', 'easy-digital-downloads' ),
+			'spam'      => __( 'Spam', 'easy-digital-downloads' ),
+			'deleted'   => __( 'Deleted', 'easy-digital-downloads' ),
+			'cancelled' => __( 'Cancelled', 'easy-digital-downloads' ),
 		);
 
 		// Return the label if set, or uppercase the first letter if not
@@ -1566,7 +1580,7 @@ function edd_format_counts( $counts = array(), $groupby = '' ) {
 
 	// Default array
 	$c = array(
-		'total' => 0
+		'total' => 0,
 	);
 
 	// Loop through counts and shape return value
@@ -1604,32 +1618,35 @@ function edd_get_payment_icon_dimensions( $icon = '' ) {
 	}
 
 	// Filter the SVG dimensions
-	$sizes = apply_filters( 'edd_get_payment_icon_dimensions', array(
-		'mastercard' => array(
-			'width'  => 50,
-			'height' => 32
-		),
-		'americanexpress' => array(
-			'width'  => 32,
-			'height' => 32
-		),
-		'visa' => array(
-			'width'  => 50,
-			'height' => 32
-		),
-		'discover' => array(
-			'width'  => 50,
-			'height' => 32
-		),
-		'paypal' => array(
-			'width'  => 50,
-			'height' => 32
-		),
-		'amazon' => array(
-			'width'  => 50,
-			'height' => 32
-		),
-	) );
+	$sizes = apply_filters(
+		'edd_get_payment_icon_dimensions',
+		array(
+			'mastercard'      => array(
+				'width'  => 50,
+				'height' => 32,
+			),
+			'americanexpress' => array(
+				'width'  => 32,
+				'height' => 32,
+			),
+			'visa'            => array(
+				'width'  => 50,
+				'height' => 32,
+			),
+			'discover'        => array(
+				'width'  => 50,
+				'height' => 32,
+			),
+			'paypal'          => array(
+				'width'  => 50,
+				'height' => 32,
+			),
+			'amazon'          => array(
+				'width'  => 50,
+				'height' => 32,
+			),
+		)
+	);
 
 	return isset( $sizes[ $icon ] )
 		? $sizes[ $icon ]
@@ -1656,15 +1673,18 @@ function edd_get_payment_icon( $args = array() ) {
 	}
 
 	// Parse args.
-	$args = wp_parse_args( $args, array(
-		'icon'     => '',
-		'title'    => '',
-		'desc'     => '',
-		'fallback' => false,
-		'width'    => '',
-		'height'   => '',
-		'classes'  => array()
-	) );
+	$args = wp_parse_args(
+		$args,
+		array(
+			'icon'     => '',
+			'title'    => '',
+			'desc'     => '',
+			'fallback' => false,
+			'width'    => '',
+			'height'   => '',
+			'classes'  => array(),
+		)
+	);
 
 	$args['classes'][] = 'icon-' . esc_attr( $args['icon'] );
 
@@ -1687,11 +1707,11 @@ function edd_get_payment_icon( $args = array() ) {
 	}
 
 	// Set width and height.
-	$width  = ! empty( $args['width']  ) ? ' width="'  . esc_attr( $args['width']  ) . '"' : '';
+	$width  = ! empty( $args['width'] ) ? ' width="' . esc_attr( $args['width'] ) . '"' : '';
 	$height = ! empty( $args['height'] ) ? ' height="' . esc_attr( $args['height'] ) . '"' : '';
 
 	// Begin SVG markup.
-	$svg = '<svg' . $width . $height . ' class="'. implode( ' ', array_filter( $args['classes'] ) ) .'"' . $aria_hidden . $aria_labelledby . ' role="img">';
+	$svg = '<svg' . $width . $height . ' class="' . implode( ' ', array_filter( $args['classes'] ) ) . '"' . $aria_hidden . $aria_labelledby . ' role="img">';
 
 	// Display the title.
 	if ( $args['title'] ) {
@@ -1734,14 +1754,16 @@ function edd_print_payment_icons( $icons = array() ) {
 	// Bail if no icons being requested
 	if ( empty( $icons ) ) {
 		return;
-	} ?>
+	}
+	?>
 
 	<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<defs>
 		<?php
 
 		// Mastercard
-		if ( in_array( 'mastercard', $icons, true ) ) : ?>
+		if ( in_array( 'mastercard', $icons, true ) ) :
+			?>
 			<symbol id="icon-<?php echo 'mastercard'; ?>" viewBox="0 0 50 32">
 				<rect width="50" height="32"/>
 				<path d="m13.827 29.327v-1.804c3e-3 -0.029 4e-3 -0.059 4e-3 -0.088 0-0.576-0.473-1.05-1.049-1.05-0.02 0-0.041 1e-3 -0.061 2e-3 -0.404-0.026-0.792 0.17-1.01 0.511-0.199-0.33-0.564-0.527-0.95-0.511-0.342-0.02-0.671 0.14-0.866 0.421v-0.352h-0.592v2.877h0.583v-1.653c-3e-3 -0.025-4e-3 -0.049-4e-3 -0.073 0-0.38 0.312-0.692 0.692-0.692 0.013 0 0.026 0 0.04 1e-3 0.415 0 0.649 0.271 0.649 0.758v1.656h0.583v-1.65c-2e-3 -0.023-3e-3 -0.047-3e-3 -0.07 0-0.381 0.313-0.695 0.694-0.695 0.012 0 0.025 1e-3 0.037 1e-3 0.427 0 0.655 0.271 0.655 0.758v1.656l0.598-3e-3zm9.368-2.871h-1.046v-0.872h-0.586v0.872h-0.601v0.523h0.601v1.362c0 0.668 0.234 1.064 0.974 1.064 0.276 1e-3 0.547-0.076 0.782-0.222l-0.181-0.511c-0.167 0.1-0.358 0.156-0.553 0.162-0.301 0-0.439-0.192-0.439-0.481v-1.38h1.046l3e-3 -0.517zm5.34-0.072c-0.316-6e-3 -0.613 0.154-0.782 0.421v-0.349h-0.571v2.877h0.577v-1.623c0-0.475 0.229-0.782 0.637-0.782 0.134-2e-3 0.267 0.023 0.391 0.072l0.193-0.544c-0.143-0.051-0.294-0.077-0.445-0.078v6e-3zm-8.072 0.301c-0.354-0.211-0.761-0.315-1.173-0.301-0.727 0-1.172 0.343-1.172 0.902 0 0.469 0.324 0.752 0.968 0.842l0.3 0.042c0.343 0.048 0.529 0.168 0.529 0.331 0 0.222-0.252 0.366-0.679 0.366-0.344 0.012-0.681-0.094-0.956-0.3l-0.301 0.451c0.367 0.249 0.802 0.38 1.245 0.372 0.83 0 1.29-0.384 1.29-0.932 0-0.547-0.352-0.754-0.974-0.844l-0.301-0.042c-0.271-0.036-0.511-0.121-0.511-0.301s0.228-0.355 0.571-0.355c0.317 4e-3 0.627 0.089 0.902 0.247l0.262-0.478zm8.718 1.202c-1e-3 0.024-2e-3 0.048-2e-3 0.071 0 0.787 0.648 1.434 1.434 1.434 0.024 0 0.048 0 0.071-2e-3 0.376 0.02 0.745-0.103 1.034-0.342l-0.3-0.451c-0.216 0.164-0.48 0.255-0.752 0.258-0.5-0.048-0.886-0.473-0.886-0.975 0-0.503 0.386-0.928 0.886-0.976 0.272 3e-3 0.536 0.094 0.752 0.259l0.3-0.451c-0.289-0.24-0.658-0.362-1.034-0.343-0.023-1e-3 -0.047-2e-3 -0.071-2e-3 -0.786 0-1.434 0.648-1.434 1.434 0 0.024 1e-3 0.048 2e-3 0.071v0.015zm-4.047-1.503c-0.841 0-1.422 0.601-1.422 1.503-1e-3 0.03-2e-3 0.059-2e-3 0.088 0 0.777 0.639 1.416 1.416 1.416 0.017 0 0.034 0 0.051-1e-3 0.428 0.015 0.848-0.128 1.178-0.402l-0.301-0.427c-0.237 0.19-0.531 0.296-0.835 0.3-0.435 0.016-0.814-0.305-0.869-0.736h2.149v-0.241c0-0.902-0.547-1.503-1.355-1.503l-0.01 3e-3zm0 0.535h0.025c0.4 0 0.73 0.327 0.733 0.728h-1.542c0.022-0.416 0.378-0.741 0.794-0.728h-0.01zm-7.789 0.971v-1.434h-0.577v0.349c-0.227-0.279-0.573-0.436-0.932-0.421-0.829 0-1.511 0.682-1.511 1.511s0.682 1.51 1.511 1.51c0.359 0.015 0.705-0.141 0.932-0.42v0.348h0.577v-1.443zm-2.33 0c-2e-3 -0.024-3e-3 -0.048-3e-3 -0.072 0-0.495 0.407-0.902 0.902-0.902h3e-3c0.5 0.048 0.886 0.473 0.886 0.976 0 0.502-0.386 0.927-0.886 0.975h-3e-3c-0.495 0-0.902-0.407-0.902-0.902 0-0.024 1e-3 -0.048 3e-3 -0.072v-3e-3zm22.214-1.503c-0.316-6e-3 -0.613 0.154-0.781 0.421v-0.352h-0.572v2.877h0.578v-1.623c0-0.475 0.228-0.782 0.637-0.782 0.134-2e-3 0.266 0.023 0.391 0.072l0.192-0.541c-0.143-0.051-0.293-0.077-0.445-0.078v6e-3zm4.636 2.531c0.039 0 0.078 7e-3 0.114 0.021 0.035 0.015 0.066 0.035 0.093 0.061s0.048 0.056 0.064 0.09c0.03 0.071 0.03 0.151 0 0.222-0.016 0.034-0.037 0.065-0.064 0.09-0.027 0.026-0.058 0.047-0.093 0.061-0.036 0.015-0.075 0.024-0.114 0.024-0.116-1e-3 -0.222-0.069-0.271-0.175-0.03-0.071-0.03-0.151 0-0.222 0.016-0.034 0.037-0.064 0.064-0.09s0.058-0.046 0.093-0.061c0.036-0.017 0.074-0.027 0.114-0.03v9e-3zm0 0.509c0.03 0 0.06-6e-3 0.087-0.019 0.026-0.011 0.05-0.027 0.069-0.048 0.078-0.084 0.078-0.216 0-0.3-0.019-0.021-0.043-0.037-0.069-0.048-0.027-0.012-0.057-0.019-0.087-0.018-0.03 0-0.06 6e-3 -0.087 0.018-0.027 0.011-0.052 0.027-0.072 0.048-0.078 0.084-0.078 0.216 0 0.3 0.02 0.021 0.045 0.037 0.072 0.048 0.028 0.01 0.057 0.014 0.087 0.013v6e-3zm0.018-0.358c0.028-2e-3 0.056 7e-3 0.078 0.024 0.019 0.015 0.029 0.039 0.027 0.063 1e-3 0.02-6e-3 0.04-0.021 0.054-0.017 0.016-0.039 0.025-0.063 0.027l0.087 0.099h-0.069l-0.081-0.099h-0.027v0.099h-0.057v-0.264l0.126-3e-3zm-0.066 0.051v0.072h0.066c0.012 4e-3 0.024 4e-3 0.036 0 4e-3 -8e-3 4e-3 -0.019 0-0.027 4e-3 -9e-3 4e-3 -0.019 0-0.027-0.012-3e-3 -0.024-3e-3 -0.036 0l-0.066-0.018zm-6.804-1.224v-1.44h-0.577v0.349c-0.226-0.279-0.572-0.436-0.932-0.421-0.828 0-1.51 0.682-1.51 1.511s0.682 1.51 1.51 1.51c0.36 0.015 0.706-0.141 0.932-0.42v0.348h0.577v-1.437zm-2.329 0c-2e-3 -0.024-3e-3 -0.048-3e-3 -0.072 0-0.495 0.407-0.902 0.902-0.902h2e-3c0.5 0.048 0.887 0.473 0.887 0.976 0 0.502-0.387 0.927-0.887 0.975h-2e-3c-0.495 0-0.902-0.407-0.902-0.902 0-0.024 1e-3 -0.048 3e-3 -0.072v-3e-3zm8.138 0v-2.6h-0.577v1.503c-0.227-0.279-0.573-0.436-0.932-0.421-0.829 0-1.511 0.682-1.511 1.511s0.682 1.51 1.511 1.51c0.359 0.015 0.705-0.141 0.932-0.42v0.348h0.577v-1.431zm-2.33 0c-2e-3 -0.024-3e-3 -0.048-3e-3 -0.072 0-0.495 0.407-0.902 0.902-0.902h3e-3c0.476 0.073 0.831 0.487 0.831 0.969 0 0.486-0.362 0.902-0.843 0.97h-3e-3c-0.495 0-0.902-0.407-0.902-0.902 0-0.023 1e-3 -0.046 3e-3 -0.069l0.012 6e-3z" fill="#fff" fill-rule="nonzero"/>
@@ -1750,29 +1772,35 @@ function edd_print_payment_icons( $icons = array() ) {
 				<path d="m41.486 19.77v-0.349h0.142v-0.072h-0.358v0.072h0.141v0.349h0.075zm0.695 0v-0.421h-0.109l-0.126 0.301-0.126-0.301h-0.108v0.421h0.075v-0.319l0.117 0.274h0.081l0.118-0.274v0.319h0.078z" fill="#f79e1b" fill-rule="nonzero"/>
 				<path d="m42.511 13.063c0 5.937-4.885 10.823-10.823 10.823-2.425 0-4.782-0.816-6.689-2.315 2.609-2.051 4.136-5.191 4.136-8.51 0-3.318-1.527-6.459-4.136-8.509 1.907-1.5 4.264-2.315 6.689-2.315 5.938 0 10.823 4.886 10.823 10.823v3e-3z" fill="#f79e1b" fill-rule="nonzero"/>
 			</symbol>
-		<?php endif;
+			<?php
+		endif;
 
 		// American Express
-		if ( in_array( 'americanexpress', $icons, true ) ) : ?>
+		if ( in_array( 'americanexpress', $icons, true ) ) :
+			?>
 			<symbol id="icon-<?php echo 'americanexpress'; ?>" viewBox="0 0 32 32">
 				<path d="m32 17.318v-17.318h-32v32h32v-9.336c-0.071 0 0-5.346 0-5.346" fill="#006fcf"/>
 				<path d="m28.08 15.537h2.423v-5.631h-2.637v0.784l-0.499-0.784h-2.28v0.998l-0.428-0.998h-3.706-0.499c-0.142 0-0.285 0.072-0.427 0.072-0.143 0-0.214 0.071-0.357 0.142-0.142 0.072-0.213 0.072-0.356 0.143v-0.143-0.214h-12.045l-0.356 0.927-0.356-0.927h-2.851v0.998l-0.428-0.998h-2.28l-0.998 2.424v3.207h1.639l0.285-0.784h0.57l0.286 0.784h12.543v-0.713l0.499 0.713h3.492v-0.143-0.285c0.071 0.071 0.214 0.071 0.285 0.143 0.071 0.071 0.214 0.071 0.285 0.142 0.143 0.071 0.285 0.071 0.428 0.071h2.566l0.285-0.783h0.57l0.285 0.783h3.492v-0.712l0.57 0.784zm3.92 7.127v-5.274h-19.599l-0.499 0.712-0.499-0.712h-5.701v5.63h5.701l0.499-0.713 0.499 0.713h3.563v-1.212h-0.142c0.499 0 0.926-0.071 1.283-0.213v1.496h2.565v-0.712l0.499 0.712h10.619c0.428-0.142 0.856-0.213 1.212-0.427z" fill="#fff"/>
 				<path d="m30.788 21.31h-1.924v0.784h1.853c0.784 0 1.283-0.499 1.283-1.212s-0.428-1.069-1.14-1.069h-0.856c-0.213 0-0.356-0.143-0.356-0.356 0-0.214 0.143-0.357 0.356-0.357h1.64l0.356-0.784h-1.924c-0.784 0-1.283 0.499-1.283 1.141 0 0.712 0.427 1.069 1.14 1.069h0.855c0.214 0 0.357 0.142 0.357 0.356 0.071 0.285-0.072 0.428-0.357 0.428zm-3.492 0h-1.924v0.784h1.853c0.784 0 1.283-0.499 1.283-1.212s-0.428-1.069-1.141-1.069h-0.855c-0.214 0-0.356-0.143-0.356-0.356 0-0.214 0.142-0.357 0.356-0.357h1.639l0.357-0.784h-1.924c-0.784 0-1.283 0.499-1.283 1.141 0 0.712 0.427 1.069 1.14 1.069h0.855c0.214 0 0.357 0.142 0.357 0.356 0.071 0.285-0.143 0.428-0.357 0.428zm-2.494-2.281v-0.784h-2.994v3.777h2.994v-0.784h-2.138v-0.784h2.067v-0.784h-2.067v-0.712h2.138v0.071zm-4.847 0c0.357 0 0.499 0.214 0.499 0.428 0 0.213-0.142 0.427-0.499 0.427h-1.069v-0.926l1.069 0.071zm-1.069 1.639h0.428l1.14 1.354h1.069l-1.282-1.425c0.641-0.143 0.997-0.57 0.997-1.14 0-0.713-0.499-1.212-1.283-1.212h-1.995v3.777h0.855l0.071-1.354zm-2.28-1.14c0 0.285-0.143 0.499-0.499 0.499h-1.14v-0.998h1.069c0.356 0 0.57 0.214 0.57 0.499zm-2.495-1.283v3.777h0.856v-1.283h1.14c0.784 0 1.354-0.498 1.354-1.282 0-0.713-0.499-1.283-1.283-1.283l-2.067 0.071zm-1.282 3.777h1.069l-1.497-1.924 1.497-1.853h-1.069l-0.927 1.212-0.926-1.212h-1.07l1.497 1.853-1.497 1.853h1.07l0.926-1.212 0.927 1.283zm-3.208-2.993v-0.784h-2.993v3.777h2.993v-0.784h-2.138v-0.784h2.067v-0.784h-2.067v-0.712h2.138v0.071zm17.319-6.699l1.497 2.28h1.069v-3.777h-0.856v2.494l-0.213-0.356-1.355-2.138h-1.14v3.777h0.855v-2.565l0.143 0.285zm-3.706-0.072l0.285-0.784 0.285 0.784 0.356 0.856h-1.282l0.356-0.856zm1.497 2.352h0.926l-1.639-3.777h-1.14l-1.64 3.777h0.927l0.356-0.784h1.853l0.357 0.784zm-3.992 0l0.357-0.784h-0.214c-0.641 0-0.998-0.427-0.998-1.069v-0.071c0-0.641 0.357-1.069 0.998-1.069h0.926v-0.784h-0.997c-1.141 0-1.782 0.784-1.782 1.853v0.071c0 1.141 0.641 1.853 1.71 1.853zm-3.207 0h0.856v-1.71-1.996h-0.856v3.706zm-1.853-2.993c0.357 0 0.499 0.214 0.499 0.428 0 0.213-0.142 0.427-0.499 0.427h-1.069v-0.926l1.069 0.071zm-1.069 1.639h0.428l1.14 1.354h1.069l-1.283-1.425c0.642-0.143 0.998-0.57 0.998-1.14 0-0.713-0.499-1.212-1.283-1.212h-1.995v3.777h0.855l0.071-1.354zm-1.568-1.639v-0.784h-2.993v3.777h2.993v-0.784h-2.138v-0.784h2.067v-0.784h-2.067v-0.712h2.138v0.071zm-6.485 2.993h0.784l1.069-3.064v3.064h0.855v-3.777h-1.425l-0.856 2.566-0.855-2.566h-1.425v3.777h0.855v-3.064l0.998 3.064zm-4.633-2.352l0.285-0.784 0.285 0.784 0.357 0.856h-1.283l0.356-0.856zm1.497 2.352h0.926l-1.639-3.777h-1.069l-1.639 3.777h0.927l0.356-0.784h1.853l0.285 0.784z" fill="#006fcf"/>
 			</symbol>
-		<?php endif;
+			<?php
+		endif;
 
 		// Visa
-		if ( in_array( 'visa', $icons, true ) ) : ?>
+		if ( in_array( 'visa', $icons, true ) ) :
+			?>
 			<symbol id="icon-<?php echo 'visa'; ?>" viewBox="0 0 50 32">
 				<rect y="4.608" width="50" height="22.794" fill="#fff"/>
 				<rect y="27.402" width="50" height="4.608" fill="#f7b600"/>
 				<rect width="50" height="4.608" fill="#1a1f71"/>
 				<path d="m24.803 9.686l-2.71 12.666h-3.277l2.71-12.666h3.277zm13.786 8.179l1.725-4.757 0.992 4.757h-2.717zm3.658 4.487h3.03l-2.648-12.666h-2.795c-0.63 0-1.161 0.365-1.396 0.928l-4.917 11.738h3.442l0.683-1.892h4.204l0.397 1.892zm-8.555-4.135c0.014-3.343-4.621-3.528-4.59-5.022 0.01-0.454 0.443-0.937 1.389-1.061 0.47-0.06 1.764-0.109 3.232 0.567l0.574-2.687c-0.788-0.285-1.803-0.56-3.065-0.56-3.239 0-5.518 1.721-5.537 4.187-0.02 1.823 1.628 2.84 2.868 3.447 1.278 0.621 1.706 1.02 1.7 1.574-9e-3 0.85-1.019 1.226-1.96 1.24-1.649 0.026-2.604-0.445-3.365-0.8l-0.595 2.777c0.767 0.351 2.18 0.656 3.643 0.672 3.444 0 5.696-1.701 5.706-4.334m-13.572-8.531l-5.309 12.666h-3.464l-2.613-10.109c-0.158-0.621-0.296-0.85-0.778-1.112-0.788-0.429-2.089-0.829-3.233-1.078l0.078-0.367h5.576c0.71 0 1.349 0.472 1.512 1.29l1.38 7.33 3.409-8.62h3.442z" fill="#1a1f71" fill-rule="nonzero"/>
 			</symbol>
-		<?php endif;
+			<?php
+		endif;
 
 		// Discover
-		if ( in_array( 'discover', $icons, true ) ) : ?>
+		if ( in_array( 'discover', $icons, true ) ) :
+			?>
 			<symbol id="icon-<?php echo 'discover'; ?>" viewBox="0 0 50 32">
 				<rect width="50" height="32" fill="#fff"/>
 				<path d="m49.673 17.776s-13.573 9.578-38.433 13.864h38.433v-13.864z" fill="#f58025" fill-rule="nonzero"/>
@@ -1788,10 +1816,12 @@ function edd_print_payment_icons( $icons = array() ) {
 				<path d="m47.299 10.022h-0.026v-0.166h0.027c0.075 0 0.115 0.027 0.115 0.082 0 0.056-0.04 0.084-0.116 0.084m0.267-0.087c0-0.126-0.087-0.196-0.24-0.196h-0.205v0.637h0.152v-0.247l0.178 0.247h0.185l-0.209-0.263c0.09-0.024 0.139-0.089 0.139-0.178" fill="#231f20" fill-rule="nonzero"/>
 				<path d="m47.354 10.512c-0.243 0-0.442-0.203-0.442-0.455 0-0.253 0.196-0.456 0.442-0.456 0.242 0 0.439 0.207 0.439 0.456 0 0.25-0.197 0.455-0.439 0.455m2e-3 -1.01c-0.309 0-0.554 0.246-0.554 0.554s0.248 0.555 0.554 0.555c0.301 0 0.548-0.25 0.548-0.555 0-0.304-0.247-0.554-0.548-0.554" fill="#231f20" fill-rule="nonzero"/>
 			</symbol>
-		<?php endif;
+			<?php
+		endif;
 
 		// Paypal
-		if ( in_array( 'paypal', $icons, true ) ) : ?>
+		if ( in_array( 'paypal', $icons, true ) ) :
+			?>
 			<symbol id="icon-<?php echo 'paypal'; ?>" viewBox="0 0 50 32">
 				<rect width="50" height="32" fill="#fff"/>
 				<path d="m49.639 0.363v31.274h-49.278c0-0.355-2e-3 -30.917-2e-3 -31.273 0.36 0 48.918-1e-3 49.28-1e-3m0.18-0.363l-49.819 5e-3v31.995h50l-3e-3 -32h-0.178z" fill="#ebebeb" fill-rule="nonzero"/>
@@ -1805,20 +1835,24 @@ function edd_print_payment_icons( $icons = array() ) {
 				<path d="m31.052 7.735c0.196-1.254-2e-3 -2.107-0.679-2.88-0.746-0.851-2.094-1.215-3.818-1.215h-5.006c-0.352 0-0.652 0.256-0.707 0.605l-2.084 13.228c-0.041 0.261 0.16 0.497 0.424 0.497h3.09l0.777-4.926-0.024 0.154c0.054-0.348 0.352-0.605 0.704-0.605h1.469c2.884 0 5.143-1.173 5.803-4.565 0.019-0.1 0.036-0.198 0.051-0.293" fill="#072269" fill-rule="nonzero"/>
 				<path d="m23.882 7.751c0.033-0.209 0.168-0.381 0.349-0.468 0.082-0.039 0.174-0.061 0.27-0.061h3.924c0.464 0 0.898 0.031 1.294 0.094 0.113 0.019 0.223 0.04 0.33 0.063 0.108 0.024 0.211 0.051 0.312 0.08 0.05 0.015 0.1 0.03 0.148 0.046 0.195 0.065 0.376 0.141 0.543 0.23 0.196-1.254-2e-3 -2.107-0.679-2.88-0.746-0.851-2.094-1.216-3.818-1.216h-5.005c-0.353 0-0.653 0.257-0.708 0.606l-2.084 13.228c-0.041 0.261 0.16 0.497 0.424 0.497h3.09l0.777-4.926 0.833-5.293z" fill="#012f87" fill-rule="nonzero"/>
 			</symbol>
-		<?php endif;
+			<?php
+		endif;
 
 		// Amazon
-		if ( in_array( 'amazon', $icons, true ) ) : ?>
+		if ( in_array( 'amazon', $icons, true ) ) :
+			?>
 			<symbol id="icon-<?php echo 'amazon'; ?>" viewBox="0 0 50 32">
 				<rect width="50" height="32" fill="#eaeded"/>
 				<path d="m17.467 7.121c-0.071 0.01-0.148 0.02-0.22 0.031-0.714 0.086-1.358 0.352-1.94 0.771-0.123 0.087-0.235 0.179-0.363 0.276-0.01-0.026-0.02-0.052-0.02-0.072-0.021-0.138-0.041-0.281-0.066-0.419-0.036-0.235-0.154-0.337-0.389-0.337h-0.587c-0.352 0-0.419 0.067-0.419 0.419v10.688c0 0.052 0 0.103 5e-3 0.154 0.011 0.153 0.103 0.25 0.251 0.255 0.357 5e-3 0.72 5e-3 1.077 0 0.148 0 0.24-0.102 0.256-0.255 5e-3 -0.051 5e-3 -0.102 5e-3 -0.154v-3.697c0.056 0.046 0.087 0.072 0.112 0.097 0.914 0.761 1.966 1.011 3.115 0.787 1.042-0.205 1.767-0.843 2.237-1.783 0.357-0.709 0.505-1.465 0.526-2.252 0.025-0.873-0.061-1.731-0.414-2.543-0.434-1.001-1.154-1.66-2.242-1.884-0.163-0.036-0.332-0.051-0.5-0.077-0.143-5e-3 -0.281-5e-3 -0.424-5e-3zm-2.421 2.14c0-0.077 0.021-0.123 0.087-0.169 0.7-0.485 1.471-0.74 2.329-0.674 0.761 0.056 1.384 0.429 1.711 1.323 0.199 0.546 0.25 1.113 0.25 1.685 0 0.531-0.041 1.052-0.204 1.563-0.348 1.087-1.144 1.501-2.176 1.455-0.715-0.031-1.338-0.306-1.91-0.71-0.061-0.046-0.087-0.087-0.087-0.168 6e-3 -0.72 0-1.435 0-2.155 0-0.715 6e-3 -1.43 0-2.15zm10.505-2.14c-0.051 5e-3 -0.102 0.015-0.148 0.02-0.5 0.026-0.991 0.087-1.476 0.21-0.311 0.082-0.613 0.194-0.914 0.296-0.184 0.061-0.276 0.194-0.271 0.393 5e-3 0.169-5e-3 0.337 0 0.506 5e-3 0.245 0.108 0.311 0.348 0.25 0.398-0.102 0.796-0.214 1.2-0.291 0.628-0.117 1.261-0.169 1.899-0.072 0.332 0.052 0.644 0.149 0.858 0.429 0.189 0.246 0.261 0.537 0.271 0.838 0.015 0.424 0.01 0.848 0.015 1.272 0 0.02-5e-3 0.045-0.01 0.071-0.025-5e-3 -0.046 0-0.066-5e-3 -0.536-0.128-1.078-0.22-1.634-0.25-0.577-0.031-1.149 5e-3 -1.701 0.199-0.659 0.23-1.19 0.628-1.501 1.271-0.24 0.501-0.276 1.032-0.2 1.568 0.103 0.715 0.46 1.267 1.093 1.619 0.608 0.337 1.267 0.378 1.936 0.276 0.771-0.118 1.455-0.444 2.058-0.94 0.02-0.02 0.046-0.036 0.082-0.056 0.03 0.194 0.056 0.378 0.091 0.562 0.031 0.158 0.128 0.26 0.276 0.265 0.276 5e-3 0.557 5e-3 0.833 0 0.137-5e-3 0.229-0.097 0.245-0.24 5e-3 -0.046 5e-3 -0.097 5e-3 -0.143v-5.413c0-0.219-0.01-0.439-0.046-0.659-0.097-0.658-0.378-1.2-0.97-1.552-0.343-0.204-0.72-0.307-1.114-0.363-0.184-0.025-0.367-0.041-0.551-0.066-0.199 5e-3 -0.404 5e-3 -0.608 5e-3zm1.787 6.521c0 0.067-0.02 0.113-0.076 0.154-0.572 0.413-1.2 0.689-1.91 0.76-0.291 0.031-0.582 0.021-0.858-0.091-0.322-0.128-0.531-0.353-0.633-0.68-0.102-0.326-0.102-0.664-5e-3 -0.99 0.127-0.424 0.429-0.664 0.837-0.797 0.414-0.133 0.843-0.153 1.267-0.112 0.429 0.035 0.847 0.117 1.276 0.173 0.082 0.01 0.108 0.051 0.108 0.133-6e-3 0.245 0 0.485 0 0.73-6e-3 0.24-0.011 0.48-6e-3 0.72zm6.527 0.317c-0.659-1.823-1.318-3.651-1.976-5.474-0.103-0.292-0.215-0.578-0.322-0.864-0.056-0.148-0.164-0.245-0.327-0.245-0.388-5e-3 -0.776-0.01-1.169-5e-3 -0.128 0-0.189 0.102-0.164 0.23 0.026 0.107 0.056 0.209 0.097 0.312 1.001 2.476 2.007 4.958 3.018 7.43 0.087 0.209 0.108 0.388 0.01 0.603-0.168 0.372-0.301 0.766-0.474 1.138-0.154 0.332-0.409 0.582-0.777 0.68-0.26 0.071-0.521 0.081-0.786 0.056-0.128-0.011-0.255-0.041-0.383-0.051-0.174-0.011-0.261 0.066-0.266 0.245-5e-3 0.168-5e-3 0.337 0 0.505 5e-3 0.281 0.102 0.409 0.378 0.455 0.286 0.051 0.577 0.097 0.863 0.102 0.874 0.02 1.568-0.332 2.017-1.093 0.179-0.301 0.343-0.618 0.47-0.94 1.211-3.053 2.406-6.112 3.606-9.171 0.035-0.092 0.066-0.184 0.081-0.281 0.021-0.143-0.046-0.225-0.189-0.225-0.337-5e-3 -0.679 0-1.016 0-0.189 0-0.322 0.082-0.393 0.266-0.026 0.071-0.056 0.138-0.082 0.209-0.592 1.701-1.185 3.401-1.777 5.107-0.128 0.368-0.26 0.74-0.393 1.134-0.021-0.057-0.031-0.087-0.046-0.123z"/>
 				<path d="m7.647 19.594c0.131-0.238 0.295-0.278 0.551-0.142 0.59 0.318 1.169 0.647 1.771 0.948 2.311 1.159 4.725 2.022 7.235 2.629 1.186 0.284 2.379 0.511 3.588 0.67 1.789 0.239 3.589 0.341 5.395 0.296 0.988-0.023 1.976-0.102 2.958-0.216 3.203-0.38 6.298-1.181 9.273-2.43 0.165-0.068 0.335-0.114 0.517-0.068 0.38 0.102 0.511 0.511 0.233 0.789-0.159 0.159-0.358 0.289-0.546 0.42-1.743 1.198-3.645 2.067-5.655 2.72-1.397 0.449-2.817 0.784-4.265 0.999-0.999 0.148-2.01 0.25-3.021 0.273-0.045 0-0.096 0.011-0.142 0.017h-1.198c-0.045-6e-3 -0.096-0.017-0.142-0.017-0.204-0.011-0.408-0.017-0.607-0.023-0.96-0.04-1.914-0.147-2.862-0.301-1.556-0.255-3.078-0.647-4.566-1.187-3.072-1.113-5.826-2.759-8.267-4.94-0.102-0.091-0.171-0.216-0.25-0.323v-0.114zm34.706-0.176c-0.057-0.284-0.272-0.392-0.517-0.471-0.386-0.131-0.789-0.188-1.192-0.222-0.744-0.062-1.488-0.028-2.226 0.108-0.812 0.153-1.584 0.415-2.271 0.886-0.08 0.057-0.159 0.119-0.21 0.199-0.04 0.062-0.052 0.159-0.029 0.227 0.023 0.085 0.119 0.108 0.205 0.102 0.039 0 0.085 0 0.124-6e-3 0.443-0.045 0.881-0.096 1.324-0.142 0.647-0.062 1.3-0.102 1.947-0.051 0.273 0.017 0.551 0.08 0.818 0.154 0.29 0.079 0.42 0.295 0.431 0.59 0.023 0.454-0.079 0.892-0.198 1.323-0.233 0.875-0.568 1.721-0.897 2.561-0.023 0.057-0.046 0.114-0.057 0.171-0.029 0.164 0.068 0.272 0.233 0.232 0.096-0.022 0.204-0.073 0.272-0.142 0.25-0.244 0.506-0.488 0.721-0.761 0.727-0.931 1.153-2.004 1.403-3.157 0.045-0.204 0.079-0.414 0.119-0.619v-0.982z" fill="#f90"/>
 				<rect y="30.292" width="50" height="1.684" fill="#f90"/>
 			</symbol>
-		<?php endif;
+			<?php
+		endif;
 
 		// Lock
-		if ( in_array( 'lock', $icons, true ) ) : ?>
+		if ( in_array( 'lock', $icons, true ) ) :
+			?>
 			<symbol id="icon-<?php echo 'lock'; ?>" viewBox="0 0 16 16">
 				<path d="M5.091,7.273L10.909,7.273L10.909,5.091C10.909,3.489 9.602,2.182 8,2.182C6.398,2.182 5.091,3.489 5.091,5.091L5.091,7.273ZM14.545,8.364L14.545,14.909C14.545,15.511 14.057,16 13.455,16L2.545,16C1.943,16 1.455,15.511 1.455,14.909L1.455,8.364C1.455,7.761 1.943,7.273 2.545,7.273L2.909,7.273L2.909,5.091C2.909,2.295 5.204,0 8,0C10.796,0 13.091,2.295 13.091,5.091L13.091,7.273L13.455,7.273C14.057,7.273 14.545,7.761 14.545,8.364Z" />
 			</symbol>

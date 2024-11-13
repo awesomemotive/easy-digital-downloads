@@ -118,9 +118,9 @@ function edds_process_gateway_connect_completion() {
 		'https://easydigitaldownloads.com/?edd_gateway_connect_credentials=stripe_connect'
 	);
 
-	$response = wp_remote_get( esc_url_raw( $edd_credentials_url ) );
+	$request = new \EDD\Utils\RemoteRequest( $edd_credentials_url );
 
-	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+	if ( is_wp_error( $request->response ) || 200 !== $request->code ) {
 		$message = '<p>' . sprintf(
 			/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
 			__( 'There was an error getting your Stripe credentials. Please %1$stry again%2$s. If you continue to have this problem, please contact support.', 'easy-digital-downloads' ),
@@ -130,7 +130,7 @@ function edds_process_gateway_connect_completion() {
 		wp_die( $message );
 	}
 
-	$data = json_decode( $response['body'], true );
+	$data = json_decode( $request->response['body'], true );
 	$data = $data['data'];
 
 	if ( edd_is_test_mode() ) {
@@ -146,6 +146,8 @@ function edds_process_gateway_connect_completion() {
 	}
 
 	edd_update_option( 'stripe_connect_account_id', sanitize_text_field( $data['stripe_user_id'] ) );
+
+	\EDD\Gateways\Stripe\PaymentMethods::reset();
 
 	$redirect_url = edd_get_admin_url(
 		array(
@@ -237,6 +239,9 @@ function edds_stripe_connect_process_disconnect() {
 	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edds-stripe-connect-disconnect' ) ) {
 		return;
 	}
+
+	// Remove payment method configuration and account capabilities.
+	\EDD\Gateways\Stripe\PaymentMethods::reset();
 
 	$options = array(
 		'stripe_connect_account_id',
@@ -782,6 +787,7 @@ function edds_stripe_connect_admin_notices_print() {
 				$notices->output( 'stripe-connect' );
 				// Stripe Connect reconnect.
 			} else {
+				EDD\Gateways\Stripe\PaymentMethods::reset();
 				$notices->output( 'stripe-connect-reconnect' );
 			}
 		}
