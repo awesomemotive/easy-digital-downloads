@@ -248,7 +248,7 @@ class API {
 		$headers = wp_parse_args( $headers, array(
 			'Content-Type'                  => 'application/json',
 			'Authorization'                 => sprintf( 'Bearer %s', $this->get_access_token()->token() ),
-			'PayPal-Partner-Attribution-Id' => EDD_PAYPAL_PARTNER_ATTRIBUTION_ID
+			'PayPal-Partner-Attribution-Id' => EDD_PAYPAL_PARTNER_ATTRIBUTION_ID,
 		) );
 
 		$request_args = array(

@@ -500,7 +500,7 @@ class EDD_Payment_History_Table extends List_Table {
 				$value = '<time datetime="' . esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) . '">' . edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
 				break;
 			case 'gateway':
-				$value = edd_get_gateway_admin_label( $order->gateway );
+				$value = edd_get_gateway_admin_label( $order->gateway, $order );
 
 				if ( empty( $value ) ) {
 					$value = '&mdash;';
@@ -1096,6 +1096,26 @@ class EDD_Payment_History_Table extends List_Table {
 			} else {
 				// If no discount object is found, we force the results to be empty.
 				$args['id__in'] = array( null );
+			}
+
+			return $args;
+		}
+
+		// Support searching by Stripe Payment Method.
+		if ( is_string( $search ) && ( false !== strpos( $search, 'payment-method:' ) ) ) {
+			$search     = trim( str_replace( 'payment-method:', '', $search ) );
+			$meta_query = array(
+				array(
+					'key'     => 'stripe_payment_method_type',
+					'value'   => $search,
+					'compare' => '=',
+				),
+			);
+			// if the $args already have a meta_query, we need to merge the new meta_query with the existing one.
+			if ( isset( $args['meta_query'] ) ) {
+				$args['meta_query'] = array_merge( $args['meta_query'], $meta_query );
+			} else {
+				$args['meta_query'] = $meta_query;
 			}
 
 			return $args;

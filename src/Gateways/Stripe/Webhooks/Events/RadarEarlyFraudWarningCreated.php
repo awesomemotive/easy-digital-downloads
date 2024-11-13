@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  * @since 3.3.0
  */
 class RadarEarlyFraudWarningCreated extends Event {
+	use Traits\Order;
 
 	/**
 	 * The event object.
@@ -35,14 +36,13 @@ class RadarEarlyFraudWarningCreated extends Event {
 	 * @return void
 	 */
 	public function process() {
-		$order_id = edd_get_order_id_from_transaction_id( $this->object->charge );
-		$order    = edd_get_order( $order_id );
+		$order = $this->get_order( $this->object->charge );
 
 		if ( $order instanceof \EDD\Orders\Order ) {
 			// Add an order note.
 			edd_add_note(
 				array(
-					'object_id'   => $order_id,
+					'object_id'   => $order->id,
 					'object_type' => 'order',
 					'content'     => sprintf(
 						/* translators: %s Stripe Radar early fraud warning reason. */

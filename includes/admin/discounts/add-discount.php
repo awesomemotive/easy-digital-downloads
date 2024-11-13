@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 					</th>
 					<td>
 						<div class="edd-code-wrapper">
-							<input type="text" required="required" id="edd-code" name="code" class="code" value="" pattern="[a-zA-Z0-9\-_]+" maxlength="50" placeholder="<?php esc_html_e( '10PERCENT', 'easy-digital-downloads' ); ?>" />
+							<input type="text" required="required" id="edd-code" name="code" class="code" value="" pattern="[a-zA-Z0-9_\-]+" maxlength="50" placeholder="<?php esc_html_e( '10PERCENT', 'easy-digital-downloads' ); ?>" />
 							<?php do_action( 'edd_add_discount_form_after_code_field' ); ?>
 						</div>
 						<?php do_action( 'edd_add_discount_form_after_code_field_wrapper' ); ?>

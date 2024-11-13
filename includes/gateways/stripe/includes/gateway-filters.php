@@ -74,22 +74,6 @@ function edds_get_stripe_checkout_locale() {
 }
 
 /**
- * Sets the $_COOKIE global when a logged in cookie is available.
- *
- * We need the global to be immediately available so calls to wp_create_nonce()
- * within the same session will use the newly available data.
- *
- * @since 2.8.0
- *
- * @link https://wordpress.stackexchange.com/a/184055
- *
- * @param string $logged_in_cookie The logged-in cookie value.
- */
-function edds_set_logged_in_cookie_global( $logged_in_cookie ) {
-	$_COOKIE[ LOGGED_IN_COOKIE ] = $logged_in_cookie;
-}
-
-/**
  * Given a transaction ID, generate a link to the Stripe transaction ID details
  *
  * @since  1.9.1
@@ -110,3 +94,60 @@ function edd_stripe_link_transaction_id( $transaction_id, $payment_id ) {
 	return apply_filters( 'edd_stripe_link_payment_details_transaction_id', $url );
 }
 add_filter( 'edd_payment_details_transaction_id-stripe', 'edd_stripe_link_transaction_id', 10, 2 );
+
+/**
+ * Modifies the checkout label for a specific gateway in Easy Digital Downloads Pro.
+ *
+ * @param string $label The original checkout label.
+ * @param string $gateway The gateway being used for the checkout.
+ * @param object $order The order object.
+ * @return string The modified checkout label.
+ */
+function edds_gateway_checkout_label( $label, $gateway, $order ) {
+	if ( 'stripe' !== $gateway || empty( $order ) ) {
+		return $label;
+	}
+
+	$type = edd_get_order_meta( $order->id, 'stripe_payment_method_type', true );
+	if ( ! $type ) {
+		return $label;
+	}
+
+	$type_label = EDD\Gateways\Stripe\PaymentMethods::get_label( $type );
+	if ( $type_label ) {
+		if ( 'edd_gateway_admin_label' === current_filter() ) {
+			return $label . ' (' . $type_label . ')';
+		}
+
+		return $type_label;
+	}
+
+	return $label;
+}
+add_filter( 'edd_gateway_checkout_label', 'edds_gateway_checkout_label', 10, 3 );
+add_filter( 'edd_gateway_admin_label', 'edds_gateway_checkout_label', 10, 3 );
+
+
+/**
+ * When redirecting to the Stripe success screen outside of a purchase session,
+ * show the correct content.
+ *
+ * @since 3.3.5
+ * @param string $content
+ * @return string
+ */
+function edds_success_page_content( $content ) {
+	ob_start();
+
+	// If the status is set, show the processing template. Likely a bank transfer.
+	if ( ! empty( $_GET['status']) ) {
+		edd_get_template_part( 'payment', 'processing' );
+		edd_empty_cart();
+	} else {
+		// Authenticated offsite (Cash App, etc).
+		edd_get_template_part( 'stripe', 'success' );
+	}
+
+	return ob_get_clean();
+}
+add_filter( 'edd_payment_confirm_stripe', 'edds_success_page_content' );

@@ -84,7 +84,7 @@ $minutes             = edd_get_minute_values();
 						<label for="edd-code"><?php _e( 'Code', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( $discount->code ); ?>" pattern="[a-zA-Z0-9-_]+" class="code" placeholder="<?php esc_html_e( '10PERCENT', 'easy-digital-downloads' ); ?>" />
+						<input type="text" required="required" id="edd-code" name="code" value="<?php echo esc_attr( $discount->code ); ?>" pattern="[a-zA-Z0-9_\-]+" class="code" placeholder="<?php esc_html_e( '10PERCENT', 'easy-digital-downloads' ); ?>" />
 						<p class="description"><?php _e( 'The code customers will enter to apply this discount. Only alphanumeric characters are allowed.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>

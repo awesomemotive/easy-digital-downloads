@@ -4,6 +4,10 @@
 
 namespace EDD\Vendor\Stripe\Service;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
@@ -12,7 +16,7 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
      * first.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -32,7 +36,7 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -44,26 +48,12 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * @param string $id
-     * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
-     *
-     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
-     *
-     * @return \EDD\Vendor\Stripe\Transfer
-     */
-    public function cancel($id, $params = null, $opts = null)
-    {
-        return $this->request('post', $this->buildPath('/v1/transfers/%s/cancel', $id), $params, $opts);
-    }
-
-    /**
      * To send funds from your EDD\Vendor\Stripe account to a connected account, you create a new
      * transfer object. Your <a href="#balance">EDD\Vendor\Stripe balance</a> must be able to
      * cover the transfer amount, or you’ll receive an “Insufficient Funds” error.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -86,7 +76,7 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -104,7 +94,7 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -123,7 +113,7 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -142,7 +132,7 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -162,7 +152,7 @@ class TransferService extends \EDD\Vendor\Stripe\Service\AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *

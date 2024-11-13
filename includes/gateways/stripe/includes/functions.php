@@ -495,8 +495,6 @@ function edds_verify( $nonce = 'edd-process-checkout-nonce', $action = 'edd-proc
 		return \EDD\Utils\Tokenizer::is_token_valid( $token, $timestamp );
 	}
 
-	edd_debug_log( 'Attempted to verify ' . $action . ' session by tokenizer but the data was missing.' );
-
 	// Checkout.
 	$nonce = isset( $_POST[ $nonce ] )
 		? sanitize_text_field( $_POST[ $nonce ] )
@@ -541,12 +539,8 @@ function edds_documentation_route( $type ) {
  *              validated by Stripe when a request is made.
  */
 function edds_stripe_connect_account_country_supports_application_fees() {
-	$edd_country = edd_get_option( 'base_country', '' );
 
-	$account_country = edd_get_option(
-		'stripe_connect_account_country',
-		$edd_country
-	);
+	$account_country = edd_stripe()->connect->get_connect_country();
 
 	// If we have no country to compare against try to add an application fee.
 	// If the Stripe account is actually one of the blocked countries an API

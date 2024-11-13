@@ -515,6 +515,22 @@ class EDD_Notices {
 				edd_delete_option( 'sequential_start_update_failed' );
 			}
 		}
+
+		if ( 'paypal_commerce' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
+			if ( edd_is_test_mode() && ! \EDD\Gateways\PayPal\has_rest_api_connection( 'sandbox' ) ) {
+				$this->add_notice(
+					array(
+						'message'        => sprintf(
+							/* translators: %s: Sandbox doc link */
+							__( 'Connecting to PayPal in Test Mode requires the use of Sandbox Credentials. If you need help finding this, you can <a href="%s" target="_blank">view our documentation</a> on using PayPal Sandbox.', 'easy-digital-downloads' ),
+							'https://easydigitaldownloads.com/docs/paypal-setup/#sandbox'
+						),
+						'class'          => 'notice-warning',
+						'is_dismissible' => false,
+					)
+				);
+			}
+		}
 	}
 
 	/**
@@ -864,6 +880,16 @@ class EDD_Notices {
 						array(
 							'id'      => 'edd-webhooks-error',
 							'message' => __( 'There was an error creating webhooks for the Stripe gateway.', 'easy-digital-downloads' ),
+							'class'   => 'error',
+						)
+					);
+					break;
+
+				case 'stripe_webhooks_error_ssl':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-webhooks-error',
+							'message' => __( 'Stripe webhooks could not be created because your site is not using HTTPS.', 'easy-digital-downloads' ),
 							'class'   => 'error',
 						)
 					);

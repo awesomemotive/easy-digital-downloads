@@ -9,8 +9,8 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Returns a list of all available payment modes.
@@ -207,33 +207,50 @@ function edd_get_default_gateway() {
  * Returns the admin label for the specified gateway
  *
  * @since 1.0.8.3
+ * @since 3.3.5 Added optional $order parameter.
  *
- * @param string $gateway Name of the gateway to retrieve a label for
+ * @param string           $gateway Name of the gateway to retrieve a label for.
+ * @param EDD\Orders\Order $order   The order object (optional).
  * @return string Gateway admin label
  */
-function edd_get_gateway_admin_label( $gateway ) {
+function edd_get_gateway_admin_label( $gateway, $order = null ) {
 	$gateways = edd_get_payment_gateways();
 
 	$label = isset( $gateways[ $gateway ] )
 		? $gateways[ $gateway ]['admin_label']
 		: ucwords( $gateway );
 
-	return apply_filters( 'edd_gateway_admin_label', $label, $gateway );
+	/**
+	 * Filter the admin label for the specified gateway.
+	 *
+	 * @since 3.3.5 Added optional $order parameter.
+	 * @param string           $label   Checkout label for the gateway.
+	 * @param string           $gateway Name of the gateway to retrieve a label for.
+	 * @param EDD\Orders\Order $order   The order object.
+	 */
+	return apply_filters( 'edd_gateway_admin_label', $label, $gateway, $order );
 }
 
 /**
  * Returns the checkout label for the specified gateway.
  *
- * @since 1.0.8.5
- *
- * @param string $gateway Name of the gateway to retrieve a label for.
+ * @since 3.3.5 Added optional $order parameter.
+ * @param string           $gateway Name of the gateway to retrieve a label for.
+ * @param EDD\Orders\Order $order   The order object (optional).
  * @return string Checkout label for the gateway.
  */
-function edd_get_gateway_checkout_label( $gateway ) {
+function edd_get_gateway_checkout_label( $gateway, $order = null ) {
 	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
 
-	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
+	/**
+	 * Filter the checkout label for the specified gateway.
+	 *
+	 * @param string           $label   Checkout label for the gateway.
+	 * @param string           $gateway Name of the gateway to retrieve a label for.
+	 * @param EDD\Orders\Order $order   The order object.
+	 */
+	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway, $order );
 }
 
 /**
@@ -294,11 +311,11 @@ function edd_shop_supports_buy_now() {
  *
  * @since 1.7
  *
- * @param int   $download_id
- * @param array $options
- * @param int   $quantity
+ * @param int   $download_id The ID of the download being purchased.
+ * @param array $options     The options for the download.
+ * @param int   $quantity    The quantity of the download being purchased.
  *
- * @return mixed|void
+ * @return array $purchase_data The purchase data.
  */
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(), $quantity = 1 ) {
 	$price_options = array();
@@ -315,7 +332,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 		$prices = edd_get_variable_prices( $download_id );
 
-		// Make sure a valid price ID was supplied
+		// Make sure a valid price ID was supplied.
 		if ( ! isset( $prices[ $price_id ] ) ) {
 			wp_die( __( 'The requested price ID does not exist.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 404 ) );
 		}
@@ -327,7 +344,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		$price         = $prices[ $price_id ]['amount'];
 	}
 
-	// Set up Downloads array
+	// Set up Downloads array.
 	$downloads = array(
 		array(
 			'id'      => $download_id,
@@ -335,7 +352,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		),
 	);
 
-	// Set up Cart Details array
+	// Set up Cart Details array.
 	$cart_details = array(
 		array(
 			'name'        => get_the_title( $download_id ),
@@ -357,9 +374,9 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		$current_user = wp_get_current_user();
 	}
 
-	// Setup user information
+	// Setup user information.
 	$user_info = array(
-		'id'         => is_user_logged_in() ? get_current_user_id() : -1,
+		'id'         => is_user_logged_in() ? get_current_user_id() : 0,
 		'email'      => is_user_logged_in() ? $current_user->user_email : '',
 		'first_name' => is_user_logged_in() ? $current_user->user_firstname : '',
 		'last_name'  => is_user_logged_in() ? $current_user->user_lastname : '',
@@ -367,7 +384,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'address'    => array(),
 	);
 
-	// Setup purchase information
+	// Setup purchase information.
 	$purchase_data = array(
 		'downloads'    => $downloads,
 		'fees'         => edd_get_cart_fees(),
@@ -375,7 +392,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'discount'     => 0,
 		'tax'          => 0,
 		'price'        => $price * $quantity,
-		'purchase_key' => strtolower( md5( uniqid() ) ),
+		'purchase_key' => edd_generate_order_payment_key( $user_info['email'] ),
 		'user_email'   => $user_info['email'],
 		'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'user_info'    => $user_info,

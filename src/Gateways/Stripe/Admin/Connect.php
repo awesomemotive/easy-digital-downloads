@@ -26,47 +26,41 @@ class Connect {
 		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			return false;
 		}
-		if ( edd_is_dev_environment() ) {
-			return sprintf(
-				/* translators: 1: Webhooks setup link, 2: Closing anchor tag */
-				__( 'Webhooks are not available in local/development environments, but you can %1$stest webhook creation%2$s. This will happen automatically on production sites.', 'easy-digital-downloads' ),
-				'<a href="' . esc_url( self::get_webhooks_setup_link() ) . '">',
-				'</a>'
-			);
-		}
-		try {
-			$webhooks = edds_api_request(
-				'WebhookEndpoint',
-				'all',
-				array(
-					'limit' => 100,
-				)
-			);
-		} catch ( \Exception $e ) {
-			$error = $e->getMessage();
+
+		$endpoints = self::get_endpoints();
+		if ( is_string( $endpoints ) ) {
+			return $endpoints;
 		}
 
-		if ( ! empty( $error ) ) {
-			return $error;
+		$key = self::check_endpoints( $endpoints );
+
+		if ( edd_is_dev_environment() ) {
+			if ( false !== $key ) {
+				return __( 'Webhooks are configured correctly, but are not typically functional in local/development environments.', 'easy-digital-downloads' );
+			} else {
+				return sprintf(
+					/* translators: 1: Webhooks setup link, 2: Closing anchor tag */
+					__( 'Webhooks are not typically functional in local/development environments, but you can %1$smanually create the webhooks%2$s for testing. This will happen automatically on production sites.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( self::get_webhooks_setup_link() ) . '">',
+					'</a>'
+				);
+			}
 		}
-		$data = $webhooks['data'];
-		$urls = wp_list_pluck( $data, 'url' );
-		$key  = array_search( self::get_listener_url(), $urls, true );
+
+		// Webhooks not found.
 		if ( false === $key ) {
+			if ( ! self::is_listener_ssl() ) {
+				return sprintf(
+					/* translators: 1: Webhooks setup link, 2: Closing anchor tag */
+					__( 'Webhooks cannot be automatically set up because your site is not using HTTPS. %1$sManually add webhooks%2$s.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( self::get_workbench_url() ) . '">',
+					'</a>'
+				);
+			}
+
 			return sprintf(
 				/* translators: 1: Webhooks setup link, 2: Closing anchor tag, 3: Manual setup link */
 				__( 'Webhooks not found. %1$sAutomatically set up webhooks%2$s or %3$sadd them to your account manually%2$s.', 'easy-digital-downloads' ),
-				'<a href="' . esc_url( self::get_webhooks_setup_link() ) . '">',
-				'</a>',
-				'<a href="' . esc_url( self::get_workbench_url() ) . '">'
-			);
-		}
-		$events = $data[ $key ]->enabled_events;
-		$diff   = array_diff( self::get_event_endpoints(), $events );
-		if ( ! empty( $diff ) ) {
-			return sprintf(
-				/* translators: 1: Webhooks setup link, 2: Closing anchor tag, 3: Manual setup link */
-				__( 'Some webhooks are missing. %1$sAutomatically set up webhooks%2$s or %3$sadd them to your account manually%2$s.', 'easy-digital-downloads' ),
 				'<a href="' . esc_url( self::get_webhooks_setup_link() ) . '">',
 				'</a>',
 				'<a href="' . esc_url( self::get_workbench_url() ) . '">'
@@ -90,6 +84,12 @@ class Connect {
 			return;
 		}
 
+		$message = 'stripe_webhooks_error';
+		// Only create webhooks in production mode if the listener is SSL.
+		if ( ! edd_is_test_mode() && ! self::is_listener_ssl() ) {
+			self::redirect( 'stripe_webhooks_error_ssl' );
+		}
+
 		try {
 			$webhooks = edds_api_request(
 				'WebhookEndpoint',
@@ -100,25 +100,13 @@ class Connect {
 					'api_version'    => EDD_STRIPE_API_VERSION,
 				)
 			);
-		} catch ( \EDD\Vendors\Stripe\ApiErrorException $e ) {
-			$error = $e->getMessage();
+
+			$message = 'stripe_webhooks_created';
+		} catch ( \EDD\Vendor\Stripe\ApiErrorException $e ) {
+			// Do nothing.
 		}
 
-		$message = 'stripe_webhooks_created';
-		if ( ! empty( $error ) ) {
-			$message = 'stripe_webhooks_error';
-		}
-
-		edd_redirect(
-			edd_get_admin_url(
-				array(
-					'page'        => 'edd-settings',
-					'tab'         => 'gateways',
-					'section'     => 'edd-stripe',
-					'edd-message' => $message,
-				)
-			)
-		);
+		self::redirect( $message );
 	}
 
 	/**
@@ -189,14 +177,24 @@ class Connect {
 	 * Gets the listener URL.
 	 *
 	 * @since 3.3.4
+	 * @param bool $include_index Whether to include the index.php file.
+	 * @param bool $include_trailing_slash Whether to include the trailing slash.
 	 * @return string
 	 */
-	private static function get_listener_url() {
+	private static function get_listener_url( $include_index = true, $include_trailing_slash = true ) {
+		$home_url = $include_index
+			? home_url( 'index.php' )
+			: home_url();
+
+		if ( ! $include_index && $include_trailing_slash ) {
+			$home_url = trailingslashit( $home_url );
+		}
+
 		return add_query_arg(
 			array(
 				'edd-listener' => 'stripe',
 			),
-			home_url( 'index.php' )
+			$home_url
 		);
 	}
 
@@ -218,5 +216,179 @@ class Connect {
 			),
 			'edd-create-stripe-webhooks'
 		);
+	}
+
+	/**
+	 * Check if the listener is SSL.
+	 *
+	 * @since 3.3.5
+	 * @return bool
+	 */
+	private static function is_listener_ssl() {
+		return 'https' === wp_parse_url( self::get_listener_url(), PHP_URL_SCHEME );
+	}
+
+	/**
+	 * Redirect to the Stripe settings page.
+	 *
+	 * @since 3.3.5
+	 * @param string $message Message.
+	 */
+	private static function redirect( string $message ) {
+		edd_redirect(
+			edd_get_admin_url(
+				array(
+					'page'        => 'edd-settings',
+					'tab'         => 'gateways',
+					'section'     => 'edd-stripe',
+					'edd-message' => $message,
+				)
+			)
+		);
+	}
+
+	/**
+	 * Get the list of webhook endpoints.
+	 *
+	 * @since 3.3.5
+	 * @return array|string
+	 */
+	private static function get_endpoints() {
+		try {
+			$webhooks = edds_api_request(
+				'WebhookEndpoint',
+				'all',
+				array(
+					'limit' => 100,
+				)
+			);
+		} catch ( \Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return $webhooks['data'];
+	}
+
+	/**
+	 * Check if the webhook endpoint exists.
+	 *
+	 * @since 3.3.5
+	 * @param array $endpoints Endpoints.
+	 * @return int|bool
+	 */
+	private static function check_endpoints( $endpoints ) {
+		$urls = wp_list_pluck( $endpoints, 'url' );
+
+		// Ensure we're only working with 'enabled' webhook endpoints.
+		foreach ( $urls as $key => $url ) {
+			if ( 'enabled' !== $endpoints[ $key ]->status ) {
+				unset( $urls[ $key ] );
+			}
+		}
+
+		$all_listeners = array(
+			self::get_listener_url(), // /index.php?edd-listener=stripe
+			self::get_listener_url( false, false ), // ?edd-listener=stripe
+			self::get_listener_url( false, true ), // /?edd-listener=stripe
+		);
+
+		foreach ( $all_listeners as $listener ) {
+			$key = array_search( $listener, $urls, true );
+
+			if ( false !== $key ) {
+				$webhook_id = $endpoints[ $key ]->id;
+				break;
+			}
+		}
+
+		if ( false === $key ) {
+			return false;
+		}
+
+		$update_data = array();
+
+		// Ensure that even if we did find a webhook that the URL is correct.
+		if ( self::get_listener_url() !== $urls[ $key ] ) {
+			$update_data['url'] = self::get_listener_url();
+		}
+
+		// Check to see if we have any of our required events missing.
+		$missing_events_count = 0;
+		foreach ( self::get_event_endpoints() as $event ) {
+			if ( ! in_array( $event, $endpoints[ $key ]->enabled_events, true ) ) {
+				++$missing_events_count;
+			}
+		}
+
+		if ( $missing_events_count > 0 ) {
+			$update_data['enabled_events'] = self::get_event_endpoints();
+		}
+
+		// If we have data to update, do so.
+		if ( ! empty( $update_data ) ) {
+			self::update_webhook( $webhook_id, $update_data );
+		}
+
+		// Now lets ensure we never have any duplicates and disable the ones we find.
+		self::disable_duplicate_webhooks( $webhook_id );
+
+		return $key;
+	}
+
+	/**
+	 * Update a webhook.
+	 *
+	 * @since 3.3.5
+	 * @param string $webhook_id Webhook ID.
+	 * @param array  $data Data.
+	 * @return bool
+	 */
+	private static function update_webhook( $webhook_id, $data ) {
+		try {
+			edds_api_request(
+				'WebhookEndpoint',
+				'update',
+				$webhook_id,
+				$data
+			);
+		} catch ( \EDD\Vendor\Stripe\ApiErrorException $e ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Disable duplicate webhooks.
+	 *
+	 * It is possible that we end up with multiple webhooks due to people adding them manually, so we'll
+	 * ensure that we only have one webhook that matches our listener URL. Searching for both the
+	 * listener URL with and without index.php, keeping the one that matches our $valid_webhook_id.
+	 *
+	 * @since 3.3.5
+	 * @param string $valid_webhook_id Webhook ID that we want to keep.
+	 */
+	private static function disable_duplicate_webhooks( $valid_webhook_id ) {
+		$endpoints = self::get_endpoints();
+
+		$listener_urls = array(
+			self::get_listener_url(), // /index.php?edd-listener=stripe
+			self::get_listener_url( false, false ), // ?edd-listener=stripe
+			self::get_listener_url( false, true ), // /?edd-listener=stripe
+		);
+
+		foreach ( $endpoints as $endpoint ) {
+			// Skip the webhook that we want to keep.
+			if ( $endpoint->id === $valid_webhook_id ) {
+				continue;
+			}
+
+			if ( in_array( $endpoint->url, $listener_urls, true ) ) {
+				self::update_webhook(
+					$endpoint->id,
+					array( 'disabled' => true )
+				);
+			}
+		}
 	}
 }

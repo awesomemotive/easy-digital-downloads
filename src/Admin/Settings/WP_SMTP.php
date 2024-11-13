@@ -71,6 +71,14 @@ class WP_SMTP implements SubscriberInterface {
 	 * @return array
 	 */
 	public function register_setting( $settings ) {
+		if ( ! function_exists( 'edd_is_admin_page' ) ) {
+			return $settings;
+		}
+
+		if ( ! edd_is_admin_page( 'emails' ) ) {
+			return $settings;
+		}
+
 		if ( $this->is_smtp_configured() ) {
 			return $settings;
 		}
@@ -175,14 +183,14 @@ class WP_SMTP implements SubscriberInterface {
 	 */
 	private function get_link_parameters() {
 		return $this->is_smtp_configured() ?
-		array(
-			'button_text' => __( 'Configure WP Mail SMTP', 'easy-digital-downloads' ),
-			'href'        => admin_url( $this->config['smtp_settings'] ),
-		) :
-		array(
-			'button_text' => __( 'Run the WP Mail SMTP Setup Wizard', 'easy-digital-downloads' ),
-			'href'        => admin_url( $this->config['smtp_wizard'] ),
-		);
+			array(
+				'button_text' => __( 'Configure WP Mail SMTP', 'easy-digital-downloads' ),
+				'href'        => admin_url( $this->config['smtp_settings'] ),
+			) :
+			array(
+				'button_text' => __( 'Run the WP Mail SMTP Setup Wizard', 'easy-digital-downloads' ),
+				'href'        => admin_url( $this->config['smtp_wizard'] ),
+			);
 	}
 
 	/**
@@ -193,17 +201,19 @@ class WP_SMTP implements SubscriberInterface {
 	 * @return bool True if some mailer is selected and configured properly.
 	 */
 	protected function is_smtp_configured() {
-
 		if ( ! $this->is_smtp_activated() || ! class_exists( '\\WPMailSMTP\\Options' ) ) {
 			return false;
 		}
 
 		$phpmailer = $this->get_phpmailer();
+		$mailer    = \WPMailSMTP\Options::init()->get( 'mail', 'mailer' );
+		if ( 'mail' === $mailer ) {
+			return false;
+		}
 
-		$mailer             = \WPMailSMTP\Options::init()->get( 'mail', 'mailer' );
-		$is_mailer_complete = ! empty( $mailer ) && wp_mail_smtp()->get_providers()->get_mailer( $mailer, $phpmailer )->is_mailer_complete();
+		$mailer_object = wp_mail_smtp()->get_providers()->get_mailer( $mailer, $phpmailer );
 
-		return 'mail' !== $mailer && $is_mailer_complete;
+		return $mailer_object && $mailer_object->is_mailer_complete();
 	}
 
 	/**
@@ -225,45 +235,6 @@ class WP_SMTP implements SubscriberInterface {
 	 * @return \PHPMailer|\PHPMailer\PHPMailer\PHPMailer Instance of PHPMailer.
 	 */
 	protected function get_phpmailer() {
-
-		if ( version_compare( get_bloginfo( 'version' ), '5.5-alpha', '<' ) ) {
-			$phpmailer = $this->get_phpmailer_v5();
-		} else {
-			$phpmailer = $this->get_phpmailer_v6();
-		}
-
-		return $phpmailer;
-	}
-
-	/**
-	 * Get $phpmailer v5 instance.
-	 *
-	 * @since 2.11.4
-	 *
-	 * @return \PHPMailer Instance of PHPMailer.
-	 */
-	private function get_phpmailer_v5() {
-
-		global $phpmailer;
-
-		if ( ! ( $phpmailer instanceof \PHPMailer ) ) {
-			require_once ABSPATH . WPINC . '/class-phpmailer.php';
-			require_once ABSPATH . WPINC . '/class-smtp.php';
-			$phpmailer = new \PHPMailer( true ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		}
-
-		return $phpmailer;
-	}
-
-	/**
-	 * Get $phpmailer v6 instance.
-	 *
-	 * @since 2.11.4
-	 *
-	 * @return \PHPMailer\PHPMailer\PHPMailer Instance of PHPMailer.
-	 */
-	private function get_phpmailer_v6() {
-
 		global $phpmailer;
 
 		if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {

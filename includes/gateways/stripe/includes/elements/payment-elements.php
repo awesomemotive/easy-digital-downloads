@@ -84,9 +84,13 @@ function edds_get_stripe_payment_elements_rules() {
  */
 function edds_get_stripe_payment_elements_layout() {
 	$payment_elements_layout = array(
-		'type'             => 'tabs',
+		'type'             => edd_get_option( 'stripe_payment_elements_layout', 'tabs' ),
 		'defaultCollapsed' => false,
 	);
+
+	if ( 'accordion' === $payment_elements_layout['type'] ) {
+		$payment_elements_layout['radios'] = true;
+	}
 
 	/**
 	 * Filters the layout variables passed to the Stripe Payment Elements.
@@ -155,9 +159,7 @@ function edds_get_stripe_payment_elements_wallets() {
 	 *
 	 * @param array $enabled_wallets Allowed wallets payment methods ot use on the Payment Element.
 	 */
-	$enabld_wallets = array_merge( $enabled_wallets, apply_filters( 'edds_stripe_payment_elements_wallets', $enabled_wallets ) );
-
-	return $enabld_wallets;
+	return array_merge( $enabled_wallets, apply_filters( 'edds_stripe_payment_elements_wallets', $enabled_wallets ) );
 }
 
 /**
@@ -182,7 +184,6 @@ function edds_get_stripe_payment_elements_label_style() {
 	 * @param array $label_style The style to use for the Payment Elements labels.
 	 */
 	return apply_filters( 'edds_stripe_payment_elements_label_style', $label_style );
-
 }
 
 /**
@@ -209,7 +210,6 @@ function edds_get_stripe_payment_elements_fonts() {
 	 * @param array $fonts The style to use for the Payment Elements labels.
 	 */
 	return apply_filters( 'edds_stripe_payment_elements_fonts', $fonts );
-
 }
 
 /**
@@ -286,23 +286,36 @@ function edds_get_stripe_payment_elements_terms() {
  */
 function edds_gather_payment_element_customizations() {
 	$customizations = array(
-		'theme'              => edds_get_stripe_payment_elements_theme(),
-		'variables'          => edds_get_stripe_payment_elements_variables(),
-		'rules'              => edds_get_stripe_payment_elements_rules(),
-		'layout'             => edds_get_stripe_payment_elements_layout(),
-		'wallets'            => edds_get_stripe_payment_elements_wallets(),
-		'labels'             => edds_get_stripe_payment_elements_label_style(),
-		'fonts'              => edds_get_stripe_payment_elements_fonts(),
-		'paymentMethodTypes' => edds_payment_element_payment_method_types(),
-		'fields'             => edds_get_stripe_payment_elements_fields(),
-		'terms'              => edds_get_stripe_payment_elements_terms(),
-		'i18n'               => array(
+		'theme'                        => edds_get_stripe_payment_elements_theme(),
+		'variables'                    => edds_get_stripe_payment_elements_variables(),
+		'rules'                        => edds_get_stripe_payment_elements_rules(),
+		'layout'                       => edds_get_stripe_payment_elements_layout(),
+		'wallets'                      => edds_get_stripe_payment_elements_wallets(),
+		'labels'                       => edds_get_stripe_payment_elements_label_style(),
+		'fonts'                        => edds_get_stripe_payment_elements_fonts(),
+		'paymentMethodTypes'           => edds_payment_element_payment_method_types(),
+		'fields'                       => edds_get_stripe_payment_elements_fields(),
+		'terms'                        => edds_get_stripe_payment_elements_terms(),
+		'i18n'                         => array(
 			'errorMessages' => edds_get_localized_error_messages(),
 		),
+		'setupFutureUsage'             => null,
+		'payment_method_configuration' => false,
 	);
 
-	if ( function_exists( 'edd_recurring' ) ) {
-		$customizations['cartHasSubscription'] = edd_recurring()->cart_contains_recurring() ? 'true' : 'false';
+	$type = '';
+	if ( function_exists( 'edd_recurring' ) && edd_recurring()->cart_contains_recurring() ) {
+		$customizations['setupFutureUsage'] = 'off_session';
+		$type                               = 'subscriptions';
+		if ( edd_recurring()->cart_has_free_trial() ) {
+			$type = 'trials';
+		}
+	}
+
+	$configuration = EDD\Gateways\Stripe\PaymentMethods::get_configuration_id( $type );
+	if ( $configuration ) {
+		$customizations['payment_method_configuration'] = $configuration;
+		unset( $customizations['paymentMethodTypes'] );
 	}
 
 	return $customizations;
@@ -357,3 +370,46 @@ function edds_payment_element_payment_method_types() {
 	 */
 	return apply_filters( 'edds_stripe_payment_elements_payment_method_types', array() );
 }
+
+/**
+ * Force address line 1 to be required when billing address display is full
+ *
+ * @since 3.3.5
+ * @param array $fields The required fields.
+ * @return array $fields The required fields.
+ */
+function edd_stripe_require_card_address( $fields ) {
+	$fields['card_address'] = array(
+		'error_id'      => 'invalid_address_line1',
+		'error_message' => __( 'Please enter your billing address.', 'easy-digital-downloads' ),
+	);
+
+	$fields['edd_last'] = array(
+		'error_id'      => 'invalid_last_name',
+		'error_message' => __( 'Please enter your last name.', 'easy-digital-downloads' ),
+	);
+
+	return $fields;
+}
+
+/**
+ * Require the billing address when Affirm is enabled.
+ *
+ * @since 3.3.5
+ * @param bool $is_required Whether the billing address is required.
+ * @return bool $is_required Whether the billing address is required.
+ */
+function edds_require_address( $is_required ) {
+	if ( $is_required ) {
+		return $is_required;
+	}
+
+	if ( ! EDD\Gateways\Stripe\PaymentMethods::affirm_requires_support() ) {
+		return $is_required;
+	}
+
+	add_filter( 'edd_purchase_form_required_fields', 'edd_stripe_require_card_address' );
+
+	return true;
+}
+add_filter( 'edd_require_billing_address', 'edds_require_address' );

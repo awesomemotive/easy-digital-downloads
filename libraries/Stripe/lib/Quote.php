@@ -5,24 +5,23 @@
 namespace EDD\Vendor\Stripe;
 
 /**
- * A Quote is a way to model prices that you'd like to provide to a customer. Once
- * accepted, it will automatically create an invoice, subscription or subscription
- * schedule.
+ * A Quote is a way to model prices that you'd like to provide to a customer.
+ * Once accepted, it will automatically create an invoice, subscription or subscription schedule.
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property int $amount_subtotal Total before any discounts or taxes are applied.
  * @property int $amount_total Total after discounts and taxes are applied.
- * @property null|string|\EDD\Vendor\Stripe\StripeObject $application ID of the Connect Application that created the quote.
+ * @property null|string|\EDD\Vendor\Stripe\Application $application ID of the Connect Application that created the quote.
  * @property null|int $application_fee_amount The amount of the application fee (if any) that will be requested to be applied to the payment and transferred to the application owner's EDD\Vendor\Stripe account. Only applicable if there are no line items with recurring prices on the quote.
- * @property null|float $application_fee_percent A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's EDD\Vendor\Stripe account. Only applicable if there are line items with recurring prices on the quote.
+ * @property null|float $application_fee_percent A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice total that will be transferred to the application owner's EDD\Vendor\Stripe account. Only applicable if there are line items with recurring prices on the quote.
  * @property \EDD\Vendor\Stripe\StripeObject $automatic_tax
- * @property string $collection_method Either <code>charge_automatically</code>, or <code>send_invoice</code>. When charging automatically, EDD\Vendor\Stripe will attempt to pay invoices at the end of the subscription cycle or on finalization using the default payment method attached to the subscription or customer. When sending an invoice, EDD\Vendor\Stripe will email your customer an invoice with payment instructions. Defaults to <code>charge_automatically</code>.
+ * @property string $collection_method Either <code>charge_automatically</code>, or <code>send_invoice</code>. When charging automatically, EDD\Vendor\Stripe will attempt to pay invoices at the end of the subscription cycle or on finalization using the default payment method attached to the subscription or customer. When sending an invoice, EDD\Vendor\Stripe will email your customer an invoice with payment instructions and mark the subscription as <code>active</code>. Defaults to <code>charge_automatically</code>.
  * @property \EDD\Vendor\Stripe\StripeObject $computed
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property null|string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
  * @property null|string|\EDD\Vendor\Stripe\Customer $customer The customer which this quote belongs to. A customer is required before finalizing the quote. Once specified, it cannot be changed.
- * @property (string|\EDD\Vendor\Stripe\TaxRate)[] $default_tax_rates The tax rates applied to this quote.
+ * @property null|(string|\EDD\Vendor\Stripe\TaxRate)[] $default_tax_rates The tax rates applied to this quote.
  * @property null|string $description A description that will be displayed on the quote PDF.
  * @property (string|\EDD\Vendor\Stripe\Discount)[] $discounts The discounts applied to this quote.
  * @property int $expires_at The date on which the quote will be canceled if in <code>open</code> or <code>draft</code> status. Measured in seconds since the Unix epoch.
@@ -30,8 +29,8 @@ namespace EDD\Vendor\Stripe;
  * @property null|\EDD\Vendor\Stripe\StripeObject $from_quote Details of the quote that was cloned. See the <a href="https://stripe.com/docs/quotes/clone">cloning documentation</a> for more details.
  * @property null|string $header A header that will be displayed on the quote PDF.
  * @property null|string|\EDD\Vendor\Stripe\Invoice $invoice The invoice that was created from this quote.
- * @property null|\EDD\Vendor\Stripe\StripeObject $invoice_settings All invoices will be billed using the specified settings.
- * @property \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\LineItem> $line_items A list of items the customer is being quoted for.
+ * @property \EDD\Vendor\Stripe\StripeObject $invoice_settings
+ * @property null|\EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\LineItem> $line_items A list of items the customer is being quoted for.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property \EDD\Vendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|string $number A unique number that identifies this particular quote. This number is assigned once the quote is <a href="https://stripe.com/docs/quotes/overview#finalize">finalized</a>.
@@ -49,9 +48,6 @@ class Quote extends ApiResource
 {
     const OBJECT_NAME = 'quote';
 
-    use ApiOperations\All;
-    use ApiOperations\Create;
-    use ApiOperations\Retrieve;
     use ApiOperations\Update;
 
     const COLLECTION_METHOD_CHARGE_AUTOMATICALLY = 'charge_automatically';
@@ -63,21 +59,87 @@ class Quote extends ApiResource
     const STATUS_OPEN = 'open';
 
     /**
-     * @param callable $readBodyChunkCallable
+     * A quote models prices and services for a customer. Default options for
+     * <code>header</code>, <code>description</code>, <code>footer</code>, and
+     * <code>expires_at</code> can be set in the dashboard via the <a
+     * href="https://dashboard.stripe.com/settings/billing/quote">quote template</a>.
+     *
+     * @param null|array $params
+     * @param null|array|string $options
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Quote the created resource
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Returns a list of your quotes.
+     *
      * @param null|array $params
      * @param null|array|string $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Quote> of ApiResources
      */
-    public function pdf($readBodyChunkCallable, $params = null, $opts = null)
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves the quote with the given ID.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Quote
+     */
+    public static function retrieve($id, $opts = null)
     {
         $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
-        if (null === $opts->apiBase) {
-            $opts->apiBase = Stripe::$apiUploadBase;
-        }
+        $instance = new static($id, $opts);
+        $instance->refresh();
 
-        $url = $this->instanceUrl() . '/pdf';
-        $this->_requestStream('get', $url, $readBodyChunkCallable, $params, $opts);
+        return $instance;
+    }
+
+    /**
+     * A quote models prices and services for a customer.
+     *
+     * @param string $id the ID of the resource to update
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Quote the updated resource
+     */
+    public static function update($id, $params = null, $opts = null)
+    {
+        self::_validateParams($params);
+        $url = static::resourceUrl($id);
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
     }
 
     /**
@@ -132,13 +194,13 @@ class Quote extends ApiResource
     }
 
     /**
+     * @param string $id
      * @param null|array $params
      * @param null|array|string $opts
-     * @param mixed $id
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Quote> list of LineItems
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\LineItem> list of line items
      */
     public static function allComputedUpfrontLineItems($id, $params = null, $opts = null)
     {
@@ -151,13 +213,13 @@ class Quote extends ApiResource
     }
 
     /**
+     * @param string $id
      * @param null|array $params
      * @param null|array|string $opts
-     * @param mixed $id
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Quote> list of LineItems
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\LineItem> list of line items
      */
     public static function allLineItems($id, $params = null, $opts = null)
     {
@@ -167,5 +229,24 @@ class Quote extends ApiResource
         $obj->setLastResponse($response);
 
         return $obj;
+    }
+
+    /**
+     * @param callable $readBodyChunkCallable
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return void
+     */
+    public function pdf($readBodyChunkCallable, $params = null, $opts = null)
+    {
+        $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
+        if (!isset($opts->apiBase)) {
+            $opts->apiBase = \EDD\Vendor\Stripe\Stripe::$apiUploadBase;
+        }
+        $url = $this->instanceUrl() . '/pdf';
+        $this->_requestStream('get', $url, $readBodyChunkCallable, $params, $opts);
     }
 }

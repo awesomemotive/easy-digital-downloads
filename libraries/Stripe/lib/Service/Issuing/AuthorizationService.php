@@ -4,6 +4,10 @@
 
 namespace EDD\Vendor\Stripe\Service\Issuing;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class AuthorizationService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
@@ -12,7 +16,7 @@ class AuthorizationService extends \EDD\Vendor\Stripe\Service\AbstractService
      * object appearing first.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -24,14 +28,18 @@ class AuthorizationService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * Approves a pending Issuing <code>Authorization</code> object. This request
-     * should be made within the timeout window of the <a
+     * [Deprecated] Approves a pending Issuing <code>Authorization</code> object. This
+     * request should be made within the timeout window of the <a
      * href="/docs/issuing/controls/real-time-authorizations">real-time
-     * authorization</a> flow.
+     * authorization</a> flow.  This method is deprecated. Instead, <a
+     * href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond
+     * directly to the webhook request to approve an authorization</a>.
+     *
+     * @deprecated  this method is deprecated, please refer to the description for details
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -43,14 +51,18 @@ class AuthorizationService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * Declines a pending Issuing <code>Authorization</code> object. This request
-     * should be made within the timeout window of the <a
+     * [Deprecated] Declines a pending Issuing <code>Authorization</code> object. This
+     * request should be made within the timeout window of the <a
      * href="/docs/issuing/controls/real-time-authorizations">real time
-     * authorization</a> flow.
+     * authorization</a> flow. This method is deprecated. Instead, <a
+     * href="/docs/issuing/controls/real-time-authorizations#authorization-handling">respond
+     * directly to the webhook request to decline an authorization</a>.
+     *
+     * @deprecated  this method is deprecated, please refer to the description for details
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -66,7 +78,7 @@ class AuthorizationService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -84,7 +96,7 @@ class AuthorizationService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *

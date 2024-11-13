@@ -4,13 +4,17 @@
 
 namespace EDD\Vendor\Stripe\Service\Reporting;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class ReportRunService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of Report Runs, with the most recent appearing first.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -26,7 +30,7 @@ class ReportRunService extends \EDD\Vendor\Stripe\Service\AbstractService
      * a <a href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.).
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -42,7 +46,7 @@ class ReportRunService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *

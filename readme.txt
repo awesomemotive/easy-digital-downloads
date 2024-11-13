@@ -4,9 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, chriscct7, sumobi, SpencerFinnell, drewapicture, johnjamesjacoby, lisacee
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.0
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.4
-Stable Tag: 3.3.4
+Stable Tag: 3.3.5
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -26,20 +26,31 @@ Within minutes of starting the Setup Wizard, you'll have access to all the featu
 
 [youtube https://www.youtube.com/watch?v=kUEdc8sB3uQ]
 
-= Effortless payments with a checkout form =
+= Secure payments with a checkout form =
 
 With 1-Click connections to the most popular payment processors, you'll be selling within minutes, allowing your customers to checkout with ease with the ability to choose from the most popular payment methods in their region of the world. With Stripe and PayPal, your ecommerce store is ready for global payments.
+
+Unlike some eCommerce solutions, all of our official payment integrations securely process payments directly between your store and the payment processor.
 
 > What can I say? Stripe is my go-to payment processor, and without [EDD] I don't know what I would do. Connect EDD to your Stripe account in seconds, and you're done!
 > Matt Whiteley - Whiteley Designs
 
-Easy Digital Downloads is a verified member of the [Stripe partner program](https://stripe.com/partners/directory/easy-digital-downloads), so you can process payments with confidence, knowing that EDD meets their strict quality standards.
+Easy Digital Downloads is a verified member of the [Stripe](https://stripe.com/partners/directory/easy-digital-downloads) and PayPal partner programs, so you can process payments with confidence, knowing that EDD meets their strict quality standards.
 
-When you use the included payment processor integrations, you get immediate access to the following:
+Support payments globally with the following payment methods, immediately available:
 
 * Credit Card Payments
 * Apple Pay
 * Google Pay
+* WeChat Pay
+* AliPay
+* Amazon Pay
+* GrabPay
+* Bancontact
+* EPS
+* giropay
+* iDEAL
+* Przelewy24
 * PayPal
 * PayPal Credit
 * CashApp
@@ -48,12 +59,12 @@ When you use the included payment processor integrations, you get immediate acce
 * Sofort
 * and more!
 
-With our included integrations, new payment methods are added when they become available, usually without any updates or changes!
+With our smart payment method integrations, you get access to most of the latest payment methods as soon as they are available, without any code changes or updates.
 
 = Make decisions with powerful reporting =
 Unlock the full potential of your digital store with Easy Digital Downloads — the best WordPress ecommerce solution renowned for its powerful reporting features. Dive deep into the heart of your digital business with tools designed not just to give you insights into what is happening in your business now, but also to help you make decisions that will help you grow your business.
 
-With the included date comparison tools, you can compare your sales, revenue, customers, and other data from one period to another, giving you the insights to make informed decisions and accelerate your growth. Some of the data points you get access to include:
+With the included date comparison tools, you can monitor trends in your sales, revenue, customers, and other data from one period to another, giving you the insights to make informed decisions and accelerate your growth. Some of the data points you get access to include:
 
 * Customer growth
 * Revenue and Sales
@@ -61,7 +72,7 @@ With the included date comparison tools, you can compare your sales, revenue, cu
 * Detailed category and tag reports
 * Revenue and Sales by Country
 * Revenue and Sales by Payment Method
-* and more!
+* Recurring Revenue Reports (Requires Pro)
 
 = Full Easy Digital Downloads Feature List =
 
@@ -106,7 +117,7 @@ Easy Digital Downloads is backed by world-class technical support from our globa
 
 = Looking to change e-Commerce solutions? =
 
-Easy Digital Downloads is the perfect digital e-Commerce alternative to Etsy, Gumroad, WooCommerce, Shopfiy, BigCommerce, or Wix.
+Easy Digital Downloads is the perfect digital e-Commerce alternative to Etsy, Gumroad, WooCommerce, Shopfiy, SureCart, BigCommerce, or Wix.
 
 You can use Easy Digital Downloads to sell your digital products with less fees than Gumroad or Etsy, and create unlimited products, and never pay a listing fee.
 
@@ -129,9 +140,11 @@ Full searchable docs for Easy Digital Downloads and all our extensions can be fo
 
 You can submit a support ticket via the [support forum](https://wordpress.org/support/plugin/easy-digital-downloads/) at anytime.
 
-= Which file types can I sell? =
+= What type of products can I sell? =
 
-Any file type can be sold using Easy Digital Downloads. You can sell .PDF, .DOC, .MP3, .MOV, .EPUB, .PSD, .MP4, .JPG, or any other extension which exists. On the product creation form, there is a file upload field which will accept any file type. Whatever file is uploaded to that field is the file customers will receive instantly when they complete a purchase.
+Any file type can be sold using Easy Digital Downloads. You can sell .PDF, .DOC, .MP3, .MOV, .EPUB, .PSD, .MP4, .JPG, or any other extension which exists.
+
+Easy Digital Downloads also supports selling access to software, services, memberships, and content when you [upgrade to Pro](https://easydigitaldownloads.com/pricing/?utm_source=pricing&utm_medium=faq_tab&utm_content=upgrade-to-pro&utm_campaign=readme).
 
 = How can I increase conversions? =
 
@@ -183,7 +196,7 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 
 **A Message from our President**
 
-Since 2012, I've been helping build Easy Digital Downloads and making it the best eCommerce solution for digital creators. Now, as the President of the company, my commitment continues to be making Easy Digital Downloads the most effortless way to manage your ecommerce store, handle billing, protect your files, integrate with payment processors, and sell your digital products.
+Since 2012, I've been helping build Easy Digital Downloads and making it the best eCommerce solution for digital creators. Now, as the President of the company, my commitment continues to be making Easy Digital Downloads the most effortless way to manage your ecommerce store, handle billing, protect your files, integrate with payment processors, and sell your digital products and services.
 
 I'm proud of what we've built and our world-class customer support team that is here to help you succeed. I hope you enjoy using Easy Digital Downloads.
 
@@ -224,6 +237,27 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.3.5 =
+* NEW! Added Support for more Stripe Payment Methods, including more wallets, mobile payment methods, and some bank redirects.
+* Stripe: Improved accessibility of the checkout form.
+* Stripe: Improved compatibility with Stripe with customized checkouts missing form attributes.
+* Stripe: Properly handle error messages when trying to create webhooks without HTTPS.
+* Stripe: Updated the Stripe PHP library.
+* PayPal: Fixed an issue preventing PayPal from fully connecting in test mode.
+* PayPal: Improved the messaging around the PayPal settings screen.
+* PayPal: Fixed an issue with the date_created on some PayPal Commerce orders.
+* WP-REST: Improved integration with the WP-REST API media endpoint.
+* Receipt: Improved hash validation when viewing a receipt as a guest.
+* Emails: Fixed a possible fatal error with the WP Mail SMTP plugin.
+* Emails: The Banned Email list filter is now accessible even when the list is empty.
+* Checkout: Improved handling of guest customers.
+* Checkout: Prevent an edge case where a warning could be thrown during checkout.
+* HTTP: Introduced a standard HTTP Request utility to make consistent HTTP requests.
+* Discounts: Prevent a JavaScript error when editing a discount.
+* Administration: Vertical navigation elements now support the Back/Forward browser navigation.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.3.4 =
 * NEW! Stripe: When connecting EDD to Stripe, the necessary webhooks are registered.
 * Cart: Enhanced cookie handling when emptying and re-adding items to cart.
@@ -246,8 +280,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Sessions: Added built-in support for WP Engine cookie exclusions.
 * Stripe: Improve legacy card elements session compatibility.
 * Users: Added a tool to help fix corrupted capabilities that prevent access to EDD settings screens.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.3 =
 * Reports: Refund tiles for fully refunded items could include partial refunds.

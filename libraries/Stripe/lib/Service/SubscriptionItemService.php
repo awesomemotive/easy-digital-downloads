@@ -4,13 +4,17 @@
 
 namespace EDD\Vendor\Stripe\Service;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class SubscriptionItemService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of your subscription items for a given subscription.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -35,7 +39,7 @@ class SubscriptionItemService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -51,7 +55,7 @@ class SubscriptionItemService extends \EDD\Vendor\Stripe\Service\AbstractService
      * or replaced.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -89,7 +93,7 @@ class SubscriptionItemService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -106,7 +110,7 @@ class SubscriptionItemService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -122,7 +126,7 @@ class SubscriptionItemService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -138,7 +142,7 @@ class SubscriptionItemService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *

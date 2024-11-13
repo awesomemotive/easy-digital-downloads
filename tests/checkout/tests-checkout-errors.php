@@ -36,4 +36,22 @@ class Errors extends EDD_UnitTestCase {
 
 		$this->assertEmpty( edd_get_errors() );
 	}
+
+	public function test_existing_user_is_error() {
+		wp_logout();
+		$user_id = $this->factory->user->create();
+		$user    = get_user_by( 'id', $user_id );
+		$errors  = new \EDD\Checkout\Errors();
+		$errors->check_existing_users(
+			$user,
+			array(
+				'guest_user_data' => array(
+					'user_email' => $user->user_email,
+				),
+			),
+			array()
+		);
+
+		$this->assertArrayHasKey( 'email_used', edd_get_errors() );
+	}
 }

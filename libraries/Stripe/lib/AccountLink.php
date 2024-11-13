@@ -5,13 +5,10 @@
 namespace EDD\Vendor\Stripe;
 
 /**
- * Account Links are the means by which a Connect platform grants a connected
- * account permission to access Stripe-hosted applications, such as Connect
- * Onboarding.
+ * Account Links are the means by which a Connect platform grants a connected account permission to access
+ * Stripe-hosted applications, such as Connect Onboarding.
  *
- * Related guide: <a
- * href="https://stripe.com/docs/connect/connect-onboarding">Connect
- * Onboarding</a>.
+ * Related guide: <a href="https://stripe.com/docs/connect/custom/hosted-onboarding">Connect Onboarding</a>
  *
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
@@ -22,5 +19,27 @@ class AccountLink extends ApiResource
 {
     const OBJECT_NAME = 'account_link';
 
-    use ApiOperations\Create;
+    /**
+     * Creates an AccountLink object that includes a single-use EDD\Vendor\Stripe URL that the
+     * platform can redirect their user to in order to take them through the Connect
+     * Onboarding flow.
+     *
+     * @param null|array $params
+     * @param null|array|string $options
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\AccountLink the created resource
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
 }

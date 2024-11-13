@@ -5,6 +5,7 @@
  */
 // import './../../../css/src/admin.scss';
 import './settings/index.js';
+import './settings/payment-methods.js';
 
 let testModeCheckbox;
 let testModeToggleNotice;

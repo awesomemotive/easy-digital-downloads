@@ -32,8 +32,6 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		edd_unset_error( 'edd-straight-to-gateway-error' );
 		edd_send_back_to_checkout();
-
-		return;
 	}
 
 	try {
@@ -879,7 +877,7 @@ function edds_create_payment() {
 
 		// Ensure $_COOKIE is available without a new HTTP request.
 		if ( EDD\Checkout\AutoRegister::is_enabled() ) {
-			add_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
+			add_action( 'set_logged_in_cookie', 'edd_set_logged_in_cookie' );
 			add_filter( 'edd_get_option_edd_auto_register_complete_orders_only', '__return_false' );
 		}
 
@@ -948,7 +946,7 @@ function edds_create_payment() {
 		$saved = $payment->save();
 
 		if ( EDD\Checkout\AutoRegister::is_enabled() ) {
-			remove_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
+			remove_action( 'set_logged_in_cookie', 'edd_set_logged_in_cookie' );
 		}
 
 		if ( true === $saved ) {
