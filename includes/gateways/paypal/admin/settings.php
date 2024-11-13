@@ -127,15 +127,10 @@ add_filter( 'edd_settings_gateways', __NAMESPACE__ . '\register_gateway_settings
  * Returns the content for the documentation settings.
  *
  * @since 2.11
- * @return string
  */
 function documentation_settings_field() {
 	?>
 	<p>
-		<a class="button button-secondary" href="https://easydigitaldownloads.com/docs/paypal-setup/" target="_blank">
-			<?php esc_html_e( 'View Documentation', 'easy-digital-downloads' ); ?>
-		</a>
-
 		<a id="edd-paypal-commerce-get-help" class="edd-hidden" href="https://easydigitaldownloads.com/support/" target="_blank">
 			<?php esc_html_e( 'Get Help', 'easy-digital-downloads' ); ?>
 		</a>
@@ -146,11 +141,19 @@ function documentation_settings_field() {
 		<div class="notice notice-warning inline">
 			<p>
 				<?php
-				echo wp_kses( sprintf(
-					/* translators: %s: SSL setup article URL */
-					__( 'PayPal requires an SSL certificate to accept payments. You can learn more about obtaining an SSL certificate in our <a href="%s" target="_blank">SSL setup article</a>.', 'easy-digital-downloads' ),
-					'https://easydigitaldownloads.com/docs/do-i-need-an-ssl-certificate/'
-				), array( 'a' => array( 'href' => true, 'target' => true ) ) );
+				echo wp_kses(
+					sprintf(
+						/* translators: %s: SSL setup article URL */
+						__( 'PayPal requires an SSL certificate to accept payments. You can learn more about obtaining an SSL certificate in our <a href="%s" target="_blank">SSL setup article</a>.', 'easy-digital-downloads' ),
+						'https://easydigitaldownloads.com/docs/do-i-need-an-ssl-certificate/'
+					),
+					array(
+						'a' => array(
+							'href'   => true,
+							'target' => true,
+						),
+					)
+				);
 				?>
 			</p>
 		</div>
@@ -158,3 +161,21 @@ function documentation_settings_field() {
 	}
 }
 add_action( 'edd_paypal_documentation', __NAMESPACE__ . '\documentation_settings_field' );
+
+/**
+ * Adds Paypal documentation link to flyout menu.
+ *
+ * @since 3.3.5
+ *
+ * @param string $link The flyout doc link.
+ * @return string
+ */
+function documentation_flyout_link( $link ) {
+
+	if ( edd_is_admin_page() && isset( $_GET['section'] ) && 'paypal_commerce' === $_GET['section'] ) {
+		$link = 'https://easydigitaldownloads.com/docs/paypal-setup/';
+	}
+
+	return $link;
+}
+add_filter( 'edd_flyout_docs_link', __NAMESPACE__ . '\documentation_flyout_link' );

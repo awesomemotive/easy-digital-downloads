@@ -34,7 +34,7 @@ class Core extends EventManagement\Subscribers {
 			new Emails\Loader(),
 			new Globals\Loader(),
 			new Integrations\Registry(),
-			Checkout\AutoRegister::get_instance(),
+			new Checkout\Loader(),
 
 			// Gateways.
 			new Gateways\Stripe\Webhooks\Listener(),
@@ -47,6 +47,9 @@ class Core extends EventManagement\Subscribers {
 
 			// Cron Loader.
 			new Cron\Loader(),
+
+			// API.
+			new API\WP\Attachments(),
 		);
 	}
 

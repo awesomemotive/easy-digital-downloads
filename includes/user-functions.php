@@ -458,13 +458,30 @@ add_action( 'edd_customer_post_attach_payment', 'edd_connect_guest_customer_to_e
  * @return void
  */
 function edd_connect_existing_customer_to_new_user( $user_id ) {
-	$email = get_the_author_meta( 'user_email', $user_id );
+	$customer = edd_get_customer_by( 'user_id', $user_id );
+	if ( $customer ) {
+		edd_debug_log( 'User ID already exists for customer ID: ' . $customer->id );
+		return;
+	}
 
-	// Update the user ID on the customer.
-	$customer = new EDD_Customer( $email );
+	$user = get_userdata( $user_id );
+	if ( ! $user || is_wp_error( $user ) ) {
+		return;
+	}
 
-	if ( $customer->id > 0 ) {
-		$customer->update( array( 'user_id' => $user_id ) );
+	$customer = edd_get_customer_by( 'email', $user->user_email );
+	if ( ! empty( $customer->user_id ) ) {
+		edd_debug_log( 'Customer already connected to a user ID: ' . $customer->user_id );
+		return;
+	}
+
+	if ( $customer ) {
+		edd_update_customer(
+			$customer->id,
+			array(
+				'user_id' => $user_id,
+			)
+		);
 	}
 }
 add_action( 'user_register', 'edd_connect_existing_customer_to_new_user', 10, 1 );

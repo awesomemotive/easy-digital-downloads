@@ -96,6 +96,7 @@ class Handler {
 		}
 		add_action( 'shutdown', array( $this, 'save' ), 20 );
 		add_action( 'wp_logout', array( $this, 'destroy' ) );
+		add_action( 'edd_pre_add_to_cart', array( $this, 'reset' ) );
 		add_action( 'edd_post_add_to_cart', array( $this, 'set_cart_cookie' ) );
 	}
 
@@ -275,6 +276,16 @@ class Handler {
 	}
 
 	/**
+	 * Resets the purchase session when an item is added to the cart.
+	 * This ensures that the checkout is processed with fresh form data.
+	 *
+	 * @since 3.3.5
+	 */
+	public function reset() {
+		$this->set( 'edd_purchase', null );
+	}
+
+	/**
 	 * Get session data.
 	 *
 	 * @return array
@@ -383,8 +394,6 @@ class Handler {
 		$disallowed_keys = array(
 			'post_data',
 			'card_info',
-			'gateway',
-			'gateway_nonce',
 		);
 		foreach ( $disallowed_keys as $key ) {
 			if ( isset( $data[ $key ] ) ) {

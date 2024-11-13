@@ -4,6 +4,10 @@
 
 namespace EDD\Vendor\Stripe\Service\Issuing;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class CardholderService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
@@ -12,7 +16,7 @@ class CardholderService extends \EDD\Vendor\Stripe\Service\AbstractService
      * object appearing first.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -27,7 +31,7 @@ class CardholderService extends \EDD\Vendor\Stripe\Service\AbstractService
      * Creates a new Issuing <code>Cardholder</code> object that can be issued cards.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -43,7 +47,7 @@ class CardholderService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -61,7 +65,7 @@ class CardholderService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *

@@ -20,18 +20,6 @@ trait Search
      */
     protected static function _searchResource($searchUrl, $params = null, $opts = null)
     {
-        self::_validateParams($params);
-
-        list($response, $opts) = static::_staticRequest('get', $searchUrl, $params, $opts);
-        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
-        if (!($obj instanceof \EDD\Vendor\Stripe\SearchResult)) {
-            throw new \EDD\Vendor\Stripe\Exception\UnexpectedValueException(
-                'Expected type ' . \EDD\Vendor\Stripe\SearchResult::class . ', got "' . \get_class($obj) . '" instead.'
-            );
-        }
-        $obj->setLastResponse($response);
-        $obj->setFilters($params);
-
-        return $obj;
+        return static::_requestPage($searchUrl, \EDD\Vendor\Stripe\SearchResult::class, $params, $opts);
     }
 }

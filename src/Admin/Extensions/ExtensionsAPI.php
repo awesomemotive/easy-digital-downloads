@@ -189,16 +189,10 @@ class ExtensionsAPI {
 			),
 			$this->get_products_url()
 		);
-		$request = wp_remote_get(
-			esc_url_raw( $url ),
-			array(
-				'timeout'   => 15,
-				'sslverify' => true,
-			)
-		);
+		$request = new \EDD\Utils\RemoteRequest( $url );
 
 		// If there was an API error, set option and return false.
-		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+		if ( is_wp_error( $request->body ) || ( 200 !== $request->code ) ) {
 			update_site_option(
 				'edd_all_extension_data',
 				array(
@@ -210,7 +204,7 @@ class ExtensionsAPI {
 		}
 
 		// Fresh data has been retrieved, so update the option with a four hour timeout.
-		$all_product_data = json_decode( wp_remote_retrieve_body( $request ) );
+		$all_product_data = json_decode( $request->body );
 		$data             = array(
 			'timeout'  => strtotime( '+4 hours', time() ),
 			'products' => $all_product_data,

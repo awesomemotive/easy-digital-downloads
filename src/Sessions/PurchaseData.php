@@ -20,16 +20,45 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 class PurchaseData {
 
 	/**
+	 * Starts the purchase data for a user.
+	 *
+	 * @since 3.3.5
+	 * @param bool|null $doing_ajax Whether the request is being made via AJAX.
+	 * @return null|array The purchase data.
+	 */
+	public static function start( $doing_ajax = null ) {
+		$valid_data = edd_purchase_form_validate_fields();
+
+		do_action( 'edd_checkout_error_checks', $valid_data, $_POST );
+
+		if ( empty( $valid_data ) ) {
+			return null;
+		}
+
+		$user = edd_get_purchase_form_user( $valid_data, $doing_ajax );
+
+		do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
+
+		if ( empty( $user ) ) {
+			return null;
+		}
+
+		return self::set( $valid_data, $user );
+	}
+
+	/**
 	 * Sets the purchase data for a user.
 	 *
 	 * @since 3.3.2
 	 * @param array $valid_data The valid data for the purchase.
 	 * @param array $user       The user data.
-	 * @return array The purchase data.
+	 * @return null|array The purchase data.
 	 */
 	public static function set( $valid_data, $user ) {
 
-		$user_info     = self::get_user_info( $valid_data, $user );
+		$user_info = self::get_user_info( $valid_data, $user );
+		self::maybe_update_customer( $user_info );
+
 		$purchase_data = array(
 			'downloads'    => edd_get_cart_contents(),
 			'fees'         => edd_get_cart_fees(), // Any arbitrary fees that have been added to the cart.
@@ -38,13 +67,12 @@ class PurchaseData {
 			'tax'          => edd_get_cart_tax(), // Taxed amount.
 			'tax_rate'     => self::get_tax_rate( $valid_data ),
 			'price'        => edd_get_cart_total(), // Amount after taxes.
-			'user_email'   => $user['user_email'],
-			'purchase_key' => self::get_purchase_key( $user ),
+			'user_email'   => $user_info['email'],
+			'purchase_key' => self::get_purchase_key( $user_info['email'] ),
 			'user_info'    => stripslashes_deep( $user_info ),
-			'post_data'    => $_POST,
 			'gateway'      => $valid_data['gateway'],
-			'card_info'    => $valid_data['cc_info'],
 			'cart_details' => edd_get_cart_content_details(),
+			'date'         => false, // unused key, but kept for backwards compatibility.
 		);
 
 		// Add the user data for hooks.
@@ -73,6 +101,12 @@ class PurchaseData {
 			$valid_data
 		);
 
+		if ( empty( $purchase_data['price'] ) ) {
+			// Revert to manual.
+			$purchase_data['gateway'] = 'manual';
+			$_POST['edd-gateway']     = 'manual';
+		}
+
 		edd_set_purchase_session( $purchase_data );
 
 		return $purchase_data;
@@ -91,14 +125,10 @@ class PurchaseData {
 			return $session;
 		}
 
-		$valid_data = edd_purchase_form_validate_fields();
-		if ( empty( $valid_data ) ) {
-			return $session;
-		}
+		// Generally we expected the purchase data to be in the session, but if not, log it.
+		edd_debug_log( 'Purchase data not found in session. Attempting to generate it.' );
 
-		$user = edd_get_purchase_form_user( $valid_data, $doing_ajax );
-
-		return self::set( $valid_data, $user );
+		return self::start( $doing_ajax );
 	}
 
 	/**
@@ -124,10 +154,10 @@ class PurchaseData {
 	 * Retrieves the purchase key for an order.
 	 *
 	 * @since 3.3.2
-	 * @param array $user The user for whom to retrieve the purchase key.
+	 * @param string $email The email address for the user.
 	 * @return string The purchase key for the user.
 	 */
-	private static function get_purchase_key( $user ) {
+	private static function get_purchase_key( $email ) {
 		$existing_payment = EDD()->session->get( 'edd_resume_payment' );
 		if ( ! empty( $existing_payment ) ) {
 			$order = edd_get_order( $existing_payment );
@@ -136,7 +166,7 @@ class PurchaseData {
 			}
 		}
 
-		return edd_generate_order_payment_key( $user['user_email'] );
+		return edd_generate_order_payment_key( $email );
 	}
 
 	/**
@@ -149,12 +179,60 @@ class PurchaseData {
 	 */
 	private static function get_user_info( $valid_data, $user ) {
 		return array(
-			'id'         => $user['user_id'],
-			'email'      => $user['user_email'],
-			'first_name' => $user['user_first'],
-			'last_name'  => $user['user_last'],
-			'discount'   => $valid_data['discount'],
+			'id'         => ! empty( $user['user_id'] ) ? $user['user_id'] : false,
+			'email'      => ! empty( $user['user_email'] ) ? $user['user_email'] : '',
+			'first_name' => ! empty( $user['user_first'] ) ? $user['user_first'] : '',
+			'last_name'  => ! empty( $user['user_last'] ) ? $user['user_last'] : '',
+			'discount'   => ! empty( $valid_data['discount'] ) ? $valid_data['discount'] : false,
 			'address'    => ! empty( $user['address'] ) ? $user['address'] : false,
 		);
+	}
+
+	/**
+	 * Updates the customer record if the user has added or updated information.
+	 *
+	 * @since 3.3.5
+	 * @param array $user_info The user information.
+	 */
+	private static function maybe_update_customer( $user_info ) {
+		$customer = edd_get_customer_by( 'email', $user_info['email'] );
+		if ( ! $customer ) {
+			return;
+		}
+		$name = trim( $user_info['first_name'] . ' ' . $user_info['last_name'] );
+		if ( empty( $customer->name ) || $name !== $customer->name ) {
+			$customer->update(
+				array(
+					'name' => $name,
+				)
+			);
+		}
+
+		if ( empty( $user_info['address'] ) ) {
+			return;
+		}
+
+		$address = wp_parse_args(
+			$user_info['address'],
+			array(
+				'line1'   => '',
+				'line2'   => '',
+				'city'    => '',
+				'state'   => '',
+				'country' => '',
+				'zip'     => '',
+			)
+		);
+
+		$address = array(
+			'address'     => $address['line1'],
+			'address2'    => $address['line2'],
+			'city'        => $address['city'],
+			'region'      => $address['state'],
+			'country'     => $address['country'],
+			'postal_code' => $address['zip'],
+		);
+
+		edd_maybe_add_customer_address( $customer->id, $address );
 	}
 }

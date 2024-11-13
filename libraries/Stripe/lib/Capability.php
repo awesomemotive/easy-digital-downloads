@@ -7,24 +7,20 @@ namespace EDD\Vendor\Stripe;
 /**
  * This is an object representing a capability for a EDD\Vendor\Stripe account.
  *
- * Related guide: <a
- * href="https://stripe.com/docs/connect/account-capabilities">Account
- * capabilities</a>.
+ * Related guide: <a href="https://stripe.com/docs/connect/account-capabilities">Account capabilities</a>
  *
  * @property string $id The identifier for the capability.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property string|\EDD\Vendor\Stripe\Account $account The account for which the capability enables functionality.
- * @property \EDD\Vendor\Stripe\StripeObject $future_requirements
+ * @property null|\EDD\Vendor\Stripe\StripeObject $future_requirements
  * @property bool $requested Whether the capability has been requested.
  * @property null|int $requested_at Time at which the capability was requested. Measured in seconds since the Unix epoch.
- * @property \EDD\Vendor\Stripe\StripeObject $requirements
+ * @property null|\EDD\Vendor\Stripe\StripeObject $requirements
  * @property string $status The status of the capability. Can be <code>active</code>, <code>inactive</code>, <code>pending</code>, or <code>unrequested</code>.
  */
 class Capability extends ApiResource
 {
     const OBJECT_NAME = 'capability';
-
-    use ApiOperations\Update;
 
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
@@ -80,9 +76,32 @@ class Capability extends ApiResource
     public static function update($_id, $_params = null, $_options = null)
     {
         $msg = 'Capabilities cannot be updated without an account ID. ' .
-               'Update a capability using `Account::updateCapability(' .
-               "'account_id', 'capability_id', \$updateParams)`.";
+                   'Update a capability using `Account::updateCapability(' .
+                   "'account_id', 'capability_id', \$updateParams)`.";
 
         throw new Exception\BadMethodCallException($msg);
+    }
+
+    /**
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return static the saved resource
+     *
+     * @deprecated The `save` method is deprecated and will be removed in a
+     *     future major version of the library. Use the static method `update`
+     *     on the resource instead.
+     */
+    public function save($opts = null)
+    {
+        $params = $this->serializeParameters();
+        if (\count($params) > 0) {
+            $url = $this->instanceUrl();
+            list($response, $opts) = $this->_request('post', $url, $params, $opts, ['save']);
+            $this->refreshFrom($response, $opts);
+        }
+
+        return $this;
     }
 }

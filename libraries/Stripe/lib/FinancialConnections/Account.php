@@ -5,8 +5,7 @@
 namespace EDD\Vendor\Stripe\FinancialConnections;
 
 /**
- * A Financial Connections Account represents an account that exists outside of
- * Stripe, to which you have been granted some degree of access.
+ * A Financial Connections Account represents an account that exists outside of Stripe, to which you have been granted some degree of access.
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
@@ -24,13 +23,13 @@ namespace EDD\Vendor\Stripe\FinancialConnections;
  * @property null|string[] $permissions The list of permissions granted by this account.
  * @property string $status The status of the link to the account.
  * @property string $subcategory <p>If <code>category</code> is <code>cash</code>, one of:</p><p>- <code>checking</code> - <code>savings</code> - <code>other</code></p><p>If <code>category</code> is <code>credit</code>, one of:</p><p>- <code>mortgage</code> - <code>line_of_credit</code> - <code>credit_card</code> - <code>other</code></p><p>If <code>category</code> is <code>investment</code> or <code>other</code>, this will be <code>other</code>.</p>
+ * @property null|string[] $subscriptions The list of data refresh subscriptions requested on this account.
  * @property string[] $supported_payment_method_types The <a href="https://stripe.com/docs/api/payment_methods/object#payment_method_object-type">PaymentMethod type</a>(s) that can be created from this account.
+ * @property null|\EDD\Vendor\Stripe\StripeObject $transaction_refresh The state of the most recent attempt to refresh the account transactions.
  */
 class Account extends \EDD\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'financial_connections.account';
-
-    use \EDD\Vendor\Stripe\ApiOperations\Retrieve;
 
     const CATEGORY_CASH = 'cash';
     const CATEGORY_CREDIT = 'credit';
@@ -47,6 +46,42 @@ class Account extends \EDD\Vendor\Stripe\ApiResource
     const SUBCATEGORY_MORTGAGE = 'mortgage';
     const SUBCATEGORY_OTHER = 'other';
     const SUBCATEGORY_SAVINGS = 'savings';
+
+    /**
+     * Returns a list of Financial Connections <code>Account</code> objects.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\FinancialConnections\Account> of ApiResources
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves the details of an Financial Connections <code>Account</code>.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\FinancialConnections\Account
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
 
     /**
      * @param null|array $params
@@ -66,6 +101,25 @@ class Account extends \EDD\Vendor\Stripe\ApiResource
     }
 
     /**
+     * @param string $id
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\FinancialConnections\AccountOwner> list of account owners
+     */
+    public static function allOwners($id, $params = null, $opts = null)
+    {
+        $url = static::resourceUrl($id) . '/owners';
+        list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
      * @param null|array $params
      * @param null|array|string $opts
      *
@@ -73,9 +127,43 @@ class Account extends \EDD\Vendor\Stripe\ApiResource
      *
      * @return \EDD\Vendor\Stripe\FinancialConnections\Account the refreshed account
      */
-    public function refresh($params = null, $opts = null)
+    public function refreshAccount($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/refresh';
+        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\FinancialConnections\Account the subscribed account
+     */
+    public function subscribe($params = null, $opts = null)
+    {
+        $url = $this->instanceUrl() . '/subscribe';
+        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\FinancialConnections\Account the unsubscribed account
+     */
+    public function unsubscribe($params = null, $opts = null)
+    {
+        $url = $this->instanceUrl() . '/unsubscribe';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 

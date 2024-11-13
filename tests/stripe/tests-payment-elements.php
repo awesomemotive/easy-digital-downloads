@@ -79,4 +79,47 @@ class PaymentElements extends EDD_UnitTestCase {
 	public function test_default_payment_elements_payment_method_types() {
 		$this->assertEmpty( edds_payment_element_payment_method_types() );
 	}
+
+	public function test_payment_method_types() {
+		$this->assertIsArray( \EDD\Gateways\Stripe\PaymentMethods::list() );
+	}
+
+	public function test_payment_method_types_includes_alipay() {
+		$methods = \EDD\Gateways\Stripe\PaymentMethods::list();
+
+		$this->assertArrayHasKey( 'alipay', $methods );
+	}
+
+	public function test_payment_method_types_get_label() {
+		$this->assertEquals( 'Cartes Bancaires', \EDD\Gateways\Stripe\PaymentMethods::get_label( 'cartes_bancaires' ) );
+	}
+
+	public function test_payment_method_types_get_label_invalid_is_empty() {
+		$this->assertEmpty( \EDD\Gateways\Stripe\PaymentMethods::get_label( 'fake_type' ) );
+	}
+
+	public function test_order_with_payment_method_returns_label() {
+		$order = parent::edd()->order->create_and_get();
+
+		edd_add_order_meta( $order->id, 'stripe_payment_method_type', 'alipay' );
+
+		$this->assertEquals( 'Alipay', edd_get_gateway_checkout_label( 'stripe', $order ) );
+		$this->assertEquals( 'Stripe (Alipay)', edd_get_gateway_admin_label( 'stripe', $order ) );
+	}
+
+	public function test_order_without_payment_method_returns_default_label() {
+		$order = parent::edd()->order->create_and_get();
+
+		$this->assertEquals( 'Credit Card', edd_get_gateway_checkout_label( 'stripe', $order ) );
+		$this->assertEquals( 'Stripe', edd_get_gateway_admin_label( 'stripe', $order ) );
+	}
+
+	public function test_order_with_invalid_payment_method_returns_default_label() {
+		$order = parent::edd()->order->create_and_get();
+
+		edd_add_order_meta( $order->id, 'stripe_payment_method_type', 'not_a_method' );
+
+		$this->assertEquals( 'Credit Card', edd_get_gateway_checkout_label( 'stripe', $order ) );
+		$this->assertEquals( 'Stripe', edd_get_gateway_admin_label( 'stripe', $order ) );
+	}
 }

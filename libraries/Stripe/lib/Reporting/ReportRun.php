@@ -6,15 +6,13 @@ namespace EDD\Vendor\Stripe\Reporting;
 
 /**
  * The Report Run object represents an instance of a report type generated with
- * specific run parameters. Once the object is created, EDD\Vendor\Stripe begins processing
- * the report. When the report has finished running, it will give you a reference
- * to a file where you can retrieve your results. For an overview, see <a
- * href="https://stripe.com/docs/reporting/statements/api">API Access to
- * Reports</a>.
+ * specific run parameters. Once the object is created, EDD\Vendor\Stripe begins processing the report.
+ * When the report has finished running, it will give you a reference to a file
+ * where you can retrieve your results. For an overview, see
+ * <a href="https://stripe.com/docs/reporting/statements/api">API Access to Reports</a>.
  *
- * Note that certain report types can only be run based on your live-mode data (not
- * test-mode data), and will error when queried without a <a
- * href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.
+ * Note that certain report types can only be run based on your live-mode data (not test-mode
+ * data), and will error when queried without a <a href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
@@ -31,7 +29,62 @@ class ReportRun extends \EDD\Vendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'reporting.report_run';
 
-    use \EDD\Vendor\Stripe\ApiOperations\All;
-    use \EDD\Vendor\Stripe\ApiOperations\Create;
-    use \EDD\Vendor\Stripe\ApiOperations\Retrieve;
+    /**
+     * Creates a new object and begin running the report. (Certain report types require
+     * a <a href="https://stripe.com/docs/keys#test-live-modes">live-mode API key</a>.).
+     *
+     * @param null|array $params
+     * @param null|array|string $options
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Reporting\ReportRun the created resource
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Returns a list of Report Runs, with the most recent appearing first.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Reporting\ReportRun> of ApiResources
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves the details of an existing Report Run.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Reporting\ReportRun
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
 }

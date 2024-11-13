@@ -75,7 +75,7 @@ class API {
 			return false;
 		}
 
-		$request = wp_remote_get(
+		$request = new \EDD\Utils\RemoteRequest(
 			add_query_arg( $this->get_body( $api_params ), $this->api_url ),
 			array(
 				'timeout'   => 15,
@@ -84,13 +84,13 @@ class API {
 		);
 
 		// If there was an API error, return false.
-		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+		if ( is_wp_error( $request->response ) || ( 200 !== $request->code ) ) {
 			$this->log_failed_request();
 
 			return false;
 		}
 
-		return json_decode( wp_remote_retrieve_body( $request ) );
+		return json_decode( $request->body );
 	}
 
 	/**

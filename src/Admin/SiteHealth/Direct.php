@@ -134,8 +134,8 @@ class Direct extends Test {
 		}
 
 		// Attempt to get the main index.php file. If we get a 403, the downloads are protected after all.
-		$check = wp_safe_remote_get( trailingslashit( edd_get_upload_url() ) . 'index.php' );
-		if ( 403 === wp_remote_retrieve_response_code( $check ) ) {
+		$check = new \EDD\Utils\RemoteRequest( trailingslashit( edd_get_upload_url() ) . 'index.php' );
+		if ( 403 === $check->code ) {
 			return $result;
 		}
 

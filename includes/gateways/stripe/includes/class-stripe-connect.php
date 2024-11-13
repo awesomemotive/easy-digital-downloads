@@ -31,4 +31,19 @@ class Connect {
 	public function get_connect_id() {
 		return edd_get_option( 'stripe_connect_account_id', false );
 	}
+
+	/**
+	 * Gets the Stripe connect account country.
+	 *
+	 * @since 3.3.5
+	 * @return string
+	 */
+	public function get_connect_country() {
+		$edd_country = edd_get_option( 'base_country', '' );
+
+		return edd_get_option(
+			'stripe_connect_account_country',
+			$edd_country
+		);
+	}
 }

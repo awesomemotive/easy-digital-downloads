@@ -2,6 +2,7 @@
  * Internal dependencies.
  */
 import './components/agree-to-terms';
+import './components/email';
 import { getCreditCardIcon, recalculateTaxes } from './utils.js';
 
 // Backwards compatibility. Assign function to global namespace.

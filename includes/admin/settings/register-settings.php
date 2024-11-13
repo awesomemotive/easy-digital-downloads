@@ -710,9 +710,7 @@ function edd_checkbox_description_callback( $args ) {
  * Renders multiple checkboxes.
  *
  * @since 1.0
- *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_multicheck_callback( $args ) {
@@ -735,7 +733,9 @@ function edd_multicheck_callback( $args ) {
 			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label>';
 			$html .= '</div>';
 		endforeach;
-		$html .= '<p class="description">' . $args['desc'] . '</p>';
+		if ( ! empty( $args['desc'] ) ) {
+			$html .= '<p class="description">' . $args['desc'] . '</p>';
+		}
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -1749,10 +1749,19 @@ function edd_add_setting_tooltip( $html = '', $args = array() ) {
 
 	// Tooltip has title & description.
 	if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
-		$tooltip = new EDD\HTML\Tooltip(
+		$args      = wp_parse_args(
+			$args,
 			array(
-				'title'   => $args['tooltip_title'],
-				'content' => $args['tooltip_desc'],
+				'tooltip_title'    => '',
+				'tooltip_desc'     => '',
+				'tooltip_dashicon' => '',
+			)
+		);
+		$tooltip   = new EDD\HTML\Tooltip(
+			array(
+				'title'    => $args['tooltip_title'],
+				'content'  => $args['tooltip_desc'],
+				'dashicon' => $args['tooltip_dashicon'],
 			)
 		);
 		$tooltip   = $tooltip->get();
