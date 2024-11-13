@@ -61,7 +61,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 		<?php if ( filter_var( $edd_receipt_args['payment_method'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
 				<td><strong><?php esc_html_e( 'Payment Method', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo esc_html( edd_get_gateway_checkout_label( $order->gateway ) ); ?></td>
+				<td><?php echo esc_html( edd_get_gateway_checkout_label( $order->gateway, $order ) ); ?></td>
 			</tr>
 		<?php endif; ?>
 		<?php if ( filter_var( $edd_receipt_args['date'], FILTER_VALIDATE_BOOLEAN ) ) : ?>

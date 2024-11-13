@@ -31,6 +31,10 @@
 	&:last-of-type {
 		margin-bottom: 0;
 	}
+
+	legend {
+		margin-bottom: 8px;
+	}
 }
 
 .edd-form-group__label,
@@ -57,6 +61,12 @@
 	&--is-inline {
 		display: inline-flex;
 		align-items: flex-end;
+	}
+
+	&--row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 }
 

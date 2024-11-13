@@ -4,13 +4,17 @@
 
 namespace EDD\Vendor\Stripe\Service;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of credit notes.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -23,12 +27,12 @@ class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
 
     /**
      * When retrieving a credit note, you’ll get a <strong>lines</strong> property
-     * containing the the first handful of those items. There is also a URL where you
-     * can retrieve the full (paginated) list of line items.
+     * containing the first handful of those items. There is also a URL where you can
+     * retrieve the full (paginated) list of line items.
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -62,7 +66,7 @@ class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
      * <code>status</code> at the time of credit note creation.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -77,7 +81,7 @@ class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
      * Get a preview of a credit note without creating it.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -94,11 +98,11 @@ class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
      * the full (paginated) list of line items.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\CreditNote>
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\CreditNoteLineItem>
      */
     public function previewLines($params = null, $opts = null)
     {
@@ -110,7 +114,7 @@ class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -126,7 +130,7 @@ class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -143,7 +147,7 @@ class CreditNoteService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *

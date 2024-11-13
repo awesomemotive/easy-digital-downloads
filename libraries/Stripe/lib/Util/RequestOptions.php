@@ -2,6 +2,10 @@
 
 namespace EDD\Vendor\Stripe\Util;
 
+/**
+ * @phpstan-type RequestOptionsArray array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_version?: string, api_base?: string }
+ * @psalm-type RequestOptionsArray = array{api_key?: string, idempotency_key?: string, stripe_account?: string, stripe_version?: string, api_base?: string }
+ */
 class RequestOptions
 {
     /**
@@ -154,8 +158,13 @@ class RequestOptions
         throw new \EDD\Vendor\Stripe\Exception\InvalidArgumentException($message);
     }
 
+    /** @return string */
     private function redactedApiKey()
     {
+        if (null === $this->apiKey) {
+            return '';
+        }
+
         $pieces = \explode('_', $this->apiKey, 3);
         $last = \array_pop($pieces);
         $redactedLast = \strlen($last) > 4

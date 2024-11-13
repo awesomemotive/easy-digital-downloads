@@ -426,3 +426,28 @@ function _edds_get_purchase_form_user( $valid_data = array() ) {
 	// Return valid user.
 	return $user;
 }
+
+/**
+ * Output a Payment authorization form in the Payment Receipt.
+ *
+ * @deprecated 3.2.0
+ * @param WP_Post $payment Payment.
+ */
+function edds_payment_receipt_authorize_payment_form( $payment ) {}
+
+/**
+ * Sets the $_COOKIE global when a logged in cookie is available.
+ *
+ * We need the global to be immediately available so calls to wp_create_nonce()
+ * within the same session will use the newly available data.
+ *
+ * @since 2.8.0
+ * @deprecated 3.3.5 as a duplicate of `edd_set_logged_in_cookie`.
+ *
+ * @link https://wordpress.stackexchange.com/a/184055
+ *
+ * @param string $logged_in_cookie The logged-in cookie value.
+ */
+function edds_set_logged_in_cookie_global( $logged_in_cookie ) {
+	$_COOKIE[ LOGGED_IN_COOKIE ] = $logged_in_cookie;
+}

@@ -6,43 +6,45 @@ namespace EDD\Vendor\Stripe;
 
 /**
  * This is an object representing a EDD\Vendor\Stripe account. You can retrieve it to see
- * properties on the account like its current e-mail address or if the account is
- * enabled yet to make live charges.
+ * properties on the account like its current requirements or if the account is
+ * enabled to make live charges or receive payouts.
  *
- * Some properties, marked below, are available only to platforms that want to <a
- * href="https://stripe.com/docs/connect/accounts">create and manage Express or
- * Custom accounts</a>.
+ * For accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+ * is <code>application</code>, which includes Custom accounts, the properties below are always
+ * returned.
+ *
+ * For accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+ * is <code>stripe</code>, which includes Standard and Express accounts, some properties are only returned
+ * until you create an <a href="/api/account_links">Account Link</a> or <a href="/api/account_sessions">Account Session</a>
+ * to start Connect Onboarding. Learn about the <a href="/connect/accounts">differences between accounts</a>.
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property null|\EDD\Vendor\Stripe\StripeObject $business_profile Business information about the account.
- * @property null|string $business_type The business type.
- * @property \EDD\Vendor\Stripe\StripeObject $capabilities
- * @property bool $charges_enabled Whether the account can create live charges.
- * @property \EDD\Vendor\Stripe\StripeObject $company
- * @property \EDD\Vendor\Stripe\StripeObject $controller
- * @property string $country The account's country.
- * @property int $created Time at which the account was connected. Measured in seconds since the Unix epoch.
- * @property string $default_currency Three-letter ISO currency code representing the default currency for the account. This must be a currency that <a href="https://stripe.com/docs/payouts">EDD\Vendor\Stripe supports in the account's country</a>.
- * @property bool $details_submitted Whether account details have been submitted. Standard accounts cannot receive payouts before this is true.
- * @property null|string $email An email address associated with the account. You can treat this as metadata: it is not used for authentication or messaging account holders.
- * @property \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card> $external_accounts External accounts (bank accounts and debit cards) currently attached to this account
- * @property \EDD\Vendor\Stripe\StripeObject $future_requirements
- * @property \EDD\Vendor\Stripe\Person $individual <p>This is an object representing a person associated with a EDD\Vendor\Stripe account.</p><p>A platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account. See the <a href="https://stripe.com/docs/connect/standard-accounts">Standard onboarding</a> or <a href="https://stripe.com/docs/connect/express-accounts">Express onboarding documentation</a> for information about platform pre-filling and account onboarding steps.</p><p>Related guide: <a href="https://stripe.com/docs/connect/identity-verification-api#person-information">Handling Identity Verification with the API</a>.</p>
- * @property \EDD\Vendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
- * @property bool $payouts_enabled Whether EDD\Vendor\Stripe can send payouts to this account.
- * @property \EDD\Vendor\Stripe\StripeObject $requirements
+ * @property null|string $business_type The business type. After you create an <a href="/api/account_links">Account Link</a> or <a href="/api/account_sessions">Account Session</a>, this property is only returned for accounts where <a href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a> is <code>application</code>, which includes Custom accounts.
+ * @property null|\EDD\Vendor\Stripe\StripeObject $capabilities
+ * @property null|bool $charges_enabled Whether the account can create live charges.
+ * @property null|\EDD\Vendor\Stripe\StripeObject $company
+ * @property null|\EDD\Vendor\Stripe\StripeObject $controller
+ * @property null|string $country The account's country.
+ * @property null|int $created Time at which the account was connected. Measured in seconds since the Unix epoch.
+ * @property null|string $default_currency Three-letter ISO currency code representing the default currency for the account. This must be a currency that <a href="https://stripe.com/docs/payouts">EDD\Vendor\Stripe supports in the account's country</a>.
+ * @property null|bool $details_submitted Whether account details have been submitted. Accounts with EDD\Vendor\Stripe Dashboard access, which includes Standard accounts, cannot receive payouts before this is true. Accounts where this is false should be directed to <a href="/connect/onboarding">an onboarding flow</a> to finish submitting account details.
+ * @property null|string $email An email address associated with the account. It's not used for authentication and EDD\Vendor\Stripe doesn't market to this field without explicit approval from the platform.
+ * @property null|\EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card> $external_accounts External accounts (bank accounts and debit cards) currently attached to this account. External accounts are only returned for requests where <code>controller[is_controller]</code> is true.
+ * @property null|\EDD\Vendor\Stripe\StripeObject $future_requirements
+ * @property null|\EDD\Vendor\Stripe\Person $individual <p>This is an object representing a person associated with a EDD\Vendor\Stripe account.</p><p>A platform cannot access a person for an account where <a href="/api/accounts/object#account_object-controller-requirement_collection">account.controller.requirement_collection</a> is <code>stripe</code>, which includes Standard and Express accounts, after creating an Account Link or Account Session to start Connect onboarding.</p><p>See the <a href="/connect/standard-accounts">Standard onboarding</a> or <a href="/connect/express-accounts">Express onboarding</a> documentation for information about prefilling information and account onboarding steps. Learn more about <a href="/connect/handling-api-verification#person-information">handling identity verification with the API</a>.</p>
+ * @property null|\EDD\Vendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|bool $payouts_enabled Whether EDD\Vendor\Stripe can send payouts to this account.
+ * @property null|\EDD\Vendor\Stripe\StripeObject $requirements
  * @property null|\EDD\Vendor\Stripe\StripeObject $settings Options for customizing how the account functions within Stripe.
- * @property \EDD\Vendor\Stripe\StripeObject $tos_acceptance
- * @property string $type The EDD\Vendor\Stripe account type. Can be <code>standard</code>, <code>express</code>, or <code>custom</code>.
+ * @property null|\EDD\Vendor\Stripe\StripeObject $tos_acceptance
+ * @property null|string $type The EDD\Vendor\Stripe account type. Can be <code>standard</code>, <code>express</code>, <code>custom</code>, or <code>none</code>.
  */
 class Account extends ApiResource
 {
     const OBJECT_NAME = 'account';
 
-    use ApiOperations\All;
-    use ApiOperations\Create;
-    use ApiOperations\Delete;
     use ApiOperations\NestedResource;
     use ApiOperations\Update;
 
@@ -51,18 +53,133 @@ class Account extends ApiResource
     const BUSINESS_TYPE_INDIVIDUAL = 'individual';
     const BUSINESS_TYPE_NON_PROFIT = 'non_profit';
 
-    const CAPABILITY_CARD_PAYMENTS = 'card_payments';
-    const CAPABILITY_LEGACY_PAYMENTS = 'legacy_payments';
-    const CAPABILITY_PLATFORM_PAYMENTS = 'platform_payments';
-    const CAPABILITY_TRANSFERS = 'transfers';
-
-    const CAPABILITY_STATUS_ACTIVE = 'active';
-    const CAPABILITY_STATUS_INACTIVE = 'inactive';
-    const CAPABILITY_STATUS_PENDING = 'pending';
-
     const TYPE_CUSTOM = 'custom';
     const TYPE_EXPRESS = 'express';
+    const TYPE_NONE = 'none';
     const TYPE_STANDARD = 'standard';
+
+    /**
+     * With <a href="/docs/connect">Connect</a>, you can create EDD\Vendor\Stripe accounts for
+     * your users. To do this, you’ll first need to <a
+     * href="https://dashboard.stripe.com/account/applications/settings">register your
+     * platform</a>.
+     *
+     * If you’ve already collected information for your connected accounts, you <a
+     * href="/docs/connect/best-practices#onboarding">can prefill that information</a>
+     * when creating the account. Connect Onboarding won’t ask for the prefilled
+     * information during account onboarding. You can prefill any information on the
+     * account.
+     *
+     * @param null|array $params
+     * @param null|array|string $options
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Account the created resource
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * With <a href="/connect">Connect</a>, you can delete accounts you manage.
+     *
+     * Test-mode accounts can be deleted at any time.
+     *
+     * Live-mode accounts where EDD\Vendor\Stripe is responsible for negative account balances
+     * cannot be deleted, which includes Standard accounts. Live-mode accounts where
+     * your platform is liable for negative account balances, which includes Custom and
+     * Express accounts, can be deleted when all <a
+     * href="/api/balance/balance_object">balances</a> are zero.
+     *
+     * If you want to delete your own account, use the <a
+     * href="https://dashboard.stripe.com/settings/account">account information tab in
+     * your account settings</a> instead.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Account the deleted resource
+     */
+    public function delete($params = null, $opts = null)
+    {
+        self::_validateParams($params);
+
+        $url = $this->instanceUrl();
+        list($response, $opts) = $this->_request('delete', $url, $params, $opts);
+        $this->refreshFrom($response, $opts);
+
+        return $this;
+    }
+
+    /**
+     * Returns a list of accounts connected to your platform via <a
+     * href="/docs/connect">Connect</a>. If you’re not a platform, the list is empty.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Account> of ApiResources
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Updates a <a href="/connect/accounts">connected account</a> by setting the
+     * values of the parameters passed. Any parameters not provided are left unchanged.
+     *
+     * For accounts where <a
+     * href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+     * is <code>application</code>, which includes Custom accounts, you can update any
+     * information on the account.
+     *
+     * For accounts where <a
+     * href="/api/accounts/object#account_object-controller-requirement_collection">controller.requirement_collection</a>
+     * is <code>stripe</code>, which includes Standard and Express accounts, you can
+     * update all information until you create an <a href="/api/account_links">Account
+     * Link</a> or <a href="/api/account_sessions">Account Session</a> to start Connect
+     * onboarding, after which some properties can no longer be updated.
+     *
+     * To update your own account, use the <a
+     * href="https://dashboard.stripe.com/settings/account">Dashboard</a>. Refer to our
+     * <a href="/docs/connect/updating-accounts">Connect</a> documentation to learn
+     * more about updating accounts.
+     *
+     * @param string $id the ID of the resource to update
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Account the updated resource
+     */
+    public static function update($id, $params = null, $opts = null)
+    {
+        self::_validateParams($params);
+        $url = static::resourceUrl($id);
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
 
     use ApiOperations\Retrieve {
         retrieve as protected _retrieve;
@@ -88,6 +205,25 @@ class Account extends ApiResource
         }
 
         return parent::instanceUrl();
+    }
+
+    /**
+     * @param null|array|string $id the ID of the account to retrieve, or an
+     *     options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Account
+     */
+    public static function retrieve($id = null, $opts = null)
+    {
+        if (!$opts && \is_string($id) && 'sk_' === \substr($id, 0, 3)) {
+            $opts = $id;
+            $id = null;
+        }
+
+        return self::_retrieve($id, $opts);
     }
 
     public function serializeParameters($force = false)
@@ -142,25 +278,6 @@ class Account extends ApiResource
     }
 
     /**
-     * @param null|array|string $id the ID of the account to retrieve, or an
-     *     options array containing an `id` key
-     * @param null|array|string $opts
-     *
-     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
-     *
-     * @return \EDD\Vendor\Stripe\Account
-     */
-    public static function retrieve($id = null, $opts = null)
-    {
-        if (!$opts && \is_string($id) && 'sk_' === \substr($id, 0, 3)) {
-            $opts = $id;
-            $id = null;
-        }
-
-        return self::_retrieve($id, $opts);
-    }
-
-    /**
      * @param null|array $clientId
      * @param null|array|string $opts
      *
@@ -184,24 +301,6 @@ class Account extends ApiResource
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Person> the list of persons
-     */
-    public function persons($params = null, $opts = null)
-    {
-        $url = $this->instanceUrl() . '/persons';
-        list($response, $opts) = $this->_request('get', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response, $opts);
-        $obj->setLastResponse($response);
-
-        return $obj;
-    }
-
-    /**
-     * @param null|array $params
-     * @param null|array|string $opts
-     *
-     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
-     *
      * @return \EDD\Vendor\Stripe\Account the rejected account
      */
     public function reject($params = null, $opts = null)
@@ -212,12 +311,6 @@ class Account extends ApiResource
 
         return $this;
     }
-
-    /*
-     * Capabilities methods
-     * We can not add the capabilities() method today as the Account object already has a
-     * capabilities property which is a hash and not the sub-list of capabilities.
-     */
 
     const PATH_CAPABILITIES = '/capabilities';
 

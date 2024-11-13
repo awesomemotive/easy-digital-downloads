@@ -943,7 +943,7 @@ function edd_order_details_extras( $order = false ) {
 				<?php if ( ! edd_is_add_order_page() ) : ?>
 					<div class="edd-order-gateway edd-admin-box-inside edd-admin-box-inside--row">
 						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></span>
-						<span class="value"><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></span>
+						<span class="value"><?php echo edd_get_gateway_admin_label( $order->gateway, $order ); ?></span>
 					</div>
 				<?php else : ?>
 					<div class="edd-order-gateway edd-admin-box-inside">

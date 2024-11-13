@@ -9,6 +9,7 @@ namespace EDD\Vendor\Stripe\Service\FinancialConnections;
  *
  * @property AccountService $accounts
  * @property SessionService $sessions
+ * @property TransactionService $transactions
  */
 class FinancialConnectionsServiceFactory extends \EDD\Vendor\Stripe\Service\AbstractServiceFactory
 {
@@ -18,6 +19,7 @@ class FinancialConnectionsServiceFactory extends \EDD\Vendor\Stripe\Service\Abst
     private static $classMap = [
         'accounts' => AccountService::class,
         'sessions' => SessionService::class,
+        'transactions' => TransactionService::class,
     ];
 
     protected function getServiceClass($name)

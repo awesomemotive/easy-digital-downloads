@@ -35,103 +35,119 @@ export function paymentForm() {
 	$( document ).off( 'click', '#edd_purchase_form #edd_purchase_submit [type=submit]' );
 
 	const purchaseButton = document.getElementById( 'edd-purchase-button' );
+	const events = [ 'click', 'keydown' ];
+	events.forEach( ( event ) => {
+		purchaseButton.addEventListener( event, triggerPurchaseButton );
+	} );
+}
 
-	purchaseButton.addEventListener( 'click', async( event ) => {
-		// Ensure we are dealing with the Stripe gateway.
-		if ( !isStripeSelectedGateway() ) {
-			return;
-		}
+async function triggerPurchaseButton ( event ) {
+	// Ensure we are dealing with the Stripe gateway.
+	if ( ! isStripeSelectedGateway() ) {
+		return;
+	}
 
-		if ( ! purchaseformValid() ) {
+	// if the event.key isdefined and not Enter, we don't want to continue.
+	if ( event.key && 'Enter' !== event.key ) {
+		return;
+	}
+
+	if ( ! purchaseformValid() ) {
+		return false;
+	}
+
+	updateForm( false );
+
+	try {
+		// Create a payment method.
+		let billingDetails = getBillingDetails( document.getElementById( 'edd_purchase_form' ) );
+		const { paymentMethod: paymentMethod } = await getPaymentMethod( billingDetails );
+
+		// If we don't have a payment method, we can't continue.
+		if ( ! paymentMethod ) {
+			// The getPaymentMethod handles the error output, so we can just return here.
 			return false;
 		}
 
-		event.preventDefault();
-		updateForm( false );
+		/**
+		 * Run the modified `_edds_process_purchase_form` and create an Intent.
+		 *
+		 * We should always create intents at the server, to prevent modification client-side.
+		 */
+		let {
+			token: refreshedNonce,
+			client_secret: clientSecret,
+			intent_type: intentType,
+			intent_fingerprint: intentFingerprint,
+			intent_id: intentId,
+		} = await processForm( paymentMethod );
 
-		try{
-			// Create a payment method.
-			let billingDetails = getBillingDetails( document.getElementById( 'edd_purchase_form' ) );
-			const { paymentMethod: paymentMethod } = await getPaymentMethod( billingDetails );
+		// Store these so we can use them later to not create different payment intents.
+		window.eddStripe.intentType = intentType;
+		window.eddStripe.intentFingerprint = intentFingerprint;
+		window.eddStripe.intentId = intentId;
 
-			// If we don't have a payment method, we can't continue.
-			if ( ! paymentMethod ) {
-				// The getPaymentMethod handles the error output, so we can just return here.
-				return false;
-			}
+		const nonceField = document.getElementById( 'edd-process-checkout-nonce' );
+		nonceField.value = refreshedNonce;
 
-			/**
-			 * Run the modified `_edds_process_purchase_form` and create an Intent.
-			 *
-			 * We should always create intents at the server, to prevent modification client-side.
-			 */
-			let {
-				token: refreshedNonce,
-				client_secret: clientSecret,
-				intent_type: intentType,
-				intent_fingerprint: intentFingerprint,
-				intent_id: intentId,
-			} = await processForm( paymentMethod );
+		/**
+		 * Our last action of processing the form returned us a Payment Intent, which
+		 * gave us a client secret. We can update the payment element with this now.
+		 */
+		const confirmFunc = 'PaymentIntent' === intentType ? 'confirmPayment' : 'confirmSetup';
 
-			// Store these so we can use them later to not create different payment intents.
-			window.eddStripe.intentType = intentType;
-			window.eddStripe.intentFingerprint = intentFingerprint;
-			window.eddStripe.intentId = intentId;
+		const confirmArgs = {
+			clientSecret: clientSecret,
+			confirmParams: {
+				return_url: edd_stripe_vars.successPageUri + '?payment_intent=' + intentId + '&redirect_status=processing',
+				payment_method: paymentMethod.id,
+			},
+			redirect: 'if_required',
+		}
 
-			const nonceFeld = document.getElementById( 'edd-process-checkout-nonce' );
-			nonceFeld.value = refreshedNonce;
+		/**
+		 * Now confirm the payment.
+		 */
+		const { error } = await window.eddStripe[ confirmFunc ]( confirmArgs );
 
-			/**
-			 * Our last action of processing the form returned us a Payment Intent, which
-			 * gave us a client secret. We can update the payment element with this now.
-			 */
-			const confirmFunc = 'PaymentIntent' === intentType ? 'confirmPayment' : 'confirmSetup';
-
-			const confirmArgs = {
-				clientSecret: clientSecret,
-				confirmParams: {
-					return_url: edd_stripe_vars.successPageUri,
-				},
-				redirect: 'if_required',
-			}
-
-			confirmArgs.confirmParams.payment_method = paymentMethod.id;
-
-			/**
-			 * Now confirm the payment.
-			 */
-			const { error } = await window.eddStripe[confirmFunc]( confirmArgs );
-
-			if ( error ) {
-				handleException( error );
-				enableForm();
-				return false;
-			}
-
-			/**
-			 * At this point, we've already verified the intent, as we marked it as automatic capturing,
-			 * so let's move forwarwd with creating the payment in EDD.
-			 */
-			const { intent, nonce } = await createAndCompleteOrder();
-
-			// Our nonce may have changed now that user is logged in, so we need to ensure we update that.
-			nonceFeld.value = nonce;
-
-			// Attempt to transition payment status and redirect.
-			// @todo Maybe confirm payment status as well? Would need to generate a custom
-			// response because the private EDD_Payment properties are not available.
-			if ( ( 'succeeded' === intent.status ) ) {
-				window.location.replace( edd_stripe_vars.successPageUri );
-			} else {
-				window.location.replace( edd_stripe_vars.failurePageUri );
-			}
-		} catch ( error ) {
+		if ( error ) {
 			handleException( error );
 			enableForm();
 			return false;
 		}
-	} );
 
+		completeOrder();
+	} catch ( error ) {
+		handleException( error );
+		enableForm();
+		return false;
+	}
+}
+
+/**
+ * Completes the order after a successful payment.
+ */
+async function completeOrder () {
+	const { intent, status, order_id } = await createAndCompleteOrder();
+	var redirect;
+
+	switch ( intent.status ) {
+		case 'succeeded':
+			redirect = edd_stripe_vars.successPageUri;
+			break;
+		case 'processing':
+			redirect = edd_stripe_vars.successPageUri + '?payment_intent=' + intent.id + '&redirect_status=' + status;
+			break;
+
+		default:
+			redirect = edd_stripe_vars.failurePageUri;
+			if ( order_id ) {
+				redirect += '?order_id=' + order_id;
+			}
+			break;
+	}
+
+	window.location.replace( redirect );
 }
 
 /**

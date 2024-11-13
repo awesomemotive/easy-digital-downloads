@@ -18,79 +18,111 @@ trait Request
     {
         if ($params && !\is_array($params)) {
             $message = 'You must pass an array as the first argument to EDD\Vendor\Stripe API '
-               . 'method calls.  (HINT: an example call to create a charge '
-               . "would be: \"EDD\Vendor\Stripe\\Charge::create(['amount' => 100, "
-               . "'currency' => 'usd', 'source' => 'tok_1234'])\")";
+                . 'method calls.  (HINT: an example call to create a charge '
+                . "would be: \"EDD\Vendor\Stripe\\Charge::create(['amount' => 100, "
+                . "'currency' => 'usd', 'source' => 'tok_1234'])\")";
 
             throw new \EDD\Vendor\Stripe\Exception\InvalidArgumentException($message);
         }
     }
 
     /**
-     * @param string $method HTTP method ('get', 'post', etc.)
+     * @param 'delete'|'get'|'post' $method HTTP method ('get', 'post', etc.)
      * @param string $url URL for the request
      * @param array $params list of parameters for the request
      * @param null|array|string $options
+     * @param string[] $usage names of tracked behaviors associated with this request
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
      * @return array tuple containing (the JSON response, $options)
      */
-    protected function _request($method, $url, $params = [], $options = null)
+    protected function _request($method, $url, $params = [], $options = null, $usage = [])
     {
         $opts = $this->_opts->merge($options);
-        list($resp, $options) = static::_staticRequest($method, $url, $params, $opts);
+        list($resp, $options) = static::_staticRequest($method, $url, $params, $opts, $usage);
         $this->setLastResponse($resp);
 
         return [$resp->json, $options];
     }
 
     /**
-     * @param string $method HTTP method ('get', 'post', etc.)
+     * @param string $url URL for the request
+     * @param class-string< \EDD\Vendor\Stripe\SearchResult|\EDD\Vendor\Stripe\Collection > $resultClass indicating what type of paginated result is returned
+     * @param null|array $params list of parameters for the request
+     * @param null|array|string $options
+     * @param string[] $usage names of tracked behaviors associated with this request
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection|\EDD\Vendor\Stripe\SearchResult
+     */
+    protected static function _requestPage($url, $resultClass, $params = null, $options = null, $usage = [])
+    {
+        self::_validateParams($params);
+
+        list($response, $opts) = static::_staticRequest('get', $url, $params, $options, $usage);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        if (!($obj instanceof $resultClass)) {
+            throw new \EDD\Vendor\Stripe\Exception\UnexpectedValueException(
+                'Expected type ' . $resultClass . ', got "' . \get_class($obj) . '" instead.'
+            );
+        }
+        $obj->setLastResponse($response);
+        $obj->setFilters($params);
+
+        return $obj;
+    }
+
+    /**
+     * @param 'delete'|'get'|'post' $method HTTP method ('get', 'post', etc.)
      * @param string $url URL for the request
      * @param callable $readBodyChunk function that will receive chunks of data from a successful request body
      * @param array $params list of parameters for the request
      * @param null|array|string $options
+     * @param string[] $usage names of tracked behaviors associated with this request
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
-    protected function _requestStream($method, $url, $readBodyChunk, $params = [], $options = null)
+    protected function _requestStream($method, $url, $readBodyChunk, $params = [], $options = null, $usage = [])
     {
         $opts = $this->_opts->merge($options);
-        static::_staticStreamingRequest($method, $url, $readBodyChunk, $params, $opts);
+        static::_staticStreamingRequest($method, $url, $readBodyChunk, $params, $opts, $usage);
     }
 
     /**
-     * @param string $method HTTP method ('get', 'post', etc.)
+     * @param 'delete'|'get'|'post' $method HTTP method ('get', 'post', etc.)
      * @param string $url URL for the request
      * @param array $params list of parameters for the request
      * @param null|array|string $options
+     * @param string[] $usage names of tracked behaviors associated with this request
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
      * @return array tuple containing (the JSON response, $options)
      */
-    protected static function _staticRequest($method, $url, $params, $options)
+    protected static function _staticRequest($method, $url, $params, $options, $usage = [])
     {
         $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($options);
         $baseUrl = isset($opts->apiBase) ? $opts->apiBase : static::baseUrl();
         $requestor = new \EDD\Vendor\Stripe\ApiRequestor($opts->apiKey, $baseUrl);
-        list($response, $opts->apiKey) = $requestor->request($method, $url, $params, $opts->headers);
+        list($response, $opts->apiKey) = $requestor->request($method, $url, $params, $opts->headers, $usage);
         $opts->discardNonPersistentHeaders();
 
         return [$response, $opts];
     }
 
     /**
-     * @param string $method HTTP method ('get', 'post', etc.)
+     * @param 'delete'|'get'|'post' $method HTTP method ('get', 'post', etc.)
      * @param string $url URL for the request
      * @param callable $readBodyChunk function that will receive chunks of data from a successful request body
      * @param array $params list of parameters for the request
      * @param null|array|string $options
+     * @param string[] $usage names of tracked behaviors associated with this request
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      */
-    protected static function _staticStreamingRequest($method, $url, $readBodyChunk, $params, $options)
+    protected static function _staticStreamingRequest($method, $url, $readBodyChunk, $params, $options, $usage = [])
     {
         $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($options);
         $baseUrl = isset($opts->apiBase) ? $opts->apiBase : static::baseUrl();

@@ -22,8 +22,8 @@ class Stripe
     /** @var string The base URL for the EDD\Vendor\Stripe API uploads endpoint. */
     public static $apiUploadBase = 'https://files.stripe.com';
 
-    /** @var null|string The version of the EDD\Vendor\Stripe API to use for requests. */
-    public static $apiVersion = null;
+    /** @var string The version of the EDD\Vendor\Stripe API to use for requests. */
+    public static $apiVersion = \EDD\Vendor\Stripe\Util\ApiVersion::CURRENT;
 
     /** @var null|string The account ID for connected accounts requests. */
     public static $accountId = null;
@@ -58,7 +58,7 @@ class Stripe
     /** @var float Initial delay between retries, in seconds */
     private static $initialNetworkRetryDelay = 0.5;
 
-    const VERSION = '7.128.0';
+    const VERSION = '15.10.0';
 
     /**
      * @return string the API key used for requests
@@ -90,7 +90,7 @@ class Stripe
     }
 
     /**
-     * @param Util\LoggerInterface $logger the logger to which the library
+     * @param \Psr\Log\LoggerInterface|Util\LoggerInterface $logger the logger to which the library
      *   will produce messages
      */
     public static function setLogger($logger)
@@ -119,8 +119,7 @@ class Stripe
     }
 
     /**
-     * @return string The API version used for requests. null if we're using the
-     *    latest version.
+     * @return string the API version used for requests
      */
     public static function getApiVersion()
     {
@@ -185,7 +184,7 @@ class Stripe
     }
 
     /**
-     * @param string $accountId the EDD\Vendor\Stripe account ID to set for connected
+     * @param null|string $accountId the EDD\Vendor\Stripe account ID to set for connected
      *   account requests
      */
     public static function setAccountId($accountId)

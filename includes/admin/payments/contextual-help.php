@@ -136,6 +136,11 @@ function edd_payments_contextual_help() {
 					__( 'A transaction ID prefixed by %s', 'easy-digital-downloads' ),
 					'<code>txn:</code>'
 				) . '</li>
+				<li>' . sprintf(
+						/* translators: %s: the prefix needed to search by Stripe Payment Method - This should remain untranslated `txn:` */
+					__( 'A Stripe Payment Method prefixed by %s', 'easy-digital-downloads' ),
+					'<code>payment-method:</code>'
+				) . '</li>
 			</ul>',
 		)
 	);

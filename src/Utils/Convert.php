@@ -29,6 +29,8 @@ class Convert {
 	 * @return string
 	 */
 	public static function snake_to_camel( $input ) {
+		$input = str_replace( '-', '_', $input );
+
 		return str_replace( '_', '', ucwords( $input, '_' ) );
 	}
 }

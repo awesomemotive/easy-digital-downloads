@@ -4,6 +4,10 @@
 
 namespace EDD\Vendor\Stripe\Service;
 
+/**
+ * @phpstan-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \EDD\Vendor\Stripe\Util\RequestOptions
+ */
 class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
 {
     /**
@@ -11,7 +15,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      * date, with the most recent customers appearing first.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -28,7 +32,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -40,15 +44,32 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
+     * Returns a list of transactions that modified the customer’s <a
+     * href="/docs/payments/customer-balance">cash balance</a>.
+     *
+     * @param string $parentId
+     * @param null|array $params
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\CustomerCashBalanceTransaction>
+     */
+    public function allCashBalanceTransactions($parentId, $params = null, $opts = null)
+    {
+        return $this->requestCollection('get', $this->buildPath('/v1/customers/%s/cash_balance_transactions', $parentId), $params, $opts);
+    }
+
+    /**
      * Returns a list of PaymentMethods for a given Customer.
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Customer>
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\PaymentMethod>
      */
     public function allPaymentMethods($id, $params = null, $opts = null)
     {
@@ -60,11 +81,11 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\AlipayAccount|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\BitcoinReceiver|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source>
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Account|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source>
      */
     public function allSources($parentId, $params = null, $opts = null)
     {
@@ -76,7 +97,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -91,7 +112,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      * Creates a new customer object.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -108,7 +129,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -128,11 +149,11 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Customer
+     * @return \EDD\Vendor\Stripe\FundingInstructions
      */
     public function createFundingInstructions($id, $params = null, $opts = null)
     {
@@ -150,11 +171,11 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\AlipayAccount|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\BitcoinReceiver|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
+     * @return \EDD\Vendor\Stripe\Account|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
      */
     public function createSource($parentId, $params = null, $opts = null)
     {
@@ -162,11 +183,11 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * Creates a new <code>TaxID</code> object for a customer.
+     * Creates a new <code>tax_id</code> object for a customer.
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -183,7 +204,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -199,11 +220,11 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\Customer
+     * @return \EDD\Vendor\Stripe\Discount
      */
     public function deleteDiscount($id, $params = null, $opts = null)
     {
@@ -211,14 +232,16 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
+     * Delete a specified source for a given customer.
+     *
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\AlipayAccount|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\BitcoinReceiver|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
+     * @return \EDD\Vendor\Stripe\Account|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
      */
     public function deleteSource($parentId, $id, $params = null, $opts = null)
     {
@@ -226,12 +249,12 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * Deletes an existing <code>TaxID</code> object.
+     * Deletes an existing <code>tax_id</code> object.
      *
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -247,7 +270,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -265,7 +288,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -281,15 +304,50 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\cash_balance
+     * @return \EDD\Vendor\Stripe\CashBalance
      */
     public function retrieveCashBalance($parentId, $params = null, $opts = null)
     {
         return $this->request('get', $this->buildPath('/v1/customers/%s/cash_balance', $parentId), $params, $opts);
+    }
+
+    /**
+     * Retrieves a specific cash balance transaction, which updated the customer’s <a
+     * href="/docs/payments/customer-balance">cash balance</a>.
+     *
+     * @param string $parentId
+     * @param string $id
+     * @param null|array $params
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\CustomerCashBalanceTransaction
+     */
+    public function retrieveCashBalanceTransaction($parentId, $id, $params = null, $opts = null)
+    {
+        return $this->request('get', $this->buildPath('/v1/customers/%s/cash_balance_transactions/%s', $parentId, $id), $params, $opts);
+    }
+
+    /**
+     * Retrieves a PaymentMethod object for a given Customer.
+     *
+     * @param string $parentId
+     * @param string $id
+     * @param null|array $params
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\PaymentMethod
+     */
+    public function retrievePaymentMethod($parentId, $id, $params = null, $opts = null)
+    {
+        return $this->request('get', $this->buildPath('/v1/customers/%s/payment_methods/%s', $parentId, $id), $params, $opts);
     }
 
     /**
@@ -298,11 +356,11 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\AlipayAccount|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\BitcoinReceiver|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
+     * @return \EDD\Vendor\Stripe\Account|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
      */
     public function retrieveSource($parentId, $id, $params = null, $opts = null)
     {
@@ -310,12 +368,12 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * Retrieves the <code>TaxID</code> object with the given identifier.
+     * Retrieves the <code>tax_id</code> object with the given identifier.
      *
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -335,7 +393,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      * during outages. Search functionality is not available to merchants in India.
      *
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -363,7 +421,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -381,7 +439,7 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
@@ -393,15 +451,15 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
-     * Updates a customer’s cash balance.
+     * Changes the settings on a customer’s cash balance.
      *
      * @param string $parentId
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\cash_balance
+     * @return \EDD\Vendor\Stripe\CashBalance
      */
     public function updateCashBalance($parentId, $params = null, $opts = null)
     {
@@ -409,14 +467,16 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
+     * Update a specified source for a given customer.
+     *
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\AlipayAccount|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\BitcoinReceiver|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
+     * @return \EDD\Vendor\Stripe\Account|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
      */
     public function updateSource($parentId, $id, $params = null, $opts = null)
     {
@@ -424,14 +484,16 @@ class CustomerService extends \EDD\Vendor\Stripe\Service\AbstractService
     }
 
     /**
+     * Verify a specified bank account for a given customer.
+     *
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|array|\EDD\Vendor\Stripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\EDD\Vendor\Stripe\Util\RequestOptions $opts
      *
      * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
      *
-     * @return \EDD\Vendor\Stripe\AlipayAccount|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\BitcoinReceiver|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
+     * @return \EDD\Vendor\Stripe\Account|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card|\EDD\Vendor\Stripe\Source
      */
     public function verifySource($parentId, $id, $params = null, $opts = null)
     {

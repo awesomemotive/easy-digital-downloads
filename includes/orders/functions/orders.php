@@ -317,8 +317,8 @@ function edd_destroy_order( $order_id = 0 ) {
 		// Get order transactions.
 		$transactions = edd_get_order_transactions(
 			array(
-				'object_id'     => $order_id,
-				'object_type'   => 'order',
+				'object_id'   => $order_id,
+				'object_type' => 'order',
 			)
 		);
 
@@ -728,7 +728,8 @@ function edd_build_order( $order_data = array() ) {
 	}
 
 	if ( $resume_order ) {
-		$order_data['date_created'] = EDD()->utils->date( 'now', null, true );
+		$date                       = EDD()->utils->date( 'now' );
+		$order_data['date_created'] = $date->format( 'Y-m-d H:i:s' );
 		edd_add_note(
 			array(
 				'object_id'   => $order->id,
@@ -885,6 +886,8 @@ function edd_build_order( $order_data = array() ) {
 		edd_debug_log( 'Failed to create order. Order data: ' . var_export( $order_args, true ) );
 		return false;
 	}
+
+	// If there is an active purchase session, store the order ID for later use.
 	if ( edd_get_purchase_session() ) {
 		EDD()->session->set( 'edd_resume_payment', $order_id );
 	}

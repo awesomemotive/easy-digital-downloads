@@ -5,63 +5,53 @@
 namespace EDD\Vendor\Stripe;
 
 /**
- * A <code>Payout</code> object is created when you receive funds from Stripe, or
- * when you initiate a payout to either a bank account or debit card of a <a
- * href="/docs/connect/bank-debit-card-payouts">connected EDD\Vendor\Stripe account</a>. You
- * can retrieve individual payouts, as well as list all payouts. Payouts are made
- * on <a href="/docs/connect/manage-payout-schedule">varying schedules</a>,
- * depending on your country and industry.
+ * A <code>Payout</code> object is created when you receive funds from Stripe, or when you
+ * initiate a payout to either a bank account or debit card of a <a href="/docs/connect/bank-debit-card-payouts">connected
+ * EDD\Vendor\Stripe account</a>. You can retrieve individual payouts,
+ * and list all payouts. Payouts are made on <a href="/docs/connect/manage-payout-schedule">varying
+ * schedules</a>, depending on your country and
+ * industry.
  *
- * Related guide: <a href="https://stripe.com/docs/payouts">Receiving Payouts</a>.
+ * Related guide: <a href="https://stripe.com/docs/payouts">Receiving payouts</a>
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property int $amount Amount (in %s) to be transferred to your bank account or debit card.
- * @property int $arrival_date Date the payout is expected to arrive in the bank. This factors in delays like weekends or bank holidays.
- * @property bool $automatic Returns <code>true</code> if the payout was created by an <a href="https://stripe.com/docs/payouts#payout-schedule">automated payout schedule</a>, and <code>false</code> if it was <a href="https://stripe.com/docs/payouts#manual-payouts">requested manually</a>.
+ * @property int $amount The amount (in cents (or local equivalent)) that transfers to your bank account or debit card.
+ * @property null|string|\EDD\Vendor\Stripe\ApplicationFee $application_fee The application fee (if any) for the payout. <a href="https://stripe.com/docs/connect/instant-payouts#monetization-and-fees">See the Connect documentation</a> for details.
+ * @property null|int $application_fee_amount The amount of the application fee (if any) requested for the payout. <a href="https://stripe.com/docs/connect/instant-payouts#monetization-and-fees">See the Connect documentation</a> for details.
+ * @property int $arrival_date Date that you can expect the payout to arrive in the bank. This factors in delays to account for weekends or bank holidays.
+ * @property bool $automatic Returns <code>true</code> if the payout is created by an <a href="https://stripe.com/docs/payouts#payout-schedule">automated payout schedule</a> and <code>false</code> if it's <a href="https://stripe.com/docs/payouts#manual-payouts">requested manually</a>.
  * @property null|string|\EDD\Vendor\Stripe\BalanceTransaction $balance_transaction ID of the balance transaction that describes the impact of this payout on your account balance.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
  * @property null|string $description An arbitrary string attached to the object. Often useful for displaying to users.
- * @property null|string|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card $destination ID of the bank account or card the payout was sent to.
- * @property null|string|\EDD\Vendor\Stripe\BalanceTransaction $failure_balance_transaction If the payout failed or was canceled, this will be the ID of the balance transaction that reversed the initial balance transaction, and puts the funds from the failed payout back in your balance.
- * @property null|string $failure_code Error code explaining reason for payout failure if available. See <a href="https://stripe.com/docs/api#payout_failures">Types of payout failures</a> for a list of failure codes.
- * @property null|string $failure_message Message to user further explaining reason for payout failure if available.
+ * @property null|string|\EDD\Vendor\Stripe\BankAccount|\EDD\Vendor\Stripe\Card $destination ID of the bank account or card the payout is sent to.
+ * @property null|string|\EDD\Vendor\Stripe\BalanceTransaction $failure_balance_transaction If the payout fails or cancels, this is the ID of the balance transaction that reverses the initial balance transaction and returns the funds from the failed payout back in your balance.
+ * @property null|string $failure_code Error code that provides a reason for a payout failure, if available. View our <a href="https://stripe.com/docs/api#payout_failures">list of failure codes</a>.
+ * @property null|string $failure_message Message that provides the reason for a payout failure, if available.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|\EDD\Vendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
- * @property string $method The method used to send this payout, which can be <code>standard</code> or <code>instant</code>. <code>instant</code> is only supported for payouts to debit cards. (See <a href="https://stripe.com/blog/instant-payouts-for-marketplaces">Instant payouts for marketplaces</a> for more information.)
+ * @property string $method The method used to send this payout, which can be <code>standard</code> or <code>instant</code>. <code>instant</code> is supported for payouts to debit cards and bank accounts in certain countries. Learn more about <a href="https://stripe.com/docs/payouts/instant-payouts-banks">bank support for Instant Payouts</a>.
  * @property null|string|\EDD\Vendor\Stripe\Payout $original_payout If the payout reverses another, this is the ID of the original payout.
- * @property null|string|\EDD\Vendor\Stripe\Payout $reversed_by If the payout was reversed, this is the ID of the payout that reverses this payout.
- * @property string $source_type The source balance this payout came from. One of <code>card</code>, <code>fpx</code>, or <code>bank_account</code>.
- * @property null|string $statement_descriptor Extra information about a payout to be displayed on the user's bank statement.
- * @property string $status Current status of the payout: <code>paid</code>, <code>pending</code>, <code>in_transit</code>, <code>canceled</code> or <code>failed</code>. A payout is <code>pending</code> until it is submitted to the bank, when it becomes <code>in_transit</code>. The status then changes to <code>paid</code> if the transaction goes through, or to <code>failed</code> or <code>canceled</code> (within 5 business days). Some failed payouts may initially show as <code>paid</code> but then change to <code>failed</code>.
+ * @property string $reconciliation_status If <code>completed</code>, you can use the <a href="https://stripe.com/docs/api/balance_transactions/list#balance_transaction_list-payout">Balance Transactions API</a> to list all balance transactions that are paid out in this payout.
+ * @property null|string|\EDD\Vendor\Stripe\Payout $reversed_by If the payout reverses, this is the ID of the payout that reverses this payout.
+ * @property string $source_type The source balance this payout came from, which can be one of the following: <code>card</code>, <code>fpx</code>, or <code>bank_account</code>.
+ * @property null|string $statement_descriptor Extra information about a payout that displays on the user's bank statement.
+ * @property string $status Current status of the payout: <code>paid</code>, <code>pending</code>, <code>in_transit</code>, <code>canceled</code> or <code>failed</code>. A payout is <code>pending</code> until it's submitted to the bank, when it becomes <code>in_transit</code>. The status changes to <code>paid</code> if the transaction succeeds, or to <code>failed</code> or <code>canceled</code> (within 5 business days). Some payouts that fail might initially show as <code>paid</code>, then change to <code>failed</code>.
  * @property string $type Can be <code>bank_account</code> or <code>card</code>.
  */
 class Payout extends ApiResource
 {
     const OBJECT_NAME = 'payout';
 
-    use ApiOperations\All;
-    use ApiOperations\Create;
-    use ApiOperations\Retrieve;
     use ApiOperations\Update;
-
-    const FAILURE_ACCOUNT_CLOSED = 'account_closed';
-    const FAILURE_ACCOUNT_FROZEN = 'account_frozen';
-    const FAILURE_BANK_ACCOUNT_RESTRICTED = 'bank_account_restricted';
-    const FAILURE_BANK_OWNERSHIP_CHANGED = 'bank_ownership_changed';
-    const FAILURE_COULD_NOT_PROCESS = 'could_not_process';
-    const FAILURE_DEBIT_NOT_AUTHORIZED = 'debit_not_authorized';
-    const FAILURE_DECLINED = 'declined';
-    const FAILURE_INCORRECT_ACCOUNT_HOLDER_NAME = 'incorrect_account_holder_name';
-    const FAILURE_INSUFFICIENT_FUNDS = 'insufficient_funds';
-    const FAILURE_INVALID_ACCOUNT_NUMBER = 'invalid_account_number';
-    const FAILURE_INVALID_CURRENCY = 'invalid_currency';
-    const FAILURE_NO_ACCOUNT = 'no_account';
-    const FAILURE_UNSUPPORTED_CARD = 'unsupported_card';
 
     const METHOD_INSTANT = 'instant';
     const METHOD_STANDARD = 'standard';
+
+    const RECONCILIATION_STATUS_COMPLETED = 'completed';
+    const RECONCILIATION_STATUS_IN_PROGRESS = 'in_progress';
+    const RECONCILIATION_STATUS_NOT_APPLICABLE = 'not_applicable';
 
     const STATUS_CANCELED = 'canceled';
     const STATUS_FAILED = 'failed';
@@ -71,6 +61,119 @@ class Payout extends ApiResource
 
     const TYPE_BANK_ACCOUNT = 'bank_account';
     const TYPE_CARD = 'card';
+
+    /**
+     * To send funds to your own bank account, create a new payout object. Your <a
+     * href="#balance">EDD\Vendor\Stripe balance</a> must cover the payout amount. If it doesn’t,
+     * you receive an “Insufficient Funds” error.
+     *
+     * If your API key is in test mode, money won’t actually be sent, though every
+     * other action occurs as if you’re in live mode.
+     *
+     * If you create a manual payout on a EDD\Vendor\Stripe account that uses multiple payment
+     * source types, you need to specify the source type balance that the payout draws
+     * from. The <a href="#balance_object">balance object</a> details available and
+     * pending amounts by source type.
+     *
+     * @param null|array $params
+     * @param null|array|string $options
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Payout the created resource
+     */
+    public static function create($params = null, $options = null)
+    {
+        self::_validateParams($params);
+        $url = static::classUrl();
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    /**
+     * Returns a list of existing payouts sent to third-party bank accounts or payouts
+     * that EDD\Vendor\Stripe sent to you. The payouts return in sorted order, with the most
+     * recently created payouts appearing first.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\Payout> of ApiResources
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Retrieves the details of an existing payout. Supply the unique payout ID from
+     * either a payout creation request or the payout list. EDD\Vendor\Stripe returns the
+     * corresponding payout information.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Payout
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
+
+    /**
+     * Updates the specified payout by setting the values of the parameters you pass.
+     * We don’t change parameters that you don’t provide. This request only accepts the
+     * metadata as arguments.
+     *
+     * @param string $id the ID of the resource to update
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Payout the updated resource
+     */
+    public static function update($id, $params = null, $opts = null)
+    {
+        self::_validateParams($params);
+        $url = static::resourceUrl($id);
+
+        list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
+        $obj = \EDD\Vendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
+    }
+
+    const FAILURE_ACCOUNT_CLOSED = 'account_closed';
+    const FAILURE_ACCOUNT_FROZEN = 'account_frozen';
+    const FAILURE_BANK_ACCOUNT_RESTRICTED = 'bank_account_restricted';
+    const FAILURE_BANK_OWNERSHIP_CHANGED = 'bank_ownership_changed';
+    const FAILURE_COULD_NOT_PROCESS = 'could_not_process';
+    const FAILURE_DEBIT_NOT_AUTHORIZED = 'debit_not_authorized';
+    const FAILURE_DECLINED = 'declined';
+    const FAILURE_INCORRECT_ACCOUNT_HOLDER_ADDRESS = 'incorrect_account_holder_address';
+    const FAILURE_INCORRECT_ACCOUNT_HOLDER_NAME = 'incorrect_account_holder_name';
+    const FAILURE_INCORRECT_ACCOUNT_HOLDER_TAX_ID = 'incorrect_account_holder_tax_id';
+    const FAILURE_INSUFFICIENT_FUNDS = 'insufficient_funds';
+    const FAILURE_INVALID_ACCOUNT_NUMBER = 'invalid_account_number';
+    const FAILURE_INVALID_CURRENCY = 'invalid_currency';
+    const FAILURE_NO_ACCOUNT = 'no_account';
+    const FAILURE_UNSUPPORTED_CARD = 'unsupported_card';
 
     /**
      * @param null|array $params

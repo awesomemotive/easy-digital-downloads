@@ -36,7 +36,6 @@ class AutoRegister extends Subscriber {
 			'edd_get_option_show_register_form'        => 'remove_register_form',
 			'edd_settings_marketing'                   => array( 'update_free_downloads_settings', 100 ),
 			'edd_batch_import_order_created'           => 'create_user_during_import',
-			'edd_checkout_user_error_checks'           => array( 'check_existing_user', 10, 3 ),
 		);
 	}
 
@@ -241,28 +240,15 @@ class AutoRegister extends Subscriber {
 	 * Checks if a user already exists during checkout.
 	 *
 	 * @since 3.3.0
+	 * @deprecated 3.3.5 for EDD\Checkout\Errors->check_existing_users().
 	 * @param mixed $user       The user object.
 	 * @param array $valid_data The valid data.
 	 * @param array $posted     The posted data.
 	 * @return void
 	 */
 	public function check_existing_user( $user, $valid_data, $posted ) {
-		if ( is_user_logged_in() || empty( $user ) || ! self::is_enabled() ) {
-			return;
-		}
-		$email = false;
-		if ( ! empty( $valid_data['guest_user_data']['user_email'] ) ) {
-			$email = $valid_data['guest_user_data']['user_email'];
-		} elseif ( ! empty( $posted['edd_email'] ) ) {
-			$email = $posted['edd_email'];
-		}
-		if ( ! $email ) {
-			return;
-		}
-
-		if ( get_user_by( 'email', $email ) ) {
-			edd_set_error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
-		}
+		$errors = new \EDD\Checkout\Errors();
+		$errors->check_existing_users( $user, $valid_data, $posted );
 	}
 
 	/**
@@ -328,7 +314,7 @@ class AutoRegister extends Subscriber {
 			return false;
 		}
 		$maybe_login_user = false;
-		if ( did_action( 'edd_purchase' ) || did_action( 'edd_straight_to_gateway' ) || did_action( 'edd_free_download_process' ) ) {
+		if ( did_action( 'edd_purchase' ) || did_action( 'edd_straight_to_gateway' ) || did_action( 'edd_free_download_process' ) || edd_get_purchase_session() ) {
 			$maybe_login_user = true;
 		}
 

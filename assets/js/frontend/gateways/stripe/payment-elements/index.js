@@ -43,7 +43,7 @@ export function createAndMountElement() {
 	const elementOptions = {
 		mode: 'payment',
 		amount: amount,
-		setupFutureUsage: 'off_session',
+		setupFutureUsage: ELEMENTS_CUSTOMIZATIONS.setupFutureUsage,
 		paymentMethodCreation: 'manual',
 		currency: edd_stripe_vars.currency.toLowerCase(),
 		loader: 'always',
@@ -51,7 +51,9 @@ export function createAndMountElement() {
 		fonts: fonts,
 	};
 
-	if ( ELEMENTS_CUSTOMIZATIONS.paymentMethodTypes.length ) {
+	if ( ELEMENTS_CUSTOMIZATIONS.payment_method_configuration.length ) {
+		elementOptions.payment_method_configuration = ELEMENTS_CUSTOMIZATIONS.payment_method_configuration;
+	} else if ( ELEMENTS_CUSTOMIZATIONS.paymentMethodTypes.length ) {
 		elementOptions.paymentMethodTypes = ELEMENTS_CUSTOMIZATIONS.paymentMethodTypes;
 	}
 
@@ -443,12 +445,24 @@ export function getBillingDetails( form ) {
 		email = fieldValueOrNull( form.querySelector( '#edd_email' ) );
 	}
 
+	// If we still don't have an email, try looking for the email by name.
+	if ( null === email ) {
+		email = fieldValueOrNull( form.querySelector( 'input[name="edd_email"]' ) );
+	}
+
+	let line1 = fieldValueOrNull( form.querySelector( '#card_address' ) );
+	let name  = fieldValueOrNull( form.querySelector( '#card_name' ) );
+	if ( null === name && null !== line1 ) {
+		name = fieldValueOrNull( form.querySelector( '#edd-first' ) );
+		name += ' ' + fieldValueOrNull( form.querySelector( '#edd-last' ) );
+	}
+
 	return {
 		email: email,
-		name: fieldValueOrNull( form.querySelector( '#card_name') ),
+		name: name,
 		phone: fieldValueOrNull( form.querySelector( '.edd-phone' ) ),
 		address: {
-			line1: fieldValueOrNull( form.querySelector( '#card_address' ) ),
+			line1: line1,
 			line2: fieldValueOrNull( form.querySelector( '#card_address_2' ) ),
 			city: fieldValueOrNull( form.querySelector( '#card_city' ) ),
 			state: fieldValueOrNull( form.querySelector( '#card_state' ) ),

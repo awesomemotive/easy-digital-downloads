@@ -9,8 +9,8 @@ namespace EDD\Vendor\Stripe;
  * created. These requirements can differ depending on the account's country. The
  * Country Specs API makes these rules available to your integration.
  *
- * You can also view the information from this API call as <a
- * href="/docs/connect/required-verification-information">an online guide</a>.
+ * You can also view the information from this API call as <a href="/docs/connect/required-verification-information">an online
+ * guide</a>.
  *
  * @property string $id Unique identifier for the object. Represented as the ISO country code for this country.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
@@ -25,6 +25,39 @@ class CountrySpec extends ApiResource
 {
     const OBJECT_NAME = 'country_spec';
 
-    use ApiOperations\All;
-    use ApiOperations\Retrieve;
+    /**
+     * Lists all Country Spec objects available in the API.
+     *
+     * @param null|array $params
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\Collection<\EDD\Vendor\Stripe\CountrySpec> of ApiResources
+     */
+    public static function all($params = null, $opts = null)
+    {
+        $url = static::classUrl();
+
+        return static::_requestPage($url, \EDD\Vendor\Stripe\Collection::class, $params, $opts);
+    }
+
+    /**
+     * Returns a Country Spec for a given Country code.
+     *
+     * @param array|string $id the ID of the API resource to retrieve, or an options array containing an `id` key
+     * @param null|array|string $opts
+     *
+     * @throws \EDD\Vendor\Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \EDD\Vendor\Stripe\CountrySpec
+     */
+    public static function retrieve($id, $opts = null)
+    {
+        $opts = \EDD\Vendor\Stripe\Util\RequestOptions::parse($opts);
+        $instance = new static($id, $opts);
+        $instance->refresh();
+
+        return $instance;
+    }
 }
