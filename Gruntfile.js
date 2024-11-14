@@ -135,6 +135,8 @@ module.exports = function ( grunt ) {
 					'vendor/symfony/deprecation-contracts/**',
 					'vendor/symfony/polyfill-php80/**',
 					'vendor/symfony/polyfill-mbstring/**',
+					'!crowdin.yml',
+					'!sonar-project.properties',
 				],
 				dest: 'build/<%= pkg.name %>-public/',
 			}

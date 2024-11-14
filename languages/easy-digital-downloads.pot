@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.3.5\n"
+"Project-Id-Version: Easy Digital Downloads 3.3.5.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-public\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-13T18:26:41+00:00\n"
+"POT-Creation-Date: 2024-11-14T23:08:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 
@@ -21414,40 +21414,40 @@ msgstr ""
 msgid "Card Elements is the legacy Stripe integration. Easy Digital Downloads has updated to use the more secure and reliable Payment Elements feature of Stripe. This toggle allows sites without access to Card Elements to enable or disable it."
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/Settings.php:492
+#: src/Gateways/Stripe/Admin/Settings.php:495
 msgid "One-time payments"
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/Settings.php:494
+#: src/Gateways/Stripe/Admin/Settings.php:497
 msgid "subscriptions"
 msgstr ""
 
-#: src/Gateways/Stripe/Admin/Settings.php:497
+#: src/Gateways/Stripe/Admin/Settings.php:500
 msgid "subscriptions with trials"
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag, 3: payment types
-#: src/Gateways/Stripe/Admin/Settings.php:502
+#: src/Gateways/Stripe/Admin/Settings.php:505
 msgid "%1$sPayment types:%2$s %3$s"
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag, 3: supported currencies
-#: src/Gateways/Stripe/Admin/Settings.php:511
+#: src/Gateways/Stripe/Admin/Settings.php:514
 msgid "%1$sSupported currencies:%2$s %3$s"
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag, 3: supported countries
-#: src/Gateways/Stripe/Admin/Settings.php:520
+#: src/Gateways/Stripe/Admin/Settings.php:523
 msgid "%1$sSupported countries:%2$s %3$s"
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag
-#: src/Gateways/Stripe/Admin/Settings.php:535
+#: src/Gateways/Stripe/Admin/Settings.php:538
 msgid "%1$sStatus:%2$s You can test this, but to use it in Live mode, you must request access to this payment method from your Stripe account."
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag
-#: src/Gateways/Stripe/Admin/Settings.php:541
+#: src/Gateways/Stripe/Admin/Settings.php:544
 msgid "%1$sStatus:%2$s You must request access to this payment method from your Stripe account."
 msgstr ""
 
