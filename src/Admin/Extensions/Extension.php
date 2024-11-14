@@ -405,6 +405,10 @@ abstract class Extension {
 	 * @return array
 	 */
 	public function add_wrap_class( $classes ) {
+		$tab = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( 'edd-stripe' === $tab ) {
+			return $classes;
+		}
 		if ( ! in_array( 'has-product-education', $classes, true ) && $this->can_show_product_section() ) {
 			$classes[] = 'has-product-education';
 		}

@@ -489,7 +489,10 @@ class Settings {
 		$is_test_mode        = edd_is_test_mode();
 		foreach ( $configuration as $method => $parameters ) {
 			$payment_method = PaymentMethods::get_payment_method( $method );
-			$payment_types  = __( 'One-time payments', 'easy-digital-downloads' );
+			if ( ! $payment_method ) {
+				continue;
+			}
+			$payment_types = __( 'One-time payments', 'easy-digital-downloads' );
 			if ( $payment_method::$subscriptions ) {
 				$payment_types .= ', ' . __( 'subscriptions', 'easy-digital-downloads' );
 			}
