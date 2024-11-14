@@ -98,7 +98,7 @@ class PaymentMethods {
 	 * Retrieves the base configuration for the payment methods.
 	 *
 	 * @since 3.3.5
-	 * @return object The base configuration for the payment methods.
+	 * @return array The array of payment methods in the base configuration.
 	 */
 	public static function get_base_configuration() {
 		$configuration_id = self::get_configuration_id();
@@ -215,7 +215,7 @@ class PaymentMethods {
 	 *
 	 * @since 3.3.5
 	 * @param string $method The payment method.
-	 * @return string The class name for the specified payment method.
+	 * @return string|false The class name for the specified payment method, or false if not found.
 	 */
 	public static function get_payment_method( $method ) {
 		$method    = str_replace( '_', ' ', $method );

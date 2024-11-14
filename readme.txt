@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable Tag: 3.3.5
+Stable Tag: 3.3.5.1
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -237,6 +237,9 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.3.5.1 =
+* Stripe: Fixed issues with displaying and saving Stripe settings.
+
 = 3.3.5 =
 * NEW! Added Support for more Stripe Payment Methods, including more wallets, mobile payment methods, and some bank redirects.
 * Stripe: Improved accessibility of the checkout form.

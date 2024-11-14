@@ -51,11 +51,12 @@ class EddStripe extends Section {
 			return;
 		}
 
-		if ( ! self::update_configuration( $configuration, $input ) ) {
+		$updated_configuration_id = self::update_configuration( $configuration, $input );
+		if ( ! $updated_configuration_id ) {
 			return;
 		}
 
-		delete_option( $configuration->id );
+		delete_option( $updated_configuration_id );
 
 		$recurring_configurations = array( 'subscriptions', 'trials' );
 		foreach ( $recurring_configurations as $id ) {
@@ -71,7 +72,15 @@ class EddStripe extends Section {
 					$configuration_id
 				);
 
-				self::update_configuration( $configuration, $input );
+				$methods = array();
+				foreach ( \EDD\Gateways\Stripe\PaymentMethods::list() as $method => $label ) {
+					if ( ! isset( $configuration->$method ) ) {
+						continue;
+					}
+					$methods[ $method ] = $configuration->$method;
+				}
+
+				self::update_configuration( $methods, $input, $configuration_id );
 			} catch ( \Exception $e ) {
 				edd_debug_log( $e->getMessage(), true );
 				continue;
@@ -83,21 +92,22 @@ class EddStripe extends Section {
 	 * Update the configuration.
 	 *
 	 * @since 3.3.5
-	 * @param object $configuration The configuration object.
-	 * @param array  $input        The input array.
-	 * @return bool
+	 * @param object $configuration    The configuration object.
+	 * @param array  $input            The input array.
+	 * @param string $configuration_id The configuration ID.
+	 * @return bool|string False if no changes were made, otherwise the configuration ID.
 	 */
-	private static function update_configuration( $configuration, $input ) {
+	private static function update_configuration( $configuration, $input, $configuration_id = null ) {
 		$args = array();
 		foreach ( $input as $method => $enabled ) {
-			if ( ! isset( $configuration->$method ) || 'card' === $method ) {
+			if ( ! isset( $configuration[ $method ] ) || 'card' === $method ) {
 				continue;
 			}
-			if ( empty( $configuration->$method->display_preference->overridable ) ) {
+			if ( empty( $configuration[ $method ]['display_preference']['overridable'] ) ) {
 				continue;
 			}
 			$new_value = $enabled ? 'on' : 'off';
-			if ( $new_value === $configuration->$method->display_preference->preference ) {
+			if ( $new_value === $configuration[ $method ]['display_preference']['preference'] ) {
 				continue;
 			}
 			$args[ $method ]['display_preference']['preference'] = $new_value;
@@ -107,11 +117,15 @@ class EddStripe extends Section {
 			return false;
 		}
 
+		if ( ! $configuration_id ) {
+			$configuration_id = \EDD\Gateways\Stripe\PaymentMethods::get_configuration_id();
+		}
+
 		try {
 			edds_api_request(
 				'PaymentMethodConfiguration',
 				'update',
-				$configuration->id,
+				$configuration_id,
 				$args
 			);
 		} catch ( \Exception $e ) {
@@ -119,6 +133,6 @@ class EddStripe extends Section {
 			return false;
 		}
 
-		return true;
+		return $configuration_id;
 	}
 }
