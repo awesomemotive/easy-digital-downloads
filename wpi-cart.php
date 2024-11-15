@@ -309,8 +309,8 @@ final class WPI_Cart {
 		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
 
 		// Set filter for plugin's languages directory.
-		$edd_lang_dir  = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
-		$edd_lang_dir  = apply_filters( 'edd_languages_directory', $edd_lang_dir );
+        $plugin_path = dirname(__FILE__);
+        $edd_lang_dir = $plugin_path . '/languages/';
 
 		// Traditional WordPress plugin locale filter.
 		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'easy-digital-downloads' );
@@ -325,6 +325,8 @@ final class WPI_Cart {
 		// Look in wp-content/languages/plugins/easy-digital-downloads
 		$mofile_global3 = WP_LANG_DIR . '/plugins/easy-digital-downloads/' . $mofile;
 
+        $mofile_local = $edd_lang_dir . $mofile;
+
 		if ( file_exists( $mofile_global1 ) ) {
 
 			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
@@ -337,8 +339,13 @@ final class WPI_Cart {
 
 			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
 
-		} else {
+		}
+        elseif ( file_exists( $mofile_local ) ) {
 
+            load_textdomain( 'easy-digital-downloads', $mofile_local );
+
+        }
+        else {
 			// Load the default language files.
 			load_plugin_textdomain( 'easy-digital-downloads', false, $edd_lang_dir );
 		}
