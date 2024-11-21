@@ -135,7 +135,11 @@ function edd_get_cart_quantity() {
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$download = get_post( $download_id );
 
-	if( 'download' != ($download->post_type ?? null) )
+    if (!$download) {
+        return;
+    }
+
+	if( 'download' != $download->post_type )
 		return; // Not a download product
 
 	if ( ! current_user_can( 'edit_post', $download->ID ) && $download->post_status != 'publish' ) {
