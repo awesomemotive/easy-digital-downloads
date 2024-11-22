@@ -109,6 +109,10 @@ class PurchaseData {
 
 		edd_set_purchase_session( $purchase_data );
 
+		// Send the card info and post data back to the purchase data, even though it's not stored in the session.
+		$purchase_data['card_info'] = $valid_data['cc_info'] ?? array();
+		$purchase_data['post_data'] = $_POST;
+
 		return $purchase_data;
 	}
 

@@ -746,8 +746,8 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		'user_login' => '',
 		'user_pass'  => '',
 		'user_email' => '',
-		'first_name' => '',
-		'last_name'  => '',
+		'first_name' => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
+		'last_name'  => isset( $user_data['user_last'] ) ? $user_data['user_last'] : '',
 		'role'       => get_option( 'default_role' ),
 	);
 	$user_args = wp_parse_args( $user_data, $defaults );

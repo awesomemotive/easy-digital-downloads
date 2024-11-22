@@ -31,6 +31,8 @@ class PurchaseData extends EDD_UnitTestCase {
 			'edd_email' => 'john@doe.example',
 		);
 		$purchase_session = \EDD\Sessions\PurchaseData::start( false );
+		unset( $purchase_session['card_info'] );
+		unset( $purchase_session['post_data'] );
 
 		$this->assertEquals( $user_id, $purchase_session['user_info']['id'] );
 		$this->assertEquals( $_POST['edd_email'], $purchase_session['user_info']['email'] );
@@ -48,6 +50,8 @@ class PurchaseData extends EDD_UnitTestCase {
 		);
 
 		$purchase_session = \EDD\Sessions\PurchaseData::start();
+		unset( $purchase_session['card_info'] );
+		unset( $purchase_session['post_data'] );
 
 		$this->assertEmpty( $purchase_session['user_info']['id'] );
 		$this->assertEquals( $_POST['edd_email'], $purchase_session['user_info']['email'] );
