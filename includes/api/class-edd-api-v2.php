@@ -174,6 +174,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$products['products'][0] = $this->get_product_data( $product_info );
 
 			} else {
+				// Translators: %s is the product name.
 				$error['error'] = sprintf( __( 'Product %s not found!', 'easy-digital-downloads' ), $args['product'] );
 				return $error;
 			}

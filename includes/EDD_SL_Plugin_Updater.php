@@ -304,6 +304,7 @@ class EDD_SL_Plugin_Updater {
 		} elseif ( ! empty( $changelog_link ) ) {
 			echo ' ';
 			printf(
+				// Translators: %1$s is the link to view the version details, %2$s is the new version number, %3$s closes the version details link, %4$s is the link to update the plugin, %5$s closes the update link.
 				__( '%1$sView version %2$s details%3$s or %4$supdate now%5$s.', 'easy-digital-downloads' ),
 				'<a target="_blank" class="thickbox open-plugin-details-modal" href="' . esc_url( $changelog_link ) . '">',
 				esc_html( $update_cache->response[ $this->name ]->new_version ),
