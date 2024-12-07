@@ -179,36 +179,44 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = explode( ',', $options['price_id'] );
 	}
 
+	$variable_prices = edd_get_variable_prices($download_id);
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
-		foreach ( $options['price_id'] as $key => $price ) {
+		foreach ( $options['price_id'] as $key => $price_id ) {
+
+		    $price_id = preg_replace( '/[^0-9]/', '', $price_id );
+		    if (is_array($variable_prices) && !isset( $variable_prices[$price_id] )) {
+		        $price_id = '0';
+		    }
+		    $options['price_id'][ $key ] = $price_id;
 
 			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
-					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
+				    'price_id' => $price_id
 				),
 				'quantity'     => $quantity[ $key ],
 			);
 
 		}
 
-	} else {
+	} elseif ( isset( $options['price_id'] ) ) {
 
 		// Sanitize price IDs
-		foreach( $options as $key => $option ) {
-
-			if( 'price_id' == $key ) {
-				$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
-			}
-
+	    $price_id = preg_replace( '/[^0-9]/', '', $options['price_id'] );
+		if (is_array($variable_prices) && !isset( $variable_prices[ $price_id ] )) {
+		    $price_id = '0';
 		}
+		$options['price_id'] = $price_id;
 
 		// Add a single item
 		$items[] = array(
 			'id'       => $download_id,
-			'options'  => $options,
+		    'options'  => array(
+		        'price_id' => $price_id
+		    ),
 			'quantity' => $quantity
 		);
 	}
@@ -478,6 +486,10 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
 
 		}
 
+	}
+
+	if( false === $price ) {
+	    $price = edd_get_highest_price_option( $download_id );
 	}
 
 	if( ! $variable_prices || false === $price ) {
