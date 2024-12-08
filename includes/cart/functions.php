@@ -180,6 +180,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	}
 
 	$variable_prices = edd_get_variable_prices($download_id);
+	$items = [];
 
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
