@@ -77,8 +77,6 @@ function edd_process_login_form( $data ) {
             return;
         }
 
-		$data['edd_user_login'] = sanitize_text_field( $data['edd_user_login'] );
-
 		$user_data = get_user_by( 'login', $data['edd_user_login'] );
 
 		if ( ! $user_data ) {
