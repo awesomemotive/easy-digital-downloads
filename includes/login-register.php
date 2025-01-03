@@ -70,11 +70,19 @@ function edd_register_form( $redirect = '' ) {
  * @return void
 */
 function edd_process_login_form( $data ) {
+
 	if ( wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
+
+		if ( !isset( $data['edd_user_login'] ) || !is_string( $data['edd_user_login'] ) ) {
+            return;
+        }
+
 		$user_data = get_user_by( 'login', $data['edd_user_login'] );
+
 		if ( ! $user_data ) {
 			$user_data = get_user_by( 'email', $data['edd_user_login'] );
 		}
+
 		if ( $user_data ) {
 			$user_ID = $user_data->ID;
 			$user_email = $user_data->user_email;
@@ -86,8 +94,10 @@ function edd_process_login_form( $data ) {
 		} else {
 			edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'easy-digital-downloads' ) );
 		}
+
 		// Check for errors and redirect if none present
 		$errors = edd_get_errors();
+
 		if ( ! $errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
 			wp_redirect( $redirect );
