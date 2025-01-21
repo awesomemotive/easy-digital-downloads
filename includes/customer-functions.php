@@ -219,10 +219,26 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 
 	$customers = new EDD\Database\Queries\Customer();
 	if ( 'email' === $field ) {
-		$customer_emails = new EDD\Database\Queries\Customer_Email_Address();
-		$customer_email  = $customer_emails->get_item_by( 'email', $value );
+		$customer_emails = edd_get_customer_email_addresses(
+			array(
+				'email'    => $value,
+				'order'    => 'ASC',
+				'order_by' => 'id',
+			)
+		);
+		$customer        = false;
+		foreach ( $customer_emails as $customer_email ) {
+			if ( ! empty( $customer_email->customer_id ) ) {
+				$customer = $customers->get_item_by( 'id', $customer_email->customer_id );
+				if ( $customer ) {
+					break;
+				}
 
-		if ( empty( $customer_email ) ) {
+				edd_debug_log( sprintf( 'Invalid customer ID %d found for email address: %s', $customer_email->customer_id, $value ) );
+			}
+		}
+
+		if ( empty( $customer ) ) {
 			$customer = $customers->get_item_by( 'email', $value );
 
 			if ( ! empty( $customer ) ) {
@@ -232,20 +248,14 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 						'type'        => 'primary',
 					)
 				);
-				$email_address_id     = edd_add_customer_email_address(
+				edd_add_customer_email_address(
 					array(
 						'customer_id' => $customer->id,
 						'email'       => $value,
 						'type'        => $customer_has_primary ? 'secondary' : 'primary',
 					)
 				);
-				$customer_email       = $customer_emails->get_item( $email_address_id );
 			}
-		}
-
-		$customer = false;
-		if ( ! empty( $customer_email->customer_id ) ) {
-			$customer = $customers->get_item_by( 'id', $customer_email->customer_id );
 		}
 	} else {
 		$customer = $customers->get_item_by( $field, $value );
@@ -271,9 +281,7 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 	 * @param array              $args             Arguments used to query the Customer.
 	 * @param EDD_DB_Customers   $edd_customers_db Customer database class.
 	 */
-	$customer = apply_filters( 'edd_get_customer', $customer, $customers->query_vars, $customers_db );
-
-	return $customer;
+	return apply_filters( 'edd_get_customer', $customer, $customers->query_vars, $customers_db );
 }
 
 /**

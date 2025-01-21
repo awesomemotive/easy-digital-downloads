@@ -4,9 +4,14 @@ namespace EDD\Tests;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
- * @group edd_formatting
+ * Tests for EDD formatting functions.
  */
-class Tests_Formatting extends EDD_UnitTestCase {
+class Formatting extends EDD_UnitTestCase {
+
+	public function tearDown(): void {
+		edd_delete_option( 'thousands_separator' );
+		edd_delete_option( 'decimal_separator' );
+	}
 
 	public function test_sanitize_amount_empty_string() {
 		$this->assertEquals( 0.00, edd_sanitize_amount( '' ) );
@@ -85,6 +90,20 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$this->assertEquals( 20000.20, edd_format_amount( '20000.20', true, '', 'typed' ) );
 	}
 
+	public function test_format_amount_data() {
+		$this->assertEquals( '20000.20', edd_format_amount( '20000.20', true, '', 'data' ) );
+
+		edd_update_option( 'thousands_separator', '.' );
+		edd_update_option( 'decimal_separator', ',' );
+
+		$this->assertEquals( '20000.20', edd_format_amount( '20000.20', true, '', 'data' ) );
+
+		edd_update_option( 'thousands_separator', ' ' );
+		edd_update_option( 'decimal_separator', '.' );
+
+		$this->assertEquals( '20000.20', edd_format_amount( '20000.20', true, '', 'data' ) );
+	}
+
 	public function test_currency_filter() {
 		$this->assertEquals( '&#36;20,000.20', edd_currency_filter( '20,000.20' ) );
 	}
@@ -111,6 +130,7 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 	public function test_separators() {
 
+		edd_update_option( 'thousands_separator', ' ' );
 		$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 		$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
@@ -134,7 +154,6 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 		$this->assertEquals( ',', $thousands_sep );
 		$this->assertEquals( '.', $decimal_sep );
-
 	}
 
 	public function test_decimal_filter() {

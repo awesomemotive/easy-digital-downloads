@@ -13,8 +13,8 @@ namespace EDD\Reports\Data\Payment_Gateways;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-use EDD\Stats as Stats;
-use EDD\Reports as Reports;
+use EDD\Stats;
+use EDD\Reports;
 use EDD\Admin\List_Table;
 
 /**
@@ -31,11 +31,13 @@ class Gateway_Stats extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'report-gateway',
-			'plural'   => 'report-gateways',
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'report-gateway',
+				'plural'   => 'report-gateways',
+				'ajax'     => false,
+			)
+		);
 	}
 
 	/**
@@ -55,8 +57,8 @@ class Gateway_Stats extends List_Table {
 	 *
 	 * @since 1.5
 	 *
-	 * @param array $item Contains all the data of the downloads
-	 * @param string $column_name The name of the column
+	 * @param array  $item Contains all the data of the downloads.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
@@ -88,8 +90,9 @@ class Gateway_Stats extends List_Table {
 	 * @return array All the data for customer reports
 	 */
 	public function get_data() {
-		$filter   = Reports\get_filter_value( 'dates' );
-		$currency = Reports\get_filter_value( 'currencies' );
+		$filter       = Reports\get_filter_value( 'dates' );
+		$currency     = Reports\get_filter_value( 'currencies' );
+		$order_status = Reports\get_filter_value( 'order_statuses' );
 
 		$reports_data = array();
 		$gateways     = edd_get_payment_gateways();
@@ -97,41 +100,55 @@ class Gateway_Stats extends List_Table {
 		foreach ( $gateways as $gateway_id => $gateway ) {
 			$stats = new Stats();
 
-			$complete_count = $stats->get_gateway_sales( array(
-				'range'    => $filter['range'],
-				'gateway'  => $gateway_id,
-				'status'   => edd_get_gross_order_statuses(),
-				'type'     => array( 'sale' ),
-				'currency' => $currency,
-			) );
+			$complete_count = $stats->get_gateway_sales(
+				array(
+					'range'    => $filter['range'],
+					'gateway'  => $gateway_id,
+					'status'   => $order_status ? array( $order_status ) : edd_get_gross_order_statuses(),
+					'type'     => array( 'sale' ),
+					'currency' => $currency,
+				)
+			);
 
-			$pending_count = $stats->get_gateway_sales( array(
-				'range'    => $filter['range'],
-				'gateway'  => $gateway_id,
-				'status'   => edd_get_incomplete_order_statuses(),
-				'type'     => array( 'sale' ),
-				'currency' => $currency,
-			) );
+			$pending_count = $stats->get_gateway_sales(
+				array(
+					'range'    => $filter['range'],
+					'gateway'  => $gateway_id,
+					'status'   => $order_status ? array( $order_status ) : edd_get_incomplete_order_statuses(),
+					'type'     => array( 'sale' ),
+					'currency' => $currency,
+				)
+			);
 
-			$refunded_count = $stats->get_gateway_sales( array(
-				'range'    => $filter['range'],
-				'gateway'  => $gateway_id,
-				'status'   => array( 'complete' ),
-				'type'     => array( 'refund' ),
-				'currency' => $currency,
-			) );
+			$refunded_count = $stats->get_gateway_sales(
+				array(
+					'range'    => $filter['range'],
+					'gateway'  => $gateway_id,
+					'status'   => array( 'complete' ),
+					'type'     => array( 'refund' ),
+					'currency' => $currency,
+				)
+			);
 
-			$total_count = $stats->get_gateway_sales( array(
-				'range'    => $filter['range'],
-				'gateway'  => $gateway_id,
-				'status'   => 'any',
-				'type'     => array( 'sale' ),
-				'currency' => $currency,
-			) );
+			$total_count = $stats->get_gateway_sales(
+				array(
+					'range'    => $filter['range'],
+					'gateway'  => $gateway_id,
+					'status'   => $order_status ? array( $order_status ) : 'any',
+					'type'     => array( 'sale' ),
+					'currency' => $currency,
+				)
+			);
 
 			$reports_data[] = array(
 				'ID'             => $gateway_id,
-				'label'          => '<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-payment-history', 'gateway' => sanitize_key( $gateway_id ) ) ) ) . '">' . esc_html( $gateway['admin_label'] ) . '</a>',
+				'label'          => '<a href="' . esc_url(
+					add_query_arg(
+						array(
+							'gateways' => sanitize_key( $gateway_id ),
+						)
+					)
+				) . '">' . esc_html( $gateway['admin_label'] ) . '</a>',
 				'complete_sales' => edd_format_amount( $complete_count, false ),
 				'pending_sales'  => edd_format_amount( $pending_count, false ),
 				'refunded_sales' => edd_format_amount( $refunded_count, false ),
@@ -153,7 +170,7 @@ class Gateway_Stats extends List_Table {
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
-		$hidden                = array(); // No hidden columns
+		$hidden                = array(); // No hidden columns.
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->get_data();
@@ -186,20 +203,16 @@ class Gateway_Stats extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $which
+	 * @param string $which The location of the table nav.
 	 */
-	protected function pagination( $which ) {
-
-	}
+	protected function pagination( $which ) {}
 
 	/**
 	 * Hide table navigation.
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $which
+	 * @param string $which The location of the table nav.
 	 */
-	protected function display_tablenav( $which ) {
-
-	}
+	protected function display_tablenav( $which ) {}
 }

@@ -751,12 +751,12 @@ class Order extends Rows\Order {
 		// Work through the order fees and credits. Discounts are included in the order items.
 		$this->total_adjustments = 0;
 		foreach ( $this->get_fees() as $fee ) {
-			$this->total_adjustments += (float) $fee->total;
+			$this->total_adjustments += (float) $fee->subtotal;
 			$this->tax               += (float) $fee->tax;
 		}
 
 		foreach ( $this->get_credits() as $credit ) {
-			$this->total_adjustments -= (float) $credit->total;
+			$this->total_adjustments -= (float) $credit->subtotal;
 			$this->tax               -= (float) $credit->tax;
 		}
 

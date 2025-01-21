@@ -3,6 +3,7 @@
 		display: grid;
 		grid-template-columns: repeat(2, minmax(200px, 50%));
 		grid-gap: 2em;
+		margin: 0 20px;
 	}
 
 	.edd-reports-chart {
@@ -20,24 +21,17 @@
 	position: relative;
 	max-width: 100%;
 	max-height: 75vh;
+	width: calc(100% - 2px);
+	overflow: visible;
 
 	&.edd-canvas__type-line,
 	&.edd-canvas__type-bar {
-		@media screen and (min-width: $break-mobile) {
-			height: 450px;
-		}
-
-		@media screen and (min-width: $break-medium) {
-			height: 500px;
-		}
-
-		@media screen and (min-width: $break-xlarge) {
-			height: 700px;
-		}
+		height: 300px;
 	}
 }
 
 .chart-timezone {
 	font-size: .75rem;
 	color: $wp-gray-10;
+	grid-column: 1 / span 2;
 }

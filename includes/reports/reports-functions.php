@@ -359,7 +359,11 @@ function get_filters() {
 		'currencies'          => array(
 			'label'            => __( 'Currencies', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_currency_filter'
-		)
+		),
+		'order_statuses'      => array(
+			'label'            => __( 'Order Statuses', 'easy-digital-downloads' ),
+			'display_callback' => __NAMESPACE__ . '\\display_order_status_filter'
+		),
 	);
 
 	/**
@@ -935,8 +939,6 @@ function get_relative_dates_filter_range() {
  * @return bool True if results should use hour by hour, otherwise false.
  */
 function get_dates_filter_hour_by_hour() {
-	$hour_by_hour = false;
-
 	// Retrieve the queried dates.
 	$dates = get_dates_filter( 'objects' );
 
@@ -946,16 +948,19 @@ function get_dates_filter_hour_by_hour() {
 		case 'yesterday':
 			$hour_by_hour = true;
 			break;
-		case 'this_week':
-		case 'this_month':
-		case 'this_quarter':
-		case 'this_year':
+
 		case 'other':
-			$difference = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
+			$hour_by_hour = false;
+			$difference   = ( $dates['end']->getTimestamp() - $dates['start']->getTimestamp() );
 			if ( $difference <= ( DAY_IN_SECONDS * 2 ) ) {
 				$hour_by_hour = true;
 			}
 			break;
+
+		case 'this_week':
+		case 'this_month':
+		case 'this_quarter':
+		case 'this_year':
 		default:
 			$hour_by_hour = false;
 			break;
@@ -1703,6 +1708,40 @@ function display_currency_filter() {
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) );
+		?>
+	</span>
+	<?php
+}
+
+/**
+ * Handles display of the 'Order Statuses' filter for reports.
+ *
+ * @since 3.3.6
+ */
+function display_order_status_filter() {
+	$statuses = edd_get_gross_order_statuses();
+	$status   = get_filter_value( 'order_statuses' );
+	?>
+	<span class="edd-graph-filter-options graph-option-section">
+		<?php
+		echo EDD()->html->select(
+			array(
+				'name'             => 'order_statuses',
+				'id'               => 'edd_reports_filter_order_statuses',
+				'options'          => array_combine(
+					$statuses,
+					array_map(
+						function ( $status ) {
+							return edd_get_payment_status_label( $status );
+						},
+						$statuses
+					)
+				),
+				'selected'          => $status,
+				'show_option_none'  => false,
+				'show_option_empty' => __( 'All order statuses', 'easy-digital-downloads' ),
+			)
+		);
 		?>
 	</span>
 	<?php

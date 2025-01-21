@@ -119,7 +119,7 @@ function do_cart_form( $block_attributes ) {
 	}
 	if ( ! $cart_has_contents ) {
 		?>
-		<p class="edd-blocks-form__cart"><?php esc_html_e( 'Your cart is empty.', 'easy-digital-downloads' ); ?></p>
+		<p class="edd-blocks-form__cart"><?php echo wp_kses_post( edd_empty_cart_message() ); ?></p>
 		<?php
 		return;
 	}
@@ -137,7 +137,7 @@ function do_cart_form( $block_attributes ) {
  * Renders the entire EDD checkout block.
  *
  * @since 2.0
- * @param array  $block_attributes The block attributes.
+ * @param array $block_attributes The block attributes.
  * @return string Checkout HTML.
  */
 function checkout( $block_attributes = array() ) {
@@ -159,7 +159,7 @@ function checkout( $block_attributes = array() ) {
 	$cart_items = get_cart_contents();
 
 	if ( ! $cart_items && ! edd_cart_has_fees() ) {
-		return '<p>' . esc_html( __( 'Your cart is empty.', 'easy-digital-downloads' ) ) . '</p>';
+		return '<p>' . edd_empty_cart_message() . '</p>';
 	}
 
 	if ( edd_item_quantities_enabled() ) {
@@ -247,7 +247,12 @@ function remove_default_purchase_fields() {
 	remove_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
 	remove_action( 'edd_register_fields_before', 'edd_user_info_fields' );
 	remove_action( 'edd_purchase_form_before_submit', 'edd_checkout_final_total', 999 );
-	add_filter( 'edd_get_option_show_register_form', function() { return 'none'; } );
+	add_filter(
+		'edd_get_option_show_register_form',
+		function () {
+			return 'none';
+		}
+	);
 	add_filter( 'edd_pre_cc_address_fields', '__return_true' );
 	add_filter( 'edd_pre_cc_fields', '__return_true' );
 }

@@ -23,17 +23,19 @@ $files = edd_get_download_files( $post_id );
 						$thumbnail_size = isset( $value['thumbnail_size'] ) ? $value['thumbnail_size'] : '';
 						$attachment_id  = isset( $value['attachment_id'] ) ? absint( $value['attachment_id'] ) : false;
 
-						$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id', 'thumbnail_size' ), $value ); ?>
+						$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition', 'attachment_id', 'thumbnail_size' ), $value );
+						?>
 
-						<div class="edd_repeatable_upload_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
+						<div class="edd_repeatable_upload_wrapper edd_repeatable_row edd-has-handle-actions" data-key="<?php echo esc_attr( $key ); ?>">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id, $index ); ?>
 						</div>
 
 						<?php
 					endforeach;
-				else : ?>
+				else :
+					?>
 
-					<div class="edd_repeatable_upload_wrapper edd_repeatable_row">
+					<div class="edd_repeatable_upload_wrapper edd_repeatable_row edd-has-handle-actions">
 						<?php do_action( 'edd_render_file_row', 1, array(), $post_id, 0 ); ?>
 					</div>
 

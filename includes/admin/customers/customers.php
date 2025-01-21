@@ -316,7 +316,7 @@ function edd_render_customer_view( $view, $callbacks ) {
 		if ( $customer && $render ) :
 			?>
 
-			<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix">
+			<div id="edd-item-wrapper" class="edd-item-has-tabs edd-clearfix full-width">
 				<?php edd_customers_sections( $customer ); ?>
 			</div>
 
@@ -482,7 +482,7 @@ function edd_customers_view( $customer = null ) {
 					</span>
 				</div>
 
-				<div class="customer-id right">
+				<div class="edd-section__id--badge customer-id">
 					#<?php echo esc_html( $customer->id ); ?>
 				</div>
 

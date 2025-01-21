@@ -91,11 +91,18 @@ class Errors extends Subscriber {
 			return new \WP_Error( 'invalid_email', __( 'Please enter a valid email address.', 'easy-digital-downloads' ) );
 		}
 
+		// If there is no user with this email, it's valid.
 		$user = get_user_by( 'email', $email );
-		if ( $user ) {
-			return new \WP_Error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
+		if ( ! $user ) {
+			return true;
 		}
 
-		return true;
+		// If there isn't a customer with this email, and guest checkout is enabled, it's valid.
+		$customer = edd_get_customer_by( 'user_id', $user->ID );
+		if ( ! $customer && empty( edd_get_option( 'logged_in_only', '' ) ) ) {
+			return true;
+		}
+
+		return new \WP_Error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
 	}
 }

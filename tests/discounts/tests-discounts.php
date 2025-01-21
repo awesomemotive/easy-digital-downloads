@@ -1086,12 +1086,12 @@ class Discounts extends EDD_UnitTestCase {
 		);
 		edd_store_discount( $post, $discount );
 
-		$this->assertEquals( '20', edd_get_cart_discountable_subtotal( $discount ) );
+		$this->assertEquals( '20.00', edd_get_cart_discountable_subtotal( $discount ) );
 
 		$download_3 = Helpers\EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download_3->ID );
 
-		$this->assertEquals( '40', edd_get_cart_discountable_subtotal( $discount ) );
+		$this->assertEquals( '40.00', edd_get_cart_discountable_subtotal( $discount ) );
 
 		Helpers\EDD_Helper_Download::delete_download( $download_1->ID );
 		Helpers\EDD_Helper_Download::delete_download( $download_2->ID );
@@ -1239,5 +1239,151 @@ class Discounts extends EDD_UnitTestCase {
 		$this->assertNotEmpty( $discount->end_date );
 		$this->assertEquals( 'inactive', $discount->status );
 		$this->assertNotEmpty( $discount->start_date );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid() with archived status
+	 */
+	public function test_discount_is_valid_with_archived_status_returns_false() {
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+		edd_update_adjustment(
+			$discount_id,
+			array(
+				'status' => 'archived',
+			)
+		);
+		edd_add_to_cart( self::$download->ID );
+
+		$discount = edd_get_discount( $discount_id );
+
+		$this->assertFalse( $discount->is_valid() );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid() with not started date
+	 */
+	public function test_discount_is_valid_with_non_started_status_returns_false() {
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+		$discount    = edd_get_discount( $discount_id );
+
+		$discount->__set( 'start_date', date( 'Y-m-d', time() + DAY_IN_SECONDS ) );
+
+		edd_add_to_cart( self::$download->ID );
+
+		$this->assertFalse( $discount->is_valid() );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid() with non-active status
+	 */
+	public function test_discount_is_valid_with_non_active_status_returns_false() {
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+		$discount    = edd_get_discount( $discount_id );
+
+		$discount->__set( 'end_date', date( 'Y-m-d', time() - DAY_IN_SECONDS ) );
+
+		edd_add_to_cart( self::$download->ID );
+
+		$this->assertFalse( $discount->is_valid() );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid() with maxed out uses
+	 */
+	public function test_discount_is_valid_with_maxed_out_uses_returns_false() {
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+		edd_update_adjustment(
+			$discount_id,
+			array(
+				'use_count' => 10,
+				'max_uses'  => 10,
+			)
+		);
+		edd_add_to_cart( self::$download->ID );
+
+		$discount = edd_get_discount( $discount_id );
+
+		$this->assertFalse( $discount->is_valid() );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid() with once per customer
+	 */
+	public function test_discount_is_valid_with_used_returns_false() {
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+		edd_update_adjustment(
+			$discount_id,
+			array(
+				'once_per_customer' => true,
+			)
+		);
+		$discount = edd_get_discount( $discount_id );
+
+		$payment_id         = Helpers\EDD_Helper_Payment::create_simple_payment();
+		$payment            = edd_get_payment( $payment_id );
+		$payment->discounts = $discount->get_code();
+		$payment->status    = 'publish';
+		$payment->save();
+
+		edd_add_to_cart( self::$download->ID );
+
+		$this->assertFalse( $discount->is_valid( 'admin@example.org' ) );
+
+		Helpers\EDD_Helper_Payment::delete_payment( $payment_id );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid() with invalid product requirements
+	 */
+	public function test_discount_is_valid_with_product_requirements_returns_false() {
+		$download_1  = Helpers\EDD_Helper_Download::create_simple_download();
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+
+		edd_update_discount(
+			$discount_id,
+			array(
+				'product_reqs'      => array( $download_1->ID ),
+				'product_condition' => 'all',
+			)
+		);
+		edd_add_to_cart( self::$download->ID );
+
+		$discount = edd_get_discount( $discount_id );
+
+		$this->assertFalse( $discount->is_valid() );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid() with excluded category
+	 */
+	public function test_discount_is_valid_with_excluded_category_returns_false() {
+		$category_1  = wp_insert_term( 'Test Category', 'download_category' );
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+
+		edd_update_discount(
+			$discount_id,
+			array(
+				'categories'     => array( $category_1['term_id'] ),
+				'term_condition' => 'exclude',
+			)
+		);
+		wp_set_object_terms( self::$download->ID, $category_1['term_id'], 'download_category' );
+		edd_add_to_cart( self::$download->ID );
+
+		$discount = edd_get_discount( $discount_id );
+
+		$this->assertFalse( $discount->is_valid() );
+	}
+
+	/**
+	 * @covers EDD_Discount::is_valid()
+	 */
+	public function test_discount_is_valid_simple_returns_true() {
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+		edd_add_to_cart( self::$download->ID );
+
+		$discount = edd_get_discount( $discount_id );
+
+		$this->assertTrue( $discount->is_valid() );
 	}
 }

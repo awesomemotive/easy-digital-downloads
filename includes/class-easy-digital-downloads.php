@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.3.5.2' );
+				define( 'EDD_VERSION', '3.3.6.1' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -431,7 +431,9 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			$GLOBALS['edd_options'] = edd_get_settings();
 
-			$this->maybe_load_amazon();
+			add_action( 'init', function() {
+				$this->maybe_load_amazon();
+			}, 5 );
 
 			// Load cache helper.
 			new EDD_Cache_Helper();
@@ -579,17 +581,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// PHP functions.
 			require_once EDD_PLUGIN_DIR . 'includes/compat-functions.php';
-
-			// Backwards Compatibility.
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-customermeta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-log.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-payment.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-tax.php';
-			require_once EDD_PLUGIN_DIR . 'includes/compat/class-template.php';
 
 			// Original Classes.
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
@@ -793,7 +784,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-list-table.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/class-sections.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';

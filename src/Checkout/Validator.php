@@ -78,8 +78,11 @@ class Validator {
 	 * @return bool
 	 */
 	private static function is_checkout_query() {
+
+		$purchase_page = edd_get_option( 'purchase_page' );
+
 		// If the current page is the purchase page, return true.
-		if ( is_page( edd_get_option( 'purchase_page' ) ) ) {
+		if ( ! empty( $purchase_page ) && is_page( $purchase_page ) ) {
 			return true;
 		}
 

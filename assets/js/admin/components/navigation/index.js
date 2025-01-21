@@ -14,6 +14,12 @@ if ( adminPage ) {
 	// Move the notices after the navWrapper.
 	const adminNotices = document.querySelectorAll( '.notice:not(.inline)' );
 	if ( adminNotices ) {
+		adminNotices.forEach( notice => {
+			// If the notice doesn't have the 'hidden' class, display it.
+			if ( !notice.classList.contains( 'hidden' ) ) {
+				notice.classList.add( 'edd-hidden' );
+			}
+		} );
 		setTimeout( () => {
 			if ( navWrapper ) {
 				const subNav = document.querySelector( '.edd-sub-nav__wrapper' );
@@ -28,7 +34,7 @@ if ( adminPage ) {
 			adminNotices.forEach( notice => {
 				// If the notice doesn't have the 'hidden' class, display it.
 				if ( ! notice.classList.contains( 'hidden' ) ) {
-					notice.style.display = 'block';
+					notice.classList.remove( 'edd-hidden' );
 				}
 			} );
 		}, 1000 );

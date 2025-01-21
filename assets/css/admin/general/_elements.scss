@@ -1,5 +1,9 @@
 .edd-hidden {
 	display: none;
+
+	&--required {
+		display: none !important;
+	}
 }
 
 .edd-clearfix:after {

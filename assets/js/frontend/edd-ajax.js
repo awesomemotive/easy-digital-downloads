@@ -328,7 +328,7 @@ jQuery( document ).ready( function( $ ) {
 		};
 
 		$.post( edd_global_vars.ajaxurl, data, function( data ) {
-			if ( $.trim( data ) === 'success' ) {
+			if ( data.trim() === 'success' ) {
 				$( '.edd_errors' ).remove();
 				window.location = edd_scripts.checkout_page;
 			} else {
@@ -399,7 +399,7 @@ jQuery( document ).ready( function( $ ) {
 		$( this ).after( '<span class="edd-loading-ajax edd-loading"></span>' );
 
 		$.post( edd_global_vars.ajaxurl, $( '#edd_purchase_form' ).serialize() + '&action=edd_process_checkout&edd_ajax=true', function( data ) {
-			if ( $.trim( data ) === 'success' ) {
+			if ( data.trim() === 'success' ) {
 				$( '.edd_errors' ).remove();
 				$( '.edd-error' ).hide();
 				$( eddPurchaseform ).submit();
@@ -456,7 +456,7 @@ jQuery( document ).ready( function( $ ) {
 				success: function ( response ) {
 
 					let newStateField = '';
-					if ( 'nostates' === $.trim( response ) ) {
+					if ( response.trim() === 'nostates' ) {
 						newStateField = '<input type="text" id="' + field_name + '" name="card_state" class="card-state edd-input required" value=""/>';
 					} else {
 						newStateField = response;

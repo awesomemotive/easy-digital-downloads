@@ -12,6 +12,11 @@
 
 namespace EDD\Currency;
 
+/**
+ * Class Money_Formatter
+ *
+ * @since 3.0
+ */
 class Money_Formatter {
 
 	/**
@@ -23,6 +28,11 @@ class Money_Formatter {
 	 * @var float Typed amount.
 	 */
 	public $typed_amount;
+
+	/**
+	 * @var float Data amount.
+	 */
+	public $data_amount;
 
 	/**
 	 * @var int|float Original, unmodified amount passed in via constructor.
@@ -37,14 +47,15 @@ class Money_Formatter {
 	/**
 	 * Money_Formatter constructor.
 	 *
-	 * @param          $amount
-	 * @param Currency $currency
+	 * @param string   $amount   The amount to format.
+	 * @param Currency $currency The currency to use for formatting.
 	 */
 	public function __construct( $amount, Currency $currency ) {
 		$this->original_amount = $amount;
 		$this->amount          = $amount;
 		$this->typed_amount    = $amount;
 		$this->currency        = $currency;
+		$this->data_amount     = $amount;
 	}
 
 	/**
@@ -174,6 +185,29 @@ class Money_Formatter {
 	}
 
 	/**
+	 * Formats the amount for data storage.
+	 * Does not apply the currency code.
+	 * This does set the amount to the correct number of decimal places.
+	 *
+	 * @since 3.3.6
+	 * @param bool $decimals If we should include decimal places or not when formatting.
+	 * @return Money_Formatter
+	 */
+	public function format_for_data( $decimals = true ) {
+		$amount = $this->unformat();
+
+		if ( empty( $amount ) ) {
+			$amount = 0;
+		}
+
+		$decimals = $this->get_decimals( $decimals, $amount );
+
+		$this->data_amount = number_format( round( floatval( (float) $amount ), $decimals ), $decimals, '.', '' );
+
+		return $this;
+	}
+
+	/**
 	 * Applies the currency prefix/suffix to the amount.
 	 *
 	 * @since 3.0
@@ -228,5 +262,4 @@ class Money_Formatter {
 
 		return $formatted;
 	}
-
 }

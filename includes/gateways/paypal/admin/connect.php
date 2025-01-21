@@ -899,6 +899,8 @@ function get_merchant_status( $merchant_id, $nonce = '' ) {
 		return $response;
 	}
 
+	$response = (array) $response;
+
 	if ( ! empty( $response['error'] ) ) {
 		$error_message = $response['error'];
 	} elseif ( ! empty( $response['message'] ) ) {

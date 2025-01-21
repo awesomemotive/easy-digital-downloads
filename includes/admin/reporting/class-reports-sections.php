@@ -43,7 +43,6 @@ class Reports_Sections extends Sections {
 				<div class="section-wrap">
 					<?php echo $this->get_all_section_contents(); ?>
 				</div>
-				<br class="clear">
 			</div>
 		</div>
 		<?php

@@ -52,6 +52,7 @@ class Checkbox extends Base {
 			}
 			// Checked could mean 'on' or 1 or true, so sanitize it for checked().
 			checked( true, ! empty( $this->args['current'] ) );
+			echo $this->get_data_elements();
 			?>
 		/>
 		<?php

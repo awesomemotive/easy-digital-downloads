@@ -128,14 +128,12 @@ function edd_get_purchase_link( $args = array() ) {
 		$price_id            = $args['price_id'];
 		$prices              = $download->prices;
 		$options['price_id'] = $args['price_id'];
-		$found_price         = isset( $prices[$price_id] ) ? $prices[$price_id]['amount'] : false;
-
+		$found_price         = isset( $prices[ $price_id ] ) ? $prices[ $price_id ]['amount'] : false;
 		$data_price_value    = $found_price;
 
 		if ( $show_price ) {
 			$price = $found_price;
 		}
-
 	} elseif ( ! $variable_pricing ) {
 
 		$data_price_value = $download->price;
@@ -143,11 +141,9 @@ function edd_get_purchase_link( $args = array() ) {
 		if ( $show_price ) {
 			$price = $download->price;
 		}
-
 	}
 
-	$data_price  = 'data-price="' . $data_price_value . '"';
-
+	$data_price  = 'data-price="' . edd_format_amount( $data_price_value, true, '', 'data' ) . '"';
 	$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
 
 	if ( false !== $price ) {
@@ -157,7 +153,6 @@ function edd_get_purchase_link( $args = array() ) {
 		} else {
 			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
-
 	}
 
 	$button_display   = '';
