@@ -170,7 +170,7 @@ class Form {
 			 *
 			 * We do this after we check for an existing intent ID, because the mandate data will change depending on the 'timestamp'.
 			 */
-			if ( 'card' === $payment_method['type'] && true === $this->cart_contains_subscription() ) {
+			if ( $this->is_mandate_required( $payment_method ) ) {
 				require_once EDDS_PLUGIN_DIR . 'includes/utils/class-edd-stripe-mandates.php';
 				$mandates = new \EDD_Stripe_Mandates( $this->purchase_data, $intent_type );
 
@@ -442,9 +442,9 @@ class Form {
 	private function get_intent_args( $payment_method ) {
 		$customer = $this->get_customer();
 
-		return array(
-			'customer'                     => $customer->id,
-			'metadata'                     => array(
+		$intent_args = array(
+			'customer'                  => $customer->id,
+			'metadata'                  => array(
 				'email'                => esc_html( $this->purchase_data['user_info']['email'] ),
 				'edd_payment_subtotal' => esc_html( $this->purchase_data['subtotal'] ),
 				'edd_payment_discount' => esc_html( $this->purchase_data['discount'] ),
@@ -455,11 +455,18 @@ class Form {
 				'edd_payment_items'    => esc_html( implode( ', ', $this->get_payment_items() ) ),
 				'zero_decimal_amount'  => $this->get_amount(),
 			),
-			'payment_method'               => sanitize_text_field( $payment_method['id'] ),
-			'automatic_payment_methods'    => array( 'enabled' => true ),
-			'description'                  => edds_get_payment_description( $this->purchase_data['cart_details'] ),
-			'payment_method_configuration' => $this->get_payment_method_configuration(),
+			'payment_method'            => sanitize_text_field( $payment_method['id'] ),
+			'automatic_payment_methods' => array( 'enabled' => true ),
+			'description'               => edds_get_payment_description( $this->purchase_data['cart_details'] ),
+
 		);
+
+		$payment_method_configuration = $this->get_payment_method_configuration();
+		if ( ! empty( $payment_method_configuration ) ) {
+			$intent_args['payment_method_configuration'] = $payment_method_configuration;
+		}
+
+		return $intent_args;
 	}
 
 	/**
@@ -613,5 +620,23 @@ class Form {
 		}
 
 		return \EDD\Gateways\Stripe\PaymentMethods::get_configuration_id( $type );
+	}
+
+	/**
+	 * Checks if a mandate is required for the Stripe checkout form.
+	 *
+	 * @since 3.3.6
+	 * @param array $payment_method The payment method.
+	 * @return bool Returns true if a mandate is required, false otherwise.
+	 */
+	private function is_mandate_required( $payment_method ) {
+		/**
+		 * Filters whether a mandate is required for the Stripe checkout form.
+		 *
+		 * @since 3.3.6
+		 * @param bool  $mandate_required Whether a mandate is required.
+		 * @param array $payment_method   The payment method.
+		 */
+		return apply_filters( 'edds_mandate_required', 'card' === $payment_method['type'], $payment_method );
 	}
 }

@@ -36,6 +36,7 @@ class Upload extends Base {
 				id="<?php echo esc_attr( $this->get_id() ); ?>"
 				name="<?php echo esc_attr( $this->args['name'] ); ?>"
 				value="<?php echo esc_url( $this->args['value'] ); ?>"
+				<?php echo $this->get_data_elements(); ?>
 			>
 			<button
 				data-input="<?php echo esc_attr( $this->get_data_input() ); ?>"

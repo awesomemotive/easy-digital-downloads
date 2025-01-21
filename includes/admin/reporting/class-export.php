@@ -31,6 +31,13 @@ class EDD_Export {
 	public $export_type = 'default';
 
 	/**
+	 * The message to display when the export is complete.
+	 *
+	 * @var string
+	 */
+	public $message;
+
+	/**
 	 * Can we export?
 	 *
 	 * @since 1.4.4
@@ -165,7 +172,7 @@ class EDD_Export {
 						? ''
 						: ',';
 
-					$i++;
+					++$i;
 				}
 			}
 			echo "\r\n";

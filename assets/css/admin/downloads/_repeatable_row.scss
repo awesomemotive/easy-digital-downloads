@@ -1,3 +1,16 @@
+.edd-repeatables-wrap {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.edd_repeatable_row {
+	border: 1px solid $wp-border;
+	border-radius: 3px;
+	margin: 0;
+	padding: 0;
+}
+
 .edd_repeatable_row.ui-sortable-placeholder {
 	line-height: 0;
 	padding: 0;
@@ -20,11 +33,6 @@
 	width: 100%;
 }
 
-.edd_variable_prices_wrapper:not(:first-child),
-.edd_repeatable_upload_wrapper:not(:first-child) {
-	margin-top: 12px;
-}
-
 .edd_repeatable_row.ui-sortable-helper .edd-repeatable-row-actions .edd-remove-row {
 	display: none;
 }
@@ -39,17 +47,14 @@
 	}
 }
 
-.edd-repeatable-row-header,
-.edd-bundle-products-header {
+.edd-repeatable-row-header {
 	clear: both;
 	background: $wp-gray-0;
-	border: 1px solid $wp-border;
+	border-bottom: 1px solid $wp-border;
 	display: flex;
 	justify-content: space-between;
-}
-
-.edd-repeatable-row-header {
-	cursor: move;
+	align-items: center;
+	padding: 0 8px;
 }
 
 .edd_repeatable_row:hover .edd-repeatable-row-header,
@@ -70,21 +75,21 @@
 	clear: both;
 }
 
-.edd-repeatable-row-title,
 .edd-bundle-products-header {
-	font-weight: 600;
+	margin-top: 0;
 }
 
-.edd-repeatable-row-title,
-.edd-repeatable-row-actions,
-.edd-bundle-products-header {
-	padding: 8px;
-	box-sizing: border-box;
+.edd-repeatable-row-title {
+	font-weight: 600;
+	padding: 9px 0;
+	margin-right: auto;
 }
 
 .edd-repeatable-row-actions {
-	flex-grow: 1;
-	text-align: right;
+	display: flex;
+	margin-left: auto;
+	align-items: center;
+	gap: 8px;
 }
 
 .edd-repeatable-row-actions .edd-remove-row,
@@ -96,23 +101,18 @@
 .edd-repeatable-row-standard-fields,
 .edd-bundled-product-row {
 	padding: 8px;
-	border-width: 0 1px 1px;
-	border-style: solid;
-	border-color: $wp-border;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 18px;
-}
 
-/* @todo: remove these when .edd-form-row has been fully implemented */
-.edd-repeatable-row-standard-fields .edd-form-group,
-.edd-bundled-product-row .edd-form-group {
-	margin-bottom: 0;
-	display: inline-flex;
-	flex-direction: column;
-	flex-grow: 1;
-	justify-content: space-between;
+	.edd-form-group {
+		margin-bottom: 0;
+		display: inline-flex;
+		flex-direction: column;
+		flex-grow: 1;
+		justify-content: space-between;
+	}
 }
 
 .edd-repeatable-row-setting-label .edd-help-tip {
@@ -154,7 +154,6 @@
 
 @media screen and (max-width: $break-mobile) {
 
-	.edd-bundle-products-header,
 	.edd-repeatable-row-header,
 	.edd-repeatable-row-standard-fields,
 	.edd-bundled-product-row {

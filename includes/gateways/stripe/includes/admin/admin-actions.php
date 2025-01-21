@@ -8,19 +8,22 @@
  */
 function edds_admin_messages() {
 
-	if( isset( $_GET['edd_gateway_connect_error'], $_GET['edd-message'] ) ) {
+	if ( isset( $_GET['edd_gateway_connect_error'], $_GET['edd-message'] ) ) {
 		/* translators: %1$s Stripe Connect error message. %2$s Retry URL. */
 		echo '<div class="notice notice-error"><p>' . sprintf( __( 'There was an error connecting your Stripe account. Message: %1$s. Please <a href="%2$s">try again</a>.', 'easy-digital-downloads' ), esc_html( urldecode( $_GET['edd-message'] ) ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p></div>';
-		add_filter( 'wp_parse_str', function( $ar ) {
-			if( isset( $ar['edd_gateway_connect_error'] ) ) {
-				unset( $ar['edd_gateway_connect_error'] );
-			}
+		add_filter(
+			'wp_parse_str',
+			function ( $ar ) {
+				if ( isset( $ar['edd_gateway_connect_error'] ) ) {
+					unset( $ar['edd_gateway_connect_error'] );
+				}
 
-			if( isset( $ar['edd-message'] ) ) {
-				unset( $ar['edd-message'] );
+				if ( isset( $ar['edd-message'] ) ) {
+					unset( $ar['edd-message'] );
+				}
+				return $ar;
 			}
-			return $ar;
-		});
+		);
 	}
 }
 add_action( 'admin_notices', 'edds_admin_messages' );
@@ -33,18 +36,17 @@ add_action( 'admin_notices', 'edds_admin_messages' );
  * @return void
  */
 function edds_show_existing_card_meta( $payment_id ) {
-	$payment = new EDD_Payment( $payment_id );
-	$existing_card = $payment->get_meta( '_edds_used_existing_card' );
-	if ( ! empty( $existing_card ) ) {
-		?>
-		<div class="edd-order-stripe-existing-card edd-admin-box-inside">
-			<p>
-				<span class="label"><?php _e( 'Used Existing Card:', 'easy-digital-downloads' ); ?></span>&nbsp;
-				<span><?php _e( 'Yes', 'easy-digital-downloads' ); ?></span>
-			</p>
-		</div>
-		<?php
+	if ( empty( edd_get_order_meta( $payment_id, '_edds_used_existing_card', true ) ) ) {
+		return;
 	}
+	?>
+	<div class="edd-order-stripe-existing-card edd-admin-box-inside">
+		<p>
+			<span class="label"><?php esc_html_e( 'Used Existing Card:', 'easy-digital-downloads' ); ?></span>&nbsp;
+			<span><?php esc_html_e( 'Yes', 'easy-digital-downloads' ); ?></span>
+		</p>
+	</div>
+	<?php
 }
 add_action( 'edd_view_order_details_payment_meta_after', 'edds_show_existing_card_meta', 10, 1 );
 
@@ -56,11 +58,11 @@ add_action( 'edd_view_order_details_payment_meta_after', 'edds_show_existing_car
 function edds_stripe_connect_test_mode_toggle_redirect() {
 
 	// Check for our marker
-	if( ! isset( $_POST['edd-test-mode-toggled'] ) ) {
+	if ( ! isset( $_POST['edd-test-mode-toggled'] ) ) {
 		return;
 	}
 
-	if( ! current_user_can( 'manage_shop_settings' ) ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
 
@@ -73,18 +75,20 @@ function edds_stripe_connect_test_mode_toggle_redirect() {
 	 * add query args to redirect to the Stripe settings page
 	 * and to show a notice about connecting with Stripe.
 	 */
-	add_filter( 'wp_redirect', function( $location ) {
-		if( false !== strpos( $location, 'page=edd-settings' ) && false !== strpos( $location, 'settings-updated=true' ) ) {
-			$location = add_query_arg(
-				array(
-					'edd-message' => 'connect-to-stripe',
-				),
-				$location
-			);
+	add_filter(
+		'wp_redirect',
+		function ( $location ) {
+			if ( false !== strpos( $location, 'page=edd-settings' ) && false !== strpos( $location, 'settings-updated=true' ) ) {
+				$location = add_query_arg(
+					array(
+						'edd-message' => 'connect-to-stripe',
+					),
+					$location
+				);
+			}
+			return $location;
 		}
-		return $location;
-	} );
-
+	);
 }
 add_action( 'admin_init', 'edds_stripe_connect_test_mode_toggle_redirect' );
 
@@ -160,7 +164,7 @@ function edds_process_settings_flags() {
 		return;
 	}
 
-	switch( $flag ) {
+	switch ( $flag ) {
 		case 'disable-card-elements':
 			delete_option( '_edds_legacy_elements_enabled' );
 			break;
@@ -174,9 +178,9 @@ function edds_process_settings_flags() {
 	wp_safe_redirect(
 		edd_get_admin_url(
 			array(
-				'page'        => 'edd-settings',
-				'tab'         => 'gateways',
-				'section'     => 'edd-stripe',
+				'page'    => 'edd-settings',
+				'tab'     => 'gateways',
+				'section' => 'edd-stripe',
 			)
 		)
 	);

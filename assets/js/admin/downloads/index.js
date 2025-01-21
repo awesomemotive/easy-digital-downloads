@@ -4,6 +4,11 @@
 import { getChosenVars } from 'utils/chosen.js';
 import { edd_attach_tooltips } from 'admin/components/tooltips';
 import './bulk-edit.js';
+import './pricing.js';
+import './files.js';
+import  './copy.js';
+import './requirements.js';
+import './move.js';
 
 /**
  * Download Configuration Metabox
@@ -13,8 +18,6 @@ var EDD_Download_Configuration = {
 		this.add();
 		this.move();
 		this.remove();
-		this.type();
-		this.prices();
 		this.files();
 		this.updatePrices();
 		this.showAdvanced();
@@ -83,10 +86,6 @@ var EDD_Download_Configuration = {
 			$( this ).text( parseInt( key ) );
 		} );
 
-		clone.find( '.edd_repeatable_default_input' ).each( function() {
-			$( this ).val( parseInt( key ) ).removeAttr( 'checked' );
-		} );
-
 		clone.find( '.edd_repeatable_condition_field' ).each( function() {
 			$( this ).find( 'option:eq(0)' ).prop( 'selected', 'selected' );
 		} );
@@ -102,6 +101,7 @@ var EDD_Download_Configuration = {
 		clone.find( '.search-choice' ).remove();
 		clone.find( '.chosen-container' ).remove();
 		edd_attach_tooltips( clone.find( '.edd-help-tip' ) );
+		EDD_Download_Configuration.triggerRowChange( clone );
 
 		return clone;
 	},
@@ -118,6 +118,7 @@ var EDD_Download_Configuration = {
 
 			// Setup chosen fields again if they exist
 			EDD_Download_Configuration.initChosen( clone );
+			EDD_Download_Configuration.triggerRowChange( clone );
 		} );
 	},
 
@@ -141,6 +142,7 @@ var EDD_Download_Configuration = {
 					} );
 					count++;
 				} );
+				EDD_Download_Configuration.triggerRowChange( $( this ) );
 			},
 			start: function( e, ui ) {
 				ui.placeholder.height( ui.item.height() - 2 );
@@ -202,72 +204,8 @@ var EDD_Download_Configuration = {
 					$( this ).attr( 'name', name ).attr( 'id', name );
 				} );
 			} );
-		} );
-	},
 
-	type: function() {
-		const product_files = $( '#edd_product_files' );
-		setTimeout( function () {
-			if ( !edd_vars.download_has_files && 'service' === $( '#_edd_product_type' ).val() ) {
-				product_files.hide();
-			}
-		}, 100 );
-		$( document.body ).on( 'change', '#_edd_product_type', function( e ) {
-			const product_type = $( this ).val(),
-				edd_download_limit_wrap = $( '#edd_download_limit_wrap' );
-
-			product_files.addClass( 'ajax--loading' );
-			let data = {
-				action: 'edd_swap_download_type',
-				product_type: product_type,
-				post_id: edd_vars.post_id,
-			}
-			$.post( ajaxurl, data, function ( response ) {
-				if ( response.success ) {
-					product_files.find( '.inside' ).empty().append( response.data.html );
-					EDD_Download_Configuration.initChosen( product_files );
-				}
-				product_files.removeClass( 'ajax--loading' );
-			} );
-
-			if ( 'bundle' === product_type ) {
-				product_files.show();
-				edd_download_limit_wrap.hide();
-			} else if ( 'service' === $( this ).val() ) {
-				const has_files = product_files.find( '.edd_upload_field' ).toArray().some( el => !!el.value );
-				if ( !has_files ) {
-					// Hide the product files after a brief timeout to override All Access.
-					setTimeout( function () {
-						product_files.hide();
-					}, 100 );
-					edd_download_limit_wrap.hide();
-				} else {
-					product_files.show();
-					edd_download_limit_wrap.show();
-				}
-			} else {
-				product_files.show();
-				edd_download_limit_wrap.show();
-			}
-		} );
-	},
-
-	prices: function() {
-		$( document.body ).on( 'change', '#edd_variable_pricing', function( e ) {
-			const checked = $( this ).is( ':checked' ),
-				single = $( '#edd_regular_price_field' ),
-				variable = $( '#edd_variable_price_fields, .edd_repeatable_table .pricing' ),
-				bundleRow = $( '.edd-bundled-product-row, .edd-repeatable-row-standard-fields' );
-
-			if ( checked ) {
-				single.hide();
-				variable.show();
-				bundleRow.addClass( 'has-variable-pricing' );
-			} else {
-				single.show();
-				variable.hide();
-				bundleRow.removeClass( 'has-variable-pricing' );
-			}
+			EDD_Download_Configuration.triggerRowChange( focusElement );
 		} );
 	},
 
@@ -436,6 +374,11 @@ var EDD_Download_Configuration = {
 		} );
 		element.find( '.edd-select-chosen' ).css( 'width', '100%' );
 		element.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
+	},
+
+	triggerRowChange: function ( el ) {
+		// trigger native custom event as jQuery and Vanilla JS both can listen to it.
+		document.dispatchEvent( new CustomEvent( 'edd_repeatable_row_change', { detail: { row: el } } ) );
 	}
 };
 

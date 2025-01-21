@@ -6,26 +6,37 @@ jQuery( document ).ready( function( $ ) {
 		return;
 	}
 
-	// Hides the section content.
-	$( `${ sectionSelector } .section-content` ).hide();
-
 	// Handle the hash existing on page load.
 	const hash = window.location.hash,
 		defaultSectionHash = $( `${ sectionSelector } .section-nav li:first-child a` ).attr( 'href' );
 
-	// When the page loads, make sure a section is selected.
-	processSectionChange( hash );
+	if ( hash.length ) {
+		// Hides the section content.
+		$( `${ sectionSelector } .section-content` ).hide();
+		// When the page loads, make sure a section is selected.
+		processSectionChange( hash );
+	}
 
 	// When a section nav item is clicked.
-	$( `${ sectionSelector } .section-nav li a` ).on( 'click',
+	$( 'body' ).on( 'click',
+		`${ sectionSelector } .section-nav li a`,
 		function( e ) {
 			// Prevent the default browser action when a link is clicked.
 			e.preventDefault();
+
+			// Don't do anything if the click is on the actions handle.
+			if ( e.target.classList.contains( 'edd__handle-actions' ) || e.target.closest( '.edd__handle-actions' ) ) {
+				return;
+			}
 
 			let href = $( this ).attr( 'href' );
 
 			processSectionChange( href );
 
+			// Do not add the hash to the URL if we are in the download editor.
+			if ( $( '.edd-download-editor__sections' ).length ) {
+				return;
+			}
 			// Add the current "link" to the page URL
 			window.history.pushState( 'object or string', '', href );
 		}

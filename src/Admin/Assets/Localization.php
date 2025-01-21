@@ -101,10 +101,12 @@ class Localization {
 			'wait'                    => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 			'test_email_save_changes' => __( 'You must save your changes to send the test email.', 'easy-digital-downloads' ),
 			'no_letters_or_numbers'   => __( 'Either Letters or Numbers should be selected.', 'easy-digital-downloads' ),
+			'delete_price_id'         => __( 'Deleting a price ID with existing orders can cause issues with your store. Are you sure you want to delete this?', 'easy-digital-downloads' ),
 
 			// Diaglog buttons.
 			'confirm_dialog_text'     => __( 'Confirm', 'easy-digital-downloads' ),
 			'cancel_dialog_text'      => __( 'Cancel', 'easy-digital-downloads' ),
+			'copy_success'            => __( 'Copied', 'easy-digital-downloads' ),
 
 			// Features.
 			'quantities_enabled'      => edd_item_quantities_enabled(),

@@ -4,14 +4,14 @@
  *
  * This class handles batch processing of recounting a single customer's stats
  *
- * @subpackage  Admin/Tools/EDD_Tools_Recount_Customer_Stats
- * @copyright   Copyright (c) 2015, Chris Klosowski
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.5
+ * @package   EDD\Admin\Tools\EDD_Tools_Recount_Customer_Stats
+ * @copyright Copyright (c) 2015, Sandhills Development, LLC
+ * @license   https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since     2.5
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * EDD_Tools_Recount_Stats Class
@@ -22,6 +22,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 2.5
 	 */
@@ -29,6 +30,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Allows for a non-download batch processing to be run.
+	 *
 	 * @since  2.5
 	 * @var boolean
 	 */
@@ -36,10 +38,18 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Sets the number of items to pull on each step
+	 *
 	 * @since  2.5
 	 * @var integer
 	 */
 	public $per_step = 10;
+
+	/**
+	 * The customer ID to recount stats for.
+	 *
+	 * @var int
+	 */
+	private $customer_id;
 
 	/**
 	 * Get the Export Data
@@ -51,7 +61,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 */
 	public function get_data() {
 
-		$customer = new EDD_Customer( $this->customer_id );
+		$customer = edd_get_customer( $this->customer_id );
 		if ( $customer ) {
 			$customer->recalculate_stats();
 			$this->result_data = array(
@@ -62,7 +72,6 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -96,7 +105,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * Set the properties specific to the payments export
 	 *
 	 * @since 2.5
-	 * @param array $request The Form Data passed into the batch processing
+	 * @param array $request The Form Data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {
 		$this->customer_id = isset( $request['customer_id'] ) ? sanitize_text_field( $request['customer_id'] ) : false;
@@ -126,6 +135,11 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		return false;
 	}
 
+	/**
+	 * Set the headers for the export.
+	 *
+	 * @return void
+	 */
 	public function headers() {
 		edd_set_time_limit();
 	}
@@ -137,8 +151,6 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * @return void
 	 */
 	public function export() {
-
-		// Set headers
 		$this->headers();
 
 		edd_die();

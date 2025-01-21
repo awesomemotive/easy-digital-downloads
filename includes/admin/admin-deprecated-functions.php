@@ -31,7 +31,18 @@ function edd_tools_banned_emails_display() {
 		<div class="inside">
 			<p><?php esc_html_e( 'Emails placed in the box below will not be allowed to make purchases.', 'easy-digital-downloads' ); ?></p>
 			<form method="post"
-					action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'general' ) ) ); ?>">
+					action="
+					<?php
+					echo esc_url(
+						edd_get_admin_url(
+							array(
+								'page' => 'edd-tools',
+								'tab'  => 'general',
+							)
+						)
+					);
+					?>
+							">
 				<p>
 					<textarea name="banned_emails" rows="10"
 								class="large-text"><?php echo esc_textarea( implode( "\n", edd_get_banned_emails() ) ); ?></textarea>
@@ -88,11 +99,14 @@ function edd_add_ons_page() {
 	_edd_deprecated_function( __FUNCTION__, '3.1.1' );
 
 	// Filter the add-ons tabs.
-	$add_ons_tabs = apply_filters( 'edd_add_ons_tabs', array(
-		'popular' => __( 'Popular', 'easy-digital-downloads' ),
-		'new'     => __( 'New',     'easy-digital-downloads' ),
-		'all'     => __( 'All',     'easy-digital-downloads' )
-	) );
+	$add_ons_tabs = apply_filters(
+		'edd_add_ons_tabs',
+		array(
+			'popular' => __( 'Popular', 'easy-digital-downloads' ),
+			'new'     => __( 'New', 'easy-digital-downloads' ),
+			'all'     => __( 'All', 'easy-digital-downloads' ),
+		)
+	);
 
 	// Active tab.
 	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $add_ons_tabs )
@@ -115,12 +129,14 @@ function edd_add_ons_page() {
 				)
 			);
 
-		// All other tabs besides "All".
+			// All other tabs besides "All".
 		} else {
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'tab'              => sanitize_key( $tab_id ),
-			) );
+			$tab_url = add_query_arg(
+				array(
+					'settings-updated' => false,
+					'tab'              => sanitize_key( $tab_id ),
+				)
+			);
 		}
 
 		// Active?
@@ -155,7 +171,8 @@ function edd_add_ons_page() {
 	}
 
 	// Start a buffer.
-	ob_start(); ?>
+	ob_start();
+	?>
 
 	<div class="wrap" id="edd-add-ons">
 		<h1>
@@ -237,7 +254,7 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 		if ( empty( $feed ) || is_wp_error( $feed ) ) {
 			$cache = '<div class="error"><p>' . __( 'These extensions could not be retrieved from the server. Please try again later.', 'easy-digital-downloads' ) . '</div>';
 
-		// Cache the results.
+			// Cache the results.
 		} elseif ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 			$cache = wp_remote_retrieve_body( $feed );
 			set_transient( $trans_key, $cache, HOUR_IN_SECONDS );
@@ -261,9 +278,9 @@ function edd_add_extentions_link() {
 	global $submenu, $edd_add_ons_page;
 
 	$edd_add_ons_page = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
-	$pass_manager = new \EDD\Admin\Pass_Manager();
+	$pass_manager     = new \EDD\Admin\Pass_Manager();
 	if ( ! $pass_manager->has_pass() ) {
-		$submenu[ 'edit.php?post_type=download' ][] = array(
+		$submenu['edit.php?post_type=download'][] = array(
 			'<span class="edd-menu-highlight">' . esc_html__( 'Upgrade to Pro', 'easy-digital-downloads' ) . '</span>',
 			'manage_shop_settings',
 			edd_link_helper(
@@ -272,14 +289,17 @@ function edd_add_extentions_link() {
 					'utm_medium'  => 'admin-menu',
 					'utm_content' => 'upgrade-to-pro',
 				)
-			)
+			),
 		);
 
-		add_action( 'admin_print_styles', function() {
-			?>
+		add_action(
+			'admin_print_styles',
+			function () {
+				?>
 			<style>#menu-posts-download li:last-child {background-color: #1da867;}#menu-posts-download li:last-child a,#menu-posts-download li:last-child a:hover{color: #FFFFFF !important;font-weight: 600;}</style>
-			<?php
-		} );
+				<?php
+			}
+		);
 	}
 }
 
@@ -313,7 +333,7 @@ function edd_tools_sysinfo_display() {
 					<?php
 					wp_nonce_field( 'edd_download_system_info', 'edd_system_info' );
 					submit_button( __( 'Download System Info File', 'easy-digital-downloads' ), 'primary', 'edd-download-sysinfo', false );
-					submit_button( __( 'Copy to Clipboard',         'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-system-info', false, array( 'onclick' => "this.form['edd-sysinfo'].focus();this.form['edd-sysinfo'].select();document.execCommand('copy');return false;" ) );
+					submit_button( __( 'Copy to Clipboard', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-system-info', false, array( 'onclick' => "this.form['edd-sysinfo'].focus();this.form['edd-sysinfo'].select();document.execCommand('copy');return false;" ) );
 					?>
 				</p>
 			</form>
@@ -355,7 +375,7 @@ function edd_tools_sysinfo_get() {
 	// Try to identify the hosting provider
 	$host = edd_get_host();
 
-	$return  = '### Begin System Info (Generated ' . date( 'Y-m-d H:i:s' ) . ') ###' . "\n\n";
+	$return = '### Begin System Info (Generated ' . date( 'Y-m-d H:i:s' ) . ') ###' . "\n\n";
 
 	// Start with the basics...
 	$return .= '-- Site Info' . "\n\n";
@@ -394,7 +414,7 @@ function edd_tools_sysinfo_get() {
 	}
 
 	$customized_template_files = edd_get_theme_edd_templates();
-	$return .= "\n" . '-- Customized Templates' . "\n\n";
+	$return                   .= "\n" . '-- Customized Templates' . "\n\n";
 	if ( empty( $customized_template_files ) ) {
 		$return .= 'No custom templates found.' . "\n\n";
 	} else {
@@ -441,7 +461,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Remote Post:              ' . $WP_REMOTE_POST . "\n";
 	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
 	// Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
-	//$return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
+	// $return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
 	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n";
 	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
@@ -549,7 +569,6 @@ function edd_tools_sysinfo_get() {
 
 	$return = apply_filters( 'edd_sysinfo_after_edd_gateways', $return );
 
-
 	// EDD Taxes
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
@@ -618,7 +637,7 @@ function edd_tools_sysinfo_get() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update     = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$plugin_url = '';
 		if ( ! empty( $plugin['PluginURI'] ) ) {
 			$plugin_url = $plugin['PluginURI'];
@@ -643,7 +662,7 @@ function edd_tools_sysinfo_get() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update     = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$plugin_url = '';
 		if ( ! empty( $plugin['PluginURI'] ) ) {
 			$plugin_url = $plugin['PluginURI'];
@@ -674,8 +693,8 @@ function edd_tools_sysinfo_get() {
 				continue;
 			}
 
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-			$plugin = get_plugin_data( $plugin_path );
+			$update     = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+			$plugin     = get_plugin_data( $plugin_path );
 			$plugin_url = '';
 			if ( ! empty( $plugin['PluginURI'] ) ) {
 				$plugin_url = $plugin['PluginURI'];
@@ -818,14 +837,16 @@ function edd_remove_refunded_sale_logs() {
 
 	edd_set_time_limit();
 
-	$step    = isset( $_GET['step']  ) ? absint( $_GET['step']  ) : 1;
-	$total   = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : edd_count_payments()->refunded;
+	$step  = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : edd_count_payments()->refunded;
 
-	$refunds = edd_get_payments( array(
-		'status' => 'refunded',
-		'number' => 20,
-		'page'   => $step
-	) );
+	$refunds = edd_get_payments(
+		array(
+			'status' => 'refunded',
+			'number' => 20,
+			'page'   => $step,
+		)
+	);
 
 	if ( ! empty( $refunds ) ) {
 		$edd_logs = EDD()->debug_log;
@@ -839,24 +860,27 @@ function edd_remove_refunded_sale_logs() {
 				array(
 					array(
 						'key'   => '_edd_log_payment_id',
-						'value' => $refund->ID
-					)
+						'value' => $refund->ID,
+					),
 				)
 			);
 		}
 
-		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'remove_refunded_sale_logs',
-			'step'        => urlencode( $step ),
-			'total'       => urlencode( $total ),
-			'_wpnonce'    => wp_create_nonce( 'edd-upgrade' ),
-		), admin_url( 'index.php' ) );
+		++$step;
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'remove_refunded_sale_logs',
+				'step'        => urlencode( $step ),
+				'total'       => urlencode( $total ),
+				'_wpnonce'    => wp_create_nonce( 'edd-upgrade' ),
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 
-	// No more refunded payments found, finish up
+		// No more refunded payments found, finish up
 	} else {
 		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
 		delete_option( 'edd_doing_upgrade' );
@@ -921,7 +945,21 @@ function edd_email_template_preview( $email ) {
 	?>
 	<div class="edd-email-editor-actions">
 		<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank"><?php esc_html_e( 'Preview Purchase Receipt', 'easy-digital-downloads' ); ?></a>
-		<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email', 'email' => 'order_receipt' ) ), 'edd-test-email' ) ); ?>" class="button-secondary"><?php esc_html_e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
+		<a href="
+		<?php
+		echo esc_url(
+			wp_nonce_url(
+				add_query_arg(
+					array(
+						'edd_action' => 'send_test_email',
+						'email'      => 'order_receipt',
+					)
+				),
+				'edd-test-email'
+			)
+		);
+		?>
+					" class="button-secondary"><?php esc_html_e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
 	</div>
 	<?php
 }
@@ -1152,7 +1190,7 @@ function edd_settings_sanitize_gateways( $input = array() ) {
 	if ( empty( $input['gateways'] ) || '-1' == $input['gateways'] ) {
 		unset( $input['default_gateway'] );
 
-	// Current gateway is no longer enabled, so
+		// Current gateway is no longer enabled, so
 	} elseif ( ! array_key_exists( $input['default_gateway'], $input['gateways'] ) ) {
 		$enabled_gateways = $input['gateways'];
 
@@ -1210,7 +1248,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			: sanitize_text_field( $tax_rate['country'] );
 
 		if ( empty( $name ) ) {
-			$scope  = 'global';
+			$scope = 'global';
 		}
 
 		$adjustment_data = array(
@@ -1242,3 +1280,397 @@ function edd_settings_sanitize_taxes( $input ) {
 
 	return $input;
 }
+
+/**
+ * Price Section
+ *
+ * If variable pricing is not enabled, simply output a single input box.
+ *
+ * If variable pricing is enabled, outputs a table of all current prices.
+ * Extensions can add column heads to the table via the `edd_download_file_table_head`
+ * hook, and actual columns via `edd_download_file_table_row`
+ *
+ * @since 1.0
+ * @deprecated 3.3.6
+ *
+ * @see edd_render_price_row()
+ *
+ * @param int $post_id Download (Post) ID.
+ */
+function edd_render_price_field( $post_id ) {
+	$metabox = new EDD\Admin\Downloads\Metabox();
+	$metabox->render_price_fields( $post_id );
+}
+
+/**
+ * Register all the meta boxes for the Download custom post type
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_add_download_meta_box( $post_type = '', $post = null ) {
+	$metaboxes = new EDD\Admin\Downloads\Metaboxes();
+	$metaboxes->add_meta_boxes( $post_type, $post );
+}
+
+/**
+ * Download Metabox
+ *
+ * Extensions (as well as the core plugin) can add items to the main download
+ * configuration metabox via the `edd_meta_box_fields` action.
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_render_download_meta_box() {
+	$post_id = get_the_ID();
+
+	/*
+	 * Output the price fields
+	 * @since 1.9
+	 */
+	do_action( 'edd_meta_box_price_fields', $post_id );
+
+	/*
+	 * Output the price fields
+	 *
+	 * Left for backwards compatibility
+	 *
+	 */
+	do_action( 'edd_meta_box_fields', $post_id );
+
+	wp_nonce_field( basename( __FILE__ ), 'edd_download_meta_box_nonce' );
+}
+
+/**
+ * Download Files Metabox
+ *
+ * @since 1.9
+ * @return void
+ */
+function edd_render_files_meta_box() {
+	/*
+	 * Output the files fields
+	 * @since 1.9
+	 */
+	do_action( 'edd_meta_box_files_fields', get_the_ID(), '' );
+}
+
+/**
+ * Download Settings Metabox
+ *
+ * @since 1.9
+ * @return void
+ */
+function edd_render_settings_meta_box() {
+	/*
+	 * Output the files fields
+	 * @since 1.9
+	 */
+	do_action( 'edd_meta_box_settings_fields', get_the_ID() );
+}
+
+/**
+ * Product Notes Meta Box
+ *
+ * Renders the Product Notes meta box
+ *
+ * @since 1.2.1
+ *
+ * @return void
+ */
+function edd_render_product_notes_meta_box() {
+	do_action( 'edd_product_notes_meta_box_fields', get_the_ID() );
+}
+
+/**
+ * Render Stats Meta Box
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_render_stats_meta_box() {
+	$post_id = get_the_ID();
+
+	if ( ! current_user_can( 'view_product_stats', $post_id ) ) {
+		return;
+	}
+
+	$earnings = edd_get_download_earnings_stats( $post_id );
+	$sales    = edd_get_download_sales_stats( $post_id );
+
+	$sales_url = add_query_arg(
+		array(
+			'page'       => 'edd-payment-history',
+			'product-id' => urlencode( $post_id ),
+		),
+		edd_get_admin_base_url()
+	);
+
+	$earnings_report_url = edd_get_admin_url(
+		array(
+			'page'     => 'edd-reports',
+			'view'     => 'downloads',
+			'products' => absint( $post_id ),
+		)
+	);
+	?>
+
+	<p class="product-sales-stats">
+		<span class="label"><?php esc_html_e( 'Net Sales:', 'easy-digital-downloads' ); ?></span>
+		<span><a href="<?php echo esc_url( $sales_url ); ?>"><?php echo esc_html( $sales ); ?></a></span>
+	</p>
+
+	<p class="product-earnings-stats">
+		<span class="label"><?php esc_html_e( 'Net Revenue:', 'easy-digital-downloads' ); ?></span>
+		<span>
+			<a href="<?php echo esc_url( $earnings_report_url ); ?>">
+				<?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?>
+			</a>
+		</span>
+	</p>
+
+	<hr />
+
+	<p class="file-download-log">
+		<?php
+		$url = edd_get_admin_url(
+			array(
+				'page'     => 'edd-tools',
+				'view'     => 'file_downloads',
+				'tab'      => 'logs',
+				'download' => absint( $post_id ),
+			)
+		);
+		?>
+		<span>
+			<a href="<?php echo esc_url( $url ); ?>">
+				<?php esc_html_e( 'View File Download Log', 'easy-digital-downloads' ); ?>
+			</a>
+		</span>
+		<br/>
+	</p>
+	<?php
+	do_action( 'edd_stats_meta_box' );
+}
+
+/**
+ * Product type options
+ *
+ * @since       1.6
+ * @param int          $post_id  Download (Post) ID.
+ * @param EDD_Download $download Download object.
+ * @return      void
+ */
+function edd_render_product_type_field( $post_id = 0, $download = null ) {
+	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+
+	$types = edd_get_download_types();
+	$type  = $download ? $download->type : false;
+	ksort( $types );
+	?>
+	<div class="edd-form-group">
+		<label for="_edd_product_type" class="edd-form-group__label">
+			<?php
+			echo esc_html(
+				apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'easy-digital-downloads' ) )
+			);
+			?>
+		</label>
+		<div class="edd-form-group__control">
+			<?php
+			echo EDD()->html->select(
+				array(
+					'options'          => $types,
+					'name'             => '_edd_product_type',
+					'id'               => '_edd_product_type',
+					'selected'         => $type,
+					'show_option_all'  => false,
+					'show_option_none' => false,
+					'class'            => 'edd-form-group__input',
+				)
+			);
+			?>
+		</div>
+		<p class="edd-form-group__help description">
+			<?php esc_html_e( 'Sell this item as a single product with download files, or select a custom product type with different options, which may not necessarily include download files.', 'easy-digital-downloads' ); ?>
+		</p>
+	</div>
+	<?php
+}
+
+/**
+ * Individual Price Row
+ *
+ * Used to output a table row for each price associated with a download.
+ * Can be called directly, or attached to an action.
+ *
+ * @since 1.2.2
+ * @deprecated 3.3.6
+ *
+ * @param int   $key   The cart item key.
+ * @param array $args  Array of arguments for the price row.
+ * @param int   $post_id The ID of the download.
+ */
+function edd_render_price_row( $key, $args, $post_id, $index ) {
+	global $wp_filter;
+
+	if ( is_numeric( $post_id ) && ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+
+	if ( is_null( $post_id ) && ! current_user_can( 'edit_products' ) ) {
+		return;
+	}
+
+	$defaults = array(
+		'name'   => null,
+		'amount' => null,
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	$default_price_id     = edd_get_default_variable_price( $post_id );
+	$currency_position    = edd_get_option( 'currency_position', 'before' );
+	$custom_price_options = isset( $wp_filter['edd_download_price_option_row'] ) ? true : false;
+	?>
+	<div class="edd-repeatable-row-header edd-draghandle-anchor">
+		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
+			<?php
+			printf(
+				/* translators: %s: price ID. */
+				__( 'Price ID: %s', 'easy-digital-downloads' ),
+				'<span class="edd_price_id">' . esc_html( $key ) . '</span>'
+			);
+			?>
+			<input type="hidden" name="edd_variable_prices[<?php echo esc_attr( $key ); ?>][index]" class="edd_repeatable_index" value="<?php echo esc_attr( $index ); ?>"/>
+		</span>
+		<?php
+		$actions = array();
+		if ( $custom_price_options ) {
+			$actions['show_advanced'] = sprintf(
+				'<a href="#" class="toggle-custom-price-option-section">%s</a>',
+				__( 'Show advanced settings', 'easy-digital-downloads' )
+			);
+		}
+
+		$actions['remove'] = sprintf(
+			/* translators: %1$s is the remove link, %2$s is the screen reader text. */
+			'<a class="edd-remove-row edd-delete" data-type="price">%1$s<span class="screen-reader-text">%2$s</span></a>',
+			__( 'Remove', 'easy-digital-downloads' ),
+			sprintf(
+				/* translators: %s: price ID. */
+				__( 'Remove price option %s', 'easy-digital-downloads' ),
+				esc_html( $key )
+			)
+		);
+		?>
+		<span class="edd-repeatable-row-actions">
+			<?php echo implode( '&nbsp;&#124;&nbsp;', $actions ); ?>
+		</span>
+	</div>
+
+	<div class="edd-repeatable-row-standard-fields">
+
+		<div class="edd-form-group edd-option-name">
+			<label for="edd_variable_prices-<?php echo esc_attr( $key ); ?>-name" class="edd-form-group__label edd-repeatable-row-setting-label">
+				<?php esc_html_e( 'Option Name', 'easy-digital-downloads' ); ?>
+			</label>
+			<div class="edd-form-group__control">
+			<?php
+			echo EDD()->html->text(
+				array(
+					'name'        => 'edd_variable_prices[' . $key . '][name]',
+					'id'          => 'edd_variable_prices-' . $key . '-name',
+					'value'       => esc_attr( $args['name'] ),
+					'placeholder' => __( 'Option Name', 'easy-digital-downloads' ),
+					'class'       => 'edd_variable_prices_name large-text',
+				)
+			);
+			?>
+			</div>
+		</div>
+
+		<div class="edd-form-group edd-option-price">
+			<label for="edd_variable_prices-<?php echo esc_attr( $key ); ?>-amount" class="edd-repeatable-row-setting-label">
+				<?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?>
+			</label>
+			<?php
+			$price_args = array(
+				'name'        => 'edd_variable_prices[' . $key . '][amount]',
+				'id'          => 'edd_variable_prices-' . $key . '-amount',
+				'value'       => $args['amount'],
+				'placeholder' => edd_format_amount( 9.99 ),
+				'class'       => 'edd-form-group__input edd-price-field',
+			);
+			?>
+
+			<div class="edd-form-group__control edd-price-input-group">
+				<?php
+				if ( 'before' === $currency_position ) {
+					?>
+					<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+					<?php
+					echo EDD()->html->text( $price_args );
+				} else {
+					echo EDD()->html->text( $price_args );
+					?>
+					<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+					<?php
+				}
+				?>
+			</div>
+		</div>
+
+		<div class="edd-form-group edd_repeatable_default edd_repeatable_default_wrapper">
+			<div class="edd-form-group__control">
+			<label for="edd_default_price_id_<?php echo esc_attr( $key ); ?>" class="edd-repeatable-row-setting-label">
+				<?php esc_html_e( 'Default', 'easy-digital-downloads' ); ?>
+			</label>
+			<?php
+			printf(
+				'<input type="radio" %1$s class="edd_repeatable_default_input" name="_edd_default_price_id" id="%2$s" value="%3$d" />',
+				checked( $default_price_id, $key, false ),
+				'edd_default_price_id_' . esc_attr( $key ),
+				esc_attr( $key )
+			);
+			?>
+			<span class="screen-reader-text">
+				<?php
+				/* translators: %s: price ID. */
+				printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key );
+				?>
+			</span>
+			</div>
+		</div>
+
+	</div>
+
+	<?php
+	if ( $custom_price_options ) {
+		?>
+
+		<div class="edd-custom-price-option-sections-wrap">
+			<div class="edd-custom-price-option-sections">
+				<?php
+					do_action( 'edd_download_price_option_row', $post_id, $key, $args );
+				?>
+			</div>
+		</div>
+
+		<?php
+	}
+}
+
+/**
+ * Add shortcode to settings meta box
+ *
+ * @since 2.5
+ * @deprecated 3.3.6
+ * @param int           $post_id  Download (Post) ID.
+ * @param \EDD_Download $download Download object.
+ * @return void
+ */
+function edd_render_meta_box_shortcode( $post_id = 0, $download = null ) {}

@@ -41,6 +41,13 @@ class Errors extends EDD_UnitTestCase {
 		wp_logout();
 		$user_id = $this->factory->user->create();
 		$user    = get_user_by( 'id', $user_id );
+		edd_add_customer(
+			array(
+				'email'   => $user->user_email,
+				'user_id' => $user->ID,
+				'name'    => $user->display_name,
+			)
+		);
 		$errors  = new \EDD\Checkout\Errors();
 		$errors->check_existing_users(
 			$user,

@@ -9,7 +9,7 @@
  * @since       1.5
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -28,16 +28,6 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	protected $log_type = 'api_requests';
 
 	/**
-	 * Get things started
-	 *
-	 * @since 1.5
-	 * @see WP_List_Table::__construct()
-	 */
-	public function __construct() {
-		parent::__construct();
-	}
-
-	/**
 	 * Retrieve the table columns
 	 *
 	 * @since 1.5
@@ -45,12 +35,12 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'      => __( 'Log ID',          'easy-digital-downloads' ),
+			'ID'      => __( 'Log ID', 'easy-digital-downloads' ),
 			'details' => __( 'Request Details', 'easy-digital-downloads' ),
-			'version' => __( 'API Version',     'easy-digital-downloads' ),
-			'ip'      => __( 'Request IP',      'easy-digital-downloads' ),
-			'speed'   => __( 'Request Speed',   'easy-digital-downloads' ),
-			'date'    => __( 'Date',            'easy-digital-downloads' )
+			'version' => __( 'API Version', 'easy-digital-downloads' ),
+			'ip'      => __( 'Request IP', 'easy-digital-downloads' ),
+			'speed'   => __( 'Request Speed', 'easy-digital-downloads' ),
+			'date'    => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -67,54 +57,34 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	}
 
 	/**
-	 * This function renders most of the columns in the list table.
-	 *
-	 * @since 1.5
-	 *
-	 * @param array $item Contains all the data of the api request
-	 * @param string $column_name The name of the column
-	 *
-	 * @return string Column Name
-	 */
-	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'ip':
-				return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
-			default:
-				return $item[ $column_name ];
-		}
-	}
-
-	/**
 	 * Output Error Message column
 	 *
 	 * @since 1.5
-	 * @param array $item Contains all the data of the log
+	 * @param array $item Contains all the data of the log.
 	 * @return void
 	 */
 	public function column_details( $item ) {
-	?>
+		?>
 		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo esc_attr( $item['ID'] ); ?>" class="thickbox"><?php esc_html_e( 'View Request', 'easy-digital-downloads' ); ?></a>
 		<div id="log-details-<?php echo absint( $item['ID'] ); ?>" style="display:none;">
+			<p><strong><?php esc_html_e( 'API Request:', 'easy-digital-downloads' ); ?></strong></p>
+			<div><?php echo esc_html( $item['request'] ); ?></div>
 			<?php
-
-			$request = $item['request'];
-			$error   = $item['error'];
-			echo '<p><strong>' . __( 'API Request:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . $request . '</div>';
-			if ( ! empty( $error ) ) {
-				echo '<p><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong></p>';
-				echo '<div>' . esc_html( $error ) . '</div>';
+			if ( ! empty( $item['error'] ) ) {
+				?>
+				<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?></strong></p>
+				<div><?php echo esc_html( $item['error'] ); ?></div>
+				<?php
 			}
-			echo '<p><strong>' . __( 'API User:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . $item['user_id'] . '</div>';
-			echo '<p><strong>' . __( 'API Key:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . $item['api_key'] . '</div>';
-			echo '<p><strong>' . __( 'Request Date:', 'easy-digital-downloads' ) . '</strong></p>';
-			echo '<div>' . $item['date'] . '</div>';
 			?>
+			<p><strong><?php esc_html_e( 'API User:', 'easy-digital-downloads' ); ?></strong></p>
+			<div><?php echo esc_html( $item['user_id'] ); ?></div>
+			<p><strong><?php esc_html_e( 'API Key:', 'easy-digital-downloads' ); ?></strong></p>
+			<div><?php echo esc_html( $item['api_key'] ); ?></div>
+			<p><strong><?php esc_html_e( 'Request Date:', 'easy-digital-downloads' ); ?></strong></p>
+			<div><?php echo esc_html( edd_date_i18n( strtotime( $item['date'] ), 'Y-m-d H:i:s' ) . ' ' . edd_get_timezone_abbr() ); ?></div>
 		</div>
-	<?php
+		<?php
 	}
 
 	/**
@@ -154,7 +124,7 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $log_query
+	 * @param array $log_query Arguments for getting logs.
 	 *
 	 * @return int
 	 */

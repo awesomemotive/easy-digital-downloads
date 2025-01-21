@@ -43,9 +43,8 @@ jQuery( document ).ready( function( $ ) {
 
 	// Variables for setting up the typing timer
 	// Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
-	let userInteractionInterval = 342,
-		typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
-		typingTimer;
+	let userInteractionInterval = 521,
+		typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input';
 
 	// Replace options with search results
 	$( document.body ).on( 'keyup', typingTimerElements, _.debounce( function( e ) {
@@ -81,16 +80,9 @@ jQuery( document ).ready( function( $ ) {
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
 		if (
 			( val.length <= 3 && 'edd_download_search' === search_type ) ||
-			(
-				lastKey === 16 ||
-				lastKey === 13 ||
-				lastKey === 91 ||
-				lastKey === 17 ||
-				lastKey === 37 ||
-				lastKey === 38 ||
-				lastKey === 39 ||
-				lastKey === 40
-			)
+			[ 16, 13, 91, 17, 37, 38, 39, 40 ].includes( lastKey ) ||
+			e.ctrlKey ||
+			e.metaKey
 		) {
 			container.children( '.spinner' ).remove();
 			return;
@@ -140,9 +132,7 @@ jQuery( document ).ready( function( $ ) {
 				element.val( val );
 			},
 		} ).fail( function( response ) {
-			if ( window.console && window.console.log ) {
-				console.log( response );
-			}
+			console.log( response );
 		} ).done( function( response ) {
 			container.children( '.spinner' ).remove();
 		} );

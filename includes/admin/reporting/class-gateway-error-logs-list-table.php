@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,16 +18,6 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0 Updated to use the custom tables and new query classes.
  */
 class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
-
-	/**
-	 * Get things started
-	 *
-	 * @since 1.4
-	 * @see WP_List_Table::__construct()
-	 */
-	public function __construct() {
-		parent::__construct();
-	}
 
 	/**
 	 * Gets the name of the primary column.
@@ -42,35 +32,25 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	}
 
 	/**
-	 * This function renders most of the columns in the list table.
+	 * Output Payment ID Column.
 	 *
-	 * @since 1.4
-	 *
-	 * @param array $item Contains all the data of the log item
-	 * @param string $column_name The name of the column
-	 *
-	 * @return string Column Name
+	 * @since 3.3.6
+	 * @param array $item Contains all the data of the log.
+	 * @return string
 	 */
-	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'error' :
-				return $item['error'];
-			case 'payment_id' :
-				return ! empty( $item['payment_id'] ) ? $item['payment_id'] : '&ndash;';
-			default:
-				return $item[ $column_name ];
-		}
+	protected function column_payment_id( $item ) {
+		return ! empty( $item['payment_id'] ) ? $item['payment_id'] : '&ndash;';
 	}
 
 	/**
 	 * Output Error Message Column
 	 *
 	 * @since 1.4.4
-	 * @param array $item Contains all the data of the log
+	 * @param array $item Contains all the data of the log.
 	 * @return void
 	 */
 	public function column_message( $item ) {
-	?>
+		?>
 		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo esc_attr( $item['ID'] ); ?>" class="thickbox"><?php esc_html_e( 'View Log Message', 'easy-digital-downloads' ); ?></a>
 		<div id="log-message-<?php echo esc_attr( $item['ID'] ); ?>" style="display:none;">
 			<?php
@@ -78,8 +58,8 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 			$log_message = $item['content'];
 			$serialized  = strpos( $log_message, '{"' );
 
-			// Check to see if the log message contains serialized information
-			if ( $serialized !== false ) {
+			// Check to see if the log message contains serialized information.
+			if ( false !== $serialized ) {
 				$length = strlen( $log_message ) - $serialized;
 				$intro  = substr( $log_message, 0, - $length );
 				$data   = substr( $log_message, $serialized, strlen( $log_message ) - 1 );
@@ -88,12 +68,12 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 				echo '<strong>' . wpautop( __( 'Log data:', 'easy-digital-downloads' ) ) . '</strong>';
 				echo '<div style="word-wrap: break-word;">' . wpautop( $data ) . '</div>';
 			} else {
-				// No serialized data found
+				// No serialized data found.
 				echo wpautop( $log_message );
 			}
 			?>
 		</div>
-	<?php
+		<?php
 	}
 
 	/**
@@ -104,12 +84,12 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Log ID',        'easy-digital-downloads' ),
-			'payment_id' => __( 'Order Number',  'easy-digital-downloads' ),
-			'error'      => __( 'Error',         'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
+			'error'      => __( 'Error', 'easy-digital-downloads' ),
 			'message'    => __( 'Error Message', 'easy-digital-downloads' ),
-			'gateway'    => __( 'Gateway',       'easy-digital-downloads' ),
-			'date'       => __( 'Date',          'easy-digital-downloads' )
+			'gateway'    => __( 'Gateway', 'easy-digital-downloads' ),
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -117,8 +97,8 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.4
-	 * @param  array  $log_query Query arguments
-	 * @global object $edd_logs EDD Logs Object
+	 * @param array $log_query Query arguments.
+	 * @global object $edd_logs  EDD Logs Object.
 	 * @return array $logs_data Array of all the Log entries
 	 */
 	public function get_logs( $log_query = array() ) {

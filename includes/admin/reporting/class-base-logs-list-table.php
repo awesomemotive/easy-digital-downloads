@@ -10,8 +10,8 @@
  * @since       3.0 Updated to use the custom tables.
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\Admin\List_Table;
 
@@ -36,11 +36,13 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'log',
-			'plural'   => 'logs',
-			'ajax'     => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'log',
+				'plural'   => 'logs',
+				'ajax'     => false,
+			)
+		);
 
 		$this->filter_bar_hooks();
 	}
@@ -51,22 +53,25 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Removes the referrer nonce from parent class.
 	 *
 	 * @since 3.0.0
-	 * @param string $which
+	 * @param string $which Position of the tablenav: 'top' or 'bottom'.
 	 */
 	protected function display_tablenav( $which ) {
-	?>
+		?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 			<?php if ( $this->has_items() ) : ?>
 				<div class="alignleft actions bulkactions">
 					<?php $this->bulk_actions( $which ); ?>
 				</div>
-			<?php endif;
+				<?php
+			endif;
 
 			$this->extra_tablenav( $which );
-			$this->pagination( $which ); ?>
+			$this->pagination( $which );
+			?>
 
 			<br class="clear" />
-		</div><?php
+		</div>
+		<?php
 	}
 
 	/**
@@ -75,7 +80,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @since 3.0
 	 */
 	private function filter_bar_hooks() {
-		add_action( 'edd_admin_filter_bar_logs',       array( $this, 'filter_bar_items'     ) );
+		add_action( 'edd_admin_filter_bar_logs', array( $this, 'filter_bar_items' ) );
 		add_action( 'edd_after_admin_filter_bar_logs', array( $this, 'filter_bar_searchbox' ) );
 	}
 
@@ -136,7 +141,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the start-date of the filter
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return string Start date to filter by
 	 */
 	public function get_filtered_start_date() {
@@ -147,7 +152,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the end-date of the filter
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return string End date to filter by
 	 */
 	public function get_filtered_end_date() {
@@ -158,7 +163,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the ID of the download we're filtering logs by
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return int Download ID.
 	 */
 	public function get_filtered_download() {
@@ -169,7 +174,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the ID of the payment we're filtering logs by
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return int Payment ID.
 	 */
 	public function get_filtered_payment() {
@@ -182,7 +187,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * This is used to return log entries that match our search query, user query, or download query.
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
@@ -206,7 +211,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 */
 	public function log_views() {
 		$views        = edd_log_default_views();
-		$current_view = $this->get_filtered_view(); ?>
+		$current_view = $this->get_filtered_view();
+		?>
 
 		<select id="edd-logs-view" name="view">
 			<?php foreach ( $views as $view_id => $label ) : ?>
@@ -258,20 +264,18 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return array $logs_data Array of all the logs.
 	 */
-	function get_logs( $log_query = array() ) {
+	public function get_logs( $log_query = array() ) {
 		return array();
 	}
 
 	/**
-	 * Get the total number of items
+	 * Get the total number of items.
 	 *
 	 * @since 3.0
-	 *
-	 * @param array $log_query
-	 *
+	 * @param array $log_query Arguments for getting logs.
 	 * @return int
 	 */
 	public function get_total( $log_query = array() ) {
@@ -284,7 +288,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function get_views() {
-		// Intentionally empty
+		// Intentionally empty.
 	}
 
 	/**
@@ -310,130 +314,142 @@ class EDD_Base_Log_List_Table extends List_Table {
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
-			$this->get_sortable_columns()
+			$this->get_sortable_columns(),
 		);
 
 		$this->items = $this->get_data();
 		$log_query   = $this->get_query_args( false );
 		$total_items = $this->get_total( $log_query );
 
-		$this->set_pagination_args( array(
-			'total_pages' => ceil( $total_items / $this->per_page ),
-			'total_items' => $total_items,
-			'per_page'    => $this->per_page,
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_pages' => ceil( $total_items / $this->per_page ),
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+			)
+		);
 	}
 
 	/**
 	 * Return array of query arguments
 	 *
 	 * @since 3.0
-	 *
-	 * @param bool $paginate Whether to add pagination arguments
-	 *
+	 * @param bool $paginate Whether to add pagination arguments.
 	 * @return array
 	 */
 	protected function get_query_args( $paginate = true ) {
 
-		// Defaults
-		$retval = array(
+		// Defaults.
+		$query_args = array(
 			'product_id'  => $this->get_filtered_download(),
 			'customer_id' => $this->get_filtered_customer(),
 			'order_id'    => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
 		);
 
-		// Search
+		// Search.
 		$search = $this->get_search();
 		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-				$retval['ip'] = $search;
+				$query_args['ip'] = $search;
 			} elseif ( is_email( $search ) ) {
 				if ( 'api_requests' === $this->log_type ) {
 					// API requests are linked to user accounts, so we're checking user data here.
 					$user = get_user_by( 'email', $search );
 					if ( ! empty( $user->ID ) ) {
-						$retval['user_id'] = $user->ID;
+						$query_args['user_id'] = $user->ID;
 					} else {
 						// This is a fallback to help ensure an invalid email will produce zero results.
-						$retval['search'] = $search;
+						$query_args['search'] = $search;
 					}
 				} else {
 					// All other logs are linked to customers.
 					$customer = edd_get_customer_by( 'email', $search );
 					if ( ! empty( $customer->id ) ) {
-						$retval['customer_id'] = $customer->id;
+						$query_args['customer_id'] = $customer->id;
 					} else {
 						// This is a fallback to help ensure an invalid email will produce zero results.
-						$retval['search'] = $search;
+						$query_args['search'] = $search;
 					}
 				}
 			} elseif ( 'api_requests' === $this->log_type && 32 === strlen( $search ) ) {
-				// Look for an API key
-				$retval['api_key'] = $search;
+				// Look for an API key.
+				$query_args['api_key'] = $search;
 			} elseif ( 'api_requests' === $this->log_type && stristr( $search, 'token:' ) ) {
-				// Look for an API token
-				$retval['token'] = str_ireplace( 'token:', '', $search );
+				// Look for an API token.
+				$query_args['token'] = str_ireplace( 'token:', '', $search );
 			} elseif ( is_numeric( $search ) ) {
 				if ( 'api_requests' === $this->log_type ) {
 					// API requests are linked to user accounts, so we're checking user data here.
 					$user = get_user_by( 'email', $search );
 					if ( ! empty( $user->ID ) ) {
-						$retval['user_id'] = $user->ID;
+						$query_args['user_id'] = $user->ID;
 					} else {
-						$retval['search'] = $search;
+						$query_args['search'] = $search;
 					}
 				} else {
 					// All other logs are linked to customers.
 					$customer = edd_get_customer( $search );
 					if ( ! empty( $customer->id ) ) {
-						$retval['customer_id'] = $customer->id;
+						$query_args['customer_id'] = $customer->id;
 					} elseif ( 'file_downloads' === $this->log_type ) {
-						$retval['product_id'] = $search;
+						$query_args['product_id'] = $search;
 					} else {
-						$retval['search'] = $search;
+						$query_args['search'] = $search;
 					}
 				}
 			} else {
 				if ( 'file_downloads' === $this->log_type ) {
 					$this->file_search = true;
 				} else {
-					$retval['search'] = $search;
+					$query_args['search'] = $search;
 				}
 			}
 		}
 
-		// Start date
+		// Start date.
 		$start_date = $this->get_filtered_start_date();
 		$end_date   = $this->get_filtered_end_date();
 
-		// Setup original array
+		// Setup original array.
 		if ( ! empty( $start_date ) || ! empty( $end_date ) ) {
-			$retval['date_created_query']['column'] = 'date_created';
+			$query_args['date_created_query']['column'] = 'date_created';
 
-			// Start date
+			// Start date.
 			if ( ! empty( $start_date ) ) {
-				$retval['date_created_query'][] = array(
+				$query_args['date_created_query'][] = array(
 					'column' => 'date_created',
-					'after'  => \EDD\Utils\Date::parse( date( 'Y-m-d H:i:s', strtotime( "{$start_date} midnight" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
+					'after'  => \EDD\Utils\Date::parse(
+						date( // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+							'Y-m-d H:i:s',
+							strtotime( "{$start_date} midnight" )
+						),
+						edd_get_timezone_id()
+					)->setTimezone( 'UTC' )->toDateTimeString(),
 				);
 			}
 
-			// End date
+			// End date.
 			if ( ! empty( $end_date ) ) {
-				$retval['date_created_query'][] = array(
+				$query_args['date_created_query'][] = array(
 					'column' => 'date_created',
-					'before' => \EDD\Utils\Date::parse( date( 'Y-m-d H:i:s', strtotime( "{$end_date} + 1 day" ) ), edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString(),
+					'before' => \EDD\Utils\Date::parse(
+						date( // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+							'Y-m-d H:i:s',
+							strtotime( "{$end_date} + 1 day" )
+						),
+						edd_get_timezone_id()
+					)->setTimezone( 'UTC' )->toDateTimeString(),
 				);
 			}
 		}
 
-		$retval = array_filter( $retval );
+		$query_args = array_filter( $query_args );
 
-		// Return query arguments
+		// Return query arguments.
 		return ( true === $paginate )
-			? $this->parse_pagination_args( $retval )
-			: $retval;
+			? $this->parse_pagination_args( $query_args )
+			: $query_args;
 	}
 
 	/**
@@ -452,17 +468,20 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 */
 	public function filter_bar_items() {
 
-		// Get values
+		// Get values.
 		$start_date = $this->get_filtered_start_date();
 		$end_date   = $this->get_filtered_end_date();
 		$download   = $this->get_filtered_download();
 		$customer   = $this->get_filtered_customer();
 		$view       = $this->get_filtered_view();
-		$clear_url  = edd_get_admin_url( array(
-			'page' => 'edd-tools',
-			'tab'  => 'logs',
-			'view' => sanitize_key( $view ),
-		) ); ?>
+		$clear_url  = edd_get_admin_url(
+			array(
+				'page' => 'edd-tools',
+				'tab'  => 'logs',
+				'view' => sanitize_key( $view ),
+			)
+		);
+		?>
 
 		<span id="edd-type-filter">
 			<?php $this->log_views(); ?>
@@ -471,21 +490,26 @@ class EDD_Base_Log_List_Table extends List_Table {
 		<span id="edd-date-filters" class="edd-from-to-wrapper">
 			<?php
 
-			echo EDD()->html->date_field( array(
-				'id'          => 'start-date',
-				'name'        => 'start-date',
-				'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-				'value'       => $start_date
-			) );
+			echo EDD()->html->date_field(
+				array(
+					'id'          => 'start-date',
+					'name'        => 'start-date',
+					'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+					'value'       => $start_date,
+				)
+			);
 
-			echo EDD()->html->date_field( array(
-				'id'          => 'end-date',
-				'name'        => 'end-date',
-				'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-				'value'       => $end_date
-			) );
+			echo EDD()->html->date_field(
+				array(
+					'id'          => 'end-date',
+					'name'        => 'end-date',
+					'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+					'value'       => $end_date,
+				)
+			);
 
-		?></span>
+			?>
+		</span>
 
 		<span id="edd-download-filter">
 			<?php $this->downloads_filter( $download ); ?>
@@ -512,7 +536,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	}
 
 	/**
-	 * Output the filter bar searchbox
+	 * Output the filter bar searchbox.
 	 *
 	 * @since 3.0
 	 */
@@ -527,14 +551,14 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
+	 * @param string $text Label for the search box.
+	 * @param string $input_id ID of the search box.
 	 *
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
 
-		// Bail if no customers and no search
+		// Bail if no customers and no search.
 		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
 			return;
 		}
@@ -557,5 +581,42 @@ class EDD_Base_Log_List_Table extends List_Table {
 		</p>
 
 		<?php
+	}
+
+	/**
+	 * This function renders most of the columns in the list table.
+	 *
+	 * @since 1.4
+	 *
+	 * @param array  $item        Contains all the data of the log item.
+	 * @param string $column_name The name of the column.
+	 * @return string Value of the column.
+	 */
+	public function column_default( $item, $column_name ) {
+		return ! empty( $item[ $column_name ] ) ? $item[ $column_name ] : '';
+	}
+
+	/**
+	 * Get the date column.
+	 *
+	 * @since 3.3.6
+	 * @param array $item Contains all the data of the log item.
+	 * @return string
+	 */
+	public function column_date( $item ) {
+		return ! empty( $item['date'] )
+			? edd_date_i18n( strtotime( $item['date'] ), 'Y-m-d H:i:s' ) . ' ' . edd_get_timezone_abbr()
+			: '&mdash;';
+	}
+
+	/**
+	 * Output the IP column.
+	 *
+	 * @since 3.3.6
+	 * @param array $item Contains all the data of the log.
+	 * @return string
+	 */
+	public function column_ip( $item ) {
+		return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
 	}
 }

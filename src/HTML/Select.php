@@ -155,7 +155,8 @@ class Select extends Base {
 		if ( $this->args['multiple'] ) {
 			return selected( true, in_array( (string) $value, $this->args['selected'], true ), false );
 		}
-		if ( ! empty( $this->args['selected'] ) && ! is_array( $this->args['selected'] ) ) {
+
+		if ( ( ! empty( $this->args['selected'] ) || is_numeric( $this->args['selected'] ) ) && ! is_array( $this->args['selected'] ) ) {
 			return selected( $this->args['selected'], $value, false );
 		}
 

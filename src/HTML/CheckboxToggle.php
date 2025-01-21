@@ -47,9 +47,15 @@ class CheckboxToggle extends Base {
 					readonly
 					<?php
 				}
+				echo $this->get_data_elements();
 				?>
 			/>
-			<label for="<?php echo esc_attr( $this->args['name'] ); ?>"><?php echo wp_kses_post( $this->args['label'] ); ?></label>
+			<label for="<?php echo esc_attr( $this->args['name'] ); ?>">
+				<?php
+				echo wp_kses_post( $this->args['label'] );
+				$this->maybe_do_tooltip();
+				?>
+			</label>
 		</div>
 		<?php
 
@@ -74,6 +80,7 @@ class CheckboxToggle extends Base {
 			),
 			'label'   => '',
 			'value'   => 1,
+			'tooltip' => false,
 		);
 	}
 
@@ -93,5 +100,19 @@ class CheckboxToggle extends Base {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Renders the tooltip if one is set.
+	 *
+	 * @since 3.3.6
+	 * @return void
+	 */
+	private function maybe_do_tooltip() {
+		if ( empty( $this->args['tooltip'] ) ) {
+			return;
+		}
+		$tooltip = new Tooltip( $this->args['tooltip'] );
+		$tooltip->output();
 	}
 }

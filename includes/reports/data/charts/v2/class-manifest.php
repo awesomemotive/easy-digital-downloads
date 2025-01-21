@@ -276,8 +276,7 @@ class Manifest implements Error_Logger {
 	public function get_dataset_handler() {
 		$handler = '';
 
-		switch( $this->get_type() ) {
-
+		switch ( $this->get_type() ) {
 			case 'doughnut':
 			case 'pie':
 				$handler = 'EDD\Reports\Data\Charts\v2\Pie_Dataset';
@@ -290,8 +289,6 @@ class Manifest implements Error_Logger {
 			case 'line':
 				$handler = 'EDD\Reports\Data\Charts\v2\Line_Dataset';
 				break;
-
-
 		}
 
 		return $handler;
@@ -439,7 +436,7 @@ class Manifest implements Error_Logger {
 			$day_by_day   = Reports\get_dates_filter_day_by_day();
 			$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
-			$time_unit = 'month';
+			$time_unit   = 'month';
 			$time_format = 'MMM YYYY';
 
 			if ( $hour_by_hour ) {
@@ -451,32 +448,38 @@ class Manifest implements Error_Logger {
 			}
 
 			$defaults = array(
-				'animation' => array(
-					'duration'   => 0,
+				'animation'  => array(
+					'duration' => 0,
 				),
 				'responsive' => true,
-				'hoverMode'  => 'index',
 				'stacked'    => false,
 				'title'      => array(
 					'display' => $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ),
 					'text'    => $this->get_endpoint()->get_label(),
 				),
-				'scales'    => array(
+				'scales'     => array(
 					'xAxes' => array(),
 					'yAxes' => array(),
+				),
+				'hover'      => array(
+					'intersect' => false,
+					'mode'      => 'index',
 				),
 			);
 
 			$default_xAxes = array(
 				array(
-					'type'     => 'time',
-					'display'  => true,
-					'ticks'    => array(
-						'source'        => 'auto',
-						'maxRotation'   => 0,
+					'type'      => 'time',
+					'offset'    => true,
+					'display'   => true,
+					'gridLines' => array(
+						'display' => false,
 					),
-					'position' => 'bottom',
-					'time'     => array(
+					'ticks'     => array(
+						'source' => 'auto',
+					),
+					'position'  => 'bottom',
+					'time'      => array(
 						'unit'          => $time_unit,
 						'tooltipFormat' => $time_format,
 					),
@@ -485,19 +488,25 @@ class Manifest implements Error_Logger {
 
 			$default_yAxes = array(
 				array(
-					'type'     => 'linear',
-					'display'  => true,
-					'position' => 'left',
-					'ticks'    => array(
+					'type'      => 'linear',
+					'display'   => true,
+					'position'  => 'left',
+					'gridLines' => array(
+						'drawBorder' => false,
+					),
+					'ticks'     => array(
 						'formattingType' => 'format',
 						'beginAtZero'    => true,
 						'suggestedMin'   => 0,
+						'maxTicksLimit'  => 5,
+						'padding'        => 10,
 					),
+					'fill'      => false,
 				),
 			);
 
 			// Check if specific axes are missing from the endpoint options and load them from defaults.
-			foreach ( array( 'xAxes', 'yAxes' ) as $axes_name) {
+			foreach ( array( 'xAxes', 'yAxes' ) as $axes_name ) {
 				if ( empty( $endpoint_options['scales'][ $axes_name ] ) ) {
 					$endpoint_options['scales'][ $axes_name ] = ${ "default_{$axes_name}" };
 				}
