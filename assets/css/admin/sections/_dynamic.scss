@@ -1,0 +1,28 @@
+li.section-title--add-new {
+	border: unset !important;
+	margin-bottom: 40px;
+
+	button {
+		border: 0;
+		border-bottom: 1px solid $gray-200;
+		background-color: $dark-secondary;
+		display: flex;
+		gap: 3px;
+		width: 100%;
+		padding: 8px;
+		justify-content: center;
+
+		&:focus-visible {
+			outline: none;
+			box-shadow: inset 0 0 1px 1px var(--wp-admin-theme-color);
+		}
+	}
+}
+
+.edd-spacer {
+	height: 40px;
+}
+
+button.edd-section-content__remove.button.button-secondary.edd-hidden {
+	display: none;
+}

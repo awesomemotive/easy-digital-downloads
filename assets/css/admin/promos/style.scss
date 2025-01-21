@@ -58,7 +58,7 @@
 
 /* Five Star Review Request
 ------------------------------------------------------------- */
-#edd-admin-notice-five-star-review {
+#edd-admin-notice-five-star-review:not(.edd-hidden) {
 	display: grid !important;
 }
 

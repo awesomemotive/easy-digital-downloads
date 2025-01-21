@@ -105,7 +105,7 @@ jQuery( ( $ ) => {
 				hidePopup( $( '.edd-code-generator-popup' ) );
 			}
 		})
-		.keyup( function( e ) {
+		.on( 'keyup', function( e ) {
 			if ( e.keyCode === 27 ) {
 				hidePopup( $( '.edd-code-generator-popup' ) );
 			}

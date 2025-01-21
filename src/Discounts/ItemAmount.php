@@ -91,14 +91,11 @@ class ItemAmount {
 				continue;
 			}
 
-			// Check the category requirements.
-			if ( ! $discount->is_valid_for_categories( false, array( $this->item['id'] ) ) ) {
-				continue;
-			}
-
 			// Get the product requirements.
 			$product_requirements = $discount->get_product_reqs();
-			if ( ! empty( $product_requirements ) && 'global' !== $discount->get_scope() ) {
+			if ( ! empty( $product_requirements ) ) {
+				$processed = false;
+
 				// This is a product(s) specific discount.
 				foreach ( $product_requirements as $requirement ) {
 
@@ -110,12 +107,21 @@ class ItemAmount {
 						// If there is no price ID on the requirement, or the requirement price ID matches the item's price ID, apply the discount.
 						if ( is_null( $parsed_requirement['price_id'] ) || $parsed_requirement['price_id'] === $price_id ) {
 							$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+							$processed        = true;
 							// Break the requirements loop since the discount is applied for the current cart item.
 							break;
 						}
 					}
 				}
+
 				// Discount calculation is done for this discount, so continue to the next discount.
+				if ( $processed || 'global' !== $discount->get_scope() ) {
+					continue;
+				}
+			}
+
+			// Check the category requirements.
+			if ( ! $discount->is_valid_for_categories( false, array( $this->item['id'] ) ) ) {
 				continue;
 			}
 
@@ -130,7 +136,7 @@ class ItemAmount {
 			// Get the discount amount for a flat discount.
 			$items_amount     = $this->get_items_amount( $excluded_products );
 			$subtotal_percent = ! empty( $items_amount ) ? ( $item_amount / $items_amount ) : 0;
-			$item_discount    = round( $discount->get_amount() * $subtotal_percent, edd_currency_decimal_filter() );
+			$item_discount    = $discount->get_amount() * $subtotal_percent;
 
 			// Make adjustments on the last item.
 			if ( $this->is_last_item() ) {
@@ -150,7 +156,7 @@ class ItemAmount {
 			$edd_flat_discount_total += $discount_amount;
 		}
 
-		return $discount_amount;
+		return edd_format_amount( $discount_amount, true, '', 'data' );
 	}
 
 	/**
@@ -325,7 +331,7 @@ class ItemAmount {
 				if ( ! hash_equals( $this->item['hash'], $_item['hash'] ) && ! empty( $items_amount ) && ! in_array( $_item['id'], $excluded_products, true ) ) {
 					$percent = $_item['amount'] / $items_amount;
 				}
-				$value = round( $discount->get_amount() * $percent, edd_currency_decimal_filter() );
+				$value = edd_format_amount( $discount->get_amount() * $percent, true, '', 'data' );
 
 				return $carry + $value;
 			},

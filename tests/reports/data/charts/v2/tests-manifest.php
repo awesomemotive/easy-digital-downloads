@@ -366,7 +366,6 @@ class Manifest_Tests extends EDD_UnitTestCase {
 				'duration'   => 0,
 			),
 			'responsive' => true,
-			'hoverMode'  => 'index',
 			'stacked'    => false,
 			'title'      => array(
 				'display' => false,
@@ -376,10 +375,13 @@ class Manifest_Tests extends EDD_UnitTestCase {
 				'xAxes' => array(
 					array(
 						'type'     => 'time',
+						'offset'   => true,
 						'display'  => true,
+						'gridLines' => array(
+							'display' => false,
+						),
 						'ticks'    => array(
-							'source'      => 'auto',
-							'maxRotation' => 0,
+							'source'  => 'auto',
 						),
 						'position' => 'bottom',
 						'time'     => array(
@@ -393,13 +395,23 @@ class Manifest_Tests extends EDD_UnitTestCase {
 						'type'     => 'linear',
 						'display'  => true,
 						'position' => 'left',
+						'gridLines' => array(
+							'drawBorder' => false,
+						),
 						'ticks'    => array(
 							'formattingType' => 'format',
 							'beginAtZero'    => true,
 							'suggestedMin'   => 0,
+							'maxTicksLimit'  => 5,
+							'padding'        => 10,
 						),
+						'fill' => false,
 					),
 				),
+			),
+			'hover' => array(
+				'intersect' => false,
+				'mode'      => 'index',
 			),
 			'labels'   => array( 'First', 'Second', 'Third', 'Fourth' ),
 			'datasets' => array(

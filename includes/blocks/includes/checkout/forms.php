@@ -105,10 +105,14 @@ function do_personal_info_forms( $block_attributes ) {
 		}
 		$form = reset( $forms );
 		echo '<div class="edd-checkout-block__personal-info">';
-		if ( is_callable( $form['view'] ) ) {
-			echo call_user_func( $form['view'], array( 'current' => true ) );
+		if ( $form && ! empty( $form['view'] ) ) {
+			if ( is_callable( $form['view'] ) ) {
+				echo call_user_func( $form['view'], array( 'current' => true ) );
+			} elseif ( \EDD\Utils\FileSystem::file_exists( $form['view'] ) ) {
+				include $form['view'];
+			}
 		} else {
-			include $form['view'];
+			do_action( 'edd_purchase_form_user_info_fields', $customer );
 		}
 		?>
 		</div>
@@ -188,15 +192,23 @@ function swap_form() {
 	if ( empty( $forms[ $form_id ] ) ) {
 		return;
 	}
-	$form     = $forms[ $form_id ];
+	$form = $forms[ $form_id ];
+	if ( empty( $form['view'] ) ) {
+		wp_send_json_error( __( 'Unable to load form.', 'easy-digital-downloads' ) );
+	}
+
 	$customer = \EDD\Blocks\Checkout\get_customer();
 	if ( is_callable( $form['view'] ) ) {
 		wp_send_json_success( call_user_func( $form['view'], array( 'current' => true ) ) );
 	}
 
-	ob_start();
-	$form = include $form['view'];
-	wp_send_json_success( ob_get_clean() );
+	if ( \EDD\Utils\FileSystem::file_exists( $form['view'] ) ) {
+		ob_start();
+		include $form['view'];
+		wp_send_json_success( ob_get_clean() );
+	}
+
+	wp_send_json_error( __( 'Unable to load form.', 'easy-digital-downloads' ) );
 }
 
 /**

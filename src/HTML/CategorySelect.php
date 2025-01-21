@@ -1,11 +1,15 @@
 <?php
 /**
  * Category Select
+ *
+ * @package EDD
+ * @subpackage HTML
  */
 
 namespace EDD\HTML;
 
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Class CategorySelect
@@ -24,7 +28,7 @@ class CategorySelect {
 	 * CategorySelect constructor.
 	 *
 	 * @since 3.2.0
-	 * @param array $args
+	 * @param array $args Arguments for the category select.
 	 */
 	public function __construct( $args ) {
 		$this->args = $this->parse_args( $args );
@@ -41,14 +45,16 @@ class CategorySelect {
 			$this->args['options'] = $this->get_categories();
 		}
 
-		return EDD()->html->select( $this->args );
+		$select = new Select( $this->args );
+
+		return $select->get();
 	}
 
 	/**
 	 * Parses the arguments for the category select.
 	 *
 	 * @since 3.2.0
-	 * @param array $args
+	 * @param array $args Arguments for the category select.
 	 * @return array
 	 */
 	private function parse_args( $args ) {

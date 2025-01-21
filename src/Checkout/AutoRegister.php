@@ -272,7 +272,7 @@ class AutoRegister extends Subscriber {
 		if ( ! empty( $data['email'] ) ) {
 			$user = get_user_by( 'email', $data['email'] );
 			// User account already exists.
-			if ( $user instanceof WP_User ) {
+			if ( $user instanceof \WP_User ) {
 				// For multisite, associate the user with the site.
 				if ( is_multisite() ) {
 					add_user_to_blog( get_current_blog_id(), $user->ID, get_option( 'default_role' ) );

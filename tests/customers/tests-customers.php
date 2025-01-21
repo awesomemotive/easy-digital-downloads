@@ -70,7 +70,7 @@ class Customers extends EDD_UnitTestCase {
 		$customer_id = $customer->create( array( 'email' => 'testaccount@domain.com' ) );
 
 		$this->assertGreaterThan( 0, $customer->id );
-		$this->assertSame( $customer_id, $customer->id );
+		$this->assertEquals( $customer_id, $customer->id );
 		$this->assertSame( $test_email, $customer->email );
 	}
 
@@ -499,5 +499,16 @@ class Customers extends EDD_UnitTestCase {
 		$users_orders     = edd_get_orders( array( 'user_id' => self::$customers[0]->user_id, 'number' => 9999 ) );
 
 		$this->assertEquals( $customers_orders, $users_orders );
+	}
+
+	public function test_creating_duplicate_customer_returns_original_customer_id() {
+		$test_email = 'newcustomer@edd.local';
+
+		$customer_id = edd_add_customer( array( 'email' => $test_email ) );
+
+		$customer                        = new \EDD_Customer( 0 );
+		$potential_duplicate_customer_id = $customer->create( array( 'email' => $test_email ) );
+
+		$this->assertEquals( $customer_id, $potential_duplicate_customer_id );
 	}
 }

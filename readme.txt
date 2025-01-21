@@ -3,10 +3,10 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, chriscct7, sumobi, SpencerFinnell, drewapicture, johnjamesjacoby, lisacee
 Tags: ecommerce, payments, sell, digital store, stripe
-Requires at least: 6.0
+Requires at least: 6.2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable Tag: 3.3.5.2
+Stable Tag: 3.3.6.1
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -238,6 +238,48 @@ Check out some of our popular posts for actionable advice for running your busin
 
 == Changelog ==
 
+= 3.3.6.1 =
+* Fixes a formatting issue for stores using European style decimal separators.
+
+= 3.3.6 =
+* **Important:** This release requires **WordPress 6.2 or higher**.
+* Admin: Prevent UI shifting in the EDD admin pages.
+* Blocks: Improved the UI of the Checkout block registration settings.
+* Checkout: Improved reliability of guest checkout process.
+* Checkout: Improved the detection of existing customer email addresses.
+* Customers: Switched to using `Order` objects instead of `EDD_Payment` objects.
+* Dev: Added the `edd_empty_cart_message` to the Checkout block.
+* Dev: Fixed an issue that could cause hooking into `edd_purchase_form_user_info_fields` to result in a fatal error.
+* Dev: Introduced the `edd_order_receipt_before` hook to the receipt block.
+* Discounts: Fixed an issue that would prevent min/max values on discounts from being changed to empty values.
+* Discounts: Improved the logic of discount code validation to ensure that required products are allowed even if in a prevented category.
+* Downloads: Added the ability to copy the block, shortcode, or add to cart links to the clipboard from the Download Edit screen.
+* Downloads: Improved the registration and rendering of metaboxes.
+* Downloads: Improved the variable pricing UI for the Download Edit screen.
+* Downloads: Refreshed and combined Download metaboxes for improved download management.
+* Emails: Fixed an issue that could result in the password reset email from the Auto Register extension not being sent.
+* HTML: All HTML element classes now run `get_data_elements` to ensure that the data elements are available.
+* HTML: Improved search results for Chosen select fields.
+* HTML: Introduced the `Number` input field.
+* i18n: Fixed an issue resulting in an undefined variable notice in translations.
+* Logs: Updated the date column of the Logs to reflect the store timezone (instead of UTC) and improved the formatting.
+* Orders: Corrected an issue resulting in the order total being incorrect when combining fees and taxes.
+* Pages: Fixed an issue that resulted in 'noindex nofollow' tags being added when no checkout page is set.
+* PayPal: Ensure that the merchant status check accounts for all exceptions.
+* Reports: Added support for filtering by order status on the Payment Gateways reports.
+* Reports: Current Period reports no longer show 'Hour by Hour' when less than two days of the period have passed.
+* Reports: Improved the tooltip handling for reports to be more consistent.
+* Reports: Separated many charts into individual charts to improve usability and flexibility.
+* Reports: The Payment Gateways list table report now filters reports by the selected gateways, instead of linking to a list of orders for the gateway.
+* Sessions: Prevent an undefined variable notice.
+* Stripe: Added support for TWINT, and Revolut Pay.
+* Stripe: Always get mandates for India-based customers/stores.
+* Stripe: Fixed an issue that could cause a gateway error if the Payment Method Configuration cannot be retrieved.
+* Stripe: Improved compatibility with Zero Decimal Currencies.
+* Stripe: Improved performance by switching to using `Order` objects instead of `EDD_Payment` objects.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.3.5.2 =
 * Checkout: Fixed a user's first/last name not saving to their WordPress account when registering during checkout.
 * Checkout: Fixed purchase data being sent to some gateways which process credit cards from form data.
@@ -263,8 +305,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * HTTP: Introduced a standard HTTP Request utility to make consistent HTTP requests.
 * Discounts: Prevent a JavaScript error when editing a discount.
 * Administration: Vertical navigation elements now support the Back/Forward browser navigation.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.4 =
 * NEW! Stripe: When connecting EDD to Stripe, the necessary webhooks are registered.

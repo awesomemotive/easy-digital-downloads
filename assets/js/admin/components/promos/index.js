@@ -101,7 +101,9 @@ jQuery( document ).ready( function( $ ) {
 			el.fadeOut();
 			$( '.edd-extension-manager__key-notice' ).hide();
 		} else {
-			el.slideUp();
+			el.slideUp( 400, function () {
+				$( this ).addClass( 'edd-hidden' );
+			} );
 		}
 
 		// trigger native custom event as jQuery and Vanilla JS both can listen to it.

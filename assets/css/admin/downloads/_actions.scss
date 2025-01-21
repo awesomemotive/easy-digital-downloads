@@ -1,0 +1,14 @@
+.edd__handle-actions-order {
+	display: flex;
+	transition: opacity 0.25s ease-in-out;
+
+	button {
+		padding: 9px;
+		border: 0;
+		background: transparent;
+
+		&:disabled .dashicons {
+			opacity: 0.5;
+		}
+	}
+}

@@ -43,8 +43,8 @@ export const getLabelWithTypeCondition = ( label, datasetConfig ) => {
  */
 export const toolTipBaseConfig = {
 	enabled: false,
+	intersect: false,
 	mode: 'index',
-	position: 'nearest',
 
 	/**
 	 * Output a a custom tooltip.
@@ -70,15 +70,6 @@ export const toolTipBaseConfig = {
 			return;
 		}
 
-		// Set caret position.
-		tooltipEl.classList.remove( 'above', 'below', 'no-transform' );
-
-		if ( tooltip.yAlign ) {
-			tooltipEl.classList.add( tooltip.yAlign );
-		} else {
-			tooltipEl.classList.add( 'no-transform' );
-		}
-
 		function getBody( bodyItem ) {
 			return bodyItem.lines;
 		}
@@ -88,9 +79,8 @@ export const toolTipBaseConfig = {
 			const titleLines = tooltip.title || [];
 			const bodyLines = tooltip.body.map( getBody );
 
-			let innerHtml = '<thead>';
-
-			innerHtml += '</thead><tbody>';
+			let innerHtml = '<thead>' + titleLines + '</thead>';
+			innerHtml    += '<tbody>';
 
 			bodyLines.forEach( function( body, i ) {
 				const colors = tooltip.labelColors[ i ];
@@ -120,17 +110,31 @@ export const toolTipBaseConfig = {
 			tableRoot.innerHTML = innerHtml;
 		}
 
-		const positionY = this._chart.canvas.offsetTop;
-		const positionX = this._chart.canvas.offsetLeft;
+		// Position the tooltip.
+		const chartRect = this._chart.canvas.getBoundingClientRect();
+		let elementRect = tooltipEl.getBoundingClientRect();
 
-		// Display, position, and set styles for font
-		tooltipEl.style.opacity = 1;
-		tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-		tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+		const positionX = this._chart.canvas.offsetLeft + tooltip.caretX;
+		// If the positionX is greater than 1/2 of the chart width, move it to the left.
+		let elementXPosition = positionX;
+		if ( positionX >= ( chartRect.width / 2 ) ) {
+			elementXPosition = positionX - ( elementRect.width / 2 ) - 20;
+		} else {
+			elementXPosition = positionX + ( elementRect.width / 2 ) + 20;
+		}
+
+		tooltipEl.style.left = elementXPosition + 'px';
+
+		const positionY = this._chart.canvas.offsetTop + Math.round( this._chart.canvas.height / 5 );
+		tooltipEl.style.top = positionY + 'px';
+
+		// Set the font styles.
 		tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
 		tooltipEl.style.fontSize = tooltip.bodyFontSize + 'px';
 		tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
-		tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
+
+		// Display the tooltip.
+		tooltipEl.style.opacity = 1;
 	},
 };
 
@@ -149,9 +153,9 @@ export const toolTipBaseConfig = {
 				break;
 			case 'format':
 				value = number.format( value );
-			  	break;
+				break;
 			default:
-		  }
+		}
 
 		return value;
 	}

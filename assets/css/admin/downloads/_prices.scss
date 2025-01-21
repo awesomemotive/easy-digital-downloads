@@ -1,3 +1,7 @@
+.edd-section-content__fields--custom {
+	display: grid;
+	gap: 20px;
+}
 
 .edd-custom-price-option {
 	&-sections-wrap {
@@ -11,8 +15,8 @@
 
 	&-section {
 		display: block;
-		padding: 10px 8px;
-		border-bottom: 1px solid rgba( 222, 222, 222, 0.3 );
+		padding: .5em .5em 20px .5em;
+		border-bottom: 1px solid $wp-border;
 
 		&-title {
 			display: block;
@@ -25,10 +29,6 @@
 			gap: 12px;
 			margin-bottom: 6px;
 		}
-
-		&:last-child {
-			border-bottom: none;
-		}
 	}
 }
 
@@ -38,4 +38,8 @@
 	&:hover {
 		color: $wp-text;
 	}
+}
+
+.edd-variable-prices__default input:checked {
+	opacity: .5;
 }

@@ -285,7 +285,7 @@ class EDD_Cart {
 			$tax = $this->get_item_tax( $item['id'], $options, $subtotal_for_tax - $discount );
 
 			if ( edd_prices_include_tax() ) {
-				$subtotal -= round( $tax, edd_currency_decimal_filter() );
+				$subtotal -= $this->format_amount( $tax );
 			}
 
 			$total = $subtotal - $discount + $tax;
@@ -298,13 +298,13 @@ class EDD_Cart {
 				'name'        => get_the_title( $item['id'] ),
 				'id'          => $item['id'],
 				'item_number' => $item,
-				'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
+				'item_price'  => $this->format_amount( $item_price ),
 				'quantity'    => $quantity,
-				'discount'    => round( $discount, edd_currency_decimal_filter() ),
-				'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
-				'tax'         => round( $tax, edd_currency_decimal_filter() ),
+				'discount'    => $this->format_amount( $discount ),
+				'subtotal'    => $this->format_amount( $subtotal ),
+				'tax'         => $this->format_amount( $tax ),
 				'fees'        => $fees,
-				'price'       => round( $total, edd_currency_decimal_filter() ),
+				'price'       => $this->format_amount( $total ),
 			);
 
 			if ( $edd_is_last_cart_item ) {
@@ -720,7 +720,7 @@ class EDD_Cart {
 		);
 
 		// Recalculate using the legacy filter discounted amount.
-		return round( ( $item_price - $discounted_amount ), edd_currency_decimal_filter() );
+		return $this->format_amount( $item_price - $discounted_amount );
 	}
 
 	/**
@@ -943,6 +943,8 @@ class EDD_Cart {
 			$price -= $this->get_item_tax( $download_id, $options, $price );
 		}
 
+		$price = false !== $price ? $this->format_amount( $price ) : $price;
+
 		return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
 	}
 
@@ -982,7 +984,7 @@ class EDD_Cart {
 
 		$tax = max( $tax, 0 );
 
-		return apply_filters( 'edd_get_cart_item_tax', $tax, $download_id, $options, $subtotal );
+		return apply_filters( 'edd_get_cart_item_tax', $this->format_amount( $tax ), $download_id, $options, $subtotal );
 	}
 
 	/**
@@ -1031,7 +1033,7 @@ class EDD_Cart {
 			}
 		}
 
-		$this->subtotal = apply_filters( 'edd_get_cart_items_subtotal', $subtotal );
+		$this->subtotal = apply_filters( 'edd_get_cart_items_subtotal', $this->format_amount( $subtotal ) );
 
 		return $this->subtotal;
 	}
@@ -1082,7 +1084,7 @@ class EDD_Cart {
 			}
 		}
 
-		return apply_filters( 'edd_get_cart_discounted_amount', $amount );
+		return apply_filters( 'edd_get_cart_discounted_amount', $this->format_amount( $amount ) );
 	}
 
 	/**
@@ -1131,7 +1133,7 @@ class EDD_Cart {
 			$total = 0.00;
 		}
 
-		$this->total = (float) apply_filters( 'edd_get_cart_total', $total );
+		$this->total = (float) apply_filters( 'edd_get_cart_total', $this->format_amount( $total ) );
 
 		return $this->total;
 	}
@@ -1173,7 +1175,7 @@ class EDD_Cart {
 			$fee_total += $fee['amount'];
 		}
 
-		return apply_filters( 'edd_get_fee_total', $fee_total, $this->fees );
+		return apply_filters( 'edd_get_fee_total', $this->format_amount( $fee_total ), $this->fees );
 	}
 
 	/**
@@ -1258,7 +1260,7 @@ class EDD_Cart {
 			$cart_tax = 0;
 		}
 
-		$cart_tax = apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
+		$cart_tax = apply_filters( 'edd_get_cart_tax', $this->format_amount( edd_sanitize_amount( $cart_tax ) ) );
 
 		return $cart_tax;
 	}
@@ -1273,7 +1275,7 @@ class EDD_Cart {
 	 */
 	public function tax( $echo = false ) {
 		$cart_tax = $this->get_tax();
-		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
+		$cart_tax = edd_currency_filter( $cart_tax );
 
 		$tax = max( $cart_tax, 0 );
 		$tax = apply_filters( 'edd_cart_tax', $cart_tax );
@@ -1310,7 +1312,7 @@ class EDD_Cart {
 			}
 		}
 
-		return apply_filters( 'edd_get_cart_fee_tax', $tax );
+		return apply_filters( 'edd_get_cart_fee_tax', $this->format_amount( $tax ) );
 	}
 
 	/**
@@ -1494,6 +1496,17 @@ class EDD_Cart {
 	 */
 	public function generate_token() {
 		return apply_filters( 'edd_generate_cart_token', md5( mt_rand() . time() ) );
+	}
+
+	/**
+	 * Format an amount for the cart/currency.
+	 *
+	 * @since 3.3.6
+	 * @param string $amount The amount to format.
+	 * @return string
+	 */
+	private function format_amount( $amount ) {
+		return edd_format_amount( $amount, true, '', 'data' );
 	}
 
 	/**

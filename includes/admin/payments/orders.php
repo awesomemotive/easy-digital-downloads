@@ -188,12 +188,7 @@ function edd_get_order_details_sections( $order ) {
  * @param EDD\Orders\Order $order The order object.
  */
 function edd_order_details_customer( $order ) {
-	$customer  = edd_get_customer( $order->customer_id );
-	$payment   = edd_get_payment( $order->id );
-	$user_info = $payment
-		? $payment->user_info
-		: array();
-
+	$customer    = edd_get_customer( $order->customer_id );
 	$change_text = edd_is_add_order_page()
 		? esc_html__( 'Assign', 'easy-digital-downloads' )
 		: esc_html__( 'Switch Customer', 'easy-digital-downloads' );
@@ -299,8 +294,11 @@ function edd_order_details_customer( $order ) {
 
 	<?php
 
+
 	// The edd_payment_personal_details_list hook is left here for backwards compatibility.
-	if ( ! edd_is_add_order_page() && $payment instanceof EDD_Payment ) {
+	if ( has_action( 'edd_payment_personal_details_list' ) && ! edd_is_add_order_page() ) {
+		$payment   = edd_get_payment( $order->id );
+		$user_info = $payment ? $payment->user_info : array();
 		do_action( 'edd_payment_personal_details_list', $payment->get_meta(), $user_info );
 	}
 	do_action( 'edd_payment_view_details', $order->id );
@@ -1093,13 +1091,14 @@ function edd_order_details_extras( $order = false ) {
  *
  * @since 3.0
  *
- * @param object $order
+ * @param EDD\Orders\Order $order Order object.
  */
 function edd_order_details_attributes( $order ) {
 
-	$recovery_url = edd_is_add_order_page()
-		? ''
-		: edd_get_payment( $order->id )->get_recovery_url();
+	$recovery_url = '';
+	if ( ! edd_is_add_order_page() ) {
+		$recovery_url = $order->get_recovery_url();
+	}
 
 	$order_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $order->date_created, 'utc', true ) );
 

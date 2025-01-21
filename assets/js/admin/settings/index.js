@@ -10,6 +10,7 @@ const EDD_Settings = {
 		this.misc();
 		this.gateways();
 		this.emails();
+		this.checkout();
 	},
 
 	general: function() {
@@ -193,6 +194,27 @@ const EDD_Settings = {
 
 
 			} );
+	},
+
+	checkout: function() {
+		const registration = document.getElementById( 'edd_settings[logged_in_only]' );
+		const formSelect = document.getElementById( 'edd_settings[show_register_form]' );
+
+		if ( ! registration || ! formSelect ) {
+			return;
+		}
+
+		const handleRegistrationChange = () => {
+			formSelect.querySelectorAll( 'option' ).forEach( option => {
+				option.disabled = 'auto' === registration.value && [ 'registration', 'both' ].includes( option.value );
+				if ( option.disabled && option.value === formSelect.value) {
+					formSelect.value = 'none';
+				}
+			} );
+		};
+
+		handleRegistrationChange();
+		registration.addEventListener( 'change', handleRegistrationChange );
 	}
 };
 
