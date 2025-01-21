@@ -45,6 +45,7 @@ class Textarea extends Base {
 				<?php if ( $this->args['disabled'] ) : ?>
 					disabled
 				<?php endif; ?>
+				<?php echo $this->get_data_elements(); ?>
 			><?php echo esc_textarea( $this->args['value'] ); ?></textarea>
 
 			<?php

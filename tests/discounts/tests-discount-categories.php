@@ -301,7 +301,7 @@ class Categories extends EDD_UnitTestCase {
 		$cart_contents = edd_get_cart_contents();
 		$this->assertTrue( $discount->is_product_requirements_met( false ) );
 		$this->assertFalse( $discount->is_valid_for_categories( false ) );
-		$this->assertEquals( 0, edd_get_item_discount_amount( reset( $cart_contents ), $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 4.0, edd_get_item_discount_amount( reset( $cart_contents ), $cart_contents, array( self::$discount->code ) ) );
 	}
 
 	/**
@@ -330,7 +330,37 @@ class Categories extends EDD_UnitTestCase {
 		$cart_contents = edd_get_cart_contents();
 		$this->assertTrue( $discount->is_product_requirements_met( false ) );
 		$this->assertTrue( $discount->is_valid_for_categories( false ) );
-		$this->assertEquals( 0, edd_get_item_discount_amount( reset( $cart_contents ), $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 4.0, edd_get_item_discount_amount( reset( $cart_contents ), $cart_contents, array( self::$discount->code ) ) );
 		$this->assertEquals( 4.0, edd_get_item_discount_amount( $cart_contents[1], $cart_contents, array( self::$discount->code ) ) );
+	}
+
+	/**
+	 * Test a discount for a product requirement to be discounted and an excluded category to not be discounted.
+	 *
+	 * @return void
+	 */
+	public function test_edd_validate_discount_one_product_requirement_one_excluded_category() {
+		$download_1 = self::$downloads[0];
+		$download_2 = self::$downloads[1];
+		$args       = array(
+			'product_reqs'      => array( $download_1->ID ),
+			'product_condition' => 'all',
+			'categories'        => array( self::$category ),
+			'term_condition'    => 'exclude',
+			'min_charge_amount' => 0,
+			'scope'             => 'global',
+		);
+
+		edd_update_discount( self::$discount->id, $args );
+		edd_add_to_cart( $download_1->ID );
+		edd_add_to_cart( $download_2->ID );
+
+		$discount      = edd_get_discount( self::$discount->id );
+		$cart_contents = edd_get_cart_contents();
+
+		$this->assertTrue( $discount->is_product_requirements_met( false ) );
+		$this->assertFalse( $discount->is_valid_for_categories( false, array( $download_2->ID ) ) );
+		$this->assertEquals( 4.0, edd_get_item_discount_amount( $cart_contents[0], $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 0, edd_get_item_discount_amount( $cart_contents[1], $cart_contents, array( self::$discount->code ) ) );
 	}
 }

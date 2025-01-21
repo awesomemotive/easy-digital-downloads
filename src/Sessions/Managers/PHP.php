@@ -72,6 +72,8 @@ class PHP extends Manager {
 	 * @return void
 	 */
 	public function delete( string $session_key ) {
-		unset( $_SESSION[ $session_key ] );
+		if ( isset( $_SESSION ) ) {
+			unset( $_SESSION[ $session_key ] );
+		}
 	}
 }

@@ -758,8 +758,10 @@ function edd_build_order( $order_data = array() ) {
 		if ( strtolower( $order->email ) !== strtolower( $order_data['user_info']['email'] ) ) {
 
 			// Remove the payment from the previous customer.
-			$previous_customer = new EDD_Customer( $order->customer_id );
-			$previous_customer->remove_payment( $order->id, false );
+			$previous_customer = edd_get_customer( $order->customer_id );
+			if ( $previous_customer ) {
+				$previous_customer->remove_payment( $order->id, false );
+			}
 
 			// Redefine the email first and last names.
 			edd_update_order(
@@ -805,10 +807,10 @@ function edd_build_order( $order_data = array() ) {
 
 	/** Setup customer */
 
-	$customer = new stdClass();
+	$customer = false;
 
 	if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-		$customer = new EDD_Customer( get_current_user_id(), true );
+		$customer = edd_get_customer_by( 'user_id', get_current_user_id() );
 
 		// Customer is logged in but used a different email to purchase so we need to assign that email address to their customer record.
 		if ( ! empty( $customer->id ) && ( $order_args['email'] !== $customer->email ) ) {
@@ -816,29 +818,34 @@ function edd_build_order( $order_data = array() ) {
 		}
 	}
 
-	if ( empty( $customer->id ) ) {
-		$customer = new EDD_Customer( $order_args['email'] );
+	$name = '';
+	if ( ! empty( $order_data['user_info']['first_name'] ) ) {
+		$name = $order_data['user_info']['first_name'];
+	}
+	if ( ! empty( $order_data['user_info']['last_name'] ) ) {
+		$name .= ' ' . $order_data['user_info']['last_name'];
+	}
 
-		if ( empty( $order_data['user_info']['first_name'] ) && empty( $order_data['user_info']['last_name'] ) ) {
-			$name = $order_args['email'];
-		} else {
-			$name = trim( $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'] );
+	if ( ! $customer ) {
+		$customer = edd_get_customer_by( 'email', $order_args['email'] );
+
+		if ( ! $customer ) {
+			$customer_id = edd_add_customer(
+				array(
+					'name'    => $name ? $name : $order_args['email'],
+					'email'   => $order_args['email'],
+					'user_id' => $order_args['user_id'],
+				)
+			);
+			$customer    = edd_get_customer( $customer_id );
 		}
-
-		$customer->create(
-			array(
-				'name'    => $name,
-				'email'   => $order_args['email'],
-				'user_id' => $order_args['user_id'],
-			)
-		);
 	}
 
 	// If the customer name was initially empty, update the record to store the name used at checkout.
-	if ( empty( $customer->name ) ) {
+	if ( $customer && $name && empty( $customer->name ) ) {
 		$customer->update(
 			array(
-				'name' => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'],
+				'name' => $name,
 			)
 		);
 	}
@@ -915,14 +922,6 @@ function edd_build_order( $order_data = array() ) {
 			'state'   => '',
 		)
 	);
-
-	$name = '';
-	if ( ! empty( $order_data['user_info']['first_name'] ) ) {
-		$name = $order_data['user_info']['first_name'];
-	}
-	if ( ! empty( $order_data['user_info']['last_name'] ) ) {
-		$name .= ' ' . $order_data['user_info']['last_name'];
-	}
 
 	$order_address_data = array(
 		'order_id'    => $order_id,

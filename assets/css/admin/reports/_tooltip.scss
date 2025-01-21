@@ -1,14 +1,20 @@
 .edd-chartjs-tooltip {
 	position: absolute;
-	background-color: #fff;
-	border-radius: 7px;
-	transition: all .1s ease;
-	pointer-events: none;
+	background: $white !important;
+	border-width: 0px;
+	border-radius: 12px !important;
+	box-shadow: $edd-tool-tip-shadow !important;
+	color: $edd-tooltip-text !important;
+	width: auto;
+	min-width: 180px;
+	max-width: 250px !important;
+	padding: 16px !important;
+	text-rendering: optimizeLegibility;
+	text-shadow: none !important;
+	font-size: 13px !important;
 	transform: translate(-50%, 0);
-	font-size: 12px;
-	box-shadow: 0 0 0 1px rgba(89, 94, 100, .1), 0 15px 35px 0 rgba(89, 94, 100, .1), 0 5px 15px 0 rgba(0, 0, 0, .12);
-	min-width: 120px;
-	opacity: 0;
+	pointer-events: none;
+	white-space: nowrap;
 }
 
 .edd-chartjs-tooltip-key {

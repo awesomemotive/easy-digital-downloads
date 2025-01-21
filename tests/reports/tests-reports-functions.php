@@ -291,7 +291,7 @@ class Functions extends EDD_UnitTestCase {
 	 * @covers \EDD\Reports\get_filters()
 	 */
 	public function test_get_filters_should_return_records_for_all_official_filters() {
-		$expected = array( 'dates', 'products', 'product_categories', 'taxes', 'gateways', 'discounts', 'regions', 'countries', 'currencies' );
+		$expected = array( 'dates', 'products', 'product_categories', 'taxes', 'gateways', 'discounts', 'regions', 'countries', 'currencies', 'order_statuses' );
 
 		$this->assertEqualSets( $expected, array_keys( Reports\get_filters() ) );
 	}

@@ -12,7 +12,7 @@
 
 use EDD\Logs\File_Download_Log;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -47,73 +47,89 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	private $queried_files = array();
 
 	/**
-	 * Get things started
+	 * Gets the download column.
 	 *
-	 * @since 1.4
-	 * @see WP_List_Table::__construct()
+	 * @since 3.3.6
+	 * @param array $item The log data.
+	 * @return string
 	 */
-	public function __construct() {
-		parent::__construct();
+	protected function column_download( $item ) {
+		$base_url     = remove_query_arg( 'paged' );
+		$column_value = ! is_null( $item['price_id'] )
+			? edd_get_download_name( $item['download'], $item['price_id'] )
+			: edd_get_download_name( $item['download'] );
+
+		return '<a href="' . esc_url( add_query_arg( 'download', absint( $item['download'] ), $base_url ) ) . '" >' . esc_html( $column_value ) . '</a>';
 	}
 
 	/**
-	 * This function renders most of the columns in the list table.
+	 * Gets the customer column.
 	 *
-	 * @since 1.4
-	 *
-	 * @param array  $item Contains all the data of the log item.
-	 * @param string $column_name The name of the column.
-	 *
-	 * @return string Column Name
+	 * @since 3.3.6
+	 * @param array $item The log data.
+	 * @return string
 	 */
-	public function column_default( $item, $column_name ) {
+	protected function column_customer( $item ) {
 		$base_url = remove_query_arg( 'paged' );
-		switch ( $column_name ) {
-			case 'download' :
-				$download     = new EDD_Download( $item[ $column_name ] );
-				$column_value = ! empty( $item['price_id'] )
-					? edd_get_download_name( $download->ID, $item['price_id'] )
-					: edd_get_download_name( $download->ID );
 
-				return '<a href="' . esc_url( add_query_arg( 'download', absint( $download->ID ), $base_url ) ) . '" >' . esc_html( $column_value ) . '</a>';
-			case 'customer' :
-				return ! empty( $item[ 'customer' ]->id )
-					? '<a href="' . esc_url( add_query_arg( 'customer', absint( $item['customer']->id ), $base_url ) ) . '">' . esc_html( $item['customer']->name ) . '</a>'
-					: '&mdash;';
+		return ! empty( $item['customer']->id )
+			? '<a href="' . esc_url( add_query_arg( 'customer', absint( $item['customer']->id ), $base_url ) ) . '">' . esc_html( $item['customer']->name ) . '</a>'
+			: '&mdash;';
+	}
 
-			case 'payment_id' :
-				$number = edd_get_payment_number( $item['payment_id'] );
-				return ! empty( $number )
-					? '<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-payment-history', 'view' => 'view-order-details', 'id' => absint( $item['payment_id'] ) ) ) ) . '">' . esc_html( $number ) . '</a>'
-					: '&mdash;';
-			case 'ip' :
-				return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) )  . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] )  . '</a>';
-			case 'file':
-				return ! empty( $item['file'] )
-					? esc_html( $item['file'] )
-					: '&mdash;';
-			default:
-				return $item[ $column_name ];
-		}
+	/**
+	 * Gets the payment ID column.
+	 *
+	 * @since 3.3.6
+	 * @param array $item The log data.
+	 * @return string
+	 */
+	protected function column_payment_id( $item ) {
+		$number = edd_get_payment_number( $item['payment_id'] );
+
+		return ! empty( $number )
+			? '<a href="' . esc_url(
+				edd_get_admin_url(
+					array(
+						'page' => 'edd-payment-history',
+						'view' => 'view-order-details',
+						'id'   => absint( $item['payment_id'] ),
+					)
+				)
+			) . '">' . esc_html( $number ) . '</a>'
+			: '&mdash;';
+	}
+
+	/**
+	 * Gets the file column.
+	 *
+	 * @since 3.3.6
+	 * @param array $item The log data.
+	 * @return string
+	 */
+	protected function column_file( $item ) {
+		return ! empty( $item['file'] )
+			? esc_html( $item['file'] )
+			: '&mdash;';
 	}
 
 	/**
 	 * Set the table columns.
 	 *
 	 * @since 1.4
-     *
+	 *
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Log ID',       'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'customer'   => __( 'Customer',     'easy-digital-downloads' ),
+			'customer'   => __( 'Customer', 'easy-digital-downloads' ),
 			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
-			'file'       => __( 'File',         'easy-digital-downloads' ),
-			'ip'         => __( 'IP Address',   'easy-digital-downloads' ),
-			'user_agent' => __( 'User Agent',   'easy-digital-downloads' ),
-			'date'       => __( 'Date',         'easy-digital-downloads' )
+			'file'       => __( 'File', 'easy-digital-downloads' ),
+			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
+			'user_agent' => __( 'User Agent', 'easy-digital-downloads' ),
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -122,11 +138,11 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 1.4
 	 *
-	 * @param $log_query array Arguments for getting logs.
-     *
+	 * @param array $log_query Arguments for getting logs.
+	 *
 	 * @return array $logs_data Array of all the logs.
 	 */
-	function get_logs( $log_query = array() ) {
+	public function get_logs( $log_query = array() ) {
 		$logs_data = array();
 
 		$logs = edd_get_file_download_logs( $log_query );
@@ -184,8 +200,8 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param File_Download_Log $log
-	 * @param int               $customer_id
+	 * @param File_Download_Log $log         Log record from the database.
+	 * @param int               $customer_id Customer ID.
 	 *
 	 * @return array
 	 */
@@ -198,7 +214,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 		 * This is needed for backwards compatibility in the `edd_log_file_download_download_files` filter.
 		 */
 		if ( ! array_key_exists( $log->product_id, $this->queried_files ) ) {
-			$files = get_post_meta( $log->product_id, 'edd_download_files', true );
+			$files                                   = get_post_meta( $log->product_id, 'edd_download_files', true );
 			$this->queried_files[ $log->product_id ] = $files;
 		} else {
 			$files = $this->queried_files[ $log->product_id ];
@@ -233,7 +249,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 			'_edd_log_price_id'    => $log->price_id,
 		);
 
-		foreach( $backwards_compat_meta as $meta_key => $meta_value ) {
+		foreach ( $backwards_compat_meta as $meta_key => $meta_value ) {
 			$meta[ $meta_key ] = array( $meta_value );
 		}
 

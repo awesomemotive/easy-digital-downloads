@@ -85,6 +85,19 @@ class Orders extends EDD_UnitTestCase {
 		$this->assertSame( 'custom', edd_get_order_adjustment_meta( $adjustment->id, 'points_type', true ) );
 	}
 
+	public function test_positive_fee_with_tax_gets_correct_order_total() {
+		$order_data = $this->get_order_data( false );
+		$order_id   = edd_build_order( $order_data );
+
+		$order = edd_get_order( $order_id );
+		$fees  = 0;
+		foreach( $order->get_fees() as $fee ) {
+			$fees += (float) $fee->subtotal;
+		}
+		$expected = $order->subtotal + $fees + $order->tax;
+		$this->assertEquals( $expected, $order->total );
+	}
+
 	public function test_negative_fee_no_tax_is_true() {
 		// Replace the fees.
 		$fees       = array(

@@ -197,10 +197,13 @@ class EDD_Stripe_Mandates {
 			'start_date'      => current_time( 'timestamp' ),
 			'amount_type'     => 'maximum',
 			'supported_types' => array( 'india' ),
-			'interval'        => $this->interval,
 		);
 
-		if ( false !== $this->interval_count ) {
+		if ( ! empty( $this->interval ) ) {
+			$mandate_options['interval'] = $this->interval;
+		}
+
+		if ( ! empty( $this->interval_count ) ) {
 			$mandate_options['interval_count'] = $this->interval_count;
 		}
 

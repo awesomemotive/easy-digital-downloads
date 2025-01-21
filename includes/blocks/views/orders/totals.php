@@ -10,6 +10,7 @@
 do_action( 'edd_order_receipt_before_table', $order, array() );
 ?>
 <div class="edd-blocks-receipt__totals">
+	<?php do_action( 'edd_order_receipt_before', $order, array() ); ?>
 	<div class="edd-blocks__row edd-blocks__row-header edd-blocks-receipt__row-header">
 		<div class="edd-blocks__row-label"><?php echo esc_html_x( 'Order', 'heading', 'easy-digital-downloads' ); ?>:</div>
 		<div class="edd-blocks__row-value"><?php echo esc_html( $order->get_number() ); ?></div>

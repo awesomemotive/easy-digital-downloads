@@ -128,6 +128,9 @@ function edd_format_amount( $amount = 0, $decimals = true, $currency = '', $cont
 		case 'typed':
 			$return_value = $formatter->format_for_typed( $decimals )->typed_amount;
 			break;
+		case 'data':
+			$return_value = $formatter->format_for_data( $decimals )->data_amount;
+			break;
 		case 'display':
 		default:
 			$return_value = $formatter->format_for_display( $decimals )->amount;

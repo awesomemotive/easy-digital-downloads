@@ -1,0 +1,46 @@
+.edd-admin--has-grid {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 20px;
+
+	.postbox {
+		margin-bottom: 0;
+	}
+
+	.edd-from-to-wrapper {
+		display: flex;
+		margin-bottom: 16px;
+		width: 100%;
+
+		input {
+			width: 100%;
+		}
+
+		span {
+			flex-grow: 1;
+		}
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		position: relative;
+	}
+
+	.postbox .edd-select {
+		max-width: 100%;
+		margin-right: 0;
+	}
+
+	.button.updating-message:before,
+	.button.updated-message:before {
+		vertical-align: text-bottom;
+		margin: 0 5px 0 0;
+	}
+
+	@media screen and (max-width: $break-mobile) {
+		grid-template-columns: 1fr;
+	}
+}

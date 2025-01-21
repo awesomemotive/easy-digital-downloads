@@ -61,7 +61,7 @@ final class RequirementsCheck {
 
 		// WordPress.
 		'wp'  => array(
-			'minimum' => '6.0',
+			'minimum' => '6.2',
 			'name'    => 'WordPress',
 			'exists'  => true,
 			'current' => false,

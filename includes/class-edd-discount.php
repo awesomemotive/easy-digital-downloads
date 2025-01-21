@@ -1662,18 +1662,7 @@ class EDD_Discount extends Adjustment {
 		$user   = trim( $user );
 
 		if ( edd_get_cart_contents() && $this->id ) {
-			if (
-				! $this->is_archived( $set_error ) &&
-				$this->is_started( $set_error ) &&
-				$this->is_active( true, $set_error ) &&
-				! $this->is_maxed_out( $set_error ) &&
-				! $this->is_used( $user, $set_error ) &&
-				$this->is_product_requirements_met( $set_error ) &&
-				$this->is_min_price_met( $set_error ) &&
-				$this->is_valid_for_categories( $set_error )
-			) {
-				$return = true;
-			}
+			$return = $this->is_valid_for_conditions( $user, $set_error );
 		} elseif ( $set_error ) {
 			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration', 'easy-digital-downloads' ) );
 		}
@@ -2041,5 +2030,38 @@ class EDD_Discount extends Adjustment {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Checks if the discount is valid for the conditions.
+	 *
+	 * @since 3.3.6
+	 * @param string $user      User info.
+	 * @param bool   $set_error Whether to set an error message.
+	 * @return bool
+	 */
+	private function is_valid_for_conditions( $user, $set_error = true ) {
+		if ( $this->is_archived( $set_error ) ) {
+			return false;
+		}
+		if ( ! $this->is_started( $set_error ) ) {
+			return false;
+		}
+		if ( ! $this->is_active( true, $set_error ) ) {
+			return false;
+		}
+		if ( $this->is_maxed_out( $set_error ) ) {
+			return false;
+		}
+		if ( $this->is_used( $user, $set_error ) ) {
+			return false;
+		}
+		if ( ! $this->is_min_price_met( $set_error ) ) {
+			return false;
+		}
+		if ( ! $this->is_product_requirements_met( $set_error ) || ! count( array_filter( $this->get_product_reqs() ) ) && ! $this->is_valid_for_categories( $set_error ) ) {
+			return false;
+		}
+		return true;
 	}
 }

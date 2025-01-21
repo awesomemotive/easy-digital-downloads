@@ -3,7 +3,6 @@
 /**
  * Internal dependencies.
  */
-import moment from 'moment';
 import { render as lineChartRender } from './line.js';
 import { render as pieChartRender } from './pie.js';
 import { isPieChart } from './utils.js';
@@ -19,10 +18,6 @@ window.edd = window.edd || {};
  * @param {Object} config Chart config.
  */
 window.edd.renderChart = ( config ) => {
-	const isPie = isPieChart( config );
-
-	Chart.defaults.global.pointHitDetectionRadius = 5;
-
 	if ( isPieChart( config ) ) {
 		pieChartRender( config );
 	} else {

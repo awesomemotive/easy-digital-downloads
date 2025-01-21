@@ -378,24 +378,18 @@ class Gateways extends Tab {
 	 * @return array
 	 */
 	private function get_register_form() {
-		$options = array(
-			'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
-			'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
-			'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
-			'none'         => __( 'None', 'easy-digital-downloads' ),
-		);
-		if ( 'auto' === edd_get_option( 'logged_in_only', '' ) ) {
-			unset( $options['both'] );
-			unset( $options['registration'] );
-		}
-
 		return array(
 			'id'      => 'show_register_form',
 			'name'    => __( 'Show Register / Login Form', 'easy-digital-downloads' ),
 			'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
 			'type'    => 'select',
 			'std'     => 'none',
-			'options' => $options,
+			'options' => array(
+				'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
+				'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
+				'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
+				'none'         => __( 'None', 'easy-digital-downloads' ),
+			),
 		);
 	}
 }

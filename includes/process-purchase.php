@@ -768,11 +768,11 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 	// Allow themes and plugins to filter the user data.
 	$user_data = apply_filters( 'edd_insert_user_data', $user_data, $user_args );
 
-	// Allow themes and plugins to hook.
-	do_action( 'edd_insert_user', $user_id, $user_data );
-
 	// Login new user.
 	$user = edd_log_user_in( $user_id, $user_data['user_login'], $user_data['user_pass'] );
+
+	// Allow themes and plugins to hook.
+	do_action( 'edd_insert_user', $user_id, $user_data );
 
 	// If we have errors after trying to use wp_signon, return -1.
 	if ( edd_get_errors() ) {

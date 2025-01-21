@@ -467,7 +467,7 @@ class EDD_Download {
 		 * @param string $price The download price(s).
 		 * @param string|int $id The downloads ID.
 		 */
-		return apply_filters( 'edd_get_download_price', $this->price, $this->ID );
+		return apply_filters( 'edd_get_download_price', edd_format_amount( $this->price, true, '', 'data' ), $this->ID );
 	}
 
 	/**

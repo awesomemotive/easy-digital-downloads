@@ -249,4 +249,21 @@ class ItemAmounts extends EDD_UnitTestCase {
 
 		$this->assertEquals( 10, edd_get_item_discount_amount( $first_item, $cart_contents, array( self::$discount->code ) ) );
 	}
+
+	public function test_get_item_discount_amount_product_required_and_excluded() {
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'excluded_products' => array( self::$downloads[1]->ID ),
+				'product_reqs'      => array( self::$downloads[1]->ID ),
+			)
+		);
+
+		edd_add_to_cart( self::$downloads[1]->ID );
+
+		$cart_contents = edd_get_cart_contents();
+
+		$this->assertFalse( self::$discount->is_valid() );
+		$this->assertEquals( 0, edd_get_item_discount_amount( $cart_contents[0], $cart_contents, array( self::$discount->code ) ) );
+	}
 }

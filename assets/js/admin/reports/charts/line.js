@@ -57,7 +57,7 @@ export const render = ( config ) => {
 						ticks: {
 							maxTicksLimit: 12,
 							autoSkip: true,
-							maxRotation: 0,
+							maxRotation: 45,
 						},
 						time: {
 							...config.options.scales.xAxes[0].time,
