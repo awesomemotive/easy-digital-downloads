@@ -684,7 +684,7 @@ function edd_ajax_download_category_search() {
 
 	$categories_found = get_terms( $category_args );
 
-	if ( ! empty( $categories_found ) ) {
+	if ( ! is_wp_error( $categories_found ) && ! empty( $categories_found ) ) {
 		foreach ( $categories_found as $category ) {
 			$results[] = array(
 				'id'   => $category->slug,

@@ -159,8 +159,11 @@ class Services implements SubscriberInterface {
 
 		$options = array();
 		$terms   = get_terms( 'download_category', apply_filters( 'edd_das_get_terms', $args ) );
-		foreach ( $terms as $term ) {
-			$options[ $term->term_id ] = $term->name;
+
+		if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+			foreach ( $terms as $term ) {
+				$options[ $term->term_id ] = $term->name;
+			}
 		}
 
 		return $options;
