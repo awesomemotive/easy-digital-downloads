@@ -151,11 +151,6 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
 
-	if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
-		// Forces to the first price ID if none is specified and download has variable prices
-		$options['price_id'] = '0';
-	}
-
 	if( isset( $options['quantity'] ) ) {
 		if ( is_array( $options['quantity'] ) ) {
 
@@ -180,36 +175,56 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = explode( ',', $options['price_id'] );
 	}
 
+	$variable_prices = edd_get_variable_prices($download_id);
+	$items = [];
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 
 		// Process multiple price options at once
-		foreach ( $options['price_id'] as $key => $price ) {
+		foreach ( $options['price_id'] as $key => $price_id ) {
+
+		    $price_id = preg_replace( '/[^0-9]/', '', $price_id );
+		    if (is_array($variable_prices) && !isset( $variable_prices[$price_id] )) {
+		        continue;
+		    }
+		    $options['price_id'][ $key ] = $price_id;
 
 			$items[] = array(
 				'id'           => $download_id,
 				'options'      => array(
-					'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
+				    'price_id' => $price_id
 				),
 				'quantity'     => $quantity[ $key ],
 			);
 
 		}
+		if( empty($items) ) {
+		    //TODO komunikat o błędnych numerach wariantów
+		    return;
+		}
 
 	} else {
+	    if ( isset( $options['price_id'] ) ) {
+    		// Sanitize price IDs
+    	    $price_id = preg_replace( '/[^0-9]/', '', $options['price_id'] );
 
-		// Sanitize price IDs
-		foreach( $options as $key => $option ) {
-
-			if( 'price_id' == $key ) {
-				$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
-			}
-
-		}
+    		if (is_array($variable_prices) && !isset( $variable_prices[ $price_id ] )) {
+    		    //TODO komunikat o błędnym numerze wariantu
+    		    return;
+    		}
+    		$options['price_id'] = $price_id;
+	    }
+	    else {
+	        if ( is_array($variable_prices) && !empty($variable_prices) ) {
+	            //TODO komunikat o niepodaniu numeru wariantu
+	            return;
+	        }
+	    }
 
 		// Add a single item
 		$items[] = array(
 			'id'       => $download_id,
-			'options'  => $options,
+		    'options'  => $options,
 			'quantity' => $quantity
 		);
 	}
@@ -232,11 +247,9 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 				$cart[ $key ]['quantity'] += $quantity;
 			}
 
-
 		} else {
 
-			$cart[] = $to_add;
-
+		    $cart[] = $to_add;
 		}
 	}
 
@@ -479,6 +492,10 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
 
 		}
 
+	}
+
+	if( false === $price ) {
+	    $price = edd_get_highest_price_option( $download_id );
 	}
 
 	if( ! $variable_prices || false === $price ) {
