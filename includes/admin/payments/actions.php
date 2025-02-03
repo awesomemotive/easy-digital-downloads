@@ -138,8 +138,14 @@ function edd_update_payment_details( $data ) {
 
 	do_action( 'edd_update_edited_purchase', $payment_id );
 
+	$previous_date = $payment->date;
 	$payment->date = $date;
+
 	$updated       = $payment->save();
+
+	if ($previous_date !== $date) {
+		do_action('edd_payment_date_updated', $payment_id, $status);
+	}
 
 	if ( 0 === $updated ) {
 		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
