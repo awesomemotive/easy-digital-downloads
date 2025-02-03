@@ -428,6 +428,9 @@ function edd_load_gateway( payment_mode ) {
 	};
 	data[wpidea.nonce_name] = wpidea.nonce_value;
 
+	jQuery("[class^='additional_gateway_info']").slideUp();
+	jQuery('.additional_gateway_info_' + payment_mode).slideDown();
+
 	jQuery.ajax({
 		type: "POST",
 		data: data,
