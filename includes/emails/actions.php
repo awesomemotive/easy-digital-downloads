@@ -25,8 +25,7 @@ function edd_trigger_purchase_receipt( $payment_id ) {
 		return;
 	}
 
-	// Send email with secure download link
-	edd_email_purchase_receipt( $payment_id );
+    do_action('send_purchase_receipt', (int)$payment_id);
 }
 add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 1 );
 
