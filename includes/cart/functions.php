@@ -151,6 +151,11 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
 
+	if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
+		// Forces to the first price ID if none is specified and download has variable prices
+		$options['price_id'] = '0';
+	}
+
 	if( isset( $options['quantity'] ) ) {
 		if ( is_array( $options['quantity'] ) ) {
 
@@ -185,7 +190,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 		    $price_id = preg_replace( '/[^0-9]/', '', $price_id );
 		    if (is_array($variable_prices) && !isset( $variable_prices[$price_id] )) {
-		        continue;
+		        $price_id = '0';
 		    }
 		    $options['price_id'][ $key ] = $price_id;
 
@@ -198,33 +203,22 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			);
 
 		}
-		if( empty($items) ) {
-		    //TODO komunikat o błędnych numerach wariantów
-		    return;
+
+	} elseif ( isset( $options['price_id'] ) ) {
+
+		// Sanitize price IDs
+	    $price_id = preg_replace( '/[^0-9]/', '', $options['price_id'] );
+		if (is_array($variable_prices) && !isset( $variable_prices[ $price_id ] )) {
+		    $price_id = '0';
 		}
-
-	} else {
-	    if ( isset( $options['price_id'] ) ) {
-    		// Sanitize price IDs
-    	    $price_id = preg_replace( '/[^0-9]/', '', $options['price_id'] );
-
-    		if (is_array($variable_prices) && !isset( $variable_prices[ $price_id ] )) {
-    		    //TODO komunikat o błędnym numerze wariantu
-    		    return;
-    		}
-    		$options['price_id'] = $price_id;
-	    }
-	    else {
-	        if ( is_array($variable_prices) && !empty($variable_prices) ) {
-	            //TODO komunikat o niepodaniu numeru wariantu
-	            return;
-	        }
-	    }
+		$options['price_id'] = $price_id;
 
 		// Add a single item
 		$items[] = array(
 			'id'       => $download_id,
-		    'options'  => $options,
+		    'options'  => array(
+		        'price_id' => $price_id
+		    ),
 			'quantity' => $quantity
 		);
 	}
@@ -247,9 +241,11 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 				$cart[ $key ]['quantity'] += $quantity;
 			}
 
+
 		} else {
 
-		    $cart[] = $to_add;
+			$cart[] = $to_add;
+
 		}
 	}
 
