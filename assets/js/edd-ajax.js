@@ -421,12 +421,15 @@ function edd_load_gateway( payment_mode ) {
 
 	// Show the ajax loader
 	jQuery('.edd-cart-ajax').show();
-	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
+	jQuery('#edd_purchase_form_wrap').html('<img style="display:block; margin: 10px auto 0;"  src="' + edd_scripts.ajax_loader + '"/>');
 	var data = {
 		'edd_payment_mode': payment_mode,
 		'payment-mode': payment_mode,
 	};
 	data[wpidea.nonce_name] = wpidea.nonce_value;
+
+	jQuery("[class^='additional_gateway_info']").slideUp();
+	jQuery('.additional_gateway_info_' + payment_mode).slideDown();
 
 	jQuery.ajax({
 		type: "POST",
