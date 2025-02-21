@@ -68,24 +68,23 @@ function edd_process_add_to_cart( $data ) {
 
     $options = (isset($data['edd_options']) && is_array($data['edd_options'])) ? $data['edd_options'] : array();
 
-    if ( ! empty( $data['edd_download_quantity'] ) ) {
-		$options['quantity'] = absint( $data['edd_download_quantity'] );
+	$args = [
+	    'add-to-cart' => $download_id
+	];
+	if( isset($options['price_id']) ) {
+	    if( is_array( $options['price_id'] ) ) {
+	        $args['price-id'] = end($options['price_id']);
+	    }
+	    else {
+	        $args['price-id'] = $options['price_id'];
+	    }
+	}
+	if ( ! empty( $data['edd_download_quantity'] ) ) {
+	    $args['quantity'] = absint( $data['edd_download_quantity'] );
 	}
 
-	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
-		foreach ( $options['price_id'] as  $key => $price_id ) {
-			$options['quantity'][ $key ] = isset( $data[ 'edd_download_quantity_' . $price_id ] ) ? absint( $data[ 'edd_download_quantity_' . $price_id ] ) : 1;
-		}
-	}
-
-	$cart        = edd_add_to_cart( $download_id, $options );
-
-	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
-		wp_redirect( edd_get_checkout_uri(), 303 );
-		edd_die();
-	} else {
-		wp_redirect( remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) ) ); edd_die();
-	}
+	wp_redirect(edd_get_checkout_uri($args));
+	edd_die();
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
 
