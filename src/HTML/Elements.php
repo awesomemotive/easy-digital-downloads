@@ -196,6 +196,7 @@ class Elements {
 
 		$user_args = array(
 			'number' => $args['number'],
+			'fields' => array( 'ID', 'display_name' ),
 		);
 		$users     = get_users( $user_args );
 		$options   = array();

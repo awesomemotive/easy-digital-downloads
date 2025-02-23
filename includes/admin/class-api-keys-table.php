@@ -308,6 +308,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 				'meta_value' => 'edd_user_secret_key',
 				'number'     => $this->per_page,
 				'offset'     => $this->per_page * ( $this->get_pagenum() - 1 ),
+				'fields'     => array( 'ID', 'user_email', 'user_login' ),
 			)
 		);
 

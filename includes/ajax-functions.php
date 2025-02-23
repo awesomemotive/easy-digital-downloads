@@ -730,20 +730,22 @@ function edd_ajax_user_search() {
 				array(
 					'search' => '*' . $search . '*',
 					'number' => 50,
+					'fields' => array( 'ID', 'display_name' ),
 				)
 			);
 		}
 
 		// Setup results based on users.
 		if ( ! empty( $users ) ) {
-			$results = array();
-
-			foreach ( $users as $user ) {
-				$results[] = array(
-					'id'   => $user->ID,
-					'name' => $user->display_name,
-				);
-			}
+			$results = array_map(
+				function ( $user ) {
+					return array(
+						'id'   => $user->ID,
+						'name' => $user->display_name,
+					);
+				},
+				$users
+			);
 		}
 	}
 
@@ -827,6 +829,7 @@ function edd_ajax_search_users() {
 	$defaults = array(
 		'number' => 50,
 		'search' => $search_query . '*',
+		'fields' => array( 'ID', 'user_login' ),
 	);
 
 	// Maybe exclude users.
