@@ -4,8 +4,6 @@
  *
  * @group edd_orders
  * @group database
- *
- * @coversDefaultClass \EDD\Orders\Order
  */
 namespace EDD\Tests\Orders;
 

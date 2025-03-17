@@ -321,8 +321,8 @@ var EDD_Download_Configuration = {
 	},
 
 	updatePrices: function() {
-		$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
-			const key = $( this ).parents( '.edd_repeatable_row' ).data( 'key' ),
+		$( '#edd_price_fields' ).on( 'blur', '.edd_variable_prices_name', function() {
+			const key = $( this ).parents( '.edd-section-content__fields--standard' ).data( 'key' ),
 				name = $( this ).val(),
 				field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 

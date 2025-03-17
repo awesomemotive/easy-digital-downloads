@@ -99,9 +99,9 @@ $minutes             = edd_get_minute_values();
 					</th>
 					<td>
 						<span class="edd-amount-type-wrapper">
-							<input type="text" required="required" class="edd-price-field" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_format_amount( $discount->amount ) ); ?>" placeholder="<?php esc_html_e( '10.00', 'easy-digital-downloads' ); ?>" />
+							<input type="text" required="required" class="edd-price-field edd__input edd__input--left" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_format_amount( $discount->amount ) ); ?>" placeholder="<?php esc_html_e( '10.00', 'easy-digital-downloads' ); ?>" />
 							<label for="edd-amount-type" class="screen-reader-text"><?php esc_html_e( 'Amount Type', 'easy-digital-downloads' ); ?></label>
-							<select name="amount_type" id="edd-amount-type">
+							<select name="amount_type" id="edd-amount-type" class="edd__input edd__input--right">
 								<option value="percent" <?php selected( $type, 'percent' ); ?>>%</option>
 								<option value="flat"<?php selected( $type, 'flat' ); ?>><?php echo esc_html( edd_currency_symbol() ); ?></option>
 							</select>
@@ -326,7 +326,8 @@ $minutes             = edd_get_minute_values();
 			<input type="hidden" name="type" value="discount" />
 			<input type="hidden" name="edd-action" value="edit_discount" />
 			<input type="hidden" name="discount-id" value="<?php echo esc_attr( $discount->id ); ?>" />
-			<?php $redirect_url = esc_url(
+			<?php
+			$redirect_url = esc_url(
 				edd_get_admin_url(
 					array(
 						'page'       => 'edd-discounts',

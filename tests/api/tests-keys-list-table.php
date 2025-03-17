@@ -103,7 +103,7 @@ class List_Table extends EDD_UnitTestCase {
 	/**
 	 * Verify the pagination args.
 	 *
-	 * @covers \EDD_API_Keys_Table::test_pagination_args()
+	 * @covers \EDD_API_Keys_Table::get_pagination_arg()
 	 */
 	public function test_pagination_args() {
 		self::$list_table->prepare_items();

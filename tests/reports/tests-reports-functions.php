@@ -869,13 +869,13 @@ class Functions extends EDD_UnitTestCase {
 	}
 
 	public function test_parse_dates_for_range_with_last_quarter_range_should_return_those_dates_utc_plus() {
-		$date = EDD()->utils->date( 'now', 'UTC', false );
+		$date = EDD()->utils->date( '2024-12-25', 'UTC', false );
 		$expected = array(
 			'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
 			'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),
 		);
 
-		$date = EDD()->utils->date( 'now', 'GMT+5', false );
+		$date = EDD()->utils->date( '2024-12-25', 'GMT+5', false );
 		$result = array(
 			'start' => $date->copy()->subQuarter( 1 )->startOfQuarter(),
 			'end'   => $date->copy()->subQuarter( 1 )->endOfQuarter(),

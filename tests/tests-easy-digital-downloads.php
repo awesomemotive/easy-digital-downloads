@@ -5,8 +5,6 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * EDD class tests.
- *
- * @coversDefaultClass EDD
  */
 class EDD extends EDD_UnitTestCase {
 	protected $object;
@@ -24,9 +22,6 @@ class EDD extends EDD_UnitTestCase {
 		$this->assertClassHasStaticAttribute( 'instance', 'Easy_Digital_Downloads' );
 	}
 
-	/**
-	 * @covers Easy_Digital_Downloads::setup_constants
-	 */
 	public function test_constants() {
 		// Plugin Folder URL
 		$path = str_replace( 'tests/', '', plugin_dir_url( __FILE__ ) );
@@ -45,8 +40,6 @@ class EDD extends EDD_UnitTestCase {
 
 	/**
 	 * @dataProvider _test_includes_dp
-	 * @covers ::includes()
-	 *
 	 * @group edd_includes
 	 */
 	public function test_includes( $path_to_file ) {
@@ -74,7 +67,6 @@ class EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/api/class-edd-api-v1.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php' ),
-			array( EDD_PLUGIN_DIR . 'includes/class-edd-fees.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/deprecated/classes.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' ),
@@ -143,8 +135,6 @@ class EDD extends EDD_UnitTestCase {
 
 	/**
 	 * @dataProvider _test_includes_assets_dp
-	 * @covers ::includes()
-	 *
 	 * @group edd_includes
 	 */
 	public function test_includes_assets( $path_to_file ) {

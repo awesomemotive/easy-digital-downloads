@@ -1,45 +1,124 @@
-.edd-section-content__fields--custom {
-	display: grid;
-	gap: 20px;
+.edd-variable-prices__wrapper {
+	display: flex;
+	flex-direction: column;
 }
 
-.edd-custom-price-option {
-	&-sections-wrap {
-		display: none;
-		border-width: 0 1px 1px;
-		border-style: solid;
-		border-color: $wp-border;
-		box-sizing: border-box;
-		width: 100%;
+.edd__header-footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	gap: .5em;
+	padding: 16px 0;
+
+	.button-link {
+		text-decoration: none;
 	}
 
-	&-section {
+	.edd-header-separator {
 		display: block;
-		padding: .5em .5em 20px .5em;
-		border-bottom: 1px solid $wp-border;
+	}
+}
 
-		&-title {
+.edd-variable-prices__rows {
+	border-top: 1px solid $wp-border;
+}
+
+.edd-variable-price__row {
+	padding: 20px;
+	border: 0;
+	border-radius: 0;
+	border-bottom: 1px solid $wp-border;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+
+	.edd-section-content__fields--standard {
+		align-items: center;
+		flex-grow: 1;
+		border: 0;
+
+		@media screen and (min-width: $break-mobile) {
+			flex-wrap: nowrap;
+		}
+
+		.regular-text {
+			width: 100%;
+			max-width: 100%;
+		}
+
+		.edd-form-group__control {
+			margin-bottom: 0px;
+		}
+
+		.edd-option-price {
+			margin-left: auto;
+		}
+	}
+
+	.edd-custom-price-option {
+		&-section {
 			display: block;
-			font-weight: 600;
-			padding: 0 0 10px;
-		}
+			padding: 20px;
+			padding-left: calc(2rem + 12px);
+			border-top: 1px solid $wp-border;
 
-		&-content {
-			display: flex;
-			gap: 12px;
-			margin-bottom: 6px;
+			&-title {
+				display: block;
+				font-weight: 600;
+				padding: 0 0 10px;
+			}
+
+			&-content {
+				display: flex;
+				gap: 12px;
+			}
 		}
+	}
+
+	.toggle-custom-price-option-section {
+		color: $wp-gray-40;
+
+		&:hover {
+			color: $wp-text;
+		}
+	}
+
+	.edd-variable-prices__default {
+		margin-left: calc(2rem + 12px);
+		margin-right: auto;
+
+		input:checked {
+			opacity: .5;
+		}
+	}
+
+	.edd-section__actions {
+		align-self: flex-end;
+		margin-left: auto;
+		display: flex;
+		gap: 8px;
 	}
 }
 
-.toggle-custom-price-option-section {
-	color: $wp-gray-40;
-
-	&:hover {
-		color: $wp-text;
-	}
+.edd-variable-price__id {
+	flex-basis: 2rem;
+	font-weight: 600;
+	margin-bottom: 0;
+	text-align: right;
 }
 
-.edd-variable-prices__default input:checked {
-	opacity: .5;
+.edd-variable-price__name {
+	flex-grow: 1;
+}
+
+.edd-section-content__fields--custom {
+	flex-basis: 100%;
+
+	.closed & {
+		display: none;
+	}
+
+	.open & {
+		display: grid;
+	}
 }

@@ -62,9 +62,9 @@ defined( 'ABSPATH' ) || exit;
 					</th>
 					<td>
 						<span class="edd-amount-type-wrapper">
-							<input type="text" required="required" class="edd-price-field" id="edd-amount" name="amount" value="" placeholder="<?php esc_html_e( '10.00', 'easy-digital-downloads' ); ?>"/>
+							<input type="text" required="required" class="edd__input edd__input--left edd-price-field" id="edd-amount" name="amount" value="" placeholder="<?php esc_html_e( '10.00', 'easy-digital-downloads' ); ?>"/>
 							<label for="edd-amount-type" class="screen-reader-text"><?php esc_html_e( 'Amount Type', 'easy-digital-downloads' ); ?></label>
-							<select name="amount_type" id="edd-amount-type">
+							<select name="amount_type" id="edd-amount-type" class="edd__input edd__input--right">
 								<option value="percent">%</option>
 								<option value="flat"><?php echo esc_html( edd_currency_symbol() ); ?></option>
 							</select>

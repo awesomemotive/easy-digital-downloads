@@ -2,8 +2,7 @@
 /**
  * PayPal Standard Gateway
  *
- * @package     EDD
- * @subpackage  Gateways
+ * @package     EDD\Gateways
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -176,25 +175,26 @@ function edd_process_paypal_purchase( $purchase_data ) {
 	// Collect payment data.
 	$payment_data = array(
 		'price'        => $purchase_data['price'],
-		'date'         => $purchase_data['date'],
 		'user_email'   => $purchase_data['user_email'],
 		'purchase_key' => $purchase_data['purchase_key'],
-		'currency'     => edd_get_currency(),
 		'downloads'    => $purchase_data['downloads'],
 		'user_info'    => $purchase_data['user_info'],
 		'cart_details' => $purchase_data['cart_details'],
 		'gateway'      => 'paypal',
-		'status'       => ! empty( $purchase_data['buy_now'] ) ? 'private' : 'pending',
+		'status'       => 'pending',
 	);
+	if ( ! empty( $purchase_data['date'] ) ) {
+		$payment_data['date'] = $purchase_data['date'];
+	}
 
-	// Record the pending payment.
-	$payment = edd_insert_payment( $payment_data );
+	// Record the pending order.
+	$order_id = edd_build_order( $payment_data );
 
 	// Check payment.
-	if ( ! $payment ) {
+	if ( ! $order_id ) {
 		// Record the error.
 		/* translators: %s: payment data */
-		edd_record_gateway_error( __( 'Payment Error', 'easy-digital-downloads' ), sprintf( __( 'Payment creation failed before sending buyer to PayPal. Payment data: %s', 'easy-digital-downloads' ), json_encode( $payment_data ) ), $payment );
+		edd_record_gateway_error( __( 'Payment Error', 'easy-digital-downloads' ), sprintf( __( 'Payment creation failed before sending buyer to PayPal. Payment data: %s', 'easy-digital-downloads' ), json_encode( $payment_data ) ), $order_id );
 		// Problems? send back.
 		edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
 	} else {
@@ -202,15 +202,15 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$listener_url = add_query_arg( 'edd-listener', 'IPN', home_url( 'index.php' ) );
 
 		// Set the session data to recover this payment in the event of abandonment or error.
-		EDD()->session->set( 'edd_resume_payment', $payment );
+		EDD()->session->set( 'edd_resume_payment', $order_id );
 
 		// Get the success url.
 		$return_url = add_query_arg(
 			array(
 				'payment-confirmation' => 'paypal',
-				'payment-id'           => urlencode( $payment ),
+				'payment-id'           => urlencode( $order_id ),
 			),
-			get_permalink( edd_get_option( 'success_page', false ) )
+			edd_get_confirmation_page_uri()
 		);
 
 		// Get the PayPal redirect uri.
@@ -228,10 +228,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'no_note'       => '1',
 			'currency_code' => edd_get_currency(),
 			'charset'       => get_bloginfo( 'charset' ),
-			'custom'        => $payment,
+			'custom'        => $order_id,
 			'rm'            => '2',
 			'return'        => esc_url_raw( $return_url ),
-			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $payment ) ) ),
+			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $order_id ) ) ),
 			'notify_url'    => esc_url_raw( $listener_url ),
 			'image_url'     => esc_url_raw( edd_get_paypal_image_url() ),
 			'cbt'           => get_bloginfo( 'name' ),
@@ -700,14 +700,14 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 				sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $data ) ),
 				$payment_id
 			);
-			edd_debug_log( 'Invalid payment amount in IPN response. IPN data: ' . printf( $data, true ) );
+			edd_debug_log( 'Invalid payment amount in IPN response. IPN data: ' . var_export( $data ) );
 			edd_update_payment_status( $payment_id, 'failed' );
 			edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid amount in PayPal IPN.', 'easy-digital-downloads' ) );
 			return;
 		}
 		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
 			// Purchase keys don't match.
-			edd_debug_log( 'Invalid purchase key in IPN response. IPN data: ' . printf( $data, true ) );
+			edd_debug_log( 'Invalid purchase key in IPN response. IPN data: ' . var_export( $data ) );
 			edd_record_gateway_error(
 				__( 'IPN Error', 'easy-digital-downloads' ),
 				/* translators: %s: IPN Verification response */
@@ -908,30 +908,31 @@ function edd_get_paypal_image_url() {
  */
 function edd_paypal_success_page_content( $content ) {
 
-	if ( ! isset( $_GET['payment-id'] ) && ! edd_get_purchase_session() ) {
+	$order_id = filter_input( INPUT_GET, 'payment-id', FILTER_SANITIZE_NUMBER_INT );
+	$session  = edd_get_purchase_session();
+	if ( ! $order_id && ! empty( $session['purchase_key'] ) ) {
+		$order_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
+	}
+	if ( ! $order_id && ! $session ) {
 		return $content;
 	}
 
 	edd_empty_cart();
 
-	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
-
-	if ( ! $payment_id ) {
-		$session    = edd_get_purchase_session();
-		$payment_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
+	$payment_confirmation = filter_input( INPUT_GET, 'payment-confirmation', FILTER_SANITIZE_SPECIAL_CHARS );
+	if ( 'paypal' !== $payment_confirmation ) {
+		return $content;
 	}
 
-	$payment = new EDD_Payment( $payment_id );
-
-	if ( $payment->ID > 0 && 'pending' == $payment->status ) {
+	$order = edd_get_order( $order_id );
+	if ( $order && 'pending' === $order->status ) {
 
 		// Payment is still pending so show processing indicator to fix the Race Condition, issue #.
 		ob_start();
 
 		edd_get_template_part( 'payment', 'processing' );
 
-		$content = ob_get_clean();
-
+		return ob_get_clean();
 	}
 
 	return $content;
@@ -965,12 +966,12 @@ function edd_paypal_process_pdt_on_return() {
 	}
 
 	$purchase_session = edd_get_purchase_session();
-	$payment          = new EDD_Payment( $payment_id );
-
 	// If there is no purchase session, don't try and fire PDT.
 	if ( empty( $purchase_session ) ) {
 		return;
 	}
+
+	$payment = edd_get_payment( $payment_id );
 
 	// Do not fire a PDT verification if the purchase session does not match the payment-id PDT is asking to verify.
 	if ( ! empty( $purchase_session['purchase_key'] ) && $payment->key !== $purchase_session['purchase_key'] ) {
@@ -1098,12 +1099,17 @@ function edd_paypal_process_pdt_on_return() {
 				$payment->add_note( __( 'PayPal PDT encountered an unexpected result, payment set to pending', 'easy-digital-downloads' ) );
 				$payment->status = 'pending';
 				$payment->save();
+			}
 
+			if ( 'pending' === $payment->status ) {
+				edd_set_purchase_session(
+					array(
+						'purchase_key' => $payment->key,
+					)
+				);
 			}
 		} else {
-
 			edd_debug_log( 'Attempt to verify PayPal payment with PDT failed. Request return: ' . print_r( $request, true ) );
-
 		}
 	}
 }
@@ -1143,8 +1149,8 @@ add_filter( 'edd_get_payment_transaction_id-paypal', 'edd_paypal_get_payment_tra
  */
 function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 
-	$payment         = new EDD_Payment( $payment_id );
-	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
+	$order           = edd_get_order( $payment_id );
+	$sandbox         = 'test' === $order->mode ? 'sandbox.' : '';
 	$paypal_base_url = 'https://' . $sandbox . 'paypal.com/activity/payment/';
 	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . esc_html( $transaction_id ) . '</a>';
 

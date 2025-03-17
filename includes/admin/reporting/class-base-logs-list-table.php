@@ -23,6 +23,13 @@ use EDD\Admin\List_Table;
 class EDD_Base_Log_List_Table extends List_Table {
 
 	/**
+	 * Native search box
+	 *
+	 * @var bool
+	 */
+	protected $search_box = false;
+
+	/**
 	 * Log type
 	 *
 	 * @var string
@@ -575,9 +582,14 @@ class EDD_Base_Log_List_Table extends List_Table {
 
 		?>
 
-		<p class="search-form">
+		<p class="search-<?php echo $this->search_box ? 'box' : 'form'; ?>">
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search logs...', 'easy-digital-downloads' ); ?>" />
+			<?php
+			if ( $this->search_box ) {
+				submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) );
+			}
+			?>
 		</p>
 
 		<?php

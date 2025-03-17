@@ -22,41 +22,45 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 class VariablePrices extends Section {
 
 	/**
+	 * Section ID.
+	 *
+	 * @since 3.3.6
+	 * @var string
+	 */
+	protected $id = 'variable-pricing';
+
+	/**
 	 * Section priority.
 	 *
 	 * @since 3.3.6
 	 * @var int
 	 */
-	protected $priority = 501;
+	protected $priority = 2;
 
 	/**
-	 * The dynamic class.
+	 * Section icon.
 	 *
+	 * @since 3.3.6
 	 * @var string
 	 */
-	protected $dynamic = true;
+	protected $icon = 'money-alt';
 
 	/**
-	 * The section requirement.
+	 * Section requirement.
 	 *
+	 * @since 3.3.6
 	 * @var string
 	 */
 	protected $requires = 'variable-pricing';
 
 	/**
-	 * Gets the section label.
+	 * Get the section label.
 	 *
 	 * @since 3.3.6
 	 * @return string
 	 */
 	public function get_label() {
-		$args = $this->get_price_args( $this->item );
-		if ( ! empty( $args['name'] ) ) {
-			return $args['name'];
-		}
-
-		/* translators: %s: Price ID */
-		return sprintf( __( 'Price ID: %s', 'easy-digital-downloads' ), $this->id );
+		return __( 'Prices', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -69,45 +73,35 @@ class VariablePrices extends Section {
 		if ( ! $download ) {
 			$download = $item;
 		}
-		$args = $this->get_price_args( $download );
-		$this->do_row( $download, $args );
-		do_action( 'edd_render_price_row', $this->id, $args, $download->ID, $this->id );
-	}
 
-	/**
-	 * Get the repeatable button.
-	 *
-	 * @since 3.3.6
-	 * @return string
-	 */
-	public function get_repeatable_button(): string {
-		ob_start();
-		$classes   = array(
-			'section-title--add-new',
-			'button',
-		);
-		$timestamp = time();
+		$prices = $this->get_price_args( $download );
+
 		?>
-		<li id="edd_download_editor___add--section" class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" role="menuitem" data-edd-requires-variable-pricing="true">
-			<button type="button" class="edd-add-new-section" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>">
-				<span class="dashicons dashicons-insert"></span>
-				<span class="label"><?php esc_html_e( 'Add Price', 'easy-digital-downloads' ); ?></span>
-			</button>
-		</li>
-		<div class="edd-spacer"></div>
-
+		<div class="edd-variable-prices__wrapper">
+			<div class="edd__header-footer">
+				<button type="button" class="button-link edd-button__toggle-expand-custom">
+					<?php esc_html_e( 'Expand All', 'easy-digital-downloads' ); ?>
+				</button>
+				<span class="edd-header-separator">/</span>
+				<button type="button" class="button-link edd-button__toggle-collapse-custom">
+					<?php esc_html_e( 'Collapse All', 'easy-digital-downloads' ); ?>
+				</button>
+			</div>
+			<div id="edd_price_fields" class="edd-variable-prices__rows">
+				<?php
+				foreach ( $prices as $key => $price ) {
+					$this->do_row( $download, $price, $key );
+				}
+				?>
+			</div>
+			<div class="edd__header-footer">
+				<?php $timestamp = time(); ?>
+				<button type="button" class="button button-secondary edd-button__add--variation" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>">
+					<?php esc_html_e( 'Add Variation', 'easy-digital-downloads' ); ?>
+				</button>
+			</div>
+		</div>
 		<?php
-		return ob_get_clean();
-	}
-
-	/**
-	 * Get the ID of the section.
-	 *
-	 * @since 3.3.6
-	 * @return string
-	 */
-	protected function get_id() {
-		return 'price_id_' . $this->id;
 	}
 
 	/**
@@ -119,7 +113,6 @@ class VariablePrices extends Section {
 	protected function get_classes(): array {
 		$classes   = parent::get_classes();
 		$classes[] = 'edd_variable_prices_wrapper'; // For backwards compatibility.
-		$classes[] = 'edd_repeatable_row'; // For backwards compatibility.
 
 		return $classes;
 	}
@@ -132,15 +125,17 @@ class VariablePrices extends Section {
 	 */
 	private function get_price_args( $download ) {
 		$prices = $download ? $download->get_prices() : array();
-		$args   = array(
-			'name'   => '',
-			'amount' => '',
-		);
-		if ( isset( $prices[ $this->id ] ) ) {
-			$args = wp_parse_args( $prices[ $this->id ], $args );
+		if ( ! empty( $prices ) ) {
+			return $prices;
 		}
 
-		return $args;
+		return array(
+			1 => array(
+				'index'  => 1,
+				'name'   => '',
+				'amount' => '',
+			),
+		);
 	}
 
 	/**
@@ -150,83 +145,134 @@ class VariablePrices extends Section {
 	 * @since 3.3.6
 	 *
 	 * @param \EDD_Download $download The download object.
-	 * @param array         $args     The arguments.
+	 * @param array         $args     The price args.
+	 * @param int           $price_id The key.
 	 */
-	private function do_row( $download, $args ) {
+	public function do_row( $download, $args, $price_id ) {
 		?>
-		<input type="hidden" class="edd-section__id" value="<?php echo esc_attr( $this->id ); ?>" />
-		<div class="edd-section__id--badge">#<?php echo esc_html( $this->id ); ?></div>
-		<div class="edd-section-content__fields--standard">
-
-			<div class="edd-form-group">
-				<label for="edd_variable_prices-<?php echo esc_attr( $this->id ); ?>-name" class="edd-form-group__label">
-					<?php esc_html_e( 'Variation Name', 'easy-digital-downloads' ); ?>
-				</label>
-				<div class="edd-form-group__control">
+		<div class="edd-section-content__row edd-variable-price__row edd_repeatable_row closed" id="edd-variable-price__row-<?php echo esc_attr( $price_id ); ?>">
+			<input type="hidden" class="edd-section__id" value="<?php echo esc_attr( $price_id ); ?>" />
+			<input type="hidden" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][index]" value="<?php echo esc_attr( $args['index'] ); ?>"/>
+			<div class="edd-form-row edd-section-content__fields--standard" data-key="<?php echo esc_attr( $price_id ); ?>">
+				<div class="edd-variable-price__id">#<?php echo esc_html( $price_id ); ?></div>
+				<div class="edd-form-group__control edd-variable-price__name">
+					<label for="edd_variable_prices-<?php echo esc_attr( $price_id ); ?>-name" class="screen-reader-text" aria-hidden="true">
+						<?php esc_html_e( 'Variation Name', 'easy-digital-downloads' ); ?>
+					</label>
 					<?php
 					$text = new \EDD\HTML\Text(
 						array(
-							'name'        => 'edd_variable_prices[' . $this->id . '][name]',
-							'id'          => 'edd_variable_prices-' . $this->id . '-name',
+							'name'        => 'edd_variable_prices[' . $price_id . '][name]',
+							'id'          => 'edd_variable_prices-' . $price_id . '-name',
 							'value'       => esc_attr( $args['name'] ),
-							'placeholder' => __( 'Option Name', 'easy-digital-downloads' ),
-							'class'       => 'edd_variable_prices_name regular-text',
+							'placeholder' => __( 'Variation Name', 'easy-digital-downloads' ),
+							'class'       => array( 'edd_variable_prices_name', 'regular-text' ),
 						)
 					);
 					$text->output();
 					?>
 				</div>
+
+				<div class="edd-form-group__control edd-price-input-group edd-option-price">
+					<label for="edd_variable_prices-<?php echo esc_attr( $price_id ); ?>-amount" class="screen-reader-text" aria-hidden="true">
+						<?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?>
+					</label>
+					<span class="edd-amount-type-wrapper">
+						<?php
+						$currency_position = edd_get_option( 'currency_position', 'before' );
+						$currency_symbol   = edd_get_option( 'currency_symbol', '$' );
+
+						// If the currency symbol is before the price, output the prefix.
+						if ( 'before' === $currency_position ) {
+							?>
+							<span class="edd-input__symbol edd-input__symbol--prefix"><?php echo esc_html( $currency_symbol ); ?></span>
+							<?php
+						}
+						?>
+						<?php
+						$price_input = new \EDD\HTML\Text(
+							array(
+								'name'         => 'edd_variable_prices[' . $price_id . '][amount]',
+								'id'           => 'edd_variable_prices-' . $price_id . '-amount',
+								'value'        => esc_attr( $args['amount'] ),
+								'class'        => array( 'edd-amount-input', 'edd-price-field', 'no-controls', 'symbol-' . $currency_position ),
+								'placeholder'  => edd_format_amount( 9.99 ),
+								'include_span' => false,
+							)
+						);
+
+						$price_input->output();
+						if ( 'after' === $currency_position ) {
+							?>
+							<span class="edd-input__symbol edd-input__symbol--suffix"><?php echo esc_html( $currency_symbol ); ?></span>
+							<?php
+						}
+						?>
+					</span>
+				</div>
+
 			</div>
 
-			<div class="edd-form-group edd-option-price">
-				<label for="edd_variable_prices-<?php echo esc_attr( $this->id ); ?>-amount" class="">
-					<?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?>
-				</label>
-				<?php
-				$price_args = array(
-					'name'        => 'edd_variable_prices[' . $this->id . '][amount]',
-					'id'          => 'edd_variable_prices-' . $this->id . '-amount',
-					'value'       => $args['amount'],
-					'placeholder' => edd_format_amount( 9.99 ),
-					'class'       => 'edd-form-group__input edd-price-field',
-				);
-				?>
+			<div class="edd-section__actions">
+				<div class="edd__handle-actions-order hide-if-no-js">
+					<button type="button" class="edd__handle-actions edd__handle-actions-order--higher" aria-disabled="false" aria-describedby="edd-variation-<?php echo esc_attr( $price_id ); ?>-edd__handle-actions-order--higher-description">
+						<span class="screen-reader-text"><?php esc_html_e( 'Move up', 'easy-digital-downloads' ); ?></span>
+						<span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span>
+					</button>
+					<span class="hidden" id="edd-variation-<?php echo esc_attr( $price_id ); ?>-edd__handle-actions-order--higher-description">
+							<?php
+							/* translators: %d: price ID */
+							printf( esc_html__( 'Move price %d up', 'easy-digital-downloads' ), $price_id );
+							?>
+					</span>
+					<button type="button" class="edd__handle-actions edd__handle-actions-order--lower" aria-disabled="false" aria-describedby="edd-variation-<?php echo esc_attr( $price_id ); ?>-edd__handle-actions-order--lower-description">
+						<span class="screen-reader-text"><?php esc_html_e( 'Move down', 'easy-digital-downloads' ); ?></span>
+						<span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+					</button>
+					<span class="hidden" id="edd-variation-<?php echo esc_attr( $price_id ); ?>-edd__handle-actions-order--lower-description">
+							<?php
+							/* translators: %d: price ID */
+							printf( esc_html__( 'Move price %d down', 'easy-digital-downloads' ), $price_id );
+							?>
+					</span>
+				</div>
+				<button type="button" class="button button-secondary edd-button__edit">
+					<?php esc_html_e( 'Edit', 'easy-digital-downloads' ); ?>
+				</button>
+				<?php $this->do_remove_button( $download, $price_id ); ?>
+			</div>
 
-				<div class="edd-form-group__control edd-price-input-group">
+			<div class="edd-section-content__fields--custom">
+				<?php
+				if ( has_action( 'edd_download_price_option_row' ) ) {
+					/**
+					 * Fires inside the variable price row.
+					 *
+					 * @param \EDD_Download $download The download object.
+					 * @param int           $price_id The price ID.
+					 * @param array         $args     The price arguments.
+					 */
+					do_action( 'edd_download_price_option_row', $download->ID, $price_id, $args );
+				}
+				?>
+				<div class="edd-section-content__actions">
 					<?php
-					$currency_position = edd_get_option( 'currency_position', 'before' );
-					if ( 'before' === $currency_position ) {
-						?>
-						<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
-						<?php
-					}
-					$price = new \EDD\HTML\Text( $price_args );
-					$price->output();
-					if ( 'after' === $currency_position ) {
-						?>
-						<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
-						<?php
-					}
+					$this->do_default_price_checkbox( $download, $price_id );
+					$this->do_add_to_cart_button( $download, $price_id );
 					?>
 				</div>
 			</div>
-		</div>
 
-		<?php
-		if ( has_action( 'edd_download_price_option_row' ) ) {
-			?>
-			<div class="edd-section-content__fields--custom">
-				<?php do_action( 'edd_download_price_option_row', $download->ID, $this->id, $args ); ?>
-			</div>
 			<?php
-		}
-		?>
-
-		<div class="edd-section-content__actions">
-			<?php
-			$this->do_default_price_checkbox( $download );
-			$this->do_add_to_cart_button( $download );
-			$this->do_remove_button( $download );
+			/**
+			 * Fires after the variable price row.
+			 *
+			 * @param int   $price_id The price ID.
+			 * @param array $args     The price arguments.
+			 * @param int   $download_id The download ID.
+			 * @param int   $price_id The price ID (duplicate, left for backwards compatibility).
+			 */
+			do_action( 'edd_render_price_row', $price_id, $args, $download->ID, $price_id );
 			?>
 		</div>
 		<?php
@@ -237,17 +283,14 @@ class VariablePrices extends Section {
 	 *
 	 * @since 3.3.6
 	 * @param \EDD_Download $download The download object.
+	 * @param int           $price_id The price ID.
 	 */
-	private function do_default_price_checkbox( $download ) {
+	private function do_default_price_checkbox( $download, $price_id ) {
 		$default_price_id = $download->get_default_price_id() ?: 1;
 		?>
-		<div class="edd-form-group edd-variable-prices__default">
-			<div class="edd-form-group__control edd-toggle">
-				<input type="checkbox" name="_edd_default_price_id" id="edd_default_price_id_<?php echo esc_attr( $this->id ); ?>" value="<?php echo esc_attr( $this->id ); ?>" <?php checked( $default_price_id, $this->id ); ?> />
-				<label for="edd_default_price_id_<?php echo esc_attr( $this->id ); ?>">
-					<?php esc_html_e( 'Default Price', 'easy-digital-downloads' ); ?>
-				</label>
-			</div>
+		<div class="edd-form-group__control edd-variable-prices__default edd-toggle">
+			<input type="checkbox" name="_edd_default_price_id" id="edd_default_price_id_<?php echo esc_attr( $price_id ); ?>" value="<?php echo esc_attr( $price_id ); ?>" <?php checked( $default_price_id, $price_id ); ?> />
+			<label for="edd_default_price_id_<?php echo esc_attr( $price_id ); ?>"><?php esc_html_e( 'Set as Default', 'easy-digital-downloads' ); ?></label>
 		</div>
 		<?php
 	}
@@ -257,19 +300,20 @@ class VariablePrices extends Section {
 	 *
 	 * @since 3.3.6
 	 * @param \EDD_Download $download The download object.
+	 * @param int           $price_id The price ID.
 	 */
-	private function do_add_to_cart_button( $download ) {
+	private function do_add_to_cart_button( $download, $price_id ) {
 		$add_to_cart_link = add_query_arg(
 			array(
 				'edd_action'            => 'add_to_cart',
 				'download_id'           => (int) $download->ID,
-				'edd_options[price_id]' => (int) $this->id,
+				'edd_options[price_id]' => (int) $price_id,
 			),
 			edd_get_checkout_uri()
 		);
 		?>
-		<input type="text" id="edd-add-to-cart-link-<?php echo esc_attr( $this->id ); ?>" class="hidden" value="<?php echo esc_html( $add_to_cart_link ); ?>">
-		<button type="button" class="button button-secondary edd-button__copy" data-clipboard-target="#edd-add-to-cart-link-<?php echo esc_attr( $this->id ); ?>"><?php esc_html_e( 'Copy Add to Cart Link', 'easy-digital-downloads' ); ?></button>
+		<input type="text" id="edd-add-to-cart-link-<?php echo esc_attr( $price_id ); ?>" class="hidden" value="<?php echo esc_html( $add_to_cart_link ); ?>">
+		<button type="button" class="button button-secondary edd-button__copy" data-clipboard-target="#edd-add-to-cart-link-<?php echo esc_attr( $price_id ); ?>"><?php esc_html_e( 'Copy Add to Cart Link', 'easy-digital-downloads' ); ?></button>
 		<?php
 	}
 
@@ -279,7 +323,7 @@ class VariablePrices extends Section {
 	 * @since 3.3.6
 	 * @param \EDD_Download $download The download object.
 	 */
-	private function do_remove_button( $download ) {
+	private function do_remove_button( $download, $price_id ) {
 		$button_classes = array(
 			'edd-section-content__remove',
 			'button',
@@ -289,7 +333,7 @@ class VariablePrices extends Section {
 		$has_orders     = edd_get_order_items(
 			array(
 				'product_id' => $download->ID,
-				'price_id'   => $this->id,
+				'price_id'   => $price_id,
 				'status__in' => edd_get_deliverable_order_item_statuses(),
 				'number'     => 1,
 			)
@@ -299,7 +343,7 @@ class VariablePrices extends Section {
 			$button_classes[] = 'edd-promo-notice__trigger--ajax';
 		}
 		?>
-		<button type="button" class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>" data-id="pricechanges" data-product="<?php echo absint( $download->id ); ?>" data-value="<?php echo absint( $this->id ); ?>">
+		<button type="button" class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>" data-id="pricechanges" data-product="<?php echo absint( $download->id ); ?>" data-price-id="<?php echo absint( $price_id ); ?>" data-value="<?php echo absint( $price_id ); ?>">
 			<?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?>
 		</button>
 		<?php

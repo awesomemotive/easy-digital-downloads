@@ -11,7 +11,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * @group database
  * @group edd_logs
  *
- * @coversDefaultClass \EDD_Log_API_Request_Query
+ * @coversDefaultClass \EDD\Database\Queries\Log_Api_Request
  */
 class Api_Request_Logs_Tests extends EDD_UnitTestCase {
 

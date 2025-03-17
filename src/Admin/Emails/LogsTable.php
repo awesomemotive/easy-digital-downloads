@@ -25,6 +25,13 @@ use EDD\Emails\Templates\Registry;
 class LogsTable extends \EDD_Base_Log_List_Table {
 
 	/**
+	 * Native search box
+	 *
+	 * @var bool
+	 */
+	protected $search_box = true;
+
+	/**
 	 * Log type
 	 *
 	 * @var string
@@ -132,6 +139,45 @@ class LogsTable extends \EDD_Base_Log_List_Table {
 		);
 
 		return $logs->query( $query );
+	}
+
+	/**
+	 * Get the query args.
+	 *
+	 * @since 3.3.7
+	 * @param bool $paginate Whether to paginate the query.
+	 * @return array
+	 */
+	protected function get_query_args( $paginate = true ) {
+		return array( 'search' => $this->get_search() );
+	}
+
+	/**
+	 * Display the tablenav.
+	 *
+	 * @since 3.3.7
+	 * @param string $which The display position.
+	 */
+	protected function display_tablenav( $which ) {
+
+		ob_start();
+
+		if ( 'top' === $which ) {
+			$this->search_box( __( 'Search Logs', 'easy-digital-downloads' ), 'edd-email-logs' );
+		}
+
+		parent::display_tablenav( $which );
+
+		$output = ob_get_clean();
+
+		if ( 'top' === $which ) {
+			$output = sprintf(
+				'<div id="edd-filters">%s</div>',
+				$output
+			);
+		}
+
+		echo $output;
 	}
 
 	/**

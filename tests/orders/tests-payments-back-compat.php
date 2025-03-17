@@ -4,13 +4,14 @@
  *
  * @group edd_back_compat
  * @group edd_legacy
- *
- * @coversDefaultClass \EDD\Compat\Payment
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @coversDefaultClass \EDD\Compat\Payment
+ */
 class Payment_Back_Compat_Tests extends EDD_UnitTestCase {
 
 	/**

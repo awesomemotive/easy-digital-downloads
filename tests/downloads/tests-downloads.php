@@ -103,12 +103,14 @@ class Downloads extends EDD_UnitTestCase {
 		// Retrieve a previously created download
 		$prices = array(
 			array(
-				'name' => 'Simple',
-				'amount' => 20
+				'name'   => 'Simple',
+				'amount' => 20,
+				'index'  => 0,
 			),
 			array(
-				'name' => 'Advanced',
-				'amount' => 100
+				'name'   => 'Advanced',
+				'amount' => 100,
+				'index'  => 1,
 			)
 		);
 		$files = array(

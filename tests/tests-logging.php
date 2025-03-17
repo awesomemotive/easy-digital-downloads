@@ -5,6 +5,8 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * EDD Logging Class Tests
+ *
+ * @coversDefaultClass \EDD\Logging
  */
 class Logging extends EDD_UnitTestCase {
 
@@ -115,9 +117,6 @@ class Logging extends EDD_UnitTestCase {
 		$this->assertSame( 0, self::$object->get_log_count( 1, 'gateway_error' ) );
 	}
 
-	/**
-	 * @covers edd_record_gateway_error()
-	 */
 	public function test_edd_record_gateway_error() {
 
 		$log_id     = edd_record_gateway_error( 'Test gateway error', 'Test gateway error content' );
@@ -140,9 +139,6 @@ class Logging extends EDD_UnitTestCase {
 		$this->assertSame( $expected['content'], $actual_log->content );
 	}
 
-	/**
-	 * @covers edd_add_log()
-	 */
 	public function test_edd_add_log_with_null_type_and_no_id() {
 
 		$log_id = edd_add_log(
@@ -172,9 +168,6 @@ class Logging extends EDD_UnitTestCase {
 		$this->assertSame( $expected['content'], $actual_log->content );
 	}
 
-	/**
-	 * @covers edd_add_log()
-	 */
 	public function test_edd_add_log_with_null_type_and_an_id() {
 
 		$log_id = edd_add_log(
@@ -192,9 +185,6 @@ class Logging extends EDD_UnitTestCase {
 		$this->assertSame( $expected, $actual_log );
 	}
 
-	/**
-	 * @covers edd_add_log()
-	 */
 	public function test_edd_add_log_with_empty_type_and_no_id() {
 
 		$log_id = edd_add_log(
@@ -212,9 +202,6 @@ class Logging extends EDD_UnitTestCase {
 		$this->assertSame( $expected, $actual_log );
 	}
 
-	/**
-	 * @covers edd_add_log()
-	 */
 	public function test_edd_add_log_with_empty_type_and_an_id() {
 
 		$log_id = edd_add_log(

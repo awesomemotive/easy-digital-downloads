@@ -216,7 +216,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// APIs.
 			self::$instance->roles             = new EDD_Roles();
-			self::$instance->fees              = new EDD_Fees();
+			self::$instance->fees              = new EDD\Fees\Handler();
 			self::$instance->api               = new EDD_API();
 			self::$instance->debug_log         = new EDD\Logging();
 			self::$instance->utils             = new EDD\Utilities();
@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.3.6.1' );
+				define( 'EDD_VERSION', '3.3.7' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -591,7 +591,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 
 			// Classes.
-			require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';

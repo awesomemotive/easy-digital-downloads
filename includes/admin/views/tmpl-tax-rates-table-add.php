@@ -9,6 +9,7 @@
  * @author Easy Digital Downloads
  * @version 1.0.0
  */
+
 ?>
 
 <tr class="edd-tax-rate-table-add">
@@ -16,9 +17,18 @@
 	<th colspan="2">
 		<label for="tax_rate_country" class="screen-reader-text"><?php esc_html_e( 'Country', 'easy-digital-downloads' ); ?></label>
 		<?php
-		echo EDD()->html->country_select( array(
-			'id' => 'tax_rate_country',
-		) );
+		add_filter(
+			'edd_countries',
+			function ( $countries ) {
+				return array( '*' => __( 'All Countries', 'easy-digital-downloads' ) ) + $countries;
+			}
+		);
+		echo EDD()->html->country_select(
+			array(
+				'id'                => 'tax_rate_country',
+				'show_option_empty' => __( 'Select a country', 'easy-digital-downloads' ),
+			)
+		);
 		?>
 	</th>
 

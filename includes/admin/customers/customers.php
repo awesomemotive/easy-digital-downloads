@@ -2,17 +2,14 @@
 /**
  * Customers - Admin Functions.
  *
- * @package     EDD
- * @subpackage  Admin/Customers
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @package     EDD\Admin\Customers
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.3
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
-
-/** Navigation ****************************************************************/
 
 /**
  * Output the primary customers page navigation
@@ -102,8 +99,8 @@ function edd_customers_sections( $customer ) {
 	);
 
 	// Get all registered tabs & views.
-	$tabs  = edd_customer_tabs();
-	$views = edd_customer_views();
+	$tabs  = edd_customer_tabs( $customer );
+	$views = edd_customer_views( $customer );
 
 	// Do not display the addresses tab if there are none.
 	if ( empty( $customer->get_addresses() ) ) {
@@ -149,24 +146,29 @@ function edd_customers_page() {
 	wp_enqueue_script( 'edd-admin-customers' );
 	wp_enqueue_script( 'edd-admin-notes' );
 
-	// Views.
+	// If we're not looking at a specific customer, we can just load the main list table based on the tab.
+	if ( empty( filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT ) ) ) {
+		// Tabs.
+		$active_tab = ! empty( $_GET['page_type'] )
+			? sanitize_key( $_GET['page_type'] )
+			: 'customers';
+
+		edd_customers_list( $active_tab );
+		return;
+	}
+
+	// If we have customer ID, determine which view to load.
 	$default_views  = edd_customer_views();
 	$requested_view = isset( $_GET['view'] )
 		? sanitize_key( $_GET['view'] )
-		: 'customers';
+		: 'overview';
 
-	// Tabs.
-	$active_tab = ! empty( $_GET['page_type'] )
-		? sanitize_key( $_GET['page_type'] )
-		: 'customers';
-
+	// If the requested view is valid, render it.
 	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[ $requested_view ] ) ) {
 		// Single customer view.
 		edd_render_customer_view( $requested_view, $default_views );
-
 	} else {
-		// List table view.
-		edd_customers_list( $active_tab );
+		edd_render_customer_view( 'overview', $default_views );
 	}
 }
 
@@ -174,20 +176,64 @@ function edd_customers_page() {
  * Register the views for customer management
  *
  * @since  2.3
+ * @param \EDD_Customer $customer Customer object.
  * @return array Array of views and their callbacks
  */
-function edd_customer_views() {
-	return apply_filters( 'edd_customer_views', array() );
+function edd_customer_views( $customer = null ) {
+	return array_merge(
+		array(
+			'overview'  => 'edd_customers_view',
+			'emails'    => 'edd_customers_emails_view',
+			'addresses' => 'edd_customers_addresses_view',
+			'delete'    => 'edd_customers_delete_view',
+			'notes'     => 'edd_customer_notes_view',
+			'tools'     => 'edd_customer_tools_view',
+		),
+		apply_filters( 'edd_customer_views', array(), $customer )
+	);
 }
 
 /**
  * Register the tabs for customer management
  *
  * @since  2.3
+ * @param \EDD_Customer $customer Customer object.
  * @return array Array of tabs for the customer
  */
-function edd_customer_tabs() {
-	return apply_filters( 'edd_customer_tabs', array() );
+function edd_customer_tabs( $customer = null ) {
+	$tabs = array_merge(
+		array(
+			'overview'  => array(
+				'dashicon' => 'dashicons-admin-users',
+				'title'    => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ),
+			),
+			'emails'    => array(
+				'dashicon' => 'dashicons-email',
+				'title'    => _x( 'Emails', 'Customer Emails tab title', 'easy-digital-downloads' ),
+			),
+			'addresses' => array(
+				'dashicon' => 'dashicons-admin-home',
+				'title'    => _x( 'Addresses', 'Customer Addresses tab title', 'easy-digital-downloads' ),
+			),
+			'notes'     => array(
+				'dashicon' => 'dashicons-admin-comments',
+				'title'    => _x( 'Notes', 'Customer Notes tab title', 'easy-digital-downloads' ),
+			),
+			'tools'     => array(
+				'dashicon' => 'dashicons-admin-tools',
+				'title'    => _x( 'Tools', 'Customer Tools tab title', 'easy-digital-downloads' ),
+			),
+		),
+		apply_filters( 'edd_customer_tabs', array(), $customer )
+	);
+
+	// Ensure that the delete tab is always at the bottom.
+	$tabs['delete'] = array(
+		'dashicon' => 'dashicons-trash',
+		'title'    => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' ),
+	);
+
+	return $tabs;
 }
 
 /**
@@ -284,15 +330,16 @@ function edd_render_customer_view( $view, $callbacks ) {
 		$render = false;
 	}
 
-	if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
+	$customer_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
+
+	if ( empty( $customer_id ) ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'easy-digital-downloads' ) );
 		$render = false;
 	}
 
-	$customer_id = absint( $_GET['id'] );
-	$customer    = edd_get_customer( $customer_id );
+	$customer = ! empty( $customer_id ) ? edd_get_customer( $customer_id ) : false;
 
-	if ( empty( $customer->id ) ) {
+	if ( false === $customer ) {
 		edd_set_error( 'edd-invalid_customer', __( 'Invalid Customer ID Provided.', 'easy-digital-downloads' ) );
 		$render = false;
 	}

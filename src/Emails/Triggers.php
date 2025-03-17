@@ -2,9 +2,10 @@
 /**
  * Class for email triggers.
  *
- * @since 3.2.0
- * @package EDD
- * @subpackage Emails
+ * @package EDD\Emails
+ * @copyright   Copyright (c) 2023, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.2.0
  */
 
 namespace EDD\Emails;
@@ -22,6 +23,7 @@ use EDD\Orders\Order;
  */
 class Triggers implements SubscriberInterface {
 	use Traits\Preview;
+	use Traits\Orders;
 
 	/**
 	 * Get the events that this subscriber is subscribed to.
@@ -39,70 +41,6 @@ class Triggers implements SubscriberInterface {
 			'edd_insert_user'                => array( 'send_new_user_email', 10, 2 ),
 			'edd_stripe_early_fraud_warning' => array( 'send_stripe_early_fraud_warning', 10, 1 ),
 		);
-	}
-
-	/**
-	 * Send the order receipt and admin order notice.
-	 *
-	 * @since 3.2.0
-	 *
-	 * @param int           $order_id The order ID.
-	 * @param Order         $order    The Order object.
-	 * @param \EDD_Customer $customer The customer object.
-	 *
-	 * @return void
-	 */
-	public function send_order_emails( $order_id = 0, $order = null, $customer = null ) {
-		// No order ID and no Order object, we can't move forward, just return.
-		if ( empty( $order_id ) && ! $order instanceof Order ) {
-			return;
-		}
-
-		// Order ID present, but no Order object, let's get the Order object.
-		if ( ! empty( $order_id ) && ! $order instanceof Order ) {
-			$order = edd_get_order( $order_id );
-		}
-
-		// No valid Order object, we can't move forward, just return.
-		if ( false === $order ) {
-			return;
-		}
-
-		if ( 'refund' === $order->type ) {
-			return;
-		}
-
-		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
-		$should_send_order_receipt = edd_get_order_meta( $order_id, '_edd_should_send_order_receipt', true );
-
-		edd_debug_log( 'order_receipt should send: ' . var_export( $should_send_order_receipt, true ) );
-
-		// Delete the meta so we don't keep it around.
-		edd_delete_order_meta( $order_id, '_edd_should_send_order_receipt' );
-
-		if ( $should_send_order_receipt ) {
-			// Send the email.
-			$order_receipt = Registry::get( 'order_receipt', array( $order ) );
-			$order_receipt->send();
-		} else {
-			_edd_deprecated_function( 'edd_trigger_purchase_receipt', '3.2.0', 'EDD\Emails\Types\OrderReceipt' );
-		}
-
-		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
-		$should_send_admin_order_notice = edd_get_order_meta( $order_id, '_edd_should_send_admin_order_notice', true );
-
-		edd_debug_log( 'admin_order_notice should send: ' . var_export( $should_send_admin_order_notice, true ) );
-
-		// Delete the meta so we don't keep it around.
-		edd_delete_order_meta( $order_id, '_edd_should_send_admin_order_notice' );
-
-		if ( $should_send_admin_order_notice ) {
-			// Send the email.
-			$admin_notice = Registry::get( 'admin_order_notice', array( $order ) );
-			$admin_notice->send();
-		} else {
-			_edd_deprecated_function( 'edd_admin_email_notice', '3.2.0', 'EDD\Emails\Types\AdminOrderNotice' );
-		}
 	}
 
 	/**
@@ -133,21 +71,9 @@ class Triggers implements SubscriberInterface {
 			$email    = $customer->email;
 		}
 
-		// To know if people unhooked the legacy filter on edd_purchase_complete, check the order meta.
-		$should_send_order_receipt = edd_get_order_meta( $order_id, '_edd_should_send_order_receipt', true );
-
-		edd_debug_log( 'order_receipt should send: ' . var_export( $should_send_order_receipt, true ) );
-
-		// Delete the meta so we don't keep it around.
-		edd_delete_order_meta( $order_id, '_edd_should_send_order_receipt' );
-
-		$sent = false;
-
-		if ( $should_send_order_receipt ) {
-			$order_receipt          = Registry::get( 'order_receipt', array( $order ) );
-			$order_receipt->send_to = $email;
-			$sent                   = $order_receipt->send();
-		}
+		$order_receipt          = Registry::get( 'order_receipt', array( $order ) );
+		$order_receipt->send_to = $email;
+		$sent                   = $order_receipt->send();
 
 		// Allow filtering this as extensions like Per Product Emails may disable sending the main receipt.
 		$sent = apply_filters( 'edd_resend_order_receipt_was_sent', $sent, $order, $email );

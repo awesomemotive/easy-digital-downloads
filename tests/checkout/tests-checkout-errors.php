@@ -61,4 +61,69 @@ class Errors extends EDD_UnitTestCase {
 
 		$this->assertArrayHasKey( 'email_used', edd_get_errors() );
 	}
+
+	public function test_existing_email_different_customer_is_error() {
+		wp_logout();
+		$user_id = $this->factory->user->create();
+		$user    = get_user_by( 'id', $user_id );
+		$customer_id = edd_add_customer(
+			array(
+				'email'   => $user->user_email,
+				'user_id' => $user->ID,
+				'name'    => $user->display_name,
+			)
+		);
+		$user_2_id = $this->factory->user->create();
+		$user_2    = get_user_by( 'id', $user_2_id );
+		edd_add_customer_email_address(
+			array(
+				'email'       => $user_2->user_email,
+				'customer_id' => $customer_id,
+			)
+		);
+		// log this user in
+		wp_set_current_user( $user_2_id );
+		$_POST['email'] = $user_2->user_email;
+		$errors   = new \EDD\Checkout\Errors();
+		$response = $errors->check_email_ajax();
+
+		$this->assertInstanceOf( 'WP_Error', $response );
+
+		edd_checkout_check_existing_email( array(), array() );
+
+		$this->assertArrayHasKey( 'edd-customer-email-exists', edd_get_errors() );
+	}
+
+	public function test_existing_email_deleted_customer_is_okay() {
+		wp_logout();
+		$user_id = $this->factory->user->create();
+		$user    = get_user_by( 'id', $user_id );
+		$customer_id = edd_add_customer(
+			array(
+				'email'   => $user->user_email,
+				'user_id' => $user->ID,
+				'name'    => $user->display_name,
+			)
+		);
+		$user_2_id = $this->factory->user->create();
+		$user_2    = get_user_by( 'id', $user_2_id );
+		edd_add_customer_email_address(
+			array(
+				'email'       => $user_2->user_email,
+				'customer_id' => $customer_id,
+				'type'        => 'secondary',
+			)
+		);
+		edd_delete_customer( $customer_id );
+		// log this user in
+		wp_set_current_user( $user_2_id );
+		$_POST['email'] = $user_2->user_email;
+		$errors = new \EDD\Checkout\Errors();
+
+		$this->assertTrue( $errors->check_email_ajax() );
+
+		edd_checkout_check_existing_email( array(), array() );
+
+		$this->assertEmpty( edd_get_errors() );
+	}
 }

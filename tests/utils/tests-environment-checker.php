@@ -112,7 +112,7 @@ class EnvironmentCheckerTests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers @covers \EDD\Utils\EnvironmentChecker::paymentGatewayMatch
+	 * @covers \EDD\Utils\EnvironmentChecker::paymentGatewayMatch
 	 */
 	public function test_stripe_gateway_doesnt_match_if_stripe_gateway_not_enabled() {
 		$this->assertFalse( $this->environmentChecker->paymentGatewayMatch( array( 'paypal_commerce' ), 'gateway-stripe' ) );

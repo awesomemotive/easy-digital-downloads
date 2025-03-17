@@ -86,7 +86,6 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$endpoints
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_endpoints_should_flag_WP_Error_including_code_missing_endpoints() {
@@ -102,7 +101,6 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$capability
 	 * @group edd_errors
 	 */
 	public function test_Report_with_empty_capability_should_flag_WP_Error_including_code_missing_capability() {
@@ -162,7 +160,7 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$filters
+	 * @covers ::get_filters
 	 */
 	public function test_Report_with_false_filters_should_return_no_filters() {
 		$report = new Report( array(
@@ -177,7 +175,7 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$filters
+	 * @covers ::get_filters
 	 */
 	public function test_Report_with_non_empty_valid_filters_should_set_those_filters() {
 		$report = new Report( array(
@@ -192,7 +190,7 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$filters
+	 * @covers ::get_filters
 	 * @group edd_errors
 	 */
 	public function test_Report_with_an_invalid_filter_should_flag_WP_Error_including_code_invalid_report_filter() {
@@ -208,7 +206,6 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$display_callback
 	 * @covers ::get_display_callback()
 	 */
 	public function test_Report_with_empty_display_callback_should_set_the_default() {
@@ -223,7 +220,6 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$display_callback
 	 * @covers ::get_display_callback()
 	 */
 	public function test_Report_with_non_empty_callable_display_callback_should_set_that_callback() {
@@ -239,7 +235,6 @@ class Report_Tests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::$display_callback
 	 * @group edd_errors
 	 */
 	public function test_Report_with_non_callable_display_callback_should_flag_WP_Error_including_code_invalid_report_arg_type() {

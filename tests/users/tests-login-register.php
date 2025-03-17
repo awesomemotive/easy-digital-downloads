@@ -30,6 +30,8 @@ class LoginRegister extends EDD_UnitTestCase {
 	/**
 	 * Test that there is displayed a error when the username is incorrect.
 	 *
+	 * @covers ::edd_process_login_form
+	 *
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_incorrect_username() {
@@ -53,6 +55,8 @@ class LoginRegister extends EDD_UnitTestCase {
 	/**
 	 * Test that there is displayed a error when the wrong password is entered.
 	 *
+	 * @covers ::edd_process_login_form
+	 *
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_username_invalid_pass() {
@@ -74,6 +78,8 @@ class LoginRegister extends EDD_UnitTestCase {
 
 	/**
 	 * Test correct login.
+	 *
+	 * @covers ::edd_process_login_form
 	 *
 	 * @since 2.2.3
 	 */
@@ -97,6 +103,8 @@ class LoginRegister extends EDD_UnitTestCase {
 	/**
 	 * Test that the edd_log_user_in() function successfully logs the user in.
 	 *
+	 * @covers ::edd_log_user_in
+	 *
 	 * @since 2.2.3
 	 */
 	public function test_log_user_in_return() {
@@ -105,6 +113,8 @@ class LoginRegister extends EDD_UnitTestCase {
 
 	/**
 	 * Test that the edd_log_user_in() function successfully logs the user in.
+	 *
+	 * @covers ::edd_log_user_in
 	 *
 	 * @since 2.2.3
 	 */
@@ -116,6 +126,8 @@ class LoginRegister extends EDD_UnitTestCase {
 
 	/**
 	 * Test that the function returns when the user is already logged in.
+	 *
+	 * @covers ::edd_process_register_form
 	 *
 	 * @since 2.2.3
 	 */
@@ -141,6 +153,8 @@ class LoginRegister extends EDD_UnitTestCase {
 	/**
 	 * Test that the function returns when the submit is empty.
 	 *
+	 * @covers ::edd_process_register_form
+	 *
 	 * @since 2.2.3
 	 */
 	public function test_process_register_form_return_submit() {
@@ -156,6 +170,8 @@ class LoginRegister extends EDD_UnitTestCase {
 
 	/**
 	 * Test that 'empty' errors are displayed when certain fields are empty.
+	 *
+	 * @covers ::edd_process_register_form
 	 *
 	 * @since 2.2.3
 	 */
@@ -184,6 +200,8 @@ class LoginRegister extends EDD_UnitTestCase {
 	 * Test that a error is displayed when the username already exists.
 	 * Also tests the password mismatch.
 	 *
+	 * @covers ::edd_process_register_form
+	 *
 	 * @since 2.2.3
 	 */
 	public function test_process_register_form_username_exists() {
@@ -206,6 +224,8 @@ class LoginRegister extends EDD_UnitTestCase {
 
 	/**
 	 * Test that a error is displayed when the username is invalid.
+	 *
+	 * @covers ::edd_process_register_form
 	 *
 	 * @since 2.2.3
 	 */
@@ -230,6 +250,8 @@ class LoginRegister extends EDD_UnitTestCase {
 	 * Test that a error is displayed when the email is already taken.
 	 * Test that a error is displayed when the payment email is incorrect.
 	 *
+	 * @covers ::edd_process_register_form
+	 *
 	 * @since 2.2.3
 	 */
 	public function test_process_register_form_payment_email_incorrect() {
@@ -252,7 +274,7 @@ class LoginRegister extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_process_register_form
+	 * @covers ::edd_process_register_form
 	 */
 	public function test_process_register_form_pass2_missing() {
 
@@ -271,14 +293,14 @@ class LoginRegister extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers: edd_get_file_download_login_redirect
+	 * @covers ::edd_get_file_download_login_redirect
 	 */
 	public function test_get_file_download_login_redirect_no_login_redirect_page() {
 		$this->assertTrue( 0 === strpos( edd_get_file_download_login_redirect( array( 'foo' => 'bar' ) ), home_url() ) );
 	}
 
 	/**
-	 * @covers: edd_get_file_download_login_redirect
+	 * @covers ::edd_get_file_download_login_redirect
 	 */
 	public function test_get_file_download_login_redirect_page() {
 
@@ -295,6 +317,9 @@ class LoginRegister extends EDD_UnitTestCase {
 		edd_delete_option( 'login_redirect_page' );
 	}
 
+	/**
+	 * @covers ::edd_get_login_page_uri
+	 */
 	public function test_login_uri_with_block_returns_uri() {
 		$login_page_id = wp_insert_post(
 			array(
@@ -312,6 +337,9 @@ class LoginRegister extends EDD_UnitTestCase {
 		wp_delete_post( $login_page_id );
 	}
 
+	/**
+	 * @covers ::edd_get_login_page_uri
+	 */
 	public function test_login_uri_without_block_returns_false() {
 		$login_page_id = wp_insert_post(
 			array(
@@ -329,6 +357,9 @@ class LoginRegister extends EDD_UnitTestCase {
 		wp_delete_post( $login_page_id );
 	}
 
+	/**
+	 * @covers ::edd_process_register_form
+	 */
 	public function test_process_register_form_customer_email_exists() {
 
 		$customer = edd_add_customer(
@@ -361,15 +392,24 @@ class LoginRegister extends EDD_UnitTestCase {
 		edd_clear_errors();
 	}
 
+	/**
+	 * @covers ::edd_get_password_reset_link
+	 */
 	public function test_edd_get_password_reset_link_with_invalid_user() {
 		$this->assertFalse( edd_get_password_reset_link( 'invalid_user' ) );
 	}
 
+	/**
+	 * @covers ::edd_get_password_reset_link
+	 */
 	public function test_edd_get_password_reset_link_is_core_login_url() {
 		$user_id = $this->factory->user->create();
 		$this->assertStringContainsString( 'wp-login.php', edd_get_password_reset_link( get_userdata( $user_id ) ) );
 	}
 
+	/**
+	 * @covers ::edd_get_password_reset_link
+	 */
 	public function test_edd_get_password_reset_link_uses_edd_login_uri() {
 		$login_page_id = wp_insert_post(
 			array(
@@ -389,11 +429,17 @@ class LoginRegister extends EDD_UnitTestCase {
 		wp_delete_post( $login_page_id );
 	}
 
+	/**
+	 * @covers ::edd_validate_password_reset
+	 */
 	public function test_edd_validate_password_reset_empty_has_errors() {
 		edd_validate_password_reset( array() );
 		$this->assertArrayHasKey( 'password_reset_failed', edd_get_errors() );
 	}
 
+	/**
+	 * @covers ::edd_validate_password_reset
+	 */
 	public function test_edd_validate_password_reset_user_login_has_errors() {
 		edd_validate_password_reset(
 			array(
@@ -405,6 +451,9 @@ class LoginRegister extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'password_reset_failed', edd_get_errors() );
 	}
 
+	/**
+	 * @covers ::edd_validate_password_reset
+	 */
 	public function test_edd_validate_password_reset_invalid_user_has_errors() {
 		edd_validate_password_reset(
 			array(

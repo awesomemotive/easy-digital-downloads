@@ -85,15 +85,9 @@ class Sections extends Base {
 	protected function get_all_section_links() {
 		ob_start();
 
-		$repeatable = '';
 		foreach ( $this->sections as $section ) :
 			echo $this->get_section_link( $section ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			if ( empty( $repeatable ) ) {
-				$repeatable = $section->repeatable_button;
-			}
 		endforeach;
-
-		echo $repeatable; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		// Return current buffer.
 		return ob_get_clean();
@@ -106,7 +100,6 @@ class Sections extends Base {
 	 * @param object $section The section to get a link for.
 	 */
 	public function get_section_link( $section, $doing_ajax = false ) {
-		static $dynamic;
 		ob_start();
 		$id      = $this->id . $section->id;
 		$classes = array(
@@ -114,13 +107,6 @@ class Sections extends Base {
 		);
 		if ( $this->is_current_section( $section->id ) ) {
 			$classes[] = 'section-title--is-active';
-		}
-
-		if ( ! empty( $section->dynamic ) ) {
-			$classes[] = 'section-title--is-dynamic';
-			if ( ! $doing_ajax && ! $this->is_current_section( $section->id ) ) {
-				$classes[] = 'edd-hidden';
-			}
 		}
 		?>
 
@@ -140,7 +126,6 @@ class Sections extends Base {
 				<span class="label">
 					<?php echo $section->label; // Allow HTML. ?>
 				</span>
-				<?php $this->get_order_handles( $section ); ?>
 			</a>
 		</li>
 		<?php
@@ -160,10 +145,6 @@ class Sections extends Base {
 			: '';
 
 		$classes = $section->classes;
-		if ( $section->dynamic ) {
-			$classes[] = 'section-content--is-dynamic';
-		}
-
 		ob_start();
 		?>
 
@@ -222,42 +203,6 @@ class Sections extends Base {
 	 */
 	protected function is_current_section( $section_id = '' ) {
 		return (bool) ( 'details' === $section_id );
-	}
-
-	/**
-	 * Get the order handles for a section.
-	 *
-	 * @since 3.3.6
-	 * @param object $section The section to get order handles for.
-	 */
-	private function get_order_handles( $section ) {
-		if ( empty( $section->dynamic ) ) {
-			return;
-		}
-		?>
-		<div class="edd__handle-actions-order edd-section-title__handle-actions hide-if-no-js">
-			<button type="button" class="edd__handle-actions edd__handle-actions-order--higher" aria-disabled="false" aria-describedby="<?php echo esc_attr( $section->id ); ?>-edd__handle-actions-order--higher-description">
-				<span class="screen-reader-text"><?php esc_html_e( 'Move up', 'easy-digital-downloads' ); ?></span>
-				<span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span>
-			</button>
-			<span class="hidden" id="<?php echo esc_attr( $section->id ); ?>-edd__handle-actions-order--higher-description">
-				<?php
-				/* translators: %s: Section label */
-				printf( esc_html__( 'Move %s up', 'easy-digital-downloads' ), $section->label );
-				?>
-			</span>
-			<button type="button" class="edd__handle-actions edd__handle-actions-order--lower" aria-disabled="false" aria-describedby="<?php echo esc_attr( $section->id ); ?>-edd__handle-actions-order--lower-description">
-				<span class="screen-reader-text"><?php esc_html_e( 'Move down', 'easy-digital-downloads' ); ?></span>
-				<span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-			</button>
-			<span class="hidden" id="<?php echo esc_attr( $section->id ); ?>-edd__handle-actions-order--lower-description">
-				<?php
-				/* translators: %s: Section label */
-				printf( esc_html__( 'Move %s down', 'easy-digital-downloads' ), $section->label );
-				?>
-			</span>
-		</div>
-		<?php
 	}
 
 	/**
