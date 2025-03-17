@@ -2,8 +2,6 @@
 /**
  * Tests for EDD\Utils\Date
  *
- * @coversDefaultClass EDD\Utils\Date
- *
  * @group edd_dates
  * @group edd_objects
  */
@@ -12,6 +10,9 @@ namespace EDD\Tests\Dates;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Utils\Date;
 
+/**
+ * @coversDefaultClass \EDD\Utils\Date
+ */
 class Utilities extends EDD_UnitTestCase {
 
 	/**

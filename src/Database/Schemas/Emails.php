@@ -83,6 +83,7 @@ class Emails extends Schema {
 			'name'       => 'subject',
 			'type'       => 'text',
 			'allow_null' => false,
+			'searchable' => true,
 		),
 
 		// heading.
@@ -91,6 +92,7 @@ class Emails extends Schema {
 			'type'       => 'text',
 			'allow_null' => true,
 			'default'    => null,
+			'searchable' => true,
 		),
 
 		// content.
@@ -98,6 +100,7 @@ class Emails extends Schema {
 			'name'       => 'content',
 			'type'       => 'longtext',
 			'allow_null' => false,
+			'searchable' => true,
 		),
 
 		// status.

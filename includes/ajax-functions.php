@@ -457,20 +457,40 @@ add_action( 'wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fiel
  * @return void
  */
 function edd_ajax_get_download_title() {
-	if ( isset( $_POST['download_id'] ) ) {
-		$post_id   = absint( $_POST['download_id'] );
-		$post_type = get_post_type( $post_id );
-		$title     = 'fail';
+	// If no download ID is set, die.
+	$post_id = filter_input( INPUT_POST, 'download_id', FILTER_VALIDATE_INT );
 
-		if ( 'download' === $post_type ) {
-			$post_title = get_the_title( $_POST['download_id'] );
-			if ( $post_title ) {
-				echo $title = $post_title;
-			}
-		}
-
-		echo $title;
+	// If the download ID is not a valid integer, die.
+	if ( empty( $post_id ) ) {
+		echo 'fail';
+		edd_die();
 	}
+
+	$post = get_post( $post_id );
+
+	// If no post was found, die.
+	if ( ! $post ) {
+		echo 'fail';
+		edd_die();
+	}
+
+	// If the found post is not a download, die.
+	if ( 'download' !== $post->post_type ) {
+		echo 'fail';
+		edd_die();
+	}
+
+	// If the post is not published and the current user does not have permission to read the post, die.
+	if ( 'publish' !== $post->post_status && ! current_user_can( 'read_product', $post_id ) ) {
+		echo 'fail';
+		edd_die();
+	}
+
+	// Get the title of the download.
+	$title = ! empty( $post->post_title ) ? $post->post_title : esc_html__( 'Untitled', 'easy-digital-downloads' );
+
+	// Output the title.
+	echo $title;
 	edd_die();
 }
 add_action( 'wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title' );

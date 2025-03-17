@@ -69,11 +69,11 @@ add_action( 'wp_ajax_nopriv_edd_process_checkout', 'edd_process_purchase_form' )
 
 /**
  * Verify that when a logged in user makes a purchase that the email address
- * used doesn't belong to a different customer
+ * used doesn't belong to a different customer.
  *
  * @since  2.6
- * @param  array $valid_data Validated data submitted for the purchase
- * @param  array $post       Additional $_POST data submitted
+ * @param array $valid_data Validated data submitted for the purchase.
+ * @param array $post       Additional $_POST data submitted.
  * @return void
  */
 function edd_checkout_check_existing_email( $valid_data, $post ) {
@@ -82,43 +82,67 @@ function edd_checkout_check_existing_email( $valid_data, $post ) {
 		return;
 	}
 
+	// If the email has already been validated, skip this check.
+	if ( EDD()->session->get( 'email_validated' ) ) {
+		return;
+	}
+
+	$user            = wp_get_current_user();
+	$email           = $user->user_email;
+	$emails_to_check = array(
+		$email,
+		strtolower( $email ),
+	);
 	// If the logged in user was validated.
 	if ( isset( $valid_data['logged_in_user']['user_email'] ) ) {
-		$email = strtolower( $valid_data['logged_in_user']['user_email'] );
+		$email             = $valid_data['logged_in_user']['user_email'];
+		$emails_to_check[] = $email;
+		$emails_to_check[] = strtolower( $email );
 	} elseif ( isset( $valid_data['login_user_data']['user_email'] ) ) {
 		// If the user is logging in.
-		$email = strtolower( $valid_data['login_user_data']['user_email'] );
-	} else {
-		// The user is already logged in and EDD didn't validate the email.
-		$user  = wp_get_current_user();
-		$email = strtolower( $user->user_email );
+		$email             = $valid_data['login_user_data']['user_email'];
+		$emails_to_check[] = $email;
+		$emails_to_check[] = strtolower( $email );
 	}
+	$emails_to_check = array_unique( $emails_to_check );
 
 	$customer = edd_get_customer_by( 'user_id', get_current_user_id() );
 
 	// If the current user has a customer record and the email address matches, we're good to go.
-	if ( ! empty( $customer->email ) && strtolower( $customer->email ) === $email ) {
+	if ( ! empty( $customer->email ) && in_array( strtolower( $customer->email ), $emails_to_check, true ) ) {
 		return;
 	}
 
-	// If the current user has a customer record and the email address is in the list of emails, we're good to go.
-	if (
-		! empty( $customer->emails ) && // If the customer has emails.
-		is_array( $customer->emails ) && // ...and if the customer emails are an array.
-		in_array( $email, array_map( 'strtolower', $customer->emails ), true ) // ...and the email is in the array.
-	) {
-		return; // ...we're good to go here.
+	$email_args = array(
+		'email__in' => $emails_to_check,
+	);
+	if ( $customer ) {
+		$email_args['customer_id__not_in'] = array( $customer->id );
+	}
+	$matching_emails = edd_get_customer_email_addresses( $email_args );
+	if ( empty( $matching_emails ) ) {
+		return;
 	}
 
-	// Now we are checking to see if any other customers have this email address.
-	$found_email = edd_get_customer_email_address_by( 'email', $email );
-	if ( ! empty( $found_email->customer_id ) ) {
-		edd_set_error(
-			'edd-customer-email-exists',
-			/* translators: %s: email address */
-			sprintf( __( 'The email address %s is already in use.', 'easy-digital-downloads' ), $email )
-		);
+	$existing_customer = false;
+	// Check if any of the matching emails belong to an existing customer.
+	foreach ( $matching_emails as $matching_email ) {
+		$email_customer = edd_get_customer( $matching_email->customer_id );
+		if ( $email_customer && (int) $email_customer->user_id !== (int) $user->ID ) {
+			$existing_customer = true;
+			break;
+		}
 	}
+
+	if ( ! $existing_customer ) {
+		return;
+	}
+
+	edd_set_error(
+		'edd-customer-email-exists',
+		/* translators: %s: email address */
+		sprintf( __( 'The email address %s is already in use.', 'easy-digital-downloads' ), $email )
+	);
 }
 add_action( 'edd_checkout_error_checks', 'edd_checkout_check_existing_email', 10, 2 );
 
@@ -1200,7 +1224,7 @@ function edd_check_purchase_email_length( $valid_data, $posted_data ) {
 add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email_length', 10, 2 );
 
 /**
- * Process a straight-to-gateway purchase
+ * Process a straight-to-gateway purchase.
  *
  * @since 1.7
  * @return void
@@ -1214,23 +1238,23 @@ function edd_process_straight_to_gateway( $data ) {
 	if ( empty( $download_id ) || ! edd_get_download( $download_id ) ) {
 		return;
 	}
-
-	$purchase_data    = edd_build_straight_to_gateway_data( $download_id, $options, $quantity );
-	$enabled_gateways = edd_get_enabled_payment_gateways();
-
-	if ( ! array_key_exists( $purchase_data['gateway'], $enabled_gateways ) ) {
-		foreach ( $purchase_data['downloads'] as $download ) {
-			$options = isset( $download['options'] ) ? $download['options'] : array();
-
-			$options['quantity'] = isset( $download['quantity'] ) ? $download['quantity'] : 1;
-			edd_add_to_cart( $download['id'], $options );
-		}
-
-		edd_set_error( 'edd-straight-to-gateway-error', __( 'There was an error completing your purchase. Please try again.', 'easy-digital-downloads' ) );
-		edd_redirect( edd_get_checkout_uri() );
+	if ( edd_item_in_cart( $download_id ) ) {
+		$purchase_data = edd_get_purchase_session();
+	} else {
+		$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options, $quantity );
+		edd_set_purchase_session( $purchase_data );
 	}
 
-	edd_set_purchase_session( $purchase_data );
+	// If taxes are enabled and the download is not tax exclusive, send back to checkout.
+	if ( edd_use_taxes() && ! edd_download_is_tax_exclusive( $download_id ) ) {
+		edd_send_back_to_checkout();
+	}
+
+	$enabled_gateways = edd_get_enabled_payment_gateways();
+	if ( empty( $purchase_data['gateway'] ) || ! array_key_exists( $purchase_data['gateway'], $enabled_gateways ) ) {
+		edd_send_back_to_checkout();
+	}
+
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
 }
 add_action( 'edd_straight_to_gateway', 'edd_process_straight_to_gateway' );

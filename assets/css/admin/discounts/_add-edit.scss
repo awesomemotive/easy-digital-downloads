@@ -24,30 +24,6 @@
 	height: 100px;
 }
 
-.edd-amount-type-wrapper {
-	position: relative;
-	display: flex;
-}
-
-.edd-amount-type-wrapper select {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	width: auto !important;
-}
-
-.edd-amount-type-wrapper #edd-amount {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-	margin-right: -2px;
-	padding: 0 8px;
-	width: unset;
-	max-width: 125px;
-}
-
-.edd-amount-type-wrapper input:focus {
-	z-index: 2;
-}
-
 .edd-code-wrapper {
 	display: flex;
 	align-items: stretch;

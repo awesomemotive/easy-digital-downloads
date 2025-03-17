@@ -12,8 +12,6 @@ namespace EDD\Admin\Downloads;
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\EventManagement\SubscriberInterface;
-use EDD\Admin\Downloads\Editor\Sections;
-use EDD\Admin\Sections\Section;
 
 /**
  * Metabox class.
@@ -32,7 +30,7 @@ class Metabox implements SubscriberInterface {
 		return array(
 			'wp_ajax_edd_swap_download_type' => 'swap_download_type',
 			'add_meta_boxes'                 => array( 'add_meta_boxes', 9, 2 ),
-			'wp_ajax_edd_clone_section'      => 'clone_section',
+			'wp_ajax_edd_clone_variation'    => 'clone_variation',
 		);
 	}
 
@@ -102,7 +100,7 @@ class Metabox implements SubscriberInterface {
 	 *
 	 * @since 3.3.6
 	 */
-	public function clone_section() {
+	public function clone_variation() {
 		if ( ! current_user_can( 'edit_products' ) || ! edd_doing_ajax() ) {
 			wp_send_json_error();
 		}
@@ -121,17 +119,20 @@ class Metabox implements SubscriberInterface {
 			wp_send_json_error();
 		}
 
-		$section          = new Editor\VariablePrices( $section_id );
-		$config           = (object) $section->get_config();
-		$metabox_sections = new Sections();
-		$metabox_sections->set_item( edd_get_download( $download_id ) );
+		$section = new Editor\VariablePrices();
 
-		wp_send_json_success(
+		ob_start();
+		$section->do_row(
+			edd_get_download( $download_id ),
 			array(
-				'link'    => $metabox_sections->get_section_link( $config, true ),
-				'section' => $metabox_sections->get_section_content( $config ),
-			)
+				'name'   => '',
+				'amount' => '',
+				'index'  => $section_id,
+			),
+			$section_id
 		);
+
+		wp_send_json_success( ob_get_clean() );
 	}
 
 	/**

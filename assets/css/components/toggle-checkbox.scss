@@ -84,4 +84,12 @@
 			}
 		}
 	}
+
+	&.edd-form-group__control {
+		margin-bottom: 0;
+
+		fieldset & {
+			margin-bottom: 12px;
+		}
+	}
 }

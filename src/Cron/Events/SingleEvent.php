@@ -6,19 +6,19 @@
  * serves as a way to schedule a single event, without the need to register it to ensure it is
  * always scheduled.
  *
- * @since 3.3.0
- *
- * @package EDD
- * @subpackage Cron/Events
+ * @package   EDD\Cron\Events
+ * @copyright Copyright (c) 2024, Sandhills Development, LLC
+ * @license   https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since     3.3.0
  */
 
 namespace EDD\Cron\Events;
 
-use EDD\Utils\Exceptions;
-use EDD\Cron\Traits\NextScheduled;
-
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Utils\Exceptions;
+use EDD\Cron\Traits\NextScheduled;
 
 /**
  * Single Event Class
@@ -96,9 +96,35 @@ class SingleEvent {
 	}
 
 	/**
+	 * Remove the event.
+	 *
+	 * @since 3.3.7
+	 *
+	 * @param string $hook The hook name.
+	 * @param array  $args The arguments to pass to the hook.
+	 *
+	 * @return void
+	 */
+	public static function remove( $hook = '', $args = array() ) {
+		$scheduled = self::next_scheduled( $hook, $args );
+
+		if ( false === $scheduled ) {
+			return;
+		}
+
+		self::$run_time = $scheduled;
+		self::$hook     = $hook;
+		self::$args     = $args;
+
+		self::unschedule();
+	}
+
+	/**
 	 * Validate the one time event.
 	 *
 	 * @since 3.3.0
+	 *
+	 * @throws Exceptions\Invalid_Argument If invalid arguments are passed or the event is already scheduled.
 	 *
 	 * @return bool
 	 */
@@ -141,5 +167,16 @@ class SingleEvent {
 	 */
 	private static function schedule() {
 		wp_schedule_single_event( self::$run_time, self::$hook, self::$args );
+	}
+
+	/**
+	 * Unschedule the event.
+	 *
+	 * @since 3.3.7
+	 *
+	 * @return void
+	 */
+	private static function unschedule() {
+		wp_unschedule_event( self::$run_time, self::$hook, self::$args );
 	}
 }

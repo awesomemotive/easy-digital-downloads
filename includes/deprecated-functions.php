@@ -2300,7 +2300,6 @@ function edd_resend_purchase_receipt( $data ) {
 	 */
 	edd_add_order_meta( $data['purchase_id'], '_edd_should_send_order_receipt', '1' );
 }
-add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
 
 /**
  * Trigger the sending of a Test Email

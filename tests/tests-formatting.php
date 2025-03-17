@@ -104,6 +104,10 @@ class Formatting extends EDD_UnitTestCase {
 		$this->assertEquals( '20000.20', edd_format_amount( '20000.20', true, '', 'data' ) );
 	}
 
+	public function test_format_amount_null() {
+		$this->assertEquals( '0.00', edd_format_amount( null, true, '', 'data' ) );
+	}
+
 	public function test_currency_filter() {
 		$this->assertEquals( '&#36;20,000.20', edd_currency_filter( '20,000.20' ) );
 	}

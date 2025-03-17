@@ -31,6 +31,7 @@ class Environment {
 	public function get() {
 		$data = array(
 			'php_version'    => phpversion(),
+			'php_arch'       => 4 === PHP_INT_SIZE ? '32' : '64',
 			'wp_version'     => $this->get_wp_version(),
 			'edd_version'    => EDD_VERSION,
 			'edd_pro'        => (int) (bool) edd_is_pro(),

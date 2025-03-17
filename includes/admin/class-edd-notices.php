@@ -2,15 +2,14 @@
 /**
  * Admin Notices Class
  *
- * @package     EDD
- * @subpackage  Admin/Notices
+ * @package     EDD\Admin
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.3
  */
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * EDD_Notices Class
@@ -60,7 +59,7 @@ class EDD_Notices {
 		}
 
 		// Parse args.
-		$r = wp_parse_args(
+		$notice_args = wp_parse_args(
 			$args,
 			array(
 				'id'             => '',
@@ -71,23 +70,23 @@ class EDD_Notices {
 		);
 
 		// Prevent a notice from being added more than once.
-		if ( ! empty( $r['id'] ) && array_key_exists( $r['id'], $this->notices ) ) {
+		if ( ! empty( $notice_args['id'] ) && array_key_exists( $notice_args['id'], $this->notices ) ) {
 			return;
 		}
 
 		$default_class = 'updated';
 
 		// One message as string.
-		if ( is_string( $r['message'] ) ) {
-			$message = '<p>' . $this->esc_notice( $r['message'] ) . '</p>';
+		if ( is_string( $notice_args['message'] ) ) {
+			$message = '<p>' . $this->esc_notice( $notice_args['message'] ) . '</p>';
 
-		} elseif ( is_array( $r['message'] ) ) {
-			$message = '<p>' . implode( '</p><p>', array_map( array( $this, 'esc_notice' ), $r['message'] ) ) . '</p>';
+		} elseif ( is_array( $notice_args['message'] ) ) {
+			$message = '<p>' . implode( '</p><p>', array_map( array( $this, 'esc_notice' ), $notice_args['message'] ) ) . '</p>';
 
 			// Messages as objects.
-		} elseif ( is_wp_error( $r['message'] ) ) {
+		} elseif ( is_wp_error( $notice_args['message'] ) ) {
 			$default_class = 'is-error';
-			$errors        = $r['message']->get_error_messages();
+			$errors        = $notice_args['message']->get_error_messages();
 
 			switch ( count( $errors ) ) {
 				case 0:
@@ -109,22 +108,26 @@ class EDD_Notices {
 		}
 
 		// CSS Classes.
-		$classes = array( $default_class );
-		if ( ! empty( $r['class'] ) ) {
-			$classes = explode( ' ', $r['class'] );
+		$classes = array(
+			'notice',
+			'edd-notice',
+			$default_class,
+		);
+		if ( ! empty( $notice_args['class'] ) ) {
+			$classes = array_merge( $classes, explode( ' ', $notice_args['class'] ) );
 		}
 
 		// Add dismissible class.
-		if ( ! empty( $r['is_dismissible'] ) ) {
+		if ( ! empty( $notice_args['is_dismissible'] ) ) {
 			array_push( $classes, 'is-dismissible' );
 		}
 
 		// Assemble the message.
-		$message = '<div class="notice ' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '">' . $message . '</div>';
+		$message = '<div class="' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '">' . $message . '</div>';
 		$message = str_replace( "'", "\'", $message );
 
 		// Add notice to notices array.
-		$this->notices[ $r['id'] ] = $message;
+		$this->notices[ $notice_args['id'] ] = $message;
 	}
 
 	/**

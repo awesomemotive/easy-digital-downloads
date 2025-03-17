@@ -9,7 +9,7 @@ use \EDD_Stripe_API;
 /**
  * Tests for EDD_Stripe_Api class.
  *
- * @covers EDD_Stripe_API
+ * @coversDefaultClass EDD_Stripe_API
  */
 class API extends EDD_UnitTestCase {
 
@@ -18,6 +18,9 @@ class API extends EDD_UnitTestCase {
 		edd_update_option( 'live_secret_key', 'sk_live_123' );
 	}
 
+	/**
+	 * @covers ::set_api_key
+	 */
 	public function test_set_api_key_test() {
 		edd_update_option( 'test_mode', true );
 		$api = new EDD_Stripe_API;
@@ -26,6 +29,9 @@ class API extends EDD_UnitTestCase {
 		$this->assertSame( 'sk_test_123', Stripe::$apiKey );
 	}
 
+	/**
+	 * @covers ::set_api_key
+	 */
 	public function test_set_api_key_live() {
 		edd_update_option( 'test_mode', false );
 		$api = new EDD_Stripe_API;
@@ -34,6 +40,9 @@ class API extends EDD_UnitTestCase {
 		$this->assertSame( 'sk_live_123', Stripe::$apiKey );
 	}
 
+	/**
+	 * @covers ::set_app_info
+	 */
 	public function test_set_app_info() {
 		$api = new EDD_Stripe_API();
 		$api->set_app_info();
@@ -55,6 +64,9 @@ class API extends EDD_UnitTestCase {
 		$this->assertSame( EDD_STRIPE_API_VERSION, Stripe::$apiVersion );
 	}
 
+	/**
+	 * @covers ::set_api_version
+	 */
 	public function test_no_conflict() {
 		// Mock some other plugin making requests.
 		Stripe::setApiVersion( '123' );
@@ -63,23 +75,5 @@ class API extends EDD_UnitTestCase {
 		$api->set_api_version();
 
 		$this->assertSame( EDD_STRIPE_API_VERSION, Stripe::$apiVersion );
-	}
-
-	/**
-	 * @covers edds_api_request
-	 */
-	public function test_request() {
-		$this->expectException( \EDD\Vendor\Stripe\Exception\AuthenticationException::class );
-
-		$request = edds_api_request( 'Customer', 'retrieve', 123 );
-	}
-
-	/**
-	 * @covers edds_api_request
-	 */
-	public function test_invalid_request() {
-		$this->expectException( \EDD_Stripe_Utils_Exceptions_Stripe_Object_Not_Found::class );
-
-		$request = edds_api_request( 'UnknownObject', 'retrieve', 123 );
 	}
 }

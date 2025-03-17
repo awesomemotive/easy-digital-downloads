@@ -1,22 +1,39 @@
 <?php
+/**
+ * Deferred Actions for Orders
+ *
+ * @package     EDD\Orders
+ * @copyright   Copyright (c) 2024, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.2.0
+ */
 
 namespace EDD\Orders;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 use EDD\Utils\Date;
 use EDD\EventManagement\SubscriberInterface;
 
+/**
+ * Deferred actions for orders.
+ *
+ * @since 3.2.0
+ */
 class DeferredActions implements SubscriberInterface {
 
 	/**
 	 * Hook into actions and filters.
 	 *
 	 * @since  3.2
-	 * @return void
+	 * @return array
 	 */
 	public static function get_subscribed_events() {
 		return array(
 			'edd_complete_purchase'               => array( 'schedule_deferred_actions', 10, 1 ),
 			'edd_after_payment_scheduled_actions' => array( 'run_deferred_actions', 10, 1 ),
+			'edd_order_destroyed'                 => array( 'unschedule_deferred_actions', 10, 2 ),
 		);
 	}
 
@@ -26,7 +43,7 @@ class DeferredActions implements SubscriberInterface {
 	 * Is run on the edd_complete_purchase action.
 	 *
 	 * @since 3.2.0
-	 * @param $payment_id
+	 * @param int $payment_id The payment ID being processed.
 	 */
 	public static function schedule_deferred_actions( $payment_id ) {
 		edd_debug_log( 'Scheduling after order actions for order ID ' . $payment_id );
@@ -46,13 +63,32 @@ class DeferredActions implements SubscriberInterface {
 	}
 
 	/**
+	 * Unschedule the deferred actions.
+	 *
+	 * @since 3.3.7
+	 *
+	 * @param int  $order_id The order ID.
+	 * @param bool $destroyed If the order was destroyed.
+	 */
+	public static function unschedule_deferred_actions( $order_id, $destroyed ) {
+		if ( ! $destroyed ) {
+			return;
+		}
+
+		\EDD\Cron\Events\SingleEvent::remove(
+			'edd_after_payment_scheduled_actions',
+			array( $order_id, false )
+		);
+	}
+
+	/**
 	 * Runs the deferred actions.
 	 *
 	 * Is run on the edd_after_payment_scheduled_actions action.
 	 *
 	 * @since 3.2.0
-	 * @param $payment_id The payment ID being processed.
-	 * @param bool $force If we should run these actions, even if they've been run before.
+	 * @param int  $payment_id The payment ID being processed.
+	 * @param bool $force      If we should run these actions, even if they've been run before.
 	 *
 	 * @return void
 	 */
@@ -62,7 +98,19 @@ class DeferredActions implements SubscriberInterface {
 		}
 
 		$order = edd_get_order( $payment_id );
+
+		// If the order is not found, return.
+		if ( empty( $order ) ) {
+			return;
+		}
+
+		// If the order has already run the actions, return.
 		if ( ! empty( $order->date_actions_run ) && false === $force ) {
+			return;
+		}
+
+		// If the order is not in a completed status, return.
+		if ( ! in_array( $order->status, edd_get_complete_order_statuses(), true ) ) {
 			return;
 		}
 
@@ -123,8 +171,8 @@ class DeferredActions implements SubscriberInterface {
 	 *
 	 * @since 3.2.0
 	 *
-	 * @param int $payment_id        The payment ID being processed.
-	 * @param EDD_Customer $customer The EDD_Customer object containing all customer data.
+	 * @param int          $payment_id The payment ID being processed.
+	 * @param EDD_Customer $customer   The EDD_Customer object containing all customer data.
 	 */
 	private function maybe_trigger_legacy_action( $payment_id, $customer ) {
 		if ( has_action( 'edd_after_payment_actions' ) ) {
@@ -142,5 +190,4 @@ class DeferredActions implements SubscriberInterface {
 			do_action( 'edd_after_payment_actions', $payment_id, $payment, $customer );
 		}
 	}
-
 }

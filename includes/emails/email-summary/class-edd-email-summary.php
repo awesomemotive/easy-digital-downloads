@@ -50,6 +50,14 @@ class EDD_Email_Summary {
 	private $image_path = 'https://plugin.easydigitaldownloads.com/cdn/summaries/';
 
 	/**
+	 * Date ranges.
+	 *
+	 * @since 3.3.7
+	 * @var array
+	 */
+	private $date_ranges;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @since 3.1
@@ -123,68 +131,6 @@ class EDD_Email_Summary {
 		return apply_filters( 'edd_email_summary_recipients', $recipients );
 	}
 
-	/**
-	 * Get report start date.
-	 *
-	 * @since 3.1
-	 *
-	 * @return EDD\Utils\Date An array of start date and its relative counterpart as the EDD date object set at the UTC equivalent time.
-	 */
-	public function get_report_start_date() {
-		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
-
-		if ( 'monthly' === $this->email_options['email_summary_frequency'] ) {
-			$start_date          = $date->copy()->subMonth( 1 )->startOfMonth();
-			$relative_start_date = $date->copy()->subMonth( 2 )->startOfMonth();
-		} else {
-			$start_date          = $date->copy()->subDay( 7 )->startOfDay();
-			$relative_start_date = $date->copy()->subDay( 14 )->startOfDay();
-		}
-
-		return array(
-			'start_date'          => $start_date,
-			'relative_start_date' => $relative_start_date,
-		);
-	}
-
-	/**
-	 * Get report end date.
-	 *
-	 * @since 3.1
-	 *
-	 * @return EDD\Utils\Date An array of end date and its relative counterpart as the EDD date object set at the UTC equivalent time.
-	 */
-	public function get_report_end_date() {
-		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
-
-		if ( 'monthly' === $this->email_options['email_summary_frequency'] ) {
-			$end_date          = $date->copy()->subMonth( 1 )->endOfMonth();
-			$relative_end_date = $date->copy()->subMonth( 2 )->endOfMonth();
-		} else {
-			$end_date          = $date->copy()->endOfDay();
-			$relative_end_date = $date->copy()->subDay( 7 )->endOfDay();
-		}
-
-		return array(
-			'end_date'          => $end_date,
-			'relative_end_date' => $relative_end_date,
-		);
-	}
-
-	/**
-	 * Get report date range.
-	 *
-	 * @since 3.1
-	 *
-	 * @return array Array of start and end date objects in \EDD\Utils\Date[] format.
-	 */
-	public function get_report_date_range() {
-		// @todo - Check if we have to convert this to UTC because of DB?
-		return array_merge(
-			$this->get_report_start_date(),
-			$this->get_report_end_date()
-		);
-	}
 	/**
 	 * Retrieve ! TEST ! dataset for email content.
 	 *
@@ -414,5 +360,70 @@ class EDD_Email_Summary {
 		}
 
 		return $email_sent;
+	}
+
+	/**
+	 * Get report date range.
+	 *
+	 * @since 3.1
+	 * @return array Array of start and end date objects in \EDD\Utils\Date[] format.
+	 */
+	public function get_report_date_range() {
+		if ( ! is_null( $this->date_ranges ) ) {
+			return $this->date_ranges;
+		}
+
+		$range          = 'last_week';
+		$previous_range = 'previous_period';
+		if ( 'monthly' === $this->email_options['email_summary_frequency'] ) {
+			$range          = 'last_month';
+			$previous_range = 'previous_month';
+		}
+
+		require_once EDD_PLUGIN_DIR . 'includes/reports/reports-functions.php';
+		$parsed_dates          = \EDD\Reports\parse_dates_for_range( $range );
+		$parsed_relative_dates = \EDD\Reports\parse_relative_dates_for_range( $range, $previous_range );
+
+		$this->date_ranges = array(
+			'start_date'          => $parsed_dates['start'],
+			'end_date'            => $parsed_dates['end'],
+			'relative_start_date' => $parsed_relative_dates['start'],
+			'relative_end_date'   => $parsed_relative_dates['end'],
+		);
+
+		return $this->date_ranges;
+	}
+
+	/**
+	 * Get report start date.
+	 *
+	 * @since 3.1
+	 * @deprecated 3.3.7
+	 * @return EDD\Utils\Date An array of start date and its relative counterpart as the EDD date object set at the UTC equivalent time.
+	 */
+	public function get_report_start_date() {
+		$ranges = $this->get_report_date_range();
+
+		return array(
+			'start_date'          => $ranges['start_date'],
+			'relative_start_date' => $ranges['relative_start_date'],
+		);
+	}
+
+	/**
+	 * Get report end date.
+	 *
+	 * @since 3.1
+	 * @deprecated 3.3.7
+	 * @return EDD\Utils\Date An array of end date and its relative counterpart as the EDD date object set at the UTC equivalent time.
+	 */
+	public function get_report_end_date() {
+
+		$ranges = $this->get_report_date_range();
+
+		return array(
+			'end_date'          => $ranges['end_date'],
+			'relative_end_date' => $ranges['relative_end_date'],
+		);
 	}
 }

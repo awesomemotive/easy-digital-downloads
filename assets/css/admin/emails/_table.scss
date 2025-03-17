@@ -31,7 +31,7 @@ td.column-status {
 	}
 }
 
-tr.no-items {
+tr.no-items:not(:only-child) {
 	display: none;
 }
 
@@ -55,13 +55,19 @@ table.email_templates {
 	margin-top: 1em;
 }
 
-.tablenav {
-	&.top {
-		position: relative;
+.edd-emails__tablenav--top {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+
+	p.search-box {
+		margin: 0;
 	}
 
-	.alignright.actions {
-		padding-right: 0;
+	.edd-emails__actions {
+		margin-left: auto;
 	}
 }
 

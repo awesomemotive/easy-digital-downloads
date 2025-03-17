@@ -76,6 +76,14 @@ class Details extends Section {
 				echo esc_html(
 					apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'easy-digital-downloads' ) )
 				);
+
+				$tooltip = new \EDD\HTML\Tooltip(
+					array(
+						'id'      => 'edd-product-type-tooltip',
+						'content' => __( 'Sell this item as a single product with download files, or select a custom product type with different options, which may not necessarily include download files.', 'easy-digital-downloads' ),
+					)
+				);
+				$tooltip->output();
 				?>
 			</label>
 			<div class="edd-form-group__control">
@@ -97,9 +105,105 @@ class Details extends Section {
 				$select->output();
 				?>
 			</div>
-			<p class="edd-form-group__help description">
-				<?php esc_html_e( 'Sell this item as a single product with download files, or select a custom product type with different options, which may not necessarily include download files.', 'easy-digital-downloads' ); ?>
-			</p>
+		</div>
+
+		<?php
+		$price             = $download->get_price();
+		$currency_position = edd_get_option( 'currency_position', 'before' );
+		?>
+
+		<div id="edd_regular_price_field" class="edd-form-group edd_pricing_fields" data-edd-requires-variable-pricing="false">
+			<label for="edd_price" class="edd-form-group__label">
+				<?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?>
+			</label>
+			<div class="edd-form-group__control">
+				<span class="edd-amount-type-wrapper">
+					<?php
+					$currency_position = edd_get_option( 'currency_position', 'before' );
+					$currency_symbol   = edd_get_option( 'currency_symbol', '$' );
+
+					// If the currency symbol is before the price, output the prefix.
+					if ( 'before' === $currency_position ) {
+						?>
+						<span class="edd-input__symbol edd-input__symbol--prefix"><?php echo esc_html( $currency_symbol ); ?></span>
+						<?php
+					}
+					?>
+					<?php
+					$price_input = new \EDD\HTML\Text(
+						array(
+							'name'         => 'edd_price',
+							'id'           => 'edd_price',
+							'value'        => isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : '',
+							'class'        => array( 'edd-amount-input', 'edd-price-field', 'no-controls', 'symbol-' . $currency_position ),
+							'include_span' => false,
+						)
+					);
+
+					$price_input->output();
+					if ( 'after' === $currency_position ) {
+						?>
+						<span class="edd-input__symbol edd-input__symbol--suffix"><?php echo esc_html( $currency_symbol ); ?></span>
+						<?php
+					}
+					?>
+				</span>
+				<?php do_action( 'edd_price_field', $download->ID ); ?>
+			</div>
+		</div>
+
+		<?php do_action( 'edd_after_price_field', $download->ID ); ?>
+
+		<?php
+		/**
+		 * Output the price fields.
+		 *
+		 * @since 1.9
+		 * @param int                 $download_id The download ID.
+		 * @param \EDD_Download|false $download    The download object (added in 3.3.6).
+		 */
+		do_action( 'edd_meta_box_price_fields', $download->ID, $download );
+		?>
+
+		<div class="edd-form-group__label">
+			<?php esc_html_e( 'Additional Details', 'easy-digital-downloads' ); ?>
+		</div>
+
+		<div class="edd-form-group">
+			<div id="edd-variable-pricing-control" class="edd-form-group__control edd-toggle">
+				<input type="hidden" name="_variable_pricing" value="0" />
+				<input type="checkbox" class="edd-form-group__input edd-requirement" name="_variable_pricing" id="edd_variable_pricing" value="1" data-edd-requirement="variable-pricing" <?php checked( 1, $download->has_variable_prices() ); ?> />
+				<label for="edd_variable_pricing">
+					<?php
+					echo esc_html(
+						apply_filters(
+							'edd_variable_pricing_toggle_text',
+							/* translators: %s: Download singular label */
+							sprintf( __( 'Create price variations for this %s.', 'easy-digital-downloads' ), edd_get_label_singular( true ) )
+						)
+					);
+					?>
+				</label>
+			</div>
+		</div>
+
+		<div class="edd-form-group" data-edd-requires-variable-pricing="true">
+			<div class="edd-form-group__control">
+				<?php
+				$toggle = new \EDD\HTML\CheckboxToggle(
+					array(
+						'name'    => '_edd_price_options_mode',
+						'current' => edd_single_price_option_mode( $download->ID ),
+						'class'   => 'edd-form-group__input',
+						'label'   => apply_filters(
+							'edd_multi_option_purchase_text',
+							__( 'Allow purchasing multiple variations in the same order.', 'easy-digital-downloads' )
+						),
+					)
+				);
+				$toggle->output();
+				?>
+			</div>
 		</div>
 
 		<?php

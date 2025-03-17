@@ -115,22 +115,13 @@ class Details extends Metabox {
 		$sections = apply_filters(
 			'edd_download_details_sections',
 			array(
-				'details'  => Editor\Details::class,
-				'pricing'  => Editor\Price::class,
-				'files'    => Editor\Files::class,
-				'notes'    => Editor\Notes::class,
-				'settings' => Editor\Settings::class,
+				'details'          => Editor\Details::class,
+				'variable-pricing' => Editor\VariablePrices::class,
+				'files'            => Editor\Files::class,
+				'notes'            => Editor\Notes::class,
+				'settings'         => Editor\Settings::class,
 			)
 		);
-
-		$prices = $download->get_prices();
-		if ( empty( $prices ) ) {
-			$sections[1] = Editor\VariablePrices::class;
-		} else {
-			foreach ( $prices as $key => $price ) {
-				$sections[ $key ] = Editor\VariablePrices::class;
-			}
-		}
 
 		if ( empty( $sections ) ) {
 			return array();
