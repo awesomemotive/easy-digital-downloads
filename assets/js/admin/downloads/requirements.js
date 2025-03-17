@@ -62,7 +62,7 @@ document.querySelectorAll( '.edd-supports' ).forEach( function ( element ) {
 } );
 
 // Listen for changes to supported values.
-document.addEventListener( 'click', function ( event ) {
+document.addEventListener( 'change', function ( event ) {
 	if ( ! event.target.classList.contains( 'edd-supports' ) ) {
 		return;
 	}

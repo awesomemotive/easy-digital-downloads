@@ -5,14 +5,12 @@
  * @group edd_orders
  * @group edd_order_adjustments
  * @group database
- *
- * @coversDefaultClass \EDD\Orders\Order_Item
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-class Order_Adjustment_Tests extends EDD_UnitTestCase {
+class Adjustments extends EDD_UnitTestCase {
 
 	/**
 	 * Order adjustments fixture.
@@ -27,6 +25,33 @@ class Order_Adjustment_Tests extends EDD_UnitTestCase {
 	 */
 	public static function wpSetUpBeforeClass() {
 		self::$order_adjustments = parent::edd()->order_adjustment->create_many( 5 );
+
+	}
+
+	public function test_add_should_not_truncate_description_if_within_255_characters() {
+		$order_adjustment = edd_get_order_adjustment( self::$order_adjustments[0] );
+		$adjustment_id = edd_add_order_adjustment( array(
+			'object_id'   => $order_adjustment->object_id,
+			'object_type' => $order_adjustment->object_type,
+			'description' => str_repeat( 'x', 255 ),
+		) );
+
+		$order_adjustment = edd_get_order_adjustment( $adjustment_id );
+
+		$this->assertSame( str_repeat( 'x', 255 ), $order_adjustment->description );
+	}
+
+	public function test_add_should_truncate_description_if_over_255_characters() {
+		$order_adjustment = edd_get_order_adjustment( self::$order_adjustments[0] );
+		$adjustment_id = edd_add_order_adjustment( array(
+			'object_id'   => $order_adjustment->object_id,
+			'object_type' => $order_adjustment->object_type,
+			'description' => str_repeat( 'x', 256 ),
+		) );
+
+		$order_adjustment = edd_get_order_adjustment( $adjustment_id );
+
+		$this->assertSame( str_repeat( 'x', 250 ) . '...', $order_adjustment->description );
 	}
 
 	/**
@@ -38,6 +63,26 @@ class Order_Adjustment_Tests extends EDD_UnitTestCase {
 		) );
 
 		$this->assertSame( 1, $success );
+	}
+
+	public function test_update_should_truncate_description_if_over_255_characters() {
+		edd_update_order_adjustment( self::$order_adjustments[0], array(
+			'description' => str_repeat( 'x', 256 ),
+		) );
+
+		$order_adjustment = edd_get_order_adjustment( self::$order_adjustments[0] );
+
+		$this->assertSame( str_repeat( 'x', 250 ) . '...', $order_adjustment->description );
+	}
+
+	public function test_update_should_not_truncate_description_if_within_255_characters() {
+		edd_update_order_adjustment( self::$order_adjustments[0], array(
+			'description' => str_repeat( 'x', 255 ),
+		) );
+
+		$order_adjustment = edd_get_order_adjustment( self::$order_adjustments[0] );
+
+		$this->assertSame( str_repeat( 'x', 255 ), $order_adjustment->description );
 	}
 
 	/**

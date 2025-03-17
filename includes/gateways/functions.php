@@ -318,7 +318,9 @@ function edd_shop_supports_buy_now() {
  * @return array $purchase_data The purchase data.
  */
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(), $quantity = 1 ) {
-	$price_options = array();
+	$price_options = array(
+		'price_id' => null,
+	);
 
 	if ( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
@@ -339,7 +341,6 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 
 		$price_options = array(
 			'price_id' => $price_id,
-			'amount'   => $prices[ $price_id ]['amount'],
 		);
 		$price         = $prices[ $price_id ]['amount'];
 	}
@@ -352,41 +353,30 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		),
 	);
 
-	// Set up Cart Details array.
-	$cart_details = array(
-		array(
-			'name'        => get_the_title( $download_id ),
-			'id'          => $download_id,
-			'item_number' => array(
-				'id'      => $download_id,
-				'options' => $price_options,
-			),
-			'tax'         => 0,
-			'discount'    => 0,
-			'item_price'  => $price,
-			'subtotal'    => ( $price * $quantity ),
-			'price'       => ( $price * $quantity ),
-			'quantity'    => $quantity,
-		),
-	);
-
-	if ( is_user_logged_in() ) {
-		$current_user = wp_get_current_user();
+	foreach ( $downloads as $download ) {
+		edd_add_to_cart( $download['id'], $download['options'] );
 	}
 
 	// Setup user information.
 	$user_info = array(
-		'id'         => is_user_logged_in() ? get_current_user_id() : 0,
-		'email'      => is_user_logged_in() ? $current_user->user_email : '',
-		'first_name' => is_user_logged_in() ? $current_user->user_firstname : '',
-		'last_name'  => is_user_logged_in() ? $current_user->user_lastname : '',
+		'id'         => 0,
+		'email'      => '',
+		'first_name' => '',
+		'last_name'  => '',
 		'discount'   => 'none',
 		'address'    => array(),
 	);
+	if ( is_user_logged_in() ) {
+		$current_user            = wp_get_current_user();
+		$user_info['id']         = $current_user->ID;
+		$user_info['email']      = $current_user->user_email;
+		$user_info['first_name'] = $current_user->user_firstname;
+		$user_info['last_name']  = $current_user->user_lastname;
+	}
 
 	// Setup purchase information.
 	$purchase_data = array(
-		'downloads'    => $downloads,
+		'downloads'    => edd_get_cart_contents(),
 		'fees'         => edd_get_cart_fees(),
 		'subtotal'     => $price * $quantity,
 		'discount'     => 0,
@@ -394,10 +384,9 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'price'        => $price * $quantity,
 		'purchase_key' => edd_generate_order_payment_key( $user_info['email'] ),
 		'user_email'   => $user_info['email'],
-		'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'user_info'    => $user_info,
 		'post_data'    => array(),
-		'cart_details' => $cart_details,
+		'cart_details' => edd_get_cart_content_details(),
 		'gateway'      => \EDD\Gateways\PayPal\paypal_standard_enabled() ? 'paypal' : 'paypal_commerce',
 		'buy_now'      => true,
 		'card_info'    => array(),

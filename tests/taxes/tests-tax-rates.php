@@ -49,7 +49,7 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_tax_rate_by_location
+	 * @covers ::edd_get_tax_rate_by_location
 	 */
 	public function test_edd_get_tax_rate_by_location_no_country_should_return_fallback_rate() {
 		$tax_rate = edd_get_tax_rate_by_location(
@@ -63,7 +63,7 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_tax_rate_by_location
+	 * @covers ::edd_get_tax_rate_by_location
 	 */
 	public function test_edd_get_tax_rate_by_location_random_country_should_return_fallback_rate() {
 		$tax_rate = edd_get_tax_rate_by_location(
@@ -77,7 +77,7 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_tax_rate_by_location
+	 * @covers ::edd_get_tax_rate_by_location
 	 */
 	public function test_edd_get_tax_rate_by_location_this_country_should_return_country_rate() {
 		$tax_rate = edd_get_tax_rate_by_location(
@@ -91,7 +91,7 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_tax_rate_by_location
+	 * @covers ::edd_get_tax_rate_by_location
 	 */
 	public function test_edd_get_tax_rate_by_location_this_state_should_return_region_rate() {
 		$tax_rate = edd_get_tax_rate_by_location(
@@ -104,6 +104,9 @@ class Tests_Tax_Rates extends EDD_UnitTestCase {
 		$this->assertEquals( self::$region_rate->id, $tax_rate->id );
 	}
 
+	/**
+	 * @covers ::edd_get_tax_rate_by_location
+	 */
 	public function test_edd_get_tax_rate_by_location_country_rate_with_description_returns_country_rate() {
 		edd_update_adjustment(
 			self::$country_rate->id,

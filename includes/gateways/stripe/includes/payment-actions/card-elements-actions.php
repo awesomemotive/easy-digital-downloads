@@ -23,13 +23,6 @@ function edds_process_purchase_form( $purchase_data ) {
 	// Catch a straight to gateway request.
 	// Remove the error set by the "gateway mismatch" and allow the redirect.
 	if ( isset( $_REQUEST['edd_action'] ) && 'straight_to_gateway' === $_REQUEST['edd_action'] ) {
-		foreach ( $purchase_data['downloads'] as $download ) {
-			$options             = isset( $download['options'] ) ? $download['options'] : array();
-			$options['quantity'] = isset( $download['quantity'] ) ? $download['quantity'] : 1;
-
-			edd_add_to_cart( $download['id'], $options );
-		}
-
 		edd_unset_error( 'edd-straight-to-gateway-error' );
 		edd_send_back_to_checkout();
 	}

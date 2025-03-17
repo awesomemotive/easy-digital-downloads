@@ -117,6 +117,13 @@ class_alias( \EDD\Orders\Refunds\Validator::class, 'EDD\Orders\Refund_Validator'
 class_alias( \EDD\RequirementsCheck::class, 'EDD_Requirements_Check' );
 
 /**
+ * Class Alias for the `EDD\Fees\Handler` class.
+ *
+ * @deprecated 3.3.7
+ */
+class_alias( \EDD\Fees\Handler::class, 'EDD_Fees' );
+
+/**
  * Fully Deprecated Classes
  *
  * These classes are fully deprecated and are no longer used internally. There are no aliases for them, and their original class

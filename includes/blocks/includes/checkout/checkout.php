@@ -207,29 +207,30 @@ function get_cart_contents() {
 			'fields'         => 'ids',
 			'posts_per_page' => 10,
 			'no_found_rows'  => true,
+			'post_status'    => 'publish',
 		)
 	);
 	if ( empty( $downloads->posts ) ) {
 		return false;
 	}
+
 	$download_id = array_rand( array_flip( $downloads->posts ) );
 	$download    = edd_get_download( $download_id );
-	$price_id    = null;
+	$cart_item   = array(
+		'id'       => $download_id,
+		'quantity' => 1,
+		'options'  => array(),
+	);
+
 	if ( $download->has_variable_prices() ) {
 		$price_ids = $download->get_prices();
-		$price_ids = wp_list_pluck( $price_ids, 'index' );
-		$price_id  = array_rand( array_flip( $price_ids ) );
+		if ( empty( $price_ids ) ) {
+			return false;
+		}
+		$cart_item['options']['price_id'] = array_rand( array_flip( array_keys( $price_ids ) ) );
 	}
 
-	return array(
-		array(
-			'id'       => $download_id,
-			'options'  => array(
-				'price_id' => $price_id,
-			),
-			'quantity' => 1,
-		),
-	);
+	return array( $cart_item );
 }
 
 add_action( 'edd_purchase_form_top', __NAMESPACE__ . '\remove_default_purchase_fields' );

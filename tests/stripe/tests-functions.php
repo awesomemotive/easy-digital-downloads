@@ -3,7 +3,6 @@
 namespace EDD\Tests\Stripe;
 
 use \EDD\Tests\PHPUnit\EDD_UnitTestCase;
-use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 
 /**
  * Tests for functions.
@@ -11,7 +10,7 @@ use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 class Functions extends EDD_UnitTestCase {
 
 	/**
-	 * @covers edds_string_to_bool
+	 * @covers ::edds_string_to_bool
 	 */
 	public function test_string_to_bool() {
 		$this->assertTrue( edds_truthy_to_bool( 1 ) );
@@ -31,7 +30,7 @@ class Functions extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edds_stripe_connect_account_country_supports_application_fees
+	 * @covers ::edds_stripe_connect_account_country_supports_application_fees
 	 */
 	public function test_edds_stripe_connect_account_country_supports_application_fees() {
 		edd_update_option( 'stripe_connect_account_country', 'us' );
@@ -42,7 +41,7 @@ class Functions extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edds_stripe_connect_account_country_supports_application_fees
+	 * @covers ::edds_stripe_connect_account_country_supports_application_fees
 	 */
 	public function test_edds_stripe_connect_blank_account_country_supports_application_fees() {
 		$this->assertTrue(
@@ -51,7 +50,7 @@ class Functions extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edds_stripe_connect_account_country_supports_application_fees
+	 * @covers ::edds_stripe_connect_account_country_supports_application_fees
 	 */
 	public function test_edds_stripe_connect_account_country_does_not_support_application_fees() {
 		edd_update_option( 'stripe_connect_account_country', 'br' );
@@ -62,7 +61,7 @@ class Functions extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edds_is_zero_decimal_currency
+	 * @covers ::edds_is_zero_decimal_currency
 	 */
 	public function test_edds_is_zero_decimal_currency() {
 		edd_update_option( 'currency', 'JPY' );
@@ -70,10 +69,28 @@ class Functions extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers edds_is_zero_decimal_currency
+	 * @covers ::edds_is_zero_decimal_currency
 	 */
 	public function test_edds_is_non_zero_decimal_currency() {
 		edd_update_option( 'currency', 'USD' );
 		$this->assertFalse( edds_is_zero_decimal_currency() );
+	}
+
+	/**
+	 * @covers ::edds_api_request
+	 */
+	public function test_request() {
+		$this->expectException( \EDD\Vendor\Stripe\Exception\AuthenticationException::class );
+
+		edds_api_request( 'Customer', 'retrieve', 123 );
+	}
+
+	/**
+	 * @covers ::edds_api_request
+	 */
+	public function test_invalid_request() {
+		$this->expectException( \EDD_Stripe_Utils_Exceptions_Stripe_Object_Not_Found::class );
+
+		edds_api_request( 'UnknownObject', 'retrieve', 123 );
 	}
 }

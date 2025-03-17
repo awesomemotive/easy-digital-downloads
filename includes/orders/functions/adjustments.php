@@ -60,7 +60,12 @@ function edd_add_order_adjustment( $data ) {
 		return false;
 	}
 
-	// Instantiate a query object
+	// If the description is over 255 characters, truncate it.
+	if ( ! empty( $data['description'] ) && mb_strlen( $data['description'] ) > 255 ) {
+		$data['description'] = mb_substr( $data['description'], 0, 250 ) . '...';
+	}
+
+	// Instantiate a query object.
 	$order_adjustments = new EDD\Database\Queries\Order_Adjustment();
 
 	return $order_adjustments->add_item( $data );
@@ -118,6 +123,11 @@ function edd_delete_order_adjustment( $order_adjustment_id = 0 ) {
  */
 function edd_update_order_adjustment( $order_adjustment_id = 0, $data = array() ) {
 	$order_adjustments = new EDD\Database\Queries\Order_Adjustment();
+
+	// If the description is over 255 characters, truncate it.
+	if ( ! empty( $data['description'] ) && mb_strlen( $data['description'] ) > 255 ) {
+		$data['description'] = mb_substr( $data['description'], 0, 250 ) . '...';
+	}
 
 	return $order_adjustments->update_item( $order_adjustment_id, $data );
 }

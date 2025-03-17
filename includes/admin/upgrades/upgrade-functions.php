@@ -4,17 +4,16 @@
  * Note: Do not move, rename, or delete this file as many extensions will attempt
  * to require it during an installation or upgrade process.
  *
- * @package     EDD
- * @subpackage  Admin/Upgrades
+ * @package     EDD\Admin\Upgrades
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// edd_do_automatic upgrades is defined in includes/upgrades/functions.php
+// edd_do_automatic upgrades is defined in includes/upgrades/functions.php.
 add_action( 'admin_init', 'edd_do_automatic_upgrades' );
 
 /**
@@ -24,8 +23,8 @@ add_action( 'admin_init', 'edd_do_automatic_upgrades' );
  * @return void
  */
 function edd_show_upgrade_notices() {
-	// Don't show notices on the upgrades page
-	$page = wp_strip_all_tags( filter_input( INPUT_GET, 'page' ) );
+	// Don't show notices on the upgrades page.
+	$page = wp_strip_all_tags( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS ) );
 	if ( ! empty( $page ) && ( 'edd-upgrades' === $page ) ) {
 		return;
 	}
@@ -34,7 +33,7 @@ function edd_show_upgrade_notices() {
 		return;
 	}
 
-	// Sequential Orders was the first stepped upgrade, so check if we have a stalled upgrade
+	// Sequential Orders was the first stepped upgrade, so check if we have a stalled upgrade.
 	$resume_upgrade = edd_maybe_resume_upgrade();
 	if ( ! empty( $resume_upgrade ) ) {
 		EDD()->notices->add_notice(
@@ -52,13 +51,13 @@ function edd_show_upgrade_notices() {
 	} else {
 
 		// Include all 'Stepped' upgrade process notices in this else statement,
-		// to avoid having a pending, and new upgrade suggested at the same time
+		// to avoid having a pending, and new upgrade suggested at the same time.
 
 		if ( get_option( 'edd_upgrade_sequential' ) ) {
 			delete_option( 'edd_upgrade_sequential' );
 		}
 
-		/** 3.0 Upgrades ******************************************************/
+		/** 3.0 Upgrades */
 
 		// Check if we need to do any upgrades.
 		if ( ! edd_v30_is_migration_complete() ) {
@@ -198,7 +197,7 @@ function edd_show_upgrade_notices() {
 		 * into the upgrades array in `edd_get_all_upgrades`.
 		 */
 
-		// End 'Stepped' upgrade process notices
+		// End 'Stepped' upgrade process notices.
 	}
 }
 add_action( 'admin_notices', 'edd_show_upgrade_notices' );
@@ -217,13 +216,13 @@ function edd_trigger_upgrades() {
 		return;
 	}
 
-	// Bail if user is not capable
+	// Bail if user is not capable.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		delete_option( 'edd_doing_upgrade' );
 		die( 'complete' );
 	}
 
-	// Bail if nonce is not set
+	// Bail if nonce is not set.
 	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd-upgrade' ) ) {
 		delete_option( 'edd_doing_upgrade' );
 		die( 'complete' );
@@ -236,6 +235,7 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
  * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle
+ *
  * @since 2.2.6
  * @return mixed   When nothing to resume returns false, otherwise starts the upgrade where it left off
  */
@@ -278,15 +278,15 @@ function edd_upgrade_render_v30_migration() {
 		}
 	}
 
-	$migration_complete = $number_complete === count( $upgrades );
+	$migration_complete = count( $upgrades ) === $number_complete;
 
 	/*
 	 * Determine if legacy data can be removed.
 	 * It can be if all upgrades except legacy data have been completed.
 	 */
-	$can_remove_legacy_data = array_key_exists( 'v30_legacy_data_removed', $upgrade_statuses ) && $upgrade_statuses[ 'v30_legacy_data_removed' ] !== true;
+	$can_remove_legacy_data = array_key_exists( 'v30_legacy_data_removed', $upgrade_statuses ) && true !== $upgrade_statuses['v30_legacy_data_removed'];
 	if ( $can_remove_legacy_data ) {
-		foreach( $upgrade_statuses as $upgrade_key => $status ) {
+		foreach ( $upgrade_statuses as $upgrade_key => $status ) {
 			if ( 'v30_legacy_data_removed' === $upgrade_key ) {
 				continue;
 			}
@@ -341,21 +341,23 @@ function edd_upgrade_render_v30_migration() {
 
 	<?php
 	// Only show the migration form if there are still upgrades to do.
-	if ( ! $can_remove_legacy_data ) : ?>
-	<form id="edd-v3-migration" class="edd-v3-migration" method="POST">
-		<p>
-			<label for="edd-v3-migration-confirmation">
-				<input type="checkbox" id="edd-v3-migration-confirmation" class="edd-v3-migration-confirmation" name="backup_confirmation" value="1">
-				<?php esc_html_e( 'I have secured a backup of my website data.', 'easy-digital-downloads' ); ?>
-			</label>
-		</p>
-		<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
-		<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled>
-			<?php esc_html_e( 'Upgrade Easy Digital Downloads', 'easy-digital-downloads' ); ?>
-		</button>
-		<div class="edd-v3-migration-error edd-hidden"></div>
-	</form>
-	<?php endif
+	if ( ! $can_remove_legacy_data ) :
+		?>
+		<form id="edd-v3-migration" class="edd-v3-migration" method="POST">
+			<p>
+				<label for="edd-v3-migration-confirmation">
+					<input type="checkbox" id="edd-v3-migration-confirmation" class="edd-v3-migration-confirmation" name="backup_confirmation" value="1">
+					<?php esc_html_e( 'I have secured a backup of my website data.', 'easy-digital-downloads' ); ?>
+				</label>
+			</p>
+			<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
+			<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled>
+				<?php esc_html_e( 'Upgrade Easy Digital Downloads', 'easy-digital-downloads' ); ?>
+			</button>
+			<div class="edd-v3-migration-error edd-hidden"></div>
+		</form>
+		<?php
+	endif;
 
 	/*
 	 * Progress is only shown immediately if the upgrade is in progress. Otherwise it's hidden by default
@@ -364,7 +366,8 @@ function edd_upgrade_render_v30_migration() {
 	?>
 	<div id="edd-migration-progress" <?php echo count( array_filter( $upgrade_statuses ) ) ? '' : 'class="edd-hidden"'; ?>>
 		<ul>
-			<?php foreach ( $upgrades as $upgrade_key => $upgrade_details ) :
+			<?php
+			foreach ( $upgrades as $upgrade_key => $upgrade_details ) :
 				// We skip the one to remove legacy data. We'll handle that separately later.
 				if ( 'v30_legacy_data_removed' === $upgrade_key ) {
 					continue;
@@ -489,7 +492,7 @@ function edd_v3_remove_legacy_data_tool() {
 	$v3_upgrades = array_keys( $v3_upgrades );
 
 	// If even one upgrade hasn't completed, they cannot delete legacy data.
-	foreach( $v3_upgrades as $v3_upgrade ) {
+	foreach ( $v3_upgrades as $v3_upgrade ) {
 		if ( ! edd_has_upgrade_completed( $v3_upgrade ) ) {
 			return;
 		}

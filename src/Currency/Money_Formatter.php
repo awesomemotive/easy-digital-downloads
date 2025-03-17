@@ -51,6 +51,11 @@ class Money_Formatter {
 	 * @param Currency $currency The currency to use for formatting.
 	 */
 	public function __construct( $amount, Currency $currency ) {
+
+		if ( empty( $amount ) ) {
+			$amount = 0;
+		}
+
 		$this->original_amount = $amount;
 		$this->amount          = $amount;
 		$this->typed_amount    = $amount;

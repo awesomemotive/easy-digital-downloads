@@ -4,14 +4,15 @@
  *
  * @group edd_orders
  * @group edd_payment
- *
- * @coversDefaultClass \EDD_Payment
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\Helpers;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @coversDefaultClass \EDD_Payment
+ */
 class EDD_Payment extends EDD_UnitTestCase {
 
 	/**

@@ -8,8 +8,6 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Telemetry Tests
- *
- * @covers EDD\Telemetry
  * @group edd_telemetry
  */
 class Telemetry extends EDD_UnitTestCase {
@@ -90,7 +88,7 @@ class Telemetry extends EDD_UnitTestCase {
 		$this->assertEquals( EDD_VERSION, self::$data['environment']['edd_version'] );
 	}
 
-	public function test_environment_contains_multiste() {
+	public function test_environment_contains_multisite() {
 		$this->assertEquals( is_multisite(), self::$data['environment']['multisite'] );
 
 		if ( is_multisite() ) {
@@ -100,6 +98,11 @@ class Telemetry extends EDD_UnitTestCase {
 			$this->assertEquals( 0, self::$data['environment']['domain_mapping'] );
 			$this->assertEquals( 1, self::$data['environment']['is_main_site'] );
 		}
+	}
+
+	public function test_environment_contains_architecture() {
+		// We're going to hard code this at 64bit, because our automated testing only runs on 64bit.
+		$this->assertEquals( '64', self::$data['environment']['php_arch'] );
 	}
 
 	public function test_no_data_includes_admin_email() {

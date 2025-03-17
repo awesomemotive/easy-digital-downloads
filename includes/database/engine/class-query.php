@@ -881,6 +881,13 @@ class Query extends Base {
 			$this->query_vars['no_found_rows']     = true;
 			$this->query_vars['update_item_cache'] = false;
 			$this->query_vars['update_meta_cache'] = false;
+			/**
+			 * Custom workaround to fix a bug in Berlin,
+			 * which breaks counts when the fields are set.
+			 *
+			 * @link https://github.com/berlindb/core/issues/168
+			 */
+			$this->query_vars['fields'] = '';
 		}
 
 		// Check the cache

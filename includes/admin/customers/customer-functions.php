@@ -9,63 +9,8 @@
  * @since       2.3
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
-/**
- * Register a view for the single customer view
- *
- * @since  2.3
- * @param  array $views An array of existing views
- * @return array        The altered list of views
- */
-function edd_register_default_customer_views( $views ) {
-	return array_merge( $views, array(
-		'overview'  => 'edd_customers_view',
-		'emails'    => 'edd_customers_emails_view',
-		'addresses' => 'edd_customers_addresses_view',
-		'delete'    => 'edd_customers_delete_view',
-		'notes'     => 'edd_customer_notes_view',
-		'tools'     => 'edd_customer_tools_view',
-	) );
-}
-add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
-
-/**
- * Register a tab for the single customer view
- *
- * @since  2.3
- * @param  array $tabs An array of existing tabs
- * @return array       The altered list of tabs
- */
-function edd_register_default_customer_tabs( $tabs ) {
-	return array_merge( $tabs, array(
-		'overview'  => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'emails'    => array( 'dashicon' => 'dashicons-email', 'title' => _x( 'Emails', 'Customer Emails tab title', 'easy-digital-downloads' ) ),
-		'addresses' => array( 'dashicon' => 'dashicons-admin-home', 'title' => _x( 'Addresses', 'Customer Addresses tab title', 'easy-digital-downloads' ) ),
-		'notes'     => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
-		'tools'     => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
-	) );
-}
-add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
-
-/**
- * Register the Delete icon as late as possible so it's at the bottom
- *
- * @since  2.3.1
- * @param  array $tabs An array of existing tabs
- * @return array       The altered list of tabs, with 'delete' at the bottom
- */
-function edd_register_delete_customer_tab( $tabs ) {
-
-	$tabs['delete'] = array(
-		'dashicon' => 'dashicons-trash',
-		'title'    => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' )
-	);
-
-	return $tabs;
-}
-add_filter( 'edd_customer_tabs', 'edd_register_delete_customer_tab', PHP_INT_MAX, 1 );
 
 /**
  * Remove the admin bar edit profile link when the user is not verified

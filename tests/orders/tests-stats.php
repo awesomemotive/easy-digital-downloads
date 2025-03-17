@@ -4,13 +4,15 @@
  *
  * @group edd_orders
  * @group edd_stats
- *
- * @coversDefaultClass \EDD\Stats
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Stats;
+
+/**
+ * @coversDefaultClass \EDD\Stats
+ */
 class Stats_Tests extends EDD_UnitTestCase {
 
 	/**

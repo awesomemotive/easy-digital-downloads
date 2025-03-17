@@ -27,13 +27,14 @@ class CheckboxToggle extends Base {
 	 */
 	public function get() {
 
+		$id = isset( $this->args['id'] ) ? $this->args['id'] : $this->args['name'];
 		ob_start();
 		?>
 		<div class="<?php echo esc_attr( $this->get_css_class_string( array( $this->args['name'] ) ) ); ?>">
 			<input
 				type="checkbox"
 				name="<?php echo esc_attr( $this->args['name'] ); ?>"
-				id="<?php echo esc_attr( $this->args['name'] ); ?>"
+				id="<?php echo esc_attr( $id ); ?>"
 				value="1"
 				<?php
 				checked( true, ! empty( $this->args['current'] ) );

@@ -576,9 +576,9 @@ function edd_render_refund_row( $post_id, $download = null ) {
 		<label for="_edd_refund_window" class="edd-form-group__label">
 			<?php esc_html_e( 'Refund Window', 'easy-digital-downloads' ); ?>
 		</label>
-		<div class="edd-form-group__control">
-			<input class="edd-form-group__input small-text" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
-			<?php echo esc_html( _x( 'Days', 'refund window interval', 'easy-digital-downloads' ) ); ?>
+		<div class="edd-form-group__control edd-amount-type-wrapper">
+			<input class="edd-form-group__input small-text edd__input edd__input--left" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
+			<span class="edd-input__symbol edd-input__symbol--suffix"><?php echo esc_html( _x( 'Days', 'refund window interval', 'easy-digital-downloads' ) ); ?></span>
 		</div>
 		<p class="edd-form-group__help description">
 			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
@@ -788,7 +788,7 @@ function edd_render_disable_button( $download_id ) {
 		'[purchase_link id="%1$d"]',
 		absint( $download_id )
 	);
-	$buy_button       = sprintf( '<!-- wp:edd/buy-button {"download_id":%d} /-->', $download_id );
+	$buy_button       = sprintf( '<!-- wp:edd/buy-button {"download_id":"%d"} /-->', $download_id );
 	$add_to_cart_link = add_query_arg(
 		array(
 			'edd_action'  => 'add_to_cart',

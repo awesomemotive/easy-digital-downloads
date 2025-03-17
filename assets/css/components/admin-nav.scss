@@ -67,7 +67,7 @@
 	}
 }
 
-.edd-admin-page #wpbody-content > .notice:not(.inline) {
+.edd-admin-page #wpbody-content > .notice:not(.inline):not(.edd-notice) {
 	display: none;
 	margin-left: 0;
 }
