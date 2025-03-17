@@ -2,15 +2,15 @@
 /**
  * Order Adjustments Schema Class.
  *
- * @package     EDD
- * @subpackage  Database\Schemas
+ * @package     EDD\Database\Schemas
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Database\Schemas;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Database\Schema;
@@ -31,47 +31,47 @@ class Order_Adjustments extends Schema {
 	 */
 	public $columns = array(
 
-		// id
+		// id.
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
-		// parent
+		// parent.
 		array(
-			'name'       => 'parent',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'parent',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
-		// object_id
+		// object_id.
 		array(
-			'name'       => 'object_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'object_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
-		// object_type
+		// object_type.
 		array(
-			'name'       => 'object_type',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
-			'sortable'   => true
+			'name'     => 'object_type',
+			'type'     => 'varchar',
+			'length'   => '20',
+			'default'  => '',
+			'sortable' => true,
 		),
 
-		// type_id
+		// type_id.
 		array(
 			'name'       => 'type_id',
 			'type'       => 'bigint',
@@ -82,17 +82,17 @@ class Order_Adjustments extends Schema {
 			'allow_null' => true,
 		),
 
-		// type
+		// type.
 		array(
 			'name'       => 'type',
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
-		// type key
+		// type key.
 		array(
 			'name'       => 'type_key',
 			'type'       => 'varchar',
@@ -102,77 +102,77 @@ class Order_Adjustments extends Schema {
 			'sortable'   => true,
 		),
 
-		// description
+		// description.
 		array(
 			'name'       => 'description',
 			'type'       => 'varchar',
-			'length'     => '100',
+			'length'     => '255',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// subtotal
-		array(
-			'name'       => 'subtotal',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
 			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
 		),
 
-		// tax
+		// subtotal.
 		array(
-			'name'       => 'tax',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'subtotal',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
-		// total
+		// tax.
 		array(
-			'name'       => 'total',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'tax',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
-		// rate
+		// total.
 		array(
-			'name'       => 'rate',
-			'type'       => 'decimal',
-			'length'     => '10,5',
-			'default'    => '1.00000',
+			'name'     => 'total',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
-		// date_created
+		// rate.
+		array(
+			'name'    => 'rate',
+			'type'    => 'decimal',
+			'length'  => '10,5',
+			'default' => '1.00000',
+		),
+
+		// date_created.
 		array(
 			'name'       => 'date_created',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '', // Defaults to current time in query class.
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// date_modified
+		// date_modified.
 		array(
 			'name'       => 'date_modified',
 			'type'       => 'datetime',
-			'default'    => '', // Defaults to current time in query class
+			'default'    => '', // Defaults to current time in query class.
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
-		// uuid
+		// uuid.
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

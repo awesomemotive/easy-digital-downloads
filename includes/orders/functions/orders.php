@@ -837,7 +837,9 @@ function edd_build_order( $order_data = array() ) {
 					'user_id' => $order_args['user_id'],
 				)
 			);
-			$customer    = edd_get_customer( $customer_id );
+			$customer    = $customer_id ?
+				edd_get_customer( $customer_id ) :
+				new EDD_Customer( $order_args['email'] );
 		}
 	}
 

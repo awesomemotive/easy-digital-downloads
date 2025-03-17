@@ -172,7 +172,16 @@ class Screen {
 
 		$logs_table = new LogsTable();
 		$logs_table->prepare_items();
-		$logs_table->display();
+		?>
+		<form id="edd-email-logs" method="get">
+			<?php
+			$logs_table->display();
+			?>
+			<input type="hidden" name="post_type" value="download" />
+			<input type="hidden" name="page" value="edd-emails" />
+			<input type="hidden" name="tab" value="logs" />
+		</form>
+		<?php
 	}
 
 	/**

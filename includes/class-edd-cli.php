@@ -618,7 +618,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		$error = false;
 
-		// At some point we'll likely add another action for payments
+		// At some point we'll likely add another action for payments.
 		if ( ! isset( $args ) || 0 === count( $args ) ) {
 			$error = __( 'No action specified, did you mean', 'easy-digital-downloads' );
 		} elseif ( isset( $args ) && ! in_array( 'create', $args, true ) ) {
@@ -646,8 +646,8 @@ class EDD_CLI extends WP_CLI_Command {
 		$price_id = null;
 		$tax      = 0;
 		$email    = 'guest@edd.local';
-		$fname    = 'Pippin';
-		$lname    = 'Williamson';
+		$fname    = 'EDD';
+		$lname    = 'Guest';
 		$date     = false;
 		$range    = 30;
 		$currency = edd_get_currency();
@@ -703,7 +703,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$products = array();
 			$total    = 0;
 
-			// No specified product
+			// No specified product.
 			if ( ! $id ) {
 				$products = get_posts(
 					array(
@@ -777,23 +777,6 @@ class EDD_CLI extends WP_CLI_Command {
 				$total += $item_price;
 			}
 
-			// Generate random date.
-			if ( 'random' === $date ) {
-				// Randomly grab a date from the current past 30 days
-				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp' ) );
-				$newest_time = current_time( 'timestamp' );
-
-				$timestamp  = rand( $oldest_time, $newest_time );
-				$timestring = date( 'Y-m-d H:i:s', $timestamp );
-			} elseif ( empty( $date ) ) {
-				$timestring = false;
-			} elseif ( is_numeric( $date ) ) {
-					$timestring = date( 'Y-m-d H:i:s', $date );
-			} else {
-				$parsed_time = strtotime( $date );
-				$timestring  = date( 'Y-m-d H:i:s', $parsed_time );
-			}
-
 			// Maybe generate users.
 			if ( $generate_users ) {
 				$fname  = $this->get_fname();
@@ -835,8 +818,10 @@ class EDD_CLI extends WP_CLI_Command {
 				'downloads'    => $final_downloads,
 				'cart_details' => $cart_details,
 				'status'       => 'pending',
+				'gateway'      => $gateway,
 			);
 
+			$timestring = $this->get_order_timestring( $date, $range );
 			if ( ! empty( $timestring ) ) {
 				$purchase_data['date_created'] = $timestring;
 			}
@@ -844,7 +829,8 @@ class EDD_CLI extends WP_CLI_Command {
 			$order_id = edd_build_order( $purchase_data );
 
 			// Ensure purchase receipts do not get sent.
-			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
+			edd_update_order_meta( $order_id, '_edd_should_send_order_receipt', false );
+			edd_update_order_meta( $order_id, '_edd_should_send_admin_order_notice', false );
 
 			// Trigger payment status actions.
 			if ( 'pending' !== $status ) {
@@ -852,10 +838,12 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 
 			if ( ! empty( $timestring ) ) {
-				$payment                 = new EDD_Payment( $order_id );
-				$payment->completed_date = $timestring;
-				$payment->gateway        = $gateway;
-				$payment->save();
+				edd_update_order(
+					$order_id,
+					array(
+						'date_completed' => $timestring,
+					)
+				);
 			}
 
 			$progress->tick();
@@ -2501,5 +2489,35 @@ class EDD_CLI extends WP_CLI_Command {
 		);
 
 		return $tlds[ rand( 0, ( count( $tlds ) - 1 ) ) ];
+	}
+
+	/**
+	 * Gets a time string for an order.
+	 *
+	 * @since 3.3.7
+	 * @param mixed $date  The date to use.
+	 * @param int   $range The range to use.
+	 * @return false|string
+	 */
+	private function get_order_timestring( $date, $range ) {
+
+		if ( empty( $date ) ) {
+			return false;
+		}
+		// Generate random date.
+		if ( 'random' === $date ) {
+			// Randomly grab a date from the current past 30 days.
+			$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp' ) );
+			$newest_time = current_time( 'timestamp' );
+			$timestamp   = rand( $oldest_time, $newest_time );
+
+			return date( 'Y-m-d H:i:s', $timestamp );
+		}
+
+		if ( is_numeric( $date ) ) {
+			return date( 'Y-m-d H:i:s', $date );
+		}
+
+		return date( 'Y-m-d H:i:s', strtotime( $date ) );
 	}
 }

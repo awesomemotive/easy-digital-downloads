@@ -5,7 +5,6 @@
 .edd-sections-wrap {
 	clear: both;
 	width: 100%;
-	border: 1px solid $wp-border;
 
 	.section-wrap {
 		background-color: $white;
@@ -65,7 +64,8 @@
 			padding: 20px;
 
 			h2,
-			> p {
+			> p,
+			> .edd-form-group {
 				margin: 0;
 			}
 		}

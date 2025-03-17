@@ -60,12 +60,12 @@ class Number extends Base {
 				required
 				<?php
 			endif;
-			if ( ! empty( $this->args['min'] ) ) :
+			if ( '' !== $this->args['min'] ) :
 				?>
 				min="<?php echo esc_attr( $this->args['min'] ); ?>"
 				<?php
 			endif;
-			if ( ! empty( $this->args['max'] ) ) :
+			if ( '' !== $this->args['max'] ) :
 				?>
 				max="<?php echo esc_attr( $this->args['max'] ); ?>"
 				<?php

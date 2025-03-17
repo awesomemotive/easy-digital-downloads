@@ -483,6 +483,16 @@ class EDD_Download {
 		if ( true === $this->has_variable_prices() ) {
 			if ( empty( $this->prices ) ) {
 				$this->prices = array_filter( (array) get_post_meta( $this->ID, 'edd_variable_prices', true ) );
+				foreach ( $this->prices as $key => $price ) {
+					$this->prices[ $key ] = wp_parse_args(
+						$price,
+						array(
+							'amount' => '',
+							'name'   => '',
+							'index'  => $key,
+						)
+					);
+				}
 			}
 		}
 

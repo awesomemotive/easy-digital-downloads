@@ -1,49 +1,63 @@
-// get the .edd-download-editor__sections element
-const sections = document.querySelector( '.edd-download-editor__sections' );
-const variablePricing = document.querySelector( '#edd_variable_pricing' );
+const variablePricing = document.getElementById( 'edd_variable_pricing' );
+const variablePricingSection = document.getElementById( 'edd_download_editor__variable-pricing' );
+const variablePriceRowClass = 'edd-section-content__row';
+const variablePriceRowSelector = '.' + variablePriceRowClass;
 
-if ( sections ) {
+// Add an event listener to the variable pricing toggle.
+if ( variablePricing ) {
+	toggleVariablePricing( variablePricing.checked );
 
+	variablePricing.addEventListener( 'change', function () {
+		toggleVariablePricing( this.checked );
+	} );
+}
+
+if ( variablePricingSection ) {
 	addOrderListeners();
 
-	// if the variablePricing checkbox is not checked, hide the variable pricing section
-	if ( variablePricing ) {
-		toggleVariablePricing( variablePricing.checked );
-
-		variablePricing.addEventListener( 'change', function () {
-			toggleVariablePricing( this.checked );
-		} );
-	}
-
-	document.addEventListener( 'click', function ( event ) {
-		if ( event.target.classList.contains( 'edd-add-new-section' ) || event.target.closest( '.edd-add-new-section' ) ) {
+	variablePricingSection.addEventListener( 'click', function ( event ) {
+		if ( event.target.classList.contains( 'edd-button__add--variation' ) || event.target.closest( '.edd-button__add--variation' ) ) {
 			cloneSection.call( event.target, event );
 		}
 		if ( event.target.classList.contains( 'edd-section-content__remove' ) ) {
 			deleteSection.call( event.target, event );
 			hideRemoveButton();
 		}
-	} );
 
-	document.addEventListener( 'change', function( event ) {
-		// Update the nav item label when changing a variation name.
-		if ( event.target.classList.contains( 'edd_variable_prices_name' ) ) {
-			const section = event.target.closest( '.section-content--is-dynamic' );
-			const navItem = sections.querySelector( '#' + section.id + '-nav-item' );
-			const label = navItem.querySelector( '.label' );
-			label.textContent = event.target.value;
+		if ( event.target.classList.contains( 'edd-button__edit' ) ) {
+			const priceRow = event.target.closest( variablePriceRowSelector );
+			priceRow.classList.toggle( 'open' );
+			priceRow.classList.toggle( 'closed' );
+		}
+
+		if ( event.target.classList.contains( 'edd-button__toggle-expand-custom' ) ) {
+			event.preventDefault();
+			const priceRows = variablePricingSection.querySelectorAll( variablePriceRowSelector );
+			priceRows.forEach( function ( priceRow ) {
+				priceRow.classList.add( 'open' );
+				priceRow.classList.remove( 'closed' );
+			} );
+		}
+
+		if ( event.target.classList.contains( 'edd-button__toggle-collapse-custom' ) ) {
+			event.preventDefault();
+			const priceRows = variablePricingSection.querySelectorAll( variablePriceRowSelector );
+			priceRows.forEach( function ( priceRow ) {
+				priceRow.classList.remove( 'open' );
+				priceRow.classList.add( 'closed' );
+			} );
 		}
 	} );
 
 	// Ensure only one default price is selected.
-	document.addEventListener( 'change', function( event ) {
+	variablePricingSection.addEventListener( 'change', function ( event ) {
 		if ( event.target.name !== '_edd_default_price_id' ) {
 			return;
 		}
 
 		if ( event.target.checked ) {
-			const checkboxes = document.querySelectorAll( 'input[name="_edd_default_price_id"]' );
-			checkboxes.forEach( function( checkbox ) {
+			const checkboxes = variablePricingSection.querySelectorAll( 'input[name="_edd_default_price_id"]' );
+			checkboxes.forEach( function ( checkbox ) {
 				if ( checkbox !== event.target ) {
 					checkbox.checked = false;
 				}
@@ -52,51 +66,50 @@ if ( sections ) {
 			event.target.checked = true;
 		}
 	} );
+
+	// Add an additional listener to the document to handle clicks on the remove button from the modal.
+	const modal = document.getElementById( 'edd-admin-notice-pricechanges' );
+	if ( modal ) {
+		modal.addEventListener( 'click', function ( event ) {
+			if ( event.target.classList.contains( 'edd-section-content__remove' ) ) {
+				deleteSection.call( event.target, event );
+				hideRemoveButton();
+			}
+		} );
+	}
 }
 
 function addOrderListeners() {
-	const dynamicSections = sections.querySelectorAll( '.edd-section-title__handle-actions' );
-	if ( ! dynamicSections.length ) {
+	const priceVariations = variablePricingSection.querySelectorAll( variablePriceRowSelector );
+	if ( ! priceVariations.length ) {
 		return;
 	}
 
 	updateOrderButtons();
 
-	dynamicSections.forEach( function ( section ) {
+	priceVariations.forEach( function ( section ) {
 		section.querySelector( '.edd__handle-actions-order--higher' ).addEventListener( 'click', function () {
-			const thisSectionTitle = this.closest( '.section-title--is-dynamic' );
-			const prevSectionTitle = thisSectionTitle.previousElementSibling;
-			if ( ! prevSectionTitle.classList.contains( 'section-title--is-dynamic' ) ) {
+			const thisRow = this.closest( variablePriceRowSelector );
+			const previousRow = thisRow.previousElementSibling;
+			if ( ! previousRow || ! previousRow.classList.contains( variablePriceRowClass ) ) {
 				return;
 			}
 			this.disabled = true;
-			if ( prevSectionTitle ) {
-				prevSectionTitle.insertAdjacentElement( 'beforebegin', thisSectionTitle );
-			}
-			const thisSectionId = thisSectionTitle.id.replace( '-nav-item', '' );
-			const thisSection = sections.querySelector( '#' + thisSectionId );
-			const prevSection = thisSection.previousElementSibling;
-			if ( prevSection ) {
-				prevSection.insertAdjacentElement( 'beforebegin', thisSection );
+			if ( previousRow ) {
+				previousRow.insertAdjacentElement( 'beforebegin', thisRow );
 			}
 			updateOrderButtons();
 		} );
 
 		section.querySelector( '.edd__handle-actions-order--lower' ).addEventListener( 'click', function () {
-			const thisSectionTitle = this.closest( '.section-title--is-dynamic' );
-			const nextSectionTitle = thisSectionTitle.nextElementSibling;
-			if ( ! nextSectionTitle.classList.contains( 'section-title--is-dynamic' ) ) {
+			const thisRow = this.closest( variablePriceRowSelector );
+			const nextRow = thisRow.nextElementSibling;
+			if ( ! nextRow || ! nextRow.classList.contains( variablePriceRowClass ) ) {
 				return;
 			}
 			this.disabled = true;
-			if ( nextSectionTitle ) {
-				thisSectionTitle.insertAdjacentElement( 'beforebegin', nextSectionTitle );
-			}
-			const thisSectionId = thisSectionTitle.id.replace( '-nav-item', '' );
-			const thisSection = sections.querySelector( '#' + thisSectionId );
-			const nextSection = thisSection.nextElementSibling;
-			if ( nextSection ) {
-				thisSection.insertAdjacentElement( 'beforebegin', nextSection );
+			if ( nextRow ) {
+				thisRow.insertAdjacentElement( 'beforebegin', nextRow );
 			}
 			updateOrderButtons();
 		} );
@@ -104,7 +117,7 @@ function addOrderListeners() {
 }
 
 function toggleVariablePricing ( enabled ) {
-	// get all .edd-bundled-product-row, .edd-repeatable-row-standard-fields
+	// Get all .edd-bundled-product-row, .edd-repeatable-row-standard-fields; using the document is intentional.
 	const rows = document.querySelectorAll( '.edd-bundled-product-row, .edd-repeatable-row-standard-fields' );
 	rows.forEach( function ( row ) {
 		if ( enabled ) {
@@ -119,27 +132,27 @@ function toggleVariablePricing ( enabled ) {
 function cloneSection ( event ) {
 	event.preventDefault();
 
-	const button = document.querySelector( '.edd-add-new-section' );
+	const button = variablePricingSection.querySelector( '.edd-button__add--variation' );
 	button.disabled = true;
 
-	// Get a fresh list of sections.
-	const updatedSections = document.querySelectorAll( '.section-content--is-dynamic' );
+	// Get a fresh list of rows.
+	const updatedVariations = variablePricingSection.querySelectorAll( variablePriceRowSelector );
 	const data = new FormData();
-	data.append( 'action', 'edd_clone_section' );
+	data.append( 'action', 'edd_clone_variation' );
 	data.append( 'timestamp', button.dataset.timestamp );
 	data.append( 'token', button.dataset.token );
 	data.append( 'download_id', edd_vars.post_id );
 
-	let lastSectionNumber = 0;
-	updatedSections.forEach( function ( section ) {
+	let lastVariationNumber = 0;
+	updatedVariations.forEach( function ( section ) {
 		const hiddenInput = section.querySelector( '.edd-section__id' );
 		const sectionNumber = parseInt( hiddenInput.value );
-		if ( sectionNumber > lastSectionNumber ) {
-			lastSectionNumber = sectionNumber;
+		if ( sectionNumber > lastVariationNumber ) {
+			lastVariationNumber = sectionNumber;
 		}
 	} );
 
-	data.append( 'section', parseInt( lastSectionNumber ) + 1 );
+	data.append( 'section', parseInt( lastVariationNumber ) + 1 );
 
 	fetch( ajaxurl, {
 		method: 'POST',
@@ -148,15 +161,8 @@ function cloneSection ( event ) {
 		return response.json();
 	} ).then( function ( data ) {
 		if ( data.success ) {
-			const lastSection = updatedSections[ updatedSections.length - 1 ];
-			lastSection.insertAdjacentHTML( 'afterend', data.data.section );
-
-			const sectionTitles = sections.querySelectorAll( '.section-title--is-dynamic' );
-			const lastSectionTitle = sectionTitles[ sectionTitles.length - 1 ];
-			lastSectionTitle.insertAdjacentHTML( 'afterend', data.data.link );
-
-			// Go to the new section.
-			lastSectionTitle.nextElementSibling.querySelector( 'a' ).click();
+			const lastVariation = updatedVariations[ updatedVariations.length - 1 ];
+			lastVariation.insertAdjacentHTML( 'afterend', data.data );
 
 			button.disabled = false;
 			hideRemoveButton();
@@ -172,55 +178,51 @@ function deleteSection ( e ) {
 		return;
 	}
 
-	let section = this.closest( '.section-content--is-dynamic' );
+	let section = this.closest( variablePriceRowSelector );
 	if ( ! section ) {
 		const dataId = this.getAttribute( 'data-id' );
 		if ( dataId ) {
-			const hiddenInput = sections.querySelector( '.edd-section__id[value="' + dataId + '"]' );
-			section = hiddenInput.closest( '.section-content--is-dynamic' );
+			const hiddenInput = variablePricingSection.querySelector( '.edd-section__id[value="' + dataId + '"]' );
+			section = hiddenInput.closest( variablePriceRowSelector );
 		}
 	}
 
-	sections.querySelector( '#' + section.id + '-nav-item' ).remove();
 	section.remove();
-	const navMenu = sections.querySelector( '.section-nav' );
-	const selectedNavItem = navMenu.querySelector( 'li' );
-	selectedNavItem.classList.add( 'section-title--is-active' );
-	selectedNavItem.setAttribute( 'aria-selected', 'true' );
-	selectedNavItem.querySelector( 'a' ).focus();
-	sections.querySelector( '#' + selectedNavItem.getAttribute( 'aria-controls' ) ).style.display = 'block';
 }
 
 // Hide the remove button for the first section.
 function hideRemoveButton () {
-	const dynamicSectionRemoveButtons = sections.querySelectorAll( '.edd-section-content__remove' );
-	if ( dynamicSectionRemoveButtons.length === 1 ) {
-		dynamicSectionRemoveButtons[ 0 ].classList.add( 'edd-hidden' );
+	const variationRemoveButtons = variablePricingSection.querySelectorAll( '.edd-section-content__remove' );
+	if ( variationRemoveButtons.length === 1 ) {
+		variationRemoveButtons[ 0 ].classList.add( 'edd-hidden' );
 	} else {
-		dynamicSectionRemoveButtons.forEach( function ( el ) {
+		variationRemoveButtons.forEach( function ( el ) {
 			el.classList.remove( 'edd-hidden' );
 		} );
 	}
 }
 
 function updateOrderButtons() {
-	const sections = document.querySelectorAll( '.section-title--is-dynamic' );
-	sections.forEach( function ( section ) {
+	const rows = variablePricingSection.querySelectorAll( variablePriceRowSelector );
+	if ( ! rows.length ) {
+		return;
+	}
+	rows.forEach( function ( section ) {
 		section.querySelector( '.edd__handle-actions-order--higher' ).disabled = false;
 		section.querySelector( '.edd__handle-actions-order--lower' ).disabled = false;
 	} );
 
-	const firstSection = sections[ 0 ];
-	firstSection.querySelector( '.edd__handle-actions-order--higher' ).disabled = true;
+	const firstVariation = rows[ 0 ];
+	firstVariation.querySelector( '.edd__handle-actions-order--higher' ).disabled = true;
 
-	const lastSection = sections[ sections.length - 1 ];
-	lastSection.querySelector( '.edd__handle-actions-order--lower' ).disabled = true;
+	const lastVariation = rows[ rows.length - 1 ];
+	lastVariation.querySelector( '.edd__handle-actions-order--lower' ).disabled = true;
 
 	// if there is only one section, hide some things
-	if ( sections.length === 1 ) {
-		firstSection.querySelector( '.edd-section-title__handle-actions' ).classList.add( 'edd-hidden' );
+	if ( rows.length === 1 ) {
+		firstVariation.querySelector( '.edd__handle-actions-order' ).classList.add( 'edd-hidden' );
 	} else {
-		firstSection.querySelector( '.edd-section-title__handle-actions' ).classList.remove( 'edd-hidden' );
+		firstVariation.querySelector( '.edd__handle-actions-order' ).classList.remove( 'edd-hidden' );
 	}
 }
 

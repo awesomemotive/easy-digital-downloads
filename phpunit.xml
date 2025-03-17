@@ -37,7 +37,12 @@
 				<file>./includes/admin/import/class-batch-import-downloads.php</file>
 				<file>./includes/admin/import/class-batch-import-payments.php</file>
 				<file>./includes/class-edd-cli.php</file>
+				<directory>./libraries</directory>
+				<directory>./vendor</directory>
+				<directory>./templates</directory>
 				<directory>./includes/admin/reporting/export</directory>
+				<directory>./includes/admin/reporting/views</directory>
+				<directory>./includes/admin/views</directory>
 				<directory>./includes/blocks/views</directory>
 			</exclude>
 		</whitelist>

@@ -2,14 +2,16 @@
 /**
  * PayPal Commerce Scripts
  *
- * @package    Sandhills Development, LLC
- * @subpackage Gateways\PayPal
- * @copyright  Copyright (c) 2021, Ashley Gibson
- * @license    GPL2+
+ * @package    EDD\Gateways\PayPal
+ * @copyright  Copyright (c) 2021, Sandhills Development, LLC
+ * @license    https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      2.11
  */
 
 namespace EDD\Gateways\PayPal;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 use EDD\Gateways\PayPal\Exceptions\Authentication_Exception;
 
@@ -25,8 +27,9 @@ function maybe_enqueue_polyfills() {
 	 * go away at one point.
 	 *
 	 * @since 2.11
+	 * @since 3.3.7 - Defaults to false, so that loading polyfills is opt-in.
 	 */
-	if ( ! apply_filters( 'edd_load_ie11_polyfills', true ) ) {
+	if ( ! apply_filters( 'edd_load_ie11_polyfills', false ) ) {
 		return;
 	}
 
@@ -36,7 +39,7 @@ function maybe_enqueue_polyfills() {
 /**
  * Registers PayPal JavaScript
  *
- * @param bool $force_load
+ * @param bool $force_load Whether to force load the scripts.
  *
  * @since 2.11
  * @return void

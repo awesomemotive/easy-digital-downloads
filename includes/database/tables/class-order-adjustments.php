@@ -2,15 +2,15 @@
 /**
  * Order Adjustments Table.
  *
- * @package     EDD
- * @subpackage  Database\Tables
+ * @package     EDD\Database\Tables
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Database\Tables;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Database\Table;
@@ -38,7 +38,7 @@ final class Order_Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202105221;
+	protected $version = 202502281;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -52,6 +52,7 @@ final class Order_Adjustments extends Table {
 		'202011122' => 202011122,
 		'202103151' => 202103151,
 		'202105221' => 202105221,
+		'202502281' => 202502281,
 	);
 
 	/**
@@ -69,7 +70,7 @@ final class Order_Adjustments extends Table {
 		type_id bigint(20) unsigned DEFAULT NULL,
 		type varchar(20) DEFAULT NULL,
 		type_key varchar(255) DEFAULT NULL,
-		description varchar(100) DEFAULT NULL,
+		description varchar(255) DEFAULT NULL,
 		subtotal decimal(18,9) NOT NULL default '0',
 		tax decimal(18,9) NOT NULL default '0',
 		total decimal(18,9) NOT NULL default '0',
@@ -93,17 +94,16 @@ final class Order_Adjustments extends Table {
 	protected function __202002141() {
 
 		// Update `date_created`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
+		$result = $this->get_db()->query(
+			"ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;"
+		);
 
 		// Update `date_modified`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
-		" );
+		$result = $this->get_db()->query(
+			"ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;"
+		);
 
 		return $this->is_success( $result );
-
 	}
 
 	/**
@@ -117,20 +117,20 @@ final class Order_Adjustments extends Table {
 	protected function __202011122() {
 
 		// Update `type_id`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `type_id` bigint(20) default NULL;
-		" );
+		$result = $this->get_db()->query(
+			"ALTER TABLE {$this->table_name} MODIFY COLUMN `type_id` bigint(20) default NULL;"
+		);
 
 		// Add `type_key`.
 		$column_exists = $this->column_exists( 'type_key' );
 		if ( false === $column_exists ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `type_key` varchar(255) default NULL AFTER `type`;
-			" );
+			$result = $this->get_db()->query(
+				"ALTER TABLE {$this->table_name} ADD COLUMN `type_key` varchar(255) default NULL AFTER `type`"
+			);
 		} else {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} MODIFY `type_key` varchar(255) default NULL AFTER `type`
-			" );
+			$result = $this->get_db()->query(
+				"ALTER TABLE {$this->table_name} MODIFY `type_key` varchar(255) default NULL AFTER `type`"
+			);
 		}
 
 		// Change `type_id` with `0` value to `null` to support new default.
@@ -141,21 +141,21 @@ final class Order_Adjustments extends Table {
 
 	/**
 	 * Upgrade to version 202103151
-	 * 	- Add column `parent`
-	 * 	- Add index on `parent` column.
+	 *  - Add column `parent`
+	 *  - Add index on `parent` column.
 	 *
 	 * @since 3.0
 	 * @return bool
 	 */
 	protected function __202103151() {
-		// Look for column
+		// Look for column.
 		$result = $this->column_exists( 'parent' );
 
-		// Maybe add column
+		// Maybe add column.
 		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN parent bigint(20) unsigned NOT NULL default '0' AFTER id;
-			" );
+			$result = $this->get_db()->query(
+				"ALTER TABLE {$this->table_name} ADD COLUMN parent bigint(20) unsigned NOT NULL default '0' AFTER id;"
+			);
 		}
 
 		if ( ! $this->index_exists( 'parent' ) ) {
@@ -168,7 +168,7 @@ final class Order_Adjustments extends Table {
 
 	/**
 	 * Upgrade to version 202105221
-	 * 	- Add `rate` column.
+	 *  - Add `rate` column.
 	 *
 	 * @since 3.0
 	 * @return bool
@@ -183,5 +183,20 @@ final class Order_Adjustments extends Table {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Upgrade to version 202502281
+	 *  - Change `description` column to `varchar(255)`
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202502281() {
+		return $this->is_success(
+			$this->get_db()->query(
+				"ALTER TABLE {$this->table_name} MODIFY COLUMN description varchar(255) DEFAULT NULL"
+			)
+		);
 	}
 }

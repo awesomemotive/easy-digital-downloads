@@ -53,23 +53,10 @@ abstract class Section extends Base {
 	 * @return array
 	 */
 	public function get_config() {
-		$config                      = parent::get_config();
-		$config['dynamic']           = $this->dynamic;
-		$config['requires']          = $this->requires;
-		$config['supports']          = $this->supports;
-		$config['repeatable_button'] = $this->get_repeatable_button();
+		$config             = parent::get_config();
+		$config['requires'] = $this->requires;
+		$config['supports'] = $this->supports;
 
 		return $config;
-	}
-
-	/**
-	 * Get the repeatable button.
-	 * Only one section can have a repeatable button; the first one found will be used.
-	 *
-	 * @since 3.3.6
-	 * @return string
-	 */
-	public function get_repeatable_button(): string {
-		return '';
 	}
 }

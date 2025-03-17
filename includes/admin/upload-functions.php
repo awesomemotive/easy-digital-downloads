@@ -84,7 +84,7 @@ function edd_create_protection_files( $force = false, $method = false ) {
 		$folders = edd_scan_folders( $upload_path );
 		foreach ( $folders as $folder ) {
 			// Continue if the folder is not writable.
-			if ( ! wp_is_writable( $folder ) ) {
+			if ( ! wp_is_writable( $folder ) || is_link( $folder ) ) {
 				continue;
 			}
 
@@ -122,13 +122,15 @@ function edd_htaccess_exists() {
  * @since 1.1.5
  * @since 3.2.10 Switched to using glob() for better performance and accuracy.
  *
- * @param string $path   Path to scan.
- * @param array  $return Results of previous recursion (Deprecated in 3.2.10).
+ * @param string $path       Path to scan.
+ * @param array  $deprecated Results of previous recursion (Deprecated in 3.2.10).
  *
  * @return array $return List of files inside directory
  */
-function edd_scan_folders( $path = '', $return = array() ) {
-	$path = ! empty( $path ) ? $path : __DIR__;
+function edd_scan_folders( $path = '', $deprecated = array() ) {
+	if ( empty( $path ) ) {
+		$path = edd_get_upload_dir();
+	}
 
 	// Get the main directories in the root of the directory we're scanning.
 	$upload_root_dirs = glob( $path . '/*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK );

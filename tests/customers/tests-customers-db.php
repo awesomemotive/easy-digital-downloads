@@ -154,6 +154,7 @@ class CustomersDB extends EDD_UnitTestCase {
 
 	public function test_count_should_be_5() {
 		$this->assertSame( 5, edd_count_customers() );
+		$this->assertSame( 5, edd_count_customers( array( 'fields' => 'ids' ) ) );
 	}
 
 	public function test_count_with_id_should_be_1() {

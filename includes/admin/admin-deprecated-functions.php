@@ -1674,3 +1674,74 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
  * @return void
  */
 function edd_render_meta_box_shortcode( $post_id = 0, $download = null ) {}
+
+/**
+ * Register a view for the single customer view
+ *
+ * @since  2.3
+ * @deprecated 3.3.7
+ *
+ * @param  array $views An array of existing views.
+ * @return array       The default customer views.
+ */
+function edd_register_default_customer_views( $views ) {
+	return array(
+		'overview'  => 'edd_customers_view',
+		'emails'    => 'edd_customers_emails_view',
+		'addresses' => 'edd_customers_addresses_view',
+		'delete'    => 'edd_customers_delete_view',
+		'notes'     => 'edd_customer_notes_view',
+		'tools'     => 'edd_customer_tools_view',
+	);
+}
+
+/**
+ * Register a tab for the single customer view
+ *
+ * @since  2.3
+ * @deprecated 3.3.7
+ *
+ * @param  array $tabs An array of existing tabs.
+ * @return array       The default customer tabs.
+ */
+function edd_register_default_customer_tabs( $tabs ) {
+	return array(
+		'overview'  => array(
+			'dashicon' => 'dashicons-admin-users',
+			'title'    => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ),
+		),
+		'emails'    => array(
+			'dashicon' => 'dashicons-email',
+			'title'    => _x( 'Emails', 'Customer Emails tab title', 'easy-digital-downloads' ),
+		),
+		'addresses' => array(
+			'dashicon' => 'dashicons-admin-home',
+			'title'    => _x( 'Addresses', 'Customer Addresses tab title', 'easy-digital-downloads' ),
+		),
+		'notes'     => array(
+			'dashicon' => 'dashicons-admin-comments',
+			'title'    => _x( 'Notes', 'Customer Notes tab title', 'easy-digital-downloads' ),
+		),
+		'tools'     => array(
+			'dashicon' => 'dashicons-admin-tools',
+			'title'    => _x( 'Tools', 'Customer Tools tab title', 'easy-digital-downloads' ),
+		),
+	);
+}
+
+/**
+ * Register the Delete icon as late as possible so it's at the bottom
+ *
+ * @since  2.3.1
+ * @deprecated 3.3.7
+ * @param  array $tabs An array of existing tabs.
+ * @return array       The delete tab.
+ */
+function edd_register_delete_customer_tab( $tabs ) {
+	return array(
+		'delete' => array(
+			'dashicon' => 'dashicons-trash',
+			'title'    => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' ),
+		),
+	);
+}

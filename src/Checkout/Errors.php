@@ -22,6 +22,7 @@ class Errors extends Subscriber {
 		return array(
 			'edd_checkout_user_error_checks' => array( 'check_existing_users', 10, 3 ),
 			'wp_ajax_nopriv_edd_check_email' => 'check_email_ajax',
+			'wp_ajax_edd_check_email'        => 'check_email_ajax',
 		);
 	}
 
@@ -64,12 +65,21 @@ class Errors extends Subscriber {
 	 * Checks if the email is valid and not already used.
 	 *
 	 * @since 3.3.5
-	 * @return void
+	 * @return void|bool|\WP_Error
 	 */
 	public function check_email_ajax() {
 		EDD()->session->set( 'email_validated', null );
-		$email    = sanitize_email( $_POST['email'] );
-		$validate = $this->validate_email( $email );
+		$email = sanitize_email( $_POST['email'] );
+		if ( is_user_logged_in() ) {
+			$validate = $this->validate_logged_in_email( $email );
+		} else {
+			$validate = $this->validate_email( $email );
+		}
+
+		if ( edd_is_doing_unit_tests() ) {
+			return $validate;
+		}
+
 		if ( is_wp_error( $validate ) ) {
 			wp_send_json_error( array( 'message' => $validate->get_error_message() ) );
 		}
@@ -104,5 +114,72 @@ class Errors extends Subscriber {
 		}
 
 		return new \WP_Error( 'email_used', __( 'Email already used. Login or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
+	}
+
+	/**
+	 * Validates an email address for a logged in user.
+	 *
+	 * @since 3.3.7
+	 * @param string $email The email address to validate.
+	 * @return bool|\WP_Error
+	 */
+	private function validate_logged_in_email( $email ) {
+		if ( ! is_email( $email ) ) {
+			return new \WP_Error( 'invalid_email', __( 'Please enter a valid email address.', 'easy-digital-downloads' ) );
+		}
+
+		$user       = wp_get_current_user();
+		$user_check = get_user_by( 'email', $email );
+		if ( $user_check && (int) $user_check->ID !== (int) $user->ID ) {
+			return new \WP_Error( 'email_used', __( 'Email already used. Log in or use a different email to complete your purchase.', 'easy-digital-downloads' ) );
+		}
+
+		$user_email      = $user->user_email;
+		$emails_to_check = array_unique(
+			array(
+				$email,
+				strtolower( $email ),
+				$user_email,
+				strtolower( $user_email ),
+			)
+		);
+
+		$customer = edd_get_customer_by( 'user_id', get_current_user_id() );
+
+		// If the current user has a customer record and the email address matches, we're good to go.
+		if ( ! empty( $customer->email ) && in_array( strtolower( $customer->email ), $emails_to_check, true ) ) {
+			return true;
+		}
+
+		$email_args = array(
+			'email__in' => $emails_to_check,
+		);
+		if ( $customer ) {
+			$email_args['customer_id__not_in'] = array( $customer->id );
+		}
+		$matching_emails = edd_get_customer_email_addresses( $email_args );
+		if ( empty( $matching_emails ) ) {
+			return true;
+		}
+
+		$existing_customer = false;
+		// Check if any of the matching emails belong to an existing customer.
+		foreach ( $matching_emails as $matching_email ) {
+			$email_customer = edd_get_customer( $matching_email->customer_id );
+			if ( $email_customer && (int) $email_customer->user_id !== (int) $user->ID ) {
+				$existing_customer = true;
+				break;
+			}
+		}
+
+		if ( ! $existing_customer ) {
+			return true;
+		}
+
+		return new \WP_Error(
+			'edd-customer-email-exists',
+			/* translators: %s: email address */
+			sprintf( __( 'The email address %s is already in use.', 'easy-digital-downloads' ), $email )
+		);
 	}
 }

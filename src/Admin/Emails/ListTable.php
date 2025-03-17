@@ -199,12 +199,12 @@ class ListTable extends \WP_List_Table {
 	public function display_rows_or_placeholder() {
 		if ( $this->has_items() ) {
 			$this->display_rows();
-
-			// Add our hidden row for when no items are found.
-			echo '<tr id="no-items" class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
-			$this->no_items();
-			echo '</td></tr>';
 		}
+
+		// Add our hidden row for when no items are found.
+		echo '<tr id="no-items" class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
+		$this->no_items();
+		echo '</td></tr>';
 	}
 
 	/**
@@ -257,32 +257,46 @@ class ListTable extends \WP_List_Table {
 	 * @param string $which The position.
 	 * @return void
 	 */
-	protected function extra_tablenav( $which ) {
+	protected function display_tablenav( $which ) {
 		if ( 'top' !== $which ) {
-			do_action( 'edd_email_manager_bottom' );
+			?>
+			<div class="tablenav <?php echo esc_attr( $which ); ?>">
+				<?php
+				do_action( 'edd_email_manager_bottom' );
+				?>
+			</div>
+			<?php
 			return;
 		}
 
 		?>
-		<div class="alignleft actions">
+		<div class="tablenav edd-emails__tablenav--top <?php echo esc_attr( $which ); ?>">
+			<div class="edd-emails__filters">
+				<?php
+				$this->do_status_filter();
+				$this->do_sender_filter();
+				$this->do_context_filter();
+				$this->do_recipient_filter();
+				?>
+				<button id="edd-email-clear-filters" class="button button-secondary" style="display:none;">
+					<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
+				</button>
+			</div>
+			<form method="get" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-emails' ) ) ); ?>">
+			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'emails' ); ?>
+				<input type="hidden" name="post_type" value="download" />
+				<input type="hidden" name="page" value="edd-emails" />
+			</form>
 			<?php
-			$this->do_status_filter();
-			$this->do_sender_filter();
-			$this->do_context_filter();
-			$this->do_recipient_filter();
+			$add_new_actions = $this->registry->get_add_new_actions();
+			if ( ! empty( $add_new_actions ) ) :
+				?>
+				<div class="edd-emails__actions">
+					<?php $this->do_new_actions_overlay( $add_new_actions ); ?>
+				</div>
+				<?php
+			endif;
 			?>
-			<button id="edd-email-clear-filters" class="button button-secondary" style="display:none;">
-				<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
-			</button>
-		</div>
-		<?php
-		$add_new_actions = $this->registry->get_add_new_actions();
-		if ( empty( $add_new_actions ) ) {
-			return;
-		}
-		?>
-		<div class="alignright actions">
-			<?php $this->do_new_actions_overlay( $add_new_actions ); ?>
 		</div>
 		<?php
 	}
@@ -345,8 +359,23 @@ class ListTable extends \WP_List_Table {
 		);
 
 		$this->items = array();
+		$emails      = $this->registry->get_emails();
 
-		$emails = $this->registry->get_emails();
+		$search = filter_input( INPUT_GET, 's', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( ! empty( $search ) ) {
+			$search_results = edd_get_emails(
+				array(
+					'search' => $search,
+					'fields' => 'email_id',
+				)
+			);
+
+			foreach ( $emails as $key => $email_class_name ) {
+				if ( ! in_array( $key, $search_results, true ) ) {
+					unset( $emails[ $key ] );
+				}
+			}
+		}
 
 		// The key is important as it is used to manage dynamic emails.
 		foreach ( $emails as $key => $email_class_name ) {
@@ -472,7 +501,7 @@ class ListTable extends \WP_List_Table {
 			<option value="">
 				<?php esc_html_e( 'All Contexts', 'easy-digital-downloads' ); ?>
 			</option>
-			<?php foreach ( $this->registry->get_contexts() as $context_key => $context_label ) : ?>
+		<?php foreach ( $this->registry->get_contexts() as $context_key => $context_label ) : ?>
 				<option value="<?php echo esc_attr( $context_key ); ?>">
 					<?php echo esc_html( $context_label ); ?>
 				</option>

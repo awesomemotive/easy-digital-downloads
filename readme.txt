@@ -1,12 +1,12 @@
 === Easy Digital Downloads – eCommerce Payments and Subscriptions made easy ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, mordauk, chriscct7, sumobi, SpencerFinnell, drewapicture, johnjamesjacoby, lisacee
+Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, chriscct7, sumobi, SpencerFinnell, johnjamesjacoby
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable Tag: 3.3.6.1
+Stable Tag: 3.3.7
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -237,6 +237,36 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.3.7 =
+* Blocks: Fixed undefined index error in checkout block preview.
+* Checkout: Improved existing email check for logged-in users during checkout.
+* Compatibility: Improved handling of upgrade pages.
+* Currency: Fixed Money_Formatter unformat method ensuring `original_amount` is not null before processing.
+* Customers: Improve performance of viewing customers in the admin.
+* Downloads: Improved file protection handling in some edge case configurations.
+* Downloads: Supports feature now listens on 'change' instead of 'click'.
+* Downloads: Improved variable price handling.
+* Downloads: Improved download title validation before returning via AJAX.
+* Emails: Fixed email summary dates not adjusting for the local time zone.
+* Emails: Store admins can now search/filter emails and email logs.
+* Fees: Order adjustments with titles longer than 100 characters now correctly record fees.
+* HTML: `EDD\HTML\Number` input now allows a `0` minimum value.
+* i18n: Fixed multiple translation warnings in the new metabox implementation.
+* Orders: Orders - Deferred Actions now unschedule or gracefully fail on deleted orders.
+* PayPal: Ensure that `straight to gateway` is only enabled for supported PayPal gateways.
+* PayPal: Removed PayPal Commerce IE 11 Polyfills by default, now requiring opt-in.
+* Reports: Improved price assignment selection when adding new price variations.
+* Settings: Improved admin settings notices.
+* Settings: Improved styling for input fields.
+* Stripe: Fixed issue where Stripe variables were added to the DOM twice.
+* Taxes: Fix an issue preventing saving a global tax rate.
+* Dev: Counting with `fields` set fails in Berlin.
+* Dev: Generating orders via CLI no longer adds unnecessary order meta.
+* Dev: Fixed CLI order handling triggering new deprecation notices.
+* Dev: Unit tests updated to remove older versions.
+* Dev: Resending a receipt no longer throws a deprecation notice.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.6.1 =
 * Fixes a formatting issue for stores using European style decimal separators.
@@ -277,8 +307,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Stripe: Fixed an issue that could cause a gateway error if the Payment Method Configuration cannot be retrieved.
 * Stripe: Improved compatibility with Zero Decimal Currencies.
 * Stripe: Improved performance by switching to using `Order` objects instead of `EDD_Payment` objects.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.5.2 =
 * Checkout: Fixed a user's first/last name not saving to their WordPress account when registering during checkout.

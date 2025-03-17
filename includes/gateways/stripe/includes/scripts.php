@@ -5,6 +5,7 @@
  *
  * The Stripe JS is by default, loaded on every page as suggested by Stripe. This can be overridden by using the Restrict Stripe Assets
  * setting within the admin, and the Stripe Javascript resources will only be loaded when necessary.
+ *
  * @link https://stripe.com/docs/web/setup
  *
  * The custom Javascript for EDD is loaded if the page is checkout. If checkout, the function is called directly with
@@ -18,10 +19,13 @@
  *                                 the context of checkout, such as the card management or update subscription payment method
  *                                 UIs. Sending in 'true' will ensure that the Javascript resources are enqueued when you need them.
  *
- *
  * @return      void
  */
 function edd_stripe_js( $force_load_scripts = false ) {
+	if ( wp_script_is( 'edd-stripe-js', 'enqueued' ) ) {
+		return;
+	}
+
 	if ( false === edds_is_gateway_active() ) {
 		return;
 	}

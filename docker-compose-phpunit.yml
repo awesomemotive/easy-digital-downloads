@@ -1,5 +1,4 @@
 ---
-version: "3.7"
 services:
     wordpress:
         image: public.ecr.aws/q7y6e9n2/unit-test-images/php:${TEST_PHP_VERSION}
