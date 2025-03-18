@@ -1164,7 +1164,7 @@ function edd_set_upload_dir( $upload ) {
 /**
  * Determines the receipt visibility status
  *
- * @param string  $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
+ * @param string|\EDD\Orders\Order  $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
  * @return bool   whether the receipt is visible or not.
  */
 function edd_can_view_receipt( $order_or_key = '' ) {
