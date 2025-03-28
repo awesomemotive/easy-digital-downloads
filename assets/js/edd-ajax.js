@@ -373,7 +373,7 @@ jQuery(document).ready(function ($) {
 		}
 	}
 
-	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit], #edd_purchase_form #edd_purchase_submit button[type=submit]', function (e) {
+	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit], #edd_purchase_form #edd_purchase_submit button[type=submit]:not(#edd-payu-button-pay-for-all):not(#edd-payu-button-pay-for-recurring)', function (e) {
 		if (!is_wpidea_loaded) {
 			console.log('WP Idea not loaded!');
 			return;
@@ -387,8 +387,6 @@ jQuery(document).ready(function ($) {
 
 		let button = $(this);
 		let elementType = button.is('button') ? 'button' : 'input';
-
-		console.log(elementType);
 
 		var complete_purchase_val = getButtonText(button, elementType);
 		setButtonText(button, elementType, edd_global_vars.purchase_loading);
