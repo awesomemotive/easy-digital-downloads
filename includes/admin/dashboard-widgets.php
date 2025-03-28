@@ -24,7 +24,10 @@ function edd_load_dashboard_sales_widget( ) {
 		die();
 	}
 
-	$stats = new EDD_Payment_Stats; ?>
+	$stats = new EDD_Payment_Stats;
+	$sales_report = apply_filters( 'get_sales_report_for_dashboard', [] );
+
+	?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
 			<table>
@@ -36,7 +39,7 @@ function edd_load_dashboard_sales_widget( ) {
 				<tbody>
 					<tr>
 						<td class="first t monthly_earnings"><?php _e( 'Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
+						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $sales_report['current_month_total_sales'] ) ); ?></td>
 					</tr>
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish') ); ?>
@@ -54,7 +57,7 @@ function edd_load_dashboard_sales_widget( ) {
 				<tbody>
 					<tr>
 						<td class="first t earnings"><?php echo __( 'Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="b b-last-month-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ); ?></td>
+						<td class="b b-last-month-earnings"><?php echo edd_currency_filter( edd_format_amount( $sales_report['previous_month_total_sales'] ) ); ?></td>
 					</tr>
 					<tr>
 						<td class="first t sales">
@@ -81,7 +84,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<td class="t sales"><?php _e( 'Earnings', 'easy-digital-downloads' ); ?></td>
 						<td class="last b b-earnings">
-							<?php $earnings_today = $stats->get_earnings( 0, 'today', false ); ?>
+							<?php $earnings_today = $sales_report['current_day_total_sales']; ?>
 							<?php echo edd_currency_filter( edd_format_amount( $earnings_today ) ); ?>
 						</td>
 					</tr>
@@ -107,7 +110,7 @@ function edd_load_dashboard_sales_widget( ) {
 				<tbody>
 					<tr>
 						<td class="t earnings"><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="last b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></td>
+						<td class="last b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $sales_report['all_total_sales'] ) ); ?></td>
 					</tr>
 					<tr>
 						<td class="t sales"><?php _e( 'Total Sales', 'easy-digital-downloads' ); ?></td>
