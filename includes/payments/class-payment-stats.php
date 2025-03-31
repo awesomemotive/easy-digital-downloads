@@ -118,7 +118,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$args = array(
 				'post_type'              => 'edd_payment',
 				'nopaging'               => true,
-				'post_status'            => array( 'publish', 'revoked' ),
+				'post_status'            => array( 'publish' ),
 				'fields'                 => 'ids',
 				'update_post_term_cache' => false,
 				'suppress_filters'       => false,
