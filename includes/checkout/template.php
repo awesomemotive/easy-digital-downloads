@@ -538,7 +538,7 @@ function edd_payment_mode_select() {
 		</fieldset>
 		<fieldset id="edd_payment_mode_submit" class="edd-no-js">
 			<p id="edd-next-submit-wrap">
-				<?php echo edd_checkout_button_next(); ?>
+				<?php if( !empty($gateways) ) echo edd_checkout_button_next(); ?>
 			</p>
 		</fieldset>
 	<?php if( edd_is_ajax_disabled() ) { ?>
