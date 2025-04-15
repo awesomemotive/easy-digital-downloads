@@ -11,6 +11,12 @@ jQuery(document).ready(function ($) {
 	$('.edd-no-js').hide();
 	$('a.edd-add-to-cart').addClass('edd-has-js');
 
+	document.addEventListener("keydown", function(event) {
+		if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
+		  event.preventDefault();
+		}
+	});
+	
 	// Send Remove from Cart requests
 	$('body').on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
 		var $this  = $(this),
