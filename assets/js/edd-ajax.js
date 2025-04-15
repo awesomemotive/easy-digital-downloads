@@ -11,11 +11,16 @@ jQuery(document).ready(function ($) {
 	$('.edd-no-js').hide();
 	$('a.edd-add-to-cart').addClass('edd-has-js');
 
-	document.getElementById('edd_purchase_form').addEventListener('keydown', function(event) {
+	const edd_purchase_form = document.getElementById('edd_purchase_form');
+
+	if (edd_purchase_form) {
+		edd_purchase_form.addEventListener('keydown', function(event) {
 		if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
-			event.preventDefault(); 
+		  event.preventDefault();
 		}
-	});
+	  });
+	}
+	
 
 	// Send Remove from Cart requests
 	$('body').on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
