@@ -402,6 +402,9 @@ jQuery(document).ready(function ($) {
 			if ($.trim(data) == 'success') {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
+
+                insertHiddenInputWithButtonValue();
+
 				$(eddPurchaseform).submit();
 			} else {
 				let isButton = elementType === 'button';
@@ -422,6 +425,20 @@ jQuery(document).ready(function ($) {
 			}
 		});
 
+		function insertHiddenInputWithButtonValue() {
+			let buttonName = button.attr('name');
+			let buttonValue = button.val();
+
+			if (buttonName && buttonValue && buttonValue.trim() !== '') {
+				$('<input>')
+					.attr({
+						type: 'hidden',
+						name: buttonName,
+						value: buttonValue
+					})
+					.appendTo($(eddPurchaseform));
+			}
+		}
 	});
 });
 
