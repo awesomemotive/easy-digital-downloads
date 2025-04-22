@@ -107,11 +107,6 @@ class Details extends Section {
 			</div>
 		</div>
 
-		<?php
-		$price             = $download->get_price();
-		$currency_position = edd_get_option( 'currency_position', 'before' );
-		?>
-
 		<div id="edd_regular_price_field" class="edd-form-group edd_pricing_fields" data-edd-requires-variable-pricing="false">
 			<label for="edd_price" class="edd-form-group__label">
 				<?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?>
@@ -119,8 +114,9 @@ class Details extends Section {
 			<div class="edd-form-group__control">
 				<span class="edd-amount-type-wrapper">
 					<?php
+					$price             = $download->get_price();
 					$currency_position = edd_get_option( 'currency_position', 'before' );
-					$currency_symbol   = edd_get_option( 'currency_symbol', '$' );
+					$currency_symbol   = edd_currency_symbol();
 
 					// If the currency symbol is before the price, output the prefix.
 					if ( 'before' === $currency_position ) {

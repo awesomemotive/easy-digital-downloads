@@ -185,17 +185,17 @@ function edd_set_all_upgrades_complete() {
  */
 function edd_install_pages() {
 
-	// Get all of the EDD settings
+	// Get all of the EDD settings.
 	$current_options = get_option( 'edd_settings', array() );
 
-	// Required store pages
+	// Required store pages.
 	$pages = edd_get_required_pages();
 
-	// Look for missing pages
+	// Look for missing pages.
 	$missing_pages  = array_diff_key( $pages, $current_options );
 	$pages_to_check = array_intersect_key( $current_options, $pages );
 
-	// Query for any existing pages
+	// Query for any existing pages.
 	$posts = new WP_Query(
 		array(
 			'include'   => array_values( $pages_to_check ),
@@ -204,16 +204,16 @@ function edd_install_pages() {
 		)
 	);
 
-	// Default value for checkout page
+	// Default value for checkout page.
 	$checkout = 0;
 
-	// We'll only update settings on change
+	// We'll only update settings on change.
 	$changed = false;
 
 	// Use the current user as the page author.
 	$user_id = get_current_user_id();
 
-	// Loop through all pages, fix or create any missing ones
+	// Loop through all pages, fix or create any missing ones.
 	foreach ( $pages as $page => $page_attributes ) {
 
 		$page_attributes = wp_parse_args(
@@ -228,20 +228,20 @@ function edd_install_pages() {
 
 		$page_id = ! empty( $pages_to_check[ $page ] ) ? $pages_to_check[ $page ] : false;
 
-		// Checks if the page option exists
+		// Checks if the page option exists.
 		$page_object = ! array_key_exists( $page, $missing_pages ) && ! empty( $posts->posts ) && ! empty( $page_id )
 			? get_post( $page_id )
 			: array();
 
-		// Skip if page exists
+		// Skip if page exists.
 		if ( ! empty( $page_object ) ) {
 
-			// Set the checkout page
+			// Set the checkout page.
 			if ( 'purchase_page' === $page ) {
 				$checkout = $page_object->ID;
 			}
 
-			// Skip if page exists
+			// Skip if page exists.
 			continue;
 		}
 
@@ -249,22 +249,22 @@ function edd_install_pages() {
 			$page_attributes['post_parent'] = $checkout;
 		}
 
-		// Create the new page
+		// Create the new page.
 		$new_page = wp_insert_post( $page_attributes );
 
-		// Update the checkout page ID
+		// Update the checkout page ID.
 		if ( 'purchase_page' === $page ) {
 			$checkout = $new_page;
 		}
 
-		// Set the page option
+		// Set the page option.
 		$current_options[ $page ] = $new_page;
 
-		// Pages changed
+		// Pages changed.
 		$changed = true;
 	}
 
-	// Update the option
+	// Update the option.
 	if ( true === $changed ) {
 		update_option( 'edd_settings', $current_options );
 	}

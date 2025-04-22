@@ -1,0 +1,38 @@
+.edd-sortable-list {
+	margin: 0;
+	width: 300px;
+	display: grid;
+	gap: 18px;
+
+	&__item {
+		margin-bottom: 6px;
+		padding: 0;
+		display: flex;
+		gap: 4px;
+		cursor: move;
+		align-items: center;
+
+		&:after {
+			display: block;
+			width: 17px;
+			height: 17px;
+			margin-left: auto;
+			color: #aaa;
+			font-family: dashicons;
+			font-size: 17px;
+			content: "\f228";
+			cursor: move;
+			line-height: 1;
+		}
+	}
+
+	.payment-icon-image {
+		display: flex;
+		align-items: center;
+	}
+
+	.payment-icon {
+		width: 32px;
+		height: 24px;
+	}
+}

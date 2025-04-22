@@ -46,4 +46,35 @@ class Checkout extends Section {
 
 		return $emails;
 	}
+
+	/**
+	 * Sanitize the address checkout fields.
+	 *
+	 * @since 3.3.8
+	 * @param string $value The value to sanitize.
+	 * @return string
+	 */
+	protected static function sanitize_checkout_address_fields( $value ) {
+		if ( ! edd_use_taxes() ) {
+			return $value;
+		}
+
+		// If taxes are enabled at all, we need to ensure the country field is always present.
+		$value['country'] = 1;
+
+		$has_regional_rates = edd_get_adjustments(
+			array(
+				'type'   => 'tax_rate',
+				'scope'  => 'region',
+				'status' => 'active',
+				'number' => 1,
+			)
+		);
+
+		if ( ! empty( $has_regional_rates ) ) {
+			$value['state'] = 1;
+		}
+
+		return $value;
+	}
 }

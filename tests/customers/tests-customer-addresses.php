@@ -26,9 +26,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		self::$customer_addresses = parent::edd()->customer_address->create_many( 5 );
 	}
 
-	/**
-	 * @covers ::edd_update_customer_address
-	 */
 	public function test_update_should_return_true() {
 		$success = edd_update_customer_address(
 			self::$customer_addresses[0],
@@ -40,9 +37,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertSame( 1, $success );
 	}
 
-	/**
-	 * @covers ::edd_update_customer_address
-	 */
 	public function test_address_object_after_update_should_return_true() {
 		edd_update_customer_address( self::$customer_addresses[0], array(
 			'address' => 'Address Line 1',
@@ -53,9 +47,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertSame( 'Address Line 1', $customer_address->address );
 	}
 
-	/**
-	 * @covers ::edd_update_customer_address
-	 */
 	public function test_update_without_id_should_fail() {
 		$success = edd_update_customer_address( null, array(
 			'email' => 'eddtest@edd.test',
@@ -64,27 +55,18 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertFalse( $success );
 	}
 
-	/**
-	 * @covers ::edd_delete_order_transaction
-	 */
 	public function test_delete_should_return_true() {
 		$success = edd_delete_customer_address( self::$customer_addresses[0] );
 
 		$this->assertSame( 1, $success );
 	}
 
-	/**
-	 * @covers ::edd_delete_order_transaction
-	 */
 	public function test_delete_without_id_should_fail() {
 		$success = edd_delete_customer_address( '' );
 
 		$this->assertFalse( $success );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_number_should_return_true() {
 		$orders = edd_get_customer_addresses( array(
 			'number' => 10,
@@ -93,9 +75,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $orders );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_offset_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'number' => 10,
@@ -105,9 +84,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_id_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'id',
@@ -117,9 +93,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->id < $customer_addresses[1]->id );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_id_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'id',
@@ -129,9 +102,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->id > $customer_addresses[1]->id );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_id__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'id__not_in' => array(
@@ -142,9 +112,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_customer_id_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'customer_id',
@@ -154,9 +121,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->customer_id < $customer_addresses[1]->customer_id );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_customer_id_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'customer_id',
@@ -166,9 +130,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->customer_id > $customer_addresses[1]->customer_id );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_customer_id__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'customer_id__in' => array(
@@ -179,9 +140,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_customer_id__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'customer_id__not_in' => array(
@@ -192,9 +150,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_type_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'type',
@@ -204,9 +159,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->type < $customer_addresses[1]->type );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_type_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'type',
@@ -216,9 +168,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->type > $customer_addresses[1]->type );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_type__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'type__in' => array(
@@ -229,9 +178,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_type__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'type__not_in' => array(
@@ -242,9 +188,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_status_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'status',
@@ -254,9 +197,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->status < $customer_addresses[1]->status );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_status_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'status',
@@ -266,9 +206,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->status > $customer_addresses[1]->status );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_status__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'status__in' => array(
@@ -279,9 +216,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_status__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'status__not_in' => array(
@@ -292,9 +226,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_address_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'address',
@@ -304,9 +235,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->address < $customer_addresses[1]->address );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_address_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'address',
@@ -316,9 +244,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->address > $customer_addresses[1]->address );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_address__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'address__in' => array(
@@ -329,9 +254,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_address__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'address__not_in' => array(
@@ -342,9 +264,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_address2_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'address2',
@@ -354,9 +273,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->address2 < $customer_addresses[1]->address2 );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_address2_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'address2',
@@ -366,9 +282,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->address2 > $customer_addresses[1]->address2 );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_address2__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'address2__in' => array(
@@ -379,9 +292,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_address2__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'address2__not_in' => array(
@@ -392,9 +302,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_city_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'city',
@@ -404,9 +311,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->city < $customer_addresses[1]->city );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_city_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'city',
@@ -416,9 +320,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->city > $customer_addresses[1]->city );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_city__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'city__in' => array(
@@ -429,9 +330,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_city__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'city__not_in' => array(
@@ -442,9 +340,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_region_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'region',
@@ -454,9 +349,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->region < $customer_addresses[1]->region );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_region_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'region',
@@ -466,9 +358,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->region > $customer_addresses[1]->region );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_region__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'region__in' => array(
@@ -479,9 +368,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_region__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'region__not_in' => array(
@@ -492,9 +378,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_postal_code_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'postal_code',
@@ -504,9 +387,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->postal_code < $customer_addresses[1]->postal_code );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_postal_code_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'postal_code',
@@ -516,9 +396,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->postal_code > $customer_addresses[1]->postal_code );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_postal_code__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'postal_code__in' => array(
@@ -529,9 +406,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_postal_code__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'postal_code__not_in' => array(
@@ -542,9 +416,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_country_and_order_asc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'country',
@@ -554,9 +425,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->country < $customer_addresses[1]->country );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_orderby_country_and_order_desc_should_return_true() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'orderby' => 'country',
@@ -566,9 +434,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertTrue( $customer_addresses[0]->country > $customer_addresses[1]->country );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_country__in_should_return_1() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'country__in' => array(
@@ -579,9 +444,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 1, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_country__not_in_should_return_5() {
 		$customer_addresses = edd_get_customer_addresses( array(
 			'country__not_in' => array(
@@ -592,9 +454,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 5, $customer_addresses );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_id_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'id' => -999,
@@ -603,9 +462,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_customer_id_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'customer_id' => -999,
@@ -614,9 +470,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_type_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'type' => -999,
@@ -625,9 +478,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_status_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'status' => -999,
@@ -636,9 +486,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_address_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'address' => -999,
@@ -647,9 +494,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_address2_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'address2' => -999,
@@ -658,9 +502,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_city_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'city' => -999,
@@ -669,9 +510,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_region_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'region' => -999,
@@ -680,9 +518,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_postal_code_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'postal_code' => -999,
@@ -691,9 +526,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_country_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'country' => -999,
@@ -702,9 +534,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_date_created_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'date_created' => '2250-01-01 23:59:59',
@@ -713,9 +542,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_get_customer_addresses
-	 */
 	public function test_get_customer_addresses_with_invalid_date_modified_should_return_0() {
 		$transactions = edd_get_customer_addresses( array(
 			'date_modified' => '2250-01-01 23:59:59',
@@ -724,9 +550,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertCount( 0, $transactions );
 	}
 
-	/**
-	 * @covers ::edd_demote_customer_primary_addresses
-	 */
 	public function test_adding_new_primary_customer_address_demotes_previous_primary() {
 		$old_primary_address = parent::edd()->customer_address->create_and_get( array(
 			'is_primary' => true
@@ -761,9 +584,6 @@ class Customer_Address extends EDD_UnitTestCase {
 		$this->assertEquals( '0', $old_primary_address->is_primary );
 	}
 
-	/**
-	 * @covers ::edd_demote_customer_primary_addresses
-	 */
 	public function test_adding_new_non_primary_customer_address_doesnt_demote_primary() {
 		$primary_address = parent::edd()->customer_address->create_and_get( array(
 			'is_primary' => true
@@ -782,5 +602,35 @@ class Customer_Address extends EDD_UnitTestCase {
 		// Ensure primary address is still a primary.
 		$primary_address = parent::edd()->customer_address->get_object_by_id( $primary_address->id );
 		$this->assertEquals( '1', $primary_address->is_primary );
+	}
+
+	public function test_edd_get_customer_address_gets_address() {
+		$user_id  = parent::factory()->user->create();
+		$customer = parent::edd()->customer->create_and_get(
+			array(
+				'user_id' => $user_id,
+			)
+		);
+		$address = parent::edd()->customer_address->create_and_get(
+			array(
+				'customer_id' => $customer->id,
+				'address'     => '123 Fake Street',
+				'city'        => 'Springfield',
+				'region'      => 'IL',
+				'postal_code' => '62701',
+				'country'     => 'US',
+				'is_primary'  => true,
+			)
+		);
+		$customer->update_meta( 'phone', '555-555-5555' );
+
+		$customer_address = edd_get_customer_address( $user_id );
+
+		$this->assertEquals( '123 Fake Street', $customer_address['line1'] );
+		$this->assertEquals( 'Springfield', $customer_address['city'] );
+		$this->assertEquals( 'IL', $customer_address['state'] );
+		$this->assertEquals( '62701', $customer_address['zip'] );
+		$this->assertEquals( 'US', $customer_address['country'] );
+		$this->assertEquals( '555-555-5555', $customer_address['phone'] );
 	}
 }

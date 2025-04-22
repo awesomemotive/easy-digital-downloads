@@ -54,6 +54,7 @@ function localize() {
 			'view_downloads_link'     => add_query_arg( 'post_type', 'download', admin_url( 'edit.php' ) ),
 			'download_label_singular' => edd_get_label_singular(),
 			'download_label_plural'   => edd_get_label_plural(),
+			'checkout_registration'   => in_array( edd_get_option( 'show_register_form', 'none' ), array( 'both', 'registration' ), true ),
 		)
 	);
 }

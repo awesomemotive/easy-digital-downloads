@@ -1,0 +1,231 @@
+#edd_checkout_form_wrap {
+	legend {
+		display: block;
+		font-size: 120%;
+		line-height: 1;
+		font-weight: bold;
+		width: 100%;
+		margin: 0 0 1rem;
+		padding: 0;
+		white-space: nowrap;
+	}
+
+	label {
+		font-weight: bold;
+		display: block;
+		position: relative;
+		line-height: 100%;
+		font-size: 95%;
+		margin: 0 0 5px;
+	}
+
+	.edd-description {
+		color: #666;
+		font-size: 80%;
+		display: block;
+		margin: 0 0 5px;
+	}
+
+	input.edd-input,
+	textarea.edd-input,
+	select.edd-select {
+		display: block;
+		width: 70%;
+	}
+
+	select.edd-select.edd-select-small {
+		display: inline;
+		width: auto;
+	}
+
+	input.edd-input.error,
+	textarea.edd-input.error {
+		border-color: #c4554e;
+	}
+
+	> p,
+	fieldset > div {
+		margin: 0 0 21px;
+	}
+
+	span.edd-required-indicator {
+		color: #b94a48;
+		display: inline;
+	}
+
+	textarea,
+	input[type="text"],
+	input[type="email"],
+	input[type="password"],
+	input[type="tel"],
+	select {
+		padding: 4px 6px;
+	}
+
+	input[type="radio"] {
+		border: none;
+		margin-right: 5px;
+	}
+
+	input[type="checkbox"] {
+		display: inline-block;
+		margin: 0 5px 0 0;
+	}
+
+	input[type="checkbox"] + label,
+	input[type="checkbox"] + label:after {
+		display: inline;
+	}
+
+	.edd-payment-icons {
+		display: -ms-flexbox;
+		display: flex;
+		margin: 0 0 8px;
+	}
+
+	.edd-payment-icons img.payment-icon {
+		max-height: 32px;
+	}
+
+	.edd-payment-icons .payment-icon {
+		margin: 0 10px 0 0;
+	}
+
+	#edd-payment-mode-wrap label {
+		display: inline-block;
+		margin: 0 20px 0 0;
+	}
+
+	#edd-payment-mode-wrap .edd-payment-mode-label {
+		font-weight: bold;
+		display: inline-block;
+		position: relative;
+		margin-bottom: 5px;
+	}
+
+	fieldset {
+		border: 1px solid #eee;
+		padding: 1.387em;
+		margin: 0 0 21px;
+	}
+
+	#edd_purchase_submit,
+	#edd_discount_code,
+	#edd_register_account_fields {
+		padding: 0;
+		border: none;
+	}
+
+	fieldset fieldset {
+		margin: 0;
+		border: none;
+		padding: 0;
+	}
+
+	#edd-login-account-wrap,
+	#edd-new-account-wrap,
+	#edd_show_discount,
+	.edd-cart-adjustment,
+	#edd_final_total_wrap {
+		background: #fafafa;
+		color: #666;
+		padding: 0.5em 1.387em;
+	}
+
+	#edd-discount-code-wrap,
+	#edd_final_total_wrap,
+	#edd_show_discount {
+		border: 1px solid #eee;
+	}
+
+	.edd-cart-adjustment {
+		padding: 1.387em;
+	}
+
+	.edd-cart-adjustment input.edd-input,
+	.edd-cart-adjustment input.edd-submit,
+	.edd-cart-adjustment .edd-apply-discount.edd-submit {
+		display: inline-block;
+	}
+
+	.edd-cart-adjustment input.edd-submit {
+		padding: 3px 12px;
+		margin-bottom: 2px;
+	}
+
+	#edd-discount-error-wrap {
+		width: 100%;
+		display: inline-block;
+		margin: 1em 0 0;
+	}
+
+	#edd-new-account-wrap,
+	#edd-login-account-wrap {
+		margin: -1.387em -1.387em 21px;
+		border-left: none;
+		border-right: none;
+		border-top: none;
+	}
+
+	#edd_payment_mode_select {
+		margin-bottom: 21px;
+	}
+
+	fieldset#edd_register_fields #edd_checkout_user_info {
+		margin-bottom: 21px;
+	}
+
+	fieldset#edd_register_account_fields legend {
+		padding-top: 11px;
+	}
+
+	fieldset#edd_register_account_fields p.edd_register_password,
+	fieldset#edd_register_account_fields p.edd_login_password {
+		margin: 0;
+	}
+
+	fieldset#edd_cc_fields legend {
+		border: none;
+		padding: 0;
+	}
+
+	fieldset p:last-child {
+		margin-bottom: 0;
+	}
+
+	fieldset#edd_cc_fields #edd-card-number-wrap {
+		margin-top: 5px;
+	}
+
+	#edd_purchase_final_total {
+		margin: 21px 0;
+	}
+
+	#edd_purchase_final_total p {
+		margin: 0;
+	}
+
+	input.edd-input.card-number.valid {
+		background-image: url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22green%22%3E%0A%20%20%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M4.5%2012.75l6%206%209-13.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A);
+		background-repeat: no-repeat;
+		background-position: 98% 50%;
+	}
+
+	span.exp-divider {
+		display: inline;
+	}
+
+	span.card-type {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+
+	span.card-type.off {
+		display: none;
+	}
+
+	.edd-cart-ajax {
+		box-shadow: none;
+	}
+}

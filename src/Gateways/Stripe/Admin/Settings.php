@@ -69,19 +69,6 @@ class Settings {
 				'size'  => 'regular',
 				'class' => 'edd-hidden edds-api-key-row',
 			),
-			'stripe_billing_fields'          => array(
-				'id'      => 'stripe_billing_fields',
-				'name'    => __( 'Billing Address Display', 'easy-digital-downloads' ),
-				'desc'    => __( 'Select how you would like to display the billing address fields on the checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this option cannot be changed from "Full address".</p><p>If set to "No address fields", you <strong>must</strong> disable "zip code verification" in your Stripe account.</p>', 'easy-digital-downloads' ),
-				'type'    => 'select',
-				'std'     => 'full',
-				'class'   => $this->get_connected_class(),
-				'options' => array(
-					'full'        => __( 'Full address', 'easy-digital-downloads' ),
-					'zip_country' => __( 'Zip / Postal Code and Country only', 'easy-digital-downloads' ),
-					'none'        => __( 'No address fields', 'easy-digital-downloads' ),
-				),
-			),
 			'statement_descriptor'           => array(
 				'id'          => 'stripe_statement_descriptor',
 				'name'        => __( 'Statement Descriptor', 'easy-digital-downloads' ),
@@ -112,7 +99,7 @@ class Settings {
 				'type'        => 'text',
 				'faux'        => true,
 				'disabled'    => true,
-				'class'       => edd_stripe()->connect->is_connected && ! empty( edd_get_option( 'stripe_include_purchase_summary_in_statement_descriptor', false ) ) ? 'statement-descriptor-prefix' : 'edd-hidden statement-descriptor-prefix',
+				'class'       => $this->is_connected() && ! empty( edd_get_option( 'stripe_include_purchase_summary_in_statement_descriptor', false ) ) ? 'statement-descriptor-prefix' : 'edd-hidden statement-descriptor-prefix',
 				'field_class' => 'edd-text-loading',
 			),
 			'stripe_more_settings_header'    => array(
@@ -440,7 +427,7 @@ class Settings {
 	 * @return string
 	 */
 	private function get_connected_class() {
-		return edd_stripe()->connect->is_connected ? '' : 'edd-hidden';
+		return $this->is_connected() ? '' : 'edd-hidden';
 	}
 
 	/**
@@ -454,7 +441,7 @@ class Settings {
 			return false;
 		}
 
-		if ( ! edd_stripe()->connect->is_connected ) {
+		if ( ! $this->is_connected() ) {
 			return false;
 		}
 
@@ -615,5 +602,15 @@ class Settings {
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * Whether the Stripe connection is active.
+	 *
+	 * @since 3.3.8
+	 * @return bool
+	 */
+	private function is_connected(): bool {
+		return edd_stripe()->connect() && edd_stripe()->connect->is_connected;
 	}
 }

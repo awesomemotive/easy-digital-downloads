@@ -30,6 +30,8 @@
 
 		span.edit-item {
 			display: none;
+			flex-direction: column;
+			gap: 0;
 		}
 
 		.edit-item input {

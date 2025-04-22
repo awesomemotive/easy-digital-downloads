@@ -112,6 +112,7 @@ function registration( $block_attributes = array() ) {
 		array(
 			'current'  => true,
 			'redirect' => '',
+			'username' => true,
 		)
 	);
 	ob_start();

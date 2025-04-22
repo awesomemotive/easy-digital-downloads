@@ -109,6 +109,11 @@ const EDD_Stripe_Connect_Scripts = {
 		}
 
 		element.className = 'notice inline notice-' + type;
+		let stripeInput = document.getElementById( 'edd_settings[gateways][stripe]' );
+		if ( stripeInput ) {
+			stripeInput.checked = false;
+			stripeInput.disabled = true;
+		}
 	},
 
 	hideNotice( element = false ) {
@@ -121,5 +126,9 @@ const EDD_Stripe_Connect_Scripts = {
 		}
 
 		element.className = 'edd-hidden';
+		let stripeInput = document.getElementById( 'edd_settings[gateways][stripe]' );
+		if ( stripeInput ) {
+			stripeInput.disabled = false;
+		}
 	},
 };

@@ -1,0 +1,12 @@
+.edd-multicheck {
+	.edd-form-group__control {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin-bottom: 0 !important;
+
+		label {
+			margin: 0 !important;
+		}
+	}
+}

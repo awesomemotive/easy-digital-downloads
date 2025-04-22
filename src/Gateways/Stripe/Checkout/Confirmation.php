@@ -62,22 +62,57 @@ class Confirmation {
 	private static function get_order( $intent_id ) {
 		$intent = Intents::get( $intent_id );
 		if ( ! $intent ) {
+			edd_record_gateway_error(
+				__( 'Stripe Gateway Error', 'easy-digital-downloads' ),
+				sprintf(
+					/* translators: %s: Payment intent ID */
+					__( 'The payment intent could not be retrieved: %s', 'easy-digital-downloads' ),
+					$intent_id
+				)
+			);
 			return false;
 		}
 
-		// Only process successful or processing intents.
-		if ( ! in_array( $intent->status, array( 'succeeded', 'processing' ), true ) ) {
+		// If the intent is canceled, return false.
+		if ( in_array( $intent->status, array( 'canceled', 'requires_payment_method' ), true ) ) {
+			edd_record_gateway_error(
+				__( 'Stripe Gateway Error', 'easy-digital-downloads' ),
+				sprintf(
+					/* translators: %1$s: Payment intent status, %2$s: Payment intent ID */
+					__( 'The payment intent status is %1$s for payment intent: %2$s', 'easy-digital-downloads' ),
+					$intent->status,
+					$intent_id
+				)
+			);
 			return false;
 		}
 
 		// Get the order ID from the metadata (edd_payment_id).
 		$metadata = $intent->metadata;
 		if ( ! isset( $metadata->edd_payment_id ) ) {
+			edd_record_gateway_error(
+				__( 'Stripe Gateway Error', 'easy-digital-downloads' ),
+				sprintf(
+					/* translators: %s: Payment intent ID */
+					__( 'The payment intent metadata does not contain an order ID: %s', 'easy-digital-downloads' ),
+					$intent_id
+				)
+			);
 			return false;
 		}
 
 		$order = edd_get_order( $metadata->edd_payment_id );
 		if ( ! $order ) {
+			edd_record_gateway_error(
+				__( 'Stripe Gateway Error', 'easy-digital-downloads' ),
+				sprintf(
+					/* translators: %1$s: Order ID, %2$s: Payment intent ID */
+					__( 'The order %1$s could not be retrieved from the payment intent metadata: %2$s', 'easy-digital-downloads' ),
+					$metadata->edd_payment_id,
+					$intent_id
+				),
+				$metadata->edd_payment_id
+			);
 			return false;
 		}
 

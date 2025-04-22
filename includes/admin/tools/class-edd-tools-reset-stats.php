@@ -11,8 +11,8 @@
  * @since       2.5
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * EDD_Tools_Reset_Stats class.
@@ -74,7 +74,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 
 		if ( $step_items ) {
 			$query = "TRUNCATE TABLE {$step_items[0]}";
-			edd_debug_log( var_export($query, true), true );
+			edd_debug_log( var_export( $query, true ), true );
 			$wpdb->query( $query );
 
 			return true;
@@ -142,7 +142,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			delete_transient( 'edd_estimated_monthly_stats' . false );
 			$this->delete_data( 'edd_reset_tables_to_truncate' );
 
-			// Reset the sequential order numbers
+			// Reset the sequential order numbers.
 			if ( edd_get_option( 'enable_sequential' ) ) {
 				delete_option( 'edd_last_payment_number' );
 				delete_option( 'edd_next_order_number' );
@@ -189,24 +189,25 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 		$tables = get_option( 'edd_reset_tables_to_truncate', false );
 
 		if ( false === $tables ) {
-			$tables = array();
+			$tables      = array();
+			$skip_tables = $this->get_tables_to_skip();
 
 			foreach ( EDD()->components as $component ) {
 				/** @var $component EDD\Component */
 
-				// Objects
+				// Objects.
 				$object = $component->get_interface( 'table' );
 				if ( $object instanceof \EDD\Database\Table && $object->exists() ) {
-					if ( 'adjustments' === $object->name ) {
+					if ( in_array( $object->name, $skip_tables, true ) ) {
 						continue;
 					}
 					$tables[] = $object->table_name;
 				}
 
-				// Meta
+				// Meta.
 				$meta = $component->get_interface( 'meta' );
 				if ( $meta instanceof \EDD\Database\Table && $meta->exists() ) {
-					if ( 'adjustmentmeta' === $meta->name ) {
+					if ( in_array( $meta->name, $skip_tables, true ) ) {
 						continue;
 					}
 					$tables[] = $meta->table_name;
@@ -295,5 +296,20 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 
 		// Delete from the database.
 		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
+	}
+
+	/**
+	 * Get the tables to skip.
+	 *
+	 * @since 3.3.8
+	 * @return array
+	 */
+	private function get_tables_to_skip() {
+		return array(
+			'adjustments',
+			'adjustmentmeta',
+			'emails',
+			'emailmeta',
+		);
 	}
 }

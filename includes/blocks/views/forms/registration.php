@@ -8,17 +8,19 @@ wp_enqueue_script( 'user-profile' );
 wp_enqueue_style( 'dashicons' );
 ?>
 <form id="edd-blocks-form__register" class="edd-blocks-form edd-blocks-form__register" action="" method="post">
-	<div class="edd-blocks-form__group edd-blocks-form__group-username">
-		<label for="edd_user_register">
-			<?php
-			esc_html_e( 'Username or Email', 'easy-digital-downloads' );
-			echo EDD()->html->show_required();
-			?>
-		</label>
-		<div class="edd-blocks-form__control">
-			<input name="edd_user_login" id="edd_user_register" class="edd-required edd-input" type="text" required/>
+	<?php if ( $block_attributes['username'] ) : ?>
+		<div class="edd-blocks-form__group edd-blocks-form__group-username">
+			<label for="edd_user_register">
+				<?php
+				esc_html_e( 'Username or Email', 'easy-digital-downloads' );
+				echo EDD()->html->show_required();
+				?>
+			</label>
+			<div class="edd-blocks-form__control">
+				<input name="edd_user_login" id="edd_user_register" class="edd-required edd-input" type="text" required/>
+			</div>
 		</div>
-	</div>
+	<?php endif; ?>
 	<div class="edd-blocks-form__group edd-blocks-form__group-email">
 		<label for="edd-user-email">
 			<?php

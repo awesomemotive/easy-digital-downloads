@@ -169,6 +169,12 @@ class Stats {
 
 		if ( empty( $column ) ) {
 			$column = true === $this->query_vars['exclude_taxes'] ?  "{$column_prefix}total - {$column_prefix}tax" : $column_prefix . 'total';
+		} elseif ( false !== strpos( $column, '-' ) ) {
+			$array = explode( '-', $column );
+			foreach ( $array as $key => $column_name ) {
+				$array[ $key ] = $column_prefix . trim( $column_name );
+			}
+			$column = implode( ' - ', $array );
 		} else {
 			$column = $column_prefix . $column;
 		}

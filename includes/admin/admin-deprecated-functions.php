@@ -1745,3 +1745,209 @@ function edd_register_delete_customer_tab( $tabs ) {
 		),
 	);
 }
+
+/**
+ * Register the earnings report batch exporter
+ *
+ * @since  2.7
+ * @deprecated 3.3.8
+ */
+function edd_register_earnings_report_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_earnings_report_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the earnings report batch process if needed
+ *
+ * @since  2.7
+ * @deprecated 3.3.8
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_earnings_report_batch_processor( $class ) {}
+
+/**
+ * Register the sales and earnings report batch exporter.
+ *
+ * @since 3.0
+ * @deprecated 3.3.8
+ */
+function edd_register_sales_and_earnings_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_sales_and_earnings_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the sales and earnings batch process if needed.
+ *
+ * @since 3.0
+ * @deprecated 3.3.8
+ * @param string $class The class being requested to run for the batch export
+ */
+function edd_include_sales_and_earnings_batch_processor( $class ) {}
+
+/**
+ * Register the sales batch exporter.
+ *
+ * @since 2.7
+ * @deprecated 3.3.8
+ */
+function edd_register_sales_export_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_sales_export_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the sales export batch process if needed
+ *
+ * @since  2.7
+ * @deprecated 3.3.8
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_sales_export_batch_processor( $class ) {}
+
+/**
+ * Register the payments batch exporter
+ *
+ * @since  2.4.2
+ */
+function edd_register_payments_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_payments_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the payments batch processor if needed.
+ *
+ * @since 2.4.2
+ * @deprecated 3.3.8
+ * @param string $class The class being requested to run for the batch export
+ */
+function edd_include_payments_batch_processor( $class ) {}
+
+/**
+ * Register the taxed orders report batch exporter.
+ *
+ * @since 3.0
+ */
+function edd_register_taxed_orders_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_taxed_orders_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the taxed orders report batch process if needed.
+ *
+ * @since 3.0
+ *
+ * @param string $class The class being requested to run for the batch export
+ */
+function edd_include_taxed_orders_batch_processor( $class ) {}
+
+/**
+ * Register the customers batch exporter.
+ *
+ * @since 2.4.2
+ */
+function edd_register_customers_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_customers_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the customers batch processor if needed.
+ *
+ * @since 2.4.2
+ *
+ * @param string $class The class being requested to run for the batch export.
+ */
+function edd_include_customers_batch_processor( $class ) {}
+
+/**
+ * Register the taxed customers report batch exporter.
+ *
+ * @since 3.0
+ * @deprecated 3.3.8
+ */
+function edd_register_taxed_customers_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_taxed_customers_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the taxed customers report batch process if needed.
+ *
+ * @since 3.0
+ * @deprecated 3.3.8
+ * @param string $class The class being requested to run for the batch export
+ */
+function edd_include_taxed_customers_batch_processor( $class ) {}
+
+/**
+ * Register the download products batch exporter
+ *
+ * @since  2.5
+ * @deprecated 3.3.8
+ */
+function edd_register_downloads_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_downloads_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the file downloads batch process if needed
+ *
+ * @since  2.5
+ * @deprecated 3.3.8
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_downloads_batch_processor( $class ) {}
+
+/**
+ * Register the API requests batch exporter
+ *
+ * @since  2.7
+ * @deprecated 3.3.8
+ */
+function edd_register_api_requests_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_api_requests_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the API requests batch process if needed
+ *
+ * @since  2.7
+ * @deprecated 3.3.8
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_api_requests_batch_processor( $class ) {}
+
+/**
+ * Register the file downloads batch exporter
+ *
+ * @since  2.4.2
+ * @deprecated 3.3.8
+ */
+function edd_register_file_downloads_batch_export() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_file_downloads_batch_processor', 10, 1 );
+}
+
+/**
+ * Loads the file downloads batch process if needed
+ *
+ * @since  2.4.2
+ * @deprecated 3.3.8
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_file_downloads_batch_processor( $class ) {}
+
+/**
+ * Add an email address to the customer from within the admin and log a customer note
+ *
+ * @since  2.6
+ * @deprecated 3.3.8
+ * @param  array $args  Array of arguments: nonce, customer id, and email address.
+ * @return mixed        Echos JSON if doing AJAX. Returns array of success (bool) and message (string) if not AJAX.
+ */
+function edd_add_customer_email( $args = array() ) {
+	$emails = new EDD\Admin\Customers\Emails();
+
+	return $emails->maybe_add_email( $args );
+}

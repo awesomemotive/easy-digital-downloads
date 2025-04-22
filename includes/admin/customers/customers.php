@@ -461,6 +461,8 @@ function edd_customers_view( $customer = null ) {
 		$address = $address_args;
 	}
 
+	$phone = $customer->get_meta( 'phone', true );
+
 	do_action( 'edd_customer_card_top', $customer );
 
 	// Country.
@@ -518,7 +520,7 @@ function edd_customers_view( $customer = null ) {
 					<?php echo get_avatar( $customer->email, 150 ); ?><br />
 					<?php if ( current_user_can( $customer_edit_role ) ) : ?>
 						<span class="info-item editable customer-edit-link">
-							<a href="#" class="button-secondary" id="edit-customer"><?php esc_html_e( 'Edit Profile', 'easy-digital-downloads' ); ?></a>
+							<button class="button button-secondary" id="edit-customer"><?php esc_html_e( 'Edit Profile', 'easy-digital-downloads' ); ?></button>
 						</span>
 						<?php do_action( 'edd_after_customer_edit_link', $customer ); ?>
 					<?php endif; ?>
@@ -544,13 +546,14 @@ function edd_customers_view( $customer = null ) {
 							<span class="info-item" data-key="region"><?php echo esc_html( edd_get_state_name( $address['country'], $address['region'] ) ); ?></span>
 							<span class="info-item" data-key="postal_code"><?php echo esc_html( $address['postal_code'] ); ?></span>
 							<span class="info-item" data-key="country"><?php echo esc_html( edd_get_country_name( $address['country'] ) ); ?></span>
+							<span class="info-item" data-key="phone"><?php echo esc_html( $phone ); ?></span>
 						</span>
 
 						<span class="customer-address info-item edit-item">
 							<input class="info-item" type="text" data-key="address" name="customerinfo[address]" placeholder="<?php esc_html_e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['address'] ); ?>" />
 							<input class="info-item" type="text" data-key="address2" name="customerinfo[address2]" placeholder="<?php esc_html_e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['address2'] ); ?>" />
 							<input class="info-item" type="text" data-key="city"  name="customerinfo[city]"  placeholder="<?php esc_html_e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['city'] ); ?>" />
-							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd-country-field-nonce' ) ); ?>">
+							<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item edd_countries_filter" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd-country-field-nonce' ) ); ?>">
 								<?php
 								foreach ( $countries as $country_code => $country ) {
 									echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . esc_html( $country ) . '</option>';
@@ -578,6 +581,21 @@ function edd_customers_view( $customer = null ) {
 							<?php endif; ?>
 
 							<input class="info-item" type="text" data-key="postal_code" name="customerinfo[postal_code]" placeholder="<?php esc_html_e( 'Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $address['postal_code'] ); ?>" />
+							<?php
+							$phone_input = new \EDD\HTML\Phone(
+								array(
+									'name'        => 'customerinfo[phone]',
+									'value'       => $phone,
+									'class'       => 'info-item',
+									'data'        => array(
+										'key'     => 'phone',
+										'country' => strtolower( $address['country'] ),
+									),
+									'placeholder' => __( 'Phone', 'easy-digital-downloads' ),
+								)
+							);
+							$phone_input->output();
+							?>
 						</span>
 					</fieldset>
 				</div>

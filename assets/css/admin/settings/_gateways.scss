@@ -1,0 +1,35 @@
+#edd-payment-gateways {
+
+	label {
+		margin-right: auto;
+	}
+
+	.button.edd-settings__button-settings {
+		margin: 0;
+		background-image: $icon-settings;
+		background-size: 1em;
+		background-repeat: no-repeat;
+		background-position: center;
+		min-height: unset;
+		height: 1.5em;
+		width: 1.5em;
+		border: none;
+		background-color: $wp-alternate;
+
+		&:hover,
+		&:active {
+			background-image: $icon-settings;
+			background-size: 1em;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+
+		.edd-plugin__active & {
+			display: block;
+		}
+	}
+
+	.edd-sortable-list__item:after {
+		margin-left: 0;
+	}
+}

@@ -37,7 +37,7 @@ class ChargeDisputeCreated extends Event {
 	public function process() {
 		$order_id = edd_get_order_id_from_transaction_id( $this->object->charge );
 		if ( $order_id ) {
-			edd_record_order_dispute( $order_id, $this->object->charge, $this->object->reason );
+			edd_record_order_dispute( $order_id, $this->object->id, $this->object->reason );
 			do_action( 'edd_stripe_dispute_created', $this->object, $order_id );
 		}
 	}

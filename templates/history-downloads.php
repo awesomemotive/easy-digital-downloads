@@ -72,7 +72,7 @@ if ( $orders ) :
 
 									foreach ( $download_files as $filekey => $file ) :
 
-										$download_url = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $price_id );
+										$download_url = edd_get_download_file_url( $item, $order->email, $filekey, $item->product_id, $price_id );
 										?>
 
 										<div class="edd_download_file">

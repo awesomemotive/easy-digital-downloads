@@ -24,13 +24,13 @@ class Checkout {
 	 * @return void
 	 */
 	public static function register() {
-		$scripts   = array(
-			'creditCardValidator'  => 'vendor/jquery.creditcardvalidator.min.js',
-			'jQuery.payment'       => 'vendor/jquery.payment.min.js',
-			'edd-checkout-global'  => 'edd-checkout-global.js',
-			'edd-ajax'             => 'edd-ajax.js',
+		$scripts = array(
+			'creditCardValidator' => 'vendor/jquery.creditcardvalidator.min.js',
+			'jQuery.payment'      => 'vendor/jquery.payment.min.js',
+			'edd-checkout-global' => 'edd-checkout-global.js',
+			'edd-ajax'            => 'edd-ajax.js',
 		);
-		foreach ( $scripts as $handle => $file  ) {
+		foreach ( $scripts as $handle => $file ) {
 			wp_register_script(
 				$handle,
 				EDD_PLUGIN_URL . 'assets/js/' . $file,
@@ -55,5 +55,10 @@ class Checkout {
 
 		// Enqueue global checkout.
 		wp_enqueue_script( 'edd-checkout-global' );
+
+		$checkout_address = edd_get_option( 'checkout_address_fields', array() );
+		if ( ! empty( $checkout_address['phone'] ) ) {
+			\EDD\HTML\Phone::enqueue();
+		}
 	}
 }

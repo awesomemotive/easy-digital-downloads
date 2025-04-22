@@ -435,7 +435,6 @@ function edd_render_file_row( $key, $args, $post_id, $index ) {
 		);
 		if ( ! $has_variable_prices ) {
 			$file_assignment_classes[] = 'edd-hidden';
-			$file_assignment_classes[] = 'edd-hidden--required';
 		}
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', $file_assignment_classes ) ); ?>" data-edd-requires-variable-pricing="true">

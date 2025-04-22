@@ -325,97 +325,10 @@ add_action( 'admin_init', 'edds_stripe_connect_maybe_refresh_account_country' );
  * Provides a way to use Stripe Connect and manually manage API keys.
  *
  * @since 2.8.0
+ * @return string
  */
 function edds_stripe_connect_setting_field() {
-	$stripe_connect_url    = edds_stripe_connect_url();
-	$stripe_disconnect_url = edds_stripe_connect_disconnect_url();
-
-	$stripe_connect_account_id = edd_stripe()->connect()->get_connect_id();
-
-	$api_key = edd_is_test_mode()
-		? edd_get_option( 'test_publishable_key' )
-		: edd_get_option( 'live_publishable_key' );
-
-	ob_start();
-	?>
-
-	<?php if ( empty( $api_key ) ) : ?>
-
-	<a href="<?php echo esc_url( $stripe_connect_url ); ?>" class="edd-stripe-connect">
-		<span><?php esc_html_e( 'Connect with Stripe', 'easy-digital-downloads' ); ?></span>
-	</a>
-
-	<p>
-		<?php
-		echo wp_kses_post( edd_stripe()->application_fee->get_fee_message() );
-		echo wp_kses(
-			sprintf(
-				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
-				__( 'Have questions about connecting with Stripe? See the %1$sdocumentation%2$s.', 'easy-digital-downloads' ),
-				'<a href="' . esc_url( edds_documentation_route( 'stripe' ) ) . '" target="_blank" rel="noopener noreferrer">',
-				'</a>'
-			),
-			array(
-				'a' => array(
-					'href'   => true,
-					'target' => true,
-					'rel'    => true,
-				),
-			)
-		);
-		?>
-	</p>
-
-	<?php endif; ?>
-
-	<?php if ( ! empty( $api_key ) ) : ?>
-
-	<div
-		id="edds-stripe-connect-account"
-		class="edds-stripe-connect-acount-info notice inline loading"
-		data-account-id="<?php echo esc_attr( $stripe_connect_account_id ); ?>"
-		data-nonce="<?php echo wp_create_nonce( 'edds-stripe-connect-account-information' ); ?>"
-		<?php echo ( ! empty( $_GET['page'] ) && 'edd-onboarding-wizard' === $_GET['page'] ) ? ' data-onboarding-wizard="true"' : ''; ?>>
-		<p>
-			<span class="account-name"></span>
-			<span class="info"></span>
-		</p>
-	</div>
-	<div id="edds-stripe-disconnect-reconnect" class="loading">
-	</div>
-
-	<?php endif; ?>
-
-	<?php if ( true === edds_stripe_connect_can_manage_keys() ) : ?>
-
-	<div class="edds-api-key-toggle">
-		<p>
-			<button type="button" class="button-link">
-				<small>
-					<?php esc_html_e( 'Manage API keys manually', 'easy-digital-downloads' ); ?>
-				</small>
-			</button>
-		</p>
-	</div>
-
-	<div class="edds-api-key-toggle edd-hidden">
-		<p>
-			<button type="button" class="button-link">
-				<small>
-					<?php esc_html_e( 'Hide API keys', 'easy-digital-downloads' ); ?>
-				</small>
-			</button>
-		</p>
-
-		<div class="notice inline notice-warning" style="margin: 15px 0 -10px;">
-			<?php echo wpautop( esc_html__( 'Although you can add your API keys manually, we recommend using Stripe Connect: an easier and more secure way of connecting your Stripe account to your website. Stripe Connect prevents issues that can arise when copying and pasting account details from Stripe into your Easy Digital Downloads payment gateway settings. With Stripe Connect you\'ll be ready to go with just a few clicks.', 'easy-digital-downloads' ) ); ?>
-		</div>
-	</div>
-
-	<?php endif; ?>
-
-	<?php
-	return ob_get_clean();
+	return EDD\Gateways\Stripe\Admin\Connect::render_connect_field();
 }
 
 /**

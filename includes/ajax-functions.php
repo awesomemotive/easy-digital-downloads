@@ -580,13 +580,12 @@ function edd_ajax_get_states_field() {
 	// Get states for country.
 	$states = edd_get_shop_states( $country );
 
-	// Chosen.
-	$chosen = ! isset( $_POST['chosen'] ) || ( 'true' === $_POST['chosen'] )
-		? true
-		: false;
-
-	// Maybe setup the new listbox.
 	if ( ! empty( $states ) ) {
+		// Chosen.
+		$chosen = ! isset( $_POST['chosen'] ) || ( 'true' === $_POST['chosen'] )
+			? true
+			: false;
+
 		$field_name = isset( $_POST['field_name'] )
 			? sanitize_text_field( $_POST['field_name'] )
 			: 'edd-state-select';
@@ -595,21 +594,27 @@ function edd_ajax_get_states_field() {
 			? sanitize_text_field( $_POST['field_id'] )
 			: $field_name;
 
-		$response = EDD()->html->region_select(
-			array(
-				'name'            => $field_name,
-				'id'              => $field_id,
-				'class'           => $field_name . ' edd-select',
-				'options'         => $states,
-				'chosen'          => $chosen,
-				'show_option_all' => false,
-			)
+		$args = array(
+			'name'    => $field_name,
+			'id'      => $field_id,
+			'class'   => $field_name . ' edd-select',
+			'chosen'  => $chosen,
+			'country' => $country,
+			'options' => $states,
 		);
-	} else {
-		$response = 'nostates';
-	}
 
-	echo $response;
+		if ( in_array( $field_name, array( 'card_state', 'edd_settings[base_state]' ), true ) ) {
+			$args['show_option_empty'] = __( 'Select a State / Province', 'easy-digital-downloads' );
+			if ( 'edd_settings[base_state]' === $field_name ) {
+				$args['show_option_empty'] = __( 'Select a Region', 'easy-digital-downloads' );
+			}
+		}
+
+		$region = new \EDD\HTML\RegionSelect( $args );
+		$region->output();
+	} else {
+		echo 'nostates';
+	}
 
 	edd_die();
 }

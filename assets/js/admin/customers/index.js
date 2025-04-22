@@ -22,7 +22,7 @@ var EDD_Customer = {
 			e.preventDefault();
 
 			EDD_Customer.vars.customer_card_wrap_editable.hide();
-			EDD_Customer.vars.customer_card_wrap_edit_item.show().css( 'display', 'block' );
+			EDD_Customer.vars.customer_card_wrap_edit_item.show().css( 'display', 'flex' );
 		} );
 	},
 	add_email: function() {

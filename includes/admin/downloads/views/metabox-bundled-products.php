@@ -14,7 +14,10 @@ if ( ! $products ) {
 	);
 }
 $variable_pricing = $download->has_variable_prices();
-$row_classes      = array(
+if ( edd_doing_ajax() ) {
+	$variable_pricing = filter_input( INPUT_POST, 'has_variable_pricing', FILTER_VALIDATE_BOOLEAN );
+}
+$row_classes = array(
 	'edd-bundled-product-row',
 );
 if ( $variable_pricing ) {
@@ -34,7 +37,7 @@ $bundle_options = EDD()->html->get_products(
 
 			<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
 
-			<div class="edd-bundled-product-select edd-repeatables-wrap">
+			<div class="edd-bundled-product-select edd-repeatables-wrap edd-handle-actions__group">
 				<?php
 				$index = 1;
 				foreach ( $products as $product ) :
@@ -56,28 +59,6 @@ $bundle_options = EDD()->html->get_products(
 					?>
 					<div class="edd_repeatable_product_wrapper edd_repeatable_row edd-has-handle-actions" data-key="<?php echo esc_attr( $index ); ?>">
 						<div class="<?php echo esc_attr( implode( ' ', $row_classes ) ); ?>">
-							<div class="edd__handle-actions-order hide-if-no-js">
-								<button type="button" class="edd__handle-actions edd__handle-actions-order--higher" aria-disabled="false" aria-describedby="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--higher-description">
-									<span class="screen-reader-text"><?php esc_html_e( 'Move up', 'easy-digital-downloads' ); ?></span>
-									<span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span>
-								</button>
-								<span class="hidden" id="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--higher-description">
-										<?php
-										/* translators: %s: Download singular label */
-										printf( esc_html__( 'Move %s up', 'easy-digital-downloads' ), edd_get_label_singular() );
-										?>
-								</span>
-								<button type="button" class="edd__handle-actions edd__handle-actions-order--lower" aria-disabled="false" aria-describedby="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--lower-description">
-									<span class="screen-reader-text"><?php esc_html_e( 'Move down', 'easy-digital-downloads' ); ?></span>
-									<span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-								</button>
-								<span class="hidden" id="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--lower-description">
-										<?php
-										/* translators: %s: Download singular label */
-										printf( esc_html__( 'Move %s down', 'easy-digital-downloads' ), edd_get_label_singular() );
-										?>
-								</span>
-							</div>
 							<div class="edd-form-group edd-bundled-product-item">
 								<?php /* translators: %s: Download singular label */ ?>
 								<label for="edd_bundled_products_<?php echo esc_attr( $index ); ?>" class="edd-form-group__label edd-repeatable-row-setting-label"><?php printf( esc_html_x( 'Select %s:', 'Noun: The singular label for the download post type', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
@@ -96,7 +77,6 @@ $bundle_options = EDD()->html->get_products(
 							);
 							if ( ! $variable_pricing ) {
 								$conditions_classes[] = 'edd-hidden';
-								$conditions_classes[] = 'edd-hidden--required';
 							}
 							?>
 							<div class="<?php echo esc_attr( implode( ' ', $conditions_classes ) ); ?>" data-edd-requires-variable-pricing="true">
@@ -132,12 +112,34 @@ $bundle_options = EDD()->html->get_products(
 								?>
 								</div>
 							</div>
-							<div class="edd-bundled-product-actions">
-								<?php /* translators: %s: The bundle product index number. */ ?>
-								<a class="edd-remove-row edd-delete" data-type="file"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( esc_html__( 'Remove bundle option %s', 'easy-digital-downloads' ), esc_html( $index ) ); ?></span></a>
-							</div>
-							<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 						</div>
+						<div class="edd-bundled-product-actions edd-repeatable-row-actions">
+							<div class="edd__handle-actions-order hide-if-no-js">
+								<button type="button" class="edd__handle-actions edd__handle-actions-order--higher" aria-disabled="false" aria-describedby="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--higher-description">
+									<span class="screen-reader-text"><?php esc_html_e( 'Move up', 'easy-digital-downloads' ); ?></span>
+									<span class="dashicons dashicons-arrow-up-alt2" aria-hidden="true"></span>
+								</button>
+								<span class="hidden" id="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--higher-description">
+									<?php
+									/* translators: %s: Download singular label */
+									printf( esc_html__( 'Move %s up', 'easy-digital-downloads' ), edd_get_label_singular() );
+									?>
+								</span>
+								<button type="button" class="edd__handle-actions edd__handle-actions-order--lower" aria-disabled="false" aria-describedby="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--lower-description">
+									<span class="screen-reader-text"><?php esc_html_e( 'Move down', 'easy-digital-downloads' ); ?></span>
+									<span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+								</button>
+								<span class="hidden" id="edd-bundled-product-<?php echo esc_attr( $index ); ?>-edd__handle-actions-order--lower-description">
+									<?php
+									/* translators: %s: Download singular label */
+									printf( esc_html__( 'Move %s down', 'easy-digital-downloads' ), edd_get_label_singular() );
+									?>
+								</span>
+							</div>
+							<?php /* translators: %s: The bundle product index number. */ ?>
+							<button type="button" class="edd-remove-row button button-secondary edd-delete" data-type="file"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?><span class="screen-reader-text"><?php printf( esc_html__( 'Remove bundle option %s', 'easy-digital-downloads' ), esc_html( $index ) ); ?></span></button>
+						</div>
+						<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 					</div>
 					<?php ++$index; ?>
 				<?php endforeach; ?>

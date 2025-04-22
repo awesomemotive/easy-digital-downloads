@@ -743,64 +743,82 @@ function edd_checkbox_description_callback( $args ) {
  * Renders multiple checkboxes.
  *
  * @since 1.0
+ * @since 3.3.8 Updated to use `EDD\HTML\Multicheck`.
  * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_multicheck_callback( $args ) {
-	$edd_option = edd_get_option( $args['id'] );
-
-	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '';
 	if ( ! empty( $args['options'] ) ) {
-		$html .= '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
-
-		foreach ( $args['options'] as $key => $option ) :
-			if ( isset( $edd_option[ $key ] ) ) {
-				$enabled = $option;
-			} else {
-				$enabled = null;
-			}
-			$html .= '<div class="edd-check-wrapper">';
-			$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
-			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']">' . wp_kses_post( $option ) . '</label>';
-			$html .= '</div>';
-		endforeach;
-		if ( ! empty( $args['desc'] ) ) {
-			$html .= '<p class="description">' . $args['desc'] . '</p>';
+		$edd_option = edd_get_option( $args['id'], false );
+		if ( false === $edd_option && ! empty( $args['std'] ) ) {
+			$edd_option = $args['std'];
 		}
+		$options = array();
+		foreach ( $args['options'] as $key => $option ) {
+			if ( is_string( $option ) ) {
+				$option = array(
+					'label' => $option,
+				);
+			}
+			$options[ $key ] = wp_parse_args(
+				$option,
+				array(
+					'label'    => '',
+					'disabled' => false,
+					'tooltip'  => array(),
+					'checked'  => (int) (bool) ! empty( $edd_option[ $key ] ),
+				)
+			);
+		}
+		$multicheck = new EDD\HTML\Multicheck(
+			array(
+				'class'    => edd_sanitize_html_class( $args['field_class'] ),
+				'options'  => $options,
+				'name'     => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']',
+				'toggle'   => (bool) ! empty( $args['toggle'] ),
+				'sortable' => array(
+					'enabled' => (bool) ! empty( $args['sortable'] ),
+					'order'   => edd_get_option( 'edd_settings[' . edd_sanitize_key( $args['id'] ) . '_order', array() ),
+					'name'    => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . '_order]',
+				),
+			)
+		);
+		$html      .= $multicheck->get();
+	}
+	if ( ! empty( $args['desc'] ) ) {
+		$html .= '<p class="description">' . $args['desc'] . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
 /**
- * Payment method icons callback
+ * Payment method icons callback.
  *
  * @since 2.1
- *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_payment_icons_callback( $args = array() ) {
 
-	// Start an output buffer
+	// Start an output buffer.
 	ob_start();
 
 	$edd_option = edd_get_option( $args['id'] );
 	$class      = edd_sanitize_html_class( $args['field_class'] ); ?>
 
-	<input type="hidden" name="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>]" value="-1" />
+	<input type="hidden" name="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>]" value="" />
 	<input type="hidden" name="edd_settings[payment_icons_order]" class="edd-order" value="<?php echo edd_get_option( 'payment_icons_order' ); ?>" />
 
 	<?php
 
-	// Only go if options exist
+	// Only go if options exist.
 	if ( ! empty( $args['options'] ) ) :
 		$class = edd_sanitize_html_class( $args['field_class'] );
 
-		// Everything is wrapped in a sortable UL
+		// Everything is wrapped in a sortable UL.
 		?>
 		<ul id="edd-payment-icons-list" class="edd-sortable-list">
 
@@ -809,12 +827,11 @@ function edd_payment_icons_callback( $args = array() ) {
 			$enabled = isset( $edd_option[ $key ] )
 				? $option
 				: null;
+			$id      = 'edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']';
 			?>
 
-			<li class="edd-toggle" data-key="<?php echo edd_sanitize_key( $key ); ?>">
-				<label>
-					<input name="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>][<?php echo edd_sanitize_key( $key ); ?>]" id="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>][<?php echo edd_sanitize_key( $key ); ?>]" class="<?php echo $class; ?>" type="checkbox" value="<?php echo esc_attr( $option ); ?>" <?php echo checked( $option, $enabled, false ); ?> />
-
+			<li class="edd-toggle edd-sortable-list__item" data-key="<?php echo edd_sanitize_key( $key ); ?>">
+				<input name="<?php echo esc_attr( $id ); ?>" id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( $class ); ?>" type="checkbox" value="<?php echo esc_attr( $option ); ?>" <?php checked( $option, $enabled ); ?> />
 				<?php if ( edd_string_is_image_url( $key ) ) : ?>
 					<span class="payment-icon-image"><img class="payment-icon" src="<?php echo esc_url( $key ); ?>" /></span>
 					<?php
@@ -847,11 +864,11 @@ function edd_payment_icons_callback( $args = array() ) {
 						);
 					}
 
-					// SVG or IMG
+					// SVG or IMG.
 					if ( 'svg' === $type ) :
 						?>
 
-						<span class="payment-icon-image"><?php echo $image; // Contains trusted HTML ?></span>
+						<span class="payment-icon-image"><?php echo $image; // Contains trusted HTML. ?></span>
 
 					<?php else : ?>
 
@@ -860,7 +877,8 @@ function edd_payment_icons_callback( $args = array() ) {
 					<?php endif; ?>
 
 				<?php endif; ?>
-					<span class="payment-option-name"><?php echo $option; ?></span>
+				<label for="<?php echo esc_attr( $id ); ?>">
+					<span class="payment-option-name"><?php echo esc_html( $option ); ?></span>
 				</label>
 			</li>
 
@@ -868,15 +886,15 @@ function edd_payment_icons_callback( $args = array() ) {
 
 		</ul>
 
-		<p class="description" style="margin-top:16px;"><?php echo wp_kses_post( $args['desc'] ); ?></p>
+		<p class="description"><?php echo wp_kses_post( $args['desc'] ); ?></p>
 
 		<?php
 	endif;
 
-	// Get the contents of the current output buffer
+	// Get the contents of the current output buffer.
 	$html = ob_get_clean();
 
-	// Filter & return
+	// Filter & return.
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
@@ -971,7 +989,7 @@ function edd_gateways_callback( $args ) {
 				$enabled = null;
 			}
 
-			$html .= '<li class="edd-toggle" data-key="' . edd_sanitize_key( $key ) . '">';
+			$html .= '<li class="edd-toggle edd-sortable-list__item" data-key="' . edd_sanitize_key( $key ) . '">';
 			$html .= '<label>';
 
 			$attributes = array(
@@ -998,7 +1016,7 @@ function edd_gateways_callback( $args ) {
 				);
 				$html   .= $tooltip->get();
 			}
-
+			$html .= '</label>';
 			// If a settings URL is returned, display a button to go to the settings page.
 			$gateway_settings_url = edd_get_gateway_settings_url( $key );
 			if ( ! empty( $gateway_settings_url ) ) {
@@ -1008,8 +1026,6 @@ function edd_gateways_callback( $args ) {
 					__( 'Configure Gateway', 'easy-digital-downloads' )
 				);
 			}
-
-			$html .= '</label>';
 			$html .= '</li>';
 		}
 
@@ -1741,7 +1757,8 @@ function edd_hook_callback( $args ) {
 /**
  * Checkbox toggle callback.
  *
- * @param [type] $args
+ * @since 3.2.8
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_checkbox_toggle_callback( $args ) {
@@ -1753,19 +1770,22 @@ function edd_checkbox_toggle_callback( $args ) {
 		$name = 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']';
 	}
 
-	$args['name']    = $name;
-	$args['class']   = edd_sanitize_html_class( $args['field_class'] );
-	$args['current'] = ! empty( $edd_option )
-		? $edd_option
-		: '';
-
-	$args['check'] = isset( $args['check'] )
+	$args['name']  = $name;
+	$args['id']    = $name;
+	$args['class'] = edd_sanitize_html_class( $args['field_class'] );
+	if ( ! empty( $edd_option ) ) {
+		$args['current'] = $edd_option;
+	}
+	$args['label'] = isset( $args['check'] )
 		? $args['check']
 		: '';
 
-	$args['label'] = $args['check'];
-	$args['value'] = 1;
-
+	if ( isset( $args['tooltip_title'] ) || isset( $args['tooltip_desc'] ) ) {
+		$args['tooltip'] = array(
+			'title'   => $args['tooltip_title'] ?? '',
+			'content' => $args['tooltip_desc'] ?? '',
+		);
+	}
 	$checkbox = new EDD\HTML\CheckboxToggle( $args );
 	$html     = $checkbox->get();
 	if ( ! empty( $args['desc'] ) ) {

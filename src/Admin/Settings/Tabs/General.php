@@ -113,13 +113,14 @@ class General extends Tab {
 				),
 			),
 			'pages'    => array(
-				'page_settings'         => array(
-					'id'            => 'page_settings',
-					'name'          => '<h3>' . __( 'Pages', 'easy-digital-downloads' ) . '</h3>',
-					'desc'          => '',
-					'type'          => 'header',
-					'tooltip_title' => __( 'Page Settings', 'easy-digital-downloads' ),
-					'tooltip_desc'  => __( 'Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'easy-digital-downloads' ),
+				'products_page'         => array(
+					'id'          => 'products_page',
+					'name'        => __( 'Shop Page', 'easy-digital-downloads' ),
+					'desc'        => __( 'This is the page that displays all of your products.', 'easy-digital-downloads' ),
+					'type'        => 'select',
+					'options'     => $pages,
+					'chosen'      => true,
+					'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 				),
 				'purchase_page'         => array(
 					'id'          => 'purchase_page',
@@ -220,7 +221,7 @@ class General extends Tab {
 				),
 			),
 			'api'      => array(
-				'api_settings'                => array(
+				'api_settings'               => array(
 					'id'            => 'api_settings',
 					'name'          => '<h3>' . __( 'API', 'easy-digital-downloads' ) . '</h3>',
 					'desc'          => '',
@@ -228,7 +229,7 @@ class General extends Tab {
 					'tooltip_title' => __( 'API Settings', 'easy-digital-downloads' ),
 					'tooltip_desc'  => __( 'The Easy Digital Downloads REST API provides access to store data through our API endpoints. Enable this setting if you would like all user accounts to be able to generate their own API keys.', 'easy-digital-downloads' ),
 				),
-				'api_allow_user_keys'         => array(
+				'api_allow_user_keys'        => array(
 					'id'    => 'api_allow_user_keys',
 					'name'  => __( 'Allow User Keys', 'easy-digital-downloads' ),
 					'check' => __( 'Allow all users to generate API keys.', 'easy-digital-downloads' ),
@@ -236,7 +237,7 @@ class General extends Tab {
 					'type'  => 'checkbox_toggle',
 				),
 				'enable_public_request_logs' => $this->get_enable_public_request_logs(),
-				'api_help'                    => array(
+				'api_help'                   => array(
 					'id'   => 'api_help',
 					'desc' => sprintf(
 						/* translators: %s: API documentation URL */

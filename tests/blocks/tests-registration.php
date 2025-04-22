@@ -105,6 +105,7 @@ class Registration extends EDD_UnitTestCase {
 	}
 
 	public function test_checkout_has_blocks_is_true() {
+		$this->assertTrue( \EDD\Checkout\Validator::has_block() );
 		$this->assertTrue( \EDD\Blocks\Checkout\Functions\checkout_has_blocks() );
 	}
 

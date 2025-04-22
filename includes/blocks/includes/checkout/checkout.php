@@ -20,7 +20,6 @@ require_once EDD_BLOCKS_DIR . 'includes/checkout/forms.php';
 require_once EDD_BLOCKS_DIR . 'includes/checkout/functions.php';
 require_once EDD_BLOCKS_DIR . 'includes/checkout/gateways.php';
 
-add_action( 'init', __NAMESPACE__ . '\register' );
 /**
  * Registers all of the EDD core blocks.
  *
@@ -42,6 +41,7 @@ function register() {
 		register_block_type( EDD_BLOCKS_DIR . 'build/' . $block, $args );
 	}
 }
+add_action( 'init', __NAMESPACE__ . '\register' );
 
 /**
  * Renders the cart.
@@ -99,7 +99,7 @@ function cart( $block_attributes = array() ) {
  * Generates the cart form depending on contents and options.
  *
  * @since 2.0
- * @param array $block_attributes
+ * @param array $block_attributes The block attributes.
  * @return void
  */
 function do_cart_form( $block_attributes ) {
@@ -233,7 +233,6 @@ function get_cart_contents() {
 	return array( $cart_item );
 }
 
-add_action( 'edd_purchase_form_top', __NAMESPACE__ . '\remove_default_purchase_fields' );
 /**
  * Remove some of the default EDD fields from the purchase form.
  * Loaded in this hook because we have to account for ajax.
@@ -242,7 +241,7 @@ add_action( 'edd_purchase_form_top', __NAMESPACE__ . '\remove_default_purchase_f
  * @return void
  */
 function remove_default_purchase_fields() {
-	if ( ! Functions\checkout_has_blocks() ) {
+	if ( ! \EDD\Checkout\Validator::has_block() ) {
 		return;
 	}
 	remove_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
@@ -257,8 +256,8 @@ function remove_default_purchase_fields() {
 	add_filter( 'edd_pre_cc_address_fields', '__return_true' );
 	add_filter( 'edd_pre_cc_fields', '__return_true' );
 }
+add_action( 'edd_purchase_form_top', __NAMESPACE__ . '\remove_default_purchase_fields' );
 
-add_filter( 'edd_get_checkout_cart', __NAMESPACE__ . '\do_checkout_cart' );
 /**
  * Gets the checkout cart markup when EDD recalculates taxes.
  *
@@ -266,7 +265,7 @@ add_filter( 'edd_get_checkout_cart', __NAMESPACE__ . '\do_checkout_cart' );
  * @return string
  */
 function do_checkout_cart( $cart ) {
-	if ( ! Functions\checkout_has_blocks() ) {
+	if ( ! \EDD\Checkout\Validator::has_block() ) {
 		return $cart;
 	}
 	$cart_items = get_cart_contents();
@@ -276,6 +275,7 @@ function do_checkout_cart( $cart ) {
 
 	return ob_get_clean();
 }
+add_filter( 'edd_get_checkout_cart', __NAMESPACE__ . '\do_checkout_cart' );
 
 /**
  * Gets the array of customer information from the session and potentially the logged in user information.
@@ -309,10 +309,61 @@ function get_customer() {
 }
 
 /**
+ * Renders the customer address fields for checkout.
+ *
+ * @since 2.0
+ * @return void
+ */
+function do_address() {
+	$address = new \EDD\Checkout\Address();
+	$address->render();
+}
+add_action( 'edd_cc_address_fields', __NAMESPACE__ . '\do_address' );
+
+/**
+ * Renders the default credit card fields on checkout.
+ *
+ * @since 2.0
+ * @return void
+ */
+function do_cc_fields() {
+	do_action( 'edd_before_cc_fields' );
+	include EDD_BLOCKS_DIR . 'views/checkout/purchase-form/credit-card.php';
+	do_action( 'edd_after_cc_fields' );
+}
+add_action( 'edd_cc_fields', __NAMESPACE__ . '\do_cc_fields' );
+
+/**
+ * If the checkout block is on a page that isn't set as the checkout option, set edd_is_checkout to true.
+ *
+ * @since 2.0
+ * @deprecated 3.3.0
+ * @param bool $is_checkout Whether we are currently on the checkout page.
+ * @return bool
+ */
+function is_checkout( $is_checkout ) {
+	if ( $is_checkout ) {
+		return $is_checkout;
+	}
+
+	if ( has_block( 'edd/checkout' ) ) {
+		return true;
+	}
+
+	$current_page = ! empty( $_POST['current_page'] ) ? absint( $_POST['current_page'] ) : false;
+	if ( $current_page && edd_doing_ajax() && has_block( 'edd/checkout', $current_page ) ) {
+		return true;
+	}
+
+	return $is_checkout;
+}
+
+/**
  * Gets the customer address for checkout.
  *
  * @since 2.0
- * @param array $customer
+ * @deprecated 3.3.8
+ * @param array $customer The customer data from the session.
  * @return array
  */
 function get_customer_address( $customer ) {
@@ -343,56 +394,4 @@ function get_customer_address( $customer ) {
 	 * @param array $customer The customer data from the session
 	 */
 	return array_map( 'sanitize_text_field', apply_filters( 'edd_checkout_billing_details_address', $address, $customer ) );
-}
-
-add_action( 'edd_cc_address_fields', __NAMESPACE__ . '\do_address' );
-/**
- * Renders the customer address fields for checkout.
- *
- * @since 2.0
- * @return void
- */
-function do_address() {
-	$customer            = get_customer();
-	$customer['address'] = get_customer_address( $customer );
-
-	include EDD_BLOCKS_DIR . 'views/checkout/purchase-form/address.php';
-}
-
-add_action( 'edd_cc_fields', __NAMESPACE__ . '\do_cc_fields' );
-/**
- * Renders the default credit card fields on checkout.
- *
- * @since 2.0
- * @return void
- */
-function do_cc_fields() {
-	do_action( 'edd_before_cc_fields' );
-	include EDD_BLOCKS_DIR . 'views/checkout/purchase-form/credit-card.php';
-	do_action( 'edd_after_cc_fields' );
-}
-
-/**
- * If the checkout block is on a page that isn't set as the checkout option, set edd_is_checkout to true.
- *
- * @since 2.0
- * @deprecated 3.3.0
- * @param bool $is_checkout Whether we are currently on the checkout page.
- * @return bool
- */
-function is_checkout( $is_checkout ) {
-	if ( $is_checkout ) {
-		return $is_checkout;
-	}
-
-	if ( has_block( 'edd/checkout' ) ) {
-		return true;
-	}
-
-	$current_page = ! empty( $_POST['current_page'] ) ? absint( $_POST['current_page'] ) : false;
-	if ( $current_page && edd_doing_ajax() && has_block( 'edd/checkout', $current_page ) ) {
-		return true;
-	}
-
-	return $is_checkout;
 }
