@@ -1,4 +1,12 @@
 <?php
+/**
+ * Legacy EDD Software Licensing Plugin Updater.
+ * This is a legacy class that is used to update plugins using the EDD Software Licensing API.
+ * See https://easydigitaldownloads.com/docs/software-licensing-updater-implementation-for-wordpress-plugins/
+ * for instructions on using this code in your own plugins; do not use this class.
+ *
+ * @package EDD\Licensing
+ */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -593,45 +601,44 @@ class EDD_SL_Plugin_Updater {
 		 */
 		$api_params = apply_filters( 'edd_sl_plugin_updater_api_params', $api_params, $this->api_data, $this->plugin_file );
 
-		$request = new \EDD\Utils\RemoteRequest(
+		$request = wp_remote_post(
 			$this->api_url,
 			array(
 				'timeout'   => 15,
 				'sslverify' => $this->verify_ssl(),
 				'body'      => $api_params,
-				'method'    => 'POST',
-			),
+			)
 		);
 
-		if ( is_wp_error( $request->response ) || ( 200 !== $request->code ) ) {
+		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
 			$this->log_failed_request();
 
 			return false;
 		}
 
-		$body = json_decode( $request->body );
+		$request = json_decode( wp_remote_retrieve_body( $request ) );
 
-		if ( $body && isset( $body->sections ) ) {
-			$body->sections = maybe_unserialize( $body->sections );
+		if ( $request && isset( $request->sections ) ) {
+			$request->sections = maybe_unserialize( $request->sections );
 		} else {
-			$body = false;
+			$request = false;
 		}
 
-		if ( $body && isset( $body->banners ) ) {
-			$body->banners = maybe_unserialize( $body->banners );
+		if ( $request && isset( $request->banners ) ) {
+			$request->banners = maybe_unserialize( $request->banners );
 		}
 
-		if ( $body && isset( $body->icons ) ) {
-			$body->icons = maybe_unserialize( $body->icons );
+		if ( $request && isset( $request->icons ) ) {
+			$request->icons = maybe_unserialize( $request->icons );
 		}
 
-		if ( ! empty( $body->sections ) ) {
-			foreach ( $body->sections as $key => $section ) {
-				$body->$key = (array) $section;
+		if ( ! empty( $request->sections ) ) {
+			foreach ( $request->sections as $key => $section ) {
+				$request->$key = (array) $section;
 			}
 		}
 
-		return $body;
+		return $request;
 	}
 
 	/**

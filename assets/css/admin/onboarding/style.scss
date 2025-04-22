@@ -448,20 +448,32 @@ h1.edd-onboarding__single-step-title {
 	}
 }
 
-.edd-onboarding input:not([type="checkbox"]):not([type="radio"]) {
-	border: 1px solid #dedfe0 !important;
-	border-radius: 2px !important;
-	padding: 2px 8px !important;
-	width: 100%;
-}
+.edd-onboarding {
+	input:not([type="checkbox"]):not([type="radio"]) {
+		border: 1px solid #dedfe0 !important;
+		border-radius: 2px !important;
+		padding: 2px 8px !important;
+		width: 100%;
+	}
 
-.edd-onboarding .quicktags-toolbar input.ed_button {
-	width: auto;
-}
+	.edd-amount-type-wrapper .edd-input__symbol {
+		border: 1px solid #dedfe0 !important;
+		border-radius: 2px !important;
+		padding: 2px 8px !important;
+	}
 
-.edd-onboarding .edd-check-wrapper {
-	display: flex;
-	align-items: center;
+	.edd-section__actions button {
+		padding: 2px 8px;
+	}
+
+	.quicktags-toolbar input.ed_button {
+		width: auto;
+	}
+
+	.edd-check-wrapper {
+		display: flex;
+		align-items: center;
+	}
 }
 
 .wp-core-ui .edd-onboarding select {

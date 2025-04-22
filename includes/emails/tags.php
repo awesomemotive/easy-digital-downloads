@@ -231,7 +231,7 @@ function edd_email_tag_download_list( $payment_id, $order = null ) {
 
 					if ( $show_links ) {
 						$download_list .= '<div>';
-						$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id );
+						$file_url       = edd_get_download_file_url( $item, $order->email, $filekey );
 						$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 						$download_list .= '</div>';
 					} else {
@@ -255,7 +255,7 @@ function edd_email_tag_download_list( $payment_id, $order = null ) {
 					foreach ( $download_files as $filekey => $file ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
-							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item_id, $bundle_item_price_id );
+							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item_id, $bundle_item_price_id, $item );
 							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
@@ -364,7 +364,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				foreach ( $files as $filekey => $file ) {
 					if ( $show_links ) {
 						$download_list .= "\n";
-						$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id );
+						$file_url       = edd_get_download_file_url( $item, $order->email, $filekey, $item->product_id, $item->price_id, $item );
 						$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 					} else {
 						$download_list .= "\n";
@@ -383,7 +383,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 					foreach ( $files as $filekey => $file ) {
 						if ( $show_links ) {
-							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item, $item->price_id );
+							$file_url       = edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item, $item->price_id, $item );
 							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 						} else {
 							$download_list .= edd_get_file_name( $file ) . "\n";

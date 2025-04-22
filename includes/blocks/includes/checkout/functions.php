@@ -17,16 +17,11 @@ defined( 'ABSPATH' ) || exit;
  * Whether the checkout page is using blocks.
  *
  * @since 2.0
+ * @deprecated 3.3.8 Use \EDD\Checkout\Validator::has_block() instead.
  * @return bool
  */
 function checkout_has_blocks() {
-	if ( edd_doing_ajax() && ! empty( $_POST['current_page'] ) ) {
-		return has_block( 'edd/checkout', absint( $_POST['current_page'] ) );
-	}
-
-	$post_id = absint( edd_is_checkout() ? get_the_ID() : edd_get_option( 'purchase_page' ) );
-
-	return has_block( 'edd/checkout' ) || has_block( 'edd/checkout', $post_id );
+	return \EDD\Checkout\Validator::has_block();
 }
 
 /**

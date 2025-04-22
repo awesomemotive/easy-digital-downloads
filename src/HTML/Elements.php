@@ -4,9 +4,8 @@
  *
  * A helper class for outputting common HTML elements, such as product drop downs
  *
- * @package     EDD
- * @subpackage  Classes/HTML
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @package     EDD\HTML
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -440,31 +439,13 @@ class Elements {
 	 * @return string
 	 */
 	public function country_select( $args = array(), $country = '' ) {
-		$args = wp_parse_args(
-			$args,
-			array(
-				'name'              => 'edd_countries',
-				'class'             => 'edd_countries_filter',
-				'options'           => edd_get_country_list(),
-				'chosen'            => true,
-				'selected'          => $country,
-				'show_option_none'  => false,
-				'placeholder'       => __( 'Choose a Country', 'easy-digital-downloads' ),
-				'show_option_all'   => false,
-				'show_option_none'  => false,
-				'show_option_empty' => __( 'All Countries', 'easy-digital-downloads' ),
-				'data'              => array(
-					'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
-				),
-				'required'          => false,
-			)
-		);
-
-		if ( false === strpos( $args['class'], 'edd_countries_filter' ) ) {
-			$args['class'] .= ' edd_countries_filter';
+		if ( ! empty( $country ) ) {
+			$args['selected'] = $country;
 		}
 
-		return $this->select( $args );
+		$country_select = new CountrySelect( $args );
+
+		return $country_select->get();
 	}
 
 	/**
@@ -477,40 +458,11 @@ class Elements {
 	 * @return string
 	 */
 	public function region_select( $args = array(), $country = '', $region = '' ) {
-		if ( ! $country ) {
-			$country = edd_get_shop_country();
-		}
-		$options = edd_get_shop_states( $country );
-		if ( 'GB' === $country && ! empty( $region ) && ! array_key_exists( $region, $options ) ) {
-			$legacy_states = include EDD_PLUGIN_DIR . 'i18n/states-gb-legacy.php';
-			if ( array_key_exists( $region, $legacy_states ) ) {
-				$options[ $region ] = $legacy_states[ $region ];
+		$args['country']  = $country;
+		$args['selected'] = $region;
+		$region_select    = new RegionSelect( $args );
 
-				// Sort the states alphabetically.
-				asort( $options );
-			}
-		}
-		$args = wp_parse_args(
-			$args,
-			array(
-				'name'              => 'edd_regions',
-				'class'             => 'edd_regions_filter',
-				'options'           => $options,
-				'chosen'            => true,
-				'selected'          => $region,
-				'show_option_none'  => false,
-				'placeholder'       => __( 'Choose a Region', 'easy-digital-downloads' ),
-				'show_option_empty' => __( 'All Regions', 'easy-digital-downloads' ),
-				'show_option_all'   => false,
-				'required'          => false,
-			)
-		);
-
-		if ( false === strpos( $args['class'], 'edd_regions_filter' ) ) {
-			$args['class'] .= ' edd_regions_filter';
-		}
-
-		return $this->select( $args );
+		return $region_select->get();
 	}
 
 	/**

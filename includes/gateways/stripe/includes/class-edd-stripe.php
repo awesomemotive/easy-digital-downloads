@@ -209,7 +209,7 @@ class EDD_Stripe {
 	 * @since 2.9.3
 	 */
 	public function connect() {
-		if ( ! is_null( $this->connect ) ) {
+		if ( $this->connect instanceof EDD\Stripe\Connect ) {
 			return $this->connect;
 		}
 		require_once EDDS_PLUGIN_DIR . '/includes/class-stripe-connect.php';

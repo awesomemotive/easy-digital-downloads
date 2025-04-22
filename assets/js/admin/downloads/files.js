@@ -9,7 +9,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		const productType = e.target.value;
 		const productFiles = document.getElementById( 'edd_product_files' );
 		const navItem = document.getElementById( 'edd_download_editor__files-nav-item' );
-
+		const variablePricing = document.getElementById( 'edd_variable_pricing' );
 		// Add the loading class
 		navItem.classList.add( 'ajax--loading' );
 
@@ -18,6 +18,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		data.append( 'action', 'edd_swap_download_type' );
 		data.append( 'product_type', productType );
 		data.append( 'post_id', edd_vars.post_id );
+		data.append( 'has_variable_pricing', variablePricing && variablePricing.checked );
 
 		// Perform the AJAX POST request
 		fetch( ajaxurl, {
@@ -29,12 +30,6 @@ document.addEventListener( 'DOMContentLoaded', function () {
 				if ( response.success ) {
 					productFiles.innerHTML = response.data.html;
 
-					// Assuming this function exists globally
-					if ( typeof EDD_Download_Configuration !== 'undefined' &&
-						typeof EDD_Download_Configuration.initChosen === 'function' ) {
-						EDD_Download_Configuration.initChosen( productFiles );
-					}
-
 					const label = navItem.querySelector( '.label' );
 					if ( label ) {
 						label.textContent = response.data.label;
@@ -45,7 +40,6 @@ document.addEventListener( 'DOMContentLoaded', function () {
 							productType: productType,
 						},
 					} ) );
-
 				}
 			} )
 			.catch( error => console.error( 'Error:', error ) )

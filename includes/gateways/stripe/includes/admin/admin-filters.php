@@ -26,18 +26,31 @@ add_filter( 'edd_get_payment_transaction_id-stripe', 'edds_get_payment_transacti
  * Add a link to the dispute ID in the payment details
  *
  * @since  3.2.0
- * @param  string $dispute_id The dispute ID
- * @param  object $order      The order object
+ * @param  string $dispute_id The dispute ID.
+ * @param  object $order      The order object.
  * @return string             The HTML markup to link to the dispute
  */
 function edds_link_dispute_id( $dispute_id, $order ) {
 	$test = 'test' === $order->mode ? 'test/' : '';
 
+	// If the dispute_id starts with d, then it's a dispute.
+	if ( 0 === strpos( $dispute_id, 'd' ) ) {
+		return sprintf(
+			'<a href="https://dashboard.stripe.com/%1$sdisputes/%2$s" target="_blank">%2$s</a>',
+			$test,
+			$dispute_id
+		);
+	}
+
+	$stripe_payment = edd_get_order_meta( $order->id, '_edds_stripe_payment_intent_id', true );
+	if ( ! $stripe_payment ) {
+		return $dispute_id;
+	}
+
 	return sprintf(
-		//https://dashboard.stripe.com/test/payments/ch_3NZxWnKGKBYUpn0O0FP3oDad
 		'<a href="https://dashboard.stripe.com/%1$spayments/%2$s" target="_blank">%2$s</a>',
 		$test,
-		$dispute_id
+		$stripe_payment
 	);
 }
 add_filter( 'edd_payment_details_dispute_id_stripe', 'edds_link_dispute_id', 10, 2 );

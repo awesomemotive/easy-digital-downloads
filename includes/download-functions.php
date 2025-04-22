@@ -1189,46 +1189,53 @@ function edd_get_file_price_condition( $download_id = 0, $file_key = '' ) {
  * @since 1.0
  * @since 3.0  Updated to use new query methods.
  *
- * @param string    $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
- * @param string    $email        Customer email address. Use edd_get_payment_user_email() to get user email.
- * @param int       $filekey      Index of array of files returned by edd_get_download_files() that this download link is for.
- * @param int       $download_id  Optional. ID of download this download link is for. Default is 0.
- * @param bool|int  $price_id     Optional. Price ID when using variable prices. Default is false.
+ * @param string|EDD\Orders\Order|EDD\Orders\Order_Item $order_item_or_order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
+ * @param string                                        $email                      Customer email address. Use edd_get_payment_user_email() to get user email.
+ * @param int                                           $filekey                    Index of array of files returned by edd_get_download_files() that this download link is for.
+ * @param int                                           $download_id                Optional. ID of download this download link is for. Default is 0.
+ * @param bool|int                                      $price_id                   Optional. Price ID when using variable prices. Default is false.
+ * @param EDD\Orders\Order_Item                         $order_item                 Optional. Order item object. Default is null.
  *
  * @return string Secure download URL.
  */
-function edd_get_download_file_url( $order_or_key, $email, $filekey, $download_id = 0, $price_id = false ) {
+function edd_get_download_file_url( $order_item_or_order_or_key, $email, $filekey, $download_id = 0, $price_id = false, $order_item = null ) {
 	$hours = absint( edd_get_option( 'download_link_expiration', 24 ) );
 
 	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp' ) ) ) ) {
-		$date = 2147472000; // Highest possible date, January 19, 2038
+		$date = 2147472000; // Highest possible date, January 19, 2038.
 	}
 
 	// Fetch order.
-	if ( $order_or_key instanceof EDD\Orders\Order ) {
-		$order = $order_or_key;
+	if ( $order_item_or_order_or_key instanceof EDD\Orders\Order_Item ) {
+		$order_item  = $order_item_or_order_or_key;
+		$order       = edd_get_order( $order_item->order_id );
+		$key         = $order->payment_key;
+		$download_id = $order_item->product_id;
+		$price_id    = $order_item->price_id;
+	} elseif ( $order_item_or_order_or_key instanceof EDD\Orders\Order ) {
+		$order = $order_item_or_order_or_key;
 		$key   = $order->payment_key;
 	} else {
-		$key   = $order_or_key;
+		$key   = $order_item_or_order_or_key;
 		$order = edd_get_order_by( 'payment_key', $key );
 	}
-
-	// Leaving in this array and the filter for backwards compatibility now
-	$old_args = array(
-		'download_key' => rawurlencode( $key ),
-		'email'        => rawurlencode( $email ),
-		'file'         => rawurlencode( $filekey ),
-		'price_id'     => (int) $price_id,
-		'download_id'  => $download_id,
-		'expire'       => rawurlencode( $date ),
-	);
-
-	$params = apply_filters( 'edd_download_file_url_args', $old_args );
 
 	// Bail if order wasn't found.
 	if ( ! $order ) {
 		return false;
 	}
+
+	// Leaving in this array and the filter for backwards compatibility now.
+	$old_args = array(
+		'download_key' => rawurlencode( $key ),
+		'email'        => rawurlencode( $email ),
+		'file'         => rawurlencode( $filekey ),
+		'price_id'     => $price_id,
+		'download_id'  => $download_id,
+		'expire'       => rawurlencode( $date ),
+	);
+
+	$params = apply_filters( 'edd_download_file_url_args', $old_args );
 
 	// Get the array of parameters in the same order in which they will be validated.
 	$args = array_fill_keys( edd_get_url_token_parameters(), '' );
@@ -1245,19 +1252,24 @@ function edd_get_download_file_url( $order_or_key, $email, $filekey, $download_i
 		$args['ttl'] = $params['expire'];
 	}
 
-	// Ensure all custom args registered with extensions through edd_download_file_url_args get added to the URL, but without adding all the old args
+	if ( $order_item ) {
+		$args['oiid'] = $order_item->id;
+	}
+
+	// Ensure all custom args registered with extensions through edd_download_file_url_args get added to the URL, but without adding all the old args.
 	$args = array_merge( $args, array_diff_key( $params, $old_args ) );
 
 	/**
 	 * Allow the file download args to be filtered.
 	 *
 	 * @since 3.1.1 Includes the order object as the fourth parameter.
-	 * @param array            $args     The full array of parameters.
-	 * @param int              $order_id The order ID.
-	 * @param array            $params   The original array of parameters.
-	 * @param EDD\Orders\Order $order    The order object.
+	 * @param array                      $args       The full array of parameters.
+	 * @param int                        $order_id   The order ID.
+	 * @param array                      $params     The original array of parameters.
+	 * @param EDD\Orders\Order           $order      The order object.
+	 * @param EDD\Orders\Order_Item|null $order_item The order item object.
 	 */
-	$args = apply_filters( 'edd_get_download_file_url_args', $args, $order->id, $params, $order );
+	$args = apply_filters( 'edd_get_download_file_url_args', $args, $order->id, $params, $order, $order_item );
 
 	$args['file']  = $params['file'];
 	$args['token'] = edd_get_download_token( add_query_arg( array_filter( $args ), untrailingslashit( site_url() ) ) );
@@ -1280,6 +1292,7 @@ function edd_get_url_token_parameters() {
 			'ttl',
 			'file',
 			'token',
+			'oiid',
 		)
 	);
 }
@@ -1489,13 +1502,12 @@ function edd_get_download_token( $url = '' ) {
 	$url   = add_query_arg( $args, $url );
 	$parts = wp_parse_url( $url );
 
-	// In the event there isn't a path, set an empty one so we can MD5 the token
+	// In the event there isn't a path, set an empty one so we can MD5 the token.
 	if ( ! isset( $parts['path'] ) ) {
 		$parts['path'] = '';
 	}
 
-	$token = hash_hmac( 'sha256', $parts['path'] . '?' . $parts['query'], wp_salt( 'edd_file_download_link' ) );
-	return $token;
+	return hash_hmac( 'sha256', $parts['path'] . '?' . $parts['query'], wp_salt( 'edd_file_download_link' ) );
 }
 
 /**

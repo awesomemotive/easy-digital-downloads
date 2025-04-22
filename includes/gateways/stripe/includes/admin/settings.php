@@ -35,29 +35,6 @@ add_filter( 'edd_settings_gateways', 'edds_add_settings' );
 add_action( 'edd_stripe_payment_methods', array( 'EDD\\Gateways\\Stripe\\Admin\\Settings', 'render_payment_methods' ) );
 
 /**
- * Force full billing address display when taxes are enabled
- *
- * @access      public
- * @since       2.5
- *
- * @param string $value The value currently set for the Stripe billing fields setting.
- * @param string $key   The Stripe setting key to detect, stripe_billing_fields.
- *
- * @return      string
- */
-function edd_stripe_sanitize_stripe_billing_fields_save( $value, $key ) {
-
-	if ( 'stripe_billing_fields' === $key && edd_use_taxes() ) {
-
-		$value = 'full';
-
-	}
-
-	return $value;
-}
-add_filter( 'edd_settings_sanitize_select', 'edd_stripe_sanitize_stripe_billing_fields_save', 10, 2 );
-
-/**
  * Filter the output of the statement descriptor option to add a max length to the text string
  *
  * @since 2.6
@@ -262,7 +239,7 @@ add_filter( 'edd_settings_gateways', 'edds_maybe_add_billing_support_message', 3
  *
  * @since 3.2.8
  *
- * @param string $route The route to the documentation.
+ * @param string $link The route to the documentation.
  *
  * @return string
  */
@@ -274,3 +251,18 @@ function edds_documentation_flyout_link( $link ) {
 	return $link;
 }
 add_filter( 'edd_flyout_docs_link', 'edds_documentation_flyout_link' );
+
+/**
+ * Force full billing address display when taxes are enabled.
+ *
+ * @since 2.5
+ * @deprecated 3.3.8
+ *
+ * @param string $value The value currently set for the Stripe billing fields setting.
+ * @param string $key   The Stripe setting key to detect, stripe_billing_fields.
+ *
+ * @return      string
+ */
+function edd_stripe_sanitize_stripe_billing_fields_save( $value, $key ) {
+	return $value;
+}

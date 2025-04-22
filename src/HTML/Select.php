@@ -46,6 +46,11 @@ class Select extends Base {
 				required
 				<?php
 			}
+			if ( ! empty( $this->args['autocomplete'] ) ) {
+				?>
+				autocomplete="<?php echo esc_attr( $this->args['autocomplete'] ); ?>"
+				<?php
+			}
 			?>
 			name="<?php echo esc_attr( $this->args['name'] ); ?>"
 			id="<?php echo esc_attr( str_replace( '-', '_', $this->args['id'] ) ); ?>"
@@ -121,6 +126,7 @@ class Select extends Base {
 			'disabled'          => false,
 			'required'          => false,
 			'show_option_empty' => false,
+			'autocomplete'      => '',
 		);
 	}
 

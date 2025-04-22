@@ -1,38 +1,23 @@
 <?php
 /**
+ * Login Form.
+ *
+ * @package EDD\Blocks\Views\Forms
  * @var string $redirect_url
  */
+
 ?>
 <form id="edd-blocks-form__login" class="edd-blocks-form edd-blocks-form__login" action="" method="post">
-	<?php do_action( 'edd_login_fields_before' ); ?>
-	<div class="edd-blocks-form__group edd-blocks-form__group-username">
-		<label for="edd_user_login">
-			<?php
-			esc_html_e( 'Username or Email', 'easy-digital-downloads' );
-			echo EDD()->html->show_required();
-			?>
-		</label>
-		<div class="edd-blocks-form__control">
-			<input name="edd_user_login" id="edd_user_login" class="edd-required edd-input" type="text" required/>
-		</div>
-	</div>
-	<div class="edd-blocks-form__group edd-blocks-form__group-password">
-		<label for="edd_user_pass">
-			<?php
-			esc_html_e( 'Password', 'easy-digital-downloads' );
-			echo EDD()->html->show_required();
-			?>
-		</label>
-		<div class="edd-blocks-form__control">
-			<input name="edd_user_pass" id="edd_user_pass" class="edd-password edd-required edd-input" type="password" required/>
-		</div>
-	</div>
-	<div class="edd-blocks-form__group edd-blocks-form__group-remember">
-		<div class="edd-blocks-form__control">
-			<input name="rememberme" type="checkbox" id="rememberme" value="forever" />
-			<label for="rememberme"><?php esc_html_e( 'Remember Me', 'easy-digital-downloads' ); ?></label>
-		</div>
-	</div>
+	<?php
+	do_action( 'edd_login_fields_before' );
+	EDD\Forms\Handler::render_fields(
+		array(
+			'\\EDD\\Forms\\Login\\Username',
+			'\\EDD\\Forms\\Login\\Password',
+			'\\EDD\\Forms\\Login\\Remember',
+		)
+	);
+	?>
 	<div class="edd-blocks-form__group edd-blocks-form__group-submit">
 		<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $redirect_url ); ?>"/>
 		<input type="hidden" name="edd_login_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd-login-nonce' ) ); ?>"/>

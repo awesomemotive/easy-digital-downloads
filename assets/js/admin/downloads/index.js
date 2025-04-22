@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { getChosenVars } from 'utils/chosen.js';
+import { initChosen } from 'utils/chosen.js';
 import { edd_attach_tooltips } from 'admin/components/tooltips';
 import './bulk-edit.js';
 import './pricing.js';
@@ -9,6 +9,7 @@ import './files.js';
 import  './copy.js';
 import './requirements.js';
 import './move.js';
+import './../components/forms/index.js';
 
 /**
  * Download Configuration Metabox
@@ -322,7 +323,7 @@ var EDD_Download_Configuration = {
 
 	updatePrices: function() {
 		$( '#edd_price_fields' ).on( 'blur', '.edd_variable_prices_name', function() {
-			const key = $( this ).parents( '.edd-section-content__fields--standard' ).data( 'key' ),
+			const key = $( this ).parents( '.edd_repeatable_row' ).data( 'key' ),
 				name = $( this ).val(),
 				field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 
@@ -368,12 +369,9 @@ var EDD_Download_Configuration = {
 	},
 
 	initChosen: function ( element ) {
-		element.find( '.edd-select-chosen' ).each( function () {
-			const el = $( this );
-			el.chosen( getChosenVars( el ) );
+		element.find( 'select.edd-select-chosen' ).each( function () {
+			initChosen( $( this ) );
 		} );
-		element.find( '.edd-select-chosen' ).css( 'width', '100%' );
-		element.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 	},
 
 	triggerRowChange: function ( el ) {

@@ -493,6 +493,10 @@ function edd_display_post_states( $post_states, $post ) {
 		$post_states['edd_login_redirect_page'] = __( 'Login Redirect Page', 'easy-digital-downloads' );
 	}
 
+	if ( intval( edd_get_option( 'products_page' ) ) === $post->ID ) {
+		$post_states['edd_products_page'] = __( 'Shop Page', 'easy-digital-downloads' );
+	}
+
 	return $post_states;
 }
 add_filter( 'display_post_states', 'edd_display_post_states', 10, 2 );

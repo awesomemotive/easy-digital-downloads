@@ -192,6 +192,9 @@ function deleteSection ( e ) {
 
 // Hide the remove button for the first section.
 function hideRemoveButton () {
+	if ( ! variablePricingSection ) {
+		return;
+	}
 	const variationRemoveButtons = variablePricingSection.querySelectorAll( '.edd-section-content__remove' );
 	if ( variationRemoveButtons.length === 1 ) {
 		variationRemoveButtons[ 0 ].classList.add( 'edd-hidden' );

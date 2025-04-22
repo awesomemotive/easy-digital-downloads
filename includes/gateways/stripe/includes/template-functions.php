@@ -701,7 +701,9 @@ function edd_stripe_manage_cards() {
 					<?php
 					switch ( $display ) {
 						case 'full':
-							edd_default_cc_address_fields();
+							$address         = new EDD\Gateways\Stripe\Checkout\Address();
+							$address->fields = array( 'address', 'address_2', 'city', 'zip', 'country', 'state', 'zip' );
+							$address->render();
 							break;
 
 						case 'zip_country':
@@ -781,120 +783,14 @@ add_action( 'edd_profile_editor_after', 'edd_stripe_maybe_hide_profile_editor_bi
 /**
  * Zip / Postal Code field for when full billing address is disabled
  *
- * @since       2.5
- * @return      void
+ * @since 2.5
+ * @since 3.3.8 Updated to use the new EDD\Gateways\Stripe\Checkout\Address class.
+ * @return void
  */
 function edd_stripe_zip_and_country() {
-
-	$logged_in = is_user_logged_in();
-	$customer  = EDD()->session->get( 'customer' );
-	$customer  = wp_parse_args(
-		$customer,
-		array(
-			'address' => array(
-				'line1'   => '',
-				'line2'   => '',
-				'city'    => '',
-				'zip'     => '',
-				'state'   => '',
-				'country' => '',
-			),
-		)
-	);
-
-	$customer['address'] = array_map( 'sanitize_text_field', $customer['address'] );
-
-	if ( $logged_in ) {
-		$existing_cards = edd_stripe_get_existing_cards( get_current_user_id() );
-		if ( empty( $existing_cards ) ) {
-
-			$user_address = edd_get_customer_address( get_current_user_id() );
-
-			foreach ( $customer['address'] as $key => $field ) {
-
-				if ( empty( $field ) && ! empty( $user_address[ $key ] ) ) {
-					$customer['address'][ $key ] = $user_address[ $key ];
-				} else {
-					$customer['address'][ $key ] = '';
-				}
-			}
-		} else {
-			foreach ( $existing_cards as $card ) {
-				if ( false === $card['default'] ) {
-					continue;
-				}
-
-				$source              = $card['source'];
-				$customer['address'] = array(
-					'line1'   => $source->address_line1,
-					'line2'   => $source->address_line2,
-					'city'    => $source->address_city,
-					'zip'     => $source->address_zip,
-					'state'   => $source->address_state,
-					'country' => $source->address_country,
-				);
-			}
-		}
-	}
-	?>
-	<fieldset id="edd_cc_address" class="cc-address">
-		<legend><?php _e( 'Billing Details', 'easy-digital-downloads' ); ?></legend>
-		<p id="edd-card-country-wrap">
-			<label for="billing_country" class="edd-label">
-				<?php _e( 'Billing Country', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'billing_country' ) ) { ?>
-					<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The country for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<select name="billing_country" id="billing_country" class="billing_country edd-select
-			<?php
-			if ( edd_field_is_required( 'billing_country' ) ) {
-				echo ' required'; }
-			?>
-			"
-	<?php
-	if ( edd_field_is_required( 'billing_country' ) ) {
-				echo ' required '; }
-	?>
-autocomplete="billing country">
-				<?php
-
-				$selected_country = edd_get_shop_country();
-
-				if ( ! empty( $customer['address']['country'] ) && '*' !== $customer['address']['country'] ) {
-					$selected_country = $customer['address']['country'];
-				}
-
-				$countries = edd_get_country_list();
-				foreach ( $countries as $country_code => $country ) {
-					echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . esc_html( $country ) . '</option>';
-				}
-				?>
-			</select>
-		</p>
-		<p id="edd-card-zip-wrap">
-			<label for="card_zip" class="edd-label">
-				<?php _e( 'Billing Zip / Postal Code', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'card_zip' ) ) { ?>
-					<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" size="4" name="card_zip" id="card_zip" class="card-zip edd-input
-			<?php
-			if ( edd_field_is_required( 'card_zip' ) ) {
-				echo ' required'; }
-			?>
-			" placeholder="<?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['address']['zip'] ); ?>"
-							<?php
-							if ( edd_field_is_required( 'card_zip' ) ) {
-											echo ' required '; }
-							?>
-autocomplete="billing postal-code" />
-		</p>
-	</fieldset>
-	<?php
+	$address         = new EDD\Gateways\Stripe\Checkout\Address();
+	$address->fields = array( 'country', 'zip' );
+	$address->render();
 }
 
 /**
@@ -911,39 +807,20 @@ function edd_stripe_setup_billing_address_fields() {
 
 	remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 
-	$hook                 = 'payment-elements' === edds_get_elements_mode() || apply_filters( 'edds_address_before_payment', false ) ? 'edd_before_cc_fields' : 'edd_after_cc_fields';
-	$should_force_address = edd_use_taxes();
-	$display              = edd_get_option( 'stripe_billing_fields', 'full' );
+	$hook    = 'payment-elements' === edds_get_elements_mode() || apply_filters( 'edds_address_before_payment', false ) ? 'edd_before_cc_fields' : 'edd_after_cc_fields';
+	$address = new EDD\Gateways\Stripe\Checkout\Address();
+	$fields  = $address->get_fields();
 
-	if ( ! $should_force_address && EDD\Gateways\Stripe\PaymentMethods::affirm_requires_support() ) {
-		$should_force_address = true;
-	}
-
-	if ( $should_force_address ) {
-		add_action( $hook, 'edd_default_cc_address_fields' );
+	if ( empty( $fields ) ) {
 		return;
 	}
 
-	switch ( $display ) {
-
-		case 'full':
-			// Make address fields required.
-			add_filter( 'edd_require_billing_address', '__return_true' );
-			add_action( $hook, 'edd_default_cc_address_fields' );
-
-			break;
-
-		case 'zip_country':
-			add_action( $hook, 'edd_stripe_zip_and_country', 9 );
-
-			// Make Zip required.
-			add_filter( 'edd_purchase_form_required_fields', 'edd_stripe_require_zip_and_country' );
-
-			break;
-
-		case 'none':
-			break;
-	}
+	add_action(
+		$hook,
+		function () use ( $address ) {
+			$address->render();
+		}
+	);
 }
 add_action( 'edd_purchase_form_before_cc_form', 'edd_stripe_setup_billing_address_fields', 9 );
 

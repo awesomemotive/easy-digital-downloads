@@ -1,10 +1,18 @@
 <?php
+/**
+ * Blocks
+ *
+ * @package EDD\Blocks
+ * @copyright   Copyright (c) 2023, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.2.0
+ */
 
 namespace EDD\Blocks;
 
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-add_action( 'plugins_loaded', __NAMESPACE__ . '\init_core_blocks', 500 );
 /**
  * Initialize the blocks.
  *
@@ -55,9 +63,8 @@ function init_core_blocks() {
 		}
 	}
 }
+add_action( 'plugins_loaded', __NAMESPACE__ . '\init_core_blocks', 500 );
 
-
-add_filter( 'edd_required_pages', __NAMESPACE__ . '\update_core_required_pages' );
 /**
  * Update the EDD required pages array to include blocks.
  * This is in the main plugin file so that it's available to the EDD installer.
@@ -79,6 +86,12 @@ function update_core_required_pages( $pages ) {
 		'post_content' => '<!-- wp:edd/order-history /-->',
 	);
 	$pages['purchase_page']['post_content'] = '<!-- wp:edd/checkout /-->';
+	$pages['products_page']                 = array(
+		'post_title'   => __( 'Products', 'easy-digital-downloads' ),
+		'post_content' => '<!-- wp:edd/downloads {"columns":2} /-->',
+		'post_parent'  => 0,
+	);
 
 	return $pages;
 }
+add_filter( 'edd_required_pages', __NAMESPACE__ . '\update_core_required_pages' );

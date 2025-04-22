@@ -72,6 +72,22 @@ class Validator {
 	}
 
 	/**
+	 * Checks if the checkout page has the checkout block.
+	 *
+	 * @since 3.3.8
+	 * @return bool
+	 */
+	public static function has_block() {
+		if ( edd_doing_ajax() && ! empty( $_POST['current_page'] ) ) {
+			return has_block( 'edd/checkout', absint( $_POST['current_page'] ) );
+		}
+
+		$post_id = absint( edd_is_checkout() ? get_the_ID() : edd_get_option( 'purchase_page' ) );
+
+		return has_block( 'edd/checkout' ) || has_block( 'edd/checkout', $post_id );
+	}
+
+	/**
 	 * Checks the query for the Validator class.
 	 *
 	 * @since 3.3.0

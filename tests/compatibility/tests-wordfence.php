@@ -39,7 +39,7 @@ class Wordfence extends EDD_UnitTestCase {
 	 * @since 3.2.8
 	 */
 	public function test_wordfence_compatibility_class_not_loaded() {
-		Loader::load_plugin_compatibility();
+		Loader::load_compatibility_layers();
 
 		$this->assertTrue( array_key_exists( 'wordfence', Loader::get_loaded()['plugins'] ) );
 		$this->assertFalse( Loader::get_loaded()['plugins']['wordfence'] );
@@ -49,7 +49,7 @@ class Wordfence extends EDD_UnitTestCase {
 		// Include the stub for the Wordfence class.
 		require_once EDD_PLUGIN_DIR . 'tests/helpers/stubs/wordfence.php';
 
-		Loader::load_plugin_compatibility();
+		Loader::load_compatibility_layers();
 
 		$this->assertTrue( array_key_exists( 'wordfence', Loader::get_loaded()['plugins'] ) );
 		$this->assertTrue( Loader::get_loaded()['plugins']['wordfence'] );

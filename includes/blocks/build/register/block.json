@@ -27,6 +27,10 @@
     "redirect": {
       "type": "string",
       "default": ""
+    },
+    "username": {
+      "type": "boolean",
+      "default": true
     }
   },
   "example": {

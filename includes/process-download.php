@@ -26,17 +26,21 @@ function edd_process_download() {
 		$_GET['download_id'] = $_GET['download'];
 	}
 
-	$args = apply_filters( 'edd_process_download_args', array(
-		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                       : '',
-		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
-		'expire'   => ( isset( $_GET['expire'] ) )       ? rawurldecode( $_GET['expire'] )                  : '',
-		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
-		'price_id' => ( isset( $_GET['price_id'] ) )     ? (int) $_GET['price_id']                          : false,
-		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : '',
-		'eddfile'  => ( isset( $_GET['eddfile'] ) )      ? $_GET['eddfile']                                 : '',
-		'ttl'      => ( isset( $_GET['ttl'] ) )          ? $_GET['ttl']                                     : '',
-		'token'    => ( isset( $_GET['token'] ) )        ? $_GET['token']                                   : ''
-	) );
+	$args = apply_filters(
+		'edd_process_download_args',
+		array(
+			'download' => ( isset( $_GET['download_id'] ) ) ? (int) $_GET['download_id'] : '',
+			'email'    => ( isset( $_GET['email'] ) ) ? rawurldecode( $_GET['email'] ) : '',
+			'expire'   => ( isset( $_GET['expire'] ) ) ? rawurldecode( $_GET['expire'] ) : '',
+			'file_key' => ( isset( $_GET['file'] ) ) ? (int) $_GET['file'] : '',
+			'price_id' => ( isset( $_GET['price_id'] ) ) ? (int) $_GET['price_id'] : false,
+			'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key'] : '',
+			'eddfile'  => ( isset( $_GET['eddfile'] ) ) ? $_GET['eddfile'] : '',
+			'ttl'      => ( isset( $_GET['ttl'] ) ) ? $_GET['ttl'] : '',
+			'token'    => ( isset( $_GET['token'] ) ) ? $_GET['token'] : '',
+			'oiid'     => ( isset( $_GET['oiid'] ) ) ? (int) $_GET['oiid'] : '',
+		)
+	);
 
 	if ( ! empty( $args['eddfile'] ) && ! empty( $args['ttl'] ) && ! empty( $args['token'] ) ) {
 
