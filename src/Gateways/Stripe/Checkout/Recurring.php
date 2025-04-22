@@ -67,18 +67,21 @@ class Recurring {
 		$subscriptions   = $subscription_db->get_subscriptions(
 			array(
 				'parent_payment_id' => $order->id,
+				'status'            => 'pending',
 			)
 		);
 
+		if ( empty( $subscriptions ) ) {
+			return;
+		}
+
 		foreach ( $subscriptions as $subscription ) {
-			if ( 'pending' !== $subscription->status ) {
-				continue;
-			}
 			$subscription->update(
 				array(
 					'status' => empty( $subscription->trial_period ) ? 'active' : 'trialling',
 				)
 			);
+			$subscription->add_note( __( 'Subscription activated via EDD Stripe Checkout.', 'easy-digital-downloads' ) );
 		}
 	}
 

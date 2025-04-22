@@ -88,6 +88,8 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Settings\Pointers(),
 			new Admin\Menu\Header(),
 			new Admin\Notifications\Loader(),
+			new Admin\Exports\Loader(),
+			new Admin\Customers\Emails(),
 		);
 
 		return $providers;

@@ -590,21 +590,20 @@ function edd_register_downloads_report( $reports ) {
 				'label' => __( 'Average Sales / Earnings', 'easy-digital-downloads' ),
 				'views' => array(
 					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
+						'data_callback' => function () use ( $dates, $currency ) {
 							$stats = new EDD\Stats(
 								array(
-									'function'      => 'AVG',
-									'range'         => $dates['range'],
-									'exclude_taxes' => $exclude_taxes,
-									'currency'      => $currency,
-									'output'        => 'formatted',
+									'function' => 'AVG',
+									'range'    => $dates['range'],
+									'currency' => $currency,
+									'output'   => 'formatted',
 								)
 							);
 
 							return $stats->get_order_item_count() . ' / ' . $stats->get_order_item_earnings();
 						},
 						'display_args'  => array(
-							'comparison_label' => $label . ' &mdash; ' . __( 'Net	', 'easy-digital-downloads' ),
+							'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
 						),
 					),
 				),
@@ -3177,22 +3176,8 @@ function display_export_report() {
 			<div id="post-body">
 				<div id="post-body-content" class="edd-reports-export edd-admin--has-grid">
 					<?php
+					\EDD\Admin\Exports\Loader::bootstrap();
 					do_action( 'edd_reports_tab_export_content_top' );
-					$views = array(
-						'earnings-report',
-						'sales-earnings',
-						'sales',
-						'orders',
-						'taxed-orders',
-						'customers',
-						'taxed-customers',
-						'downloads',
-						'api-requests',
-						'download-history',
-					);
-					foreach ( $views as $view ) {
-						include "views/export-{$view}.php";
-					}
 					do_action( 'edd_reports_tab_export_content_bottom' );
 					?>
 				</div>

@@ -20,12 +20,18 @@ export default function Edit ( { attributes, setAttributes } ) {
 		<div {...useBlockProps()}>
 			<InspectorControls>
 				<PanelBody title={__( 'Settings', 'easy-digital-downloads' )}>
-					<p className="description">{__( 'Once registered, where should the user be directed? You can choose the current page, or a custom URL.', 'easy-digital-downloads' )}</p>
+					<ToggleControl
+						label={__( 'Username', 'easy-digital-downloads' )}
+						checked={!!attributes.username}
+						onChange={toggleAttribute( 'username' )}
+					/>
+					<p className="description">{__( 'If the username is enabled, the user will be required to enter both a username and email address.', 'easy-digital-downloads' )}</p>
 					<ToggleControl
 						label={__( 'Redirect to Current Page', 'easy-digital-downloads' )}
 						checked={!!attributes.current}
 						onChange={toggleAttribute( 'current' )}
 					/>
+					<p className="description">{__( 'Once registered, where should the user be directed? You can choose the current page, or a custom URL.', 'easy-digital-downloads' )}</p>
 					{!attributes.current && (
 						<TextControl
 							label={__( 'Custom Redirect URL', 'easy-digital-downloads' )}
@@ -37,15 +43,17 @@ export default function Edit ( { attributes, setAttributes } ) {
 			</InspectorControls>
 			<p className="description">{__( 'This form is a sample view of your registration form. Logged in users will not see it.', 'easy-digital-downloads' )}</p>
 			<form id="edd-blocks-form__register" className="edd-blocks-form edd-blocks-form__register">
-				<div className="edd-blocks-form__group edd-blocks-form__group-username">
-					<label htmlFor="edd_user_register">
-						{__( 'Username or Email', 'easy-digital-downloads' )}
-						<span className="edd-required-indicator">*</span><span className="screen-reader-text">{__( 'Required', 'easy-digital-downloads' )}</span>
-					</label>
-					<div className="edd-blocks-form__control">
-						<input name="edd_user_register" id="edd_user_register" className="edd-required edd-input" type="text" readOnly />
+				{attributes.username && (
+					<div className="edd-blocks-form__group edd-blocks-form__group-username">
+						<label htmlFor="edd_user_register">
+							{__( 'Username or Email', 'easy-digital-downloads' )}
+							<span className="edd-required-indicator">*</span><span className="screen-reader-text">{__( 'Required', 'easy-digital-downloads' )}</span>
+						</label>
+						<div className="edd-blocks-form__control">
+							<input name="edd_user_register" id="edd_user_register" className="edd-required edd-input" type="text" readOnly />
+						</div>
 					</div>
-				</div>
+				)}
 				<div className="edd-blocks-form__group edd-blocks-form__group-email">
 					<label htmlFor="edd-user-email">
 						{__( 'Email', 'easy-digital-downloads' )}
@@ -62,15 +70,6 @@ export default function Edit ( { attributes, setAttributes } ) {
 					</label>
 					<div className="edd-blocks-form__control">
 						<input id="edd-user-pass" className="password required edd-input" type="password" name="edd_user_pass" readOnly />
-					</div>
-				</div>
-				<div className="edd-blocks-form__group edd-blocks-form__group-password-confirm">
-					<label htmlFor="edd-user-pass2">
-						{__( 'Confirm Password', 'easy-digital-downloads' )}
-						<span className="edd-required-indicator">*</span><span className="screen-reader-text">{__( 'Required', 'easy-digital-downloads' )}</span>
-					</label>
-					<div className="edd-blocks-form__control">
-						<input id="edd-user-pass2" className="password required edd-input" type="password" name="edd_user_pass2" readOnly />
 					</div>
 				</div>
 				<div className="edd-blocks-form__group edd-blocks-form__group-submit">

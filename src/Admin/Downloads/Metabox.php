@@ -115,7 +115,7 @@ class Metabox implements SubscriberInterface {
 			wp_send_json_error();
 		}
 		$download_id = filter_input( INPUT_POST, 'download_id', FILTER_SANITIZE_NUMBER_INT );
-		if ( empty( $download_id ) || ! current_user_can( 'edit_product', $download_id ) ) {
+		if ( ! empty( $download_id ) && ! current_user_can( 'edit_product', $download_id ) ) {
 			wp_send_json_error();
 		}
 
@@ -123,7 +123,7 @@ class Metabox implements SubscriberInterface {
 
 		ob_start();
 		$section->do_row(
-			edd_get_download( $download_id ),
+			! empty( $download_id ) ? edd_get_download( $download_id ) : new \EDD_Download(),
 			array(
 				'name'   => '',
 				'amount' => '',

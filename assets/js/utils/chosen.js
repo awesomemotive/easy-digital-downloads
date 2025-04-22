@@ -17,7 +17,7 @@ export const chosenVars = {
  * @return {Object} Variables for Chosen.
  */
 export const getChosenVars = ( el ) => {
-	if ( ! el instanceof jQuery ) {
+	if ( ! ( el instanceof jQuery ) ) {
 		el = jQuery( el );
 	}
 
@@ -33,4 +33,14 @@ export const getChosenVars = ( el ) => {
 		...inputVars,
 		width: el.css( 'width' ),
 	};
+}
+
+export const initChosen = ( el ) => {
+	if ( ! ( el instanceof jQuery ) ) {
+		el = jQuery( el );
+	}
+
+	el.chosen( getChosenVars( el ) );
+	el.css( 'width', '100%' );
+	el.find( '.chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 }

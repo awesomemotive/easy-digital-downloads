@@ -150,7 +150,7 @@ class VariablePrices extends Section {
 	 */
 	public function do_row( $download, $args, $price_id ) {
 		?>
-		<div class="edd-section-content__row edd-variable-price__row edd_repeatable_row closed" id="edd-variable-price__row-<?php echo esc_attr( $price_id ); ?>">
+		<div class="edd-section-content__row edd-variable-price__row edd_repeatable_row closed edd-handle-actions__group" id="edd-variable-price__row-<?php echo esc_attr( $price_id ); ?>">
 			<input type="hidden" class="edd-section__id" value="<?php echo esc_attr( $price_id ); ?>" />
 			<input type="hidden" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][index]" value="<?php echo esc_attr( $args['index'] ); ?>"/>
 			<div class="edd-form-row edd-section-content__fields--standard" data-key="<?php echo esc_attr( $price_id ); ?>">
@@ -180,7 +180,7 @@ class VariablePrices extends Section {
 					<span class="edd-amount-type-wrapper">
 						<?php
 						$currency_position = edd_get_option( 'currency_position', 'before' );
-						$currency_symbol   = edd_get_option( 'currency_symbol', '$' );
+						$currency_symbol   = edd_currency_symbol();
 
 						// If the currency symbol is before the price, output the prefix.
 						if ( 'before' === $currency_position ) {
@@ -303,6 +303,9 @@ class VariablePrices extends Section {
 	 * @param int           $price_id The price ID.
 	 */
 	private function do_add_to_cart_button( $download, $price_id ) {
+		if ( empty( $download->ID ) ) {
+			return;
+		}
 		$add_to_cart_link = add_query_arg(
 			array(
 				'edd_action'            => 'add_to_cart',

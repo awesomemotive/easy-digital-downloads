@@ -21,5 +21,11 @@
   "style": "file:./style-index.css",
   "example": {
     "attributes": {}
+  },
+  "attributes": {
+    "username": {
+      "type": "boolean",
+      "default": true
+    }
   }
 }

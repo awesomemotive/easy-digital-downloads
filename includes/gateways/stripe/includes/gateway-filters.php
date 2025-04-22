@@ -140,7 +140,7 @@ function edds_success_page_content( $content ) {
 	ob_start();
 
 	// If the status is set, show the processing template. Likely a bank transfer.
-	if ( ! empty( $_GET['status']) ) {
+	if ( ! empty( $_GET['status'] ) ) {
 		edd_get_template_part( 'payment', 'processing' );
 		edd_empty_cart();
 	} else {
@@ -151,3 +151,31 @@ function edds_success_page_content( $content ) {
 	return ob_get_clean();
 }
 add_filter( 'edd_payment_confirm_stripe', 'edds_success_page_content' );
+
+/**
+ * When getting the deprecated billing fields setting, extrapolate it from the new setting.
+ *
+ * @since 3.3.8
+ * @param string $value         The current value of the setting.
+ * @param string $setting       The setting key.
+ * @param mixed  $default_value The default value for the setting.
+ * @return string
+ */
+function edds_get_billing_fields( $value, $setting, $default_value ) {
+	$new_checkout_fields = edd_get_option( 'checkout_address_fields', false );
+	if ( false === $new_checkout_fields ) {
+		return $value ?? $default_value;
+	}
+
+	$new_checkout_fields = array_keys( array_filter( $new_checkout_fields ) );
+	if ( empty( $new_checkout_fields ) ) {
+		return 'none';
+	}
+
+	if ( 2 === count( $new_checkout_fields ) && in_array( 'zip', $new_checkout_fields, true ) && in_array( 'country', $new_checkout_fields, true ) ) {
+		return 'zip_country';
+	}
+
+	return 'full';
+}
+add_filter( 'edd_get_option_stripe_billing_fields', 'edds_get_billing_fields', 10, 3 );

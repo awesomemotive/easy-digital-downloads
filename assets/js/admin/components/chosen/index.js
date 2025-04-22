@@ -3,14 +3,13 @@
 /**
  * Internal dependencies.
  */
-import { getChosenVars } from 'utils/chosen.js';
+import { initChosen } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
 
 	// Globally apply to elements on the page.
 	$( '.edd-select-chosen' ).each( function() {
-		const el = $( this );
-		el.chosen( getChosenVars( el ) );
+		initChosen( $( this ) );
 	} );
 
 	$( '.edd-select-chosen .chosen-search input' ).each( function() {

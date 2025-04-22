@@ -110,6 +110,109 @@ class Connect {
 	}
 
 	/**
+	 * Render the connect field.
+	 *
+	 * @since 3.3.8
+	 * @return string
+	 */
+	public static function render_connect_field() {
+		if ( ! self::can_render_connect_field() ) {
+			return '';
+		}
+
+		$stripe_connect_url    = edds_stripe_connect_url();
+		$stripe_disconnect_url = edds_stripe_connect_disconnect_url();
+
+		$stripe_connect_account_id = edd_stripe()->connect()->get_connect_id();
+
+		$api_key = edd_is_test_mode()
+			? edd_get_option( 'test_publishable_key' )
+			: edd_get_option( 'live_publishable_key' );
+
+		ob_start();
+		?>
+
+		<?php if ( empty( $api_key ) ) : ?>
+
+			<a href="<?php echo esc_url( $stripe_connect_url ); ?>" class="edd-stripe-connect">
+				<span><?php esc_html_e( 'Connect with Stripe', 'easy-digital-downloads' ); ?></span>
+			</a>
+
+			<p>
+				<?php
+				echo wp_kses_post( edd_stripe()->application_fee->get_fee_message() );
+				echo wp_kses(
+					sprintf(
+					/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+						__( 'Have questions about connecting with Stripe? See the %1$sdocumentation%2$s.', 'easy-digital-downloads' ),
+						'<a href="' . esc_url( edds_documentation_route( 'stripe' ) ) . '" target="_blank" rel="noopener noreferrer">',
+						'</a>'
+					),
+					array(
+						'a' => array(
+							'href'   => true,
+							'target' => true,
+							'rel'    => true,
+						),
+					)
+				);
+				?>
+			</p>
+
+		<?php endif; ?>
+
+		<?php if ( ! empty( $api_key ) ) : ?>
+
+			<div
+				id="edds-stripe-connect-account"
+				class="edds-stripe-connect-account-info notice inline loading"
+				data-account-id="<?php echo esc_attr( $stripe_connect_account_id ); ?>"
+				data-nonce="<?php echo wp_create_nonce( 'edds-stripe-connect-account-information' ); ?>"
+				<?php echo self::is_onboarding_wizard() ? ' data-onboarding-wizard="true"' : ''; ?>
+			>
+				<p>
+					<span class="account-name"></span>
+					<span class="info"></span>
+				</p>
+			</div>
+			<div id="edds-stripe-disconnect-reconnect" class="loading">
+			</div>
+
+		<?php endif; ?>
+
+		<?php if ( true === edds_stripe_connect_can_manage_keys() ) : ?>
+
+			<div class="edds-api-key-toggle">
+				<p>
+					<button type="button" class="button-link">
+						<small>
+							<?php esc_html_e( 'Manage API keys manually', 'easy-digital-downloads' ); ?>
+						</small>
+					</button>
+				</p>
+			</div>
+
+			<div class="edds-api-key-toggle edd-hidden">
+				<p>
+					<button type="button" class="button-link">
+						<small>
+							<?php esc_html_e( 'Hide API keys', 'easy-digital-downloads' ); ?>
+						</small>
+					</button>
+				</p>
+
+				<div class="notice inline notice-warning" style="margin: 15px 0 -10px;">
+					<?php echo wpautop( esc_html__( 'Although you can add your API keys manually, we recommend using Stripe Connect: an easier and more secure way of connecting your Stripe account to your website. Stripe Connect prevents issues that can arise when copying and pasting account details from Stripe into your Easy Digital Downloads payment gateway settings. With Stripe Connect you\'ll be ready to go with just a few clicks.', 'easy-digital-downloads' ) ); ?>
+				</div>
+			</div>
+
+		<?php endif; ?>
+
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Get the webhooks setup link to manually set up webhooks.
 	 *
 	 * @since 3.3.4
@@ -390,5 +493,43 @@ class Connect {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Check if the connect field can be rendered.
+	 *
+	 * @since 3.3.8
+	 * @return bool
+	 */
+	private static function can_render_connect_field() {
+		if ( ! function_exists( 'edd_is_admin_page' ) ) {
+			return false;
+		}
+
+		// Check if it's the Stripe settings page.
+		if ( edd_is_admin_page( 'settings', 'gateways' ) ) {
+			$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+			if ( 'edd-stripe' === $section ) {
+				return true;
+			}
+		}
+
+		// Check if it's the onboarding wizard.
+		if ( ! self::is_onboarding_wizard() ) {
+			return false;
+		}
+
+		// Check if the current step is the payment methods step.
+		return 'payment_methods' === filter_input( INPUT_GET, 'current_step', FILTER_SANITIZE_SPECIAL_CHARS );
+	}
+
+	/**
+	 * Check if the current page is the onboarding wizard.
+	 *
+	 * @since 3.3.8
+	 * @return bool
+	 */
+	private static function is_onboarding_wizard() {
+		return 'edd-onboarding-wizard' === filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS );
 	}
 }

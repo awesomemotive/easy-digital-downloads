@@ -457,7 +457,7 @@ jQuery( document ).ready( function( $ ) {
 
 					let newStateField = '';
 					if ( response.trim() === 'nostates' ) {
-						newStateField = '<input type="text" id="' + field_name + '" name="card_state" class="card-state edd-input required" value=""/>';
+						newStateField = '<input type="text" id="' + field_name + '" name="card_state" class="card_state edd-input required" value=""/>';
 					} else {
 						newStateField = response;
 					}

@@ -124,6 +124,14 @@ class_alias( \EDD\RequirementsCheck::class, 'EDD_Requirements_Check' );
 class_alias( \EDD\Fees\Handler::class, 'EDD_Fees' );
 
 /**
+ * Class Aliases for the Export classes.
+ *
+ * @deprecated 3.3.8
+ */
+class_alias( \EDD\Admin\Exports\Legacy\Export::class, 'EDD_Export' );
+class_alias( \EDD\Admin\Exports\Legacy\BatchExport::class, 'EDD_Batch_Export' );
+
+/**
  * Fully Deprecated Classes
  *
  * These classes are fully deprecated and are no longer used internally. There are no aliases for them, and their original class

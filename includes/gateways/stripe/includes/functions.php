@@ -540,7 +540,9 @@ function edds_documentation_route( $type ) {
  */
 function edds_stripe_connect_account_country_supports_application_fees() {
 
-	$account_country = edd_stripe()->connect->get_connect_country();
+	$account_country = edd_stripe()->connect() ?
+		edd_stripe()->connect->get_connect_country() :
+		false;
 
 	// If we have no country to compare against try to add an application fee.
 	// If the Stripe account is actually one of the blocked countries an API

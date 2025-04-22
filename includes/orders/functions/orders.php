@@ -952,6 +952,11 @@ function edd_build_order( $order_data = array() ) {
 
 	edd_maybe_add_customer_address( $customer->id, $customer_address_data );
 
+	if ( ! empty( $order_data['user_info']['address']['phone'] ) ) {
+		edd_add_order_meta( $order_id, '_edd_phone', sanitize_text_field( $order_data['user_info']['address']['phone'] ) );
+		edd_update_customer_meta( $customer->id, 'phone', sanitize_text_field( $order_data['user_info']['address']['phone'] ) );
+	}
+
 	/** Insert order items */
 
 	$decimal_filter = edd_currency_decimal_filter();

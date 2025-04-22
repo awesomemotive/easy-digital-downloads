@@ -53,6 +53,7 @@ class Activation extends EDD_UnitTestCase {
 		$this->assertNotEquals( $origin_edd_options['purchase_history_page'], $new_settings['purchase_history_page'] );
 
 		$this->assertArrayHasKey( 'confirmation_page', $new_settings );
+		$this->assertArrayHasKey( 'products_page', $new_settings );
 
 		$this->assertEquals( edd_format_db_version( EDD_VERSION ), get_option( 'edd_version' ) );
 
@@ -66,6 +67,7 @@ class Activation extends EDD_UnitTestCase {
 		wp_delete_post( $new_settings['success_page'], true );
 		wp_delete_post( $new_settings['purchase_history_page'], true );
 		wp_delete_post( $new_settings['failure_page'], true );
+		wp_delete_post( $new_settings['products_page'], true );
 		update_option( 'edd_version_upgraded_from', $origin_upgraded_from );
 		$edd_options = $origin_edd_options;
 		update_option( 'edd_settings', $edd_options );

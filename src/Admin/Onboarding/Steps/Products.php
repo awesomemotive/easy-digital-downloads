@@ -32,7 +32,7 @@ class Products extends Step {
 		?>
 		<form method="post" class="edd-onboarding__create-product-form">
 			<input type="hidden" name="_edd_product_type" value="0">
-			<table class="form-table" role="presentation">
+			<table class="form-table edd-download-editor__sections" role="presentation">
 				<tbody>
 					<tr>
 						<th scope="row"><h3><?php echo esc_html_e( 'Product details', 'easy-digital-downloads' ); ?></h3></th>
@@ -78,50 +78,71 @@ class Products extends Step {
 					<tr class="edd-onboarding__product-single-price">
 						<th scope="row"><label for="edd_price"><?php echo esc_html_e( 'Product Price', 'easy-digital-downloads' ); ?></label></th>
 						<td>
-						<div class="edd-form-group__control">
-							<?php
-								$price_args = array(
-									'name'  => 'edd_price',
-									'id'    => 'edd_price',
-									'value' => '0.00',
-									'class' => 'edd-form-group__input edd-price-field',
-								);
-								if ( 'before' === $currency_position ) {
-									?>
-									<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+							<div class="edd-form-group__control">
+								<span class="edd-amount-type-wrapper">
 									<?php
-									echo EDD()->html->text( $price_args );
-								} else {
-									echo EDD()->html->text( $price_args );
-									?>
-									<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
-									<?php
-								}
+									$currency_position = edd_get_option( 'currency_position', 'before' );
+									$currency_symbol   = edd_currency_symbol();
 
-								do_action( 'edd_price_field', null );
-								?>
+									// If the currency symbol is before the price, output the prefix.
+									if ( 'before' === $currency_position ) {
+										?>
+										<span class="edd-input__symbol edd-input__symbol--prefix"><?php echo esc_html( $currency_symbol ); ?></span>
+										<?php
+									}
+									?>
+									<?php
+									$price_input = new \EDD\HTML\Text(
+										array(
+											'name'         => 'edd_price',
+											'id'           => 'edd_price',
+											'value'        => '0.00',
+											'class'        => array( 'edd-amount-input', 'edd-price-field', 'no-controls', 'symbol-' . $currency_position ),
+											'include_span' => false,
+										)
+									);
+
+									$price_input->output();
+									if ( 'after' === $currency_position ) {
+										?>
+										<span class="edd-input__symbol edd-input__symbol--suffix"><?php echo esc_html( $currency_symbol ); ?></span>
+										<?php
+									}
+									?>
+								</span>
+								<?php do_action( 'edd_price_field', null ); ?>
 							</div>
 						</td>
 					</tr>
 
 					<tr class="edd-onboarding__product-variable-price no-table-row-padding">
 						<td colspan="2">
-							<div id="edd_variable_price_fields" class="edd_pricing_fields edd-onboarding__product-variable-price-fields">
+							<div id="edd_download_editor__variable-pricing" class="edd_pricing_fields edd-onboarding__product-variable-price-fields edd_download_editor__variable-pricing">
 								<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
 								<div id="edd_price_fields" class="edd_meta_table_wrap">
-									<div class="widefat edd_repeatable_table">
-										<div class="edd-price-option-fields edd-repeatables-wrap">
-											<div class="edd_variable_prices_wrapper edd_repeatable_row" data-key="1">
-												<?php do_action( 'edd_render_price_row', 1, array(), null, 1 ); ?>
-											</div>
-										</div>
+									<div class="widefat edd-variable-prices__rows">
+										<?php
+										$section = new \EDD\Admin\Downloads\Editor\VariablePrices();
+										$section->do_row(
+											new \EDD_Download(),
+											array(
+												'name'   => '',
+												'amount' => '',
+												'index'  => 1,
+											),
+											1
+										);
+										?>
+									</div>
 
-										<div class="edd-add-repeatable-row">
-											<button class="button button-secondary edd_add_repeatable"><?php echo esc_html_e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
-										</div>
+									<div class="edd__header-footer">
+										<?php $timestamp = time(); ?>
+										<button type="button" class="button button-secondary edd-button__add--variation" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>">
+											<?php esc_html_e( 'Add Variation', 'easy-digital-downloads' ); ?>
+										</button>
 									</div>
 								</div>
-							</div><!--end #edd_variable_price_fields-->
+							</div><!--end #edd_download_editor__variable-pricing-->
 						</td>
 					</tr>
 					<tr>

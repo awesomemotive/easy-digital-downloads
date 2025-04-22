@@ -226,56 +226,6 @@ button.edd-round:active {
 	margin: 0 auto;
 }
 
-.edd-sortable-list {
-	margin: 0;
-	width: 300px;
-	position: relative;
-}
-
-.edd-sortable-list li {
-	margin: 0;
-	padding: 0;
-	position: relative;
-	height: 28px;
-	cursor: move;
-
-	&.edd-toggle {
-		padding: 4px 0;
-	}
-}
-
-.edd-sortable-list li label * {
-	vertical-align: middle;
-}
-
-.edd-sortable-list li label:after {
-	display: block;
-	width: 17px;
-	height: 17px;
-	position: absolute;
-	right: 6px;
-	top: 0px;
-	color: #aaa;
-	font-family: dashicons;
-	font-size: 17px;
-	content: '\f228';
-	cursor: move;
-}
-
-.form-table .edd-sortable-list li label {
-	display: block;
-	height: 28px;
-	padding: 0;
-	margin: 0;
-}
-
-.edd-sortable-list .payment-icon {
-	width: 32px;
-	height: 24px;
-	position: relative;
-	margin-right: 5px;
-}
-
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
@@ -1597,23 +1547,6 @@ body.download_page_edd-reports {
 	background-color: #444;
 }
 
-/* Keeping this rule for Software Licensing Reports */
-.edd-reports-wrapper .postbox h2,
-.edd-reports-wrapper .postbox h3 {
-	font-size: 1.3em
-}
-
-#edd-dashboard-widgets-wrap .metabox-holder {
-	padding-top: 0;
-}
-
-.edd-reports-wrapper .postbox .edd-select {
-	max-width: 200px;
-	vertical-align: baseline;
-	margin-right: 4px;
-	margin-bottom: 16px;
-}
-
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
@@ -1641,84 +1574,8 @@ body.download_page_edd-reports {
 	margin-bottom: 20px;
 }
 
-fieldset.edd-to-and-from-container {
-	display: flex;
-	gap: 8px;
-
-	select {
-		flex: 0 0 calc(50% - 6px);
-	}
-}
-
-span.edd-to-and-from--separator {
-	line-height: normal;
-	align-self: center;
-	margin-bottom: 16px;
-}
-
-.edd-import-export-form .edd-progress {
-	background: #ddd;
-	border-radius: 15px;
-	height: 15px;
-	flex-basis: 100%;
-}
-
-.edd-import-export-form .edd-progress div {
-	background: #ccc;
-	border-radius: 15px;
-	height: 100%;
-	width: 0;
-}
-
-.edd-import-export-form .notice-wrap {
-	background-color: #f4f4f4;
-	border-style: solid;
-	border-width: 1px 0;
-	border-color: #eae9e9;
-	padding: 12px;
-	overflow: auto;
-	margin: 20px -12px -23px;
-	position: relative;
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.notice-wrap div.notice {
-	margin: 0;
-}
-
 h3 + .notice-wrap .notice {
 	margin-bottom: 1em;
-}
-
-.admin-color-fresh .edd-import-export-form .edd-progress div {
-	background: #0073aa;
-}
-
-.admin-color-light .edd-import-export-form .edd-progress div {
-	background: #888;
-}
-
-.admin-color-blue .edd-import-export-form .edd-progress div {
-	background: #096484;
-}
-
-.admin-color-coffee .edd-import-export-form .edd-progress div {
-	background: #c7a589;
-}
-
-.admin-color-ectoplasm .edd-import-export-form .edd-progress div {
-	background: #a3b745;
-}
-
-.admin-color-midnight .edd-import-export-form .edd-progress div {
-	background: #e14d43;
-}
-
-.admin-color-sunrise .edd-import-export-form .edd-progress div {
-	background: #dd823b;
 }
 
 .graph-option-section {
@@ -2070,13 +1927,12 @@ h3 + .notice-wrap .notice {
 
 .edd-item-info.customer-info input[type="text"],
 .edd-item-info.customer-info input[type="password"],
+.edd-item-info.customer-info input[type="tel"],
 .edd-item-info.customer-info select {
 	width: 200px;
-	height: auto;
 	box-shadow: none;
 	transition: none;
 	border: 1px solid #ddd;
-	margin: -5px 0 4px -2px;
 	font-size: 13px;
 	padding: 2px 4px;
 }

@@ -51,12 +51,16 @@ class Text extends Base {
 			type="text"
 			name="<?php echo esc_attr( $this->args['name'] ); ?>"
 			id="<?php echo esc_attr( $this->args['id'] ); ?>"
-			autocomplete="<?php echo esc_attr( $this->args['autocomplete'] ); ?>"
 			value="<?php echo esc_attr( $this->args['value'] ); ?>"
 			placeholder="<?php echo esc_attr( $this->args['placeholder'] ); ?>"
 			class="<?php echo esc_attr( $this->get_css_class_string() ); ?>"
 			<?php
 			echo $this->get_data_elements();
+			if ( $this->args['autocomplete'] ) :
+				?>
+				autocomplete="<?php echo esc_attr( $this->args['autocomplete'] ); ?>"
+				<?php
+			endif;
 			if ( $this->args['disabled'] ) :
 				?>
 				disabled

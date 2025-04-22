@@ -2,7 +2,7 @@
 	display: grid;
 	display: -ms-grid;
 	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-	grid-gap: 20px;
+	gap: 20px;
 
 	.postbox {
 		margin-bottom: 0;
@@ -10,7 +10,6 @@
 
 	.edd-from-to-wrapper {
 		display: flex;
-		margin-bottom: 16px;
 		width: 100%;
 
 		input {
@@ -27,6 +26,8 @@
 		flex-direction: column;
 		flex-wrap: wrap;
 		position: relative;
+		gap: 16px;
+		box-sizing: border-box;
 	}
 
 	.postbox .edd-select {

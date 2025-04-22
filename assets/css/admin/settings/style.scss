@@ -1,6 +1,7 @@
 @import "../../variables/variables";
 @import 'licenses';
 @import 'subnav';
+@import 'gateways';
 
 .edd-settings-content {
 	max-width: $break-huge;
@@ -29,32 +30,6 @@
 
 .edd-upload-button-wrapper button.edd_settings_upload_button {
     margin-bottom: 0;
-}
-
-#edd-payment-gateways a.button.edd-settings__button-settings {
-	position: absolute;
-	right: 2em;
-	background-image: $icon-settings;
-	background-size: 1em;
-	background-repeat: no-repeat;
-	background-position: center;
-	min-height: unset;
-	height: 1.5em;
-	width: 1.5em;
-	border: none;
-	background-color: $wp-alternate;
-
-	&:hover,
-	&:active {
-		background-image: $icon-settings;
-		background-size: 1em;
-		background-repeat: no-repeat;
-		background-position: center;
-	}
-
-	.edd-plugin__active & {
-		display: block;
-	}
 }
 
 .edd-settings__list--disc {

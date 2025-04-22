@@ -129,6 +129,9 @@ class Complete {
 		$updated = edd_update_order_status( $order->id, $final_status );
 		if ( $updated ) {
 
+			// Refresh the order object.
+			$order = edd_get_order( $order->id );
+
 			if ( 'setup_intent' !== $intent['object'] ) {
 				$charge_id = sanitize_text_field( current( $intent['charges']['data'] )['id'] );
 
@@ -203,6 +206,9 @@ class Complete {
 		if ( ! $updated ) {
 			return;
 		}
+
+		// Refresh the order object.
+		$order = edd_get_order( $order->id );
 
 		edd_add_note(
 			array(

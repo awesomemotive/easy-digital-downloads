@@ -8,7 +8,7 @@
 	border: 1px solid $wp-border;
 	border-radius: 3px;
 	margin: 0;
-	padding: 0;
+	padding: 20px;
 
 	&.ui-sortable-placeholder {
 		line-height: 0;
@@ -59,6 +59,7 @@
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 8px;
+	margin-bottom: 16px;
 }
 
 .edd_repeatable_row:hover .edd-repeatable-row-header,
@@ -79,10 +80,6 @@
 	clear: both;
 }
 
-.edd-bundle-products-header {
-	margin-top: 0;
-}
-
 .edd-repeatable-row-title {
 	font-weight: 600;
 	padding: 9px 0;
@@ -96,19 +93,13 @@
 	gap: 8px;
 }
 
-.edd-repeatable-row-actions .edd-remove-row,
-.edd-bundled-product-row .edd-remove-row {
-	width: auto;
-	cursor: pointer;
-}
-
 .edd-repeatable-row-standard-fields,
 .edd-bundled-product-row {
-	padding: 8px;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	gap: 18px;
+	justify-content: flex-start;
+	gap: 16px;
+	flex-grow: 1;
 
 	.edd-form-group {
 		margin-bottom: 0;
@@ -116,44 +107,28 @@
 		flex-direction: column;
 		flex-grow: 1;
 		justify-content: space-between;
-	}
-}
 
-.edd-repeatable-row-setting-label .edd-help-tip {
-	display: inline-block;
-	margin-left: 4px;
-}
+		select {
+			width: 100%;
+			max-width: 300px;
+		}
 
-.edd-bundled-product-item-reorder {
-	min-width: 30px;
-
-	.edd-product-file-reorder {
-		font-size: 20px;
-		cursor: move;
-		color: $wp-gray-5;
-		font-family: "dashicons";
-		content: "\f545";
-		transition: .2s color;
-
-		&:hover {
-			color: $wp-gray-20;
+		&.edd-hidden {
+			display: none;
 		}
 	}
 }
 
-.edd-bundled-product-actions {
-	align-self: center;
-}
+.edd_repeatable_product_wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	flex-wrap: wrap;
+	gap: 16px;
 
-#edd_products .edd-select,
-.edd_repeatable_upload_wrapper .pricing select,
-.edd_repeatable_product_wrapper .edd-select {
-	min-width: 100%;
-	max-width: 200px;
-}
-
-.edd_repeatable_product_wrapper td {
-	overflow: visible;
+	td {
+		overflow: visible;
+	}
 }
 
 @media screen and (max-width: $break-mobile) {
