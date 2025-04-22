@@ -57,7 +57,7 @@ function edds_get_elements_mode() {
 		return 'card-elements';
 	}
 
-	return edd_get_option( 'stripe_elements_mode', $default );
+	return apply_filters( 'edds_elements_mode', edd_get_option( 'stripe_elements_mode', $default ) );
 }
 
 /**
