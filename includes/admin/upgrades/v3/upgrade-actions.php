@@ -56,7 +56,6 @@ function edd_process_v3_upgrade() {
 	$class_name = $all_upgrades[ $upgrade_key ]['class'];
 
 	// Load the required classes.
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
 	do_action( 'edd_batch_export_class_include', $class_name );
 
 	if ( ! class_exists( $class_name ) ) {

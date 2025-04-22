@@ -1,0 +1,13 @@
+fieldset.edd-to-and-from-container {
+	display: flex;
+	gap: 8px;
+
+	select {
+		flex: 0 0 calc(50% - 6px);
+	}
+}
+
+span.edd-to-and-from--separator {
+	line-height: normal;
+	align-self: center;
+}

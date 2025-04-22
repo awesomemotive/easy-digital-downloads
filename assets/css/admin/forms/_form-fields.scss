@@ -98,5 +98,9 @@
 			margin-right: inherit;
 			margin-left: -1px;
 		}
+
+		.edd-disabled & {
+			border-color: rgba(220, 220, 222, 0.75);
+		}
 	}
 }

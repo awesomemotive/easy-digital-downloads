@@ -24,9 +24,22 @@ class Multicheck extends Base {
 	 * @return string
 	 */
 	public function get() {
+		$fieldset_classes = array( $this->args['name'] );
+		if ( $this->is_sortable() ) {
+			$fieldset_classes[] = 'edd-sortable-list';
+		}
 		ob_start();
+		if ( $this->is_sortable() ) {
+			$order = $this->args['sortable']['order'];
+			if ( is_string( $order ) ) {
+				$order = explode( ',', $order );
+			}
+			?>
+			<input type="hidden" name="<?php echo esc_attr( $this->args['sortable']['name'] ); ?>" class="edd-order" value="<?php echo esc_attr( implode( ',', $order ) ); ?>" />
+			<?php
+		}
 		?>
-		<fieldset class="<?php echo esc_attr( $this->get_css_class_string( array( $this->args['name'] ) ) ); ?>">
+		<fieldset class="<?php echo esc_attr( $this->get_css_class_string( $fieldset_classes ) ); ?>">
 			<?php if ( ! empty( $this->args['legend'] ) ) : ?>
 				<legend><?php echo wp_kses_post( $this->args['legend'] ); ?></legend>
 			<?php endif; ?>
@@ -40,6 +53,9 @@ class Multicheck extends Base {
 				if ( ! empty( $data['classes'] ) ) {
 					$classes = array_merge( $classes, $data['classes'] );
 				}
+				if ( ! empty( $this->args['sortable']['enabled'] ) ) {
+					$classes[] = 'edd-sortable-list__item';
+				}
 				$inner_classes = array(
 					'edd-form-group__control',
 				);
@@ -47,10 +63,10 @@ class Multicheck extends Base {
 					$inner_classes[] = 'edd-toggle';
 				}
 				?>
-				<div class="<?php echo esc_attr( $this->array_to_css_string( $classes ) ); ?>">
+				<div class="<?php echo esc_attr( $this->array_to_css_string( $classes ) ); ?>" data-key="<?php echo esc_attr( $key ); ?>">
 					<div class="<?php echo esc_attr( $this->array_to_css_string( $inner_classes ) ); ?>">
 						<?php $this->do_icon( $data ); ?>
-						<input type="hidden" name="<?php echo esc_attr( $this->args['name'] ); ?>[<?php echo esc_attr( $key ); ?>]" value="0">
+						<input type="hidden" name="<?php echo esc_attr( $this->args['name'] ); ?>[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $checked && ! empty( $data['disabled'] ) ? 1 : 0 ); ?>">
 						<input
 							type="checkbox"
 							name="<?php echo esc_attr( $this->args['name'] ); ?>[<?php echo esc_attr( $key ); ?>]"
@@ -58,10 +74,11 @@ class Multicheck extends Base {
 							id="<?php echo esc_attr( $this->args['name'] . '[' . $key . ']' ); ?>"
 							<?php checked( $checked, 1 ); ?>
 							<?php disabled( ! empty( $data['disabled'] ), true ); ?>
+							<?php wp_readonly( ! empty( $data['readonly'] ), true ); ?>
 						>
 						<div class="edd-form-group__control__label">
 							<label for="<?php echo esc_attr( $this->args['name'] . '[' . $key . ']' ); ?>">
-								<?php echo esc_html( $label ); ?>
+								<?php echo wp_kses_post( $label ); ?>
 							</label>
 							<?php $this->do_tooltip( $data ); ?>
 						</div>
@@ -87,11 +104,16 @@ class Multicheck extends Base {
 	 */
 	protected function defaults() {
 		return array(
-			'name'    => null,
-			'class'   => 'multicheck',
-			'options' => array(), // key => array( label => label, disabled => bool, checked => bool ).
-			'legend'  => '',
-			'toggle'  => false,
+			'name'     => null,
+			'class'    => 'multicheck',
+			'options'  => array(), // key => array( label => label, disabled => bool, checked => bool ).
+			'legend'   => '',
+			'toggle'   => false,
+			'sortable' => array(
+				'enabled' => false,
+				'order'   => array(),
+				'name'    => '',
+			),
 		);
 	}
 
@@ -139,5 +161,15 @@ class Multicheck extends Base {
 		}
 		$tooltip = new Tooltip( $data['tooltip'] );
 		$tooltip->output();
+	}
+
+	/**
+	 * Determines if the multicheck is sortable.
+	 *
+	 * @since 3.3.8
+	 * @return bool
+	 */
+	private function is_sortable() {
+		return ! empty( $this->args['sortable']['enabled'] ) && ! empty( $this->args['sortable']['name'] );
 	}
 }

@@ -81,6 +81,6 @@ class ChargeSucceeded extends Event {
 			return false;
 		}
 
-		return in_array( edd_get_order_meta( $order->id, 'stripe_payment_method_type', true ), array( 'us_bank_account', 'sofort' ), true );
+		return true;
 	}
 }

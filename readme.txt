@@ -4,9 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, chriscct7, sumobi, SpencerFinnell, johnjamesjacoby
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable Tag: 3.3.7
+Stable Tag: 3.3.8.1
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -237,6 +237,34 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.3.8.1 =
+* Checkout: Compatibility updated for Checkout Fields Manager.
+* Dev: Empty legacy files have been replaced for plugins which may manually be loading them in error.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
+= 3.3.8 =
+* Customers: Improved messaging when trying to assign a user's email to their customer account.
+* Compatibility: Added EDD's Checkout URI to the list of excluded speculative URLs for WordPress 6.8.
+* Downloads: Fixed issue where download details metabox didn't honor store currency.
+* Downloads: Price assignment for bundles now correctly displays without requiring a product update.
+* Downloads: Resolved issue where Chosen field did not initialize when Bundle is selected for the product type.
+* Downloads: Improved handling of download URLs to support the order item object.
+* Emails: Fixed a fatal error in sending purchase receipt after store reset.
+* PayPal: 100% discount codes now function properly with PayPal.
+* Reports: Improved batch export functionality.
+* Reports: Updated order export to allow different values and correct formatting.
+* Reports: Stats class now avoids ambiguous column queries.
+* Settings: Created product grid page automatically on fresh install.
+* Stripe: Added logging for Stripe confirmation process.
+* Stripe: Corrected issue where dispute ID stored was actually the payment ID.
+* Stripe: Improved the loading behavior of the Stripe Connect settings screen.
+* Stripe: Fixed issue where test mode warning wasn't showing in the gateways settings screen.
+* Stripe: Improved reliability when retrieving connected country in Stripe Connect.
+* Stripe: Update the object reference when completing a Stripe order.
+* Dev: Rolled back changes to the included EDD Updater to ensure compatibility by unexpected uses.
+* Dev: Deprecated functionality impacting namespaced class usage in `EDD_Batch_Export`.
+
 = 3.3.7 =
 * Blocks: Fixed undefined index error in checkout block preview.
 * Checkout: Improved existing email check for logged-in users during checkout.
@@ -265,8 +293,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Dev: Fixed CLI order handling triggering new deprecation notices.
 * Dev: Unit tests updated to remove older versions.
 * Dev: Resending a receipt no longer throws a deprecation notice.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.6.1 =
 * Fixes a formatting issue for stores using European style decimal separators.

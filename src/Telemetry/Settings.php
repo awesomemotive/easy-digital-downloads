@@ -206,7 +206,7 @@ class Settings {
 	 * @return bool
 	 */
 	private function should_populate_array( $setting ) {
-		$settings = array( 'gateways', 'accepted_cards' );
+		$settings = array( 'gateways', 'accepted_cards', 'checkout_address_fields' );
 
 		return 'multicheck' === $setting['type'] || in_array( $setting['id'], $settings, true );
 	}
@@ -221,8 +221,23 @@ class Settings {
 	 */
 	private function update_setting_value_array( $saved_value, $setting ) {
 		$value = array();
-		foreach ( $setting['options'] as $key => $label ) {
-			if ( is_array( $saved_value ) && ! empty( $saved_value[ $key ] ) ) {
+		if ( ! is_array( $saved_value ) ) {
+			return $value;
+		}
+
+		if ( ! empty( $setting['options'] ) ) {
+			foreach ( $setting['options'] as $key => $label ) {
+				if ( is_array( $saved_value ) && ! empty( $saved_value[ $key ] ) ) {
+					$value[] = $key;
+				}
+			}
+
+			return $value;
+		}
+
+		// If the setting options aren't available here, work from the saved value.
+		foreach ( $saved_value as $key => $enabled ) {
+			if ( $enabled ) {
 				$value[] = $key;
 			}
 		}

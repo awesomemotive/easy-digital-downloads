@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_checkout_cart() {
 
-	if ( function_exists( '\\EDD\\Blocks\\Checkout\\Functions\\checkout_has_blocks' ) && \EDD\Blocks\Checkout\Functions\checkout_has_blocks() ) {
+	if ( EDD\Checkout\Validator::has_block() ) {
 		$cart_items = edd_get_cart_contents();
 		include EDD_BLOCKS_DIR . 'views/checkout/cart/cart.php';
 

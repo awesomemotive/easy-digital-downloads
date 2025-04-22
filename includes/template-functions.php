@@ -565,25 +565,24 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
  * Gets the download links for each item purchased
  *
  * @since 1.1.5
- * @param int $payment_id The ID of the payment to retrieve download links for
+ * @param int $payment_id The ID of the payment to retrieve download links for.
  * @return string
  */
 function edd_get_purchase_download_links( $payment_id = 0 ) {
 
-	$order     = edd_get_order( $payment_id );
-	$downloads = $order->get_items();
-	$links     = '<ul class="edd_download_links">';
+	$order = edd_get_order( $payment_id );
+	$links = '<ul class="edd_download_links">';
 
-	foreach ( $downloads as $download ) {
+	foreach ( $order->get_items() as $order_item ) {
 		$links .= '<li>';
-		$links .= '<h3 class="edd_download_link_title">' . esc_html( edd_get_download_name( $download->product_id ) ) . '</h3>';
-		$files  = edd_get_download_files( $download->product_id, $download->price_id );
+		$links .= '<h3 class="edd_download_link_title">' . esc_html( $order_item->product_name ) . '</h3>';
+		$files  = edd_get_download_files( $order_item->product_id, $order_item->price_id );
 		if ( is_array( $files ) ) {
 			foreach ( $files as $filekey => $file ) {
 				$links .= '<div class="edd_download_link_file">';
 				$links .= sprintf(
 					'<a href="%s">%s</a>',
-					esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $download->product_id, $download->price_id ) ),
+					esc_url( edd_get_download_file_url( $order_item, $order->email, $filekey ) ),
 					edd_get_file_name( $file )
 				);
 				$links .= '</div>';

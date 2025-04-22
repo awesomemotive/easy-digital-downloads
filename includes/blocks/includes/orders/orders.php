@@ -597,7 +597,7 @@ function render_user_downloads_files_column( $action_args = array() ) {
 	foreach ( $action_args['download_files'] as $filekey => $file ) :
 		$order        = $action_args['order'];
 		$item         = $action_args['order_item'];
-		$download_url = edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id );
+		$download_url = edd_get_download_file_url( $item, $order->email, $filekey );
 		?>
 		<div class="edd-order-item__file">
 			<a href="<?php echo esc_url( $download_url ); ?>" class="edd-order-item__file-link">

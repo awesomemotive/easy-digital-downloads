@@ -37,9 +37,33 @@ class Loader implements SubscriberInterface {
 	 */
 	public static function get_subscribed_events() {
 		return array(
-			'plugins_loaded' => array( 'load_plugin_compatibility', 9999 ),
-			'plugins_loaded' => array( 'load_host_compatibility', 9999 ),
+			'plugins_loaded' => array( 'load_compatibility_layers', 9999 ),
 		);
+	}
+
+	/**
+	 * Load the compatibility layers.
+	 *
+	 * @since 3.3.8
+	 *
+	 * @return void
+	 */
+	public static function load_compatibility_layers() {
+		self::load_wp_core_compatibility();
+		self::load_plugin_compatibility();
+		self::load_host_compatibility();
+	}
+
+	/**
+	 * Load compatibility classes for core WordPress features.
+	 *
+	 * @since 3.3.8
+	 *
+	 * @return void
+	 */
+	private static function load_wp_core_compatibility() {
+		new WP\Performance();
+		self::$loaded['wp_core'] = true;
 	}
 
 	/**
@@ -49,7 +73,7 @@ class Loader implements SubscriberInterface {
 	 *
 	 * @return void
 	 */
-	public static function load_plugin_compatibility() {
+	private static function load_plugin_compatibility() {
 		$plugin_compatibility_classes = array(
 			Plugins\Wordfence::class,
 		);
@@ -76,7 +100,7 @@ class Loader implements SubscriberInterface {
 	 *
 	 * @return void
 	 */
-	public function load_host_compatibility() {
+	private static function load_host_compatibility() {
 		$host_compatibility_classes = array(
 			Hosts\Pantheon::class,
 			Hosts\WPEngine::class,

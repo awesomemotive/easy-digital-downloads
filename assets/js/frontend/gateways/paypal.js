@@ -20,16 +20,7 @@ var EDD_PayPal = {
 	 * @returns {boolean}
 	 */
 	isPayPal: function() {
-		var chosenGateway = false;
-		if ( jQuery('select#edd-gateway, input.edd-gateway').length ) {
-			chosenGateway = jQuery("meta[name='edd-chosen-gateway']").attr('content');
-		}
-
-		if ( ! chosenGateway && edd_scripts.default_gateway ) {
-			chosenGateway = edd_scripts.default_gateway;
-		}
-
-		return 'paypal_commerce' === chosenGateway;
+		return document.getElementById( 'edd-paypal-container' ) ? true : false;
 	},
 
 	/**
@@ -39,9 +30,13 @@ var EDD_PayPal = {
 	 * @param {object} data
 	 */
 	maybeRefreshPage: function( e, data ) {
-		if ( 0 === data.total_plain && EDD_PayPal.isPayPal() ) {
+		if ( ! EDD_PayPal.isPayPal() ) {
+			return;
+		}
+		if ( ! EDD_PayPal.isMounted && data.total_plain > 0 ) {
 			window.location.reload();
-		} else if ( ! EDD_PayPal.isMounted && EDD_PayPal.isPayPal() && data.total_plain > 0 ) {
+		}
+		if ( 0 == parseFloat( data.total_plain ) ) {
 			window.location.reload();
 		}
 	},

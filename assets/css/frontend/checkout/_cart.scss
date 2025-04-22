@@ -1,0 +1,71 @@
+/* Cart Contents */
+#edd_checkout_cart {
+	text-align: left;
+	width: 100%;
+	border: none;
+	margin: 0 0 21px;
+	table-layout: auto;
+
+	th,
+	td {
+		text-align: left;
+		border: 1px solid #eee;
+		color: #666;
+		padding: 0.5em 1.387em;
+	}
+
+	.edd_cart_header_row th {
+		background: #fafafa;
+		padding: 1.387em;
+	}
+
+	.edd_cart_tax_row th,
+	.edd_cart_discount_row th {
+		background: none;
+	}
+
+	th {
+		font-weight: bold;
+	}
+
+	td {
+		line-height: 25px;
+		vertical-align: middle;
+		background: #fff;
+	}
+
+	th.edd_cart_actions,
+	td.edd_cart_actions,
+	th:last-child,
+	td:last-child,
+	th.edd_cart_total {
+		text-align: right;
+	}
+
+	td img {
+		float: left;
+		margin: 0 8px 0 0;
+		background: none;
+		padding: 0;
+		border: none;
+	}
+
+	input.edd-item-quantity {
+		width: 3em;
+		padding: 2px;
+	}
+
+	.edd_discount {
+		display: inline-block;
+		margin-left: 5px;
+	}
+
+	br {
+		display: none;
+	}
+
+	a.edd-cart-saving-button {
+		font-weight: normal;
+		text-decoration: none;
+	}
+}

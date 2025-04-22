@@ -26,5 +26,4 @@ interface Static_Registry {
 	 * @return \EDD\Utils\Static_Registry Registry instance.
 	 */
 	public static function instance();
-
 }

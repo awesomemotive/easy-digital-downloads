@@ -577,6 +577,8 @@ function edd_get_customer_address( $user_id = 0 ) {
 				'state'   => $address->region,
 			);
 		}
+
+		$parsed_address['phone'] = $customer->get_meta( 'phone' );
 	}
 
 	return wp_parse_args(
@@ -588,6 +590,7 @@ function edd_get_customer_address( $user_id = 0 ) {
 			'zip'     => '',
 			'country' => '',
 			'state'   => '',
+			'phone'   => '',
 		)
 	);
 }

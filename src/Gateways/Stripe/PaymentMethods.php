@@ -254,7 +254,7 @@ class PaymentMethods {
 	 * @return object The configuration for the specified payment method.
 	 */
 	private static function get_pmc() {
-		if ( ! edd_stripe()->connect || ! edd_stripe()->connect->is_connected ) {
+		if ( ! edd_stripe()->connect() || ! edd_stripe()->connect->is_connected ) {
 			return false;
 		}
 

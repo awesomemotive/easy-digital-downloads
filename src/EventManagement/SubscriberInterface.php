@@ -5,6 +5,7 @@
  * @since 3.1.1
  * @package EDD
  */
+
 namespace EDD\EventManagement;
 
 interface SubscriberInterface {

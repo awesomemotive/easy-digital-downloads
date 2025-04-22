@@ -10,7 +10,7 @@ $download_files = edd_get_download_files( $item->product_id, $item->price_id );
 		foreach ( $download_files as $filekey => $file ) :
 			?>
 			<li class="edd_download_file">
-				<a href="<?php echo esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+				<a href="<?php echo esc_url( edd_get_download_file_url( $item, $order->email, $filekey ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 			</li>
 			<?php
 			/**
@@ -42,7 +42,7 @@ $download_files = edd_get_download_files( $item->product_id, $item->price_id );
 						foreach ( $download_files as $filekey => $file ) :
 							?>
 							<li class="edd_download_file">
-								<a href="<?php echo esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item, $bundle_item_price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+								<a href="<?php echo esc_url( edd_get_download_file_url( $order, $order->email, $filekey, $bundle_item, $bundle_item_price_id, $item ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 							</li>
 							<?php
 							/**

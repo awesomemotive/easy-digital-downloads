@@ -90,7 +90,7 @@ abstract class Base {
 	 * @return string
 	 */
 	final protected function get_css_class_string( array $classes = array() ): string {
-		$classes = array_merge( $this->get_base_classes(), $classes, $this->get_css_classes_from_args() );
+		$classes = array_unique( array_merge( $this->get_base_classes(), $classes, $this->get_css_classes_from_args() ) );
 
 		return $this->array_to_css_string( $classes );
 	}
