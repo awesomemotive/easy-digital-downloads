@@ -108,7 +108,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					if ( ! empty( $order_item_meta ) ) {
 						foreach ( $order_item_meta as $item_meta_key => $item_meta_value ) {
 							if ( '_option_' === substr( $item_meta_key, 0, 8 ) && isset( $item_meta_value[0] ) ) {
-								$item_options[ str_replace( '_option_', '', $item_meta_key ) ] = $item_meta_value[0];
+								$item_options[ str_replace( '_option_', '', $item_meta_key ) ] = maybe_unserialize( $item_meta_value[0] );
 							}
 						}
 					}
