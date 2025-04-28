@@ -71,6 +71,11 @@ function edd_process_add_to_cart( $data ) {
 	$args = [
 	    'add-to-cart' => $download_id
 	];
+
+    if(isset($data['discount'])) {
+        $args['discount'] = $data['discount'];
+    }
+
 	if( isset($options['price_id']) ) {
 	    if( is_array( $options['price_id'] ) ) {
 	        $args['price-id'] = end($options['price_id']);
