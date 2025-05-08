@@ -389,7 +389,6 @@ jQuery(document).ready(function ($) {
 			console.log('WP Idea not loaded!');
 			return;
 		}
-
 		var eddPurchaseform = document.getElementById('edd_purchase_form');
 		if (typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity()) {
 			return;
@@ -401,7 +400,8 @@ jQuery(document).ready(function ($) {
 
 		var complete_purchase_val = getButtonText(button, elementType);
 		setButtonText(button, elementType, edd_global_vars.purchase_loading);
-		button.prop('disabled', true);
+
+		$('#edd_purchase_form #edd_purchase_submit input[type=submit], #edd_purchase_form #edd_purchase_submit button[type=submit]').prop('disabled', true);
 		button.after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
 		var data = $('#edd_purchase_form').serialize();
