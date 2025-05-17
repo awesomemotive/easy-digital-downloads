@@ -427,12 +427,12 @@ jQuery(document).ready(function ($) {
 
 				if (isButton) {
 					button.html(complete_purchase_val);
-					button.prop('disabled', false);
+					$('#edd_purchase_form #edd_purchase_submit input[type=submit], #edd_purchase_form #edd_purchase_submit button[type=submit]').prop('disabled', false);
 					return;
 				}
 
 				$('#edd-purchase-button').val(complete_purchase_val);
-				$('#edd-purchase-button').prop('disabled', false);
+				$('#edd_purchase_form #edd_purchase_submit input[type=submit], #edd_purchase_form #edd_purchase_submit button[type=submit]').prop('disabled', false);
 			}
 		});
 
