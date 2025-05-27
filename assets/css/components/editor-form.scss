@@ -1,0 +1,29 @@
+@use "../variables/colors" as colors;
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+
+.edd-form {
+	background: colors.$white;
+	border: 1px solid #e2e4e7;
+	padding: 2em;
+	max-width: wp-breakpoints.$break-huge;
+
+	@media screen and (min-width: wp-breakpoints.$break-medium) {
+		$first-column-width: 200px;
+
+		> .edd-form-group {
+			display: grid;
+			grid-template-columns: $first-column-width 1fr;
+			margin-bottom: 2em;
+
+			> .description {
+				grid-column-start: 1;
+				grid-column-end: 3;
+			}
+		}
+
+		.edd-form-group > .description,
+		.notice {
+			margin-left: $first-column-width;
+		}
+	}
+}

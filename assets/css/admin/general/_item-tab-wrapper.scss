@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 #edd-item-tab-wrapper {
 	line-height: 1em;
 	margin: 0 -1px 0 0;
@@ -26,11 +29,11 @@
 			position: relative;
 			align-items: center;
 			gap: 3px;
-			color: $gray-60;
+			color: colors.$wp-gray-60;
 		}
 
 		>.edd-item-tab-label-wrap {
-			background-color: $white;
+			background-color: colors.$white;
 		}
 
 		a:focus,
@@ -46,7 +49,7 @@
 	margin: 0;
 }
 
-@media only screen and (max-width: $break-medium) {
+@media only screen and (max-width: wp-breakpoints.$break-medium) {
 
 	#edd-item-tab-wrapper {
 		width: 48px;

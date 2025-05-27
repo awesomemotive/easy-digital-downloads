@@ -3,32 +3,32 @@
 /**
  * Internal dependencies
  */
-import { apiRequest, generateNotice, fieldValueOrNull, forEach } from 'utils'; // eslint-disable-line @wordpress/dependency-group
+import { apiRequest, generateNotice, fieldValueOrNull } from 'utils'; // eslint-disable-line @wordpress/dependency-group
 
 /**
  * Binds events for card actions.
  */
 export function paymentMethodActions() {
 	// Update.
-	forEach( document.querySelectorAll( '.edd-stripe-update-card' ), function( updateButton ) {
+	document.querySelectorAll( '.edd-stripe-update-card' ).forEach( function( updateButton ) {
 		updateButton.addEventListener( 'click', onToggleUpdateForm );
 	} );
 
-	forEach( document.querySelectorAll( '.edd-stripe-cancel-update' ), function( cancelButton ) {
+	document.querySelectorAll( '.edd-stripe-cancel-update' ).forEach( function( cancelButton ) {
 		cancelButton.addEventListener( 'click', onToggleUpdateForm );
 	} );
 
-	forEach( document.querySelectorAll( '.card-update-form' ), function( updateButton ) {
+	document.querySelectorAll( '.card-update-form' ).forEach( function( updateButton ) {
 		updateButton.addEventListener( 'submit', onUpdatePaymentMethod );
 	} );
 
 	// Delete.
-	forEach( document.querySelectorAll( '.edd-stripe-delete-card' ), function( deleteButton ) {
+	document.querySelectorAll( '.edd-stripe-delete-card' ).forEach( function( deleteButton ) {
 		deleteButton.addEventListener( 'click', onDeletePaymentMethod );
 	} );
 
 	// Set Default.
-	forEach( document.querySelectorAll( '.edd-stripe-default-card' ), function( setDefaultButton ) {
+	document.querySelectorAll( '.edd-stripe-default-card' ).forEach( function( setDefaultButton ) {
 		setDefaultButton.addEventListener( 'click', onSetDefaultPaymentMethod );
 	} );
 }
@@ -177,7 +177,7 @@ export function handleNotice( paymentMethodId, error, type = 'error' ) {
 	);
 
 	// Hide previous notices.
-	forEach( document.querySelectorAll( '.edd-stripe-alert' ), function( alert ) {
+	document.querySelectorAll( '.edd-stripe-alert' ).forEach( function( alert ) {
 		alert.remove();
 	} );
 

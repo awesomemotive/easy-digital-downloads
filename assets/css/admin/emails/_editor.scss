@@ -1,3 +1,8 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+@use "../../variables/mixins" as mixins;
+@use "../../components/editor-header";
+
 .edd-email-editor__description {
 	margin: 2em 0;
 }
@@ -17,48 +22,22 @@
 	#submit.edd-updating {
 		&:before {
 			background: none;
-			@include edd-spinner(
+			@include mixins.edd-spinner(
 				12px,
-				$wp-alternate,
-				$wp-input-border
+				colors.$wp-alternate,
+				colors.$wp-input-border
 			);
 		}
 	}
 }
 
-.edd-form__email {
-	background: $white;
-	border: 1px solid #e2e4e7;
-	padding: 2em;
-	max-width: $break-huge;
-
-	@media screen and (min-width: $break-medium) {
-		$first-column-width: 200px;
-		.edd-form-group {
-			display: grid;
-			grid-template-columns: $first-column-width 1fr;
-			margin-bottom: 2em;
-
-			> .description {
-				grid-column-start: 1;
-				grid-column-end: 3;
-			}
-		}
-
-		.edd-form-group > .description,
-		.notice {
-			margin-left: $first-column-width;
-		}
-	}
-}
-
 .edd-email-action-reset {
-	border-color: $edd-alert-red !important;
-	color: $edd-alert-red !important;
+	border-color: colors.$edd-alert-red !important;
+	color: colors.$edd-alert-red !important;
 
 	&:hover {
-		border-color: $edd-alert-red-hover !important;
-		color: $edd-alert-red-hover !important;
+		border-color: colors.$edd-alert-red-hover !important;
+		color: colors.$edd-alert-red-hover !important;
 	}
 }
 

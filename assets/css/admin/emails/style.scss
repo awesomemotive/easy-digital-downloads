@@ -1,7 +1,7 @@
-@import "../../variables/variables";
-@import "../../components/toggle-button";
-@import "../../components/editor-header.scss";
-@import "promo";
-@import "table";
-@import "editor";
-@import "logs";
+@use "promo";
+@use "table";
+@use "editor";
+@use "logs";
+@use "../../components/toggle-button";
+@use "../../components/editor-header";
+@use "../../components/editor-form";

@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 #edd-reports-tiles-wrap #dashboard-widgets .sortable-placeholder {
 	padding: 0;
 	margin: 0 0 20px 0;
@@ -41,7 +43,7 @@
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: normal;
-	color: $wp-gray-2;
+	color: colors.$wp-gray-2;
 }
 
 .edd-reports-tile .tile-value {
@@ -100,7 +102,7 @@
 	top: 4px;
 	left: -5px;
 	margin-left: -5px;
-	color: $wp-inactive;
+	color: colors.$wp-inactive;
 }
 
 .edd-reports-tile .tile-relative {
@@ -112,12 +114,12 @@
 
 	span.dashicons-arrow-down,
 	span.dashicons-arrow-up.reverse {
-		color: $wp-red-50;
+		color: colors.$wp-red-50;
 	}
 
 	span.dashicons-arrow-up,
 	span.dashicons-arrow-down.reverse {
-		color: $wp-green-50;
+		color: colors.$wp-green-50;
 	}
 }
 

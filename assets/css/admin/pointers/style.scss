@@ -1,16 +1,16 @@
-@import "../../variables/variables";
+@use "../../variables/colors" as colors;
 
 $pointer-blue: #2271b1;
 
 .edd-pointer {
 	&.warning {
 		& h3 {
-			background: $alert-yellow;
-			border-color: $wp-yellow-50;
-			color: $gray-900;
+			background: colors.$alert-yellow;
+			border-color: colors.$wp-yellow-50;
+			color: colors.$wp-gray-900;
 
 			&:before {
-				color: $alert-yellow;
+				color: colors.$alert-yellow;
 			}
 		}
 	}

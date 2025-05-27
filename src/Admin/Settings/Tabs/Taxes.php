@@ -85,44 +85,6 @@ class Taxes extends Tab {
 					'tooltip_desc'  => __( 'This option will determine whether the product price displays with or without tax on checkout.', 'easy-digital-downloads' ),
 				),
 			),
-			'rates' => $this->get_rates(),
-		);
-	}
-
-	/**
-	 * Get the tax rates settings.
-	 *
-	 * @since 3.1.4
-	 * @return array
-	 */
-	private function get_rates() {
-
-		$rates = array(
-			'tax_rates' => array(
-				'id'   => 'tax_rates',
-				'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-				'desc' => __( 'Configure rates for each region you wish to collect sales tax in.', 'easy-digital-downloads' ),
-				'type' => 'tax_rates',
-			),
-		);
-
-		if ( false === edd_get_option( 'tax_rate' ) ) {
-			return $rates;
-		}
-
-		// Show a disabled "Default Rate" in "Tax Rates" if the value is not 0.
-		return array_merge(
-			array(
-				'tax_rate' => array(
-					'id'   => 'tax_rate',
-					'type' => 'tax_rate',
-					'name' => __( 'Default Rate', 'easy-digital-downloads' ),
-					'desc' => (
-						'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. We have migrated any fallback tax rates for you to verify below. Click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
-					),
-				),
-			),
-			$rates
 		);
 	}
 }

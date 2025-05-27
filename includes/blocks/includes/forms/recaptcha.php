@@ -64,7 +64,7 @@ add_action( 'edd_lost_password_fields_after', __NAMESPACE__ . '\initialize' );
  * @return void
  */
 add_action(
-	'edd_register_form_fields_before_submit',
+	'edd_register_form_fields_top',
 	function () {
 		remove_action( 'edd_register_form_fields_after', __NAMESPACE__ . '\initialize' );
 	}

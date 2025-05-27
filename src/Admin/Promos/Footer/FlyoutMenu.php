@@ -182,7 +182,7 @@ class FlyoutMenu {
 		wp_enqueue_script(
 			'edd-flyout-menu',
 			EDD_PLUGIN_URL . 'assets/js/edd-admin-flyout.js',
-			array(),
+			array( 'wp-dom-ready' ),
 			EDD_VERSION,
 			true
 		);

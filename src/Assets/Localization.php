@@ -24,7 +24,8 @@ class Localization {
 	 * @return void
 	 */
 	public static function checkout() {
-		if ( ! edd_is_checkout() ) {
+		// Both scripts require the localization, so if neither are enqueued, don't run.
+		if ( ! wp_script_is( 'edd-checkout-global' ) && ! wp_script_is( 'edd-ajax' ) ) {
 			return;
 		}
 

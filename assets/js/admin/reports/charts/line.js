@@ -1,9 +1,8 @@
-/* global Chart */
+/* global Chart, moment */
 
 /**
  * Internal dependencies.
  */
-import moment, { utc } from 'moment';
 import { getLabelWithTypeCondition, toolTipBaseConfig, attachAxisTickFormattingCallback } from './utils';
 
 /**
@@ -66,9 +65,9 @@ export const render = ( config ) => {
 								// Specifically this ensures month by month shows the start of the month
 								// if the UTC offset is negative.
 								if ( ! hourByHour && ! dayByDay ) {
-									return moment.utc( date );
+									return window.moment.utc( date );
 								} else {
-									return moment( date ).utcOffset( utcOffset );
+									return window.moment( date ).utcOffset( utcOffset );
 								}
 							},
 						},

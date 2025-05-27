@@ -70,6 +70,7 @@ class Tags extends EDD_UnitTestCase {
 		$this->assertTrue( edd_email_tag_exists( 'refund_link' ) );
 		$this->assertTrue( edd_email_tag_exists( 'refund_amount' ) );
 		$this->assertTrue( edd_email_tag_exists( 'refund_id' ) );
+		$this->assertTrue( edd_email_tag_exists( 'phone' ) );
 	}
 
 	public function test_email_tags_add() {
@@ -197,6 +198,17 @@ class Tags extends EDD_UnitTestCase {
 		$this->assertEquals( $expected, $render->refund_amount( $refund_id, $refund, 'refund' ) );
 		$this->assertEquals( $refund->order_number, $render->refund_id( $refund_id, $refund, 'refund' ) );
 		$this->assertEquals( '{refund_id}', $render->refund_id( $new_order, null, 'refund' ) );
+	}
+
+	public function test_email_tags_no_phone_returns_empty_string() {
+		$render = new \EDD\Emails\Tags\Render();
+		$this->assertEquals( '', $render->phone( self::$payment_id, self::$order, 'order' ) );
+	}
+
+	public function test_email_tags_phone_returns_phone_number() {
+		edd_add_order_meta( self::$payment_id, '_edd_phone', '(123) 456-7890' );
+		$render = new \EDD\Emails\Tags\Render();
+		$this->assertEquals( '(123) 456-7890', $render->phone( self::$payment_id, self::$order, 'order' ) );
 	}
 
 	private static function create_download() {

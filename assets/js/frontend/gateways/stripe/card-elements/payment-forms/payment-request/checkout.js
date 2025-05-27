@@ -4,8 +4,7 @@
  * Internal dependencies
  */
 import { parseDataset } from './';
-import { apiRequest, forEach, outputNotice, clearNotice } from 'utils';
-import { handle as handleIntent } from '../../intents';
+import { apiRequest, outputNotice, clearNotice } from 'utils';
 import { createPayment, completePayment } from '../../payment-forms';
 
 let IS_PRB_GATEWAY;

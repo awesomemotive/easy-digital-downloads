@@ -3,6 +3,11 @@ import './style.scss';
 import Edit from './edit';
 import metadata from './block.json';
 import { Icon } from '../utilities/icons';
+import Save from './save';
+
+const legacySave = () => {
+	return null;
+};
 
 registerBlockType( metadata.name, {
 
@@ -11,4 +16,13 @@ registerBlockType( metadata.name, {
 	 * @see ./edit.js
 	 */
 	edit: Edit,
+	save: Save,
+
+	deprecated: [
+		{
+			// Use the attributes directly from the imported metadata since they haven't changed.
+			attributes: metadata.attributes,
+			save: legacySave, // The OLD save function
+		},
+	],
 } );

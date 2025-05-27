@@ -1,15 +1,18 @@
-@mixin edd-admin-colors() {
-	@include admin-scheme(#007cba);
-	@include wordpress-admin-schemes();
+@use "colors";
+@use "~@wordpress/base-styles/mixins" as wp-mixins;
 
-	@each $slug, $color in $buddypress-colors {
+@mixin edd-admin-colors() {
+	@include wp-mixins.admin-scheme(#007cba);
+	@include wp-mixins.wordpress-admin-schemes();
+
+	@each $slug, $color in colors.$buddypress-colors {
 		body.admin-color-#{$slug} {
-			@include admin-scheme($color);
+			@include wp-mixins.admin-scheme($color);
 		}
 	}
 }
 
-@mixin edd-spinner( $size: 1em, $border-background: $white, $border-color: $black, $border-width: 2px ) {
+@mixin edd-spinner( $size: 1em, $border-background: colors.$white, $border-color: colors.$black, $border-width: 2px ) {
 	animation: 1.5s linear infinite edd-spinning;
 	animation-play-state: inherit;
 	border: $border-width solid $border-background;
@@ -35,7 +38,7 @@
 	padding: 10px;
 	transform: translate( $transformX, $transformY );
 	background-color: #fff;
-	border: 1px solid $wp-input-border-2;
+	border: 1px solid colors.$wp-input-border-2;
 	border-radius: 4px;
 	box-shadow: 0 $box-shadow-y 5px 0 rgba(0,0,0,.25);
 	box-sizing: border-box;
@@ -81,7 +84,6 @@
 
 @mixin screen-reader-text {
 	border: 0;
-	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
 	height: 1px;
 	margin: -1px;

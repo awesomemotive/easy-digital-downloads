@@ -50,6 +50,9 @@ class Core extends EventManagement\Subscribers {
 
 			// API.
 			new API\WP\Attachments(),
+
+			// Discounts.
+			new Discounts\Search(),
 		);
 	}
 
@@ -90,6 +93,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Notifications\Loader(),
 			new Admin\Exports\Loader(),
 			new Admin\Customers\Emails(),
+			new Admin\Discounts\Manager(),
 		);
 
 		return $providers;

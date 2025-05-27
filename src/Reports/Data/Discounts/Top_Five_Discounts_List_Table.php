@@ -2,19 +2,19 @@
 /**
  * Top Five Discounts list table.
  *
- * @package     EDD
- * @subpackage  Reports/Data/Customers
+ * @package     EDD\Reports\Data\Discounts
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Reports\Data\Discounts;
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-use EDD\Reports as Reports;
-use EDD\Stats as Stats;
+use EDD\Reports;
+use EDD\Stats;
 use EDD\Admin\List_Table;
 
 /**
@@ -36,28 +36,30 @@ class Top_Five_Discounts_List_Table extends List_Table {
 
 		$stats = new Stats();
 
-		$d = $stats->get_most_popular_discounts( array(
-			'number' => 5,
-			'range'  => $filter['range'],
-		) );
+		$discounts = $stats->get_most_popular_discounts(
+			array(
+				'number' => 5,
+				'range'  => $filter['range'],
+			)
+		);
 
 		$data = array();
 
-		foreach ( $d as $result ) {
+		foreach ( $discounts as $result ) {
 			if ( empty( $result->object ) ) {
 				continue;
 			}
 
-			$c            = new \stdClass();
-			$c->id        = $result->object->id;
-			$c->name      = $result->object->name;
-			$c->status    = $result->object->status;
-			$c->use_count = $result->count;
-			$c->code      = $result->object->code;
-			$c->type      = $result->object->type;
-			$c->amount    = $result->object->amount;
+			$object            = new \stdClass();
+			$object->id        = $result->object->id;
+			$object->name      = $result->object->name;
+			$object->status    = $result->object->status;
+			$object->use_count = $result->count;
+			$object->code      = $result->object->code;
+			$object->type      = $result->object->type;
+			$object->amount    = $result->object->amount;
 
-			$data[] = $c;
+			$data[] = $object;
 		}
 
 		return $data;
@@ -72,10 +74,10 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'      => __( 'Name',   'easy-digital-downloads' ),
-			'code'      => __( 'Code',   'easy-digital-downloads' ),
-			'use_count' => __( 'Uses',   'easy-digital-downloads' ),
-			'amount'    => __( 'Amount', 'easy-digital-downloads' )
+			'name'      => __( 'Name', 'easy-digital-downloads' ),
+			'code'      => __( 'Code', 'easy-digital-downloads' ),
+			'use_count' => __( 'Uses', 'easy-digital-downloads' ),
+			'amount'    => __( 'Amount', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -85,7 +87,7 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 * @since 3.0
 	 *
 	 * @param \stdClass $discount Discount object.
-	 * @param string $column_name The name of the column
+	 * @param string    $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
@@ -112,30 +114,35 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 * @since 3.0
 	 *
 	 * @param \stdClass $discount Discount object.
-	 * @return string Data shown in the Name column
+	 * @return string Data shown in the Name column.
 	 */
 	public function column_name( $discount ) {
-		$base  = $this->get_base_url();
-		$state = '';
 
-		// Bail if current user cannot manage discounts
+		// Bail if current user cannot manage discounts.
 		if ( ! current_user_can( 'manage_shop_discounts' ) ) {
-			return;
+			return '';
 		}
 
-		// State
-		if ( ( ! empty( $status ) && ( $status !== $discount->status ) ) || ( $discount->status !== 'active' ) ) {
+		// State.
+		$state = '';
+		if ( 'active' !== $discount->status ) {
 			$state = ' &mdash; ' . edd_get_discount_status_label( $discount->id );
 		}
 
-		// Wrap discount title in strong anchor
-		$discount_title = '<strong><a class="row-title" href="' . esc_url( add_query_arg( array(
-				'edd-action' => 'edit_discount',
-				'discount'   => absint( $discount->id ),
-			), $base ) ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
-
-		// Return discount title & row actions
-		return $discount_title;
+		return sprintf(
+			'<a class="row-title" href="%s">%s</a>%s',
+			esc_url(
+				add_query_arg(
+					array(
+						'view'     => 'edit_discount',
+						'discount' => absint( $discount->id ),
+					),
+					$this->get_base_url()
+				)
+			),
+			stripslashes( $discount->name ),
+			esc_html( $state )
+		);
 	}
 
 	/**
@@ -161,13 +168,16 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 */
 	public function get_base_url() {
 
-		// Remove some query arguments
+		// Remove some query arguments.
 		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
-		// Add base query args
-		return add_query_arg( array(
-			'page' => 'edd-discounts',
-		), $base );
+		// Add base query args.
+		return add_query_arg(
+			array(
+				'page' => 'edd-discounts',
+			),
+			$base
+		);
 	}
 
 	/**
@@ -218,20 +228,16 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $which
+	 * @param string $which Which pagination to show.
 	 */
-	protected function pagination( $which ) {
-
-	}
+	protected function pagination( $which ) {}
 
 	/**
 	 * Hide table navigation.
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $which
+	 * @param string $which Which pagination to show.
 	 */
-	protected function display_tablenav( $which ) {
-
-	}
+	protected function display_tablenav( $which ) {}
 }

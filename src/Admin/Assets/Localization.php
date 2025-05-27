@@ -63,7 +63,8 @@ class Localization {
 			'decimal_separator'       => $edd_currency->decimal_separator,
 			'thousands_separator'     => $edd_currency->thousands_separator,
 			'date_picker_format'      => edd_get_date_picker_format( 'js' ),
-			'add_new_download'        => __( 'Add New Download', 'easy-digital-downloads' ),
+			/* translators: %s: Add New label */
+			'add_new_download'        => __( 'Add Download', 'easy-digital-downloads' ),
 			'use_this_file'           => __( 'Use This File', 'easy-digital-downloads' ),
 			'quick_edit_warning'      => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
 			'delete_order_item'       => __( 'Are you sure you want to delete this item?', 'easy-digital-downloads' ),
@@ -107,6 +108,7 @@ class Localization {
 			'confirm_dialog_text'     => __( 'Confirm', 'easy-digital-downloads' ),
 			'cancel_dialog_text'      => __( 'Cancel', 'easy-digital-downloads' ),
 			'copy_success'            => __( 'Copied', 'easy-digital-downloads' ),
+			'closeText'               => __( 'Close', 'easy-digital-downloads' ),
 
 			// Features.
 			'quantities_enabled'      => edd_item_quantities_enabled(),

@@ -12,8 +12,7 @@ import {
 	apiRequest,
 	hasValidInputs,
 	triggerBrowserValidation,
-	generateNotice,
-	forEach
+	generateNotice
 } from 'utils';
 
 /**
@@ -187,7 +186,7 @@ export function handleNotice( error, type = 'error' ) {
 	);
 
 	// Hide previous notices.
-	forEach( document.querySelectorAll( '.edd-stripe-alert' ), function( alert ) {
+	document.querySelectorAll( '.edd-stripe-alert' ).forEach( function( alert ) {
 		alert.remove();
 	} );
 

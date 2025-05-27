@@ -305,6 +305,26 @@ class Render {
 	}
 
 	/**
+	 * Renders the phone number email tag.
+	 *
+	 * @since 3.3.9
+	 * @param int    $object_id    The object ID.
+	 * @param mixed  $email_object The email object.
+	 * @param string $context      The context.
+	 * @return string
+	 */
+	public function phone( $object_id, $email_object = null, $context = null ) {
+		if ( $context instanceof \EDD\Emails\Types\Email ) {
+			$context = $context->get_context();
+		}
+		if ( 'order' !== $context ) {
+			return '';
+		}
+
+		return edd_get_order_meta( $object_id, '_edd_phone', true );
+	}
+
+	/**
 	 * Check if it the first purchase for a given user.
 	 *
 	 * @since 3.3.0

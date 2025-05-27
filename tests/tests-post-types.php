@@ -18,10 +18,11 @@ class Tests_Post_Types extends EDD_UnitTestCase {
 
 	public function test_downloads_post_type_labels() {
 		global $wp_post_types;
+
 		$this->assertEquals( 'Downloads', $wp_post_types['download']->labels->name );
 		$this->assertEquals( 'Download', $wp_post_types['download']->labels->singular_name );
 		$this->assertEquals( 'Add New', $wp_post_types['download']->labels->add_new );
-		$this->assertEquals( 'Add New Download', $wp_post_types['download']->labels->add_new_item );
+		$this->assertEquals( 'Add Download', $wp_post_types['download']->labels->add_new_item );
 		$this->assertEquals( 'Edit Download', $wp_post_types['download']->labels->edit_item );
 		$this->assertEquals( 'View Download', $wp_post_types['download']->labels->view_item );
 		$this->assertEquals( 'Search Downloads', $wp_post_types['download']->labels->search_items );

@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 /**
  * Form Group
  *
@@ -34,6 +36,10 @@
 
 	legend {
 		margin-bottom: 8px;
+	}
+
+	select {
+		max-width: 100%;
 	}
 }
 
@@ -89,7 +95,7 @@ select.edd-form-group__input {
 }
 
 .edd-form-group__help {
-	color: $wp-gray-50;
+	color: colors.$wp-gray-50;
 	font-size: 13px;
 	font-style: italic;
 	line-height: initial;

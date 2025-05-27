@@ -483,19 +483,12 @@ function edd_v3_remove_legacy_data_form( $hide_wrapper_initially = false ) {
  */
 function edd_v3_remove_legacy_data_tool() {
 	// Tool not available if they've already done it.
-	if ( edd_has_upgrade_completed( 'v30_legacy_data_removed' ) ) {
+	if ( EDD\Upgrades\Utilities\MigrationCheck::is_legacy_data_removed() ) {
 		return;
 	}
 
-	$v3_upgrades = edd_get_v30_upgrades();
-	unset( $v3_upgrades['v30_legacy_data_removed'] );
-	$v3_upgrades = array_keys( $v3_upgrades );
-
-	// If even one upgrade hasn't completed, they cannot delete legacy data.
-	foreach ( $v3_upgrades as $v3_upgrade ) {
-		if ( ! edd_has_upgrade_completed( $v3_upgrade ) ) {
-			return;
-		}
+	if ( ! EDD\Upgrades\Utilities\MigrationCheck::is_v30_migration_complete() ) {
+		return;
 	}
 	?>
 	<div class="postbox">

@@ -1,9 +1,9 @@
 /**
  * Internal dependencices
  */
- @import './frontend/shared.scss';
- @import './frontend/modal.scss';
- @import './frontend/payment-request-button.scss';
+ @use './frontend/shared.scss';
+ @use './frontend/modal.scss';
+ @use './frontend/payment-request-button.scss';
 
  #edd_checkout_form_wrap .edd-card-selector-radio label {
 	 display: inline;

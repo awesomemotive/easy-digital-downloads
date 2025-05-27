@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 body.edd-about {
 	& div.notice {
 		display: none;
@@ -14,10 +17,10 @@ body.edd-about {
 		flex-direction: column;
 
 		& .edd-admin-about-section {
-			box-shadow: 0 2px 5px $edd-very-light-gray;
+			box-shadow: 0 2px 5px colors.$edd-very-light-gray;
 			margin: 0 20px 20px;
 			padding: 30px;
-			background: #ffffff;
+			background: colors.$white;
 			border: 1px solid #dddddd;
 			line-height: 2;
 			display: flex;
@@ -26,14 +29,14 @@ body.edd-about {
 			& h2 {
 				font-size: 24px;
 				line-height: 32px;
-				color: $wp-gray-50;
+				color: colors.$wp-gray-50;
 				margin: 0px;
 			}
 
 			& h3 {
 				font-size: 16px;
 				line-height: 22px;
-				color: $wp-gray-40;
+				color: colors.$wp-gray-40;
 			}
 
 			& ul, p {
@@ -65,7 +68,7 @@ body.edd-about {
 
 				& img.shadow {
 					width: 100%;
-					box-shadow: 0 2px 5px $edd-very-light-gray;
+					box-shadow: 0 2px 5px colors.$edd-very-light-gray;
 				}
 
 				& figcaption {
@@ -248,7 +251,7 @@ body.edd-about {
 				transition: all 0.1s ease-in-out;
 				&:hover, &:focus {
 					background-color: #2271B1;
-					color: $white;
+					color: colors.$white;
 				}
 			}
 		}
@@ -271,20 +274,20 @@ body.edd-about {
 						display: flex;
 						flex-direction: column;
 						border: 1px solid #dddddd;
-						box-shadow: 0 2px 5px $edd-very-light-gray;
+						box-shadow: 0 2px 5px colors.$edd-very-light-gray;
 
 						& .details {
 							padding: 20px;
 							display: flex;
 							flex-direction: row;
-							background-color: #ffffff;
+							background-color: colors.$white;
 							flex-grow: 1;
 
 							& .leftcol {
 								& img {
 									max-width: 100px;
 									padding: 10px;
-									box-shadow: 0 2px 3px $edd-very-light-gray;
+									box-shadow: 0 2px 3px colors.$edd-very-light-gray;
 								}
 							}
 
@@ -317,15 +320,15 @@ body.edd-about {
 								& span.status-label {
 									font-weight: 600;
 									&.active {
-										color: $wp-green-50;
+										color: colors.$wp-green-50;
 									}
 
 									&.inactive {
-										color: $wp-red-50;
+										color: colors.$wp-red-50;
 									}
 
 									&.not-installed {
-										color: $wp-gray-50;
+										color: colors.$wp-gray-50;
 									}
 								}
 							}
@@ -341,7 +344,7 @@ body.edd-about {
 			}
 		}
 
-		@media (max-width: $break-huge) {
+		@media (max-width: wp-breakpoints.$break-huge) {
 			& #edd-admin-addons {
 				& .addons-container {
 					& .addon-container {
@@ -354,7 +357,7 @@ body.edd-about {
 			}
 		}
 
-		@media (max-width: $break-wide) {
+		@media (max-width: wp-breakpoints.$break-wide) {
 			& .welcome-message {
 				flex-direction: column-reverse;
 
@@ -372,7 +375,7 @@ body.edd-about {
 			}
 		}
 
-		@media (max-width: $break-large) {
+		@media (max-width: wp-breakpoints.$break-large) {
 			& .edd-admin-about-section {
 				flex-direction: column;
 				gap: 20px;

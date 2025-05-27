@@ -45,7 +45,7 @@ function edd_setup_edd_post_types() {
 			'singular_name'         => $singular_label,
 			'add_new'               => __( 'Add New', 'easy-digital-downloads' ),
 			/* translators: %s: Download singular label */
-			'add_new_item'          => sprintf( _x( 'Add New %s', 'Text for adding a new Download/Product', 'easy-digital-downloads' ), $singular_label ),
+			'add_new_item'          => sprintf( _x( 'Add %s', 'Text for adding a new Download/Product', 'easy-digital-downloads' ), $singular_label ),
 			/* translators: %s: Download singular label */
 			'edit_item'             => sprintf( _x( 'Edit %s', 'Text for editing an existing Download/Product', 'easy-digital-downloads' ), $singular_label ),
 			/* translators: %s: Download singular label */
@@ -221,7 +221,7 @@ function edd_setup_download_taxonomies() {
 		/* translators: %s: Download singular label */
 		'update_item'       => sprintf( __( 'Update %s Category', 'easy-digital-downloads' ), $singular_label ),
 		/* translators: %s: Download singular label */
-		'add_new_item'      => sprintf( __( 'Add New %s Category', 'easy-digital-downloads' ), $singular_label ),
+		'add_new_item'      => sprintf( __( 'Add %s Category', 'easy-digital-downloads' ), $singular_label ),
 		/* translators: %s: Download singular label */
 		'new_item_name'     => sprintf( __( 'New %s Category Name', 'easy-digital-downloads' ), $singular_label ),
 		/* translators: %s: Download singular label */
@@ -273,7 +273,7 @@ function edd_setup_download_taxonomies() {
 		/* translators: %s: Download singular label */
 		'update_item'           => sprintf( __( 'Update %s Tag', 'easy-digital-downloads' ), $singular_label ),
 		/* translators: %s: Download singular label */
-		'add_new_item'          => sprintf( __( 'Add New %s Tag', 'easy-digital-downloads' ), $singular_label ),
+		'add_new_item'          => sprintf( __( 'Add %s Tag', 'easy-digital-downloads' ), $singular_label ),
 		/* translators: %s: Download singular label */
 		'new_item_name'         => sprintf( __( 'New %s Tag Name', 'easy-digital-downloads' ), $singular_label ),
 		/* translators: %s: Download singular label */

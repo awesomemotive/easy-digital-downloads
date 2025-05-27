@@ -304,26 +304,29 @@ class Utilities {
 	 * @param string $date   A valid date string.
 	 * @param int    $hour   The hour.
 	 * @param int    $minute The minute.
+	 * @param int    $second The second.
 	 * @return string
 	 */
-	public function get_date_string( $date = '', $hour = 0, $minute = 0 ) {
+	public function get_date_string( $date = '', $hour = 0, $minute = 0, $second = 0 ) {
 		if ( empty( $date ) || ! strtotime( $date ) ) {
 			$date = date( 'Y-m-d' );
 		}
 
-		$hour = absint( $hour );
-		if ( $hour > 23 ) {
-			$hour = 23;
-		}
-		$hour = str_pad( $hour, 2, '0', STR_PAD_LEFT );
+		$time_components = array(
+			'hour'   => min( absint( $hour ), 23 ),
+			'minute' => min( absint( $minute ), 59 ),
+			'second' => min( absint( $second ), 59 ),
+		);
 
-		$minute = absint( $minute );
-		if ( $minute > 59 ) {
-			$minute = 59;
-		}
-		$minute = str_pad( $minute, 2, '0', STR_PAD_LEFT );
+		$time = implode(
+			':',
+			array_map(
+				fn ( $value ) => str_pad( $value, 2, '0', STR_PAD_LEFT ),
+				$time_components
+			)
+		);
 
-		return "{$date} {$hour}:{$minute}:00";
+		return "{$date} {$time}";
 	}
 
 	/** Private Setters *******************************************************/

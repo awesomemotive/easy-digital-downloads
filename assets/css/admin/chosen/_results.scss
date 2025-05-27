@@ -1,6 +1,7 @@
+@use "../../variables/colors" as colors;
 
 .chosen-container .chosen-results {
-	color: $wp-text;
+	color: colors.$wp-text;
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -12,5 +13,5 @@
 .chosen-container .chosen-results li.highlighted {
 	background-image: none;
 	border-radius: 4px;
-	color: $white;
+	color: colors.$white;
 }

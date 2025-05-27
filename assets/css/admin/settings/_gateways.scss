@@ -1,3 +1,6 @@
+@use "../../variables/icons" as icons;
+@use "../../variables/colors" as colors;
+
 #edd-payment-gateways {
 
 	label {
@@ -6,7 +9,7 @@
 
 	.button.edd-settings__button-settings {
 		margin: 0;
-		background-image: $icon-settings;
+		background-image: icons.$icon-settings;
 		background-size: 1em;
 		background-repeat: no-repeat;
 		background-position: center;
@@ -14,11 +17,11 @@
 		height: 1.5em;
 		width: 1.5em;
 		border: none;
-		background-color: $wp-alternate;
+		background-color: colors.$wp-alternate;
 
 		&:hover,
 		&:active {
-			background-image: $icon-settings;
+			background-image: icons.$icon-settings;
 			background-size: 1em;
 			background-repeat: no-repeat;
 			background-position: center;

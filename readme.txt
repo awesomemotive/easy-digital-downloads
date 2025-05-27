@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable Tag: 3.3.8.1
+Stable Tag: 3.3.9
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -237,11 +237,33 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.3.9 =
+* Blocks: Add support for inner blocks to certain blocks.
+* Blocks: Add a hook to the registration block above the submit button.
+* Blocks: Update login block behavior for logged in users.
+* Checkout: Add `edd_purchase_form_after_email` hook to the Checkout block.
+* Dev: Deprecate and update comments filters.
+* Dev: Refactor gateway registration logic.
+* Dev: Update "Add New" admin button text for WordPress Core consistency.
+* Dev: Update wp-scripts version.
+* Dev: Register a loader/mini event manager.
+* Emails: Register phone tag for use in emails.
+* Utilities: Ensure get_date_string() supports seconds.
+* Shortcodes: Improve email change handling from the user profile shortcode.
+* Payments: Refactor tax rate addition process to use modal interface.
+* Payments: Update discount add/edit screens for improved UI.
+* Reports: Prevent fatal error when requesting non-existent order IDs through the Sales API.
+* Shortcodes: Improved error handling for `edd_receipt` shortcode.
+* Stripe: Allow error logging for gateway-related JS errors when using Payment Elements.
+* Stripe: Remove non-functional subscription handling from webhook events.
+* Stripe: Prevent checkout errors in Card Elements flow.
+* Users: Add "Lost password" option to the login form on the Checkout Block.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.3.8.1 =
 * Checkout: Compatibility updated for Checkout Fields Manager.
 * Dev: Empty legacy files have been replaced for plugins which may manually be loading them in error.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.8 =
 * Customers: Improved messaging when trying to assign a user's email to their customer account.

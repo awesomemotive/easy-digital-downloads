@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { domReady, apiRequest, generateNotice } from 'utils';
+import { apiRequest, generateNotice } from 'utils';
 
 import {
 	setupCheckout,
@@ -25,7 +25,6 @@ import {
 
 		// Alias some functionality for external plugins.
 		window.eddStripe._plugin = {
-			domReady,
 			apiRequest,
 			generateNotice,
 			createAndMountElement,
@@ -33,10 +32,8 @@ import {
 		};
 
 		// Setup frontend components when DOM is ready.
-		domReady(
-			setupCheckout,
-			setupBuyNow,
-		);
+		wp.domReady( setupCheckout );
+		wp.domReady( setupBuyNow );
 
 	} catch ( error ) {
 		alert( error.message );

@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 .edd-import-export-form {
 	button {
 		display: block;
@@ -5,7 +7,7 @@
 	}
 
 	.edd-progress {
-		background: $wp-gray-5;
+		background: colors.$wp-gray-5;
 		border-radius: 15px;
 		height: 15px;
 		flex-basis: 100%;
@@ -22,7 +24,7 @@
 		background-color: #f4f4f4;
 		border-style: solid;
 		border-width: 1px 0;
-		border-color: $edd-very-light-gray;
+		border-color: colors.$edd-very-light-gray;
 		padding: 12px;
 		overflow: auto;
 		margin: 20px -12px -23px;

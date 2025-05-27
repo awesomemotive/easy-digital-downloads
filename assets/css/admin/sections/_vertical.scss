@@ -1,3 +1,7 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+@use "../../variables/mixins" as mixins;
+
 .edd-vertical-sections {
 	overflow: visible;
 	display: grid;
@@ -14,13 +18,13 @@
 
 		.section-title--is-active {
 			.dashicons {
-				color: $gray-60;
+				color: colors.$wp-gray-60;
 			}
 
 			a {
 				font-weight: bold;
-				color: $gray-60;
-				background-color: $white;
+				color: colors.$wp-gray-60;
+				background-color: colors.$white;
 				border-right: none;
 				margin-right: -1px;
 
@@ -28,7 +32,7 @@
 					content: '';
 					width: 1px;
 					height: 100%;
-					background: $white;
+					background: colors.$white;
 					position: absolute;
 					right: 0;
 					top: 0;
@@ -59,13 +63,13 @@
 				position: relative;
 				align-items: center;
 				gap: 6px;
-				color: $gray-60;
+				color: colors.$wp-gray-60;
 				outline: 0;
 				transition: all .25s;
 
 				.dashicons {
 					line-height: 20px;
-					color: $gray-60;
+					color: colors.$wp-gray-60;
 				}
 
 				&:hover {
@@ -108,13 +112,13 @@
 				position: absolute;
 				width: 100%;
 				height: 100%;
-				background: rgba($white,.4);
+				background: rgba(colors.$white,.4);
 				z-index: 50;
 			}
 		}
 	}
 
-	@media only screen and (max-width: $break-medium) {
+	@media only screen and (max-width: wp-breakpoints.$break-medium) {
 		grid-template-columns: 48px 1fr;
 	}
 }
@@ -130,7 +134,7 @@
 	}
 }
 
-@media only screen and (max-width: $break-medium) {
+@media only screen and (max-width: wp-breakpoints.$break-medium) {
 
 	.edd-vertical-sections .section-nav {
 		width: 48px;
@@ -164,6 +168,6 @@
 	}
 
 	.section-nav li .label {
-		@include screen-reader-text;
+		@include mixins.screen-reader-text;
 	}
 }
