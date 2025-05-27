@@ -260,7 +260,7 @@ function edd_mark_abandoned_orders() {
 		}
 	}
 }
-add_action( 'edd_weekly_scheduled_events', 'edd_mark_abandoned_orders' );
+add_action( 'edd_daily_scheduled_events', 'edd_mark_abandoned_orders' );
 
 /**
  * Listens to the updated_postmeta hook for our backwards compatible payment_meta updates, and runs through them
