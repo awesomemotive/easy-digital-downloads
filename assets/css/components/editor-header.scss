@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../variables/colors" as colors;
+
 .edd-editor__header {
 	height: auto;
 	border-bottom: 1px solid #e2e4e7;
@@ -5,15 +8,24 @@
 	position: sticky;
 	top: 32px;
 	margin-left: -20px;
-	background: $white;
+	background: colors.$white;
+	padding: 12px 0;
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		top: 0;
+	}
+
+	h2 {
+		margin: 0;
 	}
 
 	p.submit {
 		margin: 0;
 		padding: 0;
+	}
+
+	.edd-form-group {
+		margin-bottom: 0;
 	}
 }
 
@@ -31,13 +43,17 @@
 	align-items: center;
 }
 
-.edd-editor__actions--test {
-	display: flex;
-	gap: .5em;
+.edd-editor__actions {
+	margin-left: auto;
 
-	@media screen and (max-width: $break-medium) {
-		.edd-editor__header & {
-			display: none;
+	&--test {
+		display: flex;
+		gap: .5em;
+
+		@media screen and (max-width: wp-breakpoints.$break-medium) {
+			.edd-editor__header & {
+				display: none;
+			}
 		}
 	}
 }
@@ -54,7 +70,7 @@
 	}
 }
 
-@media screen and (max-width: $break-medium) {
+@media screen and (max-width: wp-breakpoints.$break-medium) {
 	.button.edd-back {
 		display: none !important;
 	}

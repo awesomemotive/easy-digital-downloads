@@ -1,5 +1,6 @@
+/* global wp */
+
 // Flyout Menu.
-import {domReady} from 'utils/dom';
 
 var EDD_Flyout = {
 	flyoutMenu: null,
@@ -93,6 +94,6 @@ var EDD_Flyout = {
 		}
 	}
 }
-domReady(function() {
+wp.domReady(function() {
 	EDD_Flyout.init();
 })

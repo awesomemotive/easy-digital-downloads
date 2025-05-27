@@ -2559,3 +2559,19 @@ function edd_wpmu_drop_tables( $tables, $blog_id ) {
 
 	return $tables;
 }
+
+/**
+ * Exclude notes (comments) on edd_payment post type from showing in Recent
+ * Comments widgets
+ *
+ * @since 2.2
+ * @deprecated 3.3.9
+ *
+ * @param array  $clauses          Comment clauses for comment query.
+ * @param object $wp_comment_query WordPress Comment Query Object.
+ *
+ * @return array $clauses Updated comment clauses.
+ */
+function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
+	return $clauses;
+}

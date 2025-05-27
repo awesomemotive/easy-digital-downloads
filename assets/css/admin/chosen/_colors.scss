@@ -1,8 +1,9 @@
+@use "../../variables/mixins" as mixins;
 
 /* WordPress Color Schemes */
 
 :root {
-	@include edd-admin-colors();
+	@include mixins.edd-admin-colors();
 }
 
 .chosen-container.chosen-container-active .chosen-single,

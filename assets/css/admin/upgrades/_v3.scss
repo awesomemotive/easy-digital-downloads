@@ -1,6 +1,8 @@
+@use "../../variables/colors" as colors;
+
 #edd-migration-progress {
 	.dashicons-minus {
-		color: $gray-600;
+		color: colors.$wp-gray-600;
 	}
 	.dashicons-yes {
 		color: green;

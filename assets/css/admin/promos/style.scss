@@ -1,6 +1,9 @@
-@import '../../variables/variables';
-@import 'about';
-@import 'flyout';
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+@use 'about';
+@use 'flyout';
+@use "overlay";
+@use "popup";
 
 .edd-admin-notice-top-of-page {
 	font-size: 15px;
@@ -11,7 +14,7 @@
 	background: #2d6ca2;
 
 	&.edd-pro-inactive {
-		background: $wp-red-50;
+		background: colors.$wp-red-50;
 	}
 
 	@media screen and ( min-width: 783px ) {
@@ -79,13 +82,13 @@
 	margin-bottom: -1px;
 }
 
-@media screen and (max-width: $break-medium) {
+@media screen and (max-width: wp-breakpoints.$break-medium) {
 	#edd-admin-notice-five-star-review.notice .edd-peeking {
 		margin-bottom: -6px;
 	}
 }
 
-@media screen and (min-width: $break-mobile) {
+@media screen and (min-width: wp-breakpoints.$break-mobile) {
 	.edd-promo-notice.notice-info .edd-peeking {
 		justify-self: flex-start;
 		margin-right: 0;
@@ -97,6 +100,3 @@
 .edd-promo-notice .edd-peeking {
 	grid-area: 1/-1;
 }
-
-@import "overlay";
-@import "popup";

@@ -8,7 +8,7 @@ import {
 	getBillingDetails,
 } from '../..'; // eslint-disable-line @wordpress/dependency-group
 
-import { apiRequest, generateNotice } from 'utils'; // eslint-disable-line @wordpress/dependency-group
+import { apiRequest, generateNotice, consoleOutput } from 'utils'; // eslint-disable-line @wordpress/dependency-group
 
 /**
  * Binds Payment submission functionality.
@@ -290,7 +290,7 @@ function maybeAddSpinner() {
  * @param {Object} error Error data.
  */
 async function handleException( error ) {
-	console.log(error);
+	consoleOutput( 'Error', error );
 	let { code, message, type } = error;
 	const { elementsCustomizations: { i18n: { errorMessages } } } = window.edd_stripe_vars;
 
@@ -309,7 +309,7 @@ async function handleException( error ) {
 	 * With non-card payments there is also an incomplete code that we need to account for, that shouln't tick.
 	 */
 	if ( code && 'incomplete' !== code ) {
-		let { is_at_limit: isAtLimit, message: errorMessage } = await apiRequest( 'edds_payment_elements_rate_limit_tick' );
+		let { is_at_limit: isAtLimit, message: errorMessage } = await apiRequest( 'edds_payment_elements_rate_limit_tick', error );
 
 		// If we're at the limit, disable the form.
 		if ( isAtLimit ) {

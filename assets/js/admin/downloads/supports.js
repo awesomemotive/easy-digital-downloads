@@ -23,10 +23,10 @@ export function updateSupports ( supports, supportedValue ) {
 			return;
 		}
 		const elementSupports = element.getAttribute( 'data-edd-supports-' + supports );
-		if ( ! elementSupports.split( ',' ).includes( supportedValue ) ) {
-			element.classList.add( 'edd-hidden' );
-		} else {
+		if ( elementSupports.split( ',' ).includes( supportedValue ) || ( supportedValue.length && 'any' === supportedValue && elementSupports === 'true' ) ) {
 			element.classList.remove( 'edd-hidden' );
+		} else {
+			element.classList.add( 'edd-hidden' );
 		}
 	} );
 }

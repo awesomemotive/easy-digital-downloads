@@ -1,17 +1,19 @@
+@use "../../variables/colors" as colors;
+
 .edd-help-tip {
 	cursor: help;
 	margin-top: -2px;
 	font-size: 24px;
-	color: $edd-tool-tip-icon-color;
+	color: colors.$edd-tool-tip-icon-color;
 }
 
 .edd-ui-tooltip {
 	position: absolute;
-	background: $white !important;
+	background: colors.$white !important;
 	border-width: 0px;
 	border-radius: 12px !important;
-	box-shadow: $edd-tool-tip-shadow !important;
-	color: $edd-tooltip-text !important;
+	box-shadow: colors.$edd-tool-tip-shadow !important;
+	color: colors.$edd-tooltip-text !important;
 	max-width: 300px !important;
 	padding: 16px !important;
 	text-rendering: optimizeLegibility;
@@ -39,7 +41,7 @@
 				height: 4px;
 				left: -16px;
 				background: rgb(0 0 0 / 0%);
-				border: 2px solid $edd-tooltip-text;
+				border: 2px solid colors.$edd-tooltip-text;
 				top: 0;
 				bottom: 0;
 				margin: auto;
@@ -51,7 +53,7 @@
 				content: '';
 				width: 2px;
 				height: calc(100% - 4px);
-				background: $edd-tooltip-text;
+				background: colors.$edd-tooltip-text;
 				position: absolute;
 				left: -13px;
 				top: calc(50% + 3px);

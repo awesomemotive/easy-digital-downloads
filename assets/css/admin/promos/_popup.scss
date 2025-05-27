@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 .edd-promo-notice__popup {
 	display: flex;
 	justify-content: center;
@@ -34,7 +37,7 @@
 				min-width: 50%;
 			}
 
-			@media screen and (max-width: $break-small) {
+			@media screen and (max-width: wp-breakpoints.$break-small) {
 				grid-template-columns: unset;
 			}
 		}
@@ -46,7 +49,7 @@
 		}
 
 		&__link {
-			color: $gray-100;
+			color: colors.$wp-gray-2;
 		}
 	}
 }

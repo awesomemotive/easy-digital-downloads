@@ -13,7 +13,8 @@
     "orders"
   ],
   "supports": {
-    "html": false
+    "html": false,
+    "innerBlocks": true
   },
   "textdomain": "easy-digital-downloads",
   "editorScript": "file:./index.js",
@@ -31,5 +32,9 @@
   },
   "example": {
     "attributes": {}
-  }
+  },
+  "allowedBlocks": [
+    "core/paragraph",
+    "core/heading"
+  ]
 }

@@ -1,10 +1,10 @@
 /**
  * Internal dependencies
  */
-import { domReady, apiRequest } from 'utils';
+import { apiRequest } from 'utils';
 
 // Wait for DOM.
-domReady( () => {
+wp.domReady( () => {
 	const containerEl = document.getElementById( 'edds-stripe-connect-account' );
 	const actionsEl = document.getElementById( 'edds-stripe-disconnect-reconnect' );
 

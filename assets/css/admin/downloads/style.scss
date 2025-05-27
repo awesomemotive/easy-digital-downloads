@@ -1,9 +1,8 @@
-@import "../variables/variables";
-@import "repeatable_row";
-@import "prices";
-@import "upload";
-@import "duplicate";
-@import "product-files";
-@import "sections";
-@import "settings";
-@import "actions";
+@use "repeatable_row";
+@use "prices";
+@use "upload";
+@use "duplicate";
+@use "product-files";
+@use "sections";
+@use "settings";
+@use "actions";

@@ -75,11 +75,11 @@ function update_core_required_pages( $pages ) {
 
 	$pages['confirmation_page']             = array(
 		'post_title'   => __( 'Confirmation', 'easy-digital-downloads' ),
-		'post_content' => '<!-- wp:paragraph --><p>' . __( 'Thank you for your purchase!', 'easy-digital-downloads' ) . '</p><!-- /wp:paragraph --><!-- wp:edd/confirmation /-->',
+		'post_content' => '<!-- wp:paragraph --><p>' . __( 'Thank you for your purchase!', 'easy-digital-downloads' ) . '</p><!-- /wp:paragraph --><!-- wp:edd/confirmation --><div class="wp-block-edd-confirmation"></div><!-- /wp:edd/confirmation -->',
 	);
 	$pages['success_page']                  = array(
 		'post_title'   => __( 'Receipt', 'easy-digital-downloads' ),
-		'post_content' => '<!-- wp:edd/receipt /-->',
+		'post_content' => '<!-- wp:edd/receipt --><div class="wp-block-edd-receipt"></div><!-- /wp:edd/receipt -->',
 	);
 	$pages['purchase_history_page']         = array(
 		'post_title'   => __( 'Order History', 'easy-digital-downloads' ),

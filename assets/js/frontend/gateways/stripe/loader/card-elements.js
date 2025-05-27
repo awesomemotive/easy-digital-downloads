@@ -1,9 +1,9 @@
-/* global Stripe, edd_stripe_vars */
+/* global Stripe, edd_stripe_vars, wp */
 
 /**
  * Internal dependencies
  */
-import { domReady, apiRequest, generateNotice } from 'utils';
+import { apiRequest, generateNotice } from 'utils';
 
 import {
 	setupCheckout,
@@ -38,7 +38,6 @@ import {
 
 		// Alias some functionality for external plugins.
 		window.eddStripe._plugin = {
-			domReady,
 			apiRequest,
 			generateNotice,
 			mountCardElement,
@@ -49,17 +48,17 @@ import {
 			handleIntent,
 			retrieveIntent,
 			paymentMethods,
+			// The domReady function is kept here for backward compatibility with EDD Recurring.
+			domReady: wp.domReady,
 		};
 
 		// Setup frontend components when DOM is ready.
-		domReady(
-			setupCheckout,
-			setupProfile,
-			setupPaymentHistory,
-			setupBuyNow,
-			setupDownloadPRB,
-			setupCheckoutPRB,
-		);
+		wp.domReady( setupCheckout );
+		wp.domReady( setupProfile );
+		wp.domReady( setupPaymentHistory );
+		wp.domReady( setupBuyNow );
+		wp.domReady( setupDownloadPRB );
+		wp.domReady( setupCheckoutPRB );
 	} catch ( error ) {
 		alert( error.message );
 	}

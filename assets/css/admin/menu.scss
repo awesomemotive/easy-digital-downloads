@@ -7,8 +7,8 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
-@import "~@wordpress/base-styles/breakpoints";
-@import "../variables/colors";
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../variables/colors";
 
 
 /* Main Menu
@@ -21,7 +21,7 @@
 	}
 }
 
-@media screen and (max-width: $break-mobile) {
+@media screen and (max-width: wp-breakpoints.$break-mobile) {
 	#menu-posts-download.wp-not-current-submenu .wp-submenu {
 		display: none;
 	}
@@ -54,7 +54,7 @@
 	content: '';
 	width: calc(100% + 26px);
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		margin: 20px -20px 8px -20px;
 		width: calc(100% + 30px);
 	}
@@ -80,29 +80,29 @@ ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-	border-right-color: $wp-gray-0;
+	border-right-color: colors.$wp-gray-0;
 	margin-top: 2px;
 }
 
 /* Onboarding Submenu Item */
 a.edd-onboarding__menu-item {
 	background: #dd823b !important;
-	color: $white !important;
+	color: colors.$white !important;
 	font-weight: 600;
 	&:hover {
-		color: $black !important;
+		color: colors.$black !important;
 	}
 }
 
 a.edd-sidebar__upgrade-pro,
 a.edd-sidebar__upgrade-pro:hover {
-	background-color: $edd-pro-upgrade !important;
-	color: $white !important;
+	background-color: colors.$edd-pro-upgrade !important;
+	color: colors.$white !important;
 	font-weight: 600;
 }
 
 .edd-admin-menu__new {
-	color: $warning;
+	color: colors.$warning;
 	vertical-align: super;
 	font-size: 9px;
 	margin-left: 3px;

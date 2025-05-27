@@ -8,6 +8,8 @@
 */
 @charset "UTF-8";
 
+@use './checkout/style.scss';
+
 /* Base styles for SVG icons. */
 
 .edd-icon {
@@ -57,7 +59,6 @@
 }
 
 /* Checkout Fields */
-@import './checkout/style.scss';
 
 #edd_secure_site_wrapper {
 	padding: 4px 4px 4px 0;

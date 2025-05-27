@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { forEach, apiRequest, setGlobal } from 'utils';
+import { apiRequest } from 'utils';
 import { Modal } from '../../shared';
 import { paymentForm } from './checkout.js'
 
@@ -131,7 +131,7 @@ function buyNowModal( args ) {
 export function setup() {
 
 	// Find all "Buy Now" links on the page.
-	forEach( document.querySelectorAll( '.edds-buy-now' ), ( el ) => {
+	document.querySelectorAll( '.edds-buy-now' ).forEach( ( el ) => {
 
 		// Don't use modal if "Free Downloads" is active and available for this download.
 		// https://easydigitaldownloads.com/downloads/free-downloads/

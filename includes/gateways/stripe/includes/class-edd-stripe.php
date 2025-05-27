@@ -79,7 +79,6 @@ class EDD_Stripe {
 			self::$instance = new EDD_Stripe();
 			self::$instance->includes();
 			self::$instance->setup_classes();
-			self::$instance->filters();
 		}
 
 		return self::$instance;
@@ -177,22 +176,6 @@ class EDD_Stripe {
 	}
 
 	/**
-	 * Applies various hooks.
-	 *
-	 * @since 2.6.0
-	 */
-	private function actions() {}
-
-	/**
-	 * Applies various filters.
-	 *
-	 * @since 2.6.0
-	 */
-	private function filters() {
-		add_filter( 'edd_payment_gateways', array( self::$instance, 'register_gateway' ) );
-	}
-
-	/**
 	 * Configures core components.
 	 *
 	 * @since 2.6.19
@@ -221,6 +204,7 @@ class EDD_Stripe {
 	/**
 	 * Registers the gateway.
 	 *
+	 * @deprecated 3.3.9
 	 * @param array $gateways Payment gateways.
 	 * @return array
 	 */

@@ -69,7 +69,7 @@ class Pages {
 				'page_title' => __( 'Discounts', 'easy-digital-downloads' ),
 				'menu_title' => __( 'Discounts', 'easy-digital-downloads' ),
 				'capability' => 'manage_shop_discounts',
-				'callback'   => 'edd_discounts_page',
+				'callback'   => array( '\\EDD\\Admin\\Discounts\\Screen', 'render' ),
 			),
 			'edd-reports'         => array(
 				'page_title' => __( 'Reports', 'easy-digital-downloads' ),

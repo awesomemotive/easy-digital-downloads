@@ -1,3 +1,6 @@
+@use "../../variables/colors" as colors;
+@use "../../variables/mixins" as mixins;
+
 #edd_product_files {
 	&.ajax--loading {
 		position: relative;
@@ -9,15 +12,15 @@
 			top: 50%;
 			left: 50%;
 			z-index: 5;
-			@include edd-spinner(
+			@include mixins.edd-spinner(
 				1.25em,
-				$wp-input-border,
-				$wp-alternate
+				colors.$wp-input-border,
+				colors.$wp-alternate
 			);
 		}
 
 		&::after {
-			background-color: rgba( $white, .75 );
+			background-color: rgba( colors.$white, .75 );
 			display: block;
 			position: absolute;
 			top: 0;

@@ -131,10 +131,6 @@ add_action(
 			20,
 			2
 		);
-		add_action(
-			'edds_stripe_event_charge.succeeded',
-			array( EDD\Gateways\Stripe\Checkout\Recurring::class, 'activate_subscriptions' )
-		);
 	},
 	100
 );

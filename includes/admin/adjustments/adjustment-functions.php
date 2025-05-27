@@ -32,8 +32,8 @@ function edd_adjustments_page() {
 	// Add new URL.
 	$add_new_url = edd_get_admin_url(
 		array(
-			'page'       => 'edd-discounts',
-			'edd-action' => 'add_' . sanitize_key( $active_tab ),
+			'page' => 'edd-discounts',
+			'view' => 'add_' . sanitize_key( $active_tab ),
 		)
 	);
 
@@ -51,7 +51,7 @@ function edd_adjustments_page() {
 
 	<div class="wrap">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Discounts', 'easy-digital-downloads' ); ?></h1>
-		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
+		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add Discount', 'easy-digital-downloads' ); ?></a>
 
 		<hr class="wp-header-end">
 		<?php do_action( 'edd_adjustments_page_' . esc_attr( $active_tab ) ); ?>

@@ -6,7 +6,6 @@
 import {
 	generateNotice,
 	fieldValueOrNull,
-	forEach
 } from 'utils'; // eslint-disable-line @wordpress/dependency-group
 
 const DEFAULT_ELEMENTS = {
@@ -45,7 +44,8 @@ export function createPaymentForm( elementsInstance, elements ) {
 			: DEFAULT_ELEMENTS;
 	}
 
-	forEach( elements, ( selector, element ) => {
+	// Use Object.entries() + native forEach to iterate over the elements object
+	Object.entries( elements ).forEach( ( [ element, selector ] ) => {
 		mountedEl = createAndMountElement( elementsInstance, selector, element );
 	} );
 

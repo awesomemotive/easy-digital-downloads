@@ -69,7 +69,7 @@ class Ajax implements SubscriberInterface {
 			'license'     => $this->license_key,
 			'item_name'   => $this->name,
 			'item_id'     => filter_input( INPUT_POST, 'item_id', FILTER_SANITIZE_NUMBER_INT ),
-			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
+			'environment' => wp_get_environment_type(),
 		);
 		$custom_api   = filter_input( INPUT_POST, 'api', FILTER_SANITIZE_URL );
 		$api          = new API( $custom_api );
@@ -146,7 +146,7 @@ class Ajax implements SubscriberInterface {
 			'edd_action'  => 'deactivate_license',
 			'license'     => $this->license_key,
 			'item_id'     => urlencode( $item_id ),
-			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
+			'environment' => wp_get_environment_type(),
 		);
 		$custom_api        = filter_input( INPUT_POST, 'api', FILTER_SANITIZE_URL );
 		$api               = new API( $custom_api );

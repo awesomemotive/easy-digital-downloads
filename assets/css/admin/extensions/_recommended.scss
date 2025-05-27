@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 .edd-extension-manager__card--installer {
 	&[data-filter*="recommended"] {
 		.edd-extension-manager__icon {
@@ -9,8 +11,8 @@
 
 .edd-plugin__recommended {
 	font-size: 8px;
-	background: $wp-green-50;
-	color: $white;
+	background: colors.$wp-green-50;
+	color: colors.$white;
 	margin-left: -1px;
 	margin-right: -1px;
 	padding: 6px 0;

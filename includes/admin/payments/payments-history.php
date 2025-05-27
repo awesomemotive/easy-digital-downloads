@@ -152,7 +152,7 @@ function edd_order_list_table_content() {
 			printf(
 				'<a href="%s" class="page-title-action">%s</a>',
 				esc_url( $add_new_url ),
-				esc_html__( 'Add New', 'easy-digital-downloads' )
+				esc_html__( 'Add Order', 'easy-digital-downloads' )
 			);
 		}
 		?>
@@ -209,7 +209,7 @@ function edd_view_order_details_title( $admin_title, $title ) {
 
 		// Add
 		case 'add-order':
-			$title = __( 'Add New Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
+			$title = __( 'Add Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
 			break;
 
 		// List

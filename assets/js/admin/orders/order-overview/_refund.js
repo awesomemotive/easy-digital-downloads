@@ -34,7 +34,7 @@ $(document.body).on('click', '.edd-refund-order', function (e) {
 				classes: {
 					'ui-dialog': 'edd-dialog',
 				},
-				closeText: eddAdminOrderOverview.i18n.closeText,
+				closeText: edd_vars.closeText,
 				open: function( event, ui ) {
 					$(this).html( modal_content );
 				},
