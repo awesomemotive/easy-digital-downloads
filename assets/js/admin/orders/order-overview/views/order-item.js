@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
+import { Base } from '../../../../packages/edd-backbone/src/base.js';
 import { CopyDownloadLink } from './copy-download-link.js';
 
 /**

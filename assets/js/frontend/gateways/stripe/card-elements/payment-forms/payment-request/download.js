@@ -4,8 +4,7 @@
  * Internal dependencies
  */
 import { parseDataset } from './';
-import { apiRequest, forEach, outputNotice } from 'utils';
-import { handle as handleIntent } from '../../intents';
+import { apiRequest, outputNotice } from 'utils';
 import { createPayment, completePayment } from '../../payment-forms';
 
 /**
@@ -319,7 +318,7 @@ function bindEvents( paymentRequest, purchaseLink ) {
 	// Price option change.
 	const priceOptionsEls = purchaseLink.querySelectorAll( '.edd_price_options input[type="radio"]' );
 
-	forEach( priceOptionsEls, ( priceOption ) => {
+	priceOptionsEls.forEach( priceOption => {
 		priceOption.addEventListener( 'change', () => onChange( paymentRequest, purchaseLink ) );
 	} );
 
@@ -412,5 +411,5 @@ function mount( element ) {
  * Sets up Payment Request functionality for single purchase links.
  */
 export function setup() {
-	forEach( document.querySelectorAll( '.edds-prb.edds-prb--download' ), mount );
+	document.querySelectorAll( '.edds-prb.edds-prb--download' ).forEach( mount );
 }

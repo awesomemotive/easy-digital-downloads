@@ -76,4 +76,12 @@ class Migration_Tests extends EDD_UnitTestCase {
 		$this->assertTrue( _edd_needs_v3_migration() );
 		delete_option( 'edd_tax_rates' );
 	}
+
+	public function test_migration_check_is_v30_migration_complete() {
+		$this->assertTrue( \EDD\Upgrades\Utilities\MigrationCheck::is_v30_migration_complete() );
+	}
+
+	public function test_migration_check_is_legacy_data_removed() {
+		$this->assertTrue( \EDD\Upgrades\Utilities\MigrationCheck::is_legacy_data_removed() );
+	}
 }

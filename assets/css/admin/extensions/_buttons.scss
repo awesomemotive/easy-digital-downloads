@@ -1,11 +1,16 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+@use "../../variables/icons" as icons;
+@use "../../variables/mixins" as mixins;
+
 .button.edd-extension-manager__action-upgrade {
-	background-color: $wp-green-50;
-	color: $white;
+	background-color: colors.$wp-green-50;
+	color: colors.$white;
 
 	&:hover,
 	&:active {
-		background-color: darken($wp-green-50,10%);
-		color: $white;
+		background-color: darken(colors.$wp-green-50,10%);
+		color: colors.$white;
 	}
 }
 
@@ -21,25 +26,25 @@
 	}
 
 	&.edd-button__install {
-		color: $wp-input-text;
-		border-color: $wp-input-border;
+		color: colors.$wp-input-text;
+		border-color: colors.$wp-input-border;
 
 		&:before {
 			content: ' ';
 			display: block;
 			width: 1em;
 			height: 1em;
-			background-image: $icon-install;
+			background-image: icons.$icon-install;
 			background-size: 1em;
 		}
 
 		&.edd-updating {
 			&:before {
 				background: none;
-				@include edd-spinner(
+				@include mixins.edd-spinner(
 					12px,
-					$wp-alternate,
-					$wp-input-border
+					colors.$wp-alternate,
+					colors.$wp-input-border
 				);
 			}
 		}
@@ -54,7 +59,7 @@
 		width: 36px;
 		height: 20px;
 		min-height: unset;
-		background-color: $wp-border;
+		background-color: colors.$wp-border;
 		transition: background 0.2s ease;
 		border-radius: 30px;
 		box-shadow: none;
@@ -67,7 +72,7 @@
 			width: 14px;
 			left: 3px;
 			bottom: 3px;
-			background-color: $white;
+			background-color: colors.$white;
 			transition: 0.1s transform ease;
 			border-radius: 50%;
 
@@ -79,23 +84,23 @@
 		&:active,
 		&:focus {
 			outline: 0;
-			box-shadow: 0 0 0 1px $white, 0 0 0 3px $wp-input-border;
+			box-shadow: 0 0 0 1px colors.$white, 0 0 0 3px colors.$wp-input-border;
 		}
 
 		&:hover {
-			background-color: $wp-input-border;
+			background-color: colors.$wp-input-border;
 		}
 
 		&:disabled {
-			background-color: $wp-input-border !important;
+			background-color: colors.$wp-input-border !important;
 
 			&:before {
 				position: absolute;
 				top: 3px;
-				@include edd-spinner(
+				@include mixins.edd-spinner(
 					10px,
-					$wp-input-border,
-					$wp-alternate
+					colors.$wp-input-border,
+					colors.$wp-alternate
 				);
 			}
 
@@ -109,12 +114,12 @@
 
 			:active,
 			:focus {
-				box-shadow: 0 0 0 1px $white, 0 0 0 3px var(--wp-admin-theme-color);
+				box-shadow: 0 0 0 1px colors.$white, 0 0 0 3px var(--wp-admin-theme-color);
 			}
 		}
 	}
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		min-height: 40px;
 	}
 }
@@ -124,7 +129,7 @@
 	align-items: center;
 	gap: .5em;
 	min-height: 30px;
-	border: 1px solid $wp-border;
+	border: 1px solid colors.$wp-border;
 	border-radius: 4px;
 	padding: 3px 10px;
 }
@@ -134,7 +139,7 @@ a.button.edd-extension-manager__button-settings {
 	position: absolute;
 	top: 1em;
 	right: 1em;
-	background-image: $icon-settings;
+	background-image: icons.$icon-settings;
 	background-size: 1.25em;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -143,11 +148,11 @@ a.button.edd-extension-manager__button-settings {
 	width: 1.5em;
 	padding: 1em;
 	border: none;
-	background-color: $wp-alternate;
+	background-color: colors.$wp-alternate;
 
 	&:hover,
 	&:active {
-		background-image: $icon-settings;
+		background-image: icons.$icon-settings;
 		background-size: 1.25em;
 		background-repeat: no-repeat;
 		background-position: center;

@@ -7,32 +7,30 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-@import "../variables/variables";
-@import "general/style";
-@import "sections/style";
-@import "downloads/style";
+@use "../variables/colors" as colors;
+@use "general/style" as general;
+@use "sections/style" as sections;
+@use "downloads/style" as downloads;
 
-@import "discounts/style";
+@use "discounts/style" as discounts;
 
-@import "forms/style";
+@use "forms/style" as forms;
 
-@import "upgrades/v3";
+@use "upgrades/v3" as upgrades;
 
-@import "reports/style";
+@use "reports/style" as reports;
 
-@import "orders/style";
+@use "orders/style" as orders;
 
-@import "promos/style";
+@use "promos/style" as promos;
 
-@import "gateways/style";
+@use "gateways/style" as gateways;
 
-@import "settings/style";
+@use "settings/style" as settings;
 
-@import "discounts/style";
+@use "dashboard/style" as dashboard;
 
-@import "dashboard/style";
-
-@import "../components/toggle-checkbox";
+@use "../components/toggle-checkbox";
 
 /**
  * Notes:
@@ -856,10 +854,6 @@ textarea[name="edd-note"] {
 	width: 100%;
 	min-height: 70px;
 	margin-top: 0;
-}
-
-.edd-notes-wrapper {
-	width: 80%;
 }
 
 .edd-note-pagination {
@@ -1898,7 +1892,7 @@ h3 + .notice-wrap .notice {
 
 #edd-item-wrapper {
 	background: #fff;
-	border: 1px solid $wp-border;
+	border: 1px solid colors.$wp-border;
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	position: relative;

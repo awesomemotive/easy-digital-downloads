@@ -2751,7 +2751,6 @@ function edd_register_discounts_report( $reports ) {
 					'table' => array(
 						'display_args' => array(
 							'class_name' => '\\EDD\\Reports\\Data\\Discounts\\Top_Five_Discounts_List_Table',
-							'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/discounts/class-top-five-discounts-list-table.php',
 						),
 					),
 				),

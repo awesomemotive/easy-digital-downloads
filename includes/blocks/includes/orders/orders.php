@@ -102,9 +102,11 @@ function orders( $block_attributes = array() ) {
  * Renders the order confirmation block.
  *
  * @since 2.0
+ * @param array  $block_attributes The block attributes.
+ * @param string $content          The content of the block.
  * @return string
  */
-function confirmation( $block_attributes = array() ) {
+function confirmation( $block_attributes = array(), $content = '' ) {
 	$session = Functions\get_purchase_session();
 	$order   = false;
 	if ( ! empty( $session['purchase_key'] ) ) {
@@ -146,6 +148,7 @@ function confirmation( $block_attributes = array() ) {
 				<?php esc_html_e( 'View Order Details', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
+		<?php echo wp_kses_post( $content ); ?>
 	</div>
 	<?php
 
@@ -156,10 +159,11 @@ function confirmation( $block_attributes = array() ) {
  * Renders the full order receipt.
  *
  * @since 2.0
- * @param array $block_attributes
+ * @param array  $block_attributes The block attributes.
+ * @param string $content          The content of the block.
  * @return string
  */
-function receipt( $block_attributes = array() ) {
+function receipt( $block_attributes = array(), $content = '' ) {
 	global $edd_receipt_args;
 
 	$edd_receipt_args = wp_parse_args(
@@ -201,6 +205,7 @@ function receipt( $block_attributes = array() ) {
 		<?php
 		include EDD_BLOCKS_DIR . 'views/orders/totals.php';
 		maybe_show_receipt( $order );
+		echo wp_kses_post( $content );
 		?>
 	</div>
 	<?php

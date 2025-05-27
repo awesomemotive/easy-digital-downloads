@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 .edd-sub-nav {
 	margin: 0;
 	display: flex;
@@ -5,7 +8,7 @@
 	gap: 4px;
 	flex-wrap: wrap;
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		justify-content: center;
 	}
 
@@ -19,7 +22,7 @@
 		margin: 0;
 
 		a {
-			color: $wp-gray-50;
+			color: colors.$wp-gray-50;
 			display: block;
 			padding: 6px 14px;
 			text-decoration: none;
@@ -34,10 +37,10 @@
 		&:hover,
 		&:active,
 		&:focus {
-			background-color: $white;
+			background-color: colors.$white;
 			box-shadow: none;
 			outline: none;
-			border-color: $wp-gray-20;
+			border-color: colors.$wp-gray-20;
 		}
 
 		&.current {

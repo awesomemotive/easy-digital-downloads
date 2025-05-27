@@ -46,7 +46,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				'orderby'          => $args['orderby'],
 			);
 
-			if( ! empty( $args['s'] ) ) {
+			if ( ! empty( $args['s'] ) ) {
 				$query_args['s'] = sanitize_text_field( $args['s'] );
 			}
 
@@ -72,8 +72,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 			}
 
-			if( ! empty( $args['category'] ) ) {
-				if ( is_string( $args[ 'category' ] ) ) {
+			if ( ! empty( $args['category'] ) ) {
+				if ( is_string( $args['category'] ) ) {
 					$args['category'] = explode( ',', $args['category'] );
 				}
 
@@ -82,15 +82,14 @@ class EDD_API_V2 extends EDD_API_V1 {
 						array(
 							'taxonomy' => 'download_category',
 							'field'    => 'ID',
-							'terms'    => (int) $args['category']
+							'terms'    => (int) $args['category'],
 						),
 					);
-				} else if ( is_array( $args['category'] ) ) {
+				} elseif ( is_array( $args['category'] ) ) {
 
 					foreach ( $args['category'] as $category ) {
 
-
-						$field = is_numeric( $category ) ? 'ID': 'slug';
+						$field = is_numeric( $category ) ? 'ID' : 'slug';
 
 						$query_args['tax_query'][] = array(
 							'taxonomy' => 'download_category',
@@ -99,13 +98,12 @@ class EDD_API_V2 extends EDD_API_V1 {
 						);
 
 					}
-
 				} else {
 					$query_args['download_category'] = $args['category'];
 				}
 			}
 
-			if( ! empty( $args['tag'] ) ) {
+			if ( ! empty( $args['tag'] ) ) {
 				if ( strpos( $args['tag'], ',' ) ) {
 					$args['tag'] = explode( ',', $args['tag'] );
 				}
@@ -115,15 +113,14 @@ class EDD_API_V2 extends EDD_API_V1 {
 						array(
 							'taxonomy' => 'download_tag',
 							'field'    => 'ID',
-							'terms'    => (int) $args['tag']
+							'terms'    => (int) $args['tag'],
 						),
 					);
-				} else if ( is_array( $args['tag'] ) ) {
+				} elseif ( is_array( $args['tag'] ) ) {
 
 					foreach ( $args['tag'] as $tag ) {
 
-
-						$field = is_numeric( $tag ) ? 'ID': 'slug';
+						$field = is_numeric( $tag ) ? 'ID' : 'slug';
 
 						$query_args['tax_query'][] = array(
 							'taxonomy' => 'download_tag',
@@ -132,7 +129,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 						);
 
 					}
-
 				} else {
 					$query_args['download_tag'] = $args['tag'];
 				}
@@ -140,7 +136,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 			if ( ! empty( $query_args['tax_query'] ) ) {
 
-				$relation = ! empty( $args['term_relation'] ) ? sanitize_text_field( $args['term_relation'] ) : 'OR';
+				$relation                            = ! empty( $args['term_relation'] ) ? sanitize_text_field( $args['term_relation'] ) : 'OR';
 				$query_args['tax_query']['relation'] = $relation;
 
 			}
@@ -161,11 +157,10 @@ class EDD_API_V2 extends EDD_API_V1 {
 			if ( $product_list ) {
 				$i = 0;
 				foreach ( $product_list as $product_info ) {
-					$products['products'][$i] = $this->get_product_data( $product_info );
-					$i++;
+					$products['products'][ $i ] = $this->get_product_data( $product_info );
+					++$i;
 				}
 			}
-
 		} else {
 
 			if ( get_post_type( $args['product'] ) == 'download' ) {
@@ -199,7 +194,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 		}
 
 		return apply_filters( 'edd_api_products_product_v2', $product );
-
 	}
 
 	/**
@@ -352,7 +346,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$customers['customers'][ $customer_count ]['stats']['total_spent']     = edd_format_amount( $customer_obj->purchase_value, true, '', 'typed' );
 				$customers['customers'][ $customer_count ]['stats']['total_downloads'] = edd_count_file_downloads_of_customer( $customer_obj->id );
 
-				$customer_count++;
+				++$customer_count;
 
 			}
 		} elseif ( true === $query_by_customer ) {
@@ -377,7 +371,6 @@ class EDD_API_V2 extends EDD_API_V1 {
 	 * @return array
 	 */
 	public function get_recent_sales() {
-		global $wp_query;
 
 		$sales = array();
 
@@ -385,11 +378,11 @@ class EDD_API_V2 extends EDD_API_V1 {
 			return $sales;
 		}
 
+		global $wp_query;
+		$query = array();
 		if ( isset( $wp_query->query_vars['id'] ) ) {
-			$query   = array();
 			$query[] = edd_get_order( $wp_query->query_vars['id'] );
 		} elseif ( isset( $wp_query->query_vars['purchasekey'] ) ) {
-			$query   = array();
 			$query[] = edd_get_order_by( 'payment_key', $wp_query->query_vars['purchasekey'] );
 		} elseif ( isset( $wp_query->query_vars['email'] ) ) {
 			$query = edd_get_orders(
@@ -412,10 +405,12 @@ class EDD_API_V2 extends EDD_API_V1 {
 			);
 		}
 
-		if ( $query ) {
+		if ( ! empty( array_filter( $query ) ) ) {
 			$i = 0;
 			foreach ( $query as $order ) {
-				/** @var EDD\Orders\Order $order  An Order object. */
+				if ( ! $order instanceof \EDD\Orders\Order ) {
+					continue;
+				}
 
 				$localized_time = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $order->date_created ) );
 
@@ -457,7 +452,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 					}
 				}
 
-				$c = 0;
+				$c          = 0;
 				$cart_items = array();
 
 				foreach ( $order->items as $item ) {
@@ -487,17 +482,16 @@ class EDD_API_V2 extends EDD_API_V1 {
 						}
 					}
 
-					$c++;
+					++$c;
 				}
 
 				$sales['sales'][ $i ]['products']  = $cart_items;
 				$sales['sales'][ $i ]['fees']      = ! empty( $fees ) ? $fees : null;
 				$sales['sales'][ $i ]['discounts'] = ! empty( $discounts ) ? $discounts : null;
 
-				$i++;
+				++$i;
 			}
 		}
 		return apply_filters( 'edd_api_sales', $sales, $this );
 	}
-
 }

@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 .edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container {
 	position: relative;
 	width: 100%;
@@ -12,9 +14,9 @@
 }
 
 .edd_upload_file button {
-	background: $wp-gray-0;
+	background: colors.$wp-gray-0;
 	border: none;
-	border-left: 1px solid $wp-border;
+	border-left: 1px solid colors.$wp-border;
 	padding: 0 4px;
 	position: absolute;
 	height: calc(100% - 4px);

@@ -69,10 +69,10 @@ class Scripts {
 		wp_deregister_script( 'cmadm-utils' );
 		wp_deregister_script( 'cmadm-backend' );
 
-		// Enqueue media on EDD admin pages
+		// Enqueue media on EDD admin pages.
 		wp_enqueue_media();
 
-		// Scripts to enqueue
+		// Scripts to enqueue.
 		$scripts = array(
 			'edd-admin-scripts',
 			'jquery-chosen',
@@ -86,7 +86,7 @@ class Scripts {
 			'wp-color-picker',
 		);
 
-		// Loop through and enqueue the scripts
+		// Loop through and enqueue the scripts.
 		foreach ( $scripts as $script ) {
 			wp_enqueue_script( $script );
 		}
@@ -100,8 +100,8 @@ class Scripts {
 			wp_enqueue_script( 'edd-admin-downloads-editor' );
 		}
 
-		// Upgrades Page
-		if ( in_array( $hook, array( 'edd-admin-upgrades', 'download_page_edd-tools' ) ) ) {
+		// Upgrades Page.
+		if ( in_array( $hook, array( 'edd-admin-upgrades', 'download_page_edd-tools' ), true ) ) {
 			wp_enqueue_script( 'edd-admin-tools-export' );
 			wp_enqueue_script( 'edd-admin-upgrades' );
 		}
@@ -138,6 +138,7 @@ class Scripts {
 			'payments'          => array(),
 			'reports'           => array(
 				'edd-chart-js',
+				'moment',
 			),
 			'settings'          => array(),
 			'tools'             => array(

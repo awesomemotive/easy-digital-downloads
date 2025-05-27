@@ -1,8 +1,8 @@
 /**
- * Internal dependencices
+ * Internal dependencies
  */
- @import './frontend/shared.scss';
- @import './frontend/modal.scss';
+ @use './frontend/shared.scss';
+ @use './frontend/modal.scss';
 
 #edd_purchase_submit {
 

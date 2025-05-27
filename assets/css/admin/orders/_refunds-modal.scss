@@ -1,3 +1,4 @@
+@use "../../variables/colors" as colors;
 
 $fixed-column-width: 80px;
 #edd-submit-refund-status {
@@ -16,7 +17,7 @@ $fixed-column-width: 80px;
 
 		&.success:before {
 			content: "\f147";
-			background-color: $wp-green-50;
+			background-color: colors.$wp-green-50;
 			padding-right: 1px;
 		}
 
@@ -26,7 +27,7 @@ $fixed-column-width: 80px;
 
 			&::before {
 				content: "\f335";
-				background-color: $wp-red-50;
+				background-color: colors.$wp-red-50;
 			}
 		}
 	}
@@ -82,7 +83,7 @@ $fixed-column-width: 80px;
 	}
 
 	.edd-refund-submit-line-total {
-		background-color: $white !important;
+		background-color: colors.$white !important;
 
 		td {
 			text-align: right;
@@ -97,7 +98,7 @@ $fixed-column-width: 80px;
 	}
 
 	#edd-refund-submit-subtotal td {
-		border-top: 2px solid $wp-border;
+		border-top: 2px solid colors.$wp-border;
 	}
 
 	@media screen and ( max-width: 782px ) {

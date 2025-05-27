@@ -9,7 +9,8 @@
 	"description": "Show customers their detailed receipt. Supports guest orders.",
 	"keywords": [ "easy digital downloads", "edd", "orders" ],
 	"supports": {
-		"html": false
+		"html": false,
+		"innerBlocks": true
 	},
 	"textdomain": "easy-digital-downloads",
 	"editorScript": "file:./index.js",
@@ -27,5 +28,6 @@
 	},
 	"example": {
 		"attributes": {}
-	}
+	},
+  "allowedBlocks": [ "core/paragraph", "core/heading" ]
 }

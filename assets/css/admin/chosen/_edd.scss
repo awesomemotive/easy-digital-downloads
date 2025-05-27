@@ -1,3 +1,5 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+
 .edd-select-chosen {
 	width: 100%;
 	max-width: 300px;
@@ -12,7 +14,7 @@
 	max-width: 55px;
 }
 
-@media screen and (max-width: $break-medium) {
+@media screen and (max-width: wp-breakpoints.$break-medium) {
 	.edd-select-chosen.edd-time {
 		width: 70px;
 		max-width: 70px;

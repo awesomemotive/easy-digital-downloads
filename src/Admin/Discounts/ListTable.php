@@ -2,12 +2,13 @@
 /**
  * Discount Codes Table Class
  *
- * @package     EDD
- * @subpackage  Admin/Discounts
+ * @package     EDD\Admin\Discounts
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
+
+namespace EDD\Admin\Discounts;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -15,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 use EDD\Admin\List_Table;
 
 /**
- * EDD_Discount_Codes_Table Class
+ * ListTable Class
  *
  * Renders the Discount Codes table on the Discount Codes page
  *
  * @since 1.4
  * @since 3.0 Updated to work with the discount code migration to custom tables.
  */
-class EDD_Discount_Codes_Table extends List_Table {
+class ListTable extends List_Table {
 
 	/**
 	 * Get things started
@@ -205,15 +206,15 @@ class EDD_Discount_Codes_Table extends List_Table {
 
 		// Bail if current user cannot manage discounts.
 		if ( ! current_user_can( 'manage_shop_discounts' ) ) {
-			return;
+			return '';
 		}
 
 		// Edit.
 		$row_actions['edit'] = '<a href="' . esc_url(
 			add_query_arg(
 				array(
-					'edd-action' => 'edit_discount',
-					'discount'   => absint( $discount->id ),
+					'view'     => 'edit_discount',
+					'discount' => absint( $discount->id ),
 				),
 				$base
 			)
@@ -297,8 +298,8 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$discount_title = '<a class="row-title" href="' . esc_url(
 			add_query_arg(
 				array(
-					'edd-action' => 'edit_discount',
-					'discount'   => absint( $discount->id ),
+					'view'     => 'edit_discount',
+					'discount' => absint( $discount->id ),
 				),
 				$base
 			)
@@ -372,6 +373,9 @@ class EDD_Discount_Codes_Table extends List_Table {
 				$icon   = 'backup';
 				$status = 'warning';
 				break;
+
+			default:
+				break;
 		}
 
 		if ( ( ! $this->get_status() || 'active' === $this->get_status() ) && ! $discount->is_started( false ) ) {
@@ -386,7 +390,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 			$label  = __( '100% Claimed', 'easy-digital-downloads' );
 		}
 
-		$status_badge = new EDD\Utils\StatusBadge(
+		$status_badge = new \EDD\Utils\StatusBadge(
 			array(
 				'status' => $status,
 				'label'  => $label,
@@ -411,7 +415,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$uses     = sprintf( '%d / %s', $discount->use_count, $max_uses );
 
 		if ( $discount->max_uses > 0 ) {
-			$progress_bar = new EDD\Utils\ProgressBar(
+			$progress_bar = new \EDD\Utils\ProgressBar(
 				array(
 					'size'            => 'small',
 					'current_count'   => $discount->use_count,
@@ -507,6 +511,9 @@ class EDD_Discount_Codes_Table extends List_Table {
 				case 'deactivate':
 					edd_update_discount_status( $id, 'inactive' );
 					break;
+
+				default:
+					break;
 			}
 		}
 	}
@@ -536,7 +543,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return array Discount codes.
 	 */
 	public function discount_codes_data() {
-		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Discount_Codes_Table::get_data()' );
+		_edd_deprecated_function( __METHOD__, '3.0', 'ListTable::get_data()' );
 
 		return $this->get_data();
 	}

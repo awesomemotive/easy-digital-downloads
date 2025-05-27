@@ -265,17 +265,6 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		$this->assertEquals( '<span class="edd_price" id="edd_price_'. $post_id .'">&#36;54.43</span>', $actual );
 	}
 
-	public function __test_receipt_shortcode() {
-		/**
-		 * @internal This test fails on Travis but passes when running locally.
-		 */
-
-//		$actual = edd_receipt_shortcode( array( 'payment_key' => self::$payment_key ) );
-//
-//		$this->assertIsString( $actual );
-//		$this->assertStringContainsString( '<table id="edd_purchase_receipt" class="edd-table">', $actual  );
-	}
-
 	public function test_profile_shortcode() {
 		$actual = edd_profile_editor_shortcode( array() );
 

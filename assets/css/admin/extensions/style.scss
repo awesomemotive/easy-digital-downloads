@@ -1,16 +1,16 @@
 /* Extension Manager
 ------------------------------------------------------------- */
 
-@import "bar";
-@import "body";
-@import "buttons";
-@import "card";
-@import "features";
-@import "group";
-@import "images";
-@import "installer";
-@import "overlay";
-@import "key";
-@import "steps";
-@import "variations";
-@import "recommended";
+@use "bar";
+@use "body";
+@use "buttons";
+@use "card";
+@use "features";
+@use "group";
+@use "images";
+@use "installer";
+@use "overlay";
+@use "key";
+@use "steps";
+@use "variations";
+@use "recommended";

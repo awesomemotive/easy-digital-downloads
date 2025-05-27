@@ -1,13 +1,15 @@
-@import "vertical";
-@import "dynamic";
-@import "id";
+@use "../../variables/colors" as colors;
+
+@use "vertical";
+@use "dynamic";
+@use "id";
 
 .edd-sections-wrap {
 	clear: both;
 	width: 100%;
 
 	.section-wrap {
-		background-color: $white;
+		background-color: colors.$white;
 		border-left: 1px solid #e5e5e5;
 
 		.row-title {

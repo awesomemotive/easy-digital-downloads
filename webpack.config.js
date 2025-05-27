@@ -5,9 +5,9 @@ const path = require( 'path' );
 const webpack = require( 'webpack' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const UglifyJS = require( 'uglify-es' );
-const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
 const MiniCSSExtractPlugin = require( 'mini-css-extract-plugin' );
-const WebpackRTLPlugin = require( 'webpack-rtl-plugin' );
+const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
+const RTLCSSWebpackPlugin = require( 'rtlcss-webpack-plugin' );
 
 /**
  * WordPress dependencies
@@ -115,14 +115,13 @@ const config = {
 	},
 	plugins: [
 		new MiniCSSExtractPlugin( {
-			esModule: false,
-			moduleFilename: ( chunk ) =>
-				`css/${ chunk.name.replace( '-style', '' ) }.min.css`
+			filename: ( pathData ) =>
+				`css/${ pathData.chunk.name.replace( '-style', '' ) }.min.css`
 		} ),
-		new WebpackRTLPlugin( {
-			filename: [ /(\.min\.css)/i, '-rtl$1' ],
+		new RemoveEmptyScriptsPlugin(),
+		new RTLCSSWebpackPlugin( {
+			filename: ( pathData ) => `css/${ pathData.chunk.name.replace( '-style', '' ) }-rtl.min.css`
 		} ),
-		new FixStyleOnlyEntriesPlugin(),
 		new webpack.ProvidePlugin( {
 			$: 'jquery',
 			jQuery: 'jquery'

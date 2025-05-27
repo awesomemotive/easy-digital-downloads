@@ -1,12 +1,4 @@
 /**
- * Internal dependencies.
- */
-/**
- * External dependencies
- */
-import { forEach } from 'utils';
-
-/**
  * Checks is a form passes HTML5 validation.
  *
  * @param {HTMLElement} form Form to trigger validation on.
@@ -15,7 +7,8 @@ import { forEach } from 'utils';
 export function hasValidInputs( form ) {
 	let plainInputsValid = true;
 
-	forEach( form.querySelectorAll( 'input' ), function( input ) {
+	// Use native NodeList.forEach
+	form.querySelectorAll( 'input' ).forEach( function( input ) {
 		if ( input.checkValidity && ! input.checkValidity() ) {
 			plainInputsValid = false;
 		}

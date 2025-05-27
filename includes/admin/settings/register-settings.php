@@ -1648,17 +1648,15 @@ function edd_recapture_callback( $args ) {
 }
 
 /**
- * Tax Rates Callback
- *
- * Renders tax rates table
+ * Renders tax rates table.
  *
  * @since 1.6
- *
- * @param array $args Arguments passed by the setting
+ * @since 3.3.9 Updated to work outside the forms table.
+ * @param array $deprecated Deprecated argument. Previously the setting parameters.
  *
  * @return void
  */
-function edd_tax_rates_callback( $args ) {
+function edd_tax_rates_callback( $deprecated = array() ) {
 	$rates = edd_get_tax_rates( array(), OBJECT );
 
 	wp_enqueue_script( 'edd-admin-tax-rates' );
@@ -1676,21 +1674,25 @@ function edd_tax_rates_callback( $args ) {
 				'emptyCountry'  => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
 				'negativeTax'   => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
 				'emptyTax'      => esc_html__( 'Are you sure you want to add a 0% tax rate?', 'easy-digital-downloads' ),
+				'addNewRate'    => esc_html__( 'Add Tax Rate', 'easy-digital-downloads' ),
 			),
 		)
 	);
+
+	?>
+	<p><?php esc_html_e( 'Configure rates for each region you wish to collect sales tax in.', 'easy-digital-downloads' ); ?> </p>
+
+	<div id="edd-admin-tax-rates"></div>
+	<?php
 
 	$templates = array(
 		'meta',
 		'row',
 		'row-empty',
-		'add',
+		'footer',
 		'bulk-actions',
+		'dialog',
 	);
-
-	echo '<p>' . $args['desc'] . '</p>';
-
-	echo '<div id="edd-admin-tax-rates"></div>';
 
 	foreach ( $templates as $tmpl ) {
 		?>
@@ -1702,6 +1704,7 @@ function edd_tax_rates_callback( $args ) {
 		<?php
 	}
 }
+add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_rates_callback' );
 
 /**
  * Descriptive text callback.

@@ -1,5 +1,7 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+
 .edd-extension-manager__wrap {
-	max-width: $break-huge;
+	max-width: wp-breakpoints.$break-huge;
 }
 
 .edd-extension-manager__card-group {

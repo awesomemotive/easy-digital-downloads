@@ -1,27 +1,33 @@
+@use "../../variables/colors" as colors;
+@use "../../variables/mixins" as mixins;
+@use "~@wordpress/base-styles/breakpoints" as breakpoints;
 
-#edd-products {
+.edd-form__discount {
+	background-color: colors.$white;
+	padding: 24px;
+	border: 1px solid colors.$wp-border;
+	border-radius: 4px;
+
+	.description {
+		display: block;
+
+		&:not(:last-child) {
+			margin-bottom: 2em;
+		}
+	}
+
+	input[type="text"] {
+		width: 300px;
+	}
+
+	textarea {
+		height: 100px;
+	}
+}
+
+#edd_products {
 	height: 100px;
 	min-width: 200px;
-}
-
-#edd-add-discount input[type="text"],
-#edd-edit-discount input[type="text"] {
-	width: 300px;
-}
-
-#edd-add-discount .edd-discount-datetime input,
-#edd-edit-discount .edd-discount-datetime input {
-	vertical-align: middle;
-}
-
-#edd-add-discount input[type="text"].edd_datepicker,
-#edd-edit-discount input[type="text"].edd_datepicker {
-	display: inline-block;
-	width: 183px;
-}
-
-#edd-edit-discount textarea {
-	height: 100px;
 }
 
 .edd-code-wrapper {
@@ -35,11 +41,11 @@
 	align-items: center;
 	gap: 3px;
 
-	@media screen and (max-width: 782px) {
+	@media screen and (max-width: breakpoints.$break-medium) {
 		margin-bottom: 0 !important;
 	}
 
-	@media screen and (max-width: 480px) {
+	@media screen and (max-width: breakpoints.$break-mobile) {
 		span:not(.dashicons) {
 			display: none;
 		}
@@ -47,13 +53,17 @@
 }
 
 .edd-code-generator-popup {
-	@include edd-popup( $width: 250px, $transformX: 240px, $transformY: 15px, $pointer-size: 15px, $pointer-position: top );
+	@include mixins.edd-popup( $width: 250px, $transformX: 55px, $transformY: 0, $pointer-size: 15px, $pointer-position: top );
 
-	@media screen and (max-width: 480px) {
-		transform: translateY(15px) translateX(105px);
+	&:after {
+		left: 70%;
+	}
+
+	@media screen and (min-width: breakpoints.$break-medium) {
+		transform: translateY(45px) translateX(445px);
 
 		&:after {
-			left: 70%;
+			left: 0;
 		}
 	}
 
@@ -66,7 +76,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-bottom: 1px solid $wp-gray-5;
+		border-bottom: 1px solid colors.$wp-gray-5;
 		height: 40px;
 
 		&:last-of-type {
@@ -80,7 +90,7 @@
 			margin-bottom: 0;
 			box-sizing: border-box;
 
-			@media screen and (max-width: 782px) {
+			@media screen and (max-width: breakpoints.$break-medium) {
 				line-height: 28px;
 			}
 		}
@@ -91,7 +101,7 @@
 			height: 30px;
 
 			&:not(:focus) {
-				border: 1px solid $wp-input-border-2;
+				border: 1px solid colors.$wp-input-border-2;
 			}
 		}
 	}
@@ -99,7 +109,7 @@
 	#edd-generate-code {
 		width: 100%;
 
-		@media screen and (max-width: 782px) {
+		@media screen and (max-width: breakpoints.$break-medium) {
 			&:before {
 				margin-top: 8px;
 			}

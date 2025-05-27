@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 .wrap-licenses {
 
 	.edd-licenses__description {
@@ -12,7 +15,7 @@
 	caption {
 		display: block;
 
-		@media screen and (min-width: $break-small) {
+		@media screen and (min-width: wp-breakpoints.$break-small) {
 			display: unset;
 		}
 	}
@@ -25,8 +28,8 @@
 	.form-table {
 		tr {
 			margin: 0;
-			background: $white;
-			border: 1px solid $wp-gray-5;
+			background: colors.$white;
+			border: 1px solid colors.$wp-gray-5;
 			border-radius: 3px;
 			padding: 0;
 			box-sizing: border-box;
@@ -34,20 +37,20 @@
 			flex-direction: column;
 			justify-content: space-between;
 
-			@media screen and (min-width: $break-small) {
+			@media screen and (min-width: wp-breakpoints.$break-small) {
 				display: grid;
 				grid-template-columns: 200px 1fr;
 			}
 		}
 
 		th {
-			background: $wp-alternate;
+			background: colors.$wp-alternate;
 			margin-bottom: 2.5em;
 			padding: 1em;
-			border-bottom: 1px solid $wp-gray-5;
+			border-bottom: 1px solid colors.$wp-gray-5;
 			width: unset;
 
-			@media screen and (min-width: $break-small) {
+			@media screen and (min-width: wp-breakpoints.$break-small) {
 				border-bottom: none;
 				margin-bottom: 0;
 				display: flex;
@@ -63,7 +66,7 @@
 			gap: 2.5em;
 			flex-grow: 1;
 
-			@media screen and (min-width: $break-small) {
+			@media screen and (min-width: wp-breakpoints.$break-small) {
 				flex-direction: row;
 				gap: unset;
 			}
@@ -87,7 +90,7 @@
 			align-items: center;
 			justify-content: center;
 
-			@media screen and (min-width: $break-small) {
+			@media screen and (min-width: wp-breakpoints.$break-small) {
 				justify-content: flex-end;
 			}
 		}
@@ -99,9 +102,9 @@
 	}
 
 	.edd-license-data[class*="edd-license-"] {
-		background: $wp-alternate;
+		background: colors.$wp-alternate;
 		padding: 1em;
-		border-top: 1px solid $wp-gray-5;
+		border-top: 1px solid colors.$wp-gray-5;
 		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
@@ -116,7 +119,7 @@
 			}
 		}
 
-		@media screen and (min-width: $break-small) {
+		@media screen and (min-width: wp-breakpoints.$break-small) {
 			border-top: none;
 			width: unset;
 			flex-basis: 100%;
@@ -157,7 +160,7 @@
 
 		&.license-expires-soon-notice a,
 		&.edd-license-expired a {
-			color: $white;
+			color: colors.$white;
 
 			&:hover {
 				text-decoration: none;

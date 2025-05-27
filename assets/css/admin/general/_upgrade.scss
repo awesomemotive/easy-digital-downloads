@@ -1,13 +1,15 @@
+@use "../../variables/colors" as colors;
+
 .edd-pro-upgrade,
-.edd-pro-upgrade:hover{
-	color: $edd-pro-upgrade;
+.edd-pro-upgrade:hover {
+	color: colors.$edd-pro-upgrade;
 	font-weight: 600;
 	text-decoration: none;
 }
 
 .button.edd-pro-upgrade,
 .button.edd-pro-upgrade:hover {
-	background-color: $edd-pro-upgrade;
-	color: $white;
-	border-color: $edd-pro-upgrade;
+	background-color: colors.$edd-pro-upgrade;
+	color: colors.$white;
+	border-color: colors.$edd-pro-upgrade;
 }

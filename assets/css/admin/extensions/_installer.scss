@@ -1,5 +1,7 @@
+@use "../../variables/colors" as colors;
+
 .edd-extension-manager__card--installer {
-	border: 1px solid $wp-gray-5;
+	border: 1px solid colors.$wp-gray-5;
 	border-radius: 3px;
 	padding: 0;
 
@@ -7,7 +9,7 @@
 		padding: 2em;
 
 		&:not(:last-child) {
-			border-bottom: 1px solid $gray-200;
+			border-bottom: 1px solid colors.$wp-gray-200;
 		}
 	}
 
@@ -30,7 +32,7 @@
 	}
 
 	.edd-extension-manager__actions {
-		background: $wp-alternate;
+		background: colors.$wp-alternate;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

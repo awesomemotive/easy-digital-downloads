@@ -2,6 +2,11 @@ import { getChosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function ( $ ) {
 	$( '.edd_countries_filter' ).on( 'change', function () {
+
+		if ( ! $( this ).val() ) {
+			return;
+		}
+
 		const select = $( this ),
 			state_field = $( '.edd_regions_filter' ),
 			data = {
@@ -16,7 +21,7 @@ jQuery( document ).ready( function ( $ ) {
 		$.post( ajaxurl, data, function ( response ) {
 
 			// hot fix for settings page
-			if ( $( 'body' ).hasClass( 'download_page_edd-settings' ) ) {
+			if ( $( 'body' ).hasClass( 'download_page_edd-settings' ) || $( 'body' ).hasClass( 'download_page_edd-onboarding-wizard' ) ) {
 				// only on these 2 scenarios we have to setup the field
 				if ( ( 'nostates' === response && state_field.is( 'select' ) ) || ( 'nostates' !== response && state_field.is( 'input' ) ) ) {
 					let attributes = {};
@@ -29,7 +34,6 @@ jQuery( document ).ready( function ( $ ) {
 						}
 					)
 
-					const parent = state_field.parent();
 					let newStateField = '';
 
 					if ( state_field.is( 'select' ) ) {
@@ -38,9 +42,7 @@ jQuery( document ).ready( function ( $ ) {
 					} else {
 						newStateField = $( response ).attr( { ...attributes, ...{ 'data-placeholder': edd_vars.select_region } } ).addClass( 'edd-select-chosen' );
 					}
-
-					state_field.remove();
-					parent.prepend( newStateField );
+					state_field.replaceWith( newStateField );
 					$( 'select.edd_regions_filter' ).chosen( { ...getChosenVars( newStateField ) } );
 					return;
 				}

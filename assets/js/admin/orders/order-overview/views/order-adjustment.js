@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
+import { Base } from '../../../../packages/edd-backbone/src/base.js';
 
 /**
  * OrderAdjustment

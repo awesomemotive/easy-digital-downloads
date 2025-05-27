@@ -10,10 +10,6 @@ import { focus } from '@wordpress/dom';
  */
 import { getChosenVars } from 'utils/chosen.js';
 
-// Set noconflict when using Lodash (@wordpress packages) and Underscores.
-// @todo Find a better place to set this up. Webpack?
-window.lodash = _.noConflict();
-
 /**
  * Base
  *

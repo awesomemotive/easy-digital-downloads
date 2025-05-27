@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { forEach, getNextSiblings } from 'utils'; // eslint-disable-line @wordpress/dependency-group
+import { getNextSiblings } from 'utils'; // eslint-disable-line @wordpress/dependency-group
 
 /**
  *
@@ -28,7 +28,7 @@ export function paymentMethods() {
 	const existingPaymentMethods = document.querySelectorAll( '.edd-stripe-existing-card' );
 
 	if ( 0 !== existingPaymentMethods.length ) {
-		forEach( existingPaymentMethods, function( existingPaymentMethod ) {
+		existingPaymentMethods.forEach( function( existingPaymentMethod ) {
 			/**
 			 * Binds change event to credit card toggles.
 			 *

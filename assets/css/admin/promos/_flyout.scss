@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 #edd-flyout {
 	position: fixed;
 	z-index: 99999;
@@ -9,7 +12,7 @@
 	flex-direction: column;
 	align-items: flex-end;
 
-	@media (max-width: $break-large) {
+	@media (max-width: wp-breakpoints.$break-large) {
 		display: none;
 	}
 
@@ -17,8 +20,8 @@
 		transform: translateY(-50%);
 		-moz-transform: translateY(-50%);
 		-webkit-transform: translateY(-50%);
-		color: $white;
-		background-color: $gray-700;
+		color: colors.$white;
+		background-color: colors.$wp-gray-700;
 		font-size: 12px;
 		white-space: nowrap;
 		padding: 5px 10px;
@@ -45,15 +48,15 @@
 			height: 54px;
 			display: block;
 			border-radius: 50%;
-			border: 3px solid $edd-notice-blue;
+			border: 3px solid colors.$edd-notice-blue;
 			overflow: hidden;
 			transition: all 0.2s ease-in-out;
-			background: $white;
+			background: colors.$white;
 		}
 
 		&:hover img {
 			cursor: pointer;
-			box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
+			box-shadow: 0 3px 12px 1px colors.$medium-gray-placeholder;
 		}
 
 		& .edd-flyout-label {
@@ -71,7 +74,7 @@
 			opacity: 1;
 			font-family: "dashicons";
 			content: "\f534";
-			color: $edd-alert-red;
+			color: colors.$edd-alert-red;
 			font-size: 16px;
 			height: 16px;
 			width: 16px;
@@ -79,7 +82,7 @@
 			border-radius: 999999px;
 			line-height: 16px;
 			transition: all 0.2s ease-in-out;
-			background-color: $white;
+			background-color: colors.$white;
 			position: absolute;
 			right: 3px;
 			bottom: 46px;
@@ -104,7 +107,7 @@
 
 			& a {
 				text-decoration: none;
-				color: $white;
+				color: colors.$white;
 			}
 
 			& .edd-flyout-label, .edd-flyout-icon {
@@ -129,19 +132,19 @@
 				width: 40px;
 				height: 40px;
 				border-radius: 50%;
-				box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
-				background: $edd-notice-blue 0 0 no-repeat padding-box;
+				box-shadow: 0 3px 12px 1px colors.$medium-gray-placeholder;
+				background: colors.$edd-notice-blue 0 0 no-repeat padding-box;
 
 				&.red {
-					background: $edd-alert-red 0 0 no-repeat padding-box;
+					background: colors.$edd-alert-red 0 0 no-repeat padding-box;
 				}
 
 				&.green {
-					background: $edd-notice-green 0 0 no-repeat padding-box;
+					background: colors.$edd-notice-green 0 0 no-repeat padding-box;
 				}
 
 				& span.dashicons:before {
-					color: $white;
+					color: colors.$white;
 					font-size: 20px;
 					line-height: 40px;
 					vertical-align: middle;
@@ -152,23 +155,23 @@
 				cursor: pointer;
 
 				& .edd-flyout-icon, .edd-flyout-label {
-					box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
+					box-shadow: 0 3px 12px 1px colors.$medium-gray-placeholder;
 				}
 
 				& .edd-flyout-icon {
-					background: $edd-blue-gray 0 0 no-repeat padding-box;
+					background: colors.$edd-blue-gray 0 0 no-repeat padding-box;
 
 					&.red {
-						background: $edd-alert-red-hover 0 0 no-repeat padding-box;
+						background: colors.$edd-alert-red-hover 0 0 no-repeat padding-box;
 					}
 
 					&.green {
-						background: $edd-notice-green-hover 0 0 no-repeat padding-box;
+						background: colors.$edd-notice-green-hover 0 0 no-repeat padding-box;
 					}
 				}
 
 				& .edd-flyout-label {
-					background-color: $gray-800;
+					background-color: colors.$gray-800;
 				}
 			}
 		}
@@ -207,7 +210,7 @@
 
 		& #edd-flyout-button {
 			& img {
-				box-shadow: 0 3px 12px 1px $medium-gray-placeholder;
+				box-shadow: 0 3px 12px 1px colors.$medium-gray-placeholder;
 
 			}
 

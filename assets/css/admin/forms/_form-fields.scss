@@ -1,7 +1,9 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 .edd-amount-type-wrapper {
 	display: inline-flex;
 	align-items: center;
-	background-color: $wp-alternate;
 
 	input,
 	#edd-amount,
@@ -74,7 +76,7 @@
 		align-self: stretch;
 		line-height: 2;
 
-		@media screen and (max-width: $break-medium) {
+		@media screen and (max-width: wp-breakpoints.$break-medium) {
 			padding: 3px 10px;
 		}
 

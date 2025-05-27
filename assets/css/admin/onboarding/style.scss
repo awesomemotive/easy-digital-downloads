@@ -1,12 +1,9 @@
-@import "~@wordpress/base-styles/breakpoints";
-@import "~@wordpress/base-styles/colors";
-@import "~@wordpress/base-styles/variables";
-@import "~@wordpress/base-styles/mixins";
-@import "../../variables/colors";
-@import "../../variables/mixins";
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+@use "../../variables/mixins" as mixins;
 
 :root {
-	@include edd-admin-colors();
+	@include mixins.edd-admin-colors();
 }
 
 .edd-onboarding {
@@ -25,7 +22,7 @@
 	position: relative;
 }
 
-@media only screen and (max-width: $break-wide) {
+@media only screen and (max-width: wp-breakpoints.$break-wide) {
 	.edd-onboarding__wrapper {
 		max-width: 850px;
 	}
@@ -48,29 +45,27 @@
 	text-align: center;
 	&:before {
 		position: absolute;
-		@include edd-spinner(
-			35px,
-			$wp-input-border,
-			$wp-alternate
-		);
+		@include mixins.edd-spinner(35px, colors.$wp-input-border, colors.$wp-alternate);
 	}
+
 	.edd-onboarding__loading-status {
 		display: block;
 		text-align: center;
-		color: black;
+		color: colors.$black;
 		flex-basis: 100%;
 		margin-top: 80px;
 	}
 }
 
-@media only screen and (max-width: $break-small) {
+@media only screen and (max-width: wp-breakpoints.$break-small) {
 	.edd-onboarding__loading {
 		padding-left: 0;
 	}
 }
 
 .edd-onboarding__loading-in-progress {
-	.edd-onboarding__single-step, .edd-onboarding__welcome-screen {
+	.edd-onboarding__single-step,
+	.edd-onboarding__welcome-screen {
 		position: relative;
 		&:before {
 			content: "";
@@ -102,7 +97,7 @@
 			background: #dedfe0;
 			content: "";
 			z-index: -1;
-	   }
+		}
 		li {
 			flex: 1;
 			text-align: center;
@@ -114,7 +109,7 @@
 				font-size: 12px;
 				text-decoration: none;
 				span {
-					color: $white;
+					color: colors.$white;
 					width: 25px;
 					height: 25px;
 					line-height: 25px;
@@ -134,10 +129,10 @@
 						right: -8px;
 						width: 8px;
 						height: 10px;
-						background: #F0F0F1;
+						background: #f0f0f1;
 						content: "";
 						z-index: -1;
-				   }
+					}
 					&:after {
 						position: absolute;
 						top: 50%;
@@ -145,46 +140,47 @@
 						left: -8px;
 						width: 8px;
 						height: 10px;
-						background: #F0F0F1;
+						background: #f0f0f1;
 						content: "";
 						z-index: -1;
-				   }
-			   }
-		   }
+					}
+				}
+			}
 			&.active-step a {
 				color: var(--wp-admin-theme-color);
 				font-weight: 500;
 				small {
 					font-weight: 500;
 					color: var(--wp-admin-theme-color);
-			   }
+				}
 				span {
 					background: var(--wp-admin-theme-color);
 					box-shadow: 0 0 4px 1px rgba(var(--wp-admin-theme-color), 0.3);
-			   }
-		   }
+				}
+			}
 			&.completed-step a {
 				span {
 					width: 25px;
 					height: 25px;
 					line-height: 25px;
 					font-size: 14px;
-					background: $wp-green-30;
+					background: colors.$wp-green-30;
 					box-shadow: none;
-			   }
-		   }
-	   }
-   }
+				}
+			}
+		}
+	}
 }
 
 .edd-onboarding__steps__name {
-	color: $wp-gray-50;
+	color: colors.$wp-gray-50;
 	display: block;
 	font-size: 11px;
 }
 
-@media only screen and (max-width: $break-small) {
-	.edd-onboarding__steps ul li a span, .edd-onboarding__steps ul li.completed-step a span {
+@media only screen and (max-width: wp-breakpoints.$break-small) {
+	.edd-onboarding__steps ul li a span,
+	.edd-onboarding__steps ul li.completed-step a span {
 		width: 20px;
 		height: 20px;
 		line-height: 20px;
@@ -212,7 +208,7 @@
 	}
 }
 
-@media only screen and (max-width: $break-large) {
+@media only screen and (max-width: wp-breakpoints.$break-large) {
 	.edd-onboarding__single-step-inner {
 		padding: 35px 70px 20px 70px;
 		&.equal {
@@ -221,7 +217,7 @@
 	}
 }
 
-@media only screen and (max-width: $break-small) {
+@media only screen and (max-width: wp-breakpoints.$break-small) {
 	.edd-onboarding__single-step-inner {
 		padding: 17px 35px 10px 35px;
 		&.equal {
@@ -303,7 +299,7 @@ h1.edd-onboarding__single-step-title {
 .edd-onboarding__testimonial-info {
 	display: flex;
 	flex-direction: column;
-	gap: .25em;
+	gap: 0.25em;
 
 	> .testimonial-name {
 		font-weight: 600;
@@ -323,14 +319,14 @@ h1.edd-onboarding__single-step-title {
 }
 
 .edd-onboarding__welcome-screen-get-started {
-	color: $white !important;
-	background: $wp-green-30 !important;
-	border-color: $wp-green-30 !important;
+	color: colors.$white !important;
+	background: colors.$wp-green-30 !important;
+	border-color: colors.$wp-green-30 !important;
 	margin: 1em auto !important;
 
 	&:hover {
-		color: $white !important;
-		background: $wp-green-50 !important;
+		color: colors.$white !important;
+		background: colors.$wp-green-50 !important;
 	}
 }
 
@@ -383,20 +379,20 @@ h1.edd-onboarding__single-step-title {
 			background: rgba(#72b281, 0.04);
 			&:hover {
 				background: rgba(#72b281, 0.04);
-		   }
-	   }
+			}
+		}
 		&:hover {
-			background: rgba(var( --wp-admin-theme-color ), 0.02);
+			background: rgba(var(--wp-admin-theme-color), 0.02);
 			.edd-onboarding__plugins-details {
 				h3 {
-					color: var( --wp-admin-theme-color );
-			   }
+					color: var(--wp-admin-theme-color);
+				}
 				p {
-					color: var( --wp-admin-theme-color );
-			   }
-		   }
-	   }
-   }
+					color: var(--wp-admin-theme-color);
+				}
+			}
+		}
+	}
 }
 .edd-onboarding__single-step-footer {
 	border-top: 1px solid #ededed;
@@ -405,22 +401,22 @@ h1.edd-onboarding__single-step-title {
 	justify-content: space-between;
 	align-items: center;
 	.edd-onboarding__button-back {
-		color: $wp-gray-40;
+		color: colors.$wp-gray-40;
 		text-decoration: none;
 		transition: all 0.2s ease-in-out;
 		background: none;
 		border: none;
 		cursor: pointer;
 		&:hover {
-			color: var( --wp-admin-theme-color );
-	   }
-   }
-   .edd-onboarding__button-skip-step {
+			color: var(--wp-admin-theme-color);
+		}
+	}
+	.edd-onboarding__button-skip-step {
 		opacity: 0.6;
-   }
+	}
 }
 
-@media only screen and (max-width: $break-small) {
+@media only screen and (max-width: wp-breakpoints.$break-small) {
 	.edd-onboarding__single-step-footer {
 		padding: 17px 25px;
 		flex-wrap: wrap;
@@ -440,7 +436,7 @@ h1.edd-onboarding__single-step-title {
 
 /* EDD ONBOARDING - Form style */
 
-@media only screen and (max-width: $break-medium) {
+@media only screen and (max-width: wp-breakpoints.$break-medium) {
 	.edd-form-group__control {
 		display: flex;
 		align-items: center;
@@ -521,12 +517,12 @@ h1.edd-onboarding__single-step-title {
 .edd-onboarding__stripe-features-listing {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	list-style-type:none;
+	list-style-type: none;
 	margin-left: 0;
 	padding-left: 0;
 	margin-top: 20px;
 	li {
-		list-style-type:none;
+		list-style-type: none;
 		position: relative;
 		padding-left: 28px;
 		color: #3c434a;
@@ -539,15 +535,15 @@ h1.edd-onboarding__single-step-title {
 			left: 0;
 			content: "✓";
 			background: #e9e4fe;
-			color: #635BFF;
+			color: #635bff;
 			width: 20px;
 			height: 20px;
 			line-height: 20px;
 			text-align: center;
 			border-radius: 50%;
 			display: inline-block;
-	   }
-   }
+		}
+	}
 }
 .edd-onboarding__stripe-content-holder {
 	max-width: 75%;
@@ -563,7 +559,7 @@ h1.edd-onboarding__single-step-title {
 		padding-bottom: 25px;
 		img {
 			max-width: 180px;
-	   }
+		}
 		span {
 			text-align: center;
 			font-size: 13px;
@@ -571,17 +567,16 @@ h1.edd-onboarding__single-step-title {
 			display: block;
 			max-width: 300px;
 			margin: 0 auto;
-	   }
-   }
-}
-
-@media only screen and (max-width: $break-large) {
-	.edd-onboarding__stripe-content-holder {
-		padding:25px 20px 25px 20px;
-		max-width: 100%;
+		}
 	}
 }
 
+@media only screen and (max-width: wp-breakpoints.$break-large) {
+	.edd-onboarding__stripe-content-holder {
+		padding: 25px 20px 25px 20px;
+		max-width: 100%;
+	}
+}
 
 .edd-onboarding__button-stripe {
 	display: block;
@@ -633,21 +628,25 @@ h1.edd-onboarding__single-step-title {
 	background: #f0f0f1;
 	border-radius: 3px;
 }
-.checkbox-control:hover input ~ .checkbox-control__indicator, .checkbox-control input:focus ~ .checkbox-control__indicator {
+.checkbox-control:hover input ~ .checkbox-control__indicator,
+.checkbox-control input:focus ~ .checkbox-control__indicator {
 	background: #eaeaec;
 }
 .checkbox-control input:checked ~ .checkbox-control__indicator {
-	background: var( --wp-admin-theme-color );
+	background: var(--wp-admin-theme-color);
 }
-.checkbox-control:hover input:not([disabled]):checked ~ .checkbox-control__indicator, .checkbox-control input:checked:focus ~ .checkbox-control__indicator {
-	background: var( --wp-admin-theme-color );
+.checkbox-control:hover
+	input:not([disabled]):checked
+	~ .checkbox-control__indicator,
+.checkbox-control input:checked:focus ~ .checkbox-control__indicator {
+	background: var(--wp-admin-theme-color);
 }
 .checkbox-control input:disabled ~ .checkbox-control__indicator {
-	background: $wp-green-30;
+	background: colors.$wp-green-30;
 	pointer-events: none;
 }
 .checkbox-control__indicator:after {
-	content: '';
+	content: "";
 	position: absolute;
 	display: none;
 }
@@ -663,7 +662,9 @@ h1.edd-onboarding__single-step-title {
 	border-width: 0 2.5px 2.5px 0;
 	transform: rotate(40deg);
 }
-.checkbox-control--checkbox input:disabled ~ .checkbox-control__indicator:after {
+.checkbox-control--checkbox
+	input:disabled
+	~ .checkbox-control__indicator:after {
 	border-color: #fff;
 }
 /* Small checkbox style */
@@ -679,14 +680,20 @@ h1.edd-onboarding__single-step-title {
 	width: 17px;
 	background: #eaeaec;
 }
-.checkbox-control.small-checkbox:hover input ~ .checkbox-control__indicator, .checkbox-control.small-checkbox input:focus ~ .checkbox-control__indicator {
+.checkbox-control.small-checkbox:hover input ~ .checkbox-control__indicator,
+.checkbox-control.small-checkbox input:focus ~ .checkbox-control__indicator {
 	background: #dedfe0;
 }
 .checkbox-control.small-checkbox input:checked ~ .checkbox-control__indicator {
-	background: var( --wp-admin-theme-color );
+	background: var(--wp-admin-theme-color);
 }
-.checkbox-control.small-checkbox:hover input:not([disabled]):checked ~ .checkbox-control__indicator, .checkbox-control.small-checkbox input:checked:focus ~ .checkbox-control__indicator {
-	background: var( --wp-admin-theme-color );
+.checkbox-control.small-checkbox:hover
+	input:not([disabled]):checked
+	~ .checkbox-control__indicator,
+.checkbox-control.small-checkbox
+	input:checked:focus
+	~ .checkbox-control__indicator {
+	background: var(--wp-admin-theme-color);
 }
 .checkbox-control.small-checkbox input:disabled ~ .checkbox-control__indicator {
 	background: #72b281;
@@ -755,7 +762,7 @@ h1.edd-onboarding__single-step-title {
 		}
 	}
 
-	@media only screen and (max-width: $break-large) {
+	@media only screen and (max-width: wp-breakpoints.$break-large) {
 		padding-left: 0;
 	}
 }
@@ -768,9 +775,9 @@ h1.edd-onboarding__single-step-title {
 }
 
 .edd-onboarding__product-image-wrapper {
-    display: flex;
-    justify-content: space-between;
-    gap: 4px;
+	display: flex;
+	justify-content: space-between;
+	gap: 4px;
 }
 
 .edd-onboarding__pricing-option-pill {
@@ -812,7 +819,8 @@ h1.edd-onboarding__single-step-title {
 	display: none;
 }
 
-.edd-onboarding__multi-option-toggle, .edd-onboarding__upload-files-toggle {
+.edd-onboarding__multi-option-toggle,
+.edd-onboarding__upload-files-toggle {
 	display: flex;
 	align-items: center;
 	span {
@@ -831,13 +839,12 @@ h1.edd-onboarding__single-step-title {
 	}
 }
 
-
 .edd-onboarding__pricing-options-label {
 	display: block;
 	color: #141b38;
-    font-weight: 400;
-    text-shadow: none;
-    vertical-align: baseline;
+	font-weight: 400;
+	text-shadow: none;
+	vertical-align: baseline;
 	font-size: 14px;
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -861,7 +868,7 @@ h1.edd-onboarding__single-step-title {
 }
 
 .edd-settings-form__email {
-	@media screen and (min-width: $break-medium) {
+	@media screen and (min-width: wp-breakpoints.$break-medium) {
 		.edd-form-group:not(.edd-form-group__wide) {
 			display: table-row;
 

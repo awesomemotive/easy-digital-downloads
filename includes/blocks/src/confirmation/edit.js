@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Disabled, PanelBody, ToggleControl } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls, InnerBlocks } from '@wordpress/block-editor';
 import './editor.scss';
 import { emptyPlaceholder } from '../utilities/no-orders-placeholder';
 import { queryArgs } from '../utilities/query-args';
@@ -46,6 +46,7 @@ export default function Edit ( { attributes, setAttributes } ) {
 					EmptyResponsePlaceholder={emptyPlaceholder}
 				/>
 			</Disabled>
+			<InnerBlocks />
 		</div>
 	);
 }

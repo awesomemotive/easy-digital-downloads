@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 .chosen-container-multi {
 	.search-field {
 		border: none;
@@ -13,7 +15,7 @@
 	}
 
 	.chosen-choices li.search-field input[type=text] {
-		color: $wp-input-text;
+		color: colors.$wp-input-text;
 		font-family: unset;
 		height: unset;
 		margin: 0;
@@ -24,12 +26,12 @@
 	.chosen-choices li.search-choice {
 		margin: 3px 5px 3px 0;
 		padding: 5px 22px 5px 5px;
-		border: 1px solid $wp-input-border;
+		border: 1px solid colors.$wp-input-border;
 		max-width: 100%;
 		border-radius: 4px;
 		background: #f4f4f4;
 		box-shadow: none;
-		color: $wp-input-text;
+		color: colors.$wp-input-text;
 		cursor: default;
 	}
 
@@ -48,7 +50,7 @@
 		position: absolute;
 		top: 0;
 		right: 0;
-		color: $wp-input-text;
+		color: colors.$wp-input-text;
 		font-family: 'dashicons';
 		content: '\f158';
 		font-size: 15px;
@@ -56,6 +58,6 @@
 	}
 
 	.chosen-choices li.search-choice .search-choice-close:hover:before {
-		color: $wp-text;
+		color: colors.$wp-text;
 	}
 }

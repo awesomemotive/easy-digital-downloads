@@ -18,7 +18,7 @@ use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Denied;
 use EDD\Gateways\PayPal\Webhooks\Webhook_Handler;
 use EDD\Orders\Order;
 
-class Tests_PayPal extends EDD_UnitTestCase {
+class PayPalCommerce extends EDD_UnitTestCase {
 
 	const TRANSACTION_ID = '27M47624FP291604U';
 

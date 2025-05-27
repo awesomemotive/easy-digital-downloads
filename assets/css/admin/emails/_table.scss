@@ -1,3 +1,6 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+@use "../../components/toggle-button";
 
 #edd-emails__add {
 	display: flex;
@@ -24,7 +27,7 @@ td.column-status {
 		margin-top: 2px;
 	}
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		text-align: left;
 		width: unset;
 		min-height: 40px;
@@ -35,7 +38,7 @@ tr.no-items:not(:only-child) {
 	display: none;
 }
 
-@media screen and (min-width: $break-wide) {
+@media screen and (min-width: wp-breakpoints.$break-wide) {
 	.column-primary {
 		width: 250px;
 	}
@@ -85,7 +88,7 @@ table.email_templates {
 
 	& a {
 		text-decoration: none;
-		color: $wp-text;
+		color: colors.$wp-text;
 	}
 
 	img {

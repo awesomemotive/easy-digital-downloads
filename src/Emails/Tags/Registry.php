@@ -257,6 +257,13 @@ class Registry {
 				'function'    => array( $this->render, 'refund_id' ),
 				'contexts'    => array( 'refund' ),
 			),
+			array(
+				'tag'         => 'phone',
+				'label'       => __( 'Phone', 'easy-digital-downloads' ),
+				'description' => __( 'The customer\'s phone number.', 'easy-digital-downloads' ),
+				'function'    => array( $this->render, 'phone' ),
+				'contexts'    => array( 'order' ),
+			),
 		);
 
 		// Apply edd_email_tags filter.
