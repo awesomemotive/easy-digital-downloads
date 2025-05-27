@@ -148,8 +148,8 @@ $bundle_options = EDD()->html->get_products(
 			<div class="edd-add-repeatable-row">
 				<button class="button-secondary edd_add_repeatable">
 					<?php
-					/* translators: %s: Singular label for the download post type */
-					echo esc_html( sprintf( __( 'Add New %s', 'easy-digital-downloads' ), edd_get_label_singular() ) );
+					/* translators: %s: Download singular label */
+					echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) );
 					?>
 				</button>
 			</div>

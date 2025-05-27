@@ -1,4 +1,6 @@
-@import "../variables/variables";
+@use "../variables/mixins" as mixins;
+@use "../variables/colors";
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
 
 .edd-pass-handler {
 	&__description {
@@ -34,10 +36,10 @@
 		&:before {
 			background: none;
 			display: block;
-			@include edd-spinner(
+			@include mixins.edd-spinner(
 				12px,
-				$wp-input-border,
-				$wp-alternate
+				colors.$wp-input-border,
+				colors.$wp-alternate
 			);
 		}
 	}
@@ -55,19 +57,19 @@
 		z-index: 110;
 
 		p {
-			background: $white;
-			border: 1px solid $wp-input-border;
+			background: colors.$white;
+			border: 1px solid colors.$wp-input-border;
 			border-radius: 4px;
 			padding: 2em;
 		}
 
-		@media only screen and (min-width: $break-large) {
+		@media only screen and (min-width: wp-breakpoints.$break-large) {
 			.wp-admin:not(.folded) & {
 				left: 160px;
 			}
 		}
 
-		@media only screen and (max-width: $break-medium) {
+		@media only screen and (max-width: wp-breakpoints.$break-medium) {
 			left: 0;
 		}
 	}

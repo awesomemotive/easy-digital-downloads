@@ -1,8 +1,8 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
-import { Dialog } from './dialog.js';
+import { Base } from '../../../../packages/edd-backbone/src/base.js';
+import { Dialog } from '../../../../packages/edd-backbone/src/dialog.js';
 
 /**
  * "Copy Download Link" view

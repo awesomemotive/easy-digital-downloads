@@ -247,12 +247,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'edd_remove_cart_discount', $wp_filter['edd_remove_cart_discount'][10] );
 	}
 
-	public function test_comments_clauses() {
-		global $wp_filter;
-		$this->assertArrayHasKey( 'edd_hide_payment_notes', $wp_filter['pre_get_comments'][10] );
-		$this->assertArrayHasKey( 'edd_hide_payment_notes_pre_41', $wp_filter['comments_clauses'][10] );
-	}
-
 	public function test_edd_update_payment_status() {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_complete_purchase', $wp_filter['edd_update_payment_status'][100] );

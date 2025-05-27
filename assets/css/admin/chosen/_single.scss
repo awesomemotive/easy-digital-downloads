@@ -1,3 +1,5 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
 .chosen-container-single .chosen-single div b {
 	background-image: none;
 }
@@ -22,7 +24,7 @@
 }
 
 .chosen-container-single .chosen-default {
-	color: $wp-input-text;
+	color: colors.$wp-input-text;
 }
 
 .chosen-container-active .chosen-single {
@@ -36,7 +38,7 @@
 	width: 100% !important;
 	height: auto;
 	outline: 0;
-	border: 1px solid $wp-input-border;
+	border: 1px solid colors.$wp-input-border;
 	border-radius: 4px;
 	line-height: normal;
 	box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
@@ -45,7 +47,7 @@
 .chosen-container-single.chosen-container-active.chosen-with-drop .chosen-single {
 	min-height: 30px;
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		font-size: 16px;
 		line-height: 1.625;
 		min-height: 40px;

@@ -1,16 +1,14 @@
 /**
  * Internal dependencies.
  */
-import { jQueryReady } from 'utils/jquery.js';
 import './generator';
 
-/**
- * DOM ready.
- */
-jQueryReady( () => {
+; ( function ( document, $ ) {
+	'use strict';
+
 	const products = $( '#edd_products' );
 	const categories = $( '#edd_categories' );
-	if ( !products && !categories ) {
+	if ( ! products && ! categories ) {
 		return;
 	}
 
@@ -24,4 +22,4 @@ jQueryReady( () => {
 	categories.on( 'change', function () {
 		$( '#edd-discount-category-conditions' ).toggle( !!categories.val().length );
 	} );
-} );
+} )( document, jQuery );

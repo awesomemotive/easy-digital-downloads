@@ -1,8 +1,10 @@
+@use "../../variables/colors" as colors;
+
 .edd-download-editor__sections {
 	margin-top: 20px;
 
 	&.edd-sections-wrap {
-		border: 1px solid $wp-border;
+		border: 1px solid colors.$wp-border;
 	}
 
 	.section-wrap .edd-section-content__fields--standard .edd-form-group {

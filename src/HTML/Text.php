@@ -48,7 +48,7 @@ class Text extends Base {
 
 		?>
 		<input
-			type="text"
+			type="<?php echo esc_attr( $this->get_type() ); ?>"
 			name="<?php echo esc_attr( $this->args['name'] ); ?>"
 			id="<?php echo esc_attr( $this->args['id'] ); ?>"
 			value="<?php echo esc_attr( $this->args['value'] ); ?>"
@@ -101,6 +101,21 @@ class Text extends Base {
 			'data'         => false,
 			'required'     => false,
 			'include_span' => true,
+			'type'         => 'text',
 		);
+	}
+
+	/**
+	 * Get the type of the text field.
+	 *
+	 * @since 3.3.9
+	 * @return string
+	 */
+	private function get_type(): string {
+		if ( ! in_array( $this->args['type'], array( 'text', 'password', 'email' ), true ) ) {
+			return 'text';
+		}
+
+		return $this->args['type'];
 	}
 }

@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 .edd_dashboard_widget {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(150px, 1fr));
@@ -8,7 +10,7 @@
 	}
 
 	table thead td {
-		border-bottom: 1px solid $wp-border;
+		border-bottom: 1px solid colors.$wp-border;
 		color: #777;
 	}
 
@@ -38,7 +40,7 @@
 	}
 
 	.label_heading {
-		border-top: 1px solid $wp-border;
+		border-top: 1px solid colors.$wp-border;
 		color: #8f8f8f;
 		font-size: 12px;
 		font-weight: normal;
@@ -48,7 +50,7 @@
 	}
 
 	.edd_dashboard_widget_subheading {
-		border-top: 1px solid $wp-border;
+		border-top: 1px solid colors.$wp-border;
 		color: #8f8f8f;
 		font-size: 14px;
 		padding-top: 10px;
@@ -96,15 +98,15 @@ only screen and (max-width: 1000px) {
 	padding: 1px;
 	text-align: center;
 	margin: 1em -1em -1em;
-	background-color: $wp-alternate;
-	border: 1px solid $wp-border;
+	background-color: colors.$wp-alternate;
+	border: 1px solid colors.$wp-border;
 
 	&--error {
-		background: $wp-red-50;
-		color: $white;
+		background: colors.$wp-red-50;
+		color: colors.$white;
 
 		a {
-			color: $white;
+			color: colors.$white;
 		}
 	}
 }

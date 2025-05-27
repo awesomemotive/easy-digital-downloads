@@ -1,5 +1,7 @@
+@use "../../variables/colors" as colors;
+
 .edd-extension-manager__card {
-	background-color: $white;
+	background-color: colors.$white;
 	padding: 2em;
 	margin: 0;
 	display: flex;

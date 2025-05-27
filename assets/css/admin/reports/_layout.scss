@@ -1,4 +1,7 @@
-@media screen and (min-width: $break-small) {
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
+@media screen and (min-width: wp-breakpoints.$break-small) {
 	#edd-reports-charts-wrap {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(200px, 50%));
@@ -32,6 +35,6 @@
 
 .chart-timezone {
 	font-size: .75rem;
-	color: $wp-gray-10;
+	color: colors.$wp-gray-10;
 	grid-column: 1 / span 2;
 }

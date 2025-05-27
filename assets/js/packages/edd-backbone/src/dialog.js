@@ -31,7 +31,7 @@ export const Dialog = Base.extend( {
 			classes: {
 				'ui-dialog': 'edd-dialog',
 			},
-			closeText: eddAdminOrderOverview.i18n.closeText,
+			closeText: edd_vars.closeText,
 			width: '350px',
 			modal: true,
 			resizable: false,

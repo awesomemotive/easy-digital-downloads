@@ -1,3 +1,5 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
 .edd-repeatables-wrap {
 	display: flex;
 	flex-direction: column;
@@ -5,7 +7,7 @@
 }
 
 .edd_repeatable_row {
-	border: 1px solid $wp-border;
+	border: 1px solid colors.$wp-border;
 	border-radius: 3px;
 	margin: 0;
 	padding: 20px;
@@ -15,7 +17,7 @@
 		padding: 0;
 		margin: 0;
 		box-sizing: border-box;
-		border: 1px dashed $wp-border;
+		border: 1px dashed colors.$wp-border;
 		visibility: visible !important;
 	}
 
@@ -33,7 +35,7 @@
 }
 
 .edd-add-repeatable-row {
-	border-top: 1px solid $wp-border;
+	border-top: 1px solid colors.$wp-border;
 	padding: 12px;
 	margin: 15px -12px -12px -12px;
 	display: flex;
@@ -42,7 +44,7 @@
 }
 
 .edd-repeatable-row-actions {
-	color: $wp-gray-40;
+	color: colors.$wp-gray-40;
 
 	a {
 		text-decoration: none;
@@ -53,8 +55,8 @@
 
 .edd-repeatable-row-header {
 	clear: both;
-	background: $wp-gray-0;
-	border-bottom: 1px solid $wp-border;
+	background: colors.$wp-gray-0;
+	border-bottom: 1px solid colors.$wp-border;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -64,7 +66,7 @@
 
 .edd_repeatable_row:hover .edd-repeatable-row-header,
 .edd_repeatable_row:hover .edd-repeatable-row-standard-fields {
-	border-color: $wp-border;
+	border-color: colors.$wp-border;
 }
 
 .edd-repeatable-row-header:before,
@@ -131,7 +133,7 @@
 	}
 }
 
-@media screen and (max-width: $break-mobile) {
+@media screen and (max-width: wp-breakpoints.$break-mobile) {
 
 	.edd-repeatable-row-header,
 	.edd-repeatable-row-standard-fields,

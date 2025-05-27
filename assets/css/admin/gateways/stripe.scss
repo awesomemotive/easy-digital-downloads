@@ -1,37 +1,5 @@
-@import "~@wordpress/base-styles/colors";
-@import "~@wordpress/base-styles/colors.native";
-
-@import "../../variables/colors";
-@import "../../variables/animations";
-
-/**
- * WordPress Core colors current as of 5.5.1.
- */
-$wp-text: $gray-text-min;
-$wp-border: #c3c4c7;
-
-$wp-input-text: #32373c;
-$wp-input-border: #7e8993;
-
-$wp-alternate: #f9f9f9;
-$wp-inactive: #999;
-
-$wp-red-50: #d63638;
-$wp-green-30: #00ba37;
-$wp-green-50: #008a20;
-
-$wp-gray-0: $gray-0;
-$wp-gray-2: $gray-100;
-$wp-gray-5: #dcdcde;
-$wp-gray-10: #c3c4c7;
-$wp-gray-20: $gray-20;
-$wp-gray-40: $gray-40;
-$wp-gray-50: $gray-50;
-
-$buddypress-colors: (
-	"evergreen": #36533f,
-	"mint": #4f6d59,
-);
+@use "../../variables/colors" as colors;
+@use "../../variables/animations";
 
 .edds-stripe-connect-account-info {
 	& .display-name,
@@ -190,7 +158,7 @@ $buddypress-colors: (
 }
 
 .edds-stripe-connect-account-info span.edd-pro-upgrade a {
-	color: $edd-pro-upgrade;
+	color: colors.$edd-pro-upgrade;
 	font-weight: 600;
 	text-decoration: none;
 }
@@ -223,7 +191,7 @@ $buddypress-colors: (
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: $wp-gray-10;
+	background: colors.$wp-gray-10;
 	margin-right: 12px;
 
 	&--enabled {
@@ -242,10 +210,9 @@ $buddypress-colors: (
 	width: 14px;
 	left: 3px;
 	bottom: 3px;
-	background-color: $white;
+	background-color: colors.$white;
 	transition: 0.1s transform ease;
 	border-radius: 50%;
-	background: white;
 }
 
 .edd-stripe-payment-methods__description {
@@ -262,8 +229,8 @@ $buddypress-colors: (
 	gap: 1em;
 
 	.edd-form-group__control--wrap {
-		background-color: $white;
-		border: 1px solid $wp-gray-10;
+		background-color: colors.$white;
+		border: 1px solid colors.$wp-gray-10;
 		border-radius: 4px;
 		padding: 20px;
 		margin: 0;
@@ -301,7 +268,7 @@ $buddypress-colors: (
 		}
 
 		input[type="checkbox"]:disabled:not(:checked) {
-			background-color: rgba($wp-red-50, 0.5);
+			background-color: rgba(colors.$wp-red-50, 0.5);
 		}
 	}
 }

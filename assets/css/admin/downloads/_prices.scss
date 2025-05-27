@@ -1,3 +1,5 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
 .edd-variable-prices__wrapper {
 	display: flex;
 	flex-direction: column;
@@ -20,14 +22,14 @@
 }
 
 .edd-variable-prices__rows {
-	border-top: 1px solid $wp-border;
+	border-top: 1px solid colors.$wp-border;
 }
 
 .edd-variable-price__row {
 	padding: 20px;
 	border: 0;
 	border-radius: 0;
-	border-bottom: 1px solid $wp-border;
+	border-bottom: 1px solid colors.$wp-border;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 16px;
@@ -37,7 +39,7 @@
 		flex-grow: 1;
 		border: 0;
 
-		@media screen and (min-width: $break-mobile) {
+		@media screen and (min-width: wp-breakpoints.$break-mobile) {
 			flex-wrap: nowrap;
 		}
 
@@ -60,7 +62,7 @@
 			display: block;
 			padding: 20px;
 			padding-left: calc(2rem + 12px);
-			border-top: 1px solid $wp-border;
+			border-top: 1px solid colors.$wp-border;
 
 			&-title {
 				display: block;
@@ -76,10 +78,10 @@
 	}
 
 	.toggle-custom-price-option-section {
-		color: $wp-gray-40;
+		color: colors.$wp-gray-40;
 
 		&:hover {
-			color: $wp-text;
+			color: colors.$wp-text;
 		}
 	}
 

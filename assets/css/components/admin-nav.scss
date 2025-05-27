@@ -1,7 +1,10 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../variables/colors" as colors;
+
 .edd-nav {
 	&__wrapper {
-		background-color: $white;
-		box-shadow: inset 0 -3px $edd-very-light-gray;
+		background-color: colors.$white;
+		box-shadow: inset 0 -3px colors.$edd-very-light-gray;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -11,7 +14,7 @@
 		top: 32px;
 		z-index: 30;
 
-		@media screen and (max-width: $break-medium) {
+		@media screen and (max-width: wp-breakpoints.$break-medium) {
 			top: auto;
 			position: relative;
 			justify-content: center;
@@ -31,7 +34,7 @@
 		margin: 0;
 		gap: 8px;
 
-		@media screen and (max-width: $break-medium) {
+		@media screen and (max-width: wp-breakpoints.$break-medium) {
 			justify-content: center;
 		}
 
@@ -42,12 +45,12 @@
 
 			&:hover,
 			&:focus {
-				box-shadow: inset 0 -3px $wp-gray-20;
+				box-shadow: inset 0 -3px colors.$wp-gray-20;
 			}
 
 			&.active {
-				color: $edd-notice-blue;
-				box-shadow: inset 0 -3px $edd-notice-blue;
+				color: colors.$edd-notice-blue;
+				box-shadow: inset 0 -3px colors.$edd-notice-blue;
 			}
 		}
 
@@ -57,7 +60,7 @@
 			outline: none;
 			display: block;
 			text-decoration: none;
-			color: $wp-gray-50;
+			color: colors.$wp-gray-50;
 			padding: 18px 20px;
 			font-weight: 600;
 			font-size: 16px;

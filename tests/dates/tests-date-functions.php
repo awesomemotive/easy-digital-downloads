@@ -287,6 +287,16 @@ class Functions extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::EDD()->utils->get_date_string()
+	 */
+	public function test_get_date_string_with_seconds() {
+		$actual   = EDD()->utils->get_date_string( '2025-01-01', 23, 59, 59 );
+		$expected = '2025-01-01 23:59:59';
+
+		$this->assertSame( $expected, $actual );
+	}
+
+	/**
 	 * @covers ::edd_get_utc_date_string()
 	 */
 	public function test_get_utc_date_string_from_local() {

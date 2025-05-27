@@ -1,12 +1,9 @@
-/**
- * Internal dependencies
- */
-import { domReady } from 'utils';
+/* global wp */
 
 /**
  * Hides "Save Changes" button if showing the special settings placeholder.
  */
-domReady( () => {
+wp.domReady( () => {
 	const containerEl = document.querySelector( '.edds-requirements-not-met' );
 
 	if ( ! containerEl ) {
@@ -21,7 +18,7 @@ domReady( () => {
  * Moves "Payment Gateways" notice under Stripe.
  * Disables/unchecks the checkbox.
  */
-domReady( () => {
+wp.domReady( () => {
 	const noticeEl = document.getElementById( 'edds-payment-gateways-stripe-unmet-requirements' );
 
 	if ( ! noticeEl ) {

@@ -1,3 +1,4 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
 .edd-toggle {
 	position: relative;
 	display: flex;
@@ -37,7 +38,7 @@
 		z-index: 999;
 	}
 
-	@media only screen and (max-width: $break-medium) {
+	@media only screen and (max-width: wp-breakpoints.$break-medium) {
 		input:checked:before {
 			margin: -.1875rem 0 0 -.25rem;
 		}

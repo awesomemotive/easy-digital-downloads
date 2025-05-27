@@ -37,7 +37,7 @@ function edd_tax_settings_display_tax_disabled_notice() {
 	</div>
 	<?php
 }
-add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_settings_display_tax_disabled_notice', 10 );
+add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_settings_display_tax_disabled_notice', 5 );
 
 /**
  * Display help text at the top of the Licenses tab.

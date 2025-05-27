@@ -1,6 +1,9 @@
+@use "../../variables/colors" as colors;
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
 
 #edd-admin-tax-rates {
 	margin: 1em 0 0;
+	max-width: wp-breakpoints.$break-huge;
 
 	table {
 		border-collapse: collapse;
@@ -15,9 +18,17 @@
 		display: inline-flex;
 	}
 
-	th:not(.check-column) {
+	th {
 		padding: 15px 10px;
 		width: unset;
+
+		button {
+			font-weight: 400;
+		}
+	}
+
+	td {
+		padding: 15px 10px;
 	}
 
 	.chosen-container {
@@ -25,7 +36,7 @@
 	}
 
 	tbody tr:not(:last-of-type) {
-		border-bottom: 1px solid $gray-200;
+		border-bottom: 1px solid colors.$wp-gray-200;
 	}
 
 	tfoot.add-new th {
@@ -49,16 +60,16 @@
 	}
 
 	.edd-tax-rate-row--is-empty td {
-		background-color: $wp-alternate;
+		background-color: colors.$wp-alternate;
 	}
 
 	.edd-tax-rate-row--inactive td {
-		color: $wp-inactive;
-		background-color: $wp-alternate;
+		color: colors.$wp-inactive;
+		background-color: colors.$wp-alternate;
 	}
 
 	.edd-tax-rate-table-add {
-		background-color: $wp-alternate;
+		background-color: colors.$wp-alternate;
 	}
 
 	@media screen and (max-width: 782px) {

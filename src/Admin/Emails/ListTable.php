@@ -311,7 +311,7 @@ class ListTable extends \WP_List_Table {
 	private function do_new_actions_overlay( $add_new_actions ) {
 		?>
 		<button id="edd-emails__add" class="button button-primary">
-			<?php esc_html_e( 'Add New Email', 'easy-digital-downloads' ); ?>
+			<?php esc_html_e( 'Add Email', 'easy-digital-downloads' ); ?>
 		</button>
 		<div class="edd-emails__add-new__overlay" style="display:none;">
 			<?php

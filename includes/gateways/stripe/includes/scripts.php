@@ -54,6 +54,7 @@ function edd_stripe_js( $force_load_scripts = false ) {
 			'sandhills-stripe-js-v3',
 			'jquery',
 			'edd-ajax',
+			'wp-dom-ready',
 		);
 
 		// But if the user has Card Elements, we need to load that instead.
@@ -164,7 +165,7 @@ function edd_stripe_connect_admin_script( $hook ) {
 
 	edd_stripe_connect_admin_style();
 
-	wp_enqueue_script( 'edd-stripe-admin-scripts', EDD_PLUGIN_URL . 'assets/js/stripe-admin.js', array( 'jquery' ), EDD_VERSION, true );
+	wp_enqueue_script( 'edd-stripe-admin-scripts', EDD_PLUGIN_URL . 'assets/js/stripe-admin.js', array( 'jquery', 'wp-dom-ready' ), EDD_VERSION, true );
 
 	$test_key = edd_get_option( 'test_publishable_key' );
 	$live_key = edd_get_option( 'live_publishable_key' );

@@ -47,9 +47,6 @@ function register() {
  * @return string Login form HTML.
  */
 function login( $block_attributes = array() ) {
-	if ( is_user_logged_in() && empty( $_GET['reauth'] ) ) {
-		return '';
-	}
 	$block_attributes = wp_parse_args(
 		$block_attributes,
 		array(
@@ -57,8 +54,34 @@ function login( $block_attributes = array() ) {
 			'redirect' => '',
 		)
 	);
+	$action           = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : false;
+	$block_classes    = array( 'wp-block-edd-login' );
+	if ( $action ) {
+		$block_classes[] = "wp-block-edd-login__{$action}";
+	}
+	$classes = Functions\get_block_classes( $block_attributes, $block_classes );
+	if ( is_user_logged_in() && empty( $_GET['reauth'] ) && ! in_array( $action, array( 'lostpassword', 'rp' ), true ) ) {
+		$user = wp_get_current_user();
 
-	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : false;
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+			<?php
+			edd_print_errors();
+			printf(
+				/* translators: 1: The current user's email address, 2: opening anchor tag, do not translate, 3: closing anchor tag, do not translate. */
+				__( 'You are currently logged in as %1$s. (%2$slog out%3$s)', 'easy-digital-downloads' ),
+				esc_html( $user->user_email ),
+				'<a href="' . esc_url( wp_logout_url( edd_get_current_page_url() ) ) . '">',
+				'</a>'
+			);
+			?>
+		</div>
+		<?php
+
+		return ob_get_clean();
+	}
+
 	if ( 'rp' === $action ) {
 		$user = false;
 		if ( isset( $_COOKIE[ 'wp-resetpass-' . COOKIEHASH ] ) ) {
@@ -70,15 +93,10 @@ function login( $block_attributes = array() ) {
 			edd_set_error( 'invalidkey', __( 'Your password reset link appears to be invalid. Please request a new link below.', 'easy-digital-downloads' ) );
 		}
 	}
-	$block_classes = array( 'wp-block-edd-login' );
-	if ( $action ) {
-		$block_classes[] = "wp-block-edd-login__{$action}";
-	}
-	$classes = Functions\get_block_classes( $block_attributes, $block_classes );
-	ob_start();
 
+	ob_start();
 	?>
-	<div class="<?php echo esc_attr( implode( ' ', $block_classes ) ); ?>">
+	<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 		<?php
 		// Show any error messages after form submission.
 		edd_print_errors();

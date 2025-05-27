@@ -44,7 +44,7 @@ $files = edd_get_download_files( $post_id );
 			</div>
 
 			<div class="edd-add-repeatable-row">
-				<button type="button" class="button-secondary edd_add_repeatable"><?php esc_html_e( 'Add New File', 'easy-digital-downloads' ); ?></button>
+				<button type="button" class="button-secondary edd_add_repeatable"><?php esc_html_e( 'Add File', 'easy-digital-downloads' ); ?></button>
 			</div>
 		</div>
 	</div>

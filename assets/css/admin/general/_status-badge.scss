@@ -1,4 +1,5 @@
-@import "../../variables/colors";
+@use "../../variables/colors" as colors;
+
 /** Status labels */
 .edd-status-badge,
 .edd-admin-order-status-badge {
@@ -39,7 +40,7 @@
 	&--yellow,
 	&--warning,
 	&--pending {
-		color: $wp-yellow-50;
+		color: colors.$wp-yellow-50;
 		background: #f5f2e5;
 	}
 
@@ -47,7 +48,7 @@
 	&--info,
 	&--processing,
 	&--trialling {
-		color: $blue-500;
+		color: colors.$wp-blue-500;
 		background: #e5f1f5;
 	}
 }

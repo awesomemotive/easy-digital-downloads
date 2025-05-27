@@ -5,8 +5,7 @@ namespace EDD\Upgrades;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-use EDD\EventManagement\SubscriberInterface;
-use EDD\EventManagement\EventManager;
+use EDD\EventManagement\MiniManager;
 
 /**
  * Class Loader
@@ -14,36 +13,19 @@ use EDD\EventManagement\EventManager;
  * @since 3.2.10
  * @package EDD\Upgrades
  */
-class Loader implements SubscriberInterface {
+class Loader extends MiniManager {
 
 	/**
-	 * Get the events to subscribe to.
+	 * Get the event classes.
 	 *
 	 * @since 3.2.10
 	 * @return array
 	 */
-	public static function get_subscribed_events() {
+	protected function get_event_classes(): array {
 		return array(
-			'plugins_loaded' => 'add_events',
-		);
-	}
-
-	/**
-	 * Add the upgrade events.
-	 *
-	 * @since 3.2.10
-	 * @return void
-	 */
-	public function add_events() {
-		$upgrade_classes = array(
 			new Orders\MigrateAfterActionsDate(),
 			new Adjustments\DiscountsStartEnd(),
 			new Emails\Registration(),
 		);
-
-		$events = new EventManager();
-		foreach ( $upgrade_classes as $upgrade_class ) {
-			$events->add_subscriber( $upgrade_class );
-		}
 	}
 }

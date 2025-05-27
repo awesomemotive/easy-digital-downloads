@@ -33,7 +33,7 @@ class Select extends EDD_UnitTestCase {
 
 		$this->assertStringContainsString( 'name="edd_discounts"', $dropdown );
 		$this->assertStringContainsString( 'id="discounts"', $dropdown );
-		$this->assertStringContainsString( 'class="edd-select edd-select-chosen edd-user-select"', $dropdown );
+		$this->assertStringContainsString( 'class="edd-select edd-select-chosen edd-discount-select"', $dropdown );
 	}
 
 	public function test_category_dropdown() {

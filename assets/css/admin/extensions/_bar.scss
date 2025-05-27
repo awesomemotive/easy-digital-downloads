@@ -1,3 +1,6 @@
+@use "../../variables/colors" as colors;
+@use "../../variables/icons" as icons;
+
 .edd-extension-manager__bar {
 	display: flex;
 	align-items: center;
@@ -12,8 +15,8 @@
 	}
 
 	input[type="search"] {
-		background-color: $white;
-		background-image: $icon-search;
+		background-color: colors.$white;
+		background-image: icons.$icon-search;
 		background-size: 1em;
 		background-repeat: no-repeat;
 		background-position: 97% center;

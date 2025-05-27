@@ -1,12 +1,16 @@
 <?php
-namespace EDD\Tests;
+namespace EDD\Tests\Gateways;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Tests\Helpers\EDD_Helper_Download;
 
-/**
- * @group edd_gateways
- */
-class Test_Gateways extends EDD_UnitTestCase {
+class General extends EDD_UnitTestCase {
+
+	public function tearDown(): void {
+		edd_delete_option( 'gateways' );
+		edd_delete_option( 'default_gateway' );
+		parent::tearDown();
+	}
 
 	public function test_payment_gateways() {
 		$out = edd_get_payment_gateways();
@@ -76,9 +80,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$edd_options['gateways']['manual'] = '1';
 		$edd_options['gateways']['stripe'] = '1';
 
-		// If we have Stripe in this install, 'stripe' is the default';
-		$expected_result = class_exists( 'EDD_Stripe' ) ? 'stripe' : 'manual';
-		$this->assertEquals( $expected_result, edd_get_default_gateway() );
+		$this->assertEquals( 'stripe', edd_get_default_gateway() );
 	}
 
 	public function test_get_gateway_admin_label() {
@@ -139,7 +141,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$original_user  = $current_user;
 		$current_user   = wp_set_current_user( 1 );
 
-		$download = Helpers\EDD_Helper_Download::create_simple_download();
+		$download = EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download->ID );
 
 		$edd_options['gateways'] = array();
@@ -161,7 +163,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$original_user  = $current_user;
 		$current_user   = wp_set_current_user( 0 );
 
-		$download = Helpers\EDD_Helper_Download::create_simple_download();
+		$download = EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download->ID );
 
 		$edd_options['gateways'] = array();

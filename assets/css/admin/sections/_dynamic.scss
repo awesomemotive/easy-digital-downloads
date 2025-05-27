@@ -1,11 +1,13 @@
+@use "../../variables/colors" as colors;
+
 li.section-title--add-new {
 	border: unset !important;
 	margin-bottom: 40px;
 
 	button {
 		border: 0;
-		border-bottom: 1px solid $gray-200;
-		background-color: $dark-secondary;
+		border-bottom: 1px solid colors.$wp-gray-200;
+		background-color: colors.$dark-secondary;
 		display: flex;
 		gap: 3px;
 		width: 100%;

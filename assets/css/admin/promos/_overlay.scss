@@ -1,10 +1,13 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+@use "../../variables/colors" as colors;
+
 /* Overlay Notice
 -------------------------------------------------- */
 
 .edd-promo-notice__overlay {
 	display: none;
 	position: fixed;
-	background: rgba($gray-100,.75);
+	background: rgba( colors.$wp-gray-2, .75 );
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -17,14 +20,14 @@
 		left: 36px;
 	}
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		left: 0;
 	}
 }
 
 .edd-admin-notice-overlay {
 	display: none;
-	background-color: $white;
+	background-color: colors.$white;
 	padding: 2.5em;
 	text-align: center;
 	max-width: 650px;
@@ -54,7 +57,7 @@
 			align-items: center;
 		}
 
-		@media screen and (max-width: $break-small) {
+		@media screen and (max-width: wp-breakpoints.$break-small) {
 			grid-template-columns: unset;
 		}
 	}
@@ -66,12 +69,12 @@
 	}
 
 	&__link {
-		color: $gray-100;
+		color: colors.$wp-gray-2;
 	}
 
 	.edd-promo-notice-dismiss.button-link {
 		position: absolute;
-		color: $wp-text;
+		color: colors.$wp-text;
 		text-decoration: none;
 		font-size: 2em;
 		top: 0;
@@ -79,11 +82,11 @@
 
 		&:active,
 		&:hover {
-			color: $gray-100;
+			color: colors.$wp-gray-2;
 		}
 	}
 
-	@media screen and (max-width: $break-medium) {
+	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		margin: 1em;
 	}
 }

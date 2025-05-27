@@ -1,4 +1,4 @@
-@import '../../variables/variables';
+@use "../../variables/colors" as colors;
 
 /* Notifications
 -------------------------------------------------------------- */
@@ -78,7 +78,7 @@ body.admin-bar #edd-notifications-panel {
 	color: #005ae0;
 }
 .edd-notification--icon.edd-notification--icon-warning {
-	color: $warning;
+	color: colors.$warning;
 }
 .edd-notification--icon.edd-notification--icon-error {
 	color: #df2a4a;

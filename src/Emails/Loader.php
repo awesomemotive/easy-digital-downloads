@@ -13,8 +13,7 @@ namespace EDD\Emails;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-use EDD\EventManagement\SubscriberInterface;
-use EDD\EventManagement\EventManager;
+use EDD\EventManagement\MiniManager;
 
 /**
  * Class Loader
@@ -22,41 +21,25 @@ use EDD\EventManagement\EventManager;
  * @since 3.3.0
  * @package EDD\Emails
  */
-class Loader implements SubscriberInterface {
+class Loader extends MiniManager {
 
 	/**
-	 * Get the events to subscribe to.
+	 * Get the event classes.
 	 *
-	 * @since 3.3.0
+	 * @since 3.3.9
 	 * @return array
 	 */
-	public static function get_subscribed_events() {
-		return array(
-			'plugins_loaded' => 'add_events',
-		);
-	}
-
-	/**
-	 * Add the email events.
-	 *
-	 * @since 3.3.0
-	 * @return void
-	 */
-	public function add_events() {
-		$email_classes = array(
+	protected function get_event_classes(): array {
+		$classes = array(
 			new Handler(),
 			new Triggers(),
 			new Legacy(),
 		);
-
 		if ( is_admin() ) {
-			$email_classes[] = new \EDD\Admin\Emails\Manager();
-			$email_classes[] = new \EDD\Admin\Emails\Messages();
+			$classes[] = new \EDD\Admin\Emails\Manager();
+			$classes[] = new \EDD\Admin\Emails\Messages();
 		}
 
-		$events = new EventManager();
-		foreach ( $email_classes as $email_class ) {
-			$events->add_subscriber( $email_class );
-		}
+		return $classes;
 	}
 }

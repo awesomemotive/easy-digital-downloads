@@ -1,3 +1,5 @@
+@use "../../variables/colors" as colors;
+
 .edd-mobile-link {
 	line-height: 32px;
 
@@ -16,7 +18,7 @@
 
 		&:before {
 			content: "\f470";
-			color: $gray-700;
+			color: colors.$wp-gray-700;
 			margin-right: -3px;
 		}
 
