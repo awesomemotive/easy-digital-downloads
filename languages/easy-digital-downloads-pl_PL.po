@@ -3697,3 +3697,7 @@ msgstr "do"
 #: includes/discount-functions.php:688
 msgid "Minimum order of %s not met."
 msgstr "Aby użyć kodu zniżkowego wartość zamówienia musi wynosić co najmniej %s"
+
+#: includes/shortcodes.php:666
+msgid "You must be logged in to view this payment receipt."
+msgstr "Musisz się zalogować, aby zobaczyć to potwierdzenie zamówienia"
