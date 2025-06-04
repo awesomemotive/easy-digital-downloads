@@ -206,7 +206,7 @@ function edd_load_admin_scripts( $hook ) {
 		'numeric_item_price'      => __( 'Item price must be numeric', 'easy-digital-downloads' ),
 		'numeric_quantity'        => __( 'Quantity must be numeric', 'easy-digital-downloads' ),
 		'currency'                => edd_get_currency(),
-		'currency_sign'           => edd_currency_filter(''),
+		'currency_sign'           => edd_currency_symbol(),
 		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'       => edd_currency_decimal_filter(),
 		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
