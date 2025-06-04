@@ -184,7 +184,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', $admin_deps, EDD_VERSION, false );
 	wp_enqueue_script( 'edd-admin-scripts' );
 
-	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
+	$edd_vars = [
 		'post_id'                 => isset( $post->ID ) ? $post->ID : null,
 		'edd_version'             => EDD_VERSION,
 		'add_new_download'        => __( 'Add New Download', 'easy-digital-downloads' ),
@@ -217,7 +217,9 @@ function edd_load_admin_scripts( $hook ) {
 		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
 		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
 		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
-	));
+	];
+
+	wp_localize_script( 'edd-admin-scripts', 'edd_vars', apply_filters('edd_admin_scripts_vars', $edd_vars));
 
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
