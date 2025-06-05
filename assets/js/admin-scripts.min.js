@@ -485,9 +485,10 @@ jQuery(document).ready(function ($) {
 
 				amount = amount.toFixed( edd_vars.currency_decimals );
 
-				var formatted_amount = amount + edd_vars.currency_sign;
+				var formatted_amount = amount + ' ' + edd_vars.currency_sign;
+
 				if ( 'before' === edd_vars.currency_pos ) {
-					formatted_amount = edd_vars.currency_sign + amount;
+					formatted_amount = edd_vars.currency_sign + ' ' + amount;
 				}
 
 				if( price_name ) {
