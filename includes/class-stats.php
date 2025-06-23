@@ -1016,6 +1016,13 @@ class Stats {
 			'requested_function' => 'SUM',
 		) );
 
+		/**
+		 * Total and tax sum is already calculated in above queries,
+		 * having tax column in union query will throw no column found error.
+		 * So we are setting the column only to total.
+		 */
+		$this->query_vars['column'] = 'total';
+
 		$union_function = $this->get_amount_column_and_function( array(
 			'column_prefix'      => '',
 			'accepted_functions' => array( 'SUM', 'AVG' ),

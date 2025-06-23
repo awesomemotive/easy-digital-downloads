@@ -102,7 +102,7 @@ final class ApplicationFee {
 		}
 
 		$message = sprintf(
-			/* translators: 1: opening strong tag, 2: closing strong tag, 3: the message explaining the application fee (eg "3% per-transaction fee + Stripe fees"). */
+			/* translators: 1: opening strong tag, 2: closing strong tag, 3: the message explaining the application fee (eg "3% per-transaction fee + gateway fees"). */
 			__( '%1$sPay as you go pricing:%2$s %3$s.', 'easy-digital-downloads' ),
 			'<strong>',
 			'</strong>',
@@ -110,7 +110,7 @@ final class ApplicationFee {
 		);
 		if ( empty( $this->license->license_data->key ) && ! edds_is_pro() && ! edd_is_pro() ) {
 			$message .= ' ' . sprintf(
-				/* translators: Replacements are for the html wrappers for the phrse Upgrade to Pro and should not be translated. */
+				/* translators: Replacements are for the html wrappers for the phrase Upgrade to Pro and should not be translated. */
 				__( '%1$sUpgrade to Pro%2$s to remove transaction fees.', 'easy-digital-downloads' ),
 				'<span class="edd-pro-upgrade"><a href="' . edd_link_helper(
 					'https://easydigitaldownloads.com/pricing/',
@@ -213,7 +213,7 @@ final class ApplicationFee {
 	private function get_initial_connect_message() {
 		if ( ! $this->get_license() || empty( $this->license->license_data->key ) ) {
 			return sprintf(
-				/* translators: the message explaining the application fee (eg "3% per-transaction fee + Stripe fees") */
+				/* translators: the message explaining the application fee (eg "3% per-transaction fee + gateway fees") */
 				__( 'Connect with Stripe for pay as you go pricing: %s.', 'easy-digital-downloads' ),
 				$this->get_base_fee_message()
 			);
@@ -221,7 +221,7 @@ final class ApplicationFee {
 
 		// Stripe Pro is active, but the license is not valid.
 		return sprintf(
-			/* translators: the message explaining the application fee (eg "3% per-transaction fee + Stripe fees") */
+			/* translators: the message explaining the application fee (eg "3% per-transaction fee + gateway fees") */
 			__( 'Connect with Stripe for pay as you go pricing: %s. Activate your license to remove the per-transaction fee.', 'easy-digital-downloads' ),
 			$this->get_base_fee_message()
 		);

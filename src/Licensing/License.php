@@ -119,6 +119,14 @@ class License {
 	public $subscription_id;
 
 	/**
+	 * The magic update link.
+	 *
+	 * @since 3.4.0
+	 * @var string
+	 */
+	public $magic_update_link;
+
+	/**
 	 * The product shortname.
 	 *
 	 * @var string
@@ -325,6 +333,6 @@ class License {
 	 * @return array
 	 */
 	private function get_editable_keys() {
-		return array( 'license', 'error', 'success', 'pass_id', 'subscription', 'subscription_id', 'expires' );
+		return array( 'license', 'error', 'success', 'pass_id', 'subscription', 'subscription_id', 'expires', 'magic_update_link' );
 	}
 }

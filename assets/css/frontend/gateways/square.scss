@@ -1,0 +1,142 @@
+/**
+ * Square Checkout Styles
+ *
+ * Styles for Square payment integration in Easy Digital Downloads.
+ *
+ * @package EDD\Gateways\Square
+ * @since 3.4.0
+ */
+
+/* Square Payment Form Container */
+#edd-square-payment-form {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+}
+
+/* Square Card Element */
+#edd-square-card-element {
+    padding: 12px;
+    background: transparent;
+    min-height: 40px;
+	margin-bottom: 0px !important;
+
+    &:focus-within {
+        border-color: #006ba1;
+        box-shadow: 0 0 0 1px #006ba1;
+    }
+
+    &:focus {
+        outline: 2px solid #006ba1;
+        outline-offset: 2px;
+    }
+}
+
+/* Payment Errors */
+#edd-square-payment-errors {
+    margin: 15px 0;
+
+    .edd-alert {
+        padding: 12px 15px;
+        margin: 10px 0;
+        border-radius: 4px;
+        font-size: 14px;
+
+        &.edd-alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    }
+}
+
+/* Loading States */
+.edd-loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #006ba1;
+    border-radius: 50%;
+    animation: edd-square-spin 1s linear infinite;
+}
+
+@keyframes edd-square-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Gateway Selection */
+.edd-gateway-option {
+    input[value="square"]:checked ~ label {
+        background-color: #f0f8ff;
+        border-color: #006ba1;
+    }
+
+    /* Hide Square form when not selected */
+    &:not(.edd-gateway-option-selected) ~ #edd-square-payment-form {
+        display: none;
+    }
+
+    /* Show Square form when selected */
+    &.edd-gateway-option-selected input[value="square"] ~ #edd-square-payment-form {
+        display: block;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #edd-square-payment-form {
+        margin: 15px 0;
+        padding: 15px;
+    }
+}
+
+/* Integration with EDD Styles */
+.edd_checkout_form_wrap {
+    #edd-square-payment-form {
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    #edd-square-card-element {
+        font-family: inherit;
+        font-size: inherit;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    #edd-square-card-element {
+        border-color: #000;
+        border-width: 2px;
+    }
+
+    #edd-square-payment-errors .edd-alert-error {
+        background-color: #fff;
+        border-color: #000;
+        color: #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .edd-loading {
+        animation: none;
+    }
+
+    html, body {
+        scroll-behavior: auto;
+    }
+}
+
+/* Print styles */
+@media print {
+    #edd-square-payment-form {
+        display: none;
+    }
+}

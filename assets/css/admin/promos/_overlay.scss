@@ -33,6 +33,8 @@
 	max-width: 650px;
 	position: relative;
 	flex-direction: column;
+	border-top: 5px solid colors.$edd-light-blue;
+	border-radius: 12px;
 
 	.edd-promo-notice__overlay & {
 		display: flex;
@@ -88,5 +90,31 @@
 
 	@media screen and (max-width: wp-breakpoints.$break-medium) {
 		margin: 1em;
+	}
+
+	& .edd-promo-notice__info {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		& p {
+			display: flex;
+			justify-content: center;
+			margin: 0;
+
+			&.info {
+				color: colors.$wp-blue-500;
+				background-color: rgba( colors.$wp-blue-500, 0.1 );
+				padding: 1em;
+				border-radius: 4px;
+				margin-top: 1em;
+				font-weight: 500;
+			}
+
+			&.edd-hidden {
+				display: none;
+			}
+		}
 	}
 }

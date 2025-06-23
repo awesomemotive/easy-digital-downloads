@@ -31,7 +31,7 @@ $bundle_options = EDD()->html->get_products(
 );
 ?>
 
-<div id="edd_products">
+<div id="edd_bundled_products">
 	<div id="edd_file_fields_bundle" class="edd_meta_table_wrap">
 		<div class="widefat edd_repeatable_table">
 

@@ -344,13 +344,17 @@ jQuery( document ).ready( function( $ ) {
 	$(document).on('change', 'select#edd-gateway, input.edd-gateway', function (e) {
 		const payment_mode = $( '#edd-gateway option:selected, input.edd-gateway:checked' ).val();
 
+		// Ensure the change is applied if this is the input.edd-gateway.
+		if ( $( this ).is( 'input.edd-gateway' ) ) {
+			// Ensure the correct gateway is 'checked'.
+			$( 'input.edd-gateway[value="' + payment_mode + '"]' ).prop( 'checked', 'checked' );
+		}
+
 		if ( payment_mode === '0' ) {
 			return false;
 		}
 
 		edd_load_gateway( payment_mode );
-
-		return false;
 	} );
 
 	// Auto load first payment gateway

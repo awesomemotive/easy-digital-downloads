@@ -25,25 +25,12 @@ function edds_stripe_connect_can_manage_keys() {
  * @return string The elements mode string.
  */
 function edds_get_elements_mode() {
-	$default = _edds_legacy_elements_enabled() ? 'card-elements' : 'payment-elements';
 
 	/**
 	 * Because we use the deferred payment intents beta, only connected accounts can use Payment Elements
 	 * for now, so we'll force them to be in `card-elements`.
 	 */
 	if ( edds_stripe_connect_can_manage_keys() ) {
-		return 'card-elements';
-	}
-
-	/**
-	 * Recurring Subscription payment method updates need to still run card elements for now.
-	 */
-	if (
-		function_exists( 'edd_recurring' ) &&
-		( isset( $_GET['action'] ) && 'update' === $_GET['action'] ) &&
-		( isset( $_GET['subscription_id'] ) && is_numeric( $_GET['subscription_id'] ) )
-	) {
-		add_filter( 'edd_get_option_stripe_split_payment_fields', '__return_false' );
 		return 'card-elements';
 	}
 
@@ -57,7 +44,27 @@ function edds_get_elements_mode() {
 		return 'card-elements';
 	}
 
-	return edd_get_option( 'stripe_elements_mode', $default );
+	$default                = _edds_legacy_elements_enabled() ? 'card-elements' : 'payment-elements';
+	$stripe_elements_option = edd_get_option( 'stripe_elements_mode', $default );
+
+	if ( ! function_exists( 'edd_recurring' ) || 'card-elements' === $stripe_elements_option ) {
+		return $stripe_elements_option;
+	}
+
+	// As of 2.13.0, Recurring can use Payment Elements, so we need to check for that.
+	if ( class_exists( '\\EDD\\Recurring\\Gateways\\Stripe\\Update\\Form' ) ) {
+		return $stripe_elements_option;
+	}
+
+	if (
+		( isset( $_GET['action'] ) && 'update' === $_GET['action'] ) &&
+		( isset( $_GET['subscription_id'] ) && is_numeric( $_GET['subscription_id'] ) )
+	) {
+		add_filter( 'edd_get_option_stripe_split_payment_fields', '__return_false' );
+		return 'card-elements';
+	}
+
+	return $stripe_elements_option;
 }
 
 /**

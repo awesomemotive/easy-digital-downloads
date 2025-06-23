@@ -38,6 +38,7 @@ class Core extends EventManagement\Subscribers {
 
 			// Gateways.
 			new Gateways\Stripe\Webhooks\Listener(),
+			new Gateways\Square\Webhooks\Listener(),
 
 			// Upgrades.
 			new Upgrades\Loader(),
@@ -94,6 +95,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Exports\Loader(),
 			new Admin\Customers\Emails(),
 			new Admin\Discounts\Manager(),
+			new Gateways\Square\Admin\Settings\Register(),
 		);
 
 		return $providers;

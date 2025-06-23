@@ -12,8 +12,9 @@
     "platform-check": false
   },
   "require": {
-    "nesbot/carbon": "^2.69.0",
-    "stripe/stripe-php": "15.10.0"
+    "nesbot/carbon": "^2.73.0",
+    "stripe/stripe-php": "15.10.0",
+    "square/square": "^40.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^8",
@@ -28,13 +29,14 @@
   "autoload": {
     "psr-4": {
       "EDD\\": "src/",
+      "EDD\\Vendor\\": "libraries/",
       "EDD\\Vendor\\Stripe\\": "libraries/Stripe/lib/",
+      "EDD\\Vendor\\Square\\": "libraries/Square/",
       "EDD\\Vendor\\Carbon\\": "libraries/Carbon/src/Carbon/",
       "EDD\\Vendor\\Symfony\\Polyfill\\Mbstring\\": "libraries/Symfony/Polyfill/Mbstring/"
     },
     "files": [
-      "src/Globals/Polyfills/PHP.php",
-      "libraries/Symfony/Polyfill/Mbstring/bootstrap.php"
+      "src/Globals/Polyfills/PHP.php"
     ]
   },
   "autoload-dev": {
@@ -52,7 +54,8 @@
       "classmap_prefix": "EDD_",
       "packages": [
         "stripe/stripe-php",
-        "nesbot/carbon"
+        "nesbot/carbon",
+        "square/square"
       ],
       "excluded_packages": [
         "symfony/deprecation-contracts",
@@ -69,6 +72,19 @@
           "psr-4": {
             "Carbon\\": ""
           }
+        },
+        "square/square": {
+          "psr-4": {
+            "Square\\": "src/"
+          }
+        },
+        "symfony/polyfill-mbstring": {
+          "psr-4": {
+            "Symfony\\Polyfill\\Mbstring\\": ""
+          },
+          "files": [
+            "bootstrap.php"
+          ]
         }
       }
     }
