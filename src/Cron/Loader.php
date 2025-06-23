@@ -213,6 +213,7 @@ class Loader implements SubscriberInterface {
 			Components\Store::class,
 			Components\Stripe::class,
 			Components\EmailSummariesBlurbs::class,
+			Components\NewUser::class,
 		);
 
 		/**

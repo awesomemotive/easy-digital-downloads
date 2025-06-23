@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.3.9\n"
+"Project-Id-Version: Easy Digital Downloads 3.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-public\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-27T22:29:07+00:00\n"
+"POT-Creation-Date: 2025-06-23T19:44:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 
@@ -5790,7 +5790,7 @@ msgstr ""
 
 #: includes/admin/adjustments/adjustment-functions.php:53
 #: includes/admin/adjustments/adjustment-functions.php:73
-#: includes/admin/reporting/reports.php:2586
+#: includes/admin/reporting/reports.php:2595
 #: includes/reports/reports-functions.php:348
 #: includes/upgrades/functions.php:148
 #: src/Admin/Menu/Header.php:154
@@ -5939,8 +5939,8 @@ msgstr ""
 #: includes/api/class-edd-api.php:2005
 #: includes/api/class-edd-api.php:2015
 #: includes/blocks/includes/forms/recaptcha.php:196
-#: includes/cart/class-edd-cart.php:1438
-#: includes/cart/class-edd-cart.php:1452
+#: includes/cart/class-edd-cart.php:1455
+#: includes/cart/class-edd-cart.php:1469
 #: includes/class-edd-license-handler.php:479
 #: includes/deprecated-functions.php:489
 #: includes/deprecated-functions.php:506
@@ -6575,10 +6575,11 @@ msgstr ""
 #: src/Admin/Emails/Manager.php:50
 #: src/Admin/Emails/Manager.php:97
 #: src/Admin/Emails/Manager.php:203
-#: src/Admin/Promos/PromoHandler.php:158
-#: src/Admin/Promos/PromoHandler.php:165
-#: src/Admin/Promos/PromoHandler.php:170
-#: src/Admin/Promos/PromoHandler.php:194
+#: src/Admin/Promos/PromoHandler.php:159
+#: src/Admin/Promos/PromoHandler.php:166
+#: src/Admin/Promos/PromoHandler.php:171
+#: src/Admin/Promos/PromoHandler.php:195
+#: src/Gateways/Square/Admin/Settings/Register.php:147
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -6955,7 +6956,7 @@ msgid "Unnamed Customer"
 msgstr ""
 
 #: includes/admin/customers/customers.php:62
-#: includes/admin/reporting/reports.php:2906
+#: includes/admin/reporting/reports.php:2915
 #: src/Admin/Exports/Loader.php:156
 #: src/Admin/Menu/Header.php:157
 #: src/Admin/Menu/Pages.php:63
@@ -7001,6 +7002,7 @@ msgstr ""
 #: includes/gateways/stripe/includes/template-functions.php:727
 #: src/Admin/Assets/Localization.php:109
 #: src/Admin/Emails/Reset.php:52
+#: src/Admin/Promos/Notices/SquareWebhooksModal.php:115
 msgid "Cancel"
 msgstr ""
 
@@ -7332,7 +7334,7 @@ msgstr ""
 #: includes/admin/reporting/reports.php:284
 #: includes/admin/reporting/reports.php:372
 #: includes/admin/reporting/reports.php:400
-#: includes/admin/reporting/reports.php:606
+#: includes/admin/reporting/reports.php:607
 #: includes/reports/data/taxes/class-tax-collected-by-location-list-table.php:78
 msgid "Net"
 msgstr ""
@@ -7346,13 +7348,13 @@ msgstr ""
 #: includes/admin/reporting/reports.php:266
 #: includes/admin/reporting/reports.php:372
 #: includes/admin/reporting/reports.php:380
-#: includes/admin/reporting/reports.php:761
-#: includes/admin/reporting/reports.php:782
-#: includes/admin/reporting/reports.php:907
-#: includes/admin/reporting/reports.php:1531
-#: includes/admin/reporting/reports.php:1774
-#: includes/admin/reporting/reports.php:1795
-#: includes/admin/reporting/reports.php:1891
+#: includes/admin/reporting/reports.php:763
+#: includes/admin/reporting/reports.php:784
+#: includes/admin/reporting/reports.php:916
+#: includes/admin/reporting/reports.php:1540
+#: includes/admin/reporting/reports.php:1783
+#: includes/admin/reporting/reports.php:1804
+#: includes/admin/reporting/reports.php:1900
 #: includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php:61
 #: src/Admin/Exports/Exporters/Downloads.php:62
 #: src/Admin/Exports/Exporters/SalesEarnings.php:65
@@ -7874,7 +7876,7 @@ msgstr ""
 #: includes/blocks/includes/downloads/downloads.php:162
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:36
 #: includes/shortcodes.php:50
-#: includes/template-functions.php:92
+#: includes/template-functions.php:95
 #: src/Admin/Settings/Tabs/Misc.php:253
 #: includes/blocks/build/buy-button/index.js:13
 #: includes/blocks/src/buy-button/edit.js:71
@@ -8658,8 +8660,8 @@ msgid "City:"
 msgstr ""
 
 #: includes/admin/payments/orders.php:470
-msgctxt "Zip / Postal code of address"
-msgid "Zip / Postal Code:"
+msgctxt "Postal code of address"
+msgid "Postal / ZIP Code:"
 msgstr ""
 
 #: includes/admin/payments/orders.php:477
@@ -9067,13 +9069,13 @@ msgstr ""
 #: includes/admin/reporting/reports.php:241
 #: includes/admin/reporting/reports.php:400
 #: includes/admin/reporting/reports.php:408
-#: includes/admin/reporting/reports.php:706
-#: includes/admin/reporting/reports.php:927
-#: includes/admin/reporting/reports.php:1025
-#: includes/admin/reporting/reports.php:1499
-#: includes/admin/reporting/reports.php:1710
-#: includes/admin/reporting/reports.php:1911
-#: includes/admin/reporting/reports.php:2007
+#: includes/admin/reporting/reports.php:708
+#: includes/admin/reporting/reports.php:936
+#: includes/admin/reporting/reports.php:1034
+#: includes/admin/reporting/reports.php:1508
+#: includes/admin/reporting/reports.php:1719
+#: includes/admin/reporting/reports.php:1920
+#: includes/admin/reporting/reports.php:2016
 #: includes/reports/data/downloads/class-top-selling-downloads-list-table.php:57
 #: includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php:60
 #: src/Admin/Exports/Exporters/Downloads.php:61
@@ -9165,11 +9167,12 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:66
 #: includes/admin/tools.php:680
+#: includes/gateways/stripe/includes/template-functions.php:572
 #: src/Admin/Exports/Exporters/Orders.php:59
 #: src/Admin/Exports/Exporters/TaxedOrders.php:72
 #: src/Forms/Checkout/PostalCode.php:51
 #: templates/shortcode-profile-editor.php:163
-msgid "Zip / Postal Code"
+msgid "Postal / ZIP Code"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:67
@@ -9303,7 +9306,7 @@ msgid "This screen provides you with reports for your earnings, downloads, custo
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:67
-#: includes/admin/reporting/reports.php:3152
+#: includes/admin/reporting/reports.php:3161
 #: includes/admin/tools.php:955
 msgid "Export"
 msgstr ""
@@ -9431,20 +9434,20 @@ msgid "The logs tab has been moved to the Tools screen."
 msgstr ""
 
 #: includes/admin/reporting/reports.php:294
-#: includes/admin/reporting/reports.php:1599
+#: includes/admin/reporting/reports.php:1608
 msgid "Average Order Value"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:321
-#: includes/admin/reporting/reports.php:2929
-#: includes/admin/reporting/reports.php:3024
-#: includes/admin/reporting/reports.php:3100
+#: includes/admin/reporting/reports.php:2938
+#: includes/admin/reporting/reports.php:3033
+#: includes/admin/reporting/reports.php:3109
 #: includes/emails/email-summary/template-parts/data-listing.php:68
 msgid "New Customers"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:345
-#: includes/admin/reporting/reports.php:1246
+#: includes/admin/reporting/reports.php:1255
 msgid "Total Refund Amount"
 msgstr ""
 
@@ -9462,29 +9465,29 @@ msgid "Average Sales / Earnings"
 msgstr ""
 
 #. translators: %s: Downloads plural label
-#: includes/admin/reporting/reports.php:656
+#: includes/admin/reporting/reports.php:658
 msgid "Top Selling %s"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:671
+#: includes/admin/reporting/reports.php:673
 msgid "Sales by Variation"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:726
+#: includes/admin/reporting/reports.php:728
 msgid "Earnings by Variation"
 msgstr ""
 
 #. translators: %s: Downloads label
-#: includes/admin/reporting/reports.php:1085
+#: includes/admin/reporting/reports.php:1094
 msgid "%s Terms"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1100
+#: includes/admin/reporting/reports.php:1109
 msgid "Earnings By Term"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1140
-#: includes/admin/reporting/reports.php:1565
+#: includes/admin/reporting/reports.php:1149
+#: includes/admin/reporting/reports.php:1574
 #: includes/admin/settings/register-settings.php:555
 #: includes/orders/functions/types.php:102
 #: src/Admin/Settings/Tabs/Gateways.php:154
@@ -9492,87 +9495,87 @@ msgstr ""
 msgid "Refunds"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1169
+#: includes/admin/reporting/reports.php:1178
 msgid "Number of Refunds"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1195
+#: includes/admin/reporting/reports.php:1204
 msgid "Number of Fully Refunded Orders"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1222
+#: includes/admin/reporting/reports.php:1231
 msgid "Number of Fully Refunded Items"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1271
+#: includes/admin/reporting/reports.php:1280
 msgid "Average Refund Amount"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1297
+#: includes/admin/reporting/reports.php:1306
 msgid "Average Time to Refund"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1320
+#: includes/admin/reporting/reports.php:1329
 msgid "Refund Rate"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1345
+#: includes/admin/reporting/reports.php:1354
 msgid "Refunded Revenue"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1353
+#: includes/admin/reporting/reports.php:1362
 msgid "Revenue"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1372
+#: includes/admin/reporting/reports.php:1381
 msgid "Refunded Orders"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1380
+#: includes/admin/reporting/reports.php:1389
 msgctxt "Context: As in the total number of items"
 msgid "Number"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1484
+#: includes/admin/reporting/reports.php:1493
 msgid "Payment Gateways"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1638
+#: includes/admin/reporting/reports.php:1647
 msgid "Gateway Stats"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1653
+#: includes/admin/reporting/reports.php:1662
 msgid "Stripe Payment Methods"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1669
+#: includes/admin/reporting/reports.php:1678
 msgid "Gateway Sales"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1730
+#: includes/admin/reporting/reports.php:1739
 msgid "Gateway Earnings"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2094
+#: includes/admin/reporting/reports.php:2103
 #: includes/admin/settings/contextual-help.php:112
 #: includes/admin/settings/register-settings.php:501
 msgid "Taxes"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2108
+#: includes/admin/reporting/reports.php:2117
 msgid "Total Tax Collected"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2151
+#: includes/admin/reporting/reports.php:2160
 msgid "Total Tax Collected for "
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2189
+#: includes/admin/reporting/reports.php:2198
 msgid "Tax Collected by Location"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2266
-#: includes/admin/reporting/reports.php:2481
+#: includes/admin/reporting/reports.php:2275
+#: includes/admin/reporting/reports.php:2490
 #: includes/admin/settings/register-settings.php:606
 #: includes/admin/tools/logs.php:174
 #: includes/privacy-functions.php:591
@@ -9580,83 +9583,83 @@ msgstr ""
 msgid "File Downloads"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2281
-#: includes/admin/reporting/reports.php:2395
+#: includes/admin/reporting/reports.php:2290
+#: includes/admin/reporting/reports.php:2404
 msgid "Number of File Downloads"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2313
+#: includes/admin/reporting/reports.php:2322
 msgid "Average per Customer"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2336
+#: includes/admin/reporting/reports.php:2345
 msgid "Average per Order"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2359
+#: includes/admin/reporting/reports.php:2368
 msgid "Most Downloaded Product"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2380
+#: includes/admin/reporting/reports.php:2389
 msgid "Top Five Most Downloaded Products"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2601
+#: includes/admin/reporting/reports.php:2610
 msgid "Number of Discounts Used"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2623
+#: includes/admin/reporting/reports.php:2632
 msgid "Discount Ratio"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2646
+#: includes/admin/reporting/reports.php:2655
 msgid "Customer Savings"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2672
+#: includes/admin/reporting/reports.php:2681
 msgid "Average Discount Amount"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2695
+#: includes/admin/reporting/reports.php:2704
 msgid "Most Popular Discount"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2725
+#: includes/admin/reporting/reports.php:2734
 msgid "Discount Usage Count"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2749
+#: includes/admin/reporting/reports.php:2758
 msgid "Top Five Discounts"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2764
-#: includes/admin/reporting/reports.php:2844
+#: includes/admin/reporting/reports.php:2773
+#: includes/admin/reporting/reports.php:2853
 msgid "Discount Usage"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2953
+#: includes/admin/reporting/reports.php:2962
 msgid "Average Revenue per Customer"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2973
+#: includes/admin/reporting/reports.php:2982
 msgid "Average Orders per Customer"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2994
+#: includes/admin/reporting/reports.php:3003
 msgid "Top Five Customers &mdash; All Time"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:3009
+#: includes/admin/reporting/reports.php:3018
 msgid "Most Valuable Customers"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:3250
+#: includes/admin/reporting/reports.php:3259
 #: includes/user-functions.php:875
 #: includes/user-functions.php:879
 msgid "Notice"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:3251
+#: includes/admin/reporting/reports.php:3260
 msgid "Tax reports are only generated for taxes associated with a location. The legacy default tax rate is unable to be reported on."
 msgstr ""
 
@@ -10105,7 +10108,7 @@ msgid "Link"
 msgstr ""
 
 #: includes/admin/thickbox.php:59
-#: includes/template-functions.php:528
+#: includes/template-functions.php:538
 msgid "Button"
 msgstr ""
 
@@ -10114,7 +10117,7 @@ msgstr ""
 #: includes/checkout/template.php:872
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:212
 #: includes/shortcodes.php:52
-#: includes/template-functions.php:92
+#: includes/template-functions.php:95
 #: src/Admin/Settings/Tabs/Misc.php:129
 msgid "Purchase"
 msgstr ""
@@ -10958,7 +10961,7 @@ msgid "Orders placed through the Amazon gateway must be refunded through Amazon.
 msgstr ""
 
 #: includes/admin/views/tmpl-order-adjustment-discount.php:27
-#: includes/discount-functions.php:1336
+#: includes/discount-functions.php:1366
 msgid "Remove discount"
 msgstr ""
 
@@ -10968,7 +10971,7 @@ msgstr ""
 #: includes/blocks/views/checkout/discount.php:16
 #: includes/blocks/views/orders/discounts.php:7
 #: includes/checkout/template.php:621
-#: includes/discount-functions.php:1300
+#: includes/discount-functions.php:1330
 #: templates/shortcode-receipt.php:87
 msgid "Discount"
 msgid_plural "Discounts"
@@ -11462,6 +11465,7 @@ msgstr ""
 #: includes/cart/template.php:130
 #: includes/gateways/stripe/includes/compat.php:118
 #: includes/process-purchase.php:30
+#: src/Gateways/Square/Checkout/Form.php:138
 msgid "Your cart is empty."
 msgstr ""
 
@@ -11669,6 +11673,7 @@ msgstr ""
 
 #: includes/blocks/views/checkout/purchase-form/credit-card.php:16
 #: includes/gateways/stripe/includes/template-functions.php:60
+#: src/Gateways/Square/Checkout/Form.php:63
 msgid "This is a secure SSL encrypted payment."
 msgstr ""
 
@@ -11766,7 +11771,7 @@ msgid "Confirm Password"
 msgstr ""
 
 #: includes/blocks/views/downloads/content.php:18
-#: includes/template-functions.php:152
+#: includes/template-functions.php:156
 msgid "Free"
 msgstr ""
 
@@ -11889,37 +11894,37 @@ msgid "Search Downloads"
 msgstr ""
 
 #. translators: %s: tax rate formatted as a percentage
-#: includes/cart/class-edd-cart.php:894
+#: includes/cart/class-edd-cart.php:911
 msgid "includes %s tax"
 msgstr ""
 
 #. translators: %s: tax rate formatted as a percentage
-#: includes/cart/class-edd-cart.php:897
+#: includes/cart/class-edd-cart.php:914
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1403
-#: includes/cart/class-edd-cart.php:1463
+#: includes/cart/class-edd-cart.php:1420
+#: includes/cart/class-edd-cart.php:1480
 #: includes/error-tracking.php:84
 #: templates/shortcode-profile-editor.php:28
 msgid "Success"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1404
+#: includes/cart/class-edd-cart.php:1421
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1438
-#: includes/cart/class-edd-cart.php:1452
+#: includes/cart/class-edd-cart.php:1455
+#: includes/cart/class-edd-cart.php:1469
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1446
-#: includes/cart/class-edd-cart.php:1455
+#: includes/cart/class-edd-cart.php:1463
+#: includes/cart/class-edd-cart.php:1472
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1463
+#: includes/cart/class-edd-cart.php:1480
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -13093,12 +13098,12 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: includes/class-stats.php:3230
+#: includes/class-stats.php:3237
 #: includes/emails/email-summary/class-edd-email-summary.php:275
 msgid "No Change"
 msgstr ""
 
-#: includes/class-stats.php:3242
+#: includes/class-stats.php:3249
 #: includes/emails/email-summary/class-edd-email-summary.php:273
 msgid "No data to compare"
 msgstr ""
@@ -14236,6 +14241,7 @@ msgid "PayPal Settings"
 msgstr ""
 
 #: includes/gateways/paypal/admin/settings.php:60
+#: src/Gateways/Square/Admin/Settings/Render.php:44
 #: src/Gateways/Stripe/Admin/Settings.php:35
 msgid "Connection Status"
 msgstr ""
@@ -14837,6 +14843,7 @@ msgstr ""
 
 #: includes/gateways/stripe/includes/class-edd-stripe.php:215
 #: includes/gateways/stripe/includes/template-functions.php:183
+#: src/Gateways/Square/Gateway.php:95
 #: src/Gateways/Stripe/Gateway.php:70
 #: src/Gateways/Stripe/PaymentMethods/Card.php:58
 msgid "Credit Card"
@@ -14853,6 +14860,7 @@ msgstr ""
 
 #: includes/gateways/stripe/includes/compat.php:122
 #: includes/process-purchase.php:34
+#: src/Gateways/Square/Checkout/Form.php:142
 msgid "Missing nonce when processing checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
@@ -14860,6 +14868,9 @@ msgstr ""
 #: includes/gateways/stripe/includes/compat.php:132
 #: includes/gateways/stripe/includes/compat.php:141
 #: includes/process-purchase.php:39
+#: src/Gateways/Square/Checkout/Form.php:149
+#: src/Gateways/Square/Checkout/Form.php:155
+#: src/Gateways/Square/Checkout/Form.php:165
 msgid "Error processing purchase. Please reload the page and try again."
 msgstr ""
 
@@ -15204,6 +15215,7 @@ msgid "Please wait..."
 msgstr ""
 
 #: includes/gateways/stripe/includes/template-functions.php:41
+#: src/Gateways/Square/Checkout/Form.php:45
 msgid "Payment Info"
 msgstr ""
 
@@ -15259,10 +15271,6 @@ msgstr ""
 #: includes/gateways/stripe/includes/template-functions.php:515
 #: src/Checkout/Address.php:86
 msgid "Billing Details"
-msgstr ""
-
-#: includes/gateways/stripe/includes/template-functions.php:572
-msgid "ZIP Code"
 msgstr ""
 
 #: includes/gateways/stripe/includes/template-functions.php:677
@@ -16352,72 +16360,72 @@ msgid "You are already logged in"
 msgstr ""
 
 #. translators: the settings screen URL
-#: includes/template-functions.php:64
+#: includes/template-functions.php:61
 msgid "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to set one."
 msgstr ""
 
-#: includes/template-functions.php:93
+#: includes/template-functions.php:96
 #: src/Admin/Settings/Tabs/Misc.php:150
 msgctxt "text shown on the Add to Cart Button when the product is already in the cart"
 msgid "Checkout"
 msgstr ""
 
-#: includes/template-functions.php:199
+#: includes/template-functions.php:203
 #: src/Assets/Localization.php:63
 msgid "Loading"
 msgstr ""
 
-#: includes/template-functions.php:213
+#: includes/template-functions.php:217
 msgid "Added to cart"
 msgstr ""
 
 #. translators: the formatted tax rate
-#: includes/template-functions.php:220
+#: includes/template-functions.php:225
 msgid "Includes %1$s tax"
 msgstr ""
 
 #. translators: the formatted tax rate
-#: includes/template-functions.php:223
+#: includes/template-functions.php:228
 msgid "Excluding %1$s tax"
 msgstr ""
 
-#: includes/template-functions.php:478
+#: includes/template-functions.php:488
 msgid "White"
 msgstr ""
 
-#: includes/template-functions.php:482
+#: includes/template-functions.php:492
 msgid "Gray"
 msgstr ""
 
-#: includes/template-functions.php:486
+#: includes/template-functions.php:496
 msgid "Blue"
 msgstr ""
 
-#: includes/template-functions.php:490
+#: includes/template-functions.php:500
 msgid "Red"
 msgstr ""
 
-#: includes/template-functions.php:494
+#: includes/template-functions.php:504
 msgid "Green"
 msgstr ""
 
-#: includes/template-functions.php:498
+#: includes/template-functions.php:508
 msgid "Yellow"
 msgstr ""
 
-#: includes/template-functions.php:502
+#: includes/template-functions.php:512
 msgid "Orange"
 msgstr ""
 
-#: includes/template-functions.php:506
+#: includes/template-functions.php:516
 msgid "Dark Gray"
 msgstr ""
 
-#: includes/template-functions.php:510
+#: includes/template-functions.php:520
 msgid "Inherit"
 msgstr ""
 
-#: includes/template-functions.php:529
+#: includes/template-functions.php:539
 msgid "Plain Text"
 msgstr ""
 
@@ -17073,6 +17081,7 @@ msgid "Invalid discount."
 msgstr ""
 
 #: src/Admin/Discounts/Manager.php:145
+#: src/Gateways/Square/Connection.php:301
 msgid "Invalid nonce"
 msgstr ""
 
@@ -17261,6 +17270,7 @@ msgid "Missing email ID."
 msgstr ""
 
 #: src/Admin/Emails/Manager.php:92
+#: src/Gateways/Square/Admin/Settings/Register.php:152
 msgid "Invalid nonce."
 msgstr ""
 
@@ -18830,8 +18840,29 @@ msgstr ""
 msgid "No, keep it"
 msgstr ""
 
-#: src/Admin/Promos/PromoHandler.php:154
-#: src/Admin/Promos/PromoHandler.php:188
+#: src/Admin/Promos/Notices/SquareWebhooksModal.php:75
+msgid "Personal Access Token Required"
+msgstr ""
+
+#. translators: 1: Square Developer Dashboard opening anchor tag, 2: closing anchor tag
+#: src/Admin/Promos/Notices/SquareWebhooksModal.php:80
+msgid "To receive events, create a webhook route by providing your Personal Access Token, which you can find after registering an app on the %1$sSquare Developer Dashboard%2$s. You can also set it up manually in the Advanced section."
+msgstr ""
+
+#: src/Admin/Promos/Notices/SquareWebhooksModal.php:95
+msgid "Enter your Personal Access Token"
+msgstr ""
+
+#: src/Admin/Promos/Notices/SquareWebhooksModal.php:111
+msgid "Connect"
+msgstr ""
+
+#: src/Admin/Promos/Notices/SquareWebhooksModal.php:111
+msgid "Refresh"
+msgstr ""
+
+#: src/Admin/Promos/PromoHandler.php:155
+#: src/Admin/Promos/PromoHandler.php:189
 msgid "Missing notice ID."
 msgstr ""
 
@@ -20159,6 +20190,7 @@ msgid "Easy Digital Downloads &mdash; General"
 msgstr ""
 
 #: src/Admin/SiteHealth/General.php:214
+#: src/Gateways/Square/Admin/Settings/Render.php:100
 msgid "Unknown"
 msgstr ""
 
@@ -21014,7 +21046,7 @@ msgid "The phone number for your order."
 msgstr ""
 
 #: src/Forms/Checkout/PostalCode.php:39
-msgid "Billing Zip / Postal Code"
+msgid "Billing Postal / ZIP Code"
 msgstr ""
 
 #: src/Forms/Checkout/PostalCode.php:69
@@ -21154,6 +21186,510 @@ msgstr ""
 
 #: src/Gateways/PayPal/Webhooks/Events/Payment_Capture_Refunded.php:75
 msgid "Full refund processed in PayPal."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Orders/Refunds.php:57
+msgid "Refund Charge in Square"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Orders/Refunds.php:62
+msgid "This order is currently on hold. You can create the refund transaction in EDD; Square may have already issued a refund."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Orders/Refunds.php:105
+msgid "Charge not refunded in Square, as checkbox was not selected."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Register.php:61
+#: src/Gateways/Square/Gateway.php:85
+msgid "Square"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Register.php:157
+msgid "Missing token."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Register.php:187
+#: src/Gateways/Square/Admin/Settings/Register.php:223
+#: src/Gateways/Square/Admin/Settings/Register.php:231
+msgid "Webhooks successfully updated."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Register.php:246
+msgid "Webhooks successfully registered."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:51
+msgid "Location ID"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:52
+msgid "Select the location ID where payments will be processed."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:104
+msgid "Connected Account:"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:110
+#: src/Gateways/Square/Connection.php:229
+msgid "Square Account"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:124
+msgid "Webhooks Status:"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:127
+msgctxt "Webhooks status when registered"
+msgid "Registered"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:128
+msgctxt "Webhooks status when not registered"
+msgid "Not registered"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:134
+msgid "Square uses webhooks to notify Easy Digital Downloads when an event has occurred in your Square account."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:135
+msgid "Please see our documentation on Square webhooks for full details."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:143
+msgid "Connect Webhooks"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:156
+msgid "Refresh Webhooks"
+msgstr ""
+
+#. translators: %s is the mode of the connection.
+#: src/Gateways/Square/Admin/Settings/Render.php:167
+msgid "Reconnect in %s mode"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:176
+msgid "disconnect this account"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:193
+msgid "Your store is currently in test mode. The process of connecting with Square in test mode is slightly different than in live mode."
+msgstr ""
+
+#. translators: %s: Documentation link
+#: src/Gateways/Square/Admin/Settings/Render.php:196
+msgid "Please %1$sread these special instructions%2$s to connect with Square in test mode."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:208
+msgid "Connect with Square"
+msgstr ""
+
+#. translators: %s: Documentation link
+#: src/Gateways/Square/Admin/Settings/Render.php:221
+msgid "Have questions about connecting with Square? See the %s."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:225
+msgid "documentation"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:302
+msgid "Testing connection..."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:303
+msgid "Square is connected and ready to accept payments."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:304
+msgid "Connection failed."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:305
+msgid "Invalid location ID format."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:306
+msgid "Loading..."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:307
+msgid "Connecting to Square..."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:308
+msgid "Disconnecting..."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:309
+msgid "Reconnecting..."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:310
+msgid "Switching mode..."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:311
+msgid "Connection error. Please try again."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:312
+msgid "Are you sure you want to disconnect Square? This will disable Square payments."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:327
+msgid "Security verification failed."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:332
+msgid "Insufficient permissions."
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:337
+msgid "Invalid connection mode."
+msgstr ""
+
+#. translators: %s: Error message from proxy
+#: src/Gateways/Square/Admin/Settings/Render.php:351
+msgid "Square connection failed: %s"
+msgstr ""
+
+#: src/Gateways/Square/Admin/Settings/Render.php:355
+msgid "Unable to connect to Square. Please check your internet connection and try again."
+msgstr ""
+
+#. translators: %s: Exception message
+#: src/Gateways/Square/Admin/Settings/Render.php:367
+msgid "Connection error: %s"
+msgstr ""
+
+#. translators: %s: currency
+#: src/Gateways/Square/Admin/Settings/Render.php:397
+msgid "%1$sImportant Notice:%2$s The Square payment integration is not currently able to process payments in %3$s."
+msgstr ""
+
+#. translators: %s: currency
+#: src/Gateways/Square/Admin/Settings/Render.php:409
+msgid "Square requires that payments be processed in %1$s, the currency of your merchant account for %2$s. Please %3$supdate the EDD currency%4$s to match."
+msgstr ""
+
+#. translators: 1: opening strong tag, 2: closing strong tag, 3: the message explaining the application fee (eg "3% per-transaction fee + gateway fees").
+#: src/Gateways/Square/ApplicationFee.php:154
+#: src/Gateways/Stripe/ApplicationFee.php:106
+msgid "%1$sPay as you go pricing:%2$s %3$s."
+msgstr ""
+
+#. translators: Replacements are for the html wrappers for the phrase Upgrade to Pro and should not be translated.
+#: src/Gateways/Square/ApplicationFee.php:166
+#: src/Gateways/Stripe/ApplicationFee.php:114
+msgid "%1$sUpgrade to Pro%2$s to remove transaction fees."
+msgstr ""
+
+#. translators: the application fee percentage.
+#: src/Gateways/Square/ApplicationFee.php:192
+msgid "%d%% per-transaction fee + Square fees"
+msgstr ""
+
+#. translators: the message explaining the application fee (eg "3% per-transaction fee + Square fees")
+#: src/Gateways/Square/ApplicationFee.php:217
+msgid "Connect with Square for pay as you go pricing: %s."
+msgstr ""
+
+#. translators: 1: opening link tag, do not translate, 2: closing link tag, do not translate;  3. the date the grace period ends
+#: src/Gateways/Square/ApplicationFee.php:253
+#: src/Gateways/Stripe/ApplicationFee.php:256
+msgid "Your license has expired, but you are in a grace period. %1$sRenew your license key%2$s before %3$s to prevent being charged additional transaction fees."
+msgstr ""
+
+#. translators: 1: the date the license expired, 2: opening link tag, do not translate, 3: closing link tag, do not translate
+#: src/Gateways/Square/ApplicationFee.php:263
+#: src/Gateways/Stripe/ApplicationFee.php:265
+msgid "Your license expired on %1$s. %2$sRenew your license%3$s to prevent additional fees."
+msgstr ""
+
+#. translators: opening link tag, do not translate; closing link tag, do not translate
+#: src/Gateways/Square/ApplicationFee.php:278
+#: src/Gateways/Stripe/ApplicationFee.php:274
+msgid "%1$sActivate or upgrade your license%2$s to prevent additional fees."
+msgstr ""
+
+#: src/Gateways/Square/Checkout/Process.php:137
+#: src/Gateways/Square/Checkout/Process.php:138
+msgid "Error 1106: An error occurred, but your payment may have gone through. Please contact the site administrator."
+msgstr ""
+
+#: src/Gateways/Square/Checkout/Process.php:144
+#: src/Gateways/Square/Checkout/Process.php:145
+msgid "Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator."
+msgstr ""
+
+#. translators: %s is a reference code for the error, to help with customer support
+#: src/Gateways/Square/Checkout/Transactions/Single.php:48
+msgid "There was an error processing your order. Please try again. Reference: %s"
+msgstr ""
+
+#. translators: %s is a reference code for the error, to help with customer support
+#: src/Gateways/Square/Checkout/Transactions/Single.php:68
+msgid "There was an error processing your payment. Please try again. Reference: %s"
+msgstr ""
+
+#: src/Gateways/Square/Connection.php:53
+#: src/Gateways/Square/Connection.php:297
+msgid "Insufficient permissions"
+msgstr ""
+
+#: src/Gateways/Square/Connection.php:122
+msgid "Invalid token data"
+msgstr ""
+
+#. translators: %s is the name of the required field.
+#: src/Gateways/Square/Connection.php:130
+msgid "Missing required field: %s"
+msgstr ""
+
+#: src/Gateways/Square/Connection.php:137
+msgid "Token data is too old"
+msgstr ""
+
+#. translators: 1: Business name, 2: Connection mode (live/sandbox).
+#: src/Gateways/Square/Connection.php:232
+msgid "Square Connected! Successfully connected to %1$s in %2$s mode."
+msgstr ""
+
+#. translators: 1: Error message.
+#: src/Gateways/Square/Connection.php:273
+msgid "Square Connection Failed: %s"
+msgstr ""
+
+#: src/Gateways/Square/Connection.php:326
+msgid "Successfully disconnected from Square"
+msgstr ""
+
+#: src/Gateways/Square/Connection.php:351
+msgid "Invalid connection mode"
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:238
+msgid "An error occurred while processing your payment. Please try again."
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:239
+#: src/Gateways/Square/Gateway.php:243
+msgid "Processing..."
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:242
+msgid "Card Information"
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:244
+msgid "Payment failed. Please try again."
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:245
+msgid "Please enter valid card information."
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:246
+msgid "Network error. Please check your connection and try again."
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:269
+msgid "Square does not support subscription payments at this time. Please remove any recurring items from your cart and try again."
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:285
+msgid "The Square payment gateway is not properly configured. Please review your settings and try again."
+msgstr ""
+
+#: src/Gateways/Square/Gateway.php:290
+msgid "Checkout is currently unavailable. Please contact support."
+msgstr ""
+
+#. translators: %s is a reference code for the error, to help with customer support
+#: src/Gateways/Square/Helpers/Customer.php:45
+#: src/Gateways/Square/Helpers/Customer.php:67
+msgid "There was an error creating your customer record. Please try again, or contact support. Reference: %s"
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Customer.php:159
+msgid "Created by Easy Digital Downloads"
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:38
+msgid "An unknown error occurred. Please try again."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:48
+msgid "Please verify your information and try again."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:49
+msgid "Please contact your card issuer."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:50
+#: src/Gateways/Square/Helpers/Errors.php:85
+msgid "Card Declined."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:51
+msgid "Please contact support."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:54
+msgid "Invalid Postal Code. Please try again."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:57
+msgid "Card Expired."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:58
+msgid "Card Not Supported."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:59
+msgid "Payment Verification Expired."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:60
+msgid "Payment Verification Error."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:61
+msgid "Invalid CVV."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:62
+#: src/Gateways/Square/Helpers/Errors.php:71
+#: src/Gateways/Square/Helpers/Errors.php:84
+msgid "Invalid Expiration Date."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:64
+msgid "Invalid Payment Method."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:65
+msgid "Insufficient Funds."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:66
+msgid "Insufficient Permissions."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:67
+msgid "Invalid Account."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:68
+#: src/Gateways/Square/Helpers/Errors.php:69
+#: src/Gateways/Square/Helpers/Errors.php:78
+msgid "Invalid Card."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:70
+msgid "Invalid Email Address."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:72
+msgid "Invalid Fees."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:73
+msgid "Invalid Location."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:74
+msgid "Invalid Phone Number."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:75
+#: src/Gateways/Square/Helpers/Errors.php:83
+msgid "Invalid PIN."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:76
+msgid "Invalid Postal Code."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Errors.php:86
+msgid "Card Requires Chip."
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Order.php:153
+#: src/Gateways/Square/Helpers/Order.php:189
+msgid "Error 1101: There was an error processing your order. Please try again."
+msgstr ""
+
+#. translators: %s is a reference code for the error, to help with customer support
+#: src/Gateways/Square/Helpers/Order.php:216
+msgid "There was an error creating your order record. Please try again, or contact support. Reference: %s"
+msgstr ""
+
+#. translators: 1: The error message (which has already been translated), 2: A reference code for the error, to help with customer support
+#: src/Gateways/Square/Helpers/Payment.php:145
+msgid "There was an error processing your payment - %1$s Reference: %2$s"
+msgstr ""
+
+#: src/Gateways/Square/Helpers/Payment.php:217
+msgid "Error 1103: There was an error processing the refund. Please try again."
+msgstr ""
+
+#. translators: %1$s the amount refunded; %2$s Square Refund ID
+#: src/Gateways/Square/Helpers/Payment.php:230
+msgid "%1$s refunded in Square. Refund ID %2$s"
+msgstr ""
+
+#. translators: The charge ID from Square that is being refunded.
+#: src/Gateways/Square/Webhooks/Events/RefundUpdated.php:73
+msgid "Charge %s has been fully refunded in Square."
+msgstr ""
+
+#. translators: The charge ID from Square that is being partially refunded.
+#: src/Gateways/Square/Webhooks/Events/RefundUpdated.php:77
+msgid "Charge %s partially refunded in Square."
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Listener.php:172
+#: src/Gateways/Square/Webhooks/Listener.php:230
+msgid "Square Settings"
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Listener.php:177
+#: src/Gateways/Square/Webhooks/Listener.php:235
+msgid "[IMPORTANT] Square Webhooks Error"
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Listener.php:178
+msgid "We detected that Square attempted to send a webhook to Easy Digital Downloads, but you have not yet configured webhooks."
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Listener.php:236
+msgid "There was an error while processing webhooks from Square. Please refresh your webhooks in Square and try again."
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Manager.php:106
+#: src/Gateways/Square/Webhooks/Manager.php:113
+#: src/Gateways/Square/Webhooks/Manager.php:122
+msgid "Failed to retrieve webhooks."
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Manager.php:199
+msgid "Failed to create webhooks."
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Manager.php:288
+msgid "Unable to register webhooks.Webhooks require the URL to be reachable from the Square servers to be registered."
+msgstr ""
+
+#: src/Gateways/Square/Webhooks/Manager.php:295
+msgid "Failed to update webhooks."
 msgstr ""
 
 #: src/Gateways/Stripe/Admin/Connect.php:39
@@ -21509,27 +22045,17 @@ msgstr ""
 msgid "%1$sStatus:%2$s You must request access to this payment method from your Stripe account."
 msgstr ""
 
-#. translators: 1: opening strong tag, 2: closing strong tag, 3: the message explaining the application fee (eg "3% per-transaction fee + Stripe fees").
-#: src/Gateways/Stripe/ApplicationFee.php:106
-msgid "%1$sPay as you go pricing:%2$s %3$s."
-msgstr ""
-
-#. translators: Replacements are for the html wrappers for the phrse Upgrade to Pro and should not be translated.
-#: src/Gateways/Stripe/ApplicationFee.php:114
-msgid "%1$sUpgrade to Pro%2$s to remove transaction fees."
-msgstr ""
-
 #. translators: the application fee percentage.
 #: src/Gateways/Stripe/ApplicationFee.php:178
 msgid "%d%% per-transaction fee + Stripe fees"
 msgstr ""
 
-#. translators: the message explaining the application fee (eg "3% per-transaction fee + Stripe fees")
+#. translators: the message explaining the application fee (eg "3% per-transaction fee + gateway fees")
 #: src/Gateways/Stripe/ApplicationFee.php:217
 msgid "Connect with Stripe for pay as you go pricing: %s."
 msgstr ""
 
-#. translators: the message explaining the application fee (eg "3% per-transaction fee + Stripe fees")
+#. translators: the message explaining the application fee (eg "3% per-transaction fee + gateway fees")
 #: src/Gateways/Stripe/ApplicationFee.php:225
 msgid "Connect with Stripe for pay as you go pricing: %s. Activate your license to remove the per-transaction fee."
 msgstr ""
@@ -21537,21 +22063,6 @@ msgstr ""
 #. translators: the date the grace period ends
 #: src/Gateways/Stripe/ApplicationFee.php:245
 msgid "You are in a grace period for your new license. Activate your license by %s to prevent additional fees."
-msgstr ""
-
-#. translators: 1: opening link tag, do not translate, 2: closing link tag, do not translate;  3. the date the grace period ends
-#: src/Gateways/Stripe/ApplicationFee.php:256
-msgid "Your license has expired, but you are in a grace period. %1$sRenew your license key%2$s before %3$s to prevent being charged additional transaction fees."
-msgstr ""
-
-#. translators: 1: the date the license expired, 2: opening link tag, do not translate, 3: closing link tag, do not translate
-#: src/Gateways/Stripe/ApplicationFee.php:265
-msgid "Your license expired on %1$s. %2$sRenew your license%3$s to prevent additional fees."
-msgstr ""
-
-#. translators: opening link tag, do not translate; closing link tag, do not translate
-#: src/Gateways/Stripe/ApplicationFee.php:274
-msgid "%1$sActivate or upgrade your license%2$s to prevent additional fees."
 msgstr ""
 
 #: src/Gateways/Stripe/Checkout/Complete.php:39

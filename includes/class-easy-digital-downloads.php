@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.3.9' );
+				define( 'EDD_VERSION', '3.4.0' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -431,9 +431,13 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			$GLOBALS['edd_options'] = edd_get_settings();
 
-			add_action( 'init', function() {
-				$this->maybe_load_amazon();
-			}, 5 );
+			add_action(
+				'init',
+				function () {
+					$this->maybe_load_amazon();
+				},
+				5
+			);
 
 			// Load cache helper.
 			new EDD_Cache_Helper();

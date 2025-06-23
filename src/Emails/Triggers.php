@@ -151,10 +151,28 @@ class Triggers implements SubscriberInterface {
 			return;
 		}
 
-		$user_email = Registry::get( 'new_user', array( $user_id, $user_data ) );
-		$user_email->send();
-		$admin_email = Registry::get( 'new_user_admin', array( $user_id, $user_data ) );
-		$admin_email->send();
+		$legacy_filters = array(
+			'edd_user_registration_email_message',
+			'edd_user_registration_email_subject',
+			'edd_user_registration_email_heading',
+		);
+
+		foreach ( $legacy_filters as $filter ) {
+			if ( has_filter( $filter ) ) {
+				$user_email = Registry::get( 'new_user', array( $user_id, $user_data ) );
+				$user_email->send();
+				$admin_email = Registry::get( 'new_user_admin', array( $user_id, $user_data ) );
+				$admin_email->send();
+
+				return;
+			}
+		}
+
+		\EDD\Cron\Events\SingleEvent::add(
+			time() + 30,
+			'edd_send_new_user_email',
+			array( $user_id )
+		);
 	}
 
 	/**

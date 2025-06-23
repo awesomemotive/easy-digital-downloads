@@ -261,13 +261,16 @@ class EDD_Cart {
 			$price_id = isset( $options['price_id'] ) ? $options['price_id'] : null;
 
 			$item_price = $this->get_item_price( $item['id'], $options );
-			$discount   = $this->get_item_discount_amount( $item );
-			$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
-			$quantity   = $this->get_item_quantity( $item['id'], $options );
-			$fees       = $this->get_fees( 'fee', $item['id'], $price_id );
-			$subtotal   = floatval( $item_price ) * $quantity;
 
-			// Subtotal for tax calculation must exclude fees that are greater than 0. See $this->get_tax_on_fees()
+			$discount_details  = $this->get_item_discount_amount( $item, false, true );
+			$discount          = $discount_details['amount'];
+			$applied_discounts = $discount_details['discounts'];
+			$discount          = apply_filters( 'edd_get_cart_content_details_item_discount_amount', $discount, $item );
+			$quantity          = $this->get_item_quantity( $item['id'], $options );
+			$fees              = $this->get_fees( 'fee', $item['id'], $price_id );
+			$subtotal          = floatval( $item_price ) * $quantity;
+
+			// Subtotal for tax calculation must exclude fees that are greater than 0. See $this->get_tax_on_fees().
 			$subtotal_for_tax = $subtotal;
 
 			foreach ( $fees as $fee ) {
@@ -295,16 +298,17 @@ class EDD_Cart {
 			}
 
 			$details[ $key ] = array(
-				'name'        => get_the_title( $item['id'] ),
-				'id'          => $item['id'],
-				'item_number' => $item,
-				'item_price'  => $this->format_amount( $item_price ),
-				'quantity'    => $quantity,
-				'discount'    => $this->format_amount( $discount ),
-				'subtotal'    => $this->format_amount( $subtotal ),
-				'tax'         => $this->format_amount( $tax ),
-				'fees'        => $fees,
-				'price'       => $this->format_amount( $total ),
+				'name'              => get_the_title( $item['id'] ),
+				'id'                => $item['id'],
+				'item_number'       => $item,
+				'item_price'        => $this->format_amount( $item_price ),
+				'quantity'          => $quantity,
+				'discount'          => $this->format_amount( $discount ),
+				'applied_discounts' => $applied_discounts,
+				'subtotal'          => $this->format_amount( $subtotal ),
+				'tax'               => $this->format_amount( $tax ),
+				'fees'              => $fees,
+				'price'             => $this->format_amount( $total ),
 			);
 
 			if ( $edd_is_last_cart_item ) {
@@ -668,9 +672,10 @@ class EDD_Cart {
 	 *
 	 * @param array       $item     Cart item.
 	 * @param bool|string $discount False to use the cart discounts or a string to check with a discount code.
-	 * @return float The discounted amount
+	 * @param bool        $return_details Whether to return the discounted amount and the discounts applied to the item.
+	 * @return float|array The discounted amount or an array of the discounted amount and the discounts applied to the item.
 	 */
-	public function get_item_discount_amount( $item = array(), $discount = false ) {
+	public function get_item_discount_amount( $item = array(), $discount = false, $return_details = false ) {
 		// Validate item.
 		if ( empty( $item ) || empty( $item['id'] ) ) {
 			return 0;
@@ -696,8 +701,14 @@ class EDD_Cart {
 			? $this->get_discounts()
 			: array( $discount );
 
-		$item_price      = $this->get_item_price( $item['id'], $item['options'] );
-		$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts, $item_price );
+		$item_price = $this->get_item_price( $item['id'], $item['options'] );
+
+		if ( $return_details ) {
+			$discount_details = edd_get_item_discount_breakdown( $item, $this->get_contents(), $discounts, $item_price );
+			$discount_amount  = $discount_details['amount'];
+		} else {
+			$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts, $item_price );
+		}
 
 		$discounted_amount = ( $item_price - $discount_amount );
 
@@ -719,8 +730,14 @@ class EDD_Cart {
 			$item_price
 		);
 
-		// Recalculate using the legacy filter discounted amount.
-		return $this->format_amount( $item_price - $discounted_amount );
+		if ( $return_details ) {
+			return array(
+				'amount'    => $this->format_amount( $item_price - $discounted_amount ),
+				'discounts' => $discount_details['discounts'],
+			);
+		} else {
+			return $this->format_amount( $item_price - $discounted_amount );
+		}
 	}
 
 	/**

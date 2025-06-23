@@ -440,4 +440,14 @@ class Pass_Manager {
 
 		return null;
 	}
+
+	/**
+	 * Gets the pro license object.
+	 *
+	 * @since 3.4.0
+	 * @return \EDD\Licensing\License
+	 */
+	public function get_pro_license_object() {
+		return new \EDD\Licensing\License( 'pro' );
+	}
 }

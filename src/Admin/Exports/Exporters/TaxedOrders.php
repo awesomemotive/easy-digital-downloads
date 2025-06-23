@@ -69,7 +69,7 @@ class TaxedOrders extends BatchExport {
 			'city'         => __( 'City', 'easy-digital-downloads' ),
 			'state'        => __( 'State', 'easy-digital-downloads' ),
 			'country'      => __( 'Country', 'easy-digital-downloads' ),
-			'zip'          => __( 'Zip / Postal Code', 'easy-digital-downloads' ),
+			'zip'          => __( 'Postal / ZIP Code', 'easy-digital-downloads' ),
 			'products'     => __( 'Products (Verbose)', 'easy-digital-downloads' ),
 			'products_raw' => __( 'Products (Raw)', 'easy-digital-downloads' ),
 			'skus'         => __( 'SKUs', 'easy-digital-downloads' ),

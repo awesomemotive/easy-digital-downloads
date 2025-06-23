@@ -36,7 +36,7 @@ class PostalCode extends Field {
 	 * @return string
 	 */
 	public function get_label(): string {
-		return esc_html__( 'Billing Zip / Postal Code', 'easy-digital-downloads' );
+		return esc_html__( 'Billing Postal / ZIP Code', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class PostalCode extends Field {
 		$input = new \EDD\HTML\Text(
 			wp_parse_args(
 				array(
-					'placeholder'  => esc_html__( 'Zip / Postal Code', 'easy-digital-downloads' ),
+					'placeholder'  => esc_html__( 'Postal / ZIP Code', 'easy-digital-downloads' ),
 					'value'        => $this->data['address']['zip'],
 					'autocomplete' => 'billing postal-code',
 					'include_span' => false,

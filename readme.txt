@@ -1,12 +1,12 @@
 === Easy Digital Downloads – eCommerce Payments and Subscriptions made easy ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, chriscct7, sumobi, SpencerFinnell, johnjamesjacoby
+Contributors: easydigitaldownloads, am, cklosows, littlerchicken, achchu93, smub, chriscct7, sumobi, johnjamesjacoby
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable Tag: 3.3.9
+Stable Tag: 3.4.0
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -35,11 +35,11 @@ Unlike some eCommerce solutions, all of our official payment integrations secure
 > What can I say? Stripe is my go-to payment processor, and without [EDD] I don't know what I would do. Connect EDD to your Stripe account in seconds, and you're done!
 > Matt Whiteley - Whiteley Designs
 
-Easy Digital Downloads is a verified member of the [Stripe](https://stripe.com/partners/directory/easy-digital-downloads) and PayPal partner programs, so you can process payments with confidence, knowing that EDD meets their strict quality standards.
+Easy Digital Downloads is a verified member of the [Stripe](https://stripe.com/partners/directory/easy-digital-downloads), PayPal and Square partner programs, so you can process payments with confidence, knowing that EDD meets their strict quality standards.
 
 Support payments globally with the following payment methods, immediately available:
 
-* Credit Card Payments
+* Credit Card Payments (via Stripe and Square)
 * Apple Pay
 * Google Pay
 * WeChat Pay
@@ -80,8 +80,8 @@ With the included date comparison tools, you can monitor trends in your sales, r
 * Digital Product Management - Create as many digital products as you want, with no added costs. Create single products, product variations, and product bundles.
 * Discount Codes - Run sales and promotions with the built-in discount code management. Set start and expiration dates, product limitations, price limitations, and reward your best customers with custom discount codes.
 * eCommerce Reports - Easy Digital Downloads provides the best reporting available in WordPress ecommerce with the included reporting features. You'll get access to valuable insights into the growth of your ecommerce business.
-* 1-Click Payments - Go from Install to Selling in a matter of minutes with our official integrations with Stripe and PayPal.
-* Flexible Payment Methods - With the included integrations for Stripe and PayPal, it's even easier for you to collect payments and sell access to your digital products.
+* 1-Click Payments - Go from Install to Selling in a matter of minutes with our official integrations with Stripe, Square, and PayPal.
+* Flexible Payment Methods - With the included integrations for Stripe, Square, and PayPal, it's even easier for you to collect payments and sell access to your digital products.
 * File Downloads Protection - Your downloadable products are safe with Easy Digital Downloads. When a user purchases your product, we generate a secure and unique link that allows only your customers to download your files from your ecommerce site.
 * Email Receipts - The included email receipts are fully customizable to ensure that your brand is represented in your receipts.
 * Customer Management - Track your customer lifetime value and purchase history with the included Customer Management system. Quickly access a customer's entire purchase history, add notes, and link to WordPress users.
@@ -237,6 +237,18 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.4.0 =
+* NEW! Add Square to supported gateways for one-time payments.
+* Downloads: Prevent bundle configurations from breaking the Prices metabox display.
+* Emails: Deprecated new user email message filter and moved the email send process to a scheduled cron event.
+* i18n: Update terminology to use "Postal/ZIP Code" consistently.
+* Reports: Fixed an issue where excluding taxes would result in $0 earnings being displayed.
+* Stripe: Allow subscription payment methods to be updated using Payment Elements.
+* Templates: Add $args parameter to edd_get_template_part.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
+
 = 3.3.9 =
 * Blocks: Add support for inner blocks to certain blocks.
 * Blocks: Add a hook to the registration block above the submit button.
@@ -258,8 +270,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Stripe: Remove non-functional subscription handling from webhook events.
 * Stripe: Prevent checkout errors in Card Elements flow.
 * Users: Add "Lost password" option to the login form on the Checkout Block.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.3.8.1 =
 * Checkout: Compatibility updated for Checkout Fields Manager.

@@ -65,18 +65,35 @@ class ItemAmount {
 	 *
 	 * @since 3.2.0
 	 *
-	 * @return float
+	 * @param bool $per_discount Whether to return a breakdown of discount amounts per discount code.
+	 * @return float|array
 	 */
-	public function get_discount_amount() {
+	public function get_discount_amount( $per_discount = false ) {
 		global $edd_flat_discount_total;
+
+		// If we are getting the discount amount per discount, we need to return an array of discounts and applied amounts.
+		$itemized_discounts = array();
 
 		// Return early if the item is not valid.
 		if ( empty( $this->item ) || empty( $this->item['id'] ) || empty( $this->item['quantity'] ) ) {
+			if ( $per_discount ) {
+				return array(
+					'amount'    => 0,
+					'discounts' => array(),
+				);
+			}
+
 			return 0;
 		}
 
 		// If there are no discounts, return 0.
 		if ( empty( $this->discounts ) ) {
+			if ( $per_discount ) {
+				return array(
+					'amount'    => 0,
+					'discounts' => array(),
+				);
+			}
 			return 0;
 		}
 
@@ -108,6 +125,15 @@ class ItemAmount {
 						if ( is_null( $parsed_requirement['price_id'] ) || $parsed_requirement['price_id'] === $price_id ) {
 							$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
 							$processed        = true;
+
+							// Store the discount amount for the item.
+							$itemized_discounts[ $discount->get_code() ] = edd_format_amount(
+								$discount->get_applied_discount_amount( $item_amount ),
+								true,
+								'',
+								'data'
+							);
+
 							// Break the requirements loop since the discount is applied for the current cart item.
 							break;
 						}
@@ -130,13 +156,23 @@ class ItemAmount {
 			// Get the discount amount for a percentage discount.
 			if ( 'flat' !== $discount->get_type() ) {
 				$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+
+				// Store the discount amount for the item.
+				$itemized_discounts[ $discount->get_code() ] = edd_format_amount(
+					$discount->get_applied_discount_amount( $item_amount ),
+					true,
+					'',
+					'data'
+				);
+
 				continue;
 			}
 
 			// Get the discount amount for a flat discount.
 			$items_amount     = $this->get_items_amount( $excluded_products );
 			$subtotal_percent = ! empty( $items_amount ) ? ( $item_amount / $items_amount ) : 0;
-			$item_discount    = $discount->get_amount() * $subtotal_percent;
+
+			$item_discount = $discount->get_amount() * $subtotal_percent;
 
 			// Make adjustments on the last item.
 			if ( $this->is_last_item() ) {
@@ -147,6 +183,9 @@ class ItemAmount {
 
 			$discount_amount += $item_discount;
 
+			// Store the discount amount for the item.
+			$itemized_discounts[ $discount->get_code() ] = edd_format_amount( $item_discount, true, '', 'data' );
+
 			// Make sure the discount amount doesn't exceed the item amount.
 			if ( $discount_amount > $item_amount ) {
 				$discount_amount = $item_amount;
@@ -156,7 +195,37 @@ class ItemAmount {
 			$edd_flat_discount_total += $discount_amount;
 		}
 
-		return edd_format_amount( $discount_amount, true, '', 'data' );
+		$discount_amount = edd_format_amount( $discount_amount, true, '', 'data' );
+
+		if ( $per_discount ) {
+			// Make sure that the total of the itemized discounts is not greater than the total discount amount.
+			$total_itemized_discounts = array_sum( $itemized_discounts );
+
+			/**
+			 * If the total of the itemized discounts is greater than the total discount amount,
+			 * We need to adjust the 'last' itemized discount to make sure the sum is equal to the total discount amount.
+			 */
+			if ( $total_itemized_discounts > $discount_amount ) {
+				// Get the last discount key.
+				$last_discount_key = array_key_last( $itemized_discounts );
+
+				// Unset the last discount.
+				unset( $itemized_discounts[ $last_discount_key ] );
+
+				// Recalculate the total of the itemized discounts.
+				$total_itemized_discounts = array_sum( $itemized_discounts );
+
+				// Now re-add the last discount key with the difference between the total discount amount and the total of the itemized discounts.
+				$itemized_discounts[ $last_discount_key ] = edd_format_amount( $discount_amount - $total_itemized_discounts, true, '', 'data' );
+			}
+
+			return array(
+				'amount'    => $discount_amount,
+				'discounts' => $itemized_discounts,
+			);
+		}
+
+		return $discount_amount;
 	}
 
 	/**

@@ -1,0 +1,44 @@
+/**
+ * Square Admin Styles
+ *
+ * Styles for Square gateway administration in Easy Digital Downloads.
+ *
+ * @package EDD\Gateways\Square
+ * @since 3.4.0
+ */
+
+/* Connection Status - Using WordPress Admin Notice Styles */
+.edd-square-connect-row .notice {
+    .button {
+        margin-right: 8px;
+        margin-top: 5px;
+    }
+}
+
+/* Connection Status Wrapper */
+.edd-square-connect-status-wrapper {
+    margin: 15px 0;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* Square Connect Button - Similar to Stripe styling */
+.edd-square-connect-button {
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+
+    .dashicons {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+.edd-square-connect-row a.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}

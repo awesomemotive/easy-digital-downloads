@@ -677,10 +677,10 @@ function edd_tools_import_export_display() {
 							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
 						</tr>
 						<tr>
-							<td><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></td>
+							<td><?php _e( 'Postal / ZIP Code', 'easy-digital-downloads' ); ?></td>
 							<td>
 								<select name="edd-import-field[zip]" class="edd-import-csv-column"
-										data-field="Zip / Postal Code">
+										data-field="Postal / ZIP Code">
 									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
 								</select>
 							</td>
