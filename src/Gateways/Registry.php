@@ -139,10 +139,19 @@ class Registry {
 	 * @return array
 	 */
 	private static function get_registered_classes() {
+		/**
+		 * Filter the registered gateways.
+		 *
+		 * @since 3.3.9
+		 *
+		 * @param array $registered_gateways Registered gateways.
+		 * @return array Registered gateways.
+		 */
 		return apply_filters(
 			'edd_registered_gateways',
 			array(
 				'stripe'          => Stripe\Gateway::class,
+				'square'          => Square\Gateway::class,
 				'paypal_commerce' => PayPal\Gateway::class,
 				'paypal'          => PayPalStandard\Gateway::class,
 				'manual'          => StoreGateway\Gateway::class,

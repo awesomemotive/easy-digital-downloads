@@ -1189,6 +1189,35 @@ class Discounts extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * Tests a discount for a single price product when a false price ID is added to the cart.
+	 *
+	 * Returns details.
+	 */
+	public function test_discount_product_requirements_false_price_id_returns_details() {
+		$args     = array(
+			'product_reqs'      => array( self::$download->ID ),
+			'product_condition' => 'all',
+			'max_uses'          => 10000,
+			'scope'             => 'not_global',
+		);
+		edd_update_discount( self::$discount_id, $args );
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => false ) );
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = reset( $cart_contents );
+		$discount      = edd_get_discount( self::$discount_id );
+		$this->assertTrue( $discount->is_product_requirements_met( false ) );
+
+		$expected = array(
+			'amount'    => 4.0,
+			'discounts' => array(
+				'20OFF' => 4.0,
+			),
+		);
+		$this->assertEquals( $expected, edd_get_item_discount_breakdown( $first_item, $cart_contents, array( $discount ) ) );
+	}
+
+	/**
 	 * Tests a discount for a single price product when an empty string price ID is added to the cart.
 	 */
 	public function test_discount_product_requirements_empty_string_price_id() {

@@ -160,7 +160,7 @@ if ( is_user_logged_in() ):
 			</p>
 
 			<p id="edd_profile_billing_address_postal_wrap">
-				<label for="edd_address_zip"><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_address_zip"><?php _e( 'Postal / ZIP Code', 'easy-digital-downloads' ); ?></label>
 				<input name="edd_address_zip" id="edd_address_zip" class="text edd-input" type="text" value="<?php echo esc_attr( $address['zip'] ); ?>" />
 			</p>
 

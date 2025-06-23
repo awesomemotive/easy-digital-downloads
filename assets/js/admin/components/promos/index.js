@@ -1,7 +1,6 @@
 /* global ajaxurl */
 
 jQuery( document ).ready( function( $ ) {
-
 	/**
 	 * Show overlay notices on a delay.
 	 */
@@ -12,7 +11,9 @@ jQuery( document ).ready( function( $ ) {
 		overlayNotice.wrap( '<div class="edd-promo-notice__overlay"></div>' );
 		overlayNoticeWrapper = overlayNotice.parent();
 
-		$( document ).on( 'click', '.edd-promo-notice__trigger', function () {
+		$( document ).on( 'click', '.edd-promo-notice__trigger', function ( e ) {
+			e.preventDefault();
+
 			if ( $( this ).hasClass( 'edd-promo-notice__trigger--ajax' ) ) {
 				$.ajax( {
 					type: 'GET',

@@ -1760,7 +1760,7 @@ class EDD_Discount extends Adjustment {
 				$amount = 0;
 			}
 		} else {
-			// Percentage discount
+			// Percentage discount.
 			$amount = $base_price - ( $base_price * ( floatval( $this->amount ) / 100 ) );
 		}
 
@@ -1774,6 +1774,32 @@ class EDD_Discount extends Adjustment {
 		 * @param EDD_Discount $this Discount object.
 		 */
 		return apply_filters( 'edd_discounted_amount', $amount, $this );
+	}
+
+	/**
+	 * Get the applied discount amount.
+	 *
+	 * This differs from the discounted amount in that it does not apply the discount to the item.
+	 * It only returns how much the discount should apply to the item.
+	 *
+	 * @since 3.4.0
+	 * @param  float $base_price The base price of the item.
+	 * @return float The applied discount amount.
+	 */
+	public function get_applied_discount_amount( $base_price ) {
+		$base_price = floatval( $base_price );
+
+		if ( 'flat' === $this->amount_type ) {
+			$applied_amount = $this->amount;
+
+			if ( $applied_amount < 0 ) {
+				$applied_amount = 0;
+			}
+		} else {
+			$applied_amount = $base_price * ( floatval( $this->amount ) / 100 );
+		}
+
+		return apply_filters( 'edd_applied_discount_amount', floatval( $applied_amount ), $this );
 	}
 
 	/**

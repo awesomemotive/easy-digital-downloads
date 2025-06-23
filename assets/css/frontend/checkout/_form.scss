@@ -116,6 +116,22 @@
 		border: none;
 	}
 
+	#edd_purchase_submit {
+		& #edd-purchase-button {
+			&[data-edd-button-state="disabled"]
+			{
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
+			&[data-edd-button-state="updating"],
+			[data-edd-button-state="processing"] {
+				opacity: 0.5;
+				cursor: wait;
+			}
+		}
+	}
+
 	fieldset fieldset {
 		margin: 0;
 		border: none;

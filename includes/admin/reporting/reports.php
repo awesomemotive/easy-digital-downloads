@@ -590,13 +590,14 @@ function edd_register_downloads_report( $reports ) {
 				'label' => __( 'Average Sales / Earnings', 'easy-digital-downloads' ),
 				'views' => array(
 					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
+						'data_callback' => function () use ( $dates, $currency, $exclude_taxes ) {
 							$stats = new EDD\Stats(
 								array(
-									'function' => 'AVG',
-									'range'    => $dates['range'],
-									'currency' => $currency,
-									'output'   => 'formatted',
+									'function'      => 'AVG',
+									'range'         => $dates['range'],
+									'currency'      => $currency,
+									'output'        => 'formatted',
+									'exclude_taxes' => $exclude_taxes,
 								)
 							);
 
@@ -616,15 +617,16 @@ function edd_register_downloads_report( $reports ) {
 				'label' => $endpoint_label,
 				'views' => array(
 					'tile' => array(
-						'data_callback' => function () use ( $download_data, $dates, $currency ) {
+						'data_callback' => function () use ( $download_data, $dates, $currency, $exclude_taxes ) {
 							$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ? absint( $download_data['price_id'] ) : null;
 							$stats    = new EDD\Stats(
 								array(
-									'product_id' => absint( $download_data['download_id'] ),
-									'price_id'   => $price_id,
-									'currency'   => $currency,
-									'range'      => $dates['range'],
-									'output'     => 'formatted',
+									'product_id'    => absint( $download_data['download_id'] ),
+									'price_id'      => $price_id,
+									'currency'      => $currency,
+									'range'         => $dates['range'],
+									'output'        => 'formatted',
+									'exclude_taxes' => $exclude_taxes,
 								)
 							);
 
@@ -782,7 +784,7 @@ function edd_register_downloads_report( $reports ) {
 				'label' => __( 'Earnings', 'easy-digital-downloads' ) . esc_html( $download_label ),
 				'views' => array(
 					'chart' => array(
-						'data_callback' => function () use ( $download_data, $currency ) {
+						'data_callback' => function () use ( $download_data, $currency, $exclude_taxes ) {
 							global $wpdb;
 
 							$dates       = Reports\get_dates_filter( 'objects' );
@@ -802,13 +804,16 @@ function edd_register_downloads_report( $reports ) {
 
 							$earnings_statuses      = edd_get_gross_order_statuses();
 							$earnings_status_string = implode( ', ', array_fill( 0, count( $earnings_statuses ), '%s' ) );
+							$order_item_column      = true === $exclude_taxes ? '( edd_oi.total - edd_oi.tax )' : 'edd_oi.total';
+
+							$order_item_earnings_query = "SELECT SUM($order_item_column / edd_oi.rate) AS earnings, {$sql_clauses['select']}
+								FROM {$wpdb->edd_order_items} edd_oi
+								INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
+								WHERE edd_oi.product_id = %d {$price_id} AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_o.status IN ({$earnings_status_string})
+								GROUP BY {$sql_clauses['groupby']}";
 
 							$order_item_earnings = $wpdb->prepare(
-								"SELECT SUM(edd_oi.total / edd_oi.rate) AS earnings, {$sql_clauses['select']}
-							FROM {$wpdb->edd_order_items} edd_oi
-							INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
-							WHERE edd_oi.product_id = %d {$price_id} AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_o.status IN ({$earnings_status_string})
-							GROUP BY {$sql_clauses['groupby']}",
+								$order_item_earnings_query, //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 								$download_data['download_id'],
 								$dates['start']->copy()->format( 'mysql' ),
 								$dates['end']->copy()->format( 'mysql' ),
@@ -821,19 +826,22 @@ function edd_register_downloads_report( $reports ) {
 							 */
 							$adjustments_statuses      = edd_get_net_order_statuses();
 							$adjustments_status_string = implode( ', ', array_fill( 0, count( $adjustments_statuses ), '%s' ) );
+							$order_adjustment_column   = true === $exclude_taxes ? '( edd_oa.total - edd_oa.tax )' : 'edd_oa.total';
+
+							$order_adjustments_query = "SELECT SUM($order_adjustment_column / edd_oa.rate) AS earnings, {$sql_clauses['select']}
+								FROM {$wpdb->edd_order_adjustments} edd_oa
+								INNER JOIN {$wpdb->edd_order_items} edd_oi ON
+									edd_oi.id = edd_oa.object_id
+									AND edd_oi.product_id = %d
+									{$price_id}
+									AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s
+								INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id AND edd_o.type = 'sale' AND edd_o.status IN ({$adjustments_status_string})
+								WHERE edd_oa.object_type = 'order_item'
+								AND edd_oa.type != 'discount'
+								GROUP BY {$sql_clauses['groupby']}";
 
 							$order_adjustments = $wpdb->prepare(
-								"SELECT SUM(edd_oa.total / edd_oa.rate) AS earnings, {$sql_clauses['select']}
-							FROM {$wpdb->edd_order_adjustments} edd_oa
-							INNER JOIN {$wpdb->edd_order_items} edd_oi ON
-								edd_oi.id = edd_oa.object_id
-								AND edd_oi.product_id = %d
-								{$price_id}
-								AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s
-							INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id AND edd_o.type = 'sale' AND edd_o.status IN ({$adjustments_status_string})
-							WHERE edd_oa.object_type = 'order_item'
-							AND edd_oa.type != 'discount'
-							GROUP BY {$sql_clauses['groupby']}",
+								$order_adjustments_query, //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 								$download_data['download_id'],
 								$dates['start']->copy()->format( 'mysql' ),
 								$dates['end']->copy()->format( 'mysql' ),
@@ -841,13 +849,14 @@ function edd_register_downloads_report( $reports ) {
 							);
 
 							$earnings_sql     = "SELECT SUM(earnings) as earnings, {$union_clauses['select']} FROM ({$order_item_earnings} UNION {$order_adjustments})a GROUP BY {$union_clauses['groupby']} ORDER BY {$union_clauses['orderby']}";
-							$earnings_results = $wpdb->get_results( $earnings_sql );
+							$earnings_results = $wpdb->get_results( $earnings_sql ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 							$statuses      = edd_get_net_order_statuses();
 							$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
 
-							$join = $wpdb->prepare(
-								"INNER JOIN {$wpdb->edd_orders} edd_o ON (edd_oi.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale' ",
+							$join_query = "INNER JOIN {$wpdb->edd_orders} edd_o ON (edd_oi.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale'";
+							$join       = $wpdb->prepare(
+								$join_query, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 								...$statuses
 							);
 
