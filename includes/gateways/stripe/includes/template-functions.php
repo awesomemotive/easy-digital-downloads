@@ -569,7 +569,7 @@ function edd_stripe_manage_cards() {
 								array(
 									'id'    => sprintf( 'edds_address_zip_%1$s', $source->id ),
 									'value' => sanitize_text_field( isset( $source->address_zip ) ? $source->address_zip : '' ),
-									'label' => esc_html__( 'ZIP Code', 'easy-digital-downloads' ),
+									'label' => esc_html__( 'Postal / ZIP Code', 'easy-digital-downloads' ),
 									'name'  => 'address_zip',
 									'class' => 'card-update-field address_zip text edd-input',
 									'data'  => array(
@@ -781,7 +781,7 @@ function edd_stripe_maybe_hide_profile_editor_billing_address() {
 add_action( 'edd_profile_editor_after', 'edd_stripe_maybe_hide_profile_editor_billing_address' );
 
 /**
- * Zip / Postal Code field for when full billing address is disabled
+ * Postal / ZIP Code field for when full billing address is disabled
  *
  * @since 2.5
  * @since 3.3.8 Updated to use the new EDD\Gateways\Stripe\Checkout\Address class.

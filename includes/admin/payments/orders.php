@@ -467,7 +467,7 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="edd-form-group">
-				<label for="edd_order_address_postal_code" class="edd-form-group__label"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_order_address_postal_code" class="edd-form-group__label"><?php echo esc_html_x( 'Postal / ZIP Code:', 'Postal code of address', 'easy-digital-downloads' ); ?></label>
 				<div class="edd-form-group__control">
 					<input type="text" name="edd_order_address[postal_code]" class="edd-form-group__input regular-text" id="edd_order_address_postal_code" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
 				</div>

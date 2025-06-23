@@ -1144,6 +1144,36 @@ function edd_get_item_discount_amount( $item, $items, $discounts, $item_unit_pri
 	return $item_amount->get_discount_amount();
 }
 
+/**
+ * Get a breakdown of the discount amount for an item.
+ *
+ * This function will return an array containing the total discount amount
+ * as well as an array of the discounts and how much they applied to the total discount amount.
+ *
+ * This is useful for gateways that need detailed information about the discounts applied to an item.
+ *
+ * @since 3.4.0
+ *
+ * @param array $item The item.
+ * @param array $items The items.
+ * @param array $discounts The discounts.
+ * @param int   $item_unit_price The item unit price.
+ *
+ * @return array The discount breakdown.
+ * Example:
+ * array(
+ *     'amount' => 20.00,
+ *     'discounts' => array(
+ *         'discount_code' => 5.00,
+ *         'discount_code_2' => 15.00,
+ *     ),
+ * )
+ */
+function edd_get_item_discount_breakdown( $item, $items, $discounts, $item_unit_price = false ) {
+	$item_amount = new EDD\Discounts\ItemAmount( $item, $items, $discounts, $item_unit_price );
+	return $item_amount->get_discount_amount( true );
+}
+
 /** Cart **********************************************************************/
 
 /**

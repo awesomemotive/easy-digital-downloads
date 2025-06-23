@@ -75,6 +75,7 @@ const config = {
 		'js/edd-admin-downloads-editor': './assets/js/admin/downloads/editor',
 		'js/stripe-admin': './assets/js/admin/stripe/index.js',
 		'js/stripe-notices': './assets/js/admin/stripe/notices.js',
+		'js/square-admin': './assets/js/admin/gateways/square.js',
 
 		// Front-end JavaScript.
 		'js/edd-ajax': './assets/js/frontend/edd-ajax.js',
@@ -82,6 +83,7 @@ const config = {
 		'js/paypal-checkout': './assets/js/frontend/gateways/paypal.js',
 		'js/stripe-cardelements': './assets/js/frontend/gateways/stripe/loader/card-elements.js',
 		'js/stripe-paymentelements': './assets/js/frontend/gateways/stripe/loader/payment-elements.js',
+		'js/square-checkout': './assets/js/frontend/gateways/square',
 
 		'pro/js/checkout': './assets/pro/js/frontend/checkout.js',
 		'pro/js/duplicator': './assets/pro/js/admin/duplicator.js',
@@ -97,6 +99,7 @@ const config = {
 		'edd-admin-pass-handler-style': './assets/css/admin/pass-handler.scss',
 		'edd-admin-onboarding-style': './assets/css/admin/onboarding/style.scss',
 		'stripe-admin': './assets/css/admin/gateways/stripe.scss',
+		'square-admin': './assets/css/admin/gateways/square.scss',
 		'edd-admin-notifications-style': './assets/css/admin/notifications/style.scss',
 		'edd-admin-emails-style': './assets/css/admin/emails/style.scss',
 		'edd-admin-pointers-style': './assets/css/admin/pointers/style.scss',
@@ -104,6 +107,7 @@ const config = {
 		'edd-style': './assets/css/frontend/style.scss',
 		'stripe-cardelements': './assets/css/frontend/stripe/card-elements.scss',
 		'stripe-paymentelements': './assets/css/frontend/stripe/payment-elements.scss',
+		'square-checkout': './assets/css/frontend/gateways/square.scss',
 	},
 	output: {
 		filename: '[name].js',

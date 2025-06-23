@@ -23,12 +23,12 @@ let ELEMENTS_CUSTOMIZATIONS = { ...edd_stripe_vars.elementsCustomizations };
  * @param {string} selector Selector to mount Element on.
  * @return {Element|undefined} Stripe Element.
  */
-export function createAndMountElement() {
+export function createAndMountElement () {
 	window.eddStripe.elementMounted = false;
 
 	const el = document.querySelector( getGlobal( 'elementsTarget' ) );
 
-	if ( ! el ) {
+	if ( !el ) {
 		return undefined;
 	}
 
@@ -62,7 +62,7 @@ export function createAndMountElement() {
 	let elements = window.eddStripe.elements( elementOptions );
 	window.eddStripe.configuredElement = elements;
 
-	const purchaseForm   = document.getElementById( 'edd_purchase_form' );
+	const purchaseForm = document.getElementById( 'edd_purchase_form' );
 	const billingDetails = getBillingDetails( purchaseForm );
 
 	let createOptions = {
@@ -108,7 +108,7 @@ export function createAndMountElement() {
  *
  * @return {Object}
  */
-function generateElementStyles() {
+function generateElementStyles () {
 	// We're going to add a sample field, which should get some styles applied, capture them, then remove them.
 	const sampleLabel = document.createElement( 'label' );
 	sampleLabel.setAttribute( 'id', 'edds-sample-label' );
@@ -128,7 +128,7 @@ function generateElementStyles() {
 	paymentElementTarget.parentNode.insertBefore( sampleLabel, paymentElementTarget );
 
 	// Try to mimick existing input styles.
-	const textInputEl  = document.querySelector( '#edds-sample-input' );
+	const textInputEl = document.querySelector( '#edds-sample-input' );
 	const textInputElFocus = document.querySelector( '#edds-sample-input', ':focus' );
 	const textInputElHover = document.querySelector( '#edds-sample-input', ':hover' );
 
@@ -269,17 +269,17 @@ function generateElementStyles() {
 	};
 
 	// Loop through all the customizations and merge them with the default found ones.
-	Object.keys( ELEMENTS_CUSTOMIZATIONS.rules ).forEach(key => {
+	Object.keys( ELEMENTS_CUSTOMIZATIONS.rules ).forEach( key => {
 		let foundDefaultRules = {};
-		if ( rules[key] ) {
-			foundDefaultRules = rules[key];
+		if ( rules[ key ] ) {
+			foundDefaultRules = rules[ key ];
 		}
 
-		rules[key] = {
+		rules[ key ] = {
 			...foundDefaultRules,
-			...ELEMENTS_CUSTOMIZATIONS.rules[key]
+			...ELEMENTS_CUSTOMIZATIONS.rules[ key ]
 		};
-	  });
+	} );
 
 	return {
 		theme: theme,
@@ -289,7 +289,7 @@ function generateElementStyles() {
 	};
 }
 
-function bindEvents() {
+function bindEvents () {
 	/**
 	 * Since EDD core still uses the jQuery event system, we need to use jQuery for these events.
 	 *
@@ -334,7 +334,7 @@ function bindEvents() {
 	} );
 
 	// Now also listen for events triggered by the elements object to possibly disable the purchase button.
-	window.eddStripe.paymentElement.on( 'change', (event) => {
+	window.eddStripe.paymentElement.on( 'change', ( event ) => {
 		if ( !isStripeSelectedGateway() ) {
 			return;
 		}
@@ -359,7 +359,7 @@ function bindEvents() {
  * @param {paymentElement} paymentElement Payment Element object.
  * @param {HTMLElement} checkoutForm Checkout form.
  */
-async function onAmountChange( reason ) {
+async function onAmountChange ( reason ) {
 	if ( !paymentElementExists() ) {
 		return;
 	}
@@ -382,10 +382,10 @@ async function onAmountChange( reason ) {
  *
  * @returns {number} Amount to charge.
  */
-function getElementsAmount() {
+function getElementsAmount () {
 	let totalElement, amount;
 
-	totalElement = document.querySelector('.edd_cart_total .edd_cart_amount' );
+	totalElement = document.querySelector( '.edd_cart_total .edd_cart_amount' );
 	if ( totalElement ) {
 		amount = totalElement.getAttribute( 'data-total' );
 	} else {
@@ -404,7 +404,7 @@ function getElementsAmount() {
 /**
  * Updates the Payment Element with the current billing details.
  */
-async function updateElementBillingDetails() {
+async function updateElementBillingDetails () {
 	if ( !isStripeSelectedGateway() ) {
 		return;
 	}
@@ -427,7 +427,7 @@ async function updateElementBillingDetails() {
  *
  * @param {object} data
  */
-function updateElement( data ) {
+function updateElement ( data ) {
 	window.eddStripe.paymentElement.update( data );
 }
 
@@ -437,7 +437,7 @@ function updateElement( data ) {
  * @param {HTMLElement} form Form to find data from.
  * @return {Object} Billing details
  */
-export function getBillingDetails( form ) {
+export function getBillingDetails ( form ) {
 	// Email address could either be in edd_email or edd-email, depending on core or CFM.
 	let email = fieldValueOrNull( form.querySelector( '#edd-email' ) );
 
@@ -451,7 +451,7 @@ export function getBillingDetails( form ) {
 	}
 
 	let line1 = fieldValueOrNull( form.querySelector( '#card_address' ) );
-	let name  = fieldValueOrNull( form.querySelector( '#card_name' ) );
+	let name = fieldValueOrNull( form.querySelector( '#card_name' ) );
 	if ( null === name && null !== line1 ) {
 		name = fieldValueOrNull( form.querySelector( '#edd-first' ) );
 		name += ' ' + fieldValueOrNull( form.querySelector( '#edd-last' ) );
