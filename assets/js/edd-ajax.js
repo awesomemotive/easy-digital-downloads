@@ -405,17 +405,25 @@ jQuery(document).ready(function ($) {
 		$(submit_selector).prop('disabled', true);
 		button.after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
-		var data = $('#edd_purchase_form').serialize();
-		data += '&edd_ajax=true';
-		data += '&' + wpidea.nonce_name + '=' + wpidea.nonce_value;
+		let formData = $('#edd_purchase_form');
+		let serializedFormData = formData.serialize();
+		serializedFormData += '&edd_ajax=true';
+		serializedFormData += '&' + wpidea.nonce_name + '=' + wpidea.nonce_value;
 
 
-		$.post(wpidea.urls.payment_process_checkout, data, function (data) {
+		$.post(wpidea.urls.payment_process_checkout, serializedFormData, function (data) {
 			if ($.trim(data) == 'success') {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 
                 insertHiddenInputWithButtonValue();
+				const blikCode = formData.find('input[name="bpmj-eddcm-blik-code"]').val();
+
+				if (blikCode && blikCode.trim() !== '') {
+					const event = new CustomEvent('pbg-blik-payment-ready', {});
+					document.dispatchEvent(event);
+					return;
+				}
 
 				$(eddPurchaseform).submit();
 			} else {
@@ -424,7 +432,7 @@ jQuery(document).ready(function ($) {
 				$('.edd-cart-ajax').remove();
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
-				$('#edd_purchase_submit').before(data);
+				$('#edd_final_total_wrap').before(data);
 
 				if (isButton) {
 					button.html(complete_purchase_val);
