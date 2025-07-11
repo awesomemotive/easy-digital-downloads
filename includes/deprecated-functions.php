@@ -1538,7 +1538,8 @@ function edd_sendwp_callback( $args ) {
 	$connected .= '</a>.';
 
 	$disconnected = sprintf(
-		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . esc_url( admin_url( 'tools.php?page=sendwp' ) ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
+		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="%s">Click here</a> to enable it.</em>', 'easy-digital-downloads' ),
+		esc_url( admin_url( 'tools.php?page=sendwp' ) )
 	);
 
 	// Checks if SendWP is connected
