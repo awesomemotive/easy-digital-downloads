@@ -82,10 +82,10 @@ class Tax extends Base {
 				: '';
 
 			$adjustment_data = array(
-				'name'        => $tax_rate['country'],
-				'scope'       => $scope,
-				'amount'      => floatval( $tax_rate['rate'] ),
-				'description' => $region,
+				'country' => $tax_rate['country'],
+				'amount'  => floatval( $tax_rate['rate'] ),
+				'state'   => $region,
+				'scope'   => $scope,
 			);
 
 			edd_add_tax_rate( $adjustment_data );

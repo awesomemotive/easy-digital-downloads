@@ -1,16 +1,12 @@
 <?php
-namespace EDD\Tests\Logs\Request;
+namespace EDD\Tests\Logs;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * Logs Meta DB Tests
- *
- * @group edd_logs_db
- * @group database
- * @group edd_logs
  */
-class Api_Request_Log_Meta_Tests extends EDD_UnitTestCase {
+class APIRequestLogsMeta extends EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.

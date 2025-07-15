@@ -74,6 +74,7 @@ class Orders extends Exporter {
 			'status'       => __( 'Status', 'easy-digital-downloads' ),
 			'country_name' => __( 'Country Name', 'easy-digital-downloads' ),
 			'state_name'   => __( 'State Name', 'easy-digital-downloads' ),
+			'vat_number'   => __( 'VAT Number', 'easy-digital-downloads' ),
 		);
 
 		if ( ! edd_use_skus() ) {
@@ -82,6 +83,10 @@ class Orders extends Exporter {
 
 		if ( ! edd_get_option( 'enable_sequential' ) ) {
 			unset( $columns['seq_id'] );
+		}
+
+		if ( ! edd_get_option( 'vat_enable' ) ) {
+			unset( $columns['vat_number'] );
 		}
 
 		return $columns;
@@ -222,6 +227,7 @@ class Orders extends Exporter {
 				'status'       => $order->status,
 				'country_name' => isset( $address->country ) ? edd_get_country_name( $address->country ) : '',
 				'state_name'   => isset( $address->country ) && isset( $address->region ) ? edd_get_state_name( $address->country, $address->region ) : '',
+				'vat_number'   => esc_html( edd_get_order_meta( $order->id, '_edd_payment_vat_number', true ) ),
 			);
 		}
 

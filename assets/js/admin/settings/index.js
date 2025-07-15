@@ -1,5 +1,6 @@
 import { recaptureRemoteInstall } from './recapture';
 import './gateways/paypal';
+import './../components/conditionals';
 
 /**
  * Settings screen JS
@@ -123,6 +124,79 @@ const EDD_Settings = {
 
 			default_gateway.trigger( 'chosen:updated' );
 		} );
+
+		// Empty Cart Behavior functionality
+		this.emptyCartBehavior();
+	},
+
+	emptyCartBehavior: function() {
+		const behaviorSelect = $( '#edd_settings\\[empty_cart_behavior\\]' );
+
+		if ( ! behaviorSelect.length ) {
+			return;
+		}
+
+		// Handle empty cart behavior field visibility
+		function toggleEmptyCartFields() {
+			const behavior = behaviorSelect.val();
+			const messageRow = $( '#edd_settings_empty_cart_message' ).closest( 'tr' );
+			const pageRow = $( '#edd_settings\\[empty_cart_redirect_page\\]' ).closest( 'tr' );
+			const urlRow = $( '#edd_settings\\[empty_cart_redirect_url\\]' ).closest( 'tr' );
+
+			// Hide all conditional fields first by adding edd-hidden class
+			messageRow.addClass( 'edd-hidden' );
+			pageRow.addClass( 'edd-hidden' );
+			urlRow.addClass( 'edd-hidden' );
+
+			// Show appropriate field based on selection by removing edd-hidden class
+			if ( behavior === 'message' ) {
+				messageRow.removeClass( 'edd-hidden' );
+			} else if ( behavior === 'redirect_page' ) {
+				pageRow.removeClass( 'edd-hidden' );
+			} else if ( behavior === 'redirect_url' ) {
+				urlRow.removeClass( 'edd-hidden' );
+			}
+		}
+
+		// Handle promo modal for Lite users
+		function handleLitePromoModal() {
+			behaviorSelect.on( 'change', function() {
+				const value = $( this ).val();
+				if ( value === 'redirect_page' || value === 'redirect_url' ) {
+					// Reset to default value
+					$( this ).val( 'message' );
+					// Trigger field visibility update
+					toggleEmptyCartFields();
+					// Trigger promo modal
+					if ( typeof edd_promo_admin !== 'undefined' ) {
+						edd_promo_admin.show_notice( 'empty-cart-behavior' );
+					}
+				} else {
+					// For allowed values, just toggle fields
+					toggleEmptyCartFields();
+				}
+			} );
+		}
+
+		// Initialize based on license type
+		if ( typeof edd_vars !== 'undefined' && typeof edd_vars.is_pro !== 'undefined' ) {
+			if ( edd_vars.is_pro ) {
+				// Pro users get field visibility handling
+				// Run initial toggle
+				toggleEmptyCartFields();
+				// Bind change event
+				behaviorSelect.on( 'change', toggleEmptyCartFields );
+			} else {
+				// Lite users get promo modal handling
+				// Run initial toggle for lite users too
+				toggleEmptyCartFields();
+				handleLitePromoModal();
+			}
+		} else {
+			// Fallback: assume we need field toggling
+			toggleEmptyCartFields();
+			behaviorSelect.on( 'change', toggleEmptyCartFields );
+		}
 	},
 
 	emails: function() {

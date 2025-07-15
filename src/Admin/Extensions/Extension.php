@@ -1,9 +1,22 @@
 <?php
+/**
+ * Extension class.
+ *
+ * @package EDD\Admin\Extensions
+ * @copyright (c) 2021 Sandhills Development, LLC
+ * @license https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since 2.11.4
+ */
 
 namespace EDD\Admin\Extensions;
 
-use \EDD\Admin\Pass_Manager;
+use EDD\Admin\Pass_Manager;
 
+/**
+ * Abstract class for extensions.
+ *
+ * @since 2.11.4
+ */
 abstract class Extension {
 
 	/**
@@ -50,8 +63,13 @@ abstract class Extension {
 	 */
 	protected $pass_manager;
 
+	/**
+	 * Constructor.
+	 *
+	 * @since 2.11.4
+	 */
 	public function __construct() {
-		$this->manager      = new \EDD\Admin\Extensions\Extension_Manager( static::PASS_LEVEL );
+		$this->manager      = new \EDD\Admin\Extensions\Extension_Manager( $this->get_pass_level() );
 		$this->pass_manager = new Pass_Manager();
 	}
 
@@ -129,7 +147,7 @@ abstract class Extension {
 	/**
 	 * Gets the product data for a specific extension.
 	 *
-	 * @param false|int $item_id
+	 * @param false|int $item_id Optional: the individual extension product ID.
 	 * @return bool|ProductData|array False if there is no data; product data object if there is, or possibly an array of arrays.
 	 */
 	public function get_product_data( $item_id = false ) {
@@ -226,13 +244,32 @@ abstract class Extension {
 	}
 
 	/**
+	 * Gets the pass level for an extension.
+	 *
+	 * @since 3.5.0
+	 * @return int|null
+	 */
+	protected function get_pass_level() {
+		if ( empty( $this->item_id ) ) {
+			return static::PASS_LEVEL;
+		}
+
+		$product_data = $this->get_product_data();
+		if ( ! $product_data || empty( $product_data->pass_id ) ) {
+			return static::PASS_LEVEL;
+		}
+
+		return $product_data->pass_id;
+	}
+
+	/**
 	 * Gets the type for the button data-type attribute.
 	 * This is intended to sync with the Products API request.
 	 * Default is product.
 	 *
 	 * Really a shim for array_key_first.
 	 *
-	 * @param array $array
+	 * @param array $array The array to get the type from.
 	 * @return string
 	 */
 	private function get_type( array $array ) {
@@ -249,7 +286,7 @@ abstract class Extension {
 	 * Classes should not need to replace this method.
 	 *
 	 * @param ProductData $product_data The extension data returned from the Products API.
-	 * @param int|false                         $item_id      Optional: the item ID.
+	 * @param int|false   $item_id      Optional: the item ID.
 	 * @return array
 	 */
 	protected function get_button_parameters( ProductData $product_data, $item_id = false ) {
@@ -310,8 +347,8 @@ abstract class Extension {
 	 *
 	 * @since 2.11.4
 	 * @param ProductData $product_data The product data object.
-	 * @param int                               $item_id      The item/product ID.
-	 * @param bool                              $has_access   Whether the user already has access to the extension (based on pass level).
+	 * @param int         $item_id      The item/product ID.
+	 * @param bool        $has_access   Whether the user already has access to the extension (based on pass level).
 	 * @return string
 	 */
 	protected function get_upgrade_url( ProductData $product_data, $item_id, $has_access = false ) {
@@ -336,7 +373,7 @@ abstract class Extension {
 	 * Gets the array of parameters for the link to configure the extension.
 	 *
 	 * @since 2.11.4
-	 * @param ProductData  $product_data  The product data object.
+	 * @param ProductData $product_data  The product data object.
 	 * @return array
 	 */
 	protected function get_link_parameters( ProductData $product_data ) {
@@ -388,7 +425,7 @@ abstract class Extension {
 	 * Checks the current user's capability level.
 	 *
 	 * @since 3.1.1
-	 * @param string $capability
+	 * @param string $capability The capability to check.
 	 * @return bool
 	 */
 	protected function current_user_can( $capability = 'activate_plugins' ) {

@@ -85,7 +85,7 @@ class Pages {
 			),
 			'edd-emails'          => array(
 				'page_title' => __( 'EDD Emails', 'easy-digital-downloads' ),
-				'menu_title' => self::mark_new( __( 'Emails', 'easy-digital-downloads' ) ),
+				'menu_title' => __( 'Emails', 'easy-digital-downloads' ),
 				'capability' => 'manage_shop_settings',
 				'callback'   => array( '\\EDD\\Admin\\Emails\\Screen', 'render' ),
 			),

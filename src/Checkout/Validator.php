@@ -75,16 +75,26 @@ class Validator {
 	 * Checks if the checkout page has the checkout block.
 	 *
 	 * @since 3.3.8
+	 * @param int|null $post_id The ID of the post to check. Added in 3.5.0.
 	 * @return bool
 	 */
-	public static function has_block() {
+	public static function has_block( $post_id = null ) {
+		$block = 'edd/checkout';
+		if ( $post_id ) {
+			return has_block( $block, absint( $post_id ) );
+		}
+
 		if ( edd_doing_ajax() && ! empty( $_POST['current_page'] ) ) {
-			return has_block( 'edd/checkout', absint( $_POST['current_page'] ) );
+			return has_block( $block, absint( $_POST['current_page'] ) );
+		}
+
+		if ( has_block( $block ) ) {
+			return true;
 		}
 
 		$post_id = absint( edd_is_checkout() ? get_the_ID() : edd_get_option( 'purchase_page' ) );
 
-		return has_block( 'edd/checkout' ) || has_block( 'edd/checkout', $post_id );
+		return ! empty( $post_id ) && has_block( $block, $post_id );
 	}
 
 	/**
@@ -123,7 +133,7 @@ class Validator {
 	 */
 	private static function has_checkout( $post_id ) {
 
-		if ( has_block( 'edd/checkout', absint( $post_id ) ) ) {
+		if ( self::has_block( $post_id ) ) {
 			return true;
 		}
 

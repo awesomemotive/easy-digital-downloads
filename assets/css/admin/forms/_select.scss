@@ -1,0 +1,10 @@
+@use "../../variables/icons" as icons;
+
+.edd-select {
+	& option {
+		&[disabled] {
+			color: #666;
+			cursor: not-allowed;
+		}
+	}
+}

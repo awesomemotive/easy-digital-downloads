@@ -85,8 +85,9 @@ const config = {
 		'js/stripe-paymentelements': './assets/js/frontend/gateways/stripe/loader/payment-elements.js',
 		'js/square-checkout': './assets/js/frontend/gateways/square',
 
-		'pro/js/checkout': './assets/pro/js/frontend/checkout.js',
+		'pro/js/checkout': './assets/pro/js/frontend/geolocation/index.js',
 		'pro/js/duplicator': './assets/pro/js/admin/duplicator.js',
+		'pro/js/vat': './assets/pro/js/frontend/taxes/index.js',
 
 		// Admin styles.
 		'edd-admin-style': './assets/css/admin/style.scss',
@@ -108,6 +109,7 @@ const config = {
 		'stripe-cardelements': './assets/css/frontend/stripe/card-elements.scss',
 		'stripe-paymentelements': './assets/css/frontend/stripe/payment-elements.scss',
 		'square-checkout': './assets/css/frontend/gateways/square.scss',
+		'pro/css/edd-invoice': './assets/pro/scss/invoice/style.scss',
 	},
 	output: {
 		filename: '[name].js',
@@ -119,8 +121,12 @@ const config = {
 	},
 	plugins: [
 		new MiniCSSExtractPlugin( {
-			filename: ( pathData ) =>
-				`css/${ pathData.chunk.name.replace( '-style', '' ) }.min.css`
+			filename: ( pathData ) => {
+				if ( pathData.chunk.name.startsWith( 'pro/css/' ) ) {
+					return pathData.chunk.name + '.min.css';
+				}
+				return `css/${ pathData.chunk.name.replace( '-style', '' ) }.min.css`;
+			}
 		} ),
 		new RemoveEmptyScriptsPlugin(),
 		new RTLCSSWebpackPlugin( {

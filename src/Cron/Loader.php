@@ -2,18 +2,18 @@
 /**
  * Class for loading our Cron Integrations.
  *
- * @package EDD
- * @subpackage Cron
- *
- * @since 3.3.0
+ * @package     EDD\Cron
+ * @copyright   Copyright (c) 2024, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.3.0
  */
 
 namespace EDD\Cron;
 
-use EDD\EventManagement\SubscriberInterface;
-
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
+
+use EDD\EventManagement\SubscriberInterface;
 
 /**
  * Loader Class
@@ -152,7 +152,6 @@ class Loader implements SubscriberInterface {
 		}
 
 		return $registered_schedules;
-
 	}
 
 	/**

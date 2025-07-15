@@ -52,7 +52,9 @@ class RefundUpdated extends Event {
 		$order_total = $order_total * 100;
 
 		if ( $this->object['refund']['amount_money']['amount'] === $order_total && edd_is_order_refundable( $order->id ) ) {
+			add_filter( 'edd_is_order_refundable_by_override', '__return_true' );
 			$refund_id = edd_refund_order( $order->id );
+			remove_filter( 'edd_is_order_refundable_by_override', '__return_true' );
 
 			if ( $refund_id && ! is_wp_error( $refund_id ) ) {
 				edd_add_order_transaction(

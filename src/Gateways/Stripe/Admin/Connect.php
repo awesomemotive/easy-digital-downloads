@@ -502,9 +502,6 @@ class Connect {
 	 * @return bool
 	 */
 	private static function can_render_connect_field() {
-		if ( ! function_exists( 'edd_is_admin_page' ) ) {
-			return false;
-		}
 
 		// Check if it's the Stripe settings page.
 		if ( edd_is_admin_page( 'settings', 'gateways' ) ) {

@@ -18,7 +18,7 @@ use EDD\Gateways\PayPal;
  * @since 2.11
  */
 function enqueue_connect_scripts() {
-	if ( ! function_exists( 'edd_is_admin_page' ) || ! edd_is_admin_page( 'settings' ) ) {
+	if ( ! edd_is_admin_page( 'settings' ) ) {
 		return;
 	}
 

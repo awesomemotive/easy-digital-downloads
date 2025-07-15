@@ -66,6 +66,18 @@ class Countries {
 	}
 
 	/**
+	 * Retrieves the list of EU countries.
+	 *
+	 * @since 3.5.0
+	 * @return array The array of EU country codes.
+	 */
+	public static function get_eu_countries() {
+		$countries = include EDD_PLUGIN_DIR . 'i18n/countries-eu.php';
+
+		return array_keys( $countries );
+	}
+
+	/**
 	 * Retrieves the legacy GB states based on the state code and country code.
 	 *
 	 * @since 3.3.0

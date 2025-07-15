@@ -67,14 +67,10 @@ class WP_SMTP implements SubscriberInterface {
 	/**
 	 * Register the setting to show the WP SMTP installer if it isn't active.
 	 *
-	 * @param array $settings
+	 * @param array $settings The settings array.
 	 * @return array
 	 */
 	public function register_setting( $settings ) {
-		if ( ! function_exists( 'edd_is_admin_page' ) ) {
-			return $settings;
-		}
-
 		if ( ! edd_is_admin_page( 'emails' ) ) {
 			return $settings;
 		}

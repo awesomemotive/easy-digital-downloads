@@ -13,6 +13,9 @@
 
 <th class="edd-tax-rates-table-checkbox check-column">
 	<input type="checkbox" <# if ( data.selected ) { #>checked<# } #> />
+	<# if ( data.id ) { #>
+		<input type="hidden" name="tax_rates[{{ data.id }}][id]" value="{{ data.id }}" />
+	<# } #>
 </th>
 
 <td class="edd-tax-rates-table-country" data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">

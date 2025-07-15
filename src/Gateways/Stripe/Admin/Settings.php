@@ -417,7 +417,7 @@ class Settings {
 	 * @return bool
 	 */
 	private function is_gateway_settings_screen() {
-		return function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'settings', 'gateways' );
+		return edd_is_admin_page( 'settings', 'gateways' );
 	}
 
 	/**

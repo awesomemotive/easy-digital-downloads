@@ -150,10 +150,10 @@ class VariablePrices extends Section {
 	 */
 	public function do_row( $download, $args, $price_id ) {
 		?>
-		<div class="edd-section-content__row edd-variable-price__row edd_repeatable_row closed edd-handle-actions__group" id="edd-variable-price__row-<?php echo esc_attr( $price_id ); ?>">
+		<div class="edd-section-content__row edd-variable-price__row edd_repeatable_row closed edd-handle-actions__group" id="edd-variable-price__row-<?php echo esc_attr( $price_id ); ?>" data-key="<?php echo esc_attr( $price_id ); ?>">
 			<input type="hidden" class="edd-section__id" value="<?php echo esc_attr( $price_id ); ?>" />
 			<input type="hidden" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][index]" value="<?php echo esc_attr( $args['index'] ); ?>"/>
-			<div class="edd-form-row edd-section-content__fields--standard" data-key="<?php echo esc_attr( $price_id ); ?>">
+			<div class="edd-form-row edd-section-content__fields--standard">
 				<div class="edd-variable-price__id">#<?php echo esc_html( $price_id ); ?></div>
 				<div class="edd-form-group__control edd-variable-price__name">
 					<label for="edd_variable_prices-<?php echo esc_attr( $price_id ); ?>-name" class="screen-reader-text" aria-hidden="true">

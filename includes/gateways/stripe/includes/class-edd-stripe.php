@@ -56,7 +56,7 @@ class EDD_Stripe {
 	 * Stripe Connect status class.
 	 *
 	 * @since 2.9.3
-	 * @var \EDD\Stripe\Connect
+	 * @var \EDD\Gateways\Stripe\Connect
 	 */
 	public $connect;
 
@@ -192,11 +192,12 @@ class EDD_Stripe {
 	 * @since 2.9.3
 	 */
 	public function connect() {
-		if ( $this->connect instanceof EDD\Stripe\Connect ) {
+		if ( $this->connect instanceof EDD\Gateways\Stripe\Connect ) {
 			return $this->connect;
 		}
-		require_once EDDS_PLUGIN_DIR . '/includes/class-stripe-connect.php';
-		$this->connect = new EDD\Stripe\Connect();
+		class_alias( 'EDD\Gateways\Stripe\Connect', 'EDD\Stripe\Connect' );
+
+		$this->connect = new EDD\Gateways\Stripe\Connect();
 
 		return $this->connect;
 	}

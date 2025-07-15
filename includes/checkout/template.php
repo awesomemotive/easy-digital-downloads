@@ -159,21 +159,7 @@ add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
  * @return void
  */
 function edd_user_info_fields() {
-	$customer = EDD()->session->get( 'customer' );
-	$customer = wp_parse_args( $customer, array( 'first_name' => '', 'last_name' => '', 'email' => '' ) );
-
-	if ( is_user_logged_in() ) {
-		$user_data = get_userdata( get_current_user_id() );
-		foreach ( $customer as $key => $field ) {
-			if ( 'email' === $key && empty( $field ) ) {
-				$customer[ $key ] = $user_data->user_email;
-			} elseif ( empty( $field ) ) {
-				$customer[ $key ] = $user_data->$key;
-			}
-		}
-	}
-
-	$customer = array_map( 'sanitize_text_field', $customer );
+	$customer = \EDD\Sessions\Customer::get();
 	?>
 	<fieldset id="edd_checkout_user_info">
 		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html__( 'Personal info', 'easy-digital-downloads' ) ); ?></legend>

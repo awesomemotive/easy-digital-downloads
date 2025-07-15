@@ -456,11 +456,6 @@ function edd_ajax_generate_refund_form() {
 	</div>
 	<form id="edd-submit-refund-form" method="POST">
 		<?php
-		// Load list table if not already loaded
-		if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
-			require_once 'class-refund-items-table.php';
-		}
-
 		$refund_items = new EDD\Admin\Refund_Items_Table();
 		$refund_items->prepare_items();
 		$refund_items->display();

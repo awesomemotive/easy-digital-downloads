@@ -5,6 +5,12 @@
 	color: colors.$edd-pro-upgrade;
 	font-weight: 600;
 	text-decoration: none;
+
+	&.button-link,
+	&.button-link:hover {
+		color: colors.$edd-pro-upgrade !important;
+		text-decoration: none !important;
+	}
 }
 
 .button.edd-pro-upgrade,
