@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-15T19:47:14+00:00\n"
+"POT-Creation-Date: 2025-07-15T21:13:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 
@@ -6712,15 +6712,14 @@ msgstr ""
 #: includes/admin/customers/customers.php:1163
 #: includes/admin/customers/customers.php:1216
 #: includes/admin/reporting/class-export-payments.php:65
-#: includes/admin/reporting/views/export-eu-vat-sales.php:10
-#: includes/admin/reporting/views/export-eu-vat.php:10
 #: includes/admin/tools.php:690
 #: includes/admin/views/tmpl-tax-rates-table-dialog.php:18
 #: includes/admin/views/tmpl-tax-rates-table-meta.php:20
 #: includes/admin/views/tmpl-tax-rates-table-row.php:21
 #: includes/gateways/stripe/includes/template-functions.php:584
 #: includes/gateways/stripe/includes/template-functions.php:594
-#: src/Admin/Exports/Exporters/EUVAT.php:95
+#: pro/admin/views/export-eu-vat-sales.php:10
+#: pro/admin/views/export-eu-vat.php:10
 #: src/Admin/Exports/Exporters/Orders.php:58
 #: src/Admin/Exports/Exporters/TaxedOrders.php:71
 #: src/Forms/Checkout/Registry.php:40
@@ -9716,18 +9715,6 @@ msgstr ""
 msgid "Select end year"
 msgstr ""
 
-#: includes/admin/reporting/views/export-eu-vat-sales.php:4
-#: includes/admin/reporting/views/export-eu-vat.php:4
-msgid "Export EU VAT Dates"
-msgstr ""
-
-#: includes/admin/reporting/views/export-eu-vat-sales.php:22
-#: includes/admin/reporting/views/export-eu-vat.php:22
-#: includes/admin/views/tmpl-tax-rates-table-dialog.php:24
-#: src/HTML/CountrySelect.php:41
-msgid "All Countries"
-msgstr ""
-
 #: includes/admin/reporting/views/export-orders.php:4
 msgid "Export Order Dates"
 msgstr ""
@@ -11159,6 +11146,13 @@ msgstr ""
 
 #: includes/admin/views/tmpl-tax-rates-table-bulk-actions.php:31
 msgid "Show deactivated rates"
+msgstr ""
+
+#: includes/admin/views/tmpl-tax-rates-table-dialog.php:24
+#: pro/admin/views/export-eu-vat-sales.php:22
+#: pro/admin/views/export-eu-vat.php:22
+#: src/HTML/CountrySelect.php:41
+msgid "All Countries"
 msgstr ""
 
 #: includes/admin/views/tmpl-tax-rates-table-dialog.php:30
@@ -16580,6 +16574,11 @@ msgstr ""
 msgid "Generate XML"
 msgstr ""
 
+#: pro/admin/views/export-eu-vat-sales.php:4
+#: pro/admin/views/export-eu-vat.php:4
+msgid "Export EU VAT Dates"
+msgstr ""
+
 #: pro/invoices/actions.php:85
 #: pro/invoices/emails.php:22
 msgid "Invoice"
@@ -17520,34 +17519,6 @@ msgstr ""
 msgid "Gross Amount"
 msgstr ""
 
-#: src/Admin/Exports/Exporters/EUVAT.php:96
-msgid "Standard VAT Rate"
-msgstr ""
-
-#: src/Admin/Exports/Exporters/EUVAT.php:97
-msgid "Value of Items (Excluding VAT)"
-msgstr ""
-
-#: src/Admin/Exports/Exporters/EUVAT.php:98
-msgid "VAT"
-msgstr ""
-
-#: src/Admin/Exports/Exporters/EUVATSales.php:74
-msgid "EU Country Code"
-msgstr ""
-
-#: src/Admin/Exports/Exporters/EUVATSales.php:75
-msgid "VAT Registration Number"
-msgstr ""
-
-#: src/Admin/Exports/Exporters/EUVATSales.php:76
-msgid "Value of Supplies"
-msgstr ""
-
-#: src/Admin/Exports/Exporters/EUVATSales.php:77
-msgid "Indicator"
-msgstr ""
-
 #: src/Admin/Exports/Exporters/Orders.php:60
 #: src/Admin/Exports/Exporters/TaxedOrders.php:73
 msgid "Products (Verbose)"
@@ -17643,22 +17614,6 @@ msgstr ""
 
 #: src/Admin/Exports/Loader.php:189
 msgid "Download a CSV of file download logs."
-msgstr ""
-
-#: src/Admin/Exports/Loader.php:194
-msgid "EU VAT Report"
-msgstr ""
-
-#: src/Admin/Exports/Loader.php:195
-msgid "Download a CSV of all European VAT collected, which you can use for your EU VAT/MOSS tax return."
-msgstr ""
-
-#: src/Admin/Exports/Loader.php:200
-msgid "EC Sales List Report"
-msgstr ""
-
-#: src/Admin/Exports/Loader.php:201
-msgid "Download a CSV of all European Sales to VAT-registered customers, which you can use for your EC Sales List tax return."
 msgstr ""
 
 #: src/Admin/Exports/Registry.php:82
