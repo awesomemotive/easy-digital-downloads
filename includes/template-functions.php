@@ -606,7 +606,7 @@ function edd_get_purchase_download_links( $payment_id = 0 ) {
 }
 
 /**
- * Returns the path to the EDD templates directory
+ * Returns the path to the EDD templates directory.
  *
  * @since 1.2
  * @return string
@@ -681,6 +681,7 @@ function edd_load_verification_template_once( $load_template ) {
 	}
 
 	$account_pending_loaded = true;
+
 	return $load_template;
 }
 add_filter( 'edd_allow_template_part_account_pending', 'edd_load_verification_template_once', 10, 1 );
@@ -739,7 +740,7 @@ function edd_locate_template( $template_names, $load = false, $load_once = true,
 }
 
 /**
- * Returns a list of paths to check for template locations
+ * Returns a list of paths to check for template locations.
  *
  * @since 1.8.5
  * @return mixed|void

@@ -30,8 +30,8 @@ jQueryReady( () => {
 	// Normalize rate data.
 	_.each( eddTaxRates.rates, ( rate ) => rates.push( {
 		id: rate.id,
-		country: rate.name,
-		region: rate.description,
+		country: rate.country,
+		region: rate.state,
 		global: 'country' === rate.scope,
 		amount: rate.amount,
 		status: rate.status,

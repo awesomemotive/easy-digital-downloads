@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "3.4.0",
+	"version": "3.5.0",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"author": "Easy Digital Downloads",
@@ -18,8 +18,8 @@
 		"url": "https://github.com/easydigitaldownloads/easy-digital-downloads/issues"
 	},
 	"engines": {
-		"node": ">=10.0.0",
-		"npm": ">=6.9.0"
+		"node": ">=15.14.0",
+		"npm": ">=10.2.5"
 	},
 	"main": "webpack.config.js",
 	"dependencies": {

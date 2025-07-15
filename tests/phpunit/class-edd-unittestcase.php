@@ -80,6 +80,16 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 	}
 
 	/**
+	 * Runs after each test method.
+	 */
+	public function tearDown(): void {
+		// Clear any static caches that might interfere with other tests.
+		\EDD\Admin\Utils\Page::clear_cache();
+
+		parent::tearDown();
+	}
+
+	/**
 	 * Sets up logic for the @expectEDDeprecated annotation for deprecated elements in EDD.
 	 */
 	function expectDeprecatedEDD() {

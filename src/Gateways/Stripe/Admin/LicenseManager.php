@@ -105,7 +105,7 @@ final class LicenseManager {
 		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
-		if ( function_exists( 'edd_is_admin_page' ) && ! edd_is_admin_page() ) {
+		if ( ! edd_is_admin_page() ) {
 			return;
 		}
 		if ( ! $this->should_show_warnings() ) {

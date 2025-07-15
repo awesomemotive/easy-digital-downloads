@@ -136,8 +136,7 @@ class Localization {
 	private static function get_currency() {
 		$currency = edd_get_currency();
 
-		// Customize the currency on a few individual pages.
-		if ( ! function_exists( 'edd_is_admin_page' ) ) {
+		if ( ! edd_is_admin_page() ) {
 			return $currency;
 		}
 
@@ -169,7 +168,7 @@ class Localization {
 	 * @return bool
 	 */
 	private static function download_has_files() {
-		if ( function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'download', 'edit' ) ) {
+		if ( edd_is_admin_page( 'download', 'edit' ) ) {
 			return (bool) edd_get_download_files( get_the_ID() );
 		}
 

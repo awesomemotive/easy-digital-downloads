@@ -48,6 +48,7 @@ class RatesSection extends EDD_UnitTestCase {
 			)
 		);
 
+		$this->setExpectedIncorrectUsage( 'edd_get_adjustments' );
 		$this->assertSame( 0, count( edd_get_adjustments( array( 'type' => 'tax_rate' ) ) ) );
 	}
 
@@ -63,6 +64,10 @@ class RatesSection extends EDD_UnitTestCase {
 				'country' => 'GB',
 				'state'   => 'GB-WRX',
 				'rate'    => '20',
+			),
+			array(
+				'country' => '*',
+				'rate'    => '10',
 			)
 		);
 
@@ -73,6 +78,7 @@ class RatesSection extends EDD_UnitTestCase {
 		);
 
 		// Verify that the tax rates were saved.
+		$this->setExpectedIncorrectUsage( 'edd_get_adjustments' );
 		$tax_rates = edd_get_adjustments(
 			array(
 				'type'    => 'tax_rate',
@@ -80,7 +86,7 @@ class RatesSection extends EDD_UnitTestCase {
 				'order'   => 'ASC'
 			)
 		);
-		$this->assertSame( 2, count( $tax_rates ) );
+		$this->assertSame( 3, count( $tax_rates ) );
 		$this->assertSame( 'US', $tax_rates[0]->name );
 		$this->assertSame('country', $tax_rates[0]->scope );
 		$this->assertSame( floatval( 7.52 ), floatval( $tax_rates[0]->amount ) );
@@ -88,6 +94,8 @@ class RatesSection extends EDD_UnitTestCase {
 		$this->assertSame( 'region', $tax_rates[1]->scope );
 		$this->assertSame( floatval( 20 ), floatval( $tax_rates[1]->amount ) );
 		$this->assertSame( 'GB-WRX', $tax_rates[1]->description );
+		$this->assertSame( 'global', $tax_rates[2]->scope );
+		$this->assertSame( floatval( 10 ), floatval( $tax_rates[2]->amount ) );
 	}
 
 }

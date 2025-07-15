@@ -9,8 +9,8 @@
  * @since       3.0
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Add an adjustment.
@@ -147,7 +147,7 @@ function edd_update_adjustment( $adjustment_id = 0, $data = array() ) {
 function edd_get_adjustment( $adjustment_id = 0 ) {
 	$adjustments = new EDD\Database\Queries\Adjustment();
 
-	// Return adjustment
+	// Return adjustment.
 	return $adjustments->get_item( $adjustment_id );
 }
 
@@ -165,7 +165,7 @@ function edd_get_adjustment( $adjustment_id = 0 ) {
 function edd_get_adjustment_by( $field = '', $value = '' ) {
 	$adjustments = new EDD\Database\Queries\Adjustment();
 
-	// Return adjustment
+	// Return adjustment.
 	return $adjustments->get_item_by( $field, $value );
 }
 
@@ -182,15 +182,26 @@ function edd_get_adjustment_by( $field = '', $value = '' ) {
  */
 function edd_get_adjustments( $args = array() ) {
 
-	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	// Parse args.
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
-	// Instantiate a query object
+	if ( array_key_exists( 'type', $r ) && 'tax_rate' === $r['type'] ) {
+		_doing_it_wrong( __FUNCTION__, 'This function is no longer used for retrieving tax rates.', '3.5.0' );
+
+		$tax_rates = new EDD\Database\Queries\TaxRate();
+
+		return $tax_rates->query( $r );
+	}
+
+	// Instantiate a query object.
 	$adjustments = new EDD\Database\Queries\Adjustment();
 
-	// Return adjustments
+	// Return adjustments.
 	return $adjustments->query( $r );
 }
 
@@ -207,14 +218,25 @@ function edd_get_adjustments( $args = array() ) {
  */
 function edd_count_adjustments( $args = array() ) {
 
-	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	// Parse args.
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
-	// Query for count(s)
+	if ( array_key_exists( 'type', $r ) && 'tax_rate' === $r['type'] ) {
+		_doing_it_wrong( __FUNCTION__, 'This function is no longer used for retrieving tax rates.', '3.5.0' );
+
+		$tax_rates = new EDD\Database\Queries\TaxRate( $r );
+
+		return absint( $tax_rates->found_items );
+	}
+
+	// Query for count(s).
 	$adjustments = new EDD\Database\Queries\Adjustment( $r );
 
-	// Return count(s)
+	// Return count(s).
 	return absint( $adjustments->found_items );
 }

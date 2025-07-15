@@ -26,6 +26,7 @@ class Loader extends MiniManager {
 			new Orders\MigrateAfterActionsDate(),
 			new Adjustments\DiscountsStartEnd(),
 			new Emails\Registration(),
+			new Background\TaxRates(),
 		);
 	}
 }

@@ -535,7 +535,7 @@ function edd_customers_view( $customer = null ) {
 					#<?php echo esc_html( $customer->id ); ?>
 				</div>
 
-				<div class="customer-address-wrapper right">
+				<div class="customer-address-wrapper">
 					<fieldset>
 						<legend class="screen-reader-text"><?php esc_html_e( 'Customer Address', 'easy-digital-downloads' ); ?></legend>
 
@@ -600,7 +600,7 @@ function edd_customers_view( $customer = null ) {
 					</fieldset>
 				</div>
 
-				<div class="customer-main-wrapper left">
+				<div class="customer-main-wrapper">
 					<span class="customer-name info-item edit-item">
 						<input size="15" data-key="name" name="customerinfo[name]" type="text" value="<?php echo esc_attr( $customer->name ); ?>" placeholder="<?php esc_html_e( 'Customer Name', 'easy-digital-downloads' ); ?>" />
 					</span>

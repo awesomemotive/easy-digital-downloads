@@ -95,7 +95,7 @@ class Handler {
 			$this->manager = new Managers\Database();
 		}
 		add_action( 'shutdown', array( $this, 'save' ), 20 );
-		add_action( 'wp_logout', array( $this, 'destroy' ) );
+		add_action( 'wp_logout', array( $this, 'forget' ) );
 		add_action( 'edd_pre_add_to_cart', array( $this, 'reset' ) );
 		add_action( 'edd_post_add_to_cart', array( $this, 'set_cart_cookie' ) );
 	}
@@ -259,6 +259,7 @@ class Handler {
 		$this->set_cart_cookie( false );
 
 		edd_empty_cart();
+		$this->set( 'customer', null );
 
 		$this->data        = array();
 		$this->dirty       = false;

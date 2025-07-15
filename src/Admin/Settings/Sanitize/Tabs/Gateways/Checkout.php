@@ -62,19 +62,83 @@ class Checkout extends Section {
 		// If taxes are enabled at all, we need to ensure the country field is always present.
 		$value['country'] = 1;
 
-		$has_regional_rates = edd_get_adjustments(
-			array(
-				'type'   => 'tax_rate',
-				'scope'  => 'region',
-				'status' => 'active',
-				'number' => 1,
-			)
-		);
-
-		if ( ! empty( $has_regional_rates ) ) {
+		// If there are regional tax rates, we need to ensure the state field is always present.
+		if ( self::has_regional_rates() ) {
 			$value['state'] = 1;
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Sanitize the empty cart behavior.
+	 *
+	 * @since 3.5.0
+	 * @param array $value The value to sanitize.
+	 * @return array The sanitized value.
+	 */
+	protected static function sanitize_empty_cart_behavior( $value ) {
+		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
+
+		return $provider::validate_empty_cart_behavior( $value );
+	}
+
+	/**
+	 * Sanitize the empty cart message.
+	 *
+	 * @since 3.5.0
+	 * @param string $value The value to sanitize.
+	 * @return string The sanitized value.
+	 */
+	public static function sanitize_empty_cart_message( $value ) {
+		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
+
+		return $provider::validate_empty_cart_message( $value );
+	}
+
+	/**
+	 * Sanitize the empty cart redirect page.
+	 *
+	 * @since 3.5.0
+	 * @param string $value The value to sanitize.
+	 * @return string The sanitized value.
+	 */
+	public static function sanitize_empty_cart_redirect_page( $value ) {
+		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
+
+		return $provider::validate_empty_cart_redirect_page( $value );
+	}
+
+	/**
+	 * Sanitize the empty cart redirect URL.
+	 *
+	 * @since 3.5.0
+	 * @param string $value The value to sanitize.
+	 * @return string The sanitized value.
+	 */
+	public static function sanitize_empty_cart_redirect_url( $value ) {
+		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
+
+		return $provider::validate_empty_cart_redirect_url( $value );
+	}
+
+	/**
+	 * Checks if there are any active regional tax rates.
+	 *
+	 * @since 3.5.0
+	 * @return bool
+	 */
+	private static function has_regional_rates() {
+		$tax_rates = new \EDD\Database\Queries\TaxRate();
+
+		return ! empty(
+			$tax_rates->query(
+				array(
+					'scope'  => 'region',
+					'status' => 'active',
+					'number' => 1,
+				)
+			)
+		);
 	}
 }

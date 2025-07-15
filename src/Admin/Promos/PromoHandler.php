@@ -41,6 +41,8 @@ class PromoHandler implements SubscriberInterface {
 		'\\EDD\\Admin\\Promos\\Notices\\Recurring',
 		'\\EDD\\Admin\\Promos\\Notices\\PriceChanges',
 		'\\EDD\\Admin\\Promos\\Notices\\SquareWebhooksModal',
+		'\\EDD\\Admin\\Promos\\Notices\\EmptyCartBehavior',
+		'\\EDD\\Admin\\Promos\\Notices\\VATHandling',
 	);
 
 	/**

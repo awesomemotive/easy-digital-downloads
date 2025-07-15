@@ -89,8 +89,17 @@ class Select extends Base {
 				}
 
 				foreach ( $this->args['options'] as $key => $option ) {
+					if ( is_array( $option ) ) {
+						$disabled = isset( $option['disabled'] ) ? $option['disabled'] : false;
+						$option   = $option['label'];
+					} else {
+						$disabled = false;
+					}
+
+					$selected = $this->is_selected( $key ) ? ' selected' : '';
+					$disabled = $disabled ? ' disabled' : '';
 					?>
-					<option value="<?php echo esc_attr( $key ); ?>"<?php echo $this->is_selected( $key ) ? ' selected' : ''; ?>>
+					<option value="<?php echo esc_attr( $key ); ?>"<?php echo $selected; ?><?php echo $disabled; ?>>
 						<?php echo esc_html( $option ); ?>
 					</option>
 					<?php

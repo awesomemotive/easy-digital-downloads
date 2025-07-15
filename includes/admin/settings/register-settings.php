@@ -2,11 +2,10 @@
 /**
  * Register Settings
  *
- * @package     EDD
- * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0
+ * @package     EDD\Admin\Settings
+ * @copyright   Copyright (c) 2025, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       3.5.0
  */
 
 // Exit if accessed directly.
@@ -69,18 +68,18 @@ function edd_delete_option( $key = '' ) {
  * Retrieves all plugin settings
  *
  * @since 1.0
- * @return array EDD settings
+ * @return array EDD settings.
  */
 function edd_get_settings() {
 
-	// Get the option key
+	// Get the option key.
 	$settings = get_option( 'edd_settings' );
 
-	// Look for old option keys
+	// Look for old option keys.
 	if ( empty( $settings ) ) {
 		$settings = array();
 
-		// Old option keys
+		// Old option keys.
 		$old_keys = array(
 			'edd_settings_general',
 			'edd_settings_gateways',
@@ -92,19 +91,19 @@ function edd_get_settings() {
 			'edd_settings_misc',
 		);
 
-		// Merge old keys together
+		// Merge old keys together.
 		foreach ( $old_keys as $key ) {
 			$settings[ $key ] = get_option( $key, array() );
 		}
 
-		// Remove empties
+		// Remove empties.
 		$settings = array_filter( array_values( $settings ) );
 
-		// Update the main option
+		// Update the main option.
 		update_option( 'edd_settings', $settings );
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'edd_get_settings', $settings );
 }
 
@@ -116,26 +115,26 @@ function edd_get_settings() {
  */
 function edd_register_settings() {
 
-	// Get registered settings
+	// Get registered settings.
 	$edd_settings = edd_get_registered_settings();
 
-	// Loop through settings
+	// Loop through settings.
 	foreach ( $edd_settings as $tab => $sections ) {
 
-		// Loop through sections
+		// Loop through sections.
 		foreach ( $sections as $section => $settings ) {
 
-			// Check for backwards compatibility
+			// Check for backwards compatibility.
 			$section_tabs = edd_get_settings_tab_sections( $tab );
 			if ( ! is_array( $section_tabs ) || ! array_key_exists( $section, $section_tabs ) ) {
 				$section  = 'main';
 				$settings = $sections;
 			}
 
-			// Current page
+			// Current page.
 			$page = "edd_settings_{$tab}_{$section}";
 
-			// Add the settings section
+			// Add the settings section.
 			add_settings_section(
 				$page,
 				__return_null(),
@@ -145,12 +144,12 @@ function edd_register_settings() {
 
 			foreach ( $settings as $option ) {
 
-				// For backwards compatibility
+				// For backwards compatibility.
 				if ( empty( $option['id'] ) ) {
 					continue;
 				}
 
-				// Parse args
+				// Parse args.
 				$args = wp_parse_args(
 					$option,
 					array(
@@ -177,18 +176,18 @@ function edd_register_settings() {
 					)
 				);
 
-				// Callback fallback
+				// Callback fallback.
 				$func     = 'edd_' . $args['type'] . '_callback';
 				$callback = ! function_exists( $func )
 					? 'edd_missing_callback'
 					: $func;
 
-				// Link the label to the form field
+				// Link the label to the form field.
 				if ( empty( $args['label_for'] ) ) {
 					$args['label_for'] = 'edd_settings[' . $args['id'] . ']';
 				}
 
-				// Add the settings field
+				// Add the settings field.
 				add_settings_field(
 					'edd_settings[' . $args['id'] . ']',
 					$args['name'],
@@ -201,7 +200,7 @@ function edd_register_settings() {
 		}
 	}
 
-	// Register our setting in the options table
+	// Register our setting in the options table.
 	register_setting( 'edd_settings', 'edd_settings', 'edd_settings_sanitize' );
 }
 add_action( 'admin_init', 'edd_register_settings' );
@@ -210,7 +209,7 @@ add_action( 'admin_init', 'edd_register_settings' );
  * Retrieve the array of plugin settings
  *
  * @since 1.8
- * @since 3.0 Use a static variable internally to store registered settings
+ * @since 3.0 Use a static variable internally to store registered settings.
  * @return array
  */
 function edd_get_registered_settings() {
@@ -233,11 +232,11 @@ function edd_get_registered_settings() {
  *
  * @since 1.0.8.2
  *
- * @param array $input       The value inputted in the field
+ * @param array $input The value inputted in the field.
  *
- * @global array $edd_options Array of all the EDD Options
+ * @global array $edd_options Array of all the EDD Options.
  *
- * @return array $input Sanitized value
+ * @return array $input Sanitized value.
  */
 function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
@@ -281,7 +280,7 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 
 		// Run a general sanitization for the section so custom tabs with sub-sections can save special data.
-		$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input );
+		$input = apply_filters( 'edd_settings_' . $tab . '-' . $section . '_sanitize', $input ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 
 		// If we have a class for this section, use it to sanitize the input.
 		// Normalize the section name to be a class name.
@@ -291,15 +290,15 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 	}
 
-	// Remove non setting types and merge settings together
+	// Remove non setting types and merge settings together.
 	$non_setting_types = edd_get_non_setting_types();
 	$setting_types     = array_diff( $setting_types, $non_setting_types );
 	$output            = array_merge( $edd_options, $input );
 
-	// Loop through settings, and apply any filters
+	// Loop through settings, and apply any filters.
 	foreach ( $setting_types as $key => $type ) {
 
-		// Skip if type is empty
+		// Skip if type is empty.
 		if ( empty( $type ) ) {
 			continue;
 		}
@@ -322,7 +321,7 @@ function edd_settings_sanitize( $input = array() ) {
 				case 'gateways':
 				case 'multicheck':
 				case 'payment_icons':
-					if ( array_key_exists( $key, $input ) && $output[ $key ] === '-1' ) {
+					if ( array_key_exists( $key, $input ) && '-1' === $output[ $key ] ) {
 						unset( $output[ $key ] );
 					}
 					break;
@@ -368,10 +367,10 @@ function edd_settings_sanitize( $input = array() ) {
  * @since  2.6.5
  * @since  2.8 - Added the ability to filter setting types by tab and section
  *
- * @param $filtered_tab     bool|string     A tab to filter setting types by.
- * @param $filtered_section bool|string A section to filter setting types by.
+ * @param bool|string $filtered_tab     A tab to filter setting types by.
+ * @param bool|string $filtered_section A section to filter setting types by.
  *
- * @return array Key is the setting ID, value is the type of setting it is registered as
+ * @return array Key is the setting ID, value is the type of setting it is registered as.
  */
 function edd_get_registered_settings_types( $filtered_tab = false, $filtered_section = false ) {
 	$settings      = edd_get_registered_settings();
@@ -385,7 +384,7 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 
 		foreach ( $tab as $section_id => $section_or_setting ) {
 
-			// See if we have a setting registered at the tab level for backwards compatibility
+			// See if we have a setting registered at the tab level for backwards compatibility.
 			if ( false !== $filtered_section && is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
 				$setting_types[ $section_or_setting['id'] ] = $section_or_setting['type'];
 				continue;
@@ -465,20 +464,19 @@ function edd_sanitize_text_field( $input = '' ) {
  *
  * @since 2.6.11
  *
- * @param  string|array $class HTML Class Name(s)
- *
- * @return string $class
+ * @param  string|array $class_string HTML Class Name(s).
+ * @return string $class_string
  */
-function edd_sanitize_html_class( $class = '' ) {
+function edd_sanitize_html_class( $class_string = '' ) {
 
-	if ( is_string( $class ) ) {
-		$class = sanitize_html_class( $class );
-	} elseif ( is_array( $class ) ) {
-		$class = array_values( array_map( 'sanitize_html_class', $class ) );
-		$class = implode( ' ', array_unique( $class ) );
+	if ( is_string( $class_string ) ) {
+		$class_string = sanitize_html_class( $class_string );
+	} elseif ( is_array( $class_string ) ) {
+		$class_string = array_values( array_map( 'sanitize_html_class', $class_string ) );
+		$class_string = implode( ' ', array_unique( $class_string ) );
 	}
 
-	return $class;
+	return $class_string;
 }
 
 /**
@@ -609,7 +607,7 @@ function edd_get_registered_settings_sections() {
 		);
 	}
 
-	// Filter & return
+	// Filter & return.
 	return apply_filters( 'edd_settings_sections', $sections );
 }
 
@@ -619,12 +617,14 @@ function edd_get_registered_settings_sections() {
  * On large sites this can be expensive, so only load if on the settings page or $force is set to true
  *
  * @since 1.9.5
+ * @since 3.5.0 Added $the $exclude parameter.
  *
- * @param bool $force Force the pages to be loaded even if not on settings
+ * @param bool   $force Force the pages to be loaded even if not on settings.
+ * @param string $exclude Array of page IDs to exclude.
  *
  * @return array $pages_options An array of the pages
  */
-function edd_get_pages( $force = false ) {
+function edd_get_pages( $force = false, $exclude = array() ) {
 
 	$pages_options = array( '' => __( 'None', 'easy-digital-downloads' ) );
 
@@ -632,7 +632,12 @@ function edd_get_pages( $force = false ) {
 		return $pages_options;
 	}
 
-	$pages = get_pages();
+	$pages = get_pages(
+		array(
+			'exclude' => $exclude,
+		)
+	);
+
 	if ( $pages ) {
 		foreach ( $pages as $page ) {
 			$pages_options[ $page->ID ] = $page->post_title;
@@ -649,8 +654,7 @@ function edd_get_pages( $force = false ) {
  *
  * @since 1.0
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_header_callback( $args ) {
@@ -701,8 +705,7 @@ function edd_checkbox_callback( $args ) {
  *
  * @since 3.0
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_checkbox_description_callback( $args ) {
@@ -903,22 +906,22 @@ function edd_payment_icons_callback( $args = array() ) {
  *
  * @since 3.0
  *
- * @param array $icons
- * @return array
+ * @param array $icons The icons to order.
+ * @return array The ordered icons.
  */
 function edd_order_accepted_payment_icons( $icons = array() ) {
 
-	// Get the order option
+	// Get the order option.
 	$order = edd_get_option( 'payment_icons_order', '' );
 
-	// If order is set, enforce it
+	// If order is set, enforce it.
 	if ( ! empty( $order ) ) {
 		$order = array_flip( explode( ',', $order ) );
 		$order = array_intersect_key( $order, $icons );
 		$icons = array_merge( $order, $icons );
 	}
 
-	// Return ordered icons
+	// Return ordered icons.
 	return $icons;
 }
 add_filter( 'edd_accepted_payment_icons', 'edd_order_accepted_payment_icons', 99 );
@@ -930,8 +933,7 @@ add_filter( 'edd_accepted_payment_icons', 'edd_order_accepted_payment_icons', 99
  *
  * @since 1.3.3
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_radio_callback( $args ) {
@@ -944,9 +946,9 @@ function edd_radio_callback( $args ) {
 	foreach ( $args['options'] as $key => $option ) :
 		$checked = false;
 
-		if ( $edd_options && $edd_options == $key ) {
+		if ( $edd_options && $edd_options === $key ) {
 			$checked = true;
-		} elseif ( isset( $args['std'] ) && $args['std'] == $key && ! $edd_options ) {
+		} elseif ( isset( $args['std'] ) && $args['std'] === $key && ! $edd_options ) {
 			$checked = true;
 		}
 
@@ -968,8 +970,7 @@ function edd_radio_callback( $args ) {
  *
  * @since 1.0
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_gateways_callback( $args ) {
@@ -1053,8 +1054,7 @@ function edd_gateways_callback( $args ) {
  *
  * @since 1.5
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_gateway_select_callback( $args ) {
@@ -1093,8 +1093,7 @@ function edd_gateway_select_callback( $args ) {
  *
  * @since 1.0
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_text_callback( $args ) {
@@ -1113,22 +1112,44 @@ function edd_text_callback( $args ) {
 		$value            = isset( $args['std'] ) ? $args['std'] : '';
 		$name             = '';
 	} else {
-		$name = 'name="edd_settings[' . esc_attr( $args['id'] ) . ']"';
+		$name = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	}
 
-	$class = edd_sanitize_html_class( $args['field_class'] );
+	if ( ! is_array( $args['field_class'] ) ) {
+		$args['field_class'] = explode( ' ', $args['field_class'] );
+	}
+	// Add the size class to the field class array.
+	$field_size            = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$args['field_class'][] = sanitize_html_class( $field_size ) . '-text';
 
-	$placeholder = ! empty( $args['placeholder'] )
-		? ' placeholder="' . esc_attr( $args['placeholder'] ) . '"'
-		: '';
+	$input_args = array(
+		'type'         => isset( $args['subtype'] ) ? $args['subtype'] : 'text',
+		'name'         => $name,
+		'id'           => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']',
+		'class'        => $args['field_class'],
+		'value'        => esc_attr( stripslashes( $value ) ),
+		'placeholder'  => ! empty( $args['placeholder'] ) ? $args['placeholder'] : '',
+		'readonly'     => isset( $args['readonly'] ) && true === $args['readonly'] ? true : false,
+		'disabled'     => isset( $args['disabled'] ) && true === $args['disabled'] ? true : false,
+		'required'     => isset( $args['required'] ) && true === $args['required'] ? true : false,
+		'autocomplete' => isset( $args['autocomplete'] ) && true === $args['autocomplete'] ? true : false,
+		'include_span' => isset( $args['include_span'] ) && true === $args['include_span'] ? true : false,
+		'label'        => false,
+		'desc'         => false,
+	);
 
-	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
-	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
-	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $readonly . $disabled . $placeholder . ' />';
-	$html    .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
+	$input = new EDD\HTML\Text( $input_args );
 
-	echo apply_filters( 'edd_after_setting_output', $html, $args );
+	$html = $input->get();
+	if ( ! empty( $args['desc'] ) ) {
+		$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
+	}
+
+	echo apply_filters(
+		'edd_after_setting_output',
+		$html,
+		$args
+	);
 }
 
 /**
@@ -1138,8 +1159,7 @@ function edd_text_callback( $args ) {
  *
  * @since 2.8
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_email_callback( $args ) {
@@ -1168,7 +1188,7 @@ function edd_email_callback( $args ) {
 		: '';
 
 	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
-	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+	$readonly = true === $args['readonly'] ? ' readonly="readonly"' : '';
 	$size     = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html     = '<input type="email" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '" ' . $readonly . $disabled . ' placeholder="' . esc_attr( $placeholder ) . '" />';
 	$html    .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
@@ -1229,8 +1249,7 @@ function edd_number_callback( $args ) {
  *
  * @since 1.0
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_textarea_callback( $args ) {
@@ -1251,7 +1270,7 @@ function edd_textarea_callback( $args ) {
 		? ' placeholder="' . esc_attr( $args['placeholder'] ) . '"'
 		: '';
 
-	$readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+	$readonly = true === $args['readonly'] ? ' readonly="readonly"' : '';
 
 	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $readonly . '>' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
@@ -1266,8 +1285,7 @@ function edd_textarea_callback( $args ) {
  *
  * @since 1.3
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_password_callback( $args ) {
@@ -1295,8 +1313,7 @@ function edd_password_callback( $args ) {
  *
  * @since 1.3.1
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_missing_callback( $args ) {
@@ -1316,8 +1333,7 @@ function edd_missing_callback( $args ) {
  *
  * @since 1.0
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_select_callback( $args ) {
@@ -1364,8 +1380,7 @@ function edd_select_callback( $args ) {
  *
  * @since 1.8
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_color_select_callback( $args ) {
@@ -1405,7 +1420,7 @@ function edd_color_select_callback( $args ) {
  *
  * @since 1.0
  *
- * @param array $args Arguments passed by the setting
+ * @param array $args Arguments passed by the setting.
  */
 function edd_rich_editor_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
@@ -1452,8 +1467,7 @@ function edd_rich_editor_callback( $args ) {
  *
  * @since 1.0
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_upload_callback( $args ) {
@@ -1476,8 +1490,7 @@ function edd_upload_callback( $args ) {
  *
  * @since 1.6
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_color_callback( $args ) {
@@ -1507,7 +1520,6 @@ function edd_color_callback( $args ) {
  * @since 1.6
  *
  * @param array $args Arguments passed by the setting.
- *
  * @return void
  */
 function edd_shop_states_callback( $args ) {
@@ -1563,7 +1575,7 @@ function edd_tax_rate_callback( $args ) {
  * Renders Recapture Settings
  *
  * @since 2.10.2
- * @param array $args Arguments passed by the setting
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_recapture_callback( $args ) {
@@ -1577,7 +1589,7 @@ function edd_recapture_callback( $args ) {
 
 	echo $args['desc'];
 
-	// Output the appropriate button and label based on connection status
+	// Output the appropriate button and label based on connection status.
 	if ( $client_connected ) :
 		$connection_complete = get_option( 'recapture_api_key' );
 		?>
@@ -1653,7 +1665,6 @@ function edd_recapture_callback( $args ) {
  * @since 1.6
  * @since 3.3.9 Updated to work outside the forms table.
  * @param array $deprecated Deprecated argument. Previously the setting parameters.
- *
  * @return void
  */
 function edd_tax_rates_callback( $deprecated = array() ) {
@@ -1713,8 +1724,7 @@ add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_rates_callback' );
  *
  * @since 2.1.3
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_descriptive_text_callback( $args ) {
@@ -1723,15 +1733,15 @@ function edd_descriptive_text_callback( $args ) {
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 
-/**
- * Registers the license field callback for Software Licensing.
- *
- * @since 1.5
- * @since 3.1.1 Updated to use the extension licenses class.
- * @param array $args Arguments passed by the setting.
- * @return void
- */
 if ( ! function_exists( 'edd_license_key_callback' ) ) {
+	/**
+	 * Registers the license field callback for Software Licensing.
+	 *
+	 * @since 1.5
+	 * @since 3.1.1 Updated to use the extension licenses class.
+	 * @param array $args Arguments passed by the setting.
+	 * @return void
+	 */
 	function edd_license_key_callback( $args ) {
 		$settings_field = new EDD\Licensing\Settings( $args );
 	}
@@ -1744,8 +1754,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
  *
  * @since 1.0.8.2
  *
- * @param array $args Arguments passed by the setting
- *
+ * @param array $args Arguments passed by the setting.
  * @return void
  */
 function edd_hook_callback( $args ) {
@@ -1783,7 +1792,7 @@ function edd_checkbox_toggle_callback( $args ) {
 		? $args['check']
 		: '';
 
-	if ( isset( $args['tooltip_title'] ) || isset( $args['tooltip_desc'] ) ) {
+	if ( ! empty( $args['tooltip_title'] ) || ! empty( $args['tooltip_desc'] ) ) {
 		$args['tooltip'] = array(
 			'title'   => $args['tooltip_title'] ?? '',
 			'content' => $args['tooltip_desc'] ?? '',
@@ -1813,8 +1822,8 @@ add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
  * Maybe attach a tooltip to a setting
  *
  * @since 1.9
- * @param string $html
- * @param type   $args
+ * @param string $html The HTML to add the tooltip to.
+ * @param array  $args The arguments for the setting.
  * @return string
  */
 function edd_add_setting_tooltip( $html = '', $args = array() ) {
@@ -1868,9 +1877,9 @@ add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
  *
  * @param bool   $value   If test_mode is enabled in the settings.
  * @param string $key     The key of the setting, should be test_mode.
- * @param bool   $default The default setting, which is 'false' for test_mode.
+ * @param bool   $default_value The default setting, which is 'false' for test_mode.
  */
-function edd_filter_test_mode_option( $value, $key, $default ) {
+function edd_filter_test_mode_option( $value, $key, $default_value ) {
 	if ( edd_is_test_mode_forced() ) {
 		$value = true;
 	}

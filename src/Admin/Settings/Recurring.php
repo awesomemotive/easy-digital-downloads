@@ -42,11 +42,6 @@ class Recurring extends Extension implements SubscriberInterface {
 	protected $settings_tab = 'gateways';
 
 	/**
-	 * The pass level required to access this extension.
-	 */
-	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
-
-	/**
 	 * The settings section for this item.
 	 *
 	 * @since 2.11.5

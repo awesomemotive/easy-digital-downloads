@@ -127,7 +127,21 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
  * @return string Cart is empty message
  */
 function edd_empty_cart_message() {
-	return apply_filters( 'edd_empty_cart_message', '<span class="edd_empty_cart">' . __( 'Your cart is empty.', 'easy-digital-downloads' ) . '</span>' );
+	return '<span class="edd_empty_cart">' .
+		do_shortcode(
+			/**
+			 * Filters the empty cart message.
+			 *
+			 * @since 1.1.4.1
+			 * @param string $message The empty cart message.
+			 * @return string The filtered empty cart message.
+			 */
+			apply_filters(
+				'edd_empty_cart_message',
+				edd_get_option( 'empty_cart_message', __( 'Your cart is empty.', 'easy-digital-downloads' ) )
+			)
+		) .
+	'</span>';
 }
 
 /**
