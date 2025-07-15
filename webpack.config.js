@@ -130,7 +130,12 @@ const config = {
 		} ),
 		new RemoveEmptyScriptsPlugin(),
 		new RTLCSSWebpackPlugin( {
-			filename: ( pathData ) => `css/${ pathData.chunk.name.replace( '-style', '' ) }-rtl.min.css`
+			filename: ( pathData ) => {
+				if ( pathData.chunk.name.startsWith( 'pro/css/' ) ) {
+					return pathData.chunk.name.replace( '-style', '' ) + '-rtl.min.css';
+				}
+				return `css/${ pathData.chunk.name.replace( '-style', '' ) }-rtl.min.css`;
+			}
 		} ),
 		new webpack.ProvidePlugin( {
 			$: 'jquery',

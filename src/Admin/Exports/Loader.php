@@ -190,18 +190,6 @@ class Loader implements \EDD\EventManagement\SubscriberInterface {
 				'class'       => Exporters\DownloadHistory::class,
 				'view'        => 'export-download-history',
 			),
-			'eu_vat'           => array(
-				'label'       => __( 'EU VAT Report', 'easy-digital-downloads' ),
-				'description' => __( 'Download a CSV of all European VAT collected, which you can use for your EU VAT/MOSS tax return.', 'easy-digital-downloads' ),
-				'class'       => Exporters\EUVAT::class,
-				'view'        => 'export-eu-vat',
-			),
-			'eu_vat_sales'     => array(
-				'label'       => __( 'EC Sales List Report', 'easy-digital-downloads' ),
-				'description' => __( 'Download a CSV of all European Sales to VAT-registered customers, which you can use for your EC Sales List tax return.', 'easy-digital-downloads' ),
-				'class'       => Exporters\EUVATSales::class,
-				'view'        => 'export-eu-vat-sales',
-			),
 		);
 	}
 
