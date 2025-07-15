@@ -228,6 +228,8 @@ export const State = Backbone.Model.extend(
 		 */
 		hasInclusiveTax() {
 			return this.get( 'hasTax' ).inclusive;
-		}
+		},
+
+
 	}
 );

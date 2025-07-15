@@ -2,15 +2,22 @@
 /**
  * Status Badge utility.
  *
- * @package   easy-digital-downloads
- * @copyright Copyright (c) 2023, Easy Digital Downloads
- * @license   GPL2+
+ * @package   EDD\Utils
+ * @copyright Copyright (c) 2023, Sandhills Development, LLC
+ * @license   https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since     3.1.4
  */
+
 namespace EDD\Utils;
 
-defined( 'ABSPATH' ) || exit;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+/**
+ * Status Badge utility.
+ *
+ * @since 3.1.4
+ */
 class StatusBadge {
 
 	/**
@@ -92,6 +99,15 @@ class StatusBadge {
 	}
 
 	/**
+	 * Renders the badge.
+	 *
+	 * @since 3.5.0
+	 */
+	public function render() {
+		echo $this->get();
+	}
+
+	/**
 	 * Gets the classes for the badge.
 	 *
 	 * @since 3.1.4
@@ -116,7 +132,7 @@ class StatusBadge {
 	 * Gets a class string from an array of classes.
 	 *
 	 * @since 3.1.4
-	 * @param array $classes
+	 * @param array $classes The classes to get a string from.
 	 * @return string
 	 */
 	private function get_class_string( array $classes ) {

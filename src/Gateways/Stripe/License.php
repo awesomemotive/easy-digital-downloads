@@ -221,7 +221,7 @@ final class License {
 		$args = array(
 			'page' => 'edd-settings',
 		);
-		if ( ( function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'settings', 'general' ) ) || ( ! edd_is_pro() && edds_is_pro() ) ) {
+		if ( edd_is_admin_page( 'settings', 'general' ) || ( ! edd_is_pro() && edds_is_pro() ) ) {
 			$args['tab'] = 'licenses';
 		}
 

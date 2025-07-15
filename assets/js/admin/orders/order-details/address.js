@@ -60,6 +60,7 @@ jQueryReady( () => {
 		function getTaxRate() {
 			const country = $( '#edd_order_address_country' ).val();
 			const region = $( '#edd_order_address_region' ).val();
+			const customerId = document.getElementById( 'customer_id' ) ? document.getElementById( 'customer_id' ).value : 0;
 
 			const nonce = document.getElementById( 'edd_get_tax_rate_nonce' )
 				.value;
@@ -69,6 +70,7 @@ jQueryReady( () => {
 					nonce,
 					country,
 					region,
+					customerId,
 				},
 				/**
 				 * Updates the Overview's tax configuration on successful retrieval.

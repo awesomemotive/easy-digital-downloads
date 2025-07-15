@@ -12,6 +12,10 @@
 		select {
 			padding: 4px 6px;
 		}
+
+		.edd-card-vat-wrap {
+			grid-column: span 2;
+		}
 	}
 
 	.edd-blocks-form__cart,

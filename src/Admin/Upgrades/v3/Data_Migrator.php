@@ -2,7 +2,7 @@
 /**
  * 3.0 Data Migration - Data Migrator.
  *
- * @subpackage  Admin/Upgrades/v3
+ * @package     EDD\Admin\Upgrades\v3
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
@@ -130,9 +130,12 @@ class Data_Migrator {
 		if ( property_exists( $data, 'notes' ) && ! empty( $data->notes ) ) {
 			$notes = array_reverse( array_filter( explode( "\n\n", $data->notes ) ) );
 
-			$notes = array_map( function( $val ) {
-				return explode( ' - ', $val );
-			}, $notes );
+			$notes = array_map(
+				function ( $val ) {
+					return explode( ' - ', $val );
+				},
+				$notes
+			);
 
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $note ) {
@@ -149,14 +152,16 @@ class Data_Migrator {
 						? $note[1]
 						: '';
 
-					edd_add_note( array(
-						'user_id'       => 0,
-						'object_id'     => $customer_id,
-						'object_type'   => 'customer',
-						'content'       => $note_content,
-						'date_created'  => $date,
-						'date_modified' => $date,
-					) );
+					edd_add_note(
+						array(
+							'user_id'       => 0,
+							'object_id'     => $customer_id,
+							'object_type'   => 'customer',
+							'content'       => $note_content,
+							'date_created'  => $date,
+							'date_modified' => $date,
+						)
+					);
 				}
 			}
 		}
@@ -263,13 +268,14 @@ class Data_Migrator {
 
 			$log_data = array(
 				'product_id'    => $data->post_parent,
+
 				/*
 				 * Custom Deliverables was overriding the file ID to be a string instead of an integer. The preg_replace
 				 * allows us to try to salvage the file ID from that string.
 				 */
 				'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? preg_replace( '/[^0-9]/', '', $post_meta['_edd_log_file_id'] ) : 0,
-				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
-				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
+				'order_id'      => isset( $post_meta['_edd_log_payment_id'] ) ? $post_meta['_edd_log_payment_id'] : 0,
+				'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
 				'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
 				'date_created'  => $data->post_date_gmt,
@@ -501,14 +507,14 @@ class Data_Migrator {
 		$gateway          = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
 		$customer_id      = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
 		$date_completed   = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : null;
-		$purchase_key     = isset( $meta['_edd_payment_purchase_key'][0]) ? $meta['_edd_payment_purchase_key'][0] : false;
+		$purchase_key     = isset( $meta['_edd_payment_purchase_key'][0] ) ? $meta['_edd_payment_purchase_key'][0] : false;
 		$purchase_email   = isset( $meta['_edd_payment_user_email'][0] ) ? $meta['_edd_payment_user_email'][0] : $payment_meta['email'];
 		$date_actions_run = isset( $meta['_edd_complete_actions_run'][0] ) ? $meta['_edd_complete_actions_run'][0] : null;
 
 		// Get the customer object
 		if ( ! empty( $customer_id ) ) {
 			$customer = edd_get_customer( $customer_id );
-		} else if ( ! empty( $purchase_email ) ) {
+		} elseif ( ! empty( $purchase_email ) ) {
 			$customer = edd_get_customer_by( 'email', $purchase_email );
 			if ( $customer ) {
 				$customer_id = $customer->id;
@@ -599,7 +605,6 @@ class Data_Migrator {
 					$order_total += $cart_item['price'];
 				}
 			}
-
 		}
 
 		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
@@ -637,7 +642,7 @@ class Data_Migrator {
 				}
 			}
 
-			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
+			$date_created_gmt = $date_created_gmt->format( 'Y-m-d H:i:s' );
 		}
 
 		// Maybe convert the date completed to UTC or backfill the date_completed.
@@ -653,7 +658,6 @@ class Data_Migrator {
 			} elseif ( is_null( $date_completed ) ) { // Backfill a missing date_completed (for things like recurring payments).
 				$date_completed = $date_created_gmt;
 			}
-
 		}
 
 		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
@@ -678,30 +682,33 @@ class Data_Migrator {
 			? $user_info['address']
 			: array();
 
-		$user_info['address'] = wp_parse_args( $user_info['address'], array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'zip'     => '',
-			'country' => '',
-			'state'   => '',
-		) );
+		$user_info['address'] = wp_parse_args(
+			$user_info['address'],
+			array(
+				'line1'   => '',
+				'line2'   => '',
+				'city'    => '',
+				'zip'     => '',
+				'country' => '',
+				'state'   => '',
+			)
+		);
 
 		$order_address_data = array(
 			'name'         => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
-			'address'      => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
-			'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
-			'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
-			'region'       => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+			'address'      => isset( $user_info['address']['line1'] ) ? $user_info['address']['line1'] : '',
+			'address2'     => isset( $user_info['address']['line2'] ) ? $user_info['address']['line2'] : '',
+			'city'         => isset( $user_info['address']['city'] ) ? $user_info['address']['city'] : '',
+			'region'       => isset( $user_info['address']['state'] ) ? $user_info['address']['state'] : '',
 			'country'      => isset( $user_info['address']['country'] ) && array_key_exists( strtoupper( $user_info['address']['country'] ), edd_get_country_list() )
 				? $user_info['address']['country']
 				: '',
-			'postal_code'  => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+			'postal_code'  => isset( $user_info['address']['zip'] ) ? $user_info['address']['zip'] : '',
 			'date_created' => $date_created_gmt,
 		);
 
 		$tax_rate_id = null;
-		$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
+		$tax_rate    = isset( $meta['_edd_payment_tax_rate'][0] )
 			? (float) $meta['_edd_payment_tax_rate'][0]
 			: 0.00;
 
@@ -717,10 +724,12 @@ class Data_Migrator {
 
 		if ( ! empty( $tax_rate ) ) {
 			// Fetch the actual tax rate object for the order region & country.
-			$tax_rate_object = edd_get_tax_rate_by_location( array(
-				'country' => $order_address_data['country'],
-				'region'  => $order_address_data['region'],
-			) );
+			$tax_rate_object = edd_get_tax_rate_by_location(
+				array(
+					'country' => $order_address_data['country'],
+					'region'  => $order_address_data['region'],
+				)
+			);
 
 			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == $tax_rate ) {
 				$tax_rate_id = $tax_rate_object->id;
@@ -818,7 +827,6 @@ class Data_Migrator {
 			$refund_data['discount'] = edd_negate_amount( $order_discount );
 			$refund_data['total']    = edd_negate_amount( $order_total );
 
-
 			// These are the best guess at the date it was refunded since we didn't store that prior.
 			$refund_data['date_created']  = $data->post_modified_gmt;
 			$refund_data['date_modified'] = $data->post_modified_gmt;
@@ -862,7 +870,7 @@ class Data_Migrator {
 			);
 		}
 
-		/** Migrate meta *********************************************/
+		/** Migrate meta */
 
 		// Unlimited downloads meta is not an order property, so we set it on the order meta for the new order ID.
 		if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
@@ -876,16 +884,18 @@ class Data_Migrator {
 			$transaction_id = self::find_transaction_id_from_notes( $order_id );
 		}
 		if ( ! empty( $transaction_id ) ) {
-			edd_add_order_transaction( array(
-				'object_id'      => $order_id,
-				'object_type'    => 'order',
-				'transaction_id' => $transaction_id,
-				'gateway'        => $gateway,
-				'status'         => 'complete',
-				'total'          => $order_total,
-				'date_created'   => $date_completed,
-				'date_modified'  => $date_completed,
-			) );
+			edd_add_order_transaction(
+				array(
+					'object_id'      => $order_id,
+					'object_type'    => 'order',
+					'transaction_id' => $transaction_id,
+					'gateway'        => $gateway,
+					'status'         => 'complete',
+					'total'          => $order_total,
+					'date_created'   => $date_completed,
+					'date_modified'  => $date_completed,
+				)
+			);
 		}
 
 		/**
@@ -897,20 +907,23 @@ class Data_Migrator {
 		 * @since 3.0
 		 * @param array The array of payment meta keys.
 		 */
-		$core_meta_keys = apply_filters( 'edd_30_payment_meta_keys_not_migrated', array(
-			'fees',
-			'key',
-			'email',
-			'date',
-			'downloads',
-			'cart_details',
-			'currency',
-			'discount',
-			'subtotal',
-			'tax',
-			'amount',
-			'user_id',
-		) );
+		$core_meta_keys = apply_filters(
+			'edd_30_payment_meta_keys_not_migrated',
+			array(
+				'fees',
+				'key',
+				'email',
+				'date',
+				'downloads',
+				'cart_details',
+				'currency',
+				'discount',
+				'subtotal',
+				'tax',
+				'amount',
+				'user_id',
+			)
+		);
 
 		// Remove core keys from `user_info`.
 		$remaining_user_info = false;
@@ -944,7 +957,7 @@ class Data_Migrator {
 			}
 		}
 
-		/** Create order items ***************************************/
+		/** Create order items */
 
 		// Now we iterate through all the cart items and make rows in the order items table.
 		if ( ! empty( $cart_details ) ) {
@@ -1028,7 +1041,7 @@ class Data_Migrator {
 
 					// Negate the amounts
 					$refund_item_args['quantity'] = edd_negate_int( $cart_item['quantity'] );
-					foreach( array( 'amount', 'subtotal', 'tax', 'total' ) as $field_to_negate ) {
+					foreach ( array( 'amount', 'subtotal', 'tax', 'total' ) as $field_to_negate ) {
 						$refund_item_args[ $field_to_negate ] = edd_negate_amount( $refund_item_args[ $field_to_negate ] );
 					}
 
@@ -1051,7 +1064,6 @@ class Data_Migrator {
 							edd_add_order_item_meta( $refund_order_item_id, $option_key, $value );
 						}
 					}
-
 				}
 
 				// Store order item fees as adjustments.
@@ -1156,7 +1168,7 @@ class Data_Migrator {
 			}
 		}
 
-		/** Create order adjustments *********************************/
+		/** Create order adjustments */
 
 		if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
 			foreach ( $payment_meta['fees'] as $fee_id => $fee ) {
@@ -1222,18 +1234,24 @@ class Data_Migrator {
 
 		// Add fee taxes (order and order item) if the order tax amount was previously manually calculated.
 		if ( false === $meta_tax ) {
-			edd_update_order( $order_id, array(
-				'tax' => $order_tax + $order_fees_tax + $order_items_fees_tax,
-			) );
+			edd_update_order(
+				$order_id,
+				array(
+					'tax' => $order_tax + $order_fees_tax + $order_items_fees_tax,
+				)
+			);
 		}
 
 		// Add fee totals (order and order item) if the order tax amount was previously manually calculated.
 		// Order item fees were previously included in the total calculation. We must manually include
 		// order item fee tax amounts, and order fees total (subtotal + tax).
 		if ( false === $meta_total ) {
-			edd_update_order( $order_id, array(
-				'total' => $order_total + $order_fees_total + $order_items_fees_tax,
-			) );
+			edd_update_order(
+				$order_id,
+				array(
+					'total' => $order_total + $order_fees_total + $order_items_fees_tax,
+				)
+			);
 		}
 
 		// Insert discounts.
@@ -1368,7 +1386,7 @@ class Data_Migrator {
 			edd_add_order_adjustment( $discount_args );
 		}
 
-		/** Create order meta ****************************************/
+		/** Create order meta */
 
 		$core_meta_keys = array(
 			'_edd_payment_user_email',
@@ -1455,10 +1473,12 @@ class Data_Migrator {
 	private static function find_transaction_id_from_notes( $payment_id ) {
 		global $wpdb;
 
-		$payment_notes = $wpdb->get_col( $wpdb->prepare(
-			"SELECT comment_content FROM {$wpdb->comments} WHERE comment_post_ID = %d",
-			$payment_id
-		) );
+		$payment_notes = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT comment_content FROM {$wpdb->comments} WHERE comment_post_ID = %d",
+				$payment_id
+			)
+		);
 
 		if ( empty( $payment_notes ) || ! is_array( $payment_notes ) ) {
 			return false;
@@ -1491,11 +1511,12 @@ class Data_Migrator {
 			? 'country'
 			: 'region';
 
+		$query = new \EDD\Database\Queries\TaxRate();
+
 		// If the scope is 'country', look for other active rates that are country wide and set them as 'inactive'.
 		if ( 'country' === $scope ) {
-			$tax_rates = edd_get_adjustments(
+			$tax_rates = $query->query(
 				array(
-					'type'   => 'tax_rate',
 					'status' => 'active',
 					'scope'  => 'country',
 					'name'   => $data['country'],
@@ -1504,25 +1525,25 @@ class Data_Migrator {
 
 			if ( ! empty( $tax_rates ) ) {
 				foreach ( $tax_rates as $tax_rate ) {
-					edd_update_adjustment(
+					edd_update_tax_rate(
 						$tax_rate->id,
-						array( 'status' => 'inactive', )
+						array( 'status' => 'inactive' )
 					);
 				}
 			}
 		}
 
-		$adjustment_data = array(
-			'name'   => $data['country'],
-			'scope'  => $scope,
-			'amount' => floatval( $data['rate'] ),
+		$tax_rate_data = array(
+			'country' => $data['country'],
+			'scope'   => $scope,
+			'amount'  => floatval( $data['rate'] ),
 		);
 
 		if ( ! empty( $data['state'] ) ) {
-			$adjustment_data['description'] = sanitize_text_field( $data['state'] );
+			$tax_rate_data['state'] = sanitize_text_field( $data['state'] );
 		}
 
-		edd_add_tax_rate( $adjustment_data );
+		edd_add_tax_rate( $tax_rate_data );
 	}
 
 	/**

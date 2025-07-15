@@ -284,28 +284,7 @@ add_filter( 'edd_get_checkout_cart', __NAMESPACE__ . '\do_checkout_cart' );
  * @return array
  */
 function get_customer() {
-	$session  = EDD()->session->get( 'customer' );
-	$customer = wp_parse_args(
-		$session,
-		array(
-			'first_name' => '',
-			'last_name'  => '',
-			'email'      => '',
-		)
-	);
-
-	if ( is_user_logged_in() ) {
-		$user_data = get_userdata( get_current_user_id() );
-		foreach ( $customer as $key => $field ) {
-			if ( 'email' === $key && empty( $field ) ) {
-				$customer[ $key ] = $user_data->user_email;
-			} elseif ( empty( $field ) ) {
-				$customer[ $key ] = $user_data->$key;
-			}
-		}
-	}
-
-	return array_map( 'sanitize_text_field', $customer );
+	return \EDD\Sessions\Customer::get();
 }
 
 /**

@@ -2575,3 +2575,22 @@ function edd_wpmu_drop_tables( $tables, $blog_id ) {
 function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
 	return $clauses;
 }
+
+/**
+ * Add a WHERE clause to ensure only active tax rates are returned.
+ *
+ * @since 3.0
+ * @deprecated 3.5.0
+ * @param array $clauses Query clauses.
+ * @return array $clauses Updated query clauses.
+ */
+function edd_active_tax_rates_query_clauses( $clauses ) {
+	$date = \EDD\Utils\Date::now( edd_get_timezone_id() )->toDateTimeString();
+
+	$clauses['where'] .= "
+		AND ( start_date < '{$date}' OR start_date IS NULL )
+		AND ( end_date > '{$date}' OR end_date IS NULL )
+	";
+
+	return $clauses;
+}

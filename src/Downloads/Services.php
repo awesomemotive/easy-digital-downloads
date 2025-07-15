@@ -162,7 +162,7 @@ class Services implements SubscriberInterface {
 	 */
 	private function get_terms_options() {
 		$options = array();
-		if ( ! function_exists( 'edd_is_admin_page' ) || ! edd_is_admin_page( 'settings' ) ) {
+		if ( ! edd_is_admin_page( 'settings' ) ) {
 			return $options;
 		}
 

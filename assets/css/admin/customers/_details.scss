@@ -1,0 +1,98 @@
+@use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
+
+.edd-item-info.customer-info {
+	input[type="text"],
+	input[type="password"],
+	input[type="tel"],
+	select {
+		width: 200px;
+		box-shadow: none;
+		transition: none;
+		border: 1px solid #ddd;
+		font-size: 13px;
+		padding: 2px 4px;
+	}
+}
+
+.customer-info {
+	display: flex;
+	gap: 1em;
+
+	.customer-name {
+		font-size: 24px;
+		font-weight: 600;
+	}
+
+	.customer-name.editable {
+		margin-bottom: 6px;
+	}
+
+	.customer-main-wrapper input[name="customerinfo[name]"] {
+			font-size: 24px;
+		}
+
+	.customer-address-wrapper {
+		margin-top: -3px;
+		margin-right: 50px;
+		width: 202px;
+		margin-left: auto;
+		order: 2;
+	}
+
+	.customer-address {
+		span[data-key="address"],
+		span[data-key="address2"],
+		span[data-key="country"] {
+			display: block;
+		}
+	}
+
+	@media screen and (max-width: wp-breakpoints.$break-small) {
+		flex-wrap: wrap;
+
+		.customer-name {
+			font-size: 16px;
+		}
+
+		.customer-address-wrapper {
+			margin: 0;
+			width: 100%;
+		}
+	}
+}
+
+.customer-edit-link a {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.disconnect-user a {
+	color: #aaa;
+	font-size: 20px;
+}
+
+#customer-edit-actions {
+	padding: 3px;
+	line-height: 28px;
+	text-align: center;
+
+	.button-secondary {
+		margin-right: 5px;
+	}
+
+	.cancel {
+		padding: 5px;
+	}
+}
+
+.customer-main-wrapper .info-item > .edd-toggle {
+	margin-top: 8px;
+}
+
+@media screen and (max-width: wp-breakpoints.$break-small) {
+	.edd-sections-wrap .section-wrap {
+		.customer-id {
+			display: none;
+		}
+	}
+}

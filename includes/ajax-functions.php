@@ -1286,15 +1286,6 @@ function edd_ajax_get_tax_rate() {
 		? sanitize_text_field( $_POST['nonce'] )
 		: '';
 
-	$country = isset( $_POST['country'] )
-		? sanitize_text_field( $_POST['country'] )
-		: '';
-
-	$region = isset( $_POST['region'] )
-		? sanitize_text_field( $_POST['region'] )
-		: '';
-
-	// Bail if missing any data.
 	if ( empty( $nonce ) ) {
 		return wp_send_json_error();
 	}
@@ -1304,12 +1295,22 @@ function edd_ajax_get_tax_rate() {
 		return wp_send_json_error();
 	}
 
-	$response = array();
+	$country = isset( $_POST['country'] )
+		? sanitize_text_field( $_POST['country'] )
+		: '';
 
-	$rate = edd_get_tax_rate( $country, $region, $fallback = false );
+	$region = isset( $_POST['region'] )
+		? sanitize_text_field( $_POST['region'] )
+		: '';
 
-	$response['tax_rate']           = $rate;
-	$response['prices_include_tax'] = (bool) edd_prices_include_tax();
+	$customer_id = isset( $_POST['customerId'] )
+		? absint( $_POST['customerId'] )
+		: 0;
+
+	$response = array(
+		'tax_rate'           => edd_get_tax_rate( $country, $region, $fallback = false ),
+		'prices_include_tax' => (bool) edd_prices_include_tax(),
+	);
 
 	return wp_send_json_success( $response );
 }
@@ -1365,6 +1366,10 @@ function edd_admin_order_get_item_amounts() {
 	$region = isset( $_POST['region'] )
 		? sanitize_text_field( $_POST['region'] )
 		: '';
+
+	$customer_id = isset( $_POST['customerId'] )
+		? absint( $_POST['customerId'] )
+		: 0;
 
 	$products = isset( $_POST['products'] )
 		? $_POST['products']

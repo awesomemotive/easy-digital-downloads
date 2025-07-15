@@ -161,9 +161,7 @@ function edd_is_order_refundable_by_override( $order_id = 0 ) {
 	 *                           the current user.
 	 * @param int  $order_id     ID of current Order being refunded.
 	 */
-	$can_override = apply_filters( 'edd_is_order_refundable_by_override', $can_override, $order_id );
-
-	return $can_override;
+	return apply_filters( 'edd_is_order_refundable_by_override', $can_override, $order_id );
 }
 
 /**

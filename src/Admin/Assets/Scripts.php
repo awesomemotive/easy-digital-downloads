@@ -94,10 +94,11 @@ class Scripts {
 		// Downloads page.
 		if ( edd_is_admin_page( 'download' ) ) {
 			wp_enqueue_script( 'edd-admin-downloads' );
-		}
 
-		if ( ( edd_is_admin_page( 'download', 'edit' ) || edd_is_admin_page( 'download', 'new' ) ) && get_current_screen()->is_block_editor() ) {
-			wp_enqueue_script( 'edd-admin-downloads-editor' );
+			$current_screen = get_current_screen();
+			if ( $current_screen && $current_screen->is_block_editor() ) {
+				wp_enqueue_script( 'edd-admin-downloads-editor' );
+			}
 		}
 
 		// Upgrades Page.

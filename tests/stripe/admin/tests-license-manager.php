@@ -28,6 +28,7 @@ class LicenseManager extends EDD_UnitTestCase {
 		parent::setUp();
 		add_filter( 'edd_is_gateway_active', '__return_true' );
 		add_filter( 'edd_is_pro', '__return_false' );
+		add_filter( 'edd_is_admin_page', '__return_true' );
 
 		global $current_user;
 		self::$original_user = $current_user;
@@ -43,6 +44,7 @@ class LicenseManager extends EDD_UnitTestCase {
 		edd_stripe()->application_fee->reset_license();
 		remove_filter( 'edd_is_gateway_active', '__return_true' );
 		remove_filter( 'edd_is_pro', '__return_false' );
+		remove_filter( 'edd_is_admin_page', '__return_true' );
 		global $current_user;
 		$current_user = self::$original_user;
 	}

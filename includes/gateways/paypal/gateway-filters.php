@@ -23,7 +23,7 @@ namespace EDD\Gateways\PayPal;
  * @return array
  */
 function maybe_remove_paypal_standard( $gateways ) {
-	if ( function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'settings' ) && ! paypal_standard_enabled() ) {
+	if ( edd_is_admin_page( 'settings' ) && ! paypal_standard_enabled() ) {
 		unset( $gateways['paypal'] );
 	}
 

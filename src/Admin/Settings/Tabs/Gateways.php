@@ -38,6 +38,8 @@ class Gateways extends Tab {
 
 		$gateways = edd_get_payment_gateways();
 
+		$empty_cart_settings_provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
+
 		return array(
 			'main'       => array(
 				'test_mode'       => $this->get_test_mode(),
@@ -132,6 +134,18 @@ class Gateways extends Tab {
 					),
 					'disabled' => true,
 				),
+				'empty_cart_settings'      => array(
+					'id'            => 'empty_cart_settings',
+					'name'          => '<h3>' . __( 'Empty Cart Settings', 'easy-digital-downloads' ) . '</h3>',
+					'desc'          => '',
+					'type'          => 'header',
+					'tooltip_title' => __( 'Empty Cart Settings', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'Control the behavior of the checkout page when the cart is empty.', 'easy-digital-downloads' ),
+				),
+				'empty_cart_behavior'      => $empty_cart_settings_provider::get_empty_cart_behavior_setting(),
+				'empty_cart_message'       => $empty_cart_settings_provider::get_empty_cart_message_setting(),
+				'empty_cart_redirect_page' => $empty_cart_settings_provider::get_empty_cart_redirect_page_setting(),
+				'empty_cart_redirect_url'  => $empty_cart_settings_provider::get_empty_cart_redirect_url_setting(),
 				'moderation_settings'     => array(
 					'id'            => 'moderation_settings',
 					'name'          => '<h3>' . __( 'Moderation', 'easy-digital-downloads' ) . '</h3>',
@@ -508,9 +522,9 @@ class Gateways extends Tab {
 			$options['country']['checked']            = true;
 			$options['country']['tooltip']['content'] = __( 'Required for tax calculations.', 'easy-digital-downloads' );
 
-			$has_regional_rate = edd_get_adjustments(
+			$tax_rates         = new \EDD\Database\Queries\TaxRate();
+			$has_regional_rate = $tax_rates->query(
 				array(
-					'type'   => 'tax_rate',
 					'scope'  => 'region',
 					'status' => 'active',
 					'number' => 1,

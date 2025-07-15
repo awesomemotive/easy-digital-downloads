@@ -310,6 +310,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			'adjustmentmeta',
 			'emails',
 			'emailmeta',
+			'tax_rates',
 		);
 	}
 }

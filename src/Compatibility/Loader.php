@@ -2,16 +2,19 @@
 /**
  * Loader for compatibility classes.
  *
- * @package     EDD
- * @subpackage  Compatibility\Load
+ * @package     EDD\Compatibility
+ * @subpackage  Loader
+ * @copyright   Copyright (c) 2025, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.2.8
  */
 
 namespace EDD\Compatibility;
 
-use EDD\EventManagement\SubscriberInterface;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-defined( 'ABSPATH' ) || exit;
+use EDD\EventManagement\SubscriberInterface;
 
 /**
  * Compatibility loader
@@ -76,6 +79,7 @@ class Loader implements SubscriberInterface {
 	private static function load_plugin_compatibility() {
 		$plugin_compatibility_classes = array(
 			Plugins\Wordfence::class,
+			Plugins\UserSwitching::class,
 		);
 
 		foreach ( $plugin_compatibility_classes as $plugin_compatibility_class ) {

@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.4.0' );
+				define( 'EDD_VERSION', '3.5.0' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -382,8 +382,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 		 */
 		private function setup_files() {
 			$this->include_options();
-			$this->include_utilities();
-			$this->include_reports();
 			$this->include_components();
 			$this->include_backcompat();
 			$this->include_objects();
@@ -463,7 +461,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			// Component helpers are loaded before everything.
 			require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
 			require_once EDD_PLUGIN_DIR . 'includes/component-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/class-component.php';
 
 			// Database Engine.
 			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-base.php';
@@ -476,75 +473,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-date.php';
 			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-compare.php';
 
-			// Database Schemas.
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-adjustments.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-customer-addresses.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-customer-email-addresses.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-customers.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs-api-requests.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-logs-file-downloads.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-notes.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-orders.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-addresses.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-adjustments.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-items.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-order-transactions.php';
-
-			// Database Objects.
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-adjustment.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-customer.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-customer-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-customer-email-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-log.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-log-api-request.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-log-file-download.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-note.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order-adjustment.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order-item.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/rows/class-order-transaction.php';
-
-			// Database Tables.
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustments.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-addresses.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-email-addresses.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customers.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-requests.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-request-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-downloads.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-download-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-notes.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-orders.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-addresses.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustments.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-adjustment-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-items.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-transactions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customer-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-adjustment-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-note-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-item-meta.php';
-
-			// Database Table Query Interfaces.
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-adjustment.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer-email-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log-api-request.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-log-file-download.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-note.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-adjustment.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-item.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-order-transaction.php';
-
 			// Old Database Components.
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		}
@@ -556,24 +484,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 		 */
 		private function include_options() {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
-		}
-
-		/**
-		 * Setup utilities
-		 *
-		 * @since 3.0
-		 */
-		private function include_utilities() {
-			require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
-		}
-
-		/**
-		 * Setup all EDD settings & options
-		 *
-		 * @since 3.0
-		 */
-		private function include_reports() {
-			require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 		}
 
 		/**
@@ -624,22 +534,16 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/traits/trait-refundable-item.php';
 
 			// Adjustments.
-			require_once EDD_PLUGIN_DIR . 'includes/adjustments/class-adjustment.php';
 			require_once EDD_PLUGIN_DIR . 'includes/adjustments/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/adjustments/meta.php';
 
 			// API.
 			require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
-			require_once EDD_PLUGIN_DIR . 'includes/api/v3/Endpoint.php';
 
 			// Checkout.
 			require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 			require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/checkout/pages.php';
-
-			// Customers.
-			require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/customers/class-customer-email-address.php';
 
 			// Cart.
 			require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
@@ -665,29 +569,20 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Logs.
 			require_once EDD_PLUGIN_DIR . 'includes/logs/functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/class-api-request-log.php';
 			require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/meta.php';
 
-			require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/class-file-download-log.php';
 			require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/meta.php';
 
-			require_once EDD_PLUGIN_DIR . 'includes/logs/log/class-log.php';
 			require_once EDD_PLUGIN_DIR . 'includes/logs/log/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/logs/log/meta.php';
 
 			// Notes.
-			require_once EDD_PLUGIN_DIR . 'includes/notes/class-note.php';
 			require_once EDD_PLUGIN_DIR . 'includes/notes/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/notes/meta.php';
 
 			// Orders.
-			require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order.php';
-			require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-address.php';
-			require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-adjustment.php';
-			require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-item.php';
-			require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-transaction.php';
 			require_once EDD_PLUGIN_DIR . 'includes/orders/functions/types.php';
 			require_once EDD_PLUGIN_DIR . 'includes/orders/functions/orders.php';
 			require_once EDD_PLUGIN_DIR . 'includes/orders/functions/actions.php';
@@ -718,11 +613,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary.php';
 			require_once EDD_PLUGIN_DIR . 'includes/emails/email-summary/class-edd-email-summary-blurb.php';
 
-			// Stats.
-			require_once EDD_PLUGIN_DIR . 'includes/class-stats.php';
-
-			// Downloads.
-			require_once EDD_PLUGIN_DIR . 'includes/models/Download.php';
+			// Taxes.
 
 			// Blocks.
 			$blocks = EDD_PLUGIN_DIR . 'includes/blocks/edd-blocks.php';
@@ -762,7 +653,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
-			require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
+			require_once EDD_PLUGIN_DIR . 'includes/taxes/functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/refund-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 			require_once EDD_PLUGIN_DIR . 'includes/users/login.php';
@@ -786,7 +677,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/class-list-table.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
@@ -809,11 +699,9 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/refunds.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/orders.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-sections.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-reports-sections.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports-callbacks.php';
@@ -875,8 +763,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 					foreach ( $endpoints as $endpointClassName ) { // phpcs:ignore
 						$endpointNamePieces = explode( '\\', $endpointClassName ); // phpcs:ignore
 						$endpointName       = end( $endpointNamePieces ); // phpcs:ignore
-
-						require_once EDD_PLUGIN_DIR . 'includes/api/v3/' . $endpointName . '.php'; // phpcs:ignore
 
 						if ( class_exists( $endpointClassName ) ) { // phpcs:ignore
 							$endpoint = new $endpointClassName(); // phpcs:ignore

@@ -8,6 +8,7 @@
  */
 
 @use "../variables/colors" as colors;
+@use "../components/toggle-checkbox";
 @use "general/style" as general;
 @use "sections/style" as sections;
 @use "downloads/style" as downloads;
@@ -30,7 +31,8 @@
 
 @use "dashboard/style" as dashboard;
 
-@use "../components/toggle-checkbox";
+@import "customers/style";
+
 
 /**
  * Notes:
@@ -440,30 +442,6 @@ button.edd-round:active {
 	background: none;
 	border: 1px solid transparent;
 	box-shadow: none;
-}
-
-.order-customer-info .customer-details-wrap {
-	margin: 15px 0;
-	align-items: center;
-}
-
-.order-customer-info .customer-details-wrap .spinner {
-	margin: 0;
-}
-
-.order-customer-info .customer-details {
-	display: flex;
-	flex-direction: column;
-}
-
-.order-customer-info .customer-details .customer-since {
-	color: #666;
-	display: block;
-	margin: 4px 0 6px;
-}
-
-.order-customer-info .customer-details>span {
-	margin-bottom: 5px;
 }
 
 .edd-order-add-download-select .spinner {
@@ -1919,55 +1897,6 @@ h3 + .notice-wrap .notice {
 	}
 }
 
-.edd-item-info.customer-info input[type="text"],
-.edd-item-info.customer-info input[type="password"],
-.edd-item-info.customer-info input[type="tel"],
-.edd-item-info.customer-info select {
-	width: 200px;
-	box-shadow: none;
-	transition: none;
-	border: 1px solid #ddd;
-	font-size: 13px;
-	padding: 2px 4px;
-}
-
-.customer-info {
-	min-height: 185px;
-}
-
-.customer-info .customer-name {
-	font-size: 24px;
-	font-weight: 600;
-}
-
-.customer-info .customer-name.editable {
-	margin-bottom: 6px;
-}
-
-.customer-edit-link a {
-	font-weight: normal;
-	text-decoration: none;
-}
-
-.disconnect-user a {
-	color: #aaa;
-	font-size: 20px;
-}
-
-#customer-edit-actions {
-	padding: 3px;
-	line-height: 28px;
-	text-align: center;
-}
-
-#customer-edit-actions .button-secondary {
-	margin-right: 5px;
-}
-
-#customer-edit-actions .cancel {
-	padding: 5px;
-}
-
 #edd-item-stats-wrapper {
 	margin: 0 auto;
 	text-align: center;
@@ -2056,10 +1985,6 @@ h3 + .notice-wrap .notice {
 }
 
 @media screen and (max-width: 810px) and (min-width: 656px) {
-	.customer-info .customer-name {
-		font-size: 16px;
-	}
-
 	.widefat th {
 		max-width: 100% !important;
 		display: table-cell;
@@ -2067,13 +1992,6 @@ h3 + .notice-wrap .notice {
 }
 
 @media screen and (max-width: 656px) {
-	.edd-item-info.customer-info {
-		position: relative;
-	}
-
-	.customer-info .customer-name {
-		font-size: 16px;
-	}
 
 	#edd-item-tables-wrapper .emails td.column-primary {
 		padding-right: 10px;

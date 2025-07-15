@@ -112,7 +112,7 @@ class Text extends Base {
 	 * @return string
 	 */
 	private function get_type(): string {
-		if ( ! in_array( $this->args['type'], array( 'text', 'password', 'email' ), true ) ) {
+		if ( ! in_array( $this->args['type'], array( 'text', 'password', 'email', 'url' ), true ) ) {
 			return 'text';
 		}
 

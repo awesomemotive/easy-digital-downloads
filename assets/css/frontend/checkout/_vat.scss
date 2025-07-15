@@ -1,0 +1,19 @@
+.edd-vat-number-wrap {
+	display: flex;
+	gap: 8px;
+	justify-content: space-between;
+
+	.edd-vat-check__control {
+		display: flex;
+		gap: 4px;
+
+		.edd-loading {
+			margin: auto !important;
+			position: unset !important;
+		}
+	}
+
+	+ .edd-alert {
+		margin-top: 18px;
+	}
+}

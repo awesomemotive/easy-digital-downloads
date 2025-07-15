@@ -7,7 +7,7 @@ namespace EDD\Tests\Taxes;
 use EDD\Tests\Helpers;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
-class Tests_Taxes extends EDD_UnitTestCase {
+class Tax extends EDD_UnitTestCase {
 
 	/**
 	 * Order test fixture.

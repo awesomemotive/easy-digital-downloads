@@ -660,7 +660,6 @@ function edd_register_downloads_report( $reports ) {
 					'table' => array(
 						'display_args' => array(
 							'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Top_Selling_Downloads_List_Table',
-							'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/downloads/class-top-selling-downloads-list-table.php',
 						),
 					),
 				),
@@ -1649,7 +1648,6 @@ function edd_register_payment_gateways_report( $reports ) {
 					'table' => array(
 						'display_args' => array(
 							'class_name' => '\\EDD\\Reports\\Data\\Payment_Gateways\\Gateway_Stats',
-							'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/payment-gateways/class-gateway-stats-list-table.php',
 						),
 					),
 				),
@@ -2200,7 +2198,6 @@ function edd_register_taxes_report( $reports ) {
 					'table' => array(
 						'display_args' => array(
 							'class_name' => '\\EDD\\Reports\\Data\\Taxes\\Tax_Collected_By_Location',
-							'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/taxes/class-tax-collected-by-location-list-table.php',
 						),
 					),
 				),
@@ -2391,7 +2388,6 @@ function edd_register_file_downloads_report( $reports ) {
 					'table' => array(
 						'display_args' => array(
 							'class_name' => '\\EDD\\Reports\\Data\\File_Downloads\\Top_Five_Most_Downloaded_List_Table',
-							'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/file-downloads/class-top-five-most-downloaded-list-table.php',
 						),
 					),
 				),
@@ -3005,7 +3001,6 @@ function edd_register_customer_report( $reports ) {
 					'table' => array(
 						'display_args' => array(
 							'class_name' => '\\EDD\\Reports\\Data\\Customers\\Top_Five_Customers_List_Table',
-							'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/customers/class-top-five-customers-list-table.php',
 						),
 					),
 				),
@@ -3020,7 +3015,6 @@ function edd_register_customer_report( $reports ) {
 					'table' => array(
 						'display_args' => array(
 							'class_name' => '\\EDD\\Reports\\Data\\Customers\\Most_Valuable_Customers_List_Table',
-							'class_file' => EDD_PLUGIN_DIR . 'includes/reports/data/customers/class-most-valuable-customers-list-table.php',
 						),
 					),
 				),

@@ -45,17 +45,8 @@ if ( ! defined( 'EDD_PAYPAL_SANDBOX_MERCHANT_ID' ) ) {
 /**
  * Include PayPal gateway files
  */
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-api-exception.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-authentication-exception.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-gateway-exception.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-invalid-merchant-details.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-missing-merchant-details.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/buy-now.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/checkout-actions.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-account-status-validator.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-merchant-account.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-paypal-api.php';
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-token.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/deprecated.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/functions.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/gateway-filters.php';
