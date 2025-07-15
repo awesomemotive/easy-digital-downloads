@@ -108,7 +108,7 @@ class Address {
 	 * @return array
 	 */
 	protected function set_up_customer() {
-		$customer = EDD()->session->get( 'customer' );
+		$customer = \EDD\Sessions\Customer::get();
 		$customer = wp_parse_args(
 			$customer,
 			$this->customer

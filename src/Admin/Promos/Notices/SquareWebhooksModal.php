@@ -140,4 +140,25 @@ class SquareWebhooksModal extends Notice {
 	 * @return void
 	 */
 	protected function _display() {}
+
+	/**
+	 * Determines if the notice should be displayed.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return bool
+	 */
+	protected function _should_display() {
+		if ( ! edd_is_admin_page( 'settings', 'gateways' ) ) {
+			return false;
+		}
+
+		$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+
+		if ( 'square' !== $section ) {
+			return false;
+		}
+
+		return true;
+	}
 }

@@ -139,10 +139,6 @@ abstract class Tab {
 	 * @return bool
 	 */
 	protected function is_admin_page( $page = 'settings', $view = '' ) {
-		if ( ! function_exists( 'edd_is_admin_page' ) ) {
-			return false;
-		}
-
 		return edd_is_admin_page( $page, $view );
 	}
 
@@ -164,5 +160,40 @@ abstract class Tab {
 	 */
 	protected function get_section() {
 		return filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+	}
+
+	/**
+	 * Get the classes for a setting that requires another setting to be enabled.
+	 *
+	 * @since 3.5.0
+	 * @param string $requirement The requirement to check.
+	 * @param array  $classes     The additional classes to add.
+	 * @return string
+	 */
+	protected function get_requires_css_class( string $requirement, $classes = array() ) {
+		$classes = wp_parse_args(
+			$classes,
+			array(
+				'edd-requires',
+				"edd-requires__{$requirement}",
+			)
+		);
+
+		if ( empty( edd_get_option( $requirement, false ) ) ) {
+			$classes[] = 'edd-hidden';
+		}
+
+		return implode( ' ', $classes );
+	}
+
+	/**
+	 * Parses a description array into a string.
+	 *
+	 * @since 3.5.0
+	 * @param array $description The description array.
+	 * @return string
+	 */
+	protected function parse_description( array $description ): string {
+		return implode( '<br />', array_filter( $description ) );
 	}
 }

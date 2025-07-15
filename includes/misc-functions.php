@@ -2086,3 +2086,38 @@ function edd_is_inactive_pro() {
 function edd_is_doing_unit_tests() {
 	return (bool) ( ( defined( 'EDD_DOING_TESTS' ) && EDD_DOING_TESTS ) || function_exists( '_manually_load_plugin' ) );
 }
+
+/**
+ * Determines whether the current admin page is a specific EDD admin page.
+ *
+ * Only works after the `wp_loaded` hook, & most effective
+ * starting on `admin_menu` hook. Failure to pass in $view will match all views of $passed_page.
+ * Failure to pass in $passed_page will return true if on any EDD page
+ *
+ * @since 1.9.6
+ * @since 2.11.3 Added `$include_non_exclusive` parameter.
+ *
+ * @param string $passed_page           Optional. Main page's slug.
+ * @param string $passed_view           Optional. Page view ( ex: `edit` or `delete` ).
+ * @param bool   $include_non_exclusive Optional. If we should consider pages not exclusive to EDD.
+ *                                      Includes the main dashboard page and custom post types that
+ *                                      support the "Insert Download" button via the TinyMCE editor.
+ *
+ * @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
+ */
+function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_exclusive = true ) {
+	$page   = isset( $_GET['page'] ) && is_string( $_GET['page'] ) ? strtolower( sanitize_text_field( $_GET['page'] ) ) : false;
+	$view   = isset( $_GET['view'] ) && is_string( $_GET['view'] ) ? strtolower( sanitize_text_field( $_GET['view'] ) ) : false;
+	$result = EDD\Admin\Utils\Page::is_admin( $passed_page, $passed_view, $include_non_exclusive, $page, $view );
+
+	/**
+	 * Allow the result of the admin page check to be filtered.
+	 *
+	 * @param bool   $found       Whether the current page is an EDD admin page.
+	 * @param string $page        The page slug.
+	 * @param string $view        The view slug.
+	 * @param string $passed_page The passed page slug.
+	 * @param string $passed_view The passed view slug.
+	 */
+	return (bool) apply_filters( 'edd_is_admin_page', $result, $page, $view, $passed_page, $passed_view );
+}

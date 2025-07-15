@@ -93,8 +93,12 @@ class NotificationsDB {
 		if ( empty( $data['remote_id'] ) || is_numeric( $data['remote_id'] ) ) {
 			return false;
 		}
+
 		// The source is always always local.
 		$data['source'] = 'local';
+
+		// If the remote_id is too long, truncate it to 20 characters.
+		$data['remote_id'] = substr( $data['remote_id'], 0, 20 );
 
 		$existing = $this->get_item_by( 'remote_id', $data['remote_id'] );
 		if ( $existing ) {

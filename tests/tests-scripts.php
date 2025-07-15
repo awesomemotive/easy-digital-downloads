@@ -118,10 +118,6 @@ class Scripts extends EDD_UnitTestCase {
 		$origin_pagenow = $pagenow;
 		$pagenow = 'dashboard';
 
-		if ( ! function_exists( 'edd_is_admin_page' ) ) {
-			include EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
-		}
-
 		// Assert
 		$this->assertNull( edd_load_admin_scripts( 'dashboard' ) );
 
@@ -136,9 +132,11 @@ class Scripts extends EDD_UnitTestCase {
 	 * @param string $script_is Status of the script to check.
 	 */
 	public function test_load_admin_scripts_should_enqueue_expected_scripts( $script, $script_is ) {
+		add_filter( 'edd_is_admin_page', '__return_true' );
 		$this->load_admin_scripts();
 
 		$this->assertTrue( wp_script_is( $script, $script_is ) );
+		remove_filter( 'edd_is_admin_page', '__return_true' );
 	}
 
 	/**
@@ -162,9 +160,11 @@ class Scripts extends EDD_UnitTestCase {
 	 * @param string $style_is Status of the stylesheet to check.
 	 */
 	public function test_load_admin_scripts_should_enqueue_expected_stylesheets( $style, $style_is ) {
+		add_filter( 'edd_is_admin_page', '__return_true' );
 		$this->load_admin_scripts();
 
 		$this->assertTrue( wp_style_is( $style, $style_is ) );
+		remove_filter( 'edd_is_admin_page', '__return_true' );
 	}
 
 	/**

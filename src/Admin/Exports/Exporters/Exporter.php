@@ -134,7 +134,7 @@ abstract class Exporter {
 	 * @since 3.3.8
 	 * @var EDD\Utils\FileSystem
 	 */
-	private $file_system;
+	protected $file_system;
 
 	/**
 	 * Constructor.
@@ -234,6 +234,38 @@ abstract class Exporter {
 	 * @return void
 	 */
 	public function pre_fetch() {}
+
+	/**
+	 * Get the columns to export.
+	 *
+	 * @since 3.3.8
+	 * @return array
+	 */
+	final public function get_columns(): array {
+		$columns     = $this->get_data_headers();
+		$export_type = $this->get_export_type();
+
+		// Legacy filter.
+		if ( has_filter( 'edd_export_csv_cols_' . $export_type ) ) {
+			$columns = apply_filters( 'edd_export_csv_cols_' . $export_type, $columns );
+		}
+
+		return apply_filters( 'edd_export_get_columns_' . $export_type, $columns );
+	}
+
+	/**
+	 * Get the rows to export.
+	 * The rows are defined in get_data. This method is private to allow for filtering.
+	 *
+	 * @since 3.3.8
+	 * @return array
+	 */
+	final public function get_rows(): array {
+		$rows = $this->get_data();
+		$rows = apply_filters( 'edd_export_get_data', $rows );
+
+		return apply_filters( 'edd_export_get_data_' . $this->get_export_type(), $rows );
+	}
 
 	/**
 	 * Get the export type.
@@ -402,6 +434,18 @@ abstract class Exporter {
 	}
 
 	/**
+	 * Gets the final filename.
+	 *
+	 * @since 3.5.0
+	 * @return string
+	 */
+	protected function get_final_filename() {
+		$date = gmdate( 'm-d-Y' );
+
+		return "edd-export-{$this->get_export_type()}-{$date}.{$this->filetype}";
+	}
+
+	/**
 	 * Set the export headers.
 	 *
 	 * @since 3.3.8
@@ -411,9 +455,7 @@ abstract class Exporter {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		$date     = gmdate( 'm-d-Y' );
-		$filename = "edd-export-{$this->get_export_type()}-{$date}.{$this->filetype}";
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Content-Disposition: attachment; filename="' . $this->get_final_filename() . '"' );
 		header( 'Expires: 0' );
 
 		/**
@@ -431,7 +473,7 @@ abstract class Exporter {
 	 * @since 3.3.8
 	 * @return string
 	 */
-	private function get_file() {
+	protected function get_file() {
 
 		$this->maybe_set_up_file();
 
@@ -455,7 +497,7 @@ abstract class Exporter {
 	 * @since 3.3.8
 	 * @return void
 	 */
-	private function maybe_set_up_file() {
+	protected function maybe_set_up_file() {
 		if ( $this->file ) {
 			return;
 		}
@@ -483,7 +525,7 @@ abstract class Exporter {
 	 * @since 3.3.8
 	 * @return Transient
 	 */
-	private function get_transient() {
+	protected function get_transient() {
 		return new Transient( 'edd_export_' . $this->get_export_type() . '_total' );
 	}
 
@@ -508,37 +550,5 @@ abstract class Exporter {
 		$transient->set( $total );
 
 		return $total;
-	}
-
-	/**
-	 * Get the columns to export.
-	 *
-	 * @since 3.3.8
-	 * @return array
-	 */
-	final protected function get_columns() {
-		$columns     = $this->get_data_headers();
-		$export_type = $this->get_export_type();
-
-		// Legacy filter.
-		if ( has_filter( 'edd_export_csv_cols_' . $export_type ) ) {
-			$columns = apply_filters( 'edd_export_csv_cols_' . $export_type, $columns );
-		}
-
-		return apply_filters( 'edd_export_get_columns_' . $export_type, $columns );
-	}
-
-	/**
-	 * Get the rows to export.
-	 * The rows are defined in get_data. This method is private to allow for filtering.
-	 *
-	 * @since 3.3.8
-	 * @return array
-	 */
-	final protected function get_rows() {
-		$rows = $this->get_data();
-		$rows = apply_filters( 'edd_export_get_data', $rows );
-
-		return apply_filters( 'edd_export_get_data_' . $this->get_export_type(), $rows );
 	}
 }

@@ -50,14 +50,18 @@ trait Order {
 	/**
 	 * Get a refund ID for an order.
 	 *
-	 * This method will either create a refund and return it's ID or return the ID of an existing refund.
+	 * This method will either create a refund and return its ID or return the ID of an existing refund.
 	 *
 	 * @param \EDD\Orders\Order $order The order object.
 	 * @return int|bool The refund ID or false if no refund was created.
 	 */
 	private function get_refund_id( $order ) {
 		if ( edd_is_order_refundable( $order->id ) ) {
-			return edd_refund_order( $order->id );
+			add_filter( 'edd_is_order_refundable_by_override', '__return_true' );
+			$refunded = edd_refund_order( $order->id );
+			remove_filter( 'edd_is_order_refundable_by_override', '__return_true' );
+
+			return $refunded;
 		}
 
 		$refunds = edd_get_orders(

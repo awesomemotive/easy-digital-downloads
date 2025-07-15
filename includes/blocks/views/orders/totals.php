@@ -68,11 +68,16 @@ do_action( 'edd_order_receipt_before_table', $order, array() );
 	<?php
 	do_action( 'edd_order_receipt_order_details', $order );
 	if ( has_action( 'edd_order_receipt_after' ) ) {
-		?>
-		<div class="edd-blocks-receipt__row-item">
-			<?php EDD\Blocks\Orders\Functions\do_order_details( $order, 'edd_order_receipt_after', array() ); ?>
-		</div>
-		<?php
+		ob_start();
+		EDD\Blocks\Orders\Functions\do_order_details( $order, 'edd_order_receipt_after', array() );
+		$content = ob_get_clean();
+		if ( ! empty( $content ) ) {
+			?>
+			<div class="edd-blocks-receipt__row-item">
+				<?php echo wp_kses_post( $content ); ?>
+			</div>
+			<?php
+		}
 	}
 	?>
 </div>

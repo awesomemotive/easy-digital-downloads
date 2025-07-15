@@ -57,28 +57,7 @@ function edds_buy_now_checkout() {
 
 	$form_action    = edd_get_checkout_uri( $form_mode );
 	$existing_cards = edd_stripe_get_existing_cards( get_current_user_id() );
-
-	$customer = EDD()->session->get( 'customer' );
-	$customer = wp_parse_args(
-		$customer,
-		array(
-			'email' => '',
-		)
-	);
-
-	if ( is_user_logged_in() ) {
-		$user_data = get_userdata( get_current_user_id() );
-
-		foreach ( $customer as $key => $field ) {
-			if ( 'email' == $key && empty( $field ) ) {
-				$customer[ $key ] = $user_data->user_email;
-			} elseif ( empty( $field ) ) {
-				$customer[ $key ] = $user_data->$key;
-			}
-		}
-	}
-
-	$customer = array_map( 'sanitize_text_field', $customer );
+	$customer       = \EDD\Sessions\Customer::get();
 
 	remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields', 10 );
 	remove_action( 'edd_purchase_form_before_submit', 'edd_checkout_final_total', 999 );

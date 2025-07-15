@@ -41,11 +41,6 @@ class Invoices extends Extension implements SubscriberInterface {
 	protected $settings_section = 'invoices';
 
 	/**
-	 * The pass level required to access this extension.
-	 */
-	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
-
-	/**
 	 * Returns an array of events that this subscriber wants to listen to.
 	 *
 	 * @since 3.1.1
@@ -120,6 +115,10 @@ class Invoices extends Extension implements SubscriberInterface {
 	 * @return bool True if Invoices is active.
 	 */
 	protected function is_activated() {
+		if ( edd_is_pro() ) {
+			return true;
+		}
+
 		if ( $this->manager->is_plugin_active( $this->get_product_data() ) ) {
 			return true;
 		}

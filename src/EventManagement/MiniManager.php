@@ -29,6 +29,14 @@ abstract class MiniManager implements SubscriberInterface {
 	protected static $hook = 'plugins_loaded';
 
 	/**
+	 * Track which classes have already added their events.
+	 *
+	 * @since 3.5.0
+	 * @var array
+	 */
+	private static $events_added = array();
+
+	/**
 	 * Get the events to subscribe to.
 	 *
 	 * @since 3.3.9
@@ -47,10 +55,19 @@ abstract class MiniManager implements SubscriberInterface {
 	 * @return void
 	 */
 	public function add_events() {
+		$class_name = get_class( $this );
+
+		// Prevent double registration for this specific class.
+		if ( isset( self::$events_added[ $class_name ] ) ) {
+			return;
+		}
+
 		$events = new EventManager();
 		foreach ( $this->get_event_classes() as $event_class ) {
 			$events->add_subscriber( $event_class );
 		}
+
+		self::$events_added[ $class_name ] = true;
 	}
 
 	/**

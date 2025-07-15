@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable Tag: 3.4.0
+Stable Tag: 3.5.0
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -69,6 +69,7 @@ With the included date comparison tools, you can monitor trends in your sales, r
 * Customer growth
 * Revenue and Sales
 * Filtering by product
+* Detailed tax reports
 * Detailed category and tag reports
 * Revenue and Sales by Country
 * Revenue and Sales by Payment Method
@@ -99,6 +100,8 @@ We've made it even easier, with [1-Click installation of code snippets via WPCod
 
 With our Pro plans you can get access to [additional features](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) and super-charge your ecommerce business. Some of our most popular features in Pro are:
 
+* EU VAT Compliance - Easily manage EU VAT compliance. Get automatic rate updates, collect and verify customer VAT numbers, export EU VAT data for compliance, and more.
+* Invoices - Create and send beautiful invoices to your customers.
 * [Subscriptions](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) - Build a sustainable ecommerce business and add recurring revenue to your store by selling subscriptions.
 * [Reviews](https://easydigitaldownloads.com/downloads/product-reviews/?utm_source=extension&utm_medium=description_tab&utm_content=reviews&utm_campaign=readme) - What better way promote your digital products than by having your happy customers do it for you! Schedule automatic review requests, show average ratings and rating breakdowns.
 * [Content Restriction](https://easydigitaldownloads.com/downloads/content-restriction/?utm_source=extension&utm_medium=description_tab&utm_content=content-restriction&utm_campaign=readme) - Restrict content on your site and only share it with customers who have purchased specific products. Content Restriction is great for membership sites and customer-only information.
@@ -237,6 +240,19 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.5.0 =
+* NEW: Customize the message displayed on checkout when the cart is empty.
+* Admin: Improved styles when multiple admin notices are displayed on EDD Settings pages.
+* Admin: Improved the performance of detecting if the current admin page is an EDD Admin page.
+* Downloads: Improved the reliability of the files drop-down for variable price products.
+* Orders: Bypass the order refund window when an order refund is initialized from the gateway.
+* Dev: Improved the extensibility of the export classes.
+* Dev: Improved the extensibility of the Stats class.
+* Dev: Many classes that were namespaced were relocated to take advantage of auto-loading.
+* Dev: Registered tax rates were moved out of the adjustments database table into their own tax rates database table.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.4.0 =
 * NEW! Add Square to supported gateways for one-time payments.
 * Downloads: Prevent bundle configurations from breaking the Prices metabox display.
@@ -245,9 +261,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Reports: Fixed an issue where excluding taxes would result in $0 earnings being displayed.
 * Stripe: Allow subscription payment methods to be updated using Payment Elements.
 * Templates: Add $args parameter to edd_get_template_part.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
-
 
 = 3.3.9 =
 * Blocks: Add support for inner blocks to certain blocks.

@@ -184,6 +184,9 @@ export const OrderItem = Backbone.Model.extend( {
 			this.attributes
 		);
 
+		// Get customer information from the form
+		const customerId = document.getElementById( 'customer_id' ) ? document.getElementById( 'customer_id' ).value : 0;
+
 		return wp.ajax.send( 'edd-admin-order-get-item-amounts', {
 			data: {
 				nonce,
@@ -195,6 +198,7 @@ export const OrderItem = Backbone.Model.extend( {
 				subtotal,
 				country,
 				region,
+				customerId, // Pass customer ID for tax exemption checking
 				products: _.uniq( [
 					...products,
 					{

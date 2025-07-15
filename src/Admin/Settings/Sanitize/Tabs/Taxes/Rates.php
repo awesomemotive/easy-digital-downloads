@@ -53,30 +53,26 @@ class Rates extends Section {
 				$scope = 'global';
 			}
 
-			$adjustment_data = array(
-				'name'        => $name,
-				'type'        => 'tax_rate',
-				'scope'       => $scope,
-				'amount_type' => 'percent',
-				'amount'      => floatval( $tax_rate['rate'] ),
-				'description' => $region,
+			$tax_rate_data = array(
+				'country' => $name,
+				'amount'  => floatval( $tax_rate['rate'] ),
+				'state'   => $region,
+				'scope'   => $scope,
+				'status'  => $tax_rate['status'] ?? 'active',
 			);
 
-			if ( ( empty( $adjustment_data['name'] ) && 'global' !== $adjustment_data['scope'] ) || $adjustment_data['amount'] < 0 ) {
+			if ( ( empty( $tax_rate_data['country'] ) && 'global' !== $tax_rate_data['scope'] ) || $tax_rate_data['amount'] < 0 ) {
 				continue;
 			}
 
-			$existing_adjustment = edd_get_adjustments( $adjustment_data );
+			if ( ! empty( $tax_rate['id'] ) && edd_get_tax_rate_by( $tax_rate['id'] ) ) {
+				$tax_rate_data['status'] = sanitize_text_field( $tax_rate['status'] );
 
-			if ( ! empty( $existing_adjustment ) ) {
-				$adjustment                = $existing_adjustment[0];
-				$adjustment_data['status'] = sanitize_text_field( $tax_rate['status'] );
-
-				edd_update_adjustment( $adjustment->id, $adjustment_data );
+				edd_update_tax_rate( $tax_rate['id'], $tax_rate_data );
 			} else {
-				$adjustment_data['status'] = 'active';
+				$tax_rate_data['status'] = 'active';
 
-				edd_add_tax_rate( $adjustment_data );
+				edd_add_tax_rate( $tax_rate_data );
 			}
 		}
 

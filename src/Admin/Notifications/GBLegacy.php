@@ -88,11 +88,11 @@ class GBLegacy extends Notification {
 		return ! empty(
 			edd_get_tax_rates(
 				array(
-					'name'            => 'GB',
-					'number'          => 1,
-					'scope'           => 'region',
-					'description__in' => array_keys( self::get_legacy_states() ),
-					'status'          => 'active',
+					'country'   => 'GB',
+					'number'    => 1,
+					'scope'     => 'region',
+					'state__in' => array_keys( self::get_legacy_states() ),
+					'status'    => 'active',
 				)
 			)
 		);

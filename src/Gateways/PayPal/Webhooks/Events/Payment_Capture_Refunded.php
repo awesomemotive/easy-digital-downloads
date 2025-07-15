@@ -75,7 +75,9 @@ class Payment_Capture_Refunded extends Webhook_Event {
 					'content'     => __( 'Full refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
 				)
 			);
+			add_filter( 'edd_is_order_refundable_by_override', '__return_true' );
 			$refund_id = edd_refund_order( $order->id );
+			remove_filter( 'edd_is_order_refundable_by_override', '__return_true' );
 			if ( $refund_id ) {
 				edd_add_order_transaction(
 					array(
