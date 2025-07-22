@@ -106,7 +106,7 @@ function edd_render_download_columns( $column_name, $post_id ) {
 			break;
 	}
 }
-add_action( 'manage_posts_custom_column', 'edd_render_download_columns', 10, 2 );
+add_action( 'manage_download_posts_custom_column', 'edd_render_download_columns', 10, 2 );
 
 /**
  * Registers the sortable columns in the list table
