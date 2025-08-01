@@ -417,13 +417,16 @@ jQuery(document).ready(function ($) {
 				$('.edd-error').hide();
 
                 insertHiddenInputWithButtonValue();
-				const blikCode = formData.find('input[name="bpmj-eddcm-blik-code"]').val();
+				const beforeSubmitEvent = new CustomEvent('publigo_before_form_submit', {
+                    bubbles: true,
+                    cancelable: true,
+                    detail: { form: this } 
+                });
+                document.dispatchEvent(beforeSubmitEvent);
 
-				if (blikCode && blikCode.trim() !== '') {
-					const event = new CustomEvent('pbg-blik-payment-ready', {});
-					document.dispatchEvent(event);
-					return;
-				}
+                if (beforeSubmitEvent.defaultPrevented) {
+                    return;
+                }
 
 				$(eddPurchaseform).submit();
 			} else {
