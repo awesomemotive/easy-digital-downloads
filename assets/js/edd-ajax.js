@@ -405,19 +405,17 @@ jQuery(document).ready(function ($) {
 		$(submit_selector).prop('disabled', true);
 		button.after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
-		let formData = $('#edd_purchase_form');
-		let serializedFormData = formData.serialize();
-		serializedFormData += '&edd_ajax=true';
-		serializedFormData += '&' + wpidea.nonce_name + '=' + wpidea.nonce_value;
+		var data = $('#edd_purchase_form').serialize();
+		data += '&edd_ajax=true';
+		data += '&' + wpidea.nonce_name + '=' + wpidea.nonce_value;
 
-
-		$.post(wpidea.urls.payment_process_checkout, serializedFormData, function (data) {
+		$.post(wpidea.urls.payment_process_checkout, data, function (data) {
 			if ($.trim(data) == 'success') {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 
                 insertHiddenInputWithButtonValue();
-				const beforeSubmitEvent = new CustomEvent('publigo_before_form_submit', {
+                const beforeSubmitEvent = new CustomEvent('publigo_before_form_submit', {
                     bubbles: true,
                     cancelable: true,
                     detail: { form: this } 
