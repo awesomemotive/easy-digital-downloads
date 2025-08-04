@@ -415,7 +415,7 @@ jQuery(document).ready(function ($) {
 				$('.edd-error').hide();
 
                 insertHiddenInputWithButtonValue();
-                const beforeSubmitEvent = new CustomEvent('publigo_before_form_submit', {
+                const beforeSubmitEvent = new CustomEvent('wpi_checkout_before_form_submit', {
                     bubbles: true,
                     cancelable: true,
                     detail: { form: this } 
