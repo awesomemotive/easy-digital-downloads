@@ -1740,7 +1740,7 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 add_filter( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 10, 2 );
 
 
-/**1
+/**
  * Filter where older than one week
  *
  * @access public
