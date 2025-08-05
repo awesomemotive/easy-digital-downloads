@@ -832,9 +832,11 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 			$by_user_id = is_email( $user ) ? false : true;
 			$customer = new EDD_Customer( $user, $by_user_id );
 
-			$payments = explode( ',', $customer->payment_ids );
+            if (is_string($customer->payment_ids)) {
+                $payments = explode(',', $customer->payment_ids);
+            }
 
-		} else {
+        } else {
 
 			$user_found = false;
 
