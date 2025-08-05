@@ -1657,7 +1657,7 @@ function edd_hide_payment_notes_pre_41( $clauses, $wp_comment_query ) {
     global $wpdb, $wp_version;
 
     if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
-        $clauses['where'] .= ' AND comment_type != "edd_payment_note"';
+        $clauses['where'] .= " AND comment_type != 'edd_payment_note'";
     }
     return $clauses;
 }
@@ -1709,7 +1709,7 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 
     $stats = [];
 
-    $where = 'WHERE comment_type != "edd_payment_note"';
+    $where = "WHERE comment_type != 'edd_payment_note'";
 
     if ( $post_id > 0 )
         $where .= $wpdb->prepare( " AND comment_post_ID = %d", $post_id );
