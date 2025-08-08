@@ -409,13 +409,22 @@ jQuery(document).ready(function ($) {
 		data += '&edd_ajax=true';
 		data += '&' + wpidea.nonce_name + '=' + wpidea.nonce_value;
 
-
 		$.post(wpidea.urls.payment_process_checkout, data, function (data) {
 			if ($.trim(data) == 'success') {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 
                 insertHiddenInputWithButtonValue();
+                const beforeSubmitEvent = new CustomEvent('wpi_checkout_before_form_submit', {
+                    bubbles: true,
+                    cancelable: true,
+                    detail: { form: this } 
+                });
+                document.dispatchEvent(beforeSubmitEvent);
+
+                if (beforeSubmitEvent.defaultPrevented) {
+                    return;
+                }
 
 				$(eddPurchaseform).submit();
 			} else {
@@ -424,7 +433,7 @@ jQuery(document).ready(function ($) {
 				$('.edd-cart-ajax').remove();
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
-				$('#edd_purchase_submit').before(data);
+				$('#edd_final_total_wrap').before(data);
 
 				if (isButton) {
 					button.html(complete_purchase_val);
