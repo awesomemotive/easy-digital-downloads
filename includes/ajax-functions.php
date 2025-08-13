@@ -222,7 +222,7 @@ function edd_ajax_apply_discount() {
 			);
 		} else {
 			$errors = edd_get_errors();
-			$return['msg']  = $errors['edd-discount-error'];
+            $return['msg'] = is_array($errors) && isset($errors['edd-discount-error']) ? $errors['edd-discount-error'] : '';
 			edd_unset_error( 'edd-discount-error' );
 		}
 
