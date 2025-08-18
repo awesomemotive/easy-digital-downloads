@@ -38,6 +38,16 @@ function localize() {
 		)
 	);
 
+	// Get button colors with fallbacks.
+	$button_colors = edd_get_option( 'button_colors', array() );
+	$button_colors = wp_parse_args(
+		$button_colors,
+		array(
+			'background' => '#428bca',
+			'text'       => '#ffffff',
+		)
+	);
+
 	wp_localize_script(
 		'wp-block-editor',
 		'EDDBlocks',
@@ -55,6 +65,8 @@ function localize() {
 			'download_label_singular' => edd_get_label_singular(),
 			'download_label_plural'   => edd_get_label_plural(),
 			'checkout_registration'   => in_array( edd_get_option( 'show_register_form', 'none' ), array( 'both', 'registration' ), true ),
+			'button_colors'           => $button_colors,
+			'featured_promo'      => ! edd_is_pro() && class_exists( '\\EDD\\Lite\\Admin\\Promos\\Notices\\FeaturedDownloads' ),
 		)
 	);
 }

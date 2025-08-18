@@ -39,8 +39,13 @@ class Legacy implements \EDD\EventManagement\SubscriberInterface {
 	public function manage_legacy_extensions() {
 		foreach ( $this->get_extensions() as $extension ) {
 			if ( empty( $extension['on_demand'] ) ) {
-				add_action( "plugin_action_links_{$extension['basename']}", array( $this, 'update_plugin_links' ), 10, 2 );
 				self::deactivate( $extension );
+			} elseif ( is_plugin_active( $extension['basename'] ) ) {
+				$this->maybe_do_notification( $extension );
+			}
+
+			if ( empty( $extension['allow_reactivation'] ) ) {
+				add_action( "plugin_action_links_{$extension['basename']}", array( $this, 'update_plugin_links' ), 10, 2 );
 			}
 		}
 	}
@@ -141,8 +146,16 @@ class Legacy implements \EDD\EventManagement\SubscriberInterface {
 				),
 			),
 			'edd-eu-vat'                   => array(
-				'basename'  => 'edd-eu-vat/edd-eu-vat.php',
-				'on_demand' => true,
+				'basename'           => 'edd-eu-vat/edd-eu-vat.php',
+				'on_demand'          => true,
+				'allow_reactivation' => true,
+			),
+			'edd-featured-downloads'       => array(
+				'name'            => 'Featured Downloads',
+				'basename'        => 'edd-featured-downloads/edd-featured-downloads.php',
+				'on_demand'       => true,
+				'notification-id' => 'fd-legacy-notice',
+				'content'         => __( 'Featured Downloads has been merged into Easy Digital Downloads. If you are using the [edd_featured_downloads] shortcode anywhere, please update it to use the downloads block or shortcode instead and then deactivate this plugin.', 'easy-digital-downloads' ),
 			),
 		);
 	}

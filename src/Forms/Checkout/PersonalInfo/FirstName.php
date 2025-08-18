@@ -77,14 +77,4 @@ class FirstName extends Field {
 	protected function get_key(): string {
 		return 'edd_first';
 	}
-
-	/**
-	 * Whether the field is required.
-	 *
-	 * @since 3.3.9
-	 * @return bool
-	 */
-	protected function is_required(): bool {
-		return true;
-	}
 }

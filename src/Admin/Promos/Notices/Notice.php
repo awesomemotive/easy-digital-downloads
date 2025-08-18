@@ -164,6 +164,7 @@ abstract class Notice {
 		return array(
 			"edd-admin-notice-{$type}",
 			'edd-promo-notice',
+			'edd-promo-notice--' . $this->get_id(),
 		);
 	}
 }

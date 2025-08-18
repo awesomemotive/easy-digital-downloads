@@ -139,6 +139,18 @@ class AdminOrderNotice extends Email {
 	 * @return void
 	 */
 	protected function set_headers() {
+		// Check if the "Reply to customer" setting is enabled. This needs to run before the parent::set_headers() method.
+		$use_customer_reply_to = $this->get_template()->get_metadata( 'use_customer_reply_to' );
+		if ( ! empty( $use_customer_reply_to ) && $this->order && ! empty( $this->order->email ) ) {
+			add_filter(
+				'edd_email_headers_array',
+				function ( $headers ) {
+					$headers['Reply-To'] = $this->order->email;
+					return $headers;
+				}
+			);
+		}
+
 		parent::set_headers();
 
 		$this->maybe_run_legacy_filter( 'edd_admin_sale_notification_headers' );

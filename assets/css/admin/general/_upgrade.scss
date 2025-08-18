@@ -19,3 +19,10 @@
 	color: colors.$white;
 	border-color: colors.$edd-pro-upgrade;
 }
+
+.edd-settings-content {
+	.edd-pro-upgrade,
+	.edd-pro-upgrade:hover {
+		text-decoration: underline !important;
+	}
+}

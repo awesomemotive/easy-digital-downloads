@@ -1894,12 +1894,12 @@ class Stats {
 	public function get_tax( $query = array() ) {
 
 		// Add table and column name to query_vars to assist with date query generation.
-		$query['table']             = $this->get_db()->edd_orders;
 		$query['column']            = 'tax';
 		$query['date_query_column'] = 'date_created';
 
-		// Run pre-query checks and maybe generate SQL.
+		$this->query_vars['table'] = 'o';
 		$this->pre_query( $query );
+		$this->query_vars['table'] = $this->get_db()->edd_orders;
 
 		$function = $this->get_amount_column_and_function(
 			array(
@@ -1947,7 +1947,7 @@ class Stats {
 			$this->pre_query( $query );
 		} else {
 			$sql = "SELECT {$function} AS total
-					FROM {$this->query_vars['table']}
+					FROM {$this->query_vars['table']} o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 		}
 

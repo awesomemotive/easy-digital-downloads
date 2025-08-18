@@ -493,7 +493,7 @@ class Manifest implements Error_Logger {
 						'drawBorder' => false,
 					),
 					'ticks'     => array(
-						'formattingType' => 'format',
+						'formattingType' => ! empty( $endpoint_options['formattingType'] ) ? $endpoint_options['formattingType'] : 'format',
 						'beginAtZero'    => true,
 						'suggestedMin'   => 0,
 						'maxTicksLimit'  => 5,

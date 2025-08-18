@@ -156,18 +156,12 @@ class License_Upgrade_Notice extends Notice {
 					$utm_parameters
 				);
 
-				$help_url = edd_get_admin_url(
-					array(
-						'page' => 'edd-settings',
-					)
-				);
-
 				printf(
-					/* translators: %1$s opening anchor tag; %2$s closing anchor tag */
-					__( 'You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments. Already have a Pass? %3$sActivate it now%4$s', 'easy-digital-downloads' ),
+					/* translators: %1$s opening strong tag; %2$s closing strong tag; %3$s opening anchor tag; %4$s closing anchor tag */
+					__( '%1$sYou\'re using Easy Digital Downloads Lite.%2$s To unlock more features consider %3$supgrading to Pro%4$s for 50%% off.', 'easy-digital-downloads' ),
+					'<strong>',
+					'</strong>',
 					'<a href="' . $link_url . '" target="_blank">',
-					'</a>',
-					'<a href="' . esc_url( $help_url ) . '">',
 					'</a>'
 				);
 
