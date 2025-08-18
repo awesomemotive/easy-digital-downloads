@@ -7,7 +7,7 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * @group edd_mime
  * @group edd_functions
  */
-class Tests_Templates extends EDD_UnitTestCase {
+class Templates extends EDD_UnitTestCase {
 
 	protected $_post;
 
@@ -155,6 +155,34 @@ class Tests_Templates extends EDD_UnitTestCase {
 		$this->assertIsString( $paths[1] );
 		$this->assertIsString( $paths[10] );
 		$this->assertIsString( $paths[100] );
+	}
+
+	/**
+	 * Test that EDD Pro templates are added with auto-increment logic to avoid conflicts.
+	 */
+	public function test_pro_templates_auto_increment_on_conflict() {
+		// Create a filter that would conflict with Pro's preferred priority of 20
+		$conflicting_filter = function( $paths ) {
+			$paths[20] = '/conflicting-plugin/templates/';
+			return $paths;
+		};
+
+		// Add the conflicting filter first
+		add_filter( 'edd_template_paths', $conflicting_filter, 10 );
+
+		// Pro templates filter runs later and should auto-increment
+		$paths = edd_get_theme_template_paths();
+
+		// Both paths should exist - no overwrites
+		$this->assertArrayHasKey( 20, $paths );  // Conflicting plugin gets priority 20
+		$this->assertArrayHasKey( 21, $paths );  // Pro should get auto-incremented to 21
+
+		// Verify the paths are correctly assigned
+		$this->assertStringContainsString( '/conflicting-plugin/templates/', $paths[20] );
+		$this->assertStringContainsString( 'pro/templates/', $paths[21] );
+
+		// Clean up
+		remove_filter( 'edd_template_paths', $conflicting_filter, 10 );
 	}
 
 	public function test_get_templates_dir_name() {

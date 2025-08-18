@@ -67,7 +67,7 @@ abstract class Field extends BaseField {
 	 * @return bool
 	 */
 	protected function is_required(): bool {
-		return edd_field_is_required( $this->get_id() );
+		return edd_field_is_required( $this->get_key() );
 	}
 
 	/**

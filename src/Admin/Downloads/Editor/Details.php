@@ -202,6 +202,21 @@ class Details extends Section {
 			</div>
 		</div>
 
+		<div class="edd-form-group">
+			<div class="edd-form-group__control">
+				<?php
+				$toggle = new \EDD\HTML\CheckboxToggle(
+					array(
+						'name'    => 'edd_feature_download',
+						'current' => get_post_meta( $download->ID, 'edd_feature_download', true ),
+						'label'   => __( 'Feature this download in the store.', 'easy-digital-downloads' ),
+					)
+				);
+				$toggle->output();
+				?>
+			</div>
+		</div>
+
 		<?php
 		/**
 		 * Hook to add additional fields to the meta box.

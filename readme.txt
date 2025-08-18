@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable Tag: 3.5.0
+Stable Tag: 3.5.1
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -240,6 +240,31 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.5.1 =
+* New: Featured Downloads is now part of Easy Digital Downloads.
+* New (Pro): Customize the display of Featured Downloads.
+* Admin: Improved EDD Admin Page detection.
+* Discounts: Improve discount calculations with product requirements.
+* Discounts: Fixed an issue regarding download requirements saving.
+* Emails: Admin Sale Notifications can now be set to reply to the customer.
+* EU VAT: Improves compatibility when editing existing orders.
+* EU VAT: Improve compatibility with Multi Currency and Exports.
+* EU VAT: Improved subscription compatibility when upgrading a license.
+* Invoices: Removed the requirement to have an "Invoices" page.
+* Invoices: Resolved an issue with missing Invoices styles.
+* Reports: Improved report and graph registration APIs.
+* Reports: Fixed an ambiguous tax query.
+* Square: Fixed an issue with the Webhook registration.
+* Stripe: Improved customer name detection.
+* Stripe: Fixed an undefined property error.
+* Taxes: Currency filter was not always applying to the cart tax amount.
+* Taxes: Improved rounding on tax rates when adding a new order.
+* Dev: Removed callbacks and hooks for deprecated functions.
+* Dev: Checkout billing fields required via filter now show as required at Checkout.
+* Dev: Improved checkout page validation with invalid Post IDs.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.5.0 =
 * NEW: Customize the message displayed on checkout when the cart is empty.
 * Admin: Improved styles when multiple admin notices are displayed on EDD Settings pages.
@@ -250,8 +275,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Dev: Improved the extensibility of the Stats class.
 * Dev: Many classes that were namespaced were relocated to take advantage of auto-loading.
 * Dev: Registered tax rates were moved out of the adjustments database table into their own tax rates database table.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.4.0 =
 * NEW! Add Square to supported gateways for one-time payments.

@@ -1,13 +1,18 @@
 <?php
-
 /**
  * Core class for adding event subscribers.
  *
- * @since 3.1.1
- * @package EDD
+ * @package   EDD\Lite
+ * @copyright Copyright (c) 2025, Sandhills Development, LLC
+ * @license   GPL2+
+ * @since     3.1.1
  */
+
 namespace EDD\Lite;
 
+/**
+ * Core class for adding lite event subscribers.
+ */
 class Core extends \EDD\Core {
 
 	/**
@@ -27,6 +32,17 @@ class Core extends \EDD\Core {
 	 */
 	protected function get_admin_providers() {
 		return array_merge( parent::get_admin_providers(), $this->get_lite_admin_providers() );
+	}
+
+	/**
+	 * Gets providers that may be extended/replaced in lite/pro.
+	 *
+	 * @return array
+	 */
+	protected function get_replaceable_providers() {
+		return array(
+			'Admin\Promos\PromoHandler' => new Admin\Promos\PromoHandler(),
+		);
 	}
 
 	/**

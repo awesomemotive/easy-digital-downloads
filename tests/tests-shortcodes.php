@@ -7,7 +7,7 @@ use EDD\Tests\Helpers;
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends EDD_UnitTestCase {
+class Shortcodes extends EDD_UnitTestCase {
 
 	protected static $payment_key;
 

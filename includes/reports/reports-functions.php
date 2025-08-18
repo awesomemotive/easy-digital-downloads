@@ -1575,17 +1575,21 @@ function display_gateways_filter() {
 		$gateways[ $id ] = esc_html( $data['admin_label'] );
 	}
 
-	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'gateways',
-		'options'          => $gateways,
-		'selected'         => empty( $gateway ) ? 0 : $gateway,
-		'show_option_none' => false,
-	) ); ?>
+	// Get the select.
+	$select = new \EDD\HTML\Select(
+		array(
+			'name'              => 'gateways',
+			'options'           => $gateways,
+			'selected'          => empty( $gateway ) ? 0 : $gateway,
+			'show_option_empty' => __( 'All gateways', 'easy-digital-downloads' ),
+			'show_option_all'   => false,
+			'show_option_none'  => false,
+		)
+	);
+	?>
 
-    <span class="edd-graph-filter-options graph-option-section"><?php
-		echo $select;
-	?></span><?php
+	<span class="edd-graph-filter-options graph-option-section"><?php $select->output(); ?></span>
+	<?php
 }
 
 /**

@@ -78,7 +78,7 @@ class LicenseUpgradeNotice extends EDD_UnitTestCase {
 	public function test_notice_should_display_if_no_license_keys() {
 		$notice = new License_Upgrade_Notice();
 		$this->assertTrue( $notice->should_display() );
-		$this->assertNoticeContains( 'You are using the free version of Easy Digital Downloads', $notice );
+		$this->assertNoticeContains( 'You\'re using Easy Digital Downloads Lite', $notice );
 	}
 
 	/**

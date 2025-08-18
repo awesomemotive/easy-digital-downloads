@@ -326,6 +326,7 @@ class Manager implements SubscriberInterface {
 			}
 		}
 		$this->update_recipients( $email->id, $data );
+		$this->update_reply_to_setting( $email->id, $data );
 
 		return array(
 			'success'  => $success,
@@ -394,6 +395,22 @@ class Manager implements SubscriberInterface {
 		}
 
 		edd_delete_email_meta( $email_id, 'recipients' );
+	}
+
+	/**
+	 * Updates the reply-to customer setting for admin order notification emails.
+	 * This method runs after the email has been saved.
+	 *
+	 * @since 3.5.1
+	 * @param int   $email_id The email ID.
+	 * @param array $data     The data.
+	 */
+	private function update_reply_to_setting( $email_id, $data ) {
+		if ( isset( $data['use_customer_reply_to'] ) && ! empty( $data['use_customer_reply_to'] ) ) {
+			edd_update_email_meta( $email_id, 'use_customer_reply_to', 1 );
+		} else {
+			edd_delete_email_meta( $email_id, 'use_customer_reply_to' );
+		}
 	}
 
 	/**

@@ -135,3 +135,37 @@ if ( ! empty( $options['default']['selected'] ) ) {
 		<p class="description"><?php esc_html_e( 'Enter one email per line.', 'easy-digital-downloads' ); ?></p>
 	</div>
 </div>
+
+<?php
+$show_reply_to_customer = 'admin' === $email->recipient && 'admin_order_notice' === $email->email_id && $email->can_edit( 'recipient' );
+
+/**
+ * Filter to allow the "Reply to customer" setting to be shown.
+ *
+ * @since 3.5.1
+ *
+ * @param bool $show_reply_to_customer Whether to show the "Reply to customer" setting.
+ * @param \EDD\Emails\Base $email The email object.
+ */
+$show_reply_to_customer = apply_filters( 'edd_emails_show_reply_to_customer', $show_reply_to_customer, $email );
+
+if ( $show_reply_to_customer ) {
+	$checkbox = new \EDD\HTML\CheckboxToggle(
+		array(
+			'name'    => 'use_customer_reply_to',
+			'current' => ! empty( $email->get_metadata( 'use_customer_reply_to' ) ),
+			'label'   => __( 'Reply to customer', 'easy-digital-downloads' ),
+		)
+	);
+	?>
+	<div class="edd-form-group edd-email__reply-to-customer">
+		<div class="edd-form-group__label">
+			<?php esc_html_e( 'Reply Settings', 'easy-digital-downloads' ); ?>
+		</div>
+		<div class="edd-form-group__control">
+			<?php $checkbox->output(); ?>
+			<p class="description"><?php esc_html_e( 'When enabled, replies to this email will go to the customer instead of the site admin.', 'easy-digital-downloads' ); ?></p>
+		</div>
+	</div>
+	<?php
+}

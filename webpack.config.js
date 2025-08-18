@@ -110,6 +110,7 @@ const config = {
 		'stripe-paymentelements': './assets/css/frontend/stripe/payment-elements.scss',
 		'square-checkout': './assets/css/frontend/gateways/square.scss',
 		'pro/css/edd-invoice': './assets/pro/scss/invoice/style.scss',
+		'pro/css/downloads': './assets/pro/scss/downloads/style.scss',
 	},
 	output: {
 		filename: '[name].js',
