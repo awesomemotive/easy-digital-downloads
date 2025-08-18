@@ -147,7 +147,7 @@ class Form {
 					array(
 						'intent_id'          => $this->intent->id,
 						'client_secret'      => $this->intent->client_secret,
-						'intent_type'        => $this->intent_type,
+						'intent_type'        => $intent_type,
 						'token'              => wp_create_nonce( 'edd-process-checkout' ),
 						'intent_fingerprint' => $new_fingerprint,
 						'intent_changed'     => 0,

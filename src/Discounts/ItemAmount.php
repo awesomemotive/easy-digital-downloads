@@ -119,20 +119,36 @@ class ItemAmount {
 					$parsed_requirement = edd_parse_product_dropdown_value( $requirement );
 					if ( $parsed_requirement['download_id'] === $this->item['id'] ) {
 
-						$price_id = isset( $this->item['options']['price_id'] ) && is_numeric( $this->item['options']['price_id'] ) ? absint( $this->item['options']['price_id'] ) : null;
+						$price_id = isset( $this->item['options']['price_id'] ) && is_numeric( $this->item['options']['price_id'] ) ? (int) $this->item['options']['price_id'] : null;
 
 						// If there is no price ID on the requirement, or the requirement price ID matches the item's price ID, apply the discount.
 						if ( is_null( $parsed_requirement['price_id'] ) || $parsed_requirement['price_id'] === $price_id ) {
-							$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
-							$processed        = true;
 
-							// Store the discount amount for the item.
-							$itemized_discounts[ $discount->get_code() ] = edd_format_amount(
-								$discount->get_applied_discount_amount( $item_amount ),
-								true,
-								'',
-								'data'
-							);
+							if ( 'flat' === $discount->get_type() && 'global' !== $discount->get_scope() ) {
+								// Handle flat discount with proper distribution among eligible items (not_global scope only).
+								$eligible_items   = $this->get_eligible_items_for_product_requirements( $discount );
+								$item_discount    = $this->calculate_item_flat_discount( $discount, $eligible_items );
+								$discount_amount += $item_discount;
+
+								// Store the discount amount for the item.
+								$itemized_discounts[ $discount->get_code() ] = edd_format_amount( $item_discount, true, '', 'data' );
+
+								$processed = true;
+							} elseif ( 'flat' !== $discount->get_type() ) {
+								// Handle percentage discount (existing logic).
+								$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+
+								// Store the discount amount for the item.
+								$itemized_discounts[ $discount->get_code() ] = edd_format_amount(
+									$discount->get_applied_discount_amount( $item_amount ),
+									true,
+									'',
+									'data'
+								);
+
+								// Flat discounts with global scope are processed globally, even if there are product requirements.
+								$processed = true;
+							}
 
 							// Break the requirements loop since the discount is applied for the current cart item.
 							break;
@@ -168,19 +184,8 @@ class ItemAmount {
 				continue;
 			}
 
-			// Get the discount amount for a flat discount.
-			$items_amount     = $this->get_items_amount( $excluded_products );
-			$subtotal_percent = ! empty( $items_amount ) ? ( $item_amount / $items_amount ) : 0;
-
-			$item_discount = $discount->get_amount() * $subtotal_percent;
-
-			// Make adjustments on the last item.
-			if ( $this->is_last_item() ) {
-				$other_items_discount = $this->get_other_items_discount( $items_amount, $discount, $excluded_products );
-				$adjustment           = $discount->get_amount() - ( $item_discount + $other_items_discount );
-				$item_discount       += $adjustment;
-			}
-
+			// Get the discount amount for a flat discount using the helper method.
+			$item_discount    = $this->calculate_item_flat_discount( $discount );
 			$discount_amount += $item_discount;
 
 			// Store the discount amount for the item.
@@ -226,6 +231,95 @@ class ItemAmount {
 		}
 
 		return $discount_amount;
+	}
+
+	/**
+	 * Calculate the flat discount amount for this item.
+	 *
+	 * Distributes flat discount amounts proportionally based on item price relative to total eligible items.
+	 *
+	 * @since 3.5.1
+	 *
+	 * @param \EDD_Discount $discount The discount object.
+	 * @param array|null    $eligible_items Optional. Array of eligible items. If null, calculates for global discount.
+	 * @return float The proportional flat discount amount for this item.
+	 */
+	private function calculate_item_flat_discount( $discount, $eligible_items = null ): float {
+		if ( 'flat' !== $discount->get_type() ) {
+			return 0;
+		}
+
+		$excluded_products = array_map( 'intval', $discount->get_excluded_products() );
+
+		// Calculate total amount for eligible items.
+		if ( null === $eligible_items ) {
+			// Global discount - use all items minus excluded products.
+			$eligible_items_amount = $this->get_items_amount( $excluded_products );
+		} else {
+			// Product-specific discount - calculate total for provided eligible items.
+			$eligible_items_amount = array_reduce(
+				$eligible_items,
+				function ( $carry, $item ) {
+					$item_unit_price = $this->get_item_unit_price( false, $item );
+
+					return $carry + ( $item_unit_price * $item['quantity'] );
+				},
+				0
+			);
+		}
+
+		$item_amount      = ( $this->item_unit_price * $this->item['quantity'] );
+		$subtotal_percent = ! empty( $eligible_items_amount ) ? ( $item_amount / $eligible_items_amount ) : 0;
+		$item_discount    = $discount->get_amount() * $subtotal_percent;
+
+		// Make adjustments on the last item to handle rounding discrepancies.
+		if ( $this->is_last_item() ) {
+			$other_items_discount = $this->get_other_items_discount( $eligible_items_amount, $discount, $excluded_products, $eligible_items );
+			$adjustment           = $discount->get_amount() - ( $item_discount + $other_items_discount );
+			$item_discount       += $adjustment;
+		}
+
+		return $item_discount;
+	}
+
+	/**
+	 * Get eligible items for product requirements.
+	 *
+	 * Returns all cart items that match the discount's product requirements.
+	 *
+	 * @since 3.5.1
+	 *
+	 * @param \EDD_Discount $discount The discount object.
+	 * @return array Array of eligible cart items.
+	 */
+	private function get_eligible_items_for_product_requirements( $discount ): array {
+		$eligible_items       = array();
+		$product_requirements = $discount->get_product_reqs();
+
+		foreach ( $this->items as $item ) {
+			// Skip items without valid ID.
+			if ( empty( $item['id'] ) ) {
+				continue;
+			}
+
+			foreach ( $product_requirements as $requirement ) {
+				$parsed_requirement = edd_parse_product_dropdown_value( $requirement );
+
+				if ( $parsed_requirement['download_id'] === $item['id'] ) {
+					$price_id = isset( $item['options']['price_id'] ) && is_numeric( $item['options']['price_id'] )
+					? (int) $item['options']['price_id']
+					: null;
+
+					// Check if price ID matches or if no specific price ID is required.
+					if ( is_null( $parsed_requirement['price_id'] ) || $parsed_requirement['price_id'] === $price_id ) {
+						$eligible_items[] = $item;
+						break; // Found match for this item, no need to check other requirements.
+					}
+				}
+			}
+		}
+
+		return $eligible_items;
 	}
 
 	/**
@@ -388,23 +482,76 @@ class ItemAmount {
 	 * @param float         $items_amount      The items amount.
 	 * @param \EDD_Discount $discount           The discount.
 	 * @param array         $excluded_products The excluded products.
+	 * @param array|null    $eligible_items    Optional. Array of eligible items for product-specific discounts.
 	 * @return float
 	 */
-	private function get_other_items_discount( $items_amount, $discount, $excluded_products ) {
+	private function get_other_items_discount( $items_amount, $discount, $excluded_products, $eligible_items = null ): float {
 		return array_reduce(
 			$this->items,
-			function ( $carry, $_item ) use ( $items_amount, $discount, $excluded_products ) {
+			function ( $carry, $_item ) use ( $items_amount, $discount, $excluded_products, $eligible_items ) {
 
-				$percent = 0;
-				// Calculate percent only if current item is not same as loop item and not in excluded products.
-				if ( ! hash_equals( $this->item['hash'], $_item['hash'] ) && ! empty( $items_amount ) && ! in_array( $_item['id'], $excluded_products, true ) ) {
-					$percent = $_item['amount'] / $items_amount;
-				}
-				$value = edd_format_amount( $discount->get_amount() * $percent, true, '', 'data' );
+				$percent = $this->get_item_percent( $_item, $items_amount, $excluded_products, $eligible_items );
+				$value   = edd_format_amount( $discount->get_amount() * $percent, true, '', 'data' );
 
 				return $carry + $value;
 			},
 			0
 		);
+	}
+
+	/**
+	 * Get the item percent. This is the percentage of the flat discount that should be applied to the item.
+	 *
+	 * @since 3.5.1
+	 * @param array      $item           The item.
+	 * @param float      $items_amount   The items amount.
+	 * @param array      $excluded_products The excluded products.
+	 * @param array|null $eligible_items    The eligible items. This is only used for product-specific discounts.
+	 * @return float
+	 */
+	private function get_item_percent( $item, $items_amount, $excluded_products, $eligible_items = null ): float {
+		if ( empty( $items_amount ) ) {
+			return 0;
+		}
+
+		if ( in_array( $item['id'], $excluded_products, true ) ) {
+			return 0;
+		}
+
+		if ( ! $this->is_item_eligible( $item, $eligible_items ) ) {
+			return 0;
+		}
+
+		if ( hash_equals( $this->item['hash'], $item['hash'] ) ) {
+			return 0;
+		}
+
+		$item_unit_price = $this->get_item_unit_price( false, $item );
+		$item_amount     = $item_unit_price * $item['quantity'];
+
+		return $item_amount / $items_amount;
+	}
+
+	/**
+	 * Check if the item is eligible for the discount.
+	 *
+	 * @since 3.5.1
+	 *
+	 * @param array      $item           The item.
+	 * @param array|null $eligible_items The eligible items. This is only used for product-specific discounts.
+	 * @return bool
+	 */
+	private function is_item_eligible( $item, $eligible_items ): bool {
+		if ( is_null( $eligible_items ) ) {
+			return true;
+		}
+
+		foreach ( $eligible_items as $eligible_item ) {
+			if ( hash_equals( $item['hash'], $eligible_item['hash'] ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

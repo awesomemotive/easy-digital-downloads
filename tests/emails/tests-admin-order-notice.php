@@ -115,4 +115,147 @@ class AdminOrderNotice extends EDD_UnitTestCase {
 
 		$this->assertArrayHasKey( 'edit', $row_actions );
 	}
+
+	public function test_default_use_customer_reply_to_meta() {
+		$this->assertEquals( '', self::$email->get_metadata( 'use_customer_reply_to' ) );
+		$this->assertEquals( 0, self::$email->get_default( 'use_customer_reply_to' ) );
+	}
+
+	public function test_use_customer_reply_to_setting_save() {
+		$user_id = self::factory()->user->create( array(
+			'role' => 'administrator',
+		) );
+		wp_set_current_user( $user_id );
+
+		$templates = new \EDD\Admin\Emails\Manager();
+		$templates->save(
+			array(
+				'edd_save_email_nonce'   => wp_create_nonce( 'edd_save_email' ),
+				'email_id'               => self::$id,
+				'use_customer_reply_to'  => '1',
+				'subject'                => 'Test Subject',
+				'heading'                => 'Test Heading',
+				'content'                => 'Test Body',
+			)
+		);
+
+		$email = self::$registry->get_email_by_id( self::$id );
+		$this->assertEquals( '1', $email->get_metadata( 'use_customer_reply_to' ) );
+	}
+
+	public function test_use_customer_reply_to_setting_uncheck() {
+		$user_id = self::factory()->user->create( array(
+			'role' => 'administrator',
+		) );
+		wp_set_current_user( $user_id );
+
+		edd_update_email_meta( self::$email->email->id, 'use_customer_reply_to', 1 );
+
+		$templates = new \EDD\Admin\Emails\Manager();
+		$templates->save(
+			array(
+				'edd_save_email_nonce' => wp_create_nonce( 'edd_save_email' ),
+				'email_id'             => self::$id,
+				'subject'              => 'Test Subject',
+				'heading'              => 'Test Heading',
+				'content'              => 'Test Body',
+			)
+		);
+
+		$email = self::$registry->get_email_by_id( self::$id );
+		$this->assertEquals( '', $email->get_metadata( 'use_customer_reply_to' ) );
+	}
+
+	public function test_reply_to_header_with_customer_setting_enabled() {
+		$payment = EDD_Helper_Payment::create_simple_payment();
+		$order   = edd_get_order( $payment );
+
+		edd_update_email_meta( self::$email->email->id, 'use_customer_reply_to', 1 );
+
+		$admin_notice = new \EDD\Emails\Types\AdminOrderNotice( $order );
+		
+		$reflection = new \ReflectionClass( $admin_notice );
+		$set_headers_method = $reflection->getMethod( 'set_headers' );
+		$set_headers_method->setAccessible( true );
+		$set_headers_method->invoke( $admin_notice );
+
+		$this->assertTrue( has_filter( 'edd_email_headers_array' ) );
+
+		$headers = apply_filters( 'edd_email_headers_array', array(
+			'From'         => 'test@example.com',
+			'Reply-To'     => 'admin@example.com',
+			'Content-Type' => 'text/html; charset=utf-8',
+		) );
+
+		$this->assertEquals( $order->email, $headers['Reply-To'] );
+
+		edd_delete_email_meta( self::$email->email->id, 'use_customer_reply_to' );
+	}
+
+	public function test_reply_to_header_with_customer_setting_disabled() {
+		$payment = EDD_Helper_Payment::create_simple_payment();
+		$order   = edd_get_order( $payment );
+
+		$admin_notice = new \EDD\Emails\Types\AdminOrderNotice( $order );
+		
+		$reflection = new \ReflectionClass( $admin_notice );
+		$set_headers_method = $reflection->getMethod( 'set_headers' );
+		$set_headers_method->setAccessible( true );
+		$set_headers_method->invoke( $admin_notice );
+
+		$headers = apply_filters( 'edd_email_headers_array', array(
+			'From'         => 'test@example.com',
+			'Reply-To'     => 'admin@example.com',
+			'Content-Type' => 'text/html; charset=utf-8',
+		) );
+
+		$this->assertEquals( 'admin@example.com', $headers['Reply-To'] );
+	}
+
+	public function test_reply_to_header_without_customer_email() {
+		$payment = EDD_Helper_Payment::create_simple_payment();
+		$order   = edd_get_order( $payment );
+		edd_update_order( $order->id, array( 'email' => '' ) );
+		$order = edd_get_order( $order->id );
+
+		edd_update_email_meta( self::$email->email->id, 'use_customer_reply_to', 1 );
+
+		$admin_notice = new \EDD\Emails\Types\AdminOrderNotice( $order );
+		
+		$reflection = new \ReflectionClass( $admin_notice );
+		$set_headers_method = $reflection->getMethod( 'set_headers' );
+		$set_headers_method->setAccessible( true );
+		$set_headers_method->invoke( $admin_notice );
+
+		$headers = apply_filters( 'edd_email_headers_array', array(
+			'From'         => 'test@example.com',
+			'Reply-To'     => 'admin@example.com',
+			'Content-Type' => 'text/html; charset=utf-8',
+		) );
+
+		$this->assertEquals( 'admin@example.com', $headers['Reply-To'] );
+
+		edd_delete_email_meta( self::$email->email->id, 'use_customer_reply_to' );
+	}
+
+	public function test_reply_to_header_with_null_order() {
+		edd_update_email_meta( self::$email->email->id, 'use_customer_reply_to', 1 );
+
+		$admin_notice = new \EDD\Emails\Types\AdminOrderNotice( false );
+		
+		$reflection = new \ReflectionClass( $admin_notice );
+		$set_headers_method = $reflection->getMethod( 'set_headers' );
+		$set_headers_method->setAccessible( true );
+		$set_headers_method->invoke( $admin_notice );
+
+		$headers = apply_filters( 'edd_email_headers_array', array(
+			'From'         => 'test@example.com',
+			'Reply-To'     => 'admin@example.com',
+			'Content-Type' => 'text/html; charset=utf-8',
+		) );
+
+		$this->assertEquals( 'admin@example.com', $headers['Reply-To'] );
+
+		edd_delete_email_meta( self::$email->email->id, 'use_customer_reply_to' );
+	}
 }

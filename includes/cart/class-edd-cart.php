@@ -1281,21 +1281,21 @@ class EDD_Cart {
 	}
 
 	/**
-	 * Gets the total tax amount for the cart contents in a fully formatted way
+	 * Gets the total tax amount for the cart contents in a fully formatted way.
 	 *
 	 * @since 2.7
 	 *
-	 * @param boolean $echo Decides if the result should be returned or not
-	 * @return string Total tax amount
+	 * @param bool $should_echo Decides if the result should be returned or not.
+	 * @return string Formatted tax amount.
 	 */
-	public function tax( $echo = false ) {
+	public function tax( $should_echo = false ) {
 		$cart_tax = $this->get_tax();
-		$cart_tax = edd_currency_filter( $cart_tax );
+		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
 
 		$tax = max( $cart_tax, 0 );
 		$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
-		if ( $echo ) {
+		if ( $should_echo ) {
 			echo esc_html( $tax );
 		}
 

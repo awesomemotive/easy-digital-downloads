@@ -2,17 +2,16 @@
 /**
  * Reports functions.
  *
- * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Reports
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  * @since       3.0 Full refactor of Reports.
  */
 
 use EDD\Reports;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -28,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_admin_load_report() {
 
-	// Redirect URL (on error)
+	// Redirect URL (on error).
 	$redirect_url = edd_get_admin_url(
 		array(
 			'page' => 'edd-reports',
@@ -36,7 +35,7 @@ function edd_admin_load_report() {
 		)
 	);
 
-	// Redirect if user cannot view reports
+	// Redirect if user cannot view reports.
 	if ( ! current_user_can( 'view_shop_reports' ) ) {
 		edd_redirect( $redirect_url );
 	}
@@ -46,16 +45,16 @@ function edd_admin_load_report() {
 
 	add_filter( 'edd_admin_is_single_view', '__return_false' );
 
-	// Get the section and report
+	// Get the section and report.
 	$section = Reports\get_current_report();
 	$report  = Reports\get_report( $section );
 
-	// Redirect if report is invalid
+	// Redirect if report is invalid.
 	if ( empty( $report ) || is_wp_error( $report ) ) {
 		edd_redirect( $redirect_url );
 	}
 
-	// Stash the report in the EDD global for future reference
+	// Stash the report in the EDD global for future reference.
 	EDD()->report = $report;
 }
 add_action( 'load-download_page_edd-reports', 'edd_admin_load_report' );
@@ -67,11 +66,11 @@ add_action( 'load-download_page_edd-reports', 'edd_admin_load_report' );
  */
 function edd_reports_sections() {
 
-	// Instantiate the Sections class and sections array
+	// Instantiate the Sections class and sections array.
 	$sections   = new EDD\Admin\Reports_Sections();
 	$c_sections = array();
 
-	// Setup sections variables
+	// Setup sections variables.
 	$sections->use_js          = false;
 	$sections->current_section = Reports\get_current_report();
 	$sections->item            = null;
@@ -96,14 +95,14 @@ function edd_reports_sections() {
 		)
 	);
 
-	// Get all registered tabs & views
+	// Get all registered tabs & views.
 	$tabs = Reports\get_reports();
 
-	// Loop through tabs & setup sections
+	// Loop through tabs & setup sections.
 	if ( ! empty( $tabs ) ) {
 		foreach ( $tabs as $id => $tab ) {
 
-			// Add to sections array
+			// Add to sections array.
 			$c_sections[] = array(
 				'id'       => $id,
 				'label'    => $tab['label'],
@@ -113,10 +112,10 @@ function edd_reports_sections() {
 		}
 	}
 
-	// Set the customer sections
+	// Set the customer sections.
 	$sections->set_sections( $c_sections );
 
-	// Display the sections
+	// Display the sections.
 	$sections->display();
 }
 
@@ -125,11 +124,11 @@ function edd_reports_sections() {
  *
  * @since 3.0
  *
- * @param string $report_id
+ * @param string $report_id The report ID.
  */
 function edd_output_report_callback( $report_id = '' ) {
 
-	// Maybe use the already loaded report
+	// Maybe use the already loaded report.
 	$report = EDD()->report
 		? EDD()->report
 		: EDD\Reports\get_report( $report_id );
@@ -199,15 +198,17 @@ function edd_reports_page() {
  */
 function edd_register_overview_report( $reports ) {
 	try {
-		// Variables to hold date filter values.
-		$options       = Reports\get_dates_filter_options();
-		$dates         = Reports\get_filter_value( 'dates' );
-		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$currency      = Reports\get_filter_value( 'currencies' );
-
-		$hbh   = Reports\get_dates_filter_hour_by_hour();
-		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
-
+		$tiles  = array(
+			'overview_sales'               => 'EDD\Reports\Endpoints\Tiles\Sales',
+			'overview_earnings'            => 'EDD\Reports\Endpoints\Tiles\Earnings',
+			'overview_average_order_value' => 'EDD\Reports\Endpoints\Tiles\Average',
+			'new_customer_growth'          => 'EDD\Reports\Endpoints\Tiles\CustomerGrowth',
+			'overview_refunded_amount'     => 'EDD\Reports\Endpoints\Tiles\RefundedAmount',
+		);
+		$charts = array(
+			'overview_earnings_chart' => 'EDD\Reports\Endpoints\Charts\Earnings',
+			'overview_sales_chart'    => 'EDD\Reports\Endpoints\Charts\Sales',
+		);
 		$reports->add_report(
 			'overview',
 			array(
@@ -215,17 +216,8 @@ function edd_register_overview_report( $reports ) {
 				'icon'      => 'dashboard',
 				'priority'  => 5,
 				'endpoints' => array(
-					'tiles'  => array(
-						'overview_sales',
-						'overview_earnings',
-						'overview_average_order_value',
-						'overview_new_customers',
-						'overview_refunded_amount',
-					),
-					'charts' => array(
-						'overview_earnings_chart',
-						'overview_sales_chart',
-					),
+					'tiles'  => array_keys( $tiles ),
+					'charts' => array_keys( $charts ),
 				),
 				'filters'   => array(
 					'dates',
@@ -235,211 +227,11 @@ function edd_register_overview_report( $reports ) {
 			)
 		);
 
-		$reports->register_endpoint(
-			'overview_sales',
-			array(
-				'label' => __( 'Sales', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$stats = new EDD\Stats(
-								array(
-									'range'        => $dates['range'],
-									'relative'     => true,
-									'currency'     => $currency,
-									'revenue_type' => 'net',
-								)
-							);
-							return $stats->get_order_count();
-						},
-						'display_args'  => array(
-							'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
-						),
-					),
-				),
-			)
-		);
+		$endpoints = array_merge( $tiles, $charts );
 
-		$reports->register_endpoint(
-			'overview_earnings',
-			array(
-				'label' => __( 'Earnings', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-							$stats = new EDD\Stats(
-								array(
-									'range'         => $dates['range'],
-									'function'      => 'SUM',
-									'exclude_taxes' => $exclude_taxes,
-									'currency'      => $currency,
-									'relative'      => true,
-									'output'        => 'formatted',
-									'revenue_type'  => 'net',
-								)
-							);
-							return $stats->get_order_earnings();
-						},
-						'display_args'  => array(
-							'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'overview_average_order_value',
-			array(
-				'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-							$stats = new EDD\Stats(
-								array(
-									'function'      => 'AVG',
-									'output'        => 'formatted',
-									'relative'      => true,
-									'range'         => $dates['range'],
-									'exclude_taxes' => $exclude_taxes,
-									'currency'      => $currency,
-								)
-							);
-							return $stats->get_order_earnings();
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'overview_new_customers',
-			array(
-				'label' => __( 'New Customers', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates ) {
-							$stats = new EDD\Stats();
-							return $stats->get_customer_count(
-								array(
-									'range'          => $dates['range'],
-									'relative'       => true,
-									'purchase_count' => true,
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'overview_refunded_amount',
-			array(
-				'label' => __( 'Total Refund Amount', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-							$stats  = new EDD\Stats();
-							return $stats->get_order_refund_amount(
-								array(
-									'range'         => $dates['range'],
-									'function'      => 'SUM',
-									'exclude_taxes' => $exclude_taxes,
-									'currency'      => $currency,
-									'relative'      => true,
-									'output'        => 'formatted',
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'overview_earnings_chart',
-			array(
-				'label' => __( 'Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
-				'views' => array(
-					'chart' => array(
-						'data_callback' => 'edd_overview_earnings_chart',
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'earnings' => array(
-									'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(24,126,244,0.75)',
-									'backgroundColor'      => 'rgba(24,126,244,0.05)',
-									'fill'                 => false,
-									'type'                 => 'currency',
-									'borderWidth'          => 2,
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'overview_sales_chart',
-			array(
-				'label' => __( 'Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
-				'views' => array(
-					'chart' => array(
-						'data_callback' => 'edd_overview_sales_chart',
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'sales'    => array(
-									'label'                => __( 'Sales', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(252,108,18,0.75)',
-									'backgroundColor'      => 'rgba(252,108,18,0.05)',
-									'fill'                 => false,
-									'borderWidth'          => 2,
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-							'scales'   => array(
-								'yAxes' => array(
-									array(
-										'type'     => 'linear',
-										'display'  => true,
-										'position' => 'left',
-										'gridLines' => array(
-											'drawBorder' => false,
-										),
-										'ticks'    => array(
-											'formattingType' => 'integer',
-											'beginAtZero'    => true,
-											'suggestedMin'   => 0,
-											'maxTicksLimit'  => 4,
-											'padding'        => 10,
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			)
-		);
-
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -455,31 +247,20 @@ add_action( 'edd_reports_init', 'edd_register_overview_report' );
  */
 function edd_register_downloads_report( $reports ) {
 	try {
-		$options       = Reports\get_dates_filter_options();
-		$dates         = Reports\get_filter_value( 'dates' );
-		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$currency      = '';
-
-		$hbh   = Reports\get_dates_filter_hour_by_hour();
-		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
-
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
-		$endpoint_label = __( 'Sales / Earnings', 'easy-digital-downloads' );
-
 		// Mock downloads and prices in case they cannot be found later.
-		$download       = edd_get_download();
-		$prices         = array();
-		$download_label = Reports\get_download_label( $download_data );
+		$download = edd_get_download();
+		$prices   = array();
 
 		$tiles = array_filter(
 			array(
-				'most_valuable_download',
-				'average_download_sales_earnings',
-				'download_sales_earnings',
+				'most_valuable_download'          => 'EDD\Reports\Endpoints\Tiles\MostValuableDownload',
+				'average_download_sales_earnings' => 'EDD\Reports\Endpoints\Tiles\AverageSalesEarnings',
+				'download_sales_earnings'         => 'EDD\Reports\Endpoints\Tiles\DownloadSalesEarnings',
 			),
 			function ( $endpoint ) use ( $download_data ) {
 				switch ( $endpoint ) {
@@ -489,23 +270,27 @@ function edd_register_downloads_report( $reports ) {
 					default:
 						return false === $download_data;
 				}
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$charts = array_filter(
 			array(
-				'download_sales_by_variations',
-				'download_earnings_by_variations',
-				'download_earnings_chart',
-				'download_sales_chart',
+				'download_sales_by_variations'    => 'EDD\Reports\Endpoints\Pies\DownloadSalesByVariations',
+				'download_earnings_by_variations' => 'EDD\Reports\Endpoints\Pies\DownloadEarningsByVariations',
+				'download_earnings_chart'         => 'EDD\Reports\Endpoints\Charts\DownloadEarnings',
+				'download_sales_chart'            => 'EDD\Reports\Endpoints\Charts\DownloadSales',
 			),
 			function ( $endpoint ) use ( $download_data, $download ) {
+				if ( $download_data ) {
+					$download = edd_get_download( absint( $download_data['download_id'] ) );
+				}
 				switch ( $endpoint ) {
 					case 'download_sales_by_variations':
 					case 'download_earnings_by_variations':
 						return (
-						false !== $download_data &&
-						false === $download_data['price_id'] &&
+						$download &&
+						null === $download_data['price_id'] &&
 						true === $download->has_variable_prices()
 						);
 
@@ -514,16 +299,18 @@ function edd_register_downloads_report( $reports ) {
 					default:
 						return false !== $download_data;
 				}
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$tables = array_filter(
 			array(
-				'top_selling_downloads',
+				'top_selling_downloads' => 'EDD\Reports\Endpoints\Tables\TopSellingDownloads',
 			),
 			function ( $endpoint ) use ( $download_data ) {
 				return false === $download_data;
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$reports->add_report(
@@ -533,539 +320,19 @@ function edd_register_downloads_report( $reports ) {
 				'priority'  => 10,
 				'icon'      => 'download',
 				'endpoints' => array(
-					'tiles'  => $tiles,
-					'charts' => $charts,
-					'tables' => $tables,
+					'tiles'  => array_keys( $tiles ),
+					'charts' => array_keys( $charts ),
+					'tables' => array_keys( $tables ),
 				),
 				'filters'   => array( 'dates', 'products', 'taxes' ),
 			)
 		);
 
-		$reports->register_endpoint(
-			'most_valuable_download',
-			array(
-				/* translators: %s: Download singular label */
-				'label' => sprintf( __( 'Most Valuable %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$stats = new EDD\Stats();
-							$d     = $stats->get_most_valuable_order_items(
-								array(
-									'range'    => $dates['range'],
-									'currency' => $currency,
-									'function' => 'SUM',
-								)
-							);
+		$endpoints = array_merge( $tiles, $charts, $tables );
 
-							if ( ! empty( $d ) && isset( $d[0] ) ) {
-								$d = $d[0];
-
-								if ( $d->object instanceof EDD_Download ) {
-									$title = $d->object->post_title;
-
-									if ( $d->object->has_variable_prices() ) {
-										$prices = array_values( wp_filter_object_list( $d->object->get_prices(), array( 'index' => absint( $d->price_id ) ) ) );
-
-										$title .= ( is_array( $prices ) && isset( $prices[0] ) )
-										? ': ' . $prices[0]['name']
-										: '';
-									}
-
-									return esc_html( $title );
-								}
-							}
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_download_sales_earnings',
-			array(
-				'label' => __( 'Average Sales / Earnings', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency, $exclude_taxes ) {
-							$stats = new EDD\Stats(
-								array(
-									'function'      => 'AVG',
-									'range'         => $dates['range'],
-									'currency'      => $currency,
-									'output'        => 'formatted',
-									'exclude_taxes' => $exclude_taxes,
-								)
-							);
-
-							return $stats->get_order_item_count() . ' / ' . $stats->get_order_item_earnings();
-						},
-						'display_args'  => array(
-							'comparison_label' => $label . ' &mdash; ' . __( 'Net', 'easy-digital-downloads' ),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'download_sales_earnings',
-			array(
-				'label' => $endpoint_label,
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $download_data, $dates, $currency, $exclude_taxes ) {
-							$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] ) ? absint( $download_data['price_id'] ) : null;
-							$stats    = new EDD\Stats(
-								array(
-									'product_id'    => absint( $download_data['download_id'] ),
-									'price_id'      => $price_id,
-									'currency'      => $currency,
-									'range'         => $dates['range'],
-									'output'        => 'formatted',
-									'exclude_taxes' => $exclude_taxes,
-								)
-							);
-
-							$earnings = $stats->get_order_item_earnings(
-								array(
-									'function' => 'SUM',
-								)
-							);
-							$sales    = $stats->get_order_item_count(
-								array(
-									'function' => 'COUNT',
-								)
-							);
-
-							return esc_html( $sales . ' / ' . $earnings );
-						},
-						'display_args'  => array(
-							'comparison_label' => $label . $download_label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'top_selling_downloads',
-			array(
-				/* translators: %s: Downloads plural label */
-				'label' => sprintf( __( 'Top Selling %s', 'easy-digital-downloads' ), edd_get_label_plural() ) . ' &mdash; ' . $label,
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Top_Selling_Downloads_List_Table',
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'download_sales_by_variations',
-			array(
-				'label' => __( 'Sales by Variation', 'easy-digital-downloads' ) . $download_label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $download_data, $download, $dates, $prices, $currency ) {
-							$stats = new EDD\Stats();
-							$sales = $stats->get_order_item_count(
-								array(
-									'product_id' => absint( $download_data['download_id'] ),
-									'range'      => $dates['range'],
-									'grouped'    => true,
-									'currency'   => $currency,
-								)
-							);
-
-							// Set all values to 0.
-							foreach ( $prices as $key => $price ) {
-								$prices[ $key ]['sales'] = 0;
-							}
-
-							// Parse results from the database.
-							foreach ( $sales as $data ) {
-								$prices[ $data->price_id ]['sales'] = absint( $data->total );
-							}
-
-							$sales = array_values( wp_list_pluck( $prices, 'sales' ) );
-
-							return array(
-								'sales' => $sales,
-							);
-						},
-						'type'          => 'pie',
-						'options'       => array(
-							'cutoutPercentage' => 0,
-							'datasets'         => array(
-								'sales' => array(
-									'label'           => __( 'Sales', 'easy-digital-downloads' ),
-									'backgroundColor' => array(
-										'rgb(133,175,91)',
-										'rgb(9,149,199)',
-										'rgb(8,189,231)',
-										'rgb(137,163,87)',
-										'rgb(27,98,122)',
-									),
-								),
-							),
-							'labels'           => array_values( wp_list_pluck( $prices, 'name' ) ),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'download_earnings_by_variations',
-			array(
-				'label' => __( 'Earnings by Variation', 'easy-digital-downloads' ) . $download_label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $download_data, $prices, $dates, $currency ) {
-							$stats = new EDD\Stats();
-							$earnings = $stats->get_order_item_earnings(
-								array(
-									'product_id' => absint( $download_data['download_id'] ),
-									'range'      => $dates['range'],
-									'grouped'    => true,
-									'currency'   => $currency,
-								)
-							);
-
-							// Set all values to 0.
-							foreach ( $prices as $key => $price ) {
-								$prices[ $key ]['earnings'] = floatval( 0 );
-							}
-
-							// Parse results from the database.
-							foreach ( $earnings as $data ) {
-								$prices[ $data->price_id ]['earnings'] = floatval( $data->total );
-							}
-
-							$earnings = array_values( wp_list_pluck( $prices, 'earnings' ) );
-
-							return array(
-								'earnings' => $earnings,
-							);
-						},
-						'type'          => 'pie',
-						'options'       => array(
-							'cutoutPercentage' => 0,
-							'datasets'         => array(
-								'earnings' => array(
-									'label'           => __( 'Earnings', 'easy-digital-downloads' ),
-									'type'            => 'currency',
-									'backgroundColor' => array(
-										'rgb(133,175,91)',
-										'rgb(9,149,199)',
-										'rgb(8,189,231)',
-										'rgb(137,163,87)',
-										'rgb(27,98,122)',
-									),
-								),
-							),
-							'labels'           => array_values( wp_list_pluck( $prices, 'name' ) ),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'download_earnings_chart',
-			array(
-				'label' => __( 'Earnings', 'easy-digital-downloads' ) . esc_html( $download_label ),
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $download_data, $currency, $exclude_taxes ) {
-							global $wpdb;
-
-							$dates       = Reports\get_dates_filter( 'objects' );
-							$chart_dates = Reports\parse_dates_for_range( null, 'now', false );
-							$period      = Reports\get_graph_period();
-							$sql_clauses = Reports\get_sql_clauses( $period, 'edd_oi.date_created' );
-
-							$union_clauses = array(
-								'select'  => 'date',
-								'groupby' => 'date',
-								'orderby' => 'date',
-							);
-
-							$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
-								? sprintf( 'AND price_id = %d', absint( $download_data['price_id'] ) )
-								: '';
-
-							$earnings_statuses      = edd_get_gross_order_statuses();
-							$earnings_status_string = implode( ', ', array_fill( 0, count( $earnings_statuses ), '%s' ) );
-							$order_item_column      = true === $exclude_taxes ? '( edd_oi.total - edd_oi.tax )' : 'edd_oi.total';
-
-							$order_item_earnings_query = "SELECT SUM($order_item_column / edd_oi.rate) AS earnings, {$sql_clauses['select']}
-								FROM {$wpdb->edd_order_items} edd_oi
-								INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
-								WHERE edd_oi.product_id = %d {$price_id} AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_o.status IN ({$earnings_status_string})
-								GROUP BY {$sql_clauses['groupby']}";
-
-							$order_item_earnings = $wpdb->prepare(
-								$order_item_earnings_query, //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-								$download_data['download_id'],
-								$dates['start']->copy()->format( 'mysql' ),
-								$dates['end']->copy()->format( 'mysql' ),
-								...$earnings_statuses
-							);
-
-							/**
-							 * The adjustments query needs a different order status check than the order items. This is due to the fact that
-							 * adjustments refunded would end up being double counted, and therefore create an inaccurate revenue report.
-							 */
-							$adjustments_statuses      = edd_get_net_order_statuses();
-							$adjustments_status_string = implode( ', ', array_fill( 0, count( $adjustments_statuses ), '%s' ) );
-							$order_adjustment_column   = true === $exclude_taxes ? '( edd_oa.total - edd_oa.tax )' : 'edd_oa.total';
-
-							$order_adjustments_query = "SELECT SUM($order_adjustment_column / edd_oa.rate) AS earnings, {$sql_clauses['select']}
-								FROM {$wpdb->edd_order_adjustments} edd_oa
-								INNER JOIN {$wpdb->edd_order_items} edd_oi ON
-									edd_oi.id = edd_oa.object_id
-									AND edd_oi.product_id = %d
-									{$price_id}
-									AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s
-								INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id AND edd_o.type = 'sale' AND edd_o.status IN ({$adjustments_status_string})
-								WHERE edd_oa.object_type = 'order_item'
-								AND edd_oa.type != 'discount'
-								GROUP BY {$sql_clauses['groupby']}";
-
-							$order_adjustments = $wpdb->prepare(
-								$order_adjustments_query, //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-								$download_data['download_id'],
-								$dates['start']->copy()->format( 'mysql' ),
-								$dates['end']->copy()->format( 'mysql' ),
-								...$adjustments_statuses
-							);
-
-							$earnings_sql     = "SELECT SUM(earnings) as earnings, {$union_clauses['select']} FROM ({$order_item_earnings} UNION {$order_adjustments})a GROUP BY {$union_clauses['groupby']} ORDER BY {$union_clauses['orderby']}";
-							$earnings_results = $wpdb->get_results( $earnings_sql ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-							$statuses      = edd_get_net_order_statuses();
-							$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-
-							$join_query = "INNER JOIN {$wpdb->edd_orders} edd_o ON (edd_oi.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale'";
-							$join       = $wpdb->prepare(
-								$join_query, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-								...$statuses
-							);
-
-							$earnings = array();
-
-							// Initialise all arrays with timestamps and set values to 0.
-							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timestamp     = $chart_dates['start']->copy()->format( 'U' );
-								$date_on_chart = $chart_dates['start'];
-
-								$earnings[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$earnings[ $timestamp ][1] = 0.00;
-
-								// Loop through each date there were sales/earnings, which we queried from the database.
-								foreach ( $earnings_results as $earnings_result ) {
-									$date_of_db_value = EDD()->utils->date( $earnings_result->date );
-
-									// Add any sales/earnings that happened during this hour.
-									if ( 'hour' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-											$earnings[ $timestamp ][1] += $earnings_result->earnings;
-										}
-										// Add any sales/earnings that happened during this day.
-									} elseif ( 'day' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-											$earnings[ $timestamp ][1] += $earnings_result->earnings;
-										}
-										// Add any sales/earnings that happened during this month.
-									} else {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-											$earnings[ $timestamp ][1] += $earnings_result->earnings;
-										}
-									}
-								}
-
-								// Move the chart along to the next hour/day/month to get ready for the next loop.
-								if ( 'hour' === $period ) {
-									$chart_dates['start']->addHour( 1 );
-								} elseif ( 'day' === $period ) {
-									$chart_dates['start']->addDays( 1 );
-								} else {
-									$chart_dates['start']->addMonth( 1 );
-								}
-							}
-
-							return array(
-								'earnings' => array_values( $earnings ),
-							);
-						},
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'earnings' => array(
-									'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(24,126,244,0.75)',
-									'backgroundColor'      => 'rgba(24,126,244,0.1)',
-									'fill'                 => false,
-									'borderWidth'          => 2,
-									'type'                 => 'currency',
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'download_sales_chart',
-			array(
-				'label' => __( 'Sales', 'easy-digital-downloads' ) . esc_html( $download_label ),
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $download_data, $currency ) {
-							global $wpdb;
-
-							$dates       = Reports\get_dates_filter( 'objects' );
-							$chart_dates = Reports\parse_dates_for_range( null, 'now', false );
-							$period      = Reports\get_graph_period();
-							$sql_clauses = Reports\get_sql_clauses( $period, 'edd_oi.date_created' );
-
-							$union_clauses = array(
-								'select'  => 'date',
-								'groupby' => 'date',
-								'orderby' => 'date',
-							);
-
-							$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
-								? sprintf( 'AND price_id = %d', absint( $download_data['price_id'] ) )
-								: '';
-
-							$statuses      = edd_get_net_order_statuses();
-							$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-
-							$join = $wpdb->prepare(
-								"INNER JOIN {$wpdb->edd_orders} edd_o ON (edd_oi.order_id = edd_o.id) AND edd_o.status IN({$status_string}) AND edd_o.type = 'sale' ",
-								...$statuses
-							);
-
-							$sales_sql = $wpdb->prepare(
-								"SELECT COUNT(edd_oi.total) AS sales, {$sql_clauses['select']}
-							FROM {$wpdb->edd_order_items} edd_oi
-							{$join}
-							WHERE edd_oi.product_id = %d %1s AND edd_oi.date_created >= %s AND edd_oi.date_created <= %s AND edd_oi.status IN ({$status_string})
-							GROUP BY {$sql_clauses['groupby']}
-							ORDER BY {$sql_clauses['orderby']} ASC",
-								$download_data['download_id'],
-								$price_id,
-								$dates['start']->copy()->format( 'mysql' ),
-								$dates['end']->copy()->format( 'mysql' ),
-								...$statuses
-							);
-
-							$sales_results = $wpdb->get_results( $sales_sql );
-
-							$sales    = array();
-
-							// Initialise all arrays with timestamps and set values to 0.
-							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timestamp     = $chart_dates['start']->copy()->format( 'U' );
-								$date_on_chart = $chart_dates['start'];
-
-								$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$sales[ $timestamp ][1] = 0;
-
-								// Loop through each date there were sales/earnings, which we queried from the database.
-								foreach ( $sales_results as $sales_result ) {
-									$date_of_db_value = EDD()->utils->date( $sales_result->date );
-
-									// Add any sales/earnings that happened during this hour.
-									if ( 'hour' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-											$sales[ $timestamp ][1] += $sales_result->sales;
-										}
-										// Add any sales/earnings that happened during this day.
-									} elseif ( 'day' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-											$sales[ $timestamp ][1] += $sales_result->sales;
-										}
-										// Add any sales/earnings that happened during this month.
-									} else {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-											$sales[ $timestamp ][1] += $sales_result->sales;
-										}
-									}
-								}
-
-								// Move the chart along to the next hour/day/month to get ready for the next loop.
-								if ( 'hour' === $period ) {
-									$chart_dates['start']->addHour( 1 );
-								} elseif ( 'day' === $period ) {
-									$chart_dates['start']->addDays( 1 );
-								} else {
-									$chart_dates['start']->addMonth( 1 );
-								}
-							}
-
-							return array(
-								'sales'    => array_values( $sales ),
-							);
-						},
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'sales'    => array(
-									'label'                => __( 'Sales', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(252,108,18,0.75)',
-									'backgroundColor'      => 'rgba(252,108,18,0.05)',
-									'fill'                 => false,
-									'borderWidth'          => 2,
-									'borderCapStyle'       => 'round',
-									'borderJoinStyle'      => 'round',
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-							'scales'   => array(
-								'yAxes' => array(
-									array(
-										'type'     => 'linear',
-										'display'  => true,
-										'position' => 'left',
-										'gridLines' => array(
-											'drawBorder' => false,
-										),
-										'ticks'    => array(
-											'formattingType' => 'integer',
-											'beginAtZero'    => true,
-											'suggestedMin'   => 0,
-											'maxTicksLimit'  => 4,
-											'padding'        => 10,
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			)
-		);
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -1080,11 +347,9 @@ add_action( 'edd_reports_init', 'edd_register_downloads_report' );
  */
 function edd_register_downloads_taxonomy_report( $reports ) {
 	try {
-		$options = Reports\get_dates_filter_options();
-		$dates   = Reports\get_filter_value( 'dates' );
-
-		$hbh   = Reports\get_dates_filter_hour_by_hour();
-		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
+		$tables = array(
+			'earnings_by_taxonomy' => 'EDD\Reports\Endpoints\Tables\EarningsByTaxonomy',
+		);
 
 		$reports->add_report(
 			'downloads_taxonomy',
@@ -1094,34 +359,20 @@ function edd_register_downloads_taxonomy_report( $reports ) {
 				'priority'  => 11,
 				'icon'      => 'category',
 				'endpoints' => array(
-					'tables' => array(
-						'earnings_by_taxonomy',
-					),
+					'tables' => array_keys( $tables ),
 				),
 				'filters'   => array( 'dates' ),
 			)
 		);
 
-		$reports->register_endpoint(
-			'earnings_by_taxonomy',
-			array(
-				'label' => __( 'Earnings By Term', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Downloads\\Earnings_By_Taxonomy_List_Table',
-							'class_file' => EDD_PLUGIN_DIR . 'src/Reports/Data/Downloads/Earnings_By_Taxonomy_List_Table.php',
-						),
-					),
-				),
-			)
-		);
+		foreach ( $tables as $class ) {
+			new $class( $reports );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
 }
 add_action( 'edd_reports_init', 'edd_register_downloads_taxonomy_report' );
-
 
 /**
  * Register refunds report and endpoints.
@@ -1133,14 +384,19 @@ add_action( 'edd_reports_init', 'edd_register_downloads_taxonomy_report' );
 function edd_register_refunds_report( $reports ) {
 	try {
 
-		// Variables to hold date filter values.
-		$options       = Reports\get_dates_filter_options();
-		$dates         = Reports\get_filter_value( 'dates' );
-		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$currency      = Reports\get_filter_value( 'currencies' );
-
-		$hbh   = Reports\get_dates_filter_hour_by_hour();
-		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
+		$tiles  = array(
+			'refund_count'                    => 'EDD\Reports\Endpoints\Tiles\RefundCount',
+			'fully_refunded_order_count'      => 'EDD\Reports\Endpoints\Tiles\FullyRefundedOrderCount',
+			'fully_refunded_order_item_count' => 'EDD\Reports\Endpoints\Tiles\FullyRefundedOrderItemCount',
+			'refund_amount'                   => 'EDD\Reports\Endpoints\Tiles\RefundAmount',
+			'average_refund_amount'           => 'EDD\Reports\Endpoints\Tiles\AverageRefundAmount',
+			'average_time_to_refund'          => 'EDD\Reports\Endpoints\Tiles\AverageRefundTime',
+			'refund_rate'                     => 'EDD\Reports\Endpoints\Tiles\RefundRate',
+		);
+		$charts = array(
+			'refunds_earnings_chart' => 'EDD\Reports\Endpoints\Charts\RefundRevenue',
+			'refunds_orders_chart'   => 'EDD\Reports\Endpoints\Charts\Refunds',
+		);
 
 		$reports->add_report(
 			'refunds',
@@ -1149,19 +405,8 @@ function edd_register_refunds_report( $reports ) {
 				'icon'      => 'image-rotate',
 				'priority'  => 15,
 				'endpoints' => array(
-					'tiles'  => array(
-						'refund_count',
-						'fully_refunded_order_count',
-						'fully_refunded_order_item_count',
-						'refund_amount',
-						'average_refund_amount',
-						'average_time_to_refund',
-						'refund_rate',
-					),
-					'charts' => array(
-						'refunds_orders_chart',
-						'refunds_earnings_chart',
-					),
+					'tiles'  => array_keys( $tiles ),
+					'charts' => array_keys( $charts ),
 				),
 				'filters'   => array(
 					'dates',
@@ -1171,255 +416,10 @@ function edd_register_refunds_report( $reports ) {
 			)
 		);
 
-		$reports->register_endpoint(
-			'refund_count',
-			array(
-				'label' => __( 'Number of Refunds', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$stats  = new EDD\Stats();
-
-							return esc_html(
-								$stats->get_order_refund_count(
-									array(
-										'range'    => $dates['range'],
-										'currency' => $currency,
-									)
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'fully_refunded_order_count',
-			array(
-				'label' => __( 'Number of Fully Refunded Orders', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$stats  = new EDD\Stats();
-
-							return esc_html(
-								$stats->get_order_refund_count(
-									array(
-										'range'          => $dates['range'],
-										'currency'       => $currency,
-										'fully_refunded' => true,
-									)
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'fully_refunded_order_item_count',
-			array(
-				'label' => __( 'Number of Fully Refunded Items', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$stats  = new EDD\Stats();
-							$number = $stats->get_order_item_refund_count(
-								array(
-									'range'    => $dates['range'],
-									'currency' => $currency,
-								)
-							);
-							return esc_html( $number );
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'refund_amount',
-			array(
-				'label' => __( 'Total Refund Amount', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-							$stats  = new EDD\Stats();
-							return $stats->get_order_refund_amount(
-								array(
-									'range'         => $dates['range'],
-									'exclude_taxes' => $exclude_taxes,
-									'output'        => 'formatted',
-									'currency'      => $currency,
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_refund_amount',
-			array(
-				'label' => __( 'Average Refund Amount', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-							$stats = new EDD\Stats();
-							return $stats->get_order_refund_amount(
-								array(
-									'function'      => 'AVG',
-									'range'         => $dates['range'],
-									'exclude_taxes' => $exclude_taxes,
-									'output'        => 'formatted',
-									'currency'      => $currency,
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_time_to_refund',
-			array(
-				'label' => __( 'Average Time to Refund', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$stats = new EDD\Stats();
-							return $stats->get_average_refund_time(
-								array(
-									'range'    => $dates['range'],
-									'currency' => $currency,
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'refund_rate',
-			array(
-				'label' => __( 'Refund Rate', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$stats = new EDD\Stats();
-							return $stats->get_refund_rate(
-								array(
-									'range'    => $dates['range'],
-									'output'   => 'formatted',
-									'status'   => edd_get_gross_order_statuses(),
-									'currency' => $currency,
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'refunds_earnings_chart',
-			array(
-				'label' => __( 'Refunded Revenue', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => 'edd_overview_refunds_chart',
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'amount' => array(
-									'label'                => __( 'Revenue', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(24,126,244,0.75)',
-									'backgroundColor'      => 'rgba(24,126,244,0.1)',
-									'borderWidth'          => 2,
-									'type'                 => 'currency',
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'refunds_orders_chart',
-			array(
-				'label' => __( 'Refunded Orders', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => 'edd_overview_refunds_chart',
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'number' => array(
-									'label'                => _x( 'Number', 'Context: As in the total number of items', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(252,108,18,0.75)',
-									'backgroundColor'      => 'rgba(252,108,18,0.05)',
-									'borderWidth'          => 2,
-									'borderCapStyle'       => 'round',
-									'borderJoinStyle'      => 'round',
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-							'scales'   => array(
-								'yAxes' => array(
-									array(
-										'type'     => 'linear',
-										'display'  => true,
-										'position' => 'left',
-										'gridLines' => array(
-											'drawBorder' => false,
-										),
-										'ticks'    => array(
-											'formattingType' => 'integer',
-											'beginAtZero'    => true,
-											'suggestedMin'   => 0,
-											'maxTicksLimit'  => 4,
-											'padding'        => 10,
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			)
-		);
+		$endpoints = array_merge( $tiles, $charts );
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -1448,31 +448,34 @@ function edd_register_payment_gateways_report( $reports ) {
 		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$tiles = array(
-			'sales_per_gateway',
-			'earnings_per_gateway',
-			'refunds_per_gateway',
-			'average_value_per_gateway',
+			'sales_per_gateway'         => 'EDD\Reports\Endpoints\Tiles\GatewaySales',
+			'earnings_per_gateway'      => 'EDD\Reports\Endpoints\Tiles\GatewayEarnings',
+			'refunds_per_gateway'       => 'EDD\Reports\Endpoints\Tiles\GatewayRefunds',
+			'average_value_per_gateway' => 'EDD\Reports\Endpoints\Tiles\GatewayAverage',
 		);
 
 		$tables = array_filter(
 			array(
-				'gateway_stats',
+				'gateway_stats' => 'EDD\Reports\Endpoints\Tables\GatewayStats',
 			),
 			function ( $endpoint ) use ( $gateway ) {
 				return empty( $gateway ) || 'all' === $gateway;
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		if ( 'stripe' === $gateway && 'payment-elements' === edds_get_elements_mode() ) {
-			$tables[] = 'stripe_payment_methods';
+			$tables['stripe_payment_methods'] = 'EDD\Reports\Endpoints\Tables\StripePaymentMethods';
 		}
 
 		$charts = array_filter(
 			array(
-				'gateway_sales_breakdown',
-				'gateway_earnings_breakdown',
-				'gateway_earnings_chart',
-				'gateway_sales_chart',
+				'gateway_sales_breakdown'    => 'EDD\Reports\Endpoints\Charts\GatewaySalesBreakdown',
+				'gateway_earnings_breakdown' => 'EDD\Reports\Endpoints\Charts\GatewayEarningsBreakdown',
+				'gateway_earnings_chart'     => 'EDD\Reports\Endpoints\Charts\GatewayEarnings',
+				'gateway_sales_chart'        => 'EDD\Reports\Endpoints\Charts\GatewaySales',
+				'gateway_sales_breakdown'    => 'EDD\Reports\Endpoints\Pies\GatewaySales',
+				'gateway_earnings_breakdown' => 'EDD\Reports\Endpoints\Pies\GatewayEarnings',
 			),
 			function ( $endpoint ) use ( $gateway ) {
 				switch ( $endpoint ) {
@@ -1483,7 +486,8 @@ function edd_register_payment_gateways_report( $reports ) {
 					default:
 						return ( empty( $gateway ) || 'all' === $gateway );
 				}
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$reports->add_report(
@@ -1493,560 +497,18 @@ function edd_register_payment_gateways_report( $reports ) {
 				'icon'      => 'image-filter',
 				'priority'  => 20,
 				'endpoints' => array(
-					'tiles'  => $tiles,
-					'tables' => $tables,
-					'charts' => $charts,
+					'tiles'  => array_keys( $tiles ),
+					'tables' => array_keys( $tables ),
+					'charts' => array_keys( $charts ),
 				),
 				'filters'   => array( 'dates', 'gateways', 'order_statuses', 'taxes', 'currencies' ),
 			)
 		);
 
-		$reports->register_endpoint(
-			'sales_per_gateway',
-			array(
-				'label' => __( 'Sales', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency, $order_status ) {
-							$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
-							? Reports\get_filter_value( 'gateways' )
-							: '';
-
-							$stats = new EDD\Stats();
-							$args  = array(
-								'range'    => $dates['range'],
-								'gateway'  => $gateway,
-								'currency' => $currency,
-							);
-
-							if ( ! empty( $order_status ) ) {
-								$args['status'] = array( $order_status );
-							}
-
-							return $stats->get_gateway_sales( $args );
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'earnings_per_gateway',
-			array(
-				'label' => __( 'Earnings', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency, $order_status ) {
-							$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
-							? Reports\get_filter_value( 'gateways' )
-							: '';
-
-							$stats = new EDD\Stats();
-							$args  = array(
-								'range'         => $dates['range'],
-								'exclude_taxes' => $exclude_taxes,
-								'gateway'       => $gateway,
-								'output'        => 'formatted',
-								'currency'      => $currency,
-							);
-
-							if ( ! empty( $order_status ) ) {
-								$args['status'] = array( $order_status );
-							}
-
-							return $stats->get_gateway_earnings( $args );
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'refunds_per_gateway',
-			array(
-				'label' => __( 'Refunds', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency, $order_status ) {
-							$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
-							? Reports\get_filter_value( 'gateways' )
-							: '';
-
-							$stats = new EDD\Stats();
-							$args  = array(
-								'range'    => $dates['range'],
-								'gateway'  => $gateway,
-								'output'   => 'formatted',
-								'type'     => 'refund',
-								'currency' => $currency,
-							);
-
-							if ( ! empty( $order_status ) ) {
-								$args['status'] = array( $order_status );
-							}
-
-							return $stats->get_gateway_earnings( $args );
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_value_per_gateway',
-			array(
-				'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency, $order_status ) {
-							$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
-							? Reports\get_filter_value( 'gateways' )
-							: '';
-
-							$stats = new EDD\Stats();
-							$args  = array(
-								'range'         => $dates['range'],
-								'exclude_taxes' => $exclude_taxes,
-								'function'      => 'AVG',
-								'output'        => 'formatted',
-								'currency'      => $currency,
-							);
-
-							if ( ! empty( $order_status ) ) {
-								$args['status'] = array( $order_status );
-							}
-
-							if ( ! empty( $gateway ) ) {
-								$args['gateway'] = $gateway;
-								return $stats->get_gateway_earnings( $args );
-							}
-
-							return $stats->get_order_earnings( $args );
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'gateway_stats',
-			array(
-				'label' => __( 'Gateway Stats', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $dates['range'] ],
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Payment_Gateways\\Gateway_Stats',
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'stripe_payment_methods',
-			array(
-				'label' => __( 'Stripe Payment Methods', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $dates['range'] ],
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Gateways\\StripePaymentMethods',
-						),
-					),
-				),
-			)
-		);
-
-		$gateway_list = array_map( 'edd_get_gateway_admin_label', array_keys( edd_get_payment_gateways() ) );
-
-		$reports->register_endpoint(
-			'gateway_sales_breakdown',
-			array(
-				'label' => __( 'Gateway Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $dates['range'] ],
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $dates, $currency, $order_status ) {
-							$stats = new EDD\Stats();
-							$args  = array(
-								'range'    => $dates['range'],
-								'grouped'  => true,
-								'currency' => $currency,
-							);
-
-							if ( ! empty( $order_status ) ) {
-								$args['status'] = array( $order_status );
-							}
-
-							$g = $stats->get_gateway_sales( $args );
-
-							$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
-
-							foreach ( $g as $data ) {
-								$gateways[ $data->gateway ] = $data->total;
-							}
-
-							$gateways = array_map(
-								function ( $v ) {
-									return null === $v
-									? 0
-									: $v;
-								},
-								$gateways
-							);
-
-							return array(
-								'sales' => array_values( $gateways ),
-							);
-						},
-						'type'          => 'pie',
-						'options'       => array(
-							'cutoutPercentage' => 0,
-							'datasets'         => array(
-								'sales' => array(
-									'label'           => __( 'Sales', 'easy-digital-downloads' ),
-									'backgroundColor' => array(
-										'rgb(133,175,91)',
-										'rgb(9,149,199)',
-										'rgb(8,189,231)',
-										'rgb(137,163,87)',
-										'rgb(27,98,122)',
-									),
-								),
-							),
-							'labels'           => $gateway_list,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'gateway_earnings_breakdown',
-			array(
-				'label' => __( 'Gateway Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $dates['range'] ],
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency, $order_status ) {
-							$stats = new EDD\Stats();
-							$args  = array(
-								'range'         => $dates['range'],
-								'grouped'       => true,
-								'exclude_taxes' => $exclude_taxes,
-								'currency'      => $currency,
-							);
-
-							if ( ! empty( $order_status ) ) {
-								$args['status'] = array( $order_status );
-							}
-
-							$g = $stats->get_gateway_earnings( $args );
-
-							$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
-
-							foreach ( $g as $data ) {
-								$gateways[ $data->gateway ] = $data->earnings;
-							}
-
-							$gateways = array_values(
-								array_map(
-									function ( $v ) {
-										return null === $v
-										? 0.00
-										: $v;
-									},
-									$gateways
-								)
-							);
-
-							return array(
-								'earnings' => $gateways,
-							);
-						},
-						'type'          => 'pie',
-						'options'       => array(
-							'cutoutPercentage' => 0,
-							'datasets'         => array(
-								'earnings' => array(
-									'label'           => __( 'Earnings', 'easy-digital-downloads' ),
-									'backgroundColor' => array(
-										'rgb(133,175,91)',
-										'rgb(9,149,199)',
-										'rgb(8,189,231)',
-										'rgb(137,163,87)',
-										'rgb(27,98,122)',
-									),
-									'type'            => 'currency',
-								),
-							),
-							'labels'           => $gateway_list,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'gateway_earnings_chart',
-			array(
-				'label' => __( 'Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-							global $wpdb;
-
-							$dates        = Reports\get_dates_filter( 'objects' );
-							$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-							$period       = Reports\get_graph_period();
-							$sql_clauses  = Reports\get_sql_clauses( $period, 'date_created' );
-
-							$gateway = Reports\get_filter_value( 'gateways' );
-							$column  = $exclude_taxes
-							? '( total - tax ) / rate'
-							: 'total / rate';
-
-							$currency_sql = '';
-							if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
-								$currency_sql = $wpdb->prepare(
-									' AND currency = %s ',
-									strtoupper( $currency )
-								);
-							}
-
-							$results = $wpdb->get_results(
-								$wpdb->prepare(
-									"SELECT SUM({$column}) AS earnings, {$sql_clauses['select']}
-							FROM {$wpdb->edd_orders} o
-							WHERE gateway = %s AND status IN ('complete', 'revoked') {$currency_sql} AND date_created >= %s AND date_created <= %s
-							GROUP BY {$sql_clauses['groupby']}
-							ORDER BY {$sql_clauses['orderby']} ASC",
-									esc_sql( $gateway ),
-									$dates['start']->copy()->format( 'mysql' ),
-									$dates['end']->copy()->format( 'mysql' )
-								)
-							);
-
-							$earnings = array();
-
-							/**
-							 * Initialise all arrays with timestamps and set values to 0.
-							 *
-							 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
-							 */
-							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timestamp     = $chart_dates['start']->copy()->format( 'U' );
-								$date_on_chart = $chart_dates['start'];
-
-								$earnings[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$earnings[ $timestamp ][1] = 0.00;
-
-								// Loop through each date there were sales/earnings, which we queried from the database.
-								foreach ( $results as $result ) {
-									$date_of_db_value = EDD()->utils->date( $result->date );
-
-									// Add any sales/earnings that happened during this hour.
-									if ( 'hour' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-											$earnings[ $timestamp ][1] += $result->earnings;
-										}
-										// Add any sales/earnings that happened during this day.
-									} elseif ( 'day' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-											$earnings[ $timestamp ][1] += $result->earnings;
-										}
-										// Add any sales/earnings that happened during this month.
-									} else {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-											$earnings[ $timestamp ][1] += $result->earnings;
-										}
-									}
-								}
-
-								// Move the chart along to the next hour/day/month to get ready for the next loop.
-								if ( 'hour' === $period ) {
-									$chart_dates['start']->addHour( 1 );
-								} elseif ( 'day' === $period ) {
-									$chart_dates['start']->addDays( 1 );
-								} else {
-									$chart_dates['start']->addMonth( 1 );
-								}
-							}
-
-							$earnings = array_values( $earnings );
-
-							return array(
-								'earnings' => $earnings,
-							);
-						},
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'earnings' => array(
-									'label'                => __( 'Earnings', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(24,126,244,0.75)',
-									'backgroundColor'      => 'rgba(24,126,244,0.1)',
-									'fill'                 => false,
-									'borderWidth'          => 2,
-									'type'                 => 'currency',
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'gateway_sales_chart',
-			array(
-				'label' => __( 'Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-							global $wpdb;
-
-							$dates        = Reports\get_dates_filter( 'objects' );
-							$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-							$period       = Reports\get_graph_period();
-							$sql_clauses  = Reports\get_sql_clauses( $period, 'date_created' );
-
-							$gateway = Reports\get_filter_value( 'gateways' );
-							$column  = $exclude_taxes
-							? '( total - tax ) / rate'
-							: 'total / rate';
-
-							$currency_sql = '';
-							if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
-								$currency_sql = $wpdb->prepare(
-									' AND currency = %s ',
-									strtoupper( $currency )
-								);
-							}
-
-							$results = $wpdb->get_results(
-								$wpdb->prepare(
-									"SELECT COUNT({$column}) AS sales, {$sql_clauses['select']}
-							FROM {$wpdb->edd_orders} o
-							WHERE gateway = %s AND status IN ('complete', 'revoked') {$currency_sql} AND date_created >= %s AND date_created <= %s
-							GROUP BY {$sql_clauses['groupby']}
-							ORDER BY {$sql_clauses['orderby']} ASC",
-									esc_sql( $gateway ),
-									$dates['start']->copy()->format( 'mysql' ),
-									$dates['end']->copy()->format( 'mysql' )
-								)
-							);
-
-							$sales    = array();
-
-							/**
-							 * Initialise all arrays with timestamps and set values to 0.
-							 *
-							 * We use the Chart based dates for this loop, so the graph shows in the proper date ranges while the actual DB queries are all UTC based.
-							 */
-							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timestamp     = $chart_dates['start']->copy()->format( 'U' );
-								$date_on_chart = $chart_dates['start'];
-
-								$sales[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$sales[ $timestamp ][1] = 0;
-
-								// Loop through each date there were sales/earnings, which we queried from the database.
-								foreach ( $results as $result ) {
-									$date_of_db_value = EDD()->utils->date( $result->date );
-
-									// Add any sales/earnings that happened during this hour.
-									if ( 'hour' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-											$sales[ $timestamp ][1] += $result->sales;
-										}
-										// Add any sales/earnings that happened during this day.
-									} elseif ( 'day' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-											$sales[ $timestamp ][1] += $result->sales;
-										}
-										// Add any sales/earnings that happened during this month.
-									} else {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-											$sales[ $timestamp ][1] += $result->sales;
-										}
-									}
-								}
-
-								// Move the chart along to the next hour/day/month to get ready for the next loop.
-								if ( 'hour' === $period ) {
-									$chart_dates['start']->addHour( 1 );
-								} elseif ( 'day' === $period ) {
-									$chart_dates['start']->addDays( 1 );
-								} else {
-									$chart_dates['start']->addMonth( 1 );
-								}
-							}
-
-							$sales    = array_values( $sales );
-
-							return array(
-								'sales'    => $sales,
-							);
-						},
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'sales'    => array(
-									'label'                => __( 'Sales', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(252,108,18,0.75)',
-									'backgroundColor'      => 'rgba(252,108,18,0.05)',
-									'fill'                 => false,
-									'borderWidth'          => 2,
-									'borderCapStyle'       => 'round',
-									'borderJoinStyle'      => 'round',
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-							'scales'   => array(
-								'yAxes' => array(
-									array(
-										'type'     => 'linear',
-										'display'  => true,
-										'position' => 'left',
-										'gridLines' => array(
-											'drawBorder' => false,
-										),
-										'ticks'    => array(
-											'formattingType' => 'integer',
-											'beginAtZero'    => true,
-											'suggestedMin'   => 0,
-											'maxTicksLimit'  => 4,
-											'padding'        => 10,
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			)
-		);
+		$endpoints = array_merge( $tiles, $charts, $tables );
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -2063,36 +525,36 @@ add_action( 'edd_reports_init', 'edd_register_payment_gateways_report' );
 function edd_register_taxes_report( $reports ) {
 	try {
 
-		// Variables to hold date filter values.
-		$options  = Reports\get_dates_filter_options();
-		$dates    = Reports\get_filter_value( 'dates' );
-		$currency = Reports\get_filter_value( 'currencies' );
-
-		$hbh   = Reports\get_dates_filter_hour_by_hour();
-		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
-
-		$download_data = Reports\get_filter_value( 'products' );
-		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
-			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
-			: false;
-
-		$download_label = Reports\get_download_label( $download_data );
-
 		$country = Reports\get_filter_value( 'countries' );
-		$region  = Reports\get_filter_value( 'regions' );
 
-		$tiles = array(
-			'total_tax_collected',
-			'total_tax_collected_for_location',
+		$tiles = array_filter(
+			array(
+				'total_tax_collected'              => 'EDD\Reports\Endpoints\Tiles\TaxCollected',
+				'total_tax_collected_for_location' => 'EDD\Reports\Endpoints\Tiles\TaxCollectedLocation',
+			),
+			function ( $tile ) use ( $country ) {
+				switch ( $tile ) {
+					case 'total_tax_collected_for_location':
+						return ! in_array( $country, array( 'all', false, '' ), true );
+						break;
+
+					default:
+						return true;
+				}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$tables = array_filter(
 			array(
-				'tax_collected_by_location',
+				'tax_collected_by_location' => 'EDD\Reports\Endpoints\Tables\TaxCollectedByLocation',
 			),
-			function ( $table ) use ( $download_data ) {
-				return false === $download_data;
-			}
+			function () {
+				$download_data = Reports\get_filter_value( 'products' );
+
+				return empty( $download_data ) || 'all' === $download_data;
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$reports->add_report(
@@ -2102,107 +564,17 @@ function edd_register_taxes_report( $reports ) {
 				'priority'  => 25,
 				'icon'      => 'editor-paste-text',
 				'endpoints' => array(
-					'tiles'  => $tiles,
-					'tables' => $tables,
+					'tiles'  => array_keys( $tiles ),
+					'tables' => array_keys( $tables ),
 				),
 				'filters'   => array( 'dates', 'products', 'countries', 'regions', 'currencies' ),
 			)
 		);
 
-		$reports->register_endpoint(
-			'total_tax_collected',
-			array(
-				'label' => __( 'Total Tax Collected', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates, $currency ) {
-							$download = Reports\get_filter_value( 'products' );
-							$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
-							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
-							: array(
-								'download_id' => '',
-								'price_id'    => '',
-							);
-
-							$stats = new EDD\Stats();
-							return $stats->get_tax(
-								array(
-									'output'      => 'formatted',
-									'range'       => $dates['range'],
-									'download_id' => $download['download_id'],
-									'price_id'    => (string) $download['price_id'],
-									'currency'    => $currency,
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label . $download_label,
-						),
-					),
-				),
-			)
-		);
-
-		if ( ! empty( $country ) && 'all' !== $country ) {
-			$location = '';
-
-			if ( ! empty( $region ) && 'all' !== $region ) {
-				$location = edd_get_state_name( $country, $region ) . ', ';
-			}
-
-			$location .= edd_get_country_name( $country );
-
-			$reports->register_endpoint(
-				'total_tax_collected_for_location',
-				array(
-					'label' => __( 'Total Tax Collected for ', 'easy-digital-downloads' ) . $location,
-					'views' => array(
-						'tile' => array(
-							'data_callback' => function () use ( $dates, $country, $region, $currency ) {
-								$download = Reports\get_filter_value( 'products' );
-								$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
-								? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
-								: array(
-									'download_id' => '',
-									'price_id'    => '',
-								);
-
-								$stats = new EDD\Stats();
-
-								return $stats->get_tax_by_location(
-									array(
-										'output'      => 'formatted',
-										'range'       => $dates['range'],
-										'download_id' => $download['download_id'],
-										'price_id'    => (string) $download['price_id'],
-										'country'     => $country,
-										'region'      => $region,
-										'currency'    => $currency,
-									)
-								);
-							},
-							'display_args'  => array(
-								'comparison_label' => $label . $download_label,
-							),
-						),
-					),
-				)
-			);
+		$endpoints = array_merge( $tiles, $tables );
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
 		}
-
-		$reports->register_endpoint(
-			'tax_collected_by_location',
-			array(
-				'label' => __( 'Tax Collected by Location', 'easy-digital-downloads' ),
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Taxes\\Tax_Collected_By_Location',
-						),
-					),
-				),
-			)
-		);
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -2231,14 +603,12 @@ function edd_register_file_downloads_report( $reports ) {
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
-		$download_label = Reports\get_download_label( $download_data );
-
 		$tiles = array_filter(
 			array(
-				'number_of_file_downloads',
-				'average_file_downloads_per_customer',
-				'most_downloaded_product',
-				'average_file_downloads_per_order',
+				'number_of_file_downloads'            => 'EDD\Reports\Endpoints\Tiles\FileDownloads',
+				'average_file_downloads_per_customer' => 'EDD\Reports\Endpoints\Tiles\FileDownloadsCustomer',
+				'most_downloaded_product'             => 'EDD\Reports\Endpoints\Tiles\FileDownloadsProduct',
+				'average_file_downloads_per_order'    => 'EDD\Reports\Endpoints\Tiles\FileDownloadsOrder',
 			),
 			function ( $endpoint ) use ( $download_data ) {
 				switch ( $endpoint ) {
@@ -2250,20 +620,22 @@ function edd_register_file_downloads_report( $reports ) {
 					default:
 						return true;
 				}
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$tables = array_filter(
 			array(
-				'top_five_most_downloaded_products',
+				'top_five_most_downloaded_products' => 'EDD\Reports\Endpoints\Tables\TopFiveMostDownloaded',
 			),
 			function ( $endpoint ) use ( $download_data ) {
 				return false === $download_data;
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$charts = array(
-			'file_downloads_chart',
+			'file_downloads_chart' => 'EDD\Reports\Endpoints\Charts\FileDownloads',
 		);
 
 		$reports->add_report(
@@ -2273,250 +645,18 @@ function edd_register_file_downloads_report( $reports ) {
 				'icon'      => 'download',
 				'priority'  => 30,
 				'endpoints' => array(
-					'tiles'  => $tiles,
-					'tables' => $tables,
-					'charts' => $charts,
+					'tiles'  => array_keys( $tiles ),
+					'tables' => array_keys( $tables ),
+					'charts' => array_keys( $charts ),
 				),
 				'filters'   => array( 'dates', 'products' ),
 			)
 		);
 
-		$reports->register_endpoint(
-			'number_of_file_downloads',
-			array(
-				'label' => __( 'Number of File Downloads', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$download = Reports\get_filter_value( 'products' );
-							$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
-							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
-							: array(
-								'download_id' => '',
-								'price_id'    => '',
-							);
-
-							$stats = new EDD\Stats();
-							return $stats->get_file_download_count(
-								array(
-									'range'       => $filter['range'],
-									'download_id' => $download['download_id'],
-									'price_id'    => (string) $download['price_id'],
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label . $download_label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_file_downloads_per_customer',
-			array(
-				'label' => __( 'Average per Customer', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$stats = new EDD\Stats();
-							return $stats->get_average_file_download_count(
-								array(
-									'range'  => $filter['range'],
-									'column' => 'customer_id',
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_file_downloads_per_order',
-			array(
-				'label' => __( 'Average per Order', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$stats = new EDD\Stats();
-							return $stats->get_average_file_download_count(
-								array(
-									'range'  => $filter['range'],
-									'column' => 'order_id',
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'most_downloaded_product',
-			array(
-				'label' => __( 'Most Downloaded Product', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$stats = new EDD\Stats();
-							$d = $stats->get_most_downloaded_products( array( 'range' => $filter['range'] ) );
-							if ( $d ) {
-								return esc_html( $d[0]->object->post_title );
-							}
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'top_five_most_downloaded_products',
-			array(
-				'label' => __( 'Top Five Most Downloaded Products', 'easy-digital-downloads' ) . ' – ' . $label,
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\File_Downloads\\Top_Five_Most_Downloaded_List_Table',
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'file_downloads_chart',
-			array(
-				'label' => __( 'Number of File Downloads', 'easy-digital-downloads' ) . $download_label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () use ( $filter, $download_data ) {
-							global $wpdb;
-
-							$dates       = Reports\get_dates_filter( 'objects' );
-							$chart_dates = Reports\parse_dates_for_range( null, 'now', false );
-							$period      = Reports\get_graph_period();
-							$sql_clauses = Reports\get_sql_clauses( $period );
-
-							$product_id = '';
-							$price_id   = '';
-
-							if ( is_array( $download_data ) ) {
-								$product_id = $wpdb->prepare( 'AND product_id = %d', absint( $download_data['download_id'] ) );
-
-								$price_id = isset( $download_data['price_id'] ) && is_numeric( $download_data['price_id'] )
-								? $wpdb->prepare( 'AND price_id = %d', absint( $download_data['price_id'] ) )
-								: '';
-							}
-
-							$results = $wpdb->get_results(
-								$wpdb->prepare(
-									"SELECT COUNT(id) AS total, {$sql_clauses['select']}
-							FROM {$wpdb->edd_logs_file_downloads} edd_lfd
-							WHERE edd_lfd.date_created >= %s AND edd_lfd.date_created <= %s {$product_id} {$price_id}
-							GROUP BY {$sql_clauses['groupby']}
-							ORDER BY {$sql_clauses['orderby']} ASC",
-									$dates['start']->copy()->format( 'mysql' ),
-									$dates['end']->copy()->format( 'mysql' )
-								)
-							);
-
-							$file_downloads = array();
-
-							// Initialise all arrays with timestamps and set values to 0.
-							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timestamp       = $chart_dates['start']->copy()->format( 'U' );
-								$date_on_chart   = $chart_dates['start'];
-
-								$file_downloads[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$file_downloads[ $timestamp ][1] = 0;
-
-								foreach ( $results as $result ) {
-									$date_of_db_value = EDD()->utils->date( $result->date );
-
-									// Add any file downloads that happened during this hour.
-									if ( 'hour' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-											$file_downloads[ $timestamp ][1] += absint( $result->total );
-										}
-										// Add any file downloads that happened during this day.
-									} elseif ( 'day' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-											$file_downloads[ $timestamp ][1] += absint( $result->total );
-										}
-										// Add any file downloads that happened during this month.
-									} else {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-											$file_downloads[ $timestamp ][1] += absint( $result->total );
-										}
-									}
-								}
-
-								// Move the chart along to the next hour/day/month to get ready for the next loop.
-								if ( 'hour' === $period ) {
-									$chart_dates['start']->addHour( 1 );
-								} elseif ( 'day' === $period ) {
-									$chart_dates['start']->addDays( 1 );
-								} else {
-									$chart_dates['start']->addMonth( 1 );
-								}
-							}
-
-							$file_downloads = array_values( $file_downloads );
-
-							return array( 'file_downloads' => $file_downloads );
-						},
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'file_downloads' => array(
-									'label'                => __( 'File Downloads', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(24,126,244,0.75)',
-									'backgroundColor'      => 'rgba(24,126,244,0.1)',
-									'fill'                 => false,
-									'borderWidth'          => 2,
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-							'scales'   => array(
-								'yAxes' => array(
-									array(
-										'type'     => 'linear',
-										'display'  => true,
-										'position' => 'left',
-										'gridLines' => array(
-											'drawBorder' => false,
-										),
-										'ticks'    => array(
-											'formattingType' => 'integer',
-											'beginAtZero'    => true,
-											'suggestedMin'   => 0,
-											'maxTicksLimit'  => 4,
-											'padding'        => 10,
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			)
-		);
+		$endpoints = array_merge( $tiles, $tables, $charts );
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -2546,20 +686,14 @@ function edd_register_discounts_report( $reports ) {
 			? $discount
 			: 0;
 
-		$d = edd_get_discount( $discount );
-
-		$discount_label = false !== $d
-			? esc_html( ' (' . $d->name . ')' )
-			: '';
-
 		$tiles = array_filter(
 			array(
-				'number_of_discounts_used',
-				'ratio_of_discounted_orders',
-				'customer_savings',
-				'average_discount_amount',
-				'most_popular_discount',
-				'discount_usage_count',
+				'number_of_discounts_used'   => 'EDD\Reports\Endpoints\Tiles\DiscountsUsed',
+				'ratio_of_discounted_orders' => 'EDD\Reports\Endpoints\Tiles\DiscountRatio',
+				'customer_savings'           => 'EDD\Reports\Endpoints\Tiles\DiscountSavings',
+				'average_discount_amount'    => 'EDD\Reports\Endpoints\Tiles\DiscountAverage',
+				'most_popular_discount'      => 'EDD\Reports\Endpoints\Tiles\DiscountPopular',
+				'discount_usage_count'       => 'EDD\Reports\Endpoints\Tiles\DiscountUsage',
 			),
 			function ( $tile ) use ( $discount ) {
 				switch ( $tile ) {
@@ -2569,20 +703,22 @@ function edd_register_discounts_report( $reports ) {
 					default:
 						return 0 === $discount;
 				}
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$tables = array_filter(
 			array(
-				'top_five_discounts',
+				'top_five_discounts' => 'EDD\Reports\Endpoints\Tables\TopFiveDiscounts',
 			),
 			function ( $table ) use ( $discount ) {
 				return 0 === $discount;
-			}
+			},
+			ARRAY_FILTER_USE_KEY
 		);
 
 		$charts = array(
-			'discount_usage_chart',
+			'discount_usage_chart' => 'EDD\Reports\Endpoints\Charts\Discounts',
 		);
 
 		$reports->add_report(
@@ -2592,294 +728,17 @@ function edd_register_discounts_report( $reports ) {
 				'icon'      => 'tickets-alt',
 				'priority'  => 35,
 				'endpoints' => array(
-					'tiles'  => $tiles,
-					'tables' => $tables,
-					'charts' => $charts,
+					'tiles'  => array_keys( $tiles ),
+					'tables' => array_keys( $tables ),
+					'charts' => array_keys( $charts ),
 				),
 				'filters'   => array( 'dates', 'discounts' ),
 			)
 		);
 
-		$reports->register_endpoint(
-			'number_of_discounts_used',
-			array(
-				'label' => __( 'Number of Discounts Used', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$stats = new EDD\Stats();
-							return $stats->get_discount_usage_count(
-								array(
-									'range' => $filter['range'],
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'ratio_of_discounted_orders',
-			array(
-				'label' => __( 'Discount Ratio', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$stats = new EDD\Stats();
-							return $stats->get_ratio_of_discounted_orders(
-								array(
-									'range' => $filter['range'],
-								)
-							);
-						},
-						'display_args'  => array(
-							'context'          => 'secondary',
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'customer_savings',
-			array(
-				'label' => __( 'Customer Savings', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter, $d ) {
-							$stats = new EDD\Stats();
-							return $stats->get_discount_savings(
-								array(
-									'range'         => $filter['range'],
-									'output'        => 'formatted',
-									'discount_code' => isset( $d->code )
-										? $d->code
-										: '',
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label . $discount_label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_discount_amount',
-			array(
-				'label' => __( 'Average Discount Amount', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$stats = new EDD\Stats();
-							return $stats->get_average_discount_amount(
-								array(
-									'range'  => $filter['range'],
-									'output' => 'formatted',
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'most_popular_discount',
-			array(
-				'label' => __( 'Most Popular Discount', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $filter ) {
-							$stats = new EDD\Stats();
-
-							$r = $stats->get_most_popular_discounts(
-								array(
-									'range'  => $filter['range'],
-									'number' => 1,
-								)
-							);
-
-							if ( ! empty( $r ) ) {
-								$r = $r[0];
-								return esc_html( $r->code . ' (' . $r->count . ')' );
-							}
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		if ( $d ) {
-			$reports->register_endpoint(
-				'discount_usage_count',
-				array(
-					'label' => __( 'Discount Usage Count', 'easy-digital-downloads' ),
-					'views' => array(
-						'tile' => array(
-							'data_callback' => function () use ( $filter, $d ) {
-								$stats = new EDD\Stats();
-								return $stats->get_discount_usage_count(
-									array(
-										'range'         => $filter['range'],
-										'discount_code' => $d->code,
-									)
-								);
-							},
-							'display_args'  => array(
-								'comparison_label' => $label . $discount_label,
-							),
-						),
-					),
-				)
-			);
-		}
-
-		$reports->register_endpoint(
-			'top_five_discounts',
-			array(
-				'label' => __( 'Top Five Discounts', 'easy-digital-downloads' ) . ' – ' . $label,
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Discounts\\Top_Five_Discounts_List_Table',
-						),
-					),
-				),
-			)
-		);
-
-		if ( $d ) {
-			$reports->register_endpoint(
-				'discount_usage_chart',
-				array(
-					'label' => __( 'Discount Usage', 'easy-digital-downloads' ),
-					'views' => array(
-						'chart' => array(
-							'data_callback' => function () use ( $filter, $d ) {
-								global $wpdb;
-
-								$dates        = Reports\get_dates_filter( 'objects' );
-								$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-								$period       = Reports\get_graph_period();
-								$sql_clauses  = Reports\get_sql_clauses( $period, 'edd_oa.date_created' );
-
-								$discount_code = ! empty( $d->code )
-								? $wpdb->prepare( 'AND type = %s AND description = %s', 'discount', esc_sql( $d->code ) )
-								: $wpdb->prepare( 'AND type = %s', 'discount' );
-
-								$results = $wpdb->get_results(
-									$wpdb->prepare(
-										"SELECT COUNT(id) AS total, {$sql_clauses['select']}
-								 FROM {$wpdb->edd_order_adjustments} edd_oa
-								 WHERE 1=1 {$discount_code} AND edd_oa.date_created >= %s AND edd_oa.date_created <= %s
-								 GROUP BY {$sql_clauses['groupby']}
-								 ORDER BY {$sql_clauses['orderby']} ASC",
-										$dates['start']->copy()->format( 'mysql' ),
-										$dates['end']->copy()->format( 'mysql' )
-									)
-								);
-
-								$discount_usage = array();
-
-								// Initialise all arrays with timestamps and set values to 0.
-								while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-									$timestamp     = $chart_dates['start']->copy()->format( 'U' );
-									$date_on_chart = $chart_dates['start'];
-
-									$discount_usage[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-									$discount_usage[ $timestamp ][1] = 0;
-
-									// Loop through each date in which there were discount codes used, which we queried from the database.
-									foreach ( $results as $result ) {
-										$date_of_db_value = EDD()->utils->date( $result->date );
-
-										// Add any discount codes that were used during this hour.
-										if ( 'hour' === $period ) {
-											// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-											if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-												$discount_usage[ $timestamp ][1] += abs( $result->total );
-											}
-											// Add any discount codes that were used during this day.
-										} elseif ( 'day' === $period ) {
-											// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-											if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-												$discount_usage[ $timestamp ][1] += abs( $result->total );
-											}
-											// Add any discount codes that were used during this month.
-										} else {
-											// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-											if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-												$discount_usage[ $timestamp ][1] += abs( $result->total );
-											}
-										}
-									}
-
-									// Move the chart along to the next hour/day/month to get ready for the next loop.
-									if ( 'hour' === $period ) {
-										$chart_dates['start']->addHour( 1 );
-									} elseif ( 'day' === $period ) {
-										$chart_dates['start']->addDays( 1 );
-									} else {
-										$chart_dates['start']->addMonth( 1 );
-									}
-								}
-
-								$discount_usage = array_values( $discount_usage );
-
-								return array( 'discount_usage' => $discount_usage );
-							},
-							'type'          => 'line',
-							'options'       => array(
-								'datasets' => array(
-									'discount_usage' => array(
-										'label'            => __( 'Discount Usage', 'easy-digital-downloads' ),
-										'borderColor'      => 'rgba(24,126,244,0.75)',
-										'backgroundColor'  => 'rgba(24,126,244,0.1)',
-										'fill'             => false,
-										'borderWidth'      => 2,
-										'pointRadius'      => 4,
-										'pointHoverRadius' => 6,
-										'pointBackgroundColor' => 'rgb(255,255,255)',
-									),
-								),
-								'scales'   => array(
-									'yAxes' => array(
-										array(
-											'type'     => 'linear',
-											'display'  => true,
-											'position' => 'left',
-											'gridLines' => array(
-												'drawBorder' => false,
-											),
-											'ticks'    => array(
-												'formattingType' => 'integer',
-												'beginAtZero'    => true,
-												'suggestedMin'   => 0,
-												'maxTicksLimit'  => 4,
-												'padding'        => 10,
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				)
-			);
+		$endpoints = array_merge( $tiles, $tables, $charts );
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
 		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
@@ -2896,14 +755,18 @@ add_action( 'edd_reports_init', 'edd_register_discounts_report' );
  */
 function edd_register_customer_report( $reports ) {
 	try {
-
-		// Variables to hold date filter values.
-		$options       = Reports\get_dates_filter_options();
-		$dates         = Reports\get_filter_value( 'dates' );
-		$exclude_taxes = Reports\get_taxes_excluded_filter();
-
-		$hbh   = Reports\get_dates_filter_hour_by_hour();
-		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
+		$tiles  = array(
+			'new_customer_growth'                   => 'EDD\Reports\Endpoints\Tiles\CustomerGrowth',
+			'average_revenue_per_customer'          => 'EDD\Reports\Endpoints\Tiles\CustomerAverage',
+			'average_number_of_orders_per_customer' => 'EDD\Reports\Endpoints\Tiles\CustomerAverageOrders',
+		);
+		$charts = array(
+			'new_customers' => 'EDD\Reports\Endpoints\Charts\Customers',
+		);
+		$tables = array(
+			'top_five_customers'      => 'EDD\Reports\Endpoints\Tables\TopFiveCustomers',
+			'most_valuable_customers' => 'EDD\Reports\Endpoints\Tables\MostValuableCustomers',
+		);
 
 		$reports->add_report(
 			'customers',
@@ -2912,228 +775,17 @@ function edd_register_customer_report( $reports ) {
 				'icon'      => 'groups',
 				'priority'  => 40,
 				'endpoints' => array(
-					'tiles'  => array(
-						'new_customer_growth',
-						'average_revenue_per_customer',
-						'average_number_of_orders_per_customer',
-					),
-					'tables' => array(
-						'top_five_customers',
-						'most_valuable_customers',
-					),
-					'charts' => array(
-						'new_customers',
-					),
+					'tiles'  => array_keys( $tiles ),
+					'tables' => array_keys( $tables ),
+					'charts' => array_keys( $charts ),
 				),
 			)
 		);
+		$endpoints = array_merge( $tiles, $charts, $tables );
 
-		$reports->register_endpoint(
-			'new_customer_growth',
-			array(
-				'label' => __( 'New Customers', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates ) {
-							$stats = new EDD\Stats();
-							return $stats->get_customer_count(
-								array(
-									'range'          => $dates['range'],
-									'relative'       => true,
-									'purchase_count' => true,
-								)
-							);
-						},
-						'display_args'  => array(
-							'comparison_label' => $label,
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_revenue_per_customer',
-			array(
-				'label' => __( 'Average Revenue per Customer', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () {
-							$stats = new EDD\Stats();
-							return $stats->get_customer_lifetime_value(
-								array(
-									'function' => 'AVG',
-									'output'   => 'formatted',
-								)
-							);
-						},
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'average_number_of_orders_per_customer',
-			array(
-				'label' => __( 'Average Orders per Customer', 'easy-digital-downloads' ),
-				'views' => array(
-					'tile' => array(
-						'data_callback' => function () use ( $dates ) {
-							$stats = new EDD\Stats();
-							return $stats->get_customer_order_count(
-								array(
-									'range'    => $dates['range'],
-									'function' => 'AVG',
-									'relative' => true,
-								)
-							);
-						},
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'top_five_customers',
-			array(
-				'label' => __( 'Top Five Customers &mdash; All Time', 'easy-digital-downloads' ),
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Customers\\Top_Five_Customers_List_Table',
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'most_valuable_customers',
-			array(
-				'label' => __( 'Most Valuable Customers', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-				'views' => array(
-					'table' => array(
-						'display_args' => array(
-							'class_name' => '\\EDD\\Reports\\Data\\Customers\\Most_Valuable_Customers_List_Table',
-						),
-					),
-				),
-			)
-		);
-
-		$reports->register_endpoint(
-			'new_customers',
-			array(
-				'label' => __( 'New Customers', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
-				'views' => array(
-					'chart' => array(
-						'data_callback' => function () {
-							global $wpdb;
-
-							$dates        = Reports\get_dates_filter( 'objects' );
-							$chart_dates  = Reports\parse_dates_for_range( null, 'now', false );
-							$period       = Reports\get_graph_period();
-							$sql_clauses  = Reports\get_sql_clauses( $period );
-
-							$results = $wpdb->get_results(
-								$wpdb->prepare(
-									"SELECT COUNT(c.id) AS total, {$sql_clauses['select']}
-							 FROM {$wpdb->edd_customers} c
-							 WHERE c.date_created >= %s AND c.date_created <= %s
-							 AND c.purchase_count > 0
-							 GROUP BY {$sql_clauses['groupby']}
-							 ORDER BY {$sql_clauses['orderby']} ASC",
-									$dates['start']->copy()->format( 'mysql' ),
-									$dates['end']->copy()->format( 'mysql' )
-								)
-							);
-
-							$customers = array();
-
-							// Initialise all arrays with timestamps and set values to 0.
-							while ( strtotime( $chart_dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $chart_dates['end']->copy()->format( 'mysql' ) ) ) {
-								$timestamp     = $chart_dates['start']->copy()->format( 'U' );
-								$date_on_chart = $chart_dates['start'];
-
-								$customers[ $timestamp ][0] = $date_on_chart->format( 'Y-m-d H:i:s' );
-								$customers[ $timestamp ][1] = 0;
-
-								foreach ( $results as $result ) {
-									$date_of_db_value = EDD()->utils->date( $result->date );
-
-									// Add any new customers that were created during this hour.
-									if ( 'hour' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-											$customers[ $timestamp ][1] += $result->total;
-										}
-										// Add any new customers that were created during this day.
-									} elseif ( 'day' === $period ) {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-											$customers[ $timestamp ][1] += $result->total;
-										}
-										// Add any new customers that were created during this month.
-									} else {
-										// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
-										if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-											$customers[ $timestamp ][1] += $result->total;
-										}
-									}
-								}
-
-								// Move the chart along to the next hour/day/month to get ready for the next loop.
-								if ( 'hour' === $period ) {
-									$chart_dates['start']->addHour( 1 );
-								} elseif ( 'day' === $period ) {
-									$chart_dates['start']->addDays( 1 );
-								} else {
-									$chart_dates['start']->addMonth( 1 );
-								}
-							}
-
-							return array(
-								'customers' => array_values( $customers ),
-							);
-						},
-						'type'          => 'line',
-						'options'       => array(
-							'datasets' => array(
-								'customers' => array(
-									'label'                => __( 'New Customers', 'easy-digital-downloads' ),
-									'borderColor'          => 'rgba(24,126,244,0.75)',
-									'backgroundColor'      => 'rgba(24,126,244,0.1)',
-									'fill'                 => false,
-									'borderWidth'          => 2,
-									'pointRadius'          => 4,
-									'pointHoverRadius'     => 6,
-									'pointBackgroundColor' => 'rgb(255,255,255)',
-								),
-							),
-							'scales'   => array(
-								'yAxes' => array(
-									array(
-										'type'     => 'linear',
-										'display'  => true,
-										'position' => 'left',
-										'gridLines' => array(
-											'drawBorder' => false,
-										),
-										'ticks'    => array(
-											'formattingType' => 'integer',
-											'beginAtZero'    => true,
-											'suggestedMin'   => 0,
-											'maxTicksLimit'  => 4,
-											'padding'        => 10,
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			)
-		);
+		foreach ( $endpoints as $class ) {
+			new $class( $reports );
+		}
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 	}
@@ -3194,7 +846,7 @@ function display_export_report() {
  *
  * @since 1.5
  *
- * @param bool $include_taxes If the estimated earnings should include taxes
+ * @param bool $include_taxes If the estimated earnings should include taxes.
  * @return array
  */
 function edd_estimated_monthly_stats( $include_taxes = true ) {
@@ -3221,7 +873,7 @@ function edd_estimated_monthly_stats( $include_taxes = true ) {
 		$estimated['earnings'] = ( $to_date_earnings / $current_day ) * $days_in_month;
 		$estimated['sales']    = ( $to_date_sales / $current_day ) * $days_in_month;
 
-		// Cache for one day
+		// Cache for one day.
 		set_transient( 'edd_estimated_monthly_stats' . $include_taxes, $estimated, 86400 );
 	}
 

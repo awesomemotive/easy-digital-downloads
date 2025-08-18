@@ -439,22 +439,15 @@ function updateElement ( data ) {
  */
 export function getBillingDetails ( form ) {
 	// Email address could either be in edd_email or edd-email, depending on core or CFM.
-	let email = fieldValueOrNull( form.querySelector( '#edd-email' ) );
+	let email = getFieldValue( form, 'edd_email' );
 
-	if ( null === email ) {
-		email = fieldValueOrNull( form.querySelector( '#edd_email' ) );
-	}
-
-	// If we still don't have an email, try looking for the email by name.
-	if ( null === email ) {
-		email = fieldValueOrNull( form.querySelector( 'input[name="edd_email"]' ) );
-	}
-
-	let line1 = fieldValueOrNull( form.querySelector( '#card_address' ) );
 	let name = fieldValueOrNull( form.querySelector( '#card_name' ) );
-	if ( null === name && null !== line1 ) {
-		name = fieldValueOrNull( form.querySelector( '#edd-first' ) );
-		name += ' ' + fieldValueOrNull( form.querySelector( '#edd-last' ) );
+	if ( null === name ) {
+		name = getFieldValue( form, 'edd_first' );
+		let last = getFieldValue( form, 'edd_last' );
+		if ( last ) {
+			name += ' ' + last;
+		}
 	}
 
 	return {
@@ -462,7 +455,7 @@ export function getBillingDetails ( form ) {
 		name: name,
 		phone: fieldValueOrNull( form.querySelector( '.edd-phone' ) ),
 		address: {
-			line1: line1,
+			line1: fieldValueOrNull( form.querySelector( '#card_address' ) ),
 			line2: fieldValueOrNull( form.querySelector( '#card_address_2' ) ),
 			city: fieldValueOrNull( form.querySelector( '#card_city' ) ),
 			state: fieldValueOrNull( form.querySelector( '#card_state' ) ),
@@ -478,4 +471,26 @@ export function getBillingDetails ( form ) {
  */
 function paymentElementExists () {
 	return Boolean( document.getElementById( 'edd-stripe-payment-element' ) );
+}
+
+/**
+ * Retrieves a field value from the form, checking for both name and id attributes.
+ *
+ * @param {HTMLElement} form Form to find data from.
+ * @param {string} name Name of the field.
+ * @returns {string} Field value.
+ */
+function getFieldValue( form, name ) {
+	let value = fieldValueOrNull( form.querySelector( `input[name="${name}"]` ) );
+	if ( value ) {
+		return value;
+	}
+
+	const id = name.replace( /-/g, '_' );
+	value = fieldValueOrNull( form.querySelector( `#${id}` ) );
+	if ( value ) {
+		return value;
+	}
+
+	return fieldValueOrNull( form.querySelector( `#${name}` ) );
 }

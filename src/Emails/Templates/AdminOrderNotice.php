@@ -52,7 +52,8 @@ class AdminOrderNotice extends EmailTemplate {
 	 * @var array
 	 */
 	protected $meta = array(
-		'recipients' => '',
+		'recipients'           => '',
+		'use_customer_reply_to' => '',
 	);
 
 	/**
@@ -87,11 +88,12 @@ class AdminOrderNotice extends EmailTemplate {
 	public function defaults(): array {
 		return array(
 			/* translators: %s: The email tag that will be replaced with the payment ID. */
-			'subject'    => sprintf( __( 'New download purchase - Order #%s', 'easy-digital-downloads' ), '{payment_id}' ),
-			'heading'    => __( 'New Sale!', 'easy-digital-downloads' ),
-			'content'    => $this->get_default_content(),
-			'status'     => 1,
-			'recipients' => 'admin',
+			'subject'               => sprintf( __( 'New download purchase - Order #%s', 'easy-digital-downloads' ), '{payment_id}' ),
+			'heading'               => __( 'New Sale!', 'easy-digital-downloads' ),
+			'content'               => $this->get_default_content(),
+			'status'                => 1,
+			'recipients'            => 'admin',
+			'use_customer_reply_to' => 0, // Default to disabled to preserve current behavior.
 		);
 	}
 

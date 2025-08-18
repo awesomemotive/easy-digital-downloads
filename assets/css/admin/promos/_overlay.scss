@@ -53,6 +53,10 @@
 		margin: 2em auto;
 		gap: 0 1.5em;
 
+		&--2-col {
+			grid-template-columns: repeat( 2, auto );
+		}
+
 		li {
 			display: flex;
 			gap: .5em;

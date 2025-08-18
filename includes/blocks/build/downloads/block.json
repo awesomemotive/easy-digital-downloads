@@ -10,7 +10,9 @@
   "keywords": [
     "easy digital downloads",
     "edd",
-    "downloads"
+    "downloads",
+    "featured downloads",
+    "featured products"
   ],
   "supports": {
     "html": false,
@@ -107,6 +109,56 @@
     "author": {
       "type": "string",
       "default": ""
+    },
+    "featured": {
+      "type": "string",
+      "default": ""
+    },
+    "featured_styling_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "featured_badge_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "featured_border_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "featured_badge_text": {
+      "type": "string",
+      "default": "Featured"
+    },
+    "featuredBadgeColor": {
+      "type": "string"
+    },
+    "customFeaturedBadgeColor": {
+      "type": "string",
+      "default": ""
+    },
+    "featuredBadgeBackgroundColor": {
+      "type": "string"
+    },
+    "customFeaturedBadgeBackgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "featured_border_color": {
+      "type": "string",
+      "default": ""
+    },
+    "featured_border_width": {
+      "type": "string",
+      "default": "2px"
+    },
+    "featured_border_style": {
+      "type": "string",
+      "default": "solid"
+    },
+    "featured_border_radius": {
+      "type": "string",
+      "default": "3px"
     }
   },
   "example": {

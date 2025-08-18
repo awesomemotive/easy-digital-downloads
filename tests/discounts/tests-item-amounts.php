@@ -266,4 +266,186 @@ class ItemAmounts extends EDD_UnitTestCase {
 		$this->assertFalse( self::$discount->is_valid() );
 		$this->assertEquals( 0, edd_get_item_discount_amount( $cart_contents[0], $cart_contents, array( self::$discount->code ) ) );
 	}
+
+	public function test_flat_discount_with_product_requirements_single_item() {
+		// Create a flat discount with product requirements
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'product_reqs' => array( self::$downloads[0]->ID ),
+				'scope'        => 'not_global',
+			)
+		);
+
+		edd_add_to_cart( self::$downloads[0]->ID );
+		edd_add_to_cart( self::$downloads[1]->ID );
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = $cart_contents[0];  // Should get the discount
+		$second_item   = $cart_contents[1]; // Should NOT get the discount
+
+		// First item should get the full $10 discount since it's the only eligible item
+		$this->assertEquals( 10, edd_get_item_discount_amount( $first_item, $cart_contents, array( self::$discount->code ) ) );
+		// Second item should get no discount since it's not in the requirements
+		$this->assertEquals( 0, edd_get_item_discount_amount( $second_item, $cart_contents, array( self::$discount->code ) ) );
+	}
+
+	public function test_flat_discount_with_product_requirements_multiple_items() {
+		// Create a flat discount with product requirements for two products
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'product_reqs' => array( self::$downloads[0]->ID, self::$downloads[1]->ID ),
+				'scope'        => 'not_global',
+			)
+		);
+
+		edd_add_to_cart( self::$downloads[0]->ID ); // $20 item
+		edd_add_to_cart( self::$downloads[1]->ID ); // $20 item
+		edd_add_to_cart( self::$downloads[2]->ID ); // $20 item (not eligible)
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = $cart_contents[0];  // Should get proportional discount
+		$second_item   = $cart_contents[1]; // Should get proportional discount
+		$third_item    = $cart_contents[2]; // Should NOT get discount
+
+		// $10 discount should be split evenly between first two items ($5 each)
+		// since they're both $20 items (equal proportions)
+		$this->assertEquals( 5, edd_get_item_discount_amount( $first_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 5, edd_get_item_discount_amount( $second_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 0, edd_get_item_discount_amount( $third_item, $cart_contents, array( self::$discount->code ) ) );
+	}
+
+	public function test_flat_discount_with_product_requirements_variable_pricing() {
+		$variable_download = Helpers\EDD_Helper_Download::create_variable_download();
+
+		// Create flat discount for specific price ID
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'product_reqs' => array( $variable_download->ID . '_' . 1 ), // Only price ID 1
+				'scope'        => 'not_global',
+			)
+		);
+
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => 0 ) ); // $20 - not eligible
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => 1 ) ); // $100 - eligible
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = $cart_contents[0]; // Price ID 0 - should get no discount
+		$second_item   = $cart_contents[1]; // Price ID 1 - should get full discount
+
+		$this->assertEquals( 0, edd_get_item_discount_amount( $first_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 10, edd_get_item_discount_amount( $second_item, $cart_contents, array( self::$discount->code ) ) );
+	}
+
+	public function test_flat_discount_with_product_requirements_proportional_distribution() {
+		// Create variable download with different prices to test proportional distribution
+		$variable_download = Helpers\EDD_Helper_Download::create_variable_download(); // Has $20 and $100 options
+
+		// Create flat discount for the entire variable product (all price IDs)
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'product_reqs' => array( $variable_download->ID ),
+				'scope'        => 'not_global',
+			)
+		);
+
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => 0 ) ); // $20 item
+		edd_add_to_cart( $variable_download->ID, array( 'price_id' => 1 ) ); // $100 item
+		edd_add_to_cart( self::$downloads[0]->ID ); // $20 item - not eligible
+
+		$cart_contents = edd_get_cart_contents();
+		$cheaper_item    = $cart_contents[0]; // $20 - should get smaller portion
+		$expensive_item = $cart_contents[1]; // $100 - should get larger portion
+		$ineligible_item = $cart_contents[2]; // $20 - should get nothing
+
+		// Total eligible amount: $20 + $100 = $120
+		// $20 item should get: $10 * (20/120) = $1.67
+		// $100 item should get: $10 * (100/120) = $8.33
+		$this->assertEquals( 1.67, edd_get_item_discount_amount( $cheaper_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 8.33, edd_get_item_discount_amount( $expensive_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 0, edd_get_item_discount_amount( $ineligible_item, $cart_contents, array( self::$discount->code ) ) );
+	}
+
+	public function test_flat_discount_with_product_requirements_rounding_adjustment() {
+		// Test that the last eligible item gets rounding adjustments
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'product_reqs' => array( self::$downloads[0]->ID, self::$downloads[1]->ID, self::$downloads[2]->ID ),
+				'scope'        => 'not_global',
+			)
+		);
+
+		edd_add_to_cart( self::$downloads[0]->ID ); // $20
+		edd_add_to_cart( self::$downloads[1]->ID ); // $20
+		edd_add_to_cart( self::$downloads[2]->ID ); // $20
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = $cart_contents[0];
+		$second_item   = $cart_contents[1];
+		$third_item    = $cart_contents[2]; // Last item - should get rounding adjustment
+
+		// $10 discount across 3 equal $20 items
+		// Should be $3.33, $3.33, $3.34 (last item gets extra penny)
+		$this->assertEquals( 3.33, edd_get_item_discount_amount( $first_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 3.33, edd_get_item_discount_amount( $second_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 3.34, edd_get_item_discount_amount( $third_item, $cart_contents, array( self::$discount->code ) ) );
+	}
+
+	public function test_flat_discount_with_product_requirements_global_scope() {
+		// Test that flat discounts with product requirements but GLOBAL scope
+		// should distribute across ALL cart items, not just the required ones
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'product_reqs' => array( self::$downloads[0]->ID, self::$downloads[1]->ID ),
+				'scope'        => 'global', // This is the key difference
+			)
+		);
+
+		edd_add_to_cart( self::$downloads[0]->ID ); // $20 - required (but discount applies globally)
+		edd_add_to_cart( self::$downloads[1]->ID ); // $20 - required (but discount applies globally)
+		edd_add_to_cart( self::$downloads[2]->ID ); // $20 - not required but gets discount due to global scope
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = $cart_contents[0];  // Should get proportional discount
+		$second_item   = $cart_contents[1]; // Should get proportional discount
+		$third_item    = $cart_contents[2]; // Should ALSO get proportional discount (global scope)
+
+		// $10 discount should be distributed across ALL three $20 items
+		// Total cart: $60, so each $20 item gets: $10 * (20/60) = $3.33, $3.33, $3.34
+		$this->assertEquals( 3.33, edd_get_item_discount_amount( $first_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 3.33, edd_get_item_discount_amount( $second_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 3.34, edd_get_item_discount_amount( $third_item, $cart_contents, array( self::$discount->code ) ) );
+	}
+
+	public function test_flat_discount_with_product_requirements_global_scope_mixed_prices() {
+		// Test with different item prices to ensure proper proportional distribution
+		edd_update_discount(
+			self::$discount_id,
+			array(
+				'product_reqs' => array( self::$downloads[0]->ID ), // Only one required
+				'scope'        => 'global',
+				'amount'       => 6, // Use $6 for easier math
+			)
+		);
+
+		edd_add_to_cart( self::$downloads[0]->ID ); // $20 - required
+		edd_add_to_cart( self::$downloads[1]->ID ); // $20 - not required but gets discount
+		edd_add_to_cart( self::$downloads[2]->ID ); // $20 - not required but gets discount
+
+		$cart_contents = edd_get_cart_contents();
+		$first_item    = $cart_contents[0];
+		$second_item   = $cart_contents[1];
+		$third_item    = $cart_contents[2];
+
+		// $6 discount across $60 total = 10% discount for each item
+		// Each $20 item should get: $6 * (20/60) = $2.00
+		$this->assertEquals( 2.00, edd_get_item_discount_amount( $first_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 2.00, edd_get_item_discount_amount( $second_item, $cart_contents, array( self::$discount->code ) ) );
+		$this->assertEquals( 2.00, edd_get_item_discount_amount( $third_item, $cart_contents, array( self::$discount->code ) ) );
+	}
 }

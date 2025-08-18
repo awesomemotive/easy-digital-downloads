@@ -82,8 +82,9 @@ jQueryReady( () => {
 				success( response ) {
 					let { tax_rate: rate } = response;
 
-					// Make a percentage.
-					rate = rate * 100;
+					// Make a percentage and round to avoid floating point precision issues.
+					// This mirrors the PHP round( $rate * 100, 4 ) in edd_get_formatted_tax_rate().
+					rate = Math.round( (rate * 100) * 10000 ) / 10000;
 
 					overviewState.set( 'hasTax', {
 						...overviewState.get( 'hasTax' ),
