@@ -125,15 +125,12 @@ class Taxes extends Tab {
 	 */
 	private function get_vat_enable() {
 		$setting = array(
-			'id'      => 'vat_enable',
-			'name'    => __( 'EU VAT', 'easy-digital-downloads' ),
-			'check'   => __( 'Enable VAT handling and validation.', 'easy-digital-downloads' ),
-			'type'    => 'checkbox_toggle',
-			'class'   => $this->get_requires_css_class( 'enable_taxes' ),
-			'options' => array(
-				'disabled' => true,
-			),
-			'desc'    => '',
+			'id'    => 'vat_enable',
+			'name'  => __( 'EU VAT', 'easy-digital-downloads' ),
+			'check' => __( 'Enable VAT handling and validation.', 'easy-digital-downloads' ),
+			'type'  => 'checkbox_toggle',
+			'class' => $this->get_requires_css_class( 'enable_taxes' ),
+			'desc'  => '',
 		);
 
 		if ( ! $this->is_admin_page( 'settings', 'taxes' ) ) {
@@ -142,22 +139,39 @@ class Taxes extends Tab {
 
 		$description = array();
 
-		if ( function_exists( '\Barn2\Plugin\EDD_VAT\edd_eu_vat' ) ) {
-			$description[] = __( 'Enabling VAT handling in EDD will automatically deactivate the Easy Digital Downloads - EU VAT plugin.', 'easy-digital-downloads' );
-		}
-
 		if ( ! edd_is_pro() ) {
 			$pass_manager = new \EDD\Admin\Pass_Manager();
 			if ( $pass_manager->has_pass() ) {
-				$description[] = __( 'This feature requires Easy Digital Downloads (Pro) to be installed and activated.', 'easy-digital-downloads' );
+				$description[]      = __( 'This feature requires Easy Digital Downloads (Pro) to be installed and activated.', 'easy-digital-downloads' );
+				$setting['options'] = array(
+					'disabled' => true,
+				);
 			} else {
+				$upgrade_url = edd_link_helper(
+					'https://easydigitaldownloads.com/lite-upgrade/',
+					array(
+						'utm_medium'  => 'edd-settings',
+						'utm_content' => 'vat-enable',
+					)
+				);
+
 				$description[] = sprintf(
 					/* translators: 1: opening button tag, 2: closing button tag */
 					__( '%1$sUpgrade to Pro%2$s to enable VAT handling.', 'easy-digital-downloads' ),
-					'<button class="edd-pro-upgrade button-link edd-promo-notice__trigger">',
-					'</button>'
+					'<a class="edd-pro-upgrade button-link" href="' . esc_url( $upgrade_url ) . '">',
+					'</a>'
 				);
+
+				$setting['class']   = $this->get_requires_css_class( 'enable_taxes', array( 'edd-promo-notice__trigger' ) );
+				$setting['options'] = array(
+					'readonly' => true,
+				);
+
 			}
+		}
+
+		if ( function_exists( '\Barn2\Plugin\EDD_VAT\edd_eu_vat' ) ) {
+			$description[] = __( 'Enabling VAT handling in EDD will automatically deactivate the Easy Digital Downloads - EU VAT plugin.', 'easy-digital-downloads' );
 		}
 
 		if ( ! empty( $description ) ) {

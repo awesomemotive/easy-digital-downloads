@@ -40,6 +40,7 @@ function edd_download_metabox_fields() {
 		'edd_product_notes',
 		'_edd_default_price_id',
 		'_edd_bundled_products_conditions',
+		'edd_feature_download',
 	);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {

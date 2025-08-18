@@ -162,15 +162,51 @@ class Base {
 	 * Get the email headers
 	 *
 	 * @since 2.1
+	 * @since 3.5.1 - Changed to use the get_headers_array() method.
+	 *
+	 * @return string
 	 */
 	public function get_headers() {
 		if ( ! $this->headers ) {
-			$this->headers  = "From: {$this->get_from_name()} <{$this->get_from_address()}>\r\n";
-			$this->headers .= "Reply-To: {$this->get_from_address()}\r\n";
-			$this->headers .= "Content-Type: {$this->get_content_type()}; charset=utf-8\r\n";
+			$this->headers = '';
+			$headers_array = $this->get_headers_array();
+			foreach ( $headers_array as $key => $value ) {
+				$this->headers .= "{$key}: {$value}\r\n";
+			}
 		}
 
+		/**
+		 * Filter the email headers, as a string.
+		 *
+		 * @param string $headers The email headers.
+		 * @param \EDD\Emails\Base $this The email object.
+		 */
 		return apply_filters( 'edd_email_headers', $this->headers, $this );
+	}
+
+	/**
+	 * Get the headers array.
+	 *
+	 * @since 3.5.1
+	 * @return array
+	 */
+	private function get_headers_array() {
+		/**
+		 * Filter the email headers, as an array.
+		 *
+		 * @since 3.5.1
+		 *
+		 * @param array $headers The email headers.
+		 * @param \EDD\Emails\Base $this The email object.
+		 */
+		return apply_filters(
+			'edd_email_headers_array',
+			array(
+				'From'         => "{$this->get_from_name()} <{$this->get_from_address()}>",
+				'Reply-To'     => $this->get_from_address(),
+				'Content-Type' => "{$this->get_content_type()}; charset=utf-8",
+			)
+		);
 	}
 
 	/**

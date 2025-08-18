@@ -72,6 +72,73 @@ class Manager extends EDD_UnitTestCase {
 		$this->assertStringNotContainsString( '!', $new_id );
 	}
 
+	public function test_update_reply_to_setting_enabled() {
+		$email_id = 123;
+		$data = array( 'use_customer_reply_to' => '1' );
+
+		$manager = new \EDD\Admin\Emails\Manager();
+		
+		$reflection = new \ReflectionClass( $manager );
+		$method = $reflection->getMethod( 'update_reply_to_setting' );
+		$method->setAccessible( true );
+		$method->invoke( $manager, $email_id, $data );
+
+		$this->assertEquals( '1', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
+
+		edd_delete_email_meta( $email_id, 'use_customer_reply_to' );
+	}
+
+	public function test_update_reply_to_setting_disabled() {
+		$email_id = 456;
+		$data = array();
+
+		edd_update_email_meta( $email_id, 'use_customer_reply_to', 1 );
+		$this->assertEquals( '1', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
+
+		$manager = new \EDD\Admin\Emails\Manager();
+		
+		$reflection = new \ReflectionClass( $manager );
+		$method = $reflection->getMethod( 'update_reply_to_setting' );
+		$method->setAccessible( true );
+		$method->invoke( $manager, $email_id, $data );
+
+		$this->assertEquals( '', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
+	}
+
+	public function test_update_reply_to_setting_empty_value() {
+		$email_id = 789;
+		$data = array( 'use_customer_reply_to' => '' );
+
+		edd_update_email_meta( $email_id, 'use_customer_reply_to', 1 );
+		$this->assertEquals( '1', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
+
+		$manager = new \EDD\Admin\Emails\Manager();
+		
+		$reflection = new \ReflectionClass( $manager );
+		$method = $reflection->getMethod( 'update_reply_to_setting' );
+		$method->setAccessible( true );
+		$method->invoke( $manager, $email_id, $data );
+
+		$this->assertEquals( '', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
+	}
+
+	public function test_update_reply_to_setting_zero_value() {
+		$email_id = 101;
+		$data = array( 'use_customer_reply_to' => '0' );
+
+		edd_update_email_meta( $email_id, 'use_customer_reply_to', 1 );
+		$this->assertEquals( '1', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
+
+		$manager = new \EDD\Admin\Emails\Manager();
+		
+		$reflection = new \ReflectionClass( $manager );
+		$method = $reflection->getMethod( 'update_reply_to_setting' );
+		$method->setAccessible( true );
+		$method->invoke( $manager, $email_id, $data );
+
+		$this->assertEquals( '', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
+	}
+
 	private static function get_registry() {
 		if ( ! self::$registry ) {
 			self::$registry = edd_get_email_registry();

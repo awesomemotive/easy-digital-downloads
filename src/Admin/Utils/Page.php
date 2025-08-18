@@ -525,25 +525,14 @@ class Page {
 
 		// If a specific view is passed, check if it matches the current tab and is a valid settings tab.
 		if ( ! empty( $this->passed_view ) ) {
-			$tabs = array_keys( \edd_get_settings_tabs() );
-			if ( $this->get_tab() === $this->passed_view && in_array( $this->passed_view, $tabs, true ) ) {
+			if ( 'general' === $this->passed_view ) {
 				return true;
 			}
+
+			return $this->get_tab() === $this->passed_view && in_array( $this->passed_view, array_keys( \edd_get_settings_tabs() ), true );
 		}
 
-		$found = false;
-		switch ( $this->passed_view ) {
-			case 'general':
-				if ( false === $this->get_tab() ) {
-					$found = true;
-				}
-				break;
-			default:
-				$found = true;
-				break;
-		}
-
-		return $found;
+		return true;
 	}
 
 	/**

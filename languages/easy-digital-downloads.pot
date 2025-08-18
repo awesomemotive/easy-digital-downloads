@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.5.0\n"
+"Project-Id-Version: Easy Digital Downloads 3.5.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-public\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-15T21:13:02+00:00\n"
+"POT-Creation-Date: 2025-08-18T19:45:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 
@@ -5827,7 +5827,7 @@ msgstr ""
 
 #: includes/admin/adjustments/adjustment-functions.php:53
 #: includes/admin/adjustments/adjustment-functions.php:73
-#: includes/admin/reporting/reports.php:2591
+#: includes/admin/reporting/reports.php:727
 #: includes/reports/reports-functions.php:349
 #: includes/upgrades/functions.php:148
 #: src/Admin/Menu/Header.php:154
@@ -5884,6 +5884,7 @@ msgstr ""
 #: src/Admin/Settings/Tabs/Gateways.php:339
 #: src/Lite/Admin/Menu.php:36
 #: src/Lite/Admin/Menu.php:37
+#: src/Lite/Admin/Promos/Notices/FeaturedDownloads.php:88
 msgid "Upgrade to Pro"
 msgstr ""
 
@@ -5934,7 +5935,7 @@ msgstr ""
 #: includes/admin/discounts/discount-actions.php:99
 #: includes/admin/discounts/discount-actions.php:126
 #: includes/admin/discounts/discount-actions.php:157
-#: includes/admin/downloads/dashboard-columns.php:190
+#: includes/admin/downloads/dashboard-columns.php:203
 #: includes/admin/import/class-batch-import-downloads.php:67
 #: includes/admin/import/class-batch-import-payments.php:77
 #: includes/admin/import/class-batch-import.php:206
@@ -6149,7 +6150,7 @@ msgstr ""
 
 #. translators: %s: The bundle product index number.
 #: includes/admin/admin-deprecated-functions.php:1562
-#: includes/admin/downloads/metabox.php:371
+#: includes/admin/downloads/metabox.php:372
 #: includes/admin/downloads/views/metabox-bundled-products.php:140
 #: includes/admin/views/tmpl-tax-rates-table-row.php:50
 #: includes/blocks/views/checkout/cart/cart-fees.php:15
@@ -6173,8 +6174,8 @@ msgid "Option Name"
 msgstr ""
 
 #: includes/admin/admin-deprecated-functions.php:1598
-#: includes/admin/downloads/dashboard-columns.php:34
-#: includes/admin/downloads/dashboard-columns.php:330
+#: includes/admin/downloads/dashboard-columns.php:35
+#: includes/admin/downloads/dashboard-columns.php:343
 #: src/Admin/Downloads/Editor/Details.php:112
 #: src/Admin/Downloads/Editor/VariablePrices.php:178
 #: src/Admin/Exports/Exporters/Downloads.php:55
@@ -6750,7 +6751,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:256
 #: includes/admin/customers/customers.php:861
 #: includes/admin/customers/customers.php:911
-#: includes/admin/downloads/dashboard-columns.php:37
+#: includes/admin/downloads/dashboard-columns.php:38
 #: includes/admin/payments/class-payments-table.php:428
 #: includes/admin/payments/orders.php:1246
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:43
@@ -6859,7 +6860,7 @@ msgid "Select %s"
 msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:252
-#: includes/admin/downloads/dashboard-columns.php:31
+#: includes/admin/downloads/dashboard-columns.php:32
 #: includes/admin/reporting/class-export-customers.php:71
 #: includes/admin/tools.php:455
 #: includes/privacy-functions.php:639
@@ -6951,7 +6952,7 @@ msgstr ""
 
 #. translators: 1: email address, 2: username
 #: includes/admin/customers/customer-actions.php:239
-#: includes/shortcodes.php:1033
+#: includes/shortcodes.php:812
 msgid "Email address %1$s removed by %2$s"
 msgstr ""
 
@@ -6997,7 +6998,7 @@ msgid "Unnamed Customer"
 msgstr ""
 
 #: includes/admin/customers/customers.php:62
-#: includes/admin/reporting/reports.php:2911
+#: includes/admin/reporting/reports.php:774
 #: src/Admin/Exports/Loader.php:156
 #: src/Admin/Menu/Header.php:157
 #: src/Admin/Menu/Pages.php:63
@@ -7192,6 +7193,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:858
 #: includes/admin/customers/customers.php:908
 #: includes/admin/payments/class-payments-table.php:424
+#: src/Reports/Endpoints/Charts/Refunds.php:50
 msgid "Number"
 msgstr ""
 
@@ -7242,8 +7244,8 @@ msgstr ""
 
 #. translators: %s: plural downloads label
 #: includes/admin/customers/customers.php:971
-#: includes/blocks/build/buy-button/index.js:7
-#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/build/buy-button/index.js:6
+#: includes/blocks/build/downloads/index.js:2
 #: includes/blocks/src/utilities/download-new.js:14
 msgid "No %s Found"
 msgstr ""
@@ -7371,12 +7373,9 @@ msgstr ""
 #: includes/admin/dashboard-widgets.php:153
 #: includes/admin/dashboard-widgets.php:175
 #: includes/admin/dashboard-widgets.php:195
-#: includes/admin/reporting/reports.php:256
-#: includes/admin/reporting/reports.php:284
-#: includes/admin/reporting/reports.php:372
-#: includes/admin/reporting/reports.php:400
-#: includes/admin/reporting/reports.php:607
 #: src/Reports/Data/Taxes/Tax_Collected_By_Location.php:80
+#: src/Reports/Endpoints/Charts/Sales.php:60
+#: src/Reports/Endpoints/Tiles/AverageSalesEarnings.php:52
 msgid "Net"
 msgstr ""
 
@@ -7386,19 +7385,15 @@ msgstr ""
 #: includes/admin/reporting/class-download-reports-table.php:104
 #: includes/admin/reporting/graphing.php:299
 #: includes/admin/reporting/graphing.php:598
-#: includes/admin/reporting/reports.php:266
-#: includes/admin/reporting/reports.php:372
-#: includes/admin/reporting/reports.php:380
-#: includes/admin/reporting/reports.php:762
-#: includes/admin/reporting/reports.php:783
-#: includes/admin/reporting/reports.php:915
-#: includes/admin/reporting/reports.php:1539
-#: includes/admin/reporting/reports.php:1781
-#: includes/admin/reporting/reports.php:1802
-#: includes/admin/reporting/reports.php:1898
 #: src/Admin/Exports/Exporters/Downloads.php:62
 #: src/Admin/Exports/Exporters/SalesEarnings.php:65
 #: src/Reports/Data/File_Downloads/Top_Five_Most_Downloaded_List_Table.php:63
+#: src/Reports/Endpoints/Charts/DownloadEarnings.php:44
+#: src/Reports/Endpoints/Charts/DownloadEarnings.php:54
+#: src/Reports/Endpoints/Charts/Earnings.php:42
+#: src/Reports/Endpoints/Charts/GatewayEarnings.php:42
+#: src/Reports/Endpoints/Tiles/Earnings.php:42
+#: src/Reports/Endpoints/Tiles/GatewayEarnings.php:42
 #: includes/blocks/build/downloads/index.js:1
 #: includes/blocks/src/utilities/download-order-by.js:26
 msgid "Earnings"
@@ -7679,21 +7674,21 @@ msgstr ""
 msgid "For more information, see <a href=\"%1$s\">using Shortcodes</a> on the WordPress.org Codex or <a href=\"%2$s\">Easy Digital Downloads Documentation</a>"
 msgstr ""
 
-#: includes/admin/downloads/dashboard-columns.php:35
+#: includes/admin/downloads/dashboard-columns.php:36
 msgid "Net Sales"
 msgstr ""
 
-#: includes/admin/downloads/dashboard-columns.php:36
+#: includes/admin/downloads/dashboard-columns.php:37
 #: includes/emails/email-summary/template-parts/data-listing.php:40
 msgid "Net Revenue"
 msgstr ""
 
-#: includes/admin/downloads/dashboard-columns.php:190
+#: includes/admin/downloads/dashboard-columns.php:203
 msgid "You do not have permission to view this data."
 msgstr ""
 
 #. translators: %s: Download Category taxonomy name
-#: includes/admin/downloads/dashboard-columns.php:244
+#: includes/admin/downloads/dashboard-columns.php:256
 #: src/HTML/CategorySelect.php:70
 #: src/HTML/Elements.php:298
 msgctxt "plural: Example: \"All Categories\""
@@ -7701,8 +7696,8 @@ msgid "All %s"
 msgstr ""
 
 #. translators: %s: Download Category taxonomy name
-#: includes/admin/downloads/dashboard-columns.php:270
-#: includes/admin/downloads/dashboard-columns.php:273
+#: includes/admin/downloads/dashboard-columns.php:282
+#: includes/admin/downloads/dashboard-columns.php:285
 #: src/HTML/CategorySelect.php:74
 #: src/HTML/CategorySelect.php:77
 msgctxt "plural: Example: \"Search Download Categories\""
@@ -7710,150 +7705,150 @@ msgid "Search %s"
 msgstr ""
 
 #. translators: %s: Download singular label
-#: includes/admin/downloads/dashboard-columns.php:328
+#: includes/admin/downloads/dashboard-columns.php:341
 msgid "%s Configuration"
 msgstr ""
 
 #. translators: %1$s is the singular label, %2$s is the file ID.
-#: includes/admin/downloads/metabox.php:335
+#: includes/admin/downloads/metabox.php:336
 msgid "%1$s file ID: %2$s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:350
+#: includes/admin/downloads/metabox.php:351
 #: includes/admin/downloads/views/metabox-bundled-products.php:119
 #: src/Admin/Downloads/Editor/VariablePrices.php:219
 msgid "Move up"
 msgstr ""
 
 #. translators: %s: Download singular label
-#: includes/admin/downloads/metabox.php:356
+#: includes/admin/downloads/metabox.php:357
 #: includes/admin/downloads/views/metabox-bundled-products.php:125
 msgid "Move %s up"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:360
+#: includes/admin/downloads/metabox.php:361
 #: includes/admin/downloads/views/metabox-bundled-products.php:129
 #: src/Admin/Downloads/Editor/VariablePrices.php:229
 msgid "Move down"
 msgstr ""
 
 #. translators: %s: Download singular label
-#: includes/admin/downloads/metabox.php:366
+#: includes/admin/downloads/metabox.php:367
 #: includes/admin/downloads/views/metabox-bundled-products.php:135
 msgid "Move %s down"
 msgstr ""
 
 #. translators: %s: file ID.
-#: includes/admin/downloads/metabox.php:375
+#: includes/admin/downloads/metabox.php:376
 msgid "Remove file %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:385
+#: includes/admin/downloads/metabox.php:386
 msgid "File Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:396
+#: includes/admin/downloads/metabox.php:397
 msgid "My Neat File"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:406
+#: includes/admin/downloads/metabox.php:407
 msgid "File URL"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:415
+#: includes/admin/downloads/metabox.php:416
 msgid "Enter, upload, choose from Media Library"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:422
-#: includes/admin/downloads/metabox.php:424
+#: includes/admin/downloads/metabox.php:423
+#: includes/admin/downloads/metabox.php:425
 msgid "Select Files"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:422
+#: includes/admin/downloads/metabox.php:423
 msgid "Select"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:444
-#: includes/admin/downloads/metabox.php:447
+#: includes/admin/downloads/metabox.php:445
+#: includes/admin/downloads/metabox.php:448
 msgid "Price Assignment"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:448
+#: includes/admin/downloads/metabox.php:449
 msgid "With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file."
 msgstr ""
 
 #. translators: %s: Download singular label, in lowercase form.
-#: includes/admin/downloads/metabox.php:504
+#: includes/admin/downloads/metabox.php:505
 msgid "Insert into %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:536
+#: includes/admin/downloads/metabox.php:537
 msgid "Refund Status"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:539
+#: includes/admin/downloads/metabox.php:540
 #: includes/refund-functions.php:26
 msgid "Refundable"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:540
+#: includes/admin/downloads/metabox.php:541
 msgid "Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing."
 msgstr ""
 
 #. translators: %s: Default refund status
-#: includes/admin/downloads/metabox.php:558
+#: includes/admin/downloads/metabox.php:559
 msgctxt "Download refund status"
 msgid "Default (%s)"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:576
+#: includes/admin/downloads/metabox.php:577
 #: src/Admin/Settings/Tabs/Gateways.php:184
 msgid "Refund Window"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:580
+#: includes/admin/downloads/metabox.php:581
 msgctxt "refund window interval"
 msgid "Days"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:583
-#: includes/admin/downloads/metabox.php:634
+#: includes/admin/downloads/metabox.php:584
+#: includes/admin/downloads/metabox.php:635
 msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:620
-#: includes/admin/downloads/metabox.php:623
+#: includes/admin/downloads/metabox.php:621
+#: includes/admin/downloads/metabox.php:624
 #: includes/admin/tools.php:890
 #: src/Admin/Exports/Exporters/Downloads.php:57
 #: src/Admin/Settings/Tabs/Misc.php:187
 msgid "File Download Limit"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:624
+#: includes/admin/downloads/metabox.php:625
 msgid "Limit the number of times a customer who purchased this product can access their download links."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:670
+#: includes/admin/downloads/metabox.php:671
 msgid "This product is non-taxable"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:677
+#: includes/admin/downloads/metabox.php:678
 msgid "When taxes are enabled, all products are taxable by default. Check this box to mark this product as non-taxable."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:710
+#: includes/admin/downloads/metabox.php:711
 msgid "Disable quantity input for this product"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:717
+#: includes/admin/downloads/metabox.php:718
 msgid "If disabled, customers will not be provided an option to change the number they wish to purchase."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:746
+#: includes/admin/downloads/metabox.php:747
 msgid "Enter an SKU for this product."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:749
+#: includes/admin/downloads/metabox.php:750
 #: includes/emails/tags.php:209
 #: includes/emails/tags.php:352
 #: src/Admin/Exports/Exporters/Downloads.php:59
@@ -7861,76 +7856,76 @@ msgstr ""
 msgid "SKU"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:750
+#: includes/admin/downloads/metabox.php:751
 msgid "If an SKU is entered for this product, it will be shown on the purchase receipt and exported purchase histories."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:799
+#: includes/admin/downloads/metabox.php:800
 msgid "By default, the buy button will be displayed at the bottom of the download. Disable the default buy button and use the EDD Buy Button block to place the button where you prefer."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:802
+#: includes/admin/downloads/metabox.php:803
 msgid "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. A Buy Now button bypasses most of the process, taking the customer directly from button click to payment, greatly speeding up the process of buying the product."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:809
-#: includes/admin/downloads/metabox.php:812
+#: includes/admin/downloads/metabox.php:810
+#: includes/admin/downloads/metabox.php:813
 msgid "Buy Buttons"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:822
+#: includes/admin/downloads/metabox.php:823
 msgid "Copy Buy Button Block"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:826
+#: includes/admin/downloads/metabox.php:827
 msgid "Copy Buy Button Shortcode"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:830
+#: includes/admin/downloads/metabox.php:831
 #: src/Admin/Downloads/Editor/VariablePrices.php:319
 msgid "Copy Add to Cart Link"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:843
+#: includes/admin/downloads/metabox.php:844
 msgid "Hide default purchase button."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:849
+#: includes/admin/downloads/metabox.php:850
 msgid "Buy Button Block Detected"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:850
+#: includes/admin/downloads/metabox.php:851
 msgid "The Buy Button block is in the post content, so we recommend disabling the default purchase button."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:863
+#: includes/admin/downloads/metabox.php:864
 msgid "Purchase button behavior"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:873
+#: includes/admin/downloads/metabox.php:874
 #: includes/admin/thickbox.php:126
 #: src/Admin/Settings/Tabs/Misc.php:143
 msgid "Add to Cart"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:874
-#: includes/blocks/includes/downloads/downloads.php:162
+#: includes/admin/downloads/metabox.php:875
+#: includes/blocks/includes/downloads/downloads.php:171
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:36
 #: includes/shortcodes.php:50
 #: includes/template-functions.php:95
 #: src/Admin/Settings/Tabs/Misc.php:253
-#: includes/blocks/build/buy-button/index.js:13
+#: includes/blocks/build/buy-button/index.js:10
 #: includes/blocks/src/buy-button/edit.js:71
 msgid "Buy Now"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:912
+#: includes/admin/downloads/metabox.php:913
 #: src/Admin/Downloads/Editor/Notes.php:75
 msgid "Download Instructions"
 msgstr ""
 
 #. translators: %s: singular label.
-#: includes/admin/downloads/metabox.php:920
+#: includes/admin/downloads/metabox.php:921
 #: src/Admin/Downloads/Editor/Notes.php:83
 msgid "Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes."
 msgstr ""
@@ -8145,6 +8140,7 @@ msgid "All modes"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:176
+#: includes/reports/reports-functions.php:1584
 msgid "All gateways"
 msgstr ""
 
@@ -8204,7 +8200,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:334
 #: includes/admin/reporting/class-base-logs-list-table.php:534
 #: includes/admin/tools/logs.php:238
-#: includes/reports/reports-functions.php:1840
+#: includes/reports/reports-functions.php:1844
 msgid "Filter"
 msgstr ""
 
@@ -8328,7 +8324,7 @@ msgid "You are about to permanently delete this order from your store. Once dele
 msgstr ""
 
 #: includes/admin/payments/contextual-help.php:70
-#: includes/admin/reporting/reports.php:214
+#: includes/admin/reporting/reports.php:215
 msgid "Overview"
 msgstr ""
 
@@ -8923,7 +8919,7 @@ msgstr ""
 #: src/Admin/Emails/Screen.php:35
 #: src/Admin/Menu/Header.php:145
 #: src/Admin/Menu/Pages.php:82
-#: includes/blocks/build/buy-button/index.js:12
+#: includes/blocks/build/buy-button/index.js:9
 #: includes/blocks/build/cart/index.js:1
 #: includes/blocks/build/confirmation/index.js:1
 #: includes/blocks/build/login/index.js:1
@@ -9031,20 +9027,16 @@ msgstr ""
 #: includes/admin/reporting/class-download-reports-table.php:103
 #: includes/admin/reporting/graphing.php:300
 #: includes/admin/reporting/graphing.php:599
-#: includes/admin/reporting/reports.php:241
-#: includes/admin/reporting/reports.php:400
-#: includes/admin/reporting/reports.php:408
-#: includes/admin/reporting/reports.php:707
-#: includes/admin/reporting/reports.php:935
-#: includes/admin/reporting/reports.php:1033
-#: includes/admin/reporting/reports.php:1507
-#: includes/admin/reporting/reports.php:1717
-#: includes/admin/reporting/reports.php:1918
-#: includes/admin/reporting/reports.php:2014
 #: src/Admin/Exports/Exporters/Downloads.php:61
 #: src/Admin/Exports/Exporters/SalesEarnings.php:64
 #: src/Reports/Data/Downloads/Top_Selling_Downloads_List_Table.php:59
 #: src/Reports/Data/File_Downloads/Top_Five_Most_Downloaded_List_Table.php:62
+#: src/Reports/Endpoints/Charts/DownloadSales.php:52
+#: src/Reports/Endpoints/Charts/DownloadSales.php:62
+#: src/Reports/Endpoints/Charts/GatewaySales.php:50
+#: src/Reports/Endpoints/Charts/Sales.php:50
+#: src/Reports/Endpoints/Tiles/GatewaySales.php:42
+#: src/Reports/Endpoints/Tiles/Sales.php:42
 #: includes/blocks/build/downloads/index.js:1
 #: includes/blocks/src/utilities/download-order-by.js:22
 msgid "Sales"
@@ -9276,7 +9268,7 @@ msgid "Item Amount"
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:61
-#: includes/admin/reporting/reports.php:181
+#: includes/admin/reporting/reports.php:180
 #: src/Admin/Menu/Header.php:148
 #: src/Admin/Menu/Pages.php:75
 #: src/Admin/Menu/Pages.php:76
@@ -9288,7 +9280,7 @@ msgid "This screen provides you with reports for your earnings, downloads, custo
 msgstr ""
 
 #: includes/admin/reporting/contextual-help.php:67
-#: includes/admin/reporting/reports.php:3155
+#: includes/admin/reporting/reports.php:807
 #: includes/admin/tools.php:955
 msgid "Export"
 msgstr ""
@@ -9415,233 +9407,46 @@ msgstr ""
 msgid "The logs tab has been moved to the Tools screen."
 msgstr ""
 
-#: includes/admin/reporting/reports.php:294
-#: includes/admin/reporting/reports.php:1607
-msgid "Average Order Value"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:321
-#: includes/admin/reporting/reports.php:2934
-#: includes/admin/reporting/reports.php:3027
-#: includes/admin/reporting/reports.php:3103
-#: includes/emails/email-summary/template-parts/data-listing.php:68
-msgid "New Customers"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:345
-#: includes/admin/reporting/reports.php:1254
-msgid "Total Refund Amount"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:471
-msgid "Sales / Earnings"
-msgstr ""
-
-#. translators: %s: Download singular label
-#: includes/admin/reporting/reports.php:548
-msgid "Most Valuable %s"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:590
-msgid "Average Sales / Earnings"
-msgstr ""
-
-#. translators: %s: Downloads plural label
-#: includes/admin/reporting/reports.php:658
-msgid "Top Selling %s"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:672
-msgid "Sales by Variation"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:727
-msgid "Earnings by Variation"
-msgstr ""
-
 #. translators: %s: Downloads label
-#: includes/admin/reporting/reports.php:1093
+#: includes/admin/reporting/reports.php:358
 msgid "%s Terms"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1108
-msgid "Earnings By Term"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1148
-#: includes/admin/reporting/reports.php:1573
+#: includes/admin/reporting/reports.php:404
 #: includes/admin/settings/register-settings.php:553
 #: includes/orders/functions/types.php:102
 #: src/Admin/Settings/Tabs/Gateways.php:168
 #: src/Admin/Settings/Tabs/Gateways.php:171
+#: src/Reports/Endpoints/Tiles/GatewayRefunds.php:42
 msgid "Refunds"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1177
-msgid "Number of Refunds"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1203
-msgid "Number of Fully Refunded Orders"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1230
-msgid "Number of Fully Refunded Items"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1279
-msgid "Average Refund Amount"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1305
-msgid "Average Time to Refund"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1328
-msgid "Refund Rate"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1353
-msgid "Refunded Revenue"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1361
-msgid "Revenue"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1380
-msgid "Refunded Orders"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1388
-msgctxt "Context: As in the total number of items"
-msgid "Number"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1492
+#: includes/admin/reporting/reports.php:496
 msgid "Payment Gateways"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:1646
-msgid "Gateway Stats"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1660
-msgid "Stripe Payment Methods"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1676
-msgid "Gateway Sales"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:1737
-msgid "Gateway Earnings"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2101
+#: includes/admin/reporting/reports.php:563
 #: includes/admin/settings/contextual-help.php:112
 #: includes/admin/settings/register-settings.php:499
 msgid "Taxes"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2115
-msgid "Total Tax Collected"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2158
-msgid "Total Tax Collected for "
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2196
-msgid "Tax Collected by Location"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2272
-#: includes/admin/reporting/reports.php:2486
+#: includes/admin/reporting/reports.php:644
 #: includes/admin/settings/register-settings.php:604
 #: includes/admin/tools/logs.php:174
 #: includes/privacy-functions.php:591
 #: src/Reports/Data/File_Downloads/Top_Five_Most_Downloaded_List_Table.php:60
+#: src/Reports/Endpoints/Charts/FileDownloads.php:50
 msgid "File Downloads"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:2287
-#: includes/admin/reporting/reports.php:2400
-msgid "Number of File Downloads"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2319
-msgid "Average per Customer"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2342
-msgid "Average per Order"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2365
-msgid "Most Downloaded Product"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2386
-msgid "Top Five Most Downloaded Products"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2606
-msgid "Number of Discounts Used"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2628
-msgid "Discount Ratio"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2651
-msgid "Customer Savings"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2677
-msgid "Average Discount Amount"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2700
-msgid "Most Popular Discount"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2730
-msgid "Discount Usage Count"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2754
-msgid "Top Five Discounts"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2769
-#: includes/admin/reporting/reports.php:2849
-msgid "Discount Usage"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2958
-msgid "Average Revenue per Customer"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2978
-msgid "Average Orders per Customer"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:2999
-msgid "Top Five Customers &mdash; All Time"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:3013
-msgid "Most Valuable Customers"
-msgstr ""
-
-#: includes/admin/reporting/reports.php:3253
+#: includes/admin/reporting/reports.php:905
 #: includes/user-functions.php:875
 #: includes/user-functions.php:879
 msgid "Notice"
 msgstr ""
 
-#: includes/admin/reporting/reports.php:3254
+#: includes/admin/reporting/reports.php:906
 msgid "Tax reports are only generated for taxes associated with a location. The legacy default tax rate is unable to be reported on."
 msgstr ""
 
@@ -10095,7 +9900,7 @@ msgid "Button"
 msgstr ""
 
 #: includes/admin/thickbox.php:77
-#: includes/blocks/includes/downloads/downloads.php:136
+#: includes/blocks/includes/downloads/downloads.php:145
 #: includes/checkout/template.php:858
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:191
 #: includes/shortcodes.php:52
@@ -10874,6 +10679,18 @@ msgstr ""
 msgid "Enter one email per line."
 msgstr ""
 
+#: includes/admin/views/email-editor/recipient.php:157
+msgid "Reply to customer"
+msgstr ""
+
+#: includes/admin/views/email-editor/recipient.php:163
+msgid "Reply Settings"
+msgstr ""
+
+#: includes/admin/views/email-editor/recipient.php:167
+msgid "When enabled, replies to this email will go to the customer instead of the site admin."
+msgstr ""
+
 #: includes/admin/views/email-editor/sender.php:15
 msgid "From"
 msgstr ""
@@ -10965,7 +10782,7 @@ msgstr ""
 #: includes/blocks/views/orders/discounts.php:7
 #: includes/checkout/template.php:607
 #: includes/discount-functions.php:1330
-#: pro/invoices/functions.php:241
+#: pro/invoices/functions.php:242
 #: templates/shortcode-receipt.php:87
 msgid "Discount"
 msgid_plural "Discounts"
@@ -11498,7 +11315,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: the plurals downloads name.
-#: includes/blocks/includes/downloads/downloads.php:91
+#: includes/blocks/includes/downloads/downloads.php:100
 msgctxt "download post type name"
 msgid "No %s found."
 msgstr ""
@@ -11553,7 +11370,7 @@ msgid "Your purchase session could not be retrieved."
 msgstr ""
 
 #: includes/blocks/includes/orders/orders.php:172
-#: includes/shortcodes.php:728
+#: includes/shortcodes.php:507
 msgid "Sorry, trouble retrieving order receipt."
 msgstr ""
 
@@ -12327,8 +12144,8 @@ msgstr ""
 
 #. translators: %s: The customer's username
 #: includes/class-edd-cli.php:426
-#: includes/deprecated-functions.php:2497
-#: includes/deprecated-functions.php:2512
+#: includes/deprecated-functions.php:2380
+#: includes/deprecated-functions.php:2395
 msgid "Username: %s"
 msgstr ""
 
@@ -13330,8 +13147,6 @@ msgstr ""
 #: includes/deprecated-functions.php:1338
 #: includes/deprecated-functions.php:1417
 #: includes/deprecated-functions.php:1446
-#: includes/deprecated-functions.php:1596
-#: includes/deprecated-functions.php:1672
 #: includes/emails/recapture.php:16
 msgid "You do not have permission to do this."
 msgstr ""
@@ -13352,93 +13167,65 @@ msgstr ""
 msgid "%1$s %2$s %3$s %4$s Dismiss this notice. %5$s"
 msgstr ""
 
-#: includes/deprecated-functions.php:1537
-msgid "Access your SendWP account"
+#: includes/deprecated-functions.php:1546
+#: includes/deprecated-functions.php:1562
+msgid "This feature is no longer available."
 msgstr ""
 
-#: includes/deprecated-functions.php:1541
-msgid "<em><strong>Note:</strong> Email sending is currently disabled. <a href=\""
-msgstr ""
-
-#: includes/deprecated-functions.php:1558
-msgid "SendWP plugin activated."
-msgstr ""
-
-#: includes/deprecated-functions.php:1561
-msgid "Disconnect SendWP"
-msgstr ""
-
-#: includes/deprecated-functions.php:1569
-msgid "We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more."
-msgstr ""
-
-#. translators: 1: Opening anchor tag (do not translate) 2. Closing anchor tag (do not translate)
-#: includes/deprecated-functions.php:1571
-msgid "%1$sLearn more%2$s"
-msgstr ""
-
-#: includes/deprecated-functions.php:1575
-msgid "Connect with SendWP"
-msgstr ""
-
-#: includes/deprecated-functions.php:1647
-msgid "Something went wrong. SendWP was not installed correctly."
-msgstr ""
-
-#: includes/deprecated-functions.php:1763
+#: includes/deprecated-functions.php:1646
 msgid "Activate Reviews"
 msgstr ""
 
 #. translators: The %s represents the link to the Product Reviews extension.
-#: includes/deprecated-functions.php:1777
+#: includes/deprecated-functions.php:1660
 msgid "Would you like to enable reviews for this product? Check out our <a target=\"_blank\" href=\"%s\">Product Reviews</a> extension."
 msgstr ""
 
 #. translators: %s: The site name
-#: includes/deprecated-functions.php:2494
+#: includes/deprecated-functions.php:2377
 msgid "[%s] New User Registration"
 msgstr ""
 
-#: includes/deprecated-functions.php:2495
+#: includes/deprecated-functions.php:2378
 #: src/Emails/Templates/NewUserAdmin.php:86
 msgid "New user registration"
 msgstr ""
 
 #. translators: the user email
-#: includes/deprecated-functions.php:2499
+#: includes/deprecated-functions.php:2382
 msgid "E-mail: %s"
 msgstr ""
 
 #. translators: Site name
-#: includes/deprecated-functions.php:2509
+#: includes/deprecated-functions.php:2392
 msgid "[%s] Your username and password"
 msgstr ""
 
-#: includes/deprecated-functions.php:2510
+#: includes/deprecated-functions.php:2393
 #: src/Emails/Templates/NewUser.php:86
 msgid "Your account info"
 msgstr ""
 
-#: includes/deprecated-functions.php:2515
+#: includes/deprecated-functions.php:2398
 msgid "Password entered at checkout"
 msgstr ""
 
-#: includes/deprecated-functions.php:2517
+#: includes/deprecated-functions.php:2400
 msgid "Password entered at registration"
 msgstr ""
 
 #. translators: %s: password message
-#: includes/deprecated-functions.php:2521
+#: includes/deprecated-functions.php:2404
 msgid "Password: %s"
 msgstr ""
 
-#: includes/deprecated-functions.php:2526
+#: includes/deprecated-functions.php:2409
 #: src/Emails/Templates/NewUser.php:114
 msgid "Click here to log in"
 msgstr ""
 
 #. translators: %s: login URL
-#: includes/deprecated-functions.php:2530
+#: includes/deprecated-functions.php:2413
 #: src/Emails/Templates/NewUser.php:118
 msgid "To log in, visit: %s"
 msgstr ""
@@ -13536,6 +13323,12 @@ msgstr ""
 #: includes/emails/email-summary/template-parts/data-listing.php:16
 #: includes/emails/email-summary/template-parts/top-products.php:18
 msgid "Gross Revenue"
+msgstr ""
+
+#: includes/emails/email-summary/template-parts/data-listing.php:68
+#: src/Reports/Endpoints/Charts/Customers.php:50
+#: src/Reports/Endpoints/Tiles/CustomerGrowth.php:42
+msgid "New Customers"
 msgstr ""
 
 #: includes/emails/email-summary/template-parts/data-listing.php:92
@@ -15352,9 +15145,9 @@ msgstr ""
 #: includes/orders/functions/types.php:90
 #: includes/orders/functions/ui.php:36
 #: src/Emails/Templates/Registry.php:113
-#: includes/blocks/build/downloads/index.js:6
+#: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/build/terms/index.js:5
-#: includes/blocks/src/downloads/edit.js:72
+#: includes/blocks/src/downloads/edit.js:229
 #: includes/blocks/src/terms/edit.js:62
 msgid "Order"
 msgstr ""
@@ -16194,15 +15987,15 @@ msgid "compared to"
 msgstr ""
 
 #. translators: %s: Default currency of the store, in standard 3 character format (example: USD or EUR)
-#: includes/reports/reports-functions.php:1696
+#: includes/reports/reports-functions.php:1700
 msgid "%s - Converted"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1743
+#: includes/reports/reports-functions.php:1747
 msgid "All order statuses"
 msgstr ""
 
-#: includes/reports/reports-functions.php:1869
+#: includes/reports/reports-functions.php:1873
 msgid "Try the Sales/Earnings iOS App!"
 msgstr ""
 
@@ -16211,41 +16004,41 @@ msgid "Purchase All Items"
 msgstr ""
 
 #. translators: plural download label
-#: includes/shortcodes.php:640
+#: includes/shortcodes.php:419
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
 
-#: includes/shortcodes.php:740
+#: includes/shortcodes.php:519
 msgid "You must be logged in to view this payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:752
+#: includes/shortcodes.php:531
 msgid "Receipt could not be retrieved, your purchase session has expired."
 msgstr ""
 
-#: includes/shortcodes.php:766
+#: includes/shortcodes.php:545
 msgid "Sorry, trouble viewing order receipt."
 msgstr ""
 
-#: includes/shortcodes.php:836
+#: includes/shortcodes.php:615
 msgid "Your profile could not be updated. Please contact a site administrator."
 msgstr ""
 
-#: includes/shortcodes.php:872
+#: includes/shortcodes.php:651
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:883
+#: includes/shortcodes.php:662
 msgid "The email you entered is invalid. Please enter a valid email."
 msgstr ""
 
-#: includes/shortcodes.php:894
+#: includes/shortcodes.php:673
 #: includes/users/register.php:81
 msgid "This email address is not available."
 msgstr ""
 
-#: includes/shortcodes.php:1037
+#: includes/shortcodes.php:816
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
@@ -16543,8 +16336,8 @@ msgid "Show %s Title"
 msgstr ""
 
 #: includes/widgets.php:436
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:163
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:320
 msgid "Show Purchase Button"
 msgstr ""
 
@@ -16562,10 +16355,10 @@ msgstr ""
 
 #: pro/admin/invoices.php:28
 #: pro/admin/invoices.php:53
-#: pro/invoices/actions.php:118
-#: pro/invoices/actions.php:140
-#: pro/invoices/actions.php:167
-#: pro/invoices/actions.php:194
+#: pro/invoices/actions.php:111
+#: pro/invoices/actions.php:133
+#: pro/invoices/actions.php:155
+#: pro/invoices/actions.php:179
 #: pro/invoices/emails.php:43
 msgid "View Invoice"
 msgstr ""
@@ -16579,22 +16372,22 @@ msgstr ""
 msgid "Export EU VAT Dates"
 msgstr ""
 
-#: pro/invoices/actions.php:85
+#: pro/invoices/actions.php:82
 #: pro/invoices/emails.php:22
 msgid "Invoice"
 msgstr ""
 
-#: pro/invoices/actions.php:165
-#: pro/invoices/actions.php:191
+#: pro/invoices/actions.php:153
+#: pro/invoices/actions.php:176
 msgid "Invoice:"
 msgstr ""
 
-#: pro/invoices/actions.php:220
-#: pro/invoices/actions.php:273
+#: pro/invoices/actions.php:205
+#: pro/invoices/actions.php:258
 msgid "You do not have permission to view this invoice."
 msgstr ""
 
-#: pro/invoices/actions.php:273
+#: pro/invoices/actions.php:258
 msgid "Access Denied"
 msgstr ""
 
@@ -16602,7 +16395,7 @@ msgstr ""
 msgid "Creates a link to a printable invoice."
 msgstr ""
 
-#: pro/invoices/functions.php:207
+#: pro/invoices/functions.php:208
 msgid "License Renewal Discount:"
 msgstr ""
 
@@ -17232,6 +17025,10 @@ msgstr ""
 msgid "Allow purchasing multiple variations in the same order."
 msgstr ""
 
+#: src/Admin/Downloads/Editor/Details.php:212
+msgid "Feature this download in the store."
+msgstr ""
+
 #: src/Admin/Downloads/Editor/Sections.php:165
 #: src/Admin/Sections.php:302
 msgid "Invalid section"
@@ -17267,6 +17064,11 @@ msgstr ""
 #. translators: %d: price ID
 #: src/Admin/Downloads/Editor/VariablePrices.php:235
 msgid "Move price %d down"
+msgstr ""
+
+#: src/Admin/Downloads/Filters.php:57
+#: src/Admin/Downloads/Filters.php:87
+msgid "Featured"
 msgstr ""
 
 #. translators: %s: Download singular label
@@ -17484,8 +17286,8 @@ msgid "Slug"
 msgstr ""
 
 #: src/Admin/Exports/Exporters/Downloads.php:49
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:85
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:242
 msgid "Author"
 msgstr ""
 
@@ -17805,29 +17607,33 @@ msgstr ""
 msgid "Extension deactivated."
 msgstr ""
 
-#: src/Admin/Extensions/Legacy.php:84
+#: src/Admin/Extensions/Legacy.php:89
 msgid "Inactive &mdash; Part of EDD"
 msgstr ""
 
-#: src/Admin/Extensions/Legacy.php:131
+#: src/Admin/Extensions/Legacy.php:136
 msgid "Auto Register has been merged into Easy Digital Downloads. It has been deactivated and you can safely delete the Auto Register plugin. Please review your new user emails to ensure that any customizations were retained during the migration."
 msgstr ""
 
-#: src/Admin/Extensions/Legacy.php:134
+#: src/Admin/Extensions/Legacy.php:139
 msgid "View Emails"
 msgstr ""
 
+#: src/Admin/Extensions/Legacy.php:158
+msgid "Featured Downloads has been merged into Easy Digital Downloads. If you are using the [edd_featured_downloads] shortcode anywhere, please update it to use the downloads block or shortcode instead and then deactivate this plugin."
+msgstr ""
+
 #. translators: %s: name of the extension.
-#: src/Admin/Extensions/Legacy.php:207
+#: src/Admin/Extensions/Legacy.php:220
 msgid "%s is now part of EDD!"
 msgstr ""
 
 #. translators: %s: name of the extension.
-#: src/Admin/Extensions/Legacy.php:212
+#: src/Admin/Extensions/Legacy.php:225
 msgid "The functionality of %1$s has been merged into Easy Digital Downloads. It has been deactivated and you can safely delete the %2$s plugin."
 msgstr ""
 
-#: src/Admin/Extensions/Legacy.php:231
+#: src/Admin/Extensions/Legacy.php:244
 msgid "View Plugins"
 msgstr ""
 
@@ -18875,6 +18681,7 @@ msgstr ""
 
 #: src/Admin/Promos/Notices/EmptyCartBehavior.php:118
 #: src/Admin/Promos/Notices/VATHandling.php:116
+#: src/Lite/Admin/Promos/Notices/FeaturedDownloads.php:91
 msgid "Maybe Later"
 msgstr ""
 
@@ -18911,28 +18718,28 @@ msgstr ""
 msgid "Ok, you deserve it!"
 msgstr ""
 
-#. translators: %1$s opening anchor tag; %2$s closing anchor tag
-#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:167
-msgid "You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments. Already have a Pass? %3$sActivate it now%4$s"
+#. translators: %1$s opening strong tag; %2$s closing strong tag; %3$s opening anchor tag; %4$s closing anchor tag
+#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:161
+msgid "%1$sYou're using Easy Digital Downloads Lite.%2$s To unlock more features consider %3$supgrading to Pro%4$s for 50%% off."
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
-#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:184
+#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:178
 msgid "For access to additional Easy Digital Downloads extensions to grow your store, consider %1$spurchasing a pass%2$s."
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
-#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:199
+#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:193
 msgid "You are using Easy Digital Downloads with a Personal Pass. Consider %1$supgrading%2$s to get recurring payments and more."
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
-#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:216
+#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:210
 msgid "Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s"
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
-#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:223
+#: src/Admin/Promos/Notices/License_Upgrade_Notice.php:217
 msgid "Gain access to powerful insights to grow your traffic and revenue. %1$sGet MonsterInsights%2$s"
 msgstr ""
 
@@ -19348,7 +19155,7 @@ msgid "Enter the heading for the sale notification email."
 msgstr ""
 
 #: src/Admin/Settings/Tabs/Emails.php:133
-#: src/Emails/Templates/AdminOrderNotice.php:91
+#: src/Emails/Templates/AdminOrderNotice.php:92
 msgid "New Sale!"
 msgstr ""
 
@@ -19357,7 +19164,7 @@ msgid "Sale Notification"
 msgstr ""
 
 #: src/Admin/Settings/Tabs/Emails.php:138
-#: src/Emails/Templates/AdminOrderNotice.php:75
+#: src/Emails/Templates/AdminOrderNotice.php:76
 msgid "Text to email as a notification for every completed purchase. Personalize with HTML and <code>{tag}</code> markers."
 msgstr ""
 
@@ -20287,17 +20094,17 @@ msgstr ""
 msgid "Enable VAT handling and validation."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Taxes.php:146
-msgid "Enabling VAT handling in EDD will automatically deactivate the Easy Digital Downloads - EU VAT plugin."
-msgstr ""
-
-#: src/Admin/Settings/Tabs/Taxes.php:152
+#: src/Admin/Settings/Tabs/Taxes.php:145
 msgid "This feature requires Easy Digital Downloads (Pro) to be installed and activated."
 msgstr ""
 
 #. translators: 1: opening button tag, 2: closing button tag
-#: src/Admin/Settings/Tabs/Taxes.php:156
+#: src/Admin/Settings/Tabs/Taxes.php:160
 msgid "%1$sUpgrade to Pro%2$s to enable VAT handling."
+msgstr ""
+
+#: src/Admin/Settings/Tabs/Taxes.php:174
+msgid "Enabling VAT handling in EDD will automatically deactivate the Easy Digital Downloads - EU VAT plugin."
 msgstr ""
 
 #: src/Admin/Settings/WP_SMTP.php:83
@@ -20752,20 +20559,20 @@ msgstr ""
 msgid "Select categories"
 msgstr ""
 
-#: src/Emails/Base.php:183
+#: src/Emails/Base.php:219
 msgid "Default Template"
 msgstr ""
 
-#: src/Emails/Base.php:184
+#: src/Emails/Base.php:220
 msgid "No template, plain text only"
 msgstr ""
 
-#: src/Emails/Base.php:319
+#: src/Emails/Base.php:355
 msgid "You cannot send email with EDD_Emails until init/admin_init has been reached"
 msgstr ""
 
 #. translators: 1: To address, 2: Subject
-#: src/Emails/Base.php:351
+#: src/Emails/Base.php:387
 msgid ""
 "Email from Easy Digital Downloads failed to send. \n"
 "To: %1$s\n"
@@ -20979,51 +20786,51 @@ msgstr ""
 msgid "Set your password"
 msgstr ""
 
-#: src/Emails/Templates/AdminOrderNotice.php:65
+#: src/Emails/Templates/AdminOrderNotice.php:66
 msgid "Admin Sale Notification"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced with the payment ID.
-#: src/Emails/Templates/AdminOrderNotice.php:90
+#: src/Emails/Templates/AdminOrderNotice.php:91
 msgid "New download purchase - Order #%s"
 msgstr ""
 
 #. translators: %s: The plural label for the Download post type.
-#: src/Emails/Templates/AdminOrderNotice.php:120
+#: src/Emails/Templates/AdminOrderNotice.php:122
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:162
 msgid "Hello"
 msgstr ""
 
 #. translators: %s: The plural label for the Download post type.
-#: src/Emails/Templates/AdminOrderNotice.php:124
+#: src/Emails/Templates/AdminOrderNotice.php:126
 msgid "A %s purchase has been made"
 msgstr ""
 
 #. translators: %s: The plural label for the Download post type.
-#: src/Emails/Templates/AdminOrderNotice.php:128
+#: src/Emails/Templates/AdminOrderNotice.php:130
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:167
 msgid "%s sold:"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced by the customer's full name
-#: src/Emails/Templates/AdminOrderNotice.php:133
+#: src/Emails/Templates/AdminOrderNotice.php:135
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:170
 msgid "Purchased by: %s"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced by the order total.
-#: src/Emails/Templates/AdminOrderNotice.php:136
+#: src/Emails/Templates/AdminOrderNotice.php:138
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:172
 msgctxt "Context: This is a tag (placholder) for email content that will be replaced when sending."
 msgid "Amount: %s"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced by the payment method.
-#: src/Emails/Templates/AdminOrderNotice.php:139
+#: src/Emails/Templates/AdminOrderNotice.php:141
 msgid "Payment Method: %s"
 msgstr ""
 
-#: src/Emails/Templates/AdminOrderNotice.php:141
+#: src/Emails/Templates/AdminOrderNotice.php:143
 msgid "Thank you"
 msgstr ""
 
@@ -22892,6 +22699,14 @@ msgstr ""
 msgid "Good news! With your pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and access Pro only features."
 msgstr ""
 
+#: src/Lite/Admin/Promos/Notices/FeaturedDownloads.php:80
+msgid "Turn Your Best Products into Bestsellers"
+msgstr ""
+
+#: src/Lite/Admin/Promos/Notices/FeaturedDownloads.php:83
+msgid "Get more clicks and sales by making your top downloads impossible to miss. With EDD Pro, you can style featured products with custom borders, badges, and colors—grabbing attention and boosting conversions instantly."
+msgstr ""
+
 #: src/Orders/Refunds/Validator.php:268
 msgid "No items have been selected to refund."
 msgstr ""
@@ -22973,6 +22788,179 @@ msgstr ""
 #: src/Reports/Data/Taxes/Tax_Collected_By_Location.php:177
 #: src/Reports/Data/Taxes/Tax_Collected_By_Location.php:294
 msgid "Global Rate"
+msgstr ""
+
+#: src/Reports/Endpoints/Charts/Discounts.php:50
+#: src/Reports/Endpoints/Tiles/DiscountUsage.php:42
+msgid "Discount Usage"
+msgstr ""
+
+#: src/Reports/Endpoints/Charts/FileDownloads.php:60
+#: src/Reports/Endpoints/Tiles/FileDownloads.php:44
+msgid "Number of File Downloads"
+msgstr ""
+
+#: src/Reports/Endpoints/Charts/RefundRevenue.php:42
+msgid "Revenue"
+msgstr ""
+
+#: src/Reports/Endpoints/Charts/RefundRevenue.php:52
+msgid "Refunded Revenue"
+msgstr ""
+
+#: src/Reports/Endpoints/Charts/Refunds.php:60
+msgid "Refunded Orders"
+msgstr ""
+
+#: src/Reports/Endpoints/Pies/DownloadEarningsByVariations.php:50
+msgid "Earnings by Variation"
+msgstr ""
+
+#: src/Reports/Endpoints/Pies/DownloadSalesByVariations.php:50
+msgid "Sales by Variation"
+msgstr ""
+
+#: src/Reports/Endpoints/Pies/GatewayEarnings.php:50
+msgid "Gateway Earnings"
+msgstr ""
+
+#: src/Reports/Endpoints/Pies/GatewaySales.php:50
+msgid "Gateway Sales"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/EarningsByTaxonomy.php:40
+msgid "Earnings by Term"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/GatewayStats.php:40
+msgid "Gateway Stats"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/MostValuableCustomers.php:40
+msgid "Most Valuable Customers"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/StripePaymentMethods.php:40
+msgid "Stripe Payment Methods"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/TaxCollectedByLocation.php:40
+msgid "Tax Collected by Location"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/TopFiveCustomers.php:40
+msgid "Top Five Customers &mdash; All Time"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/TopFiveDiscounts.php:40
+msgid "Top Five Discounts"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/TopFiveMostDownloaded.php:40
+msgid "Top Five Most Downloaded Products"
+msgstr ""
+
+#: src/Reports/Endpoints/Tables/TopSellingDownloads.php:40
+msgid "Top Selling Downloads"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/Average.php:42
+#: src/Reports/Endpoints/Tiles/GatewayAverage.php:42
+msgid "Average Order Value"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/AverageRefundAmount.php:42
+msgid "Average Refund Amount"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/AverageRefundTime.php:42
+msgid "Average Time to Refund"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/AverageSalesEarnings.php:42
+msgid "Average Sales / Earnings"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/CustomerAverage.php:42
+msgid "Average Revenue per Customer"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/CustomerAverageOrders.php:42
+msgid "Average Orders per Customer"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/DiscountAverage.php:42
+msgid "Average Discount Amount"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/DiscountPopular.php:42
+msgid "Most Popular Discount"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/DiscountRatio.php:42
+msgid "Discount Ratio"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/DiscountSavings.php:42
+msgid "Customer Savings"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/DiscountsUsed.php:42
+msgid "Number of Discounts Used"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/DownloadSalesEarnings.php:42
+msgid "Sales / Earnings"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/FileDownloadsCustomer.php:42
+msgid "Average per Customer"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/FileDownloadsOrder.php:42
+msgid "Average per Order"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/FileDownloadsProduct.php:42
+msgid "Most Downloaded Product"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/FullyRefundedOrderCount.php:42
+msgid "Number of Fully Refunded Orders"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/FullyRefundedOrderItemCount.php:42
+msgid "Number of Fully Refunded Items"
+msgstr ""
+
+#. translators: %s: Download singular label
+#: src/Reports/Endpoints/Tiles/MostValuableDownload.php:43
+msgid "Most Valuable %s"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/MostValuableDownload.php:69
+msgid "N/A"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/RefundAmount.php:42
+#: src/Reports/Endpoints/Tiles/RefundedAmount.php:42
+msgid "Total Refund Amount"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/RefundCount.php:42
+msgid "Number of Refunds"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/RefundRate.php:51
+msgid "Refund Rate"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/TaxCollected.php:42
+msgid "Total Tax Collected"
+msgstr ""
+
+#: src/Reports/Endpoints/Tiles/TaxCollectedLocation.php:53
+msgid "Total Tax Collected for %s"
 msgstr ""
 
 #: src/Reports/Init.php:183
@@ -23240,7 +23228,7 @@ msgstr ""
 
 #. translators: %s: Download label singular
 #: includes/blocks/build/buy-button/index.js:3
-#: includes/blocks/build/buy-button/index.js:13
+#: includes/blocks/build/buy-button/index.js:10
 #: includes/blocks/src/buy-button/edit.js:59
 #: includes/blocks/src/utilities/downloads.js:11
 msgid "Select a %s"
@@ -23253,53 +23241,53 @@ msgid "Current %s"
 msgstr ""
 
 #. translators: %s: Download label plural
-#: includes/blocks/build/buy-button/index.js:6
-#: includes/blocks/build/downloads/index.js:2
+#: includes/blocks/build/buy-button/index.js:5
+#: includes/blocks/build/downloads/index.js:1
 #: includes/blocks/src/utilities/download-new.js:12
 msgid "No Published %s Found"
 msgstr ""
 
 #. translators: %s: Download label singular
-#: includes/blocks/build/buy-button/index.js:8
-#: includes/blocks/build/downloads/index.js:4
+#: includes/blocks/build/buy-button/index.js:6
+#: includes/blocks/build/downloads/index.js:2
 #: includes/blocks/src/utilities/download-new.js:23
 msgid "Create a New %s"
 msgstr ""
 
 #. translators: %s: Download label singular
-#: includes/blocks/build/buy-button/index.js:9
-#: includes/blocks/build/downloads/index.js:5
+#: includes/blocks/build/buy-button/index.js:6
+#: includes/blocks/build/downloads/index.js:2
 #: includes/blocks/src/utilities/download-new.js:26
 msgid "Create Your First %s"
 msgstr ""
 
 #. translators: %s: Download label singular
-#: includes/blocks/build/buy-button/index.js:10
-#: includes/blocks/build/downloads/index.js:6
+#: includes/blocks/build/buy-button/index.js:7
+#: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/src/utilities/download-new.js:37
 msgid "View All %s"
 msgstr ""
 
 #. translators: %s: Download label singular
-#: includes/blocks/build/buy-button/index.js:11
+#: includes/blocks/build/buy-button/index.js:8
 #: includes/blocks/src/buy-button/edit.js:31
 msgid "Select a %s:"
 msgstr ""
 
 #. translators: %s: Download label plural
-#: includes/blocks/build/buy-button/index.js:12
+#: includes/blocks/build/buy-button/index.js:9
 #: includes/blocks/src/buy-button/edit.js:35
 msgid "Published %s"
 msgstr ""
 
-#: includes/blocks/build/buy-button/index.js:13
-#: includes/blocks/build/downloads/index.js:6
+#: includes/blocks/build/buy-button/index.js:10
+#: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/src/buy-button/edit.js:65
-#: includes/blocks/src/downloads/edit.js:158
+#: includes/blocks/src/downloads/edit.js:315
 msgid "Show Price"
 msgstr ""
 
-#: includes/blocks/build/buy-button/index.js:13
+#: includes/blocks/build/buy-button/index.js:10
 #: includes/blocks/src/buy-button/edit.js:74
 msgid "Enable Buy Now to process a download order without going through the full checkout."
 msgstr ""
@@ -23472,111 +23460,238 @@ msgstr ""
 msgid "All authors"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:34
+#: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/src/downloads/edit.js:35
+#: includes/blocks/src/downloads/edit.js:36
 msgid "All Categories"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:41
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:149
 msgid "Product Block Settings"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:43
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:151
 msgid "Decide how to display your products."
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:45
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:153
+msgid "Featured Downloads"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:159
+msgid "Show All Downloads"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:163
+msgid "Show Only Featured Downloads"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:167
+msgid "Show Featured Downloads First"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:183
+#: includes/blocks/src/downloads/edit.js:193
+msgid "Enable Featured Styling"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:187
+#: includes/blocks/src/downloads/edit.js:197
+msgid "Apply special styling to featured downloads to make them stand out."
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:202
 msgid "Downloads per Page"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:53
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:210
 msgid "Show All Access Downloads"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
+#: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/build/terms/index.js:5
-#: includes/blocks/src/downloads/edit.js:59
+#: includes/blocks/src/downloads/edit.js:216
 #: includes/blocks/src/terms/edit.js:68
 msgid "Number of Columns"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
+#: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/build/terms/index.js:5
-#: includes/blocks/src/downloads/edit.js:66
+#: includes/blocks/src/downloads/edit.js:223
 #: includes/blocks/src/terms/edit.js:56
 msgid "Order By"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:79
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:236
 msgid "Show Pagination"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:92
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:249
 msgid "Download Term Settings"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:98
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:255
 msgid "Show Downloads From Categories"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:106
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:263
 msgid "Show Downloads From Tags"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:114
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:271
 msgid "Individual Product Settings"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
+#: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/build/terms/index.js:5
-#: includes/blocks/src/downloads/edit.js:118
+#: includes/blocks/src/downloads/edit.js:275
 #: includes/blocks/src/terms/edit.js:85
 msgid "Show Title"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:123
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:280
 msgid "Featured Image Location"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:130
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:287
 msgid "Should the featured image link to the product?"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:137
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:294
 msgid "Featured Image Size"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:145
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:302
 msgid "Featured Image Alignment"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:152
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:309
 msgid "Content"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:170
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:327
 msgid "Purchase Button Alignment"
 msgstr ""
 
-#: includes/blocks/build/downloads/index.js:6
-#: includes/blocks/src/downloads/edit.js:176
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:333
 msgid "Show Price on Button"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:342
+msgid "Featured Downloads Styling"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:346
+msgid "Show Featured Badge"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:349
+msgid "Display a badge on featured downloads."
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:354
+msgid "Featured Badge Text"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:357
+msgid "Text to display on the featured badge."
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:360
+msgid "Featured Badge Colors"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:363
+msgid "Badge Text Color"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:368
+msgid "Badge Background Color"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:377
+msgid "Enable Featured Border"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:380
+msgid "Add a custom border to featured downloads."
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:384
+msgid "Border Color"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:390
+msgid "Border Width (px)"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:397
+msgid "Border Style"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:401
+msgid "Solid"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:402
+msgid "Dashed"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:403
+msgid "Dotted"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:404
+msgid "Double"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:408
+msgid "Border Radius (px)"
+msgstr ""
+
+#: includes/blocks/build/downloads/index.js:3
+#: includes/blocks/src/downloads/edit.js:413
+msgid "Rounded corners for the border."
 msgstr ""
 
 #: includes/blocks/build/login/index.js:1
@@ -23899,6 +24014,18 @@ msgstr ""
 #: includes/blocks/src/terms/block.json
 msgctxt "block keyword"
 msgid "downloads"
+msgstr ""
+
+#: includes/blocks/build/downloads/block.json
+#: includes/blocks/src/downloads/block.json
+msgctxt "block keyword"
+msgid "featured downloads"
+msgstr ""
+
+#: includes/blocks/build/downloads/block.json
+#: includes/blocks/src/downloads/block.json
+msgctxt "block keyword"
+msgid "featured products"
 msgstr ""
 
 #: includes/blocks/build/login/block.json

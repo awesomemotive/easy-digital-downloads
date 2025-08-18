@@ -96,6 +96,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Customers\Emails(),
 			new Admin\Discounts\Manager(),
 			new Gateways\Square\Admin\Settings\Register(),
+			new Admin\Downloads\Filters(),
 		);
 
 		return $providers;

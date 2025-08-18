@@ -71,9 +71,18 @@ function downloads( $block_attributes = array() ) {
 		'show_price'          => true,
 		'all_access'          => false,
 		'author'              => false,
+		'featured'            => '',
 	);
 
-	$block_attributes = wp_parse_args( $block_attributes, $defaults );
+	/**
+	 * Filters the block attributes.
+	 *
+	 * @since 3.5.1
+	 *
+	 * @param array $block_attributes The block attributes.
+	 * @return array
+	 */
+	$block_attributes = apply_filters( 'edd_blocks_downloads_attributes', wp_parse_args( $block_attributes, $defaults ) );
 	if ( 'rand' === $block_attributes['orderby'] ) {
 		$block_attributes['pagination'] = false;
 	}
@@ -83,7 +92,7 @@ function downloads( $block_attributes = array() ) {
 
 	require_once EDD_BLOCKS_DIR . 'includes/downloads/query.php';
 
-	$query      = new Query( $block_attributes );
+	$query      = new \EDD\Downloads\Query( $block_attributes );
 	$query_args = $query->get_query();
 	$downloads  = new \WP_Query( $query_args );
 	if ( ! $downloads->have_posts() ) {
@@ -194,7 +203,7 @@ add_filter( 'edd_purchase_link_args', __NAMESPACE__ . '\maybe_update_purchase_li
  * If the blocks button colors have been defined, update all purchase links everywhere.
  *
  * @since 2.0
- * @param array $args
+ * @param array $args Purchase link arguments.
  * @return array
  */
 function maybe_update_purchase_links( $args ) {
@@ -210,7 +219,7 @@ function maybe_update_purchase_links( $args ) {
  * Renders a featured image if one is set.
  *
  * @since 2.0
- * @param array $block_attributes
+ * @param array $block_attributes The block attributes.
  * @return void
  */
 function image( $block_attributes ) {

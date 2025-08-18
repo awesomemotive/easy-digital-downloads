@@ -128,10 +128,15 @@ class Validator {
 	/**
 	 * Checks if a post has a checkout block or shortcode.
 	 *
+	 * @since 3.3.0
 	 * @param int $post_id The ID of the post to check.
 	 * @return bool True if the post has a checkout block or shortcode, false otherwise.
 	 */
-	private static function has_checkout( $post_id ) {
+	private static function has_checkout( $post_id ): bool {
+
+		if ( ! $post_id ) {
+			return false;
+		}
 
 		if ( self::has_block( $post_id ) ) {
 			return true;

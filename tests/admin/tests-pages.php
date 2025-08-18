@@ -665,7 +665,7 @@ class Pages extends EDD_UnitTestCase {
 		$result3 = Page::is_admin( 'reports', 'earnings' );
 
 		$this->assertTrue( $result1 );
-		$this->assertTrue( $result2 );
+		$this->assertFalse( $result2 );
 		$this->assertFalse( $result3 ); // Should be false since page is edd-settings, not edd-reports
 
 		// Ensure edd_is_admin_page() returns same results
