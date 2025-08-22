@@ -1484,6 +1484,7 @@ function display_products_filter() {
 		'variations'       => true,
 		'selected'         => empty( $products ) ? 0 : $products,
 		'show_option_none' => false,
+		// Translators: %s represents the plural label for the items in the context of Easy Digital Downloads.
 		'show_option_all'  => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 	) ); ?>
 

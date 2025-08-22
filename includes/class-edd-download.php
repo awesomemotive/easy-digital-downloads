@@ -374,6 +374,7 @@ class EDD_Download {
 		if ( method_exists( $this, "get_{$key}" ) ) {
 			return call_user_func( array( $this, "get_{$key}" ) );
 		} else {
+			// Translators: %s is the name of the property that could not be retrieved.
 			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 		}
 	}
