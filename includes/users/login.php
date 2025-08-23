@@ -70,6 +70,8 @@ function edd_process_login_form( $data ) {
 		$pass       = isset( $data['edd_user_pass'] ) ? $data['edd_user_pass'] : '';
 		$rememberme = isset( $data['rememberme'] );
 
+		do_action( 'edd_pre_process_login_form' );
+		
 		$user = edd_log_user_in( 0, $login, $pass, $rememberme );
 
 		// Wipe these variables so they aren't anywhere in the submitted format any longer.
@@ -78,6 +80,8 @@ function edd_process_login_form( $data ) {
 		$data['edd_user_login'] = null;
 		$data['edd_user_pass']  = null;
 
+		do_action( 'edd_process_login_form' );
+		
 		// Check for errors and redirect if none present.
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
