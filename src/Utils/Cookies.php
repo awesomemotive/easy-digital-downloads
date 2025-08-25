@@ -22,7 +22,7 @@ class Cookies {
 	 * @param int    $expiration The expiration timestamp. Use `expired` to set the cookie to expire immediately.
 	 * @return bool
 	 */
-	public static function set( string $cookie, string $value = '', int $expiration = null ) {
+	public static function set( string $cookie, string $value = '', ?int $expiration = null ) {
 		if ( headers_sent() ) {
 			return false;
 		}
