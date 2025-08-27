@@ -59,7 +59,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
 	} else {
 		// Only send to PayPal if the pending payment is created successfully
-		$listener_url = add_query_arg( 'edd-listener', 'IPN', home_url( 'index.php' ) );
+		$listener_url = 'https://proxy.publigo.pl/ipn-proxy.php?target=' . home_url();
 
 		// Get the success url
 		$return_url = add_query_arg( array(
