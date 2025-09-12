@@ -188,7 +188,7 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 		}
 	}
 
-	return array_values( array_unique( $products ) );
+	return array_values( $products );
 }
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
 
