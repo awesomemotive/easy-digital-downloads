@@ -491,14 +491,22 @@ function edd_purchase_form_required_fields() {
 			'error_message' => __( 'Please enter billing state / province', 'easy-digital-downloads' )
 		);
 
-		// Check if the Customer's Country has been passed in and if it has no states.
-		if ( isset( $_POST['billing_country'] ) && isset( $required_fields['card_state'] ) ){
+		// Check if the Customer's Country has been passed in
+		if ( isset( $_POST['billing_country'] ) ){
 			$customer_billing_country = sanitize_text_field( $_POST['billing_country'] );
-			$states = edd_get_shop_states( $customer_billing_country );
 
-			// If this country has no states, remove the requirement of a card_state.
-			if ( empty( $states ) ){
-				unset( $required_fields['card_state'] );
+			if ( isset( $required_fields['card_state'] ) ) {
+				$states = edd_get_shop_states( $customer_billing_country );
+
+				// If this country has no states, remove the requirement of a card_state.
+				if ( empty( $states ) ){
+					unset( $required_fields['card_state'] );
+				}
+			}
+
+			// Remove the requirement for a zip code depending on country
+			if ( ! edd_maybe_require_zip( $customer_billing_country ) ) {
+				unset( $required_fields['card_zip'] );
 			}
 		}
 	}
