@@ -337,6 +337,7 @@ class EDD_Session {
 	public function should_start_session() {
 
 		$start_session = true;
+		$uri           = '';
 
 		if( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
 
@@ -362,9 +363,19 @@ class EDD_Session {
 				$start_session = false;
 			}
 
+			// Do not start a session during the loopback request.
+			if ( false !== strpos( $uri, 'wp-site-health/v1/tests/loopback-requests' ) ) {
+				$start_session = false;
+			}
 		}
 
-		return apply_filters( 'edd_start_session', $start_session );
+		/**
+		 * Filters the value for whether an EDD session should start or not.
+		 *
+		 * @param boolean $start_session Whether or not the EDD session should start.
+		 * @param string  $uri           The sanitized request URI.
+		 */
+		return apply_filters( 'edd_start_session', $start_session, $uri );
 
 	}
 
