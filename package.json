@@ -3,7 +3,7 @@
   "version": "2.11.7",
   "private": true,
   "devDependencies": {
-    "grunt": "^1.4.1",
+    "grunt": "^1.5.3",
     "grunt-checktextdomain": "^1.0.1",
     "grunt-cli": "^1.4.3",
     "grunt-contrib-clean": "^2.0.0",
