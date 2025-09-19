@@ -37,7 +37,7 @@ class ConfigureEmails extends Step {
 		<form method="post" class="edd-settings-form edd-settings-form__email">
 			<div class="edd-form-group">
 				<label for="email_logo">
-					<?php echo esc_html_e( 'Logo', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Logo', 'easy-digital-downloads' ); ?>
 				</label>
 				<div class="edd-form-group__control">
 					<?php
@@ -57,7 +57,7 @@ class ConfigureEmails extends Step {
 			<div class="edd-form-group">
 				<th>
 					<label for="from_name">
-						<?php echo esc_html_e( 'From Name', 'easy-digital-downloads' ); ?>
+						<?php esc_html_e( 'From Name', 'easy-digital-downloads' ); ?>
 					</label>
 				</th>
 				<div class="edd-form-group__control">
@@ -79,7 +79,7 @@ class ConfigureEmails extends Step {
 
 			<div class="edd-form-group">
 				<label for="from_email">
-					<?php echo esc_html_e( 'From Email', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'From Email', 'easy-digital-downloads' ); ?>
 				</label>
 				<div class="edd-form-group__control">
 					<?php
@@ -100,7 +100,7 @@ class ConfigureEmails extends Step {
 
 			<div class="edd-form-group edd-form-group__wide">
 				<label for="edd_settings_purchase_receipt">
-					<?php echo esc_html_e( 'Message', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Message', 'easy-digital-downloads' ); ?>
 				</label>
 				<div class="edd-form-group__control">
 					<?php edd_email_tags_inserter_thickbox_content(); ?>
