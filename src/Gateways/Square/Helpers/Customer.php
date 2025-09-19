@@ -122,14 +122,15 @@ class Customer {
 			$customer_args['user_id'] = $user_id;
 		}
 
-		$customer_id = edd_add_customer( $customer_args );
+		$customer = new \EDD_Customer( $billing_details['email'] );
+		$customer->create( $customer_args );
 
-		if ( false === $customer_id ) {
+		if ( empty( $customer->id ) ) {
 			edd_debug_log( 'Square: Error creating EDD customer record for: ' . $billing_details['email'] );
 			return false;
 		}
 
-		return edd_get_customer( $customer_id );
+		return $customer;
 	}
 
 	/**

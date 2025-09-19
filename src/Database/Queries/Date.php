@@ -138,6 +138,12 @@ class Date extends Base {
 	);
 
 	/**
+	 * @since <next version> (Berlin version 2.0.2)
+	 * @var string|null Table name
+	 */
+	public $table_name = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * Time-related parameters that normally require integer values ('year', 'month', 'week', 'dayofyear', 'day',
@@ -361,6 +367,11 @@ class Date extends Base {
 		$retval = ! empty( $query['column'] )
 			? esc_sql( $this->validate_column( $query['column'] ) )
 			: $this->column;
+
+		// Our check here is different than the original because the $retval may already be prefixed.
+		if ( ! empty( $this->table_name ) && false === strpos( $retval, '.' ) ) {
+			$retval = $this->table_name . '.' . $retval;
+		}
 
 		return $retval;
 	}
@@ -603,10 +614,16 @@ class Date extends Base {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $type          The type of date query.
+	 * @param string $primary_table The primary table name.
+	 * @param string $primary_id_column The primary ID column name.
+	 * @param string $context       The context of the date query.
+	 *
 	 * @return string MySQL WHERE clauses.
 	 */
-	public function get_sql() {
-		$sql = $this->get_sql_clauses();
+	public function get_sql( $type, $primary_table, $primary_id_column, $context = null ) {
+		$this->table_name = $this->sanitize_table_name( $primary_table );
+		$sql              = $this->get_sql_clauses();
 
 		/**
 		 * Filters the date query clauses.

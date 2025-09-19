@@ -47,7 +47,9 @@ class Settings {
 						$setting_id = isset( $setting['id'] ) ? $setting['id'] : sanitize_title( $setting['name'] );
 						if ( is_array( $value ) ) {
 							foreach ( $value as $v ) {
-								$data[ "{$setting_id}_{$v}" ] = 1;
+								if ( is_scalar( $v ) ) {
+									$data[ "{$setting_id}_{$v}" ] = 1;
+								}
 							}
 						} else {
 							$data[ $setting_id ] = $value;

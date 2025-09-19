@@ -102,13 +102,4 @@ class OrderReceipt extends EDD_UnitTestCase {
 
 		$this->assertStringContainsString( 'Please click on the link(s) below to download your files.', $preview );
 	}
-
-	/**
-	 * @expectedDeprecated edd_get_option( 'purchase_receipt' )
-	 *
-	 * @return void
-	 */
-	public function test_legacy_option_handling() {
-		$this->assertEquals( self::$email->content, edd_get_option( 'purchase_receipt' ) );
-	}
 }

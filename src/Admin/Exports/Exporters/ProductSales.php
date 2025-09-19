@@ -16,29 +16,20 @@ namespace EDD\Admin\Exports\Exporters;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-use EDD\Admin\Exports\Legacy\BatchExport;
-
 /**
  * ProductSales Class
  *
  * @since 2.7
  */
-class ProductSales extends BatchExport {
-	/**
-	 * Our export type. Used for export-type specific filters/actions
-	 *
-	 * @var string
-	 * @since 2.7
-	 */
-	public $export_type = 'sales';
+class ProductSales extends Exporter {
 
 	/**
-	 * The array of order IDs.
+	 * The number of items to export per step.
 	 *
-	 * @since 3.1.1.4
-	 * @var array
+	 * @var int
+	 * @since 3.5.2
 	 */
-	private $orders;
+	protected $per_step = 100;
 
 	/**
 	 * The download ID for the export.
@@ -48,12 +39,35 @@ class ProductSales extends BatchExport {
 	private $download_id;
 
 	/**
+	 * Set the properties specific to the product sales export.
+	 *
+	 * @param array $request The request data.
+	 */
+	public function set_properties( $request ): void {
+		$this->start       = isset( $request['sales-export-start'] ) ? sanitize_text_field( $request['sales-export-start'] ) : '';
+		$this->end         = isset( $request['sales-export-end'] ) ? sanitize_text_field( $request['sales-export-end'] ) : '';
+		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
+	}
+
+	/**
+	 * Return the calculated completion percentage.
+	 *
+	 * @since 2.7
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return int
+	 */
+	protected function get_total(): int {
+		return edd_count_order_items( $this->get_order_item_args() );
+	}
+
+	/**
 	 * Set the CSV columns
 	 *
 	 * @since 2.7
 	 * @return array $cols All the columns
 	 */
-	public function csv_cols() {
+	protected function get_data_headers(): array {
 		return array(
 			'ID'          => __( 'Product ID', 'easy-digital-downloads' ),
 			'user_id'     => __( 'User', 'easy-digital-downloads' ),
@@ -72,6 +86,16 @@ class ProductSales extends BatchExport {
 	}
 
 	/**
+	 * Get the export type.
+	 *
+	 * @since 3.5.2
+	 * @return string
+	 */
+	protected function get_export_type(): string {
+		return 'sales';
+	}
+
+	/**
 	 * Get the Export Data
 	 *
 	 * @since 2.7
@@ -79,28 +103,46 @@ class ProductSales extends BatchExport {
 	 *
 	 * @return array|bool The data for the CSV file, false if no data to return.
 	 */
-	public function get_data() {
-		$data = array();
-
-		$args = array_merge(
+	protected function get_data(): array {
+		$data     = array();
+		$per_step = $this->get_per_step();
+		$args     = array_merge(
 			$this->get_order_item_args(),
 			array(
-				'number' => 30,
-				'offset' => ( $this->step * 30 ) - 30,
+				'number' => $per_step,
+				'offset' => ( $this->step * $per_step ) - $per_step,
 				'order'  => 'ASC',
 			)
 		);
 
 		$items = edd_get_order_items( $args );
 
-		foreach ( $items as $item ) {
+		if ( empty( $items ) ) {
+			return $data;
+		}
 
-			if ( 'refunded' === $item->status ) {
+		$order_ids = wp_list_pluck( $items, 'order_id' );
+		$orders    = array();
+
+		if ( ! empty( $order_ids ) ) {
+			$order_ids   = array_unique( $order_ids );
+			$orders_data = edd_get_orders(
+				array(
+					'id__in' => $order_ids,
+				)
+			);
+
+			foreach ( $orders_data as $order ) {
+				$orders[ $order->id ] = $order;
+			}
+		}
+
+		foreach ( $items as $item ) {
+			$order = isset( $orders[ $item->order_id ] ) ? $orders[ $item->order_id ] : null;
+
+			if ( ! $order ) {
 				continue;
 			}
-
-			/** @var EDD\Orders\Order_Item $item */
-			$order = edd_get_order( $item->order_id );
 
 			$data[] = array(
 				'ID'          => $item->product_id,
@@ -119,35 +161,7 @@ class ProductSales extends BatchExport {
 			);
 		}
 
-		$data = apply_filters( 'edd_export_get_data', $data );
-		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
-
-		return ! empty( $data )
-			? $data
-			: false;
-	}
-	/**
-	 * Return the calculated completion percentage.
-	 *
-	 * @since 2.7
-	 * @since 3.0 Updated to use new query methods.
-	 *
-	 * @return int
-	 */
-	public function get_percentage_complete() {
-		$args       = $this->get_order_item_args();
-		$total      = edd_count_order_items( $args );
-		$percentage = 100;
-
-		if ( $total > 0 ) {
-			$percentage = ( ( 30 * $this->step ) / $total ) * 100;
-		}
-
-		if ( $percentage > 100 ) {
-			$percentage = 100;
-		}
-
-		return $percentage;
+		return $data;
 	}
 
 	/**
@@ -157,7 +171,14 @@ class ProductSales extends BatchExport {
 	 * @return array
 	 */
 	private function get_order_item_args() {
-		$args = array();
+		$args = array(
+			'status__not_in' => array( 'refunded', 'pending', 'abandoned', 'failed' ),
+			'order_query'    => array(
+				'type'       => 'sale',
+				'status__in' => edd_get_complete_order_statuses(),
+			),
+		);
+
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
 			$args['date_query'] = $this->get_date_query();
 		}
@@ -166,42 +187,6 @@ class ProductSales extends BatchExport {
 			$args['product_id'] = $this->download_id;
 		}
 
-		if ( ! empty( $this->orders ) ) {
-			$args['order_id__in'] = $this->orders;
-		}
-
 		return $args;
 	}
-
-	/**
-	 * Set the properties specific to the product sales export.
-	 *
-	 * @param array $request The request data.
-	 */
-	public function set_properties( $request ) {
-		$this->start       = isset( $request['sales-export-start'] ) ? sanitize_text_field( $request['sales-export-start'] ) : '';
-		$this->end         = isset( $request['sales-export-end'] ) ? sanitize_text_field( $request['sales-export-end'] ) : '';
-		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
-		$this->orders      = $this->get_orders();
-	}
-
-	/**
-	 * Gets the array of complete order IDs for the time period.
-	 *
-	 * @return array
-	 */
-	private function get_orders() {
-		$args = array(
-			'fields'     => 'ids',
-			'type'       => 'sale',
-			'number'     => 999999999,
-			'status__in' => edd_get_complete_order_statuses(),
-		);
-		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = $this->get_date_query();
-		}
-
-		return edd_get_orders( $args );
-	}
 }
-

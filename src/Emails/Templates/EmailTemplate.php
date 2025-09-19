@@ -442,11 +442,6 @@ abstract class EmailTemplate implements TemplateInterface {
 	 */
 	private function install_metadata( $email_id ) {
 
-		// Install legacy options meta.
-		foreach ( $this->get_options() as $option ) {
-			edd_add_email_meta( $email_id, 'legacy', $option );
-		}
-
 		$data = array();
 		if ( empty( $this->meta ) ) {
 			return;

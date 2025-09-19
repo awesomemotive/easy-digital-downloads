@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.5.1\n"
+"Project-Id-Version: Easy Digital Downloads 3.5.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads-public\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-18T19:45:26+00:00\n"
+"POT-Creation-Date: 2025-09-19T03:22:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 
 #. Plugin Name of the plugin
 #. Author of the plugin
@@ -5857,6 +5857,7 @@ msgstr ""
 
 #. translators: %s: Downloads plural label
 #: includes/admin/admin-bar.php:93
+#, php-format
 msgid "All %1$s"
 msgstr ""
 
@@ -5871,6 +5872,7 @@ msgstr ""
 
 #. translators: %s: store status ("Test Mode" or "Live Mode")
 #: includes/admin/admin-bar.php:111
+#, php-format
 msgid "Store Status: %s"
 msgstr ""
 
@@ -5890,6 +5892,7 @@ msgstr ""
 
 #. translators: %s: Whether this is a development domain (1 for true, 0 for false)
 #: includes/admin/admin-bar.php:148
+#, php-format
 msgid "Development Domain %s"
 msgstr ""
 
@@ -6140,6 +6143,7 @@ msgstr ""
 
 #. translators: %s: price ID.
 #: includes/admin/admin-deprecated-functions.php:1544
+#, php-format
 msgid "Price ID: %s"
 msgstr ""
 
@@ -6165,6 +6169,7 @@ msgstr ""
 
 #. translators: %s: price ID.
 #: includes/admin/admin-deprecated-functions.php:1565
+#, php-format
 msgid "Remove price option %s"
 msgstr ""
 
@@ -6197,6 +6202,7 @@ msgstr ""
 
 #. translators: %s: price ID.
 #: includes/admin/admin-deprecated-functions.php:1643
+#, php-format
 msgid "Set ID %s as default price"
 msgstr ""
 
@@ -6245,6 +6251,7 @@ msgstr ""
 #: includes/admin/class-api-keys-table.php:138
 #: includes/user-functions.php:1088
 #: src/Models/Notification.php:187
+#, php-format
 msgid "%s ago"
 msgstr ""
 
@@ -6293,11 +6300,13 @@ msgstr ""
 
 #. translators: %s: URL to the settings page
 #: includes/admin/class-edd-notices.php:312
+#, php-format
 msgid "No checkout page is configured. Set one in <a href=\"%s\">Settings</a>."
 msgstr ""
 
 #. translators: %s: Uploads directory
 #: includes/admin/class-edd-notices.php:384
+#, php-format
 msgid "The files in %s are not currently protected."
 msgstr ""
 
@@ -6307,23 +6316,27 @@ msgstr ""
 
 #. translators: %s: Dismiss notice URL
 #: includes/admin/class-edd-notices.php:389
+#, php-format
 msgid "If you have already done this, or it does not apply to your site, you may permanently <a href=\"%s\">dismiss this notice</a>."
 msgstr ""
 
 #. translators: %s: Uploads directory
 #: includes/admin/class-edd-notices.php:422
 #: src/Admin/SiteHealth/Direct.php:217
+#, php-format
 msgid "The .htaccess file is missing from: %s"
 msgstr ""
 
 #. translators: %s: Uploads directory
 #: includes/admin/class-edd-notices.php:424
 #: src/Admin/SiteHealth/Direct.php:222
+#, php-format
 msgid "First, please re-save the Misc settings tab a few times. If this warning continues to appear, create a file called \".htaccess\" in the %s directory, and copy the following into it:"
 msgstr ""
 
 #. translators: %s: Notice Dismissal URL
 #: includes/admin/class-edd-notices.php:426
+#, php-format
 msgid "If you have already done this, or it does not apply to your site, you may permanently %s."
 msgstr ""
 
@@ -6334,6 +6347,7 @@ msgstr ""
 
 #. translators: 1: link to the recount tool, 2: link to the plugins screen.
 #: includes/admin/class-edd-notices.php:450
+#, php-format
 msgid "Easy Digital Downloads 2.5 contains a <a href=\"%1$s\">built in recount tool</a>. Please <a href=\"%2$s\">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>"
 msgstr ""
 
@@ -6356,11 +6370,13 @@ msgstr ""
 
 #. translators: %s: Next order number
 #: includes/admin/class-edd-notices.php:538
+#, php-format
 msgid "The sequential starting number could not be updated because it could conflict with existing orders. The next assigned order number is %s."
 msgstr ""
 
 #. translators: %s: Sandbox doc link
 #: includes/admin/class-edd-notices.php:554
+#, php-format
 msgid "Connecting to PayPal in Test Mode requires the use of Sandbox Credentials. If you need help finding this, you can <a href=\"%s\" target=\"_blank\">view our documentation</a> on using PayPal Sandbox."
 msgstr ""
 
@@ -6370,11 +6386,13 @@ msgstr ""
 
 #. translators: 1: opening link tag, 2: opening link tag, 3: closing link tag.
 #: includes/admin/class-edd-notices.php:609
+#, php-format
 msgid "You are running an outdated version of the Easy Digital Downloads &mdash; Stripe Pro Payment Gateway. You may need to log into %1$syour account%3$s to download the latest version and %2$smanually upgrade%3$s it."
 msgstr ""
 
 #. translators: 1: Opening anchor tag; %2$s: Closing anchor tag.
 #: includes/admin/class-edd-notices.php:643
+#, php-format
 msgid "New webhooks have been registered for PayPal Commerce, but we were unable to update them automatically. Please %1$ssync your webhooks manually%2$s."
 msgstr ""
 
@@ -6576,6 +6594,7 @@ msgstr ""
 
 #. translators: 1: opening strong tag, do not translate, 2: closing strong tag, do not translate
 #: includes/admin/class-edd-notices.php:1121
+#, php-format
 msgid "Congratulations! You are now running %1$sEasy Digital Downloads (Pro)%2$s."
 msgstr ""
 
@@ -6637,7 +6656,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-addresses-table.php:142
 #: includes/admin/customers/class-customer-email-addresses-table.php:135
 #: includes/admin/customers/class-customer-table.php:131
-#: includes/admin/payments/orders.php:1123
+#: includes/admin/payments/orders.php:1122
 #: includes/misc-functions.php:1546
 #: includes/payments/functions.php:542
 msgid "Pending"
@@ -6679,11 +6698,13 @@ msgstr ""
 
 #. translators: customer address id
 #: includes/admin/customers/class-customer-addresses-table.php:260
+#, php-format
 msgid "Address ID: %s"
 msgstr ""
 
 #. translators: %s: the customer name
 #: includes/admin/customers/class-customer-addresses-table.php:271
+#, php-format
 msgctxt "Noun: The customer name"
 msgid "Select %s"
 msgstr ""
@@ -6753,7 +6774,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:911
 #: includes/admin/downloads/dashboard-columns.php:38
 #: includes/admin/payments/class-payments-table.php:428
-#: includes/admin/payments/orders.php:1246
+#: includes/admin/payments/orders.php:1245
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:43
 #: includes/admin/reporting/class-export-download-history.php:59
 #: includes/admin/reporting/class-export-payments.php:76
@@ -6766,8 +6787,8 @@ msgstr ""
 #: includes/reports/reports-functions.php:329
 #: src/Admin/Exports/Exporters/APIRequests.php:51
 #: src/Admin/Exports/Exporters/DownloadHistory.php:62
-#: src/Admin/Exports/Exporters/Orders.php:70
-#: src/Admin/Exports/Exporters/ProductSales.php:70
+#: src/Admin/Exports/Exporters/Orders.php:72
+#: src/Admin/Exports/Exporters/ProductSales.php:84
 #: src/Admin/Exports/Exporters/SalesEarnings.php:63
 #: src/Admin/Exports/Exporters/TaxedOrders.php:82
 #: src/Admin/Exports/Legacy/Export.php:86
@@ -6786,6 +6807,7 @@ msgstr ""
 
 #. translators: %s: the customer email address
 #: includes/admin/customers/class-customer-email-addresses-table.php:261
+#, php-format
 msgctxt "Noun: The customer email address"
 msgid "Select %s"
 msgstr ""
@@ -6802,7 +6824,7 @@ msgstr ""
 #: src/Admin/Emails/ListTable.php:75
 #: src/Admin/Exports/Exporters/Customers.php:58
 #: src/Admin/Exports/Exporters/Orders.php:51
-#: src/Admin/Exports/Exporters/ProductSales.php:61
+#: src/Admin/Exports/Exporters/ProductSales.php:75
 #: src/Admin/Exports/Exporters/TaxedCustomers.php:47
 #: src/Admin/Exports/Exporters/TaxedOrders.php:63
 #: src/Emails/Tags/Registry.php:98
@@ -6846,7 +6868,7 @@ msgid "Edit"
 msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:196
-#: includes/admin/payments/orders.php:596
+#: includes/admin/payments/orders.php:595
 #: includes/upgrades/functions.php:168
 #: src/Admin/Emails/Screen.php:37
 #: src/Admin/Tools/Screen.php:72
@@ -6855,6 +6877,7 @@ msgstr ""
 
 #. translators: %s: the customer name or email address
 #: includes/admin/customers/class-customer-table.php:227
+#, php-format
 msgctxt "Noun: The customer name or Email Address"
 msgid "Select %s"
 msgstr ""
@@ -6868,7 +6891,7 @@ msgstr ""
 #: src/Admin/Discounts/ListTable.php:80
 #: src/Admin/Exports/Exporters/Customers.php:57
 #: src/Admin/Exports/Exporters/Downloads.php:47
-#: src/Admin/Exports/Exporters/ProductSales.php:62
+#: src/Admin/Exports/Exporters/ProductSales.php:76
 #: src/Admin/Exports/Exporters/TaxedCustomers.php:46
 #: src/Reports/Data/Discounts/Top_Five_Discounts_List_Table.php:77
 #: src/Reports/Data/Downloads/Earnings_By_Taxonomy_List_Table.php:178
@@ -6937,28 +6960,33 @@ msgstr ""
 
 #. translators: %d: user ID
 #: includes/admin/customers/customer-actions.php:70
+#, php-format
 msgid "The User ID %d is already associated with a different customer."
 msgstr ""
 
 #. translators: %d: user ID
 #: includes/admin/customers/customer-actions.php:77
+#, php-format
 msgid "The User ID %d does not exist. Please assign an existing user."
 msgstr ""
 
 #. translators: %s: user login or email address
 #: includes/admin/customers/customer-actions.php:104
+#, php-format
 msgid "Failed to attach user. The login or email address %s was not found."
 msgstr ""
 
 #. translators: 1: email address, 2: username
 #: includes/admin/customers/customer-actions.php:239
-#: includes/shortcodes.php:812
+#: includes/shortcodes.php:817
+#, php-format
 msgid "Email address %1$s removed by %2$s"
 msgstr ""
 
 #. translators: 1: email address, 2: username
 #: includes/admin/customers/customer-actions.php:299
 #: src/Admin/Customers/Emails.php:139
+#, php-format
 msgid "Email address %1$s set as primary by %2$s"
 msgstr ""
 
@@ -6985,6 +7013,7 @@ msgstr ""
 #. translators: link to send an email
 #: includes/admin/customers/customer-functions.php:55
 #: templates/account-pending.php:8
+#, php-format
 msgid "Your account is pending verification. Please click the link in your email to activate your account. No email? <a href=\"%s\">Click here</a> to send a new activation code."
 msgstr ""
 
@@ -7016,6 +7045,7 @@ msgstr ""
 
 #. translators: the active screen, eg "Search Customers" or "Search Customer Email Addresses"
 #: includes/admin/customers/customers.php:298
+#, php-format
 msgctxt "Noun: Customers or Customer Email Addresses placeholder for a search box"
 msgid "Search %s"
 msgstr ""
@@ -7107,7 +7137,7 @@ msgid "Customer Name"
 msgstr ""
 
 #: includes/admin/customers/customers.php:612
-#: includes/admin/payments/orders.php:368
+#: includes/admin/payments/orders.php:367
 msgid "Customer Email"
 msgstr ""
 
@@ -7118,11 +7148,13 @@ msgstr ""
 #. translators: %s: i18n formatted date that the customer was created
 #: includes/admin/customers/customers.php:624
 #: includes/admin/payments/orders.php:243
+#, php-format
 msgid "Customer since %s"
 msgstr ""
 
 #. translators: %s: user id
 #: includes/admin/customers/customers.php:647
+#, php-format
 msgid "User %s missing"
 msgstr ""
 
@@ -7132,6 +7164,7 @@ msgstr ""
 
 #. translators: the customer's lifetime number of sales
 #: includes/admin/customers/customers.php:696
+#, php-format
 msgid "%s Completed Sale"
 msgid_plural "%s Completed Sales"
 msgstr[0] ""
@@ -7139,6 +7172,7 @@ msgstr[1] ""
 
 #. translators: the customer's lifetime value
 #: includes/admin/customers/customers.php:716
+#, php-format
 msgid "%s Lifetime Value"
 msgstr ""
 
@@ -7200,8 +7234,8 @@ msgstr ""
 #: includes/admin/customers/customers.php:859
 #: includes/admin/customers/customers.php:909
 #: includes/admin/payments/class-payments-table.php:426
-#: includes/admin/payments/orders.php:943
-#: includes/admin/payments/orders.php:949
+#: includes/admin/payments/orders.php:942
+#: includes/admin/payments/orders.php:948
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:91
 #: includes/admin/reporting/class-gateways-reports-table.php:74
 #: src/Admin/Exports/Exporters/TaxedOrders.php:79
@@ -7239,6 +7273,7 @@ msgstr ""
 
 #. translators: %s: plural downloads label
 #: includes/admin/customers/customers.php:946
+#, php-format
 msgid "Purchased %s"
 msgstr ""
 
@@ -7247,6 +7282,7 @@ msgstr ""
 #: includes/blocks/build/buy-button/index.js:6
 #: includes/blocks/build/downloads/index.js:2
 #: includes/blocks/src/utilities/download-new.js:14
+#, php-format,js-format
 msgid "No %s Found"
 msgstr ""
 
@@ -7273,7 +7309,7 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:1110
 #: includes/admin/customers/customers.php:1112
-#: includes/admin/payments/orders.php:341
+#: includes/admin/payments/orders.php:340
 #: includes/blocks/views/orders/guest.php:10
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:83
 #: includes/privacy-functions.php:818
@@ -7437,6 +7473,7 @@ msgstr ""
 
 #. translators: 1: customer name, 2: number of items purchased, 3: order total
 #: includes/admin/dashboard-widgets.php:246
+#, php-format
 msgid "%1$s purchased %2$s item for <strong>%3$s</strong>"
 msgid_plural "%1$s purchased %2$s items for <strong>%3$s</strong>"
 msgstr[0] ""
@@ -7448,11 +7485,13 @@ msgstr ""
 
 #. translators: %s: Download label singular
 #: includes/admin/dashboard-widgets.php:304
+#, php-format
 msgid "1 %s"
 msgstr ""
 
 #. translators: 1: Number of downloads, 2: Download label plural
 #: includes/admin/dashboard-widgets.php:310
+#, php-format
 msgid "%1$d %2$s"
 msgstr ""
 
@@ -7470,6 +7509,7 @@ msgstr ""
 #: includes/admin/payments/contextual-help.php:58
 #: includes/admin/reporting/contextual-help.php:51
 #: includes/admin/settings/contextual-help.php:52
+#, php-format
 msgid "Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads website."
 msgstr ""
 
@@ -7478,6 +7518,7 @@ msgstr ""
 #: includes/admin/downloads/contextual-help.php:54
 #: includes/admin/payments/contextual-help.php:61
 #: includes/admin/reporting/contextual-help.php:53
+#, php-format
 msgid "Need more from your Easy Digital Downloads store? <a href=\"%s\">Upgrade Now</a>!"
 msgstr ""
 
@@ -7590,6 +7631,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/admin/downloads/contextual-help.php:64
+#, php-format
 msgid "%s Settings"
 msgstr ""
 
@@ -7607,6 +7649,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/admin/downloads/contextual-help.php:76
+#, php-format
 msgid "%s Prices"
 msgstr ""
 
@@ -7620,6 +7663,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/admin/downloads/contextual-help.php:87
+#, php-format
 msgid "%s Files"
 msgstr ""
 
@@ -7633,11 +7677,13 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/admin/downloads/contextual-help.php:98
+#, php-format
 msgid "%s Instructions"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/admin/downloads/contextual-help.php:100
+#, php-format
 msgid "Special instructions for this %s. These will be added to the sales receipt, and may be used by some extensions or themes."
 msgstr ""
 
@@ -7671,6 +7717,7 @@ msgstr ""
 
 #. translators: 1: Shortcodes Codex URL, 2: EDD Documentation URL
 #: includes/admin/downloads/contextual-help.php:134
+#, php-format
 msgid "For more information, see <a href=\"%1$s\">using Shortcodes</a> on the WordPress.org Codex or <a href=\"%2$s\">Easy Digital Downloads Documentation</a>"
 msgstr ""
 
@@ -7691,6 +7738,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:256
 #: src/HTML/CategorySelect.php:70
 #: src/HTML/Elements.php:298
+#, php-format
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
@@ -7700,17 +7748,20 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:285
 #: src/HTML/CategorySelect.php:74
 #: src/HTML/CategorySelect.php:77
+#, php-format
 msgctxt "plural: Example: \"Search Download Categories\""
 msgid "Search %s"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/admin/downloads/dashboard-columns.php:341
+#, php-format
 msgid "%s Configuration"
 msgstr ""
 
 #. translators: %1$s is the singular label, %2$s is the file ID.
 #: includes/admin/downloads/metabox.php:336
+#, php-format
 msgid "%1$s file ID: %2$s"
 msgstr ""
 
@@ -7723,6 +7774,7 @@ msgstr ""
 #. translators: %s: Download singular label
 #: includes/admin/downloads/metabox.php:357
 #: includes/admin/downloads/views/metabox-bundled-products.php:125
+#, php-format
 msgid "Move %s up"
 msgstr ""
 
@@ -7735,11 +7787,13 @@ msgstr ""
 #. translators: %s: Download singular label
 #: includes/admin/downloads/metabox.php:367
 #: includes/admin/downloads/views/metabox-bundled-products.php:135
+#, php-format
 msgid "Move %s down"
 msgstr ""
 
 #. translators: %s: file ID.
 #: includes/admin/downloads/metabox.php:376
+#, php-format
 msgid "Remove file %s"
 msgstr ""
 
@@ -7779,6 +7833,7 @@ msgstr ""
 
 #. translators: %s: Download singular label, in lowercase form.
 #: includes/admin/downloads/metabox.php:505
+#, php-format
 msgid "Insert into %s"
 msgstr ""
 
@@ -7797,6 +7852,7 @@ msgstr ""
 
 #. translators: %s: Default refund status
 #: includes/admin/downloads/metabox.php:559
+#, php-format
 msgctxt "Download refund status"
 msgid "Default (%s)"
 msgstr ""
@@ -7927,6 +7983,7 @@ msgstr ""
 #. translators: %s: singular label.
 #: includes/admin/downloads/metabox.php:921
 #: src/Admin/Downloads/Editor/Notes.php:83
+#, php-format
 msgid "Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes."
 msgstr ""
 
@@ -7936,6 +7993,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/admin/downloads/views/metabox-bundled-products.php:64
+#, php-format
 msgctxt "Noun: The singular label for the download post type"
 msgid "Select %s:"
 msgstr ""
@@ -7946,6 +8004,7 @@ msgstr ""
 
 #. translators: %s: The bundle product index number.
 #: includes/admin/downloads/views/metabox-bundled-products.php:140
+#, php-format
 msgid "Remove bundle option %s"
 msgstr ""
 
@@ -7953,6 +8012,7 @@ msgstr ""
 #: includes/admin/downloads/views/metabox-bundled-products.php:152
 #: includes/admin/views/tmpl-order-actions.php:41
 #: includes/admin/views/tmpl-order-form-add-order-item.php:254
+#, php-format
 msgid "Add %s"
 msgstr ""
 
@@ -8019,6 +8079,7 @@ msgstr ""
 
 #. translators: 1: URL to view imported items, 2: Import type label
 #: includes/admin/import/import-functions.php:185
+#, php-format
 msgid "Import complete! <a href=\"%1$s\">View imported %2$s</a>."
 msgstr ""
 
@@ -8028,6 +8089,7 @@ msgstr ""
 
 #. translators: user ID
 #: includes/admin/notes/note-functions.php:81
+#, php-format
 msgid "User ID #%s"
 msgstr ""
 
@@ -8054,6 +8116,7 @@ msgstr ""
 
 #. translators: %s: email address
 #: includes/admin/payments/actions.php:150
+#, php-format
 msgid "A customer with the email address %s already exists. Please go back and assign this payment to them."
 msgstr ""
 
@@ -8230,7 +8293,7 @@ msgid "No orders found."
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:429
-#: includes/admin/payments/orders.php:1118
+#: includes/admin/payments/orders.php:1117
 #: includes/admin/reporting/class-export-payments.php:78
 #: includes/admin/tools.php:584
 #: includes/privacy-functions.php:834
@@ -8238,13 +8301,14 @@ msgstr ""
 #: src/Admin/Discounts/ListTable.php:81
 #: src/Admin/Emails/ListTable.php:81
 #: src/Admin/Exports/Exporters/Downloads.php:52
-#: src/Admin/Exports/Exporters/Orders.php:74
+#: src/Admin/Exports/Exporters/Orders.php:76
 #: src/Admin/Exports/Exporters/TaxedOrders.php:87
 msgid "Status"
 msgstr ""
 
 #. translators: %s: the order number
 #: includes/admin/payments/class-payments-table.php:539
+#, php-format
 msgctxt "Number: The order ID in alpha numeric representation"
 msgid "Select %s"
 msgstr ""
@@ -8255,7 +8319,7 @@ msgid "View Receipt"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:591
-#: includes/admin/payments/orders.php:404
+#: includes/admin/payments/orders.php:403
 msgid "Resend Receipt"
 msgstr ""
 
@@ -8305,7 +8369,7 @@ msgid "Delete permanently"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:754
-#: includes/admin/payments/orders.php:1217
+#: includes/admin/payments/orders.php:1216
 #: includes/admin/payments/refunds.php:308
 msgid "Move to Trash"
 msgstr ""
@@ -8402,31 +8466,37 @@ msgstr ""
 
 #. translators: %s: the prefix needed to search by customer - This should remain untranslated `customer:`
 #: includes/admin/payments/contextual-help.php:115
+#, php-format
 msgid "The customer's name or ID prefixed by %s"
 msgstr ""
 
 #. translators: %s: the prefix needed to search by user - This should remain untranslated `user:`
 #: includes/admin/payments/contextual-help.php:120
+#, php-format
 msgid "A user's ID prefixed by %s"
 msgstr ""
 
 #. translators: %s: the prefix needed to search by Order ID - This should remain untranslated `#`
 #: includes/admin/payments/contextual-help.php:125
+#, php-format
 msgid "The %1$s ID prefixed by %2$s"
 msgstr ""
 
 #. translators: %s: the prefix needed to search by discount code - This should remain untranslated `discount:`
 #: includes/admin/payments/contextual-help.php:131
+#, php-format
 msgid "The Discount Code prefixed by %s"
 msgstr ""
 
 #. translators: %s: the prefix needed to search by transaction ID - This should remain untranslated `txn:`
 #: includes/admin/payments/contextual-help.php:136
+#, php-format
 msgid "A transaction ID prefixed by %s"
 msgstr ""
 
 #. translators: %s: the prefix needed to search by Stripe Payment Method - This should remain untranslated `txn:`
 #: includes/admin/payments/contextual-help.php:141
+#, php-format
 msgid "A Stripe Payment Method prefixed by %s"
 msgstr ""
 
@@ -8541,100 +8611,101 @@ msgid "Last Name"
 msgstr ""
 
 #. translators: email type
-#: includes/admin/payments/orders.php:332
+#: includes/admin/payments/orders.php:331
+#, php-format
 msgid "Send a new copy of the purchase receipt to the %s email address. If download URLs were included in the original receipt, new ones will be included."
 msgstr ""
 
-#: includes/admin/payments/orders.php:333
+#: includes/admin/payments/orders.php:332
 msgid "selected"
 msgstr ""
 
-#: includes/admin/payments/orders.php:333
+#: includes/admin/payments/orders.php:332
 msgid "customer"
 msgstr ""
 
-#: includes/admin/payments/orders.php:337
+#: includes/admin/payments/orders.php:336
 msgid "Sending purchase receipts from Easy Digital Downloads has been disabled."
 msgstr ""
 
-#: includes/admin/payments/orders.php:341
+#: includes/admin/payments/orders.php:340
 msgid "Send email receipt to"
 msgstr ""
 
-#: includes/admin/payments/orders.php:365
+#: includes/admin/payments/orders.php:364
 msgid "Customer Primary"
 msgstr ""
 
-#: includes/admin/payments/orders.php:367
+#: includes/admin/payments/orders.php:366
 msgid "Order Email"
 msgstr ""
 
-#: includes/admin/payments/orders.php:441
+#: includes/admin/payments/orders.php:440
 #: includes/privacy-functions.php:824
 #: src/Emails/Tags/Registry.php:105
 #: src/Forms/Checkout/Address.php:39
 msgid "Billing Address"
 msgstr ""
 
-#: includes/admin/payments/orders.php:444
+#: includes/admin/payments/orders.php:443
 msgid "Existing Address:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:449
+#: includes/admin/payments/orders.php:448
 msgid "Line 1:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:456
+#: includes/admin/payments/orders.php:455
 #: pro/templates/invoice/invoice-form.php:40
 msgid "Line 2:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:463
+#: includes/admin/payments/orders.php:462
 msgctxt "Address City"
 msgid "City:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:470
+#: includes/admin/payments/orders.php:469
 msgctxt "Postal code of address"
 msgid "Postal / ZIP Code:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:477
+#: includes/admin/payments/orders.php:476
 msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:489
+#: includes/admin/payments/orders.php:488
 msgid "Search Countries"
 msgstr ""
 
-#: includes/admin/payments/orders.php:499
+#: includes/admin/payments/orders.php:498
 msgctxt "Region of address"
 msgid "Region:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:511
+#: includes/admin/payments/orders.php:510
 msgid "Search Regions"
 msgstr ""
 
-#: includes/admin/payments/orders.php:597
+#: includes/admin/payments/orders.php:596
 msgid "File Download Log for Order"
 msgstr ""
 
-#: includes/admin/payments/orders.php:598
+#: includes/admin/payments/orders.php:597
 msgid "Customer Download Log"
 msgstr ""
 
-#: includes/admin/payments/orders.php:599
+#: includes/admin/payments/orders.php:598
 #: includes/privacy-functions.php:852
 msgid "Customer Orders"
 msgstr ""
 
-#: includes/admin/payments/orders.php:616
+#: includes/admin/payments/orders.php:615
 msgid "Recalculate Order Values"
 msgstr ""
 
-#: includes/admin/payments/orders.php:819
+#: includes/admin/payments/orders.php:818
 #: includes/admin/views/tmpl-order-copy-download-link.php:38
 #: includes/gateways/stripe/includes/utils/modal.php:69
 #: src/Admin/Assets/Localization.php:111
@@ -8642,7 +8713,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/admin/payments/orders.php:852
+#: includes/admin/payments/orders.php:851
 #: includes/admin/payments/refunds.php:230
 #: includes/admin/views/tmpl-order-form-add-order-item.php:175
 #: includes/admin/views/tmpl-order-item.php:67
@@ -8650,19 +8721,19 @@ msgstr ""
 msgid "Unit Price"
 msgstr ""
 
-#: includes/admin/payments/orders.php:854
+#: includes/admin/payments/orders.php:853
 #: includes/admin/payments/refunds.php:231
 #: includes/admin/views/tmpl-order-form-add-order-item.php:110
 #: includes/admin/views/tmpl-order-item.php:73
 #: includes/emails/tags.php:205
 #: includes/emails/tags.php:348
-#: src/Admin/Exports/Exporters/ProductSales.php:64
+#: src/Admin/Exports/Exporters/ProductSales.php:78
 #: src/Admin/Refund_Items_Table.php:81
 #: templates/shortcode-receipt.php:209
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/payments/orders.php:856
+#: includes/admin/payments/orders.php:855
 #: includes/admin/payments/refunds.php:232
 #: includes/admin/reporting/class-export-payments.php:70
 #: includes/admin/views/tmpl-order-adjustment-discount.php:41
@@ -8682,154 +8753,155 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: includes/admin/payments/orders.php:884
+#: includes/admin/payments/orders.php:883
 msgid "Order Details"
 msgstr ""
 
-#: includes/admin/payments/orders.php:933
+#: includes/admin/payments/orders.php:932
 msgid "Order Extras"
 msgstr ""
 
-#: includes/admin/payments/orders.php:971
+#: includes/admin/payments/orders.php:970
 msgid "Key"
 msgstr ""
 
-#: includes/admin/payments/orders.php:981
-#: includes/admin/payments/orders.php:989
+#: includes/admin/payments/orders.php:980
+#: includes/admin/payments/orders.php:988
 msgid "IP"
 msgstr ""
 
-#: includes/admin/payments/orders.php:996
-#: includes/admin/payments/orders.php:1019
+#: includes/admin/payments/orders.php:995
+#: includes/admin/payments/orders.php:1018
 #: includes/admin/reporting/class-export-payments.php:74
 #: includes/admin/tools.php:622
-#: src/Admin/Exports/Exporters/Orders.php:68
+#: src/Admin/Exports/Exporters/Orders.php:70
 #: src/Admin/Exports/Exporters/TaxedOrders.php:80
 #: src/Emails/Tags/Registry.php:233
 msgid "Transaction ID"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1008
+#: includes/admin/payments/orders.php:1007
 msgid "Dispute ID"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1033
+#: includes/admin/payments/orders.php:1032
 msgid "Unlimited Downloads"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1037
+#: includes/admin/payments/orders.php:1036
 msgid "Checking this box will override all other file download limits for this purchase, granting the customer unlimited downloads of all files included on the purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1048
+#: includes/admin/payments/orders.php:1047
 msgid "Deferred Actions"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1051
+#: includes/admin/payments/orders.php:1050
 msgid "Not Run"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1055
+#: includes/admin/payments/orders.php:1054
 #: includes/payments/functions.php:544
 msgid "Completed"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1058
+#: includes/admin/payments/orders.php:1057
 #: src/Admin/Discounts/ListTable.php:384
 msgid "Scheduled"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1072
+#: includes/admin/payments/orders.php:1071
 msgid "Deferred Actions were added in Easy Digital Downloads 2.8. Orders placed on prior versions will not have a deferred actions status. If this order was placed on a version of Easy Digital Downloads supporting Deferred Actions, please verify that WP Cron is able to be run."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1109
+#: includes/admin/payments/orders.php:1108
 msgid "Order Attributes"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1124
+#: includes/admin/payments/orders.php:1123
 msgid "Order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1127
+#: includes/admin/payments/orders.php:1126
 msgid "Complete"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1128
+#: includes/admin/payments/orders.php:1127
 msgid "All processing is completed for this purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1131
+#: includes/admin/payments/orders.php:1130
 #: includes/payments/functions.php:547
 msgid "Revoked"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1132
+#: includes/admin/payments/orders.php:1131
 msgid "Access to purchased items is disabled, perhaps due to policy violation or fraud."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1135
+#: includes/admin/payments/orders.php:1134
 #: includes/payments/functions.php:545
 #: pro/invoices/templates.php:126
+#: src/Admin/Exports/Exporters/Orders.php:67
 msgid "Refunded"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1136
+#: includes/admin/payments/orders.php:1135
 msgid "The purchase amount is returned to the customer and access to items is disabled."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1139
+#: includes/admin/payments/orders.php:1138
 #: includes/payments/functions.php:549
 msgid "Abandoned"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1140
+#: includes/admin/payments/orders.php:1139
 msgid "The purchase attempt was not completed by the customer."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1143
+#: includes/admin/payments/orders.php:1142
 #: includes/payments/functions.php:548
 msgid "Failed"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1144
+#: includes/admin/payments/orders.php:1143
 msgid "Customer clicked Cancel before completing the purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1147
+#: includes/admin/payments/orders.php:1146
 #: includes/payments/functions.php:550
 msgid "On Hold"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1148
+#: includes/admin/payments/orders.php:1147
 msgid "Order is held for review. Order items are not available to download."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1187
+#: includes/admin/payments/orders.php:1186
 msgid "On Hold Due To:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1188
+#: includes/admin/payments/orders.php:1187
 msgid "Original Hold Reason:"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1228
+#: includes/admin/payments/orders.php:1227
 msgid "Recover"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1231
+#: includes/admin/payments/orders.php:1230
 msgid "Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1257
+#: includes/admin/payments/orders.php:1256
 msgid "Time"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1262
+#: includes/admin/payments/orders.php:1261
 msgid "Hour"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1268
+#: includes/admin/payments/orders.php:1267
 msgid "Minute"
 msgstr ""
 
@@ -8880,12 +8952,14 @@ msgstr ""
 
 #. translators: %s: refund link
 #: includes/admin/payments/view-order-details.php:43
+#, php-format
 msgid "The specified ID is for a refund, not an order. Please <a href=\"%s\">access the refund directly</a>."
 msgstr ""
 
 #. translators: %s: order number
 #: includes/admin/payments/view-order-details.php:57
 #: includes/blocks/views/orders/orders.php:19
+#, php-format
 msgid "Order: %s"
 msgstr ""
 
@@ -8897,6 +8971,7 @@ msgstr ""
 #. translators: %s: singular label
 #: includes/admin/payments/view-order-details.php:138
 #: includes/admin/views/tmpl-order-item.php:54
+#, php-format
 msgid "Copy %s Links"
 msgstr ""
 
@@ -8911,6 +8986,7 @@ msgstr ""
 #. translators: %s Refund number, linked to Refund record.
 #: includes/admin/payments/view-refund.php:44
 #: includes/admin/views/tmpl-order-refund.php:25
+#, php-format
 msgid "Refund: %s"
 msgstr ""
 
@@ -8981,6 +9057,7 @@ msgstr ""
 
 #. translators: %d: customer ID
 #: includes/admin/reporting/class-base-logs-list-table.php:529
+#, php-format
 msgid "Customer ID: %d"
 msgstr ""
 
@@ -9079,7 +9156,7 @@ msgstr ""
 #: includes/privacy-functions.php:999
 #: src/Admin/Exports/Exporters/APIRequests.php:46
 #: src/Admin/Exports/Exporters/DownloadHistory.php:64
-#: src/Admin/Exports/Exporters/Orders.php:72
+#: src/Admin/Exports/Exporters/Orders.php:74
 #: src/Admin/Exports/Exporters/TaxedOrders.php:85
 #: src/Emails/Tags/Registry.php:203
 msgid "IP Address"
@@ -9150,7 +9227,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:69
 #: includes/admin/settings/register-settings.php:543
 #: src/Admin/Exports/Exporters/Orders.php:63
-#: src/Admin/Exports/Exporters/ProductSales.php:67
+#: src/Admin/Exports/Exporters/ProductSales.php:81
 #: src/Admin/Exports/Exporters/TaxedOrders.php:84
 #: src/Admin/Settings/Tabs/General.php:178
 #: src/Admin/Settings/Tabs/General.php:186
@@ -9164,7 +9241,7 @@ msgstr ""
 #: includes/blocks/views/checkout/cart/cart-taxes.php:9
 #: includes/blocks/views/orders/totals.php:57
 #: src/Admin/Exports/Exporters/Orders.php:65
-#: src/Admin/Exports/Exporters/ProductSales.php:66
+#: src/Admin/Exports/Exporters/ProductSales.php:80
 #: src/Admin/Exports/Exporters/TaxedOrders.php:77
 #: src/Admin/Refund_Items_Table.php:88
 #: src/Emails/Tags/Registry.php:126
@@ -9183,7 +9260,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:73
 #: includes/admin/tools.php:535
 #: includes/blocks/views/orders/totals.php:33
-#: src/Admin/Exports/Exporters/Orders.php:67
+#: src/Admin/Exports/Exporters/Orders.php:69
 #: src/Emails/Tags/Registry.php:168
 #: src/Reports/Data/Gateways/StripePaymentMethods.php:77
 #: templates/shortcode-receipt.php:63
@@ -9192,28 +9269,28 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:75
 #: includes/admin/tools.php:564
-#: src/Admin/Exports/Exporters/Orders.php:69
+#: src/Admin/Exports/Exporters/Orders.php:71
 #: src/Admin/Exports/Exporters/TaxedOrders.php:81
 msgid "Purchase Key"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:77
 #: includes/admin/tools.php:632
-#: src/Admin/Exports/Exporters/Orders.php:71
-#: src/Admin/Exports/Exporters/ProductSales.php:59
+#: src/Admin/Exports/Exporters/Orders.php:73
+#: src/Admin/Exports/Exporters/ProductSales.php:73
 #: src/Admin/Exports/Exporters/TaxedOrders.php:83
 #: src/Emails/Templates/Registry.php:80
 msgid "User"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:185
-#: src/Admin/Exports/Exporters/Orders.php:136
+#: src/Admin/Exports/Exporters/Orders.php:137
 #: src/Admin/Exports/Exporters/TaxedOrders.php:149
 msgid "none"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:190
-#: src/Admin/Exports/Exporters/Orders.php:224
+#: src/Admin/Exports/Exporters/Orders.php:227
 #: src/Admin/Exports/Exporters/TaxedOrders.php:232
 msgid "guest"
 msgstr ""
@@ -9263,7 +9340,7 @@ msgid "Pending / Failed Sales"
 msgstr ""
 
 #: includes/admin/reporting/class-sales-logs-list-table.php:100
-#: src/Admin/Exports/Exporters/ProductSales.php:65
+#: src/Admin/Exports/Exporters/ProductSales.php:79
 msgid "Item Amount"
 msgstr ""
 
@@ -9374,16 +9451,19 @@ msgstr ""
 
 #. translators: %s: Download title
 #: includes/admin/reporting/graphing.php:609
+#, php-format
 msgid "Earnings Over Time for %s"
 msgstr ""
 
 #. translators: %s: Formatted currency value for earnings
 #: includes/admin/reporting/graphing.php:642
+#, php-format
 msgid "Average monthly earnings: %s"
 msgstr ""
 
 #. translators: %s: Number of sales
 #: includes/admin/reporting/graphing.php:653
+#, php-format
 msgid "Average monthly sales: %s"
 msgstr ""
 
@@ -9409,6 +9489,7 @@ msgstr ""
 
 #. translators: %s: Downloads label
 #: includes/admin/reporting/reports.php:358
+#, php-format
 msgid "%s Terms"
 msgstr ""
 
@@ -9479,6 +9560,7 @@ msgstr ""
 #: includes/admin/reporting/views/export-sales-earnings.php:18
 #: includes/reports/reports-functions.php:1487
 #: src/HTML/ProductSelect.php:52
+#, php-format
 msgid "All %s"
 msgstr ""
 
@@ -9567,6 +9649,7 @@ msgstr ""
 
 #. translators: %s: Upgrade URL
 #: includes/admin/settings/contextual-help.php:55
+#, php-format
 msgid "Need more from your Easy Digital Downloads store? <a href=\"%s\">Upgrade Now!</a>."
 msgstr ""
 
@@ -9709,6 +9792,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: includes/admin/settings/display-settings.php:73
+#, php-format
 msgid "Have a pass? You're ready to set up EDD (Pro). %1$sActivate Your Pass%2$s"
 msgstr ""
 
@@ -9810,6 +9894,7 @@ msgstr ""
 
 #. translators: 1: opening link tag; do not translate, 2: closing link tag; do not translate
 #: includes/admin/settings/register-settings.php:1044
+#, php-format
 msgid "More %1$sPayment Gateways%2$s are available."
 msgstr ""
 
@@ -9819,6 +9904,7 @@ msgstr ""
 
 #. translators: %s: the setting ID
 #: includes/admin/settings/register-settings.php:1323
+#, php-format
 msgid "The callback function used for the %s setting is missing."
 msgstr ""
 
@@ -9833,6 +9919,7 @@ msgstr ""
 
 #. translators: 1:  opening anchor tag, 2:  closing anchor tag
 #: includes/admin/settings/register-settings.php:1603
+#, php-format
 msgid "%1$sAccess your Recapture account%2$s."
 msgstr ""
 
@@ -9842,6 +9929,7 @@ msgstr ""
 
 #. translators: 1:  opening anchor tag, 2:  closing anchor tag
 #: includes/admin/settings/register-settings.php:1621
+#, php-format
 msgid "%1$sComplete your connection to Recapture%2$s"
 msgstr ""
 
@@ -9851,6 +9939,7 @@ msgstr ""
 
 #. translators: 1:  opening anchor tag, 2:  closing anchor tag
 #: includes/admin/settings/register-settings.php:1640
+#, php-format
 msgid "%1$sLearn more%2$s (Free trial available)"
 msgstr ""
 
@@ -9860,6 +9949,7 @@ msgstr ""
 
 #. translators: Tax rate country code
 #: includes/admin/settings/register-settings.php:1684
+#, php-format
 msgid "Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another."
 msgstr ""
 
@@ -9886,6 +9976,7 @@ msgstr ""
 #. translators: singular download label
 #: includes/admin/thickbox.php:31
 #: includes/admin/thickbox.php:184
+#, php-format
 msgid "Insert %s"
 msgstr ""
 
@@ -9973,11 +10064,13 @@ msgstr ""
 
 #. translators: %s: Singular download label, lowercase
 #: includes/admin/tools.php:48
+#, php-format
 msgid "Recount Earnings and Sales for a %s"
 msgstr ""
 
 #. translators: %s: Plural download label, lowercase
 #: includes/admin/tools.php:55
+#, php-format
 msgid "Recount Earnings and Sales for All %s"
 msgstr ""
 
@@ -9995,11 +10088,13 @@ msgstr ""
 
 #. translators: %s: Singular wownload label, lowercase
 #: includes/admin/tools.php:86
+#, php-format
 msgid "Recalculates the earnings and sales stats for a specific %s."
 msgstr ""
 
 #. translators: %s: Pural download label, lowercase
 #: includes/admin/tools.php:92
+#, php-format
 msgid "Recalculates the earnings and sales stats for all %s."
 msgstr ""
 
@@ -10026,6 +10121,7 @@ msgstr ""
 
 #. translators: 1: API documentation linktag, 2: iOS app link tag, 3: closing link tag
 #: includes/admin/tools.php:185
+#, php-format
 msgid "These API keys allow you to use the %1$sEDD REST API%3$s to retrieve store data in JSON or XML for external applications or devices, such as the %2$sEDD mobile app%3$s."
 msgstr ""
 
@@ -10039,6 +10135,7 @@ msgstr ""
 
 #. translators: %s: Product name
 #: includes/admin/tools.php:235
+#, php-format
 msgid "Get updates for pre-release versions of %s"
 msgstr ""
 
@@ -10057,6 +10154,7 @@ msgstr ""
 
 #. translators: %1$s opening anchor tag, %2$s closing anchor tag
 #: includes/admin/tools.php:418
+#, php-format
 msgid "Each column loaded from the CSV needs to be mapped to an order field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing payment records."
 msgstr ""
 
@@ -10176,7 +10274,7 @@ msgstr ""
 #: includes/privacy-functions.php:631
 #: includes/privacy-functions.php:917
 #: src/Admin/Exports/Exporters/Orders.php:52
-#: src/Admin/Exports/Exporters/ProductSales.php:60
+#: src/Admin/Exports/Exporters/ProductSales.php:74
 #: src/Admin/Exports/Exporters/TaxedOrders.php:64
 msgid "Customer ID"
 msgstr ""
@@ -10186,7 +10284,7 @@ msgid "Discount Code(s)"
 msgstr ""
 
 #: includes/admin/tools.php:515
-#: src/Admin/Exports/Exporters/Orders.php:73
+#: src/Admin/Exports/Exporters/Orders.php:75
 #: src/Admin/Exports/Exporters/TaxedOrders.php:86
 msgid "Mode (Live|Test)"
 msgstr ""
@@ -10235,6 +10333,7 @@ msgstr ""
 
 #. translators: %1$s and %2$s opening and closing anchor tags respectively
 #: includes/admin/tools.php:737
+#, php-format
 msgid "Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See %1$sthis guide%2$s for assistance with importing Download products."
 msgstr ""
 
@@ -10314,6 +10413,7 @@ msgstr ""
 
 #. translators: %s: Reports page URL
 #: includes/admin/tools.php:937
+#, php-format
 msgid "To export shop data (purchases, customers, etc), visit the <a href=\"%s\">Reports</a> page."
 msgstr ""
 
@@ -10352,6 +10452,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, do not translate, 2: function name, do not translate, 3: closing anchor tag, do not translate
 #: includes/admin/tools.php:1139
+#, php-format
 msgid "When debug mode is enabled, specific information will be logged here. (%1$sLearn how to use %2$s in your own code.%3$s)"
 msgstr ""
 
@@ -10387,6 +10488,7 @@ msgstr ""
 
 #. translators: %s: download title
 #: includes/admin/tools/class-edd-tools-recount-download-stats.php:138
+#, php-format
 msgid "Earnings and sales stats successfully recounted for %s."
 msgstr ""
 
@@ -10460,6 +10562,7 @@ msgstr ""
 
 #. translators: %s: Resume upgrade link
 #: includes/admin/upgrades/upgrade-functions.php:45
+#, php-format
 msgid "Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href=\"%s\">here</a> to resume the upgrade."
 msgstr ""
 
@@ -10469,6 +10572,7 @@ msgstr ""
 
 #. translators: 1: Opening strong tag; do not translate. 2. Closing strong tag; do not translate.
 #: includes/admin/upgrades/upgrade-functions.php:97
+#, php-format
 msgid "Easy Digital Downloads needs to upgrade the database. %1$sLearn more about this upgrade%2$s."
 msgstr ""
 
@@ -10478,16 +10582,19 @@ msgstr ""
 
 #. translators: 1: Opening strong/italics tag; do not translate. 2. Closing strong/italics tag; do not translate.
 #: includes/admin/upgrades/upgrade-functions.php:112
+#, php-format
 msgid "This is a %1$smandatory%2$s update that will migrate all Easy Digital Downloads data to custom database tables. This upgrade will provide better performance and scalability."
 msgstr ""
 
 #. translators: 1: Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Plural download label
 #: includes/admin/upgrades/upgrade-functions.php:122
+#, php-format
 msgid "%1$sPlease back up your database before starting this upgrade.%2$s This upgrade routine will make irreversible changes to the database."
 msgstr ""
 
 #. translators: 1: Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Line break; do not translate. 4. CLI command example; do not translate.
 #: includes/admin/upgrades/upgrade-functions.php:132
+#, php-format
 msgid "%1$sAdvanced User?%2$s This upgrade can also be run via WP-CLI with the following command:%3$s%3$s%4$s"
 msgstr ""
 
@@ -10505,11 +10612,13 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate, 3: MySQL database version, do not translate
 #: includes/admin/upgrades/upgrade-functions.php:172
+#, php-format
 msgid "Please contact your host and ask them to upgrade your environment to meet our %1$sminimum technical requirements%2$s. Your MySQL version is %3$s and needs to be updated."
 msgstr ""
 
 #. translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate
 #: includes/admin/upgrades/upgrade-functions.php:180
+#, php-format
 msgid "%1$sContact our support team%2$s for help with next steps."
 msgstr ""
 
@@ -10535,6 +10644,7 @@ msgstr ""
 
 #. translators: %s: Plural label for downloads
 #: includes/admin/upgrades/upgrade-functions.php:328
+#, php-format
 msgid "Sales and earnings data for %s and customers will be updated once orders have finished migrating."
 msgstr ""
 
@@ -10544,6 +10654,7 @@ msgstr ""
 
 #. translators: %s: WP-CLI command
 #: includes/admin/upgrades/upgrade-functions.php:338
+#, php-format
 msgid "This migration can also be run via WP-CLI with the following command: %s. This is the recommended method for large sites."
 msgstr ""
 
@@ -10580,6 +10691,7 @@ msgstr ""
 
 #. translators: 1: Opening anchor tag; do not translate. 2: Closing anchor tag; do not translate.
 #: includes/admin/upgrades/upgrade-functions.php:440
+#, php-format
 msgid "You can complete this step later by navigating to %1$sDownloads &raquo; Tools%2$s."
 msgstr ""
 
@@ -10606,11 +10718,13 @@ msgstr ""
 
 #. translators: 1: Step number, %2$d: Total steps
 #: includes/admin/upgrades/upgrades.php:99
+#, php-format
 msgid "Step %1$d of approximately %2$d running"
 msgstr ""
 
 #. translators: %s: Upgrade step name/key
 #: includes/admin/upgrades/v3/upgrade-actions.php:45
+#, php-format
 msgid "\"%s\" is not a valid 3.0 upgrade."
 msgstr ""
 
@@ -10646,6 +10760,7 @@ msgstr ""
 
 #. translators: %s: Date and time of the scheduled event.
 #: includes/admin/views/email-editor/legacy.php:35
+#, php-format
 msgid "Success! This email has been converted to the new email management system. We will keep a backup of the old settings which are no longer used, until %s, after which we will remove them to improve site performance."
 msgstr ""
 
@@ -10672,6 +10787,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag; 2: closing anchor tag
 #: includes/admin/views/email-editor/recipient.php:114
+#, php-format
 msgid "Update the admin email recipients in the %1$semail settings%2$s."
 msgstr ""
 
@@ -10713,6 +10829,7 @@ msgstr ""
 
 #. translators: %s: number of notifications
 #: includes/admin/views/notifications.php:35
+#, php-format
 msgid "(%s) New Notifications"
 msgstr ""
 
@@ -10782,7 +10899,7 @@ msgstr ""
 #: includes/blocks/views/orders/discounts.php:7
 #: includes/checkout/template.php:607
 #: includes/discount-functions.php:1330
-#: pro/invoices/functions.php:242
+#: pro/invoices/functions.php:249
 #: templates/shortcode-receipt.php:87
 msgid "Discount"
 msgid_plural "Discounts"
@@ -10792,6 +10909,7 @@ msgstr[1] ""
 #. translators: %s: Adjustment type (discount, fee, etc)
 #: includes/admin/views/tmpl-order-adjustment.php:30
 #: includes/admin/views/tmpl-order-item.php:25
+#, php-format
 msgid "Remove %s"
 msgstr ""
 
@@ -10821,6 +10939,7 @@ msgstr ""
 
 #. translators: %s: Download label singular
 #: includes/admin/views/tmpl-order-copy-download-link.php:20
+#, php-format
 msgid "%s Links"
 msgstr ""
 
@@ -10854,6 +10973,7 @@ msgstr ""
 #. translators: %s: Tax rate as a percentage
 #: includes/admin/views/tmpl-order-form-add-order-adjustment.php:121
 #: includes/admin/views/tmpl-order-form-add-order-item.php:148
+#, php-format
 msgid "Tax Rate: %s"
 msgstr ""
 
@@ -10892,6 +11012,7 @@ msgstr ""
 
 #. translators: %s: Download label singular
 #: includes/admin/views/tmpl-order-form-add-order-item.php:98
+#, php-format
 msgid "This %s already exists in the Order. Please remove it before adding it again."
 msgstr ""
 
@@ -10901,6 +11022,7 @@ msgstr ""
 
 #. translators: %s: Tax rate as a percentage
 #: includes/admin/views/tmpl-order-form-add-order-item.php:201
+#, php-format
 msgctxt "add order item tax rate"
 msgid "(%s)"
 msgstr ""
@@ -10920,6 +11042,7 @@ msgstr ""
 
 #. translators: %s: Tax rate
 #: includes/admin/views/tmpl-order-tax.php:47
+#, php-format
 msgid "The tax rate has been updated to %1$s. Existing automatically calculated amounts have not been updated."
 msgstr ""
 
@@ -11069,6 +11192,7 @@ msgstr ""
 #: includes/api/class-edd-api.php:1125
 #: includes/api/class-edd-api.php:1335
 #: includes/api/class-edd-api.php:1457
+#, php-format
 msgid "Product %s not found!"
 msgstr ""
 
@@ -11103,6 +11227,7 @@ msgstr ""
 
 #. translators: %s: customer ID.
 #: includes/api/class-edd-api.php:1068
+#, php-format
 msgid "Customer %s not found!"
 msgstr ""
 
@@ -11122,6 +11247,7 @@ msgstr ""
 
 #. translators: %s: discount ID.
 #: includes/api/class-edd-api.php:1671
+#, php-format
 msgid "Discount %s not found!"
 msgstr ""
 
@@ -11136,6 +11262,7 @@ msgstr ""
 #. translators: %s: action being performed.
 #: includes/api/class-edd-api.php:2002
 #: includes/api/class-edd-api.php:2012
+#, php-format
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -11192,6 +11319,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: includes/blocks/includes/admin/recaptcha.php:30
+#, php-format
 msgid "%1$sRegister with Google%2$s to get reCAPTCHA v3 keys. Setting the keys here will enable reCAPTCHA on your registration block and when a user requests a password reset using the login block."
 msgstr ""
 
@@ -11209,6 +11337,7 @@ msgstr ""
 
 #. translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate.
 #: includes/blocks/includes/admin/settings.php:35
+#, php-format
 msgid "Do not use this with the %1$s[edd_login]%2$s shortcode; it does not support resetting passwords."
 msgstr ""
 
@@ -11229,11 +11358,13 @@ msgstr ""
 
 #. translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate.
 #: includes/blocks/includes/admin/settings.php:59
+#, php-format
 msgid "The Checkout block or %1$s[download_checkout]%2$s shortcode must be on this page."
 msgstr ""
 
 #. translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate.
 #: includes/blocks/includes/admin/settings.php:71
+#, php-format
 msgid "If a customer logs in using the EDD Login block or %1$s[edd_login]%2$s shortcode, will be redirected to this page."
 msgstr ""
 
@@ -11247,6 +11378,7 @@ msgstr ""
 
 #. translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate.
 #: includes/blocks/includes/admin/settings.php:87
+#, php-format
 msgid "Either the EDD Order History block or the %1$s[purchase_history]%2$s shortcode must be on this page."
 msgstr ""
 
@@ -11264,6 +11396,7 @@ msgstr ""
 
 #. translators: 1: opening code tag, do not translate, 2: closing code tag, do not translate.
 #: includes/blocks/includes/admin/settings.php:119
+#, php-format
 msgid "Use the EDD Receipt block or the %1$s[edd_receipt]%2$s shortcode to work with the confirmation page."
 msgstr ""
 
@@ -11316,6 +11449,7 @@ msgstr[1] ""
 
 #. translators: the plurals downloads name.
 #: includes/blocks/includes/downloads/downloads.php:100
+#, php-format
 msgctxt "download post type name"
 msgid "No %s found."
 msgstr ""
@@ -11323,6 +11457,7 @@ msgstr ""
 #. translators: 1: The current user's email address, 2: opening anchor tag, do not translate, 3: closing anchor tag, do not translate.
 #: includes/blocks/includes/forms/forms.php:73
 #: includes/blocks/views/checkout/logged-in.php:7
+#, php-format
 msgid "You are currently logged in as %1$s. (%2$slog out%3$s)"
 msgstr ""
 
@@ -11370,7 +11505,7 @@ msgid "Your purchase session could not be retrieved."
 msgstr ""
 
 #: includes/blocks/includes/orders/orders.php:172
-#: includes/shortcodes.php:507
+#: includes/shortcodes.php:512
 msgid "Sorry, trouble retrieving order receipt."
 msgstr ""
 
@@ -11431,11 +11566,13 @@ msgstr ""
 
 #. translators: 1: name of the term
 #: includes/blocks/includes/terms/images.php:132
+#, php-format
 msgid "Set Term Image for %1$s."
 msgstr ""
 
 #. translators: the placeholder refers to which featured image
 #: includes/blocks/includes/terms/images.php:156
+#, php-format
 msgid "%s featured image"
 msgstr ""
 
@@ -11674,6 +11811,7 @@ msgstr ""
 
 #. translators: 1: Opening anchor tag. 2: Closing anchor tag.
 #: includes/blocks/views/orders/pending.php:13
+#, php-format
 msgid "Your account is pending verification. Please click the link in your email to activate your account. No email? %1$sSend a new activation code.%2$s"
 msgstr ""
 
@@ -11714,11 +11852,13 @@ msgstr ""
 
 #. translators: %s: tax rate formatted as a percentage
 #: includes/cart/class-edd-cart.php:911
+#, php-format
 msgid "includes %s tax"
 msgstr ""
 
 #. translators: %s: tax rate formatted as a percentage
 #: includes/cart/class-edd-cart.php:914
+#, php-format
 msgid "excludes %s tax"
 msgstr ""
 
@@ -11765,6 +11905,7 @@ msgstr ""
 
 #. Translators: %s: name of the download that was added to the cart.
 #: includes/cart/template.php:324
+#, php-format
 msgid "You have successfully added %s to your shopping cart."
 msgstr ""
 
@@ -11954,36 +12095,43 @@ msgstr ""
 
 #. translators: %s: W3 Total Cache settings URL
 #: includes/class-edd-cache-helper.php:114
+#, php-format
 msgid "In order for <strong>database caching</strong> to work with Easy Digital Downloads you must add <code>_wp_session_</code> to the \"Ignored query stems\" option in W3 Total Cache settings <a href=\"%s\">here</a>."
 msgstr ""
 
 #. translators: %s: EDD version
 #: includes/class-edd-cli.php:61
+#, php-format
 msgid "You are running EDD version: %s"
 msgstr ""
 
 #. translators: %s: The status of test mode, either Enabled or Disabled
 #: includes/class-edd-cli.php:66
+#, php-format
 msgid "Test mode is: %s"
 msgstr ""
 
 #. translators: %s: The status of AJAX, either Enabled or Disabled
 #: includes/class-edd-cli.php:76
+#, php-format
 msgid "AJAX is: %s"
 msgstr ""
 
 #. translators: %s: The status of guest checkouts, either Enabled or Disabled
 #: includes/class-edd-cli.php:86
+#, php-format
 msgid "Guest checkouts are: %s"
 msgstr ""
 
 #. translators: %s: The status of file downloads via symlink setting, either Enabled or Disabled
 #: includes/class-edd-cli.php:96
+#, php-format
 msgid "Symlinks are: %s"
 msgstr ""
 
 #. translators: %s: The status of the checkout page, either Valid or Invalid
 #: includes/class-edd-cli.php:107
+#, php-format
 msgid "Checkout page is: %s"
 msgstr ""
 
@@ -11997,6 +12145,7 @@ msgstr ""
 
 #. translators: %s: The URL of the checkout page
 #: includes/class-edd-cli.php:116
+#, php-format
 msgid "Checkout URL is: %s"
 msgstr ""
 
@@ -12008,41 +12157,49 @@ msgstr ""
 
 #. translators: %s: The URL of the success page
 #: includes/class-edd-cli.php:126
+#, php-format
 msgid "Success URL is: %s"
 msgstr ""
 
 #. translators: %s: The URL of the failure page
 #: includes/class-edd-cli.php:136
+#, php-format
 msgid "Failure URL is: %s"
 msgstr ""
 
 #. translators: %s: The download slug used in the WordPress Permalinks, defaults to /downloads
 #: includes/class-edd-cli.php:146
+#, php-format
 msgid "Downloads slug is: %s"
 msgstr ""
 
 #. translators: %s: The status of the taxes enabled setting, either Enabled or Disabled
 #: includes/class-edd-cli.php:157
+#, php-format
 msgid "Taxes are: %s"
 msgstr ""
 
 #. translators: %s: The default tax rate formatted as a percentage
 #: includes/class-edd-cli.php:165
+#, php-format
 msgid "Tax rate is: %s"
 msgstr ""
 
 #. translators: 1: The country code, 2: The state code, 3: The tax rate formatted as a percentage
 #: includes/class-edd-cli.php:171
+#, php-format
 msgid "Country: %1$s, State: %2$s, Rate: %3$s"
 msgstr ""
 
 #. translators: %s: The earnings formatted for the currency
 #: includes/class-edd-cli.php:215
+#, php-format
 msgid "Earnings: %s"
 msgstr ""
 
 #. translators: %s: The sales count
 #: includes/class-edd-cli.php:217
+#, php-format
 msgid "Sales: %s"
 msgstr ""
 
@@ -12052,55 +12209,65 @@ msgstr ""
 
 #. translators: %d: The product ID (post ID)
 #: includes/class-edd-cli.php:282
+#, php-format
 msgctxt "The Download/Product ID"
 msgid "ID: %d"
 msgstr ""
 
 #. translators: %s: The status of the product
 #: includes/class-edd-cli.php:284
+#, php-format
 msgctxt "The Download/Product Status"
 msgid "Status: %s"
 msgstr ""
 
 #. translators: %s: The date the product was posted
 #: includes/class-edd-cli.php:286
+#, php-format
 msgid "Posted: %s"
 msgstr ""
 
 #. translators: %s: The product categories
 #: includes/class-edd-cli.php:288
+#, php-format
 msgid "Categories: %s"
 msgstr ""
 
 #. translators: %s: The product tags
 #: includes/class-edd-cli.php:290
+#, php-format
 msgid "Tags: %s"
 msgstr ""
 
 #. translators: %s: The product pricing
 #: includes/class-edd-cli.php:292
+#, php-format
 msgid "Pricing: %s"
 msgstr ""
 
 #. translators: %s: The product sales count
 #: includes/class-edd-cli.php:294
+#, php-format
 msgctxt "The sales count for the product"
 msgid "Sales: %s"
 msgstr ""
 
 #. translators: %s: The product earnings formatted for the currency
 #: includes/class-edd-cli.php:296
+#, php-format
 msgctxt "The product earnings"
 msgid "Earnings: %s"
 msgstr ""
 
 #. translators: %s: The product page slug
 #: includes/class-edd-cli.php:299
+#, php-format
 msgid "Slug: %s"
 msgstr ""
 
 #. translators: %s: The product link
 #: includes/class-edd-cli.php:301
+#, php-format
 msgid "Permalink: %s"
 msgstr ""
 
@@ -12110,16 +12277,19 @@ msgstr ""
 
 #. translators: 1: The file name, 2: The file path
 #: includes/class-edd-cli.php:309
+#, php-format
 msgid "File: %1$s (%2$s)"
 msgstr ""
 
 #. translators: %s: The price assignment condition
 #: includes/class-edd-cli.php:313
+#, php-format
 msgid "Price Assignment: %s"
 msgstr ""
 
 #. translators: %d: The customer ID
 #: includes/class-edd-cli.php:377
+#, php-format
 msgid "Customer %d created successfully"
 msgstr ""
 
@@ -12129,6 +12299,7 @@ msgstr ""
 
 #. translators: 1: The number of customers created, %2$d: The time it took to create the customers
 #: includes/class-edd-cli.php:388
+#, php-format
 msgid "%1$d customers created in %2$d seconds"
 msgstr ""
 
@@ -12139,6 +12310,7 @@ msgstr ""
 
 #. translators: %d: The customer's user ID
 #: includes/class-edd-cli.php:424
+#, php-format
 msgid "Customer User ID: %s"
 msgstr ""
 
@@ -12146,42 +12318,50 @@ msgstr ""
 #: includes/class-edd-cli.php:426
 #: includes/deprecated-functions.php:2380
 #: includes/deprecated-functions.php:2395
+#, php-format
 msgid "Username: %s"
 msgstr ""
 
 #. translators: %s: The customer's display name
 #: includes/class-edd-cli.php:428
+#, php-format
 msgid "Display Name: %s"
 msgstr ""
 
 #. translators: %s: The customer's first name
 #: includes/class-edd-cli.php:432
+#, php-format
 msgid "First Name: %s"
 msgstr ""
 
 #. translators: %s: The customer's surname
 #: includes/class-edd-cli.php:437
+#, php-format
 msgid "Last Name: %s"
 msgstr ""
 
 #. translators: %s: The customer's email address
 #: includes/class-edd-cli.php:441
 #: includes/class-edd-cli.php:489
+#, php-format
 msgid "Email: %s"
 msgstr ""
 
 #. translators: %s: The customer's total purchases
 #: includes/class-edd-cli.php:445
+#, php-format
 msgid "Purchases: %s"
 msgstr ""
 
 #. translators: %s: The customer's total spent
 #: includes/class-edd-cli.php:447
+#, php-format
 msgid "Total Spent: %s"
 msgstr ""
 
 #. translators: %s: The customer's total downloads
 #: includes/class-edd-cli.php:449
+#, php-format
 msgid "Total Downloads: %s"
 msgstr ""
 
@@ -12191,21 +12371,25 @@ msgstr ""
 
 #. translators: %s: The purchase key
 #: includes/class-edd-cli.php:487
+#, php-format
 msgid "Purchase Key: %s"
 msgstr ""
 
 #. translators: %s: The purchase date
 #: includes/class-edd-cli.php:491
+#, php-format
 msgid "Date: %s"
 msgstr ""
 
 #. translators: %s: The purchase subtotal
 #: includes/class-edd-cli.php:493
+#, php-format
 msgid "Subtotal: %s"
 msgstr ""
 
 #. translators: %s: The purchase tax
 #: includes/class-edd-cli.php:495
+#, php-format
 msgid "Tax: %s"
 msgstr ""
 
@@ -12215,16 +12399,19 @@ msgstr ""
 
 #. translators: 1: The fee amount, 2: The currency
 #: includes/class-edd-cli.php:502
+#, php-format
 msgid "  Fee: %1$s - %2$s"
 msgstr ""
 
 #. translators: %s: The purchase total
 #: includes/class-edd-cli.php:507
+#, php-format
 msgid "Total: %s"
 msgstr ""
 
 #. translators: %s: The payment gateway used
 #: includes/class-edd-cli.php:510
+#, php-format
 msgid "Gateway: %s"
 msgstr ""
 
@@ -12234,6 +12421,7 @@ msgstr ""
 
 #. translators: 1: The product name, 2: The product price
 #: includes/class-edd-cli.php:518
+#, php-format
 msgid "  Product: %1$s - %2$s"
 msgstr ""
 
@@ -12244,26 +12432,31 @@ msgstr ""
 
 #. translators: %s: The name of the discount
 #: includes/class-edd-cli.php:557
+#, php-format
 msgid "Name: %s"
 msgstr ""
 
 #. translators: %s: The code of the discount
 #: includes/class-edd-cli.php:559
+#, php-format
 msgid "Code: %s"
 msgstr ""
 
 #. translators: %s: The amount of the discount
 #: includes/class-edd-cli.php:568
+#, php-format
 msgid "Amount: %s"
 msgstr ""
 
 #. translators: %s: The number of uses of the discount
 #: includes/class-edd-cli.php:570
+#, php-format
 msgid "Uses: %s"
 msgstr ""
 
 #. translators: %s: The maximum number of uses of the discount
 #: includes/class-edd-cli.php:572
+#, php-format
 msgid "Max Uses: %s"
 msgstr ""
 
@@ -12275,6 +12468,7 @@ msgstr ""
 
 #. translators: %s: The start date of the discount
 #: includes/class-edd-cli.php:574
+#, php-format
 msgid "Start Date: %s"
 msgstr ""
 
@@ -12285,6 +12479,7 @@ msgstr ""
 
 #. translators: %s: The expiration date of the discount
 #: includes/class-edd-cli.php:576
+#, php-format
 msgid "Expiration Date: %s"
 msgstr ""
 
@@ -12295,6 +12490,7 @@ msgstr ""
 
 #. translators: %s: The status of the discount
 #: includes/class-edd-cli.php:578
+#, php-format
 msgctxt "The status of the discount code"
 msgid "Status: %s"
 msgstr ""
@@ -12305,16 +12501,19 @@ msgstr ""
 
 #. translators: %s: The ID of the product required for this discount
 #: includes/class-edd-cli.php:587
+#, php-format
 msgid "  Product: %s"
 msgstr ""
 
 #. translators: %s: The type of discount if it is able to be used on all products.
 #: includes/class-edd-cli.php:594
+#, php-format
 msgid "Global Discount: %s"
 msgstr ""
 
 #. translators: %s: The type of discount if it is a single use discount.
 #: includes/class-edd-cli.php:596
+#, php-format
 msgid "Single Use: %s"
 msgstr ""
 
@@ -12330,6 +12529,7 @@ msgstr ""
 
 #. translators: %s: The status of the payment
 #: includes/class-edd-cli.php:683
+#, php-format
 msgid "Invalid status '%s', defaulting to 'complete'"
 msgstr ""
 
@@ -12339,11 +12539,13 @@ msgstr ""
 
 #. translators: %s: The number of orders created
 #: includes/class-edd-cli.php:855
+#, php-format
 msgid "Created %s orders"
 msgstr ""
 
 #. translators: %s: The number of discounts created
 #: includes/class-edd-cli.php:960
+#, php-format
 msgid "Created %s discounts"
 msgstr ""
 
@@ -12544,21 +12746,25 @@ msgstr ""
 
 #. translators: 1: the refund order ID, 2: the original payment ID.
 #: includes/class-edd-cli.php:1875
+#, php-format
 msgid "%1$d is a refund order. EDD will delete the refund and migrate payment %1$d, then re-migrate payment %2$d."
 msgstr ""
 
 #. translators: 1: the order/payment ID.
 #: includes/class-edd-cli.php:1885
+#, php-format
 msgid "Order ID %1$d appears to be a different record from Payment ID %1$d. Are you sure you want to destroy this order and overwrite it?"
 msgstr ""
 
 #. translators: %d: The order ID.
 #: includes/class-edd-cli.php:1891
+#, php-format
 msgid "Deleting order %d."
 msgstr ""
 
 #. translators: %d: The payment ID.
 #: includes/class-edd-cli.php:1922
+#, php-format
 msgid "Migration failed for payment %d."
 msgstr ""
 
@@ -12677,6 +12883,7 @@ msgstr ""
 #. translators: %s: discount property name
 #: includes/class-edd-discount.php:377
 #: includes/class-edd-download.php:377
+#, php-format
 msgid "Can't get property %s"
 msgstr ""
 
@@ -12706,6 +12913,7 @@ msgstr ""
 
 #. translators: %s: Minimum order amount, formatted for the currency
 #: includes/class-edd-discount.php:1408
+#, php-format
 msgid "Minimum order of %s not met."
 msgstr ""
 
@@ -12744,6 +12952,7 @@ msgstr ""
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: includes/class-edd-license-handler.php:302
 #: src/Extensions/Handler.php:256
+#, php-format
 msgid "You have invalid or expired license keys for Easy Digital Downloads. %1$sActivate License(s)%2$s"
 msgstr ""
 
@@ -13120,6 +13329,7 @@ msgstr ""
 #. translators: 1: Old status, 2: New status
 #: includes/deprecated-functions.php:1158
 #: includes/orders/functions/transitions.php:30
+#, php-format
 msgid "Status changed from %1$s to %2$s"
 msgstr ""
 
@@ -13133,6 +13343,7 @@ msgstr ""
 
 #. translators: 1:  <a> tag, 2.  </a> tag
 #: includes/deprecated-functions.php:1295
+#, php-format
 msgid "%1$sClick here%2$s to visit your Jilt dashboard"
 msgstr ""
 
@@ -13158,12 +13369,14 @@ msgstr ""
 
 #. translators: 1:  <strong> tag, 2.  </strong> tag, 3.  <a> tag, 4.  </a> tag
 #: includes/deprecated-functions.php:1487
+#, php-format
 msgid "%1$sRecover abandoned purchases like this one.%2$s %3$sTry Jilt for free%4$s."
 msgstr ""
 
 #. translators: 1:  Opening anchor tag, 2:  The url to dismiss the ajax notice, 3: Complete the opening of the anchor tag, 4: Open span tag, 5:  Close span tag
 #: includes/deprecated-functions.php:1500
 #: includes/emails/recapture.php:126
+#, php-format
 msgid "%1$s %2$s %3$s %4$s Dismiss this notice. %5$s"
 msgstr ""
 
@@ -13178,11 +13391,13 @@ msgstr ""
 
 #. translators: The %s represents the link to the Product Reviews extension.
 #: includes/deprecated-functions.php:1660
+#, php-format
 msgid "Would you like to enable reviews for this product? Check out our <a target=\"_blank\" href=\"%s\">Product Reviews</a> extension."
 msgstr ""
 
 #. translators: %s: The site name
 #: includes/deprecated-functions.php:2377
+#, php-format
 msgid "[%s] New User Registration"
 msgstr ""
 
@@ -13193,11 +13408,13 @@ msgstr ""
 
 #. translators: the user email
 #: includes/deprecated-functions.php:2382
+#, php-format
 msgid "E-mail: %s"
 msgstr ""
 
 #. translators: Site name
 #: includes/deprecated-functions.php:2392
+#, php-format
 msgid "[%s] Your username and password"
 msgstr ""
 
@@ -13216,6 +13433,7 @@ msgstr ""
 
 #. translators: %s: password message
 #: includes/deprecated-functions.php:2404
+#, php-format
 msgid "Password: %s"
 msgstr ""
 
@@ -13227,11 +13445,13 @@ msgstr ""
 #. translators: %s: login URL
 #: includes/deprecated-functions.php:2413
 #: src/Emails/Templates/NewUser.php:118
+#, php-format
 msgid "To log in, visit: %s"
 msgstr ""
 
 #. translators: 1: Function name, 2: Version number, 3: Replacement function name
 #: includes/discount-functions.php:505
+#, php-format
 msgid "%1$s is deprecated since Easy Digital Downloads version %2$s! Use %3$s instead."
 msgstr ""
 
@@ -13250,6 +13470,7 @@ msgstr ""
 #. translators: the plugin name.
 #: includes/EDD_SL_Plugin_Updater.php:296
 #: src/Extensions/Updater.php:315
+#, php-format
 msgid "There is a new version of %1$s available."
 msgstr ""
 
@@ -13261,12 +13482,14 @@ msgstr ""
 #. translators: 1: opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate.
 #: includes/EDD_SL_Plugin_Updater.php:307
 #: src/Extensions/Updater.php:326
+#, php-format
 msgid "%1$sView version %2$s details%3$s."
 msgstr ""
 
 #. translators: 1: opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate.
 #: includes/EDD_SL_Plugin_Updater.php:315
 #: src/Extensions/Updater.php:335
+#, php-format
 msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
 msgstr ""
 
@@ -13282,6 +13505,7 @@ msgstr ""
 
 #. translators: Site domain name
 #: includes/emails/email-summary/class-edd-email-summary.php:96
+#, php-format
 msgid "Easy Digital Downloads Summary - %s"
 msgstr ""
 
@@ -13309,6 +13533,7 @@ msgstr ""
 
 #. translators: period name (e.g. week)
 #: includes/emails/email-summary/class-edd-email-summary.php:320
+#, php-format
 msgid "vs previous %s"
 msgstr ""
 
@@ -13337,11 +13562,13 @@ msgstr ""
 
 #. translators: 1: amount that could have been saved, 2: opening anchor tag, 3: closing anchor tag
 #: includes/emails/email-summary/template-parts/fee-info.php:59
+#, php-format
 msgid "You could have saved %1$s in transaction fees this year by %2$supgrading to an Extended Pass%3$s."
 msgstr ""
 
 #. translators: 1: opening span tag, 2. the formatted currency amount, 3. the closing span tag
 #: includes/emails/email-summary/template-parts/fee-info.php:67
+#, php-format
 msgid "You have %1$ssaved %2$s in transaction fees%3$s this year with your active license."
 msgstr ""
 
@@ -13383,6 +13610,7 @@ msgstr ""
 
 #. translators: 1:  <strong> tag, 2.  </strong> tag, 3.  <a> tag, 4.  </a> tag
 #: includes/emails/recapture.php:113
+#, php-format
 msgid "%1$sRecover abandoned purchases like this one.%2$s %3$sTry Recapture for free%4$s."
 msgstr ""
 
@@ -13413,6 +13641,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: includes/emails/tags.php:765
+#, php-format
 msgid "%1$sView it in your browser %2$s"
 msgstr ""
 
@@ -13443,6 +13672,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, %2$s Closing anchor tag, %3$s Opening anchor tag
 #: includes/gateways/amazon-payments.php:121
+#, php-format
 msgid "Amazon Payments for Easy Digital Downloads has been deprecated and will be removed in a future version. To continue to accept credit card payments in the future, please %1$senable Stripe now%2$s or %3$slearn more about the benefits of using Stripe%2$s."
 msgstr ""
 
@@ -13514,6 +13744,7 @@ msgstr ""
 
 #. translators: %s: Integration Settings URL
 #: includes/gateways/amazon-payments.php:410
+#, php-format
 msgid "The IPN URL to provide in your MWS account. Enter this under your <a href=\"%s\">Integration Settings</a>"
 msgstr ""
 
@@ -13532,11 +13763,13 @@ msgstr ""
 
 #. translators: %s: Payment Failure Reason (dynamic, provided by the gateway)
 #: includes/gateways/amazon-payments.php:893
+#, php-format
 msgid "Your payment could not be authorized, please try a different payment method. Reason: %s"
 msgstr ""
 
 #. translators: %s: Amazon Error (dynamic, provided by the gateway)
 #: includes/gateways/amazon-payments.php:940
+#, php-format
 msgid "There was an issue processing your payment. Amazon error: %s"
 msgstr ""
 
@@ -13564,16 +13797,19 @@ msgstr ""
 #. translators: %s: Amazon Refund ID
 #: includes/gateways/amazon-payments.php:1092
 #: includes/gateways/amazon-payments.php:1172
+#, php-format
 msgid "Refund completed in Amazon. Refund ID: %s"
 msgstr ""
 
 #. translators: %s: Amazon Refund ID
 #: includes/gateways/amazon-payments.php:1166
+#, php-format
 msgid "Refund declined in Amazon. Refund ID: %s"
 msgstr ""
 
 #. translators: %s: Amazon Refund ID
 #: includes/gateways/amazon-payments.php:1177
+#, php-format
 msgid "Refund initiated in Amazon. Reference ID: %s"
 msgstr ""
 
@@ -13597,6 +13833,7 @@ msgstr ""
 
 #. translators: %s: payment data
 #: includes/gateways/manual.php:72
+#, php-format
 msgid "Payment creation failed while processing a manual (free or test) purchase. Payment data: %s"
 msgstr ""
 
@@ -13623,6 +13860,7 @@ msgstr ""
 
 #. translators: %s: Documentation URL
 #: includes/gateways/paypal-standard.php:73
+#, php-format
 msgid "Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href=\"%s\" target=\"_blank\">documentation</a> for further information."
 msgstr ""
 
@@ -13632,6 +13870,7 @@ msgstr ""
 
 #. translators: %s: FAQ URL
 #: includes/gateways/paypal-standard.php:87
+#, php-format
 msgid "If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href=\"%s\" target=\"_blank\">FAQ</a> for further information."
 msgstr ""
 
@@ -13645,6 +13884,7 @@ msgstr ""
 
 #. translators: %s: PayPal API Credentials URL
 #: includes/gateways/paypal-standard.php:106
+#, php-format
 msgid "API credentials are necessary to process PayPal refunds from inside WordPress. These can be obtained from <a href=\"%s\" target=\"_blank\">your PayPal account</a>."
 msgstr ""
 
@@ -13698,17 +13938,20 @@ msgstr ""
 
 #. translators: %s: payment data
 #: includes/gateways/paypal-standard.php:197
+#, php-format
 msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
 #. translators: %s: IPN Verification response
 #: includes/gateways/paypal-standard.php:498
 #: includes/gateways/paypal-standard.php:509
+#, php-format
 msgid "Invalid IPN verification response. IPN data: %s"
 msgstr ""
 
 #. translators: %s: IPN Verification response
 #: includes/gateways/paypal-standard.php:605
+#, php-format
 msgid "Invalid business email in IPN response. IPN data: %s"
 msgstr ""
 
@@ -13718,6 +13961,7 @@ msgstr ""
 
 #. translators: %s: IPN Verification response
 #: includes/gateways/paypal-standard.php:620
+#, php-format
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
@@ -13727,6 +13971,7 @@ msgstr ""
 
 #. translators: %s: IPN Verification response
 #: includes/gateways/paypal-standard.php:700
+#, php-format
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
@@ -13736,6 +13981,7 @@ msgstr ""
 
 #. translators: %s: IPN Verification response
 #: includes/gateways/paypal-standard.php:714
+#, php-format
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
@@ -13746,6 +13992,7 @@ msgstr ""
 #. translators: %s: PayPal Transaction ID
 #: includes/gateways/paypal-standard.php:724
 #: includes/gateways/paypal/checkout-actions.php:420
+#, php-format
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
@@ -13787,16 +14034,19 @@ msgstr ""
 
 #. translators: %s: PayPal transaction ID
 #: includes/gateways/paypal-standard.php:831
+#, php-format
 msgid "Partial PayPal refund processed: %s"
 msgstr ""
 
 #. translators: 1: PayPal transaction ID, 2: Reason for refund
 #: includes/gateways/paypal-standard.php:837
+#, php-format
 msgid "PayPal Payment #%1$s Refunded for reason: %2$s"
 msgstr ""
 
 #. translators: %s: PayPal transaction ID
 #: includes/gateways/paypal-standard.php:839
+#, php-format
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
@@ -13806,6 +14056,7 @@ msgstr ""
 
 #. translators: 1: Expected payment amount, 2: Received payment amount
 #: includes/gateways/paypal-standard.php:1063
+#, php-format
 msgid "Payment failed while validating PayPal PDT. Amount expected: %1$f. Amount Received: %2$f"
 msgstr ""
 
@@ -13833,16 +14084,19 @@ msgstr ""
 
 #. translators: 1:  amount refunded; %2$s - transaction ID.
 #: includes/gateways/paypal-standard.php:1364
+#, php-format
 msgid "%1$s refunded in PayPal. Transaction ID: %2$s"
 msgstr ""
 
 #. translators: %s: PayPal Transaction ID.
 #: includes/gateways/paypal-standard.php:1367
+#, php-format
 msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
 #. translators: %s: error message.
 #: includes/gateways/paypal-standard.php:1404
+#, php-format
 msgid "PayPal refund failed: %s"
 msgstr ""
 
@@ -13858,16 +14112,19 @@ msgstr ""
 
 #. translators: 1. opening <strong> tag, 2. closing </strong> tag
 #: includes/gateways/paypal/admin/connect.php:47
+#, php-format
 msgid "%1$sPayPal Communication Error:%2$s We are having trouble communicating with PayPal at the moment. Please try again later, and if the issue persists, reach out to our support team."
 msgstr ""
 
 #. translators: %s: the store mode, either `sandbox` or `live`
 #: includes/gateways/paypal/admin/connect.php:62
+#, php-format
 msgid "Connect with PayPal in %s mode"
 msgstr ""
 
 #. translators: 1: HTTP response code, 2: error message
 #: includes/gateways/paypal/admin/connect.php:228
+#, php-format
 msgid "Unexpected response code: %1$d. Error: %2$s"
 msgstr ""
 
@@ -13893,11 +14150,13 @@ msgstr ""
 
 #. translators: %d: HTTP response code
 #: includes/gateways/paypal/admin/connect.php:363
+#, php-format
 msgid "Unexpected response from PayPal while generating token. Response code: %d. Please try again."
 msgstr ""
 
 #. translators: %d: HTTP response code
 #: includes/gateways/paypal/admin/connect.php:396
+#, php-format
 msgid "Unexpected response from PayPal. Response code: %d. Please try again."
 msgstr ""
 
@@ -13931,6 +14190,7 @@ msgstr ""
 
 #. translators: %s: the connected mode, either `sandbox` or `live`
 #: includes/gateways/paypal/admin/connect.php:469
+#, php-format
 msgid "Your PayPal account is successfully connected in %s mode."
 msgstr ""
 
@@ -13961,6 +14221,7 @@ msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag; %3$s: opening line item/status/strong tags; %4$s closing strong tag; %5$s: closing list item tag
 #: includes/gateways/paypal/admin/connect.php:556
+#, php-format
 msgid "%3$sGateway Status: %4$s PayPal is not currently active. %1$sEnable PayPal%2$s in the general gateway settings to start using it.%5$s"
 msgstr ""
 
@@ -13982,6 +14243,7 @@ msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
 #: includes/gateways/paypal/admin/notices.php:54
+#, php-format
 msgid "A new, improved PayPal experience is now available in Easy Digital Downloads. You can learn more about the new integration in %1$sour documentation%2$s."
 msgstr ""
 
@@ -14061,6 +14323,7 @@ msgstr ""
 
 #. translators: %s: SSL setup article URL
 #: includes/gateways/paypal/admin/settings.php:147
+#, php-format
 msgid "PayPal requires an SSL certificate to accept payments. You can learn more about obtaining an SSL certificate in our <a href=\"%s\" target=\"_blank\">SSL setup article</a>."
 msgstr ""
 
@@ -14095,6 +14358,7 @@ msgstr ""
 
 #. translators: %s: Original order data sent to PayPal.
 #: includes/gateways/paypal/checkout-actions.php:213
+#, php-format
 msgid "PayPal could not complete the transaction with the itemized breakdown. Original order data sent: %s"
 msgstr ""
 
@@ -14133,6 +14397,7 @@ msgstr ""
 
 #. translators: %s: The error message
 #: includes/gateways/paypal/deprecated.php:98
+#, php-format
 msgid "Failed to refund transaction in PayPal. Error Message: %s"
 msgstr ""
 
@@ -14166,6 +14431,7 @@ msgstr ""
 
 #. translators: 1: Refund ID, 2: Error message
 #: includes/gateways/paypal/refunds.php:119
+#, php-format
 msgid "Failure when processing PayPal refund #%1$d: %2$s"
 msgstr ""
 
@@ -14175,21 +14441,25 @@ msgstr ""
 
 #. translators: 1: Response code, 2: Response message
 #: includes/gateways/paypal/refunds.php:187
+#, php-format
 msgid "Unexpected response code: %1$d. Response: %2$s"
 msgstr ""
 
 #. translators: %s: API response from PayPal
 #: includes/gateways/paypal/refunds.php:196
+#, php-format
 msgid "Missing or unexpected refund status. Response: %s"
 msgstr ""
 
 #. translators: 1: amount refunded; 2: transaction ID.
 #: includes/gateways/paypal/refunds.php:209
+#, php-format
 msgid "%1$s refunded in PayPal. Refund transaction ID: %2$s"
 msgstr ""
 
 #. translators: %s: ID of the refund in PayPal
 #: includes/gateways/paypal/refunds.php:216
+#, php-format
 msgid "Successfully refunded in PayPal. Refund transaction ID: %s"
 msgstr ""
 
@@ -14199,6 +14469,7 @@ msgstr ""
 
 #. translators: %d: HTTP response code; %s - Full response from the API.
 #: includes/gateways/paypal/webhooks/functions.php:132
+#, php-format
 msgid "Invalid response code %1$d while creating webhook. Response: %2$s"
 msgstr ""
 
@@ -14212,6 +14483,7 @@ msgstr ""
 
 #. translators: %d: HTTP response code; %s - Full response from the API.
 #: includes/gateways/paypal/webhooks/functions.php:201
+#, php-format
 msgid "Invalid response code %1$d while syncing webhook. Response: %2$s"
 msgstr ""
 
@@ -14221,6 +14493,7 @@ msgstr ""
 
 #. translators: %d: HTTP response code.
 #: includes/gateways/paypal/webhooks/functions.php:258
+#, php-format
 msgid "Invalid response code %d while retrieving webhook details."
 msgstr ""
 
@@ -14230,11 +14503,13 @@ msgstr ""
 
 #. translators: %d: HTTP response code.
 #: includes/gateways/paypal/webhooks/functions.php:303
+#, php-format
 msgid "Invalid response code %d while deleting webhook."
 msgstr ""
 
 #. translators: %1$s Stripe Connect error message. %2$s Retry URL.
 #: includes/gateways/stripe/includes/admin/admin-actions.php:13
+#, php-format
 msgid "There was an error connecting your Stripe account. Message: %1$s. Please <a href=\"%2$s\">try again</a>."
 msgstr ""
 
@@ -14323,6 +14598,7 @@ msgstr ""
 
 #. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong tag, do not translate. %3$s Opening code tag, do not translate. %4$s Closing code tag, do not translate.
 #: includes/gateways/stripe/includes/admin/notices/edd-recurring-requirement.php:26
+#, php-format
 msgid "To continue accepting credit card payments with Stripe please update %1$sEasy Digital Downloads - Recurring Payments%2$s to version %3$s2.10%4$s or higher."
 msgstr ""
 
@@ -14332,6 +14608,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. %3$s Opening anchor tag, do not translate. %4$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/admin/notices/edd-stripe-core.php:34
+#, php-format
 msgid "Easy Digital Downloads now lets you accept credit card payments using Stripe, including Apple Pay and Google Pay support. %1$sEnable Stripe%2$s now or %3$slearn more%4$s about the benefits of using Stripe."
 msgstr ""
 
@@ -14342,6 +14619,7 @@ msgstr ""
 #. translators: %1$s PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate.
 #: includes/gateways/stripe/includes/admin/settings.php:106
 #: includes/gateways/stripe/includes/admin/settings.php:179
+#, php-format
 msgid "Processing credit cards with Stripe requires PHP version %1$s or higher. It looks like you're using version %2$s, which means you will need to %3$supgrade your version of PHP before acceping credit card payments%4$s."
 msgstr ""
 
@@ -14353,11 +14631,13 @@ msgstr ""
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/admin/settings.php:130
 #: includes/gateways/stripe/includes/admin/settings.php:199
+#, php-format
 msgid "Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %1$sour hosting recommendations%2$s."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:126
+#, php-format
 msgid "There was an error getting your Stripe credentials. Please %1$stry again%2$s. If you continue to have this problem, please contact support."
 msgstr ""
 
@@ -14377,11 +14657,13 @@ msgstr ""
 
 #. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for reconnecting to Stripe, do not translate. %3$s Opening anchor tag for disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:367
+#, php-format
 msgid "Your Stripe account is connected in %1$s mode. %2$sReconnect in %1$s mode%4$s, or %3$sdisconnect this account%4$s."
 msgstr ""
 
 #. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag, do not translate.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:390
+#, php-format
 msgid "You are currently connected to a %1$stemporary%2$s Stripe test account, which can only be used for testing purposes. You cannot manage this account in Stripe."
 msgstr ""
 
@@ -14391,12 +14673,14 @@ msgstr ""
 
 #. translators: %1$s Opening link tag, do not translate. %2$s Closing link tag, do not translate.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:404
+#, php-format
 msgid "%1$sRegister a Stripe account%2$s for full access."
 msgstr ""
 
 #. translators: 1: Opening anchor tag for disconnecting Stripe, do not translate. 2: Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:411
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:536
+#, php-format
 msgid "%1$sDisconnect this account%2$s."
 msgstr ""
 
@@ -14421,11 +14705,13 @@ msgstr ""
 
 #. translators: %1$s Stripe payment mode.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:565
+#, php-format
 msgid "Your manually managed %1$s mode API keys are valid."
 msgstr ""
 
 #. translators: %1$s Stripe payment mode.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:581
+#, php-format
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
@@ -14446,6 +14732,7 @@ msgstr ""
 
 #. translators: %s Test mode status. Enabled or disabled.
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:642
+#, php-format
 msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
 msgstr ""
 
@@ -14491,6 +14778,7 @@ msgstr ""
 
 #. translators: %s Upgrade link.
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:62
+#, php-format
 msgid "Easy Digital Downloads - Stripe Gateway needs to upgrade the customers database; <a href=\"%s\">click here to start the upgrade</a>. <a href=\"#\" onClick=\"jQuery(this).parent().next('p').slideToggle()\">Learn more about this upgrade</a>"
 msgstr ""
 
@@ -14578,6 +14866,7 @@ msgstr ""
 
 #. translators: %1$s Stripe API class name. %2$s Stripe API method name.
 #: includes/gateways/stripe/includes/class-stripe-api.php:69
+#, php-format
 msgid "Unable to call %1$s::%2$s"
 msgstr ""
 
@@ -14633,6 +14922,7 @@ msgstr ""
 
 #. translators: %1$s the amount refunded; %2$s Stripe Refund ID
 #: includes/gateways/stripe/includes/functions.php:660
+#, php-format
 msgid "%1$s refunded in Stripe. Refund ID %2$s"
 msgstr ""
 
@@ -14647,6 +14937,7 @@ msgstr ""
 
 #. translators: %s: statement descriptor
 #: includes/gateways/stripe/includes/gateway-actions.php:36
+#, php-format
 msgid "Charges will appear on your card statement as %s"
 msgstr ""
 
@@ -14791,6 +15082,7 @@ msgstr ""
 #. translators: %s: Error message
 #: includes/gateways/stripe/includes/payment-actions/card-elements-actions.php:369
 #: includes/gateways/stripe/includes/payment-actions/card-elements-actions.php:394
+#, php-format
 msgid "There was an error while processing a Stripe payment. Payment data: %s"
 msgstr ""
 
@@ -14838,6 +15130,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/payment-methods/apple-pay.php:281
+#, php-format
 msgid "Please %1$smanually add your domain%2$s %3$s to use Apple Pay."
 msgstr ""
 
@@ -14859,6 +15152,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. %3$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:51
+#, php-format
 msgid "\"Express Checkout\" via Apple Pay, Google Pay, or Microsoft Pay digital wallets. By using Apple Pay, you agree to %1$sStripe%3$s and %2$sApple's%3$s terms of service."
 msgstr ""
 
@@ -14868,16 +15162,19 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:59
+#, php-format
 msgid "See our %1$sdocumentation%2$s for more information."
 msgstr ""
 
 #. translators: %s Download noun
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:80
+#, php-format
 msgid "Single %s"
 msgstr ""
 
 #. translators: 1: Download singular label, 2: shortcode tag wrapped in <code> span
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:85
+#, php-format
 msgid "%1$s Archive (includes %2$s shortcode)"
 msgstr ""
 
@@ -14891,6 +15188,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:134
+#, php-format
 msgid "See the %1$sExpress Checkout documentation%2$s for more information."
 msgstr ""
 
@@ -14905,6 +15203,7 @@ msgstr ""
 #. translators: %d: Quantity.
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:165
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:222
+#, php-format
 msgid " × %d"
 msgstr ""
 
@@ -14956,6 +15255,7 @@ msgstr ""
 
 #. translators: %1$s Card type. %2$s Card last 4.
 #: includes/gateways/stripe/includes/template-functions.php:297
+#, php-format
 msgid "Update card billing address for %1$s •••• %2$s"
 msgstr ""
 
@@ -14966,6 +15266,7 @@ msgstr ""
 #. translators: %1$s Card type. %2$s Card last 4.
 #: includes/gateways/stripe/includes/template-functions.php:366
 #: includes/gateways/stripe/includes/template-functions.php:456
+#, php-format
 msgid "%1$s •••• %2$s"
 msgstr ""
 
@@ -15025,6 +15326,7 @@ msgstr ""
 
 #. translators: %s: The country name.
 #: includes/gateways/stripe/includes/utils/regional-support/class-edd-stripe-region-base.php:111
+#, php-format
 msgid "Based on your store's base country of %s, it is recommended to set your Billing Address Display to use the \"Full Address\" option to ensure payments are completed successfully."
 msgstr ""
 
@@ -15042,55 +15344,65 @@ msgstr ""
 
 #. translators: 1: function, 2: version, 3: replacement
 #: includes/misc-functions.php:525
+#, php-format
 msgctxt "deprecated function error logging with replacement function"
 msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead."
 msgstr ""
 
 #. translators: 1: function, 2: version
 #: includes/misc-functions.php:534
+#, php-format
 msgctxt "deprecated function error logging with no replacement"
 msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available."
 msgstr ""
 
 #. translators: 1: argument, 2: function, 3: version, 4: replacement
 #: includes/misc-functions.php:573
+#, php-format
 msgctxt "deprecated function argument error logging with replacement"
 msgid "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead."
 msgstr ""
 
 #. translators: 1: argument, 2: function, 3: version
 #: includes/misc-functions.php:582
+#, php-format
 msgctxt "deprecated function argument error logging with no replacement"
 msgid "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available."
 msgstr ""
 
 #. translators: 1: PHP file name, 2: EDD version number, 3: alternative file name
 #: includes/misc-functions.php:638
+#, php-format
 msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead."
 msgstr ""
 
 #. translators: 1: PHP file name, 2: EDD version number
 #: includes/misc-functions.php:641
+#, php-format
 msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available."
 msgstr ""
 
 #. translators: 1: PHP file name, 2: EDD version number
 #: includes/misc-functions.php:669
+#, php-format
 msgid "Code within %1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s. See message for further details."
 msgstr ""
 
 #. translators: 1: PHP file name, 2: EDD version number
 #: includes/misc-functions.php:711
+#, php-format
 msgid "The class %1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s. See message for further details."
 msgstr ""
 
 #. translators: 1: PHP file name, 2: EDD version number, 3: alternative hook name
 #: includes/misc-functions.php:839
+#, php-format
 msgid "The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use the %3$s hook instead."
 msgstr ""
 
 #. translators: 1: PHP file name, 2: EDD version number
 #: includes/misc-functions.php:842
+#, php-format
 msgid "The %1$s hook is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available."
 msgstr ""
 
@@ -15211,90 +15523,105 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:48
+#, php-format
 msgctxt "Text for adding a new Download/Product"
 msgid "Add %s"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:50
+#, php-format
 msgctxt "Text for editing an existing Download/Product"
 msgid "Edit %s"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:52
+#, php-format
 msgctxt "Text for adding a new Download/Product"
 msgid "New %s"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:55
+#, php-format
 msgctxt "Text for viewing an existing Download/Product"
 msgid "View %s"
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: includes/post-types.php:57
+#, php-format
 msgctxt "Verb: Text hinting the user to search for Downloads/Products"
 msgid "Search %s"
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: includes/post-types.php:59
+#, php-format
 msgctxt "Context: When no search results are found for Downloads/Products"
 msgid "No %s found"
 msgstr ""
 
 #. translators: %s: Download plural label
 #: includes/post-types.php:61
+#, php-format
 msgctxt "Context: When no Downloads/Products are found in the trash"
 msgid "No %s found in Trash"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:65
+#, php-format
 msgctxt "Context: Label for the featured images for a Download/Product"
 msgid "%s Image"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:67
+#, php-format
 msgctxt "Context: Text to set the featured image for a Download/Product"
 msgid "Set %s Image"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:69
+#, php-format
 msgctxt "Context: Text to remove the feature image for a Download/Product"
 msgid "Remove %s Image"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:71
+#, php-format
 msgctxt "Context: Text to use an image as the featured image for a Download/Produt"
 msgid "Use as %s Image"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:73
+#, php-format
 msgctxt "Context: Label for listing the attributes of a Download/Product"
 msgid "%s Attributes"
 msgstr ""
 
 #. translators: %s: Download plural label
 #: includes/post-types.php:75
+#, php-format
 msgctxt "Context: Label for filtering the Downloads/Products list"
 msgid "Filter %s list"
 msgstr ""
 
 #. translators: %s: Download plural label
 #: includes/post-types.php:77
+#, php-format
 msgctxt "Context: Label for the Downloads/Products list navigation"
 msgid "%s list navigation"
 msgstr ""
 
 #. translators: %s: Download plural label
 #: includes/post-types.php:79
+#, php-format
 msgctxt "Context: Lable for the Downloads/Products list"
 msgid "%s list"
 msgstr ""
@@ -15312,58 +15639,69 @@ msgstr ""
 #. translators: %s: Download singular label
 #: includes/post-types.php:179
 #: includes/post-types.php:188
+#, php-format
 msgid "Enter %s name here"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:208
+#, php-format
 msgctxt "taxonomy general name"
 msgid "%s Categories"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:210
+#, php-format
 msgctxt "taxonomy singular name"
 msgid "%s Category"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:212
+#, php-format
 msgid "Search %s Categories"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:214
+#, php-format
 msgid "All %s Categories"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:216
+#, php-format
 msgid "Parent %s Category"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:218
+#, php-format
 msgid "Parent %s Category:"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:220
+#, php-format
 msgid "Edit %s Category"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:222
+#, php-format
 msgid "Update %s Category"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:224
+#, php-format
 msgid "Add %s Category"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:226
+#, php-format
 msgid "New %s Category Name"
 msgstr ""
 
@@ -15376,54 +15714,64 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:260
+#, php-format
 msgctxt "taxonomy general name"
 msgid "%s Tags"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:262
+#, php-format
 msgctxt "taxonomy singular name"
 msgid "%s Tag"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:264
+#, php-format
 msgctxt "singular: Download singular label"
 msgid "Search %s Tags"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:266
+#, php-format
 msgid "All %s Tags"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:268
+#, php-format
 msgid "Parent %s Tag"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:270
+#, php-format
 msgid "Parent %s Tag:"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:272
+#, php-format
 msgid "Edit %s Tag"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:274
+#, php-format
 msgid "Update %s Tag"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:276
+#, php-format
 msgid "Add %s Tag"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:278
+#, php-format
 msgid "New %s Tag Name"
 msgstr ""
 
@@ -15435,86 +15783,101 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:282
+#, php-format
 msgid "Choose from most used %s tags"
 msgstr ""
 
 #. translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate)
 #: includes/post-types.php:385
 #: includes/post-types.php:387
+#, php-format
 msgid "%1$s updated. %2$sView %1$s%3$s."
 msgstr ""
 
 #. translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate)
 #: includes/post-types.php:389
+#, php-format
 msgid "%1$s published. %2$sView %1$s%3$s."
 msgstr ""
 
 #. translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate)
 #: includes/post-types.php:391
+#, php-format
 msgid "%1$s saved. %2$sView %1$s%3$s."
 msgstr ""
 
 #. translators: 1: Download singular label, 2: Opening anchor tag (do not translate), 3: Closing anchor tag (do not translate)
 #: includes/post-types.php:393
+#, php-format
 msgid "%1$s submitted. %2$sView %1$s%3$s."
 msgstr ""
 
 #. translators: 1: Number of downloads updated, 2: Downloads plural label
 #: includes/post-types.php:418
+#, php-format
 msgctxt "Context: Admin notice for multiple Downloads/Products updated in bulk"
 msgid "%1$d %2$s updated."
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:420
+#, php-format
 msgctxt "Context: Admin notice for one Downloads/Products updated in bulk"
 msgid "1 %s updated."
 msgstr ""
 
 #. translators: 1: Number of downloads locked, 2: Downloads plural label
 #: includes/post-types.php:423
+#, php-format
 msgctxt "Context: Admin notice for multiple Downloads/Products not updated in bulk because they are being edited"
 msgid "%1$d %2$s not updated, somebody is editing them."
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:425
+#, php-format
 msgctxt "Context: Admin notice for one Downloads/Products not updated in bulk because it is being edited"
 msgid "1 %s not updated, somebody is editing it."
 msgstr ""
 
 #. translators: 1: Number of downloads deleted, 2: Downloads plural label
 #: includes/post-types.php:428
+#, php-format
 msgctxt "Context: Admin notice for multiple Downloads/Products permanently deleted"
 msgid "%1$d %2$s permanently deleted."
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:430
+#, php-format
 msgctxt "Context: Admin notice for one Downloads/Products permanently deleted"
 msgid "1 %s permanently deleted."
 msgstr ""
 
 #. translators: 1: Number of downloads moved to the Trash, 2: Downloads plural label
 #: includes/post-types.php:433
+#, php-format
 msgctxt "Context: Admin notice for multiple Downloads/Products moved to the Trash"
 msgid "%1$d %2$s moved to the Trash."
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:435
+#, php-format
 msgctxt "Context: Admin notice for one Downloads/Products moved to the Trash"
 msgid "1 %s moved to the Trash."
 msgstr ""
 
 #. translators: 1: Number of downloads restored from the Trash, 2: Downloads plural label
 #: includes/post-types.php:438
+#, php-format
 msgctxt "Context: Admin notice for multiple Downloads/Products restored from the Trash"
 msgid "%1$d %2$s restored from the Trash."
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/post-types.php:440
+#, php-format
 msgctxt "Context: Admin notice for one Downloads/Products restored from the Trash"
 msgid "1 %s restored from the Trash."
 msgstr ""
@@ -15586,6 +15949,7 @@ msgstr ""
 
 #. translators: %d is the customer ID.
 #: includes/privacy-functions.php:255
+#, php-format
 msgid "No customer with ID %d"
 msgstr ""
 
@@ -15603,26 +15967,31 @@ msgstr ""
 
 #. translators: %d is the customer ID.
 #: includes/privacy-functions.php:378
+#, php-format
 msgid "Customer ID %d successfully anonymized."
 msgstr ""
 
 #. translators: %d is the order ID.
 #: includes/privacy-functions.php:403
+#, php-format
 msgid "No order with ID %d."
 msgstr ""
 
 #. translators: %d is the order status.
 #: includes/privacy-functions.php:441
+#, php-format
 msgid "Order not modified, due to status: %s."
 msgstr ""
 
 #. translators: %1$d is the order ID, %2$s is the order status.
 #: includes/privacy-functions.php:451
+#, php-format
 msgid "Order %1$d with status %2$s deleted."
 msgstr ""
 
 #. translators: %d is the order ID.
 #: includes/privacy-functions.php:490
+#, php-format
 msgid "Order ID %d successfully anonymized."
 msgstr ""
 
@@ -15694,7 +16063,7 @@ msgstr ""
 
 #: includes/privacy-functions.php:913
 #: src/Admin/Exports/Exporters/Orders.php:49
-#: src/Admin/Exports/Exporters/ProductSales.php:68
+#: src/Admin/Exports/Exporters/ProductSales.php:82
 #: src/Admin/Exports/Exporters/TaxedOrders.php:61
 msgid "Order ID"
 msgstr ""
@@ -15714,16 +16083,19 @@ msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1150
+#, php-format
 msgid "Customer for %s not deleted, due to remaining payments."
 msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1165
+#, php-format
 msgid "Customer for %s successfully deleted."
 msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1177
+#, php-format
 msgid "Customer for %s failed to be deleted."
 msgstr ""
 
@@ -15733,31 +16105,37 @@ msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1248
+#, php-format
 msgid "Customer for %s has been anonymized."
 msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1273
+#, php-format
 msgid "No orders found for %s."
 msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1275
+#, php-format
 msgid "All eligible orders anonymized or deleted for %s."
 msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1337
+#, php-format
 msgid "All eligible file download logs anonymized or deleted for %s."
 msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1387
+#, php-format
 msgid "No User found for %s, no access logs to remove."
 msgstr ""
 
 #. translators: %s: email address
 #: includes/privacy-functions.php:1405
+#, php-format
 msgid "All API access logs deleted for %s."
 msgstr ""
 
@@ -15805,6 +16183,7 @@ msgstr ""
 #. translators: %s: email address
 #: includes/process-purchase.php:144
 #: src/Checkout/Errors.php:182
+#, php-format
 msgid "The email address %s is already in use."
 msgstr ""
 
@@ -15979,6 +16358,7 @@ msgstr ""
 
 #. translators: %s: Timezone ID
 #: includes/reports/reports-functions.php:1326
+#, php-format
 msgid "Chart time zone: %s"
 msgstr ""
 
@@ -15988,6 +16368,7 @@ msgstr ""
 
 #. translators: %s: Default currency of the store, in standard 3 character format (example: USD or EUR)
 #: includes/reports/reports-functions.php:1700
+#, php-format
 msgid "%s - Converted"
 msgstr ""
 
@@ -16004,41 +16385,42 @@ msgid "Purchase All Items"
 msgstr ""
 
 #. translators: plural download label
-#: includes/shortcodes.php:419
+#: includes/shortcodes.php:424
+#, php-format
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
 
-#: includes/shortcodes.php:519
+#: includes/shortcodes.php:524
 msgid "You must be logged in to view this payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:531
+#: includes/shortcodes.php:536
 msgid "Receipt could not be retrieved, your purchase session has expired."
 msgstr ""
 
-#: includes/shortcodes.php:545
+#: includes/shortcodes.php:550
 msgid "Sorry, trouble viewing order receipt."
 msgstr ""
 
-#: includes/shortcodes.php:615
+#: includes/shortcodes.php:620
 msgid "Your profile could not be updated. Please contact a site administrator."
 msgstr ""
 
-#: includes/shortcodes.php:651
+#: includes/shortcodes.php:656
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:662
+#: includes/shortcodes.php:667
 msgid "The email you entered is invalid. Please enter a valid email."
 msgstr ""
 
-#: includes/shortcodes.php:673
+#: includes/shortcodes.php:678
 #: includes/users/register.php:81
 msgid "This email address is not available."
 msgstr ""
 
-#: includes/shortcodes.php:816
+#: includes/shortcodes.php:821
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
@@ -16052,6 +16434,7 @@ msgstr ""
 
 #. translators: the settings screen URL
 #: includes/template-functions.php:61
+#, php-format
 msgid "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to set one."
 msgstr ""
 
@@ -16072,11 +16455,13 @@ msgstr ""
 
 #. translators: the formatted tax rate
 #: includes/template-functions.php:225
+#, php-format
 msgid "Includes %1$s tax"
 msgstr ""
 
 #. translators: the formatted tax rate
 #: includes/template-functions.php:228
+#, php-format
 msgid "Excluding %1$s tax"
 msgstr ""
 
@@ -16138,6 +16523,7 @@ msgstr ""
 
 #. translators: %s: URL to request a new verification link
 #: includes/user-functions.php:843
+#, php-format
 msgid "Sorry but your account verification link has expired. <a href=\"%s\">Click here</a> to request a new verification URL."
 msgstr ""
 
@@ -16183,6 +16569,7 @@ msgstr ""
 
 #. translators: %s: iOS App URL
 #: includes/user-functions.php:1110
+#, php-format
 msgid "Easy Digital Downloads <a href=\"%s\">iOS App</a>"
 msgstr ""
 
@@ -16192,11 +16579,13 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: includes/users/login.php:152
+#, php-format
 msgid "Invalid username or password. %1$sReset Password%2$s"
 msgstr ""
 
 #. translators: %s: Link to the referring page.
 #: includes/users/lost-password.php:31
+#, php-format
 msgid "Follow the instructions in the confirmation email you just received, then <a href=\"%s\">return to what you were doing</a>."
 msgstr ""
 
@@ -16300,11 +16689,13 @@ msgstr ""
 #: includes/widgets.php:244
 #: includes/widgets.php:366
 #: src/Admin/Downloads/Metaboxes/Details.php:53
+#, php-format
 msgid "%s Details"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/widgets.php:247
+#, php-format
 msgid "Display the details of a specific %s"
 msgstr ""
 
@@ -16322,16 +16713,19 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/widgets.php:403
+#, php-format
 msgid "%s:"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/widgets.php:422
+#, php-format
 msgid "%s ID"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: includes/widgets.php:430
+#, php-format
 msgid "Show %s Title"
 msgstr ""
 
@@ -16343,12 +16737,14 @@ msgstr ""
 
 #. translators: %s: download category label
 #: includes/widgets.php:444
+#, php-format
 msgctxt "plural: Download category label (example: Show Download Categories)"
 msgid "Show %s"
 msgstr ""
 
 #. translators: %s: download tag label
 #: includes/widgets.php:452
+#, php-format
 msgctxt "plural: Download tag label (example: Show Download Tags)"
 msgid "Show %s"
 msgstr ""
@@ -16405,11 +16801,13 @@ msgstr ""
 
 #. translators: the invoice number
 #: pro/invoices/templates.php:29
+#, php-format
 msgid "Invoice #%s"
 msgstr ""
 
 #. translators: the invoice number
 #: pro/invoices/templates.php:111
+#, php-format
 msgid "Invoice %s"
 msgstr ""
 
@@ -16419,6 +16817,7 @@ msgstr ""
 
 #. Translators: %s - Date of purchase
 #: pro/invoices/templates.php:158
+#, php-format
 msgid "Purchase Date: %s"
 msgstr ""
 
@@ -16444,6 +16843,7 @@ msgstr ""
 
 #. Translators: %1$s - opening <span> tag; %2$s - closing </span> tag
 #: pro/invoices/templates.php:260
+#, php-format
 msgid "Update %1$sbilling information%2$s"
 msgstr ""
 
@@ -16481,6 +16881,7 @@ msgstr ""
 
 #. translators: %s: the URL to the PDF invoices documentation
 #: pro/templates/invoice/invoice-bulk-header.php:27
+#, php-format
 msgid "View the <a href=\"%s\" target=\"_blank\">documentation</a> for more information on how to export invoices as a PDF."
 msgstr ""
 
@@ -16542,6 +16943,7 @@ msgstr ""
 
 #. translators: %d: quantity
 #: pro/templates/invoice/invoice-table.php:30
+#, php-format
 msgid "Quantity: %d"
 msgstr ""
 
@@ -16553,6 +16955,7 @@ msgstr ""
 
 #. translators: the order tax rate.
 #: pro/templates/invoice/invoice-table.php:98
+#, php-format
 msgid "Tax (%s%%):"
 msgstr ""
 
@@ -16612,22 +17015,26 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: src/Admin/Assets/Localization.php:80
+#, php-format
 msgid "Are you sure you want to delete this %s?"
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Assets/Localization.php:82
+#, php-format
 msgid "Type to search %s"
 msgstr ""
 
 #. translators: %s: Download singular label
 #: src/Admin/Assets/Localization.php:84
 #: src/HTML/ProductSelect.php:80
+#, php-format
 msgid "Choose a %s"
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Assets/Localization.php:86
+#, php-format
 msgid "Choose one or more %s"
 msgstr ""
 
@@ -16734,6 +17141,7 @@ msgstr ""
 
 #. translators: 1: email address, 2: link to edit customer profile
 #: src/Admin/Customers/Emails.php:99
+#, php-format
 msgid "Email address may already associated with a user. Did you mean to link to the user instead of adding a new email? You can %1$sedit the customer profile%2$s and link to the user."
 msgstr ""
 
@@ -16747,6 +17155,7 @@ msgstr ""
 
 #. translators: 1: email address, 2: username
 #: src/Admin/Customers/Emails.php:134
+#, php-format
 msgid "Email address %1$s added by %2$s"
 msgstr ""
 
@@ -16794,17 +17203,20 @@ msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Discounts/Editor/Excluded.php:43
+#, php-format
 msgid "%s Excluded"
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Discounts/Editor/Excluded.php:54
+#, php-format
 msgid "%s this discount cannot be applied to. Leave blank for none."
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Discounts/Editor/Excluded.php:82
 #: src/Admin/Discounts/Editor/Products.php:101
+#, php-format
 msgctxt "Noun: The plural label for the download post type as a placeholder for a dropdown"
 msgid "Select %s"
 msgstr ""
@@ -16868,21 +17280,25 @@ msgstr ""
 
 #. translators: %s: Downloads singular label
 #: src/Admin/Discounts/Editor/Products.php:43
+#, php-format
 msgid "%s Requirements"
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Discounts/Editor/Products.php:54
+#, php-format
 msgid "%s this discount can only be applied to. Leave blank for any."
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Discounts/Editor/Products.php:118
+#, php-format
 msgid "Cart must contain all selected %s"
 msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Discounts/Editor/Products.php:124
+#, php-format
 msgid "Cart needs one or more of the selected %s"
 msgstr ""
 
@@ -16892,6 +17308,7 @@ msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Discounts/Editor/Products.php:138
+#, php-format
 msgid "Apply discount only to selected %s."
 msgstr ""
 
@@ -16959,6 +17376,7 @@ msgstr ""
 
 #. translators: %s: Discount code title (name)
 #: src/Admin/Discounts/ListTable.php:338
+#, php-format
 msgctxt "Noun: The discount code title (name)"
 msgid "Select %s"
 msgstr ""
@@ -17018,6 +17436,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: src/Admin/Downloads/Editor/Details.php:178
+#, php-format
 msgid "Create price variations for this %s."
 msgstr ""
 
@@ -17058,11 +17477,13 @@ msgstr ""
 
 #. translators: %d: price ID
 #: src/Admin/Downloads/Editor/VariablePrices.php:225
+#, php-format
 msgid "Move price %d up"
 msgstr ""
 
 #. translators: %d: price ID
 #: src/Admin/Downloads/Editor/VariablePrices.php:235
+#, php-format
 msgid "Move price %d down"
 msgstr ""
 
@@ -17073,6 +17494,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: src/Admin/Downloads/Metaboxes/Stats.php:51
+#, php-format
 msgid "%s Stats"
 msgstr ""
 
@@ -17162,16 +17584,19 @@ msgstr ""
 
 #. translators: %s: Order number
 #: src/Admin/Emails/LogsTable.php:208
+#, php-format
 msgid "Order %s"
 msgstr ""
 
 #. translators: %s: User display name
 #: src/Admin/Emails/LogsTable.php:228
+#, php-format
 msgid "User %s"
 msgstr ""
 
 #. translators: %s: Refund number
 #: src/Admin/Emails/LogsTable.php:249
+#, php-format
 msgid "Refund %s"
 msgstr ""
 
@@ -17197,6 +17622,7 @@ msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing string tag, 3: required tag
 #: src/Admin/Emails/Manager.php:155
+#, php-format
 msgid "%1$sImportant:%2$s The %3$s template tag must remain in this email. Do not delete it."
 msgstr ""
 
@@ -17326,29 +17752,34 @@ msgstr ""
 msgid "Products (Verbose)"
 msgstr ""
 
-#: src/Admin/Exports/Exporters/Orders.php:75
+#: src/Admin/Exports/Exporters/Orders.php:68
+msgid "Refunded Tax"
+msgstr ""
+
+#: src/Admin/Exports/Exporters/Orders.php:77
 #: src/Admin/Exports/Exporters/TaxedOrders.php:88
 msgid "Country Name"
 msgstr ""
 
-#: src/Admin/Exports/Exporters/Orders.php:76
+#: src/Admin/Exports/Exporters/Orders.php:78
 msgid "State Name"
 msgstr ""
 
-#: src/Admin/Exports/Exporters/Orders.php:77
+#: src/Admin/Exports/Exporters/Orders.php:79
 msgid "VAT Number"
 msgstr ""
 
-#: src/Admin/Exports/Exporters/ProductSales.php:58
+#: src/Admin/Exports/Exporters/ProductSales.php:72
 msgid "Product ID"
 msgstr ""
 
-#: src/Admin/Exports/Exporters/ProductSales.php:69
+#: src/Admin/Exports/Exporters/ProductSales.php:83
 msgid "Price ID"
 msgstr ""
 
 #. translators: %s: Name of the exporter tool
 #: src/Admin/Exports/Loader.php:70
+#, php-format
 msgid "Export %s"
 msgstr ""
 
@@ -17390,6 +17821,7 @@ msgstr ""
 
 #. Translators: %s: Downloads plural label
 #: src/Admin/Exports/Loader.php:159
+#, php-format
 msgid "Download a CSV of customers. Select a taxonomy to see all the customers who purchased %s in that taxonomy."
 msgstr ""
 
@@ -17403,6 +17835,7 @@ msgstr ""
 
 #. translators: %s: Download plural label
 #: src/Admin/Exports/Loader.php:175
+#, php-format
 msgid "Download a CSV of product %1$s."
 msgstr ""
 
@@ -17437,36 +17870,43 @@ msgstr ""
 
 #. translators: the plugin version
 #: src/Admin/Extensions/Card.php:386
+#, php-format
 msgid "Version: %s"
 msgstr ""
 
 #. translators: The extension name.
 #: src/Admin/Extensions/Extension.php:310
+#, php-format
 msgid "Log In to Your Account to Download %s"
 msgstr ""
 
 #. translators: The extension name.
 #: src/Admin/Extensions/Extension.php:318
+#, php-format
 msgid "Upgrade Today to Access %s!"
 msgstr ""
 
 #. translators: The extension name.
 #: src/Admin/Extensions/Extension.php:334
+#, php-format
 msgid "Activate %s"
 msgstr ""
 
 #. translators: The extension name.
 #: src/Admin/Extensions/Extension.php:338
+#, php-format
 msgid "Deactivate %s"
 msgstr ""
 
 #. translators: The extension name.
 #: src/Admin/Extensions/Extension.php:386
+#, php-format
 msgid "Configure %s"
 msgstr ""
 
 #. translators: the plural Downloads label.
 #: src/Admin/Extensions/Extension.php:399
+#, php-format
 msgid "View %s"
 msgstr ""
 
@@ -17485,6 +17925,7 @@ msgstr ""
 
 #. translators: the active pass name
 #: src/Admin/Extensions/ExtensionPage.php:134
+#, php-format
 msgid "Add functionality to your Easy Digital Downloads powered store with your <strong>%s</strong>."
 msgstr ""
 
@@ -17494,11 +17935,13 @@ msgstr ""
 
 #. translators: 1: pass name, 2: opening anchor tag, 3: closing anchor tag.
 #: src/Admin/Extensions/ExtensionPage.php:162
+#, php-format
 msgid "Using the 1-Click Installation feature requires Easy Digital Downloads (Pro), which you have access to with your %1$s. %2$sInstall (Pro) now%3$s."
 msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag.
 #: src/Admin/Extensions/ExtensionPage.php:180
+#, php-format
 msgid "Missing access to an extension? %1$sAdd your license key now%2$s."
 msgstr ""
 
@@ -17527,6 +17970,7 @@ msgstr ""
 #. translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate
 #: src/Admin/Extensions/Extension_Manager.php:94
 #: src/Admin/Extensions/Extension_Manager.php:191
+#, php-format
 msgid "Could not install the extension. Please %1$sdownload it from your account%2$s and install it manually."
 msgstr ""
 
@@ -17552,6 +17996,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, do not translate, 2: closing anchor tag, do not translate.
 #: src/Admin/Extensions/Extension_Manager.php:185
+#, php-format
 msgid "Could not install the plugin. Please %1$sdownload%2$s and install it manually via Plugins > Add New."
 msgstr ""
 
@@ -17569,6 +18014,7 @@ msgstr ""
 
 #. translators: "extension" or "plugin" as defined by $type
 #: src/Admin/Extensions/Extension_Manager.php:296
+#, php-format
 msgid "Could not activate the %s."
 msgstr ""
 
@@ -17625,11 +18071,13 @@ msgstr ""
 
 #. translators: %s: name of the extension.
 #: src/Admin/Extensions/Legacy.php:220
+#, php-format
 msgid "%s is now part of EDD!"
 msgstr ""
 
 #. translators: %s: name of the extension.
 #: src/Admin/Extensions/Legacy.php:225
+#, php-format
 msgid "The functionality of %1$s has been merged into Easy Digital Downloads. It has been deactivated and you can safely delete the %2$s plugin."
 msgstr ""
 
@@ -17641,6 +18089,7 @@ msgstr ""
 #: src/Admin/Extensions/Legacy/AutoRegister.php:103
 #: src/Emails/Templates/OrderReceipt.php:105
 #: src/Emails/Templates/OrderRefund.php:129
+#, php-format
 msgctxt "Context: This is an email tag (placeholder) that will be replaced at the time of sending the email"
 msgid "Dear %s,"
 msgstr ""
@@ -17651,28 +18100,33 @@ msgstr ""
 
 #. translators: %s: Email tag that will be replaced with the customer username
 #: src/Admin/Extensions/Legacy/AutoRegister.php:106
+#, php-format
 msgid "Your Username: %s"
 msgstr ""
 
 #. translators: %s: Site name email tag
 #: src/Admin/Extensions/Legacy/AutoRegister.php:132
+#, php-format
 msgid "[%s] Login Details"
 msgstr ""
 
 #. translators: %s: Email tag that will be replaced with the Site Name
 #: src/Admin/Extensions/Legacy/AutoRegister.php:146
+#, php-format
 msgctxt "Used to insert the {sitename} email tag into default email content."
 msgid "New user registration on your site %s:"
 msgstr ""
 
 #. translators: %s: Username email tag
 #: src/Admin/Extensions/Legacy/AutoRegister.php:148
+#, php-format
 msgctxt "Used to insert the {username} email tag into default email content."
 msgid "Username: %s"
 msgstr ""
 
 #. translators: %s: User email email tag
 #: src/Admin/Extensions/Legacy/AutoRegister.php:150
+#, php-format
 msgctxt "Used to insert the {user_email} email tag into default email content."
 msgid "Email: %s"
 msgstr ""
@@ -17680,6 +18134,7 @@ msgstr ""
 #. translators: %s: Email tag that will be replaced with the Site Name
 #: src/Admin/Extensions/Legacy/AutoRegister.php:163
 #: src/Emails/Templates/NewUserAdmin.php:85
+#, php-format
 msgctxt "Context: This is an email tag (placeholder) that will be replaced at the time of sending the email"
 msgid "[%s] New User Registration"
 msgstr ""
@@ -17690,6 +18145,7 @@ msgstr ""
 
 #. translators: %1$s number of notifications; %2$s opening span tag; %3$s closing span tag
 #: src/Admin/Menu/Header.php:82
+#, php-format
 msgid "%1$s %2$sunread notifications%3$s"
 msgstr ""
 
@@ -17729,6 +18185,7 @@ msgstr ""
 
 #. translators: %s: Search query.
 #: src/Admin/Menu/SecondaryNavigation.php:84
+#, php-format
 msgid "Search results for: %s"
 msgstr ""
 
@@ -17869,6 +18326,7 @@ msgstr ""
 
 #. translators: the plugin name.
 #: src/Admin/Onboarding/Steps/Tools.php:82
+#, php-format
 msgid "%s is already active."
 msgstr ""
 
@@ -17878,11 +18336,13 @@ msgstr ""
 
 #. translators: %s The plugin name.
 #: src/Admin/Onboarding/Steps/Tools.php:93
+#, php-format
 msgid "Installs %s"
 msgstr ""
 
 #. translators: %s The plugin name.
 #: src/Admin/Onboarding/Steps/Tools.php:98
+#, php-format
 msgid "Activates %s"
 msgstr ""
 
@@ -17896,6 +18356,7 @@ msgstr ""
 
 #. translators: list of plugins that were not able to be installed or activated
 #: src/Admin/Onboarding/Steps/Tools.php:120
+#, php-format
 msgid "Don't worry, everything will still work without them! You can install %s later by going to Plugins > Add New."
 msgstr ""
 
@@ -17955,6 +18416,7 @@ msgstr ""
 
 #. translators: %1$s: the opening anchor tag, %2$s: the closing anchor tag
 #: src/Admin/Onboarding/Steps/Tools.php:281
+#, php-format
 msgid "Help us provide a better experience and faster fixes by sharing some %1$sanonymous data%2$s about how you use Easy Digital Downloads."
 msgstr ""
 
@@ -18030,6 +18492,7 @@ msgstr ""
 
 #. translators: %s: The company name of the person giving the testimonial
 #: src/Admin/Onboarding/Wizard.php:424
+#, php-format
 msgctxt "Context: The title/role of the person giving the testimonial. Example: Podcast Coach - How I Built It. The company name remains untranslated"
 msgid "Podcast Coach - %s"
 msgstr ""
@@ -18041,6 +18504,7 @@ msgstr ""
 
 #. translators: %s: The company name of the person giving the testimonial
 #: src/Admin/Onboarding/Wizard.php:443
+#, php-format
 msgctxt "Context: The title/role of the person giving the testimonial. Example: Flea Market Insiders. The company name remains untranslated"
 msgid "Founder - %s"
 msgstr ""
@@ -18052,6 +18516,7 @@ msgstr ""
 
 #. translators: %s: The company name of the person giving the testimonial
 #: src/Admin/Onboarding/Wizard.php:462
+#, php-format
 msgctxt "Context: The title/role of the person giving the testimonial. Example: Community Leader - BobWP. The company name remains untranslated"
 msgid "Community Leader & Podcaster - %s"
 msgstr ""
@@ -18157,6 +18622,7 @@ msgstr ""
 
 #. translators: 1: opening link tag; do not translate, 2: closing link tag; do not translate.
 #: src/Admin/PassHandler/Settings.php:195
+#, php-format
 msgid "To unlock more features, consider %1$supgrading to Pro%2$s."
 msgstr ""
 
@@ -18231,6 +18697,7 @@ msgstr ""
 
 #. translators: %s: status label.
 #: src/Admin/Promos/About.php:273
+#, php-format
 msgctxt "The status of an installed WordPress plugin"
 msgid "Status: %s"
 msgstr ""
@@ -18266,6 +18733,7 @@ msgstr ""
 
 #. translators: %s: stars.
 #: src/Admin/Promos/About.php:366
+#, php-format
 msgid "We know that you will truly love Easy Digital Downloads. It has over <strong>450+ five star ratings</strong> (%s) and over 50,000+ professionals and creators use it to run their businesses and projects."
 msgstr ""
 
@@ -18311,6 +18779,7 @@ msgstr ""
 
 #. translators: 1:  opening link tag, 2.  closing link tag.
 #: src/Admin/Promos/About.php:446
+#, php-format
 msgid "%1$sUpgrade to Pro Today%2$s"
 msgstr ""
 
@@ -18631,6 +19100,7 @@ msgstr ""
 
 #. translators: $1$s - Easy Digital Downloads plugin name, $2$s - Full markup for WP.org review link, $3$s - Full markup for WP.org review link.
 #: src/Admin/Promos/Footer/Review.php:30
+#, php-format
 msgid "Please rate %1$s %2$s on %3$s to help us spread the word."
 msgstr ""
 
@@ -18720,26 +19190,31 @@ msgstr ""
 
 #. translators: %1$s opening strong tag; %2$s closing strong tag; %3$s opening anchor tag; %4$s closing anchor tag
 #: src/Admin/Promos/Notices/License_Upgrade_Notice.php:161
+#, php-format
 msgid "%1$sYou're using Easy Digital Downloads Lite.%2$s To unlock more features consider %3$supgrading to Pro%4$s for 50%% off."
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
 #: src/Admin/Promos/Notices/License_Upgrade_Notice.php:178
+#, php-format
 msgid "For access to additional Easy Digital Downloads extensions to grow your store, consider %1$spurchasing a pass%2$s."
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
 #: src/Admin/Promos/Notices/License_Upgrade_Notice.php:193
+#, php-format
 msgid "You are using Easy Digital Downloads with a Personal Pass. Consider %1$supgrading%2$s to get recurring payments and more."
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
 #: src/Admin/Promos/Notices/License_Upgrade_Notice.php:210
+#, php-format
 msgid "Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s"
 msgstr ""
 
 #. translators: %1$s opening anchor tag; %2$s closing anchor tag
 #: src/Admin/Promos/Notices/License_Upgrade_Notice.php:217
+#, php-format
 msgid "Gain access to powerful insights to grow your traffic and revenue. %1$sGet MonsterInsights%2$s"
 msgstr ""
 
@@ -18805,6 +19280,7 @@ msgstr ""
 
 #. translators: 1: Square Developer Dashboard opening anchor tag, 2: closing anchor tag
 #: src/Admin/Promos/Notices/SquareWebhooksModal.php:80
+#, php-format
 msgid "To receive events, create a webhook route by providing your Personal Access Token, which you can find after registering an app on the %1$sSquare Developer Dashboard%2$s. You can also set it up manually in the Advanced section."
 msgstr ""
 
@@ -18876,6 +19352,7 @@ msgstr ""
 
 #. translators: %s: The product name
 #: src/Admin/Refund_Items_Table.php:448
+#, php-format
 msgctxt "Title: The title of the current download product"
 msgid "Select %s"
 msgstr ""
@@ -18906,6 +19383,7 @@ msgstr ""
 
 #. translators: the product name
 #: src/Admin/Settings/EmailMarketing.php:80
+#, php-format
 msgid "Get %s Today!"
 msgstr ""
 
@@ -18946,6 +19424,7 @@ msgstr ""
 
 #. translators: 1: opening button tag, 2: closing button tag
 #: src/Admin/Settings/EmptyCartBehavior.php:228
+#, php-format
 msgid "Enable more options when you %1$sUpgrade to Pro%2$s."
 msgstr ""
 
@@ -19097,6 +19576,7 @@ msgstr ""
 
 #. translators: %s: admin email
 #: src/Admin/Settings/Tabs/Emails.php:79
+#, php-format
 msgid "Enter the email address(es) that may receive admin notices. One per line. Leave blank to use %s."
 msgstr ""
 
@@ -19194,6 +19674,7 @@ msgstr ""
 
 #. translators: email
 #: src/Admin/Settings/Tabs/Emails.php:178
+#, php-format
 msgid "Administrator: %s"
 msgstr ""
 
@@ -19215,6 +19696,7 @@ msgstr ""
 
 #. translators: formatted date
 #: src/Admin/Settings/Tabs/Emails.php:239
+#, php-format
 msgid "The next summary email is scheduled to send on %s."
 msgstr ""
 
@@ -19435,6 +19917,7 @@ msgstr ""
 
 #. translators: %s: next order number, wrapped in code tags
 #: src/Admin/Settings/Tabs/Gateways.php:302
+#, php-format
 msgid "The next order number will be %s."
 msgstr ""
 
@@ -19456,16 +19939,19 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: src/Admin/Settings/Tabs/Gateways.php:343
+#, php-format
 msgid "Access %1$sAdvanced Sequential Order Numbers%2$s today."
 msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: src/Admin/Settings/Tabs/Gateways.php:376
+#, php-format
 msgid "GeoLocation Detection is only available in Easy Digital Downloads Pro. %1$sVerify your pass to get access to pro features.%2$s"
 msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: src/Admin/Settings/Tabs/Gateways.php:392
+#, php-format
 msgid "Increase conversions by auto-filling address information for customers during checkout. To enable GeoLocation Detection, %1$sUpgrade to Pro%2$s."
 msgstr ""
 
@@ -19503,6 +19989,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: src/Admin/Settings/Tabs/Gateways.php:442
+#, php-format
 msgid "If \"Postal Code\" is not selected, you must disable the %1$spostal code verification%2$s rule in Stripe Radar."
 msgstr ""
 
@@ -19601,6 +20088,7 @@ msgstr ""
 
 #. translators: %s: home URL
 #: src/Admin/Settings/Tabs/General.php:166
+#, php-format
 msgid "If a customer logs in using the <code>[edd_login]</code> shortcode, this is the page they will be redirected to.<br>Note: override using the redirect shortcode attribute: <code>[edd_login redirect=\"%s\"]</code>."
 msgstr ""
 
@@ -19670,6 +20158,7 @@ msgstr ""
 
 #. translators: %s: API documentation URL
 #: src/Admin/Settings/Tabs/General.php:244
+#, php-format
 msgid "Visit the <a href=\"%s\" target=\"_blank\">REST API documentation</a> for further information."
 msgstr ""
 
@@ -19683,6 +20172,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: src/Admin/Settings/Tabs/General.php:280
+#, php-format
 msgid "Authenticated requests to the EDD API are always logged. %1$sView the API request logs.%2$s"
 msgstr ""
 
@@ -19744,6 +20234,7 @@ msgstr ""
 
 #. translators: %s: Downloads plural label
 #: src/Admin/Settings/Tabs/Misc.php:97
+#, php-format
 msgid "Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart."
 msgstr ""
 
@@ -19848,6 +20339,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: src/Admin/Settings/Tabs/Misc.php:189
+#, php-format
 msgid "The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s."
 msgstr ""
 
@@ -19857,6 +20349,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: src/Admin/Settings/Tabs/Misc.php:194
+#, php-format
 msgid "Set the global default for the number of times a customer can download items they purchase. Using a value of 0 is unlimited. This can be defined on a %s-specific level as well. Download limits can also be reset for an individual purchase."
 msgstr ""
 
@@ -20006,6 +20499,7 @@ msgstr ""
 
 #. translators: %s: Tab class name.
 #: src/Admin/Settings/Tabs/Tab.php:81
+#, php-format
 msgid "The %s settings class is missing the required ID property."
 msgstr ""
 
@@ -20019,6 +20513,7 @@ msgstr ""
 
 #. translators: %s: tax setup documentation URL.
 #: src/Admin/Settings/Tabs/Taxes.php:71
+#, php-format
 msgid "Visit the <a href=\"%s\" target=\"_blank\">Tax setup documentation</a> for further information."
 msgstr ""
 
@@ -20100,6 +20595,7 @@ msgstr ""
 
 #. translators: 1: opening button tag, 2: closing button tag
 #: src/Admin/Settings/Tabs/Taxes.php:160
+#, php-format
 msgid "%1$sUpgrade to Pro%2$s to enable VAT handling."
 msgstr ""
 
@@ -20181,6 +20677,7 @@ msgstr ""
 
 #. translators: 1:  opening <code> tag, 2.  closing <code> tag
 #: src/Admin/SiteHealth/Direct.php:97
+#, php-format
 msgid "Your checkout page is configured; however, it is currently using the legacy %1$s[download_checkout]%2$s shortcode. We recommend changing your checkout to use the EDD Checkout Block."
 msgstr ""
 
@@ -20202,6 +20699,7 @@ msgstr ""
 
 #. translators: 1: opening link tag, 2: closing link tag
 #: src/Admin/SiteHealth/Direct.php:156
+#, php-format
 msgid "To ensure the best protection, you should use this doc to add this %1$sNGINX redirect rule%2$s."
 msgstr ""
 
@@ -20290,7 +20788,7 @@ msgid "Easy Digital Downloads &mdash; General"
 msgstr ""
 
 #: src/Admin/SiteHealth/General.php:214
-#: src/Gateways/Square/Admin/Settings/Render.php:100
+#: src/Gateways/Square/Admin/Settings/Render.php:109
 msgid "Unknown"
 msgstr ""
 
@@ -20480,6 +20978,7 @@ msgstr ""
 
 #. translators: 1: posts table, 2: adjustments table, 3: edd_get_discounts(), 4: edd_get_discount(), 5: EDD_Discount, 6: development URL
 #: src/Compat/Discount.php:78
+#, php-format
 msgid "As of Easy Digital Downloads 3.0, discounts no longer exist in the %1$s table. They have been migrated to %2$s. Discounts should be accessed using %3$s, %4$s or instantiating a new instance of %5$s. See %6$s for more information."
 msgstr ""
 
@@ -20489,6 +20988,7 @@ msgstr ""
 
 #. translators: 1: wp_posts table, 2: edd_orders table, 3: edd_get_orders(), 4: edd_get_order(), 5: EDD development blog
 #: src/Compat/Payment.php:107
+#, php-format
 msgid "As of Easy Digital Downloads 3.0, orders no longer exist in the %1$s table. They have been migrated to %2$s. Orders should be accessed using %3$s or %4$s. See %5$s for more information."
 msgstr ""
 
@@ -20498,6 +20998,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag (do not translate) 2. closing anchor tag (do not translate)
 #: src/Compat/Template.php:111
+#, php-format
 msgid "This update must be completed manually. Please click %1$shere%2$s for more information."
 msgstr ""
 
@@ -20511,6 +21012,7 @@ msgstr ""
 
 #. translators: %s: hook name that would be run for this WP Cron event.
 #: src/Cron/Events/Event.php:109
+#, php-format
 msgid "The event %s is already scheduled."
 msgstr ""
 
@@ -20573,6 +21075,7 @@ msgstr ""
 
 #. translators: 1: To address, 2: Subject
 #: src/Emails/Base.php:387
+#, php-format
 msgid ""
 "Email from Easy Digital Downloads failed to send. \n"
 "To: %1$s\n"
@@ -20599,6 +21102,7 @@ msgstr ""
 
 #. translators: 1: The number of arguments provided. 2: The number of arguments required. 3: The class name.
 #: src/Emails/Registry.php:113
+#, php-format
 msgid "The number of arguments provided (%1$d) does not match the number of arguments required (%2$d) for %3$s."
 msgstr ""
 
@@ -20792,6 +21296,7 @@ msgstr ""
 
 #. translators: %s: The email tag that will be replaced with the payment ID.
 #: src/Emails/Templates/AdminOrderNotice.php:91
+#, php-format
 msgid "New download purchase - Order #%s"
 msgstr ""
 
@@ -20803,30 +21308,35 @@ msgstr ""
 
 #. translators: %s: The plural label for the Download post type.
 #: src/Emails/Templates/AdminOrderNotice.php:126
+#, php-format
 msgid "A %s purchase has been made"
 msgstr ""
 
 #. translators: %s: The plural label for the Download post type.
 #: src/Emails/Templates/AdminOrderNotice.php:130
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:167
+#, php-format
 msgid "%s sold:"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced by the customer's full name
 #: src/Emails/Templates/AdminOrderNotice.php:135
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:170
+#, php-format
 msgid "Purchased by: %s"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced by the order total.
 #: src/Emails/Templates/AdminOrderNotice.php:138
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:172
+#, php-format
 msgctxt "Context: This is a tag (placholder) for email content that will be replaced when sending."
 msgid "Amount: %s"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced by the payment method.
 #: src/Emails/Templates/AdminOrderNotice.php:141
+#, php-format
 msgid "Payment Method: %s"
 msgstr ""
 
@@ -20848,6 +21358,7 @@ msgstr ""
 
 #. translators: %s: The email tag that will be replaced with the order ID.
 #: src/Emails/Templates/AdminOrderRefund.php:140
+#, php-format
 msgid "Order %s has been refunded."
 msgstr ""
 
@@ -20873,6 +21384,7 @@ msgstr ""
 
 #. translators: %s: Email tag that will be replaced with the Site's Name
 #: src/Emails/Templates/NewUser.php:85
+#, php-format
 msgctxt "Context: This is an email tag (placeholder) that will be replaced at the time of sending the email"
 msgid "[%s] Your username and password"
 msgstr ""
@@ -20881,6 +21393,7 @@ msgstr ""
 #: src/Emails/Templates/NewUser.php:103
 #: src/Emails/Templates/NewUserAdmin.php:101
 #: src/Emails/Templates/PasswordReset.php:181
+#, php-format
 msgctxt "Context: This is an email tag (placeholder) that will be replaced at the time of sending the email"
 msgid "Username: %s"
 msgstr ""
@@ -20899,6 +21412,7 @@ msgstr ""
 
 #. translators: %s: Email tag that will be replaced with the user email
 #: src/Emails/Templates/NewUserAdmin.php:111
+#, php-format
 msgctxt "Context: This is an email tag (placeholder) that will be replaced at the time of sending the email"
 msgid "E-mail: %s"
 msgstr ""
@@ -20957,6 +21471,7 @@ msgstr ""
 
 #. translators: %s: Email tag that will be replaced with the site name
 #: src/Emails/Templates/PasswordReset.php:178
+#, php-format
 msgid "Site Name: %s"
 msgstr ""
 
@@ -20970,11 +21485,13 @@ msgstr ""
 
 #. translators: %s: IP address of password reset requester.
 #: src/Emails/Templates/PasswordReset.php:195
+#, php-format
 msgid "This password reset request originated from the IP address %s."
 msgstr ""
 
 #. translators: %s: Site name.
 #: src/Emails/Templates/PasswordReset.php:219
+#, php-format
 msgid "[%s] Password Reset"
 msgstr ""
 
@@ -21012,6 +21529,7 @@ msgstr ""
 
 #. translators: %1$s is the class name, %2$s is the parent class name.
 #: src/Emails/Templates/Registry.php:219
+#, php-format
 msgid "The %1$s class must extend the %2$s class."
 msgstr ""
 
@@ -21025,6 +21543,7 @@ msgstr ""
 
 #. translators: %s: Email tag that will be replaced with the order ID.
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:105
+#, php-format
 msgid "Stripe Early Fraud Warning - Order #%s"
 msgstr ""
 
@@ -21042,6 +21561,7 @@ msgstr ""
 
 #. translators: 1: The opening anchor tag, 2: The closing anchor tag
 #: src/Emails/Templates/StripeEarlyFraudWarning.php:174
+#, php-format
 msgid "%1$sOrder Details%2$s"
 msgstr ""
 
@@ -21080,16 +21600,19 @@ msgstr ""
 
 #. translators: %s: The email tag that will be replaced with the customer's full name.
 #: src/Emails/Templates/UserVerification.php:136
+#, php-format
 msgid "Hello %s,"
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced with the Site Name.
 #: src/Emails/Templates/UserVerification.php:141
+#, php-format
 msgid "Your account with %s needs to be verified before you can access your order history."
 msgstr ""
 
 #. translators: %s: The email tag that will be replaced with the verification URL.
 #: src/Emails/Templates/UserVerification.php:146
+#, php-format
 msgid "Visit this link to verify your account: %s"
 msgstr ""
 
@@ -21226,27 +21749,32 @@ msgstr[1] ""
 
 #. translators: %s: The ID of the PayPal credential
 #: src/Gateways/PayPal/API.php:158
+#, php-format
 msgid "Missing PayPal credential: %s"
 msgstr ""
 
 #. translators: %d: HTTP response code.
 #: src/Gateways/PayPal/API.php:223
+#, php-format
 msgid "Unexpected response code: %d"
 msgstr ""
 
 #. translators: 1: Response code, 2: Response message
 #: src/Gateways/PayPal/Exceptions/Gateway_Exception.php:56
+#, php-format
 msgid "Response Code: %1$d; Message: %2$s"
 msgstr ""
 
 #. translators: %s: IPN Verification response
 #: src/Gateways/PayPal/IPN.php:201
 #: src/Gateways/PayPal/IPN.php:212
+#, php-format
 msgid "Invalid PayPal Commerce/Express IPN verification response. IPN data: %s"
 msgstr ""
 
 #. translators: 1: Dispute ID, 2: Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt.
 #: src/Gateways/PayPal/IPN.php:324
+#, php-format
 msgid "The PayPal transaction has been disputed (IPN). Case ID: %1$s. Reason given: %2$s."
 msgstr ""
 
@@ -21261,27 +21789,32 @@ msgstr ""
 
 #. translators: %s: The payment data sent via the IPN
 #: src/Gateways/PayPal/IPN.php:434
+#, php-format
 msgid "The currency code in an IPN request did not match the site currency code. Payment data: %s"
 msgstr ""
 
 #. translators: %s: The transaction ID of the failed payment
 #: src/Gateways/PayPal/IPN.php:449
+#, php-format
 msgid "Transaction ID %s failed in PayPal"
 msgstr ""
 
 #. translators: %s: The collected outstanding balance of the subscription
 #: src/Gateways/PayPal/IPN.php:479
+#, php-format
 msgid "Outstanding subscription balance of %s collected successfully."
 msgstr ""
 
 #. translators: %s: Transaction ID
 #: src/Gateways/PayPal/IPN.php:579
+#, php-format
 msgid "Reversal processed in PayPal (IPN). Transaction ID: %s"
 msgstr ""
 
 #. translators: 1:  Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID
 #: src/Gateways/PayPal/IPN.php:597
 #: src/Gateways/PayPal/Webhooks/Events/Payment_Capture_Refunded.php:53
+#, php-format
 msgid "Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s"
 msgstr ""
 
@@ -21307,11 +21840,13 @@ msgstr ""
 
 #. translators: 1: Dispute ID, 2: Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt.
 #: src/Gateways/PayPal/Webhooks/Events/Customer_Dispute_Created.php:58
+#, php-format
 msgid "The PayPal transaction has been disputed. Case ID: %1$s. Reason given: %2$s."
 msgstr ""
 
 #. translators: dispute message added by the customer
 #: src/Gateways/PayPal/Webhooks/Events/Customer_Dispute_Created.php:72
+#, php-format
 msgid "PayPal Dispute Message: %s"
 msgstr ""
 
@@ -21321,11 +21856,13 @@ msgstr ""
 
 #. translators: %s: webhook data
 #: src/Gateways/PayPal/Webhooks/Events/Payment_Capture_Completed.php:58
+#, php-format
 msgid "Invalid payment amount in webhook response. Webhook data: %s"
 msgstr ""
 
 #. translators: %1$s is the order amount, %2$s is the PayPal amount
 #: src/Gateways/PayPal/Webhooks/Events/Payment_Capture_Completed.php:70
+#, php-format
 msgid "Payment failed due to invalid amount in PayPal webhook. Expected amount: %1$s; PayPal amount: %2$s."
 msgstr ""
 
@@ -21380,193 +21917,207 @@ msgstr ""
 msgid "Select the location ID where payments will be processed."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:104
+#: src/Gateways/Square/Admin/Settings/Render.php:113
 msgid "Connected Account:"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:110
+#: src/Gateways/Square/Admin/Settings/Render.php:119
 #: src/Gateways/Square/Connection.php:229
 msgid "Square Account"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:124
+#: src/Gateways/Square/Admin/Settings/Render.php:133
 msgid "Webhooks Status:"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:127
+#: src/Gateways/Square/Admin/Settings/Render.php:136
 msgctxt "Webhooks status when registered"
 msgid "Registered"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:128
+#: src/Gateways/Square/Admin/Settings/Render.php:137
 msgctxt "Webhooks status when not registered"
 msgid "Not registered"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:134
+#: src/Gateways/Square/Admin/Settings/Render.php:143
 msgid "Square uses webhooks to notify Easy Digital Downloads when an event has occurred in your Square account."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:135
+#: src/Gateways/Square/Admin/Settings/Render.php:144
 msgid "Please see our documentation on Square webhooks for full details."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:143
+#: src/Gateways/Square/Admin/Settings/Render.php:152
 msgid "Connect Webhooks"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:156
+#: src/Gateways/Square/Admin/Settings/Render.php:165
 msgid "Refresh Webhooks"
 msgstr ""
 
 #. translators: %s is the mode of the connection.
-#: src/Gateways/Square/Admin/Settings/Render.php:167
+#: src/Gateways/Square/Admin/Settings/Render.php:176
+#, php-format
 msgid "Reconnect in %s mode"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:176
+#: src/Gateways/Square/Admin/Settings/Render.php:185
 msgid "disconnect this account"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:193
+#: src/Gateways/Square/Admin/Settings/Render.php:202
 msgid "Your store is currently in test mode. The process of connecting with Square in test mode is slightly different than in live mode."
 msgstr ""
 
 #. translators: %s: Documentation link
-#: src/Gateways/Square/Admin/Settings/Render.php:196
+#: src/Gateways/Square/Admin/Settings/Render.php:205
+#, php-format
 msgid "Please %1$sread these special instructions%2$s to connect with Square in test mode."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:208
+#: src/Gateways/Square/Admin/Settings/Render.php:217
 msgid "Connect with Square"
 msgstr ""
 
 #. translators: %s: Documentation link
-#: src/Gateways/Square/Admin/Settings/Render.php:221
+#: src/Gateways/Square/Admin/Settings/Render.php:230
+#, php-format
 msgid "Have questions about connecting with Square? See the %s."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:225
+#: src/Gateways/Square/Admin/Settings/Render.php:234
 msgid "documentation"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:302
+#: src/Gateways/Square/Admin/Settings/Render.php:311
 msgid "Testing connection..."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:303
+#: src/Gateways/Square/Admin/Settings/Render.php:312
 msgid "Square is connected and ready to accept payments."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:304
+#: src/Gateways/Square/Admin/Settings/Render.php:313
 msgid "Connection failed."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:305
+#: src/Gateways/Square/Admin/Settings/Render.php:314
 msgid "Invalid location ID format."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:306
+#: src/Gateways/Square/Admin/Settings/Render.php:315
 msgid "Loading..."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:307
+#: src/Gateways/Square/Admin/Settings/Render.php:316
 msgid "Connecting to Square..."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:308
+#: src/Gateways/Square/Admin/Settings/Render.php:317
 msgid "Disconnecting..."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:309
+#: src/Gateways/Square/Admin/Settings/Render.php:318
 msgid "Reconnecting..."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:310
+#: src/Gateways/Square/Admin/Settings/Render.php:319
 msgid "Switching mode..."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:311
+#: src/Gateways/Square/Admin/Settings/Render.php:320
 msgid "Connection error. Please try again."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:312
+#: src/Gateways/Square/Admin/Settings/Render.php:321
 msgid "Are you sure you want to disconnect Square? This will disable Square payments."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:327
+#: src/Gateways/Square/Admin/Settings/Render.php:336
 msgid "Security verification failed."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:332
+#: src/Gateways/Square/Admin/Settings/Render.php:341
 msgid "Insufficient permissions."
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:337
+#: src/Gateways/Square/Admin/Settings/Render.php:346
 msgid "Invalid connection mode."
 msgstr ""
 
 #. translators: %s: Error message from proxy
-#: src/Gateways/Square/Admin/Settings/Render.php:351
+#: src/Gateways/Square/Admin/Settings/Render.php:360
+#, php-format
 msgid "Square connection failed: %s"
 msgstr ""
 
-#: src/Gateways/Square/Admin/Settings/Render.php:355
+#: src/Gateways/Square/Admin/Settings/Render.php:364
 msgid "Unable to connect to Square. Please check your internet connection and try again."
 msgstr ""
 
 #. translators: %s: Exception message
-#: src/Gateways/Square/Admin/Settings/Render.php:367
+#: src/Gateways/Square/Admin/Settings/Render.php:376
+#, php-format
 msgid "Connection error: %s"
 msgstr ""
 
 #. translators: %s: currency
-#: src/Gateways/Square/Admin/Settings/Render.php:397
+#: src/Gateways/Square/Admin/Settings/Render.php:406
+#, php-format
 msgid "%1$sImportant Notice:%2$s The Square payment integration is not currently able to process payments in %3$s."
 msgstr ""
 
 #. translators: %s: currency
-#: src/Gateways/Square/Admin/Settings/Render.php:409
+#: src/Gateways/Square/Admin/Settings/Render.php:418
+#, php-format
 msgid "Square requires that payments be processed in %1$s, the currency of your merchant account for %2$s. Please %3$supdate the EDD currency%4$s to match."
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag, 3: the message explaining the application fee (eg "3% per-transaction fee + gateway fees").
 #: src/Gateways/Square/ApplicationFee.php:154
 #: src/Gateways/Stripe/ApplicationFee.php:106
+#, php-format
 msgid "%1$sPay as you go pricing:%2$s %3$s."
 msgstr ""
 
 #. translators: Replacements are for the html wrappers for the phrase Upgrade to Pro and should not be translated.
 #: src/Gateways/Square/ApplicationFee.php:166
 #: src/Gateways/Stripe/ApplicationFee.php:114
+#, php-format
 msgid "%1$sUpgrade to Pro%2$s to remove transaction fees."
 msgstr ""
 
 #. translators: the application fee percentage.
 #: src/Gateways/Square/ApplicationFee.php:192
+#, php-format
 msgid "%d%% per-transaction fee + Square fees"
 msgstr ""
 
 #. translators: the message explaining the application fee (eg "3% per-transaction fee + Square fees")
 #: src/Gateways/Square/ApplicationFee.php:217
+#, php-format
 msgid "Connect with Square for pay as you go pricing: %s."
 msgstr ""
 
 #. translators: 1: opening link tag, do not translate, 2: closing link tag, do not translate;  3. the date the grace period ends
 #: src/Gateways/Square/ApplicationFee.php:253
 #: src/Gateways/Stripe/ApplicationFee.php:256
+#, php-format
 msgid "Your license has expired, but you are in a grace period. %1$sRenew your license key%2$s before %3$s to prevent being charged additional transaction fees."
 msgstr ""
 
 #. translators: 1: the date the license expired, 2: opening link tag, do not translate, 3: closing link tag, do not translate
-#: src/Gateways/Square/ApplicationFee.php:263
+#: src/Gateways/Square/ApplicationFee.php:264
 #: src/Gateways/Stripe/ApplicationFee.php:265
+#, php-format
 msgid "Your license expired on %1$s. %2$sRenew your license%3$s to prevent additional fees."
 msgstr ""
 
 #. translators: opening link tag, do not translate; closing link tag, do not translate
-#: src/Gateways/Square/ApplicationFee.php:278
+#: src/Gateways/Square/ApplicationFee.php:282
 #: src/Gateways/Stripe/ApplicationFee.php:274
+#, php-format
 msgid "%1$sActivate or upgrade your license%2$s to prevent additional fees."
 msgstr ""
 
@@ -21582,11 +22133,13 @@ msgstr ""
 
 #. translators: %s is a reference code for the error, to help with customer support
 #: src/Gateways/Square/Checkout/Transactions/Single.php:48
+#, php-format
 msgid "There was an error processing your order. Please try again. Reference: %s"
 msgstr ""
 
 #. translators: %s is a reference code for the error, to help with customer support
 #: src/Gateways/Square/Checkout/Transactions/Single.php:68
+#, php-format
 msgid "There was an error processing your payment. Please try again. Reference: %s"
 msgstr ""
 
@@ -21601,6 +22154,7 @@ msgstr ""
 
 #. translators: %s is the name of the required field.
 #: src/Gateways/Square/Connection.php:130
+#, php-format
 msgid "Missing required field: %s"
 msgstr ""
 
@@ -21610,11 +22164,13 @@ msgstr ""
 
 #. translators: 1: Business name, 2: Connection mode (live/sandbox).
 #: src/Gateways/Square/Connection.php:232
+#, php-format
 msgid "Square Connected! Successfully connected to %1$s in %2$s mode."
 msgstr ""
 
 #. translators: 1: Error message.
 #: src/Gateways/Square/Connection.php:273
+#, php-format
 msgid "Square Connection Failed: %s"
 msgstr ""
 
@@ -21666,10 +22222,11 @@ msgstr ""
 #. translators: %s is a reference code for the error, to help with customer support
 #: src/Gateways/Square/Helpers/Customer.php:45
 #: src/Gateways/Square/Helpers/Customer.php:67
+#, php-format
 msgid "There was an error creating your customer record. Please try again, or contact support. Reference: %s"
 msgstr ""
 
-#: src/Gateways/Square/Helpers/Customer.php:159
+#: src/Gateways/Square/Helpers/Customer.php:160
 msgid "Created by Easy Digital Downloads"
 msgstr ""
 
@@ -21782,11 +22339,13 @@ msgstr ""
 
 #. translators: %s is a reference code for the error, to help with customer support
 #: src/Gateways/Square/Helpers/Order.php:216
+#, php-format
 msgid "There was an error creating your order record. Please try again, or contact support. Reference: %s"
 msgstr ""
 
 #. translators: 1: The error message (which has already been translated), 2: A reference code for the error, to help with customer support
 #: src/Gateways/Square/Helpers/Payment.php:145
+#, php-format
 msgid "There was an error processing your payment - %1$s Reference: %2$s"
 msgstr ""
 
@@ -21796,16 +22355,19 @@ msgstr ""
 
 #. translators: %1$s the amount refunded; %2$s Square Refund ID
 #: src/Gateways/Square/Helpers/Payment.php:230
+#, php-format
 msgid "%1$s refunded in Square. Refund ID %2$s"
 msgstr ""
 
 #. translators: The charge ID from Square that is being refunded.
 #: src/Gateways/Square/Webhooks/Events/RefundUpdated.php:75
+#, php-format
 msgid "Charge %s has been fully refunded in Square."
 msgstr ""
 
 #. translators: The charge ID from Square that is being partially refunded.
 #: src/Gateways/Square/Webhooks/Events/RefundUpdated.php:79
+#, php-format
 msgid "Charge %s partially refunded in Square."
 msgstr ""
 
@@ -21851,16 +22413,19 @@ msgstr ""
 
 #. translators: 1: Webhooks setup link, 2: Closing anchor tag
 #: src/Gateways/Stripe/Admin/Connect.php:43
+#, php-format
 msgid "Webhooks are not typically functional in local/development environments, but you can %1$smanually create the webhooks%2$s for testing. This will happen automatically on production sites."
 msgstr ""
 
 #. translators: 1: Webhooks setup link, 2: Closing anchor tag
 #: src/Gateways/Stripe/Admin/Connect.php:55
+#, php-format
 msgid "Webhooks cannot be automatically set up because your site is not using HTTPS. %1$sManually add webhooks%2$s."
 msgstr ""
 
 #. translators: 1: Webhooks setup link, 2: Closing anchor tag, 3: Manual setup link
 #: src/Gateways/Stripe/Admin/Connect.php:63
+#, php-format
 msgid "Webhooks not found. %1$sAutomatically set up webhooks%2$s or %3$sadd them to your account manually%2$s."
 msgstr ""
 
@@ -21870,6 +22435,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: src/Gateways/Stripe/Admin/Connect.php:147
+#, php-format
 msgid "Have questions about connecting with Stripe? See the %1$sdocumentation%2$s."
 msgstr ""
 
@@ -21887,11 +22453,13 @@ msgstr ""
 
 #. translators: %1$s is the opening link tag; %2$s is the closing link tag.
 #: src/Gateways/Stripe/Admin/LicenseManager.php:147
+#, php-format
 msgid "Your license is not active. Please %1$sactivate your license%2$s."
 msgstr ""
 
 #. translators: %1$s is the opening link tag; %2$s is the closing link tag.
 #: src/Gateways/Stripe/Admin/LicenseManager.php:154
+#, php-format
 msgid "Your license has expired. Please %1$srenew your license%2$s."
 msgstr ""
 
@@ -21918,11 +22486,13 @@ msgstr ""
 #. translators: %s: name of the license.
 #: src/Gateways/Stripe/Admin/LicenseManager.php:272
 #: src/Gateways/Stripe/Admin/LicenseManager.php:298
+#, php-format
 msgid "Your %s license has expired!"
 msgstr ""
 
 #. translators: %s: date the grace period ends.
 #: src/Gateways/Stripe/Admin/LicenseManager.php:277
+#, php-format
 msgid "Renew your license before %s to continue using Stripe without paying additional fees and to continue receiving important security and feature updates."
 msgstr ""
 
@@ -21938,11 +22508,13 @@ msgstr ""
 
 #. translators: %s: name of the license.
 #: src/Gateways/Stripe/Admin/LicenseManager.php:320
+#, php-format
 msgid "Your %s License Is Expiring Soon!"
 msgstr ""
 
 #. translators: 1: the name of the license, 2: the date the license expires.
 #: src/Gateways/Stripe/Admin/LicenseManager.php:325
+#, php-format
 msgid "Your %1$s license is set to expire on %2$s. An active license key is required to create and edit payment forms, enable automatic updates, and to keep Easy Digital Downloads - Stripe Pro Payment Gateway fully activated."
 msgstr ""
 
@@ -21980,6 +22552,7 @@ msgstr ""
 
 #. translators: 1: opening link tag (do not translate), 2: closing link tag (do not translate)
 #: src/Gateways/Stripe/Admin/Settings.php:77
+#, php-format
 msgid "You can change the description of charges on a customer's bank statement in your %1$sStripe Settings%2$s."
 msgstr ""
 
@@ -22017,6 +22590,7 @@ msgstr ""
 
 #. translators: 1: opening link tag, 2: closing link tag
 #: src/Gateways/Stripe/Admin/Settings.php:117
+#, php-format
 msgid "Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. %1$sLearn more about Stripe's recommended setup.%2$s"
 msgstr ""
 
@@ -22055,6 +22629,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: src/Gateways/Stripe/Admin/Settings.php:165
+#, php-format
 msgid "Prepaid card allowance can now be managed in your %1$sStripe Radar Rules%2$s."
 msgstr ""
 
@@ -22077,6 +22652,7 @@ msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #: src/Gateways/Stripe/Admin/Settings.php:194
+#, php-format
 msgid "Previously used cards are now managed by %1$sLink by Stripe%2$s, for even better conversions and security."
 msgstr ""
 
@@ -22175,46 +22751,55 @@ msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag, 3: payment types
 #: src/Gateways/Stripe/Admin/Settings.php:492
+#, php-format
 msgid "%1$sPayment types:%2$s %3$s"
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag, 3: supported currencies
 #: src/Gateways/Stripe/Admin/Settings.php:501
+#, php-format
 msgid "%1$sSupported currencies:%2$s %3$s"
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag, 3: supported countries
 #: src/Gateways/Stripe/Admin/Settings.php:510
+#, php-format
 msgid "%1$sSupported countries:%2$s %3$s"
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag
 #: src/Gateways/Stripe/Admin/Settings.php:525
+#, php-format
 msgid "%1$sStatus:%2$s You can test this, but to use it in Live mode, you must request access to this payment method from your Stripe account."
 msgstr ""
 
 #. translators: 1: opening strong tag, 2: closing strong tag
 #: src/Gateways/Stripe/Admin/Settings.php:531
+#, php-format
 msgid "%1$sStatus:%2$s You must request access to this payment method from your Stripe account."
 msgstr ""
 
 #. translators: the application fee percentage.
 #: src/Gateways/Stripe/ApplicationFee.php:178
+#, php-format
 msgid "%d%% per-transaction fee + Stripe fees"
 msgstr ""
 
 #. translators: the message explaining the application fee (eg "3% per-transaction fee + gateway fees")
 #: src/Gateways/Stripe/ApplicationFee.php:217
+#, php-format
 msgid "Connect with Stripe for pay as you go pricing: %s."
 msgstr ""
 
 #. translators: the message explaining the application fee (eg "3% per-transaction fee + gateway fees")
 #: src/Gateways/Stripe/ApplicationFee.php:225
+#, php-format
 msgid "Connect with Stripe for pay as you go pricing: %s. Activate your license to remove the per-transaction fee."
 msgstr ""
 
 #. translators: the date the grace period ends
 #: src/Gateways/Stripe/ApplicationFee.php:245
+#, php-format
 msgid "You are in a grace period for your new license. Activate your license by %s to prevent additional fees."
 msgstr ""
 
@@ -22247,21 +22832,25 @@ msgstr ""
 
 #. translators: %s: Payment intent ID
 #: src/Gateways/Stripe/Checkout/Confirmation.php:69
+#, php-format
 msgid "The payment intent could not be retrieved: %s"
 msgstr ""
 
 #. translators: %1$s: Payment intent status, %2$s: Payment intent ID
 #: src/Gateways/Stripe/Checkout/Confirmation.php:82
+#, php-format
 msgid "The payment intent status is %1$s for payment intent: %2$s"
 msgstr ""
 
 #. translators: %s: Payment intent ID
 #: src/Gateways/Stripe/Checkout/Confirmation.php:97
+#, php-format
 msgid "The payment intent metadata does not contain an order ID: %s"
 msgstr ""
 
 #. translators: %1$s: Order ID, %2$s: Payment intent ID
 #: src/Gateways/Stripe/Checkout/Confirmation.php:110
+#, php-format
 msgid "The order %1$s could not be retrieved from the payment intent metadata: %2$s"
 msgstr ""
 
@@ -22275,6 +22864,7 @@ msgstr ""
 
 #. translators: %s: Error message
 #: src/Gateways/Stripe/Checkout/Form.php:217
+#, php-format
 msgid "There was an error while processing a Stripe payment. Order data: %s"
 msgstr ""
 
@@ -22392,26 +22982,31 @@ msgstr ""
 
 #. translators: The charge ID from Stripe that is being refunded.
 #: src/Gateways/Stripe/Webhooks/Events/ChargeRefunded.php:69
+#, php-format
 msgid "Charge %s has been fully refunded in Stripe."
 msgstr ""
 
 #. translators: The charge ID from Stripe that is being partially refunded.
 #: src/Gateways/Stripe/Webhooks/Events/ChargeRefunded.php:73
+#, php-format
 msgid "Charge %s partially refunded in Stripe."
 msgstr ""
 
 #. translators: %s Stripe Radar early fraud warning reason.
 #: src/Gateways/Stripe/Webhooks/Events/RadarEarlyFraudWarningCreated.php:49
+#, php-format
 msgid "Stripe Radar early fraud warning created with a reason of %s."
 msgstr ""
 
 #. translators: %s Stripe Radar review closing reason.
 #: src/Gateways/Stripe/Webhooks/Events/ReviewClosed.php:61
+#, php-format
 msgid "Stripe Radar review closed with a reason of %s."
 msgstr ""
 
 #. translators: %s Stripe Radar review opening reason.
 #: src/Gateways/Stripe/Webhooks/Events/ReviewOpened.php:68
+#, php-format
 msgid "Stripe Radar review opened with a reason of %s."
 msgstr ""
 
@@ -22421,6 +23016,7 @@ msgstr ""
 
 #. translators: %s: Download Category taxonomy name
 #: src/HTML/CategorySelect.php:80
+#, php-format
 msgctxt "plural: Example: \"Choose one or more Download Categories\""
 msgid "Choose %s"
 msgstr ""
@@ -22480,12 +23076,14 @@ msgstr ""
 
 #. translators: %s: Download plural label
 #: src/HTML/ProductSelect.php:87
+#, php-format
 msgctxt "Noun: Download plural label for product select input"
 msgid "Search %s"
 msgstr ""
 
 #. translators: %s: Download plural label
 #: src/HTML/ProductSelect.php:95
+#, php-format
 msgctxt "Noun: Download plural label for selecting All Downloads"
 msgid "All %s"
 msgstr ""
@@ -22506,6 +23104,7 @@ msgstr ""
 
 #. translators: %s: number of additional items that are not being displayed.
 #: src/HTML/TimelineTooltip.php:134
+#, php-format
 msgid "%s More"
 msgstr ""
 
@@ -22543,6 +23142,7 @@ msgstr ""
 
 #. translators: the extension name.
 #: src/Licensing/Messages.php:116
+#, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
@@ -22560,11 +23160,13 @@ msgstr ""
 
 #. translators: the license expiration date.
 #: src/Licensing/Messages.php:162
+#, php-format
 msgid "Your license key expires soon! It expires on %s."
 msgstr ""
 
 #. translators: the license expiration date.
 #: src/Licensing/Messages.php:169
+#, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
@@ -22574,11 +23176,13 @@ msgstr ""
 
 #. translators: the license subscription status.
 #: src/Licensing/Messages.php:187
+#, php-format
 msgid "Your license subscription is %s and will not automatically renew."
 msgstr ""
 
 #. translators: 1: license expiration date.
 #: src/Licensing/Messages.php:204
+#, php-format
 msgid "Your license key expired on %1$s. Please renew your license key."
 msgstr ""
 
@@ -22588,11 +23192,13 @@ msgstr ""
 
 #. translators: 1: license expiration date, 2: opening link tag, 3: closing link tag.
 #: src/Licensing/Messages.php:228
+#, php-format
 msgid "Your license key expired on %1$s. Please %2$srenew your license key%3$s."
 msgstr ""
 
 #. translators: 1: opening link tag, 2: closing link tag.
 #: src/Licensing/Messages.php:237
+#, php-format
 msgid "Your license key has expired. Please %1$srenew your license key%2$s."
 msgstr ""
 
@@ -22602,6 +23208,7 @@ msgstr ""
 
 #. translators: 1: opening link tag, 2: closing link tag.
 #: src/Licensing/Messages.php:267
+#, php-format
 msgid "Your license key has been disabled. Please %1$scontact support%2$s for more information."
 msgstr ""
 
@@ -22611,6 +23218,7 @@ msgstr ""
 
 #. translators: 1: opening link tag; 2 closing link tag.
 #: src/Licensing/Messages.php:297
+#, php-format
 msgid "Your license key has reached its activation limit. %1$sView possible upgrades%2$s now."
 msgstr ""
 
@@ -22620,11 +23228,13 @@ msgstr ""
 
 #. translators: 1: opening link tag, 2: closing link tag.
 #: src/Licensing/Messages.php:328
+#, php-format
 msgid "Your license key is not active for this URL. Please %1$svisit your account page%2$s to manage your license keys."
 msgstr ""
 
 #. translators: 1: the extension name, 2: opening link tag, 3: closing link tag.
 #: src/Licensing/Messages.php:336
+#, php-format
 msgid "Your %1$s license key is not active for this URL. Please %2$svisit your account page%3$s to manage your license keys."
 msgstr ""
 
@@ -22634,6 +23244,7 @@ msgstr ""
 
 #. translators: 1: opening link tag, 2: closing link tag.
 #: src/Licensing/Messages.php:364
+#, php-format
 msgid "Invalid license. Please %1$svisit your account page%2$s and verify it."
 msgstr ""
 
@@ -22667,6 +23278,7 @@ msgstr ""
 
 #. translators: the all acess pass name.
 #: src/Licensing/Traits/Controls.php:200
+#, php-format
 msgid "Your %s gives you access to this extension."
 msgstr ""
 
@@ -22696,6 +23308,7 @@ msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
 #: src/Lite/Admin/PassHandler/Pointer.php:175
+#, php-format
 msgid "Good news! With your pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and access Pro only features."
 msgstr ""
 
@@ -22713,26 +23326,31 @@ msgstr ""
 
 #. translators: %s: 0.00 formatted in store currency
 #: src/Orders/Refunds/Validator.php:277
+#, php-format
 msgid "The refund amount must be greater than %s."
 msgstr ""
 
 #. translators: %s: maximum refund amount as formatted currency
 #: src/Orders/Refunds/Validator.php:289
+#, php-format
 msgid "The maximum refund amount is %s."
 msgstr ""
 
 #. translators: %s: type of amount being refunded (e.g. "subtotal" or "tax"). Not translatable at this time.
 #: src/Orders/Refunds/Validator.php:369
+#, php-format
 msgid "An unexpected error occurred while validating the maximum %s amount."
 msgstr ""
 
 #. Translators: %1$s - type of amount being refunded (subtotal, tax, or total); %1$s - product name; %3$s - maximum amount allowed for refund
 #: src/Orders/Refunds/Validator.php:398
+#, php-format
 msgid "The maximum refund %1$s for the product \"%2$s\" is %3$s."
 msgstr ""
 
 #. Translators: %1$s - type of amount being refunded (subtotal, tax, or total); %1$s - adjustment description; %3$s - maximum amount allowed for refund
 #: src/Orders/Refunds/Validator.php:411
+#, php-format
 msgid "The maximum refund %1$s for the adjustment \"%2$s\" is %3$s."
 msgstr ""
 
@@ -22935,6 +23553,7 @@ msgstr ""
 
 #. translators: %s: Download singular label
 #: src/Reports/Endpoints/Tiles/MostValuableDownload.php:43
+#, php-format
 msgid "Most Valuable %s"
 msgstr ""
 
@@ -22960,6 +23579,7 @@ msgid "Total Tax Collected"
 msgstr ""
 
 #: src/Reports/Endpoints/Tiles/TaxCollectedLocation.php:53
+#, php-format
 msgid "Total Tax Collected for %s"
 msgstr ""
 
@@ -22973,11 +23593,13 @@ msgstr ""
 
 #. translators: 1: Requirement name, 2: Minimum version, 3: Current version
 #: src/RequirementsCheck.php:183
+#, php-format
 msgid "Requires %1$s (%2$s), but (%3$s) is installed."
 msgstr ""
 
 #. translators: 1: Requirement name, 2: Minimum version
 #: src/RequirementsCheck.php:194
+#, php-format
 msgid "Requires %1$s (%2$s), but it appears to be missing."
 msgstr ""
 
@@ -23035,6 +23657,7 @@ msgstr ""
 
 #. translators: %1$s Link to tracking information, do not translate. %2$s clsoing link tag, do not translate
 #: src/Telemetry/Tracking.php:294
+#, php-format
 msgid "%1$sHere is what we track.%2$s"
 msgstr ""
 
@@ -23048,6 +23671,7 @@ msgstr ""
 
 #. translators: %s: % complete.
 #: src/Upgrades/Adjustments/DiscountsStartEnd.php:234
+#, php-format
 msgid "Updating Discounts ( %d%% )"
 msgstr ""
 
@@ -23065,6 +23689,7 @@ msgstr ""
 
 #. translators: %d: Percentage complete
 #: src/Upgrades/Background/TaxRates.php:128
+#, php-format
 msgid "Updating Tax Rates ( %d%% )"
 msgstr ""
 
@@ -23078,6 +23703,7 @@ msgstr ""
 
 #. Translators: %s is the CLI command to run
 #: src/Upgrades/Background/TaxRates.php:144
+#, php-format
 msgid "Easy Digital Downloads needs to update tax rate information in the database, but due to the number of records, you should run this via CLI using <code>%s</code>."
 msgstr ""
 
@@ -23087,11 +23713,13 @@ msgstr ""
 
 #. translators: %s is the upgrade name
 #: src/Upgrades/Background/Upgrade.php:136
+#, php-format
 msgid "The %s upgrade has already been run."
 msgstr ""
 
 #. translators: %s is the upgrade name
 #: src/Upgrades/Background/Upgrade.php:149
+#, php-format
 msgid "The %s upgrade has been completed."
 msgstr ""
 
@@ -23105,6 +23733,7 @@ msgstr ""
 
 #. translators: %s: % complete.
 #: src/Upgrades/Orders/MigrateAfterActionsDate.php:296
+#, php-format
 msgid "Optimizing Orders Table ( %d%% )"
 msgstr ""
 
@@ -23123,6 +23752,7 @@ msgstr ""
 
 #. translators: the order item's status.
 #: templates/history-downloads.php:97
+#, php-format
 msgctxt "The status of an order item"
 msgid "Status: %s"
 msgstr ""
@@ -23141,6 +23771,7 @@ msgstr ""
 
 #. translators: %s: success page URL
 #: templates/payment-processing.php:5
+#, php-format
 msgid "Your purchase is processing. This page will reload automatically in 8 seconds. If it does not, click <a href=\"%s\">here</a>."
 msgstr ""
 
@@ -23154,6 +23785,7 @@ msgstr ""
 
 #. translators: %s: Restore cart URL
 #: templates/shortcode-profile-editor.php:22
+#, php-format
 msgid "You have a saved cart, <a href=\"%s\">click here</a> to restore it."
 msgstr ""
 
@@ -23231,12 +23863,14 @@ msgstr ""
 #: includes/blocks/build/buy-button/index.js:10
 #: includes/blocks/src/buy-button/edit.js:59
 #: includes/blocks/src/utilities/downloads.js:11
+#, js-format
 msgid "Select a %s"
 msgstr ""
 
 #. translators: %s: Download label singular
 #: includes/blocks/build/buy-button/index.js:5
 #: includes/blocks/src/utilities/downloads.js:17
+#, js-format
 msgid "Current %s"
 msgstr ""
 
@@ -23244,6 +23878,7 @@ msgstr ""
 #: includes/blocks/build/buy-button/index.js:5
 #: includes/blocks/build/downloads/index.js:1
 #: includes/blocks/src/utilities/download-new.js:12
+#, js-format
 msgid "No Published %s Found"
 msgstr ""
 
@@ -23251,6 +23886,7 @@ msgstr ""
 #: includes/blocks/build/buy-button/index.js:6
 #: includes/blocks/build/downloads/index.js:2
 #: includes/blocks/src/utilities/download-new.js:23
+#, js-format
 msgid "Create a New %s"
 msgstr ""
 
@@ -23258,6 +23894,7 @@ msgstr ""
 #: includes/blocks/build/buy-button/index.js:6
 #: includes/blocks/build/downloads/index.js:2
 #: includes/blocks/src/utilities/download-new.js:26
+#, js-format
 msgid "Create Your First %s"
 msgstr ""
 
@@ -23265,18 +23902,21 @@ msgstr ""
 #: includes/blocks/build/buy-button/index.js:7
 #: includes/blocks/build/downloads/index.js:3
 #: includes/blocks/src/utilities/download-new.js:37
+#, js-format
 msgid "View All %s"
 msgstr ""
 
 #. translators: %s: Download label singular
 #: includes/blocks/build/buy-button/index.js:8
 #: includes/blocks/src/buy-button/edit.js:31
+#, js-format
 msgid "Select a %s:"
 msgstr ""
 
 #. translators: %s: Download label plural
 #: includes/blocks/build/buy-button/index.js:9
 #: includes/blocks/src/buy-button/edit.js:35
+#, js-format
 msgid "Published %s"
 msgstr ""
 
@@ -23766,12 +24406,14 @@ msgstr ""
 #. translators: %s: Download label singular
 #: includes/blocks/build/terms/index.js:3
 #: includes/blocks/src/utilities/download-taxonomies.js:7
+#, js-format
 msgid "%s Categories"
 msgstr ""
 
 #. translators: %s: Download label singular
 #: includes/blocks/build/terms/index.js:5
 #: includes/blocks/src/utilities/download-taxonomies.js:12
+#, js-format
 msgid "%s Tags"
 msgstr ""
 

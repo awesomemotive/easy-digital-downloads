@@ -830,16 +830,14 @@ function edd_build_order( $order_data = array() ) {
 		$customer = edd_get_customer_by( 'email', $order_args['email'] );
 
 		if ( ! $customer ) {
-			$customer_id = edd_add_customer(
+			$customer = new EDD_Customer( $order_args['email'] );
+			$customer->create(
 				array(
 					'name'    => $name ? $name : $order_args['email'],
 					'email'   => $order_args['email'],
 					'user_id' => $order_args['user_id'],
 				)
 			);
-			$customer    = $customer_id ?
-				edd_get_customer( $customer_id ) :
-				new EDD_Customer( $order_args['email'] );
 		}
 	}
 

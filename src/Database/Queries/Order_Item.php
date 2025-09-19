@@ -175,4 +175,112 @@ class Order_Item extends Query {
 	public function __construct( $query = array() ) {
 		parent::__construct( $query );
 	}
+
+	/**
+	 * Query the order items.
+	 *
+	 * @since 3.5.2
+	 * @param array $query The query variables.
+	 * @return array
+	 */
+	public function query( $query = array() ) {
+		$query_clauses_filters = $this->get_query_clauses_filters( $query );
+		foreach ( $query_clauses_filters as $filter ) {
+			if ( $filter['condition'] ) {
+				add_filter( 'edd_order_items_query_clauses', array( $this, $filter['callback'] ) );
+			}
+		}
+
+		$result = parent::query( $query );
+
+		foreach ( $query_clauses_filters as $filter ) {
+			if ( $filter['condition'] ) {
+				remove_filter( 'edd_order_items_query_clauses', array( $this, $filter['callback'] ) );
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Query the order items by order.
+	 *
+	 * @since 3.5.2
+	 * @param array $clauses The query clauses.
+	 * @return array The query clauses.
+	 */
+	public function query_by_order( $clauses ) {
+		if ( empty( $this->query_vars['order_query'] ) || ! is_array( $this->query_vars['order_query'] ) ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+
+		$order_table       = new Order();
+		$order_table_alias = $order_table->table_alias;
+
+		$clauses['join'] .= " INNER JOIN {$order_table->table_name} {$order_table_alias}
+			ON( {$this->table_alias}.order_id = {$order_table_alias}.{$order_table->primary_column_name} )";
+
+		$where_conditions = array();
+
+		foreach ( $order_table->columns as $column ) {
+			if ( isset( $this->query_vars['order_query'][ $column->name ] ) ) {
+				$where_conditions[] = $wpdb->prepare(
+					"{$order_table_alias}.{$column->name} = %s",
+					$this->query_vars['order_query'][ $column->name ]
+				);
+				continue;
+			}
+			if ( true === $column->in && isset( $this->query_vars['order_query'][ $column->name . '__in' ] ) ) {
+				$in_values              = $this->query_vars['order_query'][ $column->name . '__in' ];
+				$in_values_placeholders = implode( ', ', array_fill( 0, count( $in_values ), '%s' ) );
+				$where_conditions[]     = $wpdb->prepare(
+					"{$order_table_alias}.{$column->name} IN ( {$in_values_placeholders} )",
+					$in_values
+				);
+				continue;
+			}
+			if ( true === $column->not_in && isset( $this->query_vars['order_query'][ $column->name . '__not_in' ] ) ) {
+				$not_in_values              = $this->query_vars['order_query'][ $column->name . '__not_in' ];
+				$not_in_values_placeholders = implode( ', ', array_fill( 0, count( $not_in_values ), '%s' ) );
+				$where_conditions[]         = $wpdb->prepare(
+					"{$order_table_alias}.{$column->name} NOT IN ( {$not_in_values_placeholders} )",
+					$not_in_values
+				);
+			}
+		}
+
+		if ( ! empty( $where_conditions ) ) {
+			$clauses['where'] .= ( $clauses['where'] ? ' AND ' : '' ) . implode( ' AND ', $where_conditions );
+		}
+
+		return $clauses;
+	}
+
+	/**
+	 * Set the query var defaults.
+	 *
+	 * @since 3.5.2
+	 */
+	protected function set_query_var_defaults() {
+		parent::set_query_var_defaults();
+		$this->query_var_defaults['order_query'] = false;
+	}
+
+	/**
+	 * Get the query clauses filters.
+	 *
+	 * @since 3.5.2
+	 * @param array $query The query variables.
+	 * @return array The query clauses filters.
+	 */
+	private function get_query_clauses_filters( $query ) {
+		return array(
+			array(
+				'condition' => ! empty( $query['order_query'] ),
+				'callback'  => 'query_by_order',
+			),
+		);
+	}
 }

@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.5.1' );
+				define( 'EDD_VERSION', '3.5.2' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -461,17 +461,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			// Component helpers are loaded before everything.
 			require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
 			require_once EDD_PLUGIN_DIR . 'includes/component-functions.php';
-
-			// Database Engine.
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-base.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-column.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-schema.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-query.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-row.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-table.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-meta.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-date.php';
-			require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-compare.php';
 
 			// Old Database Components.
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';

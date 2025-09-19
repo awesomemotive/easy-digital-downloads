@@ -353,20 +353,25 @@ function edd_downloads_query( $atts, $content = null ) {
 		'downloads'
 	);
 
-	// Transform shortcode attributes for the Query class.
-	$query_atts = array(
-		'category'         => $atts['category'],
-		'exclude_category' => $atts['exclude_category'],
-		'tag'              => $atts['tags'], // Map 'tags' to 'tag'.
-		'exclude_tags'     => $atts['exclude_tags'],
-		'author'           => $atts['author'],
-		'relation'         => $atts['relation'], // Preserve 'OR' default.
-		'number'           => $atts['number'],   // Preserve '9' default.
-		'orderby'          => $atts['orderby'],
-		'order'            => $atts['order'],
-		'ids'              => $atts['ids'],
-		'pagination'       => filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ), // Convert string to boolean.
-		'featured'         => $atts['featured'],
+	// Start with all original shortcode attributes.
+	$query_atts = $atts;
+
+	// Map shortcode attributes to Query class attributes.
+	$query_atts['tag'] = $atts['tags']; // Map 'tags' to 'tag'.
+
+	// Convert pagination string to boolean.
+	$query_atts['pagination'] = filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN );
+
+	// Remove attributes that aren't needed for the query.
+	unset(
+		$query_atts['tags'], // Remove the original 'tags' key.
+		$query_atts['price'],
+		$query_atts['excerpt'],
+		$query_atts['full_content'],
+		$query_atts['buy_button'],
+		$query_atts['columns'],
+		$query_atts['thumbnails'],
+		$query_atts['class']
 	);
 
 	// Handle special case for random orderby.
@@ -387,7 +392,7 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	ob_start();
 	if ( $downloads->have_posts() ) :
-		$i = 1;
+		$i               = 1;
 		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
 		$custom_classes  = array_map( 'sanitize_html_class', explode( ',', $atts['class'] ) );
 		$wrapper_classes = array_unique( array_merge( $columns_class, $custom_classes ) );
@@ -402,7 +407,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			while ( $downloads->have_posts() ) :
 				$downloads->the_post();
 				do_action( 'edd_download_shortcode_item', $atts, $i );
-				$i++;
+				++$i;
 			endwhile;
 			?>
 

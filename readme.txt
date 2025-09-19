@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable Tag: 3.5.1
+Stable Tag: 3.5.2
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -240,6 +240,30 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.5.2 =
+* Accessibility: Fixed custom screen-reader-text using deprecated property.
+* Admin: Added support for nested siblings in slider updates.
+* Blocks: Fixed a conflict which allowed the receipt block inner blocks to be overwritten by extensions.
+* Cart: Improved VAT number validation for sites with multiple checkout pages.
+* Customers: Reviewed and improved customer creation process.
+* Downloads: Fixed incorrect sales numbers in downloads report.
+* EU VAT: Fixed reverse charge potentially being doubled on subscription renewal orders.
+* Stripe: Fixed the requirements check for the `invoice.created` webhook.
+* Orders: Order details now always show dispute information when disputes exist.
+* Reports: Fixed PHP warning in user report telemetry.
+* Reports: Fixed graph tooltips not displaying currency amounts correctly.
+* Reports: Improved orders export functionality.
+* Reports: Enhanced performance of product sales report export.
+* Site Health: Fixed missing tax rate names in copy/paste functionality.
+* Square: Fixed potential fatal error in Square connection notice.
+* Dev: Fixed deprecation notice for Cookies::set() due to implicitly nullable parameter.
+* Dev: Moved DB engine to PSR autoloading.
+* Dev: Fixed fatal error in edd_scan_folders() on PHP 8.1+ when scandir() returns false.
+* Dev: Added filter in edd_invoices_get_order_items function for invoices.
+* Dev: Removed legacy email option filter.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.5.1 =
 * New: Featured Downloads is now part of Easy Digital Downloads.
 * New (Pro): Customize the display of Featured Downloads.
@@ -262,8 +286,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Dev: Removed callbacks and hooks for deprecated functions.
 * Dev: Checkout billing fields required via filter now show as required at Checkout.
 * Dev: Improved checkout page validation with invalid Post IDs.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.5.0 =
 * NEW: Customize the message displayed on checkout when the cart is empty.

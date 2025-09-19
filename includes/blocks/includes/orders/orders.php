@@ -160,10 +160,10 @@ function confirmation( $block_attributes = array(), $content = '' ) {
  *
  * @since 2.0
  * @param array  $block_attributes The block attributes.
- * @param string $content          The content of the block.
+ * @param string $block_content    The content of the block.
  * @return string
  */
-function receipt( $block_attributes = array(), $content = '' ) {
+function receipt( $block_attributes = array(), $block_content = '' ) {
 	global $edd_receipt_args;
 
 	$edd_receipt_args = wp_parse_args(
@@ -205,7 +205,7 @@ function receipt( $block_attributes = array(), $content = '' ) {
 		<?php
 		include EDD_BLOCKS_DIR . 'views/orders/totals.php';
 		maybe_show_receipt( $order );
-		echo wp_kses_post( $content );
+		echo wp_kses_post( $block_content );
 		?>
 	</div>
 	<?php
