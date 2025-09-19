@@ -77,8 +77,8 @@ if ( ! empty( $recent_downloads ) ) {
 				name="edd-order-add-download-select"
 				id="download"
 				class="edd-select edd-order-add-download-select variations variations-only edd-select-chosen"
-				data-placeholder="<?php echo esc_html_e( 'Search for a download', 'easy-digital-downloads' ); ?>"
-				data-search-placeholder="<?php echo esc_html_e( 'Search for a download', 'easy-digital-downloads' ); ?>"
+				data-placeholder="<?php esc_html_e( 'Search for a download', 'easy-digital-downloads' ); ?>"
+				data-search-placeholder="<?php esc_html_e( 'Search for a download', 'easy-digital-downloads' ); ?>"
 				data-search-type="download">
 					<option value=""></option>
 					<# if ( 0 !== data.productId ) { #>
