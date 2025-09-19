@@ -64,6 +64,8 @@ class Orders extends Exporter {
 			'amount'       => __( 'Amount', 'easy-digital-downloads' ),
 			'tax'          => __( 'Tax', 'easy-digital-downloads' ),
 			'discount'     => __( 'Discount Code', 'easy-digital-downloads' ),
+			'refunded'     => __( 'Refunded', 'easy-digital-downloads' ),
+			'refunded_tax' => __( 'Refunded Tax', 'easy-digital-downloads' ),
 			'gateway'      => __( 'Payment Method', 'easy-digital-downloads' ),
 			'trans_id'     => __( 'Transaction ID', 'easy-digital-downloads' ),
 			'key'          => __( 'Purchase Key', 'easy-digital-downloads' ),
@@ -123,7 +125,6 @@ class Orders extends Exporter {
 
 			$items        = $order->get_items();
 			$address      = $order->get_address();
-			$total        = $order->total;
 			$user_id      = ! empty( $order->user_id ) ? $order->user_id : $order->email;
 			$customer     = edd_get_customer( $order->customer_id );
 			$products     = '';
@@ -214,9 +215,11 @@ class Orders extends Exporter {
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
 				'currency'     => $order->currency,
-				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price.
+				'amount'       => html_entity_decode( edd_format_amount( $order->total ) ), // The non-discounted item price.
 				'tax'          => html_entity_decode( edd_format_amount( $order->tax ) ),
 				'discount'     => $discounts,
+				'refunded'     => html_entity_decode( edd_format_amount( $this->get_refunded_amount( $order ) ) ),
+				'refunded_tax' => html_entity_decode( edd_format_amount( $this->get_refunded_tax_amount( $order ) ) ),
 				'gateway'      => edd_get_gateway_admin_label( $order->gateway ),
 				'trans_id'     => $order->get_transaction_id(),
 				'key'          => $order->payment_key,
@@ -294,5 +297,45 @@ class Orders extends Exporter {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Get the refunded amount for an order.
+	 *
+	 * @param EDD\Orders\Order $order The order to get the refunded amount for.
+	 * @return float The refunded amount.
+	 */
+	private function get_refunded_amount( $order ): float {
+		$refunds = edd_get_order_refunds( $order->id );
+		if ( empty( $refunds ) ) {
+			return 0;
+		}
+
+		$refunded_amount = 0;
+		foreach ( $refunds as $refund ) {
+			$refunded_amount += abs( $refund->total );
+		}
+
+		return $refunded_amount;
+	}
+
+	/**
+	 * Get the refunded tax amount for an order.
+	 *
+	 * @param EDD\Orders\Order $order The order to get the refunded tax amount for.
+	 * @return float The refunded tax amount.
+	 */
+	private function get_refunded_tax_amount( $order ): float {
+		$refunds = edd_get_order_refunds( $order->id );
+		if ( empty( $refunds ) ) {
+			return 0;
+		}
+
+		$refunded_tax_amount = 0;
+		foreach ( $refunds as $refund ) {
+			$refunded_tax_amount += abs( $refund->tax );
+		}
+
+		return $refunded_tax_amount;
 	}
 }

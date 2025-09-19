@@ -83,6 +83,10 @@ abstract class Pie extends Endpoint {
 	 * @since 3.5.1
 	 */
 	protected function register(): void {
+		if ( empty( $this->get_data() ) ) {
+			return;
+		}
+
 		$this->reports->register_endpoint(
 			$this->get_id(),
 			array(

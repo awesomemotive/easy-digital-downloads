@@ -42,7 +42,10 @@ class Taxes {
 			),
 			'default_rate'        => array(
 				'label' => 'Default Tax Rate',
-				'value' => edd_get_formatted_tax_rate(),
+				'value' => edd_get_formatted_tax_rate(
+					edd_get_option( 'base_country' ),
+					edd_get_option( 'base_region' ),
+				),
 			),
 			'display_on_checkout' => array(
 				'label' => 'Display on Checkout',
@@ -53,19 +56,19 @@ class Taxes {
 				'value' => edd_prices_include_tax() ? 'Yes' : 'No',
 			),
 		);
-		$rates = edd_get_tax_rates( array(), OBJECT );
+		$rates = edd_get_tax_rates( array( 'status' => 'active' ), OBJECT );
 		if ( ! empty( $rates ) ) {
 			foreach ( $rates as $rate ) {
 				if ( 'global' === $rate->scope ) {
 					continue;
 				}
-				$tax_rate = $rate->name;
-				if ( ! empty( $rate->description ) ) {
-					$tax_rate .= ' / ' . $rate->description;
+				$tax_rate = $rate->country;
+				if ( ! empty( $rate->state ) ) {
+					$tax_rate .= ' / ' . $rate->state;
 				}
-				$taxes[ $rate->id ] = array(
+				$taxes[ $tax_rate ] = array(
 					'label' => $tax_rate,
-					'value' => edd_get_formatted_tax_rate( $rate->name, $rate->description ),
+					'value' => edd_get_formatted_tax_rate( $rate->country, $rate->state ),
 				);
 			}
 		}

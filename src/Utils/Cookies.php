@@ -17,12 +17,12 @@ class Cookies {
 	 * If the value is empty and the expiration is not null, the cookie will be deleted.
 	 *
 	 * @since 3.3.0
-	 * @param string $cookie     The cookie name.
-	 * @param string $value      The cookie value.
-	 * @param int    $expiration The expiration timestamp. Use `expired` to set the cookie to expire immediately.
+	 * @param string   $cookie     The cookie name.
+	 * @param string   $value      The cookie value.
+	 * @param int|null $expiration The expiration timestamp. Use `expired` to set the cookie to expire immediately.
 	 * @return bool
 	 */
-	public static function set( string $cookie, string $value = '', int $expiration = null ) {
+	public static function set( string $cookie, string $value = '', ?int $expiration = null ) {
 		if ( headers_sent() ) {
 			return false;
 		}

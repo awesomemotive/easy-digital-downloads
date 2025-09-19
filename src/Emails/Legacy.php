@@ -24,7 +24,6 @@ class Legacy implements SubscriberInterface {
 	public static function get_subscribed_events() {
 		return array(
 			'edd_email_legacy_data_cleanup' => 'remove_legacy_data',
-			'edd_get_option'                => array( 'get_option', 10, 2 ),
 		);
 	}
 
@@ -51,6 +50,7 @@ class Legacy implements SubscriberInterface {
 	 * Retrieves the value of a specific option from the Legacy class.
 	 *
 	 * @since 3.3.0
+	 * @deprecated 3.5.2
 	 * @param string $value The value to retrieve.
 	 * @param string $key   The key of the option.
 	 * @return mixed The value of the option.

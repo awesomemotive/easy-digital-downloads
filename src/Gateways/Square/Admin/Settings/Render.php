@@ -68,6 +68,15 @@ class Render {
 	 * @return string
 	 */
 	private function get_connect_setting_field() {
+		if ( ! edd_is_admin_page( 'settings', 'gateways' ) ) {
+			return '';
+		}
+
+		$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( 'square' !== $section ) {
+			return '';
+		}
+
 		if ( $this->is_connected() ) {
 			return $this->get_connected_status_html();
 		}

@@ -29,11 +29,6 @@ class InvoiceCreated extends Event {
 	 * @return void
 	 */
 	public function process() {
-		// Only process draft invoices as we can only modify draft invoices.
-		if ( 'draft' !== $this->object->status ) {
-			return;
-		}
-
 		$application_fee = new ApplicationFee();
 
 		// Check if we should collect an application fee.
@@ -93,6 +88,22 @@ class InvoiceCreated extends Event {
 	 * @return bool
 	 */
 	public function requirements_met() {
-		return ! empty( $this->object ) && ! empty( $this->object->id );
+		if ( empty( $this->object ) || empty( $this->object->id ) ) {
+			return false;
+		}
+
+		if ( 'draft' !== $this->object->status ) {
+			return false;
+		}
+
+		if ( empty( $this->object->subscription ) ) {
+			return false;
+		}
+
+		if ( ! function_exists( 'edd_recurring_get_subscription_by' ) ) {
+			return false;
+		}
+
+		return (bool) edd_recurring_get_subscription_by( 'profile_id', $this->object->subscription );
 	}
 }

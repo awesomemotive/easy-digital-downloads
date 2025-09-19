@@ -64,9 +64,10 @@ class Download {
 
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
-		$order_status_sql = $this->generate_order_status_query_sql( false );
+		$order_status_sql = $this->generate_order_status_query_sql();
 		$date_query_sql   = $this->generate_date_query_sql();
 
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_row(
 			"SELECT SUM(oi.quantity) AS sales
 			FROM {$wpdb->edd_order_items} oi
@@ -77,6 +78,7 @@ class Download {
 			{$order_status_sql}
 			{$date_query_sql}"
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return ! empty( $results->sales ) ? intval( $results->sales ) : 0;
 	}
@@ -92,7 +94,7 @@ class Download {
 
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
-		$order_status_sql = $this->generate_order_status_query_sql( false );
+		$order_status_sql = $this->generate_order_status_query_sql();
 		$date_query_sql   = $this->generate_date_query_sql();
 
 		$order_items =
@@ -116,16 +118,17 @@ class Download {
 			AND oa.total > 0
 			{$date_query_sql}";
 
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_row( "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a" );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return ! empty( $results->revenue ) ? floatval( edd_sanitize_amount( $results->revenue ) ) : 0.00;
 	}
 
 	/**
 	 * Gets the net number of sales for this download from the database.
-	 * Because a partial refund with an identical quantity as the original order will
-	 * negate the original, we also sum partially refunded sales where the quantity
-	 * matches the partial refund quantity.
+	 * This sums all order item quantities, including negative quantities from refunds,
+	 * to calculate the true net sales after accounting for refunds.
 	 *
 	 * @since 3.0
 	 * @return int
@@ -138,28 +141,40 @@ class Download {
 		$order_status_sql = $this->generate_order_status_query_sql();
 		$date_query_sql   = $this->generate_date_query_sql();
 
-		$complete_orders =
-			"SELECT SUM(oi.quantity) as sales
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_row(
+			"SELECT SUM(CASE
+				WHEN o.type = 'sale' THEN oi.quantity
+				WHEN o.type = 'refund' AND (
+					oi.parent IN (
+						SELECT id FROM {$wpdb->edd_order_items}
+						WHERE product_id = {$this->id} AND status = 'refunded'
+					)
+					OR (
+						oi.parent IN (
+							SELECT id FROM {$wpdb->edd_order_items}
+							WHERE product_id = {$this->id} AND status = 'partially_refunded'
+						)
+						AND ABS(oi.quantity) != (
+							SELECT ABS(quantity) FROM {$wpdb->edd_order_items}
+							WHERE id = oi.parent
+						)
+					)
+				) THEN oi.quantity
+				ELSE 0
+			END) AS sales
 			FROM {$wpdb->edd_order_items} oi
-			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
+			INNER JOIN {$wpdb->edd_orders} o ON (o.id = oi.order_id)
 			WHERE {$product_id_sql}
 			{$price_id_sql}
-			AND oi.status IN('complete','refunded','partially_refunded')
-			{$order_status_sql} {$date_query_sql}";
-		$partial_orders  =
-			"SELECT SUM(oi.quantity) as sales
-			FROM {$wpdb->edd_order_items} oi
-			LEFT JOIN {$wpdb->edd_order_items} ri
-			ON ri.parent = oi.id
-			WHERE {$product_id_sql}
-			{$price_id_sql}
-			AND oi.status = 'partially_refunded'
-			AND oi.quantity = - ri.quantity
-			{$date_query_sql}";
+			AND oi.status IN('complete', 'refunded', 'partially_refunded')
+			AND o.type IN('sale', 'refund')
+			{$order_status_sql}
+			{$date_query_sql}"
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		$results = $wpdb->get_row( "SELECT SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
-
-		return ! empty( $results->sales ) ? $results->sales : 0;
+		return ! empty( $results->sales ) ? intval( $results->sales ) : 0;
 	}
 
 	/**
@@ -173,7 +188,7 @@ class Download {
 
 		$product_id_sql   = $this->generate_product_id_query_sql();
 		$price_id_sql     = $this->generate_price_id_query_sql();
-		$order_status_sql = $this->generate_order_status_query_sql( false );
+		$order_status_sql = $this->generate_order_status_query_sql();
 		$date_query_sql   = $this->generate_date_query_sql();
 
 		/**
@@ -205,7 +220,9 @@ class Download {
 
 		$sql = "SELECT SUM(revenue) AS revenue FROM ({$order_items} UNION {$order_adjustments})a";
 
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$results = $wpdb->get_row( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		return ! empty( $results->revenue ) ? $results->revenue : 0.00;
 	}
@@ -214,7 +231,7 @@ class Download {
 	 * Converts an array of statuses to a string for a SQL query.
 	 *
 	 * @since 3.0
-	 * @param array $statuses
+	 * @param array $statuses Array of status strings to convert.
 	 * @return string
 	 */
 	private function convert_status_array_to_string( $statuses ) {
@@ -253,19 +270,23 @@ class Download {
 
 	/**
 	 * Gets the query string for the order statuses.
+	 * Always uses gross order statuses for consistent reporting.
 	 *
 	 * @since 3.0
-	 * @param bool $net Whether to use net statuses.
 	 * @return string
 	 */
-	private function generate_order_status_query_sql( $net = true ) {
+	private function generate_order_status_query_sql() {
 		global $wpdb;
-		$statuses = $net ? edd_get_net_order_statuses() : edd_get_gross_order_statuses();
 
+		$statuses     = edd_get_gross_order_statuses();
+		$placeholders = $this->convert_status_array_to_string( $statuses );
+
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		return $wpdb->prepare(
-			"AND o.status IN({$this->convert_status_array_to_string( $statuses )})",
+			sprintf( 'AND o.status IN(%s)', $placeholders ),
 			...$statuses
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 	}
 
 	/**

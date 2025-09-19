@@ -257,14 +257,18 @@ final class ApplicationFee {
 				);
 			}
 
-			$expiration_date = new \EDD\Utils\Date( $license->expires );
-			return ' ' . sprintf(
-				/* translators: 1: the date the license expired, 2: opening link tag, do not translate, 3: closing link tag, do not translate  */
-				__( 'Your license expired on %1$s. %2$sRenew your license%3$s to prevent additional fees.', 'easy-digital-downloads' ),
-				$expiration_date->format( 'F j, Y' ),
-				'<a href="' . esc_url( $renewal_url ) . '" target="_blank">',
-				'</a>'
-			);
+			try {
+				$expiration_date = new \EDD\Utils\Date( $license->expires );
+				return ' ' . sprintf(
+					/* translators: 1: the date the license expired, 2: opening link tag, do not translate, 3: closing link tag, do not translate  */
+					__( 'Your license expired on %1$s. %2$sRenew your license%3$s to prevent additional fees.', 'easy-digital-downloads' ),
+					$expiration_date->format( 'F j, Y' ),
+					'<a href="' . esc_url( $renewal_url ) . '" target="_blank">',
+					'</a>'
+				);
+			} catch ( \Exception $e ) {
+				// Do nothing.
+			}
 		}
 
 		$args = array(

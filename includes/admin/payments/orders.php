@@ -294,7 +294,6 @@ function edd_order_details_customer( $order ) {
 
 	<?php
 
-
 	// The edd_payment_personal_details_list hook is left here for backwards compatibility.
 	if ( has_action( 'edd_payment_personal_details_list' ) && ! edd_is_add_order_page() ) {
 		$payment   = edd_get_payment( $order->id );
@@ -999,7 +998,7 @@ function edd_order_details_extras( $order = false ) {
 				<?php endif; ?>
 
 				<?php
-				if ( ! edd_is_add_order_page() && 'on_hold' === $order->status ) {
+				if ( ! edd_is_add_order_page() ) {
 					$dispute_id = edd_get_order_dispute_id( $order->id );
 					if ( $dispute_id ) {
 						$dispute_id = apply_filters( "edd_payment_details_dispute_id_{$order->gateway}", $dispute_id, $order );

@@ -958,4 +958,104 @@ class OrderItem extends EDD_UnitTestCase {
 		}
 
 	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query
+	 */
+	public function test_get_order_items_with_order_query_id_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		$order_items = edd_count_order_items( array(
+			'order_query' => array(
+				'id' => $order_1,
+			),
+		) );
+
+		$this->assertSame( 2, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query
+	 */
+	public function test_get_order_items_with_order_query_id__in_should_return_4() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		$order_items = edd_count_order_items( array(
+			'order_query' => array(
+				'id__in' => array( $order_1, $order_2 ),
+			),
+		) );
+
+		$this->assertSame( 4, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query
+	 */
+	public function test_get_order_items_with_order_query_id__not_in_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		$order_items = edd_get_order_items( array(
+			'order_query' => array(
+				'id__not_in' => array( $order_1 ),
+			),
+		) );
+
+		foreach ( $order_items as $order_item ) {
+			$this->assertNotEquals( $order_1, $order_item->order_id );
+		}
+
+		$this->assertCount( 2, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query
+	 */
+	public function test_get_order_items_with_order_query_refunded_status_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		edd_update_order_status( $order_1, 'refunded' );
+
+		$order_items = edd_count_order_items( array(
+			'order_query' => array(
+				'status' => 'refunded',
+			),
+		) );
+
+		$this->assertSame( 2, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query
+	 */
+	public function test_get_order_items_with_order_query_complete_status__in_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		edd_update_order_status( $order_1, 'complete' );
+
+		$order_items = edd_count_order_items( array(
+			'order_query' => array(
+				'status__in' => edd_get_complete_order_statuses(),
+			),
+		) );
+
+		$this->assertSame( 2, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query
+	 */
+	public function test_get_order_items_with_false_order_query_should_return_all_order_items() {
+		$order_items = edd_count_order_items( array(
+			'order_query' => false,
+		) );
+
+		$this->assertSame( 5, $order_items );
+		$this->assertNotEmpty( $order_items );
+	}
 }

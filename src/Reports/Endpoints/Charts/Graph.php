@@ -248,6 +248,7 @@ abstract class Graph extends Endpoint {
 			'borderCapStyle'       => 'round',
 			'borderJoinStyle'      => 'round',
 			'pointBackgroundColor' => 'rgb(255,255,255)',
+			'type'                 => 'earnings' === $this->key ? 'currency' : false,
 		);
 	}
 

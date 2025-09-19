@@ -11,6 +11,7 @@ export const edd_init_range_slider = function( selector ) {
 
 	const updateSliderInputValue = ( e, ui ) => {
 		selector.siblings( '.edd-range__input' ).val( ui.value );
+		selector.siblings( '.edd-amount-type-wrapper').find( '.edd-range__input' ).val( ui.value );
 	};
 
 	selector.slider({
@@ -23,6 +24,9 @@ export const edd_init_range_slider = function( selector ) {
 		change: updateSliderInputValue,
 		create: () => {
 			selector.siblings( '.edd-range__input' ).on( 'input change', function() {
+				selector.slider( 'value', $( this ).val() );
+			});
+			selector.siblings( '.edd-amount-type-wrapper').find( '.edd-range__input' ).on( 'input change', function() {
 				selector.slider( 'value', $( this ).val() );
 			});
 		}

@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  *
  * @since 1.0
  * @since 3.2.10 The function hooks into the wp_handle_upload_prefilter action.
- * @param array $file
- * @return void
+ * @param array $file The uploaded file array.
+ * @return array The modified file array.
  */
 function edd_change_downloads_upload_dir( $file = array() ) {
 	if ( empty( $_REQUEST['post_id'] ) ) {
@@ -134,9 +134,10 @@ function edd_scan_folders( $path = '', $deprecated = array() ) {
 
 	// Get the main directories in the root of the directory we're scanning.
 	$upload_root_dirs = glob( $path . '/*', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK );
-
+	$upload_root_dirs = is_array( $upload_root_dirs ) ? $upload_root_dirs : array();
 	// Now get all the recursive directories.
 	$upload_sub_dirs = glob( $path . '/*/**', GLOB_ONLYDIR | GLOB_NOSORT | GLOB_MARK );
+	$upload_sub_dirs = is_array( $upload_sub_dirs ) ? $upload_sub_dirs : array();
 
 	// Merge the two arrays together, and avoid any possible duplicates.
 	return array_unique( array_merge( $upload_root_dirs, $upload_sub_dirs ) );
@@ -147,7 +148,7 @@ function edd_scan_folders( $path = '', $deprecated = array() ) {
  *
  * @since 1.6
  *
- * @param bool $method
+ * @param bool $method The download method (redirect/direct).
  * @return mixed|void The htaccess rules
  */
 function edd_get_htaccess_rules( $method = false ) {
