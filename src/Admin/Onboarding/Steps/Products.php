@@ -35,7 +35,7 @@ class Products extends Step {
 			<table class="form-table edd-download-editor__sections" role="presentation">
 				<tbody>
 					<tr>
-						<th scope="row"><h3><?php echo esc_html_e( 'Product details', 'easy-digital-downloads' ); ?></h3></th>
+						<th scope="row"><h3><?php esc_html_e( 'Product details', 'easy-digital-downloads' ); ?></h3></th>
 						<td>
 							<?php
 							$tooltip = new \EDD\HTML\Tooltip(
@@ -48,13 +48,13 @@ class Products extends Step {
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="product_title"><?php echo esc_html_e( 'Product Name', 'easy-digital-downloads' ); ?></label></th>
+						<th scope="row"><label for="product_title"><?php esc_html_e( 'Product Name', 'easy-digital-downloads' ); ?></label></th>
 						<td>
 							<input type="text" class="regular-text" id="product_title" name="product_title" required>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="product_image_url"><?php echo esc_html_e( 'Product Image', 'easy-digital-downloads' ); ?></label></th>
+						<th scope="row"><label for="product_image_url"><?php esc_html_e( 'Product Image', 'easy-digital-downloads' ); ?></label></th>
 						<td>
 							<div class="edd-onboarding__product-image-wrapper">
 								<input type="hidden" id="product_image_id" name="product_image_id">
@@ -70,13 +70,13 @@ class Products extends Step {
 						<td>
 							<input style="display:none;" type="checkbox" class="edd-form-group__input" name="_variable_pricing" id="edd_variable_pricing" value="1"/>
 							<div class="edd-onboarding__pricing-option-pill">
-								<button class="left-option active" data-variable-pricing="false"><?php echo esc_html_e( 'Single price', 'easy-digital-downloads' ); ?></button>
-								<button class="right-option" data-variable-pricing="true"><?php echo esc_html_e( 'Variable price', 'easy-digital-downloads' ); ?></button>
+								<button class="left-option active" data-variable-pricing="false"><?php esc_html_e( 'Single price', 'easy-digital-downloads' ); ?></button>
+								<button class="right-option" data-variable-pricing="true"><?php esc_html_e( 'Variable price', 'easy-digital-downloads' ); ?></button>
 							</div>
 						</td>
 					</tr>
 					<tr class="edd-onboarding__product-single-price">
-						<th scope="row"><label for="edd_price"><?php echo esc_html_e( 'Product Price', 'easy-digital-downloads' ); ?></label></th>
+						<th scope="row"><label for="edd_price"><?php esc_html_e( 'Product Price', 'easy-digital-downloads' ); ?></label></th>
 						<td>
 							<div class="edd-form-group__control">
 								<span class="edd-amount-type-wrapper">
@@ -159,7 +159,7 @@ class Products extends Step {
 											)
 										);
 										?>
-										<span><?php echo esc_html_e( 'Add your first file', 'easy-digital-downloads' ); ?></span>
+										<span><?php esc_html_e( 'Add your first file', 'easy-digital-downloads' ); ?></span>
 									</label>
 								</div>
 							</div>
