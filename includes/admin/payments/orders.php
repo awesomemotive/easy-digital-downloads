@@ -304,23 +304,23 @@ function edd_order_details_customer( $order ) {
  * @param object $order
  */
 function edd_order_details_email( $order ) {
-	$customer   = edd_get_customer( $order->customer_id );
-	$all_emails = array( 'primary' => $customer->email );
+	$customer = edd_get_customer( $order->customer_id );
+	$help     = __( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' );
 
-	foreach ( $customer->emails as $key => $email ) {
-		if ( $customer->email === $email ) {
-			continue;
-		}
-
-		$all_emails[ $key ] = $email;
-	}
-
-	$help = __( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' );
-?>
-
+	?>
 	<div>
 		<?php
-		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
+		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) :
+			$all_emails = array( 'primary' => $customer->email );
+			foreach ( $customer->emails as $key => $email ) {
+				if ( $customer->email === $email ) {
+					continue;
+				}
+
+				$all_emails[ $key ] = $email;
+			}
+			?>
+
 			<fieldset class="edd-form-group">
 				<legend class="edd-form-group__label">
 					<?php _e( 'Send email receipt to', 'easy-digital-downloads' ); ?>
