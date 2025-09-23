@@ -513,3 +513,62 @@ function edd_download_row_actions( $actions, $post ) {
 	return $actions;
 }
 add_filter( 'post_row_actions', 'edd_download_row_actions', 2, 100 );
+
+/**
+ * Register rewrite rule for category support in permalinks.
+ *
+ * @since 3.0
+ *
+ * @param array $rules Rewrite rules.
+ * @return array $rules Updated rewrite rules.
+ */
+function edd_register_category_rewrite_rule( $rules ) {
+	$permalink = get_option( 'permalink_structure' );
+
+	// Only register the rewrite rule if %category% exists in the permalink structure.
+	if ( strpos( $permalink, '%category%' ) !== false ) {
+		$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+
+		$regex = $slug . '/[^/]+/([^/]+)/?$';
+
+		$rules[ $regex ] = 'index.php?download=$matches[1]';
+	}
+
+	return $rules;
+}
+add_filter( 'rewrite_rules_array', 'edd_register_category_rewrite_rule', -10, 1 );
+
+/**
+ * Adjust all permalinks to add category support.
+ *
+ * @since 3.0
+ *
+ * @param string $permalink Permalink.
+ * @param WP_Post $post Post object.
+ *
+ * @return string $permalink Updated permalink.
+ */
+function edd_change_post_link( $permalink, $post ) {
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return $permalink;
+	}
+
+	$should_modify_permalink = apply_filters( 'edd_should_change_post_link', false );
+
+	if ( $should_modify_permalink && is_object( $post ) && 'download' === $post->post_type ) {
+		$term_slug = '';
+
+		$terms = get_the_terms( $post, 'download_category' );
+		if ( ! empty( $terms ) ) {
+			$term_slug = $terms[0]->slug;
+		}
+
+		if ( ! empty( $term_slug ) ) {
+			$slug = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+			$permalink = get_home_url() . '/' . $slug . '/' . $term_slug . '/' . $post->post_name;
+		}
+	}
+
+	return $permalink;
+}
+add_filter( 'post_type_link', 'edd_change_post_link', 10, 2 );
