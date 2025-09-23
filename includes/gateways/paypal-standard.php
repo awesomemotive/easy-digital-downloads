@@ -375,6 +375,7 @@ add_action( 'init', 'edd_listen_for_paypal_ipn' );
  * @return void
  */
 function edd_process_paypal_ipn() {
+
 	// Check the request method is POST
 	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] != 'POST' ) {
 		return;
@@ -475,14 +476,14 @@ function edd_process_paypal_ipn() {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
 			edd_debug_log( 'Invalid IPN verification response. IPN data: ' . print_r( $api_response, true ) );
 
-			return; // Something went wrong
+			die( 'IPN error' );
 		}
 
 		if ( wp_remote_retrieve_body( $api_response ) !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification', false ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) ) );
 			edd_debug_log( 'Invalid IPN verification response. IPN data: ' . print_r( $api_response, true ) );
 
-			return; // Response not okay
+			die( 'IPN error' );
 		}
 
 		edd_debug_log( 'IPN verified successfully' );
@@ -575,7 +576,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 		edd_debug_log( 'Invalid business email in IPN response. IPN data: ' . print_r( $data, true ) );
 		edd_update_payment_status( $payment_id, 'failed' );
 		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid PayPal business email.', 'easy-digital-downloads' ) );
-		return;
+		die( 'IPN error' ); // We must die here to prevent any further processing
 	}
 
 	// Verify payment currency
@@ -585,7 +586,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 		edd_debug_log( 'Invalid currency in IPN response. IPN data: ' . print_r( $data, true ) );
 		edd_update_payment_status( $payment_id, 'failed' );
 		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid currency in PayPal IPN.', 'easy-digital-downloads' ) );
-		return;
+		die( 'IPN error' ); // We must die here to prevent any further processing
 	}
 
 	if ( empty( $payment->email ) ) {
@@ -658,7 +659,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 			edd_debug_log( 'Invalid payment amount in IPN response. IPN data: ' . printf( $data, true ) );
 			edd_update_payment_status( $payment_id, 'failed' );
 			edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid amount in PayPal IPN.', 'easy-digital-downloads' ) );
-			return;
+			die( 'IPN error' ); // We must die here to prevent any further processing
 		}
 		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
 			// Purchase keys don't match
@@ -666,7 +667,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 			edd_record_gateway_error( __( 'IPN Error', 'easy-digital-downloads' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $data ) ), $payment_id );
 			edd_update_payment_status( $payment_id, 'failed' );
 			edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid purchase key in PayPal IPN.', 'easy-digital-downloads' ) );
-			return;
+			die( 'IPN error' ); // We must die here to prevent any further processing
 		}
 
 		if ( 'completed' == $payment_status || edd_is_test_mode() ) {
@@ -749,6 +750,8 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 			}
 
 		}
+
+		die( '1' );
 	}
 }
 add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart', 10, 2 );
@@ -796,6 +799,8 @@ function edd_process_paypal_refund( $data, $payment_id = 0 ) {
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded for reason: %s', 'easy-digital-downloads' ), $data['parent_txn_id'], $data['reason_code'] ) );
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'easy-digital-downloads' ), $data['txn_id'] ) );
 	edd_update_payment_status( $payment_id, 'refunded' );
+
+	die( '2' );
 }
 
 /**
