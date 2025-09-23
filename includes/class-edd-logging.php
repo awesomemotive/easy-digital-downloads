@@ -51,8 +51,8 @@ class EDD_Logging {
 	public function setup_log_file() {
 
 		$upload_dir       = wp_upload_dir();
-		$this->filename   = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
-		$this->file       = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+		$this->filename   = $this->make_log_file_name();
+		$this->file       = $this->get_log_directory_path() . $this->filename;
 
 		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
@@ -422,7 +422,95 @@ class EDD_Logging {
 	 * @return void
 	 */
 	protected function write_to_log( $message = '' ) {
-		file_put_contents( $this->file, $message, FILE_APPEND );
+		if ( $this->should_rotate_logs() ) {
+			$this->rotate_logs();
+		}
+
+		@file_put_contents( $this->file, $message, FILE_APPEND );
+	}
+
+	/**
+	 * Determines if the main log file should be rotated.
+	 *
+	 * @since 2.11.5
+	 *
+	 * @return bool True if the file exists and its size is >= 5 MB.
+	 */
+	protected function should_rotate_logs() {
+		$log_size_limit = 5 * 1024 * 1024;
+
+		return file_exists( $this->file ) && filesize( $this->file ) > $log_size_limit;
+	}
+
+	/**
+	 * Rotates the logs.
+	 *
+	 * This shifts each log "up" a number so we can start fresh on the "base" log.
+	 *
+	 * edd-debug.log   => edd-debug.1.log
+	 * edd-debug.1.log => edd-debug.2.log
+	 *
+	 * @since 2.11.5
+	 *
+	 * @return void
+	 */
+	protected function rotate_logs() {
+		for ( $i = 8; $i >= 1; $i-- ) {
+			$this->rotate_log( $i );
+		}
+
+		$this->rotate_log();
+	}
+
+	/**
+	 * Rotates an individual log. This increments the number in the file name
+	 * and renames the file.
+	 *
+	 * @since 2.11.5
+	 *
+	 * @param int|null $log_number
+	 *
+	 * @return bool
+	 */
+	protected function rotate_log( $log_number = null ) {
+		$next_suffix = ( is_numeric( $log_number ) ) ? $log_number + 1 : 1;
+
+		$rename_from = $this->get_log_directory_path() . $this->make_log_file_name( $log_number );
+		$rename_to   = $this->get_log_directory_path() . $this->make_log_file_name( $next_suffix );
+
+		if ( is_writable( $rename_from ) ) {
+			return rename( $rename_from, $rename_to );
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Generates a log file name.
+	 *
+	 * @since 2.11.5
+	 *
+	 * @param int|null $log_number
+	 *
+	 * @return string
+	 */
+	protected function make_log_file_name( $log_number = null ) {
+		$suffix = is_numeric( $log_number ) ? ".{$log_number}" : '';
+
+		return wp_hash( home_url( '/' ) ) . '-edd-debug' . $suffix . '.log';
+	}
+
+	/**
+	 * Retrieves the full path to the log directory.
+	 *
+	 * @since 2.11.5
+	 *
+	 * @return string
+	 */
+	protected function get_log_directory_path() {
+		$upload_dir = wp_upload_dir();
+
+		return trailingslashit( $upload_dir['basedir'] );
 	}
 
 	/**
