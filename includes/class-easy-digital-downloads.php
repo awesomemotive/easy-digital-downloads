@@ -19,6 +19,13 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
+	 * @var \EDD\Container\Container
+	 *
+	 * @since 3.1
+	 */
+	private $container;
+
+	/**
 	 * EDD loader file.
 	 *
 	 * @since 3.0
@@ -133,6 +140,15 @@ final class Easy_Digital_Downloads {
 	public $components = array();
 
 	/**
+	 * Constructor
+	 *
+	 * @since 3.1
+	 */
+	public function __construct() {
+		$this->container = new \EDD\Container\Container();
+	}
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -243,6 +259,20 @@ final class Easy_Digital_Downloads {
 					? $this->{$key}
 					: null;
 		}
+	}
+
+	/**
+	 * Magic methods are passed to the service container.
+	 *
+	 * @since 3.1
+	 *
+	 * @param string $name
+	 * @param mixed  $arguments
+	 *
+	 * @return mixed
+	 */
+	public function __call( $name, $arguments ) {
+		return call_user_func_array( [ $this->container, $name ], $arguments );
 	}
 
 	/**
@@ -808,9 +838,20 @@ endif; // End if class_exists check.
  *
  * Example: <?php $edd = EDD(); ?>
  *
+ * @param string|null $abstract Data to retrieve from the service container.
+ *
  * @since 1.4
- * @return Easy_Digital_Downloads The one true Easy_Digital_Downloads instance.
+ * @since 3.1 Add support for retrieving data from service container.
+ *
+ * @return Easy_Digital_Downloads|object The one true Easy_Digital_Downloads instance
+ *                                       or the requested abstract.
  */
-function EDD() {
-	return Easy_Digital_Downloads::instance();
+function EDD( $abstract = null ) {
+	$instance = Easy_Digital_Downloads::instance();
+
+	if ( null !== $abstract ) {
+		return $instance->make( $abstract );
+	}
+
+	return $instance;
 }
