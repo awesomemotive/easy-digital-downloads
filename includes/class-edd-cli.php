@@ -135,7 +135,11 @@ class EDD_CLI extends WP_CLI_Command {
 	 */
 	public function products( $args, $assoc_args ) {
 		$product_id = isset( $assoc_args ) && array_key_exists( 'id', $assoc_args ) ? absint( $assoc_args['id'] ) : false;
-		$products   = $this->api->get_products( $product_id );
+		if ( $product_id ) {
+			$products = $this->api->get_products( array( 'product' => $product_id ) );
+		} else {
+			$products = $this->api->get_products();
+		}
 
 		if ( isset( $products['error'] ) ) {
 			WP_CLI::error( $products['error'] );
