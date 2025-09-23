@@ -28,7 +28,7 @@
 		"jquery-creditcardvalidator": "1.0.0",
 		"jquery-validation": "^1.19.3",
 		"jquery.payment": "3.0.0",
-		"moment": "2.29.3",
+		"moment": "2.29.4",
 		"moment-timezone": "0.5.23"
 	},
 	"devDependencies": {
