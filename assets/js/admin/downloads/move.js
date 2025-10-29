@@ -11,6 +11,9 @@ events.forEach( function ( event ) {
 } );
 
 function addRowListeners () {
+	if ( ! sections ) {
+		return;
+	}
 	const dynamicRows = sections.querySelectorAll( '.edd-has-handle-actions' );
 	if ( ! dynamicRows.length ) {
 		return;

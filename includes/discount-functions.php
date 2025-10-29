@@ -1209,6 +1209,9 @@ function edd_set_cart_discount( $code = '' ) {
 
 	EDD()->session->set( 'cart_discounts', implode( '|', $discounts ) );
 
+	// Invalidate cart cache when discounts change.
+	EDD()->cart->invalidate_cache();
+
 	do_action( 'edd_cart_discount_set', $code, $discounts );
 	do_action( 'edd_cart_discounts_updated', $discounts );
 

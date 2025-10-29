@@ -382,4 +382,9 @@ var EDD_Download_Configuration = {
 
 jQuery( document ).ready( function( $ ) {
 	EDD_Download_Configuration.init();
+
+	// add a listener for the edd_download_type_changed event
+	document.addEventListener( 'edd_download_type_changed', function ( e ) {
+		EDD_Download_Configuration.initChosen( $( '#edd_product_files' ) );
+	} );
 } );

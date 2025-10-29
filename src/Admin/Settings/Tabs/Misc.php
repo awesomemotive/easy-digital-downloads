@@ -63,7 +63,7 @@ class Misc extends Tab {
 	 */
 	protected function register() {
 
-		return array(
+		$settings = array(
 			'main'           => array(
 				'debug_mode'          => array(
 					'id'    => 'debug_mode',
@@ -217,7 +217,40 @@ class Misc extends Tab {
 					),
 				),
 			),
+			'captcha'        => array(
+				'recaptcha'            => array(
+					'id'   => 'recaptcha',
+					'name' => __( 'reCAPTCHA v3', 'easy-digital-downloads' ),
+					'desc' => sprintf(
+					/* translators: 1. opening anchor tag; 2. closing anchor tag */
+						__( '%1$sRegister with Google%2$s to get reCAPTCHA v3 keys. Setting the keys here will enable reCAPTCHA on your registration block and when a user requests a password reset using the login block.', 'easy-digital-downloads' ),
+						'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">',
+						'</a>'
+					),
+					'type' => 'descriptive_text',
+				),
+				'recaptcha_site_key'   => array(
+					'id'   => 'recaptcha_site_key',
+					'name' => __( 'reCAPTCHA Site Key', 'easy-digital-downloads' ),
+					'type' => 'text',
+					'std'  => '',
+				),
+				'recaptcha_secret_key' => array(
+					'id'   => 'recaptcha_secret_key',
+					'name' => __( 'reCAPTCHA Secret Key', 'easy-digital-downloads' ),
+					'type' => 'password',
+					'std'  => '',
+				),
+				'recaptcha_checkout'   => $this->get_recaptcha_checkout_setting(),
+			),
 		);
+
+		$rate_limiting = $this->get_recaptcha_rate_limiting_setting();
+		if ( $rate_limiting ) {
+			$settings['captcha']['recaptcha_rate_limiting'] = $rate_limiting;
+		}
+
+		return $settings;
 	}
 
 	/**
@@ -279,5 +312,53 @@ class Misc extends Tab {
 		);
 
 		return '<a href="' . esc_url( $debug_log_url ) . '">' . __( 'View the Log', 'easy-digital-downloads' ) . '</a>';
+	}
+
+	/**
+	 * Gets the recaptcha checkout setting.
+	 *
+	 * @since 3.5.3
+	 * @return array
+	 */
+	private function get_recaptcha_checkout_setting(): array {
+		$checkout_has_block = \EDD\Checkout\Validator::has_block();
+
+		return array(
+			'id'       => 'recaptcha_checkout',
+			'name'     => __( 'reCAPTCHA on Checkout', 'easy-digital-downloads' ),
+			'desc'     => $checkout_has_block ?
+				__( 'Enable reCAPTCHA on the checkout block.', 'easy-digital-downloads' ) :
+				__( 'This setting requires the checkout block and will not work with the shortcode.', 'easy-digital-downloads' ),
+			'type'     => 'select',
+			'options'  => array(
+				''       => __( 'Never', 'easy-digital-downloads' ),
+				'always' => __( 'Always', 'easy-digital-downloads' ),
+				'guests' => __( 'Only for guests', 'easy-digital-downloads' ),
+			),
+			'disabled' => ! $checkout_has_block,
+		);
+	}
+
+	/**
+	 * Gets the recaptcha rate limiting setting.
+	 *
+	 * @since 3.5.3
+	 * @return false|array
+	 */
+	private function get_recaptcha_rate_limiting_setting() {
+		if ( ! \EDD\Checkout\Validator::has_block() || ! edd_is_gateway_active( 'stripe' ) ) {
+			return false;
+		}
+
+		return array(
+			'id'      => 'recaptcha_rate_limiting',
+			'name'    => __( 'reCAPTCHA on Demand', 'easy-digital-downloads' ),
+			'check'   => __( 'Enable reCAPTCHA on checkout when Stripe determines that your site is experiencing card testing.', 'easy-digital-downloads' ),
+			'desc'    => __( 'If reCAPTCHA is always enabled on checkout, this setting is ignored. When needed, this will affect both guests and logged in users.', 'easy-digital-downloads' ),
+			'type'    => 'checkbox_toggle',
+			'options' => array(
+				'disabled' => 'always' === edd_get_option( 'recaptcha_checkout' ),
+			),
+		);
 	}
 }

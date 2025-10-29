@@ -79,7 +79,6 @@ add_action(
 function do_inputs() {
 	?>
 	<input style="position: fixed; bottom: 0px; left: -10000px; width: 1px; height: 1px; overflow: hidden;" type="text" name="edd-blocks-recaptcha" id="edd-blocks-recaptcha" required value=""/>
-	<input type="hidden" name="edd_blocks_ip" value="<?php echo esc_attr( edd_get_ip() ); ?>"/>
 	<?php
 }
 
@@ -87,16 +86,12 @@ function do_inputs() {
  * Enqueues the script.
  *
  * @since 2.0
- * @param string $submit
- * @param string $action
  * @return void
  */
 function enqueue() {
 	wp_enqueue_script( 'edd-recaptcha' );
 }
 
-add_action( 'wp_ajax_nopriv_edd_recaptcha_validate', __NAMESPACE__ . '\validate' );
-add_action( 'wp_ajax_edd_recaptcha_validate', __NAMESPACE__ . '\validate' );
 /**
  * Checks for the reCAPTCHA validation.
  *
@@ -104,80 +99,31 @@ add_action( 'wp_ajax_edd_recaptcha_validate', __NAMESPACE__ . '\validate' );
  * @return void
  */
 function validate() {
-	$token = ! empty( $_POST['token'] ) ? trim( sanitize_text_field( $_POST['token'] ) ) : false;
-	if ( ! $token ) {
-		wp_send_json_error(
-			array(
-				'error'   => 'invalid_recaptcha_missing',
-				'message' => __( 'reCAPTCHA validation missing.', 'easy-digital-downloads' ),
-			)
-		);
-	}
-
-	try {
-		$args = array(
-			'headers' => array(
-				'Content-type' => 'application/x-www-form-urlencoded',
-			),
-			'body'    => array(
-				'secret'   => edd_get_option( 'recaptcha_secret_key', false ),
-				'response' => $token,
-				'remoteip' => trim( sanitize_text_field( $_POST['ip'] ) ),
-			),
-		);
-
-		$validated = validate_recaptcha(
-			wp_safe_remote_post(
-				'https://www.google.com/recaptcha/api/siteverify',
-				$args
-			)
-		);
-
-		// No errors with data validation.
-		if ( true === $validated ) {
-			wp_send_json_success(
-				array( 'success' => true )
-			);
-		} else {
-			wp_send_json_error( $validated );
-		}
-	} catch ( Exception $e ) {
-		wp_send_json_error(
-			array(
-				'error'   => 'invalid_recaptcha_bad',
-				'message' => __( 'There was an error validating the reCAPTCHA. Please try again.', 'easy-digital-downloads' ),
-			)
-		);
-	}
+	_edd_deprecated_function( __FUNCTION__, '3.5.3', 'EDD\Captcha\Validate::validate' );
+	$validate = new \EDD\Captcha\Validate();
+	$validate->validate();
 }
 
 /**
  * Evaluates the reCAPTCHA response.
  *
  * @since 2.0
- * @param array|WP_Error $response
+ * @deprecated 3.5.3 This function is no longer used.
+ * @param array|\WP_Error $response The response from the reCAPTCHA API.
  * @return bool
  */
 function validate_recaptcha( $response ) {
 	if ( is_wp_error( $response ) ) {
-		return array(
-			'error'   => 'invalid_recaptcha_bad',
-			'message' => __( 'Unexpected reCAPTCHA error. Please try again.', 'easy-digital-downloads' ),
-		);
+		return set_error( 'invalid_recaptcha_bad' );
 	}
+
 	$verify = json_decode( wp_remote_retrieve_body( $response ) );
 	if ( true !== $verify->success ) {
-		return array(
-			'error'   => 'invalid_recaptcha_bad',
-			'message' => __( 'reCAPTCHA verification failed. Please contact a site administrator.', 'easy-digital-downloads' ),
-		);
+		return set_error( 'invalid_recaptcha_failed' );
 	}
 
 	if ( isset( $verify->score ) && (float) $verify->score < 0.5 ) {
-		return array(
-			'error'   => 'invalid_recaptcha_low_score',
-			'message' => __( 'reCAPTCHA verification failed with low score. Please contact a site administrator.', 'easy-digital-downloads' ),
-		);
+		return set_error( 'invalid_recaptcha_low_score' );
 	}
 
 	return true;
@@ -191,9 +137,12 @@ function validate_recaptcha( $response ) {
  */
 function get_localize_args() {
 	return array(
-		'ajaxurl' => edd_get_ajax_url(),
-		'sitekey' => get_site_key(),
-		'error'   => __( 'Error', 'easy-digital-downloads' ),
+		'ajaxurl'         => edd_get_ajax_url(),
+		'sitekey'         => get_site_key(),
+		'context'         => edd_is_checkout() ? 'checkout' : 'form',
+		'error'           => __( 'Error', 'easy-digital-downloads' ),
+		'error_message'   => __( 'There was an error validating the form. Please contact support.', 'easy-digital-downloads' ),
+		'checkoutFailure' => __( 'Unable to verify purchase session. Please try again.', 'easy-digital-downloads' ),
 	);
 }
 

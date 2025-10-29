@@ -95,6 +95,11 @@ class Handler extends EDD_UnitTestCase {
 			'first_name'  => '',
 			'last_name'   => '',
 			'email'       => '',
+			'address'     => array(
+				'country' => '',
+				'state'   => '',
+				'city'    => '',
+			),
 		);
 
 		$this->assertEquals( $expected_defaults, $result );
@@ -135,6 +140,11 @@ class Handler extends EDD_UnitTestCase {
 			'first_name'  => '',
 			'last_name'   => '',
 			'email'       => 'nocustomer@example.com',
+			'address'     => array(
+				'country' => '',
+				'state'   => '',
+				'city'    => '',
+			),
 		);
 
 		$this->assertEquals( $expected_result, $result );
@@ -237,6 +247,11 @@ class Handler extends EDD_UnitTestCase {
 			'first_name'  => '',
 			'last_name'   => '',
 			'email'       => '',
+			'address'     => array(
+				'country' => '',
+				'state'   => '',
+				'city'    => '',
+			),
 		);
 
 		$this->assertEquals( $expected_defaults, $result );
@@ -268,11 +283,80 @@ class Handler extends EDD_UnitTestCase {
 			'first_name'  => 'Checkout',
 			'last_name'   => 'User',
 			'email'       => 'checkout@example.com',
+			'address'     => array(
+				'country' => '',
+				'state'   => '',
+				'city'    => '',
+			),
 		);
 
 		$this->assertEquals( $expected_result, $result );
 
 		// Clean up
 		wp_delete_user( $user_id );
+	}
+
+	public function test_set_customer_with_address_data() {
+		// Clear customer session
+		EDD()->session->set( 'customer', null );
+
+		// Set address data
+		$address_data = array(
+			'address' => array(
+				'state'   => 'CA',
+				'country' => 'US',
+				'city'    => 'Los Angeles',
+			),
+		);
+
+		$result = \EDD\Sessions\Customer::set( $address_data );
+
+		// Should include address data in result
+		$this->assertArrayHasKey( 'address', $result );
+		$this->assertEquals( 'CA', $result['address']['state'] );
+		$this->assertEquals( 'US', $result['address']['country'] );
+		$this->assertEquals( 'Los Angeles', $result['address']['city'] );
+	}
+
+	public function test_set_customer_merges_address_with_defaults() {
+		// Clear customer session
+		EDD()->session->set( 'customer', null );
+
+		// Set partial address data
+		$address_data = array(
+			'address' => array(
+				'country' => 'CA',
+			),
+		);
+
+		$result = \EDD\Sessions\Customer::set( $address_data );
+
+		// Should merge with defaults
+		$this->assertEquals( 'CA', $result['address']['country'] );
+		$this->assertEquals( '', $result['address']['state'] );
+	}
+
+	public function test_get_customer_includes_address_data() {
+		// Set customer data with address in session
+		$customer_data = array(
+			'customer_id' => 123,
+			'user_id'     => 456,
+			'name'        => 'Test User',
+			'first_name'  => 'Test',
+			'last_name'   => 'User',
+			'email'       => 'test@example.com',
+			'address'     => array(
+				'state'   => 'NY',
+				'country' => 'US',
+			),
+		);
+		EDD()->session->set( 'customer', $customer_data );
+
+		$result = \EDD\Sessions\Customer::get();
+
+		$this->assertEquals( $customer_data, $result );
+		$this->assertArrayHasKey( 'address', $result );
+		$this->assertEquals( 'NY', $result['address']['state'] );
+		$this->assertEquals( 'US', $result['address']['country'] );
 	}
 }

@@ -1,6 +1,6 @@
 <div class="edd-blocks-cart__row edd-blocks-cart__row-footer edd_cart_footer_row">
 	<?php
-	if ( $is_checkout_block ) {
+	if ( $is_checkout_block && ! empty( $block_attributes['show_discount_form'] ) ) {
 		include EDD_BLOCKS_DIR . 'views/checkout/discount.php';
 	}
 	?>

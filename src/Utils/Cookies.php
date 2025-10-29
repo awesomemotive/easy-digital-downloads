@@ -53,6 +53,17 @@ class Cookies {
 	}
 
 	/**
+	 * Gets the value of a cookie.
+	 *
+	 * @since 3.6.0
+	 * @param string $cookie The cookie name.
+	 * @return string|false The cookie value or false if the cookie is not set.
+	 */
+	public static function get( string $cookie ) {
+		return isset( $_COOKIE[ $cookie ] ) ? $_COOKIE[ $cookie ] : false;
+	}
+
+	/**
 	 * Gets the cookie options.
 	 *
 	 * @since 3.3.0

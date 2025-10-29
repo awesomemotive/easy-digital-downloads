@@ -36,6 +36,12 @@ class Core extends EventManagement\Subscribers {
 			new Integrations\Registry(),
 			new Checkout\Loader(),
 
+			// Users.
+			new Users\Verification(),
+
+			// Utils.
+			new Utils\Modal(),
+
 			// Gateways.
 			new Gateways\Stripe\Webhooks\Listener(),
 			new Gateways\Square\Webhooks\Listener(),
@@ -54,6 +60,12 @@ class Core extends EventManagement\Subscribers {
 
 			// Discounts.
 			new Discounts\Search(),
+
+			// Captcha.
+			new Captcha\Validate(),
+
+			// Blocks.
+			new Blocks\Loader(),
 		);
 	}
 
@@ -78,6 +90,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Settings\Recurring(),
 			new Admin\Settings\Reviews(),
 			new Admin\Settings\WP_SMTP(),
+			new Admin\Settings\WPConsent(),
 			new Admin\Downloads\Meta(),
 			new Admin\Onboarding\Tools(),
 			new Admin\Onboarding\Wizard(),
@@ -97,6 +110,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Discounts\Manager(),
 			new Gateways\Square\Admin\Settings\Register(),
 			new Admin\Downloads\Filters(),
+			new Admin\Tools\Labs(),
 		);
 
 		return $providers;

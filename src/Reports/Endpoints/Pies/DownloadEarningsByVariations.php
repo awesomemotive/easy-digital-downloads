@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.5.1
  */
 class DownloadEarningsByVariations extends Pie {
+	use Traits\DownloadVariations;
 
 	/**
 	 * The key for the dataset.
@@ -51,21 +52,6 @@ class DownloadEarningsByVariations extends Pie {
 	}
 
 	/**
-	 * Gets the heading for the chart.
-	 *
-	 * @since 3.5.1
-	 * @return string
-	 */
-	protected function get_heading(): string {
-		$download_data = $this->get_download_data();
-		if ( ! $download_data ) {
-			return $this->get_label();
-		}
-
-		return $this->get_label() . ' (' . edd_get_download_name( $download_data['download_id'] ) . ')';
-	}
-
-	/**
 	 * Gets the query results for building the chart.
 	 *
 	 * @since 3.5.1
@@ -86,54 +72,19 @@ class DownloadEarningsByVariations extends Pie {
 	}
 
 	/**
-	 * Gets the labels for the pie chart.
-	 *
-	 * @since 3.5.1
-	 * @return array
-	 */
-	protected function get_labels(): array {
-		$download_data = $this->get_download_data();
-		$labels        = array();
-		foreach ( $this->get_pieces() as $piece ) {
-			$labels[] = edd_get_price_option_name( $download_data['download_id'], $piece );
-		}
-
-		return $labels;
-	}
-
-	/**
-	 * Gets the pieces for the pie chart.
-	 *
-	 * @since 3.5.1
-	 * @return array
-	 */
-	protected function get_pieces(): array {
-		$download_data = $this->get_download_data();
-		if ( ! $download_data ) {
-			return array();
-		}
-
-		$download = edd_get_download( absint( $download_data['download_id'] ) );
-		if ( ! $download ) {
-			return array();
-		}
-
-		return array_keys( $download->get_prices() );
-	}
-
-	/**
 	 * Processes the query results to populate the data and labels arrays.
 	 *
 	 * @since 3.5.1
 	 * @param array $query_results Database query results.
 	 */
 	protected function process_results( array $query_results ): array {
-		// Get all available gateways.
-		$prices = $this->get_pieces();
+		// Get all available price IDs.
+		$price_ids = $this->get_pieces();
 
-		// Initialize all gateways with 0 sales.
-		foreach ( $prices as $price ) {
-			$prices[ $price ] = 0;
+		// Initialize all price IDs with 0 earnings.
+		$prices = array();
+		foreach ( $price_ids as $price_id => $value ) {
+			$prices[ $price_id ] = 0;
 		}
 
 		// Populate with actual data from query results.
@@ -143,6 +94,14 @@ class DownloadEarningsByVariations extends Pie {
 			}
 		}
 
-		return array_values( $prices );
+		// Group small pieces based on percentage threshold.
+		$prices = $this->group_small_percentage_pieces( $prices );
+
+		// If we still have more pieces than the maximum, group the smallest ones into "Other".
+		if ( count( $prices ) > $this->max_pieces ) {
+			$prices = $this->group_small_pieces( $prices );
+		}
+
+		return $prices;
 	}
 }

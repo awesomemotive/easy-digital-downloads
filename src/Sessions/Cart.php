@@ -64,6 +64,9 @@ class Cart {
 	 * @return void
 	 */
 	public function empty_cart() {
+		// Invalidate cache before clearing cart.
+		$this->cart->invalidate_cache();
+
 		// Remove cart contents.
 		EDD()->session->set( 'edd_cart', null );
 

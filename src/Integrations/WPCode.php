@@ -9,7 +9,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.2.4
  */
-class WPCode {
+class WPCode implements Integration {
+
+	/**
+	 * Check if WPCode is loaded.
+	 *
+	 * @since 3.6.0
+	 * @return bool
+	 */
+	public function can_load(): bool {
+		return function_exists( 'WPCode' );
+	}
 
 	/**
 	 * Registers the event subscribers.

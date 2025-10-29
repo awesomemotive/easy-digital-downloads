@@ -801,14 +801,30 @@ function edd_stripe_zip_and_country() {
  * @return      void
  */
 function edd_stripe_setup_billing_address_fields() {
+	// The checkout block handles the address fields differently.
+	if ( \EDD\Checkout\Validator::has_block() ) {
+		return;
+	}
+
 	if ( 'stripe' !== edd_get_chosen_gateway() || ! edd_get_cart_total() > 0 ) {
 		return;
 	}
 
 	remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 
-	$hook    = 'payment-elements' === edds_get_elements_mode() || apply_filters( 'edds_address_before_payment', false ) ? 'edd_before_cc_fields' : 'edd_after_cc_fields';
-	$address = new EDD\Gateways\Stripe\Checkout\Address();
+	$elements_mode = edds_get_elements_mode();
+	$hook          = 'edd_after_cc_fields';
+	if ( 'payment-elements' === $elements_mode || apply_filters( 'edds_address_before_payment', false ) ) {
+		$hook = 'edd_before_cc_fields';
+	}
+
+	// The Stripe address class is only needed for legacy Card Elements, with stored cards.
+	if ( 'payment-elements' === $elements_mode ) {
+		$address_class = edd_get_namespace( 'Checkout\\Address' );
+	} else {
+		$address_class = '\\EDD\\Gateways\\Stripe\\Checkout\\Address';
+	}
+	$address = new $address_class();
 	$fields  = $address->get_fields();
 
 	if ( empty( $fields ) ) {

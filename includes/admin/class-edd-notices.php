@@ -1050,6 +1050,23 @@ class EDD_Notices {
 						)
 					);
 					break;
+				case 'user-already-verified':
+					$this->add_notice(
+						array(
+							'id'          => 'edd-user-already-verified',
+							'message'     => __( 'This user is already verified.', 'easy-digital-downloads' ),
+							'dismissible' => true,
+						)
+					);
+					break;
+				case 'verification-email-sent':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-verification-email-sent',
+							'message' => __( 'Verification email sent successfully.', 'easy-digital-downloads' ),
+						)
+					);
+					break;
 				case 'email-added':
 					$this->add_notice(
 						array(

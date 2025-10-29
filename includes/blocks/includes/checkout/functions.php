@@ -45,7 +45,7 @@ function get_quantity_string() {
  *
  * @since 2.0
  * @param string $action The action being called.
- * @param mixed  $args
+ * @param mixed  ...$args Additional arguments.
  * @return string
  */
 function do_cart_action( $action = 'edd_cart_items_after', ...$args ) {

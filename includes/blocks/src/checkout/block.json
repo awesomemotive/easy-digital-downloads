@@ -19,9 +19,17 @@
 		"attributes": {}
 	},
 	"attributes": {
-		"username": {
+		"layout": {
+			"type": "string",
+			"default": ""
+		},
+		"show_discount_form": {
 			"type": "boolean",
 			"default": true
+		},
+		"thumbnail_width": {
+			"type": "number",
+			"default": 25
 		}
 	}
 }

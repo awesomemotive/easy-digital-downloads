@@ -129,6 +129,7 @@ class ProductSales extends Exporter {
 			$orders_data = edd_get_orders(
 				array(
 					'id__in' => $order_ids,
+					'number' => count( $order_ids ),
 				)
 			);
 
@@ -180,7 +181,7 @@ class ProductSales extends Exporter {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = $this->get_date_query();
+			$args['order_query']['date_query'] = $this->get_date_query();
 		}
 
 		if ( ! empty( $this->download_id ) ) {

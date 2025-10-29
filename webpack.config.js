@@ -73,6 +73,7 @@ const config = {
 		'js/edd-admin-licensing': './assets/js/admin/settings/licensing',
 		'js/edd-admin-pointers': './assets/js/admin/pointers',
 		'js/edd-admin-downloads-editor': './assets/js/admin/downloads/editor',
+		'js/edd-admin-tools-labs': './assets/js/admin/tools/labs/index.js',
 		'js/stripe-admin': './assets/js/admin/stripe/index.js',
 		'js/stripe-notices': './assets/js/admin/stripe/notices.js',
 		'js/square-admin': './assets/js/admin/gateways/square.js',
@@ -80,6 +81,8 @@ const config = {
 		// Front-end JavaScript.
 		'js/edd-ajax': './assets/js/frontend/edd-ajax.js',
 		'js/edd-checkout-global': './assets/js/frontend/checkout',
+		'js/edd-modal': './assets/js/frontend/edd-modal.js',
+		'js/user-verification': './assets/js/frontend/user-verification.js',
 		'js/paypal-checkout': './assets/js/frontend/gateways/paypal.js',
 		'js/stripe-cardelements': './assets/js/frontend/gateways/stripe/loader/card-elements.js',
 		'js/stripe-paymentelements': './assets/js/frontend/gateways/stripe/loader/payment-elements.js',

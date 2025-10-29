@@ -602,6 +602,7 @@ function edd_get_registered_settings_sections() {
 					'main'           => __( 'General', 'easy-digital-downloads' ),
 					'button_text'    => __( 'Purchase Buttons', 'easy-digital-downloads' ),
 					'file_downloads' => __( 'File Downloads', 'easy-digital-downloads' ),
+					'captcha'        => __( 'reCAPTCHA', 'easy-digital-downloads' ),
 				)
 			),
 		);

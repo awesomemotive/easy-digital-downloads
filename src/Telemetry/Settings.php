@@ -64,6 +64,30 @@ class Settings {
 			$data = array_merge( $data, $emails );
 		}
 
+		$features = \EDD\Admin\Tools\Labs::get_feature_settings();
+		if ( $features ) {
+			foreach ( $features as $feature ) {
+				if ( ! empty( $feature['id'] ) ) {
+					$data[ $feature['id'] ] = (int) (bool) edd_get_option( $feature['id'] );
+				}
+			}
+		}
+
+		$profilers = \EDD\Admin\Tools\Labs::get_profilers();
+		if ( $profilers ) {
+			foreach ( $profilers as $profiler ) {
+				if ( empty( $profiler['class'] ) || ! is_subclass_of( $profiler['class'], '\\EDD\\Profiler\\Profiler' ) ) {
+					continue;
+				}
+				$settings = $profiler['class']::get_settings();
+				foreach ( (array) $settings as $setting ) {
+					if ( ! empty( $setting['id'] ) ) {
+						$data[ $setting['id'] ] = 1;
+					}
+				}
+			}
+		}
+
 		return $data;
 	}
 

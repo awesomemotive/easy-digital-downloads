@@ -114,7 +114,7 @@ class Address {
 			$this->customer
 		);
 
-		$customer['address'] = array_map( 'sanitize_text_field', $customer['address'] );
+		$customer['address'] = array_map( 'sanitize_text_field', wp_parse_args( $customer['address'], $this->customer['address'] ) );
 
 		if ( ! is_user_logged_in() ) {
 			return $customer;

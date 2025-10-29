@@ -10,6 +10,8 @@
 
 namespace EDD\Blocks\Checkout\Ajax;
 
+use EDD\Blocks\Checkout\Functions;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -30,7 +32,7 @@ add_filter( 'edd_ajax_add_to_cart_response', __NAMESPACE__ . '\update_cart_respo
  * Filters the add to cart response to update the block cart.
  *
  * @since 2.0
- * @param array $response
+ * @param array $response The AJAX response array.
  * @return array
  */
 function update_cart_response( $response ) {
@@ -38,14 +40,17 @@ function update_cart_response( $response ) {
 	if ( empty( $cart_items ) ) {
 		$response['block_cart'] = '<p class="edd-blocks-form__cart">' . esc_html( __( 'Your cart is empty.', 'easy-digital-downloads' ) ) . '</p>';
 	} else {
-		$is_cart_widget = true;
 		ob_start();
-		include EDD_BLOCKS_DIR . 'views/checkout/cart/cart.php';
-
+		\EDD\Blocks\Checkout\Elements\Cart::render(
+			array(
+				'is_cart_widget' => true,
+				'cart_items'     => $cart_items,
+			)
+		);
 		$response['block_cart'] = ob_get_clean();
 	}
 
-	$response['quantity_formatted'] = \EDD\Blocks\Checkout\Functions\get_quantity_string();
+	$response['quantity_formatted'] = Functions\get_quantity_string();
 
 	return $response;
 }

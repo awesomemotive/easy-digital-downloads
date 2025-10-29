@@ -6,12 +6,13 @@
 	<?php } ?>
 
 	<fieldset id="edd_payment_mode_select">
-		<legend><?php esc_html_e( 'Select Payment Method', 'easy-digital-downloads' ); ?></legend>
+		<legend><?php esc_html_e( 'Payment Method', 'easy-digital-downloads' ); ?></legend>
 		<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
 		<div id="edd-payment-mode-wrap">
 			<?php
 			do_action( 'edd_payment_mode_before_gateways' );
 
+			$payment_mode  = edd_get_chosen_gateway();
 			$gateways      = edd_get_enabled_payment_gateways( true );
 			$payment_icons = EDD\Blocks\Checkout\Gateways\get_payment_icons();
 			$default       = edd_get_option( 'default_gateway' );

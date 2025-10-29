@@ -1392,24 +1392,40 @@ function edd_verify_customer_notice( $customer ) {
 		return;
 	}
 
-	$url = wp_nonce_url(
+	$verify_url = wp_nonce_url(
 		edd_get_admin_url(
 			array(
 				'page'       => 'edd-customers',
 				'view'       => 'overview',
-				'edd_action' => 'verify_user_admin',
+				'edd-action' => 'verify_user_admin',
 				'id'         => absint( $customer->id ),
 			)
 		),
 		'edd-verify-user'
 	);
 
-	echo '<div class="update error"><p>';
-	esc_html_e( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' );
-	echo ' ';
-	echo '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Verify account.', 'easy-digital-downloads' ) . '</a>';
-	echo "\n\n";
+	$resend_url = wp_nonce_url(
+		edd_get_admin_url(
+			array(
+				'page'       => 'edd-customers',
+				'view'       => 'overview',
+				'edd-action' => 'resend_verification_email_admin',
+				'id'         => absint( $customer->id ),
+			)
+		),
+		'edd-resend-verification'
+	);
 
-	echo '</p></div>';
+	?>
+	<div class="notice notice-error">
+		<p>
+			<?php esc_html_e( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' ); ?>
+			&nbsp;
+			<a href="<?php echo esc_url( $verify_url ); ?>"><?php esc_html_e( 'Verify account', 'easy-digital-downloads' ); ?></a>
+			&nbsp;|&nbsp;
+			<a href="<?php echo esc_url( $resend_url ); ?>"><?php esc_html_e( 'Resend verification email', 'easy-digital-downloads' ); ?></a>
+		</p>
+	</div>
+	<?php
 }
 add_action( 'edd_customer_card_top', 'edd_verify_customer_notice', 10, 1 );
