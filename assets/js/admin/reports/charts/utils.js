@@ -71,28 +71,31 @@ export const toolTipBaseConfig = {
 		}
 
 		function getBody( bodyItem ) {
+			// Handle multi-line text by joining with <br> tags
+			if ( Array.isArray( bodyItem.lines ) ) {
+				return bodyItem.lines.join( '<br>' );
+			}
 			return bodyItem.lines;
 		}
 
+		const isPie = this._chart.config.type === 'pie' || this._chart.config.type === 'doughnut';
+
 		// Set Text
 		if ( tooltip.body ) {
-			const titleLines = tooltip.title || [];
+			let innerHtml = '';
+			if ( tooltip.title.length ) {
+				innerHtml += '<thead>' + tooltip.title + '</thead>';
+			}
 			const bodyLines = tooltip.body.map( getBody );
 
-			let innerHtml = '<thead>' + titleLines + '</thead>';
-			innerHtml    += '<tbody>';
+			innerHtml += '<tbody>';
 
 			bodyLines.forEach( function( body, i ) {
 				const colors = tooltip.labelColors[ i ];
-				const { borderColor, backgroundColor } = colors;
-
-				// Super dirty check to use the legend's color.
-				let fill = borderColor;
-
-				if ( fill === 'rgb(230, 230, 230)' || fill === '#fff' ) {
-					fill = backgroundColor;
+				var fill = colors.backgroundColor;
+				if ( ! isPie ) {
+					fill = colors.borderColor;
 				}
-
 				const style = [
 					`background: ${ fill }`,
 					`border-color: ${ fill }`,
@@ -110,23 +113,29 @@ export const toolTipBaseConfig = {
 			tableRoot.innerHTML = innerHtml;
 		}
 
-		// Position the tooltip.
-		const chartRect = this._chart.canvas.getBoundingClientRect();
-		let elementRect = tooltipEl.getBoundingClientRect();
-
-		const positionX = this._chart.canvas.offsetLeft + tooltip.caretX;
-		// If the positionX is greater than 1/2 of the chart width, move it to the left.
-		let elementXPosition = positionX;
-		if ( positionX >= ( chartRect.width / 2 ) ) {
-			elementXPosition = positionX - ( elementRect.width / 2 ) - 20;
+		// Position based on chart type.
+		if ( isPie ) {
+			// For pie charts, use the caret position relative to the canvas
+			tooltipEl.style.left = tooltip.caretX + 'px';
+			tooltipEl.style.top = tooltip.caretY + 'px';
 		} else {
-			elementXPosition = positionX + ( elementRect.width / 2 ) + 20;
+			// For line charts, use custom positioning logic
+			const chartRect = this._chart.canvas.getBoundingClientRect();
+			let elementRect = tooltipEl.getBoundingClientRect();
+
+			const positionX = this._chart.canvas.offsetLeft + tooltip.caretX;
+			// If the positionX is greater than 1/2 of the chart width, move it to the left.
+			let elementXPosition = positionX;
+			if ( positionX >= ( chartRect.width / 2 ) ) {
+				elementXPosition = positionX - ( elementRect.width / 2 ) - 20;
+			} else {
+				elementXPosition = positionX + ( elementRect.width / 2 ) + 20;
+			}
+
+			tooltipEl.style.left = elementXPosition + 'px';
+			const positionY = this._chart.canvas.offsetTop + Math.round( this._chart.canvas.height / 5 );
+			tooltipEl.style.top = positionY + 'px';
 		}
-
-		tooltipEl.style.left = elementXPosition + 'px';
-
-		const positionY = this._chart.canvas.offsetTop + Math.round( this._chart.canvas.height / 5 );
-		tooltipEl.style.top = positionY + 'px';
 
 		// Set the font styles.
 		tooltipEl.style.fontFamily = tooltip._bodyFontFamily;

@@ -52,18 +52,25 @@ export function recalculateTaxes( state ) {
 		return;
 	}
 
-	let tax_amount_row = cart.getElementsByClassName( 'edd_cart_tax' ),
-		current_tax_amount_raw = 0;
+	let tax_amount_row = cart.getElementsByClassName( 'edd_cart_tax' );
+	let current_tax_amount_raw = 0;
+
+	// Capture current cart total for error restoration
+	const cart_total_element = document.querySelector( '.edd_cart_amount' );
+	const current_cart_total = cart_total_element ? cart_total_element.dataset.total || cart_total_element.textContent : 0;
 
 	// See if the tax_amount_row has an edd-loading-ajax child before adding another one.
 	if ( tax_amount_row.length > 0 && ! tax_amount_row[0].querySelector( '.edd-recalculate-taxes-loading' ) ) {
 		tax_amount_row = tax_amount_row[0];
 		const taxes_loading = document.createElement('span');
 		const current_tax_amount = tax_amount_row.getElementsByClassName( 'edd_cart_tax_amount' );
+
+		// Capture tax value from last element before hiding (maintains original behavior)
 		for ( let i = 0; i < current_tax_amount.length; i++ ) {
 			current_tax_amount_raw = current_tax_amount[ i ].dataset.tax;
-			current_tax_amount[ i ].remove();
+			current_tax_amount[ i ].style.display = 'none';
 		}
+
 		taxes_loading.classList.add( 'edd-loading-ajax', 'edd-recalculate-taxes-loading', 'edd-loading' );
 		tax_amount_row.appendChild( taxes_loading );
 	}
@@ -96,6 +103,10 @@ export function recalculateTaxes( state ) {
 
 	const current_ajax_count = ++ajax_tax_count;
 
+	// Initialize tax_data object that will be accessible to both success and fail callbacks
+	const tax_data = new Object();
+	tax_data.postdata = postData;
+
 	return jQuery.ajax( {
 		type: 'POST',
 		data: postData,
@@ -113,19 +124,34 @@ export function recalculateTaxes( state ) {
 					jQuery( '#edd_checkout_cart_form' ).replaceWith( tax_response.html );
 				}
 				jQuery( '.edd_cart_amount' ).html( tax_response.total );
-				const tax_data = new Object();
-				tax_data.postdata = postData;
 				tax_data.response = tax_response;
 				jQuery( 'body' ).trigger( 'edd_taxes_recalculated', [ tax_data ] );
 			}
 			jQuery( '.edd-recalculate-taxes-loading' ).remove();
 		},
 	} ).fail( function( data ) {
-		if ( window.console && window.console.log ) {
-			console.log( data );
-			if ( current_ajax_count === ajax_tax_count ) {
-				jQuery( 'body' ).trigger( 'edd_taxes_recalculated', [ tax_data ] );
-			}
+		console.log( 'Tax recalculation failed:', data );
+
+		if ( current_ajax_count === ajax_tax_count ) {
+			// Create standardized error response structure to maintain consistency
+			// with success callback and prevent issues in event listeners
+			tax_data.response = {
+				success: false,
+				error: true,
+				tax_raw: tax_data.postdata.current_tax_amount || 0,
+				total_raw: current_cart_total,
+				debug_data: data
+			};
+			jQuery( 'body' ).trigger( 'edd_taxes_recalculated', [ tax_data ] );
 		}
+
+		// Remove loading spinner on error
+		jQuery( '.edd-recalculate-taxes-loading' ).remove();
+
+		// Restore original tax display by showing hidden elements
+		const tax_amount_elements = document.querySelectorAll( '.edd_cart_tax .edd_cart_tax_amount' );
+		tax_amount_elements.forEach( function( element ) {
+			element.style.display = '';
+		} );
 	} );
 }

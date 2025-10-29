@@ -1,9 +1,14 @@
-<?php if( ! empty( $_GET['edd-verify-request'] ) ) : ?>
-<p class="edd-account-pending edd_success">
-	<?php _e( 'An email with an activation link has been sent.', 'easy-digital-downloads' ); ?>
-</p>
+<?php if ( ! empty( $_GET['edd-verify-request'] ) ) : ?>
+	<p class="edd-account-pending edd_success">
+		<?php esc_html_e( 'An email with an activation link has been sent.', 'easy-digital-downloads' ); ?>
+	</p>
 <?php endif; ?>
 <p class="edd-account-pending">
-	<?php $url = esc_url( edd_get_user_verification_request_url() ); ?>
-	<?php printf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), esc_url( $url ) ); ?>
+	<?php
+	/* translators: Context: Message displayed when user account is pending verification */
+	esc_html_e( 'Your account is pending verification. Please click the link in your email to activate your account.', 'easy-digital-downloads' );
+	?>
 </p>
+
+<?php
+\EDD\Users\Verification::render();

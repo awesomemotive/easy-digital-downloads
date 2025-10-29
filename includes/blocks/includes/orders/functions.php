@@ -49,8 +49,8 @@ function get_details( $order ) {
  *
  * @since 2.0
  * @param \EDD\Orders\Order $order
- * @param string $action The action being called.
- * @param mixed  $args
+ * @param string            $action The action being called.
+ * @param mixed             $args
  * @return string
  */
 function do_order_details( $order, $action = 'edd_order_history_row_end', ...$args ) {
@@ -95,7 +95,7 @@ function get_order_history_args( $block_attributes ) {
 		'type'           => 'sale',
 		'number'         => $number,
 		'offset'         => $number * ( intval( $current_page ) - 1 ),
-		'status__not_in' => array( 'trash' )
+		'status__not_in' => array( 'trash' ),
 	);
 	if ( ! empty( $block_attributes['recurring'] ) ) {
 		$args['status__not_in'] = array( 'edd_subscription' );
@@ -112,7 +112,7 @@ function get_order_history_args( $block_attributes ) {
  * @return array|false
  */
 function get_purchase_session() {
-	if ( ! \EDD\Blocks\Functions\is_block_editor() ) {
+	if ( ! \EDD\Blocks\Utility::is_block_editor() ) {
 		return edd_get_purchase_session();
 	}
 	$sample_order_key = get_sample_order_payment_key();
@@ -135,7 +135,7 @@ function get_purchase_session() {
  * @return string|false
  */
 function get_payment_key() {
-	if ( \EDD\Blocks\Functions\is_block_editor( 'edit_shop_payments' ) ) {
+	if ( \EDD\Blocks\Utility::is_block_editor( 'edit_shop_payments' ) ) {
 		$sample_order_key = get_sample_order_payment_key();
 		if ( $sample_order_key ) {
 			return $sample_order_key;
@@ -176,7 +176,7 @@ function get_payment_key() {
  * @return false|array
  */
 function get_sample_order_payment_key() {
-	if ( ! \EDD\Blocks\Functions\is_block_editor( 'edit_shop_payments' ) ) {
+	if ( ! \EDD\Blocks\Utility::is_block_editor( 'edit_shop_payments' ) ) {
 		return false;
 	}
 

@@ -138,7 +138,7 @@ class Date extends Base {
 	);
 
 	/**
-	 * @since <next version> (Berlin version 2.0.2)
+	 * @since 3.5.2 (Berlin version 2.0.2)
 	 * @var string|null Table name
 	 */
 	public $table_name = null;

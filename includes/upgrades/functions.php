@@ -230,5 +230,7 @@ function edd_do_automatic_upgrades() {
 		set_transient( 'edd_stripe_new_install', time(), HOUR_IN_SECONDS * 72 );
 	}
 
+	edd_delete_option( 'enabled_betas' );
+
 	edd_update_db_version();
 }

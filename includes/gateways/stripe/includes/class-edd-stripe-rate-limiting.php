@@ -55,6 +55,9 @@ class EDD_Stripe_Rate_Limiting {
 	private function actions() {
 		// Catch any recurring errors as they don't run through the main Stripe extension.
 		add_action( 'edd_before_purchase_form', array( $this, 'listen_for_recurring_card_errors' ), 0 );
+
+		// Add reCAPTCHA support.
+		add_filter( 'edd_can_recaptcha_checkout', array( $this, 'maybe_enable_recaptcha' ) );
 	}
 
 	/**
@@ -327,6 +330,11 @@ class EDD_Stripe_Rate_Limiting {
 		if ( isset( $errors['edd_recurring_stripe_error'] ) && ! empty( $errors['edd_recurring_stripe_error'] ) ) {
 			$this->increment_card_error_count();
 		}
+
+		// If any of our errors are Stripe card errors from invalid recaptcha, increment the card error counter.
+		if ( ! empty( $errors['recaptcha_invalid'] ) ) {
+			$this->increment_card_error_count();
+		}
 	}
 
 	/**
@@ -414,5 +422,33 @@ class EDD_Stripe_Rate_Limiting {
 			'We are unable to process your payment at this time, please try again later or contact support.',
 			'easy-digital-downloads'
 		);
+	}
+
+	/**
+	 * If the rate limiting file has a count of 50 or more, enable reCAPTCHA.
+	 *
+	 * @since 3.5.3
+	 * @param bool $enabled Whether reCAPTCHA is enabled for checkout.
+	 * @return bool
+	 */
+	public function maybe_enable_recaptcha( $enabled ) {
+		if ( $enabled || empty( edd_get_option( 'recaptcha_rate_limiting', false ) ) ) {
+			return $enabled;
+		}
+		if ( ! $this->card_error_checks_enabled() ) {
+			return $enabled;
+		}
+		$decoded_contents = $this->get_decoded_file();
+		$number_of_errors = count( $decoded_contents );
+		/**
+		 * The threshold for enabling reCAPTCHA when rate limiting is enabled.
+		 * The lower the number, the more sensitive the rate limiting.
+		 *
+		 * @since 3.5.3
+		 * @param int $threshold The number of logs that must be present before reCAPTCHA is enabled.
+		 */
+		$threshold = (int) apply_filters( 'edd_stripe_rate_limiting_recaptcha_threshold', 50 );
+
+		return $number_of_errors >= $threshold;
 	}
 }

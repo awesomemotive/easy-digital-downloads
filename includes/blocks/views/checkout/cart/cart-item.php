@@ -3,14 +3,20 @@
 		<div class="edd_checkout_cart_item_title">
 		<?php
 		if ( has_post_thumbnail( $item['id'] ) ) {
-			echo '<div class="edd_cart_item_image">';
-				echo get_the_post_thumbnail( $item['id'], apply_filters( 'edd_checkout_image_size', array( 25, 25 ) ) );
-			echo '</div>';
+			?>
+			<div class="edd_cart_item_image">
+				<?php
+				$thumbnail_width = ! empty( $block_attributes['thumbnail_width'] ) ? $block_attributes['thumbnail_width'] : 25;
+				echo get_the_post_thumbnail( $item['id'], apply_filters( 'edd_checkout_image_size', array( $thumbnail_width, $thumbnail_width ) ) );
+				?>
+			</div>
+			<?php
 		}
 		echo esc_html( edd_get_cart_item_name( $item ) );
 		echo '</div>';
 		/**
 		 * Runs after the item in cart's title is echoed
+		 *
 		 * @since 2.6
 		 *
 		 * @param array $item Cart Item

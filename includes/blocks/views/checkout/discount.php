@@ -1,10 +1,22 @@
 <?php
-if ( isset( $_GET['payment-mode'] ) && edd_is_ajax_disabled() ) {
-	return; // Only show before a payment method has been selected if ajax is disabled
-}
+/**
+ * Discount form.
+ *
+ * @package EDD\Blocks
+ */
 
-if ( ! edd_has_active_discounts() || ! edd_get_cart_total() ) {
-	return;
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+// The discount form always shows in the checkout preview.
+if ( ! \EDD\Blocks\Utility::is_block_editor() ) {
+	if ( isset( $_GET['payment-mode'] ) && edd_is_ajax_disabled() ) {
+		return; // Only show before a payment method has been selected if ajax is disabled.
+	}
+
+	if ( ! edd_has_active_discounts() || ! edd_get_cart_total() ) {
+		return;
+	}
 }
 ?>
 <div id="edd_discount_code" class="edd-blocks-cart__discount">

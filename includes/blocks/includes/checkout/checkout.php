@@ -123,8 +123,13 @@ function do_cart_form( $block_attributes ) {
 		<?php
 		return;
 	}
-	$is_cart_widget = true;
-	include EDD_BLOCKS_DIR . 'views/checkout/cart/cart.php';
+	\EDD\Blocks\Checkout\Elements\Cart::render(
+		array(
+			'block_attributes' => $block_attributes,
+			'is_cart_widget'   => true,
+			'cart_items'       => $cart_items,
+		)
+	);
 	// Link to checkout if it's not currently the checkout screen.
 	if ( ! edd_is_checkout() ) {
 		?>
@@ -145,16 +150,23 @@ function checkout( $block_attributes = array() ) {
 		$block_attributes,
 		array(
 			'show_register_form' => edd_get_option( 'show_register_form' ),
+			'layout'             => '',
+			'show_discount_form' => true,
+			'thumbnail_width'    => 25,
+			'logged_in'          => is_user_logged_in() && ! \EDD\Blocks\Utility::doing_guest_preview(),
 		)
 	);
 
-	$classes = Helpers\get_block_classes(
-		$block_attributes,
-		array(
-			'wp-block-edd-checkout',
-			'edd-blocks__checkout',
-		)
+	$layout  = $block_attributes['layout'] ? sanitize_text_field( $block_attributes['layout'] ) : 'full';
+	$classes = array(
+		'wp-block-edd-checkout',
+		'edd-blocks__checkout',
+		"edd-checkout__layout--{$layout}",
 	);
+	if ( $block_attributes['logged_in'] ) {
+		$classes[] = 'edd-blocks__checkout--logged-in';
+	}
+	$classes = Helpers\get_block_classes( $block_attributes, $classes );
 
 	$cart_items = get_cart_contents();
 
@@ -175,14 +187,18 @@ function checkout( $block_attributes = array() ) {
 	?>
 	<div id="edd_checkout_form_wrap" class="<?php echo esc_attr( implode( ' ', array_filter( $classes ) ) ); ?>">
 		<?php
-		if ( is_user_logged_in() ) {
+		if ( $block_attributes['logged_in'] ) {
 			$customer = get_customer();
 			include EDD_BLOCKS_DIR . 'views/checkout/logged-in.php';
 		}
-		do_action( 'edd_before_checkout_cart' );
-		include EDD_BLOCKS_DIR . 'views/checkout/cart/cart.php';
-		do_action( 'edd_after_checkout_cart' );
-		Forms\do_purchase_form( $block_attributes );
+		\EDD\Blocks\Checkout\Elements\Cart::render(
+			array(
+				'block_attributes' => $block_attributes,
+				'cart_items'       => $cart_items,
+				'doing_ajax'       => false,
+			)
+		);
+		\EDD\Blocks\Checkout\Elements\PurchaseForm::render( $block_attributes );
 		?>
 	</div>
 	<?php
@@ -198,9 +214,30 @@ function checkout( $block_attributes = array() ) {
  * @return false|array
  */
 function get_cart_contents() {
-	if ( ! Helpers\is_block_editor() ) {
+	if ( ! \EDD\Blocks\Utility::is_block_editor() ) {
 		return edd_get_cart_contents();
 	}
+
+	if ( ! empty( $_GET['cart_item'] ) ) {
+		$download = edd_get_download( absint( $_GET['cart_item'] ) );
+		if ( $download ) {
+			$cart_item = array(
+				array(
+					'id'       => $download->ID,
+					'quantity' => 1,
+					'options'  => array(),
+				),
+			);
+			if ( $download->has_variable_prices() ) {
+				$price_ids = $download->get_prices();
+				if ( ! empty( $price_ids ) ) {
+					$cart_item[0]['options']['price_id'] = array_rand( array_flip( array_keys( $price_ids ) ) );
+				}
+			}
+			return $cart_item;
+		}
+	}
+
 	$downloads = new \WP_Query(
 		array(
 			'post_type'      => 'download',
@@ -259,25 +296,6 @@ function remove_default_purchase_fields() {
 add_action( 'edd_purchase_form_top', __NAMESPACE__ . '\remove_default_purchase_fields' );
 
 /**
- * Gets the checkout cart markup when EDD recalculates taxes.
- *
- * @param string $cart The cart HTML markup.
- * @return string
- */
-function do_checkout_cart( $cart ) {
-	if ( ! \EDD\Checkout\Validator::has_block() ) {
-		return $cart;
-	}
-	$cart_items = get_cart_contents();
-	ob_start();
-	do_action( 'edd_before_checkout_cart' );
-	include EDD_BLOCKS_DIR . 'views/checkout/cart/cart.php';
-
-	return ob_get_clean();
-}
-add_filter( 'edd_get_checkout_cart', __NAMESPACE__ . '\do_checkout_cart' );
-
-/**
  * Gets the array of customer information from the session and potentially the logged in user information.
  *
  * @since 2.0
@@ -291,13 +309,14 @@ function get_customer() {
  * Renders the customer address fields for checkout.
  *
  * @since 2.0
+ * @deprecated 3.6.0
  * @return void
  */
 function do_address() {
-	$address = new \EDD\Checkout\Address();
+	$address_class = edd_get_namespace( 'Checkout\\Address' );
+	$address       = new $address_class();
 	$address->render();
 }
-add_action( 'edd_cc_address_fields', __NAMESPACE__ . '\do_address' );
 
 /**
  * Renders the default credit card fields on checkout.
@@ -313,6 +332,18 @@ function do_cc_fields() {
 add_action( 'edd_cc_fields', __NAMESPACE__ . '\do_cc_fields' );
 
 /**
+ * Disables the Checkout Fields Manager captcha if reCAPTCHA is enabled.
+ *
+ * @since 3.5.3
+ * @param bool $has_captcha Whether the checkout has a captcha.
+ * @return bool
+ */
+function disable_cfm_captcha( $has_captcha ) {
+	return \EDD\Captcha\Utility::can_do_captcha() ? false : $has_captcha;
+}
+add_filter( 'edd_cfm_checkout_has_captcha', __NAMESPACE__ . '\disable_cfm_captcha' );
+
+/**
  * If the checkout block is on a page that isn't set as the checkout option, set edd_is_checkout to true.
  *
  * @since 2.0
@@ -321,18 +352,7 @@ add_action( 'edd_cc_fields', __NAMESPACE__ . '\do_cc_fields' );
  * @return bool
  */
 function is_checkout( $is_checkout ) {
-	if ( $is_checkout ) {
-		return $is_checkout;
-	}
-
-	if ( has_block( 'edd/checkout' ) ) {
-		return true;
-	}
-
-	$current_page = ! empty( $_POST['current_page'] ) ? absint( $_POST['current_page'] ) : false;
-	if ( $current_page && edd_doing_ajax() && has_block( 'edd/checkout', $current_page ) ) {
-		return true;
-	}
+	_edd_deprecated_function( __FUNCTION__, '3.3.0' );
 
 	return $is_checkout;
 }
@@ -373,4 +393,15 @@ function get_customer_address( $customer ) {
 	 * @param array $customer The customer data from the session
 	 */
 	return array_map( 'sanitize_text_field', apply_filters( 'edd_checkout_billing_details_address', $address, $customer ) );
+}
+
+/**
+ * Gets the checkout cart markup when EDD recalculates taxes.
+ *
+ * @deprecated 3.6.0
+ * @param string $cart The cart HTML markup.
+ * @return string
+ */
+function do_checkout_cart( $cart ) {
+	return $cart;
 }

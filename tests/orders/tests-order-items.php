@@ -1058,4 +1058,233 @@ class OrderItem extends EDD_UnitTestCase {
 		$this->assertSame( 5, $order_items );
 		$this->assertNotEmpty( $order_items );
 	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query date_query
+	 */
+	public function test_get_order_items_with_order_query_date_query_after_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		// Update order 1 to have an older date.
+		edd_update_order(
+			$order_1,
+			array(
+				'date_created' => '2020-01-01 00:00:00',
+			)
+		);
+
+		// Update order 2 to have a newer date.
+		edd_update_order(
+			$order_2,
+			array(
+				'date_created' => '2023-06-01 00:00:00',
+			)
+		);
+
+		// Query for order items from orders after 2023-01-01.
+		$order_items = edd_count_order_items(
+			array(
+				'order_query' => array(
+					'date_query' => array(
+						array(
+							'after' => '2023-01-01 00:00:00',
+						),
+					),
+				),
+			)
+		);
+
+		$this->assertSame( 2, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query date_query
+	 */
+	public function test_get_order_items_with_order_query_date_query_before_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		// Update order 1 to have an older date.
+		edd_update_order(
+			$order_1,
+			array(
+				'date_created' => '2020-01-01 00:00:00',
+			)
+		);
+
+		// Update order 2 to have a newer date.
+		edd_update_order(
+			$order_2,
+			array(
+				'date_created' => '2023-06-01 00:00:00',
+			)
+		);
+
+		// Query for order items from orders before 2023-01-01.
+		$order_items = edd_count_order_items(
+			array(
+				'order_query' => array(
+					'date_query' => array(
+						array(
+							'before' => '2023-01-01 00:00:00',
+						),
+					),
+				),
+			)
+		);
+
+		$this->assertSame( 2, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query date_query
+	 */
+	public function test_get_order_items_with_order_query_date_query_range_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+		$order_3 = EDD_Helper_Payment::create_simple_payment();
+
+		// Update orders to have different dates.
+		edd_update_order(
+			$order_1,
+			array(
+				'date_created' => '2020-01-01 00:00:00',
+			)
+		);
+
+		edd_update_order(
+			$order_2,
+			array(
+				'date_created' => '2022-06-15 00:00:00',
+			)
+		);
+
+		edd_update_order(
+			$order_3,
+			array(
+				'date_created' => '2024-01-01 00:00:00',
+			)
+		);
+
+		// Query for order items from orders between 2022-01-01 and 2023-01-01.
+		$order_items = edd_count_order_items(
+			array(
+				'order_query' => array(
+					'date_query' => array(
+						array(
+							'after'     => '2022-01-01 00:00:00',
+							'before'    => '2023-01-01 00:00:00',
+							'inclusive' => true,
+						),
+					),
+				),
+			)
+		);
+
+		$this->assertSame( 2, $order_items );
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query date_query
+	 */
+	public function test_get_order_items_with_order_query_date_query_filters_by_order_date_not_item_date() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+
+		// Backdate the order to 2020.
+		edd_update_order(
+			$order_1,
+			array(
+				'date_created' => '2020-01-01 00:00:00',
+			)
+		);
+
+		// Get the order items (which will have today's date_created).
+		$items = edd_get_order_items(
+			array(
+				'order_id' => $order_1,
+			)
+		);
+
+		// Verify the item was created today (or very recently).
+		$this->assertNotEmpty( $items );
+		$this->assertNotEquals( '2020-01-01', substr( $items[0]->date_created, 0, 10 ) );
+
+		// Query for order items using order date query for year 2020.
+		$order_items_2020 = edd_count_order_items(
+			array(
+				'order_query' => array(
+					'date_query' => array(
+						array(
+							'year' => 2020,
+						),
+					),
+				),
+			)
+		);
+
+		// Query for order items using order date query for current year.
+		$order_items_current_year = edd_count_order_items(
+			array(
+				'order_query' => array(
+					'date_query' => array(
+						array(
+							'year' => gmdate( 'Y' ),
+						),
+					),
+				),
+			)
+		);
+
+		// The items should be found when filtering by the order's date (2020), not the item's date.
+		$this->assertSame( 2, $order_items_2020 );
+
+		// The items should NOT be found when filtering by current year (unless it's somehow 2020).
+		if ( gmdate( 'Y' ) != '2020' ) {
+			$this->assertSame( 0, $order_items_current_year );
+		}
+	}
+
+	/**
+	 * @covers ::edd_get_order_items with order_query date_query combined with status
+	 */
+	public function test_get_order_items_with_order_query_date_query_and_status_should_return_2() {
+		$order_1 = EDD_Helper_Payment::create_simple_payment();
+		$order_2 = EDD_Helper_Payment::create_simple_payment();
+
+		// Update order 1 to complete and backdate.
+		edd_update_order_status( $order_1, 'complete' );
+		edd_update_order(
+			$order_1,
+			array(
+				'date_created' => '2023-01-15 00:00:00',
+			)
+		);
+
+		// Update order 2 to pending and backdate to same range.
+		edd_update_order(
+			$order_2,
+			array(
+				'date_created' => '2023-01-20 00:00:00',
+			)
+		);
+
+		// Query for complete order items from January 2023.
+		$order_items = edd_count_order_items(
+			array(
+				'order_query' => array(
+					'status__in' => edd_get_complete_order_statuses(),
+					'date_query' => array(
+						array(
+							'year'  => 2023,
+							'month' => 1,
+						),
+					),
+				),
+			)
+		);
+
+		// Should only get items from order 1 (complete).
+		$this->assertSame( 2, $order_items );
+	}
 }

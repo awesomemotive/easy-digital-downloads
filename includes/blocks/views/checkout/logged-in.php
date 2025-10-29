@@ -1,4 +1,4 @@
-<p>
+<p class="edd-blocks__logged-in">
 	<strong><?php esc_html_e( 'Account Information', 'easy-digital-downloads' ); ?>:</strong>
 	&nbsp;
 	<?php

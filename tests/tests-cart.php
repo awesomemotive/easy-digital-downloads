@@ -768,4 +768,135 @@ class Cart extends EDD_UnitTestCase {
 		EDD()->cart->remove_discount( '20OFF' );
 		$this->assertEmpty( EDD()->session->get( 'cart_discounts' ) );
 	}
+
+	/**
+	 * Test that get_contents method works with profiler enabled.
+	 */
+	public function test_get_contents_with_profiler() {
+		// Add items to cart first
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		// Enable profiler
+		edd_update_option( 'cart_profiler', true );
+
+		// Get contents from global cart - should work normally even with profiler
+		$contents = EDD()->cart->get_contents();
+
+		$this->assertIsArray( $contents );
+		$this->assertNotEmpty( $contents );
+
+		// Clean up
+		edd_delete_option( 'cart_profiler' );
+	}
+
+	/**
+	 * Test that get_contents_details works with profiler enabled.
+	 */
+	public function test_get_contents_details_with_profiler() {
+		// Add items to cart first
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		// Enable profiler
+		edd_update_option( 'cart_profiler', true );
+
+		// Get contents details from global cart - should work normally even with profiler
+		$details = EDD()->cart->get_contents_details();
+
+		$this->assertIsArray( $details );
+		$this->assertNotEmpty( $details );
+
+		$cart_item = reset( $details );
+		$this->assertEquals( self::$download->ID, $cart_item['id'] );
+
+		// Clean up
+		edd_delete_option( 'cart_profiler' );
+	}
+
+	/**
+	 * Test that get_total works with profiler enabled.
+	 */
+	public function test_get_total_with_profiler() {
+		// Add items to cart first
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		// Enable profiler
+		edd_update_option( 'cart_profiler', true );
+
+		// Get total from global cart - should work normally even with profiler
+		$total = EDD()->cart->get_total();
+
+		$this->assertEquals( 20.00, $total );
+
+		// Clean up
+		edd_delete_option( 'cart_profiler' );
+	}
+
+	/**
+	 * Test that get_subtotal works with profiler enabled.
+	 */
+	public function test_get_subtotal_with_profiler() {
+		// Add items to cart first
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		// Enable profiler
+		edd_update_option( 'cart_profiler', true );
+
+		// Get subtotal from global cart - should work normally even with profiler
+		$subtotal = EDD()->cart->get_subtotal();
+
+		$this->assertEquals( 20.00, $subtotal );
+
+		// Clean up
+		edd_delete_option( 'cart_profiler' );
+	}
+
+	/**
+	 * Test that get_tax works with profiler enabled.
+	 */
+	public function test_get_tax_with_profiler() {
+		// Add items to cart first
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		// Enable profiler and taxes
+		edd_update_option( 'cart_profiler', true );
+		edd_update_option( 'enable_taxes', true );
+		EDD()->cart->set_tax_rate( null ); // Clear tax rate cache
+
+		// Set tax rate
+		add_filter( 'edd_tax_rate', function() {
+			return 0.10; // 10% tax
+		} );
+
+		// Get tax from global cart - should work normally even with profiler
+		$tax = EDD()->cart->get_tax();
+
+		$this->assertEquals( 2.00, $tax );
+
+		// Clean up
+		edd_delete_option( 'cart_profiler' );
+		edd_delete_option( 'enable_taxes' );
+	}
+
+	/**
+	 * Test that get_discounted_amount works with profiler enabled.
+	 */
+	public function test_get_discounted_amount_with_profiler() {
+		// Add items to cart first
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		// Apply discount
+		edd_set_cart_discount( '20OFF' );
+
+		// Enable profiler
+		edd_update_option( 'cart_profiler', true );
+
+		// Get discounted amount from global cart - should work normally even with profiler
+		$discounted = EDD()->cart->get_discounted_amount();
+
+		$this->assertEquals( 4.00, $discounted );
+
+		// Clean up
+		edd_unset_cart_discount( '20OFF' );
+		edd_delete_option( 'cart_profiler' );
+	}
 }

@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "3.5.2",
+	"version": "3.6.0",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"author": "Easy Digital Downloads",
@@ -53,19 +53,17 @@
 		"webpack-remove-empty-scripts": "^1.0.4"
 	},
 	"scripts": {
-		"build": "wp-scripts build --webpack-no-externals && npm run build:blocks && npm run translate && grunt build && npm run translate:lite",
+		"build": "wp-scripts build --webpack-no-externals && npm run build:blocks && npm run translate && grunt build && grunt replace:pot_lite",
 		"build:blocks": "cd includes/blocks && npm run build && cd ../../",
 		"dev": "cross-env NODE_ENV=production wp-scripts start --webpack-no-externals",
-		"lite": "grunt lite && npm run translate:lite && grunt compress:lite",
-		"local": "grunt build && npm run translate:lite && grunt compress",
+		"lite": "grunt lite && grunt replace:pot_lite && grunt compress:lite",
+		"local": "grunt build && grunt compress",
 		"package": "npm run build && grunt compress",
 		"postinstall": "cd includes/blocks && npm install && cd ../../",
 		"pro": "grunt pro",
-		"repo": "grunt repo && npm run translate:repo",
+		"repo": "grunt repo && grunt replace:pot_repo",
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js",
 		"translate": "grunt clean && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=node_modules,assets,tests,libraries --ignore-domain",
-		"translate:lite": "cd build/easy-digital-downloads && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=assets,libraries --ignore-domain && cd ../../",
-		"translate:repo": "cd build/easy-digital-downloads-public && wp i18n make-pot . languages/easy-digital-downloads.pot --exclude=assets,libraries --ignore-domain && cd ../../",
 		"update": "composer update --ignore-platform-reqs && composer run mozart"
 	}
 }

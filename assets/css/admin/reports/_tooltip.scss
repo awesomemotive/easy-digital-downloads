@@ -17,6 +17,7 @@
 	transform: translate(-50%, 0);
 	pointer-events: none;
 	white-space: nowrap;
+	z-index: 1000;
 }
 
 .edd-chartjs-tooltip-key {

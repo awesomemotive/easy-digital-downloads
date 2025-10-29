@@ -251,6 +251,21 @@ class Order_Item extends Query {
 			}
 		}
 
+		// Handle date_query for the orders table.
+		if ( ! empty( $this->query_vars['order_query']['date_query'] ) && is_array( $this->query_vars['order_query']['date_query'] ) ) {
+			$date_query = new \EDD\Database\Queries\Date( $this->query_vars['order_query']['date_query'] );
+			$date_sql   = $date_query->get_sql( $order_table->table_name, $order_table_alias, $order_table->primary_column_name, $this );
+
+			if ( ! empty( $date_sql['where'] ) ) {
+				// Remove leading " AND " from the date query where clause.
+				$where_conditions[] = preg_replace( '/^\s*AND\s*/i', '', $date_sql['where'] );
+			}
+
+			if ( ! empty( $date_sql['join'] ) ) {
+				$clauses['join'] .= $date_sql['join'];
+			}
+		}
+
 		if ( ! empty( $where_conditions ) ) {
 			$clauses['where'] .= ( $clauses['where'] ? ' AND ' : '' ) . implode( ' AND ', $where_conditions );
 		}

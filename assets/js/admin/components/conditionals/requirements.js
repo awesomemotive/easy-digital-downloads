@@ -11,11 +11,11 @@
  * @param {string} requires The requirement identifier (e.g., 'vat-enable').
  * @param {bool}   enabled  Whether the requirement is met.
  */
-function updateRequirements ( requires, enabled ) {
+export function updateRequirements( requires, enabled ) {
 	const elements = document.querySelectorAll( '.edd-requires__' + requires );
 	elements.forEach( function ( element ) {
 		element.classList.remove( 'edd-hidden--required' );
-		element.classList.toggle( 'edd-hidden', !enabled );
+		element.classList.toggle( 'edd-hidden', ! enabled );
 		if ( element.classList.contains( 'edd-hidden' ) ) {
 			element.classList.add( 'edd-hidden--required' );
 		}
@@ -25,13 +25,13 @@ function updateRequirements ( requires, enabled ) {
 /**
  * Initialize requirements on page load.
  */
-function initializeRequirements () {
+export function initializeRequirements() {
 	// Find all checkboxes with data-edd-requirement attribute
 	const requirementCheckboxes = document.querySelectorAll( '[data-edd-requirement]' );
 
 	requirementCheckboxes.forEach( function ( checkbox ) {
 		const requires = checkbox.getAttribute( 'data-edd-requirement' );
-		if ( !requires ) {
+		if ( ! requires ) {
 			return;
 		}
 
@@ -43,25 +43,39 @@ function initializeRequirements () {
 /**
  * Add event listeners for checkbox changes.
  */
-function addRequirementListeners () {
+export function addRequirementListeners() {
+	// Listen to native checkbox change events
 	document.addEventListener( 'change', function ( event ) {
 		const target = event.target;
 
 		// Only process checkboxes with data-edd-requirement attribute
-		if ( target.type !== 'checkbox' || !target.hasAttribute( 'data-edd-requirement' ) ) {
+		if ( target.type !== 'checkbox' || ! target.hasAttribute( 'data-edd-requirement' ) ) {
 			return;
 		}
 
 		const requires = target.getAttribute( 'data-edd-requirement' );
-		if ( !requires ) {
+		if ( ! requires ) {
 			return;
 		}
 
 		// Update dependent elements
 		updateRequirements( requires, target.checked );
 	} );
+
+	// Listen for custom events from AJAX toggles
+	document.addEventListener( 'eddSettingToggled', function ( event ) {
+		if ( ! event.detail?.setting ) {
+			return;
+		}
+
+		updateRequirements( event.detail.setting, event.detail.value );
+	} );
 }
 
+/**
+ * Auto-initialize on DOM ready for global settings pages.
+ * Can be called manually for specific pages via explicit imports.
+ */
 document.addEventListener( 'DOMContentLoaded', function () {
 	initializeRequirements();
 	addRequirementListeners();

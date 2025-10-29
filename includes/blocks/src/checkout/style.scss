@@ -5,6 +5,12 @@
 .wp-block-edd-checkout {
 	display: grid;
 	gap: 1rem;
+	grid-template-columns: 1fr; // Mobile-first: single column
+
+	// Default grid behavior for all child elements
+	> * {
+		grid-column: 1 / -1;
+	}
 
 	#edd_purchase_form {
 		@import "../scss/forms";
@@ -29,24 +35,24 @@
 		margin: 0;
 	}
 
-	#edd_checkout_cart_form #edd-discount-code-wrap,
-	#edd_checkout_cart_form #edd_show_discount {
-		padding: 0;
-		border: none;
-		background: transparent;
+	.edd-blocks__cart #edd-discount-code-wrap,
+	.edd-blocks__cart #edd_show_discount {
+		padding: 0 !important;
+		border: none !important;
+		background: transparent !important;
 		margin: 0;
 	}
 
 	#edd-payment-mode-wrap {
 		display: flex;
-		gap: .5rem;
+		gap: 0.5rem;
 		clear: both;
 		flex-wrap: wrap;
 
 		label.edd-gateway-option {
 			display: flex !important;
 			margin: 0 !important;
-			padding: .5rem 1rem;
+			padding: 0.5rem 1rem;
 			border: 1px solid;
 			flex-grow: 1;
 			text-align: center;
@@ -54,7 +60,7 @@
 			position: relative;
 			justify-content: center;
 			align-items: center;
-			gap: .5rem;
+			gap: 0.5rem;
 			font-size: 1rem;
 
 			&.edd-gateway-option-selected,
@@ -79,7 +85,7 @@
 		.edd-payment-icons {
 			display: flex;
 			margin: 0;
-			gap: .25rem;
+			gap: 0.25rem;
 			align-items: center;
 
 			.payment-icon {
@@ -98,12 +104,22 @@
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
+
+		input {
+			display: block !important;
+			margin: 0 !important;
+		}
 	}
 
 	.edd-loading-ajax.edd-loading {
 		margin: 0 auto;
 		display: block;
 		opacity: 1;
+	}
+
+	.edd-blocks-form__group--card-expiration select {
+		display: inline-block !important;
+		width: 50px !important;
 	}
 }
 
@@ -118,7 +134,7 @@
 
 	#edd_checkout_cart .edd_discount {
 		display: inline-flex;
-		margin-left: .5rem;
+		margin-left: 0.5rem;
 		align-items: center;
 		gap: 0.25rem;
 	}
@@ -129,7 +145,7 @@
 	position: relative;
 
 	fieldset.edd-blocks-form {
-		margin-bottom: 0 !important;
+		margin-bottom: 0;
 	}
 }
 
@@ -140,7 +156,7 @@
 	justify-content: center;
 
 	button {
-		padding: .5rem 1rem;
+		padding: 0.5rem 1rem;
 
 		&:disabled {
 			display: none;
@@ -185,5 +201,89 @@
 
 	.iti {
 		display: block;
+	}
+}
+
+// Layout variations
+@media (min-width: $break-medium) {
+	.wp-block-edd-checkout {
+		&:not(.edd-checkout__layout--full) {
+			.edd-blocks__logged-in {
+				order: -20;
+				grid-column: 1 / -1 !important;
+			}
+
+			.edd-blocks__cart {
+				order: -10;
+			}
+
+			.edd-blocks__purchase-form {
+				order: 10;
+			}
+
+			> .edd-alert {
+				order: 20;
+			}
+		}
+
+		&.edd-checkout__layout--half,
+		&.edd-checkout__layout--two-thirds,
+		&.edd-checkout__layout--four-fifths {
+			grid-template-columns: 1fr 1fr;
+
+			.edd-blocks__cart {
+				grid-column: 2;
+			}
+
+			.edd-blocks__purchase-form {
+				grid-row: 1;
+				order: -5;
+			}
+
+			&.edd-blocks__checkout--logged-in {
+				.edd-blocks__purchase-form {
+					grid-row: 2;
+				}
+			}
+
+			> *:not(.edd-blocks__cart) {
+				grid-column: 1;
+			}
+		}
+
+		&.edd-checkout__layout--two-thirds {
+			grid-template-columns: 2fr 1fr;
+		}
+
+		&.edd-checkout__layout--four-fifths {
+			grid-template-columns: 4fr 1fr;
+		}
+
+		&.edd-checkout__layout--half-bottom,
+		&.edd-checkout__layout--two-thirds-bottom {
+			grid-template-columns: 1fr 1fr;
+
+			.edd-blocks__cart {
+				grid-column: 1 / -1;
+			}
+
+			#edd_purchase_form {
+				grid-column: 1 / -1;
+				order: 99;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 20px;
+				align-items: start;
+			}
+		}
+
+		&.edd-checkout__layout--two-thirds-bottom {
+			grid-template-columns: 2fr 1fr;
+
+			#edd_purchase_form {
+				display: grid;
+				grid-template-columns: 2fr 1fr;
+			}
+		}
 	}
 }

@@ -112,7 +112,7 @@ function downloads( $block_attributes = array() ) {
 	}
 
 	// Always disable the Stripe express checkout buttons in the block editor.
-	if ( \EDD\Blocks\Functions\is_block_editor() ) {
+	if ( \EDD\Blocks\Utility::is_block_editor() ) {
 		add_filter( 'edds_prb_purchase_link_enabled', '__return_false' );
 	}
 

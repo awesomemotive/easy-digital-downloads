@@ -35,12 +35,19 @@ class Customer {
 		}
 
 		$session_data = wp_parse_args( $data, self::get_defaults() );
+
+		// Ensure address array is properly merged with defaults.
+		if ( isset( $data['address'] ) && is_array( $data['address'] ) ) {
+			$defaults                = self::get_defaults();
+			$session_data['address'] = wp_parse_args( $data['address'], $defaults['address'] );
+		}
+
 		if ( ! $customer ) {
 			return self::maybe_set_customer_data( $session_data );
 		}
 
-		$name         = explode( ' ', $customer->name, 2 );
-		$session_data = wp_parse_args(
+		$name          = explode( ' ', $customer->name, 2 );
+		$customer_data = wp_parse_args(
 			array(
 				'customer_id' => $customer->id,
 				'user_id'     => $customer->user_id,
@@ -52,7 +59,13 @@ class Customer {
 			$session_data
 		);
 
-		$session_data = array_map( 'sanitize_text_field', $session_data );
+		$session_data = wp_parse_args( $customer_data, $session_data );
+
+		// Ensure address array is properly merged with defaults again after customer data merge.
+		if ( isset( $data['address'] ) && is_array( $data['address'] ) ) {
+			$defaults                = self::get_defaults();
+			$session_data['address'] = wp_parse_args( $data['address'], $defaults['address'] );
+		}
 
 		return self::maybe_set_customer_data( $session_data );
 	}
@@ -101,6 +114,20 @@ class Customer {
 					$session_data[ $key ] = $value;
 				}
 			}
+
+			// Handle address data from user meta.
+			$user_address = edd_get_customer_address( $user_data->ID );
+			if ( ! empty( $user_address ) ) {
+				foreach ( $session_data['address'] as $key => $value ) {
+					if ( ! in_array( $key, array( 'country', 'state', 'city' ), true ) ) {
+						continue;
+					}
+
+					if ( empty( $value ) && ! empty( $user_address[ $key ] ) ) {
+						$session_data['address'][ $key ] = $user_address[ $key ];
+					}
+				}
+			}
 		}
 
 		if ( empty( array_filter( $session_data ) ) ) {
@@ -124,6 +151,11 @@ class Customer {
 			'first_name'  => '',
 			'last_name'   => '',
 			'email'       => '',
+			'address'     => array(
+				'country' => '',
+				'state'   => '',
+				'city'    => '',
+			),
 		);
 	}
 }

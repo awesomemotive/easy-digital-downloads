@@ -115,19 +115,12 @@ function get_input_classes( $field, $classes = array() ) {
  * Checks whether we are viewing content in the block editor.
  *
  * @since 2.0
+ * @deprecated 3.6.0 in favor of \EDD\Blocks\Utility::is_block_editor()
  * @param string $current_user_can Whether the current user needs to have a specific capability.
  * @return false|string
  */
 function is_block_editor( $current_user_can = '' ) {
-	$is_block_editor = ! empty( $_GET['edd_blocks_is_block_editor'] ) ? $_GET['edd_blocks_is_block_editor'] : false;
-
-	// If not the block editor or custom capabilities are not required, return.
-	if ( ! $is_block_editor || empty( $current_user_can ) ) {
-		return $is_block_editor;
-	}
-	$user = wp_get_current_user();
-
-	return hash_equals( md5( $user->user_email ), $is_block_editor ) && current_user_can( $current_user_can );
+	return \EDD\Blocks\Utility::is_block_editor( $current_user_can );
 }
 
 add_action( 'send_headers', __NAMESPACE__ . '\update_headers' );

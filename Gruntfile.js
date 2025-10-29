@@ -204,6 +204,54 @@ module.exports = function ( grunt ) {
 						dest: 'build/easy-digital-downloads-public'
 					}
 				]
+			},
+			pot_lite: {
+				options: {
+					patterns: [
+						{
+							match: /Easy Digital Downloads \(Pro\)/g,
+							replacement: 'Easy Digital Downloads',
+							expression: true,
+						},
+						{
+							match: /https:\/\/wordpress\.org\/support\/plugin\/easy-digital-downloads-pro/g,
+							replacement: 'https://wordpress.org/support/plugin/easy-digital-downloads',
+							expression: true,
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'build/easy-digital-downloads/languages/easy-digital-downloads.pot' ],
+						dest: 'build/easy-digital-downloads/languages'
+					}
+				]
+			},
+			pot_repo: {
+				options: {
+					patterns: [
+						{
+							match: /Easy Digital Downloads \(Pro\)/g,
+							replacement: 'Easy Digital Downloads',
+							expression: true,
+						},
+						{
+							match: /https:\/\/wordpress\.org\/support\/plugin\/easy-digital-downloads-pro/g,
+							replacement: 'https://wordpress.org/support/plugin/easy-digital-downloads',
+							expression: true,
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'build/easy-digital-downloads-public/languages/easy-digital-downloads.pot' ],
+						dest: 'build/easy-digital-downloads-public/languages'
+					}
+				]
 			}
 		}
 	} );

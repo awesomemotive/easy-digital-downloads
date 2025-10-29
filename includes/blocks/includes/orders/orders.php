@@ -49,7 +49,7 @@ function register() {
  * Renders the order history block.
  *
  * @since 2.0
- * @param array  $block_attributes The block attributes.
+ * @param array $block_attributes The block attributes.
  * @return string
  */
 function orders( $block_attributes = array() ) {
@@ -113,7 +113,7 @@ function confirmation( $block_attributes = array(), $content = '' ) {
 		$order = edd_get_order_by( 'payment_key', $session['purchase_key'] );
 	}
 	if ( ! $order ) {
-		if ( Helpers\is_block_editor() ) {
+		if ( \EDD\Blocks\Utility::is_block_editor() ) {
 			return '<p class="edd-alert edd-alert-info">' . esc_html( __( 'To view a sample confirmation screen, you need to have at least one order in your store.', 'easy-digital-downloads' ) ) . '</p>';
 		}
 
@@ -179,7 +179,7 @@ function receipt( $block_attributes = array(), $block_content = '' ) {
 
 	// No order found.
 	if ( ! $order ) {
-		if ( Helpers\is_block_editor() ) {
+		if ( \EDD\Blocks\Utility::is_block_editor() ) {
 			return '<p class="edd-alert edd-alert-info">' . esc_html( __( 'To view a sample receipt, you need to have at least one order in your store.', 'easy-digital-downloads' ) ) . '</p>';
 		}
 
@@ -402,7 +402,7 @@ function get_purchased_products( $block_attributes ) {
 		'number'     => 9999,
 		'type'       => 'sale',
 	);
-	if ( Helpers\is_block_editor() ) {
+	if ( \EDD\Blocks\Utility::is_block_editor() ) {
 		$args['number'] = 50;
 		unset( $args['user_id'] );
 	}

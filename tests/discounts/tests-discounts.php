@@ -1415,4 +1415,111 @@ class Discounts extends EDD_UnitTestCase {
 
 		$this->assertTrue( $discount->is_valid() );
 	}
+
+	/**
+	 * Test that edd_set_cart_discount invalidates cart cache.
+	 *
+	 * @since 3.6.0
+	 */
+	public function test_edd_set_cart_discount_invalidates_cache() {
+		// Enable caching
+		edd_update_option( 'cart_caching', true );
+
+		// Add item to cart
+		edd_add_to_cart( self::$download->ID );
+
+		// Get cart details to populate cache
+		$details1 = EDD()->cart->get_contents_details();
+		$stats1   = EDD()->cart->get_calculation_stats();
+
+		// Cache should be valid
+		$this->assertTrue( $stats1['cached'] );
+		$this->assertGreaterThan( 0, $stats1['cache_size'] );
+
+		// Apply discount using edd_set_cart_discount
+		edd_set_cart_discount( self::$discount->code );
+
+		// Cache should be invalidated
+		$stats2 = EDD()->cart->get_calculation_stats();
+		$this->assertFalse( $stats2['cached'] );
+		$this->assertEquals( 0, $stats2['cache_size'] );
+
+		// Clean up
+		edd_unset_cart_discount( self::$discount->code );
+		edd_delete_option( 'cart_caching' );
+	}
+
+	/**
+	 * Test that removing discount through cart method invalidates cache.
+	 *
+	 * @since 3.6.0
+	 */
+	public function test_cart_remove_discount_invalidates_cache() {
+		// Enable caching
+		edd_update_option( 'cart_caching', true );
+
+		// Add item to cart
+		edd_add_to_cart( self::$download->ID );
+
+		// Apply discount
+		edd_set_cart_discount( self::$discount->code );
+
+		// Get cart details to populate cache
+		$details1 = EDD()->cart->get_contents_details();
+		$stats1   = EDD()->cart->get_calculation_stats();
+
+		// Cache should be valid
+		$this->assertTrue( $stats1['cached'] );
+
+		// Remove discount through cart method
+		EDD()->cart->remove_discount( self::$discount->code );
+
+		// Cache should be invalidated
+		$stats2 = EDD()->cart->get_calculation_stats();
+		$this->assertFalse( $stats2['cached'] );
+		$this->assertEquals( 0, $stats2['cache_size'] );
+
+		// Clean up
+		edd_delete_option( 'cart_caching' );
+	}
+
+	/**
+	 * Test that discount calculations work correctly with caching enabled.
+	 *
+	 * @since 3.6.0
+	 */
+	public function test_discount_calculations_with_cache() {
+		// Enable caching
+		edd_update_option( 'cart_caching', true );
+
+		// Add item to cart
+		edd_add_to_cart( self::$download->ID );
+
+		// Get initial total
+		$total_before = EDD()->cart->get_total();
+		$this->assertGreaterThan( 0, $total_before );
+
+		// Apply discount
+		edd_set_cart_discount( self::$discount->code );
+
+		// Get discounted total
+		$total_after = EDD()->cart->get_total();
+		$discount_amount = EDD()->cart->get_discounted_amount();
+
+		// Verify discount is applied
+		$this->assertLessThan( $total_before, $total_after );
+		$this->assertGreaterThan( 0, $discount_amount );
+
+		// Get totals again - should use cache
+		$total_cached = EDD()->cart->get_total();
+		$discount_cached = EDD()->cart->get_discounted_amount();
+
+		// Cached values should match
+		$this->assertEquals( $total_after, $total_cached );
+		$this->assertEquals( $discount_amount, $discount_cached );
+
+		// Clean up
+		edd_unset_cart_discount( self::$discount->code );
+		edd_delete_option( 'cart_caching' );
+	}
 }

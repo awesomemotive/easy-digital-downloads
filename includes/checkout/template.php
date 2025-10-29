@@ -308,7 +308,8 @@ function edd_default_cc_address_fields() {
 		return;
 	}
 
-	$address           = new EDD\Checkout\Address();
+	$address_class     = edd_get_namespace( 'Checkout\\Address' );
+	$address           = new $address_class();
 	$address->is_block = false;
 	$address->render();
 }
@@ -585,13 +586,13 @@ add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
  *
  * @since 1.2.2
  * @return void
-*/
+ */
 function edd_discount_field() {
 	if ( isset( $_GET['payment-mode'] ) && edd_is_ajax_disabled() ) {
-		return; // Only show before a payment method has been selected if ajax is disabled
+		return; // Only show before a payment method has been selected if ajax is disabled.
 	}
 
-	if ( ! edd_is_checkout() ) {
+	if ( ! edd_is_checkout() || EDD\Checkout\Validator::has_block() ) {
 		return;
 	}
 

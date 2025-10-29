@@ -3,11 +3,11 @@ use EDD\Blocks\Checkout\Functions as CheckoutFunctions;
 ?>
 <form id="edd_checkout_cart_form" class="edd-blocks-form edd-blocks-form__cart" method="post">
 	<?php
+	$is_checkout_block = empty( $is_cart_widget ) && ( edd_is_checkout() || edd_doing_ajax() );
 	$cart_classes      = array(
 		'edd-blocks-cart',
 		'ajaxed',
 	);
-	$is_checkout_block = empty( $is_cart_widget ) && ( edd_is_checkout() || edd_doing_ajax() );
 	?>
 	<div id="edd_checkout_cart" class="<?php echo esc_attr( implode( ' ', $cart_classes ) ); ?>">
 		<?php if ( $is_checkout_block ) : ?>

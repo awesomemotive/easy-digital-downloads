@@ -1,5 +1,5 @@
 <fieldset id="edd_cc_fields" class="edd-do-validate edd-blocks-form">
-	<legend><?php esc_html_e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
+	<legend><?php esc_html_e( 'Payment Info', 'easy-digital-downloads' ); ?></legend>
 	<?php if ( is_ssl() ) : ?>
 		<div id="edd_secure_site_wrapper">
 			<?php
@@ -46,7 +46,7 @@
 			<input type="tel" pattern="[0-9]{3,4}" size="4" maxlength="4" autocomplete="off" name="card_cvc" id="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'easy-digital-downloads' ); ?>" />
 		</div>
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
-		<div class="card-expiration" class="edd-blocks-form__group edd-blocks-form__group-card--expiration">
+		<div class="edd-blocks-form__group edd-blocks-form__group--card-expiration">
 			<label for="card_exp_month" class="edd-label">
 				<?php
 				esc_html_e( 'Expiration (MM/YY)', 'easy-digital-downloads' );

@@ -14,140 +14,15 @@ namespace EDD\Blocks\Checkout\Forms;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Gets the array of personal info forms for the checkout form.
- *
- * @since 2.0
- * @param array $block_attributes       The block attributes.
- * @param bool  $customer_info_complete Whether the logged in customer information is complete.
- * @return array
- */
-function get_personal_info_forms( $block_attributes, $customer_info_complete = true ) {
-	$forms = array();
-	if ( is_user_logged_in() && $customer_info_complete ) {
-		return $forms;
-	}
-	$options = get_forms();
-	if ( ! edd_no_guest_checkout() || ( ! $customer_info_complete && is_user_logged_in() ) ) {
-		$forms['guest'] = $options['guest'];
-	}
-	if ( ! empty( $block_attributes['show_register_form'] ) && ! is_user_logged_in() ) {
-		$setting = $block_attributes['show_register_form'];
-		if ( 'both' === $setting ) {
-			$forms['register'] = $options['register'];
-			$forms['login']    = $options['login'];
-		} elseif ( 'registration' === $setting ) {
-			$forms['register'] = $options['register'];
-		} elseif ( ! empty( $options[ $setting ] ) ) {
-			$forms[ $setting ] = $options[ $setting ];
-		}
-	}
-
-	// If no forms have been set, add the registration form (guest checkout is disabled).
-	if ( empty( $forms ) ) {
-		$forms['register'] = $options['register'];
-	}
-
-	return $forms;
-}
-
-/**
- * Shows the login and/or registration form for guest users in checkout.
- *
- * @since 2.0
- * @param array $block_attributes The block attributes.
- * @return void
- */
-function do_personal_info_forms( $block_attributes ) {
-	$customer               = \EDD\Blocks\Checkout\get_customer();
-	$customer_info_complete = is_user_logged_in();
-	if ( $customer_info_complete ) {
-		include EDD_BLOCKS_DIR . 'views/checkout/purchase-form/logged-in.php';
-
-		$required_fields = array_keys( edd_purchase_form_required_fields() );
-		$customer_fields = array(
-			'email'      => 'edd_email',
-			'first_name' => 'edd_first',
-			'last_name'  => 'edd_last',
-		);
-		foreach ( $customer_fields as $field => $meta_key ) {
-			if ( empty( $customer[ $field ] ) && in_array( $meta_key, $required_fields, true ) ) {
-				$customer_info_complete = false;
-				break;
-			}
-		}
-		if ( $customer_info_complete && ! has_action( 'edd_purchase_form_user_info_fields' ) ) {
-			return;
-		}
-	}
-	?>
-	<div class="edd-blocks__checkout-user">
-		<?php
-		$forms = get_personal_info_forms( $block_attributes, $customer_info_complete );
-		$count = count( $forms );
-		if ( ! empty( $forms ) && $count > 1 ) {
-			wp_enqueue_script( 'edd-blocks-checkout-forms' );
-			$i     = 0;
-			$class = 'edd-blocks__checkout-forms';
-			if ( $count < 3 ) {
-				$class .= ' edd-blocks__checkout-forms--inline';
-			}
-			echo '<div class="' . esc_attr( $class ) . '">';
-			foreach ( $forms as $id => $form ) {
-				printf(
-					'<button type="button" class="edd-button-secondary edd-blocks__checkout-%1$s link" data-attr="%1$s"%2$s>%3$s</button>',
-					esc_attr( $id ),
-					empty( $i ) ? ' disabled' : '',
-					esc_html( $form['label'] )
-				);
-				++$i;
-			}
-			echo '</div>';
-		}
-		$form = reset( $forms );
-		echo '<div class="edd-checkout-block__personal-info">';
-		if ( $form && ! empty( $form['view'] ) ) {
-			if ( is_callable( $form['view'] ) ) {
-				echo call_user_func( $form['view'], array( 'current' => true ) );
-			} elseif ( \EDD\Utils\FileSystem::file_exists( $form['view'] ) ) {
-				include $form['view'];
-			}
-		} else {
-			do_action( 'edd_purchase_form_user_info_fields', $customer );
-		}
-		?>
-		</div>
-	</div>
-	<?php
-}
-
-/**
  * Outputs the purchase form for checkout.
  *
  * @since 2.0
+ * @deprecated 3.6.0
  * @param array $block_attributes The block attributes.
  * @return void
  */
 function do_purchase_form( $block_attributes ) {
-	$payment_mode = edd_get_chosen_gateway();
-	$form_action  = edd_get_checkout_uri( 'payment-mode=' . $payment_mode );
-	do_action( 'edd_before_purchase_form' );
-	?>
-	<form id="edd_purchase_form" class="edd_form edd-blocks-form edd-blocks-form__purchase" action="<?php echo esc_url( $form_action ); ?>" method="POST">
-		<?php
-		do_personal_info_forms( $block_attributes );
-		if ( edd_show_gateways() && edd_get_cart_total() > 0 ) {
-			include EDD_BLOCKS_DIR . 'views/checkout/purchase-form/gateways.php';
-		}
-		if ( ! edd_show_gateways() ) {
-			do_action( 'edd_purchase_form' );
-		} else {
-			?>
-			<div id="edd_purchase_form_wrap"></div>
-			<?php
-		}
-		?>
-	</form>
-	<?php
+	\EDD\Blocks\Checkout\Elements\PurchaseForm::render( $block_attributes );
 }
 
 add_action( 'enqueue_block_assets', __NAMESPACE__ . '\add_user_script' );
@@ -232,4 +107,29 @@ function get_forms() {
 			'view'  => EDD_BLOCKS_DIR . 'views/checkout/purchase-form/personal-info.php',
 		),
 	);
+}
+
+/**
+ * Gets the array of personal info forms for the checkout form.
+ *
+ * @since 2.0
+ * @deprecated 3.6.0 in favor of \EDD\Blocks\Checkout\Elements\PersonalInfo::get_personal_info_forms()
+ * @param array $block_attributes       The block attributes.
+ * @param bool  $customer_info_complete Whether the logged in customer information is complete.
+ * @return array
+ */
+function get_personal_info_forms( $block_attributes, $customer_info_complete = true ) {
+	return \EDD\Blocks\Checkout\Elements\PersonalInfo::get_personal_info_forms( $block_attributes, $customer_info_complete );
+}
+
+/**
+ * Shows the login and/or registration form for guest users in checkout.
+ *
+ * @since 2.0
+ * @deprecated 3.6.0 in favor of \EDD\Blocks\Checkout\Elements\PersonalInfo::render()
+ * @param array $block_attributes The block attributes.
+ * @return void
+ */
+function do_personal_info_forms( $block_attributes ) {
+	\EDD\Blocks\Checkout\Elements\PersonalInfo::render( $block_attributes );
 }
