@@ -13,7 +13,7 @@ function handleToggleChange( event ) {
 	}
 
 	const setting = input.dataset.setting;
-	if ( ! setting ) {
+	if ( ! setting || ! input.dataset.nonce ) {
 		return;
 	}
 
@@ -23,11 +23,11 @@ function handleToggleChange( event ) {
 
 	const body = new URLSearchParams();
 	body.append( 'action', 'edd_toggle_ajax_setting' );
-	body.append( 'nonce', eddSettings?.nonce || '' );
+	body.append( 'nonce', input.dataset.nonce );
 	body.append( 'setting', setting );
 	body.append( 'value', desiredChecked ? '1' : '0' );
 
-	fetch( eddSettings.ajaxurl, {
+	fetch( ajaxurl, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 		credentials: 'same-origin',

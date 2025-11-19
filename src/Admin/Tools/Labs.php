@@ -21,6 +21,7 @@ use EDD\EventManagement\SubscriberInterface;
  * @since 3.6.0
  */
 class Labs implements SubscriberInterface {
+	use \EDD\Admin\Settings\Traits\AjaxToggle;
 	use Traits\Profilers;
 
 	/**
@@ -31,10 +32,10 @@ class Labs implements SubscriberInterface {
 	 */
 	public static function get_subscribed_events(): array {
 		return array(
-			'edd_tools_tab_labs'              => 'render',
-			'edd_submit_profiler_log'         => 'handle_profiler_log_action',
-			'wp_ajax_edd_toggle_ajax_setting' => 'ajax_toggle_setting',
-			'heartbeat_received'              => array( 'heartbeat_received', 10, 2 ),
+			'edd_tools_tab_labs'          => 'render',
+			'edd_submit_profiler_log'     => 'handle_profiler_log_action',
+			'heartbeat_received'          => array( 'heartbeat_received', 10, 2 ),
+			'edd_toggle_setting_handlers' => 'register_handler',
 		);
 	}
 
@@ -90,10 +91,12 @@ class Labs implements SubscriberInterface {
 	/**
 	 * AJAX: Toggle a Labs/profiler setting.
 	 *
+	 * Overrides the trait method to add Labs-specific logic for profilers and cookies.
+	 *
 	 * @since 3.6.0
 	 * @return void
 	 */
-	public function ajax_toggle_setting(): void {
+	public static function ajax_toggle_setting(): void {
 		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			wp_send_json_error(
 				array(
@@ -103,10 +106,10 @@ class Labs implements SubscriberInterface {
 			);
 		}
 
-		check_ajax_referer( 'edd-labs-nonce', 'nonce' );
+		check_ajax_referer( 'edd-toggle-nonce', 'nonce' );
 
 		$setting = isset( $_POST['setting'] ) ? sanitize_key( wp_unslash( $_POST['setting'] ) ) : '';
-		$allowed = $this->get_allowed_setting_keys();
+		$allowed = static::get_allowed_ajax_settings();
 		if ( empty( $setting ) || ! in_array( $setting, $allowed, true ) ) {
 			wp_send_json_error(
 				array(
@@ -210,16 +213,6 @@ class Labs implements SubscriberInterface {
 			true
 		);
 
-		// Localize the script with necessary data for AJAX calls.
-		wp_localize_script(
-			$script_handle,
-			'eddSettings',
-			array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'edd-labs-nonce' ),
-			)
-		);
-
 		wp_enqueue_script( $script_handle );
 	}
 
@@ -274,6 +267,7 @@ class Labs implements SubscriberInterface {
 					'data'    => isset( $setting['data'] ) ? $setting['data'] : array(),
 				);
 				$args['data']['setting'] = $setting['id'];
+				$args['data']['nonce']   = wp_create_nonce( 'edd-toggle-nonce' );
 				$input                   = new \EDD\HTML\CheckboxToggle( $args );
 				$input->output();
 				?>
@@ -286,12 +280,12 @@ class Labs implements SubscriberInterface {
 	}
 
 	/**
-	 * Build allowlist of setting keys permitted to toggle via AJAX.
+	 * Get the list of settings that this handler allows to be toggled via AJAX.
 	 *
 	 * @since 3.6.0
 	 * @return array
 	 */
-	private function get_allowed_setting_keys(): array {
+	public static function get_allowed_ajax_settings(): array {
 		$keys     = array();
 		$features = self::get_feature_settings();
 		foreach ( $features as $feature ) {

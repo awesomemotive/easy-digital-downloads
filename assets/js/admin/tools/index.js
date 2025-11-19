@@ -1,6 +1,8 @@
 /**
  * Tools screen JS
  */
+import { initializeSettingsToggles } from '../components/settings/toggles';
+
 const EDD_Tools = {
 
 	init: function() {
@@ -8,6 +10,7 @@ const EDD_Tools = {
 		this.regenerate_api_key();
 		this.create_api_key();
 		this.recount_stats();
+		this.enable_toggles();
 	},
 
 	revoke_api_key: function() {
@@ -113,6 +116,9 @@ const EDD_Tools = {
 				return false;
 			}
 		} );
+	},
+	enable_toggles: function() {
+		initializeSettingsToggles();
 	},
 };
 

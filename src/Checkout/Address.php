@@ -126,7 +126,7 @@ class Address {
 		}
 
 		foreach ( $customer['address'] as $key => $field ) {
-			if ( empty( $field ) && ! empty( $user_address[ $key ] ) ) {
+			if ( isset( $user_address[ $key ] ) ) {
 				$customer['address'][ $key ] = $user_address[ $key ];
 			}
 		}

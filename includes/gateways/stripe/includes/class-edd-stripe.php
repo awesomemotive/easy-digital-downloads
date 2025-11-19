@@ -92,7 +92,6 @@ class EDD_Stripe {
 	private function includes() {
 
 		require_once EDDS_PLUGIN_DIR . '/includes/functions.php';
-		require_once EDDS_PLUGIN_DIR . '/includes/class-stripe-api.php';
 
 		// We need this one to load early so we can use it in the upcoming includes.
 		require_once EDDS_PLUGIN_DIR . '/includes/elements/functions.php';

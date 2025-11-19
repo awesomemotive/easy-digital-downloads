@@ -179,3 +179,25 @@ function edds_get_billing_fields( $value, $setting, $default_value ) {
 	return 'full';
 }
 add_filter( 'edd_get_option_stripe_billing_fields', 'edds_get_billing_fields', 10, 3 );
+
+/**
+ * Update the proration behavior for new subscriptions.
+ *
+ * @since 3.6.1
+ * @param array $args The subscription arguments.
+ * @return array The subscription arguments.
+ */
+add_filter(
+	'edd_recurring_create_stripe_subscription_args',
+	function ( $args ) {
+
+		// Stripe's API no longer accepts the prorate parameter.
+		if ( array_key_exists( 'prorate', $args ) ) {
+			unset( $args['prorate'] );
+			$args['proration_behavior'] = 'none';
+		}
+
+		return $args;
+	},
+	100
+);

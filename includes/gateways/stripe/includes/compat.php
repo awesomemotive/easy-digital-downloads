@@ -7,6 +7,14 @@
  */
 
 /**
+ * Alias the API class to EDD_Stripe_API.
+ *
+ * @since 3.6.1
+ * @deprecated 3.6.1 Use the EDD\Gateways\Stripe\API class instead.
+ */
+class_alias( 'EDD\Gateways\Stripe\API', 'EDD_Stripe_API' );
+
+/**
  * Maps serialized form data to global $_POST and $_REQUEST variables.
  *
  * This ensures any custom code that hooks in to actions inside an

@@ -116,16 +116,28 @@ class Order {
 		// Adds the customer ID to the order meta.
 		edd_update_order_meta( $order->id, '_edds_stripe_customer_id', $intent->customer );
 
-		if ( ! empty( $intent->charges->data ) ) {
-			foreach ( $intent->charges->data as $charge ) {
-				$this->add_payment_method( $order->id, $charge->payment_method_details );
-				if ( empty( $charge->payment_method_details->card->mandate ) ) {
-					continue;
+		// Use latest_charge for API version compatibility (charges array not always expanded).
+		if ( ! empty( $intent->latest_charge ) ) {
+			// If latest_charge is an object, it's already expanded.
+			if ( is_object( $intent->latest_charge ) ) {
+				$charge = $intent->latest_charge;
+			} else {
+				// If it's a string ID, retrieve the charge.
+				try {
+					$charge = edds_api_request( 'Charge', 'retrieve', $intent->latest_charge );
+				} catch ( \Exception $e ) {
+					$charge = null;
 				}
+			}
+
+			if ( $charge ) {
+				$this->add_payment_method( $order->id, $charge->payment_method_details );
 
 				// The returned Intent charges might contain a mandate ID, so let's save that and make a note.
-				$mandate_id = $charge->payment_method_details->card->mandate;
-				edd_update_order_meta( $order->id, '_edds_stripe_mandate', $mandate_id );
+				if ( ! empty( $charge->payment_method_details->card->mandate ) ) {
+					$mandate_id = $charge->payment_method_details->card->mandate;
+					edd_update_order_meta( $order->id, '_edds_stripe_mandate', $mandate_id );
+				}
 			}
 		}
 

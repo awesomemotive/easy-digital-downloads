@@ -86,10 +86,7 @@ function edds_has_met_requirements( $requirement = false ) {
 			defined( 'EDD_RECURRING_VERSION' )
 				? version_compare( EDD_RECURRING_VERSION, '2.9.99', '>' )
 				: true
-		),
-		'wp'        => (
-			version_compare( get_bloginfo( 'version' ), '5.4', '>=' )
-		),
+		)
 	);
 
 	if ( false === $requirement ) {
@@ -107,17 +104,17 @@ function edds_has_met_requirements( $requirement = false ) {
  * @since 2.7.0
  *
  * @throws \EDD_Stripe_Utils_Exceptions_Stripe_Object_Not_Found When attempting to call an object or method that is not available.
- * @throws \Stripe\Exception
+ * @throws \EDD_Stripe_Utils_Exceptions_Stripe_API_Unmet_Requirements When the application requirements are not met.
  *
- * @param string $object Name of the Stripe object to request.
- * @param string $method Name of the API operation to perform during the request.
- * @param mixed  ...$args Additional arguments to pass to the request.
+ * @param string $stripe_object Name of the Stripe object to request.
+ * @param string $method        Name of the API operation to perform during the request.
+ * @param mixed  ...$args       Additional arguments to pass to the request.
  * @return \EDD\Vendor\Stripe\Stripe\StripeObject
  */
-function edds_api_request( $object, $method, $args = null ) {
-	$api = new EDD_Stripe_API();
+function edds_api_request( $stripe_object, $method, ...$args ) {
+	$api = new \EDD\Gateways\Stripe\API();
 
-	return call_user_func_array( array( $api, 'request' ), func_get_args() );
+	return $api->request( $stripe_object, $method, ...$args );
 }
 
 /**

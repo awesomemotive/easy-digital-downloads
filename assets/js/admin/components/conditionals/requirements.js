@@ -8,14 +8,54 @@
  * Update the visibility of elements based on requirements.
  *
  * @since 3.5.0
- * @param {string} requires The requirement identifier (e.g., 'vat-enable').
- * @param {bool}   enabled  Whether the requirement is met.
+ * @param {string}       requires The requirement identifier (e.g., 'vat-enable').
+ * @param {bool|string}  enabled  Whether the requirement is met (bool for checkboxes, string for selects).
+ * @param {bool}         inverse  Whether to invert the logic (for inverse toggles).
  */
-export function updateRequirements( requires, enabled ) {
+export function updateRequirements( requires, enabled, inverse = false ) {
+	const shouldShow = inverse ? ! enabled : enabled;
 	const elements = document.querySelectorAll( '.edd-requires__' + requires );
 	elements.forEach( function ( element ) {
 		element.classList.remove( 'edd-hidden--required' );
-		element.classList.toggle( 'edd-hidden', ! enabled );
+		element.classList.toggle( 'edd-hidden', ! shouldShow );
+		if ( element.classList.contains( 'edd-hidden' ) ) {
+			element.classList.add( 'edd-hidden--required' );
+		}
+	} );
+}
+
+/**
+ * Update the visibility of elements based on select value requirements.
+ *
+ * @since 3.6.1
+ * @param {string} requires The requirement identifier (e.g., 'captcha-provider').
+ * @param {string} value    The current value of the select element.
+ */
+export function updateSelectRequirements( requires, value ) {
+	// Find all elements that depend on this requirement
+	const dependentElements = document.querySelectorAll( '[class*="edd-requires__' + requires + '-"]' );
+
+	dependentElements.forEach( function ( element ) {
+		// Extract the expected value from the class name
+		const classMatch = element.className.match( new RegExp( 'edd-requires__' + requires + '-([\\w-]+)' ) );
+		if ( classMatch ) {
+			const expectedValue = classMatch[1];
+			const shouldShow = value === expectedValue;
+
+			element.classList.remove( 'edd-hidden--required' );
+			element.classList.toggle( 'edd-hidden', ! shouldShow );
+			if ( element.classList.contains( 'edd-hidden' ) ) {
+				element.classList.add( 'edd-hidden--required' );
+			}
+		}
+	} );
+
+	// Also handle generic requirements (elements that should show for any non-empty value)
+	const genericElements = document.querySelectorAll( '.edd-requires__' + requires + ':not([class*="edd-requires__' + requires + '-"])' );
+	genericElements.forEach( function ( element ) {
+		const shouldShow = value !== '' && value !== null;
+		element.classList.remove( 'edd-hidden--required' );
+		element.classList.toggle( 'edd-hidden', ! shouldShow );
 		if ( element.classList.contains( 'edd-hidden' ) ) {
 			element.classList.add( 'edd-hidden--required' );
 		}
@@ -26,30 +66,39 @@ export function updateRequirements( requires, enabled ) {
  * Initialize requirements on page load.
  */
 export function initializeRequirements() {
-	// Find all checkboxes with data-edd-requirement attribute
-	const requirementCheckboxes = document.querySelectorAll( '[data-edd-requirement]' );
+	// Find all elements with data-edd-requirement attribute (checkboxes and selects)
+	const requirementElements = document.querySelectorAll( '[data-edd-requirement]' );
 
-	requirementCheckboxes.forEach( function ( checkbox ) {
-		const requires = checkbox.getAttribute( 'data-edd-requirement' );
+	requirementElements.forEach( function ( element ) {
+		const requires = element.getAttribute( 'data-edd-requirement' );
 		if ( ! requires ) {
 			return;
 		}
 
-		// Update initial state
-		updateRequirements( requires, checkbox.checked );
+		// Handle select elements
+		if ( element.tagName === 'SELECT' ) {
+			updateSelectRequirements( requires, element.value );
+		}
+		// Handle checkboxes
+		else if ( element.type === 'checkbox' ) {
+			// Check if this is an inverse toggle
+			const inverse = element.hasAttribute( 'data-edd-requirement-inverse' );
+			// Update initial state
+			updateRequirements( requires, element.checked, inverse );
+		}
 	} );
 }
 
 /**
- * Add event listeners for checkbox changes.
+ * Add event listeners for checkbox and select changes.
  */
 export function addRequirementListeners() {
-	// Listen to native checkbox change events
+	// Listen to native change events for both checkboxes and selects
 	document.addEventListener( 'change', function ( event ) {
 		const target = event.target;
 
-		// Only process checkboxes with data-edd-requirement attribute
-		if ( target.type !== 'checkbox' || ! target.hasAttribute( 'data-edd-requirement' ) ) {
+		// Only process elements with data-edd-requirement attribute
+		if ( ! target.hasAttribute( 'data-edd-requirement' ) ) {
 			return;
 		}
 
@@ -58,8 +107,17 @@ export function addRequirementListeners() {
 			return;
 		}
 
-		// Update dependent elements
-		updateRequirements( requires, target.checked );
+		// Handle select elements
+		if ( target.tagName === 'SELECT' ) {
+			updateSelectRequirements( requires, target.value );
+		}
+		// Handle checkboxes
+		else if ( target.type === 'checkbox' ) {
+			// Check if this is an inverse toggle
+			const inverse = target.hasAttribute( 'data-edd-requirement-inverse' );
+			// Update dependent elements
+			updateRequirements( requires, target.checked, inverse );
+		}
 	} );
 
 	// Listen for custom events from AJAX toggles

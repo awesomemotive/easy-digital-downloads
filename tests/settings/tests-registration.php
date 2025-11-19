@@ -61,7 +61,6 @@ class Registration extends EDD_UnitTestCase {
 	public function test_settings_misc_main_array_keys() {
 		$keys = array_keys( $this->get_settings()['misc']['main'] );
 
-		$this->assertTrue( in_array( 'debug_mode', $keys ) );
 		$this->assertTrue( in_array( 'session_handling', $keys ) );
 		$this->assertTrue( in_array( 'disable_styles', $keys ) );
 		$this->assertTrue( in_array( 'item_quantities', $keys ) );

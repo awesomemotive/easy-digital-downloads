@@ -7,9 +7,9 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2
-*/
+ */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -28,30 +28,35 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_sanitize_amount( $amount = 0 ) {
 
-	// Get separators
-	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+	// Ensure the amount is a number.
+	if ( empty( $amount ) ) {
+		$amount = 0;
+	}
+
+	// Get separators.
+	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 
-	// Look for separators in amount
-	$found_decimal   = strpos( $amount, $decimal_sep   );
+	// Look for separators in amount.
+	$found_decimal   = strpos( $amount, $decimal_sep );
 	$found_thousands = strpos( $amount, $thousands_sep );
 
-	// Amount contains comma as decimal separator
-	if ( ( $decimal_sep === ',' ) && ( false !== $found_decimal ) ) {
+	// Amount contains comma as decimal separator.
+	if ( ( ',' === $decimal_sep ) && ( false !== $found_decimal ) ) {
 
-		// Amount contains period or space as thousands separator
+		// Amount contains period or space as thousands separator.
 		if ( in_array( $thousands_sep, array( '.', ' ' ), true ) && ( false !== $found_thousands ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
 
-		// Amount contains period
+			// Amount contains period.
 		} elseif ( empty( $thousands_sep ) && ( false !== strpos( $amount, '.' ) ) ) {
 			$amount = str_replace( '.', '', $amount );
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
 
-	// Amount contains comma as thousands separator
-	} elseif ( ( $thousands_sep === ',' ) && ( false !== $found_thousands ) ) {
+		// Amount contains comma as thousands separator.
+	} elseif ( ( ',' === $thousands_sep ) && ( false !== $found_thousands ) ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
@@ -76,11 +81,11 @@ function edd_sanitize_amount( $amount = 0 ) {
 	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
 
-	// Flip back to negative
+	// Flip back to negative.
 	$sanitized = $amount * $negative_exponent;
 
 	// Format amount using decimals and a period for the decimal separator
-	// (no thousands separator; also rounds up or down)
+	// (no thousands separator; also rounds up or down).
 	$sanitized = number_format( (float) $sanitized, $decimals, '.', '' );
 
 	/**

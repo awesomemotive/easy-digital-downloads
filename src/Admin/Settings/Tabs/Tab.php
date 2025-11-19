@@ -11,6 +11,8 @@
 
 namespace EDD\Admin\Settings\Tabs;
 
+use EDD\Admin\Settings\Traits\Helpers;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -19,6 +21,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.1.4
  */
 abstract class Tab {
+
+	use Helpers;
 
 	/**
 	 * The ID for this tab.
@@ -162,38 +166,4 @@ abstract class Tab {
 		return filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
 	}
 
-	/**
-	 * Get the classes for a setting that requires another setting to be enabled.
-	 *
-	 * @since 3.5.0
-	 * @param string $requirement The requirement to check.
-	 * @param array  $classes     The additional classes to add.
-	 * @return string
-	 */
-	protected function get_requires_css_class( string $requirement, $classes = array() ) {
-		$classes = wp_parse_args(
-			$classes,
-			array(
-				'edd-requires',
-				"edd-requires__{$requirement}",
-			)
-		);
-
-		if ( empty( edd_get_option( $requirement, false ) ) ) {
-			$classes[] = 'edd-hidden';
-		}
-
-		return implode( ' ', $classes );
-	}
-
-	/**
-	 * Parses a description array into a string.
-	 *
-	 * @since 3.5.0
-	 * @param array $description The description array.
-	 * @return string
-	 */
-	protected function parse_description( array $description ): string {
-		return implode( '<br />', array_filter( $description ) );
-	}
 }

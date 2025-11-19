@@ -201,6 +201,7 @@ class PaymentMethods {
 			'google_pay',
 			'grabpay',
 			'ideal',
+			'klarna',
 			'link',
 			'p24',
 			'revolut_pay',

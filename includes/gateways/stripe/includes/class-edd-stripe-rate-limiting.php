@@ -56,8 +56,8 @@ class EDD_Stripe_Rate_Limiting {
 		// Catch any recurring errors as they don't run through the main Stripe extension.
 		add_action( 'edd_before_purchase_form', array( $this, 'listen_for_recurring_card_errors' ), 0 );
 
-		// Add reCAPTCHA support.
-		add_filter( 'edd_can_recaptcha_checkout', array( $this, 'maybe_enable_recaptcha' ) );
+		// Add CAPTCHA support.
+		add_filter( 'edd_can_captcha_checkout', array( $this, 'maybe_enable_recaptcha' ) );
 	}
 
 	/**

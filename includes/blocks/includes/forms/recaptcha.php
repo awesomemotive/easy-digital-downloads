@@ -15,28 +15,56 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_script' );
 /**
- * Registers the reCAPTCHA script.
+ * Registers the CAPTCHA script.
  *
  * @since 2.0
  * @return void
  */
 function register_script() {
-	$site_key = get_site_key();
+	$provider = \EDD\Captcha\Providers\Provider::get_active_provider();
+	if ( ! $provider ) {
+		return;
+	}
+
+	$site_key = $provider->get_key();
 	if ( ! $site_key ) {
 		return;
 	}
-	$url = add_query_arg(
-		array(
-			'render' => $site_key,
-		),
-		'https://www.google.com/recaptcha/api.js'
+
+	// 1. Register the provider's API script (e.g., Google, Cloudflare).
+	$provider_handle = $provider->get_script_handle();
+	wp_register_script(
+		$provider_handle,
+		esc_url_raw( $provider->get_script_url() ),
+		array(),
+		$provider->get_script_version(),
+		true
 	);
-	wp_register_script( 'google-recaptcha', esc_url_raw( $url ), array(), '3', true );
-	wp_register_script( 'edd-recaptcha', EDD_BLOCKS_URL . 'assets/js/recaptcha.js', array( 'google-recaptcha' ), EDD_VERSION, true );
+
+	// 2. Register the provider's handler script (depends on API script).
+	$handler_handle = 'edd-captcha-' . $provider->get_id();
+	wp_register_script(
+		$handler_handle,
+		esc_url_raw( $provider->get_handler_script_url() ),
+		array( $provider_handle ),
+		edd_admin_get_script_version(),
+		true
+	);
+
+	// 3. Register the core CAPTCHA script (depends on handler).
+	wp_register_script(
+		'edd-captcha',
+		EDD_PLUGIN_URL . 'assets/js/captcha/captcha.js',
+		array( $handler_handle ),
+		EDD_VERSION,
+		true
+	);
+
+	// Localize the script with provider info.
 	wp_localize_script(
-		'edd-recaptcha',
+		'edd-captcha',
 		'EDDreCAPTCHA',
-		get_localize_args()
+		get_localize_args( $provider )
 	);
 }
 
@@ -89,7 +117,7 @@ function do_inputs() {
  * @return void
  */
 function enqueue() {
-	wp_enqueue_script( 'edd-recaptcha' );
+	wp_enqueue_script( 'edd-captcha' );
 }
 
 /**
@@ -130,31 +158,41 @@ function validate_recaptcha( $response ) {
 }
 
 /**
- * Gets the array of localized parameters for the recaptcha.
+ * Gets the array of localized parameters for the CAPTCHA.
  *
  * @since 2.0
+ * @param \EDD\Captcha\Providers\Provider|null $provider The active provider.
  * @return array
  */
-function get_localize_args() {
-	return array(
+function get_localize_args( $provider = null ) {
+	if ( ! $provider ) {
+		$provider = \EDD\Captcha\Providers\Provider::get_active_provider();
+	}
+
+	$args = array(
 		'ajaxurl'         => edd_get_ajax_url(),
-		'sitekey'         => get_site_key(),
+		'sitekey'         => $provider ? $provider->get_key() : '',
+		'provider'        => $provider ? $provider->get_id() : '',
 		'context'         => edd_is_checkout() ? 'checkout' : 'form',
+		'action'          => 'edd_form_submit',
 		'error'           => __( 'Error', 'easy-digital-downloads' ),
 		'error_message'   => __( 'There was an error validating the form. Please contact support.', 'easy-digital-downloads' ),
 		'checkoutFailure' => __( 'Unable to verify purchase session. Please try again.', 'easy-digital-downloads' ),
 	);
+
+	return $args;
 }
 
 /**
- * Gets the reCAPTCHA site key if both the site key and secret key are set.
+ * Gets the CAPTCHA site key if a provider is configured.
+ *
+ * Backwards compatible function that returns the active provider's site key.
  *
  * @since 2.0
  * @return false|string
  */
 function get_site_key() {
-	$site_key   = edd_get_option( 'recaptcha_site_key', false );
-	$secret_key = edd_get_option( 'recaptcha_secret_key', false );
+	$provider = \EDD\Captcha\Providers\Provider::get_active_provider();
 
-	return ! empty( $site_key ) && ! empty( $secret_key ) ? $site_key : false;
+	return $provider ? $provider->get_key() : false;
 }

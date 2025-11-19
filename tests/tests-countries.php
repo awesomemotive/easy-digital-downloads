@@ -446,4 +446,94 @@ class Countries extends EDD_UnitTestCase {
 	public function test_get_bj_region_state_returns_name() {
 		$this->assertEquals( 'Alibori', edd_get_state_name( 'BJ', 'AL' ) );
 	}
+
+	public function test_get_eu_countries() {
+		$expected = array(
+			'AT',
+			'BE',
+			'BG',
+			'HR',
+			'CY',
+			'CZ',
+			'DK',
+			'EE',
+			'FI',
+			'FR',
+			'DE',
+			'GR',
+			'HU',
+			'IE',
+			'IT',
+			'LV',
+			'LT',
+			'LU',
+			'MT',
+			'NL',
+			'PL',
+			'PT',
+			'RO',
+			'SK',
+			'SI',
+			'ES',
+			'SE',
+			'GB',
+		);
+
+		$countries = new \EDD\Utils\Countries();
+		$this->assertEquals( $expected, $countries->get_eu_countries() );
+	}
+
+	public function test_get_eu_countries_filter_removes_gb() {
+		// Add filter to remove GB from the list.
+		add_filter( 'edd_eu_countries', function( $countries ) {
+			return array_values( array_filter( $countries, function( $country ) {
+				return 'GB' !== $country;
+			} ) );
+		} );
+
+		$countries = new \EDD\Utils\Countries();
+		$result = $countries->get_eu_countries();
+
+		// Remove the filter.
+		remove_all_filters( 'edd_eu_countries' );
+
+		// Verify GB is not in the list.
+		$this->assertNotContains( 'GB', $result );
+
+		// Verify the list still contains other EU countries.
+		$this->assertContains( 'FR', $result );
+		$this->assertContains( 'DE', $result );
+
+		// Verify the count is one less than the default.
+		$this->assertCount( 27, $result );
+	}
+
+	public function test_get_eu_countries_legacy_vat_rates_filter_removes_gb() {
+		// Expect the deprecated hook notice.
+		$this->setExpectedDeprecated( 'edd_vat_current_eu_vat_rates' );
+
+		// Add legacy filter to remove GB from the VAT rates.
+		add_filter( 'edd_vat_current_eu_vat_rates', function( $rates ) {
+			if ( isset( $rates['GB'] ) ) {
+				unset( $rates['GB'] );
+			}
+			return $rates;
+		} );
+
+		$countries = new \EDD\Utils\Countries();
+		$result = $countries->get_eu_countries();
+
+		// Remove the filter.
+		remove_all_filters( 'edd_vat_current_eu_vat_rates' );
+
+		// Verify GB is not in the list.
+		$this->assertNotContains( 'GB', $result );
+
+		// Verify the list still contains other EU countries.
+		$this->assertContains( 'FR', $result );
+		$this->assertContains( 'DE', $result );
+
+		// Verify the count is one less than the default.
+		$this->assertCount( 27, $result );
+	}
 }

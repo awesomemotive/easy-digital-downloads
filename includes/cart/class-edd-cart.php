@@ -324,12 +324,18 @@ class EDD_Cart {
 			// Subtotal for tax calculation must exclude fees that are greater than 0. See $this->get_tax_on_fees().
 			$subtotal_for_tax = $subtotal;
 
-			foreach ( $fees as $fee ) {
+			foreach ( $fees as $id => $fee ) {
 
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
 
 				if ( $fee_amount > 0 ) {
+					// Calculate tax on positive item-specific fees.
+					if ( edd_use_taxes() && empty( $fee['no_tax'] ) ) {
+						add_filter( 'edd_prices_include_tax', '__return_false' );
+						$fees[ $id ]['tax'] = edd_calculate_tax( $fee_amount, '', '', true, $this->get_tax_rate() );
+						remove_filter( 'edd_prices_include_tax', '__return_false' );
+					}
 					continue;
 				}
 
