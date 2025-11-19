@@ -3,7 +3,6 @@
 /**
  * Internal dependencies
  */
-import { initializeSettingsToggles } from 'admin/components/settings/toggles';
 
 // Requirements are auto-initialized globally when requirements.js loads
 // but we still import it to ensure it's bundled with this script
@@ -40,9 +39,6 @@ function getVisibleProfilerIds() {
  * Initialize the Labs tools tab.
  */
 function initializeLabs() {
-	// Initialize the settings toggle functionality.
-	initializeSettingsToggles();
-
 	// Handle cookie setting updates from settings toggles
 	document.addEventListener( 'eddSettingToggled', function ( event ) {
 		const cookieData = event?.detail?.cookie;

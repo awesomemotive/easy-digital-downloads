@@ -31,7 +31,7 @@ function edd_stripe_core_bootstrap() {
 	}
 
 	if ( ! defined( 'EDD_STRIPE_API_VERSION' ) ) {
-		define( 'EDD_STRIPE_API_VERSION', '2020-03-02' );
+		define( 'EDD_STRIPE_API_VERSION', '2022-11-15' );
 	}
 
 	if ( ! defined( 'EDD_STRIPE_PARTNER_ID' ) ) {

@@ -5,7 +5,7 @@ import { ImageAlignmentOptions } from '../utilities/image-alignment';
 import { OrderOptions } from '../utilities/order';
 import { ImageSizeOptions } from '../utilities/image-size';
 import { useBlockProps, InspectorControls, PanelColorSettings, withColors, ColorPalette } from '@wordpress/block-editor';
-import { useEffect } from '@wordpress/element';
+import { useRefEffect } from '@wordpress/compose';
 import './editor.scss';
 import { ButtonAlignmentOptions } from '../utilities/buy-button-alignment';
 import { DownloadOrderBy } from '../utilities/download-order-by';
@@ -36,10 +36,13 @@ function Edit ( { attributes, setAttributes, featuredBadgeColor, setFeaturedBadg
 	const tags = DownloadCategoryTerms( 'download_tag', __( 'All Categories', 'easy-digital-downloads' ) );
 
 	// Handle featured styling in block editor.
-	useEffect( () => {
+	// Use useRefEffect to access the correct document (works in iframed editors).
+	const ref = useRefEffect( ( element ) => {
+		const { ownerDocument } = element;
+
 		if ( !EDDBlocks.is_pro || !attributes.featured_styling_enabled ) {
 			// Remove existing styles if styling is disabled.
-			const existingStyle = document.getElementById( 'edd-featured-styles' );
+			const existingStyle = ownerDocument.getElementById( 'edd-featured-styles' );
 			if ( existingStyle ) {
 				existingStyle.remove();
 			}
@@ -111,18 +114,18 @@ function Edit ( { attributes, setAttributes, featuredBadgeColor, setFeaturedBadg
 			const css = `.wp-block-edd-downloads { ${ styleVars.join( '; ' ) } }`;
 
 			// Add or update the style element.
-			let styleElement = document.getElementById( 'edd-featured-styles' );
+			let styleElement = ownerDocument.getElementById( 'edd-featured-styles' );
 			if ( !styleElement ) {
-				styleElement = document.createElement( 'style' );
+				styleElement = ownerDocument.createElement( 'style' );
 				styleElement.id = 'edd-featured-styles';
-				document.head.appendChild( styleElement );
+				ownerDocument.head.appendChild( styleElement );
 			}
 			styleElement.textContent = css;
 		}
 
 		// Cleanup function.
 		return () => {
-			const styleElement = document.getElementById( 'edd-featured-styles' );
+			const styleElement = ownerDocument.getElementById( 'edd-featured-styles' );
 			if ( styleElement ) {
 				styleElement.remove();
 			}
@@ -143,7 +146,7 @@ function Edit ( { attributes, setAttributes, featuredBadgeColor, setFeaturedBadg
 	] );
 
 	return (
-		<div {...useBlockProps()}>
+		<div {...useBlockProps( { ref } )}>
 			<InspectorControls>
 				<PanelBody
 					title={__( 'Product Block Settings', 'easy-digital-downloads' )}

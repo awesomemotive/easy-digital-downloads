@@ -133,16 +133,19 @@ class Complete {
 			$order = edd_get_order( $order->id );
 
 			if ( 'setup_intent' !== $intent['object'] ) {
-				$charge_id = sanitize_text_field( current( $intent['charges']['data'] )['id'] );
+				// Use latest_charge instead of charges->data for API version compatibility.
+				$charge_id = ! empty( $intent['latest_charge'] ) ? sanitize_text_field( $intent['latest_charge'] ) : '';
 
-				edd_add_note(
-					array(
-						'object_id'   => $order->id,
-						'content'     => 'Stripe Charge ID: ' . $charge_id,
-						'user_id'     => is_admin() ? get_current_user_id() : 0,
-						'object_type' => 'order',
-					)
-				);
+				if ( ! empty( $charge_id ) ) {
+					edd_add_note(
+						array(
+							'object_id'   => $order->id,
+							'content'     => 'Stripe Charge ID: ' . $charge_id,
+							'user_id'     => is_admin() ? get_current_user_id() : 0,
+							'object_type' => 'order',
+						)
+					);
+				}
 
 				$order_transaction = edd_get_order_transaction_by( 'object_id', $order->id );
 				if ( ! empty( $order_transaction ) ) {

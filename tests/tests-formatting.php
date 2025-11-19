@@ -17,6 +17,10 @@ class Formatting extends EDD_UnitTestCase {
 		$this->assertEquals( 0.00, edd_sanitize_amount( '' ) );
 	}
 
+	public function test_sanitize_amount_null() {
+		$this->assertEquals( 0.00, edd_sanitize_amount( null ) );
+	}
+
 	public function test_sanitize_amount_comma_thousands() {
 		$this->assertEquals( '20000.20', edd_sanitize_amount( '20,000.20' ) );
 	}

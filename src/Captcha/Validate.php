@@ -30,6 +30,9 @@ class Validate implements SubscriberInterface {
 	 */
 	public static function get_subscribed_events() {
 		return array(
+			'wp_ajax_edd_captcha_validate'          => 'validate',
+			'wp_ajax_nopriv_edd_captcha_validate'   => 'validate',
+			// Backwards compatibility for old AJAX action name.
 			'wp_ajax_edd_recaptcha_validate'        => 'validate',
 			'wp_ajax_nopriv_edd_recaptcha_validate' => 'validate',
 			'edd_pre_process_purchase'              => array( 'validate', 4 ),
@@ -37,7 +40,7 @@ class Validate implements SubscriberInterface {
 	}
 
 	/**
-	 * Validates the reCAPTCHA response.
+	 * Validates the CAPTCHA response.
 	 *
 	 * @since 3.5.3
 	 * @return void
@@ -56,7 +59,7 @@ class Validate implements SubscriberInterface {
 
 		$token = $this->get_token( $doing_checkout );
 		if ( ! $token ) {
-			$this->set_error( 'invalid_recaptcha_missing' );
+			$this->set_error( 'invalid_captcha_missing' );
 			return;
 		}
 
@@ -65,29 +68,19 @@ class Validate implements SubscriberInterface {
 		if ( isset( $validated_tokens[ $token_hash ] ) ) {
 			$cached_result = $validated_tokens[ $token_hash ]['result'];
 			if ( $doing_checkout && true !== $cached_result ) {
-				edd_set_error( 'recaptcha_invalid', $cached_result['message'] );
+				edd_set_error( 'captcha_invalid', $cached_result['message'] );
 			}
 			return;
 		}
 
 		try {
-			$args = array(
-				'headers' => array(
-					'Content-type' => 'application/x-www-form-urlencoded',
-				),
-				'body'    => array(
-					'secret'   => edd_get_option( 'recaptcha_secret_key', false ),
-					'response' => $token,
-					'remoteip' => edd_get_ip(),
-				),
-			);
+			$provider = \EDD\Captcha\Providers\Provider::get_active_provider();
+			if ( ! $provider ) {
+				$this->set_error( 'invalid_captcha_bad' );
+				return;
+			}
 
-			$validated = $this->validate_recaptcha(
-				wp_safe_remote_post(
-					'https://www.google.com/recaptcha/api/siteverify',
-					$args
-				)
-			);
+			$validated = $provider->validate( $token );
 
 			// Store the validation result in the session.
 			$validated_tokens[ $token_hash ] = array(
@@ -98,7 +91,7 @@ class Validate implements SubscriberInterface {
 
 			if ( $doing_checkout ) {
 				if ( true !== $validated ) {
-					edd_set_error( 'recaptcha_invalid', $validated['message'] );
+					edd_set_error( 'captcha_invalid', $validated['message'] );
 				}
 				return;
 			}
@@ -112,7 +105,7 @@ class Validate implements SubscriberInterface {
 				wp_send_json_error( $validated );
 			}
 		} catch ( \Exception $e ) {
-			$this->set_error( 'invalid_recaptcha_bad' );
+			$this->set_error( 'invalid_captcha_bad' );
 		}
 	}
 
@@ -142,7 +135,7 @@ class Validate implements SubscriberInterface {
 	}
 
 	/**
-	 * Gets the reCAPTCHA token from the request.
+	 * Gets the CAPTCHA token from the request.
 	 *
 	 * @since 3.5.3
 	 * @param bool $doing_checkout Whether the request is being made during checkout.
@@ -161,31 +154,7 @@ class Validate implements SubscriberInterface {
 	}
 
 	/**
-	 * Evaluates the reCAPTCHA response.
-	 *
-	 * @since 3.5.3
-	 * @param array|\WP_Error $response The response from the reCAPTCHA API.
-	 * @return bool
-	 */
-	private function validate_recaptcha( $response ) {
-		if ( is_wp_error( $response ) ) {
-			return $this->set_error( 'invalid_recaptcha_bad' );
-		}
-
-		$verify = json_decode( wp_remote_retrieve_body( $response ) );
-		if ( true !== $verify->success ) {
-			return $this->set_error( 'invalid_recaptcha_failed' );
-		}
-
-		if ( isset( $verify->score ) && (float) $verify->score < 0.5 ) {
-			return $this->set_error( 'invalid_recaptcha_low_score' );
-		}
-
-		return true;
-	}
-
-	/**
-	 * Set up the reCAPTCHA error.
+	 * Set up the CAPTCHA error.
 	 *
 	 * @since 3.5.3
 	 * @param string $error_code The error code.
@@ -214,24 +183,28 @@ class Validate implements SubscriberInterface {
 	 */
 	private function get_error_message( $error_code ) {
 		switch ( $error_code ) {
-			case 'invalid_recaptcha_missing':
-				$message = __( 'reCAPTCHA validation missing.', 'easy-digital-downloads' );
+			case 'invalid_captcha_missing':
+			case 'invalid_recaptcha_missing': // Backwards compatibility.
+				$message = __( 'CAPTCHA validation missing.', 'easy-digital-downloads' );
 				break;
 
-			case 'invalid_recaptcha_bad':
-				$message = __( 'Unexpected reCAPTCHA error. Please try again.', 'easy-digital-downloads' );
+			case 'invalid_captcha_bad':
+			case 'invalid_recaptcha_bad': // Backwards compatibility.
+				$message = __( 'Unexpected CAPTCHA error. Please try again.', 'easy-digital-downloads' );
 				break;
 
-			case 'invalid_recaptcha_failed':
-				$message = __( 'reCAPTCHA verification failed. Please contact a site administrator.', 'easy-digital-downloads' );
+			case 'invalid_captcha_failed':
+			case 'invalid_recaptcha_failed': // Backwards compatibility.
+				$message = __( 'CAPTCHA verification failed. Please contact a site administrator.', 'easy-digital-downloads' );
 				break;
 
-			case 'invalid_recaptcha_low_score':
-				$message = __( 'reCAPTCHA verification failed with low score. Please contact a site administrator.', 'easy-digital-downloads' );
+			case 'invalid_captcha_low_score':
+			case 'invalid_recaptcha_low_score': // Backwards compatibility.
+				$message = __( 'CAPTCHA verification failed with low score. Please contact a site administrator.', 'easy-digital-downloads' );
 				break;
 
 			default:
-				$message = __( 'There was an error validating the reCAPTCHA. Please try again.', 'easy-digital-downloads' );
+				$message = __( 'There was an error validating the CAPTCHA. Please try again.', 'easy-digital-downloads' );
 		}
 
 		return $message;

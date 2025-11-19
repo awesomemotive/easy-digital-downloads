@@ -74,7 +74,29 @@ class Countries {
 	public static function get_eu_countries() {
 		$countries = include EDD_PLUGIN_DIR . 'i18n/countries-eu.php';
 
-		return array_keys( $countries );
+		// Check if the legacy VAT rates filter has callbacks for backward compatibility.
+		if ( has_filter( 'edd_vat_current_eu_vat_rates' ) ) {
+			_edd_deprecated_hook( 'edd_vat_current_eu_vat_rates', '3.6.1', 'edd_eu_countries', 'Use the edd_eu_countries filter to filter the list of EU countries.' );
+
+			/**
+			 * Legacy filter for EU VAT rates.
+			 *
+			 * @since 3.6.1
+			 * @deprecated Use edd_eu_countries filter instead.
+			 * @param array $rates The array of EU country codes and their VAT rates.
+			 * @return array The array of EU country codes and their VAT rates.
+			 */
+			$countries = apply_filters( 'edd_vat_current_eu_vat_rates', $countries );
+		}
+
+		/**
+		 * Allow the list of EU countries to be filtered.
+		 *
+		 * @since 3.6.1
+		 * @param array $countries The array of EU country codes.
+		 * @return array The array of EU country codes.
+		 */
+		return apply_filters( 'edd_eu_countries', array_keys( $countries ) );
 	}
 
 	/**

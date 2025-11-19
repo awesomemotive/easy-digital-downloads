@@ -119,6 +119,19 @@ class Settings {
 					'</a>'
 				),
 			),
+			'stripe_line_items_enabled'      => array(
+				'id'    => 'stripe_line_items_enabled',
+				'name'  => __( 'Send Line Items', 'easy-digital-downloads' ),
+				'check' => __( 'Send detailed line item data to Stripe for each purchase.', 'easy-digital-downloads' ),
+				'type'  => 'checkbox_toggle',
+				'desc'  => sprintf(
+					/* translators: 1: opening link tag, 2: closing link tag */
+					__( 'Enabling line items provides support for additional payment methods like Klarna and can help improve acceptance and renewal rates on some payment methods. %1$sLearn more about Stripe line items.%2$s', 'easy-digital-downloads' ),
+					'<a href="https://docs.stripe.com/payments/payment-line-items" target="_blank" rel="noopener noreferrer">',
+					'</a>'
+				),
+				'class' => $this->is_payment_elements_mode() ? 'payment-elements-feature' : 'edd-hidden payment-elements-feature',
+			),
 			'stripe_payment_elements_layout' => $this->get_layout_setting(),
 		);
 
@@ -306,6 +319,25 @@ class Settings {
 			)
 		);
 		$multicheck->output();
+
+		?>
+		<p class="edd-stripe-payment-methods__reset">
+			<?php
+			$reset_url = wp_nonce_url(
+				edd_get_admin_url(
+					array(
+						'page'       => 'edd-settings',
+						'tab'        => 'gateways',
+						'section'    => 'edd-stripe',
+						'edd-action' => 'stripe_reset_payment_methods',
+					)
+				),
+				'edd-reset-payment-methods'
+			);
+			?>
+			<a class="button button-secondary" href="<?php echo esc_url( $reset_url ); ?>"><?php esc_html_e( 'Sync Payment Methods', 'easy-digital-downloads' ); ?></a>
+		</p>
+		<?php
 	}
 
 	/**

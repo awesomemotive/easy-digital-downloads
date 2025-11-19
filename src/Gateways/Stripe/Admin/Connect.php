@@ -97,12 +97,12 @@ class Connect {
 				array(
 					'url'            => self::get_listener_url(),
 					'enabled_events' => self::get_event_endpoints(),
-					'api_version'    => EDD_STRIPE_API_VERSION,
+					'api_version'    => \EDD\Gateways\Stripe\API::get_api_version(),
 				)
 			);
 
 			$message = 'stripe_webhooks_created';
-		} catch ( \EDD\Vendor\Stripe\ApiErrorException $e ) {
+		} catch ( \EDD\Vendor\Stripe\Exception\ApiErrorException $e ) {
 			// Do nothing.
 		}
 

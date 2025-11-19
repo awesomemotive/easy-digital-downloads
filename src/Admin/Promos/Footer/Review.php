@@ -37,8 +37,8 @@ class Review {
 				)
 			),
 			'<strong>Easy Digital Downloads</strong>',
-			'<a href="https://wordpress.org/support/plugin/easy-digital-downloads/reviews/?filter=5#new-post" target="_blank" rel="noopener noreferrer">&#9733;&#9733;&#9733;&#9733;&#9733;</a>',
-			'<a href="https://wordpress.org/support/plugin/easy-digital-downloads/reviews/?filter=5#new-post" target="_blank" rel="noopener noreferrer">WordPress.org</a>',
+			'<a href="https://wordpress.org/support/plugin/easy-digital-downloads/reviews/#new-post" target="_blank" rel="noopener noreferrer">&#9733;&#9733;&#9733;&#9733;&#9733;</a>',
+			'<a href="https://wordpress.org/support/plugin/easy-digital-downloads/reviews/#new-post" target="_blank" rel="noopener noreferrer">WordPress.org</a>',
 		);
 
 		return $text;

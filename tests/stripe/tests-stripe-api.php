@@ -76,4 +76,20 @@ class API extends EDD_UnitTestCase {
 
 		$this->assertSame( EDD_STRIPE_API_VERSION, Stripe::$apiVersion );
 	}
+
+	public function test_get_api_version() {
+		$api = new EDD_Stripe_API;
+		$api_version = $api->get_api_version();
+
+		$this->assertSame( EDD_STRIPE_API_VERSION, $api_version );
+	}
+
+	public function test_class_alias() {
+		$this->assertTrue( class_exists( 'EDD_Stripe_API' ) );
+		$this->assertTrue( class_exists( '\EDD\Gateways\Stripe\API' ) );
+		$legacy_class = new EDD_Stripe_API();
+		$new_class    = new \EDD\Gateways\Stripe\API();
+		$this->assertInstanceOf( '\EDD\Gateways\Stripe\API', $legacy_class );
+		$this->assertInstanceOf( '\EDD\Gateways\Stripe\API', $new_class );
+	}
 }

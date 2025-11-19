@@ -240,7 +240,7 @@ class Validator {
 	 * @throws Invalid_Argument If a required field is missing.
 	 */
 	private function validate_required_fields( $input, $context ) {
-		// subtotal and total are both required.
+		// At least one amount field must be present and non-zero.
 		$required_fields = array( 'subtotal' );
 		if ( edd_use_taxes() ) {
 			$required_fields[] = 'tax';
@@ -250,6 +250,13 @@ class Validator {
 			if ( ! isset( $input[ $required_field ] ) ) {
 				throw Invalid_Argument::from( $required_field, $context );
 			}
+		}
+
+		// If tax is set, check if both subtotal and tax are zero.
+		if ( in_array( 'tax', $required_fields, true ) && $input['subtotal'] <= 0 && $input['tax'] <= 0 ) {
+			throw new Invalid_Argument(
+				__( 'At least one of subtotal or tax must be greater than zero for a refund.', 'easy-digital-downloads' )
+			);
 		}
 	}
 

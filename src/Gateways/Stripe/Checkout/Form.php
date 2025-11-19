@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  * Represents a form for processing Stripe checkout in Easy Digital Downloads Pro.
  */
 class Form {
+	use Traits\Recurring;
 
 	/**
 	 * Purchase data.
@@ -23,13 +24,6 @@ class Form {
 	 * @var array
 	 */
 	private $purchase_data;
-
-	/**
-	 * Indicates whether the cart contains a subscription.
-	 *
-	 * @var bool
-	 */
-	private $cart_contains_subscription;
 
 	/**
 	 * Indicates whether an existing intent is being used.
@@ -119,26 +113,19 @@ class Form {
 			 */
 			do_action( 'edds_process_purchase_form_before_intent', $this->purchase_data, $customer );
 
-			// Shared Intent arguments.
-			$intent_args = $this->get_intent_args( $payment_method );
+			// Create the Payment Intent Builder.
+			$intent_builder = new \EDD\Gateways\Stripe\PaymentIntents\Builder(
+				$this->purchase_data,
+				$payment_method,
+				$customer,
+				$amount
+			);
 
-			// We need the intent type later, so we'll set it here.
-			$intent_type = ( 0 === $amount || edds_is_preapprove_enabled() ) ? 'SetupIntent' : 'PaymentIntent';
+			// Get the intent type for fingerprinting and response.
+			$intent_type = $intent_builder->get_intent_type();
 
-			// Update the intent arguments based on the intent type.
-			if ( 'SetupIntent' === $intent_type ) {
-				$intent_args = $this->update_setup_intent_args( $intent_args );
-			} else {
-				$intent_args = $this->update_payment_intent_args( $intent_args, $payment_method['type'] );
-			}
-
-			if ( edd_stripe()->application_fee->has_application_fee() ) {
-				$application_fee = edd_stripe()->application_fee->get_application_fee_amount( $amount );
-				if ( ! empty( $application_fee ) ) {
-					$intent_args['application_fee_amount'] = $application_fee;
-				}
-			}
-
+			// Build arguments for fingerprint comparison (before mandate options which include timestamp).
+			$intent_args     = $intent_builder->get_arguments_for_fingerprint();
 			$new_fingerprint = md5( json_encode( $intent_args ) );
 
 			// Only update the intent, and process this further if we've made changes to the intent.
@@ -155,32 +142,12 @@ class Form {
 				);
 			}
 
-			/**
-			 * If purchasing a subscription with a card, we need to add the subscription mandate data.
-			 *
-			 * This will ensure that any cards that require mandates like INR payments or India based cards will correctly add
-			 * the mandates necessary for recurring payments.
-			 *
-			 * We do this after we check for an existing intent ID, because the mandate data will change depending on the 'timestamp'.
-			 */
-			if ( $this->is_mandate_required( $payment_method ) ) {
-				require_once EDDS_PLUGIN_DIR . 'includes/utils/class-edd-stripe-mandates.php';
-				$mandates = new \EDD_Stripe_Mandates( $this->purchase_data, $intent_type );
-
-				// Add the mandate options to the intent arguments.
-				$intent_args['payment_method_options']['card']['mandate_options'] = $mandates->mandate_options;
-			}
-
+			// Create or update the intent using the Builder.
 			if ( ! empty( $this->existing_intent ) && ! empty( $this->intent ) ) {
-				// Existing intents need to not have the automatic_payment_methods flag set.
-				if ( ! empty( $intent_args['automatic_payment_methods'] ) ) {
-					unset( $intent_args['automatic_payment_methods'] );
-				}
-
-				edds_api_request( $intent_type, 'update', $this->intent->id, $intent_args );
-				$intent = edds_api_request( $intent_type, 'retrieve', $this->intent->id );
+				$intent_builder->set_existing_intent( $this->intent );
+				$intent = $intent_builder->update( $this->intent->id );
 			} else {
-				$intent = edds_api_request( $intent_type, 'create', $intent_args );
+				$intent = $intent_builder->create();
 				$this->maybe_create_order( $payment_method['type'], $intent );
 			}
 
@@ -306,53 +273,6 @@ class Form {
 	}
 
 	/**
-	 * Checks if the cart contains a subscription.
-	 *
-	 * @since 3.3.5
-	 * @return bool Returns true if the cart contains a subscription, false otherwise.
-	 */
-	private function cart_contains_subscription() {
-		if ( is_null( $this->cart_contains_subscription ) ) {
-			$this->cart_contains_subscription = (bool) ( function_exists( 'edd_recurring' ) && edd_recurring()->cart_contains_recurring() );
-		}
-
-		return $this->cart_contains_subscription;
-	}
-
-	/**
-	 * Checks if the cart has a free trial.
-	 *
-	 * @since 3.3.5
-	 * @return bool Returns true if the cart has a free trial, false otherwise.
-	 */
-	private function cart_has_free_trial() {
-		return $this->cart_contains_subscription() && edd_recurring()->cart_has_free_trial();
-	}
-
-	/**
-	 * Retrieves the payment items for the Stripe checkout form.
-	 *
-	 * @since 3.3.5
-	 * @return array The payment items for the Stripe checkout form.
-	 */
-	private function get_payment_items() {
-		$payment_items = array();
-
-		// Create a list of {$download_id}_{$price_id}.
-		foreach ( $this->purchase_data['cart_details'] as $item ) {
-			$item_id = $item['id'];
-			if ( isset( $item['item_number']['options']['price_id'] ) ) {
-				$price_id = $item['item_number']['options']['price_id'];
-				$item_id .= '_' . intval( $price_id );
-			}
-
-			$payment_items[] = $item_id;
-		}
-
-		return $payment_items;
-	}
-
-	/**
 	 * Retrieves the customer associated with the Stripe checkout form.
 	 *
 	 * @since 3.3.5
@@ -409,58 +329,6 @@ class Form {
 		return $this->intent;
 	}
 
-	/**
-	 * Retrieves the future usage for the Stripe checkout form.
-	 *
-	 * @since 3.3.5
-	 * @param string $type The type of payment method.
-	 * @return string The future usage for the Stripe checkout form.
-	 */
-	private function get_future_usage( $type ) {
-		if ( 'link' === $type || $this->cart_contains_subscription() ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Retrieves the intent arguments for the Stripe checkout form.
-	 *
-	 * @since 3.3.5
-	 * @param array $payment_method The payment method.
-	 * @return array The intent arguments for the Stripe checkout form.
-	 * @throws \EDD_Stripe_Gateway_Exception If an error occurs.
-	 */
-	private function get_intent_args( $payment_method ) {
-		$customer = $this->get_customer();
-
-		$intent_args = array(
-			'customer'                  => $customer->id,
-			'metadata'                  => array(
-				'email'                => esc_html( $this->purchase_data['user_info']['email'] ),
-				'edd_payment_subtotal' => esc_html( $this->purchase_data['subtotal'] ),
-				'edd_payment_discount' => esc_html( $this->purchase_data['discount'] ),
-				'edd_payment_tax'      => esc_html( $this->purchase_data['tax'] ),
-				'edd_payment_tax_rate' => esc_html( $this->purchase_data['tax_rate'] ),
-				'edd_payment_fees'     => esc_html( edd_get_cart_fee_total() ),
-				'edd_payment_total'    => esc_html( $this->purchase_data['price'] ),
-				'edd_payment_items'    => esc_html( implode( ', ', $this->get_payment_items() ) ),
-				'zero_decimal_amount'  => $this->get_amount(),
-			),
-			'payment_method'            => sanitize_text_field( $payment_method['id'] ),
-			'automatic_payment_methods' => array( 'enabled' => true ),
-			'description'               => edds_get_payment_description( $this->purchase_data['cart_details'] ),
-
-		);
-
-		$payment_method_configuration = $this->get_payment_method_configuration();
-		if ( ! empty( $payment_method_configuration ) ) {
-			$intent_args['payment_method_configuration'] = $payment_method_configuration;
-		}
-
-		return $intent_args;
-	}
 
 	/**
 	 * Maybe creates an order for the Stripe checkout form.
@@ -495,7 +363,7 @@ class Form {
 	 * Checks if the intent needs more processing (likely due to args changing).
 	 *
 	 * @since 3.3.5
-	 * @param array $new_fingerprint The new fingerprint.
+	 * @param string $new_fingerprint The new fingerprint.
 	 * @return bool Returns true if the intent needs more processing, false otherwise.
 	 */
 	private function existing_intent_unchanged( $new_fingerprint ) {
@@ -503,133 +371,6 @@ class Form {
 			return false;
 		}
 
-		return hash_equals( $_REQUEST['intent_fingerprint'], $new_fingerprint );
-	}
-
-	/**
-	 * Updates the SetupIntent arguments for the Stripe checkout form.
-	 *
-	 * @since 3.3.5
-	 * @param array $intent_args The intent arguments.
-	 * @return array The updated SetupIntent arguments for the Stripe checkout form.
-	 */
-	private function update_setup_intent_args( $intent_args ) {
-		$intent_args['usage'] = 'off_session';
-
-		/**
-		 * BETA Functionality.
-		 *
-		 * Sending the automatic_payment_methods flag to the SetupIntent is a beta feature that we have to enable via an API version
-		 *
-		 * @link https://stripe.com/docs/payments/defer-intent-creation?type=setup#create-intent
-		 */
-		add_action(
-			'edds_pre_stripe_api_request',
-			function () {
-				\EDD\Vendor\Stripe\Stripe::setApiVersion( '2018-09-24;automatic_payment_methods_beta=v1' );
-			},
-			11
-		);
-
-		/**
-		 * Filters the arguments used to create a SetupIntent.
-		 *
-		 * @since 2.7.0
-		 *
-		 * @param array $intent_args   SetupIntent arguments.
-		 * @param array $purchase_data The purchase data.
-		 */
-		return apply_filters( 'edds_create_setup_intent_args', $intent_args, $this->purchase_data );
-	}
-
-	/**
-	 * Updates the PaymentIntent arguments for the Stripe checkout form.
-	 *
-	 * @since 3.3.5
-	 * @param array  $intent_args         The intent arguments.
-	 * @param string $payment_method_type The payment method type.
-	 * @return array The updated PaymentIntent arguments for the Stripe checkout form.
-	 */
-	private function update_payment_intent_args( $intent_args, $payment_method_type ) {
-
-		$intent_args['amount']   = $this->get_amount();
-		$intent_args['currency'] = edd_get_currency();
-
-		// If this is a card payment method, we need to add the statement descriptor suffix.
-		if ( 'card' === $payment_method_type ) {
-			$statement_descriptor_suffix = \EDD\Gateways\Stripe\StatementDescriptor::sanitize_suffix( $intent_args['description'] );
-			if ( ! empty( $statement_descriptor_suffix ) ) {
-				$intent_args['statement_descriptor_suffix'] = $statement_descriptor_suffix;
-			}
-		} elseif ( 'wechat_pay' === $payment_method_type ) {
-			$intent_args['payment_method_options']['wechat_pay']['client'] = 'web';
-		}
-
-		if ( $this->get_future_usage( $payment_method_type ) ) {
-			$intent_args['setup_future_usage'] = 'off_session';
-		}
-
-		/**
-		 * Filters the arguments used to create a PaymentIntent.
-		 *
-		 * @since 2.7.0
-		 *
-		 * @param array $intent_args PaymentIntent arguments.
-		 * @param array $purchase_data The purchase data.
-		 */
-		$intent_args = apply_filters( 'edds_create_payment_intent_args', $intent_args, $this->purchase_data );
-
-		/**
-		 * As of Feb 1, 2024, Stripe no longer allows Statement Descriptors for PaymentIntents with cards.
-		 *
-		 * @since 3.2.8
-		 *
-		 * Because of this EDD will always default to the Stripe settings, by sending no statement descriptor.
-		 * If a developer was altering it with this method, then the filters will no longer work, in order to avoid
-		 * failed payments from happening.
-		 *
-		 * Dynamic statement descriptors can be enabled by including the Order ID in the EDD Stripe
-		 */
-		if ( isset( $intent_args['statement_descriptor'] ) ) {
-			unset( $intent_args['statement_descriptor'] );
-		}
-
-		return $intent_args;
-	}
-
-	/**
-	 * Retrieves the payment method configuration for the Stripe checkout form.
-	 *
-	 * @since 3.3.5
-	 * @return array The payment method configuration for the Stripe checkout form.
-	 */
-	private function get_payment_method_configuration() {
-		$type = '';
-		if ( $this->cart_contains_subscription() ) {
-			$type = 'subscriptions';
-			if ( $this->cart_has_free_trial() ) {
-				$type = 'trials';
-			}
-		}
-
-		return \EDD\Gateways\Stripe\PaymentMethods::get_configuration_id( $type );
-	}
-
-	/**
-	 * Checks if a mandate is required for the Stripe checkout form.
-	 *
-	 * @since 3.3.6
-	 * @param array $payment_method The payment method.
-	 * @return bool Returns true if a mandate is required, false otherwise.
-	 */
-	private function is_mandate_required( $payment_method ) {
-		/**
-		 * Filters whether a mandate is required for the Stripe checkout form.
-		 *
-		 * @since 3.3.6
-		 * @param bool  $mandate_required Whether a mandate is required.
-		 * @param array $payment_method   The payment method.
-		 */
-		return apply_filters( 'edds_mandate_required', 'card' === $payment_method['type'], $payment_method );
+		return hash_equals( sanitize_text_field( $_REQUEST['intent_fingerprint'] ), $new_fingerprint );
 	}
 }

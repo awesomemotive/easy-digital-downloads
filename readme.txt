@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable Tag: 3.6.0
+Stable Tag: 3.6.1
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -50,6 +50,7 @@ Support payments globally with the following payment methods, immediately availa
 * EPS
 * giropay
 * iDEAL
+* Klarna
 * Przelewy24
 * PayPal
 * PayPal Credit
@@ -240,6 +241,23 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+= 3.6 1 =
+* New: Stripe - Added Klarna support to the Stripe integration.
+* New: Stripe - Added the option to enable Line Item metadata in Stripe requests.
+* New: CAPTCHA - Added support for Cloudflare Turnstile to the CAPTCHA providers.
+* Elementor: Fixed an issue with PHP compatibility.
+* Pricing: Fixed a PHP notice when passing an empty value to `edd_sanitize_amount`.
+* Taxes: Improved MySQL compatibility when `ANSI_QUOTES` is not enabled.
+* Taxes: Fixed an issue that prevented only refunding taxes on an order.
+* Shortcodes: Fixed an issue with the pagination in the downloads shortcode.
+* Dev: The list of EU Countries can now be filtered.
+* Dev: Updated Blocks API Version.
+* Dev: The setting to enable debug logging has been moved to the tools, and now saves via an AJAX Toggle.
+* Dev: Updated Stripe API Version to support Line Items and Klarna.
+
 = 3.6.0 =
 * NEW: Introducing Elementor Widget support for the Checkout Block.
 * NEW: Added support for multiple layouts on the Checkout Block.
@@ -247,8 +265,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Downloads: Fixed an issue with Chosen select fields and Bundles.
 * Dev: Added a new "Labs" section under Tools.
 * Dev: Added Cart Caching to Labs - an experimental feature that improves cart and checkout performance.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.5.3 =
 * New: Blocks - Added optional captcha support to checkout block.

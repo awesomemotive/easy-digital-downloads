@@ -509,7 +509,7 @@ function edd_ajax_process_refund_form() {
 	if ( ! empty( $form_data['refund_order_item'] ) && is_array( $form_data['refund_order_item'] ) ) {
 		foreach ( $form_data['refund_order_item'] as $order_item_id => $order_item ) {
 			// If there's no quantity or subtotal - bail.
-			if ( empty( $order_item['quantity'] ) || empty( $order_item['subtotal'] ) ) {
+			if ( empty( $order_item['quantity'] ) || ( empty( $order_item['subtotal'] ) && empty( $order_item['tax'] ) ) ) {
 				continue;
 			}
 

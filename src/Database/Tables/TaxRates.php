@@ -58,18 +58,18 @@ class TaxRates extends Table {
 	 * @return void
 	 */
 	protected function set_schema() {
-		$this->schema = '
+		$this->schema = "
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			country varchar(64) DEFAULT NULL,
 			state varchar(64) DEFAULT NULL,
 			amount decimal(18,9) NOT NULL DEFAULT 0,
-			scope varchar(20) NOT NULL DEFAULT "country",
-			status varchar(20) NOT NULL DEFAULT "active",
-			source varchar(20) NOT NULL DEFAULT "manual",
+			scope varchar(20) NOT NULL DEFAULT 'country',
+			status varchar(20) NOT NULL DEFAULT 'active',
+			source varchar(20) NOT NULL DEFAULT 'manual',
 			date_created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			date_modified datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			KEY country_state (country, state)
-		';
+		";
 	}
 }

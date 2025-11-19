@@ -560,6 +560,27 @@ class EDD_Notices {
 				);
 			}
 		}
+
+		if ( 'edd-stripe' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
+			$message = filter_input( INPUT_GET, 'edd-message', FILTER_SANITIZE_SPECIAL_CHARS );
+			if ( 'stripe-payment-methods-sync' === $message ) {
+				$this->add_notice(
+					array(
+						'id'      => 'stripe-payment-methods-sync',
+						'message' => __( 'Stripe payment methods synced successfully.', 'easy-digital-downloads' ),
+						'class'   => 'updated',
+					)
+				);
+			} elseif ( 'stripe-payment-methods-sync-failed' === $message ) {
+				$this->add_notice(
+					array(
+						'id'      => 'stripe-payment-methods-sync-failed',
+						'message' => __( 'Stripe payment methods could not be synced.', 'easy-digital-downloads' ),
+						'class'   => 'error',
+					)
+				);
+			}
+		}
 	}
 
 	/**

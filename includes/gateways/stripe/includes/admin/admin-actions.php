@@ -188,3 +188,32 @@ function edds_process_settings_flags() {
 	exit;
 }
 add_action( 'admin_init', 'edds_process_settings_flags', 1 );
+
+/**
+ * Resets the Stripe payment method configurations.
+ *
+ * @since 3.6.1
+ * @param array $data The data submitted to the action.
+ * @return void
+ */
+function edds_stripe_reset_payment_methods( $data ) {
+	$args = array(
+		'page'        => 'edd-settings',
+		'tab'         => 'gateways',
+		'section'     => 'edd-stripe',
+		'edd-message' => 'stripe-payment-methods-sync-failed',
+	);
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		edd_redirect( edd_get_admin_url( $args ) );
+	}
+
+	if ( empty( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd-reset-payment-methods' ) ) {
+		edd_redirect( edd_get_admin_url( $args ) );
+	}
+
+	$args['edd-message'] = 'stripe-payment-methods-sync';
+
+	EDD\Gateways\Stripe\PaymentMethods::reset();
+	edd_redirect( edd_get_admin_url( $args ) );
+}
+add_action( 'edd_stripe_reset_payment_methods', 'edds_stripe_reset_payment_methods' );

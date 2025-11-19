@@ -110,7 +110,8 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Discounts\Manager(),
 			new Gateways\Square\Admin\Settings\Register(),
 			new Admin\Downloads\Filters(),
-			new Admin\Tools\Labs(),
+			new Admin\Settings\Ajax\Toggle(),
+			new Admin\Tools\Loader(),
 		);
 
 		return $providers;

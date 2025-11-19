@@ -33,12 +33,12 @@ class Cart extends Base {
 			'cart_section_style' => array(
 				'label'    => __( 'Cart', 'easy-digital-downloads' ),
 				'controls' => array_filter(
-					array(
-						...self::get_main_cart_controls(),
-						...self::get_cart_header_controls(),
-						...self::get_cart_items_controls(),
-						...self::get_cart_quantity_controls(),
-						...self::get_cart_footer_controls(),
+					array_merge(
+						self::get_main_cart_controls(),
+						self::get_cart_header_controls(),
+						self::get_cart_items_controls(),
+						self::get_cart_quantity_controls(),
+						self::get_cart_footer_controls()
 					)
 				),
 			),

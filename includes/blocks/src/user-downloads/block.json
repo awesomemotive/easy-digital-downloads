@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "edd/user-downloads",
 	"version": "2.0.0",
 	"title": "EDD User Downloads",
