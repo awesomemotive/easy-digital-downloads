@@ -104,14 +104,16 @@ class Phone extends Base {
 			return;
 		}
 
-		wp_enqueue_script( 'intl-tel-input', EDD_PLUGIN_URL . 'assets/js/vendor/intl-tel-input/js/intlTelInput.min.js', array(), edd_admin_get_script_version(), true );
-		wp_enqueue_script( 'edd-intl-tel-input', EDD_PLUGIN_URL . 'assets/js/utils/intl-tel-input.js', array( 'intl-tel-input' ), edd_admin_get_script_version(), true );
-		wp_enqueue_style( 'intl-tel-input', EDD_PLUGIN_URL . 'assets/js/vendor/intl-tel-input/css/intlTelInput.min.css', array(), edd_admin_get_script_version() );
+		$vendor_url = edd_get_assets_url( 'vendor' );
+
+		wp_enqueue_script( 'intl-tel-input', $vendor_url . 'intl-tel-input/js/intlTelInput.min.js', array(), edd_admin_get_script_version(), true );
+		wp_enqueue_script( 'edd-intl-tel-input', edd_get_assets_url( 'js/frontend/' ) . 'intl-tel-input.js', array( 'intl-tel-input' ), edd_admin_get_script_version(), true );
+		wp_enqueue_style( 'intl-tel-input', $vendor_url . 'intl-tel-input/css/intlTelInput.min.css', array(), edd_admin_get_script_version() );
 		wp_localize_script(
 			'intl-tel-input',
 			'EDDIntlTelInput',
 			array(
-				'utils' => EDD_PLUGIN_URL . 'assets/js/vendor/intl-tel-input/js/intlTelInput.min.js',
+				'utils' => $vendor_url . 'intl-tel-input/js/intlTelInput.min.js',
 			)
 		);
 	}

@@ -58,7 +58,7 @@ class SquareWebhooksModal extends Notice {
 	 * @return string
 	 */
 	public function get_ajax_content() {
-		if ( ! $this->_should_display() ) {
+		if ( 'squarewebhooksmodal' !== filter_input( INPUT_GET, 'notice_id', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
 			return '';
 		}
 
@@ -88,12 +88,12 @@ class SquareWebhooksModal extends Notice {
 				<?php
 					$token_input = new Text(
 						array(
-							'id' => 'edd-square-personal-access-token',
-							'name' => 'token',
-							'label' => '',
-							'value' => '',
+							'id'          => 'edd-square-personal-access-token',
+							'name'        => 'token',
+							'label'       => '',
+							'value'       => '',
 							'placeholder' => __( 'Enter your Personal Access Token', 'easy-digital-downloads' ),
-							'class' => 'regular-text',
+							'class'       => 'regular-text',
 						)
 					);
 					$token_input->output();
@@ -140,4 +140,14 @@ class SquareWebhooksModal extends Notice {
 	 * @return void
 	 */
 	protected function _display() {}
+
+	/**
+	 * Determines if the notice should be displayed on render.
+	 *
+	 * @since 3.6.2
+	 * @return bool
+	 */
+	protected function _should_display(): bool {
+		return 'square' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
+	}
 }

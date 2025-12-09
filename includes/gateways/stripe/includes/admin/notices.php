@@ -14,7 +14,7 @@
 function edds_admin_notices_scripts() {
 	wp_register_script(
 		'edds-admin-notices',
-		EDD_PLUGIN_URL . 'assets/js/stripe-notices.js',
+		edd_get_assets_url( 'js/admin' ) . 'stripe-notices.js',
 		array(
 			'wp-util',
 			'jquery',

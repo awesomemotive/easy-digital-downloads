@@ -24,22 +24,25 @@ class Styles {
 	 * @return void
 	 */
 	public static function register() {
-		$css_dir    = EDD_PLUGIN_URL . 'assets/css/';
+		$css_dir    = edd_get_assets_url( 'css/admin' );
+		$vendor_dir = edd_get_assets_url( 'vendor/css' );
 		$css_suffix = is_rtl() ? '-rtl.min.css' : '.min.css';
 		$version    = edd_admin_get_script_version();
 		$deps       = array( 'edd-admin' );
 
-		// Register styles.
-		wp_register_style( 'jquery-chosen', $css_dir . 'chosen' . $css_suffix, array(), $version );
-		wp_register_style( 'jquery-ui-css', $css_dir . 'jquery-ui-fresh' . $css_suffix, array(), $version );
-		wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $css_suffix, array( 'forms' ), $version );
-		wp_register_style( 'edd-admin-menu', $css_dir . 'edd-admin-menu' . $css_suffix, array(), $version );
-		wp_register_style( 'edd-admin-chosen', $css_dir . 'edd-admin-chosen' . $css_suffix, $deps, $version );
-		wp_register_style( 'edd-admin-email-tags', $css_dir . 'edd-admin-email-tags' . $css_suffix, $deps, $version );
-		wp_register_style( 'edd-admin-datepicker', $css_dir . 'edd-admin-datepicker' . $css_suffix, $deps, $version );
-		wp_register_style( 'edd-admin-tax-rates', $css_dir . 'edd-admin-tax-rates' . $css_suffix, $deps, $version );
-		wp_register_style( 'edd-admin-onboarding', $css_dir . 'edd-admin-onboarding' . $css_suffix, $deps, $version );
-		wp_register_style( 'edd-admin-emails', $css_dir . 'edd-admin-emails' . $css_suffix, $deps, $version );
+		// Register vendor styles from assets/vendor/css.
+		wp_register_style( 'jquery-chosen', $vendor_dir . 'chosen' . $css_suffix, array(), $version );
+		wp_register_style( 'jquery-ui-css', $vendor_dir . 'jquery-ui-fresh' . $css_suffix, array(), $version );
+
+		// Register compiled styles from assets/build/css.
+		wp_register_style( 'edd-admin', $css_dir . 'admin' . $css_suffix, array( 'forms' ), $version );
+		wp_register_style( 'edd-admin-menu', $css_dir . 'menu' . $css_suffix, array(), $version );
+		wp_register_style( 'edd-admin-chosen', $css_dir . 'chosen' . $css_suffix, $deps, $version );
+		wp_register_style( 'edd-admin-email-tags', $css_dir . 'email-tags' . $css_suffix, $deps, $version );
+		wp_register_style( 'edd-admin-datepicker', $css_dir . 'datepicker' . $css_suffix, $deps, $version );
+		wp_register_style( 'edd-admin-tax-rates', $css_dir . 'tax-rates' . $css_suffix, $deps, $version );
+		wp_register_style( 'edd-admin-onboarding', $css_dir . 'onboarding' . $css_suffix, $deps, $version );
+		wp_register_style( 'edd-admin-emails', $css_dir . 'emails' . $css_suffix, $deps, $version );
 	}
 
 	/**
@@ -53,7 +56,7 @@ class Styles {
 		// Always enqueue the admin menu CSS.
 		wp_enqueue_style( 'edd-admin-menu' );
 
-		// Bail if not an EDD admin page
+		// Bail if not an EDD admin page.
 		if ( ! edd_should_load_admin_scripts( $hook ) ) {
 			return;
 		}

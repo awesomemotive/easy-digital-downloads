@@ -24,21 +24,17 @@ class Checkout {
 	 * @return void
 	 */
 	public static function register() {
-		$scripts = array(
-			'creditCardValidator' => 'vendor/jquery.creditcardvalidator.min.js',
-			'jQuery.payment'      => 'vendor/jquery.payment.min.js',
-			'edd-checkout-global' => 'edd-checkout-global.js',
-			'edd-ajax'            => 'edd-ajax.js',
-		);
-		foreach ( $scripts as $handle => $file ) {
-			wp_register_script(
-				$handle,
-				EDD_PLUGIN_URL . 'assets/js/' . $file,
-				array( 'jquery' ),
-				edd_admin_get_script_version(),
-				edd_scripts_in_footer()
-			);
-		}
+		$js_dir     = edd_get_assets_url( 'js/frontend' );
+		$vendor_dir = edd_get_assets_url( 'vendor/js' );
+		$version    = edd_admin_get_script_version();
+
+		// Register vendor scripts from assets/vendor/js.
+		wp_register_script( 'creditCardValidator', $vendor_dir . 'jquery.creditcardvalidator.min.js', array( 'jquery' ), $version, edd_scripts_in_footer() );
+		wp_register_script( 'jQuery.payment', $vendor_dir . 'jquery.payment.min.js', array( 'jquery' ), $version, edd_scripts_in_footer() );
+
+		// Register compiled scripts from assets/build/js.
+		wp_register_script( 'edd-checkout-global', $js_dir . 'checkout.js', array( 'jquery' ), $version, edd_scripts_in_footer() );
+		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax.js', array( 'jquery' ), $version, edd_scripts_in_footer() );
 	}
 
 	/**

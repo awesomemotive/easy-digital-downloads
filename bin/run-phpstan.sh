@@ -18,13 +18,13 @@ if [[ -f composer.lock ]]; then
 	rm composer.lock
 fi
 
-printf "\r\xE2\x9C\x94 Copying repo to %s" ${REPO_DIR}
+printf "\r✔ Copying repo to %s" ${REPO_DIR}
 printf "\n"
 
 printf "\n"
 printf "Installing composer dependencies"
 composer -q --no-cache install
-printf "\r\xE2\x9C\x94 Installing composer dependencies"
+printf "\r✔ Installing composer dependencies"
 printf "\n"
 
 vendor/bin/phpstan analyze --memory-limit=1G --no-ansi --no-progress > /tmp/artifacts/${BUILDKITE_BUILD_ID}/phpstan-report.txt

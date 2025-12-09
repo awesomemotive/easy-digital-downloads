@@ -66,6 +66,9 @@ class Core extends EventManagement\Subscribers {
 
 			// Blocks.
 			new Blocks\Loader(),
+
+			new Cart\Preview\Component(),
+			new REST\Manager(),
 		);
 	}
 

@@ -1,0 +1,110 @@
+/**
+ * Cart Preview Animations - Keyframes
+ *
+ * Centralized animation definitions for cart preview slideout.
+ * Includes both LTR and RTL animations for mobile and desktop.
+ *
+ * @package EDD\Cart\Preview
+ */
+
+// ============================================================================
+// Mobile Animations (Bottom Sheet) - Direction-agnostic
+// ============================================================================
+
+/**
+ * Mobile: Slide up animation (opening)
+ * Bottom sheet slides up from bottom of screen
+ */
+@keyframes slideUp {
+	from {
+		transform: translateY(100%);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
+/**
+ * Mobile: Slide down animation (closing)
+ * Bottom sheet slides down to bottom of screen
+ */
+@keyframes slideDown {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(100%);
+	}
+}
+
+// ============================================================================
+// Desktop LTR Animations (Right Slideout)
+// ============================================================================
+
+/**
+ * Desktop LTR: Slide in from right (opening)
+ * Panel appears from right side of screen
+ */
+@keyframes slideIn {
+	from {
+		transform: translateX(100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+/**
+ * Desktop LTR: Slide out to right (closing)
+ * Panel disappears to right side of screen
+ */
+@keyframes slideOut {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(100%);
+	}
+}
+
+// ============================================================================
+// Desktop RTL Animations (Left Slideout)
+// ============================================================================
+
+/**
+ * Desktop RTL: Slide in from left (opening)
+ * Panel appears from left side of screen (mirrored behavior for RTL)
+ */
+@keyframes slideInRTL {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+/**
+ * Desktop RTL: Slide out to left (closing)
+ * Panel disappears to left side of screen (mirrored behavior for RTL)
+ */
+@keyframes slideOutRTL {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-100%);
+	}
+}
+
+@keyframes bounce {
+	0%, 20%, 50%, 80%, 100% {
+		transform: translateX(-50%) translateY(0);
+	}
+	40% {
+		transform: translateX(-50%) translateY(-8px);
+	}
+	60% {
+		transform: translateX(-50%) translateY(-4px);
+	}
+}

@@ -3,40 +3,169 @@
  */
 const path = require( 'path' );
 const webpack = require( 'webpack' );
-const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
-const UglifyJS = require( 'uglify-es' );
 const MiniCSSExtractPlugin = require( 'mini-css-extract-plugin' );
 const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
 const RTLCSSWebpackPlugin = require( 'rtlcss-webpack-plugin' );
+const glob = require( 'glob' );
 
 /**
  * WordPress dependencies
  */
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config.js' );
 
-const adminPages = [
-	'customers',
-	'dashboard',
-	'discounts',
-	'downloads',
-	'tools/export',
-	'tools/import',
-	'notes',
-	'onboarding',
-	'orders',
-	'reports',
-	'payments',
-	'settings',
-	'tools',
-	'upgrades',
-	'flyout',
-	'notifications',
-	'emails/list-table',
-	'emails/editor',
-];
+/**
+ * Auto-discover JavaScript entry points.
+ *
+ * Conventions:
+ * - Files named *.entry.js are explicit entry points
+ * - index.js files in assets/src/js/admin/* directories become js/admin/* entries
+ * - index.js files in assets/src/js/frontend/* directories become js/frontend/* entries
+ * - index.js files in assets/src/js/frontend/gateways/* become js/gateways/* entries
+ */
+const getJsEntryPoints = () => {
+	const entries = {};
 
-const minifyJs = ( content ) => {
-	return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
+	// Auto-discover admin page entries (index.js files in admin subdirectories)
+	// Exclude utility directories like components and gateways
+	const adminIndexFiles = glob.sync( './assets/src/js/admin/*/index.js', {
+		ignore: [
+			'./assets/src/js/admin/components/**',
+			'./assets/src/js/admin/gateways/**',
+		]
+	} );
+	adminIndexFiles.forEach( ( file ) => {
+		const dirName = path.basename( path.dirname( file ) );
+		entries[ `js/admin/${ dirName }` ] = file;
+	} );
+
+	// Auto-discover admin nested entries (e.g., tools/export, emails/list-table, settings/email-tags)
+	// Exclude utility directories like components and gateways, and modules imported by parent
+	const adminNestedIndexFiles = glob.sync( './assets/src/js/admin/*/*/index.js', {
+		ignore: [
+			'./assets/src/js/admin/components/**',
+			'./assets/src/js/admin/gateways/**',
+			'./assets/src/js/admin/orders/order-details/**',
+			'./assets/src/js/admin/orders/order-overview/**',
+		]
+	} );
+	adminNestedIndexFiles.forEach( ( file ) => {
+		const relativePath = path.relative( './assets/src/js/admin', path.dirname( file ) );
+		// Convert path separators to dashes for the entry name
+		// e.g., admin/emails/editor -> emails-editor, admin/settings/tax-rates -> settings-tax-rates
+		const entryName = relativePath.replace( /[\/\\]/g, '-' );
+		entries[ `js/admin/${ entryName }` ] = file;
+	} );
+
+	// Auto-discover frontend entries (e.g., checkout)
+	const frontendIndexFiles = glob.sync( './assets/src/js/frontend/*/index.js', {
+		ignore: [
+			'./assets/src/js/frontend/gateways/**',
+		]
+	} );
+	frontendIndexFiles.forEach( ( file ) => {
+		const dirName = path.basename( path.dirname( file ) );
+		entries[ `js/frontend/${ dirName }` ] = file;
+	} );
+
+	// Auto-discover gateway entries - flattened at gateways/ level for easier access
+	const gatewayIndexFiles = glob.sync( './assets/src/js/frontend/gateways/*/index.js' );
+	gatewayIndexFiles.forEach( ( file ) => {
+		const gatewayName = path.basename( path.dirname( file ) );
+		entries[ `js/gateways/${ gatewayName }` ] = file;
+	} );
+
+	// Auto-discover all .entry.js files for explicit entries
+	const entryFiles = glob.sync( './assets/src/js/**/*.entry.js' );
+	entryFiles.forEach( ( file ) => {
+		const relativePath = path.relative( './assets/src/js', file );
+		let entryName = relativePath
+			.replace( /\.entry\.js$/, '' )
+			.replace( /[\/\\]/g, '-' );
+
+		// Handle naming conventions for different paths
+		if ( entryName === 'admin' ) {
+			// Root admin file: admin.entry.js -> js/admin/admin
+			entryName = 'js/admin/admin';
+		} else if ( entryName.startsWith( 'admin-' ) ) {
+			// Admin files: admin/foo/bar.entry.js -> js/admin/foo-bar
+			entryName = 'js/admin/' + entryName.replace( 'admin-', '' );
+		} else if ( entryName.startsWith( 'frontend-gateways-' ) ) {
+			// Frontend gateway files: frontend/gateways/stripe/foo.entry.js -> js/gateways/stripe-foo
+			entryName = 'js/gateways/' + entryName.replace( 'frontend-gateways-', '' );
+		} else if ( entryName.startsWith( 'frontend-' ) ) {
+			// Frontend files: frontend/foo.entry.js -> js/frontend/foo
+			entryName = 'js/frontend/' + entryName.replace( 'frontend-', '' );
+		}
+
+		entries[ entryName ] = file;
+	} );
+
+	// Auto-discover pro entries
+	const proEntryFiles = glob.sync( './assets/src/pro/js/**/*.entry.js' );
+	proEntryFiles.forEach( ( file ) => {
+		const relativePath = path.relative( './assets/src/pro/js', file );
+		const entryName = relativePath
+			.replace( /\.entry\.js$/, '' )
+			.replace( /[\/\\]/g, '/' );
+		entries[ `pro/js/${ entryName }` ] = file;
+	} );
+
+	return entries;
+};
+
+/**
+ * Auto-discover SCSS entry points.
+ *
+ * Conventions:
+ * - Only top-level .scss files in assets/src/scss/admin/ and assets/src/scss/frontend/ become entries
+ * - Subdirectories are for organization - their files are imported, not built separately
+ * - Partials (starting with _) are excluded
+ */
+const getScssEntryPoints = () => {
+	const entries = {};
+
+	// Auto-discover top-level SCSS files in admin and frontend (excluding partials)
+	const topLevelScss = glob.sync( './assets/src/scss/{admin,frontend}/*.scss', {
+		ignore: [
+			'./assets/src/scss/{admin,frontend}/_*.scss'
+		]
+	} );
+	topLevelScss.forEach( ( file ) => {
+		const fileName = path.basename( file, '.scss' );
+		const dirName = path.basename( path.dirname( file ) );
+		entries[ `css/${ dirName }/${ fileName }` ] = file;
+	} );
+
+	// Auto-discover gateway SCSS files
+	const gatewayScss = glob.sync( './assets/src/scss/frontend/gateways/*.scss', {
+		ignore: [
+			'./assets/src/scss/frontend/gateways/_*.scss'
+		]
+	} );
+	gatewayScss.forEach( ( file ) => {
+		const fileName = path.basename( file, '.scss' );
+		entries[ `css/gateways/${ fileName }` ] = file;
+	} );
+
+	// Auto-discover stripe-specific SCSS files in subdirectories
+	const stripeScss = glob.sync( './assets/src/scss/frontend/stripe/*.scss', {
+		ignore: [
+			'./assets/src/scss/frontend/stripe/_*.scss'
+		]
+	} );
+	stripeScss.forEach( ( file ) => {
+		const fileName = path.basename( file, '.scss' );
+		entries[ `css/gateways/stripe-${ fileName }` ] = file;
+	} );
+
+	// Auto-discover pro SCSS entries - only top-level style.scss files
+	const proScss = glob.sync( './assets/src/pro/scss/*/style.scss' );
+	proScss.forEach( ( file ) => {
+		const dirName = path.basename( path.dirname( file ) );
+		entries[ `pro/css/${ dirName }/style` ] = file;
+	} );
+
+	return entries;
 };
 
 // Webpack configuration.
@@ -45,161 +174,60 @@ const config = {
 	resolve: {
 		...defaultConfig.resolve,
 		modules: [
-			`${ __dirname }/assets/js`,
+			`${ __dirname }/assets/src/js`,
 			'node_modules',
 		],
 
 		// Alias faked packages. One day these may be published...
 		alias: {
 			...defaultConfig.resolve.alias,
-			'@easy-digital-downloads/currency': path.resolve( __dirname, 'assets/js/packages/currency/src/index.js' ),
+			'@easy-digital-downloads/currency': path.resolve( __dirname, 'assets/src/js/packages/currency/src/index.js' ),
+			'@easy-digital-downloads/hooks': path.resolve( __dirname, 'assets/src/js/utilities/hooks.js' ),
+			'@easy-digital-downloads/icons': path.resolve( __dirname, 'assets/src/js/utilities/icons.js' ),
+
 		},
 	},
 	entry: {
-		// Dynamic entry points for individual admin pages.
-		...adminPages.reduce( ( memo, path ) => {
-			memo[ `js/edd-admin-${ path.replace( '/', '-' ) }` ] = `./assets/js/admin/${ path }`;
-			return memo;
-		}, {} ),
-
-		// Static admin pages.
-		'js/edd-admin': './assets/js/admin',
-		'js/edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
-		'js/edd-admin-email-tags': './assets/js/admin/settings/email-tags',
-		'js/edd-admin-extension-manager': './assets/js/admin/settings/extension-manager',
-		'js/edd-admin-notices': './assets/js/admin/notices',
-		'js/edd-admin-pass-handler': './assets/js/admin/settings/pass-handler',
-		'js/edd-admin-onboarding': './assets/js/admin/onboarding',
-		'js/edd-admin-licensing': './assets/js/admin/settings/licensing',
-		'js/edd-admin-pointers': './assets/js/admin/pointers',
-		'js/edd-admin-downloads-editor': './assets/js/admin/downloads/editor',
-		'js/edd-admin-tools-labs': './assets/js/admin/tools/labs/index.js',
-		'js/stripe-admin': './assets/js/admin/stripe/index.js',
-		'js/stripe-notices': './assets/js/admin/stripe/notices.js',
-		'js/square-admin': './assets/js/admin/gateways/square.js',
-
-		// Front-end JavaScript.
-		'js/edd-ajax': './assets/js/frontend/edd-ajax.js',
-		'js/edd-checkout-global': './assets/js/frontend/checkout',
-		'js/edd-modal': './assets/js/frontend/edd-modal.js',
-		'js/user-verification': './assets/js/frontend/user-verification.js',
-		'js/paypal-checkout': './assets/js/frontend/gateways/paypal.js',
-		'js/stripe-cardelements': './assets/js/frontend/gateways/stripe/loader/card-elements.js',
-		'js/stripe-paymentelements': './assets/js/frontend/gateways/stripe/loader/payment-elements.js',
-		'js/square-checkout': './assets/js/frontend/gateways/square',
-
-		'pro/js/checkout': './assets/pro/js/frontend/geolocation/index.js',
-		'pro/js/duplicator': './assets/pro/js/admin/duplicator.js',
-		'pro/js/vat': './assets/pro/js/frontend/taxes/index.js',
-
-		// Admin styles.
-		'edd-admin-style': './assets/css/admin/style.scss',
-		'edd-admin-chosen-style': './assets/css/admin/chosen/style.scss',
-		'edd-admin-datepicker-style': './assets/css/admin/datepicker.scss',
-		'edd-admin-email-tags-style': './assets/css/admin/email-tags.scss',
-		'edd-admin-menu-style': './assets/css/admin/menu.scss',
-		'edd-admin-tax-rates-style': './assets/css/admin/tax-rates/style.scss',
-		'edd-admin-extension-manager-style': './assets/css/admin/extension-manager.scss',
-		'edd-admin-pass-handler-style': './assets/css/admin/pass-handler.scss',
-		'edd-admin-onboarding-style': './assets/css/admin/onboarding/style.scss',
-		'stripe-admin': './assets/css/admin/gateways/stripe.scss',
-		'square-admin': './assets/css/admin/gateways/square.scss',
-		'edd-admin-notifications-style': './assets/css/admin/notifications/style.scss',
-		'edd-admin-emails-style': './assets/css/admin/emails/style.scss',
-		'edd-admin-pointers-style': './assets/css/admin/pointers/style.scss',
-
-		'edd-style': './assets/css/frontend/style.scss',
-		'stripe-cardelements': './assets/css/frontend/stripe/card-elements.scss',
-		'stripe-paymentelements': './assets/css/frontend/stripe/payment-elements.scss',
-		'square-checkout': './assets/css/frontend/gateways/square.scss',
-		'pro/css/edd-invoice': './assets/pro/scss/invoice/style.scss',
-		'pro/css/downloads': './assets/pro/scss/downloads/style.scss',
+		// Automatically discovered entry points
+		...getJsEntryPoints(),
+		...getScssEntryPoints(),
 	},
 	output: {
 		filename: '[name].js',
-		path: path.resolve( __dirname, 'assets' ),
+		path: path.resolve( __dirname, 'assets/build' ),
 	},
 	externals: {
 		jquery: 'jQuery',
 		$: 'jQuery',
+		// Note: @wordpress/interactivity is NOT externalized because it uses
+		// WordPress script modules, which handle import mapping automatically.
+		// The import will be resolved by WordPress Core at runtime.
 	},
 	plugins: [
 		new MiniCSSExtractPlugin( {
 			filename: ( pathData ) => {
-				if ( pathData.chunk.name.startsWith( 'pro/css/' ) ) {
-					return pathData.chunk.name + '.min.css';
+				const name = pathData.chunk.name;
+				if ( name.startsWith( 'pro/css/' ) ) {
+					// Pro CSS: pro/css/invoice/style -> pro/css/invoice/style.min.css
+					return `${ name }.min.css`;
 				}
-				return `css/${ pathData.chunk.name.replace( '-style', '' ) }.min.css`;
+				return `${ name.replace( '-style', '' ) }.min.css`;
 			}
 		} ),
 		new RemoveEmptyScriptsPlugin(),
 		new RTLCSSWebpackPlugin( {
 			filename: ( pathData ) => {
-				if ( pathData.chunk.name.startsWith( 'pro/css/' ) ) {
-					return pathData.chunk.name.replace( '-style', '' ) + '-rtl.min.css';
+				const name = pathData.chunk.name;
+				if ( name.startsWith( 'pro/css/' ) ) {
+					// Pro RTL CSS: pro/css/invoice/style -> pro/css/invoice/style-rtl.min.css
+					return `${ name.replace( '-style', '' ) }-rtl.min.css`;
 				}
-				return `css/${ pathData.chunk.name.replace( '-style', '' ) }-rtl.min.css`;
+				return `${ name.replace( '-style', '' ) }-rtl.min.css`;
 			}
 		} ),
 		new webpack.ProvidePlugin( {
 			$: 'jquery',
 			jQuery: 'jquery'
-		} ),
-		// Copy vendor files to ensure 3rd party plugins relying on a script
-		// handle to exist continue to be enqueued.
-		new CopyWebpackPlugin( {
-			patterns: [
-				// Styles.
-				{
-					from: 'assets/css/vendor',
-					to: 'css',
-				},
-
-				// Scripts.
-				{
-					from: './node_modules/chart.js/dist/Chart.min.js',
-					to: 'js/vendor/chartjs.min.js',
-				},
-				{
-					from: './node_modules/flot/jquery.flot.js',
-					to: 'js/vendor/jquery.flot.min.js',
-					transform: ( content ) => minifyJs( content ),
-				},
-				{
-					from: './node_modules/flot/jquery.flot.time.js',
-					to: 'js/vendor/jquery.flot.time.min.js',
-					transform: ( content ) => minifyJs( content ),
-				},
-				{
-					from: './node_modules/flot/jquery.flot.pie.js',
-					to: 'js/vendor/jquery.flot.pie.min.js',
-					transform: ( content ) => minifyJs( content ),
-				},
-				{
-					from: './node_modules/moment/moment.js',
-					to: 'js/vendor/moment.min.js',
-					transform: ( content ) => minifyJs( content ),
-				},
-				{
-					from: './node_modules/moment-timezone/moment-timezone.js',
-					to: 'js/vendor/moment-timezone.min.js',
-					transform: ( content ) => minifyJs( content ),
-				},
-				{
-					from: './node_modules/jquery-creditcardvalidator/jquery.creditCardValidator.js',
-					to: 'js/vendor/jquery.creditcardvalidator.min.js',
-					transform: ( content ) => minifyJs( content ),
-				},
-				{
-					from: './node_modules/jquery-validation/dist/jquery.validate.min.js',
-					// This file is not registered in EDD so the URL must remain the same.
-					to: 'js/jquery.validate.min.js',
-				},
-				{
-					from: './node_modules/jquery.payment/lib/jquery.payment.min.js',
-					to: 'js/vendor/jquery.payment.min.js',
-				},
-			]
 		} ),
 	],
 };

@@ -4,7 +4,7 @@
  *
  * @package     EDD\Gateways
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
@@ -904,36 +904,68 @@ function edd_get_paypal_image_url() {
  * This helps address the Race Condition, as detailed in issue #1839
  *
  * @since 1.9
+ * @param string $content The page content.
  * @return string
  */
 function edd_paypal_success_page_content( $content ) {
 
 	$order_id = filter_input( INPUT_GET, 'payment-id', FILTER_SANITIZE_NUMBER_INT );
+
+	// Fallback to $_GET if filter_input returns null (for test environments).
+	if ( ! $order_id && isset( $_GET['payment-id'] ) ) {
+		$order_id = absint( $_GET['payment-id'] );
+	}
+
 	$session  = edd_get_purchase_session();
-	if ( ! $order_id && ! empty( $session['purchase_key'] ) ) {
+	if ( ! $order_id && is_array( $session ) && ! empty( $session['purchase_key'] ) ) {
 		$order_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
 	}
-	if ( ! $order_id && ! $session ) {
+	if ( ! $order_id && ( ! is_array( $session ) || empty( $session ) ) ) {
 		return $content;
 	}
 
-	edd_empty_cart();
-
 	$payment_confirmation = filter_input( INPUT_GET, 'payment-confirmation', FILTER_SANITIZE_SPECIAL_CHARS );
+
+	// Fallback to $_GET if filter_input returns null (for test environments).
+	if ( ! $payment_confirmation && isset( $_GET['payment-confirmation'] ) ) {
+		$payment_confirmation = sanitize_text_field( $_GET['payment-confirmation'] );
+	}
+
 	if ( 'paypal' !== $payment_confirmation ) {
 		return $content;
 	}
 
 	$order = edd_get_order( $order_id );
-	if ( $order && 'pending' === $order->status ) {
 
-		// Payment is still pending so show processing indicator to fix the Race Condition, issue #.
-		ob_start();
+	// If order exists, ensure session is set for receipt retrieval.
+	if ( $order ) {
+		// Restore session if it's empty or doesn't match current order.
+		if ( ! is_array( $session ) || empty( $session['purchase_key'] ) || $session['purchase_key'] !== $order->payment_key ) {
+			edd_set_purchase_session(
+				array(
+					'purchase_key' => $order->payment_key,
+				)
+			);
+		}
 
-		edd_get_template_part( 'payment', 'processing' );
+		// Clear the cart after session is restored.
+		edd_empty_cart();
 
-		return ob_get_clean();
+		// If order is still pending, show processing indicator.
+		if ( 'pending' === $order->status ) {
+			ob_start();
+			edd_get_template_part( 'payment', 'processing' );
+			return ob_get_clean();
+		}
+
+		// Order is complete, redirect to clean success URL with restored session.
+		// This allows the receipt shortcode to render properly on reload.
+		// Similar to Stripe gateway approach.
+		edd_redirect( edd_get_success_page_uri() );
 	}
+
+	// Clear the cart if order doesn't exist.
+	edd_empty_cart();
 
 	return $content;
 }

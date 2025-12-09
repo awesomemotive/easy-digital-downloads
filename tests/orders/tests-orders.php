@@ -372,6 +372,28 @@ class Orders extends EDD_UnitTestCase {
 		$this->assertSame( 1, edd_count_orders( array( 'product_price_id' => 1 ) ) );
 	}
 
+	public function test_get_orders_with_product_id_and_compare_query_total_should_return_at_least_1_order() {
+		$items      = edd_get_order_items( array( 'order_id' => self::$orders[0] ) );
+		$product_id = ! empty( $items ) ? $items[0]->product_id : 0;
+
+		// This combination previously caused "Column 'total' in where clause is ambiguous"
+		// because both edd_orders and edd_order_items tables have a 'total' column,
+		// and the compare_query was not prefixing the column with the table alias.
+		$orders = edd_get_orders( array(
+			'product_id'    => $product_id,
+			'compare_query' => array(
+				array(
+					'key'     => 'total',
+					'value'   => 0,
+					'compare' => '>',
+				),
+			),
+		) );
+
+		// Should return at least 1 order without a database error.
+		$this->assertGreaterThanOrEqual( 1, count( $orders ) );
+	}
+
 	/**
 	 * @covers ::edd_get_orders
 	 */

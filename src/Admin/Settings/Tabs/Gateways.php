@@ -84,14 +84,6 @@ class Gateways extends Tab {
 						'disabled' => is_ssl() ? false : true,
 					),
 				),
-				'redirect_on_add'         => array(
-					'id'            => 'redirect_on_add',
-					'name'          => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-					'check'         => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
-					'type'          => 'checkbox_toggle',
-					'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-					'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
-				),
 				'logged_in_only'          => array(
 					'id'      => 'logged_in_only',
 					'name'    => __( 'Customer Registration', 'easy-digital-downloads' ),
@@ -106,14 +98,6 @@ class Gateways extends Tab {
 					),
 				),
 				'show_register_form'      => $this->get_register_form(),
-				'enable_cart_saving'      => array(
-					'id'            => 'enable_cart_saving',
-					'name'          => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
-					'check'         => __( 'Allow users to temporarily save their cart at checkout.', 'easy-digital-downloads' ),
-					'type'          => 'checkbox_toggle',
-					'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
-					'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
-				),
 				'checkout_address_fields' => array(
 					'id'       => 'checkout_address_fields',
 					'name'     => __( 'Checkout Address Fields', 'easy-digital-downloads' ),
@@ -134,18 +118,6 @@ class Gateways extends Tab {
 					),
 					'disabled' => true,
 				),
-				'empty_cart_settings'      => array(
-					'id'            => 'empty_cart_settings',
-					'name'          => '<h3>' . __( 'Empty Cart Settings', 'easy-digital-downloads' ) . '</h3>',
-					'desc'          => '',
-					'type'          => 'header',
-					'tooltip_title' => __( 'Empty Cart Settings', 'easy-digital-downloads' ),
-					'tooltip_desc'  => __( 'Control the behavior of the checkout page when the cart is empty.', 'easy-digital-downloads' ),
-				),
-				'empty_cart_behavior'      => $empty_cart_settings_provider::get_empty_cart_behavior_setting(),
-				'empty_cart_message'       => $empty_cart_settings_provider::get_empty_cart_message_setting(),
-				'empty_cart_redirect_page' => $empty_cart_settings_provider::get_empty_cart_redirect_page_setting(),
-				'empty_cart_redirect_url'  => $empty_cart_settings_provider::get_empty_cart_redirect_url_setting(),
 				'moderation_settings'     => array(
 					'id'            => 'moderation_settings',
 					'name'          => '<h3>' . __( 'Moderation', 'easy-digital-downloads' ) . '</h3>',
@@ -161,6 +133,99 @@ class Gateways extends Tab {
 					'type'        => 'textarea',
 					'placeholder' => __( '@example.com', 'easy-digital-downloads' ),
 				),
+			),
+			'cart'       => array(
+				'redirect_on_add'          => array(
+					'id'            => 'redirect_on_add',
+					'name'          => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+					'check'         => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
+					'type'          => 'checkbox_toggle',
+					'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
+				),
+				'enable_cart_preview'      => array(
+					'id'    => 'enable_cart_preview',
+					'name'  => __( 'Cart Preview', 'easy-digital-downloads' ),
+					'check' => sprintf(
+						__( 'Show a sliding cart drawer when customers add products to their cart. %1$sLearn More%2$s', 'easy-digital-downloads' ),
+						'<a href="' . edd_link_helper(
+							'https://easydigitaldownloads.com/docs/enabling-cart-previews/',
+							array(
+								'utm_medium'  => 'settings',
+								'utm_content' => 'cart-preview-learn-more',
+							)
+						) . '" target="_blank" rel="noopener noreferrer">',
+						'</a>'
+					),
+					'type'  => 'checkbox_toggle',
+					'desc'  => edd_get_option( 'redirect_on_add' ) ? __( 'The cart preview will not open automatically when the store is set up to immediately redirect to checkout.', 'easy-digital-downloads' ) : '',
+					'data'  => array(
+						'edd-requirement' => 'enable_cart_preview',
+					),
+				),
+				'cart_preview_button'      => array(
+					'id'    => 'cart_preview_button',
+					'name'  => __( 'Cart Preview Button', 'easy-digital-downloads' ),
+					'type'  => 'hook',
+					'class' => $this->get_requires_css_class( 'enable_cart_preview' ),
+				),
+				'cart_recommendations'     => array(
+					'id'      => 'cart_recommendations',
+					'type'    => 'checkbox_toggle',
+					'name'    => __( 'Cart Recommendations', 'easy-digital-downloads' ),
+					'check'   => sprintf(
+						__( 'Show recommended products in the cart preview. %1$sLearn More%2$s', 'easy-digital-downloads' ),
+						'<a href="' . edd_link_helper(
+							'https://easydigitaldownloads.com/docs/enabling-cart-recommendations/',
+							array(
+								'utm_medium'  => 'settings',
+								'utm_content' => 'cart-recommendations-learn-more',
+							)
+						) . '" target="_blank" rel="noopener noreferrer">',
+						'</a>'
+					),
+					'options' => array(
+						'disabled' => ! edd_is_pro() || ( edd_is_pro() && edd_is_inactive_pro() ),
+					),
+					'desc'    => $this->get_cart_recommendations_description(),
+					'class'   => $this->get_requires_css_class( 'enable_cart_preview', array( 'edd-ai-powered' ) ),
+				),
+				'enable_cart_saving'       => array(
+					'id'            => 'enable_cart_saving',
+					'name'          => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
+					'check'         => __( 'Allow users to temporarily save their cart at checkout.', 'easy-digital-downloads' ),
+					'type'          => 'checkbox_toggle',
+					'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
+				),
+				'item_quantities'          => array(
+					'id'    => 'item_quantities',
+					'name'  => __( 'Cart Item Quantities', 'easy-digital-downloads' ),
+					/* translators: %s: Downloads plural label */
+					'check' => sprintf( __( 'Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ),
+					'type'  => 'checkbox_toggle',
+					'desc'  => '',
+				),
+				'empty_cart_settings'      => array(
+					'id'            => 'empty_cart_settings',
+					'name'          => '<h3>' . __( 'Empty Cart Settings', 'easy-digital-downloads' ) . '</h3>',
+					'desc'          => '',
+					'type'          => 'header',
+					'tooltip_title' => __( 'Empty Cart Settings', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'Control the behavior of the checkout page when the cart is empty.', 'easy-digital-downloads' ),
+				),
+				'empty_cart_behavior'      => $empty_cart_settings_provider::get_empty_cart_behavior_setting(),
+				'empty_cart_message'       => $empty_cart_settings_provider::get_empty_cart_message_setting(),
+				'empty_cart_preview'       => array(
+					'id'    => 'empty_cart_preview',
+					'name'  => __( 'Empty Cart Preview Message', 'easy-digital-downloads' ),
+					'desc'  => __( 'The message to display in the cart preview when the cart is empty. This setting does not support shortcodes or complex formatting.', 'easy-digital-downloads' ),
+					'type'  => 'textarea',
+					'std'   => __( 'Your cart is empty.', 'easy-digital-downloads' ),
+					'class' => $this->get_requires_css_class( 'enable_cart_preview' ),
+				),
+				'empty_cart_redirect_page' => $empty_cart_settings_provider::get_empty_cart_redirect_page_setting(),
+				'empty_cart_redirect_url'  => $empty_cart_settings_provider::get_empty_cart_redirect_url_setting(),
 			),
 			'refunds'    => array(
 				'refunds_settings' => array(
@@ -538,5 +603,30 @@ class Gateways extends Tab {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Get the description for the cart recommendations:
+	 * - If Pro is active, return an empty string.
+	 * - If Pro is inactive, return a link to the upgrade page.
+	 * - If Pro is inactive and the user is on the cart section, return a button to trigger the preview recommendations notice.
+	 *
+	 * @since 3.6.2
+	 * @return string
+	 */
+	private function get_cart_recommendations_description(): string {
+		if ( ! $this->is_admin_page( 'settings', $this->id ) ) {
+			return '';
+		}
+		if ( 'cart' !== $this->get_section() ) {
+			return '';
+		}
+
+		return sprintf(
+			/* translators: 1: opening button tag, 2: closing button tag */
+			__( 'Enable smart product recommendations in your cart preview when you %1$sUpgrade to Pro%2$s.', 'easy-digital-downloads' ),
+			'<button class="edd-pro-upgrade button-link edd-promo-notice__trigger" data-id="previewrecommendations">',
+			'</button>'
+		);
 	}
 }

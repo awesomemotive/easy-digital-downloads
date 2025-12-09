@@ -29,7 +29,7 @@ wp_enqueue_style( 'dashicons' );
 	<p class="description indicator-hint"><?php echo wp_kses_post( wp_get_password_hint() ); ?></p>
 
 	<?php do_action( 'edd_register_form_fields_before_submit' ); ?>
-	<div class="edd-blocks-form__group edd-blocks-form__group-submit">
+	<div class="edd-blocks-form__group edd-blocks-form__group-submit reset-pass-submit">
 		<input type="hidden" name="edd_honeypot" value="" />
 		<input type="hidden" name="edd_action" value="user_register" />
 		<input type="hidden" name="edd_submit" value="edd_register_submit" />

@@ -103,7 +103,7 @@ class Verification implements SubscriberInterface {
 		// Enqueue verification-specific script.
 		wp_enqueue_script(
 			'edd-user-verification',
-			EDD_PLUGIN_URL . 'assets/js/user-verification.js',
+			edd_get_assets_url( 'js/frontend/' ) . 'user-verification.js',
 			array( 'edd-modal' ),
 			EDD_VERSION,
 			true

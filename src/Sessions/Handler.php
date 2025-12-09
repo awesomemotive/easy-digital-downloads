@@ -124,7 +124,7 @@ class Handler {
 
 	/**
 	 * Sets the session data for a specific key.
-	 * Legacy method.
+	 * For cart session data, the cart cache will be invalidated when any of the cart cache busting keys are being modified.
 	 *
 	 * @since 3.3.0
 	 * @param string $key   The key to set.
@@ -145,6 +145,12 @@ class Handler {
 			} elseif ( isset( $this->data[ $key ] ) ) {
 				unset( $this->data[ $key ] );
 			}
+
+			// Invalidate cart cache when any of the cart cache busting keys are being set.
+			if ( in_array( $key, $this->get_cart_cache_busting_keys(), true ) ) {
+				EDD()->cart->invalidate_cache();
+			}
+
 			$this->dirty = true;
 			if ( \EDD\Utils\Request::is_request( 'ajax' ) ) {
 				$this->save();
@@ -413,5 +419,22 @@ class Handler {
 	 */
 	private function is_request_valid_for_session() {
 		return \EDD\Utils\Request::is_request( array( 'frontend', 'rest' ) );
+	}
+
+	/**
+	 * Gets the cart cache busting keys.
+	 * When any of these keys are set, the cart cache will be invalidated.
+	 *
+	 * @since 3.6.2
+	 * @return array
+	 */
+	private function get_cart_cache_busting_keys(): array {
+		/**
+		 * Filters the cart cache busting keys.
+		 *
+		 * @since 3.6.2
+		 * @param array $keys The cart cache busting keys.
+		 */
+		return apply_filters( 'edd_cart_cache_busting_keys', array( 'edd_cart', 'edd_cart_fees', 'cart_discounts' ) );
 	}
 }

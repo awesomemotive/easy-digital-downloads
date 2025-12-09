@@ -130,45 +130,4 @@ class EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/theme-compatibility.php' ),
 		);
 	}
-
-	/**
-	 * @dataProvider _test_includes_assets_dp
-	 * @group edd_includes
-	 */
-	public function test_includes_assets( $path_to_file ) {
-		$this->assertFileExists( $path_to_file );
-	}
-
-	/**
-	 * Data provider for test_includes_assets().
-	 */
-	public function _test_includes_assets_dp() {
-		return array(
-			array( EDD_PLUGIN_DIR . 'assets/css/chosen.min.css' ),
-			array( EDD_PLUGIN_DIR . 'assets/css/edd-admin-chosen.min.css' ),
-			array( EDD_PLUGIN_DIR . 'assets/css/edd-admin.min.css' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/edd-icon-2x.png' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/edd-icon.png' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/edd-logo.png' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/edd-media.png' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/loading.gif' ),
-			array( EDD_PLUGIN_DIR . 'templates/images/loading.gif' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/media-button.png' ),
-			array( EDD_PLUGIN_DIR . 'templates/images/tick.png' ),
-			array( EDD_PLUGIN_DIR . 'assets/images/xit.gif' ),
-			array( EDD_PLUGIN_DIR . 'assets/css/edd.min.css' ),
-			array( EDD_PLUGIN_DIR . 'templates/images/xit.gif' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/edd-admin.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/vendor/chosen.jquery.min.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.creditcardvalidator.min.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.flot.min.js' ),
-
-			// Cannot be in /vendor/ for back-compat :(
-			array( EDD_PLUGIN_DIR . 'assets/js/jquery.validate.min.js' ),
-		);
-	}
 }

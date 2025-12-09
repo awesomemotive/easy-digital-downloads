@@ -118,8 +118,8 @@ class Settings implements SubscriberInterface {
 		if ( ! edd_is_admin_page( 'settings' ) ) {
 			return;
 		}
-		wp_register_style( 'edd-pass-handler', EDD_PLUGIN_URL . 'assets/css/edd-admin-pass-handler.min.css', array(), EDD_VERSION );
-		wp_register_script( 'edd-pass-handler', EDD_PLUGIN_URL . 'assets/js/edd-admin-pass-handler.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_register_style( 'edd-pass-handler', edd_get_assets_url( 'css/admin' ) . 'pass-handler.min.css', array(), EDD_VERSION );
+		wp_register_script( 'edd-pass-handler', edd_get_assets_url( 'js/admin' ) . 'pass-handler.js', array( 'jquery' ), EDD_VERSION, true );
 		wp_localize_script(
 			'edd-pass-handler',
 			'EDDPassManager',

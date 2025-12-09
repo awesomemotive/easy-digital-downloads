@@ -75,23 +75,25 @@ class Styles {
 
 		$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
 		$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
-		$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
-		$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
-		$edd_plugin_style_sheet     = trailingslashit( EDD_PLUGIN_DIR ) . 'assets/css/edd' . $css_suffix;
+		$parent_theme_style_sheet   = trailingslashit( get_template_directory() ) . $templates_dir . $file;
+		$parent_theme_style_sheet_2 = trailingslashit( get_template_directory() ) . $templates_dir . 'edd.css';
+		$edd_plugin_style_sheet     = edd_get_assets_dir( 'css/frontend' ) . 'edd' . $css_suffix;
 
 		// Look in the child theme directory first, followed by the parent theme, followed by the EDD core templates directory
 		// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
 		// This allows users to copy just edd.css to their theme.
-		if ( FileSystem::file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = FileSystem::file_exists( $child_theme_style_sheet_2 ) ) ) ) {
-			if ( ! empty( $nonmin ) ) {
+		$nonmin_child_theme_style_sheet = FileSystem::file_exists( $child_theme_style_sheet_2 );
+		if ( FileSystem::file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && $nonmin_child_theme_style_sheet ) ) {
+			if ( ! empty( $nonmin_child_theme_style_sheet ) ) {
 				return trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . 'edd.css';
 			}
 
 			return trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
 		}
 
-		if ( FileSystem::file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = FileSystem::file_exists( $parent_theme_style_sheet_2 ) ) ) ) {
-			if ( ! empty( $nonmin ) ) {
+		$nonmin_parent_theme_style_sheet = FileSystem::file_exists( $parent_theme_style_sheet_2 );
+		if ( FileSystem::file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && $nonmin_parent_theme_style_sheet ) ) {
+			if ( ! empty( $nonmin_parent_theme_style_sheet ) ) {
 				return trailingslashit( get_template_directory_uri() ) . $templates_dir . 'edd.css';
 			}
 
@@ -99,7 +101,7 @@ class Styles {
 		}
 
 		if ( FileSystem::file_exists( $edd_plugin_style_sheet ) ) {
-			return trailingslashit( EDD_PLUGIN_URL ) . 'assets/css/edd' . $css_suffix;
+			return edd_get_assets_url( 'css/frontend' ) . 'edd' . $css_suffix;
 		}
 
 		return false;

@@ -47,9 +47,9 @@ class NotificationsDB {
 		$version    = edd_admin_get_script_version();
 		$css_suffix = is_rtl() ? '-rtl.min.css' : '.min.css';
 
-		wp_register_script( 'alpinejs', EDD_PLUGIN_URL . 'assets/js/alpine.min.js', array(), '3.4.2', true );
-		wp_enqueue_script( 'edd-admin-notifications', EDD_PLUGIN_URL . 'assets/js/edd-admin-notifications.js', array( 'alpinejs' ), $version, true );
-		wp_enqueue_style( 'edd-admin-notifications', EDD_PLUGIN_URL . 'assets/css/edd-admin-notifications' . $css_suffix, array(), $version );
+		wp_register_script( 'alpinejs', edd_get_assets_url( 'vendor/js' ) . 'alpine.min.js', array(), '3.4.2', true );
+		wp_enqueue_script( 'edd-admin-notifications', edd_get_assets_url( 'js/admin' ) . 'notifications.js', array( 'alpinejs' ), $version, true );
+		wp_enqueue_style( 'edd-admin-notifications', edd_get_assets_url( 'css/admin' ) . 'notifications' . $css_suffix, array(), $version );
 	}
 
 	/**
@@ -58,7 +58,7 @@ class NotificationsDB {
 	 * @since 3.2.4
 	 */
 	public function defer_alpine( $url ) {
-		$alpine = wp_make_link_relative( EDD_PLUGIN_URL . 'assets/js/alpine.min.js' );
+		$alpine = wp_make_link_relative( edd_get_assets_url( 'vendor/js' ) . 'alpine.min.js' );
 		if ( false !== strpos( $url, $alpine ) ) {
 			$url = str_replace( ' src', ' defer src', $url );
 		}

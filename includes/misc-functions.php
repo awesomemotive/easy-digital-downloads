@@ -200,7 +200,7 @@ function edd_is_cc_verify_enabled() {
  * Checks whether an integer is odd.
  *
  * @since 1.0
- * @param int     $int The integer to check
+ * @param int $int The integer to check
  * @return bool Is the integer odd?
  */
 function edd_is_odd( $int ) {
@@ -233,7 +233,7 @@ function edd_get_file_extension( $str ) {
  * Checks if the string (filename) provided is an image URL
  *
  * @since 1.0
- * @param string  $filename Filename
+ * @param string $filename Filename
  * @return bool Whether or not the filename is an image
  */
 function edd_string_is_image_url( $filename ) {
@@ -441,7 +441,7 @@ function edd_get_php_arg_separator_output() {
  * Get the current page URL
  *
  * @since 1.3
- * @param  bool   $nocache  If we should bust cache on the returned URL
+ * @param  bool $nocache  If we should bust cache on the returned URL
  * @return string $page_url Current page URL
  */
 function edd_get_current_page_url( $nocache = false ) {
@@ -511,10 +511,10 @@ function edd_add_cache_busting( $url = '' ) {
  * @uses apply_filters() Calls 'edd_deprecated_function_trigger_error' and expects boolean value of true to do
  *   trigger or false to not trigger error.
  *
- * @param string  $function    The function that was called
- * @param string  $version     The version of Easy Digital Downloads that deprecated the function
- * @param string  $replacement Optional. The function that should have been called
- * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
+ * @param string $function    The function that was called
+ * @param string $version     The version of Easy Digital Downloads that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ * @param array  $backtrace   Optional. Contains stack backtrace of deprecated function
  */
 function _edd_deprecated_function( $function, $version, $replacement = null, $backtrace = null ) {
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
@@ -558,11 +558,11 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
  * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
  *   trigger or false to not trigger error.
  *
- * @param string  $argument    The arguemnt that is being deprecated
- * @param string  $function    The function that was called
- * @param string  $version     The version of WordPress that deprecated the function
- * @param string  $replacement Optional. The function that should have been called
- * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
+ * @param string $argument    The arguemnt that is being deprecated
+ * @param string $function    The function that was called
+ * @param string $version     The version of WordPress that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ * @param array  $backtrace   Optional. Contains stack backtrace of deprecated function
  */
 function _edd_deprected_argument( $argument, $function, $version, $replacement = null, $backtrace = null ) {
 	do_action( 'edd_deprecated_argument_run', $argument, $function, $replacement, $version );
@@ -1164,7 +1164,7 @@ function edd_set_upload_dir( $upload ) {
 /**
  * Determines the receipt visibility status
  *
- * @param string  $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
+ * @param string $order_or_key The order object or payment key. Using the payment key will eventually be deprecated.
  * @return bool   whether the receipt is visible or not.
  */
 function edd_can_view_receipt( $order_or_key = '' ) {
@@ -1363,7 +1363,7 @@ function edd_redirect( $location = '', $status = 302 ) {
  * @since 1.3.5
  * @since 3.0.0 String type-checking the `in_array()` call
  *
- * @param string  $function Name of the function.
+ * @param string $function Name of the function.
  * @return bool Whether or not function is disabled.
  */
 function edd_is_func_disabled( $function ) {
@@ -2120,4 +2120,50 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_e
 	 * @param string $passed_view The passed view slug.
 	 */
 	return (bool) apply_filters( 'edd_is_admin_page', $result, $page, $view, $passed_page, $passed_view );
+}
+
+/**
+ * Get the URL to the assets build directory.
+ *
+ * @since 3.6.2
+ *
+ * @param string $path Optional. Subdirectory path (e.g., 'js', 'css', 'pro/js').
+ * @return string The full URL to the assets directory.
+ */
+function edd_get_assets_url( $path = '' ): string {
+	// Vendor files are not in the build directory.
+	if ( strpos( $path, 'vendor' ) === 0 ) {
+		$base = EDD_PLUGIN_URL . 'assets/';
+	} else {
+		$base = EDD_PLUGIN_URL . 'assets/build/';
+	}
+
+	if ( ! empty( $path ) ) {
+		$base .= trailingslashit( $path );
+	}
+
+	return $base;
+}
+
+/**
+ * Get the file system path to the assets build directory.
+ *
+ * @since 3.6.2
+ *
+ * @param string $path Optional. Subdirectory path (e.g., 'js', 'css', 'pro/js').
+ * @return string The full file system path to the assets directory.
+ */
+function edd_get_assets_dir( $path = '' ): string {
+	// Vendor files are not in the build directory.
+	if ( strpos( $path, 'vendor' ) === 0 ) {
+		$base = EDD_PLUGIN_DIR . 'assets/';
+	} else {
+		$base = EDD_PLUGIN_DIR . 'assets/build/';
+	}
+
+	if ( ! empty( $path ) ) {
+		$base .= trailingslashit( $path );
+	}
+
+	return $base;
 }

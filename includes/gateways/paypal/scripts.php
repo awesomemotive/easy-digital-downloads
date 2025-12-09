@@ -83,7 +83,7 @@ function register_js( $force_load = false ) {
 
 	wp_register_script(
 		'edd-paypal',
-		EDD_PLUGIN_URL . 'assets/js/paypal-checkout.js',
+		edd_get_assets_url( 'js/gateways/' ) . 'paypal.js',
 		array(
 			'sandhills-paypal-js-sdk',
 			'jquery',

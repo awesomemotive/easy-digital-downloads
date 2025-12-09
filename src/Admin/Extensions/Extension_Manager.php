@@ -80,8 +80,8 @@ class Extension_Manager implements SubscriberInterface {
 			return;
 		}
 		$minify = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_register_style( 'edd-extension-manager', EDD_PLUGIN_URL . 'assets/css/edd-admin-extension-manager.min.css', array(), EDD_VERSION );
-		wp_register_script( 'edd-extension-manager', EDD_PLUGIN_URL . 'assets/js/edd-admin-extension-manager.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_register_style( 'edd-extension-manager', edd_get_assets_url( 'css/admin' ) . 'extension-manager.min.css', array(), EDD_VERSION );
+		wp_register_script( 'edd-extension-manager', edd_get_assets_url( 'js/admin' ) . 'extension-manager.js', array( 'jquery' ), EDD_VERSION, true );
 		wp_localize_script(
 			'edd-extension-manager',
 			'EDDExtensionManager',

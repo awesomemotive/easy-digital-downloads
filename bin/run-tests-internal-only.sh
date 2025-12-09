@@ -3,7 +3,7 @@
 set -e
 
 if [[ $# -lt 3 ]]; then
-	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [filter] [force download]"
+	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version (default: latest)] [filter] [force download]"
 	exit 1
 fi
 
@@ -18,6 +18,17 @@ FORCE="${7-false}"
 # Download and extract WordPress
 bin/install-wp-tests.sh "${DB_NAME}" "${DB_USER}" "${DB_PASS}" "${DB_HOST}" "${WP_VERSION}" "${FORCE}"
 
+printf "\n"
+echo "🐘 PHP version:       $(php -v | head -n 1 | cut -d' ' -f2)"
+echo "🌍 WordPress version: $WP_VERSION"
+if [[ -n "${FILTER}" ]]; then
+	echo "🔍 Filter:            ${FILTER}"
+fi
+if [[ "${WP_MULTISITE}" == "1" ]]; then
+	echo "🔀 Multisite:         enabled"
+fi
+printf "\n"
+
 # Default to copying the repo elsewhere
 if [[ "${TEST_INPLACE:-x}" == "x" ]] || [[ "${TEST_INPLACE}" == "0" ]]; then
 	REPO_DIR="/tmp/$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)"
@@ -26,43 +37,30 @@ if [[ "${TEST_INPLACE:-x}" == "x" ]] || [[ "${TEST_INPLACE}" == "0" ]]; then
 	mkdir "${REPO_DIR}"
 	tar -cf - --exclude-from="./bin/.exclude" . | tar -xC "${REPO_DIR}"
 	cd "${REPO_DIR}"
-	if [[ -d vendor ]]; then
-		rm -rf vendor
-	fi
-	if [[ -f composer.lock ]]; then
-		rm composer.lock
-	fi
 
-	printf "\r\xE2\x9C\x94 Copying repo to %s" ${REPO_DIR}
+	printf "\r✔ Copying repo to %s" ${REPO_DIR}
 	printf "\n"
 else
 	printf "Running inplace..."
 fi
 
-if [[ $WP_VERSION == 5.8* ]]; then
-	sed -i 's/\"phpunit\/phpunit\": \"\^8\"/\"phpunit\/phpunit\": \"\^7\.5\"/' composer.json
-fi
-
 printf "\n"
 printf "Installing composer dependencies"
 composer -q --no-cache install
-printf "\r\xE2\x9C\x94 Installing compser dependencies"
+printf "\r✔ Installing composer dependencies"
 printf "\n"
 
 # Move files from the bin/compat directory into place, replacing any files we find.
 printf "Copying compat files into place"
 cp -R bin/compat/* .
+printf "\r✔ Copying compat files into place"
+printf "\n\n"
 
+# Set up filter argument for phpunit
 if [[ -z "${FILTER}" ]]; then
-	printf "No filter provided, running all tests."
 	filter=""
 else
-	printf "Filter provided, running only tests matching: %s" ${filter}
 	filter=" --filter ${FILTER}"
 fi
-
-printf "\n"
-printf "Running tests with flags ${filter}"
-printf "\n"
 
 vendor/bin/phpunit${filter} -c phpunit.xml

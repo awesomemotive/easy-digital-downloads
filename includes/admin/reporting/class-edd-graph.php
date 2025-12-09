@@ -4,14 +4,13 @@
  *
  * This class handles building pretty report graphs
  *
- * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Reporting
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -142,8 +141,8 @@ class EDD_Graph {
 	 * @since 1.9
 	 */
 	public function load_scripts() {
-		wp_enqueue_script( 'edd-jquery-flot',      EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.min.js' );
-		wp_enqueue_script( 'edd-jquery-flot-time', EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.time.min.js' );
+		wp_enqueue_script( 'edd-jquery-flot', edd_get_assets_url( 'js/vendor' ) . 'jquery.flot.min.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_enqueue_script( 'edd-jquery-flot-time', edd_get_assets_url( 'js/vendor' ) . 'jquery.flot.time.min.js', array( 'jquery' ), EDD_VERSION, true );
 
 		/**
 		 * Fires immediately after the legacy Flot JS graphing framework is enqueued.

@@ -58,8 +58,12 @@ trait Helpers {
 		);
 
 		if ( $value ) {
-			$should_hide = edd_get_option( $requirement, false ) !== $value;
-			$classes[]   = "edd-requires__{$requirement}-{$value}";
+			if ( is_array( $value ) ) {
+				$should_hide = ! in_array( edd_get_option( $requirement, false ), $value, true );
+			} else {
+				$should_hide = edd_get_option( $requirement, false ) !== $value;
+				$classes[]   = "edd-requires__{$requirement}-{$value}";
+			}
 		} else {
 			// Determine if field should be hidden based on requirement state.
 			// Inverse logic is used for settings like "disabled" where true means hide.

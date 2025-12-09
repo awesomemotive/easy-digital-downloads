@@ -1,0 +1,717 @@
+/**
+ * Cart Preview Shadow DOM Styles
+ *
+ * These styles are injected into the Shadow DOM for full encapsulation.
+ * Mobile-first approach: Base styles target mobile, enhanced for larger screens.
+ *
+ * @package EDD\Cart\Preview
+ */
+
+@use "../../../scss/variables/mixins" as mixins;
+@use "~@wordpress/base-styles/breakpoints" as breakpoints;
+@use "./keyframes" as *;
+
+// ============================================================================
+// CSS Custom Properties (Variables)
+// ============================================================================
+// These are exposed for theme/user customization. Define them at :host level
+// with sensible defaults, then reference them throughout the stylesheet.
+
+:host {
+	// Typography - allow font-family to inherit from site
+	--edd-cart-preview-font-family: inherit;
+	--edd-cart-preview-font-size-base: 16px;
+	--edd-cart-preview-font-size-small: 14px;
+	--edd-cart-preview-font-size-medium: 15px;
+	--edd-cart-preview-font-size-large: 18px;
+	--edd-cart-preview-font-size-xlarge: 20px;
+	--edd-cart-preview-line-height: 1.5;
+
+	// Colors - UI
+	--edd-cart-preview-color-text: #333;
+	--edd-cart-preview-color-text-muted: #666;
+	--edd-cart-preview-color-danger: #cc1818;
+	--edd-cart-preview-color-danger-light: #cc181819; // 10% opacity
+	--edd-cart-preview-color-danger-lighter: #cc18184d; // 30% opacity
+	--edd-cart-preview-color-border: #e0e0e0;
+	--edd-cart-preview-color-background: #ffffff;
+	--edd-cart-preview-color-background-dimmed: #ffffff80; // 50% opacity
+	--edd-cart-preview-color-backdrop: #00000080; // 50% opacity
+	--edd-cart-preview-color-message: #0073aa;
+	--edd-cart-preview-color-message-light: #0073aa19; // 10% opacity
+	--edd-cart-preview-color-link: var(--edd-cart-preview-color-text);
+	--edd-cart-preview-color-link-hover: var(--edd-cart-preview-color-primary-hover);
+
+	// Layout
+	--edd-cart-preview-border-radius: 4px;
+	--edd-cart-preview-dialog-width: 400px;
+	--edd-cart-preview-spacing-sm: 12px;
+	--edd-cart-preview-spacing-md: 16px;
+	--edd-cart-preview-spacing-lg: 24px;
+	--edd-cart-preview-spacing-xl: 48px;
+
+	// Shadows
+	--edd-cart-preview-shadow-dialog: -2px 0 8px #0000001a; // 10% opacity
+	--edd-cart-preview-shadow-button: 0 4px 12px #00000026; // 15% opacity
+
+	// Direction context
+	direction: inherit;
+}
+
+// ============================================================================
+// Internal SCSS Variables
+// ============================================================================
+// These are for internal use only and not exposed for customization
+
+$z-index-overlay: 999999;
+$transition-speed: 0.4s;
+$mobile-top-offset: 90px; // Space visible above mobile dialog
+
+// Mixins
+@mixin transition($property: all, $duration: $transition-speed) {
+	transition: $property $duration ease;
+}
+
+@mixin button-reset {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+}
+
+// ============================================================================
+// Shadow DOM Base Styles
+// ============================================================================
+// Apply base styles to root containers to establish consistent baseline
+// while allowing intentional inheritance (like font-family)
+
+.cart-preview__dialog,
+.cart-preview__button--trigger {
+	// Typography - inherit font-family from site, control sizes
+	font-family: var(--edd-cart-preview-font-family);
+	font-size: var(--edd-cart-preview-font-size-base);
+	line-height: var(--edd-cart-preview-line-height);
+	font-weight: 400;
+	font-style: normal;
+	text-align: left;
+	text-transform: none;
+	letter-spacing: normal;
+	word-spacing: normal;
+	color: var(--edd-cart-preview-color-text);
+	text-decoration: none;
+	text-shadow: none;
+
+	a {
+		color: var(--edd-cart-preview-color-link);
+		text-decoration: none;
+
+		&:hover {
+			color: var(--edd-cart-preview-color-link-hover);
+		}
+	}
+}
+
+// Ensure all elements use border-box
+* {
+	box-sizing: border-box;
+}
+
+// Native HTML5 dialog element
+.cart-preview__dialog {
+	// Reset default dialog styles (applies to all screen sizes)
+	border: none;
+	padding: 0;
+	margin: 0;
+	max-width: none;
+	max-height: none;
+
+	// Closed state - respect native display: none
+	// (don't override display when closed)
+
+	// Open state - now we can override the display and position
+	&[open] {
+		// MOBILE FIRST: Bottom slideout panel
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		top: $mobile-top-offset; // Leaves space above so users can see content behind
+		margin: 0;
+
+		width: 100%;
+		height: auto;
+		max-height: calc(100vh - #{$mobile-top-offset});
+
+		// Visual styling - mobile
+		background: var(--edd-cart-preview-color-background);
+		box-shadow: 0 -2px 8px #0000001a; // 10% opacity
+		border-radius: var(--edd-cart-preview-spacing-sm) var(--edd-cart-preview-spacing-sm) 0 0;
+
+		// Layout
+		display: flex;
+		flex-direction: column;
+
+		// Start off-screen at bottom, then slide up
+		transform: translateY(100%);
+		animation: slideUp $transition-speed ease forwards;
+
+		// MEDIUM SCREENS AND UP (782px+): Right slideout panel
+		@media ( min-width: breakpoints.$break-medium ) {
+			// Change to right slideout positioning
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: auto; // Override mobile left: 0
+
+			max-width: var(--edd-cart-preview-dialog-width);
+			height: 100%;
+			max-height: none;
+
+			// Visual styling - desktop
+			box-shadow: var(--edd-cart-preview-shadow-dialog);
+			border-radius: var(--edd-cart-preview-spacing-sm) 0 0 var(--edd-cart-preview-spacing-sm);
+
+			// Start off-screen to the right, then slide in
+			transform: translateX(100%);
+			animation: slideIn $transition-speed ease forwards;
+		}
+	}
+
+	// Closing state - trigger exit animations
+	&.closing {
+		// MOBILE: Slide down animation
+		animation: slideDown $transition-speed ease forwards;
+
+		// MEDIUM SCREENS AND UP: Slide out to right animation
+		@media ( min-width: breakpoints.$break-medium ) {
+			animation: slideOut $transition-speed ease forwards;
+		}
+	}
+
+	// Native backdrop
+	&::backdrop {
+		background: var(--edd-cart-preview-color-backdrop);
+		@include transition(opacity);
+	}
+}
+
+// ============================================================================
+// RTL Support for Desktop View
+// ============================================================================
+
+// RTL: Dialog positioning and styling
+@media ( min-width: breakpoints.$break-medium ) {
+	:host([dir="rtl"]) .cart-preview__dialog[open] {
+		// Mirror positioning - panel on left side
+		left: 0;
+		right: auto;
+
+		// Flip rounded corners to right side (away from screen edge)
+		border-radius: 0 var(--edd-cart-preview-spacing-md) var(--edd-cart-preview-spacing-md) 0;
+
+		// Flip shadow to right side
+		box-shadow: 2px 0 8px #0000001a; // 10% opacity
+
+		// Start animation from left side
+		transform: translateX(-100%);
+		animation: slideInRTL $transition-speed ease forwards;
+	}
+
+	// RTL: Closing animation slides out to left
+	:host([dir="rtl"]) .cart-preview__dialog.closing {
+		animation: slideOutRTL $transition-speed ease forwards;
+	}
+}
+
+.cart-preview__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--edd-cart-preview-spacing-md);
+	border-bottom: 1px solid var(--edd-cart-preview-color-border);
+	flex-shrink: 0; // Prevent header from shrinking when content is scrollable
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		padding: var(--edd-cart-preview-spacing-lg);
+	}
+}
+
+.cart-preview__title {
+	margin: 0;
+	font-size: var(--edd-cart-preview-font-size-large);
+	font-weight: 600;
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		font-size: var(--edd-cart-preview-font-size-xlarge);
+	}
+}
+
+.cart-preview__close {
+	@include button-reset;
+	font-size: 24px;
+	line-height: 1;
+	padding: 0.5rem;
+	color: var(--edd-cart-preview-color-text-muted);
+	@include transition(color, 0.2s);
+
+	svg {
+		width: 24px;
+		height: 24px;
+		display: block;
+	}
+
+	.screen-reader-text {
+		@include mixins.screen-reader-text;
+	}
+
+	&:hover,
+	&:focus {
+		color: var(--edd-cart-preview-color-text);
+	}
+
+	&:focus {
+		outline: 2px solid var(--edd-cart-preview-color-primary);
+		outline-offset: 2px;
+	}
+}
+
+.cart-preview__content {
+	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: var(--edd-cart-preview-spacing-md);
+	// Ensure smooth scrolling on touch devices
+	-webkit-overflow-scrolling: touch;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		padding: var(--edd-cart-preview-spacing-lg);
+	}
+}
+
+.cart-preview__scroll-indicator {
+	position: fixed;
+	bottom: calc(60px + var(--edd-cart-preview-spacing-md)); // Above footer height
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	background: var(--edd-cart-preview-color-background);
+	border: 1px solid var(--edd-cart-preview-color-border);
+	border-radius: 50%;
+	box-shadow: 0 2px 8px #00000014; // 8% opacity
+	pointer-events: none;
+	z-index: 10;
+	animation: bounce 2s infinite;
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		bottom: calc(60px + var(--edd-cart-preview-spacing-lg)); // Above footer height
+	}
+}
+
+.cart-preview__scroll-indicator-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--edd-cart-preview-color-text-muted);
+
+	svg {
+		width: 20px;
+		height: 20px;
+		display: block;
+	}
+}
+
+.cart-preview__loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--edd-cart-preview-spacing-lg);
+	color: var(--edd-cart-preview-color-text-muted);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999999;
+	background: var(--edd-cart-preview-color-background-dimmed);
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		padding: var(--edd-cart-preview-spacing-xl) var(--edd-cart-preview-spacing-lg);
+	}
+}
+
+.cart-preview__error {
+	padding: var(--edd-cart-preview-spacing-md);
+	margin-bottom: var(--edd-cart-preview-spacing-md);
+	background: var(--edd-cart-preview-color-danger-light);
+	border: 1px solid var(--edd-cart-preview-color-danger-lighter);
+	color: var(--edd-cart-preview-color-danger);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--edd-cart-preview-spacing-md);
+
+	&--dismiss {
+		@include button-reset;
+		font-size: 20px;
+		line-height: 1;
+		padding: 0 0.5rem;
+	}
+}
+
+.cart-preview__empty {
+	text-align: center;
+	padding: var(--edd-cart-preview-spacing-lg);
+	color: var(--edd-cart-preview-color-text-muted);
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		padding: var(--edd-cart-preview-spacing-xl) var(--edd-cart-preview-spacing-lg);
+	}
+}
+
+.cart-preview__items {
+	display: flex;
+	flex-direction: column;
+	gap: var(--edd-cart-preview-spacing-lg);
+	flex-grow: 1;
+
+	&-list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--edd-cart-preview-spacing-md);
+	}
+}
+
+.cart-preview__item {
+	display: flex;
+	gap: var(--edd-cart-preview-spacing-md);
+	padding: var(--edd-cart-preview-spacing-md);
+	border: 1px solid var(--edd-cart-preview-color-border);
+	border-radius: var(--edd-cart-preview-border-radius);
+	flex-wrap: wrap;
+
+	&__messages {
+		flex-basis: 100%;
+		display: flex;
+		flex-direction: column;
+		margin-top: 8px;
+		overflow-x: hidden;
+		word-wrap: break-word;
+		font-size: var(--edd-cart-preview-font-size-small);
+		color: var(--edd-cart-preview-color-text-muted);
+		line-height: 1.5;
+	}
+
+	&__message {
+		font-style: italic;
+		padding: 6px 10px;
+		background-color: var(--edd-cart-preview-color-message-light);
+		border-left: 3px solid var(--edd-cart-preview-color-message);
+
+		&--error {
+			border-left-color: var(--edd-cart-preview-color-danger);
+			background-color: var(--edd-cart-preview-color-danger-light);
+		}
+	}
+}
+
+.cart-preview__item-fees {
+	font-size: var(--edd-cart-preview-font-size-small);
+	color: var(--edd-cart-preview-color-text-muted);
+	margin-left: var(--edd-cart-preview-spacing-md);
+}
+
+.cart-preview__item-image {
+	width: 60px;
+	height: 60px;
+	object-fit: cover;
+	border-radius: var(--edd-cart-preview-border-radius);
+	flex-shrink: 0; // Prevent image from shrinking on narrow screens
+}
+
+.cart-preview__item-details {
+	flex: 1;
+	min-width: 0; // Allow text to truncate properly
+}
+
+.cart-preview__item-name {
+	font-weight: 600;
+	margin: 0 0 0.5rem 0;
+	font-size: var(--edd-cart-preview-font-size-medium);
+	// Handle long product names on mobile
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}
+
+.cart-preview__item-price {
+	color: var(--edd-cart-preview-color-text-muted);
+	font-size: var(--edd-cart-preview-font-size-small);
+}
+
+.cart-preview__item-quantity {
+	margin-top: 0.5rem;
+}
+
+.cart-preview__item-remove {
+	@include button-reset;
+	color: #999;
+	font-size: 20px;
+	line-height: 1;
+	padding: 0.25rem 0.5rem;
+	flex-shrink: 0;
+	@include transition(color, 0.2s);
+	align-self: center;
+
+	svg {
+		width: 20px;
+		height: 20px;
+		display: block;
+	}
+
+	.screen-reader-text {
+		@include mixins.screen-reader-text;
+	}
+
+	&:hover,
+	&:focus {
+		color: var(--edd-cart-preview-color-danger);
+	}
+
+	&:focus {
+		outline: 2px solid var(--edd-cart-preview-color-primary);
+		outline-offset: 2px;
+	}
+}
+
+.cart-preview__summary {
+	border-top: 2px solid var(--edd-cart-preview-color-border);
+	padding-top: var(--edd-cart-preview-spacing-lg);
+	margin-top: auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--edd-cart-preview-spacing-md);
+
+	&--taxes {
+		font-size: 13px;
+		font-style: italic;
+		color: var(--edd-cart-preview-color-text-muted);
+		margin: 0;
+	}
+
+	&-row {
+		display: flex;
+		justify-content: space-between;
+		margin: 0;
+		font-size: var(--edd-cart-preview-font-size-small);
+
+		@media ( min-width: breakpoints.$break-medium ) {
+			font-size: var(--edd-cart-preview-font-size-base);
+		}
+	}
+
+	&-label {
+		font-weight: 600;
+	}
+}
+
+.cart-preview__footer {
+	padding: var(--edd-cart-preview-spacing-md);
+	border-top: 1px solid var(--edd-cart-preview-color-border);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.75rem;
+	flex-shrink: 0; // Prevent footer from shrinking when content is scrollable
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		padding: var(--edd-cart-preview-spacing-lg);
+	}
+}
+
+.cart-preview__button {
+	padding: 0.75rem var(--edd-cart-preview-spacing-md);
+	border: none;
+	border-radius: var(--edd-cart-preview-border-radius);
+	font-size: var(--edd-cart-preview-font-size-medium);
+	font-weight: 600;
+	cursor: pointer;
+	@include transition(all, 0.2s);
+	text-align: center;
+	text-decoration: none;
+	display: block;
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		padding: 0.75rem var(--edd-cart-preview-spacing-lg);
+		font-size: var(--edd-cart-preview-font-size-base);
+	}
+
+	&:focus {
+		outline: 2px solid var(--edd-cart-preview-color-primary);
+		outline-offset: 2px;
+	}
+
+	&.cart-preview__button--primary {
+		background: var(--edd-cart-preview-color-primary);
+		color: var(--edd-cart-preview-color-primary-text);
+		flex-grow: 1;
+
+		&:hover,
+		&:focus {
+			background: var(--edd-cart-preview-color-primary-hover);
+			color: var(--edd-cart-preview-color-primary-text);
+		}
+	}
+
+	&.cart-preview__button--secondary {
+		background: transparent;
+		color: var(--edd-cart-preview-color-primary);
+		border: 1px solid var(--edd-cart-preview-color-primary);
+
+		&:hover,
+		&:focus {
+			background: #f0f0f0;
+		}
+	}
+}
+
+.cart-preview__spinner {
+	@include mixins.edd-spinner(20px, #f3f3f3, #666, 2px);
+}
+
+.screen-reader-text {
+	@include mixins.screen-reader-text;
+}
+
+// Floating cart button
+.cart-preview__button--trigger {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background: var(--edd-cart-preview-color-background);
+	border: none;
+	box-shadow: var(--edd-cart-preview-shadow-button);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 999998;
+	@include transition(all, 0.2s);
+
+	@media ( min-width: breakpoints.$break-medium ) {
+		width: 80px;
+		height: 80px;
+	}
+
+	svg {
+		width: 28px;
+		height: 28px;
+		stroke: var(--edd-cart-preview-color-text);
+		color: var(--edd-cart-preview-color-text);
+
+		@media ( min-width: breakpoints.$break-medium ) {
+			width: 32px;
+			height: 32px;
+		}
+	}
+
+	&--small {
+		width: 48px;
+		height: 48px;
+
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	&--right {
+		right: 20px;
+		left: auto;
+	}
+
+	&:hover {
+		box-shadow: 0 6px 16px #00000033; // 20% opacity
+		transform: scale(1.05);
+	}
+
+	&:focus {
+		outline: 2px solid var(--edd-cart-preview-color-primary);
+		outline-offset: 2px;
+	}
+
+	:host([dir="rtl"]) & {
+		left: auto;
+		right: 20px;
+	}
+}
+
+.cart-preview__quantity-control {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	border: 1px solid var(--edd-cart-preview-color-border);
+	border-radius: var(--edd-cart-preview-border-radius);
+	padding: 4px;
+}
+
+.cart-preview__quantity-button {
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: var(--edd-cart-preview-font-size-base);
+	color: var(--edd-cart-preview-color-text);
+	border-radius: 3px;
+	@include transition(all, 0.2s);
+
+	svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	.screen-reader-text {
+		@include mixins.screen-reader-text;
+	}
+
+	&:hover:not(:disabled) {
+		background: #f3f4f6;
+		color: var(--edd-cart-preview-color-text);
+	}
+
+	&:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+
+	// Accessible focus indicator
+	&:focus {
+		outline: 2px solid var(--edd-cart-preview-color-primary);
+		outline-offset: 2px;
+	}
+}
+
+.cart-preview__quantity-display {
+	min-width: 2ch;
+	text-align: center;
+	font-size: var(--edd-cart-preview-font-size-small);
+	font-weight: 500;
+	color: var(--edd-cart-preview-color-text);
+}
+
+// Hidden utility class - doubled for specificity
+.hidden.hidden {
+	display: none;
+}

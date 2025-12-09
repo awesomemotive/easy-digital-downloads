@@ -18,13 +18,13 @@ if [[ -f composer.lock ]]; then
 	rm composer.lock
 fi
 
-printf "\r\xE2\x9C\x94 Copying repo to %s" ${REPO_DIR}
+printf "\r✔ Copying repo to %s" ${REPO_DIR}
 printf "\n"
 
 printf "\n"
 printf "Installing composer dependencies"
 composer -q --no-cache install
-printf "\r\xE2\x9C\x94 Installing composer dependencies"
+printf "\r✔ Installing composer dependencies"
 printf "\n"
 
 vendor/bin/phpcs -q --report=code --report-file=/tmp/artifacts/${BUILDKITE_BUILD_ID}/phpcs-report.txt --standard=phpcs.xml.dist -d memory_limit=1G

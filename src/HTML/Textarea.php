@@ -45,13 +45,19 @@ class Textarea extends Base {
 				<?php if ( $this->args['disabled'] ) : ?>
 					disabled
 				<?php endif; ?>
+				<?php if ( $this->args['readonly'] ) : ?>
+					readonly
+				<?php endif; ?>
+				<?php if ( ! empty( $this->args['rows'] ) ) : ?>
+					rows="<?php echo absint( $this->args['rows'] ); ?>"
+				<?php endif; ?>
 				<?php echo $this->get_data_elements(); ?>
 			><?php echo esc_textarea( $this->args['value'] ); ?></textarea>
 
 			<?php
 			if ( ! empty( $this->args['desc'] ) ) {
 				?>
-				<p class="description edd-description"><?php echo esc_html( $this->args['desc'] ); ?></p>
+				<p class="description edd-description"><?php echo wp_kses_post( $this->args['desc'] ); ?></p>
 				<?php
 			}
 			?>
@@ -75,6 +81,8 @@ class Textarea extends Base {
 			'desc'     => null,
 			'class'    => 'large-text',
 			'disabled' => false,
+			'readonly' => false,
+			'rows'     => false,
 		);
 	}
 }

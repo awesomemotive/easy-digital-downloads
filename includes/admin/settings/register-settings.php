@@ -550,6 +550,7 @@ function edd_get_registered_settings_sections() {
 				array(
 					'main'       => __( 'General', 'easy-digital-downloads' ),
 					'checkout'   => __( 'Checkout', 'easy-digital-downloads' ),
+					'cart'       => __( 'Cart', 'easy-digital-downloads' ),
 					'refunds'    => __( 'Refunds', 'easy-digital-downloads' ),
 					'accounting' => __( 'Accounting', 'easy-digital-downloads' ),
 				)
@@ -1249,7 +1250,7 @@ function edd_number_callback( $args ) {
  * Renders textarea fields.
  *
  * @since 1.0
- *
+ * @since 3.6.2 Updated to use EDD\HTML\Textarea.
  * @param array $args Arguments passed by the setting.
  * @return void
  */
@@ -1266,17 +1267,20 @@ function edd_textarea_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 	}
 
-	$class       = edd_sanitize_html_class( $args['field_class'] );
-	$placeholder = ! empty( $args['placeholder'] )
-		? ' placeholder="' . esc_attr( $args['placeholder'] ) . '"'
-		: '';
+	$textarea = new EDD\HTML\Textarea(
+		array(
+			'value'       => $value,
+			'desc'        => $args['desc'],
+			'id'          => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']',
+			'name'        => 'edd_settings[' . esc_attr( $args['id'] ) . ']',
+			'class'       => ! empty( $args['field_class'] ) ? edd_sanitize_html_class( $args['field_class'] ) : 'regular-text',
+			'placeholder' => ! empty( $args['placeholder'] ) ? $args['placeholder'] : '',
+			'readonly'    => ! empty( $args['readonly'] ),
+			'rows'        => ! empty( $args['rows'] ) ? (int) $args['rows'] : 5,
+		)
+	);
 
-	$readonly = true === $args['readonly'] ? ' readonly="readonly"' : '';
-
-	$html  = '<textarea class="' . $class . '" cols="50" rows="5" ' . $placeholder . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']"' . $readonly . '>' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
-	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
-
-	echo apply_filters( 'edd_after_setting_output', $html, $args );
+	echo apply_filters( 'edd_after_setting_output', $textarea->get(), $args );
 }
 
 /**

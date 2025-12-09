@@ -82,6 +82,101 @@ class Callbacks extends EDD_UnitTestCase {
 
 	}
 
+	public function test_textarea() {
+		$args = array(
+			'id'   => 'empty_cart_preview',
+			'name' => __( 'Empty Cart Preview', 'easy-digital-downloads' ),
+			'desc' => __( 'Preview the empty cart behavior.', 'easy-digital-downloads' ),
+			'type' => 'textarea',
+			'std'  => 'Default text here',
+		);
+
+		ob_start();
+		edd_textarea_callback( $this->parse_args( $args ) );
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'name="edd_settings[empty_cart_preview]"', $output );
+		$this->assertStringContainsString( '<textarea', $output );
+		$this->assertStringContainsString( '</textarea>', $output );
+		$this->assertStringContainsString( 'class="regular-text"', $output );
+	}
+
+	public function test_textarea_with_value() {
+		$args = array(
+			'id'   => 'admin_notice_emails',
+			'name' => __( 'Admin Notice Emails', 'easy-digital-downloads' ),
+			'desc' => __( 'Enter the email address(es) that may receive admin notices.', 'easy-digital-downloads' ),
+			'type' => 'textarea',
+		);
+
+		// Set the option value.
+		edd_update_option( 'admin_notice_emails', 'admin@example.com' );
+
+		ob_start();
+		edd_textarea_callback( $this->parse_args( $args ) );
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'name="edd_settings[admin_notice_emails]"', $output );
+		$this->assertStringContainsString( 'admin@example.com', $output );
+
+		// Clean up.
+		edd_delete_option( 'admin_notice_emails' );
+	}
+
+	public function test_textarea_with_array_value() {
+		$args = array(
+			'id'   => 'admin_notice_emails',
+			'name' => __( 'Admin Notice Emails', 'easy-digital-downloads' ),
+			'desc' => __( 'Enter the email address(es) that may receive admin notices. One per line. Leave blank to use %s.', 'easy-digital-downloads' ),
+			'type' => 'textarea',
+		);
+
+		// Set the option value as an array.
+		edd_update_option( 'admin_notice_emails', array( 'test1@example.com', 'test2@example.com', 'test3@example.com' ) );
+
+		ob_start();
+		edd_textarea_callback( $this->parse_args( $args ) );
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'name="edd_settings[admin_notice_emails]"', $output );
+		$this->assertStringContainsString( "test1@example.com\ntest2@example.com\ntest3@example.com", $output );
+
+		// Clean up.
+		edd_delete_option( 'admin_notice_emails' );
+	}
+
+	public function test_textarea_with_custom_rows() {
+		$args = array(
+			'id'   => 'empty_cart_preview',
+			'name' => __( 'Empty Cart Preview', 'easy-digital-downloads' ),
+			'desc' => __( 'Preview the empty cart behavior.', 'easy-digital-downloads' ),
+			'type' => 'textarea',
+			'rows' => 10,
+		);
+
+		ob_start();
+		edd_textarea_callback( $this->parse_args( $args ) );
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'rows="10"', $output );
+	}
+
+	public function test_textarea_readonly() {
+		$args = array(
+			'id'       => 'empty_cart_preview',
+			'name'     => __( 'Empty Cart Preview', 'easy-digital-downloads' ),
+			'desc'     => __( 'This field is readonly.', 'easy-digital-downloads' ),
+			'type'     => 'textarea',
+			'readonly' => true,
+		);
+
+		ob_start();
+		edd_textarea_callback( $this->parse_args( $args ) );
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'readonly', $output );
+	}
+
 	private function parse_args( $args ) {
 		return wp_parse_args(
 			$args,
