@@ -293,7 +293,13 @@ class EDD_Cart {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 		if ( empty( $this->contents ) ) {
-			return array();
+			// If the contents haven't been fetched yet, fetch them.
+			if ( ! did_action( 'edd_cart_contents_loaded' ) ) {
+				$this->get_contents();
+			}
+			if ( empty( $this->contents ) ) {
+				return array();
+			}
 		}
 
 		$details = array();
@@ -596,7 +602,6 @@ class EDD_Cart {
 
 		unset( $item );
 
-		$this->invalidate_cache();
 		$this->update_cart();
 
 		do_action( 'edd_post_add_to_cart', $download_id, $options, $items );
@@ -628,7 +633,6 @@ class EDD_Cart {
 		}
 
 		$this->contents = $cart;
-		$this->invalidate_cache();
 		$this->update_cart();
 
 		do_action( 'edd_post_remove_from_cart', $key, $item_id );
@@ -698,7 +702,6 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function empty_cart() {
-		$this->invalidate_cache();
 		$this->cart_session->empty_cart();
 
 		do_action( 'edd_empty_cart' );
@@ -727,9 +730,6 @@ class EDD_Cart {
 
 			// Update the active discounts.
 			EDD()->session->set( 'cart_discounts', $this->discounts );
-
-			// Invalidate cache when discounts change.
-			$this->invalidate_cache();
 		}
 
 		do_action( 'edd_cart_discount_removed', $code, $this->discounts );
@@ -946,7 +946,6 @@ class EDD_Cart {
 		}
 
 		$this->contents[ $key ]['quantity'] = $quantity;
-		$this->invalidate_cache();
 		$this->update_cart();
 
 		do_action( 'edd_after_set_cart_item_quantity', $download_id, $quantity, $options, $this->contents );

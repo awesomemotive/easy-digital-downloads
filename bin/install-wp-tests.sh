@@ -170,15 +170,15 @@ printf "\n"
 printf "Installing WordPress"
 install_wp
 # Add a checkmark before the last echo statement when it's complete
-printf "\r\xE2\x9C\x94 Installing WordPress"
+printf "\r✔ Installing WordPress"
 
 printf "\n"
 printf "Installing test suite"
 install_test_suite
-printf "\r\xE2\x9C\x94 Installing test suite"
+printf "\r✔ Installing test suite"
 
 printf "\n"
 printf "Installing database"
 install_db
-printf "\r\xE2\x9C\x94 Installing database"
+printf "\r✔ Installing database"
 printf "\n"

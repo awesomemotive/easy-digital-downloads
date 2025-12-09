@@ -4,7 +4,7 @@
  *
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Sandhills Development, LLC
- * @license   GPL2+
+ * @license   https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since     2.11
  */
 

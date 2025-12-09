@@ -220,16 +220,13 @@ function edd_ajax_add_to_cart() {
 		}
 
 		if ( isset( $options['price_id'] ) && isset( $post_data[ 'edd_download_quantity_' . $options['price_id'] ] ) ) {
-
 			$options['quantity'] = absint( $post_data[ 'edd_download_quantity_' . $options['price_id'] ] );
-
 		} else {
-
 			$options['quantity'] = isset( $post_data['edd_download_quantity'] ) ? absint( $post_data['edd_download_quantity'] ) : 1;
-
 		}
 
-		$key = edd_add_to_cart( $_POST['download_id'], $options );
+		$key      = edd_add_to_cart( $_POST['download_id'], $options );
+		$price_id = isset( $options['price_id'] ) ? $options['price_id'] : null;
 
 		$item = array(
 			'id'      => $_POST['download_id'],
@@ -245,6 +242,8 @@ function edd_ajax_add_to_cart() {
 		'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
 		'cart_item'     => $items,
 		'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
+		/* translators: %s is the product name */
+		'addedToCart'   => sprintf( __( '%s added to cart.', 'easy-digital-downloads' ), edd_get_download_name( $download_id, $price_id ) ),
 	);
 
 	if ( edd_use_taxes() ) {

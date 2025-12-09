@@ -1069,10 +1069,13 @@ function edds_complete_payment() {
 		}
 
 		if ( 'setup_intent' !== $intent['object'] ) {
-			$charge_id = sanitize_text_field( current( $intent['charges']['data'] )['id'] );
+			// Use latest_charge instead of charges->data for API version compatibility.
+			$charge_id = ! empty( $intent['latest_charge'] ) ? sanitize_text_field( $intent['latest_charge'] ) : '';
 
-			$payment->add_note( 'Stripe Charge ID: ' . $charge_id );
-			$payment->transaction_id = sanitize_text_field( $charge_id );
+			if ( ! empty( $charge_id ) ) {
+				$payment->add_note( 'Stripe Charge ID: ' . $charge_id );
+				$payment->transaction_id = sanitize_text_field( $charge_id );
+			}
 		}
 
 		// Mark payment as Preapproved.

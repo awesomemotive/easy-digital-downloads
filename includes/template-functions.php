@@ -304,13 +304,14 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	// Sanitize those class names and form them into a string.
 	$css_classes_string = implode( ' ', array_map( 'sanitize_html_class', $css_classes_array ) );
 
+	$in_cart_display = '';
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
-		return;
+		$in_cart_display = 'style="display:none;"';
 	}
 
 	do_action( 'edd_before_price_options', $download_id );
 	?>
-	<div class="<?php echo esc_attr( rtrim( $css_classes_string ) ); ?>">
+	<div class="<?php echo esc_attr( rtrim( $css_classes_string ) ); ?>" <?php echo $in_cart_display; ?>>
 		<ul>
 			<?php
 			if ( $prices ) :

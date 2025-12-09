@@ -49,7 +49,7 @@ function edd_stripe_js( $force_load_scripts = false ) {
 		$publishable_key        = edd_get_option( $publishable_key_option, '' );
 
 		// We're going to assume Payment Elements needs to load...
-		$script_source = EDD_PLUGIN_URL . 'assets/js/stripe-paymentelements.js';
+		$script_source = edd_get_assets_url( 'js/gateways/' ) . 'stripe-paymentelements.js';
 		$script_deps   = array(
 			'sandhills-stripe-js-v3',
 			'jquery',
@@ -60,7 +60,7 @@ function edd_stripe_js( $force_load_scripts = false ) {
 		// But if the user has Card Elements, we need to load that instead.
 		$elements_mode = edds_get_elements_mode();
 		if ( 'card-elements' === $elements_mode ) {
-			$script_source = EDD_PLUGIN_URL . 'assets/js/stripe-cardelements.js';
+			$script_source = edd_get_assets_url( 'js/gateways/' ) . 'stripe-cardelements.js';
 			$script_deps[] = 'jQuery.payment';
 		}
 
@@ -132,12 +132,12 @@ function edd_stripe_css( $force_load_scripts = false ) {
 
 		$rtl = is_rtl() ? '-rtl' : '';
 		// We're going to assume Payment Elements needs to load...
-		$style_src = EDD_PLUGIN_URL . "assets/css/stripe-paymentelements{$rtl}.min.css";
+		$style_src = edd_get_assets_url( 'css/gateways/' ) . "stripe-payment-elements{$rtl}.min.css";
 
 		// But if the user has Card Elements, we need to load that instead.
 		$elements_mode = edds_get_elements_mode();
 		if ( 'card-elements' === $elements_mode ) {
-			$style_src = EDD_PLUGIN_URL . "assets/css/stripe-cardelements{$rtl}.min.css";
+			$style_src = edd_get_assets_url( 'css/gateways/' ) . "stripe-card-elements{$rtl}.min.css";
 		}
 
 		wp_register_style(
@@ -165,7 +165,7 @@ function edd_stripe_connect_admin_script( $hook ) {
 
 	edd_stripe_connect_admin_style();
 
-	wp_enqueue_script( 'edd-stripe-admin-scripts', EDD_PLUGIN_URL . 'assets/js/stripe-admin.js', array( 'jquery', 'wp-dom-ready' ), EDD_VERSION, true );
+	wp_enqueue_script( 'edd-stripe-admin-scripts', edd_get_assets_url( 'js/admin' ) . 'stripe.js', array( 'jquery', 'wp-dom-ready' ), EDD_VERSION, true );
 
 	$test_key = edd_get_option( 'test_publishable_key' );
 	$live_key = edd_get_option( 'live_publishable_key' );
@@ -196,7 +196,7 @@ function edd_stripe_connect_admin_style() {
 
 	wp_enqueue_style(
 		'edd-stripe-admin-styles',
-		EDD_PLUGIN_URL . "assets/css/stripe-admin{$rtl}.min.css",
+		edd_get_assets_url( 'css/admin' ) . "stripe{$rtl}.min.css",
 		array(),
 		EDD_VERSION
 	);

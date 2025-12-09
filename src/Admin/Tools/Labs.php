@@ -204,7 +204,7 @@ class Labs implements SubscriberInterface {
 	 */
 	private function enqueue(): void {
 		$script_handle = 'edd-admin-tools-labs';
-		$script_src    = EDD_PLUGIN_URL . 'assets/js/edd-admin-tools-labs.js';
+		$script_src    = edd_get_assets_url( 'js/admin' ) . 'tools-labs.js';
 		wp_register_script(
 			$script_handle,
 			$script_src,

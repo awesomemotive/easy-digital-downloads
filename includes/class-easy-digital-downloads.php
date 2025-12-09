@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.6.1' );
+				define( 'EDD_VERSION', '3.6.2' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -639,7 +639,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/customers/customer-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 			require_once EDD_PLUGIN_DIR . 'includes/taxes/functions.php';

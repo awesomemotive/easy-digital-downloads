@@ -202,7 +202,7 @@ class Gateway extends \EDD\Gateways\Gateway {
 			// Enqueue our custom Square checkout script.
 			wp_register_script(
 				'edd-square-checkout',
-				EDD_PLUGIN_URL . 'assets/js/square-checkout.js',
+				edd_get_assets_url( 'js/gateways/' ) . 'square.js',
 				array( 'edd-square-web-payments-sdk', 'jquery', 'edd-ajax', 'wp-dom-ready' ),
 				EDD_VERSION,
 				true
@@ -211,7 +211,7 @@ class Gateway extends \EDD\Gateways\Gateway {
 			// Enqueue Square checkout styles.
 			wp_register_style(
 				'edd-square-checkout',
-				EDD_PLUGIN_URL . 'assets/css/square-checkout.min.css',
+				edd_get_assets_url( 'css/gateways/' ) . 'square.min.css',
 				array(),
 				EDD_VERSION
 			);

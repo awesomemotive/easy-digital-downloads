@@ -71,58 +71,6 @@ class Checkout extends Section {
 	}
 
 	/**
-	 * Sanitize the empty cart behavior.
-	 *
-	 * @since 3.5.0
-	 * @param array $value The value to sanitize.
-	 * @return array The sanitized value.
-	 */
-	protected static function sanitize_empty_cart_behavior( $value ) {
-		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
-
-		return $provider::validate_empty_cart_behavior( $value );
-	}
-
-	/**
-	 * Sanitize the empty cart message.
-	 *
-	 * @since 3.5.0
-	 * @param string $value The value to sanitize.
-	 * @return string The sanitized value.
-	 */
-	public static function sanitize_empty_cart_message( $value ) {
-		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
-
-		return $provider::validate_empty_cart_message( $value );
-	}
-
-	/**
-	 * Sanitize the empty cart redirect page.
-	 *
-	 * @since 3.5.0
-	 * @param string $value The value to sanitize.
-	 * @return string The sanitized value.
-	 */
-	public static function sanitize_empty_cart_redirect_page( $value ) {
-		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
-
-		return $provider::validate_empty_cart_redirect_page( $value );
-	}
-
-	/**
-	 * Sanitize the empty cart redirect URL.
-	 *
-	 * @since 3.5.0
-	 * @param string $value The value to sanitize.
-	 * @return string The sanitized value.
-	 */
-	public static function sanitize_empty_cart_redirect_url( $value ) {
-		$provider = edd_get_namespace( 'Admin\\Settings\\EmptyCartBehavior' );
-
-		return $provider::validate_empty_cart_redirect_url( $value );
-	}
-
-	/**
 	 * Checks if there are any active regional tax rates.
 	 *
 	 * @since 3.5.0

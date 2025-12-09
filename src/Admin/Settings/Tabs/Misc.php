@@ -88,10 +88,9 @@ class Misc extends Tab {
 				'item_quantities'     => array(
 					'id'    => 'item_quantities',
 					'name'  => __( 'Cart Item Quantities', 'easy-digital-downloads' ),
-					/* translators: %s: Downloads plural label */
-					'check' => sprintf( __( 'Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ),
 					'type'  => 'checkbox_toggle',
 					'desc'  => '',
+					'class' => 'edd-hidden',
 				),
 				'uninstall_on_delete' => array(
 					'id'    => 'uninstall_on_delete',
@@ -286,7 +285,7 @@ class Misc extends Tab {
 				'guests' => __( 'Only for guests', 'easy-digital-downloads' ),
 			),
 			'disabled' => ! $checkout_has_block,
-			'class'    => $this->get_requires_css_class( 'captcha_provider' ),
+			'class'    => $this->get_requires_css_class( 'captcha_provider', array(), $this->get_provider_ids() ),
 		);
 	}
 
@@ -310,7 +309,7 @@ class Misc extends Tab {
 			'options' => array(
 				'disabled' => 'always' === edd_get_option( 'recaptcha_checkout' ),
 			),
-			'class'   => $this->get_requires_css_class( 'captcha_provider' ),
+			'class'   => $this->get_requires_css_class( 'captcha_provider', array(), $this->get_provider_ids() ),
 		);
 	}
 
@@ -322,7 +321,7 @@ class Misc extends Tab {
 	 */
 	private function get_captcha_settings(): array {
 		$providers        = \EDD\Captcha\Providers\Provider::get_available_providers();
-		$provider_options = array( '' => __( 'None', 'easy-digital-downloads' ) );
+		$provider_options = array( 'none' => __( 'None', 'easy-digital-downloads' ) );
 
 		foreach ( $providers as $provider ) {
 			$provider_options[ $provider->get_id() ] = $provider->get_name();
@@ -337,7 +336,7 @@ class Misc extends Tab {
 				'desc'    => __( 'Choose which CAPTCHA provider to use for spam protection.', 'easy-digital-downloads' ),
 				'type'    => 'select',
 				'options' => $provider_options,
-				'std'     => $active_provider ? $active_provider->get_id() : '',
+				'std'     => $active_provider ? $active_provider->get_id() : 'none',
 				'data'    => array(
 					'edd-requirement' => 'captcha_provider',
 				),
@@ -359,5 +358,20 @@ class Misc extends Tab {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Gets the provider IDs.
+	 *
+	 * @since 3.6.2
+	 * @return array
+	 */
+	private function get_provider_ids(): array {
+		$providers = \EDD\Captcha\Providers\Provider::get_available_providers();
+		$ids       = array();
+		foreach ( $providers as $provider ) {
+			$ids[] = $provider->get_id();
+		}
+		return $ids;
 	}
 }

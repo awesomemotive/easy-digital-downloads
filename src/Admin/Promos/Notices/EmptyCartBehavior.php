@@ -145,12 +145,6 @@ class EmptyCartBehavior extends Notice {
 			return false;
 		}
 
-		$section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
-
-		if ( 'checkout' !== $section ) {
-			return false;
-		}
-
-		return true;
+		return 'cart' === filter_input( INPUT_GET, 'section', FILTER_SANITIZE_SPECIAL_CHARS );
 	}
 }

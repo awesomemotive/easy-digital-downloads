@@ -49,31 +49,12 @@ WPIntegration\bootstrap_it();
 
 activate_plugin( 'easy-digital-downloads-pro/easy-digital-downloads.php' );
 
-echo "Setting up Easy Digital Downloads...\n";
-
-$components = EDD()->components;
-
-foreach ( $components as $component ) {
-	$thing = $component->get_interface( 'table' );
-
-	if ( $thing instanceof \EDD\Database\Table ) {
-		if ( $thing->exists() ) {
-			$thing->uninstall();
-		}
-
-		$thing->install();
-	}
-
-	$thing = $component->get_interface( 'meta' );
-
-	if ( $thing instanceof \EDD\Database\Table ) {
-		if ( $thing->exists() ) {
-			$thing->uninstall();
-		}
-
-		$thing->install();
-	}
+if ( ! defined( 'EDD_VERSION' ) ) {
+	echo "EDD could not be activated. Check your PHP and WordPress versions." . PHP_EOL;
+	exit( 1 );
 }
+
+echo "Setting up Easy Digital Downloads...\n";
 
 function _disable_reqs( $status = false, $args = array(), $url = '') {
 }

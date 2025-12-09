@@ -11,8 +11,8 @@ show_help() {
   echo "Options:";
   printf -- '-i, --in-place\t\tDoes tests in-place without copying the repo to another dir and nuking composer files. This is faster but will add composer.lock/vendor dirs to your checkout. (Default: no)\n';
   printf -- '-m, --multisite\t\tRun tests as multisite?\n';
-  printf -- '-p, --php\t\tSets the PHP version to test with (Required)\n';
-  printf -- '-w, --wp\t\tSets WP version to test against (Required)\n';
+  printf -- '-p, --php\t\tSets the PHP version to test with (Default: 8.2)\n';
+  printf -- '-w, --wp\t\tSets WP version to test against (Default: latest)\n';
   printf -- '-f, --filter\t\tPasses filters into PHPUnit\n';
   printf -- '-h, --help\t\tShow help.\n';
 }
@@ -55,10 +55,9 @@ while true; do
   esac
 done
 
-if [[ -z "${TEST_PHP_VERSION}" ]] || [[ -z "${TEST_WP_VERSION}" ]]; then
-	show_help;
-	exit 1;
-fi
+# Set defaults if not provided
+export TEST_PHP_VERSION="${TEST_PHP_VERSION:-8.2}"
+export TEST_WP_VERSION="${TEST_WP_VERSION:-latest}"
 
 # Default WP_MULTISITE to 0
 export WP_MULTISITE="${TEST_WP_MULTISITE:-0}"
@@ -67,6 +66,9 @@ export TEST_INPLACE="${TEST_INPLACE:-0}"
 
 # Default TEST_ACTIONS to 0
 export TEST_ACTIONS="${TEST_ACTIONS:-0}"
+
+# Default FILTER to empty string
+export FILTER="${FILTER:-}"
 
 # Create a random project name
 export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)"
@@ -112,7 +114,7 @@ fi
 # Do this to make sure we cleanup
 set +e
 echo "Starting Docker containers..."
-docker-compose --progress quiet -f docker-compose-phpunit.yml run -e "TEST_INPLACE=${TEST_INPLACE}" --rm --user $(id -u):$(id -g) wordpress
+docker-compose --progress quiet -f docker-compose-phpunit.yml run -e "TEST_INPLACE=${TEST_INPLACE}" -e "WP_MULTISITE=${WP_MULTISITE}" --rm --user $(id -u):$(id -g) wordpress
 
 echo "Removing Docker containers..."
 docker-compose --progress quiet -f docker-compose-phpunit.yml down -v

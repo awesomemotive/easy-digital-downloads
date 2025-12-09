@@ -8,9 +8,10 @@
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.0
  */
+
 namespace EDD\Database\Queries;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -56,7 +57,8 @@ class Compare extends Meta {
 		}
 
 		if ( ! in_array(
-			$clause['compare'], array(
+			$clause['compare'],
+			array(
 				'=',
 				'!=',
 				'>',
@@ -74,7 +76,8 @@ class Compare extends Meta {
 				'REGEXP',
 				'NOT REGEXP',
 				'RLIKE',
-			), true
+			),
+			true
 		) ) {
 			$clause['compare'] = '=';
 		}
@@ -140,7 +143,12 @@ class Compare extends Meta {
 			}
 
 			if ( $where ) {
-				$sql_chunks['where'][] = "{$column} {$compare} {$where}";
+				/**
+				 * This has been logged as an issue with Berlin.
+				 *
+				 * @link https://github.com/berlindb/core/issues/180
+				 */
+				$sql_chunks['where'][] = "{$this->primary_table}.{$column} {$compare} {$where}";
 			}
 		}
 

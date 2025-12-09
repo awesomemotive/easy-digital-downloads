@@ -285,7 +285,7 @@ class Render {
 
 		wp_enqueue_script(
 			'edd-square-admin',
-			EDD_PLUGIN_URL . 'assets/js/square-admin.js',
+			edd_get_assets_url( 'js/admin' ) . 'gateways-square.js',
 			array( 'jquery' ),
 			EDD_VERSION,
 			true
@@ -293,7 +293,7 @@ class Render {
 
 		wp_enqueue_style(
 			'edd-square-admin',
-			EDD_PLUGIN_URL . 'assets/css/square-admin.min.css',
+			edd_get_assets_url( 'css/admin' ) . 'square.min.css',
 			array(),
 			EDD_VERSION
 		);

@@ -50,7 +50,7 @@ class Modal implements SubscriberInterface {
 		// No CSS file needed - styles are embedded in the Web Component's Shadow DOM.
 		wp_register_script(
 			'edd-modal',
-			EDD_PLUGIN_URL . 'assets/js/edd-modal.js',
+			edd_get_assets_url( 'js/frontend/' ) . 'edd-modal.js',
 			array(),
 			EDD_VERSION,
 			true

@@ -115,7 +115,10 @@ abstract class Provider implements ProviderInterface {
 	 * @return Provider|null The active provider instance or null if none configured.
 	 */
 	public static function get_active_provider(): ?Provider {
-		$provider_id = edd_get_option( 'captcha_provider', '' );
+		$provider_id = edd_get_option( 'captcha_provider' );
+		if ( 'none' === $provider_id ) {
+			return null;
+		}
 
 		// Backwards compatibility: if no provider is set but reCAPTCHA keys exist, use reCAPTCHA.
 		if ( empty( $provider_id ) ) {
