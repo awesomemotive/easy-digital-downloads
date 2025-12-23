@@ -124,6 +124,7 @@ module.exports = function ( grunt ) {
 					'!src/Pro/**',
 					'!crowdin.yml',
 					'!sonar-project.properties',
+					'!tests/pro/**',
 				],
 				dest: 'build/<%= pkg.name %>-public/',
 			}

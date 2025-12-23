@@ -49,7 +49,7 @@ class Settings {
 		if ( wp_script_is( 'edd-licensing' ) ) {
 			return;
 		}
-		wp_enqueue_script( 'edd-licensing', edd_get_assets_url( 'js' ) . 'edd-admin-licensing.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_enqueue_script( 'edd-licensing', edd_get_assets_url( 'js/admin' ) . 'licensing.js', array( 'jquery' ), EDD_VERSION, true );
 		wp_localize_script(
 			'edd-licensing',
 			'EDDLicenseHandler',

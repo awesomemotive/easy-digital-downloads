@@ -4,8 +4,7 @@
  *
  * This serves as a fallback for the webhooks in the event that the app becomes disconnected.
  *
- * @package    easy-digital-downloads
- * @subpackage Gateways\PayPal\Webhooks
+ * @package    EDD\Gateways\PayPal
  * @copyright  Copyright (c) 2023, Easy Digital Downloads
  * @license    GPL2+
  * @since      3.2.0
@@ -17,7 +16,14 @@ defined( 'ABSPATH' ) || exit;
 
 use EDD\Gateways\PayPal;
 
+/**
+ * IPN class.
+ *
+ * @since 3.2.0
+ */
 class IPN {
+	use Traits\Data;
+	use Traits\Validate;
 
 	/**
 	 * The posted data from PayPal.
@@ -109,29 +115,12 @@ class IPN {
 
 		$this->debug_log( 'IPN Backup Loaded' );
 
-		/**
-		 * The is_verified() method returned true if the IPN was "VERIFIED" and false if it was "INVALID".
-		 */
-		if ( ! $this->is_verified() ) {
-			$this->debug_log( 'verification failed, bailing.' );
-			status_header( 400 );
-			die( 'invalid IPN' );
-		}
-
-		status_header( 200 );
-
 		if ( ! empty( $this->posted['txn_type'] ) ) {
 			$this->txn_type = strtolower( $this->posted['txn_type'] );
 		}
 		if ( ! empty( $this->posted['payment_status'] ) ) {
 			$this->payment_status = strtolower( $this->posted['payment_status'] );
 		}
-
-		if ( empty( $this->txn_type ) && empty( $this->payment_status ) ) {
-			$this->debug_log( 'No txn_type or payment_status in the IPN, bailing' );
-			return;
-		}
-
 		$this->amount = $this->get_amount();
 		if ( ! empty( $this->posted['mc_currency'] ) ) {
 			$this->currency_code = $this->posted['mc_currency'];
@@ -140,6 +129,29 @@ class IPN {
 		}
 		if ( ! empty( $this->posted['txn_id'] ) ) {
 			$this->transaction_id = $this->posted['txn_id'];
+		}
+
+		/**
+		 * The is_verified() method returned true if the IPN was "VERIFIED" and false if it was "INVALID".
+		 */
+		if ( ! $this->is_verified() ) {
+			$this->debug_log( 'verification failed, bailing.' );
+			$this->terminate( 400 );
+		}
+
+		status_header( 200 );
+
+		// Validate IPN data beyond PayPal's verification.
+		try {
+			$this->validate_ipn_data();
+		} catch ( \Exception $e ) {
+			$this->debug_log( 'IPN validation failed: ' . $e->getMessage() );
+			$this->terminate( 400, 'IPN validation failed' );
+		}
+
+		if ( empty( $this->txn_type ) && empty( $this->payment_status ) ) {
+			$this->debug_log( 'No txn_type or payment_status in the IPN, bailing' );
+			return;
 		}
 
 		if ( 'new_case' === $this->txn_type && ! empty( $this->transaction_id ) ) {
@@ -191,107 +203,262 @@ class IPN {
 		);
 
 		// Get response.
-		$api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
-		$body         = wp_remote_retrieve_body( $api_response );
+		$api_response  = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
+		$body          = wp_remote_retrieve_body( $api_response );
+		$response_code = wp_remote_retrieve_response_code( $api_response );
 
+		// Handle different failure scenarios.
 		if ( is_wp_error( $api_response ) ) {
-			edd_record_gateway_error(
-				__( 'IPN Error', 'easy-digital-downloads' ),
-				/* translators: %s: IPN Verification response */
-				sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) )
+			$error_code    = $api_response->get_error_code();
+			$error_message = $api_response->get_error_message();
+
+			$this->debug_log(
+				sprintf(
+					'PayPal verification endpoint error. Code: %s, Message: %s',
+					$error_code,
+					$error_message
+				)
 			);
-			$this->debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
-			status_header( 401 );
-			return false; // Something went wrong.
+
+			// Categorize the error.
+			$network_errors   = array( 'http_request_failed', 'connect_error', 'connection_timeout' );
+			$is_network_error = in_array( $error_code, $network_errors, true );
+
+			if ( $is_network_error ) {
+				// Network/timeout errors - PayPal might be down.
+				return $this->handle_verification_unavailable( 'network_error', $error_message );
+			} else {
+				// Other errors - likely invalid request.
+				edd_record_gateway_error(
+					__( 'IPN Error', 'easy-digital-downloads' ),
+					sprintf(
+						/* translators: %1$s: Error message; %2$s: IPN data */
+						__( 'PayPal IPN verification failed. Error: %1$s. IPN data: %2$s', 'easy-digital-downloads' ),
+						$error_message,
+						wp_json_encode(
+							array(
+								'txn_id'   => ! empty( $this->posted['txn_id'] ) ? $this->posted['txn_id'] : '',
+								'txn_type' => ! empty( $this->posted['txn_type'] ) ? $this->posted['txn_type'] : '',
+							)
+						)
+					)
+				);
+				status_header( 401 );
+				return false;
+			}
 		}
 
+		// Check HTTP response code.
+		if ( 403 === $response_code ) {
+			// PayPal is actively rejecting the request.
+			$this->debug_log( 'PayPal returned 403 Forbidden. Possible service disruption.' );
+			return $this->handle_verification_unavailable( 'http_403', 'PayPal returned 403' );
+		} elseif ( $response_code >= 500 ) {
+			// PayPal server error.
+			$this->debug_log( 'PayPal returned server error: ' . $response_code );
+			return $this->handle_verification_unavailable( 'server_error', 'PayPal server error ' . $response_code );
+		}
+
+		// Check verification response.
 		if ( 'VERIFIED' !== $body ) {
-			edd_record_gateway_error(
-				__( 'IPN Error', 'easy-digital-downloads' ),
-				/* translators: %s: IPN Verification response */
-				sprintf( __( 'Invalid PayPal Commerce/Express IPN verification response. IPN data: %s', 'easy-digital-downloads' ), json_encode( $api_response ) )
-			);
-			$this->debug_log( 'verification failed. Data: ' . var_export( $body, true ) );
-			status_header( 401 );
-			return false; // Response not okay.
+			// Check if it's INVALID or something else.
+			if ( 'INVALID' === $body ) {
+				// Legitimate rejection.
+				edd_record_gateway_error(
+					__( 'IPN Error', 'easy-digital-downloads' ),
+					sprintf(
+						/* translators: %s: Transaction ID */
+						__( 'PayPal rejected IPN as INVALID. Transaction ID: %s', 'easy-digital-downloads' ),
+						! empty( $this->posted['txn_id'] ) ? $this->posted['txn_id'] : 'unknown'
+					)
+				);
+				$this->debug_log( 'PayPal returned INVALID. Data: ' . var_export( $body, true ) );
+				status_header( 401 );
+				return false;
+			} else {
+				// Unexpected response.
+				$this->debug_log( 'Unexpected PayPal response: ' . var_export( $body, true ) );
+				return $this->handle_verification_unavailable( 'unexpected_response', 'Unexpected response: ' . $body );
+			}
 		}
 
 		// We've verified that the IPN Check passed, we can proceed with processing the IPN data sent to us.
+		$this->debug_log( 'IPN verified successfully by PayPal' );
 		return true;
 	}
 
 	/**
-	 * Gets the encoded data array.
+	 * Handles cases where PayPal's verification endpoint is unavailable.
 	 *
-	 * @since 3.2.0
-	 * @return array|bool
+	 * @since 3.6.3
+	 * @param string $reason Reason for unavailability.
+	 * @param string $details Additional details.
+	 * @return bool Whether to proceed with processing.
 	 */
-	private function get_encoded_data_array() {
+	private function handle_verification_unavailable( $reason, $details ) {
+		$this->debug_log(
+			sprintf(
+				'PayPal verification unavailable. Reason: %s, Details: %s',
+				$reason,
+				$details
+			)
+		);
 
-		nocache_headers();
+		/**
+		 * Filter the fallback strategy to use when PayPal verification is unavailable.
+		 *
+		 * @since 3.6.3
+		 * @param string $fallback_strategy The fallback strategy to use.
+		 * @return string The fallback strategy to use.
+		 */
+		$fallback_strategy = apply_filters( 'edd_paypal_verification_fallback', 'process_with_validation' );
 
-		// Set initial post data to empty string.
-		$post_data = '';
-
-		// Fallback just in case post_max_size is lower than needed.
-		if ( ini_get( 'allow_url_fopen' ) ) {
-			$post_data = file_get_contents( 'php://input' );
-		} else {
-			// If allow_url_fopen is not enabled, then make sure that post_max_size is large enough.
-			ini_set( 'post_max_size', '12M' );
-		}
-
-		// Start the encoded data collection with notification command.
-		$encoded_data = 'cmd=_notify-validate';
-
-		// Get current arg separator.
-		$arg_separator = edd_get_php_arg_separator_output();
-
-		// Verify there is a post_data.
-		if ( $post_data || strlen( $post_data ) > 0 ) {
-
-			// Append the data.
-			$encoded_data .= $arg_separator . $post_data;
-
-		} else {
-
-			// Check if POST is empty.
-			if ( empty( $this->posted ) ) {
-				// Nothing to do.
-				$this->debug_log( 'post data not detected, bailing' );
+		switch ( $fallback_strategy ) {
+			case 'create_on_hold':
+				// Create renewal order with on_hold status for manual review.
+				$this->create_on_hold_renewal( $reason, $details );
 				return false;
-			}
 
-			// Loop through each POST.
-			foreach ( $this->posted as $key => $value ) {
+			case 'reject':
+				// Reject the IPN.
+				edd_record_gateway_error(
+					__( 'IPN Error', 'easy-digital-downloads' ),
+					sprintf(
+						/* translators: %1$s: Details; %2$s: Transaction ID */
+						__( 'IPN rejected due to verification unavailability: %1$s. Transaction ID: %2$s', 'easy-digital-downloads' ),
+						$details,
+						! empty( $this->posted['txn_id'] ) ? $this->posted['txn_id'] : 'unknown'
+					)
+				);
+				status_header( 503 ); // Service Unavailable - PayPal will retry.
+				return false;
 
-				// Encode the value and append the data.
-				$encoded_data .= $arg_separator . "$key=" . urlencode( $value );
-			}
+			case 'process_with_validation':
+			default:
+				// Proceed with enhanced validation.
+				$this->debug_log( 'Proceeding with enhanced validation due to verification unavailability' );
+				edd_record_gateway_error(
+					__( 'IPN Warning', 'easy-digital-downloads' ),
+					sprintf(
+						/* translators: %1$s: Details; %2$s: Transaction ID */
+						__( 'Processing IPN without PayPal verification due to: %1$s. Enhanced validation will be performed. Transaction ID: %2$s', 'easy-digital-downloads' ),
+						$details,
+						! empty( $this->posted['txn_id'] ) ? $this->posted['txn_id'] : 'unknown'
+					)
+				);
+				return true; // Will rely on validate_ipn_data().
 		}
-
-		// Convert collected post data to an array.
-		parse_str( $encoded_data, $encoded_data_array );
-
-		return $encoded_data_array;
 	}
 
 	/**
-	 * Note: Amounts get more properly sanitized on insert.
+	 * Creates a renewal order with on_hold status when verification is unavailable.
 	 *
-	 * @see EDD_Subscription::add_payment()
-	 * @since 3.2.0
-	 * @return float
+	 * This allows the store owner to manually review and approve the renewal if it appears legitimate.
+	 *
+	 * @since 3.6.3
+	 * @param string $reason Reason verification is unavailable.
+	 * @param string $details Additional details about the verification failure.
 	 */
-	private function get_amount() {
-		if ( isset( $this->posted['amount'] ) ) {
-			return (float) $this->posted['amount'];
-		}
-		if ( isset( $this->posted['mc_gross'] ) ) {
-			return (float) $this->posted['mc_gross'];
+	private function create_on_hold_renewal( $reason, $details ) {
+		// Only create on-hold orders for subscription renewals.
+		$renewal_types = array( 'recurring_payment', 'recurring_payment_outstanding_payment' );
+		if ( ! in_array( $this->txn_type, $renewal_types, true ) ) {
+			$this->debug_log( sprintf( 'Not creating on-hold order for non-renewal transaction type: %s', $this->txn_type ) );
+			$this->terminate( 503, 'Not a renewal transaction' );
 		}
 
-		return 0;
+		// Check if EDD Recurring is available.
+		if ( ! class_exists( '\\EDD_Subscription' ) ) {
+			$this->debug_log( 'EDD Recurring not available, cannot create on-hold renewal' );
+			$this->terminate( 503, 'EDD Recurring not available' );
+		}
+
+		// Get the subscription.
+		if ( empty( $this->posted['recurring_payment_id'] ) ) {
+			$this->debug_log( 'No recurring_payment_id found in IPN data' );
+			$this->terminate( 503, 'No recurring_payment_id' );
+		}
+
+		$subscription = new \EDD_Subscription( $this->posted['recurring_payment_id'], true );
+		if ( empty( $subscription->id ) ) {
+			$this->debug_log( sprintf( 'No subscription found for recurring_payment_id: %s', $this->posted['recurring_payment_id'] ) );
+			$this->terminate( 503, 'Subscription not found' );
+		}
+
+		$this->debug_log(
+			sprintf(
+				'Creating on-hold renewal for subscription %d. Reason: %s',
+				$subscription->id,
+				$reason
+			)
+		);
+
+		// Use the standard process_recurring_payment method to create the renewal.
+		// Pass true to skip the subscription renewal step.
+		$payment_id = $this->process_recurring_payment( $subscription, true );
+
+		if ( ! $payment_id ) {
+			$this->debug_log( sprintf( 'Failed to create renewal payment for subscription %d', $subscription->id ) );
+			$this->terminate( 503, 'Failed to create renewal payment' );
+		}
+
+		// Now handle the on-hold specific behavior.
+
+		// Update the order status to on_hold (add_payment() sets it to 'edd_subscription').
+		edd_update_order_status( $payment_id, 'on_hold' );
+
+		// Add detailed note to the order.
+		$note_content = sprintf(
+			/* translators: 1: Verification failure reason, 2: Details, 3: Transaction ID, 4: Amount, 5: Currency */
+			__( 'Renewal order created with on_hold status for manual review.%1$s%1$sPayPal verification was unavailable:%1$sReason: %2$s%1$sDetails: %3$s%1$s%1$sThis appears to be a legitimate renewal based on:%1$s- Transaction ID: %4$s%1$s- Amount matches subscription: %5$s%1$s- Currency matches: %6$s%1$s%1$sPlease verify this transaction in your PayPal account and update the order status accordingly.', 'easy-digital-downloads' ),
+			"\n",
+			$reason,
+			$details,
+			$this->transaction_id,
+			edd_currency_filter( edd_format_amount( $this->amount ), $this->currency_code ),
+			$this->currency_code
+		);
+
+		edd_add_note(
+			array(
+				'object_type' => 'order',
+				'object_id'   => $payment_id,
+				'content'     => $note_content,
+			)
+		);
+
+		// Add note to subscription as well.
+		$subscription->add_note(
+			sprintf(
+				/* translators: 1: Order ID, 2: Transaction ID */
+				__( 'Renewal order %1$d created with on_hold status due to PayPal verification issues. Transaction ID: %2$s. Please review and approve if legitimate.', 'easy-digital-downloads' ),
+				$payment_id,
+				$this->transaction_id
+			)
+		);
+
+		$this->debug_log(
+			sprintf(
+				'Successfully created on-hold renewal order %d for subscription %d. Transaction: %s',
+				$payment_id,
+				$subscription->id,
+				$this->transaction_id
+			)
+		);
+
+		// Record this in gateway errors for admin visibility.
+		edd_record_gateway_error(
+			__( 'IPN - Manual Review Required', 'easy-digital-downloads' ),
+			sprintf(
+				/* translators: %1$d: Order ID; %2$s: Reason; %3$s: Transaction ID */
+				__( 'Renewal order %1$d created with on_hold status. PayPal verification unavailable (%2$s). Transaction ID: %3$s. Please review in PayPal account.', 'easy-digital-downloads' ),
+				$payment_id,
+				$reason,
+				$this->transaction_id
+			)
+		);
+
+		$this->terminate( 200, 'On-hold renewal created' );
 	}
 
 	/**
@@ -346,6 +513,10 @@ class IPN {
 		$this->posted = apply_filters( 'edd_recurring_ipn_post', $this->posted );
 
 		$subscription = new \EDD_Subscription( $this->posted['recurring_payment_id'], true );
+		if ( empty( $subscription->id ) ) {
+			$this->debug_log( 'No subscription found for recurring_payment_id: ' . $this->posted['recurring_payment_id'] );
+			return;
+		}
 
 		// Bail if this is the very first payment.
 		if ( ! empty( $this->posted['payment_date'] ) && date( 'Y-n-d', strtotime( $subscription->created ) ) == date( 'Y-n-d', strtotime( $this->posted['payment_date'] ) ) ) {
@@ -354,14 +525,14 @@ class IPN {
 		}
 
 		$parent_order = edd_get_order( $subscription->parent_payment_id );
-		if ( 'paypal_commerce' !== $parent_order->gateway ) {
+		if ( ! $parent_order || 'paypal_commerce' !== $parent_order->gateway ) {
 			$this->debug_log( 'This is not for PayPal Commerce - bailing' );
 			return;
 		}
 
 		if ( empty( $subscription->id ) || $subscription->id < 1 ) {
 			$this->debug_log( 'no matching subscription found detected, bailing. Data: ' . var_export( $this->posted, true ) );
-			die( 'No subscription found' );
+			$this->terminate( 400, 'No subscription found' );
 		}
 
 		$this->debug_log( 'Processing ' . $this->txn_type . ' IPN for subscription ' . $subscription->id );
@@ -400,48 +571,61 @@ class IPN {
 	}
 
 	/**
-	 * Gets the order ID from the transaction ID.
-	 *
-	 * @since 3.2.0
-	 * @return int
-	 */
-	private function get_order_id() {
-		return ! empty( $this->posted['parent_txn_id'] ) ?
-			edd_get_order_id_from_transaction_id( $this->posted['parent_txn_id'] ) :
-			0;
-	}
-
-	/**
 	 * Processes a recurring payment.
 	 *
 	 * @since 3.2.0
 	 * @param \EDD_Subscription $subscription The subscription object.
-	 * @return void
+	 * @param bool              $skip_renew Optional. Whether to skip calling $subscription->renew(). Default false.
+	 * @return int|false The payment ID on success, false on failure.
 	 */
-	private function process_recurring_payment( $subscription ) {
+	private function process_recurring_payment( $subscription, $skip_renew = false ) {
 		$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $this->transaction_id );
 		if ( ! empty( $transaction_exists ) ) {
-			$this->debug_log( 'Transaction ID ' . $this->transaction_id . ' arlready processed.' );
-			return;
+			$this->debug_log( 'Transaction ID ' . $this->transaction_id . ' already processed.' );
+			return false;
 		}
 
 		// verify details.
-		if ( ! empty( $parent_order->currency ) && strtolower( $this->currency_code ) !== strtolower( $parent_order->currency ) ) {
+		$parent_order = edd_get_order( $subscription->parent_payment_id );
+		if ( ! $parent_order ) {
+			$this->debug_log( 'Parent order not found for subscription ' . $subscription->id );
+			return false;
+		}
 
-			// the currency code is invalid
-			// @TODO: Does this need a parent_id for better error organization?
-			/* translators: %s: The payment data sent via the IPN */
-			edd_record_gateway_error( __( 'Invalid Currency Code', 'easy-digital-downloads' ), sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'easy-digital-downloads' ), json_encode( $this->posted ) ) );
+		// Validate currency code.
+		if ( ! empty( $this->currency_code ) && ! empty( $parent_order->currency ) ) {
+			if ( strtolower( $this->currency_code ) !== strtolower( $parent_order->currency ) ) {
+				// the currency code is invalid.
+				edd_record_gateway_error(
+					__( 'Invalid Currency Code', 'easy-digital-downloads' ),
+					sprintf(
+						/* translators: %1$d: Subscription ID; %2$s: Expected currency; %3$s: Received currency; %4$s: Transaction ID */
+						__( 'Currency mismatch for subscription %1$d. Expected: %2$s, Received: %3$s. Transaction ID: %4$s', 'easy-digital-downloads' ),
+						$subscription->id,
+						$parent_order->currency,
+						$this->currency_code,
+						$this->transaction_id
+					)
+				);
 
-			$this->debug_log( 'subscription ' . $subscription->id . ': invalid currency code detected in IPN data: ' . var_export( $this->posted, true ) );
+				$this->debug_log( 'subscription ' . $subscription->id . ': invalid currency code detected in IPN data: ' . var_export( $this->posted, true ) );
 
-			die( 'invalid currency code' );
+				$this->terminate( 400, 'Invalid currency code' );
+			}
+		}
+
+		// Validate amount against subscription amount.
+		try {
+			$this->validate_subscription_amount( $subscription, $this->amount );
+		} catch ( \Exception $e ) {
+			$this->debug_log( 'subscription ' . $subscription->id . ': ' . $e->getMessage() );
+			$this->terminate( 400, 'Amount validation failed' );
 		}
 
 		if ( 'failed' === $this->payment_status ) {
 			if ( 'failing' === $subscription->status ) {
-				$this->debug_log( 'Subscription ID ' . $subscription->id . ' arlready failing.' );
-				return;
+				$this->debug_log( 'Subscription ID ' . $subscription->id . ' already failing.' );
+				return false;
 			}
 
 			$transaction_link = '<a href="https://www.paypal.com/activity/payment/' . $this->transaction_id . '" target="_blank">' . $this->transaction_id . '</a>';
@@ -451,7 +635,7 @@ class IPN {
 
 			$this->debug_log( 'subscription ' . $subscription->id . ': payment failed in PayPal' );
 
-			die( 'Subscription payment failed' );
+			$this->terminate( 200, 'Subscription payment failed' );
 		}
 
 		$this->debug_log( 'subscription ' . $subscription->id . ': preparing to insert renewal payment' );
@@ -468,21 +652,42 @@ class IPN {
 		}
 
 		// when a user makes a recurring payment.
-		$payment_id = $subscription->add_payment( $subscription_payment_args );
-
-		if ( ! empty( $payment_id ) ) {
-			$this->debug_log( 'subscription ' . $subscription->id . ': renewal payment was recorded successfully, preparing to renew subscription' );
-			$subscription->renew( $payment_id );
-
-			if ( 'recurring_payment_outstanding_payment' === $this->txn_type ) {
-				/* translators: %s: The collected outstanding balance of the subscription */
-				$subscription->add_note( sprintf( __( 'Outstanding subscription balance of %s collected successfully.', 'easy-digital-downloads' ), $this->amount ) );
-			}
-		} else {
-			$this->debug_log( 'subscription ' . $subscription->id . ': renewal payment creation appeared to fail.' );
+		try {
+			$payment_id = $subscription->add_payment( $subscription_payment_args );
+		} catch ( \Exception $e ) {
+			$this->debug_log(
+				sprintf(
+					'subscription %d: failed to add payment - %s',
+					$subscription->id,
+					$e->getMessage()
+				)
+			);
+			return false;
 		}
 
-		die( 'Subscription payment successful' );
+		if ( empty( $payment_id ) ) {
+			$this->debug_log( 'subscription ' . $subscription->id . ': renewal payment creation appeared to fail.' );
+			return false;
+		}
+
+		$this->debug_log( 'subscription ' . $subscription->id . ': renewal payment was recorded successfully' );
+		edd_add_order_meta( $payment_id, 'renewal_handler', 'paypal_commerce_ipn', true );
+
+		// Skip renewing if requested (used when creating on-hold renewals).
+		if ( $skip_renew ) {
+			return $payment_id;
+		}
+
+		// Normal renewal processing - renew the subscription.
+		$this->debug_log( 'subscription ' . $subscription->id . ': preparing to renew subscription' );
+		$subscription->renew( $payment_id );
+
+		if ( 'recurring_payment_outstanding_payment' === $this->txn_type ) {
+			/* translators: %s: The collected outstanding balance of the subscription */
+			$subscription->add_note( sprintf( __( 'Outstanding subscription balance of %s collected successfully.', 'easy-digital-downloads' ), $this->amount ) );
+		}
+
+		$this->terminate( 200, 'Subscription payment successful' );
 	}
 
 	/**
@@ -501,7 +706,7 @@ class IPN {
 		$subscription->cancel();
 		$this->debug_log( 'subscription ' . $subscription->id . ': subscription cancelled.' );
 
-		die( 'Subscription cancelled' );
+		$this->terminate( 200, 'Subscription cancelled' );
 	}
 
 	/**
@@ -513,14 +718,14 @@ class IPN {
 	 */
 	private function complete( $subscription ) {
 		if ( 'completed' === $subscription->status ) {
-			$this->debug_log( 'Subscription ID ' . $subscription->id . ' arlready completed.' );
+			$this->debug_log( 'Subscription ID ' . $subscription->id . ' already completed.' );
 			return;
 		}
 
 		$subscription->complete();
 		$this->debug_log( 'subscription ' . $subscription->id . ': subscription completed.' );
 
-		die( 'Subscription completed' );
+		$this->terminate( 200, 'Subscription completed' );
 	}
 
 	/**
@@ -587,7 +792,7 @@ class IPN {
 				edd_record_order_dispute( $order->id, '', $reason );
 			}
 
-			die( 'Reversal processed' );
+			$this->terminate( 200, 'Reversal processed' );
 		}
 
 		$this->debug_log( 'Processing a refund for original transaction ' . $order->get_transaction_id() );
@@ -639,34 +844,7 @@ class IPN {
 			}
 		}
 
-		die( 'Refund processed' );
-	}
-
-	/**
-	 * Gets the payment date from the IPN data.
-	 *
-	 * @since 3.2.0
-	 * @return false|string
-	 */
-	private function get_payment_date() {
-		if ( empty( $this->posted['payment_date'] ) ) {
-			return false;
-		}
-		// Create a DateTime object of the payment_date, so we can adjust as needed.
-		$subscription_payment_date = new \DateTime( $this->posted['payment_date'] );
-
-		// To make sure we don't inadvertently fail, make sure the date was parsed correctly before working with it.
-		if ( ! $subscription_payment_date instanceof \DateTime ) {
-			return false;
-		}
-
-		/**
-		 * Convert to GMT, as that is what EDD 3.0 expects the times to be in.
-		 */
-		$subscription_payment_date->setTimezone( new \DateTimeZone( 'GMT' ) );
-
-		// Now add the date into the arguments for creating the renewal payment.
-		return $subscription_payment_date->format( 'Y-m-d H:i:s' );
+		$this->terminate( 200, 'Refund processed' );
 	}
 
 	/**
@@ -679,5 +857,21 @@ class IPN {
 	 */
 	private function debug_log( $message ) {
 		edd_debug_log( 'PayPal Commerce IPN: ' . $message );
+	}
+
+	/**
+	 * Terminate IPN processing.
+	 *
+	 * In production, this stops PHP execution to prevent WordPress from continuing to load.
+	 * In test mode, it allows tests to continue running.
+	 *
+	 * @since 3.6.3
+	 *
+	 * @param int    $status_code HTTP status code to send. Default 200.
+	 * @param string $message     Optional message to log. Default empty.
+	 * @return void
+	 */
+	private function terminate( $status_code = 200, $message = '' ) {
+		edd_die( $message, '', $status_code );
 	}
 }

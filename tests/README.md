@@ -20,6 +20,33 @@ The flags `-p` and `-w` control the PHP and WordPress versions for the tests, re
 
 This command sends the `phpunit` command to the `wordpress_phpunit` container.
 
+### Running Tests with EDD Recurring
+To run tests that require EDD Recurring (such as subscription-related IPN tests), you can use the `--extra` flag:
+
+```bash
+bin/run-tests-local.sh -p 8.2 -w latest --extra recurring
+```
+
+**Important:** Running tests with EDD Recurring requires a GitHub personal access token with access to private repositories:
+
+```bash
+export COMPOSER_AUTH='{"github-oauth":{"github.com":"your_github_token_here"}}'
+bin/run-tests-local.sh -p 8.2 -w latest --extra recurring
+```
+
+You can create a GitHub token at https://github.com/settings/tokens with the `repo` scope.
+
+When `--extra recurring` is used:
+1. The test scripts will download and install EDD Recurring from GitHub
+2. The test bootstrap will automatically load and activate EDD Recurring
+3. Tests requiring `EDD_Recurring` or `EDD_Subscription` classes will run (not be skipped)
+
+Example running PayPal IPN tests with Recurring:
+```bash
+export COMPOSER_AUTH='{"github-oauth":{"github.com":"your_token"}}'
+bin/run-tests-local.sh -p 8.2 -w latest --extra recurring -f 'EDD\\Tests\\Gateways\\PayPal\\IPN'
+```
+
 ## Writing Tests
 For more information on how to write PHPUnit Tests, see [PHPUnit's Website](http://www.phpunit.de/manual/3.6/en/writing-tests-for-phpunit.html).
 

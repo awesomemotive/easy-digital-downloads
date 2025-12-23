@@ -2420,7 +2420,7 @@ class EDD_API {
 	 * @since 3.0
 	 */
 	public function flush_api_output() {
-		if ( defined( 'EDD_UNIT_TESTS' ) ) {
+		if ( edd_is_doing_unit_tests() ) {
 			$this->data = array();
 		}
 	}

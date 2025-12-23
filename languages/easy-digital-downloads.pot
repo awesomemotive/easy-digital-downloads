@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.6.2\n"
+"Project-Id-Version: Easy Digital Downloads 3.6.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-09T16:49:33+00:00\n"
+"POT-Creation-Date: 2025-12-23T21:33:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
@@ -5998,7 +5998,7 @@ msgstr ""
 #: includes/download-functions.php:1533
 #: includes/EDD_SL_Plugin_Updater.php:561
 #: includes/emails/template.php:109
-#: includes/error-tracking.php:60
+#: includes/error-tracking.php:63
 #: includes/gateways/functions.php:257
 #: includes/gateways/manual.php:33
 #: includes/gateways/paypal-standard.php:172
@@ -6016,7 +6016,7 @@ msgstr ""
 #: includes/user-functions.php:847
 #: includes/user-functions.php:871
 #: includes/user-functions.php:920
-#: includes/users/lost-password.php:252
+#: includes/users/lost-password.php:251
 #: src/Admin/Discounts/Manager.php:46
 #: src/Admin/Discounts/Manager.php:91
 #: src/Admin/Discounts/Manager.php:96
@@ -6961,6 +6961,8 @@ msgstr ""
 #: src/Admin/Menu/Header.php:151
 #: src/Admin/Menu/Pages.php:57
 #: src/Admin/Menu/Pages.php:58
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:171
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:182
 msgid "Orders"
 msgstr ""
 
@@ -7185,11 +7187,15 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:605
 #: src/Admin/Exports/Exporters/Orders.php:53
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignCustomers.php:86
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:88
 msgid "Customer Name"
 msgstr ""
 
 #: includes/admin/customers/customers.php:612
 #: includes/admin/payments/orders.php:367
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignCustomers.php:87
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:87
 msgid "Customer Email"
 msgstr ""
 
@@ -7479,6 +7485,7 @@ msgstr ""
 #: includes/admin/reporting/graphing.php:598
 #: src/Admin/Exports/Exporters/Downloads.php:62
 #: src/Admin/Exports/Exporters/SalesEarnings.php:65
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/CampaignEarnings.php:40
 #: src/Reports/Data/File_Downloads/Top_Five_Most_Downloaded_List_Table.php:63
 #: src/Reports/Endpoints/Charts/DownloadEarnings.php:44
 #: src/Reports/Endpoints/Charts/DownloadEarnings.php:54
@@ -9174,6 +9181,7 @@ msgstr ""
 #: includes/admin/reporting/graphing.php:599
 #: src/Admin/Exports/Exporters/Downloads.php:61
 #: src/Admin/Exports/Exporters/SalesEarnings.php:64
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/CampaignSales.php:40
 #: src/Reports/Data/Downloads/Top_Selling_Downloads_List_Table.php:59
 #: src/Reports/Data/File_Downloads/Top_Five_Most_Downloaded_List_Table.php:62
 #: src/Reports/Endpoints/Charts/DownloadSales.php:52
@@ -9373,6 +9381,7 @@ msgstr ""
 #: includes/admin/reporting/class-sales-logs-list-table.php:97
 #: src/Admin/Exports/Exporters/Orders.php:50
 #: src/Admin/Exports/Exporters/TaxedOrders.php:62
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:86
 msgid "Order Number"
 msgstr ""
 
@@ -10359,6 +10368,7 @@ msgstr ""
 #: src/Admin/Exports/Exporters/Orders.php:52
 #: src/Admin/Exports/Exporters/ProductSales.php:74
 #: src/Admin/Exports/Exporters/TaxedOrders.php:64
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignCustomers.php:85
 msgid "Customer ID"
 msgstr ""
 
@@ -11555,7 +11565,7 @@ msgid "You are currently logged in as %1$s. (%2$slog out%3$s)"
 msgstr ""
 
 #: includes/blocks/includes/forms/forms.php:93
-#: includes/users/lost-password.php:232
+#: includes/users/lost-password.php:231
 msgid "Your password reset link appears to be invalid. Please request a new link below."
 msgstr ""
 
@@ -11919,6 +11929,7 @@ msgid "Order"
 msgstr ""
 
 #: includes/blocks/views/orders/totals.php:20
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:96
 #: templates/shortcode-receipt.php:50
 msgid "Order Status"
 msgstr ""
@@ -11947,7 +11958,7 @@ msgstr ""
 
 #: includes/cart/class-edd-cart.php:1512
 #: includes/cart/class-edd-cart.php:1572
-#: includes/error-tracking.php:84
+#: includes/error-tracking.php:87
 #: templates/shortcode-profile-editor.php:28
 msgid "Success"
 msgstr ""
@@ -13640,6 +13651,8 @@ msgid "New Customers"
 msgstr ""
 
 #: includes/emails/email-summary/template-parts/data-listing.php:92
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:173
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:184
 msgid "Average Order"
 msgstr ""
 
@@ -13868,8 +13881,9 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:618
 #: includes/gateways/paypal-standard.php:698
 #: includes/gateways/paypal-standard.php:712
-#: src/Gateways/PayPal/IPN.php:199
-#: src/Gateways/PayPal/IPN.php:210
+#: src/Gateways/PayPal/IPN.php:233
+#: src/Gateways/PayPal/IPN.php:268
+#: src/Gateways/PayPal/IPN.php:325
 msgid "IPN Error"
 msgstr ""
 
@@ -16119,6 +16133,7 @@ msgid "Order ID / Number"
 msgstr ""
 
 #: includes/privacy-functions.php:800
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:95
 msgid "Order Date"
 msgstr ""
 
@@ -16127,6 +16142,7 @@ msgid "Order Completed Date"
 msgstr ""
 
 #: includes/privacy-functions.php:810
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:94
 msgid "Order Total"
 msgstr ""
 
@@ -16146,6 +16162,7 @@ msgstr ""
 #: src/Admin/Exports/Exporters/Orders.php:49
 #: src/Admin/Exports/Exporters/ProductSales.php:82
 #: src/Admin/Exports/Exporters/TaxedOrders.php:61
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:85
 msgid "Order ID"
 msgstr ""
 
@@ -16665,46 +16682,46 @@ msgid "Invalid username or password. %1$sReset Password%2$s"
 msgstr ""
 
 #. translators: %s: Link to the referring page.
-#: includes/users/lost-password.php:31
+#: includes/users/lost-password.php:30
 #, php-format
 msgid "Follow the instructions in the confirmation email you just received, then <a href=\"%s\">return to what you were doing</a>."
 msgstr ""
 
-#: includes/users/lost-password.php:127
+#: includes/users/lost-password.php:125
 msgid "Your request could not be completed."
 msgstr ""
 
-#: includes/users/lost-password.php:134
+#: includes/users/lost-password.php:132
 msgid "You did it! Check your email for instructions on resetting your password."
 msgstr ""
 
-#: includes/users/lost-password.php:230
+#: includes/users/lost-password.php:229
 msgid "Your password reset link has expired. Please request a new link below."
 msgstr ""
 
-#: includes/users/lost-password.php:252
-#: includes/users/lost-password.php:257
-#: includes/users/lost-password.php:262
-#: includes/users/lost-password.php:268
+#: includes/users/lost-password.php:251
+#: includes/users/lost-password.php:256
+#: includes/users/lost-password.php:261
+#: includes/users/lost-password.php:267
 msgid "Invalid password reset request."
 msgstr ""
 
-#: includes/users/lost-password.php:277
+#: includes/users/lost-password.php:276
 #: includes/users/register.php:102
 msgid "The password cannot be a space or all spaces."
 msgstr ""
 
-#: includes/users/lost-password.php:282
+#: includes/users/lost-password.php:281
 #: includes/users/register.php:107
 msgid "The passwords do not match."
 msgstr ""
 
-#: includes/users/lost-password.php:287
-#: includes/users/lost-password.php:292
+#: includes/users/lost-password.php:286
+#: includes/users/lost-password.php:291
 msgid "Your password could not be reset."
 msgstr ""
 
-#: includes/users/lost-password.php:301
+#: includes/users/lost-password.php:303
 msgid "Your password was successfully reset."
 msgstr ""
 
@@ -17852,7 +17869,7 @@ msgid "State Name"
 msgstr ""
 
 #: src/Admin/Exports/Exporters/Orders.php:79
-#: src/Pro/Forms/Checkout/VAT.php:114
+#: src/Pro/Forms/Checkout/VAT.php:120
 msgid "VAT Number"
 msgstr ""
 
@@ -19241,6 +19258,7 @@ msgstr ""
 
 #: src/Admin/Promos/Notices/EmptyCartBehavior.php:118
 #: src/Admin/Promos/Notices/VATHandling.php:116
+#: src/Lite/Admin/Promos/Notices/CampaignTracker.php:107
 #: src/Lite/Admin/Promos/Notices/FeaturedDownloads.php:91
 #: src/Lite/Admin/Promos/Notices/PreviewRecommendations.php:107
 msgid "Maybe Later"
@@ -20336,11 +20354,25 @@ msgid "Abandoned Cart Recovery"
 msgstr ""
 
 #: src/Admin/Settings/Tabs/Marketing.php:49
-msgid "Multiple Discounts"
+msgid "Campaign Tracking"
 msgstr ""
 
 #: src/Admin/Settings/Tabs/Marketing.php:50
+msgid "Track Google Analytics UTM parameters on orders."
+msgstr ""
+
+#: src/Admin/Settings/Tabs/Marketing.php:59
+msgid "Multiple Discounts"
+msgstr ""
+
+#: src/Admin/Settings/Tabs/Marketing.php:60
 msgid "Allow customers to use multiple discounts on the same purchase?"
+msgstr ""
+
+#. translators: 1: opening button tag, 2: closing button tag
+#: src/Admin/Settings/Tabs/Marketing.php:84
+#, php-format
+msgid "Automatically capture UTM campaign data and see which campaigns drive sales when you %1$sUpgrade to Pro%2$s."
 msgstr ""
 
 #: src/Admin/Settings/Tabs/Misc.php:71
@@ -20987,6 +21019,11 @@ msgstr ""
 
 #: src/Admin/SiteHealth/General.php:214
 #: src/Gateways/Square/Admin/Settings/Render.php:109
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:232
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:243
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:254
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:265
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:276
 msgid "Unknown"
 msgstr ""
 
@@ -22521,64 +22558,107 @@ msgstr ""
 msgid "Response Code: %1$d; Message: %2$s"
 msgstr ""
 
-#. translators: %s: IPN Verification response
-#: src/Gateways/PayPal/IPN.php:201
-#: src/Gateways/PayPal/IPN.php:212
+#. translators: %1$s: Error message; %2$s: IPN data
+#: src/Gateways/PayPal/IPN.php:236
 #, php-format
-msgid "Invalid PayPal Commerce/Express IPN verification response. IPN data: %s"
+msgid "PayPal IPN verification failed. Error: %1$s. IPN data: %2$s"
+msgstr ""
+
+#. translators: %s: Transaction ID
+#: src/Gateways/PayPal/IPN.php:271
+#, php-format
+msgid "PayPal rejected IPN as INVALID. Transaction ID: %s"
+msgstr ""
+
+#. translators: %1$s: Details; %2$s: Transaction ID
+#: src/Gateways/PayPal/IPN.php:328
+#, php-format
+msgid "IPN rejected due to verification unavailability: %1$s. Transaction ID: %2$s"
+msgstr ""
+
+#: src/Gateways/PayPal/IPN.php:341
+#: src/Gateways/PayPal/Traits/Validate.php:59
+msgid "IPN Warning"
+msgstr ""
+
+#. translators: %1$s: Details; %2$s: Transaction ID
+#: src/Gateways/PayPal/IPN.php:344
+#, php-format
+msgid "Processing IPN without PayPal verification due to: %1$s. Enhanced validation will be performed. Transaction ID: %2$s"
+msgstr ""
+
+#. translators: 1: Verification failure reason, 2: Details, 3: Transaction ID, 4: Amount, 5: Currency
+#: src/Gateways/PayPal/IPN.php:413
+#, php-format
+msgid "Renewal order created with on_hold status for manual review.%1$s%1$sPayPal verification was unavailable:%1$sReason: %2$s%1$sDetails: %3$s%1$s%1$sThis appears to be a legitimate renewal based on:%1$s- Transaction ID: %4$s%1$s- Amount matches subscription: %5$s%1$s- Currency matches: %6$s%1$s%1$sPlease verify this transaction in your PayPal account and update the order status accordingly."
+msgstr ""
+
+#. translators: 1: Order ID, 2: Transaction ID
+#: src/Gateways/PayPal/IPN.php:434
+#, php-format
+msgid "Renewal order %1$d created with on_hold status due to PayPal verification issues. Transaction ID: %2$s. Please review and approve if legitimate."
+msgstr ""
+
+#: src/Gateways/PayPal/IPN.php:451
+msgid "IPN - Manual Review Required"
+msgstr ""
+
+#. translators: %1$d: Order ID; %2$s: Reason; %3$s: Transaction ID
+#: src/Gateways/PayPal/IPN.php:454
+#, php-format
+msgid "Renewal order %1$d created with on_hold status. PayPal verification unavailable (%2$s). Transaction ID: %3$s. Please review in PayPal account."
 msgstr ""
 
 #. translators: 1: Dispute ID, 2: Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt.
-#: src/Gateways/PayPal/IPN.php:324
+#: src/Gateways/PayPal/IPN.php:491
 #, php-format
 msgid "The PayPal transaction has been disputed (IPN). Case ID: %1$s. Reason given: %2$s."
 msgstr ""
 
-#: src/Gateways/PayPal/IPN.php:326
+#: src/Gateways/PayPal/IPN.php:493
 msgid "unknown"
 msgstr ""
 
-#. translators: %s: The payment data sent via the IPN
-#: src/Gateways/PayPal/IPN.php:434
+#: src/Gateways/PayPal/IPN.php:600
 msgid "Invalid Currency Code"
 msgstr ""
 
-#. translators: %s: The payment data sent via the IPN
-#: src/Gateways/PayPal/IPN.php:434
+#. translators: %1$d: Subscription ID; %2$s: Expected currency; %3$s: Received currency; %4$s: Transaction ID
+#: src/Gateways/PayPal/IPN.php:603
 #, php-format
-msgid "The currency code in an IPN request did not match the site currency code. Payment data: %s"
+msgid "Currency mismatch for subscription %1$d. Expected: %2$s, Received: %3$s. Transaction ID: %4$s"
 msgstr ""
 
 #. translators: %s: The transaction ID of the failed payment
-#: src/Gateways/PayPal/IPN.php:449
+#: src/Gateways/PayPal/IPN.php:633
 #, php-format
 msgid "Transaction ID %s failed in PayPal"
 msgstr ""
 
 #. translators: %s: The collected outstanding balance of the subscription
-#: src/Gateways/PayPal/IPN.php:479
+#: src/Gateways/PayPal/IPN.php:687
 #, php-format
 msgid "Outstanding subscription balance of %s collected successfully."
 msgstr ""
 
 #. translators: %s: Transaction ID
-#: src/Gateways/PayPal/IPN.php:579
+#: src/Gateways/PayPal/IPN.php:784
 #, php-format
 msgid "Reversal processed in PayPal (IPN). Transaction ID: %s"
 msgstr ""
 
 #. translators: 1:  Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID
-#: src/Gateways/PayPal/IPN.php:597
+#: src/Gateways/PayPal/IPN.php:802
 #: src/Gateways/PayPal/Webhooks/Events/Payment_Capture_Refunded.php:53
 #, php-format
 msgid "Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s"
 msgstr ""
 
-#: src/Gateways/PayPal/IPN.php:609
+#: src/Gateways/PayPal/IPN.php:814
 msgid "Partial refund processed in PayPal (IPN)."
 msgstr ""
 
-#: src/Gateways/PayPal/IPN.php:619
+#: src/Gateways/PayPal/IPN.php:824
 msgid "Full refund processed in PayPal (IPN)."
 msgstr ""
 
@@ -22593,6 +22673,28 @@ msgstr ""
 #: src/Gateways/PayPal/Token.php:35
 #: src/REST/Security.php:73
 msgid "Invalid token."
+msgstr ""
+
+#. translators: %1$s: Age in hours; %2$s: Transaction ID
+#: src/Gateways/PayPal/Traits/Validate.php:61
+#, php-format
+msgid "Processing old IPN (%1$s hours old). Transaction ID: %2$s"
+msgstr ""
+
+#: src/Gateways/PayPal/Traits/Validate.php:98
+msgid "IPN Amount Mismatch"
+msgstr ""
+
+#. translators: %1$d: Subscription ID; %2$s: Expected amount; %3$s: Received amount; %4$s: Transaction ID
+#: src/Gateways/PayPal/Traits/Validate.php:101
+#, php-format
+msgid "Subscription %1$d amount mismatch. Expected: %2$s, Received: %3$s. Transaction ID: %4$s"
+msgstr ""
+
+#. translators: %1$s: Expected amount; %2$s: Received amount; %3$s: Transaction ID
+#: src/Gateways/PayPal/Traits/Validate.php:113
+#, php-format
+msgid "IPN amount mismatch detected. Expected: %1$s, Received: %2$s. Transaction not processed. Transaction ID: %3$s"
 msgstr ""
 
 #. translators: 1: Dispute ID, 2: Dispute reason code. Example: The PayPal transaction has been disputed. Case ID: PP-R-NMW-10060094. Reason given: non_receipt.
@@ -24096,6 +24198,19 @@ msgstr ""
 msgid "Good news! With your pass subscription, you can install the Pro version of Easy Digital Downloads. %1$sVisit the settings page%2$s to verify your license and access Pro only features."
 msgstr ""
 
+#: src/Lite/Admin/Promos/Notices/CampaignTracker.php:96
+msgid "Track Your Marketing Campaigns"
+msgstr ""
+
+#: src/Lite/Admin/Promos/Notices/CampaignTracker.php:99
+msgid "See which campaigns, sources, and mediums drive the most sales. Pro unlocks automatic UTM parameter tracking on every order—plus detailed reports to measure ROI."
+msgstr ""
+
+#: src/Lite/Admin/Promos/Notices/CampaignTracker.php:104
+#: src/Lite/Admin/Promos/Notices/PreviewRecommendations.php:104
+msgid "Unlock This"
+msgstr ""
+
 #: src/Lite/Admin/Promos/Notices/FeaturedDownloads.php:80
 msgid "Turn Your Best Products into Bestsellers"
 msgstr ""
@@ -24110,10 +24225,6 @@ msgstr ""
 
 #: src/Lite/Admin/Promos/Notices/PreviewRecommendations.php:99
 msgid "Customers who see relevant recommendations in their cart spend more. Pro unlocks automatic cross-sells and upsells in your cart preview—no setup required."
-msgstr ""
-
-#: src/Lite/Admin/Promos/Notices/PreviewRecommendations.php:104
-msgid "Unlock This"
 msgstr ""
 
 #: src/Orders/Refunds/Validator.php:258
@@ -24721,16 +24832,240 @@ msgstr ""
 msgid "The next tax rates update will be on %1$s at %2$s."
 msgstr ""
 
-#: src/Pro/Forms/Checkout/VAT.php:77
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignCustomers.php:88
+msgid "Total Spent (Campaign)"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignCustomers.php:89
+msgid "Total Orders (Campaign)"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:89
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:95
+msgid "Campaign Name"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:90
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:93
+msgid "Campaign Source"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:91
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:94
+msgid "Campaign Medium"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:92
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:96
+msgid "Campaign Term"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/CampaignOrders.php:93
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:97
+msgid "Campaign Content"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:51
+msgid "Campaign Orders"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:52
+msgid "Download a CSV of orders filtered by campaign. Use the filters to select a specific campaign and date range."
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:61
+msgid "Campaign Customers"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:62
+msgid "Download a CSV of customers with aggregated campaign purchase data. Shows total spent and order count per customer."
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:85
+msgid "Select Campaign"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:92
+#: src/Pro/CampaignTracker/Admin/Reports/Filter.php:96
+msgid "All Campaigns"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:97
+msgid "Select a Campaign"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Exports/Loader.php:104
+msgid "Campaign Export Date Range"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:51
+#: src/Pro/CampaignTracker/Admin/Reports/Filter.php:47
+msgid "Campaign"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:69
+#: src/Pro/CampaignTracker/Emails/EmailTags.php:80
+msgid "Campaign Information"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:89
+msgid "No campaign information available."
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:105
+msgid "Parameter"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Orders/Details/Campaign.php:106
+msgid "Value"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/CampaignTracker.php:68
+msgid "Campaigns"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:167
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:180
+msgid "UTM Source"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:168
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:181
+msgid "UTM Medium"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:169
+msgid "UTM Content"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:170
+msgid "UTM Term"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:172
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:183
+msgid "Gross Sales"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:179
+msgid "UTM Campaign"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:372
+msgid "No campaign data found."
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:561
+msgid "— No change"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tables/CampaignSources.php:50
+msgid "Unknown Campaign"
+msgstr ""
+
+#. translators: %s: Campaign name
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tables/CampaignSources.php:56
+#, php-format
+msgid "%s &mdash; Campaign Sources"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tables/CampaignSources.php:61
+msgid "Campaign Sources"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignAOV.php:42
+msgid "Top Campaign by AOV"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignAOV.php:73
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignOrders.php:71
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignRevenue.php:73
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopMediumRevenue.php:93
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopSourceRevenue.php:93
+msgid "No data"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignAOV.php:80
+msgid "avg"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignOrders.php:42
+msgid "Top Campaign by Orders"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignOrders.php:78
+msgid "order"
+msgid_plural "orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopCampaignRevenue.php:42
+msgid "Top Campaign by Revenue"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopMediumRevenue.php:42
+msgid "Top Medium by Revenue"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Endpoints/Tiles/TopSourceRevenue.php:42
+msgid "Top Source by Revenue"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Admin/Reports/Filter.php:85
+msgid "Filter by campaign"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Emails/EmailTags.php:64
+msgid "Display Google Analytics Campaign info for this transaction."
+msgstr ""
+
+#: src/Pro/CampaignTracker/Emails/EmailTags.php:66
+msgid "Campaign Info"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Upgrades/CampaignMetaMigration.php:126
+msgid "Campaign Data Migration Complete!"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Upgrades/CampaignMetaMigration.php:127
+msgid "Campaign Tracker has finished updating campaign data for your orders. Enhanced reporting is now available."
+msgstr ""
+
+#. translators: %d: Percentage complete
+#: src/Pro/CampaignTracker/Upgrades/CampaignMetaMigration.php:140
+#, php-format
+msgid "Updating Campaign Data ( %d%% )"
+msgstr ""
+
+#: src/Pro/CampaignTracker/Upgrades/CampaignMetaMigration.php:141
+msgid "Campaign Tracker is updating campaign data for your orders. This will enable enhanced reporting capabilities. We'll let you know when the process is complete."
+msgstr ""
+
+#: src/Pro/CampaignTracker/Upgrades/CampaignMetaMigration.php:153
+#: src/Upgrades/Background/TaxRates.php:141
+msgid "Database Update Required"
+msgstr ""
+
+#. translators: %s is the CLI command to run
+#: src/Pro/CampaignTracker/Upgrades/CampaignMetaMigration.php:156
+#, php-format
+msgid "Campaign Tracker needs to update campaign data for your orders, but due to the number of records, you should run this via CLI using <code>%s</code>."
+msgstr ""
+
+#: src/Pro/Forms/Checkout/VAT.php:83
 msgid "e.g. DE123456789"
 msgstr ""
 
-#: src/Pro/Forms/Checkout/VAT.php:92
+#: src/Pro/Forms/Checkout/VAT.php:98
 msgid "Validate"
 msgstr ""
 
-#: src/Pro/Forms/Checkout/VAT.php:124
+#: src/Pro/Forms/Checkout/VAT.php:130
 msgid "Enter the VAT number of your company."
+msgstr ""
+
+#: src/Pro/Forms/Checkout/VAT.php:198
+msgid "Add VAT number"
 msgstr ""
 
 #: src/Pro/Inactive/Admin/Discounts/Generate.php:25
@@ -24811,11 +25146,11 @@ msgstr ""
 msgid "You do not have permission to clear recommendations."
 msgstr ""
 
-#: src/Pro/Recommendations/API.php:179
+#: src/Pro/Recommendations/API.php:181
 msgid "Recommendations service is not available. Please check your license."
 msgstr ""
 
-#: src/Pro/Recommendations/API.php:214
+#: src/Pro/Recommendations/API.php:216
 msgid "An error occurred while making the request."
 msgstr ""
 
@@ -24843,15 +25178,15 @@ msgstr ""
 msgid "%1$sRefresh now%2$s."
 msgstr ""
 
-#: src/Pro/Recommendations/Manager.php:171
+#: src/Pro/Recommendations/Manager.php:172
 msgid "Disconnect Remote Recommendations"
 msgstr ""
 
-#: src/Pro/Recommendations/Manager.php:173
+#: src/Pro/Recommendations/Manager.php:174
 msgid "Remove all product data from the recommendations service."
 msgstr ""
 
-#: src/Pro/Recommendations/Manager.php:175
+#: src/Pro/Recommendations/Manager.php:176
 msgid "If you want to stop using recommendations, you can delete all product data from the service. This will not delete your products from your store. Do not choose this if you are just temporarily disabling recommendations."
 msgstr ""
 
@@ -24873,16 +25208,12 @@ msgstr ""
 msgid "Recommendations sync scheduled."
 msgstr ""
 
-#: src/Pro/Recommendations/Sync.php:246
-msgid "Security check failed. Please try again."
-msgstr ""
-
-#: src/Pro/Recommendations/Sync.php:265
+#: src/Pro/Recommendations/Sync.php:261
 msgid "Failed to remove product data from the remote service."
 msgstr ""
 
 #. translators: %d: number of products deleted
-#: src/Pro/Recommendations/Sync.php:294
+#: src/Pro/Recommendations/Sync.php:290
 #, php-format
 msgid "Product data removed from the recommendations service for %d products."
 msgstr ""
@@ -25434,10 +25765,6 @@ msgstr ""
 
 #: src/Upgrades/Background/TaxRates.php:129
 msgid "Easy Digital Downloads is updating your store's tax rates. We'll let you know when the process is complete."
-msgstr ""
-
-#: src/Upgrades/Background/TaxRates.php:141
-msgid "Database Update Required"
 msgstr ""
 
 #. Translators: %s is the CLI command to run

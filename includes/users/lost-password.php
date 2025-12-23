@@ -2,14 +2,13 @@
 /**
  * Lost Password Functions
  *
- * @package     EDD
- * @subpackage  Functions/Login
+ * @package     EDD\Functions\Login
  * @copyright   Copyright (c) 2022, Easy Digital Downloads, LLC
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
@@ -17,9 +16,9 @@ add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
  * Changes the WordPress login confirmation message when using EDD's reset password link.
  *
  * @since 2.10
- * @param object \WP_Error $errors
- * @param string           $redirect
- * @return void
+ * @param object \WP_Error $errors   The error object.
+ * @param string           $redirect The redirect URL.
+ * @return object \WP_Error The error object.
  */
 function edd_login_register_error_message( $errors, $redirect ) {
 	$redirect_url = EDD()->session->get( 'edd_forgot_password_redirect' );
@@ -95,7 +94,6 @@ function edd_get_password_reset_link( $user ) {
 	);
 }
 
-add_action( 'lostpassword_form', 'edd_set_lostpassword_session' );
 /**
  * Sets a session value for the lost password redirect URI.
  *
@@ -106,18 +104,18 @@ function edd_set_lostpassword_session() {
 	if ( ! empty( $_GET['edd_forgot_password'] ) && 'confirm' === $_GET['edd_forgot_password'] ) {
 		$url = wp_validate_redirect(
 			wp_get_referer(),
-			edd_get_checkout_uri()
+			edd_get_login_page_uri()
 		);
 		EDD()->session->set( 'edd_forgot_password_redirect', $url );
 	}
 }
+add_action( 'lostpassword_form', 'edd_set_lostpassword_session' );
 
-add_action( 'edd_user_lost_password', 'edd_handle_lost_password_request' );
 /**
  * Handles the lost password request from the EDD lost password block.
  *
  * @since 3.1
- * @param array $data
+ * @param array $data The data submitted by the user.
  * @return void
  */
 function edd_handle_lost_password_request( $data ) {
@@ -149,8 +147,8 @@ function edd_handle_lost_password_request( $data ) {
 	}
 	edd_redirect( remove_query_arg( 'action', wp_get_referer() ) );
 }
+add_action( 'edd_user_lost_password', 'edd_handle_lost_password_request' );
 
-add_filter( 'retrieve_password_message', 'edd_retrieve_password_message', 10, 4 );
 /**
  * Filters the email message sent when a password reset has been requested.
  *
@@ -176,7 +174,8 @@ function edd_retrieve_password_message( $message, $key, $user_login, $user_data 
 	if ( false === strpos( $message, '{password_reset_link}' ) ) {
 		$message = $email->get_template()->get_default( 'content' );
 	}
-	$message = str_replace(
+	$redirect = ! empty( $_POST['edd_redirect'] ) ? sanitize_text_field( $_POST['edd_redirect'] ) : edd_get_login_page_uri();
+	$message  = str_replace(
 		'{password_reset_link}',
 		add_query_arg(
 			array(
@@ -184,15 +183,15 @@ function edd_retrieve_password_message( $message, $key, $user_login, $user_data 
 				'key'        => $key,
 				'login'      => rawurlencode( $user_login ),
 			),
-			esc_url_raw( $_POST['edd_redirect'] )
+			esc_url_raw( wp_validate_redirect( $redirect, edd_get_login_page_uri() ) )
 		),
 		$message
 	);
 
 	return edd_do_email_tags( $message, $user_data->ID, $user_data, 'user' );
 }
+add_filter( 'retrieve_password_message', 'edd_retrieve_password_message', 10, 4 );
 
-add_action( 'edd_password_reset_requested', 'edd_validate_password_reset_link' );
 /**
  * Validates the email link and sends the user to the password reset form upon success.
  *
@@ -236,13 +235,13 @@ function edd_validate_password_reset_link() {
 	// Redirect back to the lost password form instead of the password reset.
 	edd_redirect( add_query_arg( 'action', 'lostpassword', $redirect ) );
 }
+add_action( 'edd_password_reset_requested', 'edd_validate_password_reset_link' );
 
-add_action( 'edd_user_reset_password', 'edd_validate_password_reset' );
 /**
  * Validates the password reset and redirects to the login form on success.
  *
  * @since 3.1
- * @param array $data
+ * @param array $data The data submitted by the user.
  * @return void
  */
 function edd_validate_password_reset( $data ) {
@@ -282,7 +281,7 @@ function edd_validate_password_reset( $data ) {
 		edd_set_error( 'password_reset_mismatch', __( 'The passwords do not match.', 'easy-digital-downloads' ) );
 	}
 
-	$user = !empty( $data['user_login'] ) ? get_user_by( 'login', $data['user_login'] ) : false;
+	$user = ! empty( $data['user_login'] ) ? get_user_by( 'login', $data['user_login'] ) : false;
 	if ( false === $user ) {
 		edd_set_error( 'password_reset_unsuccessful', __( 'Your password could not be reset.', 'easy-digital-downloads' ) );
 	}
@@ -291,7 +290,10 @@ function edd_validate_password_reset( $data ) {
 		$redirect = edd_get_login_page_uri() ?: home_url(); // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
 		edd_set_error( 'password_reset_unsuccessful', __( 'Your password could not be reset.', 'easy-digital-downloads' ) );
 	} else {
-		$redirect = remove_query_arg( 'action', $data['edd_redirect'] );
+		$redirect = wp_validate_redirect(
+			remove_query_arg( 'action', $data['edd_redirect'] ),
+			edd_get_login_page_uri()
+		);
 	}
 
 	// If no errors were registered then reset the password.
@@ -305,3 +307,4 @@ function edd_validate_password_reset( $data ) {
 
 	edd_redirect( add_query_arg( 'action', 'password_reset_unsuccessful', $redirect ) );
 }
+add_action( 'edd_user_reset_password', 'edd_validate_password_reset' );

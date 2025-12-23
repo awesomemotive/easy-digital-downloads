@@ -204,11 +204,11 @@ function edds_stripe_reset_payment_methods( $data ) {
 		'edd-message' => 'stripe-payment-methods-sync-failed',
 	);
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		edd_redirect( edd_get_admin_url( $args ) );
+		return;
 	}
 
 	if ( empty( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd-reset-payment-methods' ) ) {
-		edd_redirect( edd_get_admin_url( $args ) );
+		return;
 	}
 
 	$args['edd-message'] = 'stripe-payment-methods-sync';

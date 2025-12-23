@@ -118,6 +118,10 @@ class Settings {
 				return strtoupper( edd_get_option( 'stripe_connect_account_country', $value ) );
 			}
 		}
+		// Use the helper function for stripe_elements_mode as it contains business logic for the default.
+		if ( 'stripe_elements_mode' === $setting['id'] && function_exists( 'edds_get_elements_mode' ) ) {
+			return edds_get_elements_mode();
+		}
 		if ( in_array( $setting['type'], $this->text_settings(), true ) ) {
 			return $this->anonymize( $value );
 		}

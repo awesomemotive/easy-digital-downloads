@@ -26,6 +26,9 @@ function listen_for_ipn() {
 		return;
 	}
 
+	// Delay execution to allow webhooks to process first.
+	sleep( 3 );
+
 	new \EDD\Gateways\PayPal\IPN( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 }
 add_action( 'init', __NAMESPACE__ . '\listen_for_ipn' );
@@ -34,7 +37,7 @@ add_action( 'init', __NAMESPACE__ . '\listen_for_ipn' );
  * Helper method to prefix any calls to edd_debug_log
  *
  * @since 3.1.0.3
- * @uses edd_debug_log
+ * @deprecated 3.2.0
  *
  * @param string $message The message to send to the debug logging.
  */

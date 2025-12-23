@@ -1833,39 +1833,40 @@ add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
  */
 function edd_add_setting_tooltip( $html = '', $args = array() ) {
 
-	// Tooltip has title & description.
-	if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
-		$args      = wp_parse_args(
-			$args,
-			array(
-				'tooltip_title'    => '',
-				'tooltip_desc'     => '',
-				'tooltip_dashicon' => '',
-			)
-		);
-		$tooltip   = new EDD\HTML\Tooltip(
-			array(
-				'title'    => $args['tooltip_title'],
-				'content'  => $args['tooltip_desc'],
-				'dashicon' => $args['tooltip_dashicon'],
-			)
-		);
-		$tooltip   = $tooltip->get();
-		$has_p_tag = strstr( $html, '</p>' );
-		$has_label = strstr( $html, '</label>' );
+	if ( empty( $args['tooltip_title'] ) || empty( $args['tooltip_desc'] ) ) {
+		return $html;
+	}
 
-		// Insert tooltip at end of paragraph.
-		if ( false !== $has_p_tag ) {
-			$html = str_replace( '</p>', $tooltip . '</p>', $html );
+	$args      = wp_parse_args(
+		$args,
+		array(
+			'tooltip_title'    => '',
+			'tooltip_desc'     => '',
+			'tooltip_dashicon' => 'dashicons-editor-help',
+		)
+	);
+	$tooltip   = new EDD\HTML\Tooltip(
+		array(
+			'title'    => $args['tooltip_title'],
+			'content'  => $args['tooltip_desc'],
+			'dashicon' => $args['tooltip_dashicon'],
+		)
+	);
+	$tooltip   = $tooltip->get();
+	$has_p_tag = strstr( $html, '</p>' );
+	$has_label = strstr( $html, '</label>' );
 
-			// Insert tooltip at end of label.
-		} elseif ( false !== $has_label ) {
-			$html = str_replace( '</label>', '</label>' . $tooltip, $html );
+	// Insert tooltip at end of paragraph.
+	if ( false !== $has_p_tag ) {
+		$html = str_replace( '</p>', $tooltip . '</p>', $html );
 
-			// Append tooltip to end of HTML.
-		} else {
-			$html .= $tooltip;
-		}
+		// Insert tooltip at end of label.
+	} elseif ( false !== $has_label ) {
+		$html = str_replace( '</label>', '</label>' . $tooltip, $html );
+
+		// Append tooltip to end of HTML.
+	} else {
+		$html .= $tooltip;
 	}
 
 	return $html;
