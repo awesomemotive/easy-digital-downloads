@@ -1,12 +1,13 @@
 <?php
-namespace EDD\Tests;
+namespace EDD\Tests\API;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
+use EDD\Tests\Helpers;
 
 /**
  * @group edd_api
  */
-class Tests_API extends EDD_UnitTestCase {
+class API extends EDD_UnitTestCase {
 
 	protected static $post;
 
@@ -187,14 +188,6 @@ class Tests_API extends EDD_UnitTestCase {
 		add_filter( 'edd_api_output_format', function() {
 			return 'override';
 		} );
-
-		// Prevents edd_die() from running.
-		add_action( 'edd_api_output_override', function () {
-			// Prevent edd_die() from stopping tests.
-			if ( ! defined( 'EDD_UNIT_TESTS' ) ) {
-				define( 'EDD_UNIT_TESTS', true );
-			}
-		}, 10 );
 
 		self::$api->flush_api_output();
 	}

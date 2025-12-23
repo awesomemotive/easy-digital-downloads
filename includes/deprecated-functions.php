@@ -2477,3 +2477,14 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
 
 	return $clauses;
 }
+
+/**
+ * Die handler for unit tests.
+ *
+ * @since 1.6
+ * @deprecated 3.6.3 Use test-specific die handler in test suite instead.
+ */
+function _edd_die_handler() {
+	_deprecated_function( __FUNCTION__, '3.6.3', 'Test suite die handler' );
+	die();
+}

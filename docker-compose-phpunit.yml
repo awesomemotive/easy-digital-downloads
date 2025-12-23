@@ -1,6 +1,8 @@
 ---
 services:
     wordpress:
+        environment:
+          COMPOSER_AUTH: ${COMPOSER_AUTH}
         image: public.ecr.aws/q7y6e9n2/unit-test-images/php:${TEST_PHP_VERSION}
         depends_on:
             db:
@@ -10,7 +12,7 @@ services:
         volumes:
             - .:/app
         working_dir: /app
-        command: [ "bin/run-tests-internal-only.sh", "wordpress_test", "root", "", "mysql", "${TEST_WP_VERSION}", "${FILTER}", 'true' ]
+        command: [ "bin/run-tests-internal-only.sh", "wordpress_test", "root", "", "mysql", "${TEST_WP_VERSION}", "${FILTER}", 'true', "${TEST_EXTRA_PLUGINS}" ]
     db:
         image: mariadb:10.4
         environment:

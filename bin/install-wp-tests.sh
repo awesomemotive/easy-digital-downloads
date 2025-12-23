@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ $# -lt 3 ]; then
-	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [skip-database-creation]"
+	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [skip-database-creation] [extra-plugins]"
 	exit 1
 fi
 
@@ -11,6 +11,12 @@ DB_PASS=$3
 DB_HOST=${4-localhost}
 WP_VERSION=${5-nightly}
 SKIP_DB_CREATE=${6-false}
+EXTRA_PLUGINS=$7
+
+# Account for these variables being empty not just missing
+if [[ -z "$7" ]]; then
+	EXTRA_PLUGINS=false
+fi
 
 TMPDIR=${TMPDIR-/tmp}
 TMPDIR=$(echo $TMPDIR | sed -e "s/\/$//")
@@ -164,6 +170,52 @@ install_db() {
 	fi
 }
 
+install_recurring() {
+	if [[ "$EXTRA_PLUGINS" == "recurring" ]]; then
+		echo "Installing EDD Recurring"
+		# Extract GitHub token from COMPOSER_AUTH if it exists
+		if [[ -n "$COMPOSER_AUTH" ]]; then
+			# Extract the GitHub token from the COMPOSER_AUTH JSON
+			# This extracts the token using shell tools from a string like '{"github-oauth":{"github.com":"token_here"}}'
+			GITHUB_TOKEN=$(echo $COMPOSER_AUTH | grep -o '"github.com":"[^"]*' | sed 's/"github.com":"//g')
+			if [[ -n "$GITHUB_TOKEN" ]]; then
+				wget --header="Authorization: token $GITHUB_TOKEN" -O /tmp/recurring.zip https://github.com/awesomemotive/edd-recurring/archive/master.zip
+				unzip -qq /tmp/recurring.zip -d $WP_CORE_DIR/wp-content/plugins/
+
+				# Find the extracted directory using case-insensitive search
+				# Try direct match for both possible case variations
+				if [[ -d "$WP_CORE_DIR/wp-content/plugins/edd-recurring-master" ]]; then
+					RECURRING_DIR="$WP_CORE_DIR/wp-content/plugins/edd-recurring-master"
+				elif [[ -d "$WP_CORE_DIR/wp-content/plugins/EDD-Recurring-master" ]]; then
+					RECURRING_DIR="$WP_CORE_DIR/wp-content/plugins/EDD-Recurring-master"
+				else
+					# Fallback to find command with case-insensitive search
+					RECURRING_DIR=$(find $WP_CORE_DIR/wp-content/plugins/ -maxdepth 1 -iname "*recurring*" -type d | head -1)
+				fi
+
+				if [[ -n "$RECURRING_DIR" ]]; then
+					mv "$RECURRING_DIR" $WP_CORE_DIR/wp-content/plugins/edd-recurring
+				else
+					echo "Error: Could not find the extracted EDD Recurring directory"
+					echo "Contents of plugins directory:"
+					ls -la $WP_CORE_DIR/wp-content/plugins/
+					exit 1
+				fi
+			else
+				echo "Could not extract GitHub token from COMPOSER_AUTH."
+				echo "Please ensure COMPOSER_AUTH contains a valid GitHub token."
+				echo "Example: export COMPOSER_AUTH='{\"github-oauth\":{\"github.com\":\"your_token_here\"}}'"
+				exit 1
+			fi
+		else
+			echo "COMPOSER_AUTH environment variable is not set."
+			echo "To access the private repository, please set COMPOSER_AUTH with a GitHub token."
+			echo "Example: export COMPOSER_AUTH='{\"github-oauth\":{\"github.com\":\"your_token_here\"}}'"
+			exit 1
+		fi
+	fi
+}
+
 set -e
 
 printf "\n"
@@ -181,4 +233,7 @@ printf "\n"
 printf "Installing database"
 install_db
 printf "\r✔ Installing database"
+
+printf "\n"
+install_recurring
 printf "\n"

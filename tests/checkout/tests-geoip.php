@@ -136,9 +136,6 @@ class GeoIPTests extends EDD_UnitTestCase {
 	 * Test add_ip_to_data method with POST data.
 	 */
 	public function test_add_ip_to_data_with_post_data() {
-		// Note: The sanitize_input method uses filter_input(INPUT_POST) which doesn't read from $_POST
-		// in PHPUnit tests. This test verifies the method runs without error, but can't fully test
-		// the IP update functionality without actually POSTing to the script.
 		$_POST['edd_pro_ip'] = '5.6.7.8';
 
 		$order_id = edd_build_order( array(
@@ -151,12 +148,11 @@ class GeoIPTests extends EDD_UnitTestCase {
 			),
 		) );
 
-		// Call the method - it won't read from $_POST due to filter_input limitations in tests
 		self::$geoip->add_ip_to_data( $order_id );
 
 		$order = edd_get_order( $order_id );
-		// Verify the method ran without error (IP will be from edd_get_ip() not from POST)
-		$this->assertNotEmpty( $order->ip );
+		// Verify the IP from POST data was used
+		$this->assertEquals( '5.6.7.8', $order->ip );
 
 		edd_delete_order( $order_id );
 		unset( $_POST['edd_pro_ip'] );
@@ -377,33 +373,57 @@ class GeoIPTests extends EDD_UnitTestCase {
 	 * Test get_state method without parameters (POST data fallback).
 	 */
 	public function test_get_state_without_parameters() {
-		// The sanitize_input method uses filter_input which doesn't work well with $_POST in tests
-		// Instead, let's test that calling get_state without params doesn't error
+		$_POST['country_iso'] = 'US';
+		$_POST['region_code'] = 'CA';
+		$_POST['city']        = 'Los Angeles';
+		$_POST['region_name'] = 'California';
+
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'get_state' );
 		$method->setAccessible( true );
 
 		$state = $method->invoke( self::$geoip );
 
-		// When filter_input returns null/false for all keys, the method will return empty values
-		// Just verify it doesn't throw an error and returns something (string, null, or false)
-		$this->assertTrue( is_string( $state ) || is_null( $state ) || $state === false );
+		// Should return the region code from POST data
+		$this->assertEquals( 'CA', $state );
+
+		unset( $_POST['country_iso'], $_POST['region_code'], $_POST['city'], $_POST['region_name'] );
 	}
 
 	/**
 	 * Test sanitize_input method.
 	 */
 	public function test_sanitize_input() {
-		// The sanitize_input method uses filter_input(INPUT_POST) which doesn't work with $_POST in PHPUnit
-		// filter_input reads from the actual POST superglobal, not the mocked version
-		// Instead, test that calling it with a non-existent key returns false, null, or empty string
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'sanitize_input' );
 		$method->setAccessible( true );
 
+		// Test with nonexistent key
 		$sanitized = $method->invoke( self::$geoip, 'nonexistent_key' );
+		$this->assertFalse( $sanitized );
 
-		// Should return false or null when key doesn't exist
-		$this->assertTrue( $sanitized === false || $sanitized === null || $sanitized === '' );
+		// Test with existing key
+		$_POST['test_key'] = 'test_value';
+		$sanitized = $method->invoke( self::$geoip, 'test_key' );
+		$this->assertEquals( 'test_value', $sanitized );
+
+		unset( $_POST['test_key'] );
+	}
+
+	/**
+	 * Test sanitize_input method with special characters.
+	 */
+	public function test_sanitize_input_with_special_chars() {
+		$reflection = new \ReflectionClass( self::$geoip );
+		$method = $reflection->getMethod( 'sanitize_input' );
+		$method->setAccessible( true );
+
+		$_POST['special_key'] = '<script>alert("xss")</script>';
+		$sanitized = $method->invoke( self::$geoip, 'special_key' );
+
+		// Should sanitize the input
+		$this->assertStringNotContainsString( '<script>', $sanitized );
+
+		unset( $_POST['special_key'] );
 	}
 }

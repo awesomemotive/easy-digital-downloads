@@ -1,12 +1,12 @@
 === Easy Digital Downloads – eCommerce Payments and Subscriptions made easy ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, am, cklosows, littlerchicken, alhoseany, gwierzba, smub, chriscct7, sumobi, johnjamesjacoby
+Contributors: easydigitaldownloads, am, cklosows, littlerchicken, alhoseany, smub, chriscct7, sumobi, johnjamesjacoby
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable Tag: 3.6.2
+Stable Tag: 3.6.3
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -241,6 +241,16 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.6.3 =
+* Blocks: Updating handling of Password Reset redirect.
+* Checkout: Improved form data handling for AJAX based checkouts.
+* Compatibility: Improved license key handling for addons.
+* PayPal: Improve IPN Handling.
+* Stripe: Improve Payment Method Configuration handling.
+* Dev: Update `edd_die()` for unit test compatibility.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.6.2 =
 * NEW: Cart - Introducing the Cart Preview, a new modern cart experience for your customers.
 * Blocks: The Caps Lock warning was showing on the registration block for some sites.
@@ -250,8 +260,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Reports: Some combinations of filters could result in an invalid MySQL query.
 * Labs: Cart - Improved cart cache invalidation handling.
 * Dev: Updates to webpack and asset organization and building.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.6.1.1 =
 * Stripe: Fixed an issue with the Legacy Card Elements integration not handling an exception properly.

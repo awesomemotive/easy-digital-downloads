@@ -40,8 +40,15 @@ require_once $_tests_dir . '/includes/functions.php';
  */
 tests_add_filter(
 	'muplugins_loaded',
-	function() use ( $plugin_dir ) {
+	function() use ( $plugin_dir, $_core_dir ) {
 		require $plugin_dir . '/easy-digital-downloads.php';
+
+		// Load EDD Recurring if it exists
+		$recurring_path = $_core_dir . '/wp-content/plugins/edd-recurring/edd-recurring.php';
+		if ( file_exists( $recurring_path ) ) {
+			echo "Loading EDD Recurring via muplugins_loaded...\n";
+			require $recurring_path;
+		}
 	}
 );
 
@@ -55,6 +62,29 @@ if ( ! defined( 'EDD_VERSION' ) ) {
 }
 
 echo "Setting up Easy Digital Downloads...\n";
+
+// Install EDD Recurring if the file exists
+$recurring_path = $_core_dir . '/wp-content/plugins/edd-recurring/edd-recurring.php';
+echo "Checking for EDD Recurring at: $recurring_path\n";
+if ( file_exists( $recurring_path ) ) {
+	echo "EDD Recurring file found! Activating...\n";
+
+	$activated = activate_plugin( 'edd-recurring/edd-recurring.php' );
+	if ( is_wp_error( $activated ) ) {
+		echo "Failed to activate EDD Recurring: " . $activated->get_error_message() . "\n";
+		exit( 1 );
+	}
+
+	// Verify it loaded properly
+	if ( ! class_exists( 'EDD_Recurring' ) ) {
+		echo "WARNING: EDD_Recurring class does not exist after activation\n";
+	} else {
+		echo "EDD Recurring successfully activated\n";
+	}
+} else {
+	echo "EDD Recurring file not found at: $recurring_path\n";
+	echo "EDD Recurring tests will be skipped\n";
+}
 
 function _disable_reqs( $status = false, $args = array(), $url = '') {
 }

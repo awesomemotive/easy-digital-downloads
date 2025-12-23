@@ -27,7 +27,7 @@ function get_settings_url() {
 /**
  * Register the PayPal Standard gateway subsection
  *
- * @param array $gateway_sections Current Gateway Tab subsections
+ * @param array $gateway_sections Current Gateway Tab subsections.
  *
  * @since 2.11
  * @return array                    Gateway subsections with PayPal Standard
@@ -42,7 +42,7 @@ add_filter( 'edd_settings_sections_gateways', __NAMESPACE__ . '\register_paypal_
 /**
  * Registers the PayPal Standard settings for the PayPal Standard subsection
  *
- * @param array $gateway_settings Gateway tab settings
+ * @param array $gateway_settings Gateway tab settings.
  *
  * @since 2.11
  * @return array Gateway tab settings with the PayPal Standard settings

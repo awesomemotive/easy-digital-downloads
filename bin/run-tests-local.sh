@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-OPTS=$(getopt -a --options w:p:f:imh --longoptions wp:filter:,php:,multisite,in-place,help --name "$0" -- "$@") || exit 1
+OPTS=$(getopt -a --options w:p:f:x:imh --longoptions wp:filter:,php:,extra:,multisite,in-place,help --name "$0" -- "$@") || exit 1
 eval set -- "$OPTS"
 
 show_help() {
@@ -14,7 +14,12 @@ show_help() {
   printf -- '-p, --php\t\tSets the PHP version to test with (Default: 8.2)\n';
   printf -- '-w, --wp\t\tSets WP version to test against (Default: latest)\n';
   printf -- '-f, --filter\t\tPasses filters into PHPUnit\n';
+  printf -- '-x, --extra\t\tSets additional plugins to include (e.g. "recurring" for EDD Recurring)\n';
   printf -- '-h, --help\t\tShow help.\n';
+  echo "";
+  echo "Environment Variables:";
+  printf -- 'COMPOSER_AUTH\t\tComposer authentication information. Should include a GitHub token if using --extra recurring\n';
+  echo '              		Example: export COMPOSER_AUTH='"'"'{"github-oauth":{"github.com":"your_token_here"}}'"'"
 }
 
 while true; do
@@ -44,6 +49,10 @@ while true; do
         export FILTER="$2"
         shift 2
         ;;
+    --extra|-x )
+        export TEST_EXTRA_PLUGINS="$2"
+        shift 2
+        ;;
     --)
         shift
         break
@@ -69,6 +78,16 @@ export TEST_ACTIONS="${TEST_ACTIONS:-0}"
 
 # Default FILTER to empty string
 export FILTER="${FILTER:-}"
+
+# Default TEST_EXTRA_PLUGINS to empty
+export TEST_EXTRA_PLUGINS="${TEST_EXTRA_PLUGINS:-}"
+
+# If using Recurring, check for COMPOSER_AUTH
+if [[ "${TEST_EXTRA_PLUGINS}" == "recurring" ]] && [[ -z "${COMPOSER_AUTH}" ]]; then
+    echo "Warning: COMPOSER_AUTH environment variable is not set but is required for EDD Recurring"
+    echo 'Please set it with: export COMPOSER_AUTH='"'"'{"github-oauth":{"github.com":"your_token_here"}}'"'"
+    echo "Continuing anyway but installation will likely fail..."
+fi
 
 # Create a random project name
 export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)"
@@ -114,7 +133,12 @@ fi
 # Do this to make sure we cleanup
 set +e
 echo "Starting Docker containers..."
-docker-compose --progress quiet -f docker-compose-phpunit.yml run -e "TEST_INPLACE=${TEST_INPLACE}" -e "WP_MULTISITE=${WP_MULTISITE}" --rm --user $(id -u):$(id -g) wordpress
+docker-compose --progress quiet -f docker-compose-phpunit.yml run \
+  -e "TEST_INPLACE=${TEST_INPLACE}" \
+  -e "TEST_EXTRA_PLUGINS=${TEST_EXTRA_PLUGINS}" \
+  -e "FILTER=${FILTER}" \
+  -e "COMPOSER_AUTH=${COMPOSER_AUTH}" \
+  --rm --user $(id -u):$(id -g) wordpress
 
 echo "Removing Docker containers..."
 docker-compose --progress quiet -f docker-compose-phpunit.yml down -v

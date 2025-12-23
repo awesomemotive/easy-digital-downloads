@@ -339,6 +339,11 @@ function edd_install_settings() {
 		}
 	}
 
+	// Enable Pro features by default on new Pro installs.
+	if ( edd_is_pro() && ! edd_is_inactive_pro() ) {
+		$options['campaign_tracker'] = '1';
+	}
+
 	$settings       = get_option( 'edd_settings', array() );
 	$merged_options = array_merge( $settings, $options );
 	$edd_options    = $merged_options;
