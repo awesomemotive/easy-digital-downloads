@@ -501,6 +501,7 @@ class Gateways extends Tab {
 		$description .= __( '<strong>Notes</strong>:', 'easy-digital-downloads' );
 		$description .= '<ul class="edd-settings__list--disc">';
 		$description .= '<li>' . __( 'If taxes are enabled, you must collect enough address information to handle tax collection.', 'easy-digital-downloads' ) . '</li>';
+		$description .= '<li>' . __( 'If "Postal Code" is enabled without "Country", postal codes cannot be validated against country-specific formats.', 'easy-digital-downloads' ) . '</li>';
 		if ( edd_is_gateway_setup( 'stripe' ) ) {
 			$description .= '<li>' . sprintf(
 				/* translators: 1: opening anchor tag, 2: closing anchor tag */

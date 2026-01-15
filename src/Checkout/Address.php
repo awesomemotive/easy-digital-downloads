@@ -65,7 +65,14 @@ class Address {
 			$fields = array( 'country', 'address', 'address_2', 'city', 'state', 'zip' );
 		}
 
-		return array_intersect( $fields, Registry::get_allowed_fields() );
+		$fields = array_intersect( $fields, Registry::get_allowed_fields() );
+
+		// If Affirm is available, ensure all required address fields are present.
+		if ( \EDD\Gateways\Stripe\PaymentMethods::affirm_requires_support() ) {
+			$fields = array_unique( array_merge( array( 'country', 'address', 'address_2', 'city', 'state', 'zip' ), $fields ) );
+		}
+
+		return $fields;
 	}
 
 	/**

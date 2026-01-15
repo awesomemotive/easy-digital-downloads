@@ -873,8 +873,14 @@ function edd_get_purchase_cc_info() {
 function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	$ret = false;
 
-	if ( empty( $zip ) || empty( $country_code ) ) {
+	if ( empty( $zip ) ) {
 		return $ret;
+	}
+
+	// If no country code is provided, we cannot validate against country-specific patterns.
+	// Return true to allow the zip code to pass validation since we have no country context.
+	if ( empty( $country_code ) ) {
+		return true;
 	}
 
 	$country_code = strtoupper( $country_code );

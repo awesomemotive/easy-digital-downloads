@@ -5,6 +5,7 @@ namespace EDD\Admin\Settings;
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Admin\Menu\SecondaryNavigation;
+use EDD\Admin\Menu\SubNav;
 
 /**
  * Class Screen
@@ -169,13 +170,13 @@ class Screen {
 	 * Output the secondary options page navigation
 	 *
 	 * @since 3.3.0
+	 * @since 3.6.4 Refactored to use SubNav HTML helper.
 	 *
 	 * @param string $active_tab The active tab.
 	 * @param string $section    The active section.
 	 * @param array  $sections   The available sections.
 	 */
 	public static function secondary_navigation( $active_tab = '', $section = '', $sections = array() ) {
-
 		// Back compat for section'less tabs (Licenses, etc...).
 		if ( empty( $sections ) ) {
 			$section  = 'main';
@@ -184,48 +185,25 @@ class Screen {
 			);
 		}
 
+		// Don't show navigation for single section.
 		if ( count( $sections ) < 2 && 'main' === $section ) {
 			return;
 		}
 
-		?>
-		<div class="edd-sub-nav__wrapper">
-			<ul class="edd-sub-nav">
-				<?php
-
-				// Loop through sections.
-				foreach ( $sections as $section_id => $section_name ) {
-
-					// Tab & Section.
-					$tab_url = add_query_arg(
-						array(
-							'post_type' => 'download',
-							'page'      => 'edd-settings',
-							'tab'       => $active_tab,
-							'section'   => $section_id,
-						),
-						edd_get_admin_base_url()
-					);
-
-					// Settings not updated.
-					$tab_url = remove_query_arg( 'settings-updated', $tab_url );
-
-					// Class for link.
-					$class = ( $section === $section_id )
-						? 'current'
-						: '';
-
-					printf(
-						'<li class="%1$s"><a href="%2$s">%3$s</a></li>',
-						esc_attr( $class ),
-						esc_url( $tab_url ),
-						esc_html( $section_name )
-					);
-				}
-				?>
-			</ul>
-		</div>
-		<?php
+		$subnav = new SubNav(
+			array(
+				'tabs'        => $sections,
+				'current'     => $section,
+				'url_args'    => array(
+					'post_type' => 'download',
+					'page'      => 'edd-settings',
+					'tab'       => $active_tab,
+				),
+				'url_key'     => 'section',
+				'remove_args' => array( 'settings-updated' ),
+			)
+		);
+		$subnav->render();
 	}
 
 	/**

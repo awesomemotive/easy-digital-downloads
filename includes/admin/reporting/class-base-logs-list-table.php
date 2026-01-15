@@ -37,6 +37,14 @@ class EDD_Base_Log_List_Table extends List_Table {
 	protected $log_type = 'logs';
 
 	/**
+	 * Log types that support the download filter.
+	 *
+	 * @since 3.6.4
+	 * @var array
+	 */
+	protected $download_filter_log_types = array( 'file_downloads' );
+
+	/**
 	 * Get things started
 	 *
 	 * @since 3.0
@@ -100,7 +108,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'id';
+		return 'ID';
 	}
 
 	/**
@@ -110,7 +118,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return string
 	 */
 	public function get_filtered_view() {
-		return isset( $_GET['view'] ) && array_key_exists( $_GET['view'], edd_log_default_views() )
+		return isset( $_GET['view'] ) && array_key_exists( $_GET['view'], \EDD\Admin\Tools\Logs::get_default_views() )
 			? sanitize_text_field( $_GET['view'] )
 			: 'file_downloads';
 	}
@@ -217,7 +225,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return void
 	 */
 	public function log_views() {
-		$views        = edd_log_default_views();
+		$views        = \EDD\Admin\Tools\Logs::get_default_views();
 		$current_view = $this->get_filtered_view();
 		?>
 
@@ -243,6 +251,16 @@ class EDD_Base_Log_List_Table extends List_Table {
 
 		<?php
 	}
+	/**
+	 * Check if the current log type supports the download filter.
+	 *
+	 * @since 3.6.4
+	 * @return bool True if download filter should be shown, false otherwise.
+	 */
+	protected function supports_download_filter() {
+		return in_array( $this->log_type, $this->download_filter_log_types, true );
+	}
+
 	/**
 	 * Sets up the downloads filter
 	 *
@@ -490,10 +508,6 @@ class EDD_Base_Log_List_Table extends List_Table {
 		);
 		?>
 
-		<span id="edd-type-filter">
-			<?php $this->log_views(); ?>
-		</span>
-
 		<span id="edd-date-filters" class="edd-from-to-wrapper">
 			<?php
 
@@ -518,9 +532,13 @@ class EDD_Base_Log_List_Table extends List_Table {
 			?>
 		</span>
 
-		<span id="edd-download-filter">
-			<?php $this->downloads_filter( $download ); ?>
-		</span>
+		<?php if ( $this->supports_download_filter() ) : ?>
+
+			<span id="edd-download-filter">
+				<?php $this->downloads_filter( $download ); ?>
+			</span>
+
+		<?php endif; ?>
 
 		<?php if ( ! empty( $customer ) ) : ?>
 
@@ -528,12 +546,19 @@ class EDD_Base_Log_List_Table extends List_Table {
 				<?php /* translators: %d: customer ID */ ?>
 				<?php printf( esc_html__( 'Customer ID: %d', 'easy-digital-downloads' ), $customer ); ?>
 			</span>
+			<input type="hidden" name="customer" value="<?php echo absint( $customer ); ?>" />
 
 		<?php endif; ?>
 
 		<input type="submit" class="button-secondary" value="<?php esc_attr_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
-		<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) || ! empty( $customer ) ) : ?>
+		<?php
+		$has_filters = ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $customer );
+		if ( $this->supports_download_filter() && ! empty( $download ) ) {
+			$has_filters = true;
+		}
+		if ( $has_filters ) :
+			?>
 			<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
 				<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
 			</a>

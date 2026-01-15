@@ -46,6 +46,17 @@ abstract class Notice {
 	const CAPABILITY = 'manage_options';
 
 	/**
+	 * Gets the border color for overlay modals.
+	 * Return a hex color string to customize, or empty string to use default blue.
+	 *
+	 * @since 3.6.4
+	 * @return string
+	 */
+	public function get_border_color() {
+		return '';
+	}
+
+	/**
 	 * Displays the notice content.
 	 *
 	 * @return void
@@ -108,6 +119,7 @@ abstract class Notice {
 	 * @return void
 	 */
 	public function display() {
+		$border_color = $this->get_border_color();
 		?>
 		<div
 			id="edd-admin-notice-<?php echo esc_attr( $this->get_id() ); ?>"
@@ -115,6 +127,9 @@ abstract class Notice {
 			data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd-dismiss-notice-' . $this->get_id() ) ); ?>"
 			data-id="<?php echo esc_attr( $this->get_id() ); ?>"
 			data-lifespan="<?php echo esc_attr( static::dismiss_duration() ); ?>"
+			<?php if ( ! empty( $border_color ) ) : ?>
+				data-border-color="<?php echo esc_attr( $border_color ); ?>"
+			<?php endif; ?>
 		>
 			<?php
 			$this->_display();

@@ -168,6 +168,7 @@ class StripePaymentMethods extends List_Table {
 	private function query( $method, $args ) {
 		$filter   = Reports\get_filter_value( 'dates' );
 		$currency = Reports\get_filter_value( 'currencies' );
+		$dates    = Reports\parse_dates_for_range( $filter['range'] );
 
 		$args = wp_parse_args(
 			$args,
@@ -183,12 +184,22 @@ class StripePaymentMethods extends List_Table {
 			$args['currency'] = $currency;
 		}
 
-		if ( ! empty( $filter['range']['start'] ) ) {
-			$args['start'] = $filter['range']['start']->format( 'mysql' );
+		if ( ! empty( $dates['start'] ) ) {
+			$args['date_created_query']['after'] = array(
+				'year'  => $dates['start']->format( 'Y' ),
+				'month' => $dates['start']->format( 'm' ),
+				'day'   => $dates['start']->format( 'd' ),
+			);
+			$args['date_created_query']['inclusive'] = true;
 		}
 
-		if ( ! empty( $filter['range']['end'] ) ) {
-			$args['end'] = $filter['range']['end']->format( 'mysql' );
+		if ( ! empty( $dates['end'] ) ) {
+			$args['date_created_query']['before'] = array(
+				'year'  => $dates['end']->format( 'Y' ),
+				'month' => $dates['end']->format( 'm' ),
+				'day'   => $dates['end']->format( 'd' ),
+			);
+			$args['date_created_query']['inclusive'] = true;
 		}
 
 		return edd_count_orders( $args );

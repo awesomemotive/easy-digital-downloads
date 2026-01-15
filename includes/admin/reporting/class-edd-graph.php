@@ -141,8 +141,8 @@ class EDD_Graph {
 	 * @since 1.9
 	 */
 	public function load_scripts() {
-		wp_enqueue_script( 'edd-jquery-flot', edd_get_assets_url( 'js/vendor' ) . 'jquery.flot.min.js', array( 'jquery' ), EDD_VERSION, true );
-		wp_enqueue_script( 'edd-jquery-flot-time', edd_get_assets_url( 'js/vendor' ) . 'jquery.flot.time.min.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_enqueue_script( 'edd-jquery-flot', edd_get_assets_url( 'vendor/js' ) . 'jquery.flot.min.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_enqueue_script( 'edd-jquery-flot-time', edd_get_assets_url( 'vendor/js' ) . 'jquery.flot.time.min.js', array( 'jquery' ), EDD_VERSION, true );
 
 		/**
 		 * Fires immediately after the legacy Flot JS graphing framework is enqueued.

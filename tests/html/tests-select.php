@@ -45,12 +45,13 @@ class Select extends EDD_UnitTestCase {
 
 	public function test_year_dropdown() {
 
-		$year_dropdown = EDD()->html->year_dropdown();
+		$year_dropdown  = EDD()->html->year_dropdown();
+		$five_years_ago = date( 'Y' ) - 5;
 
 		$this->assertStringContainsString( 'name="year"', $year_dropdown );
 		$this->assertStringContainsString( 'id="edd_year_select_year"', $year_dropdown );
 		$this->assertStringContainsString( 'class="edd-select"', $year_dropdown );
-		$this->assertStringContainsString( '<option value="2020"', $year_dropdown );
+		$this->assertStringContainsString( '<option value="' . $five_years_ago . '"', $year_dropdown );
 		$this->assertStringContainsString( date( 'Y' ), $year_dropdown );
 	}
 

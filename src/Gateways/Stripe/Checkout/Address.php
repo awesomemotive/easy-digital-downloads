@@ -21,22 +21,6 @@ use EDD\Checkout\Address as CheckoutAddress;
 class Address extends CheckoutAddress {
 
 	/**
-	 * Gets the fields to display.
-	 *
-	 * @since 3.3.8
-	 * @return array
-	 */
-	public function get_fields() {
-		$fields = parent::get_fields();
-
-		if ( ! in_array( 'address', $fields, true ) && \EDD\Gateways\Stripe\PaymentMethods::affirm_requires_support() ) {
-			return array_unique( array_merge( array( 'country', 'address', 'address2', 'city', 'state', 'zip' ), $fields ) );
-		}
-
-		return $fields;
-	}
-
-	/**
 	 * Sets up the customer data.
 	 *
 	 * @since 3.3.8

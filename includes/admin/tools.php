@@ -1187,21 +1187,48 @@ function edd_tools_tab_logs() {
 
 	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
 
+	// Check if we're viewing settings
+	$view_settings = isset( $_GET['view'] ) && 'settings' === $_GET['view'];
+
+	// Determine the current view.
 	$current_view = 'file_downloads';
-	$log_views    = edd_log_default_views();
+	$log_views    = \EDD\Admin\Tools\Logs::get_default_views();
 
 	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $log_views ) ) {
 		$current_view = sanitize_text_field( $_GET['view'] );
+	} elseif ( $view_settings ) {
+		$current_view = 'settings';
 	}
 
 	/**
-	 * Fires when a given logs view should be rendered.
+	 * Fires before any log view is rendered.
 	 *
-	 * The dynamic portion of the hook name, `$current_view`, represents the slug
-	 * of the logs view to render.
+	 * Used to render the secondary navigation for all log views,
+	 * including legacy views that don't fire their own top actions.
 	 *
-	 * @since 1.4
+	 * @since 3.6.4
+	 *
+	 * @param string $current_view The current log view being rendered.
 	 */
-	do_action( 'edd_logs_view_' . $current_view );
+	do_action( 'edd_logs_before_view', $current_view );
+
+	if ( $view_settings ) {
+		/**
+		 * Fires when the log pruning settings should be rendered.
+		 *
+		 * @since 3.6.4
+		 */
+		do_action( 'edd_logs_view_settings' );
+	} else {
+		/**
+		 * Fires when a given logs view should be rendered.
+		 *
+		 * The dynamic portion of the hook name, `$current_view`, represents the slug
+		 * of the logs view to render.
+		 *
+		 * @since 1.4
+		 */
+		do_action( 'edd_logs_view_' . $current_view );
+	}
 }
 add_action( 'edd_tools_tab_logs', 'edd_tools_tab_logs' );

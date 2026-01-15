@@ -37,7 +37,7 @@ add_action( 'template_redirect', 'edd_login_error_check', 10 );
  * @global $post
  * @param string $redirect Redirect page URL
  * @return string Login form
-*/
+ */
 function edd_login_form( $redirect = '' ) {
 	global $edd_login_redirect;
 
@@ -62,7 +62,7 @@ function edd_login_form( $redirect = '' ) {
  *
  * @param array $data Data sent from the login form
  * @return void
-*/
+ */
 function edd_process_login_form( $data ) {
 
 	if ( ! empty( $data['edd_login_nonce'] ) && wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
@@ -73,8 +73,8 @@ function edd_process_login_form( $data ) {
 		$user = edd_log_user_in( 0, $login, $pass, $rememberme );
 
 		// Wipe these variables so they aren't anywhere in the submitted format any longer.
-		$login = null;
-		$pass  = null;
+		$login                  = null;
+		$pass                   = null;
 		$data['edd_user_login'] = null;
 		$data['edd_user_pass']  = null;
 
@@ -114,12 +114,12 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
  * @since 1.0
  * @since 2.9.24 Uses the wp_signon function instead of all the additional checks which can bypass hooks in core.
  *
- * @param int $user_id User ID
- * @param string $user_login Username
- * @param string $user_pass Password
+ * @param int     $user_id User ID
+ * @param string  $user_login Username
+ * @param string  $user_pass Password
  * @param boolean $remember Remember me
  * @return void
-*/
+ */
 function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false ) {
 
 	$credentials = array(
@@ -164,20 +164,16 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	return $user;
 }
 
-add_filter( 'login_url', 'edd_update_login_url', 10, 3 );
 /**
  * If a login page has been set in the EDD settings,
  * update the WordPress login URL.
  *
- * @param string $url
+ * @param string $url          The login URL.
+ * @param string $redirect_to  The redirect URL.
+ * @param bool   $force_reauth Whether to force reauthorization.
  * @return string
  */
 function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
-
-	// Don't change the login URL if the request is an admin request.
-	if ( ! edd_doing_ajax() && is_admin() ) {
-		return $url;
-	}
 
 	/**
 	 * If the $wp_rewrite global hasn't been initialized, don't do anything.
@@ -188,14 +184,19 @@ function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
 		return $url;
 	}
 
+	// Don't change the login URL if the redirect is to the admin area.
+	if ( false !== strpos( $redirect_to, admin_url() ) ) {
+		return $url;
+	}
+
 	// Get the login page URL and return the default if it's not set.
 	$login_url = edd_get_login_page_uri();
 	if ( ! $login_url ) {
 		return $url;
 	}
 
-	if ( ! empty( $redirect ) ) {
-		$login_url = add_query_arg( 'redirect_to', urlencode( $redirect ), $login_url );
+	if ( ! empty( $redirect_to ) ) {
+		$login_url = add_query_arg( 'redirect_to', urlencode( $redirect_to ), $login_url );
 	}
 	if ( $force_reauth ) {
 		$login_url = add_query_arg( 'reauth', '1', $login_url );
@@ -203,6 +204,7 @@ function edd_update_login_url( $url, $redirect_to, $force_reauth ) {
 
 	return $login_url;
 }
+add_filter( 'login_url', 'edd_update_login_url', 10, 3 );
 
 /**
  * Helper function to get the EDD login page URI.

@@ -22,7 +22,14 @@ jQuery( document ).ready( function( $ ) {
 	$( document ).on( 'click', '.edd-promo-notice__trigger', function ( e ) {
 		e.preventDefault();
 
-		const noticeId = $( this ).data( 'id' );
+		const $trigger = $( this );
+
+		// Prevent double-clicks or opening multiple modals.
+		if ( $trigger.prop( 'disabled' ) ) {
+			return;
+		}
+
+		const noticeId = $trigger.data( 'id' );
 		// If no notice ID, assume there's only one overlay on the page
 		const targetOverlay = noticeId
 			? $( '.edd-promo-notice__overlay[data-notice-id="' + noticeId + '"]' )
@@ -32,7 +39,13 @@ jQuery( document ).ready( function( $ ) {
 			return;
 		}
 
-			if ( $( this ).hasClass( 'edd-promo-notice__trigger--ajax' ) ) {
+		// Disable the trigger button while modal is open.
+		$trigger.prop( 'disabled', true );
+
+		// Store reference to trigger on the overlay so we can re-enable it on dismiss.
+		targetOverlay.data( 'trigger-button', $trigger );
+
+			if ( $trigger.hasClass( 'edd-promo-notice__trigger--ajax' ) ) {
 				const overlayNotice = targetOverlay.find( '.edd-admin-notice-overlay' );
 				$.ajax( {
 					type: 'GET',
@@ -40,14 +53,23 @@ jQuery( document ).ready( function( $ ) {
 					data: {
 						action: 'edd_get_promo_notice',
 						notice_id: noticeId,
-						product_id: $( this ).data( 'product' ),
-						value: $( this ).data( 'value' ),
+						product_id: $trigger.data( 'product' ),
+						value: $trigger.data( 'value' ),
 					},
 					success: function ( response ) {
 						if ( response.data ) {
-							overlayNotice.html( response.data );
-							// add a class to the overlay notice
+							// Handle both new object format and legacy string format.
+							const content = response.data.content || response.data;
+							const borderColor = response.data.border_color || '';
+
+							overlayNotice.html( content );
+							// Add a class to the overlay notice.
 							targetOverlay.addClass( 'edd-promo-notice__ajax' );
+
+							// Store border color on overlay for triggerNoticeEnter to use.
+							if ( borderColor ) {
+								overlayNotice.data( 'ajax-border-color', borderColor );
+							}
 						}
 						triggerNoticeEnter( targetOverlay );
 					}
@@ -106,7 +128,18 @@ jQuery( document ).ready( function( $ ) {
 	 * @param {jQuery} el The notice element to show
 	 */
 	function triggerNoticeEnter( el ) {
-		// trigger native custom event as jQuery and Vanilla JS both can listen to it.
+		// Apply custom border color if specified.
+		const overlayNotice = el.find( '.edd-admin-notice-overlay' );
+		const innerNotice = overlayNotice.find( '.edd-promo-notice' );
+
+		// Check for border color from AJAX response first, then fall back to data attribute.
+		const borderColor = overlayNotice.data( 'ajax-border-color' ) || innerNotice.data( 'border-color' );
+
+		if ( borderColor ) {
+			overlayNotice.css( 'border-top-color', borderColor );
+		}
+
+		// Trigger native custom event as jQuery and Vanilla JS both can listen to it.
 		document.dispatchEvent( new CustomEvent( 'edd_promo_notice_enter', { detail: { notice: el } } ) );
 
 		el.css( 'display', 'flex' ).hide().fadeIn();
@@ -120,6 +153,13 @@ jQuery( document ).ready( function( $ ) {
 	function triggerNoticeDismiss( el ) {
 		if ( ! el.is( ':visible' ) ) {
 			return;
+		}
+
+		// Re-enable trigger button if one was stored.
+		const $trigger = el.data( 'trigger-button' );
+		if ( $trigger ) {
+			$trigger.prop( 'disabled', false );
+			el.removeData( 'trigger-button' );
 		}
 
 		if ( el.hasClass( 'edd-promo-notice__overlay' ) ) {

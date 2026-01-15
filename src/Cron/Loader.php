@@ -166,6 +166,7 @@ class Loader implements SubscriberInterface {
 			new Events\DailyEvents(),
 			new Events\WeeklyEvents(),
 			new Events\StripeRateLimitingCleanup(),
+			new Events\LogPruning(),
 		);
 
 		/**
@@ -213,6 +214,7 @@ class Loader implements SubscriberInterface {
 			Components\Stripe::class,
 			Components\EmailSummariesBlurbs::class,
 			Components\NewUser::class,
+			Components\LogPruning::class,
 		);
 
 		/**

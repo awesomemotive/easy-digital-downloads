@@ -407,7 +407,7 @@ abstract class Pie extends Endpoint {
 	 * @since 3.5.3
 	 * @return int
 	 */
-	private function get_max_pieces(): int {
+	protected function get_max_pieces(): int {
 		/**
 		 * Filters the maximum number of pieces to display before grouping smaller ones into "Other".
 		 *

@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.6.2' );
+				define( 'EDD_VERSION', '3.6.4' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.

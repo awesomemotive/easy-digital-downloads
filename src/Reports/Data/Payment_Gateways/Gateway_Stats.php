@@ -140,6 +140,11 @@ class Gateway_Stats extends List_Table {
 				)
 			);
 
+			// If all values are 0, skip this gateway.
+			if ( empty( $complete_count ) && empty( $pending_count ) && empty( $refunded_count ) && empty( $total_count ) ) {
+				continue;
+			}
+
 			$reports_data[] = array(
 				'ID'             => $gateway_id,
 				'label'          => '<a href="' . esc_url(

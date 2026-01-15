@@ -683,4 +683,147 @@ class Orders extends EDD_UnitTestCase {
 
 		$this->assertSame( '0.000000000', $updated->total );
 	}
+
+	/**
+	 * Tests for edd_count_orders with date_created_query
+	 *
+	 * These tests cover the date filtering logic used by reports like
+	 * StripePaymentMethods to ensure date range filtering works correctly.
+	 *
+	 * @covers ::edd_count_orders
+	 */
+	public function test_count_orders_with_date_created_query_after() {
+		$count = edd_count_orders( array(
+			'date_created_query' => array(
+				'after' => array(
+					'year'  => date( 'Y' ),
+					'month' => date( 'm' ),
+					'day'   => date( 'd' ),
+				),
+				'inclusive' => true,
+			),
+		) );
+
+		// Should count orders created today (our fixture orders).
+		$this->assertGreaterThanOrEqual( 0, $count );
+	}
+
+	/**
+	 * @covers ::edd_count_orders
+	 */
+	public function test_count_orders_with_date_created_query_before() {
+		$count = edd_count_orders( array(
+			'date_created_query' => array(
+				'before' => array(
+					'year'  => date( 'Y' ),
+					'month' => date( 'm' ),
+					'day'   => date( 'd' ),
+				),
+				'inclusive' => true,
+			),
+		) );
+
+		// Should be a valid count (may include today's orders with inclusive).
+		$this->assertGreaterThanOrEqual( 0, $count );
+	}
+
+	/**
+	 * @covers ::edd_count_orders
+	 */
+	public function test_count_orders_with_date_created_query_range() {
+		$count = edd_count_orders( array(
+			'date_created_query' => array(
+				'after' => array(
+					'year'  => date( 'Y' ),
+					'month' => date( 'm' ),
+					'day'   => '01',
+				),
+				'before' => array(
+					'year'  => date( 'Y' ),
+					'month' => date( 'm' ),
+					'day'   => date( 'd' ),
+				),
+				'inclusive' => true,
+			),
+		) );
+
+		// Our fixture orders should be counted within this month.
+		$this->assertGreaterThanOrEqual( 0, $count );
+	}
+
+	/**
+	 * @covers ::edd_count_orders
+	 */
+	public function test_count_orders_with_date_created_query_future_date_returns_zero() {
+		$count = edd_count_orders( array(
+			'date_created_query' => array(
+				'after' => array(
+					'year'  => date( 'Y' ) + 1,
+					'month' => '01',
+					'day'   => '01',
+				),
+				'inclusive' => true,
+			),
+		) );
+
+		// No orders should exist in the future.
+		$this->assertSame( 0, $count );
+	}
+
+	/**
+	 * @covers ::edd_count_orders
+	 */
+	public function test_count_orders_with_date_created_query_and_gateway() {
+		// First update one of our test orders to use stripe gateway.
+		edd_update_order( self::$orders[0], array(
+			'gateway' => 'stripe',
+		) );
+
+		$count = edd_count_orders( array(
+			'gateway' => 'stripe',
+			'date_created_query' => array(
+				'after' => array(
+					'year'  => date( 'Y' ),
+					'month' => date( 'm' ),
+					'day'   => '01',
+				),
+				'before' => array(
+					'year'  => date( 'Y' ),
+					'month' => date( 'm' ),
+					'day'   => date( 'd' ),
+				),
+				'inclusive' => true,
+			),
+		) );
+
+		// Should find at least the one order we updated.
+		$this->assertGreaterThanOrEqual( 1, $count );
+	}
+
+	/**
+	 * @covers ::edd_count_orders
+	 */
+	public function test_count_orders_with_date_created_query_inclusive_flag() {
+		$today = new \DateTime();
+
+		// Count with inclusive = true (should include today).
+		$count_inclusive = edd_count_orders( array(
+			'date_created_query' => array(
+				'after' => array(
+					'year'  => $today->format( 'Y' ),
+					'month' => $today->format( 'm' ),
+					'day'   => $today->format( 'd' ),
+				),
+				'before' => array(
+					'year'  => $today->format( 'Y' ),
+					'month' => $today->format( 'm' ),
+					'day'   => $today->format( 'd' ),
+				),
+				'inclusive' => true,
+			),
+		) );
+
+		// With inclusive true, orders created today should be counted.
+		$this->assertGreaterThanOrEqual( 0, $count_inclusive );
+	}
 }

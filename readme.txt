@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable Tag: 3.6.3
+Stable Tag: 3.6.4
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -241,6 +241,18 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.6.4 =
+* New: Manage logs with the Log Retention Settings.
+* Admin: Some help icons could get duplicated.
+* Blocks: Login block could prevent WordPress admin email confirmation from working.
+* Checkout: Improved billing address conditional logic and validation.
+* Imports: Improved handling of files uploaded for import.
+* Reports: Gateway pie charts now only show gateways used during the report date range.
+* Reports: Stripe payment method data now respects report date ranges.
+* Reports: The vendor script paths for legacy graphs have been updated.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.6.3 =
 * Blocks: Updating handling of Password Reset redirect.
 * Checkout: Improved form data handling for AJAX based checkouts.
@@ -248,8 +260,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * PayPal: Improve IPN Handling.
 * Stripe: Improve Payment Method Configuration handling.
 * Dev: Update `edd_die()` for unit test compatibility.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.6.2 =
 * NEW: Cart - Introducing the Cart Preview, a new modern cart experience for your customers.

@@ -1,15 +1,15 @@
-# Copyright (C) 2025 Easy Digital Downloads
+# Copyright (C) 2026 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.6.3\n"
+"Project-Id-Version: Easy Digital Downloads 3.6.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-23T21:33:16+00:00\n"
+"POT-Creation-Date: 2026-01-15T20:28:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
@@ -5945,9 +5945,9 @@ msgstr ""
 #: includes/admin/discounts/discount-actions.php:126
 #: includes/admin/discounts/discount-actions.php:157
 #: includes/admin/downloads/dashboard-columns.php:203
-#: includes/admin/import/class-batch-import-downloads.php:67
-#: includes/admin/import/class-batch-import-payments.php:77
-#: includes/admin/import/class-batch-import.php:206
+#: includes/admin/import/class-batch-import-downloads.php:66
+#: includes/admin/import/class-batch-import-payments.php:78
+#: includes/admin/import/class-batch-import.php:214
 #: includes/admin/payments/actions.php:76
 #: includes/admin/payments/actions.php:81
 #: includes/admin/payments/actions.php:215
@@ -6679,11 +6679,12 @@ msgstr ""
 #: src/Admin/Emails/Manager.php:50
 #: src/Admin/Emails/Manager.php:97
 #: src/Admin/Emails/Manager.php:203
-#: src/Admin/Promos/PromoHandler.php:161
-#: src/Admin/Promos/PromoHandler.php:168
-#: src/Admin/Promos/PromoHandler.php:173
-#: src/Admin/Promos/PromoHandler.php:197
+#: src/Admin/Promos/PromoHandler.php:162
+#: src/Admin/Promos/PromoHandler.php:169
+#: src/Admin/Promos/PromoHandler.php:174
+#: src/Admin/Promos/PromoHandler.php:198
 #: src/Gateways/Square/Admin/Settings/Register.php:147
+#: src/REST/Routes/LogPruning.php:112
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -6702,7 +6703,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-email-addresses-table.php:135
 #: includes/admin/customers/class-customer-table.php:131
 #: includes/admin/payments/orders.php:1122
-#: includes/misc-functions.php:1546
+#: includes/misc-functions.php:1559
 #: includes/payments/functions.php:542
 msgid "Pending"
 msgstr ""
@@ -6712,7 +6713,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:142
 #: includes/admin/customers/customers.php:631
 #: includes/class-edd-discount.php:706
-#: includes/misc-functions.php:1541
+#: includes/misc-functions.php:1554
 #: src/Admin/Discounts/Editor/Status.php:56
 #: src/Admin/Promos/About.php:834
 msgid "Active"
@@ -6903,7 +6904,7 @@ msgstr ""
 #: includes/admin/customers/class-customer-table.php:137
 #: includes/admin/customers/customers.php:632
 #: includes/class-edd-discount.php:700
-#: includes/misc-functions.php:1542
+#: includes/misc-functions.php:1555
 #: src/Admin/Discounts/Editor/Status.php:57
 #: src/Admin/Promos/About.php:840
 msgid "Inactive"
@@ -6921,7 +6922,6 @@ msgstr ""
 #: includes/admin/payments/orders.php:595
 #: includes/upgrades/functions.php:168
 #: src/Admin/Emails/Screen.php:37
-#: src/Admin/Tools/Screen.php:71
 msgid "Logs"
 msgstr ""
 
@@ -6991,8 +6991,8 @@ msgstr ""
 #: includes/admin/discounts/discount-actions.php:94
 #: includes/admin/discounts/discount-actions.php:126
 #: includes/admin/discounts/discount-actions.php:157
-#: includes/admin/import/import-functions.php:27
-#: includes/admin/import/import-functions.php:108
+#: includes/admin/import/import-functions.php:26
+#: includes/admin/import/import-functions.php:146
 #: includes/admin/reporting/export/export-actions.php:25
 #: includes/api/class-edd-api.php:1979
 #: includes/class-edd-license-handler.php:479
@@ -7128,6 +7128,7 @@ msgstr ""
 #: includes/gateways/stripe/includes/template-functions.php:727
 #: src/Admin/Assets/Localization.php:109
 #: src/Admin/Emails/Reset.php:52
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:177
 #: src/Admin/Promos/Notices/SquareWebhooksModal.php:115
 msgid "Cancel"
 msgstr ""
@@ -7596,7 +7597,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:603
 #: includes/gateways/stripe/includes/admin/admin-filters.php:74
 #: src/Admin/Sections.php:99
-#: src/Admin/Settings/Screen.php:183
+#: src/Admin/Settings/Screen.php:184
 #: src/Admin/Tools/Screen.php:69
 #: src/Elementor/Widgets/Config/Checkout/General.php:34
 #: src/Elementor/Widgets/Config/Checkout/Styles/General.php:34
@@ -8095,57 +8096,61 @@ msgstr ""
 msgid "There was an unknown problem while sending test Email Summary!"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-downloads.php:67
-#: includes/admin/import/class-batch-import-payments.php:77
-#: includes/admin/import/class-batch-import.php:206
+#: includes/admin/import/class-batch-import-downloads.php:66
+#: includes/admin/import/class-batch-import-payments.php:78
+#: includes/admin/import/class-batch-import.php:214
 msgid "You do not have permission to import data."
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:291
+#: includes/admin/import/class-batch-import-payments.php:249
 #: src/Admin/Exports/Exporters/Orders.php:61
 #: src/Admin/Exports/Exporters/TaxedOrders.php:74
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:648
+#: includes/admin/import/class-batch-import-payments.php:569
 msgid "payments"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:31
-#: includes/admin/import/import-functions.php:112
+#: includes/admin/import/import-functions.php:32
+#: includes/admin/import/import-functions.php:155
 msgid "Missing import parameters. Import class must be specified."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:43
-#: includes/admin/import/import-functions.php:140
+#: includes/admin/import/import-functions.php:47
+#: includes/admin/import/import-functions.php:196
 msgid "Invalid importer class supplied"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:52
-#: includes/admin/import/import-functions.php:150
+#: includes/admin/import/import-functions.php:56
+#: includes/admin/import/import-functions.php:206
 msgid "You do not have permission to import data"
 msgstr ""
 
-#: includes/admin/import/import-functions.php:56
+#: includes/admin/import/import-functions.php:62
 msgid "Missing import file. Please provide an import file."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:60
-#: includes/admin/import/import-functions.php:133
+#: includes/admin/import/import-functions.php:71
+#: includes/admin/import/import-functions.php:186
 msgid "The file you uploaded does not appear to be a CSV file."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:64
-#: includes/admin/import/import-functions.php:116
+#: includes/admin/import/import-functions.php:80
+#: includes/admin/import/import-functions.php:164
 msgid "Something went wrong during the upload process, please try again."
 msgstr ""
 
-#: includes/admin/import/import-functions.php:176
+#: includes/admin/import/import-functions.php:101
+msgid "Failed to move uploaded file to protected directory."
+msgstr ""
+
+#: includes/admin/import/import-functions.php:235
 msgid "No data found for import parameters"
 msgstr ""
 
 #. translators: 1: URL to view imported items, 2: Import type label
-#: includes/admin/import/import-functions.php:185
+#: includes/admin/import/import-functions.php:251
 #, php-format
 msgid "Import complete! <a href=\"%1$s\">View imported %2$s</a>."
 msgstr ""
@@ -8275,7 +8280,7 @@ msgid "All gateways"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:216
-#: includes/admin/reporting/class-base-logs-list-table.php:504
+#: includes/admin/reporting/class-base-logs-list-table.php:518
 #: includes/reports/reports-functions.php:1387
 #: src/HTML/FromTo.php:41
 msgctxt "date filter"
@@ -8283,7 +8288,7 @@ msgid "From"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:225
-#: includes/admin/reporting/class-base-logs-list-table.php:513
+#: includes/admin/reporting/class-base-logs-list-table.php:527
 #: includes/reports/reports-functions.php:1397
 #: src/HTML/FromTo.php:52
 msgctxt "date filter"
@@ -8328,21 +8333,20 @@ msgid "Extras"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:334
-#: includes/admin/reporting/class-base-logs-list-table.php:534
-#: includes/admin/tools/logs.php:238
+#: includes/admin/reporting/class-base-logs-list-table.php:553
 #: includes/reports/reports-functions.php:1844
 msgid "Filter"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:338
-#: includes/admin/reporting/class-base-logs-list-table.php:538
+#: includes/admin/reporting/class-base-logs-list-table.php:563
 #: src/Admin/Emails/ListTable.php:282
 msgid "Clear"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:357
 #: includes/admin/payments/contextual-help.php:105
-#: includes/admin/reporting/class-base-logs-list-table.php:553
+#: includes/admin/reporting/class-base-logs-list-table.php:578
 #: src/Admin/Emails/ListTable.php:286
 msgid "Search"
 msgstr ""
@@ -8370,6 +8374,7 @@ msgstr ""
 #: src/Admin/Exports/Exporters/Downloads.php:52
 #: src/Admin/Exports/Exporters/Orders.php:76
 #: src/Admin/Exports/Exporters/TaxedOrders.php:87
+#: src/Admin/Tools/Logs/LogTypesListTable.php:109
 msgid "Status"
 msgstr ""
 
@@ -8777,6 +8782,7 @@ msgstr ""
 #: includes/gateways/stripe/includes/utils/modal.php:69
 #: src/Admin/Assets/Localization.php:111
 #: src/Admin/Pointers.php:42
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:177
 #: src/Cart/Preview/templates/dialog.php:26
 #: src/Users/Verification.php:133
 #: src/Utils/Modal.php:66
@@ -9066,6 +9072,7 @@ msgstr ""
 #: src/Admin/Emails/Screen.php:35
 #: src/Admin/Menu/Header.php:145
 #: src/Admin/Menu/Pages.php:82
+#: src/Admin/Tools/LogSettings.php:296
 #: includes/blocks/build/buy-button/index.js:9
 #: includes/blocks/build/cart/index.js:1
 #: includes/blocks/build/checkout/index.js:6
@@ -9131,12 +9138,12 @@ msgid "Request Date:"
 msgstr ""
 
 #. translators: %d: customer ID
-#: includes/admin/reporting/class-base-logs-list-table.php:529
+#: includes/admin/reporting/class-base-logs-list-table.php:547
 #, php-format
 msgid "Customer ID: %d"
 msgstr ""
 
-#: includes/admin/reporting/class-base-logs-list-table.php:587
+#: includes/admin/reporting/class-base-logs-list-table.php:612
 msgid "Search logs..."
 msgstr ""
 
@@ -9596,8 +9603,10 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:644
 #: includes/admin/settings/register-settings.php:605
-#: includes/admin/tools/logs.php:174
 #: includes/privacy-functions.php:591
+#: src/Admin/Tools/Logs.php:138
+#: src/Logs/Registry.php:68
+#: src/Logs/Registry.php:433
 #: src/Reports/Data/File_Downloads/Top_Five_Most_Downloaded_List_Table.php:60
 #: src/Reports/Endpoints/Charts/FileDownloads.php:50
 msgid "File Downloads"
@@ -10605,15 +10614,6 @@ msgstr ""
 
 #: includes/admin/tools/class-edd-tools-reset-stats.php:152
 msgid "Your store has been successfully reset."
-msgstr ""
-
-#: includes/admin/tools/logs.php:175
-msgid "Payment Errors"
-msgstr ""
-
-#: includes/admin/tools/logs.php:176
-#: src/Admin/Exports/Loader.php:182
-msgid "API Requests"
 msgstr ""
 
 #: includes/admin/upgrades/classes/class-file-download-log-migration.php:133
@@ -12987,7 +12987,7 @@ msgstr ""
 
 #: includes/class-edd-discount.php:697
 #: includes/gateways/stripe/includes/template-functions.php:391
-#: includes/misc-functions.php:1543
+#: includes/misc-functions.php:1556
 msgid "Expired"
 msgstr ""
 
@@ -14510,6 +14510,8 @@ msgstr ""
 #: src/Admin/Settings/Ajax/Toggle.php:52
 #: src/Admin/Settings/Traits/AjaxToggle.php:59
 #: src/Admin/Tools/Labs.php:103
+#: src/Admin/Tools/LogSettings.php:118
+#: src/Admin/Tools/LogSettings.php:192
 msgid "Unauthorized"
 msgstr ""
 
@@ -15386,7 +15388,7 @@ msgid "Set as Default"
 msgstr ""
 
 #: includes/gateways/stripe/includes/template-functions.php:515
-#: src/Checkout/Address.php:86
+#: src/Checkout/Address.php:93
 #: src/Elementor/Widgets/Config/Checkout/Styles/Sections.php:58
 #: src/Elementor/Widgets/Config/Checkout/Titles.php:53
 msgid "Billing Details"
@@ -15505,27 +15507,27 @@ msgstr ""
 msgid "Store Bot"
 msgstr ""
 
-#: includes/misc-functions.php:1547
+#: includes/misc-functions.php:1560
 msgid "Verified"
 msgstr ""
 
-#: includes/misc-functions.php:1548
+#: includes/misc-functions.php:1561
 msgid "Spam"
 msgstr ""
 
-#: includes/misc-functions.php:1549
+#: includes/misc-functions.php:1562
 msgid "Deleted"
 msgstr ""
 
-#: includes/misc-functions.php:1550
+#: includes/misc-functions.php:1563
 msgid "Cancelled"
 msgstr ""
 
-#: includes/misc-functions.php:1667
+#: includes/misc-functions.php:1680
 msgid "Please define default parameters in the form of an array."
 msgstr ""
 
-#: includes/misc-functions.php:1672
+#: includes/misc-functions.php:1685
 msgid "Please define an SVG icon filename."
 msgstr ""
 
@@ -16376,11 +16378,11 @@ msgstr ""
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1083
+#: includes/process-purchase.php:1089
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
-#: includes/process-purchase.php:1101
+#: includes/process-purchase.php:1107
 msgid "Your email address must be shorter than 100 characters."
 msgstr ""
 
@@ -17943,6 +17945,13 @@ msgstr ""
 msgid "Download a CSV of product %1$s."
 msgstr ""
 
+#: src/Admin/Exports/Loader.php:182
+#: src/Admin/Tools/Logs.php:140
+#: src/Logs/Registry.php:90
+#: src/Logs/Registry.php:435
+msgid "API Requests"
+msgstr ""
+
 #: src/Admin/Exports/Loader.php:183
 msgid "Download a CSV of API request logs."
 msgstr ""
@@ -19367,7 +19376,42 @@ msgstr ""
 msgid "Have a question? Let us know!"
 msgstr ""
 
-#: src/Admin/Promos/Notices/Notice.php:150
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:125
+msgid "Confirm Log Pruning"
+msgstr ""
+
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:128
+msgid "Warning: This action cannot be undone!"
+msgstr ""
+
+#. translators: 1: number of records, 2: log type label, 3: number of days
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:135
+#, php-format
+msgid "You are about to permanently delete <strong>%1$s %2$s log entry</strong> older than <strong>%3$d day</strong>."
+msgid_plural "You are about to permanently delete <strong>%1$s %2$s log entries</strong> older than <strong>%3$d days</strong>."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: log type label, 2: number of days
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:148
+#, php-format
+msgid "No %1$s log entries found older than %2$d days."
+msgstr ""
+
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:157
+msgid "Are you sure you want to proceed?"
+msgstr ""
+
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:170
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:173
+msgid "Yes, Delete These Logs"
+msgstr ""
+
+#: src/Admin/Promos/Notices/LogPruningConfirmModal.php:171
+msgid "Deleting..."
+msgstr ""
+
+#: src/Admin/Promos/Notices/Notice.php:165
 msgid "Dismiss notice"
 msgstr ""
 
@@ -19437,8 +19481,8 @@ msgstr ""
 msgid "Easy data export for accounting"
 msgstr ""
 
-#: src/Admin/Promos/PromoHandler.php:157
-#: src/Admin/Promos/PromoHandler.php:191
+#: src/Admin/Promos/PromoHandler.php:158
+#: src/Admin/Promos/PromoHandler.php:192
 msgid "Missing notice ID."
 msgstr ""
 
@@ -19493,6 +19537,9 @@ msgstr ""
 #: src/Admin/Settings/Ajax/Toggle.php:80
 #: src/Admin/Settings/Traits/AjaxToggle.php:71
 #: src/Admin/Tools/Labs.php:116
+#: src/Admin/Tools/LogSettings.php:135
+#: src/Admin/Tools/LogSettings.php:206
+#: src/Admin/Tools/LogSettings.php:262
 msgid "Invalid setting"
 msgstr ""
 
@@ -20152,24 +20199,28 @@ msgstr ""
 msgid "If taxes are enabled, you must collect enough address information to handle tax collection."
 msgstr ""
 
+#: src/Admin/Settings/Tabs/Gateways.php:504
+msgid "If \"Postal Code\" is enabled without \"Country\", postal codes cannot be validated against country-specific formats."
+msgstr ""
+
 #. translators: 1: opening anchor tag, 2: closing anchor tag
-#: src/Admin/Settings/Tabs/Gateways.php:507
+#: src/Admin/Settings/Tabs/Gateways.php:508
 #, php-format
 msgid "If \"Postal Code\" is not selected, you must disable the %1$spostal code verification%2$s rule in Stripe Radar."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Gateways.php:512
+#: src/Admin/Settings/Tabs/Gateways.php:513
 msgid "If an order qualifies for <strong>Affirm</strong> financing, the customer will be required to enter a billing address, regardless of the address fields selected."
 msgstr ""
 
-#: src/Admin/Settings/Tabs/Gateways.php:588
-#: src/Admin/Settings/Tabs/Gateways.php:601
+#: src/Admin/Settings/Tabs/Gateways.php:589
+#: src/Admin/Settings/Tabs/Gateways.php:602
 msgid "Required for tax calculations."
 msgstr ""
 
 #. translators: 1: opening button tag, 2: closing button tag
 #. translators: 1: opening anchor tag, 2: closing anchor tag
-#: src/Admin/Settings/Tabs/Gateways.php:627
+#: src/Admin/Settings/Tabs/Gateways.php:628
 #: src/Pro/Recommendations/Manager.php:106
 #, php-format
 msgid "Enable smart product recommendations in your cart preview when you %1$sUpgrade to Pro%2$s."
@@ -21018,6 +21069,7 @@ msgid "Easy Digital Downloads &mdash; General"
 msgstr ""
 
 #: src/Admin/SiteHealth/General.php:214
+#: src/Admin/Tools/Logs/LogTypesListTable.php:375
 #: src/Gateways/Square/Admin/Settings/Render.php:109
 #: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:232
 #: src/Pro/CampaignTracker/Admin/Reports/Data/CampaignSourcesListTable.php:243
@@ -21087,8 +21139,209 @@ msgstr ""
 msgid "Experimental Features"
 msgstr ""
 
+#: src/Admin/Tools/Logs.php:139
+#: src/Logs/Registry.php:79
+#: src/Logs/Registry.php:434
+msgid "Payment Errors"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:97
+msgid "Storage values are estimates based on row data. Actual database storage may vary slightly due to indexes and overhead."
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:102
+msgid "Log Type"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:103
+msgid "Records"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:104
+msgid "Database Storage"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:105
+msgid "Enable Pruning"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:106
+msgid "Days to Keep"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:107
+msgid "Next Pruning"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:108
+msgid "Manual Pruning"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:303
+msgid "Not available"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:311
+msgid "Prune Now"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:337
+msgid "Unsupported"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:339
+msgid "This log type uses custom storage and cannot be managed through the standard retention system. Contact the extension developer for an update."
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:350
+msgid "Non-prunable"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:363
+msgid "Warning"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:377
+msgid "This log type has not defined retention rules. You may enable pruning based on your own preferences."
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:386
+msgid "Prunable"
+msgstr ""
+
+#: src/Admin/Tools/Logs/LogTypesListTable.php:399
+msgid "No log types found."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:337
+msgid "Log Retention Settings"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:340
+msgid "Configure automatic log retention management to keep your database clean. Logs older than the specified number of days will be automatically deleted."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:346
+msgid "Enable Automatic Pruning"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:350
+msgid "Pruning runs at a random time each day to avoid server resource issues during peak times."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:362
+msgid "Enable automatic daily pruning"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:373
+msgid "Pruning will run once daily."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:380
+msgid "Batch Size"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:385
+msgid "Maximum number of log entries to delete per run. Lower values reduce server load but may take longer to fully prune large log tables."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:402
+msgid "Default: 250"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:415
+msgid "Registered Log Types"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:417
+msgid "Configure retention settings for each registered log type. You can also manually prune logs immediately using the \"Prune Now\" button."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:441
+msgid "Additional Log Types"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:443
+msgid "These log types were found in the database but are not officially registered. You can still manage their retention settings."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:444
+msgid "Warning:"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:445
+msgid "Since these are unregistered, they may be created by extensions or custom code. Pruning them could have unintended consequences if that code expects the logs to exist."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:493
+msgid "Deleting logs..."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:494
+msgid "deleted so far."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:495
+msgid "1 log entry deleted."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:496
+#, php-format
+msgid "%d log entries deleted."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:497
+msgid "No logs found to delete."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:498
+msgid "An error occurred."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:499
+#: src/Users/Verification.php:132
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:649
+#: src/Admin/Tools/LogSettings.php:658
+msgid "Not scheduled"
+msgstr ""
+
+#: src/Admin/Tools/LogSettings.php:666
+msgid "Overdue"
+msgstr ""
+
+#. translators: %d: number of minutes
+#: src/Admin/Tools/LogSettings.php:674
+#, php-format
+msgid "In %d minute"
+msgid_plural "In %d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of hours
+#: src/Admin/Tools/LogSettings.php:681
+#, php-format
+msgid "In %d hour"
+msgid_plural "In %d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of days
+#: src/Admin/Tools/LogSettings.php:688
+#, php-format
+msgid "In %d day"
+msgid_plural "In %d days"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/Admin/Tools/Screen.php:70
 msgid "API Keys"
+msgstr ""
+
+#: src/Admin/Tools/Screen.php:71
+msgid "Event Logging"
 msgstr ""
 
 #: src/Admin/Tools/Screen.php:72
@@ -24227,6 +24480,76 @@ msgstr ""
 msgid "Customers who see relevant recommendations in their cart spend more. Pro unlocks automatic cross-sells and upsells in your cart preview—no setup required."
 msgstr ""
 
+#: src/Logs/Registry.php:61
+msgid "Logs of file downloads by customers."
+msgstr ""
+
+#: src/Logs/Registry.php:63
+msgid "Logs of file downloads by customers and package downloads by customer sites."
+msgstr ""
+
+#: src/Logs/Registry.php:87
+msgid "Gateway and payment error logs."
+msgstr ""
+
+#: src/Logs/Registry.php:97
+msgid "REST API request logs."
+msgstr ""
+
+#: src/Logs/Registry.php:100
+msgid "Email Logs"
+msgstr ""
+
+#: src/Logs/Registry.php:107
+msgid "Email sending logs."
+msgstr ""
+
+#: src/Logs/Registry.php:200
+msgid "Recurring Payments"
+msgstr ""
+
+#: src/Logs/Registry.php:201
+msgid "All Access"
+msgstr ""
+
+#: src/Logs/Registry.php:202
+msgid "Commissions"
+msgstr ""
+
+#: src/Logs/Registry.php:245
+msgid "File Download Limit is enabled - pruning logs may reset customer download counts."
+msgstr ""
+
+#. translators: %s: list of extension names (e.g., "Recurring Payments or All Access")
+#: src/Logs/Registry.php:266
+#, php-format
+msgid "Pruning may impact how %s tracks or limits downloads."
+msgstr ""
+
+#. translators: %s: log type value
+#: src/Logs/Registry.php:403
+#, php-format
+msgid "Unregistered log type: %s"
+msgstr ""
+
+#. translators: %s: log type label
+#: src/Logs/Registry.php:475
+#, php-format
+msgid "%s logs (registered via legacy filter)."
+msgstr ""
+
+#. translators: 1: first item, 2: second item
+#: src/Logs/Registry.php:511
+#, php-format
+msgid "%1$s or %2$s"
+msgstr ""
+
+#. translators: 1: comma-separated list of items, 2: last item
+#: src/Logs/Registry.php:522
+#, php-format
+msgid "%1$s, or %2$s"
+msgstr ""
+
 #: src/Orders/Refunds/Validator.php:258
 msgid "At least one of subtotal or tax must be greater than zero for a refund."
 msgstr ""
@@ -25459,11 +25782,11 @@ msgstr ""
 msgid "Sales by Variation"
 msgstr ""
 
-#: src/Reports/Endpoints/Pies/GatewayEarnings.php:50
+#: src/Reports/Endpoints/Pies/GatewayEarnings.php:51
 msgid "Gateway Earnings"
 msgstr ""
 
-#: src/Reports/Endpoints/Pies/GatewaySales.php:50
+#: src/Reports/Endpoints/Pies/GatewaySales.php:51
 msgid "Gateway Sales"
 msgstr ""
 
@@ -25673,6 +25996,35 @@ msgstr ""
 msgid "Quantity must be a positive number."
 msgstr ""
 
+#: src/REST/Controllers/LogPruning.php:48
+#: src/REST/Controllers/LogPruning.php:55
+msgid "Invalid log type."
+msgstr ""
+
+#: src/REST/Controllers/LogPruning.php:64
+msgid "This log type cannot be pruned."
+msgstr ""
+
+#. translators: %d: number of logs deleted
+#: src/REST/Controllers/LogPruning.php:82
+#, php-format
+msgid "%d log entry deleted."
+msgid_plural "%d log entries deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/REST/Routes/LogPruning.php:74
+msgid "The log type to prune."
+msgstr ""
+
+#: src/REST/Routes/LogPruning.php:85
+msgid "Days must be between 1 and 3650."
+msgstr ""
+
+#: src/REST/Routes/LogPruning.php:91
+msgid "Number of days to keep logs."
+msgstr ""
+
 #: src/REST/Security.php:53
 msgid "Cart token missing."
 msgstr ""
@@ -25840,10 +26192,6 @@ msgstr ""
 
 #: src/Users/Verification.php:131
 msgid "Email verified! Redirecting..."
-msgstr ""
-
-#: src/Users/Verification.php:132
-msgid "An error occurred. Please try again."
 msgstr ""
 
 #: src/Users/Verification.php:159
