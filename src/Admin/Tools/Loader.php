@@ -32,6 +32,8 @@ class Loader extends MiniManager {
 		return array(
 			new Labs(),
 			new DebugLog(),
+			new Logs(),
+			new LogSettings(),
 		);
 	}
 }

@@ -4,14 +4,13 @@
  *
  * This is the base class for all batch import methods. Each data import type (customers, payments, etc) extend this class
  *
- * @package     EDD
- * @subpackage  Admin/Import
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Import
+ * @copyright   Copyright by Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.6
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -25,6 +24,7 @@ class EDD_Batch_Import {
 	 * The file being imported
 	 *
 	 * @since 2.6
+	 * @var string
 	 */
 	public $file;
 
@@ -32,6 +32,7 @@ class EDD_Batch_Import {
 	 * The parsed CSV file being imported
 	 *
 	 * @since 2.6
+	 * @var array
 	 */
 	public $csv;
 
@@ -39,6 +40,7 @@ class EDD_Batch_Import {
 	 * Total rows in the CSV file
 	 *
 	 * @since 2.6
+	 * @var int
 	 */
 	public $total;
 
@@ -46,6 +48,7 @@ class EDD_Batch_Import {
 	 * The current step being processed
 	 *
 	 * @since 2.6
+	 * @var int
 	 */
 	public $step;
 
@@ -53,6 +56,7 @@ class EDD_Batch_Import {
 	 * The number of items to process per step
 	 *
 	 * @since 2.6
+	 * @var int
 	 */
 	public $per_step = 20;
 
@@ -60,6 +64,7 @@ class EDD_Batch_Import {
 	 * The capability required to import data
 	 *
 	 * @since 2.6
+	 * @var string
 	 */
 	public $capability_type = 'manage_shop_settings';
 
@@ -67,6 +72,7 @@ class EDD_Batch_Import {
 	 * Is the import file empty
 	 *
 	 * @since 2.6
+	 * @var bool
 	 */
 	public $is_empty = false;
 
@@ -74,6 +80,7 @@ class EDD_Batch_Import {
 	 * Map of CSV columns > database fields
 	 *
 	 * @since 2.6
+	 * @var array
 	 */
 	public $field_mapping = array();
 
@@ -88,7 +95,8 @@ class EDD_Batch_Import {
 	/**
 	 * Get things started
 	 *
-	 * @param $_step int The step to process
+	 * @param string $_file The file to import.
+	 * @param int    $_step The step to process.
 	 * @since 2.6
 	 */
 	public function __construct( $_file = '', $_step = 1 ) {
@@ -102,7 +110,7 @@ class EDD_Batch_Import {
 	/**
 	 * Sets up the CSV file for importing.
 	 *
-	 * @param [type] $file
+	 * @param string $file The file to set up.
 	 * @return void
 	 */
 	public function set_up_csv( $file ) {
@@ -133,7 +141,7 @@ class EDD_Batch_Import {
 	 * Parses the CSV from the file and returns the data as an array.
 	 *
 	 * @since 2.11.5
-	 * @param string $file
+	 * @param string $file The file to parse.
 	 *
 	 * @return array
 	 */
@@ -228,14 +236,12 @@ class EDD_Batch_Import {
 	public function map_fields( $import_fields = array() ) {
 
 		$this->field_mapping = array_map( 'sanitize_text_field', $import_fields );
-
 	}
 
 	/**
 	 * Retrieve the URL to the list table for the import data type
 	 *
 	 * @since 2.6
-	 * @return string
 	 */
 	public function get_list_table_url() {}
 
@@ -243,7 +249,6 @@ class EDD_Batch_Import {
 	 * Retrieve the label for the import type. Example: Payments
 	 *
 	 * @since 2.6
-	 * @return string
 	 */
 	public function get_import_type_label() {}
 
@@ -251,47 +256,35 @@ class EDD_Batch_Import {
 	 * Convert a string containing delimiters to an array
 	 *
 	 * @since 2.6
-	 * @param $str Input string to convert to an array
+	 * @param string $str Input string to convert to an array.
 	 * @return array
 	 */
 	public function str_to_array( $str = '' ) {
 
 		$array = array();
 
-		if( is_array( $str ) ) {
+		if ( is_array( $str ) ) {
 			return array_map( 'trim', $str );
 		}
 
-		// Look for standard delimiters
-		if( false !== strpos( $str, '|' ) ) {
-
+		// Look for standard delimiters.
+		if ( false !== strpos( $str, '|' ) ) {
 			$delimiter = '|';
-
-		} elseif( false !== strpos( $str, ',' ) ) {
-
+		} elseif ( false !== strpos( $str, ',' ) ) {
 			$delimiter = ',';
-
-		} elseif( false !== strpos( $str, ';' ) ) {
-
+		} elseif ( false !== strpos( $str, ';' ) ) {
 			$delimiter = ';';
-
-		} elseif( false !== strpos( $str, '/' ) && ! filter_var( str_replace( ' ', '%20', $str ), FILTER_VALIDATE_URL ) && '/' !== substr( $str, 0, 1 ) ) {
-
+		} elseif ( false !== strpos( $str, '/' ) && ! filter_var( str_replace( ' ', '%20', $str ), FILTER_VALIDATE_URL ) && '/' !== substr( $str, 0, 1 ) ) {
 			$delimiter = '/';
-
 		}
 
-		if( ! empty( $delimiter ) ) {
-
+		if ( ! empty( $delimiter ) ) {
 			$array = (array) explode( $delimiter, $str );
-
 		} else {
-
 			$array[] = $str;
 		}
 
 		return array_map( 'trim', $array );
-
 	}
 
 	/**
@@ -300,63 +293,50 @@ class EDD_Batch_Import {
 	 * This is identical to str_to_array() except it ignores all / characters.
 	 *
 	 * @since 2.9.20
-	 * @param $str Input string to convert to an array
+	 * @param string $str Input string to convert to an array.
 	 * @return array
 	 */
 	public function convert_file_string_to_array( $str = '' ) {
 
 		$array = array();
 
-		if( is_array( $str ) ) {
+		if ( is_array( $str ) ) {
 			return array_map( 'trim', $str );
 		}
 
-		// Look for standard delimiters
-		if( false !== strpos( $str, '|' ) ) {
-
+		// Look for standard delimiters.
+		if ( false !== strpos( $str, '|' ) ) {
 			$delimiter = '|';
-
-		} elseif( false !== strpos( $str, ',' ) ) {
-
+		} elseif ( false !== strpos( $str, ',' ) ) {
 			$delimiter = ',';
-
-		} elseif( false !== strpos( $str, ';' ) ) {
-
+		} elseif ( false !== strpos( $str, ';' ) ) {
 			$delimiter = ';';
-
 		}
 
-		if( ! empty( $delimiter ) ) {
-
+		if ( ! empty( $delimiter ) ) {
 			$array = (array) explode( $delimiter, $str );
-
 		} else {
-
 			$array[] = $str;
 		}
 
 		return array_map( 'trim', $array );
-
 	}
 
 	/**
 	 * Trims a column value for preview
 	 *
 	 * @since 2.6
-	 * @param $str Input string to trim down
+	 * @param string $str Input string to trim down.
 	 * @return string
 	 */
 	public function trim_preview( $str = '' ) {
 
-		if( ! is_numeric( $str ) ) {
-
+		if ( ! is_numeric( $str ) ) {
 			$long = strlen( $str ) >= 30;
 			$str  = substr( $str, 0, 30 );
 			$str  = $long ? $str . '...' : $str;
-
 		}
 
 		return $str;
-
 	}
 }

@@ -4,10 +4,9 @@
  *
  * This class handles importing downloads with the batch processing API
  *
- * @package     EDD
- * @subpackage  Admin/Import
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Import
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.6
  */
 
@@ -74,7 +73,9 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 			$this->done = true;
 
 			// Delete the uploaded CSV file.
-			unlink( $this->file );
+			if ( FileSystem::file_exists( $this->file ) ) {
+				FileSystem::get_fs()->delete( $this->file );
+			}
 		}
 
 		if ( ! $this->done && $this->csv ) {
@@ -157,7 +158,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 					$current_status = strtolower( $args['post_status'] );
 
-					if ( in_array( $current_status, $published_statuses ) ) {
+					if ( in_array( $current_status, $published_statuses, true ) ) {
 						$args['post_status'] = 'publish';
 					}
 				}
@@ -179,7 +180,6 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					$tags = $this->str_to_array( $row[ $this->field_mapping['tags'] ] );
 
 					$this->set_taxonomy_terms( $download_id, $tags, 'download_tag' );
-
 				}
 
 				// setup price(s).
@@ -188,7 +188,6 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					$price = $row[ $this->field_mapping['price'] ];
 
 					$this->set_price( $download_id, $price );
-
 				}
 
 				// setup files.
@@ -197,7 +196,6 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					$files = $this->convert_file_string_to_array( $row[ $this->field_mapping['files'] ] );
 
 					$this->set_files( $download_id, $files );
-
 				}
 
 				// Product Image.
@@ -206,7 +204,6 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 					$image = sanitize_text_field( $row[ $this->field_mapping['featured_image'] ] );
 
 					$this->set_image( $download_id, $image, $args['post_author'] );
-
 				}
 
 				// File download limit.
@@ -240,7 +237,6 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// Custom fields.
-
 				++$i;
 			}
 		}
@@ -277,9 +273,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	private function set_price( $download_id = 0, $price = '' ) {
 
 		if ( is_numeric( $price ) ) {
-
 			update_post_meta( $download_id, 'edd_price', edd_sanitize_amount( $price ) );
-
 		} else {
 
 			$prices = $this->str_to_array( $price );
@@ -376,23 +370,18 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		} elseif ( $is_url ) {
 
 			if ( ! function_exists( 'media_sideload_image' ) ) {
-
 				require_once ABSPATH . 'wp-admin/includes/file.php';
-
 			}
 
 			// Image given by external URL.
 			$url = media_sideload_image( $image, $download_id, '', 'src' );
 
 			if ( ! is_wp_error( $url ) ) {
-
 				$attachment_id = attachment_url_to_postid( $url );
-
 			}
 		} elseif ( false === strpos( $image, '/' ) && edd_get_file_extension( $image ) ) {
 
 			// Image given by name only.
-
 			$upload_dir = wp_upload_dir();
 
 			if ( FileSystem::file_exists( trailingslashit( $upload_dir['path'] ) . $image ) ) {
@@ -406,16 +395,13 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				$files = glob( $upload_dir['basedir'] . '/*/*/*' . $ext );
 				foreach ( $files as $file ) {
 
-					if ( basename( $file ) == $image ) {
-
+					if ( basename( $file ) === $image ) {
 						// Found our file.
 						break;
-
 					}
 
 					// Make sure $file is unset so our empty check below does not return a false positive.
 					unset( $file );
-
 				}
 			}
 
@@ -456,9 +442,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		}
 
 		if ( ! empty( $attachment_id ) ) {
-
 			return set_post_thumbnail( $download_id, $attachment_id );
-
 		}
 
 		return false;
@@ -475,9 +459,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		$terms = $this->maybe_create_terms( $terms, $taxonomy );
 
 		if ( ! empty( $terms ) ) {
-
 			wp_set_object_terms( $download_id, $terms, $taxonomy );
-
 		}
 	}
 
@@ -495,32 +477,23 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 		foreach ( $terms as $term ) {
 
 			if ( is_numeric( $term ) && 0 === (int) $term ) {
-
 				$t = get_term( $term, $taxonomy );
-
 			} else {
 
 				$t = get_term_by( 'name', $term, $taxonomy );
-
 				if ( ! $t ) {
-
 					$t = get_term_by( 'slug', $term, $taxonomy );
-
 				}
 			}
 
 			if ( ! empty( $t ) ) {
-
 				$term_ids[] = $t->term_id;
-
 			} else {
 
 				$term_data = wp_insert_term( $term, $taxonomy, array( 'slug' => sanitize_title( $term ) ) );
 
 				if ( ! is_wp_error( $term_data ) ) {
-
 					$term_ids[] = $term_data['term_id'];
-
 				}
 			}
 		}

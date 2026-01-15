@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.5.1
  */
 class GatewayEarnings extends Pie {
+	use Traits\Gateway;
 
 	/**
 	 * The key for the dataset.
@@ -66,45 +67,5 @@ class GatewayEarnings extends Pie {
 		);
 
 		return $stats->get_gateway_earnings( $args );
-	}
-
-	/**
-	 * Gets the labels for the pie chart.
-	 *
-	 * @since 3.5.1
-	 * @return array
-	 */
-	protected function get_labels(): array {
-		return array_map( 'edd_get_gateway_admin_label', $this->get_pieces() );
-	}
-
-	/**
-	 * Gets the pieces for the pie chart.
-	 *
-	 * @since 3.5.1
-	 * @return array
-	 */
-	protected function get_pieces(): array {
-		return array_keys( edd_get_payment_gateways() );
-	}
-
-	/**
-	 * Processes the query results to populate the data and labels arrays.
-	 *
-	 * @since 3.5.1
-	 * @param array $query_results Database query results.
-	 * @return array
-	 */
-	protected function process_results( array $query_results ): array {
-		$gateways = array_fill_keys( $this->get_pieces(), 0.00 );
-
-		// Populate with actual data from query results.
-		foreach ( $query_results as $result ) {
-			if ( isset( $gateways[ $result->gateway ] ) ) {
-				$gateways[ $result->gateway ] = floatval( $result->earnings );
-			}
-		}
-
-		return array_values( $gateways );
 	}
 }

@@ -43,6 +43,7 @@ class StatusBadge {
 				'dashicon' => true,
 				'class'    => '',
 				'position' => 'after',
+				'tooltip'  => '',
 			)
 		);
 	}
@@ -62,12 +63,18 @@ class StatusBadge {
 			$icon = $this->get_icon();
 		}
 
+		$tooltip_attr = '';
+		if ( ! empty( $this->args['tooltip'] ) ) {
+			$tooltip_attr = sprintf( ' title="%s"', esc_attr( $this->args['tooltip'] ) );
+		}
+
 		return sprintf(
-			'<span class="%1$s">%4$s<span class="edd-status-badge__text">%2$s</span>%3$s</span>',
+			'<span class="%1$s"%5$s>%4$s<span class="edd-status-badge__text">%2$s</span>%3$s</span>',
 			$this->get_class_string( $this->get_classes() ),
 			esc_html( $this->args['label'] ),
 			'after' === $this->args['position'] ? $icon : '',
-			'before' === $this->args['position'] ? $icon : ''
+			'before' === $this->args['position'] ? $icon : '',
+			$tooltip_attr
 		);
 	}
 
@@ -119,6 +126,12 @@ class StatusBadge {
 			"edd-status-badge--{$this->args['status']}",
 			$this->get_color_class(),
 		);
+
+		// Add tooltip class for jQuery UI tooltip styling.
+		if ( ! empty( $this->args['tooltip'] ) ) {
+			$classes[] = 'edd-help-tip';
+		}
+
 		if ( is_array( $this->args['class'] ) ) {
 			$classes = array_merge( $classes, $this->args['class'] );
 		} elseif ( ! empty( $this->args['class'] ) ) {

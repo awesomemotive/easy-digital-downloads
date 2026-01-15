@@ -51,4 +51,40 @@
 		color: colors.$wp-blue-500;
 		background: #e5f1f5;
 	}
+
+	// Reset edd-help-tip styles when used on status badges for tooltips.
+	// Use !important to override the edd-help-tip color since inherit doesn't work here.
+	&.edd-help-tip {
+		font-size: inherit !important;
+		margin-top: 0;
+		cursor: help;
+
+		&.edd-status-badge--warning,
+		&.edd-status-badge--yellow,
+		&.edd-status-badge--pending {
+			color: colors.$wp-yellow-50 !important;
+		}
+
+		&.edd-status-badge--success,
+		&.edd-status-badge--green,
+		&.edd-status-badge--complete,
+		&.edd-status-badge--active {
+			color: #017d5c !important;
+		}
+
+		&.edd-status-badge--info,
+		&.edd-status-badge--blue {
+			color: colors.$wp-blue-500 !important;
+		}
+
+		&.edd-status-badge--error,
+		&.edd-status-badge--red,
+		&.edd-status-badge--failed {
+			color: #ac3d3d !important;
+		}
+
+		&.edd-status-badge--default {
+			color: inherit !important;
+		}
+	}
 }

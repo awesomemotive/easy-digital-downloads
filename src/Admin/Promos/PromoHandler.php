@@ -41,6 +41,7 @@ class PromoHandler implements SubscriberInterface {
 		'\\EDD\\Admin\\Promos\\Notices\\Recurring',
 		'\\EDD\\Admin\\Promos\\Notices\\PriceChanges',
 		'\\EDD\\Admin\\Promos\\Notices\\SquareWebhooksModal',
+		'\\EDD\\Admin\\Promos\\Notices\\LogPruningConfirmModal',
 		'\\EDD\\Admin\\Promos\\Notices\\EmptyCartBehavior',
 		'\\EDD\\Admin\\Promos\\Notices\\VATHandling',
 	);
@@ -205,7 +206,12 @@ class PromoHandler implements SubscriberInterface {
 			$content .= ob_get_clean();
 		}
 
-		wp_send_json_success( $content );
+		wp_send_json_success(
+			array(
+				'content'      => $content,
+				'border_color' => $notice->get_border_color(),
+			)
+		);
 	}
 
 	/**

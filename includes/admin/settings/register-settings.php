@@ -1837,6 +1837,11 @@ function edd_add_setting_tooltip( $html = '', $args = array() ) {
 		return $html;
 	}
 
+	// If edd-help-tip class is already in the html, return the html.
+	if ( false !== strpos( $html, 'edd-help-tip' ) ) {
+		return $html;
+	}
+
 	$args      = wp_parse_args(
 		$args,
 		array(

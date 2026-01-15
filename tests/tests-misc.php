@@ -511,6 +511,67 @@ class Misc extends EDD_UnitTestCase {
 		$this->assertTrue( edd_purchase_form_validate_cc_zip( '12345', 'SE' ) );
 	}
 
+	/**
+	 * Test that postal code validation returns true when country code is empty.
+	 *
+	 * When the Country field is disabled in checkout settings, no country code
+	 * is provided. In this case, we cannot validate against country-specific
+	 * patterns, so we should return true to allow the purchase to proceed.
+	 *
+	 * @since 3.6.4
+	 * @see https://github.com/awesomemotive/easy-digital-downloads-pro/issues/2172
+	 */
+	function test_postal_codes_empty_country_returns_true() {
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( '12345', '' ) );
+	}
+
+	/**
+	 * Test that postal code validation returns true with various zip formats when country is empty.
+	 *
+	 * @since 3.6.4
+	 * @see https://github.com/awesomemotive/easy-digital-downloads-pro/issues/2172
+	 */
+	function test_postal_codes_empty_country_various_formats() {
+		// US-style zip
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( '90210', '' ) );
+
+		// UK-style postcode
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 'SW1A 1AA', '' ) );
+
+		// Canadian-style postal code
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 'K1A 0B1', '' ) );
+
+		// German-style postal code
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( '10115', '' ) );
+	}
+
+	/**
+	 * Test that postal code validation returns false when zip is empty.
+	 *
+	 * @since 3.6.4
+	 */
+	function test_postal_codes_empty_zip_returns_false() {
+		$this->assertFalse( edd_purchase_form_validate_cc_zip( '', 'US' ) );
+		$this->assertFalse( edd_purchase_form_validate_cc_zip( '', '' ) );
+		$this->assertFalse( edd_purchase_form_validate_cc_zip( 0, 'US' ) );
+	}
+
+	/**
+	 * Test that postal code validation still works correctly when country is provided.
+	 *
+	 * @since 3.6.4
+	 */
+	function test_postal_codes_with_country_still_validates() {
+		// Valid US zip
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( '90210', 'US' ) );
+
+		// Invalid US zip (too short)
+		$this->assertFalse( edd_purchase_form_validate_cc_zip( '123', 'US' ) );
+
+		// Valid UK postcode
+		$this->assertTrue( edd_purchase_form_validate_cc_zip( 'SW1A 1AA', 'GB' ) );
+	}
+
 	private function write_test_file( $full_file_path ) {
 		$file = FileSystem::fopen( $full_file_path, "w" );
 		fwrite( $file,"" );

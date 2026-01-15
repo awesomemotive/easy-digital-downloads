@@ -59,6 +59,7 @@ class Manager implements SubscriberInterface {
 	private function get_routes() {
 		return array(
 			new Routes\Cart(),
+			new Routes\LogPruning(),
 		);
 	}
 }

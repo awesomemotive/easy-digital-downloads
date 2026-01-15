@@ -2075,3 +2075,52 @@ function edd_tools_enabled_betas_save() {
 function edd_tools_enabled_betas_sanitize_value( $value ) {
 	return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 }
+
+/**
+ * Default Log Views
+ *
+ * Wrapper for the Logs class method.
+ *
+ * @since 1.4
+ * @deprecated 3.6.4 Use \EDD\Admin\Tools\Logs::get_default_views() instead.
+ *
+ * @return array $views Log Views
+ */
+function edd_log_default_views() {
+	_edd_deprecated_function( __FUNCTION__, '3.6.4', '\EDD\Admin\Tools\Logs::get_default_views()' );
+
+	return \EDD\Admin\Tools\Logs::get_default_views();
+}
+
+/**
+ * Renders the Reports page views drop down
+ *
+ * @since 1.3
+ * @since 3.0 Deprecated, and modified to look like the 3.0 approach
+ * @deprecated 3.6.4 Moved to PSR-4 class structure
+ *
+ * @return void
+ */
+function edd_log_views() {
+	_edd_deprecated_function( __FUNCTION__, '3.6.4' );
+
+	static $once = false;
+
+	// Only once
+	if ( true === $once ) {
+		return;
+	}
+
+	// Only once
+	$once = true; ?>
+
+	<!-- EDD 3.0 Hack -->
+	</div></div>
+	<form method="get" class="edd-old-log-filters" action="<?php echo esc_url( edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) ); ?>">
+		<?php edd_admin_filter_bar( 'old_logs' ); ?>
+	</form>
+	<div class="tablenav top"><div>
+	<!-- EDD 3.0 Hack -->
+
+<?php
+}

@@ -1448,46 +1448,59 @@ add_filter( 'edd_batch_memory_limit', 'edd_set_batch_memory_limit' );
  * @param string $context
  */
 function edd_admin_filter_bar( $context = '', $item = null ) {
+	// Capture the filter bar content to check if it's empty.
+	ob_start();
 
-	?><div class="wp-filter" id="edd-filters">
-	<?php
+	/**
+	 * Fires before filtered items, usually unused
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $context
+	 */
+	do_action( "edd_before_admin_filter_bar_{$context}", $item );
 
-		/**
-		 * Fires before filtered items, usually unused
-		 *
-		 * @since 3.0
-		 *
-		 * @param string $context
-		 */
-		do_action( "edd_before_admin_filter_bar_{$context}", $item );
+	$before_content = ob_get_clean();
+
+	ob_start();
+
+	/**
+	 * Output filter bar items, used primarily for selects/inputs/buttons
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $context
+	 */
+	do_action( "edd_admin_filter_bar_{$context}", $item );
+
+	$filter_content = ob_get_clean();
+
+	ob_start();
+
+	/**
+	 * Fires after filtered items, usually used by search boxes
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $context
+	 */
+	do_action( "edd_after_admin_filter_bar_{$context}", $item );
+
+	$after_content = ob_get_clean();
+
+	// Only render the filter bar if there's actual content.
+	$has_content = trim( $before_content . $filter_content . $after_content );
+	if ( empty( $has_content ) ) {
+		return;
+	}
 
 	?>
+	<div class="wp-filter" id="edd-filters">
+		<?php echo $before_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		<div class="filter-items">
-		<?php
-
-			/**
-			 * Output filter bar items, used primarily for selects/inputs/buttons
-			 *
-			 * @since 3.0
-			 *
-			 * @param string $context
-			 */
-			do_action( "edd_admin_filter_bar_{$context}", $item );
-
-		?>
+			<?php echo $filter_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
-		<?php
-
-		/**
-		 * Fires after filtered items, usually used by search boxes
-		 *
-		 * @since 3.0
-		 *
-		 * @param string $context
-		 */
-		do_action( "edd_after_admin_filter_bar_{$context}", $item );
-
-		?>
+		<?php echo $after_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 	<?php
 }
