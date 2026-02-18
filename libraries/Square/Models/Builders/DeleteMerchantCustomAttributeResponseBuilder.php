@@ -26,7 +26,7 @@ class DeleteMerchantCustomAttributeResponseBuilder
     }
 
     /**
-     * Initializes a new Delete Merchant Custom Attribute Response Builder object.
+     * Initializes a new Delete Merchant Custom EDD_EDD_Attribute Response Builder object.
      */
     public static function init(): self
     {
@@ -45,7 +45,7 @@ class DeleteMerchantCustomAttributeResponseBuilder
     }
 
     /**
-     * Initializes a new Delete Merchant Custom Attribute Response object.
+     * Initializes a new Delete Merchant Custom EDD_EDD_Attribute Response object.
      */
     public function build(): DeleteMerchantCustomAttributeResponse
     {

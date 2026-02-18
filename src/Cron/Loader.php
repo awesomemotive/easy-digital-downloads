@@ -14,6 +14,8 @@ namespace EDD\Cron;
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\EventManagement\SubscriberInterface;
+use EDD\Cron\Schedulers;
+use EDD\Cron\Migrator;
 
 /**
  * Loader Class
@@ -38,11 +40,19 @@ class Loader implements SubscriberInterface {
 	/**
 	 * Add our custom schedules to the cron schedules.
 	 *
+	 * When Action Scheduler is available, EDD schedules are not added here; interval
+	 * lookup is done via Handler::get_schedule_interval() and the edd_cron_schedules filter.
+	 *
 	 * @since 3.3.0
 	 *
+	 * @param array $schedules Existing cron schedules.
 	 * @return array
 	 */
 	public function load_schedules( $schedules ) {
+		if ( Schedulers\Handler::is_using_action_scheduler() ) {
+			return $schedules;
+		}
+
 		foreach ( $this->get_registered_schedules() as $schedule ) {
 			// If this isn't a subclass of Schedule, skip it.
 			if ( ! is_subclass_of( $schedule, 'EDD\Cron\Schedules\Schedule' ) ) {
@@ -70,6 +80,7 @@ class Loader implements SubscriberInterface {
 	 * @return void
 	 */
 	public function load_events() {
+		$this->maybe_migrate_to_action_scheduler();
 		foreach ( $this->get_registered_events() as $event ) {
 			// If this isn't a subclass of Event, skip it.
 			if ( ! is_subclass_of( $event, 'EDD\Cron\Events\Event' ) ) {
@@ -120,48 +131,13 @@ class Loader implements SubscriberInterface {
 	}
 
 	/**
-	 * Get the registered schedules.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @return array
-	 */
-	private function get_registered_schedules() {
-		$registered_schedules = array();
-
-		/**
-		 * Filter the registered cron schedules.
-		 *
-		 * @since 3.3.0
-		 *
-		 * @param array $registered_schedules The currently registered cron schedules.
-		 *
-		 * Example:
-		 * add_filter( 'edd_cron_schedules', function( $registered_schedules ) {
-		 *    $registered_schedules[] = new MyCustomSchedule();
-		 *   return $registered_schedules;
-		 * } );
-		 *
-		 * @return array
-		 */
-		$registered_schedules = apply_filters( 'edd_cron_schedules', $registered_schedules );
-
-		// Since we have a filter here, if something goes wrong return an empty array.
-		if ( ! is_array( $registered_schedules ) ) {
-			return array();
-		}
-
-		return $registered_schedules;
-	}
-
-	/**
 	 * Get the registered events.
 	 *
 	 * @since 3.3.0
 	 *
 	 * @return array
 	 */
-	private function get_registered_events() {
+	public static function get_registered_events() {
 		$registered_events = array(
 			new Events\DailyEvents(),
 			new Events\WeeklyEvents(),
@@ -201,7 +177,7 @@ class Loader implements SubscriberInterface {
 	 *
 	 * @return array
 	 */
-	private function get_registered_components() {
+	public static function get_registered_components() {
 		// Register our components.
 		$components_to_register = array(
 			Components\Cart::class,
@@ -240,5 +216,67 @@ class Loader implements SubscriberInterface {
 		}
 
 		return $components_to_register;
+	}
+
+	/**
+	 * Get the registered schedules.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @return array
+	 */
+	private function get_registered_schedules() {
+		$registered_schedules = array();
+
+		/**
+		 * Filter the registered cron schedules.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param array $registered_schedules The currently registered cron schedules.
+		 *
+		 * Example:
+		 * add_filter( 'edd_cron_schedules', function( $registered_schedules ) {
+		 *    $registered_schedules[] = new MyCustomSchedule();
+		 *   return $registered_schedules;
+		 * } );
+		 *
+		 * @return array
+		 */
+		$registered_schedules = apply_filters( 'edd_cron_schedules', $registered_schedules );
+
+		// Since we have a filter here, if something goes wrong return an empty array.
+		if ( ! is_array( $registered_schedules ) ) {
+			return array();
+		}
+
+		return $registered_schedules;
+	}
+
+	/**
+	 * Maybe migrate cron events to Action Scheduler.
+	 *
+	 * Runs on 'init' hook at priority 999 to ensure cron events are loaded first.
+	 *
+	 * @since 3.6.5
+	 */
+	public function maybe_migrate_to_action_scheduler() {
+		// Only run once.
+		if ( edd_has_upgrade_completed( 'migrate_to_action_scheduler' ) ) {
+			return;
+		}
+
+		// Only run if Action Scheduler is available.
+		if ( ! Schedulers\ActionScheduler::is_available() ) {
+			return;
+		}
+
+		// Run the migration.
+		$migration_result = Migrator::migrate_to_action_scheduler();
+
+		// Mark as complete if successful.
+		if ( $migration_result ) {
+			edd_set_upgrade_complete( 'migrate_to_action_scheduler' );
+		}
 	}
 }

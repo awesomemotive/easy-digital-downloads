@@ -28,6 +28,9 @@ module.exports = function ( grunt ) {
 		'!includes/blocks/package.json',
 		'!includes/blocks/package-lock.json',
 		'!node_modules/**',
+		'!libraries/action-scheduler/.github/**',
+		'!libraries/action-scheduler/docs/**',
+		'!libraries/action-scheduler/tests/**',
 	];
 
 	// Project configuration.

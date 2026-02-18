@@ -32,7 +32,7 @@ class ListCustomerCustomAttributeDefinitionsResponse implements \JsonSerializabl
     private $errors;
 
     /**
-     * Returns Custom Attribute Definitions.
+     * Returns Custom EDD_EDD_Attribute Definitions.
      * The retrieved custom attribute definitions. If no custom attribute definitions are found,
      * EDD\Vendor\Square returns an empty object (`{}`).
      *
@@ -44,7 +44,7 @@ class ListCustomerCustomAttributeDefinitionsResponse implements \JsonSerializabl
     }
 
     /**
-     * Sets Custom Attribute Definitions.
+     * Sets Custom EDD_EDD_Attribute Definitions.
      * The retrieved custom attribute definitions. If no custom attribute definitions are found,
      * EDD\Vendor\Square returns an empty object (`{}`).
      *

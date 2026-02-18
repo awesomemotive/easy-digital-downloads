@@ -5,6 +5,7 @@
  */
 import { render as lineChartRender } from './line.js';
 import { render as pieChartRender } from './pie.js';
+import { render as barChartRender } from './bar.js';
 import { isPieChart } from './utils.js';
 
 // Access existing global `edd` variable, or create a new object.
@@ -20,6 +21,8 @@ window.edd = window.edd || {};
 window.edd.renderChart = ( config ) => {
 	if ( isPieChart( config ) ) {
 		pieChartRender( config );
+	} else if ( config.type === 'bar' ) {
+		barChartRender( config );
 	} else {
 		lineChartRender( config );
 	}

@@ -263,4 +263,91 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 	public function test_class_instantiation() {
 		$this->assertInstanceOf( StripePaymentMethods::class, $this->table );
 	}
+
+	/**
+	 * Test that get_all_payment_methods includes legacy methods.
+	 *
+	 * Historical transactions may use deprecated payment methods like Sofort.
+	 * These should still appear in reports.
+	 *
+	 * @covers ::get_all_payment_methods
+	 * @since 3.6.5
+	 */
+	public function test_get_all_payment_methods_includes_legacy_methods() {
+		// Use reflection to access private method.
+		$reflection = new \ReflectionClass( $this->table );
+		$method     = $reflection->getMethod( 'get_all_payment_methods' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $this->table );
+
+		// Should include Sofort as a legacy method for historical data.
+		$this->assertArrayHasKey( 'sofort', $result );
+		$this->assertSame( 'Sofort (Legacy)', $result['sofort'] );
+	}
+
+	/**
+	 * Test that get_all_payment_methods includes active payment methods.
+	 *
+	 * @covers ::get_all_payment_methods
+	 * @since 3.6.5
+	 */
+	public function test_get_all_payment_methods_includes_active_methods() {
+		// Use reflection to access private method.
+		$reflection = new \ReflectionClass( $this->table );
+		$method     = $reflection->getMethod( 'get_all_payment_methods' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $this->table );
+
+		// Should include active payment methods.
+		$this->assertArrayHasKey( 'card', $result );
+		$this->assertArrayHasKey( 'klarna', $result );
+		$this->assertArrayHasKey( 'link', $result );
+	}
+
+	/**
+	 * Test that get_all_payment_methods returns combined active and legacy methods.
+	 *
+	 * @covers ::get_all_payment_methods
+	 * @since 3.6.5
+	 */
+	public function test_get_all_payment_methods_merges_active_and_legacy() {
+		// Use reflection to access private method.
+		$reflection = new \ReflectionClass( $this->table );
+		$method     = $reflection->getMethod( 'get_all_payment_methods' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $this->table );
+
+		// Get counts from source arrays.
+		$active_count = count( \EDD\Gateways\Stripe\PaymentMethods::list() );
+		$legacy_count = count( \EDD\Gateways\Stripe\PaymentMethods::get_legacy_methods() );
+
+		// Result should contain all methods from both arrays.
+		$this->assertCount( $active_count + $legacy_count, $result );
+	}
+
+	/**
+	 * Test that get_meta_query handles legacy payment method (sofort).
+	 *
+	 * This ensures historical Sofort transactions can be queried in reports.
+	 *
+	 * @covers ::get_meta_query
+	 * @since 3.6.5
+	 */
+	public function test_get_meta_query_for_legacy_sofort_method() {
+		// Use reflection to access private method.
+		$reflection = new \ReflectionClass( $this->table );
+		$method     = $reflection->getMethod( 'get_meta_query' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $this->table, 'sofort' );
+
+		$this->assertIsArray( $result );
+		$this->assertCount( 1, $result );
+		$this->assertSame( 'stripe_payment_method_type', $result[0]['key'] );
+		$this->assertSame( 'sofort', $result[0]['value'] );
+		$this->assertSame( '=', $result[0]['compare'] );
+	}
 }

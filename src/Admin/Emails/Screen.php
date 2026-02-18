@@ -66,7 +66,7 @@ class Screen {
 	 *
 	 * @since 3.3.0
 	 */
-	private static function enqueue() {
+	protected static function enqueue() {
 		if ( empty( $_GET['email'] ) ) {
 			$script = 'edd-admin-emails-list-table';
 		} else {
@@ -90,7 +90,7 @@ class Screen {
 	 * Renders the email editor.
 	 *
 	 * @since 3.3.0
-	 * @throws Exception
+	 * @throws Exception If the email ID is missing or invalid.
 	 */
 	private static function render_email_editor() {
 		try {
@@ -135,11 +135,11 @@ class Screen {
 	 * @return void
 	 */
 	private static function render_settings() {
-		wp_enqueue_script( 'edd-admin-settings' );
 		$tab = self::get_current_tab();
 		if ( 'settings' === $tab ) {
 			$tab = 'main';
 		}
+		wp_enqueue_script( 'edd-admin-settings' );
 		?>
 
 		<div class="edd-settings-content">

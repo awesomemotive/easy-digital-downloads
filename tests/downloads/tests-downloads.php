@@ -32,9 +32,9 @@ class Downloads extends EDD_UnitTestCase {
 	public function test_get_download() {
 		$out = edd_get_download( $this->_post->ID );
 
-		$this->assertObjectHasAttribute( 'ID', $out );
-		$this->assertObjectHasAttribute( 'post_title', $out );
-		$this->assertObjectHasAttribute( 'post_type', $out );
+		$this->assertObjectHasProperty( 'ID', $out );
+		$this->assertObjectHasProperty( 'post_title', $out );
+		$this->assertObjectHasProperty( 'post_type', $out );
 
 		$this->assertEquals( $out->post_type, $this->_post->post_type );
 	}
@@ -48,9 +48,9 @@ class Downloads extends EDD_UnitTestCase {
 	public function test_get_download_by_name() {
 		$out = edd_get_download( $this->_post->post_name );
 
-		$this->assertObjectHasAttribute( 'ID', $out );
-		$this->assertObjectHasAttribute( 'post_title', $out );
-		$this->assertObjectHasAttribute( 'post_type', $out );
+		$this->assertObjectHasProperty( 'ID', $out );
+		$this->assertObjectHasProperty( 'post_title', $out );
+		$this->assertObjectHasProperty( 'post_type', $out );
 
 		$this->assertEquals( 'Variable Test Download Product', $out->get_name() );
 	}

@@ -1,33 +1,27 @@
-/* global eddEmailTagsInserter, tb_remove, tb_position, send_to_editor, _, window, document */
+/* global eddEmailTagsInserter, send_to_editor, _, window, document */
 
 /**
  * Internal dependencies.
  */
+import { setupEddModal } from '@easy-digital-downloads/modal';
 import { searchItems } from './utils.js';
 
 /**
  * Make tags clickable and send them to the email content (wp_editor()).
+ *
+ * @param {Object} modalApi From setupEddModal; used to close the dialog on insert.
  */
-function setupEmailTags() {
-	// Find all of the buttons.
+function setupEmailTags( modalApi ) {
 	const insertButtons = document.querySelectorAll( '.edd-email-tags-list-button' );
-	if ( ! insertButtons ) {
+	if ( ! insertButtons.length ) {
 		return;
 	}
 
-	/**
-	 * Listen for clicks on tag buttons.
-	 *
-	 * @param {object} node Button node.
-	 */
 	_.each( insertButtons, function( node ) {
-		/**
-		 * Listen for clicks on tag buttons.
-		 */
 		node.addEventListener( 'click', function() {
-			// Close Thickbox.
-			tb_remove();
-
+			if ( modalApi && typeof modalApi.close === 'function' ) {
+				modalApi.close();
+			}
 			window.send_to_editor( node.dataset.to_insert );
 		} );
 	} );
@@ -69,24 +63,20 @@ function setupEmailTagNavigation() {
 }
 
 /**
- * Focus on the search input when the tags inserter is opened.
+ * Focus and reset the search input when the dialog is opened (used as onOpen callback).
+ *
+ * @param {HTMLDialogElement} dialog The modal dialog element.
  */
-function setupEmailTagSearchFocus() {
-	const tagInserter = document.querySelector( '.edd-email-tags-inserter' );
-	if ( ! tagInserter ) {
+function focusSearchOnOpen( dialog ) {
+	if ( ! dialog ) {
 		return;
 	}
-
-	tagInserter.addEventListener( 'click', () => {
-		setTimeout( () => {
-			const filterInput = document.querySelector( '.edd-email-tags-filter-search' );
-			if ( filterInput ) {
-				filterInput.value = '';
-				filterInput.dispatchEvent( new Event( 'input' ) );
-				filterInput.focus();
-			}
-		}, 10 );
-	} );
+	const filterInput = dialog.querySelector( '.edd-email-tags-filter-search' );
+	if ( filterInput ) {
+		filterInput.value = '';
+		filterInput.dispatchEvent( new Event( 'input' ) );
+		filterInput.focus();
+	}
 }
 
 /**
@@ -160,23 +150,18 @@ function handleNavigation( direction ) {
  * DOM ready.
  */
 document.addEventListener( 'DOMContentLoaded', function() {
-	// Resize Thickbox when media button is clicked.
-	const mediaButton = document.querySelector( '.edd-email-tags-inserter' );
-	if ( ! mediaButton ) {
+	// Use selector + dialogId so delegation works when the button/dialog are added later (e.g. onboarding step via AJAX).
+	const modalApi = setupEddModal( {
+		trigger: '.edd-email-tags-inserter',
+		dialogId: 'edd-insert-email-tag-dialog',
+		onOpen: focusSearchOnOpen,
+	} );
+
+	if ( ! modalApi ) {
 		return;
 	}
 
-	mediaButton.addEventListener( 'click', tb_position );
-
-	// Clickable tags.
-	setupEmailTags();
-
-	// Search tags.
+	setupEmailTags( modalApi );
 	setupEmailTagSearch();
-
-	// Search tags navigation.
 	setupEmailTagNavigation();
-
-	// Search tags input focus.
-	setupEmailTagSearchFocus();
 } );

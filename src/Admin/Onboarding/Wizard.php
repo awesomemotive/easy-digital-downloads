@@ -386,7 +386,7 @@ class Wizard implements \EDD\EventManagement\SubscriberInterface {
 		<?php wp_nonce_field( 'edd_onboarding_wizard' ); ?>
 		<div class="edd-onboarding wrap">
 			<div class="edd-onboarding__logo">
-				<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/logo-edd-dark.svg' ); ?>" alt="">
+				<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/edd-cart-logo-dark.svg' ); ?>" alt="">
 			</div>
 			<div class="edd-onboarding__wrapper">
 				<div class="edd-onboarding__loading" style="display: none;">
@@ -570,17 +570,17 @@ class Wizard implements \EDD\EventManagement\SubscriberInterface {
 			<div class="edd-onboarding__single-step-footer">
 				<div>
 					<?php if ( $pagination['previous'] ) : ?>
-						<button class="edd-onboarding__button-back">← <?php echo esc_html_e( 'Go Back', 'easy-digital-downloads' ); ?></button>
+						<button class="edd-onboarding__button-back">← <?php esc_html_e( 'Go Back', 'easy-digital-downloads' ); ?></button>
 					<?php endif; ?>
 				</div>
 				<div>
-					<button class="button button-secondary button-hero edd-onboarding__button-skip-step"><?php echo esc_html_e( 'Skip this step', 'easy-digital-downloads' ); ?></button>
-					<button class="button button-primary button-hero edd-onboarding__button-save-step"><?php echo esc_html_e( 'Save & Continue', 'easy-digital-downloads' ); ?></button>
+					<button class="button button-secondary button-hero edd-onboarding__button-skip-step"><?php esc_html_e( 'Skip this step', 'easy-digital-downloads' ); ?></button>
+					<button class="button button-primary button-hero edd-onboarding__button-save-step"><?php esc_html_e( 'Save & Continue', 'easy-digital-downloads' ); ?></button>
 				</div>
 			</div>
 		</div>
 		<div class="edd-onboarding__close-and-exit">
-			<button class="<?php echo esc_attr( implode( ' ', $this->get_close_exit_button_classes() ) ); ?>"><?php echo esc_html_e( 'Close and Exit Without Saving', 'easy-digital-downloads' ); ?></button>
+			<button class="<?php echo esc_attr( implode( ' ', $this->get_close_exit_button_classes() ) ); ?>"><?php esc_html_e( 'Close and Exit Without Saving', 'easy-digital-downloads' ); ?></button>
 		</div>
 		<input type="hidden" id="edd-onboarding__exit" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download' ) ); ?>" />
 		<?php

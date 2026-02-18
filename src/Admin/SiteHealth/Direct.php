@@ -31,7 +31,7 @@ class Direct extends Test {
 		}
 
 		$tests['edd_cron_enabled'] = array(
-			'label' => __( 'Cron Events', 'easy-digital-downloads' ),
+			'label' => __( 'Scheduled Events', 'easy-digital-downloads' ),
 			'test'  => array( $this, 'get_test_cron_enabled' ),
 		);
 

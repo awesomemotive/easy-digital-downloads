@@ -60,6 +60,7 @@ class Manager implements SubscriberInterface {
 		return array(
 			new Routes\Cart(),
 			new Routes\LogPruning(),
+			new Routes\BounceWebhook(),
 		);
 	}
 }

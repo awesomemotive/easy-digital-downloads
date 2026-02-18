@@ -74,6 +74,7 @@ final class Registry {
 				'has_warning'      => $file_downloads_has_warning,
 				'default_days'     => 90,
 				'description'      => $file_downloads_description,
+				'component'        => 'log_file_download',
 			),
 			'gateway_errors' => array(
 				'label'            => __( 'Payment Errors', 'easy-digital-downloads' ),
@@ -85,6 +86,7 @@ final class Registry {
 				'prunable'         => true,
 				'default_days'     => 30,
 				'description'      => __( 'Gateway and payment error logs.', 'easy-digital-downloads' ),
+				'component'        => 'log',
 			),
 			'api_requests' => array(
 				'label'            => __( 'API Requests', 'easy-digital-downloads' ),
@@ -95,6 +97,7 @@ final class Registry {
 				'prunable'         => true,
 				'default_days'     => 60,
 				'description'      => __( 'REST API request logs.', 'easy-digital-downloads' ),
+				'component'        => 'log_api_request',
 			),
 			'emails' => array(
 				'label'            => __( 'Email Logs', 'easy-digital-downloads' ),
@@ -105,6 +108,7 @@ final class Registry {
 				'prunable'         => true,
 				'default_days'     => 30,
 				'description'      => __( 'Email sending logs.', 'easy-digital-downloads' ),
+				'component'        => 'log_email',
 			),
 		);
 

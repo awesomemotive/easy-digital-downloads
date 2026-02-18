@@ -5,8 +5,12 @@
  * Checks to see if the environment matches the passed conditions.
  * Supported conditions include:
  *
- * - EDD version number -- either specific versions or wildcards (e.g. "2.x").
+ * - EDD version (e.g. "edd-3-3", "edd-3-x" for wildcards, or legacy "3.x").
  * - Type of license (pass level, à la carte, free).
+ * - Payment gateways (e.g. "gateway-stripe", "gateway-paypal").
+ * - PHP version (e.g. "php-8-2", "php-7-x" for wildcards).
+ * - WordPress version (e.g. "wp-6-4", "wp-6-x" for wildcards).
+ * - Active plugins (e.g. "plugin-edd-recurring", "plugin-edd-software-licensing").
  *
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
@@ -66,7 +70,17 @@ class EnvironmentChecker {
 			return $this->hasLicenseType( $condition );
 		} elseif ( $this->isPaymentGateway( $condition ) ) {
 			return $this->paymentGatewayMatch( array_keys( edd_get_enabled_payment_gateways() ), $condition );
+		} elseif ( $this->isPhpVersion( $condition ) ) {
+			return $this->phpVersionMatch( PHP_VERSION, $condition );
+		} elseif ( $this->isWordPressVersion( $condition ) ) {
+			global $wp_version;
+			return $this->wordPressVersionMatch( $wp_version, $condition );
+		} elseif ( $this->isPluginCondition( $condition ) ) {
+			return $this->pluginIsActive( $condition );
+		} elseif ( $this->isEddVersion( $condition ) ) {
+			return $this->eddVersionMatch( EDD_VERSION, $condition );
 		} elseif ( $this->isVersionNumber( $condition ) ) {
+			// Legacy support for version numbers without prefix (e.g., "3.x").
 			return $this->versionNumbersMatch( EDD_VERSION, $condition );
 		}
 
@@ -222,6 +236,145 @@ class EnvironmentChecker {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Determines if the provided condition is a PHP version condition.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $condition The condition to check.
+	 *
+	 * @return bool
+	 */
+	protected function isPhpVersion( $condition ) {
+		return 'php-' === substr( $condition, 0, 4 );
+	}
+
+	/**
+	 * Determines if the current PHP version matches the condition.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $currentPhpVersion The current PHP version (e.g., "8.2.10").
+	 * @param string $condition         The condition to match (e.g., "php-8-2" or "php-8-x").
+	 *
+	 * @return bool
+	 */
+	public function phpVersionMatch( $currentPhpVersion, $condition ) {
+		$compareVersion = str_replace( 'php-', '', $condition );
+		$compareVersion = str_replace( '-', '.', $compareVersion );
+
+		return $this->versionNumbersMatch( $currentPhpVersion, $compareVersion );
+	}
+
+	/**
+	 * Determines if the provided condition is a WordPress version condition.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $condition The condition to check.
+	 *
+	 * @return bool
+	 */
+	protected function isWordPressVersion( $condition ) {
+		return 'wp-' === substr( $condition, 0, 3 );
+	}
+
+	/**
+	 * Determines if the current WordPress version matches the condition.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $currentWpVersion The current WordPress version (e.g., "6.4.2").
+	 * @param string $condition        The condition to match (e.g., "wp-6-4" or "wp-6-x").
+	 *
+	 * @return bool
+	 */
+	public function wordPressVersionMatch( $currentWpVersion, $condition ) {
+		$compareVersion = str_replace( 'wp-', '', $condition );
+		$compareVersion = str_replace( '-', '.', $compareVersion );
+
+		return $this->versionNumbersMatch( $currentWpVersion, $compareVersion );
+	}
+
+	/**
+	 * Determines if the provided condition is an EDD version condition.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $condition The condition to check.
+	 *
+	 * @return bool
+	 */
+	protected function isEddVersion( $condition ) {
+		return 'edd-' === substr( $condition, 0, 4 );
+	}
+
+	/**
+	 * Determines if the current EDD version matches the condition.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $currentEddVersion The current EDD version (e.g., "3.3.5").
+	 * @param string $condition         The condition to match (e.g., "edd-3-3" or "edd-3-x").
+	 *
+	 * @return bool
+	 */
+	public function eddVersionMatch( $currentEddVersion, $condition ) {
+		$compareVersion = str_replace( 'edd-', '', $condition );
+		$compareVersion = str_replace( '-', '.', $compareVersion );
+
+		return $this->versionNumbersMatch( $currentEddVersion, $compareVersion );
+	}
+
+	/**
+	 * Determines if the provided condition is a plugin condition.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $condition The condition to check.
+	 *
+	 * @return bool
+	 */
+	protected function isPluginCondition( $condition ) {
+		return 'plugin-' === substr( $condition, 0, 7 );
+	}
+
+	/**
+	 * Determines if a plugin matching the condition is active.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $condition The condition to check (e.g., "plugin-edd-recurring").
+	 *
+	 * @return bool
+	 */
+	public function pluginIsActive( $condition ) {
+		$pluginSlug = str_replace( 'plugin-', '', $condition );
+
+		// Check if any active plugin directory matches the slug.
+		$activePlugins = get_option( 'active_plugins', array() );
+		foreach ( $activePlugins as $plugin ) {
+			// $plugin is in format "plugin-folder/plugin-file.php".
+			$pluginDir = dirname( $plugin );
+			if ( $pluginSlug === $pluginDir ) {
+				return true;
+			}
+		}
+
+		// Also check network-activated plugins for multisite.
+		if ( is_multisite() ) {
+			$networkPlugins = get_site_option( 'active_sitewide_plugins', array() );
+			foreach ( array_keys( $networkPlugins ) as $plugin ) {
+				$pluginDir = dirname( $plugin );
+				if ( $pluginSlug === $pluginDir ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 }

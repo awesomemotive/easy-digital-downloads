@@ -114,6 +114,13 @@ class Handler {
 	 * @param string $tag Email tag to remove hook from.
 	 */
 	public function remove( $tag ) {
+		if ( is_array( $tag ) ) {
+			foreach ( $tag as $t ) {
+				$this->remove( $t );
+			}
+			return;
+		}
+
 		if ( ! array_key_exists( $tag, $this->tags ) ) {
 			$tag_name = $this->get_tag_by_name( $tag );
 			if ( $tag_name ) {

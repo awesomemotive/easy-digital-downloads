@@ -26,7 +26,7 @@ class CatalogCustomAttributeDefinitionSelectionConfigBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition Selection Config Builder object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition Selection Config Builder object.
      */
     public static function init(): self
     {
@@ -74,7 +74,7 @@ class CatalogCustomAttributeDefinitionSelectionConfigBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition Selection Config object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition Selection Config object.
      */
     public function build(): CatalogCustomAttributeDefinitionSelectionConfig
     {

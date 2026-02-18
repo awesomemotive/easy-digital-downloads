@@ -25,7 +25,7 @@ class BookingCustomAttributeDeleteRequestBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Delete Request Builder object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Delete Request Builder object.
      *
      * @param string $bookingId
      * @param string $key
@@ -36,7 +36,7 @@ class BookingCustomAttributeDeleteRequestBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Delete Request object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Delete Request object.
      */
     public function build(): BookingCustomAttributeDeleteRequest
     {

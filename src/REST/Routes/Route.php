@@ -13,6 +13,8 @@ namespace EDD\REST\Routes;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+use EDD\REST\Security;
+
 /**
  * Route class
  *
@@ -30,6 +32,22 @@ abstract class Route {
 	 * @var string
 	 */
 	public static $version = 'v3';
+
+	/**
+	 * Controller instance.
+	 *
+	 * @since 3.6.5
+	 * @var Controller
+	 */
+	protected $controller;
+
+	/**
+	 * Security instance.
+	 *
+	 * @since 3.6.5
+	 * @var Security
+	 */
+	protected $security;
 
 	/**
 	 * Register the routes.

@@ -35,7 +35,7 @@ class CatalogQuerySortedAttribute implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Name.
+     * Returns EDD_EDD_Attribute Name.
      * The attribute whose value is used as the sort key.
      */
     public function getAttributeName(): string
@@ -44,7 +44,7 @@ class CatalogQuerySortedAttribute implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Name.
+     * Sets EDD_EDD_Attribute Name.
      * The attribute whose value is used as the sort key.
      *
      * @required
@@ -56,7 +56,7 @@ class CatalogQuerySortedAttribute implements \JsonSerializable
     }
 
     /**
-     * Returns Initial Attribute Value.
+     * Returns Initial EDD_EDD_Attribute Value.
      * The first attribute value to be returned by the query. Ascending sorts will return only
      * objects with this value or greater, while descending sorts will return only objects with this value
      * or less. If unset, start at the beginning (for ascending sorts) or end (for descending sorts).
@@ -70,7 +70,7 @@ class CatalogQuerySortedAttribute implements \JsonSerializable
     }
 
     /**
-     * Sets Initial Attribute Value.
+     * Sets Initial EDD_EDD_Attribute Value.
      * The first attribute value to be returned by the query. Ascending sorts will return only
      * objects with this value or greater, while descending sorts will return only objects with this value
      * or less. If unset, start at the beginning (for ascending sorts) or end (for descending sorts).
@@ -83,7 +83,7 @@ class CatalogQuerySortedAttribute implements \JsonSerializable
     }
 
     /**
-     * Unsets Initial Attribute Value.
+     * Unsets Initial EDD_EDD_Attribute Value.
      * The first attribute value to be returned by the query. Ascending sorts will return only
      * objects with this value or greater, while descending sorts will return only objects with this value
      * or less. If unset, start at the beginning (for ascending sorts) or end (for descending sorts).

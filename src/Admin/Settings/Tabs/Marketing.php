@@ -38,12 +38,6 @@ class Marketing extends Tab {
 	protected function register() {
 		return array(
 			'main' => array(
-				'recapture'                => array(
-					'id'   => 'recapture',
-					'name' => __( 'Abandoned Cart Recovery', 'easy-digital-downloads' ),
-					'desc' => '',
-					'type' => 'recapture',
-				),
 				'campaign_tracker'         => array(
 					'id'      => 'campaign_tracker',
 					'name'    => __( 'Campaign Tracking', 'easy-digital-downloads' ),

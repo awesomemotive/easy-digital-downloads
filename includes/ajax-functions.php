@@ -539,6 +539,13 @@ function edd_ajax_recalculate_taxes() {
 		'total_raw'    => edd_get_cart_total(),
 	);
 
+	/**
+	 * Fires after cart taxes have been recalculated (e.g. when the customer changes country or state on checkout).
+	 *
+	 * @since 3.6.5
+	 */
+	do_action( 'edd_cart_tax_recalculated' );
+
 	echo json_encode( $response );
 
 	edd_die();

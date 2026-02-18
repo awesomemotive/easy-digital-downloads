@@ -27,7 +27,7 @@ class BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequ
     }
 
     /**
-     * Initializes a new Bulk Upsert Customer Custom Attributes Request Customer Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Customer Custom Attributes Request Customer Custom EDD_EDD_Attribute Upsert
      * Request Builder object.
      *
      * @param string $customerId
@@ -62,7 +62,7 @@ class BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequ
     }
 
     /**
-     * Initializes a new Bulk Upsert Customer Custom Attributes Request Customer Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Customer Custom Attributes Request Customer Custom EDD_EDD_Attribute Upsert
      * Request object.
      */
     public function build(): BulkUpsertCustomerCustomAttributesRequestCustomerCustomAttributeUpsertRequest

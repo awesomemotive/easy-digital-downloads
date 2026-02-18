@@ -30,7 +30,7 @@ class CustomerCustomAttributeFilterValueBuilder
     }
 
     /**
-     * Initializes a new Customer Custom Attribute Filter Value Builder object.
+     * Initializes a new Customer Custom EDD_EDD_Attribute Filter Value Builder object.
      */
     public static function init(): self
     {
@@ -135,7 +135,7 @@ class CustomerCustomAttributeFilterValueBuilder
     }
 
     /**
-     * Initializes a new Customer Custom Attribute Filter Value object.
+     * Initializes a new Customer Custom EDD_EDD_Attribute Filter Value object.
      */
     public function build(): CustomerCustomAttributeFilterValue
     {

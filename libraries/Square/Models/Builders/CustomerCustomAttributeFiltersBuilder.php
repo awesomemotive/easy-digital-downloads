@@ -26,7 +26,7 @@ class CustomerCustomAttributeFiltersBuilder
     }
 
     /**
-     * Initializes a new Customer Custom Attribute Filters Builder object.
+     * Initializes a new Customer Custom EDD_EDD_Attribute Filters Builder object.
      */
     public static function init(): self
     {
@@ -54,7 +54,7 @@ class CustomerCustomAttributeFiltersBuilder
     }
 
     /**
-     * Initializes a new Customer Custom Attribute Filters object.
+     * Initializes a new Customer Custom EDD_EDD_Attribute Filters object.
      */
     public function build(): CustomerCustomAttributeFilters
     {

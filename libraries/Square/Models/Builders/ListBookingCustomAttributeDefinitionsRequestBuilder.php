@@ -25,7 +25,7 @@ class ListBookingCustomAttributeDefinitionsRequestBuilder
     }
 
     /**
-     * Initializes a new List Booking Custom Attribute Definitions Request Builder object.
+     * Initializes a new List Booking Custom EDD_EDD_Attribute Definitions Request Builder object.
      */
     public static function init(): self
     {
@@ -73,7 +73,7 @@ class ListBookingCustomAttributeDefinitionsRequestBuilder
     }
 
     /**
-     * Initializes a new List Booking Custom Attribute Definitions Request object.
+     * Initializes a new List Booking Custom EDD_EDD_Attribute Definitions Request object.
      */
     public function build(): ListBookingCustomAttributeDefinitionsRequest
     {

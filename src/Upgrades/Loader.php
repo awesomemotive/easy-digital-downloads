@@ -16,6 +16,14 @@ use EDD\EventManagement\MiniManager;
 class Loader extends MiniManager {
 
 	/**
+	 * The priority to subscribe to.
+	 *
+	 * @since 3.6.5
+	 * @var int
+	 */
+	protected static $priority = 100;
+
+	/**
 	 * Get the event classes.
 	 *
 	 * @since 3.2.10

@@ -120,7 +120,7 @@ class LogStorageCalculator {
 
 		$table      = $type_config['table'];
 		$table_name = $wpdb->prefix . $table;
-		$columns    = self::get_table_columns( $table );
+		$columns    = self::get_table_columns( $table, $type_config );
 
 		if ( empty( $columns ) ) {
 			return 0;
@@ -147,6 +147,11 @@ class LogStorageCalculator {
 				)
 			);
 		} else {
+			// If the table doesn't exist, return 0.
+			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) ) {
+				return 0;
+			}
+
 			// For dedicated tables, calculate the entire table.
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$result = $wpdb->get_var( "SELECT SUM({$sum_expression}) FROM {$table_name}" );
@@ -220,58 +225,53 @@ class LogStorageCalculator {
 	 * @since 3.6.4
 	 *
 	 * @param string $table The table name without prefix.
+	 * @param array  $type_config The log type configuration.
 	 * @return array Array of column names.
 	 */
-	private static function get_table_columns( string $table ): array {
-		$columns = array(
-			'edd_logs'                => array(
-				'object_id',
-				'object_type',
-				'user_id',
-				'type',
-				'title',
-				'content',
-				'date_created',
-				'date_modified',
-				'uuid',
-			),
-			'edd_logs_file_downloads' => array(
-				'product_id',
-				'file_id',
-				'order_id',
-				'price_id',
-				'customer_id',
-				'ip',
-				'user_agent',
-				'date_created',
-				'date_modified',
-				'uuid',
-			),
-			'edd_logs_api_requests'   => array(
-				'user_id',
-				'api_key',
-				'token',
-				'version',
-				'request',
-				'error',
-				'ip',
-				'time',
-				'date_created',
-				'date_modified',
-				'uuid',
-			),
-			'edd_logs_emails'         => array(
-				'object_id',
-				'object_type',
-				'email',
-				'email_id',
-				'subject',
-				'date_created',
-				'date_modified',
-				'uuid',
-			),
-		);
+	private static function get_table_columns( string $table, array $type_config ): array {
+		// First: Check if type_config specifies a component.
+		if ( ! empty( $type_config['component'] ) ) {
+			$schema = edd_get_component_interface( $type_config['component'], 'schema' );
+			if ( $schema && isset( $schema->columns ) ) {
+				$columns = wp_list_pluck( $schema->columns, 'name' );
+
+				return array_filter( $columns, fn( $col ) => 'id' !== $col );
+			}
+		}
+
+		// Second: Try to auto-detect component from table name.
+		$component = self::get_component_from_table( $table );
+		if ( $component ) {
+			$schema = edd_get_component_interface( $component, 'schema' );
+			if ( $schema && isset( $schema->columns ) ) {
+				$columns = wp_list_pluck( $schema->columns, 'name' );
+
+				return array_filter( $columns, fn( $col ) => 'id' !== $col );
+			}
+		}
+
+		// Third: Fall back to filter for backwards compatibility.
+		$columns = apply_filters( 'edd_log_storage_table_columns', array(), $table );
 
 		return $columns[ $table ] ?? array();
+	}
+
+	/**
+	 * Get the component from the table name.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $table The table name.
+	 * @return string The component name.
+	 */
+	private static function get_component_from_table( string $table ): string {
+		$map = array(
+			'edd_logs'                => 'log',
+			'edd_logs_file_downloads' => 'log_file_download',
+			'edd_logs_api_requests'   => 'log_api_request',
+			'edd_logs_emails'         => 'log_email',
+		);
+
+		return apply_filters( 'edd_log_table_component_map', $map )[ $table ] ?? '';
 	}
 }

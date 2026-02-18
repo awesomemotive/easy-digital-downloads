@@ -27,7 +27,7 @@ class CreateLocationCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Create Location Custom Attribute Definition Response Builder object.
+     * Initializes a new Create Location Custom EDD_EDD_Attribute Definition Response Builder object.
      */
     public static function init(): self
     {
@@ -57,7 +57,7 @@ class CreateLocationCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Create Location Custom Attribute Definition Response object.
+     * Initializes a new Create Location Custom EDD_EDD_Attribute Definition Response object.
      */
     public function build(): CreateLocationCustomAttributeDefinitionResponse
     {

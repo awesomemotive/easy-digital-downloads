@@ -319,6 +319,9 @@ abstract class Email {
 			$this->processor = new Base();
 		}
 
+		// Ensure the processor knows about this email object for template access.
+		$this->processor->set_email_object( $this );
+
 		return $this->processor;
 	}
 

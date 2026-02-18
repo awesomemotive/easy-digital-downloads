@@ -136,7 +136,7 @@ class CatalogCustomAttributeDefinition implements \JsonSerializable
 
     /**
      * Returns Description.
-     * Seller-oriented description of the meaning of this Custom Attribute,
+     * Seller-oriented description of the meaning of this Custom EDD_EDD_Attribute,
      * any constraints that the seller should observe, etc. May be displayed as a tooltip in EDD\Vendor\Square UIs.
      */
     public function getDescription(): ?string
@@ -149,7 +149,7 @@ class CatalogCustomAttributeDefinition implements \JsonSerializable
 
     /**
      * Sets Description.
-     * Seller-oriented description of the meaning of this Custom Attribute,
+     * Seller-oriented description of the meaning of this Custom EDD_EDD_Attribute,
      * any constraints that the seller should observe, etc. May be displayed as a tooltip in EDD\Vendor\Square UIs.
      *
      * @maps description
@@ -161,7 +161,7 @@ class CatalogCustomAttributeDefinition implements \JsonSerializable
 
     /**
      * Unsets Description.
-     * Seller-oriented description of the meaning of this Custom Attribute,
+     * Seller-oriented description of the meaning of this Custom EDD_EDD_Attribute,
      * any constraints that the seller should observe, etc. May be displayed as a tooltip in EDD\Vendor\Square UIs.
      */
     public function unsetDescription(): void
@@ -268,7 +268,7 @@ class CatalogCustomAttributeDefinition implements \JsonSerializable
 
     /**
      * Returns String Config.
-     * Configuration associated with Custom Attribute Definitions of type `STRING`.
+     * Configuration associated with Custom EDD_EDD_Attribute Definitions of type `STRING`.
      */
     public function getStringConfig(): ?CatalogCustomAttributeDefinitionStringConfig
     {
@@ -277,7 +277,7 @@ class CatalogCustomAttributeDefinition implements \JsonSerializable
 
     /**
      * Sets String Config.
-     * Configuration associated with Custom Attribute Definitions of type `STRING`.
+     * Configuration associated with Custom EDD_EDD_Attribute Definitions of type `STRING`.
      *
      * @maps string_config
      */
@@ -325,7 +325,7 @@ class CatalogCustomAttributeDefinition implements \JsonSerializable
     }
 
     /**
-     * Returns Custom Attribute Usage Count.
+     * Returns Custom EDD_EDD_Attribute Usage Count.
      * The number of custom attributes that reference this
      * custom attribute definition. Set by the server in response to a ListCatalog
      * request with `include_counts` set to `true`.  If the actual count is greater
@@ -337,7 +337,7 @@ class CatalogCustomAttributeDefinition implements \JsonSerializable
     }
 
     /**
-     * Sets Custom Attribute Usage Count.
+     * Sets Custom EDD_EDD_Attribute Usage Count.
      * The number of custom attributes that reference this
      * custom attribute definition. Set by the server in response to a ListCatalog
      * request with `include_counts` set to `true`.  If the actual count is greater

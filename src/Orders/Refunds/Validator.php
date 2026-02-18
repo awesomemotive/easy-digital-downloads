@@ -425,8 +425,13 @@ class Validator {
 				throw new Exception( $error_message );
 			}
 
-			if ( 'total' === $column_name && $attempted_amount < $maximum_refundable_amounts['total'] ) {
-				$item_status = 'partially_refunded';
+			if ( 'total' === $column_name ) {
+				$attempted_total = (float) edd_sanitize_amount( $attempted_amount );
+				$maximum_total   = (float) edd_sanitize_amount( $maximum_refundable_amounts['total'] );
+
+				if ( $attempted_total < $maximum_total ) {
+					$item_status = 'partially_refunded';
+				}
 			}
 
 			// If this is an adjustment, and it's _credit_, negate the amount because credit _reduces_ the total.

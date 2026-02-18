@@ -27,7 +27,7 @@ class RetrieveMerchantCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Retrieve Merchant Custom Attribute Definition Response Builder object.
+     * Initializes a new Retrieve Merchant Custom EDD_EDD_Attribute Definition Response Builder object.
      */
     public static function init(): self
     {
@@ -57,7 +57,7 @@ class RetrieveMerchantCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Retrieve Merchant Custom Attribute Definition Response object.
+     * Initializes a new Retrieve Merchant Custom EDD_EDD_Attribute Definition Response object.
      */
     public function build(): RetrieveMerchantCustomAttributeDefinitionResponse
     {

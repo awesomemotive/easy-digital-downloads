@@ -11,6 +11,8 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+use EDD\Utils\Messages;
+
 /**
  * Print Errors
  *
@@ -18,24 +20,21 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  * If errors exist, they are returned.
  *
  * @since 1.0
- * @uses edd_get_errors()
- * @uses edd_clear_errors()
+ * @uses EDD\Utils\Messages::to_html()
+ * @uses EDD\Utils\Messages::clear()
  * @return void
  */
 function edd_print_errors() {
-	$errors    = edd_get_errors();
-	$successes = EDD()->session->get( 'edd_success_errors' );
-	if ( $errors || $successes ) {
-
-		echo edd_build_errors_html( $errors );
-		echo edd_build_successes_html( $successes );
-
-		edd_clear_errors();
+	if ( ! Messages::has_any() ) {
+		return;
 	}
+	echo Messages::to_html();
+	Messages::clear();
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_print_errors' );
 add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
 add_action( 'edd_print_errors', 'edd_print_errors' );
+add_action( 'edd_cart_empty', 'edd_print_errors' );
 
 /**
  * Formats error messages and returns an HTML string.
@@ -46,27 +45,7 @@ add_action( 'edd_print_errors', 'edd_print_errors' );
  * @return string
  */
 function edd_build_errors_html( $errors ) {
-	$error_html = '';
-
-	$classes = apply_filters(
-		'edd_error_class',
-		array(
-			'edd_errors',
-			'edd-alert',
-			'edd-alert-error',
-		)
-	);
-
-	if ( ! empty( $errors ) && is_array( $errors ) ) {
-		$error_html .= '<div class="' . implode( ' ', $classes ) . '">';
-		foreach ( $errors as $error_id => $error ) {
-			$error_html .= '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong>: ' . $error . '</p>';
-
-		}
-		$error_html .= '</div>';
-	}
-
-	return $error_html;
+	return Messages::build_html_for_messages( is_array( $errors ) ? $errors : array(), 'error' );
 }
 
 /**
@@ -77,20 +56,7 @@ function edd_build_errors_html( $errors ) {
  * @return string
  */
 function edd_build_successes_html( $successes ) {
-	if ( empty( $successes ) || ! is_array( $successes ) ) {
-		return '';
-	}
-
-	$html = '<div class="edd_success edd-alert edd-alert-success">';
-	foreach ( $successes as $id => $message ) {
-		$html .= '<p id="' . $id . '">';
-		$html .= '<strong>' . esc_html__( 'Success', 'easy-digital-downloads' ) . '</strong>: ';
-		$html .= $message;
-		$html .= '</p>';
-	}
-	$html .= '</div>';
-
-	return $html;
+	return Messages::build_html_for_messages( is_array( $successes ) ? $successes : array(), 'success' );
 }
 
 /**
@@ -100,13 +66,14 @@ function edd_build_successes_html( $successes ) {
  * If errors exist, they are returned.
  *
  * @since 1.0
- * @uses EDD\Sessions\Handler::get()
+ * @uses EDD\Utils\Messages::get_by_type()
  * @return mixed array if errors are present, false if none found
  */
 function edd_get_errors() {
-	$errors = EDD()->session->get( 'edd_errors' );
+	$errors = Messages::get_by_type( 'error' );
 	$errors = apply_filters( 'edd_errors', $errors );
-	return $errors;
+
+	return ! empty( $errors ) ? $errors : null;
 }
 
 /**
@@ -115,65 +82,53 @@ function edd_get_errors() {
  * Stores an error in a session var.
  *
  * @since 1.0
- * @uses EDD\Sessions\Handler::get()
+ * @uses EDD\Utils\Messages::add()
  * @param int    $error_id ID of the error being set.
  * @param string $error_message Message to store with the error.
  * @return void
  */
 function edd_set_error( $error_id, $error_message ) {
-	$errors = edd_get_errors();
-	if ( ! $errors ) {
-		$errors = array();
-	}
-	$errors[ $error_id ] = $error_message;
-	EDD()->session->set( 'edd_errors', $errors );
+	Messages::add( 'error', (string) $error_id, $error_message );
 }
 
 /**
  * Stores an array of success messages in a session variable.
  *
  * @since 3.1
- * @uses EDD\Sessions\Handler::set()
+ * @uses EDD\Utils\Messages::add()
  * @param string $error_id      ID of the error being set.
  * @param string $error_message Message to store with the error.
  * @return void
  */
 function edd_set_success( $error_id, $error_message ) {
-	$successes = EDD()->session->get( 'edd_success_errors' );
-	if ( ! $successes ) {
-		$successes = array();
-	}
-	$successes[ $error_id ] = $error_message;
-
-	EDD()->session->set( 'edd_success_errors', $successes );
+	Messages::add( 'success', (string) $error_id, $error_message );
 }
 
 /**
- * Clears all stored errors.
+ * Clears all stored errors (error-type messages only).
+ *
+ * Success, info, and warn messages are left intact so that gateways and other
+ * code can clear errors from a previous attempt without wiping success notices
+ * (e.g. cart recovery restored).
  *
  * @since 1.0
- * @uses EDD\Sessions\Handler::set()
+ * @uses EDD\Utils\Messages::clear_by_type()
  * @return void
  */
 function edd_clear_errors() {
-	EDD()->session->set( 'edd_errors', null );
-	EDD()->session->set( 'edd_success_errors', null );
+	Messages::clear( 'error' );
 }
 
 /**
  * Removes (unsets) a stored error
  *
  * @since 1.3.4
- * @uses EDD\Sessions\Handler::set()
+ * @uses EDD\Utils\Messages::remove()
  * @param int $error_id ID of the error being set.
+ * @return void
  */
 function edd_unset_error( $error_id ) {
-	$errors = edd_get_errors();
-
-	if ( $errors && isset( $errors[ $error_id ] ) ) {
-		unset( $errors[ $error_id ] );
-		EDD()->session->set( 'edd_errors', $errors );
-	}
+	Messages::remove( (string) $error_id, 'error' );
 }
 
 /**

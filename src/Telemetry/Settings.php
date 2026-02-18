@@ -82,7 +82,7 @@ class Settings {
 				$settings = $profiler['class']::get_settings();
 				foreach ( (array) $settings as $setting ) {
 					if ( ! empty( $setting['id'] ) ) {
-						$data[ $setting['id'] ] = 1;
+						$data[ $setting['id'] ] = (int) (bool) edd_get_option( $setting['id'] );
 					}
 				}
 			}
@@ -182,7 +182,6 @@ class Settings {
 				'rich_editor',
 				'upload',
 				'color',
-				'recapture',
 				'password',
 			)
 		);

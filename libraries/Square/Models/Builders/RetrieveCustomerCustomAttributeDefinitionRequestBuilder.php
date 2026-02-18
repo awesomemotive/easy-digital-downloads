@@ -25,7 +25,7 @@ class RetrieveCustomerCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Retrieve Customer Custom Attribute Definition Request Builder object.
+     * Initializes a new Retrieve Customer Custom EDD_EDD_Attribute Definition Request Builder object.
      */
     public static function init(): self
     {
@@ -44,7 +44,7 @@ class RetrieveCustomerCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Retrieve Customer Custom Attribute Definition Request object.
+     * Initializes a new Retrieve Customer Custom EDD_EDD_Attribute Definition Request object.
      */
     public function build(): RetrieveCustomerCustomAttributeDefinitionRequest
     {

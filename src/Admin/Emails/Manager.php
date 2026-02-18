@@ -60,15 +60,16 @@ class Manager implements SubscriberInterface {
 				$message = $email_saved['message'];
 			}
 
-			edd_redirect(
-				edd_get_admin_url(
-					array(
-						'page'        => 'edd-emails',
-						'edd-message' => $message,
-						'email'       => $email_saved['email_id'],
-					)
-				)
+			$redirect_args = array(
+				'page'        => isset( $data['page'] ) ? $data['page'] : 'edd-emails',
+				'edd-message' => $message,
+				'email'       => $email_saved['email_id'],
 			);
+			if ( isset( $data['tab'] ) ) {
+				$redirect_args['tab'] = $data['tab'];
+			}
+
+			edd_redirect( edd_get_admin_url( $redirect_args ) );
 		} catch ( Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
@@ -126,10 +127,10 @@ class Manager implements SubscriberInterface {
 	 */
 	public function update_docs_link( $link ) {
 		if ( 'edd-emails' === filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
-			$link = 'https://easydigitaldownloads.com/docs/emails/';
+			$link = 'https://easydigitaldownloads.com/docs/email-setup-and-configuration/';
 
 			if ( 'email_summaries' === filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS ) ) {
-				$link .= '#summaries';
+				$link .= '#reports';
 			}
 		}
 
@@ -140,24 +141,16 @@ class Manager implements SubscriberInterface {
 	 * Outputs the email description for the editor.
 	 *
 	 * @since 3.3.0
-	 * @param \EDD\Emails\Email $email The email.
+	 * @param \EDD\Emails\Templates\EmailTemplate $email The email.
 	 */
 	public function description( $email ) {
 		?>
 		<div class="edd-email-editor__description">
 			<?php
-			$description  = $email->get_description();
-			$required_tag = $email->required_tag;
-			if ( ! empty( $required_tag ) ) {
-				$description .= '<br>';
-				$description .= sprintf(
-					/* translators: 1: opening strong tag, 2: closing string tag, 3: required tag */
-					__( '%1$sImportant:%2$s The %3$s template tag must remain in this email. Do not delete it.', 'easy-digital-downloads' ),
-					'<strong>',
-					'</strong>',
-					'<code>{' . $required_tag . '}</code>'
-				);
-				EDD()->email_tags->remove( $required_tag );
+			$description              = $email->get_description();
+			$required_tag_description = $this->get_required_tags_description( $email );
+			if ( ! empty( $required_tag_description ) ) {
+				$description .= '<br>' . $required_tag_description;
 			}
 			echo wpautop( wp_kses_post( $description ) );
 			?>
@@ -260,23 +253,6 @@ class Manager implements SubscriberInterface {
 			);
 		}
 
-		/**
-		 * Allow plugins to save the email using their own logic.
-		 * If this filter returns anything other than false, the email will not be saved with the default logic.
-		 *
-		 * @since 3.3.0
-		 * @param string                              $email_id       The email ID.
-		 * @param \EDD\Emails\Templates\EmailTemplate $email_template The email being saved.
-		 * @param array                               $data           The data being saved.
-		 */
-		$email_id = apply_filters( 'edd_email_manager_save_email_id', $email_id, $email_template, $data );
-		if ( empty( $email_id ) ) {
-			return array(
-				'success'  => false,
-				'email_id' => $email_id,
-			);
-		}
-
 		$updated_data = array();
 		$email        = $email_template->get_email();
 		foreach ( $this->get_filtered_form_data( $data ) as $key => $value ) {
@@ -300,16 +276,28 @@ class Manager implements SubscriberInterface {
 			);
 		}
 
-		$required_tag = $email_template->required_tag;
-		if (
-			! empty( $required_tag ) &&
-			! empty( $updated_data['content'] ) &&
-			false === strpos( $updated_data['content'], "{{$required_tag}}" )
-			) {
+		if ( $this->required_tags_missing( $email_template, $updated_data ) ) {
 			return array(
 				'success'  => false,
 				'email_id' => $email_id,
 				'message'  => 'required-content-missing',
+			);
+		}
+
+		/**
+		 * Allow plugins to save the email using their own logic.
+		 * If this filter returns anything other than false, the email will not be saved with the default logic.
+		 *
+		 * @since 3.3.0
+		 * @param string                              $email_id       The email ID.
+		 * @param \EDD\Emails\Templates\EmailTemplate $email_template The email being saved.
+		 * @param array                               $data           The data being saved.
+		 */
+		$email_id = apply_filters( 'edd_email_manager_save_email_id', $email_id, $email_template, $data );
+		if ( empty( $email_id ) ) {
+			return array(
+				'success'  => false,
+				'email_id' => $email_id,
 			);
 		}
 
@@ -442,5 +430,77 @@ class Manager implements SubscriberInterface {
 		unset( $sections['email_summaries'] );
 
 		return $sections;
+	}
+
+	/**
+	 * Gets the required tags description.
+	 *
+	 * @since 3.6.5
+	 * @param \EDD\Emails\Templates\EmailTemplate $email The email template.
+	 * @return string
+	 */
+	private function get_required_tags_description( $email ): string {
+		$required_tag = $email->required_tag;
+		if ( empty( $required_tag ) ) {
+			return '';
+		}
+
+		EDD()->email_tags->remove( $required_tag );
+
+		if ( is_array( $required_tag ) ) {
+			return sprintf(
+				/* translators: 1: opening strong tag, 2: closing string tag, 3: required tags */
+				__( '%1$sImportant:%2$s The following template tags must remain in this email. Do not delete them: %3$s', 'easy-digital-downloads' ),
+				'<strong>',
+				'</strong>',
+				'<code>' . implode( '</code>, <code>', $required_tag ) . '</code>'
+			);
+		}
+
+		return sprintf(
+			/* translators: 1: opening strong tag, 2: closing string tag, 3: required tag */
+			__( '%1$sImportant:%2$s The %3$s template tag must remain in this email. Do not delete it.', 'easy-digital-downloads' ),
+			'<strong>',
+			'</strong>',
+			'<code>{' . $required_tag . '}</code>'
+		);
+	}
+
+	/**
+	 * Checks if the required tags are missing from the email content.
+	 *
+	 * @since 3.6.5
+	 * @param \EDD\Emails\Templates\EmailTemplate $email_template The email template.
+	 * @param array                               $updated_data     The updated data.
+	 * @return bool
+	 */
+	private function required_tags_missing( $email_template, $updated_data ): bool {
+		// Assign to variable to get the actual value (empty doesn't work with the getter).
+		$required_tag = $email_template->required_tag;
+		if ( empty( $required_tag ) ) {
+			return false;
+		}
+
+		// If content is not being updated, don't check for required tags.
+		if ( ! isset( $updated_data['content'] ) ) {
+			return false;
+		}
+
+		// If content is being set to empty, required tags are missing.
+		if ( empty( $updated_data['content'] ) ) {
+			return true;
+		}
+
+		if ( is_array( $required_tag ) ) {
+			foreach ( $required_tag as $tag ) {
+				if ( false === strpos( $updated_data['content'], "{{$tag}}" ) ) {
+					return true;
+				}
+			}
+		} elseif ( false === strpos( $updated_data['content'], "{{$required_tag}}" ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

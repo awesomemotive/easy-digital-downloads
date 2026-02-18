@@ -37,7 +37,7 @@ class BulkUpsertOrderCustomAttributesRequestUpsertCustomAttribute implements \Js
     }
 
     /**
-     * Returns Custom Attribute.
+     * Returns Custom EDD_EDD_Attribute.
      * A custom attribute value. Each custom attribute value has a corresponding
      * `CustomAttributeDefinition` object.
      */
@@ -47,7 +47,7 @@ class BulkUpsertOrderCustomAttributesRequestUpsertCustomAttribute implements \Js
     }
 
     /**
-     * Sets Custom Attribute.
+     * Sets Custom EDD_EDD_Attribute.
      * A custom attribute value. Each custom attribute value has a corresponding
      * `CustomAttributeDefinition` object.
      *

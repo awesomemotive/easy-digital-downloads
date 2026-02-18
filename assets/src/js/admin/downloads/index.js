@@ -6,7 +6,7 @@ import { edd_attach_tooltips } from 'admin/components/tooltips';
 import './bulk-edit.js';
 import './pricing.js';
 import './files.js';
-import  './copy.js';
+import '@easy-digital-downloads/copy';
 import './requirements.js';
 import './move.js';
 import './../components/forms/index.js';

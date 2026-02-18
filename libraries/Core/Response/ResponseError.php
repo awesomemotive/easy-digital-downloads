@@ -13,6 +13,7 @@ class ResponseError
      */
     private $errors;
     private $useApiResponse = false;
+    private $mapErrorTypes = false;
     private $nullOn404 = false;
 
     /**
@@ -23,9 +24,20 @@ class ResponseError
         $this->errors[$errorCode] = $error;
     }
 
+    /**
+     * Sets the useApiResponse flag.
+     */
     public function returnApiResponse(): void
     {
         $this->useApiResponse = true;
+    }
+
+    /**
+     * Sets the mapErrorTypes flag.
+     */
+    public function mapErrorTypesInApiResponse()
+    {
+        $this->mapErrorTypes = true;
     }
 
     /**
@@ -36,38 +48,58 @@ class ResponseError
         $this->nullOn404 = true;
     }
 
-    private function shouldReturnNull(int $statusCode): bool
-    {
-        if (!$this->nullOn404) {
-            return false;
-        }
-        if ($statusCode !== 404) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Returns calculated result on failure or throws an exception.
      */
     public function getResult(Context $context)
     {
+        if ($this->useApiResponse) {
+            return $this->getApiResponse($context);
+        }
         $statusCode = $context->getResponse()->getStatusCode();
         if ($this->shouldReturnNull($statusCode)) {
-            if ($this->useApiResponse) {
-                return $context->toApiResponse(null);
-            }
             return null;
         }
-        if ($this->useApiResponse) {
+
+        $errorType = $this->getErrorType($statusCode);
+        if (empty($errorType)) {
+            throw $context->toApiException('HTTP Response Not OK');
+        }
+
+        throw $errorType->throwable($context);
+    }
+
+    private function getApiResponse(Context $context)
+    {
+        $statusCode = $context->getResponse()->getStatusCode();
+        if ($this->shouldReturnNull($statusCode)) {
+            return $context->toApiResponse(null);
+        }
+
+        $errorType = $this->getErrorType($statusCode);
+        if (!$this->mapErrorTypes || empty($errorType)) {
             return $context->toApiResponse($context->getResponseBody());
         }
+
+        return $context->toApiResponseWithMappedType($errorType->getClassName());
+    }
+
+    private function getErrorType(int $statusCode): ?ErrorType
+    {
         if (isset($this->errors[strval($statusCode)])) {
-            throw $this->errors[strval($statusCode)]->throwable($context);
+            return $this->errors[strval($statusCode)];
         }
         if (isset($this->errors[strval(0)])) {
-            throw $this->errors[strval(0)]->throwable($context); // throw default error (if set)
+            return $this->errors[strval(0)];
         }
-        throw $context->toApiException('HTTP Response Not OK');
+        return null;
+    }
+
+    private function shouldReturnNull(int $statusCode): bool
+    {
+        if (!$this->nullOn404) {
+            return false;
+        }
+        return $statusCode === 404;
     }
 }

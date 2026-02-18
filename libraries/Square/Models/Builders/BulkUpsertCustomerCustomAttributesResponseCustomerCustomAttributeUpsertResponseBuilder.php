@@ -28,7 +28,7 @@ class BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertRes
     }
 
     /**
-     * Initializes a new Bulk Upsert Customer Custom Attributes Response Customer Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Customer Custom Attributes Response Customer Custom EDD_EDD_Attribute Upsert
      * Response Builder object.
      */
     public static function init(): self
@@ -70,7 +70,7 @@ class BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertRes
     }
 
     /**
-     * Initializes a new Bulk Upsert Customer Custom Attributes Response Customer Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Customer Custom Attributes Response Customer Custom EDD_EDD_Attribute Upsert
      * Response object.
      */
     public function build(): BulkUpsertCustomerCustomAttributesResponseCustomerCustomAttributeUpsertResponse

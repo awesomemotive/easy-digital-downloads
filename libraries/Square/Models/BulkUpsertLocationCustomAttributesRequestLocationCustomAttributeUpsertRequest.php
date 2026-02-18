@@ -61,7 +61,7 @@ class BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequ
     }
 
     /**
-     * Returns Custom Attribute.
+     * Returns Custom EDD_EDD_Attribute.
      * A custom attribute value. Each custom attribute value has a corresponding
      * `CustomAttributeDefinition` object.
      */
@@ -71,7 +71,7 @@ class BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequ
     }
 
     /**
-     * Sets Custom Attribute.
+     * Sets Custom EDD_EDD_Attribute.
      * A custom attribute value. Each custom attribute value has a corresponding
      * `CustomAttributeDefinition` object.
      *

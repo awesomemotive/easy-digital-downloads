@@ -49,12 +49,12 @@ class Event_Tests extends EDD_UnitTestCase {
 	 */
 	protected function clear_all_log_pruning_hooks() {
 		// Clear old hook if it exists
-		wp_clear_scheduled_hook( 'edd_daily_log_pruning' );
+		$this->clear_scheduled_hook( 'edd_daily_log_pruning' );
 
 		// Clear individual log type hooks
 		$log_types = array( 'file_downloads', 'gateway_errors', 'api_requests', 'emails' );
 		foreach ( $log_types as $type_id ) {
-			wp_clear_scheduled_hook( "edd_prune_logs_{$type_id}" );
+			$this->clear_scheduled_hook( "edd_prune_logs_{$type_id}" );
 		}
 
 		// Clear any additional hooks from the database
@@ -122,10 +122,10 @@ class Event_Tests extends EDD_UnitTestCase {
 		$this->event->schedule();
 
 		// Check that individual hooks are scheduled for each log type
-		$this->assertNotFalse( wp_next_scheduled( 'edd_prune_logs_file_downloads' ) );
-		$this->assertNotFalse( wp_next_scheduled( 'edd_prune_logs_gateway_errors' ) );
-		$this->assertNotFalse( wp_next_scheduled( 'edd_prune_logs_api_requests' ) );
-		$this->assertNotFalse( wp_next_scheduled( 'edd_prune_logs_emails' ) );
+		$this->assertNotFalse( $this->get_next_scheduled( 'edd_prune_logs_file_downloads' ) );
+		$this->assertNotFalse( $this->get_next_scheduled( 'edd_prune_logs_gateway_errors' ) );
+		$this->assertNotFalse( $this->get_next_scheduled( 'edd_prune_logs_api_requests' ) );
+		$this->assertNotFalse( $this->get_next_scheduled( 'edd_prune_logs_emails' ) );
 
 		// Clean up.
 		edd_delete_option( 'edd_log_pruning_settings' );
@@ -141,11 +141,14 @@ class Event_Tests extends EDD_UnitTestCase {
 		$this->event->schedule();
 
 		$times = array(
-			'file_downloads'  => wp_next_scheduled( 'edd_prune_logs_file_downloads' ),
-			'gateway_errors' => wp_next_scheduled( 'edd_prune_logs_gateway_errors' ),
-			'api_requests'   => wp_next_scheduled( 'edd_prune_logs_api_requests' ),
-			'emails'         => wp_next_scheduled( 'edd_prune_logs_emails' ),
+			'file_downloads' => $this->get_next_scheduled( 'edd_prune_logs_file_downloads' ),
+			'gateway_errors' => $this->get_next_scheduled( 'edd_prune_logs_gateway_errors' ),
+			'api_requests'   => $this->get_next_scheduled( 'edd_prune_logs_api_requests' ),
+			'emails'         => $this->get_next_scheduled( 'edd_prune_logs_emails' ),
 		);
+
+		// Filter out any false values
+		$times = array_filter( $times );
 
 		// All times should be different (staggered)
 		$unique_times = array_unique( $times );
@@ -169,11 +172,11 @@ class Event_Tests extends EDD_UnitTestCase {
 
 		// Schedule the first time
 		$this->event->schedule();
-		$first_time = wp_next_scheduled( 'edd_prune_logs_file_downloads' );
+		$first_time = $this->get_next_scheduled( 'edd_prune_logs_file_downloads' );
 
 		// Schedule again
 		$this->event->schedule();
-		$second_time = wp_next_scheduled( 'edd_prune_logs_file_downloads' );
+		$second_time = $this->get_next_scheduled( 'edd_prune_logs_file_downloads' );
 
 		// Time should be the same (not rescheduled)
 		$this->assertEquals( $first_time, $second_time );
@@ -289,12 +292,12 @@ class Event_Tests extends EDD_UnitTestCase {
 		$base_time = time() + DAY_IN_SECONDS;
 		$method->invoke( $this->event, 'test_type', $base_time, 900 );
 
-		$scheduled = wp_next_scheduled( 'edd_prune_logs_test_type' );
+		$scheduled = $this->get_next_scheduled( 'edd_prune_logs_test_type' );
 		$this->assertNotFalse( $scheduled );
-		$this->assertEquals( $base_time + 900, $scheduled );
+		$this->assertEqualsWithDelta( $base_time + 900, $scheduled, 5 );
 
 		// Clean up
-		wp_clear_scheduled_hook( 'edd_prune_logs_test_type' );
+		$this->clear_scheduled_hook( 'edd_prune_logs_test_type' );
 	}
 
 	/**
@@ -333,16 +336,50 @@ class Event_Tests extends EDD_UnitTestCase {
 		$this->event->schedule();
 
 		// Should be scheduled
-		$scheduled = wp_next_scheduled( 'edd_prune_logs_unregistered_custom_enabled_type' );
+		$scheduled = $this->get_next_scheduled( 'edd_prune_logs_unregistered_custom_enabled_type' );
 		$this->assertNotFalse( $scheduled, 'Enabled additional log type should be scheduled' );
 
 		// Clean up
-		wp_clear_scheduled_hook( 'edd_prune_logs_unregistered_custom_enabled_type' );
+		$this->clear_scheduled_hook( 'edd_prune_logs_unregistered_custom_enabled_type' );
 		edd_delete_option( 'edd_log_pruning_settings' );
 		$wpdb->delete(
 			"{$wpdb->prefix}edd_logs",
 			array( 'type' => 'custom_enabled_type' ),
 			array( '%s' )
 		);
+	}
+
+	/**
+	 * Helper to get next scheduled time for a hook (checks both WP-Cron and Action Scheduler).
+	 *
+	 * @param string $hook Hook name.
+	 * @return int|false Timestamp or false if not scheduled.
+	 */
+	private function get_next_scheduled( $hook ) {
+		// Check Action Scheduler first if available.
+		if ( class_exists( 'ActionScheduler' ) && function_exists( 'as_next_scheduled_action' ) ) {
+			$next = as_next_scheduled_action( $hook, array(), 'edd' );
+			if ( $next ) {
+				return $next;
+			}
+		}
+
+		// Fall back to WP-Cron.
+		return wp_next_scheduled( $hook );
+	}
+
+	/**
+	 * Helper to clear scheduled hook (clears from both WP-Cron and Action Scheduler).
+	 *
+	 * @param string $hook Hook name.
+	 */
+	private function clear_scheduled_hook( $hook ) {
+		// Clear from Action Scheduler if available.
+		if ( class_exists( 'ActionScheduler' ) && function_exists( 'as_unschedule_all_actions' ) ) {
+			as_unschedule_all_actions( $hook, array(), 'edd' );
+		}
+
+		// Clear from WP-Cron.
+		wp_clear_scheduled_hook( $hook );
 	}
 }

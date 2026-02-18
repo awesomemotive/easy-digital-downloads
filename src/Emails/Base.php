@@ -75,6 +75,14 @@ class Base {
 	private $heading = '';
 
 	/**
+	 * The Email object using this processor.
+	 *
+	 * @since 3.6.5
+	 * @var \EDD\Emails\Types\Email|null
+	 */
+	private $email_object;
+
+	/**
 	 * Get things going
 	 *
 	 * @since 2.1
@@ -87,7 +95,6 @@ class Base {
 
 		add_action( 'edd_email_send_before', array( $this, 'send_before' ) );
 		add_action( 'edd_email_send_after', array( $this, 'send_after' ) );
-
 	}
 
 	/**
@@ -248,6 +255,27 @@ class Base {
 	}
 
 	/**
+	 * Set the Email object using this processor.
+	 *
+	 * @since 3.6.5
+	 * @param \EDD\Emails\Types\Email $email The Email object.
+	 * @return void
+	 */
+	public function set_email_object( $email ) {
+		$this->email_object = $email;
+	}
+
+	/**
+	 * Get the Email object using this processor.
+	 *
+	 * @since 3.6.5
+	 * @return \EDD\Emails\Types\Email|null
+	 */
+	public function get_email_object() {
+		return $this->email_object;
+	}
+
+	/**
 	 * Parse email template tags
 	 *
 	 * @since 2.1
@@ -277,7 +305,12 @@ class Base {
 
 		ob_start();
 
-		edd_get_template_part( 'emails/header', $this->get_template(), true );
+		// Pass the processor to templates so they can access the email object and other properties.
+		$template_args = array(
+			'email_processor' => $this,
+		);
+
+		edd_get_template_part( 'emails/header', $this->get_template(), true, $template_args );
 
 		/**
 		 * Hooks into the email header
@@ -305,7 +338,7 @@ class Base {
 		 */
 		do_action( 'edd_email_body', $this );
 
-		edd_get_template_part( 'emails/footer', $this->get_template(), true );
+		edd_get_template_part( 'emails/footer', $this->get_template(), true, $template_args );
 
 		/**
 		 * Hooks into the footer of the email

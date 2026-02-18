@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace EDD\Vendor\Core\Response\Types;
 
 use EDD\Vendor\Core\Response\Context;
-use EDD\Vendor\Core\Utils\CoreHelper;
+use EDD\Vendor\Core\Utils\JsonPointerValue;
 use EDD\Vendor\CoreInterfaces\Core\Response\ResponseInterface;
-use EDD\Vendor\Rs\Json\Pointer;
 
 class ErrorType
 {
@@ -39,13 +38,21 @@ class ErrorType
     }
 
     /**
-     * Throws an Api exception from the context provided.
+     * Returns a throwable instance of Api exception from the context provided.
      */
     public function throwable(Context $context)
     {
         $this->updateErrorDescriptionTemplate($context->getResponse());
 
         return $context->toApiException($this->description, $this->className);
+    }
+
+    /**
+     * Returns the class name of the error type.
+     */
+    public function getClassName(): ?string
+    {
+        return $this->className;
     }
 
     private function updateErrorDescriptionTemplate($response): void
@@ -111,12 +118,13 @@ class ErrorType
             );
         }
 
-        $jsonResponsePointer = $this->initializeJsonPointer($response);
-
         $jsonPointers = $jsonPointersInTemplate[0];
 
         for ($x = 0; $x < count($jsonPointers); $x++) {
-            $placeHolderValue = $this->getJsonPointerValue($jsonResponsePointer, ltrim($jsonPointers[$x], '#'));
+            $placeHolderValue = JsonPointerValue::getJsonPointerValue(
+                $response->getRawBody(),
+                ltrim($jsonPointers[$x], '#')
+            );
 
             $errorDescription = $this->addPlaceHolderValue(
                 $errorDescription,
@@ -152,38 +160,5 @@ class ErrorType
         }
 
         return str_replace($placeHolder, $value, $template);
-    }
-
-    /**
-     * @param $jsonPointer ?Pointer
-     * @param $pointer string
-     * @return mixed Json pointer value from the JSON provided.
-     */
-    private function getJsonPointerValue(?Pointer $jsonPointer, string $pointer)
-    {
-        if ($jsonPointer == null || trim($pointer) === '') {
-            return "";
-        }
-
-        try {
-            $pointerValue = $jsonPointer->get($pointer);
-
-            if (is_object($pointerValue)) {
-                return CoreHelper::serialize($pointerValue);
-            }
-
-            return $pointerValue;
-        } catch (\Exception $ex) {
-            return "";
-        }
-    }
-
-    private function initializeJsonPointer(ResponseInterface $response): ?Pointer
-    {
-        try {
-            return new Pointer($response->getRawBody());
-        } catch (\Exception $ex) {
-            return null;
-        }
     }
 }

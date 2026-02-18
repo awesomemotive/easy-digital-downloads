@@ -26,7 +26,7 @@ class BookingCustomAttributeDeleteResponseBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Delete Response Builder object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Delete Response Builder object.
      */
     public static function init(): self
     {
@@ -56,7 +56,7 @@ class BookingCustomAttributeDeleteResponseBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Delete Response object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Delete Response object.
      */
     public function build(): BookingCustomAttributeDeleteResponse
     {

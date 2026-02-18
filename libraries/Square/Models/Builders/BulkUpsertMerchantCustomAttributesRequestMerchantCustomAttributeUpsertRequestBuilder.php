@@ -27,7 +27,7 @@ class BulkUpsertMerchantCustomAttributesRequestMerchantCustomAttributeUpsertRequ
     }
 
     /**
-     * Initializes a new Bulk Upsert Merchant Custom Attributes Request Merchant Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Merchant Custom Attributes Request Merchant Custom EDD_EDD_Attribute Upsert
      * Request Builder object.
      *
      * @param string $merchantId
@@ -62,7 +62,7 @@ class BulkUpsertMerchantCustomAttributesRequestMerchantCustomAttributeUpsertRequ
     }
 
     /**
-     * Initializes a new Bulk Upsert Merchant Custom Attributes Request Merchant Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Merchant Custom Attributes Request Merchant Custom EDD_EDD_Attribute Upsert
      * Request object.
      */
     public function build(): BulkUpsertMerchantCustomAttributesRequestMerchantCustomAttributeUpsertRequest

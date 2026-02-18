@@ -102,12 +102,30 @@ abstract class Tile extends Endpoint {
 			$this->display_args
 		);
 
+		// Add tooltip if available.
+		$tooltip = $this->get_tooltip();
+		if ( ! empty( $tooltip ) ) {
+			$args['tooltip'] = $tooltip;
+		}
+
 		// Only add context if it's not primary (default).
 		if ( 'secondary' === $this->context ) {
 			$args['context'] = $this->context;
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Gets the tooltip content for the tile.
+	 *
+	 * Override this method in child classes to provide a tooltip.
+	 *
+	 * @since 3.6.5
+	 * @return string
+	 */
+	protected function get_tooltip(): string {
+		return '';
 	}
 
 	/**

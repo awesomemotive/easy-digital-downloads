@@ -25,7 +25,7 @@ class CatalogCustomAttributeDefinitionNumberConfigBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition Number Config Builder object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition Number Config Builder object.
      */
     public static function init(): self
     {
@@ -53,7 +53,7 @@ class CatalogCustomAttributeDefinitionNumberConfigBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition Number Config object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition Number Config object.
      */
     public function build(): CatalogCustomAttributeDefinitionNumberConfig
     {

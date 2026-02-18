@@ -36,22 +36,6 @@ class Cart extends Route {
 	const BASE = 'cart';
 
 	/**
-	 * Cart controller instance.
-	 *
-	 * @since 3.6.2
-	 * @var Controller
-	 */
-	private $controller;
-
-	/**
-	 * Security instance.
-	 *
-	 * @since 3.6.2
-	 * @var Security
-	 */
-	private $security;
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 3.6.2

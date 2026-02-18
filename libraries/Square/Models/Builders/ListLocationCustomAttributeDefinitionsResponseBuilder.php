@@ -27,7 +27,7 @@ class ListLocationCustomAttributeDefinitionsResponseBuilder
     }
 
     /**
-     * Initializes a new List Location Custom Attribute Definitions Response Builder object.
+     * Initializes a new List Location Custom EDD_EDD_Attribute Definitions Response Builder object.
      */
     public static function init(): self
     {
@@ -68,7 +68,7 @@ class ListLocationCustomAttributeDefinitionsResponseBuilder
     }
 
     /**
-     * Initializes a new List Location Custom Attribute Definitions Response object.
+     * Initializes a new List Location Custom EDD_EDD_Attribute Definitions Response object.
      */
     public function build(): ListLocationCustomAttributeDefinitionsResponse
     {

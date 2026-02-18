@@ -27,7 +27,7 @@ class BulkDeleteLocationCustomAttributesResponseLocationCustomAttributeDeleteRes
     }
 
     /**
-     * Initializes a new Bulk Delete Location Custom Attributes Response Location Custom Attribute Delete
+     * Initializes a new Bulk Delete Location Custom Attributes Response Location Custom EDD_EDD_Attribute Delete
      * Response Builder object.
      */
     public static function init(): self
@@ -58,7 +58,7 @@ class BulkDeleteLocationCustomAttributesResponseLocationCustomAttributeDeleteRes
     }
 
     /**
-     * Initializes a new Bulk Delete Location Custom Attributes Response Location Custom Attribute Delete
+     * Initializes a new Bulk Delete Location Custom Attributes Response Location Custom EDD_EDD_Attribute Delete
      * Response object.
      */
     public function build(): BulkDeleteLocationCustomAttributesResponseLocationCustomAttributeDeleteResponse

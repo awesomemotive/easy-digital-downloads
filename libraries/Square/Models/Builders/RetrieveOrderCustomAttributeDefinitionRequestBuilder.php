@@ -25,7 +25,7 @@ class RetrieveOrderCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Retrieve Order Custom Attribute Definition Request Builder object.
+     * Initializes a new Retrieve Order Custom EDD_EDD_Attribute Definition Request Builder object.
      */
     public static function init(): self
     {
@@ -44,7 +44,7 @@ class RetrieveOrderCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Retrieve Order Custom Attribute Definition Request object.
+     * Initializes a new Retrieve Order Custom EDD_EDD_Attribute Definition Request object.
      */
     public function build(): RetrieveOrderCustomAttributeDefinitionRequest
     {

@@ -16,5 +16,7 @@ defined( 'ABSPATH' ) || exit;
 	<input type="hidden" name="sender" value="<?php echo esc_attr( $email->sender ); ?>">
 	<input type="hidden" name="context" value="<?php echo esc_attr( $email->context ); ?>">
 	<input type="hidden" name="recipient" value="<?php echo esc_attr( $email->recipient ); ?>">
+	<input type="hidden" name="page" value="<?php echo esc_attr( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS ) ); ?>">
+	<input type="hidden" name="tab" value="<?php echo esc_attr( filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS ) ); ?>">
 	<?php wp_nonce_field( 'edd_save_email', 'edd_save_email_nonce' ); ?>
 </div>

@@ -1,12 +1,12 @@
 === Easy Digital Downloads – eCommerce Payments and Subscriptions made easy ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, am, cklosows, littlerchicken, alhoseany, smub, chriscct7, sumobi, johnjamesjacoby
+Contributors: easydigitaldownloads, am, cklosows, littlerchicken, alhoseany, misulicus, smub, chriscct7, sumobi, johnjamesjacoby
 Tags: ecommerce, payments, sell, digital store, stripe
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable Tag: 3.6.4
+Stable Tag: 3.6.5
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept credit card payments with Stripe & PayPal and start your store today.
@@ -57,7 +57,6 @@ Support payments globally with the following payment methods, immediately availa
 * CashApp
 * Link by Stripe
 * Venmo
-* Sofort
 * and more!
 
 With our smart payment method integrations, you get access to most of the latest payment methods as soon as they are available, without any code changes or updates.
@@ -241,6 +240,31 @@ Check out some of our popular posts for actionable advice for running your busin
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.6.5 =
+* NEW: Cron - Cron events are now more reliable and based on Action Scheduler.
+* Cart: Fixed an unused variable in the cart class.
+* Cart: The error handler has been improved to show messages more consistently.
+* Checkout: Improved checkout accessibility.
+* Discounts: Discount Select field now supports filtering out invalid discounts.
+* Downloads: Improved the accuracy of the Download select field.
+* Emails: Fixed documentation link.
+* Emails: Introduced new 'Styles' feature to the email editor.
+* Emails: Base email class now passes the Email Type to the template part.
+* Labs: Cart Caching - Corrected an issue with tax recalculation not invalidating cache.
+* Logs: Added filters for the LogStorageCalculator to support extensions.
+* Logs: Improved log filter navigation.
+* Notifications: Improved the flexibility of store notifications.
+* Orders: Improved order status logic when processing a refund.
+* Privacy: Personal data exports could fatal error if a product no longer exists.
+* Stripe: Removed Sofort as an individual gateway (now supported in Klarna).
+* Stripe: Prevent a console error on the Stripe settings page.
+* Dev: Added the cookie name to the `edd_cookie_options` filter.
+* Dev: Fixed incorrect usage of `echo` with `esc_html_e`.
+* Dev: Introduced base `edd-modal` styles and scripts.
+* Dev: Introduced the `edd_cart_tax_recalculated` hook.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.6.4 =
 * New: Manage logs with the Log Retention Settings.
 * Admin: Some help icons could get duplicated.
@@ -250,8 +274,6 @@ Check out some of our popular posts for actionable advice for running your busin
 * Reports: Gateway pie charts now only show gateways used during the report date range.
 * Reports: Stripe payment method data now respects report date ranges.
 * Reports: The vendor script paths for legacy graphs have been updated.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.6.3 =
 * Blocks: Updating handling of Password Reset redirect.

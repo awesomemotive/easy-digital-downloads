@@ -538,7 +538,7 @@ class EDD_Notices {
 
 		// Settings area.
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS );
-		if ( ! in_array( $page, array( 'edd-settings', 'edd-emails' ), true ) ) {
+		if ( ! in_array( $page, array( 'edd-settings', 'edd-emails', 'edd-cart-recovery' ), true ) ) {
 			return;
 		}
 
@@ -1236,7 +1236,7 @@ class EDD_Notices {
 		 *
 		 * @since 3.0
 		 */
-		wp_enqueue_script( 'edd-admin-notices', edd_get_assets_url( 'js' ) . 'edd-admin-notices.js', array( 'jquery' ), EDD_VERSION, true );
+		wp_enqueue_script( 'edd-admin-notices', edd_get_assets_url( 'js/admin' ) . 'notices.js', array( 'jquery' ), EDD_VERSION, true );
 		$view_url = add_query_arg(
 			array(
 				'post_type' => 'download',
@@ -1246,7 +1246,7 @@ class EDD_Notices {
 			admin_url( 'edit.php' )
 		);
 		?>
-		<div id="edd-debug-log-notice" class="notice notice-warning">
+		<div id="edd-debug-log-notice" class="notice edd-notice notice-warning">
 			<p>
 				<?php esc_html_e( 'Easy Digital Downloads debug logging is enabled. Please only leave it enabled for as long as it is needed for troubleshooting.', 'easy-digital-downloads' ); ?>
 			</p>

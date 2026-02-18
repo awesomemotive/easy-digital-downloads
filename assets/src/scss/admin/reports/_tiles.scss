@@ -39,11 +39,14 @@
 }
 
 .edd-reports-tile .tile-label {
-	text-align: center;
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: normal;
 	color: colors.$wp-gray-2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: .5em;
 }
 
 .edd-reports-tile .tile-value {
@@ -144,4 +147,12 @@
 	border-left: 1px solid #bbb;
 	border-top: 1px solid #bbb;
 	color: #777;
+}
+
+.edd-reports-tile .tile-tooltip {
+	.dashicons {
+		margin-left: 0;
+		left: 0;
+		top: 0;
+	}
 }

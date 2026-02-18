@@ -36,7 +36,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Name.
+     * Returns EDD_EDD_Attribute Name.
      * The name of the attribute to be searched.
      */
     public function getAttributeName(): string
@@ -45,7 +45,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Name.
+     * Sets EDD_EDD_Attribute Name.
      * The name of the attribute to be searched.
      *
      * @required
@@ -57,7 +57,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Min Value.
+     * Returns EDD_EDD_Attribute Min Value.
      * The desired minimum value for the search attribute (inclusive).
      */
     public function getAttributeMinValue(): ?int
@@ -69,7 +69,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Min Value.
+     * Sets EDD_EDD_Attribute Min Value.
      * The desired minimum value for the search attribute (inclusive).
      *
      * @maps attribute_min_value
@@ -80,7 +80,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Unsets Attribute Min Value.
+     * Unsets EDD_EDD_Attribute Min Value.
      * The desired minimum value for the search attribute (inclusive).
      */
     public function unsetAttributeMinValue(): void
@@ -89,7 +89,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Max Value.
+     * Returns EDD_EDD_Attribute Max Value.
      * The desired maximum value for the search attribute (inclusive).
      */
     public function getAttributeMaxValue(): ?int
@@ -101,7 +101,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Max Value.
+     * Sets EDD_EDD_Attribute Max Value.
      * The desired maximum value for the search attribute (inclusive).
      *
      * @maps attribute_max_value
@@ -112,7 +112,7 @@ class CatalogQueryRange implements \JsonSerializable
     }
 
     /**
-     * Unsets Attribute Max Value.
+     * Unsets EDD_EDD_Attribute Max Value.
      * The desired maximum value for the search attribute (inclusive).
      */
     public function unsetAttributeMaxValue(): void

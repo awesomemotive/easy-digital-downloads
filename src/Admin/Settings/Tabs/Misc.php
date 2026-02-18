@@ -98,6 +98,7 @@ class Misc extends Tab {
 					'check' => __( 'Completely remove all EDD core data when the plugin is deleted.', 'easy-digital-downloads' ),
 					'type'  => 'checkbox_toggle',
 				),
+				'hide_cart_recovery'  => $this->get_hide_cart_recovery_setting(),
 			),
 			'button_text'    => array(
 				'button_style'         => array(
@@ -235,6 +236,32 @@ class Misc extends Tab {
 		unset( $input['session_handling'] );
 
 		return $input;
+	}
+
+	/**
+	 * Gets the hide cart recovery setting.
+	 *
+	 * Pro users can only hide the menu item when Cart Recovery is disabled.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @return array
+	 */
+	private function get_hide_cart_recovery_setting() {
+		$setting = array(
+			'id'    => 'hide_cart_recovery',
+			'name'  => __( 'Hide Cart Recovery', 'easy-digital-downloads' ),
+			'check' => __( 'Hide the Cart Recovery menu item.', 'easy-digital-downloads' ),
+			'type'  => 'checkbox_toggle',
+		);
+
+		// Pro users with ACR enabled cannot hide the menu item.
+		if ( edd_is_pro() && ! edd_is_inactive_pro() && edd_get_option( 'acr_enabled' ) ) {
+			$setting['options']['disabled'] = true;
+			$setting['check']               = __( 'Cart Recovery is currently enabled. Disable it to hide the menu item.', 'easy-digital-downloads' );
+		}
+
+		return $setting;
 	}
 
 	/**

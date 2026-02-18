@@ -68,8 +68,8 @@ class LogsTable extends \EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'subject'      => __( 'Subject', 'easy-digital-downloads' ),
 			'email'        => __( 'To', 'easy-digital-downloads' ),
+			'subject'      => __( 'Subject', 'easy-digital-downloads' ),
 			'object_id'    => __( 'Email Object', 'easy-digital-downloads' ),
 			'date_created' => __( 'Date Sent', 'easy-digital-downloads' ),
 		);
@@ -103,6 +103,19 @@ class LogsTable extends \EDD_Base_Log_List_Table {
 
 			case 'object_id':
 				return $this->get_object_column( $item );
+
+			case 'email':
+				if ( get_metadata( 'edd_logs_email', $item->id, 'bounce', true ) ) {
+					$status_badge = new \EDD\Utils\StatusBadge(
+						array(
+							'status' => 'error',
+							'label'  => __( 'Bounced', 'easy-digital-downloads' ),
+						)
+					);
+					return $status_badge->get() . ' ' . $item->{$column_name};
+				}
+
+				return $item->{$column_name};
 
 			default:
 				return $item->{$column_name};

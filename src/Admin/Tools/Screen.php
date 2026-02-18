@@ -66,13 +66,14 @@ class Screen {
 
 			// Define all tabs.
 			$tabs = array(
-				'general'       => __( 'General', 'easy-digital-downloads' ),
-				'api_keys'      => __( 'API Keys', 'easy-digital-downloads' ),
-				'logs'          => __( 'Event Logging', 'easy-digital-downloads' ),
-				'system_info'   => __( 'System Info', 'easy-digital-downloads' ),
-				'debug_log'     => __( 'Debug Log', 'easy-digital-downloads' ),
-				'import_export' => __( 'Import/Export', 'easy-digital-downloads' ),
-				'labs'          => __( 'Labs', 'easy-digital-downloads' ),
+				'general'           => __( 'General', 'easy-digital-downloads' ),
+				'api_keys'          => __( 'API Keys', 'easy-digital-downloads' ),
+				'logs'              => __( 'Event Logging', 'easy-digital-downloads' ),
+				'scheduled_actions' => __( 'Scheduled Actions', 'easy-digital-downloads' ),
+				'system_info'       => __( 'System Info', 'easy-digital-downloads' ),
+				'debug_log'         => __( 'Debug Log', 'easy-digital-downloads' ),
+				'import_export'     => __( 'Import/Export', 'easy-digital-downloads' ),
+				'labs'              => __( 'Labs', 'easy-digital-downloads' ),
 			);
 
 			self::$tabs = apply_filters( 'edd_tools_tabs', $tabs );

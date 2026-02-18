@@ -25,7 +25,7 @@ class ListMerchantCustomAttributeDefinitionsRequestBuilder
     }
 
     /**
-     * Initializes a new List Merchant Custom Attribute Definitions Request Builder object.
+     * Initializes a new List Merchant Custom EDD_EDD_Attribute Definitions Request Builder object.
      */
     public static function init(): self
     {
@@ -84,7 +84,7 @@ class ListMerchantCustomAttributeDefinitionsRequestBuilder
     }
 
     /**
-     * Initializes a new List Merchant Custom Attribute Definitions Request object.
+     * Initializes a new List Merchant Custom EDD_EDD_Attribute Definitions Request object.
      */
     public function build(): ListMerchantCustomAttributeDefinitionsRequest
     {

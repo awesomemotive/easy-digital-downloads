@@ -25,7 +25,7 @@ class CatalogCustomAttributeDefinitionSelectionConfigCustomAttributeSelectionBui
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition Selection Config Custom Attribute Selection
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition Selection Config Custom EDD_EDD_Attribute Selection
      * Builder object.
      *
      * @param string $name
@@ -56,7 +56,7 @@ class CatalogCustomAttributeDefinitionSelectionConfigCustomAttributeSelectionBui
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition Selection Config Custom Attribute Selection
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition Selection Config Custom EDD_EDD_Attribute Selection
      * object.
      */
     public function build(): CatalogCustomAttributeDefinitionSelectionConfigCustomAttributeSelection

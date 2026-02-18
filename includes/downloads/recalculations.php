@@ -1,14 +1,16 @@
 <?php
 /**
  * Recalculation functions for downloads.
- * @package     EDD
- * @subpackage  Downloads
- * @copyright   Copyright (c) 2022, Easy Digital Downloads, LLC
+ *
+ * @package     EDD\Downloads
+ * @copyright   Copyright (c) 2022, Sandhills Development, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.1
  */
 
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Cron\Schedulers\Handler;
 
 /**
  * The hook is registered here because it's specifically for the cron job,
@@ -24,11 +26,11 @@ add_action( 'edd_recalculate_download_sales_earnings_deferred', 'edd_recalculate
  * Note: recalculating download stats is an expensive query, so it's deferred intentionally.
  *
  * @since 3.1
- * @param int $download_id
+ * @param int $download_id The download ID.
  * @return void
  */
 function edd_maybe_schedule_download_recalculation( $download_id ) {
-	$is_scheduled = wp_next_scheduled( 'edd_recalculate_download_sales_earnings_deferred', array( $download_id ) );
+	$is_scheduled = Handler::get_scheduler()->next_scheduled( 'edd_recalculate_download_sales_earnings_deferred', array( $download_id ) );
 	$bypass_cron  = apply_filters( 'edd_recalculate_bypass_cron', false );
 
 	// Check if the recalculation has already been scheduled.

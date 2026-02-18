@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Coding Standards">
+	<description>WooCommerce dev PHP_CodeSniffer ruleset.</description>
+
+	<!-- Exclude paths -->
+	<exclude-pattern>docs/</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+
+	<!-- Configs -->
+	<config name="minimum_supported_wp_version" value="4.7" />
+	<config name="testVersion" value="7.0-" />
+
+	<!-- Rules -->
+	<rule ref="WooCommerce-Core" />
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="action-scheduler" />
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>classes/*</exclude-pattern>
+		<exclude-pattern>deprecated/*</exclude-pattern>
+		<exclude-pattern>lib/*</exclude-pattern>
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+		<exclude-pattern>classes/*</exclude-pattern>
+		<exclude-pattern>deprecated/*</exclude-pattern>
+		<exclude-pattern>lib/*</exclude-pattern>
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="Generic.Commenting">
+		<exclude-pattern>tests/</exclude-pattern>
+	</rule>
+
+	<rule ref="Squiz.Commenting.FileComment.Missing">
+		<exclude-pattern>classes/*</exclude-pattern>
+		<exclude-pattern>deprecated/*</exclude-pattern>
+		<exclude-pattern>lib/*</exclude-pattern>
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="PEAR.NamingConventions.ValidClassName">
+		<exclude-pattern>classes/ActionScheduler_wcSystemStatus.php</exclude-pattern>
+		<exclude-pattern>classes/data-stores/ActionScheduler_wpCommentLogger.php</exclude-pattern>
+		<exclude-pattern>classes/data-stores/ActionScheduler_wpPostStore.php</exclude-pattern>
+		<exclude-pattern>classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php</exclude-pattern>
+		<exclude-pattern>classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php</exclude-pattern>
+		<exclude-pattern>classes/data-stores/ActionScheduler_wpPostStore_TaxonomyRegistrar.php</exclude-pattern>
+		<exclude-pattern>classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php</exclude-pattern>
+		<exclude-pattern>tests/phpunit/jobstore/ActionScheduler_wpPostStore_Test.php</exclude-pattern>
+		<exclude-pattern>tests/phpunit/logging/ActionScheduler_wpCommentLogger_Test.php</exclude-pattern>
+		<exclude-pattern>tests/phpunit/procedural_api/wc_get_scheduled_actions_Test.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Squiz.Commenting.FunctionComment.Missing">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+</ruleset>

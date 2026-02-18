@@ -25,7 +25,7 @@ class BulkDeleteOrderCustomAttributesRequestDeleteCustomAttributeBuilder
     }
 
     /**
-     * Initializes a new Bulk Delete Order Custom Attributes Request Delete Custom Attribute Builder object.
+     * Initializes a new Bulk Delete Order Custom Attributes Request Delete Custom EDD_EDD_Attribute Builder object.
      *
      * @param string $orderId
      */
@@ -46,7 +46,7 @@ class BulkDeleteOrderCustomAttributesRequestDeleteCustomAttributeBuilder
     }
 
     /**
-     * Initializes a new Bulk Delete Order Custom Attributes Request Delete Custom Attribute object.
+     * Initializes a new Bulk Delete Order Custom Attributes Request Delete Custom EDD_EDD_Attribute object.
      */
     public function build(): BulkDeleteOrderCustomAttributesRequestDeleteCustomAttribute
     {

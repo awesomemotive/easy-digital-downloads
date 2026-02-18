@@ -28,7 +28,7 @@ class BulkUpsertMerchantCustomAttributesResponseMerchantCustomAttributeUpsertRes
     }
 
     /**
-     * Initializes a new Bulk Upsert Merchant Custom Attributes Response Merchant Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Merchant Custom Attributes Response Merchant Custom EDD_EDD_Attribute Upsert
      * Response Builder object.
      */
     public static function init(): self
@@ -70,7 +70,7 @@ class BulkUpsertMerchantCustomAttributesResponseMerchantCustomAttributeUpsertRes
     }
 
     /**
-     * Initializes a new Bulk Upsert Merchant Custom Attributes Response Merchant Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Merchant Custom Attributes Response Merchant Custom EDD_EDD_Attribute Upsert
      * Response object.
      */
     public function build(): BulkUpsertMerchantCustomAttributesResponseMerchantCustomAttributeUpsertResponse

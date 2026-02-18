@@ -26,7 +26,7 @@ class UpdateCustomerCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Update Customer Custom Attribute Definition Request Builder object.
+     * Initializes a new Update Customer Custom EDD_EDD_Attribute Definition Request Builder object.
      *
      * @param CustomAttributeDefinition $customAttributeDefinition
      */
@@ -56,7 +56,7 @@ class UpdateCustomerCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Update Customer Custom Attribute Definition Request object.
+     * Initializes a new Update Customer Custom EDD_EDD_Attribute Definition Request object.
      */
     public function build(): UpdateCustomerCustomAttributeDefinitionRequest
     {

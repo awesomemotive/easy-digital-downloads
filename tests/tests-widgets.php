@@ -165,10 +165,10 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			$cart_widget->form( array() );
 		$output = ob_get_clean();
 
-		$this->assertRegExp( '/<label for="(.*)">(.*)<\/label>/', $output );
-		$this->assertRegExp( '/<input class="widefat" id="(.*)" name="(.*)" type="text" value="(.*)"\/>/', $output );
-		$this->assertRegExp( '/<input (.*) id="(.*)" name="(.*)" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="(.*)">(.*)<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="(.*)">(.*)<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<input class="widefat" id="(.*)" name="(.*)" type="text" value="(.*)"\/>/', $output );
+		$this->assertMatchesRegularExpression( '/<input (.*) id="(.*)" name="(.*)" type="checkbox" \/>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="(.*)">(.*)<\/label>/', $output );
 
 	}
 
@@ -260,13 +260,13 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			$categories_widget->form( array() );
 		$output = ob_get_clean();
 
-		$this->assertRegExp( '/<label for="(.*)">Title:<\/label>/', $output );
-		$this->assertRegExp( '/<input class="widefat" id="(.*)" name="(.*)" type="text" value="(.*)"\/>/', $output );
-		$this->assertRegExp( '/<label for="(.*)">Taxonomy:<\/label>/', $output );
-		$this->assertRegExp( '/<option value="download_category" (.*)>(.*)<\/option>/', $output );
-		$this->assertRegExp( '/<option value="download_tag" (.*)>(.*)<\/option>/', $output );
-		$this->assertRegExp( '/<label for="(.*)">Show Count:<\/label>/', $output );
-		$this->assertRegExp( '/<label for="(.*)">Hide Empty Categories:<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="(.*)">Title:<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<input class="widefat" id="(.*)" name="(.*)" type="text" value="(.*)"\/>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="(.*)">Taxonomy:<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<option value="download_category" (.*)>(.*)<\/option>/', $output );
+		$this->assertMatchesRegularExpression( '/<option value="download_tag" (.*)>(.*)<\/option>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="(.*)">Show Count:<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="(.*)">Hide Empty Categories:<\/label>/', $output );
 
 	}
 
@@ -368,7 +368,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$output = ob_get_clean();
 
 		$this->assertStringContainsString( '<h3>' . $download->post_title . '</h3>', $output );
-		$this->assertRegExp( '/<form id="edd_purchase_[0-9]+" class="edd_download_purchase_form edd_purchase_[0-9]+" method="post">/', $output );
+		$this->assertMatchesRegularExpression( '/<form id="edd_purchase_[0-9]+" class="edd_download_purchase_form edd_purchase_[0-9]+" method="post">/', $output );
 		$this->assertStringContainsString( '<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">', $output );
 		$this->assertStringContainsString( '<input type="hidden" name="download_id" value="' . $download->ID . '">', $output );
 		$this->assertStringContainsString( '<p class="edd-meta">', $output );
@@ -392,19 +392,19 @@ class Tests_Widgets extends EDD_UnitTestCase {
 			$categories_widget->form( array() );
 		$output = ob_get_clean();
 
-		$this->assertRegExp( '/<label for="widget-edd_product_details--title">Title:<\/label>/', $output );
-		$this->assertRegExp( '/<input class="widefat" id="widget-edd_product_details--title" name="widget-edd_product_details\[\]\[title\]" type="text" value="(.*)" \/>/', $output );
-		$this->assertRegExp( '/Display Type:/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--download_id">Download:<\/label>/', $output );
-		$this->assertRegExp( '/<select class="widefat" name="widget-edd_product_details\[\]\[download_id\]" id="widget-edd_product_details--download_id">/', $output );
-		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--download_title" name="widget-edd_product_details\[\]\[download_title\]" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--download_title">Show Download Title<\/label>/', $output );
-		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--purchase_button" name="widget-edd_product_details\[\]\[purchase_button\]" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--purchase_button">Show Purchase Button<\/label>/', $output );
-		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--categories" name="widget-edd_product_details\[\]\[categories\]" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--categories">Show Download Categories<\/label>/', $output );
-		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--tags" name="widget-edd_product_details\[\]\[tags\]" type="checkbox" \/>/', $output );
-		$this->assertRegExp( '/<label for="widget-edd_product_details--tags">Show Download Tags<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="widget-edd_product_details--title">Title:<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<input class="widefat" id="widget-edd_product_details--title" name="widget-edd_product_details\[\]\[title\]" type="text" value="(.*)" \/>/', $output );
+		$this->assertMatchesRegularExpression( '/Display Type:/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="widget-edd_product_details--download_id">Download:<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<select class="widefat" name="widget-edd_product_details\[\]\[download_id\]" id="widget-edd_product_details--download_id">/', $output );
+		$this->assertMatchesRegularExpression( '/<input  checked=\'checked\' id="widget-edd_product_details--download_title" name="widget-edd_product_details\[\]\[download_title\]" type="checkbox" \/>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="widget-edd_product_details--download_title">Show Download Title<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<input  checked=\'checked\' id="widget-edd_product_details--purchase_button" name="widget-edd_product_details\[\]\[purchase_button\]" type="checkbox" \/>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="widget-edd_product_details--purchase_button">Show Purchase Button<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<input  checked=\'checked\' id="widget-edd_product_details--categories" name="widget-edd_product_details\[\]\[categories\]" type="checkbox" \/>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="widget-edd_product_details--categories">Show Download Categories<\/label>/', $output );
+		$this->assertMatchesRegularExpression( '/<input  checked=\'checked\' id="widget-edd_product_details--tags" name="widget-edd_product_details\[\]\[tags\]" type="checkbox" \/>/', $output );
+		$this->assertMatchesRegularExpression( '/<label for="widget-edd_product_details--tags">Show Download Tags<\/label>/', $output );
 
 	}
 

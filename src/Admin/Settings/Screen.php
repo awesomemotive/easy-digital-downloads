@@ -237,7 +237,7 @@ class Screen {
 					unset( $tabs[ $tab ] );
 				}
 				if ( 'emails' === $tab ) {
-					$tabs_to_ignore = array( 'main', 'purchase_receipts', 'sale_notifications', 'email_summaries' );
+					$tabs_to_ignore = array( 'main', 'purchase_receipts', 'sale_notifications', 'email_summaries', 'acr' );
 					$remaining_tabs = array_diff( array_keys( $settings['emails'] ), $tabs_to_ignore );
 					if ( empty( $remaining_tabs ) ) {
 						unset( $tabs['emails'] );

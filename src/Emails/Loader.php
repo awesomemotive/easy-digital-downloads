@@ -38,6 +38,7 @@ class Loader extends MiniManager {
 		if ( is_admin() ) {
 			$classes[] = new \EDD\Admin\Emails\Manager();
 			$classes[] = new \EDD\Admin\Emails\Messages();
+			$classes[] = new \EDD\Admin\Emails\Styles();
 		}
 
 		return $classes;

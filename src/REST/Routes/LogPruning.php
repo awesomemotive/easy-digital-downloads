@@ -35,14 +35,6 @@ class LogPruning extends Route {
 	const BASE = 'logs/prune';
 
 	/**
-	 * LogPruning controller instance.
-	 *
-	 * @since 3.6.4
-	 * @var Controller
-	 */
-	private $controller;
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 3.6.4
