@@ -68,6 +68,7 @@ class Assets extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-icon-2x.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-icon.png' ),
+			array( EDD_PLUGIN_DIR . 'assets/images/edd-icon.svg' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-logo.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-media.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/loading.gif' ),

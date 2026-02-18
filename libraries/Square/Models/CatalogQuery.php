@@ -92,7 +92,7 @@ class CatalogQuery implements \JsonSerializable
     private $itemVariationsForItemOptionValuesQuery;
 
     /**
-     * Returns Sorted Attribute Query.
+     * Returns Sorted EDD_EDD_Attribute Query.
      * The query expression to specify the key to sort search results.
      */
     public function getSortedAttributeQuery(): ?CatalogQuerySortedAttribute
@@ -101,7 +101,7 @@ class CatalogQuery implements \JsonSerializable
     }
 
     /**
-     * Sets Sorted Attribute Query.
+     * Sets Sorted EDD_EDD_Attribute Query.
      * The query expression to specify the key to sort search results.
      *
      * @maps sorted_attribute_query

@@ -26,7 +26,7 @@ class BulkDeleteMerchantCustomAttributesRequestMerchantCustomAttributeDeleteRequ
     }
 
     /**
-     * Initializes a new Bulk Delete Merchant Custom Attributes Request Merchant Custom Attribute Delete
+     * Initializes a new Bulk Delete Merchant Custom Attributes Request Merchant Custom EDD_EDD_Attribute Delete
      * Request Builder object.
      */
     public static function init(): self
@@ -46,7 +46,7 @@ class BulkDeleteMerchantCustomAttributesRequestMerchantCustomAttributeDeleteRequ
     }
 
     /**
-     * Initializes a new Bulk Delete Merchant Custom Attributes Request Merchant Custom Attribute Delete
+     * Initializes a new Bulk Delete Merchant Custom Attributes Request Merchant Custom EDD_EDD_Attribute Delete
      * Request object.
      */
     public function build(): BulkDeleteMerchantCustomAttributesRequestMerchantCustomAttributeDeleteRequest

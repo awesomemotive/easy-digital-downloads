@@ -435,27 +435,36 @@ var EDD_Onboarding = {
 		 *
 		 */
 		init: function() {
-			// If WP Editor is already initialized, we have to destroy it first.
+			const editorId = 'edd_settings_purchase_receipt';
+
+			// If we previously initialized (e.g. user navigated away and back via AJAX), remove before re-init.
 			if ( EDD_Onboarding.EDD_Onboarding_Configure_Emails.vars.wp_editor ) {
-				wp.editor.remove( 'edd_settings_purchase_receipt' )
+				wp.editor.remove( editorId );
 			}
 
-			wp.editor.initialize(
-				'edd_settings_purchase_receipt',
-				{
-				  tinymce: {
-					wpautop: true,
-					plugins : 'charmap colorpicker compat3x directionality fullscreen hr image lists media paste tabfocus textcolor wordpress wpautoresize wpdialogs wpeditimage wpemoji wpgallery wplink wptextpattern wpview',
-					toolbar1: 'bold italic underline strikethrough | bullist numlist | blockquote hr wp_more | alignleft aligncenter alignright | link unlink | fullscreen | wp_adv',
-					toolbar2: 'formatselect alignjustify forecolor | pastetext removeformat charmap | outdent indent | undo redo | wp_help'
-				  },
-				  quicktags: true,
-				  mediaButtons: true,
-				}
-			  );
+			// Only initialize when the editor is not already set up (AJAX step load; inline script in injected HTML does not run).
+			// On direct page load we skip so we don't duplicate the Visual/Code tabs from wp_editor()'s own init.
+			// When we do init (AJAX), client-side build only adds Add Media—append our Insert Tag button from the hidden template.
+			if ( ! globalThis.tinymce?.get( editorId ) ) {
+				wp.editor.initialize( editorId, {
+					tinymce: {
+						wpautop: true,
+						plugins: 'charmap colorpicker compat3x directionality fullscreen hr image lists media paste tabfocus textcolor wordpress wpautoresize wpdialogs wpeditimage wpemoji wpgallery wplink wptextpattern wpview',
+						toolbar1: 'bold italic underline strikethrough | bullist numlist | blockquote hr wp_more | alignleft aligncenter alignright | link unlink | fullscreen | wp_adv',
+						toolbar2: 'formatselect alignjustify forecolor | pastetext removeformat charmap | outdent indent | undo redo | wp_help',
+					},
+					quicktags: true,
+					mediaButtons: true,
+				} );
 
-			// Append "Insert marker" button.
-			$( '#edd-onboarding__insert-marker-button a' ).clone().appendTo( '.wp-media-buttons' );
+				// Client-side editor only adds Add Media; our Insert Tag is PHP-only. Clone the hidden button into .wp-media-buttons.
+				const insertTagTemplate = document.getElementById( 'edd-onboarding__insert-tag-button-template' );
+				const mediaButtons = document.querySelector( '.wp-media-buttons' );
+				if ( insertTagTemplate && mediaButtons ) {
+					const clone = insertTagTemplate.querySelector( '.edd-email-tags-inserter' ).cloneNode( true );
+					mediaButtons.appendChild( clone );
+				}
+			}
 
 			EDD_Onboarding.EDD_Onboarding_Configure_Emails.vars.wp_editor = true;
 		},
@@ -493,9 +502,7 @@ var EDD_Onboarding = {
 				success: function( data ) {
 				},
 			} ).fail( function( response ) {
-				if ( window.console && window.console.log ) {
-					console.log( response );
-				}
+				console.log( response );
 			} );
 		}
 	},
@@ -757,9 +764,7 @@ var EDD_Onboarding = {
 					EDD_Onboarding.loading_state( false );
 				},
 			} ).fail( function( response ) {
-				if ( window.console && window.console.log ) {
-					console.log( response );
-				}
+				console.log( response );
 			} );
 		}
 	}

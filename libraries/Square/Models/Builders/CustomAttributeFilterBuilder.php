@@ -26,7 +26,7 @@ class CustomAttributeFilterBuilder
     }
 
     /**
-     * Initializes a new Custom Attribute Filter Builder object.
+     * Initializes a new Custom EDD_EDD_Attribute Filter Builder object.
      */
     public static function init(): self
     {
@@ -145,7 +145,7 @@ class CustomAttributeFilterBuilder
     }
 
     /**
-     * Initializes a new Custom Attribute Filter object.
+     * Initializes a new Custom EDD_EDD_Attribute Filter object.
      */
     public function build(): CustomAttributeFilter
     {

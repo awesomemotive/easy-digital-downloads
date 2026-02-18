@@ -133,7 +133,7 @@ class Search {
 				$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
 			}
 
-			if ( empty( $prices ) || ! $variations_only ) {
+			if ( empty( $prices ) || false === $variations || ! $variations_only ) {
 				// Add item to results array.
 				$search['results'][] = array(
 					'id'   => $post_id,
@@ -174,7 +174,22 @@ class Search {
 			}
 		);
 
-		return get_posts( $args );
+		$items = get_posts( $args );
+
+		/**
+		 * Filter the download search results.
+		 *
+		 * Allows extensions to add additional items (e.g., from taxonomy searches)
+		 * or modify the results before they are processed.
+		 *
+		 * @since 3.6.5
+		 * @param array $items The array of post objects from the search.
+		 * @param array $args  The query arguments used for the search.
+		 */
+		return $this->sort_by_relevance(
+			apply_filters( 'edd_download_search_items', $items, $args ),
+			$args['s']
+		);
 	}
 
 	/**
@@ -219,6 +234,60 @@ class Search {
 		}
 
 		return apply_filters( 'edd_product_dropdown_status', array( 'publish', 'draft', 'private', 'future' ) );
+	}
+
+	/**
+	 * Sorts results by relevance, prioritizing exact title matches.
+	 *
+	 * @since 3.6.5
+	 * @param array  $items       The items to sort.
+	 * @param string $search_term The search term.
+	 * @return array
+	 */
+	private function sort_by_relevance( $items, $search_term ) {
+		if ( empty( $search_term ) || empty( $items ) ) {
+			return $items;
+		}
+
+		$search_lower = mb_strtolower( trim( $search_term ) );
+
+		// Filter out invalid items FIRST (before sorting).
+		$items = array_filter(
+			$items,
+			function ( $item ) {
+				return $item instanceof \WP_Post;
+			}
+		);
+
+		// Assign relevance scores and sort.
+		usort(
+			$items,
+			function ( $a, $b ) use ( $search_lower ) {
+				$title_a = mb_strtolower( $a->post_title );
+				$title_b = mb_strtolower( $b->post_title );
+
+				// Exact match gets highest priority.
+				$exact_a = ( $title_a === $search_lower ) ? 1 : 0;
+				$exact_b = ( $title_b === $search_lower ) ? 1 : 0;
+
+				if ( $exact_a !== $exact_b ) {
+					return $exact_b - $exact_a;
+				}
+
+				// Starts with search term gets second priority.
+				$starts_a = ( 0 === mb_strpos( $title_a, $search_lower ) ) ? 1 : 0;
+				$starts_b = ( 0 === mb_strpos( $title_b, $search_lower ) ) ? 1 : 0;
+
+				if ( $starts_a !== $starts_b ) {
+					return $starts_b - $starts_a;
+				}
+
+				// Fall back to alphabetical order.
+				return strcmp( $title_a, $title_b );
+			}
+		);
+
+		return $items;
 	}
 
 	/**

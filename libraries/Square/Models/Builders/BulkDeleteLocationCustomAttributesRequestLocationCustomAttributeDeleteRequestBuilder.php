@@ -26,7 +26,7 @@ class BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequ
     }
 
     /**
-     * Initializes a new Bulk Delete Location Custom Attributes Request Location Custom Attribute Delete
+     * Initializes a new Bulk Delete Location Custom Attributes Request Location Custom EDD_EDD_Attribute Delete
      * Request Builder object.
      */
     public static function init(): self
@@ -46,7 +46,7 @@ class BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequ
     }
 
     /**
-     * Initializes a new Bulk Delete Location Custom Attributes Request Location Custom Attribute Delete
+     * Initializes a new Bulk Delete Location Custom Attributes Request Location Custom EDD_EDD_Attribute Delete
      * Request object.
      */
     public function build(): BulkDeleteLocationCustomAttributesRequestLocationCustomAttributeDeleteRequest

@@ -27,7 +27,7 @@ class BookingCustomAttributeUpsertResponseBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Upsert Response Builder object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Upsert Response Builder object.
      */
     public static function init(): self
     {
@@ -68,7 +68,7 @@ class BookingCustomAttributeUpsertResponseBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Upsert Response object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Upsert Response object.
      */
     public function build(): BookingCustomAttributeUpsertResponse
     {

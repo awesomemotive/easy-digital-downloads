@@ -27,7 +27,7 @@ class UpdateCustomerCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Update Customer Custom Attribute Definition Response Builder object.
+     * Initializes a new Update Customer Custom EDD_EDD_Attribute Definition Response Builder object.
      */
     public static function init(): self
     {
@@ -57,7 +57,7 @@ class UpdateCustomerCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Update Customer Custom Attribute Definition Response object.
+     * Initializes a new Update Customer Custom EDD_EDD_Attribute Definition Response object.
      */
     public function build(): UpdateCustomerCustomAttributeDefinitionResponse
     {

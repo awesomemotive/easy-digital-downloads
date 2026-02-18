@@ -27,7 +27,7 @@ class CustomerCustomAttributeFilterBuilder
     }
 
     /**
-     * Initializes a new Customer Custom Attribute Filter Builder object.
+     * Initializes a new Customer Custom EDD_EDD_Attribute Filter Builder object.
      *
      * @param string $key
      */
@@ -59,7 +59,7 @@ class CustomerCustomAttributeFilterBuilder
     }
 
     /**
-     * Initializes a new Customer Custom Attribute Filter object.
+     * Initializes a new Customer Custom EDD_EDD_Attribute Filter object.
      */
     public function build(): CustomerCustomAttributeFilter
     {

@@ -96,6 +96,22 @@ class RemoteRequest {
 	}
 
 	/**
+	 * Magic isset.
+	 *
+	 * @since 3.6.5
+	 * @param string $key The property name.
+	 * @return bool
+	 */
+	public function __isset( $key ) {
+		if ( ! property_exists( $this, $key ) ) {
+			return false;
+		}
+
+		// Use the getter to ensure lazy-loaded properties are populated.
+		return null !== $this->__get( $key );
+	}
+
+	/**
 	 * Parses the request arguments.
 	 *
 	 * @since 3.3.5

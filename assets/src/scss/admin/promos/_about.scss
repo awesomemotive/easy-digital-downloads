@@ -78,6 +78,17 @@ body.edd-about {
 					text-align: center;
 					line-height: initial;
 				}
+
+				&.welcome-image {
+					margin: 0 auto;
+					max-width: 100%;
+					text-align: center;
+
+					& img {
+						max-width: 100%;
+						height: auto;
+					}
+				}
 			}
 
 			& .edd-admin-columns {

@@ -11,6 +11,7 @@ class LoginRegister extends EDD_UnitTestCase {
 	public function setup(): void {
 		parent::setUp();
 		wp_set_current_user( 0 );
+		edd_clear_errors();
 	}
 
 	/**

@@ -27,7 +27,7 @@ class UpsertMerchantCustomAttributeResponseBuilder
     }
 
     /**
-     * Initializes a new Upsert Merchant Custom Attribute Response Builder object.
+     * Initializes a new Upsert Merchant Custom EDD_EDD_Attribute Response Builder object.
      */
     public static function init(): self
     {
@@ -57,7 +57,7 @@ class UpsertMerchantCustomAttributeResponseBuilder
     }
 
     /**
-     * Initializes a new Upsert Merchant Custom Attribute Response object.
+     * Initializes a new Upsert Merchant Custom EDD_EDD_Attribute Response object.
      */
     public function build(): UpsertMerchantCustomAttributeResponse
     {

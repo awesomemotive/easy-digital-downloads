@@ -19,7 +19,11 @@ class EDD extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_instance() {
-		$this->assertClassHasStaticAttribute( 'instance', 'Easy_Digital_Downloads' );
+		$reflection = new \ReflectionClass( 'Easy_Digital_Downloads' );
+		$this->assertTrue(
+			$reflection->hasProperty( 'instance' ) && $reflection->getProperty( 'instance' )->isStatic(),
+			'Class Easy_Digital_Downloads should have static property "instance"'
+		);
 	}
 
 	public function test_constants() {

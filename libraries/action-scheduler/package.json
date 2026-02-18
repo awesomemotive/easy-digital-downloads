@@ -1,0 +1,43 @@
+{
+  "name": "action-scheduler",
+  "title": "Action Scheduler",
+  "version": "3.9.3",
+  "homepage": "https://actionscheduler.org/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/woocommerce/action-scheduler.git"
+  },
+  "license": "GPL-3.0+",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "build": "composer install --no-dev && npm install --only=prod && composer archive --file=$npm_package_name --format=zip && npm run postarchive",
+    "postarchive": "rm -rf $npm_package_name && unzip $npm_package_name.zip -d $npm_package_name && rm $npm_package_name.zip && zip -r $npm_package_name.zip $npm_package_name && rm -rf $npm_package_name",
+    "check-textdomain": "grunt checktextdomain",
+    "phpcs": "grunt phpcs"
+  },
+  "woorelease": {
+    "wp_org_slug": "action-scheduler"
+  },
+  "devDependencies": {
+    "grunt": "1.5.3",
+    "grunt-checktextdomain": "1.0.1",
+    "grunt-phpcs": "0.4.0",
+    "husky": "3.0.9",
+    "lint-staged": "13.2.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.php": [
+      "php -d display_errors=1 -l",
+      "composer run-script phpcs-pre-commit"
+    ]
+  }
+}

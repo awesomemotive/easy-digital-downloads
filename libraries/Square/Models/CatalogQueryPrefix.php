@@ -33,7 +33,7 @@ class CatalogQueryPrefix implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Name.
+     * Returns EDD_EDD_Attribute Name.
      * The name of the attribute to be searched.
      */
     public function getAttributeName(): string
@@ -42,7 +42,7 @@ class CatalogQueryPrefix implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Name.
+     * Sets EDD_EDD_Attribute Name.
      * The name of the attribute to be searched.
      *
      * @required
@@ -54,7 +54,7 @@ class CatalogQueryPrefix implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Prefix.
+     * Returns EDD_EDD_Attribute Prefix.
      * The desired prefix of the search attribute value.
      */
     public function getAttributePrefix(): string
@@ -63,7 +63,7 @@ class CatalogQueryPrefix implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Prefix.
+     * Sets EDD_EDD_Attribute Prefix.
      * The desired prefix of the search attribute value.
      *
      * @required

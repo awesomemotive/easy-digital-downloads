@@ -26,7 +26,7 @@ class BookingCustomAttributeUpsertRequestBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Upsert Request Builder object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Upsert Request Builder object.
      *
      * @param string $bookingId
      * @param CustomAttribute $customAttribute
@@ -57,7 +57,7 @@ class BookingCustomAttributeUpsertRequestBuilder
     }
 
     /**
-     * Initializes a new Booking Custom Attribute Upsert Request object.
+     * Initializes a new Booking Custom EDD_EDD_Attribute Upsert Request object.
      */
     public function build(): BookingCustomAttributeUpsertRequest
     {

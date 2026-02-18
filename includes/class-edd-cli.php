@@ -5,17 +5,14 @@
  * This class provides an integration point with the WP-CLI plugin allowing
  * access to EDD from the command line.
  *
- * @package    EDD
- * @subpackage Classes/CLI
- * @copyright  Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license    http://opensource.org/license/gpl-2.0.php GNU Public License
+ * @package    EDD\CLI
+ * @copyright  Copyright (c) 2018, Sandhills Development, LLC
+ * @license    https://opensource.org/license/gpl-2.0.php GNU Public License
  * @since      2.0
  */
 
-// Exit if accessed directly
-defined( 'ABSPATH' ) || exit;
-
-WP_CLI::add_command( 'edd', 'EDD_CLI' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
  * Work with EDD through WP-CLI
@@ -27,6 +24,7 @@ WP_CLI::add_command( 'edd', 'EDD_CLI' );
  * @since 2.0
  */
 class EDD_CLI extends WP_CLI_Command {
+	use EDD\CLI\Traits\TestData;
 
 	private $api;
 
@@ -2395,103 +2393,6 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
-	 * Gets a random first name.
-	 *
-	 * @return string
-	 */
-	protected function get_fname() {
-		$names = array(
-			'Ilse',
-			'Emelda',
-			'Aurelio',
-			'Chiquita',
-			'Cheryl',
-			'Norbert',
-			'Neville',
-			'Wendie',
-			'Clint',
-			'Synthia',
-			'Tobi',
-			'Nakita',
-			'Marisa',
-			'Maybelle',
-			'Onie',
-			'Donnette',
-			'Henry',
-			'Sheryll',
-			'Leighann',
-			'Wilson',
-		);
-
-		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
-	}
-
-	/**
-	 * Gets a random last name.
-	 *
-	 * @return string
-	 */
-	protected function get_lname() {
-		$names = array(
-			'Warner',
-			'Roush',
-			'Lenahan',
-			'Theiss',
-			'Sack',
-			'Troutt',
-			'Vanderburg',
-			'Lisi',
-			'Lemons',
-			'Christon',
-			'Kogut',
-			'Broad',
-			'Wernick',
-			'Horstmann',
-			'Schoenfeld',
-			'Dolloff',
-			'Murph',
-			'Shipp',
-			'Hursey',
-			'Jacobi',
-		);
-
-		return $names[ rand( 0, ( count( $names ) - 1 ) ) ];
-	}
-
-	/**
-	 * Gets a random domain.
-	 *
-	 * @return string
-	 */
-	protected function get_domain() {
-		$domains = array(
-			'example',
-			'edd',
-			'rcp',
-			'affwp',
-		);
-
-		return $domains[ rand( 0, ( count( $domains ) - 1 ) ) ];
-	}
-
-	/**
-	 * Gets a random TLD.
-	 *
-	 * @return string
-	 */
-	protected function get_tld() {
-		$tlds = array(
-			'local',
-			'test',
-			'example',
-			'localhost',
-			'invalid',
-		);
-
-		return $tlds[ rand( 0, ( count( $tlds ) - 1 ) ) ];
-	}
-
-	/**
 	 * Gets a time string for an order.
 	 *
 	 * @since 3.3.7
@@ -2521,3 +2422,6 @@ class EDD_CLI extends WP_CLI_Command {
 		return date( 'Y-m-d H:i:s', strtotime( $date ) );
 	}
 }
+
+// Register the EDD CLI command after the class is defined.
+WP_CLI::add_command( 'edd', 'EDD_CLI' );

@@ -39,7 +39,7 @@ class Scripts {
 		// Register compiled scripts from assets/build/js.
 		wp_register_script( 'edd-admin-scripts', $js_dir . 'admin.js', $admin_deps, $version, true );
 		wp_register_script( 'edd-admin-tax-rates', $js_dir . 'tax-rates.js', array( 'wp-backbone', 'jquery-chosen' ), $version, true );
-		wp_register_script( 'edd-admin-email-tags', $js_dir . 'email-tags.js', array( 'thickbox', 'wp-util' ), $version, true );
+		wp_register_script( 'edd-admin-email-tags', $js_dir . 'email-tags.js', array( 'wp-util' ), $version, true );
 		wp_register_script( 'edd-admin-downloads-editor', $js_dir . 'downloads-editor.js', array( 'wp-dom-ready', 'wp-api-fetch', 'wp-data' ), $version, true );
 
 		foreach ( self::get_admin_pages() as $page => $deps ) {

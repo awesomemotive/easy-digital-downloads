@@ -25,7 +25,7 @@ class CatalogQuerySortedAttributeBuilder
     }
 
     /**
-     * Initializes a new Catalog Query Sorted Attribute Builder object.
+     * Initializes a new Catalog Query Sorted EDD_EDD_Attribute Builder object.
      *
      * @param string $attributeName
      */
@@ -66,7 +66,7 @@ class CatalogQuerySortedAttributeBuilder
     }
 
     /**
-     * Initializes a new Catalog Query Sorted Attribute object.
+     * Initializes a new Catalog Query Sorted EDD_EDD_Attribute object.
      */
     public function build(): CatalogQuerySortedAttribute
     {

@@ -118,87 +118,7 @@ function edd_register_settings() {
 	// Get registered settings.
 	$edd_settings = edd_get_registered_settings();
 
-	// Loop through settings.
-	foreach ( $edd_settings as $tab => $sections ) {
-
-		// Loop through sections.
-		foreach ( $sections as $section => $settings ) {
-
-			// Check for backwards compatibility.
-			$section_tabs = edd_get_settings_tab_sections( $tab );
-			if ( ! is_array( $section_tabs ) || ! array_key_exists( $section, $section_tabs ) ) {
-				$section  = 'main';
-				$settings = $sections;
-			}
-
-			// Current page.
-			$page = "edd_settings_{$tab}_{$section}";
-
-			// Add the settings section.
-			add_settings_section(
-				$page,
-				__return_null(),
-				'__return_false',
-				$page
-			);
-
-			foreach ( $settings as $option ) {
-
-				// For backwards compatibility.
-				if ( empty( $option['id'] ) ) {
-					continue;
-				}
-
-				// Parse args.
-				$args = wp_parse_args(
-					$option,
-					array(
-						'section'       => $section,
-						'id'            => null,
-						'desc'          => '',
-						'name'          => '',
-						'size'          => null,
-						'options'       => '',
-						'std'           => '',
-						'min'           => null,
-						'max'           => null,
-						'step'          => null,
-						'chosen'        => null,
-						'multiple'      => null,
-						'placeholder'   => null,
-						'allow_blank'   => true,
-						'readonly'      => false,
-						'faux'          => false,
-						'tooltip_title' => false,
-						'tooltip_desc'  => false,
-						'field_class'   => '',
-						'label_for'     => false,
-					)
-				);
-
-				// Callback fallback.
-				$func     = 'edd_' . $args['type'] . '_callback';
-				$callback = ! function_exists( $func )
-					? 'edd_missing_callback'
-					: $func;
-
-				// Link the label to the form field.
-				if ( empty( $args['label_for'] ) ) {
-					$args['label_for'] = 'edd_settings[' . $args['id'] . ']';
-				}
-
-				// Add the settings field.
-				add_settings_field(
-					'edd_settings[' . $args['id'] . ']',
-					$args['name'],
-					$callback,
-					$page,
-					$page,
-					$args
-				);
-			}
-		}
-	}
+	EDD\Admin\Settings\Register::add_settings_fields( $edd_settings );
 
 	// Register our setting in the options table.
 	register_setting( 'edd_settings', 'edd_settings', 'edd_settings_sanitize' );
@@ -331,6 +251,7 @@ function edd_settings_sanitize( $input = array() ) {
 					}
 					break;
 				case 'number':
+				case 'amounttype':
 					if ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) {
 						unset( $output[ $key ] );
 					}
@@ -1575,96 +1496,6 @@ function edd_tax_rate_callback( $args ) {
 }
 
 /**
- * Recapture Callback
- *
- * Renders Recapture Settings
- *
- * @since 2.10.2
- * @param array $args Arguments passed by the setting.
- * @return void
- */
-function edd_recapture_callback( $args ) {
-	$client_connected = false;
-
-	if ( class_exists( 'RecaptureEDD' ) ) {
-		$client_connected = RecaptureEDD::is_ready();
-	}
-
-	ob_start();
-
-	echo $args['desc'];
-
-	// Output the appropriate button and label based on connection status.
-	if ( $client_connected ) :
-		$connection_complete = get_option( 'recapture_api_key' );
-		?>
-		<div class="inline notice notice-<?php echo $connection_complete ? 'success' : 'warning'; ?>">
-			<p>
-				<?php esc_html_e( 'Recapture plugin activated.', 'easy-digital-downloads' ); ?>
-				<?php
-				printf(
-					wp_kses_post(
-						/* translators: 1:  opening anchor tag, 2:  closing anchor tag */
-						__( '%1$sAccess your Recapture account%2$s.', 'easy-digital-downloads' )
-					),
-					'<a href="https://recapture.io/account" target="_blank" rel="noopener noreferrer">',
-					'</a>'
-				);
-				?>
-			</p>
-
-			<?php if ( $connection_complete ) : ?>
-				<p>
-					<a id="edd-recapture-disconnect" class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=recapture-confirm-disconnect' ) ); ?>"><?php esc_html_e( 'Disconnect Recapture', 'easy-digital-downloads' ); ?></a>
-				</p>
-			<?php else : ?>
-				<p>
-					<?php
-					printf(
-						wp_kses_post(
-							/* translators: 1:  opening anchor tag, 2:  closing anchor tag */
-							__( '%1$sComplete your connection to Recapture%2$s', 'easy-digital-downloads' )
-						),
-						'<a href="' . esc_url( admin_url( 'admin.php?page=recapture' ) ) . '">',
-						'</a>'
-					);
-					?>
-				</p>
-			<?php endif; ?>
-		</div>
-		<?php
-	else :
-		?>
-		<p>
-			<?php
-			esc_html_e( 'We recommend Recapture for recovering lost revenue by automatically sending effective, targeted emails to customers who abandon their shopping cart.', 'easy-digital-downloads' );
-			echo '&nbsp;';
-			printf(
-				wp_kses_post(
-					/* translators: 1:  opening anchor tag, 2:  closing anchor tag */
-					__( '%1$sLearn more%2$s (Free trial available)', 'easy-digital-downloads' )
-				),
-				'<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" target="_blank" rel="noopener noreferrer">',
-				'</a>'
-			);
-			?>
-		</p>
-		<?php if ( current_user_can( 'install_plugins' ) ) : ?>
-		<p>
-			<button type="button" id="edd-recapture-connect" class="button button-primary">
-				<?php esc_html_e( 'Connect with Recapture', 'easy-digital-downloads' ); ?>
-			</button>
-			<?php wp_nonce_field( 'edd-recapture-connect', 'edd-recapture-connect-nonce' ); ?>
-		</p>
-	<?php endif; ?>
-
-		<?php
-	endif;
-
-	echo ob_get_clean();
-}
-
-/**
  * Renders tax rates table.
  *
  * @since 1.6
@@ -1805,6 +1636,64 @@ function edd_checkbox_toggle_callback( $args ) {
 	}
 	$checkbox = new EDD\HTML\CheckboxToggle( $args );
 	$html     = $checkbox->get();
+	if ( ! empty( $args['desc'] ) ) {
+		$html .= '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
+	}
+
+	echo apply_filters( 'edd_after_setting_output', $html, $args );
+}
+
+/**
+ * Amount Type Callback
+ *
+ * Renders amount/type fields with a unit prefix or suffix.
+ *
+ * @since 3.6.5
+ * @param array $args Arguments passed by the setting.
+ * @return void
+ */
+function edd_amounttype_callback( $args ) {
+	$edd_option = edd_get_option( $args['id'] );
+
+	if ( $edd_option ) {
+		$value = $edd_option;
+	} elseif ( ! empty( $args['allow_blank'] ) && empty( $edd_option ) ) {
+		$value = '';
+	} else {
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+	}
+
+	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
+		$args['readonly'] = true;
+		$value            = isset( $args['std'] ) ? $args['std'] : '';
+		$name             = '';
+	} else {
+		$name = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
+	}
+
+	// Build arguments for AmountType.
+	$amount_args = array(
+		'id'          => 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']',
+		'name'        => $name,
+		'value'       => esc_attr( stripslashes( $value ) ),
+		'position'    => isset( $args['position'] ) ? $args['position'] : 'after',
+		'unit'        => isset( $args['unit'] ) ? $args['unit'] : '',
+		'type'        => isset( $args['subtype'] ) ? $args['subtype'] : 'number',
+		'placeholder' => ! empty( $args['placeholder'] ) ? $args['placeholder'] : '',
+		'required'    => isset( $args['required'] ) && true === $args['required'],
+		'min'         => isset( $args['min'] ) ? $args['min'] : '',
+		'max'         => isset( $args['max'] ) ? $args['max'] : '',
+		'step'        => isset( $args['step'] ) ? $args['step'] : '',
+	);
+
+	// Add the size class to the field class array.
+	if ( ! empty( $args['field_class'] ) ) {
+		$amount_args['class'] = edd_sanitize_html_class( $args['field_class'] );
+	}
+
+	$amount_type = new EDD\HTML\AmountType( $amount_args );
+	$html        = $amount_type->get();
+
 	if ( ! empty( $args['desc'] ) ) {
 		$html .= '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
 	}

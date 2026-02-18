@@ -87,14 +87,14 @@ class Generator extends EDD_UnitTestCase {
 	public function test_generate_code_only_letters() {
 		$code = self::$generator->generate( '', 'letters', 10 );
 
-		$this->assertRegExp( '/^[A-Z]+$/', $code );
+		$this->assertMatchesRegularExpression( '/^[A-Z]+$/', $code );
 		$this->assertEquals( 10, strlen( $code ) );
 	}
 
 	public function test_generate_code_only_numbers() {
 		$code = self::$generator->generate( '', 'numbers', 10 );
 
-		$this->assertRegExp( '/^[0-9]+$/', $code );
+		$this->assertMatchesRegularExpression( '/^[0-9]+$/', $code );
 		$this->assertEquals( 10, strlen( $code ) );
 	}
 

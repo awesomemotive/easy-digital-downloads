@@ -34,6 +34,7 @@ class Loader extends MiniManager {
 			new DebugLog(),
 			new Logs(),
 			new LogSettings(),
+			new ScheduledActions(),
 		);
 	}
 }

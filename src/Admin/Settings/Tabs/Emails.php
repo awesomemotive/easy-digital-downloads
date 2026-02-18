@@ -88,6 +88,12 @@ class Emails extends Tab {
 					'desc' => '',
 					'type' => 'hook',
 				),
+				'bounce_webhook_url'  => array(
+					'id'   => 'bounce_webhook_url',
+					'name' => __( 'Bounce Notifications', 'easy-digital-downloads' ),
+					'type' => 'descriptive_text',
+					'desc' => $this->get_webhook_instructions(),
+				),
 			),
 			'purchase_receipts'  => array(
 				'purchase_subject'      => array(
@@ -190,10 +196,10 @@ class Emails extends Tab {
 				'id'   => 'email_summary_buttons',
 				'name' => '',
 				'desc' => '
-							<a href="' . esc_url( $this->get_trigger_url() ) . '" class="button" id="edd-send-test-summary">' . esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>
-							<div id="edd-send-test-summary-save-changes-notice"></div>
-							<div id="edd-send-test-summary-notice"></div>
-						',
+					<a href="' . esc_url( $this->get_trigger_url() ) . '" class="button" id="edd-send-test-summary">' . esc_html( __( 'Send Test Email', 'easy-digital-downloads' ) ) . '</a>
+					<div id="edd-send-test-summary-save-changes-notice"></div>
+					<div id="edd-send-test-summary-notice"></div>
+				',
 				'type' => 'descriptive_text',
 			),
 			'disable_email_summary'           => array(
@@ -271,5 +277,39 @@ class Emails extends Tab {
 			),
 			'edd_trigger_email_summary'
 		);
+	}
+
+	/**
+	 * Gets the webhook configuration instructions.
+	 *
+	 * @since 3.6.5
+	 * @return string HTML instructions for webhook configuration.
+	 */
+	private function get_webhook_instructions(): string {
+		$webhook_secret = \EDD\REST\Controllers\BounceWebhook::generate_webhook_secret();
+		$webhook_url    = add_query_arg( 'secret', $webhook_secret, rest_url( 'edd/v3/webhooks/bounce' ) );
+
+		ob_start();
+		?>
+		<div class="edd-bounce-webhook-config">
+			<p class="description">
+				<?php
+				esc_html_e( 'Configure your email service provider to send bounce notifications to the webhook URL below.', 'easy-digital-downloads' );
+				echo '<br>';
+				printf(
+					/* translators: 1: Opening anchor tag, 2: Closing anchor tag */
+					esc_html__( 'For detailed setup instructions for SendGrid, Mailgun, Amazon SES, SendLayer, and other providers, %1$svisit our documentation%2$s.', 'easy-digital-downloads' ),
+					'<a href="https://easydigitaldownloads.com/docs/email-setup-and-configuration/#bounce-webhook-setup" target="_blank" rel="noopener noreferrer">',
+					'</a>'
+				);
+				?>
+			</p>
+			<hr>
+			<button type="button" class="button button-secondary edd-button__copy" data-clipboard-text="<?php echo esc_attr( $webhook_url ); ?>">
+				<?php esc_html_e( 'Copy Webhook URL', 'easy-digital-downloads' ); ?>
+			</button>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 }

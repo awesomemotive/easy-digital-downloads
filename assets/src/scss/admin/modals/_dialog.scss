@@ -1,0 +1,17 @@
+@use '../../variables/colors' as colors;
+
+// Base modal dialog styles
+.edd-modal {
+	max-width: 640px;
+	width: calc(100% - 32px);
+	padding: 0;
+	border: 1px solid colors.$wp-border;
+	border-radius: 4px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+	max-height: calc(100vh - 60px);
+	overflow: hidden;
+
+	&::backdrop {
+		background: rgba(0, 0, 0, 0.7);
+	}
+}

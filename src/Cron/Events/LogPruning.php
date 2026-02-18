@@ -11,6 +11,7 @@
 namespace EDD\Cron\Events;
 
 use EDD\Cron\Traits\Clear;
+use EDD\Cron\Schedulers\Handler;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -129,32 +130,26 @@ class LogPruning extends Event {
 	 * @return void
 	 */
 	private function cleanup_orphaned_events( array $valid_type_ids ) {
-		$crons = _get_cron_array();
-		if ( empty( $crons ) ) {
-			return;
-		}
+		$scheduler = Handler::get_scheduler();
 
-		// Find all edd_prune_logs_* hooks that shouldn't be scheduled.
-		foreach ( $crons as $timestamp => $cron ) {
-			foreach ( $cron as $hook => $args ) {
-				// Only process our log pruning hooks.
-				if ( strpos( $hook, 'edd_prune_logs_' ) !== 0 ) {
-					continue;
-				}
+		// Get all scheduled hooks with our log pruning prefix.
+		$hooks = $scheduler->get_scheduled_hooks( 'edd_prune_logs_', 1000 );
 
-				// Extract the type ID from the hook name.
-				$type_id = str_replace( 'edd_prune_logs_', '', $hook );
+		foreach ( $hooks as $hook ) {
+			// Extract the type ID from the hook name.
+			$type_id = str_replace( 'edd_prune_logs_', '', $hook );
 
-				// If this type isn't in our valid list, clear it.
-				if ( ! in_array( $type_id, $valid_type_ids, true ) ) {
-					self::clear( $hook );
-				}
+			// If this type isn't in our valid list, clear it.
+			if ( ! in_array( $type_id, $valid_type_ids, true ) ) {
+				self::clear( $hook );
 			}
 		}
 	}
 
 	/**
 	 * Schedule a single log type's cron event.
+	 *
+	 * Uses the active scheduler (Action Scheduler or WP-Cron).
 	 *
 	 * @since 3.6.4
 	 *
@@ -168,15 +163,29 @@ class LogPruning extends Event {
 		$hook = "edd_prune_logs_{$type_id}";
 
 		// Check if already scheduled.
-		if ( $this->next_scheduled( $hook ) ) {
+		if ( $this->next_scheduled( $hook, array() ) ) {
 			return;
 		}
 
 		// Calculate this log type's run time with staggered offset.
 		$first_run = $base_time + $time_offset;
 
-		// Schedule this log type's event.
-		wp_schedule_event( $first_run, $this->schedule, $hook );
+		// Get the scheduler and convert schedule to interval.
+		$scheduler = Handler::get_scheduler();
+		$interval  = Handler::get_schedule_interval( $this->schedule );
+
+		if ( false === $interval ) {
+			edd_debug_log(
+				sprintf(
+					'[EDD Cron] Could not get interval for schedule "%s" when scheduling log pruning for type "%s"',
+					$this->schedule,
+					$type_id
+				)
+			);
+			return;
+		}
+
+		$scheduler->schedule_recurring( $hook, $first_run, $interval );
 	}
 
 	/**

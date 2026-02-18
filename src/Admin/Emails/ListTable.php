@@ -377,6 +377,14 @@ class ListTable extends \WP_List_Table {
 			}
 		}
 
+		/**
+		 * Filters the email keys before they are added to the list table.
+		 *
+		 * @since 3.6.5
+		 * @param array $emails Array of email IDs and class names.
+		 */
+		$emails = apply_filters( 'edd_email_list_table_emails', $emails );
+
 		// The key is important as it is used to manage dynamic emails.
 		foreach ( $emails as $key => $email_class_name ) {
 			try {

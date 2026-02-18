@@ -486,6 +486,32 @@ class Cart extends EDD_UnitTestCase {
 		$this->assertFalse( edd_item_in_cart( self::$download->ID ) );
 	}
 
+	public function test_item_in_cart_matches_by_hash() {
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		$contents = edd_get_cart_contents();
+		$item     = reset( $contents );
+
+		$this->assertNotEmpty( $item['hash'], 'Cart item should have a hash.' );
+
+		// Match by hash.
+		$this->assertTrue( edd_item_in_cart( self::$download->ID, array( 'hash' => $item['hash'] ) ) );
+
+		// Non-matching hash falls through to price_id check and still matches.
+		$this->assertTrue( edd_item_in_cart( self::$download->ID, array( 'hash' => 'nonexistent', 'price_id' => 0 ) ) );
+
+		// Non-matching hash with wrong price_id should not match.
+		$this->assertFalse( edd_item_in_cart( self::$download->ID, array( 'hash' => 'nonexistent', 'price_id' => 99 ) ) );
+	}
+
+	public function test_item_in_cart_without_hash_falls_back_to_price_id() {
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+
+		// No hash provided — should match by price_id.
+		$this->assertTrue( edd_item_in_cart( self::$download->ID, array( 'price_id' => 0 ) ) );
+		$this->assertFalse( edd_item_in_cart( self::$download->ID, array( 'price_id' => 1 ) ) );
+	}
+
 	public function test_cart_item_price() {
 		$this->assertEquals( '&#36;0.00', edd_cart_item_price( 0 ) );
 	}

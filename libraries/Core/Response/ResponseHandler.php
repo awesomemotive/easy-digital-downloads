@@ -49,6 +49,15 @@ class ResponseHandler
     }
 
     /**
+     * Map the types for the failure response body in ApiResponse
+     */
+    public function mapErrorTypesInApiResponse(): self
+    {
+        $this->responseError->mapErrorTypesInApiResponse();
+        return $this;
+    }
+
+    /**
      * Sets the nullOn404 flag in ResponseError.
      */
     public function nullOn404(): self

@@ -28,7 +28,35 @@ class PaymentMethods {
 	public static function get_label( $type ) {
 		$payment_method = self::get_payment_method( $type );
 
-		return $payment_method ? $payment_method::get_label() : '';
+		if ( $payment_method ) {
+			return $payment_method::get_label();
+		}
+
+		// Check for legacy/deprecated payment methods that may exist in historical order data.
+		$legacy_label = self::get_legacy_label( $type );
+		if ( $legacy_label ) {
+			return $legacy_label;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Retrieves the list of legacy/deprecated payment methods.
+	 *
+	 * These payment methods have been deprecated by Stripe but may still
+	 * exist in historical order data. This method is public to allow
+	 * reports to include historical transactions made with these methods.
+	 *
+	 * @since 3.6.5
+	 * @return array Array of legacy payment method types and their labels.
+	 */
+	public static function get_legacy_methods() {
+		return array(
+			// Sofort was deprecated by Stripe and replaced with Klarna.
+			// @see https://docs.stripe.com/payments/sofort/replace
+			'sofort' => __( 'Sofort (Legacy)', 'easy-digital-downloads' ),
+		);
 	}
 
 	/**
@@ -172,6 +200,63 @@ class PaymentMethods {
 	}
 
 	/**
+	 * Retrieves the class name for the specified payment method.
+	 *
+	 * @since 3.3.5
+	 * @param string $method The payment method.
+	 * @return string|false The class name for the specified payment method, or false if not found.
+	 */
+	public static function get_payment_method( $method ) {
+		// Only process registered payment methods to prevent autoloader errors
+		// for removed payment methods like Sofort.
+		if ( ! in_array( $method, self::get_registered_methods(), true ) ) {
+			return false;
+		}
+
+		$method    = str_replace( '_', ' ', $method );
+		$method    = ucwords( $method );
+		$method    = str_replace( ' ', '', $method );
+		$classname = __NAMESPACE__ . '\\PaymentMethods\\' . $method;
+
+		return class_exists( $classname ) ? $classname : false;
+	}
+
+	/**
+	 * Resets the payment method configuration options.
+	 *
+	 * @since 3.3.5
+	 */
+	public static function reset() {
+		delete_option( 'edd_stripe_account_capabilities' );
+		foreach ( array( 'test', 'live' ) as $mode ) {
+			$option = get_option( "edd_stripe_pmc_{$mode}" );
+			if ( $option ) {
+				$configurations = json_decode( $option, true );
+				if ( ! empty( $configurations['value']['edd20241002'] ) ) {
+					delete_option( $configurations['value']['edd20241002'] );
+				}
+				delete_option( "edd_stripe_pmc_{$mode}" );
+			}
+		}
+	}
+
+	/**
+	 * Retrieves the label for legacy/deprecated payment methods.
+	 *
+	 * These payment methods have been deprecated by Stripe but may still
+	 * exist in historical order data.
+	 *
+	 * @since 3.6.5
+	 * @param string $type The type of payment method.
+	 * @return string|false The legacy label if found, false otherwise.
+	 */
+	private static function get_legacy_label( $type ) {
+		$legacy_methods = self::get_legacy_methods();
+
+		return isset( $legacy_methods[ $type ] ) ? $legacy_methods[ $type ] : false;
+	}
+
+	/**
 	 * Retrieves the supported payment methods.
 	 *
 	 * @since 3.3.5
@@ -201,46 +286,10 @@ class PaymentMethods {
 			'p24',
 			'revolut_pay',
 			'sepa_debit',
-			'sofort',
 			'twint',
 			'us_bank_account',
 			'wechat_pay',
 		);
-	}
-
-	/**
-	 * Retrieves the class name for the specified payment method.
-	 *
-	 * @since 3.3.5
-	 * @param string $method The payment method.
-	 * @return string|false The class name for the specified payment method, or false if not found.
-	 */
-	public static function get_payment_method( $method ) {
-		$method    = str_replace( '_', ' ', $method );
-		$method    = ucwords( $method );
-		$method    = str_replace( ' ', '', $method );
-		$classname = __NAMESPACE__ . '\\PaymentMethods\\' . $method;
-
-		return class_exists( $classname ) ? $classname : false;
-	}
-
-	/**
-	 * Resets the payment method configuration options.
-	 *
-	 * @since 3.3.5
-	 */
-	public static function reset() {
-		delete_option( 'edd_stripe_account_capabilities' );
-		foreach ( array( 'test', 'live' ) as $mode ) {
-			$option = get_option( "edd_stripe_pmc_{$mode}" );
-			if ( $option ) {
-				$configurations = json_decode( $option, true );
-				if ( ! empty( $configurations['value']['edd20241002'] ) ) {
-					delete_option( $configurations['value']['edd20241002'] );
-				}
-				delete_option( "edd_stripe_pmc_{$mode}" );
-			}
-		}
 	}
 
 	/**

@@ -1469,54 +1469,7 @@ function edd_jilt_disconnect_handler() {
  * @param int $payment_id The ID of the abandoned payment, for which a jilt notice is being thrown.
  */
 function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
-
 	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
-
-	if ( ! is_callable( 'edd_jilt' )
-		&& ! is_plugin_active( 'recapture-for-edd/recapture.php' )
-		&& 'abandoned' === edd_get_payment_status( $payment_id )
-		&& ! get_user_meta( get_current_user_id(), '_edd_try_jilt_dismissed', true )
-	) {
-		?>
-		<div class="notice notice-warning jilt-notice">
-			<p>
-				<?php
-				echo wp_kses_post(
-					sprintf(
-						/* translators: 1:  <strong> tag, 2.  </strong> tag, 3.  <a> tag, 4.  </a> tag */
-						__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Jilt for free%4$s.', 'easy-digital-downloads' ),
-						'<strong>',
-						'</strong>',
-						'<a href="https://easydigitaldownloads.com/downloads/jilt" target="_blank">',
-						'</a>'
-					)
-				);
-				?>
-			</p>
-			<?php
-			echo wp_kses_post(
-				sprintf(
-					/* translators: 1:  Opening anchor tag, 2:  The url to dismiss the ajax notice, 3: Complete the opening of the anchor tag, 4: Open span tag, 5:  Close span tag */
-					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
-					'<a href="',
-					esc_url(
-						add_query_arg(
-							array(
-								'edd_action' => 'dismiss_notices',
-								'edd_notice' => 'try_jilt',
-							)
-						)
-					),
-					'" type="button" class="notice-dismiss">',
-					'<span class="screen-reader-text">',
-					'</span>
-				</a>'
-				)
-			);
-			?>
-		</div>
-		<?php
-	}
 }
 
 /**
@@ -2487,4 +2440,45 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
 function _edd_die_handler() {
 	_deprecated_function( __FUNCTION__, '3.6.3', 'Test suite die handler' );
 	die();
+}
+
+/**
+ * Recapture Callback
+ *
+ * Renders Recapture Settings
+ *
+ * @since 2.10.2
+ * @deprecated 3.6.5
+ * @param array $args Arguments passed by the setting.
+ * @return void
+ */
+function edd_recapture_callback( $args ) {
+	_edd_deprecated_function( __FUNCTION__, '3.6.5' );
+}
+
+/**
+ * Handle installation and connection for Recapture via ajax
+ *
+ * @since 2.10.2
+ * @deprecated 3.6.5
+ */
+function edd_recapture_remote_install_handler() {
+	_edd_deprecated_function( __FUNCTION__, '3.6.5' );
+	wp_send_json_error(
+		array(
+			'error' => __( 'This feature is no longer available.', 'easy-digital-downloads' ),
+		)
+	);
+}
+
+
+/**
+ * Maybe adds a notice to abandoned payments if Recapture isn't installed.
+ *
+ * @since 2.10.2
+ * @deprecated 3.6.5
+ * @param int $payment_id The ID of the abandoned payment, for which a Recapture notice is being thrown.
+ */
+function maybe_add_recapture_notice_to_abandoned_payment( $payment_id ) {
+	_edd_deprecated_function( __FUNCTION__, '3.6.5' );
 }

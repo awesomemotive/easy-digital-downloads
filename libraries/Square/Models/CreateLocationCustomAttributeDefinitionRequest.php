@@ -32,7 +32,7 @@ class CreateLocationCustomAttributeDefinitionRequest implements \JsonSerializabl
     }
 
     /**
-     * Returns Custom Attribute Definition.
+     * Returns Custom EDD_EDD_Attribute Definition.
      * Represents a definition for custom attribute values. A custom attribute definition
      * specifies the key, visibility, schema, and other properties for a custom attribute.
      */
@@ -42,7 +42,7 @@ class CreateLocationCustomAttributeDefinitionRequest implements \JsonSerializabl
     }
 
     /**
-     * Sets Custom Attribute Definition.
+     * Sets Custom EDD_EDD_Attribute Definition.
      * Represents a definition for custom attribute values. A custom attribute definition
      * specifies the key, visibility, schema, and other properties for a custom attribute.
      *

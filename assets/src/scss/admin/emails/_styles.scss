@@ -1,0 +1,32 @@
+/**
+ * Email style formats modal (Format button above editor).
+ * Uses native dialog element, same pattern as Cart Recovery modal (Modal.php).
+ */
+
+.edd-email-styles__list {
+	margin: 0;
+	list-style: none;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.edd-email-styles__button {
+	display: block;
+	width: 100%;
+	padding: 0.8rem;
+	text-align: left;
+	cursor: pointer;
+	color: #666;
+	background: none;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	font-size: 14px;
+	text-transform: none;
+
+	&:hover {
+		background: #fafafa;
+		color: #444;
+	}
+}

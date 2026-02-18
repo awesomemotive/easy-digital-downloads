@@ -33,7 +33,7 @@ class CatalogQueryExact implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Name.
+     * Returns EDD_EDD_Attribute Name.
      * The name of the attribute to be searched. Matching of the attribute name is exact.
      */
     public function getAttributeName(): string
@@ -42,7 +42,7 @@ class CatalogQueryExact implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Name.
+     * Sets EDD_EDD_Attribute Name.
      * The name of the attribute to be searched. Matching of the attribute name is exact.
      *
      * @required
@@ -54,7 +54,7 @@ class CatalogQueryExact implements \JsonSerializable
     }
 
     /**
-     * Returns Attribute Value.
+     * Returns EDD_EDD_Attribute Value.
      * The desired value of the search attribute. Matching of the attribute value is case insensitive and
      * can be partial.
      * For example, if a specified value of "sma", objects with the named attribute value of "Small",
@@ -66,7 +66,7 @@ class CatalogQueryExact implements \JsonSerializable
     }
 
     /**
-     * Sets Attribute Value.
+     * Sets EDD_EDD_Attribute Value.
      * The desired value of the search attribute. Matching of the attribute value is case insensitive and
      * can be partial.
      * For example, if a specified value of "sma", objects with the named attribute value of "Small",

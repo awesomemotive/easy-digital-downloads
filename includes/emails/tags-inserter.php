@@ -9,7 +9,7 @@
  * @since       3.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -42,7 +42,6 @@ function edd_email_tags_inserter_get_registered_emails() {
  */
 function edd_email_tags_inserter_register() {
 	foreach ( edd_email_tags_inserter_get_registered_emails() as $email ) {
-		// Add Thickbox button.
 		add_action( 'edd_settings_tab_top_emails_' . $email, 'edd_email_tags_inserter_media_button' );
 	}
 }
@@ -75,51 +74,53 @@ function edd_email_tags_inserter_media_button( $allow_html = true ) {
  */
 function edd_email_tags_inserter_media_button_output() {
 	?>
-	<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
+	<button type="button" class="button edd-email-tags-inserter" data-dialog-id="edd-insert-email-tag-dialog" aria-label="<?php esc_attr_e( 'Insert email tag', 'easy-digital-downloads' ); ?>">
 		<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
 		<?php esc_html_e( 'Insert Tag', 'easy-digital-downloads' ); ?>
-	</a>
+	</button>
 	<?php
-	$page      = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS );
+	$email     = null;
 	$email_id  = filter_input( INPUT_GET, 'email', FILTER_SANITIZE_SPECIAL_CHARS );
 	$context   = '';
 	$recipient = '';
-	if ( 'edd-emails' === $page && ! empty( $email_id ) ) {
+	if ( ! empty( $email_id ) ) {
+		$email = edd_get_email( $email_id );
+		if ( $email ) {
+			$context   = $email->context;
+			$recipient = $email->recipient;
+		}
+	}
+	if ( $email ) {
 		?>
 		<button type="button" class="button button-secondary edd-email-action-reset edd-promo-notice__trigger" data-email="<?php echo esc_attr( $email_id ); ?>">
 			<?php esc_html_e( 'Restore Default', 'easy-digital-downloads' ); ?>
 		</button>
 		<?php
-		$email = edd_get_email( $email_id );
-		if ( $email ) {
-			$context   = $email->context;
-			$recipient = $email->recipient;
-			if ( ! $email->get_template()->supports_html() ) {
-				$content = __( 'This email will be sent as a plain text email and does not support images or HTML markup.', 'easy-digital-downloads' );
-				if ( 'text/html' === EDD()->emails->get_content_type() ) {
-					$content .= ' ' . __( 'This is specific to this email and does not affect other emails.', 'easy-digital-downloads' );
-				}
-				$tooltip = new \EDD\HTML\Tooltip(
-					array(
-						'content'  => $content,
-						'dashicon' => 'dashicons-warning',
-					)
-				);
-				$tooltip->output();
+		if ( ! $email->get_template()->supports_html() ) {
+			$content = __( 'This email will be sent as a plain text email and does not support images or HTML markup.', 'easy-digital-downloads' );
+			if ( 'text/html' === EDD()->emails->get_content_type() ) {
+				$content .= ' ' . __( 'This is specific to this email and does not affect other emails.', 'easy-digital-downloads' );
 			}
+			$tooltip = new \EDD\HTML\Tooltip(
+				array(
+					'content'  => $content,
+					'dashicon' => 'dashicons-warning',
+				)
+			);
+			$tooltip->output();
 		}
 	}
 	if ( wp_script_is( 'edd-admin-email-tags' ) ) {
 		return;
 	}
-	// Output Thickbox content.
+	// Output dialog content (native dialog, same pattern as Format button).
 	edd_email_tags_inserter_thickbox_content( $context, $recipient );
 	// Enqueue scripts.
 	edd_email_tags_inserter_enqueue_scripts( $context, $recipient );
 }
 
 /**
- * Enqueue scripts for clicking a tag inside of Thickbox.
+ * Enqueue scripts for the email tags inserter (dialog + tag list).
  *
  * @since 3.0
  * @param string $context The context to get tags for.
@@ -155,30 +156,40 @@ function edd_email_tags_inserter_enqueue_scripts( $context = '', $recipient = ''
 }
 
 /**
- * Output Thickbox content.
+ * Output the email tags inserter dialog content (native dialog, edd-modal pattern).
  *
  * @since 3.0
+ * @since 3.6.5 Moved from thickbox to native dialog.
  * @param string $context The context to get tags for.
  * @param string $recipient The recipient to get tags for.
  */
 function edd_email_tags_inserter_thickbox_content( $context = '', $recipient = '' ) {
-	$tags = edd_get_email_tags( $context, $recipient );
+	$tags            = edd_get_email_tags( $context, $recipient );
+	$dialog_title_id = 'edd-insert-email-tag-dialog__title';
 	?>
-	<div id="edd-insert-email-tag" style="display: none;">
-		<div class="edd-email-tags-filter">
-			<input type="search" class="edd-email-tags-filter-search" placeholder="<?php echo esc_attr( __( 'Find a tag...', 'easy-digital-downloads' ) ); ?>" />
+	<dialog id="edd-insert-email-tag-dialog" class="edd-modal edd-modal--email-tags" aria-labelledby="<?php echo esc_attr( $dialog_title_id ); ?>">
+		<div class="edd-modal__header">
+			<h2 id="<?php echo esc_attr( $dialog_title_id ); ?>"><?php esc_html_e( 'Insert Tag', 'easy-digital-downloads' ); ?></h2>
+			<button type="button" class="edd-modal__close" aria-label="<?php esc_attr_e( 'Close', 'easy-digital-downloads' ); ?>">
+				<span class="dashicons dashicons-no-alt"></span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Close', 'easy-digital-downloads' ); ?></span>
+			</button>
 		</div>
-
-		<ul class="edd-email-tags-list">
-			<?php foreach ( $tags as $tag ) : ?>
-			<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list-item">
-				<button class="edd-email-tags-list-button" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
-					<strong><?php echo esc_html( $tag['label'] ); ?></strong><code><?php echo '{' . esc_html( $tag['tag'] ) . '}'; ?></code>
-					<span><?php echo esc_html( $tag['description'] ); ?></span>
-				</button>
-			</li>
-			<?php endforeach; ?>
-		</ul>
-	</div>
+		<div class="edd-modal__content">
+			<div class="edd-email-tags-filter">
+				<input type="search" class="edd-email-tags-filter-search" placeholder="<?php echo esc_attr( __( 'Find a tag...', 'easy-digital-downloads' ) ); ?>" />
+			</div>
+			<ul class="edd-email-tags-list">
+				<?php foreach ( $tags as $tag ) : ?>
+				<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list-item">
+					<button type="button" class="edd-email-tags-list-button" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
+						<strong><?php echo esc_html( $tag['label'] ); ?></strong><code><?php echo '{' . esc_html( $tag['tag'] ) . '}'; ?></code>
+						<span><?php echo esc_html( $tag['description'] ); ?></span>
+					</button>
+				</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+	</dialog>
 	<?php
 }

@@ -217,12 +217,20 @@ class EDD_Cart {
 	/**
 	 * Sets the tax rate.
 	 *
-	 * @param float $tax_rate
+	 * @param float|null $tax_rate The tax rate to set, or null to reset.
 	 *
 	 * @since 3.0
+	 * @since 3.6.5 Invalidate the cart cache when the tax rate is reset to null.
 	 */
 	public function set_tax_rate( $tax_rate ) {
 		$this->tax_rate = $tax_rate;
+
+		// When the tax rate is reset, invalidate the cache since cached calculations
+		// contain tax amounts based on the previous rate.
+		// @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2159
+		if ( null === $tax_rate && $this->is_caching_enabled() ) {
+			$this->invalidate_cache();
+		}
 	}
 
 	/**
@@ -845,31 +853,35 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int   $download_id Download ID of the item to check.
-	 * @param array $options
+	 * @param array $options      Cart item options.
 	 * @return bool
 	 */
 	public function is_item_in_cart( $download_id = 0, $options = array() ) {
 		$cart = $this->get_contents();
 
-		$ret = false;
+		$is_in_cart = false;
 
 		if ( is_array( $cart ) ) {
 			foreach ( $cart as $item ) {
 				if ( $item['id'] == $download_id ) {
+					if ( ! empty( $options['hash'] ) && ! empty( $item['hash'] ) && hash_equals( $item['hash'], $options['hash'] ) ) {
+						$is_in_cart = true;
+						break;
+					}
 					if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
 						if ( $options['price_id'] == $item['options']['price_id'] ) {
-							$ret = true;
+							$is_in_cart = true;
 							break;
 						}
 					} else {
-						$ret = true;
+						$is_in_cart = true;
 						break;
 					}
 				}
 			}
 		}
 
-		return (bool) apply_filters( 'edd_item_in_cart', $ret, $download_id, $options );
+		return (bool) apply_filters( 'edd_item_in_cart', $is_in_cart, $download_id, $options );
 	}
 
 	/**
@@ -1386,7 +1398,6 @@ class EDD_Cart {
 		$cart_tax = $this->get_tax();
 		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
 
-		$tax = max( $cart_tax, 0 );
 		$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
 		if ( $should_echo ) {

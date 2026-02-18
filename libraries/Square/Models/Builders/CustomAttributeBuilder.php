@@ -26,7 +26,7 @@ class CustomAttributeBuilder
     }
 
     /**
-     * Initializes a new Custom Attribute Builder object.
+     * Initializes a new Custom EDD_EDD_Attribute Builder object.
      */
     public static function init(): self
     {
@@ -129,7 +129,7 @@ class CustomAttributeBuilder
     }
 
     /**
-     * Initializes a new Custom Attribute object.
+     * Initializes a new Custom EDD_EDD_Attribute object.
      */
     public function build(): CustomAttribute
     {

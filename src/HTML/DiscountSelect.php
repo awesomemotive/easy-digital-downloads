@@ -69,6 +69,7 @@ class DiscountSelect extends Select {
 				__( 'All Discounts', 'easy-digital-downloads' ),
 			),
 			'status'            => array( 'active', 'expired', 'inactive', 'archived' ),
+			'filter_invalid'    => false,
 		);
 	}
 
@@ -110,7 +111,19 @@ class DiscountSelect extends Select {
 			'status__in' => $this->args['status'],
 		);
 
-		return edd_get_discounts( $discount_args );
+		$discounts = edd_get_discounts( $discount_args );
+
+		if ( empty( $this->args['filter_invalid'] ) ) {
+			return $discounts;
+		}
+
+		// Filter out invalid discounts (expired, not started, maxed out).
+		return array_filter(
+			$discounts,
+			function ( $discount ) {
+				return $discount instanceof \EDD_Discount && edd_validate_discount( $discount->id );
+			}
+		);
 	}
 
 	/**

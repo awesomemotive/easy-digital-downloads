@@ -107,22 +107,22 @@ class Manager extends EDD_UnitTestCase {
 		// Test add route uses POST
 		$this->assertArrayHasKey( '/edd/v3/cart/add', $routes );
 		$add_route = $routes['/edd/v3/cart/add'][0];
-		$this->assertContains( \WP_REST_Server::CREATABLE, $add_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::CREATABLE, $add_route['methods'] );
 
 		// Test remove route uses POST
 		$this->assertArrayHasKey( '/edd/v3/cart/remove', $routes );
 		$remove_route = $routes['/edd/v3/cart/remove'][0];
-		$this->assertContains( \WP_REST_Server::CREATABLE, $remove_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::CREATABLE, $remove_route['methods'] );
 
 		// Test contents route uses GET
 		$this->assertArrayHasKey( '/edd/v3/cart/contents', $routes );
 		$contents_route = $routes['/edd/v3/cart/contents'][0];
-		$this->assertContains( \WP_REST_Server::READABLE, $contents_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::READABLE, $contents_route['methods'] );
 
 		// Test token route uses GET
 		$this->assertArrayHasKey( '/edd/v3/cart/token', $routes );
 		$token_route = $routes['/edd/v3/cart/token'][0];
-		$this->assertContains( \WP_REST_Server::READABLE, $token_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::READABLE, $token_route['methods'] );
 	}
 
 	/**

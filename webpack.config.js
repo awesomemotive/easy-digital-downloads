@@ -184,7 +184,8 @@ const config = {
 			'@easy-digital-downloads/currency': path.resolve( __dirname, 'assets/src/js/packages/currency/src/index.js' ),
 			'@easy-digital-downloads/hooks': path.resolve( __dirname, 'assets/src/js/utilities/hooks.js' ),
 			'@easy-digital-downloads/icons': path.resolve( __dirname, 'assets/src/js/utilities/icons.js' ),
-
+			'@easy-digital-downloads/copy': path.resolve( __dirname, 'assets/src/js/utilities/copy.js' ),
+			'@easy-digital-downloads/modal': path.resolve( __dirname, 'assets/src/js/utilities/modal.js' ),
 		},
 	},
 	entry: {

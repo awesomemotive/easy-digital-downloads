@@ -28,7 +28,7 @@ class BulkUpsertLocationCustomAttributesResponseLocationCustomAttributeUpsertRes
     }
 
     /**
-     * Initializes a new Bulk Upsert Location Custom Attributes Response Location Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Location Custom Attributes Response Location Custom EDD_EDD_Attribute Upsert
      * Response Builder object.
      */
     public static function init(): self
@@ -70,7 +70,7 @@ class BulkUpsertLocationCustomAttributesResponseLocationCustomAttributeUpsertRes
     }
 
     /**
-     * Initializes a new Bulk Upsert Location Custom Attributes Response Location Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Location Custom Attributes Response Location Custom EDD_EDD_Attribute Upsert
      * Response object.
      */
     public function build(): BulkUpsertLocationCustomAttributesResponseLocationCustomAttributeUpsertResponse

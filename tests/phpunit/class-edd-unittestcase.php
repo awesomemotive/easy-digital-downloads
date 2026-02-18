@@ -93,7 +93,7 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 	 * Sets up logic for the @expectEDDeprecated annotation for deprecated elements in EDD.
 	 */
 	function expectDeprecatedEDD() {
-		$annotations = $this->getAnnotations();
+		$annotations = $this->getTestAnnotations();
 		foreach ( array( 'class', 'method' ) as $depth ) {
 			if ( ! empty( $annotations[ $depth ]['expectEDDeprecated'] ) ) {
 				$this->expected_deprecated = array_merge( $this->expected_deprecated, $annotations[ $depth ]['expectEDDeprecated'] );
@@ -104,6 +104,63 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 		add_action( 'edd_deprecated_function_run', array( $this, 'deprecated_function_run' ), 10, 3 );
 		add_action( 'edd_deprecated_argument_run', array( $this, 'deprecated_function_run' ), 10, 3 );
 		add_action( 'edd_deprecated_hook_run', array( $this, 'deprecated_function_run' ), 10, 3 );
+	}
+
+	/**
+	 * Get test annotations for deprecated EDD elements.
+	 *
+	 * Custom implementation to replace the deprecated getAnnotations() method.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @return array Array of annotations with 'class' and 'method' keys.
+	 */
+	protected function getTestAnnotations(): array {
+		$annotations = array(
+			'class'  => array(),
+			'method' => array(),
+		);
+
+		$class_reflection = new \ReflectionClass( $this );
+		$class_doc        = $class_reflection->getDocComment();
+		if ( $class_doc ) {
+			$annotations['class'] = $this->parseDocBlockAnnotations( $class_doc );
+		}
+
+		try {
+			$method_reflection = new \ReflectionMethod( $this, $this->getName( false ) );
+			$method_doc        = $method_reflection->getDocComment();
+			if ( $method_doc ) {
+				$annotations['method'] = $this->parseDocBlockAnnotations( $method_doc );
+			}
+		} catch ( \ReflectionException $e ) {
+			// Method doesn't exist.
+		}
+
+		return $annotations;
+	}
+
+	/**
+	 * Parse annotations from a docblock.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $docblock The docblock to parse.
+	 * @return array Parsed annotations.
+	 */
+	private function parseDocBlockAnnotations( string $docblock ): array {
+		$annotations = array();
+		if ( preg_match_all( '/@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?$/m', $docblock, $matches, PREG_SET_ORDER ) ) {
+			foreach ( $matches as $match ) {
+				$name  = $match['name'];
+				$value = isset( $match['value'] ) ? trim( $match['value'] ) : '';
+				if ( ! isset( $annotations[ $name ] ) ) {
+					$annotations[ $name ] = array();
+				}
+				$annotations[ $name ][] = $value;
+			}
+		}
+		return $annotations;
 	}
 
 	protected static function edd() {

@@ -101,7 +101,22 @@ class Context implements ContextInterface
     }
 
     /**
-     * Returns a MockApiResponse object from the context and the deserializedBody provided.
+     * Returns an ApiResponse object from the context by mapping the class specified by className.
+     */
+    public function toApiResponseWithMappedType(?string $className)
+    {
+        $responseBody = $this->response->getBody();
+        if (is_null($className)) {
+            return $this->toApiResponse($this->getResponseBody());
+        }
+        if (!is_object($responseBody)) {
+            return $this->toApiResponse($responseBody);
+        }
+        return $this->toApiResponse($this->jsonHelper->mapClass($responseBody, $className));
+    }
+
+    /**
+     * Returns an ApiResponse object from the context using the specified deserializedBody.
      */
     public function toApiResponse($deserializedBody)
     {

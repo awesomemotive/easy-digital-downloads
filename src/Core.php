@@ -115,6 +115,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Downloads\Filters(),
 			new Admin\Settings\Ajax\Toggle(),
 			new Admin\Tools\Loader(),
+			new Admin\CartRecovery\Screen(),
 		);
 
 		return $providers;

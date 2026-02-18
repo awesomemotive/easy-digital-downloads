@@ -317,7 +317,7 @@ class CatalogObject implements \JsonSerializable
     }
 
     /**
-     * Returns Custom Attribute Values.
+     * Returns Custom EDD_EDD_Attribute Values.
      * A map (key-value pairs) of application-defined custom attribute values. The value of a key-value
      * pair
      * is a [CatalogCustomAttributeValue](entity:CatalogCustomAttributeValue) object. The key is the `key`
@@ -353,7 +353,7 @@ class CatalogObject implements \JsonSerializable
     }
 
     /**
-     * Sets Custom Attribute Values.
+     * Sets Custom EDD_EDD_Attribute Values.
      * A map (key-value pairs) of application-defined custom attribute values. The value of a key-value
      * pair
      * is a [CatalogCustomAttributeValue](entity:CatalogCustomAttributeValue) object. The key is the `key`
@@ -388,7 +388,7 @@ class CatalogObject implements \JsonSerializable
     }
 
     /**
-     * Unsets Custom Attribute Values.
+     * Unsets Custom EDD_EDD_Attribute Values.
      * A map (key-value pairs) of application-defined custom attribute values. The value of a key-value
      * pair
      * is a [CatalogCustomAttributeValue](entity:CatalogCustomAttributeValue) object. The key is the `key`
@@ -983,7 +983,7 @@ class CatalogObject implements \JsonSerializable
     }
 
     /**
-     * Returns Custom Attribute Definition Data.
+     * Returns Custom EDD_EDD_Attribute Definition Data.
      * Contains information defining a custom attribute. Custom attributes are
      * intended to store additional information about a catalog object or to associate a
      * catalog object with an entity in another system. Do not use custom attributes
@@ -997,7 +997,7 @@ class CatalogObject implements \JsonSerializable
     }
 
     /**
-     * Sets Custom Attribute Definition Data.
+     * Sets Custom EDD_EDD_Attribute Definition Data.
      * Contains information defining a custom attribute. Custom attributes are
      * intended to store additional information about a catalog object or to associate a
      * catalog object with an entity in another system. Do not use custom attributes

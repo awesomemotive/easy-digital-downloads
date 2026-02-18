@@ -240,7 +240,7 @@ class CustomerFilter implements \JsonSerializable
     }
 
     /**
-     * Returns Custom Attribute.
+     * Returns Custom EDD_EDD_Attribute.
      * The custom attribute filters in a set of [customer filters]($m/CustomerFilter) used in a search
      * query. Use this filter
      * to search based on [custom attributes]($m/CustomAttribute) that are assigned to customer profiles.
@@ -254,7 +254,7 @@ class CustomerFilter implements \JsonSerializable
     }
 
     /**
-     * Sets Custom Attribute.
+     * Sets Custom EDD_EDD_Attribute.
      * The custom attribute filters in a set of [customer filters]($m/CustomerFilter) used in a search
      * query. Use this filter
      * to search based on [custom attributes]($m/CustomAttribute) that are assigned to customer profiles.

@@ -12,6 +12,7 @@ namespace EDD\Cron\Events;
 
 use EDD\Utils\Exceptions;
 use EDD\Cron\Traits\NextScheduled;
+use EDD\Cron\Schedulers\Handler;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -69,12 +70,47 @@ abstract class Event {
 	public $valid;
 
 	/**
+	 * Accessible properties.
+	 *
+	 * The properties that are accessible to the event.
+	 *
+	 * @var array
+	 */
+	private $accessible_properties = array( 'hook', 'schedule', 'args', 'first_run' );
+
+	/**
 	 * Event constructor.
 	 *
 	 * @since 3.3.0
 	 */
 	public function __construct() {
 		$this->valid = $this->validate();
+	}
+
+	/**
+	 * Magic getter.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @param string $property The property to get.
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		if ( in_array( $property, $this->accessible_properties, true ) ) {
+			return $this->$property;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Reset the event.
+	 *
+	 * @since 3.6.5
+	 * @return void
+	 */
+	public function reset() {
+		$this->valid = true;
 	}
 
 	/**
@@ -153,15 +189,39 @@ abstract class Event {
 	/**
 	 * Schedule an event.
 	 *
+	 * Uses the active scheduler (Action Scheduler or WP-Cron).
+	 *
 	 * @since 3.3.0
 	 *
-	 * @return void
+	 * @return bool True if successfully scheduled, false otherwise.
 	 */
 	public function schedule() {
 		if ( ! $this->valid ) {
-			return;
+			return false;
 		}
 
-		wp_schedule_event( $this->first_run, $this->schedule, $this->hook, $this->args );
+		$scheduler = Handler::get_scheduler();
+
+		// Convert WordPress schedule to interval in seconds.
+		$interval = Handler::get_schedule_interval( $this->schedule );
+
+		if ( false === $interval ) {
+			// If we can't get the interval, log and skip scheduling.
+			edd_debug_log(
+				sprintf(
+					'[EDD Cron] Could not get interval for schedule "%s", skipping event scheduling for hook "%s"',
+					$this->schedule,
+					$this->hook
+				)
+			);
+			return false;
+		}
+
+		return $scheduler->schedule_recurring(
+			$this->hook,
+			$this->first_run,
+			$interval,
+			$this->args
+		);
 	}
 }

@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 3.6.4
+ * Version: 3.6.5
  * Text Domain: easy-digital-downloads
  * Domain Path: /languages
  * Requires at least: 6.2
@@ -27,7 +27,7 @@
  * @package EDD
  * @category Core
  * @author Easy Digital Downloads
- * @version 3.6.4
+ * @version 3.6.5
  */
 
 // Exit if accessed directly.
@@ -167,4 +167,10 @@ if ( ! defined( 'EDD_PLUGIN_URL' ) ) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+// Load Action Scheduler early so it can initialize on plugins_loaded.
+if ( file_exists( EDD_PLUGIN_DIR . 'libraries/action-scheduler/action-scheduler.php' ) ) {
+	require_once EDD_PLUGIN_DIR . 'libraries/action-scheduler/action-scheduler.php';
+}
+
 new EDD\RequirementsCheck();

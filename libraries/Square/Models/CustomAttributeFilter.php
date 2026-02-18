@@ -44,7 +44,7 @@ class CustomAttributeFilter implements \JsonSerializable
     private $boolFilter = [];
 
     /**
-     * Returns Custom Attribute Definition Id.
+     * Returns Custom EDD_EDD_Attribute Definition Id.
      * A query expression to filter items or item variations by matching their custom attributes'
      * `custom_attribute_definition_id` property value against the the specified id.
      * Exactly one of `custom_attribute_definition_id` or `key` must be specified.
@@ -58,7 +58,7 @@ class CustomAttributeFilter implements \JsonSerializable
     }
 
     /**
-     * Sets Custom Attribute Definition Id.
+     * Sets Custom EDD_EDD_Attribute Definition Id.
      * A query expression to filter items or item variations by matching their custom attributes'
      * `custom_attribute_definition_id` property value against the the specified id.
      * Exactly one of `custom_attribute_definition_id` or `key` must be specified.
@@ -71,7 +71,7 @@ class CustomAttributeFilter implements \JsonSerializable
     }
 
     /**
-     * Unsets Custom Attribute Definition Id.
+     * Unsets Custom EDD_EDD_Attribute Definition Id.
      * A query expression to filter items or item variations by matching their custom attributes'
      * `custom_attribute_definition_id` property value against the the specified id.
      * Exactly one of `custom_attribute_definition_id` or `key` must be specified.

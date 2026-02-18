@@ -24,14 +24,22 @@ function edd_register_privacy_policy_template() {
 		return;
 	}
 
-	$content = wp_kses_post( apply_filters( 'edd_privacy_policy_content', __( '
+	$content = wp_kses_post(
+		apply_filters(
+			'edd_privacy_policy_content',
+			__(
+				'
 We collect information about you during the checkout process on our store. This information may include, but is not limited to, your name, billing address, shipping address, email address, phone number, credit card/payment details and any other details that might be requested from you for the purpose of processing your orders.
 Handling this data also allows us to:
 - Send you important account/order/service information.
 - Respond to your queries, refund requests, or complaints.
 - Process payments and to prevent fraudulent transactions. We do this on the basis of our legitimate business interests.
 - Set up and administer your account, provide technical and/or customer support, and to verify your identity.
-', 'easy-digital-downloads' ) ) );
+',
+				'easy-digital-downloads'
+			)
+		)
+	);
 
 	$content .= "\n\n";
 
@@ -67,7 +75,7 @@ add_action( 'admin_init', 'edd_register_privacy_policy_template' );
  *
  * @since 2.9.2
  *
- * @param string $string
+ * @param string $string The string to mask.
  *
  * @return string
  */
@@ -99,7 +107,7 @@ function edd_mask_string( $string = '' ) {
  *
  * @since 2.9.2
  *
- * @param string $domain
+ * @param string $domain The domain to mask.
  *
  * @return string
  */
@@ -113,7 +121,7 @@ function edd_mask_domain( $domain = '' ) {
 
 	if ( count( $domain_parts ) === 2 ) {
 
-		// We have a single entry tld like .org or .com
+		// We have a single entry tld like .org or .com.
 		$domain_parts[0] = edd_mask_string( $domain_parts[0] );
 
 	} else {
@@ -130,7 +138,7 @@ function edd_mask_domain( $domain = '' ) {
 		$i = 0;
 		while ( $i < $mask_parts ) {
 			$domain_parts[ $i ] = edd_mask_string( $domain_parts[ $i ] );
-			$i++;
+			++$i;
 		}
 	}
 
@@ -144,7 +152,7 @@ function edd_mask_domain( $domain = '' ) {
  *
  * @since 2.9.2
  *
- * @param $email_address
+ * @param string $email_address The email address to mask.
  *
  * @return string
  */
@@ -197,7 +205,7 @@ function edd_log_terms_and_privacy_times( $order_id = 0, $order_data = array() )
 
 add_action( 'edd_insert_payment', 'edd_log_terms_and_privacy_times', 10, 2 );
 
-/*
+/**
  * Return an anonymized email address.
  *
  * While WP Core supports anonymizing email addresses with the wp_privacy_anonymize_data function,
@@ -211,7 +219,7 @@ add_action( 'edd_insert_payment', 'edd_log_terms_and_privacy_times', 10, 2 );
  *
  * @since 2.9.2
  *
- * @param string $email_address
+ * @param string $email_address The email address to anonymize.
  *
  * @return string
  */
@@ -241,7 +249,7 @@ function edd_anonymize_email( $email_address ) {
  *
  * Once completed, a note is left stating when the customer was anonymized.
  *
- * @param int $customer_id Customer ID.
+ * @param int $customer_id The customer ID.
  *
  * @return array
  */
@@ -390,7 +398,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
  * - Address line 1 is made blank
  * - Address line 2 is made blank
  *
- * @param int $order_id Order ID.
+ * @param int $order_id The order ID.
  * @return array
  */
 function _edd_anonymize_payment( $order_id = 0 ) {
@@ -421,13 +429,20 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 	 * }
 	 * @param \EDD\Orders\Order Order object.
 	 */
-	$should_anonymize_payment = apply_filters( 'edd_should_anonymize_payment', array(
-		'should_anonymize' => true,
-		'message'          => '',
-	), $order );
+	$should_anonymize_payment = apply_filters(
+		'edd_should_anonymize_payment',
+		array(
+			'should_anonymize' => true,
+			'message'          => '',
+		),
+		$order
+	);
 
 	if ( empty( $should_anonymize_payment['should_anonymize'] ) ) {
-		return array( 'success' => false, 'message' => $should_anonymize_payment['message'] );
+		return array(
+			'success' => false,
+			'message' => $should_anonymize_payment['message'],
+		);
 	}
 
 	$action = _edd_privacy_get_payment_action( $order );
@@ -464,9 +479,9 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 
 			// Anonymize the line 1 and line 2 of the address. City, state, zip, and country are possibly needed for taxes.
 			$order_address_data = array(
-				'name'       => '',
-				'address'    => '',
-				'address2'   => '',
+				'name'     => '',
+				'address'  => '',
+				'address2' => '',
 			);
 
 			edd_update_order_address( $order->address->id, $order_address_data );
@@ -501,7 +516,7 @@ function _edd_anonymize_payment( $order_id = 0 ) {
  * @since 2.9.2
  * @since 3.0 Updated to allow \EDD\Orders\Order objects to be passed.
  *
- * @param EDD_Payment|\EDD\Orders\Order $order
+ * @param EDD_Payment|\EDD\Orders\Order $order The order object.
  *
  * @return string
  */
@@ -544,7 +559,6 @@ function _edd_privacy_get_payment_action( $order ) {
 	$action = apply_filters( 'edd_privacy_payment_status_action_' . $order->status, $action, $order );
 
 	return $action;
-
 }
 
 /**
@@ -554,7 +568,7 @@ function _edd_privacy_get_payment_action( $order ) {
  *
  * @since 2.9.2
  *
- * @param $email_address
+ * @param string $email_address The email address to get the customer data for.
  *
  * @return EDD_Customer
  */
@@ -573,7 +587,7 @@ function _edd_privacy_get_customer_id_for_email( $email_address ) {
  * @since 2.9.2
  *
  * @param array $exporters Privacy exporters.
- * @return array
+ * @return array The available exporters.
  */
 function edd_register_privacy_exporters( $exporters = array() ) {
 	$exporters[] = array(
@@ -585,7 +599,6 @@ function edd_register_privacy_exporters( $exporters = array() ) {
 		'exporter_friendly_name' => __( 'Billing Information', 'easy-digital-downloads' ),
 		'callback'               => 'edd_privacy_billing_information_exporter',
 	);
-
 
 	$exporters[] = array(
 		'exporter_friendly_name' => __( 'File Downloads', 'easy-digital-downloads' ),
@@ -618,7 +631,7 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 	if ( empty( $customer->id ) ) {
 		return array(
 			'data' => array(),
-			'done' => true
+			'done' => true,
 		);
 	}
 
@@ -693,14 +706,19 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 	$customer = new EDD_Customer( $email_address );
 
 	if ( empty( $customer->id ) ) {
-		return array( 'data' => array(), 'done' => true );
+		return array(
+			'data' => array(),
+			'done' => true,
+		);
 	}
 
-	$orders = edd_get_orders( array(
-		'customer_id' => $customer->id,
-		'number'      => 30,
-		'offset'      => ( 30 * $page ) - 30,
-	) );
+	$orders = edd_get_orders(
+		array(
+			'customer_id' => $customer->id,
+			'number'      => 30,
+			'offset'      => ( 30 * $page ) - 30,
+		)
+	);
 
 	// Bail if we haven't found any orders for this page.
 	if ( empty( $orders ) ) {
@@ -717,30 +735,10 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 			$order_items = array();
 
 			foreach ( $order->items as $order_item ) {
-				$download = edd_get_download( $order_item->product_id );
-				$name     = $download->get_name();
-
-				if ( $download->has_variable_prices() && ! empty( $order_item->price_id ) ) {
-					$variation_name = edd_get_price_option_name( $download->ID, $order_item->price_id );
-					if ( ! empty( $variation_name ) ) {
-						$name .= ' - ' . $variation_name;
-					}
-				}
-
-				$order_items[] = $name . ' &times; ' . $order_item->quantity;
+				$order_items[] = $order_item->product_name . ' &times; ' . $order_item->quantity;
 			}
 
 			$items_purchased = implode( ', ', $order_items );
-
-			$billing_name = array();
-			if ( ! empty( $order->address->first_name ) ) {
-				$billing_name[] = $order->address->first_name;
-			}
-
-			if ( ! empty( $order->address->last_name ) ) {
-				$billing_name[] = $order->address->last_name;
-			}
-			$billing_name = implode( ' ', array_values( $billing_name ) );
 
 			$billing_street = array();
 			if ( ! empty( $order->address->address ) ) {
@@ -751,7 +749,6 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 				$billing_street[] = $order->address->address2;
 			}
 			$billing_street = implode( "\n", array_values( $billing_street ) );
-
 
 			$billing_city_state = array();
 			if ( ! empty( $order->address->city ) ) {
@@ -774,8 +771,8 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 			$billing_country_postal = implode( "\n", array_values( $billing_country_postal ) );
 
 			$full_billing_address = '';
-			if ( ! empty( $billing_name ) ) {
-				$full_billing_address .= $billing_name . "\n";
+			if ( ! empty( $order->address->name ) ) {
+				$full_billing_address .= $order->address->name . "\n";
 			}
 
 			if ( ! empty( $billing_street ) ) {
@@ -790,7 +787,6 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 				$full_billing_address .= $billing_country_postal . "\n";
 			}
 
-
 			$data_points = array(
 				array(
 					'name'  => __( 'Order ID / Number', 'easy-digital-downloads' ),
@@ -802,8 +798,7 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
 				),
 				array(
 					'name'  => __( 'Order Completed Date', 'easy-digital-downloads' ),
-					'value' => ! empty( $order->date_completed ) && '0000-00-00 00:00:00' === $order->date_completed
-						? date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( EDD()->utils->date( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() )->toDateTimeString() ) )
+					'value' => ! empty( $order->date_completed ) ? date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( EDD()->utils->date( $order->date_completed, 'UTC' )->setTimezone( edd_get_timezone_id() )->toDateTimeString() ) )
 						: '',
 				),
 				array(
@@ -878,14 +873,19 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 	$customer = new EDD_Customer( $email_address );
 
 	if ( empty( $customer->id ) ) {
-		return array( 'data' => array(), 'done' => true );
+		return array(
+			'data' => array(),
+			'done' => true,
+		);
 	}
 
-	$logs = edd_get_file_download_logs( array(
-		'customer_id' => $customer->id,
-		'number'      => 100,
-		'offset'      => ( 100 * $page ) - 100,
-	) );
+	$logs = edd_get_file_download_logs(
+		array(
+			'customer_id' => $customer->id,
+			'number'      => 100,
+			'offset'      => ( 100 * $page ) - 100,
+		)
+	);
 
 	// Bail if we haven't found any logs for this page.
 	if ( empty( $logs ) ) {
@@ -898,7 +898,9 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 	$export_items = array();
 
 	foreach ( $logs as $log ) {
-		$download = edd_get_download( $log->product_id );
+		$file_name = edd_get_file_download_log_meta( $log->id, 'file_name', true );
+		// If the file name is not set, set the file name to N/A.
+		$file_name = empty( $file_name ) ? __( 'N/A', 'easy-digital-downloads' ) : $file_name;
 
 		$data_points = array(
 			array(
@@ -906,8 +908,8 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', strtotime( EDD()->utils->date( $log->date_created, 'UTC' )->setTimezone( edd_get_timezone_id() )->toDateTimeString() ) ),
 			),
 			array(
-				'name'  => __( 'Product Downloaded', 'easy-digital-downloads' ),
-				'value' => $download->get_name(),
+				'name'  => __( 'File Name', 'easy-digital-downloads' ),
+				'value' => $file_name,
 			),
 			array(
 				'name'  => __( 'Order ID', 'easy-digital-downloads' ),
@@ -969,11 +971,13 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
 		);
 	}
 
-	$logs = edd_get_api_request_logs( array(
-		'user_id' => $user->ID,
-		'number'  => 100,
-		'offset'  => ( 100 * $page ) - 100,
-	) );
+	$logs = edd_get_api_request_logs(
+		array(
+			'user_id' => $user->ID,
+			'number'  => 100,
+			'offset'  => ( 100 * $page ) - 100,
+		)
+	);
 
 	// If we haven't found any api access logs for this page, just return that we're done.
 	if ( empty( $logs ) ) {
@@ -1036,7 +1040,7 @@ function edd_privacy_api_access_log_exporter( $email_address = '', $page = 1 ) {
  * We are going to set an option of what customer we're currently deleting for what email address, so that after the
  * customer is anonymized we can still find them. Then we'll delete it.
  *
- * @param array $erasers
+ * @param array $erasers The erasers to register.
  * @return array $erasers
  */
 function edd_register_privacy_eraser_customer_id_lookup( $erasers = array() ) {
@@ -1052,8 +1056,8 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_cus
 /**
  * Lookup the customer ID for this email address so that we can use it later in the anonymization process.
  *
- * @param     $email_address
- * @param int $page
+ * @param string $email_address The email address to lookup the customer ID for.
+ * @param int    $page The page number.
  *
  * @return array
  */
@@ -1074,7 +1078,7 @@ function edd_privacy_prefetch_customer_id( $email_address, $page = 1 ) {
  *
  * We are now assumed done with our exporters, so we can go ahead and delete the customer ID we found for this eraser.
  *
- * @param array $erasers
+ * @param array $erasers The erasers to register.
  * @return array $erasers
  */
 function edd_register_privacy_eraser_customer_id_removal( $erasers = array() ) {
@@ -1095,7 +1099,7 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_eraser_cus
 /**
  * Delete the customer ID for this email address that was found in edd_privacy_prefetch_customer_id()
  *
- * @param string $email_address
+ * @param string $email_address The email address to remove the customer ID for.
  * @param int    $page
  *
  * @return array
@@ -1118,8 +1122,8 @@ function edd_privacy_remove_customer_id( $email_address, $page = 1 ) {
  * @since 2.9.2
  * @since 3.0 Updated to use new query methods.
  *
- * @param string $email_address The email address requesting anonymization/erasure
- * @param int    $page          The page (not needed for this query)
+ * @param string $email_address The email address requesting anonymization/erasure.
+ * @param int    $page          The page (not needed for this query).
  *
  * @return array
  */
@@ -1135,11 +1139,13 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
 		);
 	}
 
-	$orders = edd_get_orders( array(
-		'customer_id' => $customer->id,
-		'number'      => 30,
-		'offset'      => ( 30 * $page ) - 30,
-	) );
+	$orders = edd_get_orders(
+		array(
+			'customer_id' => $customer->id,
+			'number'      => 30,
+			'offset'      => ( 30 * $page ) - 30,
+		)
+	);
 
 	if ( ! empty( $orders ) ) {
 		return array(
@@ -1185,7 +1191,7 @@ function edd_privacy_maybe_delete_customer_eraser( $email_address, $page = 1 ) {
  *
  * @since 2.9.2
  *
- * @param array $erasers
+ * @param array $erasers The erasers to register.
  *
  * @return array
  */
@@ -1223,8 +1229,8 @@ add_filter( 'wp_privacy_personal_data_erasers', 'edd_register_privacy_erasers', 
  *
  * @since 2.9.2
  *
- * @param     $email_address
- * @param int $page
+ * @param string $email_address The email address to anonymize the customer record for.
+ * @param int    $page The page number.
  *
  * @return array
  */
@@ -1253,19 +1259,21 @@ function edd_privacy_customer_anonymizer( $email_address, $page = 1 ) {
 /**
  * Anonymize a payment record through the WP Core Privacy Data Eraser methods.
  *
- * @param string $email_address
- * @param int    $page
+ * @param string $email_address The email address to anonymize the payment record for.
+ * @param int    $page The page number.
  *
  * @return array
  */
 function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
-	$orders = edd_get_orders( array(
-		'customer_id' => $customer->id,
-		'number'      => 30,
-		'offset'      => ( 30 * $page ) - 30,
-	) );
+	$orders = edd_get_orders(
+		array(
+			'customer_id' => $customer->id,
+			'number'      => 30,
+			'offset'      => ( 30 * $page ) - 30,
+		)
+	);
 
 	if ( empty( $orders ) ) {
 		$message = 1 === $page
@@ -1314,8 +1322,8 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
  * @since 2.9.2
  * @since 3.0 Updated to use new query methods.
  *
- * @param string $email_address
- * @param int    $page
+ * @param string $email_address The email address to anonymize the file download logs for.
+ * @param int    $page The page number.
  *
  * @return array
  */
@@ -1340,9 +1348,12 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
 	}
 
 	foreach ( $logs as $log ) {
-		edd_update_file_download_log( $log->id, array(
-			'ip' => wp_privacy_anonymize_ip( $log->ip ),
-		) );
+		edd_update_file_download_log(
+			$log->id,
+			array(
+				'ip' => wp_privacy_anonymize_ip( $log->ip ),
+			)
+		);
 
 		/**
 		 * Run further anonymization on a file download log
@@ -1370,8 +1381,8 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
  *
  * @since 2.9.2
  *
- * @param string $email_address
- * @param int    $page
+ * @param string $email_address The email address to delete the API access logs for.
+ * @param int    $page The page number.
  *
  * @return array
  */

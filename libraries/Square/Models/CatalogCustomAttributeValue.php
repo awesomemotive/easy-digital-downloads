@@ -119,7 +119,7 @@ class CatalogCustomAttributeValue implements \JsonSerializable
     }
 
     /**
-     * Returns Custom Attribute Definition Id.
+     * Returns Custom EDD_EDD_Attribute Definition Id.
      * The id of the [CatalogCustomAttributeDefinition](entity:CatalogCustomAttributeDefinition) this value
      * belongs to.
      */
@@ -129,7 +129,7 @@ class CatalogCustomAttributeValue implements \JsonSerializable
     }
 
     /**
-     * Sets Custom Attribute Definition Id.
+     * Sets Custom EDD_EDD_Attribute Definition Id.
      * The id of the [CatalogCustomAttributeDefinition](entity:CatalogCustomAttributeDefinition) this value
      * belongs to.
      *

@@ -123,6 +123,8 @@ function edd_get_all_upgrades() {
 		'update_file_download_log_data',
 		'migrate_order_actions_date', // Added in 3.2, migrates the order actions run date to the order table.
 		'discounts_start_end',
+		'tax_rate_migration',
+		'migrate_to_action_scheduler', // Added in 3.6.5, migrates cron events from WP-Cron to Action Scheduler.
 	);
 	$edd_30_upgrades  = edd_get_v30_upgrades();
 

@@ -118,6 +118,14 @@ class Gateways extends Tab {
 					),
 					'disabled' => true,
 				),
+				'show_required_fields_notice' => array(
+					'id'            => 'show_required_fields_notice',
+					'name'          => __( 'Required Fields Notice', 'easy-digital-downloads' ),
+					'check'         => __( 'Display a notice on forms explaining that fields marked with an asterisk (*) are required.', 'easy-digital-downloads' ),
+					'type'          => 'checkbox_toggle',
+					'tooltip_title' => __( 'Required Fields Notice', 'easy-digital-downloads' ),
+					'tooltip_desc'  => __( 'When enabled, a notice will appear at the top of checkout, registration, login, and profile editor forms indicating that asterisk-marked fields are required. This improves accessibility for WCAG 3.3.2 compliance.', 'easy-digital-downloads' ),
+				),
 				'moderation_settings'     => array(
 					'id'            => 'moderation_settings',
 					'name'          => '<h3>' . __( 'Moderation', 'easy-digital-downloads' ) . '</h3>',

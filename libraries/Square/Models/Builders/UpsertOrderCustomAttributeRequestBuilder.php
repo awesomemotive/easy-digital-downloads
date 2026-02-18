@@ -26,7 +26,7 @@ class UpsertOrderCustomAttributeRequestBuilder
     }
 
     /**
-     * Initializes a new Upsert Order Custom Attribute Request Builder object.
+     * Initializes a new Upsert Order Custom EDD_EDD_Attribute Request Builder object.
      *
      * @param CustomAttribute $customAttribute
      */
@@ -56,7 +56,7 @@ class UpsertOrderCustomAttributeRequestBuilder
     }
 
     /**
-     * Initializes a new Upsert Order Custom Attribute Request object.
+     * Initializes a new Upsert Order Custom EDD_EDD_Attribute Request object.
      */
     public function build(): UpsertOrderCustomAttributeRequest
     {

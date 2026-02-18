@@ -26,7 +26,7 @@ class CreateOrderCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Create Order Custom Attribute Definition Request Builder object.
+     * Initializes a new Create Order Custom EDD_EDD_Attribute Definition Request Builder object.
      *
      * @param CustomAttributeDefinition $customAttributeDefinition
      */
@@ -47,7 +47,7 @@ class CreateOrderCustomAttributeDefinitionRequestBuilder
     }
 
     /**
-     * Initializes a new Create Order Custom Attribute Definition Request object.
+     * Initializes a new Create Order Custom EDD_EDD_Attribute Definition Request object.
      */
     public function build(): CreateOrderCustomAttributeDefinitionRequest
     {

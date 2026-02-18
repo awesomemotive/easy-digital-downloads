@@ -52,49 +52,74 @@ class Pages {
 	 * @return array
 	 */
 	private static function define_pages() {
+		return array_filter(
+			array(
+				'edd-payment-history' => array(
+					'page_title' => __( 'Orders', 'easy-digital-downloads' ),
+					'menu_title' => __( 'Orders', 'easy-digital-downloads' ),
+					'capability' => 'edit_shop_payments',
+					'callback'   => 'edd_payment_history_page',
+				),
+				'edd-customers'       => array(
+					'page_title' => __( 'Customers', 'easy-digital-downloads' ),
+					'menu_title' => __( 'Customers', 'easy-digital-downloads' ),
+					'capability' => apply_filters( 'edd_view_customers_role', 'view_shop_reports' ),
+					'callback'   => 'edd_customers_page',
+				),
+				'edd-discounts'       => array(
+					'page_title' => __( 'Discounts', 'easy-digital-downloads' ),
+					'menu_title' => __( 'Discounts', 'easy-digital-downloads' ),
+					'capability' => 'manage_shop_discounts',
+					'callback'   => array( '\\EDD\\Admin\\Discounts\\Screen', 'render' ),
+				),
+				'edd-reports'         => array(
+					'page_title' => __( 'Reports', 'easy-digital-downloads' ),
+					'menu_title' => __( 'Reports', 'easy-digital-downloads' ),
+					'capability' => 'view_shop_reports',
+					'callback'   => 'edd_reports_page',
+				),
+				'edd-settings'        => array(
+					'page_title' => __( 'EDD Settings', 'easy-digital-downloads' ),
+					'menu_title' => __( 'Settings', 'easy-digital-downloads' ),
+					'capability' => 'manage_shop_settings',
+					'callback'   => array( '\\EDD\\Admin\\Settings\\Screen', 'render' ),
+				),
+				'edd-emails'          => array(
+					'page_title' => __( 'EDD Emails', 'easy-digital-downloads' ),
+					'menu_title' => __( 'Emails', 'easy-digital-downloads' ),
+					'capability' => 'manage_shop_settings',
+					'callback'   => array( '\\EDD\\Admin\\Emails\\Screen', 'render' ),
+				),
+				'edd-tools'           => array(
+					'page_title' => __( 'EDD Tools', 'easy-digital-downloads' ),
+					'menu_title' => __( 'Tools', 'easy-digital-downloads' ),
+					'capability' => 'manage_shop_settings',
+					'callback'   => array( '\\EDD\\Admin\\Tools\\Screen', 'render' ),
+				),
+				'edd-cart-recovery'   => self::get_cart_recovery_page(),
+			)
+		);
+	}
+
+	/**
+	 * Gets the Cart Recovery page definition.
+	 *
+	 * Returns null if the user has chosen to hide the menu item.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @return array|null Page definition or null to exclude.
+	 */
+	private static function get_cart_recovery_page() {
+		if ( edd_get_option( 'hide_cart_recovery' ) ) {
+			return null;
+		}
+
 		return array(
-			'edd-payment-history' => array(
-				'page_title' => __( 'Orders', 'easy-digital-downloads' ),
-				'menu_title' => __( 'Orders', 'easy-digital-downloads' ),
-				'capability' => 'edit_shop_payments',
-				'callback'   => 'edd_payment_history_page',
-			),
-			'edd-customers'       => array(
-				'page_title' => __( 'Customers', 'easy-digital-downloads' ),
-				'menu_title' => __( 'Customers', 'easy-digital-downloads' ),
-				'capability' => apply_filters( 'edd_view_customers_role', 'view_shop_reports' ),
-				'callback'   => 'edd_customers_page',
-			),
-			'edd-discounts'       => array(
-				'page_title' => __( 'Discounts', 'easy-digital-downloads' ),
-				'menu_title' => __( 'Discounts', 'easy-digital-downloads' ),
-				'capability' => 'manage_shop_discounts',
-				'callback'   => array( '\\EDD\\Admin\\Discounts\\Screen', 'render' ),
-			),
-			'edd-reports'         => array(
-				'page_title' => __( 'Reports', 'easy-digital-downloads' ),
-				'menu_title' => __( 'Reports', 'easy-digital-downloads' ),
-				'capability' => 'view_shop_reports',
-				'callback'   => 'edd_reports_page',
-			),
-			'edd-settings'        => array(
-				'page_title' => __( 'EDD Settings', 'easy-digital-downloads' ),
-				'menu_title' => __( 'Settings', 'easy-digital-downloads' ),
-				'capability' => 'manage_shop_settings',
-				'callback'   => array( '\\EDD\\Admin\\Settings\\Screen', 'render' ),
-			),
-			'edd-emails'          => array(
-				'page_title' => __( 'EDD Emails', 'easy-digital-downloads' ),
-				'menu_title' => __( 'Emails', 'easy-digital-downloads' ),
-				'capability' => 'manage_shop_settings',
-				'callback'   => array( '\\EDD\\Admin\\Emails\\Screen', 'render' ),
-			),
-			'edd-tools'           => array(
-				'page_title' => __( 'EDD Tools', 'easy-digital-downloads' ),
-				'menu_title' => __( 'Tools', 'easy-digital-downloads' ),
-				'capability' => 'manage_shop_settings',
-				'callback'   => array( '\\EDD\\Admin\\Tools\\Screen', 'render' ),
-			),
+			'page_title' => __( 'EDD Cart Recovery', 'easy-digital-downloads' ),
+			'menu_title' => self::mark_new( __( 'Cart Recovery', 'easy-digital-downloads' ) ),
+			'capability' => 'manage_shop_settings',
+			'callback'   => array( '\\EDD\\Admin\\CartRecovery\\Screen', 'render' ),
 		);
 	}
 
@@ -156,6 +181,21 @@ class Pages {
 			'%s<span class="edd-admin-menu__new">&nbsp;%s</span>',
 			$title,
 			__( 'NEW!', 'easy-digital-downloads' )
+		);
+	}
+
+	/**
+	 * Adds an indicator to mark a Pro menu item.
+	 *
+	 * @since 3.6.5
+	 * @param string $title The menu title.
+	 * @return string
+	 */
+	private static function mark_pro( $title ) {
+		return sprintf(
+			'%s&nbsp;<span class="edd-admin-menu__pro">%s</span>',
+			$title,
+			__( 'PRO', 'easy-digital-downloads' )
 		);
 	}
 }

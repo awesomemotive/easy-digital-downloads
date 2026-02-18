@@ -34,8 +34,8 @@ class Messages implements SubscriberInterface {
 	 * @since 3.3.0
 	 * @return  void
 	 */
-	public function notices() {
-		if ( ! edd_is_admin_page( 'emails' ) ) {
+	public function notices( $email = null ) {
+		if ( ! edd_is_admin_page( 'emails' ) && empty( $email ) ) {
 			return;
 		}
 		if ( ! empty( $_GET['email'] ) && 'admin_notices' === current_action() ) {
@@ -59,7 +59,7 @@ class Messages implements SubscriberInterface {
 		}
 
 		?>
-		<div class="notice <?php echo esc_attr( $args['class'] ); ?> edd-email-notice" id="<?php echo esc_attr( $args['id'] ); ?>">
+		<div class="notice <?php echo esc_attr( $args['class'] ); ?> edd-email-notice edd-notice" id="<?php echo esc_attr( $args['id'] ); ?>">
 			<p><?php echo esc_html( $args['message'] ); ?></p>
 		</div>
 		<?php

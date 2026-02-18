@@ -28,7 +28,7 @@
 							checked
 						<# } #>
 					/>
-					<?php echo esc_html_e( 'Fee', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Fee', 'easy-digital-downloads' ); ?>
 				</label>
 			</p>
 
@@ -43,7 +43,7 @@
 							checked
 						<# } #>
 					/>
-					<?php echo esc_html_e( 'Credit', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Credit', 'easy-digital-downloads' ); ?>
 				</label>
 			</p>
 		</fieldset>

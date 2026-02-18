@@ -27,7 +27,7 @@ class ListMerchantCustomAttributeDefinitionsResponseBuilder
     }
 
     /**
-     * Initializes a new List Merchant Custom Attribute Definitions Response Builder object.
+     * Initializes a new List Merchant Custom EDD_EDD_Attribute Definitions Response Builder object.
      */
     public static function init(): self
     {
@@ -68,7 +68,7 @@ class ListMerchantCustomAttributeDefinitionsResponseBuilder
     }
 
     /**
-     * Initializes a new List Merchant Custom Attribute Definitions Response object.
+     * Initializes a new List Merchant Custom EDD_EDD_Attribute Definitions Response object.
      */
     public function build(): ListMerchantCustomAttributeDefinitionsResponse
     {

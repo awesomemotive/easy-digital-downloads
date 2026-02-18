@@ -481,6 +481,66 @@ class Refunds extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * Ensures full refunds on small totals do not flip to partial due to float precision.
+	 *
+	 * @covers ::edd_refund_order
+	 * @covers \EDD\Orders\Refunds\Validator
+	 */
+	public function test_full_refund_small_total_does_not_mark_partial() {
+		// Enable taxes for this test.
+		edd_update_option( 'enable_taxes', true );
+
+		$order = parent::edd()->order->create_and_get( array(
+			'subtotal' => 0.59,
+			'tax'      => 0.08,
+			'total'    => 0.67,
+		) );
+
+		edd_update_order( $order->id, array(
+			'subtotal' => 0.59,
+			'tax'      => 0.08,
+			'total'    => 0.67,
+		) );
+
+		$items = $order->items;
+		if ( ! empty( $items ) ) {
+			edd_update_order_item( $items[0]->id, array(
+				'amount'   => 0.59,
+				'subtotal' => 0.59,
+				'tax'      => 0.08,
+				'total'    => 0.67,
+				'discount' => 0,
+				'status'   => 'complete',
+			) );
+		}
+
+		// Refresh the order to get updated items.
+		$order = edd_get_order( $order->id );
+
+		$to_refund = array(
+			array(
+				'order_item_id' => $order->items[0]->id,
+				'subtotal'      => 0.59,
+				'tax'           => 0.08,
+			),
+		);
+
+		$refund_id = edd_refund_order( $order->id, $to_refund );
+
+		$this->assertGreaterThan( 0, $refund_id );
+
+		// Fetch original order.
+		$o = edd_get_order( $order->id );
+
+		$this->assertSame( 'refunded', $o->status );
+		$this->assertEquals( 0.0, (float) edd_get_order_total( $o->id ) );
+		$this->assertSame( 'refunded', $o->items[0]->status );
+
+		// Cleanup: disable taxes.
+		edd_update_option( 'enable_taxes', false );
+	}
+
+	/**
 	 * Test that the validator allows tax-only refunds.
 	 *
 	 * @covers \EDD\Orders\Refunds\Validator::validate_required_fields

@@ -21,12 +21,12 @@ class Reset extends Notice {
 	/**
 	 * Action hook for displaying the notice.
 	 */
-	const DISPLAY_HOOK = 'admin_print_footer_scripts-download_page_edd-emails';
+	const DISPLAY_HOOK = 'edd_email_editor_form';
 
 	/**
 	 * The priority for the display hook.
 	 */
-	const DISPLAY_PRIORITY = 5;
+	const DISPLAY_PRIORITY = 100;
 
 	/**
 	 * Type of promotional notice.

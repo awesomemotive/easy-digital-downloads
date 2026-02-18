@@ -9,8 +9,10 @@
  * @since       3.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+use EDD\Cron\Schedulers\Handler;
 
 /** Publishing ******************************************************************/
 
@@ -1052,7 +1054,7 @@ function edd_order_details_extras( $order = false ) {
 					if ( ! empty( $order->date_actions_run ) ) {
 						$status = 'success';
 						$label  = __( 'Completed', 'easy-digital-downloads' );
-					} elseif ( wp_next_scheduled( 'edd_after_payment_scheduled_actions', array( intval( $order->id ), false ) ) ) {
+					} elseif ( Handler::get_scheduler()->next_scheduled( 'edd_after_payment_scheduled_actions', array( intval( $order->id ), false ) ) ) {
 						$status = 'processing';
 						$label  = __( 'Scheduled', 'easy-digital-downloads' );
 					}

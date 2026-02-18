@@ -47,12 +47,11 @@ class Header implements SubscriberInterface {
 		<div id="edd-header" class="edd-header">
 			<div id="edd-header-wrapper">
 				<span id="edd-header-branding">
-					<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/logo-edd-dark.svg' ); ?>" />
+					<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/edd-cart-logo-dark.svg' ); ?>" />
 				</span>
 
 				<?php if ( ! empty( $page_title ) ) : ?>
 					<span class="edd-header-page-title-wrap">
-						<span class="edd-header-separator">/</span>
 						<?php $element = true === $is_single_view ? 'span' : 'h1'; ?>
 						<<?php echo esc_attr( $element ); ?> class="edd-header-page-title"><?php echo esc_html( $page_title ); ?></<?php echo esc_attr( $element ); ?>>
 					</span>
@@ -167,6 +166,9 @@ class Header implements SubscriberInterface {
 				if ( edd_is_pro() ) {
 					$page_title = __( 'Manage Extensions', 'easy-digital-downloads' );
 				}
+				break;
+			case 'edd-cart-recovery':
+				$page_title = __( 'Cart Recovery', 'easy-digital-downloads' );
 				break;
 			default:
 				if ( ! empty( $current_page ) ) {

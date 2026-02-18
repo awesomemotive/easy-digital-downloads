@@ -26,7 +26,7 @@ class DeleteCustomerCustomAttributeResponseBuilder
     }
 
     /**
-     * Initializes a new Delete Customer Custom Attribute Response Builder object.
+     * Initializes a new Delete Customer Custom EDD_EDD_Attribute Response Builder object.
      */
     public static function init(): self
     {
@@ -45,7 +45,7 @@ class DeleteCustomerCustomAttributeResponseBuilder
     }
 
     /**
-     * Initializes a new Delete Customer Custom Attribute Response object.
+     * Initializes a new Delete Customer Custom EDD_EDD_Attribute Response object.
      */
     public function build(): DeleteCustomerCustomAttributeResponse
     {

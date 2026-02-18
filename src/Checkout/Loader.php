@@ -31,6 +31,7 @@ class Loader extends MiniManager {
 	 */
 	protected function get_event_classes(): array {
 		return array(
+			new Accessibility(),
 			AutoRegister::get_instance(),
 			new Errors(),
 		);

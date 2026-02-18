@@ -48,7 +48,7 @@
 			height: 54px;
 			display: block;
 			border-radius: 50%;
-			border: 3px solid colors.$edd-notice-blue;
+			border: 3px solid colors.$edd-gray;
 			overflow: hidden;
 			transition: all 0.2s ease-in-out;
 			background: colors.$white;
@@ -62,6 +62,7 @@
 		& .edd-flyout-label {
 			opacity: 0;
 			transform: translateY(-50%) scale(0);
+			background-color: colors.$edd-gray;
 		}
 
 		&:hover .edd-flyout-label {
@@ -114,6 +115,7 @@
 				transition: all 0.2s ease-in-out;
 				transform: scale(0);
 				opacity: 0;
+				background-color: colors.$edd-gray;
 			}
 
 			& .edd-flyout-label {
@@ -133,7 +135,7 @@
 				height: 40px;
 				border-radius: 50%;
 				box-shadow: 0 3px 12px 1px colors.$medium-gray-placeholder;
-				background: colors.$edd-notice-blue 0 0 no-repeat padding-box;
+				background: colors.$edd-gray 0 0 no-repeat padding-box;
 
 				&.red {
 					background: colors.$edd-alert-red 0 0 no-repeat padding-box;
@@ -156,10 +158,11 @@
 
 				& .edd-flyout-icon, .edd-flyout-label {
 					box-shadow: 0 3px 12px 1px colors.$medium-gray-placeholder;
+					background-color: colors.$edd-light-blue;
 				}
 
 				& .edd-flyout-icon {
-					background: colors.$edd-blue-gray 0 0 no-repeat padding-box;
+					background: colors.$edd-light-blue 0 0 no-repeat padding-box;
 
 					&.red {
 						background: colors.$edd-alert-red-hover 0 0 no-repeat padding-box;
@@ -171,7 +174,7 @@
 				}
 
 				& .edd-flyout-label {
-					background-color: colors.$gray-800;
+					background-color: colors.$edd-light-blue;
 				}
 			}
 		}

@@ -27,7 +27,7 @@ class BulkDeleteMerchantCustomAttributesResponseMerchantCustomAttributeDeleteRes
     }
 
     /**
-     * Initializes a new Bulk Delete Merchant Custom Attributes Response Merchant Custom Attribute Delete
+     * Initializes a new Bulk Delete Merchant Custom Attributes Response Merchant Custom EDD_EDD_Attribute Delete
      * Response Builder object.
      */
     public static function init(): self
@@ -47,7 +47,7 @@ class BulkDeleteMerchantCustomAttributesResponseMerchantCustomAttributeDeleteRes
     }
 
     /**
-     * Initializes a new Bulk Delete Merchant Custom Attributes Response Merchant Custom Attribute Delete
+     * Initializes a new Bulk Delete Merchant Custom Attributes Response Merchant Custom EDD_EDD_Attribute Delete
      * Response object.
      */
     public function build(): BulkDeleteMerchantCustomAttributesResponseMerchantCustomAttributeDeleteResponse

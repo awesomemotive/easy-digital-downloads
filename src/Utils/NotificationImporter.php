@@ -105,7 +105,22 @@ class NotificationImporter {
 			throw new \Exception( $request->response->get_error_message() );
 		}
 
-		return ! empty( $request->body ) ? json_decode( $request->body ) : array();
+		$body = $request->body;
+		if ( empty( $body ) ) {
+			return array();
+		}
+
+		$decoded = json_decode( $body );
+		if ( JSON_ERROR_NONE !== json_last_error() ) {
+			throw new \Exception( 'Notifications JSON decode error: ' . json_last_error_msg() );
+		}
+
+		// The endpoint should return an array; be defensive in case it returns a single object.
+		if ( is_object( $decoded ) ) {
+			return array( $decoded );
+		}
+
+		return is_array( $decoded ) ? $decoded : array();
 	}
 
 	/**

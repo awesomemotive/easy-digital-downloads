@@ -1,0 +1,39 @@
+@use '../../variables/colors' as colors;
+
+.edd-modal__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px 20px;
+	border-bottom: 1px solid colors.$wp-gray-5;
+
+	h2 {
+		margin: 0;
+		font-size: 18px;
+		line-height: 1.4;
+		font-weight: 600;
+	}
+}
+
+.edd-modal__close {
+	padding: 4px;
+	margin: 0;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: colors.$wp-gray-50;
+	text-decoration: none;
+	box-shadow: none;
+
+	&:hover,
+	&:focus {
+		background: transparent;
+		box-shadow: none;
+	}
+
+	.dashicons {
+		font-size: 20px;
+		width: 20px;
+		height: 20px;
+	}
+}

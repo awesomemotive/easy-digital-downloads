@@ -130,7 +130,7 @@ class CartRoutes extends EDD_UnitTestCase {
 		$add_route = $routes['/edd/v3/cart/add'][0];
 
 		// Test method
-		$this->assertContains( \WP_REST_Server::CREATABLE, $add_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::CREATABLE, $add_route['methods'] );
 
 		// Test callback exists
 		$this->assertArrayHasKey( 'callback', $add_route );
@@ -193,7 +193,7 @@ class CartRoutes extends EDD_UnitTestCase {
 		$remove_route = $routes['/edd/v3/cart/remove'][0];
 
 		// Test method
-		$this->assertContains( \WP_REST_Server::CREATABLE, $remove_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::CREATABLE, $remove_route['methods'] );
 
 		// Test callback
 		$this->assertArrayHasKey( 'callback', $remove_route );
@@ -234,7 +234,7 @@ class CartRoutes extends EDD_UnitTestCase {
 		$update_route = $routes['/edd/v3/cart/update-quantity'][0];
 
 		// Test method
-		$this->assertContains( \WP_REST_Server::CREATABLE, $update_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::CREATABLE, $update_route['methods'] );
 
 		// Test callback
 		$this->assertArrayHasKey( 'callback', $update_route );
@@ -280,7 +280,7 @@ class CartRoutes extends EDD_UnitTestCase {
 		$contents_route = $routes['/edd/v3/cart/contents'][0];
 
 		// Test method
-		$this->assertContains( \WP_REST_Server::READABLE, $contents_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::READABLE, $contents_route['methods'] );
 
 		// Test callback
 		$this->assertArrayHasKey( 'callback', $contents_route );
@@ -313,7 +313,7 @@ class CartRoutes extends EDD_UnitTestCase {
 		$token_route = $routes['/edd/v3/cart/token'][0];
 
 		// Test method
-		$this->assertContains( \WP_REST_Server::READABLE, $token_route['methods'] );
+		$this->assertArrayHasKey( \WP_REST_Server::READABLE, $token_route['methods'] );
 
 		// Test callback
 		$this->assertArrayHasKey( 'callback', $token_route );

@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.6.4' );
+				define( 'EDD_VERSION', '3.6.5' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -595,7 +595,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Emails.
 			require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/emails/recapture.php';
 			require_once EDD_PLUGIN_DIR . 'includes/emails/tags.php';
 			require_once EDD_PLUGIN_DIR . 'includes/emails/tags-inserter.php';
 			require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';

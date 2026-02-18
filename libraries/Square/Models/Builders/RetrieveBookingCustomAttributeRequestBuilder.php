@@ -25,7 +25,7 @@ class RetrieveBookingCustomAttributeRequestBuilder
     }
 
     /**
-     * Initializes a new Retrieve Booking Custom Attribute Request Builder object.
+     * Initializes a new Retrieve Booking Custom EDD_EDD_Attribute Request Builder object.
      */
     public static function init(): self
     {
@@ -64,7 +64,7 @@ class RetrieveBookingCustomAttributeRequestBuilder
     }
 
     /**
-     * Initializes a new Retrieve Booking Custom Attribute Request object.
+     * Initializes a new Retrieve Booking Custom EDD_EDD_Attribute Request object.
      */
     public function build(): RetrieveBookingCustomAttributeRequest
     {

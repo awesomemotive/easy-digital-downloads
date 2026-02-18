@@ -26,7 +26,7 @@ class BulkUpsertOrderCustomAttributesRequestUpsertCustomAttributeBuilder
     }
 
     /**
-     * Initializes a new Bulk Upsert Order Custom Attributes Request Upsert Custom Attribute Builder object.
+     * Initializes a new Bulk Upsert Order Custom Attributes Request Upsert Custom EDD_EDD_Attribute Builder object.
      *
      * @param CustomAttribute $customAttribute
      * @param string $orderId
@@ -59,7 +59,7 @@ class BulkUpsertOrderCustomAttributesRequestUpsertCustomAttributeBuilder
     }
 
     /**
-     * Initializes a new Bulk Upsert Order Custom Attributes Request Upsert Custom Attribute object.
+     * Initializes a new Bulk Upsert Order Custom Attributes Request Upsert Custom EDD_EDD_Attribute object.
      */
     public function build(): BulkUpsertOrderCustomAttributesRequestUpsertCustomAttribute
     {

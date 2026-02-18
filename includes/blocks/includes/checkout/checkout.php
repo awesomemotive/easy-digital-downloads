@@ -171,7 +171,9 @@ function checkout( $block_attributes = array() ) {
 	$cart_items = get_cart_contents();
 
 	if ( ! $cart_items && ! edd_cart_has_fees() ) {
-		return '<p>' . edd_empty_cart_message() . '</p>';
+		ob_start();
+		do_action( 'edd_cart_empty' );
+		return ob_get_clean();
 	}
 
 	if ( edd_item_quantities_enabled() ) {

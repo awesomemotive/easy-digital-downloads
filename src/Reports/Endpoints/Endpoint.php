@@ -71,6 +71,14 @@ abstract class Endpoint {
 	protected $date_column = 'date_created';
 
 	/**
+	 * The SQL clauses for the query.
+	 *
+	 * @since 3.6.5
+	 * @var array
+	 */
+	protected $sql_clauses;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 3.5.1

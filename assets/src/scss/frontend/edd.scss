@@ -809,3 +809,17 @@ p.edd_error {
 	background-color: #fcf8e3;
 	border-color: #faebcc;
 }
+
+
+/* =Required Fields Notice (Accessibility)
+-------------------------------------------------------------- */
+.edd-required-fields-notice {
+	font-size: 0.75rem;
+	color: #666;
+	margin: 0 0 1em;
+
+	.edd-required-indicator {
+		color: #dc3232;
+		font-weight: bold;
+	}
+}

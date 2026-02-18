@@ -29,6 +29,14 @@ abstract class MiniManager implements SubscriberInterface {
 	protected static $hook = 'plugins_loaded';
 
 	/**
+	 * The priority to subscribe to.
+	 *
+	 * @since 3.6.5
+	 * @var int
+	 */
+	protected static $priority = 10;
+
+	/**
 	 * Track which classes have already added their events.
 	 *
 	 * @since 3.5.0
@@ -44,7 +52,7 @@ abstract class MiniManager implements SubscriberInterface {
 	 */
 	public static function get_subscribed_events() {
 		return array(
-			static::$hook => 'add_events',
+			static::$hook => array( 'add_events', static::$priority ),
 		);
 	}
 

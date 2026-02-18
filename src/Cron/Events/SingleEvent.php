@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
 
 use EDD\Utils\Exceptions;
 use EDD\Cron\Traits\NextScheduled;
+use EDD\Cron\Schedulers\Handler;
 
 /**
  * Single Event Class
@@ -100,8 +101,8 @@ class SingleEvent {
 	 *
 	 * @since 3.3.7
 	 *
-	 * @param string $hook The hook name.
-	 * @param array  $args The arguments to pass to the hook.
+	 * @param string $hook  The hook name.
+	 * @param array  $args  The arguments to pass to the hook.
 	 *
 	 * @return void
 	 */
@@ -161,22 +162,28 @@ class SingleEvent {
 	/**
 	 * Schedule the event.
 	 *
+	 * Uses the active scheduler (Action Scheduler or WP-Cron).
+	 *
 	 * @since 3.3.0
 	 *
 	 * @return void
 	 */
 	private static function schedule() {
-		wp_schedule_single_event( self::$run_time, self::$hook, self::$args );
+		$scheduler = Handler::get_scheduler();
+		$scheduler->schedule_single( self::$hook, self::$run_time, self::$args );
 	}
 
 	/**
 	 * Unschedule the event.
+	 *
+	 * Unschedules from the active scheduler.
 	 *
 	 * @since 3.3.7
 	 *
 	 * @return void
 	 */
 	private static function unschedule() {
-		wp_unschedule_event( self::$run_time, self::$hook, self::$args );
+		$scheduler = Handler::get_scheduler();
+		$scheduler->unschedule( self::$hook, self::$args );
 	}
 }

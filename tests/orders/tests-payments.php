@@ -150,10 +150,10 @@ class Payment_Tests extends EDD_UnitTestCase {
 
 	public function test_edd_get_payment_by() {
 		$payment = edd_get_payment_by( 'id', self::$payment->ID );
-		$this->assertObjectHasAttribute( 'ID', $payment );
+		$this->assertObjectHasProperty( 'ID', $payment );
 
 		$payment = edd_get_payment_by( 'key', self::$payment->key );
-		$this->assertObjectHasAttribute( 'ID', $payment );
+		$this->assertObjectHasProperty( 'ID', $payment );
 	}
 
 	public function test_fake_insert_payment() {

@@ -13,44 +13,46 @@
 	padding: 10px;
 }
 
-th.column-status {
-	text-align: right;
-	width: 80px;
-}
-
-td.column-status {
-	min-height: 30px;
-	text-align: right;
-	width: 80px;
-
-	& .edd-help-tip {
-		margin-top: 2px;
+.email_templates {
+	th.column-status {
+		text-align: right;
+		width: 80px;
 	}
 
-	@media screen and (max-width: wp-breakpoints.$break-medium) {
-		text-align: left;
-		width: unset;
-		min-height: 40px;
-	}
-}
+	td.column-status {
+		min-height: 30px;
+		text-align: right;
+		width: 80px;
 
-tr.no-items:not(:only-child) {
-	display: none;
-}
+		& .edd-help-tip {
+			margin-top: 2px;
+		}
 
-@media screen and (min-width: wp-breakpoints.$break-wide) {
-	.column-primary {
-		width: 250px;
-	}
-
-	.column-recipient,
-	.column-sender {
-		width: 125px;
+		@media screen and (max-width: wp-breakpoints.$break-medium) {
+			text-align: left;
+			width: unset;
+			min-height: 40px;
+		}
 	}
 
-	.column-context,
-	.column-date_modified {
-		width: 150px;
+	tr.no-items:not(:only-child) {
+		display: none;
+	}
+
+	@media screen and (min-width: wp-breakpoints.$break-wide) {
+		.column-primary {
+			width: 250px;
+		}
+
+		.column-recipient,
+		.column-sender {
+			width: 125px;
+		}
+
+		.column-context,
+		.column-date_modified {
+			width: 150px;
+		}
 	}
 }
 

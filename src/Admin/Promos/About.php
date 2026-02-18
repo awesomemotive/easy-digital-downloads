@@ -330,8 +330,8 @@ class About implements SubscriberInterface {
 			</div>
 
 			<div class="column column--50 m-l-15 align--middle">
-				<figure>
-					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/promo/about/getting-started-welcome.svg" alt="<?php esc_attr_e( 'Welcome to Easy Digital Downloads', 'easy-digital-downloads' ); ?>">
+				<figure class="welcome-image">
+					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/promo/about/getting-started-header.png" alt="<?php esc_attr_e( 'Welcome to Easy Digital Downloads', 'easy-digital-downloads' ); ?>">
 				</figure>
 			</div>
 

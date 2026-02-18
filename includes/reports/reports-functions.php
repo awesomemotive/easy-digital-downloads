@@ -1033,28 +1033,7 @@ function get_graph_period() {
  * @return array
  */
 function get_sql_clauses( $period, $column = 'date_created' ) {
-
-	// Get the date for the query.
-	$converted_date = get_column_conversion( $column );
-
-	switch ( $period ) {
-		case 'hour':
-			$date_format = '%%Y-%%m-%%d %%H:00:00';
-			break;
-		case 'day':
-			$date_format = '%%Y-%%m-%%d';
-			break;
-		default:
-			$date_format = '%%Y-%%m';
-			break;
-	}
-
-	return array(
-		'select'  => "DATE_FORMAT({$converted_date}, \"{$date_format}\") AS date",
-		'where'   => '',
-		'groupby' => 'date',
-		'orderby' => 'date',
-	);
+	return Utilities\Database::get_sql_clauses( $period, $column );
 }
 
 /**
@@ -1097,34 +1076,12 @@ function get_groupby_date_string( $function = 'DATE', $column = 'date_created' )
  * Get the time zone converted dates for the query.
  *
  * @since 3.1.1.4
- * @param string $column
+ * @since 3.6.5 This is a wrapper for the Utilities\Database::get_column_conversion method.
+ * @param string $column The column to convert.
  * @return string
  */
 function get_column_conversion( $column = 'date_created' ) {
-	$date       = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
-	$gmt_offset = $date->getOffset();
-	if ( empty( $gmt_offset ) ) {
-		return $column;
-	}
-
-	// Output the offset in the proper format.
-	$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
-	$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
-	$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
-
-	$formatted_offset = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours . ':00';
-
-	/**
-	 * There is a limitation here that we cannot get past due to MySQL not having timezone information.
-	 *
-	 * When a requested date group spans the DST change. For instance, a 6 month graph will have slightly
-	 * different results for each month than if you pulled each of those 6 months individually. This is because
-	 * our 'grouping' can only convert the timezone based on the current offset and that can change if the
-	 * range spans the DST break, which would have some dates be in a +/- 1 hour state.
-	 *
-	 * @see https://github.com/awesomemotive/easy-digital-downloads/pull/9449
-	 */
-	return "CONVERT_TZ({$column}, '+00:00', '{$math}{$formatted_offset}')";
+	return Utilities\Database::get_column_conversion( $column );
 }
 
 /**
@@ -1184,7 +1141,22 @@ function default_display_report( $report ) {
  * @return void Meta box display callbacks only echo output.
  */
 function default_display_tile( $endpoint, $data, $args ) {
-	echo '<div class="tile-label">' . esc_html( $endpoint->get_label() ) . '</div>';
+	echo '<div class="tile-label">';
+	echo esc_html( $endpoint->get_label() );
+
+	// Display tooltip if provided.
+	if ( ! empty( $args['tooltip'] ) ) {
+		?>
+		<div class="tile-tooltip">
+			<?php
+			$tooltip = new \EDD\HTML\Tooltip( array( 'content' => $args['tooltip'] ) );
+			$tooltip->output();
+			?>
+		</div>
+		<?php
+	}
+
+	echo '</div>';
 
 	if ( empty( $data ) ) {
 		echo '<div class="tile-no-data tile-value">&mdash;</div>';

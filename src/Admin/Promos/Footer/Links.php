@@ -26,7 +26,7 @@ class Links {
 			array(
 				'url'    => edd_is_pro() ?
 					edd_link_helper(
-						'https://easydigitaldownloads.com/support/',
+						'https://easydigitaldownloads.com/your-account/support/',
 						array(
 							'utm_medium'  => 'admin-footer',
 							'utm_content' => 'support',

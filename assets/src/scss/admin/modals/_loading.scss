@@ -1,0 +1,23 @@
+@use '../../variables/animations';
+
+.edd-modal__loading {
+	padding: 20px;
+	max-height: calc(100vh - 200px);
+	overflow-y: auto;
+
+	.edd-modal__skeleton {
+		display: block;
+		height: 16px;
+		border-radius: 4px;
+		animation: skeleton-loading 1s infinite alternate;
+
+		&--short {
+			width: 80px;
+		}
+	}
+
+	// Skeleton wrapper gets opacity to indicate loading state
+	> div {
+		opacity: 0.6;
+	}
+}

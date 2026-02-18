@@ -27,7 +27,7 @@ class BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequ
     }
 
     /**
-     * Initializes a new Bulk Upsert Location Custom Attributes Request Location Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Location Custom Attributes Request Location Custom EDD_EDD_Attribute Upsert
      * Request Builder object.
      *
      * @param string $locationId
@@ -62,7 +62,7 @@ class BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequ
     }
 
     /**
-     * Initializes a new Bulk Upsert Location Custom Attributes Request Location Custom Attribute Upsert
+     * Initializes a new Bulk Upsert Location Custom Attributes Request Location Custom EDD_EDD_Attribute Upsert
      * Request object.
      */
     public function build(): BulkUpsertLocationCustomAttributesRequestLocationCustomAttributeUpsertRequest

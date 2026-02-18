@@ -9,6 +9,7 @@
 
 @use "~@wordpress/base-styles/breakpoints" as wp-breakpoints;
 @use "../variables/colors";
+@use "../variables/icons" as icons;
 
 
 /* Main Menu
@@ -71,6 +72,20 @@
 	}
 }
 
+/* Custom SVG Menu Icon */
+#adminmenu #menu-posts-download .wp-menu-image::before {
+	content: '';
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	mask-image: icons.$icon-edd-cart;
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center;
+	background-color: currentColor;
+	font-family: inherit;
+}
+
 /* Show Submenu Arrow */
 ul#adminmenu #menu-posts-download ul.wp-submenu li.current a:before {
 	right: 0;
@@ -104,6 +119,15 @@ a.edd-sidebar__upgrade-pro:hover {
 .edd-admin-menu__new {
 	color: colors.$warning;
 	vertical-align: super;
+	font-size: 9px;
+	margin-left: 3px;
+}
+
+.edd-admin-menu__pro {
+	background-color: colors.$edd-pro-upgrade;
+	color: colors.$white;
+	padding: 2px 4px;
+	border-radius: 4px;
 	font-size: 9px;
 	margin-left: 3px;
 }

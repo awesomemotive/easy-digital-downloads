@@ -92,7 +92,8 @@ class Logs implements SubscriberInterface {
 			<form id="edd-logs-filter" method="get" action="<?php echo esc_url( $form_action_url ); ?>">
 				<input type="hidden" name="post_type" value="download" />
 				<input type="hidden" name="page" value="edd-tools" />
-				<input type="hidden" name="tab" value="<?php echo esc_attr( $tag ); ?>" />
+				<input type="hidden" name="tab" value="logs" />
+				<input type="hidden" name="view" value="<?php echo esc_attr( $tag ); ?>" />
 				<?php
 				wp_nonce_field( -1, 'edd_filter', false );
 				$logs_table->views();

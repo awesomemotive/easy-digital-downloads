@@ -7,7 +7,7 @@ namespace EDD\Vendor\Square\Models;
 use stdClass;
 
 /**
- * Configuration associated with Custom Attribute Definitions of type `STRING`.
+ * Configuration associated with Custom EDD_EDD_Attribute Definitions of type `STRING`.
  */
 class CatalogCustomAttributeDefinitionStringConfig implements \JsonSerializable
 {
@@ -18,7 +18,7 @@ class CatalogCustomAttributeDefinitionStringConfig implements \JsonSerializable
 
     /**
      * Returns Enforce Uniqueness.
-     * If true, each Custom Attribute instance associated with this Custom Attribute
+     * If true, each Custom EDD_EDD_Attribute instance associated with this Custom EDD_EDD_Attribute
      * Definition must have a unique value within the seller's catalog. For
      * example, this may be used for a value like a SKU that should not be
      * duplicated within a seller's catalog. May not be modified after the
@@ -34,7 +34,7 @@ class CatalogCustomAttributeDefinitionStringConfig implements \JsonSerializable
 
     /**
      * Sets Enforce Uniqueness.
-     * If true, each Custom Attribute instance associated with this Custom Attribute
+     * If true, each Custom EDD_EDD_Attribute instance associated with this Custom EDD_EDD_Attribute
      * Definition must have a unique value within the seller's catalog. For
      * example, this may be used for a value like a SKU that should not be
      * duplicated within a seller's catalog. May not be modified after the
@@ -49,7 +49,7 @@ class CatalogCustomAttributeDefinitionStringConfig implements \JsonSerializable
 
     /**
      * Unsets Enforce Uniqueness.
-     * If true, each Custom Attribute instance associated with this Custom Attribute
+     * If true, each Custom EDD_EDD_Attribute instance associated with this Custom EDD_EDD_Attribute
      * Definition must have a unique value within the seller's catalog. For
      * example, this may be used for a value like a SKU that should not be
      * duplicated within a seller's catalog. May not be modified after the

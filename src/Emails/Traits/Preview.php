@@ -47,15 +47,7 @@ trait Preview {
 		$sent = $test->send();
 		remove_filter( 'edd_email_show_links', '__return_false' );
 
-		$edd_message = $sent ? 'test-email-sent' : 'test-email-failed';
-
-		$redirect = array(
-			'page'        => 'edd-emails',
-			'edd-message' => $edd_message,
-		);
-		if ( ! empty( $data['editor'] ) ) {
-			$redirect['email'] = $data['email'];
-		}
+		$redirect = $this->get_test_email_redirect_args( $sent, $data );
 
 		edd_redirect( edd_get_admin_url( $redirect ) );
 	}
@@ -110,6 +102,31 @@ trait Preview {
 	 */
 	private function get_template( $email_id ) {
 		return edd_get_email_registry()->get_email_by_id( $email_id );
+	}
+
+	/**
+	 * Gets the redirect arguments for the test email.
+	 *
+	 * @since 3.6.5
+	 * @param bool  $sent Whether the email was sent.
+	 * @param array $data The $_POST data.
+	 * @return array
+	 */
+	private function get_test_email_redirect_args( $sent, $data ) {
+		$edd_message = $sent ? 'test-email-sent' : 'test-email-failed';
+
+		$redirect = array(
+			'page'        => ! empty( $data['page'] ) ? $data['page'] : 'edd-emails',
+			'edd-message' => $edd_message,
+		);
+		if ( ! empty( $data['tab'] ) ) {
+			$redirect['tab'] = $data['tab'];
+		}
+		if ( ! empty( $data['editor'] ) ) {
+			$redirect['email'] = $data['email'];
+		}
+
+		return $redirect;
 	}
 
 	/**

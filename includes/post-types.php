@@ -87,7 +87,7 @@ function edd_setup_edd_post_types() {
 		'show_ui'            => true,
 		'show_in_menu'       => true,
 		'query_var'          => true,
-		'menu_icon'          => 'dashicons-download',
+		'menu_icon'          => 'none',
 		'rewrite'            => $rewrite,
 		'capability_type'    => 'product',
 		'map_meta_cap'       => true,

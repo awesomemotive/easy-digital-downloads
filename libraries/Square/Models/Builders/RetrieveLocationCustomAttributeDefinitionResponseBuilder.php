@@ -27,7 +27,7 @@ class RetrieveLocationCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Retrieve Location Custom Attribute Definition Response Builder object.
+     * Initializes a new Retrieve Location Custom EDD_EDD_Attribute Definition Response Builder object.
      */
     public static function init(): self
     {
@@ -57,7 +57,7 @@ class RetrieveLocationCustomAttributeDefinitionResponseBuilder
     }
 
     /**
-     * Initializes a new Retrieve Location Custom Attribute Definition Response object.
+     * Initializes a new Retrieve Location Custom EDD_EDD_Attribute Definition Response object.
      */
     public function build(): RetrieveLocationCustomAttributeDefinitionResponse
     {

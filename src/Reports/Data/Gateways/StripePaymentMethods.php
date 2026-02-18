@@ -97,8 +97,12 @@ class StripePaymentMethods extends List_Table {
 	 * @return array Payment gateways reports table data.
 	 */
 	public function get_data() {
+		$reports_data = array();
 
-		foreach ( \EDD\Gateways\Stripe\PaymentMethods::list() as $method => $label ) {
+		// Get all payment methods to iterate over, including legacy methods for historical data.
+		$all_methods = $this->get_all_payment_methods();
+
+		foreach ( $all_methods as $method => $label ) {
 
 			$complete_count = $this->query(
 				$method,
@@ -141,6 +145,24 @@ class StripePaymentMethods extends List_Table {
 		}
 
 		return $reports_data;
+	}
+
+	/**
+	 * Retrieves all payment methods including legacy/deprecated ones.
+	 *
+	 * This ensures historical transactions using deprecated payment methods
+	 * (like Sofort) are still included in reports.
+	 *
+	 * @since 3.6.5
+	 * @return array Array of payment method types and their labels.
+	 */
+	private function get_all_payment_methods() {
+		$methods = \EDD\Gateways\Stripe\PaymentMethods::list();
+
+		// Include legacy payment methods for historical data.
+		$legacy_methods = \EDD\Gateways\Stripe\PaymentMethods::get_legacy_methods();
+
+		return array_merge( $methods, $legacy_methods );
 	}
 
 	/**

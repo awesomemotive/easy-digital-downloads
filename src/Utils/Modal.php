@@ -73,7 +73,8 @@ class Modal implements SubscriberInterface {
 	 * Render a reusable modal container.
 	 *
 	 * Outputs the HTML structure for a generic EDD modal that can be used
-	 * with the EDDModal JavaScript class. Modal HTML is deferred to wp_footer.
+	 * with the EDDModal JavaScript class. Modal HTML is deferred to wp_footer
+	 * (frontend) or admin_footer (admin).
 	 *
 	 * Uses a custom <edd-modal> Web Component with Shadow DOM for style isolation.
 	 *

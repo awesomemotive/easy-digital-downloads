@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'EDD\\Vendor\\Symfony\\Polyfill\\Mbstring\\' => array($baseDir . '/libraries/Symfony/Polyfill/Mbstring'),
     'EDD\\Vendor\\Stripe\\' => array($baseDir . '/libraries/Stripe/lib'),
     'EDD\\Vendor\\Square\\' => array($baseDir . '/libraries/Square'),

@@ -1,14 +1,13 @@
 /**
- * EDD Admin CSS
+ * EDD Admin CSS – Email Tags inserter (dialog + list).
+ * Uses native dialog with .edd-modal base (same pattern as Format and Cart Recovery modals).
  *
- * @package     EDD
- * @subpackage  Admin Email Tags CSS
- * @copyright   Copyright (c) 2015, Pippin Williamson
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @copyright   Copyright (c) 2015, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
 .edd-email-tags-filter {
-	margin: -15px -15px 15px;
+	margin: -15px -20px 20px -20px;
 	padding: 15px;
 	border-bottom: 1px solid #ddd;
 	background: #f3f3f3;

@@ -57,9 +57,10 @@ $dark-secondary: wp-native.$dark-secondary;
 /**
  * EDD Brand Colors
  */
+$edd-gray: #444444;
 $edd-blue-gray: #35495c; // Found on our brand assets page.
-$edd-light-blue: #2794da; // Found on our brand assets page.
-$edd-light-gray: #f4f7fa; // Found on our brand assets page.
+$edd-light-blue: #01B7FF; // Found on our brand assets page.
+$edd-light-gray: #F4F7FA; // Found on our brand assets page.
 
 /**
  * EDD Admin Colors
@@ -71,7 +72,7 @@ $edd-light-gray: #f4f7fa; // Found on our brand assets page.
  * Persistent dismissables.
  * Flyout item backgrounds.
  */
-$edd-notice-blue: #0c5d95;
+$edd-notice-blue: #01B7FF;
 $edd-notice-blue-hover: $edd-blue-gray;
 
 /**

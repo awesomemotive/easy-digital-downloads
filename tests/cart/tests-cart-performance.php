@@ -512,4 +512,240 @@ class Performance extends EDD_UnitTestCase {
 		$stats2 = EDD()->cart->get_calculation_stats();
 		$this->assertFalse( $stats2['cached'] );
 	}
+
+	/**
+	 * Test that cart cache is invalidated when set_tax_rate is called with null.
+	 *
+	 * When a customer changes their billing address during checkout, the tax
+	 * amounts need to be recalculated. Calling set_tax_rate(null) should
+	 * invalidate the cart cache since cached calculations contain tax amounts
+	 * based on the previous rate.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2159
+	 */
+	public function test_cart_cache_invalidated_on_set_tax_rate_null() {
+		// Enable caching and taxes
+		edd_update_option( 'cart_caching', true );
+		edd_update_option( 'enable_taxes', true );
+
+		// Set a tax rate
+		add_filter( 'edd_tax_rate', function() {
+			return 0.10; // 10% tax
+		} );
+
+		// Add item to cart
+		edd_add_to_cart( self::$download->ID );
+
+		// Get cart details to populate cache
+		$details = EDD()->cart->get_contents_details();
+		$stats1  = EDD()->cart->get_calculation_stats();
+
+		// Cache should be valid
+		$this->assertTrue( $stats1['cached'] );
+		$this->assertGreaterThan( 0, $stats1['cache_size'] );
+
+		// Reset the tax rate to null - this should invalidate the cache
+		EDD()->cart->set_tax_rate( null );
+
+		// Cache should be invalidated
+		$stats2 = EDD()->cart->get_calculation_stats();
+		$this->assertFalse( $stats2['cached'] );
+		$this->assertEquals( 0, $stats2['cache_size'] );
+
+		// Clean up
+		edd_delete_option( 'enable_taxes' );
+	}
+
+	/**
+	 * Test that tax amounts match after address change with cart caching enabled.
+	 *
+	 * This test simulates the scenario where a customer changes their billing
+	 * address during checkout, verifying that the tax amounts are correctly
+	 * recalculated and match the new address's tax rate.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2159
+	 */
+	public function test_tax_amounts_match_after_address_change() {
+		// Enable caching and taxes
+		edd_update_option( 'cart_caching', true );
+		edd_update_option( 'enable_taxes', true );
+
+		// Start with a 10% tax rate (e.g., Luxembourg)
+		$current_tax_rate = 0.10;
+		add_filter( 'edd_tax_rate', function() use ( &$current_tax_rate ) {
+			return $current_tax_rate;
+		} );
+
+		// Add item to cart ($10.00)
+		edd_add_to_cart( self::$download->ID );
+
+		// Get initial cart values (10% tax = $1.00 tax, $11.00 total)
+		$details1 = EDD()->cart->get_contents_details();
+		$tax1     = EDD()->cart->get_tax();
+		$total1   = EDD()->cart->get_total();
+
+		$this->assertEquals( 1.00, $tax1 );
+		$this->assertEquals( 11.00, $total1 );
+
+		// Verify cache is populated
+		$stats1 = EDD()->cart->get_calculation_stats();
+		$this->assertTrue( $stats1['cached'] );
+
+		// Simulate address change - new country has 20% tax (e.g., Germany)
+		$current_tax_rate = 0.20;
+
+		// Fire the edd_before_checkout_cart action (calls set_tax_rate(null) which invalidates cache)
+		do_action( 'edd_before_checkout_cart' );
+
+		// Get new cart values - should reflect 20% tax = $2.00 tax, $12.00 total
+		$details2 = EDD()->cart->get_contents_details();
+		$tax2     = EDD()->cart->get_tax();
+		$total2   = EDD()->cart->get_total();
+
+		$this->assertEquals( 2.00, $tax2 );
+		$this->assertEquals( 12.00, $total2 );
+
+		// Verify that the values changed
+		$this->assertNotEquals( $tax1, $tax2 );
+		$this->assertNotEquals( $total1, $total2 );
+
+		// Clean up
+		edd_delete_option( 'enable_taxes' );
+	}
+
+	/**
+	 * Test that set_tax_rate with a non-null value does NOT invalidate the cache.
+	 *
+	 * Setting the tax rate to a specific value should not invalidate the cache
+	 * since the cache entries may still be valid when only the stored rate changes
+	 * to a known value.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2159
+	 */
+	public function test_set_tax_rate_non_null_does_not_invalidate_cache() {
+		// Enable caching and taxes
+		edd_update_option( 'cart_caching', true );
+		edd_update_option( 'enable_taxes', true );
+
+		// Set a tax rate
+		add_filter( 'edd_tax_rate', function() {
+			return 0.10;
+		} );
+
+		// Add item to cart
+		edd_add_to_cart( self::$download->ID );
+
+		// Get cart details to populate cache
+		$details = EDD()->cart->get_contents_details();
+		$stats1  = EDD()->cart->get_calculation_stats();
+
+		// Cache should be valid
+		$this->assertTrue( $stats1['cached'] );
+		$this->assertGreaterThan( 0, $stats1['cache_size'] );
+
+		// Set a specific tax rate (not null) - should NOT invalidate cache
+		EDD()->cart->set_tax_rate( 0.15 );
+
+		// Cache should still be valid
+		$stats2 = EDD()->cart->get_calculation_stats();
+		$this->assertTrue( $stats2['cached'] );
+		$this->assertGreaterThan( 0, $stats2['cache_size'] );
+
+		// Clean up
+		edd_delete_option( 'enable_taxes' );
+	}
+
+	/**
+	 * Test that set_tax_rate(null) does not attempt cache invalidation when caching is disabled.
+	 *
+	 * When cart caching is disabled, the set_tax_rate(null) call should not
+	 * attempt to invalidate the cache.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2159
+	 */
+	public function test_set_tax_rate_null_skipped_when_caching_disabled() {
+		// Disable caching, enable taxes
+		edd_delete_option( 'cart_caching' );
+		edd_update_option( 'enable_taxes', true );
+
+		// Set a tax rate
+		add_filter( 'edd_tax_rate', function() {
+			return 0.10;
+		} );
+
+		// Add item to cart
+		edd_add_to_cart( self::$download->ID );
+
+		// Get cart details
+		$details = EDD()->cart->get_contents_details();
+
+		// Cache should not be valid (caching disabled)
+		$stats1 = EDD()->cart->get_calculation_stats();
+		$this->assertFalse( $stats1['cached'] );
+
+		// Reset tax rate to null
+		EDD()->cart->set_tax_rate( null );
+
+		// Cache should still not be valid (caching disabled)
+		$stats2 = EDD()->cart->get_calculation_stats();
+		$this->assertFalse( $stats2['cached'] );
+
+		// Clean up
+		edd_delete_option( 'enable_taxes' );
+	}
+
+	/**
+	 * Test that cart cache is invalidated when the tax rate is reset during purchase processing.
+	 *
+	 * This test simulates the Stripe purchase flow where setup_cart() populates the
+	 * cache during init (before form_data is parsed), and then set_tax_rate(null) is
+	 * called to force recalculation with the correct billing address.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2159
+	 */
+	public function test_cart_cache_invalidated_on_tax_rate_reset_during_purchase() {
+		// Enable caching and taxes
+		edd_update_option( 'cart_caching', true );
+		edd_update_option( 'enable_taxes', true );
+
+		// Start with a default tax rate (simulating shop default or no address)
+		$current_tax_rate = 0.00;
+		add_filter( 'edd_tax_rate', function() use ( &$current_tax_rate ) {
+			return $current_tax_rate;
+		} );
+
+		// Add item to cart ($10.00)
+		edd_add_to_cart( self::$download->ID );
+
+		// Simulate setup_cart() populating the cache with 0% tax (no billing address)
+		$details1 = EDD()->cart->get_contents_details();
+		$tax1     = EDD()->cart->get_tax();
+		$stats1   = EDD()->cart->get_calculation_stats();
+
+		// Cache should be valid with 0% tax
+		$this->assertTrue( $stats1['cached'] );
+		$this->assertEquals( 0.00, $tax1 );
+
+		// Now simulate _edds_process_purchase_form() parsing form_data
+		// and setting up the correct billing country
+		$current_tax_rate = 0.19; // 19% German VAT
+
+		// This is what _edds_process_purchase_form() does: reset the tax rate
+		EDD()->cart->set_tax_rate( null );
+
+		// The cache should now be invalidated
+		$stats2 = EDD()->cart->get_calculation_stats();
+		$this->assertFalse( $stats2['cached'] );
+		$this->assertEquals( 0, $stats2['cache_size'] );
+
+		// Getting cart details again should recalculate with the new tax rate
+		$details2 = EDD()->cart->get_contents_details();
+		$tax2     = EDD()->cart->get_tax();
+
+		// Tax should now reflect the German VAT rate
+		$this->assertEquals( 1.90, $tax2 );
+
+		// Clean up
+		edd_delete_option( 'enable_taxes' );
+	}
 }

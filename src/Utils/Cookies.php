@@ -29,7 +29,7 @@ class Cookies {
 		if ( empty( $value ) && ! is_null( $expiration ) ) {
 			$expiration = null;
 		}
-		$cookie_options = self::get_options( $expiration );
+		$cookie_options = self::get_options( $expiration, $cookie );
 
 		// We want to create a new cookie.
 		if ( $expiration ) {
@@ -68,9 +68,10 @@ class Cookies {
 	 *
 	 * @since 3.3.0
 	 * @param null|int $expiration The expiration timestamp. Use null to set the cookie to expire immediately.
+	 * @param string   $cookie     The cookie name.
 	 * @return array
 	 */
-	private static function get_options( $expiration ) {
+	private static function get_options( $expiration, $cookie ) {
 
 		/**
 		 * Allow developers to filter the cookie options.
@@ -78,6 +79,7 @@ class Cookies {
 		 * @since 3.3.4
 		 * @param array     $cookie_options The cookie options.
 		 * @param null|int  $expiration     The expiration timestamp. Use null to set the cookie to expire immediately.
+		 * @param string    $cookie         The cookie name.
 		 */
 		return apply_filters(
 			'edd_cookie_options',
@@ -89,7 +91,8 @@ class Cookies {
 				'httponly' => true,
 				'samesite' => 'Lax',
 			),
-			$expiration
+			$expiration,
+			$cookie
 		);
 	}
 

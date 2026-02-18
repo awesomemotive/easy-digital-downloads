@@ -25,7 +25,7 @@ class CatalogCustomAttributeDefinitionStringConfigBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition String Config Builder object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition String Config Builder object.
      */
     public static function init(): self
     {
@@ -53,7 +53,7 @@ class CatalogCustomAttributeDefinitionStringConfigBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition String Config object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition String Config object.
      */
     public function build(): CatalogCustomAttributeDefinitionStringConfig
     {

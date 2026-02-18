@@ -25,7 +25,7 @@ class CatalogCustomAttributeValueBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Value Builder object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Value Builder object.
      */
     public static function init(): self
     {
@@ -166,7 +166,7 @@ class CatalogCustomAttributeValueBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Value object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Value object.
      */
     public function build(): CatalogCustomAttributeValue
     {

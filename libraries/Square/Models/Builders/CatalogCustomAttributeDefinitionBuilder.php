@@ -29,7 +29,7 @@ class CatalogCustomAttributeDefinitionBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition Builder object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition Builder object.
      *
      * @param string $type
      * @param string $name
@@ -158,7 +158,7 @@ class CatalogCustomAttributeDefinitionBuilder
     }
 
     /**
-     * Initializes a new Catalog Custom Attribute Definition object.
+     * Initializes a new Catalog Custom EDD_EDD_Attribute Definition object.
      */
     public function build(): CatalogCustomAttributeDefinition
     {
