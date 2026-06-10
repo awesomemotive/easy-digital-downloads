@@ -99,6 +99,7 @@ class Core extends EventManagement\Subscribers {
 			new Admin\Settings\Reviews(),
 			new Admin\Settings\WP_SMTP(),
 			new Admin\Settings\WPConsent(),
+			new Admin\Settings\ActiveLayer(),
 			new Admin\Downloads\Meta(),
 			new Admin\Onboarding\Tools(),
 			new Admin\Onboarding\Wizard(),
