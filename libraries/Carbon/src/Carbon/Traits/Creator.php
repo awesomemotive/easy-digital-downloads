@@ -79,7 +79,7 @@ trait Creator
         } catch (Exception $exception) {
             throw new InvalidFormatException($exception->getMessage(), 0, $exception);
         }
-        $this->constructedObjectId = spl_object_hash($this);
+        $this->constructedObjectId = spl_object_id($this);
         if (isset($locale)) {
             setlocale(LC_NUMERIC, $locale);
             // @codeCoverageIgnore
@@ -111,7 +111,7 @@ trait Creator
      */
     public function __clone()
     {
-        $this->constructedObjectId = spl_object_hash($this);
+        $this->constructedObjectId = spl_object_id($this);
     }
     /**
      * Create a Carbon instance from a DateTime one.

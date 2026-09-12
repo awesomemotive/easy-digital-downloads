@@ -293,7 +293,7 @@ class Performance extends EDD_UnitTestCase {
 		$details1 = EDD()->cart->get_contents_details();
 
 		// Store the object hash to verify we get the same object back
-		$hash1 = spl_object_hash( (object) $details1 );
+		$hash1 = spl_object_id( (object) $details1 );
 
 		// Get details again - should return cached version
 		$details2 = EDD()->cart->get_contents_details();

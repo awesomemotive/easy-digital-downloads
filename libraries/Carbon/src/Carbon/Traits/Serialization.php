@@ -168,7 +168,7 @@ trait Serialization
             }
             // @codeCoverageIgnoreEnd
         }
-        $this->constructedObjectId = spl_object_hash($this);
+        $this->constructedObjectId = spl_object_id($this);
         if (isset($this->dumpLocale)) {
             $this->locale($this->dumpLocale);
             $this->dumpLocale = null;
