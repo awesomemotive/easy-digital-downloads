@@ -172,7 +172,9 @@ class Attributes extends EDD_UnitTestCase {
 	 */
 	private function parse_attributes( $page_id ) {
 		$method = new \ReflectionMethod( CheckoutAttributes::class, 'parse_attributes' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		return $method->invoke( null, $page_id );
 	}

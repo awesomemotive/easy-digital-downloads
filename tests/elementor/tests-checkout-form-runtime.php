@@ -2485,7 +2485,9 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 	private function reset_checkout_detection_cache(): void {
 		foreach ( array( 'is_checkout', 'is_wp_query_set' ) as $property ) {
 			$reflected = new \ReflectionProperty( \EDD\Checkout\Validator::class, $property );
-			$reflected->setAccessible( true );
+			if (PHP_VERSION_ID < 80100) {
+                $reflected->setAccessible( true );
+            }
 			$reflected->setValue( null, null );
 		}
 	}
@@ -2524,7 +2526,9 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 	 */
 	private function reset_attribute_cache(): void {
 		$property = new \ReflectionProperty( \EDD\Blocks\Checkout\Attributes::class, 'cached_attributes' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$property->setValue( null, null );
 	}
 

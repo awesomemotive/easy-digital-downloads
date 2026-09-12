@@ -176,7 +176,9 @@ class AdminOrderNotice extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $admin_notice );
 		$set_headers_method = $reflection->getMethod( 'set_headers' );
-		$set_headers_method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $set_headers_method->setAccessible( true );
+        }
 		$set_headers_method->invoke( $admin_notice );
 
 		$this->assertTrue( has_filter( 'edd_email_headers_array' ) );
@@ -200,7 +202,9 @@ class AdminOrderNotice extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $admin_notice );
 		$set_headers_method = $reflection->getMethod( 'set_headers' );
-		$set_headers_method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $set_headers_method->setAccessible( true );
+        }
 		$set_headers_method->invoke( $admin_notice );
 
 		$headers = apply_filters( 'edd_email_headers_array', array(
@@ -224,7 +228,9 @@ class AdminOrderNotice extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $admin_notice );
 		$set_headers_method = $reflection->getMethod( 'set_headers' );
-		$set_headers_method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $set_headers_method->setAccessible( true );
+        }
 		$set_headers_method->invoke( $admin_notice );
 
 		$headers = apply_filters( 'edd_email_headers_array', array(
@@ -245,7 +251,9 @@ class AdminOrderNotice extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $admin_notice );
 		$set_headers_method = $reflection->getMethod( 'set_headers' );
-		$set_headers_method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $set_headers_method->setAccessible( true );
+        }
 		$set_headers_method->invoke( $admin_notice );
 
 		$headers = apply_filters( 'edd_email_headers_array', array(

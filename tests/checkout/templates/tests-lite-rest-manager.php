@@ -47,7 +47,9 @@ class LiteRestManagerTest extends EDD_UnitTestCase {
 	public function test_lite_core_replaces_rest_manager() {
 		$core   = ( new \ReflectionClass( \EDD\Lite\Core::class ) )->newInstanceWithoutConstructor();
 		$method = new \ReflectionMethod( \EDD\Lite\Core::class, 'get_replaceable_providers' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$providers = $method->invoke( $core );
 

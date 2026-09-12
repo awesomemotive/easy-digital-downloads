@@ -146,7 +146,9 @@ class Verification extends EDD_UnitTestCase {
 	public function test_mask_email() {
 		$reflection = new \ReflectionClass( $this->verification );
 		$method     = $reflection->getMethod( 'mask_email' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// Test standard email.
 		$masked = $method->invoke( $this->verification, 'chris@awesomemotive.com' );
@@ -171,7 +173,9 @@ class Verification extends EDD_UnitTestCase {
 	public function test_cooldown_period() {
 		$reflection = new \ReflectionClass( $this->verification );
 		$method     = $reflection->getMethod( 'check_rate_limits' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// First check should pass.
 		$result = $method->invoke( $this->verification, $this->user_id );
@@ -196,7 +200,9 @@ class Verification extends EDD_UnitTestCase {
 	public function test_max_emails_limit() {
 		$reflection = new \ReflectionClass( $this->verification );
 		$method     = $reflection->getMethod( 'get_verification_email_count' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// Create 5 email log entries.
 		$log_email = new \EDD\Database\Queries\LogEmail();
@@ -218,7 +224,9 @@ class Verification extends EDD_UnitTestCase {
 
 		// Check rate limits should fail.
 		$rate_limit_method = $reflection->getMethod( 'check_rate_limits' );
-		$rate_limit_method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $rate_limit_method->setAccessible( true );
+        }
 		$result = $rate_limit_method->invoke( $this->verification, $this->user_id );
 
 		$this->assertInstanceOf( 'WP_Error', $result );
@@ -231,7 +239,9 @@ class Verification extends EDD_UnitTestCase {
 	public function test_email_count_filters_by_type() {
 		$reflection = new \ReflectionClass( $this->verification );
 		$method     = $reflection->getMethod( 'get_verification_email_count' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// Add verification email.
 		$log_email = new \EDD\Database\Queries\LogEmail();

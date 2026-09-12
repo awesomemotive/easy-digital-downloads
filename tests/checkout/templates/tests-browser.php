@@ -411,7 +411,9 @@ class BrowserTest extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $this->browser );
 		$method     = $reflection->getMethod( 'get_available_editors' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$editors = $method->invoke( $this->browser );
 
@@ -439,7 +441,9 @@ class BrowserTest extends EDD_UnitTestCase {
 	public function test_block_editor_advertised_unavailable() {
 		$reflection = new \ReflectionClass( $this->browser );
 		$method     = $reflection->getMethod( 'get_available_editors' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$editors = $method->invoke( $this->browser );
 
@@ -469,7 +473,9 @@ class BrowserTest extends EDD_UnitTestCase {
 	public function test_licenses_url_has_no_tab_and_matches_rest_route() {
 		$reflection = new \ReflectionClass( $this->browser );
 		$method     = $reflection->getMethod( 'get_base_script_data' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$data = $method->invoke( $this->browser );
 

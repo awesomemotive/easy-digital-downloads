@@ -84,7 +84,9 @@ class CheckoutBoxElementCoverage extends EDD_UnitTestCase {
 		$box = $this->make_box();
 
 		$method = new \ReflectionMethod( $box, 'get_default_data' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$data = $method->invoke( $box );
 
 		$this->assertIsArray( $data );
@@ -101,7 +103,9 @@ class CheckoutBoxElementCoverage extends EDD_UnitTestCase {
 		$box = $this->make_box();
 
 		$method = new \ReflectionMethod( $box, 'get_initial_config' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$config = $method->invoke( $box );
 
 		$this->assertTrue( $config['show_in_panel'] );
@@ -170,7 +174,9 @@ class CheckoutBoxElementCoverage extends EDD_UnitTestCase {
 		$box = $this->make_box();
 
 		$method = new \ReflectionMethod( $box, 'is_dynamic_content' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$this->assertTrue( $method->invoke( $box ) );
 	}
@@ -204,7 +210,9 @@ class CheckoutBoxElementCoverage extends EDD_UnitTestCase {
 		add_action( 'edd_elementor_checkout_box_bottom', function () use ( &$bottom ) { ++$bottom; } );
 
 		$method = new \ReflectionMethod( $box, 'print_content' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		ob_start();
 		$method->invoke( $box );
@@ -236,7 +244,9 @@ class CheckoutBoxElementCoverage extends EDD_UnitTestCase {
 		add_action( 'edd_elementor_checkout_box_top', function () { echo '<p class="cov-slot-top">top</p>'; } );
 
 		$method = new \ReflectionMethod( $box, 'print_content' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		ob_start();
 		$method->invoke( $box );
@@ -272,7 +282,9 @@ class CheckoutBoxElementCoverage extends EDD_UnitTestCase {
 		add_action( 'edd_cart_empty', function () use ( &$fired ) { ++$fired; } );
 
 		$method = new \ReflectionMethod( $box, 'print_content' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		ob_start();
 		$method->invoke( $box );
@@ -295,7 +307,9 @@ class CheckoutBoxElementCoverage extends EDD_UnitTestCase {
 		FormLayer::clear_empty_cart();
 
 		$method = new \ReflectionMethod( $box, 'print_content' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		ob_start();
 		$method->invoke( $box );

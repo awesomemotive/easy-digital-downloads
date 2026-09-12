@@ -154,7 +154,9 @@ class CheckoutTemplatesTest extends EDD_UnitTestCase {
 		// Access private method.
 		$reflection = new \ReflectionClass( $this->elementor_editor );
 		$method     = $reflection->getMethod( 'is_checkout_page' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->elementor_editor );
 
@@ -174,7 +176,9 @@ class CheckoutTemplatesTest extends EDD_UnitTestCase {
 		// Access private method.
 		$reflection = new \ReflectionClass( $this->elementor_editor );
 		$method     = $reflection->getMethod( 'is_checkout_page' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->elementor_editor );
 
@@ -191,7 +195,9 @@ class CheckoutTemplatesTest extends EDD_UnitTestCase {
 		// Access private method.
 		$reflection = new \ReflectionClass( $this->elementor_editor );
 		$method     = $reflection->getMethod( 'is_checkout_page' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->elementor_editor );
 

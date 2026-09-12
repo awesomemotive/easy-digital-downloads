@@ -308,7 +308,9 @@ class Cookies extends EDD_UnitTestCase {
 	private function invoke_get_options( $expiration, $cookie ) {
 		$reflection = new \ReflectionClass( Utility::class );
 		$method     = $reflection->getMethod( 'get_options' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		return $method->invokeArgs( null, array( $expiration, $cookie ) );
 	}

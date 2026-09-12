@@ -323,7 +323,9 @@ class GeoIPTests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'is_enabled' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$enabled = $method->invoke( self::$geoip );
 
@@ -341,7 +343,9 @@ class GeoIPTests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'is_enabled' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$enabled = $method->invoke( self::$geoip );
 
@@ -358,7 +362,9 @@ class GeoIPTests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'is_enabled' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$enabled = $method->invoke( self::$geoip );
 
@@ -378,7 +384,9 @@ class GeoIPTests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'get_state' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$state = $method->invoke( self::$geoip, $geoip_data );
 
@@ -396,7 +404,9 @@ class GeoIPTests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'get_state' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$state = $method->invoke( self::$geoip );
 
@@ -412,7 +422,9 @@ class GeoIPTests extends EDD_UnitTestCase {
 	public function test_sanitize_input() {
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'sanitize_input' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// Test with nonexistent key
 		$sanitized = $method->invoke( self::$geoip, 'nonexistent_key' );
@@ -432,7 +444,9 @@ class GeoIPTests extends EDD_UnitTestCase {
 	public function test_sanitize_input_with_special_chars() {
 		$reflection = new \ReflectionClass( self::$geoip );
 		$method = $reflection->getMethod( 'sanitize_input' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$_POST['special_key'] = '<script>alert("xss")</script>';
 		$sanitized = $method->invoke( self::$geoip, 'special_key' );

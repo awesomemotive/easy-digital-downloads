@@ -97,7 +97,9 @@ class CheckoutFormLayerSubscriberCoverage extends EDD_UnitTestCase {
 	public function test_cart_is_empty() {
 		$subscriber = new CheckoutFormLayer();
 		$method     = new \ReflectionMethod( $subscriber, 'cart_is_empty' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$this->assertTrue( $method->invoke( $subscriber ), 'An empty cart must report empty.' );
 
@@ -113,7 +115,9 @@ class CheckoutFormLayerSubscriberCoverage extends EDD_UnitTestCase {
 	public function test_get_element_id_resolution() {
 		$subscriber = new CheckoutFormLayer();
 		$method     = new \ReflectionMethod( $subscriber, 'get_element_id' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$this->assertSame( 'rawId', $method->invoke( $subscriber, $this->fake_element( 'rawId' ) ) );
 
@@ -129,7 +133,9 @@ class CheckoutFormLayerSubscriberCoverage extends EDD_UnitTestCase {
 	public function test_get_raw_element_data_without_method() {
 		$subscriber = new CheckoutFormLayer();
 		$method     = new \ReflectionMethod( $subscriber, 'get_raw_element_data' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$plain = new \stdClass();
 
@@ -145,14 +151,18 @@ class CheckoutFormLayerSubscriberCoverage extends EDD_UnitTestCase {
 		$subscriber = new CheckoutFormLayer();
 
 		$register = new \ReflectionMethod( $subscriber, 'register_section_fallbacks' );
-		$register->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $register->setAccessible( true );
+        }
 		$register->invoke( $subscriber, 'fbBox', array() );
 
 		$this->assertNotFalse( has_action( 'edd_checkout_form_top' ), 'A personal-info fallback must hook the form top.' );
 		$this->assertNotFalse( has_action( 'edd_checkout_form_bottom' ), 'A payment-info fallback must hook the form bottom.' );
 
 		$unregister = new \ReflectionMethod( $subscriber, 'unregister_section_fallbacks' );
-		$unregister->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $unregister->setAccessible( true );
+        }
 		$unregister->invoke( $subscriber, 'fbBox' );
 
 		// Idempotent: a second unregister for an unknown id is a no-op.

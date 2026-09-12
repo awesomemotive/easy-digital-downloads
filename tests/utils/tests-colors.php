@@ -458,7 +458,9 @@ class Colors extends EDD_UnitTestCase {
 	private function invoke_protected_method( $method_name, $parameters = array() ) {
 		$reflection = new \ReflectionClass( Utility::class );
 		$method     = $reflection->getMethod( $method_name );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		return $method->invokeArgs( null, $parameters );
 	}

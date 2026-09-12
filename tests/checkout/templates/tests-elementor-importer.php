@@ -598,7 +598,9 @@ class ElementorImporterTest extends EDD_UnitTestCase {
 
 		$importer = new ElementorImporter();
 		$method   = new \ReflectionMethod( ElementorImporter::class, 'localize_asset_urls' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$result = $method->invoke( $importer, $content, $map, 0 );
 
 		$image = $result[0]['settings']['image'];
@@ -648,7 +650,9 @@ class ElementorImporterTest extends EDD_UnitTestCase {
 
 		$importer = new ElementorImporter();
 		$method   = new \ReflectionMethod( ElementorImporter::class, 'extract_custom_css' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$map    = array();
 		$args   = array( $content, &$map );
@@ -709,7 +713,9 @@ class ElementorImporterTest extends EDD_UnitTestCase {
 		$child_css = '.bs-footsub>p{margin:0;}';
 		$importer  = new ElementorImporter();
 		$method    = new \ReflectionMethod( ElementorImporter::class, 'restore_custom_css' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$method->invoke(
 			$importer,
 			$page_id,

@@ -21,7 +21,9 @@ class BaseEmail extends EDD_UnitTestCase {
 	public function test_get_headers_array_default() {
 		$reflection = new \ReflectionClass( $this->base_email );
 		$method = $reflection->getMethod( 'get_headers_array' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		
 		$headers = $method->invoke( $this->base_email );
 		
@@ -34,7 +36,9 @@ class BaseEmail extends EDD_UnitTestCase {
 	public function test_get_headers_array_filter_applied() {
 		$reflection = new \ReflectionClass( $this->base_email );
 		$method = $reflection->getMethod( 'get_headers_array' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		
 		add_filter( 'edd_email_headers_array', function( $headers ) {
 			$headers['Reply-To'] = 'customer@example.com';
@@ -54,7 +58,9 @@ class BaseEmail extends EDD_UnitTestCase {
 	public function test_get_headers_array_multiple_filters() {
 		$reflection = new \ReflectionClass( $this->base_email );
 		$method = $reflection->getMethod( 'get_headers_array' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		
 		add_filter( 'edd_email_headers_array', function( $headers ) {
 			$headers['Reply-To'] = 'customer@example.com';
@@ -105,7 +111,9 @@ class BaseEmail extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $this->base_email );
 		$method = $reflection->getMethod( 'get_headers_array' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		
 		$headers = $method->invoke( $this->base_email );
 		
@@ -118,7 +126,9 @@ class BaseEmail extends EDD_UnitTestCase {
 	public function test_get_default_reply_to() {
 		$reflection = new \ReflectionClass( $this->base_email );
 		$method = $reflection->getMethod( 'get_headers_array' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		
 		$headers = $method->invoke( $this->base_email );
 		
@@ -128,7 +138,9 @@ class BaseEmail extends EDD_UnitTestCase {
 	public function test_content_type_header() {
 		$reflection = new \ReflectionClass( $this->base_email );
 		$method = $reflection->getMethod( 'get_headers_array' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		
 		$headers = $method->invoke( $this->base_email );
 		
@@ -139,7 +151,9 @@ class BaseEmail extends EDD_UnitTestCase {
 	public function test_from_header_format() {
 		$reflection = new \ReflectionClass( $this->base_email );
 		$method = $reflection->getMethod( 'get_headers_array' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		
 		$headers = $method->invoke( $this->base_email );
 		

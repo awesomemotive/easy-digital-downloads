@@ -125,7 +125,9 @@ class CompanyField extends EDD_UnitTestCase {
 	public function test_company_field_key() {
 		$field = new Company( array( 'address' => array( 'company' => '' ) ) );
 		$reflection = new \ReflectionMethod( $field, 'get_key' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 
 		$this->assertSame( 'company', $reflection->invoke( $field ) );
 	}
@@ -133,7 +135,9 @@ class CompanyField extends EDD_UnitTestCase {
 	public function test_company_field_defaults_include_name_and_id() {
 		$field = new Company( array( 'address' => array( 'company' => '' ) ) );
 		$reflection = new \ReflectionMethod( $field, 'get_defaults' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 
 		$defaults = $reflection->invoke( $field );
 

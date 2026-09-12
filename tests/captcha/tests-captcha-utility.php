@@ -63,7 +63,9 @@ class UtilityTests extends EDD_UnitTestCase {
 	private function clear_provider_cache() {
 		$reflection = new \ReflectionClass( Provider::class );
 		$property = $reflection->getProperty( 'providers' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$property->setValue( null, array() );
 	}
 

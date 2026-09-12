@@ -340,7 +340,9 @@ class AbstractImporterTest extends EDD_UnitTestCase {
 
 		$importer = new TestableImporter();
 		$method   = new \ReflectionMethod( \EDD\Pro\Checkout\Templates\Importer\AbstractImporter::class, 'import_to_media_library' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$attachment_id = $method->invoke(
 			$importer,

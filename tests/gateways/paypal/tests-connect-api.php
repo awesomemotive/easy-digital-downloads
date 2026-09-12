@@ -88,7 +88,9 @@ class ConnectAPITest extends EDD_UnitTestCase {
 	 */
 	private function invoke_private( $method, array $args = array() ) {
 		$reflection = new \ReflectionMethod( $this->api, $method );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 
 		return $reflection->invokeArgs( $this->api, $args );
 	}
@@ -387,7 +389,9 @@ class ConnectAPITest extends EDD_UnitTestCase {
 		$api->set_hmac_key( self::TEST_HMAC_KEY );
 
 		$reflection = new \ReflectionMethod( $api, 'build_hmac_headers' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 		$headers = $reflection->invokeArgs( $api, array( 'GET', '/v3/test' ) );
 
 		$this->assertSame( 'new-store-id', $headers['X-EDD-Store-ID'] );

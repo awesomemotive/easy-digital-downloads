@@ -260,7 +260,9 @@ class PreviewComponent extends EDD_UnitTestCase {
 		// Use reflection to check private property.
 		$reflection = new \ReflectionClass( $component );
 		$property   = $reflection->getProperty( 'assets' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$assets = $property->getValue( $component );
 
 		$this->assertInstanceOf( 'EDD\Cart\Preview\Assets', $assets );
