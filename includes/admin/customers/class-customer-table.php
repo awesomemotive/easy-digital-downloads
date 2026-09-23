@@ -272,6 +272,20 @@ class EDD_Customer_Reports_Table extends List_Table {
 				)
 			);
 
+			// Fall back to the primary email stored on the customer record only when the
+			// email addresses lookup found nothing. A customer may have an email in
+			// edd_customers without a matching row in edd_customer_email_addresses, in
+			// which case the lookup above misses it. get_item_by() matches the customers
+			// table column directly, unlike the Customer query 'email' argument which is
+			// rerouted to the email addresses table by parse_query_for_emails().
+			if ( empty( $customer_ids ) ) {
+				$customers = new EDD\Database\Queries\Customer();
+				$customer  = $customers->get_item_by( 'email', $search );
+				if ( $customer ) {
+					$customer_ids = array( $customer->id );
+				}
+			}
+
 			if ( ! empty( $customer_ids ) ) {
 				$args['id__in'] = $customer_ids;
 			} else {
