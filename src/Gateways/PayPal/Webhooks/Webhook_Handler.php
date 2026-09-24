@@ -117,9 +117,13 @@ class Webhook_Handler {
 
 			edd_debug_log( sprintf( 'PayPal Commerce Webhook - Passing to handler %s', esc_html( $class_name ) ) );
 
+			$action_key = sanitize_key( strtolower( str_replace( '.', '_', $request->get_param( 'event_type' ) ) ) );
+
+			do_action( 'edd_pre_paypal_webhook_event', $request->get_param( 'event_type' ), $request );
+			do_action( 'edd_pre_paypal_webhook_event_' . $action_key, $request );
+
 			$handler->handle();
 
-			$action_key = sanitize_key( strtolower( str_replace( '.', '_', $request->get_param( 'event_type' ) ) ) );
 			/**
 			 * Triggers once the handler has run successfully.
 			 * $action_key is a formatted version of the event type:
