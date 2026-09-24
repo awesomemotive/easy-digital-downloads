@@ -404,7 +404,9 @@ class Notices extends EDD_UnitTestCase {
 	 */
 	private function get_notices_property(): array {
 		$reflection = new \ReflectionProperty( \EDD_Notices::class, 'notices' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 		return $reflection->getValue( $this->notices );
 	}
 

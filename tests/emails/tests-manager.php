@@ -80,7 +80,9 @@ class Manager extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $manager );
 		$method = $reflection->getMethod( 'update_reply_to_setting' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$method->invoke( $manager, $email_id, $data );
 
 		$this->assertEquals( '1', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
@@ -99,7 +101,9 @@ class Manager extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $manager );
 		$method = $reflection->getMethod( 'update_reply_to_setting' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$method->invoke( $manager, $email_id, $data );
 
 		$this->assertEquals( '', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
@@ -116,7 +120,9 @@ class Manager extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $manager );
 		$method = $reflection->getMethod( 'update_reply_to_setting' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$method->invoke( $manager, $email_id, $data );
 
 		$this->assertEquals( '', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );
@@ -133,7 +139,9 @@ class Manager extends EDD_UnitTestCase {
 		
 		$reflection = new \ReflectionClass( $manager );
 		$method = $reflection->getMethod( 'update_reply_to_setting' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		$method->invoke( $manager, $email_id, $data );
 
 		$this->assertEquals( '', edd_get_email_meta( $email_id, 'use_customer_reply_to', true ) );

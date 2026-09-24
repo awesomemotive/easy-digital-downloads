@@ -656,7 +656,9 @@ class OnboardingTest extends EDD_UnitTestCase {
 		}, 10, 3 );
 
 		$reflection = new \ReflectionMethod( Onboarding::class, 'register_store' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 		$reflection->invoke( null );
 
 		$this->assertArrayHasKey( 'site_url', $captured );
@@ -697,7 +699,9 @@ class OnboardingTest extends EDD_UnitTestCase {
 		}, 10, 3 );
 
 		$reflection = new \ReflectionMethod( Onboarding::class, 'register_store' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 		$reflection->invoke( null );
 
 		$this->assertSame( home_url(), ConnectSync::get_registered_url( 'sandbox' ) );
@@ -738,7 +742,9 @@ class OnboardingTest extends EDD_UnitTestCase {
 		}, 10, 3 );
 
 		$reflection = new \ReflectionMethod( Onboarding::class, 'register_store' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 		$result = $reflection->invoke( null );
 
 		$this->assertWPError( $result );
@@ -784,7 +790,9 @@ class OnboardingTest extends EDD_UnitTestCase {
 		}, 10, 3 );
 
 		$reflection = new \ReflectionMethod( Onboarding::class, 'register_store' );
-		$reflection->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reflection->setAccessible( true );
+        }
 		$result = $reflection->invoke( null );
 
 		$this->assertIsArray( $result );

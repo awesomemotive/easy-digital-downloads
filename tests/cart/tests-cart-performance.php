@@ -400,7 +400,9 @@ class Performance extends EDD_UnitTestCase {
 		// Reflection to check private property
 		$reflection = new \ReflectionClass( $cart1 );
 		$profiler_prop = $reflection->getProperty( 'profiler' );
-		$profiler_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $profiler_prop->setAccessible( true );
+        }
 
 		// Profiler should be null
 		$this->assertNull( $profiler_prop->getValue( $cart1 ) );

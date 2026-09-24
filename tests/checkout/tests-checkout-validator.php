@@ -108,7 +108,9 @@ class Validator extends EDD_UnitTestCase {
 		// Use reflection to access the private has_checkout method
 		$reflection = new \ReflectionClass( 'EDD\Checkout\Validator' );
 		$method = $reflection->getMethod( 'has_checkout' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// Test with post_id = 0 (should return false)
 		$result = $method->invokeArgs( null, array( 0 ) );
@@ -158,7 +160,9 @@ class Validator extends EDD_UnitTestCase {
 		// Use reflection to access the private has_checkout method
 		$reflection = new \ReflectionClass( 'EDD\Checkout\Validator' );
 		$method = $reflection->getMethod( 'has_checkout' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// Create a post with checkout block
 		$block_post_id = $this->factory->post->create( array(

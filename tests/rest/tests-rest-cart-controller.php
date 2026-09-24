@@ -113,7 +113,9 @@ class CartController extends EDD_UnitTestCase {
 	public function test_controller_has_security_dependency() {
 		$reflection = new \ReflectionClass( $this->controller );
 		$property = $reflection->getProperty( 'security' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 
 		$this->assertInstanceOf( 'EDD\REST\Security', $property->getValue( $this->controller ) );
 	}

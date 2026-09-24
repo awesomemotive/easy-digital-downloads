@@ -87,7 +87,9 @@ class GatewayPies extends EDD_UnitTestCase {
 		// Test that key is set correctly
 		$reflection = new \ReflectionClass( $pie );
 		$key_prop = $reflection->getProperty( 'key' );
-		$key_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $key_prop->setAccessible( true );
+        }
 		$this->assertSame( 'sales', $key_prop->getValue( $pie ) );
 	}
 
@@ -123,7 +125,9 @@ class GatewayPies extends EDD_UnitTestCase {
 		// Test that key is set correctly
 		$reflection = new \ReflectionClass( $pie );
 		$key_prop = $reflection->getProperty( 'key' );
-		$key_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $key_prop->setAccessible( true );
+        }
 		$this->assertSame( 'earnings', $key_prop->getValue( $pie ) );
 	}
 
@@ -156,11 +160,15 @@ class GatewayPies extends EDD_UnitTestCase {
 		// Set up some test data
 		$reflection = new \ReflectionClass( $pie );
 		$dates_prop = $reflection->getProperty( 'dates' );
-		$dates_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $dates_prop->setAccessible( true );
+        }
 		$dates_prop->setValue( $pie, array( 'range' => 'this_month' ) );
 
 		$currency_prop = $reflection->getProperty( 'currency' );
-		$currency_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $currency_prop->setAccessible( true );
+        }
 		$currency_prop->setValue( $pie, 'USD' );
 
 		$results = $this->invokeMethod( $pie, 'get_query_results' );
@@ -178,15 +186,21 @@ class GatewayPies extends EDD_UnitTestCase {
 		// Set up some test data
 		$reflection = new \ReflectionClass( $pie );
 		$dates_prop = $reflection->getProperty( 'dates' );
-		$dates_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $dates_prop->setAccessible( true );
+        }
 		$dates_prop->setValue( $pie, array( 'range' => 'this_month' ) );
 
 		$currency_prop = $reflection->getProperty( 'currency' );
-		$currency_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $currency_prop->setAccessible( true );
+        }
 		$currency_prop->setValue( $pie, 'USD' );
 
 		$exclude_taxes_prop = $reflection->getProperty( 'exclude_taxes' );
-		$exclude_taxes_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $exclude_taxes_prop->setAccessible( true );
+        }
 		$exclude_taxes_prop->setValue( $pie, false );
 
 		$results = $this->invokeMethod( $pie, 'get_query_results' );
@@ -366,7 +380,9 @@ class GatewayPies extends EDD_UnitTestCase {
 		// Set min_percentage to 10% for testing
 		$reflection = new \ReflectionClass( $pie );
 		$min_percentage_prop = $reflection->getProperty( 'min_percentage' );
-		$min_percentage_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $min_percentage_prop->setAccessible( true );
+        }
 		$min_percentage_prop->setValue( $pie, 10.0 );
 
 		// Test data: 100 total sales, one gateway has 3% (should be grouped into Other)
@@ -402,12 +418,16 @@ class GatewayPies extends EDD_UnitTestCase {
 		// Set max_pieces to 3 for testing
 		$reflection = new \ReflectionClass( $pie );
 		$max_pieces_prop = $reflection->getProperty( 'max_pieces' );
-		$max_pieces_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $max_pieces_prop->setAccessible( true );
+        }
 		$max_pieces_prop->setValue( $pie, 3 );
 
 		// Disable percentage grouping
 		$min_percentage_prop = $reflection->getProperty( 'min_percentage' );
-		$min_percentage_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $min_percentage_prop->setAccessible( true );
+        }
 		$min_percentage_prop->setValue( $pie, 0.0 );
 
 		// Test data with 5 gateways (exceeds max of 3)
@@ -563,12 +583,16 @@ class GatewayPies extends EDD_UnitTestCase {
 		// Set max_pieces to 2 to force grouping
 		$reflection = new \ReflectionClass( $pie );
 		$max_pieces_prop = $reflection->getProperty( 'max_pieces' );
-		$max_pieces_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $max_pieces_prop->setAccessible( true );
+        }
 		$max_pieces_prop->setValue( $pie, 2 );
 
 		// Disable percentage grouping
 		$min_percentage_prop = $reflection->getProperty( 'min_percentage' );
-		$min_percentage_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $min_percentage_prop->setAccessible( true );
+        }
 		$min_percentage_prop->setValue( $pie, 0.0 );
 
 		// Use public API to get chart options which includes the breakdown
@@ -597,7 +621,9 @@ class GatewayPies extends EDD_UnitTestCase {
 	protected function invokeMethod( $object, $method, array $args = array() ) {
 		$reflection = new \ReflectionClass( get_class( $object ) );
 		$method = $reflection->getMethod( $method );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		return $method->invokeArgs( $object, $args );
 	}

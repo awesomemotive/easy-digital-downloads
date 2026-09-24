@@ -39,7 +39,9 @@ class Component_Tests extends EDD_UnitTestCase {
 	public function test_component_has_id() {
 		$reflection = new \ReflectionClass( $this->component );
 		$property = $reflection->getProperty( 'id' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$id = $property->getValue();
 
 		$this->assertEquals( 'log_pruning', $id );
