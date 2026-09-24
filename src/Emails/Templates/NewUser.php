@@ -108,7 +108,12 @@ class NewUser extends EmailTemplate {
 			'{username}'
 		) . "\r\n";
 
-		$message .= __( 'Password: [entered on site]', 'easy-digital-downloads' ) . "\r\n";
+		if ( EDD()->emails->html ) {
+			$message .= '<a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_attr__( 'Set your password', 'easy-digital-downloads' ) . '</a>';
+			$message .= "\r\n";
+		} else {
+			$message .= sprintf( __( 'To set your password, visit: %s', 'easy-digital-downloads' ), esc_url( wp_lostpassword_url() ) ) . "\r\n";
+		}
 
 		if ( EDD()->emails->html ) {
 			$message .= '<a href="' . esc_url( $login_url ) . '"> ' . esc_attr__( 'Click here to log in', 'easy-digital-downloads' ) . ' &rarr;</a>';
