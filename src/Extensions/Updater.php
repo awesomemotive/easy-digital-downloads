@@ -176,10 +176,13 @@ class Updater {
 			// This is required for your plugin to support auto-updates in WordPress 5.5.
 			$version_info->plugin = $this->name;
 			$version_info->id     = $this->name;
-			$version_info->tested = $this->get_tested_version( $version_info );
 
+			// The cache holds the response as the store sent it.
 			$this->set_version_info_cache( $version_info );
 		}
+
+		// Expand a partial tested version for the site reading it.
+		$version_info->tested = $this->get_tested_version( $version_info );
 
 		return $version_info;
 	}
@@ -222,27 +225,39 @@ class Updater {
 	 */
 	private function get_tested_version( $version_info ) {
 
-		// There is no tested version.
-		if ( empty( $version_info->tested ) ) {
+		// There is no usable tested version.
+		if ( empty( $version_info->tested ) || ! is_scalar( $version_info->tested ) ) {
 			return null;
 		}
 
 		// Strip off extra version data so the result is x.y or x.y.z.
 		list( $current_wp_version ) = explode( '-', get_bloginfo( 'version' ) );
+		list( $tested_version )     = explode( '-', (string) $version_info->tested );
 
 		// The tested version is greater than or equal to the current WP version, no need to do anything.
-		if ( version_compare( $version_info->tested, $current_wp_version, '>=' ) ) {
+		if ( version_compare( $tested_version, $current_wp_version, '>=' ) ) {
 			return $version_info->tested;
 		}
 		$current_version_parts = explode( '.', $current_wp_version );
-		$tested_parts          = explode( '.', $version_info->tested );
+		$tested_parts          = explode( '.', $tested_version );
 
-		// The current WordPress version is x.y.z, so update the tested version to match it.
-		if ( isset( $current_version_parts[2] ) && $current_version_parts[0] === $tested_parts[0] && $current_version_parts[1] === $tested_parts[1] ) {
-			$tested_parts[2] = $current_version_parts[2];
+		// Only a major.minor version for the release this site runs is expanded. A version that
+		// already names a patch release, one with only a major part, or one carrying pre-release
+		// data is returned unchanged.
+		if ( isset( $tested_parts[2] ) || ! isset( $tested_parts[1] ) || ! isset( $current_version_parts[1] ) ) {
+			return $version_info->tested;
 		}
 
-		return implode( '.', $tested_parts );
+		if ( $version_info->tested !== $tested_version ) {
+			return $version_info->tested;
+		}
+
+		if ( $current_version_parts[0] !== $tested_parts[0] || $current_version_parts[1] !== $tested_parts[1] ) {
+			return $version_info->tested;
+		}
+
+		// The current WordPress version is x.y.z, so update the tested version to match it.
+		return $current_wp_version;
 	}
 
 	/**
@@ -411,6 +426,9 @@ class Updater {
 			$this->set_version_info_cache( $api_response );
 
 			if ( false !== $api_response ) {
+				// Expand a partial tested version for the site reading it.
+				$api_response->tested = $this->get_tested_version( $api_response );
+
 				$_data = $api_response;
 			}
 		} else {
@@ -583,6 +601,12 @@ class Updater {
 		$cache['value'] = json_decode( $cache['value'] );
 		if ( ! empty( $cache['value']->icons ) ) {
 			$cache['value']->icons = (array) $cache['value']->icons;
+		}
+
+		// The value is stored as the store sent it, so a partial tested version is expanded against
+		// the WordPress version this site is running now.
+		if ( is_object( $cache['value'] ) ) {
+			$cache['value']->tested = $this->get_tested_version( $cache['value'] );
 		}
 
 		return $cache['value'];
