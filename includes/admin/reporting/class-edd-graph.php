@@ -173,7 +173,7 @@ class EDD_Graph {
 							label: "<?php echo esc_attr( $label ); ?>",
 							id: "<?php echo sanitize_key( $label ); ?>",
 							// data format is: [ point on x, value on y ]
-							data: [<?php foreach( $data as $point ) { echo '[' . implode( ',', $point ) . '],'; } ?>],
+							data: <?php echo wp_json_encode( array_values( $data ) ); ?>,
 							points: {
 								show: <?php echo $this->options['points'] ? 'true' : 'false'; ?>,
 							},

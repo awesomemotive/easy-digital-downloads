@@ -136,35 +136,6 @@ function edd_reports_downloads_table() {
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
 /**
- * Renders the detailed report for a specific product
- *
- * @since 1.9
- * @return void
- */
-function edd_reports_download_details() {
-
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
-	}
-
-	if( ! isset( $_GET['download-id'] ) )
-		return;
-?>
-	<div class="tablenav top">
-		<div class="actions bulkactions">
-			<div class="alignleft">
-				<?php edd_report_views(); ?>
-			</div>&nbsp;
-			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'easy-digital-downloads' ); ?></button>
-		</div>
-	</div>
-<?php
-	edd_reports_graph_of_download( absint( $_GET['download-id'] ) );
-}
-add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
-
-
-/**
  * Renders the Gateways Table
  *
  * @since 1.3
@@ -185,27 +156,6 @@ function edd_reports_gateways_table() {
 	$downloads_table->display();
 }
 add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
-
-
-/**
- * Renders the Reports Earnings Graphs
- *
- * @since 1.3
- * @return void
- */
-function edd_reports_earnings() {
-
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
-	}
-	?>
-	<div class="tablenav top">
-		<div class="alignleft actions"><?php edd_report_views(); ?></div>
-	</div>
-	<?php
-	edd_reports_graph();
-}
-add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
 
 /**
