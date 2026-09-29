@@ -159,55 +159,6 @@ add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
 
 
 /**
- * Renders the Reports Earnings By Category Table & Graphs
- *
- * @since  2.4
- */
-function edd_reports_categories() {
-	if( ! current_user_can( 'view_shop_reports' ) ) {
-		return;
-	}
-
-	include( dirname( __FILE__ ) . '/class-categories-reports-table.php' );
-	?>
-			<div class="inside">
-				<?php
-
-				$categories_table = new EDD_Categories_Reports_Table();
-				$categories_table->prepare_items();
-				$categories_table->display();
-				?>
-
-				<?php echo $categories_table->load_scripts(); ?>
-
-				<div class="edd-mix-totals">
-					<div class="edd-mix-chart">
-						<strong><?php _e( 'Category Sales Mix: ', 'easy-digital-downloads' ); ?></strong>
-						<?php $categories_table->output_sales_graph(); ?>
-					</div>
-					<div class="edd-mix-chart">
-						<strong><?php _e( 'Category Earnings Mix: ', 'easy-digital-downloads' ); ?></strong>
-						<?php $categories_table->output_earnings_graph(); ?>
-					</div>
-				</div>
-
-				<?php do_action( 'edd_reports_graph_additional_stats' ); ?>
-
-				<p class="edd-graph-notes">
-					<span>
-						<em><sup>&dagger;</sup> <?php _e( 'All Parent categories include sales and earnings stats from child categories.', 'easy-digital-downloads' ); ?></em>
-					</span>
-					<span>
-						<em><?php _e( 'Stats include all sales and earnings for the lifetime of the store.', 'easy-digital-downloads' ); ?></em>
-					</span>
-				</p>
-
-			</div>
-	<?php
-}
-add_action( 'edd_reports_view_categories', 'edd_reports_categories' );
-
-/**
  * Renders the Tax Reports
  *
  * @since 1.3.3
