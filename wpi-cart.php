@@ -273,7 +273,6 @@ final class WPI_Cart {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
@@ -282,7 +281,6 @@ final class WPI_Cart {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
