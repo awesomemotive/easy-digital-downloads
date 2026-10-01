@@ -235,9 +235,6 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_media();
 	}
 
-	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
-	wp_enqueue_script( 'jquery-flot' );
-
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'jquery-ui-dialog' );
 
