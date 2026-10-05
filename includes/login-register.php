@@ -12,29 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-/**
- * Login Form
- *
- * @since 1.0
- * @global $post
- * @param string $redirect Redirect page URL
- * @return string Login form
-*/
-function edd_login_form( $redirect = '' ) {
-	global $edd_login_redirect;
-
-	if ( empty( $redirect ) ) {
-		$redirect = edd_get_current_page_url();
-	}
-
-	$edd_login_redirect = $redirect;
-
-	ob_start();
-
-	edd_get_template_part( 'shortcode', 'login' );
-
-	return apply_filters( 'edd_login_form', ob_get_clean() );
-}
 
 /**
  * Registration Form

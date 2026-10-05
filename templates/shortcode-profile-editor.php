@@ -109,6 +109,6 @@ if ( is_user_logged_in() ):
 
 	<?php
 else:
-	echo '<p>' . __( 'You need to login to edit your profile.', 'easy-digital-downloads' ) . '</p>';
-	echo edd_login_form();
+    wp_safe_redirect(wp_login_url(edd_get_current_page_url()));
+    exit;
 endif;

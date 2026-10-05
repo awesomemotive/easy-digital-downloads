@@ -158,27 +158,6 @@ function edd_cart_shortcode( $atts, $content = null ) {
 add_shortcode( 'download_cart', 'edd_cart_shortcode' );
 
 /**
- * Login Shortcode
- *
- * Shows a login form allowing users to users to log in. This function simply
- * calls the edd_login_form function to display the login form.
- *
- * @since 1.0
- * @param array $atts Shortcode attributes
- * @param string $content
- * @uses edd_login_form()
- * @return string
- */
-function edd_login_form_shortcode( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-			'redirect' => '',
-		), $atts, 'edd_login' )
-	);
-	return edd_login_form( $redirect );
-}
-add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
-
-/**
  * Register Shortcode
  *
  * Shows a registration form allowing users to users to register for the site
@@ -655,19 +634,10 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	$payment_id    = edd_get_purchase_id_by_key( $payment_key );
 	$user_can_view = edd_can_view_receipt( $payment_key );
 
-	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
+	// Key was provided, but user is logged out. Redirect them to login and view the receipt
 	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $payment_id ) ) {
-		global $edd_login_redirect;
-		$edd_login_redirect = edd_get_current_page_url();
-
-		ob_start();
-
-		echo '<p class="edd-alert edd-alert-warn">' . __( 'You must be logged in to view this payment receipt.', 'easy-digital-downloads' ) . '</p>';
-		edd_get_template_part( 'shortcode', 'login' );
-
-		$login_form = ob_get_clean();
-
-		return $login_form;
+		wp_safe_redirect( wp_login_url( edd_get_current_page_url() ) );
+		exit;
 	}
 
 	/*
