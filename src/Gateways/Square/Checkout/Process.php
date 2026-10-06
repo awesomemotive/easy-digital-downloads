@@ -60,6 +60,17 @@ class Process {
 	 * @return void
 	 */
 	public static function process( $purchase_data ) {
+		if ( ! wp_verify_nonce( $purchase_data['gateway_nonce'] ?? '', 'edd-gateway' ) ) {
+			edd_debug_log( 'EDD Square: Gateway nonce verification failed.' );
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ),
+				)
+			);
+
+			return;
+		}
+
 		self::$purchase_data = $purchase_data;
 
 		// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
@@ -138,11 +149,16 @@ class Process {
 				throw new \Exception( esc_html__( 'Error 1106: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
 			}
 
-			// Mark the order as completed.
-			$updated = edd_update_order_status( $order_id, 'complete' );
-			if ( ! $updated ) {
-				edd_debug_log( 'Square error: ' . esc_html__( 'Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
-				throw new \Exception( esc_html__( 'Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
+			$payment_status      = strtoupper( $result['payment']->getStatus() );
+			$is_payment_complete = 'COMPLETED' === $payment_status;
+
+			// An order whose payment has not completed yet is completed by Square's order.updated webhook.
+			if ( $is_payment_complete ) {
+				$updated = edd_update_order_status( $order_id, 'complete' );
+				if ( ! $updated ) {
+					edd_debug_log( 'Square error: ' . esc_html__( 'Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
+					throw new \Exception( esc_html__( 'Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
+				}
 			}
 
 			// Save the Square Order ID to the order meta.
@@ -155,18 +171,12 @@ class Process {
 					'object_type'    => 'order',
 					'transaction_id' => sanitize_text_field( $result['payment']->getId() ),
 					'gateway'        => 'square',
-					'status'         => 'complete',
+					'status'         => $is_payment_complete ? 'complete' : 'pending',
 					'total'          => self::$purchase_data['price'],
 				)
 			);
 
 			edd_empty_cart();
-
-			wp_send_json_success(
-				array(
-					'square_payment_status' => strtoupper( $result['payment']->getStatus() ),
-				)
-			);
 		} catch ( \Exception $e ) {
 			edd_debug_log( 'Square error: ' . $e->getMessage() );
 			wp_send_json_error(
@@ -174,7 +184,15 @@ class Process {
 					'message' => $e->getMessage(),
 				)
 			);
+
+			return;
 		}
+
+		wp_send_json_success(
+			array(
+				'square_payment_status' => $payment_status,
+			)
+		);
 	}
 
 	/**

@@ -127,15 +127,17 @@ class Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_create_percent_happy_path() {
-		$ability = new Create();
-		$result  = $ability->execute(
+		$ability    = new Create();
+		$start_date = gmdate( 'Y-m-d', strtotime( '+1 day' ) );
+		$end_date   = gmdate( 'Y-m-d', strtotime( '+30 days' ) );
+		$result     = $ability->execute(
 			array(
 				'code'              => 'SUMMER25',
 				'name'              => 'Summer Sale',
 				'amount'            => 25,
 				'type'              => 'percent',
-				'start_date'        => '2026-09-01',
-				'end_date'          => '2026-09-30',
+				'start_date'        => $start_date,
+				'end_date'          => $end_date,
 				'max_uses'          => 10,
 				'min_charge_amount' => 50,
 				'once_per_customer' => true,
@@ -157,8 +159,8 @@ class Discounts extends EDD_UnitTestCase {
 		$this->assertFalse( $result['is_maxed_out'] );
 
 		// Dates normalize to the start and end of the requested days.
-		$this->assertSame( '2026-09-01 00:00:00', $result['start_date'] );
-		$this->assertSame( '2026-09-30 23:59:59', $result['end_date'] );
+		$this->assertSame( "{$start_date} 00:00:00", $result['start_date'] );
+		$this->assertSame( "{$end_date} 23:59:59", $result['end_date'] );
 	}
 
 	public function test_discount_create_defaults_to_inactive() {

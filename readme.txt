@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell digital products, digital store, stripe
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable Tag: 3.7.1
+Stable Tag: 3.7.1.1
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept payments with Stripe & PayPal. Sell ebooks, software & more.
@@ -293,6 +293,9 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.7.1.1 =
+* Improved: Square orders are now completed only once Square confirms the payment is complete.
+
 = 3.7.1 =
 * NEW: Abilities - Store data is now registered with WordPress's Abilities API, so AI assistants can discover and work with orders, customers, products and discounts.
 * NEW: Admin - Introducing Command Palette support, so orders, customers, discounts and downloads can be found and jumped to with Cmd+K / Ctrl+K on WordPress 6.9 and later.
