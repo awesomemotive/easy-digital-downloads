@@ -861,10 +861,6 @@ class FPDF {
 	function _dochecks() {
 		if ( sprintf( '%.1F', 1.0 ) != '1.0' )
 			$this->Error( 'This version of PHP is not supported' );
-		if ( ini_get( 'mbstring.func_overload' ) & 2 )
-			$this->Error( 'mbstring overloading must be disabled' );
-		if ( get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) )
-			@set_magic_quotes_runtime( 0 );
 	}
 
 	function _checkoutput() {
@@ -1173,7 +1169,7 @@ class FPDF {
 			ob_start();
 			imagepng( $im );
 			$data = ob_get_clean();
-			imagedestroy( $im );
+			unset( $im );
 			fwrite( $f, $data );
 			rewind( $f );
 			$info = $this->_parsepngstream( $f, $file );
@@ -1184,7 +1180,7 @@ class FPDF {
 				$this->Error( 'Unable to create a temporary file' );
 			if ( !imagepng( $im, $tmp ) )
 				$this->Error( 'Error while saving to temporary file' );
-			imagedestroy( $im );
+			unset( $im );
 			$info = $this->_parsepng( $tmp );
 			unlink( $tmp );
 		}

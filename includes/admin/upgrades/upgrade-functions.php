@@ -258,7 +258,7 @@ function edd_v131_upgrades() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) )
 		set_time_limit( 0 );
 
 	$args = array(
@@ -439,7 +439,7 @@ function edd_v20_upgrades() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		set_time_limit( 0 );
 	}
 
@@ -485,7 +485,7 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		set_time_limit( 0 );
 	}
 
@@ -567,7 +567,7 @@ function edd_v21_upgrade_customers_db() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -676,7 +676,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
@@ -773,7 +773,7 @@ function edd_v23_upgrade_payment_taxes() {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -849,7 +849,7 @@ function edd_v23_upgrade_customer_purchases() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -977,7 +977,7 @@ function edd_upgrade_user_api_keys() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 
@@ -1062,7 +1062,7 @@ function edd_remove_refunded_sale_logs() {
 
 	ignore_user_abort( true );
 
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit(0);
 	}
 

@@ -124,7 +124,7 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 			@set_time_limit(0);
 		}
 
