@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Easy Digital Downloads plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 3.7.1\n"
+"Project-Id-Version: Easy Digital Downloads 3.7.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/easy-digital-downloads\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-19T16:43:42+00:00\n"
+"POT-Creation-Date: 2026-10-06T19:50:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
@@ -15218,6 +15218,7 @@ msgstr ""
 #: includes/process-purchase.php:39
 #: src/Gateways/Square/Checkout/Form.php:149
 #: src/Gateways/Square/Checkout/Form.php:165
+#: src/Gateways/Square/Checkout/Process.php:67
 msgid "Error processing purchase. Please reload the page and try again."
 msgstr ""
 
@@ -26001,13 +26002,13 @@ msgstr ""
 msgid "%1$sActivate or upgrade your license%2$s to prevent additional fees."
 msgstr ""
 
-#: src/Gateways/Square/Checkout/Process.php:137
-#: src/Gateways/Square/Checkout/Process.php:138
+#: src/Gateways/Square/Checkout/Process.php:148
+#: src/Gateways/Square/Checkout/Process.php:149
 msgid "Error 1106: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: src/Gateways/Square/Checkout/Process.php:144
-#: src/Gateways/Square/Checkout/Process.php:145
+#: src/Gateways/Square/Checkout/Process.php:159
+#: src/Gateways/Square/Checkout/Process.php:160
 msgid "Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
