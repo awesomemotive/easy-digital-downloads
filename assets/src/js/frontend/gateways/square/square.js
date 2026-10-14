@@ -308,6 +308,12 @@ async function processPayment(event) { // event is passed by addEventListener
 		// 4. Redirect to the success page.
 		window.location.href = eddSquare.success_page_uri;
 	} catch (e) {
+		// A removed discount changes the total, so reload to show it with the message.
+		if ( e?.refresh ) {
+			globalThis.location.reload();
+			return;
+		}
+
 		showError( e.message || ( window.eddSquare.squareData.strings && window.eddSquare.squareData.strings.genericError ) || 'An error occurred.' );
 		restorePurchaseButton();
 	}

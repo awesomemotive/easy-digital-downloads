@@ -25,6 +25,7 @@ add_action( 'edd_manual_cc_form', '__return_false' );
  * the transaction in the Purchase History
  *
  * @since 1.0
+ * @since 3.7.2 Fails the order when its discount uses could not be claimed.
  * @param array $purchase_data Purchase Data.
  * @return void
  */
@@ -62,7 +63,11 @@ function edd_manual_payment( $purchase_data ) {
 	// Record the pending payment.
 	$payment = edd_insert_payment( $payment_data );
 
-	if ( $payment ) {
+	$refusal = $payment ? \EDD\Discounts\OrderValidation::refuse_unclaimed( $payment ) : '';
+
+	if ( $refusal ) {
+		edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
+	} elseif ( $payment ) {
 		edd_update_payment_status( $payment, 'complete' );
 		// Empty the shopping cart.
 		edd_empty_cart();

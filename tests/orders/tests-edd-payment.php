@@ -747,6 +747,46 @@ class EDD_Payment extends EDD_UnitTestCase {
 		$this->assertEquals( $store_sales - 1, edd_get_total_sales() );
 	}
 
+	public function test_status_outside_pending_and_processing_skips_pending_stats_reversal() {
+		$this->payment->status = 'complete';
+		$this->payment->save();
+
+		$reversal_count = 0;
+		add_filter(
+			'edd_decrease_store_earnings_on_pending',
+			function ( $decrease ) use ( &$reversal_count ) {
+				++$reversal_count;
+				return $decrease;
+			}
+		);
+
+		// Forcing the filter removes process_pending()'s own status check, leaving only the switch.
+		add_filter( 'edd_should_process_pending', '__return_true' );
+		$this->payment->status = 'abandoned';
+		$this->payment->save();
+
+		$this->assertSame( 0, $reversal_count );
+	}
+
+	public function test_processing_status_runs_pending_stats_reversal() {
+		$this->payment->status = 'complete';
+		$this->payment->save();
+
+		$reversal_count = 0;
+		add_filter(
+			'edd_decrease_store_earnings_on_pending',
+			function ( $decrease ) use ( &$reversal_count ) {
+				++$reversal_count;
+				return $decrease;
+			}
+		);
+
+		$this->payment->status = 'processing';
+		$this->payment->save();
+
+		$this->assertSame( 1, $reversal_count );
+	}
+
 	/**
 	 */
 	public function test_remove_with_multi_price_points_by_price_id() {

@@ -27,7 +27,8 @@ use EDD\Utils\Request;
  * Cron EventManager Class
  *
  * A callback wired through here is registered as a closure, so it cannot be removed by the
- * original callable: remove_subscriber() and has_filter() will not find it.
+ * original callable: remove_subscriber() and has_filter() will not find it. To stop a component
+ * running, remove it with the edd_cron_components filter instead.
  *
  * @since 3.7.1
  */

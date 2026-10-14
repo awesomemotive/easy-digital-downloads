@@ -111,13 +111,21 @@ class Screen {
 	/**
 	 * Gets the active tab.
 	 *
+	 * Falls back to `DEFAULT_TAB` when the requested tab is not registered, so an
+	 * unknown `tab` value can never reach `do_action()` in `render()`.
+	 *
 	 * @since 3.3.0
 	 * @return string
 	 */
 	private static function get_active_tab() {
 		$active_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
 
-		return $active_tab ?? self::DEFAULT_TAB;
+		// Fallback to $_GET if filter_input() returns null (for test environments).
+		if ( ! $active_tab && isset( $_GET['tab'] ) && is_string( $_GET['tab'] ) ) {
+			$active_tab = sanitize_text_field( $_GET['tab'] );
+		}
+
+		return array_key_exists( (string) $active_tab, self::get_tabs() ) ? $active_tab : self::DEFAULT_TAB;
 	}
 
 	/**

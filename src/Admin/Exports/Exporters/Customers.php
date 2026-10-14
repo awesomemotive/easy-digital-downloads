@@ -95,19 +95,7 @@ class Customers extends BatchExport {
 
 			if ( $results ) {
 				foreach ( $results as $customer_id ) {
-					$customer = new \EDD_Customer( $customer_id );
-					$name     = ! empty( $customer->name ) ? $customer->name : '';
-					if ( preg_match( '~^[+\-=@]~m', $name ) ) {
-						$name = "'{$name}";
-					}
-
-					$data[] = array(
-						'id'        => $customer->id,
-						'name'      => $name,
-						'email'     => $customer->email,
-						'purchases' => $customer->purchase_count,
-						'amount'    => edd_format_amount( $customer->purchase_value ),
-					);
+					$data[] = $this->get_customer_row( new \EDD_Customer( $customer_id ) );
 				}
 			}
 
@@ -131,22 +119,7 @@ class Customers extends BatchExport {
 				foreach ( $order_items as $item ) {
 					$order = edd_get_order( $item->order_id );
 
-					$customer = new \EDD_Customer( $order->customer_id );
-					$name     = ! empty( $customer->name ) ? $customer->name : '';
-					if ( preg_match( '~^[+\-=@]~m', $name ) ) {
-						$name = "'{$name}";
-					}
-
-					$data[] = array(
-						'id'           => $customer->id,
-						'user_id'      => $customer->user_id,
-						'name'         => $name,
-						'email'        => $customer->email,
-						'purchases'    => $customer->purchase_count,
-						'amount'       => edd_format_amount( $customer->purchase_value ),
-						'payment_ids'  => $customer->payment_ids,
-						'date_created' => $customer->date_created,
-					);
+					$data[] = $this->get_customer_row( new \EDD_Customer( $order->customer_id ) );
 				}
 			}
 
@@ -157,25 +130,8 @@ class Customers extends BatchExport {
 				'offset' => 30 * ( $this->step - 1 ),
 			) );
 
-			$i = 0;
-
 			foreach ( $customers as $customer ) {
-				$name = ! empty( $customer->name ) ? $customer->name : '';
-				if ( preg_match( '~^[+\-=@]~m', $name ) ) {
-					$name = "'{$name}";
-				}
-				$data[ $i ]= array(
-					'id'           => $customer->id,
-					'user_id'      => $customer->user_id,
-					'name'         => $name,
-					'email'        => $customer->email,
-					'purchases'    => $customer->purchase_count,
-					'amount'       => edd_format_amount( $customer->purchase_value ),
-					'payment_ids'  => $customer->payment_ids,
-					'date_created' => $customer->date_created,
-				);
-
-				$i++;
+				$data[] = $this->get_customer_row( $customer );
 			}
 		}
 
@@ -230,5 +186,33 @@ class Customers extends BatchExport {
 		$this->price_id = ! empty( $request['edd_price_option'] ) && 0 !== $request['edd_price_option']
 			? absint( $request['edd_price_option'] )
 			: null;
+	}
+
+	/**
+	 * Build one export row, keyed in the same order as the CSV columns.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param \EDD_Customer $customer The customer to export.
+	 * @return array
+	 */
+	private function get_customer_row( \EDD_Customer $customer ) {
+		$name = ! empty( $customer->name ) ? $customer->name : '';
+
+		// Spreadsheet apps evaluate cells starting with these characters as formulas.
+		if ( preg_match( '~^[+\-=@]~m', $name ) ) {
+			$name = "'{$name}";
+		}
+
+		return array(
+			'id'           => $customer->id,
+			'user_id'      => $customer->user_id,
+			'name'         => $name,
+			'email'        => $customer->email,
+			'purchases'    => $customer->purchase_count,
+			'amount'       => edd_format_amount( $customer->purchase_value ),
+			'payment_ids'  => $customer->payment_ids,
+			'date_created' => $customer->date_created,
+		);
 	}
 }

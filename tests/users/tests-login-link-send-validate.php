@@ -217,14 +217,28 @@ class LoginLinkSendValidate extends EDD_UnitTestCase {
 	 * @return void
 	 */
 	public function test_cooldown_boundary_one_second_before_expiry_blocks() {
-		// Log created 1 second less than COOLDOWN_SECONDS ago — still in cooldown.
-		$this->create_login_link_log(
-			self::$user_id,
-			edd_get_utc_date_string( '@' . ( time() - Validate::COOLDOWN_SECONDS + 1 ) )
-		);
+		// The log is only one second inside the cooldown if the check reads the clock in the same second it was written.
+		for ( $attempt = 1; $attempt <= 5; $attempt++ ) {
+			// A Berlin query reuses its last_changed stamp, so a reused instance leaves the check reading the previous attempt's cache.
+			$this->log_query = new LogEmail();
 
-		$result = Validate::check_user( self::$user_id );
+			$seeded_at = time();
+			$log_id    = $this->create_login_link_log(
+				self::$user_id,
+				edd_get_utc_date_string( '@' . ( $seeded_at - Validate::COOLDOWN_SECONDS + 1 ) )
+			);
 
+			$result              = Validate::check_user( self::$user_id );
+			$read_in_same_second = time() === $seeded_at;
+
+			if ( $read_in_same_second ) {
+				break;
+			}
+
+			$this->log_query->delete_item( $log_id );
+		}
+
+		$this->assertTrue( $read_in_same_second, 'The clock ticked between writing the log and checking it on every attempt.' );
 		$this->assertInstanceOf( 'WP_Error', $result );
 		$this->assertSame( 'rate_limited', $result->get_error_code() );
 	}

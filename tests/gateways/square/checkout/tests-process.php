@@ -13,6 +13,7 @@ namespace EDD\Tests\Gateways\Square\Checkout;
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\Tests\PHPUnit\Ajax_UnitTestCase;
+use EDD\Tests\Discounts\DiscountFixtures;
 use EDD\Tests\Helpers\EDD_Helper_Download;
 use EDD\Gateways\Square\Helpers\Api;
 use EDD\Gateways\Square\Helpers\Customer as CustomerHelper;
@@ -23,10 +24,12 @@ use EDD\Vendor\Square\Apis\PaymentsApi;
 use EDD\Vendor\Square\Http\ApiResponse;
 use EDD\Vendor\Square\Models\CreateOrderResponse;
 use EDD\Vendor\Square\Models\CreatePaymentResponse;
+use EDD\Vendor\Square\Models\Error as SquareError;
 use EDD\Vendor\Square\Models\Money;
 use EDD\Vendor\Square\Models\Order as SquareOrder;
 use EDD\Vendor\Square\Models\Payment as SquarePayment;
 use EDD\Vendor\Square\Models\RetrieveOrderResponse;
+use EDD\Vendor\Square\Models\UpdateOrderResponse;
 use EDD\Vendor\Square\SquareClient;
 
 /**
@@ -35,6 +38,8 @@ use EDD\Vendor\Square\SquareClient;
  * @since 3.7.1.1
  */
 class Process extends Ajax_UnitTestCase {
+
+	use DiscountFixtures;
 
 	/**
 	 * The download being purchased.
@@ -66,6 +71,7 @@ class Process extends Ajax_UnitTestCase {
 	 */
 	public function set_up() {
 		parent::set_up();
+		$this->forget_cached_claims();
 
 		foreach ( array( 'instance', 'client' ) as $property ) {
 			$this->original_api_statics[ $property ] = $this->get_api_static( $property );
@@ -130,6 +136,158 @@ class Process extends Ajax_UnitTestCase {
 		$this->assertSame( 'complete', $order->status );
 		$this->assertSame( $completed_purchases + 1, did_action( 'edd_complete_purchase' ) );
 		$this->assertSame( 'complete', $this->get_transaction_status( $order->id ) );
+	}
+
+	/**
+	 * Square is not asked to take payment when another order takes the discount's last use while this one is built.
+	 *
+	 * @since 3.7.2
+	 */
+	public function test_square_payment_is_not_requested_when_the_discount_is_used_up() {
+		$payments_api = $this->stub_square_client( 'COMPLETED' );
+		$payments_api->expects( $this->never() )->method( 'createPayment' );
+		$discount = $this->create_discount( array( 'max_uses' => 1 ) );
+		add_action(
+			'edd_order_added',
+			function () use ( $discount ) {
+				global $wpdb;
+				$wpdb->update( $wpdb->edd_adjustments, array( 'use_count' => 1 ), array( 'id' => $discount->id ) );
+			}
+		);
+
+		$response = $this->process_checkout( $this->get_purchase_data_with( $discount ) );
+
+		$orders = edd_get_orders( array( 'email' => 'square-buyer@edd.local' ) );
+		$this->assertFalse( $response['success'] );
+		$this->assertCount( 1, $orders );
+		$this->assertSame( 'failed', $orders[0]->status );
+	}
+
+	/**
+	 * A refused discount tells the form to reload, so the buyer sees the full total before paying it.
+	 *
+	 * @since 3.7.2
+	 */
+	public function test_refused_discount_asks_the_form_to_reload() {
+		$this->stub_square_client( 'COMPLETED' );
+		$discount = $this->create_discount( array( 'max_uses' => 1 ) );
+		add_action(
+			'edd_order_added',
+			function () use ( $discount ) {
+				global $wpdb;
+				$wpdb->update( $wpdb->edd_adjustments, array( 'use_count' => 1 ), array( 'id' => $discount->id ) );
+			}
+		);
+
+		$response = $this->process_checkout( $this->get_purchase_data_with( $discount ) );
+
+		$this->assertFalse( $response['success'] );
+		$this->assertTrue( $response['data']['refresh'] );
+		$this->assertArrayHasKey( 'edd-discount-error', (array) edd_get_errors() );
+	}
+
+	/**
+	 * A payment Square declines fails the order, so the discount use it claimed is given back.
+	 *
+	 * @since 3.7.2
+	 */
+	public function test_declined_square_payment_gives_back_the_discount_use() {
+		$payments_api = $this->stub_square_client( 'FAILED', 'createPayment' );
+		$payments_api->expects( $this->once() )->method( 'createPayment' );
+		$discount = $this->create_discount( array( 'max_uses' => 1 ) );
+
+		$response = $this->process_checkout( $this->get_purchase_data_with( $discount ) );
+
+		$orders = edd_get_orders( array( 'email' => 'square-buyer@edd.local' ) );
+		$this->assertFalse( $response['success'] );
+		$this->assertCount( 1, $orders );
+		$this->assertSame( 'failed', $orders[0]->status );
+		$this->assertSame( 0, (int) edd_get_discount( $discount->id )->use_count );
+	}
+
+	/**
+	 * An order Square charged stays findable by its webhook and keeps its use when a later Square call fails.
+	 *
+	 * @since 3.7.2
+	 */
+	public function test_charged_order_keeps_its_use_when_square_fails_after_payment() {
+		$this->stub_square_client( 'COMPLETED', 'retrieveOrder' );
+		$discount = $this->create_discount( array( 'max_uses' => 1 ) );
+
+		$response = $this->process_checkout( $this->get_purchase_data_with( $discount ) );
+		$order    = $this->get_square_order();
+
+		$this->assertFalse( $response['success'] );
+		$this->assertNotNull( $order, 'The charged order has no Square order ID for the webhook to find it by.' );
+		$this->assertSame( 'processing', $order->status );
+		$this->assertSame( 'pending', $this->get_transaction_status( $order->id ) );
+		$this->assertSame( 1, (int) edd_get_discount( $discount->id )->use_count );
+	}
+
+	/**
+	 * A charge with no answer from Square may have gone through, so its order stays processing where the webhook can find it.
+	 *
+	 * @since 3.7.2
+	 */
+	public function test_payment_with_an_unknown_outcome_keeps_the_order_processing() {
+		$this->stub_square_client( 'COMPLETED', 'createPayment', true );
+		$discount = $this->create_discount( array( 'max_uses' => 1 ) );
+
+		$response = $this->process_checkout( $this->get_purchase_data_with( $discount ) );
+		$order    = $this->get_square_order();
+
+		$this->assertFalse( $response['success'] );
+		$this->assertNotNull( $order, 'The order has no Square order ID for the webhook to find it by.' );
+		$this->assertSame( 'processing', $order->status );
+		$this->assertNull( $this->get_transaction_status( $order->id ) );
+		$this->assertSame( 1, (int) edd_get_discount( $discount->id )->use_count );
+	}
+
+	/**
+	 * A buyer whose order Square's webhook completed first still gets a successful checkout.
+	 *
+	 * @since 3.7.2
+	 */
+	public function test_order_completed_by_webhook_first_still_succeeds() {
+		$this->stub_square_client( 'COMPLETED' );
+		$discount = $this->create_discount( array( 'max_uses' => 1 ) );
+		add_action(
+			'edd_order_transaction_added',
+			function ( $transaction_id, $data ) {
+				edd_update_order_status( $data['object_id'], 'complete' );
+			},
+			10,
+			2
+		);
+
+		$response = $this->process_checkout( $this->get_purchase_data_with( $discount ) );
+
+		$this->assertTrue( $response['success'], $response['data']['message'] ?? '' );
+		$this->assertSame( 'complete', $this->get_square_order()->status );
+		$this->assertSame( 1, (int) edd_get_discount( $discount->id )->use_count );
+	}
+
+	/**
+	 * An order is held out of pending while Square charges it, so a second submit can't resume it and charge it again.
+	 *
+	 * @since 3.7.2
+	 */
+	public function test_order_is_held_in_processing_while_square_charges_it() {
+		$payments_api = $this->stub_square_client( 'COMPLETED' );
+		$statuses     = array();
+		// The stub's own matcher supplies the payment; this one only reads the order mid-charge.
+		$payments_api->expects( $this->once() )->method( 'createPayment' )->willReturnCallback(
+			function () use ( &$statuses ) {
+				$orders     = edd_get_orders( array( 'email' => 'square-buyer@edd.local' ) );
+				$statuses[] = $orders[0]->status;
+			}
+		);
+
+		$response = $this->process_checkout( $this->get_purchase_data() );
+
+		$this->assertTrue( $response['success'], $response['data']['message'] ?? '' );
+		$this->assertSame( array( 'processing' ), $statuses );
+		$this->assertSame( 'complete', $this->get_square_order()->status );
 	}
 
 	/**
@@ -206,10 +364,14 @@ class Process extends Ajax_UnitTestCase {
 	 *
 	 * @since 3.7.1.1
 	 *
+	 * @since 3.7.2 Can fail one Square call.
+	 *
 	 * @param string $payment_status The Square payment status.
+	 * @param string $failing_call   The Square API method that returns an error, if any.
+	 * @param bool   $times_out      Whether the failing call throws, as a timeout does, instead of answering with an error.
 	 * @return \PHPUnit\Framework\MockObject\MockObject The payments API mock.
 	 */
-	private function stub_square_client( $payment_status ) {
+	private function stub_square_client( $payment_status, $failing_call = '', $times_out = false ) {
 		$total = new Money();
 		$total->setAmount( 2000 );
 		$total->setCurrency( 'USD' );
@@ -237,10 +399,22 @@ class Process extends Ajax_UnitTestCase {
 
 		$orders_api = $this->createMock( OrdersApi::class );
 		$orders_api->method( 'createOrder' )->willReturn( $this->get_successful_response( $create_order_result ) );
-		$orders_api->method( 'retrieveOrder' )->willReturn( $this->get_successful_response( $retrieve_order_result ) );
+		$orders_api->method( 'retrieveOrder' )->willReturn(
+			'retrieveOrder' === $failing_call ? $this->get_error_response() : $this->get_successful_response( $retrieve_order_result )
+		);
+
+		$update_order_result = new UpdateOrderResponse();
+		$update_order_result->setOrder( $square_order );
+		$orders_api->method( 'updateOrder' )->willReturn( $this->get_successful_response( $update_order_result ) );
 
 		$payments_api = $this->createMock( PaymentsApi::class );
-		$payments_api->method( 'createPayment' )->willReturn( $this->get_successful_response( $create_payment_result ) );
+		if ( 'createPayment' === $failing_call && $times_out ) {
+			$payments_api->method( 'createPayment' )->willThrowException( new \RuntimeException( 'Operation timed out' ) );
+		} else {
+			$payments_api->method( 'createPayment' )->willReturn(
+				'createPayment' === $failing_call ? $this->get_error_response() : $this->get_successful_response( $create_payment_result )
+			);
+		}
 
 		$client = $this->createMock( SquareClient::class );
 		$client->method( 'getOrdersApi' )->willReturn( $orders_api );
@@ -265,6 +439,21 @@ class Process extends Ajax_UnitTestCase {
 		$response = $this->createMock( ApiResponse::class );
 		$response->method( 'isSuccess' )->willReturn( true );
 		$response->method( 'getResult' )->willReturn( $result );
+
+		return $response;
+	}
+
+	/**
+	 * Builds a Square API response carrying an error.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return ApiResponse
+	 */
+	private function get_error_response() {
+		$response = $this->createMock( ApiResponse::class );
+		$response->method( 'isSuccess' )->willReturn( false );
+		$response->method( 'getErrors' )->willReturn( array( new SquareError( 'PAYMENT_METHOD_ERROR', 'CARD_DECLINED' ) ) );
 
 		return $response;
 	}
@@ -366,6 +555,25 @@ class Process extends Ajax_UnitTestCase {
 				),
 			),
 		);
+	}
+
+	/**
+	 * Gets purchase data for the download bought through Square with a discount applied.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param \EDD_Discount $discount The discount.
+	 * @return array
+	 */
+	private function get_purchase_data_with( $discount ) {
+		$purchase_data                                = $this->get_purchase_data();
+		$purchase_data['discount']                    = 18;
+		$purchase_data['price']                       = 2;
+		$purchase_data['user_info']['discount']       = $discount->code;
+		$purchase_data['cart_details'][0]['discount'] = 18;
+		$purchase_data['cart_details'][0]['price']    = 2;
+
+		return $purchase_data;
 	}
 
 	/**

@@ -20,6 +20,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0.8.3
  * @since 3.0 Updated to use new order methods.
+ * @since 3.7.2 Claims discount uses through EDD\Discounts\Claims.
  *
  * @param int    $order_id   Order ID.
  * @param string $new_status New order status.
@@ -50,7 +51,6 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 		: $order->date_completed;
 
 	$customer_id = $order->customer_id;
-	$amount      = $order->total;
 	$order_items = $order->items;
 
 	do_action( 'edd_pre_complete_purchase', $order_id );
@@ -135,23 +135,43 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 			}
 		}
 
-		// Clear the total earnings cache
-		delete_transient( 'edd_earnings_total' );
-		delete_transient( 'edd_earnings_total_without_tax' );
-
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
-	edd_increase_total_earnings( $amount );
+	EDD\Orders\Recalculations::schedule_store_earnings();
 
-	// Check for discount codes and increment their use counts
-	$discounts = $order->get_discounts();
-	foreach ( $discounts as $adjustment ) {
-		/** @var EDD\Orders\Order_Adjustment $adjustment */
+	// Payment has already been taken, so a discount with no use left is counted past its limit rather than refused.
+	if ( ! \EDD\Discounts\Claims::claim( $order, $old_status ) ) {
+		$past_limit = \EDD\Discounts\Claims::claim_past_limit( $order, $old_status );
+		foreach ( $past_limit as $discount ) {
+			edd_add_note(
+				array(
+					'object_id'   => $order_id,
+					'object_type' => 'order',
+					'content'     => sprintf(
+						/* translators: 1: Discount code, 2: Times the discount has been used, 3: The discount's maximum uses */
+						__( 'Discount %1$s was redeemed past its maximum uses (%2$d/%3$d).', 'easy-digital-downloads' ),
+						$discount->code,
+						$discount->use_count,
+						$discount->max_uses
+					),
+				)
+			);
+		}
 
-		edd_increase_discount_usage( $adjustment->description );
+		if ( $past_limit ) {
+			/**
+			 * Fires when a completed order's discounts were counted past their limits.
+			 *
+			 * @since 3.7.2
+			 *
+			 * @param \EDD\Orders\Order $order      The order.
+			 * @param \EDD_Discount[]   $past_limit The discounts counted past their limits.
+			 */
+			do_action( 'edd/discounts/redeemed_past_limit', $order, $past_limit );
+		}
 	}
 
 	// Ensure this action only runs once ever

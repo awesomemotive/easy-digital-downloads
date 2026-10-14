@@ -19,5 +19,12 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
             MYSQL_DATABASE: "wordpress_test"
             MYSQL_ROOT_PASSWORD: ""
+        # The database is rebuilt every run, so durability only costs disk syncs.
+        tmpfs:
+            - /var/lib/mysql
+        command: [ "--innodb-flush-log-at-trx-commit=0", "--sync-binlog=0", "--innodb-doublewrite=0" ]
         healthcheck:
             test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect" ]
+            # Without these, the first check waits out Docker's default 30s interval.
+            start_period: 60s
+            start_interval: 1s

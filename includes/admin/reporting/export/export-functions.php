@@ -28,8 +28,14 @@ function edd_do_ajax_export() {
 	$_REQUEST = $form;
 	$form     = (array) $form;
 
-	if ( ! wp_verify_nonce( $_REQUEST['edd_ajax_export'], 'edd_ajax_export' ) ) {
-		die( '-2' );
+	if ( empty( $_REQUEST['edd_ajax_export'] ) || ! wp_verify_nonce( $_REQUEST['edd_ajax_export'], 'edd_ajax_export' ) ) {
+		wp_send_json(
+			array(
+				'error'   => true,
+				'message' => __( 'Nonce verification failed.', 'easy-digital-downloads' ),
+			),
+			403
+		);
 	}
 
 	\EDD\Admin\Exports\Loader::bootstrap();
@@ -67,7 +73,13 @@ function edd_do_ajax_export() {
 	$export = new $class( $step );
 
 	if ( ! $export->can_export() ) {
-		die( '-1' );
+		wp_send_json(
+			array(
+				'error'   => true,
+				'message' => __( 'You do not have permission to export data.', 'easy-digital-downloads' ),
+			),
+			403
+		);
 	}
 
 	if ( ! $export->is_writable ) {

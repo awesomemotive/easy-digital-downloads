@@ -135,32 +135,7 @@ class Complete {
 			// Refresh the order object.
 			$order = edd_get_order( $order->id );
 
-			if ( 'setup_intent' !== $intent['object'] ) {
-				// Use latest_charge instead of charges->data for API version compatibility.
-				$charge_id = ! empty( $intent['latest_charge'] ) ? sanitize_text_field( $intent['latest_charge'] ) : '';
-
-				if ( ! empty( $charge_id ) ) {
-					edd_add_note(
-						array(
-							'object_id'   => $order->id,
-							'content'     => 'Stripe Charge ID: ' . $charge_id,
-							'user_id'     => is_admin() ? get_current_user_id() : 0,
-							'object_type' => 'order',
-						)
-					);
-				}
-
-				$order_transaction = edd_get_order_transaction_by( 'object_id', $order->id );
-				if ( ! empty( $order_transaction ) ) {
-					edd_update_order_transaction(
-						$order_transaction->id,
-						array(
-							'transaction_id' => sanitize_text_field( $charge_id ),
-							'status'         => 'complete',
-						)
-					);
-				}
-			}
+			self::record_charge( $order, $intent );
 
 			self::do_legacy_complete_hook( $order, $intent );
 
@@ -179,6 +154,10 @@ class Complete {
 			do_action( 'edds_order_complete', $order, $intent['id'] );
 
 			// Empty cart.
+			edd_empty_cart();
+		} elseif ( \EDD\Discounts\CompletionHold::holds( $order->id ) ) {
+			// The order is paid but waits for the store to review its discount, so it records the charge without completing.
+			self::record_charge( edd_get_order( $order->id ), $intent );
 			edd_empty_cart();
 		} else {
 			throw new \EDD_Stripe_Gateway_Exception(
@@ -209,7 +188,8 @@ class Complete {
 		}
 
 		$updated = edd_update_order_status( $order->id, $final_status );
-		if ( ! $updated ) {
+		$is_held = ! $updated && \EDD\Discounts\CompletionHold::holds( $order->id );
+		if ( ! $updated && ! $is_held ) {
 			return;
 		}
 
@@ -224,6 +204,10 @@ class Complete {
 				'object_type' => 'order',
 			)
 		);
+
+		if ( $is_held ) {
+			return;
+		}
 
 		/**
 		 * Allows further processing after an order is completed.
@@ -280,6 +264,44 @@ class Complete {
 		}
 
 		return $intent;
+	}
+
+	/**
+	 * Records the Stripe charge on an order.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param \EDD\Orders\Order                         $order  The EDD Order object.
+	 * @param \Stripe\PaymentIntent|\Stripe\SetupIntent $intent The Stripe Intent object.
+	 * @return void
+	 */
+	private static function record_charge( $order, $intent ) {
+		if ( 'setup_intent' !== $intent['object'] ) {
+			// Use latest_charge instead of charges->data for API version compatibility.
+			$charge_id = ! empty( $intent['latest_charge'] ) ? sanitize_text_field( $intent['latest_charge'] ) : '';
+
+			if ( ! empty( $charge_id ) ) {
+				edd_add_note(
+					array(
+						'object_id'   => $order->id,
+						'content'     => 'Stripe Charge ID: ' . $charge_id,
+						'user_id'     => is_admin() ? get_current_user_id() : 0,
+						'object_type' => 'order',
+					)
+				);
+			}
+
+			$order_transaction = $order->get_transaction();
+			if ( ! empty( $order_transaction ) ) {
+				edd_update_order_transaction(
+					$order_transaction->id,
+					array(
+						'transaction_id' => sanitize_text_field( $charge_id ),
+						'status'         => 'complete',
+					)
+				);
+			}
+		}
 	}
 
 	/**

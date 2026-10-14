@@ -173,6 +173,7 @@ add_action( 'edd_checkout_user_error_checks', __NAMESPACE__ . '\send_ajax_errors
  * Creates a new order in PayPal and EDD.
  *
  * @since 2.11
+ * @since 3.7.2 Fails the order before contacting PayPal when its discount uses could not be claimed.
  * @param array $purchase_data Purchase data.
  * @throws Gateway_Exception If an error occurs.
  * @return void
@@ -229,6 +230,17 @@ function create_order( $purchase_data ) {
 					'Payment creation failed before sending buyer to PayPal. Payment data: %s',
 					json_encode( $payment_args )
 				)
+			);
+		}
+
+		$refusal = \EDD\Discounts\OrderValidation::refuse_unclaimed( $payment_id );
+		if ( $refusal ) {
+			// Shown inline without a reload, so it must not block the buyer's next attempt.
+			edd_unset_error( 'edd-discount-error' );
+			throw new Gateway_Exception(
+				$refusal,
+				409,
+				'Order discount could not be claimed before sending buyer to PayPal.'
 			);
 		}
 
@@ -432,7 +444,9 @@ add_action( 'edd_gateway_paypal_commerce', __NAMESPACE__ . '\create_order', 9 );
  * Captures the order in PayPal
  *
  * @since 2.11
+ * @since 3.7.2 Redeems the order's discounts before capture and retries a declined order.
  * @throws Gateway_Exception If an error occurs.
+ * @throws \Throwable An unexpected error; the order is put back unless PayPal captured it.
  */
 function capture_order() {
 	edd_debug_log( 'PayPal - capture_order()' );
@@ -465,11 +479,59 @@ function capture_order() {
 			);
 		}
 
-		if ( empty( $_POST['paypal_order_id'] ) ) {
+		if ( empty( $_POST['paypal_order_id'] ) || '' === sanitize_text_field( $_POST['paypal_order_id'] ) ) {
 			throw new Gateway_Exception(
 				__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
 				400,
 				'Missing PayPal order ID during capture.'
+			);
+		}
+
+		$capture_order = get_order_for_capture( sanitize_text_field( $_POST['paypal_order_id'] ) );
+		if ( ! $capture_order ) {
+			throw new Gateway_Exception(
+				__( 'This order can no longer be processed.', 'easy-digital-downloads' ),
+				409,
+				'Capture requested for a PayPal order with no matching EDD order.'
+			);
+		}
+
+		// A declined capture fails the order, and PayPal then retries it with another payment method from the same checkout.
+		$restore_status   = 'failed' === $capture_order->status ? 'failed' : 'pending';
+		$is_session_order = absint( EDD()->session->get( 'edd_resume_payment' ) ) === absint( $capture_order->id );
+		if ( 'failed' === $capture_order->status && $is_session_order ) {
+			// A request that loses the reopen to a double submit is refused by the status check below or by start_capture().
+			\EDD\Discounts\OrderValidation::reopen_failed( $capture_order->id );
+			$capture_order = edd_get_order( $capture_order->id );
+		}
+
+		if ( 'pending' !== $capture_order->status ) {
+			throw new Gateway_Exception(
+				__( 'This order can no longer be processed.', 'easy-digital-downloads' ),
+				409,
+				sprintf( 'Capture requested for an order with the status %s.', $capture_order->status )
+			);
+		}
+
+		if ( ! \EDD\Discounts\OrderValidation::start_capture( $capture_order->id ) ) {
+			throw new Gateway_Exception(
+				__( 'This order can no longer be processed.', 'easy-digital-downloads' ),
+				409,
+				'Capture requested for an order that is no longer pending.'
+			);
+		}
+		$capturing_order_id = $capture_order->id;
+
+		// Redeemed only once processing, where the pending-order sweeps can't give back the use claimed here.
+		$unredeemed = \EDD\Discounts\OrderValidation::redeem_discounts( $capture_order );
+		if ( $unredeemed ) {
+			$payment_id = $capture_order->id;
+			$refusal    = \EDD\Discounts\OrderValidation::refuse( $payment_id, $unredeemed );
+			$refresh    = true;
+			throw new Gateway_Exception(
+				$refusal,
+				409,
+				'Order discount could not be redeemed before capture.'
 			);
 		}
 
@@ -520,48 +582,70 @@ function capture_order() {
 			}
 
 			$order          = false;
+			$capture        = false;
 			$transaction_id = false;
 			$new_status     = '';
+			$capture_reason = '';
 			if ( isset( $response->purchase_units ) && is_array( $response->purchase_units ) ) {
 				foreach ( $response->purchase_units as $purchase_unit ) {
 					if ( ! empty( $purchase_unit->reference_id ) ) {
-						$order          = edd_get_order_by( 'payment_key', $purchase_unit->reference_id );
-						$transaction_id = isset( $purchase_unit->payments->captures[0]->id ) ? $purchase_unit->payments->captures[0]->id : false;
-
-						if ( ! empty( $order ) && isset( $purchase_unit->payments->captures[0]->status ) ) {
-							$capture_status = strtoupper( $purchase_unit->payments->captures[0]->status );
-							$capture_reason = ! empty( $purchase_unit->payments->captures[0]->status_details->reason )
-								? sanitize_text_field( $purchase_unit->payments->captures[0]->status_details->reason )
-								: '';
-							// Shared capture-status table: PENDING (fraud review /
-							// e-check holds) routes to on_hold, and an unknown
-							// status stays empty so the order status isn't changed
-							// rather than silently completing.
-							$new_status = CaptureStatus::to_edd_status( $capture_status );
-
-							// Stamp the PayPal reason on the order so the
-							// merchant has the context PayPal returned (e.g.
-							// `PENDING_REVIEW`, `BUYER_COMPLAINT`).
-							if ( 'on_hold' === $new_status && ! empty( $capture_reason ) ) {
-								edd_add_note(
-									array(
-										'object_id'   => $order->id,
-										'object_type' => 'order',
-										'content'     => sprintf(
-											/* translators: %s: PayPal capture status reason (e.g. PENDING_REVIEW). */
-											__( 'PayPal placed this capture in a pending state (%s). The order will update automatically when PayPal completes review.', 'easy-digital-downloads' ),
-											esc_html( $capture_reason )
-										),
-									)
-								);
-							}
-						}
+						$order   = edd_get_order_by( 'payment_key', $purchase_unit->reference_id );
+						$capture = isset( $purchase_unit->payments->captures[0] ) ? $purchase_unit->payments->captures[0] : false;
 						break;
 					}
 				}
+
+				// The PayPal order was looked up by its ID, so its capture belongs to the order being captured.
+				if ( empty( $order ) && ! empty( $capturing_order_id ) ) {
+					$order   = edd_get_order( $capturing_order_id );
+					$capture = isset( $response->purchase_units[0]->payments->captures[0] ) ? $response->purchase_units[0]->payments->captures[0] : false;
+				}
 			}
 
+			if ( ! empty( $order ) && ! empty( $capture ) ) {
+				$transaction_id = isset( $capture->id ) ? $capture->id : false;
+				if ( isset( $capture->status ) ) {
+					// Shared capture-status table: PENDING (fraud review /
+					// e-check holds) routes to on_hold, and an unknown
+					// status stays empty so the order status isn't changed
+					// rather than silently completing.
+					$new_status = CaptureStatus::to_edd_status( strtoupper( $capture->status ) );
+				}
+				$capture_reason = ! empty( $capture->status_details->reason )
+					? sanitize_text_field( $capture->status_details->reason )
+					: '';
+			}
+
+			// PayPal has taken the payment, so an error from here on must not put the order back.
+			$is_captured = ! empty( $transaction_id ) && 'failed' !== $new_status;
+
 			if ( ! empty( $order ) ) {
+				// A declined capture gives its uses back before anything else can throw.
+				if ( 'failed' === $new_status ) {
+					edd_update_order_status( $order->id, 'failed' );
+					TransactionRecorder::record_declined( $order->id, $transaction_id );
+				} else {
+					// Recorded first, so the webhook can match the payment even if a later write throws.
+					TransactionRecorder::record( $order->id, $transaction_id );
+				}
+
+				// Stamp the PayPal reason on the order so the
+				// merchant has the context PayPal returned (e.g.
+				// `PENDING_REVIEW`, `BUYER_COMPLAINT`).
+				if ( 'on_hold' === $new_status && ! empty( $capture_reason ) ) {
+					edd_add_note(
+						array(
+							'object_id'   => $order->id,
+							'object_type' => 'order',
+							'content'     => sprintf(
+								/* translators: %s: PayPal capture status reason (e.g. PENDING_REVIEW). */
+								__( 'PayPal placed this capture in a pending state (%s). The order will update automatically when PayPal completes review.', 'easy-digital-downloads' ),
+								esc_html( $capture_reason )
+							),
+						)
+					);
+				}
+
 				/**
 				 * Buy Now Button
 				 *
@@ -614,8 +698,6 @@ function capture_order() {
 					// captured via edd_add_customer above.
 					$order = edd_get_order( $order->id );
 				}
-
-				TransactionRecorder::record( $order->id, $transaction_id );
 
 				// Store the specific payment source for receipt display.
 				// Wallets are checked before `card` because PayPal sometimes
@@ -670,7 +752,7 @@ function capture_order() {
 				// the helper reads.
 				Vault::persist_from_capture( $order->id, $transaction_id, json_decode( wp_json_encode( $response ), true ) );
 
-				if ( ! empty( $new_status ) ) {
+				if ( ! empty( $new_status ) && 'failed' !== $new_status ) {
 					edd_update_order_status( $order->id, $new_status );
 				}
 
@@ -684,7 +766,14 @@ function capture_order() {
 				}
 			}
 
-			PurchaseUser::maybe_log_in_after_capture( $order->id );
+			// An unrecognized capture status leaves the order pending for the webhook to settle.
+			if ( isset( $capturing_order_id ) ) {
+				\EDD\Discounts\OrderValidation::end_capture( $capturing_order_id, 'pending' );
+			}
+
+			if ( ! empty( $order ) ) {
+				PurchaseUser::maybe_log_in_after_capture( $order->id );
+			}
 
 			wp_send_json_success( array( 'redirect_url' => edd_get_success_page_uri() ) );
 		} catch ( Authentication_Exception $e ) {
@@ -693,6 +782,10 @@ function capture_order() {
 			throw new Gateway_Exception( __( 'An error occurred while communicating with PayPal. Please try again.', 'easy-digital-downloads' ), $e->getCode(), $e->getMessage() );
 		}
 	} catch ( Gateway_Exception $e ) {
+		if ( isset( $capturing_order_id ) && empty( $is_captured ) ) {
+			\EDD\Discounts\OrderValidation::end_capture( $capturing_order_id, $restore_status );
+		}
+
 		if ( ! isset( $payment_id ) ) {
 			$payment_id = 0;
 		}
@@ -707,13 +800,51 @@ function capture_order() {
 					)
 				),
 				'retry'   => isset( $retry ) ? $retry : false,
+				'refresh' => isset( $refresh ) ? $refresh : false,
 			)
 		);
+	} catch ( \Throwable $e ) {
+		if ( isset( $capturing_order_id ) && empty( $is_captured ) ) {
+			\EDD\Discounts\OrderValidation::end_capture( $capturing_order_id, $restore_status );
+		}
+
+		throw $e;
 	}
 }
 
 add_action( 'wp_ajax_nopriv_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
 add_action( 'wp_ajax_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
+
+/**
+ * Finds the order a PayPal capture request is for.
+ *
+ * Checks the order this checkout session built first, so the meta lookup only runs without one.
+ *
+ * @since 3.7.2
+ *
+ * @param string $paypal_order_id The PayPal order ID.
+ * @return \EDD\Orders\Order|false
+ */
+function get_order_for_capture( $paypal_order_id ) {
+	$session_order_id = absint( EDD()->session->get( 'edd_resume_payment' ) );
+	if ( $session_order_id && edd_get_order_meta( $session_order_id, 'paypal_order_id', true ) === $paypal_order_id ) {
+		return edd_get_order( $session_order_id );
+	}
+
+	$orders = edd_get_orders(
+		array(
+			'number'     => 1,
+			'meta_query' => array(
+				array(
+					'key'   => 'paypal_order_id',
+					'value' => $paypal_order_id,
+				),
+			),
+		)
+	);
+
+	return ! empty( $orders ) ? $orders[0] : false;
+}
 
 /**
  * Gets a fresh set of gateway options when a PayPal order is cancelled.

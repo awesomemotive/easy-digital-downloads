@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell digital products, digital store, stripe
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable Tag: 3.7.1.1
+Stable Tag: 3.7.2
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept payments with Stripe & PayPal. Sell ebooks, software & more.
@@ -293,6 +293,28 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.7.2 =
+* Security: Fixed a missing authorization check when sending a test Email Summary.
+* Security: Discount codes with a maximum number of uses are now reserved when checkout starts, so customers checking out at the same time can no longer redeem a code past its limit.
+* Checkout: Fixed the Log in and Register forms not showing on a checkout page built from the Checkout block with no inner blocks.
+* Checkout: Improved order completion speed by deferring total store earnings calculations until after checkout has completed.
+* Database: Database events can now be triggered only by the operations that create them.
+* Discounts: Discount uses held by unpaid pending orders are now given back sooner, so abandoned checkouts no longer block other customers from using a limited code.
+* Discounts: A paid order whose discount code has no uses left is now placed On Hold for review instead of completing.
+* Emails: Fixed a fatal error with Cart Recovery enabled that could stop all site emails from sending when another mail plugin is active.
+* Emails: Fixed sending a test email or previewing a custom Cart Recovery email.
+* Emails: The new user email can now be sent only by user registration.
+* Orders: Fixed order status changes running pending order processing for statuses other than pending and processing.
+* Orders: Fixed PHP warnings on the order screens when an order has no IP address.
+* PayPal: Fixed partial refunds failing for amounts of 1,000 or more, or on stores that use a comma as the decimal separator.
+* Reports: Fixed the customers export shifting every column after the ID when filtered by a download category or tag.
+* Reports: Fixed the Export screen running out of memory on stores with many categorized downloads.
+* Reports: An export the current user isn't allowed to run now shows an error instead of running forever.
+* Stripe: Improved checkout speed on stores with many orders.
+* Tools: The Tools screen now shows the default tab when it's asked for a tab that doesn't exist.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.7.1.1 =
 * Improved: Square orders are now completed only once Square confirms the payment is complete.
 
@@ -409,8 +431,6 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Dev: Updated the minimum requirements to PHP 8.0 and WordPress 6.7.
 * Dev: Registered EDD blocks as a metadata collection.
 * Dev: Addressed a WordPress 6.6 deprecation (PluginPostStatusInfo).
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.6.9.1 =
 * Admin: Hardened the display of payment gateway error and API request log messages.

@@ -7,7 +7,7 @@ $placeholders = implode( ', ', array_fill( 0, count( $taxonomies ), '%s' ) );
 
 $taxonomy__in = $wpdb->prepare( "tt.taxonomy IN ({$placeholders})", $taxonomies );
 
-$sql = "SELECT t.*, tt.*, tr.object_id
+$sql = "SELECT DISTINCT t.term_id, t.name, tt.taxonomy
 		FROM {$wpdb->terms} AS t
 		INNER JOIN {$wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id
 		INNER JOIN {$wpdb->term_relationships} AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id

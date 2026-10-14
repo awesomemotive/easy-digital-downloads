@@ -81,9 +81,11 @@ const EDD_Export = {
 				}
 			},
 		} ).fail( function( response ) {
-			if ( window.console && window.console.log ) {
-				console.log( response );
-			}
+			const export_form = $( '.edd-export-form' ).find( '.edd-progress' ).parent().parent();
+			const message = response.responseJSON?.message ?? edd_vars.something_went_wrong;
+
+			export_form.find( 'button' ).attr( 'disabled', false ).removeClass( 'updating-message' );
+			export_form.find( '.notice-wrap' ).html( `<div class="updated error"><p>${ message }</p></div>` );
 		} );
 	},
 };

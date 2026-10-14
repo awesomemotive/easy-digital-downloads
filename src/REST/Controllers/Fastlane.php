@@ -60,9 +60,11 @@ class Fastlane {
 	 * and completes the EDD order.
 	 *
 	 * @since 3.6.9
+	 * @since 3.7.2 Fails the order before contacting PayPal when its discount uses could not be claimed.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 * @return \WP_REST_Response|\WP_Error
+	 * @throws \Throwable An unexpected error; the order is put back to pending unless PayPal took payment.
 	 */
 	public function process_payment( $request ) {
 		$body = $request->get_json_params();
@@ -172,6 +174,11 @@ class Fastlane {
 			);
 		}
 
+		$refusal = \EDD\Discounts\OrderValidation::refuse_unclaimed( $order_id );
+		if ( $refusal ) {
+			return \EDD\Discounts\OrderValidation::get_refusal_error( $refusal );
+		}
+
 		edd_debug_log( sprintf( 'Fastlane: EDD order %d created, sending to PayPal.', $order_id ) );
 
 		// Build PayPal order data.
@@ -214,6 +221,29 @@ class Fastlane {
 		 */
 		$order_data = apply_filters( 'edd_paypal_fastlane_order_arguments', $order_data, $purchase_data, $order_id );
 
+		$response = \EDD\Discounts\OrderValidation::hold_capture(
+			$order_id,
+			function () use ( $order_id, $order_data ) {
+				return $this->pay_held_order( $order_id, $order_data );
+			}
+		);
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		return $this->record_payment( $order_id, $response );
+	}
+
+	/**
+	 * Sends an order already moved to processing to PayPal.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int   $order_id   The EDD order ID.
+	 * @param array $order_data The PayPal order arguments.
+	 * @return array|\WP_Error The PayPal order response, or an error when PayPal did not create the order.
+	 */
+	private function pay_held_order( $order_id, $order_data ) {
 		// Send to the Connect service. With payment_source.card present, PayPal auto-captures.
 		$proxy    = new ConnectAPI( Gateway::get_paypal_mode() );
 		$response = $proxy->post( '/v3/paypal/orders', $order_data );
@@ -250,10 +280,20 @@ class Fastlane {
 			);
 		}
 
-		// Store PayPal order ID + the source so the Payment Gateways
-		// breakdown report distinguishes Fastlane from regular PayPal Card.
-		edd_update_order_meta( $order_id, 'paypal_order_id', $paypal_order_id );
-		edd_update_order_meta( $order_id, '_edd_paypal_payment_source', 'fastlane' );
+		return $response;
+	}
+
+	/**
+	 * Records the payment PayPal took for an order and settles its status.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int   $order_id The EDD order ID.
+	 * @param array $response The PayPal order response.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	private function record_payment( $order_id, $response ) {
+		$paypal_order_id = sanitize_text_field( $response['id'] );
 
 		// Extract transaction ID from auto-captured response.
 		$transaction_id = '';
@@ -275,8 +315,20 @@ class Fastlane {
 		// success page. Unknown statuses are treated as failures rather
 		// than silent successes.
 		$final_status = CaptureStatus::to_edd_status( $capture_status );
+		$is_declined  = 'failed' === $final_status;
 
-		TransactionRecorder::record( $order_id, $transaction_id );
+		// A declined capture gives its uses back before anything else can throw.
+		if ( $is_declined ) {
+			edd_update_order_status( $order_id, 'failed' );
+			TransactionRecorder::record_declined( $order_id, $transaction_id );
+		} else {
+			TransactionRecorder::record( $order_id, $transaction_id );
+		}
+
+		// Store PayPal order ID + the source so the Payment Gateways
+		// breakdown report distinguishes Fastlane from regular PayPal Card.
+		edd_update_order_meta( $order_id, 'paypal_order_id', $paypal_order_id );
+		edd_update_order_meta( $order_id, '_edd_paypal_payment_source', 'fastlane' );
 
 		// Stamp + persist any vault token from the capture response before the
 		// order completes, so maybe_create_vault_subscriptions can seed
@@ -285,11 +337,11 @@ class Fastlane {
 		// logged-in buyer, and the edd_paypal_v3_order_vaulted hook.
 		Vault::persist_from_capture( $order_id, $transaction_id, $response );
 
-		if ( ! empty( $final_status ) ) {
+		if ( ! empty( $final_status ) && ! $is_declined ) {
 			edd_update_order_status( $order_id, $final_status );
 		}
 
-		if ( 'failed' === $final_status ) {
+		if ( $is_declined ) {
 			return new \WP_Error(
 				'payment_declined',
 				__( 'Your payment was declined. Please try a different payment method.', 'easy-digital-downloads' ),
@@ -333,14 +385,24 @@ class Fastlane {
 			);
 		}
 
-		// Unknown / empty capture status — surface as a failure rather
-		// than silently emptying the cart and sending the buyer to the
-		// receipt. Mark the order as failed so the merchant can follow up.
-		if ( '' === $final_status ) {
+		// A response with no capture took no payment, so fail the order and give its uses back.
+		if ( '' === $final_status && '' === $transaction_id ) {
 			edd_update_order_status( $order_id, 'failed' );
+			edd_debug_log( sprintf( 'Fastlane: PayPal returned no capture for order %d. Marking failed.', $order_id ) );
+
+			return new \WP_Error(
+				'payment_unknown_status',
+				__( 'An unexpected error occurred while processing your payment. Please try again or use a different payment method.', 'easy-digital-downloads' ),
+				array( 'status' => 502 )
+			);
+		}
+
+		// PayPal took the payment but reported a status we don't map, so leave the order pending for the webhook to settle.
+		if ( '' === $final_status ) {
+			\EDD\Discounts\OrderValidation::end_capture( $order_id, 'pending' );
 			edd_debug_log(
 				sprintf(
-					'Fastlane: Unrecognized PayPal capture status "%s" on order %d. Marking failed. Reason: %s',
+					'Fastlane: Unrecognized PayPal capture status "%s" on order %d. Leaving pending. Reason: %s',
 					$capture_status,
 					$order_id,
 					$capture_reason
@@ -349,8 +411,8 @@ class Fastlane {
 
 			return new \WP_Error(
 				'payment_unknown_status',
-				__( 'An unexpected error occurred while processing your payment. Please try again or use a different payment method.', 'easy-digital-downloads' ),
-				array( 'status' => 502 )
+				__( 'Your payment is being reviewed by PayPal. You will receive an email once it has been processed.', 'easy-digital-downloads' ),
+				array( 'status' => 202 )
 			);
 		}
 

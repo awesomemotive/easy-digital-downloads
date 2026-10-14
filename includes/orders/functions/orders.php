@@ -229,14 +229,23 @@ function edd_restore_order( $order_id ) {
  * Delete an order.
  *
  * @since 3.0
+ * @since 3.7.2 Gives back the discount uses the order holds.
  *
  * @param int $order_id Order ID.
  * @return int|false `1` if the order was deleted successfully, false on error.
  */
 function edd_delete_order( $order_id = 0 ) {
-	$orders = new EDD\Database\Queries\Order();
+	// The order's meta is deleted with it, so the uses it holds are given back first.
+	$released = \EDD\Discounts\Claims::release( $order_id );
 
-	return $orders->delete_item( $order_id );
+	$orders  = new EDD\Database\Queries\Order();
+	$deleted = $orders->delete_item( $order_id );
+
+	if ( ! $deleted && $released ) {
+		\EDD\Discounts\Claims::claim( edd_get_order( $order_id ) );
+	}
+
+	return $deleted;
 }
 
 /**
@@ -247,6 +256,7 @@ function edd_delete_order( $order_id = 0 ) {
  * @todo switch to _destroy_ for items & adjustments
  *
  * @since 3.0
+ * @since 3.7.2 Discount uses are given back by edd_delete_order().
  *
  * @param int $order_id Order ID.
  * @return int|false `1` if the order was deleted successfully, false on error.
@@ -292,10 +302,6 @@ function edd_destroy_order( $order_id = 0 ) {
 		// Destroy adjustments.
 		if ( ! empty( $adjustments ) ) {
 			foreach ( $adjustments as $adjustment ) {
-				// Decrease discount code use count.
-				if ( 'discount' === $adjustment->type ) {
-					edd_decrease_discount_usage( $adjustment->description );
-				}
 				edd_delete_order_adjustment( $adjustment->id );
 			}
 		}
@@ -696,6 +702,7 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
  * based on the order details passed by the gateway.
  *
  * @since 3.0
+ * @since 3.7.2 Claims a use of each discount on the order.
  *
  * @param array $order_data Order data.
  * @return int|bool Order ID if successful, false otherwise.
@@ -1251,6 +1258,7 @@ function edd_build_order( $order_data = array() ) {
 
 	// Update the order with all of the order data.
 	$order = edd_get_order( $order_id );
+	\EDD\Discounts\Claims::claim( $order );
 	$order->recalculate();
 
 	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) { // WPCS: CSRF ok.

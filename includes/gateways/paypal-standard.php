@@ -164,6 +164,7 @@ add_filter( 'edd_settings_gateways', 'edd_register_paypal_gateway_settings', 1, 
  * Process PayPal Purchase
  *
  * @since 1.0
+ * @since 3.7.2 Fails the order before redirecting when its discount uses could not be claimed.
  * @param array $purchase_data Purchase Data.
  * @return void
  */
@@ -189,6 +190,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 	// Record the pending order.
 	$order_id = edd_build_order( $payment_data );
+	$refusal  = $order_id ? \EDD\Discounts\OrderValidation::refuse_unclaimed( $order_id ) : '';
 
 	// Check payment.
 	if ( ! $order_id ) {
@@ -196,6 +198,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		/* translators: %s: payment data */
 		edd_record_gateway_error( __( 'Payment Error', 'easy-digital-downloads' ), sprintf( __( 'Payment creation failed before sending buyer to PayPal. Payment data: %s', 'easy-digital-downloads' ), json_encode( $payment_data ) ), $order_id );
 		// Problems? send back.
+		edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
+	} elseif ( $refusal ) {
 		edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
 	} else {
 		// Only send to PayPal if the pending payment is created successfully.

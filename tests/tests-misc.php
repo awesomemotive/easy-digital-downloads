@@ -698,6 +698,44 @@ class Misc extends EDD_UnitTestCase {
 		$this->assertFalse( edd_can_view_receipt( edd_get_order( $other_order->id ) ) );
 	}
 
+	public function test_ip_address_url_is_not_available_for_an_order_that_does_not_exist() {
+		$this->assertSame( 'N/A', edd_payment_get_ip_address_url( 999999999 ) );
+	}
+
+	public function test_ip_address_url_is_not_available_for_an_order_without_an_ip() {
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
+		$order      = edd_get_order( $payment_id );
+		edd_update_order( $order->id, array( 'ip' => '' ) );
+
+		$this->assertSame( 'N/A', edd_payment_get_ip_address_url( $order->id ) );
+	}
+
+	public function test_ip_address_url_renders_ipinfo_link_for_an_order_with_an_ip() {
+		$payment_id = Helpers\EDD_Helper_Payment::create_simple_payment();
+		$order      = edd_get_order( $payment_id );
+		edd_update_order( $order->id, array( 'ip' => '127.0.0.1' ) );
+
+		$this->assertSame(
+			'<a href="https://ipinfo.io/127.0.0.1" target="_blank">127.0.0.1</a>',
+			edd_payment_get_ip_address_url( $order->id )
+		);
+	}
+
+	public function test_ip_address_url_filter_receives_the_order_id_when_the_order_does_not_exist() {
+		$received_args = array();
+		$callback      = function ( $provider_url, $ip, $order_id ) use ( &$received_args ) {
+			$received_args = array( $provider_url, $ip, $order_id );
+
+			return $provider_url;
+		};
+
+		add_filter( 'edd_payment_get_ip_address_url', $callback, 10, 3 );
+		edd_payment_get_ip_address_url( 999999999 );
+		remove_filter( 'edd_payment_get_ip_address_url', $callback, 10 );
+
+		$this->assertSame( array( 'N/A', '', 999999999 ), $received_args );
+	}
+
 	private function write_test_file( $full_file_path ) {
 		$file = FileSystem::fopen( $full_file_path, "w" );
 		fwrite( $file,"" );

@@ -106,6 +106,7 @@ $edd_options = array(
 	'edd_onboarding_completed',
 	'edd_onboarding_started',
 	'edd_onboarding_latest_step',
+	'edd_discount_claims_started',
 
 	// Widgets
 	'widget_edd_product_details',
@@ -182,6 +183,7 @@ wp_clear_scheduled_hook( 'edd_weekly_cron' );
 wp_clear_scheduled_hook( 'edd_email_summary_cron' );
 wp_clear_scheduled_hook( 'edd_weekly_scheduled_events' );
 wp_clear_scheduled_hook( 'edd_cleanup_sessions' );
+wp_clear_scheduled_hook( 'edd/discounts/release_expired_claims' );
 
 // Remove any transients we've left behind.
 $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '\_transient\_edd\_%'" );

@@ -56,7 +56,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 
 		$taxonomy__in = $wpdb->prepare( "tt.taxonomy IN ({$placeholders})", $taxonomies );
 
-		$sql = "SELECT t.*, tt.*, tr.object_id
+		$sql = "SELECT t.term_id, t.name, tt.parent, tr.object_id
 				FROM {$wpdb->terms} AS t
 				INNER JOIN {$wpdb->term_taxonomy} AS tt ON t.term_id = tt.term_id
 				INNER JOIN {$wpdb->term_relationships} AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id

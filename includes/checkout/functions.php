@@ -146,15 +146,30 @@ function edd_is_failed_transaction_page() {
  * Mark payments as Failed when returning to the Failed Transaction page
  *
  * @since       1.9.9
+ * @since       3.7.2 Only fails the order the current session is checking out or just sent to the gateway,
+ *                             and keeps an order holding a discount use pending unless its gateway rechecks discounts
+ *                             before taking payment.
  * @return      void
  */
 function edd_listen_for_failed_payments() {
 
-	$order_id = filter_input( INPUT_GET, 'payment-id', FILTER_SANITIZE_NUMBER_INT );
-	if ( empty( $order_id ) ) {
-		$order_id = EDD()->session->get( 'edd_resume_payment' );
+	$order_id     = absint( EDD()->session->get( 'edd_resume_payment' ) );
+	$requested_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	// Gateways that empty the cart before redirecting also clear the resume ID, but keep the purchase session.
+	if ( empty( $order_id ) && ! empty( $requested_id ) ) {
+		$purchase_session = edd_get_purchase_session();
+		$requested_order  = edd_get_order( $requested_id );
+		if ( $requested_order && ! empty( $purchase_session['purchase_key'] ) && hash_equals( (string) $requested_order->payment_key, (string) $purchase_session['purchase_key'] ) ) {
+			$order_id = $requested_id;
+		}
 	}
+
 	if ( empty( $order_id ) ) {
+		return;
+	}
+
+	if ( ! empty( $requested_id ) && $requested_id !== $order_id ) {
 		return;
 	}
 	if ( ! edd_is_failed_transaction_page() ) {
@@ -162,7 +177,7 @@ function edd_listen_for_failed_payments() {
 	}
 
 	$order = edd_get_order( $order_id );
-	if ( 'pending' === $order->status ) {
+	if ( $order && 'pending' === $order->status && \EDD\Discounts\OrderValidation::releases_on_failed_page( $order ) ) {
 		edd_update_order_status( $order->id, 'failed' );
 		EDD()->session->set( 'edd_resume_payment', null );
 	}

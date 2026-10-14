@@ -133,7 +133,12 @@ function edd_deactivate_discount( $data = array() ) {
 
 	$discount_id = absint( $data['discount'] );
 	$activated   = edd_update_discount_status( $discount_id, 'inactive' );
-	$arg         = ! empty( $activated )
+
+	// A used-up code is already inactive, so no status change records that it was switched off on purpose.
+	if ( $activated ) {
+		\EDD\Discounts\ManualDeactivation::mark( $discount_id );
+	}
+	$arg = ! empty( $activated )
 		? 'discount_deactivated'
 		: 'discount_deactivation_failed';
 

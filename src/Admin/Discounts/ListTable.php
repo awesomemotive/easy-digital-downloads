@@ -509,7 +509,9 @@ class ListTable extends List_Table {
 					break;
 
 				case 'deactivate':
-					edd_update_discount_status( $id, 'inactive' );
+					if ( edd_update_discount_status( $id, 'inactive' ) ) {
+						\EDD\Discounts\ManualDeactivation::mark( $id );
+					}
 					break;
 
 				default:

@@ -177,7 +177,6 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	// Update sale counts and earnings for all purchased products
 	edd_undo_purchase( false, $payment_id );
 
-	$amount      = edd_get_payment_amount( $payment_id );
 	$status      = $payment->post_status;
 	$customer_id = edd_get_payment_customer_id( $payment_id );
 
@@ -185,7 +184,7 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	// Only decrease earnings if they haven't already been decreased (or were never increased for this payment).
 	if ( 'revoked' === $status || 'complete' === $status ) {
-		edd_decrease_total_earnings( $amount );
+		EDD\Orders\Recalculations::schedule_store_earnings();
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );

@@ -2,9 +2,6 @@
 
 set -eo pipefail
 
-OPTS=$(getopt -a --options w:p:f:x:aimh --longoptions wp:filter:,php:,extra:,actions,multisite,in-place,help --name "$0" -- "$@") || exit 1
-eval set -- "$OPTS"
-
 source "$(dirname "$0")/lib/auth.sh"
 
 show_help() {
@@ -29,7 +26,21 @@ show_help() {
   echo '              		Example: export COMPOSER_AUTH='"'"'{"github-oauth":{"github.com":"your_token_here"}}'"'"
 }
 
-while true; do
+# Portable manual argument parsing (POSIX/bash, no GNU getopt — works on macOS BSD too).
+# Supports long `--opt value` and `--opt=value`, short `-x value`, and `-h/--help`.
+# require_arg ensures a value-taking flag was actually given an argument.
+require_arg() {
+  # $1 = flag name, $2 = candidate value (passed as "${2-}", so empty when missing).
+  case "${2-}" in
+    '' | -* )
+      echo "Error: option '$1' requires an argument." >&2
+      show_help
+      exit 1
+      ;;
+  esac
+}
+
+while [ $# -gt 0 ]; do
   case "$1" in
     --in-place|-i )
         TEST_INPLACE=1
@@ -39,24 +50,43 @@ while true; do
         TEST_WP_MULTISITE="1"
         shift
         ;;
+    --php=*|-p=* )
+        export TEST_PHP_VERSION="${1#*=}"
+        shift
+        ;;
     --php|-p )
+        require_arg "$1" "${2-}"
         export TEST_PHP_VERSION="$2"
         shift 2
         ;;
+    --wp=*|-w=* )
+        export TEST_WP_VERSION="${1#*=}"
+        shift
+        ;;
     --wp|-w )
+        require_arg "$1" "${2-}"
         export TEST_WP_VERSION="$2"
         shift 2
         ;;
     --help|-h )
         show_help
         exit 0
+        ;;
+    --filter=*|-f=* )
+        export FILTER="${1#*=}"
         shift
         ;;
     --filter|-f )
+        require_arg "$1" "${2-}"
         export FILTER="$2"
         shift 2
         ;;
+    --extra=*|-x=* )
+        export TEST_EXTRA_PLUGINS="${1#*=}"
+        shift
+        ;;
     --extra|-x )
+        require_arg "$1" "${2-}"
         export TEST_EXTRA_PLUGINS="$2"
         shift 2
         ;;
@@ -68,7 +98,13 @@ while true; do
         shift
         break
         ;;
+    -*)
+        echo "Error: unknown option '$1'." >&2
+        show_help
+        exit 1
+        ;;
     *)
+        echo "Error: unexpected argument '$1'." >&2
         show_help
         exit 1
         ;;
@@ -104,7 +140,7 @@ if [[ "${TEST_EXTRA_PLUGINS}" == "recurring" ]]; then
 fi
 
 # Create a random project name
-export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)"
+export COMPOSE_PROJECT_NAME="$(head -c 1000 /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | head -c 32)"
 
 # If TEST_ACTIONS is set to 1 and the wp command exists, try and run our action checks.
 if [[ $TEST_ACTIONS == 1 ]]; then
@@ -140,12 +176,12 @@ fi
 # so interrupted runs don't leave orphans under their random project name.
 cleanup() {
   echo "Removing Docker containers..."
-  docker-compose --progress quiet -f docker-compose-phpunit.yml down -v
+  docker compose --progress quiet -f docker-compose-phpunit.yml down -v
 }
 trap cleanup EXIT
 
 echo "Starting Docker containers..."
-docker-compose --progress quiet -f docker-compose-phpunit.yml run \
+docker compose --progress quiet -f docker-compose-phpunit.yml run \
   -e "TEST_INPLACE=${TEST_INPLACE}" \
   -e "TEST_EXTRA_PLUGINS=${TEST_EXTRA_PLUGINS}" \
   -e "FILTER=${FILTER}" \

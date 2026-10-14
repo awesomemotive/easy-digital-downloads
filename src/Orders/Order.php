@@ -563,6 +563,27 @@ class Order extends Rows\Order {
 	}
 
 	/**
+	 * Retrieves the order's first transaction.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return Order_Transaction|false The transaction, or false if the order has none.
+	 */
+	public function get_transaction() {
+		$transactions = edd_get_order_transactions(
+			array(
+				'object_id'   => $this->id,
+				'object_type' => 'order',
+				'orderby'     => 'date_created',
+				'order'       => 'ASC',
+				'number'      => 1,
+			)
+		);
+
+		return reset( $transactions );
+	}
+
+	/**
 	 * Retrieves the tax rate Adjustment object associated with the order.
 	 *
 	 * @since 3.0

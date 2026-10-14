@@ -181,6 +181,7 @@ class Loader implements SubscriberInterface {
 			new Events\StripeRateLimitingCleanup(),
 			new Events\LogPruning(),
 			new Events\PayPalConnectSync(),
+			new Events\DiscountClaimsCleanup(),
 		);
 
 		/**

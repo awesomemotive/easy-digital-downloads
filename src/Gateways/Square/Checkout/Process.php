@@ -26,6 +26,7 @@ namespace EDD\Gateways\Square\Checkout;
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\Gateways\Square\Checkout\Transactions\Single;
+use EDD\Gateways\Square\Exceptions\PaymentDeclined;
 use EDD\Gateways\Square\Helpers\Compat;
 use EDD\Gateways\Square\Helpers\Customer;
 use EDD\Gateways\Square\Helpers\Address;
@@ -92,8 +93,10 @@ class Process {
 	 * Process the single payment.
 	 *
 	 * @since 3.4.0
+	 * @since 3.7.2 Builds the order and claims its discount uses before Square is asked to take payment.
 	 *
 	 * @throws \Exception If there is an error processing the single payment.
+	 * @throws \Throwable An unexpected error, after failing an order Square did not charge.
 	 */
 	private static function process_single() {
 		edd_debug_log( 'EDD Square: Processing single payment.' );
@@ -140,41 +143,55 @@ class Process {
 		$args['currency'] = edd_get_currency();
 
 		try {
-			$transaction = new Single( self::$purchase_data, $args );
-			$result      = $transaction->process();
-
 			$order_id = edd_build_order( self::$purchase_data );
 			if ( false === $order_id ) {
-				edd_debug_log( 'Square error: ' . esc_html__( 'Error 1106: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
-				throw new \Exception( esc_html__( 'Error 1106: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
+				edd_debug_log( 'Square error: Error 1106: Unable to build the order before payment.' );
+				throw new \Exception( esc_html__( 'Error 1106: An error occurred while creating your order. Please try again.', 'easy-digital-downloads' ) );
+			}
+
+			$refusal = \EDD\Discounts\OrderValidation::refuse_unclaimed( $order_id );
+			if ( $refusal ) {
+				$refresh = true;
+				throw new \Exception( esc_html( $refusal ) );
+			}
+
+			// A processing order can't be resumed by a later submit; one already rebuilding the order is not stopped.
+			if ( ! \EDD\Discounts\OrderValidation::start_capture( $order_id ) ) {
+				throw new \Exception( esc_html__( 'This order can no longer be processed.', 'easy-digital-downloads' ) );
+			}
+
+			$transaction = new Single( self::$purchase_data, $args );
+			try {
+				$result = $transaction->process();
+			} catch ( \Throwable $e ) {
+				// Only an order Square certainly did not charge is failed, which gives its discount uses back.
+				if ( $transaction->has_payment() ) {
+					self::record_payment( $order_id, $transaction->get_square_order_id(), $transaction->get_payment_id(), 'pending' );
+				} elseif ( $e instanceof PaymentDeclined || ! $transaction->sent_payment_request() ) {
+					edd_update_order_status( $order_id, 'failed' );
+				} elseif ( $transaction->get_square_order_id() ) {
+					// The charge may have gone through, so leave the order processing where the webhook can find it.
+					edd_update_order_meta( $order_id, 'square_order_id', $transaction->get_square_order_id() );
+				}
+				throw $e;
 			}
 
 			$payment_status      = strtoupper( $result['payment']->getStatus() );
 			$is_payment_complete = 'COMPLETED' === $payment_status;
 
+			self::record_payment( $order_id, $result['order']->getId(), $result['payment']->getId(), $is_payment_complete ? 'complete' : 'pending' );
+
 			// An order whose payment has not completed yet is completed by Square's order.updated webhook.
 			if ( $is_payment_complete ) {
+				// Square's webhook can complete the order once its payment is recorded.
 				$updated = edd_update_order_status( $order_id, 'complete' );
-				if ( ! $updated ) {
+				if ( ! $updated && 'complete' !== edd_get_order( $order_id )->status ) {
 					edd_debug_log( 'Square error: ' . esc_html__( 'Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
 					throw new \Exception( esc_html__( 'Error 1107: An error occurred, but your payment may have gone through. Please contact the site administrator.', 'easy-digital-downloads' ) );
 				}
+			} else {
+				\EDD\Discounts\OrderValidation::end_capture( $order_id, 'pending' );
 			}
-
-			// Save the Square Order ID to the order meta.
-			edd_update_order_meta( $order_id, 'square_order_id', $result['order']->getId() );
-
-			// Insert the order transaction ID.
-			edd_add_order_transaction(
-				array(
-					'object_id'      => $order_id,
-					'object_type'    => 'order',
-					'transaction_id' => sanitize_text_field( $result['payment']->getId() ),
-					'gateway'        => 'square',
-					'status'         => $is_payment_complete ? 'complete' : 'pending',
-					'total'          => self::$purchase_data['price'],
-				)
-			);
 
 			edd_empty_cart();
 		} catch ( \Exception $e ) {
@@ -182,6 +199,7 @@ class Process {
 			wp_send_json_error(
 				array(
 					'message' => $e->getMessage(),
+					'refresh' => isset( $refresh ),
 				)
 			);
 
@@ -203,5 +221,31 @@ class Process {
 	 * @throws \Exception If there is an error processing the recurring payment.
 	 */
 	private static function process_recurring() {
+	}
+
+	/**
+	 * Records the payment Square took for an order, so Square's webhook can find the order.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int    $order_id        The EDD order ID.
+	 * @param string $square_order_id The Square order ID.
+	 * @param string $payment_id      The Square payment ID.
+	 * @param string $status          The transaction status.
+	 * @return void
+	 */
+	private static function record_payment( $order_id, $square_order_id, $payment_id, $status ) {
+		edd_update_order_meta( $order_id, 'square_order_id', $square_order_id );
+
+		edd_add_order_transaction(
+			array(
+				'object_id'      => $order_id,
+				'object_type'    => 'order',
+				'transaction_id' => sanitize_text_field( $payment_id ),
+				'gateway'        => 'square',
+				'status'         => $status,
+				'total'          => self::$purchase_data['price'],
+			)
+		);
 	}
 }

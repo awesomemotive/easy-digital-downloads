@@ -41,8 +41,13 @@ function edd_stripe_statement_descriptor_template_tag( $order_id ) {
 		return sprintf( $email_tag_output, strtoupper( edd_get_option( 'stripe_statement_descriptor' ) ) );
 	}
 
-	$transaction = edd_get_order_transaction_by( 'object_id', $order_id );
-	if ( empty( $transaction ) || empty( $transaction->transaction_id ) || 'stripe' !== $transaction->gateway ) {
+	$order = edd_get_order( $order_id );
+	if ( ! $order || 'stripe' !== $order->gateway ) {
+		return '';
+	}
+
+	$transaction = $order->get_transaction();
+	if ( empty( $transaction ) || empty( $transaction->transaction_id ) ) {
 		return '';
 	}
 

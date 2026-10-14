@@ -15,6 +15,8 @@ namespace EDD\Actions;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+use EDD\Component;
+use EDD\Database\Query;
 use EDD\Utils\Request;
 
 /**
@@ -190,6 +192,7 @@ class Router {
 			'edd_insert_payment_note',
 			'edd_pre_delete_payment_note',
 			'edd_post_delete_payment_note',
+			'edd_insert_user',
 			'edd_prune_logs',
 			'edd_paypal_v3_sync_connect',
 			'edd_email_legacy_data_cleanup',
@@ -203,7 +206,7 @@ class Router {
 			'edd_cleanup_sessions',
 			'edd_send_new_user_email',
 		);
-		$blocked = array_merge( $core, self::get_additional_blocked_hooks() );
+		$blocked = array_merge( $core, self::get_database_hooks(), self::get_additional_blocked_hooks() );
 
 		self::$blocked = array_fill_keys( array_filter( $blocked, 'is_string' ), true );
 
@@ -230,5 +233,38 @@ class Router {
 		 * @param array $blocked The array of full hook names; empty by default.
 		 */
 		return (array) apply_filters( 'edd/actions/router/blocked_hooks', array() );
+	}
+
+	/**
+	 * Gets the lifecycle and transition hooks Berlin fires for each registered component.
+	 *
+	 * Read from the component registry so that query classes registered by extensions are covered too.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return array
+	 */
+	private static function get_database_hooks(): array {
+		$hooks = array();
+
+		foreach ( EDD()->components as $component ) {
+			$query = $component instanceof Component ? $component->get_interface( 'query' ) : false;
+
+			// The router only builds `edd_` hooks, so a query on any other prefix is unreachable.
+			if ( ! $query instanceof Query || 'edd' !== $query->prefix || empty( $query->item_name ) ) {
+				continue;
+			}
+
+			$item_name = $query->item_name;
+			$hooks[]   = "edd_{$item_name}_added";
+			$hooks[]   = "edd_{$item_name}_updated";
+			$hooks[]   = "edd_{$item_name}_deleted";
+
+			foreach ( wp_filter_object_list( $query->columns, array( 'transition' => true ), 'and', 'name' ) as $column ) {
+				$hooks[] = "edd_transition_{$item_name}_{$column}";
+			}
+		}
+
+		return $hooks;
 	}
 }

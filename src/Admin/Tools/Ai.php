@@ -71,9 +71,10 @@ class Ai implements SubscriberInterface {
 	public static function get_subscribed_events(): array {
 		/**
 		 * Without the Abilities API there is nothing to describe and nothing for the
-		 * write setting to act on. The tab is not registered on those versions, but
-		 * the Tools screen dispatches whatever `tab` is in the URL, so the tab body
-		 * has to be unhooked as well.
+		 * write setting to act on, so the tab body stays unhooked. This guard also
+		 * withholds `edd_toggle_setting_handlers`, which registers this class as an
+		 * AJAX toggle handler for `Abilities::WRITE_SETTING`, so it has to stay in
+		 * place even though `Screen::get_active_tab()` now validates the tab itself.
 		 */
 		if ( ! function_exists( 'wp_register_ability' ) ) {
 			return array();

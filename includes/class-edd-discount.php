@@ -1599,13 +1599,15 @@ class EDD_Discount extends Adjustment {
 	 * @since 2.7
 	 * @since 3.0 Refactored to use new query methods.
 	 * @since 3.2 Refactored to use the order adjustments table, and always run the filter.
+	 * @since 3.7.2 Also counts the customer's other orders that hold a use of the discount.
 	 *
 	 * @param string $user      User info.
 	 * @param bool   $set_error Whether an error message be set in session.
+	 * @param int    $order_id  The order being checked, which does not count against itself.
 	 *
 	 * @return bool Whether the discount has been used or not.
 	 */
-	public function is_used( $user = '', $set_error = true ) {
+	public function is_used( $user = '', $set_error = true, $order_id = 0 ) {
 		$discount_used = false;
 
 		if ( $this->is_single_use ) {
@@ -1623,7 +1625,7 @@ class EDD_Discount extends Adjustment {
 					)
 				);
 
-				$discount_used = ! empty( $order_adjustments );
+				$discount_used = ! empty( $order_adjustments ) || $this->is_held_by_another_order( $customer, $order_id );
 			}
 		}
 
@@ -1700,6 +1702,35 @@ class EDD_Discount extends Adjustment {
 		}
 
 		return $is_archived;
+	}
+
+	/**
+	 * Whether the discount can be applied to an order, counting the use that order already holds.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int  $order_id  The order ID, or 0 for a new order.
+	 * @param bool $set_error Whether an error message be set in session.
+	 * @return bool
+	 */
+	public function is_available_to_order( $order_id, $set_error = true ) {
+		if ( ! \EDD\Discounts\Claims::holds( $order_id, $this->id ) ) {
+			return $this->is_active( true, $set_error ) && ! $this->is_maxed_out( $set_error );
+		}
+
+		// Holding the last use deactivates the code, which must not refuse the order holding it.
+		$is_inactive_at_cap = 'inactive' === $this->status && ! empty( $this->max_uses ) && $this->get_uses() >= $this->max_uses;
+		if ( $is_inactive_at_cap ) {
+			$is_expired = $this->is_expired();
+			if ( $is_expired && edd_doing_ajax() && $set_error ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
+			}
+
+			/** This filter is documented in includes/class-edd-discount.php */
+			return apply_filters( 'edd_is_discount_active', ! $is_expired && $this->is_started( $set_error ), $this->id, $set_error );
+		}
+
+		return $this->is_active( true, $set_error );
 	}
 
 	/**
@@ -1807,6 +1838,7 @@ class EDD_Discount extends Adjustment {
 	 *
 	 * @since 2.7
 	 * @since 3.7.1 Returns false when the discount had no use left to claim.
+	 * @since 3.7.2 Deactivates the code at its cap without rewriting the rest of the row.
 	 *
 	 * @return int|false New usage, or false if the code is used up.
 	 */
@@ -1831,68 +1863,61 @@ class EDD_Discount extends Adjustment {
 			return false;
 		}
 
+		return $this->record_increased_usage();
+	}
+
+	/**
+	 * Increments the usage of the discount even when it has no use left.
+	 *
+	 * Only for a use the buyer has already paid for, which can't be refused.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return int|false New usage, or false if the count could not be updated.
+	 */
+	public function increase_usage_past_limit() {
+		global $wpdb;
+
 		// nosemgrep: awesomemotive.wp-sql-injection-audit
-		$claim = $wpdb->get_row(
+		$increased = $wpdb->query(
 			$wpdb->prepare(
-				"SELECT use_count, max_uses FROM {$wpdb->edd_adjustments} WHERE id = %d",
+				"UPDATE {$wpdb->edd_adjustments} SET use_count = use_count + 1 WHERE id = %d",
 				$this->id
 			)
 		);
 
-		if ( empty( $claim ) ) {
+		if ( empty( $increased ) ) {
 			return false;
 		}
 
-		$this->use_count = (int) $claim->use_count;
-		$this->max_uses  = absint( $claim->max_uses );
-
-		// Reaching the cap deactivates the code, which is what refuses a later attempt.
-		if ( 0 !== $this->max_uses && $this->max_uses <= $this->use_count ) {
-			edd_update_discount( $this->id, array( 'status' => 'inactive' ) );
-			$this->status = 'inactive';
-		} else {
-			// The claim was written with a statement; edd_update_discount() above would have
-			// reprimed the caches itself, so only do it here on the branch that skips it.
-			( new EDD\Database\Queries\Adjustment() )->refresh_item_cache( $this->id );
-		}
-
-		/**
-		 * Fires after the usage count has been increased.
-		 *
-		 * @since 2.7
-		 *
-		 * @param int    $use_count Discount usage.
-		 * @param int    $ID        Discount ID.
-		 * @param string $code      Discount code.
-		 */
-		do_action( 'edd_discount_increase_use_count', $this->use_count, $this->id, $this->code );
-
-		return (int) $this->use_count;
+		return $this->record_increased_usage();
 	}
 
 	/**
 	 * Decrement the usage of the discount.
 	 *
 	 * @since 2.7
+	 * @since 3.7.2 Reactivates only a code that was deactivated by reaching its cap.
 	 *
 	 * @return int New discount usage.
 	 */
 	public function decrease_usage() {
-		if ( $this->get_uses() ) {
-			$this->use_count--;
-		}
+		global $wpdb;
 
-		if ( $this->use_count < 0 ) {
-			$this->use_count = 0;
-		}
+		// The status is assigned first so it compares against the count before the decrement.
+		// nosemgrep: awesomemotive.wp-sql-injection-audit
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->edd_adjustments} SET status = IF( status = 'inactive' AND max_uses > 0 AND use_count = max_uses AND NOT EXISTS ( SELECT 1 FROM {$wpdb->edd_adjustmentmeta} WHERE edd_adjustment_id = %d AND meta_key = %s ), 'active', status ), use_count = use_count - 1 WHERE id = %d AND use_count > 0",
+				$this->id,
+				\EDD\Discounts\ManualDeactivation::META_KEY,
+				$this->id
+			)
+		);
 
-		$args = array( 'use_count' => $this->use_count );
+		$this->refresh_usage();
 
-		if ( 0 !== $this->max_uses && $this->max_uses > $this->use_count ) {
-			$args['status'] = 'active';
-		}
-
-		$this->update( $args );
+		( new EDD\Database\Queries\Adjustment() )->refresh_item_cache( $this->id );
 
 		/**
 		 * Fires after the usage count has been decreased.
@@ -1925,6 +1950,44 @@ class EDD_Discount extends Adjustment {
 				)
 			)
 		);
+	}
+
+	/**
+	 * Gives back one use held by an abandoned checkout when a full code is all that refuses this shopper.
+	 *
+	 * @since 3.7.2
+	 * @return void
+	 */
+	private function release_stale_use() {
+		if ( \EDD\Discounts\Claims::release_stale( $this ) ) {
+			$this->refresh_usage();
+		}
+	}
+
+	/**
+	 * Reloads the use count, cap and status from the table.
+	 *
+	 * Uses can be given back through another instance of the same discount, which leaves this one stale.
+	 *
+	 * @since 3.7.2
+	 * @return void
+	 */
+	private function refresh_usage() {
+		global $wpdb;
+
+		// nosemgrep: awesomemotive.wp-sql-injection-audit
+		$current = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT use_count, max_uses, status FROM {$wpdb->edd_adjustments} WHERE id = %d",
+				$this->id
+			)
+		);
+
+		if ( $current ) {
+			$this->use_count = (int) $current->use_count;
+			$this->max_uses  = absint( $current->max_uses );
+			$this->status    = $current->status;
+		}
 	}
 
 	/**
@@ -2089,6 +2152,47 @@ class EDD_Discount extends Adjustment {
 	}
 
 	/**
+	 * Reloads the usage after it was increased in the database, and deactivates the code at its cap.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return int New usage.
+	 */
+	private function record_increased_usage() {
+		global $wpdb;
+
+		$this->refresh_usage();
+
+		// Reaching the cap deactivates the code, which is what refuses a later attempt.
+		if ( 0 !== $this->max_uses && $this->max_uses <= $this->use_count ) {
+			// A full-row update here could write back a stale count, so only the status is changed.
+			// nosemgrep: awesomemotive.wp-sql-injection-audit
+			$wpdb->query(
+				$wpdb->prepare(
+					"UPDATE {$wpdb->edd_adjustments} SET status = 'inactive' WHERE id = %d AND status = 'active' AND max_uses > 0 AND use_count >= max_uses",
+					$this->id
+				)
+			);
+			$this->status = 'inactive';
+		}
+
+		( new EDD\Database\Queries\Adjustment() )->refresh_item_cache( $this->id );
+
+		/**
+		 * Fires after the usage count has been increased.
+		 *
+		 * @since 2.7
+		 *
+		 * @param int    $use_count Discount usage.
+		 * @param int    $ID        Discount ID.
+		 * @param string $code      Discount code.
+		 */
+		do_action( 'edd_discount_increase_use_count', $this->use_count, $this->id, $this->code );
+
+		return (int) $this->use_count;
+	}
+
+	/**
 	 * Checks if the discount is valid for the conditions.
 	 *
 	 * @since 3.3.6
@@ -2103,10 +2207,11 @@ class EDD_Discount extends Adjustment {
 		if ( ! $this->is_started( $set_error ) ) {
 			return false;
 		}
-		if ( ! $this->is_active( true, $set_error ) ) {
-			return false;
-		}
-		if ( $this->is_maxed_out( $set_error ) ) {
+
+		$order_id = \EDD\Discounts\Claims::get_resumable_order_id();
+
+		// Expiry doesn't wait on a release, so report it before the customer and cart conditions.
+		if ( $this->is_expired( false ) && ! $this->is_available_to_order( $order_id, $set_error ) ) {
 			return false;
 		}
 		if ( $this->is_used( $user, $set_error ) ) {
@@ -2118,6 +2223,38 @@ class EDD_Discount extends Adjustment {
 		if ( ! $this->is_product_requirements_met( $set_error ) || ! count( array_filter( $this->get_product_reqs() ) ) && ! $this->is_valid_for_categories( $set_error ) ) {
 			return false;
 		}
-		return true;
+
+		if ( ! \EDD\Discounts\Claims::holds( $order_id, $this->id ) ) {
+			$this->release_stale_use();
+		}
+
+		return $this->is_available_to_order( $order_id, $set_error );
+	}
+
+	/**
+	 * Whether another of the customer's orders holds a use of the discount.
+	 *
+	 * Between two orders holding a use, only the earlier one counts against the later.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param EDD_Customer $customer The customer.
+	 * @param int          $order_id The order being checked.
+	 * @return bool
+	 */
+	private function is_held_by_another_order( $customer, $order_id ) {
+		$exclude = array_filter( array( absint( $order_id ), \EDD\Discounts\Claims::get_resumable_order_id() ) );
+		$holders = array_diff( \EDD\Discounts\Claims::get_holders( $this->id, $customer->get_order_ids() ), $exclude );
+
+		if ( ! empty( $order_id ) ) {
+			$holders = array_filter(
+				$holders,
+				function ( $holder ) use ( $order_id ) {
+					return $holder < $order_id;
+				}
+			);
+		}
+
+		return ! empty( $holders );
 	}
 }

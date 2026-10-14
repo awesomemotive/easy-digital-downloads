@@ -239,6 +239,7 @@ const EDD_Settings = {
 				url: ajaxurl,
 				data: {
 					action: 'edd_send_test_email_summary',
+					_wpnonce: new URL( emailSummaryTestButton.attr( 'href' ) ).searchParams.get( '_wpnonce' ),
 				},
 				beforeSend: function() {
 					emailSummaryTestNotice.empty();

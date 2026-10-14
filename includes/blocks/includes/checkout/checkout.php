@@ -156,6 +156,7 @@ function checkout( $block_attributes = array(), $content = '', $block = null ) {
 		array(
 			'logged_in'          => is_user_logged_in() && ! \EDD\Blocks\Utility::doing_guest_preview( $block ),
 			'show_discount_form' => true,
+			'show_register_form' => edd_get_option( 'show_register_form' ),
 		)
 	);
 

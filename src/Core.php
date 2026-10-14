@@ -31,6 +31,7 @@ class Core extends EventManagement\Subscribers {
 			new Customers\Recalculations(),
 			new Downloads\Services(),
 			new Orders\DeferredActions(),
+			new Orders\Recalculations(),
 			new Emails\Loader(),
 			new Globals\Loader(),
 			new Integrations\Registry(),
@@ -71,6 +72,9 @@ class Core extends EventManagement\Subscribers {
 
 			// Discounts.
 			new Discounts\Search(),
+			new Discounts\Claims(),
+			new Discounts\ManualDeactivation(),
+			new Discounts\CompletionHold(),
 
 			// Captcha.
 			new Captcha\Validate(),

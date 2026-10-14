@@ -1916,9 +1916,10 @@ class EDD_Payment {
 					do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
 					break;
 				case 'failed':
-					$this->process_failure();
+					// Discount uses are given back by EDD\Discounts\Claims on the status transition.
 					break;
-				case 'pending' || 'processing':
+				case 'pending':
+				case 'processing':
 					$this->process_pending();
 					break;
 			}
@@ -2726,28 +2727,6 @@ class EDD_Payment {
 	}
 
 	/**
-	 * Process when a payment is set to failed, decrement discount usages and other stats.
-	 *
-	 * @since 2.5.7
-	 * @access private
-	 */
-	private function process_failure() {
-		$discounts = $this->discounts;
-
-		if ( 'none' === $discounts || empty( $discounts ) ) {
-			return;
-		}
-
-		if ( ! is_array( $discounts ) ) {
-			$discounts = array_map( 'trim', explode( ',', $discounts ) );
-		}
-
-		foreach ( $discounts as $discount ) {
-			edd_decrease_discount_usage( $discount );
-		}
-	}
-
-	/**
 	 * Process when a payment moves to pending.
 	 *
 	 * @since 2.5.10
@@ -2820,9 +2799,9 @@ class EDD_Payment {
 			}
 		}
 
-		// Decrease store earnings.
+		// Recalculate store earnings.
 		if ( true === $alter_store_earnings ) {
-			edd_decrease_total_earnings( $this->total );
+			EDD\Orders\Recalculations::schedule_store_earnings();
 		}
 	}
 

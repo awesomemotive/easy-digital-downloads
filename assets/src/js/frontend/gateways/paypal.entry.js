@@ -433,6 +433,12 @@ var EDD_PayPal = {
 					if ( responseData.success && responseData.data.redirect_url ) {
 						window.location = responseData.data.redirect_url;
 					} else {
+						// A removed discount changes the total, so reload to show it with the message.
+						if ( responseData.data.refresh ) {
+							window.location.reload();
+							return;
+						}
+
 						EDD_PayPal.stopProcessing();
 
 						var errorHtml = responseData.data.message ? responseData.data.message : eddPayPalVars.defaultError;

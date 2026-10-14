@@ -26,11 +26,34 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 class RefundFlowTest extends EDD_UnitTestCase {
 
 	/**
+	 * Separator settings as they stood before the test, null where absent.
+	 *
+	 * @var array
+	 */
+	private $original_separators = array();
+
+	/**
+	 * Request keys as they stood before the test, null where absent.
+	 *
+	 * @var array
+	 */
+	private $original_post = array();
+
+	/**
 	 * Clean up before and after each test.
 	 */
 	public function setUp(): void {
 		parent::setUp();
 		$this->setup_v3_options();
+
+		$settings = get_option( 'edd_settings', array() );
+		foreach ( array( 'decimal_separator', 'thousands_separator' ) as $key ) {
+			$this->original_separators[ $key ] = $settings[ $key ] ?? null;
+		}
+
+		foreach ( array( 'order_id', 'data' ) as $key ) {
+			$this->original_post[ $key ] = $_POST[ $key ] ?? null;
+		}
 	}
 
 	/**
@@ -38,6 +61,23 @@ class RefundFlowTest extends EDD_UnitTestCase {
 	 */
 	public function tearDown(): void {
 		$this->clean_up_options();
+
+		foreach ( $this->original_separators as $key => $value ) {
+			if ( is_null( $value ) ) {
+				edd_delete_option( $key );
+			} else {
+				edd_update_option( $key, $value );
+			}
+		}
+
+		foreach ( $this->original_post as $key => $value ) {
+			if ( is_null( $value ) ) {
+				unset( $_POST[ $key ] );
+			} else {
+				$_POST[ $key ] = $value;
+			}
+		}
+
 		remove_all_filters( 'pre_http_request' );
 		remove_filter( 'edd_is_test_mode', '__return_true' );
 		parent::tearDown();
@@ -489,6 +529,46 @@ class RefundFlowTest extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * A partial refund's amount must reach PayPal as a plain decimal string, never one
+	 * carrying the store's own decimal or thousands separator.
+	 */
+	public function test_preflight_partial_refund_sends_an_unformatted_amount() {
+		edd_update_option( 'decimal_separator', ',' );
+		edd_update_option( 'thousands_separator', '.' );
+
+		$order_id = $this->build_high_value_refundable_order( 100.00 );
+		$this->sign_in_refunder();
+		$this->seed_refund_request( $order_id, wp_create_nonce( 'edd_process_refund' ), '12,50' );
+
+		$request = $this->capture_refund_request_body();
+
+		\EDD\Gateways\PayPal\preflight_refund_submission();
+
+		$decoded = json_decode( $request->body, true );
+
+		$this->assertArrayHasKey( 'amount', $decoded, 'A partial refund must send an amount.' );
+		$this->assertSame( '12.50', $decoded['amount']['value'], 'A refund of 12,50 must reach PayPal as 12.50.' );
+	}
+
+	/**
+	 * A partial refund over 1000 must not let the store's thousands separator leak
+	 * into the amount PayPal receives, even under the store's default separators.
+	 */
+	public function test_preflight_partial_refund_over_one_thousand_sends_no_thousands_separator() {
+		$order_id = $this->build_high_value_refundable_order( 2000.00 );
+		$this->sign_in_refunder();
+		$this->seed_refund_request( $order_id, wp_create_nonce( 'edd_process_refund' ), '1234.56' );
+
+		$request = $this->capture_refund_request_body();
+
+		\EDD\Gateways\PayPal\preflight_refund_submission();
+
+		$decoded = json_decode( $request->body, true );
+
+		$this->assertSame( '1234.56', $decoded['amount']['value'], 'A refund of 1234.56 must not carry a thousands separator.' );
+	}
+
+	/**
 	 * Creates a paypal_commerce order that the pre-flight will act on.
 	 *
 	 * @return int
@@ -499,6 +579,56 @@ class RefundFlowTest extends EDD_UnitTestCase {
 		);
 		edd_update_order( $order_id, array( 'gateway' => 'paypal_commerce' ) );
 		edd_update_order_meta( $order_id, 'paypal_order_id', 'ORDER_P1B' );
+
+		return $order_id;
+	}
+
+	/**
+	 * Creates a paypal_commerce order with a single item large enough to exercise a
+	 * partial refund's amount formatting, rather than the two fixed-price items
+	 * build_refundable_order() provides.
+	 *
+	 * @param float $total Order (and single item) total.
+	 * @return int
+	 */
+	private function build_high_value_refundable_order( $total ) {
+		$download = Helpers\EDD_Helper_Download::create_simple_download();
+
+		$order_id = parent::edd()->order->create(
+			array(
+				'gateway'  => 'paypal_commerce',
+				'mode'     => 'test',
+				'subtotal' => $total,
+				'tax'      => 0,
+				'discount' => 0,
+				'total'    => $total,
+			)
+		);
+
+		// The order factory always adds one fixed-price item, so resize it rather than add a second.
+		parent::edd()->order_item->update_object(
+			current( edd_get_order( $order_id )->get_items() )->id,
+			array(
+				'product_id'   => $download->ID,
+				'product_name' => $download->post_title,
+				'amount'       => $total,
+				'subtotal'     => $total,
+				'discount'     => 0,
+				'tax'          => 0,
+				'total'        => $total,
+			)
+		);
+
+		parent::edd()->order_transaction->create(
+			array(
+				'object_id'      => $order_id,
+				'object_type'    => 'order',
+				'transaction_id' => 'CAPTURE_HIGH_VALUE',
+				'gateway'        => 'paypal_commerce',
+				'status'         => 'complete',
+				'total'          => $total,
+			)
+		);
 
 		return $order_id;
 	}
@@ -523,10 +653,11 @@ class RefundFlowTest extends EDD_UnitTestCase {
 	/**
 	 * Seeds the request the admin refund modal submits, with the nonce under test.
 	 *
-	 * @param int    $order_id The order being refunded.
-	 * @param string $nonce    The value to place in the form's nonce field.
+	 * @param int         $order_id The order being refunded.
+	 * @param string      $nonce    The value to place in the form's nonce field.
+	 * @param string|null $subtotal Optional subtotal to post for each item exactly as typed, in place of the item's own.
 	 */
-	private function seed_refund_request( $order_id, $nonce ) {
+	private function seed_refund_request( $order_id, $nonce, $subtotal = null ) {
 		$order = edd_get_order( $order_id );
 		$items = array();
 
@@ -535,7 +666,7 @@ class RefundFlowTest extends EDD_UnitTestCase {
 				'refund_order_item[%1$d][quantity]=%2$d&refund_order_item[%1$d][subtotal]=%3$s&refund_order_item[%1$d][tax]=%4$s&refund_order_item[%1$d][id]=%1$d',
 				$item->id,
 				$item->quantity,
-				edd_format_amount( $item->subtotal ),
+				$subtotal ?? edd_format_amount( $item->subtotal ),
 				edd_format_amount( $item->tax )
 			);
 		}
@@ -571,6 +702,33 @@ class RefundFlowTest extends EDD_UnitTestCase {
 		);
 
 		return $counter;
+	}
+
+	/**
+	 * Intercepts outbound HTTP and records the refund request body, returning a live holder.
+	 *
+	 * @return object
+	 */
+	private function capture_refund_request_body() {
+		$request       = new \stdClass();
+		$request->body = '';
+
+		remove_all_filters( 'pre_http_request' );
+		add_filter(
+			'pre_http_request',
+			function ( $status, $args, $url ) use ( $request ) {
+				$request->body = $args['body'];
+
+				return array(
+					'response' => array( 'code' => 200 ),
+					'body'     => wp_json_encode( array( 'id' => 'REFUND_TEST', 'status' => 'COMPLETED' ) ),
+				);
+			},
+			10,
+			3
+		);
+
+		return $request;
 	}
 
 }

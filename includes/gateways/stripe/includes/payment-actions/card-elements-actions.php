@@ -1068,19 +1068,22 @@ function edds_complete_payment() {
 		}
 
 		if ( $payment->save() ) {
-			/**
-			 * Allows further processing after a payment is completed.
-			 *
-			 * Sends back just the Intent ID to avoid needing always retrieve
-			 * the intent in this step, which has been transformed via JSON,
-			 * and is no longer a \Stripe\PaymentIntent
-			 *
-			 * @since 2.7.0
-			 *
-			 * @param \EDD_Payment $payment   EDD Payment.
-			 * @param string       $intent_id Stripe Intent ID.
-			 */
-			do_action( 'edds_payment_complete', $payment, $intent['id'] );
+			// The save succeeds even when the order is held for its discount instead of completed.
+			if ( ! \EDD\Discounts\CompletionHold::holds( $payment->ID ) ) {
+				/**
+				 * Allows further processing after a payment is completed.
+				 *
+				 * Sends back just the Intent ID to avoid needing always retrieve
+				 * the intent in this step, which has been transformed via JSON,
+				 * and is no longer a \Stripe\PaymentIntent
+				 *
+				 * @since 2.7.0
+				 *
+				 * @param \EDD_Payment $payment   EDD Payment.
+				 * @param string       $intent_id Stripe Intent ID.
+				 */
+				do_action( 'edds_payment_complete', $payment, $intent['id'] );
+			}
 
 			// Empty cart.
 			edd_empty_cart();
