@@ -376,6 +376,7 @@ class Form {
 	 * Maybe creates an order for the Stripe checkout form.
 	 *
 	 * @since 3.3.5
+	 * @since 3.7.2 Fails the order when its discount uses could not be claimed.
 	 * @param string $payment_method_type The payment method type.
 	 * @return int|false The order ID, or false if not created.
 	 * @throws \EDD_Stripe_Gateway_Exception If an error occurs.
@@ -394,6 +395,15 @@ class Form {
 					'easy-digital-downloads'
 				),
 				'Unable to insert order record. (1009)'
+			);
+		}
+		$refusal = \EDD\Discounts\OrderValidation::refuse_unclaimed( $order_id );
+		if ( $refusal ) {
+			// Shown inline without a reload, so it must not block the buyer's next attempt.
+			edd_unset_error( 'edd-discount-error' );
+			throw new \EDD_Stripe_Gateway_Exception(
+				esc_html( $refusal ),
+				'Order discount could not be claimed before payment confirmation.'
 			);
 		}
 		edd_update_order_meta( $order_id, 'stripe_payment_method_type', $payment_method_type );

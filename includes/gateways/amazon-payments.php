@@ -850,6 +850,7 @@ final class EDD_Amazon_Payments {
 	 * Process the purchase and create the charge in Amazon
 	 *
 	 * @since  2.4
+	 * @since  3.7.2 Builds the order before the charge, so an order whose discount can't be claimed is refused unpaid.
 	 * @param  $purchase_data array Cart details
 	 * @return void
 	 */
@@ -878,6 +879,30 @@ final class EDD_Amazon_Payments {
 
 		$args['platform_id'] = 'A3JST9YM1SX7LB';
 
+		// Setup payment data to be recorded.
+		$payment_data = array(
+			'price'        => $purchase_data['price'],
+			'date'         => $purchase_data['date'],
+			'user_email'   => $purchase_data['user_email'],
+			'purchase_key' => $purchase_data['purchase_key'],
+			'currency'     => edd_get_currency(),
+			'downloads'    => $purchase_data['downloads'],
+			'user_info'    => $purchase_data['user_info'],
+			'cart_details' => $purchase_data['cart_details'],
+			'gateway'      => $this->gateway_id,
+			'status'       => 'pending',
+		);
+
+		$payment_id = edd_insert_payment( $payment_data );
+		if ( ! $payment_id ) {
+			edd_set_error( 'amazon_error', __( 'There was an issue processing your payment. Please try again.', 'easy-digital-downloads' ) );
+		}
+
+		if ( ! $payment_id || \EDD\Discounts\OrderValidation::refuse_unclaimed( $payment_id ) ) {
+			edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
+			return;
+		}
+
 		$charge = $this->client->charge( $args );
 
 		if ( 200 == $charge->response['Status'] ) {
@@ -891,24 +916,10 @@ final class EDD_Amazon_Payments {
 				$reason = $charge['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'];
 				/* translators: %s: Payment Failure Reason (dynamic, provided by the gateway) */
 				edd_set_error( 'payment_declined', sprintf( __( 'Your payment could not be authorized, please try a different payment method. Reason: %s', 'easy-digital-downloads' ), $reason ) );
+				edd_update_payment_status( $payment_id, 'failed' );
 				edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
+				return;
 			}
-
-			// Setup payment data to be recorded
-			$payment_data = array(
-				'price'         => $purchase_data['price'],
-				'date'          => $purchase_data['date'],
-				'user_email'    => $purchase_data['user_email'],
-				'purchase_key'  => $purchase_data['purchase_key'],
-				'currency'      => edd_get_currency(),
-				'downloads'     => $purchase_data['downloads'],
-				'user_info'     => $purchase_data['user_info'],
-				'cart_details'  => $purchase_data['cart_details'],
-				'gateway'       => $this->gateway_id,
-				'status'        => 'pending',
-			);
-
-			$payment_id = edd_insert_payment( $payment_data );
 
 			$authorization_id = $charge['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
 			$capture_id       = str_replace( '-A', '-C', $authorization_id );
@@ -938,6 +949,7 @@ final class EDD_Amazon_Payments {
 		} else {
 			/* translators: %s: Amazon Error (dynamic, provided by the gateway) */
 			edd_set_error( 'amazon_error',sprintf( __( 'There was an issue processing your payment. Amazon error: %s', 'easy-digital-downloads' ), print_r( $charge, true ) ) );
+			edd_update_payment_status( $payment_id, 'failed' );
 			edd_send_back_to_checkout( '?payment-mode=amazon&amazon_reference_id=' . $purchase_data['post_data']['edd_amazon_reference_id'] );
 		}
 	}

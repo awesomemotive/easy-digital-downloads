@@ -116,7 +116,10 @@ class Manager implements SubscriberInterface {
 
 		// Attempt to update.
 		$updated = edd_update_discount( $discount->id, $to_update );
-		$arg     = ! empty( $updated )
+		if ( $updated && 'inactive' !== $discount->status && 'inactive' === ( $to_update['status'] ?? '' ) ) {
+			\EDD\Discounts\ManualDeactivation::mark( $discount->id );
+		}
+		$arg = ! empty( $updated )
 			? 'discount_updated'
 			: 'discount_not_changed';
 

@@ -166,7 +166,7 @@ class Triggers implements SubscriberInterface {
 	 *
 	 * @return void
 	 */
-	public function send_new_user_email( $user_id, $user_data ) {
+	public function send_new_user_email( $user_id, $user_data = array() ) {
 		if ( empty( $user_id ) || empty( $user_data ) ) {
 			return;
 		}

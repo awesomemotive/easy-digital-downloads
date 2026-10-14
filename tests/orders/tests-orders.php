@@ -836,4 +836,44 @@ class Orders extends EDD_UnitTestCase {
 		// With inclusive true, orders created today should be counted.
 		$this->assertGreaterThanOrEqual( 0, $count_inclusive );
 	}
+
+	/**
+	 * @covers \EDD\Orders\Order::get_transaction
+	 */
+	public function test_get_transaction_returns_the_first_transaction() {
+		$order_id = parent::edd()->order->create();
+
+		parent::edd()->order_transaction->create(
+			array(
+				'object_id'      => $order_id,
+				'object_type'    => 'order',
+				'transaction_id' => 'first',
+				'gateway'        => 'manual',
+				'date_created'   => '2024-01-01 00:00:00',
+			)
+		);
+		parent::edd()->order_transaction->create(
+			array(
+				'object_id'      => $order_id,
+				'object_type'    => 'order',
+				'transaction_id' => 'second',
+				'gateway'        => 'manual',
+				'date_created'   => '2024-01-02 00:00:00',
+			)
+		);
+
+		$transaction = edd_get_order( $order_id )->get_transaction();
+
+		$this->assertInstanceOf( \EDD\Orders\Order_Transaction::class, $transaction );
+		$this->assertSame( 'first', $transaction->transaction_id );
+	}
+
+	/**
+	 * @covers \EDD\Orders\Order::get_transaction
+	 */
+	public function test_get_transaction_returns_false_without_transactions() {
+		$order_id = parent::edd()->order->create();
+
+		$this->assertFalse( edd_get_order( $order_id )->get_transaction() );
+	}
 }

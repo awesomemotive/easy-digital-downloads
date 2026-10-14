@@ -33,6 +33,7 @@ class PurchaseUser {
 	 *
 	 * @since 3.6.9
 	 * @since 3.7.1 Fires edd_checkout_user_error_checks and refuses when it raises an error.
+	 * @since 3.7.2 Takes the discounts from the cart and refuses one that does not validate.
 	 *
 	 * @param array  $form_data  Raw form data from the REST request body.
 	 * @param string $email      Already-sanitized buyer email.
@@ -42,7 +43,13 @@ class PurchaseUser {
 	 * @return array|\WP_Error Array with 'valid_data' and 'user' keys on success, or WP_Error on failure.
 	 */
 	public static function resolve( array $form_data, $email, $first_name, $last_name, array $address ) {
-		$discount = ! empty( $form_data['edd_discount'] ) ? sanitize_text_field( $form_data['edd_discount'] ) : 'none';
+		$discount = edd_purchase_form_validate_discounts();
+		$errors   = array_intersect_key( (array) edd_get_errors(), array_flip( array( 'invalid_discount', 'edd-discount-error' ) ) );
+		if ( $errors ) {
+			edd_unset_error( 'invalid_discount' );
+			edd_unset_error( 'edd-discount-error' );
+			return new \WP_Error( 'invalid_discount', reset( $errors ), array( 'status' => 400 ) );
+		}
 
 		$valid_data = array(
 			'gateway'         => 'paypal_commerce',

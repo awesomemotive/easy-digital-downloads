@@ -69,6 +69,7 @@ class UnbrandedCard {
 	 * runs the 3DS challenge after this returns the order ID.
 	 *
 	 * @since 3.6.9
+	 * @since 3.7.2 Fails the order before contacting PayPal when its discount uses could not be claimed.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 * @return \WP_REST_Response|\WP_Error
@@ -139,6 +140,10 @@ class UnbrandedCard {
 		if ( ! $order_id ) {
 			edd_debug_log( 'Unbranded card: edd_build_order() failed. Data: ' . wp_json_encode( $purchase_data ), true );
 			return new \WP_Error( 'order_creation_failed', __( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ), array( 'status' => 500 ) );
+		}
+		$refusal = \EDD\Discounts\OrderValidation::refuse_unclaimed( $order_id );
+		if ( $refusal ) {
+			return \EDD\Discounts\OrderValidation::get_refusal_error( $refusal );
 		}
 
 		$purchase_units = \EDD\Gateways\PayPal\get_order_purchase_units( $order_id, $purchase_data, $purchase_data );
@@ -230,9 +235,11 @@ class UnbrandedCard {
 	 * Returns true only when a required 3-D Secure challenge was attempted and failed; every other result proceeds.
 	 *
 	 * @since 3.6.9
+	 * @since 3.7.2 Redeems the order's discounts before capture.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 * @return \WP_REST_Response|\WP_Error
+	 * @throws \Throwable An unexpected error; the order is put back to pending unless PayPal captured it.
 	 */
 	public function capture( $request ) {
 		$body            = $request->get_json_params();
@@ -253,7 +260,36 @@ class UnbrandedCard {
 		if ( edd_get_order_meta( $order_id, 'paypal_order_id', true ) !== $paypal_order_id ) {
 			return new \WP_Error( 'order_mismatch', __( 'Order reference mismatch.', 'easy-digital-downloads' ), array( 'status' => 409 ) );
 		}
+		$response = \EDD\Discounts\OrderValidation::hold_capture(
+			$order_id,
+			function () use ( $order, $order_id, $paypal_order_id ) {
+				// Redeemed only once processing, where the pending-order sweeps can't give back the use claimed here.
+				$unredeemed = \EDD\Discounts\OrderValidation::redeem_discounts( $order );
+				if ( $unredeemed ) {
+					$refusal = \EDD\Discounts\OrderValidation::refuse( $order_id, $unredeemed );
+					return \EDD\Discounts\OrderValidation::get_refusal_error( $refusal );
+				}
 
+				return $this->capture_held_order( $order_id, $paypal_order_id );
+			}
+		);
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		return $this->finalize_capture( $order_id, $response );
+	}
+
+	/**
+	 * Checks 3-D Secure and captures an order already moved to processing.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int    $order_id        The EDD order ID.
+	 * @param string $paypal_order_id The PayPal order ID.
+	 * @return array|\WP_Error The PayPal capture response, or an error when nothing was captured.
+	 */
+	private function capture_held_order( $order_id, $paypal_order_id ) {
 		$proxy = new ConnectAPI( Gateway::get_paypal_mode() );
 
 		// Verify 3-D Secure liability BEFORE capturing. Reading the order after
@@ -293,7 +329,7 @@ class UnbrandedCard {
 			return new \WP_Error( 'paypal_error', __( 'An error occurred while processing your payment. Please try again.', 'easy-digital-downloads' ), array( 'status' => 502 ) );
 		}
 
-		return $this->finalize_capture( $order_id, $response );
+		return $response;
 	}
 
 	/**
@@ -354,6 +390,7 @@ class UnbrandedCard {
 	 * persists any vault token, and returns the redirect.
 	 *
 	 * @since 3.6.9
+	 * @since 3.7.2 Fails a declined order before recording it, and leaves an unknown status with a capture pending.
 	 *
 	 * @param int   $order_id EDD order ID.
 	 * @param array $response PayPal capture response.
@@ -371,8 +408,15 @@ class UnbrandedCard {
 		}
 
 		$final_status = CaptureStatus::to_edd_status( $capture_status );
+		$is_declined  = 'failed' === $final_status;
 
-		TransactionRecorder::record( $order_id, $transaction_id );
+		// A declined capture gives its uses back before anything else can throw.
+		if ( $is_declined ) {
+			edd_update_order_status( $order_id, 'failed' );
+			TransactionRecorder::record_declined( $order_id, $transaction_id );
+		} else {
+			TransactionRecorder::record( $order_id, $transaction_id );
+		}
 
 		// Stamp + persist any vault token before edd_update_order_status fires
 		// edd_complete_purchase, so recurring can seed subscription meta
@@ -380,11 +424,11 @@ class UnbrandedCard {
 		// logged-in buyer, and the edd_paypal_v3_order_vaulted hook.
 		Vault::persist_from_capture( $order_id, $transaction_id, $response );
 
-		if ( ! empty( $final_status ) ) {
+		if ( ! empty( $final_status ) && ! $is_declined ) {
 			edd_update_order_status( $order_id, $final_status );
 		}
 
-		if ( 'failed' === $final_status ) {
+		if ( $is_declined ) {
 			return new \WP_Error( 'payment_declined', __( 'Your payment was declined. Please try a different payment method.', 'easy-digital-downloads' ), array( 'status' => 422 ) );
 		}
 
@@ -404,10 +448,18 @@ class UnbrandedCard {
 			return new \WP_Error( 'payment_pending', __( 'Your payment is being reviewed by PayPal. You will receive an email once it has been processed.', 'easy-digital-downloads' ), array( 'status' => 202 ) );
 		}
 
-		if ( '' === $final_status ) {
+		// A response with no capture took no payment, so fail the order and give its uses back.
+		if ( '' === $final_status && '' === $transaction_id ) {
 			edd_update_order_status( $order_id, 'failed' );
-			edd_debug_log( sprintf( 'Unbranded card: unrecognized capture status "%s" on order %d.', $capture_status, $order_id ) );
+			edd_debug_log( sprintf( 'Unbranded card: PayPal returned no capture for order %d. Marking failed.', $order_id ) );
 			return new \WP_Error( 'payment_unknown_status', __( 'An unexpected error occurred while processing your payment. Please try again or use a different payment method.', 'easy-digital-downloads' ), array( 'status' => 502 ) );
+		}
+
+		// PayPal took the payment but reported a status we don't map, so leave the order pending for the webhook to settle.
+		if ( '' === $final_status ) {
+			\EDD\Discounts\OrderValidation::end_capture( $order_id, 'pending' );
+			edd_debug_log( sprintf( 'Unbranded card: unrecognized capture status "%s" on order %d. Leaving pending.', $capture_status, $order_id ) );
+			return new \WP_Error( 'payment_unknown_status', __( 'Your payment is being reviewed by PayPal. You will receive an email once it has been processed.', 'easy-digital-downloads' ), array( 'status' => 202 ) );
 		}
 
 		edd_empty_cart();

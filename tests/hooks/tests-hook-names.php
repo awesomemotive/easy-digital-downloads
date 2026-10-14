@@ -167,6 +167,7 @@ class HookNames extends EDD_UnitTestCase {
 		'edd_stripe_review_closed',
 		'edd_stripe_review_opened',
 		'edd_tools_tab_{var}',
+		'edd_transition_order_status',
 		'edd_vat_delayed_validation_reverse_charged',
 		'edd_{var}section_contents',
 	);

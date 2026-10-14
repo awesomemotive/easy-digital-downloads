@@ -67,4 +67,15 @@ class NewUser extends EDD_UnitTestCase {
 	public function test_email_body_matches_default() {
 		$this->assertEquals( self::$email->get_default( 'content' ), self::$email->content );
 	}
+
+	/**
+	 * The action router fires edd_insert_user with the request array as its only argument.
+	 */
+	public function test_new_user_email_without_user_data_schedules_nothing() {
+		$request = array( 'edd_action' => 'insert_user' );
+
+		( new \EDD\Emails\Triggers() )->send_new_user_email( $request );
+
+		$this->assertFalse( \EDD\Cron\Events\SingleEvent::next_scheduled( 'edd_send_new_user_email', array( $request ) ) );
+	}
 }

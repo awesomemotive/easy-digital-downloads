@@ -50,7 +50,8 @@ abstract class EDD_UnitTestCase extends BaseTestCase {
 
 		global $current_user;
 
-		new \WP_Roles();
+		// edd_install() leaves the role objects stale (#2912); remove this once that is fixed.
+		wp_roles()->for_site();
 
 		// Since roles are checked later, let's add these caps now.
 		$admin_role = get_role( 'administrator' );

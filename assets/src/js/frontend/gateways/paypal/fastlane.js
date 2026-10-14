@@ -213,6 +213,12 @@ const EDDFastlane = {
 					return;
 				}
 
+				// A removed discount changes the total, so reload to show it with the message.
+				if ( result.data?.refresh ) {
+					globalThis.location.reload();
+					return;
+				}
+
 				// Handle error response.
 				const errorMessage = result.message ?? result.data?.message ?? eddPayPalVars.defaultError;
 				this.showError( errorMessage );

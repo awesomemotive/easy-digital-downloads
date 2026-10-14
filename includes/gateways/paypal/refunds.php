@@ -96,7 +96,7 @@ function preflight_refund_submission() {
 	$refund_args = array( 'capture_id' => $transaction_id );
 	if ( abs( $refund_total - abs( (float) $order->total ) ) > 0.001 ) {
 		$refund_args['amount'] = array(
-			'value'         => edd_format_amount( $refund_total ),
+			'value'         => (string) edd_sanitize_amount( $refund_total ),
 			'currency_code' => $order->currency,
 		);
 	}

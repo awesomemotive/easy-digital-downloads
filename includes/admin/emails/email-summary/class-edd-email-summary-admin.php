@@ -55,6 +55,17 @@ class EDD_Email_Summary_Admin {
 					'message' => __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ),
 				)
 			);
+			edd_die();
+		}
+
+		if ( ! check_ajax_referer( 'edd_trigger_email_summary', '_wpnonce', false ) ) {
+			echo wp_json_encode(
+				array(
+					'status'  => 'error',
+					'message' => __( 'Nonce verification failed.', 'easy-digital-downloads' ),
+				)
+			);
+			edd_die();
 		}
 
 		add_action( 'wp_mail_failed', array( $this, 'mail_failed' ) );

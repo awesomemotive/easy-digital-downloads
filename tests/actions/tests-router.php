@@ -10,6 +10,8 @@ namespace EDD\Tests\Actions;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Actions\Router;
+use EDD\Database\Query;
+use EDD\Tests\Helpers\Samples\RouterSampleQuery;
 
 class RequestRouter extends EDD_UnitTestCase {
 
@@ -28,6 +30,7 @@ class RequestRouter extends EDD_UnitTestCase {
 	}
 
 	public function tear_down() {
+		unset( EDD()->components['router_sample'] );
 		Router::reset();
 		set_current_screen( 'front' );
 		unset( $_GET[ Router::FRONTEND_PARAM ], $_POST[ Router::FRONTEND_PARAM ], $_GET[ Router::ADMIN_PARAM ], $_POST[ Router::ADMIN_PARAM ] );
@@ -168,6 +171,83 @@ class RequestRouter extends EDD_UnitTestCase {
 		);
 	}
 
+	public function test_user_registration_request_does_not_fire_the_insert_user_hook() {
+		$this->listen_for( 'edd_insert_user' );
+
+		Router::frontend( array( Router::FRONTEND_PARAM => 'insert_user' ) );
+
+		$this->assertSame( array(), $this->fired );
+	}
+
+	/**
+	 * @dataProvider database_hooks
+	 */
+	public function test_database_hooks_are_blocked_by_default( $hook ) {
+		$this->assertTrue(
+			Router::is_blocked( $hook ),
+			sprintf( '%s is fired by Berlin with row arguments, so it must not be request dispatchable.', $hook )
+		);
+	}
+
+	public function test_every_core_query_hook_is_blocked() {
+		$unblocked = array();
+
+		foreach ( glob( EDD_PLUGIN_DIR . 'src/Database/Queries/*.php' ) as $file ) {
+			$class      = 'EDD\\Database\\Queries\\' . basename( $file, '.php' );
+			$reflection = new \ReflectionClass( $class );
+			if ( $reflection->isAbstract() || ! $reflection->isSubclassOf( Query::class ) || empty( $reflection->getDefaultProperties()['item_name'] ) ) {
+				continue;
+			}
+
+			$query     = new $class();
+			$item_name = $query->item_name;
+			$hooks     = array( "edd_{$item_name}_added", "edd_{$item_name}_updated", "edd_{$item_name}_deleted" );
+			foreach ( wp_filter_object_list( $query->columns, array( 'transition' => true ), 'and', 'name' ) as $column ) {
+				$hooks[] = "edd_transition_{$item_name}_{$column}";
+			}
+
+			$unblocked = array_merge( $unblocked, array_filter( $hooks, fn( $hook ) => ! Router::is_blocked( $hook ) ) );
+		}
+
+		$this->assertSame(
+			array(),
+			$unblocked,
+			'Every core query class must be registered as a component, or its hooks stay request dispatchable.'
+		);
+	}
+
+	public function test_registered_component_hooks_are_blocked() {
+		edd_register_component(
+			'router_sample',
+			array(
+				'query' => RouterSampleQuery::class,
+				'table' => false,
+			)
+		);
+		Router::reset();
+
+		$this->assertTrue( Router::is_blocked( 'edd_router_sample_deleted' ), 'A query class registered by an extension must be covered without editing the router.' );
+		$this->assertTrue( Router::is_blocked( 'edd_transition_router_sample_status' ) );
+	}
+
+	public function test_order_deleted_request_does_not_reach_listener() {
+		$this->listen_for( 'edd_order_deleted' );
+
+		do_action( 'edd_order_deleted', 1 );
+		Router::frontend( array( Router::FRONTEND_PARAM => 'order_deleted' ) );
+
+		$this->assertSame( array( 'edd_order_deleted' ), $this->fired, 'Only the direct do_action() may reach the listener.' );
+	}
+
+	public function test_deleting_an_order_still_fires_order_deleted() {
+		$order_id = parent::edd()->order->create();
+		$this->listen_for( 'edd_order_deleted' );
+
+		edd_delete_order( $order_id );
+
+		$this->assertSame( array( 'edd_order_deleted' ), $this->fired, 'Blocking the router must not stop Berlin firing the hook.' );
+	}
+
 	public function test_ordinary_action_is_not_blocked() {
 		$this->assertFalse( Router::is_blocked( 'edd_add_to_cart' ) );
 	}
@@ -257,6 +337,21 @@ class RequestRouter extends EDD_UnitTestCase {
 			'weekly pro'             => array( 'edd_pro_weekly_scheduled_events' ),
 			'session purge'          => array( 'edd_cleanup_sessions' ),
 			'new user email'         => array( 'edd_send_new_user_email' ),
+		);
+	}
+
+	/**
+	 * Berlin lifecycle and transition hooks with known listeners.
+	 *
+	 * @return array
+	 */
+	public function database_hooks() {
+		return array(
+			'order deleted'            => array( 'edd_order_deleted' ),
+			'order item added'         => array( 'edd_order_item_added' ),
+			'customer updated'         => array( 'edd_customer_updated' ),
+			'order status transition'  => array( 'edd_transition_order_status' ),
+			'order item status change' => array( 'edd_transition_order_item_status' ),
 		);
 	}
 

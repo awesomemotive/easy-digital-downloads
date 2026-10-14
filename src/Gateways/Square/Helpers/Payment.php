@@ -22,6 +22,7 @@ use EDD\Vendor\Square\Models\OrderState;
 use EDD\Vendor\Square\Models\Order as SquareOrder;
 use EDD\Vendor\Square\Models\Payment as SquarePayment;
 use EDD\Gateways\Square\ApplicationFee;
+use EDD\Gateways\Square\Exceptions\PaymentDeclined;
 
 /**
  * Payment helper for the Square integration.
@@ -108,11 +109,12 @@ class Payment {
 	 * Create a payment.
 	 *
 	 * @since 3.4.0
+	 * @since 3.7.2 Throws PaymentDeclined when Square answers with an error.
 	 * @param CreatePaymentRequest $request The request.
 	 * @param SquareOrder          $order The order.
 	 *
 	 * @return SquarePayment
-	 * @throws \Exception Throws an exception if there is an error.
+	 * @throws PaymentDeclined When Square answers with an error, so no payment was taken.
 	 */
 	public static function create_payment( $request, $order ) {
 		$response = Api::client()->getPaymentsApi()->createPayment( $request );
@@ -139,7 +141,7 @@ class Payment {
 				)
 			);
 
-			throw new \Exception(
+			throw new PaymentDeclined(
 				sprintf(
 					/* translators: 1: The error message (which has already been translated), 2: A reference code for the error, to help with customer support */
 					esc_html__( 'There was an error processing your payment - %1$s Reference: %2$s', 'easy-digital-downloads' ),

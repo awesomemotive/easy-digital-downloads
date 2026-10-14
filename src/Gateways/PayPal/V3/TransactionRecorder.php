@@ -68,4 +68,35 @@ class TransactionRecorder {
 			)
 		);
 	}
+
+	/**
+	 * Notes a declined capture on an order without recording it as a transaction.
+	 *
+	 * The order's first transaction is the capture that webhooks and refunds act on, so a declined
+	 * capture must never become it.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int    $order_id       EDD order ID.
+	 * @param string $transaction_id PayPal capture ID.
+	 * @return void
+	 */
+	public static function record_declined( $order_id, $transaction_id ) {
+		$transaction_id = sanitize_text_field( (string) $transaction_id );
+		if ( '' === $transaction_id ) {
+			return;
+		}
+
+		edd_add_note(
+			array(
+				'object_id'   => $order_id,
+				'object_type' => 'order',
+				'content'     => sprintf(
+					/* translators: %s: PayPal capture ID */
+					__( 'PayPal declined capture %s.', 'easy-digital-downloads' ),
+					esc_html( $transaction_id )
+				),
+			)
+		);
+	}
 }

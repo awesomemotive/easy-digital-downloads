@@ -89,4 +89,60 @@ class TransactionRecorderTest extends EDD_UnitTestCase {
 		$order = edd_get_order( $order_id );
 		$this->assertEmpty( $order->get_transaction_id() );
 	}
+
+	/**
+	 * A declined capture never becomes the order's transaction, which webhooks and refunds act on.
+	 */
+	public function test_declined_capture_is_not_the_orders_transaction() {
+		$order_id = $this->make_order();
+
+		TransactionRecorder::record_declined( $order_id, 'CAPTURE-DECLINED' );
+		TransactionRecorder::record( $order_id, 'CAPTURE-789' );
+
+		$this->assertSame( 'CAPTURE-789', edd_get_order( $order_id )->get_transaction_id() );
+	}
+
+	/**
+	 * A declined capture leaves a note naming its ID for the merchant.
+	 */
+	public function test_declined_capture_adds_note() {
+		$order_id = $this->make_order();
+
+		TransactionRecorder::record_declined( $order_id, 'CAPTURE-DECLINED' );
+
+		$notes = wp_list_pluck(
+			edd_get_notes(
+				array(
+					'object_id'   => $order_id,
+					'object_type' => 'order',
+				)
+			),
+			'content'
+		);
+
+		$this->assertNotEmpty(
+			array_filter(
+				$notes,
+				function ( $content ) {
+					return false !== strpos( $content, 'CAPTURE-DECLINED' );
+				}
+			)
+		);
+	}
+
+	/**
+	 * An empty declined capture id adds no note.
+	 */
+	public function test_empty_declined_capture_id_is_noop() {
+		$order_id   = $this->make_order();
+		$note_query = array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+		);
+		$note_count = edd_count_notes( $note_query );
+
+		TransactionRecorder::record_declined( $order_id, '' );
+
+		$this->assertSame( $note_count, edd_count_notes( $note_query ) );
+	}
 }

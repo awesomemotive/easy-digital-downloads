@@ -1230,17 +1230,23 @@ function edd_can_view_receipt( $order_or_key = '' ) {
  *
  * @since 2.8.15
  * @since 3.0 Updated to use EDD\Orders\Order.
+ * @since 3.7.2 Guards against a non-existent order and an order without a stored IP.
  *
  * @param int $order_id Order ID.
- * @return string A link to the IP details provider
+ * @return string A link to the IP details provider, or a translated 'N/A' when there is no order or no stored IP.
  */
 function edd_payment_get_ip_address_url( $order_id ) {
 	$order = edd_get_order( $order_id );
+	$ip    = $order ? $order->ip : '';
 
-	$base_url     = 'https://ipinfo.io/';
-	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $order->ip ) . '" target="_blank">' . esc_attr( $order->ip ) . '</a>';
+	if ( empty( $ip ) ) {
+		$provider_url = __( 'N/A', 'easy-digital-downloads' );
+	} else {
+		$base_url     = 'https://ipinfo.io/';
+		$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $ip ) . '" target="_blank">' . esc_attr( $ip ) . '</a>';
+	}
 
-	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $order->ip, $order->id );
+	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $ip, (int) ( $order ? $order->id : $order_id ) );
 }
 
 /**

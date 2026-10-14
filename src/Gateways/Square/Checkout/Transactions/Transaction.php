@@ -147,6 +147,46 @@ abstract class Transaction {
 	abstract public function process();
 
 	/**
+	 * Whether Square created a payment for the transaction.
+	 *
+	 * @since 3.7.2
+	 * @return bool
+	 */
+	public function has_payment(): bool {
+		return $this->payment instanceof Payment;
+	}
+
+	/**
+	 * Whether a payment request was built and sent to Square for the transaction.
+	 *
+	 * @since 3.7.2
+	 * @return bool
+	 */
+	public function sent_payment_request(): bool {
+		return ! empty( $this->payment_request );
+	}
+
+	/**
+	 * Gets the ID of the Square order created for the transaction.
+	 *
+	 * @since 3.7.2
+	 * @return string The Square order ID, or an empty string when none was created.
+	 */
+	public function get_square_order_id(): string {
+		return $this->order instanceof Order ? (string) $this->order->getId() : '';
+	}
+
+	/**
+	 * Gets the ID of the Square payment created for the transaction.
+	 *
+	 * @since 3.7.2
+	 * @return string The Square payment ID, or an empty string when none was created.
+	 */
+	public function get_payment_id(): string {
+		return $this->has_payment() ? (string) $this->payment->getId() : '';
+	}
+
+	/**
 	 * Get any errors.
 	 *
 	 * @since 3.4.0

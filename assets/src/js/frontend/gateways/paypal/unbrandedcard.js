@@ -19,6 +19,7 @@ const EDDPayPalUnbrandedCard = {
 	cardField: null,
 	eddOrderId: 0,
 	isProcessing: false,
+	isReloading: false,
 
 	/**
 	 * Bootstraps the card fields if eligible.
@@ -97,6 +98,9 @@ const EDDPayPalUnbrandedCard = {
 				// "could not verify your card"); surface that, not the generic
 				// fallback. SDK-side rejections may have no useful message.
 				console.error( 'Unbranded card submit failed:', err );
+				if ( this.isReloading ) {
+					return;
+				}
 				this.showError( err?.message || eddPayPalVars.defaultError );
 				this.isProcessing = false;
 				this.hideSpinner();
@@ -156,6 +160,9 @@ const EDDPayPalUnbrandedCard = {
 	 */
 	onError: function( err ) {
 		console.error( 'Unbranded card error:', err );
+		if ( this.isReloading ) {
+			return;
+		}
 		this.showError( eddPayPalVars.defaultError );
 		this.isProcessing = false;
 		this.hideSpinner();
@@ -192,6 +199,11 @@ const EDDPayPalUnbrandedCard = {
 		}
 
 		if ( ! response.ok ) {
+			// A removed discount changes the total, so reload to show it with the message.
+			if ( json?.data?.refresh ) {
+				this.isReloading = true;
+				globalThis.location.reload();
+			}
 			throw new Error( json && json.message ? json.message : eddPayPalVars.defaultError );
 		}
 

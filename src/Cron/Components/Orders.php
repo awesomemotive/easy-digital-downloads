@@ -33,7 +33,8 @@ class Orders extends Component {
 	 */
 	public static function get_subscribed_events(): array {
 		return array(
-			'edd_weekly_scheduled_events' => 'mark_abandoned_orders',
+			'edd_weekly_scheduled_events'          => 'mark_abandoned_orders',
+			'edd/discounts/release_expired_claims' => 'release_expired_discount_claims',
 		);
 	}
 
@@ -66,6 +67,30 @@ class Orders extends Component {
 				if ( 'pending' === $order->status ) {
 					edd_update_order_status( $order->id, 'abandoned' );
 				}
+			}
+		}
+	}
+
+	/**
+	 * Gives back discount uses held by unpaid PayPal orders left pending for over an hour.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return void
+	 */
+	public function release_expired_discount_claims() {
+		$before = gmdate( 'Y-m-d H:i:s', time() - \EDD\Discounts\Claims::STALE_AGE );
+
+		// Each pass releases the orders it finds, so the next pass finds the following batch.
+		for ( $pass = 0; $pass < 20; $pass++ ) {
+			$order_ids = \EDD\Discounts\Claims::get_releasable_orders( $before );
+
+			if ( empty( $order_ids ) ) {
+				break;
+			}
+
+			foreach ( $order_ids as $order_id ) {
+				\EDD\Discounts\Claims::release( $order_id, 'pending' );
 			}
 		}
 	}

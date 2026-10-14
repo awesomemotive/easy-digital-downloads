@@ -181,7 +181,7 @@ class Loader implements \EDD\EventManagement\SubscriberInterface {
 			'api_requests'     => array(
 				'label'       => __( 'API Requests', 'easy-digital-downloads' ),
 				'description' => __( 'Download a CSV of API request logs.', 'easy-digital-downloads' ),
-				'class'       => Exporters\ApiRequests::class,
+				'class'       => Exporters\APIRequests::class,
 				'view'        => 'export-api-requests',
 			),
 			'download_history' => array(
