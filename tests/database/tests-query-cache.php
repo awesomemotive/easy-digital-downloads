@@ -53,7 +53,9 @@ class QueryCache extends EDD_UnitTestCase {
 		$query_b = new Order_Query( $args );
 
 		$get_key = new \ReflectionMethod( Order_Query::class, 'get_cache_key' );
-		$get_key->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $get_key->setAccessible( true );
+        }
 
 		$key_a = $get_key->invoke( $query_a );
 		$key_b = $get_key->invoke( $query_b );

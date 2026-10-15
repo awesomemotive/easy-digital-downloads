@@ -67,20 +67,28 @@ class Endpoints extends EDD_UnitTestCase {
 		// Test that properties are initialized correctly
 		$reflection = new \ReflectionClass( $endpoint );
 		$reports_prop = $reflection->getProperty( 'reports' );
-		$reports_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $reports_prop->setAccessible( true );
+        }
 		$this->assertSame( $this->mock_reports, $reports_prop->getValue( $endpoint ) );
 
 		// Test that dates, currency, and exclude_taxes properties are set
 		$dates_prop = $reflection->getProperty( 'dates' );
-		$dates_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $dates_prop->setAccessible( true );
+        }
 		$this->assertNotNull( $dates_prop->getValue( $endpoint ) );
 
 		$currency_prop = $reflection->getProperty( 'currency' );
-		$currency_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $currency_prop->setAccessible( true );
+        }
 		$this->assertNotNull( $currency_prop->getValue( $endpoint ) );
 
 		$exclude_taxes_prop = $reflection->getProperty( 'exclude_taxes' );
-		$exclude_taxes_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $exclude_taxes_prop->setAccessible( true );
+        }
 		$this->assertIsBool( $exclude_taxes_prop->getValue( $endpoint ) );
 	}
 
@@ -130,7 +138,9 @@ class Endpoints extends EDD_UnitTestCase {
 		// Test with no currency filter
 		$reflection = new \ReflectionClass( $endpoint );
 		$currency_prop = $reflection->getProperty( 'currency' );
-		$currency_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $currency_prop->setAccessible( true );
+        }
 		$currency_prop->setValue( $endpoint, '' );
 
 		$result = $this->invokeMethod( $endpoint, 'get_currency_sql' );
@@ -268,7 +278,9 @@ class Endpoints extends EDD_UnitTestCase {
 		// Test that chart_type is set correctly
 		$reflection = new \ReflectionClass( $graph );
 		$chart_type_prop = $reflection->getProperty( 'chart_type' );
-		$chart_type_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $chart_type_prop->setAccessible( true );
+        }
 		$this->assertSame( 'line', $chart_type_prop->getValue( $graph ) );
 	}
 
@@ -287,12 +299,16 @@ class Endpoints extends EDD_UnitTestCase {
 		// Test that chart_type is set correctly
 		$reflection = new \ReflectionClass( $pie );
 		$chart_type_prop = $reflection->getProperty( 'chart_type' );
-		$chart_type_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $chart_type_prop->setAccessible( true );
+        }
 		$this->assertSame( 'pie', $chart_type_prop->getValue( $pie ) );
 
 		// Test cutout percentage default
 		$cutout_prop = $reflection->getProperty( 'cutout_percentage' );
-		$cutout_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $cutout_prop->setAccessible( true );
+        }
 		$this->assertSame( 0, $cutout_prop->getValue( $pie ) );
 	}
 
@@ -404,7 +420,9 @@ class Endpoints extends EDD_UnitTestCase {
 		// Set context to secondary
 		$reflection = new \ReflectionClass( $tile );
 		$context_prop = $reflection->getProperty( 'context' );
-		$context_prop->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $context_prop->setAccessible( true );
+        }
 		$context_prop->setValue( $tile, 'secondary' );
 
 		$display_args = $this->invokeMethod( $tile, 'get_display_args' );
@@ -480,7 +498,9 @@ class Endpoints extends EDD_UnitTestCase {
 	protected function invokeMethod( $object, $method, array $args = array() ) {
 		$reflection = new \ReflectionClass( get_class( $object ) );
 		$method = $reflection->getMethod( $method );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		return $method->invokeArgs( $object, $args );
 	}

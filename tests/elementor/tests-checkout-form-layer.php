@@ -342,7 +342,9 @@ class Tests_Checkout_Form_Layer extends EDD_UnitTestCase {
 		$box = $manager->registered[0];
 
 		$is_dynamic_content = new \ReflectionMethod( $box, 'is_dynamic_content' );
-		$is_dynamic_content->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $is_dynamic_content->setAccessible( true );
+        }
 
 		$this->assertTrue(
 			$is_dynamic_content->invoke( $box ),

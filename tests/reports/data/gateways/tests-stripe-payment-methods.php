@@ -96,7 +96,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access protected method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_primary_column_name' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$this->assertSame( 'label', $method->invoke( $this->table ) );
 	}
@@ -136,7 +138,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_meta_query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table, '' );
 
@@ -155,7 +159,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_meta_query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table, 'link' );
 
@@ -175,7 +181,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_meta_query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table, 'us_bank_account' );
 
@@ -195,7 +203,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		// This should not throw an error now that we use parse_dates_for_range().
 		// Previously, accessing $filter['range']['start'] would fail because
@@ -216,7 +226,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table, '', array( 'status' => array( 'complete' ) ) );
 
@@ -233,7 +245,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table, '', array( 'status' => array( 'complete' ) ) );
 
@@ -250,7 +264,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table, '', array( 'status' => array( 'complete' ) ) );
 
@@ -277,7 +293,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_all_payment_methods' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table );
 
@@ -296,7 +314,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_all_payment_methods' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table );
 
@@ -316,7 +336,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_all_payment_methods' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table );
 
@@ -340,7 +362,9 @@ class StripePaymentMethods_Tests extends EDD_UnitTestCase {
 		// Use reflection to access private method.
 		$reflection = new \ReflectionClass( $this->table );
 		$method     = $reflection->getMethod( 'get_meta_query' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$result = $method->invoke( $this->table, 'sofort' );
 

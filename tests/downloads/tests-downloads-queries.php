@@ -74,7 +74,9 @@ class Queries extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $query );
 		$property   = $reflection->getProperty( 'attributes' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$result     = $property->getValue( $query );
 
 		// Check provided attribute

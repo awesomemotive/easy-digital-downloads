@@ -770,10 +770,14 @@ class ImportEndpointTest extends EDD_UnitTestCase {
 		$elementor_importer = new \EDD\Pro\Checkout\Templates\Importer\ElementorImporter();
 
 		$block_method = new \ReflectionMethod( $block_importer, 'supports_revision_compare' );
-		$block_method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $block_method->setAccessible( true );
+        }
 
 		$elementor_method = new \ReflectionMethod( $elementor_importer, 'supports_revision_compare' );
-		$elementor_method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $elementor_method->setAccessible( true );
+        }
 
 		$this->assertTrue( $block_method->invoke( $block_importer ), 'Block importer should support revision compare.' );
 		$this->assertFalse( $elementor_method->invoke( $elementor_importer ), 'Elementor importer should not support revision compare.' );

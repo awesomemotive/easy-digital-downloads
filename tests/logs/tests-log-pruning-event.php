@@ -94,7 +94,9 @@ class Event_Tests extends EDD_UnitTestCase {
 	public function test_event_has_hook() {
 		$reflection = new \ReflectionClass( $this->event );
 		$property = $reflection->getProperty( 'hook' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$hook = $property->getValue( $this->event );
 
 		$this->assertEquals( 'edd_prune_logs', $hook );
@@ -106,7 +108,9 @@ class Event_Tests extends EDD_UnitTestCase {
 	public function test_event_has_schedule() {
 		$reflection = new \ReflectionClass( $this->event );
 		$property = $reflection->getProperty( 'schedule' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$schedule = $property->getValue( $this->event );
 
 		$this->assertEquals( 'daily', $schedule );
@@ -191,7 +195,9 @@ class Event_Tests extends EDD_UnitTestCase {
 	public function test_calculate_base_time_returns_future() {
 		$reflection = new \ReflectionClass( $this->event );
 		$method = $reflection->getMethod( 'calculate_base_time' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$base_time = $method->invoke( $this->event );
 
@@ -205,7 +211,9 @@ class Event_Tests extends EDD_UnitTestCase {
 	public function test_calculate_base_time_within_range() {
 		$reflection = new \ReflectionClass( $this->event );
 		$method = $reflection->getMethod( 'calculate_base_time' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$base_time = $method->invoke( $this->event );
 		$current_time = current_time( 'timestamp', true );
@@ -287,7 +295,9 @@ class Event_Tests extends EDD_UnitTestCase {
 	public function test_schedule_single_type() {
 		$reflection = new \ReflectionClass( $this->event );
 		$method = $reflection->getMethod( 'schedule_single_type' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$base_time = time() + DAY_IN_SECONDS;
 		$method->invoke( $this->event, 'test_type', $base_time, 900 );

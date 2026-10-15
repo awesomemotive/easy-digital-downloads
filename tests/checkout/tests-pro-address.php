@@ -44,7 +44,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call protected method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'set_up_customer' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$customer = $method->invoke( $address );
 
@@ -72,7 +74,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call protected method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'set_up_customer' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$customer = $method->invoke( $address );
 
@@ -108,7 +112,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call protected method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'set_up_customer' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$customer = $method->invoke( $address );
 
@@ -132,7 +138,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call private method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'get_state' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$state = $method->invoke( $address, $geoip_data );
 
@@ -155,7 +163,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call private method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'get_state' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$state = $method->invoke( $address, $geoip_data );
 
@@ -178,7 +188,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call private method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'get_state' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$state = $method->invoke( $address, $geoip_data );
 
@@ -203,7 +215,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call private method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'get_state' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$state = $method->invoke( $address, $geoip_data );
 
@@ -224,7 +238,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call private method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'get_state' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$state = $method->invoke( $address, $geoip_data );
 
@@ -250,7 +266,9 @@ class ProAddressTests extends EDD_UnitTestCase {
 		// Use reflection to call protected method
 		$reflection = new \ReflectionClass( $address );
 		$method = $reflection->getMethod( 'set_up_customer' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$customer = $method->invoke( $address );
 

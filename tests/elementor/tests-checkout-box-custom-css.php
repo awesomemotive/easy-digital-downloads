@@ -384,7 +384,9 @@ class CheckoutBoxCustomCss extends EDD_UnitTestCase {
 	private function capture_print_content( $element ): string {
 		$reflection = new \ReflectionClass( $element );
 		$method     = $reflection->getMethod( 'print_content' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		ob_start();
 		$method->invoke( $element );
@@ -400,7 +402,9 @@ class CheckoutBoxCustomCss extends EDD_UnitTestCase {
 	private function capture_print_custom_css( $element ): string {
 		$reflection = new \ReflectionClass( $element );
 		$method     = $reflection->getMethod( 'print_custom_css' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		ob_start();
 		$method->invoke( $element );

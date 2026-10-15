@@ -114,7 +114,9 @@ class Accessibility extends EDD_UnitTestCase {
 		// Use reflection to access protected method.
 		$reflection = new \ReflectionClass( $loader );
 		$method     = $reflection->getMethod( 'get_event_classes' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$classes = $method->invoke( $loader );
 
@@ -188,7 +190,9 @@ class Accessibility extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $gateways );
 		$method     = $reflection->getMethod( 'register' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$settings = $method->invoke( $gateways );
 
@@ -727,7 +731,9 @@ class Accessibility extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $gateways );
 		$method     = $reflection->getMethod( 'register' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$settings = $method->invoke( $gateways );
 		$setting  = $settings['checkout']['show_required_fields_notice'];
@@ -747,7 +753,9 @@ class Accessibility extends EDD_UnitTestCase {
 
 		$reflection = new \ReflectionClass( $gateways );
 		$method     = $reflection->getMethod( 'register' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$settings = $method->invoke( $gateways );
 		$setting  = $settings['checkout']['show_required_fields_notice'];

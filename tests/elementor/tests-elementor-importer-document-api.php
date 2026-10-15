@@ -226,7 +226,9 @@ class ElementorImporterDocumentApi extends EDD_UnitTestCase {
 	private function invoke_save( array $content, array $settings ) {
 		$importer = new ElementorImporter();
 		$method   = new \ReflectionMethod( $importer, 'save_with_document_api' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		return $method->invoke( $importer, $this->page_id, $content, $settings );
 	}

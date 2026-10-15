@@ -855,7 +855,9 @@ class RemoteAPITest extends EDD_UnitTestCase {
 		$importer   = new \EDD\Pro\Checkout\Templates\Importer\BlockImporter();
 		$reflection = new \ReflectionClass( $importer );
 		$method     = $reflection->getMethod( 'store_metadata' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		foreach ( array( '', '/', '%' ) as $edge ) {
 			$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );

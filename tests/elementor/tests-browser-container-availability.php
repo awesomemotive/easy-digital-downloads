@@ -70,7 +70,9 @@ class BrowserContainerAvailability extends EDD_UnitTestCase {
 		$browser    = new Browser();
 		$reflection = new \ReflectionClass( $browser );
 		$method     = $reflection->getMethod( 'get_available_editors' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		$editors = $method->invoke( $browser );
 

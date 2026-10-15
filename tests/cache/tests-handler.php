@@ -461,7 +461,9 @@ class Handler extends EDD_UnitTestCase {
 		$handler    = new CacheHandler();
 		$reflection = new \ReflectionClass( $handler );
 		$method     = $reflection->getMethod( 'get_dynamic_page_ids' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		return $method->invoke( $handler );
 	}

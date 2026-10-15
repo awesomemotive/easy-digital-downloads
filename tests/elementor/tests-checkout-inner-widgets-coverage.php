@@ -798,7 +798,9 @@ class CheckoutInnerWidgetsCoverage extends EDD_UnitTestCase {
 	 */
 	private function render( $widget ): string {
 		$method = new \ReflectionMethod( $widget, 'render' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 
 		ob_start();
 		$method->invoke( $widget );
@@ -818,7 +820,9 @@ class CheckoutInnerWidgetsCoverage extends EDD_UnitTestCase {
 	 */
 	private function reset_attribute_cache(): void {
 		$property = new \ReflectionProperty( \EDD\Blocks\Checkout\Attributes::class, 'cached_attributes' );
-		$property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible( true );
+        }
 		$property->setValue( null, null );
 	}
 }

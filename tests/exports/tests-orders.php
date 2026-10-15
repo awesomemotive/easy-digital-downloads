@@ -93,7 +93,9 @@ class OrdersExport extends EDD_UnitTestCase {
 	private function invoke_method( string $method_name ) {
 		$reflection = new \ReflectionClass( $this->exporter );
 		$method     = $reflection->getMethod( $method_name );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		return $method->invoke( $this->exporter );
 	}
 

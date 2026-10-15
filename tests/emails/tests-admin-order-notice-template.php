@@ -58,35 +58,45 @@ class AdminOrderNoticeTemplate extends EDD_UnitTestCase {
 	public function test_template_can_preview() {
 		$reflection = new \ReflectionClass( self::$template );
 		$can_preview_property = $reflection->getProperty( 'can_preview' );
-		$can_preview_property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $can_preview_property->setAccessible( true );
+        }
 		$this->assertTrue( $can_preview_property->getValue( self::$template ) );
 	}
 
 	public function test_template_can_test() {
 		$reflection = new \ReflectionClass( self::$template );
 		$can_test_property = $reflection->getProperty( 'can_test' );
-		$can_test_property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $can_test_property->setAccessible( true );
+        }
 		$this->assertTrue( $can_test_property->getValue( self::$template ) );
 	}
 
 	public function test_template_email_id() {
 		$reflection = new \ReflectionClass( self::$template );
 		$email_id_property = $reflection->getProperty( 'email_id' );
-		$email_id_property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $email_id_property->setAccessible( true );
+        }
 		$this->assertEquals( 'admin_order_notice', $email_id_property->getValue( self::$template ) );
 	}
 
 	public function test_template_recipient() {
 		$reflection = new \ReflectionClass( self::$template );
 		$recipient_property = $reflection->getProperty( 'recipient' );
-		$recipient_property->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $recipient_property->setAccessible( true );
+        }
 		$this->assertEquals( 'admin', $recipient_property->getValue( self::$template ) );
 	}
 
 	private function get_editable_properties() {
 		$reflection = new \ReflectionClass( self::$template );
 		$method = $reflection->getMethod( 'get_editable_properties' );
-		$method->setAccessible( true );
+		if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible( true );
+        }
 		return $method->invoke( self::$template );
 	}
 }
