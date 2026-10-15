@@ -45,7 +45,7 @@ class Legacy implements \EDD\EventManagement\SubscriberInterface {
 			}
 
 			if ( empty( $extension['allow_reactivation'] ) ) {
-				add_action( "plugin_action_links_{$extension['basename']}", array( $this, 'update_plugin_links' ), 10, 2 );
+				add_filter( "plugin_action_links_{$extension['basename']}", array( $this, 'update_plugin_links' ), 10, 2 );
 			}
 		}
 	}
