@@ -100,6 +100,20 @@ class ReceiptShortcode extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * Receipt links in emails sent before 3.7.1 carry the legacy md5 form.
+	 *
+	 * @since x.x
+	 */
+	public function test_legacy_md5_receipt_link_still_resolves_the_order() {
+		$legacy_hash = md5( $this->order->id . $this->order->payment_key . $this->order->email );
+		$_GET        = array( 'id' => (string) $this->order->id, 'order' => $legacy_hash );
+
+		$output = edd_receipt_shortcode( array() );
+
+		$this->assertStringContainsString( 'You must be logged in to view this payment receipt.', $output );
+	}
+
+	/**
 	 * Returns every 64-character hex token in a string.
 	 *
 	 * @param string $output

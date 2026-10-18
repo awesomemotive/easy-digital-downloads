@@ -823,6 +823,9 @@ class Order extends Rows\Order {
 	/**
 	 * Whether the supplied value is the one this order's receipt link carries.
 	 *
+	 * Also accepted is the plain md5 form that links issued before 3.7.1 carry, so
+	 * requests from emails sent before the update to the signed hash still resolve.
+	 *
 	 * @since 3.7.1
 	 *
 	 * @param string $hash The value from the request.
@@ -833,7 +836,12 @@ class Order extends Rows\Order {
 			return false;
 		}
 
-		return Tokenizer::is_token_valid( $hash, $this->get_receipt_hash_data() );
+		if ( Tokenizer::is_token_valid( $hash, $this->get_receipt_hash_data() ) ) {
+			return true;
+		}
+
+		// Receipt links in emails sent before 3.7.1 carry the md5 form of the data.
+		return hash_equals( md5( $this->get_receipt_hash_data() ), $hash );
 	}
 
 	/**
