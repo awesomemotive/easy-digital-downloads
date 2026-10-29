@@ -1,14 +1,15 @@
 <?php
 /**
  * Order Address Tests.
- *
- * @group edd_orders
- * @group database
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_orders
+ * @group database
+ */
 class Order_Address_Tests extends EDD_UnitTestCase {
 
 	/**

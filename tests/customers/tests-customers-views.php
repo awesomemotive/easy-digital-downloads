@@ -1,14 +1,15 @@
 <?php
 /**
  * Customers Admin View Tests.
- *
- * @group edd_customers
  */
 
 namespace EDD\Tests\Customers\Admin;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_customers
+ */
 class Views extends EDD_UnitTestCase {
 
 	public static function wpSetUpBeforeClass() {

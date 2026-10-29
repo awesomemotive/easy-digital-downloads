@@ -13,6 +13,7 @@ show_help() {
   printf -- '-p, --php\t\tSets the PHP version to test with (Default: 8.2)\n';
   printf -- '-w, --wp\t\tSets WP version to test against (Default: latest)\n';
   printf -- '-f, --filter\t\tPasses filters into PHPUnit\n';
+  printf -- '-g, --group\t\tRuns only tests in the given PHPUnit @group (comma-separate for several)\n';
   printf -- '-x, --extra\t\tSets additional plugins to include (e.g. "recurring" for EDD Recurring)\n';
   printf -- '-a, --actions\t\tRuns the edd_action heartbeat check against your local WP-CLI site (e.g. edd.local) before the test run.\n';
   printf -- '-h, --help\t\tShow help.\n';
@@ -81,6 +82,15 @@ while [ $# -gt 0 ]; do
         export FILTER="$2"
         shift 2
         ;;
+    --group=*|-g=* )
+        export GROUP="${1#*=}"
+        shift
+        ;;
+    --group|-g )
+        require_arg "$1" "${2-}"
+        export GROUP="$2"
+        shift 2
+        ;;
     --extra=*|-x=* )
         export TEST_EXTRA_PLUGINS="${1#*=}"
         shift
@@ -125,6 +135,9 @@ export TEST_ACTIONS="${TEST_ACTIONS:-0}"
 
 # Default FILTER to empty string
 export FILTER="${FILTER:-}"
+
+# Default GROUP to empty string
+export GROUP="${GROUP:-}"
 
 # Default TEST_EXTRA_PLUGINS to empty
 export TEST_EXTRA_PLUGINS="${TEST_EXTRA_PLUGINS:-}"
@@ -185,6 +198,7 @@ docker compose --progress quiet -f docker-compose-phpunit.yml run \
   -e "TEST_INPLACE=${TEST_INPLACE}" \
   -e "TEST_EXTRA_PLUGINS=${TEST_EXTRA_PLUGINS}" \
   -e "FILTER=${FILTER}" \
+  -e "GROUP=${GROUP}" \
   -e "WP_MULTISITE=${WP_MULTISITE}" \
   -e "COMPOSER_AUTH=${COMPOSER_AUTH}" \
   --rm --user $(id -u):$(id -g) wordpress

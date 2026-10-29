@@ -6,7 +6,7 @@ Tags: ecommerce, payments, sell digital products, digital store, stripe
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable Tag: 3.7.2
+Stable Tag: 3.7.3
 License: GPLv2 or later
 
 The #1 eCommerce plugin to sell digital products & subscriptions. Accept payments with Stripe & PayPal. Sell ebooks, software & more.
@@ -293,6 +293,34 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 8. Checkout Form Block - Default Theme
 
 == Changelog ==
+= 3.7.3 =
+* NEW: Customers - The customer screen now shows the date and IP address of the customer's last login, and both are included in personal data exports.
+* Security: Strengthened account verification when completing a PayPal order.
+* Blocks: The Downloads block now validates its featured styling values in the editor, as the front end already did.
+* Blocks: A malformed block editor preview parameter no longer causes a fatal error.
+* Checkout: Personal Info fields on the block checkout no longer disappear when a page builder renders the page's blocks more than once.
+* Customers: Admins can now verify, or resend verification for, a customer whose user account is still pending.
+* Database: Changing a cached value, no longer leaves the old value in the cache.
+* Orders: Filtered order lists, such as a discount's orders or a transaction search, now show the right orders on sites with a persistent object cache.
+* Orders: The discount selector on the Add New Order screen is now searchable.
+* Orders: A fee added to a new order now gets the correct tax after toggling "Apply tax to fee" or switching between Fee and Credit.
+* PayPal: Refunds issued from EDD on stores using PayPal's current onboarding now record the refund transaction and amount, so PayPal's notifications don't process the same refund twice.
+* PayPal: Full refunds received through PayPal IPN now mark the order as Refunded instead of Partially Refunded.
+* Privacy: Erasing personal data for someone who isn't a customer no longer anonymizes or deletes orders left behind by deleted customers.
+* Square: Live-mode webhooks now process, so Square events such as refunds update live orders.
+* Stripe: Browser-side Stripe requests now use the same API version as EDD's server-side requests.
+* Stripe: SEPA Direct Debit payments now go to the confirmation page instead of showing an error at checkout.
+* Stripe: Recurring Payments now handles Stripe subscription creation for Payment Elements.
+* Stripe: Disconnecting a Stripe Connect account can now also revoke EDD's access to that account in Stripe.
+* Dev: Fixed a PHP 8.5 deprecation notice when a Pro license key is saved but not active.
+* Dev: Capabilities added or removed through EDD_Roles now take effect in the same request.
+* Dev: Added EDD\Reports\Dates\Range::options() so report date ranges are available before the reports API loads.
+* Dev: Deprecated EDD_Download::create(); use wp_insert_post() instead.
+* Dev: EDD_Payment now loads most properties the first time they're read, which cuts its query count; the edd/payments/defer_properties filter turns eager loading back on.
+* Dev: The order and tax rate admin screens now use React and native dialogs instead of Backbone and jQuery UI.
+
+View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+
 = 3.7.2 =
 * Security: Fixed a missing authorization check when sending a test Email Summary.
 * Security: Discount codes with a maximum number of uses are now reserved when checkout starts, so customers checking out at the same time can no longer redeem a code past its limit.
@@ -312,8 +340,6 @@ Yes, with an Extended Pass you get access to [Recurring Payments](https://easydi
 * Reports: An export the current user isn't allowed to run now shows an error instead of running forever.
 * Stripe: Improved checkout speed on stores with many orders.
 * Tools: The Tools screen now shows the default tab when it's asked for a tab that doesn't exist.
-
-View the full changelog at [https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/](https://easydigitaldownloads.com/changelogs/plugin/easy-digital-downloads/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
 
 = 3.7.1.1 =
 * Improved: Square orders are now completed only once Square confirms the payment is complete.

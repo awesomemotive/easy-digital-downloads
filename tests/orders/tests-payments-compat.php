@@ -1,15 +1,16 @@
 <?php
 /**
  * Payment tests.
- *
- * @group edd_payments
- * @group edd_legacy
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Orders\Order;
 
+/**
+ * @group edd_payments
+ * @group edd_legacy
+ */
 class Payment_Compat_Tests extends EDD_UnitTestCase {
 
 	public $payment_id;

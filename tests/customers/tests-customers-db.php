@@ -1,16 +1,17 @@
 <?php
 /**
  * Customers DB Tests.
- *
- * @group edd_customers_db
- * @group database
- * @group edd_customers
  */
 namespace EDD\Tests\Customers;
 
 use EDD\Tests\Helpers;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_customers_db
+ * @group database
+ * @group edd_customers
+ */
 class CustomersDB extends EDD_UnitTestCase {
 
 	/**
@@ -376,5 +377,27 @@ class CustomersDB extends EDD_UnitTestCase {
 		$deprecated = new \EDD_DB_Customers();
 		$this->assertTrue( $deprecated instanceof \EDD\Deprecated\EmptyClass );
 		$this->assertNull( $deprecated->non_existent_property );
+	}
+
+	public function test_get_customer_by_old_user_id_after_relink_returns_false() {
+		$previous_user_id = self::factory()->user->create();
+		$current_user_id  = self::factory()->user->create();
+		$customer_id      = edd_add_customer(
+			array(
+				'email'   => 'relinked-customer@example.org',
+				'user_id' => $previous_user_id,
+			)
+		);
+
+		// Prime the lookup by the previous user ID.
+		$this->assertSame( (int) $customer_id, (int) edd_get_customer_by( 'user_id', $previous_user_id )->id );
+
+		edd_update_customer( $customer_id, array( 'user_id' => $current_user_id ) );
+
+		$customer = edd_get_customer_by( 'user_id', $current_user_id );
+
+		$this->assertFalse( edd_get_customer_by( 'user_id', $previous_user_id ) );
+		$this->assertSame( (int) $customer_id, (int) $customer->id );
+		$this->assertSame( (int) $current_user_id, (int) $customer->user_id );
 	}
 }

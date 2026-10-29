@@ -74,6 +74,82 @@ class Exporters extends EDD_UnitTestCase {
 		parent::edd()->customer->delete( $customer->id );
 	}
 
+	public function test_customer_record_exporter_includes_last_login() {
+		$customer                 = parent::edd()->customer->create_and_get();
+		$original_timezone_string = get_option( 'timezone_string' );
+		update_option( 'timezone_string', 'Asia/Tokyo' );
+
+		try {
+			$never_logged_in = edd_privacy_customer_record_exporter( $customer->email, 1 );
+			$this->assertNull( $this->find_data_point( $never_logged_in['data'][0]['data'], __( 'Last Login', 'easy-digital-downloads' ) ) );
+
+			edd_update_customer_meta( $customer->id, 'last_login_date', '2026-03-04 05:06:07' );
+
+			$result           = edd_privacy_customer_record_exporter( $customer->email, 1 );
+			$last_login_point = $this->find_data_point( $result['data'][0]['data'], __( 'Last Login', 'easy-digital-downloads' ) );
+
+			$this->assertNotNull( $last_login_point );
+			$this->assertSame( '2026-03-04 14:06:07', $last_login_point['value'] );
+		} finally {
+			update_option( 'timezone_string', $original_timezone_string );
+			EDD()->utils->get_time_zone( true );
+			parent::edd()->customer->delete( $customer->id );
+		}
+	}
+
+	public function test_customer_record_exporter_includes_last_login_ip() {
+		$customer = parent::edd()->customer->create_and_get();
+
+		try {
+			edd_update_customer_meta( $customer->id, 'last_login_date', '2026-03-04 05:06:07' );
+
+			$without_ip = edd_privacy_customer_record_exporter( $customer->email, 1 );
+			$this->assertNull( $this->find_data_point( $without_ip['data'][0]['data'], __( 'Last Login IP', 'easy-digital-downloads' ) ) );
+
+			edd_update_customer_meta( $customer->id, 'last_login_ip', '203.0.113.7' );
+
+			$result = edd_privacy_customer_record_exporter( $customer->email, 1 );
+			$point  = $this->find_data_point( $result['data'][0]['data'], __( 'Last Login IP', 'easy-digital-downloads' ) );
+
+			$this->assertNotNull( $point );
+			$this->assertSame( '203.0.113.7', $point['value'] );
+		} finally {
+			parent::edd()->customer->delete( $customer->id );
+		}
+	}
+
+	public function test_customer_record_exporter_omits_an_unreadable_last_login() {
+		$customer = parent::edd()->customer->create_and_get();
+
+		try {
+			edd_update_customer_meta( $customer->id, 'last_login_date', 'garbage' );
+
+			$result = edd_privacy_customer_record_exporter( $customer->email, 1 );
+
+			$this->assertNull( $this->find_data_point( $result['data'][0]['data'], __( 'Last Login', 'easy-digital-downloads' ) ) );
+		} finally {
+			parent::edd()->customer->delete( $customer->id );
+		}
+	}
+
+	public function test_customer_record_exporter_includes_the_ip_of_an_unreadable_login_time() {
+		$customer = parent::edd()->customer->create_and_get();
+
+		try {
+			edd_update_customer_meta( $customer->id, 'last_login_date', 'garbage' );
+			edd_update_customer_meta( $customer->id, 'last_login_ip', '203.0.113.7' );
+
+			$result = edd_privacy_customer_record_exporter( $customer->email, 1 );
+			$point  = $this->find_data_point( $result['data'][0]['data'], __( 'Last Login IP', 'easy-digital-downloads' ) );
+
+			$this->assertNull( $this->find_data_point( $result['data'][0]['data'], __( 'Last Login', 'easy-digital-downloads' ) ) );
+			$this->assertNotNull( $point );
+			$this->assertSame( '203.0.113.7', $point['value'] );
+		} finally {
+			parent::edd()->customer->delete( $customer->id );
+		}
+	}
+
 	// --- Billing information exporter (lines 706-869) ---
 
 	public function test_billing_information_exporter_returns_empty_when_no_customer() {

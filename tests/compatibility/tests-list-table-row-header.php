@@ -17,14 +17,16 @@
  * @copyright   Copyright (c) 2026, Sandhills Development, LLC
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.7.0
- * @group       compatibility
- * @group       edd_list_tables
  */
 
 namespace EDD\Tests\Compatibility;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group compatibility
+ * @group edd_list_tables
+ */
 class ListTableRowHeader extends EDD_UnitTestCase {
 
 	/**

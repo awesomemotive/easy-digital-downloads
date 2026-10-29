@@ -328,6 +328,11 @@ class Connect {
 			</div>
 			<div id="edds-stripe-disconnect-reconnect" class="loading">
 			</div>
+			<?php
+			if ( $stripe_connect_account_id && ! self::is_onboarding_wizard() ) {
+				Disconnect\Confirmation::render();
+			}
+			?>
 
 		<?php endif; ?>
 

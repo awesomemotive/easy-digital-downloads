@@ -40,15 +40,7 @@ class Orders extends EDD_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 
-		// EDD's capabilities are installed rather than present by default, and
-		// WP_Roles::add_cap() writes to a cached role object, so refresh it.
-		EDD()->roles->add_caps();
-		wp_roles()->for_site( get_current_blog_id() );
-
 		wp_set_current_user( 1 );
-
-		// The test administrator role does not carry all shop capabilities.
-		wp_get_current_user()->add_cap( 'edit_shop_payments' );
 	}
 
 	/**

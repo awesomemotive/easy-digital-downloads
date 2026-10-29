@@ -1,15 +1,16 @@
 <?php
 /**
  * Order Item Tests.
- *
- * @group edd_orders
- * @group database
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Tests\Helpers\EDD_Helper_Payment;
 
+/**
+ * @group edd_orders
+ * @group database
+ */
 class OrderItem extends EDD_UnitTestCase {
 
 	/**

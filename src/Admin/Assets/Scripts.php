@@ -40,7 +40,7 @@ class Scripts {
 		// Register compiled scripts from assets/build/js.
 		wp_register_script( 'edd-admin-chosen-compat', $js_dir . 'chosen-compat.js', array( 'jquery', 'edd-tom-select' ), $version, true );
 		wp_register_script( 'edd-admin-scripts', $js_dir . 'admin.js', $admin_deps, $version, true );
-		wp_register_script( 'edd-admin-tax-rates', $js_dir . 'tax-rates.js', array( 'wp-backbone', 'edd-admin-chosen-compat' ), $version, true );
+		wp_register_script( 'edd-admin-tax-rates', $js_dir . 'tax-rates.js', array( 'react-jsx-runtime', 'wp-element', 'edd-tom-select' ), $version, true );
 		wp_register_script( 'edd-admin-email-tags', $js_dir . 'email-tags.js', array( 'wp-util' ), $version, true );
 		wp_register_script( 'edd-admin-downloads-editor', $js_dir . 'downloads-editor.js', array( 'wp-dom-ready', 'wp-api-fetch', 'wp-data' ), $version, true );
 
@@ -88,7 +88,6 @@ class Scripts {
 			'edd-admin-chosen-compat',
 			'jquery-form',
 			'jquery-ui-datepicker',
-			'jquery-ui-dialog',
 			'jquery-ui-tooltip',
 			'media-upload',
 			'wp-ajax-response',
@@ -150,8 +149,8 @@ class Scripts {
 			'onboarding'        => array(),
 			'orders'            => array(
 				'edd-admin-notes',
-				'wp-util',
-				'wp-backbone',
+				'react-jsx-runtime',
+				'wp-element',
 			),
 			'emails-editor'     => array(
 				'wp-tinymce',

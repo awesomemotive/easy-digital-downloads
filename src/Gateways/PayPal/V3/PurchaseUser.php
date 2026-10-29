@@ -25,6 +25,15 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 class PurchaseUser {
 
 	/**
+	 * Session key naming the user this request authenticated at order creation.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @var string
+	 */
+	private const AUTHENTICATED_USER_KEY = 'checkout_authenticated_user';
+
+	/**
 	 * Resolves the buyer's user data from a REST request's form_data.
 	 *
 	 * Runs the standard EDD user-validation pipeline the same way
@@ -167,8 +176,29 @@ class PurchaseUser {
 	}
 
 	/**
-	 * Issues an auth cookie after capture if the order's buyer just registered
-	 * or logged in during this request.
+	 * Records the user this request authenticated, for the capture-side re-issue.
+	 *
+	 * Call after the order is built and claimed, so it reflects who is signed in
+	 * at that point. A guest clears the key, so an earlier attempt cannot carry
+	 * its value into a later one.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return void
+	 */
+	public static function remember_authenticated_user() {
+		$user_id = get_current_user_id();
+		if ( $user_id ) {
+			EDD()->session->set( self::AUTHENTICATED_USER_KEY, $user_id );
+			return;
+		}
+
+		EDD()->session->set( self::AUTHENTICATED_USER_KEY, null );
+	}
+
+	/**
+	 * Re-issues the auth cookie for the user recorded at order creation, when that
+	 * user owns the order.
 	 *
 	 * The cookie set during the /create response may be stripped by proxy
 	 * layers (e.g. Cloudflare APO); repeating it on the capture response —
@@ -181,22 +211,33 @@ class PurchaseUser {
 	 * are the trade-off for reliable session delivery in that scenario.
 	 *
 	 * @since 3.6.9
+	 * @since 3.7.3 Re-issues only for the user recorded at order creation, not the order's user_id.
 	 *
 	 * @param int $order_id EDD order ID.
 	 * @return void
 	 */
 	public static function maybe_log_in_after_capture( $order_id ) {
+		$authenticated_user_id = absint( EDD()->session->get( self::AUTHENTICATED_USER_KEY ) );
+
+		// Single-use: consume the marker unconditionally, even on the early-returns
+		// below, so it can never linger in the session for a later request.
+		EDD()->session->set( self::AUTHENTICATED_USER_KEY, null );
+
 		if ( is_user_logged_in() ) {
 			return;
 		}
 
-		$order = edd_get_order( $order_id );
-		if ( ! $order || empty( $order->email ) ) {
+		if ( empty( $authenticated_user_id ) ) {
 			return;
 		}
 
-		$wp_user = get_user_by( 'email', $order->email );
-		if ( $wp_user && (int) $order->user_id === (int) $wp_user->ID ) {
+		$order = edd_get_order( $order_id );
+		if ( ! $order || (int) $order->user_id !== $authenticated_user_id ) {
+			return;
+		}
+
+		$wp_user = get_userdata( $authenticated_user_id );
+		if ( $wp_user ) {
 			wp_set_auth_cookie( $wp_user->ID );
 			do_action( 'wp_login', $wp_user->user_login, $wp_user );
 		}

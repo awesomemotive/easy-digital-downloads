@@ -1,15 +1,16 @@
 <?php
 /**
  * Order Adjustment Tests.
- *
- * @group edd_orders
- * @group edd_order_adjustments
- * @group database
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_orders
+ * @group edd_order_adjustments
+ * @group database
+ */
 class Adjustments extends EDD_UnitTestCase {
 
 	/**

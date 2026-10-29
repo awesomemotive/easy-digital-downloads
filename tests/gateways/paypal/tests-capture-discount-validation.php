@@ -36,6 +36,13 @@ class CaptureDiscountValidationTest extends Ajax_UnitTestCase {
 	const PAYPAL_ORDER_ID = 'PAYPAL-ORDER-1';
 
 	/**
+	 * The session key that names the authenticated checkout user.
+	 *
+	 * @var string
+	 */
+	private const MARKER_KEY = 'checkout_authenticated_user';
+
+	/**
 	 * URLs of the requests sent to PayPal during the test.
 	 *
 	 * @var string[]
@@ -48,6 +55,13 @@ class CaptureDiscountValidationTest extends Ajax_UnitTestCase {
 	 * @var array
 	 */
 	private $original_post = array();
+
+	/**
+	 * The user IDs an auth cookie was issued for during the test.
+	 *
+	 * @var int[]
+	 */
+	private $cookies = array();
 
 	/**
 	 * Connects PayPal v3 in sandbox and records outgoing requests.
@@ -66,6 +80,9 @@ class CaptureDiscountValidationTest extends Ajax_UnitTestCase {
 
 		$this->paypal_requests = array();
 		add_filter( 'pre_http_request', array( $this, 'record_paypal_request' ), 10, 3 );
+
+		$this->cookies = array();
+		add_action( 'set_auth_cookie', array( $this, 'record_cookie' ), 10, 6 );
 	}
 
 	/**
@@ -74,6 +91,7 @@ class CaptureDiscountValidationTest extends Ajax_UnitTestCase {
 	 * @return void
 	 */
 	public function tear_down(): void {
+		remove_action( 'set_auth_cookie', array( $this, 'record_cookie' ), 10 );
 		remove_filter( 'pre_http_request', array( $this, 'record_paypal_request' ), 10 );
 		remove_filter( 'edd_is_test_mode', '__return_true' );
 		delete_option( 'edd_paypal_sandbox_commerce_version' );
@@ -92,6 +110,21 @@ class CaptureDiscountValidationTest extends Ajax_UnitTestCase {
 		edd_clear_errors();
 
 		parent::tear_down();
+	}
+
+	/**
+	 * Records the user an auth cookie was issued for.
+	 *
+	 * @param string $auth_cookie The authentication cookie.
+	 * @param int    $expire      When the cookie expires.
+	 * @param int    $expiration  When the auth cookie expires.
+	 * @param int    $user_id     The user the cookie was issued for.
+	 * @param string $scheme      The auth scheme.
+	 * @param string $token       The session token.
+	 * @return void
+	 */
+	public function record_cookie( $auth_cookie, $expire, $expiration, $user_id, $scheme, $token ) {
+		$this->cookies[] = (int) $user_id;
 	}
 
 	/**
@@ -230,6 +263,36 @@ class CaptureDiscountValidationTest extends Ajax_UnitTestCase {
 		$this->assertSame( 'complete', $orders[0]->status );
 		$this->assertSame( array( $discount->code ), wp_list_pluck( $orders[0]->get_discounts(), 'description' ) );
 		$this->assertSame( 1, (int) edd_get_discount( $discount->id )->use_count );
+	}
+
+	/**
+	 * A Fastlane guest checkout clears a stale login marker, so no auth cookie is issued.
+	 */
+	public function test_fastlane_guest_checkout_with_registered_email_issues_no_cookie() {
+		// Pre-create the WP account that owns the checkout email, with no customer tied to another user.
+		$buyer_id = self::factory()->user->create( array( 'role' => 'administrator', 'user_email' => 'buyer@edd.test' ) );
+		$this->assertSame( $buyer_id, get_user_by( 'email', 'buyer@edd.test' )->ID );
+		$this->assertFalse( edd_get_customer_by( 'email', 'buyer@edd.test' ) );
+		$this->assertFalse( edd_get_customer_by( 'user_id', $buyer_id ) );
+
+		// A stale login marker names the registered buyer.
+		EDD()->session->set( self::MARKER_KEY, $buyer_id );
+
+		// The guest checks out with the registered user's email.
+		wp_set_current_user( 0 );
+		$this->checkout_with_cart_discount( $this->create_discount( array( 'max_uses' => 1 ) ) );
+
+		( new Fastlane( new Security() ) )->process_payment( $this->rest_request( array( 'payment_token' => 'TOKEN' ) ) );
+
+		$orders = edd_get_orders( array( 'email' => 'buyer@edd.test' ) );
+		$this->assertCount( 1, $orders );
+		$order = $orders[0];
+
+		// The order resolves to the seeded buyer, so the owner-guard is in pass-through and cannot mask a regression.
+		$this->assertSame( $buyer_id, (int) $order->user_id, 'Order must resolve to the seeded buyer so the owner-guard is exercised.' );
+
+		// Fastlane cleared the stale marker as a guest, so the capture read an empty marker and issued no cookie.
+		$this->assertSame( array(), $this->cookies );
 	}
 
 	/**

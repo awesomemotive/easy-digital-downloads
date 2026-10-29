@@ -219,12 +219,12 @@ class Sales extends ReadAbility {
 	/**
 	 * Gets the valid preset reporting periods.
 	 *
-	 * These mirror the range keys from \EDD\Reports\get_dates_filter_options(),
+	 * These mirror the range keys from \EDD\Reports\Dates\Range::options(),
 	 * excluding the "other" (custom) option, which is covered by the explicit
 	 * date_start and date_end inputs. Kept as a literal rather than read from
-	 * that function: it is only defined once EDD\Stats has bootstrapped the
-	 * reports API, so an ability registering before that would either fatal or
-	 * publish a different enum depending on load order.
+	 * there: that list is filterable, and a key added through the filter has
+	 * no preset in \EDD\Reports\parse_dates_for_range(), so it would be
+	 * published in the enum without dates that can be computed for it.
 	 *
 	 * @since 3.7.1
 	 *

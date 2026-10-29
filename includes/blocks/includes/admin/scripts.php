@@ -69,6 +69,7 @@ function localize() {
 			'download_label_plural'   => edd_get_label_plural(),
 			'checkout_registration'   => in_array( edd_get_option( 'show_register_form', 'none' ), array( 'both', 'registration' ), true ),
 			'button_colors'           => $button_colors,
+			'css_value_functions'     => \EDD\Utils\Colors::CSS_VALUE_FUNCTIONS,
 			'featured_promo'          => ! edd_is_pro() && class_exists( '\\EDD\\Lite\\Admin\\Promos\\Notices\\FeaturedDownloads' ),
 			'manage_shop_discounts'   => current_user_can( 'manage_shop_discounts' ),
 			'quantities_enabled'      => edd_item_quantities_enabled(),
@@ -99,20 +100,10 @@ function add_edd_styles_block_editor( $editor_settings ) {
 		return $editor_settings;
 	}
 
-	$path = \EDD\Assets\Styles::get_stylesheet_path();
-	if ( ! $path || ! \EDD\Utils\FileSystem::file_exists( $path ) ) {
-		return $editor_settings;
-	}
-
-	$style = wp_styles()->registered['edd-styles'];
-
-	$editor_settings['styles'][] = array(
-		'css'            => \EDD\Utils\FileSystem::get_contents( $path ),
-		'baseURL'        => $style->src,
-		'__unstableType' => 'theme',
-		'isGlobalStyles' => false,
+	return \EDD\Assets\Styles::add_to_editor_settings(
+		$editor_settings,
+		(string) \EDD\Assets\Styles::get_stylesheet_path(),
+		wp_styles()->registered['edd-styles']->src
 	);
-
-	return $editor_settings;
 }
 add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\add_edd_styles_block_editor' );

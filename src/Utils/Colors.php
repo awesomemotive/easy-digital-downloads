@@ -26,7 +26,7 @@ class Colors {
 	 * @since 3.7.1
 	 * @var string[]
 	 */
-	private const CSS_VALUE_FUNCTIONS = array(
+	public const CSS_VALUE_FUNCTIONS = array(
 		'rgb',
 		'rgba',
 		'hsl',
@@ -181,9 +181,11 @@ class Colors {
 	/**
 	 * A value safe to interpolate into a declaration.
 	 *
-	 * Returns an empty string for anything that could end the declaration or the rule, and for any
-	 * function other than those a color or length is written with. Everything else is left intact,
-	 * so hex and named colors, lengths, keywords, rgb(), hsl(), var() and calc() all survive.
+	 * Returns an empty string for anything that could end the declaration or the rule, for a quote
+	 * or comment opener, for a bracket left open, and for any function other than those a color or
+	 * length is written with.
+	 * Everything else is left intact, so hex and named colors, lengths, keywords, rgb(), hsl(),
+	 * var() and calc() all survive.
 	 *
 	 * @since 3.7.1
 	 *
@@ -193,7 +195,7 @@ class Colors {
 	public static function css_value( $value ) {
 		$value = trim( (string) $value );
 
-		if ( preg_match( '/[;{}\\\\<>]/', $value ) ) {
+		if ( preg_match( '/[;{}\\\\<>"\']/', $value ) || false !== strpos( $value, '/*' ) || self::has_unclosed_bracket( $value ) ) {
 			return '';
 		}
 
@@ -211,7 +213,7 @@ class Colors {
 	/**
 	 * A value safe to interpolate inside a double-quoted CSS string.
 	 *
-	 * Escapes what would end the string and drops newlines, which a CSS string cannot carry.
+	 * Escapes what would end the string or the rule and drops newlines, which a CSS string cannot carry.
 	 * Everything else survives, so ordinary punctuation in a label is preserved.
 	 *
 	 * @since 3.7.1
@@ -222,11 +224,11 @@ class Colors {
 	public static function css_string( $text ) {
 		$text = preg_replace( '/[\\r\\n\\f]+/', ' ', (string) $text );
 
-		// `<` and `>` become CSS hex escapes rather than being dropped: the HTML parser ends a
-		// style element on `</style>` without regard for CSS quoting, and the label still renders.
+		// Hex escapes rather than drops: the HTML parser ends a style element on `</style>` without
+		// regard for CSS quoting, and braces and a single quote must not reach the stylesheet bare.
 		return str_replace(
-			array( '\\', '"', '<', '>' ),
-			array( '\\\\', '\\"', '\\3c ', '\\3e ' ),
+			array( '\\', '"', "'", '<', '>', '{', '}' ),
+			array( '\\\\', '\\"', '\\27 ', '\\3c ', '\\3e ', '\\7b ', '\\7d ' ),
 			$text
 		);
 	}
@@ -294,5 +296,33 @@ class Colors {
 		}
 
 		return (string) sanitize_hex_color( $colors[ $key ] );
+	}
+
+	/**
+	 * Whether a `(` or `[` in the value is never closed.
+	 *
+	 * An open bracket in a custom property value takes in every token after it, so the declarations
+	 * that follow in the same rule are lost. A stray closer only spoils its own declaration.
+	 *
+	 * @since 3.7.3
+	 * @param string $value The value.
+	 * @return bool
+	 */
+	private static function has_unclosed_bracket( string $value ): bool {
+		$closers = array(
+			'(' => ')',
+			'[' => ']',
+		);
+		$open    = array();
+
+		foreach ( str_split( $value ) as $char ) {
+			if ( isset( $closers[ $char ] ) ) {
+				$open[] = $closers[ $char ];
+			} elseif ( end( $open ) === $char ) {
+				array_pop( $open );
+			}
+		}
+
+		return ! empty( $open );
 	}
 }

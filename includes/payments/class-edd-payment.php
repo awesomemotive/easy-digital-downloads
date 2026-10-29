@@ -4,14 +4,13 @@
  *
  * This class is for working with payments in EDD.
  *
- * @package     EDD
- * @subpackage  Payments
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
+ * @package     EDD\Payments
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
@@ -188,7 +187,7 @@ class EDD_Payment {
 	 * @var string
 	 */
 	protected $status      = 'pending';
-	protected $post_status = 'pending'; // Same as $status but here for backwards compat
+	protected $post_status = 'pending'; // Same as $status but here for backwards compat.
 
 	/**
 	 * When updating, the old status prior to the change
@@ -336,6 +335,22 @@ class EDD_Payment {
 	private $pending;
 
 	/**
+	 * Properties which have not been loaded yet, keyed by the method which loads them.
+	 *
+	 * @since 3.7.3
+	 * @var array
+	 */
+	private $deferred = array();
+
+	/**
+	 * Properties currently being loaded, used to break dependency cycles.
+	 *
+	 * @since 3.7.3
+	 * @var array
+	 */
+	private $loading = array();
+
+	/**
 	 * The parent payment (if applicable)
 	 *
 	 * @since  2.5
@@ -392,11 +407,17 @@ class EDD_Payment {
 	 *
 	 * @since  2.5
 	 *
-	 * @param  string $key The property
+	 * @param  string $key The property.
 	 *
 	 * @return mixed        The value
 	 */
 	public function __get( $key ) {
+		if ( $this->is_internal_property( $key ) ) {
+			return null;
+		}
+
+		$this->hydrate( $key );
+
 		if ( method_exists( $this, "get_{$key}" ) ) {
 			$value = call_user_func( array( $this, "get_{$key}" ) );
 		} elseif ( 'id' === $key ) {
@@ -419,13 +440,23 @@ class EDD_Payment {
 	 *
 	 * @since  2.5
 	 *
-	 * @param string $key   The property name
-	 * @param mixed  $value The value of the property
+	 * @param string $key   The property name.
+	 * @param mixed  $value The value of the property.
 	 */
 	public function __set( $key, $value ) {
+		if ( $this->is_internal_property( $key ) ) {
+			return;
+		}
+
 		$ignore = array( 'downloads', 'cart_details', 'fees', '_ID' );
 
-		if ( $key === 'status' ) {
+		// Loaders read the stored object's other properties, so they have to run before it changes.
+		$this->hydrate_all();
+
+		// An explicit write wins, so cancel any load which would overwrite it.
+		unset( $this->deferred[ $key ] );
+
+		if ( 'status' === $key ) {
 			$this->old_status = $this->status;
 		}
 
@@ -448,11 +479,33 @@ class EDD_Payment {
 	 * @return boolean       If the item is set or not
 	 */
 	public function __isset( $name ) {
+		if ( $this->is_internal_property( $name ) ) {
+			return false;
+		}
+
 		if ( property_exists( $this, $name ) ) {
+			$this->hydrate( $name );
+
 			return false === empty( $this->$name );
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Report which properties have not been loaded yet, so debug output does not
+	 * misrepresent an unloaded property as an empty one.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return array
+	 */
+	public function __debugInfo() {
+		$properties = get_object_vars( $this );
+
+		$properties['deferred'] = array_keys( $this->deferred );
+
+		return $properties;
 	}
 
 	/**
@@ -495,49 +548,123 @@ class EDD_Payment {
 		$this->parent_payment  = $this->order->parent;
 		$this->status_nicename = $this->get_status_nicename();
 
-		// Items
-		$this->fees         = $this->setup_fees();
-		$this->cart_details = $this->setup_cart_details();
-		$this->downloads    = $this->setup_downloads();
-
-		// Currency Based
-		$this->total      = $this->order->total;
-		$this->tax        = $this->order->tax;
-		$this->tax_rate   = $this->setup_tax_rate();
-		$this->fees_total = $this->setup_fees_total();
-		$this->subtotal   = $this->order->subtotal;
-		$this->currency   = $this->setup_currency();
+		// Currency Based.
+		$this->total    = $this->order->total;
+		$this->tax      = $this->order->tax;
+		$this->subtotal = $this->order->subtotal;
+		$this->currency = $this->setup_currency();
 
 		// Gateway based
-		$this->gateway        = $this->order->gateway;
-		$this->transaction_id = $this->setup_transaction_id();
+		$this->gateway = $this->order->gateway;
 
 		// User based
 		$this->ip          = $this->order->ip;
 		$this->customer_id = $this->order->customer_id;
-		$this->user_id     = $this->setup_user_id();
 		$this->email       = $this->setup_email();
-		$this->discounts   = $this->setup_discounts();
-		$this->user_info   = $this->setup_user_info();
-		$this->first_name  = $this->user_info['first_name'];
-		$this->last_name   = $this->user_info['last_name'];
-		$this->address     = $this->setup_address();
 
 		// Other Identifiers
 		$this->key    = $this->order->payment_key;
 		$this->number = $this->setup_payment_number();
 
-		// Additional Attributes
-		$this->has_unlimited_downloads = $this->setup_has_unlimited();
+		/*
+		 * Everything above is on the order row already. These each need a query of their
+		 * own, so they load when something reads them.
+		 */
+		$this->deferred = array(
+			'address'                 => 'setup_address',
+			'cart_details'            => 'setup_cart_details',
+			'discounts'               => 'setup_discounts',
+			'downloads'               => 'setup_downloads',
+			'fees'                    => 'setup_fees',
+			'fees_total'              => 'setup_fees_total',
+			'first_name'              => 'setup_first_name',
+			'has_unlimited_downloads' => 'setup_has_unlimited',
+			'last_name'               => 'setup_last_name',
+			'payment_meta'            => 'setup_payment_meta',
+			'tax_rate'                => 'setup_tax_rate',
+			'transaction_id'          => 'setup_transaction_id',
+			'user_id'                 => 'setup_user_id',
+			'user_info'               => 'setup_user_info',
+		);
 
-		// We have a payment, get the generic payment_meta item to reduce calls to it
-		// This only exists for backwards compatibility purposes.
-		$this->payment_meta = $this->get_meta();
+		/**
+		 * Filter whether properties which need their own query are loaded on first read
+		 * rather than up front.
+		 *
+		 * @since 3.7.3
+		 *
+		 * @param bool        $defer   Whether to defer loading. Default true.
+		 * @param EDD_Payment $payment The payment object.
+		 */
+		if ( ! apply_filters( 'edd/payments/defer_properties', true, $this ) ) {
+			$this->hydrate_all();
+		}
 
 		// Allow extensions to add items to this object via hook
 		do_action( 'edd_setup_payment', $this, $payment_id );
 
 		return true;
+	}
+
+	/**
+	 * Load a deferred property.
+	 *
+	 * Does nothing for properties which are already loaded, were never deferred, or
+	 * are mid-load further up the call stack.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param string $key The property name.
+	 * @return void
+	 */
+	private function hydrate( $key ) {
+		if ( ! isset( $this->deferred[ $key ] ) || isset( $this->loading[ $key ] ) ) {
+			return;
+		}
+
+		$this->loading[ $key ] = true;
+
+		// A loader which throws leaves the property deferred, so the next read retries it.
+		try {
+			$value = $this->{$this->deferred[ $key ]}();
+		} finally {
+			unset( $this->loading[ $key ] );
+		}
+
+		// The loader runs filters, so a write from inside one of them wins over its return value.
+		if ( isset( $this->deferred[ $key ] ) ) {
+			unset( $this->deferred[ $key ] );
+
+			$this->$key = $value;
+		}
+	}
+
+	/**
+	 * Load every deferred property.
+	 *
+	 * Called by the methods which write, since they read most of the object regardless
+	 * of which property changed.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return void
+	 */
+	private function hydrate_all() {
+		foreach ( array_keys( $this->deferred ) as $key ) {
+			$this->hydrate( $key );
+		}
+	}
+
+	/**
+	 * Whether a property is loading bookkeeping, which the magic methods must not expose.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param string $key The property name.
+	 * @return bool
+	 */
+	private function is_internal_property( $key ) {
+		return in_array( $key, array( 'deferred', 'loading' ), true );
 	}
 
 	/**
@@ -673,6 +800,14 @@ class EDD_Payment {
 	 * @return bool True of the save occurred, false if it failed or wasn't needed.
 	 */
 	public function save() {
+
+		/*
+		 * Any pending change makes this method read most of the object, and the payment
+		 * meta comparison below decides whether to write at all, so everything has to be
+		 * loaded before any of it runs.
+		 */
+		$this->hydrate_all();
+
 		$saved = false;
 
 		if ( empty( $this->ID ) ) {
@@ -1043,6 +1178,8 @@ class EDD_Payment {
 	 * @return bool True when successful, false otherwise
 	 */
 	public function add_download( $download_id = 0, $args = array(), $options = array() ) {
+		$this->hydrate_all();
+
 		$download = new EDD_Download( $download_id );
 
 		// Bail if this post isn't a download.
@@ -1177,6 +1314,7 @@ class EDD_Payment {
 	 * @return bool               If the item was removed or not
 	 */
 	public function remove_download( $download_id, $args = array() ) {
+		$this->hydrate_all();
 
 		// Set some defaults
 		$defaults = array(
@@ -1390,6 +1528,8 @@ class EDD_Payment {
 	 * @return bool
 	 */
 	public function modify_cart_item( $cart_index = false, $args = array() ) {
+		$this->hydrate_all();
+
 		if ( false === $cart_index ) {
 			return false;
 		}
@@ -1499,6 +1639,8 @@ class EDD_Payment {
 	 * @return bool If the fee was added.
 	 */
 	public function add_fee( $args, $global = true ) {
+		$this->hydrate_all();
+
 		$default_args = array(
 			'label'       => '',
 			'amount'      => 0,
@@ -1548,6 +1690,8 @@ class EDD_Payment {
 	 * @return boolean If the item is removed.
 	 */
 	public function remove_fee_by( $key, $value, $global = false ) {
+		$this->hydrate_all();
+
 		$allowed_fee_keys = apply_filters(
 			'edd_payment_fee_keys',
 			array(
@@ -1642,6 +1786,8 @@ class EDD_Payment {
 	 * @return array Fees for the type specified.
 	 */
 	public function get_fees( $type = 'all' ) {
+		$this->hydrate( 'fees' );
+
 		$fees = array();
 
 		if ( ! empty( $this->fees ) && is_array( $this->fees ) ) {
@@ -1731,6 +1877,8 @@ class EDD_Payment {
 	 * @return void
 	 */
 	private function increase_fees( $amount = 0.00 ) {
+		$this->hydrate( 'fees_total' );
+
 		$amount            = (float) $amount;
 		$this->fees_total += $amount;
 
@@ -1747,6 +1895,8 @@ class EDD_Payment {
 	 * @return void
 	 */
 	private function decrease_fees( $amount = 0.00 ) {
+		$this->hydrate( 'fees_total' );
+
 		$amount            = (float) $amount;
 		$this->fees_total -= $amount;
 
@@ -1764,6 +1914,8 @@ class EDD_Payment {
 	 * @return void
 	 */
 	private function recalculate_total() {
+		$this->hydrate( 'fees_total' );
+
 		$this->total = $this->subtotal + $this->tax + $this->fees_total;
 	}
 
@@ -1827,7 +1979,6 @@ class EDD_Payment {
 	 * @return bool True if the status was successfully updated, false otherwise.
 	 */
 	public function update_status( $status = '' ) {
-
 		if ( ! $this->order ) {
 			return false;
 		}
@@ -2015,6 +2166,12 @@ class EDD_Payment {
 		}
 
 		if ( '_edd_payment_meta' === $meta_key ) {
+
+			// This array is back-filled from the properties below, so they have to be loaded.
+			foreach ( array( 'user_info', 'downloads', 'cart_details', 'fees' ) as $property ) {
+				$this->hydrate( $property );
+			}
+
 			if ( empty( $meta ) ) {
 				$meta = array();
 			}
@@ -2168,7 +2325,8 @@ class EDD_Payment {
 
 							// Discount exists so update the amount.
 							if ( 1 === count( $found_discount ) ) {
-								$found_discount = $found_discount[0];
+								// array_filter() keeps the original keys, so the match is not always at 0.
+								$found_discount = reset( $found_discount );
 
 								/** @var EDD\Orders\Order_Adjustment $found_discount */
 
@@ -2834,7 +2992,7 @@ class EDD_Payment {
 	 */
 	private function setup_completed_date() {
 		/** @var EDD\Orders\Order $order */
-		$order = $this->_shim_edd_get_order( $this->ID );
+		$order = $this->order;
 
 		if ( 'pending' === $order->status || 'preapproved' === $order->status || 'processing' === $order->status ) {
 			return false; // This payment was never completed
@@ -2890,6 +3048,8 @@ class EDD_Payment {
 	 * @return float Total fee amount applied to the payment.
 	 */
 	private function setup_fees_total() {
+		$this->hydrate( 'fees' );
+
 		$fees_total = array_reduce(
 			$this->fees,
 			function ( $carry, $item ) {
@@ -2974,7 +3134,12 @@ class EDD_Payment {
 	private function setup_fees() {
 		$fees = array();
 
-		if ( $this->order->get_fees() ) {
+		/*
+		 * Held in a local because each call re-queries the adjustments for every order item.
+		 */
+		$order_fees = $this->order->get_fees();
+
+		if ( $order_fees ) {
 			/*
 			 * Build up an array of order item IDs with values set to their respective download/price IDs.
 			 * This is so we can easily get that information when configuring order item fees.
@@ -2990,7 +3155,7 @@ class EDD_Payment {
 				);
 			}
 
-			foreach ( $this->order->get_fees() as $order_fee ) {
+			foreach ( $order_fees as $order_fee ) {
 				/**
 				 * @var \EDD\Orders\Order_Adjustment $order_fee
 				 */
@@ -3106,6 +3271,9 @@ class EDD_Payment {
 	 * @return array The user info associated with the payment.
 	 */
 	private function setup_user_info() {
+		$this->hydrate( 'user_id' );
+		$this->hydrate( 'discounts' );
+
 		$order_address = $this->order->get_address();
 
 		$user_info = array(
@@ -3188,6 +3356,47 @@ class EDD_Payment {
 	}
 
 	/**
+	 * Setup the payee's first name.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return string
+	 */
+	private function setup_first_name() {
+		return $this->get_user_info_name( 'first_name' );
+	}
+
+	/**
+	 * Setup the payee's last name.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return string
+	 */
+	private function setup_last_name() {
+		return $this->get_user_info_name( 'last_name' );
+	}
+
+	/**
+	 * Read a name out of the user info.
+	 *
+	 * Callers are allowed to assign a serialized string to user_info, so this cannot
+	 * assume an array.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param string $key Either first_name or last_name.
+	 * @return string
+	 */
+	private function get_user_info_name( $key ) {
+		$this->hydrate( 'user_info' );
+
+		return is_array( $this->user_info ) && isset( $this->user_info[ $key ] )
+			? $this->user_info[ $key ]
+			: '';
+	}
+
+	/**
 	 * Setup the address for the payment.
 	 *
 	 * @since 2.5
@@ -3195,6 +3404,8 @@ class EDD_Payment {
 	 * @return array The address information for the payment.
 	 */
 	private function setup_address() {
+		$this->hydrate( 'user_info' );
+
 		$address  = ! empty( $this->user_info['address'] ) ? $this->user_info['address'] : array();
 		$defaults = array(
 			'line1'   => '',
@@ -3337,6 +3548,19 @@ class EDD_Payment {
 	}
 
 	/**
+	 * Setup the legacy payment meta array.
+	 *
+	 * Only exists for backwards compatibility purposes.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return array
+	 */
+	private function setup_payment_meta() {
+		return $this->get_meta();
+	}
+
+	/**
 	 * Setup the Unlimited downloads setting
 	 *
 	 * @since  2.5
@@ -3354,6 +3578,8 @@ class EDD_Payment {
 	 * @return array The payment object as an array.
 	 */
 	public function array_convert() {
+		$this->hydrate_all();
+
 		return get_object_vars( $this );
 	}
 
@@ -3748,6 +3974,8 @@ class EDD_Payment {
 	 */
 	private function maybe_update_tax_rate( $tax_rate = null ) {
 		if ( is_null( $tax_rate ) ) {
+			$this->hydrate( 'tax_rate' );
+
 			$tax_rate = $this->tax_rate;
 		}
 

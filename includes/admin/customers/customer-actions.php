@@ -500,11 +500,13 @@ add_action( 'edd_disconnect-userid', 'edd_disconnect_customer_user_id', 10, 1 );
  * Process manual verification of customer account by admin
  *
  * @since  2.4.8
+ * @since  3.7.3 Resolves the pending account through the customer's email when the
+ *                        record is not yet claimed, so verifying it also claims the record.
  * @return bool|void
  */
 function edd_process_admin_user_verification() {
 
-	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
+	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) || empty( $_GET['user_id'] ) || ! is_numeric( $_GET['user_id'] ) ) {
 		return false;
 	}
 
@@ -512,8 +514,10 @@ function edd_process_admin_user_verification() {
 		return false;
 	}
 
+	$user_id = absint( $_GET['user_id'] );
+
 	$nonce = $_GET['_wpnonce'];
-	if ( ! wp_verify_nonce( $nonce, 'edd-verify-user' ) ) {
+	if ( ! wp_verify_nonce( $nonce, 'edd-verify-user-' . $user_id ) ) {
 		wp_die( __( 'Nonce verification failed.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
@@ -521,8 +525,18 @@ function edd_process_admin_user_verification() {
 		wp_die( __( 'You do not have permission to edit this customer.', 'easy-digital-downloads' ) );
 	}
 
-	$customer = new EDD_Customer( $_GET['id'] );
-	edd_set_user_to_verified( $customer->user_id );
+	$customer = edd_get_customer_by( 'id', absint( $_GET['id'] ) );
+
+	if ( ! $customer ) {
+		wp_die( esc_html__( 'Customer not found.', 'easy-digital-downloads' ) );
+	}
+
+	// The link named the account the notice showed, so a match that has moved since is not verified.
+	if ( \EDD\Users\Verification::resolve_customer_user_id( $customer ) !== $user_id ) {
+		wp_die( esc_html__( 'The account matched to this customer has changed. Reload the customer and try again.', 'easy-digital-downloads' ), '', array( 'back_link' => true ) );
+	}
+
+	edd_set_user_to_verified( $user_id );
 
 	$url = edd_get_admin_url(
 		array(

@@ -1,10 +1,6 @@
 <?php
 /**
  * Tests for Captcha Providers
- *
- * @group edd_captcha
- * @group edd_captcha_providers
- * @group edd_pro
  */
 
 namespace EDD\Tests\Captcha;
@@ -14,6 +10,11 @@ use EDD\Captcha\Providers\Provider;
 use EDD\Captcha\Providers\Recaptcha;
 use EDD\Captcha\Providers\Turnstile;
 
+/**
+ * @group edd_captcha
+ * @group edd_captcha_providers
+ * @group edd_pro
+ */
 class Providers extends EDD_UnitTestCase {
 
 	/**

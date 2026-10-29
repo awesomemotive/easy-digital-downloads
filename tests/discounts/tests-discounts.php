@@ -1339,7 +1339,11 @@ class Discounts extends EDD_UnitTestCase {
 	 * @covers EDD_Discount::is_valid() with once per customer
 	 */
 	public function test_discount_is_valid_with_used_returns_false() {
-		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses();
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount_nodates_nouses(
+			array(
+				'code' => 'ONCEPERCUSTOMER',
+			)
+		);
 		edd_update_adjustment(
 			$discount_id,
 			array(

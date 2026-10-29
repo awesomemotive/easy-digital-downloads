@@ -45,12 +45,6 @@ class CustomerDeleteCapability extends EDD_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		// EDD's capabilities are installed rather than present by default, and WP_Roles::add_cap()
-		// does not refresh the role objects already built for this request.
-		EDD()->roles->add_roles();
-		EDD()->roles->add_caps();
-		wp_roles()->for_site( get_current_blog_id() );
-
 		$this->order_id = EDD_Helper_Payment::create_simple_payment();
 		$order          = edd_get_order( $this->order_id );
 		$this->customer = new \EDD_Customer( $order->customer_id );

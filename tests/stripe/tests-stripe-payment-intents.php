@@ -2,9 +2,6 @@
 /**
  * Tests for Payment Intent Builder.
  *
- * @group edd_stripe
- * @group edd_stripe_payment_intents
- *
  * @coversDefaultClass \EDD\Gateways\Stripe\PaymentIntents\Builder
  */
 
@@ -13,6 +10,10 @@ namespace EDD\Tests\Stripe;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Gateways\Stripe\PaymentIntents\Builder;
 
+/**
+ * @group edd_stripe
+ * @group edd_stripe_payment_intents
+ */
 class PaymentIntents extends EDD_UnitTestCase {
 
 	/**

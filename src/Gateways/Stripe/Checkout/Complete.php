@@ -57,7 +57,12 @@ class Complete {
 
 			$intent = $this->get_intent();
 
-			Validation::intent_status( $intent );
+			$valid_statuses = array( 'succeeded', 'requires_capture' );
+			// A SetupIntent has no charge, so no webhook would ever complete a processing one.
+			if ( 'setup_intent' !== $intent->object ) {
+				$valid_statuses[] = 'processing';
+			}
+			Validation::intent_status( $intent, $valid_statuses );
 			Validation::intent_amount( $intent, Validation::get_expected_price( $intent ) );
 
 			// Get the existing order if one was created.
@@ -70,15 +75,12 @@ class Complete {
 			}
 			self::mark_complete( edd_get_order( $order_id ), $intent );
 
-			$order = edd_get_order( $order_id );
-
-			wp_send_json_success(
-				array(
-					'intent'   => $intent,
-					'nonce'    => wp_create_nonce( 'edd-process-checkout' ),
-					'status'   => $order->status,
-					'order_id' => $order->id,
-				)
+			$order    = edd_get_order( $order_id );
+			$response = array(
+				'intent'   => $intent,
+				'nonce'    => wp_create_nonce( 'edd-process-checkout' ),
+				'status'   => $order->status,
+				'order_id' => $order->id,
 			);
 
 			// Catch gateway processing errors.
@@ -108,6 +110,9 @@ class Complete {
 				)
 			);
 		}
+
+		// Sent outside the try so a die handler that throws is not caught as a failed checkout.
+		wp_send_json_success( $response );
 	}
 
 	/**

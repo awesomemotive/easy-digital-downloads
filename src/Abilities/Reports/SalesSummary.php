@@ -14,6 +14,7 @@ namespace EDD\Abilities\Reports;
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\Abilities\ReadAbility;
+use EDD\Reports\SalesSummaryRanges;
 
 /**
  * Gets net earnings and sales counts for this month, last month, today, and all time.
@@ -31,22 +32,10 @@ class SalesSummary extends ReadAbility {
 	 * @return array|\WP_Error
 	 */
 	protected function read_data( array $input ) {
-		$data   = array();
-		$ranges = array( 'this_month', 'last_month', 'today', 'total' );
+		$data = array();
 
-		foreach ( $ranges as $range ) {
-			$args = array(
-				'range'        => $range,
-				'output'       => 'raw',
-				'revenue_type' => 'net',
-			);
-
-			// The all-time totals are calculated by omitting the range entirely.
-			if ( 'total' === $range ) {
-				unset( $args['range'] );
-			}
-
-			$stats = new \EDD\Stats( $args );
+		foreach ( SalesSummaryRanges::get_ranges() as $range ) {
+			$stats = new \EDD\Stats( SalesSummaryRanges::get_stats_args( $range, 'raw' ) );
 
 			$data[ $range ] = array(
 				'earnings' => (float) $stats->get_order_earnings(),
@@ -111,16 +100,15 @@ class SalesSummary extends ReadAbility {
 	 * @return array
 	 */
 	protected function get_output_schema(): array {
+		$ranges     = SalesSummaryRanges::get_ranges();
+		$properties = array_fill_keys( $ranges, self::get_range_schema() );
+
+		$properties['currency'] = array( 'type' => 'string' );
+
 		return array(
 			'type'       => 'object',
-			'properties' => array(
-				'this_month' => self::get_range_schema(),
-				'last_month' => self::get_range_schema(),
-				'today'      => self::get_range_schema(),
-				'total'      => self::get_range_schema(),
-				'currency'   => array( 'type' => 'string' ),
-			),
-			'required'   => array( 'this_month', 'last_month', 'today', 'total', 'currency' ),
+			'properties' => $properties,
+			'required'   => array_merge( $ranges, array( 'currency' ) ),
 		);
 	}
 

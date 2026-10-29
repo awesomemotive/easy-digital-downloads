@@ -138,6 +138,9 @@ function edds_process_gateway_connect_completion() {
 	$data = json_decode( $request->response['body'], true );
 	$data = $data['data'];
 
+	\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::record_connected_mode( edd_is_test_mode() ? 'test' : 'live', sanitize_text_field( $data['stripe_user_id'] ) );
+	\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::clear_error();
+
 	if ( edd_is_test_mode() ) {
 		edd_update_option( 'test_publishable_key', sanitize_text_field( $data['publishable_key'] ) );
 		edd_update_option( 'test_secret_key', sanitize_text_field( $data['secret_key'] ) );
@@ -220,17 +223,19 @@ function edds_stripe_connect_disconnect_url() {
 }
 
 /**
- * Removes the associated Stripe Connect Account ID and keys.
+ * Removes the associated Account ID and keys, and revokes the authorization when asked to.
  *
- * This does not revoke application permissions from the Stripe Dashboard,
- * it simply allows the "Connect with Stripe" flow to run again for a different account.
+ * Disconnecting removes this site's keys only. Revoking is account-wide, so it is a separate action
+ * (`edds-revoke-disconnect`) with its own nonce, and its local keys are only deleted once Stripe has
+ * confirmed the revocation.
  *
  * @since 2.8.0
+ * @since 3.7.3 Removes this site's keys only; revoking the authorization is a separate action.
  */
 function edds_stripe_connect_process_disconnect() {
 	// Do not need to handle this request, bail.
 	if (
-		! ( isset( $_GET['page'] ) && ( 'edd-settings' === $_GET['page'] || 'edd-onboarding-wizard' === $_GET['page'] ) ) ||
+		! ( isset( $_GET['page'] ) && 'edd-settings' === $_GET['page'] ) ||
 		! isset( $_GET['edds-stripe-disconnect'] )
 	) {
 		return;
@@ -246,9 +251,63 @@ function edds_stripe_connect_process_disconnect() {
 		return;
 	}
 
-	// Invalid nonce, bail.
-	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edds-stripe-connect-disconnect' ) ) {
+	$revoke = ! empty( $_GET['edds-revoke-disconnect'] );
+
+	// Invalid nonce, bail. Each action has its own, so one link cannot trigger the other.
+	if ( ! wp_verify_nonce( $_GET['_wpnonce'], $revoke ? 'edds-stripe-connect-revoke' : 'edds-stripe-connect-disconnect' ) ) {
 		return;
+	}
+
+	$deauthorize = new \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize();
+
+	$redirect = remove_query_arg(
+		array(
+			'_wpnonce',
+			'edds-stripe-disconnect',
+			'edds-revoke-disconnect',
+			'edd-action',
+		)
+	);
+
+	// A revoke the dialog would not have offered, such as one from a staging copy, does nothing.
+	if ( $revoke && ! $deauthorize->can_offer_revoke() ) {
+		wp_safe_redirect( esc_url_raw( $redirect ) );
+		edd_die();
+	}
+
+	if ( $revoke ) {
+		$revoked = $deauthorize->revoke();
+
+		if ( is_wp_error( $revoked ) ) {
+			// A mode that was revoked before another failed has lost its keys, which the notice has to say.
+			\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::record_error(
+				$revoked,
+				array(
+					'removed'     => $deauthorize->get_removed_modes(),
+					'failed'      => $deauthorize->get_failed_modes(),
+					'unconfirmed' => $deauthorize->get_unconfirmed_modes(),
+				)
+			);
+
+			// Checkout would otherwise keep offering Stripe in the mode whose keys were just removed.
+			if ( in_array( edd_is_test_mode() ? 'test' : 'live', $deauthorize->get_removed_modes(), true ) ) {
+				$gateways = edd_get_option( 'gateways', array() );
+				unset( $gateways['stripe'] );
+				edd_update_option( 'gateways', $gateways );
+			}
+
+			// edd_redirect() returns early under unit tests, which would leave the redirect target unasserted.
+			// The request ends here, or this request's own `admin_init` consumes the notice before the redirect lands.
+			wp_safe_redirect( esc_url_raw( $redirect ) );
+			edd_die();
+		}
+	}
+
+	\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::clear_error();
+	\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::clear_unconfirmed();
+
+	if ( ! empty( $deauthorize->get_unconfirmed_modes() ) ) {
+		\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::record_unconfirmed();
 	}
 
 	// Remove payment method configuration and account capabilities.
@@ -262,25 +321,20 @@ function edds_stripe_connect_process_disconnect() {
 		'live_publishable_key',
 		'live_secret_key',
 		'stripe_statement_descriptor_prefix',
+		\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING,
 	);
 
 	foreach ( $options as $option ) {
 		edd_delete_option( $option );
 	}
 
-	// Remove Stripe from the enabled gateways.
 	$gateways = edd_get_option( 'gateways', array() );
 	unset( $gateways['stripe'] );
 	edd_update_option( 'gateways', $gateways );
 
-	$redirect = remove_query_arg(
-		array(
-			'_wpnonce',
-			'edds-stripe-disconnect',
-		)
-	);
-
-	return wp_redirect( esc_url_raw( $redirect ) );
+	// Ends the request for the same reason as the failure path, so the unconfirmed notice survives to the next page.
+	wp_safe_redirect( esc_url_raw( $redirect ) );
+	edd_die();
 }
 add_action( 'edd_disconnect_stripe_connect', 'edds_stripe_connect_process_disconnect' );
 
@@ -371,21 +425,38 @@ function edds_stripe_connect_account_info_ajax_response() {
 		? _x( 'test', 'Stripe Connect mode', 'easy-digital-downloads' )
 		: _x( 'live', 'Stripe Connect mode', 'easy-digital-downloads' );
 
+	// The onboarding wizard only reconnects; disconnecting is done from the Stripe settings screen.
+	$in_wizard = ! empty( $_POST['onboardingWizard'] );
+
 	// Provides general reconnect and disconnect action URLs.
 	$reconnect_disconnect_actions = wp_kses(
-		sprintf(
-			/* translators: %1$s Stripe payment mode. %2$s Opening anchor tag for reconnecting to Stripe, do not translate. %3$s Opening anchor tag for disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not translate. */
-			__( 'Your Stripe account is connected in %1$s mode. %2$sReconnect in %1$s mode%4$s, or %3$sdisconnect this account%4$s.', 'easy-digital-downloads' ),
-			'<strong>' . $mode . '</strong>',
-			'<a href="' . esc_url( edds_stripe_connect_url() ) . '" rel="noopener noreferrer">',
-			'<a href="' . esc_url( edds_stripe_connect_disconnect_url() ) . '">',
-			'</a>'
-		),
+		$in_wizard
+			? sprintf(
+				/* translators: %1$s Stripe payment mode. %2$s Opening anchor tag for reconnecting to Stripe, do not translate. %3$s Closing anchor tag, do not translate. */
+				__( 'Your Stripe account is connected in %1$s mode. %2$sReconnect in %1$s mode%3$s.', 'easy-digital-downloads' ),
+				'<strong>' . $mode . '</strong>',
+				'<a href="' . esc_url( edds_stripe_connect_url() ) . '" rel="noopener noreferrer">',
+				'</a>'
+			)
+			: sprintf(
+				/* translators: %1$s Stripe payment mode. %2$s Opening anchor tag for reconnecting to Stripe, do not translate. %3$s Opening button tag for disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not translate. %5$s Closing button tag, do not translate. */
+				__( 'Your Stripe account is connected in %1$s mode. %2$sReconnect in %1$s mode%4$s, or %3$sdisconnect this account%5$s.', 'easy-digital-downloads' ),
+				'<strong>' . $mode . '</strong>',
+				'<a href="' . esc_url( edds_stripe_connect_url() ) . '" rel="noopener noreferrer">',
+				'<button type="button" class="button-link" data-dialog-id="' . esc_attr( \EDD\Gateways\Stripe\Admin\Disconnect\Confirmation::DIALOG_ID ) . '">',
+				'</a>',
+				'</button>'
+			),
 		array(
 			'strong' => true,
 			'a'      => array(
 				'href' => true,
 				'rel'  => true,
+			),
+			'button' => array(
+				'type'           => true,
+				'class'          => true,
+				'data-dialog-id' => true,
 			),
 		)
 	);
@@ -416,12 +487,15 @@ function edds_stripe_connect_account_info_ajax_response() {
 					'<a href="https://dashboard.stripe.com/register" target="_blank" rel="noopener noreferrer">',
 					'</a>'
 				) . ' ' .
-				'<br /><br />' .
-				sprintf(
-					/* translators: 1: Opening anchor tag for disconnecting Stripe, do not translate. 2: Closing anchor tag, do not translate. */
-					__( '%1$sDisconnect this account%2$s.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( edds_stripe_connect_disconnect_url() ) . '">',
-					'</a>'
+				(
+					$in_wizard
+						? ''
+						: '<br /><br />' . sprintf(
+							/* translators: 1: Opening button tag for disconnecting Stripe, do not translate. 2: Closing button tag, do not translate. */
+							__( '%1$sDisconnect this account%2$s.', 'easy-digital-downloads' ),
+							'<button type="button" class="button-link" data-dialog-id="' . esc_attr( \EDD\Gateways\Stripe\Admin\Disconnect\Confirmation::DIALOG_ID ) . '">',
+							'</button>'
+						)
 				)
 			),
 			array(
@@ -431,6 +505,11 @@ function edds_stripe_connect_account_info_ajax_response() {
 					'href'   => true,
 					'rel'    => true,
 					'target' => true,
+				),
+				'button' => array(
+					'type'           => true,
+					'class'          => true,
+					'data-dialog-id' => true,
 				),
 			)
 		),
@@ -541,14 +620,16 @@ function edds_stripe_connect_account_info_ajax_response() {
 			);
 		} catch ( \Exception $e ) {
 			// General error.
-			$unknown_error['message'] .= ' ' . wpautop(
-				sprintf(
-					/* translators: 1: Opening anchor tag for disconnecting Stripe, do not translate. 2: Closing anchor tag, do not translate. */
-					__( '%1$sDisconnect this account%2$s.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( edds_stripe_connect_disconnect_url() ) . '">',
-					'</a>'
-				)
-			);
+			if ( ! $in_wizard ) {
+				$unknown_error['message'] .= ' ' . wpautop(
+					sprintf(
+						/* translators: 1: Opening button tag for disconnecting Stripe, do not translate. 2: Closing button tag, do not translate. */
+						__( '%1$sDisconnect this account%2$s.', 'easy-digital-downloads' ),
+						'<button type="button" class="button-link" data-dialog-id="' . esc_attr( \EDD\Gateways\Stripe\Admin\Disconnect\Confirmation::DIALOG_ID ) . '">',
+						'</button>'
+					)
+				);
+			}
 
 			return wp_send_json_error( $unknown_error );
 		}

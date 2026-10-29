@@ -84,7 +84,8 @@ export const NumberFormat = class NumberFormat {
 
 		const unformatted = number
 			// Remove thousand separator.
-			.replace( thousandSeparator, '' )
+			.split( thousandSeparator )
+			.join( '' )
 
 			// Replace decimal separator with a decimal.
 			.replace( decimalSeparator, '.' );

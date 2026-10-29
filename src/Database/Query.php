@@ -890,12 +890,16 @@ class Query extends Base {
 			$this->query_vars['fields'] = '';
 		}
 
-		// Check the cache
-		$cache_key   = $this->get_cache_key();
-		$cache_value = $this->cache_get( $cache_key, $this->cache_group );
+		// Build the SQL first, so the cache key covers what clauses filters add to it.
+		$this->build_request();
 
-		// No cache value
-		if ( false === $cache_value ) {
+		// Check the cache
+		$cache_key    = $this->get_cache_key();
+		$cache_value  = $this->cache_get( $cache_key, $this->cache_group );
+		$dependencies = $this->get_relationship_cache_dependencies();
+
+		// No cache value, or one cached before a table it depends on changed.
+		if ( ! is_array( $cache_value ) || ( ( $cache_value['dependencies'] ?? array() ) !== $dependencies ) ) {
 			$item_ids = $this->get_item_ids();
 
 			// Set the number of found items
@@ -903,12 +907,13 @@ class Query extends Base {
 
 			// Format the cached value
 			$cache_value = array(
-				'item_ids'    => $item_ids,
-				'found_items' => intval( $this->found_items ),
+				'item_ids'     => $item_ids,
+				'found_items'  => intval( $this->found_items ),
+				'dependencies' => $dependencies,
 			);
 
-			// Add value to the cache
-			$this->cache_add( $cache_key, $cache_value, $this->cache_group );
+			// Set, not add, so a value rejected above is replaced.
+			$this->cache_set( $cache_key, $cache_value, $this->cache_group );
 
 		// Value exists in cache
 		} else {
@@ -934,13 +939,11 @@ class Query extends Base {
 	}
 
 	/**
-	 * Used internally to get a list of item IDs matching the query vars.
+	 * Builds the SQL request from the query vars and the query clauses filter.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
+	 * @since 3.7.3
 	 */
-	protected function get_item_ids() {
+	protected function build_request() {
 
 		// Setup primary column, and parse the where clause
 		$this->parse_where();
@@ -995,6 +998,19 @@ class Query extends Base {
 		// Setup request
 		$this->set_request_clauses( $clauses );
 		$this->set_request();
+	}
+
+	/**
+	 * Used internally to get a list of item IDs matching the query vars.
+	 *
+	 * Runs the request that build_request() set.
+	 *
+	 * @since 1.0.0
+	 * @since 3.7.3 No longer builds the request.
+	 *
+	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
+	 */
+	protected function get_item_ids() {
 
 		// Return count
 		if ( ! empty( $this->query_vars['count'] ) ) {
@@ -1826,9 +1842,42 @@ class Query extends Base {
 		// Cache groups
 		$groups = $this->get_cache_groups();
 
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+
+		// Whether full items are cached by primary ID
+		$by_primary = isset( $groups[ $primary ] );
+
+		// Secondary lookup cache key and generation, if this column has them.
+		$cache_key    = false;
+		$last_changed = '';
+
 		// Check cache
 		if ( ! empty( $groups[ $column_name ] ) ) {
-			$retval = $this->cache_get( $column_value, $groups[ $column_name ] );
+
+			// Full items are cached by primary ID, or by column when the primary ID has no cache group.
+			if ( $primary === $column_name || ! $by_primary ) {
+				$retval = $this->cache_get( $column_value, $groups[ $column_name ] );
+
+			// Secondary columns cache only the primary ID of the matching item.
+			} else {
+
+				// Read the generation before the database, so a write during the lookup
+				// leaves the pointer stored below stamped with the older generation.
+				$last_changed = $this->get_item_by_last_changed( $groups[ $column_name ] );
+				$cache_key    = $this->get_item_by_cache_key( $column_value );
+				$pointer      = $this->cache_get( $cache_key, $groups[ $column_name ] );
+
+				// A pointer counts only when stamped with the current generation. Legacy
+				// and stale entries are ignored, and overwritten in place below.
+				if (
+					is_array( $pointer )
+					&& isset( $pointer['item_id'], $pointer['last_changed'] )
+					&& (string) $pointer['last_changed'] === (string) $last_changed
+				) {
+					return $this->get_item( $pointer['item_id'] );
+				}
+			}
 		}
 
 		// Item not cached
@@ -1844,6 +1893,18 @@ class Query extends Base {
 
 			// Cache — read path, do not bump last_changed.
 			$this->update_item_cache( $retval, false );
+
+			// Point the secondary lookup at the item's primary ID.
+			if ( false !== $cache_key ) {
+				$this->cache_set(
+					$cache_key,
+					array(
+						'item_id'      => $retval->{$primary},
+						'last_changed' => $last_changed,
+					),
+					$groups[ $column_name ]
+				);
+			}
 		}
 
 		// Reduce the item
@@ -2030,6 +2091,18 @@ class Query extends Base {
 		// Use get item to prime caches
 		$this->update_item_cache( $item_id );
 
+		// Invalidate the secondary lookups for cache-key columns whose value changed.
+		$changed = array();
+		foreach ( array_keys( $this->get_cache_groups() ) as $key ) {
+			if ( array_key_exists( $key, $save ) && ( (string) $item[ $key ] !== (string) $save[ $key ] ) ) {
+				$changed[] = $key;
+			}
+		}
+
+		if ( ! empty( $changed ) ) {
+			$this->rotate_item_by_last_changed( $changed );
+		}
+
 		// Transition item data
 		$this->transition_item( $save, $item );
 
@@ -2096,6 +2169,9 @@ class Query extends Base {
 		// Clean caches on successful delete
 		$this->delete_all_item_meta( $item_id );
 		$this->clean_item_cache( $item );
+
+		// Invalidate every secondary lookup, as any of them may have pointed at this item.
+		$this->rotate_item_by_last_changed();
 
 		/**
 		 * Adds a hook for a successfully deleted item.
@@ -2634,30 +2710,20 @@ class Query extends Base {
 	/** Cache *****************************************************************/
 
 	/**
-	 * Get cache key from query_vars and query_var_defaults.
+	 * Get cache key from the SQL request.
 	 *
 	 * @since 1.0.0
+	 * @since 3.7.3 Hashes the request instead of the query vars.
 	 *
 	 * @return string
 	 */
 	private function get_cache_key( $group = '' ) {
 
-		// Slice $query_vars by default keys.
-		$slice = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
-
-		// Unset "fields" so it does not affect the cache key.
-		unset( $slice['fields'] );
-
-		// Remove unset columns (sentinel values) so identical logical queries
-		// produce identical cache keys across instances.
-		foreach ( $slice as $key => $value ) {
-			if ( $value === $this->query_var_default_value ) {
-				unset( $slice[ $key ] );
-			}
-		}
+		// The placeholder escape is random per request, so strip it for a stable key.
+		$request = $this->get_db()->remove_placeholder_escape( $this->request );
 
 		// Setup key & last_changed.
-		$key          = md5( serialize( $slice ) );
+		$key          = md5( $request );
 		$last_changed = $this->get_last_changed_cache( $group );
 
 		// Return the concatenated cache key.
@@ -2836,6 +2902,12 @@ class Query extends Base {
 		// Get cache groups
 		$groups = $this->get_cache_groups();
 
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+
+		// Whether full items are cached by primary ID
+		$by_primary = isset( $groups[ $primary ] );
+
 		// Loop through all items and cache them
 		foreach ( $items as $item ) {
 
@@ -2844,8 +2916,12 @@ class Query extends Base {
 				continue;
 			}
 
-			// Loop through groups and set cache
-			if ( ! empty( $groups ) ) {
+			// Cache the full item by primary ID only.
+			if ( $by_primary ) {
+				$this->cache_set( $item->{$primary}, $item, $this->cache_group );
+
+			// No primary cache group, so cache the full item under each cache key column.
+			} elseif ( ! empty( $groups ) ) {
 				foreach ( $groups as $key => $group ) {
 					$this->cache_set( $item->{$key}, $item, $group );
 				}
@@ -2889,6 +2965,12 @@ class Query extends Base {
 		// Get all cache groups
 		$groups = $this->get_cache_groups();
 
+		// Get the primary column
+		$primary = $this->get_primary_column_name();
+
+		// Whether full items are cached by primary ID
+		$by_primary = isset( $groups[ $primary ] );
+
 		// Loop through all items and clean them
 		foreach ( $items as $item ) {
 
@@ -2897,8 +2979,12 @@ class Query extends Base {
 				continue;
 			}
 
-			// Loop through groups and delete cache
-			if ( ! empty( $groups ) ) {
+			// Delete the full item, which is cached by primary ID only.
+			if ( $by_primary ) {
+				$this->cache_delete( $item->{$primary}, $this->cache_group );
+
+			// No primary cache group, so delete the item from each cache key column.
+			} elseif ( ! empty( $groups ) ) {
 				foreach ( $groups as $key => $group ) {
 					$this->cache_delete( $item->{$key}, $group );
 				}
@@ -2929,6 +3015,80 @@ class Query extends Base {
 	}
 
 	/**
+	 * Get the current generation of a secondary cache group.
+	 *
+	 * A secondary lookup is trusted only while the generation it was stamped with is
+	 * still current, so rotating this value retires every lookup in the group.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param string $group Secondary cache group for the column.
+	 * @return string
+	 */
+	private function get_item_by_last_changed( $group ) {
+
+		// Get the last changed value for the secondary group
+		$last_changed = $this->cache_get( 'last_changed', $group );
+
+		// Always start a new group from a fresh value, never the per-instance one.
+		if ( false === $last_changed ) {
+			$last_changed = microtime();
+			$this->cache_set( 'last_changed', $last_changed, $group );
+		}
+
+		return $last_changed;
+	}
+
+	/**
+	 * Get the cache key for a secondary column lookup.
+	 *
+	 * The key depends on the value alone, so a stale pointer is overwritten in place.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param int|string $column_value Value being looked up.
+	 * @return string
+	 */
+	private function get_item_by_cache_key( $column_value ) {
+		return md5( (string) $column_value );
+	}
+
+	/**
+	 * Rotate the last_changed value of secondary cache groups.
+	 *
+	 * Writes a fresh microtime() rather than the per-instance $this->last_changed,
+	 * which update_last_changed_cache() reuses, so the rotation always retires the
+	 * lookups this instance has already cached.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param array $columns Column names to rotate. Empty rotates every secondary group.
+	 * @return void
+	 */
+	private function rotate_item_by_last_changed( $columns = array() ) {
+
+		// Get the secondary cache groups
+		$groups  = $this->get_cache_groups();
+		$primary = $this->get_primary_column_name();
+
+		// Without a primary cache group no pointers are cached, so there is nothing to retire
+		if ( ! isset( $groups[ $primary ] ) ) {
+			return;
+		}
+
+		unset( $groups[ $primary ] );
+
+		// Maybe limit to the named columns
+		if ( ! empty( $columns ) ) {
+			$groups = array_intersect_key( $groups, array_flip( $columns ) );
+		}
+
+		foreach ( $groups as $group ) {
+			$this->cache_set( 'last_changed', microtime(), $group );
+		}
+	}
+
+	/**
 	 * Get the last_changed key for a cache group
 	 *
 	 * @since 1.0.0
@@ -2949,6 +3109,53 @@ class Query extends Base {
 
 		// Return the last changed value for the cache group
 		return $last_changed;
+	}
+
+	/**
+	 * Get the queries for tables the current query reads outside its own table.
+	 *
+	 * A cached result is only served while the last_changed value of each of
+	 * these queries' cache groups is unchanged.
+	 *
+	 * @since 3.7.3
+	 * @internal Interim hook until the BerlinDB relationship port (#321), which
+	 *           will derive these from declared relationships.
+	 *
+	 * @return Query[] Default empty array.
+	 */
+	protected function get_cache_dependency_queries() {
+		return array();
+	}
+
+	/**
+	 * Get the last_changed values of the cache groups the current query depends on.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return array Last changed values, keyed by query class and cache group.
+	 */
+	private function get_relationship_cache_dependencies() {
+		$dependencies = array();
+
+		foreach ( $this->get_cache_dependency_queries() as $query ) {
+			$this->add_query_cache_dependency( $query, $dependencies );
+		}
+
+		ksort( $dependencies );
+
+		return $dependencies;
+	}
+
+	/**
+	 * Add a query's cache group last_changed value to a list of dependencies.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param Query $query        Query whose cache group the current query depends on.
+	 * @param array $dependencies Last changed values, keyed by query class and cache group.
+	 */
+	private function add_query_cache_dependency( Query $query, array &$dependencies ) {
+		$dependencies[ get_class( $query ) . ':' . $query->cache_group ] = $query->get_last_changed_cache();
 	}
 
 	/**

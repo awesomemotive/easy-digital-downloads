@@ -1,21 +1,14 @@
-/**
- * Internal dependencies
- */
+/* global eddAdminOrderOverview */
+import { createRoot } from '@wordpress/element';
 import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
-import { Overview } from './views/overview.js';
-import { OrderItems } from './collections/order-items.js';
-import { OrderItem } from './models/order-item.js';
-import { OrderAdjustments } from './collections/order-adjustments.js';
-import { OrderRefunds } from './collections/order-refunds.js';
-import { State } from './models/state.js';
+import OrderOverviewApp from './OrderOverviewApp.js';
 
-// Temporarily include old Refund flow.
 import './_refund.js';
 
-let overview;
-
 ( () => {
-	if ( ! window.eddAdminOrderOverview ) {
+	const root = document.getElementById( 'edd-order-overview' );
+
+	if ( ! root || ! globalThis.eddAdminOrderOverview ) {
 		return;
 	}
 
@@ -26,81 +19,35 @@ let overview;
 		hasQuantity,
 		hasDiscounts,
 		order,
-		items,
-		adjustments,
-		refunds,
-	} = window.eddAdminOrderOverview;
+		items       = [],
+		adjustments = [],
+		refunds     = [],
+	} = eddAdminOrderOverview;
 
-	const currencyFormatter = new Currency( {
-		currency: order.currency,
-		currencySymbol: order.currencySymbol,
-	} );
+	const normalizeItems = ( rawItems ) =>
+		rawItems.map( ( item ) => ( {
+			...item,
+			adjustments: item.adjustments ?? [],
+		} ) );
 
-	// Create and hydrate state.
-	const state = new State( {
-		isAdding: '1' === isAdding,
-		isRefund: '1' === isRefund,
-		hasTax: '0' === hasTax ? false : hasTax,
-		hasQuantity: '1' === hasQuantity,
-		hasDiscounts: '1' === hasDiscounts,
+	const config = {
+		isAdding:     '1' === String( isAdding ),
+		isRefund:     '1' === String( isRefund ),
+		hasTax:       hasTax ?? 'none',
+		hasQuantity:  '1' === String( hasQuantity ),
+		hasDiscounts: '1' === String( hasDiscounts ),
+		order:        order ?? {},
 		formatters: {
-			currency: currencyFormatter,
-			// Backbone doesn't merge nested defaults.
+			currency: new Currency( {
+				currency:       order?.currency ?? '',
+				currencySymbol: order?.currencySymbol ?? '',
+			} ),
 			number: new NumberFormat(),
 		},
-		order,
-	} );
+		items:       normalizeItems( items ),
+		adjustments: adjustments,
+		refunds:     refunds,
+	};
 
-	// Create collections and add to state.
-	state.set( {
-		items: new OrderItems( null, {
-			state,
-		} ),
-		adjustments: new OrderAdjustments( null, {
-			state,
-		} ),
-		refunds: new OrderRefunds( null, {
-			state,
-		} ),
-	} );
-
-	// Create Overview.
-	overview = new Overview( {
-		state,
-	} );
-
-	// Hydrate collections.
-
-	// Hydrate `OrderItem`s.
-	//
-	// Models are created manually before being added to the collection to
-	// ensure attributes maintain schema with deep model attributes.
-	items.forEach( ( item ) => {
-		const orderItemAdjustments = new OrderAdjustments( item.adjustments );
-		const orderItem = new OrderItem( {
-			...item,
-			adjustments: orderItemAdjustments,
-			state,
-		} );
-
-		state.get( 'items' ).add( orderItem );
-	} );
-
-	// Hyrdate `Order`-level `Adjustments`.
-	adjustments.forEach( ( adjustment ) => {
-		state.get( 'adjustments' ).add( {
-			state,
-			...adjustment,
-		} )
-	} );
-
-	// Hydrate `OrderRefund`s.
-	refunds.forEach( ( refund ) => {
-		state.get( 'refunds' ).add( {
-			state,
-			...refund,
-		} );
-	} );
-} ) ();
-
-export default overview;
+	createRoot( root ).render( <OrderOverviewApp config={ config } /> );
+} )();

@@ -1517,7 +1517,30 @@ function edd_tax_rate_callback( $args ) {
  * @return void
  */
 function edd_tax_rates_callback( $deprecated = array() ) {
-	$rates = edd_get_tax_rates( array(), OBJECT );
+	$rates        = edd_get_tax_rates( array(), OBJECT );
+	$country_list = edd_get_country_list();
+
+	// The empty option has to stay first, or the browser preselects a real country while the dialog has none.
+	$countries = array(
+		array(
+			'value' => '',
+			'text'  => '',
+		),
+		array(
+			'value' => '*',
+			'text'  => __( 'All Countries', 'easy-digital-downloads' ),
+		),
+	);
+
+	unset( $country_list[''] );
+
+	foreach ( $country_list as $code => $name ) {
+		$countries[] = array(
+			'value' => $code,
+			// React escapes on render, so entities in the source list are decoded rather than escaped again.
+			'text'  => html_entity_decode( $name, ENT_QUOTES, 'UTF-8' ),
+		);
+	}
 
 	wp_enqueue_script( 'edd-admin-tax-rates' );
 	wp_enqueue_style( 'edd-admin-tax-rates' );
@@ -1526,15 +1549,33 @@ function edd_tax_rates_callback( $deprecated = array() ) {
 		'edd-admin-tax-rates',
 		'eddTaxRates',
 		array(
-			'rates' => $rates,
-			'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
-			'i18n'  => array(
-				/* translators: Tax rate country code */
-				'duplicateRate' => esc_html__( 'Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another.', 'easy-digital-downloads' ),
-				'emptyCountry'  => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
-				'negativeTax'   => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
-				'emptyTax'      => esc_html__( 'Are you sure you want to add a 0% tax rate?', 'easy-digital-downloads' ),
-				'addNewRate'    => esc_html__( 'Add Tax Rate', 'easy-digital-downloads' ),
+			'rates'     => $rates,
+			'nonce'     => wp_create_nonce( 'edd-country-field-nonce' ),
+			'countries' => $countries,
+			'i18n'      => array(
+				/* translators: %s: Tax rate country/region identifier */
+				'duplicateRate'   => __( 'Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another.', 'easy-digital-downloads' ),
+				'emptyCountry'    => __( 'Please select a country.', 'easy-digital-downloads' ),
+				'negativeTax'     => __( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+				'emptyTax'        => __( 'Are you sure you want to add a 0% tax rate?', 'easy-digital-downloads' ),
+				'addNewRate'      => __( 'Add Tax Rate', 'easy-digital-downloads' ),
+				'addRate'         => __( 'Add Rate', 'easy-digital-downloads' ),
+				'cancel'          => __( 'Cancel', 'easy-digital-downloads' ),
+				'country'         => __( 'Country', 'easy-digital-downloads' ),
+				'region'          => __( 'Region', 'easy-digital-downloads' ),
+				'rate'            => __( 'Rate', 'easy-digital-downloads' ),
+				'actions'         => __( 'Actions', 'easy-digital-downloads' ),
+				'noRates'         => __( 'No rates found.', 'easy-digital-downloads' ),
+				'remove'          => __( 'Remove', 'easy-digital-downloads' ),
+				'activate'        => __( 'Activate', 'easy-digital-downloads' ),
+				'deactivate'      => __( 'Deactivate', 'easy-digital-downloads' ),
+				'bulkActions'     => __( 'Bulk Actions', 'easy-digital-downloads' ),
+				'apply'           => __( 'Apply', 'easy-digital-downloads' ),
+				'showDeactivated' => __( 'Show deactivated rates', 'easy-digital-downloads' ),
+				'selectCountry'   => __( 'Select a country', 'easy-digital-downloads' ),
+				'applyToCountry'  => __( 'Apply to whole country', 'easy-digital-downloads' ),
+				/* translators: Tax rate percentage symbol */
+				'taxRateSymbol'   => _x( '%', 'tax rate', 'easy-digital-downloads' ),
 			),
 		)
 	);
@@ -1544,25 +1585,6 @@ function edd_tax_rates_callback( $deprecated = array() ) {
 
 	<div id="edd-admin-tax-rates"></div>
 	<?php
-
-	$templates = array(
-		'meta',
-		'row',
-		'row-empty',
-		'footer',
-		'bulk-actions',
-		'dialog',
-	);
-
-	foreach ( $templates as $tmpl ) {
-		?>
-
-<script type="text/html" id="tmpl-edd-admin-tax-rates-table-<?php echo esc_attr( $tmpl ); ?>">
-		<?php require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-tax-rates-table-' . $tmpl . '.php'; ?>
-</script>
-
-		<?php
-	}
 }
 add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_rates_callback' );
 

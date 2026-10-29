@@ -53,6 +53,32 @@ class Styles {
 	}
 
 	/**
+	 * Adds a stylesheet to the block editor canvas through the editor settings.
+	 *
+	 * Bails when the file is missing, so a caller never inlines an empty stylesheet.
+	 *
+	 * @since 3.7.3
+	 * @param array  $editor_settings Block editor settings.
+	 * @param string $path            File system path to the stylesheet.
+	 * @param string $url             URL the stylesheet is served from.
+	 * @return array
+	 */
+	public static function add_to_editor_settings( array $editor_settings, string $path, string $url ): array {
+		if ( ! $path || ! FileSystem::file_exists( $path ) ) {
+			return $editor_settings;
+		}
+
+		$editor_settings['styles'][] = array(
+			'css'            => FileSystem::get_contents( $path ),
+			'baseURL'        => $url,
+			'__unstableType' => 'theme',
+			'isGlobalStyles' => false,
+		);
+
+		return $editor_settings;
+	}
+
+	/**
 	 * Enqueues an inline style if a custom stylesheet is being used.
 	 *
 	 * @since 3.3.0

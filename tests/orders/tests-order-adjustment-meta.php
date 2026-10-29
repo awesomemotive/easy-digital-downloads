@@ -1,13 +1,14 @@
 <?php
 /**
  * Order item meta tests.
- *
- * @group edd_orders
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_orders
+ */
 class Order_Adjustment_Meta_Tests extends EDD_UnitTestCase {
 
 	/**

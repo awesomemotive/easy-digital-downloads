@@ -112,7 +112,6 @@ class Export extends Ajax_UnitTestCase {
 	 */
 	private function set_up_exporting_user() {
 		$this->_setRole( 'administrator' );
-		wp_get_current_user()->add_cap( 'export_shop_reports' );
 	}
 
 	/**

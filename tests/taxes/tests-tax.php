@@ -1,12 +1,15 @@
 <?php
 /**
- * @group edd_tax
+ * Tax tests.
  */
 namespace EDD\Tests\Taxes;
 
 use EDD\Tests\Helpers;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_tax
+ */
 class Tax extends EDD_UnitTestCase {
 
 	/**

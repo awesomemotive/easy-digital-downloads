@@ -20,6 +20,7 @@ import {
 ( () => {
 	try {
 		window.eddStripe = new Stripe( edd_stripe_vars.publishable_key,{
+			apiVersion: edd_stripe_vars.apiVersion,
 			betas: ['elements_enable_deferred_intent_beta_1'],
 		} );
 

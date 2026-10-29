@@ -2,17 +2,18 @@
 /**
  * Order Details/Add New Order Sections
  *
- * @package     EDD
- * @subpackage  Admin/Orders
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Orders
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
+use EDD\Admin\Orders\Overview;
 use EDD\Cron\Schedulers\Handler;
+use EDD\Utils\Convert;
 
 /** Publishing ******************************************************************/
 
@@ -347,7 +348,7 @@ function edd_order_details_email( $order ) {
 							<?php selected( 'primary', $key ); ?>
 						>
 							<?php
-							echo sprintf(
+							printf(
 								'%1$s (%2$s)',
 								esc_attr( $email ),
 								esc_html(
@@ -671,9 +672,9 @@ function edd_order_details_overview( $order ) {
 					'objectId'     => esc_html( $adjustment->object_id ),
 					'objectType'   => esc_html( $adjustment->object_type ),
 					'typeId'       => esc_html( $adjustment->type_id ),
-					// Escaped by the template.
+					// Escaped by the view on render.
 					'type'         => $adjustment->type,
-					'description'  => $adjustment->description,
+					'description'  => Convert::decode_entities( $adjustment->description ),
 					'subtotal'     => esc_html( $adjustment->subtotal ),
 					'tax'          => esc_html( $adjustment->tax ),
 					'total'        => esc_html( $adjustment->total ),
@@ -691,13 +692,13 @@ function edd_order_details_overview( $order ) {
 				'id'           => esc_html( $item->id ),
 				'orderId'      => esc_html( $item->order_id ),
 				'productId'    => esc_html( $item->product_id ),
-				// Escaped by the template.
-				'productName'  => $item->get_order_item_name(),
+				// Escaped by the view on render.
+				'productName'  => Convert::decode_entities( $item->get_order_item_name() ),
 				'priceId'      => esc_html( $item->price_id ),
 				'cartIndex'    => esc_html( $item->cart_index ),
 				'type'         => esc_html( $item->type ),
 				'status'       => esc_html( $item->status ),
-				// Escaped by the template.
+				// Escaped by the view on render.
 				'statusLabel'  => edd_get_status_label( $item->status ),
 				'quantity'     => esc_html( $item->quantity ),
 				'amount'       => esc_html( $item->amount ),
@@ -733,9 +734,9 @@ function edd_order_details_overview( $order ) {
 				'objectId'     => esc_html( $adjustment->object_id ),
 				'objectType'   => esc_html( $adjustment->object_type ),
 				'typeId'       => esc_html( $adjustment->type_id ),
-				// Escaped by the template.
+				// Escaped by the view on render.
 				'type'         => $adjustment->type,
-				'description'  => $adjustment->description,
+				'description'  => Convert::decode_entities( $adjustment->description ),
 				'subtotal'     => esc_html( $adjustment->subtotal ),
 				'tax'          => esc_html( $adjustment->tax ),
 				'total'        => esc_html( $adjustment->total ),
@@ -799,75 +800,58 @@ function edd_order_details_overview( $order ) {
 		$has_quantity = false;
 	}
 
+	// Only the Add Order screen opens the Add Discount and Add Download dialogs.
+	$_initial_discounts = array();
+	$_initial_downloads = array();
+	if ( edd_is_add_order_page() ) {
+		$_initial_discounts = Overview::get_initial_discounts();
+		$_initial_downloads = Overview::get_initial_downloads();
+	}
+
+	// Refundability flags for the Actions panel.
+	$is_refundable      = edd_is_order_refundable( $order->id );
+	$is_refund_override = edd_is_order_refundable_by_override( $order->id );
+	$is_window_passed   = edd_is_order_refund_window_passed( $order->id );
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
 		array(
-			'items'        => $_items,
-			'adjustments'  => $_adjustments,
-			'refunds'      => $_refunds,
-			'isAdding'     => true === edd_is_add_order_page(),
-			'hasQuantity'  => $has_quantity,
-			'hasTax'       => $has_tax,
-			'hasDiscounts' => true === edd_has_active_discounts(),
-			'order'        => array(
+			'items'            => $_items,
+			'adjustments'      => $_adjustments,
+			'refunds'          => $_refunds,
+			'isAdding'         => true === edd_is_add_order_page(),
+			'hasQuantity'      => $has_quantity,
+			'hasTax'           => $has_tax,
+			'hasDiscounts'     => true === edd_has_active_discounts(),
+			'isRefundable'     => $is_refundable,
+			'isRefundOverride' => $is_refund_override,
+			'isWindowPassed'   => $is_window_passed,
+			'currencyPosition' => edd_get_option( 'currency_position', 'before' ),
+			'initialDiscounts' => $_initial_discounts,
+			'initialDownloads' => $_initial_downloads,
+			'order'            => array(
 				'status'         => $order->status,
+				'gateway'        => $order->gateway,
 				'currency'       => $order->currency,
 				'currencySymbol' => html_entity_decode( edd_currency_symbol( $order->currency ) ),
 				'subtotal'       => $order->subtotal,
 				'discount'       => $order->discount,
 				'tax'            => $order->tax,
 				'total'          => $order->total,
+				'netTotal'       => $order->id ? edd_get_order_total( $order->id ) : 0,
 			),
-			'nonces'       => array(
+			'nonces'           => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
 				'edd_get_file_download_link'       => wp_create_nonce( 'edd_get_file_download_link' ),
 			),
-			'i18n'         => array(
-				'closeText' => esc_html__( 'Close', 'easy-digital-downloads' ),
-			),
+			'urls'             => Overview::get_urls(),
+			'i18n'             => Overview::get_i18n(),
 		)
 	);
-
-	$templates = array(
-		'actions',
-		'subtotal',
-		'tax',
-		'total',
-		'item',
-		'adjustment',
-		'adjustment-discount',
-		'refund',
-		'no-items',
-		'copy-download-link',
-		'form-add-order-item',
-		'form-add-order-discount',
-		'form-add-order-adjustment',
-	);
-
-	foreach ( $templates as $tmpl ) {
-		echo '<script type="text/html" id="tmpl-edd-admin-order-' . esc_attr( $tmpl ) . '">';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-order-' . $tmpl . '.php';
-		echo '</script>';
-	}
 	?>
 
-<div id="edd-order-overview" class="postbox edd-edit-purchase-element edd-order-overview">
-	<table id="edd-order-overview-summary" class="widefat wp-list-table edd-order-overview-summary">
-		<thead>
-			<tr>
-				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
-				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<?php if ( $has_quantity ) : ?>
-					<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
-				<?php endif; ?>
-				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
-			</tr>
-		</thead>
-	</table>
-
-	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside"></div>
-</div>
+<div id="edd-order-overview" class="postbox edd-edit-purchase-element edd-order-overview"></div>
 
 	<?php
 

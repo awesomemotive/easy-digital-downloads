@@ -1,0 +1,12 @@
+// Revoking is account-wide, so it is set apart from the local disconnect beside it.
+.edd-modal--confirm .edd-modal__revoke {
+	color: var(--edd-alert-red-hover);
+	border-color: var(--edd-alert-red);
+
+	&:hover,
+	&:focus {
+		color: #fff;
+		background: var(--edd-alert-red-hover);
+		border-color: var(--edd-alert-red-hover);
+	}
+}

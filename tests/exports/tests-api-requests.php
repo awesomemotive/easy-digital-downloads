@@ -37,8 +37,6 @@ class APIRequests extends EDD_UnitTestCase {
 	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 		self::$user_id = parent::factory()->user->create( array( 'role' => 'administrator' ) );
-		$user = new \WP_User( self::$user_id );
-		$user->add_cap( 'export_shop_reports' );
 		self::$logs = parent::edd()->api_request_log->create_many( 5 );
 		self::$exporter = new Exporter();
 	}

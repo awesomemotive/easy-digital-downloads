@@ -1,14 +1,14 @@
 <?php
 /**
  * Order Reovery Tests.
- *
- * @group edd_orders
- *
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_orders
+ */
 class Recovery extends EDD_UnitTestCase {
 
 	protected static $recoverable_payment_id;

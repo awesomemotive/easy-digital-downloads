@@ -1,9 +1,6 @@
 <?php
 /**
  * Tests for User Verification Resend Functionality
- *
- * @group edd_users
- * @group edd_verification
  */
 
 namespace EDD\Tests\Users;
@@ -11,6 +8,10 @@ namespace EDD\Tests\Users;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Users\Verification as UserVerification;
 
+/**
+ * @group edd_users
+ * @group edd_verification
+ */
 class Verification extends EDD_UnitTestCase {
 
 	/**

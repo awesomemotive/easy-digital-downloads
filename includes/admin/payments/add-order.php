@@ -2,17 +2,16 @@
 /**
  * Add Order Page.
  *
- * @package     EDD
- * @subpackage  Admin/Orders
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Orders
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
-use EDD\Database\Rows\Order as Order;
+use EDD\Database\Rows\Order;
 
 /**
  * Output the Add Order page
@@ -26,27 +25,29 @@ function edd_add_order_page_content() {
 	wp_enqueue_script( 'edd-admin-payments' );
 
 	// Create empty order object to pass to callback functions.
-	$order = new Order( array(
-		'id'              => 0,
-		'parent'          => 0,
-		'order_number'    => 0,
-		'status'          => 'complete',
-		'date_created'    => date( 'Y-m-d H:i:s' ),
-		'date_modified'   => date( 'Y-m-d H:i:s' ),
-		'date_refundable' => null,
-		'user_id'         => 0,
-		'customer_id'     => 0,
-		'email'           => '',
-		'ip'              => edd_get_ip(),
-		'gateway'         => '',
-		'mode'            => '',
-		'currency'        => edd_get_currency(),
-		'payment_key'     => '',
-		'subtotal'        => 0,
-		'discount'        => 0,
-		'tax'             => 0,
-		'total'           => 0,
-	) );
+	$order = new Order(
+		array(
+			'id'              => 0,
+			'parent'          => 0,
+			'order_number'    => 0,
+			'status'          => 'complete',
+			'date_created'    => date( 'Y-m-d H:i:s' ),
+			'date_modified'   => date( 'Y-m-d H:i:s' ),
+			'date_refundable' => null,
+			'user_id'         => 0,
+			'customer_id'     => 0,
+			'email'           => '',
+			'ip'              => edd_get_ip(),
+			'gateway'         => '',
+			'mode'            => '',
+			'currency'        => edd_get_currency(),
+			'payment_key'     => '',
+			'subtotal'        => 0,
+			'discount'        => 0,
+			'tax'             => 0,
+			'total'           => 0,
+		)
+	);
 
 	?>
 
@@ -127,32 +128,7 @@ function edd_add_order_page_content() {
 			<?php do_action( 'edd_add_order_after' ); ?>
 
 		</div><!-- /.wrap -->
-
 	</form>
 
-	<div
-		id="edd-admin-order-add-item-dialog"
-		title="<?php esc_attr_e( 'Add Download', 'easy-digital-downloads' ); ?>"
-		style="display: none;"
-	>
-		<div id="edd-admin-order-add-item-dialog-content"></div>
-	</div>
-
-	<div
-		id="edd-admin-order-add-discount-dialog"
-		title="<?php esc_attr_e( 'Add Discount', 'easy-digital-downloads' ); ?>"
-		style="display: none;"
-	>
-		<div id="edd-admin-order-add-discount-dialog-content"></div>
-	</div>
-
-	<div
-		id="edd-admin-order-add-adjustment-dialog"
-		title="<?php esc_attr_e( 'Add Adjustment', 'easy-digital-downloads' ); ?>"
-		style="display: none;"
-	>
-		<div id="edd-admin-order-add-adjustment-dialog-content"></div>
-	</div>
-
-<?php
+	<?php
 }

@@ -72,8 +72,6 @@ class RestoreEndpointTest extends EDD_UnitTestCase {
 		self::$admin_user_id = self::factory()->user->create(
 			array( 'role' => 'administrator' )
 		);
-		$admin = new \WP_User( self::$admin_user_id );
-		$admin->add_cap( 'manage_shop_settings' );
 
 		// Create subscriber user without caps.
 		self::$subscriber_user_id = self::factory()->user->create(

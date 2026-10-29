@@ -2,13 +2,14 @@
 /**
  * Order Overview escaping tests.
  *
- * The order overview renders its item and adjustment rows from Underscore templates, fed by a
- * model localized for the browser. A value interpolated with the raw `{{{ }}}` delimiter is
- * written to the page unescaped, and a product name can reach that template already decoded by
- * the browser's HTML parser rather than as the character references that were stored.
+ * The order overview renders its item and adjustment rows in React, fed by a model localized
+ * for the browser. React escapes what it interpolates, so the model carries text and never
+ * markup: escaping it here as well displays a legitimate `Widget & Gadget` as
+ * `Widget &amp; Gadget`, and leaving kses's character references in place displays a title as
+ * `&lt;Pro&gt;` rather than as the text its author typed.
  *
- * These tests assert that the templates escape every value they interpolate, that the model
- * does not then escape a second time, and that a name containing markup cannot be stored.
+ * These tests assert that the model neither escapes nor carries character references, and that
+ * a name containing markup cannot be stored in the first place.
  *
  * @package     EDD\Tests\Admin
  * @copyright   Copyright (c) 2026, Sandhills Development, LLC
@@ -50,40 +51,21 @@ class OrderOverviewEscaping extends EDD_UnitTestCase {
 	const AMPERSAND_DESCRIPTION = 'Rush & Handling';
 
 	/**
-	 * The order overview templates, which the directory glob must reach.
-	 *
-	 * @var array
-	 */
-	const ORDER_OVERVIEW_TEMPLATES = array(
-		'tmpl-order-item.php',
-		'tmpl-order-adjustment.php',
-		'tmpl-order-adjustment-discount.php',
-		'tmpl-order-form-add-order-item.php',
-	);
-
-	/**
 	 * The order overview view functions are only loaded for admin requests.
 	 */
 	public static function wpSetUpBeforeClass() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/orders.php';
 	}
 
-	public function setUp(): void {
-		parent::setUp();
-
-		// EDD's roles and their capabilities are installed rather than present by default, and
-		// another test in the suite removes them; this class asserts against a role, so it
-		// installs them. WP_Roles::add_cap() updates the stored roles but not the WP_Role
-		// objects already built for this request, so the roles are reloaded afterwards.
-		EDD()->roles->add_roles();
-		EDD()->roles->add_caps();
-		wp_roles()->for_site( get_current_blog_id() );
-	}
-
-	public function tearDown(): void {
+	public function tear_down() {
 		wp_set_current_user( 0 );
 
-		parent::tearDown();
+		// read_localized_model() leaves the handle registered with no dependencies, and
+		// wp_register_script() will not overwrite a live handle. Dropping it restores the
+		// bootstrap's state, so the next Scripts::register() rebuilds it with its real deps.
+		wp_deregister_script( 'edd-admin-orders' );
+
+		parent::tear_down();
 	}
 
 	/**
@@ -132,68 +114,13 @@ class OrderOverviewEscaping extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * The item template must escape every value it interpolates.
-	 */
-	public function test_the_order_item_template_escapes_the_values_it_interpolates() {
-		$template = $this->get_template( 'tmpl-order-item.php' );
-
-		$this->assertStringNotContainsString(
-			'{{{ data.productName }}}',
-			$template,
-			'The product name must not be interpolated with the raw delimiter.'
-		);
-		$this->assertStringNotContainsString(
-			'{{{ data.statusLabel }}}',
-			$template,
-			'The status label must not be interpolated with the raw delimiter.'
-		);
-	}
-
-	/**
-	 * The adjustment template must escape every value it interpolates.
-	 */
-	public function test_the_order_adjustment_template_escapes_the_values_it_interpolates() {
-		$this->assertStringNotContainsString(
-			'{{{ data.type }}}',
-			$this->get_template( 'tmpl-order-adjustment.php' ),
-			'The adjustment type must not be interpolated with the raw delimiter.'
-		);
-	}
-
-	/**
-	 * No template in the admin views directory may interpolate with the raw delimiter.
+	 * The localized model must not escape a name React will escape again.
 	 *
-	 * The two assertions above name the values this change fixed; this one holds the invariant
-	 * for the directory, so a template added later cannot reintroduce the raw delimiter and a
-	 * whitespace variant such as `{{{data.productName}}}` cannot sidestep a literal comparison.
+	 * Escaping in both places displays a legitimate name as `Widget &amp;amp; Gadget`. A raw
+	 * character is required to show it: `esc_html()` does not re-encode existing character
+	 * references, which is the same property that lets the encoded name through.
 	 */
-	public function test_no_admin_view_template_interpolates_with_the_raw_delimiter() {
-		$templates = glob( EDD_PLUGIN_DIR . 'includes/admin/views/*.php' );
-		$found     = array_map( 'basename', (array) $templates );
-
-		// The glob has to reach the templates this class is about, or it passes over nothing.
-		foreach ( self::ORDER_OVERVIEW_TEMPLATES as $expected ) {
-			$this->assertContains( $expected, $found, "The glob must cover {$expected}." );
-		}
-
-		foreach ( $templates as $template ) {
-			$this->assertDoesNotMatchRegularExpression(
-				'/\{\{\{.+?\}\}\}/s',
-				file_get_contents( $template ),
-				basename( $template ) . ' interpolates a value with the raw delimiter, which does not escape.'
-			);
-		}
-	}
-
-	/**
-	 * The localized model must not escape a name the template will escape again.
-	 *
-	 * Without this, switching the template to the escaping delimiter displays a legitimate name
-	 * as `Widget &amp;amp; Gadget`, so this is what keeps the template change from breaking
-	 * display. A raw character is required to show it: `esc_html()` does not re-encode existing
-	 * character references, which is the same property that lets the encoded name through.
-	 */
-	public function test_the_localized_item_model_does_not_escape_a_name_the_template_escapes() {
+	public function test_the_localized_item_model_does_not_escape_a_name_react_escapes() {
 		$model = $this->get_localized_overview( $this->create_order_with_item_name( self::AMPERSAND_NAME ) );
 
 		$this->assertNotEmpty( $model['items'], 'The order must localize its items.' );
@@ -205,30 +132,30 @@ class OrderOverviewEscaping extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * A name stored as character references must reach the model unchanged.
+	 * A name stored as character references must reach the model decoded.
 	 *
-	 * The control for the fix: it must neither decode the references into markup nor escape them
-	 * a second time, both of which would be ways to "fix" the display and break something else.
+	 * Nothing parses HTML between the model and the row, so references would display literally.
+	 *
+	 * @see e2e/admin/orders/add-order-item-escaping.spec.js
 	 */
-	public function test_the_localized_item_model_leaves_character_references_alone() {
+	public function test_the_localized_item_model_decodes_character_references() {
 		$model = $this->get_localized_overview( $this->create_order_with_item_name( self::ENCODED_NAME ) );
 
 		$this->assertSame(
-			self::ENCODED_NAME,
+			'<img src=x onerror=alert(20002)>MXP2',
 			$model['items'][0]['productName'],
-			'Character references must reach the model exactly as stored.'
+			'Character references must be decoded for the view, which escapes on render.'
 		);
 	}
 
 	/**
-	 * The localized adjustment model must not escape a description the template escapes.
+	 * The localized adjustment model must not escape a description React escapes.
 	 *
-	 * `tmpl-order-adjustment.php` and `tmpl-order-adjustment-discount.php` both interpolate the
-	 * description with the escaping delimiter, so escaping it here as well displays a legitimate
-	 * fee as `Rush &amp; Handling`. The order screen builds the item level and order level
-	 * adjustments in separate loops, so both are asserted.
+	 * Escaping it here as well displays a legitimate fee as `Rush &amp; Handling`. The order
+	 * screen builds the item level and order level adjustments in separate loops, so both are
+	 * asserted.
 	 */
-	public function test_the_localized_adjustment_model_does_not_escape_a_description_the_template_escapes() {
+	public function test_the_localized_adjustment_model_does_not_escape_a_description_react_escapes() {
 		$model = $this->get_localized_overview( $this->create_order_with_fee_description( self::AMPERSAND_DESCRIPTION ) );
 
 		$item_adjustment  = $this->find_adjustment( $model['adjustments'], 'order_item' );
@@ -250,13 +177,12 @@ class OrderOverviewEscaping extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * The refund modal's model must not escape a name its template will escape again.
+	 * The refund modal's model must not escape a name React will escape again.
 	 *
-	 * The refund screen builds its own copy of this model for the same two templates, so it
-	 * needs the same treatment; fixing only the order screen would leave the modal showing
-	 * `Widget &amp;amp; Gadget`.
+	 * The refund screen builds its own copy of this model, so it needs the same treatment;
+	 * covering only the order screen would leave the modal showing `Widget &amp;amp; Gadget`.
 	 */
-	public function test_the_refund_model_does_not_escape_a_name_the_template_escapes() {
+	public function test_the_refund_model_does_not_escape_a_name_react_escapes() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/refunds.php';
 
 		$order     = $this->create_order_with_item_name( self::AMPERSAND_NAME );
@@ -279,12 +205,12 @@ class OrderOverviewEscaping extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * The refund modal's model must not escape a description its template will escape again.
+	 * The refund modal's model must not escape a description React will escape again.
 	 *
-	 * The modal renders the same two adjustment templates from its own copy of the model, so it
-	 * needs the same treatment as the order screen.
+	 * The modal renders its adjustments from its own copy of the model, so it needs the same
+	 * treatment as the order screen.
 	 */
-	public function test_the_refund_model_does_not_escape_a_description_the_template_escapes() {
+	public function test_the_refund_model_does_not_escape_a_description_react_escapes() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/refunds.php';
 
 		$order     = $this->create_order_with_fee_description( self::AMPERSAND_DESCRIPTION );
@@ -348,20 +274,6 @@ class OrderOverviewEscaping extends EDD_UnitTestCase {
 		);
 
 		edd_destroy_order( $order_id );
-	}
-
-	/**
-	 * Reads one of the order overview templates from disk.
-	 *
-	 * @param string $file The template file name.
-	 * @return string
-	 */
-	private function get_template( $file ) {
-		$path = EDD_PLUGIN_DIR . 'includes/admin/views/' . $file;
-
-		$this->assertFileExists( $path, 'The template must exist for this assertion to mean anything.' );
-
-		return file_get_contents( $path );
 	}
 
 	/**

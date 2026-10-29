@@ -89,17 +89,9 @@ function edd_dashboard_sales_widget() {
  * @return array
  */
 function edd_get_dashboard_sales_widget_data() {
-	$data   = array();
-	$ranges = array( 'this_month', 'last_month', 'today', 'total' );
-	foreach ( $ranges as $range ) {
-		$args = array(
-			'range'         => $range,
-			'output'        => 'formatted',
-			'revenue_type'  => 'net',
-		);
-		if ( 'total' === $range ) {
-			unset( $args['range'] );
-		}
+	$data = array();
+	foreach ( EDD\Reports\SalesSummaryRanges::get_ranges() as $range ) {
+		$args = EDD\Reports\SalesSummaryRanges::get_stats_args( $range, 'formatted' );
 		// Remove filters so that deprecation notices are not unnecessarily logged outside of reports.
 		remove_all_filters( 'edd_report_views' );
 		$stats          = new EDD\Stats( $args );

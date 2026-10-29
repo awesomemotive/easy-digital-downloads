@@ -11,7 +11,6 @@
  * @copyright   Copyright (c) 2026, Sandhills Development, LLC
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.7.0
- * @group       edd_requirements
  * @covers      \EDD\RequirementsCheck
  */
 
@@ -20,6 +19,9 @@ namespace EDD\Tests\Admin;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\RequirementsCheck;
 
+/**
+ * @group edd_requirements
+ */
 class RequirementsCheckOutput extends EDD_UnitTestCase {
 
 	/**

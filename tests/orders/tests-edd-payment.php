@@ -1,9 +1,6 @@
 <?php
 /**
  * EDD_Payment Tests.
- *
- * @group edd_orders
- * @group edd_payment
  */
 namespace EDD\Tests\Orders;
 
@@ -12,6 +9,9 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
 /**
  * @coversDefaultClass \EDD_Payment
+ *
+ * @group edd_orders
+ * @group edd_payment
  */
 class EDD_Payment extends EDD_UnitTestCase {
 
@@ -1100,5 +1100,65 @@ class EDD_Payment extends EDD_UnitTestCase {
 		$this->payment->update_meta( '_edd_payment_tax_rate', 0.25 );
 
 		$this->assertEquals( 25, edd_get_order_meta( $this->payment->ID, 'tax_rate', true ) );
+	}
+
+	/**
+	 * The saved discount is located by filtering the order's adjustments, which keeps the
+	 * original keys, so a discount sitting behind any other adjustment is not at index 0.
+	 */
+	public function test_saving_a_discount_updates_the_adjustment_behind_another_adjustment() {
+		$discount_id = Helpers\EDD_Helper_Discount::create_simple_percent_discount();
+		$discount    = edd_get_discount( $discount_id );
+
+		// Added first, so it takes the lower ID and the discount lands behind it.
+		edd_add_order_adjustment(
+			array(
+				'object_id'   => $this->payment->ID,
+				'object_type' => 'order',
+				'type'        => 'fee',
+				'description' => 'Handling',
+				'subtotal'    => 2,
+				'total'       => 2,
+			)
+		);
+
+		/*
+		 * Summed off the order rather than the payment: reading cart_details here would
+		 * load it on the object under test and mask a save() which fails to load it.
+		 */
+		$cart_subtotal = 0.00;
+
+		foreach ( edd_get_order_items( array( 'order_id' => $this->payment->ID ) ) as $item ) {
+			$cart_subtotal += $item->subtotal;
+		}
+
+		$payment            = edd_get_payment( $this->payment->ID );
+		$payment->discounts = $discount->code;
+		$payment->save();
+
+		// Saved a second time, the discount is found rather than added, which is the failing path.
+		$payment->discounts = $discount->code;
+		$payment->save();
+
+		$this->assertEquals( $cart_subtotal * 0.2, $this->get_discount_adjustment_total( $payment->ID, $discount->code ) );
+
+		Helpers\EDD_Helper_Discount::delete_discount( $discount_id );
+	}
+
+	/**
+	 * Read one discount adjustment's total straight off the order.
+	 *
+	 * @param int    $order_id The order ID.
+	 * @param string $code     The discount code.
+	 * @return float
+	 */
+	private function get_discount_adjustment_total( $order_id, $code ) {
+		foreach ( edd_get_order( $order_id )->adjustments as $adjustment ) {
+			if ( 'discount' === $adjustment->type && $code === $adjustment->description ) {
+				return (float) $adjustment->total;
+			}
+		}
+
+		return 0.00;
 	}
 }

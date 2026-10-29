@@ -71,13 +71,6 @@ class BulkActions extends EDD_UnitTestCase {
 		EDD()->roles->add_roles();
 		EDD()->roles->add_caps();
 
-		/*
-		 * EDD_Roles::add_caps() grants through WP_Roles::add_cap(), which updates the
-		 * stored roles but not the role objects WP_User reads, so the capabilities are
-		 * invisible to user_can() until the roles are rebuilt.
-		 */
-		wp_roles()->for_site();
-
 		self::$accountant = self::factory()->user->create( array( 'role' => 'shop_accountant' ) );
 		self::$worker     = self::factory()->user->create( array( 'role' => 'shop_worker' ) );
 		self::$subscriber = self::factory()->user->create( array( 'role' => 'subscriber' ) );

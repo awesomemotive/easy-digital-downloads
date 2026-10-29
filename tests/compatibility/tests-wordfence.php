@@ -1,15 +1,16 @@
 <?php
 /**
  * Handles tests for Wordfence compatibility.
- *
- * @group compatibility
- * @group plugins
  */
 
 namespace EDD\Tests\Compatibility;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Compatibility\Loader;
 
+/**
+ * @group compatibility
+ * @group plugins
+ */
 class Wordfence extends EDD_UnitTestCase {
 	/**
 	 * Test if the Wordfence compatibility class is exists.

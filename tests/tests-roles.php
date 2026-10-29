@@ -16,22 +16,42 @@ class Tests_Roles extends EDD_UnitTestCase {
 	protected static $users = array();
 
 	/**
+	 * The current user before each test.
+	 *
+	 * @var int
+	 */
+	private $original_user_id = 0;
+
+	/**
 	 * Create one user per role under test.
 	 */
 	public static function wpSetUpBeforeClass() {
 		EDD()->roles->add_roles();
 		EDD()->roles->add_caps();
 
-		/*
-		 * EDD_Roles::add_caps() grants through WP_Roles::add_cap(), which updates the
-		 * stored roles but not the role objects WP_User reads, so the capabilities are
-		 * invisible to user_can() until the roles are rebuilt.
-		 */
-		wp_roles()->for_site();
-
 		foreach ( array( 'shop_accountant', 'shop_worker', 'shop_vendor', 'subscriber' ) as $role ) {
 			self::$users[ $role ] = self::factory()->user->create( array( 'role' => $role ) );
 		}
+	}
+
+	/**
+	 * Remember the current user, which the same-request tests replace.
+	 */
+	public function set_up() {
+		parent::set_up();
+
+		$this->original_user_id = get_current_user_id();
+	}
+
+	/**
+	 * Restore the shop roles and the current user the same-request tests change.
+	 */
+	public function tear_down() {
+		EDD()->roles->add_roles();
+		EDD()->roles->add_caps();
+		wp_set_current_user( $this->original_user_id );
+
+		parent::tear_down();
 	}
 
 	public function test_roles() {
@@ -226,5 +246,102 @@ class Tests_Roles extends EDD_UnitTestCase {
 				sprintf( 'The Subscriber unexpectedly holds %s.', $cap )
 			);
 		}
+	}
+
+	/*
+	 * Same-request effect.
+	 *
+	 * Activation and the reset tool check capabilities in the request that granted
+	 * them, so a grant must reach the role objects and the loaded current user, not
+	 * only the stored option.
+	 */
+
+	public function test_add_caps_is_effective_for_new_user_object_in_same_request() {
+		$shop_manager_id = self::factory()->user->create( array( 'role' => 'shop_manager' ) );
+		$this->load_roles_without_shop_caps();
+
+		EDD()->roles->add_caps();
+
+		$this->assertTrue( user_can( new \WP_User( $shop_manager_id ), 'manage_shop_settings' ) );
+	}
+
+	public function test_add_caps_is_effective_for_current_user_in_same_request() {
+		$administrator_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$this->load_roles_without_shop_caps();
+		wp_set_current_user( $administrator_id );
+
+		EDD()->roles->add_caps();
+
+		$this->assertTrue( current_user_can( 'manage_shop_settings' ) );
+	}
+
+	public function test_remove_caps_is_effective_for_current_user_in_same_request() {
+		$administrator_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_roles()->for_site();
+		wp_set_current_user( $administrator_id );
+		$this->assertTrue( current_user_can( 'manage_shop_settings' ), 'Fixture: the administrator must start with the cap.' );
+
+		EDD()->roles->remove_caps();
+
+		$this->assertFalse( current_user_can( 'manage_shop_settings' ) );
+	}
+
+	public function test_role_objects_match_stored_roles_after_add_caps() {
+		$this->load_roles_without_shop_caps();
+
+		EDD()->roles->add_caps();
+
+		$stored_roles = get_option( wp_roles()->role_key );
+		foreach ( array( 'administrator', 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' ) as $role ) {
+			$this->assertSame( $stored_roles[ $role ]['capabilities'], get_role( $role )->capabilities, $role );
+		}
+	}
+
+	public function test_add_caps_writes_roles_option_once() {
+		$this->load_roles_without_shop_caps();
+		$write_count = 0;
+		add_action(
+			'update_option_' . wp_roles()->role_key,
+			function () use ( &$write_count ) {
+				++$write_count;
+			}
+		);
+
+		EDD()->roles->add_caps();
+
+		$this->assertSame( 1, $write_count );
+	}
+
+	public function test_remove_caps_revokes_every_cap_add_caps_grants() {
+		$shop_roles = array( 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' );
+		foreach ( $shop_roles as $role ) {
+			remove_role( $role );
+		}
+		EDD()->roles->add_roles();
+		$base_roles = get_option( wp_roles()->role_key );
+		EDD()->roles->add_caps();
+		$granted_roles = get_option( wp_roles()->role_key );
+
+		EDD()->roles->remove_caps();
+
+		$revoked_roles = get_option( wp_roles()->role_key );
+		foreach ( $shop_roles as $role ) {
+			$granted_caps = array_diff_key( $granted_roles[ $role ]['capabilities'], $base_roles[ $role ]['capabilities'] );
+			$this->assertNotEmpty( $granted_caps, "Fixture: add_caps() must grant {$role} something, or this is vacuous." );
+			$this->assertSame(
+				array(),
+				array_keys( array_intersect_key( $revoked_roles[ $role ]['capabilities'], $granted_caps ) ),
+				$role
+			);
+		}
+	}
+
+	/**
+	 * Rebuilds the role objects from roles stored without EDD's capabilities,
+	 * the state an activation request starts from.
+	 */
+	private function load_roles_without_shop_caps() {
+		EDD()->roles->remove_caps();
+		wp_roles()->for_site();
 	}
 }

@@ -97,4 +97,16 @@ class Anonymization extends EDD_UnitTestCase {
 		// Ensure that the email logs have been deleted.
 		$this->assertEquals( 0, $query->query( array( 'email' => $random_email->email, 'count' => true ) ) );
 	}
+
+	public function test_anonymize_customer_removes_last_login_meta() {
+		edd_update_customer_meta( self::$customer->id, 'last_login_date', '2026-03-04 05:06:07' );
+		edd_update_customer_meta( self::$customer->id, 'last_login_ip', '203.0.113.7' );
+		$this->assertSame( '203.0.113.7', edd_get_customer_meta( self::$customer->id, 'last_login_ip', true ) );
+
+		$anonymized = _edd_anonymize_customer( self::$customer->id );
+
+		$this->assertTrue( $anonymized['success'] );
+		$this->assertSame( array(), edd_get_customer_meta( self::$customer->id, 'last_login_date' ) );
+		$this->assertSame( array(), edd_get_customer_meta( self::$customer->id, 'last_login_ip' ) );
+	}
 }

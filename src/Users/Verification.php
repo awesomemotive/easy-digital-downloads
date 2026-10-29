@@ -241,9 +241,47 @@ class Verification implements SubscriberInterface {
 	}
 
 	/**
+	 * Resolve the WordPress account a customer record belongs to.
+	 *
+	 * Returns the customer's own user ID when it is already set. Otherwise, falls back to the
+	 * account that owns the customer's email addresses, since a guest customer's record is only
+	 * claimed once that account verifies. An account that is already linked to another customer is
+	 * never returned.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param \EDD_Customer $customer     The customer record.
+	 * @param bool          $pending_only Whether to resolve only an account pending verification.
+	 * @return int The resolved user ID, or 0 if none is found.
+	 */
+	public static function resolve_customer_user_id( $customer, $pending_only = false ) {
+		if ( ! $customer instanceof \EDD_Customer ) {
+			return 0;
+		}
+
+		$user_id = (int) $customer->user_id;
+
+		if ( ! $user_id ) {
+			$user_id = self::get_user_id_by_customer_emails( $customer );
+
+			if ( $user_id && edd_get_customer_by( 'user_id', $user_id ) ) {
+				return 0;
+			}
+		}
+
+		if ( $user_id && $pending_only && ! edd_user_pending_verification( $user_id ) ) {
+			return 0;
+		}
+
+		return $user_id;
+	}
+
+	/**
 	 * Process admin verification resend.
 	 *
 	 * @since 3.5.3
+	 * @since 3.7.3 Resolves the account through the customer's email when the record
+	 *                       is not yet claimed, rather than refusing a pending customer outright.
 	 * @return void
 	 */
 	public function process_admin_verification_resend() {
@@ -262,18 +300,20 @@ class Verification implements SubscriberInterface {
 			wp_die( __( 'Invalid customer ID.', 'easy-digital-downloads' ) );
 		}
 
-		$customer = new \EDD_Customer( absint( $_GET['id'] ) );
+		$customer = edd_get_customer_by( 'id', absint( $_GET['id'] ) );
 
-		if ( ! $customer || ! $customer->id ) {
+		if ( ! $customer ) {
 			wp_die( __( 'Customer not found.', 'easy-digital-downloads' ) );
 		}
 
-		if ( ! $customer->user_id ) {
+		$user_id = self::resolve_customer_user_id( $customer );
+
+		if ( ! $user_id ) {
 			wp_die( __( 'Customer does not have a user account.', 'easy-digital-downloads' ) );
 		}
 
 		// Check if user is pending verification.
-		if ( ! edd_user_pending_verification( $customer->user_id ) ) {
+		if ( ! edd_user_pending_verification( $user_id ) ) {
 			$url = edd_get_admin_url(
 				array(
 					'page'        => 'edd-customers',
@@ -284,10 +324,11 @@ class Verification implements SubscriberInterface {
 			);
 
 			edd_redirect( $url );
+			return;
 		}
 
 		// Send the verification email.
-		edd_send_user_verification_email( $customer->user_id );
+		edd_send_user_verification_email( $user_id );
 
 		// Redirect with success message.
 		$url = edd_get_admin_url(
@@ -300,6 +341,41 @@ class Verification implements SubscriberInterface {
 		);
 
 		edd_redirect( $url );
+	}
+
+	/**
+	 * Gets the WordPress user that owns the customer's email addresses.
+	 *
+	 * Every address on the customer is checked, secondary ones included. Only members of the current
+	 * site count on multisite, and when the addresses belong to more than one user there is no single
+	 * owner, so nothing is returned.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param \EDD_Customer $customer The customer record.
+	 * @return int The user ID, or 0 if none is found or more than one user owns the addresses.
+	 */
+	private static function get_user_id_by_customer_emails( $customer ) {
+		if ( ! $customer instanceof \EDD_Customer ) {
+			return 0;
+		}
+
+		$user_ids = array();
+		foreach ( $customer->emails as $email ) {
+			$user = get_user_by( 'email', $email );
+
+			if ( ! $user instanceof \WP_User ) {
+				continue;
+			}
+
+			if ( is_multisite() && ! is_user_member_of_blog( $user->ID ) ) {
+				continue;
+			}
+
+			$user_ids[ $user->ID ] = (int) $user->ID;
+		}
+
+		return 1 === count( $user_ids ) ? reset( $user_ids ) : 0;
 	}
 
 	/**

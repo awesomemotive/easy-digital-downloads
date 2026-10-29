@@ -101,8 +101,6 @@ class LiteRestManagerTest extends EDD_UnitTestCase {
 		// A user who passes the shared shop-settings permission callback, so the
 		// request reaches the Pro-required callback rather than stopping at the gate.
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$user    = new \WP_User( $user_id );
-		$user->add_cap( 'manage_shop_settings' );
 		wp_set_current_user( $user_id );
 
 		$import_request = new \WP_REST_Request( 'POST', '/edd/v3/checkout-templates/test-template/import' );

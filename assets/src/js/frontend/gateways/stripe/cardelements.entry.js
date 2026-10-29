@@ -34,7 +34,9 @@ import {
 
 ( () => {
 	try {
-		window.eddStripe = new Stripe( edd_stripe_vars.publishable_key );
+		window.eddStripe = new Stripe( edd_stripe_vars.publishable_key, {
+			apiVersion: edd_stripe_vars.apiVersion,
+		} );
 
 		// Alias some functionality for external plugins.
 		window.eddStripe._plugin = {

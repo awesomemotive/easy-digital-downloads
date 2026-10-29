@@ -2,14 +2,13 @@
 /**
  * View Order Details
  *
- * @package     EDD
- * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Payments
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.6
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /**
@@ -130,13 +129,17 @@ wp_enqueue_script( 'edd-admin-payments' );
 
 </form>
 
-<div id="edd-refund-order-dialog" title="<?php esc_html_e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>
-
-<div
-	id="edd-admin-order-copy-download-link-dialog"
-	<?php /* translators: %s: singular label */ ?>
-	title="<?php printf( esc_html__( 'Copy %s Links', 'easy-digital-downloads' ), esc_html( edd_get_label_singular() ) ); ?>"
-	style="display: none;"
+<dialog
+	id="edd-refund-order-dialog"
+	class="edd-modal edd-modal--refund"
+	aria-labelledby="edd-refund-order-dialog__title"
 >
-	<div id="edd-admin-order-copy-download-link-dialog-content"></div>
-</div>
+	<div class="edd-modal__header">
+		<h2 id="edd-refund-order-dialog__title"><?php esc_html_e( 'Submit Refund', 'easy-digital-downloads' ); ?></h2>
+		<button type="button" class="edd-modal__close" aria-label="<?php esc_attr_e( 'Close', 'easy-digital-downloads' ); ?>">
+			<span class="dashicons dashicons-no-alt"></span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Close', 'easy-digital-downloads' ); ?></span>
+		</button>
+	</div>
+	<div class="edd-modal__content" id="edd-refund-dialog-content"></div>
+</dialog>

@@ -63,15 +63,11 @@ class Connect extends EDD_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		/*
-		 * WP_Roles::add_cap() writes the roles option but leaves the WP_Role objects already built
-		 * in this process untouched, and a test process never re-reads them. Refresh them here or
-		 * shop_manager looks like it holds none of EDD's capabilities.
-		 */
-		wp_roles()->for_site();
-
 		// Admin-only files are not loaded in the test context.
 		require_once EDDS_PLUGIN_DIR . '/includes/admin/settings/stripe-connect.php';
+
+		edd_delete_option( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING );
+		\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::clear_error();
 	}
 
 	/**
@@ -84,6 +80,9 @@ class Connect extends EDD_UnitTestCase {
 		unset( $_GET['edd_gateway_connect_completion'], $_GET['state'], $_GET['redirect_screen'] );
 
 		wp_set_current_user( 0 );
+
+		edd_delete_option( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING );
+		\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::clear_error();
 
 		parent::tearDown();
 	}
@@ -234,6 +233,86 @@ class Connect extends EDD_UnitTestCase {
 		$this->assertSame( 'pk_live_REPLACED', edd_get_option( 'live_publishable_key' ) );
 		$this->assertSame( 'sk_live_REPLACED', edd_get_option( 'live_secret_key' ) );
 		$this->assertSame( 'acct_REPLACED', edd_get_option( 'stripe_connect_account_id' ) );
+	}
+
+	/**
+	 * Which modes EDD Connect issued is what a later disconnect sends for revocation.
+	 *
+	 * @covers ::edds_process_gateway_connect_completion
+	 */
+	public function test_completion_records_the_mode_it_was_issued_for() {
+		$this->prepare_live_mode();
+		wp_set_current_user( self::$admin_id );
+
+		$this->assertFalse( edd_get_option( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING ), 'Fixture: nothing is recorded.' );
+
+		$this->run_completion( $this->mint_state() );
+
+		$this->assertSame( 'sk_live_REPLACED', edd_get_option( 'live_secret_key' ), 'Fixture: the connection completed.' );
+		$this->assertSame( array( 'live' => 'acct_REPLACED' ), edd_get_option( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING ) );
+
+	}
+
+	/**
+	 * @covers ::edds_process_gateway_connect_completion
+	 */
+	public function test_a_first_connection_leaves_a_hand_entered_key_for_the_other_mode_unrecorded() {
+		$this->prepare_live_mode();
+		edd_delete_option( 'stripe_connect_account_id' );
+		edd_update_option( 'test_secret_key', 'sk_test_BYHAND' );
+		wp_set_current_user( self::$admin_id );
+
+		$this->assertFalse( edd_get_option( 'stripe_connect_account_id' ), 'Fixture: the store was never connected.' );
+
+		$this->run_completion( $this->mint_state() );
+
+		$this->assertSame( 'acct_REPLACED', edd_get_option( 'stripe_connect_account_id' ), 'Fixture: the connection completed.' );
+		$this->assertSame( array( 'live' => 'acct_REPLACED' ), edd_get_option( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING ) );
+	}
+
+	/**
+	 * @covers ::edds_process_gateway_connect_completion
+	 */
+	public function test_a_legacy_store_that_reconnects_one_mode_records_both_modes() {
+		$this->prepare_live_mode();
+		edd_update_option( 'test_secret_key', 'sk_test_LEGACY' );
+		wp_set_current_user( self::$admin_id );
+
+		$this->assertSame( 'acct_SENTINEL', edd_get_option( 'stripe_connect_account_id' ), 'Fixture: the store was already connected.' );
+		$this->assertSame( 'sk_live_SENTINEL', edd_get_option( 'live_secret_key' ), 'Fixture: the live mode holds a key.' );
+		$this->assertSame( 'sk_test_LEGACY', edd_get_option( 'test_secret_key' ), 'Fixture: the test mode holds a key.' );
+		$this->assertFalse( edd_get_option( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING ), 'Fixture: nothing is recorded.' );
+
+		$this->run_completion( $this->mint_state() );
+
+		$this->assertSame( 'sk_live_REPLACED', edd_get_option( 'live_secret_key' ), 'Fixture: the connection completed.' );
+		$this->assertSame(
+			array(
+				'live' => 'acct_REPLACED',
+				'test' => 'acct_SENTINEL',
+			),
+			edd_get_option( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::MODES_SETTING ),
+			'The inherited mode keeps the account stored before this connect.'
+		);
+	}
+
+	/**
+	 * A reconnect resolves the failed disconnect that was waiting on the merchant.
+	 *
+	 * @covers ::edds_process_gateway_connect_completion
+	 */
+	public function test_completion_clears_a_recorded_disconnect_failure() {
+		$this->prepare_live_mode();
+		wp_set_current_user( self::$admin_id );
+
+		\EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::record_error( new \WP_Error( 'edd_stripe_deauthorize_failed', 'Stripe didn\'t confirm.' ) );
+		$this->assertNotFalse( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::get_error(), 'Fixture: a failure is recorded.' );
+
+		$this->run_completion( $this->mint_state() );
+
+		$this->assertSame( 'sk_live_REPLACED', edd_get_option( 'live_secret_key' ), 'Fixture: the connection completed.' );
+		$this->assertFalse( \EDD\Gateways\Stripe\Admin\Disconnect\Deauthorize::get_error() );
+
 	}
 
 	/**

@@ -310,7 +310,7 @@ class IPN extends EDD_UnitTestCase {
 			'payment_status' => 'refunded',
 			'parent_txn_id'  => self::PAYPAL_ORDER_TRANS_ID,
 			'txn_id'         => '9XH123456A7890123', // Different valid PayPal transaction ID
-			'mc_gross'       => '20.00', // Positive value - absolute amount refunded
+			'mc_gross'       => '-20.00', // PayPal sends refunded amounts as negative values.
 			'mc_currency'    => 'USD',
 			'reason_code'    => 'refund',
 			'ipn_track_id'   => 'test_ipn_track_123',
@@ -423,6 +423,7 @@ class IPN extends EDD_UnitTestCase {
 	 * Test: IPN processes full refund
 	 *
 	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 * @covers \EDD\Gateways\PayPal\Traits\Refunds::process_refund
 	 */
 	public function test_ipn_processes_full_refund() {
 		// Mock successful verification
@@ -437,7 +438,7 @@ class IPN extends EDD_UnitTestCase {
 
 		// Set up IPN request for refund (full amount)
 		$ipn_data = $this->get_refund_ipn_data( array(
-			'mc_gross' => $this->order->total,
+			'mc_gross' => -1 * $this->order->total,
 		) );
 		$this->simulate_ipn_request( $ipn_data );
 
@@ -465,6 +466,18 @@ class IPN extends EDD_UnitTestCase {
 
 		$this->assertTrue( $note_found, 'Expected refund note not found' );
 
+		$refunds = edd_get_orders(
+			array(
+				'type'   => 'refund',
+				'parent' => $order->id,
+			)
+		);
+		$this->assertCount( 1, $refunds, 'A full refund should create one refund order.' );
+
+		$refund_transaction = edd_get_order_transaction_by( 'transaction_id', '9XH123456A7890123' );
+		$this->assertEquals( $refunds[0]->id, $refund_transaction->object_id, 'The refund transaction should belong to the refund order.' );
+		$this->assertEquals( edd_negate_amount( $order->total ), $refund_transaction->total, 'The refund transaction should be negative, matching refunds issued from EDD.' );
+
 		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
 	}
 
@@ -472,6 +485,7 @@ class IPN extends EDD_UnitTestCase {
 	 * Test: IPN processes partial refund
 	 *
 	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 * @covers \EDD\Gateways\PayPal\Traits\Refunds::process_refund
 	 */
 	public function test_ipn_processes_partial_refund() {
 		// Mock successful verification
@@ -486,7 +500,7 @@ class IPN extends EDD_UnitTestCase {
 
 		// Set up IPN request for partial refund (half the amount)
 		$ipn_data = $this->get_refund_ipn_data( array(
-			'mc_gross' => $this->order->total / 2,
+			'mc_gross' => -1 * $this->order->total / 2,
 		) );
 		$this->simulate_ipn_request( $ipn_data );
 
@@ -504,15 +518,257 @@ class IPN extends EDD_UnitTestCase {
 			'object_id'   => $order->id,
 		) );
 
-		$note_found = false;
+		$partial_refund_note = '';
 		foreach ( $notes as $note ) {
 			if ( strpos( $note->content, 'Partial refund processed in PayPal (IPN)' ) !== false ) {
-				$note_found = true;
+				$partial_refund_note = $note->content;
 				break;
 			}
 		}
 
-		$this->assertTrue( $note_found, 'Expected partial refund note not found' );
+		$this->assertNotEmpty( $partial_refund_note, 'Expected partial refund note not found' );
+
+		// PayPal sends a negative mc_gross, but the note must show the amount the customer got back.
+		$expected_amount = edd_currency_filter( edd_format_amount( $this->order->total / 2 ), 'USD' );
+		$this->assertStringContainsString(
+			'Amount: ' . html_entity_decode( $expected_amount ) . ';',
+			html_entity_decode( $partial_refund_note )
+		);
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: A refund IPN for an order the webhook already refunded leaves the order refunded.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 */
+	public function test_ipn_refund_leaves_already_refunded_order_refunded() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		edd_update_order_status( $this->order->id, 'refunded' );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'mc_gross' => -1 * $this->order->total,
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$order = edd_get_order( $this->order->id );
+		$this->assertEquals( 'refunded', $order->status );
+
+		$ipn_refund_notes = edd_get_notes(
+			array(
+				'object_type'    => 'order',
+				'object_id'      => $order->id,
+				'search'         => 'refund processed in PayPal (IPN)',
+				'search_columns' => array( 'content' ),
+			)
+		);
+		$this->assertEmpty( $ipn_refund_notes, 'An already refunded order should not be refunded again.' );
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: A full refund IPN on an order that cannot be refunded in EDD still marks it refunded.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 * @covers \EDD\Gateways\PayPal\Traits\Refunds::process_refund
+	 */
+	public function test_full_refund_ipn_on_revoked_order_sets_refunded_without_refund_transaction() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		edd_update_order_status( $this->order->id, 'revoked' );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'mc_gross' => -1 * $this->order->total,
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$this->assertEquals( 'refunded', edd_get_order( $this->order->id )->status );
+		$this->assertEmpty(
+			edd_get_order_transaction_by( 'transaction_id', '9XH123456A7890123' ),
+			'With no refund order created, there is nothing to attach the refund transaction to.'
+		);
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: A refund IPN in a different currency from the order is rejected.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 */
+	public function test_refund_ipn_with_mismatched_currency_does_not_refund_order() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'mc_gross'    => -1 * $this->order->total,
+					'mc_currency' => 'USD' === $this->order->currency ? 'EUR' : 'USD',
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$this->assertEquals( 'complete', edd_get_order( $this->order->id )->status );
+		$this->assertEmpty(
+			edd_get_orders(
+				array(
+					'type'   => 'refund',
+					'parent' => $this->order->id,
+				)
+			)
+		);
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: A PayPal refund matching EDD's unrefunded balance is still a partial refund.
+	 *
+	 * The amount alone cannot tell it apart from PayPal mirroring the refund EDD already recorded,
+	 * and a wrong full refund writes a refund order for items the customer still paid for.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 * @covers \EDD\Gateways\PayPal\Traits\Refunds::process_refund
+	 */
+	public function test_refund_ipn_for_remaining_balance_after_edd_partial_refund_sets_partially_refunded() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		$refunded_item = $this->order->items[0];
+		edd_refund_order(
+			$this->order->id,
+			array(
+				array(
+					'order_item_id' => $refunded_item->id,
+					'subtotal'      => $refunded_item->subtotal,
+					'tax'           => $refunded_item->tax,
+					'total'         => $refunded_item->total,
+				)
+			),
+			array()
+		);
+		$this->assertEquals( 'partially_refunded', edd_get_order( $this->order->id )->status );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'mc_gross' => -1 * ( $this->order->total - $refunded_item->total ),
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$this->assertEquals( 'partially_refunded', edd_get_order( $this->order->id )->status );
+		$this->assertCount(
+			1,
+			edd_get_orders(
+				array(
+					'type'   => 'refund',
+					'parent' => $this->order->id,
+				)
+			),
+			'Only the refund EDD recorded itself should exist.'
+		);
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: A refund IPN for a zero amount records nothing.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 */
+	public function test_refund_ipn_with_zero_amount_leaves_order_complete() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'mc_gross' => '-0.00',
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$this->assertEquals( 'complete', edd_get_order( $this->order->id )->status );
+
+		$ipn_refund_notes = edd_get_notes(
+			array(
+				'object_type'    => 'order',
+				'object_id'      => $this->order->id,
+				'search'         => 'refund processed in PayPal (IPN)',
+				'search_columns' => array( 'content' ),
+			)
+		);
+		$this->assertEmpty( $ipn_refund_notes );
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: A full refund matches an order total stored with more precision than the currency has.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 * @covers \EDD\Gateways\PayPal\Traits\Refunds::process_refund
+	 */
+	public function test_full_refund_ipn_matching_rounded_total_sets_refunded() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		// Tax math can leave sub-cent precision; PayPal only ever charges the rounded amount.
+		edd_update_order( $this->order->id, array( 'total' => 10.8249 ) );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'mc_gross' => '-10.82',
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$this->assertEquals( 'refunded', edd_get_order( $this->order->id )->status );
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: The refund amount comes from mc_gross even when the IPN also carries an amount field.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 * @covers \EDD\Gateways\PayPal\Traits\Refunds::process_refund
+	 */
+	public function test_partial_refund_ipn_with_amount_field_sizes_refund_from_mc_gross() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'mc_gross' => -1 * $this->order->total / 2,
+					'amount'   => $this->order->total,
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$this->assertEquals( 'partially_refunded', edd_get_order( $this->order->id )->status );
 
 		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
 	}
@@ -563,6 +819,42 @@ class IPN extends EDD_UnitTestCase {
 		}
 
 		$this->assertTrue( $note_found, 'Expected reversal note not found' );
+
+		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
+	}
+
+	/**
+	 * Test: A reversal IPN on a refunded order leaves it refunded, since the money is already back with the customer.
+	 *
+	 * @covers \EDD\Gateways\PayPal\IPN::maybe_handle_refunds
+	 */
+	public function test_reversal_ipn_on_refunded_order_adds_no_note() {
+		add_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10, 3 );
+
+		edd_update_order_status( $this->order->id, 'refunded' );
+
+		$this->simulate_ipn_request(
+			$this->get_refund_ipn_data(
+				array(
+					'payment_status' => 'reversed',
+					'reason_code'    => 'buyer_complaint',
+				)
+			)
+		);
+
+		$this->process_ipn();
+
+		$this->assertEquals( 'refunded', edd_get_order( $this->order->id )->status );
+
+		$reversal_notes = edd_get_notes(
+			array(
+				'object_type'    => 'order',
+				'object_id'      => $this->order->id,
+				'search'         => 'Reversal processed in PayPal (IPN)',
+				'search_columns' => array( 'content' ),
+			)
+		);
+		$this->assertEmpty( $reversal_notes );
 
 		remove_filter( 'pre_http_request', array( $this, 'mock_paypal_verified' ), 10 );
 	}

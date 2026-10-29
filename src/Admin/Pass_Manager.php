@@ -305,6 +305,10 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public static function pass_compare( $pass_1, $pass_2, $comparison = '>' ) {
+		// PHP 8.5 deprecates null as an array key, and no pass ID is ever empty.
+		if ( empty( $pass_1 ) || empty( $pass_2 ) ) {
+			return false;
+		}
 		if ( ! array_key_exists( $pass_1, self::$pass_hierarchy ) ) {
 			return false;
 		}

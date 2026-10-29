@@ -25,16 +25,6 @@ use EDD\Admin\Tools\Logs;
  */
 class LogsCapability extends EDD_UnitTestCase {
 
-	public function setUp(): void {
-		parent::setUp();
-
-		// Roles/caps aren't installed by default and another test removes them; reload after
-		// adding so this request's WP_Role objects see the update.
-		EDD()->roles->add_roles();
-		EDD()->roles->add_caps();
-		wp_roles()->for_site( get_current_blog_id() );
-	}
-
 	public function tearDown(): void {
 		$_GET  = array();
 		$_POST = array();

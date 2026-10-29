@@ -2,7 +2,6 @@
  * Internal dependencies.
  */
 import './components/date-picker';
-import './components/dialog';
 import './components/chosen';
 import './components/tooltips';
 import './components/vertical-sections';

@@ -76,6 +76,7 @@ function edd_stripe_js( $force_load_scripts = false ) {
 
 		$stripe_localized_vars = array(
 			'publishable_key'                => trim( $publishable_key ),
+			'apiVersion'                     => \EDD\Gateways\Stripe\API::get_api_version(),
 			'isTestMode'                     => edd_is_test_mode() ? 'true' : 'false',
 			'elementsMode'                   => $elements_mode,
 			'is_ajaxed'                      => edd_is_ajax_enabled() ? 'true' : 'false',

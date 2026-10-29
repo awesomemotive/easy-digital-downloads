@@ -1,15 +1,16 @@
 <?php
 /**
  * Trash Tests.
- *
- * @group edd_orders
- * @group edd_trash
- * @group database
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_orders
+ * @group edd_trash
+ * @group database
+ */
 class Trash_Tests extends EDD_UnitTestCase {
 
 	/**

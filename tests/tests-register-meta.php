@@ -218,9 +218,6 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 		// The registrations run on init, before this test starts, so run them again to assert against them.
 		$this->meta_handler->register_download_meta();
 
-		// EDD's capabilities are added to the roles after the role objects were built.
-		wp_roles()->for_site();
-
 		$registered = get_registered_meta_keys( 'post', 'download' );
 
 		$this->assertArrayHasKey( 'edd_download_files', $registered, 'Fixture: the key must be registered for downloads.' );
@@ -256,7 +253,6 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 	 */
 	public function test_a_store_manager_can_write_the_download_files_meta() {
 		$this->meta_handler->register_download_meta();
-		wp_roles()->for_site();
 
 		$vendor      = self::factory()->user->create( array( 'role' => 'shop_vendor' ) );
 		$download_id = self::factory()->post->create(

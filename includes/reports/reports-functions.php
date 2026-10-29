@@ -545,33 +545,7 @@ function get_persisted_filters() {
  * @return array Key/label pairs of date filter options.
  */
 function get_dates_filter_options() {
-	static $options = null;
-
-	if ( is_null( $options ) ) {
-		$options = array(
-			'other'        => __( 'Custom', 'easy-digital-downloads' ),
-			'today'        => __( 'Today', 'easy-digital-downloads' ),
-			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
-			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
-			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
-			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-			'this_month'   => __( 'Month to Date', 'easy-digital-downloads' ),
-			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
-			'this_quarter' => __( 'Quarter to Date', 'easy-digital-downloads' ),
-			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-			'this_year'    => __( 'Year to Date', 'easy-digital-downloads' ),
-			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
-		);
-	}
-
-	/**
-	 * Filters the list of key/label pairs of date filter options.
-	 *
-	 * @since 1.3
-	 *
-	 * @param array $date_options Date filter options.
-	 */
-	return apply_filters( 'edd_report_date_options', $options );
+	return Dates\Range::options();
 }
 
 

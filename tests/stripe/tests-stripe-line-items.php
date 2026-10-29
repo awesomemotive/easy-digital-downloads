@@ -1,9 +1,6 @@
 <?php
 /**
  * Tests for Stripe Line Items.
- *
- * @group edd_stripe
- * @group edd_stripe_line_items
  */
 
 namespace EDD\Tests\Stripe;
@@ -14,6 +11,10 @@ use EDD\Gateways\Stripe\PaymentIntents\LineItems\Item;
 use EDD\Gateways\Stripe\PaymentIntents\LineItems\Formatter;
 use EDD\Gateways\Stripe\PaymentIntents\AmountDetails;
 
+/**
+ * @group edd_stripe
+ * @group edd_stripe_line_items
+ */
 class LineItems extends EDD_UnitTestCase {
 
 	/**

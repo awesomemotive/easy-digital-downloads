@@ -96,9 +96,8 @@ class Notes extends Ajax_UnitTestCase {
 	 */
 	public function test_add_discount_note_with_no_args_should_die() {
 		$this->_setRole( 'shop_manager' );
-		// edd_install()'s role caps are not persisted in the test env, so grant the cap the handler
-		// checks; otherwise this dies on the capability gate, not the missing arguments.
-		wp_get_current_user()->add_cap( 'edit_shop_payments' );
+		// Without the cap this dies on the capability gate, not the missing arguments.
+		$this->assertTrue( current_user_can( 'edit_shop_payments' ), 'Fixture: the shop manager must pass the capability gate.' );
 
 		// The nonce is user-scoped, so issue it after the role switch.
 		$_POST['nonce'] = wp_create_nonce( 'edd_note' );
@@ -136,9 +135,8 @@ class Notes extends Ajax_UnitTestCase {
 		$_POST['object_id']   = self::$discount->id;
 		$_POST['object_type'] = 'discount';
 
-		// edd_install()'s role caps are not persisted in the test env, so grant the cap the handler
-		// checks; otherwise this dies on the capability gate, not the empty note.
-		wp_get_current_user()->add_cap( 'edit_shop_payments' );
+		// Without the cap this dies on the capability gate, not the empty note.
+		$this->assertTrue( current_user_can( 'edit_shop_payments' ), 'Fixture: the shop manager must pass the capability gate.' );
 
 		$this->expectException( \WPAjaxDieStopException::class );
 		$this->expectExceptionMessage( '-1' );
@@ -151,8 +149,6 @@ class Notes extends Ajax_UnitTestCase {
 	 */
 	public function test_add_discount_note_should_return_true() {
 		$this->_setRole( 'shop_manager' );
-		// edd_install()'s role caps are not persisted in the test env, so grant the cap the handler checks.
-		wp_get_current_user()->add_cap( 'edit_shop_payments' );
 
 		$_POST['nonce']       = wp_create_nonce( 'edd_note' );
 		$_POST['object_id']   = self::$discount->id;
@@ -193,7 +189,7 @@ class Notes extends Ajax_UnitTestCase {
 		// Switch to a capable user so the handler reaches the missing note_id check instead of the
 		// capability gate, and issue the nonce afterward, since it is user-scoped.
 		$this->_setRole( 'shop_manager' );
-		wp_get_current_user()->add_cap( 'manage_shop_settings' );
+		$this->assertTrue( current_user_can( 'manage_shop_settings' ), 'Fixture: the shop manager must pass the capability gate.' );
 		$_POST['nonce'] = wp_create_nonce( 'edd_note' );
 
 		$this->expectException( \WPAjaxDieStopException::class );
@@ -222,8 +218,7 @@ class Notes extends Ajax_UnitTestCase {
 	 */
 	public function test_delete_discount_note_with_invalid_id_should_die() {
 		$this->_setRole( 'shop_manager' );
-		// edd_install()'s role caps are not persisted in the test env, so grant the cap the handler checks.
-		wp_get_current_user()->add_cap( 'manage_shop_settings' );
+		$this->assertTrue( current_user_can( 'manage_shop_settings' ), 'Fixture: the shop manager must pass the capability gate.' );
 
 		$_POST['nonce']   = wp_create_nonce( 'edd_note' );
 		$_POST['note_id'] = 99;
@@ -241,8 +236,6 @@ class Notes extends Ajax_UnitTestCase {
 	 */
 	public function test_delete_discount_note_should_return_true() {
 		$this->_setRole( 'shop_manager' );
-		// edd_install()'s role caps are not persisted in the test env, so grant the cap the handler checks.
-		wp_get_current_user()->add_cap( 'manage_shop_settings' );
 
 		$_POST['nonce']   = wp_create_nonce( 'edd_note' );
 		$_POST['note_id'] = self::$note->id;

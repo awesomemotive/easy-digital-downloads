@@ -1,9 +1,6 @@
 <?php
 /**
  * Tests for the EventManagement Subscribers service-provider bootstrap.
- *
- * @group edd_event_management
- * @group edd_bootstrap
  */
 
 namespace EDD\Tests\EventManagement;
@@ -54,6 +51,10 @@ class ValidProviderSubscribers extends \EDD\EventManagement\Subscribers {
 	}
 }
 
+/**
+ * @group edd_event_management
+ * @group edd_bootstrap
+ */
 class Subscribers extends EDD_UnitTestCase {
 
 	/**

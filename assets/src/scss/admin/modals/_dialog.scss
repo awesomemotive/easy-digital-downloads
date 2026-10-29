@@ -15,3 +15,14 @@
 		background: rgba(0, 0, 0, 0.7);
 	}
 }
+
+// Let a select dropdown (Tom Select) escape a short modal instead of being
+// clipped. Safe because the dialog is in the top layer, so descendants render
+// above the backdrop once the ancestors stop clipping.
+.edd-modal--overflow-visible {
+	overflow: visible;
+
+	.edd-modal__content {
+		overflow: visible;
+	}
+}

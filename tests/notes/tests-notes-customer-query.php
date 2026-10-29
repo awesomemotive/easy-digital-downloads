@@ -389,4 +389,226 @@ class NotesCustomerQuery extends EDD_UnitTestCase {
 
 		$this->assertNotContains( $refund_note_id, $note_ids, 'Refund order notes should be excluded.' );
 	}
+
+	/**
+	 * @covers ::set_query_var_defaults
+	 */
+	public function test_customer_notes_are_not_served_from_another_customers_cache() {
+		// All writes come first, so the notes last_changed value is stable across both reads.
+		$other_customer = parent::edd()->customer->create_and_get(
+			array(
+				'email' => 'othercustomer@example.com',
+			)
+		);
+		$other_note_id  = edd_add_note(
+			array(
+				'object_id'   => $other_customer->id,
+				'object_type' => 'customer',
+				'content'     => 'Other customer note',
+				'user_id'     => 1,
+			)
+		);
+
+		$customer_note_ids       = array_map( 'intval', wp_list_pluck( self::$customer->get_notes( 20, 1 ), 'id' ) );
+		$other_customer_note_ids = array_map( 'intval', wp_list_pluck( $other_customer->get_notes( 20, 1 ), 'id' ) );
+
+		$expected_customer_note_ids = array_merge( self::$customer_note_ids, self::$manual_order_note_ids );
+		sort( $customer_note_ids );
+		sort( $expected_customer_note_ids );
+
+		$this->assertSame( array( (int) $other_note_id ), $other_customer_note_ids );
+		$this->assertSame( array_map( 'intval', $expected_customer_note_ids ), $customer_note_ids );
+	}
+
+	/**
+	 * @covers ::set_query_var_defaults
+	 */
+	public function test_customer_notes_count_is_not_served_from_another_customers_cache() {
+		// All writes come first, so the notes last_changed value is stable across both reads.
+		$other_customer = parent::edd()->customer->create_and_get(
+			array(
+				'email' => 'othercustomer@example.com',
+			)
+		);
+		edd_add_note(
+			array(
+				'object_id'   => $other_customer->id,
+				'object_type' => 'customer',
+				'content'     => 'Other customer note',
+				'user_id'     => 1,
+			)
+		);
+
+		$customer_count       = self::$customer->get_notes_count();
+		$other_customer_count = $other_customer->get_notes_count();
+
+		$this->assertSame( 1, $other_customer_count );
+		$this->assertSame( 4, $customer_count );
+	}
+
+	/**
+	 * @covers ::set_query_var_defaults
+	 */
+	public function test_repeated_customer_notes_query_is_served_from_cache() {
+		global $wpdb;
+
+		$args = array(
+			'customer_id' => self::$customer->id,
+			'number'      => 20,
+		);
+
+		edd_get_notes( $args );
+
+		$queries_before = $wpdb->num_queries;
+		edd_get_notes( $args );
+		$queries_after = $wpdb->num_queries;
+
+		$this->assertSame( $queries_before, $queries_after );
+	}
+
+	/**
+	 * @covers ::get_cache_dependency_queries
+	 */
+	public function test_moving_order_to_another_customer_moves_its_notes() {
+		$previous_customer = parent::edd()->customer->create_and_get( array( 'email' => 'previouscustomer@example.com' ) );
+		$new_customer      = parent::edd()->customer->create_and_get( array( 'email' => 'newcustomer@example.com' ) );
+		$moved_order       = $this->create_order_with_manual_note( $previous_customer->id );
+		$moved_note_id     = $moved_order['note_id'];
+
+		$this->assertContains( $moved_note_id, $this->get_customer_note_ids( $previous_customer ) );
+		$this->assertNotContains( $moved_note_id, $this->get_customer_note_ids( $new_customer ) );
+
+		$notes_last_changed = wp_cache_get( 'last_changed', 'edd-notes' );
+		edd_update_order( $moved_order['order_id'], array( 'customer_id' => $new_customer->id ) );
+
+		$this->assertSame( $notes_last_changed, wp_cache_get( 'last_changed', 'edd-notes' ) );
+		$this->assertNotContains( $moved_note_id, $this->get_customer_note_ids( $previous_customer ) );
+		$this->assertContains( $moved_note_id, $this->get_customer_note_ids( $new_customer ) );
+	}
+
+	/**
+	 * @covers ::get_cache_dependency_queries
+	 */
+	public function test_moving_order_to_another_customer_moves_its_notes_count() {
+		$previous_customer = parent::edd()->customer->create_and_get( array( 'email' => 'previouscustomer@example.com' ) );
+		$new_customer      = parent::edd()->customer->create_and_get( array( 'email' => 'newcustomer@example.com' ) );
+		$moved_order       = $this->create_order_with_manual_note( $previous_customer->id );
+
+		$previous_customer_count = $previous_customer->get_notes_count();
+		$new_customer_count      = $new_customer->get_notes_count();
+
+		edd_update_order( $moved_order['order_id'], array( 'customer_id' => $new_customer->id ) );
+
+		$this->assertSame( $previous_customer_count - 1, $previous_customer->get_notes_count() );
+		$this->assertSame( $new_customer_count + 1, $new_customer->get_notes_count() );
+	}
+
+	/**
+	 * @covers \EDD\Database\Query::get_items
+	 */
+	public function test_corrected_customer_notes_are_cached_again_after_order_move() {
+		global $wpdb;
+
+		$previous_customer = parent::edd()->customer->create_and_get( array( 'email' => 'previouscustomer@example.com' ) );
+		$new_customer      = parent::edd()->customer->create_and_get( array( 'email' => 'newcustomer@example.com' ) );
+		$moved_order       = $this->create_order_with_manual_note( $previous_customer->id );
+		$moved_note_id     = $moved_order['note_id'];
+		$args              = array(
+			'customer_id' => $previous_customer->id,
+			'number'      => 20,
+		);
+
+		$this->assertContains( $moved_note_id, array_map( 'intval', wp_list_pluck( edd_get_notes( $args ), 'id' ) ) );
+
+		edd_update_order( $moved_order['order_id'], array( 'customer_id' => $new_customer->id ) );
+
+		$corrected_note_ids = array_map( 'intval', wp_list_pluck( edd_get_notes( $args ), 'id' ) );
+
+		$queries_before  = $wpdb->num_queries;
+		$cached_note_ids = array_map( 'intval', wp_list_pluck( edd_get_notes( $args ), 'id' ) );
+		$queries_after   = $wpdb->num_queries;
+
+		$this->assertNotContains( $moved_note_id, $corrected_note_ids );
+		$this->assertSame( $corrected_note_ids, $cached_note_ids );
+		$this->assertSame( $queries_before, $queries_after );
+	}
+
+	/**
+	 * @covers ::get_cache_dependency_queries
+	 */
+	public function test_deleting_order_removes_its_notes_from_customer_notes() {
+		$customer      = parent::edd()->customer->create_and_get( array( 'email' => 'deletedordercustomer@example.com' ) );
+		$deleted_order = $this->create_order_with_manual_note( $customer->id );
+		$note_id       = $deleted_order['note_id'];
+
+		$this->assertContains( $note_id, $this->get_customer_note_ids( $customer ) );
+
+		edd_delete_order( $deleted_order['order_id'] );
+
+		$this->assertNotFalse( edd_get_note( $note_id ), 'The note row should be left in place.' );
+		$this->assertNotContains( $note_id, $this->get_customer_note_ids( $customer ) );
+	}
+
+	/**
+	 * @covers ::get_cache_dependency_queries
+	 */
+	public function test_order_write_keeps_non_customer_notes_queries_cached() {
+		global $wpdb;
+
+		$previous_customer = parent::edd()->customer->create_and_get( array( 'email' => 'previouscustomer@example.com' ) );
+		$new_customer      = parent::edd()->customer->create_and_get( array( 'email' => 'newcustomer@example.com' ) );
+		$moved_order       = $this->create_order_with_manual_note( $previous_customer->id );
+		$args              = array(
+			'object_id'   => $moved_order['order_id'],
+			'object_type' => 'order',
+		);
+
+		edd_get_notes( $args );
+
+		edd_update_order( $moved_order['order_id'], array( 'customer_id' => $new_customer->id ) );
+
+		$queries_before = $wpdb->num_queries;
+		edd_get_notes( $args );
+		$queries_after = $wpdb->num_queries;
+
+		$this->assertSame( $queries_before, $queries_after );
+	}
+
+	/**
+	 * Creates an order for a customer with one manual note on it.
+	 *
+	 * @param int $customer_id Customer ID.
+	 * @return array The order ID and note ID.
+	 */
+	private function create_order_with_manual_note( $customer_id ) {
+		$order_id = parent::edd()->order->create(
+			array(
+				'customer_id' => $customer_id,
+				'status'      => 'complete',
+			)
+		);
+		$note_id  = edd_add_note(
+			array(
+				'object_id'   => $order_id,
+				'object_type' => 'order',
+				'content'     => 'Manual order note',
+				'user_id'     => 1,
+			)
+		);
+
+		return array(
+			'order_id' => (int) $order_id,
+			'note_id'  => (int) $note_id,
+		);
+	}
+
+	/**
+	 * Gets the IDs of a customer's notes.
+	 *
+	 * @param \EDD_Customer $customer Customer.
+	 * @return int[]
+	 */
+	private function get_customer_note_ids( $customer ) {
+		return array_map( 'intval', wp_list_pluck( $customer->get_notes( 20, 1 ), 'id' ) );
+	}
 }

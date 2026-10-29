@@ -89,7 +89,6 @@ class Styles {
 	 */
 	private static function get_styles() {
 		return array(
-			'wp-jquery-ui-dialog',
 			'wp-color-picker',
 			'edd-admin',
 			'edd-admin-chosen',

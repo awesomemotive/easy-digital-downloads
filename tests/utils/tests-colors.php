@@ -608,10 +608,47 @@ class Colors extends EDD_UnitTestCase {
 		return array(
 			'url'             => array( 'url(https://example.com/a.png)' ),
 			'attr'            => array( 'attr(data-color)' ),
-			'image_set'       => array( 'image-set("a.png" 1x)' ),
+			'image_set'       => array( 'image-set(a.png 1x)' ),
 			'nested_off_list' => array( 'light-dark(url(a.png), #000)' ),
 			'rule_terminator' => array( '#ffffff;}' ),
 		);
+	}
+
+	/**
+	 * @dataProvider values_with_a_quote_or_comment_opener
+	 */
+	public function test_css_value_drops_a_value_holding_a_quote_or_comment_opener( $value ) {
+		$this->assertSame( '', Utility::css_value( $value ) );
+	}
+
+	public function values_with_a_quote_or_comment_opener() {
+		return array(
+			'double_quote'    => array( '"' ),
+			'single_quote'    => array( "'" ),
+			'comment_opener'  => array( '/*' ),
+			'trailing_opener' => array( '#fff /* x' ),
+		);
+	}
+
+	/**
+	 * @dataProvider values_with_an_unclosed_bracket
+	 */
+	public function test_css_value_drops_a_value_holding_an_unclosed_bracket( $value ) {
+		$this->assertSame( '', Utility::css_value( $value ) );
+	}
+
+	public function values_with_an_unclosed_bracket() {
+		return array(
+			'open_function'     => array( 'rgb(' ),
+			'open_square'       => array( '[' ),
+			'open_paren'        => array( '(' ),
+			'mismatched_closer' => array( 'rgb(1,2,3]' ),
+			'inner_left_open'   => array( 'calc(1px + (2px)' ),
+		);
+	}
+
+	public function test_css_string_hex_escapes_braces_and_a_single_quote() {
+		$this->assertSame( 'a\\7b b\\7d c\\27 d', Utility::css_string( "a{b}c'd" ) );
 	}
 
 	/**

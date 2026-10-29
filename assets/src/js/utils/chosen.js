@@ -7,6 +7,27 @@ const chosenVars = {
 };
 
 /**
+ * Convert an AJAX search result into a Tom Select option.
+ *
+ * Every key besides id and name is carried through, since individual search
+ * handlers add their own fields for option templates to render.
+ *
+ * @param {Object} item Single result from an EDD search AJAX handler.
+ * @return {Object} Tom Select option.
+ */
+const buildOption = ( item ) => {
+	const option = { value: String( item.id ), text: item.name };
+
+	Object.keys( item ).forEach( ( key ) => {
+		if ( 'id' !== key && 'name' !== key ) {
+			option[ key ] = item[ key ];
+		}
+	} );
+
+	return option;
+};
+
+/**
  * Determine the variables used to initialize a select element.
  *
  * For elements with a data-search-type attribute, AJAX search options
@@ -40,16 +61,16 @@ export const getChosenVars = ( el ) => {
 
 			// Collect all data-search-* attributes and convert to snake_case query params.
 			const searchData = { action };
-			for ( const key in el.dataset ) {
-				if ( key.startsWith( 'search' ) && key !== 'searchType' && key !== 'searchPlaceholder' ) {
+			Object.keys( el.dataset )
+				.filter( ( key ) => key.startsWith( 'search' ) && key !== 'searchType' && key !== 'searchPlaceholder' )
+				.forEach( ( key ) => {
 					// Convert camelCase key (e.g. searchNoBundles) to snake_case (no_bundles).
 					const paramName = key.replace( 'search', '' )
 						.replace( /([A-Z])/g, '_$1' )
 						.toLowerCase()
 						.replace( /^_/, '' );
 					searchData[ paramName ] = el.dataset[ key ];
-				}
-			}
+				} );
 
 			// Track which option values were returned by the most recent AJAX
 			// response so the score function can always show them. The set is
@@ -65,14 +86,13 @@ export const getChosenVars = ( el ) => {
 				fetch( ajaxurl + '?' + params.toString() )
 					.then( ( response ) => response.json() )
 					.then( ( data ) => {
-						const options = [];
-						if ( data && typeof data === 'object' ) {
-							Object.values( data ).forEach( ( item ) => {
-								const value = String( item.id );
-								options.push( { value, text: item.name } );
-								remoteValues.add( value );
-							} );
+						const items   = data && 'object' === typeof data ? Object.values( data ) : [];
+						const options = items.map( buildOption );
+
+						for ( const option of options ) {
+							remoteValues.add( option.value );
 						}
+
 						callback( options );
 					} )
 					.catch( () => callback() );

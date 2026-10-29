@@ -1,15 +1,16 @@
 <?php
 /**
  * Handles tests for User Switching compatibility.
- *
- * @group compatibility
- * @group plugins
  */
 
 namespace EDD\Tests\Compatibility;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Compatibility\Loader;
 
+/**
+ * @group compatibility
+ * @group plugins
+ */
 class UserSwitching extends EDD_UnitTestCase {
 
 	/**

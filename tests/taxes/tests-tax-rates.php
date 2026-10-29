@@ -1,13 +1,14 @@
 <?php
 /**
  * Tax rates tests.
- *
- * @group taxes
  */
 namespace EDD\Tests\Taxes;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group taxes
+ */
 class TaxRates extends EDD_UnitTestCase {
 
 	protected static $fallback_rate;

@@ -468,4 +468,30 @@ class DiscountsDB extends EDD_UnitTestCase {
 
 		$this->assertSame( false, isset( $counts['expired'] ) );
 	}
+
+	/**
+	 * A renamed discount must no longer be found by its old code, even when the
+	 * old code was looked up before the rename.
+	 *
+	 * @covers ::get_item_by
+	 */
+	public function test_get_discount_by_old_code_after_rename_returns_false() {
+		$discount_id = edd_add_discount(
+			array(
+				'name'   => 'Renamed Discount',
+				'code'   => 'RETIREDCODE',
+				'status' => 'active',
+				'type'   => 'percent',
+				'amount' => '10',
+			)
+		);
+
+		// Prime the lookup by the old code.
+		$this->assertSame( (int) $discount_id, (int) edd_get_discount_by_code( 'RETIREDCODE' )->id );
+
+		edd_update_discount( $discount_id, array( 'code' => 'REPLACEMENTCODE' ) );
+
+		$this->assertFalse( edd_get_discount_by_code( 'RETIREDCODE' ) );
+		$this->assertSame( (int) $discount_id, (int) edd_get_discount_by_code( 'REPLACEMENTCODE' )->id );
+	}
 }

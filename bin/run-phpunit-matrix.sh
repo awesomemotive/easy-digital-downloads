@@ -39,6 +39,7 @@ show_help() {
   printf -- '\t\t\tRequires: jq, Docker.\n';
   printf -- '    --retry\t\tRetry failed matrix cells once after the initial pass.\n';
   printf -- '-f, --filter TEXT\tFilter tests by name (passed to run-tests-local.sh -f / PHPUnit --filter).\n';
+  printf -- '-g, --group NAME\tRun only tests in a PHPUnit @group (passed to run-tests-local.sh -g / PHPUnit --group).\n';
   printf -- '-x, --extra TEXT\tExtra plugins to include (passed to run-tests-local.sh -x, e.g. "recurring").\n';
   echo "";
   echo "Single-cell Options (run ONE cell directly when --matrix is NOT given):";
@@ -63,12 +64,14 @@ show_help() {
   echo "  $0 --matrix=full                     # Full matrix";
   echo "  $0 --matrix --retry                  # PR matrix with auto-retry on failures";
   echo "  $0 --matrix --filter 'Discounts'     # PR matrix filtered to 'Discounts' tests";
+  echo "  $0 --matrix --group edd_orders       # PR matrix limited to the edd_orders group";
   echo "  $0 -p 8.2 -w latest                  # Single cell: PHP 8.2 / WP latest";
   echo "  $0 -p 8.3 -w latest -m -f 'Cart'     # Single multisite cell, filtered";
 }
 
 # Initialize variables
 FILTER=""
+GROUP=""
 EXTRA=""
 MATRIX_MODE=false
 MATRIX_LIST=""
@@ -124,6 +127,15 @@ while [ $# -gt 0 ]; do
     --filter|-f )
         require_arg "$1" "${2-}"
         FILTER="$2"
+        shift 2
+        ;;
+    --group=*|-g=* )
+        GROUP="${1#*=}"
+        shift
+        ;;
+    --group|-g )
+        require_arg "$1" "${2-}"
+        GROUP="$2"
         shift 2
         ;;
     --extra=*|-x=* )
@@ -182,7 +194,7 @@ cd "$(dirname "$0")/.."
 CELL_RAN_TESTS=0
 
 # Run a single cell through bin/run-tests-local.sh.
-# Args: php wp ms (ms is 0 or 1). Honors the global FILTER/EXTRA.
+# Args: php wp ms (ms is 0 or 1). Honors the global FILTER/GROUP/EXTRA.
 # Returns the exit code of run-tests-local.sh.
 # Side effect: sets CELL_RAN_TESTS=1 iff the cell output contains a PHPUnit
 # results line proving tests actually executed (guards against a clean exit
@@ -197,6 +209,9 @@ run_cell() {
     fi
     if [ -n "$FILTER" ]; then
         args+=( -f "$FILTER" )
+    fi
+    if [ -n "$GROUP" ]; then
+        args+=( -g "$GROUP" )
     fi
     if [ -n "$EXTRA" ]; then
         args+=( -x "$EXTRA" )

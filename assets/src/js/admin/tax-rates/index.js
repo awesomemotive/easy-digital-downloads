@@ -1,47 +1,29 @@
-/* global _, eddTaxRates */
+/* global eddTaxRates */
+import { createRoot } from '@wordpress/element';
+import TaxRatesApp from './TaxRatesApp.js';
 
-/**
- * Internal dependencies.
- */
-import TaxRate from './models/tax-rate.js';
-import TaxRates from './collections/tax-rates.js';
-import Manager from './views/manager.js';
-import { jQueryReady } from 'utils/jquery.js';
-
-/**
- * DOM ready.
- */
-jQueryReady( () => {
-	// Show notice if taxes are not enabled.
-	const noticeEl = document.getElementById( 'edd-tax-disabled-notice' );
-
-	if ( noticeEl ) {
-		noticeEl.classList.add( 'notice' );
-		noticeEl.classList.add( 'notice-warning' );
+document.addEventListener( 'DOMContentLoaded', () => {
+	const root = document.getElementById( 'edd-admin-tax-rates' );
+	if ( ! root ) {
+		return;
 	}
 
-	// Start manager with a blank collection.
-	const manager = new Manager( {
-		collection: new TaxRates(),
-	} );
+	// Show notice if taxes are not enabled.
+	const noticeEl = document.getElementById( 'edd-tax-disabled-notice' );
+	if ( noticeEl ) {
+		noticeEl.classList.add( 'notice', 'notice-warning' );
+	}
 
-	const rates = [];
-
-	// Normalize rate data.
-	_.each( eddTaxRates.rates, ( rate ) => rates.push( {
-		id: rate.id,
-		country: rate.country,
-		region: rate.state,
-		global: 'country' === rate.scope,
-		amount: rate.amount,
-		status: rate.status,
+	// Normalize rate data from PHP into the shape the React app expects.
+	const initialRates = ( eddTaxRates.rates ?? [] ).map( ( rate ) => ( {
+		id:      String( rate.id ),
+		country: rate.country ?? '',
+		region:  rate.state ?? '',
+		global:  'country' === rate.scope,
+		amount:  rate.amount,
+		status:  rate.status,
+		unsaved: false,
 	} ) );
 
-	// Add initial rates.
-	manager.collection.set( rates, {
-		silent: true,
-	} );
-
-	// Render manager.
-	manager.render();
+	createRoot( root ).render( <TaxRatesApp initialRates={ initialRates } /> );
 } );

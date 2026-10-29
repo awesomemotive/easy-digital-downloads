@@ -165,6 +165,8 @@ function checkout( $block_attributes = array(), $content = '', $block = null ) {
 	if ( ! $cart_items && ! edd_cart_has_fees() ) {
 		ob_start();
 		do_action( 'edd_cart_empty' );
+		\EDD\Blocks\Utility::reset_checkout_form_top();
+		\EDD\Checkout\Address::reset_billing_top();
 		return ob_get_clean();
 	}
 
@@ -253,6 +255,10 @@ function checkout( $block_attributes = array(), $content = '', $block = null ) {
 		?>
 	</div>
 	<?php
+	// Inner blocks render before this callback, so this render is only complete here.
+	\EDD\Blocks\Utility::reset_checkout_form_top();
+	\EDD\Checkout\Address::reset_billing_top();
+
 	return ob_get_clean();
 }
 
