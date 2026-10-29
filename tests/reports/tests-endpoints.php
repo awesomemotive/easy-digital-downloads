@@ -2,9 +2,6 @@
 /**
  * Tests for Reports Endpoints
  *
- * @group edd_reports
- * @group edd_endpoints
- *
  * @package   EDD\Tests\Reports
  * @copyright Copyright (c) 2025, Easy Digital Downloads, LLC
  * @license   https://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -29,6 +26,9 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * @covers \EDD\Reports\Endpoints\Charts\Graph
  * @covers \EDD\Reports\Endpoints\Pies\Pie
  * @covers \EDD\Reports\Endpoints\Traits\Colors
+ *
+ * @group edd_reports
+ * @group edd_endpoints
  */
 class Endpoints extends EDD_UnitTestCase {
 

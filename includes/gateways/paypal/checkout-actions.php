@@ -244,6 +244,8 @@ function create_order( $purchase_data ) {
 			);
 		}
 
+		PurchaseUser::remember_authenticated_user();
+
 		// Stamp the wallet hint passed by the Apple Pay / Google Pay JS buttons
 		// so the receipt label is correct even when PayPal's capture response
 		// only includes the underlying card details (PayPal IWT requirement:

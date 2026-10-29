@@ -205,6 +205,55 @@ class ScriptRegistration extends EDD_UnitTestCase {
 		$script = $wp_scripts->query( 'jquery-chosen', 'registered' );
 		$this->assertSame( $other_plugin_src, $script->src );
 	}
+
+	// -------------------------------------------------------------------------
+	// React app dependencies
+	// -------------------------------------------------------------------------
+
+	public function test_edd_admin_tax_rates_depends_on_wp_element() {
+		global $wp_scripts;
+		$script = $wp_scripts->query( 'edd-admin-tax-rates', 'registered' );
+		$this->assertContains( 'wp-element', $script->deps );
+	}
+
+	public function test_edd_admin_tax_rates_depends_on_edd_tom_select() {
+		global $wp_scripts;
+		$script = $wp_scripts->query( 'edd-admin-tax-rates', 'registered' );
+		$this->assertContains( 'edd-tom-select', $script->deps );
+	}
+
+	public function test_edd_admin_tax_rates_does_not_depend_on_backbone() {
+		global $wp_scripts;
+		$script = $wp_scripts->query( 'edd-admin-tax-rates', 'registered' );
+		$this->assertNotContains( 'wp-backbone', $script->deps );
+	}
+
+	public function test_edd_admin_orders_depends_on_wp_element() {
+		global $wp_scripts;
+		$script = $wp_scripts->query( 'edd-admin-orders', 'registered' );
+		$this->assertContains( 'wp-element', $script->deps );
+	}
+
+	public function test_edd_admin_orders_does_not_depend_on_backbone() {
+		global $wp_scripts;
+		$script = $wp_scripts->query( 'edd-admin-orders', 'registered' );
+		$this->assertNotContains( 'wp-backbone', $script->deps );
+	}
+
+	public function test_edd_admin_orders_depends_on_notes() {
+		global $wp_scripts;
+		$script = $wp_scripts->query( 'edd-admin-orders', 'registered' );
+		$this->assertContains( 'edd-admin-notes', $script->deps );
+	}
+
+	public function test_edd_admin_orders_depends_on_tom_select_exactly_once() {
+		global $wp_scripts;
+		$script = $wp_scripts->query( 'edd-admin-orders', 'registered' );
+
+		// The shared admin dependencies already declare it for every per-page script,
+		// so listing it again per page duplicates the handle.
+		$this->assertCount( 1, array_keys( $script->deps, 'edd-tom-select', true ) );
+	}
 }
 
 /**
@@ -281,11 +330,17 @@ class ChosenCompatRegistration extends EDD_UnitTestCase {
 		$this->assertTrue( wp_script_is( 'edd-admin-chosen-compat', 'enqueued' ) );
 	}
 
-	public function test_admin_tax_rates_depends_on_the_namespaced_shim() {
+	/**
+	 * The tax rates screen must reach for neither Chosen handle.
+	 *
+	 * It builds its own Tom Select field, so a dependency on either the shim or the generic
+	 * alias would load Chosen's jQuery surface for a screen that has no jQuery left to serve.
+	 */
+	public function test_admin_tax_rates_depends_on_neither_chosen_handle() {
 		global $wp_scripts;
 		$this->assertTrue( wp_script_is( 'edd-admin-tax-rates', 'registered' ) );
 		$script = $wp_scripts->query( 'edd-admin-tax-rates', 'registered' );
-		$this->assertContains( 'edd-admin-chosen-compat', $script->deps );
+		$this->assertNotContains( 'edd-admin-chosen-compat', $script->deps );
 		$this->assertNotContains( 'jquery-chosen', $script->deps );
 	}
 

@@ -250,8 +250,6 @@ class Elements extends EDD_UnitTestCase {
 	 * The product dropdown does not offer another author's draft.
 	 */
 	public function test_get_products_omits_another_authors_draft() {
-		wp_roles()->for_site();
-
 		$draft = self::factory()->post->create(
 			array(
 				'post_type'   => 'download',
@@ -273,8 +271,6 @@ class Elements extends EDD_UnitTestCase {
 	 * The control for the case above: without it, an empty dropdown would satisfy it too.
 	 */
 	public function test_get_products_includes_another_authors_published_product() {
-		wp_roles()->for_site();
-
 		$published = self::factory()->post->create(
 			array(
 				'post_type'   => 'download',
@@ -294,8 +290,6 @@ class Elements extends EDD_UnitTestCase {
 	 * Someone who can edit others' products is still offered their draft.
 	 */
 	public function test_get_products_includes_another_authors_draft_for_a_manager() {
-		wp_roles()->for_site();
-
 		$draft = self::factory()->post->create(
 			array(
 				'post_type'   => 'download',
@@ -315,8 +309,6 @@ class Elements extends EDD_UnitTestCase {
 	 * A published product is not crowded out of the limit by unreadable drafts.
 	 */
 	public function test_get_products_does_not_let_unreadable_drafts_crowd_out_a_published_product() {
-		wp_roles()->for_site();
-
 		$owner = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		foreach ( range( 1, 3 ) as $i ) {
 			self::factory()->post->create(
@@ -650,8 +642,6 @@ class Elements extends EDD_UnitTestCase {
 	 * The dropdown args filter runs once, not once per pagination batch.
 	 */
 	public function test_get_products_applies_the_args_filter_only_once() {
-		wp_roles()->for_site();
-
 		$owner = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		foreach ( range( 1, 35 ) as $i ) {
 			self::factory()->post->create(
@@ -696,7 +686,6 @@ class Elements extends EDD_UnitTestCase {
 	 * A caller nothing can be filtered away from asks the database for what it wants, once.
 	 */
 	public function test_get_products_asks_for_only_what_it_wants_when_nothing_can_be_filtered() {
-		wp_roles()->for_site();
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'shop_manager' ) ) );
 
 		$this->assertTrue(
@@ -717,7 +706,6 @@ class Elements extends EDD_UnitTestCase {
 	 * The control for the case above: without it, never batching at all would satisfy it too.
 	 */
 	public function test_get_products_still_batches_for_a_caller_who_cannot_read_everything() {
-		wp_roles()->for_site();
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'shop_vendor' ) ) );
 
 		$this->assertFalse(
@@ -770,7 +758,6 @@ class Elements extends EDD_UnitTestCase {
 	 * recognizes, so every batch filters to zero and the loop's own exit condition never trips.
 	 */
 	public function test_get_products_stops_reading_batches_at_the_limit() {
-		wp_roles()->for_site();
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'shop_vendor' ) ) );
 
 		// Asking for 1 makes the batch 30, so 61 products are three batches: 30, 30, 1. Without a

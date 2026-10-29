@@ -25,6 +25,7 @@ use EDD\Gateways\PayPal\V3\Onboarding;
 class IPN {
 	use Traits\Data;
 	use Traits\Validate;
+	use Traits\Refunds;
 
 	/**
 	 * The posted data from PayPal.
@@ -795,6 +796,7 @@ class IPN {
 
 		if ( 'refunded' === $order->status ) {
 			$this->debug_log( 'Order ' . $order_id . ' is already refunded' );
+			return;
 		}
 
 		$transaction_exists = edd_get_order_transaction_by( 'transaction_id', $this->transaction_id );
@@ -802,10 +804,6 @@ class IPN {
 			$this->debug_log( 'Refund transaction for ' . $this->transaction_id . ' already exists' );
 			return;
 		}
-
-		$order_amount    = $order->total;
-		$refunded_amount = ! empty( $this->amount ) ? $this->amount : $order_amount;
-		$currency        = ! empty( $this->currency_code ) ? $this->currency_code : $order->currency;
 
 		if ( 'reversed' === $this->payment_status ) {
 			$this->debug_log( 'Processing a reversal for original transaction ' . $order->get_transaction_id() );
@@ -829,54 +827,45 @@ class IPN {
 			$this->terminate( 200, 'Reversal processed' );
 		}
 
+		$currency = ! empty( $this->currency_code ) ? $this->currency_code : $order->currency;
+		if ( strtolower( $currency ) !== strtolower( $order->currency ) ) {
+			edd_record_gateway_error(
+				__( 'Invalid Currency Code', 'easy-digital-downloads' ),
+				sprintf(
+					/* translators: %1$d: Order ID; %2$s: Expected currency; %3$s: Received currency; %4$s: Refund transaction ID */
+					__( 'Currency mismatch for refund of order %1$d. Expected: %2$s, Received: %3$s. Transaction ID: %4$s', 'easy-digital-downloads' ),
+					$order->id,
+					$order->currency,
+					$currency,
+					$this->transaction_id
+				)
+			);
+
+			$this->debug_log( 'order ' . $order->id . ': invalid currency code detected in refund IPN data: ' . var_export( $this->posted, true ) );
+
+			$this->terminate( 400, 'Invalid currency code' );
+		}
+
 		$this->debug_log( 'Processing a refund for original transaction ' . $order->get_transaction_id() );
 
-		$payment_note = sprintf(
-		/* translators: 1:  Amount refunded; %2$s - Original payment ID; %3$s - Refund transaction ID */
-			esc_html__( 'Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s', 'easy-digital-downloads' ),
-			edd_currency_filter( edd_format_amount( $refunded_amount ), $currency ),
-			esc_html( $order->get_transaction_id() ),
-			esc_html( $this->transaction_id )
-		);
+		// PayPal sends a negative mc_gross; get_amount() is skipped because it prefers a subscription's `amount`.
+		$refunded_amount = isset( $this->posted['mc_gross'] ) ? abs( (float) $this->posted['mc_gross'] ) : $order->total;
+		if ( empty( $refunded_amount ) ) {
+			$this->debug_log( 'Ignoring a zero amount refund for order ' . $order->id );
 
-		// Partial refund.
-		if ( (float) $refunded_amount < (float) $order_amount ) {
-			edd_add_note(
-				array(
-					'object_type' => 'order',
-					'object_id'   => $order->id,
-					'content'     => __( 'Partial refund processed in PayPal (IPN).', 'easy-digital-downloads' ) . ' ' . $payment_note,
-				)
-			);
-			edd_update_order_status( $order->id, 'partially_refunded' );
-		} else {
-			// Full refund.
-			edd_add_note(
-				array(
-					'object_type' => 'order',
-					'object_id'   => $order->id,
-					'content'     => __( 'Full refund processed in PayPal (IPN).', 'easy-digital-downloads' ) . ' ' . $payment_note,
-				)
-			);
-			add_filter( 'edd_is_order_refundable_by_override', '__return_true' );
-			$refund_id = edd_refund_order( $order->id );
-			remove_filter( 'edd_is_order_refundable_by_override', '__return_true' );
-			if ( $refund_id ) {
-				edd_add_order_transaction(
-					array(
-						'object_type'    => 'order',
-						'object_id'      => $refund_id,
-						'transaction_id' => $this->transaction_id,
-						'gateway'        => 'paypal_commerce',
-						'total'          => $refunded_amount,
-						'status'         => 'complete',
-						'currency'       => $currency,
-					)
-				);
-			} else {
-				edd_update_order_status( $order->id, 'refunded' );
-			}
+			$this->terminate( 200, 'Zero amount refund ignored' );
 		}
+
+		$this->process_refund(
+			$order,
+			$refunded_amount,
+			$currency,
+			$this->transaction_id,
+			array(
+				'full'    => __( 'Full refund processed in PayPal (IPN).', 'easy-digital-downloads' ),
+				'partial' => __( 'Partial refund processed in PayPal (IPN).', 'easy-digital-downloads' ),
+			)
+		);
 
 		$this->terminate( 200, 'Refund processed' );
 	}

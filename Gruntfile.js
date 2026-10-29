@@ -128,6 +128,7 @@ module.exports = function ( grunt ) {
 					'!crowdin.yml',
 					'!sonar-project.properties',
 					'!tests/pro/**',
+					'!tests/js/pro/**',
 					'!bin/setup-e2e-site.sh',
 					'!docker-compose.e2e.yml',
 				],

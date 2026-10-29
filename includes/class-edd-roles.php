@@ -116,52 +116,7 @@ class EDD_Roles {
 	 * @since  1.4.4
 	 */
 	public function add_caps() {
-		global $wp_roles;
-
-		if ( class_exists( 'WP_Roles' ) ) {
-			if ( ! isset( $wp_roles ) ) {
-				$wp_roles = new WP_Roles(); // WPCS: override ok.
-			}
-		}
-
-		if ( is_object( $wp_roles ) ) {
-			$wp_roles->add_cap( 'shop_manager', 'view_shop_reports' );
-			$wp_roles->add_cap( 'shop_manager', 'view_shop_sensitive_data' );
-			$wp_roles->add_cap( 'shop_manager', 'export_shop_reports' );
-			$wp_roles->add_cap( 'shop_manager', 'manage_shop_settings' );
-			$wp_roles->add_cap( 'shop_manager', 'manage_shop_discounts' );
-
-			$wp_roles->add_cap( 'administrator', 'view_shop_reports' );
-			$wp_roles->add_cap( 'administrator', 'view_shop_sensitive_data' );
-			$wp_roles->add_cap( 'administrator', 'export_shop_reports' );
-			$wp_roles->add_cap( 'administrator', 'manage_shop_discounts' );
-			$wp_roles->add_cap( 'administrator', 'manage_shop_settings' );
-
-			// Add the main post type capabilities.
-			$capabilities = $this->get_core_caps();
-			foreach ( $capabilities as $cap_group ) {
-				foreach ( $cap_group as $cap ) {
-					$wp_roles->add_cap( 'shop_manager', $cap );
-					$wp_roles->add_cap( 'administrator', $cap );
-					$wp_roles->add_cap( 'shop_worker', $cap );
-				}
-			}
-
-			$wp_roles->add_cap( 'shop_accountant', 'edit_products' );
-			$wp_roles->add_cap( 'shop_accountant', 'read_private_products' );
-			$wp_roles->add_cap( 'shop_accountant', 'view_shop_reports' );
-			$wp_roles->add_cap( 'shop_accountant', 'export_shop_reports' );
-			$wp_roles->add_cap( 'shop_accountant', 'edit_shop_payments' );
-
-			$wp_roles->add_cap( 'shop_vendor', 'edit_product' );
-			$wp_roles->add_cap( 'shop_vendor', 'edit_products' );
-			$wp_roles->add_cap( 'shop_vendor', 'delete_product' );
-			$wp_roles->add_cap( 'shop_vendor', 'delete_products' );
-			$wp_roles->add_cap( 'shop_vendor', 'publish_products' );
-			$wp_roles->add_cap( 'shop_vendor', 'edit_published_products' );
-			$wp_roles->add_cap( 'shop_vendor', 'upload_files' );
-			$wp_roles->add_cap( 'shop_vendor', 'assign_product_terms' );
-		}
+		$this->update_shop_role_caps( 'add_cap' );
 	}
 
 	/**
@@ -260,56 +215,7 @@ class EDD_Roles {
 	 * @since 1.5.2
 	 */
 	public function remove_caps() {
-		global $wp_roles;
-
-		if ( class_exists( 'WP_Roles' ) ) {
-			if ( ! isset( $wp_roles ) ) {
-				$wp_roles = new WP_Roles(); // WPCS: override ok.
-			}
-		}
-
-		if ( is_object( $wp_roles ) ) {
-
-			/** Shop Manager Capabilities */
-			$wp_roles->remove_cap( 'shop_manager', 'view_shop_reports' );
-			$wp_roles->remove_cap( 'shop_manager', 'view_shop_sensitive_data' );
-			$wp_roles->remove_cap( 'shop_manager', 'export_shop_reports' );
-			$wp_roles->remove_cap( 'shop_manager', 'manage_shop_discounts' );
-			$wp_roles->remove_cap( 'shop_manager', 'manage_shop_settings' );
-
-			/** Site Administrator Capabilities */
-			$wp_roles->remove_cap( 'administrator', 'view_shop_reports' );
-			$wp_roles->remove_cap( 'administrator', 'view_shop_sensitive_data' );
-			$wp_roles->remove_cap( 'administrator', 'export_shop_reports' );
-			$wp_roles->remove_cap( 'administrator', 'manage_shop_discounts' );
-			$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
-
-			/** Remove the Main Post Type Capabilities */
-			$capabilities = $this->get_core_caps();
-
-			foreach ( $capabilities as $cap_group ) {
-				foreach ( $cap_group as $cap ) {
-					$wp_roles->remove_cap( 'shop_manager', $cap );
-					$wp_roles->remove_cap( 'administrator', $cap );
-					$wp_roles->remove_cap( 'shop_worker', $cap );
-				}
-			}
-
-			/** Shop Accountant Capabilities */
-			$wp_roles->remove_cap( 'shop_accountant', 'edit_products' );
-			$wp_roles->remove_cap( 'shop_accountant', 'read_private_products' );
-			$wp_roles->remove_cap( 'shop_accountant', 'view_shop_reports' );
-			$wp_roles->remove_cap( 'shop_accountant', 'export_shop_reports' );
-
-			/** Shop Vendor Capabilities */
-			$wp_roles->remove_cap( 'shop_vendor', 'edit_product' );
-			$wp_roles->remove_cap( 'shop_vendor', 'edit_products' );
-			$wp_roles->remove_cap( 'shop_vendor', 'delete_product' );
-			$wp_roles->remove_cap( 'shop_vendor', 'delete_products' );
-			$wp_roles->remove_cap( 'shop_vendor', 'publish_products' );
-			$wp_roles->remove_cap( 'shop_vendor', 'edit_published_products' );
-			$wp_roles->remove_cap( 'shop_vendor', 'upload_files' );
-		}
+		$this->update_shop_role_caps( 'remove_cap' );
 	}
 
 	/**
@@ -364,6 +270,83 @@ class EDD_Roles {
 				'capabilities_reset',
 				admin_url( 'users.php' )
 			)
+		);
+	}
+
+	/**
+	 * Grants or revokes every shop capability in one write to the roles option.
+	 *
+	 * Also rebuilds the role objects and the current user's capabilities, so the
+	 * change is effective in the request that made it.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param string $method The WP_Roles method to apply: 'add_cap' or 'remove_cap'.
+	 * @return void
+	 */
+	private function update_shop_role_caps( $method ) {
+		$wp_roles = wp_roles();
+		$use_db   = $wp_roles->use_db;
+
+		// WP_Roles writes the option once per capability unless use_db is off.
+		$wp_roles->use_db = false;
+		foreach ( $this->get_shop_role_caps() as $role => $caps ) {
+			foreach ( $caps as $cap ) {
+				$wp_roles->$method( $role, $cap );
+			}
+		}
+		$wp_roles->use_db = $use_db;
+
+		if ( $use_db ) {
+			update_option( $wp_roles->role_key, $wp_roles->roles );
+		}
+
+		// WP_Roles::add_cap() and remove_cap() leave the role objects that WP_User reads untouched.
+		$wp_roles->init_roles();
+
+		if ( did_action( 'set_current_user' ) ) {
+			wp_get_current_user()->get_role_caps();
+		}
+	}
+
+	/**
+	 * Gets the shop capabilities granted to each role.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return array Capability names, keyed by role.
+	 */
+	private function get_shop_role_caps() {
+		$core_caps  = array_merge( ...array_values( $this->get_core_caps() ) );
+		$store_caps = array(
+			'view_shop_reports',
+			'view_shop_sensitive_data',
+			'export_shop_reports',
+			'manage_shop_settings',
+			'manage_shop_discounts',
+		);
+
+		return array(
+			'shop_manager'    => array_merge( $store_caps, $core_caps ),
+			'administrator'   => array_merge( $store_caps, $core_caps ),
+			'shop_worker'     => $core_caps,
+			'shop_accountant' => array(
+				'edit_products',
+				'read_private_products',
+				'view_shop_reports',
+				'export_shop_reports',
+				'edit_shop_payments',
+			),
+			'shop_vendor'     => array(
+				'edit_product',
+				'edit_products',
+				'delete_product',
+				'delete_products',
+				'publish_products',
+				'edit_published_products',
+				'upload_files',
+				'assign_product_terms',
+			),
 		);
 	}
 }

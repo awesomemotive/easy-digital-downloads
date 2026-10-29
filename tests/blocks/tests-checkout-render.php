@@ -53,8 +53,19 @@ class CheckoutRender extends EDD_UnitTestCase {
 		parent::tearDownAfterClass();
 	}
 
+	/**
+	 * Callbacks that restore what a test changed, run in reverse order by tearDown().
+	 *
+	 * @var callable[]
+	 */
+	private $restorers = array();
+
 	public function setUp(): void {
 		parent::setUp();
+
+		// The dedupe flags are statics, so they persist across tests.
+		\EDD\Blocks\Utility::reset_checkout_form_top();
+		\EDD\Checkout\Address::reset_billing_top();
 
 		edd_empty_cart();
 		edd_add_to_cart( self::$download->ID );
@@ -65,6 +76,16 @@ class CheckoutRender extends EDD_UnitTestCase {
 
 		// Reset the editor-context simulation.
 		unset( $_GET['edd_blocks_is_block_editor'] );
+
+		// The dedupe flags are statics that no teardown restores, so clear them per test.
+		\EDD\Blocks\Utility::reset_checkout_form_top();
+		\EDD\Checkout\Address::reset_billing_top();
+
+		// Put back whatever the billing address tests changed.
+		foreach ( array_reverse( $this->restorers ) as $restore ) {
+			$restore();
+		}
+		$this->restorers = array();
 
 		parent::tearDown();
 	}
@@ -108,6 +129,135 @@ class CheckoutRender extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * Checkout block: a second render in the same request still outputs the
+	 * personal-info fieldset, as when a page builder pre-renders the content.
+	 */
+	public function test_checkout_block_renders_personal_info_on_a_second_render() {
+		$first_render  = $this->render_checkout_block_as_guest();
+		$second_render = $this->render_checkout_block_as_guest();
+
+		// Assert the fixture: the first render took the inner-blocks path and output the fieldset once.
+		$this->assertStringNotContainsString( 'edd-blocks__user-details--logged-in', $first_render );
+		$this->assertStringContainsString( 'edd-checkout__inner-blocks', $first_render );
+		$this->assertSame( 1, substr_count( $first_render, 'edd-blocks__user-details' ) );
+
+		$this->assertStringContainsString( 'edd-blocks__user-details', $second_render );
+		$this->assertStringContainsString( 'edd-email', $second_render );
+		$this->assertSame( 1, substr_count( $second_render, 'edd-blocks__user-details' ) );
+	}
+
+	/**
+	 * Checkout block: when the form top hook already fired outside a block checkout
+	 * in this request, the render still outputs the personal-info fieldset exactly once.
+	 */
+	public function test_checkout_block_renders_personal_info_once_when_form_top_already_fired_elsewhere() {
+		// Fire the hook as the legacy shortcode or Elementor checkout would, outside any block.
+		ob_start();
+		do_action( 'edd_checkout_form_top' );
+		ob_get_clean();
+		$this->assertGreaterThan( 0, did_action( 'edd_checkout_form_top' ) );
+
+		$html = $this->render_checkout_block_as_guest();
+
+		$this->assertSame( 1, substr_count( $html, 'edd-blocks__user-details' ) );
+		$this->assertSame( 1, substr_count( $html, 'id="edd_checkout_user_info"' ) );
+	}
+
+	/**
+	 * Checkout block: with address fields required, a second render in the same
+	 * request outputs the billing address fieldset exactly once.
+	 */
+	public function test_checkout_block_renders_billing_address_on_a_second_render() {
+		$this->remember_option( 'checkout_address_fields' );
+		edd_update_option(
+			'checkout_address_fields',
+			array(
+				'address' => 1,
+				'city'    => 1,
+				'state'   => 1,
+				'zip'     => 1,
+				'country' => 1,
+			)
+		);
+
+		$this->assert_billing_address_renders_once_per_render();
+	}
+
+	/**
+	 * Checkout block: a taxed cart forces the address fields, and a second render
+	 * in the same request still outputs the billing address fieldset exactly once.
+	 */
+	public function test_checkout_block_renders_taxed_cart_billing_address_on_a_second_render() {
+		$this->remember_option( 'checkout_address_fields' );
+		$this->remember_option( 'enable_taxes' );
+		edd_update_option( 'enable_taxes', 1 );
+
+		$this->assertTrue( edd_is_cart_taxed() );
+		$this->assertEmpty( edd_get_option( 'checkout_address_fields' ) );
+
+		$this->assert_billing_address_renders_once_per_render();
+	}
+
+	/**
+	 * Checkout block: a Stripe payment method that forces the address fields still
+	 * outputs the billing address fieldset exactly once on a second render.
+	 */
+	public function test_checkout_block_renders_stripe_forced_billing_address_on_a_second_render() {
+		$mode          = edd_is_test_mode() ? 'test' : 'live';
+		$configuration = 'edd_test_pmc';
+
+		$this->remember_option( 'checkout_address_fields' );
+		$this->remember_option( 'currency' );
+		$this->remember_option( 'stripe_elements_mode' );
+		$this->remember_transient( "edd_stripe_pmc_{$mode}" );
+		$this->remember_transient( $configuration );
+		$connect           = edd_stripe()->connect();
+		$was_connected     = $connect->is_connected;
+		$this->restorers[] = static function () use ( $connect, $was_connected ) {
+			$connect->is_connected = $was_connected;
+		};
+
+		edd_update_option( 'currency', 'INR' );
+		edd_update_option( 'stripe_elements_mode', 'payment-elements' );
+		( new \EDD\Utils\Transient( "edd_stripe_pmc_{$mode}" ) )->set( array( 'edd20241002' => $configuration ) );
+		( new \EDD\Utils\Transient( $configuration ) )->set( array( 'upi' => array( 'available' => true ) ) );
+		$connect->is_connected = true;
+
+		$this->assertTrue( \EDD\Gateways\Stripe\PaymentMethods::requires_billing_address() );
+		$this->assertEmpty( edd_get_option( 'checkout_address_fields' ) );
+
+		$this->assert_billing_address_renders_once_per_render();
+	}
+
+	/**
+	 * Checkout block: an empty-cart render followed by a filled one in the same
+	 * request still outputs the personal-info and billing address fieldsets once.
+	 */
+	public function test_checkout_block_renders_fields_once_after_an_empty_cart_render() {
+		$this->remember_option( 'checkout_address_fields' );
+		edd_update_option(
+			'checkout_address_fields',
+			array(
+				'address' => 1,
+				'city'    => 1,
+				'state'   => 1,
+				'zip'     => 1,
+				'country' => 1,
+			)
+		);
+
+		edd_empty_cart();
+		$empty_render = $this->render_checkout_block_as_guest();
+		$this->assertStringNotContainsString( 'edd-blocks__user-details', $empty_render );
+
+		edd_add_to_cart( self::$download->ID );
+		$filled_render = $this->render_checkout_block_as_guest();
+
+		$this->assertSame( 1, substr_count( $filled_render, 'edd-blocks__user-details' ) );
+		$this->assertSame( 1, substr_count( $filled_render, 'id="edd_cc_address"' ) );
+	}
+
+	/**
 	 * Payment-info block: renders the payment-details wrapper.
 	 */
 	public function test_payment_info_block_render_contains_payment_details() {
@@ -127,5 +277,74 @@ class CheckoutRender extends EDD_UnitTestCase {
 
 		$this->assertIsString( $html );
 		$this->assertStringContainsString( 'edd_discount_code', $html );
+	}
+
+	/**
+	 * Records an EDD option's current value so tearDown() restores it, or deletes
+	 * it again if it was absent.
+	 *
+	 * @param string $key The option key.
+	 */
+	private function remember_option( $key ) {
+		$absent   = new \stdClass();
+		$original = edd_get_option( $key, $absent );
+
+		$this->restorers[] = static function () use ( $key, $original, $absent ) {
+			if ( $original === $absent ) {
+				edd_delete_option( $key );
+			} else {
+				edd_update_option( $key, $original );
+			}
+		};
+	}
+
+	/**
+	 * Records a transient's current value so tearDown() restores it, or deletes
+	 * it again if it was absent.
+	 *
+	 * @param string $name The transient option name.
+	 */
+	private function remember_transient( $name ) {
+		$original = ( new \EDD\Utils\Transient( $name ) )->get( true );
+
+		$this->restorers[] = static function () use ( $name, $original ) {
+			$transient = new \EDD\Utils\Transient( $name );
+			if ( false === $original || null === $original ) {
+				$transient->delete();
+			} else {
+				$transient->set( $original );
+			}
+		};
+	}
+
+	/**
+	 * Renders the checkout block twice and asserts each render outputs the billing
+	 * address fieldset once. The first render is the fixture: it proves the fieldset
+	 * renders at all before the second render's result means anything.
+	 */
+	private function assert_billing_address_renders_once_per_render() {
+		$first_render  = $this->render_checkout_block_as_guest();
+		$second_render = $this->render_checkout_block_as_guest();
+
+		$this->assertSame( 1, substr_count( $first_render, 'id="edd_cc_address"' ) );
+		$this->assertSame( 1, substr_count( $second_render, 'id="edd_cc_address"' ) );
+	}
+
+	/**
+	 * Renders a checkout block with a personal-info inner block as a guest.
+	 *
+	 * A logged-in user adds a `--logged-in` modifier class to the user details wrapper.
+	 *
+	 * @return string
+	 */
+	private function render_checkout_block_as_guest() {
+		$original_user_id = get_current_user_id();
+		wp_set_current_user( 0 );
+
+		$html = do_blocks( '<!-- wp:edd/checkout --><!-- wp:edd/checkout-personal-info /--><!-- /wp:edd/checkout -->' );
+
+		wp_set_current_user( $original_user_id );
+
+		return $html;
 	}
 }

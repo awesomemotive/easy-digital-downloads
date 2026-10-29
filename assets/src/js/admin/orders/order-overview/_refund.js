@@ -1,279 +1,375 @@
 import { NumberFormat } from '@easy-digital-downloads/currency';
+import { setupEddModal } from '@easy-digital-downloads/modal';
 
 const number = new NumberFormat();
 
-/* global eddAdminOrderOverview */
+// Tracks whether a refund was successfully submitted so we can reload on close.
+let didRefund = false;
 
-// Loads the modal when the refund button is clicked.
-$(document.body).on('click', '.edd-refund-order', function (e) {
-	e.preventDefault();
-	var link     = $(this),
-		postData = {
-			action  : 'edd_generate_refund_form',
-			order_id: $('input[name="edd_payment_id"]').val(),
-		};
+const dialogEl = document.getElementById( 'edd-refund-order-dialog' );
 
-	$.ajax({
-		type   : 'POST',
-		data   : postData,
-		url    : ajaxurl,
-		success: function success(data) {
-			let modal_content = '';
-			if (data.success) {
-				modal_content = data.html;
-			} else {
-				modal_content = data.message;
-			}
+if ( dialogEl ) {
+	const modal = setupEddModal( { dialog: dialogEl } );
 
-			$('#edd-refund-order-dialog').dialog({
-				position: { my: 'top center', at: 'center center-25%' },
-				width    : '75%',
-				modal    : true,
-				resizable: false,
-				draggable: false,
-				classes: {
-					'ui-dialog': 'edd-dialog',
-				},
-				closeText: edd_vars.closeText,
-				open: function( event, ui ) {
-					$(this).html( modal_content );
-				},
-				close: function( event, ui ) {
-					$( this ).html( '' );
-					if ( $( this ).hasClass( 'did-refund' ) ) {
-						location.reload();
-					}
-				}
-			});
-			return false;
+	// Reload if a refund was processed; clear content for next open.
+	dialogEl.addEventListener( 'close', () => {
+		const content = dialogEl.querySelector( '.edd-modal__content' );
+		if ( content ) {
+			content.innerHTML = '';
 		}
-	}).fail(function (data) {
-		$('#edd-refund-order-dialog').dialog({
-			position: { my: 'top center', at: 'center center-25%' },
-			width    : '75%',
-			modal    : true,
-			resizable: false,
-			draggable: false
-		}).html(data.message);
-		return false;
-	});
-});
-
-$( document.body ).on( 'click', '.ui-widget-overlay', function ( e ) {
-	$( '#edd-refund-order-dialog' ).dialog( 'close' );
-} );
-
-/**
- * Listen for the bulk actions checkbox, since WP doesn't trigger a change on sub-items.
- */
-$( document.body ).on( 'change', '#edd-refund-order-dialog #cb-select-all-1', function () {
-	const itemCheckboxes = $( '.edd-order-item-refund-checkbox' );
-	const isChecked = $( this ).prop( 'checked' );
-
-	itemCheckboxes.each( function() {
-		$( this ).prop( 'checked', isChecked ).trigger( 'change' );
+		if ( didRefund ) {
+			location.reload();
+		}
+		didRefund = false;
 	} );
-} );
 
-/**
- * Listen for individual checkbox changes.
- * When it does, trigger a quantity change.
- */
-$( document.body ).on( 'change', '.edd-order-item-refund-checkbox', function () {
-	const parent = $( this ).parent().parent();
-	const quantityField = parent.find( '.edd-order-item-refund-quantity' );
+	// Open the refund modal and load the form via AJAX.
+	document.body.addEventListener( 'click', async ( e ) => {
+		const btn = e.target.closest( '.edd-refund-order' );
+		if ( ! btn ) {
+			return;
+		}
+		e.preventDefault();
 
-	if ( quantityField.length ) {
-		if ( $( this ).prop( 'checked' ) ) {
-			// Triggering a change on the quantity field handles enabling the inputs.
-			quantityField.trigger( 'change' );
+		const content = dialogEl.querySelector( '.edd-modal__content' );
+		if ( ! content ) {
+			return;
+		}
+
+		content.innerHTML = '<span class="spinner is-active"></span>';
+		modal.open();
+
+		const formData = new FormData();
+		formData.append( 'action', 'edd_generate_refund_form' );
+		formData.append( 'order_id', document.querySelector( 'input[name="edd_payment_id"]' )?.value ?? '' );
+
+		try {
+			const response = await fetch( globalThis.ajaxurl, { method: 'POST', body: formData } );
+			const data = await response.json();
+			content.innerHTML = data.success ? data.html : ( data.message ?? '' );
+		} catch {
+			content.innerHTML = '';
+		}
+	} );
+}
+
+// Delegate all refund form interactions to document.body so they work on dynamically injected content.
+
+document.body.addEventListener( 'change', handleRefundChange );
+
+function handleRefundChange( e ) {
+	if ( handleSelectAllChange( e ) ) {
+		return;
+	}
+	if ( handleItemCheckboxChange( e ) ) {
+		return;
+	}
+	handleAmountInputChange( e );
+}
+
+function handleSelectAllChange( e ) {
+	if ( ! e.target.matches( '#edd-refund-order-dialog #cb-select-all-1' ) ) {
+		return false;
+	}
+	const isChecked = e.target.checked;
+	document.querySelectorAll( '#edd-refund-order-dialog .edd-order-item-refund-checkbox' ).forEach( ( cb ) => {
+		cb.checked = isChecked;
+		cb.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+	} );
+	return true;
+}
+
+function handleItemCheckboxChange( e ) {
+	if ( ! e.target.matches( '#edd-refund-order-dialog .edd-order-item-refund-checkbox' ) ) {
+		return false;
+	}
+	const row = e.target.closest( 'tr' );
+	const quantityField = row?.querySelector( '.edd-order-item-refund-quantity' );
+	if ( quantityField ) {
+		if ( e.target.checked ) {
+			quantityField.dispatchEvent( new Event( 'change', { bubbles: true } ) );
 		} else {
-			// Disable inputs and recalculate total.
-			parent.find( '.edd-order-item-refund-input' ).prop( 'disabled', true );
+			row.querySelectorAll( '.edd-order-item-refund-input' ).forEach( ( input ) => {
+				input.disabled = true;
+			} );
 			recalculateRefundTotal();
 		}
 	}
-} );
+	return true;
+}
 
-/**
- * Handles quantity changes, which includes items in the refund.
- */
-$( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refund-input', function () {
-	let parent = $( this ).closest( '.refunditem' ),
-		quantityField = parent.find( '.edd-order-item-refund-quantity' ),
-		quantity = parseInt( quantityField.val() );
+function handleAmountInputChange( e ) {
+	if ( ! e.target.matches( '#edd-refund-order-dialog .edd-order-item-refund-input' ) ) {
+		return;
+	}
+	const row = e.target.closest( '.refunditem' );
+	const quantityField = row?.querySelector( '.edd-order-item-refund-quantity' );
+	const quantity = Number.parseInt( quantityField?.value ?? '0', 10 );
 
-	if ( quantity > 0 ) {
-		parent.addClass( 'refunded' );
-	} else {
-		parent.removeClass( 'refunded' );
+	if ( row ) {
+		row.classList.toggle( 'refunded', quantity > 0 );
 	}
 
-	// Only auto calculate subtotal / tax if we've adjusted the quantity.
-	if ( $( this ).hasClass( 'edd-order-item-refund-quantity' ) ) {
-		// Enable/disable amount fields.
-		parent.find( '.edd-order-item-refund-input:not(.edd-order-item-refund-quantity)' ).prop( 'disabled', quantity === 0 );
-		if ( quantity > 0 ) {
-			quantityField.prop( 'disabled', false );
-		}
-
-		let subtotalField = parent.find( '.edd-order-item-refund-subtotal' ),
-			taxField = parent.find( '.edd-order-item-refund-tax' ),
-			originalSubtotal = number.unformat( subtotalField.data( 'original' ) ),
-			originalTax = taxField.length ? number.unformat( taxField.data( 'original' ) ) : 0.00,
-			originalQuantity = parseInt( quantityField.data( 'max' ) ),
-			calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity,
-			calculatedTax = taxField.length ? ( originalTax / originalQuantity ) * quantity : 0.00;
-
-		// Make sure totals don't go over maximums.
-		if ( calculatedSubtotal > parseFloat( subtotalField.data( 'max' ) ) ) {
-			calculatedSubtotal = subtotalField.data( 'max' );
-		}
-		if ( taxField.length && calculatedTax > parseFloat( taxField.data( 'max' ) ) ) {
-			calculatedTax = taxField.data( 'max' );
-		}
-
-		// Guess the subtotal and tax for the selected quantity.
-		subtotalField.val( number.format( calculatedSubtotal ) );
-		if ( taxField.length ) {
-			taxField.val( number.format( calculatedTax ) );
-		}
+	if ( e.target.classList.contains( 'edd-order-item-refund-quantity' ) ) {
+		updateQuantityInputs( row, quantityField, quantity );
 	}
 
 	recalculateRefundTotal();
-} );
+}
 
-/**
- * Calculates all the final refund values.
- */
-function recalculateRefundTotal() {
-	let newSubtotal   = 0,
-		newTax        = 0,
-		newTotal      = 0,
-		canRefund     = false,
-		allInputBoxes = $( '#edd-refund-order-dialog .edd-order-item-refund-input' ),
-		allReadOnly   = $( '#edd-refund-order-dialog .edd-order-item-refund-input.readonly' );
-
-	// Set a readonly while we recalculate, to avoid race conditions in the browser.
-	allInputBoxes.prop( 'readonly', true );
-
-	// Loop over all order items.
-	$( '#edd-refund-order-dialog .edd-order-item-refund-quantity' ).each( function() {
-		const thisItemQuantity = parseInt( $( this ).val() );
-
-		if ( ! thisItemQuantity ) {
-			return;
-		}
-
-		const thisItemParent = $( this ).closest( '.refunditem' );
-		const thisItemSelected = thisItemParent.find( '.edd-order-item-refund-checkbox' ).prop( 'checked' );
-
-		if ( ! thisItemSelected ) {
-			thisItemParent.removeClass( 'refunded' );
-			return;
-		}
-
-		// Values for this item.
-		let thisItemTax = 0.00;
-
-		let thisItemSubtotal = number.unformat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() );
-
-		if ( thisItemParent.find( '.edd-order-item-refund-tax' ).length ) {
-			thisItemTax = number.unformat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() );
-		}
-
-		let thisItemTotal = thisItemSubtotal + thisItemTax;
-
-		thisItemParent.find( '.column-total span' ).text( number.format( thisItemTotal ) );
-
-		// Negate amounts if working with credit.
-		if ( thisItemParent.data( 'credit' ) ) {
-			thisItemSubtotal = thisItemSubtotal * -1;
-			thisItemTax      = thisItemTax * -1;
-			thisItemTotal    = thisItemTotal * -1;
-		}
-
-		// Only include order items in the subtotal.
-		if ( thisItemParent.data( 'orderItem' ) ) {
-			newSubtotal += thisItemSubtotal;
-		}
-
-		newTax += thisItemTax;
-		newTotal += thisItemTotal;
+function updateQuantityInputs( row, quantityField, quantity ) {
+	row?.querySelectorAll( '.edd-order-item-refund-input:not(.edd-order-item-refund-quantity)' ).forEach( ( input ) => {
+		input.disabled = quantity === 0;
 	} );
 
-	if ( parseFloat( newTotal ) > 0 ) {
-		canRefund = true;
+	if ( quantity <= 0 || ! quantityField ) {
+		return;
 	}
 
-	$( '#edd-refund-submit-subtotal-amount' ).text( number.format( newSubtotal ) );
-	$( '#edd-refund-submit-tax-amount' ).text( number.format( newTax ) );
-	$( '#edd-refund-submit-total-amount' ).text( number.format( newTotal ) );
+	quantityField.disabled = false;
 
-	$( '#edd-submit-refund-submit' ).attr( 'disabled', ! canRefund );
+	const subtotalField = row.querySelector( '.edd-order-item-refund-subtotal' );
+	const taxField      = row.querySelector( '.edd-order-item-refund-tax' );
 
-	// Remove the readonly.
-	allInputBoxes.prop( 'readonly', false );
-	allReadOnly.prop( 'readonly', true );
+	const originalSubtotal = number.unformat( subtotalField?.dataset.original ?? '0' );
+	const originalTax      = taxField ? number.unformat( taxField.dataset.original ?? '0' ) : 0;
+	const originalQuantity = Number.parseInt( quantityField.dataset.max ?? '1', 10 );
+
+	let calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity;
+	let calculatedTax      = taxField ? ( originalTax / originalQuantity ) * quantity : 0;
+
+	const maxSubtotal = Number.parseFloat( subtotalField?.dataset.max ?? '0' );
+	const maxTax      = taxField ? Number.parseFloat( taxField.dataset.max ?? '0' ) : 0;
+
+	if ( calculatedSubtotal > maxSubtotal ) {
+		calculatedSubtotal = maxSubtotal;
+	}
+	if ( taxField && calculatedTax > maxTax ) {
+		calculatedTax = maxTax;
+	}
+
+	if ( subtotalField ) {
+		subtotalField.value = number.format( calculatedSubtotal );
+	}
+	if ( taxField ) {
+		taxField.value = number.format( calculatedTax );
+	}
+}
+
+// Submit the refund form.
+document.body.addEventListener( 'click', ( e ) => {
+	const btn = e.target.closest( '#edd-refund-order-dialog #edd-submit-refund-submit' );
+	if ( btn ) {
+		void submitRefund( btn, e );
+	}
+} );
+
+async function submitRefund( btn, e ) {
+	e.preventDefault();
+
+	const dialog = document.getElementById( 'edd-refund-order-dialog' );
+	if ( ! dialog ) {
+		return;
+	}
+
+	dialog.querySelectorAll( '.edd-submit-refund-message' ).forEach( ( el ) => {
+		el.classList.remove( 'success', 'fail' );
+	} );
+
+	btn.classList.remove( 'button-primary' );
+	btn.disabled = true;
+	btn.classList.add( 'updating-message' );
+
+	const statusEl = dialog.querySelector( '#edd-submit-refund-status' );
+	if ( statusEl ) {
+		statusEl.style.display = 'none';
+	}
+
+	const refundForm = dialog.querySelector( '#edd-submit-refund-form' );
+	const formData   = new FormData();
+	formData.append( 'action', 'edd_process_refund_form' );
+	formData.append( 'order_id', document.querySelector( 'input[name="edd_payment_id"]' )?.value ?? '' );
+
+	// Serialize form fields as a URL-encoded string, matching jQuery's .serialize().
+	if ( refundForm ) {
+		const params = new URLSearchParams();
+		new FormData( refundForm ).forEach( ( value, key ) => params.append( key, value ) );
+		formData.append( 'data', params.toString() );
+	}
+
+	try {
+		const response = await fetch( globalThis.ajaxurl, { method: 'POST', body: formData } );
+		const data     = await response.json();
+
+		if ( data.success ) {
+			showRefundSuccess( dialog, data.data );
+			didRefund = true;
+		} else {
+			showRefundError( dialog, data.data ?? '' );
+			enableSubmitButton( btn );
+		}
+	} catch {
+		enableSubmitButton( btn );
+	}
 }
 
 /**
- * Process the refund form after the button is clicked.
+ * Reveals the refund result message and the link to the new refund order.
+ *
+ * @param {HTMLElement} dialog Refund dialog.
+ * @param {Object}      refund Refund data returned by the AJAX handler.
  */
-$(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
-	e.preventDefault();
-	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
-	$( this ).removeClass( 'button-primary' ).attr( 'disabled', true ).addClass( 'updating-message' );
-	$('#edd-submit-refund-status').hide();
+function showRefundSuccess( dialog, refund ) {
+	const messageTarget = dialog.querySelector( '.edd-submit-refund-message' );
+	if ( messageTarget ) {
+		messageTarget.textContent = refund.message;
+		messageTarget.classList.add( 'success' );
+	}
 
-	const refundForm = $( '#edd-submit-refund-form' );
-	const refundData = refundForm.serialize();
+	const urlTarget = dialog.querySelector( '.edd-submit-refund-url' );
+	if ( urlTarget ) {
+		urlTarget.setAttribute( 'href', refund.refund_url );
+		urlTarget.style.removeProperty( 'display' );
+		urlTarget.focus();
+	}
 
-	var postData = {
-		action: 'edd_process_refund_form',
-		data: refundData,
-		order_id: $('input[name="edd_payment_id"]').val()
-	};
+	showRefundStatus( dialog );
 
-	$.ajax({
-		type   : 'POST',
-		data   : postData,
-		url    : ajaxurl,
-		success: function success(response) {
-			const message_target = $('.edd-submit-refund-message'),
-				url_target     = $('.edd-submit-refund-url');
+	const refundForm = dialog.querySelector( '#edd-submit-refund-form' );
+	if ( refundForm ) {
+		refundForm.style.display = 'none';
+	}
+}
 
-			if ( response.success ) {
-				message_target.text(response.data.message).addClass('success');
-				url_target.attr( 'href', response.data.refund_url ).show();
+/**
+ * Reveals the error returned by the AJAX handler and hides the refund link.
+ *
+ * The message is already escaped server side and may carry markup, so it is
+ * assigned as HTML rather than text.
+ *
+ * @param {HTMLElement} dialog  Refund dialog.
+ * @param {string}      message Error message.
+ */
+function showRefundError( dialog, message ) {
+	const messageTarget = dialog.querySelector( '.edd-submit-refund-message' );
+	if ( messageTarget ) {
+		messageTarget.innerHTML = message;
+		messageTarget.classList.add( 'fail' );
+	}
 
-				$( '#edd-submit-refund-status' ).show();
-				url_target.focus();
-				$( '#edd-refund-order-dialog' ).addClass( 'did-refund' );
-			} else {
-				message_target.html(response.data).addClass('fail');
-				url_target.hide();
+	const urlTarget = dialog.querySelector( '.edd-submit-refund-url' );
+	if ( urlTarget ) {
+		urlTarget.style.display = 'none';
+	}
 
-				$('#edd-submit-refund-status').show();
-				$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'button-primary' );
-			}
-		}
-	} ).fail( function ( data ) {
-		const message_target = $('.edd-submit-refund-message'),
-			url_target     = $('.edd-submit-refund-url'),
-			json           = data.responseJSON;
+	showRefundStatus( dialog );
+}
 
+/**
+ * Shows the status area that holds the refund result message.
+ *
+ * @param {HTMLElement} dialog Refund dialog.
+ */
+function showRefundStatus( dialog ) {
+	const statusEl = dialog.querySelector( '#edd-submit-refund-status' );
+	if ( statusEl ) {
+		statusEl.style.removeProperty( 'display' );
+	}
+}
 
-		message_target.text( json.data ).addClass( 'fail' );
-		url_target.hide();
+/**
+ * Returns the submit button to its resting state so the refund can be retried.
+ *
+ * @param {HTMLElement} btn Refund submit button.
+ */
+function enableSubmitButton( btn ) {
+	btn.disabled = false;
+	btn.classList.remove( 'updating-message' );
+	btn.classList.add( 'button-primary' );
+}
 
-		$( '#edd-submit-refund-status' ).show();
-		$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'button-primary' );
-		return false;
-	});
-});
-
-// Initialize WP toggle behavior for the modal.
-$( document.body ).on( 'click', '.refund-items .toggle-row', function () {
-	$( this ).closest( 'tr' ).toggleClass( 'is-expanded' );
+// Toggle row expansion in the mobile-responsive refund items list.
+document.body.addEventListener( 'click', ( e ) => {
+	const toggle = e.target.closest( '.refund-items .toggle-row' );
+	if ( toggle ) {
+		toggle.closest( 'tr' )?.classList.toggle( 'is-expanded' );
+	}
 } );
+
+/**
+ * Recalculates all refund totals based on currently selected items and entered amounts.
+ */
+function recalculateRefundTotal() {
+	const dialog = document.getElementById( 'edd-refund-order-dialog' );
+	if ( ! dialog ) {
+		return;
+	}
+
+	let newSubtotal = 0;
+	let newTax      = 0;
+	let newTotal    = 0;
+	let canRefund   = false;
+
+	const allInputBoxes = dialog.querySelectorAll( '.edd-order-item-refund-input' );
+	const allReadOnly   = dialog.querySelectorAll( '.edd-order-item-refund-input.readonly' );
+
+	// Set readonly during calculation to prevent race conditions.
+	allInputBoxes.forEach( ( input ) => { input.readOnly = true; } );
+
+	dialog.querySelectorAll( '.edd-order-item-refund-quantity' ).forEach( ( qtyEl ) => {
+		const qty = Number.parseInt( qtyEl.value, 10 );
+		if ( ! qty ) {
+			return;
+		}
+
+		const row        = qtyEl.closest( '.refunditem' );
+		const isSelected = row?.querySelector( '.edd-order-item-refund-checkbox' )?.checked;
+
+		if ( ! isSelected ) {
+			row?.classList.remove( 'refunded' );
+			return;
+		}
+
+		let itemSubtotal = number.unformat( row.querySelector( '.edd-order-item-refund-subtotal' )?.value ?? '0' );
+		const taxEl      = row.querySelector( '.edd-order-item-refund-tax' );
+		let itemTax      = taxEl ? number.unformat( taxEl.value ) : 0;
+		let itemTotal    = itemSubtotal + itemTax;
+
+		const totalSpan = row.querySelector( '.column-total span' );
+		if ( totalSpan ) {
+			totalSpan.textContent = number.format( itemTotal );
+		}
+
+		// Negate amounts for credit rows.
+		if ( row.dataset.credit ) {
+			itemSubtotal *= -1;
+			itemTax      *= -1;
+			itemTotal    *= -1;
+		}
+
+		if ( row.dataset.orderItem ) {
+			newSubtotal += itemSubtotal;
+		}
+
+		newTax   += itemTax;
+		newTotal += itemTotal;
+	} );
+
+	if ( Number.parseFloat( newTotal ) > 0 ) {
+		canRefund = true;
+	}
+
+	const subtotalAmountEl = dialog.querySelector( '#edd-refund-submit-subtotal-amount' );
+	const taxAmountEl      = dialog.querySelector( '#edd-refund-submit-tax-amount' );
+	const totalAmountEl    = dialog.querySelector( '#edd-refund-submit-total-amount' );
+	const submitBtn        = dialog.querySelector( '#edd-submit-refund-submit' );
+
+	if ( subtotalAmountEl ) { subtotalAmountEl.textContent = number.format( newSubtotal ); }
+	if ( taxAmountEl )      { taxAmountEl.textContent = number.format( newTax ); }
+	if ( totalAmountEl )    { totalAmountEl.textContent = number.format( newTotal ); }
+	if ( submitBtn )        { submitBtn.disabled = ! canRefund; }
+
+	// Restore readonly state.
+	allInputBoxes.forEach( ( input ) => { input.readOnly = false; } );
+	allReadOnly.forEach( ( input ) => { input.readOnly = true; } );
+}

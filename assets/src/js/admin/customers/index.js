@@ -102,6 +102,23 @@ function setupRemoveUser() {
 }
 
 /**
+ * Set up the "Verify account" link, which asks first when the account is matched by email only.
+ */
+function setupVerifyUnclaimedUser() {
+	document.body.addEventListener( 'click', function( e ) {
+		const link = e.target.closest( '[data-edd-verify-unclaimed]' );
+		if ( ! link ) {
+			return;
+		}
+
+		// eslint-disable-next-line no-alert
+		if ( ! globalThis.confirm( globalThis.edd_vars?.verify_unclaimed_user ) ) {
+			e.preventDefault();
+		}
+	} );
+}
+
+/**
  * Set up the delete-customer confirmation checkbox, which gates the submit
  * button and the "delete records" secondary checkbox.
  */
@@ -138,5 +155,6 @@ document.addEventListener( 'DOMContentLoaded', function() {
 	} );
 	setupAddEmail();
 	setupRemoveUser();
+	setupVerifyUnclaimedUser();
 	setupDeleteChecked();
 } );

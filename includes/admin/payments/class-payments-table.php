@@ -2,10 +2,9 @@
 /**
  * Order History Table.
  *
- * @package     EDD
- * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @package     EDD\Admin\Payments
+ * @copyright   Copyright (c) 2018, Sandhills Development, LLC
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
 
@@ -1180,12 +1179,46 @@ class EDD_Payment_History_Table extends List_Table {
 		if ( 'top' === $which ) :
 			wp_nonce_field( 'bulk-' . $this->_args['plural'], '_wpnonce', false );
 			?>
-			<div id="edd-bulk-delete-dialog" class="edd-dialog" title="<?php esc_html_e( 'Confirmation Required', 'easy-digital-downloads' ); ?>">
-				<?php esc_html_e( 'You are about to permanently delete orders from your store. Once deleted, these orders are not recoverable. Are you sure you want to continue?', 'easy-digital-downloads' ); ?>
-			</div>
-			<div id="edd-single-delete-dialog" class="edd-dialog" title="<?php esc_html_e( 'Confirmation Required', 'easy-digital-downloads' ); ?>">
-				<?php esc_html_e( 'You are about to permanently delete this order from your store. Once deleted, this order is not recoverable. Are you sure you want to continue?', 'easy-digital-downloads' ); ?>
-			</div>
+			<dialog
+				id="edd-bulk-delete-dialog"
+				class="edd-modal edd-modal--confirm"
+				aria-labelledby="edd-bulk-delete-dialog__title"
+			>
+				<div class="edd-modal__header">
+					<h2 id="edd-bulk-delete-dialog__title"><?php esc_html_e( 'Confirmation Required', 'easy-digital-downloads' ); ?></h2>
+					<button type="button" class="edd-modal__close" aria-label="<?php esc_attr_e( 'Close', 'easy-digital-downloads' ); ?>">
+						<span class="dashicons dashicons-no-alt"></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Close', 'easy-digital-downloads' ); ?></span>
+					</button>
+				</div>
+				<div class="edd-modal__content">
+					<p><?php esc_html_e( 'You are about to permanently delete orders from your store. Once deleted, these orders are not recoverable. Are you sure you want to continue?', 'easy-digital-downloads' ); ?></p>
+				</div>
+				<div class="edd-modal__footer">
+					<button type="button" class="button edd-modal__cancel"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+					<button type="button" class="button button-primary edd-modal__confirm"><?php esc_html_e( 'Confirm', 'easy-digital-downloads' ); ?></button>
+				</div>
+			</dialog>
+			<dialog
+				id="edd-single-delete-dialog"
+				class="edd-modal edd-modal--confirm"
+				aria-labelledby="edd-single-delete-dialog__title"
+			>
+				<div class="edd-modal__header">
+					<h2 id="edd-single-delete-dialog__title"><?php esc_html_e( 'Confirmation Required', 'easy-digital-downloads' ); ?></h2>
+					<button type="button" class="edd-modal__close" aria-label="<?php esc_attr_e( 'Close', 'easy-digital-downloads' ); ?>">
+						<span class="dashicons dashicons-no-alt"></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Close', 'easy-digital-downloads' ); ?></span>
+					</button>
+				</div>
+				<div class="edd-modal__content">
+					<p><?php esc_html_e( 'You are about to permanently delete this order from your store. Once deleted, this order is not recoverable. Are you sure you want to continue?', 'easy-digital-downloads' ); ?></p>
+				</div>
+				<div class="edd-modal__footer">
+					<button type="button" class="button edd-modal__cancel"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+					<button type="button" class="button button-primary edd-modal__confirm"><?php esc_html_e( 'Confirm', 'easy-digital-downloads' ); ?></button>
+				</div>
+			</dialog>
 		<?php endif; ?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 

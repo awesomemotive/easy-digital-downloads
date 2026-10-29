@@ -1,73 +1,61 @@
-/* global $, ajaxurl, edd_vars */
+import { setupEddModal } from '@easy-digital-downloads/modal';
 
-/**
- * Internal dependencies
- */
-import { jQueryReady } from 'utils/jquery.js';
+// Single order delete confirmation.
+const singleDeleteDialog = document.getElementById( 'edd-single-delete-dialog' );
+if ( singleDeleteDialog ) {
+	const singleModal      = setupEddModal( { dialog: singleDeleteDialog } );
+	let pendingDeleteUrl   = null;
 
-jQueryReady( () => {
-
-	// Deleting a single order.
-	$( '.download_page_edd-payment-history .row-actions .delete a' ).on( 'click', function(e) {
+	document.body.addEventListener( 'click', ( e ) => {
+		const trigger = e.target.closest( '.download_page_edd-payment-history .row-actions .delete a' );
+		if ( ! trigger ) {
+			return;
+		}
 		e.preventDefault();
-		let targetUrl = $(this).attr('href');
+		pendingDeleteUrl = trigger.href;
+		singleModal.open();
+	} );
 
-		$("#edd-single-delete-dialog").dialog({
-			buttons : [
-				{
-					text : edd_vars.cancel_dialog_text,
-					class : 'button-secondary',
-					click: function() {
-						$(this).dialog('close');
-					},
-				},
-				{
-					text : edd_vars.confirm_dialog_text,
-					class : 'button-primary',
-					click :  function() {
-						$(this).dialog('close');
-						window.location.href = targetUrl;
-					},
-				},
-			]
-		});
+	singleDeleteDialog.querySelector( '.edd-modal__confirm' )?.addEventListener( 'click', () => {
+		singleDeleteDialog.close();
+		if ( pendingDeleteUrl ) {
+			globalThis.location.href = pendingDeleteUrl;
+		}
+	} );
 
-		$('#edd-single-delete-dialog').dialog('open');
-	});
+	singleDeleteDialog.querySelector( '.edd-modal__cancel' )?.addEventListener( 'click', () => {
+		singleDeleteDialog.close();
+	} );
+}
 
+// Bulk order delete confirmation.
+const bulkDeleteDialog = document.getElementById( 'edd-bulk-delete-dialog' );
+if ( bulkDeleteDialog ) {
+	const bulkModal   = setupEddModal( { dialog: bulkDeleteDialog } );
+	let pendingForm   = null;
 
-	// Trashed Orders.
-	$( '.download_page_edd-payment-history' ).on( 'click', '#doaction', function ( e ) {
-		let action = $( '#bulk-action-selector-top' ).val(),
-			form = $(this).closest( 'form' );
-
+	document.querySelector( '.download_page_edd-payment-history' )?.addEventListener( 'click', ( e ) => {
+		const btn = e.target.closest( '#doaction, #doaction2' );
+		if ( ! btn ) {
+			return;
+		}
+		const form   = btn.closest( 'form' );
+		const selectId = 'doaction2' === btn.id ? 'bulk-action-selector-bottom' : 'bulk-action-selector-top';
+		const action = form?.querySelector( `#${ selectId }` )?.value;
 		if ( 'delete' !== action ) {
 			return;
 		}
-
 		e.preventDefault();
+		pendingForm = form;
+		bulkModal.open();
+	} );
 
-		$("#edd-bulk-delete-dialog").dialog({
-			buttons : [
-				{
-					text : edd_vars.cancel_dialog_text,
-					class : 'button-secondary',
-					click: function() {
-						$(this).dialog('close');
-					},
-				},
-				{
-					text : edd_vars.confirm_dialog_text,
-					class : 'button-primary',
-					click :  function() {
-						$(this).dialog('close');
-						form.submit();
-					},
-				},
-			]
-		});
+	bulkDeleteDialog.querySelector( '.edd-modal__confirm' )?.addEventListener( 'click', () => {
+		bulkDeleteDialog.close();
+		pendingForm?.submit();
+	} );
 
-		$('#edd-bulk-delete-dialog').dialog('open');
-	});
-
-} );
+	bulkDeleteDialog.querySelector( '.edd-modal__cancel' )?.addEventListener( 'click', () => {
+		bulkDeleteDialog.close();
+	} );
+}

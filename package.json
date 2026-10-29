@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "3.7.2",
+	"version": "3.7.3",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"author": "Easy Digital Downloads",
@@ -67,6 +67,7 @@
 		"package": "npm run build && npm run build:blocks && npm run translate && grunt build && grunt replace:pot_lite && grunt compress",
 		"pro": "grunt pro",
 		"repo": "grunt repo && grunt replace:pot_repo",
+		"test:unit": "wp-scripts test-unit-js tests/js",
 		"test:e2e": "playwright test --config=e2e/playwright.config.js",
 		"test:e2e:headed": "playwright test --config=e2e/playwright.config.js --headed",
 		"test:e2e:debug": "playwright test --config=e2e/playwright.config.js --debug",

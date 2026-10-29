@@ -193,9 +193,7 @@ class LoginLink extends EDD_UnitTestCase {
 		$user_id = $this->factory->user->create( array( 'role' => 'shop_manager' ) );
 		$user    = get_userdata( $user_id );
 
-		// Explicitly grant the cap that EDD assigns to shop_manager on install,
-		// since the test environment may not run the full EDD roles setup.
-		$user->add_cap( 'manage_shop_settings' );
+		$this->assertTrue( user_can( $user, 'manage_shop_settings' ), 'Fixture: the shop manager must hold the cap this denial overrides.' );
 
 		$this->assertFalse( Utility::user_allowed( $user ) );
 	}

@@ -55,17 +55,6 @@ class NotificationRoutesTests extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * Runs before each test.
-	 */
-	public function setup(): void {
-		parent::setUp();
-
-		$roles = new \EDD_Roles;
-		$roles->add_roles();
-		$roles->add_caps();
-	}
-
-	/**
 	 * Tests that the Notifications route extends the base Route class.
 	 *
 	 * @covers \EDD\REST\Routes\Notifications
@@ -179,7 +168,6 @@ class NotificationRoutesTests extends EDD_UnitTestCase {
 		global $current_user;
 		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
-		$current_user->add_cap( 'manage_shop_settings' );
 
 		$route   = new Notifications();
 		$request = new \WP_REST_Request( \WP_REST_Server::READABLE, '/edd/v3/notifications' );

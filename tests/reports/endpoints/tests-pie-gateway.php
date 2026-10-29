@@ -2,11 +2,6 @@
 /**
  * Tests for Gateway Pie Chart Endpoints
  *
- * @group edd_reports
- * @group edd_endpoints
- * @group edd_pie_charts
- * @group edd_gateways
- *
  * @package   EDD\Tests\Reports\Endpoints
  * @copyright Copyright (c) 2026, Easy Digital Downloads, LLC
  * @license   https://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -27,6 +22,11 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
  * @covers \EDD\Reports\Endpoints\Pies\GatewaySales
  * @covers \EDD\Reports\Endpoints\Pies\GatewayEarnings
  * @covers \EDD\Reports\Endpoints\Pies\Traits\Gateway
+ *
+ * @group edd_reports
+ * @group edd_endpoints
+ * @group edd_pie_charts
+ * @group edd_gateways
  */
 class GatewayPies extends EDD_UnitTestCase {
 

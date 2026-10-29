@@ -214,8 +214,31 @@ class Reports extends EDD_UnitTestCase {
 			$this->assertIsInt( $result[ $range ]['sales'] );
 		}
 
+		$this->assertSame( array( 'this_month', 'last_month', 'today', 'total', 'currency' ), array_keys( $result ) );
 		$this->assertGreaterThanOrEqual( 1, $result['total']['sales'] );
 		$this->assertSame( edd_get_currency(), $result['currency'] );
+	}
+
+	public function test_sales_summary_output_schema_requires_every_range_and_currency() {
+		$ability = new SalesSummary();
+		$method  = new \ReflectionMethod( $ability, 'get_output_schema' );
+		$method->setAccessible( true );
+		$schema = $method->invoke( $ability );
+
+		$expected_keys = array( 'this_month', 'last_month', 'today', 'total', 'currency' );
+
+		$this->assertSame( $expected_keys, $schema['required'] );
+		$this->assertSame( $expected_keys, array_keys( $schema['properties'] ) );
+		$this->assertSame( array( 'type' => 'string' ), $schema['properties']['currency'] );
+
+		foreach ( array_slice( $expected_keys, 0, 4 ) as $range ) {
+			$range_schema = $schema['properties'][ $range ];
+
+			$this->assertSame( 'object', $range_schema['type'] );
+			$this->assertSame( 'number', $range_schema['properties']['earnings']['type'] );
+			$this->assertSame( 'integer', $range_schema['properties']['sales']['type'] );
+			$this->assertSame( array( 'earnings', 'sales' ), $range_schema['required'] );
+		}
 	}
 
 	public function test_settings_returns_curated_values_without_secrets() {

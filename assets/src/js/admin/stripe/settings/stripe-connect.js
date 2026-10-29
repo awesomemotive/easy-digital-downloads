@@ -2,6 +2,7 @@
  * Internal dependencies
  */
 import { apiRequest } from 'utils';
+import { setupEddModal } from '@easy-digital-downloads/modal';
 
 // Wait for DOM.
 wp.domReady( () => {
@@ -20,6 +21,9 @@ wp.domReady( () => {
 	if ( containerEl.hasAttribute('data-onboarding-wizard') ) {
 		return;
 	}
+
+	// Disconnect links arrive in the AJAX response, in either container, so the modal is opened by delegation.
+	setupEddModal( { trigger: '[data-dialog-id="edds-stripe-disconnect-dialog"]' } );
 
 	return apiRequest( 'edds_stripe_connect_account_info', {
 		...containerEl.dataset,

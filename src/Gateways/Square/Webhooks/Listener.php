@@ -14,8 +14,8 @@ namespace EDD\Gateways\Square\Webhooks;
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\EventManagement\SubscriberInterface;
+use EDD\Gateways\Square\Helpers\Api;
 use EDD\Gateways\Square\Helpers\Setting;
-use EDD\Gateways\Square\Helpers\Mode;
 use EDD\Vendor\Square\Utils\WebhooksHelper;
 
 /**
@@ -123,7 +123,7 @@ class Listener implements SubscriberInterface {
 
 		if ( empty( $body ) ) {
 			edd_debug_log( 'Square webhook - Request body is empty.' );
-			return new \WP_Error( 'empty_body', 'Request body is empty.' );
+			return new \WP_Error( 'empty_body', 'Request body is empty.', array( 'status' => 400 ) );
 		}
 
 		// Pull in the headers, so we can validate the webhook.
@@ -137,19 +137,19 @@ class Listener implements SubscriberInterface {
 		$webhook_environment = strtolower( $headers['square-environment'] ?? '' );
 		if ( empty( $webhook_environment ) ) {
 			edd_debug_log( 'Square webhook - Webhook environment is empty.' );
-			return new \WP_Error( 'empty_environment', 'Webhook environment is empty.' );
+			return new \WP_Error( 'empty_environment', 'Webhook environment is empty.', array( 'status' => 400 ) );
 		}
 
-		if ( Mode::get() !== $webhook_environment ) {
+		if ( Api::get_environment() !== $webhook_environment ) {
 			edd_debug_log( 'Square webhook - Webhook environment does not match.' );
-			return new \WP_Error( 'invalid_environment', 'Webhook environment does not match.' );
+			return new \WP_Error( 'invalid_environment', 'Webhook environment does not match.', array( 'status' => 403 ) );
 		}
 
 		// Validate the webhook subscription ID.
 		$webhook_subscription_id = $headers['square-subscription-id'] ?? '';
 		if ( empty( $webhook_subscription_id ) ) {
 			edd_debug_log( 'Square webhook - Webhook subscription ID is empty.' );
-			return new \WP_Error( 'empty_subscription_id', 'Webhook subscription ID is empty.' );
+			return new \WP_Error( 'empty_subscription_id', 'Webhook subscription ID is empty.', array( 'status' => 400 ) );
 		}
 
 		$saved_webhook_subscription_id = Setting::get( 'webhook_subscription_id' );
@@ -181,13 +181,13 @@ class Listener implements SubscriberInterface {
 			}
 
 			edd_debug_log( 'Square webhook - Webhook subscription ID does not match.' );
-			return new \WP_Error( 'invalid_subscription_id', 'Webhook subscription ID does not match.' );
+			return new \WP_Error( 'invalid_subscription_id', 'Webhook subscription ID does not match.', array( 'status' => 403 ) );
 		}
 
 		// Validate the webhook signature.
 		if ( ! $this->verify_signature( $body, $headers ) ) {
 			edd_debug_log( 'Square webhook - Invalid webhook signature.' );
-			return new \WP_Error( 'invalid_signature', 'Invalid webhook signature.' );
+			return new \WP_Error( 'invalid_signature', 'Invalid webhook signature.', array( 'status' => 403 ) );
 		}
 
 		edd_debug_log( 'Square webhook successfully validated.' );

@@ -20,6 +20,7 @@ use EDD\Models\Download;
  */
 class EDD_Download {
 	use EDD\Downloads\Traits\Files;
+	use EDD\Downloads\Traits\Deprecated;
 
 	/**
 	 * The download ID
@@ -369,49 +370,6 @@ class EDD_Download {
 		} else {
 			return new WP_Error( 'edd-download-invalid-property', sprintf( __( 'Can\'t get property %s', 'easy-digital-downloads' ), $key ) );
 		}
-	}
-
-	/**
-	 * Creates a download
-	 *
-	 * @since  2.3.6
-	 * @param  array  $data Array of attributes for a download
-	 * @return mixed  false if data isn't passed and class not instantiated for creation, or New Download ID
-	 */
-	public function create( $data = array() ) {
-
-		if ( $this->id != 0 ) {
-			return false;
-		}
-
-		$defaults = array(
-			'post_type'   => 'download',
-			'post_status' => 'draft',
-			'post_title'  => __( 'New Download Product', 'easy-digital-downloads' )
-		);
-
-		$args = wp_parse_args( $data, $defaults );
-
-		/**
-		 * Fired before a download is created
-		 *
-		 * @param array $args The post object arguments used for creation.
-		 */
-		do_action( 'edd_download_pre_create', $args );
-
-		$id = wp_insert_post( $args, true );
-
-		$download = WP_Post::get_instance( $id );
-
-		/**
-		 * Fired after a download is created
-		 *
-		 * @param int   $id   The post ID of the created item.
-		 * @param array $args The post object arguments used for creation.
-		 */
-		do_action( 'edd_download_post_create', $id, $args );
-
-		return $this->setup_download( $download );
 	}
 
 	/**
@@ -816,42 +774,6 @@ class EDD_Download {
 	}
 
 	/**
-	 * Increment the sale count by one
-	 *
-	 * @since 2.2
-	 * @param int $quantity The quantity to increase the sales by
-	 * @return int New number of total sales
-	 */
-	public function increase_sales( $quantity = 1 ) {
-
-		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
-		edd_recalculate_download_sales_earnings( $this->ID );
-
-		$this->get_sales();
-		do_action( 'edd_download_increase_sales', $this->ID, $this->sales, $this );
-
-		return $this->sales;
-	}
-
-	/**
-	 * Decrement the sale count by one
-	 *
-	 * @since 2.2
-	 * @param int $quantity The quantity to decrease by
-	 * @return int New number of total sales
-	 */
-	public function decrease_sales( $quantity = 1 ) {
-
-		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
-		$this->recalculate_net_sales_earnings();
-
-		$this->get_sales();
-		do_action( 'edd_download_decrease_sales', $this->ID, $this->sales, $this );
-
-		return $this->sales;
-	}
-
-	/**
 	 * Retrieve the total earnings for the download
 	 *
 	 * @since 2.2
@@ -869,43 +791,6 @@ class EDD_Download {
 			// Never let earnings be less than zero
 			$this->earnings = max( $this->earnings, 0 );
 		}
-
-		return $this->earnings;
-	}
-
-	/**
-	 * Increase the earnings by the given amount
-	 *
-	 * @since 2.2
-	 * @param int|float $amount Amount to increase the earnings by
-	 * @return float New number of total earnings
-	 */
-	public function increase_earnings( $amount = 0 ) {
-
-		_edd_deprecated_function( __METHOD__, '3.0', 'edd_recalculate_download_sales_earnings()' );
-		edd_recalculate_download_sales_earnings( $this->ID );
-
-		$this->get_earnings();
-		do_action( 'edd_download_increase_earnings', $this->ID, $this->earnings, $this );
-
-		return $this->earnings;
-	}
-
-	/**
-	 * Decrease the earnings by the given amount
-	 *
-	 * @since 2.2
-	 * @param int|float $amount Number to decrease earning with
-	 * @return float New number of total earnings
-	 */
-	public function decrease_earnings( $amount ) {
-
-		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
-
-		$this->recalculate_net_sales_earnings();
-		$this->get_earnings();
-
-		do_action( 'edd_download_decrease_earnings', $this->ID, $this->earnings, $this );
 
 		return $this->earnings;
 	}

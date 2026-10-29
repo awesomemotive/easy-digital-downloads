@@ -205,7 +205,6 @@ class Registration extends EDD_UnitTestCase {
 
 	public function test_execute_allows_administrator() {
 		wp_set_current_user( 1 );
-		wp_get_current_user()->add_cap( 'edit_shop_payments' );
 
 		$ability = wp_get_ability( 'edd/order-read' );
 		$result  = $ability->execute( array() );
@@ -217,7 +216,6 @@ class Registration extends EDD_UnitTestCase {
 
 	public function test_input_validation_rejects_unknown_properties() {
 		wp_set_current_user( 1 );
-		wp_get_current_user()->add_cap( 'edit_shop_payments' );
 
 		$ability = wp_get_ability( 'edd/order-read' );
 		$result  = $ability->execute( array( 'nonsense_property' => true ) );
@@ -228,8 +226,6 @@ class Registration extends EDD_UnitTestCase {
 
 	public function test_no_input_abilities_accept_empty_object_input() {
 		wp_set_current_user( 1 );
-		wp_get_current_user()->add_cap( 'manage_shop_settings' );
-		wp_get_current_user()->add_cap( 'view_shop_reports' );
 
 		// MCP clients routinely send an empty object instead of omitting input.
 		foreach ( array( 'edd/sales-summary', 'edd/settings', 'edd/health-check' ) as $name ) {

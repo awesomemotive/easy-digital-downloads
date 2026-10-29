@@ -62,14 +62,9 @@ class NotificationApiExtendedTests extends EDD_UnitTestCase {
 
 		self::$notificationIds = array();
 
-		$roles = new \EDD_Roles;
-		$roles->add_roles();
-		$roles->add_caps();
-
 		global $current_user;
 		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
-		$current_user->add_cap( 'manage_shop_settings' );
 	}
 
 	/**
@@ -715,7 +710,6 @@ class NotificationApiExtendedTests extends EDD_UnitTestCase {
 		) );
 		$current_user = new \WP_User( $user_id );
 		$current_user->set_role( 'shop_manager' );
-		$current_user->add_cap( 'manage_shop_settings' );
 
 		$response = $this->makeRestRequest();
 

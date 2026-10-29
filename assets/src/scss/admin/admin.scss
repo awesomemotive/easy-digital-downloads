@@ -311,19 +311,11 @@ table.edd-order-overview-summary--refund {
 	}
 }
 
-.edd-ml-auto {
-	margin-left: auto !important;
-}
-
 @media screen and (min-width: 782px) {
 
 	.edd-ml-lg-auto {
 		margin-left: auto !important;
 	}
-}
-
-.edd-ml-auto+.edd-ml-auto {
-	margin-left: 10px !important;
 }
 
 /** Items */
@@ -524,84 +516,6 @@ table.edd-order-overview-summary--refund {
 
 .edd-order-overview-actions__refund .dashicons {
 	margin-right: 8px;
-}
-
-/** Dialog */
-.edd-dialog .ui-button-icon-only {
-	font-size: 0;
-}
-
-.download_page_edd-payment-history .ui-dialog,
-.download_page_edd-payment-history .ui-dialog-content {
-	overflow: visible;
-}
-
-.edd-order-overview-modal form>p {
-	margin-top: 0;
-}
-
-.edd-order-overview-modal fieldset legend,
-.edd-order-overview-modal form label {
-	display: block;
-	margin-bottom: 4px;
-}
-
-.edd-order-overview-modal fieldset {
-	margin-bottom: calc(1em - 3px);
-}
-
-.edd-order-overview-modal fieldset>p {
-	margin: 2px 0 3px;
-}
-
-.edd-order-overview-modal form .submit {
-	margin: 0 -16px -16px;
-	padding: 16px;
-	background: #fcfcfc;
-	border-top: 1px solid #dfdfdf;
-	display: flex;
-	align-items: center;
-}
-
-.edd-order-overview-modal form .submit .spinner {
-	margin: 0;
-}
-
-.edd-order-overview-add-item [for="auto-calculate"] {
-	display: flex;
-	align-items: center;
-}
-
-.edd-order-overview-add-item [for="auto-calculate"] input[type="checkbox"] {
-	margin-top: 0;
-}
-
-.edd-order-overview-add-item [for="auto-calculate"] .label {
-	line-height: 1.15;
-	margin-left: 8px;
-}
-
-.edd-order-overview-add-item [for="auto-calculate"] .label small {
-	margin-top: 4px;
-	display: block;
-	opacity: 0.75;
-}
-
-.edd-order-overview-add-adjustment .notice,
-.edd-order-overview-add-item .notice {
-	margin: 0 0 1rem;
-}
-
-.edd-order-overview-add-adjustment #description,
-.edd-order-overview-add-discount select {
-	width: 100%;
-}
-
-.edd-order-overview-error {
-	font-style: italic;
-	color: #a00;
-	display: block;
-	margin: 4px 0;
 }
 
 .edd-order-copy-download-link textarea {

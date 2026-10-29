@@ -1,15 +1,16 @@
 <?php
 /**
  * Payment tests.
- *
- * @group edd_payments
- * @group edd_legacy
  */
 namespace EDD\Tests\Orders;
 
 use EDD\Tests\Helpers;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 
+/**
+ * @group edd_payments
+ * @group edd_legacy
+ */
 class Payment_Tests extends EDD_UnitTestCase {
 
 	/**

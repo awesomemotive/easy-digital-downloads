@@ -145,10 +145,12 @@ class Api {
 	/**
 	 * Get the environment.
 	 *
+	 * Public so the webhook listener can compare Square's environment header against it.
+	 *
 	 * @since 3.4.0
 	 * @return string The environment.
 	 */
-	private static function get_environment() {
+	public static function get_environment() {
 		if ( Mode::get() === 'sandbox' ) {
 			return Environment::SANDBOX;
 		}

@@ -97,7 +97,7 @@ class CheckoutValidation extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * A processing intent is rejected by intent_status(), so it must not be routed to order completion.
+	 * A processing intent's funds have not settled yet, so it is not paid.
 	 *
 	 * @covers ::is_intent_paid
 	 */

@@ -33,4 +33,19 @@ class Convert {
 
 		return str_replace( '_', '', ucwords( $input, '_' ) );
 	}
+
+	/**
+	 * Decode HTML entities in stored text bound for a JavaScript view.
+	 *
+	 * The view escapes on render, so references left in place are displayed literally.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @param string $text The stored text.
+	 *
+	 * @return string
+	 */
+	public static function decode_entities( $text ) {
+		return html_entity_decode( (string) $text, ENT_QUOTES, 'UTF-8' );
+	}
 }

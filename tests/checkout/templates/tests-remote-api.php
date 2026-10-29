@@ -712,8 +712,6 @@ class RemoteAPITest extends EDD_UnitTestCase {
 		}
 
 		$admin_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$admin    = new \WP_User( $admin_id );
-		$admin->add_cap( 'manage_shop_settings' );
 		wp_set_current_user( $admin_id );
 
 		// Seed a valid Pro license so the gate passes.

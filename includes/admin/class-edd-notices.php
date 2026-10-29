@@ -1068,6 +1068,7 @@ class EDD_Notices {
 					$this->add_notice(
 						array(
 							'id'      => 'edd-order-trashed',
+							'class'   => 'updated edd-order-trashed',
 							'message' => __( 'The order has been moved to the trash.', 'easy-digital-downloads' ),
 						)
 					);
@@ -1084,6 +1085,7 @@ class EDD_Notices {
 					$this->add_notice(
 						array(
 							'id'      => 'edd-payment-deleted',
+							'class'   => 'updated edd-payment-deleted',
 							'message' => __( 'The order has been deleted.', 'easy-digital-downloads' ),
 						)
 					);

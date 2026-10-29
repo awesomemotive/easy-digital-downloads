@@ -1,15 +1,16 @@
 <?php
 /**
  * Tests for the Orders exporter.
- *
- * @group exports
- * @group edd_orders
  */
 namespace EDD\Tests\Exports;
 
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Admin\Exports\Exporters\Orders;
 
+/**
+ * @group exports
+ * @group edd_orders
+ */
 class OrdersExport extends EDD_UnitTestCase {
 
 	/**

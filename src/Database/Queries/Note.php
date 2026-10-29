@@ -206,4 +206,21 @@ class Note extends Query {
 
 		return $clauses;
 	}
+
+	/**
+	 * Get the queries for tables the current query reads outside the notes table.
+	 *
+	 * A customer_id query reads the orders table to find the customer's orders.
+	 *
+	 * @since 3.7.3
+	 *
+	 * @return Query[]
+	 */
+	protected function get_cache_dependency_queries() {
+		if ( empty( absint( $this->query_vars['customer_id'] ?? 0 ) ) ) {
+			return parent::get_cache_dependency_queries();
+		}
+
+		return array( new Order() );
+	}
 }

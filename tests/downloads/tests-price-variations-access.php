@@ -27,13 +27,6 @@ class PriceVariationsAccess extends EDD_UnitTestCase {
 	 */
 	private $tiers = array( 'Insider Early Bird', 'Enterprise NDA Tier' );
 
-	public function setUp(): void {
-		parent::setUp();
-
-		// EDD's capabilities are added to the roles after the role objects were built.
-		wp_roles()->for_site();
-	}
-
 	public function tearDown(): void {
 		unset( $_POST['download_id'] );
 

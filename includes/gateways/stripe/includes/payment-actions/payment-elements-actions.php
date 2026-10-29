@@ -116,6 +116,11 @@ add_action(
 			return;
 		}
 
+		// Recurring creates and activates its own subscriptions on order completion when this class is present.
+		if ( class_exists( EDD\Recurring\Gateways\Stripe\Checkout\Subscriptions::class ) ) {
+			return;
+		}
+
 		/**
 		 * With card/Link payments, the order creation and completion hooks fire in the same request.
 		 * With other payment methods, the order can be created before the payment method is attached

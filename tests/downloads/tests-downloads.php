@@ -77,6 +77,9 @@ class Downloads extends EDD_UnitTestCase {
 
 	}
 
+	/**
+	 * @expectedDeprecated EDD_Download::create
+	 */
 	public function test_edd_download() {
 
 		// Verify passing nothing gives us an empty download
@@ -161,6 +164,26 @@ class Downloads extends EDD_UnitTestCase {
 		// Test the magic __get function
 		$this->assertTrue( is_wp_error( $download3->__get( 'asdf') ) );
 
+	}
+
+	/**
+	 * @expectedDeprecated EDD_Download::create
+	 */
+	public function test_create_reports_deprecation_with_wp_insert_post_replacement() {
+		$reported = array();
+		add_action(
+			'edd_deprecated_function_run',
+			function ( $function, $replacement ) use ( &$reported ) {
+				$reported[] = array( $function, $replacement );
+			},
+			10,
+			2
+		);
+
+		$download = new \EDD_Download();
+		$download->create( array( 'post_title' => 'Deprecated Create Download' ) );
+
+		$this->assertSame( array( array( 'EDD_Download::create', 'wp_insert_post()' ) ), $reported );
 	}
 
 	public function test_can_purchase() {

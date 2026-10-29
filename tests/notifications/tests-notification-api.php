@@ -67,21 +67,10 @@ class NotificationApiTests extends EDD_UnitTestCase {
 			) );
 		}
 
-		/**
-		 * Also need to make sure we have the EDD roles so that we pass the
-		 * capability check.
-		 *
-		 * @see \EDD\REST\Routes\Notifications::check_permission
-		 */
-		$roles = new \EDD_Roles;
-		$roles->add_roles();
-		$roles->add_caps();
-
 		// Set current user as an administrator.
 		global $current_user;
 		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
-		$current_user->add_cap( 'manage_shop_settings' ); // I feel like this shouldn't be necessary to do, but it is.
 	}
 
 	/**

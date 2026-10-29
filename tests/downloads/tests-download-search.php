@@ -38,13 +38,6 @@ class Search extends EDD_UnitTestCase {
 		parent::tearDownAfterClass();
 	}
 
-	public function setUp(): void {
-		parent::setUp();
-
-		// EDD's capabilities are added to the roles after the role objects were built.
-		wp_roles()->for_site();
-	}
-
 	public function tearDown(): void {
 		parent::tearDown();
 		unset( $_GET['s'] );

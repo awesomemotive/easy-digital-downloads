@@ -147,7 +147,6 @@ class Scripts extends EDD_UnitTestCase {
 			array( 'edd-admin-chosen-compat', 'enqueued' ),
 			array( 'edd-admin-scripts', 'enqueued' ),
 			array( 'jquery-ui-datepicker', 'enqueued' ),
-			array( 'jquery-ui-dialog', 'enqueued' ),
 			array( 'media-upload', 'enqueued' ),
 		);
 	}

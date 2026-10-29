@@ -34,7 +34,6 @@ class Ajax implements \EDD\EventManagement\SubscriberInterface {
 			'wp_ajax_edd_onboarding_started'            => 'ajax_onboarding_started',
 			'wp_ajax_edd_onboarding_completed'          => 'ajax_onboarding_completed',
 			'wp_ajax_edd_onboarding_skipped'            => 'ajax_onboarding_skipped',
-			'wp_ajax_edds_stripe_connect_account_info'  => array( 'disconnect_url', 5 ),
 			'wp_ajax_edd_onboarding_save_email'         => 'save_email',
 		);
 	}
@@ -181,33 +180,6 @@ class Ajax implements \EDD\EventManagement\SubscriberInterface {
 		exit;
 	}
 
-	/**
-	 * Filters the Stripe disconnect URL.
-	 * This has to be hooked into the ajax action before the main ajax work is run.
-	 *
-	 * @since 3.1.1
-	 * @return void
-	 */
-	public function disconnect_url() {
-		add_filter(
-			'edds_stripe_connect_disconnect_url',
-			function ( $url ) {
-				if ( empty( $_REQUEST['onboardingWizard'] ) ) {
-					return $url;
-				}
-				$stripe_connect_disconnect_url = edd_get_admin_url(
-					array(
-						'page'                   => 'edd-onboarding-wizard',
-						'current_step'           => 'payment_methods',
-						'edds-stripe-disconnect' => true,
-					)
-				);
-				return wp_nonce_url( $stripe_connect_disconnect_url, 'edds-stripe-connect-disconnect' );
-			},
-			15
-		);
-	}
-
 	public function save_email() {
 		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd_onboarding_wizard' ) ) {
 			exit;
@@ -250,5 +222,18 @@ class Ajax implements \EDD\EventManagement\SubscriberInterface {
 	 */
 	private function clean_onboarding_options() {
 		delete_option( 'edd_onboarding_latest_step' );
+	}
+
+	/**
+	 * Filtered the Stripe disconnect URL for the onboarding wizard.
+	 *
+	 * The wizard no longer offers a Disconnect link, so this does nothing and is no longer hooked.
+	 *
+	 * @since 3.1.1
+	 * @deprecated 3.7.3
+	 * @return void
+	 */
+	public function disconnect_url() {
+		_edd_deprecated_function( __METHOD__, '3.7.3' );
 	}
 }

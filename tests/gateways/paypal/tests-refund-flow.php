@@ -569,6 +569,115 @@ class RefundFlowTest extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * A cached pre-flight response with no amount still records the refund as a negative
+	 * transaction on the refund order.
+	 */
+	public function test_preflighted_minimal_response_records_negative_transaction_on_refund_order() {
+		$order_id  = $this->build_high_value_refundable_order( 20.00 );
+		$refund_id = $this->create_refund_without_gateway_call( $order_id, 'all' );
+
+		set_transient(
+			\EDD\Gateways\PayPal\preflight_cache_key( 'CAPTURE_HIGH_VALUE' ),
+			array(
+				'id'     => 'REFUND_MIN',
+				'status' => 'COMPLETED',
+			),
+			MINUTE_IN_SECONDS
+		);
+
+		$calls = $this->count_refund_requests();
+
+		\EDD\Gateways\PayPal\refund_transaction( edd_get_order( $order_id ), edd_get_order( $refund_id ) );
+
+		$this->assertSame( 0, $calls->count, 'The cached pre-flight response must be used.' );
+
+		$transactions = edd_get_order_transactions( array( 'transaction_id' => 'REFUND_MIN' ) );
+
+		$this->assertCount( 1, $transactions );
+		$this->assertSame( $refund_id, (int) $transactions[0]->object_id, 'The transaction must belong to the refund order.' );
+		$this->assertSame( 'order', $transactions[0]->object_type );
+		$this->assertEquals( -20.00, (float) $transactions[0]->total );
+	}
+
+	/**
+	 * A full refund sends no amount, so PayPal refunds whatever is left on the capture. A minimal
+	 * response does not say how much that was, so the notes must not claim one, while the
+	 * transaction still matches the refund order.
+	 */
+	public function test_full_refund_minimal_response_notes_state_no_amount() {
+		$order_id  = $this->build_high_value_refundable_order( 20.00 );
+		$refund_id = $this->create_refund_without_gateway_call( $order_id, 'all' );
+
+		$this->respond_with_minimal_refund( 'REFUND_FULL_MIN' );
+
+		\EDD\Gateways\PayPal\refund_transaction( edd_get_order( $order_id ), edd_get_order( $refund_id ) );
+
+		$transactions = edd_get_order_transactions( array( 'transaction_id' => 'REFUND_FULL_MIN' ) );
+
+		$this->assertCount( 1, $transactions );
+		$this->assertEquals( -20.00, (float) $transactions[0]->total );
+
+		foreach ( array( $order_id, $refund_id ) as $note_order_id ) {
+			$notes = $this->get_order_note_contents( $note_order_id );
+
+			$this->assertContains( 'Successfully refunded in PayPal. Refund transaction ID: REFUND_FULL_MIN', $notes, "Order {$note_order_id} must get the amount-less note." );
+			foreach ( $notes as $note ) {
+				$this->assertStringNotContainsString( '$20.00', $note );
+			}
+		}
+	}
+
+	/**
+	 * A partial refund answered with no amount records the refund order's amount as the transaction.
+	 */
+	public function test_partial_refund_minimal_response_records_negative_transaction() {
+		$order_id  = $this->build_high_value_refundable_order( 100.00 );
+		$refund_id = $this->create_partial_refund_without_gateway_call( $order_id, 12.50 );
+
+		$this->respond_with_minimal_refund( 'REFUND_PARTIAL_TX' );
+
+		\EDD\Gateways\PayPal\refund_transaction( edd_get_order( $order_id ), edd_get_order( $refund_id ) );
+
+		$transactions = edd_get_order_transactions( array( 'transaction_id' => 'REFUND_PARTIAL_TX' ) );
+
+		$this->assertCount( 1, $transactions );
+		$this->assertSame( $refund_id, (int) $transactions[0]->object_id, 'The transaction must belong to the refund order.' );
+		$this->assertEquals( -12.50, (float) $transactions[0]->total );
+	}
+
+	/**
+	 * A partial refund sends its amount, so a COMPLETED response confirms it even when the body
+	 * leaves it out, and both orders get a note naming it.
+	 */
+	public function test_partial_refund_minimal_response_notes_state_sent_amount() {
+		$order_id  = $this->build_high_value_refundable_order( 100.00 );
+		$order     = edd_get_order( $order_id );
+		$refund_id = $this->create_partial_refund_without_gateway_call( $order_id, 12.50 );
+
+		$this->respond_with_minimal_refund( 'REFUND_PARTIAL_NOTE' );
+
+		\EDD\Gateways\PayPal\refund_transaction( $order, edd_get_order( $refund_id ) );
+
+		// Notes are stored sanitized, which re-encodes the currency symbol's entity.
+		$expected_note = edd_sanitize_note_content(
+			sprintf(
+				'%1$s refunded in PayPal. Refund transaction ID: %2$s',
+				edd_currency_filter( edd_format_amount( 12.50 ), $order->currency ),
+				'REFUND_PARTIAL_NOTE'
+			)
+		);
+
+		foreach ( array( $order_id, $refund_id ) as $note_order_id ) {
+			$notes = $this->get_order_note_contents( $note_order_id );
+
+			$this->assertContains( $expected_note, $notes, "Order {$note_order_id} must get a note naming the refunded amount." );
+			foreach ( $notes as $note ) {
+				$this->assertStringNotContainsString( 'Successfully refunded in PayPal', $note );
+			}
+		}
+	}
+
+	/**
 	 * Creates a paypal_commerce order that the pre-flight will act on.
 	 *
 	 * @return int
@@ -631,6 +740,88 @@ class RefundFlowTest extends EDD_UnitTestCase {
 		);
 
 		return $order_id;
+	}
+
+	/**
+	 * Creates a refund order without letting the edd_refund_order callback call PayPal.
+	 *
+	 * @param int          $order_id    The order being refunded.
+	 * @param string|array $order_items Items to refund, as edd_refund_order() takes them.
+	 * @return int
+	 */
+	private function create_refund_without_gateway_call( $order_id, $order_items ) {
+		// The callback only calls PayPal when the refund form data is posted.
+		unset( $_POST['data'] );
+
+		$refund_id = edd_refund_order( $order_id, $order_items );
+		$this->assertIsInt( $refund_id, 'The refund order must be created.' );
+
+		return $refund_id;
+	}
+
+	/**
+	 * Creates a partial refund order for a single-item order, without calling PayPal.
+	 *
+	 * @param int   $order_id The order being refunded.
+	 * @param float $amount   The amount to refund.
+	 * @return int
+	 */
+	private function create_partial_refund_without_gateway_call( $order_id, $amount ) {
+		$item = current( edd_get_order( $order_id )->get_items() );
+
+		return $this->create_refund_without_gateway_call(
+			$order_id,
+			array(
+				array(
+					'order_item_id' => $item->id,
+					'quantity'      => 1,
+					'subtotal'      => $amount,
+					'tax'           => 0,
+					'total'         => $amount,
+				),
+			)
+		);
+	}
+
+	/**
+	 * Makes the direct PayPal call answer COMPLETED with an id and no amount.
+	 *
+	 * @param string $refund_transaction_id The refund's ID in PayPal.
+	 */
+	private function respond_with_minimal_refund( $refund_transaction_id ) {
+		remove_all_filters( 'pre_http_request' );
+		add_filter(
+			'pre_http_request',
+			function () use ( $refund_transaction_id ) {
+				return array(
+					'response' => array( 'code' => 200 ),
+					'body'     => wp_json_encode(
+						array(
+							'id'     => $refund_transaction_id,
+							'status' => 'COMPLETED',
+						)
+					),
+				);
+			}
+		);
+	}
+
+	/**
+	 * Returns the content of every note on an order.
+	 *
+	 * @param int $order_id The order.
+	 * @return string[]
+	 */
+	private function get_order_note_contents( $order_id ) {
+		return wp_list_pluck(
+			edd_get_notes(
+				array(
+					'object_id'   => $order_id,
+					'object_type' => 'order',
+				)
+			),
+			'content'
+		);
 	}
 
 	/**

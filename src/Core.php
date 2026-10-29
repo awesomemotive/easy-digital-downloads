@@ -28,6 +28,7 @@ class Core extends EventManagement\Subscribers {
 		return array(
 			new Admin\PassHandler\Ajax( $this->pass_handler ),
 			new Admin\Extensions\Extension_Manager(),
+			new Customers\LastLogin(),
 			new Customers\Recalculations(),
 			new Downloads\Services(),
 			new Orders\DeferredActions(),
@@ -51,6 +52,7 @@ class Core extends EventManagement\Subscribers {
 
 			// Gateways.
 			new Gateways\Stripe\Webhooks\Listener(),
+			new Gateways\Stripe\Admin\Disconnect\Notices(),
 			new Gateways\Square\Webhooks\Listener(),
 			new Gateways\PayPal\CommerceVersion(),
 			new Gateways\PayPal\V3\Onboarding(),

@@ -507,6 +507,50 @@ class CustomerAdoption extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * An account registered with an address of the customer's that has no orders is not held pending,
+	 * so a guest purchase must not hand it the customer's history.
+	 */
+	public function test_a_guest_purchase_does_not_hand_the_customers_history_to_an_orderless_secondary_address() {
+		$primary_email = $this->customer->email;
+
+		$this->customer->add_email( 'orderless-secondary@example.test' );
+		$this->customer = edd_get_customer( $this->customer->id );
+		$this->assertContains( 'orderless-secondary@example.test', $this->customer->emails, 'Fixture: the secondary address is on the customer.' );
+		$this->assertEmpty(
+			edd_get_orders(
+				array(
+					'email'  => 'orderless-secondary@example.test',
+					'number' => 1,
+				)
+			),
+			'Fixture: no order carries the secondary address.'
+		);
+		$this->assertSame( 0, $this->order_user_id(), 'Fixture: the earlier order is not owned by anyone.' );
+
+		$stranger_id = wp_insert_user(
+			array(
+				'user_login' => 'secondary-stranger',
+				'user_pass'  => wp_generate_password(),
+				'user_email' => 'orderless-secondary@example.test',
+			)
+		);
+		$this->assertNotWPError( $stranger_id, 'Fixture: the account must exist.' );
+		$this->assertFalse( edd_user_pending_verification( $stranger_id ), 'Fixture: nothing held the account pending.' );
+
+		$new_order_id = $this->add_guest_order( $this->customer->id, $primary_email );
+
+		( new \EDD_Customer( $this->customer->id ) )->attach_payment( $new_order_id );
+
+		$customer = edd_get_customer( $this->customer->id );
+
+		$this->assertSame( 0, (int) $customer->user_id, 'The customer is not linked to the account.' );
+		$this->assertSame( 0, $this->order_user_id(), 'The earlier order did not move.' );
+		$this->assertSame( 0, (int) edd_get_order( $new_order_id )->user_id, 'The new order did not move.' );
+		$this->assertSame( $primary_email, $customer->email, 'The primary address is unchanged.' );
+		$this->assertFalse( edd_user_pending_verification( $stranger_id ), 'The account is not locked out by someone else\'s purchase.' );
+	}
+
+	/**
 	 * Registers a user with the guest buyer's email address.
 	 *
 	 * @return int

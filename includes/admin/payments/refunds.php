@@ -2,16 +2,17 @@
 /**
  * Refund Details Sections
  *
- * @package    EDD
- * @subpackage Admin/Orders
+ * @package    EDD\Admin\Orders
  * @copyright  Copyright (c) 2021, Sandhills Development, LLC
- * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @license    https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      3.0
  */
 
+use EDD\Admin\Orders\Overview;
 use EDD\Orders\Order;
+use EDD\Utils\Convert;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 /** Header ******************************************************************/
@@ -31,7 +32,7 @@ function edd_refund_details_notice( $refund ) {
 			'view' => 'view-order-details',
 		)
 	);
-?>
+	?>
 
 <div class="edit-post-editor-regions__header">
 	<div class="edit-post-header notice-warning" style="border-left-width: 4px; border-left-style: solid;">
@@ -57,7 +58,7 @@ function edd_refund_details_notice( $refund ) {
 	</div>
 </div>
 
-<?php
+	<?php
 }
 
 /** Main **********************************************************************/
@@ -73,24 +74,28 @@ function edd_refund_details_items( $refund ) {
 	$_items       = array();
 	$_adjustments = array();
 
-	$items  = edd_get_order_items( array(
-		'order_id' => $refund->id,
-		'number'   => 999,
-	) );
+	$items = edd_get_order_items(
+		array(
+			'order_id' => $refund->id,
+			'number'   => 999,
+		)
+	);
 
 	foreach ( $items as $item ) {
 		$item_adjustments = array();
 
-		$adjustments = edd_get_order_adjustments( array(
-			'object_id'   => $item->id,
-			'number'      => 999,
-			'object_type' => 'order_item',
-			'type'        => array(
-				'discount',
-				'credit',
-				'fee',
-			),
-		) );
+		$adjustments = edd_get_order_adjustments(
+			array(
+				'object_id'   => $item->id,
+				'number'      => 999,
+				'object_type' => 'order_item',
+				'type'        => array(
+					'discount',
+					'credit',
+					'fee',
+				),
+			)
+		);
 
 		foreach ( $adjustments as $adjustment ) {
 			// @todo edd_get_order_adjustment_to_json()?
@@ -99,9 +104,9 @@ function edd_refund_details_items( $refund ) {
 				'objectId'     => esc_html( $adjustment->object_id ),
 				'objectType'   => esc_html( $adjustment->object_type ),
 				'typeId'       => esc_html( $adjustment->type_id ),
-				// Escaped by the template.
+				// Escaped by the view on render.
 				'type'         => $adjustment->type,
-				'description'  => $adjustment->description,
+				'description'  => Convert::decode_entities( $adjustment->description ),
 				'subtotal'     => esc_html( $adjustment->subtotal ),
 				'tax'          => esc_html( $adjustment->tax ),
 				'total'        => esc_html( $adjustment->total ),
@@ -119,8 +124,8 @@ function edd_refund_details_items( $refund ) {
 			'id'           => esc_html( $item->id ),
 			'orderId'      => esc_html( $item->order_id ),
 			'productId'    => esc_html( $item->product_id ),
-			// Escaped by the template.
-			'productName'  => $item->get_order_item_name(),
+			// Escaped by the view on render.
+			'productName'  => Convert::decode_entities( $item->get_order_item_name() ),
 			'priceId'      => esc_html( $item->price_id ),
 			'cartIndex'    => esc_html( $item->cart_index ),
 			'type'         => esc_html( $item->type ),
@@ -137,16 +142,18 @@ function edd_refund_details_items( $refund ) {
 		);
 	}
 
-	$adjustments  = edd_get_order_adjustments( array(
-		'object_id'   => $refund->id,
-		'number'      => 999,
-		'object_type' => 'order',
-		'type'        => array(
-			'discount',
-			'credit',
-			'fee',
-		),
-	) );
+	$adjustments = edd_get_order_adjustments(
+		array(
+			'object_id'   => $refund->id,
+			'number'      => 999,
+			'object_type' => 'order',
+			'type'        => array(
+				'discount',
+				'credit',
+				'fee',
+			),
+		)
+	);
 
 	foreach ( $adjustments as $adjustment ) {
 		// @todo edd_get_order_adjustment_to_json()?
@@ -155,9 +162,9 @@ function edd_refund_details_items( $refund ) {
 			'objectId'     => esc_html( $adjustment->object_id ),
 			'objectType'   => esc_html( $adjustment->object_type ),
 			'typeId'       => esc_html( $adjustment->type_id ),
-			// Escaped by the template.
+			// Escaped by the view on render.
 			'type'         => $adjustment->type,
-			'description'  => $adjustment->description,
+			'description'  => Convert::decode_entities( $adjustment->description ),
 			'subtotal'     => esc_html( $adjustment->subtotal ),
 			'tax'          => esc_html( $adjustment->tax ),
 			'total'        => esc_html( $adjustment->total ),
@@ -190,14 +197,14 @@ function edd_refund_details_items( $refund ) {
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
 		array(
-			'items'        => $_items,
-			'adjustments'  => $_adjustments,
-			'refunds'      => array(),
-			'isAdding'     => false,
-			'isRefund'     => true,
-			'hasQuantity'  => true,
-			'hasTax'       => $has_tax,
-			'order'        => array(
+			'items'       => $_items,
+			'adjustments' => $_adjustments,
+			'refunds'     => array(),
+			'isAdding'    => false,
+			'isRefund'    => true,
+			'hasQuantity' => true,
+			'hasTax'      => $has_tax,
+			'order'       => array(
 				'currency'       => $refund->currency,
 				'currencySymbol' => html_entity_decode( edd_currency_symbol( $refund->currency ) ),
 				'subtotal'       => $refund->subtotal,
@@ -205,40 +212,14 @@ function edd_refund_details_items( $refund ) {
 				'tax'            => $refund->tax,
 				'total'          => $refund->total,
 			),
+			'urls'        => Overview::get_urls(),
+			'i18n'        => Overview::get_i18n(),
 		)
 	);
 
-	$templates = array(
-		'no-items',
-		'subtotal',
-		'tax',
-		'total',
-		'item',
-		'adjustment',
-		'adjustment-discount',
-	);
-
-	foreach ( $templates as $tmpl ) {
-		echo '<script type="text/html" id="tmpl-edd-admin-order-' . esc_attr( $tmpl ) . '">';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-order-' . $tmpl . '.php';
-		echo '</script>';
-	}
-?>
-
-<div id="edd-order-overview" class="postbox edd-edit-purchase-element edd-order-overview">
-	<table id="edd-order-overview-summary" class="widefat wp-list-table edd-order-overview-summary edd-order-overview-summary--refund">
-		<thead>
-			<tr>
-				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
-				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
-				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
-			</tr>
-		</thead>
-	</table>
-</div>
-
-<?php
+	?>
+	<div id="edd-order-overview" class="postbox edd-edit-purchase-element edd-order-overview"></div>
+	<?php
 }
 
 /**
@@ -249,19 +230,17 @@ function edd_refund_details_items( $refund ) {
  * @param Order $refund Current Refund.
  */
 function edd_refund_details_notes( $refund ) {
-?>
+	?>
+	<div id="edd-order-items" class="postbox edd-edit-purchase-element">
+		<h2 class="hndle">
+			<?php esc_html_e( 'Refund Notes', 'easy-digital-downloads' ); ?>
+		</h2>
 
-<div id="edd-order-items" class="postbox edd-edit-purchase-element">
-	<h2 class="hndle">
-		<?php esc_html_e( 'Refund Notes', 'easy-digital-downloads' ); ?>
-	</h2>
-
-	<div class="inside">
-		<?php edd_order_details_notes( $refund ); ?>
+		<div class="inside">
+			<?php edd_order_details_notes( $refund ); ?>
+		</div>
 	</div>
-</div>
-
-<?php
+	<?php
 }
 
 /**
@@ -275,12 +254,14 @@ function edd_refund_details_attributes( $refund ) {
 	$refund_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $refund->date_created, 'utc', true ) );
 
 	$trash_url = wp_nonce_url(
-		edd_get_admin_url( array(
-			'edd-action'  => 'trash_order',
-			'purchase_id' => absint( $refund->id ),
-			'order_type'  => 'refund',
-			'page'        => 'edd-payment-history',
-		) ),
+		edd_get_admin_url(
+			array(
+				'edd-action'  => 'trash_order',
+				'purchase_id' => absint( $refund->id ),
+				'order_type'  => 'refund',
+				'page'        => 'edd-payment-history',
+			)
+		),
 		'edd_payment_nonce'
 	);
 
@@ -293,7 +274,7 @@ function edd_refund_details_attributes( $refund ) {
 	);
 
 	$order = edd_get_order( $refund->parent );
-?>
+	?>
 
 <div class="postbox">
 	<h2 class="hndle">
@@ -324,7 +305,7 @@ function edd_refund_details_attributes( $refund ) {
 	</div>
 </div>
 
-<?php
+	<?php
 }
 
 /**
@@ -337,7 +318,7 @@ function edd_refund_details_attributes( $refund ) {
 function edd_refund_details_related_refunds( $refund ) {
 	$refunds = array_filter(
 		edd_get_order_refunds( $refund->parent ),
-		function( $related_refund ) use ( $refund ) {
+		function ( $related_refund ) use ( $refund ) {
 			return $related_refund->id !== $refund->id;
 		}
 	);
@@ -345,7 +326,7 @@ function edd_refund_details_related_refunds( $refund ) {
 	if ( empty( $refunds ) ) {
 		return;
 	}
-?>
+	?>
 
 <div class="postbox edd-order-data">
 	<h2 class="hndle">
@@ -353,13 +334,15 @@ function edd_refund_details_related_refunds( $refund ) {
 	</h2>
 
 	<?php
-	foreach( $refunds as $refund ) :
-		$refund_url = edd_get_admin_url( array(
-			'page' => 'edd-payment-history',
-			'view' => 'view-refund-details',
-			'id'   => absint( $refund->id ),
-		) );
-	?>
+	foreach ( $refunds as $refund ) :
+		$refund_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-payment-history',
+				'view' => 'view-refund-details',
+				'id'   => absint( $refund->id ),
+			)
+		);
+		?>
 		<div class="edd-admin-box-inside">
 			<div class="edd-form-group">
 				<a href="<?php echo esc_url( $refund_url ); ?>" class="edd-form-group__label">
@@ -374,5 +357,5 @@ function edd_refund_details_related_refunds( $refund ) {
 	<?php endforeach; ?>
 </div>
 
-<?php
+	<?php
 }

@@ -79,13 +79,6 @@ class DownloadLogsCapability extends EDD_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		/*
-		 * WP_Roles::add_cap() writes the roles option but leaves the WP_Role objects already built
-		 * in this process untouched, and a test process never re-reads them. Refresh them here or
-		 * shop_manager looks like it holds none of EDD's capabilities.
-		 */
-		wp_roles()->for_site();
-
 		EDD()->api->override = false;
 		EDD()->api->user_id  = 0;
 	}

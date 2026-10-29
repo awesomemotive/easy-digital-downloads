@@ -31,15 +31,6 @@ class OrderAddressSanitization extends EDD_UnitTestCase {
 
 		$this->manual_order_id = 0;
 
-		/*
-		 * EDD grants its shop capabilities with WP_Roles::add_cap(), which writes the roles
-		 * option but leaves the WP_Role objects already built in this process untouched
-		 * (wp-includes/class-wp-roles.php). A real install picks the new capabilities up on
-		 * the next request; a test process never re-reads them, so refresh them here or every
-		 * shop_worker created below would look like it holds nothing but `read`.
-		 */
-		wp_roles()->for_site();
-
 		add_action( 'edd_post_add_manual_order', array( $this, 'capture_manual_order_id' ) );
 	}
 

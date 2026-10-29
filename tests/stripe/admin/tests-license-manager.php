@@ -34,7 +34,6 @@ class LicenseManager extends EDD_UnitTestCase {
 		self::$original_user = $current_user;
 		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
-		$current_user->add_cap( 'manage_shop_settings' );
 	}
 
 	public function tearDown(): void {

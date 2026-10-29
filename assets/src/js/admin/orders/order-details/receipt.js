@@ -1,30 +1,26 @@
-/* global $, ajaxurl */
+/* global edd_vars */
 
-/**
- * Internal dependencies
- */
-import { jQueryReady } from 'utils/jquery.js';
+const sendEmailButton = document.getElementById( 'edd-resend-receipt' );
 
-jQueryReady( () => {
-
-	const sendEmailButton = $( '#edd-resend-receipt' );
-	// If the button is disabled, do nothing.
-	if ( ! sendEmailButton.attr( 'href' ) ) {
-		return;
-	}
+// Nothing to do if there's no button or the button has no href (disabled state).
+if ( sendEmailButton?.getAttribute( 'href' ) ) {
 	const emailSelectSelector = '.edd-order-resend-receipt-email';
-	const url = new URLSearchParams( sendEmailButton.attr( 'href' ) );
+	const url = new URLSearchParams( sendEmailButton.getAttribute( 'href' ) );
 
-	$( document.body ).on( 'change', emailSelectSelector, function() {
-		url.set( 'email', $( this ).val() );
-		sendEmailButton.attr( 'href', decodeURIComponent( url.toString() ) );
+	document.body.addEventListener( 'change', ( e ) => {
+		if ( ! e.target.matches( emailSelectSelector ) ) {
+			return;
+		}
+		url.set( 'email', e.target.value );
+		sendEmailButton.setAttribute( 'href', decodeURIComponent( url.toString() ) );
 	} );
 
-	// trigger initial value to be set on change
-	$( emailSelectSelector ).trigger( 'change' );
+	// Trigger initial value to be set.
+	document.querySelector( emailSelectSelector )?.dispatchEvent( new Event( 'change', { bubbles: true } ) );
 
-	// confirm before sending
-	sendEmailButton.on( 'click', function() {
-		return confirm( edd_vars.resend_receipt );
-	});
-} );
+	sendEmailButton.addEventListener( 'click', ( e ) => {
+		if ( ! confirm( edd_vars.resend_receipt ) ) { // eslint-disable-line no-alert
+			e.preventDefault();
+		}
+	} );
+}

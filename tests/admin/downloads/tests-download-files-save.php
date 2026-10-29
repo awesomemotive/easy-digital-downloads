@@ -39,16 +39,6 @@ class DownloadFilesSave extends EDD_UnitTestCase {
 	private $variant_file_paths = array();
 
 	/**
-	 * Reloads role objects, since EDD's capabilities are added to the roles after the
-	 * role objects were built.
-	 */
-	public function set_up(): void {
-		parent::set_up();
-
-		wp_roles()->for_site();
-	}
-
-	/**
 	 * Resets the acting user and the posted file rows after each test.
 	 */
 	public function tear_down(): void {
@@ -360,12 +350,6 @@ class DownloadFilesSave extends EDD_UnitTestCase {
 			)
 		);
 
-		// EDD_Roles::add_caps() updates the roles option, not the cached WP_Role
-		// objects, so the product capabilities are granted directly on this user.
-		$vendor_user = new \WP_User( $vendor );
-		foreach ( array( 'edit_product', 'edit_products', 'edit_published_products' ) as $cap ) {
-			$vendor_user->add_cap( $cap );
-		}
 		$row           = array(
 			'index'         => 0,
 			'attachment_id' => $attachment_id,

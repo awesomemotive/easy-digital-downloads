@@ -1,0 +1,66 @@
+.edd-order-overview-modal form>p {
+	margin-top: 0;
+}
+
+.edd-order-overview-modal fieldset {
+	display: flex;
+	gap: 1em;
+}
+
+.edd-order-overview-modal fieldset>p {
+	margin: 2px 0 3px;
+}
+
+.edd-order-overview-modal form .submit {
+	margin: 0 -16px -16px;
+	padding: 16px;
+	background: #fcfcfc;
+	border-top: 1px solid #dfdfdf;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] {
+	display: flex;
+	align-items: center;
+
+	input[type="checkbox"] {
+		margin-top: 0;
+	}
+
+	.label {
+		line-height: 1.15;
+		margin-left: 8px;
+	}
+
+	.label small {
+		margin-top: 4px;
+		display: block;
+		opacity: 0.75;
+	}
+}
+
+.edd-order-overview-add-adjustment .notice,
+.edd-order-overview-add-item .notice {
+	margin: 0 0 1rem;
+}
+
+.edd-order-overview-modal {
+	#description,
+	select,
+	input[type="text"] {
+		width: 100%;
+	}
+}
+
+.edd-order-overview-error {
+	font-style: italic;
+	color: #a00;
+	display: block;
+	margin: 4px 0;
+}
+
+.edd-order-overview-modal .edd-form-group:last-of-type {
+	margin-bottom: 2rem;
+}

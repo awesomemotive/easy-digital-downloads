@@ -1,9 +1,6 @@
 <?php
 /**
  * Reset Stats Tests.
- *
- * @group edd_tools
- * @group edd_reset_stats
  */
 namespace EDD\Tests\Admin\Tools;
 
@@ -12,6 +9,9 @@ use EDD\Tests\Helpers\EDD_Helper_Download;
 
 /**
  * @coversDefaultClass \EDD_Tools_Reset_Stats
+ *
+ * @group edd_tools
+ * @group edd_reset_stats
  */
 class ResetStats extends EDD_UnitTestCase {
 

@@ -45,6 +45,7 @@ Handling this data also allows us to:
 
 	$additional_collection = array(
 		__( 'Location and traffic data (including IP address and browser type) if you place an order, or if we need to estimate taxes and shipping costs based on your location.', 'easy-digital-downloads' ),
+		__( 'The date and time of your last login, and the IP address it came from, if you have an account.', 'easy-digital-downloads' ),
 		__( 'Product pages visited and content viewed while your session is active.', 'easy-digital-downloads' ),
 		__( 'Your comments and product reviews if you choose to leave them on our website.', 'easy-digital-downloads' ),
 		__( 'Account email/password to allow you to access your account, if you have one.', 'easy-digital-downloads' ),
@@ -353,6 +354,9 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	foreach ( $addresses as $address ) {
 		edd_delete_customer_address( $address->id );
 	}
+
+	edd_delete_customer_meta( $customer->id, EDD\Customers\LastLogin::DATE_META_KEY );
+	edd_delete_customer_meta( $customer->id, EDD\Customers\LastLogin::IP_META_KEY );
 
 	edd_update_customer(
 		$customer->id,
@@ -681,6 +685,22 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 				'value' => date_i18n( get_option( 'date_format' ) . ' H:i:s', $timestamp ),
 			);
 		}
+	}
+
+	$last_login    = \EDD\Customers\LastLogin::get( $customer->id );
+	$last_login_at = \EDD\Customers\LastLogin::format( $last_login['date'], 'mysql' );
+	if ( ! empty( $last_login_at ) ) {
+		$export_data['data'][] = array(
+			'name'  => __( 'Last Login', 'easy-digital-downloads' ),
+			'value' => $last_login_at,
+		);
+	}
+
+	if ( ! empty( $last_login['ip'] ) ) {
+		$export_data['data'][] = array(
+			'name'  => __( 'Last Login IP', 'easy-digital-downloads' ),
+			'value' => $last_login['ip'],
+		);
 	}
 
 	$export_data = apply_filters( 'edd_privacy_customer_record', $export_data, $customer );
@@ -1267,13 +1287,17 @@ function edd_privacy_customer_anonymizer( $email_address, $page = 1 ) {
 function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
 	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
-	$orders = edd_get_orders(
-		array(
-			'customer_id' => $customer->id,
-			'number'      => 30,
-			'offset'      => ( 30 * $page ) - 30,
-		)
-	);
+	// Without a customer the ID is 0, which matches every order detached from a deleted customer.
+	$orders = array();
+	if ( ! empty( $customer->id ) ) {
+		$orders = edd_get_orders(
+			array(
+				'customer_id' => $customer->id,
+				'number'      => 30,
+				'offset'      => ( 30 * $page ) - 30,
+			)
+		);
+	}
 
 	if ( empty( $orders ) ) {
 		$message = 1 === $page
@@ -1328,14 +1352,19 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
  * @return array
  */
 function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
-	$customer  = _edd_privacy_get_customer_id_for_email( $email_address );
-	$log_query = array(
-		'customer_id' => $customer->id,
-		'number'      => 30,
-		'offset'      => ( 30 * $page ) - 30,
-	);
+	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
 
-	$logs = edd_get_file_download_logs( $log_query );
+	// Without a customer the ID is 0, which matches every log not tied to a customer.
+	$logs = array();
+	if ( ! empty( $customer->id ) ) {
+		$logs = edd_get_file_download_logs(
+			array(
+				'customer_id' => $customer->id,
+				'number'      => 30,
+				'offset'      => ( 30 * $page ) - 30,
+			)
+		);
+	}
 
 	if ( empty( $logs ) ) {
 		return array(

@@ -521,6 +521,32 @@ function edd_customers_view( $customer = null ) {
 					?>
 				</div>
 
+				<?php
+				$last_login    = \EDD\Customers\LastLogin::get( $customer->id );
+				$last_login_at = \EDD\Customers\LastLogin::format( $last_login['date'] );
+				?>
+				<?php if ( ! empty( $last_login_at ) ) : ?>
+					<div class="customer-last-login info-item">
+						<?php
+						$last_login_at .= ' ' . \EDD\Customers\LastLogin::get_timezone_abbr( $last_login['date'] );
+						if ( ! empty( $last_login['ip'] ) ) {
+							printf(
+								/* translators: 1: formatted date and time of the last login, 2: IP address of the last login */
+								esc_html__( 'Last login %1$s from %2$s', 'easy-digital-downloads' ),
+								esc_html( $last_login_at ),
+								esc_html( $last_login['ip'] )
+							);
+						} else {
+							printf(
+								/* translators: %s: formatted date and time of the last login */
+								esc_html__( 'Last login %s', 'easy-digital-downloads' ),
+								esc_html( $last_login_at )
+							);
+						}
+						?>
+					</div>
+				<?php endif; ?>
+
 				<div class="customer-user-id info-item editable">
 					<?php if ( ! empty( $user_id ) ) : ?>
 
@@ -1283,14 +1309,21 @@ function edd_customer_tools_view( $customer ) {
  * Display a notice on customer account if they are pending verification
  *
  * @since  2.4.8
+ * @since  3.7.3 Resolves the pending account through the customer's email addresses when the record is not yet claimed.
  * @return void
  */
 function edd_verify_customer_notice( $customer ) {
 
-	if ( ! edd_user_pending_verification( $customer->user_id ) ) {
+	$user_id = \EDD\Users\Verification::resolve_customer_user_id( $customer, true );
+
+	if ( ! $user_id ) {
 		return;
 	}
 
+	// An account matched by email alone is not linked to this record yet, and nobody has proved they own that address.
+	$unclaimed = empty( $customer->user_id );
+
+	// The account the notice names rides in the link, so the click can refuse if the match has moved.
 	$verify_url = wp_nonce_url(
 		edd_get_admin_url(
 			array(
@@ -1298,9 +1331,10 @@ function edd_verify_customer_notice( $customer ) {
 				'view'       => 'overview',
 				'edd-action' => 'verify_user_admin',
 				'id'         => absint( $customer->id ),
+				'user_id'    => $user_id,
 			)
 		),
-		'edd-verify-user'
+		'edd-verify-user-' . $user_id
 	);
 
 	$resend_url = wp_nonce_url(
@@ -1318,9 +1352,13 @@ function edd_verify_customer_notice( $customer ) {
 	?>
 	<div class="notice edd-notice inline notice-error">
 		<p>
-			<?php esc_html_e( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' ); ?>
+			<?php
+			echo $unclaimed
+				? esc_html__( 'A user account with this customer\'s email address is pending verification. It isn\'t linked to this customer yet, and its owner hasn\'t confirmed the address.', 'easy-digital-downloads' )
+				: esc_html__( 'This customer\'s user account is pending verification.', 'easy-digital-downloads' );
+			?>
 			&nbsp;
-			<a href="<?php echo esc_url( $verify_url ); ?>"><?php esc_html_e( 'Verify account', 'easy-digital-downloads' ); ?></a>
+			<a href="<?php echo esc_url( $verify_url ); ?>"<?php echo $unclaimed ? ' data-edd-verify-unclaimed' : ''; ?>><?php esc_html_e( 'Verify account', 'easy-digital-downloads' ); ?></a>
 			&nbsp;|&nbsp;
 			<a href="<?php echo esc_url( $resend_url ); ?>"><?php esc_html_e( 'Resend verification email', 'easy-digital-downloads' ); ?></a>
 		</p>

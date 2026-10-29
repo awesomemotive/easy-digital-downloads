@@ -346,17 +346,17 @@ function refund_transaction( $payment_or_order, ?Order $refund_object = null ) {
 		$refund_response_code = 201;
 	} else {
 		// v2 order on a v2 store — direct PayPal API call.
-		$api  = new API( $mode );
-		$args = $refund_object instanceof Order ? array( 'invoice_id' => $refund_object->id ) : array();
+		$api         = new API( $mode );
+		$refund_args = $refund_object instanceof Order ? array( 'invoice_id' => $refund_object->id ) : array();
 		if ( $refund_object instanceof Order && abs( $refund_object->total ) !== abs( $order->total ) ) {
-			$args['amount'] = array(
+			$refund_args['amount'] = array(
 				'value'         => abs( $refund_object->total ),
 				'currency_code' => $refund_object->currency,
 			);
 		}
 		$response = $api->make_request(
 			'v2/payments/captures/' . urlencode( $transaction_id ) . '/refund',
-			$args,
+			$refund_args,
 			array(
 				'Prefer' => 'return=representation',
 			)
@@ -385,12 +385,23 @@ function refund_transaction( $payment_or_order, ?Order $refund_object = null ) {
 	edd_update_order_meta( $order->id, '_edd_paypal_refunded', true );
 
 	if ( ! empty( $response->id ) ) {
-		// Add a note to the original order, and, if provided, the new refund object.
+		// A full refund sends no amount, so only a returned or sent amount confirms what PayPal refunded.
+		$transaction_amount = null;
+		$confirmed_amount   = null;
 		if ( isset( $response->amount->value ) ) {
+			$transaction_amount = $response->amount->value;
+			$confirmed_amount   = $response->amount->value;
+		} elseif ( $refund_object instanceof Order ) {
+			$transaction_amount = abs( $refund_object->total );
+			$confirmed_amount   = $refund_args['amount']['value'] ?? null;
+		}
+
+		// Add a note to the original order, and, if provided, the new refund object.
+		if ( ! is_null( $confirmed_amount ) ) {
 			$note_message = sprintf(
 				/* translators: 1: amount refunded; 2: transaction ID. */
 				__( '%1$s refunded in PayPal. Refund transaction ID: %2$s', 'easy-digital-downloads' ),
-				edd_currency_filter( edd_format_amount( $response->amount->value ), $order->currency ),
+				edd_currency_filter( edd_format_amount( $confirmed_amount ), $order->currency ),
 				esc_html( $response->id )
 			);
 		} else {
@@ -416,14 +427,14 @@ function refund_transaction( $payment_or_order, ?Order $refund_object = null ) {
 		}
 
 		// Add a negative transaction.
-		if ( $refund_object instanceof Order && isset( $response->amount->value ) ) {
+		if ( $refund_object instanceof Order ) {
 			edd_add_order_transaction( array(
 				'object_id'      => $refund_object->id,
 				'object_type'    => 'order',
 				'transaction_id' => sanitize_text_field( $response->id ),
 				'gateway'        => 'paypal_commerce',
 				'status'         => 'complete',
-				'total'          => edd_negate_amount( $response->amount->value ),
+				'total'          => edd_negate_amount( $transaction_amount ),
 			) );
 		}
 	}

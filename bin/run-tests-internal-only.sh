@@ -13,6 +13,7 @@ DB_PASS="$3"
 DB_HOST="${4-localhost}"
 WP_VERSION="${5-latest}"
 FILTER="${FILTER:-${6-''}}"
+GROUP="${GROUP:-}"
 SKIP_DB_CREATE="${7-false}"
 EXTRA_PLUGINS="${TEST_EXTRA_PLUGINS:-${8-false}}"
 
@@ -24,6 +25,9 @@ echo "🐘 PHP version:       $(php -v | head -n 1 | cut -d' ' -f2)"
 echo "🌍 WordPress version: $WP_VERSION"
 if [[ -n "${FILTER}" ]] && [[ "${FILTER}" != "false" ]]; then
 	echo "🔍 Filter:            ${FILTER}"
+fi
+if [[ -n "${GROUP}" ]]; then
+	echo "🏷️ Group:             ${GROUP}"
 fi
 if [[ "${WP_MULTISITE}" == "1" ]]; then
 	echo "🔀 Multisite:         enabled"
@@ -68,11 +72,14 @@ cp -R bin/compat/* .
 printf "\r✔ Copying compat files into place"
 printf "\n\n"
 
-# Set up filter argument for phpunit
-if [[ -z "${FILTER}" ]] || [[ "${FILTER}" == "false" ]]; then
-	filter=""
-else
-	filter=" --filter ${FILTER}"
+# Set up filter and group arguments for phpunit
+phpunit_args=()
+if [[ -n "${FILTER}" ]] && [[ "${FILTER}" != "false" ]]; then
+	phpunit_args+=( --filter "${FILTER}" )
 fi
 
-vendor/bin/phpunit${filter} -c phpunit.xml
+if [[ -n "${GROUP}" ]]; then
+	phpunit_args+=( --group "${GROUP}" )
+fi
+
+vendor/bin/phpunit "${phpunit_args[@]}" -c phpunit.xml

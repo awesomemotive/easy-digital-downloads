@@ -203,6 +203,11 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		// The block dedupe flags are statics. A full checkout() render resets them on
+		// exit, but inner blocks rendered or the utility called outside one leave them set.
+		\EDD\Blocks\Utility::reset_checkout_form_top();
+		\EDD\Checkout\Address::reset_billing_top();
+
 		edd_empty_cart();
 		edd_add_to_cart( self::$download->ID );
 
@@ -1782,10 +1787,10 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 	// G1's failure mode is a throwaway do_blocks pass firing the inner-marker render
 	// (edd_checkout_form_top -> UserDetails -> Address::render, which fires
 	// edd_cc_billing_top) BEFORE the visible Elementor pass; because both
-	// edd_checkout_form_top and edd_cc_billing_top are fire-once-per-request
+	// edd_checkout_form_top and the billing address are once-per-render
 	// (Utility::do_checkout_form_top and Address::get_fields_to_render each guard on
-	// did_action), a throwaway that consumes the billing hook first would leave the
-	// VISIBLE address either lost or doubled. A plain single-render count NEVER
+	// a static flag that only a full checkout() render resets), a throwaway that
+	// consumes the flags first would leave the VISIBLE address lost. A plain single-render count NEVER
 	// exercises that ordering, so the oracle below drives the throwaway
 	// leg first and proves the suppression preserves exactly one visible address.
 	// -----------------------------------------------------------------------
@@ -1802,9 +1807,8 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 	 *    the throwaway pass cannot fire edd_checkout_form_top / edd_cc_billing_top.
 	 * 2. ORDERING ANALOG: the throwaway do_blocks() leg runs FIRST and is asserted to
 	 *    emit no billing address AND to leave did_action( 'edd_cc_billing_top' )
-	 *    unchanged (the billing hook stays available); THEN the visible engaged render
-	 *    yields the address exactly once when the hook was still clean (never doubled,
-	 *    never lost).
+	 *    unchanged (the billing hook is not fired); THEN the visible engaged render
+	 *    yields the address exactly once (never doubled, never lost).
 	 * 3. ANTI-FALSE-PASS CONTROL: with NO box on the page the SAME
 	 *    throwaway leg is not suppressed — its inner-marker callback runs and fires
 	 *    edd_checkout_form_top — proving the single visible address is caused BY the
@@ -1847,9 +1851,8 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 
 		// (3) ANTI-FALSE-PASS CONTROL FIRST — before anything fires the fire-once
 		// edd_checkout_form_top: with NO box the throwaway inner-marker render is NOT
-		// suppressed and DOES fire edd_checkout_form_top. Run first because
-		// Utility::do_checkout_form_top() self-guards on did_action, so a later run
-		// (after the visible pass fired the hook) could not fire it again.
+		// suppressed and DOES fire edd_checkout_form_top. Run first so the flags it
+		// sets are reset below, before the visible pass.
 		$this->stub_checkout_box_page( false );
 
 		$registered_here = false;
@@ -1873,6 +1876,12 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 			unregister_block_type( 'edd/checkout-personal-info' );
 		}
 		$this->reset_checkout_box_page();
+
+		// The control leg ran inner blocks with no parent checkout() render, so the
+		// per-render flags were set and nothing cleared them. Reset them so the
+		// visible pass starts clean, as it does on a real page.
+		\EDD\Blocks\Utility::reset_checkout_form_top();
+		\EDD\Checkout\Address::reset_billing_top();
 
 		$this->assertGreaterThan(
 			0,
@@ -1920,18 +1929,16 @@ class Tests_Checkout_Form_Layer_Runtime extends EDD_UnitTestCase {
 
 		// Visible engaged pass: render_form_top fires edd_checkout_form_top unguarded,
 		// and the personal-info fallback (missing-personal-info box) renders the
-		// billing address exactly once — provided the throwaway did not consume the
-		// billing hook, which (2) above just proved.
-		$billing_clean = ( 0 === did_action( 'edd_cc_billing_top' ) );
+		// billing address exactly once, because the suppressed throwaway did not set
+		// the per-render flags.
 		$element       = $this->element_missing_personal_info( 'boxAddrOracle' );
 		$layer         = new CheckoutFormLayer();
 		$visible       = $this->render_engaged_box( $layer, $element );
 
-		$expected_address = $billing_clean ? 1 : 0;
 		$this->assertSame(
-			$expected_address,
+			1,
 			substr_count( $visible, 'id="edd_cc_address"' ),
-			'The visible Elementor pass must render the billing address exactly once when the billing hook was preserved by suppression (never lost, never doubled).'
+			'The visible Elementor pass must render the billing address exactly once (never lost, never doubled).'
 		);
 		$this->assertLessThanOrEqual(
 			1,

@@ -1,8 +1,6 @@
 <?php
 /**
  * General tests for the export system
- *
- * @group exports
  */
 
 namespace EDD\Tests\Exports;
@@ -10,6 +8,9 @@ namespace EDD\Tests\Exports;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Admin\Exports\Registry;
 
+/**
+ * @group exports
+ */
 class General extends EDD_UnitTestCase {
 	public function test_get_exports_dir() {
 		$dir = edd_get_exports_dir();

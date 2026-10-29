@@ -36,8 +36,6 @@ class UserKeySetting extends EDD_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		wp_roles()->for_site();
-
 		EDD()->api->revoke_api_key( self::$subscriber_id );
 		edd_delete_option( 'api_allow_user_keys' );
 	}

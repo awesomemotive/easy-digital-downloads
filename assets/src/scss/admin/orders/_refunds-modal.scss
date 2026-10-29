@@ -1,6 +1,11 @@
 @use "../../variables/colors" as colors;
 
 $fixed-column-width: 80px;
+
+.edd-modal.edd-modal--refund {
+	max-width: 800px;
+}
+
 #edd-submit-refund-status {
 	text-align: center;
 	font-size: 1.2em;

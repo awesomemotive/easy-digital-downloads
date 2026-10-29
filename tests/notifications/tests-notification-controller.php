@@ -65,14 +65,9 @@ class NotificationControllerTests extends EDD_UnitTestCase {
 
 		wp_cache_delete( 'edd_active_notification_count', 'edd_notifications' );
 
-		$roles = new \EDD_Roles;
-		$roles->add_roles();
-		$roles->add_caps();
-
 		global $current_user;
 		$current_user = new \WP_User( 1 );
 		$current_user->set_role( 'administrator' );
-		$current_user->add_cap( 'manage_shop_settings' );
 	}
 
 	/**

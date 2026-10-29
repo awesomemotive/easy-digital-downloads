@@ -75,6 +75,7 @@ class Localization {
 			'regenerate_api_key'      => __( 'Are you sure you want to regenerate this API key?', 'easy-digital-downloads' ),
 			'resend_receipt'          => __( 'Are you sure you want to resend the purchase receipt?', 'easy-digital-downloads' ),
 			'disconnect_customer'     => __( 'Are you sure you want to disconnect the WordPress user from this customer record?', 'easy-digital-downloads' ),
+			'verify_unclaimed_user'   => __( 'This account was matched by email address only, and its owner hasn\'t confirmed they own it. Verifying links it to this customer, makes its address the customer\'s email, and moves the customer\'s orders (and licenses, if Software Licensing is active) to it. To have the owner confirm instead, use Resend verification email. Verify anyway?', 'easy-digital-downloads' ),
 			'copy_download_link_text' => __( 'Copy these links to your clipboard and give them to your customer', 'easy-digital-downloads' ),
 			/* translators: %s: Download singular label */
 			'delete_payment_download' => sprintf( __( 'Are you sure you want to delete this %s?', 'easy-digital-downloads' ), edd_get_label_singular() ),

@@ -1,9 +1,6 @@
 <?php
 /**
  * Tests for Captcha Validation
- *
- * @group edd_captcha
- * @group edd_pro
  */
 
 namespace EDD\Tests\Captcha;
@@ -11,6 +8,10 @@ namespace EDD\Tests\Captcha;
 use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Captcha\Validate;
 
+/**
+ * @group edd_captcha
+ * @group edd_pro
+ */
 class Validation extends EDD_UnitTestCase {
 
 	/**

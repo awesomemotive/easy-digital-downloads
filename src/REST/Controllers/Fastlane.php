@@ -179,6 +179,8 @@ class Fastlane {
 			return \EDD\Discounts\OrderValidation::get_refusal_error( $refusal );
 		}
 
+		PurchaseUser::remember_authenticated_user();
+
 		edd_debug_log( sprintf( 'Fastlane: EDD order %d created, sending to PayPal.', $order_id ) );
 
 		// Build PayPal order data.

@@ -1,10 +1,6 @@
 <?php
 /**
  * Tests for Captcha Utility
- *
- * @group edd_captcha
- * @group edd_captcha_utility
- * @group edd_pro
  */
 
 namespace EDD\Tests\Captcha;
@@ -13,6 +9,11 @@ use EDD\Tests\PHPUnit\EDD_UnitTestCase;
 use EDD\Captcha\Utility;
 use EDD\Captcha\Providers\Provider;
 
+/**
+ * @group edd_captcha
+ * @group edd_captcha_utility
+ * @group edd_pro
+ */
 class UtilityTests extends EDD_UnitTestCase {
 
 	/**

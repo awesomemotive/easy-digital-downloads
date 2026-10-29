@@ -15,6 +15,7 @@ import { DownloadImageLocations } from '../utilities/download-image-location';
 import { queryArgs } from '../utilities/query-args';
 import { newDownload } from '../utilities/download-new';
 import { Users } from '../utilities/users';
+import { cssValue, cssString, cssSlug } from './css-sanitizers';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -52,62 +53,54 @@ function Edit ( { attributes, setAttributes, featuredBadgeColor, setFeaturedBadg
 		// Generate CSS styles.
 		const styleVars = [];
 
+		// An empty value would override the stylesheet's var() fallback with nothing.
+		const addVar = ( name, value ) => {
+			if ( value ) {
+				styleVars.push( `${ name }: ${ value }` );
+			}
+		};
+
 		// Badge styling (only if badge is enabled).
 		if ( attributes.featured_badge_enabled ) {
 			// Badge text color.
 			let badgeColor = '';
 			if ( attributes.featuredBadgeColor ) {
-				badgeColor = `var( --wp--preset--color--${ attributes.featuredBadgeColor } )`;
+				badgeColor = `var( --wp--preset--color--${ cssSlug( attributes.featuredBadgeColor ) } )`;
 			} else if ( attributes.customFeaturedBadgeColor ) {
-				badgeColor = attributes.customFeaturedBadgeColor;
+				badgeColor = cssValue( attributes.customFeaturedBadgeColor );
 			} else if ( EDDBlocks.button_colors?.text ) {
 				badgeColor = EDDBlocks.button_colors.text;
 			}
-			if ( badgeColor ) {
-				styleVars.push( `--edd-featured-badge-color: ${ badgeColor }` );
-			}
+			addVar( '--edd-featured-badge-color', badgeColor );
 
 			// Badge background color.
 			let badgeBgColor = '';
 			if ( attributes.featuredBadgeBackgroundColor ) {
-				badgeBgColor = `var( --wp--preset--color--${ attributes.featuredBadgeBackgroundColor } )`;
+				badgeBgColor = `var( --wp--preset--color--${ cssSlug( attributes.featuredBadgeBackgroundColor ) } )`;
 			} else if ( attributes.customFeaturedBadgeBackgroundColor ) {
-				badgeBgColor = attributes.customFeaturedBadgeBackgroundColor;
+				badgeBgColor = cssValue( attributes.customFeaturedBadgeBackgroundColor );
 			} else if ( EDDBlocks.button_colors?.background ) {
 				badgeBgColor = EDDBlocks.button_colors.background;
 			}
-			if ( badgeBgColor ) {
-				styleVars.push( `--edd-featured-badge-bg: ${ badgeBgColor }` );
-			}
+			addVar( '--edd-featured-badge-bg', badgeBgColor );
 
 			// Badge text.
 			if ( attributes.featured_badge_text ) {
-				styleVars.push( `--edd-featured-badge-text: "${ attributes.featured_badge_text }"` );
+				addVar( '--edd-featured-badge-text', `"${ cssString( attributes.featured_badge_text ) }"` );
 			}
 		}
 
 		// Border styling (only if border is enabled).
 		if ( attributes.featured_border_enabled ) {
 			// Border color.
-			let borderColor = attributes.featured_border_color || EDDBlocks.button_colors?.background || '#007cba';
-			if ( borderColor ) {
-				styleVars.push( `--edd-featured-border-color: ${ borderColor }` );
-			}
+			const borderColor = attributes.featured_border_color
+				? cssValue( attributes.featured_border_color )
+				: EDDBlocks.button_colors?.background || '#007cba';
+			addVar( '--edd-featured-border-color', borderColor );
 
-			// Border width.
-			if ( attributes.featured_border_width ) {
-				styleVars.push( `--edd-featured-border-width: ${ attributes.featured_border_width }` );
-			}
-
-			// Border style.
-			if ( attributes.featured_border_style ) {
-				styleVars.push( `--edd-featured-border-style: ${ attributes.featured_border_style }` );
-			}
-
-			// Border radius.
-			if ( attributes.featured_border_radius ) {
-				styleVars.push( `--edd-featured-border-radius: ${ attributes.featured_border_radius }` );
-			}
+			addVar( '--edd-featured-border-width', cssValue( attributes.featured_border_width ) );
+			addVar( '--edd-featured-border-style', cssValue( attributes.featured_border_style ) );
+			addVar( '--edd-featured-border-radius', cssValue( attributes.featured_border_radius ) );
 		}
 
 		if ( styleVars.length > 0 ) {

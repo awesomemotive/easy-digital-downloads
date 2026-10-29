@@ -1,10 +1,6 @@
 <?php
 /**
  * Refund Tests.
- *
- * @group edd_orders
- * @group edd_refunds
- * @group database
  */
 namespace EDD\Tests\Orders;
 
@@ -15,6 +11,11 @@ use EDD\Orders\Refunds\Validator;
 use EDD\Orders\Refunds\Number;
 use EDD\Orders\Refunds\Validator as Refund_Validator;
 
+/**
+ * @group edd_orders
+ * @group edd_refunds
+ * @group database
+ */
 class Refunds extends EDD_UnitTestCase {
 
 	/**

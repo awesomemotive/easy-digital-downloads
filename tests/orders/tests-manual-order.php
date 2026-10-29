@@ -41,13 +41,6 @@ class ManualOrder extends EDD_UnitTestCase {
 
 		$this->manual_order_id = 0;
 
-		/*
-		 * WP_Roles::add_cap() writes the roles option but leaves the WP_Role objects already built
-		 * in this process untouched, and a test process never re-reads them. Refresh them here or
-		 * every user created below looks like it holds nothing but `read`.
-		 */
-		wp_roles()->for_site();
-
 		$this->product_owner = $this->factory->user->create( array( 'role' => 'shop_manager' ) );
 
 		add_action( 'edd_post_add_manual_order', array( $this, 'capture_manual_order_id' ) );

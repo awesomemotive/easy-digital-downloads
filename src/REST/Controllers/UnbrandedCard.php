@@ -146,6 +146,8 @@ class UnbrandedCard {
 			return \EDD\Discounts\OrderValidation::get_refusal_error( $refusal );
 		}
 
+		PurchaseUser::remember_authenticated_user();
+
 		$purchase_units = \EDD\Gateways\PayPal\get_order_purchase_units( $order_id, $purchase_data, $purchase_data );
 
 		// Build the order requesting 3-D Secure only when required. No card data

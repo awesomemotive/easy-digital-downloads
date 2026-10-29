@@ -1,9 +1,6 @@
 <?php
 /**
  * Tests for EDD\Utils\Date
- *
- * @group edd_dates
- * @group edd_objects
  */
 namespace EDD\Tests\Dates;
 
@@ -12,6 +9,9 @@ use EDD\Utils\Date;
 
 /**
  * @coversDefaultClass \EDD\Utils\Date
+ *
+ * @group edd_dates
+ * @group edd_objects
  */
 class Utilities extends EDD_UnitTestCase {
 

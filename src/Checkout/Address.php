@@ -54,6 +54,14 @@ class Address {
 	);
 
 	/**
+	 * Whether the billing fields have already rendered during the current checkout render.
+	 *
+	 * @since 3.7.3
+	 * @var bool
+	 */
+	private static bool $did_billing_top = false;
+
+	/**
 	 * Get the fields to display.
 	 *
 	 * @since 3.3.8
@@ -89,6 +97,8 @@ class Address {
 
 		$this->get_customer();
 
+		self::$did_billing_top = true;
+
 		?>
 		<fieldset id="edd_cc_address" class="<?php echo esc_attr( implode( ' ', $this->get_fieldset_classes( $fields ) ) ); ?>">
 			<legend><?php esc_html_e( 'Billing Details', 'easy-digital-downloads' ); ?></legend>
@@ -107,6 +117,16 @@ class Address {
 			?>
 		</fieldset>
 		<?php
+	}
+
+	/**
+	 * Resets the billing fields flag so the next checkout render outputs them again.
+	 *
+	 * @since 3.7.3
+	 * @return void
+	 */
+	public static function reset_billing_top(): void {
+		self::$did_billing_top = false;
 	}
 
 	/**
@@ -248,10 +268,11 @@ class Address {
 	 * Get the fields to render.
 	 *
 	 * @since 3.3.8
+	 * @since 3.7.3 Dedupes per checkout render instead of per request.
 	 * @return array|false
 	 */
 	private function get_fields_to_render() {
-		if ( did_action( 'edd_cc_billing_top' ) ) {
+		if ( self::$did_billing_top ) {
 			return false;
 		}
 
